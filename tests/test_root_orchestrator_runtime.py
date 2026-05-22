@@ -134,6 +134,8 @@ def test_root_orchestrator_second_run_reuses_prior_work_record(tmp_path):
         session_anchor="sess_reuse_001",
     )
     assert orchestrator.last_trace["retrieved_record_count"] == 0
+    assert orchestrator.last_trace["reuse_applied"] is False
+    assert orchestrator.last_trace["reuse_source_record_ids"] == []
 
     second_output = orchestrator.process_event(
         raw_user_text="I need another certificate for a mock government service.",
@@ -141,11 +143,15 @@ def test_root_orchestrator_second_run_reuses_prior_work_record(tmp_path):
         session_anchor="sess_reuse_002",
     )
     assert orchestrator.last_trace["retrieved_record_count"] >= 1
+    assert orchestrator.last_trace["reuse_applied"] is True
 
     first_record = drs.read_record("work", first_output["drs_writes"][0])
     second_record = drs.read_record("work", second_output["drs_writes"][0])
 
+    assert first_record["record_id"] in orchestrator.last_trace["reuse_source_record_ids"]
     assert second_record["content"]["retrieved_record_count"] >= 1
+    assert second_record["content"]["reuse_applied"] is True
+    assert first_record["record_id"] in second_record["content"]["reuse_source_record_ids"]
     assert first_record["record_id"] != second_record["record_id"]
     assert first_record["layer"] == "work"
     assert second_record["layer"] == "work"

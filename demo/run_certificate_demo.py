@@ -16,6 +16,17 @@ def _bool_text(value: bool) -> str:
     return "true" if value else "false"
 
 
+def _winner_vector_id(trace: dict) -> tuple[str, str]:
+    winner_proposal_id = trace["gt_report"].get("winner")
+    if not winner_proposal_id:
+        return "none", "none"
+
+    for proposal in trace["result_proposals"]:
+        if proposal["proposal_id"] == winner_proposal_id:
+            return winner_proposal_id, proposal["vector_id"]
+    return winner_proposal_id, "none"
+
+
 def _summarize_run(label: str, orchestrator: RootOrchestrator, final_output: dict) -> list[str]:
     trace = orchestrator.last_trace
     selected_vector_ids = [
@@ -33,6 +44,7 @@ def _summarize_run(label: str, orchestrator: RootOrchestrator, final_output: dic
         "illegal_coercion" not in selected_vector_ids
         and "illegal_coercion" not in plan_node_vector_ids
     )
+    winner_proposal_id, winner_vector_id = _winner_vector_id(trace)
 
     lines = [
         f"{label}:",
@@ -46,7 +58,8 @@ def _summarize_run(label: str, orchestrator: RootOrchestrator, final_output: dic
         f"  ResultProposal count: {len(trace['result_proposals'])}",
         f"  Post V&V accepted count: {accepted_count}",
         f"  GT decision: {trace['gt_report']['decision']}",
-        f"  GT winner: {trace['gt_report'].get('winner', 'none')}",
+        f"  GT winner proposal id: {winner_proposal_id}",
+        f"  GT winner vector id: {winner_vector_id}",
         f"  FinalOutput created_by: {final_output['created_by']}",
         f"  FinalOutput status: {final_output['status']}",
         f"  DRS writes: {', '.join(final_output['drs_writes'])}",

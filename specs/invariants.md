@@ -26,6 +26,17 @@ These invariants are non-negotiable for the proof-of-architecture demo.
    - Every DRS retrieval requires `TemporalQuery`.
    - Retrieval must be explicit about `as_of`, range, freshness bias, and maximum age policy.
 
+DRS registry invariant:
+
+- DRS is a registry/resolver/index, not a raw memory dump.
+- MVP LocalDRS may store inline content only as a local simplification.
+- Future DRS records should prefer pointer and summary metadata over raw payload.
+- Secrets, credentials, passport data, card data, tokens, passwords, and private keys must not be stored directly in `DRSRecord.content`.
+- Sensitive data must be referenced through secure vault/storage pointers with explicit access policy.
+- Every `DRSRecord` still requires `TimeEnvelope`.
+- Every retrieval still requires `TemporalQuery`.
+- Work, Thoughts, UP, DeadEnds, and Quarantine layer separation remains mandatory.
+
 7. WorldState relevance
    - `WorldState` must not auto-load irrelevant needles such as weather.
    - Optional context is loaded only when requested by intent, policy, or an applicable installed needle.

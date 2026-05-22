@@ -30,6 +30,8 @@
       "enum": [
         "task_outcome",
         "profile",
+        "identity_pointer",
+        "document_pointer",
         "reflection",
         "protocol_patch",
         "validator_patch",
@@ -45,6 +47,76 @@
     },
     "content": {
       "type": "object"
+    },
+    "pointer": {
+      "type": "object",
+      "required": [
+        "storage_kind",
+        "ref"
+      ],
+      "properties": {
+        "storage_kind": {
+          "enum": [
+            "inline",
+            "local_json",
+            "local_secure_vault",
+            "local_memory",
+            "vector_store",
+            "document_store",
+            "project_store",
+            "external_drs_pointer"
+          ]
+        },
+        "ref": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        },
+        "access_policy": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "visibility": {
+              "enum": [
+                "private",
+                "team",
+                "project",
+                "public"
+              ]
+            },
+            "requires_user_confirmation": {
+              "type": "boolean"
+            },
+            "read_summary_only": {
+              "type": "boolean"
+            },
+            "read_payload_allowed": {
+              "type": "boolean"
+            },
+            "write_allowed": {
+              "type": "boolean"
+            },
+            "allowed_use": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/NonEmptyString"
+              }
+            },
+            "forbidden_use": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/NonEmptyString"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        },
+        "hash": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        }
+      },
+      "additionalProperties": false
     },
     "time_envelope": {
       "$ref": "time_envelope.schema.json"

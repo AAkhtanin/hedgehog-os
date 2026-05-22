@@ -312,6 +312,26 @@ Layers:
 - optional `gt`;
 - `status`.
 
+### Pointer-first DRS model
+
+DRS behaves like a more complex DNS for memory, capabilities, and knowledge
+routes. It is a registry/resolver/index for addressable memory records, not a
+centralized dump of all user memory.
+
+DRS may point to local, private, project, vault, vector, document, or external
+DRS storage. A pointer-first record stores layer, domain, type, pointer metadata,
+access policy, time envelope, provenance, GT metadata, summary, and hash. The
+payload itself may live elsewhere.
+
+Personal secrets, identity data, payment data, credentials, tokens, passwords,
+passport numbers, card numbers, and private keys must live in secure
+vault/storage systems, not directly inside DRS record content. DRS records may
+reference those secure locations through explicit storage pointers and access
+policies.
+
+For the MVP, inline content is allowed only for mock demo simplicity. Inline
+content must remain small, local, non-secret, and schema-compatible.
+
 Memory-first reuse formula:
 
 ```text

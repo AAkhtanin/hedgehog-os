@@ -68,6 +68,78 @@ def test_local_drs_writes_reads_and_validates_work_record(tmp_path):
     drs_record_validator().validate(loaded)
 
 
+def test_local_drs_writes_pointer_record(tmp_path):
+    drs = LocalDRS(tmp_path)
+    record = make_record(
+        record_id="identity_pointer_001",
+        layer="work",
+        record_type="identity_pointer",
+    )
+    record["domain"] = "user_identity"
+    record["content"] = {
+        "summary": "Pointer to secure local vault record."
+    }
+    record["pointer"] = {
+        "storage_kind": "local_secure_vault",
+        "ref": "vault://identity/passport/main",
+        "access_policy": {
+            "visibility": "private",
+            "requires_user_confirmation": True,
+            "read_summary_only": True,
+            "read_payload_allowed": False,
+            "write_allowed": False,
+            "allowed_use": ["form_filling"],
+            "forbidden_use": ["sharing_without_confirmation"],
+        },
+        "summary": "Secure identity vault pointer",
+        "hash": "mock_hash",
+    }
+
+    path = drs.write_record(record)
+    loaded = drs.read_record("work", "identity_pointer_001")
+
+    assert path.exists()
+    assert loaded == record
+    drs_record_validator().validate(loaded)
+
+
+def test_write_record_rejects_secret_like_content_keys(tmp_path):
+    drs = LocalDRS(tmp_path)
+    record = make_record()
+    record["content"] = {
+        "passport_number": "DO_NOT_STORE"
+    }
+
+    with pytest.raises(ValueError):
+        drs.write_record(record)
+
+
+def test_write_record_rejects_nested_secret_like_keys(tmp_path):
+    drs = LocalDRS(tmp_path)
+    record = make_record()
+    record["content"] = {
+        "nested": {
+            "credentials": {
+                "username": "x"
+            }
+        }
+    }
+
+    with pytest.raises(ValueError):
+        drs.write_record(record)
+
+
+def test_write_record_rejects_malformed_pointer(tmp_path):
+    drs = LocalDRS(tmp_path)
+    record = make_record(record_type="document_pointer")
+    record["pointer"] = {
+        "storage_kind": "local_secure_vault"
+    }
+
+    with pytest.raises(ValueError):
+        drs.write_record(record)
+
+
 def test_write_record_allows_identical_duplicate_write(tmp_path):
     drs = LocalDRS(tmp_path)
     record = make_record()

@@ -15,11 +15,51 @@ REQUIRED_RECORD_FIELDS = {
     "provenance",
     "status",
 }
+SENSITIVE_KEY_FRAGMENTS = {
+    "credential",
+    "credentials",
+    "api_key",
+    "apikey",
+    "token",
+    "password",
+    "secret",
+    "private_key",
+    "card_number",
+    "cvv",
+    "passport_number",
+}
 
 
 def _safe_filename(record_id: str) -> str:
     safe = "".join(char if char.isalnum() or char in "._-" else "_" for char in record_id)
     return f"{safe}.json"
+
+
+def iter_json_keys(value):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            yield key
+            yield from iter_json_keys(child)
+    elif isinstance(value, list):
+        for item in value:
+            yield from iter_json_keys(item)
+
+
+def assert_no_sensitive_drs_keys(record: dict) -> None:
+    for key in iter_json_keys(record):
+        normalized = key.lower()
+        if any(fragment in normalized for fragment in SENSITIVE_KEY_FRAGMENTS):
+            raise ValueError(f"DRS record contains sensitive key name: {key}")
+
+
+def _validate_pointer(record: dict) -> None:
+    if "pointer" not in record:
+        return
+    pointer = record["pointer"]
+    if not isinstance(pointer, dict):
+        raise ValueError("DRS record pointer must be an object")
+    if "storage_kind" not in pointer or "ref" not in pointer:
+        raise ValueError("DRS record pointer requires storage_kind and ref")
 
 
 class LocalDRS:
@@ -39,6 +79,8 @@ class LocalDRS:
             raise ValueError(f"DRS record missing required fields: {sorted(missing)}")
         if not record.get("time_envelope"):
             raise ValueError("DRS record requires time_envelope")
+        assert_no_sensitive_drs_keys(record)
+        _validate_pointer(record)
 
         layer = record["layer"]
         path = self.layer_path(layer) / _safe_filename(record["record_id"])

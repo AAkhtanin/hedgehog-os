@@ -68,6 +68,36 @@ def test_local_drs_writes_reads_and_validates_work_record(tmp_path):
     drs_record_validator().validate(loaded)
 
 
+def test_write_record_allows_identical_duplicate_write(tmp_path):
+    drs = LocalDRS(tmp_path)
+    record = make_record()
+
+    first_path = drs.write_record(record)
+    second_path = drs.write_record(record)
+
+    assert second_path == first_path
+
+
+def test_write_record_allows_same_object_with_different_existing_format(tmp_path):
+    drs = LocalDRS(tmp_path)
+    record = make_record()
+    written_path = drs.write_record(record)
+    written_path.write_text(json.dumps(record), encoding="utf-8")
+
+    assert drs.write_record(record) == written_path
+
+
+def test_write_record_rejects_different_object_with_same_record_id(tmp_path):
+    drs = LocalDRS(tmp_path)
+    record = make_record()
+    drs.write_record(record)
+    changed_record = make_record()
+    changed_record["content"]["summary"] = "Different result."
+
+    with pytest.raises(ValueError):
+        drs.write_record(changed_record)
+
+
 def test_write_record_rejects_missing_time_envelope(tmp_path):
     drs = LocalDRS(tmp_path)
     record = make_record()

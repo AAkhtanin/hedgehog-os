@@ -45,8 +45,9 @@ class LocalDRS:
         payload = json.dumps(record, indent=2, sort_keys=True)
 
         if path.exists():
-            existing = path.read_text(encoding="utf-8")
-            if existing != payload:
+            with path.open("r", encoding="utf-8") as handle:
+                existing = json.load(handle)
+            if existing != record:
                 raise ValueError(f"DRS record already exists with different content: {path}")
             return path
 

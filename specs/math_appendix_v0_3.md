@@ -1024,25 +1024,6 @@ AuditEvent = (kind, payload, timestamp, hash)
 ⸻
 
 15. Формальный полный pipeline
-I \xrightarrow{normalize} G
-G \xrightarrow{WorldState} W_t
-(W_t, TQ) \xrightarrow{DRS} M
-(W_t, M, N) \xrightarrow{CVG} V
-V \xrightarrow{AVF} A_p
-A_p \xrightarrow{Architect} P
-P \xrightarrow{Executors} R
-R \xrightarrow{PostV\&V} Q
-Q \xrightarrow{GTValidator} GT
-(R,Q,GT) \xrightarrow{Root} F
-(F,GT,Trace) \xrightarrow{Writeback} DRS
-DRS \xrightarrow{Hooks} Marennya/UP
-
-[ПАСПОРТ] [MATH-APPENDIX] [ПОЛНЫЙ-PIPELINE]
-Да, похоже, там кусок съехал/не вставился. Вот полный пункт 15 — Формальный полный pipeline целиком.
-
-⸻
-
-15. Формальный полный pipeline
 Полный pipeline описывает путь одной задачи от входа пользователя/события до финального ответа, записи опыта в DRS и возможного запуска Marennya / UP.
 Главный инвариант:
 FinalOutput создаёт только RootOrchestrator.

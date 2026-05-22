@@ -123,3 +123,29 @@ def test_root_orchestrator_final_output_references_gt_report_from_trace(tmp_path
     assert gt_report["gt_report_id"]
     assert final_output["gt_report_ref"] == gt_report["gt_report_id"]
     assert orchestrator.last_trace["final_output"] == final_output
+
+
+def test_root_orchestrator_second_run_reuses_prior_work_record(tmp_path):
+    orchestrator, drs = make_orchestrator(tmp_path)
+
+    first_output = orchestrator.process_event(
+        raw_user_text="I need a certificate for a mock government service.",
+        request_id="req_reuse_001",
+        session_anchor="sess_reuse_001",
+    )
+    assert orchestrator.last_trace["retrieved_record_count"] == 0
+
+    second_output = orchestrator.process_event(
+        raw_user_text="I need another certificate for a mock government service.",
+        request_id="req_reuse_002",
+        session_anchor="sess_reuse_002",
+    )
+    assert orchestrator.last_trace["retrieved_record_count"] >= 1
+
+    first_record = drs.read_record("work", first_output["drs_writes"][0])
+    second_record = drs.read_record("work", second_output["drs_writes"][0])
+
+    assert second_record["content"]["retrieved_record_count"] >= 1
+    assert first_record["record_id"] != second_record["record_id"]
+    assert first_record["layer"] == "work"
+    assert second_record["layer"] == "work"

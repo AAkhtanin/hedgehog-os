@@ -8,8 +8,10 @@ from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
 from hedgehog.drs import LocalDRS
 from hedgehog.executor import execute_plan_graph
 from hedgehog.gt_validator import validate_gt
+from hedgehog.marenna import create_marenna_after_task_record
 from hedgehog.post_vv import validate_result_proposals
 from hedgehog.time_model import make_temporal_query, make_time_envelope
+from hedgehog.up import create_up_after_task_record
 
 
 class RootOrchestrator:
@@ -82,6 +84,32 @@ class RootOrchestrator:
             reuse_applied=reuse_applied,
         )
         self.drs.write_record(work_record)
+        marenna_record = create_marenna_after_task_record(
+            request_id=request_id,
+            session_anchor=session_anchor,
+            work_record_id=work_record["record_id"],
+            domain=work_record["domain"],
+        )
+        up_record = create_up_after_task_record(
+            request_id=request_id,
+            session_anchor=session_anchor,
+            work_record_id=work_record["record_id"],
+            source_domain=work_record["domain"],
+        )
+        marenna_drs_record = self._make_marenna_quarantine_record(
+            request_id=request_id,
+            session_anchor=session_anchor,
+            work_record_id=work_record["record_id"],
+            marenna_record=marenna_record,
+        )
+        up_drs_record = self._make_up_quarantine_record(
+            request_id=request_id,
+            session_anchor=session_anchor,
+            work_record_id=work_record["record_id"],
+            up_record=up_record,
+        )
+        self.drs.write_record(marenna_drs_record)
+        self.drs.write_record(up_drs_record)
 
         final_output = {
             "final_output_id": f"final:{request_id}",
@@ -119,6 +147,10 @@ class RootOrchestrator:
             "vv_reports": vv_reports,
             "gt_report": gt_report,
             "drs_records": [work_record],
+            "marenna_hook_records": [marenna_record],
+            "up_hook_records": [up_record],
+            "marenna_records": [marenna_drs_record["record_id"]],
+            "up_records": [up_drs_record["record_id"]],
             "final_output": final_output,
         }
         return final_output
@@ -177,4 +209,70 @@ class RootOrchestrator:
                 "decay_rate": gt_report.get("decay_rate", 0.0),
             },
             "status": "accepted" if gt_report["decision"] == "accept" else "no_update",
+        }
+
+    @staticmethod
+    def _make_marenna_quarantine_record(
+        request_id: str,
+        session_anchor: str,
+        work_record_id: str,
+        marenna_record: dict,
+    ) -> dict:
+        return {
+            "record_id": marenna_record["marenna_record_id"],
+            "layer": "quarantine",
+            "type": "reflection",
+            "domain": marenna_record["domain"],
+            "content": {
+                "summary": marenna_record["content"]["summary"],
+                "hook_record_id": marenna_record["marenna_record_id"],
+                "promotion_target_layer": marenna_record["promotion_target_layer"],
+                "source_work_record_id": work_record_id,
+            },
+            "time_envelope": make_time_envelope(session_anchor),
+            "provenance": {
+                "request_id": request_id,
+                "created_by": "marenna",
+                "trace_refs": [
+                    {
+                        "trace_id": f"trace:{request_id}",
+                        "span_id": "marenna_quarantine",
+                        "kind": "marenna",
+                    }
+                ],
+            },
+            "status": "quarantined",
+        }
+
+    @staticmethod
+    def _make_up_quarantine_record(
+        request_id: str,
+        session_anchor: str,
+        work_record_id: str,
+        up_record: dict,
+    ) -> dict:
+        return {
+            "record_id": up_record["up_record_id"],
+            "layer": "quarantine",
+            "type": "protocol_template",
+            "domain": up_record["source_domain"],
+            "content": {
+                "summary": up_record["content"]["summary"],
+                "hook_record_id": up_record["up_record_id"],
+                "promotion_target_layer": up_record["promotion_target_layer"],
+                "source_work_record_id": work_record_id,
+            },
+            "time_envelope": make_time_envelope(session_anchor),
+            "provenance": {
+                "request_id": request_id,
+                "created_by": "up",
+                "trace_refs": [
+                    {
+                        "trace_id": f"trace:{request_id}",
+                        "span_id": "up_quarantine",
+                        "kind": "up",
+                    }
+                ],
+            },
+            "status": "quarantined",
         }

@@ -8,6 +8,8 @@ This is not a chatbot, not a generic agent, and not a simple script.
 
 The goal is to implement a small local demo proving that the core architecture works:
 
+For formulas and algorithms, read specs/math_appendix_v0_3.md.
+
 User/Event
 → RootOrchestrator
 → Intent

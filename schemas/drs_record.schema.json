@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/drs_record.schema.json",
+  "title": "Local DRS Record",
+  "type": "object",
+  "required": [
+    "record_id",
+    "layer",
+    "type",
+    "domain",
+    "content",
+    "time_envelope",
+    "provenance",
+    "status"
+  ],
+  "properties": {
+    "record_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "layer": {
+      "enum": [
+        "work",
+        "thoughts",
+        "up",
+        "quarantine",
+        "deadends"
+      ]
+    },
+    "type": {
+      "enum": [
+        "task_outcome",
+        "profile",
+        "reflection",
+        "protocol_patch",
+        "validator_patch",
+        "dead_end",
+        "opportunity",
+        "protocol_template",
+        "trace_summary",
+        "generic"
+      ]
+    },
+    "domain": {
+      "$ref": "common.schema.json#/$defs/Domain"
+    },
+    "content": {
+      "type": "object"
+    },
+    "time_envelope": {
+      "$ref": "time_envelope.schema.json"
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "request_id",
+        "created_by",
+        "trace_refs"
+      ],
+      "properties": {
+        "request_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "created_by": {
+          "enum": [
+            "root_orchestrator",
+            "marenna",
+            "up",
+            "gt_validator",
+            "post_vv",
+            "executor"
+          ]
+        },
+        "trace_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/TraceRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "accepted",
+        "rejected",
+        "quarantined",
+        "archived",
+        "no_update"
+      ]
+    },
+    "gt": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "gt_report_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "elo": {
+          "type": "number"
+        },
+        "regret": {
+          "type": "number",
+          "minimum": 0
+        },
+        "half_life_hours": {
+          "type": "number",
+          "minimum": 0
+        },
+        "decay_rate": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "viability_feedback": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "vector_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "predicted": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "actual": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "delta": {
+          "type": "number"
+        },
+        "failure_modes": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "vv_report_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "validated_at": {
+          "$ref": "common.schema.json#/$defs/Timestamp"
+        },
+        "decision": {
+          "enum": [
+            "accept",
+            "reject",
+            "revise",
+            "no_update"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "hash": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "previous_hash": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "trace_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/TraceRef"
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/ProvenanceRef"
+      }
+    }
+  },
+  "additionalProperties": false
+}

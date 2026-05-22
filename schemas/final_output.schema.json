@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/final_output.schema.json",
+  "title": "Root FinalOutput",
+  "type": "object",
+  "required": [
+    "final_output_id",
+    "request_id",
+    "created_by",
+    "status",
+    "answer",
+    "used_proposals",
+    "gt_report_ref",
+    "drs_writes",
+    "time_envelope"
+  ],
+  "properties": {
+    "final_output_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "request_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "created_by": {
+      "const": "root_orchestrator"
+    },
+    "status": {
+      "enum": [
+        "success",
+        "partial",
+        "needs_user",
+        "failed"
+      ]
+    },
+    "answer": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "used_proposals": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/Id"
+      },
+      "uniqueItems": true
+    },
+    "gt_report_ref": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "drs_writes": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/Id"
+      },
+      "uniqueItems": true
+    },
+    "time_envelope": {
+      "$ref": "time_envelope.schema.json"
+    },
+    "summary": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/NonEmptyString"
+      }
+    },
+    "trace_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/TraceRef"
+      }
+    }
+  },
+  "additionalProperties": false
+}

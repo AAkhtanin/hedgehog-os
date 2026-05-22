@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/gt_report.schema.json",
+  "title": "GTValidator Report",
+  "type": "object",
+  "required": [
+    "gt_report_id",
+    "game_mode",
+    "candidates",
+    "decision",
+    "created_at"
+  ],
+  "properties": {
+    "gt_report_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "game_mode": {
+      "enum": [
+        "result_selection",
+        "marenna_game",
+        "up_game",
+        "memory_evo"
+      ]
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "candidate_type",
+          "payoff",
+          "regret",
+          "elo_before",
+          "elo_after"
+        ],
+        "properties": {
+          "candidate_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "candidate_type": {
+            "enum": [
+              "result_proposal",
+              "memory_record",
+              "marenna_patch",
+              "up_candidate",
+              "protocol_template"
+            ]
+          },
+          "payoff": {
+            "type": "number"
+          },
+          "regret": {
+            "type": "number",
+            "minimum": 0
+          },
+          "elo_before": {
+            "type": "number"
+          },
+          "elo_after": {
+            "type": "number"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "decision": {
+      "enum": [
+        "accept",
+        "revise",
+        "reject",
+        "rerun",
+        "needs_user",
+        "no_update"
+      ]
+    },
+    "created_at": {
+      "$ref": "common.schema.json#/$defs/Timestamp"
+    },
+    "winner": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "mix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "probability"
+        ],
+        "properties": {
+          "candidate_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "probability": {
+            "$ref": "common.schema.json#/$defs/Score01"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "ratings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "rating_before",
+          "rating_after",
+          "expected",
+          "result"
+        ],
+        "properties": {
+          "candidate_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "rating_before": {
+            "type": "number"
+          },
+          "rating_after": {
+            "type": "number"
+          },
+          "expected": {
+            "$ref": "common.schema.json#/$defs/Score01"
+          },
+          "result": {
+            "$ref": "common.schema.json#/$defs/Score01"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "half_life_hours": {
+      "type": "number",
+      "minimum": 0
+    },
+    "decay_rate": {
+      "type": "number",
+      "minimum": 0
+    },
+    "audit": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "audit_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "hash": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        },
+        "previous_hash": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        }
+      },
+      "additionalProperties": false
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/NonEmptyString"
+      }
+    }
+  },
+  "additionalProperties": false
+}

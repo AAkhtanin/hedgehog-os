@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/vv_report.schema.json",
+  "title": "Post V&V Report",
+  "type": "object",
+  "required": [
+    "vv_report_id",
+    "proposal_id",
+    "status",
+    "scores",
+    "overall_score",
+    "decision",
+    "checked_at"
+  ],
+  "properties": {
+    "vv_report_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "proposal_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "status": {
+      "enum": [
+        "accepted",
+        "rejected",
+        "needs_revision"
+      ]
+    },
+    "scores": {
+      "type": "object",
+      "required": [
+        "schema",
+        "evidence",
+        "policy",
+        "time",
+        "safety",
+        "consistency"
+      ],
+      "properties": {
+        "schema": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "evidence": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "policy": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "time": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "safety": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "consistency": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        }
+      },
+      "additionalProperties": false
+    },
+    "overall_score": {
+      "$ref": "common.schema.json#/$defs/Score01"
+    },
+    "decision": {
+      "enum": [
+        "accept",
+        "reject",
+        "revise"
+      ]
+    },
+    "checked_at": {
+      "$ref": "common.schema.json#/$defs/Timestamp"
+    },
+    "violations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "violation_id",
+          "kind",
+          "description"
+        ],
+        "properties": {
+          "violation_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "kind": {
+            "enum": [
+              "schema",
+              "evidence",
+              "policy",
+              "time",
+              "safety",
+              "consistency",
+              "forbidden_region"
+            ]
+          },
+          "description": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/NonEmptyString"
+      }
+    },
+    "trace_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/TraceRef"
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/intent.schema.json",
+  "title": "Normalized Intent",
+  "type": "object",
+  "required": [
+    "intent_id",
+    "request_id",
+    "raw_input",
+    "canonical_goal",
+    "domain",
+    "source",
+    "source_of_hypothesis",
+    "created_at"
+  ],
+  "properties": {
+    "intent_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "request_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "raw_input": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "canonical_goal": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "domain": {
+      "$ref": "common.schema.json#/$defs/Domain"
+    },
+    "source": {
+      "enum": [
+        "user",
+        "system",
+        "needle",
+        "timer",
+        "external_drs"
+      ]
+    },
+    "source_of_hypothesis": {
+      "enum": [
+        "user",
+        "system",
+        "drs",
+        "needle",
+        "fallback"
+      ]
+    },
+    "constraints": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "must": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          }
+        },
+        "must_not": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          }
+        },
+        "preferences": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "created_at": {
+      "$ref": "common.schema.json#/$defs/Timestamp"
+    }
+  },
+  "additionalProperties": false
+}

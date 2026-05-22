@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/world_state.schema.json",
+  "title": "WorldState",
+  "type": "object",
+  "required": [
+    "world_state_id",
+    "request_id",
+    "intent_id",
+    "time_context",
+    "temporal_query",
+    "active_policy"
+  ],
+  "properties": {
+    "world_state_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "request_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "intent_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "time_context": {
+      "type": "object",
+      "required": [
+        "now_utc",
+        "timezone",
+        "freshness_required"
+      ],
+      "properties": {
+        "now_utc": {
+          "$ref": "common.schema.json#/$defs/Timestamp"
+        },
+        "timezone": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        },
+        "freshness_required": {
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "real_time"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "temporal_query": {
+      "$ref": "temporal_query.schema.json"
+    },
+    "user_context": {
+      "type": "object"
+    },
+    "session_context": {
+      "type": "object"
+    },
+    "local_drs_summary": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "query_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "records_considered": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "records_selected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "layers": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "work",
+              "thoughts",
+              "up",
+              "deadends",
+              "quarantine"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "summary": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        }
+      },
+      "additionalProperties": false
+    },
+    "active_policy": {
+      "type": "object",
+      "required": [
+        "mode",
+        "allow_external_drs",
+        "allow_exploration"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "default",
+            "strict",
+            "explore",
+            "test",
+            "dry_run",
+            "local_only",
+            "review"
+          ]
+        },
+        "allow_external_drs": {
+          "type": "boolean"
+        },
+        "allow_exploration": {
+          "type": "boolean"
+        },
+        "policy_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/PolicyRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "available_needles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "needle_id",
+          "domain"
+        ],
+        "properties": {
+          "needle_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "domain": {
+            "$ref": "common.schema.json#/$defs/Domain"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "recent_trace_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/TraceRef"
+      }
+    }
+  },
+  "additionalProperties": false
+}

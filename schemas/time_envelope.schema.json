@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/time_envelope.schema.json",
+  "title": "TimeEnvelope",
+  "type": "object",
+  "required": [
+    "pt_created_at",
+    "kt_asof",
+    "ct_session_anchor",
+    "ttl_seconds"
+  ],
+  "properties": {
+    "pt_created_at": {
+      "$ref": "common.schema.json#/$defs/Timestamp"
+    },
+    "kt_asof": {
+      "$ref": "common.schema.json#/$defs/Timestamp"
+    },
+    "et_observed_at": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/Timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ct_session_anchor": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "ttl_seconds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "freshness_class": {
+      "enum": [
+        "static",
+        "slow_changing",
+        "normal",
+        "fast_changing",
+        "real_time"
+      ]
+    },
+    "valid_from": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/Timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "valid_to": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/Timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

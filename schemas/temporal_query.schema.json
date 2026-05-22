@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/temporal_query.schema.json",
+  "title": "TemporalQuery",
+  "type": "object",
+  "required": [
+    "as_of",
+    "freshness_bias"
+  ],
+  "properties": {
+    "as_of": {
+      "$ref": "common.schema.json#/$defs/Timestamp"
+    },
+    "time_range": {
+      "$ref": "common.schema.json#/$defs/TimeRange"
+    },
+    "freshness_bias": {
+      "enum": [
+        "historical_as_of",
+        "prefer_recent",
+        "strict_current",
+        "ignore_time_only_if_policy_allows"
+      ]
+    },
+    "max_age_seconds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "freshness_required": {
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "real_time"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

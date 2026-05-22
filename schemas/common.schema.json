@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/common.schema.json",
+  "title": "Hedgehog OS MVP Common Definitions",
+  "type": "object",
+  "required": [],
+  "properties": {},
+  "additionalProperties": false,
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "NonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "TimeRange": {
+      "type": "object",
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "to": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "RiskScore": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "Score01": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "TraceRef": {
+      "type": "object",
+      "required": [
+        "trace_id"
+      ],
+      "properties": {
+        "trace_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "span_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "kind": {
+          "$ref": "#/$defs/NonEmptyString"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProvenanceRef": {
+      "type": "object",
+      "required": [
+        "source"
+      ],
+      "properties": {
+        "source": {
+          "enum": [
+            "user",
+            "system",
+            "needle",
+            "local_drs",
+            "external_drs",
+            "fallback",
+            "executor",
+            "validator"
+          ]
+        },
+        "source_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "trace_ref": {
+          "$ref": "#/$defs/TraceRef"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Cost": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "walltime_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "toolcalls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "money": {
+          "type": "number",
+          "minimum": 0
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        }
+      },
+      "additionalProperties": false
+    },
+    "EvidenceItem": {
+      "type": "object",
+      "required": [
+        "kind",
+        "summary"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "drs_record",
+            "needle",
+            "schema",
+            "policy",
+            "trace",
+            "simulated_executor",
+            "manual"
+          ]
+        },
+        "summary": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "ref_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Score01"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PolicyRef": {
+      "type": "object",
+      "required": [
+        "policy_id"
+      ],
+      "properties": {
+        "policy_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/NonEmptyString"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ModeRef": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "default",
+            "strict",
+            "explore",
+            "dry_run",
+            "local_only",
+            "review",
+            "test"
+          ]
+        },
+        "autonomy": {
+          "enum": [
+            "manual",
+            "confirm_before_action",
+            "bounded_auto"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "Domain": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9_:-]*$"
+    },
+    "Status": {
+      "enum": [
+        "draft",
+        "active",
+        "accepted",
+        "rejected",
+        "quarantined",
+        "archived",
+        "no_update"
+      ]
+    }
+  }
+}

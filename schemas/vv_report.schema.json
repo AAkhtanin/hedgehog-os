@@ -16,6 +16,9 @@
     "vv_report_id": {
       "$ref": "common.schema.json#/$defs/Id"
     },
+    "request_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
     "proposal_id": {
       "$ref": "common.schema.json#/$defs/Id"
     },
@@ -70,6 +73,31 @@
     },
     "checked_at": {
       "$ref": "common.schema.json#/$defs/Timestamp"
+    },
+    "normalized_features": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "utility": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "robustness": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "compute_cost": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "violations": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "transfer": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "novelty_guard": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        }
+      },
+      "additionalProperties": false
     },
     "violations": {
       "type": "array",

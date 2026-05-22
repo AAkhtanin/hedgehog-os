@@ -149,6 +149,25 @@
     "actionable": {
       "const": false,
       "default": false
+    },
+    "metrics": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "novelty": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "expected_utility": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "risk": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "energy": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false,

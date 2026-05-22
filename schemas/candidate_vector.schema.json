@@ -14,6 +14,9 @@
     "vector_id": {
       "$ref": "common.schema.json#/$defs/Id"
     },
+    "description": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
     "source": {
       "enum": [
         "needle",

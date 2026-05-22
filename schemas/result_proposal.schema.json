@@ -19,6 +19,9 @@
     "proposal_id": {
       "$ref": "common.schema.json#/$defs/Id"
     },
+    "request_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
     "producer": {
       "type": "object",
       "required": [

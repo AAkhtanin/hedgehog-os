@@ -15,6 +15,9 @@
     "plan_id": {
       "$ref": "common.schema.json#/$defs/Id"
     },
+    "request_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
     "source_packet_id": {
       "$ref": "common.schema.json#/$defs/Id"
     },
@@ -62,6 +65,15 @@
         "properties": {
           "node_id": {
             "$ref": "common.schema.json#/$defs/Id"
+          },
+          "kind": {
+            "enum": [
+              "tool_or_simulated_action",
+              "reasoning_stub",
+              "retrieval",
+              "validation",
+              "human_clarification"
+            ]
           },
           "vector_id": {
             "$ref": "common.schema.json#/$defs/Id"

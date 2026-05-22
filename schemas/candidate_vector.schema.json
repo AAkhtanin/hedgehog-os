@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/candidate_vector.schema.json",
+  "title": "CandidateVector",
+  "type": "object",
+  "required": [
+    "vector_id",
+    "source",
+    "domain",
+    "branching_hint",
+    "features"
+  ],
+  "properties": {
+    "vector_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "source": {
+      "enum": [
+        "needle",
+        "local_drs",
+        "external_drs_pointer",
+        "fallback_template"
+      ]
+    },
+    "domain": {
+      "$ref": "common.schema.json#/$defs/Domain"
+    },
+    "branching_hint": {
+      "enum": [
+        "horizontal",
+        "vertical",
+        "hybrid",
+        "fallback",
+        "forbidden"
+      ]
+    },
+    "features": {
+      "type": "object",
+      "required": [
+        "rel",
+        "p_success",
+        "utility",
+        "cost",
+        "risk",
+        "time_penalty",
+        "policy_conflict",
+        "gt_prior",
+        "novelty"
+      ],
+      "properties": {
+        "rel": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "p_success": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "utility": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "cost": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "risk": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "time_penalty": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "policy_conflict": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "gt_prior": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "novelty": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        }
+      },
+      "additionalProperties": false
+    },
+    "capabilities_required": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/NonEmptyString"
+      },
+      "uniqueItems": true
+    },
+    "history_confidence": {
+      "enum": [
+        "none",
+        "low",
+        "normal",
+        "high"
+      ]
+    },
+    "requires_architect_creativity": {
+      "type": "boolean"
+    },
+    "hard_forbidden": {
+      "type": "boolean"
+    },
+    "forbidden_reason": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "provenance_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/ProvenanceRef"
+      }
+    },
+    "source_record_ref": {
+      "$ref": "common.schema.json#/$defs/Id"
+    }
+  },
+  "additionalProperties": false
+}

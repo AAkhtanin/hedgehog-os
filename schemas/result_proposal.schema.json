@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/result_proposal.schema.json",
+  "title": "ResultProposal",
+  "type": "object",
+  "required": [
+    "proposal_id",
+    "producer",
+    "vector_id",
+    "plan_id",
+    "result_payload",
+    "evidence",
+    "cost",
+    "risks",
+    "time_envelope",
+    "trace_refs"
+  ],
+  "properties": {
+    "proposal_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "executor_id"
+      ],
+      "properties": {
+        "executor_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "needle_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "model_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "tool_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "vector_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "plan_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "result_payload": {
+      "type": "object",
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "final_output"
+            ]
+          },
+          {
+            "required": [
+              "answer"
+            ]
+          }
+        ]
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/EvidenceItem"
+      }
+    },
+    "cost": {
+      "$ref": "common.schema.json#/$defs/Cost"
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "risk_id",
+          "severity",
+          "description"
+        ],
+        "properties": {
+          "risk_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "severity": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "description": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "time_envelope": {
+      "$ref": "time_envelope.schema.json"
+    },
+    "trace_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/TraceRef"
+      }
+    }
+  },
+  "additionalProperties": false
+}

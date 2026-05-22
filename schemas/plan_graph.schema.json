@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/plan_graph.schema.json",
+  "title": "PlanGraph",
+  "type": "object",
+  "required": [
+    "plan_id",
+    "source_packet_id",
+    "time_assumptions",
+    "nodes",
+    "edges",
+    "executor_assignments"
+  ],
+  "properties": {
+    "plan_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "source_packet_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "time_assumptions": {
+      "type": "object",
+      "required": [
+        "as_of",
+        "freshness_required",
+        "assumptions"
+      ],
+      "properties": {
+        "as_of": {
+          "$ref": "common.schema.json#/$defs/Timestamp"
+        },
+        "freshness_required": {
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "real_time"
+          ]
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "node_id",
+          "vector_id",
+          "task",
+          "executor_id",
+          "depends_on",
+          "expected_output"
+        ],
+        "properties": {
+          "node_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "vector_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "task": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          },
+          "executor_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/Id"
+            },
+            "uniqueItems": true
+          },
+          "expected_output": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          },
+          "branching_mode": {
+            "enum": [
+              "horizontal",
+              "vertical",
+              "hybrid",
+              "fallback"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "to": {
+            "$ref": "common.schema.json#/$defs/Id"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "executor_assignments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "executor_id",
+          "node_ids",
+          "mode"
+        ],
+        "properties": {
+          "executor_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "node_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/Id"
+            },
+            "uniqueItems": true
+          },
+          "mode": {
+            "enum": [
+              "simulate",
+              "local_stub",
+              "tool"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

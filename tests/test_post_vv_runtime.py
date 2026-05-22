@@ -78,6 +78,12 @@ def test_validate_demo_result_proposals_accepts_and_validates_schema():
         assert "normalized_features" in report
         validator.validate(report)
 
+    utility_by_vector = {
+        proposal["vector_id"]: report["normalized_features"]["utility"]
+        for proposal, report in zip(proposals, reports)
+    }
+    assert utility_by_vector["official_online_request"] > utility_by_vector["fallback_exploration"]
+
 
 def test_forbidden_final_output_key_rejects_policy():
     proposal = deepcopy(build_demo_proposals()[0])
@@ -87,6 +93,7 @@ def test_forbidden_final_output_key_rejects_policy():
 
     assert report["decision"] == "reject"
     assert report["scores"]["policy"] == 0.0
+    assert report["normalized_features"]["utility"] == report["overall_score"]
 
 
 def test_missing_time_envelope_revises_or_rejects_time():

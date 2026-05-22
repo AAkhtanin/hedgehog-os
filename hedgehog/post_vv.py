@@ -59,6 +59,32 @@ def _compute_cost_score(cost: dict) -> float:
     return _clamp_01(normalized_cost)
 
 
+def _avf_final_viability(proposal: dict) -> float | None:
+    result_payload = proposal.get("result_payload")
+    if not isinstance(result_payload, dict):
+        return None
+    avf = result_payload.get("avf")
+    if not isinstance(avf, dict):
+        return None
+    value = avf.get("final_viability")
+    if isinstance(value, (int, float)):
+        return _clamp_01(float(value))
+    return None
+
+
+def _avf_soft_mask(proposal: dict) -> float | None:
+    result_payload = proposal.get("result_payload")
+    if not isinstance(result_payload, dict):
+        return None
+    avf = result_payload.get("avf")
+    if not isinstance(avf, dict):
+        return None
+    value = avf.get("soft_mask")
+    if isinstance(value, (int, float)):
+        return _clamp_01(float(value))
+    return None
+
+
 def _violation(violation_id: str, kind: str, description: str) -> dict:
     return {
         "violation_id": violation_id,
@@ -153,6 +179,19 @@ def validate_result_proposal(proposal: dict) -> dict:
         "consistency": consistency_score,
     }
     overall_score = sum(scores.values()) / len(scores)
+    avf_final_viability = _avf_final_viability(candidate)
+    avf_soft_mask = _avf_soft_mask(candidate)
+    utility = overall_score
+    if (
+        avf_final_viability is not None
+        and avf_soft_mask is not None
+        and schema_score == 1.0
+        and policy_score == 1.0
+        and time_score == 1.0
+        and safety_score == 1.0
+    ):
+        avf_utility = (avf_final_viability * 0.9) + (avf_soft_mask * 0.1)
+        utility = (overall_score + avf_utility) / 2
 
     if schema_score == 1.0 and policy_score == 1.0 and time_score == 1.0:
         decision = "accept"
@@ -177,7 +216,7 @@ def validate_result_proposal(proposal: dict) -> dict:
         "checked_at": utc_now_iso(),
         "violations": violations,
         "normalized_features": {
-            "utility": overall_score,
+            "utility": utility,
             "robustness": (evidence_score + consistency_score + time_score) / 3,
             "compute_cost": _compute_cost_score(candidate.get("cost", {})),
             "violations": 1.0 - policy_score,

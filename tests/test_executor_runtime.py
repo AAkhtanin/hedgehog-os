@@ -104,10 +104,19 @@ def test_execute_plan_graph_returns_schema_valid_result_proposals():
     for proposal in proposals:
         assert required_fields <= set(proposal)
         assert time_fields <= set(proposal["time_envelope"])
+        assert proposal["result_payload"]["avf"]["vector_id"] == proposal["vector_id"]
+        assert 0.0 <= proposal["result_payload"]["avf"]["final_viability"] <= 1.0
+        assert 0.0 <= proposal["result_payload"]["avf"]["soft_mask"] <= 1.0
         assert not contains_key(proposal, "final_output")
         assert not contains_key(proposal, "answer")
         assert not contains_key(proposal, "raw_user_text")
         validator.validate(proposal)
+
+    by_vector = {proposal["vector_id"]: proposal for proposal in proposals}
+    assert (
+        by_vector["official_online_request"]["result_payload"]["avf"]["final_viability"]
+        > by_vector["fallback_exploration"]["result_payload"]["avf"]["final_viability"]
+    )
 
 
 def test_execute_plan_graph_rejects_empty_nodes():

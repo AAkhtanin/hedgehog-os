@@ -78,6 +78,8 @@ def test_make_plan_graph_from_attractor_packet_validates_schema():
     assert node_vector_ids <= packet_vector_ids
     assert "illegal_coercion" not in node_vector_ids
     assert all(node["branching_mode"] != "forbidden" for node in plan_graph["nodes"])
+    assert all("avf_final_viability=" in node["task"] for node in plan_graph["nodes"])
+    assert all("avf_soft_mask=" in node["task"] for node in plan_graph["nodes"])
     assert not contains_key(plan_graph, "final_output")
     assert not contains_key(plan_graph, "answer")
     assert not contains_key(plan_graph, "raw_user_text")

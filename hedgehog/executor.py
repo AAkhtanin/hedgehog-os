@@ -3,11 +3,25 @@ from __future__ import annotations
 from hedgehog.time_model import make_time_envelope
 
 
+def _parse_avf_from_task(task: str) -> dict:
+    metadata = {}
+    for part in task.split(";")[1:]:
+        if "=" not in part:
+            continue
+        key, value = part.split("=", 1)
+        metadata[key] = value
+    return {
+        "final_viability": float(metadata.get("avf_final_viability", 0.0)),
+        "soft_mask": float(metadata.get("avf_soft_mask", 0.0)),
+    }
+
+
 def execute_node(
     plan_graph: dict, node: dict, session_anchor: str = "demo_session"
 ) -> dict:
     plan_id = plan_graph["plan_id"]
     node_id = node["node_id"]
+    avf = _parse_avf_from_task(node["task"])
     proposal = {
         "proposal_id": f"rp:{plan_id}:{node_id}",
         "producer": {
@@ -21,6 +35,11 @@ def execute_node(
             "node_id": node_id,
             "task_completed": True,
             "simulated_artifact": "mock_certificate_step_result",
+            "avf": {
+                "final_viability": avf["final_viability"],
+                "soft_mask": avf["soft_mask"],
+                "vector_id": node["vector_id"],
+            },
         },
         "evidence": [
             {

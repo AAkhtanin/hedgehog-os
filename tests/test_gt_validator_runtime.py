@@ -68,6 +68,34 @@ def build_demo_vv_reports():
     return validate_result_proposals(proposals)
 
 
+def build_demo_proposals_and_vv_reports():
+    vectors = load_candidate_vectors_from_needles(
+        [
+            NEEDLES_DIR / "government_services.json",
+            NEEDLES_DIR / "fallback_exploration.json",
+        ]
+    )
+    packet = build_attractor_packet(
+        request_id="req_gt_rank_001",
+        intent_id="intent_gt_rank_001",
+        world_state_ref="world_state_gt_rank_001",
+        goal_id="goal_certificate_001",
+        desired_state="Prepare a mock government certificate request plan.",
+        candidate_vectors=vectors,
+        as_of=utc_now_iso(),
+        max_selected=4,
+    )
+    assert "fallback_exploration" in {
+        vector["vector_id"] for vector in packet["candidate_vectors"]
+    }
+    assert "illegal_coercion" not in {
+        vector["vector_id"] for vector in packet["candidate_vectors"]
+    }
+    plan_graph = make_plan_graph(packet)
+    proposals = execute_plan_graph(plan_graph, session_anchor="sess_gt_rank_001")
+    return proposals, validate_result_proposals(proposals)
+
+
 def test_validate_gt_accepts_and_validates_schema():
     vv_reports = build_demo_vv_reports()
     gt_report = validate_gt(vv_reports)
@@ -96,6 +124,28 @@ def test_validate_gt_accepts_and_validates_schema():
         assert "elo_after" in candidate
 
     gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_prefers_official_online_request_over_fallback():
+    proposals, vv_reports = build_demo_proposals_and_vv_reports()
+    gt_report = validate_gt(vv_reports)
+
+    proposal_by_id = {proposal["proposal_id"]: proposal for proposal in proposals}
+    utility_by_vector = {
+        proposal["vector_id"]: report["normalized_features"]["utility"]
+        for proposal, report in zip(proposals, vv_reports)
+    }
+    payoff_by_vector = {
+        proposal_by_id[candidate["candidate_id"]]["vector_id"]: candidate["payoff"]
+        for candidate in gt_report["candidates"]
+    }
+
+    assert utility_by_vector["official_online_request"] > utility_by_vector["fallback_exploration"]
+    assert payoff_by_vector["official_online_request"] > payoff_by_vector["fallback_exploration"]
+    assert proposal_by_id[gt_report["winner"]]["vector_id"] == "official_online_request"
+    assert not contains_key(gt_report, "final_output")
+    assert not contains_key(gt_report, "answer")
+    assert not contains_key(gt_report, "raw_user_text")
 
 
 def test_validate_gt_returns_no_update_when_no_candidates_are_accepted():

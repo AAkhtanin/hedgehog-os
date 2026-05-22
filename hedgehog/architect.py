@@ -15,12 +15,18 @@ def make_plan_graph(attractor_packet: dict) -> dict:
     nodes = []
     for index, vector in enumerate(candidate_vectors, start=1):
         vector_id = vector["vector_id"]
+        final_viability = vector["final_viability"]
+        soft_mask = vector["soft_mask"]
         nodes.append(
             {
                 "node_id": f"node:{packet_id}:{index}",
                 "vector_id": vector_id,
                 "kind": "tool_or_simulated_action",
-                "task": f"simulate_result_proposal_for_vector:{vector_id}",
+                "task": (
+                    f"simulate_result_proposal_for_vector:{vector_id};"
+                    f"avf_final_viability={final_viability};"
+                    f"avf_soft_mask={soft_mask}"
+                ),
                 "executor_id": EXECUTOR_ID,
                 "depends_on": [],
                 "expected_output": "result_proposal",

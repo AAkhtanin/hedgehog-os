@@ -61,6 +61,19 @@ Do not turn this into a chatbot.
 15. Marennya and UP must not mutate Work directly.
 16. Work / Thoughts / UP / DeadEnds / Quarantine must remain separate layers.
 
+## DRS pointer-first rule
+
+- DRS is a registry/resolver/index, similar to a much more complex DNS for memory, capabilities, and knowledge routes.
+- DRS records should prefer pointer + summary + metadata over raw payload.
+- MVP LocalDRS may store small inline non-secret content only as a local simplification.
+- Real payload may live in local memory, local JSON, local secure vault, vector store, document store, project store, or external DRS pointer.
+- Pointer resolution is a separate future responsibility and must respect access_policy.
+- DRS must never directly store credentials, tokens, passwords, private keys, passport numbers, card numbers, CVV, or similar sensitive payloads.
+- Every DRSRecord still requires TimeEnvelope.
+- Every retrieval still requires TemporalQuery.
+- Work / Thoughts / UP / DeadEnds / Quarantine remain separate layers.
+- Marennya and UP must write to Quarantine first and must not mutate Work directly.
+
 ---
 
 ## Required MVP repository layout

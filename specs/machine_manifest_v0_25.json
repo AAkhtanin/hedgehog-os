@@ -1,0 +1,1042 @@
+{
+  "spec": {
+    "name": "hedgehog_os.machine_manifest",
+    "version": "0.25.0",
+    "status": "draft_for_mvp_demo",
+    "language": "ru",
+    "created_for": "Hedgehog OS / Fractal Reflexive OS proof-of-architecture demo",
+    "scope": "single-node local demo with mock domain, local JSON DRS, deterministic stubs allowed"
+  },
+
+  "project": {
+    "project_id": "proj_hedgehog_os_demo",
+    "title": "Hedgehog OS / Fractal Reflexive OS Demo",
+    "codename": "hedgehog_os_demo",
+    "description": "Proof-of-architecture runtime demonstrating Root orchestration, WorldState, Local DRS, CandidateVector generation, AVF scoring, AttractorPacket, Architect planning, Executor result proposals, Post V&V, GT validation, Root-only final output, DRS writeback, Marennya and UP hooks.",
+    "not_goal": [
+      "not a full operating system",
+      "not a real government service integration",
+      "not a real external DRS network",
+      "not a chatbot-only demo",
+      "not a UI-first project"
+    ],
+    "demo_domain": {
+      "domain_id": "domain_mock_government_certificate",
+      "title": "Mock government certificate request",
+      "description": "A simulated bureaucratic task used to demonstrate branching, forbidden vectors, dead-ends, DRS reuse, GT-TTL, Marennya reflections, and UP protocol templates."
+    }
+  },
+
+  "architecture_level": {
+    "v0_2": "ontology: entities, roles, invariants, DRS layers, Time, GT hooks",
+    "v0_25": "algorithmic execution layer: how modules compute and interact",
+    "v0_3_future": "modes, fractal limits, needle taxonomy, advanced policies"
+  },
+
+  "core_principles": [
+    {
+      "id": "principle_root_cognitive_authority",
+      "statement": "RootOrchestrator is the cognitive authority of the local system and the only entity allowed to produce FinalOutput."
+    },
+    {
+      "id": "principle_execution_substrate",
+      "statement": "Code substrate enforces schemas, time, DRS IO, budgets, hooks, persistence, and invariants. It does not replace Root cognition."
+    },
+    {
+      "id": "principle_vassal_boundary",
+      "statement": "A vassal's vassal is not Root's vassal. Parent clusters set boundary conditions and evaluate returned snapshots, but do not micromanage nested internal trajectories."
+    },
+    {
+      "id": "principle_memory_first",
+      "statement": "Before generating a plan, the system must attempt local memory / DRS retrieval with TemporalQuery."
+    },
+    {
+      "id": "principle_time_as_axis",
+      "statement": "Time is a mandatory axis of truth, retrieval, decay, and validity. Every DRSRecord requires TimeEnvelope."
+    },
+    {
+      "id": "principle_epistemic_layers",
+      "statement": "Work, Thoughts, UP, Quarantine, and DeadEnds are separate epistemic layers and must not be silently merged."
+    },
+    {
+      "id": "principle_structural_not_prose",
+      "statement": "Internal exchange is structured JSON objects. Prose is output rendering, not the primary internal substrate."
+    },
+    {
+      "id": "principle_avf_before_architect",
+      "statement": "AVF builds a viability field and AttractorPacket before Architect receives the task."
+    },
+    {
+      "id": "principle_gt_after_post_vv",
+      "statement": "GTValidator runs after Post V&V and before Root FinalOutput."
+    },
+    {
+      "id": "principle_quarantine_first",
+      "statement": "Marennya and UP artifacts are written to Quarantine before promotion."
+    }
+  ],
+
+  "actors": {
+    "human_owner": {
+      "id": "actor_human_owner",
+      "name": "Human Owner",
+      "role": "ultimate_authority",
+      "responsibilities": [
+        "sets policies and preferences",
+        "approves autonomy boundaries",
+        "can override or configure modes",
+        "owns local memory and private DRS data"
+      ]
+    },
+    "root_orchestrator": {
+      "id": "actor_root_orchestrator",
+      "name": "RootOrchestrator",
+      "role": "cognitive_control_plane",
+      "engine_policy": {
+        "mvp_engine": "deterministic_python_allowed",
+        "future_engine": "LLM_or_SLM",
+        "note": "Root may be implemented as deterministic class in MVP, but architecture assumes future LLM/SLM cognitive authority."
+      },
+      "responsibilities": [
+        "receive User/Event",
+        "normalize Intent",
+        "assemble WorldState",
+        "run DRS retrieval",
+        "run CandidateVectorGenerator",
+        "run AVF scoring",
+        "create AttractorPacket",
+        "call Architect",
+        "dispatch Executors",
+        "collect ResultProposals",
+        "run Post V&V",
+        "run GTValidator",
+        "create FinalOutput",
+        "write DRS records",
+        "trigger Marennya and UP hooks"
+      ],
+      "hard_limits": [
+        "must not let Executor produce FinalOutput",
+        "must not bypass TimeEnvelope",
+        "must not bypass DRS layer separation",
+        "must not allow forbidden vectors to reach Architect"
+      ]
+    }
+  },
+
+  "roles": {
+    "architect": {
+      "id": "role_architect",
+      "input_contract": "attractor_packet",
+      "output_contract": "plan_graph",
+      "responsibilities": [
+        "convert AttractorPacket into executable PlanGraph",
+        "respect forbidden regions",
+        "respect branch budgets",
+        "declare time_assumptions",
+        "declare branching mode",
+        "assign executor nodes",
+        "avoid final answer to user"
+      ],
+      "forbidden": [
+        "final_output",
+        "expanding hard-forbidden regions",
+        "using unavailable capabilities",
+        "ignoring Time assumptions"
+      ]
+    },
+    "executor": {
+      "id": "role_executor",
+      "input_contract": "plan_node",
+      "output_contract": "result_proposal",
+      "responsibilities": [
+        "execute or simulate assigned PlanGraph node",
+        "return ResultProposal only",
+        "include evidence, cost, risks, TimeEnvelope and trace_refs"
+      ],
+      "forbidden": [
+        "final_output",
+        "mutating Work directly without Root writeback",
+        "inventing evidence"
+      ]
+    },
+    "post_vv": {
+      "id": "role_post_vv",
+      "input_contract": "result_proposal",
+      "output_contract": "vv_report",
+      "responsibilities": [
+        "validate schema",
+        "validate evidence",
+        "validate time",
+        "validate policy",
+        "validate forbidden region compliance",
+        "normalize features for GT"
+      ]
+    },
+    "gt_validator": {
+      "id": "role_gt_validator",
+      "input_contract": "vv_reports",
+      "output_contract": "gt_report",
+      "responsibilities": [
+        "compute payoff",
+        "select winner or mix",
+        "update Elo or no_update",
+        "compute regret",
+        "compute half_life_hours and decay_rate",
+        "emit decision accept/revise/reject/rerun"
+      ],
+      "note": "GT does not prove truth. It selects robust strategy under payoff specification."
+    },
+    "marenna": {
+      "id": "role_marenna",
+      "input_contract": "work_gt_feedback_bundle",
+      "output_contract": "marenna_record",
+      "responsibilities": [
+        "generate intradomain reflections",
+        "create patches, dead_end_candidates, validator_patch candidates",
+        "write first to Quarantine",
+        "promote only after validation"
+      ]
+    },
+    "up": {
+      "id": "role_up",
+      "input_contract": "work_thoughts_up_bundle",
+      "output_contract": "up_record",
+      "responsibilities": [
+        "generate transfer opportunities",
+        "generate protocol templates",
+        "generate links between domains",
+        "write first to UP Quarantine",
+        "promote only after validation"
+      ]
+    }
+  },
+
+  "entities": {
+    "intent": {
+      "id_prefix": "intent_",
+      "description": "Canonicalized user/event request."
+    },
+    "world_state": {
+      "id_prefix": "ws_",
+      "description": "Root-assembled state of the world before Architect: time, user context, session context, DRS summaries, active policy and relevant memory pointers."
+    },
+    "temporal_query": {
+      "id_prefix": "tq_",
+      "description": "Mandatory retrieval time filter with as_of, time_range and freshness_bias."
+    },
+    "time_envelope": {
+      "id_prefix": "te_",
+      "description": "Mandatory time vector for DRS records: PT, KT, ET, CT and TTL."
+    },
+    "candidate_vector": {
+      "id_prefix": "cv_",
+      "description": "Pre-plan direction of possible solution. Generated by needles, DRS records, external pointers, or fallback templates."
+    },
+    "attractor_packet": {
+      "id_prefix": "ap_",
+      "description": "AVF output passed to Architect: viable vectors, forbidden regions, budgets, time assumptions and instructions."
+    },
+    "plan_graph": {
+      "id_prefix": "plan_",
+      "description": "Architect output: DAG/chain/tree/mixed plan with node dependencies and executor assignments."
+    },
+    "result_proposal": {
+      "id_prefix": "rp_",
+      "description": "Executor output candidate. Not a final answer."
+    },
+    "vv_report": {
+      "id_prefix": "vv_",
+      "description": "Post V&V normalized validation report."
+    },
+    "gt_report": {
+      "id_prefix": "gt_",
+      "description": "GTValidator output: winner/mix, payoff, ratings, regret, half-life, decision."
+    },
+    "final_output": {
+      "id_prefix": "fo_",
+      "description": "User-facing output created only by RootOrchestrator."
+    },
+    "drs_record": {
+      "id_prefix": "drs_",
+      "description": "Local DRS record with layer, content, TimeEnvelope, provenance and optional GT metadata."
+    },
+    "needle": {
+      "id_prefix": "needle_",
+      "description": "Configurable module declaring capabilities, vectors, contracts, policies and metadata."
+    },
+    "viability_feedback": {
+      "id_prefix": "vf_",
+      "description": "Feedback from actual outcomes to future AVF scoring."
+    }
+  },
+
+  "time_model": {
+    "required": true,
+    "time_axes": {
+      "PT": {
+        "name": "Physical Time",
+        "description": "System/clock time when record was created or observed."
+      },
+      "KT": {
+        "name": "Knowledge Time",
+        "description": "As-of time: when knowledge is considered valid or known."
+      },
+      "ET": {
+        "name": "Event Time",
+        "description": "Time when domain event happened, if applicable."
+      },
+      "CT": {
+        "name": "Context Time",
+        "description": "Session/task contextual time anchor."
+      }
+    },
+    "time_envelope_minimum_fields": [
+      "pt_created_at",
+      "kt_asof",
+      "et_observed_at",
+      "ct_session_anchor",
+      "ttl_seconds"
+    ],
+    "temporal_query_minimum_fields": [
+      "as_of",
+      "time_range",
+      "freshness_bias"
+    ],
+    "invariants": [
+      "Every DRSRecord must include TimeEnvelope.",
+      "Every retrieval must include TemporalQuery.",
+      "Architect output must include time_assumptions."
+    ]
+  },
+
+  "drs": {
+    "mode": "local_json_for_mvp",
+    "external_drs": {
+      "enabled_in_mvp": false,
+      "mock_allowed": true,
+      "future_mode": "pointer_based_resolve_request_consent_transfer_ack"
+    },
+    "storage_layout": {
+      "root": "data/drs/",
+      "layers": {
+        "work": "data/drs/work/",
+        "thoughts": "data/drs/thoughts/",
+        "up": "data/drs/up/",
+        "quarantine": "data/drs/quarantine/",
+        "deadends": "data/drs/deadends/"
+      }
+    },
+    "layers": {
+      "work": {
+        "id": "layer_work",
+        "description": "Canonical task outcomes, accepted facts, final decisions, successful and failed execution results.",
+        "direct_mutation_by": ["root_orchestrator"],
+        "forbidden_mutation_by": ["marenna", "up", "executor"]
+      },
+      "thoughts": {
+        "id": "layer_thoughts",
+        "description": "Validated Marennya reflections, patches, lessons and intradomain improvements.",
+        "direct_mutation_by": ["root_orchestrator_after_validation"]
+      },
+      "up": {
+        "id": "layer_up",
+        "description": "Validated UP opportunities, protocol templates and cross-domain links.",
+        "direct_mutation_by": ["root_orchestrator_after_validation"]
+      },
+      "quarantine": {
+        "id": "layer_quarantine",
+        "description": "Raw Marennya and UP drafts before validation and promotion."
+      },
+      "deadends": {
+        "id": "layer_deadends",
+        "description": "Negative experience, forbidden/failed paths, invalidated approaches and conditions."
+      }
+    },
+    "record_requirements": [
+      "record_id",
+      "layer",
+      "type",
+      "domain",
+      "content",
+      "time_envelope",
+      "provenance",
+      "status"
+    ],
+    "optional_record_blocks": [
+      "gt",
+      "viability_feedback",
+      "validation",
+      "signature",
+      "hash"
+    ]
+  },
+
+  "pipeline": {
+    "id": "pipeline_core_v0_25",
+    "steps": [
+      {
+        "order": 1,
+        "id": "step_user_event",
+        "name": "User/Event Input",
+        "input": "raw_user_text_or_event",
+        "output": "raw_event"
+      },
+      {
+        "order": 2,
+        "id": "step_intent_normalization",
+        "name": "Intent Normalization",
+        "owner": "root_orchestrator",
+        "input": "raw_event",
+        "output": "intent"
+      },
+      {
+        "order": 3,
+        "id": "step_world_state",
+        "name": "WorldState Assembly",
+        "owner": "root_orchestrator",
+        "input": "intent",
+        "output": "world_state",
+        "must_use": ["temporal_query", "local_drs"]
+      },
+      {
+        "order": 4,
+        "id": "step_candidate_vectors",
+        "name": "CandidateVector Generation",
+        "owner": "root_orchestrator",
+        "input": "world_state",
+        "output": "candidate_vectors",
+        "allowed_sources": [
+          "installed_needles",
+          "local_drs",
+          "external_drs_pointers",
+          "fallback_exploration_templates"
+        ],
+        "forbidden": [
+          "free_llm_generation_of_vectors"
+        ]
+      },
+      {
+        "order": 5,
+        "id": "step_avf",
+        "name": "AVF Scoring",
+        "owner": "root_orchestrator",
+        "input": "candidate_vectors",
+        "output": "attractor_packet",
+        "method": "deterministic_vectorized_scoring"
+      },
+      {
+        "order": 6,
+        "id": "step_architect",
+        "name": "Architect Planning",
+        "owner": "architect",
+        "input": "attractor_packet",
+        "output": "plan_graph"
+      },
+      {
+        "order": 7,
+        "id": "step_executors",
+        "name": "Executor Proposals",
+        "owner": "executor",
+        "input": "plan_graph",
+        "output": "result_proposals"
+      },
+      {
+        "order": 8,
+        "id": "step_post_vv",
+        "name": "Post V&V",
+        "owner": "post_vv",
+        "input": "result_proposals",
+        "output": "vv_reports"
+      },
+      {
+        "order": 9,
+        "id": "step_gt",
+        "name": "GT Validation",
+        "owner": "gt_validator",
+        "input": "vv_reports",
+        "output": "gt_report"
+      },
+      {
+        "order": 10,
+        "id": "step_root_final",
+        "name": "Root Final Synthesis",
+        "owner": "root_orchestrator",
+        "input": ["result_proposals", "vv_reports", "gt_report"],
+        "output": "final_output"
+      },
+      {
+        "order": 11,
+        "id": "step_drs_writeback",
+        "name": "DRS Writeback",
+        "owner": "root_orchestrator",
+        "input": ["final_output", "gt_report", "trace"],
+        "output": "drs_records"
+      },
+      {
+        "order": 12,
+        "id": "step_marenna_up_hooks",
+        "name": "Marennya and UP Hooks",
+        "owner": "root_orchestrator",
+        "input": ["drs_records", "gt_report", "viability_feedback"],
+        "output": ["marenna_record_optional", "up_record_optional"]
+      }
+    ]
+  },
+
+  "avf": {
+    "id": "module_avf",
+    "name": "Attractor Viability Field",
+    "description": "Pre-fractal Root layer that scores candidate solution directions before Architect planning.",
+    "position": "after_world_state_and_candidate_vectors_before_architect",
+    "does": [
+      "applies HardMask",
+      "applies SoftMask",
+      "computes vectorized viability scores",
+      "selects Top-K candidate vectors",
+      "allocates branch budgets",
+      "creates AttractorPacket"
+    ],
+    "does_not": [
+      "does not generate plans",
+      "does not freely invent vectors",
+      "does not replace Architect",
+      "does not create final answer"
+    ],
+    "candidate_vector_sources": [
+      "installed_needles",
+      "local_drs",
+      "external_drs_pointers",
+      "fallback_exploration_templates"
+    ],
+    "feature_vector_order": [
+      "rel",
+      "p_success",
+      "utility",
+      "cost",
+      "risk",
+      "time_penalty",
+      "policy_conflict",
+      "gt_prior",
+      "novelty"
+    ],
+    "mode_weight_vector_default": {
+      "alpha_rel": 1.0,
+      "beta_p_success": 1.0,
+      "chi_utility": 1.0,
+      "delta_cost": 0.6,
+      "epsilon_risk": 1.0,
+      "zeta_time_penalty": 0.4,
+      "eta_policy_conflict": 2.0,
+      "lambda_gt_prior": 0.8,
+      "rho_novelty": 0.2
+    },
+    "formula": {
+      "feature_vector": "x_i = [rel_i, p_i, utility_i, cost_i, risk_i, time_i, conflict_i, gt_i, novelty_i]",
+      "weight_vector": "w = [alpha, beta, chi, -delta, -epsilon, -zeta, -eta, lambda, rho]",
+      "score": "S = Xw",
+      "final_viability": "FV(v_i) = HardMask(v_i) * SoftMask(v_i) * S(v_i)"
+    },
+    "cold_start_policy": {
+      "history_confidence": "low",
+      "fallback_to_architect_creativity": true,
+      "exploration_mode": "controlled",
+      "requires_feedback_writeback": true,
+      "rho_novelty_boost": true
+    },
+    "output": "attractor_packet"
+  },
+
+  "gt": {
+    "id": "module_gt_validator",
+    "name": "GTValidator",
+    "position": "after_post_vv_before_root_final_output",
+    "modes": [
+      "result_selection",
+      "marenna_game",
+      "up_game",
+      "memory_evo"
+    ],
+    "payoff_formula": {
+      "formula": "Payoff = w1*U + w2*R - w3*C - w4*V + w5*Tr + w6*N",
+      "variables": {
+        "U": "utility",
+        "R": "robustness",
+        "C": "compute_or_cost",
+        "V": "violations",
+        "Tr": "transfer_score",
+        "N": "novelty_guard"
+      }
+    },
+    "rating_update": {
+      "elo_formula": "Elo' = Elo + K * (Result - Expected)"
+    },
+    "gt_ttl": {
+      "half_life_formula": "half_life = base * sigmoid((Elo - mu) / s) * (1 - normalized_regret) * freshness_boost",
+      "decay_rate_formula": "decay_rate = ln(2) / half_life"
+    },
+    "required_output_fields": [
+      "gt_report_id",
+      "game_mode",
+      "winner",
+      "mix",
+      "ratings",
+      "regret",
+      "half_life_hours",
+      "decision",
+      "audit"
+    ],
+    "early_stop_allowed": true,
+    "early_stop_methods": [
+      "successive_halving",
+      "sprt",
+      "bayesian_early_stopping",
+      "top_two_thompson_sampling"
+    ]
+  },
+
+  "marenna": {
+    "id": "module_marenna",
+    "name": "Marennya",
+    "type": "intradomain_reflection",
+    "triggers": [
+      "after_task",
+      "idle_tick",
+      "event_driven",
+      "staleness_driven"
+    ],
+    "input_sources": [
+      "work_records",
+      "deadends",
+      "gt_reports",
+      "viability_feedback",
+      "recent_traces"
+    ],
+    "output_types": [
+      "marenna_reflection",
+      "marenna_patch",
+      "validator_patch",
+      "dead_end_candidate",
+      "heuristic_adjustment"
+    ],
+    "first_write_layer": "quarantine",
+    "promotion_target_layer": "thoughts",
+    "validation_pipeline": [
+      "static",
+      "dedup",
+      "rag_support",
+      "self_consistency",
+      "utility",
+      "safety"
+    ],
+    "invariants": [
+      "must_not_mutate_work_directly",
+      "must_not_create_final_output",
+      "must_not_publish_without_validation"
+    ]
+  },
+
+  "up": {
+    "id": "module_up",
+    "name": "UP!",
+    "type": "cross_domain_transfer",
+    "triggers": [
+      "after_task",
+      "idle_tick",
+      "event_driven_pattern_repetition"
+    ],
+    "input_sources": [
+      "work_records",
+      "thoughts_records",
+      "up_records",
+      "gt_reports"
+    ],
+    "output_types": [
+      "up_opportunity",
+      "up_protocol_template",
+      "up_link"
+    ],
+    "first_write_layer": "quarantine",
+    "promotion_target_layer": "up",
+    "energy_formula": "E = (novelty * expected_utility) / (risk + cost_tokens)",
+    "validation_pipeline": [
+      "static",
+      "dedup",
+      "rag_support",
+      "self_consistency",
+      "utility",
+      "safety"
+    ],
+    "invariants": [
+      "must_not_mutate_work_directly",
+      "non_actionable_by_default",
+      "must_not_publish_without_validation"
+    ]
+  },
+
+  "needles": {
+    "mvp_needles": [
+      {
+        "needle_id": "needle_government_services",
+        "name": "Mock Government Services Needle",
+        "domain": "government_certificate",
+        "declared_vectors": [
+          {
+            "vector_id": "official_online_request",
+            "branching_hint": "vertical",
+            "capabilities_required": ["government_service_access"],
+            "default_features": {
+              "rel": 0.95,
+              "p_success": 0.75,
+              "utility": 0.85,
+              "cost": 0.25,
+              "risk": 0.08,
+              "time_penalty": 0.10,
+              "policy_conflict": 0.0,
+              "gt_prior": 0.50,
+              "novelty": 0.10
+            }
+          },
+          {
+            "vector_id": "personal_visit",
+            "branching_hint": "vertical",
+            "capabilities_required": ["human_action"],
+            "default_features": {
+              "rel": 0.75,
+              "p_success": 0.55,
+              "utility": 0.55,
+              "cost": 0.60,
+              "risk": 0.18,
+              "time_penalty": 0.35,
+              "policy_conflict": 0.0,
+              "gt_prior": 0.40,
+              "novelty": 0.05
+            }
+          },
+          {
+            "vector_id": "legal_representative",
+            "branching_hint": "hybrid",
+            "capabilities_required": ["legal_delegation"],
+            "default_features": {
+              "rel": 0.70,
+              "p_success": 0.65,
+              "utility": 0.60,
+              "cost": 0.70,
+              "risk": 0.10,
+              "time_penalty": 0.25,
+              "policy_conflict": 0.0,
+              "gt_prior": 0.45,
+              "novelty": 0.10
+            }
+          },
+          {
+            "vector_id": "illegal_coercion",
+            "branching_hint": "forbidden",
+            "capabilities_required": [],
+            "default_features": {
+              "rel": 0.20,
+              "p_success": 0.10,
+              "utility": 0.0,
+              "cost": 1.0,
+              "risk": 1.0,
+              "time_penalty": 0.0,
+              "policy_conflict": 1.0,
+              "gt_prior": 0.0,
+              "novelty": 0.0
+            },
+            "hard_forbidden": true,
+            "forbidden_reason": "hard_policy_violation"
+          }
+        ]
+      },
+      {
+        "needle_id": "needle_fallback_exploration",
+        "name": "Fallback Exploration Needle",
+        "domain": "generic",
+        "declared_vectors": [
+          {
+            "vector_id": "fallback_exploration",
+            "branching_hint": "hybrid",
+            "requires_architect_creativity": true,
+            "default_features": {
+              "rel": 0.50,
+              "p_success": 0.30,
+              "utility": 0.50,
+              "cost": 0.50,
+              "risk": 0.40,
+              "time_penalty": 0.30,
+              "policy_conflict": 0.0,
+              "gt_prior": 0.0,
+              "novelty": 0.90
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "policies": {
+    "mvp_modes": {
+      "default": {
+        "description": "Balanced mode for ordinary tasks.",
+        "allow_exploration": true,
+        "exploration_epsilon": 0.05,
+        "allow_marenna": true,
+        "allow_up": true,
+        "allow_external_drs": false,
+        "max_candidate_vectors": 5,
+        "max_plan_nodes": 8
+      },
+      "strict": {
+        "description": "Low-exploration, high-safety mode.",
+        "allow_exploration": false,
+        "exploration_epsilon": 0.0,
+        "allow_marenna": true,
+        "allow_up": false,
+        "allow_external_drs": false,
+        "max_candidate_vectors": 3,
+        "max_plan_nodes": 5
+      },
+      "explore": {
+        "description": "Higher exploration mode for research or creative search.",
+        "allow_exploration": true,
+        "exploration_epsilon": 0.20,
+        "allow_marenna": true,
+        "allow_up": true,
+        "allow_external_drs": false,
+        "max_candidate_vectors": 8,
+        "max_plan_nodes": 12
+      }
+    },
+    "hard_forbidden_regions": [
+      "illegal_coercion",
+      "fraud",
+      "identity_abuse",
+      "violence",
+      "privacy_violation"
+    ]
+  },
+
+  "schemas": {
+    "schema_dir": "schemas/",
+    "required_schemas": [
+      "intent.schema.json",
+      "world_state.schema.json",
+      "temporal_query.schema.json",
+      "time_envelope.schema.json",
+      "candidate_vector.schema.json",
+      "attractor_packet.schema.json",
+      "plan_graph.schema.json",
+      "result_proposal.schema.json",
+      "vv_report.schema.json",
+      "gt_report.schema.json",
+      "drs_record.schema.json",
+      "marenna_record.schema.json",
+      "up_record.schema.json",
+      "final_output.schema.json"
+    ]
+  },
+
+  "repository_layout": {
+    "root": "hedgehog-os-demo/",
+    "directories": {
+      "specs": "human-readable architecture docs and manifests",
+      "schemas": "JSON schemas for contracts",
+      "hedgehog": "Python package implementing the demo runtime",
+      "needles": "JSON needle declarations",
+      "data_drs": "Local JSON DRS storage",
+      "demo": "Demo runners and scenarios",
+      "tests": "Invariant and pipeline tests"
+    },
+    "files": {
+      "README.md": "Demo explanation and run instructions",
+      "specs/human_passport_v0_25.md": "Human architecture passport",
+      "specs/machine_manifest_v0_25.json": "This manifest",
+      "specs/invariants.md": "Invariant list",
+      "specs/demo_scenario.md": "Cold start and reuse scenarios",
+      "hedgehog/models.py": "Data classes / pydantic models if used",
+      "hedgehog/time_model.py": "TimeEnvelope and TemporalQuery helpers",
+      "hedgehog/drs.py": "Local JSON DRS",
+      "hedgehog/world_state.py": "WorldState assembler",
+      "hedgehog/candidate_vectors.py": "CandidateVectorGenerator",
+      "hedgehog/avf.py": "AVF scoring",
+      "hedgehog/root_orchestrator.py": "Root pipeline orchestration",
+      "hedgehog/architect.py": "Architect stub",
+      "hedgehog/executor.py": "Executor simulators",
+      "hedgehog/post_vv.py": "Post validation and normalization",
+      "hedgehog/gt_validator.py": "Payoff, Elo, half-life",
+      "hedgehog/marenna.py": "Marennya hook",
+      "hedgehog/up.py": "UP hook",
+      "hedgehog/policies.py": "Modes and hard masks",
+      "demo/run_certificate_demo.py": "Main demo entry point"
+    }
+  },
+
+  "tests": {
+    "required_invariant_tests": [
+      {
+        "id": "test_final_output_root_only",
+        "statement": "Only RootOrchestrator may create FinalOutput."
+      },
+      {
+        "id": "test_executor_no_final_output",
+        "statement": "Executor output must validate as ResultProposal and must not include final_output."
+      },
+      {
+        "id": "test_time_envelope_required",
+        "statement": "Every DRSRecord must include TimeEnvelope."
+      },
+      {
+        "id": "test_temporal_query_required",
+        "statement": "DRS retrieval requires TemporalQuery."
+      },
+      {
+        "id": "test_avf_hardmask",
+        "statement": "Forbidden vectors must be removed before AttractorPacket reaches Architect."
+      },
+      {
+        "id": "test_candidate_vectors_no_llm_hallucination",
+        "statement": "CandidateVectors must come from needles, DRS, external pointers or fallback templates."
+      },
+      {
+        "id": "test_gt_updates_half_life",
+        "statement": "GTValidator must update half_life_hours or explicitly return no_update."
+      },
+      {
+        "id": "test_marenna_quarantine",
+        "statement": "Marennya writes to quarantine before Thoughts."
+      },
+      {
+        "id": "test_up_never_mutates_work",
+        "statement": "UP cannot mutate Work directly."
+      },
+      {
+        "id": "test_work_thoughts_up_separation",
+        "statement": "Work, Thoughts and UP records must remain layer-separated."
+      }
+    ]
+  },
+
+  "implementation_phases": [
+    {
+      "phase": 1,
+      "name": "Data models and schemas",
+      "tasks": [
+        "create repository layout",
+        "define data models",
+        "write JSON schemas",
+        "write schema validation helper",
+        "write initial invariant tests"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Local DRS",
+      "tasks": [
+        "implement JSON file store",
+        "implement write/read by layer",
+        "implement TemporalQuery filter",
+        "implement dead-end retrieval"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "CandidateVector and AVF",
+      "tasks": [
+        "load needles",
+        "generate candidate vectors",
+        "apply hard masks",
+        "compute vectorized scores",
+        "select Top-K",
+        "produce AttractorPacket"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Architect and Executors",
+      "tasks": [
+        "implement deterministic Architect stub",
+        "implement simulated Executors",
+        "return ResultProposals"
+      ]
+    },
+    {
+      "phase": 5,
+      "name": "Post V&V and GT",
+      "tasks": [
+        "validate proposals",
+        "normalize features",
+        "compute payoff",
+        "update Elo",
+        "compute half-life",
+        "produce GTReport"
+      ]
+    },
+    {
+      "phase": 6,
+      "name": "RootOrchestrator",
+      "tasks": [
+        "wire full pipeline",
+        "enforce root-only FinalOutput",
+        "write DRS records",
+        "emit trace"
+      ]
+    },
+    {
+      "phase": 7,
+      "name": "Marennya and UP hooks",
+      "tasks": [
+        "implement after_task hooks",
+        "write quarantine records",
+        "stub six-stage validation",
+        "allow promotion after validation"
+      ]
+    },
+    {
+      "phase": 8,
+      "name": "Demo runner",
+      "tasks": [
+        "create cold_start scenario",
+        "create reuse scenario",
+        "show DRS before/after",
+        "print AVF decisions and GT updates"
+      ]
+    }
+  ],
+
+  "forbidden_simplifications": [
+    "Do not reduce the project to a chatbot.",
+    "Do not allow Executor to create FinalOutput.",
+    "Do not merge Work, Thoughts and UP layers.",
+    "Do not remove TimeEnvelope.",
+    "Do not remove TemporalQuery.",
+    "Do not remove AVF.",
+    "Do not calculate AVF by free-form LLM reasoning.",
+    "Do not remove GTValidator.",
+    "Do not remove Quarantine.",
+    "Do not implement real external APIs in MVP.",
+    "Do not start with UI before invariant tests pass."
+  ],
+
+  "allowed_simplifications_for_mvp": [
+    "RootOrchestrator may be deterministic Python.",
+    "Architect may be deterministic stub.",
+    "Executors may be simulators.",
+    "DRS may be local JSON files.",
+    "External DRS may be mocked or disabled.",
+    "GTValidator may use simple payoff and Elo.",
+    "Marennya and UP validation may be stubbed as explicit six-stage pipeline.",
+    "Needles may be static JSON files."
+  ],
+
+  "success_criteria": [
+    "Cold-start scenario runs end-to-end.",
+    "Reuse scenario uses DRS records from prior run.",
+    "Forbidden vector is blocked by AVF before Architect.",
+    "Executor returns ResultProposal only.",
+    "Root creates FinalOutput only after Post V&V and GT.",
+    "DRS writeback creates Work record with TimeEnvelope and GT metadata.",
+    "Marennya creates quarantine reflection.",
+    "UP creates quarantine protocol template.",
+    "Second run demonstrates improved vector scoring or dead-end avoidance."
+  ]
+}

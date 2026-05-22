@@ -35,10 +35,12 @@ class RootOrchestrator:
             temporal_query,
             ["work", "thoughts", "deadends"],
         )
-        reuse_source_record_ids = [
+        memory_source_record_ids = [
             record["record_id"] for record in retrieved_records if "record_id" in record
         ]
-        reuse_applied = len(reuse_source_record_ids) > 0
+        memory_context_applied = len(memory_source_record_ids) > 0
+        reuse_decision = "context_only" if memory_context_applied else "none"
+        reuse_applied = False
 
         candidate_vectors = load_candidate_vectors_from_needles(
             [
@@ -74,8 +76,10 @@ class RootOrchestrator:
             gt_report=gt_report,
             used_proposals=used_proposals,
             retrieved_record_count=len(retrieved_records),
+            memory_context_applied=memory_context_applied,
+            memory_source_record_ids=memory_source_record_ids,
+            reuse_decision=reuse_decision,
             reuse_applied=reuse_applied,
-            reuse_source_record_ids=reuse_source_record_ids,
         )
         self.drs.write_record(work_record)
 
@@ -105,8 +109,10 @@ class RootOrchestrator:
         self.last_trace = {
             "temporal_query": temporal_query,
             "retrieved_record_count": len(retrieved_records),
+            "memory_context_applied": memory_context_applied,
+            "memory_source_record_ids": memory_source_record_ids,
+            "reuse_decision": reuse_decision,
             "reuse_applied": reuse_applied,
-            "reuse_source_record_ids": reuse_source_record_ids,
             "attractor_packet": attractor_packet,
             "plan_graph": plan_graph,
             "result_proposals": result_proposals,
@@ -132,8 +138,10 @@ class RootOrchestrator:
         gt_report: dict,
         used_proposals: list[str],
         retrieved_record_count: int,
+        memory_context_applied: bool,
+        memory_source_record_ids: list[str],
+        reuse_decision: str,
         reuse_applied: bool,
-        reuse_source_record_ids: list[str],
     ) -> dict:
         return {
             "record_id": f"work:{request_id}",
@@ -146,8 +154,10 @@ class RootOrchestrator:
                 "result": "simulated_success",
                 "used_proposal_count": len(used_proposals),
                 "retrieved_record_count": retrieved_record_count,
+                "memory_context_applied": memory_context_applied,
+                "memory_source_record_ids": memory_source_record_ids,
+                "reuse_decision": reuse_decision,
                 "reuse_applied": reuse_applied,
-                "reuse_source_record_ids": reuse_source_record_ids,
             },
             "time_envelope": make_time_envelope(session_anchor),
             "provenance": {

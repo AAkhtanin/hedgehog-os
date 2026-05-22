@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/up_record.schema.json",
+  "title": "UP Cross-Domain Transfer Record",
+  "type": "object",
+  "required": [
+    "up_record_id",
+    "record_type",
+    "source_domain",
+    "target_domain",
+    "initial_layer",
+    "promotion_target_layer",
+    "trigger",
+    "content",
+    "validation",
+    "time_envelope",
+    "provenance",
+    "status",
+    "actionable"
+  ],
+  "properties": {
+    "up_record_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "record_type": {
+      "enum": [
+        "up_opportunity",
+        "up_protocol_template",
+        "up_link"
+      ]
+    },
+    "source_domain": {
+      "$ref": "common.schema.json#/$defs/Domain"
+    },
+    "target_domain": {
+      "$ref": "common.schema.json#/$defs/Domain"
+    },
+    "initial_layer": {
+      "const": "quarantine"
+    },
+    "promotion_target_layer": {
+      "const": "up"
+    },
+    "trigger": {
+      "enum": [
+        "after_task",
+        "idle_tick",
+        "event_driven_pattern_repetition",
+        "pattern_repetition",
+        "high_utility_thought"
+      ]
+    },
+    "content": {
+      "type": "object",
+      "required": [
+        "summary"
+      ],
+      "properties": {
+        "summary": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        },
+        "protocol_template": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        },
+        "transfer_reason": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        },
+        "structural_similarity": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "expected_utility": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "risk_notes": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "static",
+        "dedup",
+        "rag_support",
+        "self_consistency",
+        "utility",
+        "safety"
+      ],
+      "properties": {
+        "static": {
+          "$ref": "#/$defs/ValidationStage"
+        },
+        "dedup": {
+          "$ref": "#/$defs/ValidationStage"
+        },
+        "rag_support": {
+          "$ref": "#/$defs/ValidationStage"
+        },
+        "self_consistency": {
+          "$ref": "#/$defs/ValidationStage"
+        },
+        "utility": {
+          "$ref": "#/$defs/ValidationStage"
+        },
+        "safety": {
+          "$ref": "#/$defs/ValidationStage"
+        }
+      },
+      "additionalProperties": false
+    },
+    "time_envelope": {
+      "$ref": "time_envelope.schema.json"
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "request_id",
+        "source_bundle_refs",
+        "created_by"
+      ],
+      "properties": {
+        "request_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "source_bundle_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/ProvenanceRef"
+          }
+        },
+        "created_by": {
+          "const": "up"
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "enum": [
+        "quarantined",
+        "promoted",
+        "rejected",
+        "archived"
+      ]
+    },
+    "actionable": {
+      "const": false,
+      "default": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ValidationStage": {
+      "type": "object",
+      "required": [
+        "status",
+        "score"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail",
+            "skipped"
+          ]
+        },
+        "score": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

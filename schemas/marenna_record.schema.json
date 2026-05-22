@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/marenna_record.schema.json",
+  "title": "Marennya Intradomain Reflection Record",
+  "type": "object",
+  "required": [
+    "marenna_record_id",
+    "record_type",
+    "domain",
+    "initial_layer",
+    "promotion_target_layer",
+    "trigger",
+    "content",
+    "validation",
+    "time_envelope",
+    "provenance",
+    "status"
+  ],
+  "properties": {
+    "marenna_record_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "record_type": {
+      "enum": [
+        "marenna_reflection",
+        "marenna_patch",
+        "validator_patch",
+        "dead_end_candidate",
+        "heuristic_adjustment"
+      ]
+    },
+    "domain": {
+      "$ref": "common.schema.json#/$defs/Domain"
+    },
+    "initial_layer": {
+      "const": "quarantine"
+    },
+    "promotion_target_layer": {
+      "const": "thoughts"
+    },
+    "trigger": {
+      "enum": [
+        "after_task",
+        "idle_tick",
+        "event_driven",
+        "staleness_driven",
+        "failure_pattern",
+        "gt_regret_high"
+      ]
+    },
+    "content": {
+      "type": "object",
+      "required": [
+        "summary"
+      ],
+      "properties": {
+        "summary": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        },
+        "proposed_change": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        },
+        "affected_protocol": {
+          "$ref": "common.schema.json#/$defs/NonEmptyString"
+        },
+        "expected_improvement": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "risk_notes": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "static",
+        "dedup",
+        "rag_support",
+        "self_consistency",
+        "utility",
+        "safety"
+      ],
+      "properties": {
+        "static": {
+          "$ref": "#/$defs/ValidationStage"
+        },
+        "dedup": {
+          "$ref": "#/$defs/ValidationStage"
+        },
+        "rag_support": {
+          "$ref": "#/$defs/ValidationStage"
+        },
+        "self_consistency": {
+          "$ref": "#/$defs/ValidationStage"
+        },
+        "utility": {
+          "$ref": "#/$defs/ValidationStage"
+        },
+        "safety": {
+          "$ref": "#/$defs/ValidationStage"
+        }
+      },
+      "additionalProperties": false
+    },
+    "time_envelope": {
+      "$ref": "time_envelope.schema.json"
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "request_id",
+        "source_bundle_refs",
+        "created_by"
+      ],
+      "properties": {
+        "request_id": {
+          "$ref": "common.schema.json#/$defs/Id"
+        },
+        "source_bundle_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/ProvenanceRef"
+          }
+        },
+        "created_by": {
+          "const": "marenna"
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "enum": [
+        "quarantined",
+        "promoted",
+        "rejected",
+        "archived"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ValidationStage": {
+      "type": "object",
+      "required": [
+        "status",
+        "score"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail",
+            "skipped"
+          ]
+        },
+        "score": {
+          "$ref": "common.schema.json#/$defs/Score01"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

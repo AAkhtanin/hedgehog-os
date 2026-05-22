@@ -43,23 +43,37 @@ def vectors_by_id(needle):
     return {vector["vector_id"]: vector for vector in needle.get("declared_vectors", [])}
 
 
+def candidate_vector_validator(candidate_schema, common_schema):
+    store = {
+        common_schema["$id"]: common_schema,
+        "common.schema.json": common_schema,
+        "https://hedgehog-os.local/schemas/common.schema.json": common_schema,
+        candidate_schema["$id"]: candidate_schema,
+    }
+    resolver = jsonschema.RefResolver.from_schema(candidate_schema, store=store)
+    return jsonschema.Draft202012Validator(candidate_schema, resolver=resolver)
+
+
 def test_needle_files_and_declared_vectors_are_valid():
     government_path = NEEDLES_DIR / "government_services.json"
     fallback_path = NEEDLES_DIR / "fallback_exploration.json"
+    common_schema_path = SCHEMAS_DIR / "common.schema.json"
     candidate_schema_path = SCHEMAS_DIR / "candidate_vector.schema.json"
 
     assert government_path.exists(), "needles/government_services.json does not exist"
     assert fallback_path.exists(), "needles/fallback_exploration.json does not exist"
+    assert common_schema_path.exists(), "schemas/common.schema.json does not exist"
     assert candidate_schema_path.exists(), "schemas/candidate_vector.schema.json does not exist"
 
     government = load_json(government_path)
     fallback = load_json(fallback_path)
+    common_schema = load_json(common_schema_path)
     candidate_schema = load_json(candidate_schema_path)
 
     assert_no_secret_keys(government_path, government)
     assert_no_secret_keys(fallback_path, fallback)
 
-    validator = jsonschema.Draft202012Validator(candidate_schema)
+    validator = candidate_vector_validator(candidate_schema, common_schema)
 
     for needle_path, needle in (
         (government_path, government),

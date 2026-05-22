@@ -1,0 +1,1247 @@
+# Hedgehog OS / Fractal Reflexive OS Human Passport v0.25
+
+Version v0.25 is an MVP engineering passport. It is not the full final OS theory.
+It is the bridge from concept to a GitHub proof-of-architecture demo that a new
+LLM or coding agent can read before implementation.
+
+The purpose of this document is to preserve the architecture, contracts,
+invariants, and success criteria for the MVP. It should be treated as an
+engineering guide, not marketing material and not a prompt for a generic
+chatbot.
+
+## 1. Project Identity
+
+Hedgehog OS / Fractal Reflexive OS is not a chatbot.
+
+It is a proof-of-architecture demo for a cognitive/fractal runtime. The system
+is organized around controlled transformation of a user/event into intent,
+time-aware world state, memory-first retrieval, candidate branch generation,
+deterministic branch viability scoring, planning, execution, validation,
+game-theoretic memory update, and final output creation by the root control
+plane.
+
+The MVP is not the full OS. It does not attempt to implement every future layer,
+network protocol, continuous runtime, autonomous tool environment, or external
+ecosystem integration. It proves the spine of the architecture with small local
+deterministic components.
+
+The demo domain is a mock government certificate request. The domain is chosen
+because it has enough structure to exercise forms, requirements, evidence,
+policy checks, temporal validity, reuse, validation, and final answer assembly.
+
+The goal is to prove the pipeline, not to integrate real government APIs,
+banks, YouTube, Telegram, or UI.
+
+Core pipeline:
+
+```text
+User/Event
+-> RootOrchestrator
+-> Intent
+-> TemporalQuery
+-> WorldState
+-> Local DRS retrieval
+-> CandidateVectorGenerator
+-> AVF
+-> AttractorPacket
+-> Architect
+-> PlanGraph
+-> Executors
+-> ResultProposals
+-> Post V&V
+-> GTValidator
+-> Root FinalOutput
+-> DRS writeback
+-> Marennya / UP quarantine hooks
+-> Audit/Trace
+```
+
+## 2. Non-Goals
+
+The MVP explicitly is not:
+
+- a chatbot;
+- a LangChain-like simple agent;
+- a full operating system implementation;
+- an external DRS network implementation;
+- a real external API integration project;
+- a UI-first project;
+- a rewrite of legacy code;
+- a place to remove Time, GT, AVF, or DRS layers for simplicity.
+
+The proof must keep the architectural layers even when individual components
+are implemented as deterministic stubs.
+
+## 3. Core Roles
+
+### Human Owner / Sovereign
+
+The human is above Root. The human sets policies, permissions, modes, autonomy
+boundaries, and installed needles.
+
+The system may optimize within these boundaries, but it does not outrank the
+human owner. The human decides what capabilities are installed, which external
+actions are permitted, what autonomy level is acceptable, and which modes are
+active.
+
+### RootOrchestrator
+
+Root is the cognitive control plane.
+
+In the future Root may be LLM/SLM. In the MVP Root may be deterministic Python.
+Root is not a dumb dispatcher. Root owns the whole cognitive pipeline and is the
+only component allowed to create `FinalOutput`.
+
+Root:
+
+- normalizes intent;
+- assembles `WorldState`;
+- performs memory-first retrieval;
+- runs `CandidateVectorGenerator`;
+- runs AVF;
+- creates `AttractorPacket`;
+- calls Architect;
+- dispatches Executors;
+- collects `ResultProposal` objects;
+- runs Post V&V;
+- runs GTValidator;
+- creates `FinalOutput`;
+- writes DRS records;
+- triggers Marennya/UP hooks.
+
+Hard rule:
+
+```text
+FinalOutput = RootOrchestrator only
+```
+
+### Architect
+
+Architect receives `AttractorPacket`, not raw user text.
+
+Architect returns `PlanGraph` only. It must not answer the user and must not
+produce final output. Architect turns approved attractor vectors into a graph of
+work, executor assignments, dependencies, and time assumptions.
+
+Architect must include `time_assumptions`.
+
+Architect must respect forbidden regions and branch budgets. It may plan within
+the space exposed by AVF, but it must not reintroduce hard-masked branches.
+
+### Executor
+
+Executor runs a plan node.
+
+Executor returns `ResultProposal` only. It may simulate work, produce structured
+payloads, cite evidence, estimate cost, and report risk. It must never produce
+`FinalOutput`.
+
+### Post V&V
+
+Post V&V checks `ResultProposal` objects before GTValidator.
+
+It validates schema, evidence, time, policy, safety, consistency, and forbidden
+region compliance. Invalid proposals are rejected or marked as unusable before
+game-theoretic selection.
+
+### GTValidator
+
+GTValidator runs after Post V&V and before Root `FinalOutput`.
+
+GT does not prove truth. It selects a robust strategy under payoff and updates
+memory evolution parameters such as Elo, regret, half-life, and decay rate.
+
+The GT layer is a decision and memory-evolution mechanism. It is not a
+substitute for evidence, policy, or truth verification.
+
+### Marennya
+
+Marennya is intradomain reflection.
+
+It studies recent work, related thoughts, dead ends, GT feedback, and traces
+inside the same domain. Its outputs may include reflections, protocol patches,
+validator patches, dead-end candidates, and heuristic adjustments.
+
+Marennya writes first to quarantine. It can promote to `Thoughts` only after
+validation. It never mutates `Work` directly.
+
+### UP!
+
+UP is the cross-domain transfer/opportunity layer.
+
+It looks for protocol templates, opportunities, and structural transfers across
+domains. UP writes first to quarantine and can promote to the `UP` layer only
+after validation.
+
+UP is non-actionable by default. It must not trigger external actions directly.
+It never mutates `Work` directly.
+
+## 4. Fundamental Invariants
+
+These invariants are non-negotiable:
+
+1. `FinalOutput` is created only by `RootOrchestrator`.
+2. Executor returns `ResultProposal` only.
+3. Architect returns `PlanGraph` only.
+4. Architect receives `AttractorPacket`, not raw user text.
+5. Every `DRSRecord` must include `TimeEnvelope`.
+6. Every DRS retrieval must use `TemporalQuery`.
+7. `WorldState` must not automatically pull irrelevant needles.
+8. Memory-first retrieval happens before Architect.
+9. `CandidateVector` values must come only from:
+   - installed needles;
+   - Local DRS;
+   - external DRS pointers;
+   - fallback templates.
+10. `CandidateVector` values must not be freely hallucinated by LLM.
+11. AVF must run before Architect.
+12. AVF must hard-mask forbidden vectors before Architect.
+13. AVF scoring must be deterministic/vectorized, not free-form LLM reasoning.
+14. Post V&V runs before GTValidator.
+15. GTValidator must update Elo/regret/half_life or explicitly return
+    `no_update`.
+16. Marennya and UP must write to quarantine first.
+17. Marennya and UP must not mutate `Work` directly.
+18. `Work` / `Thoughts` / `UP` / `DeadEnds` / `Quarantine` must remain
+    separate.
+19. Exploration cannot bypass `HardMask`.
+20. User-origin hypothesis gets no automatic trust boost.
+
+These rules preserve the difference between a controlled cognitive runtime and
+a normal agent loop. A component may be stubbed in the MVP, but the contract must
+remain intact.
+
+## 5. Time Model
+
+Time is first-class because memory is not timeless. A reused record can be
+historically true, locally useful, stale for the current task, or invalid for
+the current `as_of`. The system must know which case it is handling.
+
+Every `DRSRecord` requires `TimeEnvelope`.
+
+```text
+TimeEnvelope TE = (PT, KT, ET, CT, TTL)
+```
+
+Where:
+
+- `PT` = Physical Time / `created_at`.
+- `KT` = Knowledge Time / `as_of`.
+- `ET` = Event Time / domain event time.
+- `CT` = Context Time / session/task anchor.
+- `TTL` = initial life window.
+
+Every retrieval requires `TemporalQuery`.
+
+```text
+TemporalQuery TQ = (as_of, time_range, freshness_bias, max_age)
+```
+
+Age by knowledge time:
+
+```text
+Age(r, t) = t - KT(r)
+```
+
+Effective age:
+
+```text
+Age_effective(r) =
+omega_PT * Age_PT +
+omega_KT * Age_KT +
+omega_ET * Age_ET
+```
+
+with:
+
+```text
+omega_PT + omega_KT + omega_ET = 1
+```
+
+Time decay:
+
+```text
+W_t(r) = e^(-lambda * Delta t)
+```
+
+```text
+lambda = ln(2) / t_half
+```
+
+Equivalent:
+
+```text
+W_t(r) = 2^(-Delta t / t_half)
+```
+
+FreshnessBoost modifies effective half-life:
+
+```text
+t_half_effective = t_half_base * FreshnessBoost
+```
+
+Temporal conflict means two records can both be valid historically but not
+equally valid for the current `as_of`. This is why old profile/context snapshots
+are not blindly reused. Retrieval must compare records through temporal
+validity, freshness, and task relevance.
+
+## 6. DRS: Distributed Reflexive Store / Local DRS in MVP
+
+DRS is not just memory. It is addressable, layered, time-aware, GT-aware memory.
+
+The MVP uses local JSON DRS. The local implementation proves the memory contract
+without implementing the future external DRS network.
+
+Layers:
+
+- `Work`: canonical task outcomes and accepted records.
+- `Thoughts`: validated Marennya reflections / intradomain lessons.
+- `UP`: validated cross-domain opportunities / protocol templates.
+- `DeadEnds`: negative paths / failed branches / forbidden approaches.
+- `Quarantine`: raw Marennya/UP drafts before validation.
+
+`DRSRecord` fields:
+
+- `record_id`;
+- `layer`;
+- `type`;
+- `domain`;
+- `content`;
+- `time_envelope`;
+- `provenance`;
+- optional `gt`;
+- `status`.
+
+Memory-first reuse formula:
+
+```text
+ReuseScore(r) =
+a*Q(r)
++ b*Freshness(r)
++ c*GTTrust(r)
++ d*SemanticSim(r, I)
+- e*Risk(r)
+- f*Conflict(r)
+```
+
+Reuse allowed if:
+
+```text
+ReuseScore(r) >= tau_reuse
+and PolicyOK(r) = true
+and Freshness(r) >= tau_fresh
+```
+
+Semantic similarity:
+
+```text
+Sim(q, r) = cos(Emb(q), Emb(r))
+```
+
+```text
+cos(a,b) = (a * b) / (||a|| ||b||)
+```
+
+Optional token similarity:
+
+```text
+J(A,B) = |A intersection B| / |A union B|
+```
+
+Combined:
+
+```text
+SemanticScore =
+alpha*cos(Emb(q), Emb(r))
++ beta*J(tokens(q), tokens(r))
+```
+
+## 7. WorldState
+
+`WorldState` is assembled by Root before planning.
+
+`WorldState` includes:
+
+- `time_context`;
+- `temporal_query`;
+- `user_context`;
+- `session_context`;
+- `local_drs_summary`;
+- `active_policy`;
+- available needles;
+- recent trace refs.
+
+`WorldState` is not a dump of all memory. It is a relevant, time-aware packet.
+It must not automatically include irrelevant context like weather unless the
+intent or an installed needle requires it.
+
+## 8. Fractalization
+
+The fractal cell:
+
+```text
+Cell = (Orchestrator, Architect, Executor)
+```
+
+Recursive rule:
+
+```text
+Cell(T) =
+Executor(T), if Atomic(T) = true
+Orchestrator(Architect(T)), if Atomic(T) = false
+```
+
+Task decomposition:
+
+```text
+F(T, C, B) -> (G, {t_1, t_2, ..., t_n})
+```
+
+where:
+
+- `T` = task;
+- `C` = context / `WorldState` / `AttractorPacket`;
+- `B` = budget;
+- `G` = graph;
+- `t_i` = subtasks.
+
+PlanGraph:
+
+```text
+P = (N, E)
+```
+
+`N` is the set of nodes. `E` is the set of directed edges.
+
+Ready set:
+
+```text
+Ready(P) = { n in N | deps(n) subset Completed }
+```
+
+Horizontal branching means independent branches can run in parallel.
+
+Vertical branching means `t1 -> t2 -> t3`, where the next step requires previous
+output.
+
+Hybrid branching means a graph may expand, contract, and expand again.
+
+Atomic condition:
+
+```text
+Atomic(t)=true
+```
+
+if at least one holds:
+
+- `CostEstimate(t) < tau_atomic_cost`;
+- `Uncertainty(t) < tau_uncertainty`;
+- `Depth(t) >= Depth_max`;
+- `ToolAvailable(t)=true`;
+- `NoUsefulDecomposition(t)=true`.
+
+Budget propagation:
+
+```text
+sum B_i <= B_parent
+```
+
+Branch expansion:
+
+```text
+ExpectedUtility(t_i) - ExpectedCost(t_i) > tau_expand
+```
+
+or:
+
+```text
+Uncertainty(t_i) > tau_uncertainty
+and ValueOfInformation(t_i) > tau_voi
+```
+
+Branch pruning:
+
+```text
+HardMask(t_i)=0
+or Viability(t_i) < tau_prune
+or Budget(t_i)=0
+or DeadEndMatch(t_i) > tau_deadend
+```
+
+Axiom:
+
+```text
+A vassal's vassal is not my vassal.
+```
+
+Root sets boundary conditions, budgets, forbidden regions, and expected output
+schema. Root does not micromanage nested cluster internals. Root evaluates
+returned snapshots.
+
+## 9. AVF - Attractor Viability Field
+
+AVF is the pre-fractal branch viability field.
+
+AVF does not solve the task. AVF decides which branches have the right to be
+born.
+
+Position:
+
+```text
+WorldState + DRS
+-> CandidateVectorGenerator
+-> AVF
+-> AttractorPacket
+-> Architect
+```
+
+CandidateVector sources:
+
+```text
+V = V_needles union V_localDRS union V_externalPointers union V_fallback
+```
+
+Hard invariant:
+
+```text
+V must not come from free LLM hallucination.
+```
+
+CandidateVector features:
+
+```text
+x_i = [
+rel_i,
+p_success_i,
+utility_i,
+cost_i,
+risk_i,
+time_penalty_i,
+policy_conflict_i,
+gt_prior_i,
+novelty_i
+]
+```
+
+Feature matrix:
+
+```text
+X in R^(n x d)
+```
+
+`d = 9` in MVP.
+
+Weight vector:
+
+```text
+w = [
+alpha,
+beta,
+chi,
+-delta,
+-epsilon,
+-zeta,
+-eta,
+lambda,
+rho
+]
+```
+
+Viability score:
+
+```text
+VS(v_i) =
+alpha*rel_i
++ beta*p_success_i
++ chi*utility_i
+- delta*cost_i
+- epsilon*risk_i
+- zeta*time_penalty_i
+- eta*policy_conflict_i
++ lambda*gt_prior_i
++ rho*novelty_i
+```
+
+Vectorized form:
+
+```text
+S = Xw
+```
+
+HardMask:
+
+```text
+HM(v_i) in {0,1}
+```
+
+If `v_i` is forbidden:
+
+```text
+HM(v_i)=0
+```
+
+SoftMask:
+
+```text
+SM(v_i) in [0,1]
+```
+
+Final viability:
+
+```text
+FV(v_i) = HM(v_i) * SM(v_i) * VS(v_i)
+```
+
+Top-K:
+
+```text
+TopK = argtopk(FV(v_i), k)
+```
+
+Exploration:
+
+```text
+Selected = TopK_exploit union TopK_explore
+```
+
+Exploration cannot bypass `HardMask`.
+
+Cold start:
+
+```text
+history_confidence = low
+fallback_to_architect_creativity = true
+requires_feedback_writeback = true
+```
+
+Boost novelty:
+
+```text
+rho' = rho + Delta_cold
+```
+
+`AttractorPacket` includes:
+
+- goal;
+- `world_state_ref`;
+- `time_context`;
+- `hard_forbidden_regions`;
+- `candidate_vectors`;
+- `branch_budget`;
+- `exploration_budget`;
+- `architect_instructions`.
+
+## 10. Architect and PlanGraph
+
+Architect receives `AttractorPacket`.
+
+Architect must output `PlanGraph`.
+
+`PlanGraph` includes:
+
+- `plan_id`;
+- `source_packet_id`;
+- `time_assumptions`;
+- nodes;
+- edges;
+- executor assignments.
+
+Architect must not:
+
+- create `FinalOutput`;
+- answer user;
+- expand forbidden regions;
+- ignore branch budgets.
+
+## 11. Executors and ResultProposal
+
+Executor receives a plan node and returns `ResultProposal`.
+
+`ResultProposal` includes:
+
+- `proposal_id`;
+- `producer`;
+- `vector_id`;
+- `plan_id`;
+- `result_payload`;
+- evidence;
+- cost;
+- risks;
+- `time_envelope`;
+- `trace_refs`.
+
+Executor must not include `final_output`.
+
+## 12. Post V&V
+
+Post V&V validates `ResultProposal` objects before GT.
+
+Scores:
+
+```text
+VV(r_i) =
+[
+schema_i,
+evidence_i,
+policy_i,
+time_i,
+safety_i,
+consistency_i
+]
+```
+
+Overall:
+
+```text
+VVScore(r_i) =
+a*schema_i
++ b*evidence_i
++ c*policy_i
++ d*time_i
++ e*safety_i
++ f*consistency_i
+```
+
+Reject rules:
+
+```text
+If schema_i = 0 -> reject.
+If policy_i = 0 -> reject.
+```
+
+Evidence score:
+
+```text
+evidence_i = claims_supported / claims_total
+```
+
+Time score:
+
+```text
+time_i = Freshness(r_i) * TimeEnvelopeValid(r_i)
+```
+
+## 13. GTValidator
+
+GTValidator runs after Post V&V.
+
+GT does not prove truth. GT selects a robust candidate under payoff and updates
+memory evolution.
+
+Candidates:
+
+```text
+C = {c_1, c_2, ..., c_m}
+```
+
+Payoff:
+
+```text
+Payoff(c_i) =
+w1*U_i
++ w2*R_i
+- w3*C_i
+- w4*V_i
++ w5*Tr_i
++ w6*N_i
+```
+
+where:
+
+- `U` = utility;
+- `R` = robustness;
+- `C` = compute/cost;
+- `V` = violations;
+- `Tr` = transfer score;
+- `N` = novelty guard.
+
+Robustness:
+
+```text
+R_i =
+a*evidence_i
++ b*consistency_i
++ c*repeatability_i
++ d*fallback_support_i
+```
+
+Cost normalized:
+
+```text
+C_i =
+a*tokens_i
++ b*walltime_i
++ c*toolcalls_i
++ d*money_i
+```
+
+Novelty guard:
+
+```text
+N_i = Novelty_i * (1 - Risk_i)
+```
+
+Elo expected score:
+
+```text
+E_i = 1 / (1 + 10^((R_j - R_i)/400))
+```
+
+Elo update:
+
+```text
+R'_i = R_i + K * (S_i - E_i)
+```
+
+Regret:
+
+```text
+Regret(c_i) = Payoff(c*) - Payoff(c_i)
+```
+
+where:
+
+```text
+c* = argmax Payoff(c)
+```
+
+Mixed strategy:
+
+```text
+mix_i =
+exp(tau*Payoff_i) / sum_j exp(tau*Payoff_j)
+```
+
+Dominance:
+
+Candidate `a` strictly dominates `b` if all metrics are `>=` and at least one
+metric is `>`.
+
+Early stopping:
+
+If payoff gap and confidence exceed thresholds, tournament may stop early.
+
+## 14. GT-TTL and Memory Evolution
+
+Half-life:
+
+```text
+t_half(r) =
+base
+* sigmoid((Elo(r)-mu)/s)
+* (1 - Regret_norm(r))
+* FreshnessBoost(r)
+```
+
+Sigmoid:
+
+```text
+sigmoid(x) = 1 / (1 + e^(-x))
+```
+
+Decay rate:
+
+```text
+decay_rate(r) = ln(2) / t_half(r)
+```
+
+Memory survival:
+
+```text
+Survival(r,t) =
+GTTrust(r)
+* Freshness(r,t)
+* ReuseFrequency(r)
+* UtilityHistory(r)
+```
+
+Garbage/archive rule:
+
+Archive if:
+
+```text
+Survival(r,t) < tau_archive
+or Regret(r) > tau_regret
+or ConflictWithWork(r)=true and newer Work has higher temporal priority.
+```
+
+Smart TTL extension:
+
+```text
+TTL'(r)=TTL(r)*(1 + alpha*Utility(r) + beta*Reuse(r) + gamma*EloBoost(r))
+```
+
+Smart TTL shrink:
+
+```text
+TTL'(r)=TTL(r)*(1 - delta*Regret(r) - epsilon*FailureRate(r))
+```
+
+## 15. Marennya
+
+Marennya is intradomain reflection.
+
+Triggers:
+
+```text
+Trigger_M =
+Idle
+or AfterTask
+or Staleness
+or FailurePattern
+or GTRegretHigh
+```
+
+Input bundle:
+
+```text
+B_M =
+Work_recent
+union Thoughts_related
+union DeadEnds
+union GTFeedback
+union TraceRefs
+```
+
+Output types:
+
+- reflection;
+- protocol_patch;
+- validator_patch;
+- dead_end_candidate;
+- heuristic_adjustment.
+
+Patch utility:
+
+```text
+U(p)=
+ExpectedImprovement(p)
+- Risk(p)
+- Cost(p)
++ Robustness(p)
+```
+
+Validation:
+
+```text
+Validate_M(p)=
+Static
+and Dedup
+and RAG
+and SelfConsistency
+and Utility
+and Safety
+```
+
+Marennya output goes to Quarantine first. Only after validation can it be
+promoted to `Thoughts`. Marennya must never mutate `Work` directly.
+
+Marennya GT game:
+
+```text
+Payoff_M(p)=
+w1*Utility(p)
++ w2*Robustness(p)
+- w3*Risk(p)
+- w4*Cost(p)
+- w5*HallucinationRisk(p)
+```
+
+## 16. UP!
+
+UP is cross-domain transfer.
+
+Triggers:
+
+```text
+Trigger_UP =
+AfterTask
+or PatternRepetition
+or HighUtilityThought
+or Idle
+```
+
+Input bundle:
+
+```text
+B_UP =
+Work
+union Thoughts
+union UP_related
+union GTFeedback
+```
+
+Candidate types:
+
+- opportunity;
+- protocol_template;
+- link.
+
+Energy:
+
+```text
+E(u)=
+Novelty(u)*ExpectedUtility(u) /
+(Risk(u)+CostTokens(u)+epsilon)
+```
+
+Transfer score:
+
+```text
+Transfer(u)=
+alpha*Sim_structure
++ beta*Sim_constraints
++ gamma*Utility
+- delta*Risk
+```
+
+Validation:
+
+```text
+Validate_UP(u)=
+Static
+and Dedup
+and RAGSupport
+and SelfConsistency
+and Utility
+and Safety
+```
+
+If valid:
+
+```text
+u -> DRS_UP
+```
+
+UP GT game:
+
+```text
+Payoff_UP(u)=
+w1*Transfer(u)
++ w2*ExpectedUtility(u)
++ w3*Novelty(u)
+- w4*Risk(u)
+- w5*Cost(u)
+```
+
+UP is non-actionable by default. UP must not trigger external actions directly.
+
+## 17. AVF Feedback / ViabilityFeedback
+
+After task execution, each vector can produce feedback:
+
+```text
+VF(v_i) =
+(predicted, actual, delta, failure_modes, gt_update)
+```
+
+Prediction error:
+
+```text
+Error(v_i)=
+|PredictedViability(v_i) - ActualUtility(v_i)|
+```
+
+If vector was overestimated:
+
+```text
+FV_future(v_i)=FV(v_i) - alpha*Error(v_i)
+```
+
+If vector was underestimated:
+
+```text
+FV_future(v_i)=FV(v_i) + beta*PositiveSurprise(v_i)
+```
+
+DeadEnd promotion:
+
+If:
+
+```text
+FailureRate(v_i) > tau_fail
+and ContextMatch(v_i) > tau_context
+```
+
+then:
+
+```text
+v_i -> DeadEnds
+```
+
+Successful protocol promotion:
+
+If:
+
+```text
+SuccessRate(v_i) > tau_success
+and Regret(v_i) < tau_regret
+```
+
+then the candidate can become `Work` or `Thoughts` depending on type.
+
+## 18. Anti-Sycophancy
+
+User-origin hypothesis gets no trust boost solely because the user proposed it:
+
+```text
+TrustBoost(v_i | source=user) = 0
+```
+
+Trust:
+
+```text
+Trust(v_i)=
+BaseTrust(v_i)
++ EvidenceSupport(v_i)
++ GTPrior(v_i)
+- ConflictPenalty(v_i)
+```
+
+`BaseTrust(user_claim)` must not be higher than `BaseTrust(system_claim)`.
+
+Risky hypotheses require counter-vector:
+
+```text
+If Risk(v_i) > tau
+then GenerateCounterVector(v_i)
+```
+
+Counter-vector must come from an allowed source:
+
+- system template;
+- red-team needle;
+- DRS conflict record.
+
+## 19. Continuous / Delta Runtime Future Layer
+
+This is future-ready, not required for MVP.
+
+WorldState as stream:
+
+```text
+W(t)
+```
+
+Delta:
+
+```text
+Delta W_t = W_t - W_(t-1)
+```
+
+Structurally:
+
+```text
+Delta W_t = added union removed union changed union expired
+```
+
+Selective activation:
+
+```text
+Relevance(module, Delta W_t) > tau_wake
+```
+
+ActiveNeedleSet:
+
+```text
+ANS_t =
+{ n in Needles | WakeScore(n, Delta W_t) > tau }
+```
+
+Delta fractal:
+
+```text
+F_t = Patch(F_(t-1), Delta W_t)
+```
+
+Scope of recomputation:
+
+```text
+Scope(Delta W_t)=
+{ nodes in F | depends_on(nodes, changed_state) }
+```
+
+Important:
+
+100Hz does not mean full recompute. 100Hz means possible delta activation
+frequency.
+
+## 20. Audit and Hash Chain
+
+Content hash:
+
+```text
+H(r)=SHA256(canonical_json(r))
+```
+
+Hash chain:
+
+```text
+H_i = SHA256(R_i || H_(i-1))
+```
+
+`AuditEvent`:
+
+- kind;
+- payload;
+- timestamp;
+- hash.
+
+Used for:
+
+- DRS append;
+- registry append;
+- GT report;
+- `FinalOutput`;
+- Marennya/UP promotion;
+- external DRS pointer publication.
+
+## 21. Legacy Code Position
+
+Legacy code is donor/reference only.
+
+Mapping:
+
+- `engine.py` -> RootOrchestrator skeleton.
+- `manager.py` -> WorldStateAssembler donor, but weather becomes optional needle.
+- `client.py` -> LocalDRS donor, but add `TimeEnvelope`, `TemporalQuery`, schema validation.
+- `fractal.py` -> DAG execution donor.
+- `run.py` -> executor runner donor, but wrap outputs as `ResultProposal`.
+- `validators.py` / `finalize.py` -> Post V&V donor.
+- `validator.py` -> GTValidator donor.
+- `logging_audit.py` -> audit donor.
+- `embeddings.py` / `similar_lsh.py` / `vector_store.py` -> semantic search/dedup donor.
+- `index.py` / `record.py` / `resolver.py` -> future ExternalDRS pointer layer.
+- `architect` / `executor` prompts -> legacy reference only.
+
+Never use legacy `config.py`.
+
+Never commit secrets.
+
+## 22. MVP Demo Success Criteria
+
+The demo succeeds if:
+
+1. Cold-start scenario runs end-to-end.
+2. Reuse scenario uses prior DRS records.
+3. Forbidden vector is blocked by AVF before Architect.
+4. Architect receives `AttractorPacket`.
+5. Executor returns `ResultProposal` only.
+6. Post V&V validates proposal.
+7. GTValidator produces `GTReport` and half-life.
+8. Root creates `FinalOutput`.
+9. DRS writeback creates `Work` record with `TimeEnvelope`.
+10. Marennya writes quarantine reflection.
+11. UP writes quarantine protocol template.
+12. Second run demonstrates improved vector scoring or dead-end avoidance.
+
+## 23. Required Tone of This Document
+
+This document is an engineering passport.
+
+It should be detailed. It should not be marketing. It must not overpromise. It
+must clearly separate the MVP from future layers.
+
+Formulas should stay readable. Invariants should stay explicit. If a future
+implementation has to choose between convenience and preserving the architecture,
+it should preserve the architecture and document the tradeoff.

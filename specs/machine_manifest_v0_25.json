@@ -258,7 +258,7 @@
     },
     "drs_record": {
       "id_prefix": "drs_",
-      "description": "Local DRS record with layer, content, TimeEnvelope, provenance and optional GT metadata."
+      "description": "Local DRS registry record with layer, pointer/summary/content stub, TimeEnvelope, provenance, access metadata, and optional GT metadata."
     },
     "needle": {
       "id_prefix": "needle_",
@@ -311,6 +311,47 @@
 
   "drs": {
     "mode": "local_json_for_mvp",
+    "model": "pointer_first_registry_resolver_index",
+    "mvp_inline_content_allowed": true,
+    "mvp_inline_content_limits": "small, local, non-secret, mock/demo only",
+    "pointer_first_preferred": true,
+    "payload_storage_kinds": [
+      "inline",
+      "local_json",
+      "local_secure_vault",
+      "local_memory",
+      "vector_store",
+      "document_store",
+      "project_store",
+      "external_drs_pointer"
+    ],
+    "sensitive_payload_forbidden_in_drs_content": [
+      "credential",
+      "credentials",
+      "api_key",
+      "apikey",
+      "token",
+      "password",
+      "secret",
+      "private_key",
+      "passport_number",
+      "card_number",
+      "cvv"
+    ],
+    "pointer_records_require": [
+      "storage_kind",
+      "ref"
+    ],
+    "pointer_access_policy_fields": [
+      "visibility",
+      "requires_user_confirmation",
+      "read_summary_only",
+      "read_payload_allowed",
+      "write_allowed",
+      "allowed_use",
+      "forbidden_use"
+    ],
+    "resolver_note": "Pointer resolution is not implemented in MVP LocalDRS. LocalDRS validates pointer shape and stores pointer metadata only.",
     "external_drs": {
       "enabled_in_mvp": false,
       "mock_allowed": true,
@@ -1021,7 +1062,7 @@
     "RootOrchestrator may be deterministic Python.",
     "Architect may be deterministic stub.",
     "Executors may be simulators.",
-    "DRS may be local JSON files.",
+    "MVP LocalDRS may use local JSON files as a registry store for pointer-first records and small non-secret inline demo content.",
     "External DRS may be mocked or disabled.",
     "GTValidator may use simple payoff and Elo.",
     "Marennya and UP validation may be stubbed as explicit six-stage pipeline.",

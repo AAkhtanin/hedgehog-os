@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from hedgehog.action_permission import check_action_permission
 from hedgehog.architect import make_plan_graph
 from hedgehog.avf import build_attractor_packet
 from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
@@ -11,6 +12,7 @@ from hedgehog.gt_validator import validate_gt
 from hedgehog.marenna import create_marenna_after_task_record
 from hedgehog.mode_router import route_execution
 from hedgehog.post_vv import validate_result_proposals
+from hedgehog.reflex import detect_reflex_action, execute_reflex_action
 from hedgehog.reuse_gate import evaluate_reuse_candidates
 from hedgehog.time_model import make_temporal_query, make_time_envelope
 from hedgehog.up import create_up_after_task_record
@@ -29,6 +31,8 @@ class RootOrchestrator:
         session_anchor: str,
         allow_direct_reuse: bool = False,
         force_full_pipeline: bool = True,
+        allow_reflex: bool = False,
+        user_confirmed: bool = False,
     ) -> dict:
         canonical_goal = "Prepare a mock government certificate request plan."
         desired_state = "Mock government certificate request is prepared for human review."
@@ -56,6 +60,28 @@ class RootOrchestrator:
             allow_direct_reuse=allow_direct_reuse,
             force_full_pipeline=force_full_pipeline,
         )
+
+        reflex_action = detect_reflex_action(raw_user_text)
+        if (
+            not force_full_pipeline
+            and allow_reflex
+            and reflex_action is not None
+            and mode_router["execution_mode"] in {
+                "deterministic_reflex_candidate",
+                "proof_full_pipeline",
+            }
+        ):
+            return self._process_reflex(
+                request_id=request_id,
+                session_anchor=session_anchor,
+                temporal_query=temporal_query,
+                retrieved_records=retrieved_records,
+                memory_source_record_ids=memory_source_record_ids,
+                reuse_gate=reuse_gate,
+                mode_router=mode_router,
+                action=reflex_action,
+                user_confirmed=user_confirmed,
+            )
 
         if mode_router["execution_mode"] == "direct_reuse":
             return self._process_direct_reuse(
@@ -182,6 +208,92 @@ class RootOrchestrator:
             "up_hook_records": [up_record],
             "marenna_records": [marenna_drs_record["record_id"]],
             "up_records": [up_drs_record["record_id"]],
+            "final_output": final_output,
+        }
+        return final_output
+
+    def _process_reflex(
+        self,
+        request_id: str,
+        session_anchor: str,
+        temporal_query: dict,
+        retrieved_records: list[dict],
+        memory_source_record_ids: list[str],
+        reuse_gate: dict,
+        mode_router: dict,
+        action: dict,
+        user_confirmed: bool,
+    ) -> dict:
+        permission = check_action_permission(action, user_confirmed=user_confirmed)
+        reflex_result = execute_reflex_action(action, permission)
+        reflex_applied = reflex_result["status"] == "simulated_success"
+        final_status = "success" if reflex_applied else "needs_user"
+        gt_ref = f"gt:reflex:{request_id}"
+        work_record = self._make_reflex_work_record(
+            request_id=request_id,
+            session_anchor=session_anchor,
+            action=action,
+            reflex_result=reflex_result,
+            retrieved_record_count=len(retrieved_records),
+            memory_source_record_ids=memory_source_record_ids,
+            gt_ref=gt_ref,
+        )
+        self.drs.write_record(work_record)
+
+        final_output = {
+            "final_output_id": f"final:{request_id}",
+            "request_id": request_id,
+            "created_by": "root_orchestrator",
+            "status": final_status,
+            "answer": (
+                "Mock deterministic reflex action completed."
+                if reflex_applied
+                else "Mock deterministic reflex action requires confirmation."
+            ),
+            "used_proposals": [],
+            "gt_report_ref": gt_ref,
+            "drs_writes": [work_record["record_id"]],
+            "time_envelope": make_time_envelope(session_anchor),
+            "summary": "Root handled an explicit deterministic reflex path.",
+            "trace_refs": [
+                {
+                    "trace_id": f"trace:{request_id}",
+                    "span_id": "root_reflex",
+                    "kind": "root_orchestrator",
+                }
+            ],
+        }
+        gt_reference = {
+            "gt_report_id": gt_ref,
+            "decision": "reflex_reference",
+            "action_id": action["action_id"],
+        }
+        self.last_trace = {
+            "temporal_query": temporal_query,
+            "retrieved_record_count": len(retrieved_records),
+            "memory_context_applied": bool(memory_source_record_ids),
+            "memory_source_record_ids": memory_source_record_ids,
+            "reuse_gate": reuse_gate,
+            "mode_router": mode_router,
+            "execution_mode": "deterministic_reflex",
+            "reuse_decision": reuse_gate["reuse_decision"],
+            "reuse_applied": False,
+            "reused_record_ids": [],
+            "reflex_applied": reflex_applied,
+            "reflex_result": reflex_result,
+            "permission": permission,
+            "architect_skipped": True,
+            "executor_skipped": True,
+            "attractor_packet": None,
+            "plan_graph": None,
+            "result_proposals": [],
+            "vv_reports": [],
+            "gt_report": gt_reference,
+            "drs_records": [work_record],
+            "marenna_hook_records": [],
+            "up_hook_records": [],
+            "marenna_records": [],
+            "up_records": [],
             "final_output": final_output,
         }
         return final_output
@@ -400,6 +512,50 @@ class RootOrchestrator:
                 "decay_rate": reused_record.get("gt", {}).get("decay_rate", 0.0),
             },
             "status": "accepted",
+        }
+
+    @staticmethod
+    def _make_reflex_work_record(
+        request_id: str,
+        session_anchor: str,
+        action: dict,
+        reflex_result: dict,
+        retrieved_record_count: int,
+        memory_source_record_ids: list[str],
+        gt_ref: str,
+    ) -> dict:
+        return {
+            "record_id": f"work:{request_id}",
+            "layer": "work",
+            "type": "task_outcome",
+            "domain": "device_control",
+            "content": {
+                "summary": "Mock deterministic reflex action trace.",
+                "execution_mode": "deterministic_reflex",
+                "action_id": action["action_id"],
+                "action_status": reflex_result["status"],
+                "permission_reason": reflex_result["permission_reason"],
+                "retrieved_record_count": retrieved_record_count,
+                "memory_source_record_ids": memory_source_record_ids,
+            },
+            "time_envelope": make_time_envelope(session_anchor),
+            "provenance": {
+                "request_id": request_id,
+                "created_by": "root_orchestrator",
+                "trace_refs": [
+                    {
+                        "trace_id": f"trace:{request_id}",
+                        "span_id": "reflex_writeback",
+                        "kind": "root_orchestrator",
+                    }
+                ],
+            },
+            "gt": {
+                "gt_report_id": gt_ref,
+                "half_life_hours": 1.0,
+                "decay_rate": 0.0,
+            },
+            "status": "accepted" if reflex_result["status"] == "simulated_success" else "active",
         }
 
     @staticmethod

@@ -345,3 +345,86 @@ def test_root_orchestrator_force_full_pipeline_prevents_direct_reuse_even_when_a
     assert orchestrator.last_trace["plan_graph"]["nodes"]
     assert orchestrator.last_trace["result_proposals"]
     assert final_output["created_by"] == "root_orchestrator"
+
+
+def test_root_orchestrator_turn_on_tv_defaults_to_proof_full_pipeline(tmp_path):
+    orchestrator, _ = make_orchestrator(tmp_path)
+    final_output = orchestrator.process_event(
+        raw_user_text="turn on tv",
+        request_id="req_reflex_default_full_pipeline",
+        session_anchor="sess_reflex_default_full_pipeline",
+    )
+
+    assert orchestrator.last_trace["mode_router"]["execution_mode"] == "proof_full_pipeline"
+    assert orchestrator.last_trace["plan_graph"]["nodes"]
+    assert orchestrator.last_trace["result_proposals"]
+    assert final_output["created_by"] == "root_orchestrator"
+
+
+def test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor(tmp_path):
+    orchestrator, drs = make_orchestrator(tmp_path)
+    final_output = orchestrator.process_event(
+        raw_user_text="turn on tv",
+        request_id="req_reflex_turn_on_tv",
+        session_anchor="sess_reflex_turn_on_tv",
+        allow_reflex=True,
+        force_full_pipeline=False,
+    )
+    work_record = drs.read_record("work", final_output["drs_writes"][0])
+
+    final_output_validator().validate(final_output)
+    assert orchestrator.last_trace["execution_mode"] == "deterministic_reflex"
+    assert orchestrator.last_trace["reflex_applied"] is True
+    assert orchestrator.last_trace["architect_skipped"] is True
+    assert orchestrator.last_trace["executor_skipped"] is True
+    assert orchestrator.last_trace["plan_graph"] is None
+    assert orchestrator.last_trace["result_proposals"] == []
+    assert final_output["status"] == "success"
+    assert work_record["content"]["execution_mode"] == "deterministic_reflex"
+    assert work_record["content"]["action_id"] == "mock_turn_on_tv"
+    assert work_record["content"]["action_status"] == "simulated_success"
+    assert work_record["content"]["permission_reason"] == "allowed"
+
+
+def test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation(tmp_path):
+    orchestrator, drs = make_orchestrator(tmp_path)
+    final_output = orchestrator.process_event(
+        raw_user_text="order pizza",
+        request_id="req_reflex_order_pizza_blocked",
+        session_anchor="sess_reflex_order_pizza_blocked",
+        allow_reflex=True,
+        force_full_pipeline=False,
+        user_confirmed=False,
+    )
+    work_record = drs.read_record("work", final_output["drs_writes"][0])
+
+    final_output_validator().validate(final_output)
+    assert final_output["status"] == "needs_user"
+    assert orchestrator.last_trace["execution_mode"] == "deterministic_reflex"
+    assert orchestrator.last_trace["reflex_applied"] is False
+    assert orchestrator.last_trace["architect_skipped"] is True
+    assert orchestrator.last_trace["executor_skipped"] is True
+    assert work_record["content"]["action_id"] == "mock_order_pizza"
+    assert work_record["content"]["action_status"] == "blocked"
+    assert work_record["content"]["permission_reason"] == "confirmation_required"
+
+
+def test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success(tmp_path):
+    orchestrator, drs = make_orchestrator(tmp_path)
+    final_output = orchestrator.process_event(
+        raw_user_text="order pizza",
+        request_id="req_reflex_order_pizza_confirmed",
+        session_anchor="sess_reflex_order_pizza_confirmed",
+        allow_reflex=True,
+        force_full_pipeline=False,
+        user_confirmed=True,
+    )
+    work_record = drs.read_record("work", final_output["drs_writes"][0])
+
+    final_output_validator().validate(final_output)
+    assert final_output["status"] == "success"
+    assert orchestrator.last_trace["reflex_applied"] is True
+    assert orchestrator.last_trace["reflex_result"]["status"] == "simulated_success"
+    assert work_record["content"]["action_id"] == "mock_order_pizza"
+    assert work_record["content"]["action_status"] == "simulated_success"
+    assert work_record["content"]["permission_reason"] == "allowed"

@@ -43,6 +43,26 @@ def test_certificate_demo_reuse_output_uses_context_only_memory(tmp_path):
     assert "GT winner vector id: fallback_exploration" not in output
 
 
+def test_certificate_demo_direct_reuse_output_shows_shortcut(tmp_path):
+    output = run_demo("direct_reuse", drs_root=tmp_path)
+
+    assert "Scenario: direct_reuse" in output
+    assert "retrieved_record_count: 1" in output
+    assert "memory_context_applied: true" in output
+    assert "reuse_decision: direct_reuse" in output
+    assert "reuse_applied: true" in output
+    assert "reuse_gate decision: direct_reuse_candidate" in output
+    assert "reuse_candidate_record_id: work:demo_direct_reuse_source" in output
+    assert "reused_record_ids: work:demo_direct_reuse_source" in output
+    assert "architect_skipped: true" in output
+    assert "executor_skipped: true" in output
+    assert "PlanGraph node count: 0" in output
+    assert "ResultProposal count: 0" in output
+    assert "FinalOutput created_by: root_orchestrator" in output
+    assert "FinalOutput status: success" in output
+    assert "DRS writes: work:demo_direct_reuse_001" in output
+
+
 def test_certificate_demo_output_does_not_print_raw_text_or_secret_terms(tmp_path):
     output = run_demo("reuse", drs_root=tmp_path)
     lowered = output.lower()

@@ -33,6 +33,8 @@ User/Event
 
 This is the core result of the baseline. The demo is not trying to be useful as a real certificate assistant yet. It is proving that the architecture can be executed end to end without collapsing into a chatbot, generic agent chain, or unstructured prompt loop.
 
+The full pipeline is the maximum cognitive loop, not the mandatory path for every future user action. In the full OS, an `ExecutionModeRouter` / `ModeRouter` must choose the cheapest safe execution depth. Frequent safe actions may use deterministic needles or direct reuse, while novel, risky, ambiguous, conflicting, high-value, or multi-branch tasks may use the full loop.
+
 ## 3. Cold Start Expected Behavior
 
 The `cold_start` scenario runs once against an empty LocalDRS.
@@ -141,6 +143,9 @@ Direct reuse is not implemented in v0.25. The baseline must not describe `contex
 
 This baseline does not prove:
 
+- L0 deterministic reflex routing.
+- L1 direct reuse routing.
+- A complete adaptive `ExecutionModeRouter`.
 - Real LLM/SLM role substitution.
 - Root-level direct reuse shortcut behavior.
 - Pointer resolution.
@@ -149,6 +154,13 @@ This baseline does not prove:
 - A polished or genuinely useful real-world assistant scenario.
 
 These are future layers. The v0.25 baseline exists to make later changes measurable against a stable contract.
+
+v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior:
+
+- `cold_start` uses the full deterministic path.
+- The second `reuse` run is memory-informed `context_only`.
+- Direct reuse shortcut is not implemented.
+- L0/L1 routing is future work.
 
 ## 8. Future Demo Evolution
 

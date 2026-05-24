@@ -309,6 +309,95 @@
     ]
   },
 
+  "execution_router": {
+    "required": true,
+    "purpose": "Select the cheapest safe execution mode instead of forcing every request through the full cognitive pipeline.",
+    "full_pipeline_is_maximum_loop_not_default": true,
+    "levels": [
+      {
+        "level": "L0",
+        "id": "deterministic_reflex",
+        "description": "Ready needle, known safe deterministic action, no Architect, no heavy LLM.",
+        "examples": [
+          "switch TV input",
+          "open known device view",
+          "repeat safe local UI action"
+        ],
+        "required_controls": [
+          "policy_check",
+          "permission_check_if_actionful",
+          "minimal_trace_audit",
+          "drs_writeback_when_state_changes_or_action_performed"
+        ]
+      },
+      {
+        "level": "L1",
+        "id": "direct_reuse",
+        "description": "Fresh trusted DRS record or protocol replay through explicit Root shortcut logic.",
+        "required_gates": [
+          "ReuseScore",
+          "Freshness",
+          "GTTrust",
+          "PolicyOK",
+          "ConflictCheck",
+          "TimeEnvelope_validity",
+          "ActionPermission_if_external_action"
+        ],
+        "skip_allowed_only_if": "Explicit RootFinalFromReuse or direct protocol shortcut exists and tests prove Architect and Executor were skipped legally."
+      },
+      {
+        "level": "L2",
+        "id": "memory_informed_execution",
+        "description": "Prior records found, but shortcut not allowed. Full or partial pipeline may run with constrained context.",
+        "note": "retrieved_records > 0 means memory_context_applied, not direct_reuse."
+      },
+      {
+        "level": "L3",
+        "id": "avf_architect_execution",
+        "description": "AVF selects CandidateVectors and creates AttractorPacket; Architect creates PlanGraph for tasks needing planning without full deep branching."
+      },
+      {
+        "level": "L4",
+        "id": "full_fractal_reasoning",
+        "description": "Multiple branches, Executors, Post V&V, GT selection, and full DRS writeback for novel, ambiguous, high-risk, high-value, or multi-path tasks."
+      },
+      {
+        "level": "L5",
+        "id": "deferred_reflection",
+        "description": "Marennya, UP, deep research, idle validation, scheduled or deferred work outside the immediate response critical path unless explicitly requested."
+      }
+    ],
+    "routing_inputs": [
+      "intent_complexity",
+      "risk_level",
+      "novelty",
+      "presence_of_installed_needle",
+      "presence_of_drs_candidate",
+      "ReuseScore",
+      "Freshness",
+      "GTTrust",
+      "PolicyOK",
+      "ConflictCheck",
+      "ActionPermission",
+      "user_confirmation_requirement",
+      "latency_token_budget",
+      "need_for_provenance",
+      "whether_state_changes_or_external_action_will_occur"
+    ],
+    "invariants": [
+      "Full pipeline must be available but not mandatory.",
+      "No DRS retrieval without TemporalQuery in any execution mode.",
+      "L0 and L1 paths must not bypass safety, policy, permission, audit, or required DRS writeback.",
+      "A DRS hit is not direct reuse by itself.",
+      "retrieved_records > 0 only permits memory_context_applied by default.",
+      "Direct reuse requires explicit Root shortcut logic.",
+      "Direct reuse must not be implemented by accident.",
+      "Tests for direct reuse must prove Architect and Executor were skipped.",
+      "Direct external or action execution must respect policy, access control, audit, and DRS writeback.",
+      "L5 deferred reflection must not block immediate user response unless explicitly requested."
+    ]
+  },
+
   "drs": {
     "mode": "local_json_for_mvp",
     "model": "pointer_first_registry_resolver_index",

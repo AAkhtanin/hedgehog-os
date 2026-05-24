@@ -48,6 +48,12 @@ User/Event
 → Marennya / UP quarantine hooks
 ```
 
+## Adaptive Execution Routing
+
+The full pipeline is the maximum cognitive loop, not the default path for every action. Simple, frequent, low-risk requests should route to cheap deterministic needles or validated reuse when policy allows. Novel, ambiguous, risky, conflicting, high-value, or multi-branch tasks can use deeper AVF, Architect, Executor, Post V&V, and GT processing.
+
+DRS, AVF, needles, cached protocols, and reuse gates are compute-saving mechanisms. They are meant to reduce unnecessary expensive LLM/SLM usage by making those calls later, less often, and with narrower context. Direct reuse is still disabled in the current MVP; a future `ExecutionModeRouter` must choose the cheapest safe level while preserving policy, permission, audit, and DRS writeback rules.
+
 ## Demo Scenarios
 
 `cold_start` runs the mock certificate request with no previous Work record in the LocalDRS. The trace shows `memory_context_applied=false`, `reuse_decision=none`, and `reuse_applied=false`.

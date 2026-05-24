@@ -51,6 +51,24 @@ DRS registry invariant:
    - `reuse_applied` remains `false` in v0.25; Root still runs the full pipeline.
    - Actual direct reuse requires explicit Root-level shortcut logic and tests proving Architect and Executor were skipped.
 
+Execution routing invariant:
+
+- The full cognitive pipeline must be available, but it is the maximum loop, not the mandatory path for every request.
+- An explicit `ExecutionModeRouter` / `ModeRouter` must select the cheapest safe execution mode before choosing pipeline depth.
+- Routing must consider intent complexity, risk, novelty, installed needles, DRS candidates, ReuseScore, Freshness, GTTrust, PolicyOK, ConflictCheck, ActionPermission, user confirmation needs, latency/token budget, provenance needs, and whether state or external action will change.
+- L0 `deterministic_reflex` may use ready deterministic needles for known safe actions without Architect or heavy LLM, but it still requires policy, permission when actionful, minimal trace/audit, and DRS writeback when state changes or an action was performed.
+- L1 `direct_reuse` may use RootFinalFromReuse or direct protocol execution only after explicit gates: ReuseScore, Freshness, GTTrust, PolicyOK, ConflictCheck, TimeEnvelope validity, and ActionPermission when external action is involved.
+- L2 `memory_informed_execution` means prior records exist, but shortcut is not allowed; a DRS hit is not direct reuse by itself.
+- L3 `avf_architect_execution` uses AVF and Architect for tasks needing planning without full deep branching.
+- L4 `full_fractal_reasoning` is reserved for novel, ambiguous, risky, high-value, conflicting, or multi-branch tasks.
+- L5 `deferred_reflection` covers Marennya, UP, deep research, idle validation, and scheduled work; it must not block immediate user response unless explicitly requested.
+- No DRS retrieval may occur without TemporalQuery in any execution mode.
+- L0/L1 paths must not bypass safety, policy, permission, audit, or required DRS writeback.
+- A DRS hit only permits `memory_context_applied` by default.
+- Direct reuse requires explicit Root shortcut logic and must not be implemented by accident.
+- Tests for direct reuse must prove Architect and Executor were skipped.
+- Direct external/action execution must still respect policy, access control, audit, and DRS writeback.
+
 9. CandidateVector sources
    - `CandidateVector` values may come only from installed needles, Local DRS, external DRS pointers, or fallback exploration templates.
    - CandidateVectors must not be freely hallucinated by an LLM.

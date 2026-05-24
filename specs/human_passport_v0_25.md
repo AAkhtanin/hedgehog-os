@@ -56,6 +56,45 @@ User/Event
 -> Audit/Trace
 ```
 
+The full pipeline is the maximum cognitive loop, not the mandatory path for
+every user action. Novel, risky, ambiguous, conflicting, high-value, or
+multi-branch tasks may require the full loop. Frequent and simple actions should
+route to cheaper execution modes when policy allows.
+
+The system therefore requires an explicit `ExecutionModeRouter` / `ModeRouter`
+before selecting pipeline depth. The router must be budget-aware: latency,
+token cost, risk, novelty, confidence, provenance need, installed needles,
+DRS candidates, reuse gates, and action permission all influence the selected
+mode. DRS, needles, AVF, reuse gates, and cached protocols are compute-saving
+mechanisms, not latency sources. Expensive LLM/SLM calls should happen later,
+less often, and with narrower context.
+
+Execution levels:
+
+- `L0 deterministic_reflex`: ready needle, known safe deterministic action, no
+  Architect, no heavy LLM. Example: switch TV input, open a known device view,
+  or repeat a safe local UI action. Still requires policy checks, permission
+  checks if actionful, minimal trace/audit, and DRS writeback when state changes
+  or an action was performed.
+- `L1 direct_reuse`: fresh trusted DRS record or protocol replay. RootFinalFromReuse
+  or direct protocol execution is allowed only after explicit gates: ReuseScore,
+  Freshness, GTTrust, PolicyOK, ConflictCheck, TimeEnvelope validity, and
+  ActionPermission if external action is involved. Architect/Executor may be
+  skipped only if explicit Root shortcut logic exists and tests prove the
+  shortcut was legal.
+- `L2 memory_informed_execution`: prior records found, but shortcut not allowed.
+  Full or partial pipeline may still run with constrained context. `retrieved_records > 0`
+  means memory context was applied, not direct reuse.
+- `L3 avf_architect_execution`: AVF selects candidate vectors and creates
+  AttractorPacket; Architect creates PlanGraph. Used when a task needs planning
+  but not full deep branching.
+- `L4 full_fractal_reasoning`: multiple branches, Executors, Post V&V, GT
+  selection, and full DRS writeback. Used for novel, ambiguous, high-risk,
+  high-value, or multi-path tasks.
+- `L5 deferred_reflection`: Marennya, UP, deep research, idle validation, and
+  scheduled work. This is after-task, idle, scheduled, or deferred and is not
+  part of the immediate user-response critical path unless explicitly requested.
+
 ## 2. Non-Goals
 
 The MVP explicitly is not:

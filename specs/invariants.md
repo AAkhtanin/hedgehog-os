@@ -47,8 +47,8 @@ DRS registry invariant:
    - ReuseGate evaluates prior DRS records after TemporalQuery retrieval.
    - ReuseGate computes `freshness`, `gt_trust`, `policy`, `conflict`, and `reuse_score`.
    - ReuseGate may return `none`, `context_only`, or `direct_reuse_candidate`.
-   - `direct_reuse_candidate` is not actual direct reuse in v0.25.
-   - `reuse_applied` remains `false` in v0.25; Root still runs the full pipeline.
+   - `direct_reuse_candidate` is not actual direct reuse by itself.
+   - `reuse_applied` remains `false` unless Root is explicitly called with direct reuse enabled.
    - Actual direct reuse requires explicit Root-level shortcut logic and tests proving Architect and Executor were skipped.
 
 Execution routing invariant:
@@ -56,8 +56,9 @@ Execution routing invariant:
 - The full cognitive pipeline must be available, but it is the maximum loop, not the mandatory path for every request.
 - An explicit `ExecutionModeRouter` / `ModeRouter` must select the cheapest safe execution mode before choosing pipeline depth.
 - Adaptive routing is future production behavior; the v0.25 CLI demo intentionally runs in `proof_full_pipeline` mode.
-- In v0.25 demo mode, `shortcut_disabled_for_demo = true`, `direct_reuse_candidate_only = true`, and `adaptive_routing_future_runtime = true`.
-- The v0.25 demo must not silently choose L0 `deterministic_reflex` or L1 `direct_reuse`; it exercises the full deterministic pipeline to prove contracts and invariants.
+- In default v0.25 demo mode, `shortcut_disabled_for_demo = true`, `direct_reuse_candidate_only = true`, and `adaptive_routing_future_runtime = true`.
+- The default v0.25 demo must not silently choose L0 `deterministic_reflex` or L1 `direct_reuse`; it exercises the full deterministic pipeline to prove contracts and invariants.
+- The explicit `direct_reuse` CLI/test scenario may skip Architect and Executor only after ReuseGate eligibility and explicit Root permission.
 - Routing must consider intent complexity, risk, novelty, installed needles, DRS candidates, ReuseScore, Freshness, GTTrust, PolicyOK, ConflictCheck, ActionPermission, user confirmation needs, latency/token budget, provenance needs, and whether state or external action will change.
 - L0 `deterministic_reflex` may use ready deterministic needles for known safe actions without Architect or heavy LLM, but it still requires policy, permission when actionful, minimal trace/audit, and DRS writeback when state changes or an action was performed.
 - L1 `direct_reuse` may use RootFinalFromReuse or direct protocol execution only after explicit gates: ReuseScore, Freshness, GTTrust, PolicyOK, ConflictCheck, TimeEnvelope validity, and ActionPermission when external action is involved.
@@ -69,6 +70,7 @@ Execution routing invariant:
 - L0/L1 paths must not bypass safety, policy, permission, audit, or required DRS writeback.
 - A DRS hit only permits `memory_context_applied` by default.
 - Direct reuse requires explicit Root shortcut logic and must not be implemented by accident.
+- Direct reuse must still create Root-only FinalOutput plus DRS writeback and audit trace.
 - Tests for direct reuse must prove Architect and Executor were skipped.
 - Direct external/action execution must still respect policy, access control, audit, and DRS writeback.
 

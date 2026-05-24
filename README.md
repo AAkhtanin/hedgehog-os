@@ -24,7 +24,7 @@ This repository demonstrates an AI OS-style runtime pipeline using deterministic
 - Not using real government APIs.
 - Not storing secrets.
 - Not using real identity, payment, or passport data.
-- Not implementing direct reuse yet.
+- Not enabling direct reuse by default.
 - Not implementing distributed external DRS yet.
 
 ## Architecture Pipeline
@@ -52,11 +52,11 @@ User/Event
 
 The full pipeline is the maximum cognitive loop, not the default path for every action. Simple, frequent, low-risk requests should route to cheap deterministic needles or validated reuse when policy allows. Novel, ambiguous, risky, conflicting, high-value, or multi-branch tasks can use deeper AVF, Architect, Executor, Post V&V, and GT processing.
 
-DRS, AVF, needles, cached protocols, and reuse gates are compute-saving mechanisms. They are meant to reduce unnecessary expensive LLM/SLM usage by making those calls later, less often, and with narrower context. Direct reuse is still disabled in the current MVP; a future `ExecutionModeRouter` must choose the cheapest safe level while preserving policy, permission, audit, and DRS writeback rules.
+DRS, AVF, needles, cached protocols, and reuse gates are compute-saving mechanisms. They are meant to reduce unnecessary expensive LLM/SLM usage by making those calls later, less often, and with narrower context. Direct reuse is not the default path; it is available only through an explicit shortcut mode. A future `ExecutionModeRouter` must choose the cheapest safe level while preserving policy, permission, audit, and DRS writeback rules.
 
 ## Demo Scenarios
 
-The current CLI demo runs in `proof_full_pipeline` mode by design. It does not silently choose `L0 deterministic_reflex` or `L1 direct_reuse`, even if cheaper modes are documented. This does not contradict adaptive runtime: v0.25 is a test/proof mode with `shortcut_disabled_for_demo`, while adaptive routing is future production behavior.
+The default CLI demo scenarios run in `proof_full_pipeline` mode by design. They do not silently choose `L0 deterministic_reflex` or `L1 direct_reuse`, even if cheaper modes are documented. This does not contradict adaptive runtime: v0.25 is a test/proof mode for the baseline pipeline, while adaptive routing is future production behavior.
 
 `cold_start` runs the mock certificate request with no previous Work record in the LocalDRS. The trace shows `memory_context_applied=false`, `reuse_decision=none`, and `reuse_applied=false`.
 
@@ -64,7 +64,7 @@ The current CLI demo runs in `proof_full_pipeline` mode by design. It does not s
 
 ReuseGate evaluates prior DRS records after TemporalQuery retrieval. It computes `freshness`, `gt_trust`, `policy`, `conflict`, and `reuse_score`, then returns one of `none`, `context_only`, or `direct_reuse_candidate`.
 
-`direct_reuse_candidate` means a record passed the scoring gates. It is not actual direct reuse in v0.25. Root still runs AVF, Architect, Executor, Post V&V, and GTValidator, and `reuse_applied` remains `false`. Actual direct reuse requires future Root-level shortcut logic, a `RootFinalFromReuse` path, and tests proving Architect and Executor were skipped.
+`direct_reuse_candidate` means a record passed the scoring gates. It is not actual direct reuse unless Root is called with explicit direct reuse permission. The `direct_reuse` CLI scenario demonstrates that optional `RootFinalFromReuse` path: it skips Architect and Executor, keeps Root-only FinalOutput, writes a new Work DRS record, and does not call LLMs or external APIs.
 
 ## Install And Run
 
@@ -98,6 +98,7 @@ Run the CLI demo:
 ```bash
 python -m demo.run_certificate_demo --scenario cold_start
 python -m demo.run_certificate_demo --scenario reuse
+python -m demo.run_certificate_demo --scenario direct_reuse
 ```
 
 ## Expected Output
@@ -123,6 +124,18 @@ second_run:
   FinalOutput created_by: root_orchestrator
 ```
 
+```text
+Scenario: direct_reuse
+run:
+  memory_context_applied: true
+  reuse_decision: direct_reuse
+  reuse_applied: true
+  architect_skipped: true
+  executor_skipped: true
+  FinalOutput created_by: root_orchestrator
+  FinalOutput status: success
+```
+
 ## Repository Map
 
 - `specs/` contains the human-readable passport, invariants, demo scenario, legacy mapping, math appendix, and machine manifest.
@@ -137,7 +150,7 @@ second_run:
 
 - Deterministic stubs only.
 - Local JSON DRS only.
-- ReuseGate scoring exists, but no direct reuse shortcut is enabled yet.
+- ReuseGate scoring exists; direct reuse is implemented only as an explicit optional CLI/test scenario, not as the default path.
 - No pointer resolution yet.
 - No real APIs.
 - No UI.
@@ -145,7 +158,7 @@ second_run:
 
 ## Roadmap
 
-- Root-level direct reuse shortcut with explicit `RootFinalFromReuse` tests.
+- Adaptive mode router that chooses direct reuse only when policy, permission, and tests allow it.
 - Richer DRS pointer resolution.
 - Marennya validation and promotion.
 - UP validation and promotion.

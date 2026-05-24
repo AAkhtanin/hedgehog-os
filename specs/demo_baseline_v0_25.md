@@ -35,19 +35,29 @@ This is the core result of the baseline. The demo is not trying to be useful as 
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for every future user action. In the full OS, an `ExecutionModeRouter` / `ModeRouter` must choose the cheapest safe execution depth. Frequent safe actions may use deterministic needles or direct reuse, while novel, risky, ambiguous, conflicting, high-value, or multi-branch tasks may use the full loop.
 
-## 3. Demo Mode: `proof_full_pipeline`
+## 3. Demo Modes
 
-The v0.25 CLI demo intentionally runs in `proof_full_pipeline` mode.
+The default v0.25 CLI demo scenarios intentionally run in `proof_full_pipeline` mode.
 
 This means:
 
-- `shortcut_disabled_for_demo = true`
-- `direct_reuse_candidate_only = true`
+- `shortcut_disabled_for_demo = true` for `cold_start` and `reuse`
+- `direct_reuse_candidate_only = true` for `cold_start` and `reuse`
 - `adaptive_routing_future_runtime = true`
 
-The demo must force the full deterministic pipeline to prove all core contracts. It should not silently choose `L0 deterministic_reflex` or `L1 direct_reuse`, even though those modes are documented as architectural requirements.
+The baseline demo must force the full deterministic pipeline to prove all core contracts. It should not silently choose `L0 deterministic_reflex` or `L1 direct_reuse`, even though those modes are documented as architectural requirements.
 
-This is intentional, not inefficient design. The demo is a proof harness, not production routing policy. It avoids hiding untested components behind shortcut routing. A `direct_reuse_candidate` may be detected by ReuseGate, but Root must still run Architect and Executor in v0.25.
+This is intentional, not inefficient design. The baseline demo is a proof harness, not production routing policy. It avoids hiding untested components behind shortcut routing. A `direct_reuse_candidate` may be detected by ReuseGate, but Root must still run Architect and Executor unless direct reuse is explicitly enabled.
+
+v0.25 also includes a separate explicit `direct_reuse` CLI/test scenario. That scenario proves the optional RootFinalFromReuse shortcut:
+
+- direct reuse requires explicit Root permission;
+- direct reuse requires an eligible ReuseGate decision;
+- Architect and Executor are skipped;
+- FinalOutput is still created only by RootOrchestrator;
+- a new Work DRS writeback and audit trace are still created;
+- no LLMs or external APIs are called;
+- raw user text and secrets are not stored in DRS.
 
 Production runtime may later enable adaptive routing after tests prove each shortcut path is safe.
 
@@ -91,7 +101,7 @@ The second run is expected to show:
 - `memory_context_applied = true`
 - `reuse_decision = context_only` for ordinary prior records.
 - `reuse_applied = false`
-- Direct reuse is not implemented yet.
+- Direct reuse is not applied in this scenario.
 - Architect and Executor still run.
 
 Interpretation:
@@ -119,11 +129,35 @@ ReuseGate may return:
 - `context_only`: records exist, but no record passed the direct reuse scoring gates.
 - `direct_reuse_candidate`: a record passed the scoring gates.
 
-`direct_reuse_candidate` is not actual reuse in v0.25. It means a candidate has been identified, but Root still runs AVF, Architect, Executor, Post V&V, and GTValidator. `reuse_applied` remains `false`.
+`direct_reuse_candidate` is not actual reuse by itself. It means a candidate has been identified. Root still runs AVF, Architect, Executor, Post V&V, and GTValidator unless Root is explicitly called with direct reuse enabled.
 
 Actual direct reuse requires explicit Root-level shortcut logic and tests proving Architect and Executor were skipped.
 
-## 7. Context-Only Memory vs Direct Reuse
+## 7. Direct Reuse Scenario Expected Behavior
+
+The `direct_reuse` scenario seeds LocalDRS with a strong accepted Work record and calls Root with direct reuse enabled.
+
+Expected trace behavior:
+
+- `retrieved_record_count >= 1`
+- `memory_context_applied = true`
+- `reuse_decision = direct_reuse`
+- `reuse_applied = true`
+- `architect_skipped = true`
+- `executor_skipped = true`
+- `FinalOutput created_by = root_orchestrator`
+- new Work DRS writeback exists
+
+Interpretation:
+
+- ReuseGate first returns `direct_reuse_candidate`.
+- Explicit Root permission converts that candidate into actual direct reuse.
+- Root creates FinalOutput directly from the trusted prior DRS record.
+- Architect, Executor, Post V&V, and fresh GT selection are skipped for that request.
+- Root still writes a new Work record and audit trace.
+- No external APIs, LLMs, raw user text persistence, or secret storage are involved.
+
+## 8. Context-Only Memory vs Direct Reuse
 
 ### Memory-Informed Execution / `context_only`
 
@@ -142,9 +176,9 @@ This proves memory-first execution without claiming direct reuse.
 
 ### True Direct Reuse / `RootFinalFromReuse`
 
-True direct reuse is a future path where Root may create a final output from a validated prior record without running the full planning/execution pipeline.
+True direct reuse is an explicit optional path where Root may create a final output from a validated prior record without running the full planning/execution pipeline.
 
-That future path must be gated by checks such as:
+That path must be gated by checks such as:
 
 - ReuseScore
 - Freshness
@@ -153,17 +187,17 @@ That future path must be gated by checks such as:
 - ConflictCheck
 - TimeEnvelope validity
 
-Direct reuse is not implemented in v0.25. The baseline must not describe `context_only` or `direct_reuse_candidate` as actual direct reuse.
+Direct reuse is implemented in v0.25 only as an explicit CLI/test scenario. The baseline must not describe `context_only` or `direct_reuse_candidate` as actual direct reuse.
 
-## 8. What This Baseline Does Not Prove Yet
+## 9. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
 - L0 deterministic reflex routing.
-- L1 direct reuse routing.
+- Production L1 direct reuse routing.
 - A complete adaptive `ExecutionModeRouter`.
 - Real LLM/SLM role substitution.
-- Root-level direct reuse shortcut behavior.
+- Automatic Root-level direct reuse routing.
 - Pointer resolution.
 - External DRS protocol.
 - Telegram shell integration.
@@ -171,17 +205,17 @@ This baseline does not prove:
 
 These are future layers. The v0.25 baseline exists to make later changes measurable against a stable contract.
 
-v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior:
+v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus an explicit L1 shortcut scenario:
 
 - `cold_start` uses the full deterministic path.
 - The second `reuse` run is memory-informed `context_only`.
-- Direct reuse shortcut is not implemented.
-- L0/L1 routing is future work.
+- `direct_reuse` demonstrates explicit optional RootFinalFromReuse.
+- Automatic L0/L1 routing is future work.
 
-## 9. Future Demo Evolution
+## 10. Future Demo Evolution
 
 - `v0.25`: deterministic CLI baseline.
-- `v0.30`: direct reuse gate.
+- `v0.30`: direct reuse gate and explicit shortcut.
 - `v0.35`: LLM/SLM role substitution.
 - `v0.40`: Telegram shell as interface only.
 - `v0.45`: richer useful assistant scenario.

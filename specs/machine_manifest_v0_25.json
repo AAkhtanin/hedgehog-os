@@ -314,11 +314,24 @@
     "purpose": "Select the cheapest safe execution mode instead of forcing every request through the full cognitive pipeline.",
     "full_pipeline_is_maximum_loop_not_default": true,
     "mvp_demo_mode": "proof_full_pipeline",
-    "shortcut_execution_enabled_in_v0_25": false,
-    "shortcut_disabled_for_demo": true,
-    "direct_reuse_candidate_only_in_v0_25": true,
+    "shortcut_execution_default_enabled_in_v0_25": false,
+    "shortcut_disabled_for_default_demo": true,
+    "direct_reuse_candidate_only_in_default_demo": true,
+    "direct_reuse_cli_scenario": true,
+    "direct_reuse_default_enabled": false,
+    "direct_reuse_requires_explicit_permission": true,
+    "direct_reuse_skips": [
+      "architect",
+      "executor"
+    ],
+    "direct_reuse_must_preserve": [
+      "root_only_final_output",
+      "drs_writeback",
+      "audit_trace",
+      "policy_safety_checks"
+    ],
     "adaptive_routing_future_runtime": true,
-    "reason": "The v0.25 demo intentionally exercises the full pipeline to prove contracts and invariants.",
+    "reason": "The default v0.25 demo intentionally exercises the full pipeline to prove contracts and invariants. The direct_reuse CLI scenario is an explicit shortcut test path, not the default.",
     "levels": [
       {
         "level": "L0",

@@ -61,6 +61,10 @@ def test_render_final_draft_returns_subordinate_draft():
     assert draft["summary"]
     assert draft["claims"]
     assert draft["selected_proposal_ids"] == ["proposal:completed"]
+    assert draft["completed_proposal_ids"] == ["proposal:completed"]
+    assert draft["rejected_proposal_ids"] == []
+    assert "final_draft_is_not_final_output" in draft["claims"]
+    assert "root_final_authority_required" in draft["claims"]
     assert not contains_key(draft, "final_output")
     assert not contains_key(draft, "raw_user_text")
 
@@ -106,3 +110,29 @@ def test_render_final_draft_records_blocked_and_needs_user_proposals():
     assert draft["blocked_proposal_ids"] == ["proposal:blocked"]
     assert "human_input_required" in draft["warnings"]
     assert "blocked_proposals_present" in draft["warnings"]
+
+
+def test_render_final_draft_records_rejected_proposals():
+    proposal = sample_proposal("proposal:rejected")
+    draft = render_final_draft(
+        request_id="req_final_renderer_rejected",
+        gt_report={
+            "gt_report_id": "gt:rejected",
+            "decision": "no_update",
+        },
+        result_proposals=[proposal],
+        vv_reports=[
+            sample_vv_report(
+                proposal_id="proposal:rejected",
+                decision="reject",
+                status="rejected",
+            )
+        ],
+        drs_writes=["work:req_final_renderer_rejected"],
+    )
+
+    assert draft["status_recommendation"] == "needs_user"
+    assert draft["completed_proposal_ids"] == []
+    assert draft["rejected_proposal_ids"] == ["proposal:rejected"]
+    assert "rejected_proposals_present" in draft["warnings"]
+    assert "no_gt_winner" in draft["warnings"]

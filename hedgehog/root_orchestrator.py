@@ -177,7 +177,7 @@ class RootOrchestrator:
             "final_output_id": f"final:{request_id}",
             "request_id": request_id,
             "created_by": "root_orchestrator",
-            "status": final_draft["status_recommendation"],
+            "status": self._final_status_from_draft(gt_report, final_draft),
             "answer": final_draft["body"],
             "used_proposals": used_proposals,
             "gt_report_ref": gt_report["gt_report_id"],
@@ -233,7 +233,6 @@ class RootOrchestrator:
         permission = check_action_permission(action, user_confirmed=user_confirmed)
         reflex_result = execute_reflex_action(action, permission)
         reflex_applied = reflex_result["status"] == "simulated_success"
-        final_status = "success" if reflex_applied else "needs_user"
         gt_ref = f"gt:reflex:{request_id}"
         work_record = self._make_reflex_work_record(
             request_id=request_id,
@@ -263,7 +262,7 @@ class RootOrchestrator:
             "final_output_id": f"final:{request_id}",
             "request_id": request_id,
             "created_by": "root_orchestrator",
-            "status": final_status,
+            "status": self._final_status_from_draft(gt_reference, final_draft),
             "answer": final_draft["body"],
             "used_proposals": [],
             "gt_report_ref": gt_ref,
@@ -360,7 +359,7 @@ class RootOrchestrator:
             "final_output_id": f"final:{request_id}",
             "request_id": request_id,
             "created_by": "root_orchestrator",
-            "status": final_draft["status_recommendation"],
+            "status": self._final_status_from_draft(reuse_reference, final_draft),
             "answer": final_draft["body"],
             "used_proposals": [],
             "gt_report_ref": gt_ref,
@@ -401,6 +400,18 @@ class RootOrchestrator:
             "final_output": final_output,
         }
         return final_output
+
+    @staticmethod
+    def _final_status_from_draft(gt_report: dict, final_draft: dict) -> str:
+        gt_decision = gt_report.get("decision")
+        recommendation = final_draft.get("status_recommendation")
+        if gt_decision == "accept" and recommendation == "success":
+            return "success"
+        if gt_decision in {"revise", "needs_user", "no_update"}:
+            return "needs_user"
+        if recommendation == "needs_user":
+            return "needs_user"
+        return "failed"
 
     @staticmethod
     def _select_used_proposals(gt_report: dict, result_proposals: list[dict]) -> list[str]:

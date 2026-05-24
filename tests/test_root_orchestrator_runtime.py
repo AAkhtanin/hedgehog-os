@@ -82,6 +82,7 @@ def test_root_orchestrator_creates_valid_final_output_and_work_record(tmp_path):
     assert final_output["answer"] == final_draft["body"]
     assert final_output["created_by"] == "root_orchestrator"
     assert final_output["created_by"] != final_draft["created_by"]
+    assert final_draft["completed_proposal_ids"]
     assert final_output["status"] in {"success", "partial", "needs_user", "failed"}
     assert final_output["answer"]
     assert final_output["used_proposals"]
@@ -272,6 +273,8 @@ def test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor(tmp
     assert orchestrator.last_trace["plan_graph"] is None
     assert orchestrator.last_trace["result_proposals"] == []
     assert orchestrator.last_trace["vv_reports"] == []
+    assert orchestrator.last_trace["final_draft_proposal"]["created_by"] == "final_renderer"
+    assert orchestrator.last_trace["final_draft_proposal"]["mode"] == "direct_reuse"
     assert final_output["created_by"] == "root_orchestrator"
     assert final_output["status"] == "success"
     assert final_output["used_proposals"] == []
@@ -384,6 +387,8 @@ def test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor(tmp_pa
     assert orchestrator.last_trace["executor_skipped"] is True
     assert orchestrator.last_trace["plan_graph"] is None
     assert orchestrator.last_trace["result_proposals"] == []
+    assert orchestrator.last_trace["final_draft_proposal"]["created_by"] == "final_renderer"
+    assert orchestrator.last_trace["final_draft_proposal"]["mode"] == "deterministic_reflex"
     assert final_output["status"] == "success"
     assert work_record["content"]["execution_mode"] == "deterministic_reflex"
     assert work_record["content"]["action_id"] == "mock_turn_on_tv"
@@ -407,6 +412,8 @@ def test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation(tmp_pa
     assert final_output["status"] == "needs_user"
     assert orchestrator.last_trace["execution_mode"] == "deterministic_reflex"
     assert orchestrator.last_trace["reflex_applied"] is False
+    assert orchestrator.last_trace["final_draft_proposal"]["created_by"] == "final_renderer"
+    assert orchestrator.last_trace["final_draft_proposal"]["mode"] == "deterministic_reflex"
     assert orchestrator.last_trace["architect_skipped"] is True
     assert orchestrator.last_trace["executor_skipped"] is True
     assert work_record["content"]["action_id"] == "mock_order_pizza"

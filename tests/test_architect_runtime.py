@@ -135,3 +135,12 @@ def test_make_plan_graph_rejects_empty_candidate_vectors():
 
     with pytest.raises(ValueError):
         make_plan_graph(packet)
+
+
+def test_make_plan_graph_optional_mock_llm_path_validates_schema():
+    packet = build_demo_packet()
+    plan_graph = make_plan_graph(packet, architect_provider="mock_llm")
+
+    assert plan_graph["source_packet_id"] == packet["packet_id"]
+    assert plan_graph["nodes"]
+    plan_graph_validator().validate(plan_graph)

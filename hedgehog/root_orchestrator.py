@@ -12,6 +12,7 @@ from hedgehog.final_renderer import render_final_draft
 from hedgehog.gt_validator import validate_gt
 from hedgehog.input_intake import classify_input_text
 from hedgehog.llm_gateway import generate_general_answer
+from hedgehog.llm_architect import make_plan_graph_with_llm
 from hedgehog.marenna import create_marenna_after_task_record
 from hedgehog.mode_router import route_execution
 from hedgehog.post_vv import validate_result_proposals
@@ -38,6 +39,9 @@ class RootOrchestrator:
         user_confirmed: bool = False,
         llm_provider: str = "mock",
         llm_model: str | None = None,
+        architect_provider: str = "deterministic",
+        architect_model: str | None = None,
+        architect_allow_config: bool = True,
     ) -> dict:
         canonical_goal = "Prepare a mock government certificate request plan."
         desired_state = "Mock government certificate request is prepared for human review."
@@ -134,7 +138,23 @@ class RootOrchestrator:
             max_selected=4,
         )
 
-        plan_graph = make_plan_graph(attractor_packet)
+        llm_architect_result = None
+        if architect_provider == "deterministic":
+            plan_graph = make_plan_graph(attractor_packet)
+        else:
+            provider = "mock" if architect_provider == "mock_llm" else architect_provider
+            llm_architect_result = make_plan_graph_with_llm(
+                attractor_packet=attractor_packet,
+                provider=provider,
+                model=architect_model,
+                allow_config=architect_allow_config,
+            )
+            plan_graph = (
+                llm_architect_result["plan_graph"]
+                if llm_architect_result["status"] == "completed"
+                and llm_architect_result["plan_graph"] is not None
+                else make_plan_graph(attractor_packet)
+            )
         result_proposals = execute_plan_graph(
             plan_graph,
             session_anchor=session_anchor,
@@ -231,6 +251,7 @@ class RootOrchestrator:
             "reuse_applied": reuse_applied,
             "reused_record_ids": reused_record_ids,
             "attractor_packet": attractor_packet,
+            "llm_architect_result": llm_architect_result,
             "plan_graph": plan_graph,
             "result_proposals": result_proposals,
             "vv_reports": vv_reports,

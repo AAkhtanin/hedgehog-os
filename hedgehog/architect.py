@@ -47,7 +47,7 @@ def _node_task(step: str, vector_id: str, final_viability: float, soft_mask: flo
     )
 
 
-def make_plan_graph(attractor_packet: dict) -> dict:
+def _make_deterministic_plan_graph(attractor_packet: dict) -> dict:
     packet_id = attractor_packet["packet_id"]
     request_id = attractor_packet.get("request_id")
     time_context = attractor_packet["time_context"]
@@ -110,3 +110,26 @@ def make_plan_graph(attractor_packet: dict) -> dict:
     if request_id is not None:
         plan_graph["request_id"] = request_id
     return plan_graph
+
+
+def make_plan_graph(
+    attractor_packet: dict,
+    architect_provider: str = "deterministic",
+    model: str | None = None,
+    allow_config: bool = True,
+) -> dict:
+    if architect_provider == "deterministic":
+        return _make_deterministic_plan_graph(attractor_packet)
+
+    from hedgehog.llm_architect import make_plan_graph_with_llm
+
+    provider = "mock" if architect_provider == "mock_llm" else architect_provider
+    result = make_plan_graph_with_llm(
+        attractor_packet=attractor_packet,
+        provider=provider,
+        model=model,
+        allow_config=allow_config,
+    )
+    if result["status"] != "completed" or result["plan_graph"] is None:
+        raise ValueError(result["error"] or "LLM Architect failed")
+    return result["plan_graph"]

@@ -142,9 +142,29 @@ def test_root_orchestrator_certificate_text_still_uses_proof_pipeline(tmp_path):
 
     assert orchestrator.last_trace["input_intake"]["intent_kind"] == "certificate_demo"
     assert orchestrator.last_trace["mode_router"]["execution_mode"] == "proof_full_pipeline"
+    assert orchestrator.last_trace["llm_architect_result"] is None
     assert orchestrator.last_trace["plan_graph"]["nodes"]
     assert orchestrator.last_trace["result_proposals"]
     assert final_output["created_by"] == "root_orchestrator"
+
+
+def test_root_orchestrator_optional_mock_llm_architect_still_creates_final_output(tmp_path):
+    orchestrator, drs = make_orchestrator(tmp_path)
+    final_output = orchestrator.process_event(
+        raw_user_text="I need a mock government certificate request.",
+        request_id="req_root_mock_llm_architect",
+        session_anchor="sess_root_mock_llm_architect",
+        architect_provider="mock_llm",
+    )
+    work_record = drs.read_record("work", final_output["drs_writes"][0])
+
+    final_output_validator().validate(final_output)
+    assert orchestrator.last_trace["llm_architect_result"]["status"] == "completed"
+    assert orchestrator.last_trace["llm_architect_result"]["provider"] == "mock"
+    assert orchestrator.last_trace["llm_architect_result"]["used_llm"] is False
+    assert orchestrator.last_trace["plan_graph"]["nodes"]
+    assert final_output["created_by"] == "root_orchestrator"
+    assert work_record["content"]["execution_mode"] == "proof_full_pipeline"
 
 
 def test_root_orchestrator_does_not_persist_raw_text_or_sensitive_content_keys(tmp_path):

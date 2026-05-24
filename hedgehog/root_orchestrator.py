@@ -10,6 +10,7 @@ from hedgehog.executor import execute_plan_graph
 from hedgehog.gt_validator import validate_gt
 from hedgehog.marenna import create_marenna_after_task_record
 from hedgehog.post_vv import validate_result_proposals
+from hedgehog.reuse_gate import evaluate_reuse_candidates
 from hedgehog.time_model import make_temporal_query, make_time_envelope
 from hedgehog.up import create_up_after_task_record
 
@@ -41,8 +42,10 @@ class RootOrchestrator:
             record["record_id"] for record in retrieved_records if "record_id" in record
         ]
         memory_context_applied = len(memory_source_record_ids) > 0
-        reuse_decision = "context_only" if memory_context_applied else "none"
+        reuse_gate = evaluate_reuse_candidates(retrieved_records, temporal_query)
+        reuse_decision = reuse_gate["reuse_decision"]
         reuse_applied = False
+        reused_record_ids = []
 
         candidate_vectors = load_candidate_vectors_from_needles(
             [
@@ -81,7 +84,10 @@ class RootOrchestrator:
             memory_context_applied=memory_context_applied,
             memory_source_record_ids=memory_source_record_ids,
             reuse_decision=reuse_decision,
+            reuse_score_best=self._reuse_score_best(reuse_gate),
+            reuse_candidate_record_id=reuse_gate["best_record_id"],
             reuse_applied=reuse_applied,
+            reused_record_ids=reused_record_ids,
         )
         self.drs.write_record(work_record)
         marenna_record = create_marenna_after_task_record(
@@ -139,8 +145,10 @@ class RootOrchestrator:
             "retrieved_record_count": len(retrieved_records),
             "memory_context_applied": memory_context_applied,
             "memory_source_record_ids": memory_source_record_ids,
+            "reuse_gate": reuse_gate,
             "reuse_decision": reuse_decision,
             "reuse_applied": reuse_applied,
+            "reused_record_ids": reused_record_ids,
             "attractor_packet": attractor_packet,
             "plan_graph": plan_graph,
             "result_proposals": result_proposals,
@@ -173,7 +181,10 @@ class RootOrchestrator:
         memory_context_applied: bool,
         memory_source_record_ids: list[str],
         reuse_decision: str,
+        reuse_score_best: float | None,
+        reuse_candidate_record_id: str | None,
         reuse_applied: bool,
+        reused_record_ids: list[str],
     ) -> dict:
         return {
             "record_id": f"work:{request_id}",
@@ -189,7 +200,10 @@ class RootOrchestrator:
                 "memory_context_applied": memory_context_applied,
                 "memory_source_record_ids": memory_source_record_ids,
                 "reuse_decision": reuse_decision,
+                "reuse_score_best": reuse_score_best,
+                "reuse_candidate_record_id": reuse_candidate_record_id,
                 "reuse_applied": reuse_applied,
+                "reused_record_ids": reused_record_ids,
             },
             "time_envelope": make_time_envelope(session_anchor),
             "provenance": {
@@ -210,6 +224,14 @@ class RootOrchestrator:
             },
             "status": "accepted" if gt_report["decision"] == "accept" else "no_update",
         }
+
+    @staticmethod
+    def _reuse_score_best(reuse_gate: dict) -> float | None:
+        best_record_id = reuse_gate.get("best_record_id")
+        for score in reuse_gate.get("candidate_scores", []):
+            if score.get("record_id") == best_record_id:
+                return score["reuse_score"]
+        return None
 
     @staticmethod
     def _make_marenna_quarantine_record(

@@ -5,6 +5,7 @@ import jsonschema
 
 from hedgehog.drs import LocalDRS, SENSITIVE_KEY_FRAGMENTS
 from hedgehog.root_orchestrator import RootOrchestrator
+from hedgehog.time_model import make_time_envelope
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -136,8 +137,11 @@ def test_root_orchestrator_second_run_reuses_prior_work_record(tmp_path):
     assert orchestrator.last_trace["retrieved_record_count"] == 0
     assert orchestrator.last_trace["memory_context_applied"] is False
     assert orchestrator.last_trace["memory_source_record_ids"] == []
+    assert orchestrator.last_trace["reuse_gate"]["reuse_decision"] == "none"
+    assert orchestrator.last_trace["reuse_gate"]["candidate_scores"] == []
     assert orchestrator.last_trace["reuse_decision"] == "none"
     assert orchestrator.last_trace["reuse_applied"] is False
+    assert orchestrator.last_trace["reused_record_ids"] == []
 
     second_output = orchestrator.process_event(
         raw_user_text="I need another certificate for a mock government service.",
@@ -151,13 +155,63 @@ def test_root_orchestrator_second_run_reuses_prior_work_record(tmp_path):
 
     assert orchestrator.last_trace["memory_context_applied"] is True
     assert first_record["record_id"] in orchestrator.last_trace["memory_source_record_ids"]
+    assert "reuse_gate" in orchestrator.last_trace
+    assert orchestrator.last_trace["reuse_gate"]["candidate_scores"]
     assert orchestrator.last_trace["reuse_decision"] == "context_only"
     assert orchestrator.last_trace["reuse_applied"] is False
+    assert orchestrator.last_trace["reused_record_ids"] == []
+    assert orchestrator.last_trace["plan_graph"]["nodes"]
+    assert orchestrator.last_trace["result_proposals"]
+    if orchestrator.last_trace["reuse_decision"] == "direct_reuse_candidate":
+        assert orchestrator.last_trace["reuse_applied"] is False
     assert second_record["content"]["retrieved_record_count"] >= 1
     assert second_record["content"]["memory_context_applied"] is True
     assert first_record["record_id"] in second_record["content"]["memory_source_record_ids"]
     assert second_record["content"]["reuse_decision"] == "context_only"
+    assert "reuse_score_best" in second_record["content"]
+    assert second_record["content"]["reuse_candidate_record_id"] == first_record["record_id"]
     assert second_record["content"]["reuse_applied"] is False
+    assert second_record["content"]["reused_record_ids"] == []
     assert first_record["record_id"] != second_record["record_id"]
     assert first_record["layer"] == "work"
     assert second_record["layer"] == "work"
+
+
+def test_root_orchestrator_direct_reuse_candidate_still_runs_full_pipeline(tmp_path):
+    orchestrator, drs = make_orchestrator(tmp_path)
+    strong_record = {
+        "record_id": "work:strong_direct_candidate",
+        "layer": "work",
+        "type": "task_outcome",
+        "domain": "government_certificate",
+        "content": {
+            "summary": "Strong prior mock certificate outcome."
+        },
+        "time_envelope": make_time_envelope("sess_strong_candidate"),
+        "provenance": {
+            "request_id": "req_strong_candidate",
+            "created_by": "root_orchestrator",
+            "trace_refs": [],
+        },
+        "gt": {
+            "gt_report_id": "gt:strong:candidate",
+            "half_life_hours": 2_000.0,
+            "decay_rate": 0.0001,
+        },
+        "status": "accepted",
+    }
+    drs.write_record(strong_record)
+
+    final_output = orchestrator.process_event(
+        raw_user_text="I need a certificate for a mock government service.",
+        request_id="req_direct_candidate_001",
+        session_anchor="sess_direct_candidate_001",
+    )
+
+    assert orchestrator.last_trace["reuse_decision"] == "direct_reuse_candidate"
+    assert orchestrator.last_trace["reuse_applied"] is False
+    assert orchestrator.last_trace["reused_record_ids"] == []
+    assert orchestrator.last_trace["reuse_gate"]["candidate_scores"][0]["eligible"] is True
+    assert orchestrator.last_trace["plan_graph"]["nodes"]
+    assert orchestrator.last_trace["result_proposals"]
+    assert final_output["created_by"] == "root_orchestrator"

@@ -44,6 +44,12 @@ DRS registry invariant:
 8. Memory-first reuse
    - Local memory reuse must be attempted before Architect.
    - Reusable prior records are evaluated through TemporalQuery, CandidateVector generation, and AVF before planning.
+   - ReuseGate evaluates prior DRS records after TemporalQuery retrieval.
+   - ReuseGate computes `freshness`, `gt_trust`, `policy`, `conflict`, and `reuse_score`.
+   - ReuseGate may return `none`, `context_only`, or `direct_reuse_candidate`.
+   - `direct_reuse_candidate` is not actual direct reuse in v0.25.
+   - `reuse_applied` remains `false` in v0.25; Root still runs the full pipeline.
+   - Actual direct reuse requires explicit Root-level shortcut logic and tests proving Architect and Executor were skipped.
 
 9. CandidateVector sources
    - `CandidateVector` values may come only from installed needles, Local DRS, external DRS pointers, or fallback exploration templates.

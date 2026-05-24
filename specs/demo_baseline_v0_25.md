@@ -71,7 +71,7 @@ The second run is expected to show:
 
 - `retrieved_record_count >= 1`
 - `memory_context_applied = true`
-- `reuse_decision = context_only`
+- `reuse_decision = context_only` for ordinary prior records.
 - `reuse_applied = false`
 - Direct reuse is not implemented yet.
 - Architect and Executor still run.
@@ -83,7 +83,29 @@ Interpretation:
 - The runtime is memory-informed, but it does not bypass planning or execution.
 - GT still selects among fresh ResultProposals from the full pipeline.
 
-## 5. Context-Only Memory vs Direct Reuse
+## 5. ReuseGate Semantics
+
+v0.25 includes a deterministic ReuseGate scoring layer. ReuseGate runs after TemporalQuery retrieval and evaluates prior DRS records before the normal planning pipeline.
+
+ReuseGate computes:
+
+- `freshness`
+- `gt_trust`
+- `policy`
+- `conflict`
+- `reuse_score`
+
+ReuseGate may return:
+
+- `none`: no prior records were retrieved.
+- `context_only`: records exist, but no record passed the direct reuse scoring gates.
+- `direct_reuse_candidate`: a record passed the scoring gates.
+
+`direct_reuse_candidate` is not actual reuse in v0.25. It means a candidate has been identified, but Root still runs AVF, Architect, Executor, Post V&V, and GTValidator. `reuse_applied` remains `false`.
+
+Actual direct reuse requires explicit Root-level shortcut logic and tests proving Architect and Executor were skipped.
+
+## 6. Context-Only Memory vs Direct Reuse
 
 ### Memory-Informed Execution / `context_only`
 
@@ -113,14 +135,14 @@ That future path must be gated by checks such as:
 - ConflictCheck
 - TimeEnvelope validity
 
-Direct reuse is not implemented in v0.25. The baseline must not describe `context_only` as direct reuse.
+Direct reuse is not implemented in v0.25. The baseline must not describe `context_only` or `direct_reuse_candidate` as actual direct reuse.
 
-## 6. What This Baseline Does Not Prove Yet
+## 7. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
 - Real LLM/SLM role substitution.
-- Direct reuse gate behavior.
+- Root-level direct reuse shortcut behavior.
 - Pointer resolution.
 - External DRS protocol.
 - Telegram shell integration.
@@ -128,11 +150,10 @@ This baseline does not prove:
 
 These are future layers. The v0.25 baseline exists to make later changes measurable against a stable contract.
 
-## 7. Future Demo Evolution
+## 8. Future Demo Evolution
 
 - `v0.25`: deterministic CLI baseline.
 - `v0.30`: direct reuse gate.
 - `v0.35`: LLM/SLM role substitution.
 - `v0.40`: Telegram shell as interface only.
 - `v0.45`: richer useful assistant scenario.
-

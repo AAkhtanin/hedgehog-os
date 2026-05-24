@@ -54,7 +54,9 @@ User/Event
 
 `reuse` runs two certificate requests against the same LocalDRS path. The second run sees the previous Work record and reports `memory_context_applied=true`, `reuse_decision=context_only`, and `reuse_applied=false`.
 
-`context_only` is not direct reuse. Architect and Executor still run. A future direct reuse gate must evaluate ReuseScore, Freshness, GTTrust, PolicyOK, ConflictCheck, and TimeEnvelope validity before bypassing planning or execution.
+ReuseGate evaluates prior DRS records after TemporalQuery retrieval. It computes `freshness`, `gt_trust`, `policy`, `conflict`, and `reuse_score`, then returns one of `none`, `context_only`, or `direct_reuse_candidate`.
+
+`direct_reuse_candidate` means a record passed the scoring gates. It is not actual direct reuse in v0.25. Root still runs AVF, Architect, Executor, Post V&V, and GTValidator, and `reuse_applied` remains `false`. Actual direct reuse requires future Root-level shortcut logic, a `RootFinalFromReuse` path, and tests proving Architect and Executor were skipped.
 
 ## Install And Run
 
@@ -127,7 +129,7 @@ second_run:
 
 - Deterministic stubs only.
 - Local JSON DRS only.
-- No direct reuse shortcut yet.
+- ReuseGate scoring exists, but no direct reuse shortcut is enabled yet.
 - No pointer resolution yet.
 - No real APIs.
 - No UI.
@@ -135,7 +137,7 @@ second_run:
 
 ## Roadmap
 
-- Direct reuse gate.
+- Root-level direct reuse shortcut with explicit `RootFinalFromReuse` tests.
 - Richer DRS pointer resolution.
 - Marennya validation and promotion.
 - UP validation and promotion.

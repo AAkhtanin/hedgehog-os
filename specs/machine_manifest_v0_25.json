@@ -71,6 +71,10 @@
       "statement": "GTValidator runs after Post V&V and before Root FinalOutput."
     },
     {
+      "id": "principle_final_draft_subordinate_to_root",
+      "statement": "Only RootOrchestrator may convert FinalDraftProposal into FinalOutput."
+    },
+    {
       "id": "principle_quarantine_first",
       "statement": "Marennya and UP artifacts are written to Quarantine before promotion."
     }
@@ -186,6 +190,23 @@
       ],
       "note": "GT does not prove truth. It selects robust strategy under payoff specification."
     },
+    "final_renderer": {
+      "id": "role_final_renderer",
+      "input_contract": "gt_report_result_proposals_vv_reports_drs_refs",
+      "output_contract": "final_draft_proposal",
+      "responsibilities": [
+        "draft user-facing response body",
+        "summarize selected completed, needs_user, and blocked branches",
+        "emit claims and warnings"
+      ],
+      "forbidden": [
+        "final_output",
+        "drs_writeback",
+        "external_actions",
+        "policy_override"
+      ],
+      "note": "FinalRenderer is subordinate to Root. It drafts FinalDraftProposal only."
+    },
     "marenna": {
       "id": "role_marenna",
       "input_contract": "work_gt_feedback_bundle",
@@ -255,6 +276,10 @@
     "final_output": {
       "id_prefix": "fo_",
       "description": "User-facing output created only by RootOrchestrator."
+    },
+    "final_draft_proposal": {
+      "id_prefix": "draft_",
+      "description": "Subordinate renderer draft. Not a FinalOutput."
     },
     "drs_record": {
       "id_prefix": "drs_",

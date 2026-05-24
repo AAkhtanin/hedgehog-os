@@ -6,6 +6,18 @@ These invariants are non-negotiable for the proof-of-architecture demo.
    - `FinalOutput` is created only by `RootOrchestrator`.
    - No executor, validator, architect, DRS component, Marennya hook, or UP hook may produce final user-facing output.
 
+Final draft / Root authority invariant:
+
+- `RootOrchestrator` is the only component allowed to create `FinalOutput`.
+- Root is the final authority and commit wrapper, not necessarily the strongest prose generator.
+- `FinalRenderer` or a future `SynthesisExecutor` may create `FinalDraftProposal` only.
+- `FinalDraftProposal` is not `FinalOutput`.
+- `FinalDraftProposal` must not write DRS records.
+- `FinalDraftProposal` must not perform external actions.
+- Root may use, reject, or rewrite a `FinalDraftProposal` before creating `FinalOutput`.
+- `FinalOutput.created_by` must remain `root_orchestrator`.
+- Renderer-created drafts must remain subordinate artifacts.
+
 2. Executor contract
    - Executors return `ResultProposal` only.
    - Executors may simulate work, report evidence, and surface uncertainty, but they must not finalize.

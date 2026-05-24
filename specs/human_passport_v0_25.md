@@ -154,6 +154,23 @@ Hard rule:
 FinalOutput = RootOrchestrator only
 ```
 
+### Root vs FinalRenderer
+
+Root owns authority, validation, policy, commit, and DRS writeback.
+`FinalRenderer` owns only draft generation.
+
+This separation allows weak Root-SLM deployments. Root does not need to be the
+best prose generator, but it must remain the final policy and commit authority.
+
+`FinalRenderer` returns `FinalDraftProposal`, never `FinalOutput`.
+`FinalDraftProposal` is a subordinate artifact that Root may use, reject, or
+rewrite before creating `FinalOutput`.
+
+A stronger LLM, SLM, or needle may later replace the deterministic
+`FinalRenderer`, but the contract remains the same: it returns
+`FinalDraftProposal` only and has no DRS writeback, external action, or final
+commit authority.
+
 ### Architect
 
 Architect receives `AttractorPacket`, not raw user text.

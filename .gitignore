@@ -4,3 +4,7 @@ __pycache__/
 *.pyc
 .DS_Store
 *.egg-info/
+config.py
+logs/
+data/logs/
+data/drs/**/*.json

@@ -10,6 +10,8 @@ from hedgehog.drs import LocalDRS
 from hedgehog.executor import execute_plan_graph
 from hedgehog.final_renderer import render_final_draft
 from hedgehog.gt_validator import validate_gt
+from hedgehog.input_intake import classify_input_text
+from hedgehog.llm_gateway import generate_general_answer
 from hedgehog.marenna import create_marenna_after_task_record
 from hedgehog.mode_router import route_execution
 from hedgehog.post_vv import validate_result_proposals
@@ -34,6 +36,8 @@ class RootOrchestrator:
         force_full_pipeline: bool = True,
         allow_reflex: bool = False,
         user_confirmed: bool = False,
+        llm_provider: str = "mock",
+        llm_model: str | None = None,
     ) -> dict:
         canonical_goal = "Prepare a mock government certificate request plan."
         desired_state = "Mock government certificate request is prepared for human review."
@@ -42,6 +46,7 @@ class RootOrchestrator:
         world_state_ref = f"world_state:{request_id}"
 
         temporal_query = make_temporal_query()
+        input_intake = classify_input_text(raw_user_text)
         retrieved_records = self.drs.query_records(
             temporal_query,
             ["work", "thoughts", "deadends"],
@@ -82,6 +87,21 @@ class RootOrchestrator:
                 mode_router=mode_router,
                 action=reflex_action,
                 user_confirmed=user_confirmed,
+            )
+
+        if input_intake["intent_kind"] == "general_request":
+            return self._process_general_request(
+                request_id=request_id,
+                session_anchor=session_anchor,
+                temporal_query=temporal_query,
+                input_intake=input_intake,
+                retrieved_records=retrieved_records,
+                memory_source_record_ids=memory_source_record_ids,
+                reuse_gate=reuse_gate,
+                mode_router=mode_router,
+                raw_user_text=raw_user_text,
+                llm_provider=llm_provider,
+                llm_model=llm_model,
             )
 
         if mode_router["execution_mode"] == "direct_reuse":
@@ -201,6 +221,7 @@ class RootOrchestrator:
 
         self.last_trace = {
             "temporal_query": temporal_query,
+            "input_intake": input_intake,
             "retrieved_record_count": len(retrieved_records),
             "memory_context_applied": memory_context_applied,
             "memory_source_record_ids": memory_source_record_ids,
@@ -220,6 +241,95 @@ class RootOrchestrator:
             "marenna_records": [marenna_drs_record["record_id"]],
             "up_records": [up_drs_record["record_id"]],
             "final_draft_proposal": final_draft,
+            "final_output": final_output,
+        }
+        return final_output
+
+    def _process_general_request(
+        self,
+        request_id: str,
+        session_anchor: str,
+        temporal_query: dict,
+        input_intake: dict,
+        retrieved_records: list[dict],
+        memory_source_record_ids: list[str],
+        reuse_gate: dict,
+        mode_router: dict,
+        raw_user_text: str,
+        llm_provider: str,
+        llm_model: str | None,
+    ) -> dict:
+        llm_result = generate_general_answer(
+            text=raw_user_text,
+            request_id=request_id,
+            provider=llm_provider,
+            model=llm_model,
+        )
+        final_status = self._general_final_status(llm_result)
+        gt_ref = f"gt:llm_general:{request_id}"
+        work_record = self._make_general_work_record(
+            request_id=request_id,
+            session_anchor=session_anchor,
+            llm_result=llm_result,
+            final_status=final_status,
+            retrieved_record_count=len(retrieved_records),
+            memory_source_record_ids=memory_source_record_ids,
+            reuse_gate=reuse_gate,
+            gt_ref=gt_ref,
+        )
+        self.drs.write_record(work_record)
+
+        final_output = {
+            "final_output_id": f"final:{request_id}",
+            "request_id": request_id,
+            "created_by": "root_orchestrator",
+            "status": final_status,
+            "answer": llm_result["answer"] or "General responder failed to produce an answer.",
+            "used_proposals": [],
+            "gt_report_ref": gt_ref,
+            "drs_writes": [work_record["record_id"]],
+            "time_envelope": make_time_envelope(session_anchor),
+            "summary": "General request handled by subordinate GeneralResponder.",
+            "trace_refs": [
+                {
+                    "trace_id": f"trace:{request_id}",
+                    "span_id": "root_llm_general",
+                    "kind": "root_orchestrator",
+                }
+            ],
+        }
+        gt_reference = {
+            "gt_report_id": gt_ref,
+            "decision": "accept" if llm_result["status"] == "completed" else "revise",
+        }
+        self.last_trace = {
+            "temporal_query": temporal_query,
+            "input_intake": input_intake,
+            "retrieved_record_count": len(retrieved_records),
+            "memory_context_applied": bool(memory_source_record_ids),
+            "memory_source_record_ids": memory_source_record_ids,
+            "reuse_gate": reuse_gate,
+            "mode_router": mode_router,
+            "execution_mode": "llm_general",
+            "route": "llm_general",
+            "reuse_decision": "none" if not memory_source_record_ids else reuse_gate["reuse_decision"],
+            "reuse_applied": False,
+            "reused_record_ids": [],
+            "reflex_applied": False,
+            "direct_reuse_applied": False,
+            "architect_skipped": True,
+            "executor_skipped": True,
+            "attractor_packet": None,
+            "plan_graph": None,
+            "result_proposals": [],
+            "vv_reports": [],
+            "gt_report": gt_reference,
+            "llm_gateway_result": llm_result,
+            "drs_records": [work_record],
+            "marenna_hook_records": [],
+            "up_hook_records": [],
+            "marenna_records": [],
+            "up_records": [],
             "final_output": final_output,
         }
         return final_output
@@ -428,6 +538,14 @@ class RootOrchestrator:
         return "failed"
 
     @staticmethod
+    def _general_final_status(llm_result: dict) -> str:
+        if llm_result["status"] == "completed":
+            return "success"
+        if llm_result["status"] == "blocked":
+            return "needs_user"
+        return "failed"
+
+    @staticmethod
     def _select_used_proposals(gt_report: dict, result_proposals: list[dict]) -> list[str]:
         winner = gt_report.get("winner")
         if winner:
@@ -525,6 +643,77 @@ class RootOrchestrator:
             if score.get("record_id") == best_record_id:
                 return score["reuse_score"]
         return None
+
+    @staticmethod
+    def _make_general_work_record(
+        request_id: str,
+        session_anchor: str,
+        llm_result: dict,
+        final_status: str,
+        retrieved_record_count: int,
+        memory_source_record_ids: list[str],
+        reuse_gate: dict,
+        gt_ref: str,
+    ) -> dict:
+        return {
+            "record_id": f"work:{request_id}",
+            "layer": "work",
+            "type": "task_outcome",
+            "domain": "general",
+            "content": {
+                "summary": "General request handled by subordinate GeneralResponder.",
+                "canonical_goal": "Answer a general user request.",
+                "result": llm_result["status"],
+                "final_status": final_status,
+                "execution_mode": "llm_general",
+                "route": "llm_general",
+                "method": "llm_gateway_general_responder",
+                "provider": llm_result["provider"],
+                "model": llm_result["model"],
+                "used_llm": llm_result["used_llm"],
+                "selected_proposal_ids": [],
+                "completed_proposal_ids": [],
+                "needs_user_proposal_ids": [],
+                "blocked_proposal_ids": [],
+                "rejected_proposal_ids": [],
+                "gt_report_ref": gt_ref,
+                "gt_decision": "accept" if llm_result["status"] == "completed" else "revise",
+                "final_draft_ref": None,
+                "final_draft_summary": "GeneralResponder result used by Root.",
+                "final_draft_claims": list(llm_result["claims"]),
+                "final_draft_warnings": list(llm_result["warnings"]),
+                "retrieved_record_count": retrieved_record_count,
+                "memory_context_applied": bool(memory_source_record_ids),
+                "memory_source_record_ids": memory_source_record_ids,
+                "reuse_decision": "none" if not memory_source_record_ids else reuse_gate["reuse_decision"],
+                "reuse_score_best": RootOrchestrator._reuse_score_best(reuse_gate),
+                "reuse_candidate_record_id": reuse_gate.get("best_record_id"),
+                "reuse_applied": False,
+                "reused_record_ids": [],
+                "reflex_applied": False,
+                "direct_reuse_applied": False,
+                "architect_skipped": True,
+                "executor_skipped": True,
+            },
+            "time_envelope": make_time_envelope(session_anchor),
+            "provenance": {
+                "request_id": request_id,
+                "created_by": "root_orchestrator",
+                "trace_refs": [
+                    {
+                        "trace_id": f"trace:{request_id}",
+                        "span_id": "llm_general_writeback",
+                        "kind": "root_orchestrator",
+                    }
+                ],
+            },
+            "gt": {
+                "gt_report_id": gt_ref,
+                "half_life_hours": 1.0,
+                "decay_rate": 0.0,
+            },
+            "status": "accepted" if llm_result["status"] == "completed" else "no_update",
+        }
 
     @staticmethod
     def _make_direct_reuse_work_record(

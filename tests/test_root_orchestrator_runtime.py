@@ -107,6 +107,46 @@ def test_root_orchestrator_creates_valid_final_output_and_work_record(tmp_path):
     assert content["final_draft_warnings"] == final_draft["warnings"]
 
 
+def test_root_orchestrator_generic_math_routes_to_llm_general_not_certificate_pipeline(tmp_path):
+    orchestrator, drs = make_orchestrator(tmp_path)
+    final_output = orchestrator.process_event(
+        raw_user_text="x + y = 110\nx - y = 100",
+        request_id="req_general_math",
+        session_anchor="sess_general_math",
+        llm_provider="mock",
+    )
+    work_record = drs.read_record("work", final_output["drs_writes"][0])
+
+    final_output_validator().validate(final_output)
+    assert orchestrator.last_trace["input_intake"]["intent_kind"] == "general_request"
+    assert orchestrator.last_trace["execution_mode"] == "llm_general"
+    assert orchestrator.last_trace["route"] == "llm_general"
+    assert orchestrator.last_trace["architect_skipped"] is True
+    assert orchestrator.last_trace["executor_skipped"] is True
+    assert orchestrator.last_trace["llm_gateway_result"]["provider"] == "mock"
+    assert final_output["created_by"] == "root_orchestrator"
+    assert final_output["answer"] == "x = 105\ny = 5"
+    assert "certificate request pipeline completed" not in final_output["answer"].lower()
+    assert work_record["domain"] == "general"
+    assert work_record["content"]["execution_mode"] == "llm_general"
+    assert work_record["content"]["route"] == "llm_general"
+    assert work_record["content"]["provider"] == "mock"
+    assert work_record["content"]["model"] == "mock_general_responder_v1"
+    assert work_record["content"]["used_llm"] is False
+    assert work_record["content"]["method"] == "llm_gateway_general_responder"
+    assert not contains_key(work_record["content"], "raw_user_text")
+
+
+def test_root_orchestrator_certificate_text_still_uses_proof_pipeline(tmp_path):
+    orchestrator, _, final_output = run_demo(tmp_path, request_id="req_certificate_pipeline")
+
+    assert orchestrator.last_trace["input_intake"]["intent_kind"] == "certificate_demo"
+    assert orchestrator.last_trace["mode_router"]["execution_mode"] == "proof_full_pipeline"
+    assert orchestrator.last_trace["plan_graph"]["nodes"]
+    assert orchestrator.last_trace["result_proposals"]
+    assert final_output["created_by"] == "root_orchestrator"
+
+
 def test_root_orchestrator_does_not_persist_raw_text_or_sensitive_content_keys(tmp_path):
     _, drs, final_output = run_demo(tmp_path, request_id="req_root_002")
     work_record = drs.read_record("work", final_output["drs_writes"][0])

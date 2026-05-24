@@ -54,6 +54,9 @@ def test_telegram_shell_debug_text_has_compact_summary(tmp_path):
     assert "[debug]" in debug_text
     assert "execution_mode:" in debug_text
     assert "route:" in debug_text
+    assert "provider:" in debug_text
+    assert "model:" in debug_text
+    assert "used_llm:" in debug_text
     assert "final_status:" in debug_text
     assert "drs_writes:" in debug_text
     assert "trace_path:" in debug_text
@@ -121,3 +124,26 @@ def test_telegram_shell_force_full_pipeline_for_generic_certificate_text(tmp_pat
     assert trace["trace"].get("reuse_applied", False) is False
     assert trace["trace"]["plan_graph"]["nodes"]
     assert trace["trace"]["result_proposals"]
+
+
+def test_telegram_shell_generic_math_routes_to_llm_general(tmp_path):
+    result = handle_telegram_text(
+        text="x + y = 110\nx - y = 100",
+        chat_id="chat_math",
+        drs_root=tmp_path / "drs",
+        needles_dir=NEEDLES_DIR,
+        llm_provider="mock",
+    )
+    trace = read_json(Path(result["trace_path"]))
+
+    assert result["reply_text"] == "x = 105\ny = 5"
+    assert result["execution_mode"] == "llm_general"
+    assert result["route"] == "llm_general"
+    assert result["provider"] == "mock"
+    assert result["used_llm"] is False
+    assert "Mock certificate request pipeline completed" not in result["reply_text"]
+    assert "execution_mode: llm_general" in result["debug_text"]
+    assert "provider: mock" in result["debug_text"]
+    assert "used_llm: False" in result["debug_text"]
+    assert trace["trace"]["input_intake"]["intent_kind"] == "general_request"
+    assert trace["trace"]["llm_gateway_result"]["provider"] == "mock"

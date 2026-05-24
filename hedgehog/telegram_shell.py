@@ -56,6 +56,9 @@ def _debug_summary(trace: dict, final_output: dict, trace_path: Path) -> dict:
         "request_id": final_output["request_id"],
         "execution_mode": execution_mode,
         "route": route,
+        "provider": trace.get("llm_gateway_result", {}).get("provider", "none"),
+        "model": trace.get("llm_gateway_result", {}).get("model", "none"),
+        "used_llm": bool(trace.get("llm_gateway_result", {}).get("used_llm", False)),
         "final_status": final_output["status"],
         "memory_context_applied": bool(trace.get("memory_context_applied", False)),
         "reuse_decision": trace.get("reuse_decision", "none"),
@@ -77,6 +80,9 @@ def _format_debug_text(summary: dict) -> str:
         "request_id",
         "execution_mode",
         "route",
+        "provider",
+        "model",
+        "used_llm",
         "final_status",
         "memory_context_applied",
         "reuse_decision",
@@ -101,6 +107,8 @@ def handle_telegram_text(
     needles_dir: Path,
     debug: bool = True,
     force_full_pipeline: bool = True,
+    llm_provider: str = "mock",
+    llm_model: str | None = None,
 ) -> dict:
     drs_root = Path(drs_root)
     request_id = _make_request_id(chat_id, text)
@@ -113,6 +121,8 @@ def handle_telegram_text(
         request_id=request_id,
         session_anchor=session_anchor,
         force_full_pipeline=force_full_pipeline,
+        llm_provider=llm_provider,
+        llm_model=llm_model,
     )
 
     trace_path = _trace_file_path(drs_root, request_id)
@@ -143,4 +153,7 @@ def handle_telegram_text(
         "final_status": final_output["status"],
         "execution_mode": summary["execution_mode"],
         "route": summary["route"],
+        "provider": summary["provider"],
+        "model": summary["model"],
+        "used_llm": summary["used_llm"],
     }

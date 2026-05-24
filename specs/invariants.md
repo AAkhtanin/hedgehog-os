@@ -98,6 +98,17 @@ L0 closure invariant:
 - L0 should not be expanded further until real needle/interface work begins.
 - After L0 closure, the next development focus is Architect/PlanGraph depth and richer planning semantics.
 
+Needle contract invariant:
+
+- A needle is not merely a plugin.
+- A needle is a bounded protocol cell declaring capabilities, candidate vectors, allowed actions, risk level, permission policy, execution mode, audit requirements, and DRS writeback requirements.
+- Runtime action/reflex behavior should prefer declared needle action metadata over hardcoded assumptions.
+- `declared_actions` may enable `deterministic_reflex` or `direct_protocol` routing, but must not bypass Root, permission, policy, audit, or required DRS writeback.
+- In MVP, `real_execution_supported` must remain `false` for declared actions.
+- Mock execution must not perform real external API calls, device control, purchases, banking, identity, or government actions.
+- `proof_full_pipeline` must remain available even if a needle declares `deterministic_reflex` actions.
+- Unknown actions must not be executed by the reflex path.
+
 9. CandidateVector sources
    - `CandidateVector` values may come only from installed needles, Local DRS, external DRS pointers, or fallback exploration templates.
    - CandidateVectors must not be freely hallucinated by an LLM.

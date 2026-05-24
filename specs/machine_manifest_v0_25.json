@@ -848,6 +848,39 @@
   },
 
   "needles": {
+    "needle_contract": {
+      "model": "bounded_protocol_cell",
+      "declares": [
+        "candidate_vectors",
+        "declared_actions",
+        "capabilities",
+        "permission_policy",
+        "execution_mode",
+        "risk_level",
+        "audit_required",
+        "drs_writeback_required"
+      ],
+      "declared_actions_supported": true,
+      "real_execution_supported_in_mvp": false,
+      "mock_execution_only": true,
+      "runtime_preference": "use_declared_action_metadata_before_hardcoded_reflex_assumptions",
+      "forbidden_in_mvp": [
+        "real_external_api_calls",
+        "real_device_control",
+        "real_purchases",
+        "real_banking_actions",
+        "real_identity_actions",
+        "real_government_actions"
+      ],
+      "invariants": [
+        "declared_actions_must_not_bypass_root",
+        "declared_actions_must_not_bypass_permission_policy",
+        "declared_actions_must_not_bypass_audit",
+        "declared_actions_must_not_bypass_required_drs_writeback",
+        "proof_full_pipeline_must_remain_available",
+        "unknown_actions_must_not_execute_in_reflex_path"
+      ]
+    },
     "mvp_needles": [
       {
         "needle_id": "needle_government_services",

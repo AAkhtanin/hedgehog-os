@@ -95,6 +95,29 @@ Execution levels:
   scheduled work. This is after-task, idle, scheduled, or deferred and is not
   part of the immediate user-response critical path unless explicitly requested.
 
+### Needle Contract v0.2
+
+Needles now declare not only `CandidateVector` objects but also action metadata:
+
+- `action_id`;
+- `intent_aliases`;
+- `capability`;
+- `execution_mode`;
+- `risk_level`;
+- confirmation policy;
+- mock/real support flags;
+- audit and writeback requirements.
+
+This makes L0 deterministic reflex and future protocol execution
+contract-driven. A TV, pizza, airline, calendar, bank, or corporate needle
+should expose a bounded grammar of allowed actions instead of forcing a large
+LLM to infer the workflow each time.
+
+For MVP all actions remain mock-only and real external execution is forbidden.
+Declared action metadata may route simple requests toward cheap execution, but
+it must not bypass Root, permission checks, policy, audit, or required DRS
+writeback.
+
 ## 2. Non-Goals
 
 The MVP explicitly is not:

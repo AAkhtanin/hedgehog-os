@@ -75,6 +75,7 @@ def test_make_plan_graph_from_attractor_packet_validates_schema():
     assert plan_graph["source_packet_id"] == packet["packet_id"]
     assert "time_assumptions" in plan_graph
     assert plan_graph["nodes"]
+    assert len(plan_graph["nodes"]) > len(packet["candidate_vectors"])
     assert node_vector_ids <= packet_vector_ids
     assert "illegal_coercion" not in node_vector_ids
     assert all(node["branching_mode"] != "forbidden" for node in plan_graph["nodes"])
@@ -85,6 +86,47 @@ def test_make_plan_graph_from_attractor_packet_validates_schema():
     assert not contains_key(plan_graph, "raw_user_text")
 
     plan_graph_validator().validate(plan_graph)
+
+
+def test_make_plan_graph_official_online_request_branch_has_ordered_dependencies():
+    packet = build_demo_packet()
+    plan_graph = make_plan_graph(packet)
+
+    official_nodes = [
+        node
+        for node in plan_graph["nodes"]
+        if node["vector_id"] == "official_online_request"
+    ]
+    official_tasks = [node["task"].split(":", 1)[0] for node in official_nodes]
+
+    assert official_tasks == [
+        "prepare_request_payload",
+        "validate_required_fields",
+        "simulate_submission_step",
+    ]
+    assert official_nodes[0]["depends_on"] == []
+    assert official_nodes[1]["depends_on"] == [official_nodes[0]["node_id"]]
+    assert official_nodes[2]["depends_on"] == [official_nodes[1]["node_id"]]
+
+
+def test_make_plan_graph_edges_and_executor_assignments_cover_nodes():
+    packet = build_demo_packet()
+    plan_graph = make_plan_graph(packet)
+
+    node_ids = {node["node_id"] for node in plan_graph["nodes"]}
+    edge_refs = {
+        ref
+        for edge in plan_graph["edges"]
+        for ref in (edge["from"], edge["to"])
+    }
+    assigned_node_ids = {
+        node_id
+        for assignment in plan_graph["executor_assignments"]
+        for node_id in assignment["node_ids"]
+    }
+
+    assert edge_refs <= node_ids
+    assert assigned_node_ids == node_ids
 
 
 def test_make_plan_graph_rejects_empty_candidate_vectors():

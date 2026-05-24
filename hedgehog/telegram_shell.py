@@ -42,9 +42,19 @@ def _trace_value(trace: dict, key: str, default: Any = None) -> Any:
     return trace.get(key, default)
 
 
+def _short_error(value: Any, limit: int = 240) -> str:
+    if not value:
+        return "none"
+    line = " ".join(str(value).split())
+    if len(line) <= limit:
+        return line
+    return f"{line[: limit - 3]}..."
+
+
 def _debug_summary(trace: dict, final_output: dict, trace_path: Path) -> dict:
     mode_router = trace.get("mode_router", {})
     gt_report = trace.get("gt_report") or {}
+    llm_result = trace.get("llm_gateway_result")
     drs_writes = final_output.get("drs_writes", [])
     execution_mode = (
         trace.get("execution_mode")
@@ -56,9 +66,14 @@ def _debug_summary(trace: dict, final_output: dict, trace_path: Path) -> dict:
         "request_id": final_output["request_id"],
         "execution_mode": execution_mode,
         "route": route,
-        "provider": trace.get("llm_gateway_result", {}).get("provider", "none"),
-        "model": trace.get("llm_gateway_result", {}).get("model", "none"),
-        "used_llm": bool(trace.get("llm_gateway_result", {}).get("used_llm", False)),
+        "provider": (llm_result or {}).get("provider", "none"),
+        "model": (llm_result or {}).get("model", "none"),
+        "used_llm": bool((llm_result or {}).get("used_llm", False)),
+        "llm_status": (llm_result or {}).get("status", "none"),
+        "llm_provider": (llm_result or {}).get("provider", "none"),
+        "llm_model": (llm_result or {}).get("model", "none"),
+        "llm_used": bool((llm_result or {}).get("used_llm", False)),
+        "llm_error": _short_error((llm_result or {}).get("error")),
         "final_status": final_output["status"],
         "memory_context_applied": bool(trace.get("memory_context_applied", False)),
         "reuse_decision": trace.get("reuse_decision", "none"),
@@ -83,6 +98,11 @@ def _format_debug_text(summary: dict) -> str:
         "provider",
         "model",
         "used_llm",
+        "llm_status",
+        "llm_provider",
+        "llm_model",
+        "llm_used",
+        "llm_error",
         "final_status",
         "memory_context_applied",
         "reuse_decision",
@@ -156,4 +176,9 @@ def handle_telegram_text(
         "provider": summary["provider"],
         "model": summary["model"],
         "used_llm": summary["used_llm"],
+        "llm_status": summary["llm_status"],
+        "llm_provider": summary["llm_provider"],
+        "llm_model": summary["llm_model"],
+        "llm_used": summary["llm_used"],
+        "llm_error": summary["llm_error"],
     }

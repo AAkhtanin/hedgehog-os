@@ -57,6 +57,11 @@ def test_telegram_shell_debug_text_has_compact_summary(tmp_path):
     assert "provider:" in debug_text
     assert "model:" in debug_text
     assert "used_llm:" in debug_text
+    assert "llm_status:" in debug_text
+    assert "llm_provider:" in debug_text
+    assert "llm_model:" in debug_text
+    assert "llm_used:" in debug_text
+    assert "llm_error:" in debug_text
     assert "final_status:" in debug_text
     assert "drs_writes:" in debug_text
     assert "trace_path:" in debug_text
@@ -141,9 +146,41 @@ def test_telegram_shell_generic_math_routes_to_llm_general(tmp_path):
     assert result["route"] == "llm_general"
     assert result["provider"] == "mock"
     assert result["used_llm"] is False
+    assert result["llm_status"] == "completed"
+    assert result["llm_provider"] == "mock"
+    assert result["llm_model"] == "mock_general_responder_v1"
+    assert result["llm_used"] is False
+    assert result["llm_error"] == "none"
     assert "Mock certificate request pipeline completed" not in result["reply_text"]
     assert "execution_mode: llm_general" in result["debug_text"]
-    assert "provider: mock" in result["debug_text"]
-    assert "used_llm: False" in result["debug_text"]
+    assert "llm_status: completed" in result["debug_text"]
+    assert "llm_provider: mock" in result["debug_text"]
+    assert "llm_model: mock_general_responder_v1" in result["debug_text"]
+    assert "llm_used: False" in result["debug_text"]
+    assert "llm_error: none" in result["debug_text"]
     assert trace["trace"]["input_intake"]["intent_kind"] == "general_request"
     assert trace["trace"]["llm_gateway_result"]["provider"] == "mock"
+    assert trace["debug_summary"]["llm_status"] == "completed"
+
+
+def test_telegram_shell_llm_error_debug_is_safe_and_compact(tmp_path):
+    result = handle_telegram_text(
+        text="Explain this general request.",
+        chat_id="chat_llm_error",
+        drs_root=tmp_path / "drs",
+        needles_dir=NEEDLES_DIR,
+        llm_provider="unsupported_provider",
+    )
+    trace = read_json(Path(result["trace_path"]))
+
+    assert result["execution_mode"] == "llm_general"
+    assert result["llm_status"] == "error"
+    assert result["llm_provider"] == "unsupported_provider"
+    assert result["llm_used"] is False
+    assert result["llm_error"] != "none"
+    assert len(result["llm_error"]) <= 240
+    assert "api_key" not in result["llm_error"].lower()
+    assert "token" not in result["llm_error"].lower()
+    assert "llm_error:" in result["debug_text"]
+    assert trace["debug_summary"]["llm_status"] == "error"
+    assert trace["debug_summary"]["llm_error"] == result["llm_error"]

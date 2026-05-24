@@ -5,6 +5,7 @@ from pathlib import Path
 
 import jsonschema
 
+from hedgehog.architect import make_plan_graph
 from hedgehog.avf import build_attractor_packet
 from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
 from hedgehog.llm_architect import make_plan_graph_with_llm, validate_plan_graph_contract
@@ -151,6 +152,91 @@ def test_gemini_architect_invalid_response_after_api_call_marks_used_llm_true(mo
     assert result["fallback"] == "deterministic"
     assert "invalid_plan_graph_contract" in result["error"]
     assert "plan_id" in result["error"]
+
+
+def test_gemini_architect_retries_invalid_first_response_and_completes(monkeypatch):
+    packet = build_demo_packet()
+    valid_plan_graph = make_plan_graph(packet)
+    responses = [
+        '{"plan_id":"bad","source_packet_id":"x","time_assumptions":{"as_of":"x","freshness_required":"normal","assumptions":["x"]},"nodes":[{"node_id":"n1","vector_id":"official_online_request","task":"t","executor_id":"e","depends_on":[],"expected_output":"result_proposal"}],"edges":[{"source":"n1","target":"n2"}],"executor_assignments":[{"executor_id":"e","node_ids":["n1"],"mode":"simulate"}]}',
+        json.dumps(valid_plan_graph),
+    ]
+    calls = []
+
+    class FakeResponse:
+        def __init__(self, text):
+            self.text = text
+
+    class FakeModel:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def generate_content(self, prompt, **kwargs):
+            calls.append((prompt, kwargs))
+            return FakeResponse(responses.pop(0))
+
+    fake_google = types.ModuleType("google")
+    fake_genai = types.ModuleType("google.generativeai")
+    fake_genai.configure = lambda **_kwargs: None
+    fake_genai.GenerativeModel = FakeModel
+    fake_google.generativeai = fake_genai
+    monkeypatch.setitem(sys.modules, "google", fake_google)
+    monkeypatch.setitem(sys.modules, "google.generativeai", fake_genai)
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+
+    result = make_plan_graph_with_llm(
+        attractor_packet=packet,
+        provider="gemini",
+        allow_config=False,
+    )
+
+    assert result["status"] == "completed"
+    assert result["provider"] == "gemini"
+    assert result["used_llm"] is True
+    assert "retry_applied" in result["warnings"]
+    assert result["plan_graph"] is not None
+    assert len(calls) == 2
+    assert "response_schema" in calls[0][1]["generation_config"]
+    assert "Validation error:" in calls[1][0]
+    validate_plan_graph_contract(result["plan_graph"], packet)
+
+
+def test_gemini_architect_retry_failure_returns_error_and_fallback(monkeypatch):
+    responses = ['{"nodes":[]}', '{"nodes":[]}']
+
+    class FakeResponse:
+        def __init__(self, text):
+            self.text = text
+
+    class FakeModel:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def generate_content(self, _prompt, **_kwargs):
+            return FakeResponse(responses.pop(0))
+
+    fake_google = types.ModuleType("google")
+    fake_genai = types.ModuleType("google.generativeai")
+    fake_genai.configure = lambda **_kwargs: None
+    fake_genai.GenerativeModel = FakeModel
+    fake_google.generativeai = fake_genai
+    monkeypatch.setitem(sys.modules, "google", fake_google)
+    monkeypatch.setitem(sys.modules, "google.generativeai", fake_genai)
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+
+    result = make_plan_graph_with_llm(
+        attractor_packet=build_demo_packet(),
+        provider="gemini",
+        allow_config=False,
+    )
+
+    assert result["status"] == "error"
+    assert result["provider"] == "gemini"
+    assert result["used_llm"] is True
+    assert result["plan_graph"] is None
+    assert result["fallback"] == "deterministic"
+    assert "retry_failed" in result["warnings"]
+    assert "invalid_plan_graph_contract" in result["error"]
 
 
 def test_validate_plan_graph_contract_rejects_missing_plan_id():

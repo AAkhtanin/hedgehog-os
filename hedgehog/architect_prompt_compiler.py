@@ -51,4 +51,89 @@ def compile_architect_prompt(attractor_packet: dict) -> dict:
         "user_prompt": user_prompt,
         "response_contract": "plan_graph_json_only",
         "schema_name": "plan_graph.schema.json",
+        "response_schema": build_plan_graph_response_schema(),
+    }
+
+
+def build_plan_graph_response_schema() -> dict:
+    return {
+        "type": "object",
+        "required": [
+            "plan_id",
+            "source_packet_id",
+            "time_assumptions",
+            "nodes",
+            "edges",
+            "executor_assignments",
+        ],
+        "properties": {
+            "plan_id": {"type": "string"},
+            "request_id": {"type": "string"},
+            "source_packet_id": {"type": "string"},
+            "time_assumptions": {
+                "type": "object",
+                "required": ["as_of", "freshness_required", "assumptions"],
+                "properties": {
+                    "as_of": {"type": "string"},
+                    "freshness_required": {"type": "string"},
+                    "assumptions": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                },
+            },
+            "nodes": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "node_id",
+                        "vector_id",
+                        "task",
+                        "executor_id",
+                        "depends_on",
+                        "expected_output",
+                    ],
+                    "properties": {
+                        "node_id": {"type": "string"},
+                        "kind": {"type": "string"},
+                        "vector_id": {"type": "string"},
+                        "task": {"type": "string"},
+                        "executor_id": {"type": "string"},
+                        "depends_on": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                        },
+                        "expected_output": {"type": "string"},
+                        "branching_mode": {"type": "string"},
+                    },
+                },
+            },
+            "edges": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["from", "to"],
+                    "properties": {
+                        "from": {"type": "string"},
+                        "to": {"type": "string"},
+                    },
+                },
+            },
+            "executor_assignments": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["executor_id", "node_ids", "mode"],
+                    "properties": {
+                        "executor_id": {"type": "string"},
+                        "node_ids": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                        },
+                        "mode": {"type": "string"},
+                    },
+                },
+            },
+        },
     }

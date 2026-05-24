@@ -5,13 +5,20 @@ import os
 import re
 
 from hedgehog.architect import _make_deterministic_plan_graph
+from hedgehog.architect_prompt_compiler import build_plan_graph_response_schema
 from hedgehog.architect_prompt_compiler import compile_architect_prompt
 
 
 class GeminiArchitectError(RuntimeError):
-    def __init__(self, message: str, used_llm: bool = False):
+    def __init__(
+        self,
+        message: str,
+        used_llm: bool = False,
+        warnings: list[str] | None = None,
+    ):
         super().__init__(message)
         self.used_llm = used_llm
+        self.warnings = warnings or []
 
 
 def _config_value(*names: str, allow_config: bool = True) -> str | None:
@@ -38,6 +45,33 @@ def _strip_markdown_fences(text: str) -> str:
     if match:
         return match.group(1).strip()
     return stripped
+
+
+def _parse_and_validate_plan_graph(text: str, attractor_packet: dict) -> dict:
+    if not text.strip():
+        raise ValueError("Gemini Architect returned an empty response.")
+    plan_graph = json.loads(_strip_markdown_fences(text))
+    validate_plan_graph_contract(plan_graph, attractor_packet)
+    return plan_graph
+
+
+def _retry_prompt(prompt_contract: dict, validation_error: str) -> str:
+    return (
+        f"{prompt_contract['user_prompt']}\n\n"
+        "The previous PlanGraph JSON failed local contract validation.\n"
+        f"Validation error: {validation_error}\n"
+        "Return corrected PlanGraph JSON only.\n"
+        "Do not include markdown.\n"
+        "Do not add unsupported top-level fields.\n"
+        "All edges must be objects with \"from\" and \"to\".\n"
+    )
+
+
+def _generate_content(gemini_model, prompt: str, generation_config: dict):
+    try:
+        return gemini_model.generate_content(prompt, generation_config=generation_config)
+    except TypeError:
+        return gemini_model.generate_content(prompt)
 
 
 def _assert_plan_graph_uses_allowed_vectors(plan_graph: dict, attractor_packet: dict) -> None:
@@ -145,7 +179,11 @@ def validate_plan_graph_contract(
             raise ValueError(f"invalid_plan_graph_contract: forbidden key/text: {key}")
 
 
-def _gemini_plan_graph(attractor_packet: dict, model: str | None, allow_config: bool) -> tuple[dict, str]:
+def _gemini_plan_graph(
+    attractor_packet: dict,
+    model: str | None,
+    allow_config: bool,
+) -> tuple[dict, str, list[str]]:
     api_key = _config_value(
         "GEMINI_API_KEY",
         "GOOGLE_API_KEY",
@@ -174,24 +212,41 @@ def _gemini_plan_graph(attractor_packet: dict, model: str | None, allow_config: 
         ) from exc
 
     prompt_contract = compile_architect_prompt(attractor_packet)
+    generation_config = {
+        "response_mime_type": "application/json",
+        "response_schema": build_plan_graph_response_schema(),
+    }
     genai.configure(api_key=api_key)
     gemini_model = genai.GenerativeModel(
         model_name=model_name,
         system_instruction=prompt_contract["system_prompt"],
     )
-    response = gemini_model.generate_content(prompt_contract["user_prompt"])
-    text = getattr(response, "text", "") or ""
-    if not text.strip():
-        raise GeminiArchitectError(
-            "Gemini Architect returned an empty response.",
-            used_llm=True,
-        )
     try:
-        plan_graph = json.loads(_strip_markdown_fences(text))
-        validate_plan_graph_contract(plan_graph, attractor_packet)
+        response = _generate_content(
+            gemini_model,
+            prompt_contract["user_prompt"],
+            generation_config,
+        )
+        first_text = getattr(response, "text", "") or ""
+        plan_graph = _parse_and_validate_plan_graph(first_text, attractor_packet)
     except Exception as exc:
-        raise GeminiArchitectError(str(exc), used_llm=True) from exc
-    return plan_graph, model_name
+        first_error = str(exc)
+        try:
+            retry_response = _generate_content(
+                gemini_model,
+                _retry_prompt(prompt_contract, first_error),
+                generation_config,
+            )
+            retry_text = getattr(retry_response, "text", "") or ""
+            plan_graph = _parse_and_validate_plan_graph(retry_text, attractor_packet)
+        except Exception as retry_exc:
+            raise GeminiArchitectError(
+                str(retry_exc),
+                used_llm=True,
+                warnings=["retry_failed"],
+            ) from retry_exc
+        return plan_graph, model_name, ["retry_applied"]
+    return plan_graph, model_name, []
 
 
 def make_plan_graph_with_llm(
@@ -230,7 +285,11 @@ def make_plan_graph_with_llm(
         }
 
     try:
-        plan_graph, model_name = _gemini_plan_graph(attractor_packet, model, allow_config)
+        plan_graph, model_name, warnings = _gemini_plan_graph(
+            attractor_packet,
+            model,
+            allow_config,
+        )
     except GeminiArchitectError as exc:
         return {
             "status": "error",
@@ -239,7 +298,7 @@ def make_plan_graph_with_llm(
             "used_llm": exc.used_llm,
             "plan_graph": None,
             "error": str(exc),
-            "warnings": ["gemini_architect_unavailable"],
+            "warnings": ["gemini_architect_unavailable", *exc.warnings],
             "fallback": "deterministic",
             "prompt_contract": prompt_contract,
         }
@@ -263,6 +322,6 @@ def make_plan_graph_with_llm(
         "used_llm": True,
         "plan_graph": plan_graph,
         "error": None,
-        "warnings": [],
+        "warnings": warnings,
         "prompt_contract": prompt_contract,
     }

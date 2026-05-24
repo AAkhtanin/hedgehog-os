@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+from hedgehog.architect_prompt_compiler import build_plan_graph_response_schema
 from hedgehog.architect_prompt_compiler import compile_architect_prompt
 from hedgehog.avf import build_attractor_packet
 from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
@@ -61,3 +62,19 @@ def test_compile_architect_prompt_does_not_instruct_final_output_creation():
 
     assert "You do not create FinalOutput" in prompt["system_prompt"]
     assert "create FinalOutput" not in prompt["user_prompt"]
+
+
+def test_build_plan_graph_response_schema_contains_required_plan_graph_shape():
+    schema = build_plan_graph_response_schema()
+
+    assert "plan_id" in schema["required"]
+    assert "source_packet_id" in schema["required"]
+    assert "nodes" in schema["required"]
+    assert "edges" in schema["required"]
+    assert "executor_assignments" in schema["required"]
+    node_schema = schema["properties"]["nodes"]["items"]
+    assert "node_id" in node_schema["required"]
+    assert "vector_id" in node_schema["required"]
+    assert "task" in node_schema["required"]
+    assert "executor_id" in node_schema["required"]
+    assert "depends_on" in node_schema["required"]

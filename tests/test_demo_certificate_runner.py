@@ -20,6 +20,8 @@ def test_certificate_demo_cold_start_output_contains_required_trace(tmp_path):
     assert "Scenario: cold_start" in output
     assert "FinalOutput created_by: root_orchestrator" in output
     assert "illegal_coercion blocked: true" in output
+    assert "reuse_gate decision: none" in output
+    assert "reuse_applied:" in output
     assert "GT winner vector id: official_online_request" in output
     assert "GT winner vector id: fallback_exploration" not in output
 
@@ -31,7 +33,9 @@ def test_certificate_demo_reuse_output_uses_context_only_memory(tmp_path):
     assert "second_run:" in output
     assert "memory_context_applied: true" in output
     assert "reuse_decision: context_only" in output
+    assert "reuse_gate decision: context_only" in output
     assert "reuse_applied: false" in output
+    assert "reuse_applied:" in output
     assert "direct reuse implemented: false" in output
     assert "GT winner vector id: official_online_request" in output
     assert "GT winner vector id: fallback_exploration" not in output

@@ -27,6 +27,25 @@ def _winner_vector_id(trace: dict) -> tuple[str, str]:
     return winner_proposal_id, "none"
 
 
+def _reuse_gate_lines(trace: dict) -> list[str]:
+    reuse_gate = trace.get("reuse_gate", {})
+    candidate_scores = reuse_gate.get("candidate_scores", [])
+    best_record_id = reuse_gate.get("best_record_id")
+    best_score = "none"
+    for score in candidate_scores:
+        if score.get("record_id") == best_record_id:
+            best_score = str(score["reuse_score"])
+            break
+
+    reused_record_ids = reuse_gate.get("reused_record_ids", [])
+    return [
+        f"  reuse_gate decision: {reuse_gate.get('reuse_decision', 'none')}",
+        f"  reuse_score_best: {best_score}",
+        f"  reuse_candidate_record_id: {best_record_id or 'none'}",
+        f"  reused_record_ids: {', '.join(reused_record_ids) if reused_record_ids else 'none'}",
+    ]
+
+
 def _summarize_run(label: str, orchestrator: RootOrchestrator, final_output: dict) -> list[str]:
     trace = orchestrator.last_trace
     selected_vector_ids = [
@@ -52,6 +71,7 @@ def _summarize_run(label: str, orchestrator: RootOrchestrator, final_output: dic
         f"  memory_context_applied: {_bool_text(trace['memory_context_applied'])}",
         f"  reuse_decision: {trace['reuse_decision']}",
         f"  reuse_applied: {_bool_text(trace['reuse_applied'])}",
+        *_reuse_gate_lines(trace),
         f"  AVF selected vector ids: {', '.join(selected_vector_ids)}",
         f"  illegal_coercion blocked: {_bool_text(illegal_blocked)}",
         f"  PlanGraph node count: {len(trace['plan_graph']['nodes'])}",

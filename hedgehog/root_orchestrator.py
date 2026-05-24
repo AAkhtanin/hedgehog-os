@@ -9,6 +9,7 @@ from hedgehog.drs import LocalDRS
 from hedgehog.executor import execute_plan_graph
 from hedgehog.gt_validator import validate_gt
 from hedgehog.marenna import create_marenna_after_task_record
+from hedgehog.mode_router import route_execution
 from hedgehog.post_vv import validate_result_proposals
 from hedgehog.reuse_gate import evaluate_reuse_candidates
 from hedgehog.time_model import make_temporal_query, make_time_envelope
@@ -27,6 +28,7 @@ class RootOrchestrator:
         request_id: str,
         session_anchor: str,
         allow_direct_reuse: bool = False,
+        force_full_pipeline: bool = True,
     ) -> dict:
         canonical_goal = "Prepare a mock government certificate request plan."
         desired_state = "Mock government certificate request is prepared for human review."
@@ -47,8 +49,15 @@ class RootOrchestrator:
         reuse_decision = reuse_gate["reuse_decision"]
         reuse_applied = False
         reused_record_ids = []
+        mode_router = route_execution(
+            raw_user_text=raw_user_text,
+            retrieved_records=retrieved_records,
+            reuse_gate=reuse_gate,
+            allow_direct_reuse=allow_direct_reuse,
+            force_full_pipeline=force_full_pipeline,
+        )
 
-        if allow_direct_reuse and reuse_decision == "direct_reuse_candidate":
+        if mode_router["execution_mode"] == "direct_reuse":
             return self._process_direct_reuse(
                 request_id=request_id,
                 session_anchor=session_anchor,
@@ -57,6 +66,7 @@ class RootOrchestrator:
                 retrieved_records=retrieved_records,
                 memory_source_record_ids=memory_source_record_ids,
                 reuse_gate=reuse_gate,
+                mode_router=mode_router,
             )
 
         candidate_vectors = load_candidate_vectors_from_needles(
@@ -158,6 +168,7 @@ class RootOrchestrator:
             "memory_context_applied": memory_context_applied,
             "memory_source_record_ids": memory_source_record_ids,
             "reuse_gate": reuse_gate,
+            "mode_router": mode_router,
             "reuse_decision": reuse_decision,
             "reuse_applied": reuse_applied,
             "reused_record_ids": reused_record_ids,
@@ -184,6 +195,7 @@ class RootOrchestrator:
         retrieved_records: list[dict],
         memory_source_record_ids: list[str],
         reuse_gate: dict,
+        mode_router: dict,
     ) -> dict:
         reused_record_id = reuse_gate["best_record_id"]
         reused_record = self._record_by_id(retrieved_records, reused_record_id)
@@ -241,6 +253,7 @@ class RootOrchestrator:
             "memory_context_applied": True,
             "memory_source_record_ids": memory_source_record_ids,
             "reuse_gate": reuse_gate,
+            "mode_router": mode_router,
             "reuse_decision": "direct_reuse",
             "reuse_applied": True,
             "reused_record_ids": reused_record_ids,

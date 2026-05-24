@@ -49,8 +49,16 @@ def compute_payoff(vv_report: dict) -> float:
     )
 
 
-def _is_accepted(vv_report: dict) -> bool:
-    return vv_report.get("decision") == "accept" or vv_report.get("status") == "accepted"
+def classify_vv_report(vv_report: dict) -> str:
+    decision = vv_report.get("decision")
+    status = vv_report.get("status")
+    if decision == "accept" and status == "accepted":
+        return "accepted_completed"
+    if decision == "revise" or status == "needs_revision":
+        return "needs_revision"
+    if decision == "reject" or status == "rejected":
+        return "rejected"
+    return "unknown"
 
 
 def _softmax_mix(scored_candidates: list[tuple[dict, float]]) -> list[dict]:
@@ -77,11 +85,35 @@ def _rating_update(is_winner: bool) -> tuple[float, float, float, float]:
 
 
 def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> dict:
-    accepted_reports = [report for report in vv_reports if _is_accepted(report)]
+    accepted_reports = [
+        report
+        for report in vv_reports
+        if classify_vv_report(report) == "accepted_completed"
+    ]
+    needs_revision_reports = [
+        report
+        for report in vv_reports
+        if classify_vv_report(report) == "needs_revision"
+    ]
     created_at = utc_now_iso()
     request_id = vv_reports[0].get("request_id") if vv_reports else None
 
     if not accepted_reports:
+        if needs_revision_reports:
+            report = {
+                "gt_report_id": f"gt:{game_mode}:revise",
+                "game_mode": game_mode,
+                "candidates": [],
+                "decision": "revise",
+                "created_at": created_at,
+                "notes": [
+                    "Only needs_revision Post V&V candidates were available; GT did not select a winner.",
+                    "Needs-revision candidates do not receive Elo or half-life promotion.",
+                ],
+            }
+            if request_id is not None:
+                report["request_id"] = request_id
+            return report
         report = {
             "gt_report_id": f"gt:{game_mode}:no_update",
             "game_mode": game_mode,

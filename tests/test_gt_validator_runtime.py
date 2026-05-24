@@ -8,7 +8,7 @@ from hedgehog.architect import make_plan_graph
 from hedgehog.avf import build_attractor_packet
 from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
 from hedgehog.executor import execute_plan_graph
-from hedgehog.gt_validator import validate_gt
+from hedgehog.gt_validator import classify_vv_report, validate_gt
 from hedgehog.post_vv import validate_result_proposals
 from hedgehog.time_model import utc_now_iso
 
@@ -126,6 +126,23 @@ def test_validate_gt_accepts_and_validates_schema():
     gt_report_validator().validate(gt_report)
 
 
+def test_classify_vv_report_returns_expected_classes():
+    assert (
+        classify_vv_report({"decision": "accept", "status": "accepted"})
+        == "accepted_completed"
+    )
+    assert (
+        classify_vv_report({"decision": "revise", "status": "needs_revision"})
+        == "needs_revision"
+    )
+    assert (
+        classify_vv_report({"decision": "reject", "status": "rejected"})
+        == "rejected"
+    )
+    assert classify_vv_report({"decision": "accept", "status": "needs_revision"}) == "needs_revision"
+    assert classify_vv_report({"decision": "unknown", "status": "unknown"}) == "unknown"
+
+
 def test_validate_gt_prefers_official_online_request_over_fallback():
     proposals, vv_reports = build_demo_proposals_and_vv_reports()
     gt_report = validate_gt(vv_reports)
@@ -154,6 +171,63 @@ def test_validate_gt_prefers_official_online_request_over_fallback():
     assert not contains_key(gt_report, "final_output")
     assert not contains_key(gt_report, "answer")
     assert not contains_key(gt_report, "raw_user_text")
+
+
+def test_validate_gt_completed_candidate_wins_over_high_utility_needs_revision():
+    accepted = deepcopy(build_demo_vv_reports()[0])
+    accepted["proposal_id"] = "proposal:accepted_completed"
+    accepted["decision"] = "accept"
+    accepted["status"] = "accepted"
+    accepted["normalized_features"] = {
+        "utility": 0.4,
+        "robustness": 0.4,
+        "compute_cost": 0.0,
+        "violations": 0.0,
+        "transfer": 0.0,
+        "novelty_guard": 0.0,
+    }
+    needs_revision = deepcopy(accepted)
+    needs_revision["proposal_id"] = "proposal:needs_revision_high_utility"
+    needs_revision["decision"] = "revise"
+    needs_revision["status"] = "needs_revision"
+    needs_revision["normalized_features"] = {
+        "utility": 1.0,
+        "robustness": 1.0,
+        "compute_cost": 0.0,
+        "violations": 0.0,
+        "transfer": 0.0,
+        "novelty_guard": 0.0,
+    }
+
+    gt_report = validate_gt([needs_revision, accepted])
+
+    assert gt_report["decision"] == "accept"
+    assert gt_report["winner"] == "proposal:accepted_completed"
+    assert [
+        candidate["candidate_id"] for candidate in gt_report["candidates"]
+    ] == ["proposal:accepted_completed"]
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_returns_revise_when_only_needs_revision_candidates_exist():
+    reports = []
+    for report in build_demo_vv_reports():
+        revised = deepcopy(report)
+        revised["decision"] = "revise"
+        revised["status"] = "needs_revision"
+        revised["normalized_features"]["utility"] = 1.0
+        reports.append(revised)
+
+    gt_report = validate_gt(reports)
+
+    assert gt_report["decision"] == "revise"
+    assert "winner" not in gt_report
+    assert gt_report["candidates"] == []
+    assert any("needs_revision" in note for note in gt_report["notes"])
+    assert not contains_key(gt_report, "final_output")
+    assert not contains_key(gt_report, "answer")
+    assert not contains_key(gt_report, "raw_user_text")
+    gt_report_validator().validate(gt_report)
 
 
 def test_validate_gt_returns_no_update_when_no_candidates_are_accepted():

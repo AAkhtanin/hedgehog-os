@@ -10,7 +10,9 @@
     "form_preparation",
     "appointment_slot_check",
     "document_requirement_check",
-    "human_action"
+    "human_action",
+    "device_control",
+    "purchase"
   ],
   "policies": [
     "no_real_external_api",
@@ -99,6 +101,105 @@
         "gt_prior": 0.0,
         "novelty": 0.0
       }
+    }
+  ],
+  "declared_actions": [
+    {
+      "action_id": "mock_request_certificate",
+      "intent_aliases": [
+        "request certificate",
+        "mock request certificate"
+      ],
+      "capability": "government_service_access",
+      "execution_mode": "direct_protocol",
+      "risk_level": "medium",
+      "requires_confirmation": true,
+      "mock_supported": true,
+      "real_execution_supported": false,
+      "permission_policy": {
+        "requires_user_confirmation": true,
+        "allowed_without_confirmation": false
+      },
+      "audit_required": true,
+      "drs_writeback_required": true,
+      "output_contract": "mock_action_result"
+    },
+    {
+      "action_id": "mock_turn_on_tv",
+      "intent_aliases": [
+        "turn on tv",
+        "switch on tv"
+      ],
+      "capability": "device_control",
+      "execution_mode": "deterministic_reflex",
+      "risk_level": "low",
+      "requires_confirmation": false,
+      "mock_supported": true,
+      "real_execution_supported": false,
+      "permission_policy": {
+        "requires_user_confirmation": false,
+        "allowed_without_confirmation": true
+      },
+      "audit_required": true,
+      "drs_writeback_required": true,
+      "output_contract": "mock_action_result"
+    },
+    {
+      "action_id": "mock_open_camera",
+      "intent_aliases": [
+        "open camera"
+      ],
+      "capability": "device_control",
+      "execution_mode": "deterministic_reflex",
+      "risk_level": "low",
+      "requires_confirmation": false,
+      "mock_supported": true,
+      "real_execution_supported": false,
+      "permission_policy": {
+        "requires_user_confirmation": false,
+        "allowed_without_confirmation": true
+      },
+      "audit_required": true,
+      "drs_writeback_required": true,
+      "output_contract": "mock_action_result"
+    },
+    {
+      "action_id": "mock_show_usual_clips",
+      "intent_aliases": [
+        "show usual clips"
+      ],
+      "capability": "non_action_preview",
+      "execution_mode": "deterministic_reflex",
+      "risk_level": "low",
+      "requires_confirmation": false,
+      "mock_supported": true,
+      "real_execution_supported": false,
+      "permission_policy": {
+        "requires_user_confirmation": false,
+        "allowed_without_confirmation": true
+      },
+      "audit_required": true,
+      "drs_writeback_required": true,
+      "output_contract": "mock_action_result"
+    },
+    {
+      "action_id": "mock_order_pizza",
+      "intent_aliases": [
+        "order pizza"
+      ],
+      "capability": "purchase",
+      "execution_mode": "deterministic_reflex",
+      "risk_level": "purchase",
+      "requires_confirmation": true,
+      "mock_supported": true,
+      "real_execution_supported": false,
+      "permission_policy": {
+        "requires_user_confirmation": true,
+        "allowed_without_confirmation": false
+      },
+      "audit_required": true,
+      "drs_writeback_required": true,
+      "output_contract": "mock_action_result"
     }
   ]
 }

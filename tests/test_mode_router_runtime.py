@@ -65,6 +65,7 @@ def test_retrieved_records_without_direct_reuse_returns_context_only():
 
 def test_simple_known_action_returns_reflex_candidate_when_not_forced():
     assert detect_reflex_candidate("turn on tv")
+    assert detect_reflex_candidate("switch on tv")
     assert classify_intent_complexity("open camera") == "simple_known_action"
 
     decision = route_execution(
@@ -77,6 +78,19 @@ def test_simple_known_action_returns_reflex_candidate_when_not_forced():
 
     assert decision["execution_mode"] == "deterministic_reflex_candidate"
     assert decision["direct_reuse_allowed"] is False
+    assert decision["reason"] == "simple_known_action_candidate"
+
+
+def test_declared_reflex_action_routes_to_reflex_candidate():
+    decision = route_execution(
+        raw_user_text="switch on tv",
+        retrieved_records=[],
+        reuse_gate={"reuse_decision": "none"},
+        allow_direct_reuse=False,
+        force_full_pipeline=False,
+    )
+
+    assert decision["execution_mode"] == "deterministic_reflex_candidate"
     assert decision["reason"] == "simple_known_action_candidate"
 
 

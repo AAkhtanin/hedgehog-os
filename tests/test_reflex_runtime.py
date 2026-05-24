@@ -7,6 +7,9 @@ def test_detects_turn_on_tv():
 
     assert action["action_id"] == "mock_turn_on_tv"
     assert action["action_kind"] == "device_control"
+    assert action["execution_mode"] == "deterministic_reflex"
+    assert action["mock_supported"] is True
+    assert action["real_execution_supported"] is False
 
 
 def test_detects_open_camera():
@@ -30,6 +33,7 @@ def test_detects_order_pizza_as_confirmation_required():
     assert action["action_kind"] == "purchase"
     assert action["requires_confirmation"] is True
     assert action["external_side_effect"] is True
+    assert action["risk_level"] == "purchase"
 
 
 def test_unknown_text_returns_none():
@@ -54,3 +58,20 @@ def test_allowed_permission_returns_simulated_success():
     assert result["action_id"] == "mock_turn_on_tv"
     assert result["status"] == "simulated_success"
     assert result["permission_reason"] == "allowed"
+
+
+def test_reflex_uses_declared_metadata_aliases():
+    action = detect_reflex_action("switch on tv")
+
+    assert action["action_id"] == "mock_turn_on_tv"
+    assert action["mock_supported"] is True
+
+
+def test_reflex_blocks_actions_without_mock_support():
+    action = detect_reflex_action("turn on tv")
+    action["mock_supported"] = False
+    permission = check_action_permission(action)
+    result = execute_reflex_action(action, permission)
+
+    assert result["status"] == "blocked"
+    assert result["permission_reason"] == "mock_execution_not_supported"

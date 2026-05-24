@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/needle.schema.json",
+  "title": "Needle",
+  "type": "object",
+  "required": [
+    "needle_id",
+    "name",
+    "version",
+    "domain",
+    "description",
+    "enabled",
+    "policies",
+    "declared_vectors"
+  ],
+  "properties": {
+    "needle_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "version": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "domain": {
+      "$ref": "common.schema.json#/$defs/Domain"
+    },
+    "description": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/NonEmptyString"
+      }
+    },
+    "policies": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/NonEmptyString"
+      }
+    },
+    "declared_vectors": {
+      "type": "array",
+      "items": {
+        "$ref": "candidate_vector.schema.json"
+      }
+    },
+    "declared_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "action_id",
+          "intent_aliases",
+          "capability",
+          "execution_mode",
+          "risk_level",
+          "requires_confirmation",
+          "mock_supported",
+          "real_execution_supported",
+          "permission_policy",
+          "audit_required",
+          "drs_writeback_required",
+          "output_contract"
+        ],
+        "properties": {
+          "action_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "intent_aliases": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/NonEmptyString"
+            }
+          },
+          "capability": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          },
+          "execution_mode": {
+            "enum": [
+              "deterministic_reflex",
+              "direct_protocol",
+              "mock_only"
+            ]
+          },
+          "risk_level": {
+            "enum": [
+              "low",
+              "medium",
+              "purchase",
+              "sensitive",
+              "external"
+            ]
+          },
+          "requires_confirmation": {
+            "type": "boolean"
+          },
+          "mock_supported": {
+            "type": "boolean"
+          },
+          "real_execution_supported": {
+            "const": false
+          },
+          "permission_policy": {
+            "type": "object",
+            "required": [
+              "requires_user_confirmation",
+              "allowed_without_confirmation"
+            ],
+            "properties": {
+              "requires_user_confirmation": {
+                "type": "boolean"
+              },
+              "allowed_without_confirmation": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "audit_required": {
+            "const": true
+          },
+          "drs_writeback_required": {
+            "const": true
+          },
+          "output_contract": {
+            "enum": [
+              "mock_action_result"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -2,7 +2,10 @@ from pathlib import Path
 
 import pytest
 
-from hedgehog.candidate_vectors import load_candidate_vectors_from_needle
+from hedgehog.candidate_vectors import (
+    load_candidate_vectors_from_needle,
+    load_declared_actions_from_needles,
+)
 from hedgehog.policies import is_allowed_candidate_source
 
 
@@ -112,3 +115,24 @@ def test_loader_does_not_invent_missing_vector_fields_from_parent_needle(tmp_pat
 
     with pytest.raises((KeyError, ValueError)):
         load_candidate_vectors_from_needle(needle)
+
+
+def test_load_declared_actions_from_needles_returns_metadata_in_order():
+    actions = load_declared_actions_from_needles(
+        [
+            NEEDLES_DIR / "government_services.json",
+            NEEDLES_DIR / "fallback_exploration.json",
+        ]
+    )
+
+    action_ids = [action["action_id"] for action in actions]
+    assert action_ids == [
+        "mock_request_certificate",
+        "mock_turn_on_tv",
+        "mock_open_camera",
+        "mock_show_usual_clips",
+        "mock_order_pizza",
+    ]
+    assert actions[1]["intent_aliases"] == ["turn on tv", "switch on tv"]
+    assert actions[-1]["risk_level"] == "purchase"
+    assert all(action["real_execution_supported"] is False for action in actions)

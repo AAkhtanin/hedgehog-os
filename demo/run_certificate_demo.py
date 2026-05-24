@@ -175,6 +175,7 @@ def run_demo(scenario: str, drs_root: Path | None = None) -> str:
                 request_id="demo_direct_reuse_001",
                 session_anchor="demo_direct_reuse_session",
                 allow_direct_reuse=True,
+                force_full_pipeline=False,
             )
             lines.extend(_summarize_run("run", orchestrator, final_output))
 

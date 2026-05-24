@@ -1,11 +1,13 @@
 import json
+import sys
+import types
 from pathlib import Path
 
 import jsonschema
 
 from hedgehog.avf import build_attractor_packet
 from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
-from hedgehog.llm_architect import make_plan_graph_with_llm
+from hedgehog.llm_architect import make_plan_graph_with_llm, validate_plan_graph_contract
 from hedgehog.time_model import utc_now_iso
 
 
@@ -114,3 +116,79 @@ def test_gemini_architect_without_key_and_config_disabled_returns_error(monkeypa
     assert result["used_llm"] is False
     assert result["plan_graph"] is None
     assert result["error"]
+
+
+def test_gemini_architect_invalid_response_after_api_call_marks_used_llm_true(monkeypatch):
+    class FakeResponse:
+        text = '{"nodes":[]}'
+
+    class FakeModel:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def generate_content(self, _prompt):
+            return FakeResponse()
+
+    fake_google = types.ModuleType("google")
+    fake_genai = types.ModuleType("google.generativeai")
+    fake_genai.configure = lambda **_kwargs: None
+    fake_genai.GenerativeModel = FakeModel
+    fake_google.generativeai = fake_genai
+    monkeypatch.setitem(sys.modules, "google", fake_google)
+    monkeypatch.setitem(sys.modules, "google.generativeai", fake_genai)
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+
+    result = make_plan_graph_with_llm(
+        attractor_packet=build_demo_packet(),
+        provider="gemini",
+        allow_config=False,
+    )
+
+    assert result["status"] == "error"
+    assert result["provider"] == "gemini"
+    assert result["used_llm"] is True
+    assert result["plan_graph"] is None
+    assert result["fallback"] == "deterministic"
+    assert "invalid_plan_graph_contract" in result["error"]
+    assert "plan_id" in result["error"]
+
+
+def test_validate_plan_graph_contract_rejects_missing_plan_id():
+    packet = build_demo_packet()
+    invalid_plan_graph = {
+        "request_id": packet["request_id"],
+        "source_packet_id": packet["packet_id"],
+        "time_assumptions": {
+            "as_of": packet["time_context"]["as_of"],
+            "freshness_required": packet["time_context"]["freshness_required"],
+            "assumptions": ["test"],
+        },
+        "nodes": [
+            {
+                "node_id": "node_invalid_001",
+                "vector_id": packet["candidate_vectors"][0]["vector_id"],
+                "task": "simulate",
+                "executor_id": "exec_mock_certificate",
+                "depends_on": [],
+                "expected_output": "result_proposal",
+            }
+        ],
+        "edges": [],
+        "executor_assignments": [
+            {
+                "executor_id": "exec_mock_certificate",
+                "node_ids": ["node_invalid_001"],
+                "mode": "simulate",
+            }
+        ],
+    }
+
+    try:
+        validate_plan_graph_contract(invalid_plan_graph, packet)
+    except ValueError as exc:
+        message = str(exc)
+    else:
+        raise AssertionError("invalid PlanGraph was accepted")
+
+    assert "invalid_plan_graph_contract" in message
+    assert "plan_id" in message

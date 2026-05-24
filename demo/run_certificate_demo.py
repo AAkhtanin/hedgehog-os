@@ -7,6 +7,7 @@ from pathlib import Path
 from hedgehog.drs import LocalDRS
 from hedgehog.root_orchestrator import RootOrchestrator
 from hedgehog.time_model import make_time_envelope
+from hedgehog.trace_reporter import render_trace_report
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,6 +52,34 @@ def _reuse_gate_lines(trace: dict) -> list[str]:
     ]
 
 
+def _short_error(value: str | None, limit: int = 240) -> str:
+    if not value:
+        return "none"
+    line = " ".join(str(value).split())
+    if len(line) <= limit:
+        return line
+    return f"{line[: limit - 3]}..."
+
+
+def _llm_architect_lines(trace: dict) -> list[str]:
+    result = trace.get("llm_architect_result")
+    if not result:
+        return []
+    lines = [
+        f"  architect_provider: {result.get('provider', 'none')}",
+        f"  llm_architect status: {result.get('status', 'none')}",
+        f"  llm_architect used_llm: {_bool_text(bool(result.get('used_llm', False)))}",
+    ]
+    if result.get("status") == "error":
+        lines.extend(
+            [
+                "  llm_architect fallback: deterministic",
+                f"  llm_architect error: {_short_error(result.get('error'))}",
+            ]
+        )
+    return lines
+
+
 def _summarize_run(label: str, orchestrator: RootOrchestrator, final_output: dict) -> list[str]:
     trace = orchestrator.last_trace
     attractor_packet = trace.get("attractor_packet")
@@ -79,6 +108,7 @@ def _summarize_run(label: str, orchestrator: RootOrchestrator, final_output: dic
         f"  reuse_decision: {trace['reuse_decision']}",
         f"  reuse_applied: {_bool_text(trace['reuse_applied'])}",
         *_reuse_gate_lines(trace),
+        *_llm_architect_lines(trace),
         f"  architect_skipped: {_bool_text(trace.get('architect_skipped', False))}",
         f"  executor_skipped: {_bool_text(trace.get('executor_skipped', False))}",
         f"  AVF selected vector ids: {', '.join(selected_vector_ids)}",
@@ -103,11 +133,17 @@ def _summarize_run(label: str, orchestrator: RootOrchestrator, final_output: dic
     return lines
 
 
-def _run_once(orchestrator: RootOrchestrator, request_id: str, session_anchor: str) -> dict:
+def _run_once(
+    orchestrator: RootOrchestrator,
+    request_id: str,
+    session_anchor: str,
+    architect_provider: str = "deterministic",
+) -> dict:
     return orchestrator.process_event(
         raw_user_text="mock certificate request",
         request_id=request_id,
         session_anchor=session_anchor,
+        architect_provider=architect_provider,
     )
 
 
@@ -137,14 +173,25 @@ def _seed_direct_reuse_record(drs: LocalDRS) -> None:
     )
 
 
-def run_demo(scenario: str, drs_root: Path | None = None) -> str:
-    if scenario not in {"cold_start", "reuse", "direct_reuse"}:
+def run_demo(
+    scenario: str,
+    drs_root: Path | None = None,
+    trace_report: bool = False,
+) -> str:
+    if scenario not in {
+        "cold_start",
+        "reuse",
+        "direct_reuse",
+        "gemini_architect",
+        "mock_llm_architect",
+    }:
         raise ValueError(f"unknown scenario: {scenario}")
 
     def run_with_root(root_path: Path) -> str:
         drs = LocalDRS(root_path)
         orchestrator = RootOrchestrator(drs=drs, needles_dir=NEEDLES_DIR)
         lines = [f"Scenario: {scenario}"]
+        reports = []
 
         if scenario == "cold_start":
             final_output = _run_once(
@@ -153,6 +200,8 @@ def run_demo(scenario: str, drs_root: Path | None = None) -> str:
                 session_anchor="demo_cold_start_session",
             )
             lines.extend(_summarize_run("run", orchestrator, final_output))
+            if trace_report:
+                reports.append(render_trace_report(orchestrator.last_trace, final_output))
         elif scenario == "reuse":
             first_output = _run_once(
                 orchestrator,
@@ -160,26 +209,46 @@ def run_demo(scenario: str, drs_root: Path | None = None) -> str:
                 session_anchor="demo_reuse_session_001",
             )
             lines.extend(_summarize_run("first_run", orchestrator, first_output))
+            if trace_report:
+                reports.append(render_trace_report(orchestrator.last_trace, first_output))
             second_output = _run_once(
                 orchestrator,
                 request_id="demo_reuse_002",
                 session_anchor="demo_reuse_session_002",
             )
             lines.extend(_summarize_run("second_run", orchestrator, second_output))
+            if trace_report:
+                reports.append(render_trace_report(orchestrator.last_trace, second_output))
             lines.append("  direct reuse implemented: false")
             lines.append("  note: context_only memory use still runs Architect and Executor.")
         else:
-            _seed_direct_reuse_record(drs)
-            final_output = orchestrator.process_event(
-                raw_user_text="mock certificate request",
-                request_id="demo_direct_reuse_001",
-                session_anchor="demo_direct_reuse_session",
-                allow_direct_reuse=True,
-                force_full_pipeline=False,
-            )
+            if scenario == "direct_reuse":
+                _seed_direct_reuse_record(drs)
+                final_output = orchestrator.process_event(
+                    raw_user_text="mock certificate request",
+                    request_id="demo_direct_reuse_001",
+                    session_anchor="demo_direct_reuse_session",
+                    allow_direct_reuse=True,
+                    force_full_pipeline=False,
+                )
+            else:
+                architect_provider = (
+                    "gemini" if scenario == "gemini_architect" else "mock_llm"
+                )
+                final_output = _run_once(
+                    orchestrator,
+                    request_id=f"demo_{scenario}_001",
+                    session_anchor=f"demo_{scenario}_session",
+                    architect_provider=architect_provider,
+                )
             lines.extend(_summarize_run("run", orchestrator, final_output))
+            if trace_report:
+                reports.append(render_trace_report(orchestrator.last_trace, final_output))
 
-        return "\n".join(lines) + "\n"
+        output = "\n".join(lines)
+        if reports:
+            output = f"{output}\n\n" + "\n\n".join(reports)
+        return output + "\n"
 
     if drs_root is not None:
         return run_with_root(Path(drs_root))
@@ -192,11 +261,22 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run the Hedgehog OS certificate MVP demo.")
     parser.add_argument(
         "--scenario",
-        choices=["cold_start", "reuse", "direct_reuse"],
+        choices=[
+            "cold_start",
+            "reuse",
+            "direct_reuse",
+            "gemini_architect",
+            "mock_llm_architect",
+        ],
         required=True,
     )
+    parser.add_argument(
+        "--trace-report",
+        action="store_true",
+        help="Append a compact human-readable Root trace report.",
+    )
     args = parser.parse_args(argv)
-    print(run_demo(args.scenario), end="")
+    print(run_demo(args.scenario, trace_report=args.trace_report), end="")
     return 0
 
 

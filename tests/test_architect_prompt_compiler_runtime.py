@@ -48,6 +48,8 @@ def test_compile_architect_prompt_includes_allowed_vectors_and_packet_json():
 
     assert "AttractorPacket JSON:" in prompt["user_prompt"]
     assert "Return PlanGraph JSON only" in prompt["user_prompt"]
+    assert "Required top-level fields: plan_id" in prompt["user_prompt"]
+    assert "Required node fields: node_id" in prompt["user_prompt"]
     for vector_id in allowed_vector_ids:
         assert vector_id in prompt["user_prompt"]
     assert packet["packet_id"] in prompt["user_prompt"]

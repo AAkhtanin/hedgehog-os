@@ -167,6 +167,47 @@ def test_root_orchestrator_optional_mock_llm_architect_still_creates_final_outpu
     assert work_record["content"]["execution_mode"] == "proof_full_pipeline"
 
 
+def test_root_orchestrator_falls_back_when_llm_architect_returns_invalid_plan_graph(
+    tmp_path,
+    monkeypatch,
+):
+    import hedgehog.root_orchestrator as root_module
+
+    def fake_invalid_llm_architect(**_kwargs):
+        return {
+            "status": "completed",
+            "provider": "gemini",
+            "model": "test-gemini",
+            "used_llm": True,
+            "plan_graph": {
+                "nodes": []
+            },
+            "error": None,
+            "warnings": [],
+            "prompt_contract": {},
+        }
+
+    monkeypatch.setattr(
+        root_module,
+        "make_plan_graph_with_llm",
+        fake_invalid_llm_architect,
+    )
+    orchestrator, _ = make_orchestrator(tmp_path)
+    final_output = orchestrator.process_event(
+        raw_user_text="I need a mock government certificate request.",
+        request_id="req_invalid_llm_architect",
+        session_anchor="sess_invalid_llm_architect",
+        architect_provider="gemini",
+    )
+
+    assert final_output["created_by"] == "root_orchestrator"
+    assert orchestrator.last_trace["llm_architect_result"]["status"] == "error"
+    assert orchestrator.last_trace["llm_architect_result"]["fallback"] == "deterministic"
+    assert "invalid_plan_graph_contract" in orchestrator.last_trace["llm_architect_result"]["error"]
+    assert orchestrator.last_trace["plan_graph"]["plan_id"]
+    assert orchestrator.last_trace["result_proposals"]
+
+
 def test_root_orchestrator_does_not_persist_raw_text_or_sensitive_content_keys(tmp_path):
     _, drs, final_output = run_demo(tmp_path, request_id="req_root_002")
     work_record = drs.read_record("work", final_output["drs_writes"][0])

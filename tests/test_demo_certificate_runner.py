@@ -63,9 +63,45 @@ def test_certificate_demo_direct_reuse_output_shows_shortcut(tmp_path):
     assert "DRS writes: work:demo_direct_reuse_001" in output
 
 
+def test_certificate_demo_mock_llm_architect_output_shows_safe_architect_path(tmp_path):
+    output = run_demo("mock_llm_architect", drs_root=tmp_path)
+
+    assert "Scenario: mock_llm_architect" in output
+    assert "architect_provider: mock" in output
+    assert "llm_architect status: completed" in output
+    assert "llm_architect used_llm: false" in output
+    assert "PlanGraph node count:" in output
+    assert "ResultProposal count:" in output
+    assert "FinalOutput created_by: root_orchestrator" in output
+    assert "FinalOutput status:" in output
+
+
+def test_certificate_demo_gemini_architect_scenario_is_registered_with_safe_failure(tmp_path):
+    output = run_demo("gemini_architect", drs_root=tmp_path)
+
+    assert "Scenario: gemini_architect" in output
+    assert "architect_provider: gemini" in output
+    assert "llm_architect status:" in output
+    assert "FinalOutput created_by: root_orchestrator" in output
+    if "llm_architect status: error" in output:
+        assert "llm_architect fallback: deterministic" in output
+        assert "llm_architect error:" in output
+    assert "api_key" not in output.lower()
+    assert "token" not in output.lower()
+
+
 def test_certificate_demo_output_does_not_print_raw_text_or_secret_terms(tmp_path):
     output = run_demo("reuse", drs_root=tmp_path)
     lowered = output.lower()
 
     for term in FORBIDDEN_OUTPUT_TERMS:
         assert term not in lowered
+
+
+def test_certificate_demo_trace_report_flag_appends_human_report(tmp_path):
+    output = run_demo("cold_start", drs_root=tmp_path, trace_report=True)
+
+    assert "Scenario: cold_start" in output
+    assert "[ROOT]" in output
+    assert "[ARCHITECT]" in output
+    assert "[FINAL]" in output

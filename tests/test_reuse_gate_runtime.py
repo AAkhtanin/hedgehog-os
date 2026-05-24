@@ -62,6 +62,38 @@ def test_reuse_gate_scores_accepted_gt_record():
     assert score["record_id"] == record["record_id"]
     assert 0.0 <= score["reuse_score"] <= 1.0
     assert score["policy"] == 1.0
+    assert score["reason"] == "gt_trust_below_threshold"
+
+
+def test_reuse_gate_reports_low_gt_trust_when_score_is_high_enough():
+    temporal_query = make_temporal_query()
+    record = make_record(
+        record_id="work_low_gt_high_score",
+        half_life_hours=800.0,
+        decay_rate=10.0,
+    )
+
+    score = compute_reuse_score(record, temporal_query)
+
+    assert score["reuse_score"] >= 0.75
+    assert score["gt_trust"] < 0.5
+    assert score["eligible"] is False
+    assert score["reason"] == "gt_trust_below_threshold"
+
+
+def test_reuse_gate_reports_low_reuse_score():
+    temporal_query = make_temporal_query()
+    record = make_record(
+        record_id="work_low_score",
+        half_life_hours=0.0,
+        decay_rate=10.0,
+    )
+
+    score = compute_reuse_score(record, temporal_query)
+
+    assert score["reuse_score"] < 0.75
+    assert score["eligible"] is False
+    assert score["reason"] == "reuse_score_below_threshold"
 
 
 def test_reuse_gate_rejects_rejected_or_archived_records():
@@ -94,6 +126,7 @@ def test_reuse_gate_can_mark_direct_reuse_candidate_without_applying_reuse():
     assert result["best_record_id"] == "work_strong_candidate"
     assert result["reused_record_ids"] == []
     assert result["candidate_scores"][0]["eligible"] is True
+    assert result["candidate_scores"][0]["reason"] == "eligible"
 
 
 def test_reuse_gate_conflict_marker_blocks_eligibility():

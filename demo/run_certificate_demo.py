@@ -32,9 +32,11 @@ def _reuse_gate_lines(trace: dict) -> list[str]:
     candidate_scores = reuse_gate.get("candidate_scores", [])
     best_record_id = reuse_gate.get("best_record_id")
     best_score = "none"
+    best_reason = "none"
     for score in candidate_scores:
         if score.get("record_id") == best_record_id:
             best_score = str(score["reuse_score"])
+            best_reason = score["reason"]
             break
 
     reused_record_ids = reuse_gate.get("reused_record_ids", [])
@@ -42,6 +44,7 @@ def _reuse_gate_lines(trace: dict) -> list[str]:
         f"  reuse_gate decision: {reuse_gate.get('reuse_decision', 'none')}",
         f"  reuse_score_best: {best_score}",
         f"  reuse_candidate_record_id: {best_record_id or 'none'}",
+        f"  reuse_gate reason: {best_reason}",
         f"  reused_record_ids: {', '.join(reused_record_ids) if reused_record_ids else 'none'}",
     ]
 

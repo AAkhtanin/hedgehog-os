@@ -78,11 +78,20 @@ def compute_reuse_score(record: dict, temporal_query: dict) -> dict:
         and policy == 1.0
         and conflict == 1.0
     )
-    reason = "eligible" if eligible else "below_direct_reuse_threshold"
-    if policy == 0.0:
+    if eligible:
+        reason = "eligible"
+    elif policy == 0.0:
         reason = "policy_rejected"
     elif conflict == 0.0:
         reason = "conflict_detected"
+    elif reuse_score < REUSE_THRESHOLD:
+        reason = "reuse_score_below_threshold"
+    elif freshness < FRESHNESS_THRESHOLD:
+        reason = "freshness_below_threshold"
+    elif gt_trust < GT_TRUST_THRESHOLD:
+        reason = "gt_trust_below_threshold"
+    else:
+        reason = "reuse_score_below_threshold"
 
     return {
         "record_id": record.get("record_id"),

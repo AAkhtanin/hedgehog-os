@@ -93,6 +93,38 @@ def _violation(violation_id: str, kind: str, description: str) -> dict:
     }
 
 
+def _payload_semantics(candidate: dict) -> dict:
+    result_payload = candidate.get("result_payload")
+    if not isinstance(result_payload, dict):
+        return {
+            "artifact_type": None,
+            "payload_status": None,
+            "task_completed": None,
+            "requires_human_input": False,
+            "blocked_reason": None,
+            "needs_user": False,
+            "blocked": False,
+        }
+
+    payload_status = result_payload.get("status")
+    task_completed = result_payload.get("task_completed")
+    requires_human_input = result_payload.get("requires_human_input", False) is True
+    blocked_reason = result_payload.get("blocked_reason")
+    needs_user = requires_human_input or payload_status == "needs_user"
+    blocked = bool(blocked_reason) or (
+        task_completed is False and payload_status == "needs_user"
+    )
+    return {
+        "artifact_type": result_payload.get("artifact_type"),
+        "payload_status": payload_status,
+        "task_completed": task_completed,
+        "requires_human_input": requires_human_input,
+        "blocked_reason": blocked_reason,
+        "needs_user": needs_user,
+        "blocked": blocked,
+    }
+
+
 def validate_result_proposal(proposal: dict) -> dict:
     candidate = deepcopy(proposal)
     violations = []
@@ -170,6 +202,34 @@ def validate_result_proposal(proposal: dict) -> dict:
             )
         )
 
+    semantics = _payload_semantics(candidate)
+    if (
+        schema_score == 1.0
+        and policy_score == 1.0
+        and time_score == 1.0
+        and semantics["needs_user"]
+    ):
+        violations.append(
+            _violation(
+                "vv_human_input_required",
+                "consistency",
+                "ResultProposal requires human input before completion.",
+            )
+        )
+    if (
+        schema_score == 1.0
+        and policy_score == 1.0
+        and time_score == 1.0
+        and semantics["blocked"]
+    ):
+        violations.append(
+            _violation(
+                "vv_blocked_before_completion",
+                "consistency",
+                "ResultProposal is blocked before completion.",
+            )
+        )
+
     scores = {
         "schema": schema_score,
         "evidence": evidence_score,
@@ -193,8 +253,26 @@ def validate_result_proposal(proposal: dict) -> dict:
         avf_utility = (avf_final_viability * 0.9) + (avf_soft_mask * 0.1)
         utility = (overall_score + avf_utility) / 2
 
-    if schema_score == 1.0 and policy_score == 1.0 and time_score == 1.0:
-        decision = "accept"
+    robustness = (evidence_score + consistency_score + time_score) / 3
+    semantic_penalty = 0.0
+    if semantics["blocked"]:
+        semantic_penalty = 0.4
+    elif semantics["needs_user"]:
+        semantic_penalty = 0.25
+    if semantic_penalty:
+        utility = _clamp_01(utility * (1.0 - semantic_penalty))
+        robustness = _clamp_01(robustness * (1.0 - semantic_penalty / 2))
+
+    if (
+        schema_score == 1.0
+        and policy_score == 1.0
+        and time_score == 1.0
+        and safety_score == 1.0
+    ):
+        if semantics["needs_user"] or semantics["blocked"]:
+            decision = "revise"
+        else:
+            decision = "accept"
     elif schema_score == 0.0 or policy_score == 0.0:
         decision = "reject"
     else:
@@ -217,9 +295,9 @@ def validate_result_proposal(proposal: dict) -> dict:
         "violations": violations,
         "normalized_features": {
             "utility": utility,
-            "robustness": (evidence_score + consistency_score + time_score) / 3,
+            "robustness": robustness,
             "compute_cost": _compute_cost_score(candidate.get("cost", {})),
-            "violations": 1.0 - policy_score,
+            "violations": _clamp_01(1.0 - policy_score + semantic_penalty),
             "transfer": 0.0,
             "novelty_guard": 0.0,
         },

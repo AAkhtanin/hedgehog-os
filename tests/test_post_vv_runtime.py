@@ -66,23 +66,66 @@ def build_demo_proposals():
     return execute_plan_graph(plan_graph, session_anchor="sess_post_vv_001")
 
 
-def test_validate_demo_result_proposals_accepts_and_validates_schema():
+def reports_by_artifact(proposals, reports):
+    return {
+        proposal["result_payload"]["artifact_type"]: report
+        for proposal, report in zip(proposals, reports)
+    }
+
+
+def test_validate_demo_result_proposals_are_task_aware_and_schema_valid():
     proposals = build_demo_proposals()
     reports = validate_result_proposals(proposals)
     validator = vv_report_validator()
 
     assert len(reports) == len(proposals)
     for report in reports:
-        assert report["decision"] == "accept"
-        assert report["status"] == "accepted"
         assert "normalized_features" in report
         validator.validate(report)
 
-    utility_by_vector = {
-        proposal["vector_id"]: report["normalized_features"]["utility"]
-        for proposal, report in zip(proposals, reports)
-    }
-    assert utility_by_vector["official_online_request"] > utility_by_vector["fallback_exploration"]
+    by_artifact = reports_by_artifact(proposals, reports)
+    assert by_artifact["request_payload"]["decision"] == "accept"
+    assert by_artifact["request_payload"]["status"] == "accepted"
+    assert by_artifact["field_validation"]["decision"] == "revise"
+    assert by_artifact["field_validation"]["status"] == "needs_revision"
+    assert by_artifact["submission_simulation"]["decision"] == "revise"
+    assert by_artifact["submission_simulation"]["status"] == "needs_revision"
+
+
+def test_completed_prepare_request_payload_remains_accepted():
+    proposals = build_demo_proposals()
+    reports = validate_result_proposals(proposals)
+    report = reports_by_artifact(proposals, reports)["request_payload"]
+
+    assert report["decision"] == "accept"
+    assert report["status"] == "accepted"
+    assert report["violations"] == []
+
+
+def test_required_field_validation_requires_user_revision():
+    proposals = build_demo_proposals()
+    reports = validate_result_proposals(proposals)
+    report = reports_by_artifact(proposals, reports)["field_validation"]
+
+    assert report["decision"] == "revise"
+    assert report["status"] == "needs_revision"
+    assert any(
+        violation["violation_id"] == "vv_human_input_required"
+        for violation in report["violations"]
+    )
+
+
+def test_submission_simulation_blocked_before_completion_revises():
+    proposals = build_demo_proposals()
+    reports = validate_result_proposals(proposals)
+    report = reports_by_artifact(proposals, reports)["submission_simulation"]
+
+    assert report["decision"] == "revise"
+    assert report["status"] == "needs_revision"
+    assert any(
+        violation["violation_id"] == "vv_blocked_before_completion"
+        for violation in report["violations"]
+    )
 
 
 def test_forbidden_final_output_key_rejects_policy():

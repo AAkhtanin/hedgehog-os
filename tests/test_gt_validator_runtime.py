@@ -131,14 +131,22 @@ def test_validate_gt_prefers_official_online_request_over_fallback():
     gt_report = validate_gt(vv_reports)
 
     proposal_by_id = {proposal["proposal_id"]: proposal for proposal in proposals}
-    utility_by_vector = {
-        proposal["vector_id"]: report["normalized_features"]["utility"]
-        for proposal, report in zip(proposals, vv_reports)
-    }
-    payoff_by_vector = {
-        proposal_by_id[candidate["candidate_id"]]["vector_id"]: candidate["payoff"]
-        for candidate in gt_report["candidates"]
-    }
+    utility_by_vector = {}
+    for proposal, report in zip(proposals, vv_reports):
+        if report["decision"] != "accept":
+            continue
+        vector_id = proposal["vector_id"]
+        utility_by_vector[vector_id] = max(
+            utility_by_vector.get(vector_id, 0.0),
+            report["normalized_features"]["utility"],
+        )
+    payoff_by_vector = {}
+    for candidate in gt_report["candidates"]:
+        vector_id = proposal_by_id[candidate["candidate_id"]]["vector_id"]
+        payoff_by_vector[vector_id] = max(
+            payoff_by_vector.get(vector_id, 0.0),
+            candidate["payoff"],
+        )
 
     assert utility_by_vector["official_online_request"] > utility_by_vector["fallback_exploration"]
     assert payoff_by_vector["official_online_request"] > payoff_by_vector["fallback_exploration"]

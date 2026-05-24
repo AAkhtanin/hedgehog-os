@@ -118,6 +118,17 @@ Declared action metadata may route simple requests toward cheap execution, but
 it must not bypass Root, permission checks, policy, audit, or required DRS
 writeback.
 
+### Needle Protocol Steps v0.3
+
+A needle can now declare a bounded mock workflow for an action:
+
+`validate_input -> permission_check -> mock_execute -> mock_receipt -> audit_marker`
+
+This is still not real external execution. It is a deterministic protocol
+skeleton proving that future TV, pizza, airline, calendar, bank, or corporate
+needles can expose constrained workflows without requiring a large LLM to invent
+the process each time.
+
 ## 2. Non-Goals
 
 The MVP explicitly is not:

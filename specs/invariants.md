@@ -109,6 +109,16 @@ Needle contract invariant:
 - `proof_full_pipeline` must remain available even if a needle declares `deterministic_reflex` actions.
 - Unknown actions must not be executed by the reflex path.
 
+Needle protocol steps invariant:
+
+- `declared_actions` may include `protocol_steps`.
+- `protocol_steps` are bounded deterministic mock workflow declarations.
+- In MVP every protocol step must be mock-only.
+- `protocol_steps` must not perform real external API calls, real device control, real purchases, banking, identity, government actions, or Telegram actions.
+- Protocol execution must remain under Root authority and permission policy.
+- Protocol execution must produce audit/DRS evidence when action state changes.
+- Unknown protocol steps must not execute.
+
 9. CandidateVector sources
    - `CandidateVector` values may come only from installed needles, Local DRS, external DRS pointers, or fallback exploration templates.
    - CandidateVectors must not be freely hallucinated by an LLM.

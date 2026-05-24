@@ -861,6 +861,15 @@
         "drs_writeback_required"
       ],
       "declared_actions_supported": true,
+      "protocol_steps_supported": true,
+      "protocol_steps_mvp_mode": "mock_only",
+      "protocol_step_kinds": [
+        "validate_input",
+        "permission_check",
+        "mock_execute",
+        "mock_receipt",
+        "audit_marker"
+      ],
       "real_execution_supported_in_mvp": false,
       "mock_execution_only": true,
       "runtime_preference": "use_declared_action_metadata_before_hardcoded_reflex_assumptions",
@@ -879,6 +888,17 @@
         "declared_actions_must_not_bypass_required_drs_writeback",
         "proof_full_pipeline_must_remain_available",
         "unknown_actions_must_not_execute_in_reflex_path"
+      ],
+      "protocol_execution_invariants": [
+        "protocol_steps_must_be_mock_only_in_mvp",
+        "protocol_steps_must_not_call_real_external_apis",
+        "protocol_steps_must_not_perform_real_device_control",
+        "protocol_steps_must_not_perform_real_purchases",
+        "protocol_steps_must_not_perform_real_banking_identity_or_government_actions",
+        "protocol_steps_must_remain_under_root_authority",
+        "protocol_steps_must_respect_permission_policy",
+        "protocol_steps_must_emit_audit_or_drs_evidence_when_state_changes",
+        "unknown_protocol_steps_must_not_execute"
       ]
     },
     "mvp_needles": [

@@ -23,6 +23,15 @@ REQUIRED_DECLARED_ACTION_FIELDS = {
     "output_contract",
 }
 
+REQUIRED_PROTOCOL_STEP_FIELDS = {
+    "step_id",
+    "kind",
+    "description",
+    "requires_permission",
+    "mock_only",
+    "output_key",
+}
+
 
 def load_needle(path: Path) -> dict:
     with path.open("r", encoding="utf-8") as handle:
@@ -65,6 +74,19 @@ def _validate_declared_action(action: dict, path: Path) -> None:
         raise ValueError("declared actions must require DRS writeback")
     if not isinstance(action["permission_policy"], dict):
         raise ValueError("declared action permission_policy must be an object")
+    protocol_steps = action.get("protocol_steps", [])
+    if protocol_steps is None:
+        return
+    if not isinstance(protocol_steps, list):
+        raise ValueError("declared action protocol_steps must be a list")
+    for step in protocol_steps:
+        if not isinstance(step, dict):
+            raise ValueError("protocol_steps items must be objects")
+        missing = REQUIRED_PROTOCOL_STEP_FIELDS - set(step)
+        if missing:
+            raise ValueError(f"protocol step missing fields: {sorted(missing)}")
+        if step["mock_only"] is not True:
+            raise ValueError("protocol steps must be mock_only in the MVP")
 
 
 def load_declared_actions_from_needle(path: Path) -> list[dict]:

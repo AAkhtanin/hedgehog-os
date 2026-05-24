@@ -412,6 +412,14 @@ def test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor(tmp_pa
     assert work_record["content"]["action_id"] == "mock_turn_on_tv"
     assert work_record["content"]["action_status"] == "simulated_success"
     assert work_record["content"]["permission_reason"] == "allowed"
+    assert work_record["content"]["protocol_step_count"] == 4
+    assert work_record["content"]["protocol_steps_executed"] == [
+        "validate_tv_command",
+        "check_tv_permission",
+        "mock_tv_execute",
+        "audit_tv_command",
+    ]
+    assert work_record["content"]["protocol_mock_only"] is True
     assert work_record["content"]["reflex_applied"] is True
     assert work_record["content"]["architect_skipped"] is True
     assert work_record["content"]["executor_skipped"] is True
@@ -440,6 +448,10 @@ def test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation(tmp_pa
     assert work_record["content"]["action_id"] == "mock_order_pizza"
     assert work_record["content"]["action_status"] == "blocked"
     assert work_record["content"]["permission_reason"] == "confirmation_required"
+    assert work_record["content"]["protocol_step_count"] == 3
+    assert "mock_pizza_execute" not in work_record["content"]["protocol_steps_executed"]
+    assert "mock_pizza_receipt" not in work_record["content"]["protocol_steps_executed"]
+    assert work_record["content"]["protocol_mock_only"] is True
     assert work_record["content"]["final_status"] == final_output["status"]
     assert work_record["content"]["execution_mode"] == "deterministic_reflex"
     assert work_record["content"]["route"] == "deterministic_reflex"
@@ -467,3 +479,12 @@ def test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success(tmp_path
     assert work_record["content"]["action_id"] == "mock_order_pizza"
     assert work_record["content"]["action_status"] == "simulated_success"
     assert work_record["content"]["permission_reason"] == "allowed"
+    assert work_record["content"]["protocol_step_count"] == 5
+    assert work_record["content"]["protocol_steps_executed"] == [
+        "validate_pizza_order",
+        "check_pizza_permission",
+        "mock_pizza_execute",
+        "mock_pizza_receipt",
+        "audit_pizza_order",
+    ]
+    assert work_record["content"]["protocol_mock_only"] is True

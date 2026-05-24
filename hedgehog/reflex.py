@@ -61,6 +61,19 @@ def detect_reflex_action(
     return _runtime_action_from_metadata(action)
 
 
+def _protocol_step_ids(action: dict, allowed: bool) -> list[str]:
+    steps = action.get("protocol_steps", [])
+    if not isinstance(steps, list):
+        return []
+    if allowed:
+        return [step["step_id"] for step in steps]
+    return [
+        step["step_id"]
+        for step in steps
+        if step.get("kind") in {"validate_input", "permission_check", "audit_marker"}
+    ]
+
+
 def execute_reflex_action(action: dict, permission: dict) -> dict:
     if action.get("mock_supported") is not True or action.get("real_execution_supported") is True:
         status = "blocked"
@@ -68,9 +81,13 @@ def execute_reflex_action(action: dict, permission: dict) -> dict:
     else:
         status = "simulated_success" if permission.get("allowed") is True else "blocked"
         reason = permission["reason"]
+    protocol_steps_executed = _protocol_step_ids(action, status == "simulated_success")
     return {
         "action_id": action["action_id"],
         "action_kind": action["action_kind"],
         "status": status,
         "permission_reason": reason,
+        "protocol_steps_executed": protocol_steps_executed,
+        "protocol_step_count": len(protocol_steps_executed),
+        "protocol_mock_only": True,
     }

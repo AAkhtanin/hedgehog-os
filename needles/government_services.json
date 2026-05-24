@@ -122,7 +122,49 @@
       },
       "audit_required": true,
       "drs_writeback_required": true,
-      "output_contract": "mock_action_result"
+      "output_contract": "mock_action_result",
+      "protocol_steps": [
+        {
+          "step_id": "validate_certificate_request_input",
+          "kind": "validate_input",
+          "description": "Validate mock certificate request inputs.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "input_validated"
+        },
+        {
+          "step_id": "check_certificate_request_permission",
+          "kind": "permission_check",
+          "description": "Check human confirmation for mock certificate request.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "permission_checked"
+        },
+        {
+          "step_id": "mock_certificate_request_execute",
+          "kind": "mock_execute",
+          "description": "Simulate certificate request protocol execution.",
+          "requires_permission": true,
+          "mock_only": true,
+          "output_key": "mock_execution"
+        },
+        {
+          "step_id": "mock_certificate_request_receipt",
+          "kind": "mock_receipt",
+          "description": "Create mock certificate request receipt.",
+          "requires_permission": true,
+          "mock_only": true,
+          "output_key": "mock_receipt"
+        },
+        {
+          "step_id": "audit_certificate_request",
+          "kind": "audit_marker",
+          "description": "Record audit marker for mock certificate request.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "audit_marker"
+        }
+      ]
     },
     {
       "action_id": "mock_turn_on_tv",
@@ -142,7 +184,41 @@
       },
       "audit_required": true,
       "drs_writeback_required": true,
-      "output_contract": "mock_action_result"
+      "output_contract": "mock_action_result",
+      "protocol_steps": [
+        {
+          "step_id": "validate_tv_command",
+          "kind": "validate_input",
+          "description": "Validate mock TV command.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "input_validated"
+        },
+        {
+          "step_id": "check_tv_permission",
+          "kind": "permission_check",
+          "description": "Check permission for mock TV command.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "permission_checked"
+        },
+        {
+          "step_id": "mock_tv_execute",
+          "kind": "mock_execute",
+          "description": "Simulate TV power command.",
+          "requires_permission": true,
+          "mock_only": true,
+          "output_key": "mock_execution"
+        },
+        {
+          "step_id": "audit_tv_command",
+          "kind": "audit_marker",
+          "description": "Record audit marker for mock TV command.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "audit_marker"
+        }
+      ]
     },
     {
       "action_id": "mock_open_camera",
@@ -161,7 +237,41 @@
       },
       "audit_required": true,
       "drs_writeback_required": true,
-      "output_contract": "mock_action_result"
+      "output_contract": "mock_action_result",
+      "protocol_steps": [
+        {
+          "step_id": "validate_camera_command",
+          "kind": "validate_input",
+          "description": "Validate mock camera command.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "input_validated"
+        },
+        {
+          "step_id": "check_camera_permission",
+          "kind": "permission_check",
+          "description": "Check permission for mock camera command.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "permission_checked"
+        },
+        {
+          "step_id": "mock_camera_execute",
+          "kind": "mock_execute",
+          "description": "Simulate opening camera view.",
+          "requires_permission": true,
+          "mock_only": true,
+          "output_key": "mock_execution"
+        },
+        {
+          "step_id": "audit_camera_command",
+          "kind": "audit_marker",
+          "description": "Record audit marker for mock camera command.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "audit_marker"
+        }
+      ]
     },
     {
       "action_id": "mock_show_usual_clips",
@@ -180,7 +290,41 @@
       },
       "audit_required": true,
       "drs_writeback_required": true,
-      "output_contract": "mock_action_result"
+      "output_contract": "mock_action_result",
+      "protocol_steps": [
+        {
+          "step_id": "validate_clips_preview",
+          "kind": "validate_input",
+          "description": "Validate mock clips preview request.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "input_validated"
+        },
+        {
+          "step_id": "check_clips_permission",
+          "kind": "permission_check",
+          "description": "Check permission for mock clips preview.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "permission_checked"
+        },
+        {
+          "step_id": "mock_clips_execute",
+          "kind": "mock_execute",
+          "description": "Simulate showing usual clips preview.",
+          "requires_permission": true,
+          "mock_only": true,
+          "output_key": "mock_execution"
+        },
+        {
+          "step_id": "audit_clips_preview",
+          "kind": "audit_marker",
+          "description": "Record audit marker for mock clips preview.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "audit_marker"
+        }
+      ]
     },
     {
       "action_id": "mock_order_pizza",
@@ -199,7 +343,49 @@
       },
       "audit_required": true,
       "drs_writeback_required": true,
-      "output_contract": "mock_action_result"
+      "output_contract": "mock_action_result",
+      "protocol_steps": [
+        {
+          "step_id": "validate_pizza_order",
+          "kind": "validate_input",
+          "description": "Validate mock pizza order request.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "input_validated"
+        },
+        {
+          "step_id": "check_pizza_permission",
+          "kind": "permission_check",
+          "description": "Check human confirmation for mock pizza order.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "permission_checked"
+        },
+        {
+          "step_id": "mock_pizza_execute",
+          "kind": "mock_execute",
+          "description": "Simulate pizza order execution.",
+          "requires_permission": true,
+          "mock_only": true,
+          "output_key": "mock_execution"
+        },
+        {
+          "step_id": "mock_pizza_receipt",
+          "kind": "mock_receipt",
+          "description": "Create mock pizza order receipt.",
+          "requires_permission": true,
+          "mock_only": true,
+          "output_key": "mock_receipt"
+        },
+        {
+          "step_id": "audit_pizza_order",
+          "kind": "audit_marker",
+          "description": "Record audit marker for mock pizza order.",
+          "requires_permission": false,
+          "mock_only": true,
+          "output_key": "audit_marker"
+        }
+      ]
     }
   ]
 }

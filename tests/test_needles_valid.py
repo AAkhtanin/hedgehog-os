@@ -126,5 +126,19 @@ def test_needle_files_and_declared_vectors_are_valid():
     assert actions["mock_turn_on_tv"]["real_execution_supported"] is False
     assert actions["mock_turn_on_tv"]["audit_required"] is True
     assert actions["mock_turn_on_tv"]["drs_writeback_required"] is True
+    assert [step["kind"] for step in actions["mock_turn_on_tv"]["protocol_steps"]] == [
+        "validate_input",
+        "permission_check",
+        "mock_execute",
+        "audit_marker",
+    ]
+    assert all(step["mock_only"] is True for step in actions["mock_turn_on_tv"]["protocol_steps"])
     assert actions["mock_order_pizza"]["requires_confirmation"] is True
     assert actions["mock_order_pizza"]["risk_level"] == "purchase"
+    assert [step["kind"] for step in actions["mock_order_pizza"]["protocol_steps"]] == [
+        "validate_input",
+        "permission_check",
+        "mock_execute",
+        "mock_receipt",
+        "audit_marker",
+    ]

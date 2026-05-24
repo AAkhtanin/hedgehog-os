@@ -48,6 +48,14 @@ def test_blocked_permission_returns_blocked_result():
     assert result["action_id"] == "mock_order_pizza"
     assert result["status"] == "blocked"
     assert result["permission_reason"] == "confirmation_required"
+    assert result["protocol_mock_only"] is True
+    assert "mock_pizza_execute" not in result["protocol_steps_executed"]
+    assert "mock_pizza_receipt" not in result["protocol_steps_executed"]
+    assert result["protocol_steps_executed"] == [
+        "validate_pizza_order",
+        "check_pizza_permission",
+        "audit_pizza_order",
+    ]
 
 
 def test_allowed_permission_returns_simulated_success():
@@ -58,6 +66,14 @@ def test_allowed_permission_returns_simulated_success():
     assert result["action_id"] == "mock_turn_on_tv"
     assert result["status"] == "simulated_success"
     assert result["permission_reason"] == "allowed"
+    assert result["protocol_mock_only"] is True
+    assert result["protocol_steps_executed"] == [
+        "validate_tv_command",
+        "check_tv_permission",
+        "mock_tv_execute",
+        "audit_tv_command",
+    ]
+    assert result["protocol_step_count"] == 4
 
 
 def test_reflex_uses_declared_metadata_aliases():
@@ -75,3 +91,22 @@ def test_reflex_blocks_actions_without_mock_support():
 
     assert result["status"] == "blocked"
     assert result["permission_reason"] == "mock_execution_not_supported"
+
+
+def test_order_pizza_confirmed_executes_mock_protocol_steps():
+    action = detect_reflex_action("order pizza")
+    permission = check_action_permission(action, user_confirmed=True)
+    result = execute_reflex_action(action, permission)
+
+    assert result["status"] == "simulated_success"
+    assert result["protocol_steps_executed"] == [
+        "validate_pizza_order",
+        "check_pizza_permission",
+        "mock_pizza_execute",
+        "mock_pizza_receipt",
+        "audit_pizza_order",
+    ]
+    assert result["protocol_step_count"] == 5
+    assert result["protocol_mock_only"] is True
+    assert "real_execution" not in result
+    assert "external_side_effect" not in result

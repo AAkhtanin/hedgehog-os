@@ -134,5 +134,18 @@ def test_load_declared_actions_from_needles_returns_metadata_in_order():
         "mock_order_pizza",
     ]
     assert actions[1]["intent_aliases"] == ["turn on tv", "switch on tv"]
+    assert [step["step_id"] for step in actions[1]["protocol_steps"]] == [
+        "validate_tv_command",
+        "check_tv_permission",
+        "mock_tv_execute",
+        "audit_tv_command",
+    ]
     assert actions[-1]["risk_level"] == "purchase"
+    assert [step["kind"] for step in actions[-1]["protocol_steps"]] == [
+        "validate_input",
+        "permission_check",
+        "mock_execute",
+        "mock_receipt",
+        "audit_marker",
+    ]
     assert all(action["real_execution_supported"] is False for action in actions)

@@ -133,6 +133,47 @@
             "enum": [
               "mock_action_result"
             ]
+          },
+          "protocol_steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "step_id",
+                "kind",
+                "description",
+                "requires_permission",
+                "mock_only",
+                "output_key"
+              ],
+              "properties": {
+                "step_id": {
+                  "$ref": "common.schema.json#/$defs/Id"
+                },
+                "kind": {
+                  "enum": [
+                    "validate_input",
+                    "permission_check",
+                    "mock_execute",
+                    "mock_receipt",
+                    "audit_marker"
+                  ]
+                },
+                "description": {
+                  "$ref": "common.schema.json#/$defs/NonEmptyString"
+                },
+                "requires_permission": {
+                  "type": "boolean"
+                },
+                "mock_only": {
+                  "const": true
+                },
+                "output_key": {
+                  "$ref": "common.schema.json#/$defs/NonEmptyString"
+                }
+              },
+              "additionalProperties": false
+            }
           }
         },
         "additionalProperties": false

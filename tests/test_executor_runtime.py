@@ -70,6 +70,16 @@ def build_demo_plan_graph():
     return make_plan_graph(packet)
 
 
+def proposals_by_task_prefix(plan_graph, proposals):
+    nodes_by_id = {node["node_id"]: node for node in plan_graph["nodes"]}
+    proposals_by_prefix = {}
+    for proposal in proposals:
+        node = nodes_by_id[proposal["result_payload"]["node_id"]]
+        prefix = node["task"].split(";", 1)[0].split(":", 1)[0]
+        proposals_by_prefix[prefix] = proposal
+    return proposals_by_prefix
+
+
 def test_execute_plan_graph_returns_schema_valid_result_proposals():
     plan_graph = build_demo_plan_graph()
     proposals = execute_plan_graph(plan_graph, session_anchor="sess_executor_001")
@@ -104,6 +114,8 @@ def test_execute_plan_graph_returns_schema_valid_result_proposals():
     for proposal in proposals:
         assert required_fields <= set(proposal)
         assert time_fields <= set(proposal["time_envelope"])
+        assert "artifact_type" in proposal["result_payload"]
+        assert "avf" in proposal["result_payload"]
         assert proposal["result_payload"]["avf"]["vector_id"] == proposal["vector_id"]
         assert 0.0 <= proposal["result_payload"]["avf"]["final_viability"] <= 1.0
         assert 0.0 <= proposal["result_payload"]["avf"]["soft_mask"] <= 1.0
@@ -112,11 +124,47 @@ def test_execute_plan_graph_returns_schema_valid_result_proposals():
         assert not contains_key(proposal, "raw_user_text")
         validator.validate(proposal)
 
-    by_vector = {proposal["vector_id"]: proposal for proposal in proposals}
-    assert (
-        by_vector["official_online_request"]["result_payload"]["avf"]["final_viability"]
-        > by_vector["fallback_exploration"]["result_payload"]["avf"]["final_viability"]
-    )
+    viability_by_vector = {}
+    for proposal in proposals:
+        viability_by_vector.setdefault(
+            proposal["vector_id"],
+            proposal["result_payload"]["avf"]["final_viability"],
+        )
+    assert viability_by_vector["official_online_request"] > viability_by_vector["fallback_exploration"]
+
+
+def test_execute_plan_graph_returns_task_aware_payloads():
+    plan_graph = build_demo_plan_graph()
+    proposals = execute_plan_graph(plan_graph, session_anchor="sess_executor_002")
+    by_task = proposals_by_task_prefix(plan_graph, proposals)
+
+    prepare_payload = by_task["prepare_request_payload"]["result_payload"]
+    assert prepare_payload["artifact_type"] == "request_payload"
+    assert prepare_payload["payload_fields"] == [
+        "applicant_identity_pointer",
+        "service_type",
+        "delivery_preference",
+    ]
+    assert prepare_payload["next_requirement"] == "validate_required_fields"
+
+    validation_payload = by_task["validate_required_fields"]["result_payload"]
+    assert validation_payload["artifact_type"] == "field_validation"
+    assert validation_payload["missing_fields"] == ["applicant_identity_pointer"]
+    assert validation_payload["requires_human_input"] is True
+
+    submission = by_task["simulate_submission_step"]
+    submission_payload = submission["result_payload"]
+    assert submission_payload["status"] == "needs_user"
+    assert submission_payload["task_completed"] is False
+    assert submission_payload["artifact_type"] == "submission_simulation"
+    assert submission_payload["blocked_reason"] == "missing_human_identity_confirmation"
+    assert submission["risks"] == [
+        {
+            "risk_id": "risk:human_confirmation_required",
+            "severity": "low",
+            "description": "Submission cannot proceed without human confirmation.",
+        }
+    ]
 
 
 def test_execute_plan_graph_rejects_empty_nodes():

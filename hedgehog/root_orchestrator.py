@@ -8,6 +8,7 @@ from hedgehog.avf import build_attractor_packet
 from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
 from hedgehog.drs import LocalDRS
 from hedgehog.executor import execute_plan_graph
+from hedgehog.final_renderer import render_final_draft
 from hedgehog.gt_validator import validate_gt
 from hedgehog.marenna import create_marenna_after_task_record
 from hedgehog.mode_router import route_execution
@@ -165,20 +166,24 @@ class RootOrchestrator:
         self.drs.write_record(marenna_drs_record)
         self.drs.write_record(up_drs_record)
 
+        final_draft = render_final_draft(
+            request_id=request_id,
+            gt_report=gt_report,
+            result_proposals=result_proposals,
+            vv_reports=vv_reports,
+            drs_writes=[work_record["record_id"]],
+        )
         final_output = {
             "final_output_id": f"final:{request_id}",
             "request_id": request_id,
             "created_by": "root_orchestrator",
-            "status": "success" if gt_report["decision"] == "accept" else "needs_user",
-            "answer": (
-                "Mock certificate request pipeline completed. "
-                "Review the simulated work record before any real action."
-            ),
+            "status": final_draft["status_recommendation"],
+            "answer": final_draft["body"],
             "used_proposals": used_proposals,
             "gt_report_ref": gt_report["gt_report_id"],
             "drs_writes": [work_record["record_id"]],
             "time_envelope": make_time_envelope(session_anchor),
-            "summary": "Deterministic MVP pipeline produced a Root-only FinalOutput.",
+            "summary": final_draft["summary"],
             "trace_refs": [
                 {
                     "trace_id": f"trace:{request_id}",
@@ -208,6 +213,7 @@ class RootOrchestrator:
             "up_hook_records": [up_record],
             "marenna_records": [marenna_drs_record["record_id"]],
             "up_records": [up_drs_record["record_id"]],
+            "final_draft_proposal": final_draft,
             "final_output": final_output,
         }
         return final_output
@@ -240,21 +246,30 @@ class RootOrchestrator:
         )
         self.drs.write_record(work_record)
 
+        gt_reference = {
+            "gt_report_id": gt_ref,
+            "decision": "accept" if reflex_applied else "revise",
+            "action_id": action["action_id"],
+        }
+        final_draft = render_final_draft(
+            request_id=request_id,
+            gt_report=gt_reference,
+            result_proposals=[],
+            vv_reports=[],
+            drs_writes=[work_record["record_id"]],
+            mode="deterministic_reflex",
+        )
         final_output = {
             "final_output_id": f"final:{request_id}",
             "request_id": request_id,
             "created_by": "root_orchestrator",
             "status": final_status,
-            "answer": (
-                "Mock deterministic reflex action completed."
-                if reflex_applied
-                else "Mock deterministic reflex action requires confirmation."
-            ),
+            "answer": final_draft["body"],
             "used_proposals": [],
             "gt_report_ref": gt_ref,
             "drs_writes": [work_record["record_id"]],
             "time_envelope": make_time_envelope(session_anchor),
-            "summary": "Root handled an explicit deterministic reflex path.",
+            "summary": final_draft["summary"],
             "trace_refs": [
                 {
                     "trace_id": f"trace:{request_id}",
@@ -262,11 +277,6 @@ class RootOrchestrator:
                     "kind": "root_orchestrator",
                 }
             ],
-        }
-        gt_reference = {
-            "gt_report_id": gt_ref,
-            "decision": "reflex_reference",
-            "action_id": action["action_id"],
         }
         self.last_trace = {
             "temporal_query": temporal_query,
@@ -294,6 +304,7 @@ class RootOrchestrator:
             "up_hook_records": [],
             "marenna_records": [],
             "up_records": [],
+            "final_draft_proposal": final_draft,
             "final_output": final_output,
         }
         return final_output
@@ -332,20 +343,30 @@ class RootOrchestrator:
         )
         self.drs.write_record(work_record)
 
+        reuse_reference = {
+            "gt_report_id": gt_ref,
+            "decision": "accept",
+            "source_record_id": reused_record_id,
+        }
+        final_draft = render_final_draft(
+            request_id=request_id,
+            gt_report=reuse_reference,
+            result_proposals=[],
+            vv_reports=[],
+            drs_writes=[work_record["record_id"]],
+            mode="direct_reuse",
+        )
         final_output = {
             "final_output_id": f"final:{request_id}",
             "request_id": request_id,
             "created_by": "root_orchestrator",
-            "status": "success",
-            "answer": (
-                "Mock direct reuse result from a trusted prior DRS record. "
-                "No real external action was performed."
-            ),
+            "status": final_draft["status_recommendation"],
+            "answer": final_draft["body"],
             "used_proposals": [],
             "gt_report_ref": gt_ref,
             "drs_writes": [work_record["record_id"]],
             "time_envelope": make_time_envelope(session_anchor),
-            "summary": "RootFinalFromReuse created by explicit direct reuse mode.",
+            "summary": final_draft["summary"],
             "trace_refs": [
                 {
                     "trace_id": f"trace:{request_id}",
@@ -353,11 +374,6 @@ class RootOrchestrator:
                     "kind": "root_orchestrator",
                 }
             ],
-        }
-        reuse_reference = {
-            "gt_report_id": gt_ref,
-            "decision": "direct_reuse_reference",
-            "source_record_id": reused_record_id,
         }
         self.last_trace = {
             "temporal_query": temporal_query,
@@ -381,6 +397,7 @@ class RootOrchestrator:
             "up_hook_records": [],
             "marenna_records": [],
             "up_records": [],
+            "final_draft_proposal": final_draft,
             "final_output": final_output,
         }
         return final_output

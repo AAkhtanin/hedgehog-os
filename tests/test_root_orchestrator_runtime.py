@@ -74,14 +74,19 @@ def contains_sensitive_key(value):
 
 
 def test_root_orchestrator_creates_valid_final_output_and_work_record(tmp_path):
-    _, drs, final_output = run_demo(tmp_path)
+    orchestrator, drs, final_output = run_demo(tmp_path)
 
     final_output_validator().validate(final_output)
+    final_draft = orchestrator.last_trace["final_draft_proposal"]
+    assert final_draft["created_by"] == "final_renderer"
+    assert final_output["answer"] == final_draft["body"]
     assert final_output["created_by"] == "root_orchestrator"
+    assert final_output["created_by"] != final_draft["created_by"]
     assert final_output["status"] in {"success", "partial", "needs_user", "failed"}
     assert final_output["answer"]
     assert final_output["used_proposals"]
     assert final_output["drs_writes"]
+    assert not contains_key(final_draft, "final_output")
 
     work_record = drs.read_record("work", final_output["drs_writes"][0])
     assert work_record["layer"] == "work"

@@ -26,6 +26,7 @@ class RootOrchestrator:
         raw_user_text: str,
         request_id: str,
         session_anchor: str,
+        allow_direct_reuse: bool = False,
     ) -> dict:
         canonical_goal = "Prepare a mock government certificate request plan."
         desired_state = "Mock government certificate request is prepared for human review."
@@ -46,6 +47,17 @@ class RootOrchestrator:
         reuse_decision = reuse_gate["reuse_decision"]
         reuse_applied = False
         reused_record_ids = []
+
+        if allow_direct_reuse and reuse_decision == "direct_reuse_candidate":
+            return self._process_direct_reuse(
+                request_id=request_id,
+                session_anchor=session_anchor,
+                canonical_goal=canonical_goal,
+                temporal_query=temporal_query,
+                retrieved_records=retrieved_records,
+                memory_source_record_ids=memory_source_record_ids,
+                reuse_gate=reuse_gate,
+            )
 
         candidate_vectors = load_candidate_vectors_from_needles(
             [
@@ -163,12 +175,104 @@ class RootOrchestrator:
         }
         return final_output
 
+    def _process_direct_reuse(
+        self,
+        request_id: str,
+        session_anchor: str,
+        canonical_goal: str,
+        temporal_query: dict,
+        retrieved_records: list[dict],
+        memory_source_record_ids: list[str],
+        reuse_gate: dict,
+    ) -> dict:
+        reused_record_id = reuse_gate["best_record_id"]
+        reused_record = self._record_by_id(retrieved_records, reused_record_id)
+        if reused_record is None:
+            raise ValueError("ReuseGate selected a missing DRS record")
+
+        reused_record_ids = [reused_record_id]
+        gt_ref = reused_record.get("gt", {}).get(
+            "gt_report_id",
+            f"gt:direct_reuse:{reused_record_id}",
+        )
+        work_record = self._make_direct_reuse_work_record(
+            request_id=request_id,
+            session_anchor=session_anchor,
+            canonical_goal=canonical_goal,
+            reused_record=reused_record,
+            retrieved_record_count=len(retrieved_records),
+            memory_source_record_ids=memory_source_record_ids,
+            reuse_gate=reuse_gate,
+            reused_record_ids=reused_record_ids,
+            gt_ref=gt_ref,
+        )
+        self.drs.write_record(work_record)
+
+        final_output = {
+            "final_output_id": f"final:{request_id}",
+            "request_id": request_id,
+            "created_by": "root_orchestrator",
+            "status": "success",
+            "answer": (
+                "Mock direct reuse result from a trusted prior DRS record. "
+                "No real external action was performed."
+            ),
+            "used_proposals": [],
+            "gt_report_ref": gt_ref,
+            "drs_writes": [work_record["record_id"]],
+            "time_envelope": make_time_envelope(session_anchor),
+            "summary": "RootFinalFromReuse created by explicit direct reuse mode.",
+            "trace_refs": [
+                {
+                    "trace_id": f"trace:{request_id}",
+                    "span_id": "root_final_from_reuse",
+                    "kind": "root_orchestrator",
+                }
+            ],
+        }
+        reuse_reference = {
+            "gt_report_id": gt_ref,
+            "decision": "direct_reuse_reference",
+            "source_record_id": reused_record_id,
+        }
+        self.last_trace = {
+            "temporal_query": temporal_query,
+            "retrieved_record_count": len(retrieved_records),
+            "memory_context_applied": True,
+            "memory_source_record_ids": memory_source_record_ids,
+            "reuse_gate": reuse_gate,
+            "reuse_decision": "direct_reuse",
+            "reuse_applied": True,
+            "reused_record_ids": reused_record_ids,
+            "architect_skipped": True,
+            "executor_skipped": True,
+            "attractor_packet": None,
+            "plan_graph": None,
+            "result_proposals": [],
+            "vv_reports": [],
+            "gt_report": reuse_reference,
+            "drs_records": [work_record],
+            "marenna_hook_records": [],
+            "up_hook_records": [],
+            "marenna_records": [],
+            "up_records": [],
+            "final_output": final_output,
+        }
+        return final_output
+
     @staticmethod
     def _select_used_proposals(gt_report: dict, result_proposals: list[dict]) -> list[str]:
         winner = gt_report.get("winner")
         if winner:
             return [winner]
         return [proposal["proposal_id"] for proposal in result_proposals]
+
+    @staticmethod
+    def _record_by_id(records: list[dict], record_id: str | None) -> dict | None:
+        for record in records:
+            if record.get("record_id") == record_id:
+                return record
+        return None
 
     @staticmethod
     def _make_work_record(
@@ -232,6 +336,58 @@ class RootOrchestrator:
             if score.get("record_id") == best_record_id:
                 return score["reuse_score"]
         return None
+
+    @staticmethod
+    def _make_direct_reuse_work_record(
+        request_id: str,
+        session_anchor: str,
+        canonical_goal: str,
+        reused_record: dict,
+        retrieved_record_count: int,
+        memory_source_record_ids: list[str],
+        reuse_gate: dict,
+        reused_record_ids: list[str],
+        gt_ref: str,
+    ) -> dict:
+        return {
+            "record_id": f"work:{request_id}",
+            "layer": "work",
+            "type": "task_outcome",
+            "domain": "government_certificate",
+            "content": {
+                "summary": "Mock direct reuse result from prior DRS record.",
+                "canonical_goal": canonical_goal,
+                "result": "direct_reuse",
+                "retrieved_record_count": retrieved_record_count,
+                "memory_context_applied": True,
+                "memory_source_record_ids": memory_source_record_ids,
+                "reuse_decision": "direct_reuse",
+                "reuse_score_best": RootOrchestrator._reuse_score_best(reuse_gate),
+                "reuse_candidate_record_id": reused_record["record_id"],
+                "reuse_applied": True,
+                "reused_record_ids": reused_record_ids,
+                "architect_skipped": True,
+                "executor_skipped": True,
+            },
+            "time_envelope": make_time_envelope(session_anchor),
+            "provenance": {
+                "request_id": request_id,
+                "created_by": "root_orchestrator",
+                "trace_refs": [
+                    {
+                        "trace_id": f"trace:{request_id}",
+                        "span_id": "direct_reuse_writeback",
+                        "kind": "root_orchestrator",
+                    }
+                ],
+            },
+            "gt": {
+                "gt_report_id": gt_ref,
+                "half_life_hours": reused_record.get("gt", {}).get("half_life_hours", 1.0),
+                "decay_rate": reused_record.get("gt", {}).get("decay_rate", 0.0),
+            },
+            "status": "accepted",
+        }
 
     @staticmethod
     def _make_marenna_quarantine_record(

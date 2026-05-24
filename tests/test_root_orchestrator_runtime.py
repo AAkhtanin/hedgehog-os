@@ -206,6 +206,7 @@ def test_root_orchestrator_direct_reuse_candidate_still_runs_full_pipeline(tmp_p
         raw_user_text="I need a certificate for a mock government service.",
         request_id="req_direct_candidate_001",
         session_anchor="sess_direct_candidate_001",
+        allow_direct_reuse=False,
     )
 
     assert orchestrator.last_trace["reuse_decision"] == "direct_reuse_candidate"
@@ -215,3 +216,81 @@ def test_root_orchestrator_direct_reuse_candidate_still_runs_full_pipeline(tmp_p
     assert orchestrator.last_trace["plan_graph"]["nodes"]
     assert orchestrator.last_trace["result_proposals"]
     assert final_output["created_by"] == "root_orchestrator"
+
+
+def test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor(tmp_path):
+    orchestrator, drs = make_orchestrator(tmp_path)
+    strong_record = {
+        "record_id": "work:direct_reuse_source",
+        "layer": "work",
+        "type": "task_outcome",
+        "domain": "government_certificate",
+        "content": {
+            "summary": "Strong prior mock certificate outcome."
+        },
+        "time_envelope": make_time_envelope("sess_direct_reuse_source"),
+        "provenance": {
+            "request_id": "req_direct_reuse_source",
+            "created_by": "root_orchestrator",
+            "trace_refs": [],
+        },
+        "gt": {
+            "gt_report_id": "gt:direct:reuse:source",
+            "half_life_hours": 2_000.0,
+            "decay_rate": 0.0001,
+        },
+        "status": "accepted",
+    }
+    drs.write_record(strong_record)
+
+    final_output = orchestrator.process_event(
+        raw_user_text="I need a certificate for a mock government service.",
+        request_id="req_direct_reuse_001",
+        session_anchor="sess_direct_reuse_001",
+        allow_direct_reuse=True,
+    )
+    work_record = drs.read_record("work", final_output["drs_writes"][0])
+
+    final_output_validator().validate(final_output)
+    assert orchestrator.last_trace["reuse_decision"] == "direct_reuse"
+    assert orchestrator.last_trace["reuse_applied"] is True
+    assert orchestrator.last_trace["reused_record_ids"] == ["work:direct_reuse_source"]
+    assert orchestrator.last_trace["architect_skipped"] is True
+    assert orchestrator.last_trace["executor_skipped"] is True
+    assert orchestrator.last_trace["plan_graph"] is None
+    assert orchestrator.last_trace["result_proposals"] == []
+    assert orchestrator.last_trace["vv_reports"] == []
+    assert final_output["created_by"] == "root_orchestrator"
+    assert final_output["status"] == "success"
+    assert final_output["used_proposals"] == []
+    assert work_record["content"]["result"] == "direct_reuse"
+    assert work_record["content"]["reused_record_ids"] == ["work:direct_reuse_source"]
+    assert work_record["content"]["reuse_applied"] is True
+    assert work_record["content"]["reuse_decision"] == "direct_reuse"
+    assert work_record["content"]["architect_skipped"] is True
+    assert work_record["content"]["executor_skipped"] is True
+
+
+def test_root_orchestrator_context_only_does_not_shortcut_with_direct_reuse_enabled(tmp_path):
+    orchestrator, drs = make_orchestrator(tmp_path)
+    first_output = orchestrator.process_event(
+        raw_user_text="I need a certificate for a mock government service.",
+        request_id="req_context_only_source",
+        session_anchor="sess_context_only_source",
+    )
+
+    second_output = orchestrator.process_event(
+        raw_user_text="I need another certificate for a mock government service.",
+        request_id="req_context_only_enabled",
+        session_anchor="sess_context_only_enabled",
+        allow_direct_reuse=True,
+    )
+    second_record = drs.read_record("work", second_output["drs_writes"][0])
+
+    assert first_output["drs_writes"][0] in orchestrator.last_trace["memory_source_record_ids"]
+    assert orchestrator.last_trace["reuse_decision"] == "context_only"
+    assert orchestrator.last_trace["reuse_applied"] is False
+    assert orchestrator.last_trace["plan_graph"]["nodes"]
+    assert orchestrator.last_trace["result_proposals"]
+    assert second_record["content"]["result"] == "simulated_success"
+    assert second_record["content"]["reuse_applied"] is False

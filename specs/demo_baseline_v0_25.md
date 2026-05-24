@@ -35,7 +35,23 @@ This is the core result of the baseline. The demo is not trying to be useful as 
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for every future user action. In the full OS, an `ExecutionModeRouter` / `ModeRouter` must choose the cheapest safe execution depth. Frequent safe actions may use deterministic needles or direct reuse, while novel, risky, ambiguous, conflicting, high-value, or multi-branch tasks may use the full loop.
 
-## 3. Cold Start Expected Behavior
+## 3. Demo Mode: `proof_full_pipeline`
+
+The v0.25 CLI demo intentionally runs in `proof_full_pipeline` mode.
+
+This means:
+
+- `shortcut_disabled_for_demo = true`
+- `direct_reuse_candidate_only = true`
+- `adaptive_routing_future_runtime = true`
+
+The demo must force the full deterministic pipeline to prove all core contracts. It should not silently choose `L0 deterministic_reflex` or `L1 direct_reuse`, even though those modes are documented as architectural requirements.
+
+This is intentional, not inefficient design. The demo is a proof harness, not production routing policy. It avoids hiding untested components behind shortcut routing. A `direct_reuse_candidate` may be detected by ReuseGate, but Root must still run Architect and Executor in v0.25.
+
+Production runtime may later enable adaptive routing after tests prove each shortcut path is safe.
+
+## 4. Cold Start Expected Behavior
 
 The `cold_start` scenario runs once against an empty LocalDRS.
 
@@ -63,7 +79,7 @@ Interpretation:
 - Root writes a Work DRS record with TimeEnvelope.
 - Marennya and UP create quarantine records only.
 
-## 4. Reuse Scenario Expected Behavior
+## 5. Reuse Scenario Expected Behavior
 
 The `reuse` scenario runs twice against the same LocalDRS path.
 
@@ -85,7 +101,7 @@ Interpretation:
 - The runtime is memory-informed, but it does not bypass planning or execution.
 - GT still selects among fresh ResultProposals from the full pipeline.
 
-## 5. ReuseGate Semantics
+## 6. ReuseGate Semantics
 
 v0.25 includes a deterministic ReuseGate scoring layer. ReuseGate runs after TemporalQuery retrieval and evaluates prior DRS records before the normal planning pipeline.
 
@@ -107,7 +123,7 @@ ReuseGate may return:
 
 Actual direct reuse requires explicit Root-level shortcut logic and tests proving Architect and Executor were skipped.
 
-## 6. Context-Only Memory vs Direct Reuse
+## 7. Context-Only Memory vs Direct Reuse
 
 ### Memory-Informed Execution / `context_only`
 
@@ -139,7 +155,7 @@ That future path must be gated by checks such as:
 
 Direct reuse is not implemented in v0.25. The baseline must not describe `context_only` or `direct_reuse_candidate` as actual direct reuse.
 
-## 7. What This Baseline Does Not Prove Yet
+## 8. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
@@ -162,7 +178,7 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior:
 - Direct reuse shortcut is not implemented.
 - L0/L1 routing is future work.
 
-## 8. Future Demo Evolution
+## 9. Future Demo Evolution
 
 - `v0.25`: deterministic CLI baseline.
 - `v0.30`: direct reuse gate.

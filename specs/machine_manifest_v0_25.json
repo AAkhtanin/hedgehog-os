@@ -313,6 +313,12 @@
     "required": true,
     "purpose": "Select the cheapest safe execution mode instead of forcing every request through the full cognitive pipeline.",
     "full_pipeline_is_maximum_loop_not_default": true,
+    "mvp_demo_mode": "proof_full_pipeline",
+    "shortcut_execution_enabled_in_v0_25": false,
+    "shortcut_disabled_for_demo": true,
+    "direct_reuse_candidate_only_in_v0_25": true,
+    "adaptive_routing_future_runtime": true,
+    "reason": "The v0.25 demo intentionally exercises the full pipeline to prove contracts and invariants.",
     "levels": [
       {
         "level": "L0",

@@ -55,6 +55,9 @@ Execution routing invariant:
 
 - The full cognitive pipeline must be available, but it is the maximum loop, not the mandatory path for every request.
 - An explicit `ExecutionModeRouter` / `ModeRouter` must select the cheapest safe execution mode before choosing pipeline depth.
+- Adaptive routing is future production behavior; the v0.25 CLI demo intentionally runs in `proof_full_pipeline` mode.
+- In v0.25 demo mode, `shortcut_disabled_for_demo = true`, `direct_reuse_candidate_only = true`, and `adaptive_routing_future_runtime = true`.
+- The v0.25 demo must not silently choose L0 `deterministic_reflex` or L1 `direct_reuse`; it exercises the full deterministic pipeline to prove contracts and invariants.
 - Routing must consider intent complexity, risk, novelty, installed needles, DRS candidates, ReuseScore, Freshness, GTTrust, PolicyOK, ConflictCheck, ActionPermission, user confirmation needs, latency/token budget, provenance needs, and whether state or external action will change.
 - L0 `deterministic_reflex` may use ready deterministic needles for known safe actions without Architect or heavy LLM, but it still requires policy, permission when actionful, minimal trace/audit, and DRS writeback when state changes or an action was performed.
 - L1 `direct_reuse` may use RootFinalFromReuse or direct protocol execution only after explicit gates: ReuseScore, Freshness, GTTrust, PolicyOK, ConflictCheck, TimeEnvelope validity, and ActionPermission when external action is involved.

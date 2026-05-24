@@ -56,6 +56,8 @@ DRS, AVF, needles, cached protocols, and reuse gates are compute-saving mechanis
 
 ## Demo Scenarios
 
+The current CLI demo runs in `proof_full_pipeline` mode by design. It does not silently choose `L0 deterministic_reflex` or `L1 direct_reuse`, even if cheaper modes are documented. This does not contradict adaptive runtime: v0.25 is a test/proof mode with `shortcut_disabled_for_demo`, while adaptive routing is future production behavior.
+
 `cold_start` runs the mock certificate request with no previous Work record in the LocalDRS. The trace shows `memory_context_applied=false`, `reuse_decision=none`, and `reuse_applied=false`.
 
 `reuse` runs two certificate requests against the same LocalDRS path. The second run sees the previous Work record and reports `memory_context_applied=true`, `reuse_decision=context_only`, and `reuse_applied=false`.

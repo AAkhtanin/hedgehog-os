@@ -13,6 +13,7 @@ from hedgehog.gt_validator import validate_gt
 from hedgehog.input_intake import classify_input_text
 from hedgehog.llm_gateway import generate_general_answer
 from hedgehog.llm_architect import make_plan_graph_with_llm
+from hedgehog.llm_architect import validate_plan_graph_contract
 from hedgehog.marenna import create_marenna_after_task_record
 from hedgehog.mode_router import route_execution
 from hedgehog.post_vv import validate_result_proposals
@@ -149,12 +150,35 @@ class RootOrchestrator:
                 model=architect_model,
                 allow_config=architect_allow_config,
             )
-            plan_graph = (
-                llm_architect_result["plan_graph"]
-                if llm_architect_result["status"] == "completed"
+            if (
+                llm_architect_result["status"] == "completed"
                 and llm_architect_result["plan_graph"] is not None
-                else make_plan_graph(attractor_packet)
-            )
+            ):
+                try:
+                    validate_plan_graph_contract(
+                        llm_architect_result["plan_graph"],
+                        attractor_packet,
+                    )
+                    plan_graph = llm_architect_result["plan_graph"]
+                except ValueError as exc:
+                    llm_architect_result = {
+                        **llm_architect_result,
+                        "status": "error",
+                        "plan_graph": None,
+                        "error": str(exc),
+                        "warnings": [
+                            *llm_architect_result.get("warnings", []),
+                            "invalid_plan_graph_contract",
+                        ],
+                        "fallback": "deterministic",
+                    }
+                    plan_graph = make_plan_graph(attractor_packet)
+            else:
+                llm_architect_result = {
+                    **llm_architect_result,
+                    "fallback": "deterministic",
+                }
+                plan_graph = make_plan_graph(attractor_packet)
         result_proposals = execute_plan_graph(
             plan_graph,
             session_anchor=session_anchor,

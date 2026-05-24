@@ -90,12 +90,21 @@ def test_root_orchestrator_creates_valid_final_output_and_work_record(tmp_path):
     assert not contains_key(final_draft, "final_output")
 
     work_record = drs.read_record("work", final_output["drs_writes"][0])
+    content = work_record["content"]
     assert work_record["layer"] == "work"
     assert work_record["time_envelope"]
     assert {"pt_created_at", "kt_asof", "ct_session_anchor", "ttl_seconds"} <= set(
         work_record["time_envelope"]
     )
     assert work_record["provenance"]["created_by"] == "root_orchestrator"
+    assert content["final_status"] == final_output["status"]
+    assert content["gt_report_ref"] == final_output["gt_report_ref"]
+    assert content["final_draft_ref"] == final_draft["draft_id"]
+    assert content["completed_proposal_ids"]
+    assert content["selected_proposal_ids"]
+    assert content["selected_proposal_ids"] == final_draft["selected_proposal_ids"]
+    assert content["final_draft_claims"] == final_draft["claims"]
+    assert content["final_draft_warnings"] == final_draft["warnings"]
 
 
 def test_root_orchestrator_does_not_persist_raw_text_or_sensitive_content_keys(tmp_path):
@@ -181,6 +190,9 @@ def test_root_orchestrator_second_run_reuses_prior_work_record(tmp_path):
     assert second_record["content"]["reuse_candidate_record_id"] == first_record["record_id"]
     assert second_record["content"]["reuse_applied"] is False
     assert second_record["content"]["reused_record_ids"] == []
+    assert second_record["content"]["final_status"] == second_output["status"]
+    assert second_record["content"]["execution_mode"] == "proof_full_pipeline"
+    assert second_record["content"]["route"] == "proof_full_pipeline"
     assert first_record["record_id"] != second_record["record_id"]
     assert first_record["layer"] == "work"
     assert second_record["layer"] == "work"
@@ -279,8 +291,12 @@ def test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor(tmp
     assert final_output["status"] == "success"
     assert final_output["used_proposals"] == []
     assert work_record["content"]["result"] == "direct_reuse"
+    assert work_record["content"]["final_status"] == final_output["status"]
+    assert work_record["content"]["execution_mode"] == "direct_reuse"
+    assert work_record["content"]["route"] == "direct_reuse"
     assert work_record["content"]["reused_record_ids"] == ["work:direct_reuse_source"]
     assert work_record["content"]["reuse_applied"] is True
+    assert work_record["content"]["direct_reuse_applied"] is True
     assert work_record["content"]["reuse_decision"] == "direct_reuse"
     assert work_record["content"]["architect_skipped"] is True
     assert work_record["content"]["executor_skipped"] is True
@@ -390,10 +406,15 @@ def test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor(tmp_pa
     assert orchestrator.last_trace["final_draft_proposal"]["created_by"] == "final_renderer"
     assert orchestrator.last_trace["final_draft_proposal"]["mode"] == "deterministic_reflex"
     assert final_output["status"] == "success"
+    assert work_record["content"]["final_status"] == final_output["status"]
     assert work_record["content"]["execution_mode"] == "deterministic_reflex"
+    assert work_record["content"]["route"] == "deterministic_reflex"
     assert work_record["content"]["action_id"] == "mock_turn_on_tv"
     assert work_record["content"]["action_status"] == "simulated_success"
     assert work_record["content"]["permission_reason"] == "allowed"
+    assert work_record["content"]["reflex_applied"] is True
+    assert work_record["content"]["architect_skipped"] is True
+    assert work_record["content"]["executor_skipped"] is True
 
 
 def test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation(tmp_path):
@@ -419,6 +440,12 @@ def test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation(tmp_pa
     assert work_record["content"]["action_id"] == "mock_order_pizza"
     assert work_record["content"]["action_status"] == "blocked"
     assert work_record["content"]["permission_reason"] == "confirmation_required"
+    assert work_record["content"]["final_status"] == final_output["status"]
+    assert work_record["content"]["execution_mode"] == "deterministic_reflex"
+    assert work_record["content"]["route"] == "deterministic_reflex"
+    assert work_record["content"]["reflex_applied"] is False
+    assert work_record["content"]["architect_skipped"] is True
+    assert work_record["content"]["executor_skipped"] is True
 
 
 def test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success(tmp_path):

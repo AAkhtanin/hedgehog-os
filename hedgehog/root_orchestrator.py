@@ -123,12 +123,25 @@ class RootOrchestrator:
         gt_report = validate_gt(vv_reports)
 
         used_proposals = self._select_used_proposals(gt_report, result_proposals)
+        work_record_id = f"work:{request_id}"
+        final_draft = render_final_draft(
+            request_id=request_id,
+            gt_report=gt_report,
+            result_proposals=result_proposals,
+            vv_reports=vv_reports,
+            drs_writes=[work_record_id],
+        )
+        final_status = self._final_status_from_draft(gt_report, final_draft)
         work_record = self._make_work_record(
             request_id=request_id,
             session_anchor=session_anchor,
             canonical_goal=canonical_goal,
             gt_report=gt_report,
+            final_draft=final_draft,
+            final_status=final_status,
             used_proposals=used_proposals,
+            execution_mode=mode_router["execution_mode"],
+            route=mode_router["execution_mode"],
             retrieved_record_count=len(retrieved_records),
             memory_context_applied=memory_context_applied,
             memory_source_record_ids=memory_source_record_ids,
@@ -166,18 +179,11 @@ class RootOrchestrator:
         self.drs.write_record(marenna_drs_record)
         self.drs.write_record(up_drs_record)
 
-        final_draft = render_final_draft(
-            request_id=request_id,
-            gt_report=gt_report,
-            result_proposals=result_proposals,
-            vv_reports=vv_reports,
-            drs_writes=[work_record["record_id"]],
-        )
         final_output = {
             "final_output_id": f"final:{request_id}",
             "request_id": request_id,
             "created_by": "root_orchestrator",
-            "status": self._final_status_from_draft(gt_report, final_draft),
+            "status": final_status,
             "answer": final_draft["body"],
             "used_proposals": used_proposals,
             "gt_report_ref": gt_report["gt_report_id"],
@@ -234,35 +240,39 @@ class RootOrchestrator:
         reflex_result = execute_reflex_action(action, permission)
         reflex_applied = reflex_result["status"] == "simulated_success"
         gt_ref = f"gt:reflex:{request_id}"
+        gt_reference = {
+            "gt_report_id": gt_ref,
+            "decision": "accept" if reflex_applied else "revise",
+            "action_id": action["action_id"],
+        }
+        work_record_id = f"work:{request_id}"
+        final_draft = render_final_draft(
+            request_id=request_id,
+            gt_report=gt_reference,
+            result_proposals=[],
+            vv_reports=[],
+            drs_writes=[work_record_id],
+            mode="deterministic_reflex",
+        )
+        final_status = self._final_status_from_draft(gt_reference, final_draft)
         work_record = self._make_reflex_work_record(
             request_id=request_id,
             session_anchor=session_anchor,
             action=action,
             reflex_result=reflex_result,
+            final_draft=final_draft,
+            final_status=final_status,
             retrieved_record_count=len(retrieved_records),
             memory_source_record_ids=memory_source_record_ids,
             gt_ref=gt_ref,
         )
         self.drs.write_record(work_record)
 
-        gt_reference = {
-            "gt_report_id": gt_ref,
-            "decision": "accept" if reflex_applied else "revise",
-            "action_id": action["action_id"],
-        }
-        final_draft = render_final_draft(
-            request_id=request_id,
-            gt_report=gt_reference,
-            result_proposals=[],
-            vv_reports=[],
-            drs_writes=[work_record["record_id"]],
-            mode="deterministic_reflex",
-        )
         final_output = {
             "final_output_id": f"final:{request_id}",
             "request_id": request_id,
             "created_by": "root_orchestrator",
-            "status": self._final_status_from_draft(gt_reference, final_draft),
+            "status": final_status,
             "answer": final_draft["body"],
             "used_proposals": [],
             "gt_report_ref": gt_ref,
@@ -329,11 +339,28 @@ class RootOrchestrator:
             "gt_report_id",
             f"gt:direct_reuse:{reused_record_id}",
         )
+        reuse_reference = {
+            "gt_report_id": gt_ref,
+            "decision": "accept",
+            "source_record_id": reused_record_id,
+        }
+        work_record_id = f"work:{request_id}"
+        final_draft = render_final_draft(
+            request_id=request_id,
+            gt_report=reuse_reference,
+            result_proposals=[],
+            vv_reports=[],
+            drs_writes=[work_record_id],
+            mode="direct_reuse",
+        )
+        final_status = self._final_status_from_draft(reuse_reference, final_draft)
         work_record = self._make_direct_reuse_work_record(
             request_id=request_id,
             session_anchor=session_anchor,
             canonical_goal=canonical_goal,
             reused_record=reused_record,
+            final_draft=final_draft,
+            final_status=final_status,
             retrieved_record_count=len(retrieved_records),
             memory_source_record_ids=memory_source_record_ids,
             reuse_gate=reuse_gate,
@@ -342,24 +369,11 @@ class RootOrchestrator:
         )
         self.drs.write_record(work_record)
 
-        reuse_reference = {
-            "gt_report_id": gt_ref,
-            "decision": "accept",
-            "source_record_id": reused_record_id,
-        }
-        final_draft = render_final_draft(
-            request_id=request_id,
-            gt_report=reuse_reference,
-            result_proposals=[],
-            vv_reports=[],
-            drs_writes=[work_record["record_id"]],
-            mode="direct_reuse",
-        )
         final_output = {
             "final_output_id": f"final:{request_id}",
             "request_id": request_id,
             "created_by": "root_orchestrator",
-            "status": self._final_status_from_draft(reuse_reference, final_draft),
+            "status": final_status,
             "answer": final_draft["body"],
             "used_proposals": [],
             "gt_report_ref": gt_ref,
@@ -433,7 +447,11 @@ class RootOrchestrator:
         session_anchor: str,
         canonical_goal: str,
         gt_report: dict,
+        final_draft: dict,
+        final_status: str,
         used_proposals: list[str],
+        execution_mode: str,
+        route: str,
         retrieved_record_count: int,
         memory_context_applied: bool,
         memory_source_record_ids: list[str],
@@ -451,7 +469,21 @@ class RootOrchestrator:
             "content": {
                 "summary": "Mock certificate request pipeline completed.",
                 "canonical_goal": canonical_goal,
-                "result": "simulated_success",
+                "result": "simulated_success" if final_status == "success" else "needs_user",
+                "final_status": final_status,
+                "execution_mode": execution_mode,
+                "route": route,
+                "selected_proposal_ids": list(final_draft["selected_proposal_ids"]),
+                "completed_proposal_ids": list(final_draft["completed_proposal_ids"]),
+                "needs_user_proposal_ids": list(final_draft["needs_user_proposal_ids"]),
+                "blocked_proposal_ids": list(final_draft["blocked_proposal_ids"]),
+                "rejected_proposal_ids": list(final_draft["rejected_proposal_ids"]),
+                "gt_report_ref": gt_report["gt_report_id"],
+                "gt_decision": gt_report["decision"],
+                "final_draft_ref": final_draft["draft_id"],
+                "final_draft_summary": final_draft["summary"],
+                "final_draft_claims": list(final_draft["claims"]),
+                "final_draft_warnings": list(final_draft["warnings"]),
                 "used_proposal_count": len(used_proposals),
                 "retrieved_record_count": retrieved_record_count,
                 "memory_context_applied": memory_context_applied,
@@ -461,6 +493,10 @@ class RootOrchestrator:
                 "reuse_candidate_record_id": reuse_candidate_record_id,
                 "reuse_applied": reuse_applied,
                 "reused_record_ids": reused_record_ids,
+                "reflex_applied": False,
+                "direct_reuse_applied": False,
+                "architect_skipped": False,
+                "executor_skipped": False,
             },
             "time_envelope": make_time_envelope(session_anchor),
             "provenance": {
@@ -496,6 +532,8 @@ class RootOrchestrator:
         session_anchor: str,
         canonical_goal: str,
         reused_record: dict,
+        final_draft: dict,
+        final_status: str,
         retrieved_record_count: int,
         memory_source_record_ids: list[str],
         reuse_gate: dict,
@@ -511,6 +549,20 @@ class RootOrchestrator:
                 "summary": "Mock direct reuse result from prior DRS record.",
                 "canonical_goal": canonical_goal,
                 "result": "direct_reuse",
+                "final_status": final_status,
+                "execution_mode": "direct_reuse",
+                "route": "direct_reuse",
+                "selected_proposal_ids": list(final_draft["selected_proposal_ids"]),
+                "completed_proposal_ids": list(final_draft["completed_proposal_ids"]),
+                "needs_user_proposal_ids": list(final_draft["needs_user_proposal_ids"]),
+                "blocked_proposal_ids": list(final_draft["blocked_proposal_ids"]),
+                "rejected_proposal_ids": list(final_draft["rejected_proposal_ids"]),
+                "gt_report_ref": gt_ref,
+                "gt_decision": "accept",
+                "final_draft_ref": final_draft["draft_id"],
+                "final_draft_summary": final_draft["summary"],
+                "final_draft_claims": list(final_draft["claims"]),
+                "final_draft_warnings": list(final_draft["warnings"]),
                 "retrieved_record_count": retrieved_record_count,
                 "memory_context_applied": True,
                 "memory_source_record_ids": memory_source_record_ids,
@@ -519,6 +571,8 @@ class RootOrchestrator:
                 "reuse_candidate_record_id": reused_record["record_id"],
                 "reuse_applied": True,
                 "reused_record_ids": reused_record_ids,
+                "reflex_applied": False,
+                "direct_reuse_applied": True,
                 "architect_skipped": True,
                 "executor_skipped": True,
             },
@@ -548,6 +602,8 @@ class RootOrchestrator:
         session_anchor: str,
         action: dict,
         reflex_result: dict,
+        final_draft: dict,
+        final_status: str,
         retrieved_record_count: int,
         memory_source_record_ids: list[str],
         gt_ref: str,
@@ -559,12 +615,35 @@ class RootOrchestrator:
             "domain": "device_control",
             "content": {
                 "summary": "Mock deterministic reflex action trace.",
+                "canonical_goal": "Execute a safe mock deterministic reflex action.",
+                "result": reflex_result["status"],
+                "final_status": final_status,
                 "execution_mode": "deterministic_reflex",
+                "route": "deterministic_reflex",
+                "selected_proposal_ids": list(final_draft["selected_proposal_ids"]),
+                "completed_proposal_ids": list(final_draft["completed_proposal_ids"]),
+                "needs_user_proposal_ids": list(final_draft["needs_user_proposal_ids"]),
+                "blocked_proposal_ids": list(final_draft["blocked_proposal_ids"]),
+                "rejected_proposal_ids": list(final_draft["rejected_proposal_ids"]),
+                "gt_report_ref": gt_ref,
+                "gt_decision": "accept" if reflex_result["status"] == "simulated_success" else "revise",
+                "final_draft_ref": final_draft["draft_id"],
+                "final_draft_summary": final_draft["summary"],
+                "final_draft_claims": list(final_draft["claims"]),
+                "final_draft_warnings": list(final_draft["warnings"]),
                 "action_id": action["action_id"],
                 "action_status": reflex_result["status"],
                 "permission_reason": reflex_result["permission_reason"],
                 "retrieved_record_count": retrieved_record_count,
+                "memory_context_applied": bool(memory_source_record_ids),
                 "memory_source_record_ids": memory_source_record_ids,
+                "reuse_decision": "none",
+                "reuse_applied": False,
+                "reused_record_ids": [],
+                "reflex_applied": reflex_result["status"] == "simulated_success",
+                "direct_reuse_applied": False,
+                "architect_skipped": True,
+                "executor_skipped": True,
             },
             "time_envelope": make_time_envelope(session_anchor),
             "provenance": {

@@ -74,6 +74,18 @@ Execution routing invariant:
 - Tests for direct reuse must prove Architect and Executor were skipped.
 - Direct external/action execution must still respect policy, access control, audit, and DRS writeback.
 
+L0 closure invariant:
+
+- Deterministic reflex is a minimal mock path, not the main intelligence layer.
+- L0 exists to prove a cheap execution path without the full pipeline.
+- L0 must not bypass Root.
+- L0 must not bypass permission, policy, audit, or DRS writeback.
+- L0 may skip Architect and Executor only when explicitly allowed by Root flags.
+- L0 must not perform real external actions in MVP.
+- Full pipeline proof mode remains available and default.
+- L0 should not be expanded further until real needle/interface work begins.
+- After L0 closure, the next development focus is Architect/PlanGraph depth and richer planning semantics.
+
 9. CandidateVector sources
    - `CandidateVector` values may come only from installed needles, Local DRS, external DRS pointers, or fallback exploration templates.
    - CandidateVectors must not be freely hallucinated by an LLM.

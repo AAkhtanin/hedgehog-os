@@ -59,6 +59,8 @@ v0.25 also includes a separate explicit `direct_reuse` CLI/test scenario. That s
 - no LLMs or external APIs are called;
 - raw user text and secrets are not stored in DRS.
 
+v0.25 also contains an L0 `deterministic_reflex` proof path. L0 exists only to prove that a cheap, permission-gated execution path can pass through Root without running the full pipeline. It is disabled by default for proof/full pipeline tests, performs no real external action, and should not be expanded further until real needle/interface work begins.
+
 Production runtime may later enable adaptive routing after tests prove each shortcut path is safe.
 
 ## 4. Cold Start Expected Behavior
@@ -211,6 +213,8 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - The second `reuse` run is memory-informed `context_only`.
 - `direct_reuse` demonstrates explicit optional RootFinalFromReuse.
 - Automatic L0/L1 routing is future work.
+
+After this baseline, the next architecture work should focus on Architect/PlanGraph depth and richer planning semantics, not on adding more mock L0 reflex commands.
 
 ## 10. Future Demo Evolution
 

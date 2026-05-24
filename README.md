@@ -54,6 +54,14 @@ The full pipeline is the maximum cognitive loop, not the default path for every 
 
 DRS, AVF, needles, cached protocols, and reuse gates are compute-saving mechanisms. They are meant to reduce unnecessary expensive LLM/SLM usage by making those calls later, less often, and with narrower context. Direct reuse is not the default path; it is available only through an explicit shortcut mode. A future `ExecutionModeRouter` must choose the cheapest safe level while preserving policy, permission, audit, and DRS writeback rules.
 
+## Execution Modes
+
+- L0 deterministic reflex: mock, permission-gated, and disabled unless Root explicitly allows it.
+- L1 direct reuse: gated shortcut through explicit Root permission and ReuseGate eligibility.
+- L2 context-only: memory-informed execution where prior records shape context but do not bypass planning.
+- L3/L4 full pipeline: AVF -> Architect -> Executor -> Post V&V -> GT for tasks that need planning, validation, and selection.
+- L5 deferred reflection: Marennya/UP quarantine hooks and later validation outside the immediate response path.
+
 ## Demo Scenarios
 
 The default CLI demo scenarios run in `proof_full_pipeline` mode by design. They do not silently choose `L0 deterministic_reflex` or `L1 direct_reuse`, even if cheaper modes are documented. This does not contradict adaptive runtime: v0.25 is a test/proof mode for the baseline pipeline, while adaptive routing is future production behavior.

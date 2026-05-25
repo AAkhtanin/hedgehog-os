@@ -129,6 +129,8 @@ def handle_telegram_text(
     force_full_pipeline: bool = True,
     llm_provider: str = "mock",
     llm_model: str | None = None,
+    allow_reflex: bool = False,
+    user_confirmed: bool = False,
 ) -> dict:
     drs_root = Path(drs_root)
     request_id = _make_request_id(chat_id, text)
@@ -143,6 +145,8 @@ def handle_telegram_text(
         force_full_pipeline=force_full_pipeline,
         llm_provider=llm_provider,
         llm_model=llm_model,
+        allow_reflex=allow_reflex,
+        user_confirmed=user_confirmed,
     )
 
     trace_path = _trace_file_path(drs_root, request_id)

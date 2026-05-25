@@ -741,6 +741,61 @@
         "N": "novelty_guard"
       }
     },
+    "payoff_v0_1_observability": {
+      "candidate_scores": true,
+      "winner_payoff": true,
+      "regret_summary": true,
+      "tie_detected": true,
+      "tie_break_rule": "lower_risk_then_lower_cost_then_higher_robustness_then_higher_utility_then_proposal_id"
+    },
+    "payoff_v0_2_design": {
+      "status": "documented_not_implemented",
+      "principle": "GT is not TruthProof. GT selects the most viable candidate under explicit payoff and policy constraints.",
+      "additional_signals": [
+        "vector_id",
+        "avf_final_viability",
+        "avf_soft_mask",
+        "artifact_type",
+        "execution_status",
+        "human_burden",
+        "fallback_role_penalty",
+        "primary_path_bonus",
+        "risk_level",
+        "dependency_depth",
+        "reuse_potential",
+        "evidence_strength"
+      ],
+      "conceptual_formula": "payoff_v0_2 = base_payoff_v0_1 + avf_viability_bonus + primary_path_bonus + reuse_potential_bonus + evidence_strength_bonus - fallback_role_penalty - human_burden_penalty - dependency_depth_penalty - risk_level_penalty",
+      "vector_role_policy": {
+        "official_online_request": "primary_path_positive_bonus_when_safe",
+        "personal_visit": "backup_physical_path_moderate_bonus_when_online_incomplete",
+        "legal_representative": "delegated_path_with_higher_authorization_burden",
+        "fallback_exploration": "exploratory_fallback_should_not_win_by_lexical_id_only",
+        "illegal_coercion": "forbidden_hardmask_zero_never_executable_winner"
+      },
+      "tie_break_v0_2": [
+        "lower_risk",
+        "lower_human_burden",
+        "higher_avf_final_viability",
+        "higher_evidence_strength",
+        "lower_cost",
+        "higher_robustness",
+        "deterministic_proposal_id"
+      ],
+      "boundaries": [
+        "no_llm_calls",
+        "no_action_execution",
+        "no_direct_drs_mutation",
+        "may_output_richer_scoring_metadata_for_marenna_up"
+      ],
+      "future_tests": [
+        "fallback_exploration_cannot_win_over_safe_official_online_request_when_base_payoff_equal",
+        "higher_avf_viability_wins_when_risk_and_cost_equal",
+        "needs_user_high_burden_loses_to_completed_lower_burden_when_otherwise_equal",
+        "illegal_coercion_never_executable_winner",
+        "tie_info_visible_when_all_v0_2_components_equal"
+      ]
+    },
     "rating_update": {
       "elo_formula": "Elo' = Elo + K * (Result - Expected)"
     },

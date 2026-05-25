@@ -931,6 +931,90 @@ Early stopping:
 
 If payoff gap and confidence exceed thresholds, tournament may stop early.
 
+### GT v0.2 AVF/vector-aware scoring design
+
+GT is not TruthProof. It does not prove that an answer is true or that an
+external action happened. GT selects the most viable candidate under explicit
+payoff and policy constraints after Post V&V.
+
+The current v0.1/v0.1.1 GT report surface should be preserved:
+
+- `candidate_scores`;
+- `winner_payoff`;
+- `regret_summary`;
+- `tie_detected`;
+- `tie_break_rule`.
+
+GT v0.2 should add architecture-aware signals to the scoring surface:
+
+- `vector_id`;
+- AVF `final_viability`;
+- AVF `soft_mask`;
+- `artifact_type`;
+- `execution_status`;
+- human burden / `needs_user` burden;
+- `fallback_role_penalty`;
+- `primary_path_bonus`;
+- `risk_level`;
+- `dependency_depth`;
+- `reuse_potential`;
+- `evidence_strength` when available.
+
+Conceptual payoff:
+
+```text
+payoff_v0_2 =
+    base_payoff_v0_1
+    + avf_viability_bonus
+    + primary_path_bonus
+    + reuse_potential_bonus
+    + evidence_strength_bonus
+    - fallback_role_penalty
+    - human_burden_penalty
+    - dependency_depth_penalty
+    - risk_level_penalty
+```
+
+Vector role policy:
+
+- `official_online_request`: primary path; receives a positive bonus when safe.
+- `personal_visit`: backup/physical path; receives a moderate bonus when the
+  official online path is incomplete.
+- `legal_representative`: delegated path; useful, but has higher authorization
+  burden.
+- `fallback_exploration`: exploratory fallback; should not beat primary paths
+  only because of lexical id.
+- `illegal_coercion`: forbidden; `HardMask=0`; never enters GT as an executable
+  winner.
+
+If v0.2 payoff is still tied, the tie-break should be:
+
+1. lower risk;
+2. lower human burden;
+3. higher AVF `final_viability`;
+4. higher evidence strength;
+5. lower cost;
+6. higher robustness;
+7. deterministic `proposal_id`.
+
+GT v0.2 boundaries:
+
+- no LLM calls;
+- no action execution;
+- no direct DRS mutation;
+- richer scoring metadata may feed Marennya/UP later;
+- Marennya/UP may consume GT scores, regret, dominance, and dead-end signals.
+
+Expected future tests:
+
+- `fallback_exploration` cannot win over `official_online_request` when base
+  payoff is equal and the official path is safe.
+- Higher AVF viability wins when risk and cost are equal.
+- A high-burden `needs_user` candidate loses to a completed lower-burden
+  candidate when payoff is otherwise equal.
+- `illegal_coercion` never appears as executable winner.
+- Tie information remains visible if all v0.2 components are equal.
+
 ## 14. GT-TTL and Memory Evolution
 
 Half-life:

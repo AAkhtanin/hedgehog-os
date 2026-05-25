@@ -135,6 +135,14 @@ Needle protocol steps invariant:
 12. GT scope
     - GT is not TruthProof.
     - GT is a payoff, regret, Elo, and decay update mechanism, not a claim of absolute truth.
+    - GT selects the most viable candidate under explicit payoff and policy constraints.
+    - GT v0.1 exposes `candidate_scores`, `winner_payoff`, and `regret_summary`.
+    - GT v0.1.1 exposes `tie_detected`, `tie_candidate_ids`, and a deterministic tie-break rule: lower risk, lower cost, higher robustness, higher utility, then deterministic proposal id.
+    - Future GT v0.2 must incorporate architecture-aware signals such as `vector_id`, AVF `final_viability`, AVF `soft_mask`, artifact type, execution status, human burden, fallback role, primary path role, risk level, dependency depth, reuse potential, and evidence strength.
+    - GT v0.2 must not call LLMs, execute actions, or mutate DRS directly.
+    - `fallback_exploration` must not beat safe primary paths only because of lexical proposal id.
+    - `illegal_coercion` remains hard-masked and must never enter GT as an executable winner.
+    - Marennya and UP may later consume GT v0.2 scores, regret, dominance, and dead-end signals, but GT itself remains a selector, not a truth oracle.
 
 13. GT update rule
     - GTValidator updates `Elo`, `regret`, `half_life`, and/or `decay_rate`, or explicitly returns `no_update`.

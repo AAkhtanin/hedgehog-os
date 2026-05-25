@@ -9,6 +9,10 @@ DEFAULT_ELO = 1500.0
 DEFAULT_K = 32.0
 DEFAULT_HALF_LIFE_BASE_HOURS = 720.0
 PAYOFF_FORMULA_VERSION = "gt_payoff_v0_1"
+PAYOFF_TIE_EPSILON = 1e-9
+TIE_BREAK_RULE = (
+    "lower_risk_then_lower_cost_then_higher_robustness_then_higher_utility_then_proposal_id"
+)
 
 
 def _clamp(value: float, minimum: float, maximum: float) -> float:
@@ -196,6 +200,35 @@ def _dominated_candidate_ids(candidate_scores: list[dict], winner_id: str | None
     return dominated
 
 
+def _tie_break_key(score: dict) -> tuple[float, float, float, float, str]:
+    return (
+        float(score.get("risk_penalty", 0.0)),
+        float(score.get("cost_penalty", 0.0)),
+        -float(score.get("robustness", 0.0)),
+        -float(score.get("utility", 0.0)),
+        str(score.get("proposal_id", "")),
+    )
+
+
+def _select_winner_from_scores(accepted_scores: list[dict]) -> tuple[dict, bool, list[str], str]:
+    max_payoff = max(score["payoff"] for score in accepted_scores)
+    tied_scores = [
+        score
+        for score in accepted_scores
+        if abs(float(score["payoff"]) - max_payoff) <= PAYOFF_TIE_EPSILON
+    ]
+    tie_detected = len(tied_scores) > 1
+    tie_candidate_ids = sorted(score["proposal_id"] for score in tied_scores)
+    if tie_detected:
+        return (
+            min(tied_scores, key=_tie_break_key),
+            True,
+            tie_candidate_ids,
+            TIE_BREAK_RULE,
+        )
+    return tied_scores[0], False, [], "highest_payoff"
+
+
 def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> dict:
     accepted_reports = [
         report
@@ -215,6 +248,9 @@ def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> 
         "candidate_scores": candidate_scores,
         "regret_summary": _regret_summary(candidate_scores),
         "dominated_candidate_ids": [],
+        "tie_detected": False,
+        "tie_candidate_ids": [],
+        "tie_break_rule": "highest_payoff",
     }
 
     if not accepted_reports:
@@ -255,14 +291,13 @@ def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> 
         for report in accepted_reports
     ]
     max_payoff = max(payoff for _, payoff in scored_candidates)
-    winner_report, _ = max(
-        scored_candidates,
-        key=lambda item: (item[1], item[0]["proposal_id"]),
+    accepted_scores = [
+        score for score in candidate_scores if score.get("accepted") is True
+    ]
+    winner_score, tie_detected, tie_candidate_ids, tie_break_rule = (
+        _select_winner_from_scores(accepted_scores)
     )
-    winner_id = winner_report["proposal_id"]
-    winner_score = next(
-        score for score in candidate_scores if score["proposal_id"] == winner_id
-    )
+    winner_id = winner_score["proposal_id"]
     max_regret = max(max_payoff - payoff for _, payoff in scored_candidates) or 1.0
 
     candidates = []
@@ -328,7 +363,14 @@ def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> 
         **base_benchmark_fields,
         "winner_payoff": winner_score["payoff"],
         "dominated_candidate_ids": _dominated_candidate_ids(candidate_scores, winner_id),
-        "selection_reason": "selected highest payoff among accepted completed candidates; GT is not TruthProof",
+        "tie_detected": tie_detected,
+        "tie_candidate_ids": tie_candidate_ids,
+        "tie_break_rule": tie_break_rule,
+        "selection_reason": (
+            f"tie-break applied with {TIE_BREAK_RULE}; GT is not TruthProof"
+            if tie_detected
+            else "selected highest payoff among accepted completed candidates; GT is not TruthProof"
+        ),
         "audit": {
             "audit_id": f"audit:gt:{winner_id}",
             "hash": "deterministic_mvp_gt",

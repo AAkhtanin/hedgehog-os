@@ -254,7 +254,15 @@ def _gt_payoff_lines(gt_report: dict) -> list[str]:
         "[GT_PAYOFF]",
         f"- payoff_formula_version: {gt_report.get('payoff_formula_version', 'none')}",
         f"- winner_payoff: {_short(gt_report.get('winner_payoff'))}",
+        f"- tie_detected: {_bool_text(gt_report.get('tie_detected', False))}",
+        f"- tie_break_rule: {_short(gt_report.get('tie_break_rule', 'none'))}",
     ]
+    if gt_report.get("tie_detected"):
+        tie_ids = ", ".join(
+            _short(candidate_id, 80)
+            for candidate_id in gt_report.get("tie_candidate_ids", [])
+        )
+        lines.append(f"- tie_candidate_ids: {tie_ids or 'none'}")
     summary = gt_report.get("regret_summary") or {}
     if summary:
         lines.append(
@@ -264,11 +272,29 @@ def _gt_payoff_lines(gt_report: dict) -> list[str]:
             f"mean_regret={summary.get('mean_regret', 0)}"
         )
     lines.append("- top candidate payoffs:")
-    top_scores = sorted(
-        gt_report.get("candidate_scores", []),
-        key=lambda score: float(score.get("payoff", 0.0)),
-        reverse=True,
-    )[:3]
+    winner_id = gt_report.get("winner")
+    candidate_scores = gt_report.get("candidate_scores", [])
+    if winner_id:
+        winner_scores = [
+            score for score in candidate_scores if score.get("proposal_id") == winner_id
+        ]
+        remaining_scores = [
+            score for score in candidate_scores if score.get("proposal_id") != winner_id
+        ]
+        top_scores = [
+            *winner_scores,
+            *sorted(
+                remaining_scores,
+                key=lambda score: float(score.get("payoff", 0.0)),
+                reverse=True,
+            ),
+        ][:3]
+    else:
+        top_scores = sorted(
+            candidate_scores,
+            key=lambda score: float(score.get("payoff", 0.0)),
+            reverse=True,
+        )[:3]
     for score in top_scores:
         lines.append(
             "  - "

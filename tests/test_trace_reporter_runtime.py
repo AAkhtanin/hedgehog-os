@@ -172,6 +172,138 @@ def test_render_trace_report_preserves_used_llm_true_for_post_call_error():
     assert "blocked proposals: 1" in report
 
 
+def test_trace_reporter_renders_gt_tie_info():
+    trace = {
+        "execution_mode": "proof_full_pipeline",
+        "route": "proof_full_pipeline",
+        "gt_report": {
+            "decision": "accept",
+            "winner": "proposal:a",
+            "payoff_formula_version": "gt_payoff_v0_1",
+            "winner_payoff": 1.25,
+            "tie_detected": True,
+            "tie_break_rule": "lower_risk_then_lower_cost_then_higher_robustness_then_higher_utility_then_proposal_id",
+            "tie_candidate_ids": ["proposal:a", "proposal:b"],
+            "regret_summary": {
+                "candidate_count": 2,
+                "max_regret": 0.0,
+                "mean_regret": 0.0,
+            },
+            "candidate_scores": [
+                {
+                    "proposal_id": "proposal:a",
+                    "accepted": True,
+                    "payoff": 1.25,
+                    "utility": 0.5,
+                    "robustness": 0.5,
+                    "risk_penalty": 0.0,
+                    "cost_penalty": 0.0,
+                },
+                {
+                    "proposal_id": "proposal:b",
+                    "accepted": True,
+                    "payoff": 1.25,
+                    "utility": 0.5,
+                    "robustness": 0.5,
+                    "risk_penalty": 0.0,
+                    "cost_penalty": 0.0,
+                },
+            ],
+        },
+    }
+
+    report = render_trace_report(trace, {"request_id": "req", "status": "success"})
+    lowered = report.lower()
+
+    assert "[GT_PAYOFF]" in report
+    assert "tie_detected: true" in report
+    assert "tie_break_rule:" in report
+    assert "tie_candidate_ids: proposal:a, proposal:b" in report
+    assert "raw_user_text" not in lowered
+    assert "api_key" not in lowered
+    assert "token" not in lowered
+
+
+def test_gt_payoff_renders_tie_break_winner_first_when_payoffs_equal():
+    trace = {
+        "execution_mode": "proof_full_pipeline",
+        "route": "proof_full_pipeline",
+        "gt_report": {
+            "decision": "accept",
+            "winner": "proposal:d",
+            "payoff_formula_version": "gt_payoff_v0_1",
+            "winner_payoff": 1.25,
+            "tie_detected": True,
+            "tie_break_rule": "lower_risk_then_lower_cost_then_higher_robustness_then_higher_utility_then_proposal_id",
+            "tie_candidate_ids": [
+                "proposal:a",
+                "proposal:b",
+                "proposal:c",
+                "proposal:d",
+            ],
+            "regret_summary": {
+                "candidate_count": 4,
+                "max_regret": 0.0,
+                "mean_regret": 0.0,
+            },
+            "candidate_scores": [
+                {
+                    "proposal_id": "proposal:a",
+                    "accepted": True,
+                    "payoff": 1.25,
+                    "utility": 0.5,
+                    "robustness": 0.5,
+                    "risk_penalty": 0.0,
+                    "cost_penalty": 0.0,
+                },
+                {
+                    "proposal_id": "proposal:b",
+                    "accepted": True,
+                    "payoff": 1.25,
+                    "utility": 0.5,
+                    "robustness": 0.5,
+                    "risk_penalty": 0.0,
+                    "cost_penalty": 0.0,
+                },
+                {
+                    "proposal_id": "proposal:c",
+                    "accepted": True,
+                    "payoff": 1.25,
+                    "utility": 0.5,
+                    "robustness": 0.5,
+                    "risk_penalty": 0.0,
+                    "cost_penalty": 0.0,
+                },
+                {
+                    "proposal_id": "proposal:d",
+                    "accepted": True,
+                    "payoff": 1.25,
+                    "utility": 0.5,
+                    "robustness": 0.5,
+                    "risk_penalty": 0.0,
+                    "cost_penalty": 0.0,
+                },
+            ],
+        },
+    }
+
+    report = render_trace_report(trace, {"request_id": "req", "status": "success"})
+    top_section = report.split("- top candidate payoffs:", maxsplit=1)[1]
+    first_row = next(
+        line for line in top_section.splitlines() if "proposal_id=" in line
+    )
+    lowered = report.lower()
+
+    assert "[GT_PAYOFF]" in report
+    assert "tie_detected: true" in report
+    assert "tie_break_rule:" in report
+    assert "proposal_id=proposal:d" in first_row
+    assert "proposal_id=proposal:d" in top_section
+    assert "raw_user_text" not in lowered
+    assert "api_key" not in lowered
+    assert "token" not in lowered
+
+
 def test_render_trace_report_redacts_forbidden_terms():
     trace = {
         "execution_mode": "llm_general",

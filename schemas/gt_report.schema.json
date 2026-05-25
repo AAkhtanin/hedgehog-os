@@ -251,6 +251,18 @@
     "selection_reason": {
       "$ref": "common.schema.json#/$defs/NonEmptyString"
     },
+    "tie_detected": {
+      "type": "boolean"
+    },
+    "tie_candidate_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/Id"
+      }
+    },
+    "tie_break_rule": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
     "audit": {
       "type": "object",
       "required": [],

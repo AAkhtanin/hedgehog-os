@@ -10,6 +10,7 @@ from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
 from hedgehog.executor import execute_plan_graph
 from hedgehog.gt_validator import (
     PAYOFF_FORMULA_VERSION,
+    TIE_BREAK_RULE,
     classify_vv_report,
     compute_payoff_components,
     validate_gt,
@@ -101,6 +102,30 @@ def build_demo_proposals_and_vv_reports():
     return proposals, validate_result_proposals(proposals)
 
 
+def accepted_report(
+    proposal_id: str,
+    *,
+    utility: float,
+    robustness: float,
+    compute_cost: float = 0.0,
+    violations: float = 0.0,
+) -> dict:
+    return {
+        "proposal_id": proposal_id,
+        "decision": "accept",
+        "status": "accepted",
+        "normalized_features": {
+            "utility": utility,
+            "robustness": robustness,
+            "compute_cost": compute_cost,
+            "violations": violations,
+            "transfer": 0.0,
+            "novelty_guard": 0.0,
+        },
+        "violations": [],
+    }
+
+
 def test_validate_gt_accepts_and_validates_schema():
     vv_reports = build_demo_vv_reports()
     gt_report = validate_gt(vv_reports)
@@ -120,6 +145,9 @@ def test_validate_gt_accepts_and_validates_schema():
     assert "regret_summary" in gt_report
     assert "dominated_candidate_ids" in gt_report
     assert "selection_reason" in gt_report
+    assert "tie_detected" in gt_report
+    assert "tie_candidate_ids" in gt_report
+    assert "tie_break_rule" in gt_report
     assert "half_life_hours" in gt_report
     assert "decay_rate" in gt_report
     assert not contains_key(gt_report, "final_output")
@@ -150,6 +178,133 @@ def test_validate_gt_accepts_and_validates_schema():
             "selection_notes",
         }.issubset(score)
 
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_tie_detected_for_equal_payoff_candidates():
+    high_risk = accepted_report(
+        "proposal:b_high_risk",
+        utility=0.7,
+        robustness=0.5,
+        violations=0.1,
+    )
+    low_risk = accepted_report(
+        "proposal:a_low_risk",
+        utility=0.5,
+        robustness=0.5,
+    )
+
+    gt_report = validate_gt([high_risk, low_risk])
+
+    assert gt_report["tie_detected"] is True
+    assert gt_report["tie_candidate_ids"] == [
+        "proposal:a_low_risk",
+        "proposal:b_high_risk",
+    ]
+    assert gt_report["tie_break_rule"] == TIE_BREAK_RULE
+    assert gt_report["winner"] == "proposal:a_low_risk"
+    assert "tie-break" in gt_report["selection_reason"]
+    regrets = {
+        candidate["candidate_id"]: candidate["regret"]
+        for candidate in gt_report["candidates"]
+    }
+    assert regrets["proposal:a_low_risk"] == 0.0
+    assert regrets["proposal:b_high_risk"] == 0.0
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_tie_break_prefers_lower_risk():
+    high_risk = accepted_report(
+        "proposal:high_risk",
+        utility=0.7,
+        robustness=0.5,
+        violations=0.1,
+    )
+    low_risk = accepted_report(
+        "proposal:low_risk",
+        utility=0.5,
+        robustness=0.5,
+    )
+
+    gt_report = validate_gt([high_risk, low_risk])
+
+    assert gt_report["tie_detected"] is True
+    assert gt_report["winner"] == "proposal:low_risk"
+    score_by_id = {
+        score["proposal_id"]: score
+        for score in gt_report["candidate_scores"]
+    }
+    assert score_by_id["proposal:low_risk"]["risk_penalty"] < score_by_id["proposal:high_risk"]["risk_penalty"]
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_tie_break_prefers_lower_cost_after_risk():
+    high_cost = accepted_report(
+        "proposal:high_cost",
+        utility=0.56,
+        robustness=0.5,
+        compute_cost=0.1,
+    )
+    low_cost = accepted_report(
+        "proposal:low_cost",
+        utility=0.5,
+        robustness=0.5,
+    )
+
+    gt_report = validate_gt([high_cost, low_cost])
+
+    assert gt_report["tie_detected"] is True
+    assert gt_report["winner"] == "proposal:low_cost"
+    score_by_id = {
+        score["proposal_id"]: score
+        for score in gt_report["candidate_scores"]
+    }
+    assert score_by_id["proposal:low_cost"]["cost_penalty"] < score_by_id["proposal:high_cost"]["cost_penalty"]
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_tie_break_is_deterministic_by_proposal_id():
+    report_b = accepted_report(
+        "proposal:b",
+        utility=0.5,
+        robustness=0.5,
+    )
+    report_a = accepted_report(
+        "proposal:a",
+        utility=0.5,
+        robustness=0.5,
+    )
+
+    first = validate_gt([report_b, report_a])
+    second = validate_gt([report_a, report_b])
+
+    assert first["tie_detected"] is True
+    assert first["winner"] == "proposal:a"
+    assert second["winner"] == "proposal:a"
+    assert first["tie_candidate_ids"] == ["proposal:a", "proposal:b"]
+    gt_report_validator().validate(first)
+    gt_report_validator().validate(second)
+
+
+def test_validate_gt_no_tie_sets_tie_detected_false():
+    high = accepted_report(
+        "proposal:high",
+        utility=0.8,
+        robustness=0.5,
+    )
+    low = accepted_report(
+        "proposal:low",
+        utility=0.5,
+        robustness=0.5,
+    )
+
+    gt_report = validate_gt([low, high])
+
+    assert gt_report["winner"] == "proposal:high"
+    assert gt_report["tie_detected"] is False
+    assert gt_report["tie_candidate_ids"] == []
+    assert gt_report["tie_break_rule"] == "highest_payoff"
+    assert "highest payoff" in gt_report["selection_reason"]
     gt_report_validator().validate(gt_report)
 
 

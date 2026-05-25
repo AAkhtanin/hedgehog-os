@@ -173,6 +173,35 @@ def validate_plan_graph_contract(
     if not assigned.issubset(node_ids):
         raise ValueError("invalid_plan_graph_contract: assignment references unknown node")
 
+    adjacency = {node_id: [] for node_id in node_ids}
+    for edge in plan_graph["edges"]:
+        source = edge["from"]
+        target = edge["to"]
+        if source == target:
+            raise ValueError(
+                "invalid_plan_graph_contract: local PlanGraph must be a DAG; cycle/self-loop detected"
+            )
+        adjacency[source].append(target)
+
+    visited = set()
+    active = set()
+
+    def visit(node_id: str) -> None:
+        if node_id in active:
+            raise ValueError(
+                "invalid_plan_graph_contract: local PlanGraph must be a DAG; cycle detected"
+            )
+        if node_id in visited:
+            return
+        active.add(node_id)
+        for child in adjacency[node_id]:
+            visit(child)
+        active.remove(node_id)
+        visited.add(node_id)
+
+    for node_id in node_ids:
+        visit(node_id)
+
     forbidden_text = json.dumps(plan_graph, sort_keys=True).lower()
     for key in ("final_output", "answer", "raw_user_text"):
         if key in forbidden_text:

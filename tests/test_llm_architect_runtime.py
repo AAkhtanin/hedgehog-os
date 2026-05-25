@@ -278,3 +278,160 @@ def test_validate_plan_graph_contract_rejects_missing_plan_id():
 
     assert "invalid_plan_graph_contract" in message
     assert "plan_id" in message
+
+
+def _base_plan_graph(packet, nodes, edges):
+    return {
+        "plan_id": "plan:test",
+        "request_id": packet["request_id"],
+        "source_packet_id": packet["packet_id"],
+        "time_assumptions": {
+            "as_of": packet["time_context"]["as_of"],
+            "freshness_required": packet["time_context"]["freshness_required"],
+            "assumptions": ["test"],
+        },
+        "nodes": nodes,
+        "edges": edges,
+        "executor_assignments": [
+            {
+                "executor_id": "exec_mock_certificate",
+                "node_ids": [node["node_id"] for node in nodes],
+                "mode": "simulate",
+            }
+        ],
+    }
+
+
+def _node(node_id, vector_id="official_online_request"):
+    return {
+        "node_id": node_id,
+        "vector_id": vector_id,
+        "task": f"task:{node_id}",
+        "executor_id": "exec_mock_certificate",
+        "depends_on": [],
+        "expected_output": "result_proposal",
+    }
+
+
+def test_validate_plan_graph_contract_accepts_horizontal_branching():
+    packet = build_demo_packet()
+    graph = _base_plan_graph(packet, [_node("a"), _node("b"), _node("c")], [])
+
+    validate_plan_graph_contract(graph, packet)
+
+
+def test_validate_plan_graph_contract_accepts_vertical_chain():
+    packet = build_demo_packet()
+    graph = _base_plan_graph(
+        packet,
+        [_node("a"), _node("b"), _node("c")],
+        [{"from": "a", "to": "b"}, {"from": "b", "to": "c"}],
+    )
+
+    validate_plan_graph_contract(graph, packet)
+
+
+def test_validate_plan_graph_contract_accepts_hybrid_dag():
+    packet = build_demo_packet()
+    graph = _base_plan_graph(
+        packet,
+        [_node("a"), _node("b"), _node("c"), _node("d")],
+        [
+            {"from": "a", "to": "b"},
+            {"from": "a", "to": "c"},
+            {"from": "b", "to": "d"},
+            {"from": "c", "to": "d"},
+        ],
+    )
+
+    validate_plan_graph_contract(graph, packet)
+
+
+def _assert_cycle_rejected(graph, packet):
+    try:
+        validate_plan_graph_contract(graph, packet)
+    except ValueError as exc:
+        message = str(exc)
+    else:
+        raise AssertionError("cyclic PlanGraph was accepted")
+
+    assert "invalid_plan_graph_contract" in message
+    assert "cycle" in message or "DAG" in message
+
+
+def test_validate_plan_graph_contract_rejects_self_loop():
+    packet = build_demo_packet()
+    graph = _base_plan_graph(
+        packet,
+        [_node("a")],
+        [{"from": "a", "to": "a"}],
+    )
+
+    _assert_cycle_rejected(graph, packet)
+
+
+def test_validate_plan_graph_contract_rejects_two_node_cycle():
+    packet = build_demo_packet()
+    graph = _base_plan_graph(
+        packet,
+        [_node("a"), _node("b")],
+        [{"from": "a", "to": "b"}, {"from": "b", "to": "a"}],
+    )
+
+    _assert_cycle_rejected(graph, packet)
+
+
+def test_validate_plan_graph_contract_rejects_three_node_cycle():
+    packet = build_demo_packet()
+    graph = _base_plan_graph(
+        packet,
+        [_node("a"), _node("b"), _node("c")],
+        [
+            {"from": "a", "to": "b"},
+            {"from": "b", "to": "c"},
+            {"from": "c", "to": "a"},
+        ],
+    )
+
+    _assert_cycle_rejected(graph, packet)
+
+
+def test_gemini_architect_cyclic_plan_graph_returns_error_and_fallback(monkeypatch):
+    packet = build_demo_packet()
+    cyclic_graph = _base_plan_graph(
+        packet,
+        [_node("a"), _node("b")],
+        [{"from": "a", "to": "b"}, {"from": "b", "to": "a"}],
+    )
+    responses = [json.dumps(cyclic_graph), json.dumps(cyclic_graph)]
+
+    class FakeResponse:
+        def __init__(self, text):
+            self.text = text
+
+    class FakeModel:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def generate_content(self, _prompt, **_kwargs):
+            return FakeResponse(responses.pop(0))
+
+    fake_google = types.ModuleType("google")
+    fake_genai = types.ModuleType("google.generativeai")
+    fake_genai.configure = lambda **_kwargs: None
+    fake_genai.GenerativeModel = FakeModel
+    fake_google.generativeai = fake_genai
+    monkeypatch.setitem(sys.modules, "google", fake_google)
+    monkeypatch.setitem(sys.modules, "google.generativeai", fake_genai)
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+
+    result = make_plan_graph_with_llm(
+        attractor_packet=packet,
+        provider="gemini",
+        allow_config=False,
+    )
+
+    assert result["status"] == "error"
+    assert result["used_llm"] is True
+    assert result["fallback"] == "deterministic"
+    assert "cycle" in result["error"] or "DAG" in result["error"]

@@ -22,6 +22,194 @@ def _short(value: Any, limit: int = 240) -> str:
     return f"{line[: limit - 3]}..."
 
 
+def _edge_cycle_validity(node_ids: set[str], edges: list[dict]) -> bool | None:
+    adjacency = {node_id: [] for node_id in node_ids}
+    for edge in edges:
+        if not isinstance(edge, dict) or "from" not in edge or "to" not in edge:
+            return None
+        source = edge["from"]
+        target = edge["to"]
+        if source not in node_ids or target not in node_ids:
+            return None
+        adjacency[source].append(target)
+
+    visited = set()
+    active = set()
+
+    def visit(node_id: str) -> bool:
+        if node_id in active:
+            return False
+        if node_id in visited:
+            return True
+        active.add(node_id)
+        for child in adjacency[node_id]:
+            if not visit(child):
+                return False
+        active.remove(node_id)
+        visited.add(node_id)
+        return True
+
+    return all(visit(node_id) for node_id in node_ids)
+
+
+def _classify_topology(nodes: list[dict], edges: list[dict], dag_valid: bool | None) -> str:
+    if dag_valid is None:
+        return "unknown"
+    if dag_valid is False:
+        return "cyclic_invalid"
+    if not nodes:
+        return "empty"
+    if len(nodes) == 1 and not edges:
+        return "single_node"
+    if not edges:
+        return "horizontal"
+
+    node_ids = {node["node_id"] for node in nodes}
+    incoming = {node_id: 0 for node_id in node_ids}
+    outgoing = {node_id: 0 for node_id in node_ids}
+    for edge in edges:
+        outgoing[edge["from"]] += 1
+        incoming[edge["to"]] += 1
+
+    roots = [node_id for node_id, count in incoming.items() if count == 0]
+    leaves = [node_id for node_id, count in outgoing.items() if count == 0]
+    linear = (
+        len(edges) == len(nodes) - 1
+        and len(roots) == 1
+        and len(leaves) == 1
+        and all(count <= 1 for count in incoming.values())
+        and all(count <= 1 for count in outgoing.values())
+    )
+    if linear:
+        return "vertical"
+    return "hybrid"
+
+
+def inspect_plan_graph(plan_graph: dict | None) -> dict:
+    if not plan_graph:
+        return {
+            "plan_id": "none",
+            "source_packet_id": "none",
+            "request_id": "none",
+            "node_count": 0,
+            "edge_count": 0,
+            "dag_valid": "unknown",
+            "topology": "empty",
+            "nodes": [],
+            "edges": [],
+        }
+    if not isinstance(plan_graph, dict):
+        return {
+            "plan_id": "unknown",
+            "source_packet_id": "unknown",
+            "request_id": "unknown",
+            "node_count": 0,
+            "edge_count": 0,
+            "dag_valid": "unknown",
+            "topology": "unknown",
+            "nodes": [],
+            "edges": [],
+        }
+
+    raw_nodes = plan_graph.get("nodes", [])
+    raw_edges = plan_graph.get("edges", [])
+    if not isinstance(raw_nodes, list) or not isinstance(raw_edges, list):
+        return {
+            "plan_id": plan_graph.get("plan_id", "unknown"),
+            "source_packet_id": plan_graph.get("source_packet_id", "unknown"),
+            "request_id": plan_graph.get("request_id", "unknown"),
+            "node_count": 0,
+            "edge_count": 0,
+            "dag_valid": "unknown",
+            "topology": "unknown",
+            "nodes": [],
+            "edges": [],
+        }
+
+    nodes = []
+    malformed = False
+    node_ids = set()
+    for node in raw_nodes:
+        if not isinstance(node, dict) or "node_id" not in node:
+            malformed = True
+            continue
+        node_ids.add(node["node_id"])
+        nodes.append(
+            {
+                "node_id": _short(node.get("node_id", "unknown"), 80),
+                "vector_id": _short(node.get("vector_id", "unknown"), 80),
+                "executor_id": _short(node.get("executor_id", "unknown"), 80),
+                "depends_on": [
+                    _short(dep, 60)
+                    for dep in node.get("depends_on", [])
+                    if isinstance(dep, str)
+                ],
+                "task_short": _short(node.get("task", "unknown"), 100),
+            }
+        )
+
+    edge_items = []
+    for edge in raw_edges:
+        if not isinstance(edge, dict) or "from" not in edge or "to" not in edge:
+            malformed = True
+            continue
+        edge_items.append(
+            {
+                "from": _short(edge["from"], 80),
+                "to": _short(edge["to"], 80),
+            }
+        )
+
+    dag_value = None if malformed else _edge_cycle_validity(node_ids, raw_edges)
+    topology = _classify_topology(raw_nodes, raw_edges, dag_value)
+    return {
+        "plan_id": _short(plan_graph.get("plan_id", "unknown"), 120),
+        "source_packet_id": _short(plan_graph.get("source_packet_id", "unknown"), 120),
+        "request_id": _short(plan_graph.get("request_id", "unknown"), 120),
+        "node_count": len(raw_nodes),
+        "edge_count": len(raw_edges),
+        "dag_valid": "unknown" if dag_value is None else _bool_text(dag_value),
+        "topology": topology,
+        "nodes": nodes,
+        "edges": edge_items,
+    }
+
+
+def render_plan_graph_section(plan_graph: dict | None) -> list[str]:
+    info = inspect_plan_graph(plan_graph)
+    lines = [
+        "[PLAN_GRAPH]",
+        f"- plan_id: {info['plan_id']}",
+        f"- source_packet_id: {info['source_packet_id']}",
+        f"- request_id: {info['request_id']}",
+        f"- node_count: {info['node_count']}",
+        f"- edge_count: {info['edge_count']}",
+        f"- dag_valid: {info['dag_valid']}",
+        f"- topology: {info['topology']}",
+        "- nodes:",
+    ]
+    if info["nodes"]:
+        for node in info["nodes"]:
+            deps = ", ".join(node["depends_on"]) if node["depends_on"] else "none"
+            lines.append(
+                "  - "
+                f"node_id={node['node_id']} "
+                f"vector_id={node['vector_id']} "
+                f"executor_id={node['executor_id']} "
+                f"depends_on={deps} "
+                f"task_short={node['task_short']}"
+            )
+    else:
+        lines.append("  - none")
+    lines.append("- edges:")
+    if info["edges"]:
+        for edge in info["edges"]:
+            lines.append(f"  - {edge['from']} -> {edge['to']}")
+    else:
+        lines.append("  - none")
+    return lines
+
+
 def _winner_vector_id(trace: dict, winner_proposal_id: str | None) -> str:
     if not winner_proposal_id:
         return "none"
@@ -126,6 +314,11 @@ def render_trace_report(trace: dict, final_output: dict | None = None) -> str:
             "",
             *_architect_lines(trace),
             "",
+            *(
+                [*render_plan_graph_section(trace.get("plan_graph")), ""]
+                if trace.get("plan_graph")
+                else []
+            ),
             "[EXECUTOR]",
             f"- executor_skipped: {_bool_text(trace.get('executor_skipped', False))}",
             f"- ResultProposal count: {len(trace.get('result_proposals', []))}",

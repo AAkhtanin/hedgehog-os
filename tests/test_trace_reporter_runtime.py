@@ -2,6 +2,7 @@ from pathlib import Path
 
 from hedgehog.drs import LocalDRS
 from hedgehog.root_orchestrator import RootOrchestrator
+from hedgehog.trace_reporter import inspect_plan_graph
 from hedgehog.trace_reporter import render_trace_report
 
 
@@ -31,7 +32,75 @@ def test_render_trace_report_handles_normal_full_pipeline_trace(tmp_path):
     assert "[POST_VV]" in report
     assert "[GT]" in report
     assert "[FINAL]" in report
+    assert "[PLAN_GRAPH]" in report
+    assert "plan_id:" in report
+    assert "node_count:" in report
+    assert "edge_count:" in report
+    assert "topology:" in report
+    assert "vector_id=" in report
+    assert "->" in report
     assert "illegal_coercion blocked: true" in report
+
+
+def _plan_graph(nodes, edges):
+    return {
+        "plan_id": "plan:test",
+        "source_packet_id": "packet:test",
+        "request_id": "req:test",
+        "nodes": nodes,
+        "edges": edges,
+    }
+
+
+def _node(node_id):
+    return {
+        "node_id": node_id,
+        "vector_id": "official_online_request",
+        "executor_id": "exec_mock_certificate",
+        "depends_on": [],
+        "task": f"task:{node_id}",
+    }
+
+
+def test_plan_graph_inspector_detects_vertical_chain():
+    graph = _plan_graph(
+        [_node("a"), _node("b"), _node("c")],
+        [{"from": "a", "to": "b"}, {"from": "b", "to": "c"}],
+    )
+    info = inspect_plan_graph(graph)
+
+    assert info["topology"] == "vertical"
+    assert info["dag_valid"] == "true"
+
+
+def test_plan_graph_inspector_detects_horizontal_branching():
+    graph = _plan_graph([_node("a"), _node("b"), _node("c")], [])
+    info = inspect_plan_graph(graph)
+
+    assert info["topology"] == "horizontal"
+    assert info["dag_valid"] == "true"
+
+
+def test_plan_graph_inspector_detects_hybrid_graph():
+    graph = _plan_graph(
+        [_node("a"), _node("b"), _node("c")],
+        [{"from": "a", "to": "b"}, {"from": "a", "to": "c"}],
+    )
+    info = inspect_plan_graph(graph)
+
+    assert info["topology"] == "hybrid"
+    assert info["dag_valid"] == "true"
+
+
+def test_plan_graph_inspector_detects_cycle_safely():
+    graph = _plan_graph(
+        [_node("a"), _node("b")],
+        [{"from": "a", "to": "b"}, {"from": "b", "to": "a"}],
+    )
+    info = inspect_plan_graph(graph)
+
+    assert info["topology"] == "cyclic_invalid"
+    assert info["dag_valid"] == "false"
 
 
 def test_render_trace_report_handles_llm_general_trace(tmp_path):
@@ -115,6 +184,32 @@ def test_render_trace_report_redacts_forbidden_terms():
     report = render_trace_report(trace, {"request_id": "req", "status": "failed"})
 
     lowered = report.lower()
+    assert "raw_user_text" not in lowered
+    assert "api_key" not in lowered
+    assert "token" not in lowered
+
+
+def test_plan_graph_section_redacts_sensitive_terms():
+    trace = {
+        "plan_graph": {
+            "plan_id": "plan:api_key",
+            "source_packet_id": "packet:token",
+            "request_id": "req",
+            "nodes": [
+                {
+                    "node_id": "a",
+                    "vector_id": "official_online_request",
+                    "executor_id": "exec",
+                    "depends_on": [],
+                    "task": "raw_user_text should not print",
+                }
+            ],
+            "edges": [],
+        }
+    }
+    report = render_trace_report(trace, {"request_id": "req", "status": "success"})
+    lowered = report.lower()
+
     assert "raw_user_text" not in lowered
     assert "api_key" not in lowered
     assert "token" not in lowered

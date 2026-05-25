@@ -148,6 +148,109 @@
         "strict"
       ]
     },
+    "candidate_scores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "proposal_id",
+          "status",
+          "accepted",
+          "utility",
+          "risk_penalty",
+          "cost_penalty",
+          "robustness",
+          "status_bonus",
+          "novelty_or_reuse_bonus",
+          "payoff",
+          "regret",
+          "selection_notes"
+        ],
+        "properties": {
+          "proposal_id": {
+            "$ref": "common.schema.json#/$defs/Id"
+          },
+          "status": {
+            "$ref": "common.schema.json#/$defs/NonEmptyString"
+          },
+          "accepted": {
+            "type": "boolean"
+          },
+          "utility": {
+            "type": "number"
+          },
+          "risk_penalty": {
+            "type": "number",
+            "minimum": 0
+          },
+          "cost_penalty": {
+            "type": "number",
+            "minimum": 0
+          },
+          "robustness": {
+            "type": "number"
+          },
+          "status_bonus": {
+            "type": "number"
+          },
+          "novelty_or_reuse_bonus": {
+            "type": "number"
+          },
+          "payoff": {
+            "type": "number"
+          },
+          "regret": {
+            "type": "number",
+            "minimum": 0
+          },
+          "selection_notes": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/NonEmptyString"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "payoff_formula_version": {
+      "const": "gt_payoff_v0_1"
+    },
+    "winner_payoff": {
+      "type": "number"
+    },
+    "regret_summary": {
+      "type": "object",
+      "required": [
+        "candidate_count",
+        "max_regret",
+        "mean_regret"
+      ],
+      "properties": {
+        "candidate_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_regret": {
+          "type": "number",
+          "minimum": 0
+        },
+        "mean_regret": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "dominated_candidate_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/Id"
+      }
+    },
+    "selection_reason": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
     "audit": {
       "type": "object",
       "required": [],

@@ -31,6 +31,10 @@ def test_render_trace_report_handles_normal_full_pipeline_trace(tmp_path):
     assert "[EXECUTOR]" in report
     assert "[POST_VV]" in report
     assert "[GT]" in report
+    assert "[GT_PAYOFF]" in report
+    assert "payoff_formula_version: gt_payoff_v0_1" in report
+    assert "winner_payoff:" in report
+    assert "top candidate payoffs:" in report
     assert "[FINAL]" in report
     assert "[PLAN_GRAPH]" in report
     assert "plan_id:" in report

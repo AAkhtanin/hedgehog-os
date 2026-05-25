@@ -247,6 +247,42 @@ def _branch_counts(trace: dict) -> tuple[int, int, int, int]:
     return accepted, rejected, revise, blocked
 
 
+def _gt_payoff_lines(gt_report: dict) -> list[str]:
+    if not gt_report.get("candidate_scores"):
+        return []
+    lines = [
+        "[GT_PAYOFF]",
+        f"- payoff_formula_version: {gt_report.get('payoff_formula_version', 'none')}",
+        f"- winner_payoff: {_short(gt_report.get('winner_payoff'))}",
+    ]
+    summary = gt_report.get("regret_summary") or {}
+    if summary:
+        lines.append(
+            "- regret_summary: "
+            f"candidate_count={summary.get('candidate_count', 0)} "
+            f"max_regret={summary.get('max_regret', 0)} "
+            f"mean_regret={summary.get('mean_regret', 0)}"
+        )
+    lines.append("- top candidate payoffs:")
+    top_scores = sorted(
+        gt_report.get("candidate_scores", []),
+        key=lambda score: float(score.get("payoff", 0.0)),
+        reverse=True,
+    )[:3]
+    for score in top_scores:
+        lines.append(
+            "  - "
+            f"proposal_id={_short(score.get('proposal_id'), 80)} "
+            f"accepted={_bool_text(score.get('accepted', False))} "
+            f"payoff={score.get('payoff', 0)} "
+            f"utility={score.get('utility', 0)} "
+            f"robustness={score.get('robustness', 0)} "
+            f"risk_penalty={score.get('risk_penalty', 0)} "
+            f"cost_penalty={score.get('cost_penalty', 0)}"
+        )
+    return lines
+
+
 def _avf_lines(trace: dict) -> list[str]:
     packet = trace.get("attractor_packet") or {}
     plan_graph = trace.get("plan_graph") or {}
@@ -337,6 +373,11 @@ def render_trace_report(trace: dict, final_output: dict | None = None) -> str:
             f"- winner proposal id: {winner_proposal_id or 'none'}",
             f"- winner vector id: {_winner_vector_id(trace, winner_proposal_id)}",
             "",
+            *(
+                [*_gt_payoff_lines(gt_report), ""]
+                if _gt_payoff_lines(gt_report)
+                else []
+            ),
             "[FINAL]",
             f"- created_by: {final.get('created_by', 'none')}",
             f"- status: {final.get('status', 'none')}",

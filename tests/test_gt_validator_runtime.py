@@ -8,7 +8,12 @@ from hedgehog.architect import make_plan_graph
 from hedgehog.avf import build_attractor_packet
 from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
 from hedgehog.executor import execute_plan_graph
-from hedgehog.gt_validator import classify_vv_report, validate_gt
+from hedgehog.gt_validator import (
+    PAYOFF_FORMULA_VERSION,
+    classify_vv_report,
+    compute_payoff_components,
+    validate_gt,
+)
 from hedgehog.post_vv import validate_result_proposals
 from hedgehog.time_model import utc_now_iso
 
@@ -109,6 +114,12 @@ def test_validate_gt_accepts_and_validates_schema():
     assert gt_report["decision"] == "accept"
     assert gt_report["winner"] in accepted_ids
     assert gt_report["candidates"]
+    assert gt_report["payoff_formula_version"] == PAYOFF_FORMULA_VERSION
+    assert gt_report["candidate_scores"]
+    assert "winner_payoff" in gt_report
+    assert "regret_summary" in gt_report
+    assert "dominated_candidate_ids" in gt_report
+    assert "selection_reason" in gt_report
     assert "half_life_hours" in gt_report
     assert "decay_rate" in gt_report
     assert not contains_key(gt_report, "final_output")
@@ -122,6 +133,22 @@ def test_validate_gt_accepts_and_validates_schema():
         assert "regret" in candidate
         assert "elo_before" in candidate
         assert "elo_after" in candidate
+
+    for score in gt_report["candidate_scores"]:
+        assert {
+            "proposal_id",
+            "status",
+            "accepted",
+            "utility",
+            "risk_penalty",
+            "cost_penalty",
+            "robustness",
+            "status_bonus",
+            "novelty_or_reuse_bonus",
+            "payoff",
+            "regret",
+            "selection_notes",
+        }.issubset(score)
 
     gt_report_validator().validate(gt_report)
 
@@ -200,12 +227,110 @@ def test_validate_gt_completed_candidate_wins_over_high_utility_needs_revision()
     }
 
     gt_report = validate_gt([needs_revision, accepted])
+    score_by_id = {
+        score["proposal_id"]: score
+        for score in gt_report["candidate_scores"]
+    }
 
     assert gt_report["decision"] == "accept"
     assert gt_report["winner"] == "proposal:accepted_completed"
     assert [
         candidate["candidate_id"] for candidate in gt_report["candidates"]
     ] == ["proposal:accepted_completed"]
+    assert score_by_id["proposal:accepted_completed"]["accepted"] is True
+    assert score_by_id["proposal:accepted_completed"]["status_bonus"] > 0
+    assert score_by_id["proposal:needs_revision_high_utility"]["accepted"] is False
+    assert score_by_id["proposal:needs_revision_high_utility"]["risk_penalty"] > 0
+    gt_report_validator().validate(gt_report)
+
+
+def test_compute_payoff_components_penalizes_blocked_needs_revision():
+    accepted = deepcopy(build_demo_vv_reports()[0])
+    accepted["proposal_id"] = "proposal:accepted_component"
+    accepted["decision"] = "accept"
+    accepted["status"] = "accepted"
+    accepted["normalized_features"] = {
+        "utility": 0.7,
+        "robustness": 0.7,
+        "compute_cost": 0.0,
+        "violations": 0.0,
+        "transfer": 0.0,
+        "novelty_guard": 0.0,
+    }
+    blocked = deepcopy(accepted)
+    blocked["proposal_id"] = "proposal:blocked_component"
+    blocked["decision"] = "revise"
+    blocked["status"] = "needs_revision"
+    blocked["normalized_features"]["utility"] = 1.0
+    blocked["normalized_features"]["robustness"] = 1.0
+    blocked["violations"] = [
+        {
+            "kind": "blocked",
+            "description": "ResultProposal is blocked before completion.",
+        }
+    ]
+
+    accepted_score = compute_payoff_components(accepted)
+    blocked_score = compute_payoff_components(blocked)
+
+    assert accepted_score["status_bonus"] > 0
+    assert blocked_score["risk_penalty"] > accepted_score["risk_penalty"]
+    assert "blocked_before_completion" in blocked_score["selection_notes"]
+    assert blocked_score["accepted"] is False
+
+
+def test_validate_gt_blocked_candidate_cannot_win():
+    accepted = deepcopy(build_demo_vv_reports()[0])
+    accepted["proposal_id"] = "proposal:accepted_low"
+    accepted["decision"] = "accept"
+    accepted["status"] = "accepted"
+    accepted["normalized_features"] = {
+        "utility": 0.25,
+        "robustness": 0.25,
+        "compute_cost": 0.0,
+        "violations": 0.0,
+        "transfer": 0.0,
+        "novelty_guard": 0.0,
+    }
+    blocked = deepcopy(accepted)
+    blocked["proposal_id"] = "proposal:blocked_high"
+    blocked["decision"] = "revise"
+    blocked["status"] = "needs_revision"
+    blocked["normalized_features"] = {
+        "utility": 1.0,
+        "robustness": 1.0,
+        "compute_cost": 0.0,
+        "violations": 0.0,
+        "transfer": 0.0,
+        "novelty_guard": 0.0,
+    }
+    blocked["violations"] = [
+        {
+            "kind": "blocked",
+            "description": "ResultProposal is blocked before completion.",
+        }
+    ]
+
+    gt_report = validate_gt([blocked, accepted])
+
+    assert gt_report["decision"] == "accept"
+    assert gt_report["winner"] == "proposal:accepted_low"
+    assert all(
+        candidate["candidate_id"] != "proposal:blocked_high"
+        for candidate in gt_report["candidates"]
+    )
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_regret_summary_exists_for_multiple_scored_candidates():
+    reports = build_demo_vv_reports()
+    gt_report = validate_gt(reports)
+
+    assert gt_report["regret_summary"]["candidate_count"] == len(
+        gt_report["candidate_scores"]
+    )
+    assert gt_report["regret_summary"]["max_regret"] >= 0
+    assert gt_report["regret_summary"]["mean_regret"] >= 0
     gt_report_validator().validate(gt_report)
 
 
@@ -223,6 +348,8 @@ def test_validate_gt_returns_revise_when_only_needs_revision_candidates_exist():
     assert gt_report["decision"] == "revise"
     assert "winner" not in gt_report
     assert gt_report["candidates"] == []
+    assert gt_report["candidate_scores"]
+    assert gt_report["payoff_formula_version"] == PAYOFF_FORMULA_VERSION
     assert any("needs_revision" in note for note in gt_report["notes"])
     assert not contains_key(gt_report, "final_output")
     assert not contains_key(gt_report, "answer")
@@ -242,4 +369,6 @@ def test_validate_gt_returns_no_update_when_no_candidates_are_accepted():
 
     assert gt_report["decision"] == "no_update"
     assert gt_report["candidates"] == []
+    assert gt_report["candidate_scores"] == []
+    assert gt_report["payoff_formula_version"] == PAYOFF_FORMULA_VERSION
     gt_report_validator().validate(gt_report)

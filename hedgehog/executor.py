@@ -33,6 +33,11 @@ def _base_payload(node: dict, task: str) -> dict:
     return {
         "status": "simulated_success",
         "node_id": node["node_id"],
+        "vector_id": node["vector_id"],
+        "executor_id": node["executor_id"],
+        "task_short": task.split(";", 1)[0],
+        "depends_on_count": len(node.get("depends_on", [])),
+        "dependency_depth": len(node.get("depends_on", [])),
         "task_completed": True,
         "artifact_type": "generic_simulated_result",
         "avf": _avf_payload(node, task),

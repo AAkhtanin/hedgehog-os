@@ -72,6 +72,16 @@ def _avf_final_viability(proposal: dict) -> float | None:
     return None
 
 
+def _avf_vector_id(proposal: dict) -> str | None:
+    result_payload = proposal.get("result_payload")
+    if not isinstance(result_payload, dict):
+        return None
+    avf = result_payload.get("avf")
+    if isinstance(avf, dict) and avf.get("vector_id"):
+        return avf["vector_id"]
+    return result_payload.get("vector_id")
+
+
 def _avf_soft_mask(proposal: dict) -> float | None:
     result_payload = proposal.get("result_payload")
     if not isinstance(result_payload, dict):
@@ -287,6 +297,10 @@ def validate_result_proposal(proposal: dict) -> dict:
     report = {
         "vv_report_id": f"vv:{candidate.get('proposal_id', 'missing_proposal')}",
         "proposal_id": candidate.get("proposal_id", "missing_proposal"),
+        "vector_id": candidate.get("vector_id") or _avf_vector_id(candidate),
+        "artifact_type": semantics["artifact_type"],
+        "execution_status": semantics["payload_status"] or status,
+        "dependency_depth": candidate.get("result_payload", {}).get("dependency_depth", 0),
         "status": status,
         "scores": scores,
         "overall_score": overall_score,
@@ -300,6 +314,8 @@ def validate_result_proposal(proposal: dict) -> dict:
             "violations": _clamp_01(1.0 - policy_score + semantic_penalty),
             "transfer": 0.0,
             "novelty_guard": 0.0,
+            "avf_final_viability": avf_final_viability,
+            "avf_soft_mask": avf_soft_mask,
         },
         "trace_refs": list(candidate.get("trace_refs", [])),
     }

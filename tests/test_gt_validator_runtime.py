@@ -109,8 +109,13 @@ def accepted_report(
     robustness: float,
     compute_cost: float = 0.0,
     violations: float = 0.0,
+    vector_id: str | None = None,
+    avf_final_viability: float | None = None,
+    avf_soft_mask: float | None = None,
+    dependency_depth: int = 0,
+    risk_level: str = "none",
 ) -> dict:
-    return {
+    report = {
         "proposal_id": proposal_id,
         "decision": "accept",
         "status": "accepted",
@@ -123,7 +128,16 @@ def accepted_report(
             "novelty_guard": 0.0,
         },
         "violations": [],
+        "dependency_depth": dependency_depth,
+        "risk_level": risk_level,
     }
+    if vector_id is not None:
+        report["vector_id"] = vector_id
+    if avf_final_viability is not None:
+        report["avf_final_viability"] = avf_final_viability
+    if avf_soft_mask is not None:
+        report["avf_soft_mask"] = avf_soft_mask
+    return report
 
 
 def test_validate_gt_accepts_and_validates_schema():
@@ -173,11 +187,158 @@ def test_validate_gt_accepts_and_validates_schema():
             "robustness",
             "status_bonus",
             "novelty_or_reuse_bonus",
+            "base_payoff_v0_1",
+            "vector_role_bonus",
+            "fallback_role_penalty",
+            "human_burden_penalty",
+            "dependency_depth_penalty",
+            "evidence_strength_bonus",
             "payoff",
             "regret",
             "selection_notes",
         }.issubset(score)
 
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_v02_official_path_beats_fallback_when_base_payoff_equal():
+    official = accepted_report(
+        "proposal:official",
+        utility=0.5,
+        robustness=0.5,
+        vector_id="official_online_request",
+        avf_final_viability=0.8,
+    )
+    fallback = accepted_report(
+        "proposal:fallback",
+        utility=0.5,
+        robustness=0.5,
+        vector_id="fallback_exploration",
+        avf_final_viability=0.8,
+    )
+
+    gt_report = validate_gt([fallback, official])
+    score_by_id = {
+        score["proposal_id"]: score
+        for score in gt_report["candidate_scores"]
+    }
+
+    assert gt_report["payoff_formula_version"] == "gt_payoff_v0_2"
+    assert gt_report["winner"] == "proposal:official"
+    assert score_by_id["proposal:official"]["vector_role_bonus"] > 0
+    assert score_by_id["proposal:fallback"]["fallback_role_penalty"] > 0
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_v02_higher_avf_final_viability_wins_when_otherwise_equal():
+    high_avf = accepted_report(
+        "proposal:high_avf",
+        utility=0.5,
+        robustness=0.5,
+        vector_id="personal_visit",
+        avf_final_viability=0.9,
+    )
+    low_avf = accepted_report(
+        "proposal:low_avf",
+        utility=0.5,
+        robustness=0.5,
+        vector_id="personal_visit",
+        avf_final_viability=0.2,
+    )
+
+    gt_report = validate_gt([low_avf, high_avf])
+
+    assert gt_report["winner"] == "proposal:high_avf"
+    assert gt_report["tie_detected"] is False
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_v02_needs_user_high_burden_loses_to_completed_candidate():
+    completed = accepted_report(
+        "proposal:completed",
+        utility=0.5,
+        robustness=0.5,
+        vector_id="official_online_request",
+    )
+    needs_user = accepted_report(
+        "proposal:needs_user",
+        utility=0.5,
+        robustness=0.5,
+        vector_id="official_online_request",
+    )
+    needs_user["decision"] = "revise"
+    needs_user["status"] = "needs_revision"
+    needs_user["violations"] = [
+        {
+            "violation_id": "vv_human_input_required",
+            "kind": "consistency",
+            "description": "ResultProposal requires human input before completion.",
+        }
+    ]
+
+    gt_report = validate_gt([needs_user, completed])
+    score_by_id = {
+        score["proposal_id"]: score
+        for score in gt_report["candidate_scores"]
+    }
+
+    assert gt_report["winner"] == "proposal:completed"
+    assert score_by_id["proposal:needs_user"]["human_burden_penalty"] > 0
+    assert score_by_id["proposal:needs_user"]["accepted"] is False
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_v02_legal_representative_has_lower_priority_than_safe_primary():
+    legal = accepted_report(
+        "proposal:legal",
+        utility=0.5,
+        robustness=0.5,
+        vector_id="legal_representative",
+        avf_final_viability=0.8,
+    )
+    official = accepted_report(
+        "proposal:official",
+        utility=0.5,
+        robustness=0.5,
+        vector_id="official_online_request",
+        avf_final_viability=0.8,
+    )
+
+    gt_report = validate_gt([legal, official])
+    score_by_id = {
+        score["proposal_id"]: score
+        for score in gt_report["candidate_scores"]
+    }
+
+    assert gt_report["winner"] == "proposal:official"
+    assert score_by_id["proposal:legal"]["human_burden_penalty"] > 0
+    assert score_by_id["proposal:official"]["vector_role_bonus"] > score_by_id["proposal:legal"]["vector_role_bonus"]
+    gt_report_validator().validate(gt_report)
+
+
+def test_validate_gt_v02_illegal_coercion_cannot_be_executable_winner():
+    illegal = accepted_report(
+        "proposal:illegal",
+        utility=10.0,
+        robustness=10.0,
+        vector_id="illegal_coercion",
+    )
+    official = accepted_report(
+        "proposal:official",
+        utility=0.1,
+        robustness=0.1,
+        vector_id="official_online_request",
+    )
+
+    gt_report = validate_gt([illegal, official])
+    score_by_id = {
+        score["proposal_id"]: score
+        for score in gt_report["candidate_scores"]
+    }
+
+    assert gt_report["winner"] == "proposal:official"
+    assert score_by_id["proposal:illegal"]["accepted"] is False
+    assert score_by_id["proposal:illegal"]["risk_penalty"] + score_by_id["proposal:illegal"]["human_burden_penalty"] >= 10.0
     gt_report_validator().validate(gt_report)
 
 

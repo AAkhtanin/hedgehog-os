@@ -116,6 +116,12 @@ def test_execute_plan_graph_returns_schema_valid_result_proposals():
         assert time_fields <= set(proposal["time_envelope"])
         assert "artifact_type" in proposal["result_payload"]
         assert "avf" in proposal["result_payload"]
+        assert proposal["result_payload"]["node_id"]
+        assert proposal["result_payload"]["vector_id"] == proposal["vector_id"]
+        assert proposal["result_payload"]["executor_id"] == proposal["producer"]["executor_id"]
+        assert proposal["result_payload"]["task_short"]
+        assert proposal["result_payload"]["depends_on_count"] >= 0
+        assert proposal["result_payload"]["dependency_depth"] >= 0
         assert proposal["result_payload"]["avf"]["vector_id"] == proposal["vector_id"]
         assert 0.0 <= proposal["result_payload"]["avf"]["final_viability"] <= 1.0
         assert 0.0 <= proposal["result_payload"]["avf"]["soft_mask"] <= 1.0

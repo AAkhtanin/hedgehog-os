@@ -32,7 +32,7 @@ def test_render_trace_report_handles_normal_full_pipeline_trace(tmp_path):
     assert "[POST_VV]" in report
     assert "[GT]" in report
     assert "[GT_PAYOFF]" in report
-    assert "payoff_formula_version: gt_payoff_v0_1" in report
+    assert "payoff_formula_version: gt_payoff_v0_2" in report
     assert "winner_payoff:" in report
     assert "top candidate payoffs:" in report
     assert "[FINAL]" in report
@@ -179,10 +179,10 @@ def test_trace_reporter_renders_gt_tie_info():
         "gt_report": {
             "decision": "accept",
             "winner": "proposal:a",
-            "payoff_formula_version": "gt_payoff_v0_1",
+            "payoff_formula_version": "gt_payoff_v0_2",
             "winner_payoff": 1.25,
             "tie_detected": True,
-            "tie_break_rule": "lower_risk_then_lower_cost_then_higher_robustness_then_higher_utility_then_proposal_id",
+            "tie_break_rule": "lower_risk_then_lower_human_burden_then_higher_avf_final_viability_then_higher_evidence_strength_then_lower_cost_then_higher_robustness_then_proposal_id",
             "tie_candidate_ids": ["proposal:a", "proposal:b"],
             "regret_summary": {
                 "candidate_count": 2,
@@ -194,8 +194,13 @@ def test_trace_reporter_renders_gt_tie_info():
                     "proposal_id": "proposal:a",
                     "accepted": True,
                     "payoff": 1.25,
+                    "vector_id": "official_online_request",
+                    "avf_final_viability": 0.9,
                     "utility": 0.5,
                     "robustness": 0.5,
+                    "vector_role_bonus": 0.15,
+                    "fallback_role_penalty": 0.0,
+                    "human_burden_penalty": 0.0,
                     "risk_penalty": 0.0,
                     "cost_penalty": 0.0,
                 },
@@ -203,8 +208,13 @@ def test_trace_reporter_renders_gt_tie_info():
                     "proposal_id": "proposal:b",
                     "accepted": True,
                     "payoff": 1.25,
+                    "vector_id": "fallback_exploration",
+                    "avf_final_viability": 0.9,
                     "utility": 0.5,
                     "robustness": 0.5,
+                    "vector_role_bonus": 0.0,
+                    "fallback_role_penalty": 0.2,
+                    "human_burden_penalty": 0.0,
                     "risk_penalty": 0.0,
                     "cost_penalty": 0.0,
                 },
@@ -218,6 +228,8 @@ def test_trace_reporter_renders_gt_tie_info():
     assert "[GT_PAYOFF]" in report
     assert "tie_detected: true" in report
     assert "tie_break_rule:" in report
+    assert "vector_id=official_online_request" in report
+    assert "avf_final_viability=0.9" in report
     assert "tie_candidate_ids: proposal:a, proposal:b" in report
     assert "raw_user_text" not in lowered
     assert "api_key" not in lowered
@@ -231,10 +243,10 @@ def test_gt_payoff_renders_tie_break_winner_first_when_payoffs_equal():
         "gt_report": {
             "decision": "accept",
             "winner": "proposal:d",
-            "payoff_formula_version": "gt_payoff_v0_1",
+            "payoff_formula_version": "gt_payoff_v0_2",
             "winner_payoff": 1.25,
             "tie_detected": True,
-            "tie_break_rule": "lower_risk_then_lower_cost_then_higher_robustness_then_higher_utility_then_proposal_id",
+            "tie_break_rule": "lower_risk_then_lower_human_burden_then_higher_avf_final_viability_then_higher_evidence_strength_then_lower_cost_then_higher_robustness_then_proposal_id",
             "tie_candidate_ids": [
                 "proposal:a",
                 "proposal:b",
@@ -251,8 +263,13 @@ def test_gt_payoff_renders_tie_break_winner_first_when_payoffs_equal():
                     "proposal_id": "proposal:a",
                     "accepted": True,
                     "payoff": 1.25,
+                    "vector_id": "official_online_request",
+                    "avf_final_viability": 0.9,
                     "utility": 0.5,
                     "robustness": 0.5,
+                    "vector_role_bonus": 0.15,
+                    "fallback_role_penalty": 0.0,
+                    "human_burden_penalty": 0.0,
                     "risk_penalty": 0.0,
                     "cost_penalty": 0.0,
                 },
@@ -260,8 +277,13 @@ def test_gt_payoff_renders_tie_break_winner_first_when_payoffs_equal():
                     "proposal_id": "proposal:b",
                     "accepted": True,
                     "payoff": 1.25,
+                    "vector_id": "personal_visit",
+                    "avf_final_viability": 0.8,
                     "utility": 0.5,
                     "robustness": 0.5,
+                    "vector_role_bonus": 0.08,
+                    "fallback_role_penalty": 0.0,
+                    "human_burden_penalty": 0.05,
                     "risk_penalty": 0.0,
                     "cost_penalty": 0.0,
                 },
@@ -269,8 +291,13 @@ def test_gt_payoff_renders_tie_break_winner_first_when_payoffs_equal():
                     "proposal_id": "proposal:c",
                     "accepted": True,
                     "payoff": 1.25,
+                    "vector_id": "legal_representative",
+                    "avf_final_viability": 0.7,
                     "utility": 0.5,
                     "robustness": 0.5,
+                    "vector_role_bonus": 0.03,
+                    "fallback_role_penalty": 0.0,
+                    "human_burden_penalty": 0.08,
                     "risk_penalty": 0.0,
                     "cost_penalty": 0.0,
                 },
@@ -278,8 +305,13 @@ def test_gt_payoff_renders_tie_break_winner_first_when_payoffs_equal():
                     "proposal_id": "proposal:d",
                     "accepted": True,
                     "payoff": 1.25,
+                    "vector_id": "fallback_exploration",
+                    "avf_final_viability": 0.6,
                     "utility": 0.5,
                     "robustness": 0.5,
+                    "vector_role_bonus": 0.0,
+                    "fallback_role_penalty": 0.2,
+                    "human_burden_penalty": 0.0,
                     "risk_penalty": 0.0,
                     "cost_penalty": 0.0,
                 },

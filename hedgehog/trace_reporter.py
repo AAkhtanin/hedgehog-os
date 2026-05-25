@@ -301,8 +301,13 @@ def _gt_payoff_lines(gt_report: dict) -> list[str]:
             f"proposal_id={_short(score.get('proposal_id'), 80)} "
             f"accepted={_bool_text(score.get('accepted', False))} "
             f"payoff={score.get('payoff', 0)} "
+            f"vector_id={_short(score.get('vector_id'), 60)} "
+            f"avf_final_viability={_short(score.get('avf_final_viability'), 40)} "
             f"utility={score.get('utility', 0)} "
             f"robustness={score.get('robustness', 0)} "
+            f"vector_role_bonus={score.get('vector_role_bonus', 0)} "
+            f"fallback_role_penalty={score.get('fallback_role_penalty', 0)} "
+            f"human_burden_penalty={score.get('human_burden_penalty', 0)} "
             f"risk_penalty={score.get('risk_penalty', 0)} "
             f"cost_penalty={score.get('cost_penalty', 0)}"
         )

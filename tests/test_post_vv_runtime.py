@@ -81,6 +81,11 @@ def test_validate_demo_result_proposals_are_task_aware_and_schema_valid():
     assert len(reports) == len(proposals)
     for report in reports:
         assert "normalized_features" in report
+        assert report["vector_id"]
+        assert report["artifact_type"]
+        assert report["execution_status"]
+        assert "avf_final_viability" in report["normalized_features"]
+        assert "avf_soft_mask" in report["normalized_features"]
         validator.validate(report)
 
     by_artifact = reports_by_artifact(proposals, reports)

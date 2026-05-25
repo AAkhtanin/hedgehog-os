@@ -22,6 +22,19 @@
     "proposal_id": {
       "$ref": "common.schema.json#/$defs/Id"
     },
+    "vector_id": {
+      "$ref": "common.schema.json#/$defs/Id"
+    },
+    "artifact_type": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "execution_status": {
+      "$ref": "common.schema.json#/$defs/NonEmptyString"
+    },
+    "dependency_depth": {
+      "type": "integer",
+      "minimum": 0
+    },
     "status": {
       "enum": [
         "accepted",
@@ -95,6 +108,26 @@
         },
         "novelty_guard": {
           "$ref": "common.schema.json#/$defs/Score01"
+        },
+        "avf_final_viability": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/Score01"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "avf_soft_mask": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/Score01"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": false

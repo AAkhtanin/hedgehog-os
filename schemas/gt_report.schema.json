@@ -176,6 +176,36 @@
           "accepted": {
             "type": "boolean"
           },
+          "vector_id": {
+            "anyOf": [
+              {
+                "$ref": "common.schema.json#/$defs/Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "avf_final_viability": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "avf_soft_mask": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "utility": {
             "type": "number"
           },
@@ -196,6 +226,27 @@
           "novelty_or_reuse_bonus": {
             "type": "number"
           },
+          "base_payoff_v0_1": {
+            "type": "number"
+          },
+          "vector_role_bonus": {
+            "type": "number"
+          },
+          "fallback_role_penalty": {
+            "type": "number",
+            "minimum": 0
+          },
+          "human_burden_penalty": {
+            "type": "number",
+            "minimum": 0
+          },
+          "dependency_depth_penalty": {
+            "type": "number",
+            "minimum": 0
+          },
+          "evidence_strength_bonus": {
+            "type": "number"
+          },
           "payoff": {
             "type": "number"
           },
@@ -214,7 +265,7 @@
       }
     },
     "payoff_formula_version": {
-      "const": "gt_payoff_v0_1"
+      "const": "gt_payoff_v0_2"
     },
     "winner_payoff": {
       "type": "number"

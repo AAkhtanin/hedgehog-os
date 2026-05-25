@@ -64,6 +64,15 @@ def contains_key(value, forbidden_key):
     return False
 
 
+def install_fake_google_genai(monkeypatch, fake_client):
+    fake_google = types.ModuleType("google")
+    fake_genai = types.ModuleType("google.genai")
+    fake_genai.Client = fake_client
+    fake_google.genai = fake_genai
+    monkeypatch.setitem(sys.modules, "google", fake_google)
+    monkeypatch.setitem(sys.modules, "google.genai", fake_genai)
+
+
 def test_mock_llm_architect_returns_valid_plan_graph():
     packet = build_demo_packet()
     result = make_plan_graph_with_llm(attractor_packet=packet, provider="mock")
@@ -123,20 +132,17 @@ def test_gemini_architect_invalid_response_after_api_call_marks_used_llm_true(mo
     class FakeResponse:
         text = '{"nodes":[]}'
 
-    class FakeModel:
+    class FakeModels:
+        def generate_content(self, **_kwargs):
+            return FakeResponse()
+
+    class FakeClient:
         def __init__(self, *_args, **_kwargs):
             pass
 
-        def generate_content(self, _prompt):
-            return FakeResponse()
+        models = FakeModels()
 
-    fake_google = types.ModuleType("google")
-    fake_genai = types.ModuleType("google.generativeai")
-    fake_genai.configure = lambda **_kwargs: None
-    fake_genai.GenerativeModel = FakeModel
-    fake_google.generativeai = fake_genai
-    monkeypatch.setitem(sys.modules, "google", fake_google)
-    monkeypatch.setitem(sys.modules, "google.generativeai", fake_genai)
+    install_fake_google_genai(monkeypatch, FakeClient)
     monkeypatch.setenv("GEMINI_API_KEY", "test-key")
 
     result = make_plan_graph_with_llm(
@@ -167,21 +173,18 @@ def test_gemini_architect_retries_invalid_first_response_and_completes(monkeypat
         def __init__(self, text):
             self.text = text
 
-    class FakeModel:
+    class FakeModels:
+        def generate_content(self, **kwargs):
+            calls.append(kwargs)
+            return FakeResponse(responses.pop(0))
+
+    class FakeClient:
         def __init__(self, *_args, **_kwargs):
             pass
 
-        def generate_content(self, prompt, **kwargs):
-            calls.append((prompt, kwargs))
-            return FakeResponse(responses.pop(0))
+        models = FakeModels()
 
-    fake_google = types.ModuleType("google")
-    fake_genai = types.ModuleType("google.generativeai")
-    fake_genai.configure = lambda **_kwargs: None
-    fake_genai.GenerativeModel = FakeModel
-    fake_google.generativeai = fake_genai
-    monkeypatch.setitem(sys.modules, "google", fake_google)
-    monkeypatch.setitem(sys.modules, "google.generativeai", fake_genai)
+    install_fake_google_genai(monkeypatch, FakeClient)
     monkeypatch.setenv("GEMINI_API_KEY", "test-key")
 
     result = make_plan_graph_with_llm(
@@ -196,8 +199,8 @@ def test_gemini_architect_retries_invalid_first_response_and_completes(monkeypat
     assert "retry_applied" in result["warnings"]
     assert result["plan_graph"] is not None
     assert len(calls) == 2
-    assert "response_schema" in calls[0][1]["generation_config"]
-    assert "Validation error:" in calls[1][0]
+    assert "response_json_schema" in calls[0]["config"]
+    assert "Validation error:" in calls[1]["contents"]
     validate_plan_graph_contract(result["plan_graph"], packet)
 
 
@@ -208,20 +211,17 @@ def test_gemini_architect_retry_failure_returns_error_and_fallback(monkeypatch):
         def __init__(self, text):
             self.text = text
 
-    class FakeModel:
+    class FakeModels:
+        def generate_content(self, **_kwargs):
+            return FakeResponse(responses.pop(0))
+
+    class FakeClient:
         def __init__(self, *_args, **_kwargs):
             pass
 
-        def generate_content(self, _prompt, **_kwargs):
-            return FakeResponse(responses.pop(0))
+        models = FakeModels()
 
-    fake_google = types.ModuleType("google")
-    fake_genai = types.ModuleType("google.generativeai")
-    fake_genai.configure = lambda **_kwargs: None
-    fake_genai.GenerativeModel = FakeModel
-    fake_google.generativeai = fake_genai
-    monkeypatch.setitem(sys.modules, "google", fake_google)
-    monkeypatch.setitem(sys.modules, "google.generativeai", fake_genai)
+    install_fake_google_genai(monkeypatch, FakeClient)
     monkeypatch.setenv("GEMINI_API_KEY", "test-key")
 
     result = make_plan_graph_with_llm(
@@ -409,20 +409,17 @@ def test_gemini_architect_cyclic_plan_graph_returns_error_and_fallback(monkeypat
         def __init__(self, text):
             self.text = text
 
-    class FakeModel:
+    class FakeModels:
+        def generate_content(self, **_kwargs):
+            return FakeResponse(responses.pop(0))
+
+    class FakeClient:
         def __init__(self, *_args, **_kwargs):
             pass
 
-        def generate_content(self, _prompt, **_kwargs):
-            return FakeResponse(responses.pop(0))
+        models = FakeModels()
 
-    fake_google = types.ModuleType("google")
-    fake_genai = types.ModuleType("google.generativeai")
-    fake_genai.configure = lambda **_kwargs: None
-    fake_genai.GenerativeModel = FakeModel
-    fake_google.generativeai = fake_genai
-    monkeypatch.setitem(sys.modules, "google", fake_google)
-    monkeypatch.setitem(sys.modules, "google.generativeai", fake_genai)
+    install_fake_google_genai(monkeypatch, FakeClient)
     monkeypatch.setenv("GEMINI_API_KEY", "test-key")
 
     result = make_plan_graph_with_llm(

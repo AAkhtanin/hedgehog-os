@@ -64,19 +64,21 @@ def _gemini_answer(
             "Gemini API key is missing from environment and config lookup is disabled."
         )
 
-    model_name = model or _config_value("GEMINI_MODEL", allow_config=allow_config) or "gemini-1.5-flash"
+    model_name = model or _config_value("GEMINI_MODEL", allow_config=allow_config) or "gemini-3.5-flash"
 
     try:
-        import google.generativeai as genai  # type: ignore
+        from google import genai  # type: ignore
     except ImportError as exc:
-        raise RuntimeError("Gemini dependency is missing: google-generativeai.") from exc
+        raise RuntimeError("Gemini dependency is missing: google-genai.") from exc
 
-    genai.configure(api_key=api_key)
-    gemini_model = genai.GenerativeModel(
-        model_name=model_name,
-        system_instruction=system_prompt,
+    client = genai.Client(api_key=api_key)
+    response = client.models.generate_content(
+        model=model_name,
+        contents=text,
+        config={
+            "system_instruction": system_prompt,
+        },
     )
-    response = gemini_model.generate_content(text)
     answer = getattr(response, "text", "") or ""
     if not answer.strip():
         raise RuntimeError("Gemini returned an empty response.")
@@ -128,7 +130,7 @@ def generate_general_answer(
             "provider": "gemini",
             "model": model
             or _config_value("GEMINI_MODEL", allow_config=allow_config)
-            or "gemini-1.5-flash",
+            or "gemini-3.5-flash",
             "used_llm": False,
             "answer": "",
             "claims": [],

@@ -67,11 +67,18 @@ def _retry_prompt(prompt_contract: dict, validation_error: str) -> str:
     )
 
 
-def _generate_content(gemini_model, prompt: str, generation_config: dict):
+def _generate_content(client, model_name: str, prompt: str, generation_config: dict):
     try:
-        return gemini_model.generate_content(prompt, generation_config=generation_config)
+        return client.models.generate_content(
+            model=model_name,
+            contents=prompt,
+            config=generation_config,
+        )
     except TypeError:
-        return gemini_model.generate_content(prompt)
+        return client.models.generate_content(
+            model=model_name,
+            contents=prompt,
+        )
 
 
 def _assert_plan_graph_uses_allowed_vectors(plan_graph: dict, attractor_packet: dict) -> None:
@@ -231,30 +238,30 @@ def _gemini_plan_graph(
             used_llm=False,
         )
 
-    model_name = model or _config_value("GEMINI_MODEL", allow_config=allow_config) or "gemini-1.5-flash"
+    model_name = model or _config_value("GEMINI_MODEL", allow_config=allow_config) or "gemini-3.5-flash"
     try:
-        import google.generativeai as genai  # type: ignore
+        from google import genai  # type: ignore
     except ImportError as exc:
         raise GeminiArchitectError(
-            "Gemini dependency is missing: google-generativeai.",
+            "Gemini dependency is missing: google-genai.",
             used_llm=False,
         ) from exc
 
     prompt_contract = compile_architect_prompt(attractor_packet)
     generation_config = {
         "response_mime_type": "application/json",
-        "response_schema": build_plan_graph_response_schema(),
+        "response_json_schema": build_plan_graph_response_schema(),
     }
-    genai.configure(api_key=api_key)
-    gemini_model = genai.GenerativeModel(
-        model_name=model_name,
-        system_instruction=prompt_contract["system_prompt"],
-    )
+    client = genai.Client(api_key=api_key)
     try:
         response = _generate_content(
-            gemini_model,
+            client,
+            model_name,
             prompt_contract["user_prompt"],
-            generation_config,
+            {
+                **generation_config,
+                "system_instruction": prompt_contract["system_prompt"],
+            },
         )
         first_text = getattr(response, "text", "") or ""
         plan_graph = _parse_and_validate_plan_graph(first_text, attractor_packet)
@@ -262,9 +269,13 @@ def _gemini_plan_graph(
         first_error = str(exc)
         try:
             retry_response = _generate_content(
-                gemini_model,
+                client,
+                model_name,
                 _retry_prompt(prompt_contract, first_error),
-                generation_config,
+                {
+                    **generation_config,
+                    "system_instruction": prompt_contract["system_prompt"],
+                },
             )
             retry_text = getattr(retry_response, "text", "") or ""
             plan_graph = _parse_and_validate_plan_graph(retry_text, attractor_packet)
@@ -323,7 +334,7 @@ def make_plan_graph_with_llm(
         return {
             "status": "error",
             "provider": "gemini",
-            "model": model or _config_value("GEMINI_MODEL", allow_config=allow_config) or "gemini-1.5-flash",
+            "model": model or _config_value("GEMINI_MODEL", allow_config=allow_config) or "gemini-3.5-flash",
             "used_llm": exc.used_llm,
             "plan_graph": None,
             "error": str(exc),
@@ -335,7 +346,7 @@ def make_plan_graph_with_llm(
         return {
             "status": "error",
             "provider": "gemini",
-            "model": model or _config_value("GEMINI_MODEL", allow_config=allow_config) or "gemini-1.5-flash",
+            "model": model or _config_value("GEMINI_MODEL", allow_config=allow_config) or "gemini-3.5-flash",
             "used_llm": False,
             "plan_graph": None,
             "error": str(exc),

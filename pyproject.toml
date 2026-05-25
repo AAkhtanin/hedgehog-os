@@ -10,7 +10,7 @@ dependencies = [
   "jsonschema",
   "pytest",
   "pyTelegramBotAPI",
-  "google-generativeai"
+  "google-genai"
 ]
 
 [tool.setuptools.packages.find]

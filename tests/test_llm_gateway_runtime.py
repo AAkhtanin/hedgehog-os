@@ -1,3 +1,6 @@
+import sys
+import types
+
 from hedgehog.llm_gateway import (
     GENERAL_RESPONDER_SYSTEM_PROMPT,
     generate_general_answer,
@@ -47,6 +50,46 @@ def test_gemini_provider_without_key_or_dependency_returns_error_not_crash(monke
     assert result["used_llm"] is False
     assert result["error"]
     assert "missing" in result["error"].lower() or "unavailable" in result["error"].lower()
+
+
+def test_gemini_provider_mocked_google_genai_returns_completed(monkeypatch):
+    class FakeResponse:
+        text = "mocked gemini answer"
+
+    class FakeModels:
+        def generate_content(self, **kwargs):
+            assert kwargs["model"] == "gemini-test"
+            assert kwargs["contents"] == "hello"
+            assert "system_instruction" in kwargs["config"]
+            return FakeResponse()
+
+    class FakeClient:
+        def __init__(self, api_key):
+            assert api_key == "test-key"
+
+        models = FakeModels()
+
+    fake_google = types.ModuleType("google")
+    fake_genai = types.ModuleType("google.genai")
+    fake_genai.Client = FakeClient
+    fake_google.genai = fake_genai
+    monkeypatch.setitem(sys.modules, "google", fake_google)
+    monkeypatch.setitem(sys.modules, "google.genai", fake_genai)
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+
+    result = generate_general_answer(
+        text="hello",
+        request_id="req_llm_gemini_mocked",
+        provider="gemini",
+        model="gemini-test",
+        allow_config=False,
+    )
+
+    assert result["status"] == "completed"
+    assert result["provider"] == "gemini"
+    assert result["model"] == "gemini-test"
+    assert result["used_llm"] is True
+    assert result["answer"] == "mocked gemini answer"
 
 
 def test_general_responder_system_prompt_preserves_root_authority():

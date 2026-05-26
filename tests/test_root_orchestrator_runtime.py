@@ -526,6 +526,55 @@ def test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor(tmp_pa
     assert work_record["content"]["executor_skipped"] is True
 
 
+def test_root_orchestrator_reflex_priority_over_persistent_context_records(tmp_path):
+    orchestrator, drs = make_orchestrator(tmp_path)
+    first_output = orchestrator.process_event(
+        raw_user_text="I need a certificate for a mock government service.",
+        request_id="req_reflex_context_source",
+        session_anchor="sess_reflex_context_source",
+    )
+    first_work_record_id = first_output["drs_writes"][0]
+
+    final_output = orchestrator.process_event(
+        raw_user_text="turn on tv",
+        request_id="req_reflex_context_priority",
+        session_anchor="sess_reflex_context_priority",
+        allow_reflex=True,
+        force_full_pipeline=False,
+    )
+    work_record = drs.read_record("work", final_output["drs_writes"][0])
+
+    assert orchestrator.last_trace["memory_context_applied"] is True
+    assert first_work_record_id in orchestrator.last_trace["memory_source_record_ids"]
+    assert orchestrator.last_trace["mode_router"]["execution_mode"] == "deterministic_reflex_candidate"
+    assert orchestrator.last_trace["execution_mode"] == "deterministic_reflex"
+    assert orchestrator.last_trace["reflex_applied"] is True
+    assert orchestrator.last_trace["architect_skipped"] is True
+    assert orchestrator.last_trace["executor_skipped"] is True
+    assert final_output["status"] == "success"
+    assert work_record["content"]["execution_mode"] == "deterministic_reflex"
+    assert work_record["content"]["memory_context_applied"] is True
+    assert first_work_record_id in work_record["content"]["memory_source_record_ids"]
+    assert work_record["content"]["action_id"] == "mock_turn_on_tv"
+
+
+def test_root_orchestrator_reflex_text_does_not_shortcut_when_reflex_not_allowed(tmp_path):
+    orchestrator, _ = make_orchestrator(tmp_path)
+    final_output = orchestrator.process_event(
+        raw_user_text="turn on tv",
+        request_id="req_reflex_not_allowed",
+        session_anchor="sess_reflex_not_allowed",
+        allow_reflex=False,
+        force_full_pipeline=False,
+    )
+
+    assert orchestrator.last_trace["mode_router"]["execution_mode"] == "proof_full_pipeline"
+    assert orchestrator.last_trace.get("reflex_applied", False) is False
+    assert orchestrator.last_trace["plan_graph"]["nodes"]
+    assert orchestrator.last_trace["result_proposals"]
+    assert final_output["created_by"] == "root_orchestrator"
+
+
 def test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation(tmp_path):
     orchestrator, drs = make_orchestrator(tmp_path)
     final_output = orchestrator.process_event(

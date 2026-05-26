@@ -45,6 +45,7 @@ def route_execution(
     reuse_gate: dict,
     allow_direct_reuse: bool = False,
     force_full_pipeline: bool = True,
+    allow_reflex: bool = False,
 ) -> dict:
     if force_full_pipeline:
         return {
@@ -65,20 +66,20 @@ def route_execution(
             "intent_complexity": classify_intent_complexity(raw_user_text),
         }
 
+    if allow_reflex and detect_reflex_candidate(raw_user_text):
+        return {
+            "execution_mode": "deterministic_reflex_candidate",
+            "direct_reuse_allowed": False,
+            "reason": "simple_known_action_candidate",
+            "intent_complexity": "simple_known_action",
+        }
+
     if retrieved_records:
         return {
             "execution_mode": "context_only",
             "direct_reuse_allowed": False,
             "reason": "memory_context_only",
             "intent_complexity": classify_intent_complexity(raw_user_text),
-        }
-
-    if detect_reflex_candidate(raw_user_text):
-        return {
-            "execution_mode": "deterministic_reflex_candidate",
-            "direct_reuse_allowed": False,
-            "reason": "simple_known_action_candidate",
-            "intent_complexity": "simple_known_action",
         }
 
     return {

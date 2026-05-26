@@ -74,6 +74,7 @@ def test_simple_known_action_returns_reflex_candidate_when_not_forced():
         reuse_gate={"reuse_decision": "none"},
         allow_direct_reuse=False,
         force_full_pipeline=False,
+        allow_reflex=True,
     )
 
     assert decision["execution_mode"] == "deterministic_reflex_candidate"
@@ -88,10 +89,39 @@ def test_declared_reflex_action_routes_to_reflex_candidate():
         reuse_gate={"reuse_decision": "none"},
         allow_direct_reuse=False,
         force_full_pipeline=False,
+        allow_reflex=True,
     )
 
     assert decision["execution_mode"] == "deterministic_reflex_candidate"
     assert decision["reason"] == "simple_known_action_candidate"
+
+
+def test_reflex_candidate_takes_priority_over_context_when_allowed():
+    decision = route_execution(
+        raw_user_text="turn on tv",
+        retrieved_records=[{"record_id": "work:prior_context"}],
+        reuse_gate={"reuse_decision": "context_only"},
+        allow_direct_reuse=False,
+        force_full_pipeline=False,
+        allow_reflex=True,
+    )
+
+    assert decision["execution_mode"] == "deterministic_reflex_candidate"
+    assert decision["reason"] == "simple_known_action_candidate"
+
+
+def test_reflex_candidate_does_not_route_when_not_allowed():
+    decision = route_execution(
+        raw_user_text="turn on tv",
+        retrieved_records=[],
+        reuse_gate={"reuse_decision": "none"},
+        allow_direct_reuse=False,
+        force_full_pipeline=False,
+        allow_reflex=False,
+    )
+
+    assert decision["execution_mode"] == "proof_full_pipeline"
+    assert decision["reason"] == "default_full_pipeline"
 
 
 def test_unknown_request_defaults_to_proof_full_pipeline_when_not_forced():

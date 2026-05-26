@@ -184,3 +184,35 @@ def test_telegram_shell_llm_error_debug_is_safe_and_compact(tmp_path):
     assert "llm_error:" in result["debug_text"]
     assert trace["debug_summary"]["llm_status"] == "error"
     assert trace["debug_summary"]["llm_error"] == result["llm_error"]
+
+
+def test_telegram_shell_reflex_priority_over_existing_work_context(tmp_path):
+    drs_root = tmp_path / "drs"
+    first = handle_telegram_text(
+        text="I need a certificate for a mock government service.",
+        chat_id="chat_reflex_context_source",
+        drs_root=drs_root,
+        needles_dir=NEEDLES_DIR,
+        debug=True,
+    )
+
+    result = handle_telegram_text(
+        text="turn on tv",
+        chat_id="chat_reflex_context_priority",
+        drs_root=drs_root,
+        needles_dir=NEEDLES_DIR,
+        debug=True,
+        force_full_pipeline=False,
+        allow_reflex=True,
+    )
+    trace = read_json(Path(result["trace_path"]))
+
+    assert first["work_record_ids"]
+    assert result["execution_mode"] == "deterministic_reflex"
+    assert result["route"] == "deterministic_reflex"
+    assert "execution_mode: deterministic_reflex" in result["debug_text"]
+    assert "reflex_applied: True" in result["debug_text"]
+    assert "architect_skipped: True" in result["debug_text"]
+    assert "executor_skipped: True" in result["debug_text"]
+    assert trace["trace"]["memory_context_applied"] is True
+    assert first["work_record_ids"][0] in trace["trace"]["memory_source_record_ids"]

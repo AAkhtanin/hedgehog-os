@@ -70,6 +70,7 @@ class RootOrchestrator:
             reuse_gate=reuse_gate,
             allow_direct_reuse=allow_direct_reuse,
             force_full_pipeline=force_full_pipeline,
+            allow_reflex=allow_reflex,
         )
 
         reflex_action = detect_reflex_action(raw_user_text)

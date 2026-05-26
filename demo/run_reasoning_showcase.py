@@ -234,6 +234,62 @@ def _story_architect_contract_recovery(root_path: Path) -> str:
     )
 
 
+def _story_live_gemini_architect(root_path: Path) -> str:
+    drs = LocalDRS(root_path / "live_gemini_architect")
+    orchestrator = RootOrchestrator(drs=drs, needles_dir=NEEDLES_DIR)
+    final_output = orchestrator.process_event(
+        raw_user_text="mock certificate request",
+        request_id="story_live_gemini_architect_certificate",
+        session_anchor="story_live_gemini_architect_session",
+        architect_provider="gemini",
+        force_full_pipeline=True,
+    )
+    trace = orchestrator.last_trace
+    llm_architect = trace.get("llm_architect_result") or {}
+    plan_info = inspect_plan_graph(trace.get("plan_graph"))
+    fallback = llm_architect.get("fallback", "none")
+    error = llm_architect.get("error") or "none"
+    status = llm_architect.get("status", "none")
+    used_llm = bool(llm_architect.get("used_llm", False))
+    fallback_used = fallback not in {None, "none", ""}
+    steps = [
+        "Live Gemini requested: true.",
+        f"Architect provider: {llm_architect.get('provider', 'gemini')}.",
+        f"LLM Architect status: {status}.",
+        f"LLM Architect used_llm: {_bool_text(used_llm)}.",
+        f"LLM Architect fallback: {fallback}.",
+        f"LLM Architect error: {error}.",
+        f"PlanGraph node count: {plan_info['node_count']}.",
+        f"PlanGraph topology: {plan_info['topology']}.",
+        f"GT winner vector: {_winner_vector_id(trace)}.",
+        f"FinalOutput created_by: {final_output.get('created_by')}.",
+        f"Deterministic fallback/recovery used: {_bool_text(fallback_used)}.",
+    ]
+    if status == "completed" and not fallback_used:
+        steps.extend(
+            [
+                "Gemini produced a contract-valid PlanGraph.",
+                "Contract validation passed before Executor.",
+                "Root still created final output.",
+            ]
+        )
+        why = "A live stochastic Architect can participate, but only through a validated PlanGraph contract under Root authority."
+    else:
+        steps.extend(
+            [
+                "Gemini attempt failed or produced an invalid plan.",
+                "Deterministic fallback/recovery used a schema-valid PlanGraph path.",
+                "Root still created final output if fallback succeeded.",
+            ]
+        )
+        why = "Live LLM failure is SAFE_FAIL/RECOVERED: invalid or unavailable Architect output does not reach Executor."
+    return _story_block(
+        "story_live_gemini_architect_certificate",
+        steps,
+        why,
+    )
+
+
 def _sanitize_output(output: str) -> str:
     sanitized = output
     for term in FORBIDDEN_OUTPUT_TERMS:
@@ -242,10 +298,17 @@ def _sanitize_output(output: str) -> str:
     return sanitized
 
 
-def run_reasoning_showcase(*, drs_root: Path | None = None) -> str:
+def run_reasoning_showcase(
+    *,
+    drs_root: Path | None = None,
+    include_live_gemini: bool = False,
+) -> str:
     if drs_root is None:
         with tempfile.TemporaryDirectory(prefix="hedgehog_reasoning_showcase_") as temp_dir:
-            return run_reasoning_showcase(drs_root=Path(temp_dir))
+            return run_reasoning_showcase(
+                drs_root=Path(temp_dir),
+                include_live_gemini=include_live_gemini,
+            )
     root_path = Path(drs_root)
     blocks = [
         _story_l0_reflex(root_path),
@@ -254,13 +317,16 @@ def run_reasoning_showcase(*, drs_root: Path | None = None) -> str:
         _story_permission_blocked(root_path),
         _story_architect_contract_recovery(root_path),
     ]
+    if include_live_gemini:
+        blocks.append(_story_live_gemini_architect(root_path))
     return _sanitize_output("\n\n".join(blocks).rstrip() + "\n")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Render Hedgehog OS structured execution stories.")
-    parser.parse_args()
-    print(run_reasoning_showcase(), end="")
+    parser.add_argument("--include-live-gemini", action="store_true")
+    args = parser.parse_args()
+    print(run_reasoning_showcase(include_live_gemini=args.include_live_gemini), end="")
     return 0
 
 

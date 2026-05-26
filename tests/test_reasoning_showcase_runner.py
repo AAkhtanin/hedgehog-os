@@ -1,3 +1,4 @@
+import demo.run_reasoning_showcase as reasoning_showcase
 from demo.run_reasoning_showcase import run_reasoning_showcase
 
 
@@ -18,6 +19,24 @@ def test_reasoning_showcase_prints_all_required_stories(tmp_path):
     assert "[STORY] story_full_certificate_pipeline" in output
     assert "[STORY] story_permission_blocked_without_confirm" in output
     assert "[STORY] story_architect_contract_violation_recovered" in output
+    assert "story_live_gemini_architect_certificate" not in output
+
+
+def test_reasoning_showcase_default_does_not_call_live_gemini(tmp_path, monkeypatch):
+    class FailingRoot:
+        def __init__(self, *_args, **_kwargs):
+            raise AssertionError("RootOrchestrator should not be constructed for this test")
+
+    monkeypatch.setattr(reasoning_showcase, "_story_l0_reflex", lambda _root: "l0")
+    monkeypatch.setattr(reasoning_showcase, "_story_memory_first_direct_reuse", lambda _root: "reuse")
+    monkeypatch.setattr(reasoning_showcase, "_story_full_certificate_pipeline", lambda _root: "full")
+    monkeypatch.setattr(reasoning_showcase, "_story_permission_blocked", lambda _root: "permission")
+    monkeypatch.setattr(reasoning_showcase, "_story_architect_contract_recovery", lambda _root: "contract")
+    monkeypatch.setattr(reasoning_showcase, "RootOrchestrator", FailingRoot)
+
+    output = run_reasoning_showcase(drs_root=tmp_path)
+
+    assert "story_live_gemini_architect_certificate" not in output
 
 
 def test_reasoning_showcase_l0_story_contains_reflex_artifacts(tmp_path):
@@ -76,10 +95,118 @@ def test_reasoning_showcase_contract_recovery_story(tmp_path):
     assert "Root still created FinalOutput as root_orchestrator" in output
 
 
+def test_reasoning_showcase_live_gemini_success_story_with_mocked_root(tmp_path, monkeypatch):
+    class FakeRoot:
+        def __init__(self, *_args, **_kwargs):
+            self.last_trace = {}
+
+        def process_event(self, **kwargs):
+            assert kwargs["architect_provider"] == "gemini"
+            self.last_trace = {
+                "llm_architect_result": {
+                    "status": "completed",
+                    "provider": "gemini",
+                    "used_llm": True,
+                    "fallback": "none",
+                    "error": None,
+                },
+                "plan_graph": {
+                    "plan_id": "plan:live",
+                    "source_packet_id": "packet:live",
+                    "request_id": "story_live_gemini_architect_certificate",
+                    "nodes": [
+                        {
+                            "node_id": "a",
+                            "vector_id": "official_online_request",
+                            "executor_id": "exec",
+                            "depends_on": [],
+                            "task": "prepare_request_payload",
+                        }
+                    ],
+                    "edges": [],
+                },
+                "gt_report": {"winner": "rp:a"},
+                "result_proposals": [{"proposal_id": "rp:a", "vector_id": "official_online_request"}],
+            }
+            return {"created_by": "root_orchestrator"}
+
+    monkeypatch.setattr(reasoning_showcase, "RootOrchestrator", FakeRoot)
+    monkeypatch.setattr(reasoning_showcase, "_story_l0_reflex", lambda _root: "l0")
+    monkeypatch.setattr(reasoning_showcase, "_story_memory_first_direct_reuse", lambda _root: "reuse")
+    monkeypatch.setattr(reasoning_showcase, "_story_full_certificate_pipeline", lambda _root: "full")
+    monkeypatch.setattr(reasoning_showcase, "_story_permission_blocked", lambda _root: "permission")
+    monkeypatch.setattr(reasoning_showcase, "_story_architect_contract_recovery", lambda _root: "contract")
+
+    output = run_reasoning_showcase(drs_root=tmp_path, include_live_gemini=True)
+
+    assert "[STORY] story_live_gemini_architect_certificate" in output
+    assert "Live Gemini requested: true" in output
+    assert "Architect provider: gemini" in output
+    assert "LLM Architect status: completed" in output
+    assert "LLM Architect used_llm: true" in output
+    assert "LLM Architect fallback: none" in output
+    assert "Gemini produced a contract-valid PlanGraph" in output
+    assert "Contract validation passed before Executor" in output
+    assert "FinalOutput created_by: root_orchestrator" in output
+
+
+def test_reasoning_showcase_live_gemini_error_fallback_story_with_mocked_root(tmp_path, monkeypatch):
+    class FakeRoot:
+        def __init__(self, *_args, **_kwargs):
+            self.last_trace = {}
+
+        def process_event(self, **_kwargs):
+            self.last_trace = {
+                "llm_architect_result": {
+                    "status": "error",
+                    "provider": "gemini",
+                    "used_llm": True,
+                    "fallback": "deterministic",
+                    "error": "invalid_plan_graph_contract: missing plan_id",
+                },
+                "plan_graph": {
+                    "plan_id": "plan:fallback",
+                    "source_packet_id": "packet:fallback",
+                    "request_id": "story_live_gemini_architect_certificate",
+                    "nodes": [],
+                    "edges": [],
+                },
+                "gt_report": {"winner": None},
+                "result_proposals": [],
+            }
+            return {"created_by": "root_orchestrator"}
+
+    monkeypatch.setattr(reasoning_showcase, "RootOrchestrator", FakeRoot)
+    monkeypatch.setattr(reasoning_showcase, "_story_l0_reflex", lambda _root: "l0")
+    monkeypatch.setattr(reasoning_showcase, "_story_memory_first_direct_reuse", lambda _root: "reuse")
+    monkeypatch.setattr(reasoning_showcase, "_story_full_certificate_pipeline", lambda _root: "full")
+    monkeypatch.setattr(reasoning_showcase, "_story_permission_blocked", lambda _root: "permission")
+    monkeypatch.setattr(reasoning_showcase, "_story_architect_contract_recovery", lambda _root: "contract")
+
+    output = run_reasoning_showcase(drs_root=tmp_path, include_live_gemini=True)
+
+    assert "LLM Architect status: error" in output
+    assert "LLM Architect fallback: deterministic" in output
+    assert "Gemini attempt failed or produced an invalid plan" in output
+    assert "Deterministic fallback/recovery used" in output
+    assert "SAFE_FAIL/RECOVERED" in output
+
+
 def test_reasoning_showcase_has_why_this_matters_per_story(tmp_path):
     output = run_reasoning_showcase(drs_root=tmp_path)
 
     assert output.count("WHY THIS MATTERS:") == 5
+
+
+def test_reasoning_showcase_live_gemini_adds_one_why_this_matters(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        reasoning_showcase,
+        "_story_live_gemini_architect",
+        lambda _root: "[STORY] story_live_gemini_architect_certificate\n\nWHY THIS MATTERS:\nmock",
+    )
+    output = run_reasoning_showcase(drs_root=tmp_path, include_live_gemini=True)
+
+    assert output.count("WHY THIS MATTERS:") == 6
 
 
 def test_reasoning_showcase_does_not_leak_sensitive_or_hidden_reasoning_terms(tmp_path):

@@ -19,6 +19,7 @@ def test_reasoning_showcase_prints_all_required_stories(tmp_path):
     assert "[STORY] story_full_certificate_pipeline" in output
     assert "[STORY] story_permission_blocked_without_confirm" in output
     assert "[STORY] story_architect_contract_violation_recovered" in output
+    assert "[STORY] story_deadend_memory_avoids_bad_route" in output
     assert "story_live_gemini_architect_certificate" not in output
 
 
@@ -32,6 +33,7 @@ def test_reasoning_showcase_default_does_not_call_live_gemini(tmp_path, monkeypa
     monkeypatch.setattr(reasoning_showcase, "_story_full_certificate_pipeline", lambda _root: "full")
     monkeypatch.setattr(reasoning_showcase, "_story_permission_blocked", lambda _root: "permission")
     monkeypatch.setattr(reasoning_showcase, "_story_architect_contract_recovery", lambda _root: "contract")
+    monkeypatch.setattr(reasoning_showcase, "_story_deadend_memory", lambda _root: "deadend")
     monkeypatch.setattr(reasoning_showcase, "RootOrchestrator", FailingRoot)
 
     output = run_reasoning_showcase(drs_root=tmp_path)
@@ -95,6 +97,23 @@ def test_reasoning_showcase_contract_recovery_story(tmp_path):
     assert "Root still created FinalOutput as root_orchestrator" in output
 
 
+def test_reasoning_showcase_deadend_memory_story(tmp_path):
+    output = run_reasoning_showcase(drs_root=tmp_path)
+
+    assert "[STORY] story_deadend_memory_avoids_bad_route" in output
+    assert "illegal_coercion blocked before Architect" in output
+    assert "demo-level DeadEnd/Fraud-like DRS signal" in output
+    assert "deadend:demo:illegal_coercion" in output
+    assert "layer deadends" in output
+    assert "type dead_end" in output
+    assert "forbidden_vector_blocked" in output
+    assert "remembered bad route" in output
+    assert "bad vector was not sent to Architect" in output
+    assert "Root remained final authority" in output
+    assert "No real external action occurred" in output
+    assert "not full Marennya/UP mutation" in output
+
+
 def test_reasoning_showcase_live_gemini_success_story_with_mocked_root(tmp_path, monkeypatch):
     class FakeRoot:
         def __init__(self, *_args, **_kwargs):
@@ -136,6 +155,7 @@ def test_reasoning_showcase_live_gemini_success_story_with_mocked_root(tmp_path,
     monkeypatch.setattr(reasoning_showcase, "_story_full_certificate_pipeline", lambda _root: "full")
     monkeypatch.setattr(reasoning_showcase, "_story_permission_blocked", lambda _root: "permission")
     monkeypatch.setattr(reasoning_showcase, "_story_architect_contract_recovery", lambda _root: "contract")
+    monkeypatch.setattr(reasoning_showcase, "_story_deadend_memory", lambda _root: "deadend")
 
     output = run_reasoning_showcase(drs_root=tmp_path, include_live_gemini=True)
 
@@ -182,6 +202,7 @@ def test_reasoning_showcase_live_gemini_error_fallback_story_with_mocked_root(tm
     monkeypatch.setattr(reasoning_showcase, "_story_full_certificate_pipeline", lambda _root: "full")
     monkeypatch.setattr(reasoning_showcase, "_story_permission_blocked", lambda _root: "permission")
     monkeypatch.setattr(reasoning_showcase, "_story_architect_contract_recovery", lambda _root: "contract")
+    monkeypatch.setattr(reasoning_showcase, "_story_deadend_memory", lambda _root: "deadend")
 
     output = run_reasoning_showcase(drs_root=tmp_path, include_live_gemini=True)
 
@@ -195,7 +216,7 @@ def test_reasoning_showcase_live_gemini_error_fallback_story_with_mocked_root(tm
 def test_reasoning_showcase_has_why_this_matters_per_story(tmp_path):
     output = run_reasoning_showcase(drs_root=tmp_path)
 
-    assert output.count("WHY THIS MATTERS:") == 5
+    assert output.count("WHY THIS MATTERS:") == 6
 
 
 def test_reasoning_showcase_live_gemini_adds_one_why_this_matters(tmp_path, monkeypatch):
@@ -206,7 +227,7 @@ def test_reasoning_showcase_live_gemini_adds_one_why_this_matters(tmp_path, monk
     )
     output = run_reasoning_showcase(drs_root=tmp_path, include_live_gemini=True)
 
-    assert output.count("WHY THIS MATTERS:") == 6
+    assert output.count("WHY THIS MATTERS:") == 7
 
 
 def test_reasoning_showcase_does_not_leak_sensitive_or_hidden_reasoning_terms(tmp_path):

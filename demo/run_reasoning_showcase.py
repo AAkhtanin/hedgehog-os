@@ -5,6 +5,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from demo.run_deadend_memory_demo import DEADEND_RECORD_ID, run_deadend_memory_demo
 from hedgehog.drs import LocalDRS
 from hedgehog.llm_architect import validate_plan_graph_contract
 from hedgehog.root_orchestrator import RootOrchestrator
@@ -234,6 +235,30 @@ def _story_architect_contract_recovery(root_path: Path) -> str:
     )
 
 
+def _story_deadend_memory(root_path: Path) -> str:
+    demo_output = run_deadend_memory_demo(drs_root=root_path / "deadend_memory")
+    first_blocked = "first_pass_block | PASS" in demo_output
+    signal_written = "deadend_record_written | PASS" in demo_output
+    second_retrieved = "second_pass_retrieval | PASS" in demo_output
+    second_avoided = "second_pass_avoidance | PASS" in demo_output
+    final_authority = "final_authority | PASS" in demo_output
+    steps = [
+        f"First pass observed illegal_coercion blocked before Architect: {_bool_text(first_blocked)}.",
+        f"System wrote a demo-level DeadEnd/Fraud-like DRS signal: {_bool_text(signal_written)}.",
+        f"Signal identity: {DEADEND_RECORD_ID}; layer deadends; type dead_end; reason forbidden_vector_blocked.",
+        f"Second pass retrieved the remembered bad route: {_bool_text(second_retrieved)}.",
+        f"The bad vector was not sent to Architect: {_bool_text(second_avoided)}.",
+        f"Root remained final authority: {_bool_text(final_authority)}.",
+        "No real external action occurred.",
+        "This is demo-level DeadEnd memory, not full Marennya/UP mutation.",
+    ]
+    return _story_block(
+        "story_deadend_memory_avoids_bad_route",
+        steps,
+        "The OS does not only block unsafe branches once; it can preserve negative experience as memory so similar bad routes are recognized later.",
+    )
+
+
 def _story_live_gemini_architect(root_path: Path) -> str:
     drs = LocalDRS(root_path / "live_gemini_architect")
     orchestrator = RootOrchestrator(drs=drs, needles_dir=NEEDLES_DIR)
@@ -316,6 +341,7 @@ def run_reasoning_showcase(
         _story_full_certificate_pipeline(root_path),
         _story_permission_blocked(root_path),
         _story_architect_contract_recovery(root_path),
+        _story_deadend_memory(root_path),
     ]
     if include_live_gemini:
         blocks.append(_story_live_gemini_architect(root_path))

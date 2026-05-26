@@ -1,6 +1,7 @@
 import json
 import sys
 import types
+from copy import deepcopy
 from pathlib import Path
 
 import jsonschema
@@ -311,6 +312,122 @@ def _node(node_id, vector_id="official_online_request"):
         "depends_on": [],
         "expected_output": "result_proposal",
     }
+
+
+def _valid_control_graph(packet):
+    return _base_plan_graph(
+        packet,
+        [_node("a"), _node("b")],
+        [{"from": "a", "to": "b"}],
+    )
+
+
+def _assert_invalid_plan_graph_rejected(graph, packet):
+    try:
+        validate_plan_graph_contract(graph, packet)
+    except ValueError as exc:
+        message = str(exc)
+    else:
+        raise AssertionError("invalid PlanGraph was accepted")
+
+    assert message.startswith("invalid_plan_graph_contract:")
+    return message
+
+
+def _contract_violation_cases(packet):
+    cases = []
+
+    graph = _valid_control_graph(packet)
+    graph.pop("plan_id")
+    cases.append(("missing plan_id", graph, "plan_id"))
+
+    graph = _valid_control_graph(packet)
+    graph.pop("source_packet_id")
+    cases.append(("missing source_packet_id", graph, "source_packet_id"))
+
+    graph = _valid_control_graph(packet)
+    graph.pop("time_assumptions")
+    cases.append(("missing time_assumptions", graph, "time_assumptions"))
+
+    graph = _valid_control_graph(packet)
+    graph.pop("nodes")
+    cases.append(("missing nodes", graph, "nodes"))
+
+    graph = _valid_control_graph(packet)
+    graph["nodes"] = []
+    graph["edges"] = []
+    graph["executor_assignments"][0]["node_ids"] = []
+    cases.append(("empty nodes", graph, "nodes must be a non-empty array"))
+
+    graph = _valid_control_graph(packet)
+    graph["nodes"][0].pop("node_id")
+    cases.append(("node missing node_id", graph, "node_id"))
+
+    graph = _valid_control_graph(packet)
+    graph["nodes"][0].pop("vector_id")
+    cases.append(("node missing vector_id", graph, "vector_id"))
+
+    graph = _valid_control_graph(packet)
+    graph["nodes"][0]["vector_id"] = "not_in_attractor_packet"
+    cases.append(("node vector_id not in packet", graph, "disallowed vector_id"))
+
+    graph = _valid_control_graph(packet)
+    graph["nodes"][0]["depends_on"] = "a"
+    cases.append(("node depends_on not array", graph, "depends_on must be an array"))
+
+    graph = _valid_control_graph(packet)
+    graph["edges"][0].pop("from")
+    cases.append(("edge missing from", graph, "edge must include from and to"))
+
+    graph = _valid_control_graph(packet)
+    graph["edges"][0].pop("to")
+    cases.append(("edge missing to", graph, "edge must include from and to"))
+
+    graph = _valid_control_graph(packet)
+    graph["edges"][0]["to"] = "unknown_node"
+    cases.append(("edge references unknown node", graph, "edge references unknown node"))
+
+    graph = _valid_control_graph(packet)
+    graph["executor_assignments"][0]["node_ids"].append("unknown_node")
+    cases.append(("executor_assignment references unknown node", graph, "assignment references unknown node"))
+
+    graph = _valid_control_graph(packet)
+    graph["final_output"] = {"status": "forbidden"}
+    cases.append(("forbidden final_output", graph, "final_output"))
+
+    graph = _valid_control_graph(packet)
+    graph["answer"] = "forbidden"
+    cases.append(("forbidden answer", graph, "answer"))
+
+    graph = _valid_control_graph(packet)
+    graph["raw_user_text"] = "forbidden"
+    cases.append(("forbidden raw_user_text", graph, "raw_user_text"))
+
+    graph = _base_plan_graph(
+        packet,
+        [_node("a"), _node("b")],
+        [{"from": "a", "to": "b"}, {"from": "b", "to": "a"}],
+    )
+    cases.append(("cyclic graph A -> B -> A", graph, "DAG"))
+
+    graph = _base_plan_graph(packet, [_node("a")], [{"from": "a", "to": "a"}])
+    cases.append(("self-loop A -> A", graph, "DAG"))
+
+    return cases
+
+
+def test_validate_plan_graph_contract_rejects_violation_matrix():
+    packet = build_demo_packet()
+    for name, graph, expected_message in _contract_violation_cases(packet):
+        message = _assert_invalid_plan_graph_rejected(deepcopy(graph), packet)
+        assert expected_message in message, name
+
+
+def test_validate_plan_graph_contract_accepts_deterministic_control_graph():
+    packet = build_demo_packet()
+    plan_graph = make_plan_graph(packet)
+
+    validate_plan_graph_contract(plan_graph, packet)
 
 
 def test_validate_plan_graph_contract_accepts_horizontal_branching():

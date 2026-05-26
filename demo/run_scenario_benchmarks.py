@@ -326,6 +326,46 @@ def _run_memory_first_reuse_second_run(tmp_path: Path) -> BenchmarkResult:
     )
 
 
+def _run_memory_first_direct_reuse_second_run(tmp_path: Path) -> BenchmarkResult:
+    drs = LocalDRS(tmp_path / "memory_first_direct")
+    _seed_direct_reuse_record(drs)
+    orchestrator = RootOrchestrator(drs=drs, needles_dir=NEEDLES_DIR)
+    final_output = orchestrator.process_event(
+        raw_user_text="mock certificate request",
+        request_id="bench_memory_first_direct_second_run",
+        session_anchor="bench_memory_first_direct_second_session",
+        allow_direct_reuse=True,
+        force_full_pipeline=False,
+    )
+    trace = orchestrator.last_trace
+    source_record_id = "work:benchmark_direct_reuse_source"
+    assertions = [
+        ("direct reuse eligible", trace.get("reuse_gate", {}).get("reuse_decision") == "direct_reuse_candidate", "direct_reuse_candidate", str(trace.get("reuse_gate", {}).get("reuse_decision"))),
+        ("direct_reuse_applied true", trace.get("reuse_applied") is True and trace.get("reuse_decision") == "direct_reuse", "true", f"{_bool_text(trace.get('reuse_applied'))}/{trace.get('reuse_decision')}"),
+        ("architect skipped", trace.get("architect_skipped") is True, "true", _bool_text(trace.get("architect_skipped"))),
+        ("executor skipped", trace.get("executor_skipped") is True, "true", _bool_text(trace.get("executor_skipped"))),
+        ("reused prior work record", source_record_id in trace.get("reused_record_ids", []), source_record_id, ", ".join(trace.get("reused_record_ids", []))),
+        ("compute saved", not _llm_called(trace) and trace.get("plan_graph") is None and trace.get("result_proposals") == [], "no_llm_no_plan_no_executor", f"llm={_bool_text(_llm_called(trace))} plan={trace.get('plan_graph')} proposals={len(trace.get('result_proposals', []))}"),
+        ("final_status success", final_output.get("status") == "success", "success", str(final_output.get("status"))),
+        ("DRS writeback present", _trace_drs_write(final_output), "true", _bool_text(_trace_drs_write(final_output))),
+    ]
+    status, passed, details = _pass_fail(assertions)
+    return BenchmarkResult(
+        "memory_first_direct_reuse_second_run",
+        status,
+        _trace_route(trace),
+        _llm_called(trace),
+        0,
+        _winner_vector_id(trace),
+        passed,
+        details,
+        trace,
+        final_output,
+        drs_write=_trace_drs_write(final_output),
+        forbidden_blocked=True,
+    )
+
+
 def _run_permissioned_mock_action(
     tmp_path: Path,
     *,
@@ -448,6 +488,7 @@ def run_benchmarks(
             _run_gt_v02(root_path),
             _run_safety(root_path),
             _run_memory_first_reuse_second_run(root_path),
+            _run_memory_first_direct_reuse_second_run(root_path),
             _run_permissioned_mock_action(root_path, confirmed=False),
             _run_permissioned_mock_action(root_path, confirmed=True),
             _run_architect_contract_violation_recovered(root_path),

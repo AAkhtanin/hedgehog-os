@@ -17,6 +17,7 @@ def test_benchmark_runner_returns_required_scenarios(tmp_path):
     assert "gt_v02_primary_beats_fallback" in output
     assert "safety_forbidden_vector_blocked" in output
     assert "memory_first_reuse_second_run" in output
+    assert "memory_first_direct_reuse_second_run" in output
     assert "permissioned_mock_action_blocked_without_confirm" in output
     assert "permissioned_mock_action_success_after_confirm" in output
     assert "architect_contract_violation_recovered" in output
@@ -32,6 +33,7 @@ def test_benchmark_controlled_scenarios_pass_without_live_gemini(tmp_path):
     assert "gt_v02_primary_beats_fallback | PASS" in output
     assert "safety_forbidden_vector_blocked | PASS" in output
     assert "memory_first_reuse_second_run | PASS" in output
+    assert "memory_first_direct_reuse_second_run | PASS" in output
     assert "permissioned_mock_action_blocked_without_confirm | PASS" in output
     assert "permissioned_mock_action_success_after_confirm | PASS" in output
     assert "architect_contract_violation_recovered | PASS" in output
@@ -93,6 +95,13 @@ def test_benchmark_output_includes_memory_and_permission_wow_scenarios(tmp_path)
     output = run_benchmarks(drs_root=tmp_path)
 
     assert "memory_first_reuse_second_run | PASS | context_only" in output
+    assert "memory_first_direct_reuse_second_run | PASS | direct_reuse | false | true" in output
+    assert "direct reuse eligible" in output
+    assert "direct_reuse_applied true" in output
+    assert "architect skipped" in output
+    assert "executor skipped" in output
+    assert "reused prior work record" in output
+    assert "compute saved" in output
     assert "permissioned_mock_action_blocked_without_confirm | PASS | deterministic_reflex | false | false | true" in output
     assert "permission reason confirmation_required" in output
     assert "permissioned_mock_action_success_after_confirm | PASS | deterministic_reflex | false | false | true" in output
@@ -109,3 +118,10 @@ def test_benchmark_output_includes_contract_recovery_and_economics(tmp_path):
     assert "L0 cheapest deterministic path" in output
     assert "L1 direct reuse skips plan" in output
     assert "L3L4 pays planning cost only when needed" in output
+
+
+def test_benchmark_distinguishes_context_memory_from_direct_reuse(tmp_path):
+    output = run_benchmarks(drs_root=tmp_path)
+
+    assert "memory_first_reuse_second_run | PASS | context_only | false | false" in output
+    assert "memory_first_direct_reuse_second_run | PASS | direct_reuse | false | true" in output

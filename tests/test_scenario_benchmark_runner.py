@@ -16,6 +16,11 @@ def test_benchmark_runner_returns_required_scenarios(tmp_path):
     assert "l3_l4_controlled_architect_certificate" in output
     assert "gt_v02_primary_beats_fallback" in output
     assert "safety_forbidden_vector_blocked" in output
+    assert "memory_first_reuse_second_run" in output
+    assert "permissioned_mock_action_blocked_without_confirm" in output
+    assert "permissioned_mock_action_success_after_confirm" in output
+    assert "architect_contract_violation_recovered" in output
+    assert "economics_routing_simulation" in output
 
 
 def test_benchmark_controlled_scenarios_pass_without_live_gemini(tmp_path):
@@ -26,6 +31,11 @@ def test_benchmark_controlled_scenarios_pass_without_live_gemini(tmp_path):
     assert "l3_l4_controlled_architect_certificate | PASS" in output
     assert "gt_v02_primary_beats_fallback | PASS" in output
     assert "safety_forbidden_vector_blocked | PASS" in output
+    assert "memory_first_reuse_second_run | PASS" in output
+    assert "permissioned_mock_action_blocked_without_confirm | PASS" in output
+    assert "permissioned_mock_action_success_after_confirm | PASS" in output
+    assert "architect_contract_violation_recovered | PASS" in output
+    assert "economics_routing_simulation | PASS" in output
     assert "gemini_architect_live_smoke | SKIPPED" in output
 
 
@@ -33,8 +43,8 @@ def test_benchmark_output_includes_compact_table(tmp_path):
     output = run_benchmarks(drs_root=tmp_path)
 
     assert "[SCENARIO BENCHMARKS]" in output
-    assert "scenario | status | route | llm_called | plan_nodes | gt_winner_vector | key_assertions" in output
-    assert "--- | --- | --- | --- | --- | --- | ---" in output
+    assert "scenario | status | route | llm_used | reuse_applied | permission_required | forbidden_blocked | gt_winner | drs_write | trace_path | key_assertions" in output
+    assert "--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---" in output
 
 
 def test_benchmark_output_includes_gt_v02_and_primary_beats_fallback(tmp_path):
@@ -77,3 +87,25 @@ def test_benchmark_trace_report_adds_trace_sections(tmp_path):
     assert "[ROOT]" in output
     assert "[GT_PAYOFF]" in output
     assert "[FINAL]" in output
+
+
+def test_benchmark_output_includes_memory_and_permission_wow_scenarios(tmp_path):
+    output = run_benchmarks(drs_root=tmp_path)
+
+    assert "memory_first_reuse_second_run | PASS | context_only" in output
+    assert "permissioned_mock_action_blocked_without_confirm | PASS | deterministic_reflex | false | false | true" in output
+    assert "permission reason confirmation_required" in output
+    assert "permissioned_mock_action_success_after_confirm | PASS | deterministic_reflex | false | false | true" in output
+    assert "permission reason allowed" in output
+
+
+def test_benchmark_output_includes_contract_recovery_and_economics(tmp_path):
+    output = run_benchmarks(drs_root=tmp_path, trace_report=True)
+
+    assert "architect_contract_violation_recovered | PASS" in output
+    assert "invalid contract rejected" in output
+    assert "deterministic recovery ran" in output
+    assert "economics_routing_simulation | PASS | adaptive_simulation" in output
+    assert "L0 cheapest deterministic path" in output
+    assert "L1 direct reuse skips plan" in output
+    assert "L3L4 pays planning cost only when needed" in output

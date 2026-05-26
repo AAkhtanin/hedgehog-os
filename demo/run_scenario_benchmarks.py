@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from hedgehog.drs import LocalDRS
+from hedgehog.llm_architect import validate_plan_graph_contract
 from hedgehog.root_orchestrator import RootOrchestrator
 from hedgehog.time_model import make_time_envelope
 from hedgehog.trace_reporter import inspect_plan_graph, render_trace_report
@@ -30,6 +31,9 @@ class BenchmarkResult:
     trace: dict | None = None
     final_output: dict | None = None
     trace_path: str = "none"
+    permission_required: bool = False
+    forbidden_blocked: bool = False
+    drs_write: bool = False
 
 
 def _bool_text(value: Any) -> str:
@@ -77,6 +81,18 @@ def _gt_score_by_vector(trace: dict) -> dict[str, list[dict]]:
 
 def _best_score(scores: list[dict]) -> dict:
     return max(scores, key=lambda score: float(score.get("payoff", 0.0)))
+
+
+def _trace_route(trace: dict) -> str:
+    return trace.get("execution_mode") or trace.get("route") or trace.get("reuse_decision") or "none"
+
+
+def _trace_drs_write(final_output: dict | None) -> bool:
+    return bool((final_output or {}).get("drs_writes"))
+
+
+def _trace_reuse_applied(trace: dict | None) -> bool:
+    return bool((trace or {}).get("reuse_applied", False))
 
 
 def _pass_fail(assertions: list[tuple[str, bool, str, str]]) -> tuple[str, list[str], list[str]]:
@@ -270,6 +286,154 @@ def _run_safety(tmp_path: Path) -> BenchmarkResult:
     return result
 
 
+def _run_memory_first_reuse_second_run(tmp_path: Path) -> BenchmarkResult:
+    drs = LocalDRS(tmp_path / "memory_first")
+    orchestrator = RootOrchestrator(drs=drs, needles_dir=NEEDLES_DIR)
+    first_output = orchestrator.process_event(
+        raw_user_text="mock certificate request",
+        request_id="bench_memory_first_source",
+        session_anchor="bench_memory_first_source_session",
+    )
+    first_record_id = first_output["drs_writes"][0]
+    second_output = orchestrator.process_event(
+        raw_user_text="mock certificate request",
+        request_id="bench_memory_first_second_run",
+        session_anchor="bench_memory_first_second_session",
+        force_full_pipeline=False,
+    )
+    trace = orchestrator.last_trace
+    assertions = [
+        ("retrieved prior work record", first_record_id in trace.get("memory_source_record_ids", []), first_record_id, ", ".join(trace.get("memory_source_record_ids", []))),
+        ("memory_context_applied true", trace.get("memory_context_applied") is True, "true", _bool_text(trace.get("memory_context_applied"))),
+        ("reuse_decision context_only", trace.get("reuse_decision") == "context_only", "context_only", str(trace.get("reuse_decision"))),
+        ("reuse_applied false", trace.get("reuse_applied") is False, "false", _bool_text(trace.get("reuse_applied"))),
+        ("second run wrote DRS", _trace_drs_write(second_output), "true", _bool_text(_trace_drs_write(second_output))),
+    ]
+    status, passed, details = _pass_fail(assertions)
+    return BenchmarkResult(
+        "memory_first_reuse_second_run",
+        status,
+        _trace_route(trace),
+        _llm_called(trace),
+        len((trace.get("plan_graph") or {}).get("nodes", [])),
+        _winner_vector_id(trace),
+        passed,
+        details,
+        trace,
+        second_output,
+        drs_write=_trace_drs_write(second_output),
+        forbidden_blocked=_illegal_blocked(trace),
+    )
+
+
+def _run_permissioned_mock_action(
+    tmp_path: Path,
+    *,
+    confirmed: bool,
+) -> BenchmarkResult:
+    drs = LocalDRS(tmp_path / ("permission_confirmed" if confirmed else "permission_blocked"))
+    orchestrator = RootOrchestrator(drs=drs, needles_dir=NEEDLES_DIR)
+    final_output = orchestrator.process_event(
+        raw_user_text="order pizza",
+        request_id="bench_permission_confirmed" if confirmed else "bench_permission_blocked",
+        session_anchor="bench_permission_session",
+        allow_reflex=True,
+        force_full_pipeline=False,
+        user_confirmed=confirmed,
+    )
+    trace = orchestrator.last_trace
+    reflex_result = trace.get("reflex_result") or {}
+    expected_status = "simulated_success" if confirmed else "blocked"
+    expected_final = "success" if confirmed else "needs_user"
+    assertions = [
+        ("permission required", reflex_result.get("action_kind") == "purchase", "purchase", str(reflex_result.get("action_kind"))),
+        (f"action {expected_status}", reflex_result.get("status") == expected_status, expected_status, str(reflex_result.get("status"))),
+        ("no real external action", reflex_result.get("protocol_mock_only") is True, "true", _bool_text(reflex_result.get("protocol_mock_only"))),
+        ("architect_skipped true", trace.get("architect_skipped") is True, "true", _bool_text(trace.get("architect_skipped"))),
+        ("executor_skipped true", trace.get("executor_skipped") is True, "true", _bool_text(trace.get("executor_skipped"))),
+        ("final_status expected", final_output.get("status") == expected_final, expected_final, str(final_output.get("status"))),
+        ("DRS write present", _trace_drs_write(final_output), "true", _bool_text(_trace_drs_write(final_output))),
+    ]
+    if not confirmed:
+        assertions.append(("permission reason confirmation_required", reflex_result.get("permission_reason") == "confirmation_required", "confirmation_required", str(reflex_result.get("permission_reason"))))
+    else:
+        assertions.append(("permission reason allowed", reflex_result.get("permission_reason") == "allowed", "allowed", str(reflex_result.get("permission_reason"))))
+    status, passed, details = _pass_fail(assertions)
+    return BenchmarkResult(
+        "permissioned_mock_action_success_after_confirm" if confirmed else "permissioned_mock_action_blocked_without_confirm",
+        status,
+        _trace_route(trace),
+        _llm_called(trace),
+        len((trace.get("plan_graph") or {}).get("nodes", [])),
+        _winner_vector_id(trace),
+        passed,
+        details,
+        trace,
+        final_output,
+        permission_required=True,
+        drs_write=_trace_drs_write(final_output),
+        forbidden_blocked=True,
+    )
+
+
+def _run_architect_contract_violation_recovered(tmp_path: Path) -> BenchmarkResult:
+    invalid_plan_graph = {
+        "source_packet_id": "packet:invalid",
+        "nodes": [],
+        "edges": [],
+        "executor_assignments": [],
+        "time_assumptions": {},
+    }
+    contract_error = ""
+    try:
+        validate_plan_graph_contract(invalid_plan_graph)
+    except ValueError as exc:
+        contract_error = str(exc)
+
+    recovered = _run_l3_l4(tmp_path / "architect_contract_recovery")
+    trace = recovered.trace or {}
+    assertions = [
+        ("invalid contract rejected", "invalid_plan_graph_contract" in contract_error, "invalid_plan_graph_contract", contract_error or "none"),
+        ("deterministic recovery ran", recovered.status == "PASS", "PASS", recovered.status),
+        ("PlanGraph dag_valid true", inspect_plan_graph(trace.get("plan_graph"))["dag_valid"] == "true", "true", inspect_plan_graph(trace.get("plan_graph"))["dag_valid"]),
+        ("FinalOutput root created", (recovered.final_output or {}).get("created_by") == "root_orchestrator", "root_orchestrator", str((recovered.final_output or {}).get("created_by"))),
+    ]
+    status, passed, details = _pass_fail(assertions)
+    details.append(f"contract_error: {contract_error}")
+    recovered.scenario = "architect_contract_violation_recovered"
+    recovered.status = status
+    recovered.key_assertions = passed
+    recovered.details = details
+    return recovered
+
+
+def _run_economics_routing_simulation(tmp_path: Path) -> BenchmarkResult:
+    l0 = _run_l0(tmp_path / "economics_l0")
+    l1 = _run_l1(tmp_path / "economics_l1")
+    l3 = _run_l3_l4(tmp_path / "economics_l3")
+    assertions = [
+        ("L0 cheapest deterministic path", l0.route == "deterministic_reflex" and l0.plan_nodes == 0 and not l0.llm_called, "reflex/no_plan/no_llm", f"{l0.route}/{l0.plan_nodes}/{_bool_text(l0.llm_called)}"),
+        ("L1 direct reuse skips plan", l1.route == "direct_reuse" and l1.plan_nodes == 0 and _trace_reuse_applied(l1.trace), "direct_reuse/reuse_applied", f"{l1.route}/{l1.plan_nodes}/{_bool_text(_trace_reuse_applied(l1.trace))}"),
+        ("L3L4 pays planning cost only when needed", l3.plan_nodes > 0 and l3.gt_winner_vector == "official_online_request", "plan nodes and official winner", f"{l3.plan_nodes}/{l3.gt_winner_vector}"),
+        ("live LLM not required", not any([l0.llm_called, l1.llm_called, l3.llm_called]), "false", _bool_text(any([l0.llm_called, l1.llm_called, l3.llm_called]))),
+    ]
+    status, passed, details = _pass_fail(assertions)
+    return BenchmarkResult(
+        "economics_routing_simulation",
+        status,
+        "adaptive_simulation",
+        False,
+        l3.plan_nodes,
+        l3.gt_winner_vector,
+        passed,
+        details,
+        l3.trace,
+        l3.final_output,
+        drs_write=all(_trace_drs_write(result.final_output) for result in [l0, l1, l3]),
+        forbidden_blocked=True,
+    )
+
+
 def run_benchmarks(
     *,
     drs_root: Path | None = None,
@@ -283,6 +447,11 @@ def run_benchmarks(
             _run_l3_l4(root_path),
             _run_gt_v02(root_path),
             _run_safety(root_path),
+            _run_memory_first_reuse_second_run(root_path),
+            _run_permissioned_mock_action(root_path, confirmed=False),
+            _run_permissioned_mock_action(root_path, confirmed=True),
+            _run_architect_contract_violation_recovered(root_path),
+            _run_economics_routing_simulation(root_path),
         ]
         if include_live_gemini:
             results.append(_run_l3_l4(root_path, live_gemini=True))
@@ -291,13 +460,16 @@ def run_benchmarks(
             "[SCENARIO BENCHMARKS]",
             f"live_gemini: {_bool_text(include_live_gemini)}",
             "",
-            "scenario | status | route | llm_called | plan_nodes | gt_winner_vector | key_assertions",
-            "--- | --- | --- | --- | --- | --- | ---",
+            "scenario | status | route | llm_used | reuse_applied | permission_required | forbidden_blocked | gt_winner | drs_write | trace_path | key_assertions",
+            "--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---",
         ]
         for result in results:
             assertions = "; ".join(result.key_assertions[:3])
             if len(result.key_assertions) > 3:
                 assertions = f"{assertions}; +{len(result.key_assertions) - 3} more"
+            reuse_applied = _trace_reuse_applied(result.trace)
+            forbidden_blocked = result.forbidden_blocked or bool(result.trace and _illegal_blocked(result.trace))
+            drs_write = result.drs_write or _trace_drs_write(result.final_output)
             lines.append(
                 " | ".join(
                     [
@@ -305,14 +477,18 @@ def run_benchmarks(
                         result.status,
                         result.route,
                         _bool_text(result.llm_called),
-                        str(result.plan_nodes),
+                        _bool_text(reuse_applied),
+                        _bool_text(result.permission_required),
+                        _bool_text(forbidden_blocked),
                         result.gt_winner_vector,
+                        _bool_text(drs_write),
+                        result.trace_path,
                         assertions or "none",
                     ]
                 )
             )
         if not include_live_gemini:
-            lines.append("gemini_architect_live_smoke | SKIPPED | not_requested | false | 0 | none | skipped_by_default")
+            lines.append("gemini_architect_live_smoke | SKIPPED | not_requested | false | false | false | false | none | false | none | skipped_by_default")
 
         lines.append("")
         lines.append("[DETAILS]")

@@ -22,6 +22,7 @@ def test_benchmark_runner_returns_required_scenarios(tmp_path):
     assert "permissioned_mock_action_success_after_confirm" in output
     assert "architect_contract_violation_recovered" in output
     assert "economics_routing_simulation" in output
+    assert "deadend_fraud_memory_remembers_bad_route" in output
 
 
 def test_benchmark_controlled_scenarios_pass_without_live_gemini(tmp_path):
@@ -38,6 +39,7 @@ def test_benchmark_controlled_scenarios_pass_without_live_gemini(tmp_path):
     assert "permissioned_mock_action_success_after_confirm | PASS" in output
     assert "architect_contract_violation_recovered | PASS" in output
     assert "economics_routing_simulation | PASS" in output
+    assert "deadend_fraud_memory_remembers_bad_route | PASS" in output
     assert "gemini_architect_live_smoke | SKIPPED" in output
 
 
@@ -118,6 +120,19 @@ def test_benchmark_output_includes_contract_recovery_and_economics(tmp_path):
     assert "L0 cheapest deterministic path" in output
     assert "L1 direct reuse skips plan" in output
     assert "L3L4 pays planning cost only when needed" in output
+
+
+def test_benchmark_output_includes_deadend_fraud_memory_scenario(tmp_path):
+    output = run_benchmarks(drs_root=tmp_path)
+
+    assert "deadend_fraud_memory_remembers_bad_route | PASS | demo_deadend_memory | false | false | false | true | none | true | demo" in output
+    assert "illegal_coercion blocked before Architect" in output
+    assert "deadend signal written" in output
+    assert "remembered bad route found" in output
+    assert "illegal_coercion not sent to Architect" in output
+    assert "Root final authority" in output
+    assert "demo-level signal, not full Marennya/UP mutation" in output
+    assert "no real external actions" in output
 
 
 def test_benchmark_distinguishes_context_memory_from_direct_reuse(tmp_path):

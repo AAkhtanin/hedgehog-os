@@ -62,6 +62,17 @@ def test_telegram_shell_debug_text_has_compact_summary(tmp_path):
     assert "llm_model:" in debug_text
     assert "llm_used:" in debug_text
     assert "llm_error:" in debug_text
+    assert "general_provider:" in debug_text
+    assert "general_model:" in debug_text
+    assert "general_llm_used:" in debug_text
+    assert "general_llm_status:" in debug_text
+    assert "general_llm_error:" in debug_text
+    assert "architect_provider:" in debug_text
+    assert "architect_model:" in debug_text
+    assert "architect_llm_used:" in debug_text
+    assert "architect_status:" in debug_text
+    assert "architect_fallback:" in debug_text
+    assert "architect_error:" in debug_text
     assert "final_status:" in debug_text
     assert "drs_writes:" in debug_text
     assert "trace_path:" in debug_text
@@ -147,7 +158,15 @@ def test_telegram_shell_full_pipeline_can_surface_architect_diagnostics(tmp_path
     assert result["llm_architect_provider"] == "mock"
     assert result["llm_architect_status"] == "completed"
     assert result["llm_architect_used_llm"] is False
+    assert result["general_provider"] == "none"
+    assert result["general_llm_used"] is False
+    assert result["architect_provider"] == "mock"
+    assert result["architect_llm_used"] is False
+    assert result["architect_status"] == "completed"
     assert "architect_provider: mock" in result["debug_text"]
+    assert "architect_llm_used: False" in result["debug_text"]
+    assert "general_provider: none" in result["debug_text"]
+    assert "general_llm_used: False" in result["debug_text"]
     assert "llm_architect_provider: mock" in result["debug_text"]
     assert trace["trace"]["llm_architect_result"]["provider"] == "mock"
 
@@ -172,6 +191,13 @@ def test_telegram_shell_generic_math_routes_to_llm_general(tmp_path):
     assert result["llm_model"] == "mock_general_responder_v1"
     assert result["llm_used"] is False
     assert result["llm_error"] == "none"
+    assert result["general_provider"] == "mock"
+    assert result["general_model"] == "mock_general_responder_v1"
+    assert result["general_llm_used"] is False
+    assert result["general_llm_status"] == "completed"
+    assert result["general_llm_error"] == "none"
+    assert result["architect_provider"] == "deterministic"
+    assert result["architect_llm_used"] is False
     assert "Mock certificate request pipeline completed" not in result["reply_text"]
     assert "execution_mode: llm_general" in result["debug_text"]
     assert "llm_status: completed" in result["debug_text"]
@@ -179,6 +205,10 @@ def test_telegram_shell_generic_math_routes_to_llm_general(tmp_path):
     assert "llm_model: mock_general_responder_v1" in result["debug_text"]
     assert "llm_used: False" in result["debug_text"]
     assert "llm_error: none" in result["debug_text"]
+    assert "general_provider: mock" in result["debug_text"]
+    assert "general_llm_used: False" in result["debug_text"]
+    assert "architect_provider: deterministic" in result["debug_text"]
+    assert "architect_llm_used: False" in result["debug_text"]
     assert trace["trace"]["input_intake"]["intent_kind"] == "general_request"
     assert trace["trace"]["llm_gateway_result"]["provider"] == "mock"
     assert trace["debug_summary"]["llm_status"] == "completed"

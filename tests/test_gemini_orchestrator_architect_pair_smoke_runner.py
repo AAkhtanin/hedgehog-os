@@ -22,6 +22,7 @@ def test_pair_smoke_prints_required_sections():
 
     assert "[GEMINI ORCHESTRATOR + ARCHITECT PAIR SMOKE]" in output
     assert "[ORCHESTRATOR PROPOSAL]" in output
+    assert "[PROPOSAL QUALITY]" in output
     assert "[ROUTE VALIDATION]" in output
     assert "[ROOT EXECUTION]" in output
     assert "[SUMMARY]" in output
@@ -45,6 +46,18 @@ def test_mock_orchestrator_proposal_validated_before_root_execution():
     assert "allowed: true" in output
     assert "would_execute_route: proof_full_pipeline" in output
     assert output.index("[ROUTE VALIDATION]") < output.index("[ROOT EXECUTION]")
+
+
+def test_mock_pair_smoke_guard_quality_is_complete():
+    output = run_gemini_orchestrator_architect_pair_smoke()
+
+    assert "route_correct: true" in output
+    assert "guards_complete: true" in output
+    assert "guard_completeness_score: 1.00" in output
+    assert "missing_required_guards: none" in output
+    assert "validator_completed_guards: false" in output
+    assert "proposal_quality_status: PASS_COMPLETE" in output
+    assert "orchestrator_guard_quality_ready_for_controlled_runtime: true" in output
 
 
 def test_mock_root_execution_uses_full_pipeline_and_mock_architect():
@@ -126,6 +139,11 @@ def test_invalid_live_proposal_path_reports_diagnostics_without_execution(monkey
 
     assert "proposal_status: invalid" in output
     assert "orchestrator_proposal_valid: false" in output
+    assert "route_correct: false" in output
+    assert "guards_complete: false" in output
+    assert "guard_completeness_score: 0.00" in output
+    assert "proposal_quality_status: INVALID_PROPOSAL" in output
+    assert "orchestrator_guard_quality_ready_for_controlled_runtime: false" in output
     assert "proposal_error: ValueError: no JSON object found" in output
     assert "parse_error: ValueError: no JSON object found" in output
     assert "raw_response_preview: not-json" in output

@@ -9,6 +9,9 @@ from typing import Any
 from demo.run_live_gemini_orchestrator_shadow import ShadowCase
 from demo.run_live_gemini_orchestrator_shadow import ShadowProposal
 from demo.run_live_gemini_orchestrator_shadow import make_shadow_proposal
+from demo.run_orchestrator_guard_completeness import GuardAuditResult
+from demo.run_orchestrator_guard_completeness import GuardScenario
+from demo.run_orchestrator_guard_completeness import audit_guard_scenario
 from demo.run_orchestrator_route_validator import RouteProposal
 from demo.run_orchestrator_route_validator import ValidationResult
 from demo.run_orchestrator_route_validator import validate_route_proposal
@@ -53,6 +56,8 @@ class PairSmokeResult:
     gt_winner_vector: str
     plan_graph_node_count: int
     accepted_branch_count: int
+    proposal_quality: GuardAuditResult
+    guard_quality_ready: bool
     pair_smoke_status: str
 
 
@@ -122,6 +127,32 @@ def _proposal_for_validator(case: ShadowCase, proposal: ShadowProposal) -> Route
         direct_reuse_eligible=False,
         forbidden_candidate_present=case.forbidden_candidate_present,
         budget_class="normal",
+    )
+
+
+def _proposal_quality(case: ShadowCase, proposal: ShadowProposal) -> GuardAuditResult:
+    if proposal.proposal_status != "valid":
+        return GuardAuditResult(
+            scenario=case.scenario,
+            expected_route=case.expected_route,
+            proposed_route=proposal.suggested_route,
+            route_correct=False,
+            guards_complete=False,
+            guard_completeness_score=0.0,
+            missing_required_guards=[],
+            extra_guards=[],
+            validator_required_guards=[],
+            validator_completed_guards=False,
+            proposal_quality_status="INVALID_PROPOSAL",
+        )
+    return audit_guard_scenario(
+        GuardScenario(
+            scenario=case.scenario,
+            expected_route=case.expected_route,
+            proposed_route=proposal.suggested_route,
+            proposed_required_guards=proposal.required_guards,
+            forbidden_candidate_present=case.forbidden_candidate_present,
+        )
     )
 
 
@@ -228,6 +259,7 @@ def _execution_facts(
 def _pair_smoke_result(*, provider: str, model: str | None = None) -> PairSmokeResult:
     case = _certificate_case()
     proposal = _make_pair_shadow_proposal(case, provider=provider, model=model)
+    proposal_quality = _proposal_quality(case, proposal)
     validation = validate_route_proposal(_proposal_for_validator(case, proposal))
     would_execute_route = _would_execute_route(validation)
     execution = _execution_facts(
@@ -250,12 +282,20 @@ def _pair_smoke_result(*, provider: str, model: str | None = None) -> PairSmokeR
         }
     elif provider == "gemini" and not validation.allowed:
         pair_pass = not execution["executed"]
+    guard_quality_ready = (
+        proposal_quality.route_correct
+        and proposal_quality.guards_complete
+        and proposal_quality.proposal_quality_status == "PASS_COMPLETE"
+        and not proposal_quality.validator_completed_guards
+    )
     return PairSmokeResult(
         provider=provider,
         live_gemini=provider == "gemini",
         proposal=proposal,
         validation=validation,
         would_execute_route=would_execute_route,
+        proposal_quality=proposal_quality,
+        guard_quality_ready=guard_quality_ready,
         pair_smoke_status="PASS" if pair_pass else "FAIL",
         **execution,
     )
@@ -302,6 +342,15 @@ def run_gemini_orchestrator_architect_pair_smoke(
         f"raw_response_preview: {result.proposal.raw_response_preview}",
         f"reason: {result.proposal.reason}",
         "",
+        "[PROPOSAL QUALITY]",
+        f"route_correct: {_bool_text(result.proposal_quality.route_correct)}",
+        f"guards_complete: {_bool_text(result.proposal_quality.guards_complete)}",
+        f"guard_completeness_score: {result.proposal_quality.guard_completeness_score:.2f}",
+        f"missing_required_guards: {', '.join(result.proposal_quality.missing_required_guards) or 'none'}",
+        f"validator_completed_guards: {_bool_text(result.proposal_quality.validator_completed_guards)}",
+        f"proposal_quality_status: {result.proposal_quality.proposal_quality_status}",
+        f"orchestrator_guard_quality_ready_for_controlled_runtime: {_bool_text(result.guard_quality_ready)}",
+        "",
         "[ROUTE VALIDATION]",
         f"validation_decision: {result.validation.validation_decision}",
         f"allowed: {_bool_text(result.validation.allowed)}",
@@ -337,6 +386,8 @@ def run_gemini_orchestrator_architect_pair_smoke(
         f"architect_provider: {result.architect_provider}",
         f"pair_smoke_status: {result.pair_smoke_status}",
         f"live_pair_executed: {_bool_text(result.live_gemini and result.executed)}",
+        f"validator_completed_guards: {_bool_text(result.proposal_quality.validator_completed_guards)}",
+        f"orchestrator_guard_quality_ready_for_controlled_runtime: {_bool_text(result.guard_quality_ready)}",
         "root_final_authority: true",
         "controlled_orchestrator_enabled: false",
         "next_step: controlled orchestrator runtime integration later",

@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import re
+from dataclasses import replace
 from dataclasses import dataclass
 from typing import Any
 
@@ -34,11 +35,15 @@ ALLOWED_ROUTES = {
 SYSTEM_PROMPT = """You are a shadow Orchestrator inside Hedgehog OS.
 You do not control execution.
 Return JSON only.
+Return exactly one JSON object.
+Do not include markdown fences.
+Do not include prose before or after JSON.
 Do not produce FinalOutput.
 Do not call tools.
 Do not request secrets.
 Choose only an allowed route.
 Include required guards.
+Required keys: suggested_route, confidence, reason, required_guards, shadow_only.
 If purchase/actionful, require PermissionGate.
 If complex/certificate, require AVF and PlanGraph contract.
 If direct reuse, require DirectReuseGate.
@@ -69,6 +74,9 @@ class ShadowProposal:
     shadow_only: bool
     provider: str
     error: str = "none"
+    proposal_error: str = "none"
+    raw_response_preview: str = "none"
+    parse_error: str = "none"
 
 
 @dataclass(frozen=True)
@@ -108,6 +116,16 @@ def _config_value(*names: str, allow_config: bool = True) -> str | None:
 
 def _bool_text(value: Any) -> str:
     return "true" if bool(value) else "false"
+
+
+def _safe_text(value: Any, limit: int = 300) -> str:
+    text = " ".join(str(value).split())
+    for term in FORBIDDEN_OUTPUT_TERMS:
+        text = text.replace(term, "[redacted]")
+        text = text.replace(term.upper(), "[redacted]")
+    if len(text) <= limit:
+        return text or "none"
+    return f"{text[: limit - 3]}..."
 
 
 def _cases() -> list[ShadowCase]:
@@ -215,6 +233,21 @@ def _strip_markdown_fences(text: str) -> str:
     return stripped
 
 
+def _extract_json_object(text: str) -> dict:
+    stripped = _strip_markdown_fences(text)
+    decoder = json.JSONDecoder()
+    for index, char in enumerate(stripped):
+        if char != "{":
+            continue
+        try:
+            payload, _end = decoder.raw_decode(stripped[index:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            return payload
+    raise ValueError("no JSON object found")
+
+
 def _validate_shadow_json(payload: dict) -> ShadowProposal:
     route = payload.get("suggested_route")
     guards = payload.get("required_guards")
@@ -223,6 +256,11 @@ def _validate_shadow_json(payload: dict) -> ShadowProposal:
         raise ValueError("invalid suggested_route")
     if not isinstance(guards, list) or not all(isinstance(item, str) for item in guards):
         raise ValueError("required_guards must be an array of strings")
+    if isinstance(confidence, str):
+        try:
+            confidence = float(confidence)
+        except ValueError as exc:
+            raise ValueError("confidence must be numeric") from exc
     if not isinstance(confidence, int | float) or not 0.0 <= float(confidence) <= 1.0:
         raise ValueError("confidence must be in [0, 1]")
     if payload.get("shadow_only") is not True:
@@ -300,9 +338,12 @@ def _gemini_shadow_proposal(
             },
         )
         text = getattr(response, "text", "") or ""
-        payload = json.loads(_strip_markdown_fences(text))
-        return _validate_shadow_json(payload)
+        payload = _extract_json_object(text)
+        proposal = _validate_shadow_json(payload)
+        return replace(proposal, raw_response_preview=_safe_text(text))
     except Exception as exc:
+        raw_preview = _safe_text(locals().get("text", "none"))
+        parse_error = _safe_text(f"{type(exc).__name__}: {exc}")
         return ShadowProposal(
             proposal_status="invalid",
             suggested_route="fallback_to_deterministic",
@@ -311,7 +352,10 @@ def _gemini_shadow_proposal(
             required_guards=["Route Validator", "Root final authority"],
             shadow_only=True,
             provider="gemini",
-            error=str(exc)[:240],
+            error=parse_error,
+            proposal_error=parse_error,
+            raw_response_preview=raw_preview,
+            parse_error=parse_error,
         )
 
 

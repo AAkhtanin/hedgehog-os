@@ -44,10 +44,24 @@ Do not request secrets.
 Choose only an allowed route.
 Include required guards.
 Required keys: suggested_route, confidence, reason, required_guards, shadow_only.
-If purchase/actionful, require PermissionGate.
-If complex/certificate, require AVF and PlanGraph contract.
-If direct reuse, require DirectReuseGate.
-If unsafe/forbidden candidate, require AVF/HardMask or reject_or_block.
+For certificate_request, government service, or certificate-like inputs, choose proof_full_pipeline, not deterministic_reflex.
+Allowed routes and required guards:
+- deterministic_reflex:
+  required guards: Root final authority, audit, DRS writeback
+  if actionful: PermissionGate
+- llm_general:
+  required guards: Root final authority, no external action, budget check
+- proof_full_pipeline:
+  required guards: AVF, HardMask, PlanGraph contract, Post V&V, GT, Root final authority
+- direct_reuse:
+  required guards: DirectReuseGate, Freshness, PolicyOK, DRS writeback, Root final authority
+- permission_required / needs_user:
+  required guards: PermissionGate, Root final authority, no real external action, audit
+- reject_or_block:
+  required guards: AVF, HardMask, Root final authority, no execution
+required_guards MUST include the complete required guard set for the selected route.
+Do not abbreviate PlanGraph contract as only PlanGraph.
+For proof_full_pipeline, required_guards MUST include exactly or at least: AVF, HardMask, PlanGraph contract, Post V&V, GT, Root final authority.
 Root remains final authority."""
 
 

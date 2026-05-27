@@ -69,7 +69,7 @@ def _certificate_case() -> ShadowCase:
     return ShadowCase(
         scenario="pair_certificate_full_pipeline",
         input_kind="certificate_request",
-        input_text="mock certificate request",
+        input_text="I need a government certificate.",
         expected_route="proof_full_pipeline",
         forbidden_candidate_present=True,
     )

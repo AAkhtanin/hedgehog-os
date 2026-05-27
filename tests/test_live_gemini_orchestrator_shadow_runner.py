@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from demo.run_live_gemini_orchestrator_shadow import SYSTEM_PROMPT
 from demo.run_live_gemini_orchestrator_shadow import run_live_gemini_orchestrator_shadow
 
 
@@ -22,6 +23,33 @@ def test_live_shadow_default_prints_all_mock_scenarios():
     assert "live_shadow_repeated_certificate_direct_reuse" in output
     assert "live_shadow_permissioned_order_pizza" in output
     assert "live_shadow_forbidden_certificate_route" in output
+
+
+def test_live_shadow_prompt_contains_required_guard_table():
+    assert "Allowed routes and required guards" in SYSTEM_PROMPT
+    assert "deterministic_reflex" in SYSTEM_PROMPT
+    assert "llm_general" in SYSTEM_PROMPT
+    assert "proof_full_pipeline" in SYSTEM_PROMPT
+    assert "direct_reuse" in SYSTEM_PROMPT
+    assert "permission_required / needs_user" in SYSTEM_PROMPT
+    assert "reject_or_block" in SYSTEM_PROMPT
+
+
+def test_live_shadow_prompt_lists_full_pipeline_required_guards():
+    assert "AVF" in SYSTEM_PROMPT
+    assert "HardMask" in SYSTEM_PROMPT
+    assert "PlanGraph contract" in SYSTEM_PROMPT
+    assert "Post V&V" in SYSTEM_PROMPT
+    assert "GT" in SYSTEM_PROMPT
+    assert "Root final authority" in SYSTEM_PROMPT
+
+
+def test_live_shadow_prompt_demands_complete_required_guards():
+    assert "required_guards MUST include the complete required guard set" in SYSTEM_PROMPT
+    assert "Do not abbreviate PlanGraph contract as only PlanGraph" in SYSTEM_PROMPT
+    assert "For proof_full_pipeline, required_guards MUST include exactly or at least" in SYSTEM_PROMPT
+    assert "certificate_request" in SYSTEM_PROMPT
+    assert "choose proof_full_pipeline, not deterministic_reflex" in SYSTEM_PROMPT
 
 
 def test_live_shadow_default_is_mock_offline():

@@ -25,6 +25,7 @@ class SmokeMapping:
     force_full_pipeline: bool
     allow_reflex: bool
     llm_provider: str
+    architect_provider: str
     user_confirmed: bool
     local_only: bool = False
     local_reply: str = ""
@@ -62,6 +63,7 @@ def map_smoke_command(
             force_full_pipeline=True,
             allow_reflex=False,
             llm_provider=provider,
+            architect_provider="deterministic",
             user_confirmed=False,
             local_only=True,
             local_reply="pong",
@@ -73,11 +75,13 @@ def map_smoke_command(
             force_full_pipeline=True,
             allow_reflex=False,
             llm_provider=provider,
+            architect_provider="deterministic",
             user_confirmed=False,
             local_only=True,
             local_reply=(
                 "safe smoke commands: /ping, /mode, /reflex turn on tv, "
-                "/math x + y = 110 / x - y = 100, /certificate_mock, /debug_last"
+                "/math x + y = 110 / x - y = 100, /certificate_mock, "
+                "/certificate_gemini, /debug_last"
             ),
         )
     if lowered == "/debug_last":
@@ -87,6 +91,7 @@ def map_smoke_command(
             force_full_pipeline=True,
             allow_reflex=False,
             llm_provider=provider,
+            architect_provider="deterministic",
             user_confirmed=False,
             local_only=True,
             local_reply="debug_last is available during manual polling after one handled message.",
@@ -99,6 +104,7 @@ def map_smoke_command(
             force_full_pipeline=False,
             allow_reflex=True,
             llm_provider="mock",
+            architect_provider="deterministic",
             user_confirmed=False,
         )
     if lowered.startswith("/math"):
@@ -109,6 +115,7 @@ def map_smoke_command(
             force_full_pipeline=False,
             allow_reflex=False,
             llm_provider=provider,
+            architect_provider="deterministic",
             user_confirmed=False,
         )
     if lowered == "/certificate_mock":
@@ -118,6 +125,27 @@ def map_smoke_command(
             force_full_pipeline=True,
             allow_reflex=False,
             llm_provider="mock",
+            architect_provider="deterministic",
+            user_confirmed=False,
+        )
+    if lowered == "/certificate_gemini":
+        return SmokeMapping(
+            command="/certificate_gemini",
+            shell_text="mock certificate request",
+            force_full_pipeline=True,
+            allow_reflex=False,
+            llm_provider="gemini",
+            architect_provider="gemini",
+            user_confirmed=False,
+        )
+    if lowered == "/full_gemini certificate":
+        return SmokeMapping(
+            command="/full_gemini",
+            shell_text="mock certificate request",
+            force_full_pipeline=True,
+            allow_reflex=False,
+            llm_provider="gemini",
+            architect_provider="gemini",
             user_confirmed=False,
         )
 
@@ -127,6 +155,7 @@ def map_smoke_command(
         force_full_pipeline=True,
         allow_reflex=False,
         llm_provider=provider,
+        architect_provider="deterministic",
         user_confirmed=False,
     )
 
@@ -163,6 +192,7 @@ def handle_smoke_text(
         debug=debug,
         force_full_pipeline=mapping.force_full_pipeline,
         llm_provider=mapping.llm_provider,
+        architect_provider=mapping.architect_provider,
         allow_reflex=mapping.allow_reflex,
         user_confirmed=mapping.user_confirmed,
     )
@@ -182,6 +212,8 @@ def render_dry_run(provider: str = "mock", debug: bool = True) -> str:
         "/reflex turn on tv",
         "/math x + y = 110 / x - y = 100",
         "/certificate_mock",
+        "/certificate_gemini",
+        "/full_gemini certificate",
         "/debug_last",
     ]
     lines = [
@@ -192,8 +224,8 @@ def render_dry_run(provider: str = "mock", debug: bool = True) -> str:
         f"debug: {'true' if debug else 'false'}",
         "note: manual polling only; no secrets are printed",
         "",
-        "command | shell_text | force_full_pipeline | allow_reflex | llm_provider",
-        "--- | --- | --- | --- | ---",
+        "command | shell_text | force_full_pipeline | allow_reflex | llm_provider | architect_provider",
+        "--- | --- | --- | --- | --- | ---",
     ]
     for command in examples:
         mapping = map_smoke_command(command, provider=provider, debug=debug)
@@ -206,6 +238,7 @@ def render_dry_run(provider: str = "mock", debug: bool = True) -> str:
                     "true" if mapping.force_full_pipeline else "false",
                     "true" if mapping.allow_reflex else "false",
                     mapping.llm_provider,
+                    mapping.architect_provider,
                 ]
             )
         )

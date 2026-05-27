@@ -55,6 +55,7 @@ def _debug_summary(trace: dict, final_output: dict, trace_path: Path) -> dict:
     mode_router = trace.get("mode_router", {})
     gt_report = trace.get("gt_report") or {}
     llm_result = trace.get("llm_gateway_result")
+    llm_architect = trace.get("llm_architect_result") or {}
     drs_writes = final_output.get("drs_writes", [])
     execution_mode = (
         trace.get("execution_mode")
@@ -74,6 +75,14 @@ def _debug_summary(trace: dict, final_output: dict, trace_path: Path) -> dict:
         "llm_model": (llm_result or {}).get("model", "none"),
         "llm_used": bool((llm_result or {}).get("used_llm", False)),
         "llm_error": _short_error((llm_result or {}).get("error")),
+        "architect_provider": llm_architect.get("provider")
+        or trace.get("architect_provider", "deterministic"),
+        "llm_architect_status": llm_architect.get("status", "none"),
+        "llm_architect_provider": llm_architect.get("provider", "none"),
+        "llm_architect_model": llm_architect.get("model", "none"),
+        "llm_architect_used_llm": bool(llm_architect.get("used_llm", False)),
+        "llm_architect_fallback": llm_architect.get("fallback", "none"),
+        "llm_architect_error": _short_error(llm_architect.get("error")),
         "final_status": final_output["status"],
         "memory_context_applied": bool(trace.get("memory_context_applied", False)),
         "reuse_decision": trace.get("reuse_decision", "none"),
@@ -103,6 +112,13 @@ def _format_debug_text(summary: dict) -> str:
         "llm_model",
         "llm_used",
         "llm_error",
+        "architect_provider",
+        "llm_architect_status",
+        "llm_architect_provider",
+        "llm_architect_model",
+        "llm_architect_used_llm",
+        "llm_architect_fallback",
+        "llm_architect_error",
         "final_status",
         "memory_context_applied",
         "reuse_decision",
@@ -129,6 +145,9 @@ def handle_telegram_text(
     force_full_pipeline: bool = True,
     llm_provider: str = "mock",
     llm_model: str | None = None,
+    architect_provider: str = "deterministic",
+    architect_model: str | None = None,
+    architect_allow_config: bool = True,
     allow_reflex: bool = False,
     user_confirmed: bool = False,
 ) -> dict:
@@ -145,6 +164,9 @@ def handle_telegram_text(
         force_full_pipeline=force_full_pipeline,
         llm_provider=llm_provider,
         llm_model=llm_model,
+        architect_provider=architect_provider,
+        architect_model=architect_model,
+        architect_allow_config=architect_allow_config,
         allow_reflex=allow_reflex,
         user_confirmed=user_confirmed,
     )
@@ -185,4 +207,11 @@ def handle_telegram_text(
         "llm_model": summary["llm_model"],
         "llm_used": summary["llm_used"],
         "llm_error": summary["llm_error"],
+        "architect_provider": summary["architect_provider"],
+        "llm_architect_status": summary["llm_architect_status"],
+        "llm_architect_provider": summary["llm_architect_provider"],
+        "llm_architect_model": summary["llm_architect_model"],
+        "llm_architect_used_llm": summary["llm_architect_used_llm"],
+        "llm_architect_fallback": summary["llm_architect_fallback"],
+        "llm_architect_error": summary["llm_architect_error"],
     }

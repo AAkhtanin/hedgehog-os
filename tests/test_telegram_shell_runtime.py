@@ -131,6 +131,27 @@ def test_telegram_shell_force_full_pipeline_for_generic_certificate_text(tmp_pat
     assert trace["trace"]["result_proposals"]
 
 
+def test_telegram_shell_full_pipeline_can_surface_architect_diagnostics(tmp_path):
+    result = handle_telegram_text(
+        text="I need a certificate for a mock government service.",
+        chat_id="chat_architect_diag",
+        drs_root=tmp_path / "drs",
+        needles_dir=NEEDLES_DIR,
+        force_full_pipeline=True,
+        architect_provider="mock_llm",
+    )
+    trace = read_json(Path(result["trace_path"]))
+
+    assert result["execution_mode"] == "proof_full_pipeline"
+    assert result["architect_provider"] == "mock"
+    assert result["llm_architect_provider"] == "mock"
+    assert result["llm_architect_status"] == "completed"
+    assert result["llm_architect_used_llm"] is False
+    assert "architect_provider: mock" in result["debug_text"]
+    assert "llm_architect_provider: mock" in result["debug_text"]
+    assert trace["trace"]["llm_architect_result"]["provider"] == "mock"
+
+
 def test_telegram_shell_generic_math_routes_to_llm_general(tmp_path):
     result = handle_telegram_text(
         text="x + y = 110\nx - y = 100",

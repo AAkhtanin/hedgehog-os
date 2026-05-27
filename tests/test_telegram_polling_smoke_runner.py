@@ -25,6 +25,7 @@ def test_dry_run_prints_command_mappings_without_network():
     assert "dry_run: true" in output
     assert "network_called: false" in output
     assert "/reflex" in output
+    assert "/ask" in output
     assert "/math" in output
     assert "/certificate_mock" in output
     assert "/certificate_gemini" in output
@@ -35,6 +36,7 @@ def test_dry_run_gemini_debug_shows_certificate_gemini_mapping():
 
     assert "command | shell_text | force_full_pipeline | allow_reflex | llm_provider | architect_provider" in output
     assert "/certificate_gemini | mock certificate request | true | false | gemini | gemini" in output
+    assert "/ask | Explain why bicycles are useful for short city trips. | false | false | gemini | deterministic" in output
     assert "network_called: false" in output
 
 
@@ -69,6 +71,50 @@ def test_math_command_uses_non_full_pipeline_and_selected_provider():
     assert kwargs["allow_reflex"] is False
     assert kwargs["llm_provider"] == "gemini"
     assert kwargs["architect_provider"] == "deterministic"
+
+
+def test_ask_command_uses_general_route_with_selected_provider():
+    result = handle_smoke_text(
+        text="/ask Explain in one paragraph why bicycles are useful.",
+        provider="gemini",
+        debug=True,
+        shell_handler=_fake_shell,
+    )
+    kwargs = result["captured_kwargs"]
+
+    assert result["shell_called"] is True
+    assert kwargs["text"] == "Explain in one paragraph why bicycles are useful."
+    assert kwargs["force_full_pipeline"] is False
+    assert kwargs["allow_reflex"] is False
+    assert kwargs["llm_provider"] == "gemini"
+    assert kwargs["architect_provider"] == "deterministic"
+
+
+def test_ask_command_uses_mock_provider_when_selected():
+    result = handle_smoke_text(
+        text="/ask Explain a local concept.",
+        provider="mock",
+        debug=True,
+        shell_handler=_fake_shell,
+    )
+    kwargs = result["captured_kwargs"]
+
+    assert kwargs["text"] == "Explain a local concept."
+    assert kwargs["llm_provider"] == "mock"
+    assert kwargs["force_full_pipeline"] is False
+
+
+def test_empty_ask_returns_usage_without_shell_call():
+    result = handle_smoke_text(
+        text="/ask",
+        provider="gemini",
+        debug=True,
+        shell_handler=lambda **_kwargs: (_ for _ in ()).throw(AssertionError("shell called")),
+    )
+
+    assert result["shell_called"] is False
+    assert result["reply_text"] == "Usage: /ask <general question or request>"
+    assert "network_called: false" in result["debug_text"]
 
 
 def test_certificate_mock_uses_full_pipeline_and_mock_provider():
@@ -129,12 +175,16 @@ def test_local_commands_do_not_call_shell():
 
 def test_mapping_keeps_root_transport_agnostic_flags_explicit():
     reflex = map_smoke_command("/reflex turn on tv")
+    ask = map_smoke_command("/ask Explain this", provider="gemini")
     math = map_smoke_command("/math x + y = 110")
     certificate = map_smoke_command("/certificate_mock")
     certificate_gemini = map_smoke_command("/certificate_gemini")
 
     assert reflex.allow_reflex is True
     assert reflex.force_full_pipeline is False
+    assert ask.force_full_pipeline is False
+    assert ask.allow_reflex is False
+    assert ask.llm_provider == "gemini"
     assert math.force_full_pipeline is False
     assert certificate.force_full_pipeline is True
     assert certificate_gemini.force_full_pipeline is True

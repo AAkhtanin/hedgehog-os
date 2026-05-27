@@ -80,7 +80,7 @@ def map_smoke_command(
             local_only=True,
             local_reply=(
                 "safe smoke commands: /ping, /mode, /reflex turn on tv, "
-                "/math x + y = 110 / x - y = 100, /certificate_mock, "
+                "/ask <text>, /math x + y = 110 / x - y = 100, /certificate_mock, "
                 "/certificate_gemini, /debug_last"
             ),
         )
@@ -96,6 +96,18 @@ def map_smoke_command(
             local_only=True,
             local_reply="debug_last is available during manual polling after one handled message.",
         )
+    if lowered == "/ask":
+        return SmokeMapping(
+            command="/ask",
+            shell_text="",
+            force_full_pipeline=False,
+            allow_reflex=False,
+            llm_provider=provider,
+            architect_provider="deterministic",
+            user_confirmed=False,
+            local_only=True,
+            local_reply="Usage: /ask <general question or request>",
+        )
     if lowered.startswith("/reflex"):
         payload = _command_payload(stripped, "/reflex") or "turn on tv"
         return SmokeMapping(
@@ -104,6 +116,17 @@ def map_smoke_command(
             force_full_pipeline=False,
             allow_reflex=True,
             llm_provider="mock",
+            architect_provider="deterministic",
+            user_confirmed=False,
+        )
+    if lowered.startswith("/ask "):
+        payload = _command_payload(stripped, "/ask")
+        return SmokeMapping(
+            command="/ask",
+            shell_text=payload,
+            force_full_pipeline=False,
+            allow_reflex=False,
+            llm_provider=provider,
             architect_provider="deterministic",
             user_confirmed=False,
         )
@@ -210,6 +233,7 @@ def render_dry_run(provider: str = "mock", debug: bool = True) -> str:
         "/ping",
         "/mode",
         "/reflex turn on tv",
+        "/ask Explain why bicycles are useful for short city trips.",
         "/math x + y = 110 / x - y = 100",
         "/certificate_mock",
         "/certificate_gemini",

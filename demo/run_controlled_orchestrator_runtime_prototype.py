@@ -49,6 +49,10 @@ class RuntimeResult:
     architect_skipped: bool
     executor_skipped: bool
     reuse_applied: bool
+    direct_reuse_applied: bool
+    gt_decision: str
+    drs_write_count: int
+    root_created_final_output: bool
     reason: str
 
 
@@ -141,10 +145,15 @@ def _runtime_result(scenario: RuntimeScenario, root_path: Path) -> RuntimeResult
             architect_skipped=True,
             executor_skipped=True,
             reuse_applied=False,
+            direct_reuse_applied=False,
+            gt_decision="none",
+            drs_write_count=0,
+            root_created_final_output=False,
             reason=gate.reason,
         )
 
     final_output, trace = _execute_approved_route(scenario, root_path)
+    reuse_applied = bool(trace.get("reuse_applied", False))
     return RuntimeResult(
         scenario=scenario.gate_scenario.scenario,
         proposed_route=scenario.gate_scenario.proposed_route,
@@ -158,7 +167,11 @@ def _runtime_result(scenario: RuntimeScenario, root_path: Path) -> RuntimeResult
         root_final_authority=final_output.get("created_by") == "root_orchestrator",
         architect_skipped=bool(trace.get("architect_skipped", False)),
         executor_skipped=bool(trace.get("executor_skipped", False)),
-        reuse_applied=bool(trace.get("reuse_applied", False)),
+        reuse_applied=reuse_applied,
+        direct_reuse_applied=reuse_applied and trace.get("reuse_decision") == "direct_reuse",
+        gt_decision=(trace.get("gt_report") or {}).get("decision", "none"),
+        drs_write_count=len(final_output.get("drs_writes", [])),
+        root_created_final_output=final_output.get("created_by") == "root_orchestrator",
         reason="Root executed the approved equivalent route after all controlled gates passed.",
     )
 

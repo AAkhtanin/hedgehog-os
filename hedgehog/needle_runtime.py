@@ -4,6 +4,8 @@ from dataclasses import asdict
 from dataclasses import dataclass
 from typing import Any
 
+from hedgehog.time_model import make_time_envelope
+
 
 FAILURE_KINDS = {
     "none",
@@ -177,3 +179,87 @@ def execute_needle_call(call: NeedleCall) -> NeedleExecutionResult:
             quarantine_required=True,
             result_payload={"exception_type": type(exc).__name__},
         )
+
+
+def needle_result_to_result_proposal(
+    result: NeedleExecutionResult,
+    *,
+    request_id: str,
+    session_anchor: str = "needle_runtime_failure_integration",
+) -> dict[str, Any]:
+    proposal_status = result.result_proposal_status
+    safe_for_gt = result.status in {"completed", "blocked", "degraded"}
+    blocked_reason = None
+    requires_human_input = False
+    task_completed = proposal_status == "completed"
+    risk_severity = "low"
+
+    if proposal_status == "blocked":
+        blocked_reason = result.failure_kind
+        risk_severity = "medium"
+    elif proposal_status == "degraded":
+        blocked_reason = result.failure_kind
+        risk_severity = "medium"
+    elif proposal_status == "failed":
+        blocked_reason = result.failure_kind
+        risk_severity = "high"
+    if result.permission_required:
+        requires_human_input = True
+
+    return {
+        "proposal_id": f"proposal:{request_id}:{result.needle_id}:{result.failure_kind}",
+        "request_id": request_id,
+        "producer": {
+            "executor_id": "needle_runtime_adapter",
+            "needle_id": result.needle_id,
+        },
+        "vector_id": f"needle_runtime_{result.needle_id}",
+        "plan_id": f"plan:{request_id}:needle_runtime_adapter",
+        "result_payload": {
+            "source": "needle_runtime",
+            "needle_id": result.needle_id,
+            "status": proposal_status,
+            "failure_kind": result.failure_kind,
+            "result_payload": dict(result.result_payload),
+            "quarantine_required": result.quarantine_required,
+            "circuit_breaker_opened": result.circuit_breaker_opened,
+            "permission_required": result.permission_required,
+            "no_real_external_action": result.no_real_external_action,
+            "safe_for_gt": safe_for_gt,
+            "root_crash_risk_contained": True,
+            "artifact_type": "needle_runtime_result",
+            "task_completed": task_completed,
+            "requires_human_input": requires_human_input,
+            "blocked_reason": blocked_reason,
+        },
+        "evidence": [
+            {
+                "evidence_id": f"evidence:{request_id}:{result.needle_id}:{result.failure_kind}",
+                "kind": "audit",
+                "description": (
+                    "NeedleRuntime returned a structured mock result with no external action."
+                ),
+                "ref": result.audit_event["event_type"],
+            }
+        ],
+        "cost": {
+            "tokens": 0,
+            "walltime_ms": 0,
+            "toolcalls": 0,
+        },
+        "risks": [
+            {
+                "risk_id": f"risk:needle_runtime:{result.failure_kind}",
+                "severity": risk_severity,
+                "description": f"NeedleRuntime outcome: {result.failure_kind}.",
+            }
+        ],
+        "time_envelope": make_time_envelope(session_anchor),
+        "trace_refs": [
+            {
+                "trace_id": f"trace:{request_id}:needle_runtime",
+                "span_id": "needle_runtime_adapter",
+                "kind": "needle_runtime",
+            }
+        ],
+    }

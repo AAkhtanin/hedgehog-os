@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from demo.run_live_controlled_smoke import _result as live_controlled_smoke_result
 from hedgehog.drs import LocalDRS
 from hedgehog.root_orchestrator import RootOrchestrator
 
@@ -155,6 +156,133 @@ def _format_debug_text(summary: dict) -> str:
     return "\n".join(lines)
 
 
+def _is_controlled_smoke_command(text: str) -> bool:
+    return text.strip().lower() in {"/controlled_gemini", "/full_controlled_gemini"}
+
+
+def _controlled_smoke_debug_text(summary: dict) -> str:
+    lines = ["[debug]"]
+    for key in [
+        "request_id",
+        "execution_mode",
+        "route",
+        "orchestrator_provider",
+        "orchestrator_proposal_valid",
+        "suggested_route",
+        "guard_completeness_score",
+        "guards_complete",
+        "integration_gate_decision",
+        "controlled_execution_performed",
+        "architect_provider",
+        "architect_llm_used",
+        "gt_decision",
+        "final_status",
+        "root_final_authority",
+        "root_created_final_output",
+        "uncontrolled_delegation",
+        "no_real_external_action",
+        "drs_writes",
+        "trace_path",
+    ]:
+        lines.append(f"{key}: {summary[key]}")
+    return "\n".join(lines)
+
+
+def _handle_controlled_smoke_command(
+    *,
+    text: str,
+    chat_id: str,
+    drs_root: Path,
+    debug: bool,
+    llm_provider: str,
+) -> dict:
+    request_id = _make_request_id(chat_id, text)
+    provider = "gemini" if llm_provider == "gemini" else "mock"
+    result = live_controlled_smoke_result(provider=provider)
+    proposal_valid = result.proposal.proposal_status == "valid"
+    trace_path = _trace_file_path(drs_root, request_id)
+    trace_path.parent.mkdir(parents=True, exist_ok=True)
+    reply_text = (
+        "Controlled Gemini smoke completed."
+        if result.controlled_execution_performed
+        else "Controlled Gemini smoke safely blocked."
+    )
+    summary = {
+        "request_id": request_id,
+        "execution_mode": result.root.execution_mode,
+        "route": result.root.route,
+        "orchestrator_provider": result.proposal.provider,
+        "orchestrator_proposal_valid": proposal_valid,
+        "suggested_route": result.proposal.suggested_route,
+        "guard_completeness_score": f"{result.guard_quality.guard_completeness_score:.2f}",
+        "guards_complete": result.guard_quality.guards_complete,
+        "integration_gate_decision": result.gate_decision,
+        "controlled_execution_performed": result.controlled_execution_performed,
+        "architect_provider": result.root.architect_provider,
+        "architect_llm_used": result.root.architect_llm_used,
+        "gt_decision": result.root.gt_decision,
+        "final_status": result.root.final_status,
+        "root_final_authority": result.root.root_final_authority,
+        "root_created_final_output": result.root.root_created_final_output,
+        "uncontrolled_delegation": False,
+        "no_real_external_action": True,
+        "drs_writes": result.root.drs_write_count,
+        "trace_path": str(trace_path),
+    }
+    trace_payload = {
+        "request_id": request_id,
+        "chat_id": chat_id,
+        "message_summary": {"command": text.strip().lower()},
+        "final_output": {
+            "request_id": request_id,
+            "created_by": "root_orchestrator" if result.root.root_created_final_output else "none",
+            "status": result.root.final_status,
+            "answer": reply_text,
+            "drs_writes": [],
+        },
+        "debug_summary": summary,
+        "trace": {
+            "execution_mode": result.root.execution_mode,
+            "route": result.root.route,
+            "controlled_execution_performed": result.controlled_execution_performed,
+            "orchestrator_provider": result.proposal.provider,
+            "suggested_route": result.proposal.suggested_route,
+            "integration_gate_decision": result.gate_decision,
+            "root_final_authority": result.root.root_final_authority,
+            "no_real_external_action": True,
+        },
+    }
+    trace_path.write_text(
+        json.dumps(_json_safe(trace_payload), indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+    return {
+        "reply_text": reply_text,
+        "debug_text": _controlled_smoke_debug_text(summary) if debug else "",
+        "request_id": request_id,
+        "chat_id": chat_id,
+        "trace_path": str(trace_path),
+        "work_record_ids": [],
+        "final_status": result.root.final_status,
+        "execution_mode": result.root.execution_mode,
+        "route": result.root.route,
+        "orchestrator_provider": result.proposal.provider,
+        "orchestrator_proposal_valid": proposal_valid,
+        "suggested_route": result.proposal.suggested_route,
+        "guard_completeness_score": summary["guard_completeness_score"],
+        "guards_complete": result.guard_quality.guards_complete,
+        "integration_gate_decision": result.gate_decision,
+        "controlled_execution_performed": result.controlled_execution_performed,
+        "architect_provider": result.root.architect_provider,
+        "architect_llm_used": result.root.architect_llm_used,
+        "gt_decision": result.root.gt_decision,
+        "root_final_authority": result.root.root_final_authority,
+        "root_created_final_output": result.root.root_created_final_output,
+        "uncontrolled_delegation": False,
+        "no_real_external_action": True,
+    }
+
+
 def handle_telegram_text(
     *,
     text: str,
@@ -172,6 +300,15 @@ def handle_telegram_text(
     user_confirmed: bool = False,
 ) -> dict:
     drs_root = Path(drs_root)
+    if _is_controlled_smoke_command(text):
+        return _handle_controlled_smoke_command(
+            text=text,
+            chat_id=chat_id,
+            drs_root=drs_root,
+            debug=debug,
+            llm_provider=llm_provider,
+        )
+
     request_id = _make_request_id(chat_id, text)
     session_anchor = f"telegram:{chat_id}"
     drs = LocalDRS(drs_root)

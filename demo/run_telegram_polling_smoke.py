@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
 
+from demo.run_live_controlled_smoke import _result as live_controlled_smoke_result
 from hedgehog.telegram_shell import handle_telegram_text
 from telegram_bot import _load_telegram_token, format_telegram_response
 
@@ -29,6 +30,7 @@ class SmokeMapping:
     user_confirmed: bool
     local_only: bool = False
     local_reply: str = ""
+    controlled_smoke: bool = False
 
 
 ShellHandler = Callable[..., dict]
@@ -81,7 +83,7 @@ def map_smoke_command(
             local_reply=(
                 "safe smoke commands: /ping, /mode, /reflex turn on tv, "
                 "/ask <text>, /math x + y = 110 / x - y = 100, /certificate_mock, "
-                "/certificate_gemini, /debug_last"
+                "/certificate_gemini, /controlled_gemini, /debug_last"
             ),
         )
     if lowered == "/debug_last":
@@ -161,6 +163,17 @@ def map_smoke_command(
             architect_provider="gemini",
             user_confirmed=False,
         )
+    if lowered in {"/controlled_gemini", "/full_controlled_gemini"}:
+        return SmokeMapping(
+            command="/controlled_gemini" if lowered == "/controlled_gemini" else "/full_controlled_gemini",
+            shell_text="I need a government certificate.",
+            force_full_pipeline=True,
+            allow_reflex=False,
+            llm_provider=provider,
+            architect_provider=provider,
+            user_confirmed=False,
+            controlled_smoke=True,
+        )
     if lowered == "/full_gemini certificate":
         return SmokeMapping(
             command="/full_gemini",
@@ -181,6 +194,54 @@ def map_smoke_command(
         architect_provider="deterministic",
         user_confirmed=False,
     )
+
+
+def _bool_text(value: Any) -> str:
+    return "true" if bool(value) else "false"
+
+
+def _controlled_smoke_response(*, provider: str, debug: bool) -> dict:
+    result = live_controlled_smoke_result(provider=provider)
+    proposal_valid = result.proposal.proposal_status == "valid"
+    reply = (
+        "Controlled Gemini smoke completed."
+        if result.controlled_execution_performed
+        else "Controlled Gemini smoke safely blocked."
+    )
+    debug_lines = [
+        "[debug]",
+        f"execution_mode: {result.root.execution_mode}",
+        f"route: {result.root.route}",
+        f"orchestrator_provider: {result.proposal.provider}",
+        f"orchestrator_proposal_valid: {_bool_text(proposal_valid)}",
+        f"suggested_route: {result.proposal.suggested_route}",
+        f"guard_completeness_score: {result.guard_quality.guard_completeness_score:.2f}",
+        f"guards_complete: {_bool_text(result.guard_quality.guards_complete)}",
+        f"integration_gate_decision: {result.gate_decision}",
+        f"controlled_execution_performed: {_bool_text(result.controlled_execution_performed)}",
+        f"architect_provider: {result.root.architect_provider}",
+        f"architect_llm_used: {_bool_text(result.root.architect_llm_used)}",
+        f"gt_decision: {result.root.gt_decision}",
+        f"final_status: {result.root.final_status}",
+        f"root_final_authority: {_bool_text(result.root.root_final_authority)}",
+        f"root_created_final_output: {_bool_text(result.root.root_created_final_output)}",
+        "uncontrolled_delegation: false",
+        "no_real_external_action: true",
+        f"drs_writes: {result.root.drs_write_count}",
+        "trace_path: none",
+    ]
+    debug_text = "\n".join(debug_lines) if debug else ""
+    return {
+        "reply_text": reply,
+        "debug_text": debug_text,
+        "response_text": _sanitize_output(format_telegram_response(reply, debug_text)),
+        "shell_called": False,
+        "controlled_smoke_called": True,
+        "controlled_smoke_status": result.live_controlled_smoke_status,
+        "execution_mode": result.root.execution_mode,
+        "route": result.root.route,
+        "final_status": result.root.final_status,
+    }
 
 
 def handle_smoke_text(
@@ -205,6 +266,13 @@ def handle_smoke_text(
             "response_text": format_telegram_response(mapping.local_reply, debug_text if debug else ""),
             "mapping": mapping,
             "shell_called": False,
+        }
+
+    if mapping.controlled_smoke:
+        result = _controlled_smoke_response(provider=provider, debug=debug)
+        return {
+            **result,
+            "mapping": mapping,
         }
 
     result = shell_handler(
@@ -237,6 +305,8 @@ def render_dry_run(provider: str = "mock", debug: bool = True) -> str:
         "/math x + y = 110 / x - y = 100",
         "/certificate_mock",
         "/certificate_gemini",
+        "/controlled_gemini",
+        "/full_controlled_gemini",
         "/full_gemini certificate",
         "/debug_last",
     ]

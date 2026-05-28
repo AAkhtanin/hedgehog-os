@@ -267,3 +267,56 @@ def test_telegram_shell_reflex_priority_over_existing_work_context(tmp_path):
     assert "executor_skipped: True" in result["debug_text"]
     assert trace["trace"]["memory_context_applied"] is True
     assert first["work_record_ids"][0] in trace["trace"]["memory_source_record_ids"]
+
+
+def test_telegram_shell_direct_controlled_gemini_command_routes_to_controlled_smoke(tmp_path):
+    result = handle_telegram_text(
+        text="/controlled_gemini",
+        chat_id="chat_controlled_direct",
+        drs_root=tmp_path / "drs",
+        needles_dir=NEEDLES_DIR,
+        debug=True,
+        llm_provider="mock",
+        architect_provider="mock",
+    )
+
+    assert result["execution_mode"] == "proof_full_pipeline"
+    assert result["route"] == "proof_full_pipeline"
+    assert result["orchestrator_provider"] == "mock"
+    assert result["orchestrator_proposal_valid"] is True
+    assert result["suggested_route"] == "proof_full_pipeline"
+    assert result["guard_completeness_score"] == "1.00"
+    assert result["guards_complete"] is True
+    assert result["integration_gate_decision"] == "eligible_for_controlled_dry_run"
+    assert result["controlled_execution_performed"] is True
+    assert result["architect_provider"] == "mock"
+    assert result["architect_llm_used"] is False
+    assert result["gt_decision"] == "accept"
+    assert result["final_status"] == "success"
+    assert result["root_final_authority"] is True
+    assert result["root_created_final_output"] is True
+    assert result["uncontrolled_delegation"] is False
+    assert result["no_real_external_action"] is True
+    assert "execution_mode: proof_full_pipeline" in result["debug_text"]
+    assert "orchestrator_provider: mock" in result["debug_text"]
+    assert "controlled_execution_performed: True" in result["debug_text"]
+    assert "root_final_authority: True" in result["debug_text"]
+    assert "execution_mode: llm_general" not in result["debug_text"]
+
+
+def test_telegram_shell_direct_full_controlled_gemini_alias_routes_to_controlled_smoke(tmp_path):
+    result = handle_telegram_text(
+        text="/full_controlled_gemini",
+        chat_id="chat_controlled_alias",
+        drs_root=tmp_path / "drs",
+        needles_dir=NEEDLES_DIR,
+        debug=True,
+        llm_provider="mock",
+        architect_provider="mock",
+    )
+
+    assert result["execution_mode"] == "proof_full_pipeline"
+    assert result["route"] == "proof_full_pipeline"
+    assert result["controlled_execution_performed"] is True
+    assert result["integration_gate_decision"] == "eligible_for_controlled_dry_run"
+    assert result["root_final_authority"] is True

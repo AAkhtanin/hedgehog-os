@@ -119,6 +119,22 @@ Needle protocol steps invariant:
 - Protocol execution must produce audit/DRS evidence when action state changes.
 - Unknown protocol steps must not execute.
 
+Canonical needle topology invariant:
+
+- Needles are contract modules and capability boundaries, not Executor-owned plugins.
+- A needle may be Root-visible, cluster-local, or branch-bound.
+- Executor/runtime-port may call a permitted bounded needle capability, but Executor does not own the needle.
+- Loading a needle does not grant sovereignty.
+- A needle-local Orchestrator, if present, is not global Root.
+- Needle outcomes pass through the canonical execution pipeline: `ResultProposal` -> Post V&V -> GT/Root decision -> DRS/audit/quarantine/writeback.
+- Executor may call a permitted needle capability, but Root owns authority.
+- Marennya and UP are built-in systemic/internal needles, not ordinary external action needles:
+  - Marennya is a reflective/internal-improvement needle.
+  - UP is a transfer/cross-domain-opportunity needle.
+- Future systemic needle classes may include action, data, device, validator, reflective, transfer, scheduler, policy/governance, and memory-evolution/GT.
+- Wording and implementation must avoid treating a needle as integrated into Executor, owned by Executor, or merely a plugin/tool.
+- The current NeedleRuntime Failure Integration is a demo-level adapter. It proves `NeedleExecutionResult` can become ResultProposal-compatible and Post V&V-visible. It does not yet prove full Root-level needle planning, AVF selection, DRS quarantine writeback, or production external API execution.
+
 9. CandidateVector sources
    - `CandidateVector` values may come only from installed needles, Local DRS, external DRS pointers, or fallback exploration templates.
    - CandidateVectors must not be freely hallucinated by an LLM.

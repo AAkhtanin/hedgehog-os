@@ -129,6 +129,44 @@ skeleton proving that future TV, pizza, airline, calendar, bank, or corporate
 needles can expose constrained workflows without requiring a large LLM to invent
 the process each time.
 
+### Canonical Needle Topology
+
+Needles are contract modules and capability boundaries, not plugins owned by
+Executor. A needle may be Root-visible, cluster-local, or branch-bound. An
+Executor or runtime port may execute a permitted bounded capability call, but
+it does not own the needle and cannot grant sovereignty.
+
+Loading a needle does not grant sovereignty. A needle-local Orchestrator, if
+present, is local to that needle or fractal cell; it is not global Root.
+
+Needle outcomes pass through canonical pipeline boundaries:
+
+```text
+NeedleExecutionResult / bounded capability output
+-> ResultProposal
+-> Post V&V
+-> GT / Root decision
+-> DRS / audit / quarantine / writeback
+```
+
+Executor may call a permitted needle capability, but Root owns authority.
+Needle output must not bypass Post V&V, GT, Root commit, audit, DRS writeback,
+or quarantine policy.
+
+Marennya and UP are built-in systemic/internal needles:
+
+- Marennya is a reflective/internal-improvement needle.
+- UP is a transfer/cross-domain-opportunity needle.
+
+They are not ordinary external action needles. Future systemic needle classes
+may include action, data, device, validator, reflective, transfer, scheduler,
+policy/governance, and memory-evolution/GT.
+
+The current NeedleRuntime Failure Integration is a demo-level adapter. It
+proves `NeedleExecutionResult` can become ResultProposal-compatible and Post
+V&V-visible. It does not yet prove full Root-level needle planning, AVF
+selection, DRS quarantine writeback, or production external API execution.
+
 ## 2. Non-Goals
 
 The MVP explicitly is not:

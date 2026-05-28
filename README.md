@@ -43,6 +43,26 @@ Real-world services often require two structured expansions at once. External re
 
 Needles are declarative, auditable execution and meaning contracts. A needle may declare owner, version, signature, capabilities, allowed and forbidden actions, schemas, validators, TTL, trust, endpoints, permission model, rollback policy, and failure policy. Loading a needle does not grant sovereignty; it only makes bounded capabilities available to Root-controlled routing and validation.
 
+## Canonical Needle Topology
+
+Needles are contract modules and capability boundaries, not Executor-owned plugins. A needle may be Root-visible, cluster-local, or branch-bound. An Executor or runtime port may call a permitted bounded needle capability, but it does not own the needle and cannot grant it authority.
+
+Loading a needle does not grant sovereignty. If a needle-local Orchestrator exists, it is local to that needle or fractal cell; it is not global Root. Needle outcomes pass through the canonical execution pipeline:
+
+```text
+NeedleExecutionResult / bounded capability output
+-> ResultProposal
+-> Post V&V
+-> GT / Root decision
+-> DRS / audit / quarantine / writeback
+```
+
+Executor may call a permitted needle capability, but Root owns authority. Needle output must not bypass Post V&V, GT, Root commit, audit, DRS writeback, or quarantine policy.
+
+Marennya and UP are built-in systemic/internal needles, not ordinary external action needles. Marennya is a reflective/internal-improvement needle. UP is a transfer/cross-domain-opportunity needle. Future systemic needle classes may include action, data, device, validator, reflective, transfer, scheduler, policy/governance, and memory-evolution/GT needles.
+
+The current NeedleRuntime Failure Integration is a demo-level adapter. It proves `NeedleExecutionResult` can become ResultProposal-compatible and Post V&V-visible. It does not yet prove full Root-level needle planning, AVF selection, DRS quarantine writeback, or production external API execution.
+
 ## DRS Is Not Just Memory
 
 DRS stores task outcomes, provenance, trust, failures, dead ends, reusable patterns, external pointers, quarantine, and TimeEnvelope-bearing records. Retrieval must be temporal and time-aware through TemporalQuery. DRS is not merely vector recall or chatbot memory; it is a layered reflexive store for what happened, when it was valid, who produced it, how much it is trusted, and whether it can safely influence future runs.

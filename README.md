@@ -2,6 +2,51 @@
 
 This repository demonstrates an AI OS-style runtime pipeline using deterministic Python stubs, JSON contracts, DRS memory routing, AVF scoring, GT selection, and Root-only final output. It is not a chatbot, not an agent chain, and not a UI project. The current MVP is a proof-of-architecture runtime for a future AI OS, centered on a mock government certificate request.
 
+## What Hedgehog OS Is
+
+Hedgehog OS / Fractal Reflexive OS is a fractal controlled-runtime topology for role-bounded intelligence. LLM/SLM components are cognitive organs inside bounded roles, not sovereign actors. Subordinate intelligence can propose routes, plans, drafts, or results, but Root commits.
+
+The architecture is based on fractal authority topology, root-only commit, and non-transitive delegation: the vassal of my vassal is not my vassal. A delegated subcell may manage its own bounded local authority, but that authority does not automatically propagate upward, sideways, or outward.
+
+## What Hedgehog OS Is Not
+
+Hedgehog OS is not merely:
+
+- an agent framework;
+- a plugin wrapper;
+- a LangChain-like workflow engine;
+- a chatbot memory system;
+- a simple guardrail layer;
+- an autonomous agent wrapper.
+
+Needles are executable meaning contracts, not plugins. DRS is a time/provenance/trust topology, not ordinary vector memory. AVF runs before planning. Architect is bounded by AttractorPacket. Executors return ResultProposal only. Post V&V runs before GT. GT selects stability/payoff, not truth. FinalOutput is created only by Root.
+
+## Core Authority Invariants
+
+- Root is final authority and the only creator of FinalOutput.
+- Orchestrator may route/frame proposals, but must not create FinalOutput.
+- Architect creates PlanGraph from AttractorPacket, but does not answer the user.
+- Executor returns ResultProposal only.
+- Post V&V validates proposals before GT.
+- GT selects/stabilizes under payoff and policy constraints, but does not commit.
+- Root creates FinalOutput and performs Work DRS writeback.
+
+## Controlled Expansion, Not Only Narrowing
+
+Hedgehog OS is not just narrowing like an Akinator. Large intent should expand into bounded candidate branches and fractal cells, then be constrained by AVF, HardMask, GT, and Root commit. The goal is organized complexity: enough branching to represent the real task, with explicit budgets and authority boundaries to prevent uncontrolled agent sprawl.
+
+## Two-Explosion Coupling
+
+Real-world services often require two structured expansions at once. External requirements expand into a service tree, and local DRS/private slots expand into a source tree. For example, a tax, airline, or government needle may declare required external slots while Local DRS exposes private source slots. Root validates a sealed mapping from local slots to verified external slots. An LLM may reason over schema, mapping, and policy without seeing raw private values. Commit remains Root-authorized.
+
+## Needles Are Contracts, Not Plugins
+
+Needles are declarative, auditable execution and meaning contracts. A needle may declare owner, version, signature, capabilities, allowed and forbidden actions, schemas, validators, TTL, trust, endpoints, permission model, rollback policy, and failure policy. Loading a needle does not grant sovereignty; it only makes bounded capabilities available to Root-controlled routing and validation.
+
+## DRS Is Not Just Memory
+
+DRS stores task outcomes, provenance, trust, failures, dead ends, reusable patterns, external pointers, quarantine, and TimeEnvelope-bearing records. Retrieval must be temporal and time-aware through TemporalQuery. DRS is not merely vector recall or chatbot memory; it is a layered reflexive store for what happened, when it was valid, who produced it, how much it is trusted, and whether it can safely influence future runs.
+
 ## What This Demo Proves
 
 - Root-controlled pipeline from event intake to final output.
@@ -156,16 +201,64 @@ run:
 
 ## Current MVP Limitations
 
+The MVP proves core runtime invariants, not production-scale resilience.
+
 - Deterministic stubs only.
 - Local JSON DRS only.
 - ReuseGate scoring exists; direct reuse is implemented only as an explicit optional CLI/test scenario, not as the default path.
 - No pointer resolution yet.
 - No real APIs.
 - No UI.
-- No Telegram shell yet.
+- Telegram shell and smoke runners are interface adapters only, not production bot infrastructure.
+
+## Current Implementation Checkpoint
+
+The current implementation chain includes:
+
+```text
+Intent Matrix
+-> Shadow Orchestrator
+-> Route Validator
+-> Guard Completeness
+-> Integration Gate
+-> Controlled Runtime Prototype
+```
+
+The prototype allows Orchestrator proposals to influence Root execution only after validator and gate approval. `controlled_orchestrator_enabled` remains `prototype_only`; this is not production uncontrolled runtime.
+
+## Known Production Risks And Planned Hardening
+
+### Large Graph Scaling
+
+Risk: flat PlanGraph execution does not scale to thousands of nodes.
+
+Mitigation: bounded fractal subgraphs, branch budgets, `max_plan_nodes`, `max_edges`, `max_depth`, `max_parallelism`, boundary snapshots, and top-level GT over branch summaries or ResultProposals rather than raw nodes.
+
+Future tests: oversized graph rejection, subgraph boundary limits, and proof that GT does not score 10k raw nodes as one flat list.
+
+### Needle Chaos
+
+Risk: external needles may timeout, change contracts, return invalid JSON, or fail.
+
+Mitigation: a NeedleRuntime with timeout policy, retries, circuit breakers, contract versioning, schema validation, invalid JSON quarantine, permission gates, health scoring, degraded mode, and audit. Failed needles must produce blocked or failed ResultProposals, not crash Root.
+
+Future tests: needle timeout, invalid JSON quarantine, version mismatch, circuit breaker behavior, and parallel needle failure.
+
+### Cold Start
+
+Risk: empty DRS increases cost and lowers reuse.
+
+Mitigation: installed needles, fallback templates, controlled exploration, low history confidence, strict budgets, and mandatory DRS writeback. Repeated tasks should converge toward memory-informed or direct-reuse behavior when trust and policy allow.
+
+Future tests: empty DRS vector generation, fallback template use, first-run writeback, second-run memory influence, and direct reuse convergence.
 
 ## Roadmap
 
+- Controlled Runtime Trace Visibility.
+- Live Controlled Smoke for safe certificate-demo.
+- Cold Start Benchmark v0.1.
+- NeedleRuntime Chaos Layer.
+- Large Graph Stress Layer.
 - Adaptive mode router that chooses direct reuse only when policy, permission, and tests allow it.
 - Richer DRS pointer resolution.
 - Marennya validation and promotion.

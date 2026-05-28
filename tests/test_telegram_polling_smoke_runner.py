@@ -183,7 +183,9 @@ def test_controlled_gemini_mock_mode_returns_controlled_debug():
 
     assert result["shell_called"] is False
     assert result["controlled_smoke_called"] is True
-    assert result["reply_text"] == "Controlled Gemini smoke completed."
+    assert result["reply_text"] != "Controlled Gemini smoke completed."
+    assert "Root executed the approved proof_full_pipeline route" in result["reply_text"]
+    assert "no real external action was performed" in result["reply_text"]
     debug_text = result["debug_text"]
     assert "execution_mode: proof_full_pipeline" in debug_text
     assert "route: proof_full_pipeline" in debug_text

@@ -39,6 +39,11 @@ def _trace_file_path(drs_root: Path, request_id: str) -> Path:
     return drs_root.parent / "logs" / "traces" / f"{safe_request_id}.json"
 
 
+def _debug_last_path(drs_root: Path, chat_id: str) -> Path:
+    safe_chat_id = _sanitize_id(chat_id) or "chat"
+    return drs_root.parent / "logs" / "traces" / f"last_debug_{safe_chat_id}.json"
+
+
 def _trace_value(trace: dict, key: str, default: Any = None) -> Any:
     return trace.get(key, default)
 
@@ -188,6 +193,71 @@ def _controlled_smoke_debug_text(summary: dict) -> str:
     return "\n".join(lines)
 
 
+def _write_last_debug(drs_root: Path, chat_id: str, debug_text: str, summary: dict) -> None:
+    if not debug_text:
+        return
+    path = _debug_last_path(drs_root, chat_id)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "chat_id": chat_id,
+        "debug_text": debug_text,
+        "debug_summary": summary,
+    }
+    path.write_text(
+        json.dumps(_json_safe(payload), indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+
+
+def _handle_debug_last_command(*, chat_id: str, drs_root: Path, debug: bool) -> dict:
+    request_id = _make_request_id(chat_id, "/debug_last")
+    path = _debug_last_path(drs_root, chat_id)
+    if path.exists():
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        debug_text = payload.get("debug_text", "") if debug else ""
+        summary = payload.get("debug_summary", {})
+    else:
+        debug_text = (
+            "[debug]\n"
+            "command: /debug_last\n"
+            "debug_last_available: False"
+            if debug
+            else ""
+        )
+        summary = {}
+    return {
+        "reply_text": "last debug summary",
+        "text": "last debug summary",
+        "debug_text": debug_text,
+        "request_id": request_id,
+        "chat_id": chat_id,
+        "trace_path": str(path),
+        "work_record_ids": [],
+        "final_status": summary.get("final_status", "none"),
+        "execution_mode": summary.get("execution_mode", "debug_last"),
+        "route": summary.get("route", "debug_last"),
+    }
+
+
+def _controlled_smoke_reply_text(result: Any) -> str:
+    if result.controlled_execution_performed:
+        gt_phrase = (
+            "GT accepted the result"
+            if result.root.gt_decision == "accept"
+            else f"GT decision was {result.root.gt_decision}"
+        )
+        return (
+            "Controlled certificate flow completed. "
+            f"Root executed the approved {result.root.route} route, "
+            f"{gt_phrase}, and no real external action was performed."
+        )
+    if result.proposal.proposal_status != "valid":
+        reason = "invalid Orchestrator proposal"
+    else:
+        reason = result.gate_decision
+    return f"Controlled certificate flow was blocked safely before execution: {reason}."
+
+
 def _handle_controlled_smoke_command(
     *,
     text: str,
@@ -202,11 +272,7 @@ def _handle_controlled_smoke_command(
     proposal_valid = result.proposal.proposal_status == "valid"
     trace_path = _trace_file_path(drs_root, request_id)
     trace_path.parent.mkdir(parents=True, exist_ok=True)
-    reply_text = (
-        "Controlled Gemini smoke completed."
-        if result.controlled_execution_performed
-        else "Controlled Gemini smoke safely blocked."
-    )
+    reply_text = _controlled_smoke_reply_text(result)
     summary = {
         "request_id": request_id,
         "execution_mode": result.root.execution_mode,
@@ -256,9 +322,12 @@ def _handle_controlled_smoke_command(
         json.dumps(_json_safe(trace_payload), indent=2, sort_keys=True),
         encoding="utf-8",
     )
+    debug_text = _controlled_smoke_debug_text(summary) if debug else ""
+    _write_last_debug(drs_root, chat_id, debug_text, summary)
     return {
         "reply_text": reply_text,
-        "debug_text": _controlled_smoke_debug_text(summary) if debug else "",
+        "text": reply_text,
+        "debug_text": debug_text,
         "request_id": request_id,
         "chat_id": chat_id,
         "trace_path": str(trace_path),
@@ -300,6 +369,9 @@ def handle_telegram_text(
     user_confirmed: bool = False,
 ) -> dict:
     drs_root = Path(drs_root)
+    if text.strip().lower() == "/debug_last":
+        return _handle_debug_last_command(chat_id=chat_id, drs_root=drs_root, debug=debug)
+
     if _is_controlled_smoke_command(text):
         return _handle_controlled_smoke_command(
             text=text,
@@ -345,10 +417,12 @@ def handle_telegram_text(
         json.dumps(_json_safe(trace_payload), indent=2, sort_keys=True),
         encoding="utf-8",
     )
+    debug_text = _format_debug_text(summary) if debug else ""
+    _write_last_debug(drs_root, chat_id, debug_text, summary)
 
     return {
         "reply_text": final_output["answer"],
-        "debug_text": _format_debug_text(summary) if debug else "",
+        "debug_text": debug_text,
         "request_id": request_id,
         "chat_id": chat_id,
         "trace_path": str(trace_path),

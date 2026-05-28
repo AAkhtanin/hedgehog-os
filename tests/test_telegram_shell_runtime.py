@@ -281,6 +281,11 @@ def test_telegram_shell_direct_controlled_gemini_command_routes_to_controlled_sm
     )
 
     assert result["execution_mode"] == "proof_full_pipeline"
+    assert result["reply_text"]
+    assert result["text"] == result["reply_text"]
+    assert result["reply_text"] != "Controlled Gemini smoke completed."
+    assert "Root executed the approved proof_full_pipeline route" in result["reply_text"]
+    assert "no real external action was performed" in result["reply_text"]
     assert result["route"] == "proof_full_pipeline"
     assert result["orchestrator_provider"] == "mock"
     assert result["orchestrator_proposal_valid"] is True
@@ -320,3 +325,38 @@ def test_telegram_shell_direct_full_controlled_gemini_alias_routes_to_controlled
     assert result["controlled_execution_performed"] is True
     assert result["integration_gate_decision"] == "eligible_for_controlled_dry_run"
     assert result["root_final_authority"] is True
+
+
+def test_telegram_shell_debug_last_returns_previous_controlled_summary(tmp_path):
+    drs_root = tmp_path / "drs"
+    first = handle_telegram_text(
+        text="/controlled_gemini",
+        chat_id="chat_controlled_debug_last",
+        drs_root=drs_root,
+        needles_dir=NEEDLES_DIR,
+        debug=True,
+        llm_provider="mock",
+        architect_provider="mock",
+    )
+    debug_last = handle_telegram_text(
+        text="/debug_last",
+        chat_id="chat_controlled_debug_last",
+        drs_root=drs_root,
+        needles_dir=NEEDLES_DIR,
+        debug=True,
+        llm_provider="mock",
+        architect_provider="mock",
+    )
+
+    assert first["execution_mode"] == "proof_full_pipeline"
+    assert debug_last["reply_text"] == "last debug summary"
+    assert debug_last["text"] == "last debug summary"
+    assert debug_last["execution_mode"] == "proof_full_pipeline"
+    assert debug_last["route"] == "proof_full_pipeline"
+    assert "execution_mode: proof_full_pipeline" in debug_last["debug_text"]
+    assert "route: proof_full_pipeline" in debug_last["debug_text"]
+    assert "controlled_execution_performed: True" in debug_last["debug_text"]
+    assert "integration_gate_decision: eligible_for_controlled_dry_run" in debug_last["debug_text"]
+    assert "root_final_authority: True" in debug_last["debug_text"]
+    assert "final_status: success" in debug_last["debug_text"]
+    assert "execution_mode: llm_general" not in debug_last["debug_text"]

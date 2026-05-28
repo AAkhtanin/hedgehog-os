@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from demo.run_live_controlled_smoke import _result as live_controlled_smoke_result
+from hedgehog.telegram_shell import _controlled_smoke_reply_text
 from hedgehog.telegram_shell import handle_telegram_text
 from telegram_bot import _load_telegram_token, format_telegram_response
 
@@ -203,11 +204,7 @@ def _bool_text(value: Any) -> str:
 def _controlled_smoke_response(*, provider: str, debug: bool) -> dict:
     result = live_controlled_smoke_result(provider=provider)
     proposal_valid = result.proposal.proposal_status == "valid"
-    reply = (
-        "Controlled Gemini smoke completed."
-        if result.controlled_execution_performed
-        else "Controlled Gemini smoke safely blocked."
-    )
+    reply = _controlled_smoke_reply_text(result)
     debug_lines = [
         "[debug]",
         f"execution_mode: {result.root.execution_mode}",

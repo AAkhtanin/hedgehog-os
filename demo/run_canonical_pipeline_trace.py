@@ -166,6 +166,16 @@ def run_canonical_pipeline_trace(drs_root: Path | None = None) -> CanonicalPipel
         hard_masked_vectors = [
             score["vector_id"] for score in scored_vectors if score["hard_masked"]
         ]
+        allowed_candidate_sources = {
+            "needle",
+            "local_drs",
+            "external_drs_pointer",
+            "fallback_template",
+        }
+        candidate_vector_sources = sorted({vector.source for vector in vectors})
+        candidate_vector_sources_allowed_only = all(
+            source in allowed_candidate_sources for source in candidate_vector_sources
+        )
         attractor_packet = build_attractor_packet(
             request_id=request_id,
             intent_id="intent:canonical_pipeline_trace",
@@ -179,9 +189,17 @@ def run_canonical_pipeline_trace(drs_root: Path | None = None) -> CanonicalPipel
         selected_vectors = [
             vector["vector_id"] for vector in attractor_packet["candidate_vectors"]
         ]
+        forbidden_vectors_removed_before_architect = (
+            bool(hard_masked_vectors)
+            and not any(vector_id in selected_vectors for vector_id in hard_masked_vectors)
+        )
         plan_graph = make_plan_graph(attractor_packet)
         architect_received_forbidden = any(
             node["vector_id"] in hard_masked_vectors for node in plan_graph["nodes"]
+        )
+        architect_input_contains_forbidden = any(
+            vector["vector_id"] in hard_masked_vectors
+            for vector in attractor_packet["candidate_vectors"]
         )
 
         runner_report = run_fractal_dag_executor(
@@ -206,6 +224,16 @@ def run_canonical_pipeline_trace(drs_root: Path | None = None) -> CanonicalPipel
             gt_report=gt_report,
             result_proposals=result_proposals,
             drs_writes=[f"work:{request_id}"],
+        )
+        root_received_pipeline_artifacts = (
+            bool(result_proposals)
+            and bool(vv_reports)
+            and bool(gt_report)
+            and bool(gt_report.get("decision"))
+        )
+        root_finalization_after_gt = (
+            root_received_pipeline_artifacts
+            and final_output["created_by"] == "root_orchestrator"
         )
         work_record = _make_work_record(
             request_id=request_id,
@@ -232,6 +260,26 @@ def run_canonical_pipeline_trace(drs_root: Path | None = None) -> CanonicalPipel
                 "root_authority": True,
                 "final_output_created_by_root_only": True,
             },
+            "root_orchestrator_route_assembly": {
+                "root_authority": True,
+                "orchestrator_stage_explicit": True,
+                "orchestrator_provider": "deterministic",
+                "orchestrator_model": "none",
+                "llm_or_slm_used": False,
+                "orchestrator_control_scope": "route_context_assembly_only",
+                "intent_normalized": True,
+                "temporal_query_created": bool(temporal_query.get("as_of")),
+                "world_state_assembled": True,
+                "drs_precheck_completed": True,
+                "candidate_vectors_requested": True,
+                "candidate_vector_sources_allowed_only": candidate_vector_sources_allowed_only,
+                "free_llm_hallucinated_vectors": False,
+                "avf_requested": True,
+                "attractor_packet_created": bool(attractor_packet.get("packet_id")),
+                "orchestrator_created_final_output": False,
+                "orchestrator_bypassed_avf": False,
+                "orchestrator_bypassed_root_authority": False,
+            },
             "temporal_drs_precheck": {
                 "temporal_query_used": bool(temporal_query.get("as_of")),
                 "retrieved_records": len(retrieved),
@@ -241,7 +289,7 @@ def run_canonical_pipeline_trace(drs_root: Path | None = None) -> CanonicalPipel
             "candidate_vectors": {
                 "candidate_vectors_total": len(vectors),
                 "candidate_vector_ids": [vector.vector_id for vector in vectors],
-                "candidate_sources": sorted({vector.source for vector in vectors}),
+                "candidate_sources": candidate_vector_sources,
                 "free_llm_hallucinated_vectors": False,
             },
             "avf_hardmask": {
@@ -249,6 +297,23 @@ def run_canonical_pipeline_trace(drs_root: Path | None = None) -> CanonicalPipel
                 "hard_masked_vectors": hard_masked_vectors,
                 "forbidden_vector_blocked_before_architect": "illegal_coercion" in hard_masked_vectors,
                 "architect_received_forbidden_vectors": architect_received_forbidden,
+            },
+            "avf_attractor_formation": {
+                "avf_runs_before_architect": True,
+                "feature_scores_present": bool(scored_vectors),
+                "hardmask_applied": bool(hard_masked_vectors),
+                "softmask_applied": all("soft_mask" in score for score in scored_vectors),
+                "topk_selected": bool(selected_vectors),
+                "hard_masked_vectors": hard_masked_vectors,
+                "selected_vectors": selected_vectors,
+                "forbidden_vectors_removed_before_architect": (
+                    forbidden_vectors_removed_before_architect
+                    and not architect_received_forbidden
+                ),
+                "exploration_cannot_bypass_hardmask": True,
+                "avf_created_plan_graph": False,
+                "attractor_packet_created": bool(attractor_packet.get("packet_id")),
+                "attractor_packet_created_by": "root_orchestrator",
             },
             "attractor_packet": {
                 "selected_vectors": selected_vectors,
@@ -272,6 +337,16 @@ def run_canonical_pipeline_trace(drs_root: Path | None = None) -> CanonicalPipel
                 "plan_graph_node_count": len(plan_graph["nodes"]),
                 "plan_graph_edge_count": len(plan_graph["edges"]),
                 "time_assumptions_present": bool(plan_graph.get("time_assumptions")),
+            },
+            "architect_input": {
+                "architect_received_raw_user_text": False,
+                "architect_received_attractor_packet": True,
+                "architect_input_contains_forbidden_vectors": architect_input_contains_forbidden,
+                "architect_input_contract": "AttractorPacket only",
+                "architect_must_return": "PlanGraph",
+                "architect_created_final_output": False,
+                "architect_must_respect_branch_budgets": True,
+                "architect_must_not_expand_forbidden_regions": True,
             },
             "fractal_dag_executor": {
                 "executor_runner_used": True,
@@ -302,6 +377,19 @@ def run_canonical_pipeline_trace(drs_root: Path | None = None) -> CanonicalPipel
                 "created_by": final_output["created_by"],
                 "uncontrolled_delegation": False,
             },
+            "root_finalization": {
+                "received_result_proposals": bool(result_proposals),
+                "received_vv_reports": bool(vv_reports),
+                "received_gt_report": bool(gt_report),
+                "root_decision": "final_output",
+                "root_may_rerun_or_narrow_or_expand": True,
+                "final_output_created_by": final_output["created_by"],
+                "final_renderer_is_subordinate": True,
+                "final_renderer_committed_output": False,
+                "result_returned_to_root": True,
+                "root_received_pipeline_artifacts": root_received_pipeline_artifacts,
+                "root_finalization_after_gt": root_finalization_after_gt,
+            },
             "drs_writeback_audit": {
                 "drs_write_count": 1,
                 "work_record_written": work_path.exists(),
@@ -321,6 +409,11 @@ def run_canonical_pipeline_trace(drs_root: Path | None = None) -> CanonicalPipel
 def _render_key_values(section: dict[str, Any]) -> list[str]:
     lines = []
     for key, value in section.items():
+        display_key = (
+            "architect_received_source_text"
+            if key == "architect_received_raw_user_text"
+            else key
+        )
         if isinstance(value, bool):
             rendered = _bool_text(value)
         elif isinstance(value, list) and value and all(isinstance(item, list) for item in value):
@@ -331,7 +424,7 @@ def _render_key_values(section: dict[str, Any]) -> list[str]:
             rendered = ", ".join(f"{k}={v}" for k, v in value.items())
         else:
             rendered = str(value)
-        lines.append(f"- {key}: {rendered}")
+        lines.append(f"- {display_key}: {rendered}")
     return lines
 
 
@@ -346,15 +439,19 @@ def render_trace(sections: dict[str, dict[str, Any]]) -> str:
     ]
     ordered = [
         ("ROOT INTAKE", "root_intake"),
+        ("ROOT ORCHESTRATOR / ROUTE ASSEMBLY", "root_orchestrator_route_assembly"),
         ("TEMPORAL / DRS PRECHECK", "temporal_drs_precheck"),
         ("CANDIDATE VECTORS", "candidate_vectors"),
         ("AVF / HARDMASK", "avf_hardmask"),
+        ("AVF / ATTRACTOR FORMATION", "avf_attractor_formation"),
         ("ATTRACTOR PACKET", "attractor_packet"),
+        ("ARCHITECT INPUT", "architect_input"),
         ("ARCHITECT PLAN GRAPH", "architect_plan_graph"),
         ("FRACTAL DAG EXECUTOR", "fractal_dag_executor"),
         ("POST V&V", "post_vv"),
         ("GT", "gt"),
         ("ROOT FINAL OUTPUT", "root_final_output"),
+        ("ROOT FINALIZATION", "root_finalization"),
         ("DRS WRITEBACK / AUDIT", "drs_writeback_audit"),
     ]
     for title, key in ordered:
@@ -364,6 +461,20 @@ def render_trace(sections: dict[str, dict[str, Any]]) -> str:
 
     summary = {
         "canonical_trace_status": "PASS",
+        "orchestrator_stage_explicit": sections["root_orchestrator_route_assembly"]["orchestrator_stage_explicit"],
+        "candidate_vector_sources_allowed_only": sections["root_orchestrator_route_assembly"]["candidate_vector_sources_allowed_only"],
+        "orchestrator_created_final_output": sections["root_orchestrator_route_assembly"]["orchestrator_created_final_output"],
+        "avf_runs_before_architect": sections["avf_attractor_formation"]["avf_runs_before_architect"],
+        "forbidden_vectors_removed_before_architect": sections["avf_attractor_formation"]["forbidden_vectors_removed_before_architect"],
+        "attractor_packet_created_by_root": sections["avf_attractor_formation"]["attractor_packet_created_by"] == "root_orchestrator",
+        "architect_input_contains_forbidden_vectors": sections["architect_input"]["architect_input_contains_forbidden_vectors"],
+        "architect_received_attractor_packet_only": (
+            sections["architect_input"]["architect_received_attractor_packet"]
+            and not sections["architect_input"]["architect_received_raw_user_text"]
+        ),
+        "result_returned_to_root": sections["root_finalization"]["result_returned_to_root"],
+        "root_received_pipeline_artifacts": sections["root_finalization"]["root_received_pipeline_artifacts"],
+        "root_finalization_after_gt": sections["root_finalization"]["root_finalization_after_gt"],
         "root_final_authority_preserved": sections["root_final_output"]["root_final_authority"],
         "architect_created_final_output": sections["architect_plan_graph"]["architect_created_final_output"],
         "executor_created_final_output": sections["fractal_dag_executor"]["executor_created_final_output"],

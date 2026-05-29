@@ -56,6 +56,35 @@ User/Event
 -> Audit/Trace
 ```
 
+### Observable Zero Trust Runtime Proof
+
+The current auditor-facing checkpoint is:
+
+```bash
+python -m demo.run_canonical_pipeline_trace
+```
+
+It is not a chatbot demo and not a LangChain-style agent chain. It is an
+observable role-bounded runtime trace showing Root authority, explicit
+Orchestrator-stage / Route Assembly, allowed CandidateVector sources, AVF /
+HardMask / SoftMask before Architect, Root-created AttractorPacket, Architect
+input as AttractorPacket only, Architect output as PlanGraph, Fractal DAG
+Executor Core execution, ResultProposal-only Executor output, Post V&V before
+GT, GT selection without commit, artifact return to Root, Root-only FinalOutput,
+DRS writeback / audit, no real external actions, and no uncontrolled
+delegation.
+
+The DAG runner connects to the Root-controlled pipeline after Architect: it
+executes Architect PlanGraph and returns ResultProposals. RootOrchestrator
+remains the authority and commit boundary. The DAG runner is not Root, does not
+own execution authority, and does not commit output.
+
+Current gaps: this is a demo-runtime proof, not production OS runtime.
+Production recursive child-cell execution is not implemented yet. Real external
+API/needle execution is not enabled here. Live Gemini/SLM Orchestrator is a
+later layer, not the default. `fallback` vs `fallback_template` naming cleanup
+is minor backlog.
+
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or
 multi-branch tasks may require the full loop. Frequent and simple actions should

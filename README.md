@@ -81,6 +81,20 @@ DRS stores task outcomes, provenance, trust, failures, dead ends, reusable patte
 - Marennya and UP quarantine hooks after task completion.
 - Cold start vs memory-informed second run behavior.
 
+## Observable Zero Trust Runtime Proof
+
+The main auditor-facing proof is:
+
+```bash
+python -m demo.run_canonical_pipeline_trace
+```
+
+This trace shows the canonical Root-controlled runtime boundary by boundary: RootOrchestrator authority, explicit Orchestrator-stage / Route Assembly, CandidateVectors from allowed sources only, AVF / HardMask / SoftMask before Architect, AttractorPacket created by RootOrchestrator, Architect receiving AttractorPacket only, Architect returning PlanGraph, the Fractal DAG Executor Core running that PlanGraph, Executor returning ResultProposals only, Post V&V before GT, GT selecting without committing, artifacts returning upward to RootOrchestrator, RootOrchestrator creating FinalOutput, and DRS writeback / audit. It also shows no real external actions and no uncontrolled delegation.
+
+This is not a chatbot demo and not a LangChain-style agent chain. It is an observable role-bounded runtime trace where every authority boundary is visible. The DAG runner connects to the Root-controlled pipeline after Architect: it executes Architect PlanGraph and returns ResultProposals. RootOrchestrator remains the authority and commit boundary; the DAG runner is not Root, does not own execution authority, and does not commit output.
+
+Current limitations: this is a demo-runtime proof, not production OS runtime. The next engineering step is connecting the DAG runner to the Root-controlled pipeline after Architect as a controlled route. Production recursive child-cell execution is not implemented yet. Real external API/needle execution is not enabled here. A live Gemini/SLM Orchestrator variant is a later layer, not the default. `fallback` vs `fallback_template` naming cleanup remains minor backlog.
+
 ## What This Demo Is Not
 
 - Not a chatbot.

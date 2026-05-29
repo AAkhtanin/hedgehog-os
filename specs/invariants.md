@@ -18,6 +18,13 @@ Final draft / Root authority invariant:
 - `FinalOutput.created_by` must remain `root_orchestrator`.
 - Renderer-created drafts must remain subordinate artifacts.
 
+Observable Zero Trust Runtime proof:
+
+- `python -m demo.run_canonical_pipeline_trace` is the main auditor-facing proof of the canonical runtime.
+- The trace must show Root authority, explicit Orchestrator-stage / Route Assembly, allowed CandidateVector sources, AVF / HardMask / SoftMask before Architect, Root-created AttractorPacket, Architect input as AttractorPacket only, Architect output as PlanGraph, Fractal DAG Executor Core execution, ResultProposal-only Executor output, Post V&V before GT, GT selection without commit, artifact return to Root, Root-only FinalOutput, DRS writeback / audit, no real external actions, and no uncontrolled delegation.
+- The DAG runner connects to the Root-controlled pipeline after Architect. It executes Architect PlanGraph and returns ResultProposals; it is not Root, does not own execution authority, and must not commit output.
+- This is a demo-runtime proof, not production OS runtime. Production recursive child-cell execution, real external API/needle execution, and live Gemini/SLM Orchestrator defaults are not enabled here.
+
 2. Executor contract
    - Executors return `ResultProposal` only.
    - Executors may simulate work, report evidence, and surface uncertainty, but they must not finalize.

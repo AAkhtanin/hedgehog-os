@@ -3,9 +3,21 @@
     "name": "hedgehog_os.machine_manifest",
     "version": "0.25.0",
     "status": "draft_for_mvp_demo",
-    "language": "ru",
+    "language": "en",
     "created_for": "Hedgehog OS / Fractal Reflexive OS proof-of-architecture demo",
     "scope": "single-node local demo with mock domain, local JSON DRS, deterministic stubs allowed"
+  },
+
+  "document_hierarchy": {
+    "human_passport": "specs/human_passport_v0_25.md",
+    "math_appendix": "specs/math_appendix_v0_3.md",
+    "strategic_expansion_map": "docs/strategic_expansion_map.md",
+    "rules": [
+      "Human Passport defines MVP architecture and invariants.",
+      "Math Appendix defines formulas and algorithmic details.",
+      "Strategic Expansion Map is vision-only and not an implementation sprint.",
+      "If documents conflict for current MVP implementation, Human Passport controls."
+    ]
   },
 
   "project": {
@@ -123,7 +135,36 @@
         "must not bypass TimeEnvelope",
         "must not bypass DRS layer separation",
         "must not allow forbidden vectors to reach Architect"
-      ]
+      ],
+      "authority_note": "Root controls boundary, permissions, policy, budgets, AttractorPacket, final synthesis and writeback, but does not micromanage nested child-cell internals."
+    },
+    "orchestrator_stage": {
+      "id": "actor_orchestrator_stage",
+      "name": "Root-controlled Orchestrator Stage",
+      "role": "route_context_assembly_inside_root_boundary",
+      "future_engine_options": [
+        "deterministic",
+        "SLM",
+        "LLM",
+        "hybrid"
+      ],
+      "responsibilities": [
+        "prepare route",
+        "prepare context",
+        "assemble WorldState",
+        "perform DRS precheck",
+        "request CandidateVectors",
+        "invoke AVF",
+        "create AttractorPacket"
+      ],
+      "hard_limits": [
+        "must not have global sovereignty",
+        "must not create FinalOutput",
+        "must not bypass Root",
+        "must not bypass AVF",
+        "must not send raw user text directly to Architect when AttractorPacket is required"
+      ],
+      "authority_boundary": "inside_root_controlled_boundary"
     }
   },
 
@@ -288,6 +329,10 @@
     "needle": {
       "id_prefix": "needle_",
       "description": "Configurable module declaring capabilities, vectors, contracts, policies and metadata."
+    },
+    "fractal_dag_executor": {
+      "id_prefix": "dag_",
+      "description": "Root-controlled executor runner positioned after Architect PlanGraph and before ResultProposals. It executes PlanGraph dependencies, computes ready sets, respects parallelism and max_nodes limits, detects cycles, returns ResultProposal-shaped outputs and child boundary snapshots, and never creates FinalOutput or global commit."
     },
     "viability_feedback": {
       "id_prefix": "vf_",
@@ -490,6 +535,14 @@
       "mock_allowed": true,
       "future_mode": "pointer_based_resolve_request_consent_transfer_ack"
     },
+    "credential_vault_future": {
+      "status": "future_production_requirement",
+      "principles": [
+        "Production should use Credential Vault / sealed secret slots.",
+        "DRS stores references, scopes, provenance, access policy, and audit metadata, not raw secrets.",
+        "LLM/SLM components may reason over existence, type, scope, and permission state without seeing raw secret values."
+      ]
+    },
     "storage_layout": {
       "root": "data/drs/",
       "layers": {
@@ -608,14 +661,30 @@
       },
       {
         "order": 7,
-        "id": "step_executors",
-        "name": "Executor Proposals",
-        "owner": "executor",
+        "id": "step_fractal_dag_executor",
+        "name": "Fractal DAG Executor",
+        "owner": "root_controlled_executor_runner",
         "input": "plan_graph",
-        "output": "result_proposals"
+        "output": "runner_report_and_result_proposals",
+        "enabled": "optional_controlled_route",
+        "invariants": [
+          "executes PlanGraph after Architect",
+          "returns ResultProposal-shaped outputs",
+          "may return child boundary snapshots",
+          "must not create FinalOutput",
+          "must not perform global commit"
+        ]
       },
       {
         "order": 8,
+        "id": "step_executors",
+        "name": "Executor Proposals",
+        "owner": "executor",
+        "input": "plan_graph_or_dag_runner_nodes",
+        "output": "result_proposals"
+      },
+      {
+        "order": 9,
         "id": "step_post_vv",
         "name": "Post V&V",
         "owner": "post_vv",
@@ -623,7 +692,7 @@
         "output": "vv_reports"
       },
       {
-        "order": 9,
+        "order": 10,
         "id": "step_gt",
         "name": "GT Validation",
         "owner": "gt_validator",
@@ -631,7 +700,7 @@
         "output": "gt_report"
       },
       {
-        "order": 10,
+        "order": 11,
         "id": "step_root_final",
         "name": "Root Final Synthesis",
         "owner": "root_orchestrator",
@@ -639,7 +708,7 @@
         "output": "final_output"
       },
       {
-        "order": 11,
+        "order": 12,
         "id": "step_drs_writeback",
         "name": "DRS Writeback",
         "owner": "root_orchestrator",
@@ -647,7 +716,7 @@
         "output": "drs_records"
       },
       {
-        "order": 12,
+        "order": 13,
         "id": "step_marenna_up_hooks",
         "name": "Marennya and UP Hooks",
         "owner": "root_orchestrator",
@@ -718,6 +787,34 @@
       "rho_novelty_boost": true
     },
     "output": "attractor_packet"
+  },
+
+  "fractal_dag_executor": {
+    "id": "module_fractal_dag_executor",
+    "name": "Fractal DAG Executor",
+    "position": "after Architect PlanGraph and before ResultProposals",
+    "does": [
+      "executes PlanGraph by dependencies",
+      "computes ready sets",
+      "respects parallelism limits",
+      "respects max_nodes limits",
+      "detects cycles",
+      "returns ResultProposal-shaped outputs",
+      "returns child boundary snapshots for non-atomic child-cell work"
+    ],
+    "does_not": [
+      "does not create FinalOutput",
+      "does not perform global commit",
+      "does not become Root",
+      "does not own execution authority outside Root-controlled boundaries",
+      "does not perform real external actions in MVP"
+    ],
+    "output": [
+      "runner_report",
+      "result_proposals",
+      "child_boundary_snapshots"
+    ],
+    "controlled_route_only_in_v0_25": true
   },
 
   "gt": {
@@ -903,6 +1000,25 @@
   },
 
   "needles": {
+    "systemic_needles": {
+      "marenna": {
+        "name": "Marennya",
+        "class": "reflective_internal_improvement_systemic_needle",
+        "description": "Reflective/internal-improvement systemic needle. It is not an ordinary external action needle and does not gain sovereignty."
+      },
+      "up": {
+        "name": "UP",
+        "class": "transfer_cross_domain_systemic_needle",
+        "description": "Transfer/cross-domain opportunity systemic needle. It is not an ordinary external action needle and does not gain sovereignty."
+      },
+      "future_systemic_needles_allowed_if": [
+        "preserve Root authority",
+        "preserve quarantine-first behavior",
+        "preserve DRS layer separation",
+        "preserve canonical boundary artifacts",
+        "preserve Root-only FinalOutput"
+      ]
+    },
     "needle_contract": {
       "model": "bounded_protocol_cell",
       "declares": [
@@ -1132,9 +1248,11 @@
     "files": {
       "README.md": "Demo explanation and run instructions",
       "specs/human_passport_v0_25.md": "Human architecture passport",
+      "specs/math_appendix_v0_3.md": "Math and algorithms appendix",
       "specs/machine_manifest_v0_25.json": "This manifest",
       "specs/invariants.md": "Invariant list",
       "specs/demo_scenario.md": "Cold start and reuse scenarios",
+      "docs/strategic_expansion_map.md": "Vision-only strategic expansion map, not an implementation sprint",
       "hedgehog/models.py": "Data classes / pydantic models if used",
       "hedgehog/time_model.py": "TimeEnvelope and TemporalQuery helpers",
       "hedgehog/drs.py": "Local JSON DRS",
@@ -1143,13 +1261,16 @@
       "hedgehog/avf.py": "AVF scoring",
       "hedgehog/root_orchestrator.py": "Root pipeline orchestration",
       "hedgehog/architect.py": "Architect stub",
+      "hedgehog/fractal_dag_executor.py": "Root-controlled DAG executor core for PlanGraph execution",
       "hedgehog/executor.py": "Executor simulators",
       "hedgehog/post_vv.py": "Post validation and normalization",
       "hedgehog/gt_validator.py": "Payoff, Elo, half-life",
       "hedgehog/marenna.py": "Marennya hook",
       "hedgehog/up.py": "UP hook",
       "hedgehog/policies.py": "Modes and hard masks",
-      "demo/run_certificate_demo.py": "Main demo entry point"
+      "demo/run_certificate_demo.py": "Main demo entry point",
+      "demo/run_fractal_dag_executor_core.py": "Fractal DAG Executor Core demo",
+      "demo/run_canonical_pipeline_trace.py": "Observable Zero Trust Runtime trace demo"
     }
   },
 
@@ -1265,6 +1386,42 @@
     },
     {
       "phase": 7,
+      "name": "Execution routing and direct reuse",
+      "tasks": [
+        "implement minimum sufficient route selection",
+        "prove deterministic reflex routing",
+        "prove memory-informed context routing",
+        "prove direct reuse only through explicit Root shortcut gates",
+        "preserve policy, permission, audit, and DRS writeback in shortcut paths"
+      ]
+    },
+    {
+      "phase": 8,
+      "name": "Fractal DAG Executor Core",
+      "tasks": [
+        "execute PlanGraph nodes by dependency order",
+        "compute ready sets",
+        "respect parallelism and max_nodes budgets",
+        "detect cycles",
+        "return ResultProposal-shaped outputs and child boundary snapshots",
+        "prove Executor/DAG runner never creates FinalOutput"
+      ]
+    },
+    {
+      "phase": 9,
+      "name": "Observable Zero Trust Runtime Trace",
+      "tasks": [
+        "render Root-native canonical trace",
+        "show explicit Orchestrator-stage / route assembly",
+        "show AVF/HardMask before Architect",
+        "show AttractorPacket boundary",
+        "show Fractal DAG Executor outputs",
+        "show Post V&V before GT",
+        "show Root-only FinalOutput and DRS writeback"
+      ]
+    },
+    {
+      "phase": 10,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1274,7 +1431,7 @@
       ]
     },
     {
-      "phase": 8,
+      "phase": 11,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",
@@ -1319,6 +1476,7 @@
     "DRS writeback creates Work record with TimeEnvelope and GT metadata.",
     "Marennya creates quarantine reflection.",
     "UP creates quarantine protocol template.",
-    "Second run demonstrates improved vector scoring or dead-end avoidance."
+    "Second run demonstrates memory-informed behavior through DRS retrieval, lineage, reuse/context metadata, or controlled direct reuse when explicitly enabled.",
+    "Future demos should additionally prove improved vector scoring, dead-end avoidance, and GT/TTL convergence."
   ]
 }

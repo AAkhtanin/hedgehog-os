@@ -95,6 +95,13 @@ This is not a chatbot demo and not a LangChain-style agent chain. It is an obser
 
 Current limitations: this is a demo-runtime proof, not production OS runtime. The next engineering step is connecting the DAG runner to the Root-controlled pipeline after Architect as a controlled route. Production recursive child-cell execution is not implemented yet. Real external API/needle execution is not enabled here. A live Gemini/SLM Orchestrator variant is a later layer, not the default. `fallback` vs `fallback_template` naming cleanup remains minor backlog.
 
+## Strategic Expansion Map
+
+Long-term vision beyond the MVP is documented separately in:
+
+```text
+docs/strategic_expansion_map.md
+
 ## What This Demo Is Not
 
 - Not a chatbot.
@@ -232,6 +239,7 @@ run:
 - `demo/` contains the CLI certificate demo.
 - `tests/` contains focused contract and runtime tests for the MVP pipeline.
 - `data/drs/` is the local DRS layer layout for Work, Thoughts, UP, Quarantine, and DeadEnds.
+- `docs/` contains strategic and auditor-facing documents, including the long-term expansion map. Vision documents in this folder are not implementation tasks unless explicitly promoted into the roadmap.
 
 ## Current MVP Limitations
 
@@ -259,6 +267,8 @@ Intent Matrix
 ```
 
 The prototype allows Orchestrator proposals to influence Root execution only after validator and gate approval. `controlled_orchestrator_enabled` remains `prototype_only`; this is not production uncontrolled runtime.
+
+This checkpoint is retained as the controlled-orchestrator lineage. The current auditor-facing runtime proof is `demo.run_canonical_pipeline_trace`.
 
 ## Known Production Risks And Planned Hardening
 
@@ -304,3 +314,4 @@ Future tests: empty DRS vector generation, fallback template use, first-run writ
 ## Safety / Privacy Note
 
 DRS is pointer-first. Secrets, credentials, passport numbers, card data, tokens, passwords, and private keys must not be stored directly in DRS content. MVP inline content is local, mock, non-secret only.
+Future production versions should use a Credential Vault / sealed secret slots. DRS may store secret references, scopes, provenance, and audit metadata, but not raw secret values.

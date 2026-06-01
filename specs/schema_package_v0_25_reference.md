@@ -8,6 +8,33 @@ Active schemas live in `schemas/*.schema.json`.
 
 When this reference conflicts with the active schemas, the active schemas should not be overwritten blindly. Use this file only for audit and targeted patching.
 
+## Current Status Warning
+
+This file is a historical/reference schema package, not the source of truth for the current MVP runtime.
+
+The active schema source of truth is `schemas/*.schema.json`.
+
+The current architecture is defined by:
+
+- `specs/human_passport_v0_25.md`
+- `specs/math_appendix_v0_3.md`
+- `specs/machine_manifest_v0_25.json`
+- `specs/invariants.md`
+- `specs/demo_baseline_v0_25.md`
+
+Known reference drift:
+
+- Architect must return `PlanGraph`, not `ResultProposal`.
+- Executors / DAG runner return `ResultProposal`-shaped outputs.
+- `AttractorPacket.architect_instructions.must_return_result_proposals_only` is obsolete in this reference and must not be copied into active schemas.
+- Current runtime includes explicit Orchestrator-stage / Route Assembly.
+- Current runtime includes Fractal DAG Executor after Architect PlanGraph.
+- DRS hits do not imply direct reuse.
+- Credential Vault / sealed secret slots are future production requirement for secrets.
+- Marennya and UP are systemic/internal needles with quarantine-first behavior.
+
+Use this file only as a comparison artifact. Do not overwrite active schemas from this file without checking the current passport and active tests.
+
 common.schema.json
 intent.schema.json
 time_envelope.schema.json

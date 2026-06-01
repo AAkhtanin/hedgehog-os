@@ -183,8 +183,30 @@ def build_sections(
             "drs_write_count": len(final_output.get("drs_writes", [])),
             "work_record_written": bool(work_record),
             "time_envelope_present": bool(work_record.get("time_envelope")),
+            "provenance_present": bool(work_record.get("provenance")),
             "execution_engine_in_work_record": work_content.get("execution_engine", "not_exposed_yet"),
             "fractal_dag_executor_used_in_work_record": work_content.get("fractal_dag_executor_used") is True,
+            "dag_result_proposals_count_in_work_record": int(
+                work_content.get("dag_result_proposals_count") or 0
+            ),
+            "vv_reports_count_in_work_record": int(work_content.get("vv_reports_count") or 0),
+            "gt_decision_in_work_record": work_content.get("gt_decision", "not_exposed_yet"),
+            "root_created_final_output_in_work_record": work_content.get(
+                "root_created_final_output"
+            )
+            is True,
+            "no_real_external_action_in_work_record": work_content.get(
+                "no_real_external_action"
+            )
+            is True,
+            "audit_trace_present": work_content.get("audit_trace_present") is True,
+            "root_native_dag_path": work_content.get("root_native_dag_path") is True,
+            "root_final_authority_preserved": work_content.get(
+                "root_final_authority_preserved"
+            )
+            is True,
+            "post_vv_before_gt": work_content.get("post_vv_before_gt") is True,
+            "result_returned_to_root": work_content.get("result_returned_to_root") is True,
             "sensitive_input_absent": sensitive_input_absent,
         },
     }

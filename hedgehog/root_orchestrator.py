@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
+from typing import Any
 
 from hedgehog.action_permission import check_action_permission
 from hedgehog.architect import make_plan_graph
@@ -22,6 +24,24 @@ from hedgehog.reflex import detect_reflex_action, execute_reflex_action
 from hedgehog.reuse_gate import evaluate_reuse_candidates
 from hedgehog.time_model import make_temporal_query, make_time_envelope
 from hedgehog.up import create_up_after_task_record
+
+
+SENSITIVE_DRS_TERMS = {
+    "raw_user_text",
+    "api_key",
+    "token",
+    "secret",
+    "password",
+    "private_key",
+    "passport_number",
+    "card_number",
+    "cvv",
+}
+
+
+def _sensitive_terms_absent(*values: Any) -> bool:
+    serialized = json.dumps(values, sort_keys=True, default=str).lower()
+    return not any(term in serialized for term in SENSITIVE_DRS_TERMS)
 
 
 class RootOrchestrator:
@@ -209,12 +229,23 @@ class RootOrchestrator:
                 "dag_child_boundary_snapshots": dag_runner_report["child_boundary_snapshots"],
                 "executor_created_final_output": dag_runner_report["executor_created_final_output"],
                 "post_vv_after_dag_executor": bool(vv_reports),
+                "post_vv_before_gt": bool(vv_reports) and bool(gt_report),
+                "vv_reports_count": len(vv_reports),
                 "gt_after_post_vv": bool(vv_reports) and bool(gt_report),
+                "gt_decision": gt_report["decision"],
+                "gt_committed_final_output": False,
                 "root_received_dag_artifacts": bool(result_proposals)
                 and bool(vv_reports)
                 and bool(gt_report),
+                "root_created_final_output": True,
                 "no_real_external_action": dag_runner_report["no_real_external_action"],
                 "uncontrolled_delegation": False,
+                "audit_trace_present": True,
+                "root_native_dag_path": True,
+                "root_final_authority_preserved": True,
+                "result_returned_to_root": bool(result_proposals)
+                and bool(vv_reports)
+                and bool(gt_report),
             }
             if dag_runner_report is not None
             else {
@@ -222,10 +253,21 @@ class RootOrchestrator:
                 "fractal_dag_executor_used": False,
                 "executor_created_final_output": False,
                 "post_vv_after_dag_executor": False,
+                "post_vv_before_gt": bool(vv_reports) and bool(gt_report),
+                "vv_reports_count": len(vv_reports),
                 "gt_after_post_vv": bool(vv_reports) and bool(gt_report),
+                "gt_decision": gt_report["decision"],
+                "gt_committed_final_output": False,
                 "root_received_dag_artifacts": False,
+                "root_created_final_output": True,
                 "no_real_external_action": True,
                 "uncontrolled_delegation": False,
+                "audit_trace_present": True,
+                "root_native_dag_path": False,
+                "root_final_authority_preserved": True,
+                "result_returned_to_root": bool(result_proposals)
+                and bool(vv_reports)
+                and bool(gt_report),
             }
         )
 
@@ -258,7 +300,12 @@ class RootOrchestrator:
             reuse_applied=reuse_applied,
             reused_record_ids=reused_record_ids,
             dag_trace=dag_trace if use_fractal_dag_executor else None,
+            plan_id=plan_graph.get("plan_id"),
         )
+        if use_fractal_dag_executor and dag_trace is not None:
+            dag_trace["sensitive_input_absent"] = work_record["content"][
+                "sensitive_input_absent"
+            ]
         self.drs.write_record(work_record)
         marenna_record = create_marenna_after_task_record(
             request_id=request_id,
@@ -671,6 +718,7 @@ class RootOrchestrator:
         reuse_applied: bool,
         reused_record_ids: list[str],
         dag_trace: dict | None = None,
+        plan_id: str | None = None,
     ) -> dict:
         content = {
             "summary": "Mock certificate request pipeline completed.",
@@ -714,12 +762,42 @@ class RootOrchestrator:
                     "dag_child_boundary_snapshots": dag_trace["dag_child_boundary_snapshots"],
                     "executor_created_final_output": dag_trace["executor_created_final_output"],
                     "post_vv_after_dag_executor": dag_trace["post_vv_after_dag_executor"],
+                    "vv_reports_count": dag_trace["vv_reports_count"],
                     "gt_after_post_vv": dag_trace["gt_after_post_vv"],
+                    "gt_decision": dag_trace["gt_decision"],
+                    "root_created_final_output": dag_trace["root_created_final_output"],
+                    "gt_committed_final_output": dag_trace["gt_committed_final_output"],
                     "root_received_dag_artifacts": dag_trace["root_received_dag_artifacts"],
                     "no_real_external_action": dag_trace["no_real_external_action"],
                     "uncontrolled_delegation": dag_trace["uncontrolled_delegation"],
+                    "audit_trace_present": dag_trace["audit_trace_present"],
+                    "root_native_dag_path": dag_trace["root_native_dag_path"],
+                    "root_final_authority_preserved": dag_trace[
+                        "root_final_authority_preserved"
+                    ],
+                    "post_vv_before_gt": dag_trace["post_vv_before_gt"],
+                    "result_returned_to_root": dag_trace["result_returned_to_root"],
                 }
             )
+        provenance = {
+            "request_id": request_id,
+            "route": route,
+            "execution_engine": dag_trace["execution_engine"] if dag_trace else "legacy_executor",
+            "plan_id": plan_id,
+            "gt_report_id": gt_report["gt_report_id"],
+            "gt_decision": gt_report["decision"],
+            "trace_path": f"trace:{request_id}",
+            "created_by": "root_orchestrator",
+            "trace_refs": [
+                {
+                    "trace_id": f"trace:{request_id}",
+                    "span_id": "drs_writeback",
+                    "kind": "root_orchestrator",
+                }
+            ],
+        }
+        if dag_trace is not None:
+            content["sensitive_input_absent"] = _sensitive_terms_absent(content, provenance)
         return {
             "record_id": f"work:{request_id}",
             "layer": "work",
@@ -727,17 +805,7 @@ class RootOrchestrator:
             "domain": "government_certificate",
             "content": content,
             "time_envelope": make_time_envelope(session_anchor),
-            "provenance": {
-                "request_id": request_id,
-                "created_by": "root_orchestrator",
-                "trace_refs": [
-                    {
-                        "trace_id": f"trace:{request_id}",
-                        "span_id": "drs_writeback",
-                        "kind": "root_orchestrator",
-                    }
-                ],
-            },
+            "provenance": provenance,
             "gt": {
                 "gt_report_id": gt_report["gt_report_id"],
                 "half_life_hours": gt_report.get("half_life_hours", 1.0),

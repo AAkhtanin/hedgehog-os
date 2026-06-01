@@ -9,6 +9,7 @@ from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
 from hedgehog.drs import LocalDRS
 from hedgehog.executor import execute_plan_graph
 from hedgehog.final_renderer import render_final_draft
+from hedgehog.fractal_dag_executor import run_fractal_dag_executor
 from hedgehog.gt_validator import validate_gt
 from hedgehog.input_intake import classify_input_text
 from hedgehog.llm_gateway import generate_general_answer
@@ -43,6 +44,7 @@ class RootOrchestrator:
         architect_provider: str = "deterministic",
         architect_model: str | None = None,
         architect_allow_config: bool = True,
+        use_fractal_dag_executor: bool = False,
     ) -> dict:
         canonical_goal = "Prepare a mock government certificate request plan."
         desired_state = "Mock government certificate request is prepared for human review."
@@ -180,12 +182,52 @@ class RootOrchestrator:
                     "fallback": "deterministic",
                 }
                 plan_graph = make_plan_graph(attractor_packet)
-        result_proposals = execute_plan_graph(
-            plan_graph,
-            session_anchor=session_anchor,
-        )
+        dag_runner_report = None
+        if use_fractal_dag_executor:
+            dag_runner_report = run_fractal_dag_executor(
+                plan_graph,
+                runner_id=f"runner:{request_id}:fractal_dag",
+                session_anchor=session_anchor,
+            )
+            result_proposals = dag_runner_report["result_proposals"]
+        else:
+            result_proposals = execute_plan_graph(
+                plan_graph,
+                session_anchor=session_anchor,
+            )
         vv_reports = validate_result_proposals(result_proposals)
         gt_report = validate_gt(vv_reports)
+        execution_engine = "fractal_dag" if use_fractal_dag_executor else "legacy_executor"
+        dag_trace = (
+            {
+                "execution_engine": execution_engine,
+                "fractal_dag_executor_used": True,
+                "dag_runner_status": dag_runner_report["status"],
+                "dag_ready_sequence_present": bool(dag_runner_report["ready_sequence"]),
+                "dag_execution_batches_present": bool(dag_runner_report["execution_batches"]),
+                "dag_result_proposals_count": len(result_proposals),
+                "dag_child_boundary_snapshots": dag_runner_report["child_boundary_snapshots"],
+                "executor_created_final_output": dag_runner_report["executor_created_final_output"],
+                "post_vv_after_dag_executor": bool(vv_reports),
+                "gt_after_post_vv": bool(vv_reports) and bool(gt_report),
+                "root_received_dag_artifacts": bool(result_proposals)
+                and bool(vv_reports)
+                and bool(gt_report),
+                "no_real_external_action": dag_runner_report["no_real_external_action"],
+                "uncontrolled_delegation": False,
+            }
+            if dag_runner_report is not None
+            else {
+                "execution_engine": execution_engine,
+                "fractal_dag_executor_used": False,
+                "executor_created_final_output": False,
+                "post_vv_after_dag_executor": False,
+                "gt_after_post_vv": bool(vv_reports) and bool(gt_report),
+                "root_received_dag_artifacts": False,
+                "no_real_external_action": True,
+                "uncontrolled_delegation": False,
+            }
+        )
 
         used_proposals = self._select_used_proposals(gt_report, result_proposals)
         work_record_id = f"work:{request_id}"
@@ -215,6 +257,7 @@ class RootOrchestrator:
             reuse_candidate_record_id=reuse_gate["best_record_id"],
             reuse_applied=reuse_applied,
             reused_record_ids=reused_record_ids,
+            dag_trace=dag_trace if use_fractal_dag_executor else None,
         )
         self.drs.write_record(work_record)
         marenna_record = create_marenna_after_task_record(
@@ -278,6 +321,9 @@ class RootOrchestrator:
             "attractor_packet": attractor_packet,
             "llm_architect_result": llm_architect_result,
             "plan_graph": plan_graph,
+            "execution_engine": execution_engine,
+            "dag_runner_report": dag_runner_report,
+            **dag_trace,
             "result_proposals": result_proposals,
             "vv_reports": vv_reports,
             "gt_report": gt_report,
@@ -624,44 +670,62 @@ class RootOrchestrator:
         reuse_candidate_record_id: str | None,
         reuse_applied: bool,
         reused_record_ids: list[str],
+        dag_trace: dict | None = None,
     ) -> dict:
+        content = {
+            "summary": "Mock certificate request pipeline completed.",
+            "canonical_goal": canonical_goal,
+            "result": "simulated_success" if final_status == "success" else "needs_user",
+            "final_status": final_status,
+            "execution_mode": execution_mode,
+            "route": route,
+            "selected_proposal_ids": list(final_draft["selected_proposal_ids"]),
+            "completed_proposal_ids": list(final_draft["completed_proposal_ids"]),
+            "needs_user_proposal_ids": list(final_draft["needs_user_proposal_ids"]),
+            "blocked_proposal_ids": list(final_draft["blocked_proposal_ids"]),
+            "rejected_proposal_ids": list(final_draft["rejected_proposal_ids"]),
+            "gt_report_ref": gt_report["gt_report_id"],
+            "gt_decision": gt_report["decision"],
+            "final_draft_ref": final_draft["draft_id"],
+            "final_draft_summary": final_draft["summary"],
+            "final_draft_claims": list(final_draft["claims"]),
+            "final_draft_warnings": list(final_draft["warnings"]),
+            "used_proposal_count": len(used_proposals),
+            "retrieved_record_count": retrieved_record_count,
+            "memory_context_applied": memory_context_applied,
+            "memory_source_record_ids": memory_source_record_ids,
+            "reuse_decision": reuse_decision,
+            "reuse_score_best": reuse_score_best,
+            "reuse_candidate_record_id": reuse_candidate_record_id,
+            "reuse_applied": reuse_applied,
+            "reused_record_ids": reused_record_ids,
+            "reflex_applied": False,
+            "direct_reuse_applied": False,
+            "architect_skipped": False,
+            "executor_skipped": False,
+        }
+        if dag_trace is not None:
+            content.update(
+                {
+                    "execution_engine": dag_trace["execution_engine"],
+                    "fractal_dag_executor_used": dag_trace["fractal_dag_executor_used"],
+                    "dag_runner_status": dag_trace["dag_runner_status"],
+                    "dag_result_proposals_count": dag_trace["dag_result_proposals_count"],
+                    "dag_child_boundary_snapshots": dag_trace["dag_child_boundary_snapshots"],
+                    "executor_created_final_output": dag_trace["executor_created_final_output"],
+                    "post_vv_after_dag_executor": dag_trace["post_vv_after_dag_executor"],
+                    "gt_after_post_vv": dag_trace["gt_after_post_vv"],
+                    "root_received_dag_artifacts": dag_trace["root_received_dag_artifacts"],
+                    "no_real_external_action": dag_trace["no_real_external_action"],
+                    "uncontrolled_delegation": dag_trace["uncontrolled_delegation"],
+                }
+            )
         return {
             "record_id": f"work:{request_id}",
             "layer": "work",
             "type": "task_outcome",
             "domain": "government_certificate",
-            "content": {
-                "summary": "Mock certificate request pipeline completed.",
-                "canonical_goal": canonical_goal,
-                "result": "simulated_success" if final_status == "success" else "needs_user",
-                "final_status": final_status,
-                "execution_mode": execution_mode,
-                "route": route,
-                "selected_proposal_ids": list(final_draft["selected_proposal_ids"]),
-                "completed_proposal_ids": list(final_draft["completed_proposal_ids"]),
-                "needs_user_proposal_ids": list(final_draft["needs_user_proposal_ids"]),
-                "blocked_proposal_ids": list(final_draft["blocked_proposal_ids"]),
-                "rejected_proposal_ids": list(final_draft["rejected_proposal_ids"]),
-                "gt_report_ref": gt_report["gt_report_id"],
-                "gt_decision": gt_report["decision"],
-                "final_draft_ref": final_draft["draft_id"],
-                "final_draft_summary": final_draft["summary"],
-                "final_draft_claims": list(final_draft["claims"]),
-                "final_draft_warnings": list(final_draft["warnings"]),
-                "used_proposal_count": len(used_proposals),
-                "retrieved_record_count": retrieved_record_count,
-                "memory_context_applied": memory_context_applied,
-                "memory_source_record_ids": memory_source_record_ids,
-                "reuse_decision": reuse_decision,
-                "reuse_score_best": reuse_score_best,
-                "reuse_candidate_record_id": reuse_candidate_record_id,
-                "reuse_applied": reuse_applied,
-                "reused_record_ids": reused_record_ids,
-                "reflex_applied": False,
-                "direct_reuse_applied": False,
-                "architect_skipped": False,
-                "executor_skipped": False,
-            },
+            "content": content,
             "time_envelope": make_time_envelope(session_anchor),
             "provenance": {
                 "request_id": request_id,

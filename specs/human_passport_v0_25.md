@@ -9,6 +9,14 @@ invariants, and success criteria for the MVP. It should be treated as an
 engineering guide, not marketing material and not a prompt for a generic
 chatbot.
 
+Long-term expansion beyond the MVP is documented separately in
+`docs/strategic_expansion_map.md`. That document is a strategic vision map, not
+an implementation sprint. If there is a conflict between this MVP passport and
+the strategic expansion map, this MVP passport controls current implementation
+work.
+
+
+
 ## 1. Project Identity
 
 Hedgehog OS / Fractal Reflexive OS is not a chatbot.
@@ -190,6 +198,15 @@ Marennya and UP are built-in systemic/internal needles:
 They are not ordinary external action needles. Future systemic needle classes
 may include action, data, device, validator, reflective, transfer, scheduler,
 policy/governance, and memory-evolution/GT.
+
+Future engineers may define additional systemic/internal needles of similar
+class. A systemic needle may contain its own bounded local fractal cycle, but it
+must not receive global sovereignty. It must produce canonical boundary
+artifacts such as `ResultProposal`, `QuarantineRecord`, `VVReport`, `GTReport`,
+`DRS pointer`, or `AuditEvent`. It must preserve Root authority,
+TimeEnvelope / TemporalQuery discipline, DRS layer separation,
+quarantine-first behavior for cognitive mutations, and the rule that only Root
+creates `FinalOutput`.
 
 The current NeedleRuntime Failure Integration is a demo-level adapter. It
 proves `NeedleExecutionResult` can become ResultProposal-compatible and Post
@@ -486,6 +503,12 @@ vault/storage systems, not directly inside DRS record content. DRS records may
 reference those secure locations through explicit storage pointers and access
 policies.
 
+Future production versions should use a Credential Vault / sealed secret slot
+model. DRS may store references, scopes, provenance, permission rules, access
+policies, and audit metadata for secrets, but not raw secret values. LLM/SLM
+components may reason over the existence, type, scope, and permission state of
+a sealed slot without seeing the secret itself.
+
 For the MVP, inline content is allowed only for mock demo simplicity. Inline
 content must remain small, local, non-secret, and schema-compatible.
 
@@ -554,11 +577,30 @@ intent or an installed needle requires it.
 
 ## 8. Fractalization
 
-The fractal cell:
+Minimal cognitive cell:
 
 ```text
-Cell = (Orchestrator, Architect, Executor)
+Cell_min = (Orchestrator, Architect, Executor)
 ```
+
+The operational canonical cell used by the runtime is wider:
+
+```text
+Cell = (
+  Orchestrator,
+  Architect,
+  Executor / DAG Runner,
+  Post V&V,
+  GT / selection,
+  Budget,
+  Policy,
+  EventLog,
+  MemoryIO
+)
+```
+
+`Cell_min` explains recursion. The wider `Cell` explains the MVP/runtime
+contract.
 
 Recursive rule:
 
@@ -1494,7 +1536,8 @@ The demo succeeds if:
 9. DRS writeback creates `Work` record with `TimeEnvelope`.
 10. Marennya writes quarantine reflection.
 11. UP writes quarantine protocol template.
-12. Second run demonstrates improved vector scoring or dead-end avoidance.
+12. Second run demonstrates memory-informed behavior through DRS retrieval, lineage, reuse/context metadata, or controlled direct reuse when explicitly enabled.
+13. Future demos should additionally prove improved vector scoring, dead-end avoidance, and GT/TTL convergence.
 
 ## 23. Required Tone of This Document
 

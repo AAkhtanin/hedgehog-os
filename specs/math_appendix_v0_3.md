@@ -555,9 +555,10 @@ Cell(T) =
   Orchestrator(Architect(T)), if Atomic(T) = false
 ```
 
-```markdown
 This is a structural recursion formula, not an authority transfer rule.
+
 A child Orchestrator is local to its child cell and cannot become global Root.
+
 Non-atomic execution must return boundary artifacts such as a child PlanGraph,
 boundary snapshot, ResultProposal-compatible artifact, trace pointer, or
 quarantine record.

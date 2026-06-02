@@ -6,6 +6,7 @@ from typing import Any
 
 from demo.run_needle_failure_integration import NeedleFailureIntegrationRow
 from demo.run_needle_failure_integration import collect_needle_failure_integration
+from hedgehog.gt_validator import validate_gt
 
 
 FORBIDDEN_OUTPUT_TERMS = (
@@ -41,6 +42,7 @@ REQUIRED_RESULT_PROPOSAL_SHAPE = {
 class CanonicalNeedleOutcomeTraceRow:
     scenario: str
     source: NeedleFailureIntegrationRow
+    gt_report: dict[str, Any]
     root_visible_decision: str
     intended_drs_route: str
     converted_to_result_proposal: bool
@@ -94,10 +96,15 @@ def collect_canonical_needle_outcome_trace() -> list[CanonicalNeedleOutcomeTrace
     rows: list[CanonicalNeedleOutcomeTraceRow] = []
     for source in collect_needle_failure_integration():
         failure_kind = source.needle_result.failure_kind
+        gt_report = validate_gt(
+            [source.vv_report],
+            game_mode=f"needle_outcome_trace_{source.scenario}",
+        )
         rows.append(
             CanonicalNeedleOutcomeTraceRow(
                 scenario=source.scenario,
                 source=source,
+                gt_report=gt_report,
                 root_visible_decision=_root_visible_decision(failure_kind),
                 intended_drs_route=_intended_drs_route(failure_kind),
                 converted_to_result_proposal=source.proposal["result_payload"][
@@ -166,8 +173,11 @@ def _gt_root_line(row: CanonicalNeedleOutcomeTraceRow) -> str:
             row.scenario,
             row.root_visible_decision,
             "true",
-            "false",
-            "deterministic_trace_mapping",
+            "true",
+            "gt_validator_runtime",
+            "true",
+            row.gt_report.get("gt_report_id", "not_available"),
+            row.gt_report.get("decision", "not_available"),
             "false",
             "true",
             "false",
@@ -239,8 +249,8 @@ def render_canonical_needle_outcome_trace(
         [
             "",
             "[GT / ROOT DECISION]",
-            "scenario | root_visible_decision | gt_boundary_after_post_vv | gt_runtime_called | gt_decision_mode | gt_committed_final_output | root_decision_required | root_created_final_output | no_direct_user_answer_from_needle",
-            "--- | --- | --- | --- | --- | --- | --- | --- | ---",
+            "scenario | root_visible_decision | gt_boundary_after_post_vv | gt_runtime_called | gt_decision_mode | gt_report_present | gt_report_id | gt_decision | gt_committed_final_output | root_decision_required | root_created_final_output | no_direct_user_answer_from_needle",
+            "--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---",
         ]
     )
     lines.extend(_gt_root_line(row) for row in rows)
@@ -262,9 +272,15 @@ def render_canonical_needle_outcome_trace(
             f"post_vv_runs: {sum(row.post_vv_ran for row in rows)}",
             "gt_after_post_vv: true",
             "gt_boundary_after_post_vv: true",
-            "gt_runtime_called: false",
-            "gt_decision_mode: deterministic_trace_mapping",
-            "canonical_gt_runtime_integration: false",
+            "gt_runtime_called: true",
+            "gt_decision_mode: gt_validator_runtime",
+            "canonical_gt_runtime_integration: true",
+            f"gt_report_present_count: {sum(bool(row.gt_report.get('gt_report_id')) for row in rows)}",
+            "unsafe_outcomes_not_marked_success: true",
+            "invalid_json_not_success: true",
+            "schema_validation_failed_not_success: true",
+            "unknown_exception_not_success: true",
+            "gt_committed_final_output: false",
             f"root_decisions_required: {len(rows)}",
             "needle_created_final_output: false",
             "executor_owns_needle: false",

@@ -85,9 +85,15 @@ def test_gt_root_boundary_invariants_are_visible_in_output():
     output = run_canonical_needle_outcome_trace()
 
     assert "gt_boundary_after_post_vv: true" in output
-    assert "gt_runtime_called: false" in output
-    assert "gt_decision_mode: deterministic_trace_mapping" in output
-    assert "canonical_gt_runtime_integration: false" in output
+    assert "gt_runtime_called: true" in output
+    assert "gt_decision_mode: gt_validator_runtime" in output
+    assert "canonical_gt_runtime_integration: true" in output
+    assert "gt_report_present_count: 8" in output
+    assert "unsafe_outcomes_not_marked_success: true" in output
+    assert "invalid_json_not_success: true" in output
+    assert "schema_validation_failed_not_success: true" in output
+    assert "unknown_exception_not_success: true" in output
+    assert "gt_committed_final_output: false" in output
     assert "needle_created_final_output: false" in output
     assert "executor_owns_needle: false" in output
     assert "direct_user_answers_from_needle: 0" in output
@@ -102,6 +108,8 @@ def test_invalid_json_routes_to_quarantine():
     assert row.root_visible_decision == "quarantine"
     assert row.intended_drs_route == "quarantine"
     assert row.source.needle_result.quarantine_required is True
+    assert row.gt_report["decision"] != "accept"
+    assert row.source.proposal["result_payload"]["task_completed"] is False
 
 
 def test_schema_validation_failed_routes_to_quarantine():
@@ -111,6 +119,8 @@ def test_schema_validation_failed_routes_to_quarantine():
     assert row.root_visible_decision == "quarantine"
     assert row.intended_drs_route == "quarantine"
     assert row.source.needle_result.quarantine_required is True
+    assert row.gt_report["decision"] != "accept"
+    assert row.source.proposal["result_payload"]["task_completed"] is False
 
 
 def test_permission_required_routes_to_needs_user_or_blocked():
@@ -120,6 +130,7 @@ def test_permission_required_routes_to_needs_user_or_blocked():
     assert row.root_visible_decision == "needs_user_or_blocked"
     assert row.intended_drs_route == "needs_user_or_blocked_trace"
     assert row.source.needle_result.permission_required is True
+    assert row.gt_report["decision"] != "accept"
 
 
 def test_circuit_breaker_open_routes_to_blocked():
@@ -138,6 +149,7 @@ def test_timeout_routes_to_degraded_trace():
     assert row.root_visible_decision == "degraded_trace"
     assert row.intended_drs_route == "degraded_trace"
     assert row.source.needle_result.status == "degraded"
+    assert row.source.proposal["result_payload"]["status"] == "degraded"
 
 
 def test_success_routes_to_work_candidate():
@@ -147,6 +159,8 @@ def test_success_routes_to_work_candidate():
     assert row.root_visible_decision == "accept/work_candidate"
     assert row.intended_drs_route == "work_candidate"
     assert row.source.needle_result.status == "completed"
+    assert row.gt_report["decision"] == "accept"
+    assert row.gt_report.get("winner") == row.source.vv_report["proposal_id"]
 
 
 def test_unknown_exception_is_contained_and_does_not_raise():
@@ -157,6 +171,17 @@ def test_unknown_exception_is_contained_and_does_not_raise():
     assert row.intended_drs_route == "quarantine_or_failed_trace"
     assert row.source.needle_result.status == "failed"
     assert row.source.proposal["result_payload"]["root_crash_risk_contained"] is True
+    assert row.gt_report["decision"] != "accept"
+    assert row.source.proposal["result_payload"]["task_completed"] is False
+
+
+def test_every_scenario_has_real_gt_report_after_post_vv():
+    for row in collect_canonical_needle_outcome_trace():
+        assert row.post_vv_ran is True
+        assert row.gt_report.get("gt_report_id")
+        assert row.gt_report.get("decision") in {"accept", "revise", "no_update"}
+        assert "final_output" not in row.gt_report
+        assert "answer" not in row.gt_report
 
 
 def test_output_says_no_real_external_actions_and_no_unhandled_exceptions():
@@ -181,3 +206,4 @@ def test_underlying_payloads_contain_no_sensitive_terms_before_rendering():
         _assert_no_sensitive_terms_in_value(row.source.proposal)
         _assert_no_sensitive_terms_in_value(row.source.proposal["result_payload"])
         _assert_no_sensitive_terms_in_value(row.source.needle_result.result_payload)
+        _assert_no_sensitive_terms_in_value(row.gt_report)

@@ -123,6 +123,30 @@ This trace should show the runtime as a controlled contour, not as a long-chain 
 
 text Root authority → Orchestrator-stage → AVF / Attractor formation → Architect PlanGraph → Fractal DAG Executor → Post V&V → GT → back to Root → Root FinalOutput → DRS writeback 
 
+## Needle Outcome Routing Checkpoint
+
+Needle outcome routing is a LocalDRS-only MVP proof:
+
+```text
+NeedleRuntime / adapter
+-> ResultProposal-compatible artifact
+-> Post V&V
+-> real GTValidator runtime report
+-> Root-visible routing semantics
+-> LocalDRS Work / Quarantine / DeadEnds persistence
+```
+
+Completed accepted needle outcomes may become Work/task_outcome records.
+invalid_json and schema_validation_failed route to Quarantine. unknown_exception
+routes to Quarantine or failed trace. contract_version_mismatch and
+circuit_breaker_open route to DeadEnds / blocked trace. timeout is degraded
+trace, not successful Work. permission_required is needs_user / blocked trace,
+not completed action.
+
+Failed, quarantined, degraded, blocked, and deadend records are not direct-reuse
+eligible. Only the accepted completed Work candidate is direct-reuse eligible in
+this MVP demo.
+
 ## Exclusions
 
 - No real external APIs.
@@ -134,7 +158,9 @@ text Root authority → Orchestrator-stage → AVF / Attractor formation → Arc
 - No production LLM/SLM role substitution by default.
 - No legacy architecture repair.
 - No global DRS network.
+- No external DRS protocol implementation.
 - No Internet of Meaning implementation.
+- No NeedleFactory implementation.
 - No needle marketplace implementation.
 - No production recursive child-cell execution.
 - No universal natural Telegram assistant behavior.

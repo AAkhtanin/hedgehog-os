@@ -52,7 +52,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcome through canonical pipeline → only later: NeedleFactory / NeedleForge 
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → only later: NeedleFactory / NeedleForge 
 
 Do not jump ahead to:
 
@@ -173,6 +173,10 @@ Explicit direct reuse scenario may skip Architect and Executor only after:
 - DRS is a registry/resolver/index, similar to a much more complex DNS for memory, capabilities, and knowledge routes.
 - DRS records should prefer pointer + summary + metadata over raw payload.
 - MVP LocalDRS may store small inline non-secret content only as a local simplification.
+- LocalDRS is the only implemented DRS runtime in the MVP.
+- External DRS remains a future pointer/protocol boundary.
+- Global DRS / Internet of Meaning is not implemented.
+- DRS records are addressable meaning records with TimeEnvelope, provenance, GT metadata, validation metadata, trace refs, and routing semantics.
 - Real payload may live in local memory, local JSON, local secure vault, vector store, document store, project store, or external DRS pointer.
 - Pointer resolution is a separate future responsibility and must respect access_policy.
 - DRS must never directly store credentials, tokens, passwords, private keys, passport numbers, card numbers, CVV, or similar sensitive payloads.
@@ -205,7 +209,30 @@ A needle-local Orchestrator, if present, is not global Root.
 
 Needle outcomes must pass through the canonical pipeline:
 
-text Needle outcome → ResultProposal-compatible artifact / QuarantineRecord → Post V&V → GT / Root decision → DRS / audit / quarantine / writeback 
+text NeedleRuntime / adapter → ResultProposal-compatible artifact → Post V&V → real GTValidator runtime report → Root-visible routing semantics → LocalDRS Work / Quarantine / DeadEnds persistence 
+
+Needle outcome routing semantics in the current MVP:
+
+- completed accepted outcome -> Work / task_outcome;
+- invalid_json -> Quarantine;
+- schema_validation_failed -> Quarantine;
+- unknown_exception -> Quarantine or failed trace;
+- contract_version_mismatch -> DeadEnds / blocked trace;
+- circuit_breaker_open -> DeadEnds / blocked trace;
+- timeout -> degraded trace, not successful Work;
+- permission_required -> needs_user / blocked trace, not completed action.
+
+Safety rules:
+
+- Work != Quarantine.
+- Work != DeadEnds.
+- degraded trace != successful Work.
+- permission_required != completed action.
+- blocked != success.
+- failed / quarantined / degraded / blocked / deadend records are not direct-reuse eligible.
+- only accepted completed Work candidate is direct-reuse eligible in this MVP demo.
+
+Known limitation: `deadends` is currently used broadly for blocked, degraded, and needs_user traces. A future schema may split DeadEnd, BlockedTrace, DegradedTrace, and NeedsUserTrace.
 
 Marennya and UP are built-in systemic/internal needles:
 

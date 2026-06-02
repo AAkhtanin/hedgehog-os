@@ -163,7 +163,26 @@ Canonical needle topology invariant:
 - Systemic needle outputs must become canonical boundary artifacts such as ResultProposal, QuarantineRecord, VVReport, GTReport, DRS pointer, or AuditEvent.
 - Cognitive mutations from systemic needles must follow quarantine-first behavior and Root-controlled promotion.
 - Wording and implementation must avoid treating a needle as integrated into Executor, owned by Executor, or merely a plugin/tool.
-- The current NeedleRuntime Failure Integration is a demo-level adapter. It proves NeedleExecutionResult can become ResultProposal-compatible and Post V&V-visible. It does not yet prove full Root-level needle planning, AVF selection, DRS quarantine writeback, or production external API execution.
+- The current needle outcome checkpoint proves simulated NeedleRuntime outcomes can become ResultProposal-compatible artifacts, pass through Post V&V, receive real GTValidator runtime reports, receive Root-visible routing semantics, and persist to LocalDRS Work / Quarantine / DeadEnds.
+- LocalDRS is the only implemented DRS runtime for this checkpoint. External DRS remains a future pointer/protocol boundary. Global DRS / Internet of Meaning is not implemented.
+- Needle outcome routing semantics:
+  - completed accepted outcome -> Work / task_outcome;
+  - invalid_json -> Quarantine;
+  - schema_validation_failed -> Quarantine;
+  - unknown_exception -> Quarantine or failed trace;
+  - contract_version_mismatch -> DeadEnds / blocked trace;
+  - circuit_breaker_open -> DeadEnds / blocked trace;
+  - timeout -> degraded trace, not successful Work;
+  - permission_required -> needs_user / blocked trace, not completed action.
+- Needle outcome reuse safety:
+  - Work != Quarantine.
+  - Work != DeadEnds.
+  - degraded trace != successful Work.
+  - permission_required != completed action.
+  - blocked != success.
+  - failed, quarantined, degraded, blocked, and deadend records are not direct-reuse eligible.
+  - only accepted completed Work candidate is direct-reuse eligible in this MVP demo.
+- Known limitation: the `deadends` layer is currently used broadly for blocked, degraded, and needs_user traces. A future schema may split DeadEnd, BlockedTrace, DegradedTrace, and NeedsUserTrace.
 
 9. CandidateVector sources
    - CandidateVector values may come only from installed needles, Local DRS, external DRS pointers, or fallback exploration templates.

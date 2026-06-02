@@ -182,8 +182,9 @@ Needle outcomes pass through canonical pipeline boundaries:
 NeedleExecutionResult / bounded capability output
 -> ResultProposal
 -> Post V&V
--> GT / Root decision
--> DRS / audit / quarantine / writeback
+-> GTValidator runtime report
+-> Root-visible routing semantics
+-> LocalDRS Work / Quarantine / DeadEnds persistence
 ```
 
 Executor may call a permitted needle capability, but Root owns authority.
@@ -208,10 +209,38 @@ TimeEnvelope / TemporalQuery discipline, DRS layer separation,
 quarantine-first behavior for cognitive mutations, and the rule that only Root
 creates `FinalOutput`.
 
-The current NeedleRuntime Failure Integration is a demo-level adapter. It
-proves `NeedleExecutionResult` can become ResultProposal-compatible and Post
-V&V-visible. It does not yet prove full Root-level needle planning, AVF
-selection, DRS quarantine writeback, or production external API execution.
+The current needle outcome checkpoint proves the local canonical boundary for
+simulated needle outcomes. `NeedleExecutionResult` becomes a
+ResultProposal-compatible artifact, Post V&V runs, the real `GTValidator`
+runtime produces a report, Root-visible routing semantics are computed, and
+LocalDRS persists the result into Work, Quarantine, or DeadEnds.
+
+Routing semantics in the current MVP:
+
+- completed accepted outcome -> Work / `task_outcome`;
+- `invalid_json` -> Quarantine;
+- `schema_validation_failed` -> Quarantine;
+- `unknown_exception` -> Quarantine or failed trace;
+- `contract_version_mismatch` -> DeadEnds / blocked trace;
+- `circuit_breaker_open` -> DeadEnds / blocked trace;
+- `timeout` -> degraded trace, not successful Work;
+- `permission_required` -> needs_user / blocked trace, not completed action.
+
+Safety invariants:
+
+- Work != Quarantine.
+- Work != DeadEnds.
+- degraded trace != successful Work.
+- permission_required != completed action.
+- blocked != success.
+- failed / quarantined / degraded / blocked / deadend records are not
+  direct-reuse eligible.
+- only accepted completed Work candidate is direct-reuse eligible in this MVP
+  demo.
+
+This does not yet prove full Root-level needle planning, AVF selection over
+live external needles, production external API execution, global DRS,
+NeedleFactory, marketplace, or Internet-of-Meaning behavior.
 
 ## 2. Non-Goals
 
@@ -465,6 +494,11 @@ DRS is not just memory. It is addressable, layered, time-aware, GT-aware memory.
 
 The MVP uses local JSON DRS. The local implementation proves the memory contract
 without implementing the future external DRS network.
+
+LocalDRS is the only implemented DRS runtime. External DRS remains a future
+pointer/protocol boundary. Global DRS / Internet of Meaning is not implemented.
+DRS records are addressable meaning records with `TimeEnvelope`, provenance, GT
+metadata, validation metadata, trace refs, and routing semantics.
 
 Layers:
 

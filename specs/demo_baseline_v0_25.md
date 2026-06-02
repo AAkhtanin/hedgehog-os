@@ -216,7 +216,45 @@ It should make visible:
 
 This is still a demo-runtime proof. It does not claim production recursive child-cell execution, real external API execution, real external DRS protocol, or live LLM/SLM Orchestrator defaults.
 
-## 10. What This Baseline Does Not Prove Yet
+## 10. Needle Outcome DRS Routing Checkpoint
+
+The current needle outcome demos prove a local simulated path:
+
+```text
+NeedleRuntime / adapter
+-> ResultProposal-compatible artifact
+-> Post V&V
+-> real GTValidator runtime report
+-> Root-visible routing semantics
+-> LocalDRS Work / Quarantine / DeadEnds persistence
+```
+
+Routing semantics:
+
+- completed accepted outcome -> Work / task_outcome;
+- invalid_json -> Quarantine;
+- schema_validation_failed -> Quarantine;
+- unknown_exception -> Quarantine or failed trace;
+- contract_version_mismatch -> DeadEnds / blocked trace;
+- circuit_breaker_open -> DeadEnds / blocked trace;
+- timeout -> degraded trace, not successful Work;
+- permission_required -> needs_user / blocked trace, not completed action.
+
+Reuse safety:
+
+- Work != Quarantine.
+- Work != DeadEnds.
+- degraded trace != successful Work.
+- permission_required != completed action.
+- blocked != success.
+- failed / quarantined / degraded / blocked / deadend records are not direct-reuse eligible.
+- only accepted completed Work candidate is direct-reuse eligible in this MVP demo.
+
+This is LocalDRS only. External DRS remains a future pointer/protocol boundary.
+Global DRS / Internet of Meaning, NeedleFactory, marketplace, and real external
+needle execution are not implemented.
+
+## 11. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 

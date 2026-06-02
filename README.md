@@ -175,7 +175,11 @@ Future systemic needle classes may include:
 
 Systemic/internal needles may contain bounded local fractal cycles, but they must not receive global sovereignty.
 
-The current NeedleRuntime Failure Integration is a demo-level adapter. It proves NeedleExecutionResult can become ResultProposal-compatible and Post V&V-visible. It does not yet prove full Root-level needle planning, AVF selection, DRS quarantine writeback, or production external API execution.
+The current needle outcome checkpoint proves the local canonical boundary for simulated needle outcomes:
+
+text NeedleRuntime / adapter -> ResultProposal-compatible artifact -> Post V&V -> real GTValidator runtime report -> Root-visible routing semantics -> LocalDRS Work / Quarantine / DeadEnds persistence 
+
+This remains MVP/demo scope. It does not yet prove full Root-level needle planning, AVF selection over live external needles, production external API execution, global DRS, NeedleFactory, marketplace, or Internet-of-Meaning behavior.
 
 ---
 
@@ -196,6 +200,15 @@ DRS stores:
 Retrieval must be temporal and time-aware through TemporalQuery.
 
 DRS is not merely vector recall or chatbot memory. It is a layered reflexive store for what happened, when it was valid, who produced it, how much it is trusted, and whether it can safely influence future runs.
+
+Current LocalDRS status:
+
+- LocalDRS is the only implemented DRS runtime.
+- External DRS remains a future pointer/protocol boundary.
+- Global DRS / Internet of Meaning is not implemented.
+- DRS records are addressable meaning records with TimeEnvelope, provenance, GT metadata, validation metadata, trace refs, and routing semantics.
+- Needle outcomes currently route to Work, Quarantine, or DeadEnds according to V&V/GT-classified outcome semantics.
+- Failed, quarantined, degraded, blocked, and dead-end records are not direct-reuse eligible.
 
 ---
 
@@ -423,11 +436,23 @@ This is not production uncontrolled runtime.
 
 Current auditor-facing / runtime checkpoint:
 
-text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native canonical trace in progress / next if not committed yet 
+text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 
 
 The important current rule:
 
 text DAG runner connects to the Root-controlled pipeline after Architect. DAG runner executes Architect PlanGraph. DAG runner returns ResultProposals / boundary artifacts. DAG runner is not Root. DAG runner does not commit output. RootOrchestrator remains final authority. 
+
+Needle outcome routing now proves the local path from simulated NeedleRuntime output through Post V&V, real GTValidator runtime, Root-visible routing semantics, and LocalDRS persistence. Completed accepted outcomes may become Work/task_outcome records. invalid_json, schema_validation_failed, and unknown_exception route to Quarantine. contract_version_mismatch and circuit_breaker_open route to DeadEnds / blocked traces. timeout is a degraded trace, not successful Work. permission_required is needs_user / blocked trace, not a completed action.
+
+Safety rules for this checkpoint:
+
+- Work != Quarantine.
+- Work != DeadEnds.
+- degraded trace != successful Work.
+- permission_required != completed action.
+- blocked != success.
+- failed/quarantined/degraded/blocked/deadend records are not direct-reuse eligible.
+- only accepted completed Work candidate is direct-reuse eligible in this MVP demo.
 
 ---
 
@@ -475,13 +500,17 @@ Completed recent layers:
 - Canonical Pipeline Trace.
 - Explicit Orchestrator / AVF / Attractor Formation.
 - Root-controlled DAG runner integration.
+- Root-native DAG/DRS/audit stabilization.
+- Canonical Needle Outcome Trace.
+- Real GTValidator integration for needle outcomes.
+- Needle Outcome DRS Routing Persistence v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Root-native canonical trace.
-- Stabilize DRS writeback / audit around root-native path.
-- Strengthen NeedleRuntime outcomes through canonical pipeline.
+- Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
+- Add richer direct reuse scoring: ReuseScore / GTTrust / Freshness / PolicyOK / ConflictCheck.
+- Add dedicated audit/hash-chain records beyond embedded trace refs.
 - DRS graph proximity / lineage.
 - Larger graph and bounded fractal stress tests.
 - Adaptive mode router hardening.

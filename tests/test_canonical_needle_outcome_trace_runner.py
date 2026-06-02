@@ -38,6 +38,23 @@ def _rows_by_scenario():
     }
 
 
+def _assert_no_sensitive_terms_in_value(value):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            key_text = str(key).lower()
+            assert key_text not in FORBIDDEN_TERMS
+            _assert_no_sensitive_terms_in_value(child)
+        return
+    if isinstance(value, list):
+        for child in value:
+            _assert_no_sensitive_terms_in_value(child)
+        return
+    if isinstance(value, str):
+        lowered = value.lower()
+        for term in FORBIDDEN_TERMS:
+            assert term not in lowered
+
+
 def test_runner_output_contains_title_and_all_sections():
     output = run_canonical_needle_outcome_trace()
 
@@ -67,7 +84,10 @@ def test_every_scenario_crosses_canonical_boundary_and_post_vv():
 def test_gt_root_boundary_invariants_are_visible_in_output():
     output = run_canonical_needle_outcome_trace()
 
-    assert "gt_ran_after_post_vv: true" in output
+    assert "gt_boundary_after_post_vv: true" in output
+    assert "gt_runtime_called: false" in output
+    assert "gt_decision_mode: deterministic_trace_mapping" in output
+    assert "canonical_gt_runtime_integration: false" in output
     assert "needle_created_final_output: false" in output
     assert "executor_owns_needle: false" in output
     assert "direct_user_answers_from_needle: 0" in output
@@ -152,3 +172,12 @@ def test_output_contains_no_sensitive_terms():
 
     for term in FORBIDDEN_TERMS:
         assert term not in output
+
+
+def test_underlying_payloads_contain_no_sensitive_terms_before_rendering():
+    rows = collect_canonical_needle_outcome_trace()
+
+    for row in rows:
+        _assert_no_sensitive_terms_in_value(row.source.proposal)
+        _assert_no_sensitive_terms_in_value(row.source.proposal["result_payload"])
+        _assert_no_sensitive_terms_in_value(row.source.needle_result.result_payload)

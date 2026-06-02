@@ -167,6 +167,8 @@ def _gt_root_line(row: CanonicalNeedleOutcomeTraceRow) -> str:
             row.root_visible_decision,
             "true",
             "false",
+            "deterministic_trace_mapping",
+            "false",
             "true",
             "false",
             "true",
@@ -237,8 +239,8 @@ def render_canonical_needle_outcome_trace(
         [
             "",
             "[GT / ROOT DECISION]",
-            "scenario | root_visible_decision | gt_ran_after_post_vv | gt_committed_final_output | root_decision_required | root_created_final_output | no_direct_user_answer_from_needle",
-            "--- | --- | --- | --- | --- | --- | ---",
+            "scenario | root_visible_decision | gt_boundary_after_post_vv | gt_runtime_called | gt_decision_mode | gt_committed_final_output | root_decision_required | root_created_final_output | no_direct_user_answer_from_needle",
+            "--- | --- | --- | --- | --- | --- | --- | --- | ---",
         ]
     )
     lines.extend(_gt_root_line(row) for row in rows)
@@ -259,7 +261,10 @@ def render_canonical_needle_outcome_trace(
             f"canonical_boundary_conversions: {len(rows)}",
             f"post_vv_runs: {sum(row.post_vv_ran for row in rows)}",
             "gt_after_post_vv: true",
-            "gt_ran_after_post_vv: true",
+            "gt_boundary_after_post_vv: true",
+            "gt_runtime_called: false",
+            "gt_decision_mode: deterministic_trace_mapping",
+            "canonical_gt_runtime_integration: false",
             f"root_decisions_required: {len(rows)}",
             "needle_created_final_output: false",
             "executor_owns_needle: false",

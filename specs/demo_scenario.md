@@ -191,6 +191,25 @@ Its PASS summary is derived from computed section predicates. It does not claim
 global DRS, production 10k graph execution, production retrieval, or production
 autonomy.
 
+## Compute Collapse Via DRS Reuse
+
+Compute Collapse via DRS Reuse v0.1 is an auditor-facing showcase over existing
+deterministic cold-start, Root direct reuse, LocalDRS, ReuseGate, and unsafe DRS
+routing proofs. It is not a new runtime layer. It complements Chaos Survival:
+Chaos Survival demonstrates resilience / safety / containment, while Compute
+Collapse demonstrates efficiency / reuse / zero re-planning path.
+
+It shows cold_start_full_pipeline, memory_context_only, eligible_direct_reuse,
+and unsafe_records_not_reused. Context memory does not equal direct reuse.
+Eligible direct reuse skips Architect and Executor/DAG, but still returns
+through Root. Unsafe Quarantine, DeadEnds, failed, blocked, and degraded records
+are not direct-reuse candidates.
+
+Compute units are illustrative deterministic units derived from route flags, not
+real token billing. savings_ratio is computed from those units. Do not describe
+this as absolute zero cost, real token savings proven, production billing
+benchmark, or production autonomy.
+
 ## Exclusions
 
 - No real external APIs.
@@ -205,6 +224,8 @@ autonomy.
 - No external DRS protocol implementation.
 - No production DRS retrieval engine.
 - No production autonomy.
+- No production billing benchmark.
+- No real token savings measurement.
 - No Internet of Meaning implementation.
 - No NeedleFactory implementation.
 - No needle marketplace implementation.

@@ -120,6 +120,18 @@ Current bounded graph and lineage checkpoints:
   does not claim production autonomy, does not claim global DRS or production
   retrieval, and does not claim production 10k-node execution. Its PASS summary
   is derived from computed section predicates.
+- Compute Collapse via DRS Reuse v0.1 is an auditor-facing showcase / evidence
+  aggregator over existing deterministic cold-start, Root direct reuse,
+  LocalDRS, ReuseGate, and unsafe DRS routing proofs. It complements Chaos
+  Survival Showcase: Chaos Survival demonstrates resilience / safety /
+  containment; Compute Collapse demonstrates efficiency / reuse / zero
+  re-planning path. It shows cold_start_full_pipeline, memory_context_only,
+  eligible_direct_reuse, and unsafe_records_not_reused. Direct reuse requires
+  eligible Work, context memory is not direct reuse, Root remains final
+  authority, unsafe records are not reused, and GT does not commit FinalOutput.
+  Compute units are illustrative deterministic units derived from route flags,
+  not real token billing. This must not be described as absolute zero cost, real
+  token savings proven, production autonomy, or a production billing benchmark.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

@@ -306,7 +306,40 @@ The showcase PASS summary is derived from computed section predicates. It does
 not claim production autonomy, global DRS, production 10k-node graph execution,
 or a production retrieval engine.
 
-## 13. What This Baseline Does Not Prove Yet
+## 13. Compute Collapse Via DRS Reuse Checkpoint
+
+Compute Collapse via DRS Reuse v0.1 is an auditor-facing showcase / evidence
+aggregator over existing deterministic cold-start, Root direct reuse, LocalDRS,
+ReuseGate, and unsafe DRS routing proof modules. It is not a new core runtime
+layer.
+
+It complements Chaos Survival Showcase:
+
+- Chaos Survival Showcase v0.1 demonstrates reliability / safety / containment.
+- Compute Collapse via DRS Reuse v0.1 demonstrates efficiency / reuse / zero
+  re-planning path.
+
+It demonstrates four scenarios:
+
+1. cold_start_full_pipeline: full pipeline path, direct_reuse_applied=false,
+   Architect and Executor are not skipped, Post V&V and GT run, Root creates
+   FinalOutput, and DRS writeback happens.
+2. memory_context_only: memory_context_applied=true and
+   direct_reuse_applied=false. Prior memory may inform context, but it does not
+   bypass Architect/Executor without eligibility.
+3. eligible_direct_reuse: direct_reuse_applied=true, Architect skipped,
+   Executor/DAG skipped, result sourced from eligible Work, Root still creates
+   FinalOutput, and direct reuse does not bypass Root.
+4. unsafe_records_not_reused: Quarantine / DeadEnds / failed / blocked /
+   degraded records are not direct-reuse candidates, and
+   direct_reuse_unsafe_candidates=0.
+
+Compute units are illustrative deterministic units derived from route flags.
+They are not real token billing, and savings_ratio is not a production billing
+benchmark. Do not claim absolute zero cost, real token savings proven, or
+production autonomy.
+
+## 14. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
@@ -323,6 +356,8 @@ This baseline does not prove:
 - production 10k-node graph execution;
 - production DRS retrieval engine;
 - production autonomy;
+- production billing benchmark;
+- real token savings measurement;
 - global or external DRS graph traversal;
 - a polished or genuinely useful real-world assistant scenario.
 
@@ -336,9 +371,9 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work should focus on Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path, typed DRS lineage edges, richer reuse scoring, dedicated audit/hash-chain records, and clearer trace layer splits for blocked/degraded/needs_user outcomes, not on adding more mock L0 reflex commands. Avoid claiming absolute zero cost.
+After this baseline, the next architecture work should return to runtime hardening: DRS layer taxonomy v0.1. The MVP DeadEnds layer is intentionally broad and may contain dead_end / blocked_trace / degraded_trace / needs_user_trace semantics. Future work should split or classify these meanings at routing/report level before deeper ReuseScore or typed lineage edges.
 
-## 14. Future Demo Evolution
+## 15. Future Demo Evolution
 
 - v0.25: deterministic CLI baseline, memory-informed reuse, explicit direct reuse scenario, and closed L0 proof path.
 - v0.26: Observable Zero Trust Runtime proof / canonical pipeline trace.
@@ -348,6 +383,7 @@ After this baseline, the next architecture work should focus on Compute Collapse
 - v0.30: Large Graph / Bounded Fractal Stress and DRS Graph Proximity / Lineage.
 - v0.31: Chaos Survival Showcase.
 - v0.32: Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path.
+- v0.33: DRS layer taxonomy v0.1.
 - v0.35: controlled LLM/SLM role substitution.
 - v0.40: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

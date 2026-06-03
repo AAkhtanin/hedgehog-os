@@ -1467,13 +1467,26 @@
       "phase": 14,
       "name": "Compute Collapse via DRS Reuse",
       "tasks": [
-        "demonstrate zero re-planning path where policy allows",
+        "compose existing cold-start, Root direct reuse, LocalDRS, ReuseGate, and unsafe DRS routing proofs",
+        "demonstrate cold_start_full_pipeline, memory_context_only, eligible_direct_reuse, and unsafe_records_not_reused",
+        "demonstrate zero re-planning path where eligibility allows",
         "show near-zero LLM cost path without claiming absolute zero cost",
-        "prove DRS reuse remains gated by Root, ReuseGate, freshness, trust, policy, and conflict checks"
+        "derive illustrative compute units from route flags rather than real token billing",
+        "prove DRS reuse remains gated by Root, ReuseGate, freshness, trust, policy, and conflict checks",
+        "prove unsafe records are not direct-reuse candidates"
       ]
     },
     {
       "phase": 15,
+      "name": "DRS layer taxonomy",
+      "tasks": [
+        "classify broad DeadEnds routing semantics",
+        "distinguish dead_end, blocked_trace, degraded_trace, and needs_user_trace at routing/report level",
+        "prepare cleaner semantics before deeper ReuseScore or typed lineage edges"
+      ]
+    },
+    {
+      "phase": 16,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1483,7 +1496,7 @@
       ]
     },
     {
-      "phase": 16,
+      "phase": 17,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

@@ -99,6 +99,22 @@ Chaos Survival Showcase invariant:
 - It may summarize NeedleRuntime Chaos, Canonical Needle Outcome Trace, Needle Outcome DRS Routing Persistence, Large Graph / Bounded Fractal Stress, and DRS Graph Proximity / Lineage.
 - It must preserve Root final authority, Executor/needle no-FinalOutput, GT no-commit, unsafe reuse candidates = 0, and bad outcomes written to successful Work = 0.
 
+Compute Collapse via DRS Reuse invariant:
+
+- Compute Collapse via DRS Reuse is an auditor-facing evidence aggregator, not a new core runtime layer.
+- It may demonstrate cold_start_full_pipeline, memory_context_only, eligible_direct_reuse, and unsafe_records_not_reused.
+- Context memory is not direct reuse.
+- Direct reuse requires eligible Work and explicit Root gate.
+- Direct reuse must not bypass Root and must not use Quarantine, DeadEnds, failed, blocked, or degraded records.
+- Architect / Executor / DAG skipping is allowed only in the eligible direct reuse scenario.
+- Compute units are illustrative deterministic units derived from route flags, not real token billing.
+- The proof must not claim absolute zero cost, real token savings proven, production billing benchmark, production autonomy, live Gemini, Telegram actions, global DRS, external DRS, or real external actions.
+
+DRS layer taxonomy direction:
+
+- The MVP DeadEnds layer is intentionally broad and may contain dead_end, blocked_trace, degraded_trace, and needs_user_trace semantics.
+- Future hardening should classify or split these meanings at routing/report level before deeper ReuseScore, typed lineage edges, or broader direct reuse policy.
+
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.
    - Optional context is loaded only when requested by intent, policy, or an applicable installed needle.

@@ -109,6 +109,9 @@ These are future strategic layers, not current MVP tasks.
 30. DeadEnds, Quarantine, blocked, failed, and degraded records must not become direct-reuse eligible because they are graph-near.
 31. Showcase reports must be derived from existing proof outputs or structured collectors, not hardcoded PASS tables.
 32. Chaos Survival Showcase is not production autonomy and must not imply live Gemini, Telegram actions, external DRS, global DRS, or real external actions.
+33. Compute Collapse via DRS Reuse is an evidence aggregator, not a new runtime layer or billing benchmark.
+34. Compute Collapse may say zero re-planning path or near-zero LLM cost path, but must not claim absolute zero cost or real token savings proven.
+35. Direct reuse must require eligible Work and must not bypass Root.
 
 ---
 
@@ -174,6 +177,23 @@ GraphProximity does not change ReuseGate and does not override policy. Nearby De
 It is not a new runtime layer. It summarizes timeout containment, quarantine routing, blocked permission/circuit-breaker cases, unsafe reuse candidates = 0, bad outcomes written to successful Work = 0, bounded/malformed graph survival, graph proximity policy safety, Root authority, no Executor/needle FinalOutput, no GT commit, no live Gemini, no Telegram actions, and no real external actions. Its PASS summary must be derived from computed section predicates.
 
 The next planned demonstration is Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path. Do not claim absolute zero cost.
+
+---
+
+## Compute Collapse via DRS Reuse
+
+`python -m demo.run_compute_collapse_reuse_showcase` is an auditor-facing showcase over existing deterministic cold-start, Root direct reuse, LocalDRS, ReuseGate, and unsafe DRS routing proofs. It complements Chaos Survival Showcase: Chaos Survival demonstrates resilience / safety / containment, while Compute Collapse demonstrates efficiency / reuse / zero re-planning path.
+
+It shows four scenarios:
+
+- cold_start_full_pipeline: full pipeline, no direct reuse, Architect/Executor run, Post V&V and GT run, Root creates FinalOutput, and DRS writeback occurs.
+- memory_context_only: memory_context_applied=true, direct_reuse_applied=false; context memory does not bypass Architect/Executor without eligibility.
+- eligible_direct_reuse: direct_reuse_applied=true; Architect and Executor/DAG are skipped, result is sourced from eligible Work, and Root still creates FinalOutput.
+- unsafe_records_not_reused: Quarantine, DeadEnds, failed, blocked, and degraded records are not direct-reuse candidates.
+
+Compute units are illustrative deterministic units derived from route flags. They are not real token billing. Do not claim absolute zero cost, real token savings proven, or production billing benchmark.
+
+Next engineering direction should return to runtime hardening: DRS layer taxonomy v0.1, classifying broad DeadEnds semantics into dead_end / blocked_trace / degraded_trace / needs_user_trace before deeper ReuseScore or typed lineage edges.
 
 ---
 
@@ -338,6 +358,7 @@ Use this order for current MVP work:
 27. DRS Graph Proximity / Lineage.
 28. Chaos Survival Showcase.
 29. Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path.
+30. DRS layer taxonomy v0.1.
 
 Do not implement NeedleFactory, marketplace, global DRS, official organizational needles, blockchain, or real external actions before the canonical runtime is stable.
 

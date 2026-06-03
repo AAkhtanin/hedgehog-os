@@ -436,7 +436,7 @@ This is not production uncontrolled runtime.
 
 Current auditor-facing / runtime checkpoint:
 
-text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 
+text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 -> Compute Collapse via DRS Reuse v0.1 
 
 The important current rule:
 
@@ -449,6 +449,8 @@ Large Graph / Bounded Fractal Stress proves bounded behavior for oversized or ma
 DRS Graph Proximity / Lineage proves a LocalDRS-only read-only retrieval/ranking signal. Records are written to and read from LocalDRS, store links through lineage/source refs, and do not store static `hops_ago`, `hop_distance`, or `graph_distance`. `graph_distance` is computed at query time, and `graph_proximity = 2 ** (-distance / hop_half_life)`. GraphProximity is only a ranking signal: it does not override policy, does not change ReuseGate, and does not make Quarantine, DeadEnds, blocked, failed, or degraded records direct-reuse eligible.
 
 Chaos Survival Showcase v0.1 is an auditor-facing evidence aggregator, not a new core runtime layer. It composes NeedleRuntime Chaos, Canonical Needle Outcome Trace with real GTValidator integration, Needle Outcome DRS Routing Persistence, Large Graph / Bounded Fractal Stress, and DRS Graph Proximity / Lineage into one report. It shows timeout containment, invalid_json and schema_validation_failed quarantine, unknown_exception containment, permission_required needs_user/blocking, circuit breaker blocking, unsafe reuse candidates = 0, bad outcomes written to successful Work = 0, oversized/cycle/unknown-dependency graph blocking, raw large graph not sent to GT, graph proximity not overriding policy, Root final authority, no Executor/needle FinalOutput, no GT commit, no live Gemini, no Telegram action, no real external action, and `production_autonomy_claimed: false`. The showcase PASS summary is derived from computed section predicates, not hardcoded.
+
+Compute Collapse via DRS Reuse v0.1 complements Chaos Survival: Chaos Survival demonstrates resilience / safety / containment, while Compute Collapse demonstrates efficiency / reuse / zero re-planning path. It is an auditor-facing evidence aggregator over existing deterministic cold-start, Root direct reuse, LocalDRS, ReuseGate, and unsafe DRS routing proofs. It shows four scenarios: cold_start_full_pipeline runs Architect, Executor, Post V&V, GT, Root FinalOutput, and DRS writeback with direct_reuse_applied=false; memory_context_only applies memory context but does not fake direct reuse or skip Architect/Executor; eligible_direct_reuse applies direct reuse, skips Architect and Executor/DAG, sources from eligible Work, and still returns through Root; unsafe_records_not_reused keeps Quarantine, DeadEnds, failed, blocked, and degraded records out of direct reuse with direct_reuse_unsafe_candidates=0. Compute units are illustrative deterministic units derived from route flags, not real token billing; savings_ratio is computed from those units. This proof must not be described as absolute zero cost, real token savings proven, or a production billing benchmark.
 
 Safety rules for this checkpoint:
 
@@ -510,6 +512,12 @@ Mitigation: Chaos Survival Showcase v0.1 is explicitly a deterministic presentat
 
 Future tests: Compute Collapse via DRS Reuse, Zero Re-Planning Path, or Near-Zero LLM Cost Path. Avoid claiming absolute zero cost.
 
+### DRS Layer Taxonomy
+
+Risk: the MVP uses DeadEnds broadly for dead_end, blocked_trace, degraded_trace, and needs_user_trace semantics.
+
+Mitigation: future runtime hardening should classify or split these meanings at routing/report level before deeper ReuseScore, typed lineage edges, or richer direct reuse policy.
+
 ---
 
 ## Roadmap
@@ -531,11 +539,12 @@ Completed recent layers:
 - Large Graph / Bounded Fractal Stress v0.1.
 - DRS Graph Proximity / Lineage v0.1.
 - Chaos Survival Showcase v0.1.
+- Compute Collapse via DRS Reuse v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path.
+- DRS layer taxonomy v0.1: classify broad DeadEnds routing into dead_end / blocked_trace / degraded_trace / needs_user_trace semantics.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add richer direct reuse scoring: ReuseScore / GTTrust / Freshness / PolicyOK / ConflictCheck.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.

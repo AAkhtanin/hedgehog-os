@@ -124,7 +124,26 @@ DRS layer taxonomy invariant:
 - needs_user_trace means confirmation, permission, or missing human input required; it is not completed action.
 - Taxonomy does not override policy. Direct reuse policy remains unchanged, unsafe_direct_reuse_candidates must remain 0, local_drs_only remains true, external/global DRS are not implemented, and schema_refactor_performed remains false.
 - taxonomy_does_not_override_policy, broad_deadends_semantics_clarified, direct_reuse_policy_unchanged, and PASS status must be derived from classified rows, not hardcoded.
-- Typed DRS lineage edges should come next. ReuseScore v0.1 should come after taxonomy and typed lineage edges.
+
+Typed DRS lineage edges invariant:
+
+- Typed DRS Lineage Edges v0.1 is an engineering hardening layer, not a showcase.
+- It is a LocalDRS-only typed-edge proof.
+- It does not perform a schema refactor, change ReuseGate behavior, implement ReuseScore, implement ConflictCheck, implement global/external DRS, or make unsafe records reusable.
+- After DRS Layer Taxonomy clarifies what kind of records exist, typed edges clarify what kind of relationships exist between records.
+- Required edge classes are derived_from, same_trace, warns_against, blocked_by_policy, requires_user, degraded_from, supports, and contradicts.
+- Typed edge interpretation is computed at query time. Records must not store static hops_ago, hop_distance, or graph_distance as persisted truth.
+- supports may contribute positive evidence, but cannot make a target directly reusable by itself.
+- derived_from may contribute lineage evidence, but does not override policy.
+- warns_against is warning evidence, not positive reuse evidence.
+- blocked_by_policy is blocking evidence, not success.
+- requires_user is needs-user evidence, not completed action.
+- degraded_from is degradation evidence, not stable success.
+- contradicts is contradiction evidence, but does not auto-block the target in v0.1.
+- Contradiction source records must not be reused; contradiction targets require future ConflictCheck / ReuseScore handling.
+- typed_edges_are_signals_only must remain true for v0.1.
+- direct reuse policy remains unchanged, ReuseScore_implemented = false, conflict_check_implemented = false, local_drs_only = true, external/global DRS are not implemented, and schema_refactor_performed = false.
+- ReuseScore v0.1 should come next and must remain advisory/ranking only, not Root, not ReuseGate, and not policy override.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

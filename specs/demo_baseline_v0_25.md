@@ -378,7 +378,47 @@ The taxonomy proof derives taxonomy_does_not_override_policy,
 broad_deadends_semantics_clarified, direct_reuse_policy_unchanged, and PASS from
 classified rows rather than hardcoded claims.
 
-## 15. What This Baseline Does Not Prove Yet
+## 15. Typed DRS Lineage Edges Checkpoint
+
+Typed DRS Lineage Edges v0.1 is engineering hardening after taxonomy. It is a
+LocalDRS-only typed-edge proof, not a showcase, schema refactor, ReuseGate
+change, ReuseScore implementation, ConflictCheck implementation, global DRS, or
+external DRS.
+
+Typed edge classes:
+
+- derived_from;
+- same_trace;
+- warns_against;
+- blocked_by_policy;
+- requires_user;
+- degraded_from;
+- supports;
+- contradicts.
+
+Safety semantics:
+
+- supports may contribute positive evidence, but cannot make a target directly
+  reusable by itself.
+- derived_from may contribute lineage evidence, but does not override policy.
+- warns_against is warning evidence, not positive reuse evidence.
+- blocked_by_policy is blocking evidence, not success.
+- requires_user is needs-user evidence, not completed action.
+- degraded_from is degradation evidence, not stable success.
+- contradicts is contradiction evidence, but does not auto-block the target in
+  v0.1.
+- contradiction source records are not reused.
+- contradiction targets require future ConflictCheck / ReuseScore handling.
+- typed_edges_are_signals_only = true.
+- ReuseScore_implemented = false.
+- conflict_check_implemented = false.
+- direct reuse policy remains unchanged.
+
+Graph distance and typed edge interpretation are computed at query time. Records
+do not store static hops_ago / hop_distance / graph_distance. This checkpoint is
+not a claim of production retrieval or a production semantic internet.
+
+## 16. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
@@ -394,6 +434,9 @@ This baseline does not prove:
 - production recursive child-cell execution;
 - production 10k-node graph execution;
 - production DRS retrieval engine;
+- production typed-edge retrieval engine;
+- production ConflictCheck;
+- production ReuseScore;
 - production autonomy;
 - production billing benchmark;
 - real token savings measurement;
@@ -410,9 +453,9 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work should continue runtime hardening with Typed DRS Lineage Edges v0.1. ReuseScore v0.1 should come after taxonomy and typed lineage edges, not before.
+After this baseline, the next architecture work should continue runtime hardening with ReuseScore v0.1. ReuseScore must remain advisory/ranking only, not Root, not ReuseGate, and not policy override.
 
-## 16. Future Demo Evolution
+## 17. Future Demo Evolution
 
 - v0.25: deterministic CLI baseline, memory-informed reuse, explicit direct reuse scenario, and closed L0 proof path.
 - v0.26: Observable Zero Trust Runtime proof / canonical pipeline trace.
@@ -424,6 +467,7 @@ After this baseline, the next architecture work should continue runtime hardenin
 - v0.32: Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path.
 - v0.33: DRS layer taxonomy v0.1.
 - v0.34: Typed DRS Lineage Edges v0.1.
-- v0.35: controlled LLM/SLM role substitution.
+- v0.35: ReuseScore v0.1 as advisory/ranking only.
+- v0.36: controlled LLM/SLM role substitution.
 - v0.40: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

@@ -1491,6 +1491,20 @@
     },
     {
       "phase": 16,
+      "name": "Typed DRS Lineage Edges",
+      "status": "v0.1_complete",
+      "tasks": [
+        "distinguish derived_from, same_trace, warns_against, blocked_by_policy, requires_user, degraded_from, supports, and contradicts relationships",
+        "extract typed edges from persisted LocalDRS record content/source refs in the proof",
+        "compute graph distance and typed edge interpretation at query time",
+        "preserve direct reuse policy and ReuseGate behavior",
+        "document typed_edges_are_signals_only for v0.1",
+        "keep ReuseScore_implemented false and conflict_check_implemented false",
+        "prepare cleaner semantics before advisory ReuseScore"
+      ]
+    },
+    {
+      "phase": 17,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1500,7 +1514,7 @@
       ]
     },
     {
-      "phase": 17,
+      "phase": 18,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

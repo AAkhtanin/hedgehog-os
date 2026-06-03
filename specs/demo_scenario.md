@@ -237,6 +237,37 @@ the only implemented DRS runtime, external/global DRS are not implemented, and
 schema_refactor_performed remains false. The taxonomy proof derives its safety
 and summary flags from classified rows, not hardcoded PASS claims.
 
+## Typed DRS Lineage Edges
+
+Typed DRS Lineage Edges v0.1 is a LocalDRS-only typed-edge proof after DRS Layer
+Taxonomy. It clarifies relationship types between records without a schema
+refactor, ReuseGate change, ReuseScore, ConflictCheck, global DRS, or external
+DRS.
+
+Typed edge classes:
+
+- derived_from
+- same_trace
+- warns_against
+- blocked_by_policy
+- requires_user
+- degraded_from
+- supports
+- contradicts
+
+Typed edges are query-time semantic signals only in v0.1. `supports` and
+`derived_from` can contribute evidence but cannot make a target directly
+reusable by themselves. `warns_against` is warning evidence, `blocked_by_policy`
+is blocking evidence, `requires_user` is needs-user evidence, `degraded_from` is
+degradation evidence, and `contradicts` is contradiction evidence.
+
+Contradiction source records are not reused. Contradiction targets are not
+auto-blocked by typed edges in v0.1 and require future ConflictCheck /
+ReuseScore handling. Records do not store static hops_ago / hop_distance /
+graph_distance; graph distance and typed interpretation are computed at query
+time. This checkpoint is not production retrieval and not a production semantic
+internet.
+
 ## Exclusions
 
 - No real external APIs.

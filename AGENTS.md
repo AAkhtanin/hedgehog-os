@@ -52,7 +52,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → only later: NeedleFactory / NeedleForge 
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → only later: NeedleFactory / NeedleForge 
 
 Do not jump ahead to:
 
@@ -114,6 +114,8 @@ These are future strategic layers, not current MVP tasks.
 35. Direct reuse must require eligible Work and must not bypass Root.
 36. DRS Layer Taxonomy clarifies broad DeadEnds semantics but does not change ReuseGate, schema layers, or direct reuse eligibility.
 37. Taxonomy must not make quarantine, dead_end, blocked_trace, degraded_trace, or needs_user_trace records reusable.
+38. Typed DRS Lineage Edges are query-time semantic signals only in v0.1; they must not override policy, ReuseGate, or direct reuse gates.
+39. Typed edges must not imply ReuseScore or ConflictCheck is implemented.
 
 ---
 
@@ -178,7 +180,7 @@ GraphProximity does not change ReuseGate and does not override policy. Nearby De
 
 It is not a new runtime layer. It summarizes timeout containment, quarantine routing, blocked permission/circuit-breaker cases, unsafe reuse candidates = 0, bad outcomes written to successful Work = 0, bounded/malformed graph survival, graph proximity policy safety, Root authority, no Executor/needle FinalOutput, no GT commit, no live Gemini, no Telegram actions, and no real external actions. Its PASS summary must be derived from computed section predicates.
 
-The next planned demonstration is Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path. Do not claim absolute zero cost.
+Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path is complete. Do not claim absolute zero cost.
 
 ---
 
@@ -206,7 +208,24 @@ It classifies the broad MVP DeadEnds semantics into:
 - degraded_trace: timeout, partial failure, or service instability; not successful Work.
 - needs_user_trace: user confirmation, permission, or missing human input required; not completed action.
 
-Safety flags such as taxonomy_does_not_override_policy, broad_deadends_semantics_clarified, and direct_reuse_policy_unchanged must be derived from classified rows, not hardcoded. Next engineering direction: Typed DRS Lineage Edges v0.1. ReuseScore v0.1 should come after taxonomy and typed lineage edges.
+Safety flags such as taxonomy_does_not_override_policy, broad_deadends_semantics_clarified, and direct_reuse_policy_unchanged must be derived from classified rows, not hardcoded.
+
+Typed DRS Lineage Edges v0.1 is the next completed hardening step. It is LocalDRS-only typed-edge proof, not a schema refactor, not a ReuseGate change, not ReuseScore, not ConflictCheck, and not global/external DRS.
+
+It distinguishes:
+
+- derived_from;
+- same_trace;
+- warns_against;
+- blocked_by_policy;
+- requires_user;
+- degraded_from;
+- supports;
+- contradicts.
+
+Typed edges are semantic signals only in v0.1. `supports` and `derived_from` may provide positive or lineage evidence but cannot make a target directly reusable by themselves. `warns_against` is warning evidence, `blocked_by_policy` is blocking evidence, `requires_user` is needs-user evidence, `degraded_from` is degradation evidence, and `contradicts` is contradiction evidence. A contradiction source is not reused, but the target is not auto-blocked until a future ConflictCheck / ReuseScore layer exists.
+
+Next engineering direction: ReuseScore v0.1. It must remain advisory/ranking only, not Root, not ReuseGate, and not policy override.
 
 ---
 
@@ -373,6 +392,7 @@ Use this order for current MVP work:
 29. Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path.
 30. DRS Layer Taxonomy v0.1.
 31. Typed DRS Lineage Edges v0.1.
+32. ReuseScore v0.1 as advisory/ranking only.
 
 Do not implement NeedleFactory, marketplace, global DRS, official organizational needles, blockchain, or real external actions before the canonical runtime is stable.
 

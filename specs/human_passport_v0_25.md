@@ -141,6 +141,16 @@ Current bounded graph and lineage checkpoints:
   demo. timeout is degraded_trace, permission_required is needs_user_trace,
   blocked_trace is not success, quarantine is not Work, and the taxonomy truth
   flags are derived from classified rows.
+- Typed DRS Lineage Edges v0.1 is the next completed engineering hardening layer. It is a
+  LocalDRS-only typed-edge proof that distinguishes derived_from, same_trace,
+  warns_against, blocked_by_policy, requires_user, degraded_from, supports, and
+  contradicts relationships. It does not perform a schema refactor, change
+  ReuseGate, implement ReuseScore, implement ConflictCheck, implement
+  global/external DRS, or make unsafe records reusable. Typed edges are
+  query-time semantic signals only: supports / derived_from can contribute
+  evidence but not direct reuse eligibility, warning/blocking/needs-user/
+  degraded/contradiction edges do not become success, and contradiction targets
+  require future ConflictCheck / ReuseScore handling.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or
@@ -296,6 +306,13 @@ Safety invariants:
   service instability; needs_user_trace covers permission_required or missing
   human input. It does not override policy, does not make unsafe records
   reusable, and does not implement global/external DRS.
+- Typed DRS Lineage Edges v0.1 then clarifies record relationships at query
+  time: derived_from, same_trace, warns_against, blocked_by_policy,
+  requires_user, degraded_from, supports, and contradicts. Records do not store
+  static hops_ago / hop_distance / graph_distance. Typed edges are semantic
+  signals only in v0.1; they do not override policy, do not implement ReuseScore
+  or ConflictCheck, do not auto-block contradiction targets, and do not make
+  unsafe records reusable.
 
 This does not yet prove full Root-level needle planning, AVF selection over
 live external needles, production external API execution, global DRS,

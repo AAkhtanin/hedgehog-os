@@ -1553,11 +1553,24 @@
         "keep full pipeline fallback, conflict check, policy blocked, quarantine, needs_user, degraded, and dead_end decisions as non-gate routes",
         "return approved gate candidates upward to Root final decision without production execution",
         "preserve root_authority_preserved, reuse_gate_boundary_preserved, semantic_pipeline_authority_granted false, and unsafe_reuse_candidates zero",
-        "prepare Root-controlled Semantic Reuse Final Decision Trace"
+        "feed Root-controlled Semantic Reuse Final Decision Trace"
       ]
     },
     {
       "phase": 21,
+      "name": "Root-controlled Semantic Reuse Final Decision Trace",
+      "status": "v0.1_complete",
+      "tasks": [
+        "consume Root Semantic Reuse Gate Trace rows",
+        "map gate outcomes into explicit Root final dry-run decisions",
+        "create only a trace-level Root final decision artifact",
+        "avoid production RootOrchestrator behavior changes, production direct reuse execution, production FinalOutput, real external actions, and production Work writeback",
+        "preserve semantic_pipeline_authority_granted false, reuse_gate_authority_granted false, root_authority_preserved true, and unsafe_reuse_candidates zero",
+        "prepare Root-native Semantic Reuse E2E Trace"
+      ]
+    },
+    {
+      "phase": 22,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1567,7 +1580,7 @@
       ]
     },
     {
-      "phase": 22,
+      "phase": 23,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

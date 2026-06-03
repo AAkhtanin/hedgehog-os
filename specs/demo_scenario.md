@@ -388,11 +388,47 @@ reuse_gate_boundary_preserved=true, semantic_pipeline_authority_granted=false,
 local_drs_only=true, external/global DRS are not implemented, and
 production_autonomy_claimed=false.
 
-Current semantic reuse chain: Semantic Reuse Pipeline recommends -> Root
-Decision Trace maps recommendations -> ReuseGate Trace reviews direct reuse
-candidate only -> approved candidate returns upward to Root final decision -> no
-production execution yet. The next planned engineering layer is Root-controlled
-Semantic Reuse Final Decision Trace v0.1.
+Root-controlled Semantic Reuse Final Decision Trace v0.1 is a deterministic
+Root-controlled dry-run proof. It consumes the Gate Trace, does not change
+production RootOrchestrator behavior, does not execute production direct reuse,
+does not create production FinalOutput, does not perform real external actions,
+does not write production Work records, and grants no authority to the semantic
+pipeline or ReuseGate. It creates only a trace-level Root final decision
+artifact.
+
+Final decision semantics:
+
+- gate_review_accepts_candidate_for_root_final_decision ->
+  root_final_accepts_controlled_direct_reuse_trace
+- gate_not_applicable_full_pipeline_fallback ->
+  root_final_selects_full_pipeline_fallback
+- gate_not_applicable_conflict_check_required ->
+  root_final_requires_conflict_check
+- gate_not_applicable_policy_blocked -> root_final_blocks_policy_route
+- gate_not_applicable_quarantine -> root_final_routes_to_quarantine
+- gate_not_applicable_needs_user -> root_final_requires_user_input
+- gate_not_applicable_degraded -> root_final_marks_degraded_trace
+- gate_not_applicable_dead_end -> root_final_rejects_dead_end
+
+Final Decision Trace safety flags: trace_final_decision_artifacts_created=1,
+trace_artifacts_created_only_by_root=true,
+controlled_direct_reuse_trace_accepts=1,
+production_direct_reuse_executed=false, production_final_output_created=false,
+production_action_executed=false, production_work_record_written=false,
+semantic_pipeline_authority_granted=false, reuse_gate_authority_granted=false,
+unsafe_reuse_candidates=0, root_authority_preserved=true,
+reuse_gate_boundary_preserved=true, local_drs_only=true, external/global DRS are
+not implemented, and production_autonomy_claimed=false.
+
+Important honesty note: root_final_accepts_controlled_direct_reuse_trace is
+still trace/dry-run. It is not production direct reuse execution, and the trace
+final decision artifact is not production FinalOutput.
+
+Current semantic reuse authority chain: Semantic Reuse Pipeline recommends ->
+Root Decision Trace maps recommendations -> ReuseGate Trace reviews direct reuse
+candidate only -> approved candidate returns upward to Root -> Root Final
+Decision Trace makes final dry-run decision -> no production execution yet. The
+next planned engineering layer is Root-native Semantic Reuse E2E Trace v0.1.
 
 ## Exclusions
 

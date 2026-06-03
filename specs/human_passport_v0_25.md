@@ -198,11 +198,29 @@ Current bounded graph and lineage checkpoints:
   final decision; it is not production execution. ReuseGate does not create
   FinalOutput, does not execute direct reuse, semantic pipeline does not commit,
   and Root remains final authority.
-- The current semantic reuse chain is: Semantic Reuse Pipeline recommends ->
-  Root Decision Trace maps recommendations -> ReuseGate Trace reviews direct
-  reuse candidate only -> approved candidate returns upward to Root final
-  decision -> no production execution yet. The next planned engineering layer is
-  Root-controlled Semantic Reuse Final Decision Trace v0.1.
+- Root-controlled Semantic Reuse Final Decision Trace v0.1 is the completed
+  Root-controlled dry-run proof. It consumes the Gate Trace, does not change
+  production RootOrchestrator behavior, does not execute production direct
+  reuse, does not create production FinalOutput, does not perform real external
+  actions, does not write production Work records, and grants no authority to
+  the semantic pipeline or ReuseGate. It creates only a trace-level Root final
+  decision artifact.
+- Final decision mapping is explicit: gate-approved candidate ->
+  root_final_accepts_controlled_direct_reuse_trace; full pipeline fallback ->
+  root_final_selects_full_pipeline_fallback; conflict check ->
+  root_final_requires_conflict_check; policy block ->
+  root_final_blocks_policy_route; quarantine -> root_final_routes_to_quarantine;
+  needs_user -> root_final_requires_user_input; degraded ->
+  root_final_marks_degraded_trace; dead_end -> root_final_rejects_dead_end.
+- root_final_accepts_controlled_direct_reuse_trace is still trace/dry-run, not
+  production direct reuse execution. The trace final decision artifact is not
+  production FinalOutput.
+- The current semantic reuse authority chain is complete in dry-run form:
+  Semantic Reuse Pipeline recommends -> Root Decision Trace maps
+  recommendations -> ReuseGate Trace reviews direct reuse candidate only ->
+  approved candidate returns upward to Root -> Root Final Decision Trace makes
+  final dry-run decision -> no production execution yet. The next planned
+  engineering layer is Root-native Semantic Reuse E2E Trace v0.1.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

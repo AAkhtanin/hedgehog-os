@@ -52,7 +52,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → only later: NeedleFactory / NeedleForge 
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → only later: NeedleFactory / NeedleForge 
 
 Do not jump ahead to:
 
@@ -104,6 +104,9 @@ These are future strategic layers, not current MVP tasks.
 25. A DRS hit is not direct reuse by itself.
 26. Direct reuse requires explicit Root shortcut logic and tests proving Architect and Executor were skipped.
 27. No real external API, device, purchase, banking, identity, government, or Telegram action may execute in MVP.
+28. Large or malformed PlanGraphs must be bounded or blocked, not executed as uncontrolled flat graphs.
+29. Graph proximity is a query-time ranking signal only; it does not override policy, validation, TimeEnvelope, GTTrust, or ReuseGate.
+30. DeadEnds, Quarantine, blocked, failed, and degraded records must not become direct-reuse eligible because they are graph-near.
 
 ---
 
@@ -135,6 +138,24 @@ This trace should show:
 - no uncontrolled delegation.
 
 This is a demo-runtime proof, not production OS runtime.
+
+---
+
+## Large Graph / Bounded Fractal Stress
+
+`python -m demo.run_large_graph_stress` proves deterministic bounded behavior for oversized or malformed PlanGraphs. It demonstrates max_nodes, max_edges, max_depth, max_parallelism, cycle detection, unknown dependency detection, child boundary snapshots, and bounded GT candidate summaries.
+
+This does not prove production 10k-node execution. It shows that oversized or malformed graphs are blocked or bounded instead of attempted as uncontrolled flat execution. The stress runner does not call the real GTValidator runtime; it reports `gt_runtime_called: false` and `gt_boundary_mode: bounded_summary_check`. The raw large graph is not sent to GT. The DAG runner remains after Architect and is not Root.
+
+## DRS Graph Proximity / Lineage
+
+`python -m demo.run_drs_graph_proximity` proves a LocalDRS-only read-only ranking signal. Records store links through lineage/source refs; they do not store static `hops_ago`, `hop_distance`, or `graph_distance`. Graph distance is computed at query time, and GraphProximity uses:
+
+```text
+graph_proximity = 2 ** (-distance / hop_half_life)
+```
+
+GraphProximity does not change ReuseGate and does not override policy. Nearby DeadEnds are warning signals, nearby Quarantine records are quarantine signals, and neither becomes a direct-reuse candidate. External/global DRS remains future work.
 
 ---
 
@@ -293,6 +314,10 @@ Use this order for current MVP work:
 21. Documentation checkpoint.
 22. Root-controlled FractalDagExecutor integration.
 23. Root-native canonical trace.
+24. Root-native DAG/DRS/audit stabilization.
+25. Needle outcome Post V&V / real GTValidator / LocalDRS routing.
+26. Large Graph / Bounded Fractal Stress.
+27. DRS Graph Proximity / Lineage.
 
 Do not implement NeedleFactory, marketplace, global DRS, official organizational needles, blockchain, or real external actions before the canonical runtime is stable.
 

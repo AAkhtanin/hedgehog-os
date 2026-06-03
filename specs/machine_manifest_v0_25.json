@@ -1422,6 +1422,38 @@
     },
     {
       "phase": 10,
+      "name": "Root-native DAG and needle outcome persistence",
+      "tasks": [
+        "stabilize Root-native DAG DRS writeback and audit fields",
+        "route simulated needle outcomes through Post V&V and real GTValidator runtime",
+        "persist needle outcome routing to LocalDRS Work, Quarantine, and DeadEnds",
+        "preserve LocalDRS-only boundaries and direct reuse safety"
+      ]
+    },
+    {
+      "phase": 11,
+      "name": "Large Graph / Bounded Fractal Stress",
+      "tasks": [
+        "prove oversized and malformed PlanGraphs are blocked or bounded",
+        "demonstrate max_nodes, max_edges, max_depth, and max_parallelism checks",
+        "detect cycles and unknown dependencies before execution",
+        "produce child boundary snapshots for non-atomic nodes",
+        "prove bounded GT candidate summary behavior without calling GT runtime"
+      ]
+    },
+    {
+      "phase": 12,
+      "name": "DRS Graph Proximity / Lineage",
+      "tasks": [
+        "write and read linked LocalDRS records",
+        "store lineage links instead of static hop counts",
+        "compute graph_distance at query time",
+        "apply graph_proximity as ranking signal only",
+        "prove graph proximity does not override policy or ReuseGate"
+      ]
+    },
+    {
+      "phase": 13,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1431,7 +1463,7 @@
       ]
     },
     {
-      "phase": 11,
+      "phase": 14,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

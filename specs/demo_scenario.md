@@ -147,6 +147,31 @@ Failed, quarantined, degraded, blocked, and deadend records are not direct-reuse
 eligible. Only the accepted completed Work candidate is direct-reuse eligible in
 this MVP demo.
 
+## Large Graph And DRS Lineage Checkpoints
+
+Large Graph / Bounded Fractal Stress v0.1 is a deterministic stress proof. It
+shows that oversized or malformed PlanGraphs are blocked or bounded instead of
+executed as uncontrolled flat graphs. It demonstrates max_nodes, max_edges,
+max_depth, max_parallelism, cycle detection, unknown dependency detection, child
+boundary snapshots, and bounded GT candidate summaries. It does not prove
+production 10k-node execution. The stress runner does not call the real
+GTValidator runtime; it uses `gt_boundary_mode: bounded_summary_check`, and the
+raw large graph is not sent to GT.
+
+DRS Graph Proximity / Lineage v0.1 is a LocalDRS-only read-only ranking proof.
+It writes and reads linked LocalDRS records, stores lineage/source refs rather
+than static hop counters, and computes `graph_distance` at query time.
+GraphProximity uses:
+
+```text
+graph_proximity = 2 ** (-distance / hop_half_life)
+```
+
+GraphProximity is not policy. It does not change ReuseGate and does not make
+DeadEnds, Quarantine, blocked, failed, or degraded records direct-reuse
+eligible. Nearby DeadEnds are warnings; nearby Quarantine records are quarantine
+signals. External/global DRS remains unimplemented.
+
 ## Exclusions
 
 - No real external APIs.
@@ -159,9 +184,11 @@ this MVP demo.
 - No legacy architecture repair.
 - No global DRS network.
 - No external DRS protocol implementation.
+- No production DRS retrieval engine.
 - No Internet of Meaning implementation.
 - No NeedleFactory implementation.
 - No needle marketplace implementation.
+- No production 10k-node graph execution.
 - No production recursive child-cell execution.
 - No universal natural Telegram assistant behavior.
 

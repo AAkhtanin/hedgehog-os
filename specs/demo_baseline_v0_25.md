@@ -254,7 +254,32 @@ This is LocalDRS only. External DRS remains a future pointer/protocol boundary.
 Global DRS / Internet of Meaning, NeedleFactory, marketplace, and real external
 needle execution are not implemented.
 
-## 11. What This Baseline Does Not Prove Yet
+## 11. Large Graph And DRS Lineage Checkpoints
+
+Large Graph / Bounded Fractal Stress v0.1 proves bounded behavior for oversized
+or malformed PlanGraphs. It demonstrates max_nodes, max_edges, max_depth,
+max_parallelism, cycle detection, unknown dependency detection, child boundary
+snapshots, and bounded GT candidate summaries. It does not prove production
+10k-node execution. The stress runner does not call the real GT runtime; it
+reports `gt_runtime_called: false` and `gt_boundary_mode:
+bounded_summary_check`. Raw large graphs are not sent to GT.
+
+DRS Graph Proximity / Lineage v0.1 proves a LocalDRS-only read-only
+retrieval/ranking signal. Records are written to and read from LocalDRS, store
+links through source_refs / lineage refs, and do not store static `hops_ago`,
+`hop_distance`, or `graph_distance`. `graph_distance` is computed at query time,
+and GraphProximity is computed as:
+
+```text
+graph_proximity = 2 ** (-distance / hop_half_life)
+```
+
+GraphProximity is only a ranking signal. It does not change ReuseGate and does
+not override policy. Nearby DeadEnds are warning signals, nearby Quarantine
+records are quarantine signals, and neither becomes a direct-reuse candidate.
+External/global DRS remains unimplemented.
+
+## 12. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
@@ -268,6 +293,9 @@ This baseline does not prove:
 - universal natural Telegram assistant behavior;
 - real external API/needle execution;
 - production recursive child-cell execution;
+- production 10k-node graph execution;
+- production DRS retrieval engine;
+- global or external DRS graph traversal;
 - a polished or genuinely useful real-world assistant scenario.
 
 These are future layers. The v0.25 baseline exists to make later changes measurable against a stable contract.
@@ -280,15 +308,17 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work should focus on Root-controlled Fractal DAG Executor integration, Root-native canonical trace, Architect/PlanGraph depth, and richer planning semantics, not on adding more mock L0 reflex commands.
+After this baseline, the next architecture work should focus on typed DRS lineage edges, richer reuse scoring, dedicated audit/hash-chain records, and clearer trace layer splits for blocked/degraded/needs_user outcomes, not on adding more mock L0 reflex commands.
 
-## 11. Future Demo Evolution
+## 13. Future Demo Evolution
 
 - v0.25: deterministic CLI baseline, memory-informed reuse, explicit direct reuse scenario, and closed L0 proof path.
 - v0.26: Observable Zero Trust Runtime proof / canonical pipeline trace.
 - v0.27: Root-controlled Fractal DAG Executor integration.
 - v0.28: Root-native canonical trace.
-- v0.30: richer Architect/PlanGraph semantics and bounded child-cell behavior.
+- v0.29: Root-native DAG/DRS/audit stabilization and needle outcome LocalDRS routing.
+- v0.30: Large Graph / Bounded Fractal Stress and DRS Graph Proximity / Lineage.
+- v0.31: richer Architect/PlanGraph semantics and bounded child-cell behavior.
 - v0.35: controlled LLM/SLM role substitution.
 - v0.40: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

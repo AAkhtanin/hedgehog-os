@@ -53,6 +53,9 @@ Fractal DAG Executor invariant:
 - It must not perform global commit.
 - Non-atomic nodes must return boundary artifacts, not uncontrolled recursion.
 - The DAG runner is part of the Root-controlled pipeline, but it is not Root.
+- Large or malformed PlanGraphs must be bounded or blocked rather than executed as uncontrolled flat graphs.
+- Large Graph / Bounded Fractal Stress v0.1 demonstrates max_nodes, max_edges, max_depth, max_parallelism, cycle detection, unknown dependency detection, child boundary snapshots, and bounded GT candidate summaries.
+- That stress runner proves a GT boundary / bounded summary check only: gt_runtime_called = false, gt_boundary_mode = bounded_summary_check, and raw large graphs are not sent to GT.
 
 5. DRS time requirement
    - Every DRSRecord requires TimeEnvelope.
@@ -75,6 +78,18 @@ DRS registry invariant:
 - Every DRSRecord still requires TimeEnvelope.
 - Every retrieval still requires TemporalQuery.
 - Work, Thoughts, UP, DeadEnds, and Quarantine layer separation remains mandatory.
+
+DRS graph proximity / lineage invariant:
+
+- MVP DRS graph proximity is LocalDRS-only and read-only.
+- Records may store lineage/source links, but they must not store static hops_ago, hop_distance, or graph_distance.
+- graph_distance is computed at query time from record links.
+- graph_proximity = 2 ** (-distance / hop_half_life).
+- GraphProximity is a retrieval/ranking signal only.
+- GraphProximity must not override TimeEnvelope, GTTrust, policy, validation, or ReuseGate.
+- Nearby DeadEnds may be warning signals, not direct-reuse candidates.
+- Nearby Quarantine records may be quarantine signals, not direct-reuse candidates.
+- External DRS, global DRS, and Internet of Meaning remain future pointer/protocol boundaries, not current implementation.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

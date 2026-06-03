@@ -436,13 +436,17 @@ This is not production uncontrolled runtime.
 
 Current auditor-facing / runtime checkpoint:
 
-text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 
+text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 
 
 The important current rule:
 
 text DAG runner connects to the Root-controlled pipeline after Architect. DAG runner executes Architect PlanGraph. DAG runner returns ResultProposals / boundary artifacts. DAG runner is not Root. DAG runner does not commit output. RootOrchestrator remains final authority. 
 
 Needle outcome routing now proves the local path from simulated NeedleRuntime output through Post V&V, real GTValidator runtime, Root-visible routing semantics, and LocalDRS persistence. Completed accepted outcomes may become Work/task_outcome records. invalid_json, schema_validation_failed, and unknown_exception route to Quarantine. contract_version_mismatch and circuit_breaker_open route to DeadEnds / blocked traces. timeout is a degraded trace, not successful Work. permission_required is needs_user / blocked trace, not a completed action.
+
+Large Graph / Bounded Fractal Stress proves bounded behavior for oversized or malformed PlanGraphs. It demonstrates max_nodes, max_edges, max_depth, max_parallelism, cycle detection, unknown dependency detection, child boundary snapshots, and bounded GT candidate summaries. It does not prove production 10k-node execution. The stress runner does not call the real GT runtime; it proves the GT boundary / bounded summary behavior with `gt_runtime_called: false` and `gt_boundary_mode: bounded_summary_check`. The raw large graph is not sent to GT. The DAG runner remains after Architect, does not become Root, and Executor does not create FinalOutput.
+
+DRS Graph Proximity / Lineage proves a LocalDRS-only read-only retrieval/ranking signal. Records are written to and read from LocalDRS, store links through lineage/source refs, and do not store static `hops_ago`, `hop_distance`, or `graph_distance`. `graph_distance` is computed at query time, and `graph_proximity = 2 ** (-distance / hop_half_life)`. GraphProximity is only a ranking signal: it does not override policy, does not change ReuseGate, and does not make Quarantine, DeadEnds, blocked, failed, or degraded records direct-reuse eligible.
 
 Safety rules for this checkpoint:
 
@@ -466,6 +470,8 @@ Mitigation: bounded fractal subgraphs, branch budgets, max_plan_nodes, max_edges
 
 Future tests: oversized graph rejection, subgraph boundary limits, and proof that GT does not score 10k raw nodes as one flat list.
 
+Current proof: Large Graph / Bounded Fractal Stress v0.1 blocks or bounds oversized and malformed graphs. It demonstrates bounded summary behavior, not production-scale 10k-node execution and not a real GTValidator call.
+
 ### Needle Chaos
 
 Risk: external needles may timeout, change contracts, return invalid JSON, or fail.
@@ -486,6 +492,14 @@ Repeated tasks should converge toward memory-informed or direct-reuse behavior w
 
 Future tests: empty DRS vector generation, fallback template use, first-run writeback, second-run memory influence, and direct reuse convergence.
 
+### DRS Graph Proximity / Lineage
+
+Risk: graph-near records could be mistaken for policy permission or direct reuse eligibility.
+
+Mitigation: graph proximity is computed at query time from stored links and remains only one ranking signal. TimeEnvelope, GTTrust, policy, validation, and ReuseGate still dominate. Nearby DeadEnds are warnings, nearby Quarantine records are quarantine signals, and neither is direct-reuse eligible.
+
+Future tests: typed lineage edges, bidirectional traversal, dedicated policy/invariant layers, and richer reuse scoring with GraphProximity, GTTrust, Freshness, PolicyOK, and ConflictCheck.
+
 ---
 
 ## Roadmap
@@ -504,6 +518,8 @@ Completed recent layers:
 - Canonical Needle Outcome Trace.
 - Real GTValidator integration for needle outcomes.
 - Needle Outcome DRS Routing Persistence v0.1.
+- Large Graph / Bounded Fractal Stress v0.1.
+- DRS Graph Proximity / Lineage v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
@@ -511,8 +527,8 @@ Next engineering focus:
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add richer direct reuse scoring: ReuseScore / GTTrust / Freshness / PolicyOK / ConflictCheck.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.
-- DRS graph proximity / lineage.
-- Larger graph and bounded fractal stress tests.
+- Split broad work/trace_summary demo records into a future dedicated policy/invariant layer where appropriate.
+- Add typed or bidirectional DRS lineage edge semantics.
 - Adaptive mode router hardening.
 - Richer DRS pointer resolution.
 - Marennya / UP validation and promotion.

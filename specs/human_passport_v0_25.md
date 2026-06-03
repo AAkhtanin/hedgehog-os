@@ -93,6 +93,24 @@ API/needle execution is not enabled here. Live Gemini/SLM Orchestrator is a
 later layer, not the default. `fallback` vs `fallback_template` naming cleanup
 is minor backlog.
 
+Current bounded graph and lineage checkpoints:
+
+- Large Graph / Bounded Fractal Stress v0.1 proves deterministic bounded
+  behavior for oversized or malformed PlanGraphs. It demonstrates max_nodes,
+  max_edges, max_depth, max_parallelism, cycle detection, unknown dependency
+  detection, child boundary snapshots, and bounded GT candidate summaries. It
+  does not prove production 10k-node execution. The stress runner does not call
+  the real GT runtime; it proves a GT boundary / bounded summary check
+  (`gt_runtime_called: false`, `gt_boundary_mode: bounded_summary_check`) and
+  does not send the raw large graph to GT.
+- DRS Graph Proximity / Lineage v0.1 proves a LocalDRS-only read-only
+  retrieval/ranking signal. Records store links through source_refs / lineage
+  refs, not static hop counters. `graph_distance` is computed at query time and
+  `graph_proximity = 2 ** (-distance / hop_half_life)`. GraphProximity is only a
+  ranking signal; it does not change ReuseGate, override policy, or make
+  Quarantine / DeadEnds / blocked / failed / degraded records direct-reuse
+  eligible.
+
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or
 multi-branch tasks may require the full loop. Frequent and simple actions should

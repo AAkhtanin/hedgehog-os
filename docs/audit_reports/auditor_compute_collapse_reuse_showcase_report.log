@@ -1,0 +1,268 @@
+===== GIT LOG =====
+249e22e Document chaos survival showcase checkpoint
+b40df01 Add chaos survival showcase
+9963bdb Archive milestone audit reports
+b2d3797 Document large graph and DRS lineage checkpoints
+b0a0959 Add DRS graph proximity lineage demo
+f1aedee Add large graph bounded stress runner
+291fa05 Document needle outcome GT and DRS routing checkpoint
+69ca0fc Add needle outcome DRS routing persistence
+ac5ac6e Integrate GTValidator for needle outcomes
+dcabf85 Clarify needle outcome GT boundary
+3d3d323 Add canonical needle outcome trace
+1adec21 Stabilize Root DAG DRS audit writeback
+5bb49b4 Refresh README current checkpoint
+00c87fa Clarify schema package reference status
+fd407f6 Refine demo scenario
+a6ef8d1 Refresh Codex agent instructions
+30b743a Refine legacy mapping
+dc2e184 Refine demo baseline
+6142bd5 Refine project invariants
+ab84f55 Sync machine manifest with current canon
+
+===== GIT STATUS =====
+?? auditor_compute_collapse_reuse_showcase_report.log
+?? demo/run_compute_collapse_reuse_showcase.py
+?? tests/test_compute_collapse_reuse_showcase_runner.py
+
+===== COMPUTE COLLAPSE VIA DRS REUSE =====
+[COMPUTE COLLAPSE VIA DRS REUSE]
+note: deterministic showcase over existing DRS/reuse proof modules
+note: not absolute zero cost
+note: no real external actions
+note: no live Gemini
+note: no global DRS
+note: Root authority remains final
+note: direct reuse requires eligible DRS record
+
+[INPUT MODULES]
+cold_start_benchmark_available: true
+reuse_gate_available: true
+local_drs_available: true
+root_orchestrator_direct_reuse_available: true
+
+[SCENARIO TABLE]
+scenario | route | memory_context_applied | direct_reuse_applied | architect_skipped | executor_skipped | dag_runner_skipped | post_vv_called | gt_called | drs_writeback_done | root_created_final_output | unsafe_reuse_candidates | compute_units
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+cold_start_full_pipeline | proof_full_pipeline | false | false | false | false | true | true | true | true | true | 0 | 43
+memory_context_only | context_only | true | false | false | false | true | true | true | true | true | 0 | 45
+eligible_direct_reuse | direct_reuse | true | true | true | true | true | false | false | true | true | 0 | 11
+unsafe_records_not_reused | reuse_safety_check | true | false | true | true | true | false | false | false | false | 0 | 6
+
+[COMPUTE MODEL]
+compute_model: illustrative_deterministic_units
+absolute_zero_cost_claimed: false
+real_token_billing_measured: false
+cold_start_units: 43
+memory_context_only_units: 45
+direct_reuse_units: 11
+savings_ratio: 0.744
+note: compute units are illustrative deterministic units, not token billing
+
+[REUSE SAFETY]
+direct_reuse_requires_eligible_work: true
+context_memory_does_not_equal_reuse: true
+quarantine_reuse_candidates: 0
+deadend_reuse_candidates: 0
+failed_reuse_candidates: 0
+blocked_reuse_candidates: 0
+degraded_success_reuse_candidates: 0
+direct_reuse_unsafe_candidates: 0
+root_gate_required: true
+root_authority_preserved: true
+
+[AUTHORITY / BOUNDARIES]
+root_created_final_output: true
+architect_created_final_output: false
+executor_created_final_output: false
+gt_committed_final_output: false
+direct_reuse_bypasses_root: false
+no_real_external_actions: true
+no_live_gemini: true
+no_global_drs: true
+no_external_drs_network: true
+production_autonomy_claimed: false
+
+[SUMMARY]
+compute_collapse_showcase_status: PASS
+cold_start_full_pipeline_verified: true
+memory_context_only_not_fake_reuse: true
+eligible_direct_reuse_skips_architect: true
+eligible_direct_reuse_skips_executor: true
+unsafe_records_not_reused: true
+direct_reuse_requires_eligibility: true
+root_authority_preserved: true
+absolute_zero_cost_claimed: false
+savings_ratio_positive: true
+no_real_external_actions: true
+
+===== FOCUSED COMPUTE COLLAPSE TESTS =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collected 71 items
+
+tests/test_compute_collapse_reuse_showcase_runner.py .............       [ 18%]
+tests/test_cold_start_benchmark_runner.py ........                       [ 29%]
+tests/test_reuse_gate_runtime.py .......                                 [ 39%]
+tests/test_drs_runtime.py .............                                  [ 57%]
+tests/test_root_orchestrator_runtime.py ...................              [ 84%]
+tests/test_chaos_survival_showcase_runner.py ...........                 [100%]
+
+=============================== warnings summary ===============================
+tests/test_drs_runtime.py::test_local_drs_writes_reads_and_validates_work_record
+tests/test_drs_runtime.py::test_local_drs_writes_pointer_record
+  /Users/admin/Projects/hedgehog-os/tests/test_drs_runtime.py:33: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(drs_record_schema, store=store)
+
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_creates_valid_final_output_and_work_record
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_generic_math_routes_to_llm_general_not_certificate_pipeline
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_optional_mock_llm_architect_still_creates_final_output
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success
+  /Users/admin/Projects/hedgehog-os/tests/test_root_orchestrator_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(final_output_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 71 passed, 9 warnings in 0.35s ========================
+
+===== FULL SUITE =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.13.0
+collected 534 items
+
+tests/test_action_permission_runtime.py .......                          [  1%]
+tests/test_architect_prompt_compiler_runtime.py ....                     [  2%]
+tests/test_architect_runtime.py .....                                    [  2%]
+tests/test_avf_runtime.py ..                                             [  3%]
+tests/test_candidate_vectors.py ......                                   [  4%]
+tests/test_canonical_needle_outcome_trace_runner.py ...............      [  7%]
+tests/test_canonical_pipeline_trace_runner.py ..............             [  9%]
+tests/test_chaos_survival_showcase_runner.py ...........                 [ 11%]
+tests/test_cold_start_benchmark_runner.py ........                       [ 13%]
+tests/test_compute_collapse_reuse_showcase_runner.py .............       [ 15%]
+tests/test_controlled_orchestrator_dry_run_runner.py ..........          [ 17%]
+tests/test_controlled_orchestrator_integration_gate_runner.py .......... [ 19%]
+...                                                                      [ 20%]
+tests/test_controlled_orchestrator_runtime_prototype_runner.py ......... [ 21%]
+....                                                                     [ 22%]
+tests/test_controlled_runtime_trace_visibility_runner.py ..........      [ 24%]
+tests/test_deadend_memory_demo_runner.py ......                          [ 25%]
+tests/test_demo_certificate_runner.py .......                            [ 26%]
+tests/test_drs_graph_proximity_runner.py ..............                  [ 29%]
+tests/test_drs_runtime.py .............                                  [ 32%]
+tests/test_economics_benchmark_runner.py .........                       [ 33%]
+tests/test_executor_runtime.py ...                                       [ 34%]
+tests/test_final_renderer_runtime.py ....                                [ 35%]
+tests/test_fractal_dag_executor_core_runner.py .............             [ 37%]
+tests/test_gemini_orchestrator_architect_pair_smoke_runner.py .......... [ 39%]
+                                                                         [ 39%]
+tests/test_gt_validator_runtime.py ...................                   [ 42%]
+tests/test_input_intake_runtime.py .....                                 [ 43%]
+tests/test_intent_route_matrix_runner.py ..........                      [ 45%]
+tests/test_large_graph_stress_runner.py .............                    [ 48%]
+tests/test_live_controlled_smoke_runner.py ........                      [ 49%]
+tests/test_live_gemini_orchestrator_shadow_runner.py ............        [ 51%]
+tests/test_llm_architect_runtime.py .................                    [ 55%]
+tests/test_llm_gateway_runtime.py .....                                  [ 55%]
+tests/test_marenna_up_runtime.py ...                                     [ 56%]
+tests/test_mode_router_runtime.py ........                               [ 58%]
+tests/test_mode_selection_matrix_runner.py ........                      [ 59%]
+tests/test_needle_failure_integration_runner.py .......                  [ 60%]
+tests/test_needle_outcome_drs_routing_runner.py ...............          [ 63%]
+tests/test_needle_runtime_chaos_runner.py ..........                     [ 65%]
+tests/test_needles_valid.py .                                            [ 65%]
+tests/test_orchestrator_guard_completeness_runner.py ............        [ 67%]
+tests/test_orchestrator_route_validator_runner.py ...........            [ 70%]
+tests/test_orchestrator_shadow_mode_runner.py ........                   [ 71%]
+tests/test_post_vv_runtime.py .......                                    [ 72%]
+tests/test_reasoning_showcase_runner.py .............                    [ 75%]
+tests/test_reflex_runtime.py ..........                                  [ 77%]
+tests/test_reuse_gate_runtime.py .......                                 [ 78%]
+tests/test_root_dag_drs_audit_runner.py .......                          [ 79%]
+tests/test_root_dag_integration_runner.py .......                        [ 81%]
+tests/test_root_native_canonical_trace_runner.py ..........              [ 82%]
+tests/test_root_orchestrator_runtime.py ...................              [ 86%]
+tests/test_scenario_benchmark_runner.py ............                     [ 88%]
+tests/test_schema_files_valid.py .                                       [ 88%]
+tests/test_showcase_runner.py .....                                      [ 89%]
+tests/test_telegram_bridge_runtime.py ..                                 [ 90%]
+tests/test_telegram_e2e_benchmark_runner.py .........                    [ 91%]
+tests/test_telegram_polling_smoke_runner.py ................             [ 94%]
+tests/test_telegram_shell_runtime.py .............                       [ 97%]
+tests/test_time_model.py ..                                              [ 97%]
+tests/test_trace_reporter_runtime.py ............                        [100%]
+
+=============================== warnings summary ===============================
+tests/test_architect_runtime.py::test_make_plan_graph_from_attractor_packet_validates_schema
+tests/test_architect_runtime.py::test_make_plan_graph_optional_mock_llm_path_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_architect_runtime.py:32: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_avf_runtime.py::test_build_attractor_packet_filters_forbidden_vectors_and_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_avf_runtime.py:30: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(attractor_schema, store=store)
+
+tests/test_demo_certificate_runner.py::test_certificate_demo_gemini_architect_scenario_is_registered_with_safe_failure
+  /Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/types.py:42: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+tests/test_drs_runtime.py::test_local_drs_writes_reads_and_validates_work_record
+tests/test_drs_runtime.py::test_local_drs_writes_pointer_record
+  /Users/admin/Projects/hedgehog-os/tests/test_drs_runtime.py:33: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(drs_record_schema, store=store)
+
+tests/test_executor_runtime.py::test_execute_plan_graph_returns_schema_valid_result_proposals
+  /Users/admin/Projects/hedgehog-os/tests/test_executor_runtime.py:37: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+
+tests/test_gt_validator_runtime.py: 17 warnings
+  /Users/admin/Projects/hedgehog-os/tests/test_gt_validator_runtime.py:41: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(gt_report_schema, store=store)
+
+tests/test_llm_architect_runtime.py::test_mock_llm_architect_returns_valid_plan_graph
+  /Users/admin/Projects/hedgehog-os/tests/test_llm_architect_runtime.py:35: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_marenna_up_runtime.py::test_marenna_after_task_record_validates_and_stays_quarantined
+tests/test_marenna_up_runtime.py::test_up_after_task_record_validates_and_stays_quarantined
+  /Users/admin/Projects/hedgehog-os/tests/test_marenna_up_runtime.py:42: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(target_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:53: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(candidate_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:67: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(needle_schema, store=store)
+
+tests/test_post_vv_runtime.py::test_validate_demo_result_proposals_are_task_aware_and_schema_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_post_vv_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_creates_valid_final_output_and_work_record
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_generic_math_routes_to_llm_general_not_certificate_pipeline
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_optional_mock_llm_architect_still_creates_final_output
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success
+  /Users/admin/Projects/hedgehog-os/tests/test_root_orchestrator_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(final_output_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+====================== 534 passed, 37 warnings in 12.77s =======================
+
+===== FINAL GIT STATUS =====
+?? auditor_compute_collapse_reuse_showcase_report.log
+?? demo/run_compute_collapse_reuse_showcase.py
+?? tests/test_compute_collapse_reuse_showcase_runner.py

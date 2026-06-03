@@ -463,7 +463,51 @@ The current DRS semantic stack is:
 - Typed DRS Lineage Edges v0.1;
 - ReuseScore v0.1.
 
-## 17. What This Baseline Does Not Prove Yet
+## 17. Semantic Reuse Pipeline Integration Checkpoint
+
+Semantic Reuse Pipeline Integration v0.1 is a bounded LocalDRS semantic reuse
+integration proof. It connects:
+
+```text
+LocalDRS retrieval
+-> taxonomy-aware filtering
+-> typed edge interpretation
+-> graph proximity
+-> ReuseScore
+-> ReuseGate / Root boundary
+-> direct reuse candidate or full pipeline fallback
+```
+
+It is not production RootOrchestrator integration, production autonomy, global
+DRS, external DRS, a ReuseGate replacement, a Root bypass, direct reuse
+execution, FinalOutput creation, real external action, live Gemini, or Telegram
+action.
+
+It proves collect_reuse_score() is structurally consumed, the source Typed DRS
+Lineage Edges report is preserved, all six stages pass, scenario rows are
+evaluated, and recommendations are separated from authority. The six stages are:
+local_drs_retrieval, taxonomy_filtering, typed_edge_interpretation,
+graph_proximity, reuse_score, and reuse_gate_root_boundary.
+
+Scenario semantics:
+
+- eligible_direct_reuse_candidate is recommended but not committed by the
+  pipeline.
+- context_memory_not_reuse falls back to full pipeline because context memory is
+  not direct reuse.
+- contradiction_needs_conflict_check routes to needs_conflict_check.
+- high_score_blocked_by_policy proves high score does not override policy.
+- quarantine_not_reused, needs_user_not_completed_action,
+  degraded_not_stable_success, and dead_end_not_reused remain non-reuse cases.
+
+Safety flags: semantic_pipeline_committed_final_output=false,
+semantic_pipeline_bypassed_root=false, semantic_pipeline_bypassed_reuse_gate=false,
+root_boundary_preserved=true, reuse_gate_boundary_preserved=true,
+unsafe_reuse_candidates=0, production_autonomy_claimed=false, local_drs_only=true,
+and external/global DRS are not implemented. PASS is derived from stages,
+scenarios, and boundary facts.
+
+## 18. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
@@ -480,6 +524,7 @@ This baseline does not prove:
 - production 10k-node graph execution;
 - production DRS retrieval engine;
 - production typed-edge retrieval engine;
+- production semantic reuse integration into RootOrchestrator;
 - production ConflictCheck;
 - production ReuseScore or ReuseGate-driven semantic scoring;
 - production autonomy;
@@ -498,9 +543,9 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work should continue runtime hardening with Semantic Reuse Pipeline Integration v0.1: LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback. This next layer must still not be production global DRS, external DRS, production autonomy, or a Root bypass.
+After this baseline, the next architecture work should continue runtime hardening with Root-controlled Semantic Reuse Decision Trace v0.1. Root should receive semantic reuse recommendations as trace/dry-run input, check boundaries, preserve ReuseGate, and choose between direct reuse candidate or full pipeline fallback without giving authority to the semantic pipeline.
 
-## 18. Future Demo Evolution
+## 19. Future Demo Evolution
 
 - v0.25: deterministic CLI baseline, memory-informed reuse, explicit direct reuse scenario, and closed L0 proof path.
 - v0.26: Observable Zero Trust Runtime proof / canonical pipeline trace.
@@ -514,6 +559,7 @@ After this baseline, the next architecture work should continue runtime hardenin
 - v0.34: Typed DRS Lineage Edges v0.1.
 - v0.35: ReuseScore v0.1 as advisory/ranking only.
 - v0.36: Semantic Reuse Pipeline Integration v0.1.
-- v0.37: controlled LLM/SLM role substitution.
+- v0.37: Root-controlled Semantic Reuse Decision Trace v0.1.
+- v0.38: controlled LLM/SLM role substitution.
 - v0.40: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

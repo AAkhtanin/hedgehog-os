@@ -1519,6 +1519,20 @@
     },
     {
       "phase": 18,
+      "name": "Semantic Reuse Pipeline Integration",
+      "status": "v0.1_complete",
+      "tasks": [
+        "connect LocalDRS retrieval, taxonomy-aware filtering, typed edge interpretation, graph proximity, ReuseScore, and ReuseGate / Root boundary in one bounded proof",
+        "structurally consume collect_reuse_score and preserve the source Typed DRS Lineage Edges report",
+        "evaluate scenario rows for direct reuse candidate, context fallback, conflict check, policy block, quarantine, needs_user, degraded, and dead_end routes",
+        "separate recommendations from authority and keep semantic_pipeline_committed_final_output false",
+        "preserve Root and ReuseGate boundaries without changing production RootOrchestrator or ReuseGate behavior",
+        "derive PASS from stages, scenarios, and boundary facts",
+        "prepare Root-controlled Semantic Reuse Decision Trace"
+      ]
+    },
+    {
+      "phase": 19,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1528,7 +1542,7 @@
       ]
     },
     {
-      "phase": 19,
+      "phase": 20,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

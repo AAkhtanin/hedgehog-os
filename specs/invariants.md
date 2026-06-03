@@ -159,8 +159,25 @@ ReuseScore invariant:
 - Contradiction does not auto-reuse; contradiction-risk candidates route to needs_conflict_check until future ConflictCheck exists.
 - Root authority and ReuseGate authority remain preserved.
 - Important proof examples: a high-ish scoring unsafe blocked_trace remains not reusable because policy_allowed is false; a work_candidate with contradiction_penalty becomes needs_conflict_check rather than direct_reuse; unsafe_direct_reuse_candidates remains 0.
-- The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1, DRS Layer Taxonomy v0.1, Typed DRS Lineage Edges v0.1, and ReuseScore v0.1.
-- The next planned engineering layer is Semantic Reuse Pipeline Integration v0.1: LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback. It must not become production global DRS, external DRS, production autonomy, or a Root bypass.
+- The current DRS semantic stack through this layer is DRS Graph Proximity / Lineage v0.1, DRS Layer Taxonomy v0.1, Typed DRS Lineage Edges v0.1, and ReuseScore v0.1.
+
+Semantic Reuse Pipeline Integration invariant:
+
+- Semantic Reuse Pipeline Integration v0.1 is an engineering integration proof.
+- It is a bounded LocalDRS semantic reuse integration proof, not production RootOrchestrator integration.
+- It connects LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback.
+- It is not production autonomy, global DRS, external DRS, a ReuseGate replacement, a Root bypass, direct reuse execution, FinalOutput creation, real external action, live Gemini, or Telegram action.
+- It must structurally consume collect_reuse_score() and preserve the source Typed DRS Lineage Edges report.
+- All six pipeline stages must be represented: local_drs_retrieval, taxonomy_filtering, typed_edge_interpretation, graph_proximity, reuse_score, and reuse_gate_root_boundary.
+- Scenario rows must separate recommendations from authority: eligible direct reuse may be recommended but not committed by the pipeline; context memory does not equal direct reuse; contradiction routes to needs_conflict_check; high score does not override policy; quarantine, needs_user, degraded, and dead_end records are not reused.
+- semantic_pipeline_committed_final_output must be false.
+- semantic_pipeline_bypassed_root must be false.
+- semantic_pipeline_bypassed_reuse_gate must be false.
+- root_boundary_preserved and reuse_gate_boundary_preserved must remain true.
+- unsafe_reuse_candidates must remain 0.
+- PASS must be derived from stages, scenarios, and boundary facts, not hardcoded.
+- The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1, DRS Layer Taxonomy v0.1, Typed DRS Lineage Edges v0.1, ReuseScore v0.1, and Semantic Reuse Pipeline Integration v0.1.
+- The next planned engineering layer is Root-controlled Semantic Reuse Decision Trace v0.1. Root should receive semantic reuse recommendations as trace/dry-run input, check boundaries, preserve ReuseGate, and choose between a direct reuse candidate or full pipeline fallback without giving authority to the semantic pipeline.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

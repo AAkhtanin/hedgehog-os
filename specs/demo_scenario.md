@@ -297,13 +297,55 @@ reusable because policy_allowed is false, a work_candidate with
 contradiction_penalty becomes needs_conflict_check instead of direct_reuse, and
 unsafe_direct_reuse_candidates remains 0.
 
+## Semantic Reuse Pipeline Integration
+
+Semantic Reuse Pipeline Integration v0.1 is a bounded LocalDRS semantic reuse
+integration proof. It connects LocalDRS retrieval -> taxonomy-aware filtering ->
+typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root
+boundary -> direct reuse candidate or full pipeline fallback.
+
+It is not production RootOrchestrator integration, production autonomy, global
+DRS, external DRS, a ReuseGate replacement, a Root bypass, direct reuse
+execution, FinalOutput creation, real external action, live Gemini, or Telegram
+action.
+
+It proves:
+
+- collect_reuse_score() is structurally consumed;
+- the source Typed DRS Lineage Edges report is preserved;
+- all six stages pass: local_drs_retrieval, taxonomy_filtering,
+  typed_edge_interpretation, graph_proximity, reuse_score, and
+  reuse_gate_root_boundary;
+- recommendations are separated from authority.
+
+Scenario semantics:
+
+- eligible_direct_reuse_candidate is recommended as direct_reuse_candidate, but
+  not committed by the pipeline;
+- context_memory_not_reuse falls back to full pipeline because context memory is
+  not direct reuse;
+- contradiction_needs_conflict_check routes to needs_conflict_check, not direct
+  reuse;
+- high_score_blocked_by_policy proves high score does not override policy;
+- quarantine_not_reused proves quarantine is not reused;
+- needs_user_not_completed_action proves needs_user is not completed action;
+- degraded_not_stable_success proves degraded trace is not stable success;
+- dead_end_not_reused proves dead_end is not reused.
+
+Safety flags: semantic_pipeline_committed_final_output=false,
+semantic_pipeline_bypassed_root=false, semantic_pipeline_bypassed_reuse_gate=false,
+root_boundary_preserved=true, reuse_gate_boundary_preserved=true,
+unsafe_reuse_candidates=0, production_autonomy_claimed=false, local_drs_only=true,
+and external/global DRS are not implemented. PASS is derived from stages,
+scenarios, and boundary facts, not hardcoded.
+
 The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1, DRS Layer
-Taxonomy v0.1, Typed DRS Lineage Edges v0.1, and ReuseScore v0.1. The next
-planned engineering layer is Semantic Reuse Pipeline Integration v0.1:
-LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation ->
-graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse
-candidate or full pipeline fallback. It must not become production global DRS,
-external DRS, production autonomy, or a Root bypass.
+Taxonomy v0.1, Typed DRS Lineage Edges v0.1, ReuseScore v0.1, and Semantic
+Reuse Pipeline Integration v0.1. The next planned engineering layer is
+Root-controlled Semantic Reuse Decision Trace v0.1. Root should receive semantic
+reuse recommendations as trace/dry-run input, check boundaries, preserve
+ReuseGate, and choose between direct reuse candidate or full pipeline fallback
+without giving authority to the semantic pipeline.
 
 ## Exclusions
 

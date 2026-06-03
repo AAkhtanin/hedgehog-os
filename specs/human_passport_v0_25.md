@@ -164,13 +164,28 @@ Current bounded graph and lineage checkpoints:
   successful Work, context memory is not direct reuse, unsafe taxonomy records
   remain non-reusable, and contradiction-risk candidates become
   needs_conflict_check until future ConflictCheck exists.
-- The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1, DRS
-  Layer Taxonomy v0.1, Typed DRS Lineage Edges v0.1, and ReuseScore v0.1. The
-  next planned engineering layer is Semantic Reuse Pipeline Integration v0.1:
+- Semantic Reuse Pipeline Integration v0.1 is the next completed engineering
+  integration proof. It connects the completed semantic stack:
   LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation ->
   graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse
-  candidate or full pipeline fallback. It must not become production global DRS,
-  external DRS, production autonomy, or a Root bypass.
+  candidate or full pipeline fallback. It structurally consumes
+  collect_reuse_score(), preserves the source Typed DRS Lineage Edges report,
+  evaluates scenario rows, and separates recommendations from authority. It is
+  not production RootOrchestrator integration, production autonomy, global DRS,
+  external DRS, a ReuseGate replacement, a Root bypass, direct reuse execution,
+  FinalOutput creation, real external action, live Gemini, or Telegram action.
+  It proves eligible direct reuse can be recommended but not committed by the
+  pipeline, context memory is not direct reuse, contradiction routes to
+  needs_conflict_check, high score does not override policy, and quarantine /
+  needs_user / degraded / dead_end records are not reused. PASS is derived from
+  stages, scenarios, and boundary facts.
+- The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1, DRS
+  Layer Taxonomy v0.1, Typed DRS Lineage Edges v0.1, ReuseScore v0.1, and
+  Semantic Reuse Pipeline Integration v0.1. The next planned engineering layer
+  is Root-controlled Semantic Reuse Decision Trace v0.1: Root should receive
+  semantic reuse recommendations as trace/dry-run input, check boundaries,
+  preserve ReuseGate, and choose between a direct reuse candidate or full
+  pipeline fallback without giving authority to the semantic pipeline.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

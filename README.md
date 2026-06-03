@@ -436,7 +436,7 @@ This is not production uncontrolled runtime.
 
 Current auditor-facing / runtime checkpoint:
 
-text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 -> Compute Collapse via DRS Reuse v0.1 -> DRS Layer Taxonomy v0.1 -> Typed DRS Lineage Edges v0.1 -> ReuseScore v0.1 -> Semantic Reuse Pipeline Integration v0.1 
+text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 -> Compute Collapse via DRS Reuse v0.1 -> DRS Layer Taxonomy v0.1 -> Typed DRS Lineage Edges v0.1 -> ReuseScore v0.1 -> Semantic Reuse Pipeline Integration v0.1 -> Root-controlled Semantic Reuse Decision Trace v0.1 -> Root-controlled Semantic Reuse Gate Trace v0.1 
 
 The important current rule:
 
@@ -460,7 +460,11 @@ ReuseScore v0.1 is the next completed engineering hardening layer. It is a Local
 
 Semantic Reuse Pipeline Integration v0.1 is the next completed engineering integration proof. It connects the completed LocalDRS semantic stack as one bounded proof: LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback. It is not production RootOrchestrator integration, production autonomy, global DRS, external DRS, a ReuseGate replacement, a Root bypass, direct reuse execution, FinalOutput creation, real external action, live Gemini, or Telegram action. It structurally consumes `collect_reuse_score()`, preserves the source Typed DRS Lineage Edges report, evaluates scenario rows, and separates recommendations from authority. All six stages pass: local_drs_retrieval, taxonomy_filtering, typed_edge_interpretation, graph_proximity, reuse_score, and reuse_gate_root_boundary. Scenario proofs include eligible_direct_reuse_candidate recommended but not committed, context_memory_not_reuse falling back to full pipeline, contradiction_needs_conflict_check, high_score_blocked_by_policy, quarantine_not_reused, needs_user_not_completed_action, degraded_not_stable_success, and dead_end_not_reused. `semantic_pipeline_committed_final_output=false`, `semantic_pipeline_bypassed_root=false`, `semantic_pipeline_bypassed_reuse_gate=false`, `unsafe_reuse_candidates=0`, and PASS is derived from stages, scenarios, and boundary facts.
 
-The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1 -> DRS Layer Taxonomy v0.1 -> Typed DRS Lineage Edges v0.1 -> ReuseScore v0.1 -> Semantic Reuse Pipeline Integration v0.1. The next planned engineering layer is Root-controlled Semantic Reuse Decision Trace v0.1: Root should receive semantic reuse recommendations as trace/dry-run input, check boundaries, preserve ReuseGate, and choose between a direct reuse candidate or full pipeline fallback without giving authority to the semantic pipeline.
+Root-controlled Semantic Reuse Decision Trace v0.1 is a deterministic Root-controlled dry-run proof. It consumes Semantic Reuse Pipeline recommendations, does not change production RootOrchestrator behavior, does not execute direct reuse, does not create production FinalOutput, does not write production Work records, and does not grant authority to the semantic pipeline. Root classifies recommendations into controlled decisions: direct_reuse_candidate -> root_accepts_direct_reuse_candidate_for_gate_review; needs_full_pipeline -> root_selects_full_pipeline_fallback; needs_conflict_check -> root_requires_conflict_check; blocked -> root_blocks_policy_blocked_route; quarantine -> root_routes_to_quarantine; needs_user -> root_requires_user_input; degraded -> root_marks_degraded_trace; dead_end -> root_rejects_dead_end. ReuseGate remains required for direct reuse candidate review, and the trace still does not execute production direct reuse or create production FinalOutput.
+
+Root-controlled Semantic Reuse Gate Trace v0.1 is a deterministic Root/ReuseGate dry-run proof. It consumes the Root Semantic Reuse Decision Trace, performs gate review only for the Root-approved direct reuse candidate, and keeps all other routes non-gate routes: full pipeline fallback, conflict check required, policy blocked, quarantine, needs_user, degraded, and dead_end. `gate_review_accepts_candidate_for_root_final_decision` means the candidate returns upward to Root; it is not production execution. ReuseGate does not create FinalOutput, does not execute direct reuse, semantic pipeline does not commit, and Root remains final authority. Safety flags include gate_reviews_performed=1, gate_approvals_for_root_final_decision=1, non_applicable_gate_routes=7, root_final_decision_required_for_gate_approval=true, gate_did_not_commit_final_output=true, gate_did_not_execute_direct_reuse=true, direct_reuse_executed_in_trace=false, production_final_output_created=false, unsafe_reuse_candidates=0, root_authority_preserved=true, reuse_gate_boundary_preserved=true, semantic_pipeline_authority_granted=false, local_drs_only=true, external/global DRS not implemented, and production_autonomy_claimed=false.
+
+The current semantic reuse chain is: Semantic Reuse Pipeline recommends -> Root Decision Trace maps recommendations -> ReuseGate Trace reviews direct reuse candidate only -> approved candidate returns upward to Root final decision -> no production execution yet. The next planned engineering layer is Root-controlled Semantic Reuse Final Decision Trace v0.1: Root receives the gate-approved candidate back and makes a final dry-run decision, either controlled direct reuse trace path or full pipeline fallback, while preserving Root authority, no real external action, no production default behavior change, and no semantic pipeline authority.
 
 Safety rules for this checkpoint:
 
@@ -546,6 +550,12 @@ Risk: a connected semantic reuse proof could be mistaken for production Root int
 
 Mitigation: Semantic Reuse Pipeline Integration v0.1 recommends and explains only. It consumes ReuseScore and typed-edge reports, derives stage PASS from collected facts, preserves Root / ReuseGate boundaries, does not commit FinalOutput, does not execute direct reuse, and does not make context memory or unsafe records reusable.
 
+### Root Semantic Reuse Traces
+
+Risk: Root dry-run decisions or gate approvals could be mistaken for production direct reuse execution.
+
+Mitigation: Root-controlled Semantic Reuse Decision Trace v0.1 and Gate Trace v0.1 remain dry-run proofs. Root classifies recommendations, ReuseGate reviews only the direct reuse candidate, approved candidates return upward to Root, and no production direct reuse, FinalOutput, Work writeback, external action, live Gemini, Telegram action, global DRS, or external DRS is performed.
+
 ---
 
 ## Roadmap
@@ -572,11 +582,13 @@ Completed recent layers:
 - Typed DRS Lineage Edges v0.1.
 - ReuseScore v0.1.
 - Semantic Reuse Pipeline Integration v0.1.
+- Root-controlled Semantic Reuse Decision Trace v0.1.
+- Root-controlled Semantic Reuse Gate Trace v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Root-controlled Semantic Reuse Decision Trace v0.1: Root receives semantic reuse recommendations as trace/dry-run input, checks boundaries, preserves ReuseGate, and chooses between direct reuse candidate or full pipeline fallback without giving authority to the semantic pipeline.
+- Root-controlled Semantic Reuse Final Decision Trace v0.1: Root receives the gate-approved candidate back and makes a final dry-run decision between controlled direct reuse trace path and full pipeline fallback, without production default behavior change or semantic pipeline authority.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.

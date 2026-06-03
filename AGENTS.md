@@ -52,7 +52,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → only later: NeedleFactory / NeedleForge 
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate Traces → only later: NeedleFactory / NeedleForge 
 
 Do not jump ahead to:
 
@@ -119,6 +119,8 @@ These are future strategic layers, not current MVP tasks.
 40. High ReuseScore must not make Quarantine, dead_end, blocked_trace, degraded_trace, needs_user_trace, or contradiction-risk records direct-reuse eligible.
 41. ReuseScore must send contradiction-risk candidates to needs_conflict_check until production ConflictCheck exists.
 42. Semantic Reuse Pipeline may recommend and explain, but must not commit FinalOutput, bypass Root, bypass ReuseGate, execute direct reuse, or treat context memory as direct reuse.
+43. Root Semantic Reuse Decision/Gate traces are dry-run proofs only; they must not change production RootOrchestrator behavior, execute direct reuse, create production FinalOutput, or write production Work records.
+44. ReuseGate approval in the semantic reuse trace means return upward to Root final decision, not production execution.
 
 ---
 
@@ -238,7 +240,13 @@ Scenario semantics: `eligible_direct_reuse_candidate` is recommended but not com
 
 Safety flags: semantic_pipeline_committed_final_output=false, semantic_pipeline_bypassed_root=false, semantic_pipeline_bypassed_reuse_gate=false, root_boundary_preserved=true, reuse_gate_boundary_preserved=true, unsafe_reuse_candidates=0, production_autonomy_claimed=false, local_drs_only=true, external/global DRS not implemented. PASS must be derived from stages, scenarios, and boundary facts, not hardcoded.
 
-Next engineering direction: Root-controlled Semantic Reuse Decision Trace v0.1. Root should receive semantic reuse recommendations as trace/dry-run input, check boundaries, preserve ReuseGate, and choose between direct reuse candidate or full pipeline fallback without giving authority to the semantic pipeline.
+Root-controlled Semantic Reuse Decision Trace v0.1 is complete. It is a deterministic Root-controlled dry-run proof that consumes Semantic Reuse Pipeline recommendations. It does not change production RootOrchestrator behavior, execute direct reuse, create production FinalOutput, write production Work records, or grant authority to the semantic pipeline. Decision mapping: direct_reuse_candidate → root_accepts_direct_reuse_candidate_for_gate_review; needs_full_pipeline → root_selects_full_pipeline_fallback; needs_conflict_check → root_requires_conflict_check; blocked → root_blocks_policy_blocked_route; quarantine → root_routes_to_quarantine; needs_user → root_requires_user_input; degraded → root_marks_degraded_trace; dead_end → root_rejects_dead_end.
+
+Root-controlled Semantic Reuse Gate Trace v0.1 is complete. It is a deterministic Root/ReuseGate dry-run proof that consumes the Root decision trace. Gate review happens only for the Root-approved direct reuse candidate. Non-direct-reuse routes remain non-gate routes: full pipeline fallback, conflict check required, policy blocked, quarantine, needs_user, degraded, and dead_end. `gate_review_accepts_candidate_for_root_final_decision` means candidate returns upward to Root; it is not production execution. ReuseGate does not create FinalOutput, does not execute direct reuse, semantic pipeline does not commit, and Root keeps final authority.
+
+Current semantic reuse chain: Semantic Reuse Pipeline recommends → Root Decision Trace maps recommendations → ReuseGate Trace reviews direct reuse candidate only → approved candidate returns upward to Root final decision → no production execution yet.
+
+Next engineering direction: Root-controlled Semantic Reuse Final Decision Trace v0.1. Root receives the gate-approved candidate back and makes a final dry-run decision: controlled direct reuse trace path or full pipeline fallback, while preserving Root authority, no real external action, no production default behavior change, and no semantic pipeline authority.
 
 ---
 
@@ -408,6 +416,8 @@ Use this order for current MVP work:
 32. ReuseScore v0.1 as advisory/ranking only.
 33. Semantic Reuse Pipeline Integration v0.1.
 34. Root-controlled Semantic Reuse Decision Trace v0.1.
+35. Root-controlled Semantic Reuse Gate Trace v0.1.
+36. Root-controlled Semantic Reuse Final Decision Trace v0.1.
 
 Do not implement NeedleFactory, marketplace, global DRS, official organizational needles, blockchain, or real external actions before the canonical runtime is stable.
 

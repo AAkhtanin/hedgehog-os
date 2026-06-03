@@ -507,7 +507,58 @@ unsafe_reuse_candidates=0, production_autonomy_claimed=false, local_drs_only=tru
 and external/global DRS are not implemented. PASS is derived from stages,
 scenarios, and boundary facts.
 
-## 18. What This Baseline Does Not Prove Yet
+## 18. Root Semantic Reuse Decision / Gate Trace Checkpoint
+
+Root-controlled Semantic Reuse Decision Trace v0.1 is a deterministic
+Root-controlled dry-run proof. It consumes Semantic Reuse Pipeline
+recommendations and maps them into Root-controlled decisions without changing
+production RootOrchestrator behavior, executing direct reuse, creating
+production FinalOutput, writing production Work records, or granting authority
+to the semantic pipeline.
+
+Decision mapping:
+
+- direct_reuse_candidate -> root_accepts_direct_reuse_candidate_for_gate_review;
+- needs_full_pipeline -> root_selects_full_pipeline_fallback;
+- needs_conflict_check -> root_requires_conflict_check;
+- blocked -> root_blocks_policy_blocked_route;
+- quarantine -> root_routes_to_quarantine;
+- needs_user -> root_requires_user_input;
+- degraded -> root_marks_degraded_trace;
+- dead_end -> root_rejects_dead_end.
+
+Root-controlled Semantic Reuse Gate Trace v0.1 is the paired Root/ReuseGate
+dry-run proof. It consumes the Root decision trace, performs gate review only
+for the Root-approved direct reuse candidate, and preserves non-gate routes for
+full pipeline fallback, conflict check required, policy blocked, quarantine,
+needs_user, degraded, and dead_end.
+
+Gate approval means the candidate returns upward to Root final decision. It is
+not production execution. ReuseGate does not create FinalOutput, does not execute
+direct reuse, semantic pipeline does not commit, and Root remains final
+authority.
+
+Safety flags include gate_reviews_performed=1,
+gate_approvals_for_root_final_decision=1, non_applicable_gate_routes=7,
+root_final_decision_required_for_gate_approval=true,
+gate_did_not_commit_final_output=true, gate_did_not_execute_direct_reuse=true,
+direct_reuse_executed_in_trace=false, production_final_output_created=false,
+unsafe_reuse_candidates=0, root_authority_preserved=true,
+reuse_gate_boundary_preserved=true, semantic_pipeline_authority_granted=false,
+local_drs_only=true, external/global DRS not implemented, and
+production_autonomy_claimed=false.
+
+Current semantic reuse chain:
+
+```text
+Semantic Reuse Pipeline recommends
+-> Root Decision Trace maps recommendations
+-> ReuseGate Trace reviews direct reuse candidate only
+-> approved candidate returns upward to Root final decision
+-> no production execution yet
+```
+
+## 19. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
@@ -525,6 +576,7 @@ This baseline does not prove:
 - production DRS retrieval engine;
 - production typed-edge retrieval engine;
 - production semantic reuse integration into RootOrchestrator;
+- production semantic reuse final decision / commit path;
 - production ConflictCheck;
 - production ReuseScore or ReuseGate-driven semantic scoring;
 - production autonomy;
@@ -543,9 +595,9 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work should continue runtime hardening with Root-controlled Semantic Reuse Decision Trace v0.1. Root should receive semantic reuse recommendations as trace/dry-run input, check boundaries, preserve ReuseGate, and choose between direct reuse candidate or full pipeline fallback without giving authority to the semantic pipeline.
+After this baseline, the next architecture work should continue runtime hardening with Root-controlled Semantic Reuse Final Decision Trace v0.1. Root receives the gate-approved candidate back and makes a final dry-run decision: controlled direct reuse trace path or full pipeline fallback, while preserving Root authority, no real external action, no production default behavior change, and no semantic pipeline authority.
 
-## 19. Future Demo Evolution
+## 20. Future Demo Evolution
 
 - v0.25: deterministic CLI baseline, memory-informed reuse, explicit direct reuse scenario, and closed L0 proof path.
 - v0.26: Observable Zero Trust Runtime proof / canonical pipeline trace.
@@ -560,6 +612,8 @@ After this baseline, the next architecture work should continue runtime hardenin
 - v0.35: ReuseScore v0.1 as advisory/ranking only.
 - v0.36: Semantic Reuse Pipeline Integration v0.1.
 - v0.37: Root-controlled Semantic Reuse Decision Trace v0.1.
-- v0.38: controlled LLM/SLM role substitution.
+- v0.38: Root-controlled Semantic Reuse Gate Trace v0.1.
+- v0.39: Root-controlled Semantic Reuse Final Decision Trace v0.1.
+- v0.40: controlled LLM/SLM role substitution.
 - v0.40: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

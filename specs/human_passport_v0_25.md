@@ -181,11 +181,28 @@ Current bounded graph and lineage checkpoints:
   stages, scenarios, and boundary facts.
 - The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1, DRS
   Layer Taxonomy v0.1, Typed DRS Lineage Edges v0.1, ReuseScore v0.1, and
-  Semantic Reuse Pipeline Integration v0.1. The next planned engineering layer
-  is Root-controlled Semantic Reuse Decision Trace v0.1: Root should receive
-  semantic reuse recommendations as trace/dry-run input, check boundaries,
-  preserve ReuseGate, and choose between a direct reuse candidate or full
-  pipeline fallback without giving authority to the semantic pipeline.
+  Semantic Reuse Pipeline Integration v0.1.
+- Root-controlled Semantic Reuse Decision Trace v0.1 is the next completed
+  dry-run proof. It consumes Semantic Reuse Pipeline recommendations, maps them
+  into Root-controlled decisions, does not change production RootOrchestrator
+  behavior, does not execute direct reuse, does not create production
+  FinalOutput, does not write production Work records, and does not grant
+  authority to the semantic pipeline. Direct reuse candidates are accepted only
+  for ReuseGate review, not execution; needs_full_pipeline, conflict,
+  policy-blocked, quarantine, needs_user, degraded, and dead_end recommendations
+  map to their respective Root dry-run decisions.
+- Root-controlled Semantic Reuse Gate Trace v0.1 is the paired dry-run proof.
+  It consumes the Root decision trace, performs gate review only for the
+  Root-approved direct reuse candidate, and leaves all other routes as
+  non-gate routes. Gate approval means the candidate returns upward to Root for
+  final decision; it is not production execution. ReuseGate does not create
+  FinalOutput, does not execute direct reuse, semantic pipeline does not commit,
+  and Root remains final authority.
+- The current semantic reuse chain is: Semantic Reuse Pipeline recommends ->
+  Root Decision Trace maps recommendations -> ReuseGate Trace reviews direct
+  reuse candidate only -> approved candidate returns upward to Root final
+  decision -> no production execution yet. The next planned engineering layer is
+  Root-controlled Semantic Reuse Final Decision Trace v0.1.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

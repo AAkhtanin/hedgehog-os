@@ -1533,6 +1533,31 @@
     },
     {
       "phase": 19,
+      "name": "Root-controlled Semantic Reuse Decision Trace",
+      "status": "v0.1_complete",
+      "tasks": [
+        "consume Semantic Reuse Pipeline recommendations as Root-controlled dry-run input",
+        "map direct_reuse_candidate, needs_full_pipeline, needs_conflict_check, blocked, quarantine, needs_user, degraded, and dead_end recommendations into explicit Root decisions",
+        "preserve ReuseGate requirement for direct reuse candidate review",
+        "avoid production RootOrchestrator behavior changes, production direct reuse execution, production FinalOutput, and production Work writeback",
+        "keep semantic pipeline authority false"
+      ]
+    },
+    {
+      "phase": 20,
+      "name": "Root-controlled Semantic Reuse Gate Trace",
+      "status": "v0.1_complete",
+      "tasks": [
+        "consume Root Semantic Reuse Decision Trace rows",
+        "perform dry-run gate review only for the Root-approved direct reuse candidate",
+        "keep full pipeline fallback, conflict check, policy blocked, quarantine, needs_user, degraded, and dead_end decisions as non-gate routes",
+        "return approved gate candidates upward to Root final decision without production execution",
+        "preserve root_authority_preserved, reuse_gate_boundary_preserved, semantic_pipeline_authority_granted false, and unsafe_reuse_candidates zero",
+        "prepare Root-controlled Semantic Reuse Final Decision Trace"
+      ]
+    },
+    {
+      "phase": 21,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1542,7 +1567,7 @@
       ]
     },
     {
-      "phase": 20,
+      "phase": 22,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

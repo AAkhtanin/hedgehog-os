@@ -151,6 +151,26 @@ Current bounded graph and lineage checkpoints:
   evidence but not direct reuse eligibility, warning/blocking/needs-user/
   degraded/contradiction edges do not become success, and contradiction targets
   require future ConflictCheck / ReuseScore handling.
+- ReuseScore v0.1 is the next completed engineering hardening layer. It is a
+  LocalDRS-only advisory/ranking proof that consumes Typed DRS Lineage Edges
+  candidates and computes deterministic illustrative scores from visible
+  components: quality, freshness, gt_trust, semantic_similarity,
+  graph_proximity, typed_positive_signal, warning_penalty, blocking_penalty,
+  needs_user_penalty, degraded_penalty, contradiction_penalty, and risk_penalty.
+  Raw scores are computed before policy gates are applied. ReuseScore is not
+  Root, not ReuseGate, not policy override, not production ConflictCheck, not
+  global/external DRS, not real token billing, and not production autonomy.
+  High score cannot override policy: direct reuse still requires eligible
+  successful Work, context memory is not direct reuse, unsafe taxonomy records
+  remain non-reusable, and contradiction-risk candidates become
+  needs_conflict_check until future ConflictCheck exists.
+- The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1, DRS
+  Layer Taxonomy v0.1, Typed DRS Lineage Edges v0.1, and ReuseScore v0.1. The
+  next planned engineering layer is Semantic Reuse Pipeline Integration v0.1:
+  LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation ->
+  graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse
+  candidate or full pipeline fallback. It must not become production global DRS,
+  external DRS, production autonomy, or a Root bypass.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

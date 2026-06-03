@@ -436,7 +436,7 @@ This is not production uncontrolled runtime.
 
 Current auditor-facing / runtime checkpoint:
 
-text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 -> Compute Collapse via DRS Reuse v0.1 -> DRS Layer Taxonomy v0.1 -> Typed DRS Lineage Edges v0.1 
+text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 -> Compute Collapse via DRS Reuse v0.1 -> DRS Layer Taxonomy v0.1 -> Typed DRS Lineage Edges v0.1 -> ReuseScore v0.1 
 
 The important current rule:
 
@@ -455,6 +455,10 @@ Compute Collapse via DRS Reuse v0.1 complements Chaos Survival: Chaos Survival d
 DRS Layer Taxonomy v0.1 is an engineering hardening layer, not a showcase. It adds LocalDRS taxonomy/reporting semantics without a schema refactor, without changing ReuseGate behavior, and without making unsafe records reusable. It clarifies the broad MVP DeadEnds semantics into explicit routing meanings: work_candidate / successful_work is the only direct-reuse eligible case; quarantine covers invalid_json, schema_validation_failed, and unknown_exception / failed payloads; dead_end marks stable bad routes such as contract_version_mismatch / contract_boundary; blocked_trace marks guard, policy, permission boundary, circuit breaker, or runtime safety blocks; degraded_trace marks timeout, partial failure, or service instability and is not successful Work; needs_user_trace marks permission_required or missing human input and is not completed action. The taxonomy does not override policy: direct_reuse_eligible remains true only for accepted successful Work, unsafe_direct_reuse_candidates remains 0, local_drs_only remains true, external/global DRS are not implemented, and schema_refactor_performed remains false. Its truth flags are derived from classified rows, not hardcoded.
 
 Typed DRS Lineage Edges v0.1 is the next hardening layer after taxonomy. It is a LocalDRS-only typed-edge proof, not a schema refactor, not a ReuseGate change, not ReuseScore, not ConflictCheck, and not global/external DRS. It distinguishes query-time record relationships: derived_from, same_trace, warns_against, blocked_by_policy, requires_user, degraded_from, supports, and contradicts. Typed edges are semantic signals only: supports and derived_from may contribute positive or lineage evidence but cannot make a target directly reusable by themselves; warns_against is warning evidence; blocked_by_policy is blocking evidence; requires_user is needs-user evidence; degraded_from is degradation evidence; contradicts is contradiction evidence. In v0.1 contradiction evidence does not auto-block the target; the contradiction source is not reused and the target requires future ConflictCheck / ReuseScore handling. Records do not store static hops_ago, hop_distance, or graph_distance; graph distance and typed interpretation are computed at query time. Typed edges do not override policy, direct reuse policy remains unchanged, ReuseScore_implemented=false, conflict_check_implemented=false, local_drs_only=true, external/global DRS are not implemented, and schema_refactor_performed=false.
+
+ReuseScore v0.1 is the next completed engineering hardening layer. It is a LocalDRS-only advisory/ranking proof that consumes Typed DRS Lineage Edges candidates and computes deterministic illustrative scores from visible components: quality, freshness, gt_trust, semantic_similarity, graph_proximity, typed_positive_signal, warning_penalty, blocking_penalty, needs_user_penalty, degraded_penalty, contradiction_penalty, and risk_penalty. Raw scores are computed first; policy gates are applied separately afterward. ReuseScore is not Root, not ReuseGate, not a policy override, not production ConflictCheck, not global/external DRS, not real token billing, and not production autonomy. High score cannot override policy: direct reuse still requires eligible successful Work; context memory is not direct reuse; Quarantine, dead_end, blocked_trace, degraded_trace, and needs_user_trace records are not direct-reuse candidates. Contradiction does not auto-reuse: a work_candidate with contradiction_penalty becomes needs_conflict_check, not direct_reuse. The proof includes a high-ish scoring unsafe blocked_trace that remains not reusable because policy_allowed=false, and unsafe_direct_reuse_candidates remains 0.
+
+The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1 -> DRS Layer Taxonomy v0.1 -> Typed DRS Lineage Edges v0.1 -> ReuseScore v0.1. The next planned engineering layer is Semantic Reuse Pipeline Integration v0.1: LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback. It must still not be production global DRS, external DRS, production autonomy, or a Root bypass.
 
 Safety rules for this checkpoint:
 
@@ -528,6 +532,12 @@ Risk: generic graph proximity cannot distinguish useful support from warning, po
 
 Mitigation: Typed DRS Lineage Edges v0.1 extracts typed edges from persisted record content/source refs and interprets them at query time. The proof distinguishes positive lineage/support from warning, blocked, needs-user, degraded, and contradiction signals, while keeping typed_edges_are_signals_only=true. It does not implement ReuseScore or ConflictCheck, does not drive production ReuseGate, and does not make unsafe records reusable.
 
+### ReuseScore
+
+Risk: an advisory ranking score could be mistaken for Root authority, ReuseGate approval, policy permission, or production ConflictCheck.
+
+Mitigation: ReuseScore v0.1 remains LocalDRS-only and advisory. It combines visible deterministic signals into a raw score, then applies policy gates separately. High score cannot make unsafe records reusable, contradiction sends candidates to needs_conflict_check, Root and ReuseGate authority are preserved, and unsafe_direct_reuse_candidates remains 0. It does not claim real token billing, production retrieval, production autonomy, global DRS, or external DRS.
+
 ---
 
 ## Roadmap
@@ -552,16 +562,17 @@ Completed recent layers:
 - Compute Collapse via DRS Reuse v0.1.
 - DRS Layer Taxonomy v0.1.
 - Typed DRS Lineage Edges v0.1.
+- ReuseScore v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- ReuseScore v0.1 as advisory/ranking only, not Root, not ReuseGate, and not policy override.
+- Semantic Reuse Pipeline Integration v0.1: LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
-- Add richer direct reuse scoring after taxonomy and typed lineage edges: GTTrust / Freshness / PolicyOK / ConflictCheck.
+- Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.
 - Split broad work/trace_summary demo records into a future dedicated policy/invariant layer where appropriate.
-- Add typed or bidirectional DRS lineage edge semantics.
+- Add bidirectional DRS lineage edge semantics.
 - Adaptive mode router hardening.
 - Richer DRS pointer resolution.
 - Marennya / UP validation and promotion.

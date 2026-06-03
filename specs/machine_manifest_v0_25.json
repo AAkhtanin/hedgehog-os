@@ -1505,6 +1505,20 @@
     },
     {
       "phase": 17,
+      "name": "ReuseScore",
+      "status": "v0.1_complete",
+      "tasks": [
+        "consume Typed DRS Lineage Edges candidates",
+        "compute deterministic advisory scores from quality, freshness, gt_trust, semantic similarity, graph proximity, typed edge signals, conflict signal, and penalties",
+        "apply policy gates separately after raw score calculation",
+        "preserve Root and ReuseGate authority",
+        "keep production ConflictCheck false and ReuseScore advisory only",
+        "preserve LocalDRS-only boundaries and unsafe reuse prevention",
+        "prepare Semantic Reuse Pipeline Integration"
+      ]
+    },
+    {
+      "phase": 18,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1514,7 +1528,7 @@
       ]
     },
     {
-      "phase": 18,
+      "phase": 19,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

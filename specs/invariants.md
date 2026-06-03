@@ -143,7 +143,24 @@ Typed DRS lineage edges invariant:
 - Contradiction source records must not be reused; contradiction targets require future ConflictCheck / ReuseScore handling.
 - typed_edges_are_signals_only must remain true for v0.1.
 - direct reuse policy remains unchanged, ReuseScore_implemented = false, conflict_check_implemented = false, local_drs_only = true, external/global DRS are not implemented, and schema_refactor_performed = false.
-- ReuseScore v0.1 should come next and must remain advisory/ranking only, not Root, not ReuseGate, and not policy override.
+
+ReuseScore invariant:
+
+- ReuseScore v0.1 is an engineering hardening layer.
+- It is a LocalDRS-only advisory/ranking proof that consumes Typed DRS Lineage Edges candidates.
+- It computes deterministic illustrative reuse scores from visible components: quality, freshness, gt_trust, semantic_similarity, graph_proximity, typed_positive_signal, warning_penalty, blocking_penalty, needs_user_penalty, degraded_penalty, contradiction_penalty, and risk_penalty.
+- Raw score calculation and policy gates must remain separate.
+- ReuseScore does not change ReuseGate behavior, bypass Root, implement production ConflictCheck, implement global/external DRS, make unsafe records reusable, claim real token billing, or claim production autonomy.
+- ReuseScore is not Root, not ReuseGate, and not policy override.
+- High score cannot override policy.
+- Direct reuse still requires eligible successful Work.
+- Context memory does not equal direct reuse.
+- Quarantine, dead_end, blocked_trace, degraded_trace, and needs_user_trace records are not direct-reuse candidates.
+- Contradiction does not auto-reuse; contradiction-risk candidates route to needs_conflict_check until future ConflictCheck exists.
+- Root authority and ReuseGate authority remain preserved.
+- Important proof examples: a high-ish scoring unsafe blocked_trace remains not reusable because policy_allowed is false; a work_candidate with contradiction_penalty becomes needs_conflict_check rather than direct_reuse; unsafe_direct_reuse_candidates remains 0.
+- The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1, DRS Layer Taxonomy v0.1, Typed DRS Lineage Edges v0.1, and ReuseScore v0.1.
+- The next planned engineering layer is Semantic Reuse Pipeline Integration v0.1: LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback. It must not become production global DRS, external DRS, production autonomy, or a Root bypass.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

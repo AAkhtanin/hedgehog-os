@@ -268,6 +268,43 @@ graph_distance; graph distance and typed interpretation are computed at query
 time. This checkpoint is not production retrieval and not a production semantic
 internet.
 
+## ReuseScore
+
+ReuseScore v0.1 is a LocalDRS-only advisory/ranking proof that consumes Typed
+DRS Lineage Edges candidates. It computes deterministic illustrative raw scores
+from quality, freshness, gt_trust, semantic_similarity, graph_proximity,
+typed_positive_signal, warning_penalty, blocking_penalty, needs_user_penalty,
+degraded_penalty, contradiction_penalty, and risk_penalty.
+
+Policy gates are applied separately after raw score calculation. ReuseScore is
+not Root, not ReuseGate, not policy override, not production ConflictCheck, not
+global/external DRS, not real token billing, and not production autonomy.
+
+Safety semantics:
+
+- high score cannot override policy;
+- direct reuse still requires eligible successful Work;
+- context memory does not equal direct reuse;
+- quarantine / dead_end / blocked_trace / degraded_trace / needs_user_trace
+  records are not direct-reuse candidates;
+- contradiction does not auto-reuse;
+- contradiction-risk candidates become needs_conflict_check until future
+  ConflictCheck exists;
+- Root authority and ReuseGate authority are preserved.
+
+Important proof examples: a high-ish scoring unsafe blocked_trace remains not
+reusable because policy_allowed is false, a work_candidate with
+contradiction_penalty becomes needs_conflict_check instead of direct_reuse, and
+unsafe_direct_reuse_candidates remains 0.
+
+The current DRS semantic stack is DRS Graph Proximity / Lineage v0.1, DRS Layer
+Taxonomy v0.1, Typed DRS Lineage Edges v0.1, and ReuseScore v0.1. The next
+planned engineering layer is Semantic Reuse Pipeline Integration v0.1:
+LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation ->
+graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse
+candidate or full pipeline fallback. It must not become production global DRS,
+external DRS, production autonomy, or a Root bypass.
+
 ## Exclusions
 
 - No real external APIs.

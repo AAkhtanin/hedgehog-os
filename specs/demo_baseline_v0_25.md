@@ -418,7 +418,52 @@ Graph distance and typed edge interpretation are computed at query time. Records
 do not store static hops_ago / hop_distance / graph_distance. This checkpoint is
 not a claim of production retrieval or a production semantic internet.
 
-## 16. What This Baseline Does Not Prove Yet
+## 16. ReuseScore Checkpoint
+
+ReuseScore v0.1 is engineering hardening after typed lineage edges. It is a
+LocalDRS-only advisory/ranking proof, not a showcase, schema refactor,
+ReuseGate change, Root bypass, production ConflictCheck, global DRS, external
+DRS, production autonomy, or token billing benchmark.
+
+It consumes Typed DRS Lineage Edges candidates and computes deterministic
+illustrative raw scores from visible signals:
+
+- quality;
+- freshness;
+- gt_trust;
+- semantic_similarity;
+- graph_proximity;
+- typed_positive_signal;
+- warning_penalty;
+- blocking_penalty;
+- needs_user_penalty;
+- degraded_penalty;
+- contradiction_penalty;
+- risk_penalty.
+
+Policy gates are applied separately after raw score calculation. ReuseScore is
+advisory/ranking only: it is not Root, not ReuseGate, and not policy override.
+High score cannot override policy. Direct reuse still requires eligible
+successful Work, context memory does not equal direct reuse, and Quarantine /
+dead_end / blocked_trace / degraded_trace / needs_user_trace records are not
+direct-reuse candidates.
+
+Proof examples:
+
+- a high-ish scoring unsafe blocked_trace remains not reusable because
+  policy_allowed is false.
+- a work_candidate with contradiction_penalty becomes needs_conflict_check
+  rather than direct_reuse.
+- unsafe_direct_reuse_candidates remains 0.
+
+The current DRS semantic stack is:
+
+- DRS Graph Proximity / Lineage v0.1;
+- DRS Layer Taxonomy v0.1;
+- Typed DRS Lineage Edges v0.1;
+- ReuseScore v0.1.
+
+## 17. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
@@ -436,7 +481,7 @@ This baseline does not prove:
 - production DRS retrieval engine;
 - production typed-edge retrieval engine;
 - production ConflictCheck;
-- production ReuseScore;
+- production ReuseScore or ReuseGate-driven semantic scoring;
 - production autonomy;
 - production billing benchmark;
 - real token savings measurement;
@@ -453,9 +498,9 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work should continue runtime hardening with ReuseScore v0.1. ReuseScore must remain advisory/ranking only, not Root, not ReuseGate, and not policy override.
+After this baseline, the next architecture work should continue runtime hardening with Semantic Reuse Pipeline Integration v0.1: LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback. This next layer must still not be production global DRS, external DRS, production autonomy, or a Root bypass.
 
-## 17. Future Demo Evolution
+## 18. Future Demo Evolution
 
 - v0.25: deterministic CLI baseline, memory-informed reuse, explicit direct reuse scenario, and closed L0 proof path.
 - v0.26: Observable Zero Trust Runtime proof / canonical pipeline trace.
@@ -468,6 +513,7 @@ After this baseline, the next architecture work should continue runtime hardenin
 - v0.33: DRS layer taxonomy v0.1.
 - v0.34: Typed DRS Lineage Edges v0.1.
 - v0.35: ReuseScore v0.1 as advisory/ranking only.
-- v0.36: controlled LLM/SLM role substitution.
+- v0.36: Semantic Reuse Pipeline Integration v0.1.
+- v0.37: controlled LLM/SLM role substitution.
 - v0.40: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

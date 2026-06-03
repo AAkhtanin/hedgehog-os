@@ -52,7 +52,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → only later: NeedleFactory / NeedleForge 
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → only later: NeedleFactory / NeedleForge 
 
 Do not jump ahead to:
 
@@ -115,7 +115,9 @@ These are future strategic layers, not current MVP tasks.
 36. DRS Layer Taxonomy clarifies broad DeadEnds semantics but does not change ReuseGate, schema layers, or direct reuse eligibility.
 37. Taxonomy must not make quarantine, dead_end, blocked_trace, degraded_trace, or needs_user_trace records reusable.
 38. Typed DRS Lineage Edges are query-time semantic signals only in v0.1; they must not override policy, ReuseGate, or direct reuse gates.
-39. Typed edges must not imply ReuseScore or ConflictCheck is implemented.
+39. ReuseScore is advisory/ranking only; it is not Root, not ReuseGate, and not policy override.
+40. High ReuseScore must not make Quarantine, dead_end, blocked_trace, degraded_trace, needs_user_trace, or contradiction-risk records direct-reuse eligible.
+41. ReuseScore must send contradiction-risk candidates to needs_conflict_check until production ConflictCheck exists.
 
 ---
 
@@ -210,7 +212,7 @@ It classifies the broad MVP DeadEnds semantics into:
 
 Safety flags such as taxonomy_does_not_override_policy, broad_deadends_semantics_clarified, and direct_reuse_policy_unchanged must be derived from classified rows, not hardcoded.
 
-Typed DRS Lineage Edges v0.1 is the next completed hardening step. It is LocalDRS-only typed-edge proof, not a schema refactor, not a ReuseGate change, not ReuseScore, not ConflictCheck, and not global/external DRS.
+Typed DRS Lineage Edges v0.1 is the completed hardening step after taxonomy. It is LocalDRS-only typed-edge proof, not a schema refactor, not a ReuseGate change, not ReuseScore, not ConflictCheck, and not global/external DRS.
 
 It distinguishes:
 
@@ -223,9 +225,13 @@ It distinguishes:
 - supports;
 - contradicts.
 
-Typed edges are semantic signals only in v0.1. `supports` and `derived_from` may provide positive or lineage evidence but cannot make a target directly reusable by themselves. `warns_against` is warning evidence, `blocked_by_policy` is blocking evidence, `requires_user` is needs-user evidence, `degraded_from` is degradation evidence, and `contradicts` is contradiction evidence. A contradiction source is not reused, but the target is not auto-blocked until a future ConflictCheck / ReuseScore layer exists.
+Typed edges are semantic signals only in v0.1. `supports` and `derived_from` may provide positive or lineage evidence but cannot make a target directly reusable by themselves. `warns_against` is warning evidence, `blocked_by_policy` is blocking evidence, `requires_user` is needs-user evidence, `degraded_from` is degradation evidence, and `contradicts` is contradiction evidence. A contradiction source is not reused, but the target is not auto-blocked by typed edges alone.
 
-Next engineering direction: ReuseScore v0.1. It must remain advisory/ranking only, not Root, not ReuseGate, and not policy override.
+ReuseScore v0.1 is the next completed hardening step. It is a LocalDRS-only advisory/ranking proof that consumes Typed DRS Lineage Edges candidates and computes deterministic illustrative scores from visible signals: quality, freshness, gt_trust, semantic_similarity, graph_proximity, typed_positive_signal, warning_penalty, blocking_penalty, needs_user_penalty, degraded_penalty, contradiction_penalty, and risk_penalty. Raw score calculation and policy gates remain separate. ReuseScore does not change ReuseGate, bypass Root, implement production ConflictCheck, implement global/external DRS, make unsafe records reusable, claim real token billing, or claim production autonomy.
+
+Safety examples: a high-ish scoring unsafe `blocked_trace` remains not reusable because `policy_allowed=false`; a `work_candidate` with contradiction_penalty becomes `needs_conflict_check` rather than direct reuse; `unsafe_direct_reuse_candidates` remains 0. ReuseScore is not Root, not ReuseGate, and not policy override.
+
+Next engineering direction: Semantic Reuse Pipeline Integration v0.1. It should connect LocalDRS retrieval → taxonomy-aware filtering → typed edge interpretation → graph proximity → ReuseScore → ReuseGate / Root boundary → direct reuse candidate or full pipeline fallback. It must still not be production global DRS, external DRS, production autonomy, or a Root bypass.
 
 ---
 
@@ -393,6 +399,7 @@ Use this order for current MVP work:
 30. DRS Layer Taxonomy v0.1.
 31. Typed DRS Lineage Edges v0.1.
 32. ReuseScore v0.1 as advisory/ranking only.
+33. Semantic Reuse Pipeline Integration v0.1.
 
 Do not implement NeedleFactory, marketplace, global DRS, official organizational needles, blockchain, or real external actions before the canonical runtime is stable.
 

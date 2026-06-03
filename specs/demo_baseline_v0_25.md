@@ -279,7 +279,34 @@ not override policy. Nearby DeadEnds are warning signals, nearby Quarantine
 records are quarantine signals, and neither becomes a direct-reuse candidate.
 External/global DRS remains unimplemented.
 
-## 12. What This Baseline Does Not Prove Yet
+## 12. Chaos Survival Showcase Checkpoint
+
+Chaos Survival Showcase v0.1 is an auditor-facing showcase / evidence
+aggregator over existing deterministic proof modules. It is not a new core
+runtime layer. It composes:
+
+1. NeedleRuntime Chaos.
+2. Canonical Needle Outcome Trace with real GTValidator integration.
+3. Needle Outcome DRS Routing Persistence.
+4. Large Graph / Bounded Fractal Stress.
+5. DRS Graph Proximity / Lineage.
+
+It demonstrates timeout containment, invalid_json and schema_validation_failed
+quarantine, unknown_exception containment, permission_required needs_user /
+blocking, circuit breaker blocking, bad outcomes not written to successful
+Work, unsafe reuse candidates = 0, oversized graph blocking, cycle graph
+blocking, unknown dependency graph blocking, raw large graph not sent to GT,
+Large Graph Stress as bounded-summary check rather than real GT runtime,
+GraphProximity not overriding policy, Quarantine/DeadEnds not being
+direct-reuse eligible, Root final authority, no Executor/needle FinalOutput, no
+GT commit, no live Gemini, no Telegram actions, no real external actions, and
+`production_autonomy_claimed: false`.
+
+The showcase PASS summary is derived from computed section predicates. It does
+not claim production autonomy, global DRS, production 10k-node graph execution,
+or a production retrieval engine.
+
+## 13. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
@@ -295,6 +322,7 @@ This baseline does not prove:
 - production recursive child-cell execution;
 - production 10k-node graph execution;
 - production DRS retrieval engine;
+- production autonomy;
 - global or external DRS graph traversal;
 - a polished or genuinely useful real-world assistant scenario.
 
@@ -308,9 +336,9 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work should focus on typed DRS lineage edges, richer reuse scoring, dedicated audit/hash-chain records, and clearer trace layer splits for blocked/degraded/needs_user outcomes, not on adding more mock L0 reflex commands.
+After this baseline, the next architecture work should focus on Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path, typed DRS lineage edges, richer reuse scoring, dedicated audit/hash-chain records, and clearer trace layer splits for blocked/degraded/needs_user outcomes, not on adding more mock L0 reflex commands. Avoid claiming absolute zero cost.
 
-## 13. Future Demo Evolution
+## 14. Future Demo Evolution
 
 - v0.25: deterministic CLI baseline, memory-informed reuse, explicit direct reuse scenario, and closed L0 proof path.
 - v0.26: Observable Zero Trust Runtime proof / canonical pipeline trace.
@@ -318,7 +346,8 @@ After this baseline, the next architecture work should focus on typed DRS lineag
 - v0.28: Root-native canonical trace.
 - v0.29: Root-native DAG/DRS/audit stabilization and needle outcome LocalDRS routing.
 - v0.30: Large Graph / Bounded Fractal Stress and DRS Graph Proximity / Lineage.
-- v0.31: richer Architect/PlanGraph semantics and bounded child-cell behavior.
+- v0.31: Chaos Survival Showcase.
+- v0.32: Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path.
 - v0.35: controlled LLM/SLM role substitution.
 - v0.40: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

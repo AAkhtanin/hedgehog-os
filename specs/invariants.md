@@ -91,6 +91,14 @@ DRS graph proximity / lineage invariant:
 - Nearby Quarantine records may be quarantine signals, not direct-reuse candidates.
 - External DRS, global DRS, and Internet of Meaning remain future pointer/protocol boundaries, not current implementation.
 
+Chaos Survival Showcase invariant:
+
+- Chaos Survival Showcase is an auditor-facing evidence aggregator over existing deterministic proof modules, not a new core runtime layer.
+- Its PASS/FAIL summary must be derived from computed section predicates.
+- It must not claim production autonomy, global DRS, external DRS, production 10k-node execution, production retrieval, live Gemini, Telegram actions, or real external actions.
+- It may summarize NeedleRuntime Chaos, Canonical Needle Outcome Trace, Needle Outcome DRS Routing Persistence, Large Graph / Bounded Fractal Stress, and DRS Graph Proximity / Lineage.
+- It must preserve Root final authority, Executor/needle no-FinalOutput, GT no-commit, unsafe reuse candidates = 0, and bad outcomes written to successful Work = 0.
+
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.
    - Optional context is loaded only when requested by intent, policy, or an applicable installed needle.

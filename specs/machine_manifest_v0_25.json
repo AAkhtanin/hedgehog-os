@@ -1454,6 +1454,26 @@
     },
     {
       "phase": 13,
+      "name": "Chaos Survival Showcase",
+      "tasks": [
+        "compose existing deterministic proof modules into one auditor-facing report",
+        "derive PASS summary fields from computed section predicates",
+        "show needle failure containment and LocalDRS routing safety",
+        "show large graph bounded-summary behavior and DRS graph proximity policy safety",
+        "avoid production autonomy, global DRS, external DRS, live Gemini, Telegram action, or real external action claims"
+      ]
+    },
+    {
+      "phase": 14,
+      "name": "Compute Collapse via DRS Reuse",
+      "tasks": [
+        "demonstrate zero re-planning path where policy allows",
+        "show near-zero LLM cost path without claiming absolute zero cost",
+        "prove DRS reuse remains gated by Root, ReuseGate, freshness, trust, policy, and conflict checks"
+      ]
+    },
+    {
+      "phase": 15,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1463,7 +1483,7 @@
       ]
     },
     {
-      "phase": 14,
+      "phase": 16,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

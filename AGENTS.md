@@ -52,7 +52,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → only later: NeedleFactory / NeedleForge 
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → only later: NeedleFactory / NeedleForge 
 
 Do not jump ahead to:
 
@@ -107,6 +107,8 @@ These are future strategic layers, not current MVP tasks.
 28. Large or malformed PlanGraphs must be bounded or blocked, not executed as uncontrolled flat graphs.
 29. Graph proximity is a query-time ranking signal only; it does not override policy, validation, TimeEnvelope, GTTrust, or ReuseGate.
 30. DeadEnds, Quarantine, blocked, failed, and degraded records must not become direct-reuse eligible because they are graph-near.
+31. Showcase reports must be derived from existing proof outputs or structured collectors, not hardcoded PASS tables.
+32. Chaos Survival Showcase is not production autonomy and must not imply live Gemini, Telegram actions, external DRS, global DRS, or real external actions.
 
 ---
 
@@ -156,6 +158,22 @@ graph_proximity = 2 ** (-distance / hop_half_life)
 ```
 
 GraphProximity does not change ReuseGate and does not override policy. Nearby DeadEnds are warning signals, nearby Quarantine records are quarantine signals, and neither becomes a direct-reuse candidate. External/global DRS remains future work.
+
+---
+
+## Chaos Survival Showcase
+
+`python -m demo.run_chaos_survival_showcase` is an auditor-facing showcase over existing deterministic proof modules:
+
+- NeedleRuntime Chaos;
+- Canonical Needle Outcome Trace with real GTValidator integration;
+- Needle Outcome DRS Routing Persistence;
+- Large Graph / Bounded Fractal Stress;
+- DRS Graph Proximity / Lineage.
+
+It is not a new runtime layer. It summarizes timeout containment, quarantine routing, blocked permission/circuit-breaker cases, unsafe reuse candidates = 0, bad outcomes written to successful Work = 0, bounded/malformed graph survival, graph proximity policy safety, Root authority, no Executor/needle FinalOutput, no GT commit, no live Gemini, no Telegram actions, and no real external actions. Its PASS summary must be derived from computed section predicates.
+
+The next planned demonstration is Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path. Do not claim absolute zero cost.
 
 ---
 
@@ -318,6 +336,8 @@ Use this order for current MVP work:
 25. Needle outcome Post V&V / real GTValidator / LocalDRS routing.
 26. Large Graph / Bounded Fractal Stress.
 27. DRS Graph Proximity / Lineage.
+28. Chaos Survival Showcase.
+29. Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path.
 
 Do not implement NeedleFactory, marketplace, global DRS, official organizational needles, blockchain, or real external actions before the canonical runtime is stable.
 

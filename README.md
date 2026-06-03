@@ -436,7 +436,7 @@ This is not production uncontrolled runtime.
 
 Current auditor-facing / runtime checkpoint:
 
-text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 
+text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 
 
 The important current rule:
 
@@ -447,6 +447,8 @@ Needle outcome routing now proves the local path from simulated NeedleRuntime ou
 Large Graph / Bounded Fractal Stress proves bounded behavior for oversized or malformed PlanGraphs. It demonstrates max_nodes, max_edges, max_depth, max_parallelism, cycle detection, unknown dependency detection, child boundary snapshots, and bounded GT candidate summaries. It does not prove production 10k-node execution. The stress runner does not call the real GT runtime; it proves the GT boundary / bounded summary behavior with `gt_runtime_called: false` and `gt_boundary_mode: bounded_summary_check`. The raw large graph is not sent to GT. The DAG runner remains after Architect, does not become Root, and Executor does not create FinalOutput.
 
 DRS Graph Proximity / Lineage proves a LocalDRS-only read-only retrieval/ranking signal. Records are written to and read from LocalDRS, store links through lineage/source refs, and do not store static `hops_ago`, `hop_distance`, or `graph_distance`. `graph_distance` is computed at query time, and `graph_proximity = 2 ** (-distance / hop_half_life)`. GraphProximity is only a ranking signal: it does not override policy, does not change ReuseGate, and does not make Quarantine, DeadEnds, blocked, failed, or degraded records direct-reuse eligible.
+
+Chaos Survival Showcase v0.1 is an auditor-facing evidence aggregator, not a new core runtime layer. It composes NeedleRuntime Chaos, Canonical Needle Outcome Trace with real GTValidator integration, Needle Outcome DRS Routing Persistence, Large Graph / Bounded Fractal Stress, and DRS Graph Proximity / Lineage into one report. It shows timeout containment, invalid_json and schema_validation_failed quarantine, unknown_exception containment, permission_required needs_user/blocking, circuit breaker blocking, unsafe reuse candidates = 0, bad outcomes written to successful Work = 0, oversized/cycle/unknown-dependency graph blocking, raw large graph not sent to GT, graph proximity not overriding policy, Root final authority, no Executor/needle FinalOutput, no GT commit, no live Gemini, no Telegram action, no real external action, and `production_autonomy_claimed: false`. The showcase PASS summary is derived from computed section predicates, not hardcoded.
 
 Safety rules for this checkpoint:
 
@@ -500,6 +502,14 @@ Mitigation: graph proximity is computed at query time from stored links and rema
 
 Future tests: typed lineage edges, bidirectional traversal, dedicated policy/invariant layers, and richer reuse scoring with GraphProximity, GTTrust, Freshness, PolicyOK, and ConflictCheck.
 
+### Chaos Showcase Limits
+
+Risk: an evidence aggregator could be mistaken for production autonomy.
+
+Mitigation: Chaos Survival Showcase v0.1 is explicitly a deterministic presentation layer over existing proof modules. It does not claim global DRS, external DRS, production 10k-node execution, production retrieval, live Gemini autonomy, Telegram automation, or external-action readiness.
+
+Future tests: Compute Collapse via DRS Reuse, Zero Re-Planning Path, or Near-Zero LLM Cost Path. Avoid claiming absolute zero cost.
+
 ---
 
 ## Roadmap
@@ -520,10 +530,12 @@ Completed recent layers:
 - Needle Outcome DRS Routing Persistence v0.1.
 - Large Graph / Bounded Fractal Stress v0.1.
 - DRS Graph Proximity / Lineage v0.1.
+- Chaos Survival Showcase v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
+- Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add richer direct reuse scoring: ReuseScore / GTTrust / Freshness / PolicyOK / ConflictCheck.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.

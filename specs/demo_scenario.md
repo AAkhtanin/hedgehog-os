@@ -172,6 +172,25 @@ DeadEnds, Quarantine, blocked, failed, or degraded records direct-reuse
 eligible. Nearby DeadEnds are warnings; nearby Quarantine records are quarantine
 signals. External/global DRS remains unimplemented.
 
+## Chaos Survival Showcase
+
+Chaos Survival Showcase v0.1 is a human-readable evidence aggregator over
+existing deterministic proof modules, not a new runtime layer. It composes
+NeedleRuntime Chaos, Canonical Needle Outcome Trace with real GTValidator
+integration, Needle Outcome DRS Routing Persistence, Large Graph / Bounded
+Fractal Stress, and DRS Graph Proximity / Lineage.
+
+The report shows that timeouts, invalid JSON, schema failures, unknown
+exceptions, permission-required cases, circuit breakers, malformed graphs, and
+graph-near bad records are contained or routed safely. It also shows unsafe
+reuse candidates = 0, bad outcomes written to successful Work = 0, no Executor
+or needle FinalOutput, no GT commit, no live Gemini, no Telegram actions, no
+real external actions, and `production_autonomy_claimed: false`.
+
+Its PASS summary is derived from computed section predicates. It does not claim
+global DRS, production 10k graph execution, production retrieval, or production
+autonomy.
+
 ## Exclusions
 
 - No real external APIs.
@@ -185,6 +204,7 @@ signals. External/global DRS remains unimplemented.
 - No global DRS network.
 - No external DRS protocol implementation.
 - No production DRS retrieval engine.
+- No production autonomy.
 - No Internet of Meaning implementation.
 - No NeedleFactory implementation.
 - No needle marketplace implementation.

@@ -110,6 +110,16 @@ Current bounded graph and lineage checkpoints:
   ranking signal; it does not change ReuseGate, override policy, or make
   Quarantine / DeadEnds / blocked / failed / degraded records direct-reuse
   eligible.
+- Chaos Survival Showcase v0.1 is an auditor-facing showcase / evidence
+  aggregator over existing deterministic proof modules. It composes
+  NeedleRuntime Chaos, Canonical Needle Outcome Trace with real GTValidator
+  integration, Needle Outcome DRS Routing Persistence, Large Graph / Bounded
+  Fractal Stress, and DRS Graph Proximity / Lineage. It demonstrates containment
+  and safe routing under broken needles, malformed graphs, unsafe reuse
+  candidates, and graph-near bad records. It is not a new core runtime layer,
+  does not claim production autonomy, does not claim global DRS or production
+  retrieval, and does not claim production 10k-node execution. Its PASS summary
+  is derived from computed section predicates.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

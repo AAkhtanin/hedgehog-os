@@ -1,0 +1,801 @@
+===== GIT LOG =====
+b0a0959 Add DRS graph proximity lineage demo
+f1aedee Add large graph bounded stress runner
+291fa05 Document needle outcome GT and DRS routing checkpoint
+69ca0fc Add needle outcome DRS routing persistence
+ac5ac6e Integrate GTValidator for needle outcomes
+dcabf85 Clarify needle outcome GT boundary
+3d3d323 Add canonical needle outcome trace
+1adec21 Stabilize Root DAG DRS audit writeback
+5bb49b4 Refresh README current checkpoint
+00c87fa Clarify schema package reference status
+fd407f6 Refine demo scenario
+a6ef8d1 Refresh Codex agent instructions
+30b743a Refine legacy mapping
+dc2e184 Refine demo baseline
+6142bd5 Refine project invariants
+ab84f55 Sync machine manifest with current canon
+8c748c3 Refine math appendix algorithms
+d125285 Refine math appendix algorithms
+90ccd61 Refine README project framing
+4ac74d5 Refine human passport semantics
+60a7629 Add Root-native canonical trace
+b56ece2 Add strategic expansion map
+07b4c53 Add Root-controlled DAG runner integration
+00ae42a Document observable zero trust runtime proof
+edb1a4f Expose orchestrator and attractor formation in canonical trace
+
+===== GIT STATUS =====
+?? auditor_large_graph_drs_lineage_report.log
+?? auditor_root_native_dag_drs_audit_report.log
+
+===== LARGE GRAPH / BOUNDED FRACTAL STRESS =====
+[LARGE GRAPH / BOUNDED FRACTAL STRESS]
+note: deterministic stress only
+note: no real external actions
+note: DAG runner remains after Architect, not Root
+note: oversized/malformed graphs are bounded or blocked
+note: non-atomic nodes become boundary snapshots, not uncontrolled recursion
+
+[STRESS CONFIG]
+max_nodes: 64
+max_edges: 80
+max_depth: 10
+max_parallelism: 4
+gt_candidate_limit: 5
+no_real_external_actions: true
+
+[SCENARIO RESULTS]
+scenario | status | nodes | edges | max_nodes_exceeded | max_edges_exceeded | max_depth_exceeded | cycle_detected | unknown_dependency_detected | execution_batches_count | result_proposals_count | child_boundary_snapshots | gt_candidate_count | executor_created_final_output | root_final_authority_preserved | no_real_external_action
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+normal_graph | completed | 3 | 2 | false | false | false | false | false | 2 | 3 | 0 | 3 | false | true | true
+wide_graph | completed | 12 | 0 | false | false | false | false | false | 3 | 12 | 0 | 5 | false | true | true
+deep_graph | blocked | 12 | 11 | false | false | true | false | false | 0 | 0 | 0 | 0 | false | true | true
+oversized_graph | blocked | 65 | 0 | true | false | false | false | false | 0 | 0 | 0 | 0 | false | true | true
+too_many_edges_graph | blocked | 3 | 81 | false | true | false | false | false | 0 | 0 | 0 | 0 | false | true | true
+cycle_graph | blocked | 2 | 2 | false | false | false | true | false | 0 | 0 | 0 | 0 | false | true | true
+unknown_dependency_graph | blocked | 2 | 0 | false | false | false | false | true | 0 | 0 | 0 | 0 | false | true | true
+child_boundary_graph | completed | 2 | 0 | false | false | false | false | false | 2 | 2 | 1 | 2 | false | true | true
+gt_summary_boundary | completed | 30 | 0 | false | false | false | false | false | 3 | 30 | 0 | 5 | false | true | true
+
+[BOUNDARY / AUTHORITY]
+dag_runner_is_root: false
+executor_created_final_output: false
+gt_committed_final_output: false
+gt_runtime_called: false
+gt_boundary_mode: bounded_summary_check
+gt_candidate_limit_applied: true
+root_final_authority_preserved: true
+uncontrolled_delegation: false
+non_atomic_nodes_become_boundary_snapshots: true
+oversized_graph_blocked_before_execution: true
+cycles_blocked_before_execution: true
+
+[SUMMARY]
+large_graph_stress_status: PASS
+scenarios: 9
+normal_graph_completed: true
+wide_graph_parallelism_limited: true
+deep_graph_depth_checked: true
+oversized_graph_blocked: true
+too_many_edges_graph_blocked: true
+cycle_graph_blocked: true
+unknown_dependency_graph_blocked: true
+child_boundary_snapshots_created: true
+gt_candidate_count_bounded: true
+gt_runtime_called: false
+gt_boundary_mode: bounded_summary_check
+gt_candidate_limit_applied: true
+raw_large_graph_not_sent_to_gt: true
+root_final_authority_preserved: true
+executor_created_final_output: false
+no_real_external_actions: true
+uncontrolled_delegation: false
+
+===== DRS GRAPH PROXIMITY / LINEAGE =====
+[DRS GRAPH PROXIMITY / LINEAGE]
+note: LocalDRS only
+note: read-only retrieval/ranking proof
+note: external DRS remains future pointer/protocol boundary
+note: graph proximity does not override policy
+note: TimeEnvelope remains mandatory
+note: no global DRS network
+
+[DATASET]
+records_written: 7
+local_drs_only: true
+external_drs_network_implemented: false
+global_drs_implemented: false
+static_hops_stored_in_records: false
+time_envelope_present_for_all: true
+provenance_present_for_all: true
+lineage_links_present: true
+
+[GRAPH LINKS]
+child_work_direct -> grandchild_work
+child_work_direct -> nearby_quarantine
+root_work -> child_work_direct
+root_work -> nearby_deadend
+
+[RETRIEVAL / RANKING]
+record_id | layer | type | status | graph_distance | graph_proximity | time_freshness | gt_trust | semantic_similarity_mock | policy_allowed | direct_reuse_eligible | routing_role | final_rank_score
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+root_work | work | task_outcome | accepted | 0 | 1.000000 | 0.70 | 0.95 | 0.95 | true | true | candidate | 0.920000
+child_work_direct | work | task_outcome | accepted | 1 | 0.707107 | 0.75 | 0.90 | 0.92 | true | true | candidate | 0.870066
+fresh_but_unrelated_work | work | task_outcome | accepted | unreachable | 0.000000 | 1.00 | 0.85 | 0.85 | true | true | candidate | 0.790000
+grandchild_work | work | task_outcome | accepted | 2 | 0.500000 | 0.70 | 0.82 | 0.88 | true | true | candidate | 0.785000
+distant_policy_invariant | work | trace_summary | active | unreachable | 0.000000 | 0.65 | 0.70 | 0.60 | false | false | policy_note | 0.565000
+nearby_deadend | deadends | dead_end | rejected | 1 | 0.707107 | 0.80 | 0.20 | 0.80 | false | false | warning | 0.066066
+nearby_quarantine | quarantine | trace_summary | quarantined | 2 | 0.500000 | 0.85 | 0.10 | 0.78 | false | false | quarantine | -0.204000
+
+[POLICY SAFETY]
+graph_proximity_overrides_policy: false
+quarantine_direct_reuse_candidates: 0
+deadend_direct_reuse_candidates: 0
+blocked_or_failed_reuse_candidates: 0
+nearby_deadend_used_as_warning: true
+nearby_quarantine_used_as_quarantine_signal: true
+fresh_unrelated_does_not_beat_linked_work_when_graph_signal_applies: true
+time_envelope_still_required: true
+
+[SUMMARY]
+drs_graph_proximity_status: PASS
+local_drs_only: true
+read_only_ranking_proof: true
+graph_distance_computed_at_query_time: true
+static_hops_stored_in_records: false
+graph_proximity_formula_applied: true
+graph_proximity_weight: 0.15
+graph_proximity_does_not_override_policy: true
+lineage_affects_ranking: true
+quarantine_not_reuse_eligible: true
+deadend_not_reuse_eligible: true
+direct_reuse_policy_unchanged: true
+external_drs_network_implemented: false
+global_drs_implemented: false
+
+===== NEEDLE OUTCOME DRS ROUTING =====
+[NEEDLE OUTCOME DRS ROUTING]
+note: LocalDRS routing only
+note: external DRS is a future pointer/protocol boundary
+note: no global DRS network
+note: no real external actions
+note: Work, Quarantine, DeadEnds, degraded, and needs_user routes remain distinct
+
+[INPUT]
+source: canonical needle outcomes with real GTValidator reports
+scenarios: 8
+gt_runtime_called: true
+gt_decision_mode: gt_validator_runtime
+
+[ROUTING TABLE]
+scenario | needle_status | vv_status | gt_decision | root_visible_decision | intended_drs_route | persisted_layer | persisted_type | successful_work_record | direct_reuse_eligible | quarantine | deadend_or_blocked | degraded | needs_user
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+needle_success_mock | completed | completed | accept | accept/work_candidate | work_candidate | work | task_outcome | true | true | false | false | false | false
+needle_timeout | degraded | degraded | revise | degraded_trace | degraded_trace | deadends | trace_summary | false | false | false | true | true | false
+needle_invalid_json | quarantined | failed | revise | quarantine | quarantine | quarantine | trace_summary | false | false | true | false | false | false
+needle_contract_version_mismatch | blocked | blocked | revise | blocked | deadend_or_blocked_trace | deadends | dead_end | false | false | false | true | false | false
+needle_permission_required | blocked | blocked | revise | needs_user_or_blocked | needs_user_or_blocked_trace | deadends | trace_summary | false | false | false | true | false | true
+needle_circuit_breaker_open | blocked | blocked | revise | blocked | blocked_trace | deadends | dead_end | false | false | false | true | false | false
+needle_schema_validation_failed | quarantined | failed | revise | quarantine | quarantine | quarantine | trace_summary | false | false | true | false | false | false
+needle_unknown_exception | failed | failed | revise | failed_or_quarantine | quarantine_or_failed_trace | quarantine | trace_summary | false | false | true | false | false | false
+
+[DRS RECORDS]
+total_records_written: 8
+work_records: 1
+quarantine_records: 3
+deadend_records: 4
+audit_or_trace_records: 8
+audit_trace_embedded_in_records: true
+time_envelope_present_for_all: true
+provenance_present_for_all: true
+gt_metadata_present_for_all: true
+sensitive_terms_absent_for_all: true
+no_real_external_actions: true
+
+[REUSE SAFETY]
+successful_work_reuse_candidates: 1
+quarantine_reuse_candidates: 0
+deadend_reuse_candidates: 0
+blocked_reuse_candidates: 0
+degraded_success_reuse_candidates: 0
+failed_reuse_candidates: 0
+
+[SUMMARY]
+needle_outcome_drs_routing_status: PASS
+local_drs_only: true
+external_drs_network_implemented: false
+global_drs_implemented: false
+successful_work_records: 1
+quarantine_records: 3
+blocked_or_deadend_records: 4
+degraded_records: 1
+needs_user_records: 1
+bad_outcomes_written_to_successful_work: 0
+direct_reuse_unsafe_candidates: 0
+time_envelope_present_for_all: true
+provenance_present_for_all: true
+sensitive_terms_absent_for_all: true
+no_real_external_actions: true
+
+===== CANONICAL NEEDLE OUTCOME TRACE =====
+[CANONICAL NEEDLE OUTCOME TRACE]
+note: deterministic simulated needle outcomes only
+note: needle is a contract boundary, not an Executor-owned plugin
+note: needle output does not go directly to user
+note: Root remains final authority
+note: no real external actions
+
+[NEEDLE OUTCOMES]
+scenario | needle_status | failure_kind | execution_status | quarantined | blocked | degraded | completed | unhandled_exception
+--- | --- | --- | --- | --- | --- | --- | --- | ---
+needle_success_mock | completed | none | completed | false | false | false | true | false
+needle_timeout | degraded | timeout | degraded | false | false | true | false | false
+needle_invalid_json | quarantined | invalid_json | failed | true | false | false | false | false
+needle_contract_version_mismatch | blocked | contract_version_mismatch | blocked | false | true | false | false | false
+needle_permission_required | blocked | permission_required | blocked | false | true | false | false | false
+needle_circuit_breaker_open | blocked | circuit_breaker_open | blocked | false | true | false | false | false
+needle_schema_validation_failed | quarantined | schema_validation_failed | failed | true | false | false | false | false
+needle_unknown_exception | failed | unknown_exception | failed | true | false | false | false | false
+
+[CANONICAL BOUNDARY]
+scenario | converted_to_result_proposal | result_proposal_shape_valid | needle_created_final_output | executor_owns_needle | canonical_artifact_type
+--- | --- | --- | --- | --- | ---
+needle_success_mock | true | true | false | false | result_proposal_compatible
+needle_timeout | true | true | false | false | result_proposal_compatible
+needle_invalid_json | true | true | false | false | result_proposal_compatible
+needle_contract_version_mismatch | true | true | false | false | result_proposal_compatible
+needle_permission_required | true | true | false | false | result_proposal_compatible
+needle_circuit_breaker_open | true | true | false | false | result_proposal_compatible
+needle_schema_validation_failed | true | true | false | false | result_proposal_compatible
+needle_unknown_exception | true | true | false | false | result_proposal_compatible
+
+[POST V&V]
+scenario | post_vv_ran | vv_status | safe_for_gt_for_selection | unsafe_for_domain_success | schema_visible | policy_visible | safety_visible
+--- | --- | --- | --- | --- | --- | --- | ---
+needle_success_mock | true | completed | true | false | true | true | true
+needle_timeout | true | degraded | true | true | true | true | true
+needle_invalid_json | true | failed | false | true | true | true | true
+needle_contract_version_mismatch | true | blocked | true | true | true | true | true
+needle_permission_required | true | blocked | true | true | true | true | true
+needle_circuit_breaker_open | true | blocked | true | true | true | true | true
+needle_schema_validation_failed | true | failed | false | true | true | true | true
+needle_unknown_exception | true | failed | false | true | true | true | true
+
+[GT / ROOT DECISION]
+scenario | root_visible_decision | gt_boundary_after_post_vv | gt_runtime_called | gt_decision_mode | gt_report_present | gt_report_id | gt_decision | gt_committed_final_output | root_decision_required | root_created_final_output | no_direct_user_answer_from_needle
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+needle_success_mock | accept/work_candidate | true | true | gt_validator_runtime | true | gt:needle_outcome_trace_needle_success_mock:proposal:needle_failure_integration_needle_success_mock:government_services:none | accept | false | true | false | true
+needle_timeout | degraded_trace | true | true | gt_validator_runtime | true | gt:needle_outcome_trace_needle_timeout:revise | revise | false | true | false | true
+needle_invalid_json | quarantine | true | true | gt_validator_runtime | true | gt:needle_outcome_trace_needle_invalid_json:revise | revise | false | true | false | true
+needle_contract_version_mismatch | blocked | true | true | gt_validator_runtime | true | gt:needle_outcome_trace_needle_contract_version_mismatch:revise | revise | false | true | false | true
+needle_permission_required | needs_user_or_blocked | true | true | gt_validator_runtime | true | gt:needle_outcome_trace_needle_permission_required:revise | revise | false | true | false | true
+needle_circuit_breaker_open | blocked | true | true | gt_validator_runtime | true | gt:needle_outcome_trace_needle_circuit_breaker_open:revise | revise | false | true | false | true
+needle_schema_validation_failed | quarantine | true | true | gt_validator_runtime | true | gt:needle_outcome_trace_needle_schema_validation_failed:revise | revise | false | true | false | true
+needle_unknown_exception | failed_or_quarantine | true | true | gt_validator_runtime | true | gt:needle_outcome_trace_needle_unknown_exception:revise | revise | false | true | false | true
+
+[DRS / AUDIT ROUTING]
+scenario | drs_routing_mode | intended_drs_route | time_envelope_required | provenance_required | audit_required | sensitive_terms_absent | no_real_external_action
+--- | --- | --- | --- | --- | --- | --- | ---
+needle_success_mock | planned_or_trace_only | work_candidate | true | true | true | true | true
+needle_timeout | planned_or_trace_only | degraded_trace | true | true | true | true | true
+needle_invalid_json | planned_or_trace_only | quarantine | true | true | true | true | true
+needle_contract_version_mismatch | planned_or_trace_only | deadend_or_blocked_trace | true | true | true | true | true
+needle_permission_required | planned_or_trace_only | needs_user_or_blocked_trace | true | true | true | true | true
+needle_circuit_breaker_open | planned_or_trace_only | blocked_trace | true | true | true | true | true
+needle_schema_validation_failed | planned_or_trace_only | quarantine | true | true | true | true | true
+needle_unknown_exception | planned_or_trace_only | quarantine_or_failed_trace | true | true | true | true | true
+
+[SUMMARY]
+scenarios: 8
+canonical_boundary_conversions: 8
+post_vv_runs: 8
+gt_after_post_vv: true
+gt_boundary_after_post_vv: true
+gt_runtime_called: true
+gt_decision_mode: gt_validator_runtime
+canonical_gt_runtime_integration: true
+gt_report_present_count: 8
+unsafe_outcomes_not_marked_success: true
+invalid_json_not_success: true
+schema_validation_failed_not_success: true
+unknown_exception_not_success: true
+gt_committed_final_output: false
+root_decisions_required: 8
+needle_created_final_output: false
+executor_owns_needle: false
+direct_user_answers_from_needle: 0
+quarantined_or_failed_count: 3
+blocked_count: 3
+degraded_count: 1
+completed_count: 1
+no_real_external_actions: true
+unhandled_exceptions: 0
+canonical_needle_outcome_trace_status: PASS
+
+===== ROOT DAG DRS / AUDIT SMOKE =====
+[ROOT DAG DRS / AUDIT SMOKE]
+note: stabilizes Root-native DAG DRS writeback and audit trace metadata
+note: DAG runner returns ResultProposals / boundary artifacts only
+note: Root remains final authority
+note: no real external actions
+
+[ROOT NATIVE DAG RUN]
+- execution_engine: fractal_dag
+- fractal_dag_executor_used: true
+- final_status: success
+- created_by: root_orchestrator
+
+[DRS WORK RECORD]
+- drs_write_count: 1
+- work_record_written: true
+- layer: work
+- type: task_outcome
+- time_envelope_present: true
+- provenance_present: true
+- execution_engine_in_work_record: fractal_dag
+- fractal_dag_executor_used_in_work_record: true
+- dag_result_proposals_count_in_work_record: 9
+- vv_reports_count_in_work_record: 9
+- gt_decision_in_work_record: accept
+- root_created_final_output_in_work_record: true
+- no_real_external_action_in_work_record: true
+
+[AUDIT / TRACE]
+- audit_trace_present: true
+- root_native_dag_path: true
+- root_final_authority_preserved: true
+- post_vv_before_gt: true
+- result_returned_to_root: true
+- sensitive_input_absent: true
+- secrets_absent: true
+
+[SUMMARY]
+- root_dag_drs_audit_status: PASS
+- drs_writeback_stable: true
+- time_envelope_present: true
+- provenance_present: true
+- dag_trace_fields_in_work_record: true
+- audit_trace_present: true
+- sensitive_input_absent: true
+- secrets_absent: true
+- no_real_external_actions: true
+- uncontrolled_delegation: false
+
+===== ROOT NATIVE CANONICAL TRACE =====
+[ROOT-NATIVE CANONICAL TRACE]
+note: uses real RootOrchestrator opt-in DAG route
+note: DAG runner connects to Root-controlled pipeline after Architect
+note: Root remains final authority
+note: no real external actions
+note: no live Gemini by default
+
+[ROOT INTAKE]
+- request_id: req_root_native_canonical_trace
+- input_kind: certificate_demo
+- root_authority: true
+- final_output_created_by_root_only: true
+
+[ROOT ORCHESTRATOR / ROUTE ASSEMBLY]
+- route: proof_full_pipeline
+- execution_engine: fractal_dag
+- root_authority: true
+- orchestrator_stage_explicit: true
+- orchestrator_provider: deterministic
+- llm_or_slm_used: false
+- force_full_pipeline: true
+- use_fractal_dag_executor: true
+- orchestrator_created_final_output: false
+- orchestrator_bypassed_root_authority: false
+
+[AVF / ATTRACTOR]
+- avf_runs_before_architect: true
+- hardmask_applied: true
+- forbidden_vector_blocked_before_architect: true
+- architect_received_forbidden_vectors: false
+- attractor_packet_created: true
+- attractor_packet_created_by: root_orchestrator
+- selected_vectors: official_online_request, personal_visit, legal_representative, fallback_exploration
+- forbidden_regions: fraud, identity_abuse, illegal_coercion, privacy_violation, violence
+
+[ARCHITECT]
+- architect_provider: deterministic
+- plan_graph_valid: true
+- plan_graph_node_count: 9
+- architect_created_final_output: false
+- architect_returned_plan_graph: true
+
+[DAG RUNNER]
+- fractal_dag_executor_used: true
+- dag_runner_status: completed
+- dag_ready_sequence_present: true
+- dag_execution_batches_present: true
+- dag_result_proposals_count: 9
+- dag_child_boundary_snapshots: 0
+- executor_created_final_output: false
+- no_real_external_action: true
+
+[POST V&V / GT]
+- post_vv_after_dag_executor: true
+- vv_reports_count: 9
+- gt_after_post_vv: true
+- gt_decision: accept
+- gt_committed_final_output: false
+
+[ROOT FINAL]
+- root_received_dag_artifacts: true
+- final_status: success
+- root_created_final_output: true
+- created_by: root_orchestrator
+- uncontrolled_delegation: false
+
+[DRS WRITEBACK / AUDIT]
+- drs_write_count: 1
+- work_record_written: true
+- time_envelope_present: true
+- provenance_present: true
+- execution_engine_in_work_record: fractal_dag
+- fractal_dag_executor_used_in_work_record: true
+- dag_result_proposals_count_in_work_record: 9
+- vv_reports_count_in_work_record: 9
+- gt_decision_in_work_record: accept
+- root_created_final_output_in_work_record: true
+- no_real_external_action_in_work_record: true
+- audit_trace_present: true
+- root_native_dag_path: true
+- root_final_authority_preserved: true
+- post_vv_before_gt: true
+- result_returned_to_root: true
+- sensitive_input_absent: true
+
+[SUMMARY]
+- root_native_canonical_trace_status: PASS
+- real_root_orchestrator_used: true
+- execution_engine: fractal_dag
+- fractal_dag_executor_used: true
+- root_final_authority_preserved: true
+- architect_created_final_output: false
+- executor_created_final_output: false
+- gt_committed_final_output: false
+- post_vv_after_dag_executor: true
+- gt_after_post_vv: true
+- root_created_final_output: true
+- drs_writeback_done: true
+- no_real_external_actions: true
+- uncontrolled_delegation: false
+- next_step: stabilize DRS writeback / audit around root-native path
+
+===== CANONICAL PIPELINE TRACE =====
+[CANONICAL PIPELINE TRACE]
+note: auditor-facing full canonical runtime trace
+note: uses Fractal DAG Executor Core
+note: no real external actions
+note: no live Gemini by default
+note: Root remains final authority
+
+[ROOT INTAKE]
+- request_id: req:canonical_pipeline_trace
+- input_kind: certificate_demo
+- root_authority: true
+- final_output_created_by_root_only: true
+
+[ROOT ORCHESTRATOR / ROUTE ASSEMBLY]
+- root_authority: true
+- orchestrator_stage_explicit: true
+- orchestrator_provider: deterministic
+- orchestrator_model: none
+- llm_or_slm_used: false
+- orchestrator_control_scope: route_context_assembly_only
+- intent_normalized: true
+- temporal_query_created: true
+- world_state_assembled: true
+- drs_precheck_completed: true
+- candidate_vectors_requested: true
+- candidate_vector_sources_allowed_only: true
+- free_llm_hallucinated_vectors: false
+- avf_requested: true
+- attractor_packet_created: true
+- orchestrator_created_final_output: false
+- orchestrator_bypassed_avf: false
+- orchestrator_bypassed_root_authority: false
+
+[TEMPORAL / DRS PRECHECK]
+- temporal_query_used: true
+- retrieved_records: 0
+- memory_context_applied: false
+- sensitive_input_absent_from_writeback: true
+
+[CANDIDATE VECTORS]
+- candidate_vectors_total: 5
+- candidate_vector_ids: official_online_request, personal_visit, legal_representative, illegal_coercion, fallback_exploration
+- candidate_sources: fallback_template, needle
+- free_llm_hallucinated_vectors: false
+
+[AVF / HARDMASK]
+- hard_mask_applied: true
+- hard_masked_vectors: illegal_coercion
+- forbidden_vector_blocked_before_architect: true
+- architect_received_forbidden_vectors: false
+
+[AVF / ATTRACTOR FORMATION]
+- avf_runs_before_architect: true
+- feature_scores_present: true
+- hardmask_applied: true
+- softmask_applied: true
+- topk_selected: true
+- hard_masked_vectors: illegal_coercion
+- selected_vectors: official_online_request, personal_visit, legal_representative, fallback_exploration
+- forbidden_vectors_removed_before_architect: true
+- exploration_cannot_bypass_hardmask: true
+- avf_created_plan_graph: false
+- attractor_packet_created: true
+- attractor_packet_created_by: root_orchestrator
+
+[ATTRACTOR PACKET]
+- selected_vectors: official_online_request, personal_visit, legal_representative, fallback_exploration
+- required_guards: AVF, HardMask, PlanGraph contract, Post V&V, GT, Root final authority
+- branch_budget: max_fractals=3, max_depth=3, parallelism=1
+- forbidden_regions: fraud, identity_abuse, illegal_coercion, privacy_violation, violence
+
+[ARCHITECT INPUT]
+- architect_received_source_text: false
+- architect_received_attractor_packet: true
+- architect_input_contains_forbidden_vectors: false
+- architect_input_contract: AttractorPacket only
+- architect_must_return: PlanGraph
+- architect_created_final_output: false
+- architect_must_respect_branch_budgets: true
+- architect_must_not_expand_forbidden_regions: true
+
+[ARCHITECT PLAN GRAPH]
+- architect_created_final_output: false
+- plan_graph_valid: true
+- plan_graph_node_count: 9
+- plan_graph_edge_count: 5
+- time_assumptions_present: true
+
+[FRACTAL DAG EXECUTOR]
+- executor_runner_used: true
+- runner_status: completed
+- ready_sequence: node:packet:req:canonical_pipeline_trace:1:1:prepare_request_payload,node:packet:req:canonical_pipeline_trace:2:1:prepare_visit_checklist,node:packet:req:canonical_pipeline_trace:3:1:prepare_delegation_requirements,node:packet:req:canonical_pipeline_trace:4:1:gather_missing_requirements / node:packet:req:canonical_pipeline_trace:1:2:validate_required_fields,node:packet:req:canonical_pipeline_trace:2:2:estimate_visit_requirements,node:packet:req:canonical_pipeline_trace:3:2:validate_authorization_constraints,node:packet:req:canonical_pipeline_trace:4:2:propose_human_review_questions / node:packet:req:canonical_pipeline_trace:1:3:simulate_submission_step
+- execution_batches: node:packet:req:canonical_pipeline_trace:1:1:prepare_request_payload,node:packet:req:canonical_pipeline_trace:2:1:prepare_visit_checklist,node:packet:req:canonical_pipeline_trace:3:1:prepare_delegation_requirements,node:packet:req:canonical_pipeline_trace:4:1:gather_missing_requirements / node:packet:req:canonical_pipeline_trace:1:2:validate_required_fields,node:packet:req:canonical_pipeline_trace:2:2:estimate_visit_requirements,node:packet:req:canonical_pipeline_trace:3:2:validate_authorization_constraints,node:packet:req:canonical_pipeline_trace:4:2:propose_human_review_questions / node:packet:req:canonical_pipeline_trace:1:3:simulate_submission_step
+- result_proposals_count: 9
+- child_boundary_snapshots: 0
+- executor_created_final_output: false
+- no_real_external_action: true
+
+[POST V&V]
+- vv_reports_count: 9
+- completed_reports: 9
+- blocked_or_failed_reports: 0
+- post_vv_before_gt: true
+
+[GT]
+- gt_decision: accept
+- gt_winner_vector: official_online_request
+- gt_winner_proposal: rp:plan:packet:req:canonical_pipeline_trace:node:packet:req:canonical_pipeline_trace:1:1:prepare_request_payload
+- gt_committed_final_output: false
+
+[ROOT FINAL OUTPUT]
+- final_status: success
+- root_final_authority: true
+- root_created_final_output: true
+- created_by: root_orchestrator
+- uncontrolled_delegation: false
+
+[ROOT FINALIZATION]
+- received_result_proposals: true
+- received_vv_reports: true
+- received_gt_report: true
+- root_decision: final_output
+- root_may_rerun_or_narrow_or_expand: true
+- final_output_created_by: root_orchestrator
+- final_renderer_is_subordinate: true
+- final_renderer_committed_output: false
+- result_returned_to_root: true
+- root_received_pipeline_artifacts: true
+- root_finalization_after_gt: true
+
+[DRS WRITEBACK / AUDIT]
+- drs_write_count: 1
+- work_record_written: true
+- time_envelope_present: true
+- sensitive_input_absent: true
+- audit_trace_present: true
+- trace_summary_present: true
+
+[SUMMARY]
+- canonical_trace_status: PASS
+- orchestrator_stage_explicit: true
+- candidate_vector_sources_allowed_only: true
+- orchestrator_created_final_output: false
+- avf_runs_before_architect: true
+- forbidden_vectors_removed_before_architect: true
+- attractor_packet_created_by_root: true
+- architect_input_contains_forbidden_vectors: false
+- architect_received_attractor_packet_only: true
+- result_returned_to_root: true
+- root_received_pipeline_artifacts: true
+- root_finalization_after_gt: true
+- root_final_authority_preserved: true
+- architect_created_final_output: false
+- executor_created_final_output: false
+- gt_committed_final_output: false
+- forbidden_vector_blocked_before_architect: true
+- post_vv_before_gt: true
+- drs_writeback_done: true
+- no_real_external_actions: true
+- uncontrolled_delegation: false
+- next_step: integrate Canonical Pipeline Trace into broader showcase or add Root-level DAG runner integration
+
+===== FOCUSED TESTS: RECENT LAYERS =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collected 140 items
+
+tests/test_large_graph_stress_runner.py .............                    [  9%]
+tests/test_drs_graph_proximity_runner.py ..............                  [ 19%]
+tests/test_needle_outcome_drs_routing_runner.py ...............          [ 30%]
+tests/test_canonical_needle_outcome_trace_runner.py ...............      [ 40%]
+tests/test_root_dag_drs_audit_runner.py .......                          [ 45%]
+tests/test_root_native_canonical_trace_runner.py ..........              [ 52%]
+tests/test_root_dag_integration_runner.py .......                        [ 57%]
+tests/test_fractal_dag_executor_core_runner.py .............             [ 67%]
+tests/test_drs_runtime.py .............                                  [ 76%]
+tests/test_reuse_gate_runtime.py .......                                 [ 81%]
+tests/test_gt_validator_runtime.py ...................                   [ 95%]
+tests/test_post_vv_runtime.py .......                                    [100%]
+
+=============================== warnings summary ===============================
+tests/test_drs_runtime.py::test_local_drs_writes_reads_and_validates_work_record
+tests/test_drs_runtime.py::test_local_drs_writes_pointer_record
+  /Users/admin/Projects/hedgehog-os/tests/test_drs_runtime.py:33: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(drs_record_schema, store=store)
+
+tests/test_gt_validator_runtime.py: 17 warnings
+  /Users/admin/Projects/hedgehog-os/tests/test_gt_validator_runtime.py:41: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(gt_report_schema, store=store)
+
+tests/test_post_vv_runtime.py::test_validate_demo_result_proposals_are_task_aware_and_schema_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_post_vv_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 140 passed, 20 warnings in 0.32s =======================
+
+===== FULL SUITE =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.13.0
+collected 510 items
+
+tests/test_action_permission_runtime.py .......                          [  1%]
+tests/test_architect_prompt_compiler_runtime.py ....                     [  2%]
+tests/test_architect_runtime.py .....                                    [  3%]
+tests/test_avf_runtime.py ..                                             [  3%]
+tests/test_candidate_vectors.py ......                                   [  4%]
+tests/test_canonical_needle_outcome_trace_runner.py ...............      [  7%]
+tests/test_canonical_pipeline_trace_runner.py ..............             [ 10%]
+tests/test_cold_start_benchmark_runner.py ........                       [ 11%]
+tests/test_controlled_orchestrator_dry_run_runner.py ..........          [ 13%]
+tests/test_controlled_orchestrator_integration_gate_runner.py .......... [ 15%]
+...                                                                      [ 16%]
+tests/test_controlled_orchestrator_runtime_prototype_runner.py ......... [ 18%]
+....                                                                     [ 19%]
+tests/test_controlled_runtime_trace_visibility_runner.py ..........      [ 20%]
+tests/test_deadend_memory_demo_runner.py ......                          [ 22%]
+tests/test_demo_certificate_runner.py .......                            [ 23%]
+tests/test_drs_graph_proximity_runner.py ..............                  [ 26%]
+tests/test_drs_runtime.py .............                                  [ 28%]
+tests/test_economics_benchmark_runner.py .........                       [ 30%]
+tests/test_executor_runtime.py ...                                       [ 31%]
+tests/test_final_renderer_runtime.py ....                                [ 31%]
+tests/test_fractal_dag_executor_core_runner.py .............             [ 34%]
+tests/test_gemini_orchestrator_architect_pair_smoke_runner.py .......... [ 36%]
+                                                                         [ 36%]
+tests/test_gt_validator_runtime.py ...................                   [ 40%]
+tests/test_input_intake_runtime.py .....                                 [ 41%]
+tests/test_intent_route_matrix_runner.py ..........                      [ 43%]
+tests/test_large_graph_stress_runner.py .............                    [ 45%]
+tests/test_live_controlled_smoke_runner.py ........                      [ 47%]
+tests/test_live_gemini_orchestrator_shadow_runner.py ............        [ 49%]
+tests/test_llm_architect_runtime.py .................                    [ 52%]
+tests/test_llm_gateway_runtime.py .....                                  [ 53%]
+tests/test_marenna_up_runtime.py ...                                     [ 54%]
+tests/test_mode_router_runtime.py ........                               [ 56%]
+tests/test_mode_selection_matrix_runner.py ........                      [ 57%]
+tests/test_needle_failure_integration_runner.py .......                  [ 59%]
+tests/test_needle_outcome_drs_routing_runner.py ...............          [ 61%]
+tests/test_needle_runtime_chaos_runner.py ..........                     [ 63%]
+tests/test_needles_valid.py .                                            [ 64%]
+tests/test_orchestrator_guard_completeness_runner.py ............        [ 66%]
+tests/test_orchestrator_route_validator_runner.py ...........            [ 68%]
+tests/test_orchestrator_shadow_mode_runner.py ........                   [ 70%]
+tests/test_post_vv_runtime.py .......                                    [ 71%]
+tests/test_reasoning_showcase_runner.py .............                    [ 74%]
+tests/test_reflex_runtime.py ..........                                  [ 76%]
+tests/test_reuse_gate_runtime.py .......                                 [ 77%]
+tests/test_root_dag_drs_audit_runner.py .......                          [ 78%]
+tests/test_root_dag_integration_runner.py .......                        [ 80%]
+tests/test_root_native_canonical_trace_runner.py ..........              [ 82%]
+tests/test_root_orchestrator_runtime.py ...................              [ 85%]
+tests/test_scenario_benchmark_runner.py ............                     [ 88%]
+tests/test_schema_files_valid.py .                                       [ 88%]
+tests/test_showcase_runner.py .....                                      [ 89%]
+tests/test_telegram_bridge_runtime.py ..                                 [ 89%]
+tests/test_telegram_e2e_benchmark_runner.py .........                    [ 91%]
+tests/test_telegram_polling_smoke_runner.py ................             [ 94%]
+tests/test_telegram_shell_runtime.py .............                       [ 97%]
+tests/test_time_model.py ..                                              [ 97%]
+tests/test_trace_reporter_runtime.py ............                        [100%]
+
+=============================== warnings summary ===============================
+tests/test_architect_runtime.py::test_make_plan_graph_from_attractor_packet_validates_schema
+tests/test_architect_runtime.py::test_make_plan_graph_optional_mock_llm_path_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_architect_runtime.py:32: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_avf_runtime.py::test_build_attractor_packet_filters_forbidden_vectors_and_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_avf_runtime.py:30: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(attractor_schema, store=store)
+
+tests/test_demo_certificate_runner.py::test_certificate_demo_gemini_architect_scenario_is_registered_with_safe_failure
+  /Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/types.py:42: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+tests/test_drs_runtime.py::test_local_drs_writes_reads_and_validates_work_record
+tests/test_drs_runtime.py::test_local_drs_writes_pointer_record
+  /Users/admin/Projects/hedgehog-os/tests/test_drs_runtime.py:33: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(drs_record_schema, store=store)
+
+tests/test_executor_runtime.py::test_execute_plan_graph_returns_schema_valid_result_proposals
+  /Users/admin/Projects/hedgehog-os/tests/test_executor_runtime.py:37: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+
+tests/test_gt_validator_runtime.py: 17 warnings
+  /Users/admin/Projects/hedgehog-os/tests/test_gt_validator_runtime.py:41: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(gt_report_schema, store=store)
+
+tests/test_llm_architect_runtime.py::test_mock_llm_architect_returns_valid_plan_graph
+  /Users/admin/Projects/hedgehog-os/tests/test_llm_architect_runtime.py:35: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_marenna_up_runtime.py::test_marenna_after_task_record_validates_and_stays_quarantined
+tests/test_marenna_up_runtime.py::test_up_after_task_record_validates_and_stays_quarantined
+  /Users/admin/Projects/hedgehog-os/tests/test_marenna_up_runtime.py:42: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(target_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:53: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(candidate_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:67: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(needle_schema, store=store)
+
+tests/test_post_vv_runtime.py::test_validate_demo_result_proposals_are_task_aware_and_schema_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_post_vv_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_creates_valid_final_output_and_work_record
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_generic_math_routes_to_llm_general_not_certificate_pipeline
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_optional_mock_llm_architect_still_creates_final_output
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success
+  /Users/admin/Projects/hedgehog-os/tests/test_root_orchestrator_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(final_output_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+====================== 510 passed, 37 warnings in 14.17s =======================
+
+===== FINAL GIT STATUS =====
+?? auditor_large_graph_drs_lineage_report.log
+?? auditor_root_native_dag_drs_audit_report.log

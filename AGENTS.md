@@ -52,7 +52,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → only later: NeedleFactory / NeedleForge 
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → only later: NeedleFactory / NeedleForge 
 
 Do not jump ahead to:
 
@@ -112,6 +112,8 @@ These are future strategic layers, not current MVP tasks.
 33. Compute Collapse via DRS Reuse is an evidence aggregator, not a new runtime layer or billing benchmark.
 34. Compute Collapse may say zero re-planning path or near-zero LLM cost path, but must not claim absolute zero cost or real token savings proven.
 35. Direct reuse must require eligible Work and must not bypass Root.
+36. DRS Layer Taxonomy clarifies broad DeadEnds semantics but does not change ReuseGate, schema layers, or direct reuse eligibility.
+37. Taxonomy must not make quarantine, dead_end, blocked_trace, degraded_trace, or needs_user_trace records reusable.
 
 ---
 
@@ -193,7 +195,18 @@ It shows four scenarios:
 
 Compute units are illustrative deterministic units derived from route flags. They are not real token billing. Do not claim absolute zero cost, real token savings proven, or production billing benchmark.
 
-Next engineering direction should return to runtime hardening: DRS layer taxonomy v0.1, classifying broad DeadEnds semantics into dead_end / blocked_trace / degraded_trace / needs_user_trace before deeper ReuseScore or typed lineage edges.
+DRS Layer Taxonomy v0.1 returns development to runtime hardening after the showcase pair. It is a LocalDRS taxonomy/reporting semantics layer, not a schema refactor and not a ReuseGate change.
+
+It classifies the broad MVP DeadEnds semantics into:
+
+- work_candidate / successful_work: accepted successful Work; the only direct-reuse eligible case in this demo.
+- quarantine: invalid_json, schema_validation_failed, unknown_exception / failed payloads; not Work and not direct-reuse eligible.
+- dead_end: stable bad route, such as contract_version_mismatch / contract_boundary.
+- blocked_trace: guard, policy, permission boundary, circuit breaker, or runtime safety block.
+- degraded_trace: timeout, partial failure, or service instability; not successful Work.
+- needs_user_trace: user confirmation, permission, or missing human input required; not completed action.
+
+Safety flags such as taxonomy_does_not_override_policy, broad_deadends_semantics_clarified, and direct_reuse_policy_unchanged must be derived from classified rows, not hardcoded. Next engineering direction: Typed DRS Lineage Edges v0.1. ReuseScore v0.1 should come after taxonomy and typed lineage edges.
 
 ---
 
@@ -358,7 +371,8 @@ Use this order for current MVP work:
 27. DRS Graph Proximity / Lineage.
 28. Chaos Survival Showcase.
 29. Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path.
-30. DRS layer taxonomy v0.1.
+30. DRS Layer Taxonomy v0.1.
+31. Typed DRS Lineage Edges v0.1.
 
 Do not implement NeedleFactory, marketplace, global DRS, official organizational needles, blockchain, or real external actions before the canonical runtime is stable.
 

@@ -1479,10 +1479,14 @@
     {
       "phase": 15,
       "name": "DRS layer taxonomy",
+      "status": "v0.1_complete",
       "tasks": [
-        "classify broad DeadEnds routing semantics",
+        "classify broad DeadEnds routing semantics at routing/report/content level",
         "distinguish dead_end, blocked_trace, degraded_trace, and needs_user_trace at routing/report level",
-        "prepare cleaner semantics before deeper ReuseScore or typed lineage edges"
+        "preserve LocalDRS-only boundaries without schema refactor",
+        "preserve ReuseGate behavior and direct reuse policy",
+        "derive taxonomy_does_not_override_policy, broad_deadends_semantics_clarified, and direct_reuse_policy_unchanged from classified rows",
+        "prepare cleaner semantics before typed lineage edges and deeper ReuseScore"
       ]
     },
     {

@@ -436,7 +436,7 @@ This is not production uncontrolled runtime.
 
 Current auditor-facing / runtime checkpoint:
 
-text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 -> Compute Collapse via DRS Reuse v0.1 
+text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 -> Compute Collapse via DRS Reuse v0.1 -> DRS Layer Taxonomy v0.1 
 
 The important current rule:
 
@@ -451,6 +451,8 @@ DRS Graph Proximity / Lineage proves a LocalDRS-only read-only retrieval/ranking
 Chaos Survival Showcase v0.1 is an auditor-facing evidence aggregator, not a new core runtime layer. It composes NeedleRuntime Chaos, Canonical Needle Outcome Trace with real GTValidator integration, Needle Outcome DRS Routing Persistence, Large Graph / Bounded Fractal Stress, and DRS Graph Proximity / Lineage into one report. It shows timeout containment, invalid_json and schema_validation_failed quarantine, unknown_exception containment, permission_required needs_user/blocking, circuit breaker blocking, unsafe reuse candidates = 0, bad outcomes written to successful Work = 0, oversized/cycle/unknown-dependency graph blocking, raw large graph not sent to GT, graph proximity not overriding policy, Root final authority, no Executor/needle FinalOutput, no GT commit, no live Gemini, no Telegram action, no real external action, and `production_autonomy_claimed: false`. The showcase PASS summary is derived from computed section predicates, not hardcoded.
 
 Compute Collapse via DRS Reuse v0.1 complements Chaos Survival: Chaos Survival demonstrates resilience / safety / containment, while Compute Collapse demonstrates efficiency / reuse / zero re-planning path. It is an auditor-facing evidence aggregator over existing deterministic cold-start, Root direct reuse, LocalDRS, ReuseGate, and unsafe DRS routing proofs. It shows four scenarios: cold_start_full_pipeline runs Architect, Executor, Post V&V, GT, Root FinalOutput, and DRS writeback with direct_reuse_applied=false; memory_context_only applies memory context but does not fake direct reuse or skip Architect/Executor; eligible_direct_reuse applies direct reuse, skips Architect and Executor/DAG, sources from eligible Work, and still returns through Root; unsafe_records_not_reused keeps Quarantine, DeadEnds, failed, blocked, and degraded records out of direct reuse with direct_reuse_unsafe_candidates=0. Compute units are illustrative deterministic units derived from route flags, not real token billing; savings_ratio is computed from those units. This proof must not be described as absolute zero cost, real token savings proven, or a production billing benchmark.
+
+DRS Layer Taxonomy v0.1 is an engineering hardening layer, not a showcase. It adds LocalDRS taxonomy/reporting semantics without a schema refactor, without changing ReuseGate behavior, and without making unsafe records reusable. It clarifies the broad MVP DeadEnds semantics into explicit routing meanings: work_candidate / successful_work is the only direct-reuse eligible case; quarantine covers invalid_json, schema_validation_failed, and unknown_exception / failed payloads; dead_end marks stable bad routes such as contract_version_mismatch / contract_boundary; blocked_trace marks guard, policy, permission boundary, circuit breaker, or runtime safety blocks; degraded_trace marks timeout, partial failure, or service instability and is not successful Work; needs_user_trace marks permission_required or missing human input and is not completed action. The taxonomy does not override policy: direct_reuse_eligible remains true only for accepted successful Work, unsafe_direct_reuse_candidates remains 0, local_drs_only remains true, external/global DRS are not implemented, and schema_refactor_performed remains false. Its truth flags are derived from classified rows, not hardcoded.
 
 Safety rules for this checkpoint:
 
@@ -516,7 +518,7 @@ Future tests: Compute Collapse via DRS Reuse, Zero Re-Planning Path, or Near-Zer
 
 Risk: the MVP uses DeadEnds broadly for dead_end, blocked_trace, degraded_trace, and needs_user_trace semantics.
 
-Mitigation: future runtime hardening should classify or split these meanings at routing/report level before deeper ReuseScore, typed lineage edges, or richer direct reuse policy.
+Mitigation: DRS Layer Taxonomy v0.1 now classifies these meanings at routing/report/content semantics level while records may still physically use existing LocalDRS layers such as DeadEnds. A later schema or layer refactor may split DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace into dedicated record types or layers if needed.
 
 ---
 
@@ -540,13 +542,14 @@ Completed recent layers:
 - DRS Graph Proximity / Lineage v0.1.
 - Chaos Survival Showcase v0.1.
 - Compute Collapse via DRS Reuse v0.1.
+- DRS Layer Taxonomy v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- DRS layer taxonomy v0.1: classify broad DeadEnds routing into dead_end / blocked_trace / degraded_trace / needs_user_trace semantics.
+- Typed DRS Lineage Edges v0.1.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
-- Add richer direct reuse scoring: ReuseScore / GTTrust / Freshness / PolicyOK / ConflictCheck.
+- Add richer direct reuse scoring after taxonomy and typed lineage edges: ReuseScore / GTTrust / Freshness / PolicyOK / ConflictCheck.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.
 - Split broad work/trace_summary demo records into a future dedicated policy/invariant layer where appropriate.
 - Add typed or bidirectional DRS lineage edge semantics.

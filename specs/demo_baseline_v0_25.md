@@ -339,7 +339,46 @@ They are not real token billing, and savings_ratio is not a production billing
 benchmark. Do not claim absolute zero cost, real token savings proven, or
 production autonomy.
 
-## 14. What This Baseline Does Not Prove Yet
+## 14. DRS Layer Taxonomy Checkpoint
+
+DRS Layer Taxonomy v0.1 is runtime hardening, not a showcase. It clarifies the
+broad MVP DeadEnds/reporting semantics at routing/report/content level without a
+schema refactor, ReuseGate behavior change, global DRS, external DRS, or unsafe
+reuse.
+
+Taxonomy meanings:
+
+- work_candidate / successful_work: accepted successful Work; the only
+  direct-reuse eligible case in this demo.
+- quarantine: invalid_json, schema_validation_failed, unknown_exception /
+  failed payloads; not Work and not direct-reuse eligible.
+- dead_end: stable bad route such as contract_version_mismatch /
+  contract_boundary.
+- blocked_trace: blocked by guard, policy, permission boundary, circuit breaker,
+  or runtime safety boundary.
+- degraded_trace: timeout, partial failure, or service instability; not
+  successful Work.
+- needs_user_trace: user confirmation, permission, or missing human input; not
+  completed action.
+
+Safety:
+
+- timeout is degraded_trace, not stable successful Work.
+- permission_required is needs_user_trace, not completed action.
+- blocked_trace is not success.
+- quarantine is not Work.
+- direct_reuse_eligible remains true only for accepted successful Work.
+- unsafe_direct_reuse_candidates = 0.
+- taxonomy does not override policy.
+- local_drs_only = true.
+- external/global DRS are not implemented.
+- schema_refactor_performed = false.
+
+The taxonomy proof derives taxonomy_does_not_override_policy,
+broad_deadends_semantics_clarified, direct_reuse_policy_unchanged, and PASS from
+classified rows rather than hardcoded claims.
+
+## 15. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
 
@@ -371,9 +410,9 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work should return to runtime hardening: DRS layer taxonomy v0.1. The MVP DeadEnds layer is intentionally broad and may contain dead_end / blocked_trace / degraded_trace / needs_user_trace semantics. Future work should split or classify these meanings at routing/report level before deeper ReuseScore or typed lineage edges.
+After this baseline, the next architecture work should continue runtime hardening with Typed DRS Lineage Edges v0.1. ReuseScore v0.1 should come after taxonomy and typed lineage edges, not before.
 
-## 15. Future Demo Evolution
+## 16. Future Demo Evolution
 
 - v0.25: deterministic CLI baseline, memory-informed reuse, explicit direct reuse scenario, and closed L0 proof path.
 - v0.26: Observable Zero Trust Runtime proof / canonical pipeline trace.
@@ -384,6 +423,7 @@ After this baseline, the next architecture work should return to runtime hardeni
 - v0.31: Chaos Survival Showcase.
 - v0.32: Compute Collapse via DRS Reuse / Zero Re-Planning Path / Near-Zero LLM Cost Path.
 - v0.33: DRS layer taxonomy v0.1.
+- v0.34: Typed DRS Lineage Edges v0.1.
 - v0.35: controlled LLM/SLM role substitution.
 - v0.40: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

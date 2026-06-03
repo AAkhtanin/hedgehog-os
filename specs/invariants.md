@@ -110,10 +110,21 @@ Compute Collapse via DRS Reuse invariant:
 - Compute units are illustrative deterministic units derived from route flags, not real token billing.
 - The proof must not claim absolute zero cost, real token savings proven, production billing benchmark, production autonomy, live Gemini, Telegram actions, global DRS, external DRS, or real external actions.
 
-DRS layer taxonomy direction:
+DRS layer taxonomy invariant:
 
-- The MVP DeadEnds layer is intentionally broad and may contain dead_end, blocked_trace, degraded_trace, and needs_user_trace semantics.
-- Future hardening should classify or split these meanings at routing/report level before deeper ReuseScore, typed lineage edges, or broader direct reuse policy.
+- DRS Layer Taxonomy v0.1 is an engineering hardening layer, not a showcase.
+- It is a LocalDRS taxonomy/reporting semantics layer.
+- It does not perform a schema refactor, change ReuseGate behavior, implement global/external DRS, or make unsafe records reusable.
+- The MVP DeadEnds layer remains physically broad in v0.1, but routing/report/content semantics must distinguish dead_end, blocked_trace, degraded_trace, and needs_user_trace.
+- work_candidate / successful_work is the only direct-reuse eligible case in the current demo.
+- quarantine covers invalid_json, schema_validation_failed, and unknown_exception / failed payloads; it is not Work and not direct-reuse eligible.
+- dead_end means stable bad route / do not repeat without changing contract or path.
+- blocked_trace means blocked by guard, policy, permission boundary, circuit breaker, or runtime safety boundary.
+- degraded_trace means timeout, temporary degradation, partial failure, or service instability; it is not successful Work.
+- needs_user_trace means confirmation, permission, or missing human input required; it is not completed action.
+- Taxonomy does not override policy. Direct reuse policy remains unchanged, unsafe_direct_reuse_candidates must remain 0, local_drs_only remains true, external/global DRS are not implemented, and schema_refactor_performed remains false.
+- taxonomy_does_not_override_policy, broad_deadends_semantics_clarified, direct_reuse_policy_unchanged, and PASS status must be derived from classified rows, not hardcoded.
+- Typed DRS lineage edges should come next. ReuseScore v0.1 should come after taxonomy and typed lineage edges.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

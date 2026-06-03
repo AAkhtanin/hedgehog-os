@@ -210,6 +210,33 @@ real token billing. savings_ratio is computed from those units. Do not describe
 this as absolute zero cost, real token savings proven, production billing
 benchmark, or production autonomy.
 
+## DRS Layer Taxonomy
+
+DRS Layer Taxonomy v0.1 is an engineering hardening layer over LocalDRS
+routing/report semantics. It is not a showcase, not a schema refactor, not a
+ReuseGate change, and not global/external DRS.
+
+The taxonomy clarifies the broad MVP DeadEnds semantics:
+
+- work_candidate / successful_work: accepted successful Work; the only
+  direct-reuse eligible case in this demo.
+- quarantine: invalid_json, schema_validation_failed, unknown_exception /
+  failed payloads; not Work and not direct-reuse eligible.
+- dead_end: stable bad route such as contract_version_mismatch /
+  contract_boundary.
+- blocked_trace: guard, policy, permission boundary, circuit breaker, or runtime
+  safety block.
+- degraded_trace: timeout, partial failure, or service instability; not
+  successful Work.
+- needs_user_trace: permission_required or missing human input; not completed
+  action.
+
+The taxonomy does not override policy. Direct reuse remains true only for
+accepted successful Work, unsafe_direct_reuse_candidates remains 0, LocalDRS is
+the only implemented DRS runtime, external/global DRS are not implemented, and
+schema_refactor_performed remains false. The taxonomy proof derives its safety
+and summary flags from classified rows, not hardcoded PASS claims.
+
 ## Exclusions
 
 - No real external APIs.

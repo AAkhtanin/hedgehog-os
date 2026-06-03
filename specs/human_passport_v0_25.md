@@ -132,6 +132,15 @@ Current bounded graph and lineage checkpoints:
   Compute units are illustrative deterministic units derived from route flags,
   not real token billing. This must not be described as absolute zero cost, real
   token savings proven, production autonomy, or a production billing benchmark.
+- DRS Layer Taxonomy v0.1 is an engineering hardening layer, not a showcase. It
+  clarifies broad LocalDRS DeadEnds/reporting semantics without a schema
+  refactor, ReuseGate change, global DRS, external DRS, or unsafe reuse. It
+  classifies work_candidate / successful_work, quarantine, dead_end,
+  blocked_trace, degraded_trace, and needs_user_trace at routing/report/content
+  semantics level. Only accepted successful Work is direct-reuse eligible in the
+  demo. timeout is degraded_trace, permission_required is needs_user_trace,
+  blocked_trace is not success, quarantine is not Work, and the taxonomy truth
+  flags are derived from classified rows.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or
@@ -277,6 +286,16 @@ Safety invariants:
   direct-reuse eligible.
 - only accepted completed Work candidate is direct-reuse eligible in this MVP
   demo.
+- DRS Layer Taxonomy v0.1 makes these meanings explicit without changing
+  physical LocalDRS layers: work_candidate / successful_work is the only
+  direct-reuse eligible case; quarantine covers invalid_json,
+  schema_validation_failed, and unknown_exception / failed payloads; dead_end
+  covers stable bad routes such as contract_version_mismatch /
+  contract_boundary; blocked_trace covers guard, policy, permission boundary,
+  circuit breaker, or runtime safety blocks; degraded_trace covers timeout or
+  service instability; needs_user_trace covers permission_required or missing
+  human input. It does not override policy, does not make unsafe records
+  reusable, and does not implement global/external DRS.
 
 This does not yet prove full Root-level needle planning, AVF selection over
 live external needles, production external API execution, global DRS,

@@ -239,8 +239,50 @@ Current bounded graph and lineage checkpoints:
   749 full-suite tests passed, and the sensitive scan found no secret terms.
 - Current semantic reuse chain: Semantic Reuse Authority Stack Audit ->
   Root-native Semantic Reuse E2E Trace -> deterministic trace-level final answer
-  artifact -> no production execution. The next planned engineering layer is
-  Root-native Full Canonical E2E Trace v0.1.
+  artifact -> no production execution.
+- Root-native Full Canonical E2E Trace v0.1 is now complete. It is a
+  deterministic full canonical E2E proof that composes a first-run canonical
+  Root-controlled path with a second-run semantic reuse authority path.
+- First-run canonical path: input task -> Root intake / Orchestrator boundary ->
+  Architect / PlanGraph -> AVF / Attractor formation -> DAG / Executor ->
+  ResultProposals -> Post V&V -> GT -> Root trace artifact -> LocalDRS
+  writeback / audit visibility.
+- First-run proof semantics: root_authority_preserved_first_run = true,
+  architect_does_not_answer_user = true, executor_does_not_create_final_output =
+  true, gt_does_not_create_final_output = true,
+  first_run_created_root_trace_artifact = true,
+  first_run_local_drs_writeback_visible = true,
+  first_run_local_work_record_written_in_proof = true, and
+  production_external_action_executed = false.
+- Second-run semantic reuse path: repeat/similar task -> TemporalQuery ->
+  LocalDRS retrieval -> taxonomy / typed edges / graph proximity -> ReuseScore
+  -> Semantic Pipeline recommendation -> Root decision -> ReuseGate review ->
+  Root final dry-run decision -> trace-level semantic reuse answer artifact.
+- Second-run proof semantics: second_run_stages_passed = 12,
+  selected_scenario = eligible_direct_reuse_candidate,
+  semantic_reuse_path_used = true, second_run_root_authority_preserved = true,
+  reuse_gate_boundary_preserved = true, semantic_pipeline_recommends_only =
+  true, and reuse_score_advisory_only = true.
+- Bridge honesty: bridge_mode = deterministic_proof_linkage,
+  deterministic_bridge_between_runs = true, production_persistence_claimed =
+  false, production_reuse_claimed = false, and production_reuse_not_executed =
+  true. Local proof DRS writeback is visible; production persistence and
+  production reuse are not claimed.
+- Full Canonical E2E safety flags: production_direct_reuse_executed = false,
+  production_final_output_created = false, production_work_record_written =
+  false, production_external_action_executed = false, no_real_external_actions =
+  true, no_live_gemini = true, no_telegram_actions = true, no_global_drs = true,
+  no_external_drs_network = true, and production_autonomy_claimed = false.
+- Proof status: first_run_stages_passed = 9, second_run_stages_passed = 12,
+  250 focused tests passed, 770 full-suite tests passed, sensitive scan found no
+  secret terms, commit = 83f59a2 Add Root-native full canonical E2E trace.
+- Current status: first-run Root-controlled canonical path -> local proof
+  DRS/audit visibility -> second-run semantic reuse authority path -> Root final
+  dry-run reuse decision -> no production execution. The next planned
+  engineering direction is Optional Live Gemini Smoke v0.1 for the full
+  canonical E2E path. It must remain opt-in and must not claim Telegram live
+  action by default, real external actions, global/external DRS, production
+  direct reuse, production persistence, or production autonomy.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

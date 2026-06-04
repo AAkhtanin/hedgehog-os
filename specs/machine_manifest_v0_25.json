@@ -1579,11 +1579,25 @@
         "select eligible_direct_reuse_candidate as the deterministic direct reuse trace path",
         "create only a trace-level final answer artifact by root_orchestrator",
         "keep production_final_output false, production_action_executed false, production_work_record_written false, no live Gemini, no Telegram actions, no real external actions, and no global or external DRS",
-        "prepare Root-native Full Canonical E2E Trace"
+        "feed Root-native Full Canonical E2E Trace"
       ]
     },
     {
       "phase": 23,
+      "name": "Root-native Full Canonical E2E Trace",
+      "status": "v0.1_complete",
+      "tasks": [
+        "compose first-run canonical Root-controlled path and second-run semantic reuse authority path",
+        "show Root intake, Orchestrator boundary, Architect / PlanGraph, AVF / Attractor formation, DAG / Executor, ResultProposals, Post V&V, GT, Root trace artifact, and LocalDRS writeback / audit visibility",
+        "show repeat task through TemporalQuery, LocalDRS retrieval, taxonomy / typed edges / graph proximity, ReuseScore, Semantic Pipeline recommendation, Root decision, ReuseGate review, Root final dry-run decision, and trace-level semantic reuse answer artifact",
+        "preserve bridge_mode deterministic_proof_linkage, production_persistence_claimed false, production_reuse_claimed false, and production_reuse_not_executed true",
+        "distinguish local proof DRS writeback from production persistence",
+        "keep production_direct_reuse_executed false, production_final_output_created false, production_work_record_written false, no live Gemini, no Telegram actions, no real external actions, and no global or external DRS",
+        "prepare Optional Live Gemini Smoke for the full canonical E2E path"
+      ]
+    },
+    {
+      "phase": 24,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1593,7 +1607,7 @@
       ]
     },
     {
-      "phase": 24,
+      "phase": 25,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

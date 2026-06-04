@@ -52,7 +52,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → only later: NeedleFactory / NeedleForge
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → only later: NeedleFactory / NeedleForge
 
 Do not jump ahead to:
 
@@ -123,6 +123,7 @@ These are future strategic layers, not current MVP tasks.
 44. ReuseGate approval in the semantic reuse trace means return upward to Root final decision, not production execution.
 45. Root Semantic Reuse Final Decision Trace is a dry-run proof only; it may create a trace-level Root final decision artifact, but not production FinalOutput, production direct reuse, external action, or production Work writeback.
 46. Root-native Semantic Reuse E2E Trace is deterministic proof only; it may create a trace-level final answer artifact by Root, but it must not change production RootOrchestrator behavior, execute production direct reuse, create production FinalOutput, write production Work, call live Gemini, use Telegram actions, or implement global/external DRS.
+47. Root-native Full Canonical E2E Trace is deterministic proof only; it may show local proof DRS writeback, but it must not claim production persistence, production reuse, production direct reuse, production external-action FinalOutput, live Gemini, Telegram action, global DRS, or external DRS.
 
 ---
 
@@ -252,7 +253,11 @@ Root-native Semantic Reuse E2E Trace v0.1 is complete. It is the first determini
 
 Selected scenario: `eligible_direct_reuse_candidate` maps direct_reuse_candidate → root_accepts_direct_reuse_candidate_for_gate_review → gate_review_accepts_candidate_for_root_final_decision → root_final_accepts_controlled_direct_reuse_trace, producing `trace_level_final_answer_artifact` by `root_orchestrator`. production_final_output=false, production_action_executed=false, production_work_record_written=false, unsafe_reuse_candidates=0, and production_autonomy_claimed=false. Proof status: E2E stages passed=12, focused tests passed=229, full suite passed=749, and the sensitive scan found no secret terms.
 
-Current semantic reuse chain: Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → deterministic trace-level final answer artifact → no production execution. Next engineering direction: Root-native Full Canonical E2E Trace v0.1, covering the deterministic first-run Orchestrator / Architect path, AVF / Attractor formation, PlanGraph, DAG / Executor, Post V&V, GT, Root FinalOutput / trace artifact, DRS writeback / audit, and second-run semantic reuse path. No live Telegram or live Gemini by default.
+Root-native Full Canonical E2E Trace v0.1 is complete. It is a deterministic full canonical E2E proof that composes a first-run canonical Root-controlled path with a second-run semantic reuse authority path. The first run covers input task → Root intake / Orchestrator boundary → Architect / PlanGraph → AVF / Attractor formation → DAG / Executor → ResultProposals → Post V&V → GT → Root trace artifact → LocalDRS writeback / audit visibility. The second run covers repeat/similar task → TemporalQuery → LocalDRS retrieval → taxonomy / typed edges / graph proximity → ReuseScore → Semantic Pipeline recommendation → Root decision → ReuseGate review → Root final dry-run decision → trace-level semantic reuse answer artifact.
+
+Full Canonical E2E safety: first_run_created_root_trace_artifact=true, first_run_local_drs_writeback_visible=true, first_run_local_work_record_written_in_proof=true, bridge_mode=deterministic_proof_linkage, production_persistence_claimed=false, production_reuse_claimed=false, production_direct_reuse_executed=false, production_final_output_created=false, production_work_record_written=false, no_live_gemini=true, no_telegram_actions=true, no_global_drs=true, no_external_drs_network=true, and production_autonomy_claimed=false. Proof status: first_run_stages_passed=9, second_run_stages_passed=12, focused tests passed=250, full suite passed=770, sensitive scan found no secret terms, commit=83f59a2 Add Root-native full canonical E2E trace.
+
+Current status: first-run Root-controlled canonical path → local proof DRS/audit visibility → second-run semantic reuse authority path → Root final dry-run reuse decision → no production execution. Next engineering direction: Optional Live Gemini Smoke v0.1 for the full canonical E2E path. It must remain opt-in with no Telegram live action by default, no real external actions, no global/external DRS, no production direct reuse, no production persistence claim, and no production autonomy claim.
 
 ---
 
@@ -426,6 +431,7 @@ Use this order for current MVP work:
 36. Root-controlled Semantic Reuse Final Decision Trace v0.1.
 37. Root-native Semantic Reuse E2E Trace v0.1.
 38. Root-native Full Canonical E2E Trace v0.1.
+39. Optional Live Gemini Smoke v0.1 for the full canonical E2E path, opt-in only.
 
 Do not implement NeedleFactory, marketplace, global DRS, official organizational needles, blockchain, or real external actions before the canonical runtime is stable.
 

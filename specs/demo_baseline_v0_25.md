@@ -636,6 +636,48 @@ implemented, and production autonomy is not claimed.
 Proof status: E2E stages passed=12, focused tests passed=229, full suite
 passed=749, and the sensitive scan found no secret terms.
 
+Root-native Full Canonical E2E Trace v0.1 is now complete. It is a deterministic
+full canonical E2E proof that composes two paths:
+
+1. First-run canonical Root-controlled path:
+   input task -> Root intake / Orchestrator boundary -> Architect / PlanGraph ->
+   AVF / Attractor formation -> DAG / Executor -> ResultProposals -> Post V&V
+   -> GT -> Root trace artifact -> LocalDRS writeback / audit visibility.
+2. Second-run semantic reuse authority path:
+   repeat/similar task -> TemporalQuery -> LocalDRS retrieval -> taxonomy /
+   typed edges / graph proximity -> ReuseScore -> Semantic Pipeline
+   recommendation -> Root decision -> ReuseGate review -> Root final dry-run
+   decision -> trace-level semantic reuse answer artifact.
+
+First-run proof semantics: root_authority_preserved_first_run=true,
+architect_does_not_answer_user=true, executor_does_not_create_final_output=true,
+gt_does_not_create_final_output=true,
+first_run_created_root_trace_artifact=true,
+first_run_local_drs_writeback_visible=true,
+first_run_local_work_record_written_in_proof=true, and
+production_external_action_executed=false.
+
+Second-run proof semantics: second_run_stages_passed=12,
+selected_scenario=eligible_direct_reuse_candidate, semantic_reuse_path_used=true,
+second_run_root_authority_preserved=true, reuse_gate_boundary_preserved=true,
+semantic_pipeline_recommends_only=true, and reuse_score_advisory_only=true.
+
+Bridge honesty: bridge_mode=deterministic_proof_linkage,
+deterministic_bridge_between_runs=true, production_persistence_claimed=false,
+production_reuse_claimed=false, and production_reuse_not_executed=true. Local
+proof DRS writeback is visible, but production persistence and production reuse
+are not claimed.
+
+Full Canonical E2E safety flags: production_direct_reuse_executed=false,
+production_final_output_created=false, production_work_record_written=false,
+production_external_action_executed=false, no_real_external_actions=true,
+no_live_gemini=true, no_telegram_actions=true, no_global_drs=true,
+no_external_drs_network=true, and production_autonomy_claimed=false.
+
+Proof status: first_run_stages_passed=9, second_run_stages_passed=12, focused
+tests passed=250, full suite passed=770, sensitive scan found no secret terms,
+commit=83f59a2 Add Root-native full canonical E2E trace.
+
 ## 19. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
@@ -673,7 +715,7 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work should continue runtime hardening with Root-native Full Canonical E2E Trace v0.1. It should build a deterministic full canonical path covering the non-reuse first-run side: input task -> Orchestrator / Architect path -> AVF / Attractor formation -> PlanGraph -> DAG / Executor -> Post V&V -> GT -> Root FinalOutput / trace artifact -> DRS writeback / audit -> second-run semantic reuse path. It must remain deterministic by default, with no live Telegram or live Gemini by default.
+After this baseline, the next architecture work may add Optional Live Gemini Smoke v0.1 for the full canonical E2E path. It must remain opt-in, with no Telegram live action by default, no real external actions, no global/external DRS, no production direct reuse, no production persistence claim, and no production autonomy claim.
 
 ## 20. Future Demo Evolution
 
@@ -694,6 +736,7 @@ After this baseline, the next architecture work should continue runtime hardenin
 - v0.39: Root-controlled Semantic Reuse Final Decision Trace v0.1.
 - v0.40: Root-native Semantic Reuse E2E Trace v0.1.
 - v0.41: Root-native Full Canonical E2E Trace v0.1.
-- v0.42: controlled LLM/SLM role substitution.
-- v0.43: Telegram shell as interface only, not autonomous natural assistant.
+- v0.42: Optional Live Gemini Smoke v0.1 for the full canonical E2E path, opt-in only.
+- v0.43: controlled LLM/SLM role substitution.
+- v0.44: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

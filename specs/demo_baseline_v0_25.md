@@ -678,6 +678,39 @@ Proof status: first_run_stages_passed=9, second_run_stages_passed=12, focused
 tests passed=250, full suite passed=770, sensitive scan found no secret terms,
 commit=83f59a2 Add Root-native full canonical E2E trace.
 
+Optional Live Gemini Architect Smoke v0.1 is now complete. It is an opt-in
+role-substitution smoke proof inside the Full Canonical E2E boundary. Gemini may
+substitute only the Architect proposal role. It does not become Root,
+Orchestrator, Executor, GT, or FinalRenderer; create FinalOutput; write DRS;
+execute actions; or bypass AVF, PlanGraph contract, Executor, Post V&V, GT,
+Root, ReuseGate, policy, or permission gates.
+
+Default behavior remains deterministic and network-free:
+mode=dry_run_default, live_gemini_used=false,
+architect_artifact_source=deterministic_mock, and
+plan_graph_contract_checked=true. Live mode is opt-in through explicit `--live`,
+`HEDGEHOG_ALLOW_LIVE_GEMINI=1`, and Gemini configuration. Missing config reports
+SKIPPED instead of crashing. Invalid live artifacts are caught and contained,
+do not reach Executor or Root final output, and fall back visibly to the
+deterministic Architect.
+
+Boundary checks derive from the Full Canonical E2E source report, role
+substitution flags, artifact containment, and context facts:
+plan_graph_contract_preserved derives from the artifact contract check,
+executor_boundary_preserved derives from executor_reached=false,
+root_boundary_preserved derives from first-run and second-run Root authority
+plus no Root final output from live Gemini, and reuse_gate_boundary_preserved
+derives from Full Canonical E2E authority safety. Rendered output does not print
+credential environment names or secret terms.
+
+Proof status: focused tests passed=212, full suite passed=788, sensitive scan
+found no secret terms, default dry-run smoke status=PASS,
+live_gemini_architect_smoke_status=PASS in default mode, and
+ready_for_future_orchestrator_live_smoke=true. This is not production
+RootOrchestrator integration, live Telegram, production autonomy, production
+persistence, production direct reuse, or a real external action execution path.
+It does not claim live Gemini was used in default mode.
+
 ## 19. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
@@ -685,7 +718,7 @@ This baseline does not prove:
 - production L0 deterministic reflex routing beyond the closed mock path;
 - production L1 direct reuse routing beyond explicit CLI/test scenario;
 - a complete adaptive ExecutionModeRouter;
-- real LLM/SLM role substitution;
+- production LLM/SLM role substitution;
 - automatic Root-level direct reuse routing;
 - pointer resolution;
 - external DRS protocol;
@@ -715,7 +748,7 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work may add Optional Live Gemini Smoke v0.1 for the full canonical E2E path. It must remain opt-in, with no Telegram live action by default, no real external actions, no global/external DRS, no production direct reuse, no production persistence claim, and no production autonomy claim.
+After this baseline, the next architecture work may add Optional Live Gemini Orchestrator Smoke v0.1. Gemini may act only as an Orchestrator-stage proposal actor for route / AVF context / bounded orchestration matrix proposals. It must remain opt-in and network-free by default, and must not become Root, create FinalOutput, write DRS, execute actions, or bypass AVF, Architect contract, Executor, Post V&V, GT, Root, ReuseGate, policy, or permission gates.
 
 ## 20. Future Demo Evolution
 
@@ -736,7 +769,7 @@ After this baseline, the next architecture work may add Optional Live Gemini Smo
 - v0.39: Root-controlled Semantic Reuse Final Decision Trace v0.1.
 - v0.40: Root-native Semantic Reuse E2E Trace v0.1.
 - v0.41: Root-native Full Canonical E2E Trace v0.1.
-- v0.42: Optional Live Gemini Smoke v0.1 for the full canonical E2E path, opt-in only.
-- v0.43: controlled LLM/SLM role substitution.
+- v0.42: Optional Live Gemini Architect Smoke v0.1, opt-in only.
+- v0.43: Optional Live Gemini Orchestrator Smoke v0.1, opt-in only.
 - v0.44: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

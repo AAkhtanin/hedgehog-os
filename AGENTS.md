@@ -52,7 +52,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → only later: NeedleFactory / NeedleForge
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → only later: NeedleFactory / NeedleForge
 
 Do not jump ahead to:
 
@@ -124,6 +124,7 @@ These are future strategic layers, not current MVP tasks.
 45. Root Semantic Reuse Final Decision Trace is a dry-run proof only; it may create a trace-level Root final decision artifact, but not production FinalOutput, production direct reuse, external action, or production Work writeback.
 46. Root-native Semantic Reuse E2E Trace is deterministic proof only; it may create a trace-level final answer artifact by Root, but it must not change production RootOrchestrator behavior, execute production direct reuse, create production FinalOutput, write production Work, call live Gemini, use Telegram actions, or implement global/external DRS.
 47. Root-native Full Canonical E2E Trace is deterministic proof only; it may show local proof DRS writeback, but it must not claim production persistence, production reuse, production direct reuse, production external-action FinalOutput, live Gemini, Telegram action, global DRS, or external DRS.
+48. Optional Live Gemini Architect Smoke is opt-in role substitution only. Gemini may substitute only the Architect proposal role and must not become Root, Orchestrator, Executor, GT, or FinalRenderer; create FinalOutput; write DRS; execute actions; or bypass AVF, PlanGraph contract, Executor, Post V&V, GT, Root, ReuseGate, policy, or permission gates.
 
 ---
 
@@ -257,7 +258,9 @@ Root-native Full Canonical E2E Trace v0.1 is complete. It is a deterministic ful
 
 Full Canonical E2E safety: first_run_created_root_trace_artifact=true, first_run_local_drs_writeback_visible=true, first_run_local_work_record_written_in_proof=true, bridge_mode=deterministic_proof_linkage, production_persistence_claimed=false, production_reuse_claimed=false, production_direct_reuse_executed=false, production_final_output_created=false, production_work_record_written=false, no_live_gemini=true, no_telegram_actions=true, no_global_drs=true, no_external_drs_network=true, and production_autonomy_claimed=false. Proof status: first_run_stages_passed=9, second_run_stages_passed=12, focused tests passed=250, full suite passed=770, sensitive scan found no secret terms, commit=83f59a2 Add Root-native full canonical E2E trace.
 
-Current status: first-run Root-controlled canonical path → local proof DRS/audit visibility → second-run semantic reuse authority path → Root final dry-run reuse decision → no production execution. Next engineering direction: Optional Live Gemini Smoke v0.1 for the full canonical E2E path. It must remain opt-in with no Telegram live action by default, no real external actions, no global/external DRS, no production direct reuse, no production persistence claim, and no production autonomy claim.
+Optional Live Gemini Architect Smoke v0.1 is complete. It is an opt-in smoke proof for substituting only the Architect proposal role inside the Full Canonical E2E boundary. Default mode is `dry_run_default`, deterministic, network-free, uses a deterministic mock Architect artifact, does not call live Gemini, and keeps `plan_graph_contract_checked=true`. Live mode requires explicit `--live`, `HEDGEHOG_ALLOW_LIVE_GEMINI=1`, and Gemini configuration; missing config reports SKIPPED rather than crashing, and invalid live artifacts are contained, do not reach Executor or Root final output, and fall back visibly to deterministic Architect. Boundary checks derive from the Full Canonical E2E source report, role flags, artifact containment, and context facts; rendered output does not print credential environment names or secret terms. Proof status: focused tests passed=212, full suite passed=788, sensitive scan found no secret terms, default dry-run status PASS, and `ready_for_future_orchestrator_live_smoke=true`.
+
+Current status: first-run Root-controlled canonical path → local proof DRS/audit visibility → second-run semantic reuse authority path → Root final dry-run reuse decision → Optional Live Gemini Architect Smoke → no production execution. Next engineering direction: Optional Live Gemini Orchestrator Smoke v0.1. Gemini may act only as an Orchestrator-stage proposal actor for route / AVF context / bounded orchestration matrix proposals, must remain opt-in and network-free by default, and must not become Root, create FinalOutput, write DRS, execute actions, or bypass AVF, Architect contract, Executor, Post V&V, GT, Root, ReuseGate, policy, or permission gates.
 
 ---
 
@@ -431,7 +434,8 @@ Use this order for current MVP work:
 36. Root-controlled Semantic Reuse Final Decision Trace v0.1.
 37. Root-native Semantic Reuse E2E Trace v0.1.
 38. Root-native Full Canonical E2E Trace v0.1.
-39. Optional Live Gemini Smoke v0.1 for the full canonical E2E path, opt-in only.
+39. Optional Live Gemini Architect Smoke v0.1, opt-in only.
+40. Optional Live Gemini Orchestrator Smoke v0.1, opt-in only.
 
 Do not implement NeedleFactory, marketplace, global DRS, official organizational needles, blockchain, or real external actions before the canonical runtime is stable.
 

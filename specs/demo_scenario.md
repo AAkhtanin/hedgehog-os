@@ -482,8 +482,32 @@ no_live_gemini=true, no_telegram_actions=true, no_global_drs=true,
 no_external_drs_network=true, and production_autonomy_claimed=false. Proof
 status: focused tests passed=250, full suite passed=770, sensitive scan found no
 secret terms, commit=83f59a2 Add Root-native full canonical E2E trace. The next
-planned direction is Optional Live Gemini Smoke v0.1 for the full canonical E2E
-path, opt-in only.
+completed direction is Optional Live Gemini Architect Smoke v0.1 for the full
+canonical E2E path, opt-in only.
+
+Optional Live Gemini Architect Smoke v0.1 is an opt-in role-substitution smoke
+proof. Gemini may substitute only the Architect proposal role. It does not
+become Root, Orchestrator, Executor, GT, or FinalRenderer; create FinalOutput;
+write DRS; execute actions; or bypass AVF, PlanGraph contract, Executor, Post
+V&V, GT, Root, ReuseGate, policy, or permission gates.
+
+Default mode is dry_run_default, deterministic, network-free, does not call live
+Gemini, uses architect_artifact_source=deterministic_mock, and keeps
+plan_graph_contract_checked=true. Live mode requires explicit `--live`,
+`HEDGEHOG_ALLOW_LIVE_GEMINI=1`, and Gemini configuration. Missing config reports
+SKIPPED instead of crashing. Invalid live artifacts are caught, contained, kept
+away from Executor and Root final output, and fall back visibly to deterministic
+Architect.
+
+Boundary checks derive from the Full Canonical E2E source report, role flags,
+artifact containment, and context facts. Rendered output does not print
+credential environment names or secret terms. Proof status: focused tests
+passed=212, full suite passed=788, sensitive scan found no secret terms, default
+dry-run smoke status PASS, and ready_for_future_orchestrator_live_smoke=true.
+The next planned direction is Optional Live Gemini Orchestrator Smoke v0.1,
+where Gemini may act only as an Orchestrator-stage proposal actor for route /
+AVF context / bounded orchestration matrix proposals. It must remain opt-in and
+network-free by default.
 
 ## Exclusions
 

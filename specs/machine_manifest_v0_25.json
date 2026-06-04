@@ -1598,6 +1598,23 @@
     },
     {
       "phase": 24,
+      "name": "Optional Live Gemini Architect Smoke",
+      "status": "v0.1_complete",
+      "tasks": [
+        "prove opt-in Architect-role substitution inside the Full Canonical E2E boundary",
+        "keep default dry_run_default deterministic, network-free, and live_gemini_used false",
+        "allow Gemini to substitute only the Architect proposal role",
+        "prevent Gemini from becoming Root, Orchestrator, Executor, GT, or FinalRenderer",
+        "prevent Gemini from creating FinalOutput, writing DRS, executing actions, or bypassing AVF, PlanGraph contract, Executor, Post V&V, GT, Root, ReuseGate, policy, or permission gates",
+        "report SKIPPED for missing live configuration instead of crashing",
+        "contain invalid live artifacts and fall back visibly to deterministic Architect",
+        "derive boundary checks from Full Canonical E2E source report, role flags, artifact containment, and context facts",
+        "avoid rendering credential environment names or secret terms",
+        "prepare Optional Live Gemini Orchestrator Smoke as opt-in only"
+      ]
+    },
+    {
+      "phase": 25,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1607,7 +1624,7 @@
       ]
     },
     {
-      "phase": 25,
+      "phase": 26,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

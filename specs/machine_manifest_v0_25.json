@@ -1571,6 +1571,19 @@
     },
     {
       "phase": 22,
+      "name": "Root-native Semantic Reuse E2E Trace",
+      "status": "v0.1_complete",
+      "tasks": [
+        "consume Semantic Reuse Authority Stack Audit",
+        "connect input task, TemporalQuery, LocalDRS retrieval, taxonomy filtering, typed edge interpretation, graph proximity, ReuseScore, semantic recommendation, Root decision, ReuseGate review, Root final dry-run decision, trace-level final answer artifact, and audit visibility",
+        "select eligible_direct_reuse_candidate as the deterministic direct reuse trace path",
+        "create only a trace-level final answer artifact by root_orchestrator",
+        "keep production_final_output false, production_action_executed false, production_work_record_written false, no live Gemini, no Telegram actions, no real external actions, and no global or external DRS",
+        "prepare Root-native Full Canonical E2E Trace"
+      ]
+    },
+    {
+      "phase": 23,
       "name": "Marennya and UP hooks",
       "tasks": [
         "implement after_task hooks",
@@ -1580,7 +1593,7 @@
       ]
     },
     {
-      "phase": 23,
+      "phase": 24,
       "name": "Demo runner",
       "tasks": [
         "create cold_start scenario",

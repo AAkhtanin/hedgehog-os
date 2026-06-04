@@ -427,8 +427,31 @@ final decision artifact is not production FinalOutput.
 Current semantic reuse authority chain: Semantic Reuse Pipeline recommends ->
 Root Decision Trace maps recommendations -> ReuseGate Trace reviews direct reuse
 candidate only -> approved candidate returns upward to Root -> Root Final
-Decision Trace makes final dry-run decision -> no production execution yet. The
-next planned engineering layer is Root-native Semantic Reuse E2E Trace v0.1.
+Decision Trace makes final dry-run decision -> no production execution yet.
+
+Root-native Semantic Reuse E2E Trace v0.1 is now complete. It consumes the
+Semantic Reuse Authority Stack Audit and shows one connected deterministic path:
+input task -> TemporalQuery -> LocalDRS retrieval -> taxonomy-aware filtering ->
+typed edge interpretation -> graph proximity -> ReuseScore -> semantic reuse
+recommendation -> Root decision -> ReuseGate review -> Root final dry-run
+decision -> trace-level final answer artifact -> audit visibility.
+
+Selected scenario: eligible_direct_reuse_candidate maps
+direct_reuse_candidate -> root_accepts_direct_reuse_candidate_for_gate_review ->
+gate_review_accepts_candidate_for_root_final_decision ->
+root_final_accepts_controlled_direct_reuse_trace. The artifact kind is
+trace_level_final_answer_artifact and is created_by root_orchestrator. It is not
+production FinalOutput, does not execute a production action, and does not write
+a production Work record.
+
+Safety semantics: semantic pipeline recommends only, ReuseScore remains
+advisory, Root decides, ReuseGate guards, Root final trace decides, context
+memory is not direct reuse, high score does not override policy, contradiction
+does not auto-reuse, unsafe reuse candidates remain zero, LocalDRS is local-only,
+external/global DRS are not implemented, and production autonomy is not claimed.
+Proof status: E2E stages passed=12, focused tests passed=229, full suite
+passed=749, and the sensitive scan found no secret terms. The next planned
+engineering layer is Root-native Full Canonical E2E Trace v0.1.
 
 ## Exclusions
 

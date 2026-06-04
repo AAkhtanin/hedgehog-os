@@ -215,12 +215,32 @@ Current bounded graph and lineage checkpoints:
 - root_final_accepts_controlled_direct_reuse_trace is still trace/dry-run, not
   production direct reuse execution. The trace final decision artifact is not
   production FinalOutput.
-- The current semantic reuse authority chain is complete in dry-run form:
-  Semantic Reuse Pipeline recommends -> Root Decision Trace maps
-  recommendations -> ReuseGate Trace reviews direct reuse candidate only ->
-  approved candidate returns upward to Root -> Root Final Decision Trace makes
-  final dry-run decision -> no production execution yet. The next planned
-  engineering layer is Root-native Semantic Reuse E2E Trace v0.1.
+- Root-native Semantic Reuse E2E Trace v0.1 is now complete. It is the first
+  deterministic end-to-end semantic reuse trace, consumes the Semantic Reuse
+  Authority Stack Audit, and shows input task -> TemporalQuery -> LocalDRS
+  retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph
+  proximity -> ReuseScore -> semantic reuse recommendation -> Root decision ->
+  ReuseGate review -> Root final dry-run decision -> trace-level final answer
+  artifact -> audit visibility.
+- The selected scenario is eligible_direct_reuse_candidate:
+  direct_reuse_candidate -> root_accepts_direct_reuse_candidate_for_gate_review
+  -> gate_review_accepts_candidate_for_root_final_decision ->
+  root_final_accepts_controlled_direct_reuse_trace. The artifact kind is
+  trace_level_final_answer_artifact, created_by = root_orchestrator, with
+  production_final_output = false, production_action_executed = false, and
+  production_work_record_written = false.
+- E2E safety semantics: semantic pipeline recommends only, ReuseScore remains
+  advisory, Root decides, ReuseGate guards, Root final trace decides, context
+  memory is not direct reuse, high score does not override policy,
+  contradiction does not auto-reuse, unsafe reuse candidates remain zero,
+  LocalDRS is local-only, external/global DRS are not implemented, and
+  production autonomy is not claimed.
+- Proof status for the E2E trace: 12 stages passed, 229 focused tests passed,
+  749 full-suite tests passed, and the sensitive scan found no secret terms.
+- Current semantic reuse chain: Semantic Reuse Authority Stack Audit ->
+  Root-native Semantic Reuse E2E Trace -> deterministic trace-level final answer
+  artifact -> no production execution. The next planned engineering layer is
+  Root-native Full Canonical E2E Trace v0.1.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

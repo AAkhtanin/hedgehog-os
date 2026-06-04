@@ -592,6 +592,50 @@ trace/dry-run, not production direct reuse execution. The trace final decision
 artifact is not production FinalOutput. This closes the internal semantic reuse
 authority chain in dry-run form, not production semantic reuse.
 
+Root-native Semantic Reuse E2E Trace v0.1 is now complete. It is the first
+deterministic end-to-end semantic reuse trace, consumes the Semantic Reuse
+Authority Stack Audit, and shows one connected path:
+
+```text
+input task
+-> TemporalQuery
+-> LocalDRS retrieval
+-> taxonomy-aware filtering
+-> typed edge interpretation
+-> graph proximity
+-> ReuseScore
+-> semantic reuse recommendation
+-> Root decision
+-> ReuseGate review
+-> Root final dry-run decision
+-> trace-level final answer artifact
+-> audit visibility
+```
+
+Selected scenario:
+
+- scenario: eligible_direct_reuse_candidate;
+- semantic_pipeline_recommendation: direct_reuse_candidate;
+- root_decision: root_accepts_direct_reuse_candidate_for_gate_review;
+- reuse_gate_outcome: gate_review_accepts_candidate_for_root_final_decision;
+- root_final_decision: root_final_accepts_controlled_direct_reuse_trace;
+- artifact_kind: trace_level_final_answer_artifact;
+- created_by: root_orchestrator;
+- production_final_output=false;
+- production_action_executed=false;
+- production_work_record_written=false.
+
+Safety semantics: semantic pipeline recommends only, ReuseScore remains
+advisory, Root decides, ReuseGate guards, Root final trace decides, trace
+artifact is not production FinalOutput, controlled direct reuse trace accept is
+not production direct reuse execution, context memory is not direct reuse, high
+score does not override policy, contradiction does not auto-reuse, unsafe reuse
+candidates remain zero, LocalDRS is local-only, external/global DRS are not
+implemented, and production autonomy is not claimed.
+
+Proof status: E2E stages passed=12, focused tests passed=229, full suite
+passed=749, and the sensitive scan found no secret terms.
+
 ## 19. What This Baseline Does Not Prove Yet
 
 This baseline does not prove:
@@ -610,7 +654,7 @@ This baseline does not prove:
 - production DRS retrieval engine;
 - production typed-edge retrieval engine;
 - production semantic reuse integration into RootOrchestrator;
-- production Root-native semantic reuse E2E path;
+- production Root-native semantic reuse execution path;
 - production ConflictCheck;
 - production ReuseScore or ReuseGate-driven semantic scoring;
 - production autonomy;
@@ -629,7 +673,7 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work should continue runtime hardening with Root-native Semantic Reuse E2E Trace v0.1. It should build a deterministic end-to-end trace from input task through TemporalQuery / LocalDRS retrieval, taxonomy, typed edges, graph proximity, ReuseScore, Semantic Pipeline recommendation, Root Decision Trace, ReuseGate Trace, Root Final Decision Trace, trace-level final answer artifact or full pipeline fallback, and audit visibility. It must still not be production autonomy, global DRS, external DRS, Telegram live action, or live Gemini by default.
+After this baseline, the next architecture work should continue runtime hardening with Root-native Full Canonical E2E Trace v0.1. It should build a deterministic full canonical path covering the non-reuse first-run side: input task -> Orchestrator / Architect path -> AVF / Attractor formation -> PlanGraph -> DAG / Executor -> Post V&V -> GT -> Root FinalOutput / trace artifact -> DRS writeback / audit -> second-run semantic reuse path. It must remain deterministic by default, with no live Telegram or live Gemini by default.
 
 ## 20. Future Demo Evolution
 
@@ -649,6 +693,7 @@ After this baseline, the next architecture work should continue runtime hardenin
 - v0.38: Root-controlled Semantic Reuse Gate Trace v0.1.
 - v0.39: Root-controlled Semantic Reuse Final Decision Trace v0.1.
 - v0.40: Root-native Semantic Reuse E2E Trace v0.1.
-- v0.41: controlled LLM/SLM role substitution.
-- v0.41: Telegram shell as interface only, not autonomous natural assistant.
+- v0.41: Root-native Full Canonical E2E Trace v0.1.
+- v0.42: controlled LLM/SLM role substitution.
+- v0.43: Telegram shell as interface only, not autonomous natural assistant.
 - v0.45: richer useful assistant scenario.

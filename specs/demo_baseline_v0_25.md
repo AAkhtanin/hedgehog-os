@@ -780,18 +780,46 @@ external action execution, global DRS, or external DRS. It does not activate
 Marennya / UP; those remain deferred quarantine-first hooks and are not invoked
 by live Gemini smoke by default.
 
-After this baseline, the next architecture work is Controlled Orchestrator
-Matrix Gate v0.1, then AVF / Attractor Formation from accepted Matrix v0.1. The
-gate is narrow: Orchestrator matrix becomes an input artifact; Root-controlled
-gate accepts / rejects / downgrades it; valid matrix may continue toward AVF
-later; invalid matrix, incomplete guards, missing TemporalQuery, wrong
-downstream actors, or forbidden bypass attempts are blocked or downgraded;
-fallback route remains visible; no production execution, no DRS write by
-Orchestrator, and no FinalOutput by Orchestrator. After the gate, accepted
-matrix fields may influence candidate vector hints, budgets, risks, and guard
-context, but AVF remains independent; HardMask and policy beat Orchestrator
-confidence; Root may downgrade or override the matrix; Architect receives only
-bounded AttractorPacket-like input.
+Controlled Orchestrator Matrix Gate v0.1 is complete. It is a deterministic
+Root-controlled gate proof: Orchestrator matrix is an input artifact, not
+authority; Root creates RootMatrixGateDecision artifacts and may accept, reject,
+or downgrade. This is not full RootOrchestrator production integration, AVF /
+Attractor formation, production autonomy, live Telegram, real external action
+execution, production persistence, production direct reuse, global DRS, or
+external DRS.
+
+Gate decisions are explicit: accept means a valid matrix may become future AVF
+input; reject means unsafe or invalid matrix cannot continue; downgrade means a
+partially usable matrix may continue only with unsafe or incomplete claims
+removed. Verified scenarios: valid_matrix_accept accepted;
+missing_temporal_query_reject rejected; incomplete_guards_downgrade_or_reject
+downgraded with missing guards listed and unsafe_claims_removed=true;
+wrong_downstream_actors_reject rejected with missing/extra actor diagnostics;
+forbidden_bypass_reject rejected; high_confidence_policy_block rejected with
+policy_beats_orchestrator_confidence=true; fallback_route_visible keeps fallback
+visible but not executed.
+
+Proof status: scenarios_verified=7, accepted_count=1, rejected_count=5,
+downgraded_count=1, controlled_orchestrator_matrix_gate_status=PASS, 110 focused
+tests passed, 859 full-suite tests passed, and sensitive scan found no secret
+terms. Evidence:
+`docs/audit_reports/auditor_controlled_orchestrator_matrix_gate_report.log`. The
+gate runner verifies the final ordered Gemini 2.5 success report before using it
+as context: success_report_exists=true, success_report_verified=true,
+success_report_missing_markers=[], ordered_live_context_mode=success_report_verified.
+
+Boundary semantics: AVF is not invoked; AttractorPacket is not created;
+Architect, Executor, Post V&V, and GT are not reached; Orchestrator does not
+write DRS or create FinalOutput; production_final_output_created=false;
+production_external_action_executed=false; global/external DRS are not
+implemented; Marennya / UP are not invoked.
+
+After this baseline, the next architecture work is AVF / Attractor Formation
+from accepted Matrix v0.1. Accepted or downgraded RootMatrixGateDecision output
+may become AVF input. AVF remains independent; Orchestrator hints are hints, not
+commands; HardMask and policy beat Orchestrator confidence; Root may downgrade
+or override the matrix; invalid/rejected matrix must not reach AVF; Architect
+receives only bounded AttractorPacket-like input.
 
 ## 20. Future Demo Evolution
 
@@ -816,5 +844,6 @@ bounded AttractorPacket-like input.
 - v0.43: Optional Live Gemini Orchestrator Smoke v0.1, opt-in only.
 - v0.44: Ordered Live Gemini Orchestrator-to-Architect Smoke v0.1, opt-in only.
 - v0.45: Controlled Orchestrator Matrix Gate v0.1.
-- v0.46: Telegram shell as interface only, not autonomous natural assistant.
-- v0.47: richer useful assistant scenario.
+- v0.46: AVF / Attractor Formation from accepted Matrix v0.1.
+- v0.47: Telegram shell as interface only, not autonomous natural assistant.
+- v0.48: richer useful assistant scenario.

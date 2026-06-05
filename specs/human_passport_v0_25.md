@@ -316,18 +316,45 @@ Current bounded graph and lineage checkpoints:
   FinalOutput, activate Marennya / UP, use Telegram, or perform real external
   actions. Older ordered Gemini fallback reports are historical safety evidence
   only and must not be used as proof of dual-live success.
-- The next planned engineering direction is Controlled Orchestrator Matrix Gate
-  v0.1, followed by AVF / Attractor Formation from accepted Matrix v0.1. The
-  gate is narrow: Orchestrator matrix is an input artifact; Root-controlled
-  gate accepts, rejects, or downgrades it; invalid matrix, incomplete guards,
-  missing TemporalQuery, wrong downstream actors, or forbidden bypass attempts
-  are blocked or downgraded; fallback route remains visible; there is no
-  production execution, no DRS write by Orchestrator, and no FinalOutput by
-  Orchestrator. After the gate, accepted matrix fields may influence candidate
-  vector hints, budgets, risks, and guard context, but AVF remains independent;
-  HardMask and policy beat Orchestrator confidence; Root may downgrade or
-  override the matrix; Architect receives only bounded AttractorPacket-like
-  input.
+- Controlled Orchestrator Matrix Gate v0.1 is complete. It is a deterministic
+  Root-controlled gate proof. Orchestrator matrix is an input artifact, not
+  authority. Root creates RootMatrixGateDecision artifacts and may accept,
+  reject, or downgrade a matrix.
+- Gate decision semantics: accept means a valid matrix may become future AVF
+  input; reject means an unsafe or invalid matrix cannot continue; downgrade
+  means a partially usable matrix may continue only with unsafe or incomplete
+  claims removed.
+- Verified gate scenarios: valid_matrix_accept accepted;
+  missing_temporal_query_reject rejected; incomplete_guards_downgrade_or_reject
+  downgraded with missing guards listed, downgraded_matrix_created=true, and
+  unsafe_claims_removed=true; wrong_downstream_actors_reject rejected with
+  missing/extra actor diagnostics; forbidden_bypass_reject rejected;
+  high_confidence_policy_block rejected with high_confidence_overrides_policy =
+  false and policy_beats_orchestrator_confidence = true; fallback_route_visible
+  keeps fallback_route_visible = true and fallback_route_executed = false.
+- Gate proof status: scenarios_verified = 7, accepted_count = 1,
+  rejected_count = 5, downgraded_count = 1,
+  controlled_orchestrator_matrix_gate_status = PASS, 110 focused tests passed,
+  859 full-suite tests passed, and sensitive scan found no secret terms.
+- Gate evidence:
+  `docs/audit_reports/auditor_controlled_orchestrator_matrix_gate_report.log`.
+  The runner verifies the final ordered Gemini 2.5 success report before using
+  it as live-role context: success_report_exists = true,
+  success_report_verified = true, success_report_missing_markers = [],
+  ordered_live_context_mode = success_report_verified,
+  live_orchestrator_can_create_valid_matrix = true, and
+  live_architect_can_create_valid_artifact = true.
+- Gate boundary semantics: AVF is not invoked, AttractorPacket is not created,
+  Architect / Executor / Post V&V / GT are not reached, Orchestrator does not
+  write DRS or create FinalOutput, production_final_output_created = false,
+  production_external_action_executed = false, global/external DRS are not
+  implemented, and Marennya / UP are not invoked.
+- The next planned engineering direction is AVF / Attractor Formation from
+  accepted Matrix v0.1. Accepted or downgraded RootMatrixGateDecision output may
+  become AVF input. AVF remains independent; Orchestrator hints are hints, not
+  commands; HardMask and policy beat Orchestrator confidence; Root may downgrade
+  or override the matrix; invalid/rejected matrix must not reach AVF; Architect
+  receives only bounded AttractorPacket-like input.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

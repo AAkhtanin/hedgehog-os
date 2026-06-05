@@ -532,17 +532,41 @@ show invalid live Orchestrator output is caught, blocked from Architect /
 Executor / Root final, and replaced by deterministic fallback while preserving
 Root boundaries. They are not proof of dual-live success.
 
-The next planned direction is Controlled Orchestrator Matrix Gate v0.1, followed
-by AVF / Attractor Formation from accepted Matrix v0.1. Controlled Matrix Gate
-is narrow: Orchestrator matrix becomes an input artifact; Root-controlled gate
-accepts / rejects / downgrades it; invalid matrix, incomplete guards, missing
-TemporalQuery, wrong downstream actors, or forbidden bypass attempts are
-blocked or downgraded; fallback route remains visible; there is no production
-execution, no DRS write by Orchestrator, and no FinalOutput by Orchestrator.
-Only after that, AVF / Attractor Formation from accepted Matrix v0.1 may let an
-accepted matrix influence candidate vector hints, budgets, risks, and guard
-context. AVF remains independent; HardMask and policy beat Orchestrator
-confidence; Root may downgrade or override the matrix; Architect receives only
+Controlled Orchestrator Matrix Gate v0.1 is complete. It is a deterministic
+Root-controlled gate proof: Orchestrator matrix is an input artifact, not
+authority; Root creates RootMatrixGateDecision artifacts and may accept, reject,
+or downgrade. Gate decisions are explicit: accept means a valid matrix may
+become future AVF input; reject means unsafe/invalid matrix cannot continue;
+downgrade means a partially usable matrix may continue only with unsafe or
+incomplete claims removed.
+
+Verified gate scenarios: valid_matrix_accept accepted;
+missing_temporal_query_reject rejected; incomplete_guards_downgrade_or_reject
+downgraded with missing guard listed and unsafe_claims_removed=true;
+wrong_downstream_actors_reject rejected with missing/extra actor diagnostics;
+forbidden_bypass_reject rejected; high_confidence_policy_block rejected despite
+high confidence; fallback_route_visible keeps fallback visible but not executed.
+Proof status: scenarios_verified=7, accepted_count=1, rejected_count=5,
+downgraded_count=1, controlled_orchestrator_matrix_gate_status=PASS, 110 focused
+tests passed, 859 full-suite tests passed, and sensitive scan found no secret
+terms.
+
+Evidence:
+`docs/audit_reports/auditor_controlled_orchestrator_matrix_gate_report.log`.
+The gate runner verifies the final ordered Gemini 2.5 success report before
+using it as context: success_report_exists=true, success_report_verified=true,
+success_report_missing_markers=[], and
+ordered_live_context_mode=success_report_verified. AVF is not invoked;
+AttractorPacket is not created; Architect / Executor / Post V&V / GT are not
+reached; Orchestrator does not write DRS or create FinalOutput; production
+FinalOutput/external action are false; global/external DRS are not implemented;
+Marennya / UP are not invoked.
+
+The next planned direction is AVF / Attractor Formation from accepted Matrix
+v0.1. Accepted or downgraded RootMatrixGateDecision output may become AVF input.
+AVF remains independent; Orchestrator hints are hints, not commands; HardMask
+and policy beat Orchestrator confidence; Root may downgrade or override the
+matrix; invalid/rejected matrix must not reach AVF; Architect receives only
 bounded AttractorPacket-like input.
 
 ## Exclusions

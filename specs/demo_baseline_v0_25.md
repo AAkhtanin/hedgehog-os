@@ -903,11 +903,28 @@ ready_for_gt_from_validation_report=true, focused tests passed=87, full suite
 passed=946, and sensitive scan found no secret terms. Evidence:
 `docs/audit_reports/auditor_post_vv_from_result_proposal_report.log`.
 
-After this baseline, the next architecture work is GT from ValidationReport
-v0.1. Only ValidationReport / V&VReport artifacts from Post V&V may enter GT.
-GT may produce GTDecision / selection artifact only and must not create
-FinalOutput, write DRS directly, execute actions, invoke Root Final, or receive
-raw upstream inputs.
+GT from ValidationReport v0.1 is complete. It consumes Post V&V from
+ResultProposal v0.1 without hardcoding Post V&V PASS. Only ValidationReport /
+V&VReport artifacts from Post V&V may enter GT. Raw ResultProposal, raw Executor
+text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent, and
+real action output are blocked.
+
+Verified behavior: accepted ValidationReport creates accept GTDecision, degraded
+ValidationReport creates degrade GTDecision, rejected ValidationReport creates
+reject GTDecision, malicious FinalOutput / DRS write / action execution claims
+are rejected, malformed ValidationReport is rejected, and Root Final is not
+invoked. Proof status: gt_from_validation_report_status=PASS,
+scenarios_verified=13, gt_decisions_created=7, accepted_gt_decisions=1,
+degraded_gt_decisions=1, rejected_gt_decisions=5,
+gt_receives_only_validation_report=true,
+ready_for_root_final_from_gt_decision=true, focused tests passed=91, full suite
+passed=971, and sensitive scan found no secret terms. Evidence:
+`docs/audit_reports/auditor_gt_from_validation_report.log`.
+
+After this baseline, the next architecture work is Root Final from GTDecision
+v0.1. Only GTDecision / selection artifacts from GT may enter Root Final. Root
+creates FinalOutput / trace-level final artifact only; DRS writeback remains
+future unless explicitly included in that proof.
 
 ## 20. Future Demo Evolution
 

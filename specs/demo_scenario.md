@@ -649,8 +649,23 @@ focused tests passed=87, full suite passed=946, and sensitive scan found no
 secret terms. Evidence:
 `docs/audit_reports/auditor_post_vv_from_result_proposal_report.log`.
 
-This layer closes Executor ResultProposal -> Post V&V ValidationReport only. The
-next planned direction is GT from ValidationReport v0.1.
+GT from ValidationReport v0.1 is complete. It consumes Post V&V from
+ResultProposal v0.1 without hardcoding Post V&V PASS. GT receives only
+ValidationReport / V&VReport artifacts and blocks raw ResultProposal, raw
+Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent,
+and real action output. GT creates GTDecision / selection artifact only.
+
+Verified behavior: source_post_vv_status=PASS, accepted ValidationReport creates
+accept GTDecision, degraded ValidationReport creates degrade GTDecision, rejected
+ValidationReport creates reject GTDecision, malicious FinalOutput / DRS write /
+action execution claims are rejected, malformed ValidationReport is rejected, and
+Root Final is not invoked. Proof status: gt_from_validation_report_status=PASS,
+scenarios_verified=13, gt_decisions_created=7, rejected_gt_decisions=5, focused
+tests passed=91, full suite passed=971, and sensitive scan found no secret
+terms. Evidence: `docs/audit_reports/auditor_gt_from_validation_report.log`.
+
+This layer closes Post V&V ValidationReport -> GTDecision only. The next planned
+direction is Root Final from GTDecision v0.1.
 
 ## Exclusions
 

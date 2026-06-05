@@ -49,6 +49,13 @@ Current reports:
   - Confirms malicious FinalOutput / DRS write claims and malformed ResultProposal input are rejected.
   - Confirms Post V&V creates ValidationReport / V&VReport only, does not create FinalOutput, does not write DRS directly, does not execute actions, and GT / Root Final are not invoked.
 
+- `auditor_gt_from_validation_report.log`
+  - Proof for GT from ValidationReport v0.1.
+  - Shows accepted, degraded, and rejected ValidationReport artifacts creating accept/degrade/reject GTDecision artifacts.
+  - Confirms raw ResultProposal, raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent, and real action output are blocked before GT.
+  - Confirms malicious FinalOutput / DRS write / action execution claims and malformed ValidationReport input are rejected.
+  - Confirms GT creates GTDecision / selection artifact only, does not create FinalOutput, does not write DRS directly, does not execute actions, and Root Final is not invoked.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

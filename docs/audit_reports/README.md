@@ -36,6 +36,12 @@ Current reports:
   - Confirms rejected matrix, raw Orchestrator matrix, raw unchecked user intent, and invalid/unbounded AttractorPacket inputs are blocked before Architect.
   - Confirms invalid Architect artifact is contained, Executor / Post V&V / GT are not invoked, Architect does not create FinalOutput or write DRS, and no production external action is executed.
 
+- `auditor_dag_executor_from_valid_plan_graph_report.log`
+  - Proof for DAG / Executor from valid PlanGraph v0.1.
+  - Shows accepted and downgraded valid Architect PlanGraph proposals creating ResultProposal artifacts.
+  - Confirms invalid Architect artifact, raw Architect text, raw Orchestrator matrix, raw user intent, and unvalidated PlanGraph inputs are blocked before Executor.
+  - Confirms Executor returns ResultProposal only, does not create FinalOutput, does not write DRS directly, does not execute real external actions, and Post V&V / GT are not invoked.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

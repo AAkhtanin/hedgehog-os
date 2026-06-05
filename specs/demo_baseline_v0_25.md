@@ -861,11 +861,36 @@ ready_for_dag_executor_from_valid_plan_graph=true, focused tests passed=93,
 full suite passed=903, and sensitive scan found no secret terms. Evidence:
 `docs/audit_reports/auditor_architect_from_bounded_attractor_packet_report.log`.
 
-After this baseline, the next architecture work is DAG / Executor from valid
-PlanGraph v0.1. Executor receives only validated PlanGraph nodes and returns
-ResultProposal only. Executor must not receive invalid Architect artifacts, raw
-Architect text, raw Orchestrator matrix, or raw user intent. Executor must not
-create FinalOutput, write DRS directly, execute real external actions, or
+DAG / Executor from valid PlanGraph v0.1 is complete. It consumes Architect
+from bounded AttractorPacket v0.1 without hardcoding Architect PASS. Executor
+receives only validated PlanGraph nodes and returns ResultProposal only. It does
+not receive invalid Architect artifact, raw Architect text, raw Orchestrator
+matrix, raw user intent, or unvalidated PlanGraph.
+
+Verified behavior: source_architect_report_status=PASS, accepted valid
+PlanGraph creates ResultProposal, downgraded valid PlanGraph creates
+limited/degraded ResultProposal, invalid Architect artifact is blocked before
+Executor, raw Architect text is blocked, raw Orchestrator matrix is blocked, raw
+user intent is blocked, unvalidated PlanGraph is blocked, Post V&V is not
+invoked, and GT is not invoked.
+
+Proof status: dag_executor_from_valid_plan_graph_status=PASS,
+scenarios_verified=7, result_proposals_created=2,
+accepted_plan_result_proposals=1, downgraded_plan_result_proposals=1,
+invalid_architect_artifact_blocked=true, raw_architect_text_blocked=true,
+raw_orchestrator_matrix_blocked=true, raw_user_intent_blocked=true,
+unvalidated_plan_graph_blocked=true,
+executor_receives_only_validated_plan_graph_nodes=true,
+ready_for_post_vv_from_result_proposal=true, focused tests passed=85, full
+suite passed=923, and sensitive scan found no secret terms. Evidence:
+`docs/audit_reports/auditor_dag_executor_from_valid_plan_graph_report.log`.
+
+After this baseline, the next architecture work is Post V&V from ResultProposal
+v0.1. Only ResultProposal artifacts from Executor may enter Post V&V. Post V&V
+validates ResultProposal only and creates ValidationReport / V&VReport only. It
+must not receive raw Executor text, raw Architect PlanGraph directly, raw
+Orchestrator matrix, raw user intent, or real action output. It must not create
+FinalOutput, write DRS directly, execute actions, invoke GT / Root Final, or
 introduce production execution, real external APIs, global/external DRS, or
 Marennya / UP invocation.
 

@@ -396,10 +396,34 @@ Current bounded graph and lineage checkpoints:
   903 full-suite tests passed, and sensitive scan found no secret terms.
 - Evidence:
   `docs/audit_reports/auditor_architect_from_bounded_attractor_packet_report.log`.
-  The next planned engineering direction is DAG / Executor from valid PlanGraph
-  v0.1. Executor must receive only validated PlanGraph nodes, return
-  ResultProposal only, and must not create FinalOutput, write DRS directly,
-  execute real external actions, or receive invalid/raw upstream inputs.
+- DAG / Executor from valid PlanGraph v0.1 is complete. It consumes Architect
+  from bounded AttractorPacket v0.1 without hardcoding Architect PASS.
+  Executor receives only validated PlanGraph nodes, not invalid Architect
+  artifact, raw Architect text, raw Orchestrator matrix, raw user intent, or
+  unvalidated PlanGraph. Accepted valid PlanGraph creates ResultProposal;
+  downgraded valid PlanGraph creates limited/degraded ResultProposal; invalid
+  Architect artifact, raw Architect text, raw Orchestrator matrix, raw user
+  intent, and unvalidated PlanGraph are blocked before Executor.
+- Executor returns ResultProposal only, does not create FinalOutput, does not
+  write DRS directly, and does not execute real external actions. Post V&V and
+  GT are not invoked yet; no production FinalOutput or production external
+  action is created; global/external DRS are not implemented; Marennya / UP
+  remain deferred.
+- Proof status: dag_executor_from_valid_plan_graph_status = PASS,
+  scenarios_verified = 7, result_proposals_created = 2,
+  accepted_plan_result_proposals = 1, downgraded_plan_result_proposals = 1,
+  invalid_architect_artifact_blocked = true, raw_architect_text_blocked = true,
+  raw_orchestrator_matrix_blocked = true, raw_user_intent_blocked = true,
+  unvalidated_plan_graph_blocked = true,
+  executor_receives_only_validated_plan_graph_nodes = true,
+  ready_for_post_vv_from_result_proposal = true, 85 focused tests passed,
+  923 full-suite tests passed, and sensitive scan found no secret terms.
+- Evidence:
+  `docs/audit_reports/auditor_dag_executor_from_valid_plan_graph_report.log`.
+  The next planned engineering direction is Post V&V from ResultProposal v0.1.
+  Post V&V must receive only ResultProposal artifacts, create ValidationReport /
+  V&VReport only, and must not create FinalOutput, write DRS directly, execute
+  actions, invoke GT / Root Final, or receive raw upstream inputs.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

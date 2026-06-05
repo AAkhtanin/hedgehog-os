@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 
 from hedgehog.drs import LocalDRS
 from hedgehog.root_orchestrator import RootOrchestrator
@@ -122,7 +123,17 @@ def test_render_trace_report_handles_llm_general_trace(tmp_path):
     assert "created_by: root_orchestrator" in report
 
 
-def test_render_trace_report_handles_llm_architect_fallback_trace(tmp_path):
+def test_render_trace_report_handles_llm_architect_fallback_trace(tmp_path, monkeypatch):
+    for key in (
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GEMINI_API_KEY",
+        "GEMINI_MODEL",
+        "HEDGEHOG_ALLOW_LIVE_GEMINI",
+    ):
+        monkeypatch.delenv(key, raising=False)
+    monkeypatch.delitem(sys.modules, "google.genai", raising=False)
+
     orchestrator = make_orchestrator(tmp_path)
     final_output = orchestrator.process_event(
         raw_user_text="mock certificate request",

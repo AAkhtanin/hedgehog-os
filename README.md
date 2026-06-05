@@ -436,7 +436,7 @@ This is not production uncontrolled runtime.
 
 Current auditor-facing / runtime checkpoint:
 
-text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 -> Compute Collapse via DRS Reuse v0.1 -> DRS Layer Taxonomy v0.1 -> Typed DRS Lineage Edges v0.1 -> ReuseScore v0.1 -> Semantic Reuse Pipeline Integration v0.1 -> Root-controlled Semantic Reuse Decision Trace v0.1 -> Root-controlled Semantic Reuse Gate Trace v0.1 -> Root-controlled Semantic Reuse Final Decision Trace v0.1 -> Semantic Reuse Authority Stack Audit Pack v0.1 -> Root-native Semantic Reuse E2E Trace v0.1 -> Root-native Full Canonical E2E Trace v0.1 -> Optional Live Gemini Architect Smoke v0.1
+text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonical Pipeline Trace -> Explicit Orchestrator / AVF / Attractor Formation -> Root-controlled DAG runner integration -> Root-native DAG/DRS/audit stabilization -> Canonical Needle Outcome Trace -> real GTValidator integration for needle outcomes -> Needle Outcome DRS Routing Persistence v0.1 -> Large Graph / Bounded Fractal Stress v0.1 -> DRS Graph Proximity / Lineage v0.1 -> Chaos Survival Showcase v0.1 -> Compute Collapse via DRS Reuse v0.1 -> DRS Layer Taxonomy v0.1 -> Typed DRS Lineage Edges v0.1 -> ReuseScore v0.1 -> Semantic Reuse Pipeline Integration v0.1 -> Root-controlled Semantic Reuse Decision Trace v0.1 -> Root-controlled Semantic Reuse Gate Trace v0.1 -> Root-controlled Semantic Reuse Final Decision Trace v0.1 -> Semantic Reuse Authority Stack Audit Pack v0.1 -> Root-native Semantic Reuse E2E Trace v0.1 -> Root-native Full Canonical E2E Trace v0.1 -> Optional Live Gemini Architect Smoke v0.1 -> Ordered Live Gemini Orchestrator->Architect Smoke v0.1
 
 The important current rule:
 
@@ -485,6 +485,12 @@ Optional Live Gemini Architect Smoke v0.1 is complete. It is an opt-in role-subs
 Architect Smoke boundary checks are derived from the Full Canonical E2E source report, role substitution flags, artifact containment, and context facts. `plan_graph_contract_preserved` derives from `artifact["plan_graph_contract_checked"]`; `executor_boundary_preserved` derives from `not artifact["executor_reached"]`; `root_boundary_preserved` derives from first-run Root authority, second-run Root authority, and no Root final output from live Gemini; and `reuse_gate_boundary_preserved` derives from Full Canonical E2E authority safety. Rendered output does not print credential environment names or secret terms. Proof status: focused tests passed=212, full suite passed=788, sensitive scan found no secret terms, default dry-run smoke status=PASS, `live_gemini_architect_smoke_status=PASS` in default mode, and `ready_for_future_orchestrator_live_smoke=true`.
 
 This smoke is not production RootOrchestrator integration, live Telegram, production autonomy, production persistence, production direct reuse, or a real external action execution path. It does not claim live Gemini was used in default mode. It only proves that the Architect proposal role can be safely substituted inside the existing Full Canonical E2E boundary.
+
+Ordered Live Gemini Orchestrator->Architect Smoke v0.1 is complete. It proves an opt-in ordered role-substitution path: Root boundary -> live Gemini Orchestrator proposal -> schema-backed local validation -> live Gemini Architect proposal -> Architect contract check -> no production execution. The final success evidence is `docs/audit_reports/auditor_live_gemini_ordered_orchestrator_architect_25_success_report.log`.
+
+Final success facts: live Gemini 2.5 acted as valid Orchestrator proposal actor first with orchestrator_initial_attempt_valid=true, orchestrator_active_proposal_source=live_gemini, orchestrator_active_proposal_is_fallback=false, temporal_query_required_value=true, downstream_actors_missing=[], and downstream_actors_extra=[]. Live Gemini then acted as Architect proposal role with architect_artifact_source=live_gemini and architect_artifact_valid=true. production_final_output_created=false, production_external_action_executed=false, Gemini did not write DRS, Gemini did not execute actions, and Gemini did not receive Root authority.
+
+Older ordered Gemini live reports are historical fallback/safety evidence, not final dual-live success proof. They show invalid live Orchestrator output is caught, invalid Orchestrator does not reach Architect / Executor / Root final, deterministic fallback is used safely, and Root boundaries are preserved. This checkpoint is not production RootOrchestrator integration, production autonomy, live Telegram, production persistence, production direct reuse, real external action execution, global DRS, or external DRS. It does not activate Marennya / UP; those remain deferred quarantine-first hooks and are not invoked by live Gemini smoke by default.
 
 Safety rules for this checkpoint:
 
@@ -609,11 +615,13 @@ Completed recent layers:
 - Root-native Semantic Reuse E2E Trace v0.1.
 - Root-native Full Canonical E2E Trace v0.1.
 - Optional Live Gemini Architect Smoke v0.1.
+- Ordered Live Gemini Orchestrator->Architect Smoke v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Optional Live Gemini Orchestrator Smoke v0.1. Gemini may act only as an Orchestrator-stage proposal actor for route / AVF context / bounded orchestration matrix proposals. It must remain opt-in and network-free by default, and must not become Root, create FinalOutput, write DRS, execute actions, bypass AVF, Architect contract, Executor, Post V&V, GT, Root, ReuseGate, policy, or permission gates.
+- Controlled Orchestrator Matrix Gate v0.1. This is narrow: Orchestrator matrix becomes an input artifact; a Root-controlled gate accepts, rejects, or downgrades it; valid matrix may continue toward AVF later; invalid matrix, incomplete guards, missing TemporalQuery, wrong downstream actors, or forbidden bypass attempts are blocked or downgraded. There is no production execution, no DRS write by Orchestrator, and no FinalOutput by Orchestrator.
+- AVF / Attractor Formation from accepted Matrix v0.1. Only after the gate, an accepted matrix may influence candidate vector hints, budgets, risks, and guard context. AVF remains independent; HardMask and policy beat Orchestrator confidence; Root may downgrade or override the matrix; Architect receives only bounded AttractorPacket-like input.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.

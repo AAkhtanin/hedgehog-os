@@ -748,7 +748,50 @@ v0.25 currently demonstrates deterministic L2/L3/L4-style baseline behavior plus
 - L0 deterministic reflex exists as a closed mock proof path, not a production expansion target.
 - Automatic L0/L1 routing is future production work.
 
-After this baseline, the next architecture work may add Optional Live Gemini Orchestrator Smoke v0.1. Gemini may act only as an Orchestrator-stage proposal actor for route / AVF context / bounded orchestration matrix proposals. It must remain opt-in and network-free by default, and must not become Root, create FinalOutput, write DRS, execute actions, or bypass AVF, Architect contract, Executor, Post V&V, GT, Root, ReuseGate, policy, or permission gates.
+Ordered Live Gemini Orchestrator-to-Architect Smoke v0.1 is complete. It proves
+an opt-in ordered role-substitution path:
+
+Root boundary -> live Gemini Orchestrator proposal -> schema-backed local
+validation -> live Gemini Architect proposal -> Architect contract check -> no
+production execution.
+
+Final success evidence is
+`docs/audit_reports/auditor_live_gemini_ordered_orchestrator_architect_25_success_report.log`.
+It proves live Gemini 2.5 acted as valid Orchestrator proposal actor first
+with orchestrator_initial_attempt_valid=true,
+orchestrator_active_proposal_source=live_gemini,
+orchestrator_active_proposal_is_fallback=false,
+temporal_query_required_value=true, downstream_actors_missing=[], and
+downstream_actors_extra=[]. It then proves live Gemini acted as Architect
+proposal role with architect_artifact_source=live_gemini and
+architect_artifact_valid=true. production_final_output_created=false,
+production_external_action_executed=false, Gemini did not write DRS, Gemini did
+not execute actions, and Gemini did not receive Root authority.
+
+Older ordered Gemini fallback reports are historical safety evidence only. They
+prove invalid live Orchestrator output is caught, invalid Orchestrator does not
+reach Architect / Executor / Root final, deterministic fallback is used safely,
+and Root boundaries are preserved. They must not be used as proof of dual-live
+success.
+
+This checkpoint is not production RootOrchestrator integration, production
+autonomy, live Telegram, production persistence, production direct reuse, real
+external action execution, global DRS, or external DRS. It does not activate
+Marennya / UP; those remain deferred quarantine-first hooks and are not invoked
+by live Gemini smoke by default.
+
+After this baseline, the next architecture work is Controlled Orchestrator
+Matrix Gate v0.1, then AVF / Attractor Formation from accepted Matrix v0.1. The
+gate is narrow: Orchestrator matrix becomes an input artifact; Root-controlled
+gate accepts / rejects / downgrades it; valid matrix may continue toward AVF
+later; invalid matrix, incomplete guards, missing TemporalQuery, wrong
+downstream actors, or forbidden bypass attempts are blocked or downgraded;
+fallback route remains visible; no production execution, no DRS write by
+Orchestrator, and no FinalOutput by Orchestrator. After the gate, accepted
+matrix fields may influence candidate vector hints, budgets, risks, and guard
+context, but AVF remains independent; HardMask and policy beat Orchestrator
+confidence; Root may downgrade or override the matrix; Architect receives only
+bounded AttractorPacket-like input.
 
 ## 20. Future Demo Evolution
 
@@ -771,5 +814,7 @@ After this baseline, the next architecture work may add Optional Live Gemini Orc
 - v0.41: Root-native Full Canonical E2E Trace v0.1.
 - v0.42: Optional Live Gemini Architect Smoke v0.1, opt-in only.
 - v0.43: Optional Live Gemini Orchestrator Smoke v0.1, opt-in only.
-- v0.44: Telegram shell as interface only, not autonomous natural assistant.
-- v0.45: richer useful assistant scenario.
+- v0.44: Ordered Live Gemini Orchestrator-to-Architect Smoke v0.1, opt-in only.
+- v0.45: Controlled Orchestrator Matrix Gate v0.1.
+- v0.46: Telegram shell as interface only, not autonomous natural assistant.
+- v0.47: richer useful assistant scenario.

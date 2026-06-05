@@ -509,6 +509,42 @@ where Gemini may act only as an Orchestrator-stage proposal actor for route /
 AVF context / bounded orchestration matrix proposals. It must remain opt-in and
 network-free by default.
 
+Ordered Live Gemini Orchestrator-to-Architect Smoke v0.1 is complete. It proves
+an opt-in ordered role-substitution path:
+
+Root boundary -> live Gemini Orchestrator proposal -> schema-backed local
+validation -> live Gemini Architect proposal -> Architect contract check -> no
+production execution.
+
+Final success evidence is
+`docs/audit_reports/auditor_live_gemini_ordered_orchestrator_architect_25_success_report.log`.
+It proves orchestrator_initial_attempt_valid=true,
+orchestrator_active_proposal_source=live_gemini,
+orchestrator_active_proposal_is_fallback=false,
+temporal_query_required_value=true, downstream_actors_missing=[],
+downstream_actors_extra=[], architect_artifact_source=live_gemini,
+architect_artifact_valid=true, production_final_output_created=false, and
+production_external_action_executed=false. Gemini did not write DRS, did not
+execute actions, and did not receive Root authority.
+
+Older ordered Gemini fallback reports are historical safety evidence only. They
+show invalid live Orchestrator output is caught, blocked from Architect /
+Executor / Root final, and replaced by deterministic fallback while preserving
+Root boundaries. They are not proof of dual-live success.
+
+The next planned direction is Controlled Orchestrator Matrix Gate v0.1, followed
+by AVF / Attractor Formation from accepted Matrix v0.1. Controlled Matrix Gate
+is narrow: Orchestrator matrix becomes an input artifact; Root-controlled gate
+accepts / rejects / downgrades it; invalid matrix, incomplete guards, missing
+TemporalQuery, wrong downstream actors, or forbidden bypass attempts are
+blocked or downgraded; fallback route remains visible; there is no production
+execution, no DRS write by Orchestrator, and no FinalOutput by Orchestrator.
+Only after that, AVF / Attractor Formation from accepted Matrix v0.1 may let an
+accepted matrix influence candidate vector hints, budgets, risks, and guard
+context. AVF remains independent; HardMask and policy beat Orchestrator
+confidence; Root may downgrade or override the matrix; Architect receives only
+bounded AttractorPacket-like input.
+
 ## Exclusions
 
 - No real external APIs.
@@ -518,6 +554,7 @@ network-free by default.
 - No real banking, identity, or legal action.
 - No UI-first development.
 - No production LLM/SLM role substitution by default.
+- No production ordered Gemini role-substitution path by default.
 - No legacy architecture repair.
 - No global DRS network.
 - No external DRS protocol implementation.

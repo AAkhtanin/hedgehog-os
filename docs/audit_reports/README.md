@@ -24,6 +24,12 @@ Current reports:
   - Verifies the final ordered Gemini 2.5 success report before using it as live-role context: success_report_exists=true, success_report_verified=true, success_report_missing_markers=[].
   - Confirms AVF / Attractor formation is not invoked yet, Orchestrator does not write DRS or create FinalOutput, and no production external action is executed.
 
+- `auditor_avf_attractor_from_accepted_matrix_report.log`
+  - Proof for AVF / Attractor Formation from accepted Matrix v0.1.
+  - Shows accepted and downgraded RootMatrixGateDecision outputs forming bounded AttractorPacket-like artifacts.
+  - Confirms rejected matrices do not reach AVF and create no AttractorPacket.
+  - Confirms Architect / Executor are not invoked, AVF does not create FinalOutput or write DRS, and no production external action is executed.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

@@ -814,12 +814,38 @@ write DRS or create FinalOutput; production_final_output_created=false;
 production_external_action_executed=false; global/external DRS are not
 implemented; Marennya / UP are not invoked.
 
-After this baseline, the next architecture work is AVF / Attractor Formation
-from accepted Matrix v0.1. Accepted or downgraded RootMatrixGateDecision output
-may become AVF input. AVF remains independent; Orchestrator hints are hints, not
+AVF / Attractor Formation from accepted Matrix v0.1 is complete. It is a
+deterministic AVF / Attractor proof that consumes Controlled Orchestrator Matrix
+Gate v0.1 without hardcoding Matrix Gate PASS. It forms AttractorPacket-like
+artifacts only from accepted or downgraded RootMatrixGateDecision outputs.
+Rejected matrices do not reach AVF and create no AttractorPacket.
+
+Verified behavior: source_matrix_gate_status=PASS, valid_matrix_accept forms an
+AttractorPacket-like artifact, incomplete_guards_downgrade_or_reject forms a
+limited artifact with downgraded claims visible, and
+missing_temporal_query_reject, high_confidence_policy_block,
+forbidden_bypass_reject, and wrong_downstream_actors_reject are blocked before
+AVF. rejected_matrix_packets=0 and rejected_matrices_blocked_before_avf=true.
+
+Proof status: avf_attractor_from_accepted_matrix_status=PASS,
+scenarios_verified=6, attractor_packets_created=2, accepted_matrix_packets=1,
+downgraded_matrix_packets=1, avf_independent=true,
+ready_for_architect_from_bounded_attractor_packet=true, 91 focused tests passed,
+880 full-suite tests passed, and sensitive scan found no secret terms. Evidence:
+`docs/audit_reports/auditor_avf_attractor_from_accepted_matrix_report.log`.
+
+Boundary semantics: AVF remains independent; Orchestrator hints are hints, not
 commands; HardMask and policy beat Orchestrator confidence; Root may downgrade
-or override the matrix; invalid/rejected matrix must not reach AVF; Architect
-receives only bounded AttractorPacket-like input.
+or override claims. Architect and Executor are not invoked; AVF does not create
+FinalOutput, write DRS, or execute actions; Orchestrator does not write DRS; no
+production FinalOutput or external action is created; global/external DRS are
+not implemented; Marennya / UP remain deferred.
+
+After this baseline, the next architecture work is Architect from bounded
+AttractorPacket v0.1. Architect receives only bounded AVF output, not raw
+Orchestrator matrix or unchecked user intent. Architect may produce PlanGraph
+proposal only and must not create FinalOutput, write DRS, execute actions, or
+bypass PlanGraph contract validation.
 
 ## 20. Future Demo Evolution
 
@@ -845,5 +871,6 @@ receives only bounded AttractorPacket-like input.
 - v0.44: Ordered Live Gemini Orchestrator-to-Architect Smoke v0.1, opt-in only.
 - v0.45: Controlled Orchestrator Matrix Gate v0.1.
 - v0.46: AVF / Attractor Formation from accepted Matrix v0.1.
-- v0.47: Telegram shell as interface only, not autonomous natural assistant.
-- v0.48: richer useful assistant scenario.
+- v0.47: Architect from bounded AttractorPacket v0.1.
+- v0.48: Telegram shell as interface only, not autonomous natural assistant.
+- v0.49: richer useful assistant scenario.

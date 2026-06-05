@@ -528,6 +528,12 @@ Verified behavior: source_post_vv_status=PASS; accepted ValidationReport creates
 
 Evidence: `docs/audit_reports/auditor_gt_from_validation_report.log`. The current canonical proof chain is Orchestrator matrix -> Root Matrix Gate -> AVF AttractorPacket -> Architect PlanGraph -> DAG / Executor ResultProposal -> Post V&V ValidationReport -> GTDecision -> Root Final -> DRS writeback / audit. This layer closes Post V&V ValidationReport -> GTDecision only. No production FinalOutput or external action is created, global/external DRS are not implemented, and Marennya / UP remain deferred.
 
+Root Final from GTDecision v0.1 is complete. It is a deterministic Root Final proof that consumes GT from ValidationReport v0.1 without hardcoding GT PASS. Root Final receives only GTDecision / selection artifacts: not raw ValidationReport, raw ResultProposal, raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent, or real action output. Root creates the FinalOutput / trace-level final artifact, Root is the only final-output authority, and GT does not create FinalOutput.
+
+Verified behavior: source_gt_status=PASS; accept GTDecision creates accepted RootFinalArtifact; degrade GTDecision creates degraded RootFinalArtifact; reject GTDecision creates rejected RootFinalArtifact; raw ValidationReport, raw ResultProposal, raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent, and real action output are blocked; malicious GT FinalOutput, DRS write, and action claims are rejected; malformed GTDecision is rejected. Proof status: root_final_from_gt_decision_status=PASS, scenarios_verified=14, root_final_artifacts_created=7, accepted_root_final_artifacts=1, degraded_root_final_artifacts=1, rejected_root_final_artifacts=5, root_final_receives_only_gt_decision=true, root_is_only_final_output_authority=true, ready_for_full_canonical_chain_trace=true, drs_writeback_invoked=false, production_external_action_executed=false, production_persistence_claimed=false, focused tests passed=94, full suite passed=997, and sensitive scan found no secret terms.
+
+Evidence: `docs/audit_reports/auditor_root_final_from_gt_decision.log`. The trace-level canonical proof chain is now closed through Root Final: Orchestrator matrix -> Root Matrix Gate -> AVF AttractorPacket -> Architect PlanGraph -> DAG / Executor ResultProposal -> Post V&V ValidationReport -> GTDecision -> Root FinalArtifact. This layer closes GTDecision -> Root FinalArtifact only. It is not production RootOrchestrator integration, live Telegram, real external action execution, production persistence, production direct reuse, or DRS writeback. DRS writeback / audit remains a separate future layer.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -658,11 +664,12 @@ Completed recent layers:
 - DAG / Executor from valid PlanGraph v0.1.
 - Post V&V from ResultProposal v0.1.
 - GT from ValidationReport v0.1.
+- Root Final from GTDecision v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Root Final from GTDecision v0.1. Only GTDecision / selection artifacts from GT may enter Root Final. Root Final must not receive raw ValidationReport, raw ResultProposal, raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent, or real action output. Root creates FinalOutput / trace-level final artifact only; DRS writeback remains future unless explicitly included in that proof.
+- Full Canonical Chain Trace v0.1. It should consume existing collectors and show Orchestrator matrix -> Root Matrix Gate -> AVF AttractorPacket -> Architect PlanGraph -> DAG / Executor ResultProposal -> Post V&V ValidationReport -> GTDecision -> Root FinalArtifact without hardcoding upstream PASS, implementing DRS writeback, writing production DRS records, executing real actions, calling live Telegram, implementing global/external DRS, or invoking Marennya / UP.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.

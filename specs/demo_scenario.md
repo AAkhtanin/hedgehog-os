@@ -667,6 +667,34 @@ terms. Evidence: `docs/audit_reports/auditor_gt_from_validation_report.log`.
 This layer closes Post V&V ValidationReport -> GTDecision only. The next planned
 direction is Root Final from GTDecision v0.1.
 
+Root Final from GTDecision v0.1 is complete. It consumes GT from
+ValidationReport v0.1 without hardcoding GT PASS. Root Final receives only
+GTDecision / selection artifacts and blocks raw ValidationReport, raw
+ResultProposal, raw Executor text, raw Architect PlanGraph, raw Orchestrator
+matrix, raw user intent, and real action output. Root creates FinalOutput /
+trace-level final artifact only; Root is the only final-output authority; GT does
+not create FinalOutput.
+
+Verified behavior: source_gt_status=PASS, accept GTDecision creates accepted
+RootFinalArtifact, degrade GTDecision creates degraded RootFinalArtifact, reject
+GTDecision creates rejected RootFinalArtifact, malicious GT FinalOutput / DRS
+write / action claims are rejected, malformed GTDecision is rejected, Root does
+not write DRS, DRS writeback is not invoked, Root does not execute actions, no
+production persistence is claimed, and no production external action is
+executed. Proof status: root_final_from_gt_decision_status=PASS,
+scenarios_verified=14, root_final_artifacts_created=7,
+rejected_root_final_artifacts=5, focused tests passed=94, full suite passed=997,
+and sensitive scan found no secret terms. Evidence:
+`docs/audit_reports/auditor_root_final_from_gt_decision.log`.
+
+This closes the trace-level canonical proof chain through Root Final:
+Orchestrator matrix -> Root Matrix Gate -> AVF AttractorPacket -> Architect
+PlanGraph -> DAG / Executor ResultProposal -> Post V&V ValidationReport ->
+GTDecision -> Root FinalArtifact. DRS writeback / audit remains a separate future
+layer. The next planned direction is Full Canonical Chain Trace v0.1, which must
+consume existing collectors and must not hardcode upstream PASS or implement DRS
+writeback.
+
 ## Exclusions
 
 - No real external APIs.

@@ -456,10 +456,34 @@ Current bounded graph and lineage checkpoints:
   ready_for_root_final_from_gt_decision = true, 91 focused tests passed, 971
   full-suite tests passed, and sensitive scan found no secret terms.
 - Evidence:
-  `docs/audit_reports/auditor_gt_from_validation_report.log`. The next planned
-  engineering direction is Root Final from GTDecision v0.1. Root Final must
-  consume GTDecision / selection artifacts only, create FinalOutput / trace-level
-  final artifact only, and must not receive raw upstream inputs.
+  `docs/audit_reports/auditor_gt_from_validation_report.log`.
+- Root Final from GTDecision v0.1 is complete. It consumes GT from
+  ValidationReport v0.1 without hardcoding GT PASS. Root Final receives only
+  GTDecision / selection artifacts, not raw ValidationReport, raw ResultProposal,
+  raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user
+  intent, or real action output. Root creates FinalOutput / trace-level final
+  artifact only, Root is the only final-output authority, and GT does not create
+  FinalOutput.
+- Verified behavior: source_gt_status = PASS; accept / degrade / reject
+  GTDecision artifacts create accepted / degraded / rejected RootFinalArtifact
+  outputs; raw upstream inputs are blocked; malicious GT FinalOutput, DRS write,
+  and action claims are rejected; malformed GTDecision is rejected; DRS writeback
+  is not invoked.
+- Proof status: root_final_from_gt_decision_status = PASS,
+  scenarios_verified = 14, root_final_artifacts_created = 7,
+  accepted_root_final_artifacts = 1, degraded_root_final_artifacts = 1,
+  rejected_root_final_artifacts = 5, root_final_receives_only_gt_decision = true,
+  root_is_only_final_output_authority = true,
+  ready_for_full_canonical_chain_trace = true, drs_writeback_invoked = false,
+  production_external_action_executed = false, production_persistence_claimed =
+  false, 94 focused tests passed, 997 full-suite tests passed, and sensitive scan
+  found no secret terms.
+- Evidence:
+  `docs/audit_reports/auditor_root_final_from_gt_decision.log`. The next planned
+  engineering direction is Full Canonical Chain Trace v0.1. It must consume
+  existing collectors, must not hardcode upstream PASS, must not implement DRS
+  writeback, and must explicitly state that Root Final is reached while DRS
+  writeback / audit remains future.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

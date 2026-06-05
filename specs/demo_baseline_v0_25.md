@@ -921,10 +921,34 @@ ready_for_root_final_from_gt_decision=true, focused tests passed=91, full suite
 passed=971, and sensitive scan found no secret terms. Evidence:
 `docs/audit_reports/auditor_gt_from_validation_report.log`.
 
-After this baseline, the next architecture work is Root Final from GTDecision
-v0.1. Only GTDecision / selection artifacts from GT may enter Root Final. Root
-creates FinalOutput / trace-level final artifact only; DRS writeback remains
-future unless explicitly included in that proof.
+Root Final from GTDecision v0.1 is complete. It consumes GT from
+ValidationReport v0.1 without hardcoding GT PASS. Only GTDecision / selection
+artifacts from GT may enter Root Final. Raw ValidationReport, raw ResultProposal,
+raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user
+intent, and real action output are blocked.
+
+Verified behavior: accept GTDecision creates accepted RootFinalArtifact, degrade
+GTDecision creates degraded RootFinalArtifact, reject GTDecision creates rejected
+RootFinalArtifact, malicious GT FinalOutput / DRS write / action execution claims
+are rejected, malformed GTDecision is rejected, Root is the only FinalOutput
+authority, and DRS writeback is not invoked. Proof status:
+root_final_from_gt_decision_status=PASS, scenarios_verified=14,
+root_final_artifacts_created=7, accepted_root_final_artifacts=1,
+degraded_root_final_artifacts=1, rejected_root_final_artifacts=5,
+root_final_receives_only_gt_decision=true,
+root_is_only_final_output_authority=true,
+ready_for_full_canonical_chain_trace=true, drs_writeback_invoked=false,
+production_external_action_executed=false, production_persistence_claimed=false,
+focused tests passed=94, full suite passed=997, and sensitive scan found no
+secret terms. Evidence:
+`docs/audit_reports/auditor_root_final_from_gt_decision.log`.
+
+After this baseline, the next architecture work is Full Canonical Chain Trace
+v0.1. It should consume existing collectors and show Orchestrator matrix -> Root
+Matrix Gate -> AVF AttractorPacket -> Architect PlanGraph -> DAG / Executor
+ResultProposal -> Post V&V ValidationReport -> GTDecision -> Root FinalArtifact.
+It must not implement DRS writeback, production persistence, real external
+actions, live Telegram, global/external DRS, or Marennya / UP activation.
 
 ## 20. Future Demo Evolution
 

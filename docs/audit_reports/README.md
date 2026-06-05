@@ -56,6 +56,13 @@ Current reports:
   - Confirms malicious FinalOutput / DRS write / action execution claims and malformed ValidationReport input are rejected.
   - Confirms GT creates GTDecision / selection artifact only, does not create FinalOutput, does not write DRS directly, does not execute actions, and Root Final is not invoked.
 
+- `auditor_root_final_from_gt_decision.log`
+  - Proof for Root Final from GTDecision v0.1.
+  - Shows accept, degrade, and reject GTDecision artifacts creating accepted/degraded/rejected RootFinalArtifact outputs.
+  - Confirms raw ValidationReport, raw ResultProposal, raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent, and real action output are blocked before Root Final.
+  - Confirms malicious GT FinalOutput / DRS write / action execution claims and malformed GTDecision input are rejected.
+  - Confirms Root is the only FinalOutput authority, GT does not create FinalOutput, Root does not write DRS in this layer, DRS writeback is not invoked, no production persistence is claimed, and no production external action is executed.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

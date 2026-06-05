@@ -589,11 +589,31 @@ DRS, or execute actions; Orchestrator does not write DRS; no production
 FinalOutput or external action is created; global/external DRS are not
 implemented; Marennya / UP remain deferred.
 
-The next planned direction is Architect from bounded AttractorPacket v0.1.
-Architect receives only bounded AVF output, not raw Orchestrator matrix or
-unchecked user intent. Architect may produce PlanGraph proposal only and must
-not create FinalOutput, write DRS, execute actions, or bypass PlanGraph contract
-validation.
+Architect from bounded AttractorPacket v0.1 is complete. It consumes AVF /
+Attractor Formation from accepted Matrix v0.1 without hardcoding AVF PASS.
+Architect receives only bounded AVF output, not raw Orchestrator matrix, raw
+unchecked user intent, rejected matrix, or invalid/unbounded AttractorPacket.
+Accepted and downgraded bounded packets create valid PlanGraph proposals;
+rejected matrix, raw Orchestrator matrix, raw unchecked user intent, and
+invalid/unbounded packet inputs are blocked; invalid Architect artifact is
+contained. PlanGraph contract is checked, Executor / Post V&V / GT are not
+invoked, Architect does not create FinalOutput, write DRS, or execute actions,
+and Marennya / UP remain deferred.
+
+Proof status: architect_from_bounded_attractor_packet_status=PASS,
+scenarios_verified=7, valid_plan_graph_proposals_created=2,
+accepted_packet_plan_proposals=1, downgraded_packet_plan_proposals=1,
+raw_orchestrator_matrix_blocked=true, raw_user_intent_blocked=true,
+rejected_matrix_blocked=true, invalid_packet_blocked=true,
+invalid_architect_artifact_contained=true,
+ready_for_dag_executor_from_valid_plan_graph=true, focused tests passed=93,
+full suite passed=903, and sensitive scan found no secret terms. Evidence:
+`docs/audit_reports/auditor_architect_from_bounded_attractor_packet_report.log`.
+
+The next planned direction is DAG / Executor from valid PlanGraph v0.1.
+Executor must receive only validated PlanGraph nodes, return ResultProposal
+only, and must not create FinalOutput, write DRS directly, execute real external
+actions, or receive invalid/raw upstream inputs.
 
 ## Exclusions
 

@@ -30,6 +30,12 @@ Current reports:
   - Confirms rejected matrices do not reach AVF and create no AttractorPacket.
   - Confirms Architect / Executor are not invoked, AVF does not create FinalOutput or write DRS, and no production external action is executed.
 
+- `auditor_architect_from_bounded_attractor_packet_report.log`
+  - Proof for Architect from bounded AttractorPacket v0.1.
+  - Shows accepted and downgraded bounded AttractorPacket-like inputs creating valid Architect PlanGraph proposals.
+  - Confirms rejected matrix, raw Orchestrator matrix, raw unchecked user intent, and invalid/unbounded AttractorPacket inputs are blocked before Architect.
+  - Confirms invalid Architect artifact is contained, Executor / Post V&V / GT are not invoked, Architect does not create FinalOutput or write DRS, and no production external action is executed.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

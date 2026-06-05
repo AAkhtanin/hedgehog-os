@@ -420,10 +420,28 @@ Current bounded graph and lineage checkpoints:
   923 full-suite tests passed, and sensitive scan found no secret terms.
 - Evidence:
   `docs/audit_reports/auditor_dag_executor_from_valid_plan_graph_report.log`.
-  The next planned engineering direction is Post V&V from ResultProposal v0.1.
-  Post V&V must receive only ResultProposal artifacts, create ValidationReport /
-  V&VReport only, and must not create FinalOutput, write DRS directly, execute
-  actions, invoke GT / Root Final, or receive raw upstream inputs.
+- Post V&V from ResultProposal v0.1 is complete. It consumes DAG / Executor from
+  valid PlanGraph v0.1 without hardcoding DAG / Executor PASS. Post V&V receives
+  only ResultProposal artifacts, not raw Executor text, raw Architect PlanGraph,
+  raw Orchestrator matrix, raw user intent, or real action output. It validates
+  ResultProposal only and creates ValidationReport / V&VReport only.
+- Verified behavior: source_dag_executor_status = PASS, completed
+  ResultProposal creates accepted ValidationReport, degraded ResultProposal
+  creates degraded ValidationReport, raw upstream inputs are blocked, malicious
+  FinalOutput and DRS write claims are rejected, malformed ResultProposal is
+  rejected, GT is not invoked, and Root Final is not invoked.
+- Proof status: post_vv_from_result_proposal_status = PASS,
+  scenarios_verified = 10, validation_reports_created = 5,
+  accepted_validation_reports = 1, degraded_validation_reports = 1,
+  rejected_validation_reports = 3, post_vv_receives_only_result_proposal = true,
+  ready_for_gt_from_validation_report = true, 87 focused tests passed, 946
+  full-suite tests passed, and sensitive scan found no secret terms.
+- Evidence:
+  `docs/audit_reports/auditor_post_vv_from_result_proposal_report.log`. The next
+  planned engineering direction is GT from ValidationReport v0.1. GT must consume
+  ValidationReport / V&VReport only, produce GTDecision / selection artifact
+  only, and must not create FinalOutput, write DRS directly, execute actions,
+  invoke Root Final, or receive raw upstream inputs.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

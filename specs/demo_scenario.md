@@ -631,9 +631,26 @@ suite passed=923, and sensitive scan found no secret terms. Evidence:
 
 The current canonical proof chain is Orchestrator matrix -> Root Matrix Gate ->
 AVF AttractorPacket -> Architect PlanGraph -> DAG / Executor ResultProposal ->
-Post V&V -> GT -> Root Final -> DRS writeback / audit. This layer closes
-Architect PlanGraph -> DAG / Executor -> ResultProposal only. The next planned
-direction is Post V&V from ResultProposal v0.1.
+Post V&V ValidationReport -> GT -> Root Final -> DRS writeback / audit.
+
+Post V&V from ResultProposal v0.1 is complete. It consumes DAG / Executor from
+valid PlanGraph v0.1 without hardcoding DAG / Executor PASS. Post V&V receives
+only ResultProposal artifacts and blocks raw Executor text, raw Architect
+PlanGraph, raw Orchestrator matrix, raw user intent, and real action output. It
+validates ResultProposal only and creates ValidationReport / V&VReport only.
+
+Verified behavior: source_dag_executor_status=PASS, completed ResultProposal
+creates accepted ValidationReport, degraded ResultProposal creates degraded
+ValidationReport, malicious FinalOutput and DRS write claims are rejected,
+malformed ResultProposal is rejected, GT is not invoked, and Root Final is not
+invoked. Proof status: post_vv_from_result_proposal_status=PASS,
+scenarios_verified=10, validation_reports_created=5, rejected_validation_reports=3,
+focused tests passed=87, full suite passed=946, and sensitive scan found no
+secret terms. Evidence:
+`docs/audit_reports/auditor_post_vv_from_result_proposal_report.log`.
+
+This layer closes Executor ResultProposal -> Post V&V ValidationReport only. The
+next planned direction is GT from ValidationReport v0.1.
 
 ## Exclusions
 

@@ -42,6 +42,13 @@ Current reports:
   - Confirms invalid Architect artifact, raw Architect text, raw Orchestrator matrix, raw user intent, and unvalidated PlanGraph inputs are blocked before Executor.
   - Confirms Executor returns ResultProposal only, does not create FinalOutput, does not write DRS directly, does not execute real external actions, and Post V&V / GT are not invoked.
 
+- `auditor_post_vv_from_result_proposal_report.log`
+  - Proof for Post V&V from ResultProposal v0.1.
+  - Shows completed and degraded ResultProposal artifacts creating accepted/degraded ValidationReport artifacts.
+  - Confirms raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent, and real action output are blocked before Post V&V.
+  - Confirms malicious FinalOutput / DRS write claims and malformed ResultProposal input are rejected.
+  - Confirms Post V&V creates ValidationReport / V&VReport only, does not create FinalOutput, does not write DRS directly, does not execute actions, and GT / Root Final are not invoked.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

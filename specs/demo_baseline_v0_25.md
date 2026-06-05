@@ -885,14 +885,29 @@ ready_for_post_vv_from_result_proposal=true, focused tests passed=85, full
 suite passed=923, and sensitive scan found no secret terms. Evidence:
 `docs/audit_reports/auditor_dag_executor_from_valid_plan_graph_report.log`.
 
-After this baseline, the next architecture work is Post V&V from ResultProposal
-v0.1. Only ResultProposal artifacts from Executor may enter Post V&V. Post V&V
-validates ResultProposal only and creates ValidationReport / V&VReport only. It
-must not receive raw Executor text, raw Architect PlanGraph directly, raw
-Orchestrator matrix, raw user intent, or real action output. It must not create
-FinalOutput, write DRS directly, execute actions, invoke GT / Root Final, or
-introduce production execution, real external APIs, global/external DRS, or
-Marennya / UP invocation.
+Post V&V from ResultProposal v0.1 is complete. It consumes DAG / Executor from
+valid PlanGraph v0.1 without hardcoding DAG / Executor PASS. Only
+ResultProposal artifacts from Executor may enter Post V&V. Raw Executor text,
+raw Architect PlanGraph directly, raw Orchestrator matrix, raw user intent, and
+real action output are blocked.
+
+Verified behavior: completed ResultProposal creates accepted ValidationReport,
+degraded ResultProposal creates degraded ValidationReport, malicious FinalOutput
+and DRS write claims are rejected, malformed ResultProposal is rejected, GT is
+not invoked, and Root Final is not invoked. Proof status:
+post_vv_from_result_proposal_status=PASS, scenarios_verified=10,
+validation_reports_created=5, accepted_validation_reports=1,
+degraded_validation_reports=1, rejected_validation_reports=3,
+post_vv_receives_only_result_proposal=true,
+ready_for_gt_from_validation_report=true, focused tests passed=87, full suite
+passed=946, and sensitive scan found no secret terms. Evidence:
+`docs/audit_reports/auditor_post_vv_from_result_proposal_report.log`.
+
+After this baseline, the next architecture work is GT from ValidationReport
+v0.1. Only ValidationReport / V&VReport artifacts from Post V&V may enter GT.
+GT may produce GTDecision / selection artifact only and must not create
+FinalOutput, write DRS directly, execute actions, invoke Root Final, or receive
+raw upstream inputs.
 
 ## 20. Future Demo Evolution
 

@@ -246,6 +246,13 @@ Semantic Reuse Pipeline Integration invariant:
 - DRS writeback input invariant: only valid RootFinalArtifact may enter. Raw GTDecision, ValidationReport, ResultProposal, Architect PlanGraph, Orchestrator matrix, user intent, and real action output are blocked; malformed artifacts and malicious global/external DRS, production persistence, Root DRS write, and action claims are rejected.
 - DRS writeback boundary invariant: records are `local_audit_only`; DRS is not authority, full memory, or a vector store; Root remains commit authority. Production persistence, global/external DRS, direct reuse, Telegram, real actions, and Marennya / UP activation remain out of scope.
 - DRS writeback proof status: PASS, scenarios_verified=16, records_created=3, accepted/degraded/rejected=1/1/1, focused tests passed=98, full suite passed=1037, sensitive scan clear. Evidence: `docs/audit_reports/auditor_drs_writeback_from_root_final.log`.
+- Root-native sandbox NeedleRuntime E2E v0.1 is complete. It sources a validated PlanGraph node and permits only Root-approved bounded sandbox/mock capability execution.
+- NeedleRuntime invariants: NeedleRuntime is not authority; NeedleExecutionResult is evidence, not final truth; NeedleRuntime creates no FinalOutput, writes no DRS, executes no real external action, and bypasses neither Root, policy, permission, Post V&V / GT / Root Final, nor audit.
+- Needle outcome invariant: completed, degraded, blocked, failed, timeout, invalid_json, contract_mismatch, permission_required, forbidden_external_action, quarantine, circuit-breaker, safe-for-GT, and crash-containment facts remain visible downstream.
+- Sandbox NeedleRuntime proof status: PASS, scenarios_verified=11, malicious_claims_rejected=4, focused tests passed=70, full suite passed=1057, sensitive scan clear. Evidence: `docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log`.
+- Next execution topology invariant: atomic node -> ordinary Executor; needle-bound node -> NeedleRuntime; non-atomic node -> bounded child fractal cell returning ChildBoundarySnapshot upward.
+- Fractal Cell Runtime v0.1 must keep child Orchestrator non-Root, bound recursion by depth/budget, create no child FinalOutput, write no parent DRS, execute no real external action, use no live LLM/SLM, and leave parent DRS promotion Root-authorized only.
+- Roadmap order: Fractal Cell Runtime v0.1 -> DRS Lifecycle Semantics v0.2 -> ConflictCheck v0.1 -> Audit/hash-chain hardening v0.1.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

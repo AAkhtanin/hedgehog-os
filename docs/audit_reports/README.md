@@ -69,6 +69,12 @@ Current reports:
   - Confirms raw upstream inputs, malformed RootFinalArtifact input, and malicious global DRS, external DRS network, production persistence, Root DRS write, and real action claims are rejected.
   - Confirms DRS is not authority, Root authority is preserved, and no production persistence, global/external DRS, or real external action is claimed.
 
+- `auditor_root_native_sandbox_needleruntime_e2e.log`
+  - Proof for Root-native sandbox NeedleRuntime E2E v0.1.
+  - Shows a validated Root-approved PlanGraph node invoking bounded sandbox/mock NeedleRuntime and flowing through NeedleExecutionResult, ResultProposal, Post V&V, GTDecision, and Root FinalArtifact.
+  - Confirms completed/degraded/blocked/failed outcomes remain visible and raw output plus malicious FinalOutput, DRS write, Root bypass, and external-action claims are rejected.
+  - Confirms NeedleRuntime is not authority and no real external action, production persistence, Telegram, or global/external DRS is claimed.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

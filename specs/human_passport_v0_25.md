@@ -498,9 +498,40 @@ tests passed, and the sensitive scan found no secret terms. Evidence:
 DRS is not the full memory, a decision authority, or a vector store. It is an
 address/resonance/lineage/audit layer for Root-authorized access to memory. Root
 remains commit authority; external/global DRS remains a future pointer/protocol
-boundary. Next, sanity-check Matrix Gate / AVF against live dual-Gemini success
-and this DRS boundary, then proceed to Root-native sandbox NeedleRuntime E2E
-v0.1 if clean.
+boundary.
+
+Root-native sandbox NeedleRuntime E2E v0.1 is complete. It sources a validated
+PlanGraph node from the existing Architect proof and demonstrates a
+Root-approved bounded sandbox/mock capability call through NeedleExecutionResult,
+ResultProposal, Post V&V, GTDecision, and Root FinalArtifact. NeedleRuntime is
+not authority; needle outcome is evidence, not final truth; unsafe, degraded,
+blocked, and failed outcomes remain visible downstream.
+
+The proof verifies 11 scenarios, including completed, timeout, invalid JSON,
+contract mismatch, permission-required, forbidden-action, raw-output, and four
+malicious-claim cases. Status is PASS; completed/degraded/blocked_or_failed =
+1/1/4, malicious_claims_rejected = 4, 70 focused tests and 1057 full-suite tests
+passed, and the sensitive scan found no secret terms. Evidence:
+`docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log`.
+
+Needles are bounded capability contracts, not Executor-owned plugins. This is
+not default RootOrchestrator integration, production external execution, real
+API/device access, Telegram, credential vault, production DRS persistence, or
+external/global DRS.
+
+Next is Fractal Cell Runtime v0.1. The execution topology is atomic node ->
+ordinary Executor, needle-bound node -> NeedleRuntime, and non-atomic node ->
+bounded child fractal cell. The non-atomic node creates a child_cell_request; a
+deterministic child mini-cell may include child Orchestrator, Architect, and
+Executor roles; it returns ChildBoundarySnapshot upward for parent adaptation
+into a ResultProposal-compatible artifact. This is not a long chain.
+
+The child cell is not Root, creates no FinalOutput, writes no parent DRS,
+executes no real external action, uses no live LLM/SLM, and is bounded by depth
+and budget. Promotion to parent DRS remains Root-authorized only. After Fractal
+Cell Runtime: DRS Lifecycle Semantics v0.2, then ConflictCheck v0.1, then
+Audit/hash-chain hardening v0.1. DRS lifecycle must represent child boundary
+snapshots, child event logs, non-atomic branch traces, and promotion candidates.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

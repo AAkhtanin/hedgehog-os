@@ -540,6 +540,16 @@ Proof status: drs_writeback_from_root_final_status=PASS, scenarios_verified=16, 
 
 The proof-level canonical cycle now closes through Live Gemini Orchestrator -> Root Matrix Gate -> AVF AttractorPacket -> Live Gemini Architect -> DAG / Executor ResultProposal -> Post V&V ValidationReport -> GTDecision -> Root FinalArtifact -> DRS local audit/writeback record. DRS is not the full memory, a decision authority, or a vector store. It is an address/resonance/lineage/audit layer for Root-authorized access to memory; Root remains commit authority, and external/global DRS remains a future pointer/protocol boundary. This checkpoint is not production persistence, production direct reuse, Telegram, global/external DRS, or real external action execution; Marennya / UP remain deferred. DRS Address Space / Resonance Index, Memory Layer Pointer Registry, Root-controlled DRS Retrieval, and Controlled Memory Descent remain future branches.
 
+Root-native sandbox NeedleRuntime E2E v0.1 is complete. It is a deterministic proof-level sandbox capability boundary sourced from a validated PlanGraph node in the existing Architect proof. A Root-approved PlanGraph node may invoke a bounded sandbox/mock needle, but NeedleRuntime is not authority and NeedleExecutionResult is evidence, not final truth. NeedleRuntime does not bypass Root, policy, permission, Post V&V, GT, Root Final, or audit. The canonical proof path is Root-approved PlanGraph node -> sandbox NeedleRuntime -> NeedleExecutionResult -> ResultProposal -> Post V&V -> GTDecision -> Root FinalArtifact.
+
+Verified scenarios cover completed, timeout/degraded, invalid JSON/failed, contract mismatch/blocked, permission-required/blocked, forbidden external action/blocked, raw output blocking, and rejection of malicious FinalOutput, DRS write, Root bypass, and external-action claims. Unsafe, degraded, blocked, and failed outcomes remain visible through ResultProposal, Post V&V, GT, and Root Final. Proof status: root_native_sandbox_needleruntime_e2e_status=PASS, scenarios_verified=11, completed/degraded/blocked_or_failed=1/1/4, malicious_claims_rejected=4, raw_needleruntime_output_blocked=true, needleruntime_is_authority=false, root_remains_authority=true, root_is_only_final_output_authority=true, no_real_external_actions=true, no_drs_write_by_needle=true, no_production_persistence=true, focused tests passed=70, full suite passed=1057, and sensitive scan found no secret terms. Evidence: `docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log`.
+
+Needles are bounded capability contracts, not Executor-owned plugins. This proof uses sandbox/mock needles only: no default RootOrchestrator integration, production external execution, real API/device access, Telegram, credential vault, production DRS persistence, or global/external DRS. Real external needles require future permission, policy, audit/hash-chain, credential-vault, and controlled Root integration. Marennya / UP remain deferred.
+
+The current proof-level canonical cycle now includes Live Gemini Orchestrator -> Root Matrix Gate -> AVF AttractorPacket -> Live Gemini Architect -> DAG / Executor ResultProposal -> Post V&V ValidationReport -> GTDecision -> Root FinalArtifact -> DRS local audit/writeback record -> Root-native sandbox NeedleRuntime proof boundary.
+
+The missing execution type is a non-atomic PlanGraph node spawning a bounded child cell that returns a boundary artifact upward. Fractal Cell Runtime v0.1 will prove `child_cell_required` detection, child_cell_request creation, a deterministic child mini-cell with optional child Orchestrator / Architect / Executor roles, ChildBoundarySnapshot return, parent adaptation into a ResultProposal-compatible artifact, and visibility through Post V&V / GT / Root. The child cell is not Root, creates no FinalOutput, writes no parent DRS, executes no real external action, uses no live LLM/SLM, and is bounded by depth and budget. Promotion to parent DRS remains Root-authorized only.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -672,11 +682,15 @@ Completed recent layers:
 - GT from ValidationReport v0.1.
 - Root Final from GTDecision v0.1.
 - DRS Writeback / Audit from Root Final v0.1.
+- Root-native sandbox NeedleRuntime E2E v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Sanity-check the existing Matrix Gate / AVF layers against live dual-Gemini success and the DRS writeback boundary, preserving no production persistence, no external/global DRS, no `root_writes_drs`, and no real external actions. If clean, proceed to Root-native sandbox NeedleRuntime E2E v0.1.
+- Fractal Cell Runtime v0.1: deterministic proof that a non-atomic PlanGraph node spawns a bounded child cell and receives a ChildBoundarySnapshot upward.
+- Then DRS Lifecycle Semantics v0.2, representing needle outcomes plus child-cell boundary snapshots, child event logs, non-atomic branch traces, and child-result promotion candidates.
+- Then ConflictCheck v0.1.
+- Then Audit/hash-chain hardening v0.1.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.

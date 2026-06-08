@@ -711,9 +711,38 @@ passed=1037, and the sensitive scan found no secret terms. Evidence:
 The proof-level cycle now closes through DRS local audit/writeback. DRS is an
 address/resonance/lineage/audit layer for Root-authorized memory access, not full
 memory, decision authority, or a vector store. External/global DRS and
-production persistence remain future. Next, sanity-check Matrix Gate / AVF
-against live dual-Gemini success and this boundary, then proceed to Root-native
-sandbox NeedleRuntime E2E v0.1 if clean.
+production persistence remain future.
+
+Root-native sandbox NeedleRuntime E2E v0.1 is complete. The scenario path is:
+Root-approved PlanGraph node -> sandbox NeedleRuntime -> NeedleExecutionResult ->
+ResultProposal -> Post V&V -> GTDecision -> Root FinalArtifact. NeedleRuntime is
+not authority, needle outcome is evidence rather than final truth, and unsafe,
+degraded, blocked, and failed states remain visible downstream.
+
+Verified cases: completed; timeout/degraded; invalid_json/failed; contract
+mismatch/blocked; permission_required/blocked; forbidden_external_action/blocked;
+raw output blocked; and malicious FinalOutput, DRS write, Root bypass, and real
+external action claims rejected. Proof status: PASS, scenarios_verified=11,
+completed/degraded/blocked_or_failed=1/1/4, malicious_claims_rejected=4, focused
+tests passed=70, full suite passed=1057, sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log`.
+
+This is sandbox/mock only and does not imply default RootOrchestrator
+integration, production execution, real API/device access, Telegram, credential
+vault, production persistence, or external/global DRS.
+
+Next is Fractal Cell Runtime v0.1. A non-atomic PlanGraph node, rather than a
+long chain, spawns a bounded child cell. FractalDagExecutor detects
+`child_cell_required`, creates child_cell_request, runs a deterministic child
+mini-cell that may include child Orchestrator / Architect / Executor roles, and
+receives ChildBoundarySnapshot upward. The parent adapts that snapshot into a
+ResultProposal-compatible artifact for Post V&V, GT, and Root.
+
+The child cell does not create FinalOutput, write parent DRS, execute real
+external actions, or become Root. Recursion is bounded by depth and budget, no
+live LLM/SLM runs inside the child cell, and parent DRS promotion remains
+Root-authorized only. Then follow DRS Lifecycle Semantics v0.2, ConflictCheck
+v0.1, and Audit/hash-chain hardening v0.1.
 
 ## Exclusions
 

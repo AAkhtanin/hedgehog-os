@@ -959,9 +959,36 @@ This closes the proof-level canonical cycle through a local audit/writeback
 record. DRS is an address/resonance/lineage/audit layer for Root-authorized
 memory access, not full memory, decision authority, or a vector store. This is
 not production persistence, external/global DRS, production direct reuse,
-Telegram, or real external action execution. Next, sanity-check Matrix Gate /
-AVF against live dual-Gemini success and this DRS boundary, then proceed to
-Root-native sandbox NeedleRuntime E2E v0.1 if clean.
+Telegram, or real external action execution.
+
+Root-native sandbox NeedleRuntime E2E v0.1 is complete. A validated Architect
+PlanGraph node becomes a Root-approved bounded sandbox/mock capability request,
+then flows through NeedleExecutionResult -> ResultProposal -> Post V&V ->
+GTDecision -> Root FinalArtifact. NeedleRuntime is not authority and needle
+outcome is evidence, not final truth. Completed, degraded, blocked, and failed
+outcomes remain visible; raw output and malicious authority claims are rejected.
+
+Proof status: PASS, scenarios_verified=11, completed/degraded/blocked_or_failed=
+1/1/4, malicious_claims_rejected=4, focused tests passed=70, full suite
+passed=1057, sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log`.
+
+This is sandbox/mock only, not default RootOrchestrator integration, production
+external execution, real API/device access, Telegram, credential vault,
+production persistence, or global/external DRS.
+
+Next is Fractal Cell Runtime v0.1: a non-atomic PlanGraph node spawns a bounded
+child cell and receives ChildBoundarySnapshot upward. FractalDagExecutor detects
+`child_cell_required`, creates child_cell_request, runs a deterministic mini-cell
+that may include child Orchestrator / Architect / Executor roles, and adapts the
+boundary snapshot into a ResultProposal-compatible artifact visible to Post V&V,
+GT, and Root. This is not a long chain.
+
+The child cell is not Root, creates no FinalOutput, writes no parent DRS,
+executes no real external action, uses no live LLM/SLM, and remains bounded by
+depth and budget. Parent DRS promotion remains Root-authorized only. After this:
+DRS Lifecycle Semantics v0.2, ConflictCheck v0.1, then Audit/hash-chain
+hardening v0.1.
 
 ## 20. Future Demo Evolution
 

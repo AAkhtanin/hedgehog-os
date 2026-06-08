@@ -255,8 +255,12 @@ Semantic Reuse Pipeline Integration invariant:
 - Child-cell authority invariant: no child FinalOutput, parent DRS write, real external action, live child LLM/SLM, or automatic parent DRS promotion is allowed. Parent promotion remains Root-authorized.
 - ChildBoundarySnapshot is addressable experience, not an installed needle. Successful child traces do not automatically create needles; future promotion remains lifecycle and Root-policy work.
 - Fractal Cell Runtime proof status: PASS, scenarios_verified=12, completed/degraded/blocked_or_failed=1/1/2, malicious_child_claims_rejected=5, focused tests passed=56, full suite passed=1069, sensitive scan clear. Evidence: `docs/audit_reports/auditor_fractal_cell_runtime.log`.
-- Roadmap order: Live Child Executor in Fractal Cell v0.1 -> DRS Lifecycle Semantics v0.2 -> ConflictCheck v0.1 -> Audit/hash-chain hardening v0.1.
-- Live Child Executor boundary: live Gemini may execute only one bounded Architect-provided child node contract and return ChildExecutionResult JSON/evidence; no API/tool calls, real external actions, child FinalOutput, parent DRS write, Root bypass, or Post V&V / GT / Root bypass is allowed.
+- Live Child Executor in Fractal Cell v0.1 is complete. Opt-in live Gemini may substitute only one child Executor role inside a bounded child cell and receives an Architect-provided node contract, never a free instruction.
+- Live child result invariant: Gemini returns only ChildExecutionResult JSON/evidence; ChildExecutionResult becomes ChildBoundarySnapshot evidence and must pass through parent adapter, Post V&V, GT, and Root. It is not FinalOutput, DRS writeback, a needle, a protocol template, or production action execution.
+- Live child authority invariant: child Executor is not Root, child Orchestrator, or child Architect; action-like requests are blocked/rejected/permission-required/sandbox-only; no API/tool calls, real actions, child FinalOutput, parent DRS write, Root bypass, or Post V&V / GT / Root bypass is allowed.
+- Live child proof status: PASS, live opt-in/network used, completed proof task accepted, action-like request blocked and rejected through Root, malicious_claims_rejected=6, focused deterministic tests passed=36, full suite passed=1082, sensitive scan clear. Evidence: `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log` and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`.
+- Roadmap order: DRS Lifecycle Semantics v0.2 -> ConflictCheck v0.1 -> Audit/hash-chain hardening v0.1.
+- DRS Lifecycle invariant: remain local/proof-level first; represent richer experience and promotion candidates without making DRS full memory, decision authority, vector store, external/global DRS, or automatic NeedleFactory. Root remains commit authority.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

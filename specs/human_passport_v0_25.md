@@ -543,13 +543,37 @@ Proof status: PASS, scenarios_verified=12, completed/degraded/blocked_or_failed 
 passed=1069, sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_fractal_cell_runtime.log`.
 
-Next is Live Child Executor in Fractal Cell v0.1. Live Gemini may act only as
-child Executor for one bounded Architect-provided node contract and return
-ChildExecutionResult JSON/evidence. It may not call APIs/tools, execute real
-actions, create FinalOutput, write parent DRS, or bypass Root, Post V&V, GT, or
-Root Final. Action-like requests remain blocked, permission-required, or
-sandbox-only. Then follow DRS Lifecycle Semantics v0.2, ConflictCheck v0.1, and
-Audit/hash-chain hardening v0.1.
+Live Child Executor in Fractal Cell v0.1 is complete. It is an opt-in live
+Gemini proof inside one bounded child cell, not a long chain. Gemini substitutes
+only child Executor; it is not child Orchestrator, child Architect, or Root. It
+receives one Architect-provided bounded node contract, not a free instruction,
+and may return only ChildExecutionResult JSON/evidence.
+
+The node contract defines node identity, task kind, inputs/refs, constraints,
+expected output schema, allowed capability, forbidden actions, permission mode,
+risk, budget, and required result type. The proof-only task completed and
+reached accepted Root Final. The action-like request was detected, blocked, and
+preserved through ChildBoundarySnapshot, parent adapter, Post V&V, GT, and
+rejected Root Final with no hidden success.
+
+ChildExecutionResult is bounded experience/evidence only. It is not FinalOutput,
+DRS writeback, a needle, a protocol template, or production action execution.
+No API/tool call, real action, child FinalOutput, parent DRS write, Root bypass,
+or Post V&V / GT / Root bypass is allowed.
+
+Live proof status: PASS, mode=live_opt_in, live network used, child Executor
+only, malicious_claims_rejected=6, focused deterministic tests passed=36, full
+suite passed=1082, sensitive scan clear. Deterministic safe-fallback and live
+PASS evidence: `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log`
+and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`.
+
+Next is DRS Lifecycle Semantics v0.2, local/proof-level first. It must represent
+completed/degraded/blocked/failed experience, needle outcomes, child boundary
+snapshots, live child results, blocked action-like and non-atomic branch traces,
+promotion candidates, and a future protocol / NeedleCandidate ladder. DRS
+remains address/resonance/lineage/audit, not full memory, authority, vector
+store, external/global DRS, or automatic NeedleFactory. Root remains commit
+authority. Then follow ConflictCheck v0.1 and Audit/hash-chain hardening v0.1.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

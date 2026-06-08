@@ -997,11 +997,28 @@ Proof status: PASS, scenarios_verified=12, completed/degraded/blocked_or_failed=
 passed=1069, sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_fractal_cell_runtime.log`.
 
-Next is Live Child Executor in Fractal Cell v0.1: live Gemini may execute only
-one bounded Architect-provided child node contract and return ChildExecutionResult
-JSON/evidence. No API/tool calls, real actions, child FinalOutput, parent DRS
-write, Root bypass, or Post V&V / GT / Root bypass is allowed. Then follow DRS
-Lifecycle Semantics v0.2, ConflictCheck v0.1, and Audit/hash-chain hardening v0.1.
+Live Child Executor in Fractal Cell v0.1 is complete. Opt-in live Gemini
+substitutes only child Executor inside one bounded child cell. It receives one
+Architect-provided node contract, not a free instruction, and returns only
+ChildExecutionResult JSON/evidence. It is not child Orchestrator, child
+Architect, Root, FinalOutput, DRS writeback, a needle, or production execution.
+
+The proof-only task completed and reached accepted Root Final. The action-like
+request was detected and blocked; its blocked state remained visible through
+ChildBoundarySnapshot, parent adapter, Post V&V, GT, and rejected Root Final.
+No API/tool calls, real actions, child FinalOutput, parent DRS write, Root
+bypass, or downstream-boundary bypass occurred.
+
+Live proof status: PASS, live opt-in/network used, child Executor only,
+malicious_claims_rejected=6, focused deterministic tests passed=36, full suite
+passed=1082, sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log`
+and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`.
+
+Next is local/proof-level DRS Lifecycle Semantics v0.2. It must represent richer
+experience and promotion candidates without making DRS full memory, authority,
+vector store, external/global DRS, or automatic NeedleFactory. Root remains
+commit authority. Then follow ConflictCheck v0.1 and Audit/hash-chain hardening.
 
 ## 20. Future Demo Evolution
 

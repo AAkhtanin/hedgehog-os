@@ -81,6 +81,14 @@ Current reports:
   - Confirms atomic and NeedleRuntime routes remain distinct; completed/degraded/blocked/failed child outcomes remain visible; raw output and malicious child authority claims are rejected.
   - Confirms child cell and child Orchestrator are not Root, recursion and budget are bounded, and no child FinalOutput, parent DRS write, live child LLM/SLM, or real external action occurs.
 
+- `auditor_live_child_executor_in_fractal_cell_deterministic.log`
+  - Deterministic safe-fallback proof for Live Child Executor in Fractal Cell v0.1.
+  - Confirms no live network/Gemini use, reports `SAFE_FALLBACK_NOT_LIVE_SUCCESS`, preserves the completed and action-like-blocked child paths through Root, and includes 36 focused / 1082 full-suite passing tests.
+
+- `auditor_live_child_executor_in_fractal_cell_LIVE.log`
+  - Live Gemini PASS proof for Live Child Executor in Fractal Cell v0.1.
+  - Confirms live opt-in/network use with Gemini only as bounded child Executor, valid completed proof-task output, valid action-like request blocking, no fallback, and no API/tool call, real action, child FinalOutput, parent DRS write, Root bypass, or Post V&V / GT / Root bypass.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

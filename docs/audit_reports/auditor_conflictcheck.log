@@ -1,0 +1,350 @@
+===== GIT LOG =====
+2a65def Document DRS lifecycle semantics checkpoint
+5999f17 Add DRS lifecycle semantics proof
+54f61bf Document live child Executor in Fractal Cell checkpoint
+027f0b5 Add live child Executor in Fractal Cell proof
+ab5e5aa Document Fractal Cell Runtime checkpoint
+937dd57 Add Fractal Cell Runtime proof
+11aa7bf Document Fractal Cell Runtime as next execution layer
+a41e2ea Add Root-native sandbox NeedleRuntime E2E proof
+7a132d0 Add Matrix Gate AVF current canon sanity proof
+34918fd Document DRS writeback audit from Root Final checkpoint
+879e3e4 Add DRS writeback audit from Root Final proof
+c6417d1 Add live dual-Gemini full chain smoke
+adbac6d Document Root Final from GTDecision checkpoint
+25cc173 Add Root Final from GTDecision proof
+e544c4b Document GT from ValidationReport checkpoint
+083ae8a Add GT from ValidationReport proof
+5799127 Document Post V&V from ResultProposal checkpoint
+2b4897e Add Post V&V from ResultProposal proof
+54d81e4 Document DAG Executor from valid PlanGraph checkpoint
+ecdfb30 Add DAG Executor from valid PlanGraph proof
+d433ae5 Document Architect from bounded AttractorPacket checkpoint
+b2d6126 Add Architect from bounded AttractorPacket proof
+cc989d1 Document AVF attractor formation checkpoint
+d87ee46 Add AVF attractor formation from accepted matrix
+4340310 Document Controlled Orchestrator matrix gate
+033b6c5 Add Controlled Orchestrator matrix gate
+e04a849 Document ordered Gemini smoke evidence cleanup
+358bd3c Archive successful ordered Gemini 2.5 live smoke report
+0a1cccd Add ordered live Gemini Orchestrator Architect smoke
+be63bf4 Archive live Gemini dual-role smoke report
+
+===== GIT STATUS =====
+?? auditor_conflictcheck.log
+?? demo/run_conflictcheck.py
+?? tests/test_conflictcheck_runner.py
+
+===== CONFLICTCHECK =====
+[CONFLICTCHECK]
+note: deterministic ConflictCheck v0.1 proof
+note: consumes DRS Lifecycle ExperienceRecord objects
+note: emits ConflictReport only
+note: ConflictCheck does not decide final truth
+note: ConflictCheck does not mutate DRS
+note: ConflictCheck does not invalidate records by itself
+note: ConflictCheck does not promote or demote records by itself
+note: Root remains final authority
+note: GT may later evaluate conflict candidates
+note: no production persistence
+note: no external/global DRS
+note: no real external actions
+note: Marennya / UP remain deferred and not invoked
+
+[INPUT / MODE]
+mode: deterministic_conflictcheck
+source_drs_lifecycle_status: PASS
+live_network_used: false
+telegram_used: false
+real_external_action: false
+production_persistence: false
+global_drs_implemented: false
+external_drs_network_implemented: false
+
+[SOURCE LIFECYCLE]
+source_collector: collect_drs_lifecycle_semantics
+drs_lifecycle_semantics_status: PASS
+lifecycle_records_consumed: 13
+statuses_available: ['blocked', 'completed', 'deadend', 'degraded', 'failed', 'promotion_candidate', 'quarantined', 'rejected']
+lifecycle_stages_available: ['experience_record', 'installed_needle_ref', 'needle_candidate', 'protocol_candidate', 'reuse_candidate']
+conflict_status_default: not_checked
+lifecycle_records_local_only: true
+root_commit_authority_preserved: true
+lifecycle_records_unchanged: true
+
+[CONFLICT CANDIDATE PAIRS]
+scenario=completed_vs_completed_conflict | conflict_candidate_pair_id=conflict_candidate_pair_completed_vs_completed_conflict | left_experience_record_id=experience_record_root_final_completed_experience | right_experience_record_id=experience_record_sandbox_needle_completed_experience | left_status=completed | right_status=completed | left_lifecycle_stage=experience_record | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'completed', 'root_controlled'] | comparison_scope=same_semantic_address_incompatible_evidence | conflict_check_reason=completed_records_make_incompatible_claims
+scenario=completed_vs_deadend_conflict | conflict_candidate_pair_id=conflict_candidate_pair_completed_vs_deadend_conflict | left_experience_record_id=experience_record_root_final_completed_experience | right_experience_record_id=experience_record_child_cell_blocked_max_depth_deadend_experience | left_status=completed | right_status=deadend | left_lifecycle_stage=experience_record | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'root_controlled'] | comparison_scope=same_semantic_address_status_conflict | conflict_check_reason=completed_record_conflicts_with_deadend_evidence
+scenario=reuse_candidate_vs_quarantine_conflict | conflict_candidate_pair_id=conflict_candidate_pair_reuse_candidate_vs_quarantine_conflict | left_experience_record_id=experience_record_sandbox_needle_completed_experience | right_experience_record_id=experience_record_sandbox_needle_invalid_json_quarantined_experience | left_status=completed | right_status=quarantined | left_lifecycle_stage=experience_record | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'root_controlled'] | comparison_scope=reuse_safety_review | conflict_check_reason=reuse_candidate_conflicts_with_quarantined_evidence
+scenario=promotion_candidate_vs_rejected_evidence | conflict_candidate_pair_id=conflict_candidate_pair_promotion_candidate_vs_rejected_evidence | left_experience_record_id=experience_record_repeated_success_protocol_candidate | right_experience_record_id=experience_record_live_child_executor_action_like_blocked_experience | left_status=promotion_candidate | right_status=rejected | left_lifecycle_stage=protocol_candidate | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'root_controlled'] | comparison_scope=promotion_safety_review | conflict_check_reason=promotion_candidate_conflicts_with_rejected_evidence
+scenario=stale_vs_fresh_conflict | conflict_candidate_pair_id=conflict_candidate_pair_stale_vs_fresh_conflict | left_experience_record_id=experience_record_root_final_completed_experience | right_experience_record_id=experience_record_child_cell_degraded_budget_experience | left_status=completed | right_status=degraded | left_lifecycle_stage=experience_record | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'root_controlled'] | comparison_scope=freshness_review | conflict_check_reason=older_record_conflicts_with_fresher_evidence
+scenario=lower_trust_vs_higher_trust_conflict | conflict_candidate_pair_id=conflict_candidate_pair_lower_trust_vs_higher_trust_conflict | left_experience_record_id=experience_record_sandbox_needle_timeout_degraded_experience | right_experience_record_id=experience_record_root_final_completed_experience | left_status=degraded | right_status=completed | left_lifecycle_stage=experience_record | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'root_controlled', 'trust_comparison'] | comparison_scope=advisory_trust_review | conflict_check_reason=lower_trust_record_conflicts_with_higher_trust_record
+scenario=action_like_blocked_vs_reuse_conflict | conflict_candidate_pair_id=conflict_candidate_pair_action_like_blocked_vs_reuse_conflict | left_experience_record_id=experience_record_live_child_executor_action_like_blocked_experience | right_experience_record_id=experience_record_sandbox_needle_completed_experience | left_status=rejected | right_status=completed | left_lifecycle_stage=experience_record | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'root_controlled'] | comparison_scope=action_safety_reuse_review | conflict_check_reason=action_like_blocked_trace_conflicts_with_reuse_candidate
+scenario=permission_required_vs_action_execution_conflict | conflict_candidate_pair_id=conflict_candidate_pair_permission_required_vs_action_execution_conflict | left_experience_record_id=experience_record_sandbox_needle_permission_required_blocked_experience | right_experience_record_id=experience_record_root_final_completed_experience | left_status=blocked | right_status=completed | left_lifecycle_stage=experience_record | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'root_controlled'] | comparison_scope=permission_action_review | conflict_check_reason=permission_required_record_conflicts_with_action_execution_claim
+scenario=protocol_candidate_vs_deadend_conflict | conflict_candidate_pair_id=conflict_candidate_pair_protocol_candidate_vs_deadend_conflict | left_experience_record_id=experience_record_repeated_success_protocol_candidate | right_experience_record_id=experience_record_child_cell_blocked_max_depth_deadend_experience | left_status=promotion_candidate | right_status=deadend | left_lifecycle_stage=protocol_candidate | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'root_controlled'] | comparison_scope=protocol_promotion_review | conflict_check_reason=protocol_candidate_conflicts_with_deadend_evidence
+scenario=needle_candidate_vs_quarantine_conflict | conflict_candidate_pair_id=conflict_candidate_pair_needle_candidate_vs_quarantine_conflict | left_experience_record_id=experience_record_draft_needle_candidate_with_root_policy | right_experience_record_id=experience_record_sandbox_needle_invalid_json_quarantined_experience | left_status=promotion_candidate | right_status=quarantined | left_lifecycle_stage=needle_candidate | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'root_controlled'] | comparison_scope=needle_candidate_promotion_review | conflict_check_reason=needle_candidate_conflicts_with_quarantined_evidence
+scenario=no_conflict_same_completed_lineage | conflict_candidate_pair_id=conflict_candidate_pair_no_conflict_same_completed_lineage | left_experience_record_id=experience_record_root_final_completed_experience | right_experience_record_id=experience_record_child_cell_completed_boundary_experience | left_status=completed | right_status=completed | left_lifecycle_stage=experience_record | right_lifecycle_stage=experience_record | left_semantic_address=local://conflictcheck/certificate_workflow | right_semantic_address=local://conflictcheck/certificate_workflow | shared_resonance_tags=['certificate_workflow', 'completed', 'root_controlled'] | comparison_scope=same_lineage_compatibility_review | conflict_check_reason=completed_records_have_compatible_lineage_and_evidence
+
+[CONFLICT REPORTS]
+scenario=completed_vs_completed_conflict | conflict_report_id=conflict_report_completed_vs_completed_conflict | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_completed_vs_completed_conflict | conflict_type=completed_vs_completed_conflict | conflict_status=flagged | severity=high | root_review_required=true | gt_review_recommended=true | reuse_block_recommended=true | promotion_block_recommended=false | quarantine_review_recommended=false | invalidation_recommended=false | older_record_id=None | newer_record_id=None | lower_trust_record_id=None | higher_trust_record_id=None | evidence={'shared_resonance_tags': ['certificate_workflow', 'completed', 'root_controlled'], 'left_evidence_claim': 'certificate_workflow_is_complete', 'right_evidence_claim': 'certificate_workflow_requires_unresolved_step', 'left_gt_trust_hint': 0.82, 'right_gt_trust_hint': 0.82, 'left_observed_at': '2026-06-08T10:00:00Z', 'right_observed_at': '2026-06-08T10:05:00Z'} | recommended_next_step=root_review_incompatible_completed_evidence | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+scenario=completed_vs_deadend_conflict | conflict_report_id=conflict_report_completed_vs_deadend_conflict | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_completed_vs_deadend_conflict | conflict_type=completed_vs_deadend_conflict | conflict_status=flagged | severity=high | root_review_required=true | gt_review_recommended=true | reuse_block_recommended=true | promotion_block_recommended=false | quarantine_review_recommended=false | invalidation_recommended=false | older_record_id=None | newer_record_id=None | lower_trust_record_id=None | higher_trust_record_id=None | evidence={'shared_resonance_tags': ['certificate_workflow', 'root_controlled'], 'left_evidence_claim': 'certificate_workflow_is_complete', 'right_evidence_claim': 'certificate_workflow_branch_is_not_viable', 'left_gt_trust_hint': 0.82, 'right_gt_trust_hint': 0.04, 'left_observed_at': '2026-06-08T10:00:00Z', 'right_observed_at': '2026-06-08T00:00:00Z'} | recommended_next_step=root_review_completed_and_deadend_evidence | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+scenario=reuse_candidate_vs_quarantine_conflict | conflict_report_id=conflict_report_reuse_candidate_vs_quarantine_conflict | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_reuse_candidate_vs_quarantine_conflict | conflict_type=reuse_candidate_vs_quarantine_conflict | conflict_status=flagged | severity=high | root_review_required=true | gt_review_recommended=false | reuse_block_recommended=true | promotion_block_recommended=false | quarantine_review_recommended=true | invalidation_recommended=false | older_record_id=None | newer_record_id=None | lower_trust_record_id=None | higher_trust_record_id=None | evidence={'shared_resonance_tags': ['certificate_workflow', 'root_controlled'], 'left_evidence_claim': 'certificate_workflow_is_reusable', 'right_evidence_claim': 'certificate_workflow_evidence_is_malformed', 'left_gt_trust_hint': 0.82, 'right_gt_trust_hint': 0.05, 'left_observed_at': '2026-06-08T00:00:00Z', 'right_observed_at': '2026-06-08T00:00:00Z'} | recommended_next_step=block_reuse_pending_root_quarantine_review | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+scenario=promotion_candidate_vs_rejected_evidence | conflict_report_id=conflict_report_promotion_candidate_vs_rejected_evidence | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_promotion_candidate_vs_rejected_evidence | conflict_type=promotion_candidate_vs_rejected_evidence | conflict_status=needs_root_review | severity=high | root_review_required=true | gt_review_recommended=true | reuse_block_recommended=false | promotion_block_recommended=true | quarantine_review_recommended=false | invalidation_recommended=false | older_record_id=None | newer_record_id=None | lower_trust_record_id=None | higher_trust_record_id=None | evidence={'shared_resonance_tags': ['certificate_workflow', 'root_controlled'], 'left_evidence_claim': 'certificate_workflow_is_ready_for_protocol_promotion', 'right_evidence_claim': 'certificate_workflow_action_like_route_is_rejected', 'left_gt_trust_hint': 0.9, 'right_gt_trust_hint': 0.08, 'left_observed_at': '2026-06-08T00:00:00Z', 'right_observed_at': '2026-06-08T00:00:00Z'} | recommended_next_step=block_promotion_pending_root_and_gt_review | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+scenario=stale_vs_fresh_conflict | conflict_report_id=conflict_report_stale_vs_fresh_conflict | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_stale_vs_fresh_conflict | conflict_type=stale_vs_fresh_conflict | conflict_status=needs_root_review | severity=medium | root_review_required=true | gt_review_recommended=false | reuse_block_recommended=false | promotion_block_recommended=false | quarantine_review_recommended=false | invalidation_recommended=true | older_record_id=experience_record_root_final_completed_experience | newer_record_id=experience_record_child_cell_degraded_budget_experience | lower_trust_record_id=None | higher_trust_record_id=None | evidence={'shared_resonance_tags': ['certificate_workflow', 'root_controlled'], 'left_evidence_claim': 'certificate_workflow_uses_old_requirements', 'right_evidence_claim': 'certificate_workflow_has_new_budget_constraint', 'left_gt_trust_hint': 0.82, 'right_gt_trust_hint': 0.48, 'left_observed_at': '2025-06-08T00:00:00Z', 'right_observed_at': '2026-06-08T11:00:00Z'} | recommended_next_step=root_review_freshness_before_any_invalidation | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+scenario=lower_trust_vs_higher_trust_conflict | conflict_report_id=conflict_report_lower_trust_vs_higher_trust_conflict | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_lower_trust_vs_higher_trust_conflict | conflict_type=lower_trust_vs_higher_trust_conflict | conflict_status=needs_root_review | severity=medium | root_review_required=true | gt_review_recommended=true | reuse_block_recommended=false | promotion_block_recommended=false | quarantine_review_recommended=false | invalidation_recommended=false | older_record_id=None | newer_record_id=None | lower_trust_record_id=experience_record_sandbox_needle_timeout_degraded_experience | higher_trust_record_id=experience_record_root_final_completed_experience | evidence={'shared_resonance_tags': ['certificate_workflow', 'root_controlled', 'trust_comparison'], 'left_evidence_claim': 'certificate_workflow_timeout_is_acceptable', 'right_evidence_claim': 'certificate_workflow_timeout_requires_review', 'left_gt_trust_hint': 0.2, 'right_gt_trust_hint': 0.95, 'left_observed_at': '2026-06-08T00:00:00Z', 'right_observed_at': '2026-06-08T00:00:00Z'} | recommended_next_step=gt_advisory_review_then_root_decision | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+scenario=action_like_blocked_vs_reuse_conflict | conflict_report_id=conflict_report_action_like_blocked_vs_reuse_conflict | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_action_like_blocked_vs_reuse_conflict | conflict_type=action_like_blocked_vs_reuse_conflict | conflict_status=flagged | severity=critical | root_review_required=true | gt_review_recommended=true | reuse_block_recommended=true | promotion_block_recommended=true | quarantine_review_recommended=false | invalidation_recommended=false | older_record_id=None | newer_record_id=None | lower_trust_record_id=None | higher_trust_record_id=None | evidence={'shared_resonance_tags': ['certificate_workflow', 'root_controlled'], 'left_evidence_claim': 'certificate_workflow_action_like_route_is_rejected', 'right_evidence_claim': 'certificate_workflow_is_reusable', 'left_gt_trust_hint': 0.08, 'right_gt_trust_hint': 0.82, 'left_observed_at': '2026-06-08T00:00:00Z', 'right_observed_at': '2026-06-08T00:00:00Z'} | recommended_next_step=block_reuse_and_promotion_pending_root_review | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+scenario=permission_required_vs_action_execution_conflict | conflict_report_id=conflict_report_permission_required_vs_action_execution_conflict | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_permission_required_vs_action_execution_conflict | conflict_type=permission_required_vs_action_execution_conflict | conflict_status=flagged | severity=critical | root_review_required=true | gt_review_recommended=true | reuse_block_recommended=true | promotion_block_recommended=false | quarantine_review_recommended=false | invalidation_recommended=false | older_record_id=None | newer_record_id=None | lower_trust_record_id=None | higher_trust_record_id=None | evidence={'shared_resonance_tags': ['certificate_workflow', 'root_controlled'], 'left_evidence_claim': 'certificate_workflow_requires_permission', 'right_evidence_claim': 'certificate_workflow_action_was_executed', 'left_gt_trust_hint': 0.2, 'right_gt_trust_hint': 0.82, 'left_observed_at': '2026-06-08T00:00:00Z', 'right_observed_at': '2026-06-08T00:00:00Z'} | recommended_next_step=block_action_claim_pending_permission_and_root_review | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+scenario=protocol_candidate_vs_deadend_conflict | conflict_report_id=conflict_report_protocol_candidate_vs_deadend_conflict | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_protocol_candidate_vs_deadend_conflict | conflict_type=protocol_candidate_vs_deadend_conflict | conflict_status=needs_root_review | severity=high | root_review_required=true | gt_review_recommended=true | reuse_block_recommended=false | promotion_block_recommended=true | quarantine_review_recommended=false | invalidation_recommended=false | older_record_id=None | newer_record_id=None | lower_trust_record_id=None | higher_trust_record_id=None | evidence={'shared_resonance_tags': ['certificate_workflow', 'root_controlled'], 'left_evidence_claim': 'certificate_workflow_is_ready_for_protocol_promotion', 'right_evidence_claim': 'certificate_workflow_branch_is_not_viable', 'left_gt_trust_hint': 0.9, 'right_gt_trust_hint': 0.04, 'left_observed_at': '2026-06-08T00:00:00Z', 'right_observed_at': '2026-06-08T00:00:00Z'} | recommended_next_step=block_protocol_promotion_pending_root_review | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+scenario=needle_candidate_vs_quarantine_conflict | conflict_report_id=conflict_report_needle_candidate_vs_quarantine_conflict | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_needle_candidate_vs_quarantine_conflict | conflict_type=needle_candidate_vs_quarantine_conflict | conflict_status=flagged | severity=critical | root_review_required=true | gt_review_recommended=true | reuse_block_recommended=false | promotion_block_recommended=true | quarantine_review_recommended=true | invalidation_recommended=false | older_record_id=None | newer_record_id=None | lower_trust_record_id=None | higher_trust_record_id=None | evidence={'shared_resonance_tags': ['certificate_workflow', 'root_controlled'], 'left_evidence_claim': 'certificate_workflow_is_ready_for_needle_candidate_review', 'right_evidence_claim': 'certificate_workflow_evidence_is_malformed', 'left_gt_trust_hint': 0.9, 'right_gt_trust_hint': 0.05, 'left_observed_at': '2026-06-08T00:00:00Z', 'right_observed_at': '2026-06-08T00:00:00Z'} | recommended_next_step=block_needle_candidate_pending_root_quarantine_review | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+scenario=no_conflict_same_completed_lineage | conflict_report_id=conflict_report_no_conflict_same_completed_lineage | created_by=conflictcheck_v0_1 | source_candidate_pair_id=conflict_candidate_pair_no_conflict_same_completed_lineage | conflict_type=no_conflict_same_completed_lineage | conflict_status=no_conflict | severity=info | root_review_required=false | gt_review_recommended=false | reuse_block_recommended=false | promotion_block_recommended=false | quarantine_review_recommended=false | invalidation_recommended=false | older_record_id=None | newer_record_id=None | lower_trust_record_id=None | higher_trust_record_id=None | evidence={'shared_resonance_tags': ['certificate_workflow', 'completed', 'root_controlled'], 'left_evidence_claim': 'certificate_workflow_is_complete', 'right_evidence_claim': 'certificate_workflow_is_complete', 'left_gt_trust_hint': 0.82, 'right_gt_trust_hint': 0.82, 'left_observed_at': '2026-06-08T10:00:00Z', 'right_observed_at': '2026-06-08T10:06:00Z'} | recommended_next_step=retain_records_without_conflict_action | conflictcheck_decides_truth=false | conflictcheck_mutates_drs=false | conflictcheck_invalidates_record=false | conflictcheck_promotes_record=false | conflictcheck_demotes_record=false | root_remains_authority=true | production_persistence=false | global_drs_write=false | external_drs_network_write=false | production_external_action_executed=false
+
+[MALICIOUS CLAIMS]
+malicious_conflictcheck_truth_decision_claim_rejected: true
+malicious_conflictcheck_drs_mutation_claim_rejected: true
+malicious_conflictcheck_invalidation_claim_rejected: true
+malicious_conflictcheck_promotion_claim_rejected: true
+malicious_conflictcheck_demotion_claim_rejected: true
+malicious_production_persistence_claim_rejected: true
+malicious_global_drs_write_claim_rejected: true
+malicious_external_drs_network_claim_rejected: true
+conflictcheck_decides_truth: false
+conflictcheck_mutates_drs: false
+conflictcheck_invalidates_record: false
+conflictcheck_promotes_record: false
+conflictcheck_demotes_record: false
+production_persistence: false
+global_drs_write: false
+external_drs_network_write: false
+
+[AUTHORITY / SAFETY]
+conflictcheck_is_authority: false
+conflictcheck_decides_truth: false
+conflictcheck_mutates_drs: false
+conflictcheck_invalidates_records: false
+conflictcheck_promotes_records: false
+conflictcheck_demotes_records: false
+drs_remains_storage_index_lifecycle_layer: true
+root_remains_final_authority: true
+gt_review_is_advisory_until_root: true
+lifecycle_records_unchanged: true
+production_persistence_claimed: false
+global_drs_implemented: false
+external_drs_network_implemented: false
+production_external_action_executed: false
+marennya_invoked: false
+up_invoked: false
+
+[SUMMARY]
+conflictcheck_status: PASS
+source_drs_lifecycle_status: PASS
+lifecycle_records_consumed: 13
+candidate_pairs_created: 11
+conflict_reports_created: 11
+conflict_types_represented: ['action_like_blocked_vs_reuse_conflict', 'completed_vs_completed_conflict', 'completed_vs_deadend_conflict', 'lower_trust_vs_higher_trust_conflict', 'needle_candidate_vs_quarantine_conflict', 'no_conflict_same_completed_lineage', 'permission_required_vs_action_execution_conflict', 'promotion_candidate_vs_rejected_evidence', 'protocol_candidate_vs_deadend_conflict', 'reuse_candidate_vs_quarantine_conflict', 'stale_vs_fresh_conflict']
+flagged_conflicts: 6
+no_conflict_reports: 1
+root_review_required_reports: 10
+gt_review_recommended_reports: 8
+reuse_block_recommended_reports: 5
+promotion_block_recommended_reports: 4
+malicious_claims_rejected: 8
+conflictcheck_does_not_decide_truth: true
+conflictcheck_does_not_mutate_drs: true
+root_remains_final_authority: true
+ready_for_audit_hash_chain_hardening_v0_1: true
+production_autonomy_claimed: false
+
+===== FOCUSED CONFLICTCHECK TESTS =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collected 47 items
+
+tests/test_conflictcheck_runner.py ...................                   [ 40%]
+tests/test_drs_lifecycle_semantics_runner.py ...............             [ 72%]
+tests/test_live_child_executor_in_fractal_cell_runner.py .............   [100%]
+
+============================== 47 passed in 1.96s ==============================
+
+===== FULL SUITE =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.13.0
+collected 1116 items
+
+tests/test_action_permission_runtime.py .......                          [  0%]
+tests/test_architect_from_bounded_attractor_packet_runner.py ........... [  1%]
+............                                                             [  2%]
+tests/test_architect_prompt_compiler_runtime.py ....                     [  3%]
+tests/test_architect_runtime.py .....                                    [  3%]
+tests/test_avf_attractor_from_accepted_matrix_runner.py ................ [  4%]
+.....                                                                    [  5%]
+tests/test_avf_runtime.py ..                                             [  5%]
+tests/test_candidate_vectors.py ......                                   [  6%]
+tests/test_canonical_needle_outcome_trace_runner.py ...............      [  7%]
+tests/test_canonical_pipeline_trace_runner.py ..............             [  8%]
+tests/test_chaos_survival_showcase_runner.py ...........                 [  9%]
+tests/test_cold_start_benchmark_runner.py ........                       [ 10%]
+tests/test_compute_collapse_reuse_showcase_runner.py .............       [ 11%]
+tests/test_conflictcheck_runner.py ...................                   [ 13%]
+tests/test_controlled_orchestrator_dry_run_runner.py ..........          [ 14%]
+tests/test_controlled_orchestrator_integration_gate_runner.py .......... [ 15%]
+...                                                                      [ 15%]
+tests/test_controlled_orchestrator_matrix_gate_runner.py ............... [ 16%]
+......                                                                   [ 17%]
+tests/test_controlled_orchestrator_runtime_prototype_runner.py ......... [ 18%]
+....                                                                     [ 18%]
+tests/test_controlled_runtime_trace_visibility_runner.py ..........      [ 19%]
+tests/test_dag_executor_from_valid_plan_graph_runner.py ................ [ 20%]
+....                                                                     [ 21%]
+tests/test_deadend_memory_demo_runner.py ......                          [ 21%]
+tests/test_demo_certificate_runner.py .......                            [ 22%]
+tests/test_drs_graph_proximity_runner.py ..............                  [ 23%]
+tests/test_drs_layer_taxonomy_runner.py .................                [ 25%]
+tests/test_drs_lifecycle_semantics_runner.py ...............             [ 26%]
+tests/test_drs_runtime.py .............                                  [ 27%]
+tests/test_drs_writeback_from_root_final_runner.py ..................... [ 29%]
+...                                                                      [ 29%]
+tests/test_economics_benchmark_runner.py .........                       [ 30%]
+tests/test_executor_runtime.py ...                                       [ 30%]
+tests/test_final_renderer_runtime.py ....                                [ 31%]
+tests/test_fractal_cell_runtime_runner.py ............                   [ 32%]
+tests/test_fractal_dag_executor_core_runner.py .............             [ 33%]
+tests/test_gemini_orchestrator_architect_pair_smoke_runner.py .......... [ 34%]
+                                                                         [ 34%]
+tests/test_gt_from_validation_report_runner.py ......................... [ 36%]
+                                                                         [ 36%]
+tests/test_gt_validator_runtime.py ...................                   [ 38%]
+tests/test_input_intake_runtime.py .....                                 [ 38%]
+tests/test_intent_route_matrix_runner.py ..........                      [ 39%]
+tests/test_large_graph_stress_runner.py .............                    [ 40%]
+tests/test_live_child_executor_in_fractal_cell_runner.py .............   [ 41%]
+tests/test_live_controlled_smoke_runner.py ........                      [ 42%]
+tests/test_live_dual_gemini_full_chain_smoke_runner.py ................  [ 43%]
+tests/test_live_gemini_architect_smoke_runner.py ..................      [ 45%]
+tests/test_live_gemini_orchestrator_shadow_runner.py ............        [ 46%]
+tests/test_live_gemini_orchestrator_smoke_runner.py .................... [ 48%]
+..                                                                       [ 48%]
+tests/test_live_gemini_ordered_orchestrator_architect_smoke_runner.py .. [ 48%]
+..........................                                               [ 51%]
+tests/test_llm_architect_runtime.py .................                    [ 52%]
+tests/test_llm_gateway_runtime.py .....                                  [ 53%]
+tests/test_marenna_up_runtime.py ...                                     [ 53%]
+tests/test_matrix_gate_avf_current_canon_sanity_runner.py .........      [ 54%]
+tests/test_mode_router_runtime.py ........                               [ 54%]
+tests/test_mode_selection_matrix_runner.py ........                      [ 55%]
+tests/test_needle_failure_integration_runner.py .......                  [ 56%]
+tests/test_needle_outcome_drs_routing_runner.py ...............          [ 57%]
+tests/test_needle_runtime_chaos_runner.py ..........                     [ 58%]
+tests/test_needles_valid.py .                                            [ 58%]
+tests/test_orchestrator_guard_completeness_runner.py ............        [ 59%]
+tests/test_orchestrator_route_validator_runner.py ...........            [ 60%]
+tests/test_orchestrator_shadow_mode_runner.py ........                   [ 61%]
+tests/test_post_vv_from_result_proposal_runner.py ...................... [ 63%]
+.                                                                        [ 63%]
+tests/test_post_vv_runtime.py .......                                    [ 64%]
+tests/test_reasoning_showcase_runner.py .............                    [ 65%]
+tests/test_reflex_runtime.py ..........                                  [ 66%]
+tests/test_reuse_gate_runtime.py .......                                 [ 66%]
+tests/test_reuse_score_runner.py .......................                 [ 68%]
+tests/test_root_dag_drs_audit_runner.py .......                          [ 69%]
+tests/test_root_dag_integration_runner.py .......                        [ 70%]
+tests/test_root_final_from_gt_decision_runner.py ....................... [ 72%]
+...                                                                      [ 72%]
+tests/test_root_native_canonical_trace_runner.py ..........              [ 73%]
+tests/test_root_native_full_canonical_e2e_trace_runner.py .............. [ 74%]
+.......                                                                  [ 75%]
+tests/test_root_native_sandbox_needleruntime_e2e_runner.py ...........   [ 76%]
+tests/test_root_native_semantic_reuse_e2e_trace_runner.py .............. [ 77%]
+..............                                                           [ 78%]
+tests/test_root_orchestrator_runtime.py ...................              [ 80%]
+tests/test_root_semantic_reuse_decision_trace_runner.py ................ [ 81%]
+............                                                             [ 82%]
+tests/test_root_semantic_reuse_final_decision_trace_runner.py .......... [ 83%]
+..............                                                           [ 85%]
+tests/test_root_semantic_reuse_gate_trace_runner.py .................... [ 86%]
+....                                                                     [ 87%]
+tests/test_scenario_benchmark_runner.py ............                     [ 88%]
+tests/test_schema_files_valid.py .                                       [ 88%]
+tests/test_semantic_reuse_authority_stack_audit_runner.py .............. [ 89%]
+......                                                                   [ 90%]
+tests/test_semantic_reuse_pipeline_runner.py ..........................  [ 92%]
+tests/test_showcase_runner.py .....                                      [ 92%]
+tests/test_telegram_bridge_runtime.py ..                                 [ 93%]
+tests/test_telegram_e2e_benchmark_runner.py .........                    [ 93%]
+tests/test_telegram_polling_smoke_runner.py ................             [ 95%]
+tests/test_telegram_shell_runtime.py .............                       [ 96%]
+tests/test_time_model.py ..                                              [ 96%]
+tests/test_trace_reporter_runtime.py ............                        [ 97%]
+tests/test_typed_drs_lineage_edges_runner.py .........................   [100%]
+
+=============================== warnings summary ===============================
+tests/test_architect_runtime.py::test_make_plan_graph_from_attractor_packet_validates_schema
+tests/test_architect_runtime.py::test_make_plan_graph_optional_mock_llm_path_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_architect_runtime.py:32: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_avf_runtime.py::test_build_attractor_packet_filters_forbidden_vectors_and_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_avf_runtime.py:30: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(attractor_schema, store=store)
+
+tests/test_demo_certificate_runner.py::test_certificate_demo_gemini_architect_scenario_is_registered_with_safe_failure
+  /Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/types.py:42: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+tests/test_drs_runtime.py::test_local_drs_writes_reads_and_validates_work_record
+tests/test_drs_runtime.py::test_local_drs_writes_pointer_record
+  /Users/admin/Projects/hedgehog-os/tests/test_drs_runtime.py:33: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(drs_record_schema, store=store)
+
+tests/test_executor_runtime.py::test_execute_plan_graph_returns_schema_valid_result_proposals
+  /Users/admin/Projects/hedgehog-os/tests/test_executor_runtime.py:37: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+
+tests/test_gt_validator_runtime.py: 17 warnings
+  /Users/admin/Projects/hedgehog-os/tests/test_gt_validator_runtime.py:41: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(gt_report_schema, store=store)
+
+tests/test_llm_architect_runtime.py::test_mock_llm_architect_returns_valid_plan_graph
+  /Users/admin/Projects/hedgehog-os/tests/test_llm_architect_runtime.py:35: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_marenna_up_runtime.py::test_marenna_after_task_record_validates_and_stays_quarantined
+tests/test_marenna_up_runtime.py::test_up_after_task_record_validates_and_stays_quarantined
+  /Users/admin/Projects/hedgehog-os/tests/test_marenna_up_runtime.py:42: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(target_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:53: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(candidate_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:67: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(needle_schema, store=store)
+
+tests/test_post_vv_runtime.py::test_validate_demo_result_proposals_are_task_aware_and_schema_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_post_vv_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_creates_valid_final_output_and_work_record
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_generic_math_routes_to_llm_general_not_certificate_pipeline
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_optional_mock_llm_architect_still_creates_final_output
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success
+  /Users/admin/Projects/hedgehog-os/tests/test_root_orchestrator_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(final_output_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+====================== 1116 passed, 37 warnings in 13.36s ======================
+
+===== FINAL GIT STATUS =====
+?? auditor_conflictcheck.log
+?? demo/run_conflictcheck.py
+?? tests/test_conflictcheck_runner.py

@@ -690,10 +690,30 @@ and sensitive scan found no secret terms. Evidence:
 This closes the trace-level canonical proof chain through Root Final:
 Orchestrator matrix -> Root Matrix Gate -> AVF AttractorPacket -> Architect
 PlanGraph -> DAG / Executor ResultProposal -> Post V&V ValidationReport ->
-GTDecision -> Root FinalArtifact. DRS writeback / audit remains a separate future
-layer. The next planned direction is Full Canonical Chain Trace v0.1, which must
-consume existing collectors and must not hardcode upstream PASS or implement DRS
-writeback.
+GTDecision -> Root FinalArtifact. The Root Final layer itself does not invoke
+DRS writeback.
+
+DRS Writeback / Audit from Root Final v0.1 is complete. It actually consumes
+`collect_root_final_from_gt_decision()` without hardcoding Root Final PASS.
+Accepted, degraded, and rejected valid RootFinalArtifact inputs each create one
+`local_audit_only` record. Raw GTDecision, ValidationReport, ResultProposal,
+Architect PlanGraph, Orchestrator matrix, user intent, and real action output
+are blocked. Malformed RootFinalArtifact input and malicious global DRS,
+external DRS network, production persistence, Root DRS write, and action claims
+are rejected.
+
+Proof status: PASS, scenarios_verified=16, records_created=3,
+accepted/degraded/rejected=1/1/1, Root authority preserved, production
+persistence and external action false, focused tests passed=98, full suite
+passed=1037, and the sensitive scan found no secret terms. Evidence:
+`docs/audit_reports/auditor_drs_writeback_from_root_final.log`.
+
+The proof-level cycle now closes through DRS local audit/writeback. DRS is an
+address/resonance/lineage/audit layer for Root-authorized memory access, not full
+memory, decision authority, or a vector store. External/global DRS and
+production persistence remain future. Next, sanity-check Matrix Gate / AVF
+against live dual-Gemini success and this boundary, then proceed to Root-native
+sandbox NeedleRuntime E2E v0.1 if clean.
 
 ## Exclusions
 

@@ -63,6 +63,12 @@ Current reports:
   - Confirms malicious GT FinalOutput / DRS write / action execution claims and malformed GTDecision input are rejected.
   - Confirms Root is the only FinalOutput authority, GT does not create FinalOutput, Root does not write DRS in this layer, DRS writeback is not invoked, no production persistence is claimed, and no production external action is executed.
 
+- `auditor_drs_writeback_from_root_final.log`
+  - Proof for DRS Writeback / Audit from Root Final v0.1.
+  - Confirms the proof actually consumes Root Final output and only valid RootFinalArtifact inputs create three `local_audit_only` accepted/degraded/rejected records.
+  - Confirms raw upstream inputs, malformed RootFinalArtifact input, and malicious global DRS, external DRS network, production persistence, Root DRS write, and real action claims are rejected.
+  - Confirms DRS is not authority, Root authority is preserved, and no production persistence, global/external DRS, or real external action is claimed.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

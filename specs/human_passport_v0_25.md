@@ -479,11 +479,28 @@ Current bounded graph and lineage checkpoints:
   false, 94 focused tests passed, 997 full-suite tests passed, and sensitive scan
   found no secret terms.
 - Evidence:
-  `docs/audit_reports/auditor_root_final_from_gt_decision.log`. The next planned
-  engineering direction is Full Canonical Chain Trace v0.1. It must consume
-  existing collectors, must not hardcode upstream PASS, must not implement DRS
-  writeback, and must explicitly state that Root Final is reached while DRS
-  writeback / audit remains future.
+  `docs/audit_reports/auditor_root_final_from_gt_decision.log`.
+
+DRS Writeback / Audit from Root Final v0.1 is complete. It is a deterministic
+proof-level boundary that actually consumes `collect_root_final_from_gt_decision()`
+without hardcoding Root Final PASS. Only valid RootFinalArtifact inputs may
+create `local_audit_only` records. Raw upstream artifacts and real action output
+are blocked; malformed RootFinalArtifact inputs and malicious global DRS,
+external DRS network, production persistence, Root DRS write, and action claims
+are rejected.
+
+Proof status: PASS, scenarios_verified = 16, records_created = 3,
+accepted/degraded/rejected = 1/1/1, Root authority preserved, production
+persistence and external actions false, 98 focused tests passed, 1037 full-suite
+tests passed, and the sensitive scan found no secret terms. Evidence:
+`docs/audit_reports/auditor_drs_writeback_from_root_final.log`.
+
+DRS is not the full memory, a decision authority, or a vector store. It is an
+address/resonance/lineage/audit layer for Root-authorized access to memory. Root
+remains commit authority; external/global DRS remains a future pointer/protocol
+boundary. Next, sanity-check Matrix Gate / AVF against live dual-Gemini success
+and this DRS boundary, then proceed to Root-native sandbox NeedleRuntime E2E
+v0.1 if clean.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

@@ -1,0 +1,331 @@
+===== GIT LOG =====
+c6417d1 Add live dual-Gemini full chain smoke
+adbac6d Document Root Final from GTDecision checkpoint
+25cc173 Add Root Final from GTDecision proof
+e544c4b Document GT from ValidationReport checkpoint
+083ae8a Add GT from ValidationReport proof
+5799127 Document Post V&V from ResultProposal checkpoint
+2b4897e Add Post V&V from ResultProposal proof
+54d81e4 Document DAG Executor from valid PlanGraph checkpoint
+ecdfb30 Add DAG Executor from valid PlanGraph proof
+d433ae5 Document Architect from bounded AttractorPacket checkpoint
+b2d6126 Add Architect from bounded AttractorPacket proof
+cc989d1 Document AVF attractor formation checkpoint
+d87ee46 Add AVF attractor formation from accepted matrix
+4340310 Document Controlled Orchestrator matrix gate
+033b6c5 Add Controlled Orchestrator matrix gate
+e04a849 Document ordered Gemini smoke evidence cleanup
+358bd3c Archive successful ordered Gemini 2.5 live smoke report
+0a1cccd Add ordered live Gemini Orchestrator Architect smoke
+be63bf4 Archive live Gemini dual-role smoke report
+06e2864 Add optional live Gemini Orchestrator smoke
+68e72cf Document optional live Gemini Architect smoke
+3c58de3 Add optional live Gemini Architect smoke
+f49ceb5 Document Root-native full canonical E2E trace
+83f59a2 Add Root-native full canonical E2E trace
+82e4b6b Document Root-native semantic reuse E2E trace
+4becf3f Add Root-native semantic reuse E2E trace
+30edecc Add semantic reuse authority stack audit pack
+036e14c Document Root semantic reuse final decision trace
+af11157 Add Root semantic reuse final decision trace
+f1df531 Document Root semantic reuse decision and gate traces
+
+===== GIT STATUS =====
+?? auditor_drs_writeback_from_root_final.log
+?? demo/run_drs_writeback_from_root_final.py
+?? tests/test_drs_writeback_from_root_final_runner.py
+
+===== DRS WRITEBACK FROM ROOT FINAL =====
+[DRS WRITEBACK FROM ROOT FINAL]
+note: deterministic DRS writeback proof from Root FinalArtifact
+note: only Root FinalArtifact may enter DRS writeback
+note: raw GTDecision is blocked
+note: raw ValidationReport is blocked
+note: raw ResultProposal is blocked
+note: raw Architect PlanGraph is blocked
+note: raw Orchestrator matrix is blocked
+note: raw user intent is blocked
+note: this is audit/proof-level writeback, not production persistence
+note: no global DRS
+note: no external DRS network
+note: no real external actions
+note: Marennya / UP remain deferred and not invoked
+
+[INPUT ROOT FINAL ARTIFACTS]
+source_root_final_report_status: PASS
+root_final_artifacts_imported: ['root_final_artifact_accept_gt_decision_root_final_accept', 'root_final_artifact_degrade_gt_decision_root_final_degraded', 'root_final_artifact_reject_gt_decision_root_final_rejected']
+accepted_root_final_artifacts: 1
+degraded_root_final_artifacts: 1
+rejected_root_final_artifacts: 1
+
+[DRS WRITEBACK INPUT FILTER]
+scenario=accepted_root_final_creates_local_audit_record input_kind=root_final_artifact drs_writeback_invoked=true blocked_before_writeback=false block_reasons=[] input_is_root_final_artifact=true
+scenario=degraded_root_final_creates_degraded_audit_record input_kind=root_final_artifact drs_writeback_invoked=true blocked_before_writeback=false block_reasons=[] input_is_root_final_artifact=true
+scenario=rejected_root_final_creates_rejection_audit_record input_kind=root_final_artifact drs_writeback_invoked=true blocked_before_writeback=false block_reasons=[] input_is_root_final_artifact=true
+scenario=raw_gt_decision_blocked input_kind=raw_gt_decision drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['raw_gt_decision_not_allowed'] input_is_root_final_artifact=false
+scenario=raw_validation_report_blocked input_kind=raw_validation_report drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['raw_validation_report_not_allowed'] input_is_root_final_artifact=false
+scenario=raw_result_proposal_blocked input_kind=raw_result_proposal drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['raw_result_proposal_not_allowed'] input_is_root_final_artifact=false
+scenario=raw_architect_plan_graph_blocked input_kind=raw_architect_plan_graph drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['raw_architect_plan_graph_not_allowed'] input_is_root_final_artifact=false
+scenario=raw_orchestrator_matrix_blocked input_kind=raw_orchestrator_matrix drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['raw_orchestrator_matrix_not_allowed'] input_is_root_final_artifact=false
+scenario=raw_user_intent_blocked input_kind=raw_user_intent drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['raw_user_intent_not_allowed'] input_is_root_final_artifact=false
+scenario=real_action_output_blocked input_kind=real_action_output drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['real_action_output_not_allowed'] input_is_root_final_artifact=false
+scenario=malformed_root_final_artifact_rejected input_kind=root_final_artifact drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['malformed_root_final_artifact'] input_is_root_final_artifact=false
+scenario=malicious_root_final_claiming_global_drs_write_rejected input_kind=root_final_artifact drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['global_drs_write_claim_rejected'] input_is_root_final_artifact=true
+scenario=malicious_root_final_claiming_external_drs_network_write_rejected input_kind=root_final_artifact drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['external_drs_network_write_claim_rejected'] input_is_root_final_artifact=true
+scenario=malicious_root_final_claiming_production_persistence_rejected input_kind=root_final_artifact drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['production_persistence_claim_rejected'] input_is_root_final_artifact=true
+scenario=malicious_root_final_claiming_root_drs_write_rejected input_kind=root_final_artifact drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['root_drs_write_claim_rejected'] input_is_root_final_artifact=true
+scenario=malicious_root_final_claiming_action_rejected input_kind=root_final_artifact drs_writeback_invoked=false blocked_before_writeback=true block_reasons=['real_action_claim_rejected'] input_is_root_final_artifact=true
+
+[DRS WRITEBACK AUDIT RECORDS]
+drs_writeback_record_id=drs_writeback_audit_root_final_artifact_accept_gt_decision_root_final_accept created_by=root_orchestrator scenario=accepted_root_final_creates_local_audit_record source_root_final_artifact_id=root_final_artifact_accept_gt_decision_root_final_accept source_gt_decision_id=gt_decision_accepted_validation_report_gt_accept source_validation_report_id=validation_report_completed_result_proposal_validated source_result_proposal_id=result_proposal_accepted_plan_graph_executor_result_proposal input_is_root_final_artifact=true root_final_status_seen=accepted writeback_scope=local_audit_only production_persistence=false global_drs_write=false external_drs_network_write=false real_external_action_executed=false canonical_artifact_refs={'root_final_artifact_id': 'root_final_artifact_accept_gt_decision_root_final_accept', 'gt_decision_id': 'gt_decision_accepted_validation_report_gt_accept', 'validation_report_id': 'validation_report_completed_result_proposal_validated', 'result_proposal_id': 'result_proposal_accepted_plan_graph_executor_result_proposal'} audit_summary={'root_final_status': 'accepted', 'root_selection_reason': 'gt_decision_accepted_by_root', 'degraded_or_rejected_claims_visible': False, 'production_write_not_performed': True} time_envelope={'observed_at': '2026-06-08T00:00:00Z', 'valid_from': '2026-06-08T00:00:00Z', 'valid_to': None, 'time_basis': 'deterministic_proof_clock'} provenance={'source_layer': 'root_final_from_gt_decision_v0_1', 'writeback_layer': 'drs_writeback_from_root_final_v0_1', 'proof_only': True} root_authority_preserved=true drs_is_authority=false marennya_invoked=false up_invoked=false
+drs_writeback_record_id=drs_writeback_audit_root_final_artifact_degrade_gt_decision_root_final_degraded created_by=root_orchestrator scenario=degraded_root_final_creates_degraded_audit_record source_root_final_artifact_id=root_final_artifact_degrade_gt_decision_root_final_degraded source_gt_decision_id=gt_decision_degraded_validation_report_gt_degrade source_validation_report_id=validation_report_degraded_result_proposal_validated_as_degraded source_result_proposal_id=result_proposal_downgraded_plan_graph_executor_limited_result_proposal input_is_root_final_artifact=true root_final_status_seen=degraded writeback_scope=local_audit_only production_persistence=false global_drs_write=false external_drs_network_write=false real_external_action_executed=false canonical_artifact_refs={'root_final_artifact_id': 'root_final_artifact_degrade_gt_decision_root_final_degraded', 'gt_decision_id': 'gt_decision_degraded_validation_report_gt_degrade', 'validation_report_id': 'validation_report_degraded_result_proposal_validated_as_degraded', 'result_proposal_id': 'result_proposal_downgraded_plan_graph_executor_limited_result_proposal'} audit_summary={'root_final_status': 'degraded', 'root_selection_reason': 'gt_decision_degraded_by_root', 'degraded_or_rejected_claims_visible': True, 'production_write_not_performed': True} time_envelope={'observed_at': '2026-06-08T00:00:00Z', 'valid_from': '2026-06-08T00:00:00Z', 'valid_to': None, 'time_basis': 'deterministic_proof_clock'} provenance={'source_layer': 'root_final_from_gt_decision_v0_1', 'writeback_layer': 'drs_writeback_from_root_final_v0_1', 'proof_only': True} root_authority_preserved=true drs_is_authority=false marennya_invoked=false up_invoked=false
+drs_writeback_record_id=drs_writeback_audit_root_final_artifact_reject_gt_decision_root_final_rejected created_by=root_orchestrator scenario=rejected_root_final_creates_rejection_audit_record source_root_final_artifact_id=root_final_artifact_reject_gt_decision_root_final_rejected source_gt_decision_id=gt_decision_rejected_validation_report_gt_reject source_validation_report_id=validation_report_malformed_result_proposal_rejected source_result_proposal_id=result_proposal_accepted_plan_graph_executor_result_proposal_malformed input_is_root_final_artifact=true root_final_status_seen=rejected writeback_scope=local_audit_only production_persistence=false global_drs_write=false external_drs_network_write=false real_external_action_executed=false canonical_artifact_refs={'root_final_artifact_id': 'root_final_artifact_reject_gt_decision_root_final_rejected', 'gt_decision_id': 'gt_decision_rejected_validation_report_gt_reject', 'validation_report_id': 'validation_report_malformed_result_proposal_rejected', 'result_proposal_id': 'result_proposal_accepted_plan_graph_executor_result_proposal_malformed'} audit_summary={'root_final_status': 'rejected', 'root_selection_reason': 'gt_decision_rejected_by_root', 'degraded_or_rejected_claims_visible': True, 'production_write_not_performed': True} time_envelope={'observed_at': '2026-06-08T00:00:00Z', 'valid_from': '2026-06-08T00:00:00Z', 'valid_to': None, 'time_basis': 'deterministic_proof_clock'} provenance={'source_layer': 'root_final_from_gt_decision_v0_1', 'writeback_layer': 'drs_writeback_from_root_final_v0_1', 'proof_only': True} root_authority_preserved=true drs_is_authority=false marennya_invoked=false up_invoked=false
+
+[CONTAINMENT]
+raw_gt_decision_reached_drs_writeback: false
+raw_validation_report_reached_drs_writeback: false
+raw_result_proposal_reached_drs_writeback: false
+raw_architect_plan_graph_reached_drs_writeback: false
+raw_orchestrator_matrix_reached_drs_writeback: false
+raw_user_intent_reached_drs_writeback: false
+real_action_output_reached_drs_writeback: false
+malicious_global_drs_write_claim_passed: false
+malicious_external_drs_network_claim_passed: false
+malicious_production_persistence_claim_passed: false
+malicious_root_drs_write_claim_passed: false
+malicious_action_claim_passed: false
+
+[AUTHORITY / SAFETY]
+drs_writeback_receives_only_root_final_artifact: true
+root_authority_preserved: true
+drs_is_authority: false
+writeback_scope_local_audit_only: true
+production_persistence_claimed: false
+global_drs_implemented: false
+external_drs_network_implemented: false
+production_external_action_executed: false
+marennya_invoked: false
+up_invoked: false
+
+[SUMMARY]
+drs_writeback_from_root_final_status: PASS
+source_root_final_status: PASS
+scenarios_verified: 16
+drs_writeback_records_created: 3
+accepted_writeback_records: 1
+degraded_writeback_records: 1
+rejected_writeback_records: 1
+raw_gt_decision_blocked: true
+raw_validation_report_blocked: true
+raw_result_proposal_blocked: true
+raw_architect_plan_graph_blocked: true
+raw_orchestrator_matrix_blocked: true
+raw_user_intent_blocked: true
+real_action_output_blocked: true
+malformed_root_final_artifact_rejected: true
+malicious_global_drs_write_claim_rejected: true
+malicious_external_drs_network_claim_rejected: true
+malicious_production_persistence_claim_rejected: true
+malicious_root_drs_write_claim_rejected: true
+malicious_action_claim_rejected: true
+drs_writeback_receives_only_root_final_artifact: true
+root_authority_preserved: true
+writeback_scope_local_audit_only: true
+ready_for_full_cycle_with_drs_audit_trace: true
+production_persistence_claimed: false
+production_external_action_executed: false
+production_autonomy_claimed: false
+
+===== FOCUSED DRS WRITEBACK TESTS =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collected 98 items
+
+tests/test_drs_writeback_from_root_final_runner.py ..................... [ 21%]
+...                                                                      [ 24%]
+tests/test_root_final_from_gt_decision_runner.py ....................... [ 47%]
+...                                                                      [ 51%]
+tests/test_gt_from_validation_report_runner.py ......................... [ 76%]
+                                                                         [ 76%]
+tests/test_post_vv_from_result_proposal_runner.py ...................... [ 98%]
+.                                                                        [100%]
+
+============================== 98 passed in 2.70s ==============================
+
+===== FULL SUITE =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.13.0
+collected 1037 items
+
+tests/test_action_permission_runtime.py .......                          [  0%]
+tests/test_architect_from_bounded_attractor_packet_runner.py ........... [  1%]
+............                                                             [  2%]
+tests/test_architect_prompt_compiler_runtime.py ....                     [  3%]
+tests/test_architect_runtime.py .....                                    [  3%]
+tests/test_avf_attractor_from_accepted_matrix_runner.py ................ [  5%]
+.....                                                                    [  5%]
+tests/test_avf_runtime.py ..                                             [  5%]
+tests/test_candidate_vectors.py ......                                   [  6%]
+tests/test_canonical_needle_outcome_trace_runner.py ...............      [  8%]
+tests/test_canonical_pipeline_trace_runner.py ..............             [  9%]
+tests/test_chaos_survival_showcase_runner.py ...........                 [ 10%]
+tests/test_cold_start_benchmark_runner.py ........                       [ 11%]
+tests/test_compute_collapse_reuse_showcase_runner.py .............       [ 12%]
+tests/test_controlled_orchestrator_dry_run_runner.py ..........          [ 13%]
+tests/test_controlled_orchestrator_integration_gate_runner.py .......... [ 14%]
+...                                                                      [ 14%]
+tests/test_controlled_orchestrator_matrix_gate_runner.py ............... [ 16%]
+......                                                                   [ 16%]
+tests/test_controlled_orchestrator_runtime_prototype_runner.py ......... [ 17%]
+....                                                                     [ 17%]
+tests/test_controlled_runtime_trace_visibility_runner.py ..........      [ 18%]
+tests/test_dag_executor_from_valid_plan_graph_runner.py ................ [ 20%]
+....                                                                     [ 20%]
+tests/test_deadend_memory_demo_runner.py ......                          [ 21%]
+tests/test_demo_certificate_runner.py .......                            [ 22%]
+tests/test_drs_graph_proximity_runner.py ..............                  [ 23%]
+tests/test_drs_layer_taxonomy_runner.py .................                [ 25%]
+tests/test_drs_runtime.py .............                                  [ 26%]
+tests/test_drs_writeback_from_root_final_runner.py ..................... [ 28%]
+...                                                                      [ 28%]
+tests/test_economics_benchmark_runner.py .........                       [ 29%]
+tests/test_executor_runtime.py ...                                       [ 29%]
+tests/test_final_renderer_runtime.py ....                                [ 30%]
+tests/test_fractal_dag_executor_core_runner.py .............             [ 31%]
+tests/test_gemini_orchestrator_architect_pair_smoke_runner.py .......... [ 32%]
+                                                                         [ 32%]
+tests/test_gt_from_validation_report_runner.py ......................... [ 34%]
+                                                                         [ 34%]
+tests/test_gt_validator_runtime.py ...................                   [ 36%]
+tests/test_input_intake_runtime.py .....                                 [ 37%]
+tests/test_intent_route_matrix_runner.py ..........                      [ 38%]
+tests/test_large_graph_stress_runner.py .............                    [ 39%]
+tests/test_live_controlled_smoke_runner.py ........                      [ 40%]
+tests/test_live_dual_gemini_full_chain_smoke_runner.py ................  [ 41%]
+tests/test_live_gemini_architect_smoke_runner.py ..................      [ 43%]
+tests/test_live_gemini_orchestrator_shadow_runner.py ............        [ 44%]
+tests/test_live_gemini_orchestrator_smoke_runner.py .................... [ 46%]
+..                                                                       [ 46%]
+tests/test_live_gemini_ordered_orchestrator_architect_smoke_runner.py .. [ 46%]
+..........................                                               [ 49%]
+tests/test_llm_architect_runtime.py .................                    [ 51%]
+tests/test_llm_gateway_runtime.py .....                                  [ 51%]
+tests/test_marenna_up_runtime.py ...                                     [ 51%]
+tests/test_mode_router_runtime.py ........                               [ 52%]
+tests/test_mode_selection_matrix_runner.py ........                      [ 53%]
+tests/test_needle_failure_integration_runner.py .......                  [ 54%]
+tests/test_needle_outcome_drs_routing_runner.py ...............          [ 55%]
+tests/test_needle_runtime_chaos_runner.py ..........                     [ 56%]
+tests/test_needles_valid.py .                                            [ 56%]
+tests/test_orchestrator_guard_completeness_runner.py ............        [ 57%]
+tests/test_orchestrator_route_validator_runner.py ...........            [ 58%]
+tests/test_orchestrator_shadow_mode_runner.py ........                   [ 59%]
+tests/test_post_vv_from_result_proposal_runner.py ...................... [ 61%]
+.                                                                        [ 61%]
+tests/test_post_vv_runtime.py .......                                    [ 62%]
+tests/test_reasoning_showcase_runner.py .............                    [ 63%]
+tests/test_reflex_runtime.py ..........                                  [ 64%]
+tests/test_reuse_gate_runtime.py .......                                 [ 65%]
+tests/test_reuse_score_runner.py .......................                 [ 67%]
+tests/test_root_dag_drs_audit_runner.py .......                          [ 68%]
+tests/test_root_dag_integration_runner.py .......                        [ 68%]
+tests/test_root_final_from_gt_decision_runner.py ....................... [ 71%]
+...                                                                      [ 71%]
+tests/test_root_native_canonical_trace_runner.py ..........              [ 72%]
+tests/test_root_native_full_canonical_e2e_trace_runner.py .............. [ 73%]
+.......                                                                  [ 74%]
+tests/test_root_native_semantic_reuse_e2e_trace_runner.py .............. [ 75%]
+..............                                                           [ 77%]
+tests/test_root_orchestrator_runtime.py ...................              [ 78%]
+tests/test_root_semantic_reuse_decision_trace_runner.py ................ [ 80%]
+............                                                             [ 81%]
+tests/test_root_semantic_reuse_final_decision_trace_runner.py .......... [ 82%]
+..............                                                           [ 83%]
+tests/test_root_semantic_reuse_gate_trace_runner.py .................... [ 85%]
+....                                                                     [ 86%]
+tests/test_scenario_benchmark_runner.py ............                     [ 87%]
+tests/test_schema_files_valid.py .                                       [ 87%]
+tests/test_semantic_reuse_authority_stack_audit_runner.py .............. [ 88%]
+......                                                                   [ 89%]
+tests/test_semantic_reuse_pipeline_runner.py ..........................  [ 91%]
+tests/test_showcase_runner.py .....                                      [ 92%]
+tests/test_telegram_bridge_runtime.py ..                                 [ 92%]
+tests/test_telegram_e2e_benchmark_runner.py .........                    [ 93%]
+tests/test_telegram_polling_smoke_runner.py ................             [ 94%]
+tests/test_telegram_shell_runtime.py .............                       [ 96%]
+tests/test_time_model.py ..                                              [ 96%]
+tests/test_trace_reporter_runtime.py ............                        [ 97%]
+tests/test_typed_drs_lineage_edges_runner.py .........................   [100%]
+
+=============================== warnings summary ===============================
+tests/test_architect_runtime.py::test_make_plan_graph_from_attractor_packet_validates_schema
+tests/test_architect_runtime.py::test_make_plan_graph_optional_mock_llm_path_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_architect_runtime.py:32: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_avf_runtime.py::test_build_attractor_packet_filters_forbidden_vectors_and_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_avf_runtime.py:30: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(attractor_schema, store=store)
+
+tests/test_demo_certificate_runner.py::test_certificate_demo_gemini_architect_scenario_is_registered_with_safe_failure
+  /Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/types.py:42: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+tests/test_drs_runtime.py::test_local_drs_writes_reads_and_validates_work_record
+tests/test_drs_runtime.py::test_local_drs_writes_pointer_record
+  /Users/admin/Projects/hedgehog-os/tests/test_drs_runtime.py:33: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(drs_record_schema, store=store)
+
+tests/test_executor_runtime.py::test_execute_plan_graph_returns_schema_valid_result_proposals
+  /Users/admin/Projects/hedgehog-os/tests/test_executor_runtime.py:37: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+
+tests/test_gt_validator_runtime.py: 17 warnings
+  /Users/admin/Projects/hedgehog-os/tests/test_gt_validator_runtime.py:41: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(gt_report_schema, store=store)
+
+tests/test_llm_architect_runtime.py::test_mock_llm_architect_returns_valid_plan_graph
+  /Users/admin/Projects/hedgehog-os/tests/test_llm_architect_runtime.py:35: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_marenna_up_runtime.py::test_marenna_after_task_record_validates_and_stays_quarantined
+tests/test_marenna_up_runtime.py::test_up_after_task_record_validates_and_stays_quarantined
+  /Users/admin/Projects/hedgehog-os/tests/test_marenna_up_runtime.py:42: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(target_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:53: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(candidate_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:67: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(needle_schema, store=store)
+
+tests/test_post_vv_runtime.py::test_validate_demo_result_proposals_are_task_aware_and_schema_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_post_vv_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_creates_valid_final_output_and_work_record
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_generic_math_routes_to_llm_general_not_certificate_pipeline
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_optional_mock_llm_architect_still_creates_final_output
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success
+  /Users/admin/Projects/hedgehog-os/tests/test_root_orchestrator_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(final_output_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+====================== 1037 passed, 37 warnings in 10.11s ======================
+
+===== FINAL GIT STATUS =====
+?? auditor_drs_writeback_from_root_final.log
+?? demo/run_drs_writeback_from_root_final.py
+?? tests/test_drs_writeback_from_root_final_runner.py

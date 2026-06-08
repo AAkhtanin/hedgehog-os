@@ -92,7 +92,12 @@ Current reports:
 - `auditor_drs_lifecycle_semantics.log`
   - Proof for DRS Lifecycle Semantics v0.2.
   - Confirms current proof collectors produce 13 local/proof-level, pointer-first ExperienceRecord examples across completed, degraded, blocked, failed, rejected, quarantined, deadend, and promotion_candidate states.
-  - Confirms automatic needle creation is blocked, installed needle count remains zero, trust/TTL metadata is advisory, ConflictCheck remains deferred, and Root remains commit authority.
+  - Confirms automatic needle creation is blocked, installed needle count remains zero, trust/TTL metadata is advisory, source conflict status defaults to `not_checked`, and Root remains commit authority.
+
+- `auditor_conflictcheck.log`
+  - Proof for ConflictCheck v0.1.
+  - Confirms 13 unchanged DRS Lifecycle ExperienceRecord objects produce 11 ConflictCandidatePair and 11 ConflictReport objects across contradiction, risk, and compatible-lineage comparisons.
+  - Confirms ConflictCheck recommendations are advisory only: no truth decision, DRS mutation, invalidation, promotion, demotion, production persistence, global/external DRS, or real external action occurs; Root remains final authority.
 
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.

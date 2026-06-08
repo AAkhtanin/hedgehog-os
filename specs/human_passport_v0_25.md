@@ -587,9 +587,27 @@ authority. Proof status: PASS, records_created=13, malicious_claims_rejected=5,
 focused tests passed=75, full suite passed=1097, sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_drs_lifecycle_semantics.log`.
 
-Next is ConflictCheck v0.1. It compares lifecycle records and produces conflict
-flags / ConflictReport without deciding final truth. Root remains final
-authority. Audit/hash-chain hardening follows.
+ConflictCheck v0.1 is complete. It deterministically consumes the 13
+ExperienceRecord objects from `collect_drs_lifecycle_semantics()`, creates 11
+ConflictCandidatePair objects, and emits 11 ConflictReport objects. It covers
+completed/completed, completed/deadend, reuse/quarantine, promotion/rejected,
+stale/fresh, trust-level, action-like/reuse, permission/action, protocol/deadend,
+needle-candidate/quarantine, and compatible completed-lineage comparisons.
+
+ConflictCheck may recommend Root or GT review, reuse or promotion block,
+quarantine review, or invalidation review. It does not execute recommendations,
+decide final truth, mutate DRS, invalidate, promote, demote, delete, rewrite, or
+commit. Lifecycle records remain unchanged. GT review remains advisory until
+Root; DRS remains storage/index/lifecycle rather than judge.
+
+Proof status: PASS, candidate_pairs_created=11, conflict_reports_created=11,
+flagged_conflicts=6, root_review_required_reports=10, no_conflict_reports=1,
+malicious_claims_rejected=8, focused tests passed=47, full suite passed=1116,
+sensitive scan clear. Evidence: `docs/audit_reports/auditor_conflictcheck.log`.
+
+Next is Audit / hash-chain hardening v0.1: hash and link proof artifacts and
+reports with append-only, tamper-evident proof semantics, still without
+production persistence.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

@@ -1035,8 +1035,24 @@ remains commit authority. Proof status: PASS, malicious_claims_rejected=5,
 focused tests passed=75, full suite passed=1097, sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_drs_lifecycle_semantics.log`.
 
-Next is ConflictCheck v0.1, producing conflict flags / ConflictReport without
-deciding final truth. Audit/hash-chain hardening follows.
+ConflictCheck v0.1 is complete. It consumes 13 DRS Lifecycle ExperienceRecord
+objects without mutation, creates 11 ConflictCandidatePair objects, and emits 11
+ConflictReport objects. Ten reports require Root review; one compatible
+completed-lineage pair reports no conflict.
+
+ConflictCheck flags contradictions and risk states and may recommend Root/GT
+review, reuse/promotion block, quarantine review, or invalidation review. It
+does not execute recommendations, decide final truth, invalidate, promote,
+demote, delete, rewrite, mutate DRS, or commit. Root remains final authority and
+DRS remains storage/index/lifecycle rather than judge.
+
+Proof status: PASS, flagged_conflicts=6, root_review_required_reports=10,
+no_conflict_reports=1, malicious_claims_rejected=8, focused tests passed=47,
+full suite passed=1116, sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_conflictcheck.log`.
+
+Next is Audit / hash-chain hardening v0.1, making proof artifacts and reports
+append-only and tamper-evident without claiming production persistence.
 
 ## 20. Future Demo Evolution
 

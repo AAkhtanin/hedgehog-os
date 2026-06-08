@@ -265,8 +265,11 @@ Semantic Reuse Pipeline Integration invariant:
 - Lifecycle authority invariant: trust and TTL updates are advisory; DRS does not mutate itself or decide promotion, reuse, override, quarantine release, or commit. Root remains commit authority.
 - DRS topology invariant: DRS remains address/resonance/lineage/audit, not full memory, decision authority, vector store, automatic NeedleFactory, or external/global DRS. Dense artifacts remain outside DRS behind pointers.
 - DRS Lifecycle proof status: PASS, records_created=13, malicious_claims_rejected=5, quarantine/deadends and advisory trust/TTL represented, focused tests passed=75, full suite passed=1097, sensitive scan clear. Evidence: `docs/audit_reports/auditor_drs_lifecycle_semantics.log`.
-- Roadmap order: ConflictCheck v0.1 -> Audit/hash-chain hardening v0.1.
-- ConflictCheck invariant: compare lifecycle records and emit conflict flags / ConflictReport only; do not decide final truth. Root remains final authority.
+- ConflictCheck v0.1 is complete. It consumes DRS Lifecycle ExperienceRecord objects, creates ConflictCandidatePair objects, and emits ConflictReport flags without mutating source lifecycle records.
+- ConflictCheck invariant: recommendations for Root/GT review, reuse/promotion block, quarantine review, or invalidation review are advisory only. ConflictCheck does not decide final truth, invalidate, promote, demote, delete, rewrite, mutate DRS, or commit.
+- ConflictCheck authority invariant: Root decides truth, commit, invalidation, promotion, demotion, reuse, quarantine release, and override. GT review remains advisory until Root; DRS remains storage/index/lifecycle rather than judge.
+- ConflictCheck proof status: PASS, lifecycle_records_consumed=13 and unchanged, candidate_pairs_created=11, conflict_reports_created=11, flagged_conflicts=6, root_review_required_reports=10, no_conflict_reports=1, malicious_claims_rejected=8, focused tests passed=47, full suite passed=1116, sensitive scan clear. Evidence: `docs/audit_reports/auditor_conflictcheck.log`.
+- Roadmap order: Audit / hash-chain hardening v0.1.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

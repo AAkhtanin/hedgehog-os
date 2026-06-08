@@ -250,9 +250,13 @@ Semantic Reuse Pipeline Integration invariant:
 - NeedleRuntime invariants: NeedleRuntime is not authority; NeedleExecutionResult is evidence, not final truth; NeedleRuntime creates no FinalOutput, writes no DRS, executes no real external action, and bypasses neither Root, policy, permission, Post V&V / GT / Root Final, nor audit.
 - Needle outcome invariant: completed, degraded, blocked, failed, timeout, invalid_json, contract_mismatch, permission_required, forbidden_external_action, quarantine, circuit-breaker, safe-for-GT, and crash-containment facts remain visible downstream.
 - Sandbox NeedleRuntime proof status: PASS, scenarios_verified=11, malicious_claims_rejected=4, focused tests passed=70, full suite passed=1057, sensitive scan clear. Evidence: `docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log`.
-- Next execution topology invariant: atomic node -> ordinary Executor; needle-bound node -> NeedleRuntime; non-atomic node -> bounded child fractal cell returning ChildBoundarySnapshot upward.
-- Fractal Cell Runtime v0.1 must keep child Orchestrator non-Root, bound recursion by depth/budget, create no child FinalOutput, write no parent DRS, execute no real external action, use no live LLM/SLM, and leave parent DRS promotion Root-authorized only.
-- Roadmap order: Fractal Cell Runtime v0.1 -> DRS Lifecycle Semantics v0.2 -> ConflictCheck v0.1 -> Audit/hash-chain hardening v0.1.
+- Fractal Cell Runtime v0.1 is complete. It proves atomic node -> ordinary Executor, needle-bound node -> sandbox NeedleRuntime, and non-atomic node -> bounded child fractal cell returning ChildBoundarySnapshot upward.
+- Child-cell invariant: child cell and child Orchestrator are not Root; child output is boundary evidence, not final truth; completed, degraded, blocked, and failed outcomes remain visible; recursion and execution are bounded by max depth and budget.
+- Child-cell authority invariant: no child FinalOutput, parent DRS write, real external action, live child LLM/SLM, or automatic parent DRS promotion is allowed. Parent promotion remains Root-authorized.
+- ChildBoundarySnapshot is addressable experience, not an installed needle. Successful child traces do not automatically create needles; future promotion remains lifecycle and Root-policy work.
+- Fractal Cell Runtime proof status: PASS, scenarios_verified=12, completed/degraded/blocked_or_failed=1/1/2, malicious_child_claims_rejected=5, focused tests passed=56, full suite passed=1069, sensitive scan clear. Evidence: `docs/audit_reports/auditor_fractal_cell_runtime.log`.
+- Roadmap order: Live Child Executor in Fractal Cell v0.1 -> DRS Lifecycle Semantics v0.2 -> ConflictCheck v0.1 -> Audit/hash-chain hardening v0.1.
+- Live Child Executor boundary: live Gemini may execute only one bounded Architect-provided child node contract and return ChildExecutionResult JSON/evidence; no API/tool calls, real external actions, child FinalOutput, parent DRS write, Root bypass, or Post V&V / GT / Root bypass is allowed.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

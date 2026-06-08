@@ -546,9 +546,19 @@ Verified scenarios cover completed, timeout/degraded, invalid JSON/failed, contr
 
 Needles are bounded capability contracts, not Executor-owned plugins. This proof uses sandbox/mock needles only: no default RootOrchestrator integration, production external execution, real API/device access, Telegram, credential vault, production DRS persistence, or global/external DRS. Real external needles require future permission, policy, audit/hash-chain, credential-vault, and controlled Root integration. Marennya / UP remain deferred.
 
-The current proof-level canonical cycle now includes Live Gemini Orchestrator -> Root Matrix Gate -> AVF AttractorPacket -> Live Gemini Architect -> DAG / Executor ResultProposal -> Post V&V ValidationReport -> GTDecision -> Root FinalArtifact -> DRS local audit/writeback record -> Root-native sandbox NeedleRuntime proof boundary.
+Fractal Cell Runtime v0.1 is complete. It is a deterministic proof-level bounded child-cell runtime, not a long chain. It proves all three parent PlanGraph execution routes: atomic node -> ordinary Executor, needle-bound node -> sandbox NeedleRuntime, and non-atomic node -> bounded child fractal cell. A non-atomic node with `child_cell_required=true` creates ChildCellRequest; a deterministic child mini-cell may run child Orchestrator / Architect / Executor roles; ChildBoundarySnapshot returns upward; and the parent adapter creates a ResultProposal-compatible artifact for Post V&V, GT, and Root Final.
 
-The missing execution type is a non-atomic PlanGraph node spawning a bounded child cell that returns a boundary artifact upward. Fractal Cell Runtime v0.1 will prove `child_cell_required` detection, child_cell_request creation, a deterministic child mini-cell with optional child Orchestrator / Architect / Executor roles, ChildBoundarySnapshot return, parent adaptation into a ResultProposal-compatible artifact, and visibility through Post V&V / GT / Root. The child cell is not Root, creates no FinalOutput, writes no parent DRS, executes no real external action, uses no live LLM/SLM, and is bounded by depth and budget. Promotion to parent DRS remains Root-authorized only.
+Completed, degraded, blocked, and failed child outcomes remain visible and are not hidden as clean success. The child cell and child Orchestrator are not Root; child output is boundary evidence, not a final answer; the child creates no FinalOutput, writes no parent DRS, executes no real external action, and uses no live LLM/SLM. Recursion and execution are bounded by max depth and child budget. Parent DRS promotion remains Root-authorized only.
+
+Verified scenarios: `non_atomic_child_cell_completed`, `non_atomic_child_cell_degraded_budget_limit`, `non_atomic_child_cell_blocked_max_depth`, `non_atomic_child_cell_failed_contract_mismatch`, `atomic_node_does_not_spawn_child_cell`, `needle_bound_node_does_not_spawn_child_cell`, `malicious_child_claiming_final_output_rejected`, `malicious_child_claiming_parent_drs_write_rejected`, `malicious_child_claiming_real_action_rejected`, `malicious_child_orchestrator_claiming_root_rejected`, `malicious_child_claiming_live_llm_use_rejected`, and `raw_child_output_blocked`.
+
+Proof status: fractal_cell_runtime_status=PASS, scenarios_verified=12, completed/degraded/blocked_or_failed=1/1/2, malicious_child_claims_rejected=5, raw_child_output_blocked=true, atomic_route_preserved=true, needle_route_preserved=true, non_atomic_route_spawns_child_cell=true, child_boundary_snapshot_preserved=true, root_is_only_final_output_authority=true, no_child_final_output=true, no_child_parent_drs_write=true, no_real_external_actions=true, recursion_bounded=true, budget_bounded=true, focused tests passed=56, full suite passed=1069, and sensitive scan found no secret terms. Evidence: `docs/audit_reports/auditor_fractal_cell_runtime.log`.
+
+ChildBoundarySnapshot is addressable experience / boundary evidence, not an installed needle. A successful child trace may become a future protocol candidate or NeedleCandidate only under Root policy; it does not automatically create a needle. Future lifecycle work may represent `experience_record -> reuse_candidate -> protocol_candidate -> NeedleCandidate -> installed needle`, while Root remains commit authority.
+
+The current proof-level canonical execution now includes Live Gemini Orchestrator -> Root Matrix Gate -> AVF AttractorPacket -> Live Gemini Architect -> parent PlanGraph -> atomic / needle-bound / non-atomic routes -> bounded child fractal cell -> ChildBoundarySnapshot -> ResultProposal-compatible parent artifact -> Post V&V -> GTDecision -> Root FinalArtifact -> DRS local audit/writeback boundary.
+
+This checkpoint is deterministic only. It is not live child LLM/SLM, full recursive production runtime, production RootOrchestrator integration, production DRS persistence, external/global DRS, Telegram, real external action execution, or Marennya / UP lifecycle.
 
 Safety rules for this checkpoint:
 
@@ -683,11 +693,13 @@ Completed recent layers:
 - Root Final from GTDecision v0.1.
 - DRS Writeback / Audit from Root Final v0.1.
 - Root-native sandbox NeedleRuntime E2E v0.1.
+- Fractal Cell Runtime v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Fractal Cell Runtime v0.1: deterministic proof that a non-atomic PlanGraph node spawns a bounded child cell and receives a ChildBoundarySnapshot upward.
+- Live Child Executor in Fractal Cell v0.1: bounded live Gemini substitution for one child Executor node contract, returning ChildExecutionResult JSON/evidence only.
+- The live child Executor must receive an Architect-provided node contract, make no API/tool calls or real external actions, create no FinalOutput, write no parent DRS, and bypass neither Root nor Post V&V / GT / Root. Action-like requests remain blocked, permission-required, or sandbox-only.
 - Then DRS Lifecycle Semantics v0.2, representing needle outcomes plus child-cell boundary snapshots, child event logs, non-atomic branch traces, and child-result promotion candidates.
 - Then ConflictCheck v0.1.
 - Then Audit/hash-chain hardening v0.1.

@@ -977,18 +977,31 @@ This is sandbox/mock only, not default RootOrchestrator integration, production
 external execution, real API/device access, Telegram, credential vault,
 production persistence, or global/external DRS.
 
-Next is Fractal Cell Runtime v0.1: a non-atomic PlanGraph node spawns a bounded
-child cell and receives ChildBoundarySnapshot upward. FractalDagExecutor detects
-`child_cell_required`, creates child_cell_request, runs a deterministic mini-cell
-that may include child Orchestrator / Architect / Executor roles, and adapts the
-boundary snapshot into a ResultProposal-compatible artifact visible to Post V&V,
-GT, and Root. This is not a long chain.
+Fractal Cell Runtime v0.1 is complete. It is a deterministic bounded child-cell
+proof, not a long chain. The parent PlanGraph recognizes atomic -> ordinary
+Executor, needle-bound -> sandbox NeedleRuntime, and non-atomic -> bounded child
+cell. `child_cell_required` creates ChildCellRequest; a deterministic mini-cell
+may run child Orchestrator / Architect / Executor; ChildBoundarySnapshot returns
+upward; and the parent adapter creates a ResultProposal-compatible artifact for
+Post V&V, GT, and Root Final.
 
-The child cell is not Root, creates no FinalOutput, writes no parent DRS,
-executes no real external action, uses no live LLM/SLM, and remains bounded by
-depth and budget. Parent DRS promotion remains Root-authorized only. After this:
-DRS Lifecycle Semantics v0.2, ConflictCheck v0.1, then Audit/hash-chain
-hardening v0.1.
+Completed, degraded, blocked, and failed states remain visible. Child cell and
+child Orchestrator are not Root; child output is boundary evidence; no child
+FinalOutput, parent DRS write, real action, or live child LLM/SLM is allowed.
+Depth and budget bound recursion and execution; parent DRS promotion requires
+Root. ChildBoundarySnapshot is addressable experience, not an installed needle,
+and a successful child trace does not automatically create a needle.
+
+Proof status: PASS, scenarios_verified=12, completed/degraded/blocked_or_failed=
+1/1/2, malicious_child_claims_rejected=5, focused tests passed=56, full suite
+passed=1069, sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_fractal_cell_runtime.log`.
+
+Next is Live Child Executor in Fractal Cell v0.1: live Gemini may execute only
+one bounded Architect-provided child node contract and return ChildExecutionResult
+JSON/evidence. No API/tool calls, real actions, child FinalOutput, parent DRS
+write, Root bypass, or Post V&V / GT / Root bypass is allowed. Then follow DRS
+Lifecycle Semantics v0.2, ConflictCheck v0.1, and Audit/hash-chain hardening v0.1.
 
 ## 20. Future Demo Evolution
 

@@ -75,6 +75,12 @@ Current reports:
   - Confirms completed/degraded/blocked/failed outcomes remain visible and raw output plus malicious FinalOutput, DRS write, Root bypass, and external-action claims are rejected.
   - Confirms NeedleRuntime is not authority and no real external action, production persistence, Telegram, or global/external DRS is claimed.
 
+- `auditor_fractal_cell_runtime.log`
+  - Proof for Fractal Cell Runtime v0.1.
+  - Shows a non-atomic parent PlanGraph node creating a bounded ChildCellRequest, deterministic child mini-cell, ChildBoundarySnapshot, and ResultProposal-compatible parent artifact visible to Post V&V, GT, and Root Final.
+  - Confirms atomic and NeedleRuntime routes remain distinct; completed/degraded/blocked/failed child outcomes remain visible; raw output and malicious child authority claims are rejected.
+  - Confirms child cell and child Orchestrator are not Root, recursion and budget are bounded, and no child FinalOutput, parent DRS write, live child LLM/SLM, or real external action occurs.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

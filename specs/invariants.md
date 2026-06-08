@@ -259,8 +259,14 @@ Semantic Reuse Pipeline Integration invariant:
 - Live child result invariant: Gemini returns only ChildExecutionResult JSON/evidence; ChildExecutionResult becomes ChildBoundarySnapshot evidence and must pass through parent adapter, Post V&V, GT, and Root. It is not FinalOutput, DRS writeback, a needle, a protocol template, or production action execution.
 - Live child authority invariant: child Executor is not Root, child Orchestrator, or child Architect; action-like requests are blocked/rejected/permission-required/sandbox-only; no API/tool calls, real actions, child FinalOutput, parent DRS write, Root bypass, or Post V&V / GT / Root bypass is allowed.
 - Live child proof status: PASS, live opt-in/network used, completed proof task accepted, action-like request blocked and rejected through Root, malicious_claims_rejected=6, focused deterministic tests passed=36, full suite passed=1082, sensitive scan clear. Evidence: `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log` and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`.
-- Roadmap order: DRS Lifecycle Semantics v0.2 -> ConflictCheck v0.1 -> Audit/hash-chain hardening v0.1.
-- DRS Lifecycle invariant: remain local/proof-level first; represent richer experience and promotion candidates without making DRS full memory, decision authority, vector store, external/global DRS, or automatic NeedleFactory. Root remains commit authority.
+- DRS Lifecycle Semantics v0.2 is complete. It consumes current proof collectors and creates local/proof-level, pointer-first ExperienceRecord objects for Root Final audit, sandbox NeedleRuntime, child-cell boundary, live child Executor, blocked-action, and synthetic promotion examples.
+- Lifecycle status invariant: completed, degraded, blocked, failed, rejected, quarantined, deadend, and promotion_candidate remain distinct and visible.
+- Promotion invariant: experience_record, reuse_candidate, protocol_candidate, and needle_candidate may be represented, but installed_needle_ref is supported only and installed_needle_count remains 0. One successful run does not install a needle; automatic needle creation is blocked.
+- Lifecycle authority invariant: trust and TTL updates are advisory; DRS does not mutate itself or decide promotion, reuse, override, quarantine release, or commit. Root remains commit authority.
+- DRS topology invariant: DRS remains address/resonance/lineage/audit, not full memory, decision authority, vector store, automatic NeedleFactory, or external/global DRS. Dense artifacts remain outside DRS behind pointers.
+- DRS Lifecycle proof status: PASS, records_created=13, malicious_claims_rejected=5, quarantine/deadends and advisory trust/TTL represented, focused tests passed=75, full suite passed=1097, sensitive scan clear. Evidence: `docs/audit_reports/auditor_drs_lifecycle_semantics.log`.
+- Roadmap order: ConflictCheck v0.1 -> Audit/hash-chain hardening v0.1.
+- ConflictCheck invariant: compare lifecycle records and emit conflict flags / ConflictReport only; do not decide final truth. Root remains final authority.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

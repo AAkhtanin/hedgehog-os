@@ -567,13 +567,29 @@ suite passed=1082, sensitive scan clear. Deterministic safe-fallback and live
 PASS evidence: `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log`
 and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`.
 
-Next is DRS Lifecycle Semantics v0.2, local/proof-level first. It must represent
-completed/degraded/blocked/failed experience, needle outcomes, child boundary
-snapshots, live child results, blocked action-like and non-atomic branch traces,
-promotion candidates, and a future protocol / NeedleCandidate ladder. DRS
-remains address/resonance/lineage/audit, not full memory, authority, vector
-store, external/global DRS, or automatic NeedleFactory. Root remains commit
-authority. Then follow ConflictCheck v0.1 and Audit/hash-chain hardening v0.1.
+DRS Lifecycle Semantics v0.2 is complete. It consumes current proof collectors
+and creates local/proof-level, pointer-first ExperienceRecord objects for Root
+Final audit, sandbox NeedleRuntime outcomes, ChildBoundarySnapshots, live child
+results, blocked action-like traces, and synthetic promotion examples.
+
+It represents completed, degraded, blocked, failed, rejected, quarantined,
+deadend, and promotion_candidate states. The promotion ladder represents
+experience_record, reuse_candidate, protocol_candidate, and needle_candidate;
+installed_needle_ref is supported only and installed_needle_count remains 0.
+Automatic needle creation is blocked. Root approval, repeated validation,
+sandbox tests, manifest, and permission model gates remain explicit.
+
+Trust and TTL hints are advisory; conflict status defaults to `not_checked`;
+quarantine release and deadend override require Root. DRS remains
+address/resonance/lineage/audit, not full memory, decision authority, vector
+store, automatic NeedleFactory, or external/global DRS. Root remains commit
+authority. Proof status: PASS, records_created=13, malicious_claims_rejected=5,
+focused tests passed=75, full suite passed=1097, sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_drs_lifecycle_semantics.log`.
+
+Next is ConflictCheck v0.1. It compares lifecycle records and produces conflict
+flags / ConflictReport without deciding final truth. Root remains final
+authority. Audit/hash-chain hardening follows.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

@@ -1015,10 +1015,28 @@ passed=1082, sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log`
 and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`.
 
-Next is local/proof-level DRS Lifecycle Semantics v0.2. It must represent richer
-experience and promotion candidates without making DRS full memory, authority,
-vector store, external/global DRS, or automatic NeedleFactory. Root remains
-commit authority. Then follow ConflictCheck v0.1 and Audit/hash-chain hardening.
+DRS Lifecycle Semantics v0.2 is complete. It consumes current proof collectors
+and creates 13 local/proof-level, pointer-first ExperienceRecord examples for
+Root Final audit, sandbox NeedleRuntime outcomes, child-cell boundaries, live
+child Executor results, blocked action-like traces, and synthetic promotion
+candidates.
+
+The proof represents completed, degraded, blocked, failed, rejected,
+quarantined, deadend, and promotion_candidate statuses. It represents the
+experience_record, reuse_candidate, protocol_candidate, and needle_candidate
+ladder while supporting installed_needle_ref only; installed_needle_count=0 and
+automatic needle creation is blocked. Trust and TTL are advisory, ConflictCheck
+is deferred, quarantine release and deadend override require Root, and dense
+artifacts remain outside DRS behind pointers.
+
+DRS remains address/resonance/lineage/audit, not full memory, decision
+authority, vector store, automatic NeedleFactory, or external/global DRS. Root
+remains commit authority. Proof status: PASS, malicious_claims_rejected=5,
+focused tests passed=75, full suite passed=1097, sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_drs_lifecycle_semantics.log`.
+
+Next is ConflictCheck v0.1, producing conflict flags / ConflictReport without
+deciding final truth. Audit/hash-chain hardening follows.
 
 ## 20. Future Demo Evolution
 

@@ -89,6 +89,11 @@ Current reports:
   - Live Gemini PASS proof for Live Child Executor in Fractal Cell v0.1.
   - Confirms live opt-in/network use with Gemini only as bounded child Executor, valid completed proof-task output, valid action-like request blocking, no fallback, and no API/tool call, real action, child FinalOutput, parent DRS write, Root bypass, or Post V&V / GT / Root bypass.
 
+- `auditor_drs_lifecycle_semantics.log`
+  - Proof for DRS Lifecycle Semantics v0.2.
+  - Confirms current proof collectors produce 13 local/proof-level, pointer-first ExperienceRecord examples across completed, degraded, blocked, failed, rejected, quarantined, deadend, and promotion_candidate states.
+  - Confirms automatic needle creation is blocked, installed needle count remains zero, trust/TTL metadata is advisory, ConflictCheck remains deferred, and Root remains commit authority.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

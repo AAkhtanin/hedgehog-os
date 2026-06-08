@@ -566,7 +566,13 @@ The live proof completed a bounded proof-only task and blocked an action-like re
 
 Live proof status: live_child_executor_in_fractal_cell_status=PASS, mode=live_opt_in, live_requested=true, live_env_allowed=true, live_network_used=true, model=gemini-2.5-flash, live_child_executor_used=true, live_child_executor_valid=true, child_executor_role=child_executor_only, child_orchestrator_live=false, child_architect_live=false, bounded_node_contract_received=true, free_instruction_received=false, malicious_claims_rejected=6, no_child_final_output=true, no_child_parent_drs_write=true, no_real_external_actions=true, no_api_tool_calls=true, no_root_bypass=true, and no_post_vv_gt_root_bypass=true. Deterministic safe-fallback proof and live PASS evidence are in `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log` and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`; focused deterministic tests passed=36, full suite passed=1082, and the sensitive scan found no secret terms.
 
-The current proof-level canonical execution now includes Live Gemini Orchestrator -> Root Matrix Gate -> AVF AttractorPacket -> Live Gemini Architect -> parent PlanGraph -> non-atomic child-cell route -> bounded child fractal cell -> live Gemini child Executor -> ChildExecutionResult -> ChildBoundarySnapshot -> ResultProposal-compatible parent artifact -> Post V&V -> GTDecision -> Root FinalArtifact -> DRS local audit/writeback boundary.
+DRS Lifecycle Semantics v0.2 is complete. It is a deterministic LocalDRS proof that consumes the current DRS writeback, sandbox NeedleRuntime, Fractal Cell Runtime, and deterministic Live Child Executor collectors. It creates local/proof-level, pointer-first ExperienceRecord objects for Root Final audit records, needle outcomes, child boundary snapshots, live child results, blocked action-like traces, and synthetic protocol / NeedleCandidate examples. Dense artifacts remain outside DRS and are referenced by pointers.
+
+The proof represents completed, degraded, blocked, failed, rejected, quarantined, deadend, and promotion_candidate statuses. Its promotion ladder supports experience_record, reuse_candidate, protocol_candidate, needle_candidate, and installed_needle_ref semantics, while installed_needle_count remains 0. Automatic needle creation is blocked; Root approval, repeated validation, sandbox tests, a manifest, and a permission model remain required where applicable. Trust and TTL metadata are advisory, conflict status defaults to `not_checked`, quarantine release and deadend override require Root, and ConflictCheck remains deferred.
+
+DRS remains an address / resonance / lineage / audit layer, not full memory, decision authority, vector store, automatic NeedleFactory, or external/global DRS. DRS does not mutate itself; GT evaluation metadata remains advisory; ConflictCheck will later flag contradictions; Root decides promotion, reuse, override, quarantine release, and commit. Proof status: PASS, records_created=13, malicious_claims_rejected=5, promotion_ladder_represented=true, quarantine_and_deadends_represented=true, trust_ttl_advisory_represented=true, focused tests passed=75, full suite passed=1097, sensitive scan clear. Evidence: `docs/audit_reports/auditor_drs_lifecycle_semantics.log`.
+
+The current proof-level canonical execution now includes Live Gemini Orchestrator -> Root Matrix Gate -> AVF AttractorPacket -> Live Gemini Architect -> parent PlanGraph -> non-atomic child-cell route -> bounded child fractal cell -> live Gemini child Executor -> ChildExecutionResult -> ChildBoundarySnapshot -> ResultProposal-compatible parent artifact -> Post V&V -> GTDecision -> Root FinalArtifact -> DRS local audit/writeback boundary -> DRS Lifecycle ExperienceRecord classification.
 
 This remains opt-in proof only: no production RootOrchestrator integration, production external execution, real API/tool use, Telegram, production DRS persistence, global/external DRS, or Marennya / UP lifecycle.
 
@@ -705,13 +711,14 @@ Completed recent layers:
 - Root-native sandbox NeedleRuntime E2E v0.1.
 - Fractal Cell Runtime v0.1.
 - Live Child Executor in Fractal Cell v0.1.
+- DRS Lifecycle Semantics v0.2.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- DRS Lifecycle Semantics v0.2, local/proof-level first, representing completed/degraded/blocked/failed experience, sandbox NeedleRuntime outcomes, ChildBoundarySnapshots, live ChildExecutionResults, action-like blocked traces, non-atomic branch traces, promotion candidates, and the future protocol / NeedleCandidate ladder.
-- DRS remains an address / resonance / lineage / audit layer, not full memory, decision authority, vector store, external/global DRS, or an automatic needle factory. Root remains commit authority.
-- Then ConflictCheck v0.1.
+- ConflictCheck v0.1 compares DRS lifecycle records and produces conflict flags / ConflictReport without deciding final truth.
+- It should detect completed/completed, completed/deadend, reuse/quarantine, promotion/rejected, stale/fresh, trust-level, blocked-action/reuse, and permission/action conflicts.
+- DRS remains storage/index/lifecycle rather than judge; Root remains final authority.
 - Then Audit/hash-chain hardening v0.1.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.

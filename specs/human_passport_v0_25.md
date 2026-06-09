@@ -2202,6 +2202,33 @@ The v0.1 proof does not mutate DRS or source artifacts, decide truth, validate
 semantic correctness, grant authority, replace GT / ConflictCheck / Root,
 implement blockchain, or provide production persistence.
 
+## 20.1 Applied Warehouse Semantic Proof
+
+Applied Warehouse Semantic Demo / Warehouse-Style Proof v0.1 is the first
+applied "meat" proof over the Root-centered canonical geometry. It processes
+warehouse W-17 / dispatch D-2042 from local WorldState through DRS retrieval,
+controlled route assembly, gates, AVF, bounded planning/execution, Post V&V,
+GT, Root Final, DRS Lifecycle, ConflictCheck, and proof-level audit linkage.
+
+The explicit stock evidence is `water_filter` required=8 and current=6. Root
+Final therefore reports `dispatch_readiness=not_ready`, missing
+`water_filter=2`, and no external action. `invalid_ready_certificate` is
+rejected; `completed_not_ready_certificate` is accepted; needs-user restock
+confirmation remains a secondary valid recommendation.
+
+The applied proof creates explicit PlanGraph, node-result, validation, GT
+selection, local lifecycle, ConflictReport, applied artifact, and applied audit
+entry objects. PASS depends on `validate_applied_report_consistency()`, which
+rejects a wrong applied audit hash, missing validation row, or missing
+short-stock conflict report.
+
+These lifecycle and audit objects are local proof evidence only. They are not
+production persistence, global/external DRS, blockchain, or production
+warehouse execution. Applied demos must not automatically create
+`protocol_candidate` or `needle_candidate` unless that lifecycle is explicitly
+under test. Root remains final authority; GT and ConflictCheck remain advisory;
+hash-chain proves continuity, not truth.
+
 ## 21. Legacy Code Position
 
 Legacy code is donor/reference only.

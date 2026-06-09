@@ -109,6 +109,15 @@ Current reports:
   - Confirms delegated bounded route-assembly authority across eight deterministic scenarios while Root / MatrixGate / RouteGate / Policy / AVF preserve authority and boundary continuity.
   - Confirms this standalone proof does not replace production RootOrchestrator runtime, manage AVF, call live network, execute actions, write production DRS, or claim production autonomy.
 
+- `auditor_applied_warehouse_semantic_demo.log`
+  - Proof for Applied Warehouse Semantic Demo / Warehouse-Style Proof v0.1.
+  - Confirms W-17 / D-2042 resolves to `not_ready` from explicit `water_filter short_by_2` evidence, with explicit applied PlanGraph, execution, validation, GT, lifecycle, conflict, artifact, and audit-entry objects.
+  - Confirms applied artifact consistency and proof-only hash linkage; no production autonomy, persistence, global/external DRS, or real action occurs.
+
+- `auditor_applied_warehouse_semantic_demo_postcommit.log`
+  - Postcommit audit evidence for commits `9342b59` and `0de8db6`.
+  - Confirms the applied warehouse proof remains PASS after commit, with focused/full-suite verification and a clear sensitive scan.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

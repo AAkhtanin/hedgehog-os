@@ -55,7 +55,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Passport Geometry docs sync → next: Audit / hash-chain hardening → only later: NeedleFactory / NeedleForge
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → Applied Warehouse Semantic Demo → next: Applied Semantic Demo #2 / Permission-NeedsUser UX → only later: NeedleFactory / NeedleForge
 
 Do not jump ahead to:
 
@@ -98,6 +98,9 @@ Anti-reduction rules:
   cells, needles, DRS, GT, ConflictCheck, Marennya, UP, or external DRS.
 - Apply "Vassal of my vassal is not my vassal": bounded local authority does
   not propagate upward, sideways, outward, or into Root.
+- Applied demos prove domain transfer of the canonical Root-controlled path.
+- Applied demos must not automatically create `protocol_candidate` or
+  `needle_candidate` unless that lifecycle is explicitly under test.
 
 See `docs/passport_geometry_root_needles.md`.
 
@@ -165,6 +168,8 @@ See `docs/passport_geometry_root_needles.md`.
 54. Post V&V from ResultProposal is deterministic proof only. Post V&V receives only ResultProposal artifacts, not raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent, real action output, malicious claim payloads, or malformed ResultProposal shapes. It creates ValidationReport / V&VReport only and must not create FinalOutput, write DRS directly, execute actions, invoke GT / Root Final, implement global/external DRS, or invoke Marennya / UP.
 55. GT from ValidationReport is deterministic proof only. GT receives only ValidationReport / V&VReport artifacts, not raw ResultProposal, raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent, real action output, malicious claim payloads, or malformed ValidationReport shapes. It creates GTDecision / selection artifact only and must not create FinalOutput, write DRS directly, execute actions, invoke Root Final, implement global/external DRS, or invoke Marennya / UP.
 56. Root Final from GTDecision is deterministic proof only. Root Final receives only GTDecision / selection artifacts, not raw ValidationReport, raw ResultProposal, raw Executor text, raw Architect PlanGraph, raw Orchestrator matrix, raw user intent, real action output, malicious GTDecision claims, or malformed GTDecision shapes. Root creates FinalOutput / trace-level final artifact only and is the only final-output authority. This layer must not write DRS, invoke DRS writeback, execute actions, claim production persistence, implement global/external DRS, or invoke Marennya / UP.
+57. Applied Warehouse Semantic Demo v0.1 proves `not_ready` from explicit W-17 stock shortage and rejects an invalid ready certificate. Its applied PlanGraph, execution results, validation rows, GT selection, lifecycle records, ConflictReports, artifact, and audit entry must remain explicitly linked and consistency-checked.
+58. Applied demos must not automatically create `protocol_candidate` or `needle_candidate` unless that lifecycle is explicitly under test.
 
 ---
 

@@ -597,6 +597,16 @@ Orchestrator proposes AVF inputs; it does not manage AVF. Root / MatrixGate / Ro
 
 This remains proof-only: no production RootOrchestrator replacement or autonomy, live Gemini/network, production external execution, real API/tool use, Telegram, production DRS persistence, global/external DRS, Marennya / UP, or NeedleFactory / NeedleForge.
 
+Applied Warehouse Semantic Demo / Warehouse-Style Proof v0.1 is complete. This is the first applied "meat" proof that the Root-centered canonical geometry can process a practical semantic task end-to-end. For warehouse W-17 before dispatch D-2042, explicit local WorldState shows `water_filter` required=8 and current=6. Root Final therefore reports `dispatch_readiness=not_ready`, `blocking_reason=water_filter short by 2`, and no external action.
+
+The proof is not based on naked booleans only. It creates explicit `applied_plan_graph`, node results, validation rows, GT selection, local lifecycle records, ConflictReports, applied artifact, and proof-only audit entry. `validate_applied_report_consistency()` rejects a wrong audit hash, missing validation row, or missing short-stock conflict report. The invalid ready certificate is rejected; the completed not-ready certificate is accepted; needs-user restock confirmation remains a secondary valid recommendation.
+
+Applied lifecycle records are local proof evidence only: `warehouse_experience_record_W17_D2042`, `warehouse_reuse_candidate_W17_D2042`, `warehouse_invalid_ready_quarantine_W17_D2042`, and `warehouse_external_dispatch_deadend_W17_D2042`. ConflictCheck flags `worldstate.water_filter=short_by_2` versus an invalid ready claim, while the applied audit entry hashes the applied artifact. Hash-chain proves continuity, not truth. Root remains final authority; GT and ConflictCheck remain advisory.
+
+Proof status: PASS, `applied_audit_entry_created=true`, `applied_demo_artifact_hash_linked=true`, `explicit_applied_artifacts_consistent=true`, focused tests passed=98, full suite passed=1180 with 37 warnings, sensitive scan clear, `production_autonomy_claimed=false`. Evidence: `docs/audit_reports/auditor_applied_warehouse_semantic_demo.log` and `docs/audit_reports/auditor_applied_warehouse_semantic_demo_postcommit.log`; commits `9342b59` and `0de8db6`.
+
+This is deterministic local applied proof only, not a production warehouse runtime, real warehouse API, live Gemini, Telegram, real external action, production persistence, global/external DRS, autonomous RootOrchestrator replacement, Marennya / UP, or NeedleFactory / NeedleForge. Applied demos must not automatically create `protocol_candidate` or `needle_candidate` unless that lifecycle is explicitly under test.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -737,12 +747,15 @@ Completed recent layers:
 - Root-centered Needle Geometry docs.
 - Audit / hash-chain hardening v0.1.
 - Controlled RootOrchestrator Route Assembly Integration v0.1.
+- Applied Warehouse Semantic Demo / Warehouse-Style Proof v0.1.
+- Applied Warehouse postcommit audit log.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Applied semantic demo / warehouse-style proof through the Root-controlled canonical vector, followed by its docs/audit.
-- Only after the applied path is clean: Marennya quarantine-first v0.1, UP transfer/opportunity v0.1, NeedleCandidate lifecycle / NeedleForge prototype, and External DRS pointer protocol.
+- Applied Warehouse docs sync, then Applied Semantic Demo #2: certificate/document readiness.
+- After Applied Demo #2 docs/audit: Permission/NeedsUser UX proof, NeedleCandidate lifecycle / NeedleForge prototype, and External DRS pointer protocol.
+- Only after several applied traces, deadends, and conflicts: Marennya quarantine-first v0.1, then UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.

@@ -1090,19 +1090,47 @@ tests passed=67, full suite passed=1149 with 37 warnings, sensitive scan clear,
 production_autonomy_claimed=false. Evidence:
 `docs/audit_reports/auditor_controlled_root_orchestrator_route_assembly.log`.
 
+Applied Warehouse Semantic Demo / Warehouse-Style Proof v0.1 is complete. It is
+the first applied semantic proof of the Root-controlled canonical geometry. A
+deterministic local WorldState for W-17 / D-2042 shows `water_filter`
+required=8, current=6, so Root Final reports `not_ready`, `water_filter short
+by 2`, and no external action.
+
+The proof creates explicit applied PlanGraph, node results, validation rows, GT
+selection, lifecycle records, ConflictReports, artifact, and audit entry.
+`validate_applied_report_consistency()` rejects wrong audit hashes, missing
+validation rows, and missing short-stock conflict reports. The invalid ready
+certificate is rejected; the completed not-ready certificate is accepted; the
+needs-user restock recommendation remains secondary.
+
+Applied lifecycle records are local/proof-level only: experience, reuse
+candidate, invalid-ready quarantine, and external-dispatch deadend. They are
+not production persistence or global/external DRS. Applied demos must not
+automatically create `protocol_candidate` or `needle_candidate` unless that
+lifecycle is explicitly under test. Proof status: PASS,
+applied_audit_entry_created=true, applied_demo_artifact_hash_linked=true,
+explicit_applied_artifacts_consistent=true, focused tests passed=98, full suite
+passed=1180 with 37 warnings, sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_applied_warehouse_semantic_demo.log` and
+`docs/audit_reports/auditor_applied_warehouse_semantic_demo_postcommit.log`.
+
 Corrected next order:
 
 1. Passport Geometry docs sync - complete.
 2. Audit / hash-chain hardening v0.1 - complete.
 3. Audit/hash-chain docs sync - complete.
 4. Controlled RootOrchestrator Route Assembly Integration v0.1 - complete.
-5. Controlled RootOrchestrator docs sync - current.
-6. Applied semantic demo / warehouse-style proof.
-7. Applied demo docs/audit.
-8. Marennya quarantine-first v0.1.
-9. UP transfer/opportunity v0.1.
-10. NeedleCandidate lifecycle / NeedleForge prototype.
-11. External DRS pointer protocol.
+5. Controlled RootOrchestrator docs sync - complete.
+6. Applied Warehouse Semantic Demo / Warehouse-Style Proof v0.1 - complete.
+7. Applied Warehouse postcommit audit log - complete.
+8. Applied Warehouse docs sync - current.
+9. Applied Semantic Demo #2: certificate/document readiness.
+10. Applied Demo #2 docs/audit.
+11. Permission/NeedsUser UX proof.
+12. NeedleCandidate lifecycle / NeedleForge prototype.
+13. External DRS pointer protocol.
+14. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
+15. Then UP transfer/opportunity.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement.

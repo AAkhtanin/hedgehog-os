@@ -853,6 +853,30 @@ with 37 warnings, sensitive scan clear, production_autonomy_claimed=false.
 Evidence:
 `docs/audit_reports/auditor_controlled_root_orchestrator_route_assembly.log`.
 
+Applied Warehouse Semantic Demo / Warehouse-Style Proof v0.1 is complete. The
+first applied "meat" scenario processes a proof-level W-17 inventory readiness
+request for dispatch D-2042 through the Root-controlled canonical path. Local
+WorldState proves `water_filter short_by_2`; Root Final reports `not_ready`
+rather than issuing an invalid ready certificate.
+
+The scenario creates explicit applied PlanGraph nodes/results, validation rows,
+GT selection, local lifecycle records, ConflictReports, applied artifact, and a
+proof-only applied audit entry. `validate_applied_report_consistency()` makes
+PASS fail for a wrong audit hash, missing validation row, or missing
+short-stock conflict report. ConflictCheck flags
+`worldstate.water_filter=short_by_2` versus
+`invalid_ready_certificate.dispatch_readiness=ready` but remains advisory.
+
+The applied lifecycle records include the W-17 experience record, reuse
+candidate, invalid-ready quarantine record, and external-dispatch deadend.
+They are local proof records only. Applied demos must not automatically create
+`protocol_candidate` or `needle_candidate` unless that lifecycle is explicitly
+under test. Proof status: PASS, explicit applied artifacts consistent, focused
+tests passed=98, full suite passed=1180 with 37 warnings, sensitive scan clear,
+production_autonomy_claimed=false. Evidence:
+`docs/audit_reports/auditor_applied_warehouse_semantic_demo.log` and
+`docs/audit_reports/auditor_applied_warehouse_semantic_demo_postcommit.log`.
+
 The scenario trace is an observable projection of the main downward
 Root-controlled canonical vector, not the full architecture. Needles are
 bounded capability contracts, not plugins. DRS is semantic topology, not
@@ -860,13 +884,12 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: Passport Geometry docs sync complete; Audit / hash-chain
-hardening v0.1 complete; audit/hash-chain docs sync complete; Controlled
-RootOrchestrator Route Assembly Integration v0.1 complete; Controlled
-RootOrchestrator docs sync current;
-applied semantic demo / warehouse-style proof; applied demo docs/audit; only then
-Marennya quarantine-first, UP transfer/opportunity, NeedleCandidate lifecycle /
-NeedleForge prototype, and External DRS pointer protocol.
+Corrected next order: Passport Geometry, audit/hash-chain, Controlled Route
+Assembly, Applied Warehouse proof, and Applied Warehouse postcommit audit are
+complete; Applied Warehouse docs sync is current. Next: Applied Semantic Demo
+#2 certificate/document readiness, its docs/audit, Permission/NeedsUser UX,
+NeedleCandidate lifecycle / NeedleForge, External DRS pointer protocol, and
+only after several applied traces/deadends/conflicts: Marennya then UP.
 
 ## Exclusions
 

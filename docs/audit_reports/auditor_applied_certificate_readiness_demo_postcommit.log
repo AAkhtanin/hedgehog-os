@@ -1,0 +1,489 @@
+===== GIT LOG =====
+aa55384 Add applied certificate readiness demo proof
+21dd12e Document applied warehouse semantic demo checkpoint
+0de8db6 Add postcommit applied warehouse audit log
+9342b59 Add applied warehouse semantic demo proof
+d15ae27 Document controlled RootOrchestrator route assembly checkpoint
+9d1aa8d Add controlled RootOrchestrator route assembly proof
+ce8b846 Document audit hash-chain checkpoint
+388ee78 Add audit hash-chain proof
+6795ae7 Document Root-centered needle geometry
+d2f8f5d Add final day checkpoint audit after ConflictCheck
+fc7b56c Document ConflictCheck checkpoint
+fe271a4 Add ConflictCheck proof
+2a65def Document DRS lifecycle semantics checkpoint
+5999f17 Add DRS lifecycle semantics proof
+54f61bf Document live child Executor in Fractal Cell checkpoint
+027f0b5 Add live child Executor in Fractal Cell proof
+ab5e5aa Document Fractal Cell Runtime checkpoint
+937dd57 Add Fractal Cell Runtime proof
+11aa7bf Document Fractal Cell Runtime as next execution layer
+a41e2ea Add Root-native sandbox NeedleRuntime E2E proof
+7a132d0 Add Matrix Gate AVF current canon sanity proof
+34918fd Document DRS writeback audit from Root Final checkpoint
+879e3e4 Add DRS writeback audit from Root Final proof
+c6417d1 Add live dual-Gemini full chain smoke
+adbac6d Document Root Final from GTDecision checkpoint
+25cc173 Add Root Final from GTDecision proof
+e544c4b Document GT from ValidationReport checkpoint
+083ae8a Add GT from ValidationReport proof
+5799127 Document Post V&V from ResultProposal checkpoint
+2b4897e Add Post V&V from ResultProposal proof
+
+===== GIT STATUS BEFORE =====
+?? docs/audit_reports/auditor_applied_certificate_readiness_demo_postcommit.log
+
+===== APPLIED CERTIFICATE READINESS DEMO =====
+[APPLIED CERTIFICATE READINESS DEMO]
+note: deterministic applied certificate/document readiness proof
+note: local proof-level only; no external submission or production persistence
+
+[INPUT / MODE]
+mode: deterministic_applied_certificate_readiness_demo
+local_proof_level_only: true
+live_network_used: false
+telegram_used: false
+real_external_action: false
+production_persistence: false
+global_drs_implemented: false
+external_drs_network_implemented: false
+marennya_invoked: false
+up_invoked: false
+needleforge_invoked: false
+
+[USER EVENT]
+event_id: certificate_event_APP77_CERT310
+user_task: Create a proof-level readiness certificate for application APP-77. Check local document state, detect missing or expired documents, reject invalid ready claims, and produce a Root-final summary. Do not submit anything externally.
+application_id: APP-77
+certificate_request_id: CERT-310
+requested_certificate_type: travel_document_readiness
+proof_only: true
+
+[WORLDSTATE]
+application_id: APP-77
+certificate_request_id: CERT-310
+requested_certificate_type: travel_document_readiness
+required_documents: ['passport_scan', 'residency_proof', 'insurance_certificate', 'payment_receipt']
+local_documents: {'passport_scan': {'status': 'present', 'expiry_status': 'valid'}, 'residency_proof': {'status': 'present', 'expiry_status': 'valid'}, 'insurance_certificate': {'status': 'present', 'expiry_status': 'expired'}, 'payment_receipt': {'status': 'missing', 'expiry_status': 'not_applicable'}}
+blocking_items: {'insurance_certificate': 'expired', 'payment_receipt': 'missing'}
+freshness_status: current_for_demo
+assumptions: ['local-only data', 'no external submission', 'proof-level certificate only']
+worldstate_assembled: true
+worldstate_source: deterministic_local_fixture
+
+[DRS RETRIEVAL]
+drs_retrieval_requested: true
+drs_retrieval_scope: local_proof_only
+retrieved_records_count: 4
+retrieved_context_types: ['previous_document_readiness_pattern', 'previous_expired_document_deadend', 'previous_invalid_ready_conflict', 'previous_local_document_check_reuse_candidate']
+retrieved_context_applied: true
+no_global_or_external_drs_used: true
+
+[CONTROLLED ROUTE ASSEMBLY]
+controlled_route_assembly_source_status: PASS
+orchestrator_has_bounded_delegated_authority: true
+orchestrator_proposes_avf_inputs: true
+orchestrator_manages_avf: false
+orchestrator_is_root: false
+orchestrator_writes_drs: false
+orchestrator_creates_final_output: false
+orchestrator_executes_actions: false
+
+[MATRIX GATE / ROUTE GATE]
+root_validates_orchestrator_proposal: true
+matrix_gate_after_orchestrator: true
+route_gate_after_orchestrator: true
+policy_constraints_applied: true
+invalid_ready_claim_blocked: true
+external_submission_blocked: true
+proposal_allowed_to_avf: true
+
+[AVF / ATTRACTOR PACKET]
+avf_source_status: PASS
+avf_after_matrix_gate: true
+avf_independent_filter_scoring_layer: true
+hardmask_beats_orchestrator_confidence: true
+missing_expired_document_vector_preserved: true
+false_ready_vector_blocked: true
+external_submission_vector_blocked: true
+attractor_packet_created: true
+architect_receives_bounded_attractor_packet: true
+
+[APPLIED PLAN GRAPH]
+plan_graph_id: applied_certificate_plan_graph_APP77_CERT310
+source: bounded_attractor_packet
+raw_user_text_received: false
+nodes: [{'node_id': 'document_presence_check_node', 'node_kind': 'atomic'}, {'node_id': 'document_expiry_check_node', 'node_kind': 'atomic'}, {'node_id': 'readiness_certificate_draft_node', 'node_kind': 'non_atomic'}, {'node_id': 'no_external_submission_guard_node', 'node_kind': 'guard'}]
+edges: [{'from': 'document_presence_check_node', 'to': 'readiness_certificate_draft_node'}, {'from': 'document_expiry_check_node', 'to': 'readiness_certificate_draft_node'}, {'from': 'no_external_submission_guard_node', 'to': 'readiness_certificate_draft_node'}]
+contract_valid: true
+
+[DOCUMENT CHECK RESULTS]
+document_presence_check_result: {'passport_scan': 'present', 'residency_proof': 'present', 'insurance_certificate': 'present', 'payment_receipt': 'missing'}
+document_expiry_check_result: {'passport_scan': 'valid', 'residency_proof': 'valid', 'insurance_certificate': 'expired', 'payment_receipt': 'not_applicable'}
+readiness_certificate_draft_result: {'certificate_readiness': 'not_ready', 'blocking_reasons': ['insurance_certificate expired', 'payment_receipt missing']}
+no_external_submission_guard_result: {'no_external_submission_executed': True, 'external_submission_blocked': True}
+
+[ARCHITECT / PLAN]
+architect_source_status: PASS
+architect_receives_bounded_attractor_packet: true
+architect_receives_raw_user_text: false
+plan_graph_created: true
+required_plan_nodes_present: true
+plan_graph_contract_valid: true
+
+[DAG / EXECUTION]
+dag_source_status: PASS
+executor_receives_plan_graph_not_raw_user_text: true
+document_presence_check_completed: true
+document_expiry_check_completed: true
+invalid_ready_result_blocked: true
+no_external_submission_executed: true
+node_results_created: 4
+
+[RESULT PROPOSALS]
+result_proposal_id=completed_not_ready_certificate | status=completed | certificate_readiness=not_ready | blocking_reasons=['insurance_certificate expired', 'payment_receipt missing'] | safe_for_root_final=true | final_output_claim=false
+result_proposal_id=invalid_ready_certificate | status=rejected | certificate_readiness=ready | reason=contradicts expired insurance_certificate and missing payment_receipt | safe_for_root_final=false | final_output_claim=false
+result_proposal_id=needs_user_document_update | status=needs_user | certificate_readiness=not_ready | reason=payment_receipt missing and insurance_certificate expired | safe_for_root_final=true | final_output_claim=false
+
+[APPLIED VALIDATION ROWS]
+result_proposal_id=completed_not_ready_certificate | validation_status=accepted | schema_valid=true | evidence_valid=true | policy_valid=true | safety_valid=true | consistency_valid=true | reason=matches missing and expired local documents
+result_proposal_id=invalid_ready_certificate | validation_status=rejected | schema_valid=true | evidence_valid=true | policy_valid=true | safety_valid=false | consistency_valid=false | reason=contradicts insurance_certificate expired and payment_receipt missing
+result_proposal_id=needs_user_document_update | validation_status=needs_user_valid | schema_valid=true | evidence_valid=true | policy_valid=true | safety_valid=true | consistency_valid=true | reason=document update required before submission
+
+[POST V&V]
+post_vv_source_status: PASS
+post_vv_reached: true
+completed_not_ready_certificate_valid: true
+invalid_ready_certificate_rejected: true
+needs_user_document_update_valid: true
+
+[APPLIED GT SELECTION]
+selected_result_proposal_id: completed_not_ready_certificate
+secondary_result_proposal_id: needs_user_document_update
+rejected_result_proposal_ids: ['invalid_ready_certificate']
+selection_reason: not_ready matches local evidence; needs_user remains a secondary operational recommendation
+gt_is_not_truth_proof: true
+
+[GT]
+gt_source_status: PASS
+gt_reached: true
+gt_is_not_truth_proof: true
+selected_result_proposal_id: completed_not_ready_certificate
+secondary_result_proposal_id: needs_user_document_update
+rejected_result_proposal_ids: ['invalid_ready_certificate']
+
+[ROOT FINAL]
+root_final_source_status: PASS
+root_final_created: true
+root_created_final_output: true
+root_is_only_final_output_authority: true
+certificate_readiness: not_ready
+blocking_reasons: ['insurance_certificate expired', 'payment_receipt missing']
+ready_documents: ['passport_scan', 'residency_proof']
+invalid_ready_claim_rejected: true
+recommended_next_step: ask_user_to_upload_payment_receipt_and_refresh_insurance_certificate
+no_external_submission_executed: true
+proof_level_certificate_only: true
+
+[APPLIED DRS LIFECYCLE RECORDS]
+record_id=certificate_experience_record_APP77_CERT310 | record_type=experience_record | experience_status=completed_not_ready | source_result_proposal_id=completed_not_ready_certificate | root_authorized_writeback=true | proof_only=true
+record_id=certificate_reuse_candidate_APP77_CERT310 | record_type=reuse_candidate | source_experience_record_id=certificate_experience_record_APP77_CERT310 | proof_only=true
+record_id=certificate_invalid_ready_quarantine_APP77_CERT310 | record_type=quarantine | source_result_proposal_id=invalid_ready_certificate | quarantine_reason=ready claim contradicts missing/expired documents | proof_only=true
+record_id=certificate_external_submission_deadend_APP77_CERT310 | record_type=deadend | deadend_reason=external submission is outside proof boundary | proof_only=true
+
+[DRS LIFECYCLE]
+drs_lifecycle_source_status: PASS
+drs_lifecycle_after_root_final: true
+experience_record_created: true
+reuse_candidate_created: true
+quarantine_record_created: true
+deadend_record_created: true
+protocol_candidate_created: false
+needle_candidate_created: false
+installed_needle_created: false
+root_authorized_writeback: true
+
+[APPLIED CONFLICT REPORTS]
+conflict_report_id=conflict_invalid_ready_vs_missing_expired_docs_APP77_CERT310 | conflict_type=missing_or_expired_docs_vs_ready_certificate | left_source=worldstate.insurance_certificate=expired + payment_receipt=missing | right_source=invalid_ready_certificate.certificate_readiness=ready | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=no_conflict_completed_not_ready_APP77_CERT310 | conflict_type=no_conflict | left_source=worldstate.insurance_certificate=expired + payment_receipt=missing | right_source=completed_not_ready_certificate.certificate_readiness=not_ready | conflict_detected=false | root_review_required=false | conflictcheck_is_authority=false
+
+[CONFLICTCHECK]
+conflictcheck_source_status: PASS
+conflictcheck_after_drs_lifecycle: true
+invalid_ready_conflict_detected: true
+completed_not_ready_no_conflict: true
+conflictcheck_is_authority: false
+
+[APPLIED AUDIT ENTRY]
+audit_entry_id: audit_applied_certificate_APP77_CERT310
+entry_type: applied_certificate_readiness_artifact
+source_artifact_type: AppliedCertificateReadinessArtifact
+source_artifact_id: applied_certificate_artifact_APP77_CERT310
+canonical_payload_hash: 0a8d10d016493312fe9757f2bc18d22c879aedc3b8332f57a53992066df1eb18
+previous_chain_last_entry_hash: 09388584dfb4519d59463c5c3cf572a50f9a8caf3a3c197240e8ac9133fa5d4c
+proof_only: true
+production_persistence: false
+global_drs_write: false
+external_drs_network_write: false
+audit_chain_decides_truth: false
+
+[AUDIT HASH-CHAIN]
+audit_hash_chain_source_status: PASS
+audit_hash_chain_after_conflictcheck: true
+previous_chain_last_entry_hash: 09388584dfb4519d59463c5c3cf572a50f9a8caf3a3c197240e8ac9133fa5d4c
+applied_audit_entry_created: true
+applied_artifact_hash_linked: true
+hash_chain_proves_continuity_not_truth: true
+production_persistence: false
+
+[MALICIOUS / UNSAFE CLAIMS]
+ready_certificate_despite_missing_or_expired_docs_rejected: true
+external_submission_executed_rejected: true
+orchestrator_created_final_output_rejected: true
+orchestrator_wrote_drs_rejected: true
+avf_bypassed_rejected: true
+hardmask_overridden_rejected: true
+conflictcheck_decided_truth_rejected: true
+audit_chain_decided_truth_rejected: true
+protocol_candidate_created_rejected: true
+needle_candidate_created_rejected: true
+production_persistence_created_rejected: true
+global_or_external_drs_write_rejected: true
+marennya_or_up_invoked_rejected: true
+needleforge_invoked_rejected: true
+
+[AUTHORITY / SAFETY]
+root_sovereign: true
+orchestrator_has_bounded_delegated_authority: true
+orchestrator_is_root: false
+orchestrator_writes_drs: false
+orchestrator_creates_final_output: false
+avf_remains_independent: true
+hardmask_remains_stronger_than_orchestrator_confidence: true
+gt_remains_advisory_until_root: true
+conflictcheck_remains_advisory_until_root: true
+audit_hash_chain_proves_continuity_not_truth: true
+root_remains_final_authority: true
+production_autonomy_claimed: false
+
+[SUMMARY]
+applied_certificate_readiness_demo_status: PASS
+application_id: APP-77
+certificate_request_id: CERT-310
+certificate_readiness: not_ready
+blocking_reasons: ['insurance_certificate expired', 'payment_receipt missing']
+invalid_ready_certificate_rejected: true
+no_external_submission_executed: true
+protocol_candidate_created: false
+needle_candidate_created: false
+applied_audit_entry_created: true
+explicit_applied_artifacts_consistent: true
+malicious_claims_rejected: 14
+root_remains_final_authority: true
+ready_for_applied_certificate_docs_sync: true
+production_autonomy_claimed: false
+
+===== FOCUSED APPLIED CERTIFICATE TESTS =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collected 68 items
+
+tests/test_applied_certificate_readiness_demo_runner.py ................ [ 23%]
+...                                                                      [ 27%]
+tests/test_applied_warehouse_semantic_demo_runner.py ................... [ 55%]
+............                                                             [ 73%]
+tests/test_controlled_root_orchestrator_route_assembly_runner.py ....... [ 83%]
+...........                                                              [100%]
+
+============================= 68 passed in 47.57s ==============================
+
+===== FULL SUITE =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.13.0
+collected 1199 items
+
+tests/test_action_permission_runtime.py .......                          [  0%]
+tests/test_applied_certificate_readiness_demo_runner.py ................ [  1%]
+...                                                                      [  2%]
+tests/test_applied_warehouse_semantic_demo_runner.py ................... [  3%]
+............                                                             [  4%]
+tests/test_architect_from_bounded_attractor_packet_runner.py ........... [  5%]
+............                                                             [  6%]
+tests/test_architect_prompt_compiler_runtime.py ....                     [  7%]
+tests/test_architect_runtime.py .....                                    [  7%]
+tests/test_audit_hash_chain_runner.py ...............                    [  8%]
+tests/test_avf_attractor_from_accepted_matrix_runner.py ................ [ 10%]
+.....                                                                    [ 10%]
+tests/test_avf_runtime.py ..                                             [ 10%]
+tests/test_candidate_vectors.py ......                                   [ 11%]
+tests/test_canonical_needle_outcome_trace_runner.py ...............      [ 12%]
+tests/test_canonical_pipeline_trace_runner.py ..............             [ 13%]
+tests/test_chaos_survival_showcase_runner.py ...........                 [ 14%]
+tests/test_cold_start_benchmark_runner.py ........                       [ 15%]
+tests/test_compute_collapse_reuse_showcase_runner.py .............       [ 16%]
+tests/test_conflictcheck_runner.py ...................                   [ 17%]
+tests/test_controlled_orchestrator_dry_run_runner.py ..........          [ 18%]
+tests/test_controlled_orchestrator_integration_gate_runner.py .......... [ 19%]
+...                                                                      [ 19%]
+tests/test_controlled_orchestrator_matrix_gate_runner.py ............... [ 20%]
+......                                                                   [ 21%]
+tests/test_controlled_orchestrator_runtime_prototype_runner.py ......... [ 22%]
+....                                                                     [ 22%]
+tests/test_controlled_root_orchestrator_route_assembly_runner.py ....... [ 23%]
+...........                                                              [ 24%]
+tests/test_controlled_runtime_trace_visibility_runner.py ..........      [ 24%]
+tests/test_dag_executor_from_valid_plan_graph_runner.py ................ [ 26%]
+....                                                                     [ 26%]
+tests/test_deadend_memory_demo_runner.py ......                          [ 27%]
+tests/test_demo_certificate_runner.py .......                            [ 27%]
+tests/test_drs_graph_proximity_runner.py ..............                  [ 28%]
+tests/test_drs_layer_taxonomy_runner.py .................                [ 30%]
+tests/test_drs_lifecycle_semantics_runner.py ...............             [ 31%]
+tests/test_drs_runtime.py .............                                  [ 32%]
+tests/test_drs_writeback_from_root_final_runner.py ..................... [ 34%]
+...                                                                      [ 34%]
+tests/test_economics_benchmark_runner.py .........                       [ 35%]
+tests/test_executor_runtime.py ...                                       [ 35%]
+tests/test_final_renderer_runtime.py ....                                [ 35%]
+tests/test_fractal_cell_runtime_runner.py ............                   [ 36%]
+tests/test_fractal_dag_executor_core_runner.py .............             [ 37%]
+tests/test_gemini_orchestrator_architect_pair_smoke_runner.py .......... [ 38%]
+                                                                         [ 38%]
+tests/test_gt_from_validation_report_runner.py ......................... [ 40%]
+                                                                         [ 40%]
+tests/test_gt_validator_runtime.py ...................                   [ 42%]
+tests/test_input_intake_runtime.py .....                                 [ 42%]
+tests/test_intent_route_matrix_runner.py ..........                      [ 43%]
+tests/test_large_graph_stress_runner.py .............                    [ 44%]
+tests/test_live_child_executor_in_fractal_cell_runner.py .............   [ 45%]
+tests/test_live_controlled_smoke_runner.py ........                      [ 46%]
+tests/test_live_dual_gemini_full_chain_smoke_runner.py ................  [ 47%]
+tests/test_live_gemini_architect_smoke_runner.py ..................      [ 49%]
+tests/test_live_gemini_orchestrator_shadow_runner.py ............        [ 50%]
+tests/test_live_gemini_orchestrator_smoke_runner.py .................... [ 52%]
+..                                                                       [ 52%]
+tests/test_live_gemini_ordered_orchestrator_architect_smoke_runner.py .. [ 52%]
+..........................                                               [ 54%]
+tests/test_llm_architect_runtime.py .................                    [ 55%]
+tests/test_llm_gateway_runtime.py .....                                  [ 56%]
+tests/test_marenna_up_runtime.py ...                                     [ 56%]
+tests/test_matrix_gate_avf_current_canon_sanity_runner.py .........      [ 57%]
+tests/test_mode_router_runtime.py ........                               [ 58%]
+tests/test_mode_selection_matrix_runner.py ........                      [ 58%]
+tests/test_needle_failure_integration_runner.py .......                  [ 59%]
+tests/test_needle_outcome_drs_routing_runner.py ...............          [ 60%]
+tests/test_needle_runtime_chaos_runner.py ..........                     [ 61%]
+tests/test_needles_valid.py .                                            [ 61%]
+tests/test_orchestrator_guard_completeness_runner.py ............        [ 62%]
+tests/test_orchestrator_route_validator_runner.py ...........            [ 63%]
+tests/test_orchestrator_shadow_mode_runner.py ........                   [ 64%]
+tests/test_post_vv_from_result_proposal_runner.py ...................... [ 65%]
+.                                                                        [ 65%]
+tests/test_post_vv_runtime.py .......                                    [ 66%]
+tests/test_reasoning_showcase_runner.py .............                    [ 67%]
+tests/test_reflex_runtime.py ..........                                  [ 68%]
+tests/test_reuse_gate_runtime.py .......                                 [ 69%]
+tests/test_reuse_score_runner.py .......................                 [ 70%]
+tests/test_root_dag_drs_audit_runner.py .......                          [ 71%]
+tests/test_root_dag_integration_runner.py .......                        [ 72%]
+tests/test_root_final_from_gt_decision_runner.py ....................... [ 74%]
+...                                                                      [ 74%]
+tests/test_root_native_canonical_trace_runner.py ..........              [ 75%]
+tests/test_root_native_full_canonical_e2e_trace_runner.py .............. [ 76%]
+.......                                                                  [ 76%]
+tests/test_root_native_sandbox_needleruntime_e2e_runner.py ...........   [ 77%]
+tests/test_root_native_semantic_reuse_e2e_trace_runner.py .............. [ 78%]
+..............                                                           [ 80%]
+tests/test_root_orchestrator_runtime.py ...................              [ 81%]
+tests/test_root_semantic_reuse_decision_trace_runner.py ................ [ 83%]
+............                                                             [ 84%]
+tests/test_root_semantic_reuse_final_decision_trace_runner.py .......... [ 84%]
+..............                                                           [ 86%]
+tests/test_root_semantic_reuse_gate_trace_runner.py .................... [ 87%]
+....                                                                     [ 88%]
+tests/test_scenario_benchmark_runner.py ............                     [ 89%]
+tests/test_schema_files_valid.py .                                       [ 89%]
+tests/test_semantic_reuse_authority_stack_audit_runner.py .............. [ 90%]
+......                                                                   [ 90%]
+tests/test_semantic_reuse_pipeline_runner.py ..........................  [ 92%]
+tests/test_showcase_runner.py .....                                      [ 93%]
+tests/test_telegram_bridge_runtime.py ..                                 [ 93%]
+tests/test_telegram_e2e_benchmark_runner.py .........                    [ 94%]
+tests/test_telegram_polling_smoke_runner.py ................             [ 95%]
+tests/test_telegram_shell_runtime.py .............                       [ 96%]
+tests/test_time_model.py ..                                              [ 96%]
+tests/test_trace_reporter_runtime.py ............                        [ 97%]
+tests/test_typed_drs_lineage_edges_runner.py .........................   [100%]
+
+=============================== warnings summary ===============================
+tests/test_architect_runtime.py::test_make_plan_graph_from_attractor_packet_validates_schema
+tests/test_architect_runtime.py::test_make_plan_graph_optional_mock_llm_path_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_architect_runtime.py:32: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_avf_runtime.py::test_build_attractor_packet_filters_forbidden_vectors_and_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_avf_runtime.py:30: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(attractor_schema, store=store)
+
+tests/test_demo_certificate_runner.py::test_certificate_demo_gemini_architect_scenario_is_registered_with_safe_failure
+  /Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/types.py:42: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+tests/test_drs_runtime.py::test_local_drs_writes_reads_and_validates_work_record
+tests/test_drs_runtime.py::test_local_drs_writes_pointer_record
+  /Users/admin/Projects/hedgehog-os/tests/test_drs_runtime.py:33: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(drs_record_schema, store=store)
+
+tests/test_executor_runtime.py::test_execute_plan_graph_returns_schema_valid_result_proposals
+  /Users/admin/Projects/hedgehog-os/tests/test_executor_runtime.py:37: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+
+tests/test_gt_validator_runtime.py: 17 warnings
+  /Users/admin/Projects/hedgehog-os/tests/test_gt_validator_runtime.py:41: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(gt_report_schema, store=store)
+
+tests/test_llm_architect_runtime.py::test_mock_llm_architect_returns_valid_plan_graph
+  /Users/admin/Projects/hedgehog-os/tests/test_llm_architect_runtime.py:35: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_marenna_up_runtime.py::test_marenna_after_task_record_validates_and_stays_quarantined
+tests/test_marenna_up_runtime.py::test_up_after_task_record_validates_and_stays_quarantined
+  /Users/admin/Projects/hedgehog-os/tests/test_marenna_up_runtime.py:42: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(target_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:53: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(candidate_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:67: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(needle_schema, store=store)
+
+tests/test_post_vv_runtime.py::test_validate_demo_result_proposals_are_task_aware_and_schema_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_post_vv_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_creates_valid_final_output_and_work_record
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_generic_math_routes_to_llm_general_not_certificate_pipeline
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_optional_mock_llm_architect_still_creates_final_output
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success
+  /Users/admin/Projects/hedgehog-os/tests/test_root_orchestrator_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(final_output_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================= 1199 passed, 37 warnings in 97.11s (0:01:37) =================
+
+===== SENSITIVE SCAN =====
+
+===== FINAL GIT STATUS =====
+?? docs/audit_reports/auditor_applied_certificate_readiness_demo_postcommit.log

@@ -104,6 +104,11 @@ Current reports:
   - Confirms seven deterministic append-only evidence links, valid chain continuity, eight detected tamper classes, unchanged source artifacts, and eight rejected malicious authority/persistence claims.
   - Confirms hash-chain proves continuity, not truth: it does not mutate DRS or artifacts, grant authority, replace GT / ConflictCheck / Root, implement blockchain, or provide production persistence.
 
+- `auditor_controlled_root_orchestrator_route_assembly.log`
+  - Proof for Controlled RootOrchestrator Route Assembly Integration v0.1.
+  - Confirms delegated bounded route-assembly authority across eight deterministic scenarios while Root / MatrixGate / RouteGate / Policy / AVF preserve authority and boundary continuity.
+  - Confirms this standalone proof does not replace production RootOrchestrator runtime, manage AVF, call live network, execute actions, write production DRS, or claim production autonomy.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

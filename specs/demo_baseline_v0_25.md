@@ -1074,16 +1074,35 @@ malicious_claims_rejected=8, focused tests passed=49, full suite passed=1131
 with 37 warnings, sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_audit_hash_chain.log`.
 
+Controlled RootOrchestrator Route Assembly Integration v0.1 is complete. This
+is a standalone deterministic route-assembly integration proof that consumes
+existing collectors and verifies boundary continuity; it does not replace
+production RootOrchestrator runtime.
+
+The Orchestrator-stage has delegated bounded route-assembly authority. It may
+propose route fields and AVF inputs, but Root / MatrixGate / RouteGate / Policy
+validate the proposal, AVF / HardMask remain independent, and HardMask remains
+stronger than Orchestrator confidence. Architect and downstream execution
+receive bounded artifacts rather than raw uncontrolled intent.
+
+Proof status: PASS, scenarios_verified=8, malicious_claims_rejected=14, focused
+tests passed=67, full suite passed=1149 with 37 warnings, sensitive scan clear,
+production_autonomy_claimed=false. Evidence:
+`docs/audit_reports/auditor_controlled_root_orchestrator_route_assembly.log`.
+
 Corrected next order:
 
 1. Passport Geometry docs sync - complete.
 2. Audit / hash-chain hardening v0.1 - complete.
-3. Audit/hash-chain docs sync - current.
-4. Controlled RootOrchestrator integration and docs sync.
-5. Applied semantic demo / warehouse-style proof and docs/audit.
-6. Marennya quarantine-first v0.1, then UP transfer/opportunity v0.1.
-7. NeedleCandidate lifecycle / NeedleForge prototype.
-8. External DRS pointer protocol.
+3. Audit/hash-chain docs sync - complete.
+4. Controlled RootOrchestrator Route Assembly Integration v0.1 - complete.
+5. Controlled RootOrchestrator docs sync - current.
+6. Applied semantic demo / warehouse-style proof.
+7. Applied demo docs/audit.
+8. Marennya quarantine-first v0.1.
+9. UP transfer/opportunity v0.1.
+10. NeedleCandidate lifecycle / NeedleForge prototype.
+11. External DRS pointer protocol.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement.

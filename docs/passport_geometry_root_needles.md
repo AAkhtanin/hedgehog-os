@@ -161,9 +161,9 @@ Current engineering order:
 
 1. Passport Geometry docs sync - complete.
 2. Audit / hash-chain hardening v0.1 - complete.
-3. Audit / hash-chain docs sync - current.
-4. Controlled RootOrchestrator integration.
-5. Controlled RootOrchestrator docs sync.
+3. Audit / hash-chain docs sync - complete.
+4. Controlled RootOrchestrator Route Assembly Integration v0.1 - complete.
+5. Controlled RootOrchestrator docs sync - current.
 6. Applied semantic demo / warehouse-style proof:
    User/Event -> WorldState -> DRS retrieval -> AVF/AttractorPacket -> Architect
    PlanGraph -> DAG / NeedleRuntime / ChildCell -> ResultProposal -> Post V&V
@@ -180,3 +180,10 @@ the applied canonical path, not self-improvement.
 
 Audit/hash-chain hardens this Root-centered proof geometry rather than turning
 it into a linear long-chain. Hash-chain proves continuity, not truth.
+
+Controlled route assembly fits the geometry as: Root sovereign; Orchestrator
+has delegated bounded route-assembly authority; Gate / Policy / AVF constrain;
+Architect plans from bounded AttractorPacket; Executors / Needles / Cells
+execute bounded contracts; Post V&V / GT evaluate; Root finalizes; DRS /
+ConflictCheck / audit preserve evidence. This proof does not replace production
+RootOrchestrator runtime.

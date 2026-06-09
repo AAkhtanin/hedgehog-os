@@ -591,7 +591,11 @@ Hash-chain proves continuity, not truth. It detects payload, previous-hash, reor
 
 The hash-chain hardens the Root-centered proof geometry, not a linear long-chain. It links evidence across Root Final / DRS writeback boundary -> NeedleRuntime / ChildCell / live child Executor boundary evidence -> DRS Lifecycle summary -> ConflictCheck summary -> final checkpoint summary. `ready_for_controlled_root_orchestrator_integration=true`; no live Gemini/network, Telegram, real external action, production persistence, global/external DRS, Marennya / UP, or NeedleFactory is used.
 
-This remains opt-in proof only: no production RootOrchestrator integration, production external execution, real API/tool use, Telegram, production DRS persistence, global/external DRS, or Marennya / UP lifecycle.
+Controlled RootOrchestrator Route Assembly Integration v0.1 is complete. This is a standalone deterministic route-assembly integration proof. It consumes existing proof collectors and verifies boundary continuity; it does not yet replace production RootOrchestrator runtime. The Orchestrator-stage has delegated bounded route-assembly authority inside the Root boundary: it may propose normalized intent, TemporalQuery, WorldState, DRS retrieval, CandidateVectors, guards, route/mode, decomposition mode, an AttractorPacket draft, and ask_user / block / escalate recommendations.
+
+Orchestrator proposes AVF inputs; it does not manage AVF. Root / MatrixGate / RouteGate / Policy validate the proposal before AVF output can reach Architect. AVF remains an independent filter/scoring/HardMask layer, and HardMask remains stronger than Orchestrator confidence. Architect receives bounded AttractorPacket context; downstream execution receives PlanGraph or bounded contracts; Root Final remains required. Proof status: PASS, scenarios_verified=8, malicious_claims_rejected=14, focused tests passed=67, full suite passed=1149 with 37 warnings, sensitive scan clear, production_autonomy_claimed=false. Evidence: `docs/audit_reports/auditor_controlled_root_orchestrator_route_assembly.log`.
+
+This remains proof-only: no production RootOrchestrator replacement or autonomy, live Gemini/network, production external execution, real API/tool use, Telegram, production DRS persistence, global/external DRS, Marennya / UP, or NeedleFactory / NeedleForge.
 
 Safety rules for this checkpoint:
 
@@ -732,11 +736,11 @@ Completed recent layers:
 - ConflictCheck v0.1.
 - Root-centered Needle Geometry docs.
 - Audit / hash-chain hardening v0.1.
+- Controlled RootOrchestrator Route Assembly Integration v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Controlled RootOrchestrator integration, then its docs sync.
 - Applied semantic demo / warehouse-style proof through the Root-controlled canonical vector, followed by its docs/audit.
 - Only after the applied path is clean: Marennya quarantine-first v0.1, UP transfer/opportunity v0.1, NeedleCandidate lifecycle / NeedleForge prototype, and External DRS pointer protocol.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.

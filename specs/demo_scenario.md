@@ -831,6 +831,28 @@ PASS, entries_created=7, tamper_detection_valid=true, malicious_claims_rejected=
 focused tests passed=49, full suite passed=1131 with 37 warnings, sensitive
 scan clear. Evidence: `docs/audit_reports/auditor_audit_hash_chain.log`.
 
+Controlled RootOrchestrator Route Assembly Integration v0.1 is complete. It is
+a standalone deterministic route-assembly integration proof that consumes
+existing collectors and verifies boundary continuity; it does not replace
+production RootOrchestrator runtime.
+
+The Orchestrator-stage has delegated bounded route-assembly authority inside
+the Root boundary. Orchestrator proposes AVF inputs; it does not manage AVF.
+Root / MatrixGate / RouteGate / Policy constrain proposals, AVF / HardMask
+remain independent, Architect plans from bounded AttractorPacket context,
+bounded execution contracts follow, Root finalizes, and DRS Lifecycle /
+ConflictCheck / audit preserve evidence.
+
+The eight verified scenarios are `safe_warehouse_inventory_route`,
+`forbidden_action_route_blocked`, `hardmask_beats_orchestrator_confidence`,
+`ask_user_recommendation`, `decomposition_route_to_child_cell`,
+`direct_needle_call_attempt_rejected`, `drs_write_attempt_rejected`, and
+`malicious_authority_claims_rejected`. Proof status: PASS,
+malicious_claims_rejected=14, focused tests passed=67, full suite passed=1149
+with 37 warnings, sensitive scan clear, production_autonomy_claimed=false.
+Evidence:
+`docs/audit_reports/auditor_controlled_root_orchestrator_route_assembly.log`.
+
 The scenario trace is an observable projection of the main downward
 Root-controlled canonical vector, not the full architecture. Needles are
 bounded capability contracts, not plugins. DRS is semantic topology, not
@@ -839,9 +861,10 @@ needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
 Corrected next order: Passport Geometry docs sync complete; Audit / hash-chain
-hardening v0.1 complete; audit/hash-chain docs sync current; Controlled
-RootOrchestrator integration and docs sync;
-applied semantic demo / warehouse-style proof and docs/audit; only then
+hardening v0.1 complete; audit/hash-chain docs sync complete; Controlled
+RootOrchestrator Route Assembly Integration v0.1 complete; Controlled
+RootOrchestrator docs sync current;
+applied semantic demo / warehouse-style proof; applied demo docs/audit; only then
 Marennya quarantine-first, UP transfer/opportunity, NeedleCandidate lifecycle /
 NeedleForge prototype, and External DRS pointer protocol.
 

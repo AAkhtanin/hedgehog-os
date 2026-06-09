@@ -288,7 +288,14 @@ Semantic Reuse Pipeline Integration invariant:
 - Hash-chain entries are proof-level append-only evidence links; Root remains final authority.
 - Audit/hash-chain does not validate semantic correctness, replace GT or ConflictCheck, grant authority, implement blockchain, or provide production persistence.
 - Audit/hash-chain proof status: PASS, entries_created=7, chain_continuity_valid=true, tamper_detection_valid=true, append_only_semantics_preserved=true, source_artifacts_unchanged=true, malicious_claims_rejected=8, focused tests passed=49, full suite passed=1131 with 37 warnings, sensitive scan clear. Evidence: `docs/audit_reports/auditor_audit_hash_chain.log`.
-- Roadmap order: Passport Geometry docs sync complete -> Audit / hash-chain hardening v0.1 complete -> audit/hash-chain docs sync current -> Controlled RootOrchestrator integration -> integration docs sync -> applied semantic demo / warehouse-style proof -> applied demo docs/audit -> Marennya quarantine-first v0.1 -> UP transfer/opportunity v0.1 -> NeedleCandidate lifecycle / NeedleForge prototype -> External DRS pointer protocol.
+- Controlled RootOrchestrator Route Assembly Integration v0.1 is complete as a standalone deterministic proof over existing collectors; it does not replace production RootOrchestrator runtime.
+- Orchestrator has delegated bounded route-assembly authority only.
+- Orchestrator proposes AVF inputs; AVF / HardMask remain independent and stronger than Orchestrator confidence.
+- Every Orchestrator route-assembly proposal must pass Root / MatrixGate / RouteGate / Policy / AVF before reaching Architect.
+- Controlled route assembly does not replace production RootOrchestrator runtime yet.
+- Route-assembly authority invariant: Orchestrator is not Root and cannot create FinalOutput, write DRS, execute actions, call needles directly, bypass gates or AVF, manage AVF, override HardMask, install needles, promote candidates, release quarantine, mutate ConflictReports, decide truth, or grant authority.
+- Controlled route-assembly proof status: PASS, scenarios_verified=8, malicious_claims_rejected=14, focused tests passed=67, full suite passed=1149 with 37 warnings, sensitive scan clear, production_autonomy_claimed=false. Evidence: `docs/audit_reports/auditor_controlled_root_orchestrator_route_assembly.log`.
+- Roadmap order: Passport Geometry docs sync complete -> Audit / hash-chain hardening v0.1 complete -> audit/hash-chain docs sync complete -> Controlled RootOrchestrator Route Assembly Integration v0.1 complete -> Controlled RootOrchestrator docs sync current -> applied semantic demo / warehouse-style proof -> applied demo docs/audit -> Marennya quarantine-first v0.1 -> UP transfer/opportunity v0.1 -> NeedleCandidate lifecycle / NeedleForge prototype -> External DRS pointer protocol.
 - Roadmap priority invariant: prove the applied Root-controlled canonical path before self-improvement layers. Marennya / UP may remain deferred stubs.
 
 7. WorldState relevance

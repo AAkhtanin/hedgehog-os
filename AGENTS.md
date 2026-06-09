@@ -342,9 +342,13 @@ Audit / hash-chain hardening v0.1 is complete. It consumes the current proof col
 
 Audit/hash-chain is tamper-evident proof linkage only. Hash-chain proves continuity, not truth. It is not authority, persistence, blockchain, semantic validation, GT, ConflictCheck, or Root; it must not mutate DRS or source artifacts.
 
-Current status: Root-centered proof geometry now includes Root Final / DRS writeback boundary evidence, NeedleRuntime / ChildCell / live child Executor boundary evidence, DRS Lifecycle classification, ConflictCheck flags, and proof-level audit/hash linkage. Pipeline traces remain observable projections, not the architecture.
+Controlled RootOrchestrator Route Assembly Integration v0.1 is complete. It is a standalone deterministic route-assembly integration proof that consumes existing collectors and verifies boundary continuity; it does not replace production RootOrchestrator runtime. The Orchestrator-stage has delegated bounded route-assembly authority only.
 
-Corrected engineering order: Passport Geometry docs sync (complete) -> Audit / hash-chain hardening v0.1 (complete) -> audit/hash-chain docs sync (current) -> Controlled RootOrchestrator integration -> integration docs sync -> applied semantic demo / warehouse-style proof -> applied demo docs/audit -> Marennya quarantine-first v0.1 -> UP transfer/opportunity v0.1 -> NeedleCandidate lifecycle / NeedleForge prototype -> External DRS pointer protocol.
+Orchestrator may propose route-assembly fields, but every proposal must pass Root / MatrixGate / RouteGate / Policy / AVF before reaching Architect. Orchestrator proposes AVF inputs; it does not manage AVF. AVF / HardMask remain independent and stronger than Orchestrator confidence. Orchestrator is not Root and must not create FinalOutput, write DRS, execute actions, call needles directly, install needles, promote candidates, release quarantine, mutate ConflictReports, decide truth, or grant authority.
+
+Current status: Root-centered proof geometry now includes controlled route assembly, Gate / AVF constraints, bounded planning/execution contracts, Root Final, DRS Lifecycle, ConflictCheck, and proof-level audit/hash linkage. Pipeline traces remain observable projections, not the architecture.
+
+Corrected engineering order: Passport Geometry docs sync (complete) -> Audit / hash-chain hardening v0.1 (complete) -> audit/hash-chain docs sync (complete) -> Controlled RootOrchestrator Route Assembly Integration v0.1 (complete) -> Controlled RootOrchestrator docs sync (current) -> applied semantic demo / warehouse-style proof -> applied demo docs/audit -> Marennya quarantine-first v0.1 -> UP transfer/opportunity v0.1 -> NeedleCandidate lifecycle / NeedleForge prototype -> External DRS pointer protocol.
 
 Do not implement Marennya / UP before the applied Root-controlled canonical path passes practical semantic demos cleanly. The current priority is applied canonical execution, not self-improvement.
 

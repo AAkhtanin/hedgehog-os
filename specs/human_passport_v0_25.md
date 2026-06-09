@@ -675,18 +675,64 @@ The verified tamper checks are `payload_tamper_detected`,
 `ready_for_controlled_root_orchestrator_integration=true`.
 Evidence: `docs/audit_reports/auditor_audit_hash_chain.log`.
 
+Controlled RootOrchestrator Route Assembly Integration v0.1 is complete. This
+is a standalone deterministic route-assembly integration proof. It consumes
+existing proof collectors and verifies boundary continuity. It does not yet
+replace production RootOrchestrator runtime.
+
+The Orchestrator-stage has delegated bounded route-assembly authority inside
+the Root boundary. It may propose or assemble normalized intent, TemporalQuery,
+WorldState request/assembly, DRS retrieval request, CandidateVectors, guards,
+route/mode, decomposition mode, an AttractorPacket draft, and ask_user / block /
+escalate recommendations.
+
+Orchestrator proposes AVF inputs; it does not manage AVF. Root / MatrixGate /
+RouteGate / Policy validate the proposal before AVF output can reach Architect.
+AVF remains an independent filter/scoring/HardMask layer. HardMask remains
+stronger than Orchestrator confidence.
+
+The proof verifies continuity across MatrixGate / RouteGate, AVF / HardMask,
+bounded Architect input, DAG / Executor PlanGraph boundary, Post V&V, GT, Root
+Final, DRS Lifecycle, ConflictCheck, and audit/hash-chain. It covers:
+
+- `safe_warehouse_inventory_route`;
+- `forbidden_action_route_blocked`;
+- `hardmask_beats_orchestrator_confidence`;
+- `ask_user_recommendation`;
+- `decomposition_route_to_child_cell`;
+- `direct_needle_call_attempt_rejected`;
+- `drs_write_attempt_rejected`;
+- `malicious_authority_claims_rejected`.
+
+Orchestrator is not Root. It does not create FinalOutput, write DRS, execute
+actions, call needles directly, bypass gates or AVF, manage AVF, override
+HardMask, install needles, promote protocol candidates, release quarantine,
+mutate ConflictReports, decide truth, or grant authority.
+
+Proof status: PASS, scenarios_verified=8, malicious_claims_rejected=14, focused
+tests passed=67, full suite passed=1149 with 37 warnings, sensitive scan clear,
+production_autonomy_claimed=false. Evidence:
+`docs/audit_reports/auditor_controlled_root_orchestrator_route_assembly.log`.
+
+This proof does not activate an autonomous RootOrchestrator, call live Gemini
+or network, use Telegram, execute real external actions, create production
+persistence, implement global/external DRS, invoke Marennya / UP, or implement
+NeedleFactory / NeedleForge.
+
 Corrected roadmap:
 
 1. Passport Geometry docs sync - complete.
 2. Audit / hash-chain hardening v0.1 - complete.
-3. Audit/hash-chain docs sync - current.
-4. Controlled RootOrchestrator integration, then its docs sync.
-5. Applied semantic demo / warehouse-style proof through the Root-controlled
-   canonical vector, then its docs/audit.
-6. Marennya quarantine-first v0.1.
-7. UP transfer/opportunity v0.1.
-8. NeedleCandidate lifecycle / NeedleForge prototype.
-9. External DRS pointer protocol.
+3. Audit/hash-chain docs sync - complete.
+4. Controlled RootOrchestrator Route Assembly Integration v0.1 - complete.
+5. Controlled RootOrchestrator docs sync - current.
+6. Applied semantic demo / warehouse-style proof through the Root-controlled
+   canonical vector.
+7. Applied demo docs/audit.
+8. Marennya quarantine-first v0.1.
+9. UP transfer/opportunity v0.1.
+10. NeedleCandidate lifecycle / NeedleForge prototype.
+11. External DRS pointer protocol.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.

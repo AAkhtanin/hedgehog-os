@@ -8,9 +8,12 @@ This file is a short scenario overview. The more detailed baseline contract is d
 
 text specs/demo_baseline_v0_25.md 
 
-The demo must preserve the current canonical runtime:
+The demo must preserve the current downward canonical runtime projection:
 
-text User/Event → RootOrchestrator → Orchestrator-stage / Route Assembly → TemporalQuery → WorldState → LocalDRS retrieval → CandidateVectors → AVF / HardMask / SoftMask → AttractorPacket → Architect → PlanGraph → Fractal DAG Executor / node-level Executors → ResultProposals → Post V&V → GTValidator → back to Root → Root FinalOutput → DRS writeback / audit → Marennya/UP quarantine hooks 
+text User/Event → RootOrchestrator → Orchestrator-stage / Route Assembly → TemporalQuery → WorldState → LocalDRS retrieval → CandidateVectors → AVF / HardMask / SoftMask → AttractorPacket → Architect → PlanGraph → Fractal DAG Executor / node-level Executors → ResultProposals → Post V&V → GTValidator → back to Root → Root FinalOutput → DRS writeback / audit
+
+This projection is not the full architecture. Marennya / UP are separate
+deferred lateral/upward systemic directions.
 
 ## Scenarios
 
@@ -813,8 +816,18 @@ flagged_conflicts=6, root_review_required_reports=10, no_conflict_reports=1,
 malicious_claims_rejected=8, focused tests passed=47, full suite passed=1116,
 sensitive scan clear. Evidence: `docs/audit_reports/auditor_conflictcheck.log`.
 
-Next is Audit / hash-chain hardening v0.1, linking proof artifacts and reports
-through append-only, tamper-evident hashes without production persistence.
+The scenario trace is an observable projection of the main downward
+Root-controlled canonical vector, not the full architecture. Needles are
+bounded capability contracts, not plugins. DRS is semantic topology, not
+vector memory or authority. Marennya / UP are deferred systemic/internal
+needle-like directions and are not required for the first applied semantic
+demos. See `docs/passport_geometry_root_needles.md`.
+
+Corrected next order: Passport Geometry docs sync; Audit / hash-chain hardening
+v0.1 and docs sync; Controlled RootOrchestrator integration and docs sync;
+applied semantic demo / warehouse-style proof and docs/audit; only then
+Marennya quarantine-first, UP transfer/opportunity, NeedleCandidate lifecycle /
+NeedleForge prototype, and External DRS pointer protocol.
 
 ## Exclusions
 

@@ -6,6 +6,13 @@ This document defines the current deterministic Hedgehog OS / Fractal Reflexive 
 
 This is a baseline proof-of-architecture demo, not the final AI OS demo. Its job is to prove that the invariant pipeline exists, runs locally, preserves contracts, and produces auditable trace outputs. It is intentionally small, deterministic, and CLI-driven.
 
+The baseline pipeline is an observable projection of the Root-controlled
+canonical vector, not the full architecture. The architecture is Root-centered
+capability geometry. Needles are bounded capability contracts, not plugins; DRS
+is semantic topology, not vector memory or authority; and deferred Marennya /
+UP directions are not required for the first applied semantic demos. See
+`docs/passport_geometry_root_needles.md`.
+
 The current runtime uses deterministic Python stubs. Future versions may replace specific roles with LLMs, SLMs, tool-runners, richer local services, or live integrations, but those replacements must preserve the same contracts and invariants.
 
 This baseline should be read together with:
@@ -22,7 +29,10 @@ docs/strategic_expansion_map.md is vision-only and not an implementation sprint.
 
 The v0.25 baseline proves the canonical deterministic pipeline:
 
-text User/Event → RootOrchestrator → Orchestrator-stage / Route Assembly → TemporalQuery → WorldState → LocalDRS retrieval → CandidateVectors → AVF / HardMask / SoftMask → AttractorPacket → Architect → PlanGraph → Fractal DAG Executor / node-level Executors → ResultProposals → Post V&V → GTValidator → back to Root → Root FinalOutput → DRS writeback / audit → Marennya/UP quarantine hooks 
+text User/Event → RootOrchestrator → Orchestrator-stage / Route Assembly → TemporalQuery → WorldState → LocalDRS retrieval → CandidateVectors → AVF / HardMask / SoftMask → AttractorPacket → Architect → PlanGraph → Fractal DAG Executor / node-level Executors → ResultProposals → Post V&V → GTValidator → back to Root → Root FinalOutput → DRS writeback / audit
+
+Marennya / UP are separate deferred lateral/upward systemic directions, not
+mandatory post-pipeline modules in this downward canonical vector.
 
 This is the core result of the baseline. The demo is not trying to be useful as a real certificate assistant yet. It is proving that the architecture can be executed end to end without collapsing into a chatbot, generic agent chain, or unstructured prompt loop.
 
@@ -1051,8 +1061,18 @@ no_conflict_reports=1, malicious_claims_rejected=8, focused tests passed=47,
 full suite passed=1116, sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_conflictcheck.log`.
 
-Next is Audit / hash-chain hardening v0.1, making proof artifacts and reports
-append-only and tamper-evident without claiming production persistence.
+Corrected next order:
+
+1. Passport Geometry docs sync.
+2. Audit / hash-chain hardening v0.1 and docs sync.
+3. Controlled RootOrchestrator integration and docs sync.
+4. Applied semantic demo / warehouse-style proof and docs/audit.
+5. Marennya quarantine-first v0.1, then UP transfer/opportunity v0.1.
+6. NeedleCandidate lifecycle / NeedleForge prototype.
+7. External DRS pointer protocol.
+
+The current priority is the applied Root-controlled canonical path, not
+self-improvement.
 
 ## 20. Future Demo Evolution
 

@@ -60,9 +60,41 @@ User/Event
 -> GTValidator
 -> Root FinalOutput
 -> DRS writeback
--> Marennya / UP quarantine hooks
 -> Audit/Trace
 ```
+
+Marennya and UP are separate deferred lateral/upward systemic directions, not
+mandatory post-pipeline modules in the downward canonical vector.
+
+### Root-Centered Capability Geometry
+
+The core pipeline is one flat observable projection, not the full architecture.
+Hedgehog OS is a multidimensional Root-centered geometry of bounded directed
+capabilities.
+
+Root is the point of sovereignty and the only final commit boundary in its
+contour. "Vassal of my vassal is not my vassal": bounded local authority in a
+child cell or nested capability does not automatically propagate upward,
+sideways, outward, or into Root.
+
+A needle is not a plugin. It is a directed bounded capability / capability
+contract anchored in Root. A complex needle may contain local O/A/E rhythm,
+PlanGraph, DAG, child cells, validators, local memory, or checks, but it never
+becomes Root.
+
+Canonical execution is the main downward Root-controlled runtime vector; it is
+not merely an ordinary needle. Marennya is a lateral reflective systemic
+needle-like direction and UP is an upward transfer/opportunity systemic
+needle-like direction. Both are deferred, proposal-only, quarantine-first, and
+Root-approved. They are not required for the first applied semantic demos.
+
+DRS is semantic topology and an address/resonance/lineage/audit/trust/TTL/
+conflict/reuse/promotion fabric. It is not a memory database, vector store, or
+authority. Dense artifacts remain outside DRS behind pointers. External DRS is
+controlled transfer of verified meaning traces; external experience is
+candidate influence, not authority.
+
+See `docs/passport_geometry_root_needles.md`.
 
 ### Observable Zero Trust Runtime Proof
 
@@ -605,9 +637,20 @@ flagged_conflicts=6, root_review_required_reports=10, no_conflict_reports=1,
 malicious_claims_rejected=8, focused tests passed=47, full suite passed=1116,
 sensitive scan clear. Evidence: `docs/audit_reports/auditor_conflictcheck.log`.
 
-Next is Audit / hash-chain hardening v0.1: hash and link proof artifacts and
-reports with append-only, tamper-evident proof semantics, still without
-production persistence.
+Corrected roadmap:
+
+1. Passport Geometry docs sync.
+2. Audit / hash-chain hardening v0.1, then its docs sync.
+3. Controlled RootOrchestrator integration, then its docs sync.
+4. Applied semantic demo / warehouse-style proof through the Root-controlled
+   canonical vector, then its docs/audit.
+5. Marennya quarantine-first v0.1.
+6. UP transfer/opportunity v0.1.
+7. NeedleCandidate lifecycle / NeedleForge prototype.
+8. External DRS pointer protocol.
+
+The current priority is proving the applied Root-controlled canonical path, not
+self-improvement. Marennya / UP may remain deferred stubs for a long time.
 
 The full pipeline is the maximum cognitive loop, not the mandatory path for
 every user action. Novel, risky, ambiguous, conflicting, high-value, or

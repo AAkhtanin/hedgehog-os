@@ -6,8 +6,21 @@ Document hierarchy:
 
 - specs/human_passport_v0_25.md defines MVP architecture and invariants.
 - specs/math_appendix_v0_3.md defines formulas and algorithmic details.
+- docs/passport_geometry_root_needles.md defines Root-centered capability geometry.
 - docs/strategic_expansion_map.md is vision-only and not an implementation sprint.
 - If documents conflict for current MVP implementation, the Human Passport controls.
+
+Root-centered capability geometry invariants:
+
+- Pipeline trace is an observable projection, not the architecture. Root-centered capability geometry is the architecture.
+- Canonical execution is the main downward Root-controlled runtime vector; it is not merely an ordinary needle.
+- Needle is a directed bounded capability contract / semantic organ anchored in Root, not a plugin.
+- A complex needle or child cell may hold bounded local authority but never becomes Root; authority does not automatically propagate upward, sideways, or outward.
+- DRS is semantic topology / address / resonance / lineage / audit / trust / TTL / conflict / reuse / promotion fabric, not a memory database, vector store, or authority.
+- Marennya is a deferred lateral reflective systemic needle-like direction; UP is a deferred upward transfer/opportunity systemic needle-like direction.
+- Marennya / UP are proposal-only, quarantine-first, Root-approved, do not mutate Work, install needles, or create FinalOutput, and are not required for first applied semantic demos.
+- Architecture must allow other future systemic reflective needles; Marennya / UP are not exhaustive.
+- Orchestrator, Architect, Executor, child cells, needles, DRS, GT, ConflictCheck, Marennya, UP, and external DRS must never receive final authority.
 
 1. Root-only FinalOutput
    - FinalOutput is created only by RootOrchestrator.
@@ -269,7 +282,8 @@ Semantic Reuse Pipeline Integration invariant:
 - ConflictCheck invariant: recommendations for Root/GT review, reuse/promotion block, quarantine review, or invalidation review are advisory only. ConflictCheck does not decide final truth, invalidate, promote, demote, delete, rewrite, mutate DRS, or commit.
 - ConflictCheck authority invariant: Root decides truth, commit, invalidation, promotion, demotion, reuse, quarantine release, and override. GT review remains advisory until Root; DRS remains storage/index/lifecycle rather than judge.
 - ConflictCheck proof status: PASS, lifecycle_records_consumed=13 and unchanged, candidate_pairs_created=11, conflict_reports_created=11, flagged_conflicts=6, root_review_required_reports=10, no_conflict_reports=1, malicious_claims_rejected=8, focused tests passed=47, full suite passed=1116, sensitive scan clear. Evidence: `docs/audit_reports/auditor_conflictcheck.log`.
-- Roadmap order: Audit / hash-chain hardening v0.1.
+- Roadmap order: Passport Geometry docs sync -> Audit / hash-chain hardening v0.1 -> audit/hash-chain docs sync -> Controlled RootOrchestrator integration -> integration docs sync -> applied semantic demo / warehouse-style proof -> applied demo docs/audit -> Marennya quarantine-first v0.1 -> UP transfer/opportunity v0.1 -> NeedleCandidate lifecycle / NeedleForge prototype -> External DRS pointer protocol.
+- Roadmap priority invariant: prove the applied Root-controlled canonical path before self-improvement layers. Marennya / UP may remain deferred stubs.
 
 7. WorldState relevance
    - WorldState must not auto-load irrelevant needles such as weather.

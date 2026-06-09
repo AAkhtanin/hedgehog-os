@@ -1,6 +1,8 @@
 # Hedgehog OS Demo — Fractal Reflexive Runtime MVP
 
-This repository demonstrates an AI OS-style runtime pipeline using deterministic Python stubs, JSON contracts, DRS memory routing, AVF scoring, GT selection, Fractal DAG execution, and Root-only final output.
+Hedgehog OS is a Root-controlled runtime where AI capabilities compose safely without turning models, tools, memory, or external services into authority.
+
+This repository demonstrates one observable runtime projection using deterministic Python stubs, JSON contracts, DRS routing, AVF scoring, GT selection, Fractal DAG execution, and Root-only final output.
 
 It is not a chatbot, not an agent chain, not a LangChain clone, and not a UI project.
 
@@ -13,6 +15,8 @@ The current MVP is a proof-of-architecture runtime for a future AI OS, centered 
 Hedgehog OS / Fractal Reflexive OS is a fractal controlled-runtime topology for role-bounded intelligence.
 
 LLM/SLM components are cognitive organs inside bounded roles, not sovereign actors. Subordinate intelligence can propose routes, plans, drafts, or results, but Root commits.
+
+Pipeline traces are observable projections, not the full architecture. For the geometric explanation of Root-centered needle topology, see [docs/passport_geometry_root_needles.md](docs/passport_geometry_root_needles.md).
 
 The architecture is based on:
 
@@ -230,7 +234,7 @@ Current LocalDRS status:
 - Artifacts return upward to Root.
 - Root-only FinalOutput creation.
 - DRS writeback into Work with TimeEnvelope.
-- Marennya and UP quarantine hooks after task completion.
+- Deferred Marennya / UP quarantine-first proposal directions remain separate from canonical execution.
 - Cold start vs memory-informed second run behavior.
 - Explicit direct reuse as a gated optional path.
 
@@ -304,9 +308,12 @@ That document describes future expansion toward personal Root/Ghost, NeedleFacto
 
 ---
 
-## Architecture Pipeline
+## Observable Canonical Projection
 
-text User/Event → RootOrchestrator → Orchestrator-stage / Route Assembly → Intent / TemporalQuery → WorldState → LocalDRS retrieval → CandidateVectors → AVF / HardMask / SoftMask → AttractorPacket → Architect → PlanGraph → Fractal DAG Executor / node-level Executors → ResultProposals → Post V&V → GTValidator → back to Root → Root FinalOutput → DRS writeback / audit → Marennya / UP quarantine hooks 
+text User/Event → RootOrchestrator → Orchestrator-stage / Route Assembly → Intent / TemporalQuery → WorldState → LocalDRS retrieval → CandidateVectors → AVF / HardMask / SoftMask → AttractorPacket → Architect → PlanGraph → Fractal DAG Executor / node-level Executors → ResultProposals → Post V&V → GTValidator → back to Root → Root FinalOutput → DRS writeback / audit
+
+This is the main downward Root-controlled vector, not the full architecture.
+Marennya / UP are separate deferred lateral/upward systemic directions.
 
 ---
 
@@ -723,8 +730,12 @@ Completed recent layers:
 
 Next engineering focus:
 
-- Audit / hash-chain hardening v0.1 should hash key proof artifacts and audit reports, link Root Final / DRS lifecycle / ConflictReport evidence, preserve append-only trace semantics, and demonstrate a tamper-evident proof chain.
-- It remains proof-only unless production persistence is explicitly introduced later.
+- Passport Geometry docs sync.
+- Audit / hash-chain hardening v0.1, then its docs sync.
+- Controlled RootOrchestrator integration, then its docs sync.
+- Applied semantic demo / warehouse-style proof through the Root-controlled canonical vector, followed by its docs/audit.
+- Only after the applied path is clean: Marennya quarantine-first v0.1, UP transfer/opportunity v0.1, NeedleCandidate lifecycle / NeedleForge prototype, and External DRS pointer protocol.
+- The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only unless production persistence is explicitly introduced later.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.

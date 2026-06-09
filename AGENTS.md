@@ -8,7 +8,9 @@ This is not a chatbot, not a generic agent, not a LangChain-style tool wrapper, 
 
 The goal is to implement a small local demo proving that the core architecture works:
 
-text User/Event → RootOrchestrator → Orchestrator-stage / Route Assembly → Intent → TemporalQuery → WorldState → Local DRS retrieval → CandidateVectorGenerator → AVF / HardMask / SoftMask → AttractorPacket → Architect → PlanGraph → Fractal DAG Executor / node-level Executors → ResultProposals → Post V&V → GTValidator → back to Root → Root FinalOutput → DRS writeback / audit → Marennya / UP quarantine hooks 
+text User/Event → RootOrchestrator → Orchestrator-stage / Route Assembly → Intent → TemporalQuery → WorldState → Local DRS retrieval → CandidateVectorGenerator → AVF / HardMask / SoftMask → AttractorPacket → Architect → PlanGraph → Fractal DAG Executor / node-level Executors → ResultProposals → Post V&V → GTValidator → back to Root → Root FinalOutput → DRS writeback / audit
+
+This is the main downward canonical execution vector, not the full architecture. Marennya and UP are separate deferred lateral/upward systemic directions.
 
 Demo domain:
 
@@ -38,6 +40,7 @@ Primary documents:
 - specs/invariants.md defines non-negotiable implementation invariants.
 - specs/demo_baseline_v0_25.md defines the current deterministic demo baseline.
 - specs/legacy_mapping.md defines how old code may be used as donor/reference only.
+- docs/passport_geometry_root_needles.md defines the Root-centered capability geometry and anti-reduction framing.
 - docs/strategic_expansion_map.md defines long-term strategic vision only.
 
 If documents conflict for current MVP implementation, the Human Passport controls.
@@ -52,7 +55,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → next: Audit / hash-chain hardening → only later: NeedleFactory / NeedleForge
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Passport Geometry docs sync → next: Audit / hash-chain hardening → only later: NeedleFactory / NeedleForge
 
 Do not jump ahead to:
 
@@ -68,6 +71,35 @@ Do not jump ahead to:
 - public semantic network.
 
 These are future strategic layers, not current MVP tasks.
+
+---
+
+## Root-centered capability geometry
+
+Pipeline traces are observable projections, not the architecture. Root-centered
+capability geometry is the architecture. Canonical execution is the main
+downward Root-controlled runtime vector; it is not merely an ordinary needle.
+
+Needles are directed bounded capability contracts / semantic organs anchored in
+Root, not plugins. DRS is semantic topology and address/resonance/lineage/audit
+fabric, not vector memory or authority. Marennya is a deferred lateral
+reflective systemic needle-like direction; UP is a deferred upward
+transfer/opportunity systemic needle-like direction. They are proposal-only,
+quarantine-first, Root-approved, and not required for first applied semantic
+demos.
+
+Anti-reduction rules:
+
+- Do not reduce Hedgehog OS to a linear long-chain.
+- Do not describe needles as plugins.
+- Do not describe DRS as vector memory.
+- Do not describe Marennya / UP as post-pipeline modules.
+- Do not grant final authority to Orchestrator, Architect, Executor, child
+  cells, needles, DRS, GT, ConflictCheck, Marennya, UP, or external DRS.
+- Apply "Vassal of my vassal is not my vassal": bounded local authority does
+  not propagate upward, sideways, outward, or into Root.
+
+See `docs/passport_geometry_root_needles.md`.
 
 ---
 
@@ -308,7 +340,9 @@ ConflictCheck recommendations are advisory until Root. It may recommend Root/GT 
 
 Current status: Live Gemini Orchestrator → Root Matrix Gate → AVF AttractorPacket → Live Gemini Architect → parent PlanGraph → bounded non-atomic child cell → live Gemini child Executor → ChildExecutionResult → ChildBoundarySnapshot → ResultProposal-compatible parent artifact → Post V&V → GTDecision → Root FinalArtifact → DRS local audit/writeback boundary → DRS Lifecycle ExperienceRecord classification → ConflictCheck ConflictReport flags.
 
-Next engineering direction: Audit / hash-chain hardening v0.1. It should make the proof chain tamper-evident through artifact/report hashes and append-only linkage without claiming production persistence.
+Corrected engineering order: Passport Geometry docs sync -> Audit / hash-chain hardening v0.1 -> audit/hash-chain docs sync -> Controlled RootOrchestrator integration -> integration docs sync -> applied semantic demo / warehouse-style proof -> applied demo docs/audit -> Marennya quarantine-first v0.1 -> UP transfer/opportunity v0.1 -> NeedleCandidate lifecycle / NeedleForge prototype -> External DRS pointer protocol.
+
+Do not implement Marennya / UP before the applied Root-controlled canonical path passes practical semantic demos cleanly. The current priority is applied canonical execution, not self-improvement.
 
 ---
 

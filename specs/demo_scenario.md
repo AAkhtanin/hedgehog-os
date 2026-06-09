@@ -816,6 +816,21 @@ flagged_conflicts=6, root_review_required_reports=10, no_conflict_reports=1,
 malicious_claims_rejected=8, focused tests passed=47, full suite passed=1116,
 sensitive scan clear. Evidence: `docs/audit_reports/auditor_conflictcheck.log`.
 
+Audit / hash-chain hardening v0.1 is complete. It links seven proof artifacts
+across the Root Final / DRS writeback boundary, NeedleRuntime / ChildCell /
+deterministic Live Child Executor boundary evidence, DRS Lifecycle summary,
+ConflictCheck summary, and final checkpoint summary. This hardens the
+Root-centered proof geometry, not a linear long-chain.
+
+Hash-chain proves continuity, not truth. It detects payload, linkage, reorder,
+missing/injected entry, authority, persistence, and global DRS claim tampering
+without mutating source artifacts. It is proof-level only: no blockchain,
+production audit database, semantic truth decision, production persistence,
+network, Telegram, real action, Marennya / UP, or NeedleFactory. Proof status:
+PASS, entries_created=7, tamper_detection_valid=true, malicious_claims_rejected=8,
+focused tests passed=49, full suite passed=1131 with 37 warnings, sensitive
+scan clear. Evidence: `docs/audit_reports/auditor_audit_hash_chain.log`.
+
 The scenario trace is an observable projection of the main downward
 Root-controlled canonical vector, not the full architecture. Needles are
 bounded capability contracts, not plugins. DRS is semantic topology, not
@@ -823,8 +838,9 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: Passport Geometry docs sync; Audit / hash-chain hardening
-v0.1 and docs sync; Controlled RootOrchestrator integration and docs sync;
+Corrected next order: Passport Geometry docs sync complete; Audit / hash-chain
+hardening v0.1 complete; audit/hash-chain docs sync current; Controlled
+RootOrchestrator integration and docs sync;
 applied semantic demo / warehouse-style proof and docs/audit; only then
 Marennya quarantine-first, UP transfer/opportunity, NeedleCandidate lifecycle /
 NeedleForge prototype, and External DRS pointer protocol.

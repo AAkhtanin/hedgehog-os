@@ -159,9 +159,9 @@ local capability without Root approval.
 
 Current engineering order:
 
-1. Passport Geometry docs sync.
-2. Audit / hash-chain hardening v0.1.
-3. Audit / hash-chain docs sync.
+1. Passport Geometry docs sync - complete.
+2. Audit / hash-chain hardening v0.1 - complete.
+3. Audit / hash-chain docs sync - current.
 4. Controlled RootOrchestrator integration.
 5. Controlled RootOrchestrator docs sync.
 6. Applied semantic demo / warehouse-style proof:
@@ -177,3 +177,6 @@ Current engineering order:
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
 the applied canonical path, not self-improvement.
+
+Audit/hash-chain hardens this Root-centered proof geometry rather than turning
+it into a linear long-chain. Hash-chain proves continuity, not truth.

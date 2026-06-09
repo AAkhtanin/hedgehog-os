@@ -637,17 +637,56 @@ flagged_conflicts=6, root_review_required_reports=10, no_conflict_reports=1,
 malicious_claims_rejected=8, focused tests passed=47, full suite passed=1116,
 sensitive scan clear. Evidence: `docs/audit_reports/auditor_conflictcheck.log`.
 
+Audit / hash-chain hardening v0.1 is complete. It consumes ConflictCheck, DRS
+Lifecycle, deterministic Live Child Executor reference, DRS writeback,
+sandbox NeedleRuntime, and Fractal Cell proof collectors and creates seven
+proof-level append-only evidence links. Source artifacts remain unchanged.
+
+Consumed collectors:
+
+- `collect_conflictcheck`;
+- `collect_drs_lifecycle_semantics`;
+- `collect_live_child_executor_in_fractal_cell` in deterministic/reference mode;
+- `collect_drs_writeback_from_root_final`;
+- `collect_root_native_sandbox_needleruntime_e2e`;
+- `collect_fractal_cell_runtime`.
+
+Chain entries are `root_final_audit_boundary`, `needle_execution_result`,
+`child_boundary_snapshot`, `live_child_executor_boundary`,
+`drs_lifecycle_summary`, `conflictcheck_summary`, and
+`final_day_checkpoint_summary`.
+
+Hash-chain proves continuity, not truth. It detects payload, linkage, order,
+missing/injected entry, authority, persistence, and global DRS claim tampering.
+It does not decide truth, validate semantic correctness, mutate DRS or source
+artifacts, grant authority, replace GT / ConflictCheck / Root, implement
+blockchain, or provide production persistence. Root remains final authority.
+
+Proof status: PASS, entries_created=7, chain_continuity_valid=true,
+tamper_detection_valid=true, append_only_semantics_preserved=true,
+source_artifacts_unchanged=true, malicious_claims_rejected=8, focused tests
+passed=49, full suite passed=1131 with 37 warnings, sensitive scan clear.
+The verified tamper checks are `payload_tamper_detected`,
+`previous_hash_tamper_detected`, `entry_reorder_detected`,
+`missing_entry_detected`, `injected_entry_detected`,
+`authority_claim_tamper_detected`,
+`production_persistence_claim_tamper_detected`, and
+`global_drs_claim_tamper_detected`.
+`ready_for_controlled_root_orchestrator_integration=true`.
+Evidence: `docs/audit_reports/auditor_audit_hash_chain.log`.
+
 Corrected roadmap:
 
-1. Passport Geometry docs sync.
-2. Audit / hash-chain hardening v0.1, then its docs sync.
-3. Controlled RootOrchestrator integration, then its docs sync.
-4. Applied semantic demo / warehouse-style proof through the Root-controlled
+1. Passport Geometry docs sync - complete.
+2. Audit / hash-chain hardening v0.1 - complete.
+3. Audit/hash-chain docs sync - current.
+4. Controlled RootOrchestrator integration, then its docs sync.
+5. Applied semantic demo / warehouse-style proof through the Root-controlled
    canonical vector, then its docs/audit.
-5. Marennya quarantine-first v0.1.
-6. UP transfer/opportunity v0.1.
-7. NeedleCandidate lifecycle / NeedleForge prototype.
-8. External DRS pointer protocol.
+6. Marennya quarantine-first v0.1.
+7. UP transfer/opportunity v0.1.
+8. NeedleCandidate lifecycle / NeedleForge prototype.
+9. External DRS pointer protocol.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2081,6 +2120,10 @@ frequency.
 
 ## 20. Audit and Hash Chain
 
+Audit / hash-chain hardening v0.1 is a local proof-level append-only linkage
+over current proof artifacts. It hardens the Root-centered proof geometry, not
+a linear long-chain. Hash-chain proves continuity, not truth.
+
 Content hash:
 
 ```text
@@ -2108,6 +2151,10 @@ Used for:
 - `FinalOutput`;
 - Marennya/UP promotion;
 - external DRS pointer publication.
+
+The v0.1 proof does not mutate DRS or source artifacts, decide truth, validate
+semantic correctness, grant authority, replace GT / ConflictCheck / Root,
+implement blockchain, or provide production persistence.
 
 ## 21. Legacy Code Position
 

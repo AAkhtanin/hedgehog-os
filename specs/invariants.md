@@ -282,7 +282,13 @@ Semantic Reuse Pipeline Integration invariant:
 - ConflictCheck invariant: recommendations for Root/GT review, reuse/promotion block, quarantine review, or invalidation review are advisory only. ConflictCheck does not decide final truth, invalidate, promote, demote, delete, rewrite, mutate DRS, or commit.
 - ConflictCheck authority invariant: Root decides truth, commit, invalidation, promotion, demotion, reuse, quarantine release, and override. GT review remains advisory until Root; DRS remains storage/index/lifecycle rather than judge.
 - ConflictCheck proof status: PASS, lifecycle_records_consumed=13 and unchanged, candidate_pairs_created=11, conflict_reports_created=11, flagged_conflicts=6, root_review_required_reports=10, no_conflict_reports=1, malicious_claims_rejected=8, focused tests passed=47, full suite passed=1116, sensitive scan clear. Evidence: `docs/audit_reports/auditor_conflictcheck.log`.
-- Roadmap order: Passport Geometry docs sync -> Audit / hash-chain hardening v0.1 -> audit/hash-chain docs sync -> Controlled RootOrchestrator integration -> integration docs sync -> applied semantic demo / warehouse-style proof -> applied demo docs/audit -> Marennya quarantine-first v0.1 -> UP transfer/opportunity v0.1 -> NeedleCandidate lifecycle / NeedleForge prototype -> External DRS pointer protocol.
+- Audit / hash-chain hardening v0.1 is complete. It creates proof-level append-only evidence links from consumed proof collectors without mutating their source artifacts.
+- Hash-chain proves continuity, not truth.
+- Audit/hash-chain must not mutate DRS or source artifacts.
+- Hash-chain entries are proof-level append-only evidence links; Root remains final authority.
+- Audit/hash-chain does not validate semantic correctness, replace GT or ConflictCheck, grant authority, implement blockchain, or provide production persistence.
+- Audit/hash-chain proof status: PASS, entries_created=7, chain_continuity_valid=true, tamper_detection_valid=true, append_only_semantics_preserved=true, source_artifacts_unchanged=true, malicious_claims_rejected=8, focused tests passed=49, full suite passed=1131 with 37 warnings, sensitive scan clear. Evidence: `docs/audit_reports/auditor_audit_hash_chain.log`.
+- Roadmap order: Passport Geometry docs sync complete -> Audit / hash-chain hardening v0.1 complete -> audit/hash-chain docs sync current -> Controlled RootOrchestrator integration -> integration docs sync -> applied semantic demo / warehouse-style proof -> applied demo docs/audit -> Marennya quarantine-first v0.1 -> UP transfer/opportunity v0.1 -> NeedleCandidate lifecycle / NeedleForge prototype -> External DRS pointer protocol.
 - Roadmap priority invariant: prove the applied Root-controlled canonical path before self-improvement layers. Marennya / UP may remain deferred stubs.
 
 7. WorldState relevance

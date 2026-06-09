@@ -585,7 +585,11 @@ ConflictCheck flags contradictions and risk states and may recommend Root review
 
 Proof status: conflictcheck_status=PASS, lifecycle_records_consumed=13 and unchanged, candidate_pairs_created=11, conflict_reports_created=11, flagged_conflicts=6, root_review_required_reports=10, no_conflict_reports=1, malicious_claims_rejected=8, focused tests passed=47, full suite passed=1116, sensitive scan clear. No live network, Telegram, production persistence, global/external DRS, or real external action is used. Evidence: `docs/audit_reports/auditor_conflictcheck.log`.
 
-The current proof-level canonical execution now includes Live Gemini Orchestrator -> Root Matrix Gate -> AVF AttractorPacket -> Live Gemini Architect -> parent PlanGraph -> non-atomic child-cell route -> bounded child fractal cell -> live Gemini child Executor -> ChildExecutionResult -> ChildBoundarySnapshot -> ResultProposal-compatible parent artifact -> Post V&V -> GTDecision -> Root FinalArtifact -> DRS local audit/writeback boundary -> DRS Lifecycle ExperienceRecord classification -> ConflictCheck ConflictReport flags.
+Audit / hash-chain hardening v0.1 is complete. It deterministically consumes the current ConflictCheck, DRS Lifecycle, deterministic Live Child Executor reference, DRS writeback, sandbox NeedleRuntime, and Fractal Cell collectors and creates seven proof-level append-only evidence links. It covers the Root Final audit boundary, NeedleExecutionResult, ChildBoundarySnapshot, live child Executor boundary, DRS Lifecycle summary, ConflictCheck summary, and final checkpoint summary.
+
+Hash-chain proves continuity, not truth. It detects payload, previous-hash, reorder, missing-entry, injected-entry, authority-claim, production-persistence-claim, and global-DRS-claim tampering without mutating source artifacts. It is not blockchain, a production audit database, persistence, semantic correctness validation, GT, ConflictCheck, or Root authority. Proof status: PASS, entries_created=7, chain_continuity_valid=true, tamper_detection_valid=true, append_only_semantics_preserved=true, source_artifacts_unchanged=true, malicious_claims_rejected=8, focused tests passed=49, full suite passed=1131 with 37 warnings, sensitive scan clear. Evidence: `docs/audit_reports/auditor_audit_hash_chain.log`.
+
+The hash-chain hardens the Root-centered proof geometry, not a linear long-chain. It links evidence across Root Final / DRS writeback boundary -> NeedleRuntime / ChildCell / live child Executor boundary evidence -> DRS Lifecycle summary -> ConflictCheck summary -> final checkpoint summary. `ready_for_controlled_root_orchestrator_integration=true`; no live Gemini/network, Telegram, real external action, production persistence, global/external DRS, Marennya / UP, or NeedleFactory is used.
 
 This remains opt-in proof only: no production RootOrchestrator integration, production external execution, real API/tool use, Telegram, production DRS persistence, global/external DRS, or Marennya / UP lifecycle.
 
@@ -726,16 +730,16 @@ Completed recent layers:
 - Live Child Executor in Fractal Cell v0.1.
 - DRS Lifecycle Semantics v0.2.
 - ConflictCheck v0.1.
+- Root-centered Needle Geometry docs.
+- Audit / hash-chain hardening v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Passport Geometry docs sync.
-- Audit / hash-chain hardening v0.1, then its docs sync.
 - Controlled RootOrchestrator integration, then its docs sync.
 - Applied semantic demo / warehouse-style proof through the Root-controlled canonical vector, followed by its docs/audit.
 - Only after the applied path is clean: Marennya quarantine-first v0.1, UP transfer/opportunity v0.1, NeedleCandidate lifecycle / NeedleForge prototype, and External DRS pointer protocol.
-- The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only unless production persistence is explicitly introduced later.
+- The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.
 - Add dedicated audit/hash-chain records beyond embedded trace refs.

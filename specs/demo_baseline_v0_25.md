@@ -1061,15 +1061,29 @@ no_conflict_reports=1, malicious_claims_rejected=8, focused tests passed=47,
 full suite passed=1116, sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_conflictcheck.log`.
 
+Audit / hash-chain hardening v0.1 is complete. It consumes six current proof
+collectors and creates seven proof-level append-only evidence links spanning
+Root Final / DRS writeback, NeedleRuntime, ChildCell, deterministic Live Child
+Executor reference, DRS Lifecycle, ConflictCheck, and the final checkpoint.
+
+Hash-chain proves continuity, not truth. The proof detects eight tamper classes,
+does not mutate source artifacts or DRS, and grants no authority. Proof status:
+PASS, chain_continuity_valid=true, tamper_detection_valid=true,
+append_only_semantics_preserved=true, source_artifacts_unchanged=true,
+malicious_claims_rejected=8, focused tests passed=49, full suite passed=1131
+with 37 warnings, sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_audit_hash_chain.log`.
+
 Corrected next order:
 
-1. Passport Geometry docs sync.
-2. Audit / hash-chain hardening v0.1 and docs sync.
-3. Controlled RootOrchestrator integration and docs sync.
-4. Applied semantic demo / warehouse-style proof and docs/audit.
-5. Marennya quarantine-first v0.1, then UP transfer/opportunity v0.1.
-6. NeedleCandidate lifecycle / NeedleForge prototype.
-7. External DRS pointer protocol.
+1. Passport Geometry docs sync - complete.
+2. Audit / hash-chain hardening v0.1 - complete.
+3. Audit/hash-chain docs sync - current.
+4. Controlled RootOrchestrator integration and docs sync.
+5. Applied semantic demo / warehouse-style proof and docs/audit.
+6. Marennya quarantine-first v0.1, then UP transfer/opportunity v0.1.
+7. NeedleCandidate lifecycle / NeedleForge prototype.
+8. External DRS pointer protocol.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement.

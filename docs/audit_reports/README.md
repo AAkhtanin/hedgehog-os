@@ -99,6 +99,11 @@ Current reports:
   - Confirms 13 unchanged DRS Lifecycle ExperienceRecord objects produce 11 ConflictCandidatePair and 11 ConflictReport objects across contradiction, risk, and compatible-lineage comparisons.
   - Confirms ConflictCheck recommendations are advisory only: no truth decision, DRS mutation, invalidation, promotion, demotion, production persistence, global/external DRS, or real external action occurs; Root remains final authority.
 
+- `auditor_audit_hash_chain.log`
+  - Proof for Audit / hash-chain hardening v0.1.
+  - Confirms seven deterministic append-only evidence links, valid chain continuity, eight detected tamper classes, unchanged source artifacts, and eight rejected malicious authority/persistence claims.
+  - Confirms hash-chain proves continuity, not truth: it does not mutate DRS or artifacts, grant authority, replace GT / ConflictCheck / Root, implement blockchain, or provide production persistence.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

@@ -627,6 +627,14 @@ This proof creates no protocol candidate, needle candidate, or installed needle.
 
 This is deterministic local proof only, not production UX, a production permission service, real dispatch/restock/submission, live Gemini, Telegram, production persistence, global/external DRS, autonomous RootOrchestrator replacement, NeedleFactory / NeedleForge, or Marennya / UP.
 
+NeedleCandidate lifecycle / NeedleForge prototype v0.1 is complete. This is the first proof-level capability-evolution layer after Permission / NeedsUser. It proves that repeated safe applied patterns may become bounded NeedleCandidate objects, while `NeedleCandidate != installed Needle` and the prototype remains distinct from a production NeedleFactory.
+
+The proof creates explicit source evidence, candidate artifacts, validation rows, GT selection, Root candidate dispositions, local lifecycle records, ConflictReports, proof artifact, and audit entry. The bounded warehouse restock and certificate document-update candidates require permission, remain `installable_now=false`, and reach Root only as `candidate_pending_review`. Auto-submit and permission-bypass candidates are quarantined; ready override is rejected as conflict. GT is advisory and cannot install needles. Root may mark candidates pending review, rejected, or quarantined, but must not create an installed needle, production needle, executable action, completed dispatch/restock/submission, or ready override.
+
+Proof status: PASS, scenarios_verified=5, NeedleCandidate tests passed=28, focused tests passed=98, full suite passed=1247 with 37 warnings, sensitive scan clear, `needle_candidate_created=true`, `installed_needle_created=false`, `protocol_candidate_created=false`, `explicit_needlecandidate_artifacts_consistent=true`, and `production_autonomy_claimed=false`. Evidence: `docs/audit_reports/auditor_needlecandidate_lifecycle_proof.log` and `docs/audit_reports/auditor_needlecandidate_lifecycle_proof_postcommit.log`; commits `acb5aac` and `7fc0a1b`.
+
+This is deterministic local proof only, not production NeedleForge, production NeedleFactory, an installed needle, plugin marketplace, real external action/API, production persistence, global/external DRS, External DRS pointer protocol, Marennya, UP, or autonomous production runtime. Hash-chain proves continuity, not truth.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -773,13 +781,15 @@ Completed recent layers:
 - Applied Certificate postcommit audit log.
 - Permission / NeedsUser UX Proof v0.1.
 - Permission / NeedsUser postcommit audit log.
+- NeedleCandidate lifecycle / NeedleForge prototype v0.1.
+- NeedleCandidate postcommit audit log.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Permission / NeedsUser docs sync, then NeedleCandidate lifecycle / NeedleForge prototype and its docs/audit.
-- After NeedleCandidate lifecycle: External DRS pointer protocol.
-- Only after several applied traces, deadends, and conflicts: Marennya quarantine-first v0.1, then UP transfer/opportunity v0.1.
+- NeedleCandidate docs sync, then Applied DRS Retrieval / Reuse v0.1 and DRS adversarial stress.
+- Then Travel / multi-condition readiness, multi-domain applied smoke, Needle adversarial/safety pack, External DRS pointer protocol, read-only connector sandbox, chaos applied stress, and production-boundary design docs.
+- Only then: Marennya quarantine-first v0.1, followed by UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.

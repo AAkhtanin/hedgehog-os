@@ -171,12 +171,21 @@ Current engineering order:
 10. Applied Certificate docs/audit - complete.
 11. Permission / NeedsUser UX Proof v0.1 - complete.
 12. Permission / NeedsUser postcommit audit log - complete.
-13. Permission / NeedsUser docs sync - current.
-14. NeedleCandidate lifecycle / NeedleForge prototype.
-15. NeedleCandidate docs/audit.
-16. External DRS pointer protocol.
-17. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
-18. Then UP transfer/opportunity.
+13. Permission / NeedsUser docs/audit - complete.
+14. NeedleCandidate lifecycle / NeedleForge prototype v0.1 - complete.
+15. NeedleCandidate postcommit audit log - complete.
+16. NeedleCandidate docs sync - current.
+17. Applied DRS Retrieval / Reuse v0.1.
+18. DRS adversarial stress pack.
+19. Applied demo #3: Travel / multi-condition readiness.
+20. Multi-domain applied smoke.
+21. Needle adversarial / safety pack.
+22. External DRS pointer protocol.
+23. Read-only real API / connector sandbox.
+24. Chaos applied stress demos.
+25. Production boundary design docs.
+26. Only then Marennya quarantine-first.
+27. Then UP transfer/opportunity.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -188,8 +197,11 @@ Applied domain transfer is now proven across warehouse readiness and
 certificate/document readiness. The Permission/NeedsUser boundary is also
 proven: permission is not execution, approval is not completed action, and
 `needs_user` is not failure. This boundary must remain intact before
-NeedleForge or action needles. The next layer is NeedleCandidate lifecycle /
-NeedleForge prototype, not Marennya / UP.
+NeedleForge or action needles. NeedleCandidate lifecycle is now proven at
+proof level: a candidate may exist, but it is not an installed Needle and GT
+cannot install it. Root alone disposes candidates. The next layer is Applied
+DRS Retrieval / Reuse, followed by DRS adversarial stress; External DRS and
+Marennya / UP remain later.
 
 Audit/hash-chain hardens this Root-centered proof geometry rather than turning
 it into a linear long-chain. Hash-chain proves continuity, not truth.

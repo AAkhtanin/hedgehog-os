@@ -136,6 +136,15 @@ Current reports:
   - Postcommit audit evidence for commits `cd0ce4c` and `7d2a121`.
   - Confirms the permission proof remains PASS after commit, with focused/full-suite verification and a clear sensitive scan.
 
+- `auditor_needlecandidate_lifecycle_proof.log`
+  - Proof for NeedleCandidate lifecycle / NeedleForge prototype v0.1.
+  - Confirms two bounded safe candidates remain pending Root review while unsafe auto-submit, ready-override, permission-bypass, and installed-needle claims are rejected or quarantined.
+  - Confirms `needle_candidate_created=true`, `installed_needle_created=false`, no real action, production persistence, or global DRS write.
+
+- `auditor_needlecandidate_lifecycle_proof_postcommit.log`
+  - Postcommit audit evidence for commits `acb5aac` and `7fc0a1b`.
+  - Confirms the NeedleCandidate proof remains PASS after commit, with 28 NeedleCandidate tests, focused/full-suite verification, and a clear sensitive scan.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

@@ -721,18 +721,21 @@ NeedleFactory / NeedleForge.
 
 Corrected roadmap:
 
-1. Passport Geometry docs sync - complete.
-2. Audit / hash-chain hardening v0.1 - complete.
-3. Audit/hash-chain docs sync - complete.
-4. Controlled RootOrchestrator Route Assembly Integration v0.1 - complete.
-5. Controlled RootOrchestrator docs sync - current.
-6. Applied semantic demo / warehouse-style proof through the Root-controlled
-   canonical vector.
-7. Applied demo docs/audit.
-8. Marennya quarantine-first v0.1.
-9. UP transfer/opportunity v0.1.
-10. NeedleCandidate lifecycle / NeedleForge prototype.
-11. External DRS pointer protocol.
+1. Root-centered geometry docs sync - complete.
+2. Audit/hash-chain hardening and docs sync - complete.
+3. Controlled RootOrchestrator Route Assembly and docs sync - complete.
+4. Applied Warehouse and Applied Certificate demos/docs/audits - complete.
+5. Permission / NeedsUser proof/docs/audits - complete.
+6. NeedleCandidate lifecycle proof and postcommit audit - complete.
+7. NeedleCandidate docs sync - current.
+8. Applied DRS Retrieval / Reuse v0.1.
+9. DRS adversarial stress pack.
+10. Travel / multi-condition readiness and multi-domain smoke.
+11. Needle adversarial / safety pack.
+12. External DRS pointer protocol.
+13. Read-only connector sandbox, chaos applied stress, and production-boundary
+    design docs.
+14. Only then Marennya quarantine-first, followed by UP transfer/opportunity.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2283,8 +2286,93 @@ the permission proof artifact; hash-chain proves continuity, not truth.
 This proof creates no protocol candidate, needle candidate, or installed
 needle. It is not production UX, production permission service, real action,
 production persistence, global/external DRS, NeedleForge, or Marennya / UP.
-The next engineering layer is NeedleCandidate lifecycle / NeedleForge
-prototype, followed by External DRS pointer protocol.
+The following completed capability-evolution layer is NeedleCandidate
+lifecycle / NeedleForge prototype.
+
+## 20.4 NeedleCandidate Lifecycle / NeedleForge Prototype
+
+NeedleCandidate lifecycle / NeedleForge prototype v0.1 is the first
+proof-level capability-evolution layer after Permission / NeedsUser. Repeated
+safe applied patterns may become bounded NeedleCandidate objects only after
+accepted applied evidence, explicit permission boundaries, unsafe-variant
+rejection, advisory GT review, and Root disposition.
+
+The safe warehouse candidate may prepare a restock request only; it forbids
+dispatch, restock execution, and external ordering. The safe certificate
+candidate may prepare a user document-update request only; it forbids
+submission, government API contact, and ready-without-documents claims. Both
+require permission, remain non-installable, and reach Root only as
+`candidate_pending_review`.
+
+The safe candidate IDs are
+`needle_candidate_warehouse_restock_readiness_v0_1` and
+`needle_candidate_certificate_document_update_v0_1`. Their allowed action
+classes are `prepare_restock_request_only` and
+`prepare_user_document_update_request_only`. The warehouse evidence is W-17 /
+D-2042 `water_filter short_by_2`; the certificate evidence is APP-77 /
+CERT-310 expired insurance plus missing payment receipt.
+
+Unsafe auto-submit and permission-bypass candidates are quarantined; ready
+override is rejected as conflict. Validation also rejects an installed needle
+without Root installation. GT is advisory, is not truth proof, recommends only
+the two safe candidates, and cannot install needles. Root alone may create
+`candidate_pending_review`, `candidate_rejected`, or `candidate_quarantined`.
+The exact unsafe reasons are external submission forbidden in the proof-level
+layer, contradiction with applied evidence, and violation of the
+Permission/NeedsUser proof. Root must not create an installed or production
+needle, executable external action, completed dispatch/restock/submission, or
+ready override.
+
+Validation accepts `warehouse_restock_candidate` and
+`certificate_document_update_candidate` only as
+`accepted_as_candidate_pending_review`. It rejects
+`unsafe_auto_submit_candidate` and `unsafe_permission_bypass_candidate` as
+`rejected_quarantined`, `unsafe_ready_override_candidate` as
+`rejected_conflict`, and `installed_needle_without_root_install` as rejected.
+
+The proof creates explicit source evidence, candidate, validation, GT, Root
+Final, local lifecycle, ConflictReport, proof artifact, and audit entry
+objects. Lifecycle records are local proof evidence only, not production
+persistence, global DRS, or an installed registry. ConflictCheck remains
+advisory until Root. The audit entry hashes the proof artifact and links to
+prior audit evidence; hash-chain proves continuity, not truth.
+
+The explicit artifact groups are `needle_candidate_source_evidence`,
+`needle_candidate_artifacts`, `needle_candidate_validation_rows`,
+`needle_candidate_gt_selection`, `needle_candidate_root_final_artifacts`,
+`needle_candidate_drs_lifecycle_records`, `needle_candidate_conflict_reports`,
+`needle_candidate_proof_artifact`, and `needle_candidate_audit_entry`.
+Candidates carry source/domain scope, allowed action class, forbidden actions,
+permission and Root-review requirements, `proof_only=true`,
+`installable_now=false`, `installed_needle_created=false`,
+`production_persistence=false`, and `global_drs_write=false`.
+
+The local lifecycle records are `needle_candidate_experience_record`,
+`needle_candidate_reuse_pattern_record`,
+`needle_candidate_pending_review_record`,
+`needle_candidate_quarantine_auto_submit`,
+`needle_candidate_quarantine_permission_bypass`, and
+`needle_candidate_conflict_ready_override`. ConflictCheck flags auto-submit
+against the no-external-action boundary, ready override against applied
+evidence, and permission bypass against Permission/NeedsUser, while preserving
+no-conflict reports for both safe candidates.
+
+The exact conflict reports are
+`conflict_auto_submit_candidate_vs_no_external_action_boundary`,
+`conflict_ready_override_candidate_vs_applied_evidence`, and
+`conflict_permission_bypass_candidate_vs_permission_needsuser_boundary`, plus
+no-conflict reports for the safe warehouse and certificate candidates.
+
+The proof audit entry is `audit_needlecandidate_lifecycle_v0_1`. It hashes
+`needle_candidate_proof_artifact`, links to the previous proof hash-chain, is
+proof-only, does not write global DRS or production persistence, and does not
+decide truth.
+
+NeedleCandidate is not an installed Needle. NeedleForge prototype is not
+production NeedleFactory. No installed needle, real action, production
+persistence, global/external DRS, External DRS pointer protocol, Marennya, or
+UP is implemented. The next layer is Applied DRS Retrieval / Reuse v0.1,
+followed by DRS adversarial stress.
 
 ## 21. Legacy Code Position
 

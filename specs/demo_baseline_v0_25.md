@@ -1158,6 +1158,27 @@ production_autonomy_claimed=false. Evidence:
 `docs/audit_reports/auditor_permission_needsuser_ux_proof_postcommit.log`;
 commits `cd0ce4c` and `7d2a121`.
 
+NeedleCandidate lifecycle / NeedleForge prototype v0.1 is complete. It consumes
+accepted warehouse, certificate, Permission/NeedsUser, DRS lifecycle,
+ConflictCheck, and audit evidence. Two bounded safe patterns become
+proof-level candidates pending Root review; auto-submit and permission bypass
+are quarantined, and ready override is rejected as conflict.
+
+The proof creates explicit source evidence, candidate artifacts, validation
+rows, advisory GT selection, Root candidate dispositions, local lifecycle
+records, ConflictReports, proof artifact, and audit entry. NeedleCandidate is
+not an installed Needle; GT cannot install needles; Root alone may mark a
+candidate pending review, rejected, or quarantined.
+
+Proof status: PASS, scenarios_verified=5, NeedleCandidate tests passed=28,
+focused tests passed=98, full suite passed=1247 with 37 warnings, sensitive
+scan clear, `needle_candidate_created=true`, `installed_needle_created=false`,
+`protocol_candidate_created=false`, explicit artifacts consistent, and
+production_autonomy_claimed=false. Evidence:
+`docs/audit_reports/auditor_needlecandidate_lifecycle_proof.log` and
+`docs/audit_reports/auditor_needlecandidate_lifecycle_proof_postcommit.log`;
+commits `acb5aac` and `7fc0a1b`.
+
 Corrected next order:
 
 1. Passport Geometry docs sync - complete.
@@ -1172,12 +1193,21 @@ Corrected next order:
 10. Applied Certificate docs/audit - complete.
 11. Permission / NeedsUser UX Proof v0.1 - complete.
 12. Permission / NeedsUser postcommit audit log - complete.
-13. Permission / NeedsUser docs sync - current.
-14. NeedleCandidate lifecycle / NeedleForge prototype.
-15. NeedleCandidate docs/audit.
-16. External DRS pointer protocol.
-17. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
-18. Then UP transfer/opportunity.
+13. Permission / NeedsUser docs/audit - complete.
+14. NeedleCandidate lifecycle / NeedleForge prototype v0.1 - complete.
+15. NeedleCandidate postcommit audit log - complete.
+16. NeedleCandidate docs sync - current.
+17. Applied DRS Retrieval / Reuse v0.1.
+18. DRS adversarial stress pack.
+19. Applied demo #3: Travel / multi-condition readiness.
+20. Multi-domain applied smoke.
+21. Needle adversarial / safety pack.
+22. External DRS pointer protocol.
+23. Read-only real API / connector sandbox.
+24. Chaos applied stress demos.
+25. Production boundary design docs.
+26. Only then Marennya quarantine-first.
+27. Then UP transfer/opportunity.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement.

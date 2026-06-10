@@ -914,6 +914,23 @@ passed=1219 with 37 warnings, sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_permission_needsuser_ux_proof.log` and
 `docs/audit_reports/auditor_permission_needsuser_ux_proof_postcommit.log`.
 
+NeedleCandidate lifecycle / NeedleForge prototype v0.1 is complete. It proves
+that repeated safe warehouse and certificate patterns may become bounded
+proof-level candidates only after Permission/NeedsUser, validation, advisory
+GT, ConflictCheck, audit linkage, and Root review. The safe candidates remain
+`candidate_pending_review`; unsafe auto-submit and permission bypass are
+quarantined; ready override is rejected as conflict.
+
+Explicit source evidence, candidate artifacts, validation rows, GT selection,
+Root dispositions, local lifecycle records, ConflictReports, proof artifact,
+and audit entry keep the result inspectable. NeedleCandidate is not an
+installed Needle; GT cannot install needles; no real action, production
+persistence, or global DRS write occurs. Proof status: PASS, scenarios=5,
+NeedleCandidate tests=28, focused tests=98, full suite=1247 with 37 warnings,
+sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_needlecandidate_lifecycle_proof.log` and
+`docs/audit_reports/auditor_needlecandidate_lifecycle_proof_postcommit.log`.
+
 The scenario trace is an observable projection of the main downward
 Root-controlled canonical vector, not the full architecture. Needles are
 bounded capability contracts, not plugins. DRS is semantic topology, not
@@ -921,12 +938,13 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: Passport Geometry, audit/hash-chain, Controlled Route
-Assembly, Applied Warehouse, and Applied Certificate proofs/docs/audits are
-complete. Permission/NeedsUser proof and postcommit audit are complete;
-Permission/NeedsUser docs sync is current. Next: NeedleCandidate lifecycle /
-NeedleForge and docs/audit, then External DRS pointer protocol. Only after
-several applied traces/deadends/conflicts: Marennya then UP.
+Corrected next order: proofs/docs/audits through Permission/NeedsUser are
+complete; NeedleCandidate proof and postcommit audit are complete;
+NeedleCandidate docs sync is current. Next: Applied DRS Retrieval / Reuse, DRS
+adversarial stress, Travel readiness, multi-domain smoke, Needle adversarial
+pack, External DRS pointer protocol, read-only connector sandbox, chaos applied
+stress, and production-boundary design docs. Only then: Marennya, followed by
+UP.
 
 ## Exclusions
 

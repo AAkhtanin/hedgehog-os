@@ -55,7 +55,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → Applied Warehouse Semantic Demo → Applied Certificate Readiness Demo → Permission/NeedsUser UX Proof → next: NeedleCandidate lifecycle / NeedleForge prototype → only later: External DRS, Marennya / UP
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → Applied Warehouse Semantic Demo → Applied Certificate Readiness Demo → Permission/NeedsUser UX Proof → NeedleCandidate lifecycle proof → next: Applied DRS Retrieval / Reuse → DRS adversarial stress → only later: External DRS, Marennya / UP
 
 Do not jump ahead to:
 
@@ -104,7 +104,8 @@ Anti-reduction rules:
 - Applied demos must not automatically create `protocol_candidate` or
   `needle_candidate` unless that lifecycle is explicitly under test.
 - Before NeedleForge or action needles, the Permission/NeedsUser boundary must remain intact: permission is not execution, approval is not completed action, and `needs_user` is not failure.
-- The next layer is NeedleCandidate lifecycle / NeedleForge prototype, not Marennya / UP.
+- NeedleCandidate lifecycle may create proof-level candidate objects, but any installed needle, production persistence, external action, or Root bypass remains forbidden.
+- The next layer is Applied DRS Retrieval / Reuse v0.1, not External DRS or Marennya / UP.
 
 See `docs/passport_geometry_root_needles.md`.
 
@@ -176,6 +177,7 @@ See `docs/passport_geometry_root_needles.md`.
 58. Applied demos must not automatically create `protocol_candidate` or `needle_candidate` unless that lifecycle is explicitly under test.
 59. Applied Certificate / Document Readiness Demo v0.1 proves `not_ready` from expired/missing documents and rejects an invalid ready certificate. It creates no protocol candidate, needle candidate, or installed needle.
 60. Permission / NeedsUser UX Proof v0.1 rejects permission bypass and completed-action-without-execution claims. Permission is not execution, proof-only approval is future-action permission only, user denial remains blocked, `needs_user` is not failure, and the proof creates no protocol candidate, needle candidate, or installed needle.
+61. NeedleCandidate lifecycle / NeedleForge prototype v0.1 may create bounded proof-level NeedleCandidate objects only. NeedleCandidate is not an installed Needle; GT cannot install needles; Root alone disposes candidates as pending review, rejected, or quarantined; production persistence, global DRS writes, external actions, and Root bypass remain forbidden.
 
 ---
 
@@ -359,7 +361,7 @@ Orchestrator may propose route-assembly fields, but every proposal must pass Roo
 
 Current status: Root-centered proof geometry now includes controlled route assembly, Gate / AVF constraints, bounded planning/execution contracts, Root Final, DRS Lifecycle, ConflictCheck, and proof-level audit/hash linkage. Pipeline traces remain observable projections, not the architecture.
 
-Corrected engineering order: Passport Geometry, audit/hash-chain, Controlled Route Assembly, Applied Warehouse, and Applied Certificate proofs/docs/audits are complete. Permission / NeedsUser proof and postcommit audit are complete; Permission / NeedsUser docs sync is current. Next is NeedleCandidate lifecycle / NeedleForge prototype and its docs/audit, then External DRS pointer protocol. Only after several applied traces/deadends/conflicts: Marennya quarantine-first, then UP transfer/opportunity.
+Corrected engineering order: proofs/docs/audits through Permission / NeedsUser are complete; NeedleCandidate lifecycle proof and postcommit audit are complete; NeedleCandidate docs sync is current. Next: Applied DRS Retrieval / Reuse, DRS adversarial stress, Travel readiness, multi-domain smoke, Needle adversarial/safety pack, External DRS pointer protocol, read-only connector sandbox, chaos applied stress, and production-boundary design docs. Only then: Marennya quarantine-first, followed by UP transfer/opportunity.
 
 Do not implement Marennya / UP before the applied Root-controlled canonical path passes practical semantic demos cleanly. The current priority is applied canonical execution, not self-improvement.
 

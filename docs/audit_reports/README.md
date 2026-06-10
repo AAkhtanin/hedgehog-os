@@ -118,6 +118,15 @@ Current reports:
   - Postcommit audit evidence for commits `9342b59` and `0de8db6`.
   - Confirms the applied warehouse proof remains PASS after commit, with focused/full-suite verification and a clear sensitive scan.
 
+- `auditor_applied_certificate_readiness_demo.log`
+  - Proof for Applied Certificate / Document Readiness Demo v0.1.
+  - Confirms APP-77 / CERT-310 resolves to `not_ready` from expired insurance and a missing payment receipt through explicit applied artifacts.
+  - Confirms no external submission, protocol candidate, needle candidate, installed needle, production persistence, or production autonomy.
+
+- `auditor_applied_certificate_readiness_demo_postcommit.log`
+  - Postcommit audit evidence for commits `aa55384` and `2c9a23f`.
+  - Confirms the applied certificate proof remains PASS after commit, with focused/full-suite verification and a clear sensitive scan.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

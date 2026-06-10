@@ -165,21 +165,26 @@ Current engineering order:
 4. Controlled RootOrchestrator Route Assembly Integration v0.1 - complete.
 5. Controlled RootOrchestrator docs sync - complete.
 6. Applied Warehouse Semantic Demo / Warehouse-Style Proof v0.1 - complete.
-7. Applied Warehouse postcommit audit log - complete.
-8. Applied Warehouse docs sync - current.
-9. Applied Semantic Demo #2: certificate/document readiness.
-10. Applied Demo #2 docs/audit.
+7. Applied Warehouse docs/audit - complete.
+8. Applied Certificate / Document Readiness Demo v0.1 - complete.
+9. Applied Certificate postcommit audit log - complete.
+10. Applied Certificate docs sync - current.
 11. Permission/NeedsUser UX proof.
-12. NeedleCandidate lifecycle / NeedleForge prototype.
-13. External DRS pointer protocol.
-14. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
-15. Then UP transfer/opportunity.
+12. Permission/NeedsUser docs/audit.
+13. NeedleCandidate lifecycle / NeedleForge prototype.
+14. External DRS pointer protocol.
+15. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
+16. Then UP transfer/opportunity.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
 domain transfer through applied canonical paths, not self-improvement. Applied
 demos must not automatically create protocol candidates or needle candidates
 unless that lifecycle is explicitly under test.
+
+Applied domain transfer is now proven across warehouse readiness and
+certificate/document readiness. The next layer is Permission/NeedsUser UX,
+not Marennya / UP or NeedleForge.
 
 Audit/hash-chain hardens this Root-centered proof geometry rather than turning
 it into a linear long-chain. Hash-chain proves continuity, not truth.

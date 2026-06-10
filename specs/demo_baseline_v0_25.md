@@ -1114,6 +1114,27 @@ passed=1180 with 37 warnings, sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_applied_warehouse_semantic_demo.log` and
 `docs/audit_reports/auditor_applied_warehouse_semantic_demo_postcommit.log`.
 
+Applied Certificate / Document Readiness Demo v0.1 is complete. It is the
+second applied semantic demo and proves domain transfer from warehouse
+readiness to certificate/document readiness. For APP-77 / CERT-310, local
+WorldState contains valid passport/residency documents, expired insurance, and
+a missing payment receipt. Root Final reports `not_ready` and performs no
+external submission.
+
+The proof creates explicit applied certificate PlanGraph, document checks,
+validation rows, GT selection, local lifecycle records, ConflictReports,
+artifact, and audit entry. Completed not-ready is accepted, invalid ready is
+rejected, and needs-user document update remains secondary. ConflictCheck is
+advisory and hash-chain proves continuity, not truth.
+
+Lifecycle records are proof-level local only. The demo creates no protocol
+candidate, needle candidate, or installed needle. Proof status: PASS, focused
+tests passed=68, full suite passed=1199 with 37 warnings, sensitive scan clear,
+production_autonomy_claimed=false. Evidence:
+`docs/audit_reports/auditor_applied_certificate_readiness_demo.log` and
+`docs/audit_reports/auditor_applied_certificate_readiness_demo_postcommit.log`;
+commits `aa55384` and `2c9a23f`.
+
 Corrected next order:
 
 1. Passport Geometry docs sync - complete.
@@ -1122,15 +1143,16 @@ Corrected next order:
 4. Controlled RootOrchestrator Route Assembly Integration v0.1 - complete.
 5. Controlled RootOrchestrator docs sync - complete.
 6. Applied Warehouse Semantic Demo / Warehouse-Style Proof v0.1 - complete.
-7. Applied Warehouse postcommit audit log - complete.
-8. Applied Warehouse docs sync - current.
-9. Applied Semantic Demo #2: certificate/document readiness.
-10. Applied Demo #2 docs/audit.
+7. Applied Warehouse docs/audit - complete.
+8. Applied Certificate / Document Readiness Demo v0.1 - complete.
+9. Applied Certificate postcommit audit log - complete.
+10. Applied Certificate docs sync - current.
 11. Permission/NeedsUser UX proof.
-12. NeedleCandidate lifecycle / NeedleForge prototype.
-13. External DRS pointer protocol.
-14. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
-15. Then UP transfer/opportunity.
+12. Permission/NeedsUser docs/audit.
+13. NeedleCandidate lifecycle / NeedleForge prototype.
+14. External DRS pointer protocol.
+15. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
+16. Then UP transfer/opportunity.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement.

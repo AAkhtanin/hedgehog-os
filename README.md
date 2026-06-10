@@ -607,6 +607,16 @@ Proof status: PASS, `applied_audit_entry_created=true`, `applied_demo_artifact_h
 
 This is deterministic local applied proof only, not a production warehouse runtime, real warehouse API, live Gemini, Telegram, real external action, production persistence, global/external DRS, autonomous RootOrchestrator replacement, Marennya / UP, or NeedleFactory / NeedleForge. Applied demos must not automatically create `protocol_candidate` or `needle_candidate` unless that lifecycle is explicitly under test.
 
+Applied Certificate / Document Readiness Demo v0.1 is complete. This second applied semantic proof demonstrates domain transfer from warehouse readiness to document readiness. For application APP-77 / certificate request CERT-310, local WorldState shows valid passport and residency documents, an expired insurance certificate, and a missing payment receipt. Root Final therefore reports `certificate_readiness=not_ready`, preserves both blocking reasons, and performs no external submission.
+
+The proof creates explicit `applied_certificate_plan_graph`, `document_check_results`, `applied_validation_rows`, `applied_gt_selection`, `applied_drs_lifecycle_records`, `applied_conflict_reports`, `applied_artifact`, and `applied_audit_entry` objects. `completed_not_ready_certificate` is accepted; `invalid_ready_certificate` is rejected because it contradicts the expired insurance certificate and missing payment receipt; `needs_user_document_update` remains a secondary valid recommendation. ConflictCheck remains advisory, and hash-chain proves continuity, not truth.
+
+Local proof lifecycle records are `certificate_experience_record_APP77_CERT310`, `certificate_reuse_candidate_APP77_CERT310`, `certificate_invalid_ready_quarantine_APP77_CERT310`, and `certificate_external_submission_deadend_APP77_CERT310`. This demo does not test promotion: `protocol_candidate_created=false`, `needle_candidate_created=false`, and `installed_needle_created=false`.
+
+Proof status: PASS, focused tests passed=68, full suite passed=1199 with 37 warnings, sensitive scan clear, `production_autonomy_claimed=false`. Evidence: `docs/audit_reports/auditor_applied_certificate_readiness_demo.log` and `docs/audit_reports/auditor_applied_certificate_readiness_demo_postcommit.log`; commits `aa55384` and `2c9a23f`.
+
+This is deterministic local applied proof only, not a production certificate service, real government/API submission, live Gemini, Telegram, real external action, production persistence, global/external DRS, autonomous RootOrchestrator replacement, Marennya / UP, or NeedleFactory / NeedleForge.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -749,12 +759,14 @@ Completed recent layers:
 - Controlled RootOrchestrator Route Assembly Integration v0.1.
 - Applied Warehouse Semantic Demo / Warehouse-Style Proof v0.1.
 - Applied Warehouse postcommit audit log.
+- Applied Certificate / Document Readiness Demo v0.1.
+- Applied Certificate postcommit audit log.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Applied Warehouse docs sync, then Applied Semantic Demo #2: certificate/document readiness.
-- After Applied Demo #2 docs/audit: Permission/NeedsUser UX proof, NeedleCandidate lifecycle / NeedleForge prototype, and External DRS pointer protocol.
+- Applied Certificate docs sync, then Permission/NeedsUser UX proof and its docs/audit.
+- After Permission/NeedsUser UX: NeedleCandidate lifecycle / NeedleForge prototype and External DRS pointer protocol.
 - Only after several applied traces, deadends, and conflicts: Marennya quarantine-first v0.1, then UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.

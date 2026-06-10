@@ -877,6 +877,25 @@ production_autonomy_claimed=false. Evidence:
 `docs/audit_reports/auditor_applied_warehouse_semantic_demo.log` and
 `docs/audit_reports/auditor_applied_warehouse_semantic_demo_postcommit.log`.
 
+Applied Certificate / Document Readiness Demo v0.1 is complete. The second
+applied scenario proves domain transfer by processing APP-77 / CERT-310.
+WorldState shows valid passport and residency documents, expired insurance,
+and a missing payment receipt. Root Final reports `not_ready` and does not
+submit anything externally.
+
+Explicit applied certificate PlanGraph, document results, validation rows, GT
+selection, lifecycle records, ConflictReports, artifact, and audit entry make
+the result inspectable. Completed not-ready is accepted; invalid ready is
+rejected because it contradicts expired/missing documents; needs-user document
+update remains secondary. ConflictCheck remains advisory until Root.
+
+The four lifecycle records are local proof evidence only. This scenario
+creates no protocol candidate, needle candidate, or installed needle. Proof
+status: PASS, focused tests passed=68, full suite passed=1199 with 37 warnings,
+sensitive scan clear, production_autonomy_claimed=false. Evidence:
+`docs/audit_reports/auditor_applied_certificate_readiness_demo.log` and
+`docs/audit_reports/auditor_applied_certificate_readiness_demo_postcommit.log`.
+
 The scenario trace is an observable projection of the main downward
 Root-controlled canonical vector, not the full architecture. Needles are
 bounded capability contracts, not plugins. DRS is semantic topology, not
@@ -885,11 +904,11 @@ needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
 Corrected next order: Passport Geometry, audit/hash-chain, Controlled Route
-Assembly, Applied Warehouse proof, and Applied Warehouse postcommit audit are
-complete; Applied Warehouse docs sync is current. Next: Applied Semantic Demo
-#2 certificate/document readiness, its docs/audit, Permission/NeedsUser UX,
-NeedleCandidate lifecycle / NeedleForge, External DRS pointer protocol, and
-only after several applied traces/deadends/conflicts: Marennya then UP.
+Assembly, Applied Warehouse, and Applied Certificate proofs/docs/audits are
+complete; Applied Certificate docs sync is current. Next: Permission/NeedsUser
+UX proof and docs/audit, then NeedleCandidate lifecycle / NeedleForge and
+External DRS pointer protocol. Only after several applied traces/deadends/
+conflicts: Marennya then UP.
 
 ## Exclusions
 

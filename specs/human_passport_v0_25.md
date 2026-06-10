@@ -2229,6 +2229,31 @@ warehouse execution. Applied demos must not automatically create
 under test. Root remains final authority; GT and ConflictCheck remain advisory;
 hash-chain proves continuity, not truth.
 
+## 20.2 Applied Certificate / Document Readiness Proof
+
+Applied Certificate / Document Readiness Demo v0.1 is the second applied
+semantic proof. It demonstrates that the Root-centered canonical geometry
+transfers from warehouse readiness to certificate/document readiness.
+
+For application APP-77 / certificate request CERT-310, local WorldState shows
+valid passport and residency documents, an expired insurance certificate, and
+a missing payment receipt. Root Final must not say ready; it reports
+`certificate_readiness=not_ready`, preserves both blocking reasons, and
+executes no external submission.
+
+The proof creates explicit applied certificate PlanGraph, document-check,
+validation, GT-selection, local lifecycle, ConflictReport, artifact, and audit
+entry objects. The completed not-ready result is accepted, invalid ready is
+rejected, and needs-user document update remains a valid secondary
+recommendation. ConflictCheck remains advisory until Root; hash-chain proves
+continuity, not truth.
+
+The local lifecycle records are proof evidence only, not production
+persistence or global/external DRS. This demo does not test promotion:
+`protocol_candidate_created=false`, `needle_candidate_created=false`, and
+`installed_needle_created=false`. The next applied layer is Permission/NeedsUser
+UX proof, not Marennya / UP or NeedleForge.
+
 ## 21. Legacy Code Position
 
 Legacy code is donor/reference only.

@@ -3,6 +3,8 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import replace
 
+import pytest
+
 from demo.run_audit_hash_chain import canonical_hash
 from demo.run_needlecandidate_lifecycle_proof import (
     collect_needlecandidate_lifecycle_proof,
@@ -11,7 +13,8 @@ from demo.run_needlecandidate_lifecycle_proof import (
 )
 
 
-def _report():
+@pytest.fixture(scope="module")
+def report():
     return collect_needlecandidate_lifecycle_proof()
 
 
@@ -19,7 +22,7 @@ def _by_id(rows, key):
     return {row[key]: row for row in rows}
 
 
-def test_runner_contains_required_sections():
+def test_runner_contains_required_sections(report):
     output = run_needlecandidate_lifecycle_proof()
     for heading in (
         "[NEEDLECANDIDATE LIFECYCLE PROOF]",
@@ -39,8 +42,8 @@ def test_runner_contains_required_sections():
         assert heading in output
 
 
-def test_mode_is_deterministic_local_proof_only():
-    mode = _report().input_mode
+def test_mode_is_deterministic_local_proof_only(report):
+    mode = report.input_mode
     assert mode["mode"] == "deterministic_needlecandidate_lifecycle_proof"
     assert mode["local_proof_level_only"] is True
     for key in (
@@ -57,8 +60,8 @@ def test_mode_is_deterministic_local_proof_only():
         assert mode[key] is False
 
 
-def test_source_proofs_are_consumed_and_pass():
-    source = _report().source_evidence
+def test_source_proofs_are_consumed_and_pass(report):
+    source = report.source_evidence
     assert source["warehouse_applied_source_status"] == "PASS"
     assert "water_filter short_by_2" in source["warehouse_source_evidence"]
     assert source["certificate_applied_source_status"] == "PASS"
@@ -70,8 +73,8 @@ def test_source_proofs_are_consumed_and_pass():
     assert source["audit_hash_chain_source_status"] == "PASS"
 
 
-def test_safe_candidates_exist_with_bounded_contracts():
-    candidates = _by_id(_report().needle_candidate_artifacts, "candidate_id")
+def test_safe_candidates_exist_with_bounded_contracts(report):
+    candidates = _by_id(report.needle_candidate_artifacts, "candidate_id")
     warehouse = candidates["needle_candidate_warehouse_restock_readiness_v0_1"]
     certificate = candidates[
         "needle_candidate_certificate_document_update_v0_1"
@@ -95,8 +98,8 @@ def test_safe_candidates_exist_with_bounded_contracts():
         assert candidate["installed_needle_created"] is False
 
 
-def test_warehouse_candidate_boundary_is_granular():
-    candidates = _by_id(_report().needle_candidate_artifacts, "candidate_id")
+def test_warehouse_candidate_boundary_is_granular(report):
+    candidates = _by_id(report.needle_candidate_artifacts, "candidate_id")
     warehouse = candidates["needle_candidate_warehouse_restock_readiness_v0_1"]
     assert warehouse["candidate_id"] == (
         "needle_candidate_warehouse_restock_readiness_v0_1"
@@ -111,8 +114,8 @@ def test_warehouse_candidate_boundary_is_granular():
     assert warehouse["root_review_required"] is True
 
 
-def test_certificate_candidate_boundary_is_granular():
-    candidates = _by_id(_report().needle_candidate_artifacts, "candidate_id")
+def test_certificate_candidate_boundary_is_granular(report):
+    candidates = _by_id(report.needle_candidate_artifacts, "candidate_id")
     certificate = candidates[
         "needle_candidate_certificate_document_update_v0_1"
     ]
@@ -133,8 +136,8 @@ def test_certificate_candidate_boundary_is_granular():
     assert certificate["root_review_required"] is True
 
 
-def test_unsafe_candidates_are_rejected_or_quarantined():
-    candidates = _by_id(_report().needle_candidate_artifacts, "candidate_id")
+def test_unsafe_candidates_are_rejected_or_quarantined(report):
+    candidates = _by_id(report.needle_candidate_artifacts, "candidate_id")
     assert candidates["unsafe_auto_submit_candidate"]["candidate_status"] == (
         "rejected_quarantined"
     )
@@ -150,8 +153,8 @@ def test_unsafe_candidates_are_rejected_or_quarantined():
     )
 
 
-def test_unsafe_candidate_rejection_reasons_are_explicit():
-    candidates = _by_id(_report().needle_candidate_artifacts, "candidate_id")
+def test_unsafe_candidate_rejection_reasons_are_explicit(report):
+    candidates = _by_id(report.needle_candidate_artifacts, "candidate_id")
     assert candidates["unsafe_auto_submit_candidate"]["rejection_reason"] == (
         "external submission forbidden in proof-level layer"
     )
@@ -163,8 +166,8 @@ def test_unsafe_candidate_rejection_reasons_are_explicit():
     )
 
 
-def test_validation_rows_enforce_candidate_boundary():
-    rows = _by_id(_report().needle_candidate_validation_rows, "validation_row_id")
+def test_validation_rows_enforce_candidate_boundary(report):
+    rows = _by_id(report.needle_candidate_validation_rows, "validation_row_id")
     assert rows["warehouse_restock_candidate"]["validation_status"] == (
         "accepted_as_candidate_pending_review"
     )
@@ -194,8 +197,8 @@ def test_validation_rows_enforce_candidate_boundary():
     } == {"accepted_as_candidate_pending_review"}
 
 
-def test_gt_recommends_only_pending_review_and_cannot_install():
-    gt = _report().needle_candidate_gt_selection
+def test_gt_recommends_only_pending_review_and_cannot_install(report):
+    gt = report.needle_candidate_gt_selection
     assert gt["recommended_candidate_status"] == "candidate_pending_review"
     assert set(gt["recommended_candidate_ids"]) == {
         "needle_candidate_warehouse_restock_readiness_v0_1",
@@ -210,8 +213,8 @@ def test_gt_recommends_only_pending_review_and_cannot_install():
     assert gt["gt_remains_advisory_until_root"] is True
 
 
-def test_root_final_never_installs_or_claims_action_completion():
-    finals = _report().needle_candidate_root_final_artifacts
+def test_root_final_never_installs_or_claims_action_completion(report):
+    finals = report.needle_candidate_root_final_artifacts
     assert len(finals) == 5
     assert all(final["installed_needle_created"] is False for final in finals)
     assert all(final["completed_action_claimed"] is False for final in finals)
@@ -234,8 +237,8 @@ def test_root_final_never_installs_or_claims_action_completion():
     )
 
 
-def test_drs_lifecycle_has_required_proof_records():
-    records = _by_id(_report().needle_candidate_drs_lifecycle_records, "record_id")
+def test_drs_lifecycle_has_required_proof_records(report):
+    records = _by_id(report.needle_candidate_drs_lifecycle_records, "record_id")
     expected = {
         "needle_candidate_experience_record": "experience_record",
         "needle_candidate_reuse_pattern_record": "reuse_pattern",
@@ -264,9 +267,9 @@ def test_drs_lifecycle_has_required_proof_records():
     )
 
 
-def test_conflictcheck_has_three_conflicts_and_two_safe_no_conflicts():
+def test_conflictcheck_has_three_conflicts_and_two_safe_no_conflicts(report):
     conflicts = _by_id(
-        _report().needle_candidate_conflict_reports, "conflict_report_id"
+        report.needle_candidate_conflict_reports, "conflict_report_id"
     )
     for conflict_id in (
         "conflict_auto_submit_candidate_vs_no_external_action_boundary",
@@ -295,8 +298,7 @@ def test_conflictcheck_has_three_conflicts_and_two_safe_no_conflicts():
     )
 
 
-def test_audit_entry_hashes_needlecandidate_proof_artifact():
-    report = _report()
+def test_audit_entry_hashes_needlecandidate_proof_artifact(report):
     assert report.needle_candidate_audit_entry["audit_entry_id"] == (
         "audit_needlecandidate_lifecycle_v0_1"
     )
@@ -312,8 +314,7 @@ def test_audit_entry_hashes_needlecandidate_proof_artifact():
     assert report.needle_candidate_audit_entry["audit_chain_decides_truth"] is False
 
 
-def test_consistency_validator_rejects_wrong_audit_hash():
-    report = _report()
+def test_consistency_validator_rejects_wrong_audit_hash(report):
     audit = deepcopy(report.needle_candidate_audit_entry)
     audit["canonical_payload_hash"] = "0" * 64
     assert validate_needlecandidate_lifecycle_report_consistency(
@@ -321,8 +322,7 @@ def test_consistency_validator_rejects_wrong_audit_hash():
     ) is False
 
 
-def test_consistency_validator_rejects_missing_safe_warehouse_candidate():
-    report = _report()
+def test_consistency_validator_rejects_missing_safe_warehouse_candidate(report):
     candidates = [
         candidate
         for candidate in report.needle_candidate_artifacts
@@ -334,8 +334,7 @@ def test_consistency_validator_rejects_missing_safe_warehouse_candidate():
     ) is False
 
 
-def test_consistency_validator_rejects_missing_unsafe_conflict_report():
-    report = _report()
+def test_consistency_validator_rejects_missing_unsafe_conflict_report(report):
     conflicts = [
         conflict
         for conflict in report.needle_candidate_conflict_reports
@@ -347,8 +346,7 @@ def test_consistency_validator_rejects_missing_unsafe_conflict_report():
     ) is False
 
 
-def test_consistency_validator_rejects_installed_needle_claim():
-    report = _report()
+def test_consistency_validator_rejects_installed_needle_claim(report):
     candidates = deepcopy(report.needle_candidate_artifacts)
     candidates[0]["installed_needle_created"] = True
     assert validate_needlecandidate_lifecycle_report_consistency(
@@ -356,8 +354,7 @@ def test_consistency_validator_rejects_installed_needle_claim():
     ) is False
 
 
-def test_consistency_validator_rejects_warehouse_installable_now():
-    report = _report()
+def test_consistency_validator_rejects_warehouse_installable_now(report):
     candidates = deepcopy(report.needle_candidate_artifacts)
     candidates[0]["installable_now"] = True
     assert validate_needlecandidate_lifecycle_report_consistency(
@@ -365,8 +362,7 @@ def test_consistency_validator_rejects_warehouse_installable_now():
     ) is False
 
 
-def test_consistency_validator_rejects_certificate_installed_needle_claim():
-    report = _report()
+def test_consistency_validator_rejects_certificate_installed_needle_claim(report):
     candidates = deepcopy(report.needle_candidate_artifacts)
     candidates[1]["installed_needle_created"] = True
     assert validate_needlecandidate_lifecycle_report_consistency(
@@ -374,8 +370,7 @@ def test_consistency_validator_rejects_certificate_installed_needle_claim():
     ) is False
 
 
-def test_consistency_validator_rejects_gt_recommending_unsafe_candidate():
-    report = _report()
+def test_consistency_validator_rejects_gt_recommending_unsafe_candidate(report):
     gt = deepcopy(report.needle_candidate_gt_selection)
     gt["recommended_candidate_ids"].append("unsafe_auto_submit_candidate")
     assert validate_needlecandidate_lifecycle_report_consistency(
@@ -383,8 +378,7 @@ def test_consistency_validator_rejects_gt_recommending_unsafe_candidate():
     ) is False
 
 
-def test_consistency_validator_rejects_unsafe_root_pending_review():
-    report = _report()
+def test_consistency_validator_rejects_unsafe_root_pending_review(report):
     finals = deepcopy(report.needle_candidate_root_final_artifacts)
     finals[2]["root_candidate_status"] = "candidate_pending_review"
     assert validate_needlecandidate_lifecycle_report_consistency(
@@ -392,8 +386,7 @@ def test_consistency_validator_rejects_unsafe_root_pending_review():
     ) is False
 
 
-def test_consistency_validator_rejects_audit_truth_claim():
-    report = _report()
+def test_consistency_validator_rejects_audit_truth_claim(report):
     audit = deepcopy(report.needle_candidate_audit_entry)
     audit["audit_chain_decides_truth"] = True
     assert validate_needlecandidate_lifecycle_report_consistency(
@@ -401,8 +394,7 @@ def test_consistency_validator_rejects_audit_truth_claim():
     ) is False
 
 
-def test_consistency_validator_rejects_authority_candidate_false():
-    report = _report()
+def test_consistency_validator_rejects_authority_candidate_false(report):
     authority = deepcopy(report.authority_safety)
     authority["needle_candidate_created"] = False
     assert validate_needlecandidate_lifecycle_report_consistency(
@@ -410,8 +402,7 @@ def test_consistency_validator_rejects_authority_candidate_false():
     ) is False
 
 
-def test_consistency_validator_rejects_authority_installed_needle_true():
-    report = _report()
+def test_consistency_validator_rejects_authority_installed_needle_true(report):
     authority = deepcopy(report.authority_safety)
     authority["installed_needle_created"] = True
     assert validate_needlecandidate_lifecycle_report_consistency(
@@ -419,8 +410,7 @@ def test_consistency_validator_rejects_authority_installed_needle_true():
     ) is False
 
 
-def test_consistency_validator_rejects_summary_candidate_or_install_corruption():
-    report = _report()
+def test_consistency_validator_rejects_summary_candidate_or_install_corruption(report):
     summary = deepcopy(report.summary)
     summary["needle_candidate_created"] = False
     assert validate_needlecandidate_lifecycle_report_consistency(
@@ -433,8 +423,7 @@ def test_consistency_validator_rejects_summary_candidate_or_install_corruption()
     ) is False
 
 
-def test_authority_and_safety_boundaries_are_preserved():
-    report = _report()
+def test_authority_and_safety_boundaries_are_preserved(report):
     assert all(report.malicious_unsafe_claims.values())
     authority = report.authority_safety
     assert authority["needlecandidate_is_installed_needle"] is False
@@ -450,8 +439,8 @@ def test_authority_and_safety_boundaries_are_preserved():
     assert authority["production_autonomy_claimed"] is False
 
 
-def test_summary_pass_derives_from_explicit_artifacts():
-    summary = _report().summary
+def test_summary_pass_derives_from_explicit_artifacts(report):
+    summary = report.summary
     assert summary["needlecandidate_lifecycle_proof_status"] == "PASS"
     assert summary["scenarios_verified"] == 5
     for key in (

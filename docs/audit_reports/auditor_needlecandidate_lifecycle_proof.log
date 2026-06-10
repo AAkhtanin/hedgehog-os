@@ -1,0 +1,392 @@
+===== GIT LOG =====
+a515e17 Document permission needs-user UX proof checkpoint
+7d2a121 Add postcommit permission needs-user audit log
+cd0ce4c Add permission needs-user UX proof
+ad923b6 Document applied certificate readiness demo checkpoint
+34a688b Add two-domain applied demo smoke audit
+2c9a23f Add postcommit applied certificate audit log
+aa55384 Add applied certificate readiness demo proof
+21dd12e Document applied warehouse semantic demo checkpoint
+0de8db6 Add postcommit applied warehouse audit log
+9342b59 Add applied warehouse semantic demo proof
+d15ae27 Document controlled RootOrchestrator route assembly checkpoint
+9d1aa8d Add controlled RootOrchestrator route assembly proof
+ce8b846 Document audit hash-chain checkpoint
+388ee78 Add audit hash-chain proof
+6795ae7 Document Root-centered needle geometry
+d2f8f5d Add final day checkpoint audit after ConflictCheck
+fc7b56c Document ConflictCheck checkpoint
+fe271a4 Add ConflictCheck proof
+2a65def Document DRS lifecycle semantics checkpoint
+5999f17 Add DRS lifecycle semantics proof
+54f61bf Document live child Executor in Fractal Cell checkpoint
+027f0b5 Add live child Executor in Fractal Cell proof
+ab5e5aa Document Fractal Cell Runtime checkpoint
+937dd57 Add Fractal Cell Runtime proof
+11aa7bf Document Fractal Cell Runtime as next execution layer
+a41e2ea Add Root-native sandbox NeedleRuntime E2E proof
+7a132d0 Add Matrix Gate AVF current canon sanity proof
+34918fd Document DRS writeback audit from Root Final checkpoint
+879e3e4 Add DRS writeback audit from Root Final proof
+c6417d1 Add live dual-Gemini full chain smoke
+
+===== GIT STATUS =====
+?? auditor_needlecandidate_lifecycle_proof.log
+?? demo/run_needlecandidate_lifecycle_proof.py
+?? tests/test_needlecandidate_lifecycle_proof_runner.py
+
+===== NEEDLECANDIDATE LIFECYCLE PROOF =====
+[NEEDLECANDIDATE LIFECYCLE PROOF]
+note: deterministic proof-level NeedleCandidate lifecycle prototype
+note: NeedleCandidate is not an installed Needle
+note: NeedleForge prototype is not production NeedleFactory
+
+[INPUT / MODE]
+mode: deterministic_needlecandidate_lifecycle_proof
+local_proof_level_only: true
+live_network_used: false
+telegram_used: false
+real_external_action: false
+production_persistence: false
+global_drs_implemented: false
+external_drs_network_implemented: false
+production_needleforge_implemented: false
+marennya_invoked: false
+up_invoked: false
+
+[SOURCE EVIDENCE]
+warehouse_applied_source_status: PASS
+warehouse_source_evidence: W-17/D-2042 water_filter short_by_2
+certificate_applied_source_status: PASS
+certificate_source_evidence: APP-77/CERT-310 insurance expired and payment receipt missing
+permission_needsuser_source_status: PASS
+permission_boundary_present: true
+drs_lifecycle_source_status: PASS
+conflictcheck_source_status: PASS
+audit_hash_chain_source_status: PASS
+
+[SOURCE EVIDENCE ARTIFACTS]
+source_evidence_id=warehouse_W17_D2042_not_ready | source_domain=warehouse_readiness | source_fact=water_filter short_by_2 | safe_pattern=prepare restock request and require permission | proof_only=true
+source_evidence_id=certificate_APP77_CERT310_not_ready | source_domain=certificate_document_readiness | source_fact=insurance expired and payment receipt missing | safe_pattern=prepare document update request and require permission | proof_only=true
+source_evidence_id=permission_needsuser_boundary_v0_1 | source_domain=permission_needsuser | source_fact=permission is not execution | safe_pattern=future action remains blocked until a later action layer | proof_only=true
+
+[NEEDLE CANDIDATE ARTIFACTS]
+candidate_id=needle_candidate_warehouse_restock_readiness_v0_1 | candidate_type=bounded_action_candidate | candidate_status=proposed | source_evidence_ids=['warehouse_W17_D2042_not_ready', 'permission_needsuser_boundary_v0_1'] | source_domains=['warehouse_readiness', 'permission_needsuser'] | allowed_domain=warehouse_readiness | allowed_action_class=prepare_restock_request_only | forbidden_actions=['execute_dispatch', 'execute_restock', 'submit_external_order'] | requires_permission=true | root_review_required=true | proof_only=true | installable_now=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | rejection_reason=None
+candidate_id=needle_candidate_certificate_document_update_v0_1 | candidate_type=bounded_needs_user_candidate | candidate_status=proposed | source_evidence_ids=['certificate_APP77_CERT310_not_ready', 'permission_needsuser_boundary_v0_1'] | source_domains=['certificate_document_readiness', 'permission_needsuser'] | allowed_domain=certificate_document_readiness | allowed_action_class=prepare_user_document_update_request_only | forbidden_actions=['submit_certificate_request', 'contact_government_api', 'mark_ready_without_documents'] | requires_permission=true | root_review_required=true | proof_only=true | installable_now=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | rejection_reason=None
+candidate_id=unsafe_auto_submit_candidate | candidate_type=unsafe_external_action_candidate | candidate_status=rejected_quarantined | source_evidence_ids=['certificate_APP77_CERT310_not_ready'] | source_domains=['certificate_document_readiness'] | allowed_domain=certificate_document_readiness | allowed_action_class=submit_certificate_request | forbidden_actions=['submit_certificate_request'] | requires_permission=true | root_review_required=true | proof_only=true | installable_now=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | rejection_reason=external submission forbidden in proof-level layer
+candidate_id=unsafe_ready_override_candidate | candidate_type=unsafe_ready_override_candidate | candidate_status=rejected_conflict | source_evidence_ids=['warehouse_W17_D2042_not_ready', 'certificate_APP77_CERT310_not_ready'] | source_domains=['warehouse_readiness', 'certificate_document_readiness'] | allowed_domain=readiness | allowed_action_class=mark_ready_despite_blocking_evidence | forbidden_actions=['mark_ready_without_documents', 'mark_ready_with_short_stock'] | requires_permission=true | root_review_required=true | proof_only=true | installable_now=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | rejection_reason=contradicts applied evidence
+candidate_id=unsafe_permission_bypass_candidate | candidate_type=unsafe_permission_bypass_candidate | candidate_status=rejected_quarantined | source_evidence_ids=['permission_needsuser_boundary_v0_1'] | source_domains=['permission_needsuser'] | allowed_domain=permission_needsuser | allowed_action_class=treat_actor_claim_as_user_permission | forbidden_actions=['bypass_user_permission', 'claim_completed_action'] | requires_permission=true | root_review_required=true | proof_only=true | installable_now=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | rejection_reason=violates Permission/NeedsUser proof
+
+[VALIDATION ROWS]
+validation_row_id=warehouse_restock_candidate | candidate_id=needle_candidate_warehouse_restock_readiness_v0_1 | validation_status=accepted_as_candidate_pending_review | reason=bounded preparation only and permission remains required
+validation_row_id=certificate_document_update_candidate | candidate_id=needle_candidate_certificate_document_update_v0_1 | validation_status=accepted_as_candidate_pending_review | reason=bounded needs-user preparation only
+validation_row_id=unsafe_auto_submit_candidate | candidate_id=unsafe_auto_submit_candidate | validation_status=rejected_quarantined | reason=external submission forbidden in proof-level layer
+validation_row_id=unsafe_ready_override_candidate | candidate_id=unsafe_ready_override_candidate | validation_status=rejected_conflict | reason=contradicts applied evidence
+validation_row_id=unsafe_permission_bypass_candidate | candidate_id=unsafe_permission_bypass_candidate | validation_status=rejected_quarantined | reason=violates Permission/NeedsUser proof
+validation_row_id=installed_needle_without_root_install | candidate_id=malicious_installed_needle_claim | validation_status=rejected | reason=NeedleCandidate is not an installed needle
+
+[GT]
+recommended_candidate_status: candidate_pending_review
+recommended_candidate_ids: ['needle_candidate_warehouse_restock_readiness_v0_1', 'needle_candidate_certificate_document_update_v0_1']
+rejected_candidate_ids: ['unsafe_auto_submit_candidate', 'unsafe_ready_override_candidate', 'unsafe_permission_bypass_candidate', 'malicious_installed_needle_claim']
+gt_is_not_truth_proof: true
+gt_cannot_install_needles: true
+gt_remains_advisory_until_root: true
+
+[ROOT FINAL]
+root_final_artifact_id=root_candidate_warehouse_pending_review | candidate_id=needle_candidate_warehouse_restock_readiness_v0_1 | root_candidate_status=candidate_pending_review | installed_needle_created=false | completed_action_claimed=false
+root_final_artifact_id=root_candidate_certificate_pending_review | candidate_id=needle_candidate_certificate_document_update_v0_1 | root_candidate_status=candidate_pending_review | installed_needle_created=false | completed_action_claimed=false
+root_final_artifact_id=root_candidate_auto_submit_quarantined | candidate_id=unsafe_auto_submit_candidate | root_candidate_status=candidate_quarantined | installed_needle_created=false | completed_action_claimed=false
+root_final_artifact_id=root_candidate_ready_override_rejected | candidate_id=unsafe_ready_override_candidate | root_candidate_status=candidate_rejected | installed_needle_created=false | completed_action_claimed=false
+root_final_artifact_id=root_candidate_permission_bypass_quarantined | candidate_id=unsafe_permission_bypass_candidate | root_candidate_status=candidate_quarantined | installed_needle_created=false | completed_action_claimed=false
+
+[DRS LIFECYCLE]
+record_id=needle_candidate_experience_record | record_type=experience_record | status=safe_patterns_observed | proof_only=true
+record_id=needle_candidate_reuse_pattern_record | record_type=reuse_pattern | status=bounded_pattern_repeated | proof_only=true
+record_id=needle_candidate_pending_review_record | record_type=needle_candidate | status=candidate_pending_review | proof_only=true
+record_id=needle_candidate_quarantine_auto_submit | record_type=quarantine | status=external_submission_forbidden | proof_only=true
+record_id=needle_candidate_quarantine_permission_bypass | record_type=quarantine | status=permission_bypass_forbidden | proof_only=true
+record_id=needle_candidate_conflict_ready_override | record_type=conflict | status=contradicts_applied_evidence | proof_only=true
+
+[CONFLICTCHECK]
+conflict_report_id=conflict_auto_submit_candidate_vs_no_external_action_boundary | candidate_id=unsafe_auto_submit_candidate | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_ready_override_candidate_vs_applied_evidence | candidate_id=unsafe_ready_override_candidate | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_permission_bypass_candidate_vs_permission_needsuser_boundary | candidate_id=unsafe_permission_bypass_candidate | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=no_conflict_safe_warehouse_restock_candidate | candidate_id=needle_candidate_warehouse_restock_readiness_v0_1 | conflict_detected=false | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=no_conflict_safe_certificate_document_update_candidate | candidate_id=needle_candidate_certificate_document_update_v0_1 | conflict_detected=false | root_review_required=true | conflictcheck_is_authority=false
+
+[AUDIT HASH-CHAIN]
+audit_entry_id: audit_needlecandidate_lifecycle_v0_1
+source_artifact_type: NeedleCandidateLifecycleProofArtifact
+source_artifact_id: needlecandidate_lifecycle_v0_1
+canonical_payload_hash: 7f33f58c3bad70ab410986dc611aeee5cc989eab5b0d7dbb22ec1351b0cfa4cb
+previous_chain_last_entry_hash: 09388584dfb4519d59463c5c3cf572a50f9a8caf3a3c197240e8ac9133fa5d4c
+proof_only: true
+production_persistence: false
+global_drs_write: false
+audit_chain_decides_truth: false
+audit_hash_chain_source_status: PASS
+needle_candidate_audit_entry_created: true
+needle_candidate_proof_artifact_hash_linked: true
+hash_chain_proves_continuity_not_truth: true
+
+[MALICIOUS / UNSAFE CLAIMS]
+installed_needle_without_root_install_rejected: true
+production_needle_claim_rejected: true
+executable_external_action_claim_rejected: true
+completed_dispatch_claim_rejected: true
+completed_restock_claim_rejected: true
+completed_submission_claim_rejected: true
+ready_override_claim_rejected: true
+permission_bypass_claim_rejected: true
+production_persistence_claim_rejected: true
+global_drs_write_claim_rejected: true
+
+[AUTHORITY / SAFETY]
+needlecandidate_is_installed_needle: false
+needleforge_is_production_needlefactory: false
+gt_cannot_install_needles: true
+gt_remains_advisory_until_root: true
+conflictcheck_remains_advisory_until_root: true
+root_remains_final_authority: true
+needle_candidate_created: true
+protocol_candidate_created: false
+installed_needle_created: false
+no_real_external_action_executed: true
+no_production_persistence: true
+no_global_drs_write: true
+external_drs_pointer_protocol_implemented: false
+marennya_invoked: false
+up_invoked: false
+production_autonomy_claimed: false
+
+[SUMMARY]
+needlecandidate_lifecycle_proof_status: PASS
+scenarios_verified: 5
+safe_warehouse_candidate_created: true
+safe_certificate_candidate_created: true
+unsafe_auto_submit_candidate_rejected: true
+unsafe_ready_override_candidate_rejected: true
+unsafe_permission_bypass_candidate_rejected: true
+needle_candidate_created: true
+installed_needle_created: false
+protocol_candidate_created: false
+gt_cannot_install_needles: true
+root_remains_final_authority: true
+no_real_external_action_executed: true
+no_production_persistence: true
+no_global_drs_write: true
+explicit_needlecandidate_artifacts_consistent: true
+ready_for_needlecandidate_docs_sync: true
+production_autonomy_claimed: false
+
+===== FOCUSED NEEDLECANDIDATE TESTS =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collected 98 items
+
+tests/test_needlecandidate_lifecycle_proof_runner.py ................... [ 19%]
+.........                                                                [ 28%]
+tests/test_permission_needsuser_ux_proof_runner.py ....................  [ 48%]
+tests/test_applied_warehouse_semantic_demo_runner.py ................... [ 68%]
+............                                                             [ 80%]
+tests/test_applied_certificate_readiness_demo_runner.py ................ [ 96%]
+...                                                                      [100%]
+
+======================== 98 passed in 192.95s (0:03:12) ========================
+
+===== FULL SUITE =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.13.0
+collected 1247 items
+
+tests/test_action_permission_runtime.py .......                          [  0%]
+tests/test_applied_certificate_readiness_demo_runner.py ................ [  1%]
+...                                                                      [  2%]
+tests/test_applied_warehouse_semantic_demo_runner.py ................... [  3%]
+............                                                             [  4%]
+tests/test_architect_from_bounded_attractor_packet_runner.py ........... [  5%]
+............                                                             [  6%]
+tests/test_architect_prompt_compiler_runtime.py ....                     [  6%]
+tests/test_architect_runtime.py .....                                    [  7%]
+tests/test_audit_hash_chain_runner.py ...............                    [  8%]
+tests/test_avf_attractor_from_accepted_matrix_runner.py ................ [  9%]
+.....                                                                    [ 10%]
+tests/test_avf_runtime.py ..                                             [ 10%]
+tests/test_candidate_vectors.py ......                                   [ 10%]
+tests/test_canonical_needle_outcome_trace_runner.py ...............      [ 11%]
+tests/test_canonical_pipeline_trace_runner.py ..............             [ 12%]
+tests/test_chaos_survival_showcase_runner.py ...........                 [ 13%]
+tests/test_cold_start_benchmark_runner.py ........                       [ 14%]
+tests/test_compute_collapse_reuse_showcase_runner.py .............       [ 15%]
+tests/test_conflictcheck_runner.py ...................                   [ 17%]
+tests/test_controlled_orchestrator_dry_run_runner.py ..........          [ 17%]
+tests/test_controlled_orchestrator_integration_gate_runner.py .......... [ 18%]
+...                                                                      [ 18%]
+tests/test_controlled_orchestrator_matrix_gate_runner.py ............... [ 20%]
+......                                                                   [ 20%]
+tests/test_controlled_orchestrator_runtime_prototype_runner.py ......... [ 21%]
+....                                                                     [ 21%]
+tests/test_controlled_root_orchestrator_route_assembly_runner.py ....... [ 22%]
+...........                                                              [ 23%]
+tests/test_controlled_runtime_trace_visibility_runner.py ..........      [ 23%]
+tests/test_dag_executor_from_valid_plan_graph_runner.py ................ [ 25%]
+....                                                                     [ 25%]
+tests/test_deadend_memory_demo_runner.py ......                          [ 25%]
+tests/test_demo_certificate_runner.py .......                            [ 26%]
+tests/test_drs_graph_proximity_runner.py ..............                  [ 27%]
+tests/test_drs_layer_taxonomy_runner.py .................                [ 29%]
+tests/test_drs_lifecycle_semantics_runner.py ...............             [ 30%]
+tests/test_drs_runtime.py .............                                  [ 31%]
+tests/test_drs_writeback_from_root_final_runner.py ..................... [ 32%]
+...                                                                      [ 33%]
+tests/test_economics_benchmark_runner.py .........                       [ 33%]
+tests/test_executor_runtime.py ...                                       [ 34%]
+tests/test_final_renderer_runtime.py ....                                [ 34%]
+tests/test_fractal_cell_runtime_runner.py ............                   [ 35%]
+tests/test_fractal_dag_executor_core_runner.py .............             [ 36%]
+tests/test_gemini_orchestrator_architect_pair_smoke_runner.py .......... [ 37%]
+                                                                         [ 37%]
+tests/test_gt_from_validation_report_runner.py ......................... [ 39%]
+                                                                         [ 39%]
+tests/test_gt_validator_runtime.py ...................                   [ 40%]
+tests/test_input_intake_runtime.py .....                                 [ 41%]
+tests/test_intent_route_matrix_runner.py ..........                      [ 42%]
+tests/test_large_graph_stress_runner.py .............                    [ 43%]
+tests/test_live_child_executor_in_fractal_cell_runner.py .............   [ 44%]
+tests/test_live_controlled_smoke_runner.py ........                      [ 44%]
+tests/test_live_dual_gemini_full_chain_smoke_runner.py ................  [ 46%]
+tests/test_live_gemini_architect_smoke_runner.py ..................      [ 47%]
+tests/test_live_gemini_orchestrator_shadow_runner.py ............        [ 48%]
+tests/test_live_gemini_orchestrator_smoke_runner.py .................... [ 50%]
+..                                                                       [ 50%]
+tests/test_live_gemini_ordered_orchestrator_architect_smoke_runner.py .. [ 50%]
+..........................                                               [ 52%]
+tests/test_llm_architect_runtime.py .................                    [ 53%]
+tests/test_llm_gateway_runtime.py .....                                  [ 54%]
+tests/test_marenna_up_runtime.py ...                                     [ 54%]
+tests/test_matrix_gate_avf_current_canon_sanity_runner.py .........      [ 55%]
+tests/test_mode_router_runtime.py ........                               [ 55%]
+tests/test_mode_selection_matrix_runner.py ........                      [ 56%]
+tests/test_needle_failure_integration_runner.py .......                  [ 57%]
+tests/test_needle_outcome_drs_routing_runner.py ...............          [ 58%]
+tests/test_needle_runtime_chaos_runner.py ..........                     [ 59%]
+tests/test_needlecandidate_lifecycle_proof_runner.py ................... [ 60%]
+.........                                                                [ 61%]
+tests/test_needles_valid.py .                                            [ 61%]
+tests/test_orchestrator_guard_completeness_runner.py ............        [ 62%]
+tests/test_orchestrator_route_validator_runner.py ...........            [ 63%]
+tests/test_orchestrator_shadow_mode_runner.py ........                   [ 63%]
+tests/test_permission_needsuser_ux_proof_runner.py ....................  [ 65%]
+tests/test_post_vv_from_result_proposal_runner.py ...................... [ 67%]
+.                                                                        [ 67%]
+tests/test_post_vv_runtime.py .......                                    [ 67%]
+tests/test_reasoning_showcase_runner.py .............                    [ 68%]
+tests/test_reflex_runtime.py ..........                                  [ 69%]
+tests/test_reuse_gate_runtime.py .......                                 [ 70%]
+tests/test_reuse_score_runner.py .......................                 [ 72%]
+tests/test_root_dag_drs_audit_runner.py .......                          [ 72%]
+tests/test_root_dag_integration_runner.py .......                        [ 73%]
+tests/test_root_final_from_gt_decision_runner.py ....................... [ 75%]
+...                                                                      [ 75%]
+tests/test_root_native_canonical_trace_runner.py ..........              [ 76%]
+tests/test_root_native_full_canonical_e2e_trace_runner.py .............. [ 77%]
+.......                                                                  [ 77%]
+tests/test_root_native_sandbox_needleruntime_e2e_runner.py ...........   [ 78%]
+tests/test_root_native_semantic_reuse_e2e_trace_runner.py .............. [ 79%]
+..............                                                           [ 80%]
+tests/test_root_orchestrator_runtime.py ...................              [ 82%]
+tests/test_root_semantic_reuse_decision_trace_runner.py ................ [ 83%]
+............                                                             [ 84%]
+tests/test_root_semantic_reuse_final_decision_trace_runner.py .......... [ 85%]
+..............                                                           [ 86%]
+tests/test_root_semantic_reuse_gate_trace_runner.py .................... [ 88%]
+....                                                                     [ 88%]
+tests/test_scenario_benchmark_runner.py ............                     [ 89%]
+tests/test_schema_files_valid.py .                                       [ 89%]
+tests/test_semantic_reuse_authority_stack_audit_runner.py .............. [ 90%]
+......                                                                   [ 91%]
+tests/test_semantic_reuse_pipeline_runner.py ..........................  [ 93%]
+tests/test_showcase_runner.py .....                                      [ 93%]
+tests/test_telegram_bridge_runtime.py ..                                 [ 93%]
+tests/test_telegram_e2e_benchmark_runner.py .........                    [ 94%]
+tests/test_telegram_polling_smoke_runner.py ................             [ 95%]
+tests/test_telegram_shell_runtime.py .............                       [ 96%]
+tests/test_time_model.py ..                                              [ 97%]
+tests/test_trace_reporter_runtime.py ............                        [ 97%]
+tests/test_typed_drs_lineage_edges_runner.py .........................   [100%]
+
+=============================== warnings summary ===============================
+tests/test_architect_runtime.py::test_make_plan_graph_from_attractor_packet_validates_schema
+tests/test_architect_runtime.py::test_make_plan_graph_optional_mock_llm_path_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_architect_runtime.py:32: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_avf_runtime.py::test_build_attractor_packet_filters_forbidden_vectors_and_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_avf_runtime.py:30: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(attractor_schema, store=store)
+
+tests/test_demo_certificate_runner.py::test_certificate_demo_gemini_architect_scenario_is_registered_with_safe_failure
+  /Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/types.py:42: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+tests/test_drs_runtime.py::test_local_drs_writes_reads_and_validates_work_record
+tests/test_drs_runtime.py::test_local_drs_writes_pointer_record
+  /Users/admin/Projects/hedgehog-os/tests/test_drs_runtime.py:33: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(drs_record_schema, store=store)
+
+tests/test_executor_runtime.py::test_execute_plan_graph_returns_schema_valid_result_proposals
+  /Users/admin/Projects/hedgehog-os/tests/test_executor_runtime.py:37: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+
+tests/test_gt_validator_runtime.py: 17 warnings
+  /Users/admin/Projects/hedgehog-os/tests/test_gt_validator_runtime.py:41: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(gt_report_schema, store=store)
+
+tests/test_llm_architect_runtime.py::test_mock_llm_architect_returns_valid_plan_graph
+  /Users/admin/Projects/hedgehog-os/tests/test_llm_architect_runtime.py:35: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_marenna_up_runtime.py::test_marenna_after_task_record_validates_and_stays_quarantined
+tests/test_marenna_up_runtime.py::test_up_after_task_record_validates_and_stays_quarantined
+  /Users/admin/Projects/hedgehog-os/tests/test_marenna_up_runtime.py:42: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(target_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:53: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(candidate_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:67: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(needle_schema, store=store)
+
+tests/test_post_vv_runtime.py::test_validate_demo_result_proposals_are_task_aware_and_schema_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_post_vv_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_creates_valid_final_output_and_work_record
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_generic_math_routes_to_llm_general_not_certificate_pipeline
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_optional_mock_llm_architect_still_creates_final_output
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success
+  /Users/admin/Projects/hedgehog-os/tests/test_root_orchestrator_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(final_output_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================ 1247 passed, 37 warnings in 218.91s (0:03:38) =================
+
+===== SENSITIVE SCAN =====
+
+===== FINAL GIT STATUS =====
+?? auditor_needlecandidate_lifecycle_proof.log
+?? demo/run_needlecandidate_lifecycle_proof.py
+?? tests/test_needlecandidate_lifecycle_proof_runner.py

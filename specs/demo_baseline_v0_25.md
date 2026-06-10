@@ -1179,6 +1179,30 @@ production_autonomy_claimed=false. Evidence:
 `docs/audit_reports/auditor_needlecandidate_lifecycle_proof_postcommit.log`;
 commits `acb5aac` and `7fc0a1b`.
 
+Applied DRS Retrieval / Reuse v0.1 is complete. It consumes the accepted
+warehouse, certificate, Permission/NeedsUser, NeedleCandidate, DRS lifecycle,
+ConflictCheck, and audit proofs as read-only evidence. DRS retrieves and ranks
+prior applied experience, but retrieval, semantic similarity, and ReuseScore
+remain advisory; Root decides final reuse.
+
+Seven scenarios verify bounded warehouse partial reuse and certificate
+needs-user reuse while blocking or downgrading stale, quarantined, deadend,
+wrong-domain, and permission-as-completed-action evidence. Every retrieval
+candidate remains `direct_reuse_allowed=false`, `root_review_required=true`,
+proof-only, local-only, and non-persistent. The proof creates explicit query,
+candidate, score, gate, WorldState, freshness, quarantine/deadend,
+ConflictReport, GT, Root, lifecycle, proof-artifact, and audit-entry objects.
+
+Proof status: PASS, scenarios_verified=7, targeted tests passed=22, focused
+tests passed=120, full suite passed=1269 with 37 warnings, sensitive scan
+clear, `semantic_similarity_is_not_authority=true`, `reuse_score_is_not_root=true`,
+no direct ready or completed external action, no protocol candidate,
+NeedleCandidate, installed needle, production persistence, or global DRS write,
+and production autonomy not claimed. Evidence:
+`docs/audit_reports/auditor_applied_drs_retrieval_reuse.log` and
+`docs/audit_reports/auditor_applied_drs_retrieval_reuse_postcommit.log`;
+commits `0bbf81a`, `3fdc78e`, and `420b005`.
+
 Corrected next order:
 
 1. Passport Geometry docs sync - complete.
@@ -1196,18 +1220,21 @@ Corrected next order:
 13. Permission / NeedsUser docs/audit - complete.
 14. NeedleCandidate lifecycle / NeedleForge prototype v0.1 - complete.
 15. NeedleCandidate postcommit audit log - complete.
-16. NeedleCandidate docs sync - current.
-17. Applied DRS Retrieval / Reuse v0.1.
-18. DRS adversarial stress pack.
-19. Applied demo #3: Travel / multi-condition readiness.
-20. Multi-domain applied smoke.
-21. Needle adversarial / safety pack.
-22. External DRS pointer protocol.
-23. Read-only real API / connector sandbox.
-24. Chaos applied stress demos.
-25. Production boundary design docs.
-26. Only then Marennya quarantine-first.
-27. Then UP transfer/opportunity.
+16. NeedleCandidate docs sync - complete.
+17. Applied DRS Retrieval / Reuse v0.1 - complete.
+18. Applied DRS Retrieval / Reuse postcommit audit log - complete.
+19. Proof test report fixture optimization - complete.
+20. Applied DRS Retrieval / Reuse docs sync - current.
+21. DRS adversarial stress pack.
+22. Applied demo #3: Travel / multi-condition readiness.
+23. Multi-domain applied smoke.
+24. Needle adversarial / safety pack.
+25. External DRS pointer protocol.
+26. Read-only real API / connector sandbox.
+27. Chaos applied stress demos.
+28. Production boundary design docs.
+29. Only then Marennya quarantine-first.
+30. Then UP transfer/opportunity.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement.

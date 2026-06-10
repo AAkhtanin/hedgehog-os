@@ -931,6 +931,31 @@ sensitive scan clear. Evidence:
 `docs/audit_reports/auditor_needlecandidate_lifecycle_proof.log` and
 `docs/audit_reports/auditor_needlecandidate_lifecycle_proof_postcommit.log`.
 
+Applied DRS Retrieval / Reuse v0.1 is complete. It proves across seven
+deterministic scenarios that DRS may retrieve prior warehouse and certificate
+experience and propose partial-reuse or needs-user-reuse candidates, but
+retrieval, semantic similarity, and ReuseScore are not authority.
+
+Warehouse W-18 / D-2043 may partially reuse W-17 / D-2042 evidence only before
+rerun validation. APP-78 / CERT-311 may reuse the prior document-readiness
+pattern only while preserving needs-user. Stale, quarantined, deadend,
+wrong-domain, and permission-as-completed-action candidates are downgraded,
+blocked, or rejected. Freshness, WorldState compatibility, Permission/NeedsUser,
+ConflictCheck, advisory GT, audit, and Root review remain required.
+
+The proof creates explicit query, retrieval candidate, score, gate, WorldState,
+freshness, quarantine/deadend, ConflictReport, GT, Root Final, local lifecycle,
+proof artifact, and audit entry objects. No candidate may direct-reuse or
+create direct ready, completed external action, protocol candidate,
+NeedleCandidate, installed needle, production persistence, or global DRS
+write. Hash-chain proves continuity, not truth.
+
+Proof status: PASS, scenarios=7, targeted tests=22, focused tests=120, full
+suite=1269 with 37 warnings, sensitive scan clear, explicit applied reuse
+artifacts consistent, and production autonomy not claimed. Evidence:
+`docs/audit_reports/auditor_applied_drs_retrieval_reuse.log` and
+`docs/audit_reports/auditor_applied_drs_retrieval_reuse_postcommit.log`.
+
 The scenario trace is an observable projection of the main downward
 Root-controlled canonical vector, not the full architecture. Needles are
 bounded capability contracts, not plugins. DRS is semantic topology, not
@@ -938,9 +963,9 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: proofs/docs/audits through Permission/NeedsUser are
-complete; NeedleCandidate proof and postcommit audit are complete;
-NeedleCandidate docs sync is current. Next: Applied DRS Retrieval / Reuse, DRS
+Corrected next order: proofs/docs/audits through NeedleCandidate are complete;
+Applied DRS Retrieval / Reuse proof, postcommit audit, and fixture optimization
+are complete; Applied DRS Retrieval / Reuse docs sync is current. Next: DRS
 adversarial stress, Travel readiness, multi-domain smoke, Needle adversarial
 pack, External DRS pointer protocol, read-only connector sandbox, chaos applied
 stress, and production-boundary design docs. Only then: Marennya, followed by

@@ -174,18 +174,21 @@ Current engineering order:
 13. Permission / NeedsUser docs/audit - complete.
 14. NeedleCandidate lifecycle / NeedleForge prototype v0.1 - complete.
 15. NeedleCandidate postcommit audit log - complete.
-16. NeedleCandidate docs sync - current.
-17. Applied DRS Retrieval / Reuse v0.1.
-18. DRS adversarial stress pack.
-19. Applied demo #3: Travel / multi-condition readiness.
-20. Multi-domain applied smoke.
-21. Needle adversarial / safety pack.
-22. External DRS pointer protocol.
-23. Read-only real API / connector sandbox.
-24. Chaos applied stress demos.
-25. Production boundary design docs.
-26. Only then Marennya quarantine-first.
-27. Then UP transfer/opportunity.
+16. NeedleCandidate docs sync - complete.
+17. Applied DRS Retrieval / Reuse v0.1 - complete.
+18. Applied DRS Retrieval / Reuse postcommit audit log - complete.
+19. Proof test report fixture optimization - complete.
+20. Applied DRS Retrieval / Reuse docs sync - current.
+21. DRS adversarial stress pack.
+22. Applied demo #3: Travel / multi-condition readiness.
+23. Multi-domain applied smoke.
+24. Needle adversarial / safety pack.
+25. External DRS pointer protocol.
+26. Read-only real API / connector sandbox.
+27. Chaos applied stress demos.
+28. Production boundary design docs.
+29. Only then Marennya quarantine-first.
+30. Then UP transfer/opportunity.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -199,9 +202,13 @@ proven: permission is not execution, approval is not completed action, and
 `needs_user` is not failure. This boundary must remain intact before
 NeedleForge or action needles. NeedleCandidate lifecycle is now proven at
 proof level: a candidate may exist, but it is not an installed Needle and GT
-cannot install it. Root alone disposes candidates. The next layer is Applied
-DRS Retrieval / Reuse, followed by DRS adversarial stress; External DRS and
-Marennya / UP remain later.
+cannot install it. Root alone disposes candidates. Applied DRS Retrieval /
+Reuse is now proven as a bounded Root-governed
+direction: DRS may retrieve prior evidence and propose reuse candidates, but
+retrieval, semantic similarity, and ReuseScore are not authority. Freshness,
+WorldState compatibility, Permission/NeedsUser, quarantine/deadend proximity,
+ConflictCheck, GT, audit, and Root review remain intact. The next layer is DRS
+adversarial stress; External DRS and Marennya / UP remain later.
 
 Audit/hash-chain hardens this Root-centered proof geometry rather than turning
 it into a linear long-chain. Hash-chain proves continuity, not truth.

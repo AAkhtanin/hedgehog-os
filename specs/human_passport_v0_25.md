@@ -726,16 +726,17 @@ Corrected roadmap:
 3. Controlled RootOrchestrator Route Assembly and docs sync - complete.
 4. Applied Warehouse and Applied Certificate demos/docs/audits - complete.
 5. Permission / NeedsUser proof/docs/audits - complete.
-6. NeedleCandidate lifecycle proof and postcommit audit - complete.
-7. NeedleCandidate docs sync - current.
-8. Applied DRS Retrieval / Reuse v0.1.
-9. DRS adversarial stress pack.
-10. Travel / multi-condition readiness and multi-domain smoke.
-11. Needle adversarial / safety pack.
-12. External DRS pointer protocol.
-13. Read-only connector sandbox, chaos applied stress, and production-boundary
+6. NeedleCandidate lifecycle proof/docs/audits - complete.
+7. Applied DRS Retrieval / Reuse proof and postcommit audit - complete.
+8. Proof test report fixture optimization - complete.
+9. Applied DRS Retrieval / Reuse docs sync - current.
+10. DRS adversarial stress pack.
+11. Travel / multi-condition readiness and multi-domain smoke.
+12. Needle adversarial / safety pack.
+13. External DRS pointer protocol.
+14. Read-only connector sandbox, chaos applied stress, and production-boundary
     design docs.
-14. Only then Marennya quarantine-first, followed by UP transfer/opportunity.
+15. Only then Marennya quarantine-first, followed by UP transfer/opportunity.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2371,8 +2372,77 @@ decide truth.
 NeedleCandidate is not an installed Needle. NeedleForge prototype is not
 production NeedleFactory. No installed needle, real action, production
 persistence, global/external DRS, External DRS pointer protocol, Marennya, or
-UP is implemented. The next layer is Applied DRS Retrieval / Reuse v0.1,
-followed by DRS adversarial stress.
+UP is implemented.
+
+## 20.5 Applied DRS Retrieval / Reuse
+
+Applied DRS Retrieval / Reuse v0.1 is a deterministic local proof that DRS may
+retrieve prior applied evidence and propose bounded reuse candidates, but
+retrieval is not authority. ReuseScore is advisory, semantic similarity is
+insufficient, GT remains advisory, and Root alone decides final reuse.
+
+Seven scenarios verify warehouse partial reuse, certificate needs-user reuse,
+stale high-similarity evidence, quarantined and deadend reuse attempts, a
+wrong-domain near match, and a permission trace incorrectly proposed as
+completed-action evidence. Freshness, WorldState compatibility, permission,
+quarantine/deadend proximity, ConflictCheck, and audit evidence remain
+mandatory boundaries.
+
+The explicit artifact groups are `applied_drs_query_artifacts`,
+`applied_drs_retrieval_candidates`, `applied_reuse_score_rows`,
+`applied_reuse_gate_rows`, `applied_reuse_worldstate_checks`,
+`applied_reuse_freshness_checks`,
+`applied_reuse_quarantine_deadend_checks`,
+`applied_reuse_conflict_reports`, `applied_reuse_gt_selection`,
+`applied_reuse_root_final_artifacts`,
+`applied_reuse_drs_lifecycle_records`, `applied_reuse_proof_artifact`, and
+`applied_reuse_audit_entry`.
+
+Root may decide `partial_reuse_then_rerun_validation`,
+`partial_reuse_then_needs_user`, `rerun_required`,
+`block_reuse_quarantined_record`, `block_or_ask_user`, or
+`reject_completed_action_reuse`. Root must not create direct ready, completed
+dispatch/restock/submission/external action, protocol candidate, NeedleCandidate,
+installed needle, or global DRS write.
+
+Gate outcomes are explicit: warehouse similarity is
+`accepted_as_partial_reuse_candidate`; certificate similarity is
+`accepted_as_needs_user_reuse_candidate`; stale evidence is
+`downgraded_to_rerun_required`; quarantine is `blocked_quarantine`; deadend is
+`blocked_or_ask_user`; wrong-domain similarity is `rejected_domain_mismatch`;
+and permission-as-completed-action is `rejected_conflict`.
+
+The proof creates local proof-level lifecycle records only. ConflictCheck flags
+permission-as-completed-action, wrong-domain, stale, quarantined, and deadend
+reuse risks while preserving no-conflict reports for bounded warehouse partial
+reuse and certificate needs-user reuse. ConflictCheck remains advisory until
+Root. `audit_applied_drs_retrieval_reuse_v0_1` hashes the proof artifact and
+links to prior audit evidence; hash-chain proves continuity, not truth.
+
+The local lifecycle records are `applied_reuse_query_record`,
+`applied_reuse_candidate_record`, `applied_partial_reuse_record`,
+`applied_needs_user_reuse_record`, `applied_stale_reuse_downgrade_record`,
+`applied_quarantine_reuse_block_record`, `applied_deadend_reuse_block_record`,
+`applied_domain_mismatch_record`, and
+`applied_permission_trace_conflict_record`. ConflictCheck reports cover
+permission trace reuse as completed action, wrong-domain near match, stale
+high-similarity evidence, quarantined reuse, and deadend reuse, plus no-conflict
+reports for warehouse partial reuse and certificate needs-user reuse.
+
+Proof status: PASS, scenarios_verified=7, targeted tests passed=22, focused
+tests passed=120, full suite passed=1269 with 37 warnings, sensitive scan
+clear, explicit artifacts consistent, and production autonomy not claimed.
+The module-scoped fixture optimization removed repeated heavy report collection
+and reduced targeted proof test time to about 15.55 seconds. Evidence:
+`docs/audit_reports/auditor_applied_drs_retrieval_reuse.log` and
+`docs/audit_reports/auditor_applied_drs_retrieval_reuse_postcommit.log`;
+commits `0bbf81a`, `3fdc78e`, and `420b005`.
+
+This layer consumes NeedleCandidate source proof but creates no new
+NeedleCandidate. It is not production DRS, persistence, a real vector database,
+global/external DRS, External DRS pointer protocol, direct ready, real external
+action, Marennya, UP, or autonomous production runtime. The next engineering
+direction is DRS adversarial stress.
 
 ## 21. Legacy Code Position
 

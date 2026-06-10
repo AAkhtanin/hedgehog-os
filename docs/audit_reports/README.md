@@ -145,6 +145,16 @@ Current reports:
   - Postcommit audit evidence for commits `acb5aac` and `7fc0a1b`.
   - Confirms the NeedleCandidate proof remains PASS after commit, with 28 NeedleCandidate tests, focused/full-suite verification, and a clear sensitive scan.
 
+- `auditor_applied_drs_retrieval_reuse.log`
+  - Proof for Applied DRS Retrieval / Reuse v0.1.
+  - Confirms seven advisory retrieval/reuse scenarios preserve freshness, WorldState, permission, quarantine/deadend, ConflictCheck, GT, audit, and Root boundaries.
+  - Confirms no direct ready, completed external action, new candidate/needle, production persistence, or global DRS write.
+
+- `auditor_applied_drs_retrieval_reuse_postcommit.log`
+  - Postcommit audit evidence for commits `0bbf81a`, `3fdc78e`, and `420b005`.
+  - Confirms the proof remains PASS after the module-scoped fixture optimization: 22 targeted tests, 120 focused tests, 1269 full-suite tests, and a clear sensitive scan.
+  - Fixture optimization removed repeated `_report()` collection across Applied DRS and NeedleCandidate tests; targeted times improved to about 15.55s and 7.88s, focused tests to about 106.41s, and the post-fixture full suite to about 171.50s.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

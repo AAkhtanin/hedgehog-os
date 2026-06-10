@@ -635,6 +635,14 @@ Proof status: PASS, scenarios_verified=5, NeedleCandidate tests passed=28, focus
 
 This is deterministic local proof only, not production NeedleForge, production NeedleFactory, an installed needle, plugin marketplace, real external action/API, production persistence, global/external DRS, External DRS pointer protocol, Marennya, UP, or autonomous production runtime. Hash-chain proves continuity, not truth.
 
+Applied DRS Retrieval / Reuse v0.1 is complete. It proves that DRS may retrieve prior applied experience and produce reuse candidates, but retrieval, semantic similarity, and ReuseScore are advisory only; Root decides the final reuse outcome. Seven scenarios cover warehouse partial reuse, certificate needs-user reuse, stale high-similarity evidence, quarantined and deadend reuse attempts, a wrong-domain near match, and a permission trace incorrectly proposed as completed-action evidence.
+
+The proof creates explicit query, retrieval-candidate, score, gate, WorldState, freshness, quarantine/deadend, ConflictReport, GT, Root Final, local lifecycle, proof-artifact, and audit-entry objects. Every retrieval candidate remains `direct_reuse_allowed=false`, `root_review_required=true`, proof-only, local-only, and non-persistent. Freshness and WorldState compatibility are required; quarantine/deadend proximity and ConflictCheck may block or downgrade reuse; permission-required evidence cannot become completed action evidence.
+
+Proof status: PASS, scenarios_verified=7, targeted tests passed=22, focused tests passed=120, full suite passed=1269 with 37 warnings, sensitive scan clear, `semantic_similarity_is_not_authority=true`, `reuse_score_is_not_root=true`, `no_direct_ready_created=true`, `protocol_candidate_created=false`, `needle_candidate_created=false`, `installed_needle_created=false`, and `production_autonomy_claimed=false`. Evidence: `docs/audit_reports/auditor_applied_drs_retrieval_reuse.log` and `docs/audit_reports/auditor_applied_drs_retrieval_reuse_postcommit.log`; commits `0bbf81a`, `3fdc78e`, and `420b005`.
+
+This is deterministic local proof only, not production DRS, persistence, a real vector database, global/external DRS, External DRS pointer protocol, direct ready, completed external action, a new NeedleCandidate layer, Marennya, UP, or autonomous production runtime. Hash-chain proves continuity, not truth.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -783,11 +791,14 @@ Completed recent layers:
 - Permission / NeedsUser postcommit audit log.
 - NeedleCandidate lifecycle / NeedleForge prototype v0.1.
 - NeedleCandidate postcommit audit log.
+- Applied DRS Retrieval / Reuse v0.1.
+- Applied DRS Retrieval / Reuse postcommit audit log.
+- Proof test report fixture optimization.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- NeedleCandidate docs sync, then Applied DRS Retrieval / Reuse v0.1 and DRS adversarial stress.
+- Applied DRS Retrieval / Reuse docs sync, then DRS adversarial stress.
 - Then Travel / multi-condition readiness, multi-domain applied smoke, Needle adversarial/safety pack, External DRS pointer protocol, read-only connector sandbox, chaos applied stress, and production-boundary design docs.
 - Only then: Marennya quarantine-first v0.1, followed by UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.

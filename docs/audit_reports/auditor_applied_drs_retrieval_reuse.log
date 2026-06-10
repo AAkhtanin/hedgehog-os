@@ -1,0 +1,442 @@
+===== GIT LOG =====
+06a6aac Document NeedleCandidate lifecycle proof checkpoint
+7fc0a1b Add postcommit NeedleCandidate lifecycle audit log
+acb5aac Add NeedleCandidate lifecycle proof
+a515e17 Document permission needs-user UX proof checkpoint
+7d2a121 Add postcommit permission needs-user audit log
+cd0ce4c Add permission needs-user UX proof
+ad923b6 Document applied certificate readiness demo checkpoint
+34a688b Add two-domain applied demo smoke audit
+2c9a23f Add postcommit applied certificate audit log
+aa55384 Add applied certificate readiness demo proof
+21dd12e Document applied warehouse semantic demo checkpoint
+0de8db6 Add postcommit applied warehouse audit log
+9342b59 Add applied warehouse semantic demo proof
+d15ae27 Document controlled RootOrchestrator route assembly checkpoint
+9d1aa8d Add controlled RootOrchestrator route assembly proof
+ce8b846 Document audit hash-chain checkpoint
+388ee78 Add audit hash-chain proof
+6795ae7 Document Root-centered needle geometry
+d2f8f5d Add final day checkpoint audit after ConflictCheck
+fc7b56c Document ConflictCheck checkpoint
+fe271a4 Add ConflictCheck proof
+2a65def Document DRS lifecycle semantics checkpoint
+5999f17 Add DRS lifecycle semantics proof
+54f61bf Document live child Executor in Fractal Cell checkpoint
+027f0b5 Add live child Executor in Fractal Cell proof
+ab5e5aa Document Fractal Cell Runtime checkpoint
+937dd57 Add Fractal Cell Runtime proof
+11aa7bf Document Fractal Cell Runtime as next execution layer
+a41e2ea Add Root-native sandbox NeedleRuntime E2E proof
+7a132d0 Add Matrix Gate AVF current canon sanity proof
+
+===== GIT STATUS =====
+?? auditor_applied_drs_retrieval_reuse.log
+?? demo/run_applied_drs_retrieval_reuse.py
+?? tests/test_applied_drs_retrieval_reuse_runner.py
+
+===== APPLIED DRS RETRIEVAL / REUSE PROOF =====
+[APPLIED DRS RETRIEVAL / REUSE PROOF]
+note: deterministic local proof-level DRS retrieval and reuse
+note: DRS retrieval and ReuseScore are advisory, Root decides
+
+[INPUT / MODE]
+mode: deterministic_applied_drs_retrieval_reuse
+local_proof_level_only: true
+live_network_used: false
+telegram_used: false
+real_external_action: false
+production_persistence: false
+global_drs_implemented: false
+external_drs_network_implemented: false
+real_vector_db_used: false
+marennya_invoked: false
+up_invoked: false
+
+[SOURCE EVIDENCE]
+warehouse_source_status: PASS
+certificate_source_status: PASS
+permission_needsuser_source_status: PASS
+needlecandidate_source_status: PASS
+drs_lifecycle_source_status: PASS
+conflictcheck_source_status: PASS
+audit_hash_chain_source_status: PASS
+
+[DRS QUERY ARTIFACTS]
+query_id=drs_query_warehouse_similar_request_partial_reuse | scenario=warehouse_similar_request_partial_reuse | query_scope=local_proof_only | temporal_query_present=true | root_review_required=true | proof_only=true
+query_id=drs_query_certificate_similar_request_needs_user_reuse | scenario=certificate_similar_request_needs_user_reuse | query_scope=local_proof_only | temporal_query_present=true | root_review_required=true | proof_only=true
+query_id=drs_query_stale_high_similarity_record | scenario=stale_high_similarity_record | query_scope=local_proof_only | temporal_query_present=true | root_review_required=true | proof_only=true
+query_id=drs_query_quarantined_record_attempted_reuse | scenario=quarantined_record_attempted_reuse | query_scope=local_proof_only | temporal_query_present=true | root_review_required=true | proof_only=true
+query_id=drs_query_deadend_branch_attempted_reuse | scenario=deadend_branch_attempted_reuse | query_scope=local_proof_only | temporal_query_present=true | root_review_required=true | proof_only=true
+query_id=drs_query_wrong_domain_near_match | scenario=wrong_domain_near_match | query_scope=local_proof_only | temporal_query_present=true | root_review_required=true | proof_only=true
+query_id=drs_query_permission_trace_reused_as_completed_action_attempt | scenario=permission_trace_reused_as_completed_action_attempt | query_scope=local_proof_only | temporal_query_present=true | root_review_required=true | proof_only=true
+
+[RETRIEVAL CANDIDATES]
+retrieval_candidate_id=reuse_candidate_warehouse_W18_D2043 | source_record_id=warehouse_reuse_candidate_W17_D2042 | source_domain=warehouse_readiness | target_domain=warehouse_readiness | target_request_id=W-18/D-2043 | semantic_similarity_score=0.94 | reuse_score=0.86 | freshness_status=fresh | worldstate_compatible=true | quarantine_proximity=false | deadend_proximity=false | conflict_status=not_checked | permission_boundary_required=true | proposed_reuse_mode=partial_reuse_candidate | direct_reuse_allowed=false | root_review_required=true | proof_only=true | completed_external_action_claimed=false | production_persistence=false | global_drs_write=false
+retrieval_candidate_id=reuse_candidate_certificate_APP78_CERT311 | source_record_id=certificate_reuse_candidate_APP77_CERT310 | source_domain=certificate_document_readiness | target_domain=certificate_document_readiness | target_request_id=APP-78/CERT-311 | semantic_similarity_score=0.93 | reuse_score=0.84 | freshness_status=fresh | worldstate_compatible=true | quarantine_proximity=false | deadend_proximity=false | conflict_status=not_checked | permission_boundary_required=true | proposed_reuse_mode=needs_user_reuse_candidate | direct_reuse_allowed=false | root_review_required=true | proof_only=true | completed_external_action_claimed=false | production_persistence=false | global_drs_write=false
+retrieval_candidate_id=reuse_candidate_stale_high_similarity | source_record_id=warehouse_experience_record_W17_D2042 | source_domain=warehouse_readiness | target_domain=warehouse_readiness | target_request_id=W-18/D-2043 | semantic_similarity_score=0.98 | reuse_score=0.88 | freshness_status=stale | worldstate_compatible=true | quarantine_proximity=false | deadend_proximity=false | conflict_status=flagged | permission_boundary_required=false | proposed_reuse_mode=rerun_required | direct_reuse_allowed=false | root_review_required=true | proof_only=true | completed_external_action_claimed=false | production_persistence=false | global_drs_write=false
+retrieval_candidate_id=reuse_candidate_quarantined_record | source_record_id=warehouse_invalid_ready_quarantine_W17_D2042 | source_domain=warehouse_readiness | target_domain=warehouse_readiness | target_request_id=W-18/D-2043 | semantic_similarity_score=0.91 | reuse_score=0.32 | freshness_status=fresh | worldstate_compatible=false | quarantine_proximity=true | deadend_proximity=false | conflict_status=flagged | permission_boundary_required=false | proposed_reuse_mode=block_reuse | direct_reuse_allowed=false | root_review_required=true | proof_only=true | completed_external_action_claimed=false | production_persistence=false | global_drs_write=false
+retrieval_candidate_id=reuse_candidate_deadend_branch | source_record_id=certificate_external_submission_deadend_APP77_CERT310 | source_domain=certificate_document_readiness | target_domain=certificate_document_readiness | target_request_id=APP-78/CERT-311 | semantic_similarity_score=0.89 | reuse_score=0.28 | freshness_status=fresh | worldstate_compatible=false | quarantine_proximity=false | deadend_proximity=true | conflict_status=flagged | permission_boundary_required=true | proposed_reuse_mode=ask_user | direct_reuse_allowed=false | root_review_required=true | proof_only=true | completed_external_action_claimed=false | production_persistence=false | global_drs_write=false
+retrieval_candidate_id=reuse_candidate_wrong_domain_near_match | source_record_id=certificate_reuse_candidate_APP77_CERT310 | source_domain=certificate_document_readiness | target_domain=warehouse_readiness | target_request_id=W-18/D-2043 | semantic_similarity_score=0.87 | reuse_score=0.41 | freshness_status=fresh | worldstate_compatible=false | quarantine_proximity=false | deadend_proximity=false | conflict_status=flagged | permission_boundary_required=false | proposed_reuse_mode=rerun_required | direct_reuse_allowed=false | root_review_required=true | proof_only=true | completed_external_action_claimed=false | production_persistence=false | global_drs_write=false
+retrieval_candidate_id=reuse_candidate_permission_trace_as_completed_action | source_record_id=permission_future_action_reuse_candidate | source_domain=permission_needsuser | target_domain=warehouse_readiness | target_request_id=W-18/D-2043 | semantic_similarity_score=0.9 | reuse_score=0.2 | freshness_status=fresh | worldstate_compatible=false | quarantine_proximity=false | deadend_proximity=true | conflict_status=flagged | permission_boundary_required=true | proposed_reuse_mode=block_reuse | direct_reuse_allowed=false | root_review_required=true | proof_only=true | completed_external_action_claimed=false | production_persistence=false | global_drs_write=false
+
+[REUSE SCORE ROWS]
+score_row_id=score_reuse_candidate_warehouse_W18_D2043 | retrieval_candidate_id=reuse_candidate_warehouse_W18_D2043 | semantic_similarity_score=0.94 | reuse_score=0.86 | reuse_score_is_advisory=true | reuse_score_decides_root_final=false
+score_row_id=score_reuse_candidate_certificate_APP78_CERT311 | retrieval_candidate_id=reuse_candidate_certificate_APP78_CERT311 | semantic_similarity_score=0.93 | reuse_score=0.84 | reuse_score_is_advisory=true | reuse_score_decides_root_final=false
+score_row_id=score_reuse_candidate_stale_high_similarity | retrieval_candidate_id=reuse_candidate_stale_high_similarity | semantic_similarity_score=0.98 | reuse_score=0.88 | reuse_score_is_advisory=true | reuse_score_decides_root_final=false
+score_row_id=score_reuse_candidate_quarantined_record | retrieval_candidate_id=reuse_candidate_quarantined_record | semantic_similarity_score=0.91 | reuse_score=0.32 | reuse_score_is_advisory=true | reuse_score_decides_root_final=false
+score_row_id=score_reuse_candidate_deadend_branch | retrieval_candidate_id=reuse_candidate_deadend_branch | semantic_similarity_score=0.89 | reuse_score=0.28 | reuse_score_is_advisory=true | reuse_score_decides_root_final=false
+score_row_id=score_reuse_candidate_wrong_domain_near_match | retrieval_candidate_id=reuse_candidate_wrong_domain_near_match | semantic_similarity_score=0.87 | reuse_score=0.41 | reuse_score_is_advisory=true | reuse_score_decides_root_final=false
+score_row_id=score_reuse_candidate_permission_trace_as_completed_action | retrieval_candidate_id=reuse_candidate_permission_trace_as_completed_action | semantic_similarity_score=0.9 | reuse_score=0.2 | reuse_score_is_advisory=true | reuse_score_decides_root_final=false
+
+[REUSE GATE ROWS]
+gate_row_id=warehouse_similar_request | gate_status=accepted_as_partial_reuse_candidate | direct_reuse_allowed=false | root_review_required=true
+gate_row_id=certificate_similar_request | gate_status=accepted_as_needs_user_reuse_candidate | direct_reuse_allowed=false | root_review_required=true
+gate_row_id=stale_high_similarity_record | gate_status=downgraded_to_rerun_required | direct_reuse_allowed=false | root_review_required=true
+gate_row_id=quarantined_record_attempted_reuse | gate_status=blocked_quarantine | direct_reuse_allowed=false | root_review_required=true
+gate_row_id=deadend_branch_attempted_reuse | gate_status=blocked_or_ask_user | direct_reuse_allowed=false | root_review_required=true
+gate_row_id=wrong_domain_near_match | gate_status=rejected_domain_mismatch | direct_reuse_allowed=false | root_review_required=true
+gate_row_id=permission_trace_reused_as_completed_action_attempt | gate_status=rejected_conflict | direct_reuse_allowed=false | root_review_required=true
+
+[WORLDSTATE CHECKS]
+check_id=worldstate_warehouse_similar | retrieval_candidate_id=reuse_candidate_warehouse_W18_D2043 | worldstate_compatible=true | difference_visible=water_filter shortage count differs
+check_id=worldstate_certificate_similar | retrieval_candidate_id=reuse_candidate_certificate_APP78_CERT311 | worldstate_compatible=true | difference_visible=current missing/expired documents require recheck
+check_id=worldstate_wrong_domain | retrieval_candidate_id=reuse_candidate_wrong_domain_near_match | worldstate_compatible=false | difference_visible=certificate domain cannot satisfy warehouse request
+
+[FRESHNESS CHECKS]
+check_id=freshness_stale_high_similarity | retrieval_candidate_id=reuse_candidate_stale_high_similarity | freshness_status=stale | freshness_check_passed=false | direct_reuse_allowed=false
+
+[QUARANTINE / DEADEND CHECKS]
+check_id=quarantine_reuse_block | retrieval_candidate_id=reuse_candidate_quarantined_record | quarantine_proximity=true | deadend_proximity=false | direct_reuse_allowed=false
+check_id=deadend_reuse_block | retrieval_candidate_id=reuse_candidate_deadend_branch | quarantine_proximity=false | deadend_proximity=true | direct_reuse_allowed=false
+check_id=permission_trace_completed_action_block | retrieval_candidate_id=reuse_candidate_permission_trace_as_completed_action | quarantine_proximity=false | deadend_proximity=true | direct_reuse_allowed=false
+
+[GT]
+recommended_modes: ['partial_reuse_candidate', 'needs_user_reuse_candidate', 'rerun_required', 'ask_user', 'block_reuse']
+gt_decides_final_reuse: false
+gt_is_not_truth_proof: true
+gt_remains_advisory_until_root: true
+gt_can_mark_ready: false
+gt_can_execute_action: false
+gt_can_create_protocol_candidate: false
+gt_can_create_needle_candidate: false
+gt_can_install_needle: false
+
+[ROOT FINAL]
+root_final_artifact_id=root_reuse_warehouse_partial | scenario=warehouse_similar_request_partial_reuse | root_decision=partial_reuse_then_rerun_validation | direct_ready_created=false | completed_external_action_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | global_drs_write=false
+root_final_artifact_id=root_reuse_certificate_needs_user | scenario=certificate_similar_request_needs_user_reuse | root_decision=partial_reuse_then_needs_user | direct_ready_created=false | completed_external_action_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | global_drs_write=false
+root_final_artifact_id=root_reuse_stale_rerun | scenario=stale_high_similarity_record | root_decision=rerun_required | direct_ready_created=false | completed_external_action_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | global_drs_write=false
+root_final_artifact_id=root_reuse_quarantine_block | scenario=quarantined_record_attempted_reuse | root_decision=block_reuse_quarantined_record | direct_ready_created=false | completed_external_action_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | global_drs_write=false
+root_final_artifact_id=root_reuse_deadend_block | scenario=deadend_branch_attempted_reuse | root_decision=block_or_ask_user | direct_ready_created=false | completed_external_action_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | global_drs_write=false
+root_final_artifact_id=root_reuse_wrong_domain_rerun | scenario=wrong_domain_near_match | root_decision=rerun_required | direct_ready_created=false | completed_external_action_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | global_drs_write=false
+root_final_artifact_id=root_reuse_permission_trace_reject | scenario=permission_trace_reused_as_completed_action_attempt | root_decision=reject_completed_action_reuse | direct_ready_created=false | completed_external_action_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | global_drs_write=false
+
+[DRS LIFECYCLE]
+record_id=applied_reuse_query_record | record_type=query | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+record_id=applied_reuse_candidate_record | record_type=reuse_candidate | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+record_id=applied_partial_reuse_record | record_type=partial_reuse | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+record_id=applied_needs_user_reuse_record | record_type=needs_user_reuse | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+record_id=applied_stale_reuse_downgrade_record | record_type=stale_downgrade | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+record_id=applied_quarantine_reuse_block_record | record_type=quarantine_block | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+record_id=applied_deadend_reuse_block_record | record_type=deadend_block | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+record_id=applied_domain_mismatch_record | record_type=domain_mismatch | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+record_id=applied_permission_trace_conflict_record | record_type=permission_conflict | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+
+[CONFLICTCHECK]
+conflict_report_id=conflict_permission_trace_reused_as_completed_action | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_wrong_domain_near_match | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_stale_high_similarity_record | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_quarantined_record_attempted_reuse | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_deadend_branch_attempted_reuse | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=no_conflict_warehouse_partial_reuse | conflict_detected=false | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=no_conflict_certificate_needs_user_reuse | conflict_detected=false | root_review_required=true | conflictcheck_is_authority=false
+
+[AUDIT HASH-CHAIN]
+audit_entry_id: audit_applied_drs_retrieval_reuse_v0_1
+source_artifact_type: AppliedDrsRetrievalReuseProofArtifact
+source_artifact_id: applied_drs_retrieval_reuse_v0_1
+canonical_payload_hash: 30e7c359f2874ab872f40d78a3d75f4bcaa88b66a68d1950a6a2308df5deea89
+previous_chain_last_entry_hash: 09388584dfb4519d59463c5c3cf572a50f9a8caf3a3c197240e8ac9133fa5d4c
+proof_only: true
+production_persistence: false
+global_drs_write: false
+audit_chain_decides_truth: false
+audit_hash_chain_source_status: PASS
+applied_reuse_audit_entry_created: true
+applied_reuse_proof_artifact_hash_linked: true
+hash_chain_proves_continuity_not_truth: true
+
+[MALICIOUS / UNSAFE REUSE CLAIMS]
+direct_ready_claim_rejected: true
+completed_external_action_claim_rejected: true
+stale_direct_reuse_claim_rejected: true
+quarantine_direct_reuse_claim_rejected: true
+deadend_direct_reuse_claim_rejected: true
+wrong_domain_direct_reuse_claim_rejected: true
+permission_trace_completed_action_claim_rejected: true
+protocol_candidate_claim_rejected: true
+needle_candidate_claim_rejected: true
+installed_needle_claim_rejected: true
+production_persistence_claim_rejected: true
+global_drs_write_claim_rejected: true
+
+[AUTHORITY / SAFETY]
+drs_retrieval_is_authority: false
+semantic_similarity_is_not_authority: true
+reuse_score_is_not_root: true
+root_remains_final_authority: true
+gt_remains_advisory_until_root: true
+conflictcheck_remains_advisory_until_root: true
+no_direct_ready_created: true
+no_completed_external_action_created: true
+no_real_external_action_executed: true
+no_production_persistence: true
+no_global_drs_write: true
+external_drs_pointer_protocol_implemented: false
+protocol_candidate_created: false
+needle_candidate_created: false
+installed_needle_created: false
+production_autonomy_claimed: false
+
+[SUMMARY]
+applied_drs_retrieval_reuse_status: PASS
+scenarios_verified: 7
+warehouse_partial_reuse_candidate_created: true
+certificate_needs_user_reuse_candidate_created: true
+stale_high_similarity_record_direct_reuse_rejected: true
+quarantined_record_direct_reuse_rejected: true
+deadend_branch_direct_reuse_rejected: true
+wrong_domain_near_match_rejected: true
+permission_trace_as_completed_action_rejected: true
+semantic_similarity_is_not_authority: true
+reuse_score_is_not_root: true
+root_remains_final_authority: true
+gt_remains_advisory_until_root: true
+no_direct_ready_created: true
+no_completed_external_action_created: true
+no_real_external_action_executed: true
+no_production_persistence: true
+no_global_drs_write: true
+protocol_candidate_created: false
+needle_candidate_created: false
+installed_needle_created: false
+explicit_applied_reuse_artifacts_consistent: true
+ready_for_applied_drs_retrieval_reuse_docs_sync: true
+production_autonomy_claimed: false
+
+===== TARGETED APPLIED DRS REUSE TESTS =====
+......................                                                   [100%]
+22 passed in 186.96s (0:03:06)
+
+===== FOCUSED APPLIED DRS REUSE TESTS =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collected 120 items
+
+tests/test_applied_drs_retrieval_reuse_runner.py ......................  [ 18%]
+tests/test_needlecandidate_lifecycle_proof_runner.py ................... [ 34%]
+.........                                                                [ 41%]
+tests/test_permission_needsuser_ux_proof_runner.py ....................  [ 58%]
+tests/test_applied_warehouse_semantic_demo_runner.py ................... [ 74%]
+............                                                             [ 84%]
+tests/test_applied_certificate_readiness_demo_runner.py ................ [ 97%]
+...                                                                      [100%]
+
+======================= 120 passed in 387.34s (0:06:27) ========================
+
+===== FULL SUITE =====
+============================= test session starts ==============================
+platform darwin -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/admin/Projects/hedgehog-os
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.13.0
+collected 1269 items
+
+tests/test_action_permission_runtime.py .......                          [  0%]
+tests/test_applied_certificate_readiness_demo_runner.py ................ [  1%]
+...                                                                      [  2%]
+tests/test_applied_drs_retrieval_reuse_runner.py ......................  [  3%]
+tests/test_applied_warehouse_semantic_demo_runner.py ................... [  5%]
+............                                                             [  6%]
+tests/test_architect_from_bounded_attractor_packet_runner.py ........... [  7%]
+............                                                             [  8%]
+tests/test_architect_prompt_compiler_runtime.py ....                     [  8%]
+tests/test_architect_runtime.py .....                                    [  8%]
+tests/test_audit_hash_chain_runner.py ...............                    [  9%]
+tests/test_avf_attractor_from_accepted_matrix_runner.py ................ [ 11%]
+.....                                                                    [ 11%]
+tests/test_avf_runtime.py ..                                             [ 11%]
+tests/test_candidate_vectors.py ......                                   [ 12%]
+tests/test_canonical_needle_outcome_trace_runner.py ...............      [ 13%]
+tests/test_canonical_pipeline_trace_runner.py ..............             [ 14%]
+tests/test_chaos_survival_showcase_runner.py ...........                 [ 15%]
+tests/test_cold_start_benchmark_runner.py ........                       [ 15%]
+tests/test_compute_collapse_reuse_showcase_runner.py .............       [ 17%]
+tests/test_conflictcheck_runner.py ...................                   [ 18%]
+tests/test_controlled_orchestrator_dry_run_runner.py ..........          [ 19%]
+tests/test_controlled_orchestrator_integration_gate_runner.py .......... [ 20%]
+...                                                                      [ 20%]
+tests/test_controlled_orchestrator_matrix_gate_runner.py ............... [ 21%]
+......                                                                   [ 21%]
+tests/test_controlled_orchestrator_runtime_prototype_runner.py ......... [ 22%]
+....                                                                     [ 23%]
+tests/test_controlled_root_orchestrator_route_assembly_runner.py ....... [ 23%]
+...........                                                              [ 24%]
+tests/test_controlled_runtime_trace_visibility_runner.py ..........      [ 25%]
+tests/test_dag_executor_from_valid_plan_graph_runner.py ................ [ 26%]
+....                                                                     [ 26%]
+tests/test_deadend_memory_demo_runner.py ......                          [ 27%]
+tests/test_demo_certificate_runner.py .......                            [ 27%]
+tests/test_drs_graph_proximity_runner.py ..............                  [ 28%]
+tests/test_drs_layer_taxonomy_runner.py .................                [ 30%]
+tests/test_drs_lifecycle_semantics_runner.py ...............             [ 31%]
+tests/test_drs_runtime.py .............                                  [ 32%]
+tests/test_drs_writeback_from_root_final_runner.py ..................... [ 34%]
+...                                                                      [ 34%]
+tests/test_economics_benchmark_runner.py .........                       [ 35%]
+tests/test_executor_runtime.py ...                                       [ 35%]
+tests/test_final_renderer_runtime.py ....                                [ 35%]
+tests/test_fractal_cell_runtime_runner.py ............                   [ 36%]
+tests/test_fractal_dag_executor_core_runner.py .............             [ 37%]
+tests/test_gemini_orchestrator_architect_pair_smoke_runner.py .......... [ 38%]
+                                                                         [ 38%]
+tests/test_gt_from_validation_report_runner.py ......................... [ 40%]
+                                                                         [ 40%]
+tests/test_gt_validator_runtime.py ...................                   [ 41%]
+tests/test_input_intake_runtime.py .....                                 [ 42%]
+tests/test_intent_route_matrix_runner.py ..........                      [ 43%]
+tests/test_large_graph_stress_runner.py .............                    [ 44%]
+tests/test_live_child_executor_in_fractal_cell_runner.py .............   [ 45%]
+tests/test_live_controlled_smoke_runner.py ........                      [ 45%]
+tests/test_live_dual_gemini_full_chain_smoke_runner.py ................  [ 46%]
+tests/test_live_gemini_architect_smoke_runner.py ..................      [ 48%]
+tests/test_live_gemini_orchestrator_shadow_runner.py ............        [ 49%]
+tests/test_live_gemini_orchestrator_smoke_runner.py .................... [ 50%]
+..                                                                       [ 51%]
+tests/test_live_gemini_ordered_orchestrator_architect_smoke_runner.py .. [ 51%]
+..........................                                               [ 53%]
+tests/test_llm_architect_runtime.py .................                    [ 54%]
+tests/test_llm_gateway_runtime.py .....                                  [ 55%]
+tests/test_marenna_up_runtime.py ...                                     [ 55%]
+tests/test_matrix_gate_avf_current_canon_sanity_runner.py .........      [ 55%]
+tests/test_mode_router_runtime.py ........                               [ 56%]
+tests/test_mode_selection_matrix_runner.py ........                      [ 57%]
+tests/test_needle_failure_integration_runner.py .......                  [ 57%]
+tests/test_needle_outcome_drs_routing_runner.py ...............          [ 58%]
+tests/test_needle_runtime_chaos_runner.py ..........                     [ 59%]
+tests/test_needlecandidate_lifecycle_proof_runner.py ................... [ 61%]
+.........                                                                [ 61%]
+tests/test_needles_valid.py .                                            [ 62%]
+tests/test_orchestrator_guard_completeness_runner.py ............        [ 62%]
+tests/test_orchestrator_route_validator_runner.py ...........            [ 63%]
+tests/test_orchestrator_shadow_mode_runner.py ........                   [ 64%]
+tests/test_permission_needsuser_ux_proof_runner.py ....................  [ 66%]
+tests/test_post_vv_from_result_proposal_runner.py ...................... [ 67%]
+.                                                                        [ 67%]
+tests/test_post_vv_runtime.py .......                                    [ 68%]
+tests/test_reasoning_showcase_runner.py .............                    [ 69%]
+tests/test_reflex_runtime.py ..........                                  [ 70%]
+tests/test_reuse_gate_runtime.py .......                                 [ 70%]
+tests/test_reuse_score_runner.py .......................                 [ 72%]
+tests/test_root_dag_drs_audit_runner.py .......                          [ 73%]
+tests/test_root_dag_integration_runner.py .......                        [ 73%]
+tests/test_root_final_from_gt_decision_runner.py ....................... [ 75%]
+...                                                                      [ 75%]
+tests/test_root_native_canonical_trace_runner.py ..........              [ 76%]
+tests/test_root_native_full_canonical_e2e_trace_runner.py .............. [ 77%]
+.......                                                                  [ 78%]
+tests/test_root_native_sandbox_needleruntime_e2e_runner.py ...........   [ 79%]
+tests/test_root_native_semantic_reuse_e2e_trace_runner.py .............. [ 80%]
+..............                                                           [ 81%]
+tests/test_root_orchestrator_runtime.py ...................              [ 82%]
+tests/test_root_semantic_reuse_decision_trace_runner.py ................ [ 84%]
+............                                                             [ 84%]
+tests/test_root_semantic_reuse_final_decision_trace_runner.py .......... [ 85%]
+..............                                                           [ 86%]
+tests/test_root_semantic_reuse_gate_trace_runner.py .................... [ 88%]
+....                                                                     [ 88%]
+tests/test_scenario_benchmark_runner.py ............                     [ 89%]
+tests/test_schema_files_valid.py .                                       [ 89%]
+tests/test_semantic_reuse_authority_stack_audit_runner.py .............. [ 90%]
+......                                                                   [ 91%]
+tests/test_semantic_reuse_pipeline_runner.py ..........................  [ 93%]
+tests/test_showcase_runner.py .....                                      [ 93%]
+tests/test_telegram_bridge_runtime.py ..                                 [ 93%]
+tests/test_telegram_e2e_benchmark_runner.py .........                    [ 94%]
+tests/test_telegram_polling_smoke_runner.py ................             [ 95%]
+tests/test_telegram_shell_runtime.py .............                       [ 96%]
+tests/test_time_model.py ..                                              [ 97%]
+tests/test_trace_reporter_runtime.py ............                        [ 98%]
+tests/test_typed_drs_lineage_edges_runner.py .........................   [100%]
+
+=============================== warnings summary ===============================
+tests/test_architect_runtime.py::test_make_plan_graph_from_attractor_packet_validates_schema
+tests/test_architect_runtime.py::test_make_plan_graph_optional_mock_llm_path_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_architect_runtime.py:32: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_avf_runtime.py::test_build_attractor_packet_filters_forbidden_vectors_and_validates_schema
+  /Users/admin/Projects/hedgehog-os/tests/test_avf_runtime.py:30: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(attractor_schema, store=store)
+
+tests/test_demo_certificate_runner.py::test_certificate_demo_gemini_architect_scenario_is_registered_with_safe_failure
+  /Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/types.py:42: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+tests/test_drs_runtime.py::test_local_drs_writes_reads_and_validates_work_record
+tests/test_drs_runtime.py::test_local_drs_writes_pointer_record
+  /Users/admin/Projects/hedgehog-os/tests/test_drs_runtime.py:33: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(drs_record_schema, store=store)
+
+tests/test_executor_runtime.py::test_execute_plan_graph_returns_schema_valid_result_proposals
+  /Users/admin/Projects/hedgehog-os/tests/test_executor_runtime.py:37: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+
+tests/test_gt_validator_runtime.py: 17 warnings
+  /Users/admin/Projects/hedgehog-os/tests/test_gt_validator_runtime.py:41: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(gt_report_schema, store=store)
+
+tests/test_llm_architect_runtime.py::test_mock_llm_architect_returns_valid_plan_graph
+  /Users/admin/Projects/hedgehog-os/tests/test_llm_architect_runtime.py:35: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(plan_graph_schema, store=store)
+
+tests/test_marenna_up_runtime.py::test_marenna_after_task_record_validates_and_stays_quarantined
+tests/test_marenna_up_runtime.py::test_up_after_task_record_validates_and_stays_quarantined
+  /Users/admin/Projects/hedgehog-os/tests/test_marenna_up_runtime.py:42: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(target_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:53: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(candidate_schema, store=store)
+
+tests/test_needles_valid.py::test_needle_files_and_declared_vectors_are_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_needles_valid.py:67: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(needle_schema, store=store)
+
+tests/test_post_vv_runtime.py::test_validate_demo_result_proposals_are_task_aware_and_schema_valid
+  /Users/admin/Projects/hedgehog-os/tests/test_post_vv_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_creates_valid_final_output_and_work_record
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_generic_math_routes_to_llm_general_not_certificate_pipeline
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_optional_mock_llm_architect_still_creates_final_output
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_turn_on_tv_skips_architect_and_executor
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_blocks_without_confirmation
+tests/test_root_orchestrator_runtime.py::test_root_orchestrator_reflex_order_pizza_confirmed_is_mock_success
+  /Users/admin/Projects/hedgehog-os/tests/test_root_orchestrator_runtime.py:34: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(final_output_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================ 1269 passed, 37 warnings in 414.00s (0:06:54) =================
+
+===== SENSITIVE SCAN =====
+
+===== FINAL GIT STATUS =====
+?? auditor_applied_drs_retrieval_reuse.log
+?? demo/run_applied_drs_retrieval_reuse.py
+?? tests/test_applied_drs_retrieval_reuse_runner.py

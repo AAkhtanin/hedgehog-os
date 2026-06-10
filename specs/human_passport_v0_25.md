@@ -2254,6 +2254,38 @@ persistence or global/external DRS. This demo does not test promotion:
 `installed_needle_created=false`. The next applied layer is Permission/NeedsUser
 UX proof, not Marennya / UP or NeedleForge.
 
+## 20.3 Permission / NeedsUser UX Proof
+
+Permission / NeedsUser UX Proof v0.1 closes the permission boundary after the
+warehouse and certificate applied demos. Permission is not execution, approval
+is not completed action, and `needs_user` is not failure.
+
+Five deterministic scenarios cover warehouse dispatch/restock permission,
+certificate submission with missing documents, unsafe permission bypass,
+explicit denial, and proof-only approval. Dispatch, restock, and submission do
+not execute. Invalid permission bypass and completed-action-without-execution
+claims are rejected; denial remains blocked; proof-only approval produces only
+`permission_ready_for_future_action_layer`.
+
+The proof creates explicit permission request, needs-user, response,
+validation, GT, Root Final, local lifecycle, ConflictReport, proof artifact,
+and audit entry objects. Root may create `needs_user_pending_permission`,
+`denied_by_user_blocked`, or `permission_ready_for_future_action_layer`; it
+must not create completed dispatch, restock, submission, or external-action
+claims.
+
+Lifecycle records are local proof evidence only: `permission_experience_record`,
+`permission_blocked_trace`, `permission_denial_deadend`,
+`permission_bypass_quarantine`, and `permission_future_action_reuse_candidate`.
+ConflictCheck remains advisory until Root. The permission audit entry hashes
+the permission proof artifact; hash-chain proves continuity, not truth.
+
+This proof creates no protocol candidate, needle candidate, or installed
+needle. It is not production UX, production permission service, real action,
+production persistence, global/external DRS, NeedleForge, or Marennya / UP.
+The next engineering layer is NeedleCandidate lifecycle / NeedleForge
+prototype, followed by External DRS pointer protocol.
+
 ## 21. Legacy Code Position
 
 Legacy code is donor/reference only.

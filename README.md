@@ -617,6 +617,16 @@ Proof status: PASS, focused tests passed=68, full suite passed=1199 with 37 warn
 
 This is deterministic local applied proof only, not a production certificate service, real government/API submission, live Gemini, Telegram, real external action, production persistence, global/external DRS, autonomous RootOrchestrator replacement, Marennya / UP, or NeedleFactory / NeedleForge.
 
+Permission / NeedsUser UX Proof v0.1 is complete. It closes the permission boundary after the two applied demos: permission is not execution, approval is not completed action, and `needs_user` is not failure. Across five deterministic scenarios, warehouse dispatch/restock and certificate submission remain blocked without valid permission; an unsafe permission bypass and completed-action-without-execution claim are rejected; user denial remains blocked; and proof-only approval becomes `permission_ready_for_future_action_layer`, not a completed action.
+
+The proof creates explicit `permission_request_artifacts`, `needs_user_artifacts`, `permission_response_artifacts`, `permission_validation_rows`, `permission_gt_selection`, `permission_root_final_artifacts`, `permission_drs_lifecycle_records`, `permission_conflict_reports`, `permission_proof_artifact`, and `permission_audit_entry`. Validation accepts valid needs-user and denied-as-block artifacts, preserves approved permission as future permission only, and rejects permission bypass and completed action without execution. Root may create `needs_user_pending_permission`, `denied_by_user_blocked`, or `permission_ready_for_future_action_layer`; it must not create completed dispatch, restock, submission, or external-action claims.
+
+Local lifecycle evidence includes `permission_experience_record`, `permission_blocked_trace`, `permission_denial_deadend`, `permission_bypass_quarantine`, and `permission_future_action_reuse_candidate`. ConflictCheck flags permission bypass versus missing confirmation and completed-action claims versus no real execution, while preserving no conflict for pending permission. ConflictCheck remains advisory until Root. The permission audit entry hashes the proof artifact; hash-chain proves continuity, not truth. Root remains final authority.
+
+This proof creates no protocol candidate, needle candidate, or installed needle. Proof status: PASS, scenarios_verified=5, focused tests passed=70, full suite passed=1219 with 37 warnings, sensitive scan clear, `production_autonomy_claimed=false`. Evidence: `docs/audit_reports/auditor_permission_needsuser_ux_proof.log` and `docs/audit_reports/auditor_permission_needsuser_ux_proof_postcommit.log`; commits `cd0ce4c` and `7d2a121`.
+
+This is deterministic local proof only, not production UX, a production permission service, real dispatch/restock/submission, live Gemini, Telegram, production persistence, global/external DRS, autonomous RootOrchestrator replacement, NeedleFactory / NeedleForge, or Marennya / UP.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -761,12 +771,14 @@ Completed recent layers:
 - Applied Warehouse postcommit audit log.
 - Applied Certificate / Document Readiness Demo v0.1.
 - Applied Certificate postcommit audit log.
+- Permission / NeedsUser UX Proof v0.1.
+- Permission / NeedsUser postcommit audit log.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Applied Certificate docs sync, then Permission/NeedsUser UX proof and its docs/audit.
-- After Permission/NeedsUser UX: NeedleCandidate lifecycle / NeedleForge prototype and External DRS pointer protocol.
+- Permission / NeedsUser docs sync, then NeedleCandidate lifecycle / NeedleForge prototype and its docs/audit.
+- After NeedleCandidate lifecycle: External DRS pointer protocol.
 - Only after several applied traces, deadends, and conflicts: Marennya quarantine-first v0.1, then UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.

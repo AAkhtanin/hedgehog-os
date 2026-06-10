@@ -896,6 +896,24 @@ sensitive scan clear, production_autonomy_claimed=false. Evidence:
 `docs/audit_reports/auditor_applied_certificate_readiness_demo.log` and
 `docs/audit_reports/auditor_applied_certificate_readiness_demo_postcommit.log`.
 
+Permission / NeedsUser UX Proof v0.1 is complete. It verifies five deterministic
+permission scenarios after the warehouse and certificate demos. Warehouse
+dispatch/restock and certificate submission remain blocked without valid
+permission; unsafe permission bypass and completed-action-without-execution
+claims are rejected; denial remains blocked; proof-only approval is future
+permission only. Permission is not execution, and `needs_user` is not failure.
+
+The proof creates explicit permission requests, needs-user artifacts,
+responses, validation rows, GT selection, Root Final artifacts, proof-level
+local lifecycle records, ConflictReports, proof artifact, and audit entry.
+ConflictCheck remains advisory until Root, and hash-chain proves continuity,
+not truth. No protocol candidate, needle candidate, installed needle, real
+action, production persistence, or global/external DRS is created. Proof
+status: PASS, scenarios_verified=5, focused tests passed=70, full suite
+passed=1219 with 37 warnings, sensitive scan clear. Evidence:
+`docs/audit_reports/auditor_permission_needsuser_ux_proof.log` and
+`docs/audit_reports/auditor_permission_needsuser_ux_proof_postcommit.log`.
+
 The scenario trace is an observable projection of the main downward
 Root-controlled canonical vector, not the full architecture. Needles are
 bounded capability contracts, not plugins. DRS is semantic topology, not
@@ -905,10 +923,10 @@ demos. See `docs/passport_geometry_root_needles.md`.
 
 Corrected next order: Passport Geometry, audit/hash-chain, Controlled Route
 Assembly, Applied Warehouse, and Applied Certificate proofs/docs/audits are
-complete; Applied Certificate docs sync is current. Next: Permission/NeedsUser
-UX proof and docs/audit, then NeedleCandidate lifecycle / NeedleForge and
-External DRS pointer protocol. Only after several applied traces/deadends/
-conflicts: Marennya then UP.
+complete. Permission/NeedsUser proof and postcommit audit are complete;
+Permission/NeedsUser docs sync is current. Next: NeedleCandidate lifecycle /
+NeedleForge and docs/audit, then External DRS pointer protocol. Only after
+several applied traces/deadends/conflicts: Marennya then UP.
 
 ## Exclusions
 

@@ -168,13 +168,15 @@ Current engineering order:
 7. Applied Warehouse docs/audit - complete.
 8. Applied Certificate / Document Readiness Demo v0.1 - complete.
 9. Applied Certificate postcommit audit log - complete.
-10. Applied Certificate docs sync - current.
-11. Permission/NeedsUser UX proof.
-12. Permission/NeedsUser docs/audit.
-13. NeedleCandidate lifecycle / NeedleForge prototype.
-14. External DRS pointer protocol.
-15. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
-16. Then UP transfer/opportunity.
+10. Applied Certificate docs/audit - complete.
+11. Permission / NeedsUser UX Proof v0.1 - complete.
+12. Permission / NeedsUser postcommit audit log - complete.
+13. Permission / NeedsUser docs sync - current.
+14. NeedleCandidate lifecycle / NeedleForge prototype.
+15. NeedleCandidate docs/audit.
+16. External DRS pointer protocol.
+17. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
+18. Then UP transfer/opportunity.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -183,8 +185,11 @@ demos must not automatically create protocol candidates or needle candidates
 unless that lifecycle is explicitly under test.
 
 Applied domain transfer is now proven across warehouse readiness and
-certificate/document readiness. The next layer is Permission/NeedsUser UX,
-not Marennya / UP or NeedleForge.
+certificate/document readiness. The Permission/NeedsUser boundary is also
+proven: permission is not execution, approval is not completed action, and
+`needs_user` is not failure. This boundary must remain intact before
+NeedleForge or action needles. The next layer is NeedleCandidate lifecycle /
+NeedleForge prototype, not Marennya / UP.
 
 Audit/hash-chain hardens this Root-centered proof geometry rather than turning
 it into a linear long-chain. Hash-chain proves continuity, not truth.

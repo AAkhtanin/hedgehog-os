@@ -1135,6 +1135,29 @@ production_autonomy_claimed=false. Evidence:
 `docs/audit_reports/auditor_applied_certificate_readiness_demo_postcommit.log`;
 commits `aa55384` and `2c9a23f`.
 
+Permission / NeedsUser UX Proof v0.1 is complete. It closes the boundary after
+the two applied demos: permission is not execution, approval is not completed
+action, and `needs_user` is not failure. Five scenarios verify warehouse
+dispatch/restock permission, certificate submission needs-user handling,
+unsafe bypass rejection, explicit denial, and proof-only approval.
+
+Explicit permission requests, needs-user artifacts, responses, validation
+rows, GT selection, Root Final artifacts, local lifecycle records,
+ConflictReports, proof artifact, and audit entry make the result inspectable.
+Root may record pending permission, denial, or future-action permission, but
+must not claim completed dispatch, restock, submission, or external action.
+
+Local lifecycle records are proof-only and include blocked, deadend,
+quarantine, and future-action reuse evidence. ConflictCheck remains advisory;
+the permission audit entry hashes the proof artifact; hash-chain proves
+continuity, not truth. No protocol candidate, needle candidate, or installed
+needle is created. Proof status: PASS, scenarios_verified=5, focused tests
+passed=70, full suite passed=1219 with 37 warnings, sensitive scan clear,
+production_autonomy_claimed=false. Evidence:
+`docs/audit_reports/auditor_permission_needsuser_ux_proof.log` and
+`docs/audit_reports/auditor_permission_needsuser_ux_proof_postcommit.log`;
+commits `cd0ce4c` and `7d2a121`.
+
 Corrected next order:
 
 1. Passport Geometry docs sync - complete.
@@ -1146,13 +1169,15 @@ Corrected next order:
 7. Applied Warehouse docs/audit - complete.
 8. Applied Certificate / Document Readiness Demo v0.1 - complete.
 9. Applied Certificate postcommit audit log - complete.
-10. Applied Certificate docs sync - current.
-11. Permission/NeedsUser UX proof.
-12. Permission/NeedsUser docs/audit.
-13. NeedleCandidate lifecycle / NeedleForge prototype.
-14. External DRS pointer protocol.
-15. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
-16. Then UP transfer/opportunity.
+10. Applied Certificate docs/audit - complete.
+11. Permission / NeedsUser UX Proof v0.1 - complete.
+12. Permission / NeedsUser postcommit audit log - complete.
+13. Permission / NeedsUser docs sync - current.
+14. NeedleCandidate lifecycle / NeedleForge prototype.
+15. NeedleCandidate docs/audit.
+16. External DRS pointer protocol.
+17. Only after several applied traces/deadends/conflicts: Marennya quarantine-first.
+18. Then UP transfer/opportunity.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement.

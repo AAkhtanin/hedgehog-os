@@ -127,6 +127,15 @@ Current reports:
   - Postcommit audit evidence for commits `aa55384` and `2c9a23f`.
   - Confirms the applied certificate proof remains PASS after commit, with focused/full-suite verification and a clear sensitive scan.
 
+- `auditor_permission_needsuser_ux_proof.log`
+  - Proof for Permission / NeedsUser UX Proof v0.1.
+  - Confirms five permission scenarios preserve blocked/needs-user/denied/future-permission semantics without claiming completed action.
+  - Confirms permission bypass and completed-action-without-execution claims are rejected; no real action, production persistence, or automatic candidate/needle creation occurs.
+
+- `auditor_permission_needsuser_ux_proof_postcommit.log`
+  - Postcommit audit evidence for commits `cd0ce4c` and `7d2a121`.
+  - Confirms the permission proof remains PASS after commit, with focused/full-suite verification and a clear sensitive scan.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

@@ -1,0 +1,386 @@
+===== GIT LOG =====
+27a5b1b Add human applied auditor walkthrough
+9824431 Add all-layers applied super-smoke proof
+398dace Add DRS adversarial stress pack proof
+d0a2fb8 Document Applied DRS retrieval reuse checkpoint
+420b005 Add postcommit Applied DRS retrieval reuse audit log
+3fdc78e Optimize proof test report fixtures
+0bbf81a Add Applied DRS retrieval reuse proof
+06a6aac Document NeedleCandidate lifecycle proof checkpoint
+7fc0a1b Add postcommit NeedleCandidate lifecycle audit log
+acb5aac Add NeedleCandidate lifecycle proof
+a515e17 Document permission needs-user UX proof checkpoint
+7d2a121 Add postcommit permission needs-user audit log
+cd0ce4c Add permission needs-user UX proof
+ad923b6 Document applied certificate readiness demo checkpoint
+34a688b Add two-domain applied demo smoke audit
+2c9a23f Add postcommit applied certificate audit log
+aa55384 Add applied certificate readiness demo proof
+21dd12e Document applied warehouse semantic demo checkpoint
+0de8db6 Add postcommit applied warehouse audit log
+9342b59 Add applied warehouse semantic demo proof
+d15ae27 Document controlled RootOrchestrator route assembly checkpoint
+9d1aa8d Add controlled RootOrchestrator route assembly proof
+ce8b846 Document audit hash-chain checkpoint
+388ee78 Add audit hash-chain proof
+6795ae7 Document Root-centered needle geometry
+d2f8f5d Add final day checkpoint audit after ConflictCheck
+fc7b56c Document ConflictCheck checkpoint
+fe271a4 Add ConflictCheck proof
+2a65def Document DRS lifecycle semantics checkpoint
+5999f17 Add DRS lifecycle semantics proof
+
+===== GIT STATUS BEFORE =====
+?? docs/audit_reports/auditor_human_applied_stack_walkthrough.log
+
+===== DRS ADVERSARIAL STRESS PACK RUNNER =====
+[DRS ADVERSARIAL STRESS PACK]
+note: deterministic proof-level adversarial DRS retrieval stress
+note: hostile records cannot force Root bypass or direct reuse
+
+[INPUT / MODE]
+mode: deterministic_drs_adversarial_stress_pack
+local_proof_level_only: true
+live_network_used: false
+telegram_used: false
+real_external_action: false
+production_persistence: false
+global_drs_implemented: false
+external_drs_network_implemented: false
+
+[SOURCE EVIDENCE]
+applied_drs_retrieval_reuse_source_status: PASS
+needlecandidate_source_status: PASS
+permission_needsuser_source_status: PASS
+conflictcheck_source_status: PASS
+audit_hash_chain_source_status: PASS
+
+[ADVERSARIAL INPUTS]
+adversarial_input_id=input_spoofed_high_similarity_score | scenario=spoofed_high_similarity_score | attack_type=spoofed_high_similarity_score | proof_only=true
+adversarial_input_id=input_fake_freshness_on_stale_record | scenario=fake_freshness_on_stale_record | attack_type=fake_freshness_on_stale_record | proof_only=true
+adversarial_input_id=input_quarantine_laundering_attempt | scenario=quarantine_laundering_attempt | attack_type=quarantine_laundering_attempt | proof_only=true
+adversarial_input_id=input_deadend_laundering_attempt | scenario=deadend_laundering_attempt | attack_type=deadend_laundering_attempt | proof_only=true
+adversarial_input_id=input_permission_laundering_attempt | scenario=permission_laundering_attempt | attack_type=permission_laundering_attempt | proof_only=true
+adversarial_input_id=input_domain_camouflage_attempt | scenario=domain_camouflage_attempt | attack_type=domain_camouflage_attempt | proof_only=true
+adversarial_input_id=input_fake_audit_hash_attempt | scenario=fake_audit_hash_attempt | attack_type=fake_audit_hash_attempt | proof_only=true
+adversarial_input_id=input_root_final_injection_attempt | scenario=root_final_injection_attempt | attack_type=root_final_injection_attempt | proof_only=true
+
+[ADVERSARIAL RETRIEVAL CANDIDATES]
+adversarial_candidate_id=adversarial_candidate_spoofed_high_similarity_score | attack_type=spoofed_high_similarity_score | source_record_id=hostile_record_spoofed_high_similarity_score | claimed_source_domain=warehouse_readiness | actual_source_domain=warehouse_readiness | target_domain=warehouse_readiness | claimed_similarity_score=0.99 | claimed_reuse_score=0.99 | independent_similarity_score=0.42 | independent_reuse_score=0.18 | claimed_freshness=fresh | independent_freshness=fresh | quarantine_lineage_detected=false | deadend_lineage_detected=false | permission_laundering_detected=false | domain_camouflage_detected=false | audit_hash_valid=true | injected_root_final_detected=false | direct_reuse_allowed=false | root_review_required=true | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+adversarial_candidate_id=adversarial_candidate_fake_freshness_on_stale_record | attack_type=fake_freshness_on_stale_record | source_record_id=hostile_record_fake_freshness_on_stale_record | claimed_source_domain=warehouse_readiness | actual_source_domain=warehouse_readiness | target_domain=warehouse_readiness | claimed_similarity_score=0.9 | claimed_reuse_score=0.9 | independent_similarity_score=0.35 | independent_reuse_score=0.1 | claimed_freshness=fresh | independent_freshness=stale | quarantine_lineage_detected=false | deadend_lineage_detected=false | permission_laundering_detected=false | domain_camouflage_detected=false | audit_hash_valid=true | injected_root_final_detected=false | direct_reuse_allowed=false | root_review_required=true | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+adversarial_candidate_id=adversarial_candidate_quarantine_laundering_attempt | attack_type=quarantine_laundering_attempt | source_record_id=hostile_record_quarantine_laundering_attempt | claimed_source_domain=warehouse_readiness | actual_source_domain=warehouse_readiness | target_domain=warehouse_readiness | claimed_similarity_score=0.9 | claimed_reuse_score=0.9 | independent_similarity_score=0.35 | independent_reuse_score=0.1 | claimed_freshness=fresh | independent_freshness=fresh | quarantine_lineage_detected=true | deadend_lineage_detected=false | permission_laundering_detected=false | domain_camouflage_detected=false | audit_hash_valid=true | injected_root_final_detected=false | direct_reuse_allowed=false | root_review_required=true | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+adversarial_candidate_id=adversarial_candidate_deadend_laundering_attempt | attack_type=deadend_laundering_attempt | source_record_id=hostile_record_deadend_laundering_attempt | claimed_source_domain=warehouse_readiness | actual_source_domain=warehouse_readiness | target_domain=warehouse_readiness | claimed_similarity_score=0.9 | claimed_reuse_score=0.9 | independent_similarity_score=0.35 | independent_reuse_score=0.1 | claimed_freshness=fresh | independent_freshness=fresh | quarantine_lineage_detected=false | deadend_lineage_detected=true | permission_laundering_detected=false | domain_camouflage_detected=false | audit_hash_valid=true | injected_root_final_detected=false | direct_reuse_allowed=false | root_review_required=true | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+adversarial_candidate_id=adversarial_candidate_permission_laundering_attempt | attack_type=permission_laundering_attempt | source_record_id=hostile_record_permission_laundering_attempt | claimed_source_domain=warehouse_readiness | actual_source_domain=warehouse_readiness | target_domain=warehouse_readiness | claimed_similarity_score=0.9 | claimed_reuse_score=0.9 | independent_similarity_score=0.35 | independent_reuse_score=0.1 | claimed_freshness=fresh | independent_freshness=fresh | quarantine_lineage_detected=false | deadend_lineage_detected=false | permission_laundering_detected=true | domain_camouflage_detected=false | audit_hash_valid=true | injected_root_final_detected=false | direct_reuse_allowed=false | root_review_required=true | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+adversarial_candidate_id=adversarial_candidate_domain_camouflage_attempt | attack_type=domain_camouflage_attempt | source_record_id=hostile_record_domain_camouflage_attempt | claimed_source_domain=warehouse_readiness | actual_source_domain=certificate_document_readiness | target_domain=warehouse_readiness | claimed_similarity_score=0.9 | claimed_reuse_score=0.9 | independent_similarity_score=0.35 | independent_reuse_score=0.1 | claimed_freshness=fresh | independent_freshness=fresh | quarantine_lineage_detected=false | deadend_lineage_detected=false | permission_laundering_detected=false | domain_camouflage_detected=true | audit_hash_valid=true | injected_root_final_detected=false | direct_reuse_allowed=false | root_review_required=true | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+adversarial_candidate_id=adversarial_candidate_fake_audit_hash_attempt | attack_type=fake_audit_hash_attempt | source_record_id=hostile_record_fake_audit_hash_attempt | claimed_source_domain=warehouse_readiness | actual_source_domain=warehouse_readiness | target_domain=warehouse_readiness | claimed_similarity_score=0.9 | claimed_reuse_score=0.9 | independent_similarity_score=0.35 | independent_reuse_score=0.1 | claimed_freshness=fresh | independent_freshness=fresh | quarantine_lineage_detected=false | deadend_lineage_detected=false | permission_laundering_detected=false | domain_camouflage_detected=false | audit_hash_valid=false | injected_root_final_detected=false | direct_reuse_allowed=false | root_review_required=true | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+adversarial_candidate_id=adversarial_candidate_root_final_injection_attempt | attack_type=root_final_injection_attempt | source_record_id=hostile_record_root_final_injection_attempt | claimed_source_domain=warehouse_readiness | actual_source_domain=warehouse_readiness | target_domain=warehouse_readiness | claimed_similarity_score=0.9 | claimed_reuse_score=0.9 | independent_similarity_score=0.35 | independent_reuse_score=0.1 | claimed_freshness=fresh | independent_freshness=fresh | quarantine_lineage_detected=false | deadend_lineage_detected=false | permission_laundering_detected=false | domain_camouflage_detected=false | audit_hash_valid=true | injected_root_final_detected=true | direct_reuse_allowed=false | root_review_required=true | proof_only=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+
+[DETECTION ROWS]
+detection_row_id=detection_spoofed_high_similarity_score | scenario=spoofed_high_similarity_score | attack_detected=true | independent_checks_override_claims=true | direct_reuse_rejected=true
+detection_row_id=detection_fake_freshness_on_stale_record | scenario=fake_freshness_on_stale_record | attack_detected=true | independent_checks_override_claims=true | direct_reuse_rejected=true
+detection_row_id=detection_quarantine_laundering_attempt | scenario=quarantine_laundering_attempt | attack_detected=true | independent_checks_override_claims=true | direct_reuse_rejected=true
+detection_row_id=detection_deadend_laundering_attempt | scenario=deadend_laundering_attempt | attack_detected=true | independent_checks_override_claims=true | direct_reuse_rejected=true
+detection_row_id=detection_permission_laundering_attempt | scenario=permission_laundering_attempt | attack_detected=true | independent_checks_override_claims=true | direct_reuse_rejected=true
+detection_row_id=detection_domain_camouflage_attempt | scenario=domain_camouflage_attempt | attack_detected=true | independent_checks_override_claims=true | direct_reuse_rejected=true
+detection_row_id=detection_fake_audit_hash_attempt | scenario=fake_audit_hash_attempt | attack_detected=true | independent_checks_override_claims=true | direct_reuse_rejected=true
+detection_row_id=detection_root_final_injection_attempt | scenario=root_final_injection_attempt | attack_detected=true | independent_checks_override_claims=true | direct_reuse_rejected=true
+
+[GATE ROWS]
+gate_row_id=spoofed_high_similarity_score | scenario=spoofed_high_similarity_score | gate_status=rejected_score_spoof
+gate_row_id=fake_freshness_on_stale_record | scenario=fake_freshness_on_stale_record | gate_status=downgraded_to_rerun_required
+gate_row_id=quarantine_laundering_attempt | scenario=quarantine_laundering_attempt | gate_status=blocked_quarantine_laundering
+gate_row_id=deadend_laundering_attempt | scenario=deadend_laundering_attempt | gate_status=blocked_deadend_laundering
+gate_row_id=permission_laundering_attempt | scenario=permission_laundering_attempt | gate_status=rejected_permission_laundering
+gate_row_id=domain_camouflage_attempt | scenario=domain_camouflage_attempt | gate_status=rejected_domain_camouflage
+gate_row_id=fake_audit_hash_attempt | scenario=fake_audit_hash_attempt | gate_status=blocked_bad_audit_hash
+gate_row_id=root_final_injection_attempt | scenario=root_final_injection_attempt | gate_status=rejected_injected_root_final
+
+[GT]
+recommended_outcomes: ['block_reuse', 'rerun_required', 'reject_reuse']
+gt_decides_final_reuse: false
+gt_is_not_truth_proof: true
+gt_remains_advisory_until_root: true
+gt_can_mark_ready: false
+gt_can_execute_action: false
+gt_can_create_protocol_candidate: false
+gt_can_create_needle_candidate: false
+gt_can_install_needle: false
+gt_can_write_global_drs: false
+
+[ROOT FINAL]
+root_final_artifact_id=root_final_spoofed_high_similarity_score | scenario=spoofed_high_similarity_score | root_decision=block_reuse_score_spoof | direct_ready_created=false | completed_external_action_created=false | completed_dispatch_created=false | completed_restock_created=false | completed_certificate_submission_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false
+root_final_artifact_id=root_final_fake_freshness_on_stale_record | scenario=fake_freshness_on_stale_record | root_decision=rerun_required | direct_ready_created=false | completed_external_action_created=false | completed_dispatch_created=false | completed_restock_created=false | completed_certificate_submission_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false
+root_final_artifact_id=root_final_quarantine_laundering_attempt | scenario=quarantine_laundering_attempt | root_decision=block_reuse_quarantine_laundering | direct_ready_created=false | completed_external_action_created=false | completed_dispatch_created=false | completed_restock_created=false | completed_certificate_submission_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false
+root_final_artifact_id=root_final_deadend_laundering_attempt | scenario=deadend_laundering_attempt | root_decision=block_reuse_deadend_laundering | direct_ready_created=false | completed_external_action_created=false | completed_dispatch_created=false | completed_restock_created=false | completed_certificate_submission_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false
+root_final_artifact_id=root_final_permission_laundering_attempt | scenario=permission_laundering_attempt | root_decision=reject_permission_laundering | direct_ready_created=false | completed_external_action_created=false | completed_dispatch_created=false | completed_restock_created=false | completed_certificate_submission_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false
+root_final_artifact_id=root_final_domain_camouflage_attempt | scenario=domain_camouflage_attempt | root_decision=reject_domain_camouflage | direct_ready_created=false | completed_external_action_created=false | completed_dispatch_created=false | completed_restock_created=false | completed_certificate_submission_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false
+root_final_artifact_id=root_final_fake_audit_hash_attempt | scenario=fake_audit_hash_attempt | root_decision=block_reuse_bad_audit_hash | direct_ready_created=false | completed_external_action_created=false | completed_dispatch_created=false | completed_restock_created=false | completed_certificate_submission_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false
+root_final_artifact_id=root_final_root_final_injection_attempt | scenario=root_final_injection_attempt | root_decision=reject_injected_root_final | direct_ready_created=false | completed_external_action_created=false | completed_dispatch_created=false | completed_restock_created=false | completed_certificate_submission_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false
+
+[CONFLICTCHECK]
+conflict_report_id=conflict_score_spoof_vs_independent_reuse_score | scenario=spoofed_high_similarity_score | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_fake_freshness_vs_independent_freshness | scenario=fake_freshness_on_stale_record | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_quarantine_laundering_detected | scenario=quarantine_laundering_attempt | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_deadend_laundering_detected | scenario=deadend_laundering_attempt | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_permission_laundering_detected | scenario=permission_laundering_attempt | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_domain_camouflage_detected | scenario=domain_camouflage_attempt | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_bad_audit_hash_detected | scenario=fake_audit_hash_attempt | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+conflict_report_id=conflict_injected_root_final_detected | scenario=root_final_injection_attempt | conflict_detected=true | root_review_required=true | conflictcheck_is_authority=false
+
+[AUDIT HASH-CHAIN]
+audit_entry_id: audit_drs_adversarial_stress_pack_v0_1
+canonical_payload_hash: 137f13bfcd5c0163305931c2af4c8177b29bde1267181f7abf91035a876430f0
+previous_chain_last_entry_hash: 09388584dfb4519d59463c5c3cf572a50f9a8caf3a3c197240e8ac9133fa5d4c
+proof_only: true
+production_persistence: false
+global_drs_write: false
+external_drs_write: false
+audit_chain_decides_truth: false
+audit_hash_chain_source_status: PASS
+hash_chain_proves_continuity_not_truth: true
+
+[AUTHORITY / SAFETY]
+drs_retrieval_is_not_authority: true
+semantic_similarity_is_not_authority: true
+reuse_score_is_not_root: true
+root_remains_final_authority: true
+gt_remains_advisory_until_root: true
+conflictcheck_remains_advisory_until_root: true
+no_direct_ready_created: true
+no_completed_external_action_created: true
+no_real_external_action_executed: true
+no_production_persistence: true
+no_global_drs_write: true
+no_external_drs_write: true
+protocol_candidate_created: false
+needle_candidate_created: false
+installed_needle_created: false
+production_autonomy_claimed: false
+
+[SUMMARY]
+drs_adversarial_stress_pack_status: PASS
+scenarios_verified: 8
+spoofed_high_similarity_score_blocked: true
+fake_freshness_on_stale_record_downgraded: true
+quarantine_laundering_blocked: true
+deadend_laundering_blocked: true
+permission_laundering_rejected: true
+domain_camouflage_rejected: true
+fake_audit_hash_blocked: true
+injected_root_final_rejected: true
+drs_retrieval_is_not_authority: true
+semantic_similarity_is_not_authority: true
+reuse_score_is_not_root: true
+root_remains_final_authority: true
+gt_remains_advisory_until_root: true
+conflictcheck_remains_advisory_until_root: true
+no_direct_ready_created: true
+no_completed_external_action_created: true
+no_real_external_action_executed: true
+no_production_persistence: true
+no_global_drs_write: true
+no_external_drs_write: true
+protocol_candidate_created: false
+needle_candidate_created: false
+installed_needle_created: false
+production_autonomy_claimed: false
+explicit_drs_adversarial_artifacts_consistent: true
+ready_for_drs_adversarial_stress_pack_tests: true
+
+===== DRS ADVERSARIAL TARGETED TESTS =====
+..............                                                           [100%]
+14 passed in 27.41s
+
+===== ALL-LAYERS APPLIED SUPER-SMOKE RUNNER =====
+[ALL-LAYERS APPLIED SUPER-SMOKE]
+note: deterministic auditor-facing integration smoke over completed layers
+note: this smoke observes capabilities but creates no new capability layer
+
+[INPUT / MODE]
+mode: deterministic_all_layers_applied_super_smoke
+integration_smoke_only: true
+new_capability_layer: false
+live_network_used: false
+gemini_called: false
+telegram_used: false
+real_external_action: false
+production_persistence: false
+global_drs_implemented: false
+external_drs_network_implemented: false
+marennya_invoked: false
+up_invoked: false
+
+[SOURCE EVIDENCE]
+applied_warehouse_semantic_demo_status: PASS
+applied_certificate_readiness_demo_status: PASS
+permission_needsuser_ux_proof_status: PASS
+needlecandidate_lifecycle_proof_status: PASS
+applied_drs_retrieval_reuse_status: PASS
+drs_adversarial_stress_pack_status: PASS
+conflictcheck_status: PASS
+audit_hash_chain_status: PASS
+
+[LAYER MATRIX]
+layer_id=warehouse_applied_layer | source_status=PASS | observed=true | root_authority_preserved=true | advisory_only_when_not_root=true | no_real_external_action=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+layer_id=certificate_applied_layer | source_status=PASS | observed=true | root_authority_preserved=true | advisory_only_when_not_root=true | no_real_external_action=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+layer_id=permission_needsuser_layer | source_status=PASS | observed=true | root_authority_preserved=true | advisory_only_when_not_root=true | no_real_external_action=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+layer_id=needlecandidate_lifecycle_layer | source_status=PASS | observed=true | root_authority_preserved=true | advisory_only_when_not_root=true | no_real_external_action=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+layer_id=applied_drs_retrieval_reuse_layer | source_status=PASS | observed=true | root_authority_preserved=true | advisory_only_when_not_root=true | no_real_external_action=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+layer_id=drs_adversarial_stress_layer | source_status=PASS | observed=true | root_authority_preserved=true | advisory_only_when_not_root=true | no_real_external_action=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+layer_id=conflictcheck_layer | source_status=PASS | observed=true | root_authority_preserved=true | advisory_only_when_not_root=true | no_real_external_action=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+layer_id=audit_hash_chain_layer | source_status=PASS | observed=true | root_authority_preserved=true | advisory_only_when_not_root=true | no_real_external_action=true | production_persistence=false | global_drs_write=false | external_drs_write=false
+
+[AUTHORITY MATRIX]
+authority_id=Root | final_authority=true
+authority_id=DRS retrieval | final_authority=false
+authority_id=ReuseScore | final_authority=false
+authority_id=GT | final_authority=false
+authority_id=ConflictCheck | final_authority=false
+authority_id=Audit/hash-chain | final_authority=false
+authority_id=NeedleCandidate | final_authority=false
+authority_id=Permission approval | final_authority=false | completed_action=false
+
+[BOUNDARY MATRIX]
+boundary_id=warehouse_not_ready_preserved | boundary_preserved=true | observed_outcome=not_ready
+boundary_id=certificate_not_ready_preserved | boundary_preserved=true | observed_outcome=not_ready
+boundary_id=permission_is_not_execution | boundary_preserved=true | completed_action=false
+boundary_id=needlecandidate_is_not_installed_needle | boundary_preserved=true | source_candidate_status=candidate_pending_review | new_needle_candidate_created=false | installed_needle_created=false
+boundary_id=drs_retrieval_proposes_root_decides | boundary_preserved=true | drs_retrieval_is_authority=false
+boundary_id=adversarial_drs_reuse_blocked | boundary_preserved=true | attacks_blocked=8
+boundary_id=conflictcheck_advisory_until_root | boundary_preserved=true | final_authority=false
+boundary_id=audit_proves_continuity_not_truth | boundary_preserved=true | audit_chain_decides_truth=false
+boundary_id=non_production_boundary | boundary_preserved=true | no_real_external_action=true | no_completed_dispatch=true | no_completed_restock=true | no_completed_certificate_submission=true | no_direct_ready_override=true | protocol_candidate_created=false | needle_candidate_created_by_super_smoke=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false | telegram_used=false | marennya_invoked=false | up_invoked=false
+
+[ROOT FINAL]
+root_decision: all_layers_observed_no_autonomy
+root_final_authority_preserved: true
+system_ready_for_external_drs: false
+system_ready_for_marennya: false
+system_ready_for_up: false
+next_engineering_direction: DRS adversarial postcommit/audit/docs
+
+[AUDIT ENTRY]
+audit_entry_id: audit_all_layers_applied_super_smoke_v0_1
+canonical_payload_hash: 3b122290c3f545e4d37e34c037ebf5734828382667f5eab9986659acbe5670cc
+previous_chain_last_entry_hash: 09388584dfb4519d59463c5c3cf572a50f9a8caf3a3c197240e8ac9133fa5d4c
+proof_only: true
+production_persistence: false
+global_drs_write: false
+external_drs_write: false
+audit_chain_decides_truth: false
+
+[SUMMARY]
+all_layers_applied_super_smoke_status: PASS
+layers_observed: 8
+source_statuses_all_pass: true
+root_remains_final_authority: true
+drs_retrieval_is_not_authority: true
+reuse_score_is_not_root: true
+semantic_similarity_is_not_authority: true
+gt_remains_advisory_until_root: true
+conflictcheck_remains_advisory_until_root: true
+audit_chain_decides_truth: false
+permission_is_not_execution: true
+needlecandidate_is_not_installed_needle: true
+adversarial_drs_reuse_blocked: true
+no_direct_ready_created: true
+no_completed_external_action_created: true
+no_real_external_action_executed: true
+no_production_persistence: true
+no_global_drs_write: true
+no_external_drs_write: true
+protocol_candidate_created: false
+needle_candidate_created_by_super_smoke: false
+installed_needle_created: false
+gemini_called: false
+network_called: false
+telegram_used: false
+marennya_invoked: false
+up_invoked: false
+production_autonomy_claimed: false
+ready_for_auditor_review: true
+
+===== ALL-LAYERS SUPER-SMOKE TARGETED TESTS =====
+............                                                             [100%]
+12 passed in 29.35s
+
+===== HUMAN APPLIED AUDITOR WALKTHROUGH =====
+HEDGEHOG OS — HUMAN APPLIED AUDITOR WALKTHROUGH
+
+1. WHAT THIS DEMO IS
+
+This is a human-readable walkthrough over completed deterministic proof layers. It explains observed behavior without creating a new proof layer or capability.
+
+Nothing here performs a real external action, calls Gemini, uses the network, or creates production persistence. Root remains the final authority.
+
+2. ACT 1 — WAREHOUSE READINESS
+
+Warehouse W-17 is preparing dispatch D-2042. The request asks whether inventory is ready.
+
+The local stock evidence says water_filter requires 8 units but only 6 are available. The shortage is water_filter short by 2.
+
+Root result: not_ready. No dispatch, restock, or external action is executed.
+
+3. ACT 2 — CERTIFICATE READINESS
+
+Application APP-77 / request CERT-310 asks for travel document readiness.
+
+The insurance_certificate is expired and the payment_receipt is missing. The safe secondary outcome is needs_user_document_update.
+
+Root result: not_ready. No certificate request is submitted externally.
+
+4. ACT 3 — PERMISSION / NEEDSUSER
+
+Permission is not execution. Proof-only approval means permission may be ready for a future action layer; it does not mean an action completed.
+
+User denial keeps the action blocked. needs_user is a safe request for missing input, not a failure. A completed-action claim without execution evidence is rejected.
+
+5. ACT 4 — NEEDLECANDIDATE
+
+Safe repeated patterns may become bounded NeedleCandidate objects for Root review.
+
+The warehouse candidate may only prepare_restock_request_only. The certificate candidate may only prepare_user_document_update_request_only.
+
+They remain candidate_pending_review. NeedleCandidate is not an installed Needle, GT cannot install needles, Root review is required, and no production NeedleFactory exists.
+
+6. ACT 5 — APPLIED DRS RETRIEVAL / REUSE
+
+A similar warehouse request W-18 / D-2043 appears. DRS retrieves prior W-17 / D-2042 experience, and ReuseScore suggests bounded partial reuse.
+
+Root decision: partial_reuse_then_rerun_validation. A similar certificate request becomes partial_reuse_then_needs_user.
+
+Semantic similarity is not authority. ReuseScore is not Root. Retrieval may propose reuse, but it cannot create direct ready.
+
+7. ACT 6 — ADVERSARIAL DRS STRESS
+
+Hostile DRS records try to force reuse through spoofed scores, false freshness, laundered quarantine/deadend/permission evidence, domain camouflage, a fake audit hash, and an injected Root Final.
+
+- Spoofed high score: block_reuse_score_spoof
+- Fake freshness: rerun_required
+- Quarantine laundering: block_reuse_quarantine_laundering
+- Deadend laundering: block_reuse_deadend_laundering
+- Permission laundering: reject_permission_laundering
+- Domain camouflage: reject_domain_camouflage
+- Fake audit hash: block_reuse_bad_audit_hash
+- Injected Root Final: reject_injected_root_final
+
+All 8 adversarial scenarios are blocked or downgraded. Memory cannot force Root.
+
+8. ACT 7 — ALL-LAYERS ROOT VIEW
+
+The auditor super-smoke observes 8 applied layers. All source statuses are PASS: true.
+
+Root is final authority. DRS retrieval, ReuseScore, GT, ConflictCheck, Audit/hash-chain, and NeedleCandidate are not final authority. Permission approval is not a completed action.
+
+9. FINAL HUMAN SUMMARY
+
+The system can use prior experience, but it does not trust prior experience blindly.
+The system can propose reuse, but it cannot execute without Root and permission.
+The system blocks poisoned, stale, quarantined, deadend, and wrong-domain memory.
+The system remains deterministic local proof only.
+It is not production, not external DRS, not Marennya, and not UP.
+
+===== SENSITIVE SCAN =====
+
+===== FINAL GIT STATUS =====
+?? docs/audit_reports/auditor_human_applied_stack_walkthrough.log

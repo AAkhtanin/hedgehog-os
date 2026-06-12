@@ -1,0 +1,259 @@
+===== GIT LOG =====
+876f397 Add human dual Fractal Coupling walkthrough v0.1
+682fde5 Add dual Fractal Coupling v0.1 proof
+047fdd6 Add controlled Fractal DAC expansion v0.1 audit log
+fae3ede Add human controlled Fractal DAC walkthrough v0.1
+bf8d90c Add controlled Fractal DAC expansion v0.1 proof
+982670a Add multi-domain applied smoke v0.2 audit log
+c70f1b4 Add human multi-domain applied walkthrough v0.2
+5c6a543 Add multi-domain applied smoke v0.2 proof
+2fb27a4 Add applied travel readiness audit log
+969b886 Add human travel readiness walkthrough
+ddf13d1 Add applied travel readiness demo proof
+2d1a609 Document applied stack checkpoint and roadmap
+db18c6e Add applied stack walkthrough and full suite audit logs
+27a5b1b Add human applied auditor walkthrough
+9824431 Add all-layers applied super-smoke proof
+398dace Add DRS adversarial stress pack proof
+d0a2fb8 Document Applied DRS retrieval reuse checkpoint
+420b005 Add postcommit Applied DRS retrieval reuse audit log
+3fdc78e Optimize proof test report fixtures
+0bbf81a Add Applied DRS retrieval reuse proof
+06a6aac Document NeedleCandidate lifecycle proof checkpoint
+7fc0a1b Add postcommit NeedleCandidate lifecycle audit log
+acb5aac Add NeedleCandidate lifecycle proof
+a515e17 Document permission needs-user UX proof checkpoint
+7d2a121 Add postcommit permission needs-user audit log
+cd0ce4c Add permission needs-user UX proof
+ad923b6 Document applied certificate readiness demo checkpoint
+34a688b Add two-domain applied demo smoke audit
+2c9a23f Add postcommit applied certificate audit log
+aa55384 Add applied certificate readiness demo proof
+21dd12e Document applied warehouse semantic demo checkpoint
+0de8db6 Add postcommit applied warehouse audit log
+9342b59 Add applied warehouse semantic demo proof
+d15ae27 Document controlled RootOrchestrator route assembly checkpoint
+9d1aa8d Add controlled RootOrchestrator route assembly proof
+ce8b846 Document audit hash-chain checkpoint
+
+===== GIT STATUS BEFORE =====
+?? docs/audit_reports/auditor_dual_fractal_coupling_v01.log
+
+===== DUAL FRACTAL COUPLING v0.1 RUNNER =====
+[DUAL FRACTAL COUPLING v0.1]
+note: deterministic local proof-mode semantic interlock only
+note: coupling informs but transfers no authority, finalization, or execution
+
+[SOURCE EVIDENCE]
+controlled_fractal_dac_source_status: PASS
+multi_domain_source_status: PASS
+certificate_source_status: PASS
+travel_source_status: PASS
+applied_drs_retrieval_reuse_source_status: PASS
+conflictcheck_source_status: PASS
+audit_hash_chain_source_status: PASS
+
+[PARENT DAC MATRIX]
+parent_dac_id=certificate_parent_dac | scenario_id=APP-77/CERT-310 | parent_type=certificate_readiness | root_result=not_ready | safe_secondary_outcome=needs_user_document_update | parent_root_authority=true | child_cells_count=3 | parent_final_required=true | external_action_executed=false
+parent_dac_id=travel_parent_dac | scenario_id=TRAVEL-900/ITIN-44 | parent_type=travel_multi_condition_readiness | root_result=not_ready | safe_secondary_outcome=needs_user_travel_update | parent_root_authority=true | child_cells_count=5 | parent_final_required=true | external_action_executed=false
+
+[LOCAL CELL MATRIX]
+parent_dac_id=certificate_parent_dac | cell_id=certificate_insurance_check | local_status=blocked | input_evidence=insurance_certificate:expired | local_proposal=needs_document_update | local_only=true | root_authority=false | parent_final_authority=false | sibling_authority=false | cross_parent_authority=false | external_action_authority=false | drs_write_authority=false | can_mark_own_parent_ready=false | can_mark_other_parent_ready=false | can_override_coupled_cell=false | can_spawn_child=false | can_install_needle=false | can_create_protocol_candidate=false | can_create_needle_candidate=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false
+parent_dac_id=certificate_parent_dac | cell_id=certificate_payment_receipt_check | local_status=blocked | input_evidence=payment_receipt:missing | local_proposal=needs_payment_receipt | local_only=true | root_authority=false | parent_final_authority=false | sibling_authority=false | cross_parent_authority=false | external_action_authority=false | drs_write_authority=false | can_mark_own_parent_ready=false | can_mark_other_parent_ready=false | can_override_coupled_cell=false | can_spawn_child=false | can_install_needle=false | can_create_protocol_candidate=false | can_create_needle_candidate=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false
+parent_dac_id=certificate_parent_dac | cell_id=certificate_submission_permission_check | local_status=blocked | input_evidence=permission:not_confirmed_or_not_available | local_proposal=needs_user_permission_or_hold | local_only=true | root_authority=false | parent_final_authority=false | sibling_authority=false | cross_parent_authority=false | external_action_authority=false | drs_write_authority=false | can_mark_own_parent_ready=false | can_mark_other_parent_ready=false | can_override_coupled_cell=false | can_spawn_child=false | can_install_needle=false | can_create_protocol_candidate=false | can_create_needle_candidate=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false
+parent_dac_id=travel_parent_dac | cell_id=travel_document_check | local_status=blocked | input_evidence=insurance_certificate:expired | local_proposal=needs_document_update | local_only=true | root_authority=false | parent_final_authority=false | sibling_authority=false | cross_parent_authority=false | external_action_authority=false | drs_write_authority=false | can_mark_own_parent_ready=false | can_mark_other_parent_ready=false | can_override_coupled_cell=false | can_spawn_child=false | can_install_needle=false | can_create_protocol_candidate=false | can_create_needle_candidate=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false
+parent_dac_id=travel_parent_dac | cell_id=travel_payment_check | local_status=blocked | input_evidence=payment_receipt:missing | local_proposal=needs_payment_receipt | local_only=true | root_authority=false | parent_final_authority=false | sibling_authority=false | cross_parent_authority=false | external_action_authority=false | drs_write_authority=false | can_mark_own_parent_ready=false | can_mark_other_parent_ready=false | can_override_coupled_cell=false | can_spawn_child=false | can_install_needle=false | can_create_protocol_candidate=false | can_create_needle_candidate=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false
+parent_dac_id=travel_parent_dac | cell_id=travel_lodging_check | local_status=ready | input_evidence=hotel_confirmation:present | local_proposal=lodging_ok | local_only=true | root_authority=false | parent_final_authority=false | sibling_authority=false | cross_parent_authority=false | external_action_authority=false | drs_write_authority=false | can_mark_own_parent_ready=false | can_mark_other_parent_ready=false | can_override_coupled_cell=false | can_spawn_child=false | can_install_needle=false | can_create_protocol_candidate=false | can_create_needle_candidate=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false
+parent_dac_id=travel_parent_dac | cell_id=travel_route_window_check | local_status=blocked | input_evidence=route_window:uncertain | local_proposal=needs_route_window_confirmation | local_only=true | root_authority=false | parent_final_authority=false | sibling_authority=false | cross_parent_authority=false | external_action_authority=false | drs_write_authority=false | can_mark_own_parent_ready=false | can_mark_other_parent_ready=false | can_override_coupled_cell=false | can_spawn_child=false | can_install_needle=false | can_create_protocol_candidate=false | can_create_needle_candidate=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false
+parent_dac_id=travel_parent_dac | cell_id=travel_permission_check | local_status=blocked | input_evidence=user_permission:not_confirmed | local_proposal=needs_user_permission | local_only=true | root_authority=false | parent_final_authority=false | sibling_authority=false | cross_parent_authority=false | external_action_authority=false | drs_write_authority=false | can_mark_own_parent_ready=false | can_mark_other_parent_ready=false | can_override_coupled_cell=false | can_spawn_child=false | can_install_needle=false | can_create_protocol_candidate=false | can_create_needle_candidate=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false
+
+[COUPLING EDGES]
+coupling_edge_id=certificate_insurance_to_travel_document | from_parent=certificate_parent_dac | from_cell=certificate_insurance_check | to_parent=travel_parent_dac | to_cell=travel_document_check | shared_semantic_field=insurance_certificate | shared_evidence=expired | coupling_type=bounded_semantic_resonance | transfers_authority=false | transfers_final=false | transfers_execution=false | requires_root_review=true
+coupling_edge_id=certificate_payment_to_travel_payment | from_parent=certificate_parent_dac | from_cell=certificate_payment_receipt_check | to_parent=travel_parent_dac | to_cell=travel_payment_check | shared_semantic_field=payment_receipt | shared_evidence=missing | coupling_type=bounded_semantic_resonance | transfers_authority=false | transfers_final=false | transfers_execution=false | requires_root_review=true
+
+[COUPLING BOUNDARY MATRIX]
+coupling_edge_id=certificate_insurance_to_travel_document | semantic_resonance_observed=true | shared_evidence_can_inform=true | shared_evidence_can_decide=false | coupling_transfers_authority=false | coupling_transfers_root=false | coupling_transfers_execution=false | coupling_transfers_drs_write=false | coupled_cell_can_override_target=false | source_parent_can_finalize_target_parent=false | target_parent_can_finalize_source_parent=false | root_review_required=true
+coupling_edge_id=certificate_payment_to_travel_payment | semantic_resonance_observed=true | shared_evidence_can_inform=true | shared_evidence_can_decide=false | coupling_transfers_authority=false | coupling_transfers_root=false | coupling_transfers_execution=false | coupling_transfers_drs_write=false | coupled_cell_can_override_target=false | source_parent_can_finalize_target_parent=false | target_parent_can_finalize_source_parent=false | root_review_required=true
+
+[INTERLOCK OBSERVATION]
+interlock_observed: true
+coupled_parents: 2
+coupling_edges_observed: 2
+certificate_to_travel_reuse_observed: true
+travel_to_certificate_authority_allowed: false
+certificate_to_travel_authority_allowed: false
+shared_evidence_is_not_authority: true
+semantic_similarity_is_not_authority: true
+reuse_score_is_not_root: true
+drs_retrieval_is_not_authority: true
+root_required_to_resolve_interlock: true
+
+[CONFLICTCHECK]
+conflict_id: conflict_dual_fractal_coupling_authority_leak_attempt
+conflict_detected: true
+reason: coupling_edge_cannot_transfer_authority_or_parent_finalization
+conflictcheck_is_authority: false
+root_review_required: true
+
+[GT ADVISORY]
+gt_recommendation: dual_parent_not_ready
+gt_reason: blocked_cells_in_both_parent_dacs
+gt_is_advisory: true
+gt_can_merge_parent_authority: false
+gt_can_mark_certificate_ready: false
+gt_can_mark_travel_ready: false
+gt_can_execute_action: false
+gt_can_grant_cross_parent_authority: false
+gt_can_install_needle: false
+
+[ROOT FINAL MATRIX]
+parent_dac_id=certificate_parent_dac | root_result=not_ready | safe_secondary_outcome=needs_user_document_update | root_remains_final_authority=true | coupled_parent_finalized_this_parent=false | child_cells_finalized_result=false | coupling_edges_transferred_authority=false | completed_external_action_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false | telegram_used=false | marennya_invoked=false | up_invoked=false | certificate_request_submitted=false
+parent_dac_id=travel_parent_dac | root_result=not_ready | safe_secondary_outcome=needs_user_travel_update | root_remains_final_authority=true | coupled_parent_finalized_this_parent=false | child_cells_finalized_result=false | coupling_edges_transferred_authority=false | completed_external_action_created=false | protocol_candidate_created=false | needle_candidate_created=false | installed_needle_created=false | production_persistence=false | global_drs_write=false | external_drs_write=false | gemini_called=false | network_called=false | telegram_used=false | marennya_invoked=false | up_invoked=false | travel_request_submitted=false | booking_created=false | payment_executed=false
+
+[AUDIT]
+audit_entry_id: audit_dual_fractal_coupling_v01
+canonical_payload_hash: 83e612b6bbda49df353547985df7a61eef1e23513394f9a15a15439fde8ee628
+previous_chain_last_entry_hash: 09388584dfb4519d59463c5c3cf572a50f9a8caf3a3c197240e8ac9133fa5d4c
+proof_only: true
+production_persistence: false
+global_drs_write: false
+external_drs_write: false
+audit_chain_decides_truth: false
+
+[SUMMARY]
+dual_fractal_coupling_v01_status: PASS
+coupled_parent_dacs: 2
+total_local_cells: 8
+coupling_edges_observed: 2
+interlock_observed: true
+certificate_root_result: not_ready
+travel_root_result: not_ready
+certificate_safe_secondary_outcome: needs_user_document_update
+travel_safe_secondary_outcome: needs_user_travel_update
+shared_evidence_can_inform: true
+shared_evidence_can_decide: false
+no_cross_parent_authority: true
+no_coupling_authority_transfer: true
+no_coupling_execution_transfer: true
+no_coupling_drs_write_transfer: true
+no_coupled_parent_cross_finalization: true
+all_local_cells_bounded: true
+no_child_root_authority: true
+no_child_parent_final_authority: true
+no_child_cross_parent_authority: true
+no_child_external_action_authority: true
+no_child_drs_write_authority: true
+root_required_to_resolve_interlock: true
+gt_remains_advisory_until_root: true
+conflictcheck_remains_advisory_until_root: true
+audit_chain_decides_truth: false
+root_remains_final_authority: true
+no_real_external_action_executed: true
+no_certificate_request_submitted: true
+no_travel_request_submitted: true
+no_booking_created: true
+no_payment_executed: true
+no_production_persistence: true
+no_global_drs_write: true
+no_external_drs_write: true
+protocol_candidate_created: false
+needle_candidate_created: false
+installed_needle_created: false
+dual_fractal_coupling_observed: true
+controlled_interlock_only: true
+real_child_agents_started: false
+production_autonomy_claimed: false
+external_drs_not_implemented: true
+gemini_called: false
+network_called: false
+telegram_used: false
+marennya_invoked: false
+up_invoked: false
+ready_for_dual_fractal_coupling_v01_tests: true
+
+===== DUAL FRACTAL COUPLING v0.1 TARGETED TESTS =====
+...................................                                      [100%]
+35 passed in 77.52s (0:01:17)
+
+===== HUMAN DUAL FRACTAL COUPLING WALKTHROUGH v0.1 =====
+HEDGEHOG OS — HUMAN DUAL FRACTAL COUPLING WALKTHROUGH v0.1
+
+1. WHAT THIS DEMO IS
+
+This is a human-readable walkthrough over the committed Dual Fractal Coupling / Interlocking DAC Proof v0.1. It observes two bounded parent DACs together and connects shared semantic evidence through coupling edges.
+
+Coupling means bounded semantic resonance, not authority transfer. The walkthrough performs no real external action, certificate submission, travel submission, booking, payment, Gemini call, network call, production persistence, or global/external DRS operation. Root remains final authority.
+
+2. TWO PARENT DACs
+
+certificate_parent_dac uses APP-77/CERT-310. Its Root result is not_ready / needs_user_document_update.
+
+travel_parent_dac uses TRAVEL-900/ITIN-44. Its Root result is not_ready / needs_user_travel_update.
+
+Each parent DAC keeps its own final. The parent DACs do not merge authority.
+
+3. LOCAL CELLS
+
+certificate_insurance_check sees insurance_certificate:expired and is blocked.
+certificate_payment_receipt_check sees payment_receipt:missing and is blocked.
+certificate_submission_permission_check sees permission:not_confirmed_or_not_available and is blocked.
+
+travel_document_check sees insurance_certificate:expired and is blocked.
+travel_payment_check sees payment_receipt:missing and is blocked.
+travel_lodging_check sees hotel_confirmation:present and is ready.
+travel_route_window_check sees route_window:uncertain and is blocked.
+travel_permission_check sees user_permission:not_confirmed and is blocked.
+
+Total local cells: 8. Every local cell is local-only. No local cell has Root authority, parent-final authority, cross-parent authority, external action authority, or DRS write authority.
+
+4. COUPLING EDGES
+
+Two bounded semantic coupling edges are observed: certificate_insurance_to_travel_document and certificate_payment_to_travel_payment.
+
+insurance_certificate expired is shared evidence between the certificate insurance check and the travel document check.
+
+payment_receipt missing is shared evidence between the certificate payment check and the travel payment check.
+
+The coupling type is bounded semantic resonance. Coupling can inform the other parent, but it cannot decide for the other parent. It transfers no authority, finalization, or execution.
+
+5. WHY COUPLING IS NOT AUTHORITY
+
+Shared evidence can inform. Shared evidence cannot decide. Semantic similarity is not authority. ReuseScore is not Root. DRS retrieval is not authority.
+
+Certificate cannot finalize travel. Travel cannot finalize certificate. A coupled cell cannot override the target cell. Root review is required to resolve the interlock.
+
+6. CONFLICTCHECK AND GT
+
+An authority-leak attempt would try to use coupling to transfer authority or finalize another parent.
+ConflictCheck detects this: true, but ConflictCheck is not authority.
+
+GT recommends dual_parent_not_ready. GT cannot merge parent authority, mark certificate ready, mark travel ready, execute actions, grant cross-parent authority, or install a Needle.
+
+7. ROOT FINAL MATRIX
+
+Root keeps certificate final: not_ready / needs_user_document_update.
+Root keeps travel final: not_ready / needs_user_travel_update.
+
+No coupled parent finalizes the other parent. Child cells do not finalize the result. Coupling edges transfer no authority.
+
+There is no external action, certificate request submission, travel request submission, booking, payment, protocol_candidate, needle_candidate, installed Needle, production persistence, global/external DRS, Gemini, network, Telegram, Marennya, or UP.
+
+8. WHAT THIS MEANS ARCHITECTURALLY
+
+This is the first visible interlocking DAC proof. One parent DAC can resonate with another through shared semantic evidence, and that resonance is useful but bounded.
+
+It is the bridge from controlled Fractal DAC Expansion to future cross-domain DRS traversal. It is not External DRS, production autonomy, or live agent execution.
+
+9. FINAL HUMAN SUMMARY
+
+Two bounded parent DACs are observed together: 2 parents and 2 semantic edges.
+They are coupled through insurance and payment evidence.
+The shared evidence can inform but cannot decide.
+No authority, finalization, execution, or DRS write crosses the coupling edge.
+Root keeps separate finals for certificate and travel.
+This proves controlled dual fractal coupling without authority leakage.
+
+===== SENSITIVE SCAN =====
+
+===== FINAL GIT STATUS =====
+?? docs/audit_reports/auditor_dual_fractal_coupling_v01.log

@@ -1283,15 +1283,22 @@ Current implementation should remain focused on:
 
 Current proven / near-proven layers:
 
-text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Marennya / UP quarantine Controlled Telegram shell Cold-start / reuse demos 
+text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense All-layers super-smoke Human auditor walkthrough
 
 Near-term engineering path:
 
-text 1. Document Observable Zero Trust Runtime proof. 2. Root-controlled FractalDagExecutor integration. 3. Root-native canonical trace. 4. Stabilize DRS writeback / audit around root-native path. 5. Strengthen NeedleRuntime outcome through canonical pipeline. 6. Add NeedleFactory only after canonical runtime is stable. 7. Add DRS graph proximity / lineage. 8. Add larger benchmarks and stress tests. 
+text 1. Sync the closed deterministic applied stack docs. 2. Travel / Multi-condition Readiness Demo. 3. Multi-domain Applied Smoke v0.2. 4. Fractal DAC Expansion / Controlled Fractal Explosion v0.1. 5. Dual Fractal Coupling / Interlocking DAC Proof v0.1. 6. Cross-domain DRS Traversal / DRS Bridge Proof v0.1. 7. Needle adversarial / safety pack. 8. External DRS Pointer Protocol v0.1. 9. Read-only connector / real API sandbox. 10. Chaos Applied Stress Pack. 11. Math Appendix sync for Fractal DAC + DRS reuse + coupling. 12. Production Boundary Design Docs. 13. Only then Marennya quarantine-first. 14. Then UP transfer/opportunity.
 
 Strategic future path:
 
 text NeedleFactory → user-created needles → official needles → marketplace → DRS sharing → enterprise cells → two-fractal coupling → Internet of Meaning 
+
+Marennya and UP are intentionally deferred. They should analyze a mature
+internal system with multi-domain traces, DRS reuse, adversarial memory
+defense, controlled fractal expansion, dual coupling, DRS bridge evidence,
+chaos/failure traces, and production-boundary design. They are not early
+decorative analytics and must not be treated as the immediate step after
+External DRS.
 
 ---
 

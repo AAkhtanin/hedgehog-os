@@ -643,6 +643,20 @@ Proof status: PASS, scenarios_verified=7, targeted tests passed=22, focused test
 
 This is deterministic local proof only, not production DRS, persistence, a real vector database, global/external DRS, External DRS pointer protocol, direct ready, completed external action, a new NeedleCandidate layer, Marennya, UP, or autonomous production runtime. Hash-chain proves continuity, not truth.
 
+## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
+
+The deterministic local applied stack is closed through DRS Adversarial Stress Pack v0.1, the all-layers applied super-smoke, and the human applied auditor walkthrough.
+
+DRS Adversarial Stress Pack v0.1 verifies that hostile DRS records cannot force reuse, Root bypass, ready state, action completion, protocol or NeedleCandidate creation, installed-needle creation, production persistence, or global/external DRS writes. Its eight scenarios are `spoofed_high_similarity_score`, `fake_freshness_on_stale_record`, `quarantine_laundering_attempt`, `deadend_laundering_attempt`, `permission_laundering_attempt`, `domain_camouflage_attempt`, `fake_audit_hash_attempt`, and `root_final_injection_attempt`. Root-governed gates block, reject, or downgrade every attack.
+
+The all-layers applied super-smoke observes eight completed layers together: `warehouse_applied_layer`, `certificate_applied_layer`, `permission_needsuser_layer`, `needlecandidate_lifecycle_layer`, `applied_drs_retrieval_reuse_layer`, `drs_adversarial_stress_layer`, `conflictcheck_layer`, and `audit_hash_chain_layer`. All source statuses PASS. Root remains final authority; DRS retrieval, ReuseScore, GT, ConflictCheck, audit/hash-chain, NeedleCandidate, and permission approval are not final authority. Permission approval is not completed action.
+
+The human applied auditor walkthrough is an explanatory layer only, not a new proof or capability layer. It presents the stack as readable acts covering warehouse readiness, certificate readiness, Permission/NeedsUser, NeedleCandidate, applied DRS retrieval/reuse, adversarial DRS stress, and the all-layers Root view.
+
+Checkpoint evidence: DRS adversarial targeted tests passed=14; all-layers super-smoke targeted tests passed=12; full suite passed=1295 with 37 warnings; the human walkthrough was manually inspected; and the sensitive scan in `docs/audit_reports/auditor_human_applied_stack_walkthrough.log` was clear. Commits: `398dace`, `9824431`, `27a5b1b`, and `db18c6e`.
+
+This checkpoint performs no real external action, dispatch, restock, certificate submission, direct ready override, installed-needle creation, production NeedleFactory, production persistence, global/external DRS operation, Gemini call, Telegram action, Marennya invocation, or UP invocation.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -794,13 +808,17 @@ Completed recent layers:
 - Applied DRS Retrieval / Reuse v0.1.
 - Applied DRS Retrieval / Reuse postcommit audit log.
 - Proof test report fixture optimization.
+- DRS Adversarial Stress Pack v0.1.
+- All-layers applied super-smoke v0.1.
+- Human applied auditor walkthrough.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Applied DRS Retrieval / Reuse docs sync, then DRS adversarial stress.
-- Then Travel / multi-condition readiness, multi-domain applied smoke, Needle adversarial/safety pack, External DRS pointer protocol, read-only connector sandbox, chaos applied stress, and production-boundary design docs.
-- Only then: Marennya quarantine-first v0.1, followed by UP transfer/opportunity v0.1.
+- Current: docs sync for the closed deterministic local applied stack.
+- Next: Travel / Multi-condition Readiness Demo, then Multi-domain Applied Smoke v0.2.
+- Then: Fractal DAC Expansion / Controlled Fractal Explosion v0.1; Dual Fractal Coupling / Interlocking DAC Proof v0.1; Cross-domain DRS Traversal / DRS Bridge Proof v0.1; Needle adversarial / safety pack; External DRS Pointer Protocol v0.1; read-only connector / real API sandbox; Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling; and Production Boundary Design Docs.
+- Only after that: Marennya quarantine-first v0.1, followed by UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.

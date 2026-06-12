@@ -729,14 +729,21 @@ Corrected roadmap:
 6. NeedleCandidate lifecycle proof/docs/audits - complete.
 7. Applied DRS Retrieval / Reuse proof and postcommit audit - complete.
 8. Proof test report fixture optimization - complete.
-9. Applied DRS Retrieval / Reuse docs sync - current.
-10. DRS adversarial stress pack.
-11. Travel / multi-condition readiness and multi-domain smoke.
-12. Needle adversarial / safety pack.
-13. External DRS pointer protocol.
-14. Read-only connector sandbox, chaos applied stress, and production-boundary
-    design docs.
-15. Only then Marennya quarantine-first, followed by UP transfer/opportunity.
+9. DRS adversarial stress pack, all-layers super-smoke, human walkthrough, and
+   full-stack audit - complete.
+10. Current applied-stack docs sync - current.
+11. Travel / Multi-condition Readiness Demo.
+12. Multi-domain Applied Smoke v0.2.
+13. Fractal DAC Expansion / Controlled Fractal Explosion v0.1.
+14. Dual Fractal Coupling / Interlocking DAC Proof v0.1.
+15. Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
+16. Needle adversarial / safety pack.
+17. External DRS Pointer Protocol v0.1.
+18. Read-only connector / real API sandbox.
+19. Chaos Applied Stress Pack.
+20. Math Appendix sync for Fractal DAC + DRS reuse + coupling.
+21. Production Boundary Design Docs.
+22. Only then Marennya quarantine-first, followed by UP transfer/opportunity.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2442,7 +2449,46 @@ This layer consumes NeedleCandidate source proof but creates no new
 NeedleCandidate. It is not production DRS, persistence, a real vector database,
 global/external DRS, External DRS pointer protocol, direct ready, real external
 action, Marennya, UP, or autonomous production runtime. The next engineering
-direction is DRS adversarial stress.
+direction is Travel / Multi-condition Readiness.
+
+## 20.6 Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
+
+The deterministic local applied stack is closed through three auditor-facing
+views:
+
+- DRS Adversarial Stress Pack v0.1 blocks, rejects, or downgrades eight hostile
+  memory scenarios: spoofed score, fake freshness, quarantine laundering,
+  deadend laundering, permission laundering, domain camouflage, fake audit
+  hash, and injected Root Final.
+- The all-layers applied super-smoke observes warehouse, certificate,
+  Permission/NeedsUser, NeedleCandidate lifecycle, applied DRS retrieval/reuse,
+  DRS adversarial stress, ConflictCheck, and audit/hash-chain together. All
+  eight source statuses PASS.
+- The human applied auditor walkthrough is explanatory prose only. It is not a
+  proof layer, capability layer, runtime, or test suite.
+
+Root remains final authority. DRS retrieval, ReuseScore, GT, ConflictCheck,
+audit/hash-chain, NeedleCandidate, and permission approval are not final
+authority. Permission approval is not completed action. Hostile DRS records
+cannot force reuse, Root bypass, ready state, completed action, candidate or
+installed-needle creation, production persistence, or global/external DRS
+writes.
+
+Evidence: DRS adversarial targeted tests passed=14; all-layers super-smoke
+targeted tests passed=12; full suite passed=1295 with 37 warnings; walkthrough
+manually inspected; sensitive scan clear. Commits: `398dace`, `9824431`,
+`27a5b1b`, and `db18c6e`.
+
+This checkpoint has no real external action, completed dispatch/restock/
+certificate submission, direct ready override, installed Needle, production
+NeedleFactory, production persistence, global DRS, external DRS network,
+Gemini call inside these deterministic demos, Telegram action, Marennya, or UP.
+
+Marennya and UP remain deferred until the internal system has mature
+multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal
+expansion, dual coupling, DRS bridge evidence, chaos/failure traces, math
+alignment, and production-boundary design. They are not early decorative
+analytics.
 
 ## 21. Legacy Code Position
 

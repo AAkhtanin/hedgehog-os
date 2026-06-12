@@ -155,6 +155,29 @@ Current reports:
   - Confirms the proof remains PASS after the module-scoped fixture optimization: 22 targeted tests, 120 focused tests, 1269 full-suite tests, and a clear sensitive scan.
   - Fixture optimization removed repeated `_report()` collection across Applied DRS and NeedleCandidate tests; targeted times improved to about 15.55s and 7.88s, focused tests to about 106.41s, and the post-fixture full suite to about 171.50s.
 
+- `auditor_post_super_smoke_full_suite.log`
+  - Full-stack evidence after DRS Adversarial Stress Pack v0.1 and the all-layers applied super-smoke.
+  - Confirms adversarial targeted tests passed=14, super-smoke targeted tests passed=12, and the full suite passed=1295 with 37 warnings.
+
+- `auditor_human_applied_stack_walkthrough.log`
+  - Human-readable walkthrough and applied-stack evidence for commits `398dace`, `9824431`, `27a5b1b`, and `db18c6e`.
+  - Confirms the walkthrough was manually inspected and its sensitive scan was clear.
+
+## Current Applied Auditor Commands
+
+```bash
+.venv/bin/python -m demo.run_drs_adversarial_stress_pack
+.venv/bin/python -m pytest tests/test_drs_adversarial_stress_pack_runner.py -q
+.venv/bin/python -m demo.run_all_layers_applied_super_smoke
+.venv/bin/python -m pytest tests/test_all_layers_applied_super_smoke_runner.py -q
+.venv/bin/python -m demo.run_human_applied_auditor_walkthrough
+.venv/bin/python -m pytest
+```
+
+Latest confirmed full-suite evidence: 1295 passed, 37 warnings. These commands
+are for human audit and verification; the walkthrough is explanatory only and
+does not create a proof or capability layer.
+
 - Older ordered Gemini live reports
   - Historical fallback/safety evidence only, not final dual-live success proof.
   - These reports prove invalid live Orchestrator output is caught, does not reach Architect / Executor / Root final, falls back deterministically, and preserves Root boundaries.

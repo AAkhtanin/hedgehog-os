@@ -1203,6 +1203,25 @@ and production autonomy not claimed. Evidence:
 `docs/audit_reports/auditor_applied_drs_retrieval_reuse_postcommit.log`;
 commits `0bbf81a`, `3fdc78e`, and `420b005`.
 
+## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
+
+DRS Adversarial Stress Pack v0.1 verifies eight hostile DRS scenarios cannot
+force direct reuse, Root bypass, ready state, completed action, candidate or
+installed-needle creation, production persistence, or global/external DRS
+writes. Spoofed score, fake freshness, quarantine/deadend/permission
+laundering, domain camouflage, fake audit hash, and injected Root Final are
+blocked, rejected, or downgraded.
+
+The all-layers applied super-smoke observes eight completed applied layers with
+all source statuses PASS. Root remains final authority; DRS retrieval,
+ReuseScore, GT, ConflictCheck, audit/hash-chain, NeedleCandidate, and permission
+approval are not final authority. Permission approval is not completed action.
+
+The human applied auditor walkthrough is a readable ACT-based explanation only,
+not a new proof or capability layer. Confirmed evidence: adversarial targeted
+tests=14 passed, super-smoke targeted tests=12 passed, full suite=1295 passed
+with 37 warnings, walkthrough manually inspected, sensitive scan clear.
+
 Corrected next order:
 
 1. Passport Geometry docs sync - complete.
@@ -1224,20 +1243,29 @@ Corrected next order:
 17. Applied DRS Retrieval / Reuse v0.1 - complete.
 18. Applied DRS Retrieval / Reuse postcommit audit log - complete.
 19. Proof test report fixture optimization - complete.
-20. Applied DRS Retrieval / Reuse docs sync - current.
-21. DRS adversarial stress pack.
-22. Applied demo #3: Travel / multi-condition readiness.
-23. Multi-domain applied smoke.
-24. Needle adversarial / safety pack.
-25. External DRS pointer protocol.
-26. Read-only real API / connector sandbox.
-27. Chaos applied stress demos.
-28. Production boundary design docs.
-29. Only then Marennya quarantine-first.
-30. Then UP transfer/opportunity.
+20. Applied DRS Retrieval / Reuse docs sync - complete.
+21. DRS adversarial stress pack - complete.
+22. All-layers applied super-smoke - complete.
+23. Human applied auditor walkthrough and full-stack audit - complete.
+24. Current applied-stack docs sync - current.
+25. Travel / Multi-condition Readiness Demo.
+26. Multi-domain Applied Smoke v0.2.
+27. Fractal DAC Expansion / Controlled Fractal Explosion v0.1.
+28. Dual Fractal Coupling / Interlocking DAC Proof v0.1.
+29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
+30. Needle adversarial / safety pack.
+31. External DRS Pointer Protocol v0.1.
+32. Read-only connector / real API sandbox.
+33. Chaos Applied Stress Pack.
+34. Math Appendix sync for Fractal DAC + DRS reuse + coupling.
+35. Production Boundary Design Docs.
+36. Only then Marennya quarantine-first.
+37. Then UP transfer/opportunity.
 
 The current priority is the applied Root-controlled canonical path, not
-self-improvement.
+self-improvement. Marennya and UP are deferred until mature multi-domain,
+fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence
+exists; they are not early decorative analytics.
 
 ## 20. Future Demo Evolution
 

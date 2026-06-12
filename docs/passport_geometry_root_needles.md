@@ -178,17 +178,24 @@ Current engineering order:
 17. Applied DRS Retrieval / Reuse v0.1 - complete.
 18. Applied DRS Retrieval / Reuse postcommit audit log - complete.
 19. Proof test report fixture optimization - complete.
-20. Applied DRS Retrieval / Reuse docs sync - current.
-21. DRS adversarial stress pack.
-22. Applied demo #3: Travel / multi-condition readiness.
-23. Multi-domain applied smoke.
-24. Needle adversarial / safety pack.
-25. External DRS pointer protocol.
-26. Read-only real API / connector sandbox.
-27. Chaos applied stress demos.
-28. Production boundary design docs.
-29. Only then Marennya quarantine-first.
-30. Then UP transfer/opportunity.
+20. Applied DRS Retrieval / Reuse docs sync - complete.
+21. DRS adversarial stress pack - complete.
+22. All-layers applied super-smoke - complete.
+23. Human applied auditor walkthrough and full-stack audit - complete.
+24. Current applied-stack docs sync - current.
+25. Travel / Multi-condition Readiness Demo.
+26. Multi-domain Applied Smoke v0.2.
+27. Fractal DAC Expansion / Controlled Fractal Explosion v0.1.
+28. Dual Fractal Coupling / Interlocking DAC Proof v0.1.
+29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
+30. Needle adversarial / safety pack.
+31. External DRS Pointer Protocol v0.1.
+32. Read-only connector / real API sandbox.
+33. Chaos Applied Stress Pack.
+34. Math Appendix sync for Fractal DAC + DRS reuse + coupling.
+35. Production Boundary Design Docs.
+36. Only then Marennya quarantine-first.
+37. Then UP transfer/opportunity.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -207,8 +214,27 @@ Reuse is now proven as a bounded Root-governed
 direction: DRS may retrieve prior evidence and propose reuse candidates, but
 retrieval, semantic similarity, and ReuseScore are not authority. Freshness,
 WorldState compatibility, Permission/NeedsUser, quarantine/deadend proximity,
-ConflictCheck, GT, audit, and Root review remain intact. The next layer is DRS
-adversarial stress; External DRS and Marennya / UP remain later.
+ConflictCheck, GT, audit, and Root review remain intact. DRS adversarial stress,
+the all-layers super-smoke, and the human walkthrough are now complete;
+External DRS and Marennya / UP remain later.
+
+## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
+
+The current deterministic local applied geometry is closed through adversarial
+memory defense and an eight-layer Root view. Hostile DRS records cannot force
+reuse or authority; the super-smoke observes all completed applied directions
+together; and the human walkthrough explains the same geometry without adding
+a proof or capability layer.
+
+Root remains sovereign. DRS retrieval, ReuseScore, GT, ConflictCheck,
+audit/hash-chain, NeedleCandidate, and permission approval remain bounded,
+non-final directions. No real action, installed Needle, persistence,
+global/external DRS, Gemini/network/Telegram call, Marennya, or UP is activated.
+
+Marennya and UP remain deferred until the geometry has mature multi-domain
+traces, adversarial memory defense, controlled fractal expansion, dual
+coupling, DRS bridge evidence, chaos/failure traces, math alignment, and
+production-boundary design. They are not early decorative analytics.
 
 Audit/hash-chain hardens this Root-centered proof geometry rather than turning
 it into a linear long-chain. Hash-chain proves continuity, not truth.

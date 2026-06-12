@@ -956,6 +956,29 @@ artifacts consistent, and production autonomy not claimed. Evidence:
 `docs/audit_reports/auditor_applied_drs_retrieval_reuse.log` and
 `docs/audit_reports/auditor_applied_drs_retrieval_reuse_postcommit.log`.
 
+## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
+
+DRS Adversarial Stress Pack v0.1 covers eight hostile records: spoofed high
+score, fake freshness, quarantine laundering, deadend laundering, permission
+laundering, domain camouflage, fake audit hash, and injected Root Final. Every
+scenario is blocked, rejected, or downgraded by Root-governed gates.
+
+The all-layers applied super-smoke observes eight PASS layers together:
+warehouse, certificate, Permission/NeedsUser, NeedleCandidate lifecycle,
+applied DRS retrieval/reuse, DRS adversarial stress, ConflictCheck, and
+audit/hash-chain. Root remains final authority. Permission approval is not
+completed action; all non-Root evaluators remain advisory.
+
+The human walkthrough explains those layers in readable ACT form. It is not a
+new capability, proof layer, or runtime. These deterministic demos perform no
+real action, dispatch, restock, certificate submission, ready override,
+installed-needle creation, production persistence, global/external DRS write,
+Gemini/network/Telegram call, Marennya, or UP.
+
+Evidence: adversarial targeted tests=14 passed; super-smoke targeted tests=12
+passed; full suite=1295 passed with 37 warnings; walkthrough manually inspected;
+sensitive scan clear.
+
 The scenario trace is an observable projection of the main downward
 Root-controlled canonical vector, not the full architecture. Needles are
 bounded capability contracts, not plugins. DRS is semantic topology, not
@@ -963,13 +986,13 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: proofs/docs/audits through NeedleCandidate are complete;
-Applied DRS Retrieval / Reuse proof, postcommit audit, and fixture optimization
-are complete; Applied DRS Retrieval / Reuse docs sync is current. Next: DRS
-adversarial stress, Travel readiness, multi-domain smoke, Needle adversarial
-pack, External DRS pointer protocol, read-only connector sandbox, chaos applied
-stress, and production-boundary design docs. Only then: Marennya, followed by
-UP.
+Corrected next order: current applied-stack docs sync -> Travel /
+Multi-condition Readiness -> Multi-domain Applied Smoke v0.2 -> Fractal DAC
+Expansion / Controlled Fractal Explosion -> Dual Fractal Coupling /
+Interlocking DAC Proof -> Cross-domain DRS Traversal / DRS Bridge Proof ->
+Needle adversarial/safety pack -> External DRS Pointer Protocol -> read-only
+connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync ->
+Production Boundary Design Docs -> only then Marennya -> UP.
 
 ## Exclusions
 

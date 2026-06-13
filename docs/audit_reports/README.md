@@ -163,6 +163,22 @@ Current reports:
   - Human-readable walkthrough and applied-stack evidence for commits `398dace`, `9824431`, `27a5b1b`, and `db18c6e`.
   - Confirms the walkthrough was manually inspected and its sensitive scan was clear.
 
+- `auditor_applied_travel_readiness_demo.log`
+  - Applied Travel / Multi-condition Readiness Demo v0.1 evidence.
+  - Confirms targeted tests passed=16 and the Root result remains `not_ready`.
+
+- `auditor_multi_domain_applied_smoke_v02.log`
+  - Multi-domain Applied Smoke v0.2 evidence.
+  - Confirms targeted tests passed=16 and three domains remain separately Root-governed.
+
+- `auditor_controlled_fractal_dac_expansion_v01.log`
+  - Controlled Fractal DAC Expansion v0.1 evidence.
+  - Confirms targeted tests passed=26 and five local proof-mode child-cell candidates remain bounded under Root aggregation.
+
+- `auditor_dual_fractal_coupling_v01.log`
+  - Dual Fractal Coupling / Interlocking DAC Proof v0.1 evidence.
+  - Confirms targeted tests passed=35 and semantic coupling transfers no authority, finalization, execution, or DRS write.
+
 ## Current Applied Auditor Commands
 
 ```bash

@@ -1283,11 +1283,17 @@ Current implementation should remain focused on:
 
 Current proven / near-proven layers:
 
-text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense All-layers super-smoke Human auditor walkthrough
+text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1
 
 Near-term engineering path:
 
-text 1. Sync the closed deterministic applied stack docs. 2. Travel / Multi-condition Readiness Demo. 3. Multi-domain Applied Smoke v0.2. 4. Fractal DAC Expansion / Controlled Fractal Explosion v0.1. 5. Dual Fractal Coupling / Interlocking DAC Proof v0.1. 6. Cross-domain DRS Traversal / DRS Bridge Proof v0.1. 7. Needle adversarial / safety pack. 8. External DRS Pointer Protocol v0.1. 9. Read-only connector / real API sandbox. 10. Chaos Applied Stress Pack. 11. Math Appendix sync for Fractal DAC + DRS reuse + coupling. 12. Production Boundary Design Docs. 13. Only then Marennya quarantine-first. 14. Then UP transfer/opportunity.
+text 1. Sync the closed applied + fractal + coupling checkpoint docs. 2. Cross-domain DRS Traversal / DRS Bridge Proof v0.1. 3. Needle adversarial / safety pack. 4. External DRS Pointer Protocol v0.1. 5. Read-only connector / real API sandbox. 6. Chaos Applied Stress Pack. 7. Math Appendix sync for Fractal DAC + DRS reuse + coupling. 8. Production Boundary Design Docs. 9. Only then Marennya quarantine-first. 10. Then UP transfer/opportunity.
+
+Completed checkpoint: Travel / Multi-condition Readiness, Multi-domain Applied
+Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and Dual Fractal Coupling
+v0.1. Still deferred: External DRS implementation, real child agents, Gemini
+child-cell live mode, Telegram natural assistant, Marennya, UP, and production
+autonomy.
 
 Strategic future path:
 

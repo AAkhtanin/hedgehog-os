@@ -731,11 +731,11 @@ Corrected roadmap:
 8. Proof test report fixture optimization - complete.
 9. DRS adversarial stress pack, all-layers super-smoke, human walkthrough, and
    full-stack audit - complete.
-10. Current applied-stack docs sync - current.
-11. Travel / Multi-condition Readiness Demo.
-12. Multi-domain Applied Smoke v0.2.
-13. Fractal DAC Expansion / Controlled Fractal Explosion v0.1.
-14. Dual Fractal Coupling / Interlocking DAC Proof v0.1.
+10. Applied-stack docs sync - complete.
+11. Travel / Multi-condition Readiness Demo - complete.
+12. Multi-domain Applied Smoke v0.2 - complete.
+13. Controlled Fractal DAC Expansion v0.1 - complete.
+14. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
 15. Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
 16. Needle adversarial / safety pack.
 17. External DRS Pointer Protocol v0.1.
@@ -2449,7 +2449,8 @@ This layer consumes NeedleCandidate source proof but creates no new
 NeedleCandidate. It is not production DRS, persistence, a real vector database,
 global/external DRS, External DRS pointer protocol, direct ready, real external
 action, Marennya, UP, or autonomous production runtime. The next engineering
-direction is Travel / Multi-condition Readiness.
+direction after the applied/fractal/coupling docs checkpoint is Cross-domain
+DRS Traversal / DRS Bridge Proof v0.1.
 
 ## 20.6 Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 
@@ -2483,6 +2484,21 @@ This checkpoint has no real external action, completed dispatch/restock/
 certificate submission, direct ready override, installed Needle, production
 NeedleFactory, production persistence, global DRS, external DRS network,
 Gemini call inside these deterministic demos, Telegram action, Marennya, or UP.
+
+## 20.7 Applied + Fractal + Coupling Checkpoint
+
+Multi-domain Applied Smoke v0.2 proves that warehouse, certificate, and travel
+domains can be observed together without merging authority. Controlled Fractal
+DAC Expansion v0.1 proves that a complex parent request can decompose into
+bounded local child-cell candidates under Root aggregation. Dual Fractal
+Coupling v0.1 proves that two parent DACs may resonate through shared semantic
+evidence without transferring authority, execution, DRS writes, or
+cross-finalization.
+
+Child-cell candidates are proof-mode local structures, not real autonomous
+agents. Shared evidence can inform but cannot decide. Root remains the only
+final authority, and "vassal of my vassal is not my vassal" remains preserved
+across decomposition and coupling.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

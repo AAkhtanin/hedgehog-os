@@ -1247,11 +1247,11 @@ Corrected next order:
 21. DRS adversarial stress pack - complete.
 22. All-layers applied super-smoke - complete.
 23. Human applied auditor walkthrough and full-stack audit - complete.
-24. Current applied-stack docs sync - current.
-25. Travel / Multi-condition Readiness Demo.
-26. Multi-domain Applied Smoke v0.2.
-27. Fractal DAC Expansion / Controlled Fractal Explosion v0.1.
-28. Dual Fractal Coupling / Interlocking DAC Proof v0.1.
+24. Applied-stack docs sync - complete.
+25. Travel / Multi-condition Readiness Demo - complete.
+26. Multi-domain Applied Smoke v0.2 - complete.
+27. Controlled Fractal DAC Expansion v0.1 - complete.
+28. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
 29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
 30. Needle adversarial / safety pack.
 31. External DRS Pointer Protocol v0.1.
@@ -1261,6 +1261,30 @@ Corrected next order:
 35. Production Boundary Design Docs.
 36. Only then Marennya quarantine-first.
 37. Then UP transfer/opportunity.
+
+## Applied + Fractal + Coupling Demo Commands
+
+Machine-readable proof demos:
+
+```bash
+python -m demo.run_applied_travel_readiness_demo
+python -m demo.run_multi_domain_applied_smoke_v02
+python -m demo.run_controlled_fractal_dac_expansion_v01
+python -m demo.run_dual_fractal_coupling_v01
+```
+
+Human-readable auditor walkthroughs:
+
+```bash
+python -m demo.run_human_travel_readiness_walkthrough
+python -m demo.run_human_multi_domain_applied_walkthrough_v02
+python -m demo.run_human_controlled_fractal_dac_walkthrough_v01
+python -m demo.run_human_dual_fractal_coupling_walkthrough_v01
+```
+
+These deterministic local proofs create no real child agents, external action,
+production persistence, global/external DRS, Gemini/network/Telegram call,
+Marennya invocation, or UP invocation. Root remains final authority.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

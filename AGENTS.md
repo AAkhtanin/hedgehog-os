@@ -99,15 +99,27 @@ Anti-reduction rules:
 - Apply "Vassal of my vassal is not my vassal": bounded local authority does
   not propagate upward, sideways, outward, or into Root.
 - Applied demos prove domain transfer of the canonical Root-controlled path.
-- Applied demos now cover at least warehouse readiness and
-  certificate/document readiness.
+- Applied demos now cover warehouse, certificate/document, and travel
+  multi-condition readiness.
 - Applied demos must not automatically create `protocol_candidate` or
   `needle_candidate` unless that lifecycle is explicitly under test.
 - Before NeedleForge or action needles, the Permission/NeedsUser boundary must remain intact: permission is not execution, approval is not completed action, and `needs_user` is not failure.
 - NeedleCandidate lifecycle may create proof-level candidate objects, but any installed needle, production persistence, external action, or Root bypass remains forbidden.
 - DRS retrieval, semantic similarity, and ReuseScore are advisory and cannot bypass Root, Permission/NeedsUser, ConflictCheck, freshness, WorldState compatibility, quarantine/deadend checks, or audit.
-- The deterministic local applied stack is closed through DRS adversarial stress, all-layers super-smoke, and the human auditor walkthrough.
-- The next engineering layer is Travel / Multi-condition Readiness, not External DRS or Marennya / UP.
+- Child-cell candidates are local bounded proof-mode structures, not real
+  autonomous agents.
+- Child cells must not finalize a parent, execute actions, write DRS, install a
+  Needle, spawn children, override siblings, or create protocol/NeedleCandidate
+  objects. Root must aggregate and finalize.
+- Coupling edges are bounded semantic resonance only. Shared evidence can
+  inform but cannot decide, transfer authority, or cross-finalize parents.
+- The deterministic local applied/fractal stack is closed through Travel,
+  Multi-domain Applied Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and
+  Dual Fractal Coupling v0.1.
+- The next engineering layer is Cross-domain DRS Traversal / DRS Bridge Proof
+  v0.1, not External DRS or Marennya / UP.
+- Codex must not run long tests unless the user explicitly requests them; the
+  user runs long, focused, and full-suite tests manually.
 
 See `docs/passport_geometry_root_needles.md`.
 
@@ -368,7 +380,13 @@ Applied DRS Retrieval / Reuse v0.1 is complete. It verifies seven deterministic 
 
 Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough is complete. DRS adversarial stress blocks eight hostile memory attacks; the super-smoke observes eight PASS layers under Root-only final authority; and the walkthrough explains the completed stack without creating a proof or capability layer. No real action, direct ready, installed needle, production persistence, global/external DRS write, Gemini/network/Telegram call, Marennya, or UP is activated.
 
-Corrected engineering order: current applied-stack docs sync -> Travel / Multi-condition Readiness -> Multi-domain Applied Smoke v0.2 -> Fractal DAC Expansion / Controlled Fractal Explosion -> Dual Fractal Coupling / Interlocking DAC Proof -> Cross-domain DRS Traversal / DRS Bridge Proof -> Needle adversarial/safety pack -> External DRS Pointer Protocol -> read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
+Applied + Fractal + Coupling checkpoint is complete. Travel readiness,
+Multi-domain Applied Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and
+Dual Fractal Coupling v0.1 preserve Root-only final authority. Child-cell
+candidates are local proof structures, and coupling is bounded semantic
+resonance that informs but does not decide.
+
+Corrected engineering order: current applied/fractal/coupling docs sync -> Cross-domain DRS Traversal / DRS Bridge Proof -> Needle adversarial/safety pack -> External DRS Pointer Protocol -> read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

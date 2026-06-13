@@ -182,11 +182,11 @@ Current engineering order:
 21. DRS adversarial stress pack - complete.
 22. All-layers applied super-smoke - complete.
 23. Human applied auditor walkthrough and full-stack audit - complete.
-24. Current applied-stack docs sync - current.
-25. Travel / Multi-condition Readiness Demo.
-26. Multi-domain Applied Smoke v0.2.
-27. Fractal DAC Expansion / Controlled Fractal Explosion v0.1.
-28. Dual Fractal Coupling / Interlocking DAC Proof v0.1.
+24. Applied-stack docs sync - complete.
+25. Travel / Multi-condition Readiness Demo - complete.
+26. Multi-domain Applied Smoke v0.2 - complete.
+27. Controlled Fractal DAC Expansion v0.1 - complete.
+28. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
 29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
 30. Needle adversarial / safety pack.
 31. External DRS Pointer Protocol v0.1.
@@ -203,8 +203,9 @@ domain transfer through applied canonical paths, not self-improvement. Applied
 demos must not automatically create protocol candidates or needle candidates
 unless that lifecycle is explicitly under test.
 
-Applied domain transfer is now proven across warehouse readiness and
-certificate/document readiness. The Permission/NeedsUser boundary is also
+Applied domain transfer is now proven across warehouse readiness,
+certificate/document readiness, and travel multi-condition readiness. The
+Permission/NeedsUser boundary is also
 proven: permission is not execution, approval is not completed action, and
 `needs_user` is not failure. This boundary must remain intact before
 NeedleForge or action needles. NeedleCandidate lifecycle is now proven at
@@ -217,6 +218,33 @@ WorldState compatibility, Permission/NeedsUser, quarantine/deadend proximity,
 ConflictCheck, GT, audit, and Root review remain intact. DRS adversarial stress,
 the all-layers super-smoke, and the human walkthrough are now complete;
 External DRS and Marennya / UP remain later.
+
+## Applied Fractal Geometry Checkpoint
+
+One-parent controlled Fractal DAC geometry is:
+
+```text
+parent request
+  -> bounded local child-cell candidates
+  -> local proposals
+  -> Root aggregation
+  -> Root final
+```
+
+Child-cell candidates are local proof-mode structures, not real autonomous
+agents. They cannot finalize the parent, execute actions, write DRS, install
+Needles, spawn children, override siblings, or create protocol/NeedleCandidate
+objects.
+
+Dual coupling geometry is:
+
+```text
+parent DAC <-> bounded semantic coupling edges <-> parent DAC
+```
+
+Coupling edges transfer no authority, finalization, execution, or DRS write.
+Shared evidence can inform but cannot decide. Root remains sovereign and keeps
+separate parent finals.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

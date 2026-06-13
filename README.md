@@ -657,6 +657,36 @@ Checkpoint evidence: DRS adversarial targeted tests passed=14; all-layers super-
 
 This checkpoint performs no real external action, dispatch, restock, certificate submission, direct ready override, installed-needle creation, production NeedleFactory, production persistence, global/external DRS operation, Gemini call, Telegram action, Marennya invocation, or UP invocation.
 
+## Current Applied/Fractal Proof Checkpoint
+
+The deterministic local applied stack now covers warehouse, certificate, and
+travel readiness. Multi-domain Applied Smoke v0.2 observes all three domains
+together without merging authority or confusing their separate `not_ready`
+outcomes.
+
+Controlled Fractal DAC Expansion v0.1 decomposes travel request
+`TRAVEL-900 / ITIN-44` into five bounded local proof-mode child-cell
+candidates. The candidates produce local proposals only; they are not real
+autonomous agents and cannot finalize the parent, execute actions, write DRS,
+spawn children, override siblings, install a Needle, or create protocol or
+NeedleCandidate objects. Root aggregates and finalizes.
+
+Dual Fractal Coupling / Interlocking DAC Proof v0.1 observes
+`certificate_parent_dac` and `travel_parent_dac` connected by bounded semantic
+coupling edges for expired insurance and missing payment evidence. Coupling
+can inform but cannot decide. It transfers no authority, finalization,
+execution, or DRS-write power, and Root keeps separate certificate and travel
+finals.
+
+These layers perform no real external actions, production persistence,
+global/external DRS operation, Gemini/network/Telegram call, Marennya
+invocation, or UP invocation. Root remains final authority.
+
+Closed-layer commits: Travel `ddf13d1`, `969b886`, `2fb27a4`; Multi-domain
+Smoke v0.2 `5c6a543`, `c70f1b4`, `982670a`; Controlled Fractal DAC Expansion
+v0.1 `bf8d90c`, `fae3ede`, `047fdd6`; Dual Fractal Coupling v0.1 `682fde5`,
+`876f397`, `b07a348`.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -811,13 +841,17 @@ Completed recent layers:
 - DRS Adversarial Stress Pack v0.1.
 - All-layers applied super-smoke v0.1.
 - Human applied auditor walkthrough.
+- Applied Travel / Multi-condition Readiness Demo v0.1.
+- Multi-domain Applied Smoke v0.2.
+- Controlled Fractal DAC Expansion v0.1.
+- Dual Fractal Coupling / Interlocking DAC Proof v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Current: docs sync for the closed deterministic local applied stack.
-- Next: Travel / Multi-condition Readiness Demo, then Multi-domain Applied Smoke v0.2.
-- Then: Fractal DAC Expansion / Controlled Fractal Explosion v0.1; Dual Fractal Coupling / Interlocking DAC Proof v0.1; Cross-domain DRS Traversal / DRS Bridge Proof v0.1; Needle adversarial / safety pack; External DRS Pointer Protocol v0.1; read-only connector / real API sandbox; Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling; and Production Boundary Design Docs.
+- Current: docs sync for the closed applied + fractal + coupling checkpoint.
+- Next: Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
+- Then: Needle adversarial / safety pack; External DRS Pointer Protocol v0.1; read-only connector / real API sandbox; Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling; and Production Boundary Design Docs.
 - Only after that: Marennya quarantine-first v0.1, followed by UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.

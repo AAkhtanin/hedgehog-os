@@ -687,6 +687,28 @@ Smoke v0.2 `5c6a543`, `c70f1b4`, `982670a`; Controlled Fractal DAC Expansion
 v0.1 `bf8d90c`, `fae3ede`, `047fdd6`; Dual Fractal Coupling v0.1 `682fde5`,
 `876f397`, `b07a348`.
 
+## Cross-domain DRS Bridge v0.1 Checkpoint
+
+Cross-domain DRS Bridge v0.1 is a local proof-only traversal over already
+established bounded semantic coupling edges. Root authorizes traversal from
+`certificate_parent_dac / APP-77 / CERT-310` to
+`travel_parent_dac / TRAVEL-900 / ITIN-44`.
+
+The local bridge records are
+`bridge_certificate_insurance_to_travel_document_v01` and
+`bridge_certificate_payment_to_travel_payment_v01`. They traverse the
+previously established Dual Fractal Coupling relations for expired insurance
+and missing payment evidence. Bridge traversal can inform target checks, but
+cannot decide, finalize, execute, transfer authority, write global/external
+DRS, or prove truth. Bridge traversal is not provenance laundering.
+
+After Root review, travel remains `not_ready` with
+`needs_user_travel_update`. Root remains final authority. External DRS, global
+semantic fabric, public Internet of Meaning, remote retrieval, connector/API
+access, and production persistence remain future work.
+
+Closed commits: `2a48d35`, `1b6b5e0`, and `a2721af`.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -845,13 +867,14 @@ Completed recent layers:
 - Multi-domain Applied Smoke v0.2.
 - Controlled Fractal DAC Expansion v0.1.
 - Dual Fractal Coupling / Interlocking DAC Proof v0.1.
+- Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Current: docs sync for the closed applied + fractal + coupling checkpoint.
-- Next: Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
-- Then: Needle adversarial / safety pack; External DRS Pointer Protocol v0.1; read-only connector / real API sandbox; Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling; and Production Boundary Design Docs.
+- Current: docs sync for Cross-domain DRS Bridge v0.1.
+- Next: Needle adversarial / safety pack.
+- Then: External DRS Pointer Protocol v0.1; read-only connector / real API sandbox; Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge; and Production Boundary Design Docs.
 - Only after that: Marennya quarantine-first v0.1, followed by UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.

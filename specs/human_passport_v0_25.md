@@ -736,12 +736,12 @@ Corrected roadmap:
 12. Multi-domain Applied Smoke v0.2 - complete.
 13. Controlled Fractal DAC Expansion v0.1 - complete.
 14. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
-15. Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
+15. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
 16. Needle adversarial / safety pack.
 17. External DRS Pointer Protocol v0.1.
 18. Read-only connector / real API sandbox.
 19. Chaos Applied Stress Pack.
-20. Math Appendix sync for Fractal DAC + DRS reuse + coupling.
+20. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge.
 21. Production Boundary Design Docs.
 22. Only then Marennya quarantine-first, followed by UP transfer/opportunity.
 
@@ -2448,9 +2448,9 @@ commits `0bbf81a`, `3fdc78e`, and `420b005`.
 This layer consumes NeedleCandidate source proof but creates no new
 NeedleCandidate. It is not production DRS, persistence, a real vector database,
 global/external DRS, External DRS pointer protocol, direct ready, real external
-action, Marennya, UP, or autonomous production runtime. The next engineering
-direction after the applied/fractal/coupling docs checkpoint is Cross-domain
-DRS Traversal / DRS Bridge Proof v0.1.
+action, Marennya, UP, or autonomous production runtime. After the local
+Cross-domain DRS Bridge checkpoint, the next engineering direction is the
+Needle adversarial / safety pack.
 
 ## 20.6 Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 
@@ -2499,6 +2499,24 @@ Child-cell candidates are proof-mode local structures, not real autonomous
 agents. Shared evidence can inform but cannot decide. Root remains the only
 final authority, and "vassal of my vassal is not my vassal" remains preserved
 across decomposition and coupling.
+
+## 20.8 Cross-domain DRS Bridge v0.1 Checkpoint
+
+Cross-domain DRS Bridge v0.1 is accepted as `PASS_WITH_WARNINGS`. It is
+passport-valid only as local proof-only traversal over already established
+bounded semantic coupling edges. It grows from Dual Coupling but does not
+become External DRS.
+
+The proof demonstrates local traversal of candidate evidence from certificate
+checks into travel checks. Bridge traversal can inform, but cannot decide,
+finalize, execute, transfer authority, write global/external DRS, or prove
+truth. Bridge traversal is not provenance laundering.
+
+This checkpoint does not prove External DRS Pointer Protocol, remote
+retrieval, public or global semantic fabric, signatures, trust registry,
+revocation, production persistence, or adversarial external-record safety.
+Root-only final authority and "vassal of my vassal is not my vassal" remain
+preserved.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

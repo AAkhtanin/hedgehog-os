@@ -113,11 +113,21 @@ Anti-reduction rules:
   objects. Root must aggregate and finalize.
 - Coupling edges are bounded semantic resonance only. Shared evidence can
   inform but cannot decide, transfer authority, or cross-finalize parents.
+- A coupling edge is the bounded semantic relation. DRS bridge traversal is
+  the local reviewed trace over that relation.
+- Bridge records are candidate evidence, not authority. Traversal trace is not
+  truth, and bridge traversal is not provenance laundering.
+- DRS bridge traversal must not bypass Root, ConflictCheck, GT, audit,
+  Permission/NeedsUser, freshness, or quarantine/deadend checks.
+- Do not use DRS Bridge language to claim External DRS, global semantic
+  fabric, public Internet of Meaning, remote retrieval, or production
+  persistence.
 - The deterministic local applied/fractal stack is closed through Travel,
   Multi-domain Applied Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and
-  Dual Fractal Coupling v0.1.
-- The next engineering layer is Cross-domain DRS Traversal / DRS Bridge Proof
-  v0.1, not External DRS or Marennya / UP.
+  Dual Fractal Coupling v0.1. Cross-domain DRS Bridge v0.1 adds local reviewed
+  traversal only.
+- The next engineering layer is Needle adversarial / safety pack, not External
+  DRS or Marennya / UP.
 - Codex must not run long tests unless the user explicitly requests them; the
   user runs long, focused, and full-suite tests manually.
 
@@ -386,7 +396,13 @@ Dual Fractal Coupling v0.1 preserve Root-only final authority. Child-cell
 candidates are local proof structures, and coupling is bounded semantic
 resonance that informs but does not decide.
 
-Corrected engineering order: current applied/fractal/coupling docs sync -> Cross-domain DRS Traversal / DRS Bridge Proof -> Needle adversarial/safety pack -> External DRS Pointer Protocol -> read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
+Cross-domain DRS Bridge v0.1 is complete as local proof-only traversal over
+bounded semantic coupling edges. It creates local bridge records and traversal
+evidence, but does not implement External DRS, global DRS, remote retrieval,
+public semantic fabric, or production persistence. Bridge traversal can inform
+but cannot decide, finalize, execute, transfer authority, or prove truth.
+
+Corrected engineering order: current Cross-domain DRS Bridge docs sync -> Needle adversarial/safety pack -> External DRS Pointer Protocol -> read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

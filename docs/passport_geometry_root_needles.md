@@ -187,12 +187,12 @@ Current engineering order:
 26. Multi-domain Applied Smoke v0.2 - complete.
 27. Controlled Fractal DAC Expansion v0.1 - complete.
 28. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
-29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
+29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
 30. Needle adversarial / safety pack.
 31. External DRS Pointer Protocol v0.1.
 32. Read-only connector / real API sandbox.
 33. Chaos Applied Stress Pack.
-34. Math Appendix sync for Fractal DAC + DRS reuse + coupling.
+34. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge.
 35. Production Boundary Design Docs.
 36. Only then Marennya quarantine-first.
 37. Then UP transfer/opportunity.
@@ -245,6 +245,26 @@ parent DAC <-> bounded semantic coupling edges <-> parent DAC
 Coupling edges transfer no authority, finalization, execution, or DRS write.
 Shared evidence can inform but cannot decide. Root remains sovereign and keeps
 separate parent finals.
+
+DRS Bridge geometry is:
+
+```text
+Root-authorized local traversal
+  -> over bounded semantic coupling edge
+  -> reviewed candidate evidence for target checks
+  -> Root review
+  -> target Root final
+```
+
+The coupling edge is the bounded semantic relation. DRS bridge traversal is
+the local reviewed trace over that relation. A bridge record is not authority,
+and traversal evidence is not a command or truth proof. The source domain does
+not command the target domain; the target remains under Root final authority.
+Bridge traversal is not provenance laundering.
+
+Cross-domain DRS Bridge v0.1 does not implement External DRS, global DRS,
+public semantic fabric, remote retrieval, connector/API access, signatures,
+trust registry, revocation, or production persistence.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

@@ -986,8 +986,7 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: current applied/fractal/coupling docs sync -> Cross-domain
-DRS Traversal / DRS Bridge Proof ->
+Corrected next order: current Cross-domain DRS Bridge docs sync ->
 Needle adversarial/safety pack -> External DRS Pointer Protocol -> read-only
 connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync ->
 Production Boundary Design Docs -> only then Marennya -> UP.
@@ -999,11 +998,13 @@ python -m demo.run_applied_travel_readiness_demo
 python -m demo.run_multi_domain_applied_smoke_v02
 python -m demo.run_controlled_fractal_dac_expansion_v01
 python -m demo.run_dual_fractal_coupling_v01
+python -m demo.run_cross_domain_drs_bridge_v01
 
 python -m demo.run_human_travel_readiness_walkthrough
 python -m demo.run_human_multi_domain_applied_walkthrough_v02
 python -m demo.run_human_controlled_fractal_dac_walkthrough_v01
 python -m demo.run_human_dual_fractal_coupling_walkthrough_v01
+python -m demo.run_human_cross_domain_drs_bridge_walkthrough_v01
 ```
 
 Travel readiness preserves four blockers and a Root `not_ready` final.
@@ -1012,6 +1013,10 @@ authority merge. Controlled Fractal DAC creates five bounded local proof-mode
 child-cell candidates under Root aggregation. Dual coupling connects
 certificate and travel through insurance/payment semantic resonance while
 transferring no authority, finalization, execution, or DRS write.
+
+Cross-domain DRS Bridge v0.1 is local proof-only traversal over those bounded
+coupling relations. It uses certificate evidence to inform travel checks, but
+cannot decide, finalize, execute, write DRS, or prove truth.
 
 ## Exclusions
 

@@ -1283,17 +1283,18 @@ Current implementation should remain focused on:
 
 Current proven / near-proven layers:
 
-text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1
+text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1 Cross-domain DRS Bridge v0.1
 
 Near-term engineering path:
 
-text 1. Sync the closed applied + fractal + coupling checkpoint docs. 2. Cross-domain DRS Traversal / DRS Bridge Proof v0.1. 3. Needle adversarial / safety pack. 4. External DRS Pointer Protocol v0.1. 5. Read-only connector / real API sandbox. 6. Chaos Applied Stress Pack. 7. Math Appendix sync for Fractal DAC + DRS reuse + coupling. 8. Production Boundary Design Docs. 9. Only then Marennya quarantine-first. 10. Then UP transfer/opportunity.
+text 1. Sync the closed Cross-domain DRS Bridge checkpoint docs. 2. Needle adversarial / safety pack. 3. External DRS Pointer Protocol v0.1. 4. Read-only connector / real API sandbox. 5. Chaos Applied Stress Pack. 6. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge. 7. Production Boundary Design Docs. 8. Only then Marennya quarantine-first. 9. Then UP transfer/opportunity.
 
 Completed checkpoint: Travel / Multi-condition Readiness, Multi-domain Applied
 Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and Dual Fractal Coupling
-v0.1. Still deferred: External DRS implementation, real child agents, Gemini
-child-cell live mode, Telegram natural assistant, Marennya, UP, and production
-autonomy.
+v0.1. Cross-domain DRS Bridge v0.1 is also complete as local proof-only
+traversal. Still deferred: External DRS implementation, global semantic fabric,
+public Internet of Meaning, real child agents, Gemini child-cell live mode,
+Telegram natural assistant, Marennya, UP, and production autonomy.
 
 Strategic future path:
 

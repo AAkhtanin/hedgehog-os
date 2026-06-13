@@ -179,6 +179,11 @@ Current reports:
   - Dual Fractal Coupling / Interlocking DAC Proof v0.1 evidence.
   - Confirms targeted tests passed=35 and semantic coupling transfers no authority, finalization, execution, or DRS write.
 
+- `auditor_cross_domain_drs_bridge_v01.log`
+  - Cross-domain DRS Traversal / DRS Bridge Proof v0.1 evidence for commits `2a48d35`, `1b6b5e0`, and `a2721af`.
+  - Confirms targeted tests passed=30, sensitive scan clean, bridge records observed=2, and traversal steps observed=2.
+  - Confirms `external_drs_implemented=false` and `global_semantic_fabric_claimed=false`; traversal informs but cannot decide, finalize, execute, transfer authority, or prove truth.
+
 ## Current Applied Auditor Commands
 
 ```bash

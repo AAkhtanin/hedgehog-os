@@ -1287,7 +1287,7 @@ text Root authority Orchestrator-stage trace AVF / Attractor formation Architect
 
 Near-term engineering path:
 
-text Completed: External DRS Pointer Protocol v0.1, Read-only Enterprise Connector Sandbox v0.1, External Evidence Acceptance Gate v0.1, and Bounded LLM Semantic Executor Node v0.1 closed through audit. Current: Enterprise Chaos Pack v0.1 or the next explicitly approved layer. Then: Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; Enterprise Killer Demo v0.1; Public Auditor Packet / Whitepaper draft.
+text Completed: External DRS Pointer Protocol v0.1, Read-only Enterprise Connector Sandbox v0.1, External Evidence Acceptance Gate v0.1, and Bounded LLM Semantic Executor Node v0.1 closed through docs sync. Current: Enterprise Chaos Pack v0.1 or the next explicitly approved layer. Then: Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; Enterprise Killer Demo v0.1; Public Auditor Packet / Whitepaper draft.
 
 Completed checkpoint: Travel / Multi-condition Readiness, Multi-domain Applied
 Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and Dual Fractal Coupling

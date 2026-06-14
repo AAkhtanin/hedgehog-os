@@ -709,6 +709,25 @@ access, and production persistence remain future work.
 
 Closed commits: `2a48d35`, `1b6b5e0`, and `a2721af`.
 
+## Needle adversarial / safety pack v0.1 Checkpoint
+
+Needle adversarial / safety pack v0.1 is a deterministic local proof that
+semantic retrieval, DRS bridge traversal, coupling edges, child-cell
+proposals, DAG nodes, GT advice, audit hashes, and NeedleCandidate references
+cannot self-promote into authority, truth, installed Needle, capability, or
+external action.
+
+Eight adversarial escalation attempts were observed and all eight were
+blocked. The bridge provenance-laundering attempt was quarantined and blocked.
+The proof confirms: retrieval is not truth; bridge traversal is not authority;
+NeedleCandidate is not installed Needle; DAG node is not Root; GT is not
+authority; and Root remains sovereign.
+
+This checkpoint does not implement NeedleFactory, install production Needles,
+implement External DRS or global semantic fabric, run production RAG, call
+Gemini/network/Telegram, invoke Marennya/UP, or grant production autonomy.
+Closed commits: `5b5fa3a`, `165d679`, and `1f9d89d`.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -868,13 +887,14 @@ Completed recent layers:
 - Controlled Fractal DAC Expansion v0.1.
 - Dual Fractal Coupling / Interlocking DAC Proof v0.1.
 - Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
+- Needle adversarial / safety pack v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Current: docs sync for Cross-domain DRS Bridge v0.1.
-- Next: Needle adversarial / safety pack.
-- Then: External DRS Pointer Protocol v0.1; read-only connector / real API sandbox; Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge; and Production Boundary Design Docs.
+- Current: docs sync for Needle adversarial / safety pack v0.1.
+- Next: External DRS Pointer Protocol v0.1.
+- Then: read-only connector / real API sandbox; Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety; and Production Boundary Design Docs.
 - Only after that: Marennya quarantine-first v0.1, followed by UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.

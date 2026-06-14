@@ -184,6 +184,11 @@ Current reports:
   - Confirms targeted tests passed=30, sensitive scan clean, bridge records observed=2, and traversal steps observed=2.
   - Confirms `external_drs_implemented=false` and `global_semantic_fabric_claimed=false`; traversal informs but cannot decide, finalize, execute, transfer authority, or prove truth.
 
+- `auditor_needle_adversarial_safety_pack_v01.log`
+  - Needle adversarial / safety pack v0.1 evidence for commits `5b5fa3a`, `165d679`, and `1f9d89d`.
+  - Confirms targeted tests passed=30, adversarial attempts observed=8, attempts blocked=8, quarantined attempts observed=1, and sensitive scan clean.
+  - Confirms no installed Needle, external action, production persistence, or global/external DRS write.
+
 ## Current Applied Auditor Commands
 
 ```bash

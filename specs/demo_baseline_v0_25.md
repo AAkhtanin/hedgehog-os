@@ -1253,11 +1253,12 @@ Corrected next order:
 27. Controlled Fractal DAC Expansion v0.1 - complete.
 28. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
 29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
-30. Needle adversarial / safety pack.
+30. Needle adversarial / safety pack v0.1 - complete.
 31. External DRS Pointer Protocol v0.1.
 32. Read-only connector / real API sandbox.
 33. Chaos Applied Stress Pack.
-34. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge.
+34. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
+    Needle safety.
 35. Production Boundary Design Docs.
 36. Only then Marennya quarantine-first.
 37. Then UP transfer/opportunity.
@@ -1272,6 +1273,7 @@ python -m demo.run_multi_domain_applied_smoke_v02
 python -m demo.run_controlled_fractal_dac_expansion_v01
 python -m demo.run_dual_fractal_coupling_v01
 python -m demo.run_cross_domain_drs_bridge_v01
+python -m demo.run_needle_adversarial_safety_pack_v01
 ```
 
 Human-readable auditor walkthroughs:
@@ -1282,6 +1284,7 @@ python -m demo.run_human_multi_domain_applied_walkthrough_v02
 python -m demo.run_human_controlled_fractal_dac_walkthrough_v01
 python -m demo.run_human_dual_fractal_coupling_walkthrough_v01
 python -m demo.run_human_cross_domain_drs_bridge_walkthrough_v01
+python -m demo.run_human_needle_adversarial_safety_pack_walkthrough_v01
 ```
 
 These deterministic local proofs create no real child agents, external action,
@@ -1292,6 +1295,12 @@ Cross-domain DRS Bridge v0.1 locally traverses certificate evidence to inform
 travel checks. The bridge cannot decide, finalize, execute, transfer
 authority, or write global/external DRS. Traversal trace is not truth, and
 bridge traversal is not provenance laundering.
+
+Needle adversarial / safety pack v0.1 attacks attempts to turn retrieval,
+bridge traversal, coupling, DAG nodes, GT advice, child-cell proposals, audit
+hashes, or NeedleCandidate references into authority, truth, capability,
+installed Needle, or action. All attempts are blocked or quarantined-blocked.
+This is prerequisite safety before External DRS Pointer Protocol.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

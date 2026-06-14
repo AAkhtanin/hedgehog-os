@@ -188,11 +188,12 @@ Current engineering order:
 27. Controlled Fractal DAC Expansion v0.1 - complete.
 28. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
 29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
-30. Needle adversarial / safety pack.
+30. Needle adversarial / safety pack v0.1 - complete.
 31. External DRS Pointer Protocol v0.1.
 32. Read-only connector / real API sandbox.
 33. Chaos Applied Stress Pack.
-34. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge.
+34. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
+    Needle safety.
 35. Production Boundary Design Docs.
 36. Only then Marennya quarantine-first.
 37. Then UP transfer/opportunity.
@@ -265,6 +266,34 @@ Bridge traversal is not provenance laundering.
 Cross-domain DRS Bridge v0.1 does not implement External DRS, global DRS,
 public semantic fabric, remote retrieval, connector/API access, signatures,
 trust registry, revocation, or production persistence.
+
+## Needle Safety Geometry Checkpoint
+
+NeedleCandidate is not installed Needle. An installed Needle requires an
+explicit Root-reviewed installation boundary and safety checks. Capability
+cannot emerge merely because a candidate, retrieved record, bridge traversal,
+coupling edge, child-cell proposal, DAG node, GT recommendation, or audit hash
+exists.
+
+Safety formulas:
+
+- DAG node is not Root.
+- RAG-like retrieval result is not truth.
+- DRS bridge is not authority.
+- Traversal trace is not truth.
+- Bridge traversal is not provenance laundering.
+- Coupling edge is not command channel.
+- Child-cell proposal is not parent final.
+- NeedleCandidate is not installed Needle.
+- GT is not authority.
+- Audit hash chain is not truth.
+- Root review is required for capability.
+- Root final is required for action.
+- Explicit installation boundary is required for Needle.
+- No external action without permission and Root.
+
+Provenance-laundering attempts must be quarantined and blocked. Root remains
+sovereign.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

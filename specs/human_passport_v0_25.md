@@ -737,11 +737,12 @@ Corrected roadmap:
 13. Controlled Fractal DAC Expansion v0.1 - complete.
 14. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
 15. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
-16. Needle adversarial / safety pack.
+16. Needle adversarial / safety pack v0.1 - complete.
 17. External DRS Pointer Protocol v0.1.
 18. Read-only connector / real API sandbox.
 19. Chaos Applied Stress Pack.
-20. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge.
+20. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
+    Needle safety.
 21. Production Boundary Design Docs.
 22. Only then Marennya quarantine-first, followed by UP transfer/opportunity.
 
@@ -2448,9 +2449,9 @@ commits `0bbf81a`, `3fdc78e`, and `420b005`.
 This layer consumes NeedleCandidate source proof but creates no new
 NeedleCandidate. It is not production DRS, persistence, a real vector database,
 global/external DRS, External DRS pointer protocol, direct ready, real external
-action, Marennya, UP, or autonomous production runtime. After the local
-Cross-domain DRS Bridge checkpoint, the next engineering direction is the
-Needle adversarial / safety pack.
+action, Marennya, UP, or autonomous production runtime. After the local Needle
+adversarial / safety checkpoint, the next engineering direction is External
+DRS Pointer Protocol v0.1, not External DRS implementation.
 
 ## 20.6 Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 
@@ -2517,6 +2518,25 @@ retrieval, public or global semantic fabric, signatures, trust registry,
 revocation, production persistence, or adversarial external-record safety.
 Root-only final authority and "vassal of my vassal is not my vassal" remain
 preserved.
+
+## 20.9 Needle adversarial / safety pack v0.1 Checkpoint
+
+Needle adversarial / safety pack v0.1 is complete. It validates safety
+boundaries before External DRS Pointer Protocol by proving that eight
+escalation attempts are blocked. The provenance-laundering attempt is
+quarantined and blocked.
+
+The proof establishes that retrieval is not truth, DRS bridge traversal is not
+authority, coupling edges are not command channels, child proposals are not
+parent finals, DAG nodes are not Root, GT is not authority, audit hashes are
+not truth, and NeedleCandidate is not installed Needle. Root review is required
+for capability, Root final is required for action, and an explicit installation
+boundary is required for a Needle.
+
+This checkpoint does not prove full adversarial safety for all future external
+records and does not implement NeedleFactory, External DRS, production RAG,
+production Needle installation, or production autonomy. Root-only final
+authority remains preserved.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

@@ -119,6 +119,16 @@ Anti-reduction rules:
   truth, and bridge traversal is not provenance laundering.
 - DRS bridge traversal must not bypass Root, ConflictCheck, GT, audit,
   Permission/NeedsUser, freshness, or quarantine/deadend checks.
+- No retrieval, bridge, coupling, child-cell, DAG, GT, audit, or
+  NeedleCandidate mechanism may self-promote into an installed Needle or
+  capability.
+- NeedleCandidate remains only a candidate/reference until an explicit
+  Root-reviewed installation boundary and safety checks exist.
+- RAG-like retrieval must not be used as truth proof. DAG nodes must not claim
+  Root authority. Bridge traversal must not launder provenance.
+- GT must not install a Needle, grant authority, execute action, or mark truth.
+- Do not use Needle safety pack language to claim NeedleFactory or production
+  Needle installation.
 - Do not use DRS Bridge language to claim External DRS, global semantic
   fabric, public Internet of Meaning, remote retrieval, or production
   persistence.
@@ -126,8 +136,9 @@ Anti-reduction rules:
   Multi-domain Applied Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and
   Dual Fractal Coupling v0.1. Cross-domain DRS Bridge v0.1 adds local reviewed
   traversal only.
-- The next engineering layer is Needle adversarial / safety pack, not External
-  DRS or Marennya / UP.
+- Needle adversarial / safety pack v0.1 is complete. The next engineering layer
+  is External DRS Pointer Protocol v0.1, not External DRS implementation or
+  Marennya / UP.
 - Codex must not run long tests unless the user explicitly requests them; the
   user runs long, focused, and full-suite tests manually.
 
@@ -402,7 +413,13 @@ evidence, but does not implement External DRS, global DRS, remote retrieval,
 public semantic fabric, or production persistence. Bridge traversal can inform
 but cannot decide, finalize, execute, transfer authority, or prove truth.
 
-Corrected engineering order: current Cross-domain DRS Bridge docs sync -> Needle adversarial/safety pack -> External DRS Pointer Protocol -> read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
+Needle adversarial / safety pack v0.1 is complete. It blocks eight escalation
+attempts across retrieval, bridge traversal, coupling, child cells, DAG, GT,
+audit, and NeedleCandidate boundaries; provenance laundering is quarantined
+and blocked. It does not implement NeedleFactory, production installation,
+External DRS, production RAG, or autonomy.
+
+Corrected engineering order: current Needle adversarial/safety docs sync -> External DRS Pointer Protocol -> read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

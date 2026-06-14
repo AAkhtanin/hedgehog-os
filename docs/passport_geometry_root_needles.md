@@ -196,8 +196,8 @@ Current engineering order:
 35. External Evidence Acceptance Gate v0.1 - complete.
 36. External Evidence Acceptance Gate docs sync - complete.
 37. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
-38. Enterprise Chaos Pack v0.1 or next explicitly approved layer.
-40. Compute Collapse Enterprise Bench v0.1.
+38. Enterprise Chaos Pack v0.1 - complete through docs sync.
+39. Compute Collapse Enterprise Bench v0.1 or next approved hardening layer.
 41. Math Appendix Sync v0.4.
 42. Production Boundary Design Docs v0.1.
 43. Enterprise Killer Demo v0.1.
@@ -351,6 +351,20 @@ The LLM is `executor_node_capability`, not Root, Orchestrator, Architect, GT,
 Post V&V, or a new global actor. It cannot create or modify PlanGraph, route,
 accept evidence, prove truth, create ready status, execute action, write DRS,
 install Needle, or create Root Final. Root remains sovereign.
+
+## Enterprise Chaos Pack Geometry Checkpoint
+
+Enterprise Chaos Pack v0.1 composes closed non-sovereign surfaces into one
+dirty local proof request and attacks their boundaries. Connector observation,
+AcceptedEvidence, DRS reuse, external pointer, bridge traversal, SemanticDraft,
+NeedleCandidate, child cell, GT recommendation, audit hash, permission /
+needs_user, and ResultProposal remain non-final and non-sovereign.
+
+All 18 escalation attempts are blocked; four provenance, write, stale-time,
+and conflicting-source attempts are quarantined and blocked. Root rejects
+enterprise-ready, action, and truth. Audit hash records continuity, not truth.
+This is not production security, real-world safety, a killer demo, or a
+multi-LLM showcase. Root remains sovereign.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

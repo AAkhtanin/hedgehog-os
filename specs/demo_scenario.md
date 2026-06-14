@@ -986,8 +986,9 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: Bounded LLM Semantic Executor Node v0.1 closed through
-audit -> current Enterprise Chaos Pack v0.1 or the next explicitly approved layer -> Compute Collapse Enterprise Bench v0.1
+Corrected next order: Enterprise Chaos Pack v0.1 complete through docs sync ->
+current Compute Collapse Enterprise Bench v0.1 or the next explicitly approved
+hardening layer
 -> Math Appendix Sync v0.4 -> Production Boundary Design Docs v0.1 ->
 Enterprise Killer Demo v0.1 -> Public Auditor Packet / Whitepaper draft.
 
@@ -1056,6 +1057,14 @@ semantic path. Architect creates PlanGraph before execution; Executor runs
 wraps a SemanticDraftResultProposal; and Post V&V, GT advisory, and Root Final
 remain mandatory. The LLM is `executor_node_capability`, not a global actor,
 and all nine attempted authority escalations are blocked.
+
+Enterprise Chaos Pack v0.1 combines the closed enterprise proof surfaces into
+one dirty synthetic request. All 18 attempts to promote observations,
+accepted evidence, DRS reuse, pointers, bridge traversal, SemanticDraft,
+NeedleCandidate, child-cell, GT, audit hash, permission, or ResultProposal into
+authority, truth, ready status, action, write, or installed capability are
+blocked. Four unsafe cross-boundary cases are quarantined and blocked. This is
+local proof-only hardening, not a killer demo or multi-LLM showcase.
 
 ## Exclusions
 

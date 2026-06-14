@@ -1261,8 +1261,8 @@ Corrected next order:
 35. External Evidence Acceptance Gate v0.1 - complete.
 36. External Evidence Acceptance Gate docs sync - complete.
 37. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
-38. Enterprise Chaos Pack v0.1 or next explicitly approved layer.
-40. Compute Collapse Enterprise Bench v0.1.
+38. Enterprise Chaos Pack v0.1 - complete through docs sync.
+39. Compute Collapse Enterprise Bench v0.1 or next approved hardening layer.
 41. Math Appendix Sync v0.4.
 42. Production Boundary Design Docs v0.1.
 43. Enterprise Killer Demo v0.1.
@@ -1328,8 +1328,9 @@ Acceptance Gate v0.1 is a separate completed layer.
 External Evidence Acceptance Gate v0.1 creates six candidates and validation
 packets. Root accepts two, rejects three, and quarantines one. AcceptedEvidence
 remains not truth, not ready, not action, not DRS write, and not Needle. The
-next approved implementation layer is Enterprise Chaos Pack v0.1 or another
-explicitly approved roadmap item.
+next approved implementation layer after the current Enterprise Chaos docs
+sync is Compute Collapse Enterprise Bench v0.1 or another explicitly approved
+hardening layer.
 
 Bounded LLM Semantic Executor Node v0.1 keeps the model inside Executor as
 `executor_node_capability`. Architect creates the four-node PlanGraph first;
@@ -1338,6 +1339,14 @@ Executor wraps SemanticDraftResultProposal; then Post V&V, GT advisory, and
 Root Final remain mandatory. All nine escalation attempts are blocked, with
 no network, Gemini call, action, DRS write, Needle installation, or production
 persistence.
+
+Enterprise Chaos Pack v0.1 assembles one dirty enterprise request across
+connector, accepted-evidence, stale-state, DRS reuse, external pointer, bridge,
+SemanticDraft, NeedleCandidate, child-cell, GT, audit, permission, and
+ResultProposal surfaces. All 18 escalation attempts are detected and blocked;
+four are quarantined and blocked. Root creates the only final and rejects
+enterprise-ready, action, and truth. The pack performs no network/Gemini call,
+action, DRS write, Needle installation, or production persistence.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

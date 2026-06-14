@@ -2565,6 +2565,23 @@ The LLM is an `executor_node_capability`, not an authority term in the
 equation. It does not modify `PlanGraph_preexists`; SemanticDraft is not truth
 or final; and Post V&V, GT, and Root remain required.
 
+Enterprise Chaos Pack v0.1 checks composition under dirty inputs:
+
+```text
+for attempt in enterprise_escalations:
+    detected(attempt) = true
+    blocked(attempt) = true
+    authority_transfer(attempt) = 0
+    action(attempt) = 0
+    truth(attempt) = 0
+
+RootFinal = blocked_all_escalations
+```
+
+Quarantine remains containment, not acceptance, truth, readiness, or action.
+The deterministic local result does not establish production security or
+real-world safety.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

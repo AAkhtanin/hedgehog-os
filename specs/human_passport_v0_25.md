@@ -745,8 +745,8 @@ Corrected roadmap:
 21. External Evidence Acceptance Gate v0.1 - complete.
 22. External Evidence Acceptance Gate docs sync - complete.
 23. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
-24. Enterprise Chaos Pack v0.1 or next explicitly approved layer.
-26. Compute Collapse Enterprise Bench v0.1.
+24. Enterprise Chaos Pack v0.1 - complete through docs sync.
+25. Compute Collapse Enterprise Bench v0.1 or next approved hardening layer.
 27. Math Appendix Sync v0.4.
 28. Production Boundary Design Docs v0.1.
 29. Enterprise Killer Demo v0.1.
@@ -2616,6 +2616,55 @@ GT advisory, and Root semantic final. All nine adversarial attempts were
 blocked. It uses `source_evidence_mode=closed_checkpoint_metadata_only` and
 `source_collectors_replayed=false`; no network, Gemini call, or production
 persistence occurred.
+
+## 20.14 Enterprise Chaos Pack v0.1 Checkpoint
+
+Enterprise Chaos Pack v0.1 is complete through proof `082753e`, human
+walkthrough `104105b`, audit log `668a51a`, and docs sync.
+It is a deterministic local proof-only stress pack over one dirty enterprise
+request combining connector observations, accepted evidence, stale legal
+state, DRS reuse, external pointer claims, cross-domain bridge traversal, LLM
+SemanticDraft, NeedleCandidate, child-cell claims, GT advice, permission /
+needs_user, audit hash, and ResultProposal bypass attempts.
+
+The 18 detected and blocked escalation classes are:
+
+- `connector_observation_to_truth`
+- `connector_observation_to_accepted_evidence`
+- `accepted_evidence_to_external_action`
+- `accepted_evidence_to_ready_status`
+- `semantic_draft_to_truth`
+- `semantic_draft_to_root_final`
+- `semantic_draft_to_action`
+- `drs_reuse_to_authority`
+- `external_pointer_to_global_drs_write`
+- `bridge_traversal_to_provenance_laundering`
+- `needlecandidate_to_installed_needle`
+- `child_cell_to_autonomous_actor`
+- `gt_recommendation_to_root_authority`
+- `audit_hash_to_truth`
+- `permission_needsuser_to_execution`
+- `root_bypass_via_resultproposal`
+- `time_envelope_stale_to_current`
+- `conflicting_sources_to_ready`
+
+The external-pointer write, bridge provenance-laundering, stale-time-envelope,
+and conflicting-source attempts are quarantined and blocked. The report uses
+`source_evidence_mode=closed_checkpoint_metadata_only`,
+`source_collectors_replayed=false`, and `source_collectors_replayed_count=0`
+for four closed checkpoints.
+
+Observed totals: attempts observed/detected/blocked=18/18/18,
+quarantined-and-blocked=4, Root finals=1, and external actions, global DRS
+writes, external DRS writes, installed Needles, network calls, Gemini calls,
+and production-persistence writes=0. `root_remains_final_authority=true`,
+`enterprise_ready=false`, and `truth_proven=false`.
+
+This does not prove production security or real-world safety, perform real
+connector/API access, call Gemini/network, execute external action, implement
+global/external DRS, install Needles, create production persistence, implement
+a killer demo or multi-LLM showcase, or authorize Marennya/UP. Audit hash
+records continuity, not truth.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

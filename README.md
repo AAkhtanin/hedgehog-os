@@ -897,6 +897,29 @@ action, write DRS, install a Needle, or create Root Final.
 Closed commits: proof `863f850`, human walkthrough `fc328c8`, wording cleanup
 `4659f3e`, and audit log `0e1626c`.
 
+## Enterprise Chaos Pack v0.1 Checkpoint
+
+Enterprise Chaos Pack v0.1 stress-tested the closed proof stack against dirty
+enterprise escalation attempts. It assembled one synthetic enterprise request
+from connector observations, accepted evidence, stale legal state, DRS reuse,
+external pointer claims, LLM SemanticDraft, NeedleCandidate, child-cell, GT,
+and ResultProposal surfaces.
+
+All 18 escalation attempts were detected and blocked; four were quarantined
+and blocked. Root rejected enterprise-ready, action, and truth. No network,
+Gemini, external action, global/external DRS write, Needle installation, or
+production persistence occurred.
+
+This deterministic local proof-only pack uses
+`source_evidence_mode=closed_checkpoint_metadata_only`,
+`source_collectors_replayed=false`, and `source_collectors_replayed_count=0`
+for four closed source checkpoints. Audit hash records continuity, not truth.
+It does not prove production security or real-world safety, and it is neither
+a killer demo nor a multi-LLM showcase.
+
+Closed commits: proof `082753e`, human walkthrough `104105b`, and audit log
+`668a51a`. Status: complete through docs sync.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1081,13 +1104,13 @@ Completed recent layers:
 - Read-only Enterprise Connector Sandbox v0.1.
 - External Evidence Acceptance Gate v0.1.
 - Bounded LLM Semantic Executor Node v0.1.
+- Enterprise Chaos Pack v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Completed: Bounded LLM Semantic Executor Node v0.1, closed through docs sync.
-- Current: Enterprise Chaos Pack v0.1 or the next explicitly approved layer.
-- Next: Compute Collapse Enterprise Bench v0.1 or the next explicitly approved layer after Enterprise Chaos.
+- Completed: Enterprise Chaos Pack v0.1, complete through docs sync.
+- Current: Compute Collapse Enterprise Bench v0.1 or the next explicitly approved hardening layer.
 - Then: Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; Enterprise Killer Demo v0.1; and Public Auditor Packet / Whitepaper draft.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.

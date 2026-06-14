@@ -207,6 +207,12 @@ Current reports:
   - Confirms candidate wiring keeps EvidenceCandidate `candidate_only` before Root decision.
   - Confirms the heavy historical collector replay check, overclaim scan, and sensitive scan are clean.
 
+- `auditor_enterprise_chaos_pack_v01.log`
+  - Enterprise Chaos Pack v0.1 evidence for commits `082753e`, `104105b`, and `668a51a`.
+  - Confirms 18 enterprise chaos attempts were observed, detected, and blocked; four were quarantined and blocked.
+  - Confirms four closed checkpoints were referenced with `source_evidence_mode=closed_checkpoint_metadata_only`, `source_collectors_replayed=false`, and replay count=0.
+  - Confirms Root rejected enterprise-ready, action, and truth, with no network, Gemini, DRS write, installed Needle, external action, or production persistence.
+
 ## Current Applied Auditor Commands
 
 ```bash

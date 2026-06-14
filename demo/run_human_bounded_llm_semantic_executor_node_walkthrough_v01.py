@@ -45,7 +45,7 @@ def render_human_bounded_llm_semantic_executor_node_walkthrough_v01(report) -> s
         "Post V&V -> GT -> Root Final.",
         "",
         "There is no LLM layer between Architect and Executor. There is no new global "
-        "actor, Gemini Actor, LLM Agent, or Semantic Actor authority. The LLM is only "
+        "actor, global Gemini authority, global LLM agent authority, or post-Architect semantic authority. The LLM is only "
         "an executor_node_capability.",
         "",
         "Architect creates PlanGraph before LLM execution. Executor runs "

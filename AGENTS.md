@@ -55,7 +55,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → Applied Warehouse Semantic Demo → Applied Certificate Readiness Demo → Permission/NeedsUser UX Proof → NeedleCandidate lifecycle proof → Applied DRS Retrieval / Reuse → DRS adversarial stress → all-layers super-smoke → human auditor walkthrough → next: Travel / Multi-condition Readiness → only later: External DRS, Marennya / UP
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 complete → current: Codex/performance-rule hygiene patch → next: read-only connector sandbox → only later: External DRS implementation, Marennya / UP
 
 Do not jump ahead to:
 
@@ -141,7 +141,11 @@ Anti-reduction rules:
   hygiene, not full proof replay.
 - Full historical replay belongs to explicit audit/super-smoke commands.
   Codex must not introduce heavy historical collector replay in targeted tests
-  unless explicitly requested.
+  unless explicitly requested. If a new targeted proof imports heavy
+  historical collectors, Codex must justify why replay is required.
+- For new untracked files, ordinary `git diff --stat` is empty unless the files
+  are staged. Codex must use `git status --short` and explicitly report that
+  limitation instead of claiming `git diff --stat` shows the untracked changes.
 - Do not use External DRS Pointer language to claim External DRS
   implementation, remote retrieval, connector/API access, trusted evidence,
   or public Internet of Meaning.
@@ -440,7 +444,7 @@ blocked. Pointer claims remain untrusted and non-final. Targeted tests use
 closed-checkpoint metadata with `source_collectors_replayed=false`; explicit
 audit/super-smoke runs own full historical replay.
 
-Corrected engineering order: current External DRS Pointer Protocol docs sync -> Codex/performance-rule hygiene patch -> read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
+Corrected engineering order: External DRS Pointer Protocol complete -> current Codex/performance-rule hygiene patch -> next read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

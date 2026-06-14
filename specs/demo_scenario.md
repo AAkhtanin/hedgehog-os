@@ -986,10 +986,10 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: current External DRS Pointer Protocol docs sync ->
-Codex/performance-rule hygiene patch -> read-only connector sandbox -> Chaos
-Applied Stress Pack -> Math Appendix sync -> Production Boundary Design Docs ->
-only then Marennya -> UP.
+Corrected next order: External DRS Pointer Protocol complete -> current
+Codex/performance-rule hygiene patch -> next read-only connector sandbox ->
+Chaos Applied Stress Pack -> Math Appendix sync -> Production Boundary Design
+Docs -> only then Marennya -> UP.
 
 ## Applied + Fractal + Coupling Checkpoint Commands
 

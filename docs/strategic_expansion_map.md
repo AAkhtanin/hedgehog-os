@@ -1287,7 +1287,7 @@ text Root authority Orchestrator-stage trace AVF / Attractor formation Architect
 
 Near-term engineering path:
 
-text 1. Sync the closed External DRS Pointer Protocol checkpoint docs. 2. Codex/performance-rule hygiene patch. 3. Read-only connector / real API sandbox v0.1. 4. Chaos Applied Stress Pack. 5. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer. 6. Production Boundary Design Docs. 7. Only then Marennya quarantine-first. 8. Then UP transfer/opportunity.
+text Completed: External DRS Pointer Protocol v0.1. Current: Codex/performance-rule hygiene patch. Next: read-only connector / real API sandbox v0.1. Then: Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer; Production Boundary Design Docs; only then Marennya quarantine-first; then UP transfer/opportunity.
 
 Completed checkpoint: Travel / Multi-condition Readiness, Multi-domain Applied
 Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and Dual Fractal Coupling

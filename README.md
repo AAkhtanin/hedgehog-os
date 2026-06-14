@@ -769,7 +769,7 @@ audit/super-smoke replay.
 
 Closed commits: `0a690c5`, `3e3cc3d`, and `2036247`.
 
-Safety rules for this checkpoint:
+## General Reuse Safety Rules
 
 - Work != Quarantine.
 - Work != DeadEnds.
@@ -934,9 +934,10 @@ Completed recent layers:
 
 Next engineering focus:
 
-- Current: docs sync for External DRS Pointer Protocol v0.1.
-- Next: Codex/performance-rule hygiene patch.
-- Then: read-only connector / real API sandbox v0.1; Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer; and Production Boundary Design Docs.
+- Completed: External DRS Pointer Protocol v0.1.
+- Current: Codex/performance-rule hygiene patch.
+- Next: read-only connector / real API sandbox v0.1.
+- Then: Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer; and Production Boundary Design Docs.
 - Only after that: Marennya quarantine-first v0.1, followed by UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.

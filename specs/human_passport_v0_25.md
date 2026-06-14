@@ -741,14 +741,15 @@ Corrected roadmap:
 17. External DRS Pointer Protocol v0.1 - complete.
 18. Codex/performance-rule hygiene patch - complete.
 19. Read-only Enterprise Connector Sandbox v0.1 - complete.
-20. Read-only Enterprise Connector Sandbox docs sync.
-21. External Evidence Acceptance Gate v0.1.
-22. Bounded Gemini / LLM Semantic Actor v0.1.
-23. Enterprise Chaos Pack v0.1.
-24. Compute Collapse Enterprise Bench v0.1.
-25. Math Appendix Sync v0.4.
-26. Production Boundary Design Docs v0.1.
-27. Enterprise Killer Demo v0.1.
+20. Read-only Enterprise Connector Sandbox docs sync - complete.
+21. External Evidence Acceptance Gate v0.1 - complete.
+22. External Evidence Acceptance Gate docs sync.
+23. Bounded Gemini / LLM Semantic Actor v0.1.
+24. Enterprise Chaos Pack v0.1.
+25. Compute Collapse Enterprise Bench v0.1.
+26. Math Appendix Sync v0.4.
+27. Production Boundary Design Docs v0.1.
+28. Enterprise Killer Demo v0.1.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2573,6 +2574,24 @@ ready status. Root remains final authority.
 This checkpoint prepares External Evidence Acceptance Gate v0.1. It does not
 implement real connector/API access, network retrieval, evidence acceptance,
 DRS writes, external actions, installed Needles, or production persistence.
+
+## 20.12 External Evidence Acceptance Gate v0.1 Checkpoint
+
+External Evidence Acceptance Gate v0.1 is complete as a deterministic local
+proof-only acceptance boundary:
+`ConnectorObservation -> EvidenceCandidate -> ValidationPacket -> RootDecision
+-> AcceptedEvidence / RejectedEvidence / QuarantinedEvidence`.
+
+The proof creates six candidates and validation packets. Root accepts two,
+rejects three, and quarantines one. EvidenceCandidate remains candidate-only;
+ValidationPacket is not Root acceptance; AcceptedEvidence exists only after
+Root decision and remains bounded from truth, ready status, action, DRS write,
+and Needle installation.
+
+This checkpoint does not implement External DRS, real connectors/APIs, real
+signature/trust/revocation validation, network access, production persistence,
+action execution, ready status, or Needle installation. Root remains final
+authority.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

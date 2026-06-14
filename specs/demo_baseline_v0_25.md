@@ -1257,14 +1257,15 @@ Corrected next order:
 31. External DRS Pointer Protocol v0.1 - complete.
 32. Codex/performance-rule hygiene patch - complete.
 33. Read-only Enterprise Connector Sandbox v0.1 - complete.
-34. Read-only Enterprise Connector Sandbox docs sync.
-35. External Evidence Acceptance Gate v0.1.
-36. Bounded Gemini / LLM Semantic Actor v0.1.
-37. Enterprise Chaos Pack v0.1.
-38. Compute Collapse Enterprise Bench v0.1.
-39. Math Appendix Sync v0.4.
-40. Production Boundary Design Docs v0.1.
-41. Enterprise Killer Demo v0.1.
+34. Read-only Enterprise Connector Sandbox docs sync - complete.
+35. External Evidence Acceptance Gate v0.1 - complete.
+36. External Evidence Acceptance Gate docs sync.
+37. Bounded Gemini / LLM Semantic Actor v0.1.
+38. Enterprise Chaos Pack v0.1.
+39. Compute Collapse Enterprise Bench v0.1.
+40. Math Appendix Sync v0.4.
+41. Production Boundary Design Docs v0.1.
+42. Enterprise Killer Demo v0.1.
 
 ## Applied + Fractal + Coupling Demo Commands
 
@@ -1279,6 +1280,7 @@ python -m demo.run_cross_domain_drs_bridge_v01
 python -m demo.run_needle_adversarial_safety_pack_v01
 python -m demo.run_external_drs_pointer_protocol_v01
 python -m demo.run_read_only_enterprise_connector_sandbox_v01
+python -m demo.run_external_evidence_acceptance_gate_v01
 ```
 
 Human-readable auditor walkthroughs:
@@ -1292,6 +1294,7 @@ python -m demo.run_human_cross_domain_drs_bridge_walkthrough_v01
 python -m demo.run_human_needle_adversarial_safety_pack_walkthrough_v01
 python -m demo.run_human_external_drs_pointer_protocol_walkthrough_v01
 python -m demo.run_human_read_only_enterprise_connector_sandbox_walkthrough_v01
+python -m demo.run_human_external_evidence_acceptance_gate_walkthrough_v01
 ```
 
 These deterministic local proofs create no real child agents, external action,
@@ -1318,8 +1321,14 @@ real API sandbox, not External DRS implementation.
 Read-only Enterprise Connector Sandbox v0.1 observes local bank, legal,
 warehouse, and logistics responses as read-only observations. Clean bank
 output remains untrusted; stale legal output is blocked/quarantined; no
-connector output creates truth, ready status, DRS write, or action. The next
-layer is External Evidence Acceptance Gate v0.1, which is not implemented here.
+connector output creates truth, ready status, DRS write, or action. The
+connector checkpoint does not implement acceptance; External Evidence
+Acceptance Gate v0.1 is a separate completed layer.
+
+External Evidence Acceptance Gate v0.1 creates six candidates and validation
+packets. Root accepts two, rejects three, and quarantines one. AcceptedEvidence
+remains not truth, not ready, not action, not DRS write, and not Needle. The
+next layer is Bounded Gemini / LLM Semantic Actor v0.1.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

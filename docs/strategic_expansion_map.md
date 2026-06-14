@@ -1283,18 +1283,18 @@ Current implementation should remain focused on:
 
 Current proven / near-proven layers:
 
-text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1 Cross-domain DRS Bridge v0.1 Needle adversarial / safety pack v0.1 External DRS Pointer Protocol v0.1 Read-only Enterprise Connector Sandbox v0.1
+text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1 Cross-domain DRS Bridge v0.1 Needle adversarial / safety pack v0.1 External DRS Pointer Protocol v0.1 Read-only Enterprise Connector Sandbox v0.1 External Evidence Acceptance Gate v0.1
 
 Near-term engineering path:
 
-text Completed: External DRS Pointer Protocol v0.1 and Read-only Enterprise Connector Sandbox v0.1. Current: Read-only Enterprise Connector Sandbox docs sync. Next: External Evidence Acceptance Gate v0.1. Then: Bounded Gemini / LLM Semantic Actor v0.1; Enterprise Chaos Pack v0.1; Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; Enterprise Killer Demo v0.1; Public Auditor Packet / Whitepaper draft.
+text Completed: External DRS Pointer Protocol v0.1, Read-only Enterprise Connector Sandbox v0.1, and External Evidence Acceptance Gate v0.1. Current: External Evidence Acceptance Gate docs sync. Next: Bounded Gemini / LLM Semantic Actor v0.1. Then: Enterprise Chaos Pack v0.1; Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; Enterprise Killer Demo v0.1; Public Auditor Packet / Whitepaper draft.
 
 Completed checkpoint: Travel / Multi-condition Readiness, Multi-domain Applied
 Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and Dual Fractal Coupling
 v0.1. Cross-domain DRS Bridge v0.1, Needle adversarial / safety pack v0.1,
-External DRS Pointer Protocol v0.1, and Read-only Enterprise Connector Sandbox
-v0.1 are also complete as local proof-only safety/protocol/observation layers.
-Still deferred:
+External DRS Pointer Protocol v0.1, Read-only Enterprise Connector Sandbox
+v0.1, and External Evidence Acceptance Gate v0.1 are also complete as local
+proof-only safety/protocol/observation/acceptance layers. Still deferred:
 NeedleFactory, production Needle installation, External DRS implementation,
 global semantic fabric, public Internet of Meaning, real child agents,
 production RAG, real connector/API access, Gemini child-cell live mode beyond

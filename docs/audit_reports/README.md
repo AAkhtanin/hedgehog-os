@@ -201,6 +201,12 @@ Current reports:
   - Confirms the heavy historical collector replay check, overclaim scan, and sensitive scan are clean.
   - Confirms no trusted evidence, truth, ready status, DRS write, installed Needle, external action, network, or production persistence.
 
+- `auditor_external_evidence_acceptance_gate_v01.log`
+  - External Evidence Acceptance Gate v0.1 evidence for commits `ece902f`, `00e98cd`, and `632ecb1`.
+  - Confirms targeted tests passed=18, evidence candidates=6, validation packets=6, accepted=2, rejected=3, quarantined=1, adversarial attempts=8, and blocked attempts=8.
+  - Confirms candidate wiring keeps EvidenceCandidate `candidate_only` before Root decision.
+  - Confirms the heavy historical collector replay check, overclaim scan, and sensitive scan are clean.
+
 ## Current Applied Auditor Commands
 
 ```bash

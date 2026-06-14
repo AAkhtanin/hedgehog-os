@@ -792,8 +792,9 @@ Safety formulas:
 
 There is no network, Gemini, Telegram, Marennya/UP, production persistence,
 trusted evidence, truth, ready status, DRS write, installed Needle, or
-external action. External Evidence Acceptance Gate is not implemented. The
-next layer is External Evidence Acceptance Gate v0.1.
+external action. This connector checkpoint does not itself implement evidence
+acceptance; External Evidence Acceptance Gate v0.1 is documented separately
+below.
 
 The proof uses `source_evidence_mode=closed_checkpoint_metadata_only` and
 `source_collectors_replayed=false` for the closed External DRS Pointer
@@ -801,6 +802,42 @@ Protocol checkpoint. This is targeted proof runtime hygiene, not full
 historical replay.
 
 Closed commits: `5110d14`, `01a6b64`, and `af872eb`.
+
+## External Evidence Acceptance Gate v0.1 Checkpoint
+
+External Evidence Acceptance Gate v0.1 is a deterministic local proof-only
+acceptance boundary:
+
+```text
+ConnectorObservation -> EvidenceCandidate -> ValidationPacket -> RootDecision
+-> AcceptedEvidence / RejectedEvidence / QuarantinedEvidence
+```
+
+The proof creates six candidates and six validation packets. Root accepts only
+`accepted_bank_payment_evidence` and `accepted_warehouse_stock_evidence`,
+rejects three failed candidates, and quarantines
+`quarantined_unknown_source_evidence`. Eight adversarial escalation attempts
+are blocked. Targeted tests passed=18.
+
+EvidenceCandidate remains `candidate_only` until Root decision.
+ConnectorObservation is not truth or trusted evidence; EvidenceCandidate is
+not truth or accepted evidence; ValidationPacket is not Root acceptance; GT
+and ConflictCheck are not acceptance authorities. AcceptedEvidence requires
+Root decision and remains bounded: it does not prove truth, create ready
+status, execute action, write DRS by itself, or install a Needle.
+
+Validation is local proof-only. `mock_valid`, `mock_known`, and mock
+`not_revoked` do not prove real cryptographic signature validation, real trust
+registry use, or real revocation-registry use. There is no External DRS, real
+connector/API access, network, Gemini, Telegram, Marennya/UP, production
+persistence, external action, ready status, DRS write, or installed Needle.
+This is not production trust yet.
+
+The proof uses `source_evidence_mode=closed_checkpoint_metadata_only` and
+`source_collectors_replayed=false` for the closed connector-sandbox checkpoint.
+This is targeted proof runtime hygiene, not full historical replay.
+
+Closed commits: `ece902f`, `00e98cd`, and `632ecb1`.
 
 ## Targeted Proof Runtime Policy
 
@@ -984,14 +1021,15 @@ Completed recent layers:
 - Needle adversarial / safety pack v0.1.
 - External DRS Pointer Protocol v0.1.
 - Read-only Enterprise Connector Sandbox v0.1.
+- External Evidence Acceptance Gate v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Completed: Read-only Enterprise Connector Sandbox v0.1.
-- Current: docs sync for Read-only Enterprise Connector Sandbox v0.1.
-- Next: External Evidence Acceptance Gate v0.1.
-- Then: Bounded Gemini / LLM Semantic Actor v0.1; Enterprise Chaos Pack v0.1; Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; and Enterprise Killer Demo v0.1.
+- Completed: External Evidence Acceptance Gate v0.1.
+- Current: docs sync for External Evidence Acceptance Gate v0.1.
+- Next: Bounded Gemini / LLM Semantic Actor v0.1.
+- Then: Enterprise Chaos Pack v0.1; Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; Enterprise Killer Demo v0.1; and Public Auditor Packet / Whitepaper draft.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.

@@ -192,14 +192,15 @@ Current engineering order:
 31. External DRS Pointer Protocol v0.1 - complete.
 32. Codex/performance-rule hygiene patch - complete.
 33. Read-only Enterprise Connector Sandbox v0.1 - complete.
-34. Read-only Enterprise Connector Sandbox docs sync.
-35. External Evidence Acceptance Gate v0.1.
-36. Bounded Gemini / LLM Semantic Actor v0.1.
-37. Enterprise Chaos Pack v0.1.
-38. Compute Collapse Enterprise Bench v0.1.
-39. Math Appendix Sync v0.4.
-40. Production Boundary Design Docs v0.1.
-41. Enterprise Killer Demo v0.1.
+34. Read-only Enterprise Connector Sandbox docs sync - complete.
+35. External Evidence Acceptance Gate v0.1 - complete.
+36. External Evidence Acceptance Gate docs sync.
+37. Bounded Gemini / LLM Semantic Actor v0.1.
+38. Enterprise Chaos Pack v0.1.
+39. Compute Collapse Enterprise Bench v0.1.
+40. Math Appendix Sync v0.4.
+41. Production Boundary Design Docs v0.1.
+42. Enterprise Killer Demo v0.1.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -320,7 +321,21 @@ Root.
 Clean connector output remains an observation and still requires a future
 External Evidence Acceptance Gate before it can become accepted evidence.
 Stale or unknown-source connector output remains blocked or quarantined. The
-Acceptance Gate is not implemented by this checkpoint. Root remains sovereign.
+connector checkpoint does not itself implement acceptance; External Evidence
+Acceptance Gate v0.1 is a separate completed proof layer. Root remains
+sovereign.
+
+## External Evidence Acceptance Geometry Checkpoint
+
+ConnectorObservation remains outside truth. EvidenceCandidate is candidate
+only. ValidationPacket is not Root acceptance. AcceptedEvidence exists only
+inside the Root final acceptance boundary.
+
+AcceptedEvidence is bounded: it cannot perform action, write DRS, create ready
+status, or install a Needle. It is a substrate for future readiness checks,
+not readiness itself. Mock signature, trust-registry, and revocation checks
+are not real-world cryptographic, trust, or revocation validation. Root remains
+sovereign.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

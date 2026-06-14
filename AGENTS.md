@@ -155,15 +155,23 @@ Anti-reduction rules:
 - Clean connector output remains `observation_only`. Stale connector output
   remains blocked or quarantined. No connector response may finalize ready
   status, execute action, write DRS, install Needle, or bypass Root.
+- AcceptedEvidence is bounded accepted evidence, not truth. It cannot create
+  ready status, execute action, write DRS, install Needle, or bypass Root.
+- EvidenceCandidate remains candidate-only and ValidationPacket remains
+  non-final until Root decision. Neither may bypass Root.
+- Mock signature, trust-registry, and revocation fields must never be
+  described as real cryptographic signature validation, real trust registry,
+  or real revocation registry.
 - The deterministic local applied/fractal stack is closed through Travel,
   Multi-domain Applied Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and
   Dual Fractal Coupling v0.1. Cross-domain DRS Bridge v0.1 adds local reviewed
   traversal only.
 - Needle adversarial / safety pack v0.1 and External DRS Pointer Protocol v0.1
   are complete. Read-only Enterprise Connector Sandbox v0.1 is complete
-  through proof, human walkthrough, and audit. Current work is its docs sync;
-  next is External Evidence Acceptance Gate v0.1, not evidence acceptance
-  already implemented, External DRS implementation, or Marennya / UP.
+  through proof, human walkthrough, audit, and docs. External Evidence
+  Acceptance Gate v0.1 is complete through proof, human walkthrough, and
+  audit. Current work is its docs sync; next is Bounded Gemini / LLM Semantic
+  Actor v0.1, not production trust, External DRS, or Marennya / UP.
 - Codex must not run long tests unless the user explicitly requests them; the
   user runs long, focused, and full-suite tests manually.
 
@@ -485,9 +493,15 @@ Read-only Enterprise Connector Sandbox v0.1 is complete through proof, human
 walkthrough, and audit. It creates four local read-only observations and
 blocks six connector escalation attempts. Connector response is not truth or
 authority; connector observation is not trusted evidence or ready status.
-External Evidence Acceptance Gate is not implemented.
+The connector checkpoint does not itself implement evidence acceptance;
+External Evidence Acceptance Gate v0.1 is a separate completed proof layer.
 
-Corrected engineering order: current Read-only Enterprise Connector Sandbox docs sync -> External Evidence Acceptance Gate v0.1 -> Bounded Gemini / LLM Semantic Actor v0.1 -> Enterprise Chaos Pack v0.1 -> Compute Collapse Enterprise Bench v0.1 -> Math Appendix Sync v0.4 -> Production Boundary Design Docs v0.1 -> Enterprise Killer Demo v0.1.
+External Evidence Acceptance Gate v0.1 is complete through proof, human
+walkthrough, and audit. Root accepts two clean candidates, rejects three, and
+quarantines one. AcceptedEvidence remains bounded and non-executable; mock
+validation is not real cryptographic or registry validation.
+
+Corrected engineering order: current External Evidence Acceptance Gate docs sync -> Bounded Gemini / LLM Semantic Actor v0.1 -> Enterprise Chaos Pack v0.1 -> Compute Collapse Enterprise Bench v0.1 -> Math Appendix Sync v0.4 -> Production Boundary Design Docs v0.1 -> Enterprise Killer Demo v0.1 -> Public Auditor Packet / Whitepaper draft.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

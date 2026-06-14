@@ -1,0 +1,359 @@
+===== GIT LOG =====
+01a6b64 Add human read-only enterprise connector walkthrough v0.1
+5110d14 Add read-only enterprise connector sandbox v0.1 proof
+5f83451 Add targeted proof runtime hygiene rules
+984d001 Clean up docs after External DRS pointer checkpoint
+1b37ba5 Document External DRS pointer protocol checkpoint
+2036247 Add External DRS pointer protocol v0.1 audit log
+3e3cc3d Add human External DRS pointer protocol walkthrough v0.1
+0a690c5 Add External DRS pointer protocol v0.1 proof
+6215d64 Document Needle adversarial safety checkpoint
+1f9d89d Add Needle adversarial safety pack v0.1 audit log
+165d679 Add human Needle adversarial safety walkthrough v0.1
+5b5fa3a Add Needle adversarial safety pack v0.1 proof
+23ed124 Document cross-domain DRS bridge checkpoint
+a2721af Add cross-domain DRS bridge v0.1 audit log
+1b6b5e0 Add human cross-domain DRS bridge walkthrough v0.1
+2a48d35 Add cross-domain DRS bridge v0.1 proof
+3d6b975 Document applied fractal coupling checkpoint
+b07a348 Add dual Fractal Coupling v0.1 audit log
+876f397 Add human dual Fractal Coupling walkthrough v0.1
+682fde5 Add dual Fractal Coupling v0.1 proof
+047fdd6 Add controlled Fractal DAC expansion v0.1 audit log
+fae3ede Add human controlled Fractal DAC walkthrough v0.1
+bf8d90c Add controlled Fractal DAC expansion v0.1 proof
+982670a Add multi-domain applied smoke v0.2 audit log
+c70f1b4 Add human multi-domain applied walkthrough v0.2
+5c6a543 Add multi-domain applied smoke v0.2 proof
+2fb27a4 Add applied travel readiness audit log
+969b886 Add human travel readiness walkthrough
+ddf13d1 Add applied travel readiness demo proof
+2d1a609 Document applied stack checkpoint and roadmap
+db18c6e Add applied stack walkthrough and full suite audit logs
+27a5b1b Add human applied auditor walkthrough
+9824431 Add all-layers applied super-smoke proof
+398dace Add DRS adversarial stress pack proof
+d0a2fb8 Document Applied DRS retrieval reuse checkpoint
+420b005 Add postcommit Applied DRS retrieval reuse audit log
+3fdc78e Optimize proof test report fixtures
+0bbf81a Add Applied DRS retrieval reuse proof
+06a6aac Document NeedleCandidate lifecycle proof checkpoint
+7fc0a1b Add postcommit NeedleCandidate lifecycle audit log
+acb5aac Add NeedleCandidate lifecycle proof
+a515e17 Document permission needs-user UX proof checkpoint
+7d2a121 Add postcommit permission needs-user audit log
+cd0ce4c Add permission needs-user UX proof
+ad923b6 Document applied certificate readiness demo checkpoint
+34a688b Add two-domain applied demo smoke audit
+2c9a23f Add postcommit applied certificate audit log
+aa55384 Add applied certificate readiness demo proof
+21dd12e Document applied warehouse semantic demo checkpoint
+0de8db6 Add postcommit applied warehouse audit log
+9342b59 Add applied warehouse semantic demo proof
+d15ae27 Document controlled RootOrchestrator route assembly checkpoint
+9d1aa8d Add controlled RootOrchestrator route assembly proof
+ce8b846 Document audit hash-chain checkpoint
+388ee78 Add audit hash-chain proof
+6795ae7 Document Root-centered needle geometry
+d2f8f5d Add final day checkpoint audit after ConflictCheck
+fc7b56c Document ConflictCheck checkpoint
+fe271a4 Add ConflictCheck proof
+2a65def Document DRS lifecycle semantics checkpoint
+5999f17 Add DRS lifecycle semantics proof
+54f61bf Document live child Executor in Fractal Cell checkpoint
+027f0b5 Add live child Executor in Fractal Cell proof
+ab5e5aa Document Fractal Cell Runtime checkpoint
+937dd57 Add Fractal Cell Runtime proof
+11aa7bf Document Fractal Cell Runtime as next execution layer
+
+===== GIT STATUS BEFORE =====
+?? docs/audit_reports/auditor_read_only_enterprise_connector_sandbox_v01.log
+
+===== READ-ONLY ENTERPRISE CONNECTOR SANDBOX v0.1 RUNNER =====
+[READ-ONLY ENTERPRISE CONNECTOR SANDBOX v0.1]
+note: deterministic local read-only connector observation proof only
+note: no network, trusted evidence, action, DRS write, or acceptance gate
+
+[SOURCE EVIDENCE]
+external_drs_pointer_protocol_source_status: PASS
+external_drs_pointer_protocol_commits: 0a690c5,3e3cc3d,2036247,1b37ba5,984d001,5f83451
+source_evidence_mode: closed_checkpoint_metadata_only
+source_collectors_replayed: false
+
+[CONNECTOR REQUESTS]
+request_id=connector_request_bank_payment | scenario_id=clean_bank_observation | connector_domain=bank_source | requested_signal=payment_status | read_only=true | proof_only=true
+request_id=connector_request_legal_certificate | scenario_id=stale_legal_registry_observation | connector_domain=legal_registry_source | requested_signal=certificate_status | read_only=true | proof_only=true
+request_id=connector_request_warehouse_stock | scenario_id=warehouse_stock_observation | connector_domain=warehouse_source | requested_signal=inventory_stock | read_only=true | proof_only=true
+request_id=connector_request_logistics_window | scenario_id=logistics_window_observation | connector_domain=logistics_source | requested_signal=dispatch_window | read_only=true | proof_only=true
+
+[SOURCE PROFILES]
+source_profile_id=known_mock_bank | connector_domain=bank_source | source_kind=local_deterministic_mock | known_mock_source=true | network_allowed=false | mutation_allowed=false
+source_profile_id=known_mock_legal_registry | connector_domain=legal_registry_source | source_kind=local_deterministic_mock | known_mock_source=true | network_allowed=false | mutation_allowed=false
+source_profile_id=known_mock_warehouse | connector_domain=warehouse_source | source_kind=local_deterministic_mock | known_mock_source=true | network_allowed=false | mutation_allowed=false
+source_profile_id=known_mock_logistics | connector_domain=logistics_source | source_kind=local_deterministic_mock | known_mock_source=true | network_allowed=false | mutation_allowed=false
+
+[CONNECTOR OBSERVATIONS]
+observation_id=observation_bank_payment_paid | scenario_id=clean_bank_observation | connector_domain=bank_source | source_profile=known_mock_bank | observed_signal=payment_status:observed_paid|transaction_id:MOCK-TXN-001 | observation_created=true | root_review_required=true | trusted_evidence_created=false | truth_proven=false | ready_status_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_needle_created=false | production_persistence=false | network_called=false | final_effect=observation_only
+observation_id=observation_legal_certificate_stale | scenario_id=stale_legal_registry_observation | connector_domain=legal_registry_source | source_profile=known_mock_legal_registry | observed_signal=certificate_status:expired | observation_created=true | root_review_required=true | trusted_evidence_created=false | truth_proven=false | ready_status_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_needle_created=false | production_persistence=false | network_called=false | final_effect=blocked_or_quarantined_observation | stale_or_expired=true | blocked_or_quarantined=true
+observation_id=observation_warehouse_stock | scenario_id=warehouse_stock_observation | connector_domain=warehouse_source | source_profile=known_mock_warehouse | observed_signal=inventory_stock:water_filter_available_6 | observation_created=true | root_review_required=true | trusted_evidence_created=false | truth_proven=false | ready_status_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_needle_created=false | production_persistence=false | network_called=false | final_effect=inventory_signal_only | inventory_signal_available=true | readiness_finalized_by_connector=false | connector_root_result=not_finalized_by_connector
+observation_id=observation_logistics_dispatch_window | scenario_id=logistics_window_observation | connector_domain=logistics_source | source_profile=known_mock_logistics | observed_signal=dispatch_window:mock_window_available | observation_created=true | root_review_required=true | trusted_evidence_created=false | truth_proven=false | ready_status_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_needle_created=false | production_persistence=false | network_called=false | final_effect=dispatch_window_signal_only | dispatch_window_signal_available=true | dispatch_executed=false
+
+[READ-ONLY REPORTS]
+connector_domain=bank_source | request_id=connector_request_bank_payment | observation_id=observation_bank_payment_paid | read_only=true | state_mutated=false | drs_written=false | action_executed=false | root_bypassed=false
+connector_domain=legal_registry_source | request_id=connector_request_legal_certificate | observation_id=observation_legal_certificate_stale | read_only=true | state_mutated=false | drs_written=false | action_executed=false | root_bypassed=false
+connector_domain=warehouse_source | request_id=connector_request_warehouse_stock | observation_id=observation_warehouse_stock | read_only=true | state_mutated=false | drs_written=false | action_executed=false | root_bypassed=false
+connector_domain=logistics_source | request_id=connector_request_logistics_window | observation_id=observation_logistics_dispatch_window | read_only=true | state_mutated=false | drs_written=false | action_executed=false | root_bypassed=false
+
+[CONNECTOR BOUNDARY MATRIX]
+connector_response_is_not_truth: true
+connector_response_is_not_authority: true
+connector_observation_is_not_trusted_evidence: true
+connector_observation_is_not_ready_status: true
+connector_cannot_execute_action: true
+connector_cannot_write_global_drs: true
+connector_cannot_write_external_drs: true
+connector_cannot_install_needle: true
+connector_cannot_bypass_root: true
+connector_cannot_bypass_conflictcheck: true
+connector_cannot_bypass_gt: true
+connector_cannot_bypass_permission_needsuser: true
+connector_cannot_bypass_quarantine: true
+read_only_connector_performed_no_mutation: true
+
+[ADVERSARIAL ATTEMPTS]
+attempt_id=adversary_connector_claim_to_truth | target_illegal_effect=truth | detected=true | blocked=true | quarantined=false | root_review_required=true | final_effect=blocked | trusted_evidence_created=false | truth_proven=false | ready_status_created=false | authority_transferred=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_needle_created=false | production_persistence=false | network_called=false
+attempt_id=adversary_connector_to_ready_status | target_illegal_effect=ready_status | detected=true | blocked=true | quarantined=false | root_review_required=true | final_effect=blocked | trusted_evidence_created=false | truth_proven=false | ready_status_created=false | authority_transferred=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_needle_created=false | production_persistence=false | network_called=false
+attempt_id=adversary_connector_to_drs_write | target_illegal_effect=global_or_external_drs_write | detected=true | blocked=true | quarantined=false | root_review_required=true | final_effect=blocked | trusted_evidence_created=false | truth_proven=false | ready_status_created=false | authority_transferred=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_needle_created=false | production_persistence=false | network_called=false
+attempt_id=adversary_connector_to_external_action | target_illegal_effect=external_action | detected=true | blocked=true | quarantined=false | root_review_required=true | final_effect=blocked | trusted_evidence_created=false | truth_proven=false | ready_status_created=false | authority_transferred=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_needle_created=false | production_persistence=false | network_called=false
+attempt_id=adversary_connector_to_installed_needle | target_illegal_effect=installed_needle | detected=true | blocked=true | quarantined=false | root_review_required=true | final_effect=blocked | trusted_evidence_created=false | truth_proven=false | ready_status_created=false | authority_transferred=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_needle_created=false | production_persistence=false | network_called=false
+attempt_id=adversary_unknown_connector_laundering | target_illegal_effect=trusted_evidence | detected=true | blocked=true | quarantined=true | root_review_required=true | final_effect=quarantined_blocked | trusted_evidence_created=false | truth_proven=false | ready_status_created=false | authority_transferred=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_needle_created=false | production_persistence=false | network_called=false
+
+[CONFLICTCHECK]
+conflict_detected: true
+conflict_count: 6
+conflictcheck_is_authority: false
+root_review_required: true
+
+[GT ADVISORY]
+gt_recommendation: block_or_quarantine_connector_escalations
+gt_is_advisory: true
+gt_can_mark_observation_trusted: false
+gt_can_mark_truth: false
+gt_can_execute_action: false
+gt_can_write_external_drs: false
+gt_can_install_needle: false
+
+[ROOT FINAL]
+root_result: read_only_observations_collected_with_escalations_blocked
+safe_secondary_outcome: needs_external_evidence_acceptance_gate
+connector_observations_created: 4
+trusted_evidence_created: false
+truth_proven: false
+ready_status_created: false
+external_action_executed: false
+global_drs_write: false
+external_drs_write: false
+installed_needle_created: false
+production_persistence: false
+network_called: false
+root_remains_final_authority: true
+
+[AUDIT]
+audit_entry_id: audit_read_only_enterprise_connector_sandbox_v01
+canonical_payload_hash: 912d85c31456b9acf649767e8625127f8c5139cc5fa04f19a53c3c11b80a988c
+previous_chain_last_entry_hash: closed_checkpoint_metadata_only
+proof_only: true
+production_persistence: false
+global_drs_write: false
+external_drs_write: false
+audit_chain_decides_truth: false
+
+[SUMMARY]
+read_only_enterprise_connector_sandbox_v01_status: PASS
+connector_observations_created: 4
+adversarial_attempts_observed: 6
+adversarial_attempts_blocked: 6
+quarantined_attempts_observed: 1
+connector_response_is_not_truth: true
+connector_response_is_not_authority: true
+connector_observation_is_not_trusted_evidence: true
+connector_observation_is_not_ready_status: true
+connector_cannot_execute_action: true
+connector_cannot_write_global_drs: true
+connector_cannot_write_external_drs: true
+connector_cannot_install_needle: true
+connector_cannot_bypass_root: true
+connector_cannot_bypass_conflictcheck: true
+connector_cannot_bypass_gt: true
+connector_cannot_bypass_permission_needsuser: true
+connector_cannot_bypass_quarantine: true
+read_only_connector_performed_no_mutation: true
+trusted_evidence_created: false
+truth_proven: false
+ready_status_created: false
+external_action_executed: false
+global_drs_write: false
+external_drs_write: false
+installed_needle_created: false
+network_called: false
+gemini_called: false
+telegram_used: false
+marennya_invoked: false
+up_invoked: false
+production_persistence: false
+root_remains_final_authority: true
+external_evidence_acceptance_gate_implemented: false
+ready_for_read_only_enterprise_connector_sandbox_v01_tests: true
+
+===== READ-ONLY ENTERPRISE CONNECTOR SANDBOX v0.1 TARGETED TESTS =====
+..................                                                       [100%]
+18 passed in 0.04s
+
+===== HUMAN READ-ONLY ENTERPRISE CONNECTOR SANDBOX WALKTHROUGH v0.1 =====
+HEDGEHOG OS — HUMAN READ-ONLY ENTERPRISE CONNECTOR SANDBOX WALKTHROUGH v0.1
+
+1. WHAT THIS DEMO IS
+
+This is a human-readable walkthrough over the committed Read-only Enterprise Connector Sandbox v0.1 proof.
+
+It observes four local deterministic read-only connector domains: bank_source, legal_registry_source, warehouse_source, and logistics_source.
+
+These connectors are local deterministic mock/read-only stubs. There is no real network or API access, Gemini, Telegram, Marennya, UP, production persistence, action, DRS write, or External Evidence Acceptance Gate.
+
+2. WHY THIS LAYER EXISTS
+
+External DRS Pointer Protocol proved that external pointer claims cannot become truth or trusted evidence.
+
+This layer adds the first enterprise-style external source boundary. External sources can be read as observations, but observations do not become truth or authority.
+
+This is a necessary step toward the future Enterprise Killer Demo, but it is not that demo. It prepares the next required layer: External Evidence Acceptance Gate v0.1.
+
+3. SOURCE EVIDENCE MODE
+
+The prior External DRS Pointer Protocol checkpoint is referenced as closed checkpoint metadata.
+
+source_evidence_mode=closed_checkpoint_metadata_only.
+source_collectors_replayed=false.
+
+This is targeted proof runtime hygiene, not full historical replay. Full historical replay belongs to explicit audit or super-smoke modes.
+
+4. CONNECTOR REQUESTS
+
+bank_source requests payment_status: bank payment status.
+legal_registry_source requests certificate_status: legal certificate status.
+warehouse_source requests inventory_stock: warehouse inventory stock.
+logistics_source requests dispatch_window: logistics dispatch window.
+
+Every connector request is read_only=true and proof_only=true.
+
+5. CONNECTOR OBSERVATIONS
+
+clean_bank_observation reports payment_status: observed_paid with transaction_id MOCK-TXN-001. It remains observation_only.
+
+stale_legal_registry_observation reports certificate_status: expired. It is a blocked_or_quarantined_observation.
+
+warehouse_stock_observation reports an inventory signal only. It does not finalize readiness, and its connector result remains not_finalized_by_connector.
+
+logistics_window_observation reports a dispatch-window signal only. It does not execute dispatch.
+
+6. READ-ONLY BOUNDARY
+
+For bank_source, legal_registry_source, warehouse_source, and logistics_source:
+
+read_only=true.
+state_mutated=false.
+drs_written=false.
+action_executed=false.
+root_bypassed=false.
+
+7. CONNECTOR BOUNDARY MATRIX
+
+Connector response is not truth.
+Connector response is not authority.
+Connector observation is not trusted evidence.
+Connector observation is not ready status.
+Connector cannot execute action.
+Connector cannot write global DRS.
+Connector cannot write External DRS.
+Connector cannot install Needle.
+Connector cannot bypass Root.
+Connector cannot bypass ConflictCheck.
+Connector cannot bypass GT.
+Connector cannot bypass permission or needs_user.
+Connector cannot bypass quarantine.
+The read-only connector performed no mutation.
+
+8. SIX ADVERSARIAL ATTEMPTS
+
+adversary_connector_claim_to_truth: blocked.
+adversary_connector_to_ready_status: blocked.
+adversary_connector_to_drs_write: blocked.
+adversary_connector_to_external_action: blocked.
+adversary_connector_to_installed_needle: blocked.
+adversary_unknown_connector_laundering: quarantined_blocked.
+
+6 attempts were observed and 6 were blocked. 1 attempt was quarantined and blocked.
+
+No trusted evidence, truth, ready status, external action, DRS write, installed Needle, production persistence, or network call was created.
+
+9. CONFLICTCHECK AND GT
+
+ConflictCheck detects 6 connector escalation conflicts. ConflictCheck is not authority.
+
+GT recommends block_or_quarantine_connector_escalations. GT is advisory. GT cannot mark an observation trusted, mark truth, execute action, write External DRS, or install a Needle.
+
+10. ROOT FINAL
+
+root_result: read_only_observations_collected_with_escalations_blocked.
+safe_secondary_outcome: needs_external_evidence_acceptance_gate.
+connector observations created: 4.
+
+trusted_evidence_created=false.
+truth_proven=false.
+ready_status_created=false.
+external_action_executed=false.
+global_drs_write=false.
+external_drs_write=false.
+installed_needle_created=false.
+production_persistence=false.
+network_called=false.
+root_remains_final_authority=true.
+
+11. WHAT THIS PROVES
+
+Enterprise-style external source responses can be represented as read-only observations. Clean connector output still does not become trusted evidence.
+
+Stale connector output is blocked or quarantined. Adversarial escalation attempts are blocked, and unknown connector laundering is quarantined and blocked.
+
+This establishes the observation boundary needed before External Evidence Acceptance Gate v0.1.
+
+12. WHAT THIS DOES NOT PROVE
+
+It does not implement real connector/API access, call network or Gemini, or implement External Evidence Acceptance Gate.
+
+It does not accept evidence, prove truth, create ready status, write DRS, execute action, install a Needle, implement External DRS, grant production autonomy, or invoke Marennya or UP.
+
+13. FINAL HUMAN SUMMARY
+
+Four read-only connector observations were created.
+Six connector escalation attempts were blocked.
+Unknown-source laundering was quarantined and blocked.
+Connector response is not truth.
+Connector response is not authority.
+Connector observation is not trusted evidence.
+Root remains final authority.
+Next required layer is External Evidence Acceptance Gate v0.1.
+
+===== PERFORMANCE HYGIENE CHECK =====
+demo/run_read_only_enterprise_connector_sandbox_v01.py:109:        "source_collectors_replayed": False,
+demo/run_read_only_enterprise_connector_sandbox_v01.py:275:            report.source_evidence.get("source_collectors_replayed") is False,
+tests/test_read_only_enterprise_connector_sandbox_v01_runner.py:44:    assert report.source_evidence["source_collectors_replayed"] is False
+
+===== HEAVY HISTORICAL COLLECTOR REPLAY CHECK =====
+
+===== OVERCLAIM SCAN =====
+
+===== SENSITIVE SCAN =====
+
+===== FINAL GIT STATUS =====
+?? docs/audit_reports/auditor_read_only_enterprise_connector_sandbox_v01.log

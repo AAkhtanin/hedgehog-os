@@ -190,14 +190,16 @@ Current engineering order:
 29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
 30. Needle adversarial / safety pack v0.1 - complete.
 31. External DRS Pointer Protocol v0.1 - complete.
-32. Codex/performance-rule hygiene patch.
-33. Read-only connector / real API sandbox.
-34. Chaos Applied Stress Pack.
-35. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
-    Needle safety + External DRS Pointer.
-36. Production Boundary Design Docs.
-37. Only then Marennya quarantine-first.
-38. Then UP transfer/opportunity.
+32. Codex/performance-rule hygiene patch - complete.
+33. Read-only Enterprise Connector Sandbox v0.1 - complete.
+34. Read-only Enterprise Connector Sandbox docs sync.
+35. External Evidence Acceptance Gate v0.1.
+36. Bounded Gemini / LLM Semantic Actor v0.1.
+37. Enterprise Chaos Pack v0.1.
+38. Compute Collapse Enterprise Bench v0.1.
+39. Math Appendix Sync v0.4.
+40. Production Boundary Design Docs v0.1.
+41. Enterprise Killer Demo v0.1.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -307,6 +309,18 @@ Unknown external pointer sources require quarantine or blocking. Signature,
 trust-registry, and revocation placeholders are not real signature, trust, or
 revocation. Root review and explicit acceptance are required before any future
 trusted use. Root remains sovereign.
+
+## Read-only Enterprise Connector Geometry Checkpoint
+
+Connector response is not truth or authority. Connector observation is not
+trusted evidence or ready status. A connector read is not an action, cannot
+write DRS, cannot install a Needle or grant capability, and cannot bypass
+Root.
+
+Clean connector output remains an observation and still requires a future
+External Evidence Acceptance Gate before it can become accepted evidence.
+Stale or unknown-source connector output remains blocked or quarantined. The
+Acceptance Gate is not implemented by this checkpoint. Root remains sovereign.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

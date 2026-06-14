@@ -986,10 +986,11 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: External DRS Pointer Protocol complete -> current
-Codex/performance-rule hygiene patch -> next read-only connector sandbox ->
-Chaos Applied Stress Pack -> Math Appendix sync -> Production Boundary Design
-Docs -> only then Marennya -> UP.
+Corrected next order: Read-only Enterprise Connector Sandbox v0.1 complete ->
+current connector sandbox docs sync -> next External Evidence Acceptance Gate
+v0.1 -> Bounded Gemini / LLM Semantic Actor v0.1 -> Enterprise Chaos Pack v0.1
+-> Compute Collapse Enterprise Bench v0.1 -> Math Appendix Sync v0.4 ->
+Production Boundary Design Docs v0.1 -> Enterprise Killer Demo v0.1.
 
 ## Applied + Fractal + Coupling Checkpoint Commands
 
@@ -1001,6 +1002,7 @@ python -m demo.run_dual_fractal_coupling_v01
 python -m demo.run_cross_domain_drs_bridge_v01
 python -m demo.run_needle_adversarial_safety_pack_v01
 python -m demo.run_external_drs_pointer_protocol_v01
+python -m demo.run_read_only_enterprise_connector_sandbox_v01
 
 python -m demo.run_human_travel_readiness_walkthrough
 python -m demo.run_human_multi_domain_applied_walkthrough_v02
@@ -1009,6 +1011,7 @@ python -m demo.run_human_dual_fractal_coupling_walkthrough_v01
 python -m demo.run_human_cross_domain_drs_bridge_walkthrough_v01
 python -m demo.run_human_needle_adversarial_safety_pack_walkthrough_v01
 python -m demo.run_human_external_drs_pointer_protocol_walkthrough_v01
+python -m demo.run_human_read_only_enterprise_connector_sandbox_walkthrough_v01
 ```
 
 Travel readiness preserves four blockers and a Root `not_ready` final.
@@ -1033,6 +1036,12 @@ proof-only pointer candidates. Pointer claims cannot become truth or trusted
 evidence, and pointer candidates cannot write DRS, execute action, install a
 Needle, or bypass Root. It is prerequisite topology for future read-only
 connector work, not External DRS implementation.
+
+Read-only Enterprise Connector Sandbox v0.1 observes bank, legal, warehouse,
+and logistics responses as local read-only observations. Clean bank output
+remains untrusted; stale legal output is blocked/quarantined; no connector
+output creates truth, ready status, DRS write, or action. External Evidence
+Acceptance Gate v0.1 is the next layer and is not implemented here.
 
 ## Exclusions
 

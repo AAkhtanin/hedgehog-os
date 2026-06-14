@@ -195,6 +195,12 @@ Current reports:
   - Confirms performance hygiene with `source_collectors_replayed=false` and a clean heavy historical collector replay check.
   - Confirms no External DRS, retrieval, connector, trusted evidence, truth, DRS write, installed Needle, or external action.
 
+- `auditor_read_only_enterprise_connector_sandbox_v01.log`
+  - Read-only Enterprise Connector Sandbox v0.1 evidence for commits `5110d14`, `01a6b64`, and `af872eb`.
+  - Confirms targeted tests passed=18, connector observations=4, adversarial attempts=6, blocked attempts=6, and quarantined attempts=1.
+  - Confirms the heavy historical collector replay check, overclaim scan, and sensitive scan are clean.
+  - Confirms no trusted evidence, truth, ready status, DRS write, installed Needle, external action, network, or production persistence.
+
 ## Current Applied Auditor Commands
 
 ```bash

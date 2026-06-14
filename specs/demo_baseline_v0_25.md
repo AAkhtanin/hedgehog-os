@@ -1255,14 +1255,16 @@ Corrected next order:
 29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
 30. Needle adversarial / safety pack v0.1 - complete.
 31. External DRS Pointer Protocol v0.1 - complete.
-32. Codex/performance-rule hygiene patch.
-33. Read-only connector / real API sandbox.
-34. Chaos Applied Stress Pack.
-35. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
-    Needle safety + External DRS Pointer.
-36. Production Boundary Design Docs.
-37. Only then Marennya quarantine-first.
-38. Then UP transfer/opportunity.
+32. Codex/performance-rule hygiene patch - complete.
+33. Read-only Enterprise Connector Sandbox v0.1 - complete.
+34. Read-only Enterprise Connector Sandbox docs sync.
+35. External Evidence Acceptance Gate v0.1.
+36. Bounded Gemini / LLM Semantic Actor v0.1.
+37. Enterprise Chaos Pack v0.1.
+38. Compute Collapse Enterprise Bench v0.1.
+39. Math Appendix Sync v0.4.
+40. Production Boundary Design Docs v0.1.
+41. Enterprise Killer Demo v0.1.
 
 ## Applied + Fractal + Coupling Demo Commands
 
@@ -1276,6 +1278,7 @@ python -m demo.run_dual_fractal_coupling_v01
 python -m demo.run_cross_domain_drs_bridge_v01
 python -m demo.run_needle_adversarial_safety_pack_v01
 python -m demo.run_external_drs_pointer_protocol_v01
+python -m demo.run_read_only_enterprise_connector_sandbox_v01
 ```
 
 Human-readable auditor walkthroughs:
@@ -1288,6 +1291,7 @@ python -m demo.run_human_dual_fractal_coupling_walkthrough_v01
 python -m demo.run_human_cross_domain_drs_bridge_walkthrough_v01
 python -m demo.run_human_needle_adversarial_safety_pack_walkthrough_v01
 python -m demo.run_human_external_drs_pointer_protocol_walkthrough_v01
+python -m demo.run_human_read_only_enterprise_connector_sandbox_walkthrough_v01
 ```
 
 These deterministic local proofs create no real child agents, external action,
@@ -1310,6 +1314,12 @@ pointer candidates. Pointer claims cannot become truth or trusted evidence;
 pointer candidates cannot write DRS, execute action, install a Needle, or
 bypass Root. This is prerequisite topology for a future read-only connector /
 real API sandbox, not External DRS implementation.
+
+Read-only Enterprise Connector Sandbox v0.1 observes local bank, legal,
+warehouse, and logistics responses as read-only observations. Clean bank
+output remains untrusted; stale legal output is blocked/quarantined; no
+connector output creates truth, ready status, DRS write, or action. The next
+layer is External Evidence Acceptance Gate v0.1, which is not implemented here.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

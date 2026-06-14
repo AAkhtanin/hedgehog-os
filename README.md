@@ -769,6 +769,39 @@ audit/super-smoke replay.
 
 Closed commits: `0a690c5`, `3e3cc3d`, and `2036247`.
 
+## Read-only Enterprise Connector Sandbox v0.1 Checkpoint
+
+Read-only Enterprise Connector Sandbox v0.1 is a deterministic local
+proof-only observation boundary for four enterprise-style connector domains:
+`bank_source`, `legal_registry_source`, `warehouse_source`, and
+`logistics_source`. All connectors are local deterministic read-only mocks.
+
+The proof created four connector observations, observed and blocked six
+adversarial escalation attempts, and quarantined/blocked one unknown-source
+laundering attempt. Targeted tests passed=18. Clean bank output remains
+`observation_only`; stale legal output remains blocked/quarantined; warehouse
+and logistics outputs remain signals only.
+
+Safety formulas:
+
+- Connector response is not truth or authority.
+- Connector observation is not trusted evidence or ready status.
+- Connector cannot execute action, write global/External DRS, install Needle,
+  or bypass Root, ConflictCheck, GT, permission / needs_user, or quarantine.
+- Read-only connector performs no mutation.
+
+There is no network, Gemini, Telegram, Marennya/UP, production persistence,
+trusted evidence, truth, ready status, DRS write, installed Needle, or
+external action. External Evidence Acceptance Gate is not implemented. The
+next layer is External Evidence Acceptance Gate v0.1.
+
+The proof uses `source_evidence_mode=closed_checkpoint_metadata_only` and
+`source_collectors_replayed=false` for the closed External DRS Pointer
+Protocol checkpoint. This is targeted proof runtime hygiene, not full
+historical replay.
+
+Closed commits: `5110d14`, `01a6b64`, and `af872eb`.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -950,15 +983,15 @@ Completed recent layers:
 - Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
 - Needle adversarial / safety pack v0.1.
 - External DRS Pointer Protocol v0.1.
+- Read-only Enterprise Connector Sandbox v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Completed: External DRS Pointer Protocol v0.1.
-- Current: Codex/performance-rule hygiene patch.
-- Next: read-only connector / real API sandbox v0.1.
-- Then: Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer; and Production Boundary Design Docs.
-- Only after that: Marennya quarantine-first v0.1, followed by UP transfer/opportunity v0.1.
+- Completed: Read-only Enterprise Connector Sandbox v0.1.
+- Current: docs sync for Read-only Enterprise Connector Sandbox v0.1.
+- Next: External Evidence Acceptance Gate v0.1.
+- Then: Bounded Gemini / LLM Semantic Actor v0.1; Enterprise Chaos Pack v0.1; Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; and Enterprise Killer Demo v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.

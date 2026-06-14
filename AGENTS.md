@@ -149,14 +149,21 @@ Anti-reduction rules:
 - Do not use External DRS Pointer language to claim External DRS
   implementation, remote retrieval, connector/API access, trusted evidence,
   or public Internet of Meaning.
+- Connector outputs are `ExternalObservation` / `ConnectorObservation` only.
+  Do not name connector output trusted evidence before a future External
+  Evidence Acceptance Gate explicitly accepts it.
+- Clean connector output remains `observation_only`. Stale connector output
+  remains blocked or quarantined. No connector response may finalize ready
+  status, execute action, write DRS, install Needle, or bypass Root.
 - The deterministic local applied/fractal stack is closed through Travel,
   Multi-domain Applied Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and
   Dual Fractal Coupling v0.1. Cross-domain DRS Bridge v0.1 adds local reviewed
   traversal only.
 - Needle adversarial / safety pack v0.1 and External DRS Pointer Protocol v0.1
-  are complete. The next engineering step is the Codex/performance-rule
-  hygiene patch, followed by read-only connector sandbox work, not External
-  DRS implementation or Marennya / UP.
+  are complete. Read-only Enterprise Connector Sandbox v0.1 is complete
+  through proof, human walkthrough, and audit. Current work is its docs sync;
+  next is External Evidence Acceptance Gate v0.1, not evidence acceptance
+  already implemented, External DRS implementation, or Marennya / UP.
 - Codex must not run long tests unless the user explicitly requests them; the
   user runs long, focused, and full-suite tests manually.
 
@@ -474,7 +481,13 @@ blocked. Pointer claims remain untrusted and non-final. Targeted tests use
 closed-checkpoint metadata with `source_collectors_replayed=false`; explicit
 audit/super-smoke runs own full historical replay.
 
-Corrected engineering order: External DRS Pointer Protocol complete -> current Codex/performance-rule hygiene patch -> next read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
+Read-only Enterprise Connector Sandbox v0.1 is complete through proof, human
+walkthrough, and audit. It creates four local read-only observations and
+blocks six connector escalation attempts. Connector response is not truth or
+authority; connector observation is not trusted evidence or ready status.
+External Evidence Acceptance Gate is not implemented.
+
+Corrected engineering order: current Read-only Enterprise Connector Sandbox docs sync -> External Evidence Acceptance Gate v0.1 -> Bounded Gemini / LLM Semantic Actor v0.1 -> Enterprise Chaos Pack v0.1 -> Compute Collapse Enterprise Bench v0.1 -> Math Appendix Sync v0.4 -> Production Boundary Design Docs v0.1 -> Enterprise Killer Demo v0.1.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

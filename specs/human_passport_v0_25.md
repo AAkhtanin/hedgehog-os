@@ -739,13 +739,16 @@ Corrected roadmap:
 15. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
 16. Needle adversarial / safety pack v0.1 - complete.
 17. External DRS Pointer Protocol v0.1 - complete.
-18. Codex/performance-rule hygiene patch.
-19. Read-only connector / real API sandbox.
-20. Chaos Applied Stress Pack.
-21. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
-    Needle safety + External DRS Pointer.
-22. Production Boundary Design Docs.
-23. Only then Marennya quarantine-first, followed by UP transfer/opportunity.
+18. Codex/performance-rule hygiene patch - complete.
+19. Read-only Enterprise Connector Sandbox v0.1 - complete.
+20. Read-only Enterprise Connector Sandbox docs sync.
+21. External Evidence Acceptance Gate v0.1.
+22. Bounded Gemini / LLM Semantic Actor v0.1.
+23. Enterprise Chaos Pack v0.1.
+24. Compute Collapse Enterprise Bench v0.1.
+25. Math Appendix Sync v0.4.
+26. Production Boundary Design Docs v0.1.
+27. Enterprise Killer Demo v0.1.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2554,6 +2557,22 @@ This checkpoint does not implement External DRS, production RAG, global
 semantic fabric, remote retrieval, connector/API access, production Needle
 installation, or production autonomy. Root-only final authority remains
 preserved.
+
+## 20.11 Read-only Enterprise Connector Sandbox v0.1 Checkpoint
+
+Read-only Enterprise Connector Sandbox v0.1 is complete as a deterministic
+local proof-only observation boundary. It models `bank_source`,
+`legal_registry_source`, `warehouse_source`, and `logistics_source` through
+local read-only connector observations.
+
+The proof creates four observations, blocks six escalation attempts, and
+quarantines/blocks one unknown-source laundering attempt. Connector response
+is not truth or authority; connector observation is not trusted evidence or
+ready status. Root remains final authority.
+
+This checkpoint prepares External Evidence Acceptance Gate v0.1. It does not
+implement real connector/API access, network retrieval, evidence acceptance,
+DRS writes, external actions, installed Needles, or production persistence.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

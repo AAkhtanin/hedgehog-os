@@ -162,6 +162,16 @@ Anti-reduction rules:
 - Mock signature, trust-registry, and revocation fields must never be
   described as real cryptographic signature validation, real trust registry,
   or real revocation registry.
+- A high-capability LLM is a replaceable compute organ inside the
+  Root-controlled runtime, not a sovereign cloud brain. Depending on its
+  bounded role, it may propose routes, draft PlanGraphs, or produce semantic
+  drafts, but it must not finalize, execute external actions, accept evidence,
+  write DRS, install Needles, or bypass Root.
+- Bounded LLM Semantic Executor Node v0.1 proves only the Executor-side flow:
+  Architect-created PlanGraph -> Executor runs `llm_semantic_executor_node` ->
+  mock LLM produces SemanticDraft -> Executor wraps ResultProposal -> Post V&V
+  -> GT advisory -> Root Final. The LLM is `executor_node_capability`, not a
+  new global actor or a layer between Architect and Executor.
 - The deterministic local applied/fractal stack is closed through Travel,
   Multi-domain Applied Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and
   Dual Fractal Coupling v0.1. Cross-domain DRS Bridge v0.1 adds local reviewed
@@ -169,9 +179,11 @@ Anti-reduction rules:
 - Needle adversarial / safety pack v0.1 and External DRS Pointer Protocol v0.1
   are complete. Read-only Enterprise Connector Sandbox v0.1 is complete
   through proof, human walkthrough, audit, and docs. External Evidence
-  Acceptance Gate v0.1 is complete through proof, human walkthrough, and
-  audit. Current work is its docs sync; next is Bounded Gemini / LLM Semantic
-  Actor v0.1, not production trust, External DRS, or Marennya / UP.
+  Acceptance Gate v0.1 is complete. Bounded LLM Semantic Executor Node v0.1 is
+  complete through proof, human walkthrough, wording cleanup, and audit.
+  Current work is Enterprise Chaos Pack v0.1 or the next explicitly approved
+  layer, not production trust, External DRS, or
+  Marennya / UP.
 - Codex must not run long tests unless the user explicitly requests them; the
   user runs long, focused, and full-suite tests manually.
 
@@ -501,7 +513,14 @@ walkthrough, and audit. Root accepts two clean candidates, rejects three, and
 quarantines one. AcceptedEvidence remains bounded and non-executable; mock
 validation is not real cryptographic or registry validation.
 
-Corrected engineering order: current External Evidence Acceptance Gate docs sync -> Bounded Gemini / LLM Semantic Actor v0.1 -> Enterprise Chaos Pack v0.1 -> Compute Collapse Enterprise Bench v0.1 -> Math Appendix Sync v0.4 -> Production Boundary Design Docs v0.1 -> Enterprise Killer Demo v0.1 -> Public Auditor Packet / Whitepaper draft.
+Bounded LLM Semantic Executor Node v0.1 is complete through docs sync. It keeps the
+LLM inside Executor as `executor_node_capability`; Architect creates PlanGraph
+before LLM execution, and Post V&V, GT, and Root remain mandatory. The LLM
+does not create or modify PlanGraph, route, accept evidence, prove truth,
+create ready status, execute action, write DRS, install Needle, or create Root
+Final.
+
+Corrected engineering order: Bounded LLM Semantic Executor Node v0.1 complete through docs sync -> current Enterprise Chaos Pack v0.1 or the next explicitly approved layer -> Compute Collapse Enterprise Bench v0.1 -> Math Appendix Sync v0.4 -> Production Boundary Design Docs v0.1 -> Enterprise Killer Demo v0.1 -> Public Auditor Packet / Whitepaper draft. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

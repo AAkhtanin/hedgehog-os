@@ -743,13 +743,13 @@ Corrected roadmap:
 19. Read-only Enterprise Connector Sandbox v0.1 - complete.
 20. Read-only Enterprise Connector Sandbox docs sync - complete.
 21. External Evidence Acceptance Gate v0.1 - complete.
-22. External Evidence Acceptance Gate docs sync.
-23. Bounded Gemini / LLM Semantic Actor v0.1.
-24. Enterprise Chaos Pack v0.1.
-25. Compute Collapse Enterprise Bench v0.1.
-26. Math Appendix Sync v0.4.
-27. Production Boundary Design Docs v0.1.
-28. Enterprise Killer Demo v0.1.
+22. External Evidence Acceptance Gate docs sync - complete.
+23. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
+24. Enterprise Chaos Pack v0.1 or next explicitly approved layer.
+26. Compute Collapse Enterprise Bench v0.1.
+27. Math Appendix Sync v0.4.
+28. Production Boundary Design Docs v0.1.
+29. Enterprise Killer Demo v0.1.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2592,6 +2592,30 @@ This checkpoint does not implement External DRS, real connectors/APIs, real
 signature/trust/revocation validation, network access, production persistence,
 action execution, ready status, or Needle installation. Root remains final
 authority.
+
+## 20.13 Bounded LLM Semantic Executor Node v0.1 Checkpoint
+
+Bounded LLM Semantic Executor Node v0.1 is closed through proof, human
+walkthrough, wording cleanup, and audit. It proves this bounded Executor-side
+geometry:
+
+```text
+Architect-created PlanGraph -> Executor -> llm_semantic_executor_node
+-> bounded mock LLM -> SemanticDraft -> SemanticDraftResultProposal
+-> Post V&V -> GT advisory -> Root Final
+```
+
+The LLM is only `executor_node_capability`. It is not Root, Orchestrator,
+Architect, GT, Post V&V, or a new global authority layer. It cannot create or
+modify PlanGraph, route, accept evidence, prove truth, create ready status,
+execute action, write DRS, install Needle, or create Root Final.
+
+The proof created four PlanGraph nodes and one each of the bounded LLM call
+envelope, SemanticDraft, SemanticDraftResultProposal, passing Post V&V check,
+GT advisory, and Root semantic final. All nine adversarial attempts were
+blocked. It uses `source_evidence_mode=closed_checkpoint_metadata_only` and
+`source_collectors_replayed=false`; no network, Gemini call, or production
+persistence occurred.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

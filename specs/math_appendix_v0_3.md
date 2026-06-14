@@ -2535,7 +2535,37 @@ function up_tick(trigger):
             promote_to_up(u)
 ```
 
-## 17. What Must Move Into a New Branch
+## 17. DRS Transport Boundary And Bounded LLM Node
+
+APIs transport data. DRS represents time-scoped, contract-bound semantic
+records around observations and results:
+
+```text
+DRSRecord = meaning + TimeEnvelope + contract_boundary + provenance
+            + trust/audit_metadata + lifecycle_state
+```
+
+DRS does not replace APIs. An API may be a bounded source or connector, while
+Root-controlled gates determine whether its observation may progress through
+candidate, validation, acceptance, reuse, or rejection states.
+
+The bounded semantic LLM geometry is:
+
+```text
+PlanGraph_preexists
+Executor(llm_semantic_executor_node)
+  -> SemanticDraft
+  -> SemanticDraftResultProposal
+  -> PostVV
+  -> GT_advisory
+  -> RootFinal
+```
+
+The LLM is an `executor_node_capability`, not an authority term in the
+equation. It does not modify `PlanGraph_preexists`; SemanticDraft is not truth
+or final; and Post V&V, GT, and Root remain required.
+
+## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:
 
@@ -2556,7 +2586,7 @@ Do not paste this entire appendix into `AGENTS.md`. A link is enough:
 For formulas and algorithms, read specs/math_appendix_v0_3.md.
 ```
 
-## 18. Final Status
+## 19. Final Status
 
 ```text
 v0.25

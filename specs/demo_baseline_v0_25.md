@@ -1259,13 +1259,13 @@ Corrected next order:
 33. Read-only Enterprise Connector Sandbox v0.1 - complete.
 34. Read-only Enterprise Connector Sandbox docs sync - complete.
 35. External Evidence Acceptance Gate v0.1 - complete.
-36. External Evidence Acceptance Gate docs sync.
-37. Bounded Gemini / LLM Semantic Actor v0.1.
-38. Enterprise Chaos Pack v0.1.
-39. Compute Collapse Enterprise Bench v0.1.
-40. Math Appendix Sync v0.4.
-41. Production Boundary Design Docs v0.1.
-42. Enterprise Killer Demo v0.1.
+36. External Evidence Acceptance Gate docs sync - complete.
+37. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
+38. Enterprise Chaos Pack v0.1 or next explicitly approved layer.
+40. Compute Collapse Enterprise Bench v0.1.
+41. Math Appendix Sync v0.4.
+42. Production Boundary Design Docs v0.1.
+43. Enterprise Killer Demo v0.1.
 
 ## Applied + Fractal + Coupling Demo Commands
 
@@ -1328,7 +1328,16 @@ Acceptance Gate v0.1 is a separate completed layer.
 External Evidence Acceptance Gate v0.1 creates six candidates and validation
 packets. Root accepts two, rejects three, and quarantines one. AcceptedEvidence
 remains not truth, not ready, not action, not DRS write, and not Needle. The
-next layer is Bounded Gemini / LLM Semantic Actor v0.1.
+next approved implementation layer is Enterprise Chaos Pack v0.1 or another
+explicitly approved roadmap item.
+
+Bounded LLM Semantic Executor Node v0.1 keeps the model inside Executor as
+`executor_node_capability`. Architect creates the four-node PlanGraph first;
+Executor runs `llm_semantic_summary_node`; the mock LLM produces SemanticDraft;
+Executor wraps SemanticDraftResultProposal; then Post V&V, GT advisory, and
+Root Final remain mandatory. All nine escalation attempts are blocked, with
+no network, Gemini call, action, DRS write, Needle installation, or production
+persistence.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

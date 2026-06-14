@@ -986,9 +986,8 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: External Evidence Acceptance Gate v0.1 complete ->
-current acceptance-gate docs sync -> next Bounded Gemini / LLM Semantic Actor
-v0.1 -> Enterprise Chaos Pack v0.1 -> Compute Collapse Enterprise Bench v0.1
+Corrected next order: Bounded LLM Semantic Executor Node v0.1 closed through
+audit -> current Enterprise Chaos Pack v0.1 or the next explicitly approved layer -> Compute Collapse Enterprise Bench v0.1
 -> Math Appendix Sync v0.4 -> Production Boundary Design Docs v0.1 ->
 Enterprise Killer Demo v0.1 -> Public Auditor Packet / Whitepaper draft.
 
@@ -1049,8 +1048,14 @@ v0.1 is a separate completed layer.
 External Evidence Acceptance Gate v0.1 creates six EvidenceCandidate and
 ValidationPacket objects. Root accepts two candidates, rejects three, and
 quarantines one. AcceptedEvidence remains bounded: not truth, not ready, not
-action, not DRS write, and not Needle. Next is Bounded Gemini / LLM Semantic
-Actor v0.1.
+action, not DRS write, and not Needle.
+
+Bounded LLM Semantic Executor Node v0.1 proves the Executor-side bounded
+semantic path. Architect creates PlanGraph before execution; Executor runs
+`llm_semantic_summary_node`; the mock LLM returns SemanticDraft only; Executor
+wraps a SemanticDraftResultProposal; and Post V&V, GT advisory, and Root Final
+remain mandatory. The LLM is `executor_node_capability`, not a global actor,
+and all nine attempted authority escalations are blocked.
 
 ## Exclusions
 

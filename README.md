@@ -8,6 +8,29 @@ It is not a chatbot, not an agent chain, not a LangChain clone, and not a UI pro
 
 The current MVP is a proof-of-architecture runtime for a future AI OS, centered on a mock government certificate request.
 
+APIs move data. Hedgehog DRS moves time-scoped, contract-bound, auditable meaning.
+
+APIs transport data. Hedgehog DRS stores and routes meaning records with time
+scope, contract boundaries, provenance, trust/audit metadata, and
+Root-controlled reuse and acceptance gates. DRS is not a replacement for
+APIs: APIs may serve as sources, needles, or connectors, while DRS provides
+the semantic and audit layer around their observations.
+
+Hedgehog OS is aligned with a local-first, user-sovereign architecture model.
+Root is the local authority boundary; Needles are designed as bounded,
+signed-capability contracts; and DRS records carry provenance, time envelopes,
+trust/audit metadata, and lifecycle state. Sealed/private slots and future
+vault references are intended to keep sensitive local context from becoming
+uncontrolled LLM context. External connectors and APIs remain read-only or
+bounded until Root-controlled gates accept their observations. These are
+proof-level design boundaries, not claims of production security.
+
+The decision path is designed to be inspectable and reviewable after the fact:
+who or what proposed a route; which evidence was candidate, accepted, rejected,
+or quarantined; why reuse was allowed or denied; which forbidden vectors or
+escalations were blocked; what Post V&V and GT recommended; and what Root
+finally accepted. Audit/hash-chain records continuity, not truth.
+
 ---
 
 ## What Hedgehog OS Is
@@ -15,6 +38,13 @@ The current MVP is a proof-of-architecture runtime for a future AI OS, centered 
 Hedgehog OS / Fractal Reflexive OS is a fractal controlled-runtime topology for role-bounded intelligence.
 
 LLM/SLM components are cognitive organs inside bounded roles, not sovereign actors. Subordinate intelligence can propose routes, plans, drafts, or results, but Root commits.
+
+In Hedgehog OS, a high-capability LLM is not treated as the sovereign cloud
+brain. It is a replaceable compute organ inside a Root-controlled runtime.
+Depending on role and gate, an LLM may help propose routes, draft PlanGraphs,
+or produce bounded semantic drafts as an Executor-node capability, but it does
+not finalize, execute external actions, accept evidence, write DRS, install
+Needles, or bypass Root.
 
 Pipeline traces are observable projections, not the full architecture. For the geometric explanation of Root-centered needle topology, see [docs/passport_geometry_root_needles.md](docs/passport_geometry_root_needles.md).
 
@@ -839,6 +869,34 @@ This is targeted proof runtime hygiene, not full historical replay.
 
 Closed commits: `ece902f`, `00e98cd`, and `632ecb1`.
 
+## Bounded LLM Semantic Executor Node v0.1 Checkpoint
+
+Bounded LLM Semantic Executor Node v0.1 is closed through proof, human
+walkthrough, wording cleanup, audit, and docs sync.
+Its canonical Executor-side flow is:
+
+```text
+Architect-created PlanGraph -> Executor runs llm_semantic_executor_node
+-> mock LLM produces SemanticDraft -> Executor wraps ResultProposal
+-> Post V&V -> GT advisory -> Root Final
+```
+
+The checkpoint uses `source_evidence_mode=closed_checkpoint_metadata_only`
+with `source_collectors_replayed=false`. It created four PlanGraph nodes, one
+LLM semantic Executor node, one bounded LLM call envelope, one SemanticDraft,
+one SemanticDraftResultProposal, one passing Post V&V check, one GT advisory,
+and one Root semantic final. All nine adversarial escalation attempts were
+blocked. `network_called=false`, `gemini_called=false`, and
+`production_persistence=false`.
+
+Core invariant: the LLM is only `executor_node_capability`. It is not Root,
+Orchestrator, Architect, GT, or Post V&V. It does not create or modify the
+PlanGraph, route, accept evidence, prove truth, create ready status, execute
+action, write DRS, install a Needle, or create Root Final.
+
+Closed commits: proof `863f850`, human walkthrough `fc328c8`, wording cleanup
+`4659f3e`, and audit log `0e1626c`.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1022,14 +1080,16 @@ Completed recent layers:
 - External DRS Pointer Protocol v0.1.
 - Read-only Enterprise Connector Sandbox v0.1.
 - External Evidence Acceptance Gate v0.1.
+- Bounded LLM Semantic Executor Node v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Completed: External Evidence Acceptance Gate v0.1.
-- Current: docs sync for External Evidence Acceptance Gate v0.1.
-- Next: Bounded Gemini / LLM Semantic Actor v0.1.
-- Then: Enterprise Chaos Pack v0.1; Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; Enterprise Killer Demo v0.1; and Public Auditor Packet / Whitepaper draft.
+- Completed: Bounded LLM Semantic Executor Node v0.1, closed through docs sync.
+- Current: Enterprise Chaos Pack v0.1 or the next explicitly approved layer.
+- Next: Compute Collapse Enterprise Bench v0.1 or the next explicitly approved layer after Enterprise Chaos.
+- Then: Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; Enterprise Killer Demo v0.1; and Public Auditor Packet / Whitepaper draft.
+- A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.
 - Add future production ConflictCheck and richer direct reuse scoring only after the semantic reuse integration proof remains policy-bound.

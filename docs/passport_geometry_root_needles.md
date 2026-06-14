@@ -194,13 +194,13 @@ Current engineering order:
 33. Read-only Enterprise Connector Sandbox v0.1 - complete.
 34. Read-only Enterprise Connector Sandbox docs sync - complete.
 35. External Evidence Acceptance Gate v0.1 - complete.
-36. External Evidence Acceptance Gate docs sync.
-37. Bounded Gemini / LLM Semantic Actor v0.1.
-38. Enterprise Chaos Pack v0.1.
-39. Compute Collapse Enterprise Bench v0.1.
-40. Math Appendix Sync v0.4.
-41. Production Boundary Design Docs v0.1.
-42. Enterprise Killer Demo v0.1.
+36. External Evidence Acceptance Gate docs sync - complete.
+37. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
+38. Enterprise Chaos Pack v0.1 or next explicitly approved layer.
+40. Compute Collapse Enterprise Bench v0.1.
+41. Math Appendix Sync v0.4.
+42. Production Boundary Design Docs v0.1.
+43. Enterprise Killer Demo v0.1.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -336,6 +336,21 @@ status, or install a Needle. It is a substrate for future readiness checks,
 not readiness itself. Mock signature, trust-registry, and revocation checks
 are not real-world cryptographic, trust, or revocation validation. Root remains
 sovereign.
+
+## Bounded LLM Semantic Executor Node Geometry Checkpoint
+
+The bounded LLM node sits inside Executor, after Architect has created the
+PlanGraph:
+
+```text
+Architect -> PlanGraph -> Executor -> llm_semantic_executor_node
+-> SemanticDraft -> SemanticDraftResultProposal -> Post V&V -> GT -> Root
+```
+
+The LLM is `executor_node_capability`, not Root, Orchestrator, Architect, GT,
+Post V&V, or a new global actor. It cannot create or modify PlanGraph, route,
+accept evidence, prove truth, create ready status, execute action, write DRS,
+install Needle, or create Root Final. Root remains sovereign.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

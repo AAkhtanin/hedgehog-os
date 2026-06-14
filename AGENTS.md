@@ -160,6 +160,36 @@ Anti-reduction rules:
 - Codex must not run long tests unless the user explicitly requests them; the
   user runs long, focused, and full-suite tests manually.
 
+### Targeted Proof Runtime And Replay Policy
+
+- Targeted proof tests verify the new layer only. They must not replay
+  historical collectors by default.
+- A historical collector may be imported only when the current proof
+  explicitly requires live recomputation of that previous layer. If Codex
+  imports a heavy historical collector into a targeted proof, it must explain
+  why replay is required and why committed checkpoint metadata is
+  insufficient.
+- Closed checkpoint metadata is acceptable only after the previous layer is
+  closed by proof, human walkthrough, audit, and docs commits. Metadata-only
+  reports must expose `source_evidence_mode=closed_checkpoint_metadata_only`
+  and `source_collectors_replayed=false`.
+- Closed checkpoint metadata is runtime-cost hygiene. It is not full
+  historical proof replay and must never be presented as evidence that the
+  previous stack was re-executed.
+- Full historical replay belongs only to explicitly named, opt-in
+  audit/super-smoke/full-suite modes. Use it for checkpoint audits, regression
+  checks, or release gates, not ordinary targeted tests.
+- Do not convert expected output into fake proof. Do not hide skipped
+  collectors. If source evidence is metadata-only, state that directly.
+- Do not claim trusted evidence, truth, External DRS implementation, real
+  retrieval, connector/API access, installed Needle, or production autonomy
+  unless the current layer actually proves it. Audit hash proves continuity,
+  not truth.
+- For untracked files, ordinary `git diff --stat` may be empty. Use
+  `git status --short` to report them. Use `git diff --cached --stat` only
+  after staging. Never describe an empty ordinary diff stat as no changes when
+  untracked files exist.
+
 See `docs/passport_geometry_root_needles.md`.
 
 ---

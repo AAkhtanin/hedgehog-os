@@ -769,6 +769,26 @@ audit/super-smoke replay.
 
 Closed commits: `0a690c5`, `3e3cc3d`, and `2036247`.
 
+## Targeted Proof Runtime Policy
+
+Targeted proof tests verify the new layer only and must not replay historical
+collectors by default. Live recomputation of a previous layer is appropriate
+only when the current proof explicitly requires it; otherwise, a previously
+closed proof/human/audit/docs checkpoint may be referenced through committed
+metadata.
+
+Metadata-only reports must expose
+`source_evidence_mode=closed_checkpoint_metadata_only` and
+`source_collectors_replayed=false`. This is runtime-cost hygiene, not full
+historical proof replay. It must not be presented as evidence that the entire
+previous stack was re-executed.
+
+Full historical replay must be explicit, opt-in, and named. It belongs to
+audit, super-smoke, full-suite, regression, or release-gate modes rather than
+ordinary targeted tests. Expected output must not be converted into fake
+proof, skipped collectors must remain visible, and audit hash proves
+continuity, not truth.
+
 ## General Reuse Safety Rules
 
 - Work != Quarantine.

@@ -1254,14 +1254,15 @@ Corrected next order:
 28. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
 29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
 30. Needle adversarial / safety pack v0.1 - complete.
-31. External DRS Pointer Protocol v0.1.
-32. Read-only connector / real API sandbox.
-33. Chaos Applied Stress Pack.
-34. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
-    Needle safety.
-35. Production Boundary Design Docs.
-36. Only then Marennya quarantine-first.
-37. Then UP transfer/opportunity.
+31. External DRS Pointer Protocol v0.1 - complete.
+32. Codex/performance-rule hygiene patch.
+33. Read-only connector / real API sandbox.
+34. Chaos Applied Stress Pack.
+35. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
+    Needle safety + External DRS Pointer.
+36. Production Boundary Design Docs.
+37. Only then Marennya quarantine-first.
+38. Then UP transfer/opportunity.
 
 ## Applied + Fractal + Coupling Demo Commands
 
@@ -1274,6 +1275,7 @@ python -m demo.run_controlled_fractal_dac_expansion_v01
 python -m demo.run_dual_fractal_coupling_v01
 python -m demo.run_cross_domain_drs_bridge_v01
 python -m demo.run_needle_adversarial_safety_pack_v01
+python -m demo.run_external_drs_pointer_protocol_v01
 ```
 
 Human-readable auditor walkthroughs:
@@ -1285,6 +1287,7 @@ python -m demo.run_human_controlled_fractal_dac_walkthrough_v01
 python -m demo.run_human_dual_fractal_coupling_walkthrough_v01
 python -m demo.run_human_cross_domain_drs_bridge_walkthrough_v01
 python -m demo.run_human_needle_adversarial_safety_pack_walkthrough_v01
+python -m demo.run_human_external_drs_pointer_protocol_walkthrough_v01
 ```
 
 These deterministic local proofs create no real child agents, external action,
@@ -1301,6 +1304,12 @@ bridge traversal, coupling, DAG nodes, GT advice, child-cell proposals, audit
 hashes, or NeedleCandidate references into authority, truth, capability,
 installed Needle, or action. All attempts are blocked or quarantined-blocked.
 This is prerequisite safety before External DRS Pointer Protocol.
+
+External DRS Pointer Protocol v0.1 represents external claims only as local
+pointer candidates. Pointer claims cannot become truth or trusted evidence;
+pointer candidates cannot write DRS, execute action, install a Needle, or
+bypass Root. This is prerequisite topology for a future read-only connector /
+real API sandbox, not External DRS implementation.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

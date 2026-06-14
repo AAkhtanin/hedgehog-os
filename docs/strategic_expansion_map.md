@@ -1283,16 +1283,17 @@ Current implementation should remain focused on:
 
 Current proven / near-proven layers:
 
-text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1 Cross-domain DRS Bridge v0.1 Needle adversarial / safety pack v0.1
+text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1 Cross-domain DRS Bridge v0.1 Needle adversarial / safety pack v0.1 External DRS Pointer Protocol v0.1
 
 Near-term engineering path:
 
-text 1. Sync the closed Needle adversarial / safety checkpoint docs. 2. External DRS Pointer Protocol v0.1. 3. Read-only connector / real API sandbox. 4. Chaos Applied Stress Pack. 5. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety. 6. Production Boundary Design Docs. 7. Only then Marennya quarantine-first. 8. Then UP transfer/opportunity.
+text 1. Sync the closed External DRS Pointer Protocol checkpoint docs. 2. Codex/performance-rule hygiene patch. 3. Read-only connector / real API sandbox v0.1. 4. Chaos Applied Stress Pack. 5. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer. 6. Production Boundary Design Docs. 7. Only then Marennya quarantine-first. 8. Then UP transfer/opportunity.
 
 Completed checkpoint: Travel / Multi-condition Readiness, Multi-domain Applied
 Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and Dual Fractal Coupling
-v0.1. Cross-domain DRS Bridge v0.1 and Needle adversarial / safety pack v0.1
-are also complete as local proof-only safety layers. Still deferred:
+v0.1. Cross-domain DRS Bridge v0.1, Needle adversarial / safety pack v0.1,
+and External DRS Pointer Protocol v0.1 are also complete as local proof-only
+safety/protocol layers. Still deferred:
 NeedleFactory, production Needle installation, External DRS implementation,
 global semantic fabric, public Internet of Meaning, real child agents,
 production RAG, Gemini child-cell live mode, Telegram natural assistant,

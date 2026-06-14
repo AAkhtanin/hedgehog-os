@@ -189,14 +189,15 @@ Current engineering order:
 28. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
 29. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
 30. Needle adversarial / safety pack v0.1 - complete.
-31. External DRS Pointer Protocol v0.1.
-32. Read-only connector / real API sandbox.
-33. Chaos Applied Stress Pack.
-34. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
-    Needle safety.
-35. Production Boundary Design Docs.
-36. Only then Marennya quarantine-first.
-37. Then UP transfer/opportunity.
+31. External DRS Pointer Protocol v0.1 - complete.
+32. Codex/performance-rule hygiene patch.
+33. Read-only connector / real API sandbox.
+34. Chaos Applied Stress Pack.
+35. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
+    Needle safety + External DRS Pointer.
+36. Production Boundary Design Docs.
+37. Only then Marennya quarantine-first.
+38. Then UP transfer/opportunity.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -294,6 +295,18 @@ Safety formulas:
 
 Provenance-laundering attempts must be quarantined and blocked. Root remains
 sovereign.
+
+## External DRS Pointer Geometry Checkpoint
+
+External pointer is not External DRS. A pointer candidate is not trusted
+evidence, a pointer claim is not truth, and pointer status does not finalize.
+A pointer cannot install a Needle, grant capability, write global/external
+DRS, execute action, or bypass Root.
+
+Unknown external pointer sources require quarantine or blocking. Signature,
+trust-registry, and revocation placeholders are not real signature, trust, or
+revocation. Root review and explicit acceptance are required before any future
+trusted use. Root remains sovereign.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

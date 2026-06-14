@@ -728,6 +728,47 @@ implement External DRS or global semantic fabric, run production RAG, call
 Gemini/network/Telegram, invoke Marennya/UP, or grant production autonomy.
 Closed commits: `5b5fa3a`, `165d679`, and `1f9d89d`.
 
+## External DRS Pointer Protocol v0.1 Checkpoint
+
+External DRS Pointer Protocol v0.1 is a deterministic local proof-only
+protocol for representing external pointer candidates. It does not implement
+External DRS, global semantic fabric, public Internet of Meaning, remote
+retrieval, connector/API access, production persistence, production RAG,
+production Needle installation, Gemini/network/Telegram, Marennya, UP, or
+production autonomy.
+
+The proof observed two pointer candidates and accepted zero. Six adversarial
+escalation attempts were observed and blocked; unknown-source laundering was
+quarantined and blocked. It confirms that an external pointer is not External
+DRS, a pointer candidate is not trusted evidence, a pointer claim is not
+truth, and a pointer cannot write global/external DRS or install a Needle.
+Root remains sovereign.
+
+Safety formulas:
+
+- External pointer is not External DRS.
+- Pointer candidate is not trusted evidence.
+- Pointer claim is not truth.
+- Pointer status does not finalize.
+- Pointer cannot execute action.
+- Pointer cannot write global DRS or External DRS.
+- Pointer cannot install Needle.
+- Pointer cannot bypass Root, ConflictCheck, GT, permission / needs_user, or
+  quarantine.
+- Signature placeholder is not signature.
+- Trust registry placeholder is not trust.
+- Revocation placeholder is not revocation.
+- Root review and explicit acceptance are required.
+- Unknown-source laundering is quarantined and blocked.
+
+Targeted tests use `source_evidence_mode=closed_checkpoint_metadata_only` and
+`source_collectors_replayed=false`. Closed checkpoints are referenced as
+committed metadata instead of replaying every historical collector. This is
+runtime-cost hygiene, not a truth claim or replacement for explicit
+audit/super-smoke replay.
+
+Closed commits: `0a690c5`, `3e3cc3d`, and `2036247`.
+
 Safety rules for this checkpoint:
 
 - Work != Quarantine.
@@ -888,13 +929,14 @@ Completed recent layers:
 - Dual Fractal Coupling / Interlocking DAC Proof v0.1.
 - Cross-domain DRS Traversal / DRS Bridge Proof v0.1.
 - Needle adversarial / safety pack v0.1.
+- External DRS Pointer Protocol v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Current: docs sync for Needle adversarial / safety pack v0.1.
-- Next: External DRS Pointer Protocol v0.1.
-- Then: read-only connector / real API sandbox; Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety; and Production Boundary Design Docs.
+- Current: docs sync for External DRS Pointer Protocol v0.1.
+- Next: Codex/performance-rule hygiene patch.
+- Then: read-only connector / real API sandbox v0.1; Chaos Applied Stress Pack; Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer; and Production Boundary Design Docs.
 - Only after that: Marennya quarantine-first v0.1, followed by UP transfer/opportunity v0.1.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.

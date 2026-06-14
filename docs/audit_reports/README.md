@@ -189,6 +189,12 @@ Current reports:
   - Confirms targeted tests passed=30, adversarial attempts observed=8, attempts blocked=8, quarantined attempts observed=1, and sensitive scan clean.
   - Confirms no installed Needle, external action, production persistence, or global/external DRS write.
 
+- `auditor_external_drs_pointer_protocol_v01.log`
+  - External DRS Pointer Protocol v0.1 evidence for commits `0a690c5`, `3e3cc3d`, and `2036247`.
+  - Confirms targeted tests passed=28, pointer candidates observed=2, pointer candidates accepted=0, adversarial attempts observed=6, attempts blocked=6, quarantined attempts observed=1, and sensitive scan clean.
+  - Confirms performance hygiene with `source_collectors_replayed=false` and a clean heavy historical collector replay check.
+  - Confirms no External DRS, retrieval, connector, trusted evidence, truth, DRS write, installed Needle, or external action.
+
 ## Current Applied Auditor Commands
 
 ```bash

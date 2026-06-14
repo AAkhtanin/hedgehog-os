@@ -738,13 +738,14 @@ Corrected roadmap:
 14. Dual Fractal Coupling / Interlocking DAC Proof v0.1 - complete.
 15. Cross-domain DRS Traversal / DRS Bridge Proof v0.1 - complete.
 16. Needle adversarial / safety pack v0.1 - complete.
-17. External DRS Pointer Protocol v0.1.
-18. Read-only connector / real API sandbox.
-19. Chaos Applied Stress Pack.
-20. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
-    Needle safety.
-21. Production Boundary Design Docs.
-22. Only then Marennya quarantine-first, followed by UP transfer/opportunity.
+17. External DRS Pointer Protocol v0.1 - complete.
+18. Codex/performance-rule hygiene patch.
+19. Read-only connector / real API sandbox.
+20. Chaos Applied Stress Pack.
+21. Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge +
+    Needle safety + External DRS Pointer.
+22. Production Boundary Design Docs.
+23. Only then Marennya quarantine-first, followed by UP transfer/opportunity.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2537,6 +2538,22 @@ This checkpoint does not prove full adversarial safety for all future external
 records and does not implement NeedleFactory, External DRS, production RAG,
 production Needle installation, or production autonomy. Root-only final
 authority remains preserved.
+
+## 20.10 External DRS Pointer Protocol v0.1 Checkpoint
+
+External DRS Pointer Protocol v0.1 is complete as a deterministic local
+proof-only pointer protocol. It validates quarantine, review, and explicit
+acceptance boundaries before real External DRS or connector work.
+
+The proof observes two external pointer candidates, accepts zero, blocks six
+escalation attempts, and quarantines/blocks the unknown-source laundering
+attempt. Pointer candidates cannot self-promote into trusted evidence, truth,
+authority, ready status, installed Needle, DRS write, or external action.
+
+This checkpoint does not implement External DRS, production RAG, global
+semantic fabric, remote retrieval, connector/API access, production Needle
+installation, or production autonomy. Root-only final authority remains
+preserved.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

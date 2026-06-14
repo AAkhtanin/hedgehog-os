@@ -986,10 +986,10 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: current Needle adversarial/safety docs sync -> External
-DRS Pointer Protocol -> read-only
-connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync ->
-Production Boundary Design Docs -> only then Marennya -> UP.
+Corrected next order: current External DRS Pointer Protocol docs sync ->
+Codex/performance-rule hygiene patch -> read-only connector sandbox -> Chaos
+Applied Stress Pack -> Math Appendix sync -> Production Boundary Design Docs ->
+only then Marennya -> UP.
 
 ## Applied + Fractal + Coupling Checkpoint Commands
 
@@ -1000,6 +1000,7 @@ python -m demo.run_controlled_fractal_dac_expansion_v01
 python -m demo.run_dual_fractal_coupling_v01
 python -m demo.run_cross_domain_drs_bridge_v01
 python -m demo.run_needle_adversarial_safety_pack_v01
+python -m demo.run_external_drs_pointer_protocol_v01
 
 python -m demo.run_human_travel_readiness_walkthrough
 python -m demo.run_human_multi_domain_applied_walkthrough_v02
@@ -1007,6 +1008,7 @@ python -m demo.run_human_controlled_fractal_dac_walkthrough_v01
 python -m demo.run_human_dual_fractal_coupling_walkthrough_v01
 python -m demo.run_human_cross_domain_drs_bridge_walkthrough_v01
 python -m demo.run_human_needle_adversarial_safety_pack_walkthrough_v01
+python -m demo.run_human_external_drs_pointer_protocol_walkthrough_v01
 ```
 
 Travel readiness preserves four blockers and a Root `not_ready` final.
@@ -1025,6 +1027,12 @@ retrieval, coupling, DAG, GT, child-cell, audit, and NeedleCandidate artifacts
 into authority, action, truth, or installed capability. All eight attempts are
 blocked; provenance laundering is quarantined and blocked. This is prerequisite
 safety before External DRS Pointer Protocol.
+
+External DRS Pointer Protocol v0.1 represents external claims as local
+proof-only pointer candidates. Pointer claims cannot become truth or trusted
+evidence, and pointer candidates cannot write DRS, execute action, install a
+Needle, or bypass Root. It is prerequisite topology for future read-only
+connector work, not External DRS implementation.
 
 ## Exclusions
 

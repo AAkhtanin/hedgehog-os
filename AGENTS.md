@@ -132,13 +132,27 @@ Anti-reduction rules:
 - Do not use DRS Bridge language to claim External DRS, global semantic
   fabric, public Internet of Meaning, remote retrieval, or production
   persistence.
+- Targeted proof layers must not replay historical collectors by default.
+  Closed layers should be referenced as committed checkpoint metadata when
+  the current proof only needs source status.
+- When historical collectors are not replayed, reports must state
+  `source_collectors_replayed=false`. The mode
+  `source_evidence_mode=closed_checkpoint_metadata_only` is runtime-cost
+  hygiene, not full proof replay.
+- Full historical replay belongs to explicit audit/super-smoke commands.
+  Codex must not introduce heavy historical collector replay in targeted tests
+  unless explicitly requested.
+- Do not use External DRS Pointer language to claim External DRS
+  implementation, remote retrieval, connector/API access, trusted evidence,
+  or public Internet of Meaning.
 - The deterministic local applied/fractal stack is closed through Travel,
   Multi-domain Applied Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and
   Dual Fractal Coupling v0.1. Cross-domain DRS Bridge v0.1 adds local reviewed
   traversal only.
-- Needle adversarial / safety pack v0.1 is complete. The next engineering layer
-  is External DRS Pointer Protocol v0.1, not External DRS implementation or
-  Marennya / UP.
+- Needle adversarial / safety pack v0.1 and External DRS Pointer Protocol v0.1
+  are complete. The next engineering step is the Codex/performance-rule
+  hygiene patch, followed by read-only connector sandbox work, not External
+  DRS implementation or Marennya / UP.
 - Codex must not run long tests unless the user explicitly requests them; the
   user runs long, focused, and full-suite tests manually.
 
@@ -419,7 +433,14 @@ audit, and NeedleCandidate boundaries; provenance laundering is quarantined
 and blocked. It does not implement NeedleFactory, production installation,
 External DRS, production RAG, or autonomy.
 
-Corrected engineering order: current Needle adversarial/safety docs sync -> External DRS Pointer Protocol -> read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
+External DRS Pointer Protocol v0.1 is complete as a local proof-only pointer
+protocol. Two pointer candidates are observed, zero accepted, and all six
+escalation attempts are blocked; unknown-source laundering is quarantined and
+blocked. Pointer claims remain untrusted and non-final. Targeted tests use
+closed-checkpoint metadata with `source_collectors_replayed=false`; explicit
+audit/super-smoke runs own full historical replay.
+
+Corrected engineering order: current External DRS Pointer Protocol docs sync -> Codex/performance-rule hygiene patch -> read-only connector sandbox -> Chaos Applied Stress Pack -> Math Appendix sync for Fractal DAC + DRS reuse + coupling + DRS bridge + Needle safety + External DRS Pointer -> Production Boundary Design Docs -> only then Marennya quarantine-first -> UP transfer/opportunity.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

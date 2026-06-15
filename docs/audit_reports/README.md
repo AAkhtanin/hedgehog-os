@@ -220,6 +220,13 @@ Current reports:
   - Confirms `source_collectors_replayed=false`, `production_economics_claimed=false`, `real_billing_claimed=false`, `real_latency_claimed=false`, and `killer_demo_authorized=false`.
   - Confirms Root remains final authority.
 
+- `auditor_kernel_enforcement_transition_matrix_v01.log`
+  - Kernel Enforcement / Transition Matrix Hardening v0.1 evidence for commits `5acfc8a`, `5212eec`, and `9d648e3`.
+  - Audit status PASS. Confirms `allowed_transitions_count=10`, `blocked_transitions_count=35`, and `focused_tests_passed=15`.
+  - Confirms `transition_matrix_is_authority=false` and `transition_matrix_is_production_runtime_authority=false`.
+  - Confirms `drs_writeback_scope=local_after_root_final`, `local_drs_writeback=true`, `global_drs_write=false`, and `external_drs_write=false`.
+  - Confirms Root remains final authority.
+
 ## Current Applied Auditor Commands
 
 ```bash

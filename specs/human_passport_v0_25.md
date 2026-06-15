@@ -748,8 +748,8 @@ Corrected roadmap:
 24. Enterprise Chaos Pack v0.1 - complete through docs sync.
 25. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
 26. Math / Invariants Sync v0.4 - complete.
-27. Next: Kernel Enforcement / Transition Matrix Hardening v0.1.
-28. Then: Developer Facade / Capability Manifest UX v0.1.
+27. Kernel Enforcement / Transition Matrix Hardening v0.1 - complete through docs sync.
+28. Next: Developer Facade / Capability Manifest UX v0.1.
 29. Then: Production Boundary Design Docs v0.1.
 30. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
 
@@ -2690,6 +2690,25 @@ real cost savings, or real-world performance. It does not authorize Killer
 Demo, activate Marennya / UP, create External DRS or global DRS, use real
 connectors, install Needles, create production persistence, or execute
 external actions.
+
+## 20.16 Kernel Enforcement / Transition Matrix Hardening v0.1 Checkpoint
+
+Kernel Enforcement / Transition Matrix Hardening v0.1 is complete as a
+deterministic local proof-only transition matrix. It formalizes already proven
+boundaries from Math / Invariants Sync v0.4 and prior enterprise layers as
+artifact/effect transition rows.
+
+The proof allows 10 bounded transitions and blocks 35 forbidden transitions.
+It is not production enforcement, runtime rewrite, schema modification, a new
+authority layer, or a new actor in the canonical runtime pipeline. The
+transition matrix is not Root, not authority, and not production runtime
+authority. Root remains final authority.
+
+RootFinalOutput -> DRSWriteback is local-only:
+`drs_writeback_scope=local_after_root_final`, `local_drs_writeback=true`,
+`global_drs_write=false`, and `external_drs_write=false`.
+
+Next: Developer Facade / Capability Manifest UX v0.1.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

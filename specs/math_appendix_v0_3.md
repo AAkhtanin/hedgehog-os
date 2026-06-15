@@ -2748,6 +2748,26 @@ benchmark signals only: not billing, not economics, and not latency. DRS reuse
 reduces recomputation but is not authority. Audit hash records continuity, not
 truth.
 
+Kernel Enforcement / Transition Matrix Hardening v0.1 takes the v0.4 closed
+boundary invariants and represents them as deterministic local transition
+rows. It is proof-level and not production enforcement:
+
+```text
+allowed_transitions_count = 10
+blocked_transitions_count = 35
+transition_matrix_is_authority = false
+transition_matrix_is_production_runtime_authority = false
+
+RootFinalOutput -> DRSWriteback(local_after_root_final)
+local_drs_writeback = true
+global_drs_write = false
+external_drs_write = false
+```
+
+The transition matrix models already proven boundary rules. It is not Root,
+not authority, not production runtime authority, not a runtime rewrite, and not
+schema modification. Root remains final authority.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

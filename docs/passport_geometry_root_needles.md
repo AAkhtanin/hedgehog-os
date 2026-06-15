@@ -199,8 +199,8 @@ Current engineering order:
 38. Enterprise Chaos Pack v0.1 - complete through docs sync.
 39. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
 40. Math / Invariants Sync v0.4 - complete.
-41. Next: Kernel Enforcement / Transition Matrix Hardening v0.1.
-42. Then: Developer Facade / Capability Manifest UX v0.1.
+41. Kernel Enforcement / Transition Matrix Hardening v0.1 - complete through docs sync.
+42. Next: Developer Facade / Capability Manifest UX v0.1.
 43. Then: Production Boundary Design Docs v0.1.
 44. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
 
@@ -382,6 +382,20 @@ reuse signals, not authority. Root remains final authority.
 The `29 -> 1` estimated LLM-call signal and `180 -> 32` context-unit signal
 are local proof-level benchmark signals, not billing, economics, latency, or
 real cost-savings proof.
+
+## Kernel Enforcement / Transition Matrix Geometry Checkpoint
+
+Kernel Enforcement / Transition Matrix Hardening v0.1 is a proof-level
+boundary model around Root-centered capability geometry. It represents already
+proven boundary rules as a deterministic local transition matrix; it does not
+become Root, authority, production runtime authority, or a new actor in the
+canonical runtime pipeline.
+
+The matrix prevents non-Root artifacts from self-promoting into truth, ready
+status, external action, FinalOutput, installed Needle, DRS write, production
+claim, or runtime activation. RootFinalOutput -> DRSWriteback is local-only
+with `drs_writeback_scope=local_after_root_final`, not global or External DRS
+writeback. Root remains final authority.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

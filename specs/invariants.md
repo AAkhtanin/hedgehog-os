@@ -535,3 +535,19 @@ Compute Collapse Enterprise Bench v0.1:
 - Audit hash-chain records continuity, not truth.
 - Killer Demo remains future assembly target after maturity gates, not next
   layer and not authorized by benchmark.
+
+Kernel Enforcement / Transition Matrix Hardening v0.1:
+
+- Kernel Enforcement / Transition Matrix Hardening v0.1 confirms the closed
+  invariants as a proof-level transition matrix.
+- The transition matrix is not authority.
+- The transition matrix is not production runtime authority.
+- The transition matrix does not replace Root.
+- Root remains final authority.
+- Non-Root artifacts cannot self-promote into truth, ready status, external
+  action, DRS write, installed Needle, FinalOutput, runtime activation, or
+  production claim.
+- RootFinalOutput -> DRSWriteback is local-only:
+  `drs_writeback_scope=local_after_root_final`,
+  `local_drs_writeback=true`, `global_drs_write=false`, and
+  `external_drs_write=false`.

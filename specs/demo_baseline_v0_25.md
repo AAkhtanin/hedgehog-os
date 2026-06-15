@@ -1264,8 +1264,8 @@ Corrected next order:
 38. Enterprise Chaos Pack v0.1 - complete through docs sync.
 39. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
 40. Math / Invariants Sync v0.4 - complete.
-41. Next: Kernel Enforcement / Transition Matrix Hardening v0.1.
-42. Then: Developer Facade / Capability Manifest UX v0.1.
+41. Kernel Enforcement / Transition Matrix Hardening v0.1 - complete through docs sync.
+42. Next: Developer Facade / Capability Manifest UX v0.1.
 43. Then: Production Boundary Design Docs v0.1.
 44. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
 
@@ -1284,6 +1284,7 @@ python -m demo.run_external_drs_pointer_protocol_v01
 python -m demo.run_read_only_enterprise_connector_sandbox_v01
 python -m demo.run_external_evidence_acceptance_gate_v01
 python -m demo.run_compute_collapse_enterprise_bench_v01
+python -m demo.run_kernel_enforcement_transition_matrix_v01
 ```
 
 Human-readable auditor walkthroughs:
@@ -1299,6 +1300,7 @@ python -m demo.run_human_external_drs_pointer_protocol_walkthrough_v01
 python -m demo.run_human_read_only_enterprise_connector_sandbox_walkthrough_v01
 python -m demo.run_human_external_evidence_acceptance_gate_walkthrough_v01
 python -m demo.run_human_compute_collapse_enterprise_bench_walkthrough_v01
+python -m demo.run_human_kernel_enforcement_transition_matrix_walkthrough_v01
 ```
 
 These deterministic local proofs create no real child agents, external action,
@@ -1334,10 +1336,11 @@ packets. Root accepts two, rejects three, and quarantines one. AcceptedEvidence
 remains not truth, not ready, not action, not DRS write, and not Needle. The
 Compute Collapse Enterprise Bench v0.1 is complete through proof, human
 walkthrough, audit, and docs sync. Math / Invariants Sync v0.4 is complete.
-Next: Kernel Enforcement / Transition Matrix Hardening v0.1. Then: Developer
-Facade / Capability Manifest UX v0.1. Then: Production Boundary Design Docs
-v0.1. Enterprise Killer Demo v0.1 remains a future assembly target after
-maturity gates, not the next layer.
+Kernel Enforcement / Transition Matrix Hardening v0.1 is complete through
+proof, human walkthrough, audit, and docs sync. Next: Developer Facade /
+Capability Manifest UX v0.1. Then: Production Boundary Design Docs v0.1.
+Enterprise Killer Demo v0.1 remains a future assembly target after maturity
+gates, not the next layer.
 
 Bounded LLM Semantic Executor Node v0.1 keeps the model inside Executor as
 `executor_node_capability`. Architect creates the four-node PlanGraph first;
@@ -1363,8 +1366,15 @@ semantic routing. It shows a `29 -> 1` estimated LLM-call signal and a `180 ->
 collectors are not replayed, and no production economics, billing, latency,
 cloud-cost, or real cost-savings claim is made. Killer Demo remains a future
 assembly target after maturity gates and is not authorized by this benchmark.
-Math / Invariants Sync v0.4 is complete. Next: Kernel Enforcement /
-Transition Matrix Hardening v0.1.
+Math / Invariants Sync v0.4 is complete.
+
+Kernel Enforcement / Transition Matrix Hardening v0.1 is a deterministic local
+proof-only transition matrix over already proven boundaries. It allows 10
+bounded transitions, blocks 35 forbidden transitions, and has 15 focused tests
+passed. The transition matrix is non-authority and not production runtime
+authority. RootFinalOutput -> DRSWriteback is local-only with
+`drs_writeback_scope=local_after_root_final`. Next layer: Developer Facade /
+Capability Manifest UX v0.1.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

@@ -958,6 +958,62 @@ and `source_collectors_replayed_count=0`. Focused tests: 11 passed.
 Killer Demo remains a future assembly target after maturity gates. It is not
 the next lifecycle step and is not authorized by this benchmark.
 
+## Kernel Enforcement / Transition Matrix Hardening v0.1 Checkpoint
+
+Kernel Enforcement / Transition Matrix Hardening v0.1 is a deterministic local
+proof-only transition matrix over already proven boundary rules. Math /
+Invariants Sync v0.4 wrote the rules; this checkpoint represents those closed
+rules as local transition rows. It is a meta-proof / hardening layer over
+artifact transitions, not production kernel enforcement, production runtime
+authority, a runtime rewrite, schema modification, a new authority layer, or a
+new actor or step inside the canonical Root -> Orchestrator -> AVF -> Architect
+-> Executor -> Post V&V -> GT -> Root Final pipeline.
+
+Evidence commits: proof `5acfc8a`, human walkthrough `5212eec`, and audit log
+`9d648e3`. Proof facts: `kernel_enforcement_transition_matrix_v01_status=PASS`,
+`allowed_transitions_count=10`, `blocked_transitions_count=35`,
+`blocked_transitions_detected=35`, `blocked_transitions_blocked=35`, and
+`focused_tests_passed=15`.
+
+The proof centralizes artifact/effect transition rows with fields such as
+`artifact_type`, `source_state`, `attempted_target_or_effect`, `actor`,
+`root_commit_present`, `expected_decision`, `decision_reason`,
+`authority_transferred`, `final_output_created`, `truth_claim_created`,
+`ready_status_created`, `external_action_executed`, `global_drs_write`,
+`external_drs_write`, `installed_needle_created`, `production_persistence`,
+`network_called`, `gemini_called`, `marennya_invoked`, and `up_invoked`.
+
+Allowed transitions are bounded: ConnectorObservation -> EvidenceCandidate,
+EvidenceCandidate -> ValidationPacket, RootDecision -> AcceptedEvidence /
+RejectedEvidence / QuarantinedEvidence, ResultProposal -> PostVVReport,
+PostVVReport -> GTReport, GTReport -> RootReviewInput, Root ->
+RootFinalOutput, and RootFinalOutput -> local DRSWriteback after Root Final.
+RootFinalOutput -> DRSWriteback is local-only:
+`drs_writeback_scope=local_after_root_final`, `local_drs_writeback=true`,
+`global_drs_write=false`, and `external_drs_write=false`.
+
+Blocked transition families preserve the closed boundaries: observations,
+candidates, and validation packets cannot become truth or acceptance without
+Root; AcceptedEvidence cannot become truth, ready status, action, DRS write, or
+installed Needle; SemanticDraft, ResultProposal, GTReport, DRSReuse, closed
+checkpoint metadata, AuditHashClaim, ExternalDRSPointer, NeedleCandidate,
+PermissionNeedsUser, ChildCellClaim, ComputeCollapseMetric, LLMExecutorNode,
+MarennyaStub, and UPStub cannot self-promote into authority, final output,
+action, production claims, runtime activation, or Killer Demo authorization.
+
+The proof covers local transition taxonomy for artifact and attempted
+target/effect names. Some names are artifacts; some are attempted effects. Both
+are covered so transition rows do not use undefined boundary names.
+
+The transition matrix is not Root, not authority, and not production runtime
+authority: `transition_matrix_is_proof_only=true`,
+`transition_matrix_is_authority=false`, and
+`transition_matrix_is_production_runtime_authority=false`. It does not
+implement production enforcement, rewrite runtime, modify schemas, call
+network/Gemini, execute external action, write global/external DRS, install
+Needles, create production persistence, authorize Killer Demo, or activate
+Marennya / UP. Root remains final authority.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1145,14 +1201,15 @@ Completed recent layers:
 - Enterprise Chaos Pack v0.1.
 - Compute Collapse Enterprise Bench v0.1.
 - Math / Invariants Sync v0.4.
+- Kernel Enforcement / Transition Matrix Hardening v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
 - Completed: Compute Collapse Enterprise Bench v0.1, complete through docs sync.
 - Completed: Math / Invariants Sync v0.4.
-- Next: Kernel Enforcement / Transition Matrix Hardening v0.1.
-- Then: Developer Facade / Capability Manifest UX v0.1.
+- Completed: Kernel Enforcement / Transition Matrix Hardening v0.1.
+- Next: Developer Facade / Capability Manifest UX v0.1.
 - Then: Production Boundary Design Docs v0.1.
 - Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
 - Public Auditor Packet / Whitepaper draft remains later.

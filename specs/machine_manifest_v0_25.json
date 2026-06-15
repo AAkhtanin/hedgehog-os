@@ -23,13 +23,13 @@
   "current_checkpoint_status": {
     "metadata_sync_only": true,
     "manifest_does_not_override_human_passport": true,
-    "latest_confirmed_checkpoint_commit": "76528a5",
-    "latest_confirmed_checkpoint_name": "Document post-Math and Invariants roadmap checkpoint",
+    "latest_confirmed_checkpoint_commit": "9d648e3",
+    "latest_confirmed_checkpoint_name": "Add Kernel Enforcement Transition Matrix v0.1 audit log",
     "compute_collapse_enterprise_bench_v01_status": "complete_through_docs_sync",
     "math_invariants_sync_v04_status": "complete",
-    "next_layer": "Kernel Enforcement / Transition Matrix Hardening v0.1",
+    "kernel_enforcement_transition_matrix_v01_status": "complete_through_docs_sync",
+    "next_layer": "Developer Facade / Capability Manifest UX v0.1",
     "then": [
-      "Developer Facade / Capability Manifest UX v0.1",
       "Production Boundary Design Docs v0.1"
     ],
     "later": [
@@ -109,6 +109,15 @@
         "math_invariants_sync": "2af3876",
         "roadmap_sync": "76528a5"
       }
+    },
+    {
+      "name": "Kernel Enforcement / Transition Matrix Hardening v0.1",
+      "status": "complete_through_docs_sync",
+      "commits": {
+        "proof": "5acfc8a",
+        "human_walkthrough": "5212eec",
+        "audit_log": "9d648e3"
+      }
     }
   ],
 
@@ -138,7 +147,20 @@
     "real_billing_claimed": false,
     "real_latency_claimed": false,
     "real_cloud_cost_claimed": false,
-    "real_cost_savings_claimed": false
+    "real_cost_savings_claimed": false,
+    "transition_matrix_is_proof_only": true,
+    "transition_matrix_is_authority": false,
+    "transition_matrix_is_production_runtime_authority": false,
+    "production_enforcement_implemented": false,
+    "runtime_rewrite_performed": false,
+    "schemas_modified": false,
+    "root_only_final_output": true,
+    "root_commit_required_for_final_output": true,
+    "local_drs_writeback_scope": "local_after_root_final",
+    "local_drs_writeback": true,
+    "global_drs_write": false,
+    "external_drs_write": false,
+    "developer_facade_is_not_authorized_yet": true
   },
 
   "compute_collapse_enterprise_bench_v01_metrics": {
@@ -156,6 +178,52 @@
     "context_unit_reduction_ratio": 0.8222,
     "source_collectors_replayed": false,
     "source_collectors_replayed_count": 0
+  },
+
+  "kernel_enforcement_transition_matrix_v01_facts": {
+    "proof_commit": "5acfc8a",
+    "human_walkthrough_commit": "5212eec",
+    "audit_log_commit": "9d648e3",
+    "kernel_enforcement_transition_matrix_v01_status": "PASS",
+    "allowed_transitions_count": 10,
+    "blocked_transitions_count": 35,
+    "blocked_transitions_detected": 35,
+    "blocked_transitions_blocked": 35,
+    "focused_tests_passed": 15,
+    "transition_matrix_is_proof_only": true,
+    "transition_matrix_is_authority": false,
+    "transition_matrix_is_production_runtime_authority": false,
+    "production_enforcement_implemented": false,
+    "runtime_rewrite_performed": false,
+    "schemas_modified": false,
+    "root_only_final_output": true,
+    "root_commit_required_for_final_output": true,
+    "drs_writeback_scope": "local_after_root_final",
+    "local_drs_writeback": true,
+    "global_drs_write": false,
+    "external_drs_write": false,
+    "drs_reuse_is_authority": false,
+    "closed_checkpoint_metadata_is_authority": false,
+    "audit_hash_decides_truth": false,
+    "connector_observation_is_truth": false,
+    "evidence_candidate_is_accepted_evidence": false,
+    "accepted_evidence_is_truth": false,
+    "accepted_evidence_is_action": false,
+    "semantic_draft_is_final": false,
+    "resultproposal_is_final": false,
+    "gt_is_final_authority": false,
+    "llm_is_bounded_executor_node_capability": true,
+    "llm_is_authority": false,
+    "compute_collapse_authorizes_killer_demo": false,
+    "no_network": true,
+    "no_gemini": true,
+    "no_external_action": true,
+    "no_global_drs_write": true,
+    "no_external_drs_write": true,
+    "no_installed_needle": true,
+    "no_production_persistence": true,
+    "no_marennya": true,
+    "no_up": true
   },
 
   "deferred_not_implemented_after_math_invariants_v04": {

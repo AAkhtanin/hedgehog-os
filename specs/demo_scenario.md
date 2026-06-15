@@ -987,9 +987,10 @@ needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
 Corrected next order: Compute Collapse Enterprise Bench v0.1 complete through
-docs sync -> Math / Invariants Sync v0.4 complete -> Next: Kernel Enforcement /
-Transition Matrix Hardening v0.1 -> Then: Developer Facade / Capability
-Manifest UX v0.1 -> Then: Production Boundary Design Docs v0.1 -> Enterprise
+docs sync -> Math / Invariants Sync v0.4 complete -> Kernel Enforcement /
+Transition Matrix Hardening v0.1 complete through docs sync -> Next: Developer
+Facade / Capability Manifest UX v0.1 -> Then: Production Boundary Design Docs
+v0.1 -> Enterprise
 Killer Demo v0.1 remains a future assembly target after maturity gates, not the
 next layer -> Public Auditor Packet / Whitepaper draft remains later.
 
@@ -1076,6 +1077,13 @@ synthetic proof-level compute-collapse signal: `29 -> 1` estimated LLM-call
 units and `180 -> 32` context units. Root remains final authority. The local
 walkthrough, audit, and docs call no real LLM, network, Gemini, or API; execute
 no external action; and authorize no Killer Demo.
+
+Kernel Enforcement / Transition Matrix Hardening v0.1 is a meta-proof over
+artifact transitions, not a new actor in the runtime chain. It models already
+proven boundary rules as a deterministic local transition matrix, allows 10
+bounded transitions, blocks 35 forbidden transitions, and does not implement
+production enforcement. It does not authorize external action or Killer Demo.
+Root remains final authority.
 
 ## Exclusions
 

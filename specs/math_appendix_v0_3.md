@@ -2549,6 +2549,155 @@ DRS does not replace APIs. An API may be a bounded source or connector, while
 Root-controlled gates determine whether its observation may progress through
 candidate, validation, acceptance, reuse, or rejection states.
 
+### 17.1. Math / Invariants Sync v0.4 - Closed Enterprise Boundaries
+
+The following formulas summarize only already closed local proof layers. They
+do not add runtime enforcement, schemas, proof runners, tests, demos, real
+connectors, real external DRS, production persistence, or production autonomy.
+
+External DRS Pointer Protocol v0.1:
+
+```text
+ExternalDRSPointer = pointer/reference to external meaning trace
+ExternalDRSPointer != external_drs_write
+ExternalDRSPointer != global_drs_write
+authority(ExternalDRSPointer) = 0
+provenance_laundering(bridge_traversal) = blocked_or_quarantined
+RootFinalAuthority = 1
+```
+
+External pointer candidate influence may contribute bounded reviewed context,
+but it is not authority. Bridge traversal cannot launder provenance. Root
+remains final authority.
+
+Read-only Enterprise Connector Sandbox v0.1:
+
+```text
+ConnectorObservation = observation
+ConnectorObservation != truth
+ConnectorObservation != trusted_evidence
+ConnectorObservation -> EvidenceCandidate only through bounded acceptance flow
+read_only_connector_action = 0
+read_only_connector_drs_write = 0
+production_api_call = 0
+```
+
+ConnectorObservation is observation, not truth. ConnectorObservation is not
+trusted evidence by itself. Read-only connector sandbox outputs do not execute
+actions, write DRS, or call real production APIs.
+
+External Evidence Acceptance Gate v0.1:
+
+```text
+ConnectorObservation
+  -> EvidenceCandidate
+  -> ValidationPacket
+  -> RootDecision
+  -> AcceptedEvidence | RejectedEvidence | QuarantinedEvidence
+
+EvidenceCandidate.state = candidate_only until RootDecision
+ValidationPacket != RootDecision
+GT_acceptance_authority = 0
+ConflictCheck_acceptance_authority = 0
+AcceptedEvidence requires RootDecision
+AcceptedEvidence != truth
+AcceptedEvidence != ready_status
+AcceptedEvidence != action
+AcceptedEvidence != drs_write
+AcceptedEvidence != installed_needle
+```
+
+EvidenceCandidate remains candidate_only until Root decision. ValidationPacket
+is not Root acceptance. GT is not acceptance authority. ConflictCheck is not
+acceptance authority. AcceptedEvidence requires Root decision. AcceptedEvidence
+is not truth, ready status, action, DRS write, or installed Needle. Mock
+signature, trust, and revocation checks are local proof fields, not real-world
+cryptographic or registry validation.
+
+Bounded LLM Semantic Executor Node v0.1:
+
+```text
+PlanGraph_preexists = true
+Executor(llm_semantic_executor_node, bounded_mock_llm)
+  -> SemanticDraft
+  -> SemanticDraftResultProposal
+  -> PostVV
+  -> GT_advisory
+  -> RootFinal
+
+LLM is bounded Executor node capability
+LLM_is_Root = 0
+LLM_is_Orchestrator = 0
+LLM_is_Architect_authority = 0
+LLM_is_GT = 0
+LLM_finalize = 0
+LLM_external_action = 0
+LLM_drs_write = 0
+```
+
+Bounded LLM Semantic Executor Node means the LLM is bounded Executor node
+capability. It is not Root, Orchestrator, Architect authority, or GT. It does
+not finalize, execute external actions, or write DRS by itself. It produces
+bounded semantic draft / ResultProposal-shaped artifacts only under PlanGraph
+execution. In Compute Collapse, `hedgehog_llm_calls=1` is a synthetic
+routed-path estimate, not a real Gemini/API call by docs, walkthrough, or
+audit.
+
+Enterprise Chaos Pack v0.1:
+
+```text
+dirty_surfaces = {
+  connector_observations,
+  accepted_evidence,
+  stale_legal_state,
+  DRS_reuse,
+  external_pointer_claim,
+  LLM_semantic_draft,
+  NeedleCandidate,
+  child_cell_claim,
+  GT_advisory,
+  ResultProposal_bypass_attempt,
+  conflicting_sources
+}
+
+escalation_attempts_blocked = 18 / 18
+quarantined_and_blocked = 4
+authority_transferred = 0
+RootFinalAuthority = 1
+```
+
+Enterprise Chaos Pack composes dirty enterprise surfaces: connector
+observations, accepted evidence, stale legal state, DRS reuse, external pointer
+claim, LLM semantic draft, NeedleCandidate, child cell claim, GT advisory,
+ResultProposal bypass attempt, and conflicting sources. 18/18 escalation
+attempts were blocked. 4 attempts were quarantined and blocked. No authority
+was transferred. Root remained final authority.
+
+Compute Collapse Enterprise Bench v0.1:
+
+```text
+baseline_llm_calls = 29
+hedgehog_llm_calls = 1
+llm_call_reduction = 29 - 1 = 28
+llm_call_reduction_ratio = 28 / 29 = 0.9655
+
+baseline_context_units = 180
+hedgehog_context_units = 32
+context_unit_reduction = 180 - 32 = 148
+context_unit_reduction_ratio = 148 / 180 = 0.8222
+```
+
+This is a deterministic local synthetic proof-level compute-collapse signal.
+The long-chain baseline is estimated, not executed. The routed path uses closed
+checkpoint metadata and Root-controlled semantic routing.
+`source_collectors_replayed=false`. Closed checkpoint metadata reduces
+recomputation but is not authority. DRS reuse reduces recomputation but is not
+authority. Put plainly: closed checkpoint metadata is not authority. The
+benchmark does not prove production economics, real billing, real latency, real
+cloud cost, or real cost savings. It does not authorize Killer Demo or a
+multi-LLM showcase. Killer Demo remains future assembly target after maturity
+gates, not the next layer.
+
 The bounded semantic LLM geometry is:
 
 ```text

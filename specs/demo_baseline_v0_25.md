@@ -1332,9 +1332,12 @@ Acceptance Gate v0.1 is a separate completed layer.
 External Evidence Acceptance Gate v0.1 creates six candidates and validation
 packets. Root accepts two, rejects three, and quarantines one. AcceptedEvidence
 remains not truth, not ready, not action, not DRS write, and not Needle. The
-next approved implementation layer after the current Enterprise Chaos docs
-sync is Compute Collapse Enterprise Bench v0.1 or another explicitly approved
-hardening layer.
+Compute Collapse Enterprise Bench v0.1 is complete through proof, human
+walkthrough, audit, and docs sync. Next: Math / Invariants Sync v0.4. Then:
+Kernel Enforcement / Transition Matrix Hardening v0.1. Then: Developer Facade /
+Capability Manifest UX v0.1. Then: Production Boundary Design Docs v0.1.
+Enterprise Killer Demo v0.1 remains a future assembly target after maturity
+gates, not the next layer.
 
 Bounded LLM Semantic Executor Node v0.1 keeps the model inside Executor as
 `executor_node_capability`. Architect creates the four-node PlanGraph first;

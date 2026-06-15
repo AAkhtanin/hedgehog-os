@@ -465,3 +465,73 @@ Canonical needle topology invariant:
 16. Layer separation
     - Work, Thoughts, UP, DeadEnds, and Quarantine remain separate layers.
     - No component may silently merge or cross-write these layers.
+
+## Closed Enterprise Boundary Invariants v0.4
+
+This section records only already closed local proof boundaries. It does not
+add runtime enforcement, transition-matrix hardening, schemas, proof runners,
+tests, demos, real APIs, External/global DRS implementation, Marennya / UP
+activation, production persistence, production autonomy, or Killer Demo
+authorization.
+
+External DRS Pointer Protocol v0.1:
+
+- External pointer is not external/global DRS write.
+- External pointer cannot launder provenance.
+- External pointer does not become authority.
+
+Read-only Enterprise Connector Sandbox v0.1:
+
+- ConnectorObservation is not truth.
+- ConnectorObservation is not trusted evidence.
+- Read-only connector observation does not execute action.
+- Read-only connector observation does not write DRS by itself.
+- Mock connector stubs are not production connectors.
+
+External Evidence Acceptance Gate v0.1:
+
+- EvidenceCandidate is not AcceptedEvidence.
+- EvidenceCandidate remains candidate_only until Root decision.
+- ValidationPacket is not Root acceptance.
+- AcceptedEvidence requires Root decision.
+- AcceptedEvidence is not truth.
+- AcceptedEvidence is not ready status.
+- AcceptedEvidence is not action.
+- AcceptedEvidence is not DRS write.
+- AcceptedEvidence is not installed Needle.
+- Mock validation is not real cryptographic/trust/revocation validation.
+
+Bounded LLM Semantic Executor Node v0.1:
+
+- Bounded LLM Semantic Executor Node keeps model output inside Executor.
+- LLM is bounded Executor node capability, not actor/layer/authority.
+- LLM is not Root.
+- LLM is not GT.
+- LLM does not finalize.
+- LLM does not execute external actions.
+- LLM does not write DRS by itself.
+- SemanticDraft is not truth/final/action.
+- SemanticDraftResultProposal must pass Post V&V, GT, and Root.
+
+Enterprise Chaos Pack v0.1:
+
+- Dirty enterprise surfaces cannot transfer authority.
+- GT advisory cannot become Root.
+- ResultProposal bypass cannot become FinalOutput.
+- NeedleCandidate cannot become installed Needle.
+- Child/fractal cell claim cannot become autonomous actor.
+- ConflictCheck detects; Root decides.
+- 18/18 escalation attempts blocked.
+- 4 attempts were quarantined and blocked.
+
+Compute Collapse Enterprise Bench v0.1:
+
+- Synthetic compute-collapse metric is not production economics.
+- `hedgehog_llm_calls=1` is synthetic routed-path estimate, not a real
+  LLM/Gemini/API call by docs, walkthrough, or audit.
+- DRS reuse is not authority.
+- closed checkpoint metadata is not authority.
+- `source_collectors_replayed=false` is performance hygiene, not truth proof.
+- Audit hash-chain records continuity, not truth.
+- Killer Demo remains future assembly target after maturity gates, not next
+  layer and not authorized by benchmark.

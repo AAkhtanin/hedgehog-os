@@ -920,6 +920,44 @@ a killer demo nor a multi-LLM showcase.
 Closed commits: proof `082753e`, human walkthrough `104105b`, and audit log
 `668a51a`. Status: complete through docs sync.
 
+## Compute Collapse Enterprise Bench v0.1 Checkpoint
+
+Compute Collapse Enterprise Bench v0.1 is a deterministic local proof-only
+checkpoint that extends the earlier Economics / Compute Collapse reuse
+benchmark onto the dirty enterprise stack. It compares
+`naive_long_chain_estimate` vs Root-controlled semantic routing path as a
+synthetic proof-level compute-collapse signal.
+
+Evidence commits: proof `bc606ff`, human walkthrough `5cc0516`, and audit log
+`baac894`. The proof references five closed checkpoints: External DRS Pointer
+Protocol v0.1, Read-only Enterprise Connector Sandbox v0.1, External Evidence
+Acceptance Gate v0.1, Bounded LLM Semantic Executor Node v0.1, and Enterprise
+Chaos Pack v0.1.
+
+The benchmark estimates `baseline_llm_calls=29` and `hedgehog_llm_calls=1`,
+with `llm_call_reduction=28` and ratio `0.9655`. It estimates context units
+`180 -> 32`, with reduction `148` and ratio `0.8222`. It also records
+collector replay reduction=4, validation-pass reduction=5, action-planning
+reduction=6, unbounded-authority-risk reduction=18, and expensive semantic
+expansion reduction=17. Enterprise Chaos source facts are preserved:
+18 blocked attempts and four quarantined-and-blocked attempts.
+
+The benchmark estimates one bounded Hedgehog LLM executor call in the routed
+path. The local walkthrough and audit execute no LLM, no Gemini, no network,
+and no API call. DRS reuse and closed checkpoint metadata are Root-approved
+semantic routing / reuse signals, not authority. Root remains the final
+authority.
+
+This is not production economics, real billing, real latency measurement, real
+cloud cost measurement, real cost savings proof, Killer Demo authorization,
+multi-LLM showcase authorization, a new runtime capability, External DRS
+implementation, global/external DRS write, external action, installed Needle,
+Marennya, UP, or production persistence. `source_collectors_replayed=false`
+and `source_collectors_replayed_count=0`. Focused tests: 11 passed.
+
+Killer Demo remains a future assembly target after maturity gates. It is not
+the next lifecycle step and is not authorized by this benchmark.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1105,13 +1143,18 @@ Completed recent layers:
 - External Evidence Acceptance Gate v0.1.
 - Bounded LLM Semantic Executor Node v0.1.
 - Enterprise Chaos Pack v0.1.
+- Compute Collapse Enterprise Bench v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
-- Completed: Enterprise Chaos Pack v0.1, complete through docs sync.
-- Current: Compute Collapse Enterprise Bench v0.1 or the next explicitly approved hardening layer.
-- Then: Compute Collapse Enterprise Bench v0.1; Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; Enterprise Killer Demo v0.1; and Public Auditor Packet / Whitepaper draft.
+- Completed: Compute Collapse Enterprise Bench v0.1, complete through docs sync.
+- Next: Math / Invariants Sync v0.4.
+- Then: Kernel Enforcement / Transition Matrix Hardening v0.1.
+- Then: Developer Facade / Capability Manifest UX v0.1.
+- Then: Production Boundary Design Docs v0.1.
+- Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
+- Public Auditor Packet / Whitepaper draft remains later.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.

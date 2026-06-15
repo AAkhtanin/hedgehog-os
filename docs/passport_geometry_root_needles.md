@@ -197,10 +197,12 @@ Current engineering order:
 36. External Evidence Acceptance Gate docs sync - complete.
 37. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
 38. Enterprise Chaos Pack v0.1 - complete through docs sync.
-39. Compute Collapse Enterprise Bench v0.1 or next approved hardening layer.
-41. Math Appendix Sync v0.4.
-42. Production Boundary Design Docs v0.1.
-43. Enterprise Killer Demo v0.1.
+39. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
+40. Next: Math / Invariants Sync v0.4.
+41. Then: Kernel Enforcement / Transition Matrix Hardening v0.1.
+42. Then: Developer Facade / Capability Manifest UX v0.1.
+43. Then: Production Boundary Design Docs v0.1.
+44. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -365,6 +367,21 @@ and conflicting-source attempts are quarantined and blocked. Root rejects
 enterprise-ready, action, and truth. Audit hash records continuity, not truth.
 This is not production security, real-world safety, a killer demo, or a
 multi-LLM showcase. Root remains sovereign.
+
+## Compute Collapse Enterprise Bench Geometry Checkpoint
+
+Compute Collapse Enterprise Bench v0.1 shows compute reduction from
+Root-controlled semantic routing and closed checkpoint metadata. The signal
+comes from preserving Root-centered capability geometry and avoiding
+uncontrolled long-chain expansion.
+
+This does not make DRS, closed metadata, audit hash, or LLM into authority.
+DRS reuse and closed checkpoint metadata are Root-approved semantic routing /
+reuse signals, not authority. Root remains final authority.
+
+The `29 -> 1` estimated LLM-call signal and `180 -> 32` context-unit signal
+are local proof-level benchmark signals, not billing, economics, latency, or
+real cost-savings proof.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

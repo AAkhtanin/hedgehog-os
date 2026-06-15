@@ -182,9 +182,12 @@ Anti-reduction rules:
   Acceptance Gate v0.1 is complete. Bounded LLM Semantic Executor Node v0.1 is
   complete through proof, human walkthrough, wording cleanup, and audit.
   Enterprise Chaos Pack v0.1 is complete through proof, human walkthrough,
-  audit, and docs sync. Current work is Compute Collapse Enterprise Bench v0.1
-  or the next explicitly approved hardening layer, not production trust, External DRS, or
-  Marennya / UP.
+  audit, and docs sync. Compute Collapse Enterprise Bench v0.1 is complete
+  through proof, human walkthrough, audit, and docs sync. Next: Math /
+  Invariants Sync v0.4. Then: Kernel Enforcement / Transition Matrix
+  Hardening v0.1. Then: Developer Facade / Capability Manifest UX v0.1.
+  Then: Production Boundary Design Docs v0.1. Enterprise Killer Demo v0.1
+  remains a future assembly target after maturity gates, not the next layer.
 - Do not treat Enterprise Chaos Pack v0.1 as production readiness or use it to
   justify real external actions. Any future killer demo must still pass
   explicit Root-controlled production-boundary and acceptance gates.
@@ -193,6 +196,14 @@ Anti-reduction rules:
 - Targeted proofs must continue using closed checkpoint metadata rather than
   replaying historical collectors unless an explicit audit/full-suite mode
   requires replay.
+- Compute Collapse Enterprise Bench v0.1 is a synthetic estimate, not
+  production economics. `hedgehog_llm_calls=1` is a routed-path estimate, not a
+  real LLM call by docs, walkthrough, or audit.
+- DRS reuse is not authority, and closed checkpoint metadata is not authority.
+  Both are Root-approved semantic routing / reuse signals; Root remains final.
+- Compute-collapse does not authorize external action, Killer Demo,
+  multi-LLM showcase, Marennya, UP, installed Needles, global DRS, or External
+  DRS write.
 - Codex must not run long tests unless the user explicitly requests them; the
   user runs long, focused, and full-suite tests manually.
 
@@ -535,7 +546,14 @@ NeedleCandidate, child-cell, GT, audit, permission, and ResultProposal
 escalations. All 18 attempts remain blocked; four are quarantined and blocked.
 Root remains final authority.
 
-Corrected engineering order: Enterprise Chaos Pack v0.1 complete through docs sync -> current Compute Collapse Enterprise Bench v0.1 or the next explicitly approved hardening layer -> Math Appendix Sync v0.4 -> Production Boundary Design Docs v0.1 -> Enterprise Killer Demo v0.1 -> Public Auditor Packet / Whitepaper draft. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
+Compute Collapse Enterprise Bench v0.1 is complete through proof, human
+walkthrough, audit, and docs sync. It extends the earlier compute-collapse
+benchmark onto the dirty enterprise stack with a synthetic proof-level signal only:
+29 estimated baseline LLM calls vs 1 bounded Hedgehog routed-path estimate,
+and context units 180 -> 32. It is not real billing, latency, cloud cost, or
+production economics.
+
+Corrected engineering order: Compute Collapse Enterprise Bench v0.1 is complete through proof, human walkthrough, audit, and docs sync. Next: Math / Invariants Sync v0.4. Then: Kernel Enforcement / Transition Matrix Hardening v0.1. Then: Developer Facade / Capability Manifest UX v0.1. Then: Production Boundary Design Docs v0.1. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer. Public Auditor Packet / Whitepaper draft remains later. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

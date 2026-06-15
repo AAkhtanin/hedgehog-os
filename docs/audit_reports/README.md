@@ -213,6 +213,13 @@ Current reports:
   - Confirms four closed checkpoints were referenced with `source_evidence_mode=closed_checkpoint_metadata_only`, `source_collectors_replayed=false`, and replay count=0.
   - Confirms Root rejected enterprise-ready, action, and truth, with no network, Gemini, DRS write, installed Needle, external action, or production persistence.
 
+- `auditor_compute_collapse_enterprise_bench_v01.log`
+  - Compute Collapse Enterprise Bench v0.1 evidence for commits `bc606ff`, `5cc0516`, and `baac894`.
+  - Audit status PASS. Confirms `baseline_llm_calls=29`, `hedgehog_llm_calls=1`, and context units `180 -> 32`.
+  - `hedgehog_llm_calls=1` is a synthetic routed-path estimate, not a real LLM call by the walkthrough or audit.
+  - Confirms `source_collectors_replayed=false`, `production_economics_claimed=false`, `real_billing_claimed=false`, `real_latency_claimed=false`, and `killer_demo_authorized=false`.
+  - Confirms Root remains final authority.
+
 ## Current Applied Auditor Commands
 
 ```bash

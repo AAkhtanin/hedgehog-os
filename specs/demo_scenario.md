@@ -986,11 +986,12 @@ vector memory or authority. Marennya / UP are deferred systemic/internal
 needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
-Corrected next order: Enterprise Chaos Pack v0.1 complete through docs sync ->
-current Compute Collapse Enterprise Bench v0.1 or the next explicitly approved
-hardening layer
--> Math Appendix Sync v0.4 -> Production Boundary Design Docs v0.1 ->
-Enterprise Killer Demo v0.1 -> Public Auditor Packet / Whitepaper draft.
+Corrected next order: Compute Collapse Enterprise Bench v0.1 complete through
+docs sync -> Next: Math / Invariants Sync v0.4 -> Then: Kernel Enforcement /
+Transition Matrix Hardening v0.1 -> Then: Developer Facade / Capability
+Manifest UX v0.1 -> Then: Production Boundary Design Docs v0.1 -> Enterprise
+Killer Demo v0.1 remains a future assembly target after maturity gates, not the
+next layer -> Public Auditor Packet / Whitepaper draft remains later.
 
 ## Applied + Fractal + Coupling Checkpoint Commands
 
@@ -1065,6 +1066,16 @@ NeedleCandidate, child-cell, GT, audit hash, permission, or ResultProposal into
 authority, truth, ready status, action, write, or installed capability are
 blocked. Four unsafe cross-boundary cases are quarantined and blocked. This is
 local proof-only hardening, not a killer demo or multi-LLM showcase.
+
+Compute Collapse Enterprise Bench v0.1 inherits that dirty enterprise request
+family and references External DRS Pointer Protocol, Read-only Enterprise
+Connector Sandbox, External Evidence Acceptance Gate, Bounded LLM Semantic
+Executor Node, and Enterprise Chaos Pack as closed checkpoints. It compares a
+naive long-chain estimate against Root-controlled semantic routing and shows a
+synthetic proof-level compute-collapse signal: `29 -> 1` estimated LLM-call
+units and `180 -> 32` context units. Root remains final authority. The local
+walkthrough, audit, and docs call no real LLM, network, Gemini, or API; execute
+no external action; and authorize no Killer Demo.
 
 ## Exclusions
 

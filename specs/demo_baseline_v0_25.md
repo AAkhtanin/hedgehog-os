@@ -1262,10 +1262,12 @@ Corrected next order:
 36. External Evidence Acceptance Gate docs sync - complete.
 37. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
 38. Enterprise Chaos Pack v0.1 - complete through docs sync.
-39. Compute Collapse Enterprise Bench v0.1 or next approved hardening layer.
-41. Math Appendix Sync v0.4.
-42. Production Boundary Design Docs v0.1.
-43. Enterprise Killer Demo v0.1.
+39. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
+40. Next: Math / Invariants Sync v0.4.
+41. Then: Kernel Enforcement / Transition Matrix Hardening v0.1.
+42. Then: Developer Facade / Capability Manifest UX v0.1.
+43. Then: Production Boundary Design Docs v0.1.
+44. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
 
 ## Applied + Fractal + Coupling Demo Commands
 
@@ -1281,6 +1283,7 @@ python -m demo.run_needle_adversarial_safety_pack_v01
 python -m demo.run_external_drs_pointer_protocol_v01
 python -m demo.run_read_only_enterprise_connector_sandbox_v01
 python -m demo.run_external_evidence_acceptance_gate_v01
+python -m demo.run_compute_collapse_enterprise_bench_v01
 ```
 
 Human-readable auditor walkthroughs:
@@ -1295,6 +1298,7 @@ python -m demo.run_human_needle_adversarial_safety_pack_walkthrough_v01
 python -m demo.run_human_external_drs_pointer_protocol_walkthrough_v01
 python -m demo.run_human_read_only_enterprise_connector_sandbox_walkthrough_v01
 python -m demo.run_human_external_evidence_acceptance_gate_walkthrough_v01
+python -m demo.run_human_compute_collapse_enterprise_bench_walkthrough_v01
 ```
 
 These deterministic local proofs create no real child agents, external action,
@@ -1347,6 +1351,16 @@ ResultProposal surfaces. All 18 escalation attempts are detected and blocked;
 four are quarantined and blocked. Root creates the only final and rejects
 enterprise-ready, action, and truth. The pack performs no network/Gemini call,
 action, DRS write, Needle installation, or production persistence.
+
+Compute Collapse Enterprise Bench v0.1 is a synthetic proof-only benchmark. It
+extends the earlier compute-collapse reuse benchmark onto the dirty enterprise
+stack and compares an estimated naive long-chain path against Root-controlled
+semantic routing. It shows a `29 -> 1` estimated LLM-call signal and a `180 ->
+32` context-unit signal. The baseline path is estimated, not executed. Source
+collectors are not replayed, and no production economics, billing, latency,
+cloud-cost, or real cost-savings claim is made. Killer Demo remains a future
+assembly target after maturity gates and is not authorized by this benchmark.
+Next: Math / Invariants Sync v0.4.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

@@ -2582,6 +2582,23 @@ Quarantine remains containment, not acceptance, truth, readiness, or action.
 The deterministic local result does not establish production security or
 real-world safety.
 
+Compute Collapse Enterprise Bench v0.1 adds a small proof-level estimate over
+the dirty enterprise stack:
+
+```text
+baseline = estimated_naive_long_chain
+routed = root_controlled_semantic_routing(closed_checkpoint_metadata, DRS_reuse)
+
+llm_call_signal = 29 -> 1
+context_unit_signal = 180 -> 32
+```
+
+The long-chain baseline is estimated, not executed. The routed path uses closed
+checkpoint metadata and Root-controlled semantic routing. These are local
+benchmark signals only: not billing, not economics, and not latency. DRS reuse
+reduces recomputation but is not authority. Audit hash records continuity, not
+truth.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

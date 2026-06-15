@@ -1283,26 +1283,28 @@ Current implementation should remain focused on:
 
 Current proven / near-proven layers:
 
-text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1 Cross-domain DRS Bridge v0.1 Needle adversarial / safety pack v0.1 External DRS Pointer Protocol v0.1 Read-only Enterprise Connector Sandbox v0.1 External Evidence Acceptance Gate v0.1 Bounded LLM Semantic Executor Node v0.1 Enterprise Chaos Pack v0.1
+text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1 Cross-domain DRS Bridge v0.1 Needle adversarial / safety pack v0.1 External DRS Pointer Protocol v0.1 Read-only Enterprise Connector Sandbox v0.1 External Evidence Acceptance Gate v0.1 Bounded LLM Semantic Executor Node v0.1 Enterprise Chaos Pack v0.1 Compute Collapse Enterprise Bench v0.1
 
 Near-term engineering path:
 
-text Completed: External DRS Pointer Protocol v0.1, Read-only Enterprise Connector Sandbox v0.1, External Evidence Acceptance Gate v0.1, Bounded LLM Semantic Executor Node v0.1, and Enterprise Chaos Pack v0.1 complete through docs sync. Current: Compute Collapse Enterprise Bench v0.1 or the next explicitly approved hardening layer. Later: Math Appendix Sync v0.4; Production Boundary Design Docs v0.1; Enterprise Killer Demo v0.1; Public Auditor Packet / Whitepaper draft.
+text Completed: External DRS Pointer Protocol v0.1, Read-only Enterprise Connector Sandbox v0.1, External Evidence Acceptance Gate v0.1, Bounded LLM Semantic Executor Node v0.1, Enterprise Chaos Pack v0.1, and Compute Collapse Enterprise Bench v0.1 complete through docs sync. Next: Math / Invariants Sync v0.4. Then: Kernel Enforcement / Transition Matrix Hardening v0.1. Then: Developer Facade / Capability Manifest UX v0.1. Then: Production Boundary Design Docs v0.1. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer. Public Auditor Packet / Whitepaper draft remains later.
 
 Completed checkpoint: Travel / Multi-condition Readiness, Multi-domain Applied
 Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and Dual Fractal Coupling
 v0.1. Cross-domain DRS Bridge v0.1, Needle adversarial / safety pack v0.1,
 External DRS Pointer Protocol v0.1, Read-only Enterprise Connector Sandbox
 v0.1, External Evidence Acceptance Gate v0.1, and Bounded LLM Semantic
-Executor Node v0.1 and Enterprise Chaos Pack v0.1 are also complete as local
-proof-only safety/protocol/observation/acceptance/executor-node/stress layers.
+Executor Node v0.1, Enterprise Chaos Pack v0.1, and Compute Collapse
+Enterprise Bench v0.1 are also complete as local proof-only
+safety/protocol/observation/acceptance/executor-node/stress/benchmark layers.
 The bounded LLM
 checkpoint places the model only inside Executor as `executor_node_capability`;
 it is not a global actor or authority layer. Still deferred:
 NeedleFactory, production Needle installation, External DRS implementation,
 global semantic fabric, public Internet of Meaning, real child agents,
-production RAG, real connector/API access, Gemini child-cell live mode,
-Telegram natural assistant, Marennya, UP,
+production RAG, real connector/API access, real APIs/connectors/actions,
+installed real Needles, production persistence, Gemini child-cell live mode,
+Telegram natural assistant, Marennya, UP, multi-LLM showcase as canonical layer,
 and production autonomy.
 
 A Controlled Multi-LLM Chain Showcase may be considered only as future

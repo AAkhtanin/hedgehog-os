@@ -746,10 +746,12 @@ Corrected roadmap:
 22. External Evidence Acceptance Gate docs sync - complete.
 23. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
 24. Enterprise Chaos Pack v0.1 - complete through docs sync.
-25. Compute Collapse Enterprise Bench v0.1 or next approved hardening layer.
-27. Math Appendix Sync v0.4.
-28. Production Boundary Design Docs v0.1.
-29. Enterprise Killer Demo v0.1.
+25. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
+26. Next: Math / Invariants Sync v0.4.
+27. Then: Kernel Enforcement / Transition Matrix Hardening v0.1.
+28. Then: Developer Facade / Capability Manifest UX v0.1.
+29. Then: Production Boundary Design Docs v0.1.
+30. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2665,6 +2667,29 @@ connector/API access, call Gemini/network, execute external action, implement
 global/external DRS, install Needles, create production persistence, implement
 a killer demo or multi-LLM showcase, or authorize Marennya/UP. Audit hash
 records continuity, not truth.
+
+## 20.15 Compute Collapse Enterprise Bench v0.1 Checkpoint
+
+Compute Collapse Enterprise Bench v0.1 is a deterministic local proof-only
+checkpoint that extends the earlier Economics / Compute Collapse reuse
+benchmark onto the dirty enterprise stack. It uses Enterprise Chaos Pack v0.1
+and related closed checkpoint metadata to compare an estimated long-chain
+baseline with a Root-controlled semantic routing path.
+
+This proves a local synthetic compute-collapse signal only. It estimates
+`baseline_llm_calls=29` vs `hedgehog_llm_calls=1`, and context units `180 ->
+32`. The benchmark estimates one bounded Hedgehog LLM executor call in the
+routed path. The local walkthrough and audit execute no LLM, no Gemini, no
+network, and no API call.
+
+DRS reuse and closed checkpoint metadata are Root-approved semantic routing /
+reuse signals, not authority. Root remains the final authority.
+
+This checkpoint does not prove real economics, billing, latency, cloud cost,
+real cost savings, or real-world performance. It does not authorize Killer
+Demo, activate Marennya / UP, create External DRS or global DRS, use real
+connectors, install Needles, create production persistence, or execute
+external actions.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

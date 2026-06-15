@@ -1,0 +1,431 @@
+===== HEADER =====
+Audit report: Developer Facade / Capability Manifest UX v0.1
+Audit status: PASS
+Audit mode: deterministic local audit-facing log over committed proof and human walkthrough
+
+This audit log covers Developer Facade / Capability Manifest UX v0.1.
+This is deterministic local proof-only.
+This is proof-only developer-facing manifest validation.
+This is not production UI.
+This is not a production capability registry.
+This is not real capability installation.
+This is not real Needle installation.
+This is not real connector/API access.
+This is not a runtime rewrite.
+This is not schema modification.
+This is not a new authority layer.
+Developer Facade is not Root.
+Capability manifest is not authority.
+Transition Matrix remains non-authority.
+Root remains final authority.
+
+No network, Gemini, external APIs, external actions, global DRS write,
+External DRS write, installed capability, installed Needle, production
+persistence, Marennya, or UP is used or authorized.
+
+===== COMMIT EVIDENCE =====
+proof_commit: dd18d5f Add Developer Facade Capability Manifest UX v0.1 proof
+human_walkthrough_commit: 85c7e56 Add human Developer Facade Capability Manifest UX walkthrough v0.1
+
+Proof files:
+demo/run_developer_facade_capability_manifest_ux_v01.py
+tests/test_developer_facade_capability_manifest_ux_v01_runner.py
+
+Human walkthrough file:
+demo/run_human_developer_facade_capability_manifest_ux_walkthrough_v01.py
+
+Focused test evidence observed before proof commit:
+tests/test_developer_facade_capability_manifest_ux_v01_runner.py
+16 passed
+
+===== SOURCE CHECKPOINTS =====
+External DRS Pointer Protocol v0.1: closed checkpoint metadata
+Read-only Enterprise Connector Sandbox v0.1: closed checkpoint metadata
+External Evidence Acceptance Gate v0.1: closed checkpoint metadata
+Bounded LLM Semantic Executor Node v0.1: closed checkpoint metadata
+Enterprise Chaos Pack v0.1: closed checkpoint metadata
+Compute Collapse Enterprise Bench v0.1: closed checkpoint metadata
+Math / Invariants Sync v0.4: closed checkpoint metadata
+Kernel Enforcement / Transition Matrix Hardening v0.1: closed checkpoint metadata
+
+source_checkpoints_referenced: 8
+source_collectors_replayed: false
+source_evidence_mode: closed_checkpoint_metadata_only
+kernel_enforcement_checkpoint_referenced: true
+
+===== DEVELOPER FACADE PURPOSE =====
+Developer Facade / Capability Manifest UX v0.1 sits on the developer /
+capability admission side:
+
+Developer CapabilityManifestDraft
+-> Facade normalization
+-> CapabilityManifestCandidate
+-> FacadeValidationReport
+-> RootReviewInput
+
+It is not Executor.
+It is not Architect.
+It is not Root.
+It is not NeedleFactory.
+It is not a production registry.
+It is not a new actor inside the main runtime chain.
+
+Facade validates a manifest as a candidate for Root review.
+It does not install capability.
+It does not authorize execution.
+It does not create Needle.
+
+developer_facade_capability_manifest_ux_v01_status: PASS
+proof_type: deterministic_local_proof_only
+production_ui_implemented: false
+production_capability_registry_implemented: false
+runtime_rewrite_performed: false
+schemas_modified: false
+real_connector_created: false
+real_api_called: false
+
+===== CAPABILITY MANIFEST CONTRACT AUDIT =====
+Each manifest candidate includes:
+
+manifest_id
+capability_name
+capability_type
+declared_role
+risk_class
+permission_boundary
+allowed_operations
+forbidden_operations
+input_contract
+output_contract
+external_observation_schema
+drs_policy
+transition_matrix_refs
+root_commit_required
+audit_requirements
+production_claims
+requested_effects
+
+validated_manifest_candidate_wording_required: true
+facade_validated_manifest_candidate_only_wording_required: true
+
+A validated manifest candidate is not an installed capability.
+A validated manifest candidate is not an installed Needle.
+A validated manifest candidate is not permission to execute.
+A validated manifest candidate is not accepted evidence.
+A validated manifest candidate is not truth.
+A validated manifest candidate is not Root FinalOutput.
+A validated manifest candidate is not production readiness.
+
+validated_manifest_is_accepted_evidence: false
+validated_manifest_is_truth: false
+validated_manifest_is_final_output: false
+capability_manifest_is_installed_capability: false
+developer_manifest_is_authority: false
+
+===== MANIFEST CANDIDATES AUDIT =====
+manifest_candidates_created: 6
+facade_validated_manifest_candidates: 3
+rejected_manifest_candidates: 2
+needs_user_manifest_candidates: 1
+
+1. read_only_vendor_connector_manifest
+outcome: facade_validated_manifest_candidate_only
+meaning: read-only observation candidate only; no network/API/action; EvidenceCandidate still requires Acceptance Gate.
+
+2. bounded_llm_semantic_executor_manifest
+outcome: facade_validated_manifest_candidate_only
+meaning: LLM bounded Executor node capability only; semantic draft / ResultProposal-shaped output only; cannot finalize, write DRS by itself, or execute external action.
+
+3. local_drs_reuse_helper_manifest
+outcome: facade_validated_manifest_candidate_only
+meaning: DRS reuse helper candidate only; requires TemporalQuery / TimeEnvelope / Root-controlled reuse; DRS reuse is not authority.
+
+4. external_action_connector_manifest
+outcome: rejected
+meaning: rejected in this proof because external action / real API / production connector request is outside current proof layer; no action executed; this does not imply external action connectors are impossible forever.
+
+5. authority_escalation_manifest
+outcome: rejected
+meaning: attempts RootAuthority / FinalOutput / authority; no authority transferred.
+
+6. incomplete_manifest_missing_risk_or_permission
+outcome: needs_user
+meaning: missing risk_class and/or permission_boundary; safe next step is ask developer for missing fields; no execution.
+
+===== VALIDATED MANIFEST CANDIDATE BOUNDARY =====
+Validated manifest candidates are local proof artifacts for Root review.
+They are not installed capabilities.
+They are not installed Needles.
+They are not permission to execute.
+They are not accepted evidence.
+They are not truth.
+They are not Root FinalOutput.
+They are not production readiness.
+
+read_only_vendor_connector_manifest_boundary: ConnectorObservation only; EvidenceCandidate still requires Acceptance Gate.
+bounded_llm_semantic_executor_manifest_boundary: SemanticDraft / ResultProposal-shaped output only; cannot finalize, write DRS by itself, or execute external action.
+local_drs_reuse_helper_manifest_boundary: TemporalQuery / TimeEnvelope / Root-controlled reuse required; DRS reuse is not authority.
+
+installed_capabilities_created: 0
+installed_needles_created: 0
+external_actions_executed: 0
+global_drs_write: false
+external_drs_write: false
+root_remains_final_authority: true
+
+===== REJECTED / NEEDS_USER MANIFEST AUDIT =====
+external_action_connector_manifest: rejected
+rejection_reason: external action / real API / production connector requested outside current proof layer
+external_action_executed: false
+real_api_called: false
+real_connector_created: false
+future_external_action_connectors_impossible_forever_claimed: false
+
+authority_escalation_manifest: rejected
+rejection_reason: attempts RootAuthority / FinalOutput / authority
+authority_transferred: false
+final_output_created: false
+
+incomplete_manifest_missing_risk_or_permission: needs_user
+needs_user_reason: missing risk_class and/or permission_boundary
+safe_next_step: ask developer to provide missing manifest fields
+execution_allowed_from_needs_user: false
+
+===== ADVERSARIAL MANIFEST ATTEMPTS AUDIT =====
+adversarial_attempts_observed: 10
+adversarial_attempts_blocked: 10
+
+manifest_to_installed_capability_without_root:
+detected=true | blocked=true | final_effect=blocked | root_review_required=true | authority_transferred=false | final_output_created=false | accepted_evidence_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+manifest_to_installed_needle_without_root:
+detected=true | blocked=true | final_effect=blocked | root_review_required=true | authority_transferred=false | final_output_created=false | accepted_evidence_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+manifest_to_external_action:
+detected=true | blocked=true | final_effect=blocked | root_review_required=true | authority_transferred=false | final_output_created=false | accepted_evidence_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+manifest_to_root_authority:
+detected=true | blocked=true | final_effect=blocked | root_review_required=true | authority_transferred=false | final_output_created=false | accepted_evidence_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+manifest_to_final_output:
+detected=true | blocked=true | final_effect=blocked | root_review_required=true | authority_transferred=false | final_output_created=false | accepted_evidence_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+manifest_to_drs_write:
+detected=true | blocked=true | final_effect=blocked | root_review_required=true | authority_transferred=false | final_output_created=false | accepted_evidence_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+manifest_to_accepted_evidence:
+detected=true | blocked=true | final_effect=blocked | root_review_required=true | authority_transferred=false | final_output_created=false | accepted_evidence_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+manifest_to_production_ready_claim:
+detected=true | blocked=true | final_effect=blocked | root_review_required=true | authority_transferred=false | final_output_created=false | accepted_evidence_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+manifest_to_killer_demo_authorization:
+detected=true | blocked=true | final_effect=blocked | root_review_required=true | authority_transferred=false | final_output_created=false | accepted_evidence_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+manifest_to_transition_matrix_authority:
+detected=true | blocked=true | final_effect=blocked | root_review_required=true | authority_transferred=false | final_output_created=false | accepted_evidence_created=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+===== TRANSITION MATRIX BOUNDARY =====
+transition_matrix_required: true
+transition_matrix_is_authority: false
+transition_matrix_is_production_runtime_authority: false
+kernel_enforcement_checkpoint_referenced: true
+developer_facade_does_not_bypass_transition_matrix: true
+
+The Transition Matrix remains a proof-level boundary model.
+It is not Root.
+It is not authority.
+It is not production runtime authority.
+Developer Facade cannot use a manifest to bypass it.
+
+===== PERMISSION / RISK BOUNDARY =====
+risk_class_required: true
+permission_boundary_required: true
+risk_class_is_safety_proof: false
+permission_boundary_is_execution: false
+needs_user_for_missing_risk_or_permission: true
+external_action_requests_rejected: true
+
+Risk class is classification metadata, not safety proof.
+Permission boundary is declared scope, not execution.
+Missing risk or permission routes to needs_user, not execution.
+
+===== EXTERNAL OBSERVATION SCHEMA BOUNDARY =====
+external_observation_schema_required_for_connector: true
+external_observation_schema_is_evidence_acceptance: false
+connector_observation_is_truth: false
+connector_observation_is_accepted_evidence: false
+evidence_candidate_requires_acceptance_gate: true
+validated_manifest_is_accepted_evidence: false
+validated_manifest_is_truth: false
+validated_manifest_is_final_output: false
+
+A schema can describe an observation.
+It cannot make the observation truth.
+It cannot accept evidence.
+It cannot replace Root.
+
+===== LLM / DRS / ACTION BOUNDARY =====
+llm_is_bounded_executor_node_capability: true
+llm_is_authority: false
+llm_can_finalize: false
+llm_can_execute_external_action: false
+llm_can_write_drs_by_itself: false
+drs_reuse_is_authority: false
+closed_checkpoint_metadata_is_authority: false
+no_external_action: true
+no_global_drs_write: true
+no_external_drs_write: true
+
+Bounded LLM executor-node manifests remain semantic-draft / ResultProposal-shaped
+candidate descriptions only.
+DRS reuse remains Root-controlled routing / reuse signal, not authority.
+No manifest can execute external action or write DRS by itself.
+
+===== PRODUCTION / REGISTRY / INSTALLATION BOUNDARY =====
+production_ui_implemented: false
+production_capability_registry_implemented: false
+real_connector_created: false
+real_api_called: false
+installed_capabilities_created: 0
+installed_needles_created: 0
+production_persistence: false
+runtime_rewrite_performed: false
+schemas_modified: false
+
+The proof does not install real capabilities.
+The proof does not install real Needles.
+The proof does not create a production registry.
+The proof does not create production UI.
+
+===== KILLER DEMO / FUTURE ACTION BOUNDARY =====
+developer_facade_does_not_authorize_killer_demo: true
+killer_demo_authorized: false
+external_action_authorized: false
+production_action_boundary_implemented: false
+future_external_action_connectors_impossible_forever_claimed: false
+
+Developer Facade / Capability Manifest UX v0.1 does not authorize Killer Demo.
+External action connectors are rejected in this proof because external action,
+real API, and production connector requests are outside the current proof
+layer and production action boundary is not implemented.
+
+===== OVERCLAIM GUARDRAILS =====
+Do not say a validated manifest installs a capability.
+Do not say a validated manifest installs a Needle.
+Do not say a validated manifest is permission to execute.
+Do not say a validated manifest is accepted evidence.
+Do not say a validated manifest is truth.
+Do not say a validated manifest is Root FinalOutput.
+Do not say a validated manifest is production readiness.
+Do not say Developer Facade is Root.
+Do not say CapabilityManifestDraft is authority.
+Do not say Transition Matrix is authority.
+Do not say this proof implements production UI or a production capability registry.
+Do not say this proof authorizes real connector/API access.
+Do not say this proof authorizes Killer Demo.
+
+Correct formula:
+Facade validates a manifest as a candidate for Root review. It does not install
+capability, authorize execution, or create Needle.
+
+===== ROOT FINAL =====
+root_result: developer_facade_capability_manifest_ux_completed
+safe_secondary_outcome: manifest_candidates_available_for_root_review
+developer_facade_capability_manifest_ux_v01_status: PASS
+proof_type: deterministic_local_proof_only
+focused_tests_passed: 16
+
+production_ui_implemented: false
+production_capability_registry_implemented: false
+runtime_rewrite_performed: false
+schemas_modified: false
+real_connector_created: false
+real_api_called: false
+source_collectors_replayed: false
+source_evidence_mode: closed_checkpoint_metadata_only
+
+manifest_candidates_created: 6
+facade_validated_manifest_candidates: 3
+rejected_manifest_candidates: 2
+needs_user_manifest_candidates: 1
+adversarial_attempts_observed: 10
+adversarial_attempts_blocked: 10
+
+installed_capabilities_created: 0
+installed_needles_created: 0
+external_actions_executed: 0
+global_drs_write: false
+external_drs_write: false
+transition_matrix_required: true
+transition_matrix_is_authority: false
+developer_manifest_is_authority: false
+capability_manifest_is_installed_capability: false
+risk_class_is_safety_proof: false
+permission_boundary_is_execution: false
+external_observation_schema_is_evidence_acceptance: false
+validated_manifest_is_accepted_evidence: false
+validated_manifest_is_truth: false
+validated_manifest_is_final_output: false
+root_remains_final_authority: true
+root_commit_required_for_installation: true
+llm_is_bounded_executor_node_capability: true
+llm_is_authority: false
+drs_reuse_is_authority: false
+developer_facade_does_not_bypass_transition_matrix: true
+developer_facade_does_not_authorize_killer_demo: true
+no_network: true
+no_gemini: true
+no_external_action: true
+no_global_drs_write: true
+no_external_drs_write: true
+no_installed_capability: true
+no_installed_needle: true
+no_production_persistence: true
+no_marennya: true
+no_up: true
+
+===== AUDIT SUMMARY =====
+developer_facade_capability_manifest_ux_v01_audit_status: PASS
+proof_commit: dd18d5f
+human_walkthrough_commit: 85c7e56
+focused_tests_passed: 16
+manifest_candidates_created: 6
+facade_validated_manifest_candidates: 3
+rejected_manifest_candidates: 2
+needs_user_manifest_candidates: 1
+adversarial_attempts_observed: 10
+adversarial_attempts_blocked: 10
+installed_capabilities_created: 0
+installed_needles_created: 0
+external_actions_executed: 0
+transition_matrix_required: true
+transition_matrix_is_authority: false
+developer_manifest_is_authority: false
+capability_manifest_is_installed_capability: false
+permission_boundary_is_execution: false
+external_observation_schema_is_evidence_acceptance: false
+validated_manifest_is_accepted_evidence: false
+validated_manifest_is_truth: false
+validated_manifest_is_final_output: false
+root_remains_final_authority: true
+root_commit_required_for_installation: true
+llm_is_authority: false
+drs_reuse_is_authority: false
+developer_facade_does_not_bypass_transition_matrix: true
+developer_facade_does_not_authorize_killer_demo: true
+production_ui_implemented: false
+production_capability_registry_implemented: false
+real_connector_created: false
+real_api_called: false
+no_network: true
+no_gemini: true
+no_external_action: true
+no_global_drs_write: true
+no_external_drs_write: true
+no_installed_capability: true
+no_installed_needle: true
+no_production_persistence: true
+no_marennya: true
+no_up: true
+next_lifecycle_step: docs sync after audit commit

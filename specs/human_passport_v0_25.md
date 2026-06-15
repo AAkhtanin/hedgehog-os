@@ -749,8 +749,8 @@ Corrected roadmap:
 25. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
 26. Math / Invariants Sync v0.4 - complete.
 27. Kernel Enforcement / Transition Matrix Hardening v0.1 - complete through docs sync.
-28. Next: Developer Facade / Capability Manifest UX v0.1.
-29. Then: Production Boundary Design Docs v0.1.
+28. Developer Facade / Capability Manifest UX v0.1 - complete through docs sync.
+29. Next: Production Boundary Design Docs v0.1.
 30. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
 
 The current priority is proving the applied Root-controlled canonical path, not
@@ -2708,7 +2708,32 @@ RootFinalOutput -> DRSWriteback is local-only:
 `drs_writeback_scope=local_after_root_final`, `local_drs_writeback=true`,
 `global_drs_write=false`, and `external_drs_write=false`.
 
-Next: Developer Facade / Capability Manifest UX v0.1.
+## 20.17 Developer Facade / Capability Manifest UX v0.1 Checkpoint
+
+Developer Facade / Capability Manifest UX v0.1 is complete as deterministic
+local proof-only developer-facing manifest validation. It validates
+CapabilityManifestCandidate objects for Root review only.
+
+The proof validates three manifest candidates, rejects two, and routes one to
+needs_user. It blocks 10 adversarial manifest attempts. A validated manifest
+candidate is not installed capability, installed Needle, execution permission,
+accepted evidence, truth, Root FinalOutput, or production readiness.
+
+The facade sits on the developer/capability admission side:
+
+```text
+Developer CapabilityManifestDraft
+-> Facade normalization
+-> CapabilityManifestCandidate
+-> FacadeValidationReport
+-> RootReviewInput
+```
+
+It does not install capabilities, install Needles, execute actions, accept
+evidence, prove truth, create FinalOutput, claim production readiness, bypass
+Transition Matrix, or authorize Killer Demo. Root remains final authority.
+
+Next: Production Boundary Design Docs v0.1.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

@@ -200,8 +200,8 @@ Current engineering order:
 39. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
 40. Math / Invariants Sync v0.4 - complete.
 41. Kernel Enforcement / Transition Matrix Hardening v0.1 - complete through docs sync.
-42. Next: Developer Facade / Capability Manifest UX v0.1.
-43. Then: Production Boundary Design Docs v0.1.
+42. Developer Facade / Capability Manifest UX v0.1 - complete through docs sync.
+43. Next: Production Boundary Design Docs v0.1.
 44. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
@@ -396,6 +396,18 @@ status, external action, FinalOutput, installed Needle, DRS write, production
 claim, or runtime activation. RootFinalOutput -> DRSWriteback is local-only
 with `drs_writeback_scope=local_after_root_final`, not global or External DRS
 writeback. Root remains final authority.
+
+## Developer Facade / Capability Manifest Geometry Checkpoint
+
+Developer Facade / Capability Manifest UX v0.1 is an admission boundary around
+Root-centered capability geometry. It lets developers describe bounded
+capabilities without making manifests into authority.
+
+A validated manifest candidate is not an installed capability, installed
+Needle, execution permission, accepted evidence, truth, Root FinalOutput, or
+production readiness. Developer Facade does not bypass Transition Matrix.
+Future capability installation still requires Root and later production
+boundary design. Root remains final authority.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

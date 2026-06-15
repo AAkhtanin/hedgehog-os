@@ -551,3 +551,17 @@ Kernel Enforcement / Transition Matrix Hardening v0.1:
   `drs_writeback_scope=local_after_root_final`,
   `local_drs_writeback=true`, `global_drs_write=false`, and
   `external_drs_write=false`.
+
+Developer Facade / Capability Manifest UX v0.1:
+
+- Developer Facade is not Root.
+- Capability manifest is not authority.
+- Validated manifest candidate is not installed capability.
+- Validated manifest candidate is not installed Needle.
+- Validated manifest candidate is not execution permission.
+- Validated manifest candidate is not accepted evidence.
+- Validated manifest candidate is not truth.
+- Validated manifest candidate is not FinalOutput.
+- Validated manifest candidate is not production readiness.
+- Developer Facade cannot bypass Transition Matrix.
+- Root remains final authority.

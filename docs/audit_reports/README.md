@@ -227,6 +227,13 @@ Current reports:
   - Confirms `drs_writeback_scope=local_after_root_final`, `local_drs_writeback=true`, `global_drs_write=false`, and `external_drs_write=false`.
   - Confirms Root remains final authority.
 
+- `auditor_developer_facade_capability_manifest_ux_v01.log`
+  - Developer Facade / Capability Manifest UX v0.1 evidence for commits `dd18d5f`, `85c7e56`, and `a2b9479`.
+  - Audit status PASS. Confirms `manifest_candidates_created=6`, `facade_validated_manifest_candidates=3`, `rejected_manifest_candidates=2`, and `needs_user_manifest_candidates=1`.
+  - Confirms `adversarial_attempts_blocked=10` and `focused_tests_passed=16`.
+  - Confirms `installed_capabilities_created=0`, `installed_needles_created=0`, `developer_manifest_is_authority=false`, `validated_manifest_is_truth=false`, and `validated_manifest_is_final_output=false`.
+  - Confirms `developer_facade_does_not_authorize_killer_demo=true`.
+
 ## Current Applied Auditor Commands
 
 ```bash

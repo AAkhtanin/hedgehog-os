@@ -988,9 +988,9 @@ demos. See `docs/passport_geometry_root_needles.md`.
 
 Corrected next order: Compute Collapse Enterprise Bench v0.1 complete through
 docs sync -> Math / Invariants Sync v0.4 complete -> Kernel Enforcement /
-Transition Matrix Hardening v0.1 complete through docs sync -> Next: Developer
-Facade / Capability Manifest UX v0.1 -> Then: Production Boundary Design Docs
-v0.1 -> Enterprise
+Transition Matrix Hardening v0.1 complete through docs sync -> Developer
+Facade / Capability Manifest UX v0.1 complete through docs sync -> Next:
+Production Boundary Design Docs v0.1 -> Enterprise
 Killer Demo v0.1 remains a future assembly target after maturity gates, not the
 next layer -> Public Auditor Packet / Whitepaper draft remains later.
 
@@ -1084,6 +1084,15 @@ proven boundary rules as a deterministic local transition matrix, allows 10
 bounded transitions, blocks 35 forbidden transitions, and does not implement
 production enforcement. It does not authorize external action or Killer Demo.
 Root remains final authority.
+
+Developer Facade / Capability Manifest UX v0.1 validates local capability
+manifest candidates for Root review. It sits on the developer/capability
+admission side, not inside the main runtime as a new actor. It is not
+production UI, production registry, installation, execution permission,
+evidence acceptance, truth, or FinalOutput. Six manifest candidates are
+evaluated: three validated manifest candidates, two rejected, and one
+needs_user. Ten adversarial manifest attempts are blocked. Root remains final
+authority.
 
 ## Exclusions
 

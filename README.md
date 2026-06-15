@@ -1014,6 +1014,89 @@ network/Gemini, execute external action, write global/external DRS, install
 Needles, create production persistence, authorize Killer Demo, or activate
 Marennya / UP. Root remains final authority.
 
+## Developer Facade / Capability Manifest UX v0.1 Checkpoint
+
+Developer Facade / Capability Manifest UX v0.1 is a deterministic local
+proof-only developer-facing manifest validation layer. It proves that a
+developer capability manifest can be normalized and validated as a candidate
+for Root review without becoming authority, execution permission, accepted
+evidence, truth, Root FinalOutput, installed capability, installed Needle, or
+production readiness.
+
+The conceptual placement is:
+
+```text
+Developer CapabilityManifestDraft
+-> Facade normalization
+-> CapabilityManifestCandidate
+-> FacadeValidationReport
+-> RootReviewInput
+```
+
+It is not production UI, a production capability registry, real capability
+installation, real Needle installation, real connector/API access, runtime
+rewrite, schema modification, a new authority layer, Executor, Architect,
+Root, NeedleFactory, production registry, or a new actor inside the main
+runtime chain. Facade validates a manifest as a candidate for Root review. It
+does not install capability, authorize execution, or create Needle.
+
+Evidence commits: proof `dd18d5f`, human walkthrough `85c7e56`, and audit log
+`a2b9479`. Proof facts:
+`developer_facade_capability_manifest_ux_v01_status=PASS`,
+`proof_type=deterministic_local_proof_only`, `focused_tests_passed=16`,
+`manifest_candidates_created=6`, `facade_validated_manifest_candidates=3`,
+`rejected_manifest_candidates=2`, `needs_user_manifest_candidates=1`,
+`adversarial_attempts_observed=10`, and `adversarial_attempts_blocked=10`.
+
+The proof references closed checkpoint metadata from External DRS Pointer
+Protocol v0.1, Read-only Enterprise Connector Sandbox v0.1, External Evidence
+Acceptance Gate v0.1, Bounded LLM Semantic Executor Node v0.1, Enterprise
+Chaos Pack v0.1, Compute Collapse Enterprise Bench v0.1, Math / Invariants
+Sync v0.4, and Kernel Enforcement / Transition Matrix Hardening v0.1.
+`source_evidence_mode=closed_checkpoint_metadata_only` and
+`source_collectors_replayed=false`.
+
+Manifest candidate outcomes:
+
+- `read_only_vendor_connector_manifest` -> `facade_validated_manifest_candidate_only`
+- `bounded_llm_semantic_executor_manifest` -> `facade_validated_manifest_candidate_only`
+- `local_drs_reuse_helper_manifest` -> `facade_validated_manifest_candidate_only`
+- `external_action_connector_manifest` -> `rejected`
+- `authority_escalation_manifest` -> `rejected`
+- `incomplete_manifest_missing_risk_or_permission` -> `needs_user`
+
+`external_action_connector_manifest` is rejected in this proof because
+external action, real API, and production connector requests are outside the
+current proof layer and the production action boundary is not implemented.
+This does not imply external action connectors are impossible forever.
+
+The proof blocks 10 adversarial manifest attempts:
+`manifest_to_installed_capability_without_root`,
+`manifest_to_installed_needle_without_root`, `manifest_to_external_action`,
+`manifest_to_root_authority`, `manifest_to_final_output`,
+`manifest_to_drs_write`, `manifest_to_accepted_evidence`,
+`manifest_to_production_ready_claim`,
+`manifest_to_killer_demo_authorization`, and
+`manifest_to_transition_matrix_authority`.
+
+Validated manifest candidate boundaries: a validated manifest candidate is not
+installed capability, installed Needle, permission to execute, accepted
+evidence, truth, Root FinalOutput, or production readiness. The Transition
+Matrix is required and remains non-authority:
+`transition_matrix_required=true`, `transition_matrix_is_authority=false`,
+`developer_manifest_is_authority=false`,
+`capability_manifest_is_installed_capability=false`,
+`permission_boundary_is_execution=false`,
+`external_observation_schema_is_evidence_acceptance=false`,
+`validated_manifest_is_accepted_evidence=false`,
+`validated_manifest_is_truth=false`, and
+`validated_manifest_is_final_output=false`.
+
+No production UI, production registry, real connector/API, installation,
+external action, global/external DRS write, network, Gemini, production
+persistence, Marennya, UP, or Killer Demo authorization occurs. Root remains
+final authority.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1202,6 +1285,7 @@ Completed recent layers:
 - Compute Collapse Enterprise Bench v0.1.
 - Math / Invariants Sync v0.4.
 - Kernel Enforcement / Transition Matrix Hardening v0.1.
+- Developer Facade / Capability Manifest UX v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
@@ -1209,10 +1293,11 @@ Next engineering focus:
 - Completed: Compute Collapse Enterprise Bench v0.1, complete through docs sync.
 - Completed: Math / Invariants Sync v0.4.
 - Completed: Kernel Enforcement / Transition Matrix Hardening v0.1.
-- Next: Developer Facade / Capability Manifest UX v0.1.
-- Then: Production Boundary Design Docs v0.1.
+- Completed: Developer Facade / Capability Manifest UX v0.1.
+- Next: Production Boundary Design Docs v0.1.
 - Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
 - Public Auditor Packet / Whitepaper draft remains later.
+- Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.
 - Split broad DeadEnds routing into future DeadEnd / BlockedTrace / DegradedTrace / NeedsUserTrace layers if schema evolves.

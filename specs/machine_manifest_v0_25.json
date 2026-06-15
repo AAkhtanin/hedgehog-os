@@ -23,15 +23,14 @@
   "current_checkpoint_status": {
     "metadata_sync_only": true,
     "manifest_does_not_override_human_passport": true,
-    "latest_confirmed_checkpoint_commit": "9d648e3",
-    "latest_confirmed_checkpoint_name": "Add Kernel Enforcement Transition Matrix v0.1 audit log",
+    "latest_confirmed_checkpoint_commit": "a2b9479",
+    "latest_confirmed_checkpoint_name": "Add Developer Facade Capability Manifest UX v0.1 audit log",
     "compute_collapse_enterprise_bench_v01_status": "complete_through_docs_sync",
     "math_invariants_sync_v04_status": "complete",
     "kernel_enforcement_transition_matrix_v01_status": "complete_through_docs_sync",
-    "next_layer": "Developer Facade / Capability Manifest UX v0.1",
-    "then": [
-      "Production Boundary Design Docs v0.1"
-    ],
+    "developer_facade_capability_manifest_ux_v01_status": "complete_through_docs_sync",
+    "next_layer": "Production Boundary Design Docs v0.1",
+    "then": [],
     "later": [
       "Enterprise Killer Demo v0.1 as future assembly target after maturity gates, not next layer"
     ]
@@ -118,6 +117,15 @@
         "human_walkthrough": "5212eec",
         "audit_log": "9d648e3"
       }
+    },
+    {
+      "name": "Developer Facade / Capability Manifest UX v0.1",
+      "status": "complete_through_docs_sync",
+      "commits": {
+        "proof": "dd18d5f",
+        "human_walkthrough": "85c7e56",
+        "audit_log": "a2b9479"
+      }
     }
   ],
 
@@ -160,7 +168,24 @@
     "local_drs_writeback": true,
     "global_drs_write": false,
     "external_drs_write": false,
-    "developer_facade_is_not_authorized_yet": true
+    "developer_manifest_is_authority": false,
+    "capability_manifest_is_installed_capability": false,
+    "validated_manifest_is_accepted_evidence": false,
+    "validated_manifest_is_truth": false,
+    "validated_manifest_is_final_output": false,
+    "permission_boundary_is_execution": false,
+    "risk_class_is_safety_proof": false,
+    "external_observation_schema_is_evidence_acceptance": false,
+    "production_ui_implemented": false,
+    "production_capability_registry_implemented": false,
+    "installed_capabilities_created": 0,
+    "installed_needles_created": 0,
+    "real_connector_created": false,
+    "real_api_called": false,
+    "developer_facade_does_not_bypass_transition_matrix": true,
+    "developer_facade_does_not_authorize_killer_demo": true,
+    "production_boundary_design_docs_next": true,
+    "manifest_auto_hardening_after_killer_demo_only": true
   },
 
   "compute_collapse_enterprise_bench_v01_metrics": {
@@ -226,6 +251,60 @@
     "no_up": true
   },
 
+  "developer_facade_capability_manifest_ux_v01_facts": {
+    "proof_commit": "dd18d5f",
+    "human_walkthrough_commit": "85c7e56",
+    "audit_log_commit": "a2b9479",
+    "developer_facade_capability_manifest_ux_v01_status": "PASS",
+    "proof_type": "deterministic_local_proof_only",
+    "focused_tests_passed": 16,
+    "source_evidence_mode": "closed_checkpoint_metadata_only",
+    "source_collectors_replayed": false,
+    "manifest_candidates_created": 6,
+    "facade_validated_manifest_candidates": 3,
+    "rejected_manifest_candidates": 2,
+    "needs_user_manifest_candidates": 1,
+    "adversarial_attempts_observed": 10,
+    "adversarial_attempts_blocked": 10,
+    "installed_capabilities_created": 0,
+    "installed_needles_created": 0,
+    "external_actions_executed": 0,
+    "global_drs_write": false,
+    "external_drs_write": false,
+    "transition_matrix_required": true,
+    "transition_matrix_is_authority": false,
+    "developer_manifest_is_authority": false,
+    "capability_manifest_is_installed_capability": false,
+    "risk_class_is_safety_proof": false,
+    "permission_boundary_is_execution": false,
+    "external_observation_schema_is_evidence_acceptance": false,
+    "validated_manifest_is_accepted_evidence": false,
+    "validated_manifest_is_truth": false,
+    "validated_manifest_is_final_output": false,
+    "root_remains_final_authority": true,
+    "root_commit_required_for_installation": true,
+    "llm_is_bounded_executor_node_capability": true,
+    "llm_is_authority": false,
+    "drs_reuse_is_authority": false,
+    "kernel_enforcement_checkpoint_referenced": true,
+    "developer_facade_does_not_bypass_transition_matrix": true,
+    "developer_facade_does_not_authorize_killer_demo": true,
+    "production_ui_implemented": false,
+    "production_capability_registry_implemented": false,
+    "real_connector_created": false,
+    "real_api_called": false,
+    "no_network": true,
+    "no_gemini": true,
+    "no_external_action": true,
+    "no_global_drs_write": true,
+    "no_external_drs_write": true,
+    "no_installed_capability": true,
+    "no_installed_needle": true,
+    "no_production_persistence": true,
+    "no_marennya": true,
+    "no_up": true
+  },
+
   "deferred_not_implemented_after_math_invariants_v04": {
     "external_global_drs_implementation": "deferred",
     "real_apis_connectors_actions": "deferred",
@@ -234,7 +313,8 @@
     "marennya_runtime_activation": "deferred",
     "up_runtime_activation": "deferred",
     "multi_llm_showcase_is_canonical_layer": false,
-    "enterprise_killer_demo_current_or_next_layer": false
+    "enterprise_killer_demo_current_or_next_layer": false,
+    "manifest_auto_hardening_from_avf_drs_negative_traces_v01": "post_killer_demo_future_extension"
   },
 
   "project": {

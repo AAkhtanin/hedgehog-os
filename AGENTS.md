@@ -55,7 +55,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → current/next approved layer: Developer Facade / Capability Manifest UX v0.1 → only later: Production Boundary Design Docs v0.1, Enterprise Killer Demo v0.1 after maturity gates, External DRS implementation, Marennya / UP
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → current/next approved layer: Production Boundary Design Docs v0.1 → only later: Enterprise Killer Demo v0.1 after maturity gates, External DRS implementation, Marennya / UP
 
 Do not jump ahead to:
 
@@ -186,8 +186,9 @@ Anti-reduction rules:
   through proof, human walkthrough, audit, and docs sync. Math / Invariants
   Sync v0.4 is complete. Kernel Enforcement / Transition Matrix Hardening
   v0.1 is complete through proof, human walkthrough, audit, and docs sync.
-  Current/next approved layer: Developer Facade / Capability Manifest UX
-  v0.1. Then: Production Boundary Design Docs v0.1. Enterprise
+  Developer Facade / Capability Manifest UX v0.1 is complete through proof,
+  human walkthrough, audit, and docs sync. Current/next approved layer:
+  Production Boundary Design Docs v0.1. Enterprise
   Killer Demo v0.1 remains a future assembly target after maturity gates, not
   the next layer.
 - Do not treat Enterprise Chaos Pack v0.1 as production readiness or use it to
@@ -216,6 +217,16 @@ Anti-reduction rules:
 - Future Developer Facade / Capability Manifest UX work must not bypass the
   transition matrix boundaries, Root authority, Post V&V, GT, policy, audit,
   or permission gates.
+- Developer Facade / Capability Manifest UX v0.1 is proof-only developer-facing
+  manifest validation. Developer Facade is not Root, capability manifest is not
+  authority, and Transition Matrix remains non-authority.
+- A validated manifest candidate is not installed capability, installed
+  Needle, execution permission, accepted evidence, truth, Root FinalOutput, or
+  production readiness.
+- Production Boundary Design Docs v0.1 must document boundaries honestly. It
+  must not implement production runtime, real APIs/connectors/actions,
+  production persistence, installed Needles, Marennya runtime activation, UP
+  runtime activation, or Killer Demo authorization.
 - Codex must not run long tests unless the user explicitly requests them; the
   user runs long, focused, and full-suite tests manually.
 
@@ -565,7 +576,7 @@ benchmark onto the dirty enterprise stack with a synthetic proof-level signal on
 and context units 180 -> 32. It is not real billing, latency, cloud cost, or
 production economics.
 
-Corrected engineering order: Compute Collapse Enterprise Bench v0.1 is complete through proof, human walkthrough, audit, and docs sync. Math / Invariants Sync v0.4 is complete. Kernel Enforcement / Transition Matrix Hardening v0.1 is complete through proof, human walkthrough, audit, and docs sync. Next: Developer Facade / Capability Manifest UX v0.1. Then: Production Boundary Design Docs v0.1. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer. Public Auditor Packet / Whitepaper draft remains later. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
+Corrected engineering order: Compute Collapse Enterprise Bench v0.1 is complete through proof, human walkthrough, audit, and docs sync. Math / Invariants Sync v0.4 is complete. Kernel Enforcement / Transition Matrix Hardening v0.1 is complete through proof, human walkthrough, audit, and docs sync. Developer Facade / Capability Manifest UX v0.1 is complete through proof, human walkthrough, audit, and docs sync. Next: Production Boundary Design Docs v0.1. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer. Public Auditor Packet / Whitepaper draft remains later. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

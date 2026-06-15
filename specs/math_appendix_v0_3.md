@@ -2768,6 +2768,30 @@ The transition matrix models already proven boundary rules. It is not Root,
 not authority, not production runtime authority, not a runtime rewrite, and not
 schema modification. Root remains final authority.
 
+Developer Facade / Capability Manifest UX v0.1 adds a small proof-level
+admission formula for local developer manifests:
+
+```text
+CapabilityManifestDraft
+  -> CapabilityManifestCandidate
+  -> FacadeValidationReport
+  -> RootReviewInput
+
+validated_manifest_candidate != installed_capability
+validated_manifest_candidate != installed_needle
+validated_manifest_candidate != permission_to_execute
+validated_manifest_candidate != accepted_evidence
+validated_manifest_candidate != truth
+validated_manifest_candidate != FinalOutput
+permission_boundary != execution
+risk_class != safety_proof
+external_observation_schema != evidence_acceptance
+```
+
+The facade validates a manifest as a candidate for Root review only. It does
+not install capability, authorize execution, create Needle, accept evidence,
+prove truth, or replace Root.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

@@ -1144,13 +1144,14 @@ Completed recent layers:
 - Bounded LLM Semantic Executor Node v0.1.
 - Enterprise Chaos Pack v0.1.
 - Compute Collapse Enterprise Bench v0.1.
+- Math / Invariants Sync v0.4.
 - Strategic Expansion Map.
 
 Next engineering focus:
 
 - Completed: Compute Collapse Enterprise Bench v0.1, complete through docs sync.
-- Next: Math / Invariants Sync v0.4.
-- Then: Kernel Enforcement / Transition Matrix Hardening v0.1.
+- Completed: Math / Invariants Sync v0.4.
+- Next: Kernel Enforcement / Transition Matrix Hardening v0.1.
 - Then: Developer Facade / Capability Manifest UX v0.1.
 - Then: Production Boundary Design Docs v0.1.
 - Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.

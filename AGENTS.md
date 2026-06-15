@@ -55,7 +55,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 complete → current: Codex/performance-rule hygiene patch → next: read-only connector sandbox → only later: External DRS implementation, Marennya / UP
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → current/next approved layer: Kernel Enforcement / Transition Matrix Hardening v0.1 → only later: Developer Facade / Capability Manifest UX v0.1, Production Boundary Design Docs v0.1, Enterprise Killer Demo v0.1 after maturity gates, External DRS implementation, Marennya / UP
 
 Do not jump ahead to:
 
@@ -183,11 +183,12 @@ Anti-reduction rules:
   complete through proof, human walkthrough, wording cleanup, and audit.
   Enterprise Chaos Pack v0.1 is complete through proof, human walkthrough,
   audit, and docs sync. Compute Collapse Enterprise Bench v0.1 is complete
-  through proof, human walkthrough, audit, and docs sync. Next: Math /
-  Invariants Sync v0.4. Then: Kernel Enforcement / Transition Matrix
-  Hardening v0.1. Then: Developer Facade / Capability Manifest UX v0.1.
-  Then: Production Boundary Design Docs v0.1. Enterprise Killer Demo v0.1
-  remains a future assembly target after maturity gates, not the next layer.
+  through proof, human walkthrough, audit, and docs sync. Math / Invariants
+  Sync v0.4 is complete. Current/next approved layer: Kernel Enforcement /
+  Transition Matrix Hardening v0.1. Then: Developer Facade / Capability
+  Manifest UX v0.1. Then: Production Boundary Design Docs v0.1. Enterprise
+  Killer Demo v0.1 remains a future assembly target after maturity gates, not
+  the next layer.
 - Do not treat Enterprise Chaos Pack v0.1 as production readiness or use it to
   justify real external actions. Any future killer demo must still pass
   explicit Root-controlled production-boundary and acceptance gates.
@@ -553,7 +554,7 @@ benchmark onto the dirty enterprise stack with a synthetic proof-level signal on
 and context units 180 -> 32. It is not real billing, latency, cloud cost, or
 production economics.
 
-Corrected engineering order: Compute Collapse Enterprise Bench v0.1 is complete through proof, human walkthrough, audit, and docs sync. Next: Math / Invariants Sync v0.4. Then: Kernel Enforcement / Transition Matrix Hardening v0.1. Then: Developer Facade / Capability Manifest UX v0.1. Then: Production Boundary Design Docs v0.1. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer. Public Auditor Packet / Whitepaper draft remains later. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
+Corrected engineering order: Compute Collapse Enterprise Bench v0.1 is complete through proof, human walkthrough, audit, and docs sync. Math / Invariants Sync v0.4 is complete. Next: Kernel Enforcement / Transition Matrix Hardening v0.1. Then: Developer Facade / Capability Manifest UX v0.1. Then: Production Boundary Design Docs v0.1. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer. Public Auditor Packet / Whitepaper draft remains later. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

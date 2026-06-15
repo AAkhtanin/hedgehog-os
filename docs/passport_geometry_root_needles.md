@@ -198,8 +198,8 @@ Current engineering order:
 37. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
 38. Enterprise Chaos Pack v0.1 - complete through docs sync.
 39. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
-40. Next: Math / Invariants Sync v0.4.
-41. Then: Kernel Enforcement / Transition Matrix Hardening v0.1.
+40. Math / Invariants Sync v0.4 - complete.
+41. Next: Kernel Enforcement / Transition Matrix Hardening v0.1.
 42. Then: Developer Facade / Capability Manifest UX v0.1.
 43. Then: Production Boundary Design Docs v0.1.
 44. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.

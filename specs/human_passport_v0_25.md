@@ -747,8 +747,8 @@ Corrected roadmap:
 23. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
 24. Enterprise Chaos Pack v0.1 - complete through docs sync.
 25. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
-26. Next: Math / Invariants Sync v0.4.
-27. Then: Kernel Enforcement / Transition Matrix Hardening v0.1.
+26. Math / Invariants Sync v0.4 - complete.
+27. Next: Kernel Enforcement / Transition Matrix Hardening v0.1.
 28. Then: Developer Facade / Capability Manifest UX v0.1.
 29. Then: Production Boundary Design Docs v0.1.
 30. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.

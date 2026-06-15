@@ -1263,8 +1263,8 @@ Corrected next order:
 37. Bounded LLM Semantic Executor Node v0.1 - complete through docs sync.
 38. Enterprise Chaos Pack v0.1 - complete through docs sync.
 39. Compute Collapse Enterprise Bench v0.1 - complete through docs sync.
-40. Next: Math / Invariants Sync v0.4.
-41. Then: Kernel Enforcement / Transition Matrix Hardening v0.1.
+40. Math / Invariants Sync v0.4 - complete.
+41. Next: Kernel Enforcement / Transition Matrix Hardening v0.1.
 42. Then: Developer Facade / Capability Manifest UX v0.1.
 43. Then: Production Boundary Design Docs v0.1.
 44. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
@@ -1333,11 +1333,11 @@ External Evidence Acceptance Gate v0.1 creates six candidates and validation
 packets. Root accepts two, rejects three, and quarantines one. AcceptedEvidence
 remains not truth, not ready, not action, not DRS write, and not Needle. The
 Compute Collapse Enterprise Bench v0.1 is complete through proof, human
-walkthrough, audit, and docs sync. Next: Math / Invariants Sync v0.4. Then:
-Kernel Enforcement / Transition Matrix Hardening v0.1. Then: Developer Facade /
-Capability Manifest UX v0.1. Then: Production Boundary Design Docs v0.1.
-Enterprise Killer Demo v0.1 remains a future assembly target after maturity
-gates, not the next layer.
+walkthrough, audit, and docs sync. Math / Invariants Sync v0.4 is complete.
+Next: Kernel Enforcement / Transition Matrix Hardening v0.1. Then: Developer
+Facade / Capability Manifest UX v0.1. Then: Production Boundary Design Docs
+v0.1. Enterprise Killer Demo v0.1 remains a future assembly target after
+maturity gates, not the next layer.
 
 Bounded LLM Semantic Executor Node v0.1 keeps the model inside Executor as
 `executor_node_capability`. Architect creates the four-node PlanGraph first;
@@ -1363,7 +1363,8 @@ semantic routing. It shows a `29 -> 1` estimated LLM-call signal and a `180 ->
 collectors are not replayed, and no production economics, billing, latency,
 cloud-cost, or real cost-savings claim is made. Killer Demo remains a future
 assembly target after maturity gates and is not authorized by this benchmark.
-Next: Math / Invariants Sync v0.4.
+Math / Invariants Sync v0.4 is complete. Next: Kernel Enforcement /
+Transition Matrix Hardening v0.1.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

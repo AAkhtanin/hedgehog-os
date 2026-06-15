@@ -987,7 +987,7 @@ needle-like directions and are not required for the first applied semantic
 demos. See `docs/passport_geometry_root_needles.md`.
 
 Corrected next order: Compute Collapse Enterprise Bench v0.1 complete through
-docs sync -> Next: Math / Invariants Sync v0.4 -> Then: Kernel Enforcement /
+docs sync -> Math / Invariants Sync v0.4 complete -> Next: Kernel Enforcement /
 Transition Matrix Hardening v0.1 -> Then: Developer Facade / Capability
 Manifest UX v0.1 -> Then: Production Boundary Design Docs v0.1 -> Enterprise
 Killer Demo v0.1 remains a future assembly target after maturity gates, not the

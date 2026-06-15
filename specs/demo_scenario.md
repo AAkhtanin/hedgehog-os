@@ -990,9 +990,9 @@ Corrected next order: Compute Collapse Enterprise Bench v0.1 complete through
 docs sync -> Math / Invariants Sync v0.4 complete -> Kernel Enforcement /
 Transition Matrix Hardening v0.1 complete through docs sync -> Developer
 Facade / Capability Manifest UX v0.1 complete through docs sync -> Production
-Boundary Design Docs v0.1 complete -> Next: Enterprise Killer Demo v0.1 as
-assembly of proven layers -> Public Auditor Packet / Whitepaper draft remains
-later.
+Boundary Design Docs v0.1 complete -> Enterprise Killer Demo v0.1 / Demo A
+complete through docs sync -> Next: Enterprise Document Killer Demo B design
+doc only -> Public Auditor Packet / Whitepaper draft remains later.
 
 ## Applied + Fractal + Coupling Checkpoint Commands
 
@@ -1098,6 +1098,17 @@ Production Boundary Design Docs v0.1 closes the maturity gate before
 Enterprise Killer Demo. Killer Demo must assemble proven layers, preserve
 non-production framing, and avoid real API/action/persistence claims unless a
 later explicit production layer authorizes them.
+
+Enterprise Killer Demo v0.1 / Demo A is the human-visible assembly of proven
+layers. Demo A = Authority / Safety / Compute Collapse. ACT 1 shows a dirty
+enterprise request, ACT 2 stresses authority boundaries, and ACT 3 shows
+proof-level compute collapse. Root Final remains `not_ready` with
+`safe_secondary_outcome=needs_human_review`, 18 authority attempts are blocked,
+no real action executes, and no production claim is made.
+
+Enterprise Document Killer Demo B remains the later Document / Evidence
+Workflow layer. Demo B is not implemented and starts with design documentation
+only.
 
 ## Exclusions
 

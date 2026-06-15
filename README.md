@@ -1142,6 +1142,60 @@ Demo authorized as production.
 Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a
 post-Killer-Demo future extension, not current work.
 
+## Enterprise Killer Demo v0.1 / Demo A Checkpoint
+
+Enterprise Killer Demo v0.1 / Demo A is complete through proof, human
+walkthrough, audit, and docs sync. It is a deterministic local assembly proof
+over already proven layers, not production and not a new authority layer.
+Commits: proof `23a0cfe`, human walkthrough `a8940f2`, audit log `c955524`.
+
+Demo mode: Enterprise Killer Demo A — Authority / Safety / Compute Collapse.
+It demonstrates ACT 1 — Dirty Enterprise Request, ACT 2 — Authority Stress,
+ACT 3 — Compute Collapse, and the Killer Human Moment: "The system did not
+become an autonomous agent. It became a controlled semantic runtime."
+
+The demo assembles the closed source checkpoints from External DRS Pointer
+Protocol v0.1 through Production Boundary Design Docs v0.1. It proves that
+Root final boundary survives dirty enterprise inputs: connector observations
+are not truth, evidence candidates require acceptance gates, LLM drafts do not
+become final decisions, DRS reuse is context and not authority, Developer
+Facade remains candidate-only, Transition Matrix blocks invalid external
+action, Production Boundary blocks production overclaim, and compute collapse
+can be shown as proof-level estimate.
+
+Audit facts: `enterprise_killer_demo_v01_status=PASS`,
+`proof_type=deterministic_local_assembly_proof_only`,
+`demo_b_implemented=false`, `source_checkpoint_count=10`,
+`source_checkpoints_all_closed=true`, `source_collectors_replayed=false`,
+`act_count=3`, `human_walkthrough_ready=true`,
+`adversarial_attempts_observed=18`, and
+`adversarial_attempts_blocked=18`.
+
+Root Final remains `not_ready` with
+`safe_secondary_outcome=needs_human_review`. No shipment is approved and no
+payment is triggered: `vendor_shipment_approved=false`,
+`payment_triggered=false`, `external_action_executed=false`,
+`real_external_action_executed=false`, and `production_ready_claimed=false`.
+Root remains final authority, `root_bypassed=false`, `llm_is_authority=false`,
+`drs_reuse_is_authority=false`, `developer_manifest_is_authority=false`,
+`transition_matrix_is_authority=false`, and
+`transition_matrix_is_production_runtime_authority=false`.
+
+Compute collapse remains proof-level only: `naive_synthetic_llm_call_units=29`,
+`naive_context_units=180`, `hedgehog_bounded_llm_semantic_nodes=1`,
+`hedgehog_context_units=32`, and
+`hedgehog_blocked_authority_attempts=18`. It does not claim real cost savings,
+real latency measurement, real billing measurement, real API execution,
+installed capabilities, installed Needles, External/global DRS, production
+persistence, Marennya, or UP.
+
+Enterprise Document Killer Demo B is not implemented. The next separate layer
+is `docs/demo_designs/enterprise_document_killer_demo_b_v01.md` as design doc
+only. Demo B must not start with a proof runner or implement document/evidence
+workflow immediately, and must not add real OCR/PDF parsing, real bank/legal/
+warehouse connectors, real external action, production DRS, installed Needles,
+Marennya, UP, or production autonomy.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1332,6 +1386,7 @@ Completed recent layers:
 - Kernel Enforcement / Transition Matrix Hardening v0.1.
 - Developer Facade / Capability Manifest UX v0.1.
 - Production Boundary Design Docs v0.1.
+- Enterprise Killer Demo v0.1 / Demo A.
 - Strategic Expansion Map.
 
 Next engineering focus:
@@ -1341,8 +1396,9 @@ Next engineering focus:
 - Completed: Kernel Enforcement / Transition Matrix Hardening v0.1.
 - Completed: Developer Facade / Capability Manifest UX v0.1.
 - Completed: Production Boundary Design Docs v0.1.
-- Next: Enterprise Killer Demo v0.1 as assembly of proven layers.
-- Enterprise Killer Demo v0.1 must remain deterministic/local unless explicitly changed later, proof/demo only, not production, not real API/action/persistence, not a production-ready claim, not a shortcut around Root / Transition Matrix / Developer Facade / Production Boundary, and not a new authority layer.
+- Completed: Enterprise Killer Demo v0.1 / Demo A.
+- Next: Enterprise Document Killer Demo B design doc only.
+- Demo B lifecycle remains design doc -> proof runner -> human walkthrough -> audit log -> docs sync. It must not start with code or implement document/evidence workflow immediately.
 - Public Auditor Packet / Whitepaper draft remains later.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.

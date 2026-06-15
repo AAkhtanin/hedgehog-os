@@ -234,6 +234,12 @@ Current reports:
   - Confirms `installed_capabilities_created=0`, `installed_needles_created=0`, `developer_manifest_is_authority=false`, `validated_manifest_is_truth=false`, and `validated_manifest_is_final_output=false`.
   - Confirms `developer_facade_does_not_authorize_killer_demo=true`.
 
+- `auditor_enterprise_killer_demo_v01.log`
+  - Enterprise Killer Demo v0.1 / Demo A evidence for commits `23a0cfe`, `a8940f2`, and `c955524`.
+  - Audit status PASS. Confirms `demo_mode=Enterprise Killer Demo A — Authority / Safety / Compute Collapse` and `demo_b_implemented=false`.
+  - Confirms `act_count=3`, `adversarial_attempts_blocked=18`, `root_final_status=not_ready`, and `safe_secondary_outcome=needs_human_review`.
+  - Confirms `real_external_action_executed=false` and `production_ready_claimed=false`.
+
 ## Current Applied Auditor Commands
 
 ```bash

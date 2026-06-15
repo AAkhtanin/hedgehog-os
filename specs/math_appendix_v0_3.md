@@ -2810,6 +2810,22 @@ or real-world deployment claims. It does not change runtime behavior, authorize
 real APIs/actions, implement persistence, install capabilities or Needles,
 implement External/global DRS, or activate Marennya / UP.
 
+Enterprise Killer Demo v0.1 / Demo A is an assembly proof, not new math:
+
+```text
+demo_a_mode = authority_safety_compute_collapse
+act_count = 3
+authority_attempts_blocked = 18
+real_cost_savings_claimed = false
+real_latency_measured = false
+real_billing_measured = false
+```
+
+ACT 3 compute-collapse numbers are proof-level estimates only. Demo A does
+not create production readiness, real API/action execution, installed
+capability, installed Needle, External/global DRS, or Demo B document/evidence
+workflow.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

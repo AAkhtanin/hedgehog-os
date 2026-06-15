@@ -576,3 +576,16 @@ Production Boundary Design Docs v0.1:
 - Production design docs do not activate Marennya / UP.
 - Production design docs do not make Killer Demo production-ready.
 - Root remains final authority.
+
+Enterprise Killer Demo v0.1 / Demo A:
+
+- Demo A is Authority / Safety / Compute Collapse assembly proof only.
+- Demo A does not create production readiness.
+- Demo A does not execute real action.
+- Demo A does not install capability.
+- Demo A does not install Needle.
+- Demo A does not implement Enterprise Document Killer Demo B.
+- Demo A does not implement document/evidence workflow.
+- Demo A preserves Root final authority.
+- Demo B starts as design doc only at
+  `docs/demo_designs/enterprise_document_killer_demo_b_v01.md`.

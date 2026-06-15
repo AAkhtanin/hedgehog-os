@@ -1267,7 +1267,8 @@ Corrected next order:
 41. Kernel Enforcement / Transition Matrix Hardening v0.1 - complete through docs sync.
 42. Developer Facade / Capability Manifest UX v0.1 - complete through docs sync.
 43. Production Boundary Design Docs v0.1 - complete.
-44. Next: Enterprise Killer Demo v0.1 as assembly of proven layers, not production.
+44. Enterprise Killer Demo v0.1 / Demo A - complete through docs sync.
+45. Next: Enterprise Document Killer Demo B design doc only.
 
 ## Applied + Fractal + Coupling Demo Commands
 
@@ -1286,6 +1287,7 @@ python -m demo.run_external_evidence_acceptance_gate_v01
 python -m demo.run_compute_collapse_enterprise_bench_v01
 python -m demo.run_kernel_enforcement_transition_matrix_v01
 python -m demo.run_developer_facade_capability_manifest_ux_v01
+python -m demo.run_enterprise_killer_demo_v01
 ```
 
 Human-readable auditor walkthroughs:
@@ -1303,6 +1305,7 @@ python -m demo.run_human_external_evidence_acceptance_gate_walkthrough_v01
 python -m demo.run_human_compute_collapse_enterprise_bench_walkthrough_v01
 python -m demo.run_human_kernel_enforcement_transition_matrix_walkthrough_v01
 python -m demo.run_human_developer_facade_capability_manifest_ux_walkthrough_v01
+python -m demo.run_human_enterprise_killer_demo_walkthrough_v01
 ```
 
 Production-boundary design reference:
@@ -1347,8 +1350,9 @@ walkthrough, audit, and docs sync. Math / Invariants Sync v0.4 is complete.
 Kernel Enforcement / Transition Matrix Hardening v0.1 is complete through
 proof, human walkthrough, audit, and docs sync. Developer Facade / Capability
 Manifest UX v0.1 is complete through proof, human walkthrough, audit, and docs
-sync. Production Boundary Design Docs v0.1 is complete. Next: Enterprise
-Killer Demo v0.1 as assembly of proven layers, not production.
+sync. Production Boundary Design Docs v0.1 is complete. Enterprise Killer Demo
+v0.1 / Demo A is complete through proof, human walkthrough, audit, and docs
+sync. Next: Enterprise Document Killer Demo B design doc only.
 
 Bounded LLM Semantic Executor Node v0.1 keeps the model inside Executor as
 `executor_node_capability`. Architect creates the four-node PlanGraph first;
@@ -1388,17 +1392,22 @@ proof-only developer manifest facade. It evaluates six manifest candidates:
 three become `facade_validated_manifest_candidate_only`, two are rejected, and
 one is routed to needs_user. Ten adversarial manifest attempts are blocked, 16
 focused tests passed, and no installed capability, installed Needle, external
-action, production registry, real API, or production UI is created. Next
-layer: Enterprise Killer Demo v0.1 as assembly target.
+action, production registry, real API, or production UI is created. Enterprise
+Killer Demo v0.1 / Demo A is now complete; next layer is Enterprise Document
+Killer Demo B design doc only.
 
 Production Boundary Design Docs v0.1 is design documentation only. It defines
 what is not proven for production, gates Killer Demo language, and preserves
 the current no real API/action/persistence/Needle/External DRS boundaries.
-Enterprise Killer Demo v0.1 is the next assembly target, but it remains
-deterministic/local unless explicitly changed later, proof/demo only, not
-production, not a production-ready claim, not a new authority layer, and not a
-shortcut around Root, Transition Matrix, Developer Facade, or Production
-Boundary.
+Enterprise Killer Demo v0.1 / Demo A is the human-visible deterministic local
+assembly of proven layers. It blocks 18 authority attempts, keeps Root Final
+at `not_ready` / `needs_human_review`, and shows ACT 3 compute-collapse
+numbers as proof-level estimates only. It creates no real action, production
+claim, installed capability, installed Needle, or Demo B document/evidence
+workflow.
+
+Enterprise Document Killer Demo B is the next separate layer, but it starts as
+design doc only at `docs/demo_designs/enterprise_document_killer_demo_b_v01.md`.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

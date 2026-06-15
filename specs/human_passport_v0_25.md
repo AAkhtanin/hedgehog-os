@@ -751,7 +751,8 @@ Corrected roadmap:
 27. Kernel Enforcement / Transition Matrix Hardening v0.1 - complete through docs sync.
 28. Developer Facade / Capability Manifest UX v0.1 - complete through docs sync.
 29. Production Boundary Design Docs v0.1 - complete.
-30. Next: Enterprise Killer Demo v0.1 as assembly of proven layers, not production.
+30. Enterprise Killer Demo v0.1 / Demo A - complete through docs sync.
+31. Next: Enterprise Document Killer Demo B design doc only.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2743,7 +2744,23 @@ It does not implement production runtime, real APIs/actions, production
 persistence, installed Needles, External/global DRS, secrets vault, monitoring,
 Marennya/UP, or Killer Demo. It does not make the system production-ready.
 
-Next: Enterprise Killer Demo v0.1 as assembly of proven layers, not production.
+## 20.19 Enterprise Killer Demo v0.1 / Demo A Checkpoint
+
+Enterprise Killer Demo v0.1 / Demo A is complete as a deterministic local
+assembly proof over already proven layers. Demo mode: Enterprise Killer Demo A
+— Authority / Safety / Compute Collapse.
+
+It has ACT 1 — Dirty Enterprise Request, ACT 2 — Authority Stress, ACT 3 —
+Compute Collapse, and the Killer Human Moment: "The system did not become an
+autonomous agent. It became a controlled semantic runtime."
+
+The proof blocks 18 authority escalation attempts and returns Root Final
+`not_ready` with `safe_secondary_outcome=needs_human_review`. It executes no
+real action, approves no shipment, triggers no payment, makes no production
+claim, and does not install capabilities or Needles.
+
+Demo B is not implemented. Next: Enterprise Document Killer Demo B design doc
+only at `docs/demo_designs/enterprise_document_killer_demo_b_v01.md`.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

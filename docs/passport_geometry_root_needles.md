@@ -202,7 +202,8 @@ Current engineering order:
 41. Kernel Enforcement / Transition Matrix Hardening v0.1 - complete through docs sync.
 42. Developer Facade / Capability Manifest UX v0.1 - complete through docs sync.
 43. Production Boundary Design Docs v0.1 - complete.
-44. Next: Enterprise Killer Demo v0.1 as assembly of proven layers, not production.
+44. Enterprise Killer Demo v0.1 / Demo A - complete through docs sync.
+45. Next: Enterprise Document Killer Demo B design doc only.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -423,6 +424,22 @@ Enterprise Killer Demo v0.1 may now assemble proven layers, but only as a
 non-production proof/demo target. It must not turn proof geometry into
 production authority, bypass Root, bypass Transition Matrix, bypass Developer
 Facade, or bypass Production Boundary.
+
+## Enterprise Killer Demo A Geometry Checkpoint
+
+Enterprise Killer Demo v0.1 / Demo A shows Root-centered capability geometry
+under stress. Demo A = Authority / Safety / Compute Collapse.
+
+Useful components remain bounded and do not become Root: connector
+observations are not truth, evidence candidates require gates, LLM drafts are
+not final decisions, DRS reuse is context rather than authority, Developer
+Facade remains candidate-only, and Transition Matrix blocks invalid external
+action.
+
+Demo A does not install Needles or capabilities, does not execute real action,
+does not implement External/global DRS, and does not make a production claim.
+Root remains final authority. Enterprise Document Killer Demo B remains a
+later Document / Evidence Workflow layer and is not implemented.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

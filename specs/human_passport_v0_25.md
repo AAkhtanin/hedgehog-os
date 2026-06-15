@@ -750,8 +750,8 @@ Corrected roadmap:
 26. Math / Invariants Sync v0.4 - complete.
 27. Kernel Enforcement / Transition Matrix Hardening v0.1 - complete through docs sync.
 28. Developer Facade / Capability Manifest UX v0.1 - complete through docs sync.
-29. Next: Production Boundary Design Docs v0.1.
-30. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
+29. Production Boundary Design Docs v0.1 - complete.
+30. Next: Enterprise Killer Demo v0.1 as assembly of proven layers, not production.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2733,7 +2733,17 @@ It does not install capabilities, install Needles, execute actions, accept
 evidence, prove truth, create FinalOutput, claim production readiness, bypass
 Transition Matrix, or authorize Killer Demo. Root remains final authority.
 
-Next: Production Boundary Design Docs v0.1.
+## 20.18 Production Boundary Design Docs v0.1 Checkpoint
+
+Production Boundary Design Docs v0.1 is complete as a boundary design document.
+It defines production requirements and explicit non-claims before any
+production or real-world deployment claim.
+
+It does not implement production runtime, real APIs/actions, production
+persistence, installed Needles, External/global DRS, secrets vault, monitoring,
+Marennya/UP, or Killer Demo. It does not make the system production-ready.
+
+Next: Enterprise Killer Demo v0.1 as assembly of proven layers, not production.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

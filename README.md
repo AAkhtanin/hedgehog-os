@@ -1097,6 +1097,51 @@ external action, global/external DRS write, network, Gemini, production
 persistence, Marennya, UP, or Killer Demo authorization occurs. Root remains
 final authority.
 
+## Production Boundary Design Docs v0.1 Checkpoint
+
+Production Boundary Design Docs v0.1 is a boundary design document, not
+production implementation. Commit `140a8f5` adds
+`docs/production_boundary_design_v01.md`.
+
+The design doc defines what must exist before any production or real-world
+deployment claim: process isolation, sandbox escape resistance, real
+cryptographic signatures, real trust registry, real revocation registry,
+durable append-only audit, production persistence semantics, secrets vault /
+sealed slots, connector security boundary, network egress control, external
+action boundary, permission UX, monitoring / incident response, rollback /
+emergency stop, deployment threat model, data retention / deletion policy,
+security review, adversarial red-team coverage, and legal/compliance review
+where applicable.
+
+It explicitly does not implement production runtime, production kernel
+enforcement, real connector/API integration, real external action layer,
+production capability registry, installed Needles, External/global DRS,
+production persistence, secrets vault, live monitoring, Marennya / UP
+activation, or Enterprise Killer Demo. It is not a production-ready claim.
+
+The production boundary matrix summarizes future requirements for Root
+authority, kernel enforcement, Developer Facade, capability installation,
+Needle installation, connector observation, evidence acceptance, LLM executor
+nodes, DRS records, External/global DRS, audit/hash-chain, secrets,
+permission, external action execution, persistence, monitoring, Marennya / UP,
+Enterprise Killer Demo, and public auditor materials.
+
+The checklist requires process isolation, signed capabilities, revocation,
+durable audit, secrets vault, real connector sandbox, permission UX, action
+boundary, monitoring, incident response, persistence design, data retention
+policy, security review, red-team/adversarial testing, legal/compliance review
+where applicable, and deployment threat model before production claims.
+
+The public claims policy allows proof-of-architecture, deterministic local
+proof, Root-controlled runtime, auditable boundary model, candidate-only
+manifest validation, and production boundary design. It forbids language such
+as production-ready, autonomous enterprise agent, real-world safety proven,
+production kernel implemented, automatic capability installation, and Killer
+Demo authorized as production.
+
+Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a
+post-Killer-Demo future extension, not current work.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1286,6 +1331,7 @@ Completed recent layers:
 - Math / Invariants Sync v0.4.
 - Kernel Enforcement / Transition Matrix Hardening v0.1.
 - Developer Facade / Capability Manifest UX v0.1.
+- Production Boundary Design Docs v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
@@ -1294,8 +1340,9 @@ Next engineering focus:
 - Completed: Math / Invariants Sync v0.4.
 - Completed: Kernel Enforcement / Transition Matrix Hardening v0.1.
 - Completed: Developer Facade / Capability Manifest UX v0.1.
-- Next: Production Boundary Design Docs v0.1.
-- Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
+- Completed: Production Boundary Design Docs v0.1.
+- Next: Enterprise Killer Demo v0.1 as assembly of proven layers.
+- Enterprise Killer Demo v0.1 must remain deterministic/local unless explicitly changed later, proof/demo only, not production, not real API/action/persistence, not a production-ready claim, not a shortcut around Root / Transition Matrix / Developer Facade / Production Boundary, and not a new authority layer.
 - Public Auditor Packet / Whitepaper draft remains later.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.

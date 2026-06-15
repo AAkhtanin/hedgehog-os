@@ -2792,6 +2792,24 @@ The facade validates a manifest as a candidate for Root review only. It does
 not install capability, authorize execution, create Needle, accept evidence,
 prove truth, or replace Root.
 
+Production Boundary Design Docs v0.1 adds a design-document boundary, not a
+new runtime formula:
+
+```text
+production_boundary_design_v01 = design_doc_only
+production_ready_claim = false
+real_api_action_authorized = false
+production_persistence_implemented = false
+installed_capability_created = false
+installed_needle_created = false
+external_global_drs_implemented = false
+```
+
+The production boundary design defines future requirements before production
+or real-world deployment claims. It does not change runtime behavior, authorize
+real APIs/actions, implement persistence, install capabilities or Needles,
+implement External/global DRS, or activate Marennya / UP.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

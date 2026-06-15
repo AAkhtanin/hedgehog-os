@@ -201,8 +201,8 @@ Current engineering order:
 40. Math / Invariants Sync v0.4 - complete.
 41. Kernel Enforcement / Transition Matrix Hardening v0.1 - complete through docs sync.
 42. Developer Facade / Capability Manifest UX v0.1 - complete through docs sync.
-43. Next: Production Boundary Design Docs v0.1.
-44. Enterprise Killer Demo v0.1 remains a future assembly target after maturity gates, not the next layer.
+43. Production Boundary Design Docs v0.1 - complete.
+44. Next: Enterprise Killer Demo v0.1 as assembly of proven layers, not production.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -408,6 +408,21 @@ Needle, execution permission, accepted evidence, truth, Root FinalOutput, or
 production readiness. Developer Facade does not bypass Transition Matrix.
 Future capability installation still requires Root and later production
 boundary design. Root remains final authority.
+
+## Production Boundary Design Geometry Checkpoint
+
+Production Boundary Design Docs v0.1 protects Root-centered capability geometry
+from production overclaim. It does not turn proof boundaries into production
+authority.
+
+It keeps real capability installation, real Needles, real APIs/actions,
+External/global DRS, production persistence, Marennya, and UP deferred. Root
+remains final authority.
+
+Enterprise Killer Demo v0.1 may now assemble proven layers, but only as a
+non-production proof/demo target. It must not turn proof geometry into
+production authority, bypass Root, bypass Transition Matrix, bypass Developer
+Facade, or bypass Production Boundary.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

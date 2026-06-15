@@ -23,17 +23,27 @@
   "current_checkpoint_status": {
     "metadata_sync_only": true,
     "manifest_does_not_override_human_passport": true,
-    "latest_confirmed_checkpoint_commit": "a2b9479",
-    "latest_confirmed_checkpoint_name": "Add Developer Facade Capability Manifest UX v0.1 audit log",
+    "latest_confirmed_checkpoint_commit": "140a8f5",
+    "latest_confirmed_checkpoint_name": "Add Production Boundary Design Docs v0.1",
     "compute_collapse_enterprise_bench_v01_status": "complete_through_docs_sync",
     "math_invariants_sync_v04_status": "complete",
     "kernel_enforcement_transition_matrix_v01_status": "complete_through_docs_sync",
     "developer_facade_capability_manifest_ux_v01_status": "complete_through_docs_sync",
-    "next_layer": "Production Boundary Design Docs v0.1",
+    "production_boundary_design_docs_v01_status": "complete",
+    "production_boundary_design_docs_file": "docs/production_boundary_design_v01.md",
+    "next_layer": "Enterprise Killer Demo v0.1",
+    "next_layer_mode": "assembly_of_proven_layers",
+    "killer_demo_must_not_claim_production_ready": true,
+    "killer_demo_must_not_use_real_apis_or_actions": true,
+    "killer_demo_must_not_bypass_root": true,
+    "killer_demo_must_not_bypass_transition_matrix": true,
     "then": [],
     "later": [
-      "Enterprise Killer Demo v0.1 as future assembly target after maturity gates, not next layer"
-    ]
+      "Public Auditor Packet / Whitepaper draft",
+      "Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains post-Killer-Demo future extension",
+      "Marennya / UP remain deferred"
+    ],
+    "manifest_auto_hardening_after_killer_demo_only": true
   },
 
   "closed_enterprise_boundary_stack": [
@@ -126,6 +136,14 @@
         "human_walkthrough": "85c7e56",
         "audit_log": "a2b9479"
       }
+    },
+    {
+      "name": "Production Boundary Design Docs v0.1",
+      "status": "complete",
+      "commits": {
+        "design_doc": "140a8f5"
+      },
+      "file": "docs/production_boundary_design_v01.md"
     }
   ],
 
@@ -184,7 +202,50 @@
     "real_api_called": false,
     "developer_facade_does_not_bypass_transition_matrix": true,
     "developer_facade_does_not_authorize_killer_demo": true,
-    "production_boundary_design_docs_next": true,
+    "production_boundary_design_docs_v01_status": "complete",
+    "production_boundary_design_docs_file": "docs/production_boundary_design_v01.md",
+    "production_boundary_design_is_implementation": false,
+    "production_ready_claimed": false,
+    "real_api_implemented": false,
+    "real_external_action_authorized": false,
+    "production_persistence_implemented": false,
+    "installed_capability_created": false,
+    "installed_needle_created": false,
+    "external_global_drs_implemented": false,
+    "secrets_vault_implemented": false,
+    "live_monitoring_implemented": false,
+    "killer_demo_authorized_as_production": false,
+    "killer_demo_must_not_claim_production_ready": true,
+    "killer_demo_must_not_use_real_apis_or_actions": true,
+    "killer_demo_must_not_bypass_root": true,
+    "killer_demo_must_not_bypass_transition_matrix": true,
+    "manifest_auto_hardening_after_killer_demo_only": true
+  },
+
+  "production_boundary_design_docs_v01_facts": {
+    "checkpoint_commit": "140a8f5",
+    "production_boundary_design_docs_v01_status": "complete",
+    "production_boundary_design_docs_file": "docs/production_boundary_design_v01.md",
+    "design_document_only": true,
+    "production_boundary_design_is_implementation": false,
+    "production_ready_claimed": false,
+    "real_api_implemented": false,
+    "real_external_action_authorized": false,
+    "production_persistence_implemented": false,
+    "installed_capability_created": false,
+    "installed_needle_created": false,
+    "external_global_drs_implemented": false,
+    "secrets_vault_implemented": false,
+    "live_monitoring_implemented": false,
+    "marennya_runtime_activation": false,
+    "up_runtime_activation": false,
+    "killer_demo_authorized_as_production": false,
+    "next_layer": "Enterprise Killer Demo v0.1",
+    "next_layer_mode": "assembly_of_proven_layers",
+    "killer_demo_must_not_claim_production_ready": true,
+    "killer_demo_must_not_use_real_apis_or_actions": true,
+    "killer_demo_must_not_bypass_root": true,
+    "killer_demo_must_not_bypass_transition_matrix": true,
     "manifest_auto_hardening_after_killer_demo_only": true
   },
 
@@ -313,7 +374,8 @@
     "marennya_runtime_activation": "deferred",
     "up_runtime_activation": "deferred",
     "multi_llm_showcase_is_canonical_layer": false,
-    "enterprise_killer_demo_current_or_next_layer": false,
+    "enterprise_killer_demo_current_or_next_layer": true,
+    "enterprise_killer_demo_mode": "assembly_of_proven_layers_not_production",
     "manifest_auto_hardening_from_avf_drs_negative_traces_v01": "post_killer_demo_future_extension"
   },
 

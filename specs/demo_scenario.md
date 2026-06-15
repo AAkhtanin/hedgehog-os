@@ -989,10 +989,10 @@ demos. See `docs/passport_geometry_root_needles.md`.
 Corrected next order: Compute Collapse Enterprise Bench v0.1 complete through
 docs sync -> Math / Invariants Sync v0.4 complete -> Kernel Enforcement /
 Transition Matrix Hardening v0.1 complete through docs sync -> Developer
-Facade / Capability Manifest UX v0.1 complete through docs sync -> Next:
-Production Boundary Design Docs v0.1 -> Enterprise
-Killer Demo v0.1 remains a future assembly target after maturity gates, not the
-next layer -> Public Auditor Packet / Whitepaper draft remains later.
+Facade / Capability Manifest UX v0.1 complete through docs sync -> Production
+Boundary Design Docs v0.1 complete -> Next: Enterprise Killer Demo v0.1 as
+assembly of proven layers -> Public Auditor Packet / Whitepaper draft remains
+later.
 
 ## Applied + Fractal + Coupling Checkpoint Commands
 
@@ -1093,6 +1093,11 @@ evidence acceptance, truth, or FinalOutput. Six manifest candidates are
 evaluated: three validated manifest candidates, two rejected, and one
 needs_user. Ten adversarial manifest attempts are blocked. Root remains final
 authority.
+
+Production Boundary Design Docs v0.1 closes the maturity gate before
+Enterprise Killer Demo. Killer Demo must assemble proven layers, preserve
+non-production framing, and avoid real API/action/persistence claims unless a
+later explicit production layer authorizes them.
 
 ## Exclusions
 

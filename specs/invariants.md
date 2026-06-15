@@ -565,3 +565,14 @@ Developer Facade / Capability Manifest UX v0.1:
 - Validated manifest candidate is not production readiness.
 - Developer Facade cannot bypass Transition Matrix.
 - Root remains final authority.
+
+Production Boundary Design Docs v0.1:
+
+- Production boundary design is not production implementation.
+- Production design docs do not authorize external actions.
+- Production design docs do not install capabilities.
+- Production design docs do not install Needles.
+- Production design docs do not implement External/global DRS.
+- Production design docs do not activate Marennya / UP.
+- Production design docs do not make Killer Demo production-ready.
+- Root remains final authority.

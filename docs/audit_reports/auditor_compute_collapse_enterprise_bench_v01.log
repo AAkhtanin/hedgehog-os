@@ -1,0 +1,285 @@
+===== HEADER =====
+Audit report: Compute Collapse Enterprise Bench v0.1
+Audit status: PASS
+Audit mode: deterministic local audit-facing log over committed proof and human walkthrough
+
+This audit log covers Compute Collapse Enterprise Bench v0.1.
+This is deterministic local proof-only.
+This is an enterprise extension of the earlier Economics / Compute Collapse reuse benchmark onto the dirty enterprise stack.
+It is not a duplicate of the earlier benchmark.
+It is not production economics.
+It is not real billing.
+It is not real latency measurement.
+It is not real cloud cost measurement.
+It does not claim real cost savings.
+It does not authorize Killer Demo.
+It does not authorize multi-LLM showcase.
+It does not create a new runtime capability.
+It does not execute the naive baseline path.
+It does not call network or Gemini.
+It does not execute external actions.
+It does not write global DRS or External DRS.
+It does not install Needles.
+It does not invoke Marennya or UP.
+Root remains final authority.
+
+===== COMMIT EVIDENCE =====
+proof_commit: bc606ff Add Compute Collapse Enterprise Bench v0.1 proof
+human_walkthrough_commit: 5cc0516 Add human Compute Collapse Enterprise Bench walkthrough v0.1
+
+Focused test evidence observed before proof commit:
+tests/test_compute_collapse_enterprise_bench_v01_runner.py
+11 passed in 0.05s
+
+===== SOURCE CHECKPOINTS =====
+External DRS Pointer Protocol v0.1: closed checkpoint metadata
+Read-only Enterprise Connector Sandbox v0.1: closed checkpoint metadata
+External Evidence Acceptance Gate v0.1: closed checkpoint metadata
+Bounded LLM Semantic Executor Node v0.1: closed checkpoint metadata
+Enterprise Chaos Pack v0.1: closed checkpoint metadata
+
+Enterprise Chaos Pack v0.1 source facts:
+fully_closed: true
+commits: 082753e,104105b,668a51a,03636b8
+blocked_escalation_attempts: 18/18
+quarantined_and_blocked_attempts: 4
+
+source_checkpoints_referenced: 5
+source_collectors_replayed: false
+source_collectors_replayed_count: 0
+source_evidence_mode: closed_checkpoint_metadata_only
+
+===== BENCHMARK PURPOSE =====
+benchmark_id: compute_collapse_enterprise_bench_v01
+benchmark_type: deterministic_local_proof_only
+comparison: naive_long_chain_estimate_vs_root_controlled_semantic_routing
+synthetic_estimate: true
+new_runtime_capability_created: false
+
+Purpose:
+Compare a synthetic unsafe/inefficient long-chain enterprise reasoning estimate
+against the Hedgehog OS Root-controlled path using closed checkpoint metadata,
+DRS reuse signals, bounded LLM placement, and Root authority.
+
+===== ENTERPRISE BENCH REQUEST =====
+request_id: ENTERPRISE-COMPUTE-COLLAPSE-001
+request_family: enterprise_chaos_dirty_request
+
+Surfaces:
+connector_observations
+accepted_evidence
+stale_legal_state
+drs_reuse
+external_pointer_claim
+llm_semantic_draft
+needle_candidate
+child_cell_claim
+gt_advisory
+resultproposal_bypass_attempt
+conflicting_sources
+
+root_review_required: true
+proof_only: true
+
+===== BASELINE LONG-CHAIN ESTIMATE =====
+path_id: naive_long_chain_baseline
+estimate_mode: deterministic_synthetic_estimate
+baseline_path_executed: false
+real_llm_calls_executed: 0
+
+intake_llm_calls: 1
+connector_interpretation_llm_calls: 4
+evidence_resolution_llm_calls: 4
+legal_state_llm_calls: 2
+drs_reuse_llm_calls: 2
+external_pointer_llm_calls: 2
+semantic_summary_llm_calls: 2
+needle_candidate_llm_calls: 2
+child_cell_llm_calls: 2
+conflict_resolution_llm_calls: 3
+action_planning_llm_calls: 3
+finalization_llm_calls: 2
+baseline_llm_calls: 29
+
+baseline_collector_replays: 4
+baseline_validation_passes: 6
+baseline_context_units: 180
+baseline_action_planning_steps: 6
+baseline_escalation_surfaces: 18
+baseline_unbounded_authority_risk_units: 18
+baseline_failed_attempts: 18
+baseline_expensive_semantic_expansions: 18
+
+===== HEDGEHOG ROOT-CONTROLLED PATH =====
+path_id: hedgehog_root_controlled_path
+measurement_mode: deterministic_local_benchmark
+
+intake_llm_calls: 0
+connector_interpretation_llm_calls: 0
+evidence_resolution_llm_calls: 0
+legal_state_llm_calls: 0
+drs_reuse_llm_calls: 0
+external_pointer_llm_calls: 0
+semantic_summary_llm_calls: 1
+needle_candidate_llm_calls: 0
+child_cell_llm_calls: 0
+conflict_resolution_llm_calls: 0
+action_planning_llm_calls: 0
+finalization_llm_calls: 0
+hedgehog_llm_calls: 1
+
+bounded_llm_executor_nodes_used: 1
+hedgehog_collector_replays: 0
+hedgehog_validation_passes: 1
+hedgehog_context_units: 32
+hedgehog_action_planning_steps: 0
+hedgehog_escalation_surfaces: 18
+hedgehog_unbounded_authority_risk_units: 0
+hedgehog_failed_attempts: 0
+hedgehog_blocked_attempts: 18
+hedgehog_quarantined_and_blocked: 4
+hedgehog_expensive_semantic_expansions: 1
+root_controlled_metadata_reuse: true
+bounded_llm_use_only: true
+
+===== COMPUTE COLLAPSE METRICS =====
+metric_mode: proof_level_compute_collapse_signal
+
+baseline_llm_calls: 29
+hedgehog_llm_calls: 1
+llm_call_reduction: 28
+llm_call_reduction_ratio: 0.9655
+
+baseline_context_units: 180
+hedgehog_context_units: 32
+context_unit_reduction: 148
+context_unit_reduction_ratio: 0.8222
+
+collector_replay_reduction: 4
+validation_pass_reduction: 5
+action_planning_reduction: 6
+unbounded_authority_risk_reduction: 18
+expensive_semantic_expansion_reduction: 17
+
+synthetic_estimate_only: true
+billing_measurement_performed: false
+latency_measurement_performed: false
+
+===== LLM / SYNTHETIC ESTIMATE BOUNDARY =====
+The benchmark estimates one bounded Hedgehog LLM executor call in the routed path.
+The audit log itself executes no LLM, no Gemini, no network, and no API call.
+
+baseline_path_executed: false
+audit_log_executed_llm: false
+audit_log_called_gemini: false
+audit_log_called_network: false
+audit_log_called_api: false
+
+The baseline LLM-call count is a deterministic synthetic estimate.
+The Hedgehog LLM-call count is a routed-path estimate for one bounded executor node.
+Neither value is real billing, real latency, real cloud cost, or production economics.
+
+===== DRS / REUSE AUTHORITY BOUNDARY =====
+DRS reuse and closed checkpoint metadata are Root-approved semantic routing / reuse signals, not authority.
+Root remains the final authority.
+
+drs_reuse_is_authority: false
+closed_checkpoint_metadata_is_authority: false
+root_remains_final_authority: true
+source_collectors_replayed: false
+
+===== SAFETY / AUTHORITY BOUNDARY MATRIX =====
+root_remains_final_authority: true
+closed_metadata_prevents_collector_replay: true
+drs_reuse_is_authority: false
+closed_checkpoint_metadata_is_authority: false
+bounded_llm_use_only: true
+llm_is_not_root: true
+benchmark_does_not_execute_baseline: true
+benchmark_does_not_authorize_action: true
+benchmark_does_not_authorize_killer_demo: true
+benchmark_does_not_authorize_multi_llm_showcase: true
+no_network: true
+no_gemini: true
+no_external_action: true
+no_global_drs_write: true
+no_external_drs_write: true
+no_installed_needle: true
+no_production_persistence: true
+no_marennya: true
+no_up: true
+audit_hash_decides_truth_false: true
+
+===== KILLER DEMO / MULTI-LLM SHOWCASE BOUNDARY =====
+Killer Demo remains a future assembly target after maturity gates.
+It is not the next lifecycle step and is not authorized by this benchmark.
+
+killer_demo_authorized: false
+multi_llm_showcase_authorized: false
+new_runtime_capability_created: false
+external_action_executed: false
+production_persistence: false
+
+===== ROOT FINAL =====
+root_result: compute_collapse_enterprise_bench_completed
+safe_secondary_outcome: hardening_can_continue_without_authorizing_killer_demo
+benchmark_status: PASS
+production_economics_claimed: false
+real_billing_claimed: false
+real_latency_claimed: false
+real_cloud_cost_claimed: false
+killer_demo_authorized: false
+multi_llm_showcase_authorized: false
+root_remains_final_authority: true
+no_network: true
+no_gemini: true
+no_external_action: true
+no_global_drs_write: true
+no_external_drs_write: true
+no_installed_needle: true
+no_production_persistence: true
+no_marennya: true
+no_up: true
+
+===== OVERCLAIM GUARDRAILS =====
+production_economics_claimed: false
+real_billing_claimed: false
+real_latency_claimed: false
+real_cloud_cost_claimed: false
+real_cost_savings_claimed: false
+real_world_performance_claimed: false
+killer_demo_authorized: false
+multi_llm_showcase_authorized: false
+new_runtime_capability_created: false
+naive_baseline_executed: false
+network_called: false
+gemini_called: false
+external_api_used: false
+external_action_executed: false
+global_drs_write: false
+external_drs_write: false
+installed_needle_created: false
+marennya_invoked: false
+up_invoked: false
+audit_hash_decides_truth: false
+
+===== AUDIT SUMMARY =====
+compute_collapse_enterprise_bench_v01_audit_status: PASS
+proof_commit: bc606ff
+human_walkthrough_commit: 5cc0516
+baseline_llm_calls: 29
+hedgehog_llm_calls: 1
+hedgehog_llm_calls_meaning: synthetic routed-path estimate, not real LLM call by audit/walkthrough
+context_units: 180 -> 32
+source_collectors_replayed: false
+root_remains_final_authority: true
+production_economics_claimed: false
+real_billing_claimed: false
+real_latency_claimed: false
+real_cloud_cost_claimed: false
+real_cost_savings_claimed: false
+killer_demo_authorized: false
+multi_llm_showcase_authorized: false
+canonical_payload_hash: 86d391ee08151a4b1f04d84aa10842b36ac6db268add11eecf495107c052edc7
+previous_chain_last_entry_hash: closed_checkpoint_metadata_only
+next_lifecycle_step: docs sync after audit commit

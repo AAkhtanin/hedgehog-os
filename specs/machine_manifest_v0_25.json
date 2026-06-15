@@ -20,6 +20,155 @@
     ]
   },
 
+  "current_checkpoint_status": {
+    "metadata_sync_only": true,
+    "manifest_does_not_override_human_passport": true,
+    "latest_confirmed_checkpoint_commit": "76528a5",
+    "latest_confirmed_checkpoint_name": "Document post-Math and Invariants roadmap checkpoint",
+    "compute_collapse_enterprise_bench_v01_status": "complete_through_docs_sync",
+    "math_invariants_sync_v04_status": "complete",
+    "next_layer": "Kernel Enforcement / Transition Matrix Hardening v0.1",
+    "then": [
+      "Developer Facade / Capability Manifest UX v0.1",
+      "Production Boundary Design Docs v0.1"
+    ],
+    "later": [
+      "Enterprise Killer Demo v0.1 as future assembly target after maturity gates, not next layer"
+    ]
+  },
+
+  "closed_enterprise_boundary_stack": [
+    {
+      "name": "External DRS Pointer Protocol v0.1",
+      "status": "closed_proof_level",
+      "commits": {
+        "proof": "0a690c5",
+        "human_walkthrough": "3e3cc3d",
+        "audit_log": "2036247",
+        "docs_sync": "1b37ba5",
+        "docs_cleanup": "984d001",
+        "targeted_hygiene": "5f83451"
+      }
+    },
+    {
+      "name": "Read-only Enterprise Connector Sandbox v0.1",
+      "status": "closed_proof_level",
+      "commits": {
+        "proof": "5110d14",
+        "human_walkthrough": "01a6b64",
+        "audit_log": "af872eb",
+        "docs_sync": "056e2cd"
+      }
+    },
+    {
+      "name": "External Evidence Acceptance Gate v0.1",
+      "status": "closed_proof_level",
+      "commits": {
+        "proof": "ece902f",
+        "human_walkthrough": "00e98cd",
+        "audit_log": "632ecb1",
+        "docs_sync": "71d76e0"
+      }
+    },
+    {
+      "name": "Bounded LLM Semantic Executor Node v0.1",
+      "status": "closed_proof_level",
+      "commits": {
+        "proof": "863f850",
+        "human_walkthrough": "fc328c8",
+        "wording_cleanup": "4659f3e",
+        "audit_log": "0e1626c",
+        "docs_sync": "524949f",
+        "docs_wording_finalization": "d6504bf"
+      }
+    },
+    {
+      "name": "Enterprise Chaos Pack v0.1",
+      "status": "closed_proof_level",
+      "commits": {
+        "proof": "082753e",
+        "human_walkthrough": "104105b",
+        "audit_log": "668a51a",
+        "docs_sync": "03636b8"
+      }
+    },
+    {
+      "name": "Compute Collapse Enterprise Bench v0.1",
+      "status": "complete_through_docs_sync",
+      "commits": {
+        "proof": "bc606ff",
+        "human_walkthrough": "5cc0516",
+        "audit_log": "baac894",
+        "docs_sync": "72bfcad"
+      }
+    },
+    {
+      "name": "Math / Invariants Sync v0.4",
+      "status": "complete",
+      "commits": {
+        "math_invariants_sync": "2af3876",
+        "roadmap_sync": "76528a5"
+      }
+    }
+  ],
+
+  "enterprise_boundary_metadata": {
+    "root_remains_final_authority": true,
+    "drs_reuse_is_authority": false,
+    "closed_checkpoint_metadata_is_authority": false,
+    "audit_hash_chain_decides_truth": false,
+    "connector_observation_is_truth": false,
+    "evidence_candidate_is_accepted_evidence": false,
+    "accepted_evidence_is_truth": false,
+    "accepted_evidence_is_ready_status": false,
+    "accepted_evidence_is_action": false,
+    "accepted_evidence_is_drs_write": false,
+    "accepted_evidence_is_installed_needle": false,
+    "llm_is_bounded_executor_node_capability": true,
+    "llm_is_actor_or_authority": false,
+    "external_pointer_is_external_drs_write": false,
+    "external_pointer_is_global_drs_write": false,
+    "needle_candidate_is_installed_needle": false,
+    "permission_needs_user_is_execution": false,
+    "marennya_runtime_activation": false,
+    "up_runtime_activation": false,
+    "killer_demo_authorized": false,
+    "production_autonomy_claimed": false,
+    "production_economics_claimed": false,
+    "real_billing_claimed": false,
+    "real_latency_claimed": false,
+    "real_cloud_cost_claimed": false,
+    "real_cost_savings_claimed": false
+  },
+
+  "compute_collapse_enterprise_bench_v01_metrics": {
+    "benchmark_type": "deterministic_local_proof_only",
+    "synthetic_estimate": true,
+    "baseline_path_executed": false,
+    "baseline_llm_calls": 29,
+    "hedgehog_llm_calls": 1,
+    "hedgehog_llm_calls_meaning": "synthetic_routed_path_estimate_not_real_llm_call_by_docs_walkthrough_audit",
+    "llm_call_reduction": 28,
+    "llm_call_reduction_ratio": 0.9655,
+    "baseline_context_units": 180,
+    "hedgehog_context_units": 32,
+    "context_unit_reduction": 148,
+    "context_unit_reduction_ratio": 0.8222,
+    "source_collectors_replayed": false,
+    "source_collectors_replayed_count": 0
+  },
+
+  "deferred_not_implemented_after_math_invariants_v04": {
+    "external_global_drs_implementation": "deferred",
+    "real_apis_connectors_actions": "deferred",
+    "production_persistence": "deferred",
+    "installed_real_needles": "deferred",
+    "marennya_runtime_activation": "deferred",
+    "up_runtime_activation": "deferred",
+    "multi_llm_showcase_is_canonical_layer": false,
+    "enterprise_killer_demo_current_or_next_layer": false
+  },
+
   "project": {
     "project_id": "proj_hedgehog_os_demo",
     "title": "Hedgehog OS / Fractal Reflexive OS Demo",

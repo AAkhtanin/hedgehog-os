@@ -49,6 +49,8 @@ def test_accepted_packet_creates_valid_architect_plan_graph_proposal():
     assert proposal["plan_graph_contract_checked"] is True
     assert proposal["plan_graph_contract_valid"] is True
     assert proposal["created_by"] == "architect"
+    assert "result_payload" not in proposal
+    assert "evidence" not in proposal
     assert proposal["nodes"]
     assert proposal["forbidden_vectors_absent"] is True
     assert proposal["architect_creates_final_output"] is False

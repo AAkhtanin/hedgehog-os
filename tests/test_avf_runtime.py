@@ -68,8 +68,11 @@ def test_build_attractor_packet_filters_forbidden_vectors_and_validates_schema()
     assert packet["architect_instructions"] == {
         "do_not_expand_forbidden_regions": True,
         "must_return_time_assumptions": True,
-        "must_return_result_proposals_only": True,
+        "must_return_plan_graph_only": True,
     }
+    assert packet["architect_instructions"]["must_return_plan_graph_only"] is True
+    assert "must_return_result_proposals_only" not in packet["architect_instructions"]
+    assert "must_return_result_proposals_only" not in json.dumps(packet, sort_keys=True)
     assert all(vector["branching_mode"] != "forbidden" for vector in packet_vectors)
 
     viabilities = [vector["final_viability"] for vector in packet_vectors]

@@ -142,6 +142,6 @@ def build_attractor_packet(
         "architect_instructions": {
             "do_not_expand_forbidden_regions": True,
             "must_return_time_assumptions": True,
-            "must_return_result_proposals_only": True,
+            "must_return_plan_graph_only": True,
         },
     }

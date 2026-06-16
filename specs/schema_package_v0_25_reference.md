@@ -26,7 +26,8 @@ Known reference drift:
 
 - Architect must return `PlanGraph`, not `ResultProposal`.
 - Executors / DAG runner return `ResultProposal`-shaped outputs.
-- `AttractorPacket.architect_instructions.must_return_result_proposals_only` is obsolete in this reference and must not be copied into active schemas.
+- `AttractorPacket.architect_instructions.must_return_result_proposals_only` is obsolete and retired; active Architect-facing contracts use `must_return_plan_graph_only`.
+- Architect-facing instructions must not mix Executor / DAG ResultProposal behavior into the Architect contract.
 - Current runtime includes explicit Orchestrator-stage / Route Assembly.
 - Current runtime includes Fractal DAG Executor after Architect PlanGraph.
 - DRS hits do not imply direct reuse.
@@ -694,7 +695,7 @@ final_output.schema.json
       "required": [
         "do_not_expand_forbidden_regions",
         "must_return_time_assumptions",
-        "must_return_result_proposals_only"
+        "must_return_plan_graph_only"
       ],
       "properties": {
         "do_not_expand_forbidden_regions": {
@@ -705,7 +706,7 @@ final_output.schema.json
           "type": "boolean",
           "const": true
         },
-        "must_return_result_proposals_only": {
+        "must_return_plan_graph_only": {
           "type": "boolean",
           "const": true
         }

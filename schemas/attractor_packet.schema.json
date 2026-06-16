@@ -218,7 +218,7 @@
       "required": [
         "do_not_expand_forbidden_regions",
         "must_return_time_assumptions",
-        "must_return_result_proposals_only"
+        "must_return_plan_graph_only"
       ],
       "properties": {
         "do_not_expand_forbidden_regions": {
@@ -227,7 +227,7 @@
         "must_return_time_assumptions": {
           "const": true
         },
-        "must_return_result_proposals_only": {
+        "must_return_plan_graph_only": {
           "const": true
         },
         "notes": {

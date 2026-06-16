@@ -1435,9 +1435,6 @@ for docs sync. Phase 1 does not close Findings B/C/D/E: Runtime JSON Schema
 Validation Hardening, EvidenceItem.kind vocabulary alignment, artifact_type
 vocabulary alignment, and focused coverage gaps remain open.
 
-Next hardening is Schema Contract Alignment Phase 2 patch plan after review,
-not broad fix.
-
 Schema Contract Alignment v0.1 Phase 2 Executor / DAG ResultProposal wording
 patch clarifies the public contract only. runtime behavior drift not found.
 Existing focused tests already cover the behavior. No tests were changed in
@@ -1456,6 +1453,21 @@ This Phase 2 patch does not implement Runtime JSON Schema Validation
 Hardening, does not change Post V&V runtime validation, does not align
 EvidenceItem.kind, does not align artifact_type, does not change production
 readiness, and does not create public-auditor readiness.
+
+Runtime JSON Schema Validation Hardening v0.1 is complete through runtime patch
+and audit for Post V&V incoming ResultProposal validation. Post V&V runtime now
+performs incoming ResultProposal JSON Schema validation against
+`schemas/result_proposal.schema.json`. Validation runs before manual checks, is
+additive, and records `schema_validation_replaces_manual_checks: false`.
+Schema failures return normal V&V report rejection path and do not crash.
+Manual safety and policy checks are preserved.
+
+Checkpoint evidence: preflight `3207a19`, runtime patch `48e2515`, audit
+`107a7c4`, `post_vv_schema_batch: 38 passed, 2 warnings`, and
+`nearby_boundary_batch: 54 passed, 2 warnings`. The jsonschema.RefResolver
+deprecation warning is `non_blocking`. No schema / GT / Root / DRS modification
+is part of this docs sync. Outgoing VVReport runtime validation remains
+deferred; EvidenceItem.kind and artifact_type remain future work.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

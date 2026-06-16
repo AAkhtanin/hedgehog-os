@@ -265,6 +265,15 @@ Current reports:
   - Confirms Post V&V / GT / Root remain required after the ResultProposal boundary and Root remains final authority.
   - Confirms Findings B/C/D/E remain open after Phase 2.
 
+- `auditor_runtime_jsonschema_hardening_post_vv_resultproposal_v01.log`
+  - Runtime JSON Schema Validation Hardening v0.1 audit for Post V&V incoming ResultProposal runtime schema validation.
+  - Audit status PASS. Evidence: preflight commit `3207a19`, runtime patch commit `48e2515`, audit commit `107a7c4`.
+  - Confirms `patch_type=runtime_post_vv_incoming_resultproposal_schema_validation`.
+  - Confirms `result_proposal_runtime_schema_validation_present=true` and `post_vv_validates_incoming_resultproposal_schema=true`.
+  - Confirms schema validation runs before manual checks, is additive, and records `schema_validation_replaces_manual_checks=false`.
+  - Confirms schema failures return the V&V report path without crashing, manual policy/safety checks are preserved, and Root remains final authority.
+  - Confirms outgoing VVReport runtime schema validation is deferred.
+
 ## Current Applied Auditor Commands
 
 ```bash

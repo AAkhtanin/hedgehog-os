@@ -631,3 +631,18 @@ Enterprise Document Killer Demo B v0.1:
 - DRS reuse is not authority.
 - Next schema hardening must begin with a read-only preflight scan before any
   schema/runtime validation patch.
+
+Runtime JSON Schema Validation Hardening v0.1:
+
+- Post V&V incoming ResultProposal runtime schema validation is a boundary
+  filter only.
+- The schema filter validates incoming ResultProposal artifacts before manual
+  Post V&V checks.
+- Schema validation is additive and does not replace manual safety checks.
+- Schema validation failure returns the V&V report rejection path and must not
+  crash the boundary.
+- Schema validation cannot create FinalOutput.
+- Schema validation cannot write DRS.
+- Schema validation cannot execute action.
+- Schema validation cannot grant authority.
+- Root remains final authority.

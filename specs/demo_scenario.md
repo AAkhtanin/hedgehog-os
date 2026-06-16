@@ -1133,9 +1133,16 @@ Contract Alignment v0.1 Phase 1 for the active AttractorPacket Architect-facing
 contract: Architect returns PlanGraph only, Executor / DAG returns
 ResultProposal, and Root remains final authority.
 
-Future phases are still required for Runtime JSON Schema Validation Hardening,
-EvidenceItem.kind vocabulary alignment, artifact_type vocabulary alignment, and
-focused coverage gaps. Next: Phase 2 patch plan after review, not broad fix.
+Schema Contract Alignment Phase 1/2 clarified contracts. Runtime JSON Schema
+Validation Hardening v0.1 now partially closes Finding B for incoming
+ResultProposal at the Post V&V boundary:
+`runtime_jsonschema_hardening_post_vv_resultproposal_v01_status=complete_through_audit`,
+`result_proposal_runtime_schema_validation_present=true`, and
+`post_vv_validates_incoming_resultproposal_schema=true`. Schema validation runs
+before manual checks, is additive, returns normal V&V report rejection path on
+schema failure, and does not crash. Manual policy/safety checks remain
+preserved. Outgoing VVReport runtime validation remains deferred.
+EvidenceItem.kind and artifact_type are still separate future work.
 
 ## Exclusions
 

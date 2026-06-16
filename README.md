@@ -1311,7 +1311,55 @@ Findings B/C/D/E remain open:
 `finding_d_artifact_vocabulary_mapping_needed_status=open`, and
 `finding_e_test_coverage_gap_status=partially_open`.
 
-Next recommended step: Runtime JSON Schema Validation Hardening preflight/plan.
+That Phase 2 next step is now closed by the Runtime JSON Schema Validation
+Hardening v0.1 checkpoint below.
+
+## Runtime JSON Schema Validation Hardening v0.1 — Post V&V Incoming ResultProposal Validation
+
+Runtime JSON Schema Validation Hardening v0.1 is complete through runtime
+patch and audit. Commits: preflight `3207a19`, runtime patch `48e2515`, audit
+`107a7c4`.
+
+Audit status:
+`runtime_jsonschema_hardening_post_vv_resultproposal_v01_audit_status=PASS`.
+Patch type: `runtime_post_vv_incoming_resultproposal_schema_validation`.
+
+Post V&V now validates incoming ResultProposal artifacts against
+`schemas/result_proposal.schema.json` at runtime. Schema validation runs before
+manual checks, is additive, and records
+`schema_validation_replaces_manual_checks: false`. Schema failures return the
+normal V&V report rejection path without crashing:
+`schema_failures_return_vv_report: true` and
+`schema_failures_do_not_crash: true`. Manual policy and safety checks remain
+preserved: `manual_policy_checks_preserved: true` and
+`manual_safety_checks_preserved: true`.
+
+ResultProposal schema refs are resolved locally, including common schema and
+TimeEnvelope schema refs. Root remains final authority:
+`root_remains_final_authority: true`.
+
+Boundary facts recorded by audit:
+
+- schemas_modified: false
+- gt_modified: false
+- root_modified: false
+- drs_writeback_modified: false
+- schema_validation_creates_finaloutput: false
+- schema_validation_writes_drs: false
+- schema_validation_executes_action: false
+- schema_validation_grants_authority: false
+
+Test evidence recorded by audit:
+
+- post_vv_schema_batch: 38 passed, 2 warnings
+- nearby_boundary_batch: 54 passed, 2 warnings
+- jsonschema.RefResolver deprecation warning: non_blocking
+
+Deferred work remains explicit:
+`outgoing_vv_report_runtime_schema_validation_status=deferred`,
+`evidence_kind_alignment_implemented=false`,
+`artifact_type_alignment_implemented=false`, `production_ready_claimed=false`,
+and `public_auditor_ready_claimed=false`.
 
 ## Targeted Proof Runtime Policy
 
@@ -1519,8 +1567,9 @@ Next engineering focus:
 - Completed: Enterprise Document Killer Demo B v0.1.
 - Completed: Schema Contract Alignment v0.1 Phase 1 — AttractorPacket Architect contract alignment.
 - Completed: Schema Contract Alignment v0.1 Phase 2 — Executor / DAG ResultProposal contract wording.
-- Next: Runtime JSON Schema Validation Hardening preflight/plan.
-- Later: EvidenceItem.kind / artifact_type vocabulary alignment, then Public Auditor Packet / Whitepaper draft.
+- Completed: Runtime JSON Schema Validation Hardening v0.1 — Post V&V incoming ResultProposal validation.
+- Next decision: outgoing VVReport validation subphase or EvidenceItem.kind / artifact_type planning.
+- Later: Public Auditor Packet / Whitepaper draft after remaining schema-contract decisions.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.

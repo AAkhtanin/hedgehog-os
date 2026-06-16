@@ -2877,6 +2877,28 @@ Phase 2 preserves role mapping and clarifies that ResultProposal-shaped
 boundary artifacts are not FinalOutput, authority, action authorization, or DRS
 writeback. It does not implement runtime JSON Schema hardening.
 
+Runtime JSON Schema Validation Hardening v0.1 is contract/runtime boundary
+hardening, not new math:
+
+```text
+runtime_jsonschema_hardening_post_vv_resultproposal_v01_status = complete_through_audit
+patch_type = runtime_post_vv_incoming_resultproposal_schema_validation
+result_proposal_runtime_schema_validation_present = true
+post_vv_validates_incoming_resultproposal_schema = true
+schema_validation_runs_before_manual_checks = true
+schema_validation_is_additive = true
+schema_validation_replaces_manual_checks = false
+manual_policy_checks_preserved = true
+manual_safety_checks_preserved = true
+outgoing_vv_report_runtime_schema_validation_status = deferred
+evidence_kind_alignment_implemented = false
+artifact_type_alignment_implemented = false
+```
+
+This checkpoint turns the ResultProposal schema from test-only proof into
+runtime boundary validation for incoming Post V&V proposals. Outgoing VVReport
+validation remains future work.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

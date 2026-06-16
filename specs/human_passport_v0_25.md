@@ -2813,10 +2813,18 @@ ResultProposal-shaped boundary artifacts do not mean FinalOutput, accepted
 evidence, action authorization, DRS writeback, or authority. All branch outputs
 must flow through Post V&V / GT / Root before any final answer or writeback.
 
-Runtime JSON Schema hardening, Post V&V nested JSON Schema validation,
-EvidenceItem.kind vocabulary alignment, and artifact_type vocabulary alignment
-remain future phases. Next hardening step is a Phase 2 patch plan after review,
-not broad fix.
+Runtime JSON Schema Validation Hardening v0.1 is complete through runtime patch
+and audit for Post V&V incoming ResultProposal validation. Post V&V now checks
+the incoming ResultProposal form with the official schema before doing its
+manual judgment. The schema check is additive and does not replace manual
+policy/safety checks. Schema validation failure returns the V&V report path
+without crashing. Schema validation does not grant authority, create
+FinalOutput, write DRS, or execute actions. Root remains final authority.
+
+Outgoing VVReport runtime validation, EvidenceItem.kind vocabulary alignment,
+and artifact_type vocabulary alignment remain future phases. The next decision
+is whether to do an outgoing VVReport validation subphase or EvidenceItem.kind /
+artifact_type planning.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

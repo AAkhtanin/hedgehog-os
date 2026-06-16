@@ -456,8 +456,22 @@ making the active AttractorPacket point Architect toward PlanGraph-only output:
 This prevents Architect/Executor role collapse and keeps Root final authority
 intact.
 
-Next hardening is Schema Contract Alignment Phase 2 patch plan after review,
-not broad fix.
+Schema Contract Alignment v0.1 Phase 2 Executor / DAG ResultProposal wording
+clarifies the geometry without changing runtime behavior. Architect designs
+geometry as PlanGraph and does not execute nodes, create FinalOutput, or write
+DRS. Executor performs bounded node execution and returns schema-valid
+ResultProposal. Fractal DAG may produce child boundary snapshots /
+ResultProposal-shaped boundary artifacts from valid PlanGraph / DAG node
+structure.
+
+None of these become Root. ResultProposal-shaped != FinalOutput.
+ResultProposal-shaped != authority. ResultProposal-shaped does not authorize
+action, accepted evidence, or DRS writeback. The return path still goes
+Post V&V -> GT -> Root before any final answer or writeback.
+
+Next hardening after Phase 2 audit/docs sync remains Runtime JSON Schema
+Validation Hardening and EvidenceItem.kind / artifact_type vocabulary
+alignment.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

@@ -76,6 +76,30 @@ Fractal DAG Executor invariant:
 - Large Graph / Bounded Fractal Stress v0.1 demonstrates max_nodes, max_edges, max_depth, max_parallelism, cycle detection, unknown dependency detection, child boundary snapshots, and bounded GT candidate summaries.
 - That stress runner proves a GT boundary / bounded summary check only: gt_runtime_called = false, gt_boundary_mode = bounded_summary_check, and raw large graphs are not sent to GT.
 
+Executor / DAG ResultProposal boundary:
+
+- Executor receives validated PlanGraph node(s).
+- Executor returns ResultProposal only.
+- Active Executor output must be schema-valid ResultProposal.
+- Executor does not create FinalOutput.
+- Executor does not write DRS directly.
+- Executor does not bypass Post V&V / GT / Root.
+- Executor does not execute real external actions unless a later explicit
+  production/action layer authorizes that capability.
+- Fractal DAG consumes valid PlanGraph / DAG node structure.
+- Fractal DAG returns ResultProposal-shaped boundary artifacts.
+- Atomic node outputs and child boundary snapshots are not Root Final.
+- Child cell / node outputs must remain internal or boundary artifacts until
+  wrapped into the parent ResultProposal path.
+- ResultProposal-shaped != FinalOutput.
+- ResultProposal-shaped != authority.
+- ResultProposal-shaped != accepted evidence.
+- ResultProposal-shaped != action authorization.
+- ResultProposal-shaped != DRS writeback.
+- ResultProposal-shaped boundary artifacts must flow through
+  Post V&V / GT / Root before any final answer or writeback.
+- Root remains final authority.
+
 5. DRS time requirement
    - Every DRSRecord requires TimeEnvelope.
    - A DRS record without TimeEnvelope is invalid.

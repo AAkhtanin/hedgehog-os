@@ -1438,6 +1438,25 @@ vocabulary alignment, and focused coverage gaps remain open.
 Next hardening is Schema Contract Alignment Phase 2 patch plan after review,
 not broad fix.
 
+Schema Contract Alignment v0.1 Phase 2 Executor / DAG ResultProposal wording
+patch clarifies the public contract only. runtime behavior drift not found.
+Existing focused tests already cover the behavior. No tests were changed in
+this patch, and no runtime/schema was changed in this patch.
+
+Phase 2 states that Architect returns PlanGraph only and does not return
+ResultProposal, execute plan nodes, create FinalOutput, or write DRS. Executor
+receives validated PlanGraph node(s) and returns schema-valid ResultProposal
+artifacts. Fractal DAG may return ResultProposal-shaped boundary artifacts for
+atomic node outputs and child boundary snapshots. ResultProposal-shaped !=
+FinalOutput, ResultProposal-shaped != authority, ResultProposal-shaped !=
+accepted evidence, ResultProposal-shaped != action authorization, and
+ResultProposal-shaped != DRS writeback. Post V&V, GT, and Root remain required.
+
+This Phase 2 patch does not implement Runtime JSON Schema Validation
+Hardening, does not change Post V&V runtime validation, does not align
+EvidenceItem.kind, does not align artifact_type, does not change production
+readiness, and does not create public-auditor readiness.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

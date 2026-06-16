@@ -2787,6 +2787,32 @@ It aligned the active AttractorPacket Architect-facing contract:
 returns PlanGraph only. Executor / DAG returns ResultProposal. Root remains
 final authority.
 
+Schema Contract Alignment v0.1 Phase 2 clarifies downstream Executor / DAG
+ResultProposal contract wording. It does not change runtime behavior. It does
+not change schemas. It does not implement Post V&V JSON Schema hardening. It
+does not implement Runtime JSON Schema Validation Hardening. It does not align
+EvidenceItem.kind. It does not align artifact_type.
+
+Phase 2 separates these contracts:
+
+- Architect PlanGraph: Architect returns PlanGraph only, does not return
+  ResultProposal, does not execute plan nodes, does not create FinalOutput, and
+  does not write DRS.
+- Executor schema-valid ResultProposal: Executor receives validated PlanGraph
+  node(s), returns schema-valid ResultProposal artifacts, does not create
+  FinalOutput, does not write DRS directly, does not bypass
+  Post V&V / GT / Root, and does not execute real external actions unless a
+  later explicit production/action layer authorizes that capability.
+- Fractal DAG ResultProposal-shaped boundary artifacts: Fractal DAG consumes
+  valid PlanGraph / DAG node structure, may emit atomic node outputs and child
+  boundary snapshots as ResultProposal-shaped boundary artifacts, and those
+  artifacts are not Root Final.
+- Root FinalOutput: only Root creates FinalOutput.
+
+ResultProposal-shaped boundary artifacts do not mean FinalOutput, accepted
+evidence, action authorization, DRS writeback, or authority. All branch outputs
+must flow through Post V&V / GT / Root before any final answer or writeback.
+
 Runtime JSON Schema hardening, Post V&V nested JSON Schema validation,
 EvidenceItem.kind vocabulary alignment, and artifact_type vocabulary alignment
 remain future phases. Next hardening step is a Phase 2 patch plan after review,

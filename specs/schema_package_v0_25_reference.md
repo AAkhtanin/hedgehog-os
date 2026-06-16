@@ -34,6 +34,25 @@ Known reference drift:
 - Credential Vault / sealed secret slots are future production requirement for secrets.
 - Marennya and UP are systemic/internal needles with quarantine-first behavior.
 
+Phase 2 Executor / DAG ResultProposal contract note:
+
+- Architect returns PlanGraph only.
+- Architect does not return ResultProposal, execute plan nodes, create
+  FinalOutput, or write DRS.
+- Executor receives validated PlanGraph node(s) and returns schema-valid
+  ResultProposal artifacts.
+- Executor does not create FinalOutput, write DRS directly, bypass
+  Post V&V / GT / Root, or execute real external actions unless a later
+  explicit production/action layer authorizes that capability.
+- Executor / DAG returns ResultProposal or ResultProposal-shaped boundary
+  artifacts.
+- Active `hedgehog/executor.py` output is schema-valid ResultProposal.
+- Proof-level Fractal DAG / child-cell boundary outputs may be
+  ResultProposal-shaped until a later normalization/runtime validation layer.
+- ResultProposal-shaped boundary artifacts are not FinalOutput, not accepted
+  evidence, not action authorization, and not DRS writeback.
+- Post V&V / GT / Root remain required before any final answer or writeback.
+
 Use this file only as a comparison artifact. Do not overwrite active schemas from this file without checking the current passport and active tests.
 
 common.schema.json

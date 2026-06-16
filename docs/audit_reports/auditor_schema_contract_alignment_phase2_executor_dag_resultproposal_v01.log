@@ -1,0 +1,242 @@
+HEADER
+Schema Contract Alignment v0.1 Phase 2: Executor / DAG ResultProposal Contract Wording Audit
+
+This audit log records the docs/spec wording patch for Phase 2. The patch
+clarified Executor / DAG ResultProposal contract boundaries and reduced public
+contract ambiguity without changing runtime behavior, schemas, tests, Post V&V,
+EvidenceItem.kind, artifact_type, GT, Root, or DRS writeback.
+
+schema_contract_alignment_phase2_executor_dag_resultproposal_v01_audit_status: PASS
+patch_type: docs_spec_wording_contract_alignment
+phase2_patch_applied: true
+runtime_behavior_drift_found_in_plan: false
+tests_already_cover_behavior: true
+
+
+COMMIT EVIDENCE
+
+phase2_plan_commit: fad2276
+phase2_plan_commit_name: Add Schema Contract Alignment Phase 2 patch plan
+phase2_patch_commit: 146d44c
+phase2_patch_commit_name: Clarify Executor DAG ResultProposal contract wording
+
+phase2_plan_file: docs/schema_contract_alignment_phase2_executor_dag_resultproposal_plan_v01.md
+
+
+FILES CHANGED
+
+Phase 2 patch changed exactly these docs/spec files:
+
+- specs/schema_package_v0_25_reference.md
+- specs/invariants.md
+- specs/human_passport_v0_25.md
+- specs/demo_baseline_v0_25.md
+- docs/passport_geometry_root_needles.md
+- docs/strategic_expansion_map.md
+
+Audit file created:
+
+- docs/audit_reports/auditor_schema_contract_alignment_phase2_executor_dag_resultproposal_v01.log
+
+
+PHASE 2 PLAN BASIS
+
+The Phase 2 patch plan found:
+
+runtime_behavior_drift_found: false
+tests_missing_for_contract: false
+tests_already_cover_behavior: true
+public_contract_ambiguity_risk: medium
+recommended_next_patch: docs/spec wording patch, optional focused wording pin test after review
+
+Plan interpretation:
+
+- Runtime behavior already followed the Architect / Executor / DAG role split.
+- Existing focused tests already covered the behavior.
+- The remaining Phase 2 risk was public contract ambiguity around ResultProposal
+  versus ResultProposal-shaped boundary artifacts.
+- The approved patch was docs/spec wording only.
+
+
+CONTRACT CLARIFICATION
+
+architect_returns_plan_graph_only: true
+architect_returns_resultproposal: false
+executor_returns_resultproposal_only: true
+active_executor_emits_schema_valid_resultproposal: true
+fractal_dag_returns_resultproposal_shaped_boundary_artifacts: true
+resultproposal_shaped_is_finaloutput: false
+resultproposal_shaped_is_authority: false
+resultproposal_shaped_authorizes_action: false
+resultproposal_shaped_writes_drs: false
+child_boundary_snapshots_are_root_final: false
+post_vv_gt_root_required_after_resultproposal_boundary: true
+root_remains_final_authority: true
+
+Clarified contract:
+
+- Architect returns PlanGraph only.
+- Architect does not return ResultProposal.
+- Architect does not execute plan nodes.
+- Architect does not create FinalOutput.
+- Architect does not write DRS.
+- Executor receives validated PlanGraph node(s).
+- Executor returns ResultProposal only.
+- Active Executor output is schema-valid ResultProposal.
+- Fractal DAG consumes valid PlanGraph / DAG node structure.
+- Fractal DAG may return ResultProposal-shaped boundary artifacts.
+- Atomic node outputs and child boundary snapshots are not Root Final.
+- Child cell / node outputs remain internal or boundary artifacts until wrapped
+  into the parent ResultProposal path.
+- All branch outputs still flow through Post V&V / GT / Root.
+
+
+RUNTIME / SCHEMA / TEST BOUNDARY
+
+runtime_modified: false
+schemas_modified: false
+tests_modified: false
+post_vv_modified: false
+evidence_item_kind_modified: false
+artifact_type_modified: false
+gt_modified: false
+root_modified: false
+drs_writeback_modified: false
+runtime_jsonschema_hardening_implemented: false
+evidence_kind_alignment_implemented: false
+artifact_type_alignment_implemented: false
+
+Boundary note:
+
+Phase 2 did not modify runtime code, active schemas, tests, Post V&V,
+EvidenceItem.kind, artifact_type, GT, Root, or DRS writeback. It did not
+implement Runtime JSON Schema Validation Hardening.
+
+
+ROLE SEPARATION AUDIT
+
+architect_executor_roles_separated: true
+architect_plan_graph_boundary_preserved: true
+executor_resultproposal_boundary_preserved: true
+gt_advisory_only: true
+root_only_finaloutput_authority_preserved: true
+
+Role separation after Phase 2:
+
+- Architect designs PlanGraph and stops there.
+- Executor performs bounded node execution and returns ResultProposal.
+- Fractal DAG orders valid DAG node execution and returns boundary artifacts.
+- Post V&V consumes ResultProposal boundary artifacts.
+- GT is advisory and cannot create FinalOutput.
+- Root remains the only FinalOutput authority.
+
+
+RESULTPROPOSAL-SHAPED BOUNDARY AUDIT
+
+resultproposal_shaped_boundary_distinction_documented: true
+schema_valid_executor_resultproposal_distinguished_from_proof_boundary_artifact: true
+resultproposal_shaped_is_finaloutput: false
+resultproposal_shaped_is_authority: false
+resultproposal_shaped_is_accepted_evidence: false
+resultproposal_shaped_authorizes_action: false
+resultproposal_shaped_writes_drs: false
+normalization_layer_deferred: true
+
+Boundary meaning:
+
+- Active `hedgehog/executor.py` emits schema-valid ResultProposal objects.
+- Proof-level Fractal DAG / child-cell reports may emit ResultProposal-shaped
+  boundary artifacts.
+- ResultProposal-shaped boundary artifacts do not create FinalOutput.
+- ResultProposal-shaped boundary artifacts do not transfer authority.
+- ResultProposal-shaped boundary artifacts do not create accepted evidence.
+- ResultProposal-shaped boundary artifacts do not authorize action.
+- ResultProposal-shaped boundary artifacts do not write DRS.
+- This distinction remains until a later normalization/runtime validation layer.
+
+
+FINDINGS STATUS
+
+finding_a_schema_contract_drift_status: closed_for_active_attractor_packet_contract
+finding_b_runtime_validation_gap_status: open
+finding_c_evidence_vocabulary_alignment_gap_status: open
+finding_d_artifact_vocabulary_mapping_needed_status: open
+finding_e_test_coverage_gap_status: partially_open
+phase2_public_contract_ambiguity_status: reduced_by_docs_spec_wording_patch
+
+Phase 2 reduces public contract ambiguity only. It does not close the remaining
+preflight findings.
+
+
+WHAT THIS FIXES
+
+- clarifies Executor returns ResultProposal only
+- clarifies active Executor output is schema-valid ResultProposal
+- clarifies Fractal DAG / child-cell proof outputs may be ResultProposal-shaped boundary artifacts
+- clarifies ResultProposal-shaped != FinalOutput
+- clarifies ResultProposal-shaped != authority
+- clarifies ResultProposal-shaped != action authorization
+- clarifies ResultProposal-shaped != DRS writeback
+- clarifies all branch outputs still flow through Post V&V / GT / Root
+- preserves Architect PlanGraph / Executor ResultProposal separation
+
+
+WHAT THIS DOES NOT FIX
+
+- does not implement Runtime JSON Schema Validation Hardening
+- does not implement full nested JSON Schema validation in Post V&V
+- does not align EvidenceItem.kind
+- does not align artifact_type
+- does not modify runtime behavior
+- does not modify schemas
+- does not modify tests
+- does not claim production readiness
+- does not claim public-auditor readiness
+- does not close every finding
+
+
+OVERCLAIM GUARDRAILS
+
+runtime_jsonschema_hardening_implemented: false
+evidence_kind_alignment_implemented: false
+artifact_type_alignment_implemented: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+root_remains_final_authority: true
+
+Guardrails:
+
+- Do not describe Phase 2 as runtime validation hardening.
+- Do not describe Phase 2 as Post V&V hardening.
+- Do not describe Phase 2 as EvidenceItem.kind vocabulary alignment.
+- Do not describe Phase 2 as artifact_type vocabulary alignment.
+- Do not describe Phase 2 as production readiness.
+- Do not describe Phase 2 as public-auditor readiness.
+- Do not describe Phase 2 as closing the remaining preflight findings.
+
+
+AUDIT SUMMARY
+
+schema_contract_alignment_phase2_executor_dag_resultproposal_v01_audit_status: PASS
+phase2_plan_commit: fad2276
+phase2_patch_commit: 146d44c
+patch_type: docs_spec_wording_contract_alignment
+runtime_modified: false
+schemas_modified: false
+tests_modified: false
+architect_returns_plan_graph_only: true
+executor_returns_resultproposal_only: true
+active_executor_emits_schema_valid_resultproposal: true
+fractal_dag_returns_resultproposal_shaped_boundary_artifacts: true
+resultproposal_shaped_is_finaloutput: false
+resultproposal_shaped_is_authority: false
+resultproposal_shaped_authorizes_action: false
+resultproposal_shaped_writes_drs: false
+post_vv_gt_root_required_after_resultproposal_boundary: true
+root_remains_final_authority: true
+runtime_jsonschema_hardening_implemented: false
+evidence_kind_alignment_implemented: false
+artifact_type_alignment_implemented: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+next_recommended_step: docs sync for Phase 2, then Runtime JSON Schema Validation Hardening preflight/plan

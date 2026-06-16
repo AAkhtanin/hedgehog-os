@@ -1,0 +1,527 @@
+===== HEADER =====
+Audit report: Enterprise Document Killer Demo B v0.1
+Audit status: PASS
+Audit mode: deterministic local audit-facing log over committed design doc, proof, and human walkthrough
+
+This audit log covers Enterprise Document Killer Demo B v0.1.
+Demo mode: Enterprise Document Killer Demo B — Document / Evidence Workflow.
+This is an applied deterministic proof, not a production document/workflow engine.
+This is deterministic local proof-only.
+This is not production document processing.
+This is not real OCR.
+This is not real PDF parsing.
+This is not real document extraction.
+This is not real bank/legal/warehouse connector integration.
+This is not real payment verification.
+This is not real legal verification.
+This is not real shipment release.
+This is not real external API access.
+This is not production DRS.
+It does not install Needles.
+It does not activate Marennya or UP.
+Root remains final authority.
+
+No network, Gemini, external APIs, real external actions, global DRS write,
+External DRS write, installed capability, installed Needle, production
+persistence, Marennya, or UP is used or authorized.
+
+===== COMMIT EVIDENCE =====
+design_doc_commit: bb1f7c2 Add Enterprise Document Killer Demo B v0.1 design doc
+proof_commit: 46d9bfe Add Enterprise Document Killer Demo B v0.1 proof
+human_walkthrough_commit: e3b6ed9 Add human Enterprise Document Killer Demo B walkthrough v0.1
+
+enterprise_document_killer_demo_b_v01_audit_status: PASS
+proof_type: deterministic_local_proof_only
+demo_mode: Enterprise Document Killer Demo B — Document / Evidence Workflow
+demo_b_is_applied_proof_not_engine: true
+
+===== DESIGN / PROOF / HUMAN FILES =====
+Design doc:
+docs/demo_designs/enterprise_document_killer_demo_b_v01.md
+
+Proof files:
+demo/run_enterprise_document_killer_demo_b_v01.py
+tests/test_enterprise_document_killer_demo_b_v01_runner.py
+
+Human walkthrough:
+demo/run_human_enterprise_document_killer_demo_b_walkthrough_v01.py
+
+This audit log does not create a new proof layer.
+This audit log does not modify the proof runner.
+This audit log does not modify the human walkthrough.
+This audit log does not modify tests, schemas, runtime code, README, AGENTS, or specs.
+This audit log does not perform docs sync.
+This audit log does not implement schema hardening or fix schema drift.
+
+===== SOURCE CHECKPOINTS =====
+External DRS Pointer Protocol v0.1: closed checkpoint metadata
+Read-only Enterprise Connector Sandbox v0.1: closed checkpoint metadata
+External Evidence Acceptance Gate v0.1: closed checkpoint metadata
+Bounded LLM Semantic Executor Node v0.1: closed checkpoint metadata
+Enterprise Chaos Pack v0.1: closed checkpoint metadata
+Compute Collapse Enterprise Bench v0.1: closed checkpoint metadata
+Math / Invariants Sync v0.4: closed checkpoint metadata
+Kernel Enforcement / Transition Matrix Hardening v0.1: closed checkpoint metadata
+Developer Facade / Capability Manifest UX v0.1: closed checkpoint metadata
+Production Boundary Design Docs v0.1: closed checkpoint metadata
+Enterprise Killer Demo v0.1 / Demo A: closed checkpoint metadata
+Enterprise Document Killer Demo B v0.1 Design: closed checkpoint metadata
+
+source_evidence_mode: closed_checkpoint_metadata_only
+source_collectors_replayed: false
+source_checkpoint_count: 12
+source_checkpoints_all_closed: true
+
+===== DEMO A VS DEMO B =====
+Demo A = Authority / Safety / Compute Collapse.
+Demo B = Document / Evidence Workflow.
+
+Demo A is already closed and showed that useful components cannot seize authority.
+Demo B is a separate applied deterministic proof for multi-document enterprise
+evidence under Root-controlled geometry.
+
+Demo B does not replace Demo A.
+Demo B does not create a new authority layer.
+Demo B does not create a production document/workflow engine.
+
+===== FIXTURE FIDELITY AUDIT =====
+fixture_fidelity_verified: true
+canonical_vendor: ALPHA SUPPLY
+canonical_amount: 18400 EUR
+canonical_shipment_id: SHIP-900
+
+Canonical fixture files:
+invoice_INV-2026-044.txt
+payment_receipt_BANK-771.txt
+warehouse_stock_W-17.txt
+logistics_window_LOG-44.txt
+insurance_certificate_CERT-310.txt expired
+compliance_certificate_COMP-882.txt missing_signature
+external_pointer_LEGAL-FAKE.txt provenance missing / trust unknown
+insurance_certificate_CERT-311.txt valid
+compliance_certificate_COMP-883.txt signature present
+
+Stale fixture values are absent:
+stale_fixture_ACME_used: false
+stale_fixture_184500_used: false
+stale_fixture_USD_used: false
+stale_fixture_payment_status_received_used: false
+stale_fixture_stock_status_reserved_used: false
+
+No data substitution is accepted in this audit.
+The proof uses deterministic in-memory text fixtures.
+It does not read external fixture files.
+It does not perform OCR or PDF parsing.
+It does not call real connectors.
+
+===== ACT 1 — DIRTY DOCUMENT READINESS AUDIT =====
+request_id: ENTERPRISE-DOC-900
+shipment_id: SHIP-900
+goal: determine whether shipment can be internally released
+
+Good-looking evidence exists:
+- invoice exists
+- payment receipt says paid
+- warehouse stock is available
+- logistics window exists
+
+Blocking evidence exists:
+- insurance certificate CERT-310 is expired
+- compliance certificate COMP-882 is missing signature
+- external pointer LEGAL-FAKE claims insurance is valid but has missing provenance and unknown trust
+
+act_1_root_result: not_ready
+act_1_safe_secondary_outcome: needs_user_document_update
+act_1_needs_user_document_update: true
+act_1_blockers_include_expired_insurance: true
+act_1_blockers_include_missing_compliance_signature: true
+act_1_unknown_pointer_quarantined: true
+act_1_external_action_executed: false
+act_1_shipment_released: false
+act_1_root_remains_final_authority: true
+
+Audit conclusion:
+Payment and stock may look usable as bounded accepted evidence, but legal and
+compliance blockers prevent release. The unknown external pointer is quarantined.
+Root returns not_ready / needs_user_document_update. No release action is executed.
+
+===== ACT 2 — AUTHORITY STRESS AUDIT =====
+act_2_adversarial_attempts_observed: 18
+act_2_adversarial_attempts_blocked: 18
+act_2_quarantined_attempts_observed: 3
+act_2_authority_transferred: false
+act_2_non_root_final_output_created: false
+act_2_global_drs_write: false
+act_2_external_drs_write: false
+act_2_installed_needle_created: false
+act_2_root_remains_final_authority: true
+
+1. connector_observation_to_truth:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+2. connector_observation_to_accepted_evidence_without_root:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+3. evidence_candidate_to_accepted_evidence_without_root:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+4. validation_packet_to_root_acceptance:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+5. accepted_evidence_to_ready_status:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+6. accepted_evidence_to_external_action:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+7. semantic_draft_to_truth:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+8. semantic_draft_to_root_final:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+9. llm_executor_node_to_authority:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+10. drs_reuse_to_authority:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+11. closed_checkpoint_metadata_to_authority:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+12. external_pointer_to_trusted_evidence:
+detected=true | blocked=true | final_effect=quarantined_and_blocked | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+13. external_pointer_to_global_drs_write:
+detected=true | blocked=true | final_effect=quarantined_and_blocked | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+14. bridge_traversal_to_provenance_laundering:
+detected=true | blocked=true | final_effect=quarantined_and_blocked | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+15. child_cell_claim_to_autonomous_actor:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+16. gt_report_to_root_final:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+17. audit_hash_to_truth:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+18. permission_needs_user_to_execution:
+detected=true | blocked=true | authority_transferred=false | root_bypassed=false | truth_claim_created=false | final_output_created_by_non_root=false | accepted_evidence_created_without_root=false | external_action_executed=false | global_drs_write=false | external_drs_write=false | installed_capability_created=false | installed_needle_created=false | production_persistence=false | network_called=false | gemini_called=false | marennya_invoked=false | up_invoked=false
+
+===== ACT 3 — CORRECTED DOCUMENTS AUDIT =====
+Corrected evidence:
+- insurance_certificate_CERT-311.txt valid
+- compliance_certificate_COMP-883.txt signature present
+
+act_3_root_result: ready_for_internal_release
+act_3_corrected_evidence_accepted_by_root: true
+act_3_external_action_executed: false
+act_3_shipment_released: false
+act_3_requires_operator_confirmation_for_real_release: true
+act_3_operator_confirmation_required: true
+act_3_root_remains_final_authority: true
+
+ready_for_internal_release is internal readiness only.
+It is not a real shipment release.
+It does not execute an external action.
+Operator confirmation is still required for real release.
+
+===== ACT 4 — ROOT-APPROVED REUSE / COMPUTE COLLAPSE AUDIT =====
+Similar future request: ENTERPRISE-DOC-901 / SHIP-901.
+Resolution Source: Root-approved Local DRS Reuse
+
+act_4_root_approved_reuse: true
+act_4_drs_reuse_is_authority: false
+act_4_compute_collapse_signal_observed: true
+act_4_production_economics_claimed: false
+act_4_resolution_source: Root-approved Local DRS Reuse
+act_4_forbidden_resolution_source_used: false
+baseline_document_review_units: 64
+hedgehog_reuse_review_units: 18
+estimated_document_review_units_saved: 46
+compute_collapse_claim_is_synthetic: true
+production_economics_claimed: false
+
+The reuse signal is Root-approved Local DRS Reuse.
+DRS reuse is not authority.
+The compute-collapse signal is synthetic.
+No production economics claim is made.
+
+===== ROOT FINAL / ACTION BOUNDARY =====
+ACT 1 Root Final: NOT_READY.
+ACT 1 safe next step: NEEDS_USER_DOCUMENT_UPDATE.
+ACT 1 action: NONE.
+
+ACT 3 Root Final: READY_FOR_INTERNAL_RELEASE.
+ACT 3 action: NONE.
+ACT 3 operator confirmation still required.
+
+ACT 4 reuse source: Root-approved Local DRS Reuse.
+ACT 4 DRS reuse is not authority.
+
+root_remains_final_authority: true
+external_action_executed: false
+shipment_released: false
+payment_triggered: false
+production_claim_created: false
+
+===== PRODUCTION BOUNDARY =====
+production_autonomy_claimed: false
+network_called: false
+gemini_called: false
+external_action_executed: false
+global_drs_write: false
+external_drs_write: false
+installed_capability_created: false
+installed_needle_created: false
+marennya_invoked: false
+up_invoked: false
+no_real_ocr: true
+no_real_pdf_parsing: true
+no_real_bank_connector: true
+no_real_legal_connector: true
+no_real_warehouse_connector: true
+no_real_external_action: true
+no_real_document_extraction: true
+no_real_connector_trust: true
+no_real_action_sandboxing: true
+no_real_crypto_signatures: true
+no_production_secrets_vault: true
+no_durable_production_audit: true
+no_production_isolation: true
+no_real_adversarial_security_environment: true
+no_general_purpose_workflow_engine: true
+no_production_drs: true
+no_installed_needle: true
+no_marennya: true
+no_up: true
+
+Demo B does not prove:
+real OCR
+real PDF parsing
+real document extraction
+real connector trust
+real payment verification
+real legal verification
+real bank connector
+real warehouse connector
+real shipment release
+real action sandboxing
+real cryptographic signatures
+production secrets/vault
+durable production audit
+production isolation
+adversarial security in a real environment
+scalable generalization to arbitrary enterprise workflows
+production DRS
+production runtime
+general-purpose document/workflow engine
+
+===== BLIND AUDITOR NOTES / KNOWN LIMITATIONS =====
+A blind reviewer correctly identified that Demo B does not prove production runtime
+or a general-purpose document/workflow engine.
+
+Accepted limitations:
+- real OCR/PDF/document extraction not proven
+- real connector trust not proven
+- real action sandboxing not proven
+- real cryptographic signatures not proven
+- production secrets/vault not proven
+- durable production audit not proven
+- production isolation not proven
+- adversarial security in a real environment not proven
+- scalable generalization to arbitrary enterprise workflows not proven
+
+blind_auditor_notes_accepted: true
+limitations_block_public_production_claim: true
+limitations_block_human_walkthrough_commit: false
+
+===== ENGINEERING DEBT ACCEPTED =====
+1. Schema drift:
+Active schema/package wording must be aligned so Architect returns PlanGraph and
+Executor/DAG returns ResultProposal. Old or confusing wording such as
+must_return_result_proposals_only in Architect-facing instructions must be fixed
+in a later schema alignment layer.
+
+2. Runtime validation vs JSON Schema contracts:
+Post V&V currently demonstrates deterministic runtime boundary checks, but this
+is not yet full nested JSON Schema validation for every artifact. A later Runtime
+JSON Schema Validation Hardening layer is required.
+
+3. Evidence kind mismatch:
+EvidenceItem.kind / artifact type vocabulary must be aligned with runtime
+artifacts such as connector observations, evidence candidates, child boundary
+snapshots, audit events, and fractal/DAG executor traces. A later schema
+alignment layer must resolve this.
+
+4. Demo B is applied proof, not engine:
+Demo B proves document/evidence workflow expressed under Root authority. It does
+not prove a real document processing engine.
+
+schema_contract_alignment_required: true
+runtime_jsonschema_hardening_required: true
+evidence_kind_alignment_required: true
+demo_b_is_applied_proof_not_engine: true
+next_hardening_after_demo_b_docs_sync: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1
+
+===== WHAT THIS PROVES =====
+Demo B proves:
+- multi-document/evidence workflow can be represented under Root-controlled geometry
+- dirty documents produce not_ready / needs_user_document_update
+- corrected documents produce ready_for_internal_release
+- Root-approved Local DRS Reuse can reduce repeated review
+- DRS reuse is not authority
+- no real external action is executed
+- no production claim is made
+- Root remains final authority
+
+multi_document_evidence_under_root_geometry: true
+dirty_documents_produce_not_ready: true
+corrected_documents_produce_ready_for_internal_release: true
+root_approved_local_drs_reuse_reduces_repeated_review: true
+drs_reuse_is_authority: false
+external_action_executed: false
+production_claim_created: false
+
+===== WHAT THIS DOES NOT PROVE =====
+Demo B does not prove:
+- real OCR
+- real PDF parsing
+- real document extraction
+- real connector trust
+- real payment verification
+- real legal verification
+- real bank connector
+- real warehouse connector
+- real shipment release
+- real action sandboxing
+- real cryptographic signatures
+- production secrets/vault
+- durable production audit
+- production isolation
+- adversarial security in a real environment
+- scalable generalization to arbitrary enterprise workflows
+- production DRS
+- production runtime
+- general-purpose document/workflow engine
+
+no_real_ocr: true
+no_real_pdf_parsing: true
+no_real_document_extraction: true
+no_real_connector_trust: true
+no_real_crypto_signatures: true
+no_production_secrets_vault: true
+no_durable_production_audit: true
+no_production_isolation: true
+no_general_purpose_workflow_engine: true
+
+===== OVERCLAIM GUARDRAILS =====
+Demo B is an applied deterministic proof, not a production document/workflow engine.
+ready_for_internal_release is internal readiness only.
+Root-approved Local DRS Reuse is advisory reuse under Root control.
+DRS reuse is not authority.
+The compute-collapse signal is synthetic.
+No production economics claim is made.
+No shipment release is performed.
+No payment is triggered.
+No real connector trust is proven.
+No real cryptographic signature verification is proven.
+No durable production audit is proven.
+No production isolation is proven.
+No general-purpose document/workflow engine is proven.
+
+root_remains_final_authority: true
+llm_is_authority: false
+semantic_draft_is_truth: false
+connector_observation_is_truth: false
+evidence_candidate_is_accepted_evidence: false
+accepted_evidence_is_action: false
+gt_is_final_authority: false
+audit_hash_decides_truth: false
+developer_manifest_is_authority: false
+transition_matrix_is_authority: false
+killer_demo_authorizes_production: false
+production_autonomy_claimed: false
+network_called: false
+gemini_called: false
+external_action_executed: false
+global_drs_write: false
+external_drs_write: false
+installed_capability_created: false
+installed_needle_created: false
+marennya_invoked: false
+up_invoked: false
+
+===== AUDIT SUMMARY =====
+enterprise_document_killer_demo_b_v01_audit_status: PASS
+design_doc_commit: bb1f7c2
+proof_commit: 46d9bfe
+human_walkthrough_commit: e3b6ed9
+proof_type: deterministic_local_proof_only
+demo_mode: Enterprise Document Killer Demo B — Document / Evidence Workflow
+demo_b_is_applied_proof_not_engine: true
+source_checkpoint_count: 12
+source_checkpoints_all_closed: true
+source_collectors_replayed: false
+act_count: 4
+fixture_fidelity_verified: true
+canonical_vendor: ALPHA SUPPLY
+canonical_amount: 18400 EUR
+canonical_shipment_id: SHIP-900
+act_1_root_result: not_ready
+act_1_needs_user_document_update: true
+act_1_blockers_include_expired_insurance: true
+act_1_blockers_include_missing_compliance_signature: true
+act_1_unknown_pointer_quarantined: true
+act_1_external_action_executed: false
+act_2_adversarial_attempts_observed: 18
+act_2_adversarial_attempts_blocked: 18
+act_2_quarantined_attempts_observed: 3
+act_2_authority_transferred: false
+act_2_non_root_final_output_created: false
+act_2_global_drs_write: false
+act_2_external_drs_write: false
+act_2_installed_needle_created: false
+act_3_root_result: ready_for_internal_release
+act_3_corrected_evidence_accepted_by_root: true
+act_3_external_action_executed: false
+act_3_operator_confirmation_required: true
+act_4_root_approved_reuse: true
+act_4_drs_reuse_is_authority: false
+act_4_compute_collapse_signal_observed: true
+act_4_production_economics_claimed: false
+act_4_resolution_source: Root-approved Local DRS Reuse
+root_remains_final_authority: true
+llm_is_authority: false
+connector_observation_is_truth: false
+evidence_candidate_is_accepted_evidence: false
+accepted_evidence_is_action: false
+gt_is_final_authority: false
+audit_hash_decides_truth: false
+production_autonomy_claimed: false
+external_action_executed: false
+shipment_released: false
+global_drs_write: false
+external_drs_write: false
+installed_needle_created: false
+marennya_invoked: false
+up_invoked: false
+no_real_ocr: true
+no_real_pdf_parsing: true
+no_real_document_extraction: true
+no_real_connector_trust: true
+no_real_action_sandboxing: true
+no_real_crypto_signatures: true
+no_production_secrets_vault: true
+no_durable_production_audit: true
+no_production_isolation: true
+no_real_adversarial_security_environment: true
+no_general_purpose_workflow_engine: true
+blind_auditor_notes_accepted: true
+schema_contract_alignment_required: true
+runtime_jsonschema_hardening_required: true
+evidence_kind_alignment_required: true
+next_lifecycle_step: docs sync after audit commit
+next_hardening_after_demo_b_docs_sync: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1

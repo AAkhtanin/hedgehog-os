@@ -1,0 +1,219 @@
+HEADER
+Schema Contract Alignment v0.1 Phase 1: AttractorPacket Architect Contract Alignment Audit
+
+This audit log records the narrow Phase 1 patch that closed preflight Finding A
+for the active AttractorPacket Architect-facing contract.
+
+schema_contract_alignment_phase1_attractor_packet_v01_audit_status: PASS
+patch_type: narrow_schema_runtime_contract_alignment
+finding_a_schema_contract_drift_status: closed_for_active_attractor_packet_contract
+read_only_preflight_completed: true
+phase1_patch_applied: true
+
+This audit does not implement Runtime JSON Schema Validation Hardening, Post V&V
+changes, EvidenceItem.kind vocabulary alignment, artifact_type vocabulary
+alignment, GT changes, Root changes, DRS writeback changes, or production
+validation.
+
+
+COMMIT EVIDENCE
+
+preflight_commit: d6aaf9f
+preflight_commit_name: Add Schema Contract Alignment preflight v0.1
+phase1_patch_commit: bd0c518
+phase1_patch_commit_name: Align AttractorPacket architect contract with PlanGraph
+
+preflight_report: docs/schema_contract_alignment_preflight_v01.md
+
+
+FILES CHANGED
+
+Phase 1 patch changed:
+
+- hedgehog/avf.py
+- schemas/attractor_packet.schema.json
+- specs/schema_package_v0_25_reference.md
+- tests/test_architect_from_bounded_attractor_packet_runner.py
+- tests/test_avf_runtime.py
+
+Audit file created:
+
+- docs/audit_reports/auditor_schema_contract_alignment_phase1_attractor_packet_v01.log
+
+
+PREFLIGHT FINDING ADDRESSED
+
+Preflight Finding A:
+
+- finding: Architect / ResultProposal schema drift
+- status_before_phase1: active AttractorPacket schema and AVF runtime still used must_return_result_proposals_only
+- canonical_contract: Architect returns PlanGraph only
+- canonical_executor_contract: Executor / DAG returns ResultProposal
+- finding_a_schema_contract_drift_status: closed_for_active_attractor_packet_contract
+
+The patch addresses the active AttractorPacket Architect-facing contract only.
+
+
+CONTRACT CHANGE
+
+old_active_field: must_return_result_proposals_only
+new_active_field: must_return_plan_graph_only
+architect_contract: Architect returns PlanGraph only
+executor_contract: Executor / DAG returns ResultProposal
+architect_executor_roles_separated: true
+root_remains_final_authority: true
+
+Active contract after Phase 1:
+
+- AttractorPacket Architect instructions require must_return_plan_graph_only.
+- AVF emits must_return_plan_graph_only in architect_instructions.
+- Architect-facing instructions no longer tell Architect to return ResultProposal.
+- Executor / DAG ResultProposal behavior remains downstream and separate.
+- Root remains final authority.
+
+
+ACTIVE STALE FIELD AUDIT
+
+active_attractor_schema_contains_must_return_result_proposals_only: false
+active_avf_runtime_emits_must_return_result_proposals_only: false
+active_attractor_schema_contains_must_return_plan_graph_only: true
+active_avf_runtime_emits_must_return_plan_graph_only: true
+old_active_field_removed_from_active_schema_runtime: true
+active_stale_field_grep_clean: true
+
+Scope note:
+
+This audit does not claim a global repository grep has zero historical mentions
+of must_return_result_proposals_only. The clean claim applies only to active
+runtime/schema files:
+
+- schemas/attractor_packet.schema.json
+- hedgehog/avf.py
+
+
+HISTORICAL REFERENCES AUDIT
+
+historical_mentions_expected: true
+
+Historical references to must_return_result_proposals_only are expected and
+allowed in:
+
+- docs/schema_contract_alignment_preflight_v01.md
+- docs/audit_reports/auditor_enterprise_document_killer_demo_b_v01.log
+- specs/schema_package_v0_25_reference.md only as obsolete/retired wording
+
+The reference spec now keeps the old field only as retired/obsolete wording and
+uses must_return_plan_graph_only in the copied AttractorPacket schema block.
+
+
+TARGETED TESTS
+
+tests/test_schema_files_valid.py: 1 passed
+tests/test_architect_from_bounded_attractor_packet_runner.py: 23 passed
+tests/test_avf_runtime.py: 2 passed
+tests/test_architect_runtime.py: 5 passed
+tests/test_executor_runtime.py: 3 passed
+
+targeted_tests_passed: 34
+
+Additional focused checks also passed during Phase 1 validation:
+
+- tests/test_architect_prompt_compiler_runtime.py: 4 passed
+- tests/test_llm_architect_runtime.py: 17 passed
+
+Warnings:
+
+- jsonschema.RefResolver deprecation warnings observed
+- warnings_are_blockers: false
+
+
+BOUNDARIES NOT TOUCHED
+
+post_vv_modified: false
+evidence_item_kind_modified: false
+artifact_type_modified: false
+gt_modified: false
+root_modified: false
+drs_writeback_modified: false
+demo_a_modified: false
+demo_b_modified: false
+production_validation_created: false
+runtime_jsonschema_hardening_implemented: false
+evidence_kind_alignment_implemented: false
+artifact_type_alignment_implemented: false
+
+Phase 1 did not modify GT, Root, DRS writeback, Post V&V, EvidenceItem.kind,
+artifact_type, Demo A, or Demo B.
+
+
+FINDINGS STILL OPEN
+
+finding_b_runtime_validation_gap_status: open
+finding_c_evidence_vocabulary_alignment_gap_status: open
+finding_d_artifact_vocabulary_mapping_needed_status: open
+finding_e_test_coverage_gap_status: partially_open
+next_phase_should_not_start_with_broad_fix: true
+
+Phase 1 closes only the active AttractorPacket Architect contract portion of
+Finding A. It does not close the remaining preflight findings.
+
+
+WHAT THIS FIXES
+
+- Active AttractorPacket no longer tells Architect to return ResultProposal.
+- AVF now emits PlanGraph-only Architect instruction.
+- Architect-facing contract aligns with Human Passport / invariants.
+- Executor / DAG ResultProposal boundary remains separate.
+- Targeted tests prove the path still works.
+
+
+WHAT THIS DOES NOT FIX
+
+- does not implement full nested JSON Schema validation in Post V&V
+- does not align EvidenceItem.kind vocabulary
+- does not align artifact_type vocabulary
+- does not prove production readiness
+- does not create public-auditor readiness
+- does not create production document/workflow engine
+- does not change Root/GT/DRS authority boundaries
+
+
+OVERCLAIM GUARDRAILS
+
+runtime_jsonschema_hardening_implemented: false
+evidence_kind_alignment_implemented: false
+artifact_type_alignment_implemented: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+root_remains_final_authority: true
+
+Guardrails:
+
+- Do not describe Phase 1 as full schema hardening.
+- Do not describe Phase 1 as Post V&V hardening.
+- Do not describe Phase 1 as EvidenceItem.kind vocabulary alignment.
+- Do not describe Phase 1 as artifact_type vocabulary alignment.
+- Do not describe Phase 1 as production validation.
+- Do not describe Phase 1 as public-auditor readiness.
+
+
+AUDIT SUMMARY
+
+schema_contract_alignment_phase1_attractor_packet_v01_audit_status: PASS
+preflight_commit: d6aaf9f
+phase1_patch_commit: bd0c518
+finding_a_schema_contract_drift_status: closed_for_active_attractor_packet_contract
+old_active_field_removed_from_active_schema_runtime: true
+new_active_field: must_return_plan_graph_only
+architect_returns_plan_graph_only: true
+executor_dag_returns_resultproposal: true
+active_stale_field_grep_clean: true
+historical_mentions_expected: true
+targeted_tests_passed: 34
+runtime_jsonschema_hardening_implemented: false
+evidence_kind_alignment_implemented: false
+artifact_type_alignment_implemented: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+root_remains_final_authority: true
+next_recommended_step: docs sync for Phase 1 or Phase 2 patch plan after review

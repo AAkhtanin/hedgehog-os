@@ -1269,7 +1269,8 @@ Corrected next order:
 43. Production Boundary Design Docs v0.1 - complete.
 44. Enterprise Killer Demo v0.1 / Demo A - complete through docs sync.
 45. Enterprise Document Killer Demo B v0.1 - complete through docs sync.
-46. Next: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan.
+46. Schema Contract Alignment v0.1 Phase 1 - complete through patch and audit.
+47. Next: Schema Contract Alignment Phase 2 patch plan after review, not broad fix.
 
 ## Applied + Fractal + Coupling Demo Commands
 
@@ -1425,8 +1426,17 @@ blocks 18/18 authority attempts; ACT 3 returns `ready_for_internal_release`
 without action; ACT 4 uses Root-approved Local DRS Reuse. It performs no real
 OCR, PDF parsing, connector call, external action, or production DRS.
 
-Next hardening is Schema Contract Alignment / Runtime Schema Validation
-Hardening v0.1, starting with a read-only preflight scan.
+Schema Contract Alignment v0.1 Phase 1 is complete through patch and audit.
+The active AttractorPacket Architect-facing contract now uses
+`must_return_plan_graph_only`; active stale field grep is clean for
+`schemas/attractor_packet.schema.json` and `hedgehog/avf.py`.
+Targeted tests passed: `targeted_tests_passed=34`. No full pytest is required
+for docs sync. Phase 1 does not close Findings B/C/D/E: Runtime JSON Schema
+Validation Hardening, EvidenceItem.kind vocabulary alignment, artifact_type
+vocabulary alignment, and focused coverage gaps remain open.
+
+Next hardening is Schema Contract Alignment Phase 2 patch plan after review,
+not broad fix.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

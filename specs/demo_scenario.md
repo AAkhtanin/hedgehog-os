@@ -1115,8 +1115,15 @@ Corrected documents include valid `CERT-311` and `COMP-883` signature present.
 Reuse is Root-approved Local DRS Reuse, with `drs_reuse_is_authority=false`.
 The proof executes no real action and makes no production claim.
 
-Next hardening is Schema Contract Alignment / Runtime Schema Validation
-Hardening v0.1 as a read-only preflight scan first.
+Demo B blind-auditor debt led to Schema Contract Alignment / Runtime Schema
+Validation Hardening v0.1 preflight. Preflight Finding A is closed by Schema
+Contract Alignment v0.1 Phase 1 for the active AttractorPacket Architect-facing
+contract: Architect returns PlanGraph only, Executor / DAG returns
+ResultProposal, and Root remains final authority.
+
+Future phases are still required for Runtime JSON Schema Validation Hardening,
+EvidenceItem.kind vocabulary alignment, artifact_type vocabulary alignment, and
+focused coverage gaps. Next: Phase 2 patch plan after review, not broad fix.
 
 ## Exclusions
 

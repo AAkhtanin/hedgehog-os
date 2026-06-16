@@ -204,7 +204,8 @@ Current engineering order:
 43. Production Boundary Design Docs v0.1 - complete.
 44. Enterprise Killer Demo v0.1 / Demo A - complete through docs sync.
 45. Enterprise Document Killer Demo B v0.1 - complete through docs sync.
-46. Next: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan.
+46. Schema Contract Alignment v0.1 Phase 1 - complete through patch and audit.
+47. Next: Schema Contract Alignment Phase 2 patch plan after review, not broad fix.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -449,8 +450,14 @@ not action. DRS reuse is not authority. No Needle or capability is installed.
 Demo B remains an applied deterministic proof, not a production
 document/workflow engine.
 
-Next hardening begins with a read-only Schema Contract Alignment / Runtime
-Schema Validation Hardening v0.1 preflight scan.
+Schema Contract Alignment v0.1 Phase 1 preserves Root-centered geometry by
+making the active AttractorPacket point Architect toward PlanGraph-only output:
+`must_return_plan_graph_only`. ResultProposal remains Executor / DAG output.
+This prevents Architect/Executor role collapse and keeps Root final authority
+intact.
+
+Next hardening is Schema Contract Alignment Phase 2 patch plan after review,
+not broad fix.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

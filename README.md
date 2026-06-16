@@ -1244,6 +1244,38 @@ Runtime Schema Validation Hardening v0.1, starting with a read-only preflight
 scan. Do not implement that hardening here; do not modify schemas, Post V&V,
 runtime validation, or EvidenceItem.kind in this docs sync.
 
+## Schema Contract Alignment v0.1 Phase 1 — AttractorPacket Architect Contract
+
+Schema Contract Alignment v0.1 Phase 1 is complete through patch and audit for
+the active AttractorPacket Architect-facing contract. Commits: preflight
+`d6aaf9f`, patch `bd0c518`, audit `233b4d5`.
+
+Phase 1 closes Finding A for the active AttractorPacket contract:
+`finding_a_schema_contract_drift_status=closed_for_active_attractor_packet_contract`.
+The old active field `must_return_result_proposals_only` is retired from active
+schema/runtime, and the new active field is `must_return_plan_graph_only`.
+Architect returns PlanGraph only; Executor / DAG returns ResultProposal.
+Architect and Executor roles remain separated, and Root remains final
+authority.
+
+Targeted validation recorded `targeted_tests_passed=34`.
+`active_stale_field_grep_clean=true` applies to active schema/runtime files,
+while `historical_mentions_expected=true` allows historical preflight and audit
+references to the old field.
+
+Phase 1 does not implement Runtime JSON Schema Validation Hardening, Post V&V
+nested JSON Schema validation, EvidenceItem.kind vocabulary alignment,
+artifact_type vocabulary alignment, production validation, or public-auditor
+readiness. Findings B/C/D/E remain open:
+`finding_b_runtime_validation_gap_status=open`,
+`finding_c_evidence_vocabulary_alignment_gap_status=open`,
+`finding_d_artifact_vocabulary_mapping_needed_status=open`, and
+`finding_e_test_coverage_gap_status=partially_open`.
+
+Next recommended step: Phase 2 patch plan after review, not broad fix.
+Suggested Phase 2 scope is Executor / DAG ResultProposal contract wording and
+focused tests.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1436,6 +1468,7 @@ Completed recent layers:
 - Production Boundary Design Docs v0.1.
 - Enterprise Killer Demo v0.1 / Demo A.
 - Enterprise Document Killer Demo B v0.1.
+- Schema Contract Alignment v0.1 Phase 1 — AttractorPacket Architect contract alignment.
 - Strategic Expansion Map.
 
 Next engineering focus:
@@ -1447,8 +1480,9 @@ Next engineering focus:
 - Completed: Production Boundary Design Docs v0.1.
 - Completed: Enterprise Killer Demo v0.1 / Demo A.
 - Completed: Enterprise Document Killer Demo B v0.1.
-- Next: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan first.
-- Later: narrow schema/runtime validation patch after scan, then Public Auditor Packet / Whitepaper draft.
+- Completed: Schema Contract Alignment v0.1 Phase 1 — AttractorPacket Architect contract alignment.
+- Next: Schema Contract Alignment Phase 2 patch plan after review, not broad fix.
+- Later: Runtime JSON Schema Validation Hardening, EvidenceItem.kind / artifact_type vocabulary alignment, then Public Auditor Packet / Whitepaper draft.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.

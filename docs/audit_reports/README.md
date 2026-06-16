@@ -247,7 +247,14 @@ Current reports:
   - Confirms `fixture_fidelity_verified=true`, `canonical_vendor=ALPHA SUPPLY`, `canonical_amount=18400 EUR`, and `canonical_shipment_id=SHIP-900`.
   - Confirms ACT 1 `not_ready`, ACT 2 `adversarial_attempts_blocked=18`, ACT 3 `ready_for_internal_release`, and ACT 4 `act_4_resolution_source=Root-approved Local DRS Reuse`.
   - Confirms blind auditor notes were accepted and `schema_contract_alignment_required=true`, `runtime_jsonschema_hardening_required=true`, and `evidence_kind_alignment_required=true`.
-  - Next hardening after docs sync: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan first.
+  - Later hardening after Demo B docs sync began with Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 preflight; Phase 1 is now closed separately.
+
+- `auditor_schema_contract_alignment_phase1_attractor_packet_v01.log`
+  - Schema Contract Alignment v0.1 Phase 1 audit for the AttractorPacket Architect-facing contract.
+  - Audit status PASS. Evidence: preflight commit `d6aaf9f`, patch commit `bd0c518`, audit commit `233b4d5`.
+  - Confirms Finding A is closed for the active AttractorPacket contract: `finding_a_schema_contract_drift_status=closed_for_active_attractor_packet_contract`.
+  - Confirms active schema/runtime use `must_return_plan_graph_only`, Architect returns PlanGraph only, Executor / DAG returns ResultProposal, and Root remains final authority.
+  - Confirms Findings B/C/D/E remain open: Runtime JSON Schema Validation Hardening, EvidenceItem.kind vocabulary alignment, artifact_type vocabulary alignment, and focused coverage gaps.
 
 ## Current Applied Auditor Commands
 

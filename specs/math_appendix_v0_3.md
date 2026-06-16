@@ -2844,6 +2844,20 @@ production DRS, production runtime, production economics, or a general-purpose
 document/workflow engine. Root-approved Local DRS Reuse remains advisory under
 Root control; DRS reuse is not authority.
 
+Schema Contract Alignment v0.1 Phase 1 is contract alignment, not new math:
+
+```text
+old_architect_instruction = must_return_result_proposals_only
+new_architect_instruction = must_return_plan_graph_only
+architect_returns_plan_graph_only = true
+executor_dag_returns_resultproposal = true
+runtime_jsonschema_hardening_implemented = false
+```
+
+The phase changes active Architect-facing invariant wording from old
+ResultProposal-only wording to PlanGraph-only wording. It does not implement
+runtime JSON Schema validation.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

@@ -1283,11 +1283,11 @@ Current implementation should remain focused on:
 
 Current proven / near-proven layers:
 
-text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1 Cross-domain DRS Bridge v0.1 Needle adversarial / safety pack v0.1 External DRS Pointer Protocol v0.1 Read-only Enterprise Connector Sandbox v0.1 External Evidence Acceptance Gate v0.1 Bounded LLM Semantic Executor Node v0.1 Enterprise Chaos Pack v0.1 Compute Collapse Enterprise Bench v0.1 Math / Invariants Sync v0.4 Kernel Enforcement / Transition Matrix Hardening v0.1 Developer Facade / Capability Manifest UX v0.1 Production Boundary Design Docs v0.1 Enterprise Killer Demo v0.1 / Demo A Enterprise Document Killer Demo B v0.1
+text Root authority Orchestrator-stage trace AVF / Attractor formation Architect PlanGraph Fractal DAG Executor Post V&V GT Root FinalOutput DRS writeback NeedleRuntime failure handling Applied warehouse/certificate/travel proofs Permission/NeedsUser NeedleCandidate review Applied DRS retrieval/reuse DRS adversarial defense Multi-domain Applied Smoke v0.2 Controlled Fractal DAC Expansion v0.1 Dual Fractal Coupling v0.1 Cross-domain DRS Bridge v0.1 Needle adversarial / safety pack v0.1 External DRS Pointer Protocol v0.1 Read-only Enterprise Connector Sandbox v0.1 External Evidence Acceptance Gate v0.1 Bounded LLM Semantic Executor Node v0.1 Enterprise Chaos Pack v0.1 Compute Collapse Enterprise Bench v0.1 Math / Invariants Sync v0.4 Kernel Enforcement / Transition Matrix Hardening v0.1 Developer Facade / Capability Manifest UX v0.1 Production Boundary Design Docs v0.1 Enterprise Killer Demo v0.1 / Demo A Enterprise Document Killer Demo B v0.1 Schema Contract Alignment v0.1 Phase 1
 
 Near-term engineering path:
 
-text Completed: External DRS Pointer Protocol v0.1, Read-only Enterprise Connector Sandbox v0.1, External Evidence Acceptance Gate v0.1, Bounded LLM Semantic Executor Node v0.1, Enterprise Chaos Pack v0.1, Compute Collapse Enterprise Bench v0.1 complete through docs sync, Math / Invariants Sync v0.4, Kernel Enforcement / Transition Matrix Hardening v0.1, Developer Facade / Capability Manifest UX v0.1, Production Boundary Design Docs v0.1, Enterprise Killer Demo v0.1 / Demo A, and Enterprise Document Killer Demo B v0.1. Next: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 — read-only preflight scan first. Later: narrow schema/runtime validation patch after scan, Public Auditor Packet / Whitepaper draft, and Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 as future/post-Killer-Demo extension.
+text Completed: External DRS Pointer Protocol v0.1, Read-only Enterprise Connector Sandbox v0.1, External Evidence Acceptance Gate v0.1, Bounded LLM Semantic Executor Node v0.1, Enterprise Chaos Pack v0.1, Compute Collapse Enterprise Bench v0.1 complete through docs sync, Math / Invariants Sync v0.4, Kernel Enforcement / Transition Matrix Hardening v0.1, Developer Facade / Capability Manifest UX v0.1, Production Boundary Design Docs v0.1, Enterprise Killer Demo v0.1 / Demo A, Enterprise Document Killer Demo B v0.1, and Schema Contract Alignment v0.1 Phase 1 AttractorPacket Architect contract alignment. Next: Schema Contract Alignment Phase 2 patch plan after review, not broad fix. Later: Runtime JSON Schema Validation Hardening, EvidenceItem.kind / artifact_type vocabulary alignment, Public Auditor Packet / Whitepaper draft, and Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 as future/post-Killer-Demo extension.
 
 Completed checkpoint: Travel / Multi-condition Readiness, Multi-domain Applied
 Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and Dual Fractal Coupling
@@ -1313,9 +1313,10 @@ Telegram natural assistant, Marennya, UP, multi-LLM showcase as canonical layer,
 production document/workflow engine implementation, schema hardening before
 read-only preflight scan, and production autonomy.
 
-Next hardening is Schema Contract Alignment / Runtime Schema Validation
-Hardening v0.1 as a read-only preflight scan first. This document remains
-vision-only and does not authorize schema/runtime patches by itself.
+Schema Contract Alignment v0.1 Phase 1 is complete. Next hardening is Schema
+Contract Alignment Phase 2 patch plan after review, not broad fix. This
+document remains vision-only and does not authorize schema/runtime patches by
+itself.
 
 A Controlled Multi-LLM Chain Showcase may be considered only as future
 optional `showcase_only` work after approved hardening steps. It is not a

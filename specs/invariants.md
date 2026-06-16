@@ -56,6 +56,12 @@ Observable Zero Trust Runtime proof:
 4. Architect output contract
    - Architect returns PlanGraph and time_assumptions.
    - Architect does not return a user-facing answer.
+   - Active AttractorPacket Architect instructions must use
+     `must_return_plan_graph_only`.
+   - Active Architect-facing contract must not tell Architect to return
+     ResultProposal.
+   - Executor / DAG ResultProposal contract remains downstream.
+   - Root remains final authority.
 
 Fractal DAG Executor invariant:
 

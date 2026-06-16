@@ -753,7 +753,8 @@ Corrected roadmap:
 29. Production Boundary Design Docs v0.1 - complete.
 30. Enterprise Killer Demo v0.1 / Demo A - complete through docs sync.
 31. Enterprise Document Killer Demo B v0.1 - complete through docs sync.
-32. Next: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan.
+32. Schema Contract Alignment v0.1 Phase 1 - complete through patch and audit.
+33. Next: Schema Contract Alignment Phase 2 patch plan after review, not broad fix.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2779,8 +2780,17 @@ cryptographic signatures, production secrets/vault, durable production audit,
 production isolation, adversarial security in a real environment, scalable
 generalization, production DRS, or production runtime.
 
-Next hardening layer: Schema Contract Alignment / Runtime Schema Validation
-Hardening v0.1, read-only preflight scan first.
+Schema Contract Alignment v0.1 Phase 1 is complete through patch and audit.
+It aligned the active AttractorPacket Architect-facing contract:
+`must_return_plan_graph_only` replaces the old active
+`must_return_result_proposals_only` field in active schema/runtime. Architect
+returns PlanGraph only. Executor / DAG returns ResultProposal. Root remains
+final authority.
+
+Runtime JSON Schema hardening, Post V&V nested JSON Schema validation,
+EvidenceItem.kind vocabulary alignment, and artifact_type vocabulary alignment
+remain future phases. Next hardening step is a Phase 2 patch plan after review,
+not broad fix.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

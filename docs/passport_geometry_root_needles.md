@@ -203,7 +203,8 @@ Current engineering order:
 42. Developer Facade / Capability Manifest UX v0.1 - complete through docs sync.
 43. Production Boundary Design Docs v0.1 - complete.
 44. Enterprise Killer Demo v0.1 / Demo A - complete through docs sync.
-45. Next: Enterprise Document Killer Demo B design doc only.
+45. Enterprise Document Killer Demo B v0.1 - complete through docs sync.
+46. Next: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving
@@ -438,8 +439,18 @@ action.
 
 Demo A does not install Needles or capabilities, does not execute real action,
 does not implement External/global DRS, and does not make a production claim.
-Root remains final authority. Enterprise Document Killer Demo B remains a
-later Document / Evidence Workflow layer and is not implemented.
+Root remains final authority.
+
+Enterprise Document Killer Demo B v0.1 shows document/evidence workflow inside
+Root-centered capability geometry. Evidence, LLM semantic extraction, DRS
+reuse, GT reports, pointers, child cells, validation packets, and audit hashes
+do not become Root. `ready_for_internal_release` is internal readiness only,
+not action. DRS reuse is not authority. No Needle or capability is installed.
+Demo B remains an applied deterministic proof, not a production
+document/workflow engine.
+
+Next hardening begins with a read-only Schema Contract Alignment / Runtime
+Schema Validation Hardening v0.1 preflight scan.
 
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 

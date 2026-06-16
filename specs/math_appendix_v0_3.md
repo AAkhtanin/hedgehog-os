@@ -2826,6 +2826,24 @@ not create production readiness, real API/action execution, installed
 capability, installed Needle, External/global DRS, or Demo B document/evidence
 workflow.
 
+Enterprise Document Killer Demo B v0.1 is an applied proof, not new math:
+
+```text
+demo_b_mode = document_evidence_workflow_applied_proof
+act_count = 4
+baseline_document_review_units = 64
+hedgehog_reuse_review_units = 18
+estimated_document_review_units_saved = 46
+production_economics_claimed = false
+real_cost_savings_claimed = false
+```
+
+ACT 4 compute-collapse numbers are synthetic proof-level estimates only. Demo B
+does not prove real OCR, PDF parsing, document extraction, connector trust,
+production DRS, production runtime, production economics, or a general-purpose
+document/workflow engine. Root-approved Local DRS Reuse remains advisory under
+Root control; DRS reuse is not authority.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

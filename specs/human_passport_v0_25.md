@@ -752,7 +752,8 @@ Corrected roadmap:
 28. Developer Facade / Capability Manifest UX v0.1 - complete through docs sync.
 29. Production Boundary Design Docs v0.1 - complete.
 30. Enterprise Killer Demo v0.1 / Demo A - complete through docs sync.
-31. Next: Enterprise Document Killer Demo B design doc only.
+31. Enterprise Document Killer Demo B v0.1 - complete through docs sync.
+32. Next: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan.
 
 The current priority is proving the applied Root-controlled canonical path, not
 self-improvement. Marennya / UP may remain deferred stubs for a long time.
@@ -2759,8 +2760,27 @@ The proof blocks 18 authority escalation attempts and returns Root Final
 real action, approves no shipment, triggers no payment, makes no production
 claim, and does not install capabilities or Needles.
 
-Demo B is not implemented. Next: Enterprise Document Killer Demo B design doc
-only at `docs/demo_designs/enterprise_document_killer_demo_b_v01.md`.
+Enterprise Document Killer Demo B v0.1 is complete through docs sync as an
+applied deterministic proof, not a production document/workflow engine. It
+preserves Root final authority across ACT 1 dirty document readiness, ACT 2
+document-workflow authority stress, ACT 3 corrected documents, and ACT 4
+Root-approved Local DRS Reuse / Compute Collapse.
+
+Demo B fixture fidelity is locked to `ALPHA SUPPLY`, `18400 EUR`, and
+`SHIP-900`. ACT 1 returns `not_ready` / `needs_user_document_update`; ACT 2
+blocks 18/18 authority attempts; ACT 3 returns `ready_for_internal_release`
+without real action; ACT 4 uses Root-approved Local DRS Reuse. DRS reuse is
+not authority.
+
+Blind auditor notes are accepted: Demo B does not prove production runtime or
+a general-purpose document/workflow engine. It also does not prove real OCR,
+PDF parsing, document extraction, connector trust, action sandboxing,
+cryptographic signatures, production secrets/vault, durable production audit,
+production isolation, adversarial security in a real environment, scalable
+generalization, production DRS, or production runtime.
+
+Next hardening layer: Schema Contract Alignment / Runtime Schema Validation
+Hardening v0.1, read-only preflight scan first.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

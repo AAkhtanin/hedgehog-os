@@ -1,26 +1,26 @@
 # Enterprise Document Killer Demo B v0.1 Design
 
-Status: design document only
-Implementation status: not implemented
-Proof runner: not created
-Tests: not created
+Status: design document accepted; checkpoint complete through docs sync
+Production implementation status: not implemented
+Proof runner: created as deterministic local proof only
+Tests: created for deterministic local proof only
 Production readiness: false
 
 ## 1. STATUS
 
-This is a design document only. It is the next layer after Enterprise Killer
-Demo A and must be implemented only after this design doc is reviewed and
-accepted.
+This began as a design document only after Enterprise Killer Demo A. The design
+doc was accepted at commit `bb1f7c2`, followed by proof commit `46d9bfe`, human
+walkthrough commit `e3b6ed9`, audit log commit `d4c6668`, and docs sync.
 
-No proof runner exists yet. No tests exist yet. No document/evidence workflow
-has been implemented yet.
+The completed proof is an applied deterministic proof, not a production
+document/workflow engine.
 
-This design doc describes a future deterministic local demo. It must not claim
-real production document processing, real OCR, real PDF parsing, real bank /
-legal / warehouse connector integration, real payment verification, real legal
-verification, real shipment release, real external API access, real production
-DRS, real cost savings, production autonomy, installed Needles, or Marennya /
-UP activation.
+This design doc describes the deterministic local Demo B lifecycle. It must
+not claim real production document processing, real OCR, real PDF parsing, real
+bank / legal / warehouse connector integration, real payment verification,
+real legal verification, real shipment release, real external API access, real
+production DRS, real cost savings, production autonomy, installed Needles, or
+Marennya / UP activation.
 
 ## 2. DEMO NAME
 
@@ -370,13 +370,13 @@ Expected flow:
 - Bounded LLM calls are zero or minimal depending on fixture design.
 - Root Final: partial_reuse_then_ready_for_internal_release or ready_for_internal_release_from_root_approved_reuse.
 
-Do not write:
+Forbidden class of wording:
 
-```text
-Resolution Source: Local DRS Authority
-```
+- any phrase that presents Local DRS as authority
+- any phrase that says DRS reuse is authority
+- any phrase that removes Root approval from the reuse decision
 
-Use:
+Required wording:
 
 ```text
 Resolution Source: Root-approved Local DRS Reuse
@@ -570,6 +570,7 @@ Developer Facade / Capability Manifest UX v0.1
 -> Production Boundary Design Docs v0.1
 -> Enterprise Killer Demo A: Authority / Safety / Compute Collapse
 -> Enterprise Document Killer Demo B: Full Document / Evidence Workflow
+-> Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan
 ```
 
 Alternative combined future product demo: Enterprise Killer Demo Suite.
@@ -597,8 +598,8 @@ Demo B:
 - readiness decision
 - no external action
 
-Do not implement Demo B immediately unless explicitly instructed after this
-design doc is accepted.
+Do not extend Demo B beyond the closed design/proof/human/audit/docs lifecycle
+unless explicitly instructed.
 
 Do not shortcut production boundaries. Do not add real OCR, real PDF parsing,
 real bank/legal connectors, real external actions, or production DRS. Do not

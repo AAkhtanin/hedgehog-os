@@ -1189,12 +1189,60 @@ real latency measurement, real billing measurement, real API execution,
 installed capabilities, installed Needles, External/global DRS, production
 persistence, Marennya, or UP.
 
-Enterprise Document Killer Demo B is not implemented. The next separate layer
-is `docs/demo_designs/enterprise_document_killer_demo_b_v01.md` as design doc
-only. Demo B must not start with a proof runner or implement document/evidence
-workflow immediately, and must not add real OCR/PDF parsing, real bank/legal/
-warehouse connectors, real external action, production DRS, installed Needles,
-Marennya, UP, or production autonomy.
+Enterprise Document Killer Demo B is now closed separately as the Document /
+Evidence Workflow applied proof checkpoint below.
+
+## Enterprise Document Killer Demo B v0.1 Checkpoint
+
+Enterprise Document Killer Demo B v0.1 is complete through design doc, proof,
+human walkthrough, audit, and docs sync. It is an applied deterministic proof,
+not a production document/workflow engine. Commits: design doc `bb1f7c2`,
+proof `46d9bfe`, human walkthrough `e3b6ed9`, audit log `d4c6668`.
+
+Demo mode: Enterprise Document Killer Demo B — Document / Evidence Workflow.
+It demonstrates ACT 1 — Dirty Document Readiness, ACT 2 — Authority Stress
+Inside Document Workflow, ACT 3 — Corrected Documents, and ACT 4 —
+Root-approved Local DRS Reuse / Compute Collapse.
+
+Fixture fidelity is explicit: canonical vendor `ALPHA SUPPLY`, canonical
+amount `18400 EUR`, and canonical shipment `SHIP-900`. Stale fixture values
+are absent: `stale_fixture_ACME_used=false`,
+`stale_fixture_184500_used=false`, and `stale_fixture_USD_used=false`.
+
+Root Final summary: ACT 1 returns `act_1_root_result=not_ready` with
+`needs_user_document_update`; ACT 2 blocks 18/18 document-workflow authority
+attempts with 3 quarantined attempts; ACT 3 returns
+`ready_for_internal_release` without real action; ACT 4 uses
+`act_4_resolution_source=Root-approved Local DRS Reuse` with
+`act_4_drs_reuse_is_authority=false`.
+
+Demo B proves that multi-document/evidence workflow can be represented under
+Root-controlled geometry, dirty documents produce not_ready /
+needs_user_document_update, corrected documents produce
+ready_for_internal_release, Root-approved Local DRS Reuse can reduce repeated
+review, DRS reuse is not authority, no real external action is executed, no
+production claim is made, and Root remains final authority.
+
+Demo B does not prove real OCR, real PDF parsing, real document extraction,
+real connector trust, real payment verification, real legal verification, real
+bank connector, real warehouse connector, real shipment release, real action
+sandboxing, real cryptographic signatures, production secrets/vault, durable
+production audit, production isolation, adversarial security in a real
+environment, scalable generalization to arbitrary enterprise workflows,
+production DRS, production runtime, or a general-purpose document/workflow
+engine.
+
+Blind auditor notes are accepted: a blind reviewer correctly identified that
+Demo B does not prove production runtime or a general-purpose document/workflow
+engine. Accepted engineering debt remains: schema contract alignment is
+required, Runtime JSON Schema Validation hardening is required, EvidenceItem
+kind / artifact vocabulary alignment is required, and Demo B remains an
+applied proof rather than a real document processing engine.
+
+Next hardening layer after Demo B docs sync: Schema Contract Alignment /
+Runtime Schema Validation Hardening v0.1, starting with a read-only preflight
+scan. Do not implement that hardening here; do not modify schemas, Post V&V,
+runtime validation, or EvidenceItem.kind in this docs sync.
 
 ## Targeted Proof Runtime Policy
 
@@ -1387,6 +1435,7 @@ Completed recent layers:
 - Developer Facade / Capability Manifest UX v0.1.
 - Production Boundary Design Docs v0.1.
 - Enterprise Killer Demo v0.1 / Demo A.
+- Enterprise Document Killer Demo B v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
@@ -1397,9 +1446,9 @@ Next engineering focus:
 - Completed: Developer Facade / Capability Manifest UX v0.1.
 - Completed: Production Boundary Design Docs v0.1.
 - Completed: Enterprise Killer Demo v0.1 / Demo A.
-- Next: Enterprise Document Killer Demo B design doc only.
-- Demo B lifecycle remains design doc -> proof runner -> human walkthrough -> audit log -> docs sync. It must not start with code or implement document/evidence workflow immediately.
-- Public Auditor Packet / Whitepaper draft remains later.
+- Completed: Enterprise Document Killer Demo B v0.1.
+- Next: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan first.
+- Later: narrow schema/runtime validation patch after scan, then Public Auditor Packet / Whitepaper draft.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.

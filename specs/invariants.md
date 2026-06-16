@@ -587,5 +587,17 @@ Enterprise Killer Demo v0.1 / Demo A:
 - Demo A does not implement Enterprise Document Killer Demo B.
 - Demo A does not implement document/evidence workflow.
 - Demo A preserves Root final authority.
-- Demo B starts as design doc only at
-  `docs/demo_designs/enterprise_document_killer_demo_b_v01.md`.
+
+Enterprise Document Killer Demo B v0.1:
+
+- Demo B is Document / Evidence Workflow applied proof only.
+- Demo B does not create a production document/workflow engine.
+- Demo B does not execute real action.
+- Demo B does not prove OCR, PDF parsing, document extraction, connector trust,
+  production runtime, or production DRS.
+- Demo B does not install Needle.
+- Demo B does not activate Marennya or UP.
+- Demo B preserves Root final authority.
+- DRS reuse is not authority.
+- Next schema hardening must begin with a read-only preflight scan before any
+  schema/runtime validation patch.

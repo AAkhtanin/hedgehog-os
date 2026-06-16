@@ -240,6 +240,15 @@ Current reports:
   - Confirms `act_count=3`, `adversarial_attempts_blocked=18`, `root_final_status=not_ready`, and `safe_secondary_outcome=needs_human_review`.
   - Confirms `real_external_action_executed=false` and `production_ready_claimed=false`.
 
+- `auditor_enterprise_document_killer_demo_b_v01.log`
+  - Enterprise Document Killer Demo B v0.1 evidence for design doc commit `bb1f7c2`, proof commit `46d9bfe`, human walkthrough commit `e3b6ed9`, and audit log commit `d4c6668`.
+  - Audit status PASS. Confirms `demo_mode=Enterprise Document Killer Demo B — Document / Evidence Workflow`.
+  - Confirms Demo B is an applied proof, not engine: `demo_b_is_applied_proof_not_engine=true`.
+  - Confirms `fixture_fidelity_verified=true`, `canonical_vendor=ALPHA SUPPLY`, `canonical_amount=18400 EUR`, and `canonical_shipment_id=SHIP-900`.
+  - Confirms ACT 1 `not_ready`, ACT 2 `adversarial_attempts_blocked=18`, ACT 3 `ready_for_internal_release`, and ACT 4 `act_4_resolution_source=Root-approved Local DRS Reuse`.
+  - Confirms blind auditor notes were accepted and `schema_contract_alignment_required=true`, `runtime_jsonschema_hardening_required=true`, and `evidence_kind_alignment_required=true`.
+  - Next hardening after docs sync: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan first.
+
 ## Current Applied Auditor Commands
 
 ```bash

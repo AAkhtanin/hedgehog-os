@@ -991,8 +991,10 @@ docs sync -> Math / Invariants Sync v0.4 complete -> Kernel Enforcement /
 Transition Matrix Hardening v0.1 complete through docs sync -> Developer
 Facade / Capability Manifest UX v0.1 complete through docs sync -> Production
 Boundary Design Docs v0.1 complete -> Enterprise Killer Demo v0.1 / Demo A
-complete through docs sync -> Next: Enterprise Document Killer Demo B design
-doc only -> Public Auditor Packet / Whitepaper draft remains later.
+complete through docs sync -> Enterprise Document Killer Demo B v0.1 complete
+through docs sync -> Next: Schema Contract Alignment / Runtime Schema
+Validation Hardening v0.1 read-only preflight scan -> Public Auditor Packet /
+Whitepaper draft remains later.
 
 ## Applied + Fractal + Coupling Checkpoint Commands
 
@@ -1106,9 +1108,15 @@ proof-level compute collapse. Root Final remains `not_ready` with
 `safe_secondary_outcome=needs_human_review`, 18 authority attempts are blocked,
 no real action executes, and no production claim is made.
 
-Enterprise Document Killer Demo B remains the later Document / Evidence
-Workflow layer. Demo B is not implemented and starts with design documentation
-only.
+Enterprise Document Killer Demo B v0.1 is complete as the Document / Evidence
+Workflow applied proof, not a production engine. Dirty documents include
+expired `CERT-310`, missing `COMP-882` signature, and quarantined `LEGAL-FAKE`.
+Corrected documents include valid `CERT-311` and `COMP-883` signature present.
+Reuse is Root-approved Local DRS Reuse, with `drs_reuse_is_authority=false`.
+The proof executes no real action and makes no production claim.
+
+Next hardening is Schema Contract Alignment / Runtime Schema Validation
+Hardening v0.1 as a read-only preflight scan first.
 
 ## Exclusions
 

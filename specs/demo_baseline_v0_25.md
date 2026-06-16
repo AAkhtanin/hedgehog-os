@@ -1268,7 +1268,8 @@ Corrected next order:
 42. Developer Facade / Capability Manifest UX v0.1 - complete through docs sync.
 43. Production Boundary Design Docs v0.1 - complete.
 44. Enterprise Killer Demo v0.1 / Demo A - complete through docs sync.
-45. Next: Enterprise Document Killer Demo B design doc only.
+45. Enterprise Document Killer Demo B v0.1 - complete through docs sync.
+46. Next: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan.
 
 ## Applied + Fractal + Coupling Demo Commands
 
@@ -1352,7 +1353,9 @@ proof, human walkthrough, audit, and docs sync. Developer Facade / Capability
 Manifest UX v0.1 is complete through proof, human walkthrough, audit, and docs
 sync. Production Boundary Design Docs v0.1 is complete. Enterprise Killer Demo
 v0.1 / Demo A is complete through proof, human walkthrough, audit, and docs
-sync. Next: Enterprise Document Killer Demo B design doc only.
+sync. Enterprise Document Killer Demo B v0.1 is complete through design,
+proof, human walkthrough, audit, and docs sync. Next: Schema Contract Alignment
+/ Runtime Schema Validation Hardening v0.1 read-only preflight scan.
 
 Bounded LLM Semantic Executor Node v0.1 keeps the model inside Executor as
 `executor_node_capability`. Architect creates the four-node PlanGraph first;
@@ -1406,8 +1409,24 @@ numbers as proof-level estimates only. It creates no real action, production
 claim, installed capability, installed Needle, or Demo B document/evidence
 workflow.
 
-Enterprise Document Killer Demo B is the next separate layer, but it starts as
-design doc only at `docs/demo_designs/enterprise_document_killer_demo_b_v01.md`.
+Enterprise Document Killer Demo B v0.1 is complete as an applied
+deterministic proof, not a production document/workflow engine.
+
+Commands:
+
+```bash
+python -m demo.run_enterprise_document_killer_demo_b_v01
+python -m demo.run_human_enterprise_document_killer_demo_b_walkthrough_v01
+```
+
+Demo B keeps fixture fidelity at `ALPHA SUPPLY`, `18400 EUR`, and `SHIP-900`.
+42 focused tests passed for the proof runner. ACT 1 returns `not_ready`; ACT 2
+blocks 18/18 authority attempts; ACT 3 returns `ready_for_internal_release`
+without action; ACT 4 uses Root-approved Local DRS Reuse. It performs no real
+OCR, PDF parsing, connector call, external action, or production DRS.
+
+Next hardening is Schema Contract Alignment / Runtime Schema Validation
+Hardening v0.1, starting with a read-only preflight scan.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

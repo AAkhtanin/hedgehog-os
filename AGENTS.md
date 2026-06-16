@@ -55,7 +55,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → current/next approved layer: Enterprise Document Killer Demo B design doc only → only later: Demo B proof/human/audit/docs lifecycle, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo, External DRS implementation, Marennya / UP
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → current/next approved layer: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan only → only later: narrow schema/runtime validation patch after scan, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo, External DRS implementation, Marennya / UP
 
 Do not jump ahead to:
 
@@ -190,8 +190,10 @@ Anti-reduction rules:
   human walkthrough, audit, and docs sync. Production Boundary Design Docs
   v0.1 is complete as design documentation. Enterprise Killer Demo v0.1 /
   Demo A is complete through proof, human walkthrough, audit, and docs sync.
-  Current/next approved layer: Enterprise Document Killer Demo B design doc
-  only.
+  Enterprise Document Killer Demo B v0.1 is complete through design, proof,
+  human walkthrough, audit, and docs sync. Current/next approved layer: Schema
+  Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only
+  preflight scan only.
 - Do not treat Enterprise Chaos Pack v0.1 as production readiness or use it to
   justify real external actions. Any future killer demo must still pass
   explicit Root-controlled production-boundary and acceptance gates.
@@ -233,14 +235,20 @@ Anti-reduction rules:
   real external actions, authorize installed Needles or capabilities, authorize
   External/global DRS, or authorize Marennya / UP activation.
 - Do not confuse Demo A and Demo B. Demo A = Authority / Safety / Compute
-  Collapse. Demo B = Document / Evidence Workflow.
-- Demo B is not implemented yet. Demo B starts with
-  `docs/demo_designs/enterprise_document_killer_demo_b_v01.md` as design doc
-  only.
-- Demo B must not start with code, proof runner, document/evidence workflow
-  implementation, real OCR/PDF parsing, real bank/legal/warehouse connectors,
-  real external actions, production DRS, installed Needles, Marennya, UP, or
-  production autonomy.
+  Collapse. Demo B = Document / Evidence Workflow applied proof.
+- Enterprise Document Killer Demo B v0.1 is complete as an applied
+  deterministic proof, not a production document/workflow engine. It does not
+  prove real OCR/PDF parsing, document extraction, connector trust, real
+  shipment release, production DRS, production runtime, or general-purpose
+  workflow generalization.
+- Next hardening must begin with read-only preflight scan. Do not start by
+  patching schemas. Do not tell Codex "fix schemas" directly.
+- Read-only preflight inventory must cover:
+  `must_return_result_proposals_only`, Architect returns ResultProposal,
+  Architect returns PlanGraph, Executor returns ResultProposal,
+  `EvidenceItem.kind`, `artifact_type`, and Post V&V schema validation.
+- After the read-only preflight scan, produce a patch plan. Only after review,
+  do a narrow patch with focused tests.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains
   post-Killer-Demo future extension.
 - Codex must not run long tests unless the user explicitly requests them; the
@@ -592,7 +600,7 @@ benchmark onto the dirty enterprise stack with a synthetic proof-level signal on
 and context units 180 -> 32. It is not real billing, latency, cloud cost, or
 production economics.
 
-Corrected engineering order: Compute Collapse Enterprise Bench v0.1 is complete through proof, human walkthrough, audit, and docs sync. Math / Invariants Sync v0.4 is complete. Kernel Enforcement / Transition Matrix Hardening v0.1 is complete through proof, human walkthrough, audit, and docs sync. Developer Facade / Capability Manifest UX v0.1 is complete through proof, human walkthrough, audit, and docs sync. Production Boundary Design Docs v0.1 is complete as design documentation. Enterprise Killer Demo v0.1 / Demo A is complete through proof, human walkthrough, audit, and docs sync. Next: Enterprise Document Killer Demo B design doc only. Public Auditor Packet / Whitepaper draft remains later. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
+Corrected engineering order: Compute Collapse Enterprise Bench v0.1 is complete through proof, human walkthrough, audit, and docs sync. Math / Invariants Sync v0.4 is complete. Kernel Enforcement / Transition Matrix Hardening v0.1 is complete through proof, human walkthrough, audit, and docs sync. Developer Facade / Capability Manifest UX v0.1 is complete through proof, human walkthrough, audit, and docs sync. Production Boundary Design Docs v0.1 is complete as design documentation. Enterprise Killer Demo v0.1 / Demo A is complete through proof, human walkthrough, audit, and docs sync. Enterprise Document Killer Demo B v0.1 is complete through design, proof, human walkthrough, audit, and docs sync. Next: Schema Contract Alignment / Runtime Schema Validation Hardening v0.1 read-only preflight scan only. Public Auditor Packet / Whitepaper draft remains later. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

@@ -1,0 +1,278 @@
+HEADER
+
+Runtime JSON Schema Validation Hardening v0.1 audit log
+Scope: Post V&V incoming ResultProposal runtime schema validation
+Patch type: runtime_post_vv_incoming_resultproposal_schema_validation
+
+runtime_jsonschema_hardening_post_vv_resultproposal_v01_audit_status: PASS
+patch_type: runtime_post_vv_incoming_resultproposal_schema_validation
+runtime_patch_applied: true
+preflight_only: false
+runtime_modified: true
+schemas_modified: false
+tests_modified: true
+
+This audit records the narrow runtime patch that added incoming ResultProposal
+JSON Schema validation at the Post V&V boundary. It does not audit or claim
+outgoing VVReport runtime validation, EvidenceItem.kind vocabulary alignment,
+artifact_type mapping, GT changes, Root changes, DRS writeback changes, or
+production readiness.
+
+
+COMMIT EVIDENCE
+
+preflight_commit: 3207a19
+preflight_commit_name: Add Runtime JSON Schema Validation Hardening preflight
+
+runtime_patch_commit: 48e2515
+runtime_patch_commit_name: Add Post V&V ResultProposal runtime schema validation
+
+preflight_file:
+- docs/schema_contract_alignment_runtime_jsonschema_hardening_preflight_v01.md
+
+
+FILES CHANGED
+
+Runtime patch changed files:
+
+- hedgehog/post_vv.py
+- tests/test_post_vv_runtime.py
+
+Files not changed by this audit:
+
+- schemas/*.schema.json
+- hedgehog/gt_validator.py
+- hedgehog/root_orchestrator.py
+- hedgehog/drs.py
+- README.md
+- AGENTS.md
+- specs/*
+- docs/* except this audit log
+
+
+PREFLIGHT BASIS
+
+The preflight concluded:
+
+result_proposal_runtime_schema_validation_present: false
+vv_report_runtime_schema_validation_present: false
+schema_validation_in_tests_present: true
+manual_policy_checks_present: true
+additive_hardening_needed: true
+recommended_next_patch: Post V&V ResultProposal runtime schema validation patch + focused tests
+
+The runtime patch addresses only the incoming ResultProposal side of Finding B.
+It does not address outgoing VVReport runtime validation.
+
+
+RUNTIME BEHAVIOR CHANGE
+
+result_proposal_runtime_schema_validation_present: true
+post_vv_validates_incoming_resultproposal_schema: true
+schema_validation_runs_before_manual_checks: true
+schema_validation_is_additive: true
+schema_validation_replaces_manual_checks: false
+manual_policy_checks_preserved: true
+manual_safety_checks_preserved: true
+schema_failures_return_vv_report: true
+schema_failures_do_not_crash: true
+
+The patched Post V&V boundary now validates incoming ResultProposal artifacts
+against the active ResultProposal schema before running the existing manual
+checks. Schema failures are converted into the normal V&V report path with
+schema violations instead of uncaught exceptions.
+
+Manual checks still run after schema validation. The patch did not replace the
+manual policy and safety layer.
+
+
+SCHEMA VALIDATION BOUNDARY
+
+result_proposal_schema_refs_resolved_locally: true
+common_schema_ref_resolved: true
+time_envelope_schema_ref_resolved: true
+
+Schema files used by the runtime patch:
+
+- schemas/result_proposal.schema.json
+- schemas/common.schema.json
+- schemas/time_envelope.schema.json
+
+Schema validation now covers incoming ResultProposal shape at the Post V&V
+boundary, including required fields, nested referenced schema constraints, and
+additionalProperties constraints where defined by the active schema.
+
+Non-authority boundary:
+
+schema_validation_creates_finaloutput: false
+schema_validation_writes_drs: false
+schema_validation_executes_action: false
+schema_validation_grants_authority: false
+gt_modified: false
+root_modified: false
+drs_writeback_modified: false
+root_remains_final_authority: true
+
+
+MANUAL SAFETY CHECK PRESERVATION
+
+manual_policy_checks_preserved: true
+manual_safety_checks_preserved: true
+schema_validation_is_additive: true
+schema_validation_replaces_manual_checks: false
+
+Preserved manual checks include:
+
+- required fields / proposal consistency checks
+- evidence presence checks
+- TimeEnvelope presence checks
+- critical risk rejection
+- forbidden final_output checks
+- forbidden answer checks
+- forbidden raw_user_text checks
+- needs_user semantics
+- blocked semantics
+- malformed proposal rejection path
+
+Preserved authority boundaries:
+
+- no FinalOutput creation by Post V&V
+- no DRS write by Post V&V
+- no action execution by Post V&V
+- GT is not invoked by Post V&V
+- Root is not invoked by Post V&V
+
+
+TEST EVIDENCE
+
+Post V&V / schema batch:
+
+command: .venv/bin/python -m pytest tests/test_post_vv_runtime.py tests/test_post_vv_from_result_proposal_runner.py tests/test_schema_files_valid.py -q
+result: 38 passed, 2 warnings
+
+Nearby boundary batch:
+
+command: .venv/bin/python -m pytest tests/test_executor_runtime.py tests/test_gt_from_validation_report_runner.py tests/test_root_final_from_gt_decision_runner.py -q
+result: 54 passed, 2 warnings
+
+Focused tests covered:
+
+- missing required ResultProposal field rejected by runtime schema validation
+- bad nested TimeEnvelope rejected by runtime schema validation
+- malformed risk severity rejected by runtime schema validation
+- extra top-level field rejected by runtime schema validation
+- schema-valid critical risk still rejected by manual safety check
+- forbidden final_output still rejected by manual policy check
+- forbidden answer still rejected by manual policy check
+- malformed proposal does not crash Post V&V
+- schema-valid safe proposal still accepted by existing path
+
+
+WARNINGS / DEPRECATIONS
+
+jsonschema.RefResolver deprecation warning observed
+status: non_blocking
+future_cleanup: consider migration to referencing in later compatibility cleanup
+
+The RefResolver warning does not block this audit. It is a compatibility cleanup
+item, not a runtime boundary failure.
+
+
+FINDINGS STATUS
+
+finding_b_runtime_validation_gap_status: partially_closed_for_incoming_resultproposal_at_post_vv_boundary
+incoming_resultproposal_runtime_schema_validation_status: implemented
+outgoing_vv_report_runtime_schema_validation_status: deferred
+
+finding_c_evidence_vocabulary_alignment_gap_status: open
+finding_d_artifact_vocabulary_mapping_needed_status: open
+finding_e_test_coverage_gap_status: partially_open
+
+Finding B is not globally closed. It is partially closed for incoming
+ResultProposal runtime schema validation at the Post V&V boundary only.
+
+
+WHAT THIS FIXES
+
+This patch fixes:
+
+- adds runtime JSON Schema validation for incoming ResultProposal at Post V&V boundary
+- validates required fields through the active ResultProposal schema
+- validates nested schema constraints through the active ResultProposal schema
+- validates additionalProperties constraints through the active ResultProposal schema
+- validates time_envelope/common refs through local schema store
+- converts schema failures into normal V&V report path
+- preserves manual policy/safety checks after schema validation
+
+
+WHAT THIS DOES NOT FIX
+
+This patch does not fix:
+
+- does not validate outgoing VVReport at runtime
+- does not align EvidenceItem.kind
+- does not align artifact_type
+- does not modify schemas
+- does not modify GT
+- does not modify Root
+- does not modify DRS writeback
+- does not claim production readiness
+- does not claim public-auditor readiness
+- does not close all findings
+
+outgoing_vv_report_runtime_schema_validation_status: deferred
+evidence_kind_alignment_implemented: false
+artifact_type_alignment_implemented: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+
+OVERCLAIM GUARDRAILS
+
+schema_validation_replaces_manual_checks: false
+schema_validation_creates_finaloutput: false
+schema_validation_writes_drs: false
+schema_validation_executes_action: false
+schema_validation_grants_authority: false
+
+EvidenceItem.kind alignment remains open.
+artifact_type vocabulary mapping remains open.
+Outgoing VVReport runtime validation remains deferred.
+GT, Root, and DRS writeback were not modified.
+Root remains final authority.
+
+
+AUDIT SUMMARY
+
+runtime_jsonschema_hardening_post_vv_resultproposal_v01_audit_status: PASS
+preflight_commit: 3207a19
+runtime_patch_commit: 48e2515
+patch_type: runtime_post_vv_incoming_resultproposal_schema_validation
+
+result_proposal_runtime_schema_validation_present: true
+post_vv_validates_incoming_resultproposal_schema: true
+schema_validation_runs_before_manual_checks: true
+schema_validation_is_additive: true
+schema_validation_replaces_manual_checks: false
+schema_failures_return_vv_report: true
+schema_failures_do_not_crash: true
+manual_policy_checks_preserved: true
+manual_safety_checks_preserved: true
+
+schemas_modified: false
+gt_modified: false
+root_modified: false
+drs_writeback_modified: false
+
+outgoing_vv_report_runtime_schema_validation_status: deferred
+evidence_kind_alignment_implemented: false
+artifact_type_alignment_implemented: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+root_remains_final_authority: true
+
+test_evidence_post_vv_schema_batch: 38 passed, 2 warnings
+test_evidence_nearby_boundary_batch: 54 passed, 2 warnings
+warning_refresolver_deprecation_status: non_blocking
+
+next_recommended_step: docs sync for runtime JSON Schema validation patch; then decide whether to do outgoing VVReport validation subphase or EvidenceItem.kind/artifact_type planning

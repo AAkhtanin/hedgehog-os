@@ -256,6 +256,15 @@ Current reports:
   - Confirms active schema/runtime use `must_return_plan_graph_only`, Architect returns PlanGraph only, Executor / DAG returns ResultProposal, and Root remains final authority.
   - Confirms Findings B/C/D/E remain open: Runtime JSON Schema Validation Hardening, EvidenceItem.kind vocabulary alignment, artifact_type vocabulary alignment, and focused coverage gaps.
 
+- `auditor_schema_contract_alignment_phase2_executor_dag_resultproposal_v01.log`
+  - Schema Contract Alignment v0.1 Phase 2 audit for Executor / DAG ResultProposal contract wording.
+  - Audit status PASS. Evidence: plan commit `fad2276`, wording patch commit `146d44c`, audit commit `6e47485`.
+  - Confirms `patch_type=docs_spec_wording_contract_alignment`.
+  - Confirms runtime/schema/tests unchanged: `runtime_modified=false`, `schemas_modified=false`, and `tests_modified=false`.
+  - Confirms ResultProposal-shaped boundary artifacts are not FinalOutput, not authority, do not authorize action, and do not write DRS.
+  - Confirms Post V&V / GT / Root remain required after the ResultProposal boundary and Root remains final authority.
+  - Confirms Findings B/C/D/E remain open after Phase 2.
+
 ## Current Applied Auditor Commands
 
 ```bash

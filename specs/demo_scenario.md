@@ -636,6 +636,18 @@ The current canonical proof chain is Orchestrator matrix -> Root Matrix Gate ->
 AVF AttractorPacket -> Architect PlanGraph -> DAG / Executor ResultProposal ->
 Post V&V ValidationReport -> GT -> Root Final -> DRS writeback / audit.
 
+Demo B blind-auditor debt led to Schema Contract Alignment. Phase 1 closed
+active AttractorPacket Architect contract drift by making Architect-facing
+instructions PlanGraph-only. Phase 2 clarified downstream Executor / DAG
+ResultProposal wording: Executor returns schema-valid ResultProposal, Fractal
+DAG may return ResultProposal-shaped boundary artifacts, and those artifacts
+are not FinalOutput, authority, action authorization, or DRS writeback.
+Post V&V / GT / Root remain required after the ResultProposal boundary.
+
+Remaining hardening is Runtime JSON Schema Validation, EvidenceItem.kind
+vocabulary alignment, and artifact_type vocabulary alignment. Phase 2 does not
+implement Runtime JSON Schema Validation Hardening.
+
 Post V&V from ResultProposal v0.1 is complete. It consumes DAG / Executor from
 valid PlanGraph v0.1 without hardcoding DAG / Executor PASS. Post V&V receives
 only ResultProposal artifacts and blocks raw Executor text, raw Architect

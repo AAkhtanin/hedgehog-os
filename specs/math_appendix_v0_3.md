@@ -2858,6 +2858,25 @@ The phase changes active Architect-facing invariant wording from old
 ResultProposal-only wording to PlanGraph-only wording. It does not implement
 runtime JSON Schema validation.
 
+Schema Contract Alignment v0.1 Phase 2 is contract topology wording, not new
+math:
+
+```text
+schema_contract_alignment_phase2_executor_dag_resultproposal_v01_status = complete_through_audit
+patch_type = docs_spec_wording_contract_alignment
+Architect -> PlanGraph
+Executor -> ResultProposal
+Fractal DAG -> ResultProposal-shaped boundary artifacts
+Post V&V -> GT -> Root
+runtime_jsonschema_hardening_implemented = false
+evidence_kind_alignment_implemented = false
+artifact_type_alignment_implemented = false
+```
+
+Phase 2 preserves role mapping and clarifies that ResultProposal-shaped
+boundary artifacts are not FinalOutput, authority, action authorization, or DRS
+writeback. It does not implement runtime JSON Schema hardening.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

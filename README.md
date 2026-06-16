@@ -1272,9 +1272,46 @@ readiness. Findings B/C/D/E remain open:
 `finding_d_artifact_vocabulary_mapping_needed_status=open`, and
 `finding_e_test_coverage_gap_status=partially_open`.
 
-Next recommended step: Phase 2 patch plan after review, not broad fix.
-Suggested Phase 2 scope is Executor / DAG ResultProposal contract wording and
-focused tests.
+## Schema Contract Alignment v0.1 Phase 2 — Executor / DAG ResultProposal Contract Wording
+
+Schema Contract Alignment v0.1 Phase 2 is complete through patch and audit.
+Commits: plan `fad2276`, wording patch `146d44c`, audit `6e47485`.
+
+Audit status: `schema_contract_alignment_phase2_executor_dag_resultproposal_v01_audit_status=PASS`.
+Patch type: `docs_spec_wording_contract_alignment`.
+
+Phase 2 reduced public contract ambiguity around Executor / DAG ResultProposal
+wording. It records that Architect returns PlanGraph only; Executor returns
+schema-valid ResultProposal; Fractal DAG may return ResultProposal-shaped
+boundary artifacts; ResultProposal-shaped artifacts are not FinalOutput, are
+not authority, do not authorize action, and do not write DRS. Post V&V / GT /
+Root remain required after the ResultProposal boundary, and Root remains final
+authority.
+
+Boundary facts recorded by audit:
+
+- runtime_modified: false
+- schemas_modified: false
+- tests_modified: false
+- post_vv_modified: false
+- evidence_item_kind_modified: false
+- artifact_type_modified: false
+- gt_modified: false
+- root_modified: false
+- drs_writeback_modified: false
+- runtime_jsonschema_hardening_implemented: false
+- evidence_kind_alignment_implemented: false
+- artifact_type_alignment_implemented: false
+- production_ready_claimed: false
+- public_auditor_ready_claimed: false
+
+Findings B/C/D/E remain open:
+`finding_b_runtime_validation_gap_status=open`,
+`finding_c_evidence_vocabulary_alignment_gap_status=open`,
+`finding_d_artifact_vocabulary_mapping_needed_status=open`, and
+`finding_e_test_coverage_gap_status=partially_open`.
+
+Next recommended step: Runtime JSON Schema Validation Hardening preflight/plan.
 
 ## Targeted Proof Runtime Policy
 
@@ -1481,8 +1518,9 @@ Next engineering focus:
 - Completed: Enterprise Killer Demo v0.1 / Demo A.
 - Completed: Enterprise Document Killer Demo B v0.1.
 - Completed: Schema Contract Alignment v0.1 Phase 1 — AttractorPacket Architect contract alignment.
-- Next: Schema Contract Alignment Phase 2 patch plan after review, not broad fix.
-- Later: Runtime JSON Schema Validation Hardening, EvidenceItem.kind / artifact_type vocabulary alignment, then Public Auditor Packet / Whitepaper draft.
+- Completed: Schema Contract Alignment v0.1 Phase 2 — Executor / DAG ResultProposal contract wording.
+- Next: Runtime JSON Schema Validation Hardening preflight/plan.
+- Later: EvidenceItem.kind / artifact_type vocabulary alignment, then Public Auditor Packet / Whitepaper draft.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.

@@ -1,9 +1,17 @@
 from __future__ import annotations
 
+import json
 from copy import deepcopy
+from functools import lru_cache
+from pathlib import Path
+
+import jsonschema
 
 from hedgehog.time_model import utc_now_iso
 
+
+ROOT = Path(__file__).resolve().parents[1]
+SCHEMAS_DIR = ROOT / "schemas"
 
 REQUIRED_RESULT_PROPOSAL_FIELDS = {
     "proposal_id",
@@ -28,6 +36,57 @@ REQUIRED_TIME_ENVELOPE_FIELDS = {
 FORBIDDEN_KEYS = {"final_output", "answer", "raw_user_text"}
 
 
+def _load_schema(name: str) -> dict:
+    with (SCHEMAS_DIR / name).open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+@lru_cache(maxsize=1)
+def _result_proposal_validator() -> jsonschema.Draft202012Validator:
+    common_schema = _load_schema("common.schema.json")
+    time_envelope_schema = _load_schema("time_envelope.schema.json")
+    result_proposal_schema = _load_schema("result_proposal.schema.json")
+    store = {
+        common_schema["$id"]: common_schema,
+        "common.schema.json": common_schema,
+        "https://hedgehog-os.local/schemas/common.schema.json": common_schema,
+        time_envelope_schema["$id"]: time_envelope_schema,
+        "time_envelope.schema.json": time_envelope_schema,
+        "https://hedgehog-os.local/schemas/time_envelope.schema.json": time_envelope_schema,
+        result_proposal_schema["$id"]: result_proposal_schema,
+    }
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+    return jsonschema.Draft202012Validator(
+        result_proposal_schema,
+        resolver=resolver,
+    )
+
+
+def _schema_error_location(error: jsonschema.ValidationError) -> str:
+    if not error.absolute_path:
+        return "$"
+    return ".".join(str(part) for part in error.absolute_path)
+
+
+def _result_proposal_schema_violations(candidate) -> list[dict]:
+    validator = _result_proposal_validator()
+    errors = sorted(
+        validator.iter_errors(candidate),
+        key=lambda error: (list(error.absolute_path), error.message),
+    )
+    return [
+        _violation(
+            "vv_runtime_schema_validation_failed",
+            "schema",
+            (
+                "ResultProposal runtime schema validation failed at "
+                f"{_schema_error_location(error)}: {error.message}"
+            ),
+        )
+        for error in errors
+    ]
+
+
 def _clamp_01(value: float) -> float:
     return max(0.0, min(1.0, value))
 
@@ -43,6 +102,8 @@ def _contains_forbidden_key(value) -> bool:
 
 
 def _critical_risk_present(proposal: dict) -> bool:
+    if not isinstance(proposal, dict):
+        return True
     risks = proposal.get("risks", [])
     if not isinstance(risks, list):
         return True
@@ -104,6 +165,17 @@ def _violation(violation_id: str, kind: str, description: str) -> dict:
 
 
 def _payload_semantics(candidate: dict) -> dict:
+    if not isinstance(candidate, dict):
+        return {
+            "artifact_type": None,
+            "payload_status": None,
+            "task_completed": None,
+            "requires_human_input": False,
+            "blocked_reason": None,
+            "needs_user": False,
+            "blocked": False,
+        }
+
     result_payload = candidate.get("result_payload")
     if not isinstance(result_payload, dict):
         return {
@@ -135,12 +207,37 @@ def _payload_semantics(candidate: dict) -> dict:
     }
 
 
+def _safe_id(value, fallback: str) -> str:
+    return value if isinstance(value, str) and value else fallback
+
+
+def _safe_optional_id(value) -> str | None:
+    return value if isinstance(value, str) and value else None
+
+
+def _safe_trace_refs(candidate: dict) -> list[dict]:
+    trace_refs = candidate.get("trace_refs") if isinstance(candidate, dict) else []
+    return list(trace_refs) if isinstance(trace_refs, list) else []
+
+
+def _dependency_depth(candidate: dict) -> int:
+    result_payload = candidate.get("result_payload") if isinstance(candidate, dict) else None
+    if not isinstance(result_payload, dict):
+        return 0
+    value = result_payload.get("dependency_depth", 0)
+    return value if isinstance(value, int) and value >= 0 else 0
+
+
 def validate_result_proposal(proposal: dict) -> dict:
     candidate = deepcopy(proposal)
-    violations = []
+    violations = _result_proposal_schema_violations(candidate)
 
-    schema_score = 1.0 if REQUIRED_RESULT_PROPOSAL_FIELDS <= set(candidate) else 0.0
-    if schema_score == 0.0:
+    schema_score = 0.0 if violations else 1.0
+    required_fields_present = (
+        isinstance(candidate, dict)
+        and REQUIRED_RESULT_PROPOSAL_FIELDS <= set(candidate)
+    )
+    if not required_fields_present:
         violations.append(
             _violation(
                 "vv_schema_missing_required",
@@ -149,7 +246,8 @@ def validate_result_proposal(proposal: dict) -> dict:
             )
         )
 
-    evidence_score = 1.0 if isinstance(candidate.get("evidence"), list) and candidate["evidence"] else 0.0
+    evidence = candidate.get("evidence") if isinstance(candidate, dict) else None
+    evidence_score = 1.0 if isinstance(evidence, list) and evidence else 0.0
     if evidence_score == 0.0:
         violations.append(
             _violation(
@@ -169,7 +267,7 @@ def validate_result_proposal(proposal: dict) -> dict:
             )
         )
 
-    time_envelope = candidate.get("time_envelope")
+    time_envelope = candidate.get("time_envelope") if isinstance(candidate, dict) else None
     time_score = (
         1.0
         if isinstance(time_envelope, dict)
@@ -197,7 +295,8 @@ def validate_result_proposal(proposal: dict) -> dict:
 
     consistency_score = (
         1.0
-        if candidate.get("proposal_id")
+        if isinstance(candidate, dict)
+        and candidate.get("proposal_id")
         and candidate.get("vector_id")
         and candidate.get("plan_id")
         and isinstance(candidate.get("result_payload"), dict)
@@ -249,8 +348,8 @@ def validate_result_proposal(proposal: dict) -> dict:
         "consistency": consistency_score,
     }
     overall_score = sum(scores.values()) / len(scores)
-    avf_final_viability = _avf_final_viability(candidate)
-    avf_soft_mask = _avf_soft_mask(candidate)
+    avf_final_viability = _avf_final_viability(candidate) if isinstance(candidate, dict) else None
+    avf_soft_mask = _avf_soft_mask(candidate) if isinstance(candidate, dict) else None
     utility = overall_score
     if (
         avf_final_viability is not None
@@ -283,7 +382,7 @@ def validate_result_proposal(proposal: dict) -> dict:
             decision = "revise"
         else:
             decision = "accept"
-    elif schema_score == 0.0 or policy_score == 0.0:
+    elif schema_score == 0.0 or policy_score == 0.0 or safety_score == 0.0:
         decision = "reject"
     else:
         decision = "revise"
@@ -294,13 +393,14 @@ def validate_result_proposal(proposal: dict) -> dict:
         "revise": "needs_revision",
     }[decision]
 
+    proposal_id = _safe_id(
+        candidate.get("proposal_id") if isinstance(candidate, dict) else None,
+        "missing_proposal",
+    )
     report = {
-        "vv_report_id": f"vv:{candidate.get('proposal_id', 'missing_proposal')}",
-        "proposal_id": candidate.get("proposal_id", "missing_proposal"),
-        "vector_id": candidate.get("vector_id") or _avf_vector_id(candidate),
-        "artifact_type": semantics["artifact_type"],
-        "execution_status": semantics["payload_status"] or status,
-        "dependency_depth": candidate.get("result_payload", {}).get("dependency_depth", 0),
+        "vv_report_id": f"vv:{proposal_id}",
+        "proposal_id": proposal_id,
+        "dependency_depth": _dependency_depth(candidate),
         "status": status,
         "scores": scores,
         "overall_score": overall_score,
@@ -310,17 +410,33 @@ def validate_result_proposal(proposal: dict) -> dict:
         "normalized_features": {
             "utility": utility,
             "robustness": robustness,
-            "compute_cost": _compute_cost_score(candidate.get("cost", {})),
+            "compute_cost": _compute_cost_score(candidate.get("cost", {}) if isinstance(candidate, dict) else {}),
             "violations": _clamp_01(1.0 - policy_score + semantic_penalty),
             "transfer": 0.0,
             "novelty_guard": 0.0,
             "avf_final_viability": avf_final_viability,
             "avf_soft_mask": avf_soft_mask,
         },
-        "trace_refs": list(candidate.get("trace_refs", [])),
+        "trace_refs": _safe_trace_refs(candidate),
     }
-    if "request_id" in candidate:
-        report["request_id"] = candidate["request_id"]
+    vector_id = _safe_optional_id(
+        candidate.get("vector_id") if isinstance(candidate, dict) else None
+    ) or (
+        _safe_optional_id(_avf_vector_id(candidate))
+        if isinstance(candidate, dict)
+        else None
+    )
+    if vector_id is not None:
+        report["vector_id"] = vector_id
+    if isinstance(semantics["artifact_type"], str) and semantics["artifact_type"]:
+        report["artifact_type"] = semantics["artifact_type"]
+    execution_status = semantics["payload_status"] or status
+    if isinstance(execution_status, str) and execution_status:
+        report["execution_status"] = execution_status
+    if isinstance(candidate, dict) and "request_id" in candidate:
+        request_id = _safe_optional_id(candidate["request_id"])
+        if request_id is not None:
+            report["request_id"] = request_id
     return report
 
 

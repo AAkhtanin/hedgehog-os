@@ -45,6 +45,14 @@ def contains_key(value, forbidden_key):
     return False
 
 
+def violation_ids(report):
+    return {violation["violation_id"] for violation in report["violations"]}
+
+
+def violation_text(report):
+    return " ".join(violation["description"] for violation in report["violations"])
+
+
 def build_demo_proposals():
     vectors = load_candidate_vectors_from_needles(
         [
@@ -97,6 +105,62 @@ def test_validate_demo_result_proposals_are_task_aware_and_schema_valid():
     assert by_artifact["submission_simulation"]["status"] == "needs_revision"
 
 
+def test_missing_required_result_proposal_field_rejected_by_runtime_schema_validation():
+    proposal = deepcopy(build_demo_proposals()[0])
+    del proposal["producer"]
+
+    report = validate_result_proposal(proposal)
+
+    assert report["decision"] == "reject"
+    assert report["status"] == "rejected"
+    assert report["scores"]["schema"] == 0.0
+    assert "vv_runtime_schema_validation_failed" in violation_ids(report)
+    assert "producer" in violation_text(report)
+
+
+def test_bad_nested_time_envelope_rejected_by_runtime_schema_validation():
+    proposal = deepcopy(build_demo_proposals()[0])
+    proposal["time_envelope"]["ttl_seconds"] = -1
+
+    report = validate_result_proposal(proposal)
+
+    assert report["decision"] == "reject"
+    assert report["scores"]["schema"] == 0.0
+    assert "vv_runtime_schema_validation_failed" in violation_ids(report)
+    assert "time_envelope.ttl_seconds" in violation_text(report)
+
+
+def test_malformed_risk_severity_rejected_by_runtime_schema_validation():
+    proposal = deepcopy(build_demo_proposals()[0])
+    proposal["risks"] = [
+        {
+            "risk_id": "risk:bad_schema_shape",
+            "severity": "severe",
+            "description": "Severity is outside the ResultProposal enum.",
+        }
+    ]
+
+    report = validate_result_proposal(proposal)
+
+    assert report["decision"] == "reject"
+    assert report["scores"]["schema"] == 0.0
+    assert "vv_runtime_schema_validation_failed" in violation_ids(report)
+    assert "risks.0.severity" in violation_text(report)
+
+
+def test_extra_top_level_field_rejected_by_runtime_schema_validation():
+    proposal = deepcopy(build_demo_proposals()[0])
+    proposal["unexpected_runtime_field"] = True
+
+    report = validate_result_proposal(proposal)
+
+    assert report["decision"] == "reject"
+    assert report["scores"]["schema"] == 0.0
+    assert "vv_runtime_schema_validation_failed" in violation_ids(report)
+    assert "Additional properties are not allowed" in violation_text(report)
+    assert "unexpected_runtime_field" in violation_text(report)
+
+
 def test_completed_prepare_request_payload_remains_accepted():
     proposals = build_demo_proposals()
     reports = validate_result_proposals(proposals)
@@ -133,6 +197,24 @@ def test_submission_simulation_blocked_before_completion_revises():
     )
 
 
+def test_schema_valid_critical_risk_still_rejected_by_manual_safety_check():
+    proposal = deepcopy(build_demo_proposals()[0])
+    proposal["risks"] = [
+        {
+            "risk_id": "risk:critical_manual_check",
+            "severity": "critical",
+            "description": "Critical risk should be rejected after schema validation passes.",
+        }
+    ]
+
+    report = validate_result_proposal(proposal)
+
+    assert report["decision"] == "reject"
+    assert report["scores"]["schema"] == 1.0
+    assert report["scores"]["safety"] == 0.0
+    assert "vv_safety_critical_risk" in violation_ids(report)
+
+
 def test_forbidden_final_output_key_rejects_policy():
     proposal = deepcopy(build_demo_proposals()[0])
     proposal["result_payload"]["final_output"] = "not allowed"
@@ -142,6 +224,18 @@ def test_forbidden_final_output_key_rejects_policy():
     assert report["decision"] == "reject"
     assert report["scores"]["policy"] == 0.0
     assert report["normalized_features"]["utility"] == report["overall_score"]
+    assert "vv_policy_forbidden_key" in violation_ids(report)
+
+
+def test_forbidden_answer_key_still_rejected_by_manual_policy_check():
+    proposal = deepcopy(build_demo_proposals()[0])
+    proposal["result_payload"]["answer"] = "not allowed"
+
+    report = validate_result_proposal(proposal)
+
+    assert report["decision"] == "reject"
+    assert report["scores"]["policy"] == 0.0
+    assert "vv_policy_forbidden_key" in violation_ids(report)
 
 
 def test_missing_time_envelope_revises_or_rejects_time():
@@ -152,6 +246,22 @@ def test_missing_time_envelope_revises_or_rejects_time():
 
     assert report["decision"] != "accept"
     assert report["scores"]["time"] == 0.0
+
+
+def test_malformed_proposal_does_not_crash_post_vv():
+    report = validate_result_proposal(
+        {
+            "proposal_id": "rp:malformed",
+            "trace_refs": "not-a-list",
+        }
+    )
+
+    assert report["decision"] == "reject"
+    assert report["status"] == "rejected"
+    assert report["proposal_id"] == "rp:malformed"
+    assert report["trace_refs"] == []
+    assert report["scores"]["schema"] == 0.0
+    assert "vv_runtime_schema_validation_failed" in violation_ids(report)
 
 
 def test_vv_report_has_no_root_or_user_facing_output_keys():

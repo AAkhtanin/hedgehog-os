@@ -1,0 +1,303 @@
+HEADER
+
+artifact_type_mapping_runtime_vocabulary_v01_audit_status: PASS
+audited_layer: artifact_type_mapping_runtime_vocabulary_v01_option_a_docs_spec_map
+preflight_commit: b4aaf8e
+patch_plan_commit: c4f9a02
+map_commit: d3193a2
+option_selected: Option A docs/spec human-readable artifact vocabulary map
+
+This audit verifies that commit d3193a2 implemented only the approved Option A
+docs/spec human-readable artifact vocabulary map for artifact_type Mapping /
+Runtime Artifact Vocabulary v0.1.
+
+COMMIT EVIDENCE
+
+preflight_commit: b4aaf8e Add artifact type runtime vocabulary preflight
+patch_plan_commit: c4f9a02 Add artifact type runtime vocabulary patch plan
+map_commit: d3193a2 Document artifact type runtime vocabulary map
+
+The audited map commit file list was checked with `git show --name-only
+--format=short d3193a2`.
+
+CHANGED FILES VERIFIED
+
+Changed files from map commit d3193a2:
+
+- docs/artifact_type_mapping_runtime_vocabulary_v01.md
+- README.md
+- AGENTS.md
+- specs/schema_package_v0_25_reference.md
+- specs/invariants.md
+- specs/human_passport_v0_25.md
+- specs/machine_manifest_v0_25.json
+
+No runtime, schema, test, GT, Root, DRS, Transition Matrix, or DRS lifecycle
+file was present in the audited commit file list.
+
+SCOPE RESULT
+
+docs_spec_map_created: true
+runtime_modified: false
+schemas_modified: false
+tests_modified: false
+registry_created: false
+enum_created: false
+evidenceitem_kind_modified: false
+transition_matrix_modified: false
+drs_lifecycle_modified: false
+gt_modified: false
+root_modified: false
+drs_modified: false
+negative_trace_layer_created: false
+marennya_activated: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+PRINCIPLE AUDITED
+
+map_first_constrain_later_enum_last_if_needed: true
+
+The map records the principle as: Map first, constrain later, enum last if
+still needed.
+
+CANONICAL AXES AUDITED
+
+The Option A map separates these axes:
+
+- artifact_type
+- source_artifact_type
+- EvidenceItem.kind / evidence_kind
+- TraceRef.kind
+- lifecycle_state / status
+- authority_status
+
+Audit interpretation:
+
+- artifact_type is semantic metadata / classification only.
+- source_artifact_type is audit/lifecycle/proof source metadata only.
+- EvidenceItem.kind remains local ResultProposal evidence
+  classification/source/provenance.
+- TraceRef.kind is trace metadata and not EvidenceItem.kind.
+- lifecycle_state / status records process state.
+- authority_status records whether an artifact can decide anything.
+
+MAP CONTENT AUDITED
+
+A. Active runtime payload artifact_type values audited:
+
+- generic_simulated_result
+- request_payload
+- field_validation
+- submission_simulation
+- visit_checklist
+- visit_estimate
+- delegation_requirements
+- authorization_validation
+- missing_requirements_research
+- human_review_questions
+- needle_runtime_result
+
+B. Schema/report artifact names audited:
+
+- ResultProposal
+- VVReport
+- ValidationReport
+- PostVVReport
+- GTReport
+- RootFinalOutput
+- DRSRecord
+
+C. Proof taxonomy / external evidence terms audited:
+
+- ConnectorObservation
+- EvidenceCandidate
+- ValidationPacket
+- AcceptedEvidence
+- RejectedEvidence
+- QuarantinedEvidence
+- SemanticDraft
+- NeedleCandidate
+- ManifestCandidate
+- ExternalDRSPointer
+
+D. Audit/lifecycle source_artifact_type values audited:
+
+- DRSWritebackAuditRecord
+- NeedleExecutionResult
+- ChildBoundarySnapshot
+- ChildExecutionResult
+- ChildExecutionResult/ChildBoundarySnapshot
+- DrsLifecycleSemanticsReport
+- ConflictCheckReport
+- FinalDayCheckpointSummary
+- AppliedWarehouseSemanticDemoArtifact
+- AppliedCertificateReadinessArtifact
+- AppliedDrsRetrievalReuseProofArtifact
+- PermissionNeedsUserProofArtifact
+- NeedleCandidateLifecycleProofArtifact
+- SyntheticRepeatedValidationSummary
+- SyntheticNeedleCandidateDraft
+
+E. Boundary/authority vocabulary audited:
+
+- RootFinalArtifact
+- AuditEvent
+- TraceRef
+- EvidenceItem.kind
+- artifact_type
+- source_artifact_type
+- lifecycle_state
+- authority_status
+
+GUARDRAILS AUDITED
+
+artifact_type_creates_truth: false
+artifact_type_creates_authority: false
+artifact_type_implies_accepted_evidence: false
+artifact_type_authorizes_action: false
+artifact_type_writes_drs: false
+artifact_type_creates_finaloutput: false
+source_artifact_type_creates_truth: false
+source_artifact_type_creates_authority: false
+evidenceitem_kind_creates_truth: false
+evidenceitem_kind_creates_authority: false
+trace_ref_creates_evidence: false
+audit_event_creates_truth: false
+audit_hash_creates_truth: false
+accepted_evidence_authorizes_action_by_itself: false
+gt_report_is_advisory: true
+drs_record_is_memory_not_authority: true
+root_final_output_created_only_by_root: true
+root_remains_final_authority: true
+
+REJECTED / DEFERRED WORK AUDITED
+
+runtime_artifact_registry_recommended_now: false
+artifact_type_schema_enum_recommended_now: false
+broad_schema_enum_rejected_now: true
+global_artifact_ontology_rejected_now: true
+runtime_constants_option_b_deferred: true
+source_artifact_type_option_e_deferred: true
+guardrail_tests_option_d_deferred: true
+future_schema_enum_option_c_deferred: true
+
+The map does not implement Option B runtime constants, Option C schema enum,
+Option D guardrail tests, or Option E source_artifact_type split.
+
+AUDIT INTERPRETATION
+
+The map is a human-readable vocabulary baseline only.
+It does not implement enforcement.
+It does not implement runtime constants.
+It does not implement schema enum.
+It does not modify runtime behavior.
+It does not change authority.
+It does not claim permanent closure of artifact vocabulary work.
+It prepares the ground for later staged Option B/C/D/E work.
+
+FINDINGS STATUS
+
+option_a_docs_spec_map_status: implemented
+artifact_type_mapping_status: implemented_as_docs_spec_map_only
+source_artifact_type_mapping_status: mapped_at_high_level_deferred_for_split
+runtime_registry_status: not_created_deferred
+schema_enum_status: not_created_deferred
+guardrail_tests_status: deferred
+full_artifact_vocabulary_completion_status: not_claimed
+overengineering_risk_status: controlled_by_docs_first_map
+root_authority_status: preserved
+
+WHAT THIS FIXES
+
+- Creates a canonical human-readable vocabulary baseline.
+- Separates artifact_type from source_artifact_type.
+- Separates artifact_type from EvidenceItem.kind / evidence_kind.
+- Separates TraceRef.kind from evidence.
+- Separates lifecycle_state / status from artifact_type.
+- Separates authority_status from artifact naming.
+- Records Root-only final-output authority guardrails.
+
+WHAT THIS DOES NOT FIX
+
+- Does not implement runtime enforcement.
+- Does not create runtime constants.
+- Does not create schema enum.
+- Does not create a runtime artifact registry.
+- Does not modify runtime behavior.
+- Does not modify schemas.
+- Does not modify tests.
+- Does not modify EvidenceItem.kind.
+- Does not modify ResultProposal, VVReport, GTReport, FinalOutput, or DRS
+  schemas.
+- Does not modify GT, Root, or DRS.
+- Does not modify Transition Matrix or DRS lifecycle.
+- Does not create Negative Trace layer.
+- Does not activate Marennya / UP.
+- Does not claim permanent closure of artifact vocabulary work.
+
+NEXT RECOMMENDED STEP
+
+next_recommended_step: docs sync for artifact_type Mapping / Runtime Artifact Vocabulary v0.1 audit; then decide whether to ask Guardian to review Option A map before any Option B/C/D/E work.
+no_runtime_schema_patch_before_review: true
+
+AUDIT SUMMARY
+
+artifact_type_mapping_runtime_vocabulary_v01_audit_status: PASS
+audited_layer: artifact_type_mapping_runtime_vocabulary_v01_option_a_docs_spec_map
+preflight_commit: b4aaf8e
+patch_plan_commit: c4f9a02
+map_commit: d3193a2
+option_selected: Option A docs/spec human-readable artifact vocabulary map
+docs_spec_map_created: true
+runtime_modified: false
+schemas_modified: false
+tests_modified: false
+registry_created: false
+enum_created: false
+evidenceitem_kind_modified: false
+transition_matrix_modified: false
+drs_lifecycle_modified: false
+gt_modified: false
+root_modified: false
+drs_modified: false
+negative_trace_layer_created: false
+marennya_activated: false
+map_first_constrain_later_enum_last_if_needed: true
+artifact_type_creates_truth: false
+artifact_type_creates_authority: false
+artifact_type_implies_accepted_evidence: false
+artifact_type_authorizes_action: false
+artifact_type_writes_drs: false
+artifact_type_creates_finaloutput: false
+source_artifact_type_creates_truth: false
+source_artifact_type_creates_authority: false
+evidenceitem_kind_creates_truth: false
+evidenceitem_kind_creates_authority: false
+trace_ref_creates_evidence: false
+audit_event_creates_truth: false
+audit_hash_creates_truth: false
+accepted_evidence_authorizes_action_by_itself: false
+gt_report_is_advisory: true
+drs_record_is_memory_not_authority: true
+root_final_output_created_only_by_root: true
+root_remains_final_authority: true
+runtime_artifact_registry_recommended_now: false
+artifact_type_schema_enum_recommended_now: false
+broad_schema_enum_rejected_now: true
+global_artifact_ontology_rejected_now: true
+runtime_constants_option_b_deferred: true
+source_artifact_type_option_e_deferred: true
+guardrail_tests_option_d_deferred: true
+future_schema_enum_option_c_deferred: true
+option_a_docs_spec_map_status: implemented
+artifact_type_mapping_status: implemented_as_docs_spec_map_only
+source_artifact_type_mapping_status: mapped_at_high_level_deferred_for_split
+runtime_registry_status: not_created_deferred
+schema_enum_status: not_created_deferred
+guardrail_tests_status: deferred
+full_artifact_vocabulary_completion_status: not_claimed
+overengineering_risk_status: controlled_by_docs_first_map
+root_authority_status: preserved
+production_ready_claimed: false
+public_auditor_ready_claimed: false

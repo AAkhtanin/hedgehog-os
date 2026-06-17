@@ -148,6 +148,7 @@
             "policy",
             "trace",
             "simulated_executor",
+            "fractal_dag_executor",
             "manual"
           ]
         },

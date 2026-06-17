@@ -36,6 +36,26 @@ def vv_report_validator():
     return jsonschema.Draft202012Validator(vv_report_schema, resolver=resolver)
 
 
+def result_proposal_validator():
+    common_schema = load_json(SCHEMAS_DIR / "common.schema.json")
+    time_envelope_schema = load_json(SCHEMAS_DIR / "time_envelope.schema.json")
+    result_proposal_schema = load_json(SCHEMAS_DIR / "result_proposal.schema.json")
+    store = {
+        common_schema["$id"]: common_schema,
+        "common.schema.json": common_schema,
+        "https://hedgehog-os.local/schemas/common.schema.json": common_schema,
+        time_envelope_schema["$id"]: time_envelope_schema,
+        "time_envelope.schema.json": time_envelope_schema,
+        "https://hedgehog-os.local/schemas/time_envelope.schema.json": time_envelope_schema,
+        result_proposal_schema["$id"]: result_proposal_schema,
+    }
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+    return jsonschema.Draft202012Validator(
+        result_proposal_schema,
+        resolver=resolver,
+    )
+
+
 def contains_key(value, forbidden_key):
     if isinstance(value, dict):
         return forbidden_key in value or any(
@@ -75,6 +95,12 @@ def build_demo_proposals():
     return execute_plan_graph(plan_graph, session_anchor="sess_post_vv_001")
 
 
+def proposal_with_evidence_kind(kind: str):
+    proposal = deepcopy(build_demo_proposals()[0])
+    proposal["evidence"][0]["kind"] = kind
+    return proposal
+
+
 def reports_by_artifact(proposals, reports):
     return {
         proposal["result_payload"]["artifact_type"]: report
@@ -104,6 +130,71 @@ def test_validate_demo_result_proposals_are_task_aware_and_schema_valid():
     assert by_artifact["field_validation"]["status"] == "needs_revision"
     assert by_artifact["submission_simulation"]["decision"] == "revise"
     assert by_artifact["submission_simulation"]["status"] == "needs_revision"
+
+
+def test_fractal_dag_executor_evidence_kind_validates_result_proposal_schema():
+    proposal = proposal_with_evidence_kind("fractal_dag_executor")
+
+    result_proposal_validator().validate(proposal)
+
+
+def test_fractal_dag_executor_evidence_kind_does_not_create_authority_or_accepted_evidence():
+    proposal = proposal_with_evidence_kind("fractal_dag_executor")
+    report = validate_result_proposal(proposal)
+
+    vv_report_validator().validate(report)
+    assert report["proposal_id"] == proposal["proposal_id"]
+    assert not contains_key(proposal, "final_output")
+    assert not contains_key(report, "final_output")
+    assert not contains_key(proposal, "authority")
+    assert not contains_key(report, "authority")
+    assert not contains_key(proposal, "AcceptedEvidence")
+    assert not contains_key(report, "AcceptedEvidence")
+    assert not contains_key(proposal, "accepted_evidence")
+    assert not contains_key(report, "accepted_evidence")
+    assert not contains_key(proposal, "action_authorized")
+    assert not contains_key(report, "action_authorized")
+    assert not contains_key(proposal, "action_executed")
+    assert not contains_key(report, "action_executed")
+    assert not contains_key(proposal, "drs_write")
+    assert not contains_key(report, "drs_write")
+    assert not contains_key(proposal, "drs_writes")
+    assert not contains_key(report, "drs_writes")
+
+
+def test_simulated_executor_evidence_kind_still_validates_result_proposal_schema():
+    proposal = proposal_with_evidence_kind("simulated_executor")
+
+    result_proposal_validator().validate(proposal)
+
+
+def test_unknown_evidence_kind_is_still_rejected_by_runtime_schema_validation():
+    proposal = proposal_with_evidence_kind("unknown_evidence_kind")
+
+    report = validate_result_proposal(proposal)
+
+    assert report["decision"] == "reject"
+    assert report["status"] == "rejected"
+    assert "vv_runtime_schema_validation_failed" in violation_ids(report)
+    assert "unknown_evidence_kind" in violation_text(report)
+    vv_report_validator().validate(report)
+
+
+def test_malformed_evidence_item_shape_is_still_rejected_by_runtime_schema_validation():
+    proposal = proposal_with_evidence_kind("fractal_dag_executor")
+    proposal["evidence"][0] = {
+        "kind": "fractal_dag_executor",
+        "description": "Malformed EvidenceItem shape keeps old description field.",
+    }
+
+    report = validate_result_proposal(proposal)
+
+    assert report["decision"] == "reject"
+    assert report["status"] == "rejected"
+    assert "vv_runtime_schema_validation_failed" in violation_ids(report)
+    assert "summary" in violation_text(report)
+    assert "description" in violation_text(report)
+    vv_report_validator().validate(report)
 
 
 def test_missing_required_result_proposal_field_rejected_by_runtime_schema_validation():

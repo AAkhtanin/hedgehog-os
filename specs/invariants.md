@@ -650,3 +650,10 @@ Runtime JSON Schema Validation Hardening v0.1:
 - Schema validation cannot grant authority.
 - EvidenceItem.kind / artifact_type alignment remain open.
 - Root remains final authority.
+
+EvidenceItem.kind alignment invariant:
+
+- EvidenceItem.kind is a local ResultProposal evidence classification.
+- EvidenceItem.kind does not create truth, authority, AcceptedEvidence, action
+  permission, DRS write, or FinalOutput.
+- Root remains final authority.

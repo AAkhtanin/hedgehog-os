@@ -53,6 +53,20 @@ Phase 2 Executor / DAG ResultProposal contract note:
   evidence, not action authorization, and not DRS writeback.
 - Post V&V / GT / Root remain required before any final answer or writeback.
 
+EvidenceItem.kind alignment note:
+
+- Active `$defs.EvidenceItem.properties.kind.enum` is:
+  `drs_record`, `needle`, `schema`, `policy`, `trace`,
+  `simulated_executor`, `fractal_dag_executor`, and `manual`.
+- `fractal_dag_executor` is a local ResultProposal evidence classification for
+  Fractal DAG boundary evidence. It is not truth, authority,
+  AcceptedEvidence, action permission, DRS writeback, or FinalOutput.
+- Do not copy `audit`, `needle_runtime`, `executor_node`,
+  `fractal_dag_executor_node`, `EvidenceCandidate`, `ValidationPacket`,
+  `RootFinalOutput`, `GTReport`, `AuditEvent`, `ChildBoundarySnapshot`,
+  `SemanticDraft`, `NeedleCandidate`, or `ManifestCandidate` into the active
+  EvidenceItem.kind enum from this reference note.
+
 Use this file only as a comparison artifact. Do not overwrite active schemas from this file without checking the current passport and active tests.
 
 common.schema.json

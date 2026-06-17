@@ -1143,6 +1143,13 @@ before return, is additive, preserves manual policy/safety checks, and returns
 a safe schema-conforming rejected VVReport on validation failure. EvidenceItem.kind
 and artifact_type remain the separate next planning layer.
 
+EvidenceItem.kind Alignment v0.1 added only `fractal_dag_executor` as a local
+ResultProposal evidence classification. `audit` and `needle_runtime` were not
+added. artifact_type remains separate. The label records source/provenance of
+Fractal DAG boundary evidence; it does not make Fractal DAG Root, does not
+create truth or authority, and does not create FinalOutput. Root remains final
+authority.
+
 ## Exclusions
 
 - No real external APIs.

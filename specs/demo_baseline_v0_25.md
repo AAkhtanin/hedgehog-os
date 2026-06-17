@@ -1480,6 +1480,15 @@ with a schema violation instead of crashing. Checkpoint evidence: preflight
 modification is part of this docs sync. EvidenceItem.kind and artifact_type
 remain future work.
 
+EvidenceItem.kind Alignment v0.1 is complete through narrow patch and audit.
+It adds `fractal_dag_executor` only as a local ResultProposal evidence
+classification for Fractal DAG executor evidence. `audit`, `needle_runtime`,
+`executor_node`, and `fractal_dag_executor_node` were not added. artifact_type
+was not touched. Checkpoint evidence: plan `2685921`, patch `4ced110`, audit
+`0eb58c1`, `targeted_batch: 25 passed, 22 warnings`, and jsonschema.RefResolver
+deprecation warning `non_blocking`. No runtime / artifact_type / GT / Root /
+DRS modification is part of this checkpoint.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

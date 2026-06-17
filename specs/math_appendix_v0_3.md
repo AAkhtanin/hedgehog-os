@@ -2920,6 +2920,25 @@ artifact_type_alignment_implemented = false
 The Post V&V runtime schema boundary is now two-sided: ResultProposal in,
 VVReport out. This does not validate every artifact in the system.
 
+EvidenceItem.kind Alignment v0.1 is schema vocabulary hardening, not new math:
+
+```text
+evidenceitem_kind_alignment_v01_status = complete_through_audit
+patch_type = narrow_evidenceitem_kind_enum_expansion
+evidenceitem_kind_added = fractal_dag_executor
+added_enum_values_count = 1
+audit_added_to_evidenceitem_kind = false
+needle_runtime_added_to_evidenceitem_kind = false
+artifact_vocab_terms_added_to_evidenceitem_kind = false
+evidenceitem_kind_creates_truth = false
+evidenceitem_kind_creates_authority = false
+evidenceitem_kind_creates_finaloutput = false
+root_remains_final_authority = true
+```
+
+This adds `fractal_dag_executor` only. It does not alter authority, artifact_type,
+runtime math, Post V&V scoring, GT, Root, or DRS.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

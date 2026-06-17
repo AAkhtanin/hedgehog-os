@@ -1412,6 +1412,49 @@ EvidenceItem.kind / artifact_type preflight planning remains next:
 `artifact_type_alignment_implemented=false`, `production_ready_claimed=false`,
 and `public_auditor_ready_claimed=false`.
 
+## EvidenceItem.kind Alignment v0.1
+
+EvidenceItem.kind Alignment v0.1 is complete through narrow patch and audit.
+Commits: plan `2685921`, patch `4ced110`, audit `0eb58c1`.
+
+Audit status: `evidenceitem_kind_alignment_v01_audit_status=PASS`.
+Patch type: `narrow_evidenceitem_kind_enum_expansion`.
+
+Exact enum addition: `fractal_dag_executor` only. The patch did not add
+`audit`, `needle_runtime`, `executor_node`, or `fractal_dag_executor_node` to
+EvidenceItem.kind. It did not touch artifact_type.
+
+Checkpoint fields:
+
+- added_enum_values_count: 1
+- audit_added_to_evidenceitem_kind: false
+- needle_runtime_added_to_evidenceitem_kind: false
+- artifact_vocab_terms_added_to_evidenceitem_kind: false
+
+EvidenceItem.kind remains a local ResultProposal evidence classification, not
+artifact_type and not a global artifact registry. `fractal_dag_executor`
+records source/provenance of Fractal DAG boundary evidence; it does not make
+Fractal DAG Root. Fractal DAG output remains downstream of Post V&V, GT, and
+Root.
+
+Authority guardrails recorded by audit:
+
+- evidenceitem_kind_creates_truth: false
+- evidenceitem_kind_creates_authority: false
+- evidenceitem_kind_implies_accepted_evidence: false
+- evidenceitem_kind_authorizes_action: false
+- evidenceitem_kind_writes_drs: false
+- evidenceitem_kind_creates_finaloutput: false
+- root_remains_final_authority: true
+
+Test evidence recorded by audit: `25 passed, 22 warnings`; the
+jsonschema.RefResolver deprecation warning is `non_blocking`.
+
+Deferred work remains explicit: NeedleRuntime evidence shape was not
+normalized, `audit` was not added to EvidenceItem.kind, and artifact_type
+Mapping remains a separate later layer. Next: NeedleRuntime audit evidence
+shape preflight.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1605,6 +1648,7 @@ Completed recent layers:
 - Enterprise Killer Demo v0.1 / Demo A.
 - Enterprise Document Killer Demo B v0.1.
 - Schema Contract Alignment v0.1 Phase 1 — AttractorPacket Architect contract alignment.
+- EvidenceItem.kind Alignment v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
@@ -1620,7 +1664,9 @@ Next engineering focus:
 - Completed: Schema Contract Alignment v0.1 Phase 2 — Executor / DAG ResultProposal contract wording.
 - Completed: Runtime JSON Schema Validation Hardening v0.1 — Post V&V incoming ResultProposal validation.
 - Completed: Outgoing VVReport Runtime Schema Validation v0.1.
-- Next: EvidenceItem.kind / artifact_type preflight planning.
+- Completed: EvidenceItem.kind Alignment v0.1 — narrow Fractal DAG executor evidence kind patch.
+- Next: NeedleRuntime audit evidence shape preflight.
+- Later: artifact_type Mapping / Runtime Artifact Vocabulary as a separate layer.
 - Later: Public Auditor Packet / Whitepaper draft after remaining schema-contract decisions.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.

@@ -2828,6 +2828,13 @@ authority. The outgoing fallback is a safe rejected VVReport, not execution.
 EvidenceItem.kind vocabulary alignment and artifact_type vocabulary alignment
 remain future phases. Root remains final authority.
 
+EvidenceItem.kind Alignment v0.1 is complete through narrow patch and audit.
+EvidenceItem.kind is the small label on evidence inside ResultProposal. It now
+recognizes Fractal DAG executor evidence with `fractal_dag_executor`. The label
+does not make anything true, final, accepted evidence, action permission, DRS
+write, or authority. `audit` and `needle_runtime` were not added. artifact_type
+remains separate. Root remains final authority.
+
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal
 expansion, dual coupling, DRS bridge evidence, chaos/failure traces, math

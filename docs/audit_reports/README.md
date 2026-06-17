@@ -282,6 +282,15 @@ Current reports:
   - Confirms outgoing validation runs before return, is additive, preserves manual checks, and falls back to safe rejected VVReport on validation failure.
   - Confirms EvidenceItem.kind / artifact_type remain open.
 
+- `auditor_evidenceitem_kind_alignment_v01.log`
+  - EvidenceItem.kind Alignment v0.1 audit for the narrow enum expansion.
+  - Audit status PASS. Evidence: plan commit `2685921`, patch commit `4ced110`, audit commit `0eb58c1`.
+  - Confirms `patch_type=narrow_evidenceitem_kind_enum_expansion`.
+  - Confirms the exact enum addition is `fractal_dag_executor` only.
+  - Confirms `audit_added_to_evidenceitem_kind=false`, `needle_runtime_added_to_evidenceitem_kind=false`, and `artifact_vocab_terms_added_to_evidenceitem_kind=false`.
+  - Confirms authority guardrails: EvidenceItem.kind does not create truth, authority, AcceptedEvidence, action permission, DRS write, or FinalOutput; Root remains final authority.
+  - Confirms NeedleRuntime evidence shape and artifact_type Mapping remain deferred.
+
 ## Current Applied Auditor Commands
 
 ```bash

@@ -1,0 +1,380 @@
+HEADER
+======
+
+Audit: NeedleRuntime Audit Evidence Shape v0.1
+Scope: narrow Option B schema/runtime-adapter/test patch for NeedleRuntime audit evidence shape
+Created for: committed patch chain review
+
+needleruntime_audit_evidence_shape_v01_audit_status: PASS
+patch_type: option_b_add_audit_and_normalize_shape
+
+This audit records the narrow patch that added `audit` to active
+EvidenceItem.kind and normalized only the NeedleRuntime audit evidence object
+to the active EvidenceItem shape. It does not claim artifact_type Mapping,
+NeedleRuntime authority, broader artifact vocabulary completion, production
+readiness, or public-auditor readiness.
+
+
+COMMIT EVIDENCE
+===============
+
+preflight_commit: 99592a6
+preflight_commit_name: Add NeedleRuntime audit evidence shape preflight
+
+patch_plan_commit: fd9e862
+patch_plan_commit_name: Add NeedleRuntime audit evidence shape patch plan
+
+patch_commit: f0bf7be
+patch_commit_name: Normalize NeedleRuntime audit evidence shape
+
+
+FILES CHANGED BY PATCH
+======================
+
+schemas/common.schema.json
+specs/schema_package_v0_25_reference.md
+specs/invariants.md
+hedgehog/needle_runtime.py
+tests/test_needle_failure_integration_runner.py
+tests/test_post_vv_runtime.py
+
+schema_modified: true
+runtime_adapter_modified: true
+reference_docs_modified: true
+invariants_modified: true
+tests_modified: true
+
+artifact_type_modified: false
+transition_matrix_modified: false
+drs_lifecycle_modified: false
+gt_modified: false
+root_modified: false
+drs_modified: false
+negative_trace_layer_created: false
+marennya_activated: false
+
+
+PATCH SCOPE
+===========
+
+Patch scope:
+
+- Add only `audit` to active EvidenceItem.kind.
+- Normalize only the NeedleRuntime audit evidence object to active
+  EvidenceItem fields.
+- Keep `needle_runtime` as trace_refs.kind only.
+- Keep artifact_type Mapping deferred and separate.
+- Preserve GT, Root, DRS, Transition Matrix, DRS lifecycle, Negative Trace,
+  and Marennya boundaries.
+
+The patch does not add `needle_runtime`, `executor_node`,
+`fractal_dag_executor_node`, or global artifact vocabulary terms to
+EvidenceItem.kind.
+
+
+EXACT ENUM RESULT
+=================
+
+evidenceitem_kind_added: audit
+added_enum_values_count: 1
+
+audit_added_to_evidenceitem_kind: true
+needle_runtime_added_to_evidenceitem_kind: false
+executor_node_added_to_evidenceitem_kind: false
+fractal_dag_executor_node_added_to_evidenceitem_kind: false
+artifact_vocab_terms_added_to_evidenceitem_kind: false
+
+Allowed active EvidenceItem.kind result after patch:
+
+- drs_record
+- needle
+- schema
+- policy
+- trace
+- simulated_executor
+- fractal_dag_executor
+- audit
+- manual
+
+Forbidden additions intentionally absent:
+
+- needle_runtime
+- executor_node
+- fractal_dag_executor_node
+- AcceptedEvidence
+- EvidenceCandidate
+- ValidationPacket
+- RootFinalOutput
+- GTReport
+- AuditEvent
+- ChildBoundarySnapshot
+- SemanticDraft
+- NeedleCandidate
+- ManifestCandidate
+
+
+NEEDLERUNTIME EVIDENCE SHAPE
+============================
+
+NeedleRuntime evidence shape before:
+
+- kind: audit
+- evidence_id
+- description
+- ref
+
+NeedleRuntime evidence shape after:
+
+- kind: audit
+- summary
+- ref_id
+- confidence_added: false
+
+The old fields were removed from the NeedleRuntime EvidenceItem:
+
+- evidence_id
+- description
+- ref
+
+The normalized EvidenceItem records local audit/provenance support for the
+NeedleRuntime ResultProposal without changing result_payload artifact_type,
+status mapping, failure_kind, quarantine_required, circuit_breaker_opened,
+permission_required, no_real_external_action, safe_for_gt,
+root_crash_risk_contained, or trace_refs semantics.
+
+
+MEANING
+=======
+
+`audit` in EvidenceItem.kind means local ResultProposal evidence
+support/provenance.
+
+`audit` does not mean truth.
+`audit` does not mean authority.
+`audit` does not mean AcceptedEvidence.
+`audit` does not authorize action.
+`audit` does not write DRS.
+`audit` does not create FinalOutput.
+
+`needle_runtime` remains trace_refs.kind only. It is not EvidenceItem.kind.
+
+artifact_type Mapping remains deferred and separate.
+
+NeedleRuntime remains downstream of Post V&V, GT, and Root. Root remains the
+only final-output authority.
+
+
+AUTHORITY GUARDRAILS
+====================
+
+audit_evidence_creates_truth: false
+audit_evidence_creates_authority: false
+audit_evidence_implies_accepted_evidence: false
+audit_evidence_authorizes_action: false
+audit_evidence_writes_drs: false
+audit_evidence_creates_finaloutput: false
+audit_hash_creates_truth: false
+evidenceitem_kind_creates_truth: false
+evidenceitem_kind_creates_authority: false
+needleruntime_is_authority: false
+needleruntime_creates_finaloutput: false
+needleruntime_writes_drs_directly: false
+needleruntime_executes_real_external_action: false
+root_remains_final_authority: true
+
+Guardrail interpretation:
+
+- EvidenceItem.kind classifies local ResultProposal evidence.
+- It does not decide truth.
+- It does not grant authority.
+- It does not create AcceptedEvidence.
+- It does not authorize action.
+- It does not write DRS.
+- It does not create FinalOutput.
+- Audit hashes are audit/provenance references only.
+- NeedleRuntime does not become Root.
+- Root remains final authority.
+
+
+TEST EVIDENCE
+=============
+
+Targeted batch:
+
+command: .venv/bin/python -m pytest tests/test_schema_files_valid.py tests/test_post_vv_runtime.py tests/test_needle_failure_integration_runner.py -q
+result: 36 passed, 24 warnings
+
+Nearby boundary batch:
+
+command: .venv/bin/python -m pytest tests/test_executor_runtime.py tests/test_gt_validator_runtime.py tests/test_root_final_from_gt_decision_runner.py -q
+result: 48 passed, 20 warnings
+
+Focused tests covered:
+
+- NeedleRuntime adapter output is schema-valid ResultProposal after patch.
+- Post V&V no longer rejects NeedleRuntime proposal for EvidenceItem shape.
+- audit EvidenceItem.kind validates ResultProposal schema.
+- audit evidence does not create truth, authority, AcceptedEvidence, action
+  permission, DRS write, or FinalOutput.
+- needle_runtime remains trace_refs.kind and is not EvidenceItem.kind.
+- old malformed fields evidence_id, description, and ref are rejected if
+  reintroduced.
+- unknown evidence kind remains rejected.
+- simulated_executor and fractal_dag_executor remain valid evidence kinds.
+
+
+WARNINGS
+========
+
+jsonschema.RefResolver deprecation warning observed.
+warning_status: non_blocking
+
+Interpretation:
+
+- The RefResolver warning is compatibility cleanup debt, not a failure of this
+  patch.
+- This audit does not recommend changing validator plumbing in this layer.
+
+
+FINDINGS STATUS
+===============
+
+needleruntime_evidence_shape_status: implemented
+audit_evidence_kind_status: implemented
+needle_runtime_evidence_kind_status: not_added_trace_metadata_only
+artifact_type_mapping_status: deferred_separate_layer
+evidenceitem_kind_alignment_status: implemented_for_fractal_dag_executor_and_audit
+broader_artifact_vocabulary_status: partially_open
+
+Finding interpretation:
+
+- The NeedleRuntime audit evidence shape drift is fixed for the active adapter
+  object.
+- The `audit` EvidenceItem.kind gap is fixed for local ResultProposal evidence
+  support/provenance.
+- `needle_runtime` remains trace metadata only.
+- artifact_type Mapping remains a separate later layer.
+- Broader artifact vocabulary remains partially open.
+
+
+NON-GOALS / DEFERRED WORK
+=========================
+
+needle_runtime EvidenceItem.kind not added.
+artifact_type Mapping deferred.
+Transition Matrix not modified.
+DRS lifecycle not modified.
+GT, Root, and DRS not modified.
+Negative Trace layer not created.
+Marennya not activated.
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+Deferred work remains:
+
+- docs sync for NeedleRuntime Audit Evidence Shape v0.1.
+- Guardian Passport review bundle for the completed vocabulary/evidence
+  boundary block.
+- artifact_type Mapping / Runtime Artifact Vocabulary remains separate later
+  layer.
+
+
+OVERCLAIM GUARDRAILS
+====================
+
+This audit does not claim:
+
+- `needle_runtime` was added to EvidenceItem.kind
+- artifact_type Mapping was completed
+- Transition Matrix changes
+- DRS lifecycle changes
+- GT changes
+- Root changes
+- DRS changes
+- Negative Trace layer creation
+- Marennya activation
+- production readiness
+- public-auditor readiness
+- every artifact vocabulary issue is closed
+
+Accurate wording:
+
+- `audit` was added to EvidenceItem.kind as local ResultProposal evidence
+  support/provenance.
+- NeedleRuntime audit evidence now uses active EvidenceItem fields.
+- `needle_runtime` remains trace_refs.kind only.
+- Root remains final authority.
+
+
+NEXT RECOMMENDED STEP
+=====================
+
+next_recommended_step: docs sync for NeedleRuntime Audit Evidence Shape v0.1; then prepare Guardian Passport review bundle for the completed vocabulary/evidence boundary block; artifact_type Mapping / Runtime Artifact Vocabulary remains separate later layer
+
+
+AUDIT SUMMARY
+=============
+
+needleruntime_audit_evidence_shape_v01_audit_status: PASS
+patch_type: option_b_add_audit_and_normalize_shape
+preflight_commit: 99592a6
+patch_plan_commit: fd9e862
+patch_commit: f0bf7be
+
+schema_modified: true
+runtime_adapter_modified: true
+reference_docs_modified: true
+invariants_modified: true
+tests_modified: true
+
+artifact_type_modified: false
+transition_matrix_modified: false
+drs_lifecycle_modified: false
+gt_modified: false
+root_modified: false
+drs_modified: false
+negative_trace_layer_created: false
+marennya_activated: false
+
+evidenceitem_kind_added: audit
+added_enum_values_count: 1
+audit_added_to_evidenceitem_kind: true
+needle_runtime_added_to_evidenceitem_kind: false
+executor_node_added_to_evidenceitem_kind: false
+fractal_dag_executor_node_added_to_evidenceitem_kind: false
+artifact_vocab_terms_added_to_evidenceitem_kind: false
+
+needleruntime_evidence_shape_before: kind: audit; evidence_id; description; ref
+needleruntime_evidence_shape_after: kind: audit; summary; ref_id
+confidence_added: false
+
+audit_evidence_creates_truth: false
+audit_evidence_creates_authority: false
+audit_evidence_implies_accepted_evidence: false
+audit_evidence_authorizes_action: false
+audit_evidence_writes_drs: false
+audit_evidence_creates_finaloutput: false
+audit_hash_creates_truth: false
+evidenceitem_kind_creates_truth: false
+evidenceitem_kind_creates_authority: false
+needleruntime_is_authority: false
+needleruntime_creates_finaloutput: false
+needleruntime_writes_drs_directly: false
+needleruntime_executes_real_external_action: false
+root_remains_final_authority: true
+
+test_evidence_targeted_batch: 36 passed, 24 warnings
+test_evidence_nearby_boundary_batch: 48 passed, 20 warnings
+warning_refresolver_deprecation_status: non_blocking
+
+needleruntime_evidence_shape_status: implemented
+audit_evidence_kind_status: implemented
+needle_runtime_evidence_kind_status: not_added_trace_metadata_only
+artifact_type_mapping_status: deferred_separate_layer
+evidenceitem_kind_alignment_status: implemented_for_fractal_dag_executor_and_audit
+broader_artifact_vocabulary_status: partially_open
+
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+next_recommended_step: docs sync for NeedleRuntime Audit Evidence Shape v0.1; then prepare Guardian Passport review bundle for the completed vocabulary/evidence boundary block; artifact_type Mapping / Runtime Artifact Vocabulary remains separate later layer

@@ -138,12 +138,44 @@ def test_fractal_dag_executor_evidence_kind_validates_result_proposal_schema():
     result_proposal_validator().validate(proposal)
 
 
+def test_audit_evidence_kind_validates_result_proposal_schema():
+    proposal = proposal_with_evidence_kind("audit")
+
+    result_proposal_validator().validate(proposal)
+
+
 def test_fractal_dag_executor_evidence_kind_does_not_create_authority_or_accepted_evidence():
     proposal = proposal_with_evidence_kind("fractal_dag_executor")
     report = validate_result_proposal(proposal)
 
     vv_report_validator().validate(report)
     assert report["proposal_id"] == proposal["proposal_id"]
+    assert not contains_key(proposal, "final_output")
+    assert not contains_key(report, "final_output")
+    assert not contains_key(proposal, "authority")
+    assert not contains_key(report, "authority")
+    assert not contains_key(proposal, "AcceptedEvidence")
+    assert not contains_key(report, "AcceptedEvidence")
+    assert not contains_key(proposal, "accepted_evidence")
+    assert not contains_key(report, "accepted_evidence")
+    assert not contains_key(proposal, "action_authorized")
+    assert not contains_key(report, "action_authorized")
+    assert not contains_key(proposal, "action_executed")
+    assert not contains_key(report, "action_executed")
+    assert not contains_key(proposal, "drs_write")
+    assert not contains_key(report, "drs_write")
+    assert not contains_key(proposal, "drs_writes")
+    assert not contains_key(report, "drs_writes")
+
+
+def test_audit_evidence_kind_does_not_create_authority_or_accepted_evidence():
+    proposal = proposal_with_evidence_kind("audit")
+    report = validate_result_proposal(proposal)
+
+    vv_report_validator().validate(report)
+    assert report["proposal_id"] == proposal["proposal_id"]
+    assert not contains_key(proposal, "truth")
+    assert not contains_key(report, "truth")
     assert not contains_key(proposal, "final_output")
     assert not contains_key(report, "final_output")
     assert not contains_key(proposal, "authority")

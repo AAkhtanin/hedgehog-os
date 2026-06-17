@@ -149,6 +149,7 @@
             "trace",
             "simulated_executor",
             "fractal_dag_executor",
+            "audit",
             "manual"
           ]
         },

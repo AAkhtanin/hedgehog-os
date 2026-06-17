@@ -234,12 +234,9 @@ def needle_result_to_result_proposal(
         },
         "evidence": [
             {
-                "evidence_id": f"evidence:{request_id}:{result.needle_id}:{result.failure_kind}",
                 "kind": "audit",
-                "description": (
-                    "NeedleRuntime returned a structured mock result with no external action."
-                ),
-                "ref": result.audit_event["event_type"],
+                "summary": "NeedleRuntime returned a structured mock result with no external action.",
+                "ref_id": result.audit_event["event_type"],
             }
         ],
         "cost": {

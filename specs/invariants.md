@@ -655,6 +655,8 @@ EvidenceItem.kind alignment invariant:
 
 - EvidenceItem.kind is a local ResultProposal evidence classification.
 - `fractal_dag_executor` is allowed as an evidence source classification.
+- `audit` is allowed as local ResultProposal evidence support/provenance.
+- `needle_runtime` remains trace metadata, not EvidenceItem.kind.
 - EvidenceItem.kind does not create truth, authority, AcceptedEvidence, action
   permission, DRS write, or FinalOutput.
 - Root remains final authority.

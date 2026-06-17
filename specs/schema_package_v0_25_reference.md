@@ -57,12 +57,16 @@ EvidenceItem.kind alignment note:
 
 - Active `$defs.EvidenceItem.properties.kind.enum` is:
   `drs_record`, `needle`, `schema`, `policy`, `trace`,
-  `simulated_executor`, `fractal_dag_executor`, and `manual`.
+  `simulated_executor`, `fractal_dag_executor`, `audit`, and `manual`.
 - `fractal_dag_executor` is a local ResultProposal evidence classification for
   Fractal DAG boundary evidence. It is not truth, authority,
   AcceptedEvidence, action permission, DRS writeback, or FinalOutput.
-- Do not copy `audit`, `needle_runtime`, `executor_node`,
-  `fractal_dag_executor_node`, `EvidenceCandidate`, `ValidationPacket`,
+- `audit` is local ResultProposal evidence support/provenance. It does not
+  mean truth, authority, AcceptedEvidence, action permission, DRS write, or
+  FinalOutput.
+- `needle_runtime` remains `trace_refs.kind` only.
+- Do not copy `needle_runtime`, `executor_node`, `fractal_dag_executor_node`,
+  `EvidenceCandidate`, `ValidationPacket`,
   `RootFinalOutput`, `GTReport`, `AuditEvent`, `ChildBoundarySnapshot`,
   `SemanticDraft`, `NeedleCandidate`, or `ManifestCandidate` into the active
   EvidenceItem.kind enum from this reference note.

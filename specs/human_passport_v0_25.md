@@ -2825,8 +2825,11 @@ Outgoing VVReport Runtime Schema Validation v0.1 is also complete. Post V&V now
 checks the form of what comes in and the form of what goes out: ResultProposal
 in, VVReport out. Schema validation is a boundary filter, not truth or
 authority. The outgoing fallback is a safe rejected VVReport, not execution.
-EvidenceItem.kind vocabulary alignment and artifact_type vocabulary alignment
-remain future phases. Root remains final authority.
+EvidenceItem.kind vocabulary alignment is complete for current active
+evidence-boundary needs. artifact_type Mapping / Runtime Artifact Vocabulary
+v0.1 now has an Option A docs/spec map only; registry, enum, guardrail tests,
+and source_artifact_type split work remain future reviewed phases. Root remains
+final authority.
 
 EvidenceItem.kind Alignment v0.1 is complete through narrow patch and audit.
 EvidenceItem.kind is the small label on evidence inside ResultProposal. It now
@@ -2842,6 +2845,28 @@ NeedleRuntime fields `evidence_id`, `description`, and `ref` were removed from
 that EvidenceItem. `audit` is a local support/provenance label, not truth or
 authority. Audit hash is not truth. `needle_runtime` remains a trace label.
 Root remains final authority.
+
+artifact_type Mapping / Runtime Artifact Vocabulary v0.1 is complete as an
+Option A docs/spec human-readable map only. It does not change runtime,
+schemas, tests, GT, Root, DRS, Transition Matrix, or DRS lifecycle.
+
+The map separates the questions reviewers often collapse:
+
+- artifact_type answers "what kind of thing is this?"
+- EvidenceItem.kind answers "what kind/source of evidence is inside
+  ResultProposal?"
+- source_artifact_type answers "what proof/audit/lifecycle source did this
+  record come from?"
+- TraceRef.kind answers "what trace reference is this?"
+- lifecycle_state/status answers "where is it in process?"
+- authority_status answers "who can decide?"
+
+artifact_type is metadata/classification only. It does not create truth,
+authority, AcceptedEvidence, action permission, DRS write, or FinalOutput.
+source_artifact_type does not create truth or authority. TraceRef.kind does
+not create evidence. AcceptedEvidence does not authorize action by itself.
+GTReport remains advisory, DRSRecord remains memory/audit, and RootFinalOutput
+is created only by Root. Root remains final authority.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

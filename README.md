@@ -1407,10 +1407,11 @@ Test evidence recorded by audit:
 - nearby_boundary_batch: 73 passed, 20 warnings
 - jsonschema.RefResolver deprecation warning: non_blocking
 
-EvidenceItem.kind / artifact_type preflight planning remains next:
-`evidence_kind_alignment_implemented=false`,
-`artifact_type_alignment_implemented=false`, `production_ready_claimed=false`,
-and `public_auditor_ready_claimed=false`.
+EvidenceItem.kind alignment is complete for current active evidence-boundary
+needs, and artifact_type Mapping / Runtime Artifact Vocabulary v0.1 now has an
+Option A docs/spec map. Deeper Option B/C/D/E artifact vocabulary work remains
+deferred and requires review. `production_ready_claimed=false` and
+`public_auditor_ready_claimed=false`.
 
 ## EvidenceItem.kind Alignment v0.1
 
@@ -1506,9 +1507,39 @@ Test evidence recorded by audit: targeted batch `36 passed, 24 warnings`;
 nearby boundary batch `48 passed, 20 warnings`. The jsonschema.RefResolver
 deprecation warning is `non_blocking`.
 
-Next: prepare Guardian Passport review bundle for the completed
-vocabulary/evidence boundary block. Later: artifact_type Mapping / Runtime
-Artifact Vocabulary remains a separate layer.
+Next: artifact_type Mapping / Runtime Artifact Vocabulary Option A docs/spec
+map.
+
+## artifact_type Mapping / Runtime Artifact Vocabulary v0.1
+
+artifact_type Mapping / Runtime Artifact Vocabulary v0.1 created the Option A
+docs/spec human-readable artifact vocabulary map. It is based on preflight
+`b4aaf8e` and patch plan `c4f9a02`.
+
+Status: `artifact_type_mapping_runtime_vocabulary_v01_status=implemented_docs_spec_map_only`.
+This checkpoint made no runtime, schema, or test change. It created no enum and
+no runtime artifact registry.
+
+The map separates `artifact_type`, `source_artifact_type`, EvidenceItem.kind,
+TraceRef.kind, lifecycle_state/status, and authority_status. artifact_type is
+metadata/classification only; source_artifact_type is audit/lifecycle/proof
+source metadata; EvidenceItem.kind remains local ResultProposal evidence
+classification; TraceRef.kind remains trace metadata; lifecycle_state/status
+records process state; and authority_status records who can decide.
+
+Guardrails remain explicit: artifact_type does not create truth, authority,
+AcceptedEvidence, action permission, DRS write, or FinalOutput.
+source_artifact_type does not create truth or authority. TraceRef.kind does not
+create evidence. Audit events and audit hashes do not create truth.
+AcceptedEvidence does not authorize action by itself. GTReport remains
+advisory, DRSRecord remains memory/audit, RootFinalOutput is created only by
+Root, and Root remains final authority.
+
+Deferred work: `runtime_artifact_registry_recommended_now=false`,
+`artifact_type_schema_enum_recommended_now=false`,
+`broad_schema_enum_rejected_now=true`, and
+`global_artifact_ontology_rejected_now=true`. Option B/C/D/E work is later and
+requires review.
 
 ## Targeted Proof Runtime Policy
 
@@ -1722,8 +1753,8 @@ Next engineering focus:
 - Completed: Outgoing VVReport Runtime Schema Validation v0.1.
 - Completed: EvidenceItem.kind Alignment v0.1 — narrow Fractal DAG executor evidence kind patch.
 - Completed: NeedleRuntime Audit Evidence Shape v0.1 — audit evidence shape normalized and `audit` added as local EvidenceItem.kind.
-- Next: Guardian Passport review bundle for the completed vocabulary/evidence boundary block.
-- Later: artifact_type Mapping / Runtime Artifact Vocabulary as a separate layer.
+- Completed: artifact_type Mapping / Runtime Artifact Vocabulary v0.1 — Option A docs/spec human-readable artifact vocabulary map.
+- Next later: Option B/C/D/E artifact vocabulary work only after review.
 - Later: Public Auditor Packet / Whitepaper draft after remaining schema-contract decisions.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.

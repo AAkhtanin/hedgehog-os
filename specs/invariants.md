@@ -648,7 +648,10 @@ Runtime JSON Schema Validation Hardening v0.1:
 - Schema validation cannot execute action.
 - Schema validation cannot call GT or Root.
 - Schema validation cannot grant authority.
-- EvidenceItem.kind / artifact_type alignment remain open.
+- EvidenceItem.kind alignment is complete for current active evidence-boundary
+  needs. artifact_type Mapping / Runtime Artifact Vocabulary v0.1 has an
+  Option A docs/spec map only; registry, enum, and guardrail-test work remain
+  deferred and require review.
 - Root remains final authority.
 
 EvidenceItem.kind alignment invariant:
@@ -663,3 +666,34 @@ EvidenceItem.kind alignment invariant:
 - EvidenceItem.kind does not create truth, authority, AcceptedEvidence, action
   permission, DRS write, or FinalOutput.
 - Root remains final authority.
+
+artifact_type Mapping / Runtime Artifact Vocabulary v0.1 invariant:
+
+- artifact_type, source_artifact_type, EvidenceItem.kind, TraceRef.kind,
+  lifecycle_state/status, and authority_status are separate axes.
+- artifact_type is metadata/classification only.
+- source_artifact_type is audit/lifecycle/proof source metadata only.
+- EvidenceItem.kind remains local ResultProposal evidence classification only.
+- TraceRef.kind remains trace metadata only and is not evidence by itself.
+- lifecycle_state/status records process state and must not be collapsed into
+  artifact_type.
+- authority_status records who can decide; Root remains the only final-output
+  authority.
+- artifact_type_creates_truth: false
+- artifact_type_creates_authority: false
+- artifact_type_implies_accepted_evidence: false
+- artifact_type_authorizes_action: false
+- artifact_type_writes_drs: false
+- artifact_type_creates_finaloutput: false
+- source_artifact_type_creates_truth: false
+- source_artifact_type_creates_authority: false
+- evidenceitem_kind_creates_truth: false
+- evidenceitem_kind_creates_authority: false
+- trace_ref_creates_evidence: false
+- audit_event_creates_truth: false
+- audit_hash_creates_truth: false
+- accepted_evidence_authorizes_action_by_itself: false
+- gt_report_is_advisory: true
+- drs_record_is_memory_not_authority: true
+- root_final_output_created_only_by_root: true
+- root_remains_final_authority: true

@@ -71,6 +71,23 @@ EvidenceItem.kind alignment note:
   `SemanticDraft`, `NeedleCandidate`, or `ManifestCandidate` into the active
   EvidenceItem.kind enum from this reference note.
 
+artifact_type Mapping / Runtime Artifact Vocabulary v0.1 reference note:
+
+- artifact_type is metadata/classification only.
+- `result_payload.artifact_type` is an active runtime payload label when
+  present. It is not formally declared in ResultProposal schema in this
+  checkpoint.
+- VVReport `artifact_type` is optional free-string metadata.
+- GTReport uses `candidate_type`, not top-level artifact_type.
+- FinalOutput has no artifact_type by design.
+- DRSRecord uses `layer`, `type`, and `status`, not artifact_type.
+- source_artifact_type is a proof/audit/lifecycle source label, not active
+  runtime payload artifact_type unless explicitly mapped later.
+- EvidenceItem.kind remains separate from artifact_type.
+- Map first, constrain later, enum last if still needed.
+- This reference note creates no runtime registry, no schema enum, and no
+  authority semantics.
+
 Use this file only as a comparison artifact. Do not overwrite active schemas from this file without checking the current passport and active tests.
 
 common.schema.json

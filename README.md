@@ -1455,6 +1455,61 @@ normalized, `audit` was not added to EvidenceItem.kind, and artifact_type
 Mapping remains a separate later layer. Next: NeedleRuntime audit evidence
 shape preflight.
 
+## NeedleRuntime Audit Evidence Shape v0.1
+
+NeedleRuntime Audit Evidence Shape v0.1 is complete through narrow patch and
+audit. Commits: preflight `99592a6`, patch plan `fd9e862`, patch `f0bf7be`,
+audit `0b2ffc8`.
+
+Audit status: `needleruntime_audit_evidence_shape_v01_audit_status=PASS`.
+Patch type: `option_b_add_audit_and_normalize_shape`.
+
+Exact enum addition: `audit` only. The patch did not add `needle_runtime` to
+EvidenceItem.kind and did not add executor node terms or global artifact
+vocabulary terms. artifact_type Mapping remains separate.
+
+Checkpoint fields:
+
+- needleruntime_audit_evidence_shape_v01_status: complete_through_audit
+- needleruntime_audit_evidence_shape_v01_audit_status: PASS
+- evidenceitem_kind_added: audit
+- added_enum_values_count: 1
+- audit_added_to_evidenceitem_kind: true
+- needle_runtime_added_to_evidenceitem_kind: false
+- artifact_vocab_terms_added_to_evidenceitem_kind: false
+
+NeedleRuntime evidence shape before: `kind: audit; evidence_id; description;
+ref`. NeedleRuntime evidence shape after: `kind: audit; summary; ref_id`.
+`confidence_added: false`.
+
+`audit` in EvidenceItem.kind means local ResultProposal evidence
+support/provenance. It is not truth, not authority, not AcceptedEvidence, and
+does not authorize action, write DRS, or create FinalOutput. Audit hash is not
+truth. `needle_runtime` remains `trace_refs.kind` only. NeedleRuntime remains
+downstream of Post V&V, GT, and Root. Root remains final authority.
+
+Authority guardrails:
+
+- audit_evidence_creates_truth: false
+- audit_evidence_creates_authority: false
+- audit_evidence_implies_accepted_evidence: false
+- audit_evidence_authorizes_action: false
+- audit_evidence_writes_drs: false
+- audit_evidence_creates_finaloutput: false
+- audit_hash_creates_truth: false
+- needleruntime_is_authority: false
+- needleruntime_creates_finaloutput: false
+- needleruntime_writes_drs_directly: false
+- root_remains_final_authority: true
+
+Test evidence recorded by audit: targeted batch `36 passed, 24 warnings`;
+nearby boundary batch `48 passed, 20 warnings`. The jsonschema.RefResolver
+deprecation warning is `non_blocking`.
+
+Next: prepare Guardian Passport review bundle for the completed
+vocabulary/evidence boundary block. Later: artifact_type Mapping / Runtime
+Artifact Vocabulary remains a separate layer.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1649,6 +1704,7 @@ Completed recent layers:
 - Enterprise Document Killer Demo B v0.1.
 - Schema Contract Alignment v0.1 Phase 1 — AttractorPacket Architect contract alignment.
 - EvidenceItem.kind Alignment v0.1.
+- NeedleRuntime Audit Evidence Shape v0.1.
 - Strategic Expansion Map.
 
 Next engineering focus:
@@ -1665,7 +1721,8 @@ Next engineering focus:
 - Completed: Runtime JSON Schema Validation Hardening v0.1 — Post V&V incoming ResultProposal validation.
 - Completed: Outgoing VVReport Runtime Schema Validation v0.1.
 - Completed: EvidenceItem.kind Alignment v0.1 — narrow Fractal DAG executor evidence kind patch.
-- Next: NeedleRuntime audit evidence shape preflight.
+- Completed: NeedleRuntime Audit Evidence Shape v0.1 — audit evidence shape normalized and `audit` added as local EvidenceItem.kind.
+- Next: Guardian Passport review bundle for the completed vocabulary/evidence boundary block.
 - Later: artifact_type Mapping / Runtime Artifact Vocabulary as a separate layer.
 - Later: Public Auditor Packet / Whitepaper draft after remaining schema-contract decisions.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.

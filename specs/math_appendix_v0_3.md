@@ -2939,6 +2939,31 @@ root_remains_final_authority = true
 This adds `fractal_dag_executor` only. It does not alter authority, artifact_type,
 runtime math, Post V&V scoring, GT, Root, or DRS.
 
+NeedleRuntime Audit Evidence Shape v0.1 is schema vocabulary/runtime adapter
+hardening, not new math:
+
+```text
+needleruntime_audit_evidence_shape_v01_status = complete_through_audit
+patch_type = option_b_add_audit_and_normalize_shape
+evidenceitem_kind_added = audit
+audit_added_to_evidenceitem_kind = true
+needle_runtime_added_to_evidenceitem_kind = false
+needleruntime_evidence_shape_before = kind: audit; evidence_id; description; ref
+needleruntime_evidence_shape_after = kind: audit; summary; ref_id
+confidence_added = false
+audit_evidence_creates_truth = false
+audit_evidence_creates_authority = false
+audit_hash_creates_truth = false
+needleruntime_is_authority = false
+needleruntime_creates_finaloutput = false
+needleruntime_writes_drs_directly = false
+root_remains_final_authority = true
+```
+
+This adds `audit` as local EvidenceItem.kind support/provenance and normalizes
+NeedleRuntime evidence to `kind`, `summary`, and `ref_id`. It does not change
+authority, artifact_type, runtime math, Post V&V scoring, GT, Root, or DRS.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

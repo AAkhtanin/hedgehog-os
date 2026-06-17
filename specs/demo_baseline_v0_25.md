@@ -1489,6 +1489,18 @@ was not touched. Checkpoint evidence: plan `2685921`, patch `4ced110`, audit
 deprecation warning `non_blocking`. No runtime / artifact_type / GT / Root /
 DRS modification is part of this checkpoint.
 
+NeedleRuntime Audit Evidence Shape v0.1 is complete through narrow patch and
+audit. `audit` was added to EvidenceItem.kind as local ResultProposal evidence
+support/provenance, and NeedleRuntime audit evidence shape was normalized from
+`kind: audit; evidence_id; description; ref` to `kind: audit; summary; ref_id`
+with `confidence_added: false`. Old fields `evidence_id`, `description`, and
+`ref` were removed from the NeedleRuntime EvidenceItem. Checkpoint evidence:
+preflight `99592a6`, patch plan `fd9e862`, patch `f0bf7be`, audit `0b2ffc8`,
+`targeted_batch: 36 passed, 24 warnings`, and `nearby_boundary_batch:
+48 passed, 20 warnings`; jsonschema.RefResolver deprecation warning is
+`non_blocking`. No artifact_type / GT / Root / DRS modification is part of this
+checkpoint.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

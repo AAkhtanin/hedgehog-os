@@ -2835,6 +2835,14 @@ does not make anything true, final, accepted evidence, action permission, DRS
 write, or authority. `audit` and `needle_runtime` were not added. artifact_type
 remains separate. Root remains final authority.
 
+NeedleRuntime Audit Evidence Shape v0.1 is complete through narrow patch and
+audit. NeedleRuntime's evidence record now uses the same active EvidenceItem
+format as the rest of ResultProposal: `kind: audit; summary; ref_id`. The old
+NeedleRuntime fields `evidence_id`, `description`, and `ref` were removed from
+that EvidenceItem. `audit` is a local support/provenance label, not truth or
+authority. Audit hash is not truth. `needle_runtime` remains a trace label.
+Root remains final authority.
+
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal
 expansion, dual coupling, DRS bridge evidence, chaos/failure traces, math

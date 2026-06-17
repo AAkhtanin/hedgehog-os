@@ -291,6 +291,16 @@ Current reports:
   - Confirms authority guardrails: EvidenceItem.kind does not create truth, authority, AcceptedEvidence, action permission, DRS write, or FinalOutput; Root remains final authority.
   - Confirms NeedleRuntime evidence shape and artifact_type Mapping remain deferred.
 
+- `auditor_needleruntime_audit_evidence_shape_v01.log`
+  - NeedleRuntime Audit Evidence Shape v0.1 audit for the narrow Option B patch.
+  - Audit status PASS. Evidence: preflight commit `99592a6`, patch plan commit `fd9e862`, patch commit `f0bf7be`, audit commit `0b2ffc8`.
+  - Confirms `patch_type=option_b_add_audit_and_normalize_shape`.
+  - Confirms exact enum addition `audit` and `audit_added_to_evidenceitem_kind=true`.
+  - Confirms `needle_runtime_added_to_evidenceitem_kind=false` and `artifact_vocab_terms_added_to_evidenceitem_kind=false`.
+  - Confirms NeedleRuntime evidence shape changed from `kind: audit; evidence_id; description; ref` to `kind: audit; summary; ref_id` with `confidence_added=false`.
+  - Confirms authority guardrails: audit evidence does not create truth, authority, AcceptedEvidence, action permission, DRS write, or FinalOutput; audit hash is not truth; Root remains final authority.
+  - Confirms artifact_type Mapping remains deferred.
+
 ## Current Applied Auditor Commands
 
 ```bash

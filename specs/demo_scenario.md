@@ -1150,6 +1150,14 @@ Fractal DAG boundary evidence; it does not make Fractal DAG Root, does not
 create truth or authority, and does not create FinalOutput. Root remains final
 authority.
 
+NeedleRuntime Audit Evidence Shape v0.1 is complete. NeedleRuntime audit
+evidence now conforms to active EvidenceItem shape: before `kind: audit;
+evidence_id; description; ref`, after `kind: audit; summary; ref_id`;
+`confidence_added: false`. `audit` is local ResultProposal evidence
+support/provenance, while `needle_runtime` remains trace_refs.kind only.
+artifact_type remains separate. NeedleRuntime remains downstream of Post V&V,
+GT, and Root. Root remains final authority.
+
 ## Exclusions
 
 - No real external APIs.

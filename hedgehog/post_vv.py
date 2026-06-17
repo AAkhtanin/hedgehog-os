@@ -62,6 +62,23 @@ def _result_proposal_validator() -> jsonschema.Draft202012Validator:
     )
 
 
+@lru_cache(maxsize=1)
+def _vv_report_validator() -> jsonschema.Draft202012Validator:
+    common_schema = _load_schema("common.schema.json")
+    vv_report_schema = _load_schema("vv_report.schema.json")
+    store = {
+        common_schema["$id"]: common_schema,
+        "common.schema.json": common_schema,
+        "https://hedgehog-os.local/schemas/common.schema.json": common_schema,
+        vv_report_schema["$id"]: vv_report_schema,
+    }
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+    return jsonschema.Draft202012Validator(
+        vv_report_schema,
+        resolver=resolver,
+    )
+
+
 def _schema_error_location(error: jsonschema.ValidationError) -> str:
     if not error.absolute_path:
         return "$"
@@ -80,6 +97,25 @@ def _result_proposal_schema_violations(candidate) -> list[dict]:
             "schema",
             (
                 "ResultProposal runtime schema validation failed at "
+                f"{_schema_error_location(error)}: {error.message}"
+            ),
+        )
+        for error in errors
+    ]
+
+
+def _vv_report_schema_violations(report: dict) -> list[dict]:
+    validator = _vv_report_validator()
+    errors = sorted(
+        validator.iter_errors(report),
+        key=lambda error: (list(error.absolute_path), error.message),
+    )
+    return [
+        _violation(
+            "vv_outgoing_runtime_schema_validation_failed",
+            "schema",
+            (
+                "Outgoing VVReport runtime schema validation failed at "
                 f"{_schema_error_location(error)}: {error.message}"
             ),
         )
@@ -226,6 +262,57 @@ def _dependency_depth(candidate: dict) -> int:
         return 0
     value = result_payload.get("dependency_depth", 0)
     return value if isinstance(value, int) and value >= 0 else 0
+
+
+def _safe_rejected_vv_report(
+    *,
+    proposal_id: str,
+    trace_refs: list[dict],
+    violations: list[dict],
+) -> dict:
+    return {
+        "vv_report_id": f"vv:{proposal_id}",
+        "proposal_id": proposal_id,
+        "status": "rejected",
+        "scores": {
+            "schema": 0.0,
+            "evidence": 0.0,
+            "policy": 0.0,
+            "time": 0.0,
+            "safety": 0.0,
+            "consistency": 0.0,
+        },
+        "overall_score": 0.0,
+        "decision": "reject",
+        "checked_at": utc_now_iso(),
+        "violations": violations,
+        "normalized_features": {
+            "utility": 0.0,
+            "robustness": 0.0,
+            "compute_cost": 0.0,
+            "violations": 1.0,
+            "transfer": 0.0,
+            "novelty_guard": 0.0,
+            "avf_final_viability": None,
+            "avf_soft_mask": None,
+        },
+        "trace_refs": trace_refs,
+    }
+
+
+def _validate_outgoing_vv_report(report: dict, candidate: dict) -> dict:
+    violations = _vv_report_schema_violations(report)
+    if not violations:
+        return report
+    proposal_id = _safe_id(
+        candidate.get("proposal_id") if isinstance(candidate, dict) else None,
+        "missing_proposal",
+    )
+    return _safe_rejected_vv_report(
+        proposal_id=proposal_id,
+        trace_refs=_safe_trace_refs(candidate),
+        violations=violations,
+    )
 
 
 def validate_result_proposal(proposal: dict) -> dict:
@@ -437,7 +524,8 @@ def validate_result_proposal(proposal: dict) -> dict:
         request_id = _safe_optional_id(candidate["request_id"])
         if request_id is not None:
             report["request_id"] = request_id
-    return report
+    # Final outgoing schema boundary; manual checks above remain in force.
+    return _validate_outgoing_vv_report(report, candidate)
 
 
 def validate_result_proposals(proposals: list[dict]) -> list[dict]:

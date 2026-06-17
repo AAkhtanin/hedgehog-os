@@ -4,6 +4,7 @@ from pathlib import Path
 
 import jsonschema
 
+from hedgehog import post_vv
 from hedgehog.architect import make_plan_graph
 from hedgehog.avf import build_attractor_packet
 from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
@@ -116,6 +117,7 @@ def test_missing_required_result_proposal_field_rejected_by_runtime_schema_valid
     assert report["scores"]["schema"] == 0.0
     assert "vv_runtime_schema_validation_failed" in violation_ids(report)
     assert "producer" in violation_text(report)
+    vv_report_validator().validate(report)
 
 
 def test_bad_nested_time_envelope_rejected_by_runtime_schema_validation():
@@ -128,6 +130,7 @@ def test_bad_nested_time_envelope_rejected_by_runtime_schema_validation():
     assert report["scores"]["schema"] == 0.0
     assert "vv_runtime_schema_validation_failed" in violation_ids(report)
     assert "time_envelope.ttl_seconds" in violation_text(report)
+    vv_report_validator().validate(report)
 
 
 def test_malformed_risk_severity_rejected_by_runtime_schema_validation():
@@ -146,6 +149,7 @@ def test_malformed_risk_severity_rejected_by_runtime_schema_validation():
     assert report["scores"]["schema"] == 0.0
     assert "vv_runtime_schema_validation_failed" in violation_ids(report)
     assert "risks.0.severity" in violation_text(report)
+    vv_report_validator().validate(report)
 
 
 def test_extra_top_level_field_rejected_by_runtime_schema_validation():
@@ -159,6 +163,7 @@ def test_extra_top_level_field_rejected_by_runtime_schema_validation():
     assert "vv_runtime_schema_validation_failed" in violation_ids(report)
     assert "Additional properties are not allowed" in violation_text(report)
     assert "unexpected_runtime_field" in violation_text(report)
+    vv_report_validator().validate(report)
 
 
 def test_completed_prepare_request_payload_remains_accepted():
@@ -169,6 +174,7 @@ def test_completed_prepare_request_payload_remains_accepted():
     assert report["decision"] == "accept"
     assert report["status"] == "accepted"
     assert report["violations"] == []
+    vv_report_validator().validate(report)
 
 
 def test_required_field_validation_requires_user_revision():
@@ -182,6 +188,7 @@ def test_required_field_validation_requires_user_revision():
         violation["violation_id"] == "vv_human_input_required"
         for violation in report["violations"]
     )
+    vv_report_validator().validate(report)
 
 
 def test_submission_simulation_blocked_before_completion_revises():
@@ -195,6 +202,7 @@ def test_submission_simulation_blocked_before_completion_revises():
         violation["violation_id"] == "vv_blocked_before_completion"
         for violation in report["violations"]
     )
+    vv_report_validator().validate(report)
 
 
 def test_schema_valid_critical_risk_still_rejected_by_manual_safety_check():
@@ -213,6 +221,7 @@ def test_schema_valid_critical_risk_still_rejected_by_manual_safety_check():
     assert report["scores"]["schema"] == 1.0
     assert report["scores"]["safety"] == 0.0
     assert "vv_safety_critical_risk" in violation_ids(report)
+    vv_report_validator().validate(report)
 
 
 def test_forbidden_final_output_key_rejects_policy():
@@ -225,6 +234,7 @@ def test_forbidden_final_output_key_rejects_policy():
     assert report["scores"]["policy"] == 0.0
     assert report["normalized_features"]["utility"] == report["overall_score"]
     assert "vv_policy_forbidden_key" in violation_ids(report)
+    vv_report_validator().validate(report)
 
 
 def test_forbidden_answer_key_still_rejected_by_manual_policy_check():
@@ -236,6 +246,7 @@ def test_forbidden_answer_key_still_rejected_by_manual_policy_check():
     assert report["decision"] == "reject"
     assert report["scores"]["policy"] == 0.0
     assert "vv_policy_forbidden_key" in violation_ids(report)
+    vv_report_validator().validate(report)
 
 
 def test_missing_time_envelope_revises_or_rejects_time():
@@ -262,6 +273,7 @@ def test_malformed_proposal_does_not_crash_post_vv():
     assert report["trace_refs"] == []
     assert report["scores"]["schema"] == 0.0
     assert "vv_runtime_schema_validation_failed" in violation_ids(report)
+    vv_report_validator().validate(report)
 
 
 def test_vv_report_has_no_root_or_user_facing_output_keys():
@@ -270,3 +282,64 @@ def test_vv_report_has_no_root_or_user_facing_output_keys():
     assert not contains_key(report, "final_output")
     assert not contains_key(report, "answer")
     assert not contains_key(report, "raw_user_text")
+
+
+def test_internal_outgoing_vv_report_shape_error_returns_safe_schema_valid_report(monkeypatch):
+    proposal = deepcopy(build_demo_proposals()[0])
+
+    def fake_outgoing_schema_violations(report):
+        return [
+            post_vv._violation(
+                "vv_outgoing_runtime_schema_validation_failed",
+                "schema",
+                "Outgoing VVReport runtime schema validation failed at $: test injected shape error.",
+            )
+        ]
+
+    monkeypatch.setattr(
+        post_vv,
+        "_vv_report_schema_violations",
+        fake_outgoing_schema_violations,
+    )
+
+    report = validate_result_proposal(proposal)
+
+    assert report["decision"] == "reject"
+    assert report["status"] == "rejected"
+    assert report["overall_score"] == 0.0
+    assert report["scores"] == {
+        "schema": 0.0,
+        "evidence": 0.0,
+        "policy": 0.0,
+        "time": 0.0,
+        "safety": 0.0,
+        "consistency": 0.0,
+    }
+    assert "vv_outgoing_runtime_schema_validation_failed" in violation_ids(report)
+    vv_report_validator().validate(report)
+
+
+def test_outgoing_validation_fallback_does_not_create_authority_or_action(monkeypatch):
+    proposal = deepcopy(build_demo_proposals()[0])
+
+    monkeypatch.setattr(
+        post_vv,
+        "_vv_report_schema_violations",
+        lambda report: [
+            post_vv._violation(
+                "vv_outgoing_runtime_schema_validation_failed",
+                "schema",
+                "Outgoing VVReport runtime schema validation failed at $: test injected shape error.",
+            )
+        ],
+    )
+
+    report = validate_result_proposal(proposal)
+
+    assert "final_output" not in report
+    assert "drs_write" not in report
+    assert "action_executed" not in report
+    assert "gt_report" not in report
+    assert "root_final" not in report
+    assert not contains_key(report, "final_output")
+    vv_report_validator().validate(report)

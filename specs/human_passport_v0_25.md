@@ -2874,6 +2874,16 @@ This is not full artifact vocabulary completion. Runtime constants, schema
 enum, guardrail tests, and source_artifact_type split work remain deferred
 until Guardian / user review of the Option A docs/spec map.
 
+Long-lived DRS State / TTL / Aging Stress v0.1 follows the artifact_type
+vocabulary pause. This stage documents time/DRS aging invariants only. It does
+not create runtime behavior, schema changes, tests, or a proof runner.
+
+The layer exists because long-lived memory can become dangerous if stale
+records, old accepted evidence, old connector observations, old GT-TTL,
+quarantine/deadend lineage, or reuse popularity silently affect direct reuse.
+Memory may survive; authority does not survive through memory. Root remains
+final authority.
+
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal
 expansion, dual coupling, DRS bridge evidence, chaos/failure traces, math

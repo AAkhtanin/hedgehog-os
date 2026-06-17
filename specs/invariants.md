@@ -699,3 +699,31 @@ artifact_type Mapping / Runtime Artifact Vocabulary v0.1 invariant:
 - drs_record_is_memory_not_authority: true
 - root_final_output_created_only_by_root: true
 - root_remains_final_authority: true
+
+Long-lived DRS State / TTL / Aging Stress v0.1 invariant:
+
+- Long-lived DRS / TTL / Aging Stress v0.1 is docs/math only at this stage.
+- Time is reuse boundary, not authority.
+- Failed TemporalHardGate blocks direct reuse.
+- DRS retrieval is not direct reuse.
+- Age_effective is ranking metadata, not permission.
+- Fresh ingestion is not fresh knowledge.
+- TTL expiry is not claim invalidity.
+- Claim validity interval is not record freshness.
+- Query mode determines temporal validity.
+- record.lifecycle_state != query_state.
+- Freshness hard gate beats ReuseScore, ReuseFrequency, SemanticSimilarity,
+  and Survival.
+- RootShortcutAllowed is required for any direct final reuse.
+- Unaccepted ConnectorObservation, SemanticDraft, ExternalDRSPointer, or
+  EvidenceCandidate cannot supersede Work.
+- Root acceptance beats freshness.
+- authority class beats freshness.
+- freshness alone never supersedes trusted Work.
+- ReuseBoost cannot affect RootShortcutAllowed or hard gates.
+- Bounded proximity only; no unbounded graph traversal in hot path.
+- quarantine_taint propagation must be bounded.
+- a quarantined record cannot cascade-taint the whole DRS graph.
+- AcceptedEvidence from past is not future action permission.
+- Audit hash proves continuity, not truth.
+- Root remains final authority.

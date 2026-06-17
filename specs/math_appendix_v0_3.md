@@ -1142,6 +1142,520 @@ Bad knowledge decays faster:
 TTL'(r) = TTL(r) * (1 - delta Regret(r) - epsilon FailureRate(r))
 ```
 
+## 8A. Long-lived DRS State / TTL / Aging Stress v0.1 - Math Invariants
+
+This section records the TIME / DRS AGING v0.2 math basis for the
+Long-lived DRS State / TTL / Aging Stress v0.1 layer. It is documentation only:
+no runtime behavior, schema field, test, or proof runner is implemented by this
+math patch.
+
+Source-of-truth rule:
+
+- Human Passport controls MVP architecture and invariants.
+- Math Appendix records formulas and algorithms.
+- Invariants file records hard invariant bullets.
+- Machine manifest records machine-readable checkpoint status.
+- README / AGENTS record engineering order and current layer status.
+- If conflict exists, Human Passport controls current MVP implementation.
+
+The existing TimeEnvelope basis remains:
+
+```text
+TE = (PT, KT, ET, CT, TTL)
+```
+
+Operational extension target:
+
+```text
+TE_ext = (
+  PT,
+  KT,
+  ET,
+  CT,
+  TTL,
+  valid_from,
+  valid_to,
+  source_observed_at,
+  source_reported_at,
+  system_ingested_at,
+  system_verified_at,
+  freshness_class
+)
+```
+
+Interpretation:
+
+- TTL expiry != claim invalidity.
+- Claim validity interval != record freshness.
+- Fresh ingestion != fresh knowledge.
+- Fresh verification != permanent trust.
+- Stale verification may require rerun even if the underlying claim is still valid.
+- An unexpired document may still require fresh verification.
+
+TemporalQuery extension target:
+
+```text
+TQ_ext = (
+  as_of,
+  query_mode,
+  time_range,
+  freshness_bias,
+  max_age,
+  required_time_axes,
+  risk_class,
+  domain,
+  reuse_intent
+)
+```
+
+Required query modes:
+
+- current_decision.
+- historical_as_of.
+- audit_replay.
+- trend_analysis.
+- memory_context_only.
+- direct_reuse_candidate.
+- warning_lookup.
+
+Invariant:
+
+```text
+Validity(r, TQ) is query-mode dependent.
+```
+
+Temporal logic must not be implemented as simply record valid / invalid. It
+must be valid for this query_mode and this reuse decision class.
+
+### 8A.1. Age Rules
+
+```text
+Age_PT(r,t) = t - PT(r)
+Age_KT(r,t) = t - KT(r)
+Age_ET(r,t) = t - ET(r)
+
+Age_effective(r,TQ) =
+  omega_PT * Age_PT(r,TQ)
+  + omega_KT * Age_KT(r,TQ)
+  + omega_ET * Age_ET(r,TQ)
+
+omega_PT + omega_KT + omega_ET = 1
+```
+
+Invariant:
+
+- Age_effective is ranking metadata, not direct reuse permission.
+
+### 8A.2. Hard Temporal Gates
+
+```text
+TemporalHardGate(r,TQ) =
+  TimeEnvelopePresent(r)
+  and TemporalQueryPresent(TQ)
+  and ClockOK(r)
+  and ValidityIntervalOK(r,TQ)
+  and FreshnessOK(r,TQ)
+
+FreshnessOK(r,TQ) =
+  forall axis in required_time_axes(TQ):
+    Age_axis(r, as_of(TQ)) <= min(TTL_axis(r), max_age_axis(TQ))
+```
+
+Required ordering:
+
+```text
+TemporalHardGate
+-> PolicyGate
+-> ConflictGate
+-> QuarantineDeadEndGate
+-> PermissionGate
+-> ReuseScore ranking
+-> Root decision
+```
+
+Hard rules:
+
+- Freshness hard gate beats ReuseScore.
+- Freshness hard gate beats ReuseFrequency.
+- Freshness hard gate beats SemanticSimilarity.
+- Freshness hard gate beats SurvivalScore.
+
+### 8A.3. Validity Intervals
+
+```text
+ValidityIntervalOK(r,TQ) =
+  valid_from(r) <= as_of(TQ) <= valid_to(r)
+```
+
+If `valid_to = null`:
+
+```text
+there is no upper claim-validity bound, but freshness still applies.
+```
+
+Historical validity:
+
+```text
+ValidityIntervalOK_historical(r,TQ) =
+  valid_from(r) <= historical_as_of(TQ) <= valid_to(r)
+```
+
+Invariant:
+
+- A record can be stale for current_decision but valid for historical_as_of.
+
+### 8A.4. Fresh Ingestion Is Not Fresh Knowledge
+
+```text
+FreshIngestionDoesNotImplyFreshKnowledge(r) =
+  system_ingested_at fresh
+  does not imply
+  source_observed_at fresh
+```
+
+If `source_observed_at` is stale and `query_mode = current_decision`:
+
+```text
+DirectReuseAllowed = false
+```
+
+### 8A.5. Temporal Conflict And Trust-aware Supersession
+
+```text
+TemporalConflict(r_i, r_j, TQ) =
+  SameSubject(r_i,r_j)
+  and IncompatibleClaim(r_i,r_j)
+  and ValidityIntervalsOverlap(r_i,r_j,TQ)
+  and not SupersessionExplained(r_i,r_j)
+```
+
+Trust-aware supersession:
+
+```text
+Supersedes(r_new, r_old) =
+  SameSubject(r_new, r_old)
+  and SameClaimDimension(r_new, r_old)
+  and KT(r_new) > KT(r_old)
+  and ValidityIntervalsCompatibleForSupersession(r_new, r_old)
+  and ProvenanceChainValid(r_new)
+  and ReplacementReasonPresent(r_new)
+  and RootAcceptedForSupersession(r_new)
+  and TrustClassAllowedToSupersede(r_new, r_old)
+
+TrustClassAllowedToSupersede(r_new, r_old) =
+  authority_class(r_new) >= authority_class(r_old)
+  or RootExplicitOverride(r_new, r_old) = true
+```
+
+Optional advisory check only:
+
+```text
+GTTrust(r_new) >= GTTrust(r_old) - tau_trust_tolerance
+```
+
+Supersession invariants:
+
+- GTTrust is not authority.
+- Root acceptance beats freshness.
+- authority class beats freshness.
+- freshness alone never supersedes trusted Work.
+- unaccepted ConnectorObservation cannot supersede Work.
+- SemanticDraft cannot supersede Work.
+- ExternalDRSPointer cannot supersede Work.
+- EvidenceCandidate cannot supersede Work.
+- unaccepted fresh observation may create conflict, warning, rerun_required,
+  quarantine/review, but not supersession.
+
+### 8A.6. Query-local State
+
+```text
+record.lifecycle_state in {
+  active,
+  completed,
+  rejected,
+  quarantined,
+  deadend,
+  archived
+}
+
+query_state(r,TQ) in {
+  fresh_candidate,
+  stale_context_only,
+  historical_only,
+  warning_only,
+  rerun_required,
+  blocked_by_conflict,
+  blocked_by_quarantine_proximity,
+  blocked_by_deadend_proximity,
+  blocked_by_time_gate
+}
+```
+
+Invariant:
+
+```text
+record.lifecycle_state != query_state
+```
+
+### 8A.7. Bounded Quarantine / DeadEnd Proximity
+
+Raw proximity formulas must not become unbounded full graph scans. Candidate
+sets must be bounded before proximity is evaluated:
+
+```text
+CandidateSet_pre =
+  filter_by_domain
+  intersection filter_by_time_window
+  intersection filter_by_subject_or_claim_key
+  intersection top_k_semantic_candidates
+
+QuarantineProximity(r,TQ) =
+  max_{q in RelevantQuarantine(r,TQ)}
+    Risk(q) * Sim(r,q) * LineageDecay(distance(r,q))
+
+DeadEndProximity(r,TQ) =
+  max_{d in RelevantDeadEnds(r,TQ)}
+    Risk(d) * Sim(r,d) * LineageDecay(distance(r,d))
+
+LineageDecay(d) = exp(-lambda_lineage * d)
+```
+
+Hard bound:
+
+```text
+if distance(r,x) > max_lineage_hops:
+  do not full-traverse
+  use aggregate_taint_signal instead
+```
+
+Allowed acceleration signals:
+
+- quarantine_taint_summary.
+- deadend_taint_summary.
+- lineage_risk_bucket.
+- subject_risk_tags.
+- claim_risk_tags.
+
+Anti-DoS invariant:
+
+- QuarantineProximity and DeadEndProximity must not require full DRS graph
+  traversal in hot path.
+- quarantine_taint propagation must be bounded.
+- a quarantined record cannot cascade-taint the whole DRS graph.
+
+Behavior:
+
+- QuarantineProximity > tau_quarantine blocks direct reuse and requires Root review.
+- DeadEndProximity > tau_deadend blocks direct reuse and route reuse.
+- Quarantine proximity cannot become Work.
+- DeadEnd proximity cannot become authority.
+
+### 8A.8. ReuseDecisionClass And DirectReuseAllowed
+
+```text
+ReuseDecisionClass(r,TQ,domain,risk) in {
+  direct_final_reuse,
+  partial_reuse_then_validation,
+  context_only,
+  warning_only,
+  historical_replay,
+  blocked
+}
+```
+
+Rule:
+
+```text
+if risk_class in {high, regulated, external_action_related}:
+  direct_final_reuse = false
+  unless explicit policy allows and RootShortcutAllowed = true
+```
+
+Default for enterprise/document/payment/legal domains:
+
+```text
+DefaultReuseDecisionClass = partial_reuse_then_validation
+```
+
+Direct reuse gate:
+
+```text
+DirectReuseAllowed(r,TQ) =
+  RootShortcutAllowed(r,TQ)
+  and TimeEnvelopePresent(r)
+  and TemporalQueryPresent(TQ)
+  and TemporalHardGate(r,TQ)
+  and PolicyOK(r,TQ)
+  and ConflictOK(r,TQ)
+  and QuarantineProximityOK(r,TQ)
+  and DeadEndProximityOK(r,TQ)
+  and GTTrustOK(r,TQ)
+  and PermissionOK(r,TQ)
+  and ReuseScore(r,TQ) >= tau_reuse
+```
+
+If any hard gate fails:
+
+```text
+DirectReuseAllowed = false
+```
+
+Allowed fallback states:
+
+- partial_reuse_then_validation.
+- context_only.
+- warning_only.
+- historical_replay.
+- blocked.
+
+### 8A.9. ReuseBoost And Survival
+
+```text
+ReuseBoost(r) =
+  min(
+    1 + k * ln(1 + reuse_count(r)),
+    reuse_boost_max
+  )
+
+Survival(r,t) =
+  GTTrust(r)
+  * Freshness(r,t)
+  * UtilityHistory(r)
+  * SafetyScore(r)
+  * ProvenanceQuality(r)
+  * (1 - ConflictPenalty(r))
+  * (1 - QuarantineProximity(r))
+  * ReuseBoost(r)
+```
+
+ReuseBoost isolation:
+
+- ReuseBoost affects survival/ranking only.
+- ReuseBoost does not affect RootShortcutAllowed.
+- ReuseBoost does not affect DirectReuseAllowed hard gates.
+- ReuseBoost does not create authority.
+- ReuseBoost may help record remain visible.
+- ReuseBoost may affect retrieval ranking.
+- ReuseBoost may delay archive.
+- ReuseBoost must not override TemporalHardGate.
+- ReuseBoost must not override PolicyGate.
+- ReuseBoost must not override ConflictGate.
+- ReuseBoost must not override QuarantineDeadEndGate.
+- ReuseBoost must not override PermissionGate.
+- ReuseBoost must not grant RootShortcutAllowed.
+
+Hard invariant:
+
+```text
+If any hard gate fails:
+  DirectReuseAllowed = false
+  regardless of ReuseBoost
+```
+
+### 8A.10. Clock Pathology
+
+Clock pathology cases:
+
+- future_PT.
+- future_KT.
+- future_ET_without_explanation.
+- ET_after_PT_without_explanation.
+- valid_to_before_valid_from.
+- negative_TTL.
+- zero_TTL_without_policy.
+- timezone_mismatch.
+- clock_skew.
+- DST_ambiguous_local_time.
+
+Rules:
+
+- valid_to_before_valid_from -> reject_or_quarantine.
+- negative_TTL -> reject.
+- future_KT -> quarantine_or_review.
+- clock_skew -> root_review_required.
+- timezone_mismatch -> normalize_or_quarantine.
+- Clock pathology cannot create freshness.
+
+### 8A.11. Audit Replay
+
+```text
+AuditReplay(TQ) requires query_mode = historical_as_of
+```
+
+Rules:
+
+- audit replay evaluates what the system knew at that historical time, not what
+  is known now.
+- audit hash proves continuity, not truth.
+- audit replay is not current truth.
+- audit replay uses historical_as_of semantics.
+
+### 8A.12. AcceptedEvidence Time Boundary
+
+```text
+AcceptedEvidence(t_old) != ActionPermission(t_now)
+```
+
+If action is requested at current time:
+
+- permission boundary must be rechecked.
+- freshness must be rechecked.
+- policy must be rechecked.
+- Root must decide.
+
+Invariant:
+
+- AcceptedEvidence is bounded evidence.
+- AcceptedEvidence is not action permission.
+- AcceptedEvidence does not survive time as execution authority.
+
+### 8A.13. Intended Proof Inventory
+
+The first stress proof inventory should include these scenarios. They are not
+implemented by this docs/math patch:
+
+1. missing_time_envelope_rejected
+2. drs_query_without_temporal_query_rejected
+3. fresh_record_direct_reuse_candidate_but_root_required
+4. stale_work_record_context_only_not_direct_reuse
+5. expired_time_envelope_blocks_direct_reuse
+6. valid_document_but_stale_verification_requires_rerun
+7. fresh_ingestion_old_source_observed_at_blocks_freshness
+8. prefer_recent_selects_new_record
+9. historical_as_of_selects_old_record
+10. non_overlapping_validity_records_do_not_conflict
+11. overlapping_validity_conflict_blocks_reuse
+12. quarantine_proximity_blocks_reuse
+13. deadend_proximity_blocks_route
+14. reuse_frequency_cannot_override_staleness
+15. gt_ttl_decay_penalizes_bad_old_record
+16. future_timestamp_quarantined
+17. negative_ttl_rejected
+18. audit_replay_uses_historical_time
+19. accepted_evidence_not_future_action_permission
+20. root_shortcut_required_for_any_direct_final_reuse
+21. supersession_requires_root_accepted_trustworthy_new_record
+22. fresh_unaccepted_observation_cannot_supersede_work
+23. quarantine_proximity_computation_is_bounded
+24. quarantine_taint_does_not_cascade_to_whole_graph
+25. reuse_boost_cannot_override_hard_gates
+
+### 8A.14. Compact Rule
+
+Memory may survive.
+Authority does not survive through memory.
+Old records may inform.
+Old records may warn.
+Old records may explain history.
+Old records may suggest rerun.
+Old records may not silently authorize direct reuse.
+Freshness can expire reuse.
+Trust can constrain supersession.
+Proximity can warn or block.
+Popularity can preserve visibility.
+None of them can authorize final reuse.
+Root remains final authority.
+
 ## 9. Marennya
 
 Marennya is intra-domain reflection.

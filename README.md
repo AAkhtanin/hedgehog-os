@@ -1566,6 +1566,33 @@ Deferred fields:
 - full_artifact_vocabulary_completion_status: not_claimed
 - overengineering_risk_status: controlled_by_docs_first_map
 
+## Long-lived DRS State / TTL / Aging Stress v0.1
+
+Long-lived DRS State / TTL / Aging Stress v0.1 is now in the math/invariants
+docs stage. The read-only preflight is committed at `c8c0907`, and the
+math/invariants patch plan is committed at `49b0a11`. This docs patch stores
+the TIME / DRS AGING v0.2 formulas in project documentation.
+
+This checkpoint creates no runtime behavior, no schema change, no tests, and
+no proof runner. The next expected stage is a deterministic proof runner patch
+plan, not implementation, unless the user explicitly changes route.
+
+Compact rule:
+
+Memory may survive.
+Authority does not survive through memory.
+Old records may inform.
+Old records may warn.
+Old records may explain history.
+Old records may suggest rerun.
+Old records may not silently authorize direct reuse.
+Freshness can expire reuse.
+Trust can constrain supersession.
+Proximity can warn or block.
+Popularity can preserve visibility.
+None of them can authorize final reuse.
+Root remains final authority.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical

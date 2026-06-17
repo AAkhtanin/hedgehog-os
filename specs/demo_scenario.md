@@ -1134,15 +1134,14 @@ contract: Architect returns PlanGraph only, Executor / DAG returns
 ResultProposal, and Root remains final authority.
 
 Schema Contract Alignment Phase 1/2 clarified contracts. Runtime JSON Schema
-Validation Hardening v0.1 now partially closes Finding B for incoming
-ResultProposal at the Post V&V boundary:
-`runtime_jsonschema_hardening_post_vv_resultproposal_v01_status=complete_through_audit`,
-`result_proposal_runtime_schema_validation_present=true`, and
-`post_vv_validates_incoming_resultproposal_schema=true`. Schema validation runs
-before manual checks, is additive, returns normal V&V report rejection path on
-schema failure, and does not crash. Manual policy/safety checks remain
-preserved. Outgoing VVReport runtime validation remains deferred.
-EvidenceItem.kind and artifact_type are still separate future work.
+Validation Hardening v0.1 now closes Finding B only for Post V&V incoming
+ResultProposal and outgoing VVReport boundaries. Incoming ResultProposal
+validation is implemented, and Outgoing VVReport Runtime Schema Validation
+v0.1 adds `outgoing_vv_report_runtime_schema_validation_present=true` and
+`post_vv_validates_outgoing_vvreport_schema=true`. Outgoing validation runs
+before return, is additive, preserves manual policy/safety checks, and returns
+a safe schema-conforming rejected VVReport on validation failure. EvidenceItem.kind
+and artifact_type remain the separate next planning layer.
 
 ## Exclusions
 

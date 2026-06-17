@@ -1361,6 +1361,57 @@ Deferred work remains explicit:
 `artifact_type_alignment_implemented=false`, `production_ready_claimed=false`,
 and `public_auditor_ready_claimed=false`.
 
+## Outgoing VVReport Runtime Schema Validation v0.1
+
+Outgoing VVReport Runtime Schema Validation v0.1 is complete through runtime
+patch and audit. Commits: preflight `c6e1bf7`, runtime patch `187461d`, audit
+`916a913`.
+
+Audit status: `outgoing_vvreport_runtime_validation_v01_audit_status=PASS`.
+Patch type: `runtime_post_vv_outgoing_vvreport_schema_validation`.
+
+Post V&V now validates outgoing VVReport dictionaries against
+`schemas/vv_report.schema.json` before returning. Post V&V incoming
+ResultProposal and outgoing VVReport boundaries are runtime-schema validated.
+Finding B is closed only for those two Post V&V boundaries.
+
+Outgoing validation runs before return, is additive, and records
+`outgoing_validation_replaces_manual_checks: false`. Incoming ResultProposal
+validation is preserved. Manual policy and safety checks are preserved:
+`manual_policy_checks_preserved: true` and
+`manual_safety_checks_preserved: true`.
+
+Outgoing validation failures return a safe schema-conforming rejected VVReport
+without crashing: `outgoing_validation_failures_return_safe_vvreport: true`,
+`outgoing_validation_failures_do_not_crash: true`, and
+`fallback_vvreport_is_schema_conforming: true`. The fallback uses
+`fallback_status: rejected`, `fallback_decision: reject`,
+`fallback_overall_score: 0.0`, `fallback_contains_schema_violation: true`, and
+`fallback_avoids_recursive_validation_loop: true`.
+
+Boundary facts recorded by audit:
+
+- schemas_modified: false
+- gt_modified: false
+- root_modified: false
+- drs_writeback_modified: false
+- outgoing_schema_validation_creates_finaloutput: false
+- outgoing_schema_validation_writes_drs: false
+- outgoing_schema_validation_executes_action: false
+- outgoing_schema_validation_grants_authority: false
+- root_remains_final_authority: true
+
+Test evidence recorded by audit:
+
+- post_vv_schema_batch: 40 passed, 16 warnings
+- nearby_boundary_batch: 73 passed, 20 warnings
+- jsonschema.RefResolver deprecation warning: non_blocking
+
+EvidenceItem.kind / artifact_type preflight planning remains next:
+`evidence_kind_alignment_implemented=false`,
+`artifact_type_alignment_implemented=false`, `production_ready_claimed=false`,
+and `public_auditor_ready_claimed=false`.
+
 ## Targeted Proof Runtime Policy
 
 Targeted proof tests verify the new layer only and must not replay historical
@@ -1568,7 +1619,8 @@ Next engineering focus:
 - Completed: Schema Contract Alignment v0.1 Phase 1 — AttractorPacket Architect contract alignment.
 - Completed: Schema Contract Alignment v0.1 Phase 2 — Executor / DAG ResultProposal contract wording.
 - Completed: Runtime JSON Schema Validation Hardening v0.1 — Post V&V incoming ResultProposal validation.
-- Next decision: outgoing VVReport validation subphase or EvidenceItem.kind / artifact_type planning.
+- Completed: Outgoing VVReport Runtime Schema Validation v0.1.
+- Next: EvidenceItem.kind / artifact_type preflight planning.
 - Later: Public Auditor Packet / Whitepaper draft after remaining schema-contract decisions.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.

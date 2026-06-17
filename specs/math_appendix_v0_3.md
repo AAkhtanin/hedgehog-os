@@ -2899,6 +2899,27 @@ This checkpoint turns the ResultProposal schema from test-only proof into
 runtime boundary validation for incoming Post V&V proposals. Outgoing VVReport
 validation remains future work.
 
+Outgoing VVReport Runtime Schema Validation v0.1 is contract/runtime boundary
+hardening, not new math:
+
+```text
+outgoing_vvreport_runtime_validation_v01_status = complete_through_audit
+patch_type = runtime_post_vv_outgoing_vvreport_schema_validation
+ResultProposal in -> Post V&V -> VVReport out
+outgoing_vv_report_runtime_schema_validation_present = true
+post_vv_validates_outgoing_vvreport_schema = true
+outgoing_validation_runs_before_return = true
+outgoing_validation_is_additive = true
+outgoing_validation_replaces_manual_checks = false
+fallback_vvreport_is_schema_conforming = true
+root_remains_final_authority = true
+evidence_kind_alignment_implemented = false
+artifact_type_alignment_implemented = false
+```
+
+The Post V&V runtime schema boundary is now two-sided: ResultProposal in,
+VVReport out. This does not validate every artifact in the system.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

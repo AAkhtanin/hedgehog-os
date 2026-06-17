@@ -1466,8 +1466,19 @@ Checkpoint evidence: preflight `3207a19`, runtime patch `48e2515`, audit
 `107a7c4`, `post_vv_schema_batch: 38 passed, 2 warnings`, and
 `nearby_boundary_batch: 54 passed, 2 warnings`. The jsonschema.RefResolver
 deprecation warning is `non_blocking`. No schema / GT / Root / DRS modification
-is part of this docs sync. Outgoing VVReport runtime validation remains
-deferred; EvidenceItem.kind and artifact_type remain future work.
+is part of this docs sync.
+
+Outgoing VVReport Runtime Schema Validation v0.1 is complete through runtime
+patch and audit. Post V&V validates outgoing VVReport dictionaries against
+`schemas/vv_report.schema.json` before returning. It keeps incoming
+ResultProposal validation and manual policy/safety checks intact. If outgoing
+validation fails, Post V&V returns a safe schema-conforming rejected VVReport
+with a schema violation instead of crashing. Checkpoint evidence: preflight
+`c6e1bf7`, runtime patch `187461d`, audit `916a913`,
+`post_vv_schema_batch: 40 passed, 16 warnings`, and
+`nearby_boundary_batch: 73 passed, 20 warnings`. No schema / GT / Root / DRS
+modification is part of this docs sync. EvidenceItem.kind and artifact_type
+remain future work.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

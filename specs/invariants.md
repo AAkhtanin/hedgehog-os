@@ -634,15 +634,19 @@ Enterprise Document Killer Demo B v0.1:
 
 Runtime JSON Schema Validation Hardening v0.1:
 
-- Post V&V incoming ResultProposal runtime schema validation is a boundary
-  filter only.
-- The schema filter validates incoming ResultProposal artifacts before manual
+- Post V&V incoming ResultProposal and outgoing VVReport runtime schema
+  validation are boundary filters only.
+- The incoming schema filter validates ResultProposal artifacts before manual
   Post V&V checks.
+- The outgoing schema filter validates VVReport dictionaries before Post V&V
+  returns.
 - Schema validation is additive and does not replace manual safety checks.
-- Schema validation failure returns the V&V report rejection path and must not
-  crash the boundary.
+- Schema validation failure returns the V&V report rejection path or a safe
+  rejected VVReport fallback and must not crash the boundary.
 - Schema validation cannot create FinalOutput.
 - Schema validation cannot write DRS.
 - Schema validation cannot execute action.
+- Schema validation cannot call GT or Root.
 - Schema validation cannot grant authority.
+- EvidenceItem.kind / artifact_type alignment remain open.
 - Root remains final authority.

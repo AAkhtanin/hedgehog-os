@@ -272,7 +272,15 @@ Current reports:
   - Confirms `result_proposal_runtime_schema_validation_present=true` and `post_vv_validates_incoming_resultproposal_schema=true`.
   - Confirms schema validation runs before manual checks, is additive, and records `schema_validation_replaces_manual_checks=false`.
   - Confirms schema failures return the V&V report path without crashing, manual policy/safety checks are preserved, and Root remains final authority.
-  - Confirms outgoing VVReport runtime schema validation is deferred.
+  - Superseded for outgoing boundary status by `auditor_outgoing_vvreport_runtime_validation_v01.log`.
+
+- `auditor_outgoing_vvreport_runtime_validation_v01.log`
+  - Outgoing VVReport Runtime Schema Validation v0.1 audit for Post V&V outgoing VVReport runtime schema validation.
+  - Audit status PASS. Evidence: preflight commit `c6e1bf7`, runtime patch commit `187461d`, audit commit `916a913`.
+  - Confirms `patch_type=runtime_post_vv_outgoing_vvreport_schema_validation`.
+  - Confirms `outgoing_vv_report_runtime_schema_validation_present=true` and `post_vv_validates_outgoing_vvreport_schema=true`.
+  - Confirms outgoing validation runs before return, is additive, preserves manual checks, and falls back to safe rejected VVReport on validation failure.
+  - Confirms EvidenceItem.kind / artifact_type remain open.
 
 ## Current Applied Auditor Commands
 

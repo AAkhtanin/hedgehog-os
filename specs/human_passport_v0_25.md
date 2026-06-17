@@ -2821,10 +2821,12 @@ policy/safety checks. Schema validation failure returns the V&V report path
 without crashing. Schema validation does not grant authority, create
 FinalOutput, write DRS, or execute actions. Root remains final authority.
 
-Outgoing VVReport runtime validation, EvidenceItem.kind vocabulary alignment,
-and artifact_type vocabulary alignment remain future phases. The next decision
-is whether to do an outgoing VVReport validation subphase or EvidenceItem.kind /
-artifact_type planning.
+Outgoing VVReport Runtime Schema Validation v0.1 is also complete. Post V&V now
+checks the form of what comes in and the form of what goes out: ResultProposal
+in, VVReport out. Schema validation is a boundary filter, not truth or
+authority. The outgoing fallback is a safe rejected VVReport, not execution.
+EvidenceItem.kind vocabulary alignment and artifact_type vocabulary alignment
+remain future phases. Root remains final authority.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

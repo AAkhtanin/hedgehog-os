@@ -254,8 +254,8 @@ Anti-reduction rules:
   workflow generalization.
 - Schema Contract Alignment v0.1 preflight scan is complete. Phase 1 closed
   only Finding A for the active AttractorPacket Architect-facing contract.
-  Finding B is partially closed for incoming ResultProposal validation at the
-  Post V&V boundary. Outgoing VVReport validation remains deferred.
+  Finding B is closed only for Post V&V incoming ResultProposal and outgoing
+  VVReport runtime-schema boundaries.
   Findings C/D/E remain open or partially open: EvidenceItem.kind vocabulary
   alignment, artifact_type vocabulary alignment, and focused coverage gaps.
 - Schema Contract Alignment v0.1 Phase 2 is complete through patch and audit.
@@ -271,11 +271,19 @@ Anti-reduction rules:
   patch `48e2515`, audit `107a7c4`, with `38 passed, 2 warnings` and
   `54 passed, 2 warnings`; jsonschema.RefResolver deprecation warning is
   `non_blocking`.
-- Current next decision: outgoing VVReport validation subphase or
-  EvidenceItem.kind / artifact_type planning. Do not combine next layers. Do
-  not claim production readiness. Continue the phase-gated workflow.
-- Do not run broad schema hardening. Do not implement outgoing VVReport
-  validation unless explicitly approved. Do not align EvidenceItem.kind yet. Do
+- Outgoing VVReport Runtime Schema Validation v0.1 is complete through runtime
+  patch and audit. Post V&V validates outgoing VVReport dictionaries before
+  return; outgoing validation is additive, preserves incoming ResultProposal
+  validation and manual policy/safety checks, and falls back to a safe
+  schema-conforming rejected VVReport without calling GT/Root, writing DRS,
+  executing action, or creating FinalOutput. Audit evidence: preflight
+  `c6e1bf7`, runtime patch `187461d`, audit `916a913`, with
+  `40 passed, 16 warnings` and `73 passed, 20 warnings`; jsonschema.RefResolver
+  deprecation warning is `non_blocking`.
+- Current next layer: EvidenceItem.kind / artifact_type preflight planning. Do
+  not combine with DRS aging or adversarial packs yet. Do not claim production
+  readiness. Continue the phase-gated workflow.
+- Do not run broad schema hardening. Do not align EvidenceItem.kind yet. Do
   not align artifact_type yet.
 - Never tell Codex "fix schema hardening" broadly. Use phase-gated patches:
   define the narrow contract, patch only allowed files, and verify with
@@ -631,7 +639,7 @@ benchmark onto the dirty enterprise stack with a synthetic proof-level signal on
 and context units 180 -> 32. It is not real billing, latency, cloud cost, or
 production economics.
 
-Corrected engineering order: Compute Collapse Enterprise Bench v0.1 is complete through proof, human walkthrough, audit, and docs sync. Math / Invariants Sync v0.4 is complete. Kernel Enforcement / Transition Matrix Hardening v0.1 is complete through proof, human walkthrough, audit, and docs sync. Developer Facade / Capability Manifest UX v0.1 is complete through proof, human walkthrough, audit, and docs sync. Production Boundary Design Docs v0.1 is complete as design documentation. Enterprise Killer Demo v0.1 / Demo A is complete through proof, human walkthrough, audit, and docs sync. Enterprise Document Killer Demo B v0.1 is complete through design, proof, human walkthrough, audit, and docs sync. Schema Contract Alignment v0.1 Phase 1 is complete through patch and audit. Schema Contract Alignment v0.1 Phase 2 is complete through patch and audit. Runtime JSON Schema Validation Hardening v0.1 is complete through runtime patch and audit for Post V&V incoming ResultProposal validation. Next decision: outgoing VVReport validation subphase or EvidenceItem.kind / artifact_type planning. Public Auditor Packet / Whitepaper draft remains later. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
+Corrected engineering order: Compute Collapse Enterprise Bench v0.1 is complete through proof, human walkthrough, audit, and docs sync. Math / Invariants Sync v0.4 is complete. Kernel Enforcement / Transition Matrix Hardening v0.1 is complete through proof, human walkthrough, audit, and docs sync. Developer Facade / Capability Manifest UX v0.1 is complete through proof, human walkthrough, audit, and docs sync. Production Boundary Design Docs v0.1 is complete as design documentation. Enterprise Killer Demo v0.1 / Demo A is complete through proof, human walkthrough, audit, and docs sync. Enterprise Document Killer Demo B v0.1 is complete through design, proof, human walkthrough, audit, and docs sync. Schema Contract Alignment v0.1 Phase 1 is complete through patch and audit. Schema Contract Alignment v0.1 Phase 2 is complete through patch and audit. Runtime JSON Schema Validation Hardening v0.1 is complete through runtime patch and audit for Post V&V incoming ResultProposal validation. Outgoing VVReport Runtime Schema Validation v0.1 is complete through runtime patch and audit. Next: EvidenceItem.kind / artifact_type preflight planning. Public Auditor Packet / Whitepaper draft remains later. Any future Controlled Multi-LLM Chain Showcase is `showcase_only`, not a canonical authority layer, and must remain Root-final and action-free.
 
 Marennya and UP remain deferred because they should analyze a mature internal system with multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal expansion, dual coupling, DRS bridge evidence, chaos/failure traces, and production-boundary design. They are not early decorative analytics.
 

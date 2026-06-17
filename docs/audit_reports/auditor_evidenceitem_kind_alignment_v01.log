@@ -1,0 +1,292 @@
+HEADER
+======
+
+Audit: EvidenceItem.kind Alignment v0.1 narrow patch
+Scope: narrow schema/reference/test patch for active EvidenceItem.kind enum
+Created for: committed patch chain review
+
+evidenceitem_kind_alignment_v01_audit_status: PASS
+patch_type: narrow_evidenceitem_kind_enum_expansion
+
+This audit records that the patch added exactly one active EvidenceItem.kind
+enum value, `fractal_dag_executor`, for Fractal DAG ResultProposal evidence.
+It does not claim artifact_type alignment, broad artifact vocabulary alignment,
+runtime behavior changes, or production/public-auditor readiness.
+
+
+COMMIT EVIDENCE
+===============
+
+plan_commit: 2685921
+plan_commit_name: Add EvidenceItem kind Alignment patch plan
+
+runtime_schema_patch_commit: 4ced110
+runtime_schema_patch_commit_name: Align EvidenceItem kind for Fractal DAG executor evidence
+
+
+FILES CHANGED BY PATCH
+======================
+
+schemas/common.schema.json
+specs/schema_package_v0_25_reference.md
+specs/invariants.md
+tests/test_post_vv_runtime.py
+
+schema_modified: true
+reference_docs_modified: true
+invariants_modified: true
+tests_modified: true
+runtime_modified: false
+artifact_type_modified: false
+transition_matrix_modified: false
+drs_lifecycle_modified: false
+gt_modified: false
+root_modified: false
+drs_modified: false
+
+
+PATCH SCOPE
+===========
+
+Patch scope:
+
+- Add one active EvidenceItem.kind enum value for Fractal DAG executor evidence.
+- Sync the schema package reference with the active enum result.
+- Add a compact invariant stating EvidenceItem.kind is local evidence
+  classification only.
+- Add focused tests around ResultProposal schema validation and authority
+  guardrails.
+
+The patch does not modify runtime emitters, Post V&V behavior, GT, Root, DRS,
+Transition Matrix, DRS lifecycle, NeedleRuntime evidence shape, or artifact_type
+vocabulary.
+
+
+EXACT ENUM RESULT
+=================
+
+evidenceitem_kind_added: fractal_dag_executor
+added_enum_values_count: 1
+
+audit_added_to_evidenceitem_kind: false
+needle_runtime_added_to_evidenceitem_kind: false
+executor_node_added_to_evidenceitem_kind: false
+fractal_dag_executor_node_added_to_evidenceitem_kind: false
+artifact_vocab_terms_added_to_evidenceitem_kind: false
+
+Allowed active EvidenceItem.kind result after patch:
+
+- drs_record
+- needle
+- schema
+- policy
+- trace
+- simulated_executor
+- fractal_dag_executor
+- manual
+
+Forbidden additions intentionally absent:
+
+- audit
+- needle_runtime
+- executor_node
+- fractal_dag_executor_node
+- AcceptedEvidence
+- EvidenceCandidate
+- ValidationPacket
+- RootFinalOutput
+- GTReport
+- AuditEvent
+- ChildBoundarySnapshot
+- SemanticDraft
+- NeedleCandidate
+- ManifestCandidate
+
+
+MEANING
+=======
+
+EvidenceItem.kind remains a local ResultProposal evidence classification.
+EvidenceItem.kind is not artifact_type.
+EvidenceItem.kind is not a global artifact registry.
+
+The `fractal_dag_executor` evidence kind records source/provenance of Fractal
+DAG boundary evidence. It does not make Fractal DAG Root. Fractal DAG output
+remains downstream of Post V&V, GT, and Root.
+
+
+AUTHORITY GUARDRAILS
+====================
+
+evidenceitem_kind_creates_truth: false
+evidenceitem_kind_creates_authority: false
+evidenceitem_kind_implies_accepted_evidence: false
+evidenceitem_kind_authorizes_action: false
+evidenceitem_kind_writes_drs: false
+evidenceitem_kind_creates_finaloutput: false
+root_remains_final_authority: true
+
+Guardrail interpretation:
+
+- EvidenceItem.kind classifies local ResultProposal evidence.
+- It does not decide truth.
+- It does not grant authority.
+- It does not create AcceptedEvidence.
+- It does not authorize action.
+- It does not write DRS.
+- It does not create FinalOutput.
+- Root remains final authority.
+
+
+TEST EVIDENCE
+=============
+
+Command recorded:
+
+.venv/bin/python -m pytest tests/test_schema_files_valid.py tests/test_post_vv_runtime.py tests/test_executor_runtime.py -q
+
+Result recorded:
+
+25 passed, 22 warnings
+
+Test coverage recorded:
+
+- fractal_dag_executor evidence kind validates ResultProposal schema
+- fractal_dag_executor evidence kind does not create authority or AcceptedEvidence
+- simulated_executor evidence kind still validates ResultProposal schema
+- unknown evidence kind is still rejected by runtime schema validation
+- malformed EvidenceItem shape is still rejected by runtime schema validation
+
+
+WARNINGS
+========
+
+jsonschema.RefResolver deprecation warning observed.
+warning_status: non_blocking
+
+Interpretation:
+
+- The warnings are compatibility cleanup debt, not failures of this patch.
+- This audit does not recommend changing validator plumbing in this layer.
+
+
+NON-GOALS / DEFERRED WORK
+=========================
+
+audit EvidenceItem.kind not added.
+needle_runtime EvidenceItem.kind not added.
+NeedleRuntime evidence shape not normalized.
+artifact_type Mapping deferred.
+Negative Trace layer not created.
+Marennya not activated.
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+Deferred work remains:
+
+- NeedleRuntime evidence shape preflight before deciding whether audit should
+  become EvidenceItem.kind.
+- artifact_type Mapping / Runtime Artifact Vocabulary remains separate later
+  layer.
+- Broader artifact taxonomy remains outside this narrow enum patch.
+
+
+OVERCLAIM GUARDRAILS
+====================
+
+This audit does not claim:
+
+- audit was added to EvidenceItem.kind
+- needle_runtime was added to EvidenceItem.kind
+- executor_node was added to EvidenceItem.kind
+- fractal_dag_executor_node was added to EvidenceItem.kind
+- artifact_type was modified
+- runtime behavior was modified
+- Transition Matrix was modified
+- DRS lifecycle was modified
+- GT was modified
+- Root was modified
+- DRS was modified
+- Negative Trace layer was created
+- Marennya was activated
+- production readiness
+- public-auditor readiness
+- all findings closed
+
+
+FINDINGS STATUS
+===============
+
+evidenceitem_kind_enum_too_narrow_status: partially_closed_for_fractal_dag_executor
+fractal_dag_executor_evidence_kind_status: implemented
+audit_evidence_kind_status: deferred
+needle_runtime_evidence_kind_status: not_added_trace_metadata_only
+needleruntime_evidence_shape_status: deferred_preflight_needed
+artifact_type_mapping_status: deferred_separate_layer
+
+Finding interpretation:
+
+- This patch closes only the observed Fractal DAG executor evidence kind gap.
+- It does not close audit evidence shape drift.
+- It does not close artifact_type centralization.
+- It does not close every artifact vocabulary issue from the taxonomy preflight.
+
+
+NEXT RECOMMENDED STEP
+=====================
+
+next_recommended_step: docs sync for EvidenceItem.kind Alignment v0.1
+
+Then:
+
+- NeedleRuntime audit evidence shape preflight, before deciding whether audit
+  should become EvidenceItem.kind.
+- artifact_type Mapping / Runtime Artifact Vocabulary remains separate later
+  layer.
+
+
+AUDIT SUMMARY
+=============
+
+evidenceitem_kind_alignment_v01_audit_status: PASS
+patch_type: narrow_evidenceitem_kind_enum_expansion
+plan_commit: 2685921
+runtime_schema_patch_commit: 4ced110
+
+schema_modified: true
+reference_docs_modified: true
+invariants_modified: true
+tests_modified: true
+runtime_modified: false
+artifact_type_modified: false
+transition_matrix_modified: false
+drs_lifecycle_modified: false
+gt_modified: false
+root_modified: false
+drs_modified: false
+
+evidenceitem_kind_added: fractal_dag_executor
+added_enum_values_count: 1
+audit_added_to_evidenceitem_kind: false
+needle_runtime_added_to_evidenceitem_kind: false
+executor_node_added_to_evidenceitem_kind: false
+fractal_dag_executor_node_added_to_evidenceitem_kind: false
+artifact_vocab_terms_added_to_evidenceitem_kind: false
+
+evidenceitem_kind_creates_truth: false
+evidenceitem_kind_creates_authority: false
+evidenceitem_kind_implies_accepted_evidence: false
+evidenceitem_kind_authorizes_action: false
+evidenceitem_kind_writes_drs: false
+evidenceitem_kind_creates_finaloutput: false
+root_remains_final_authority: true
+
+test_evidence_targeted_batch: 25 passed, 22 warnings
+warning_refresolver_deprecation_status: non_blocking
+
+needleruntime_evidence_shape_status: deferred_preflight_needed
+artifact_type_mapping_status: deferred_separate_layer
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+next_recommended_step: docs sync for EvidenceItem.kind Alignment v0.1; then NeedleRuntime audit evidence shape preflight before deciding whether audit should become EvidenceItem.kind; artifact_type Mapping / Runtime Artifact Vocabulary remains separate later layer

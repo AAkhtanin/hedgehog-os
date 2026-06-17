@@ -1507,18 +1507,30 @@ Test evidence recorded by audit: targeted batch `36 passed, 24 warnings`;
 nearby boundary batch `48 passed, 20 warnings`. The jsonschema.RefResolver
 deprecation warning is `non_blocking`.
 
-Next: artifact_type Mapping / Runtime Artifact Vocabulary Option A docs/spec
-map.
+Next: Guardian review of the artifact_type Mapping / Runtime Artifact
+Vocabulary Option A docs/spec map.
 
 ## artifact_type Mapping / Runtime Artifact Vocabulary v0.1
 
-artifact_type Mapping / Runtime Artifact Vocabulary v0.1 created the Option A
-docs/spec human-readable artifact vocabulary map. It is based on preflight
-`b4aaf8e` and patch plan `c4f9a02`.
+artifact_type Mapping / Runtime Artifact Vocabulary v0.1 is complete through
+audit. It created the Option A docs/spec human-readable artifact vocabulary
+map. Evidence: preflight `b4aaf8e`, patch plan `c4f9a02`, map `d3193a2`, and
+audit `27bee7d`.
 
-Status: `artifact_type_mapping_runtime_vocabulary_v01_status=implemented_docs_spec_map_only`.
+Status: `artifact_type_mapping_runtime_vocabulary_v01_status=complete_through_audit`.
+Audit status: `artifact_type_mapping_runtime_vocabulary_v01_audit_status=PASS`.
 This checkpoint made no runtime, schema, or test change. It created no enum and
 no runtime artifact registry.
+
+Checkpoint fields:
+
+- docs_spec_map_created: true
+- runtime_modified: false
+- schemas_modified: false
+- tests_modified: false
+- registry_created: false
+- enum_created: false
+- map_first_constrain_later_enum_last_if_needed: true
 
 The map separates `artifact_type`, `source_artifact_type`, EvidenceItem.kind,
 TraceRef.kind, lifecycle_state/status, and authority_status. artifact_type is
@@ -1538,8 +1550,21 @@ Root, and Root remains final authority.
 Deferred work: `runtime_artifact_registry_recommended_now=false`,
 `artifact_type_schema_enum_recommended_now=false`,
 `broad_schema_enum_rejected_now=true`, and
-`global_artifact_ontology_rejected_now=true`. Option B/C/D/E work is later and
-requires review.
+`global_artifact_ontology_rejected_now=true`. Full artifact vocabulary
+completion is not claimed:
+`full_artifact_vocabulary_completion_status=not_claimed`. Next: Guardian
+review of Option A map. No Option B runtime constants, Option C schema enum,
+Option D guardrail tests, Option E source_artifact_type split, or
+runtime/schema patch should start before Guardian / user approval.
+
+Deferred fields:
+
+- runtime_artifact_registry_recommended_now: false
+- artifact_type_schema_enum_recommended_now: false
+- broad_schema_enum_rejected_now: true
+- global_artifact_ontology_rejected_now: true
+- full_artifact_vocabulary_completion_status: not_claimed
+- overengineering_risk_status: controlled_by_docs_first_map
 
 ## Targeted Proof Runtime Policy
 
@@ -1753,8 +1778,8 @@ Next engineering focus:
 - Completed: Outgoing VVReport Runtime Schema Validation v0.1.
 - Completed: EvidenceItem.kind Alignment v0.1 — narrow Fractal DAG executor evidence kind patch.
 - Completed: NeedleRuntime Audit Evidence Shape v0.1 — audit evidence shape normalized and `audit` added as local EvidenceItem.kind.
-- Completed: artifact_type Mapping / Runtime Artifact Vocabulary v0.1 — Option A docs/spec human-readable artifact vocabulary map.
-- Next later: Option B/C/D/E artifact vocabulary work only after review.
+- Completed: artifact_type Mapping / Runtime Artifact Vocabulary v0.1 — Option A docs/spec human-readable artifact vocabulary map, complete through audit.
+- Next: Guardian review of Option A docs/spec artifact vocabulary map before any Option B/C/D/E work.
 - Later: Public Auditor Packet / Whitepaper draft after remaining schema-contract decisions.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.

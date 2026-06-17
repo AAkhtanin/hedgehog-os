@@ -2846,9 +2846,11 @@ that EvidenceItem. `audit` is a local support/provenance label, not truth or
 authority. Audit hash is not truth. `needle_runtime` remains a trace label.
 Root remains final authority.
 
-artifact_type Mapping / Runtime Artifact Vocabulary v0.1 is complete as an
-Option A docs/spec human-readable map only. It does not change runtime,
-schemas, tests, GT, Root, DRS, Transition Matrix, or DRS lifecycle.
+artifact_type Mapping / Runtime Artifact Vocabulary v0.1 is complete through
+audit as an Option A docs/spec human-readable map only. Evidence: preflight
+`b4aaf8e`, patch plan `c4f9a02`, map `d3193a2`, audit `27bee7d`. It does not
+change runtime, schemas, tests, GT, Root, DRS, Transition Matrix, or DRS
+lifecycle.
 
 The map separates the questions reviewers often collapse:
 
@@ -2867,6 +2869,10 @@ source_artifact_type does not create truth or authority. TraceRef.kind does
 not create evidence. AcceptedEvidence does not authorize action by itself.
 GTReport remains advisory, DRSRecord remains memory/audit, and RootFinalOutput
 is created only by Root. Root remains final authority.
+
+This is not full artifact vocabulary completion. Runtime constants, schema
+enum, guardrail tests, and source_artifact_type split work remain deferred
+until Guardian / user review of the Option A docs/spec map.
 
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal

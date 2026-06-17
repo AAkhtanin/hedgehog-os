@@ -1501,6 +1501,14 @@ preflight `99592a6`, patch plan `fd9e862`, patch `f0bf7be`, audit `0b2ffc8`,
 `non_blocking`. No artifact_type / GT / Root / DRS modification is part of this
 checkpoint.
 
+artifact_type Mapping / Runtime Artifact Vocabulary v0.1 is complete through
+audit as Option A docs/spec human-readable map only. Evidence: preflight
+`b4aaf8e`, patch plan `c4f9a02`, map `d3193a2`, audit `27bee7d`. It makes no
+runtime, schema, or test change; creates no registry or enum; and does not
+claim full artifact vocabulary completion. Option B runtime constants, Option C
+schema enum, Option D guardrail tests, and Option E source_artifact_type split
+remain deferred pending Guardian / user review.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

@@ -301,6 +301,15 @@ Current reports:
   - Confirms authority guardrails: audit evidence does not create truth, authority, AcceptedEvidence, action permission, DRS write, or FinalOutput; audit hash is not truth; Root remains final authority.
   - Confirms artifact_type Mapping remains deferred.
 
+- `auditor_artifact_type_mapping_runtime_vocabulary_v01.log`
+  - artifact_type Mapping / Runtime Artifact Vocabulary v0.1 audit for the Option A docs/spec human-readable artifact vocabulary map.
+  - Audit status PASS. Evidence: preflight commit `b4aaf8e`, patch plan commit `c4f9a02`, map commit `d3193a2`, audit commit `27bee7d`.
+  - Confirms Option A docs/spec map only.
+  - Confirms no runtime/schema/test/registry/enum changes.
+  - Confirms canonical axes: artifact_type, source_artifact_type, EvidenceItem.kind, TraceRef.kind, lifecycle_state/status, and authority_status.
+  - Confirms Root authority guardrails: artifact_type and source_artifact_type do not create truth or authority; TraceRef.kind does not create evidence; GTReport remains advisory; DRSRecord remains memory/audit; RootFinalOutput is Root-created only.
+  - Confirms full artifact vocabulary completion is not claimed.
+
 ## Current Applied Auditor Commands
 
 ```bash

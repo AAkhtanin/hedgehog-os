@@ -1158,6 +1158,13 @@ support/provenance, while `needle_runtime` remains trace_refs.kind only.
 artifact_type remains separate. NeedleRuntime remains downstream of Post V&V,
 GT, and Root. Root remains final authority.
 
+artifact_type Mapping / Runtime Artifact Vocabulary v0.1 is complete through
+audit as an Option A docs/spec human-readable map only. It separates
+artifact_type, source_artifact_type, EvidenceItem.kind, TraceRef.kind,
+lifecycle_state/status, and authority_status. It makes no runtime, schema, or
+test change; creates no registry or enum; and preserves Root final authority.
+Next: Guardian review of Option A map before any Option B/C/D/E work.
+
 ## Exclusions
 
 - No real external APIs.

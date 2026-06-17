@@ -2964,6 +2964,34 @@ This adds `audit` as local EvidenceItem.kind support/provenance and normalizes
 NeedleRuntime evidence to `kind`, `summary`, and `ref_id`. It does not change
 authority, artifact_type, runtime math, Post V&V scoring, GT, Root, or DRS.
 
+artifact_type Mapping / Runtime Artifact Vocabulary v0.1 is vocabulary mapping,
+not new math:
+
+```text
+artifact_type_mapping_runtime_vocabulary_v01_status = complete_through_audit
+artifact_type_mapping_runtime_vocabulary_v01_audit_status = PASS
+option_selected = Option A docs/spec human-readable artifact vocabulary map
+runtime_modified = false
+schemas_modified = false
+tests_modified = false
+registry_created = false
+enum_created = false
+artifact_type_creates_truth = false
+artifact_type_creates_authority = false
+source_artifact_type_creates_truth = false
+source_artifact_type_creates_authority = false
+trace_ref_creates_evidence = false
+gt_report_is_advisory = true
+drs_record_is_memory_not_authority = true
+root_final_output_created_only_by_root = true
+root_remains_final_authority = true
+```
+
+This map separates artifact_type, source_artifact_type, EvidenceItem.kind,
+TraceRef.kind, lifecycle_state/status, and authority_status. It preserves
+authority guardrails and makes no runtime, schema, test, enum, registry, GT,
+Root, DRS, Transition Matrix, or DRS lifecycle change.
+
 ## 18. What Must Move Into a New Branch
 
 For Codex / Antigravity, this file should exist as:

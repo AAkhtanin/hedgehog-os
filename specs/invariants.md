@@ -649,9 +649,10 @@ Runtime JSON Schema Validation Hardening v0.1:
 - Schema validation cannot call GT or Root.
 - Schema validation cannot grant authority.
 - EvidenceItem.kind alignment is complete for current active evidence-boundary
-  needs. artifact_type Mapping / Runtime Artifact Vocabulary v0.1 has an
-  Option A docs/spec map only; registry, enum, and guardrail-test work remain
-  deferred and require review.
+  needs. artifact_type Mapping / Runtime Artifact Vocabulary v0.1 is complete
+  through audit as an Option A docs/spec map only; registry, enum,
+  guardrail-test, and source_artifact_type split work remain deferred and
+  require Guardian / user review.
 - Root remains final authority.
 
 EvidenceItem.kind alignment invariant:
@@ -671,6 +672,7 @@ artifact_type Mapping / Runtime Artifact Vocabulary v0.1 invariant:
 
 - artifact_type, source_artifact_type, EvidenceItem.kind, TraceRef.kind,
   lifecycle_state/status, and authority_status are separate axes.
+- This separation is documented through the Option A map and audit.
 - artifact_type is metadata/classification only.
 - source_artifact_type is audit/lifecycle/proof source metadata only.
 - EvidenceItem.kind remains local ResultProposal evidence classification only.

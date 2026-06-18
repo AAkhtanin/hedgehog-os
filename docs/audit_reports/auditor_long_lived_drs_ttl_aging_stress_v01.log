@@ -1,0 +1,234 @@
+# Auditor Report - Long-lived DRS State / TTL / Aging Stress v0.1
+
+## 1. Audit status
+
+audit_id: auditor_long_lived_drs_ttl_aging_stress_v01
+audit_status: PASS
+audited_commit: d3840db
+proof_status: PASS
+proof_runner_created: true
+focused_tests_created: true
+runtime_modified: false
+schemas_modified: false
+production_drs_implemented: false
+external_drs_implemented: false
+network_used: false
+gemini_used: false
+marennya_activated: false
+up_activated: false
+negative_trace_layer_created: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+## 2. Scope
+
+Audit scope:
+
+- `demo/run_long_lived_drs_ttl_aging_stress_v01.py`
+- `tests/test_long_lived_drs_ttl_aging_stress_v01_runner.py`
+
+This audit is for deterministic proof evidence only. It does not audit the
+proof as production runtime. It does not claim production DRS, real database,
+distributed DRS, real clock security, real connector trust, or real time
+synchronization.
+
+## 3. Commit chain
+
+- c8c0907 - read-only preflight
+- 49b0a11 - math invariants patch plan
+- 1cc9c69 - math invariants docs patch
+- ee9e419 - proof runner patch plan
+- d3840db - deterministic proof runner + focused tests
+
+## 4. Validation commands
+
+Command:
+
+```text
+python3 -m demo.run_long_lived_drs_ttl_aging_stress_v01
+```
+
+Result:
+
+- proof runner prints `FINAL STATUS: PASS`
+
+Command:
+
+```text
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_long_lived_drs_ttl_aging_stress_v01_runner.py
+```
+
+Result:
+
+- focused tests: 19 passed
+
+Static checks required for audit task:
+
+- `git status --short`
+- `git diff --stat`
+- `git diff --check`
+
+Expected:
+
+- worktree should contain only the new audit log file
+- no diff check errors
+
+## 5. Proof counters
+
+Observed proof counters:
+
+- scenarios_total: 25
+- scenarios_passed: 25
+- direct_reuse_allowed_count: 1
+- direct_reuse_blocked_count: 24
+- context_only_count: 3
+- warning_only_count: 2
+- historical_replay_count: 2
+- rerun_required_count: 2
+- blocked_count: 12
+- root_final_authority_preserved_count: 25
+- unbounded_graph_traversal_used_count: 0
+- reuse_boost_hard_gate_overrides_count: 0
+- unaccepted_supersession_count: 0
+- accepted_evidence_action_permission_count: 0
+- production_drs_used_count: 0
+- external_drs_used_count: 0
+- network_used_count: 0
+- gemini_used_count: 0
+- marennya_activated_count: 0
+- up_activated_count: 0
+
+`direct_reuse_allowed_count: 1` is expected and safe because it corresponds to
+the positive control scenario where all hard gates pass and RootShortcutAllowed
+is true. It is not a Root bypass and does not imply production DRS behavior.
+
+## 6. Scenario coverage audit
+
+All required scenarios are present and PASS:
+
+1. missing_time_envelope_rejected - PASS
+2. drs_query_without_temporal_query_rejected - PASS
+3. fresh_record_direct_reuse_candidate_but_root_required - PASS
+4. stale_work_record_context_only_not_direct_reuse - PASS
+5. expired_time_envelope_blocks_direct_reuse - PASS
+6. valid_document_but_stale_verification_requires_rerun - PASS
+7. fresh_ingestion_old_source_observed_at_blocks_freshness - PASS
+8. prefer_recent_selects_new_record - PASS
+9. historical_as_of_selects_old_record - PASS
+10. non_overlapping_validity_records_do_not_conflict - PASS
+11. overlapping_validity_conflict_blocks_reuse - PASS
+12. quarantine_proximity_blocks_reuse - PASS
+13. deadend_proximity_blocks_route - PASS
+14. reuse_frequency_cannot_override_staleness - PASS
+15. gt_ttl_decay_penalizes_bad_old_record - PASS
+16. future_timestamp_quarantined - PASS
+17. negative_ttl_rejected - PASS
+18. audit_replay_uses_historical_time - PASS
+19. accepted_evidence_not_future_action_permission - PASS
+20. root_shortcut_required_for_any_direct_final_reuse - PASS
+21. supersession_requires_root_accepted_trustworthy_new_record - PASS
+22. fresh_unaccepted_observation_cannot_supersede_work - PASS
+23. quarantine_proximity_computation_is_bounded - PASS
+24. quarantine_taint_does_not_cascade_to_whole_graph - PASS
+25. reuse_boost_cannot_override_hard_gates - PASS
+
+## 7. Boundary checks
+
+- TemporalHardGate can block direct reuse.
+- FreshnessOK checks required time axes independently.
+- DirectReuseAllowed requires RootShortcutAllowed and every hard gate.
+- ReuseScore does not decide.
+- ReuseBoost does not override hard gates.
+- ReuseBoost does not grant RootShortcutAllowed.
+- Reuse frequency cannot override staleness.
+- GT-TTL is advisory, not authority.
+- Fresh ingestion is not fresh knowledge.
+- AcceptedEvidence(t_old) is not ActionPermission(t_now).
+- Audit replay is historical, not current truth.
+- Unaccepted ConnectorObservation cannot supersede Work.
+- SemanticDraft cannot supersede Work.
+- ExternalDRSPointer cannot supersede Work.
+- EvidenceCandidate cannot supersede Work.
+- Supersession requires RootAcceptedForSupersession and
+  TrustClassAllowedToSupersede.
+- Quarantine/deadend proximity can warn or block.
+- Proximity computation is bounded by CandidateSet_pre / max_lineage_hops /
+  taint summary.
+- Quarantine taint does not cascade to the whole graph.
+- Root remains final authority.
+
+The proof demonstrates:
+
+Memory may survive.
+Authority does not survive through memory.
+Old records may inform.
+Old records may warn.
+Old records may explain history.
+Old records may suggest rerun.
+Old records may not silently authorize direct reuse.
+Freshness can expire reuse.
+Trust can constrain supersession.
+Proximity can warn or block.
+Popularity can preserve visibility.
+None of them can authorize final reuse.
+Root remains final authority.
+
+## 8. PASS conditions
+
+- scenarios_total == 25: PASS
+- scenarios_passed == scenarios_total: PASS
+- root_final_authority_preserved_count == scenarios_total: PASS
+- unbounded_graph_traversal_used_count == 0: PASS
+- reuse_boost_hard_gate_overrides_count == 0: PASS
+- unaccepted_supersession_count == 0: PASS
+- accepted_evidence_action_permission_count == 0: PASS
+- production_drs_used_count == 0: PASS
+- external_drs_used_count == 0: PASS
+- network_used_count == 0: PASS
+- gemini_used_count == 0: PASS
+- marennya_activated_count == 0: PASS
+- up_activated_count == 0: PASS
+
+## 9. Limitations
+
+- deterministic local proof only
+- not production DRS
+- not external/global DRS
+- not real database
+- not distributed DRS
+- not real clock synchronization
+- not real clock security
+- not real connector trust
+- not real external evidence acceptance
+- not production persistence
+- not runtime integration
+- not schema change
+- not proof of production readiness
+- not public-auditor readiness
+- not Marennya
+- not UP
+- not Negative Trace layer
+
+## 10. Findings
+
+finding_time_gates: PASS
+finding_reuse_boundary: PASS
+finding_supersession_boundary: PASS
+finding_quarantine_deadend_boundary: PASS
+finding_reuseboost_isolation: PASS
+finding_accepted_evidence_boundary: PASS
+finding_audit_replay_boundary: PASS
+finding_root_authority: PASS
+finding_no_production_claim: PASS
+
+## 11. Recommended next step
+
+Recommended next step:
+
+- docs sync for Long-lived DRS State / TTL / Aging Stress v0.1 proof/audit
+  checkpoint
+- no runtime/schema/proof-runner changes during docs sync
+- no production DRS
+- no external/global DRS
+- no Marennya/UP
+- no Negative Trace layer

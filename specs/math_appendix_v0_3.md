@@ -1656,6 +1656,16 @@ Popularity can preserve visibility.
 None of them can authorize final reuse.
 Root remains final authority.
 
+### 8A.15. Deterministic Proof / Audit Checkpoint
+
+Long-lived DRS State / TTL / Aging Stress v0.1 is complete through proof and
+audit at deterministic local level. Proof commit: `d3840db`; audit commit:
+`f1eefee`; `25/25 scenarios` PASS; `19 focused tests` PASS.
+
+The proof/audit checkpoint does not implement runtime behavior or schemas.
+There is no runtime integration and no schema change. The math in this section
+remains the controlling basis for any future runtime/schema work.
+
 ## 9. Marennya
 
 Marennya is intra-domain reflection.

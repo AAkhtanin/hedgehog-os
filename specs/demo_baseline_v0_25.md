@@ -1509,6 +1509,13 @@ claim full artifact vocabulary completion. Option B runtime constants, Option C
 schema enum, Option D guardrail tests, and Option E source_artifact_type split
 remain deferred pending Guardian / user review.
 
+Long-lived DRS State / TTL / Aging Stress v0.1 closes the time/aging proof
+checkpoint at deterministic local level. Evidence: proof `d3840db`, audit
+`f1eefee`, `25/25 scenarios` passed, and `19 focused tests` passed. The layer
+does not claim production persistence, real clock sync/security, distributed
+DRS, or deployment readiness. It is before any production/runtime DRS work and
+keeps Root final authority.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

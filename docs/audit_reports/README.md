@@ -310,6 +310,12 @@ Current reports:
   - Confirms Root authority guardrails: artifact_type and source_artifact_type do not create truth or authority; TraceRef.kind does not create evidence; GTReport remains advisory; DRSRecord remains memory/audit; RootFinalOutput is Root-created only.
   - Confirms full artifact vocabulary completion is not claimed.
 
+- `auditor_long_lived_drs_ttl_aging_stress_v01.log`
+  - Long-lived DRS State / TTL / Aging Stress v0.1 audit: `audited_commit: d3840db`, `audit_commit: f1eefee`.
+  - `audit_status: PASS`, `proof_status: PASS`, `scenarios_total: 25`, `scenarios_passed: 25`, `25/25 scenarios` PASS, and `19 focused tests` PASS.
+  - Confirms TemporalHardGate, FreshnessOK, DirectReuseAllowed, RootShortcutAllowed, trust-aware supersession, bounded proximity through CandidateSet_pre / max_lineage_hops, ReuseBoost isolation, AcceptedEvidence(t_old) != ActionPermission(t_now), audit replay boundary, and Root final authority.
+  - Confirms limitations: deterministic local proof only, not production DRS, not external/global DRS, not real database, not distributed DRS, not real clock security, not runtime integration, not schema change, and not deployment/public-auditor readiness.
+
 ## Current Applied Auditor Commands
 
 ```bash

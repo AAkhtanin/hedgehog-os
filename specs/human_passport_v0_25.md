@@ -2875,12 +2875,17 @@ enum, guardrail tests, and source_artifact_type split work remain deferred
 until Guardian / user review of the Option A docs/spec map.
 
 Long-lived DRS State / TTL / Aging Stress v0.1 follows the artifact_type
-vocabulary pause. This stage documents time/DRS aging invariants only. It does
-not create runtime behavior, schema changes, tests, or a proof runner.
+vocabulary pause and is complete through proof and audit. Proof commit:
+`d3840db`; audit commit: `f1eefee`; `25/25 scenarios` passed; Root final
+authority was preserved in all scenarios.
 
 The layer exists because long-lived memory can become dangerous if stale
 records, old accepted evidence, old connector observations, old GT-TTL,
 quarantine/deadend lineage, or reuse popularity silently affect direct reuse.
+Failed hard gates block direct reuse. The direct reuse positive control is safe
+only when all gates pass and RootShortcutAllowed is true. This is no production
+DRS, no external DRS, and no Marennya / UP activation.
+
 Memory may survive; authority does not survive through memory. Root remains
 final authority.
 

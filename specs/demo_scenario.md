@@ -1165,6 +1165,15 @@ lifecycle_state/status, and authority_status. It makes no runtime, schema, or
 test change; creates no registry or enum; and preserves Root final authority.
 Next: Guardian review of Option A map before any Option B/C/D/E work.
 
+Long-lived DRS State / TTL / Aging Stress v0.1 is complete through proof/audit
+at deterministic local level. It proves old memory may remain visible but
+cannot silently authorize direct reuse. It verifies TemporalHardGate,
+freshness hard gates, query modes, trust-aware supersession, bounded
+quarantine/deadend proximity, ReuseBoost isolation, AcceptedEvidence(t_old) is
+not ActionPermission(t_now), and Root authority. This is deterministic local
+proof only: not production DRS, not external/global DRS, not runtime
+integration, and not schema change.
+
 ## Exclusions
 
 - No real external APIs.

@@ -702,9 +702,11 @@ artifact_type Mapping / Runtime Artifact Vocabulary v0.1 invariant:
 
 Long-lived DRS State / TTL / Aging Stress v0.1 invariant:
 
-- Long-lived DRS / TTL / Aging Stress v0.1 is docs/math only at this stage.
+- Long-lived DRS / TTL / Aging Stress v0.1 proof/audit status:
+  complete_through_audit.
 - Time is reuse boundary, not authority.
 - Failed TemporalHardGate blocks direct reuse.
+- TemporalHardGate blocks direct reuse.
 - DRS retrieval is not direct reuse.
 - Age_effective is ranking metadata, not permission.
 - Fresh ingestion is not fresh knowledge.
@@ -720,10 +722,15 @@ Long-lived DRS State / TTL / Aging Stress v0.1 invariant:
 - Root acceptance beats freshness.
 - authority class beats freshness.
 - freshness alone never supersedes trusted Work.
+- Fresh unaccepted observations cannot supersede Work.
 - ReuseBoost cannot affect RootShortcutAllowed or hard gates.
+- ReuseBoost cannot override hard gates.
 - Bounded proximity only; no unbounded graph traversal in hot path.
+- Bounded proximity prevents unbounded graph traversal and taint cascade.
 - quarantine_taint propagation must be bounded.
 - a quarantined record cannot cascade-taint the whole DRS graph.
+- AcceptedEvidence(t_old) is not ActionPermission(t_now).
 - AcceptedEvidence from past is not future action permission.
+- Audit replay is historical, not current truth.
 - Audit hash proves continuity, not truth.
 - Root remains final authority.

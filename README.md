@@ -1568,14 +1568,42 @@ Deferred fields:
 
 ## Long-lived DRS State / TTL / Aging Stress v0.1
 
-Long-lived DRS State / TTL / Aging Stress v0.1 is now in the math/invariants
-docs stage. The read-only preflight is committed at `c8c0907`, and the
-math/invariants patch plan is committed at `49b0a11`. This docs patch stores
-the TIME / DRS AGING v0.2 formulas in project documentation.
+Long-lived DRS State / TTL / Aging Stress v0.1 is complete through proof and
+audit. Preflight committed at `c8c0907`; math/invariants patch plan committed
+at `49b0a11`; math/invariants docs patch committed at `1cc9c69`; proof runner
+patch plan committed at `ee9e419`; deterministic proof committed at
+`d3840db`; audit log committed at `f1eefee`.
 
-This checkpoint creates no runtime behavior, no schema change, no tests, and
-no proof runner. The next expected stage is a deterministic proof runner patch
-plan, not implementation, unless the user explicitly changes route.
+Status: `complete_through_audit: true`, `proof_status: PASS`,
+`audit_status: PASS`, `proof_commit: d3840db`, and
+`audit_commit: f1eefee`. The deterministic proof recorded
+`scenarios_total: 25`, `scenarios_passed: 25`, `25/25 scenarios` passed,
+`19 focused tests` passed, and `root_final_authority_preserved_count: 25`.
+`direct_reuse_allowed_count: 1` is expected and safe: it is the positive
+control scenario where all hard gates pass and `RootShortcutAllowed` is true.
+It is not a Root bypass and not production DRS behavior.
+
+Proof counters: `direct_reuse_blocked_count: 24`, `context_only_count: 3`,
+`warning_only_count: 2`, `historical_replay_count: 2`,
+`rerun_required_count: 2`, `blocked_count: 12`,
+`unbounded_graph_traversal_used_count: 0`,
+`reuse_boost_hard_gate_overrides_count: 0`,
+`unaccepted_supersession_count: 0`, and
+`accepted_evidence_action_permission_count: 0`.
+
+Guardrail counters: `production_drs_used_count: 0`,
+`external_drs_used_count: 0`, `network_used_count: 0`,
+`gemini_used_count: 0`, `marennya_activated_count: 0`, and
+`up_activated_count: 0`. The proof confirms TemporalHardGate, FreshnessOK,
+DirectReuseAllowed, RootShortcutAllowed, trust-aware supersession, bounded
+proximity through CandidateSet_pre / max_lineage_hops, ReuseBoost isolation,
+AcceptedEvidence(t_old) != ActionPermission(t_now), and that Audit replay is
+historical, not current truth. This is not production DRS, not
+external/global DRS, not runtime integration, and not schema change.
+
+This docs sync makes no runtime/schema/test/proof-runner change. The next
+expected stage is human walkthrough or docs-sync checkpoint closure only if the
+user requests it; do not jump to runtime/schema/external DRS.
 
 Compact rule:
 

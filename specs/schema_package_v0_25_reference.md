@@ -92,10 +92,11 @@ Long-lived DRS State / TTL / Aging Stress v0.1 schema-reference note:
 
 - TimeEnvelope and TemporalQuery schemas currently do not yet include all
   TE_ext/TQ_ext fields.
-- This math/invariants stage documents the target semantics only.
+- The math/invariants and deterministic proof/audit stages document target
+  semantics only.
 - Future schema changes require a separate approved schema patch plan.
-- This note does not imply active schema changes, runtime changes, tests, or a
-  proof runner.
+- Active schemas are still not changed by this proof/audit. This note does not
+  imply active schema changes, runtime changes, or production DRS behavior.
 
 Use this file only as a comparison artifact. Do not overwrite active schemas from this file without checking the current passport and active tests.
 

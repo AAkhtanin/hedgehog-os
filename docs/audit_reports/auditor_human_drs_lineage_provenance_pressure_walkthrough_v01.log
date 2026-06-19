@@ -1,0 +1,253 @@
+# Auditor Report — Human DRS Lineage / Provenance Pressure Walkthrough v0.1
+
+## 1. Audit Status
+
+* audit_id: auditor_human_drs_lineage_provenance_pressure_walkthrough_v01
+* audit_status: PASS
+* audited_commit: fefd6a4
+* technical_audit_commit: 24b64c2
+* proof_commit: d3d13c1
+* patch_plan_commit: 7415be3
+* preflight_commit: e60b40f
+* audit_scope: human_readable_walkthrough_and_focused_tests
+* underlying_proof_status: PASS
+* walkthrough_required_counters_match: true
+* focused_tests_status: PASS
+* focused_tests_passed: 7
+* runtime_modified: false
+* schemas_modified: false
+* production_drs_implemented: false
+* external_drs_implemented: false
+* network_used: false
+* gemini_used: false
+* marennya_activated: false
+* up_activated: false
+* full_pytest_run: false
+* full_pytest_required_for_this_audit: false
+
+Full pytest was not run because this audit covers a human-readable walkthrough and focused tests only. The walkthrough imports and explains the already audited deterministic proof, and does not modify runtime/schema/contract code.
+
+## 2. Audited Artifacts
+
+Audited human walkthrough and focused test:
+
+* `demo/run_human_drs_lineage_provenance_pressure_walkthrough_v01.py`
+* `tests/test_human_drs_lineage_provenance_pressure_walkthrough_v01_runner.py`
+
+## 3. What The Walkthrough Explains
+
+The walkthrough translates the deterministic DRS Lineage / Provenance Pressure proof into a human-readable story.
+
+It does not create new proof semantics, authority, runtime capability, production DRS, external/global DRS, connector trust, action permission, or schema mutation.
+
+Core human message:
+
+Lineage and provenance are useful bounded pressure signals.
+They may inform, warn, rank, or block.
+They cannot decide.
+Root remains final authority.
+
+## 4. Human Act Coverage
+
+1. WHAT THIS WALKTHROUGH IS
+
+   * status: PASS
+   * boundary: walkthrough only, no new runtime/capability/schema/authority
+
+2. CORE RULE
+
+   * status: PASS
+   * includes:
+
+     * lineage informs
+     * lineage does not decide
+     * provenance does not become truth
+     * audit/hash-chain proves continuity, not truth
+     * accepted evidence ancestry is not future action permission
+     * bridge traversal is not authority transfer
+     * quarantine/deadend proximity is bounded
+     * ConflictCheck remains advisory
+     * GT remains advisory
+     * Root remains final authority
+
+3. ACT 1 — TRACE CAN COME FROM TRACE, BUT TRACE DOES NOT DECIDE
+
+   * status: PASS
+   * scenario: trace_derived_from_trace_informs_only
+   * reason: lineage_informs_only
+   * direct_reuse_allowed: false
+
+4. ACT 2 — ACCEPTED EVIDENCE ANCESTRY IS NOT FUTURE ACTION PERMISSION
+
+   * status: PASS
+   * scenario: reuse_candidate_derived_from_old_accepted_evidence_requires_review
+   * reason: accepted_evidence_ancestry_not_action_permission
+   * direct_reuse_allowed: false
+
+5. ACT 3 — BRIDGE TRAVERSAL INFORMS, BUT DOES NOT TRANSFER AUTHORITY
+
+   * status: PASS
+   * scenario: bridge_traversal_across_domain_informs_only
+   * reason: bridge_informs_only
+   * direct_reuse_allowed: false
+
+6. ACT 4 — QUARANTINE AND DEADEND ARE BOUNDED PRESSURE, NOT GLOBAL INFECTION
+
+   * status: PASS
+   * scenarios:
+
+     * quarantine_near_reuse_candidate_warns_or_blocks
+     * deadend_near_reuse_candidate_warns_or_blocks
+
+   * reasons:
+
+     * quarantine_proximity_bounded
+     * deadend_proximity_bounded
+
+   * quarantine_global_taint_count: 0
+   * deadend_global_taint_count: 0
+
+7. ACT 5 — CONFLICTING PROVENANCE BLOCKS DIRECT REUSE, BUT DOES NOT DECIDE TRUTH
+
+   * status: PASS
+   * scenario: conflicting_provenance_blocks_direct_reuse
+   * reason: conflictcheck_advisory_root_required
+   * direct_reuse_allowed: false
+   * Root remains final authority
+
+8. ACT 6 — NEWER TRUSTED PROVENANCE CAN REQUEST REVIEW, NOT SELF-AUTHORIZE SUPERSESSION
+
+   * status: PASS
+   * scenario: trusted_newer_provenance_can_request_supersession_review_but_not_self_authorize
+   * reason: supersession_review_required
+   * direct_reuse_allowed: false
+
+9. ACT 7 — AUDIT CHAIN PROVES CONTINUITY, NOT TRUTH
+
+   * status: PASS
+   * scenario: audit_hash_continuity_does_not_create_truth
+   * reason: audit_hash_continuity_not_truth
+   * direct_reuse_allowed: false
+
+10. ACT 8 — POPULAR LINEAGE IS NOT AUTHORITY
+
+    * status: PASS
+    * scenario: high_reuse_lineage_does_not_create_authority
+    * reason: popularity_not_authority
+    * lineage_decides_count: 0
+    * direct_reuse_allowed: false
+
+11. ACT 9 — COMPOSITE PRESSURE STILL ENDS AT ROOT
+
+    * status: PASS
+    * scenario: root_final_authority_preserved_across_lineage_pressure
+    * reason: root_final_authority_preserved
+    * root_final_authority_preserved_count: 10
+    * direct_reuse_allowed_count: 0
+
+12. WHAT THE PROOF COUNTERS SHOW
+
+    * status: PASS
+    * required counters shown
+
+13. LIMITATIONS
+
+    * status: PASS
+    * non-goals shown
+
+14. FINAL HUMAN SUMMARY
+
+    * status: PASS
+    * explains that a normal agent might confuse ancestry/provenance/audit/bridge/popularity with truth, while Hedgehog OS keeps them as bounded pressure signals.
+
+## 5. Counter Coverage
+
+Exact counters shown by the walkthrough:
+
+* scenarios_total: 10
+* scenarios_passed: 10
+* direct_reuse_allowed_count: 0
+* direct_reuse_blocked_count: 10
+* root_review_required_count: 10
+* root_final_authority_preserved_count: 10
+* lineage_decides_count: 0
+* provenance_truth_claimed_count: 0
+* audit_hash_truth_claimed_count: 0
+* bridge_authority_transfer_count: 0
+* quarantine_global_taint_count: 0
+* deadend_global_taint_count: 0
+* conflictcheck_authority_count: 0
+* gt_authority_count: 0
+* production_drs_used_count: 0
+* external_drs_used_count: 0
+* network_used_count: 0
+* gemini_used_count: 0
+* marennya_activated_count: 0
+* up_activated_count: 0
+
+## 6. Validation Commands
+
+Validation commands recorded for the committed walkthrough:
+
+```bash
+python3 -m demo.run_human_drs_lineage_provenance_pressure_walkthrough_v01
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_drs_lineage_provenance_pressure_walkthrough_v01_runner.py
+```
+
+Observed:
+
+* walkthrough exits 0
+* underlying_proof_status: PASS
+* walkthrough_required_counters_match: True
+* 7 passed in 0.02s
+
+## 7. Boundary Audit
+
+* walkthrough is explanatory, not authoritative
+* walkthrough imports and reflects audited proof behavior
+* walkthrough does not duplicate or change proof logic
+* walkthrough does not create new runtime capability
+* walkthrough does not create action permission
+* walkthrough does not create DRS write authority
+* walkthrough does not create Root Final authority
+* no production DRS
+* no external/global DRS
+* no real connector
+* no network
+* no Gemini
+* no Marennya
+* no UP
+* no production persistence
+* no runtime integration
+* no schema mutation
+* no public auditor readiness claim
+* no production readiness claim
+* Root remains final authority
+
+## 8. Limitations
+
+* deterministic local human walkthrough only
+* depends on underlying proof status PASS
+* not production behavior
+* not external/global DRS
+* not real connector behavior
+* not a UI test
+* not a public auditor packet
+* not a whitepaper
+* not WOW demo
+* not production readiness
+* not public auditor readiness
+
+## 9. Auditor Conclusion
+
+PASS.
+
+Human DRS Lineage / Provenance Pressure Walkthrough v0.1 successfully translates the deterministic proof into a human-readable story without creating new authority, runtime behavior, schema changes, production DRS, external/global DRS, connector trust, or action permission.
+
+The walkthrough preserves the central message:
+lineage/provenance pressure can inform, warn, or block, but cannot decide.
+
+Root remains final authority.
+
+Recommended next step:
+Docs sync / checkpoint closure for DRS Lineage / Provenance Pressure v0.1.

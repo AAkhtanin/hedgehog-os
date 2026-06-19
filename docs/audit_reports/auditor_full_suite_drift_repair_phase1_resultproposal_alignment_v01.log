@@ -1,0 +1,148 @@
+# Auditor Report — Full Suite Drift Repair Phase 1 ResultProposal Alignment v0.1
+
+## 1. Audit Status
+
+* audit_id: auditor_full_suite_drift_repair_phase1_resultproposal_alignment_v01
+* audit_status: PASS
+* audited_commit: ef8b63b
+* preflight_commit: 99455db
+* patch_type: narrow_runtime_schema_contract_alignment
+* root_cause: schema-invalid top-level node_id in Fractal DAG ResultProposal
+* runtime_modified: true
+* schemas_modified: false
+* tests_modified: true
+* schema_relaxed: false
+* post_vv_weakened: false
+* gt_forced_accept: false
+* root_forced_success: false
+* skips_added: false
+* xfails_added: false
+* production_ready_claimed: false
+* public_auditor_ready_claimed: false
+
+## 2. Scope
+
+Audited commit:
+
+* ef8b63b — Fix Fractal DAG ResultProposal schema alignment
+
+Preflight:
+
+* 99455db — Add full suite drift triage preflight
+
+Committed files audited:
+
+* `hedgehog/fractal_dag_executor.py`
+* `tests/test_fractal_dag_executor_core_runner.py`
+
+This audit covers the Phase 1 repair only. It does not audit a docs sync, schema patch, production DRS implementation, external DRS implementation, live network behavior, Gemini execution, Marennya activation, or UP activation.
+
+## 3. Before Repair Evidence
+
+Known full pytest drift before repair:
+
+* full_pytest_before_repair_summary: 25 failed, 1667 passed, 60 warnings
+* full_pytest_failed: 25
+* full_pytest_passed: 1667
+* full_pytest_warnings: 60
+
+Observed failure chain:
+
+* Fractal DAG ResultProposal included a schema-invalid top-level `node_id`.
+* Current ResultProposal schema forbids additional top-level properties.
+* Post V&V rejected otherwise safe/completed Fractal DAG ResultProposal artifacts.
+* completed_reports: 0
+* gt_decision: no_update
+* final_status: needs_user
+* Root-native full canonical E2E: FAIL
+* live Gemini and Controlled Matrix Gate: downstream FAIL
+
+## 4. Repair Audited
+
+The repair removed the top-level `node_id` from the Fractal DAG ResultProposal producer and preserved node identity in valid locations:
+
+* `result_payload["node_id"]`
+* evidence `ref_id`
+* `trace_refs` `span_id`
+
+The focused Fractal DAG executor test now confirms:
+
+* top-level `node_id` absent
+* `result_payload["node_id"]` present
+
+Audit interpretation:
+
+* The repair did not weaken Post V&V.
+* The repair did not change GT mapping.
+* The repair did not change Root final mapping.
+* The repair did not relax schema.
+* The repair made Fractal DAG ResultProposal conform to the current ResultProposal schema.
+* Post V&V then again accepted completed schema-valid proposals.
+* GT then again selected `accept` for accepted ValidationReport.
+* Root then again produced `success` for the deterministic canonical safe proof path.
+* Live Gemini / Controlled Matrix failures cleared downstream once canonical source recovered.
+
+## 5. Validation Evidence
+
+Validation commands run for this audit:
+
+```bash
+git status --short --untracked-files=all
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_fractal_dag_executor_core_runner.py tests/test_post_vv_runtime.py tests/test_gt_validator_runtime.py
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_canonical_pipeline_trace_runner.py tests/test_root_native_canonical_trace_runner.py tests/test_root_native_full_canonical_e2e_trace_runner.py tests/test_root_dag_integration_runner.py tests/test_root_dag_drs_audit_runner.py
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_live_gemini_architect_smoke_runner.py tests/test_live_gemini_orchestrator_smoke_runner.py tests/test_live_gemini_ordered_orchestrator_architect_smoke_runner.py tests/test_controlled_orchestrator_matrix_gate_runner.py
+tail -n 80 _audit_exports/full_pytest_after_phase1_output.txt
+```
+
+Observed targeted validation:
+
+* fractal_dag_post_vv_gt_subset: 55 passed, 40 warnings
+* canonical_root_dag_subset: 59 passed, 2 warnings
+* downstream_live_matrix_subset: 89 passed, 2 warnings
+
+Observed full-suite evidence from existing `_audit_exports/full_pytest_after_phase1_output.txt`:
+
+* full_pytest_after_phase1_summary: 1692 passed, 60 warnings
+* full_pytest_after_phase1: 1692 passed, 60 warnings
+* full_pytest_failed_after_phase1: 0
+
+The full-suite output was inspected, not rerun during this audit task.
+
+## 6. Boundary Confirmations
+
+* Executor still returns ResultProposal only.
+* Executor does not create FinalOutput.
+* Executor does not write DRS directly.
+* Executor does not execute real external actions.
+* Post V&V remains the validator of ResultProposal.
+* GT remains advisory/selection layer.
+* Root remains final authority.
+* `_audit_exports/` remains local and uncommitted.
+
+## 7. Findings
+
+* finding_resultproposal_schema_alignment: PASS
+* finding_schema_not_relaxed: PASS
+* finding_post_vv_not_weakened: PASS
+* finding_gt_not_forced: PASS
+* finding_root_not_forced: PASS
+* finding_skips_xfails_not_added: PASS
+* finding_canonical_root_dag_recovered: PASS
+* finding_downstream_live_matrix_recovered: PASS
+* finding_full_pytest_recovered: PASS
+* finding_root_authority_preserved: PASS
+
+## 8. Limitations
+
+This audit is limited to Phase 1 ResultProposal schema contract alignment. It does not claim production readiness, public auditor readiness, production DRS, external DRS, network use, Gemini use, Marennya activation, or UP activation.
+
+Warnings remain:
+
+* 60 full-suite warnings after Phase 1
+* warning class observed in the full-suite tail is primarily deprecation warning output around `jsonschema.RefResolver`, plus existing library deprecation output
+
+## 9. Audit Conclusion
+
+audit_status: PASS
+
+The Phase 1 repair is narrow and valid. The drift was caused by a schema-invalid top-level `node_id` in Fractal DAG ResultProposal artifacts. Removing that field from the top level restored schema conformance without relaxing schemas, weakening Post V&V, forcing GT accept, or forcing Root success. Canonical/root DAG, downstream live/matrix, and full-suite evidence are green after the repair.

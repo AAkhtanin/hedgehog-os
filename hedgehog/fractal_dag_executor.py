@@ -156,7 +156,6 @@ def _make_result_proposal(
         },
         "vector_id": str(node.get("vector_id", "unknown_vector")),
         "plan_id": plan_id,
-        "node_id": node_id,
         "result_payload": payload,
         "evidence": [
             {

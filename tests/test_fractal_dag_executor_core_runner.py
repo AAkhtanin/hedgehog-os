@@ -124,7 +124,6 @@ def test_atomic_nodes_produce_result_proposal_shaped_dicts_with_time_envelope():
         "producer",
         "vector_id",
         "plan_id",
-        "node_id",
         "result_payload",
         "evidence",
         "cost",
@@ -141,10 +140,12 @@ def test_atomic_nodes_produce_result_proposal_shaped_dicts_with_time_envelope():
 
     for proposal in report["result_proposals"]:
         assert required_fields <= set(proposal)
+        assert "node_id" not in proposal
         assert "executor_id" in proposal["producer"]
         assert time_fields <= set(proposal["time_envelope"])
         assert proposal["result_payload"]["status"] == "completed"
         assert proposal["result_payload"]["atomic"] is True
+        assert proposal["result_payload"]["node_id"]
         assert proposal["result_payload"]["executed_domain_action"] is False
 
 

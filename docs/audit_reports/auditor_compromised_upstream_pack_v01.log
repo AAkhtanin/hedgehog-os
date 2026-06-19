@@ -1,0 +1,188 @@
+# Auditor Report - Compromised Upstream Pack v0.1
+
+## 1. Audit Status
+
+* audit_id: auditor_compromised_upstream_pack_v01
+* audit_status: PASS
+* audited_commit: c131ddc
+* patch_plan_commit: 003bcf3
+* preflight_commit: 2ec1266
+* latest_checkpoint_before_layer: 9b70726
+* audit_scope: deterministic_local_proof_runner_and_focused_tests
+* production_connector_used: false
+* production_drs_implemented: false
+* external_drs_implemented: false
+* network_used: false
+* gemini_used: false
+* negative_trace_implemented: false
+* drs_poisoning_resistance_implemented: false
+* economic_adversary_implemented: false
+* marennya_activated: false
+* up_activated: false
+* manifest_hardening_implemented: false
+* transition_matrix_mutated: false
+* schemas_modified: false
+* runtime_modified: false
+* full_pytest_run: false
+* full_pytest_required_for_this_audit: false
+
+Full pytest was not run because this audit covers a local deterministic proof runner and focused tests only. The proof does not modify runtime, schemas, contracts, production connectors, production DRS, external/global DRS, manifest behavior, or the transition matrix.
+
+## 2. Audited Artifacts
+
+Audited proof runner and focused test:
+
+* `demo/run_compromised_upstream_pack_v01.py`
+* `tests/test_compromised_upstream_pack_v01_runner.py`
+
+## 3. What This Proof Demonstrates
+
+Compromised Upstream Pack v0.1 is a source-focused deterministic proof. It demonstrates that compromised upstream source pressure cannot become truth, authority, ready status, direct reuse permission, action permission, external/global DRS trust, or Root Final authority.
+
+Core rule audited:
+
+```text
+compromised upstream source is not truth
+signed-looking source is not truth
+external pointer is not trust
+schema-valid upstream content is not semantic truth
+ValidationPacket is not Root acceptance
+EvidenceCandidate is candidate-only before Root
+AcceptedEvidence is bounded evidence, not future action permission
+ConflictCheck remains advisory
+GT remains advisory
+Root remains final authority
+```
+
+## 4. Scenario Coverage
+
+1. compromised_bank_source_cannot_create_truth
+   * status: PASS
+   * expected boundary: bank-like upstream pressure cannot mark payment truth or readiness.
+   * observed result: blocked_or_review_required, needs_root_review.
+   * key reason code: compromised_source_not_truth
+
+2. stale_legal_source_signed_looking_forces_review
+   * status: PASS
+   * expected boundary: signed-looking stale legal source pressure cannot become truth.
+   * observed result: stale_source_review_required, needs_root_review.
+   * key reason code: stale_signed_source_requires_review
+
+3. warehouse_source_contradiction_blocks_ready
+   * status: PASS
+   * expected boundary: warehouse contradiction blocks direct ready while ConflictCheck remains advisory until Root.
+   * observed result: blocked_by_conflict, not_ready.
+   * key reason code: conflicting_warehouse_provenance_blocks_ready
+
+4. external_pointer_trust_laundering_rejected
+   * status: PASS
+   * expected boundary: repeated external pointer trust claims do not become trusted evidence or external/global DRS.
+   * observed result: pointer_laundering_rejected, blocked.
+   * key reason code: external_pointer_trust_laundering_rejected
+
+5. accepted_evidence_from_compromised_source_is_not_action_permission
+   * status: PASS
+   * expected boundary: AcceptedEvidence is bounded evidence, not future action permission.
+   * observed result: accepted_evidence_bounded, needs_root_review.
+   * key reason code: accepted_evidence_not_action_permission
+
+6. root_final_authority_preserved_under_compromised_upstream_pressure
+   * status: PASS
+   * expected boundary: composite compromised upstream pressure preserves Root final authority.
+   * observed result: composite_blocked, blocked.
+   * key reason code: root_final_authority_preserved_under_compromised_upstream_pressure
+
+## 5. Aggregate Counters
+
+Observed proof counters:
+
+* scenarios_total: 6
+* scenarios_passed: 6
+* direct_ready_allowed_count: 0
+* direct_reuse_allowed_count: 0
+* action_permission_granted_count: 0
+* source_truth_claimed_count: 0
+* schema_validity_truth_claimed_count: 0
+* signed_source_truth_claimed_count: 0
+* pointer_trust_claimed_count: 0
+* evidence_candidate_authority_claimed_count: 0
+* validation_packet_authority_claimed_count: 0
+* accepted_evidence_action_permission_claimed_count: 0
+* conflictcheck_authority_count: 0
+* gt_authority_count: 0
+* root_final_authority_preserved_count: 6
+
+External, governance, and deferred-layer counters:
+
+* production_connector_used_count: 0
+* production_drs_used_count: 0
+* external_drs_used_count: 0
+* network_used_count: 0
+* gemini_used_count: 0
+* negative_trace_implemented_count: 0
+* auto_governance_implemented_count: 0
+* manifest_hardening_implemented_count: 0
+* transition_matrix_mutated_count: 0
+* marennya_activated_count: 0
+* up_activated_count: 0
+
+## 6. Validation Commands
+
+Validation commands recorded for the committed proof:
+
+```bash
+python3 -m demo.run_compromised_upstream_pack_v01
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_compromised_upstream_pack_v01_runner.py
+```
+
+Observed:
+
+* FINAL STATUS: PASS
+* 11 passed in 0.03s
+
+## 7. Authority Boundary Audit
+
+* compromised upstream sources do not become truth
+* signed-looking stale sources do not become truth
+* external pointers do not become trust
+* schema-valid upstream content does not become semantic truth
+* ValidationPacket does not become Root acceptance
+* EvidenceCandidate remains candidate-only before Root
+* AcceptedEvidence remains bounded evidence and not future action permission
+* ConflictCheck remains advisory
+* GT remains advisory
+* Root remains final authority
+
+## 8. Limitations
+
+* local deterministic proof only
+* no production connector
+* no production DRS
+* no external/global DRS
+* no network
+* no Gemini
+* no Negative Trace
+* no DRS Poisoning Resistance
+* no Economic Adversary
+* no Marennya
+* no UP
+* no manifest hardening
+* no transition matrix mutation
+* no runtime integration
+* no schema mutation
+* no human walkthrough in this layer
+* no docs sync in this layer
+* no audit of production behavior
+* no claim of production readiness
+* no claim of public auditor readiness
+
+## 9. Auditor Conclusion
+
+PASS.
+
+Compromised Upstream Pack v0.1 successfully proves, at local deterministic proof level, that compromised upstream sources, signed-looking stale sources, external pointers, schema-valid content, ValidationPacket, EvidenceCandidate, AcceptedEvidence, ConflictCheck, and GT do not become truth or authority.
+
+Root remains final authority across all 6 scenarios.
+
+Recommended next step:
+Create human-readable walkthrough for Compromised Upstream Pack v0.1.

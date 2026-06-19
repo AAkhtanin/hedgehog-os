@@ -1190,6 +1190,26 @@ GT, Root, live Gemini, and Controlled Matrix downstream failures recovered.
 Full pytest after Phase 1: 1692 passed, 60 warnings, 0 failed. Root remains
 final authority.
 
+DRS Lineage / Provenance Pressure v0.1 is complete through human walkthrough
+audit. Evidence chain: preflight `e60b40f`, patch plan `7415be3`, proof
+`d3d13c1`, technical audit `24b64c2`, human walkthrough `fefd6a4`, and human
+walkthrough audit `b486171`. It proves ancestry/provenance pressure across
+10 scenarios while preserving Root authority and preventing
+lineage/provenance/audit/bridge/popularity from becoming truth or authority.
+Proof counters include `scenarios_total: 10`, `scenarios_passed: 10`,
+`direct_reuse_allowed_count: 0`, `root_review_required_count: 10`,
+`root_final_authority_preserved_count: 10`, `lineage_decides_count: 0`,
+`provenance_truth_claimed_count: 0`, and `audit_hash_truth_claimed_count: 0`.
+The human walkthrough reports `underlying_proof_status: PASS`,
+`walkthrough_required_counters_match: True`, and `7 passed`; the proof tests
+record `14 passed`.
+
+Core rule: lineage informs; lineage does not decide; provenance does not
+become truth; audit/hash-chain proves continuity, not truth; accepted evidence
+ancestry is not future action permission; bridge traversal is not authority
+transfer; quarantine/deadend proximity is bounded; ConflictCheck remains
+advisory; GT remains advisory; Root remains final authority.
+
 ## Exclusions
 
 - No real external APIs.

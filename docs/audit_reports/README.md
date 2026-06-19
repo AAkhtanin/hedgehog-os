@@ -334,6 +334,23 @@ Current reports:
   - Confirms no schema relaxation, no Post V&V weakening, no forced GT accept, no forced Root success, and no skip/xfail.
   - Confirms Executor still returns ResultProposal only, Post V&V remains the ResultProposal validator, GT remains advisory/selection, and Root remains final authority.
 
+- `auditor_drs_lineage_provenance_pressure_v01.log`
+  - DRS Lineage / Provenance Pressure v0.1 technical audit for commit `d3d13c1`; audit commit `24b64c2`; preflight `e60b40f`; patch plan `7415be3`.
+  - `audit_status: PASS`; scope: deterministic local proof runner and focused tests.
+  - Key counters: `scenarios_total: 10`, `scenarios_passed: 10`, `direct_reuse_allowed_count: 0`, `direct_reuse_blocked_count: 10`, `root_review_required_count: 10`, and `root_final_authority_preserved_count: 10`.
+  - Authority counters: `lineage_decides_count: 0`, `provenance_truth_claimed_count: 0`, `audit_hash_truth_claimed_count: 0`, `bridge_authority_transfer_count: 0`, `quarantine_global_taint_count: 0`, `deadend_global_taint_count: 0`, `conflictcheck_authority_count: 0`, and `gt_authority_count: 0`.
+  - Confirms lineage informs, lineage does not decide; provenance does not become truth; audit/hash-chain proves continuity, not truth; bridge traversal is not authority transfer; quarantine/deadend proximity is bounded; ConflictCheck and GT remain advisory; Root remains final authority.
+  - Limitations: deterministic local proof only; no production DRS, external/global DRS, network, Gemini, Marennya, UP, runtime integration, or schema mutation.
+  - Next step was human-readable walkthrough.
+
+- `auditor_human_drs_lineage_provenance_pressure_walkthrough_v01.log`
+  - Human DRS Lineage / Provenance Pressure walkthrough audit for commit `fefd6a4`; audit commit `b486171`; technical audit `24b64c2`.
+  - `audit_status: PASS`; scope: human-readable walkthrough and focused tests.
+  - Confirms `underlying_proof_status: PASS`, `walkthrough_required_counters_match: True`, focused tests: `7 passed`, and the human acts cover trace ancestry, AcceptedEvidence ancestry, bridge traversal, quarantine/deadend bounded pressure, conflicting provenance, supersession review, audit continuity, popular lineage, and composite pressure ending at Root.
+  - Confirms the walkthrough is explanatory, imports and reflects audited proof behavior, does not change proof logic, and creates no runtime capability, action permission, DRS write authority, or Root Final authority.
+  - Limitations: deterministic local human walkthrough only; no production DRS, external/global DRS, real connector, network, Gemini, Marennya, UP, runtime integration, schema mutation, or readiness packet.
+  - Next step: Docs sync / checkpoint closure.
+
 ## Current Applied Auditor Commands
 
 ```bash

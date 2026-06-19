@@ -751,3 +751,26 @@ Full Suite Drift Repair Phase 1 invariant:
 - Root remains final authority.
 - Drift repair must not use skips/xfails, forced accept, forced success, or
   schema relaxation.
+
+DRS Lineage / Provenance Pressure v0.1 invariant:
+
+- DRS Lineage / Provenance Pressure v0.1 status:
+  complete_through_human_walkthrough_audit.
+- Evidence chain: preflight e60b40f, patch plan 7415be3, proof d3d13c1,
+  technical audit 24b64c2, human walkthrough fefd6a4, human walkthrough audit
+  b486171.
+- lineage informs, lineage does not decide.
+- provenance does not become truth.
+- audit/hash-chain proves continuity, not truth.
+- accepted evidence ancestry is not future action permission.
+- bridge traversal is not authority transfer.
+- quarantine/deadend proximity is bounded and not global taint.
+- ConflictCheck remains advisory.
+- GT remains advisory.
+- Root remains final authority.
+- Proof counters: scenarios_total: 10, scenarios_passed: 10,
+  direct_reuse_allowed_count: 0, root_review_required_count: 10,
+  root_final_authority_preserved_count: 10, lineage_decides_count: 0,
+  provenance_truth_claimed_count: 0, audit_hash_truth_claimed_count: 0.
+- Human walkthrough counters: underlying_proof_status: PASS,
+  walkthrough_required_counters_match: True, 7 passed.

@@ -55,7 +55,7 @@ Do not implement from the Strategic Expansion Map unless a later explicit task p
 
 The current MVP focus is:
 
-text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → next: checkpoint closure / decide next reviewed engineering layer → only after explicit review: runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
+text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → next reviewed roadmap layer: Compromised Upstream / Economic Adversary / DRS poisoning-adversarial maturity track → only after explicit review: runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
 Long-lived DRS TTL Aging Stress v0.1 is complete through proof, audit, docs
 sync, human walkthrough, and human walkthrough audit. The human walkthrough
@@ -66,8 +66,25 @@ Full Suite Drift Repair Phase 1 is complete through repair and audit. The
 Fractal DAG ResultProposal producer was aligned with the current schema by
 removing schema-invalid top-level `node_id` while preserving node identity in
 valid payload/evidence/trace fields. Full suite recovered to 1692 passed,
-60 warnings, 0 failed. Current next step after this docs sync: checkpoint
-closure / decide next reviewed engineering layer. For future large
+60 warnings, 0 failed.
+
+DRS Lineage / Provenance Pressure v0.1 is complete through proof, technical
+audit, human walkthrough, and human walkthrough audit. It proves lineage
+informs, lineage does not decide, provenance does not become truth,
+audit/hash-chain proves continuity, not truth, accepted evidence ancestry is
+not future action permission, bridge traversal is not authority transfer,
+quarantine/deadend proximity is bounded, ConflictCheck remains advisory, GT
+remains advisory, and Root remains final authority. Proof counters include
+`scenarios_total: 10`, `scenarios_passed: 10`,
+`direct_reuse_allowed_count: 0`, `root_review_required_count: 10`,
+`root_final_authority_preserved_count: 10`, `lineage_decides_count: 0`,
+`provenance_truth_claimed_count: 0`, and
+`audit_hash_truth_claimed_count: 0`. Human walkthrough evidence records
+`underlying_proof_status: PASS`, `walkthrough_required_counters_match: True`,
+and `7 passed`.
+
+Current next reviewed roadmap layer: Compromised Upstream / Economic Adversary
+/ DRS poisoning-adversarial maturity track. For future large
 runtime/schema/contract/hardening changes, full pytest is required before
 closing the layer. Do not claim production readiness. Do not start unrelated
 layers before explicit review. Preserve drift-repair discipline: no
@@ -75,8 +92,10 @@ skips/xfails, no forced success, no forced accept, and no schema relaxation.
 
 Do not start runtime/schema production DRS, external/global DRS, Marennya / UP
 / Negative Trace, or artifact_type vocabulary work from this checkpoint. Do
-not treat TTL, GT-TTL, DRS, audit, source ingestion, ReuseBoost, or
-AcceptedEvidence as authority.
+not treat TTL, GT-TTL, DRS, audit, source ingestion, ReuseBoost,
+AcceptedEvidence, lineage, provenance, bridge traversal, audit hash,
+ConflictCheck, GT, or popularity as authority. Future V2 / Negative Trace /
+Marennya / UP / Whitepaper / Public Packet remain deferred and are not current.
 
 Do not jump ahead to:
 

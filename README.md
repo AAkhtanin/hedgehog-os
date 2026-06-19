@@ -1656,6 +1656,57 @@ no forced Root success, and no skips/xfails. Guardrail fields:
 ResultProposal validator, GT remains advisory/selection, and Root remains final
 authority. `_audit_exports/` remains local and uncommitted.
 
+## DRS Lineage / Provenance Pressure v0.1
+
+DRS Lineage / Provenance Pressure v0.1 is complete through human walkthrough
+audit. Preflight committed at `e60b40f`; patch plan committed at `7415be3`;
+proof committed at `d3d13c1`; technical audit committed at `24b64c2`; human
+walkthrough committed at `fefd6a4`; human walkthrough audit committed at
+`b486171`.
+
+Status: `complete_through_human_walkthrough_audit`. This is a local
+deterministic proof only. It pressure-combines lineage/provenance signals:
+trace ancestry, AcceptedEvidence ancestry, bridge traversal, quarantine/deadend
+bounded pressure, conflicting provenance, supersession review, audit
+continuity, popular lineage, and composite pressure ending at Root.
+
+Core rule:
+
+lineage informs.
+lineage does not decide.
+provenance does not become truth.
+audit/hash-chain proves continuity, not truth.
+accepted evidence ancestry is not future action permission.
+bridge traversal is not authority transfer.
+quarantine/deadend proximity is bounded.
+ConflictCheck remains advisory.
+GT remains advisory.
+Root remains final authority.
+
+Proof evidence: runner `demo/run_drs_lineage_provenance_pressure_v01.py`,
+focused tests `tests/test_drs_lineage_provenance_pressure_v01_runner.py`,
+`FINAL STATUS: PASS`, `14 passed`, `scenarios_total: 10`,
+`scenarios_passed: 10`, `direct_reuse_allowed_count: 0`,
+`direct_reuse_blocked_count: 10`, `root_review_required_count: 10`, and
+`root_final_authority_preserved_count: 10`.
+
+Authority boundary counters: `lineage_decides_count: 0`,
+`provenance_truth_claimed_count: 0`, `audit_hash_truth_claimed_count: 0`,
+`bridge_authority_transfer_count: 0`, `quarantine_global_taint_count: 0`,
+`deadend_global_taint_count: 0`, `conflictcheck_authority_count: 0`, and
+`gt_authority_count: 0`.
+
+Human walkthrough evidence: runner
+`demo/run_human_drs_lineage_provenance_pressure_walkthrough_v01.py`, focused
+tests `tests/test_human_drs_lineage_provenance_pressure_walkthrough_v01_runner.py`,
+`underlying_proof_status: PASS`, `walkthrough_required_counters_match: True`,
+and `7 passed`.
+
+No production DRS, no external/global DRS, no network/Gemini, and no
+Marennya/UP are part of this checkpoint. Next layer after checkpoint closure
+returns to the roadmap: Compromised Upstream / Economic Adversary / DRS
+poisoning-adversarial maturity track, subject to explicit review.
+
 Compact rule:
 
 Memory may survive.

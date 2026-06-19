@@ -1529,6 +1529,29 @@ Fractal DAG ResultProposal producer schema conformance, not test hiding. There
 was no schema relaxation, no Post V&V weakening, no forced GT accept, and no
 forced Root success.
 
+DRS Lineage / Provenance Pressure v0.1 extends long-lived DRS maturity after
+TTL/Aging. It is complete through human walkthrough audit: preflight `e60b40f`,
+patch plan `7415be3`, proof `d3d13c1`, technical audit `24b64c2`, human
+walkthrough `fefd6a4`, and human walkthrough audit `b486171`. It is proof-level,
+not production DRS. It shows bounded pressure over lineage/provenance surfaces
+and keeps direct reuse blocked unless Root/hard gates allow.
+
+Proof counters: `scenarios_total: 10`, `scenarios_passed: 10`,
+`direct_reuse_allowed_count: 0`, `root_review_required_count: 10`,
+`root_final_authority_preserved_count: 10`, `lineage_decides_count: 0`,
+`provenance_truth_claimed_count: 0`, `audit_hash_truth_claimed_count: 0`,
+`bridge_authority_transfer_count: 0`, `quarantine_global_taint_count: 0`,
+`deadend_global_taint_count: 0`, `conflictcheck_authority_count: 0`, and
+`gt_authority_count: 0`. Human walkthrough evidence:
+`underlying_proof_status: PASS`, `walkthrough_required_counters_match: True`,
+and `7 passed`; proof focused tests recorded `14 passed`.
+
+Core rule: lineage informs; lineage does not decide; provenance does not
+become truth; audit/hash-chain proves continuity, not truth; accepted evidence
+ancestry is not future action permission; bridge traversal is not authority
+transfer; quarantine/deadend proximity is bounded; ConflictCheck remains
+advisory; GT remains advisory; Root remains final authority.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

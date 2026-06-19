@@ -1592,3 +1592,31 @@ and trace_refs span_id.
 No schema relaxation occurred. Post V&V remains the ResultProposal shape
 validator, GT remains advisory/selection, and Root remains final authority.
 Future schema additions still require a separate schema patch plan.
+
+⸻
+
+19. DRS Lineage / Provenance Pressure v0.1 — Schema Reference Note
+
+DRS Lineage / Provenance Pressure v0.1 is complete through human walkthrough
+audit: preflight `e60b40f`, patch plan `7415be3`, proof `d3d13c1`, technical
+audit `24b64c2`, human walkthrough `fefd6a4`, and human walkthrough audit
+`b486171`.
+
+This layer did not add or change schemas. It used existing generic fields such
+as `trace_refs`, `source_refs`, `provenance`, EvidenceItem refs, audit links,
+bridge refs, conflict refs, quarantine refs, and deadend refs in a proof-local
+model. First-class lineage pressure schema is deferred unless separately
+approved.
+
+Core rule: lineage informs; lineage does not decide; provenance does not
+become truth; audit/hash-chain proves continuity, not truth; accepted evidence
+ancestry is not future action permission; bridge traversal is not authority
+transfer; quarantine/deadend proximity is bounded; ConflictCheck remains
+advisory; GT remains advisory; Root remains final authority.
+
+Proof counters: `scenarios_total: 10`, `scenarios_passed: 10`,
+`direct_reuse_allowed_count: 0`, `root_review_required_count: 10`,
+`root_final_authority_preserved_count: 10`, `lineage_decides_count: 0`,
+`provenance_truth_claimed_count: 0`, `audit_hash_truth_claimed_count: 0`,
+`underlying_proof_status: PASS`, `walkthrough_required_counters_match: True`,
+`14 passed`, and `7 passed`.

@@ -2903,6 +2903,29 @@ force GT accept, force Root success, or add skips/xfails. This establishes a
 process rule: after any fundamental runtime/schema/contract/hardening layer,
 run full pytest before closure/docs sync.
 
+DRS Lineage / Provenance Pressure v0.1 is complete through proof, technical
+audit, human walkthrough, and human walkthrough audit. Evidence chain:
+preflight `e60b40f`, patch plan `7415be3`, proof `d3d13c1`, technical audit
+`24b64c2`, human walkthrough `fefd6a4`, human walkthrough audit `b486171`.
+Status: `complete_through_human_walkthrough_audit`.
+
+A human should understand that ancestry, provenance, audit history, bridge
+context, and popularity are bounded pressure signals. They can inform, warn,
+rank, or block. They cannot decide. Root remains final authority.
+
+Core rule: lineage informs; lineage does not decide; provenance does not
+become truth; audit/hash-chain proves continuity, not truth; accepted evidence
+ancestry is not future action permission; bridge traversal is not authority
+transfer; quarantine/deadend proximity is bounded; ConflictCheck remains
+advisory; GT remains advisory; Root remains final authority.
+
+Proof checkpoint: `scenarios_total: 10`, `scenarios_passed: 10`,
+`direct_reuse_allowed_count: 0`, `root_review_required_count: 10`,
+`root_final_authority_preserved_count: 10`, `lineage_decides_count: 0`,
+`provenance_truth_claimed_count: 0`, `audit_hash_truth_claimed_count: 0`,
+`14 passed`, `underlying_proof_status: PASS`,
+`walkthrough_required_counters_match: True`, and `7 passed`.
+
 The layer exists because long-lived memory can become dangerous if stale
 records, old accepted evidence, old connector observations, old GT-TTL,
 quarantine/deadend lineage, or reuse popularity silently affect direct reuse.

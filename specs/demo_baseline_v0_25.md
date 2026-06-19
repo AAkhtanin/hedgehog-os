@@ -1516,6 +1516,13 @@ does not claim production persistence, real clock sync/security, distributed
 DRS, or deployment readiness. It is before any production/runtime DRS work and
 keeps Root final authority.
 
+Human walkthrough and audit close the human-readable TTL Aging explanation
+checkpoint. Human walkthrough `e22ee04` and audit `4a30d39` preserve a
+lightweight Demo B bridge as narrative only. It is not merged Killer Demo B
+proof, not runtime/schema/prod DRS/external DRS, and not schema change. Full
+pytest drift exists and must be repaired next: 25 failed, 1667 passed, 60
+warnings. Next: Full Suite Drift Triage / Repair v0.1.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

@@ -1605,6 +1605,22 @@ This docs sync makes no runtime/schema/test/proof-runner change. The next
 expected stage is human walkthrough or docs-sync checkpoint closure only if the
 user requests it; do not jump to runtime/schema/external DRS.
 
+Human Long-lived DRS TTL Aging walkthrough checkpoint: human walkthrough
+committed at `e22ee04`; human walkthrough audit log committed at `4a30d39`.
+Status: human walkthrough complete and audited with
+`PASS_WITH_SCOPE_WARNING`. `targeted_tests_status: PASS`; focused tests:
+3 passed; `3 focused tests`. The Demo B bridge is narrative only: it explains
+Enterprise Document Killer Demo B evidence exists -> time passes -> reuse must
+be rechecked. It does not rerun Demo B, does not import Demo B as executable
+proof, and is not merged Killer Demo B proof.
+
+This walkthrough checkpoint is not production DRS, not external/global DRS,
+not runtime integration, and not schema change. Full pytest personal audit
+currently shows known global drift: 25 failed, 1667 passed, 60 warnings.
+Those full pytest failures are outside walkthrough scope and are likely
+post-hardening expectation drift. Next engineering layer: Full Suite Drift
+Triage / Repair v0.1.
+
 Compact rule:
 
 Memory may survive.

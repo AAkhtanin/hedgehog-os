@@ -2879,6 +2879,16 @@ vocabulary pause and is complete through proof and audit. Proof commit:
 `d3840db`; audit commit: `f1eefee`; `25/25 scenarios` passed; Root final
 authority was preserved in all scenarios.
 
+The TTL Aging chain is now complete through proof, audit, docs sync, human
+walkthrough, and human walkthrough audit. Human walkthrough commit: `e22ee04`;
+human walkthrough audit commit: `4a30d39`; audit status:
+PASS_WITH_SCOPE_WARNING. The walkthrough explains Demo B -> evidence exists ->
+time passes -> reuse must be rechecked. It is not merged Demo B proof.
+
+Full pytest is currently not green: 25 failed, 1667 passed, 60 warnings. Treat
+this as known post-hardening expectation drift and the next repair layer, not
+as a walkthrough failure. Next: Full Suite Drift Triage / Repair v0.1.
+
 The layer exists because long-lived memory can become dangerous if stale
 records, old accepted evidence, old connector observations, old GT-TTL,
 quarantine/deadend lineage, or reuse popularity silently affect direct reuse.

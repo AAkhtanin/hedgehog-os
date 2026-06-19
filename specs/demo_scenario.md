@@ -1174,6 +1174,14 @@ not ActionPermission(t_now), and Root authority. This is deterministic local
 proof only: not production DRS, not external/global DRS, not runtime
 integration, and not schema change.
 
+Human TTL Aging walkthrough is complete and audited. It bridges Demo B
+narrative to TTL Aging without merging proof runners. It explains old
+document/evidence memory over time and confirms AcceptedEvidence is not future
+action permission, fresh ingestion is not fresh knowledge, ReuseBoost cannot
+override hard gates, and Root remains final authority. Audit status:
+PASS_WITH_SCOPE_WARNING due to known full pytest drift outside scope. Next:
+Full Suite Drift Triage / Repair v0.1.
+
 ## Exclusions
 
 - No real external APIs.

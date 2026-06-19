@@ -316,6 +316,15 @@ Current reports:
   - Confirms TemporalHardGate, FreshnessOK, DirectReuseAllowed, RootShortcutAllowed, trust-aware supersession, bounded proximity through CandidateSet_pre / max_lineage_hops, ReuseBoost isolation, AcceptedEvidence(t_old) != ActionPermission(t_now), audit replay boundary, and Root final authority.
   - Confirms limitations: deterministic local proof only, not production DRS, not external/global DRS, not real database, not distributed DRS, not real clock security, not runtime integration, not schema change, and not deployment/public-auditor readiness.
 
+- `auditor_human_long_lived_drs_ttl_aging_stress_walkthrough_v01.log`
+  - Human Long-lived DRS TTL Aging walkthrough audit for commit `e22ee04`; audit commit `4a30d39`.
+  - `audit_status: PASS_WITH_SCOPE_WARNING`, `walkthrough_status: PASS`, `targeted_tests_status: PASS`, focused tests: 3 passed, `3 focused tests`.
+  - `full_pytest_status: FAIL_KNOWN_GLOBAL_DRIFT`; full pytest observed: 25 failed, 1667 passed, 60 warnings.
+  - Confirms full pytest failures outside walkthrough scope and likely post-hardening expectation drift.
+  - Confirms Demo B bridge is narrative only, not merged Killer Demo B proof, and does not rerun Demo B as executable proof.
+  - Confirms no runtime/schema/prod DRS/external DRS/network/Gemini/Marennya/UP.
+  - Recommends Full Suite Drift Triage / Repair v0.1.
+
 ## Current Applied Auditor Commands
 
 ```bash

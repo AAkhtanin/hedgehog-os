@@ -1578,3 +1578,17 @@ final_output.schema.json
 5. Проверка, что все DRS retrieval вызваны с TemporalQuery.
 6. Проверка, что ResultProposal не содержит user-facing answer.
 7. Проверка, что second run использует DRS-записи first run.
+
+⸻
+
+18. Full Suite Drift Repair Phase 1 — ResultProposal Schema Alignment
+
+Phase 1 did not change ResultProposal schema. The active schema already
+rejected additional top-level `node_id` in Fractal DAG ResultProposal. The
+repair aligned Fractal DAG producer output to the existing schema by preserving
+node identity in valid fields: `result_payload["node_id"]`, evidence ref_id,
+and trace_refs span_id.
+
+No schema relaxation occurred. Post V&V remains the ResultProposal shape
+validator, GT remains advisory/selection, and Root remains final authority.
+Future schema additions still require a separate schema patch plan.

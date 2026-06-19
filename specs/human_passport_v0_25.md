@@ -2885,9 +2885,23 @@ human walkthrough audit commit: `4a30d39`; audit status:
 PASS_WITH_SCOPE_WARNING. The walkthrough explains Demo B -> evidence exists ->
 time passes -> reuse must be rechecked. It is not merged Demo B proof.
 
-Full pytest is currently not green: 25 failed, 1667 passed, 60 warnings. Treat
-this as known post-hardening expectation drift and the next repair layer, not
-as a walkthrough failure. Next: Full Suite Drift Triage / Repair v0.1.
+Before Full Suite Drift Repair Phase 1, full pytest was not green:
+25 failed, 1667 passed, 60 warnings. This was treated as known
+post-hardening expectation drift and not as a walkthrough failure.
+
+Full Suite Drift Repair Phase 1 is complete through audit. Preflight:
+`99455db`; repair: `ef8b63b`; audit: `627ab74`. The drift came from Fractal DAG
+ResultProposal top-level node_id conflicting with the current ResultProposal
+schema. Current schema rejects additional top-level properties, so Post V&V
+rejected otherwise safe/completed Fractal DAG ResultProposal artifacts and the
+canonical chain degraded through GT and Root.
+
+The repair kept node identity in valid fields: result_payload["node_id"],
+evidence ref_id, and trace_refs span_id. It restored the full suite:
+1692 passed, 60 warnings, 0 failed. It did not relax schemas, weaken Post V&V,
+force GT accept, force Root success, or add skips/xfails. This establishes a
+process rule: after any fundamental runtime/schema/contract/hardening layer,
+run full pytest before closure/docs sync.
 
 The layer exists because long-lived memory can become dangerous if stale
 records, old accepted evidence, old connector observations, old GT-TTL,

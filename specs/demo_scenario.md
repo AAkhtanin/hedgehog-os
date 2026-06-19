@@ -1179,8 +1179,16 @@ narrative to TTL Aging without merging proof runners. It explains old
 document/evidence memory over time and confirms AcceptedEvidence is not future
 action permission, fresh ingestion is not fresh knowledge, ReuseBoost cannot
 override hard gates, and Root remains final authority. Audit status:
-PASS_WITH_SCOPE_WARNING due to known full pytest drift outside scope. Next:
-Full Suite Drift Triage / Repair v0.1.
+PASS_WITH_SCOPE_WARNING due to then-known full pytest drift outside scope.
+
+Full Suite Drift Repair Phase 1 closed the post-hardening expectation drift.
+The cause was a schema-invalid top-level node_id in Fractal DAG ResultProposal.
+The fix aligned the producer with the current ResultProposal schema by
+removing top-level node_id while preserving node identity in
+result_payload["node_id"], evidence ref_id, and trace_refs span_id. Post V&V,
+GT, Root, live Gemini, and Controlled Matrix downstream failures recovered.
+Full pytest after Phase 1: 1692 passed, 60 warnings, 0 failed. Root remains
+final authority.
 
 ## Exclusions
 

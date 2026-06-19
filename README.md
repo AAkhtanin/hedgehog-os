@@ -1615,11 +1615,46 @@ be rechecked. It does not rerun Demo B, does not import Demo B as executable
 proof, and is not merged Killer Demo B proof.
 
 This walkthrough checkpoint is not production DRS, not external/global DRS,
-not runtime integration, and not schema change. Full pytest personal audit
-currently shows known global drift: 25 failed, 1667 passed, 60 warnings.
-Those full pytest failures are outside walkthrough scope and are likely
-post-hardening expectation drift. Next engineering layer: Full Suite Drift
-Triage / Repair v0.1.
+not runtime integration, and not schema change. At the time of that audit,
+full pytest personal audit showed known global drift: 25 failed, 1667 passed,
+60 warnings. Those full pytest failures were outside walkthrough scope and
+likely post-hardening expectation drift; they were addressed by Full Suite
+Drift Repair Phase 1 below.
+
+## Full Suite Drift Repair Phase 1 — ResultProposal Schema Alignment
+
+Full Suite Drift Repair Phase 1 is complete through audit. Preflight committed
+at `99455db`; repair patch committed at `ef8b63b`; audit log committed at
+`627ab74`.
+
+Status: `complete_through_audit`. Root cause: schema-invalid top-level
+`node_id` in Fractal DAG ResultProposal. The active ResultProposal schema
+forbids additional top-level properties, so Post V&V rejected otherwise safe
+completed Fractal DAG ResultProposal artifacts. That led to
+`completed_reports: 0`, `gt_decision: no_update`, `final_status: needs_user`,
+Root-native full canonical E2E FAIL, and downstream live Gemini / Controlled
+Matrix Gate failures.
+
+Repair: remove top-level `node_id`; preserve node identity in
+`result_payload["node_id"]`, evidence ref_id, and trace_refs span_id. This made
+the producer conform to the existing ResultProposal schema.
+
+Before repair: 25 failed, 1667 passed, 60 warnings. After repair:
+1692 passed, 60 warnings, 0 failed.
+
+Targeted subsets:
+
+- fractal_dag_post_vv_gt_subset: 55 passed, 40 warnings
+- canonical_root_dag_subset: 59 passed, 2 warnings
+- downstream_live_matrix_subset: 89 passed, 2 warnings
+
+Guardrails: no schema relaxation, no Post V&V weakening, no forced GT accept,
+no forced Root success, and no skips/xfails. Guardrail fields:
+`schema_relaxed: false`, `post_vv_weakened: false`,
+`gt_forced_accept: false`, `root_forced_success: false`,
+`skips_added: false`, and `xfails_added: false`. Post V&V remains the
+ResultProposal validator, GT remains advisory/selection, and Root remains final
+authority. `_audit_exports/` remains local and uncommitted.
 
 Compact rule:
 

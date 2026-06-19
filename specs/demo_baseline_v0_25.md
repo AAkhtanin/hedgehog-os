@@ -1519,9 +1519,15 @@ keeps Root final authority.
 Human walkthrough and audit close the human-readable TTL Aging explanation
 checkpoint. Human walkthrough `e22ee04` and audit `4a30d39` preserve a
 lightweight Demo B bridge as narrative only. It is not merged Killer Demo B
-proof, not runtime/schema/prod DRS/external DRS, and not schema change. Full
-pytest drift exists and must be repaired next: 25 failed, 1667 passed, 60
-warnings. Next: Full Suite Drift Triage / Repair v0.1.
+proof, not runtime/schema/prod DRS/external DRS, and not schema change. At
+that point, full pytest drift existed: 25 failed, 1667 passed, 60 warnings.
+
+Full Suite Drift Repair Phase 1 restored baseline cleanliness after V&V/schema
+hardening drift. Before: 25 failed, 1667 passed, 60 warnings. After:
+1692 passed, 60 warnings, 0 failed. The fix was narrow and architectural:
+Fractal DAG ResultProposal producer schema conformance, not test hiding. There
+was no schema relaxation, no Post V&V weakening, no forced GT accept, and no
+forced Root success.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

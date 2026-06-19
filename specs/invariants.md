@@ -734,3 +734,20 @@ Long-lived DRS State / TTL / Aging Stress v0.1 invariant:
 - Audit replay is historical, not current truth.
 - Audit hash proves continuity, not truth.
 - Root remains final authority.
+
+Full Suite Drift Repair Phase 1 invariant:
+
+- Full Suite Drift Repair Phase 1 status: complete_through_audit.
+- ResultProposal producers must not emit schema-invalid additional top-level
+  properties.
+- The repaired drift root cause was schema-invalid top-level node_id in Fractal
+  DAG ResultProposal.
+- Fractal DAG node identity belongs inside valid payload/evidence/trace fields,
+  such as result_payload["node_id"], evidence ref_id, and trace_refs span_id,
+  not arbitrary top-level fields.
+- Post V&V schema validation is authoritative for ResultProposal shape but not
+  final authority.
+- GT remains advisory/selection.
+- Root remains final authority.
+- Drift repair must not use skips/xfails, forced accept, forced success, or
+  schema relaxation.

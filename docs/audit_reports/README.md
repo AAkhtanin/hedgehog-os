@@ -325,6 +325,15 @@ Current reports:
   - Confirms no runtime/schema/prod DRS/external DRS/network/Gemini/Marennya/UP.
   - Recommends Full Suite Drift Triage / Repair v0.1.
 
+- `auditor_full_suite_drift_repair_phase1_resultproposal_alignment_v01.log`
+  - Full Suite Drift Repair Phase 1 audit for commit `ef8b63b`; audit commit `627ab74`; preflight commit `99455db`.
+  - `audit_status: PASS`; `patch_type: narrow_runtime_schema_contract_alignment`.
+  - Root cause: schema-invalid top-level node_id in Fractal DAG ResultProposal.
+  - Before repair: 25 failed, 1667 passed, 60 warnings.
+  - After repair: 1692 passed, 60 warnings, 0 failed.
+  - Confirms no schema relaxation, no Post V&V weakening, no forced GT accept, no forced Root success, and no skip/xfail.
+  - Confirms Executor still returns ResultProposal only, Post V&V remains the ResultProposal validator, GT remains advisory/selection, and Root remains final authority.
+
 ## Current Applied Auditor Commands
 
 ```bash

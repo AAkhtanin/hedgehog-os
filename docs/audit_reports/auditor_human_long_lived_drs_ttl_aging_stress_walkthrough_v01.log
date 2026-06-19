@@ -1,0 +1,244 @@
+# Auditor Report - Human Long-lived DRS TTL Aging Stress Walkthrough v0.1
+
+## 1. Audit status
+
+audit_id: auditor_human_long_lived_drs_ttl_aging_stress_walkthrough_v01
+audit_status: PASS_WITH_SCOPE_WARNING
+audited_commit: e22ee04
+walkthrough_status: PASS
+targeted_tests_status: PASS
+full_pytest_status: FAIL_KNOWN_GLOBAL_DRIFT
+full_pytest_failures_are_out_of_scope_for_this_walkthrough: true
+runtime_modified: false
+schemas_modified: false
+tests_modified: false
+production_drs_implemented: false
+external_drs_implemented: false
+network_used: false
+gemini_used: false
+marennya_activated: false
+up_activated: false
+negative_trace_layer_created: false
+merged_killer_demo_b_proof_created: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+## 2. Audit scope
+
+Audited files:
+
+- demo/run_human_long_lived_drs_ttl_aging_stress_walkthrough_v01.py
+- tests/test_human_long_lived_drs_ttl_aging_stress_walkthrough_v01_runner.py
+
+This audit covers the human walkthrough only. It does not audit production
+runtime behavior, active schemas, the deterministic TTL proof runner, Demo B
+proof internals, or full-suite repair.
+
+## 3. Commit chain
+
+- c8c0907 - Add long-lived DRS TTL aging stress preflight
+- 49b0a11 - Add long-lived DRS TTL aging math invariants patch plan
+- 1cc9c69 - Document long-lived DRS TTL aging math invariants
+- ee9e419 - Add long-lived DRS TTL aging proof runner patch plan
+- d3840db - Add long-lived DRS TTL aging stress proof
+- f1eefee - Add long-lived DRS TTL aging stress audit log
+- 5274744 - Document long-lived DRS TTL aging stress proof checkpoint
+- e22ee04 - Add human long-lived DRS TTL aging stress walkthrough
+
+## 4. Validation commands
+
+Commands run for this audit:
+
+```bash
+python3 -m demo.run_human_long_lived_drs_ttl_aging_stress_walkthrough_v01
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_long_lived_drs_ttl_aging_stress_walkthrough_v01_runner.py
+git status --short
+```
+
+Observed results:
+
+- walkthrough runner result: PASS
+- focused test result: 3 passed in 0.03s
+- runner printed the human walkthrough title and all required narrative
+  sections.
+- focused test verified required markers for the Demo B bridge, proof/audit
+  commits, TTL proof counters, Root authority, limitations, and non-goals.
+
+## 5. Walkthrough content audit
+
+The walkthrough includes:
+
+- title: HEDGEHOG OS - HUMAN WALKTHROUGH - LONG-LIVED DRS TTL AGING v0.1
+- WHAT THIS WALKTHROUGH IS
+- PREVIOUS LAYER: DOCUMENT EVIDENCE WORKFLOW / DEMO B BRIDGE
+- THE NEW QUESTION: WHAT HAPPENS AFTER TIME PASSES?
+- THE TIME / DRS AGING PROOF
+- HUMAN SCENE A - OLD ACCEPTED EVIDENCE
+- HUMAN SCENE B - VALID DOCUMENT, STALE VERIFICATION
+- HUMAN SCENE C - FRESH INGESTION IS NOT FRESH KNOWLEDGE
+- HUMAN SCENE D - POPULAR MEMORY IS NOT AUTHORITY
+- HUMAN SCENE E - QUARANTINE / DEADEND PROXIMITY
+- HUMAN SCENE F - TRUST-AWARE SUPERSESSION
+- POSITIVE CONTROL - DIRECT REUSE CAN EXIST
+- WHY THIS MATTERS FOR THE BIG SYSTEM
+- LIMITATIONS
+- FINAL HUMAN TAKEAWAY
+
+The walkthrough preserves the compact rule:
+
+Memory may survive.
+Authority does not survive through memory.
+Old records may inform.
+Old records may warn.
+Old records may explain history.
+Old records may suggest rerun.
+Old records may not silently authorize direct reuse.
+Freshness can expire reuse.
+Trust can constrain supersession.
+Proximity can warn or block.
+Popularity can preserve visibility.
+None of them can authorize final reuse.
+Root remains final authority.
+
+## 6. Demo B bridge audit
+
+Demo B bridge status: PASS
+
+The walkthrough includes a lightweight Demo B bridge:
+
+- Enterprise Document Killer Demo B is named as the previous document/evidence
+  workflow.
+- Demo B is used only as a human mental bridge:
+  document evidence exists -> time passes -> reuse must be rechecked.
+- The walkthrough mentions Demo B context filenames only.
+- Demo B is not rerun.
+- Demo B is not imported as executable proof.
+- This is not merged Killer Demo B proof.
+- merged_killer_demo_b_proof_created: false
+- The walkthrough does not rerun or merge Demo B.
+
+This audit confirms the walkthrough is narrative only. It does not create a
+mega-proof and does not merge Demo B with the TTL proof runner.
+
+## 7. Boundary checks
+
+Confirmed:
+
+- runner prints the human walkthrough.
+- focused test passes.
+- walkthrough includes Demo B bridge.
+- bridge is narrative only.
+- Demo B is not rerun.
+- Demo B is not imported as executable proof.
+- this is not merged Killer Demo B proof.
+- no runtime/schema/docs/manifest changes are made by the walkthrough.
+- Root remains final authority.
+- AcceptedEvidence is not future action permission.
+- fresh ingestion is not fresh knowledge.
+- ReuseBoost cannot override hard gates.
+- trust-aware supersession is explained.
+- quarantine/deadend proximity is explained.
+- limitations are explicit.
+
+## 8. TTL proof facts referenced by the walkthrough
+
+The walkthrough references the completed TTL proof/audit/docs checkpoint:
+
+- proof commit: d3840db
+- audit commit: f1eefee
+- docs sync commit: 5274744
+- scenarios_total: 25
+- scenarios_passed: 25
+- focused tests: 19 passed
+- root_final_authority_preserved_count: 25
+- unbounded_graph_traversal_used_count: 0
+- reuse_boost_hard_gate_overrides_count: 0
+- unaccepted_supersession_count: 0
+- accepted_evidence_action_permission_count: 0
+- production_drs_used_count: 0
+- external_drs_used_count: 0
+- network_used_count: 0
+- gemini_used_count: 0
+- marennya_activated_count: 0
+- up_activated_count: 0
+
+## 9. Full pytest drift note
+
+Local `_audit_exports/full_pytest_output.txt` is present. It is local personal
+audit evidence and is not a project change for this audit.
+
+Full pytest was run by the user for personal audit visibility. Observed full
+suite result:
+
+- 25 failed, 1667 passed, 60 warnings
+
+The failures are outside the current human walkthrough target. They are not
+caused by the human walkthrough commit. Observed failure clusters:
+
+- canonical pipeline expected `success` but current output can be `needs_user`
+- GT expected `accept` but current output can be `no_update`
+- live Gemini smoke depends on full canonical E2E and now reports FAIL
+- missing live config expected SKIPPED but currently reports FAIL
+- Fractal DAG / Root-native canonical paths expect older accept/success
+  semantics
+
+Interpretation: likely post-hardening expectation drift, not caused by the
+human walkthrough commit.
+
+Required next engineering layer after this audit/docs sync:
+
+- Full Suite Drift Triage / Repair v0.1
+
+This full-suite drift is why the audit status is PASS_WITH_SCOPE_WARNING rather
+than unconditional PASS.
+
+## 10. Limitations
+
+- deterministic human walkthrough only
+- not new proof
+- not runtime
+- not schema change
+- not production DRS
+- not external/global DRS
+- not real database
+- not distributed DRS
+- not real clock synchronization
+- not real clock security
+- not real connector trust
+- not real external evidence acceptance
+- not production persistence
+- not runtime integration
+- not proof of production readiness
+- not public-auditor readiness
+- not Marennya
+- not UP
+- not Negative Trace layer
+- not artifact_type vocabulary change
+- not merged Killer Demo B proof
+
+## 11. Findings
+
+finding_walkthrough_runner: PASS
+finding_focused_tests: PASS
+finding_demo_b_bridge: PASS
+finding_bridge_is_narrative_only: PASS
+finding_no_merged_demo_b_proof: PASS
+finding_root_authority: PASS
+finding_accepted_evidence_boundary: PASS
+finding_fresh_ingestion_boundary: PASS
+finding_reuseboost_boundary: PASS
+finding_trust_aware_supersession_explained: PASS
+finding_quarantine_deadend_proximity_explained: PASS
+finding_limitations_explicit: PASS
+finding_full_pytest_global_drift: PASS_WITH_SCOPE_WARNING
+
+## 12. Recommended next step
+
+Recommended next step:
+
+- docs sync for the human walkthrough audit checkpoint
+- then Full Suite Drift Triage / Repair v0.1
+
+Do not treat the full pytest drift as a failure of this walkthrough audit. Do
+not modify runtime, schemas, Demo B, TTL proof runner, or full-suite
+expectations inside this audit log task.

@@ -1,0 +1,214 @@
+# Auditor Report — DRS Lineage / Provenance Pressure v0.1
+
+## 1. Audit Status
+
+* audit_id: auditor_drs_lineage_provenance_pressure_v01
+* audit_status: PASS
+* audited_commit: d3d13c1
+* patch_plan_commit: 7415be3
+* preflight_commit: e60b40f
+* latest_checkpoint_before_layer: c1f0abd
+* audit_scope: deterministic_local_proof_runner_and_focused_tests
+* production_drs_implemented: false
+* external_drs_implemented: false
+* network_used: false
+* gemini_used: false
+* marennya_activated: false
+* up_activated: false
+* schemas_modified: false
+* runtime_modified: false
+* full_pytest_run: false
+* full_pytest_required_for_this_audit: false
+
+Full pytest was not run because this proof patch created only a local deterministic demo runner and focused tests, with no runtime/schema/contract changes. Full pytest remains required before closing any future runtime/schema/contract/hardening layer.
+
+## 2. Audited Artifacts
+
+Audited proof runner and focused test:
+
+* `demo/run_drs_lineage_provenance_pressure_v01.py`
+* `tests/test_drs_lineage_provenance_pressure_v01_runner.py`
+
+## 3. What This Proof Demonstrates
+
+This proof pressure-combines existing lineage/provenance concepts into one local deterministic scenario table.
+
+It demonstrates that these can influence review, warning, ranking, or blocking:
+
+* trace ancestry
+* AcceptedEvidence ancestry
+* cross-domain bridge traversal
+* quarantine proximity
+* deadend proximity
+* conflicting provenance
+* supersession review pressure
+* audit hash-chain continuity
+* high reuse lineage / popularity
+* composite lineage pressure
+
+But none of these becomes truth, authority, direct reuse permission, action permission, DRS write authority, or Root Final authority.
+
+Core invariant audited:
+
+```text
+lineage informs
+lineage does not decide
+provenance does not become truth
+audit/hash-chain proves continuity, not truth
+accepted evidence ancestry is not future action permission
+bridge traversal is not authority transfer
+quarantine/deadend proximity is bounded
+ConflictCheck remains advisory
+GT remains advisory
+Root remains final authority
+```
+
+## 4. Scenario Coverage
+
+1. trace_derived_from_trace_informs_only
+   * status: PASS
+   * expected boundary: trace ancestry may inform context but cannot decide reuse.
+   * observed result: context_only, direct_reuse_allowed false.
+   * key reason code: lineage_informs_only
+
+2. reuse_candidate_derived_from_old_accepted_evidence_requires_review
+   * status: PASS
+   * expected boundary: AcceptedEvidence ancestry is not future action permission.
+   * observed result: rerun_required, partial_reuse_then_validation, direct_reuse_allowed false.
+   * key reason code: accepted_evidence_ancestry_not_action_permission
+
+3. bridge_traversal_across_domain_informs_only
+   * status: PASS
+   * expected boundary: bridge traversal informs the target domain but does not transfer authority.
+   * observed result: context_only, direct_reuse_allowed false.
+   * key reason code: bridge_informs_only
+
+4. quarantine_near_reuse_candidate_warns_or_blocks
+   * status: PASS
+   * expected boundary: quarantine proximity can warn/block but cannot globally taint the graph.
+   * observed result: blocked_by_quarantine_proximity, blocked, direct_reuse_allowed false.
+   * key reason code: quarantine_proximity_bounded
+
+5. deadend_near_reuse_candidate_warns_or_blocks
+   * status: PASS
+   * expected boundary: deadend proximity can warn/block route reuse but cannot globally taint the graph.
+   * observed result: blocked_by_deadend_proximity, blocked, direct_reuse_allowed false.
+   * key reason code: deadend_proximity_bounded
+
+6. conflicting_provenance_blocks_direct_reuse
+   * status: PASS
+   * expected boundary: ConflictCheck remains advisory until Root.
+   * observed result: blocked_by_conflicting_provenance, blocked, direct_reuse_allowed false.
+   * key reason code: conflictcheck_advisory_root_required
+
+7. trusted_newer_provenance_can_request_supersession_review_but_not_self_authorize
+   * status: PASS
+   * expected boundary: trusted newer provenance may request supersession review but cannot self-authorize.
+   * observed result: supersession_review_required, partial_reuse_then_validation, direct_reuse_allowed false.
+   * key reason code: supersession_review_required
+
+8. audit_hash_continuity_does_not_create_truth
+   * status: PASS
+   * expected boundary: audit/hash-chain proves continuity, not truth.
+   * observed result: audit_continuity_only, historical_replay, direct_reuse_allowed false.
+   * key reason code: audit_hash_continuity_not_truth
+
+9. high_reuse_lineage_does_not_create_authority
+   * status: PASS
+   * expected boundary: high reuse lineage / popularity does not create authority.
+   * observed result: review_required, partial_reuse_then_validation, direct_reuse_allowed false.
+   * key reason code: popularity_not_authority
+
+10. root_final_authority_preserved_across_lineage_pressure
+    * status: PASS
+    * expected boundary: composite lineage pressure remains advisory/blocking and Root remains final authority.
+    * observed result: blocked_by_quarantine_proximity, blocked, direct_reuse_allowed false.
+    * key reason code: root_final_authority_preserved
+
+## 5. Aggregate Counters
+
+Observed proof counters:
+
+* scenarios_total: 10
+* scenarios_passed: 10
+* direct_reuse_allowed_count: 0
+* direct_reuse_blocked_count: 10
+* root_review_required_count: 10
+* root_final_authority_preserved_count: 10
+
+Authority boundary counters:
+
+* lineage_decides_count: 0
+* provenance_truth_claimed_count: 0
+* audit_hash_truth_claimed_count: 0
+* bridge_authority_transfer_count: 0
+* quarantine_global_taint_count: 0
+* deadend_global_taint_count: 0
+* conflictcheck_authority_count: 0
+* gt_authority_count: 0
+
+External/production counters:
+
+* production_drs_used_count: 0
+* external_drs_used_count: 0
+* network_used_count: 0
+* gemini_used_count: 0
+* marennya_activated_count: 0
+* up_activated_count: 0
+
+## 6. Validation Commands
+
+Validation commands recorded for the committed proof:
+
+```bash
+python3 -m demo.run_drs_lineage_provenance_pressure_v01
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_drs_lineage_provenance_pressure_v01_runner.py
+```
+
+Observed:
+
+* FINAL STATUS: PASS
+* 14 passed in 0.04s
+
+## 7. Authority Boundary Audit
+
+* lineage informs, lineage does not decide
+* provenance does not become truth
+* audit/hash-chain proves continuity, not truth
+* accepted evidence ancestry is not future action permission
+* bridge traversal is not authority transfer
+* quarantine/deadend proximity is bounded
+* quarantine/deadend proximity does not globally taint the graph
+* ConflictCheck remains advisory
+* GT remains advisory
+* Root remains final authority
+
+## 8. Limitations
+
+* deterministic local proof only
+* no production DRS
+* no external/global DRS
+* no real connector
+* no network
+* no Gemini
+* no Marennya
+* no UP
+* no production persistence
+* no runtime integration
+* no schema mutation
+* no human walkthrough in this layer
+* no docs sync in this layer
+* no audit of production behavior
+* no claim of production readiness
+* no claim of public auditor readiness
+
+## 9. Auditor Conclusion
+
+PASS.
+
+DRS Lineage / Provenance Pressure v0.1 successfully proves, at local deterministic proof level, that lineage/provenance pressure can inform, warn, or block, but cannot become authority, truth, direct reuse permission, action permission, DRS write authority, or Root Final authority.
+
+Root final authority is preserved across all 10 scenarios.
+
+Recommended next step:
+Create human-readable walkthrough for DRS Lineage / Provenance Pressure v0.1.

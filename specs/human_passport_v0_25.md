@@ -2936,6 +2936,40 @@ DRS, no external DRS, and no Marennya / UP activation.
 Memory may survive; authority does not survive through memory. Root remains
 final authority.
 
+Compromised Upstream Pack v0.1 is closed through human walkthrough audit.
+Evidence chain: preflight `2ec1266`, patch plan `003bcf3`, proof `c131ddc`,
+technical audit `b17c096`, human walkthrough `38be1d1`, and human walkthrough
+audit `8dc22d3`.
+
+Proof status: PASS. Technical audit status: PASS. Human walkthrough status:
+PASS. Human walkthrough audit status: PASS. Focused walkthrough tests:
+`8 passed`.
+
+The layer covers six deterministic source-focused scenarios:
+compromised_bank_source_cannot_create_truth,
+stale_legal_source_signed_looking_forces_review,
+warehouse_source_contradiction_blocks_ready,
+external_pointer_trust_laundering_rejected,
+accepted_evidence_from_compromised_source_is_not_action_permission, and
+root_final_authority_preserved_under_compromised_upstream_pressure.
+
+Proof checkpoint: `scenarios_total: 6`, `scenarios_passed: 6`, and
+`root_final_authority_preserved_count: 6`.
+
+A human should understand that compromised upstream sources, signed-looking
+stale sources, warehouse contradictions, repeated external pointers,
+schema-valid upstream content, ValidationPacket, EvidenceCandidate,
+AcceptedEvidence, ConflictCheck, and GT can inform or force review. They do
+not become truth, trust, authority, action permission, or Root Final authority.
+Root remains final authority.
+
+This checkpoint remains deterministic/local proof and explanatory docs only:
+no production connector, no production DRS, no external/global DRS, no network,
+no Gemini, no Negative Trace, no DRS Poisoning Resistance, no Economic
+Adversary, no Marennya/UP, no manifest hardening, and no transition matrix
+mutation. DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 may be next
+possible layers, but they are not implemented by this checkpoint.
+
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal
 expansion, dual coupling, DRS bridge evidence, chaos/failure traces, math

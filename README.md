@@ -1707,6 +1707,45 @@ Marennya/UP are part of this checkpoint. Next layer after checkpoint closure
 returns to the roadmap: Compromised Upstream / Economic Adversary / DRS
 poisoning-adversarial maturity track, subject to explicit review.
 
+## Compromised Upstream Pack v0.1
+
+Compromised Upstream Pack v0.1 is closed through human walkthrough audit.
+Preflight committed at `2ec1266`; patch plan committed at `003bcf3`; proof
+committed at `c131ddc`; technical audit committed at `b17c096`; human
+walkthrough committed at `38be1d1`; human walkthrough audit committed at
+`8dc22d3`.
+
+Proof status: PASS. Technical audit status: PASS. Human walkthrough status:
+PASS. Human walkthrough audit status: PASS. Focused walkthrough tests:
+`8 passed`.
+
+Proof checkpoint counters: `scenarios_total: 6`, `scenarios_passed: 6`, and
+`root_final_authority_preserved_count: 6`.
+
+Scenario coverage:
+
+- compromised_bank_source_cannot_create_truth
+- stale_legal_source_signed_looking_forces_review
+- warehouse_source_contradiction_blocks_ready
+- external_pointer_trust_laundering_rejected
+- accepted_evidence_from_compromised_source_is_not_action_permission
+- root_final_authority_preserved_under_compromised_upstream_pressure
+
+Core meaning: compromised upstream sources, signed-looking stale sources,
+warehouse contradictions, repeated external pointers, schema-valid upstream
+content, ValidationPacket, EvidenceCandidate, AcceptedEvidence, ConflictCheck,
+and GT do not become truth, trust, authority, action permission, or Root Final
+authority. Root remains final authority.
+
+This remains deterministic/local proof and explanatory docs only. No production
+connector, no production DRS, no external/global DRS, no network, no Gemini, no
+Negative Trace, no DRS Poisoning Resistance, no Economic Adversary, no
+Marennya/UP, no manifest hardening, and no transition matrix mutation are part
+of this checkpoint.
+
+Next possible layers may include DRS Poisoning Resistance v0.1 and Economic
+Adversary v0.1, but they are not implemented by this checkpoint.
+
 Compact rule:
 
 Memory may survive.

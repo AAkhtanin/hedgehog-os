@@ -351,6 +351,24 @@ Current reports:
   - Limitations: deterministic local human walkthrough only; no production DRS, external/global DRS, real connector, network, Gemini, Marennya, UP, runtime integration, schema mutation, or readiness packet.
   - Next step: Docs sync / checkpoint closure.
 
+- `auditor_compromised_upstream_pack_v01.log`
+  - Compromised Upstream Pack v0.1 technical audit for commit `c131ddc`; audit commit `b17c096`; preflight `2ec1266`; patch plan `003bcf3`.
+  - Proof status: PASS. Technical audit status: PASS. Scope: deterministic local proof runner and focused tests.
+  - Key counters: `scenarios_total: 6`, `scenarios_passed: 6`, and `root_final_authority_preserved_count: 6`.
+  - Scenario coverage: compromised_bank_source_cannot_create_truth, stale_legal_source_signed_looking_forces_review, warehouse_source_contradiction_blocks_ready, external_pointer_trust_laundering_rejected, accepted_evidence_from_compromised_source_is_not_action_permission, and root_final_authority_preserved_under_compromised_upstream_pressure.
+  - Confirms compromised upstream source pressure does not create source truth, pointer trust, ready status, direct reuse permission, action permission, ValidationPacket authority, EvidenceCandidate authority, AcceptedEvidence action permission, ConflictCheck authority, GT authority, or Root Final authority.
+  - Limitations: deterministic local proof only; no production connector, production DRS, external/global DRS, network, Gemini, Negative Trace, DRS Poisoning Resistance, Economic Adversary, Marennya/UP, manifest hardening, or transition matrix mutation.
+  - Root remains final authority.
+
+- `auditor_human_compromised_upstream_pack_walkthrough_v01.log`
+  - Human Compromised Upstream Pack walkthrough audit for commit `38be1d1`; audit commit `8dc22d3`; technical audit `b17c096`; proof `c131ddc`.
+  - Human walkthrough status: PASS. Human walkthrough audit status: PASS. Scope: human-readable walkthrough and focused tests.
+  - Confirms `underlying_proof_status: PASS`, `walkthrough_required_counters_match: True`, focused walkthrough tests: `8 passed`, `scenarios_total: 6`, `scenarios_passed: 6`, and `root_final_authority_preserved_count: 6`.
+  - Confirms the walkthrough covers compromised_bank_source_cannot_create_truth, stale_legal_source_signed_looking_forces_review, warehouse_source_contradiction_blocks_ready, external_pointer_trust_laundering_rejected, accepted_evidence_from_compromised_source_is_not_action_permission, and root_final_authority_preserved_under_compromised_upstream_pressure.
+  - Confirms official-looking sources, signed-looking stale documents, repeated external pointers, schema-valid content, ValidationPacket, EvidenceCandidate, AcceptedEvidence, ConflictCheck, and GT may inform or force review, but do not become truth, trust, authority, action permission, or Root Final authority.
+  - Root remains final authority.
+  - Next possible layers may include DRS Poisoning Resistance v0.1 and Economic Adversary v0.1, but they are not implemented by this checkpoint.
+
 ## Current Applied Auditor Commands
 
 ```bash

@@ -1,0 +1,260 @@
+# Auditor Report - CandidateVectorGenerator + Real AVF Scoring v0.1
+
+## 1. Audit Status
+
+* audit_id: auditor_candidate_vector_generator_avf_scoring_v01
+* audit_status: PASS
+* audited_commit: 1506eea
+* patch_plan_commit: 8f8f78d
+* preflight_commit: 97a1437
+* previous_runtime_checkpoint: 4f513d1
+* runtime_gate_commit: 1e1afe6
+* audit_scope: runtime_implementation_and_tests
+* full_pytest_run: true
+* full_pytest_result: 1772 passed, 60 warnings in 957.62s
+* focused_test_result: 51 passed, 1 warning in 0.27s
+* runner_result: FINAL STATUS: PASS
+* schemas_modified: false
+* production_avf: false
+* production_drs: false
+* external_global_drs: false
+* network_used: false
+* gemini_used: false
+* embeddings_used: false
+* llm_semantic_matching_used: false
+* autonomous_action_used: false
+* connector_side_effects_used: false
+* marennya_activated: false
+* up_activated: false
+* manifest_mutation_count: 0
+* transition_matrix_mutation_count: 0
+
+This audit records the committed runtime-facing implementation of
+CandidateVectorGenerator + Real AVF Scoring v0.1. Full pytest had already been
+run for the runtime implementation, and this audit log does not rerun the full
+suite.
+
+## 2. Audited Artifacts
+
+Audited runtime implementation, deterministic runner, and focused tests:
+
+* `hedgehog/candidate_vector_generator.py`
+* `demo/run_candidate_vector_generator_avf_scoring_v01.py`
+* `tests/test_candidate_vector_generator_avf_scoring_v01_runner.py`
+
+## 3. Implementation Seam Audited
+
+The implementation adds a narrow runtime-facing adapter:
+
+* added `hedgehog/candidate_vector_generator.py`
+* composes existing `hedgehog/local_drs_resolver.py`
+* composes existing `hedgehog/candidate_vectors.py`
+* composes existing `hedgehog/avf.py`
+* composes existing `hedgehog/reuse_gate.py`
+* composes existing `hedgehog/time_model.py`
+* does not replace AVF
+* does not replace candidate_vectors
+* does not replace local DRS resolver
+* does not create a separate store
+* does not use external/global DRS
+* does not use network/Gemini/LLM/embeddings
+
+The audited path bridges the previous runtime layer into bounded scoring:
+
+```text
+Real Local DRS Resolver candidates
+bounded CandidateVectors
+deterministic AVF scores
+ranked/reviewable candidate report
+GT/LGT/Root review still required
+```
+
+## 4. Runtime Behavior Audited
+
+Audited behavior:
+
+* converts resolved local DRS candidates into bounded candidate vectors
+* computes deterministic AVF scores
+* ranks candidates for review/routing
+* returns a reviewable candidate report
+* preserves candidate-only semantics
+* keeps GT/LGT/Root review required
+* does not grant direct reuse
+* does not grant action permission
+* does not create FinalOutput
+* does not mutate manifest
+* does not mutate transition matrix
+* does not call network, Gemini, connectors, external DRS, or global DRS
+
+The generator uses deterministic signals only: domain, subject/claim keys,
+controlled token overlap, freshness/TTL state, provenance refs, trace refs,
+source refs, conflict flags, quarantine/deadend flags, poisoning flags, and
+schema-validity as shape-only metadata.
+
+## 5. Scenario Coverage
+
+1. drs_resolved_candidates_generate_candidate_vectors
+   * status: PASS
+   * boundary: resolved local DRS candidates become bounded candidate vectors only.
+
+2. exact_domain_and_claim_match_scores_higher_but_not_authority
+   * status: PASS
+   * boundary: exact domain and claim match can rank higher, but cannot become authority.
+
+3. stale_candidate_gets_review_required_penalty
+   * status: PASS
+   * boundary: stale candidate receives review pressure and cannot silently win.
+
+4. quarantine_deadend_candidate_blocked_from_top_reuse
+   * status: PASS
+   * boundary: quarantine/deadend candidate cannot become direct reuse.
+
+5. conflicting_provenance_penalizes_or_blocks_candidate
+   * status: PASS
+   * boundary: conflicting provenance penalizes or blocks candidate reuse.
+
+6. duplicate_spam_candidates_do_not_win_by_volume
+   * status: PASS
+   * boundary: duplicate/spam candidate volume cannot create authority.
+
+7. high_score_candidate_still_requires_gt_lgt_root_review
+   * status: PASS
+   * boundary: high AVF score still requires GT/LGT/Root review.
+
+8. schema_valid_vector_is_not_semantic_truth
+   * status: PASS
+   * boundary: schema-valid vector shape is not semantic truth.
+
+9. root_final_authority_preserved_across_avf_scoring
+   * status: PASS
+   * boundary: Root remains final authority across scoring and ranking.
+
+## 6. Aggregate Counters
+
+Required runner counters:
+
+* scenarios_total: 9
+* scenarios_passed: 9
+* direct_reuse_allowed_count: 0
+* action_permission_granted_count: 0
+* avf_authority_claimed_count: 0
+* vector_truth_claimed_count: 0
+* schema_validity_truth_claimed_count: 0
+* duplicate_spam_authority_claimed_count: 0
+* high_score_direct_reuse_granted_count: 0
+* network_used_count: 0
+* gemini_used_count: 0
+* root_final_authority_preserved_count: 9
+
+Additional runner counters observed:
+
+* drs_candidates_input_count: 17
+* candidate_vectors_generated_count: 17
+* avf_scores_computed_count: 17
+* ranked_candidates_count: 17
+* top_ranked_candidates_count: 9
+* stale_candidate_review_required_count: 2
+* quarantine_deadend_blocked_count: 3
+* conflicting_provenance_penalized_count: 2
+* duplicate_spam_candidates_seen_count: 10
+* gt_lgt_review_required_count: 17
+* root_review_required_count: 17
+* manifest_mutation_count: 0
+* transition_matrix_mutation_count: 0
+
+## 7. Validation Results Recorded
+
+Recorded validation commands for the committed runtime implementation:
+
+```bash
+python3 -m demo.run_candidate_vector_generator_avf_scoring_v01
+
+PYTHONPATH=. .venv/bin/python -m pytest -q \
+  tests/test_candidate_vector_generator_avf_scoring_v01_runner.py \
+  tests/test_candidate_vectors.py \
+  tests/test_avf_runtime.py \
+  tests/test_reuse_gate_runtime.py \
+  tests/test_real_local_drs_resolver_writeback_v01_runner.py
+
+PYTHONPATH=. .venv/bin/python -m pytest -q
+```
+
+Observed validation:
+
+* runner_result: FINAL STATUS: PASS
+* focused_test_result: 51 passed, 1 warning in 0.27s
+* full_pytest_result: 1772 passed, 60 warnings in 957.62s
+
+## 8. Required Invariants
+
+Audited invariants:
+
+* Candidate vector is not truth
+* Candidate vector is not authority
+* AVF score is not authority
+* Top-ranked candidate is not action permission
+* Top-ranked candidate is not direct reuse permission
+* DRS hit is not authority
+* DRS reuse candidate is not action permission
+* AVF ranking can influence review/routing only
+* stale candidate cannot silently win
+* quarantine/deadend candidate cannot become direct reuse
+* conflicting provenance blocks or forces review
+* duplicate/spam candidates cannot become authority by volume
+* schema-valid candidate vector is not semantic truth
+* GT/LGT remains advisory
+* Root remains final authority
+* CandidateVectorGenerator cannot mutate manifest
+* CandidateVectorGenerator cannot mutate transition matrix
+* CandidateVectorGenerator cannot call network/Gemini/connectors
+
+## 9. Poisoning / Adversarial Guardrails
+
+Audited guardrails:
+
+* duplicate candidates cannot win by count alone
+* spam candidates can at most create review pressure
+* compromised upstream-looking records cannot become truth
+* repeated external pointer cannot become trust
+* stale but high-overlap record cannot silently outrank fresh review
+* high AVF score cannot override quarantine/deadend/conflict
+* high AVF score cannot create direct reuse permission
+* high AVF score cannot create action permission
+* high AVF score cannot create RootFinal output
+
+These guardrails are acceptance criteria for this runtime-facing layer. They do
+not implement a separate DRS Poisoning Resistance v0.1 layer.
+
+## 10. Limitations
+
+This layer remains bounded:
+
+* not production AVF
+* not production DRS
+* not external/global DRS
+* no network
+* no Gemini
+* no embeddings
+* no LLM semantic matching
+* no autonomous action
+* no connector side effects
+* no public WOW
+* no whitepaper/public auditor packet
+* no Marennya/UP
+* no self-modifying manifest
+* no transition matrix mutation
+* no GT/LGT implementation in this layer
+* no Fractal Cell Runtime integration in this layer
+* no direct reuse permission
+* no final output authority
+* Real Semantic Runtime MVP is not complete
+
+## 11. Core Audit Conclusion
+
+CandidateVectorGenerator + Real AVF Scoring v0.1 passes technical audit for the
+runtime implementation and focused tests. It converts resolved local DRS
+candidates into bounded candidate vectors, computes deterministic AVF scores,
+and ranks candidates for review/routing while preserving candidate-only
+semantics. Candidate vectors, AVF scores, DRS hits, top-ranked candidates,
+schema-valid shapes, and duplicate/spam pressure do not become truth,
+authority, permission, or final output. Root remains final authority.

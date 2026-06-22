@@ -1746,6 +1746,83 @@ of this checkpoint.
 Next possible layers may include DRS Poisoning Resistance v0.1 and Economic
 Adversary v0.1, but they are not implemented by this checkpoint.
 
+## Real Local DRS Resolver / Writeback v0.1
+
+Real Local DRS Resolver / Writeback v0.1 is closed through human walkthrough
+audit. It is the first runtime-facing primitive under Real Semantic Runtime
+MVP, following the STOP PROOF-ONLY EXPANSION GATE.
+
+Checkpoint chain: preflight `55ab2cd`; patch plan `cbe170c`; runtime
+implementation `2a18df5`; technical audit `6bb2422`; human walkthrough
+`118f040`; human walkthrough audit `dfbcd6e`.
+
+It adds the bounded local semantic DRS primitive:
+
+write meaning
+-> resolve meaning
+-> reuse under Root review
+
+Runtime files: `hedgehog/local_drs_resolver.py`,
+`demo/run_real_local_drs_resolver_writeback_v01.py`, and
+`tests/test_real_local_drs_resolver_writeback_v01_runner.py`. Human
+walkthrough files:
+`demo/run_human_real_local_drs_resolver_walkthrough_v01.py` and
+`tests/test_human_real_local_drs_resolver_walkthrough_v01_runner.py`.
+
+Runtime runner: `FINAL STATUS: PASS`. Technical audit status: PASS. Human
+walkthrough status: PASS. Human audit status: PASS. Focused runtime tests:
+`35 passed, 2 warnings`. Focused human walkthrough tests:
+`4 passed in 0.10s`. Full pytest evidence:
+`1754 passed, 60 warnings in 934.65s`.
+
+Scenario coverage:
+
+- write_then_resolve_semantic_record_candidate_only
+- stale_record_forces_root_review
+- quarantine_proximity_blocks_direct_reuse
+- changed_worldstate_blocks_old_reuse
+- conflicting_provenance_blocks_reuse
+- duplicate_poisoning_pressure_does_not_create_authority
+- root_review_required_before_reuse_affects_final_output
+- writeback_records_root_final_without_action_side_effects
+
+Runtime counters: `scenarios_total: 8`, `scenarios_passed: 8`,
+`records_written_count: 9`, `resolve_queries_count: 7`,
+`candidates_returned_count: 8`, `direct_reuse_allowed_count: 0`,
+`root_review_required_count: 8`, `stale_record_reuse_blocked_count: 1`,
+`quarantine_reuse_blocked_count: 1`,
+`changed_worldstate_reuse_blocked_count: 1`,
+`conflicting_provenance_blocked_count: 1`,
+`duplicate_poisoning_records_seen_count: 2`,
+`poisoning_pressure_authority_claimed_count: 0`,
+`action_permission_granted_count: 0`, `manifest_mutation_count: 0`,
+`transition_matrix_mutation_count: 0`, `production_drs_used_count: 0`,
+`external_drs_used_count: 0`, `network_used_count: 0`,
+`gemini_used_count: 0`, and `root_final_authority_preserved_count: 8`.
+
+Core meaning: Hedgehog OS can now locally write semantic memory, resolve
+candidate memory, and record RootFinal-derived outcomes. DRS record is not
+truth. DRS hit is not authority. DRS reuse candidate is not action permission.
+Stale memory cannot silently reuse. Quarantine/deadend proximity forces
+review. Conflicting provenance blocks direct reuse. Duplicate/spam/external
+pointer pressure cannot create authority. Raw ValidationPacket-like,
+EvidenceCandidate-like, ResultProposal-like, and ConnectorObservation-like
+shapes cannot become RootFinal writeback authority even if they claim
+`root_reviewed=true` and `created_by=root_orchestrator`. Root remains final
+authority.
+
+Limitations: not production DRS, not external/global DRS, no network, no
+Gemini, no autonomous action, no connector side effects, no public WOW, no
+whitepaper/public auditor packet, no Marennya/UP, no self-modifying manifest,
+no transition matrix mutation, not separate DRS Poisoning Resistance v0.1, not
+Economic Adversary v0.1, and Real Semantic Runtime MVP not complete.
+
+Next Real Semantic Runtime MVP layers may include CandidateVectorGenerator +
+real AVF scoring v0.1, GT / LGT advisory evaluator v0.1, bounded LLM / SLM
+actors, Fractal Cell Runtime v0.1 integration with real semantic DRS, and DRS
+poisoning resistance only if needed to protect or unblock real DRS behavior.
+None of those are implemented by this checkpoint.
+
 ## General Plan Runtime Gate
 
 Hardening-plan: APPROVED.
@@ -2054,8 +2131,9 @@ Next engineering focus:
 - Completed: Long-lived DRS State / Aging / TTL Stress v0.1.
 - Completed: DRS Lineage / Provenance Pressure v0.1.
 - Completed: Compromised Upstream Pack v0.1.
-- Current gate: STOP PROOF-ONLY EXPANSION GATE.
-- Next: Real Semantic Runtime MVP plan, with DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 gated / conditional before Real Semantic Runtime MVP only if they protect or unblock runtime primitives.
+- Completed: Real Local DRS Resolver / Writeback v0.1, the first runtime-facing primitive under Real Semantic Runtime MVP.
+- Current block: Real Semantic Runtime MVP remains open; the local DRS write/resolve/reuse-under-Root-review primitive is now checkpointed.
+- Next Real Semantic Runtime MVP layers may include CandidateVectorGenerator + real AVF scoring v0.1, GT / LGT advisory evaluator v0.1, bounded LLM / SLM actors, Fractal Cell Runtime v0.1 integration with real semantic DRS, and DRS poisoning resistance only if needed to protect or unblock real DRS behavior.
 - Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.
 - Later, after Real Semantic Runtime MVP: Real Semantic Runtime WOW Demo, Public Auditor Packet, and Whitepaper engineering draft.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.

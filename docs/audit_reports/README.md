@@ -369,6 +369,24 @@ Current reports:
   - Root remains final authority.
   - Next possible layers may include DRS Poisoning Resistance v0.1 and Economic Adversary v0.1, but they are not implemented by this checkpoint.
 
+- `auditor_real_local_drs_resolver_writeback_v01.log`
+  - Real Local DRS Resolver / Writeback v0.1 technical audit for commit `2a18df5`; audit commit `6bb2422`; preflight `55ab2cd`; patch plan `cbe170c`; runtime gate `1e1afe6`.
+  - Audit status: PASS. Scope: runtime implementation and tests. Runtime runner: `FINAL STATUS: PASS`. Focused runtime tests: `35 passed, 2 warnings`. Full pytest evidence: `1754 passed, 60 warnings in 934.65s`.
+  - Audited runtime seam: `hedgehog/local_drs_resolver.py`, composing existing LocalDRS and local temporal helpers without a separate DRS store, without `hedgehog/external_drs/*`, and without schema changes.
+  - Confirms the first runtime-facing primitive under Real Semantic Runtime MVP: write meaning -> resolve meaning -> reuse under Root review.
+  - Key counters: `scenarios_total: 8`, `scenarios_passed: 8`, `records_written_count: 9`, `resolve_queries_count: 7`, `candidates_returned_count: 8`, `direct_reuse_allowed_count: 0`, `root_review_required_count: 8`, `poisoning_pressure_authority_claimed_count: 0`, `action_permission_granted_count: 0`, `production_drs_used_count: 0`, `external_drs_used_count: 0`, `network_used_count: 0`, `gemini_used_count: 0`, and `root_final_authority_preserved_count: 8`.
+  - Confirms stale record, quarantine proximity, changed WorldState, conflicting provenance, and duplicate poisoning pressure scenarios force review or block candidate reuse instead of creating authority.
+  - Confirms raw ValidationPacket-like, EvidenceCandidate-like, ResultProposal-like, and ConnectorObservation-like shapes cannot become RootFinal writeback authority even if they claim `root_reviewed=true` and `created_by=root_orchestrator`.
+  - Limitations: not production DRS, not external/global DRS, no network, no Gemini, no autonomous action, no connector side effects, no public WOW, no whitepaper/public auditor packet, no Marennya/UP, no self-modifying manifest, no transition matrix mutation, not separate DRS Poisoning Resistance v0.1, not Economic Adversary v0.1, and Real Semantic Runtime MVP not complete.
+
+- `auditor_human_real_local_drs_resolver_walkthrough_v01.log`
+  - Human Real Local DRS Resolver walkthrough audit for commit `118f040`; audit commit `dfbcd6e`; technical audit `6bb2422`; runtime commit `2a18df5`.
+  - Human walkthrough status: PASS. Human audit status: PASS. Scope: human-readable walkthrough and focused tests.
+  - Confirms `underlying_runtime_status: PASS`, `walkthrough_required_counters_match: True`, focused human walkthrough tests: `4 passed in 0.10s`, `scenarios_total: 8`, `scenarios_passed: 8`, and `root_final_authority_preserved_count: 8`.
+  - Confirms all eight runtime scenarios are explained: write_then_resolve_semantic_record_candidate_only, stale_record_forces_root_review, quarantine_proximity_blocks_direct_reuse, changed_worldstate_blocks_old_reuse, conflicting_provenance_blocks_reuse, duplicate_poisoning_pressure_does_not_create_authority, root_review_required_before_reuse_affects_final_output, and writeback_records_root_final_without_action_side_effects.
+  - Confirms the human message: DRS record is not truth, DRS hit is not authority, DRS reuse candidate is not action permission, and Root remains final authority.
+  - Next Real Semantic Runtime MVP layers may include CandidateVectorGenerator + real AVF scoring v0.1, GT / LGT advisory evaluator v0.1, bounded LLM / SLM actors, Fractal Cell Runtime v0.1 integration with real semantic DRS, and DRS poisoning resistance only if needed to protect or unblock real DRS behavior. They are not implemented by this checkpoint.
+
 ## Current Applied Auditor Commands
 
 ```bash

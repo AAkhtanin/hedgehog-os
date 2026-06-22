@@ -2970,6 +2970,60 @@ Adversary, no Marennya/UP, no manifest hardening, and no transition matrix
 mutation. DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 may be next
 possible layers, but they are not implemented by this checkpoint.
 
+Hardening-plan: APPROVED.
+Full path to living Hedgehog OS: PATCHED.
+
+The corrected architecture roadmap is proof hardening -> enforcement hardening
+-> gated DRS/adversary protection where needed -> real semantic runtime -> real
+WOW / public packet / whitepaper. The rejected path is proof hardening ->
+another pretty proof/public packet -> whitepaper.
+
+The closed ordering remains Long-lived DRS State / Aging / TTL Stress v0.1 ->
+DRS Lineage / Provenance Pressure v0.1 -> Compromised Upstream Pack v0.1.
+
+The old combined Compromised Upstream / Economic Adversary Pack wording is
+split:
+
+- Compromised Upstream Pack v0.1 — CLOSED.
+- DRS Poisoning Resistance v0.1 — gated / conditional before Real Semantic Runtime MVP.
+- Economic Adversary v0.1 — gated / conditional before Real Semantic Runtime MVP.
+
+DRS Poisoning Resistance and Economic Adversary are not optional decoration.
+They are gated protection layers. They should be implemented only if they
+protect or unblock Real Semantic Runtime MVP, or folded into Real Local DRS
+Resolver / Writeback acceptance criteria.
+
+STOP PROOF-ONLY EXPANSION GATE:
+
+After Kernel Hardening, no new proof-only expansion is allowed unless it
+directly protects or unblocks runtime primitives: DRS, AVF, GT / LGT, bounded
+LLM / SLM actors, fractal cells, or the Root-reviewed semantic reuse loop.
+
+The former WOW Demo / Public Auditor Packet / Whitepaper slot is now Kernel
+Hardening Auditor Packet. That packet may happen after enforcement/boundary as
+an engineering hardening packet, but it is not the real living-system WOW demo.
+
+BLOCK — Real Semantic Runtime MVP:
+
+- Real Local DRS Resolver / Writeback v0.1
+- CandidateVectorGenerator + real AVF scoring v0.1
+- GT / LGT advisory evaluator v0.1
+- bounded LLM / SLM actors: Intake / Orchestrator / Architect / Executor
+- Fractal Cell Runtime v0.1
+- DRS reuse cycle: write meaning -> resolve meaning -> reuse under Root review
+- End-to-end local semantic runtime demo
+
+Only after Real Semantic Runtime MVP should the roadmap move to Real Semantic
+Runtime WOW Demo, Public Auditor Packet, and Whitepaper engineering draft.
+
+Kernel Enforcement Integration v0.2 and Production Boundary Design v0.2 /
+Security Kernel Spec remain. Developer Facade v0.2 / Manifest Suggestion
+Candidates are gated: keep only if they directly support DRS / AVF / GT-LGT /
+bounded LLM actors / fractal cells. Otherwise move them to gated backlog.
+
+No deletion. No premature public packaging. No endless proof-only expansion.
+Runtime primitives before real WOW.
+
 Marennya and UP remain deferred until the internal system has mature
 multi-domain traces, DRS reuse, adversarial memory defense, controlled fractal
 expansion, dual coupling, DRS bridge evidence, chaos/failure traces, math

@@ -1287,7 +1287,48 @@ text Root authority Orchestrator-stage trace AVF / Attractor formation Architect
 
 Near-term engineering path:
 
-text Completed: External DRS Pointer Protocol v0.1, Read-only Enterprise Connector Sandbox v0.1, External Evidence Acceptance Gate v0.1, Bounded LLM Semantic Executor Node v0.1, Enterprise Chaos Pack v0.1, Compute Collapse Enterprise Bench v0.1 complete through docs sync, Math / Invariants Sync v0.4, Kernel Enforcement / Transition Matrix Hardening v0.1, Developer Facade / Capability Manifest UX v0.1, Production Boundary Design Docs v0.1, Enterprise Killer Demo v0.1 / Demo A, Enterprise Document Killer Demo B v0.1, Schema Contract Alignment v0.1 Phase 1 AttractorPacket Architect contract alignment, and Schema Contract Alignment Phase 2 Executor / DAG ResultProposal wording patch. Next: Phase 2 audit log, then Phase 2 docs sync. Later: Runtime JSON Schema Validation Hardening, EvidenceItem.kind / artifact_type vocabulary alignment, Public Auditor Packet / Whitepaper draft, and Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 as future/post-Killer-Demo extension.
+text Completed: External DRS Pointer Protocol v0.1, Read-only Enterprise
+Connector Sandbox v0.1, External Evidence Acceptance Gate v0.1, Bounded LLM
+Semantic Executor Node v0.1, Enterprise Chaos Pack v0.1, Compute Collapse
+Enterprise Bench v0.1 complete through docs sync, Math / Invariants Sync v0.4,
+Kernel Enforcement / Transition Matrix Hardening v0.1, Developer Facade /
+Capability Manifest UX v0.1, Production Boundary Design Docs v0.1, Enterprise
+Killer Demo v0.1 / Demo A, Enterprise Document Killer Demo B v0.1, Schema
+Contract Alignment v0.1 Phase 1 AttractorPacket Architect contract alignment,
+Schema Contract Alignment Phase 2 Executor / DAG ResultProposal wording patch,
+Runtime JSON Schema Validation Hardening, EvidenceItem.kind Alignment,
+NeedleRuntime Audit Evidence Shape, artifact_type Mapping / Runtime Artifact
+Vocabulary Option A, Long-lived DRS State / Aging / TTL Stress v0.1, DRS
+Lineage / Provenance Pressure v0.1, and Compromised Upstream Pack v0.1. Current
+gate: STOP PROOF-ONLY EXPANSION GATE before Real Semantic Runtime MVP.
+
+Hardening-plan: APPROVED. Full path to living Hedgehog OS: PATCHED. The path
+is proof hardening -> enforcement hardening -> gated DRS/adversary protection
+where needed -> real semantic runtime -> real WOW / public packet / whitepaper,
+not proof hardening -> another pretty proof/public packet -> whitepaper.
+
+DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 are gated /
+conditional before Real Semantic Runtime MVP. They are not optional decoration:
+implement them only if they protect or unblock Real Semantic Runtime MVP, or
+fold their criteria into Real Local DRS Resolver / Writeback acceptance
+criteria.
+
+BLOCK — Real Semantic Runtime MVP:
+
+- Real Local DRS Resolver / Writeback v0.1
+- CandidateVectorGenerator + real AVF scoring v0.1
+- GT / LGT advisory evaluator v0.1
+- bounded LLM / SLM actors: Intake / Orchestrator / Architect / Executor
+- Fractal Cell Runtime v0.1
+- DRS reuse cycle: write meaning -> resolve meaning -> reuse under Root review
+- End-to-end local semantic runtime demo
+
+Kernel Hardening Auditor Packet may happen after enforcement/boundary as an
+engineering packet, but it is not the Real Semantic Runtime WOW Demo. Real
+public packaging moves after Real Semantic Runtime MVP: Real Semantic Runtime
+WOW Demo, Public Auditor Packet, and Whitepaper engineering draft. No
+premature public packaging. No endless proof-only expansion. Runtime primitives
+before real WOW.
 
 Completed checkpoint: Travel / Multi-condition Readiness, Multi-domain Applied
 Smoke v0.2, Controlled Fractal DAC Expansion v0.1, and Dual Fractal Coupling
@@ -1320,13 +1361,17 @@ Fractal DAG may return ResultProposal-shaped boundary artifacts, and all branch
 outputs still flow through Post V&V / GT / Root. This document remains
 vision-only and does not authorize schema/runtime patches by itself.
 
-Next: Phase 2 audit log, then Phase 2 docs sync.
+Next: Real Semantic Runtime MVP plan under STOP PROOF-ONLY EXPANSION GATE.
 
 Later:
 
-- Runtime JSON Schema Validation Hardening
-- EvidenceItem.kind / artifact_type vocabulary alignment
-- Public Auditor Packet / Whitepaper draft
+- DRS Poisoning Resistance v0.1 when it protects or unblocks Real Semantic Runtime MVP.
+- Economic Adversary v0.1 when it protects or unblocks Real Semantic Runtime MVP.
+- Kernel Enforcement Integration v0.2.
+- Production Boundary Design v0.2 / Security Kernel Spec.
+- Real Semantic Runtime WOW Demo.
+- Public Auditor Packet.
+- Whitepaper engineering draft.
 - production boundary implementation remains future
 
 A Controlled Multi-LLM Chain Showcase may be considered only as future

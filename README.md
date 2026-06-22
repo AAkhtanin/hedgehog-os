@@ -1746,6 +1746,82 @@ of this checkpoint.
 Next possible layers may include DRS Poisoning Resistance v0.1 and Economic
 Adversary v0.1, but they are not implemented by this checkpoint.
 
+## General Plan Runtime Gate
+
+Hardening-plan: APPROVED.
+Full path to living Hedgehog OS: PATCHED.
+
+The corrected roadmap is:
+
+proof hardening
+-> enforcement hardening
+-> gated DRS/adversary protection where needed
+-> real semantic runtime
+-> real WOW / public packet / whitepaper
+
+The roadmap is not:
+
+proof hardening
+-> another pretty proof/public packet
+-> whitepaper
+
+Closed order is preserved: Long-lived DRS State / Aging / TTL Stress v0.1 ->
+DRS Lineage / Provenance Pressure v0.1 -> Compromised Upstream Pack v0.1.
+
+The old combined "Compromised Upstream / Economic Adversary Pack" wording is
+split into:
+
+- Compromised Upstream Pack v0.1 — CLOSED.
+- DRS Poisoning Resistance v0.1 — gated / conditional before Real Semantic Runtime MVP.
+- Economic Adversary v0.1 — gated / conditional before Real Semantic Runtime MVP.
+
+DRS Poisoning Resistance and Economic Adversary are not optional decoration.
+They are gated protection layers. They should be implemented only if they
+protect or unblock Real Semantic Runtime MVP, or folded into Real Local DRS
+Resolver / Writeback acceptance criteria.
+
+STOP PROOF-ONLY EXPANSION GATE:
+
+After Kernel Hardening, no new proof-only expansion is allowed unless it
+directly protects or unblocks runtime primitives:
+
+- DRS
+- AVF
+- GT / LGT
+- bounded LLM / SLM actors
+- fractal cells
+- Root-reviewed semantic reuse loop
+
+The old WOW Demo / Public Auditor Packet / Whitepaper position is reframed as
+Kernel Hardening Auditor Packet. This packet may happen after
+enforcement/boundary as an engineering hardening packet, but it is not the real
+living-system WOW demo.
+
+BLOCK — Real Semantic Runtime MVP:
+
+- Real Local DRS Resolver / Writeback v0.1
+- CandidateVectorGenerator + real AVF scoring v0.1
+- GT / LGT advisory evaluator v0.1
+- bounded LLM / SLM actors: Intake / Orchestrator / Architect / Executor
+- Fractal Cell Runtime v0.1
+- DRS reuse cycle: write meaning -> resolve meaning -> reuse under Root review
+- End-to-end local semantic runtime demo
+
+Real public packaging moves after Real Semantic Runtime MVP:
+
+- Real Semantic Runtime WOW Demo
+- Public Auditor Packet
+- Whitepaper engineering draft
+
+Kernel Enforcement Integration v0.2 and Production Boundary Design v0.2 /
+Security Kernel Spec remain on the roadmap. Developer Facade v0.2 / Manifest
+Suggestion Candidates are gated: keep only if they directly support DRS / AVF /
+GT-LGT / bounded LLM actors / fractal cells. Otherwise move them to gated
+backlog.
+
+No deletion. No premature public packaging. No endless proof-only expansion.
+Runtime primitives before real WOW.
+
 Compact rule:
 
 Memory may survive.
@@ -1975,8 +2051,13 @@ Next engineering focus:
 - Completed: EvidenceItem.kind Alignment v0.1 — narrow Fractal DAG executor evidence kind patch.
 - Completed: NeedleRuntime Audit Evidence Shape v0.1 — audit evidence shape normalized and `audit` added as local EvidenceItem.kind.
 - Completed: artifact_type Mapping / Runtime Artifact Vocabulary v0.1 — Option A docs/spec human-readable artifact vocabulary map, complete through audit.
-- Next: Guardian review of Option A docs/spec artifact vocabulary map before any Option B/C/D/E work.
-- Later: Public Auditor Packet / Whitepaper draft after remaining schema-contract decisions.
+- Completed: Long-lived DRS State / Aging / TTL Stress v0.1.
+- Completed: DRS Lineage / Provenance Pressure v0.1.
+- Completed: Compromised Upstream Pack v0.1.
+- Current gate: STOP PROOF-ONLY EXPANSION GATE.
+- Next: Real Semantic Runtime MVP plan, with DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 gated / conditional before Real Semantic Runtime MVP only if they protect or unblock runtime primitives.
+- Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.
+- Later, after Real Semantic Runtime MVP: Real Semantic Runtime WOW Demo, Public Auditor Packet, and Whitepaper engineering draft.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.
 - A Controlled Multi-LLM Chain Showcase is future optional `showcase_only` work, not a canonical authority layer. It must preserve Root-only final authority, execute no real external action, and wait for approved hardening steps.
 - The current priority is the applied Root-controlled canonical path, not self-improvement. Audit/hash-chain remains proof-only and does not introduce production persistence.

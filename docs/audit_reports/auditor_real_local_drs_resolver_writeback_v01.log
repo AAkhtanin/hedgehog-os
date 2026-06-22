@@ -1,0 +1,259 @@
+# Auditor Report - Real Local DRS Resolver / Writeback v0.1
+
+## 1. Audit Status
+
+* audit_id: auditor_real_local_drs_resolver_writeback_v01
+* audit_status: PASS
+* audited_commit: 2a18df5
+* patch_plan_commit: cbe170c
+* preflight_commit: 55ab2cd
+* runtime_gate_commit: 1e1afe6
+* audit_scope: runtime_implementation_and_tests
+* full_pytest_run: true
+* full_pytest_result: 1754 passed, 60 warnings in 934.65s
+* focused_test_result: 35 passed, 2 warnings
+* runner_result: FINAL STATUS: PASS
+* schemas_modified: false
+* production_drs_implemented: false
+* external_drs_implemented: false
+* network_used: false
+* gemini_used: false
+* autonomous_action_used: false
+* connector_side_effects_used: false
+* marennya_activated: false
+* up_activated: false
+* manifest_mutated: false
+* transition_matrix_mutated: false
+
+Full pytest was run for this runtime-facing layer because the patch adds a new
+runtime module under `hedgehog/`. The full-suite result was green:
+1754 passed, 60 warnings in 934.65s.
+
+## 2. Audited Artifacts
+
+Audited runtime implementation, deterministic runner, and focused tests:
+
+* `hedgehog/local_drs_resolver.py`
+* `demo/run_real_local_drs_resolver_writeback_v01.py`
+* `tests/test_real_local_drs_resolver_writeback_v01_runner.py`
+
+## 3. Implemented Seam
+
+Real Local DRS Resolver / Writeback v0.1 adds the first runtime-facing local DRS
+primitive under the Real Semantic Runtime MVP block.
+
+Implemented seam:
+
+* `hedgehog/local_drs_resolver.py`
+* composes existing `LocalDRS`
+* composes local temporal helpers / `time_model`
+* may use advisory `reuse_gate`
+* no separate DRS store
+* no `hedgehog/external_drs/*`
+* no schema changes
+
+Runtime primitive:
+
+```text
+write meaning
+resolve meaning
+reuse under Root review
+```
+
+## 4. Runtime Behavior Audited
+
+The implementation writes local DRS records using the existing DRSRecord shape.
+It preserves domain, content, TimeEnvelope, provenance, trace refs, and source
+refs.
+
+The resolver resolves deterministic candidates by:
+
+* domain
+* explicit content keys
+* controlled token overlap
+* source_refs
+* trace_refs
+* provenance
+* status
+* TimeEnvelope
+
+Audited behavior:
+
+* returns candidates only
+* attaches reason codes
+* preserves `direct_reuse_allowed_count: 0`
+* requires Root review before reuse affects final output
+* records RootFinal-derived local writeback without action side effects
+* does not create FinalOutput
+* does not execute actions
+* does not call network, Gemini, connectors, or external/global DRS
+
+## 5. Security Boundary Fix Audited
+
+The writeback boundary in `write_root_final_record(...)` rejects raw artifact
+shapes even if they claim `root_reviewed: true` and
+`created_by: root_orchestrator`.
+
+Rejected raw artifact families:
+
+* ValidationPacket-like
+* EvidenceCandidate-like
+* ResultProposal-like
+* ConnectorObservation-like
+
+Rejected raw-shape keys unless the object is explicitly a RootFinal /
+RootFinalOutput / Root-reviewed semantic outcome with `final_artifact_id` or
+`outcome_id` and `root_final_status`:
+
+* `packet_id`
+* `candidate_id`
+* `result_payload`
+
+Unsafe external/global DRS claim keys rejected when true:
+
+* `external_global_drs_write`
+* `external_global_drs_used`
+* `global_drs_used`
+* `external_global_drs_implemented`
+
+The valid RootFinal-derived writeback path remains accepted when it is
+Root-created, Root-reviewed, has a final artifact/outcome identity, has
+`root_final_status`, and carries no unsafe claims.
+
+## 6. Scenario Coverage
+
+1. write_then_resolve_semantic_record_candidate_only
+   * status: PASS
+   * boundary: local semantic record can be written and resolved, but returned only as a candidate.
+   * key reason: candidate_only_root_review_required
+
+2. stale_record_forces_root_review
+   * status: PASS
+   * boundary: stale records remain visible but cannot silently reuse.
+   * key reason: stale_record_forces_root_review
+
+3. quarantine_proximity_blocks_direct_reuse
+   * status: PASS
+   * boundary: quarantine/deadend pressure blocks direct reuse and requires review.
+   * key reason: quarantine_proximity_blocks_direct_reuse
+
+4. changed_worldstate_blocks_old_reuse
+   * status: PASS
+   * boundary: changed WorldState blocks old reuse.
+   * key reason: changed_worldstate_blocks_old_reuse
+
+5. conflicting_provenance_blocks_reuse
+   * status: PASS
+   * boundary: conflicting provenance blocks direct reuse.
+   * key reason: conflicting_provenance_blocks_reuse
+
+6. duplicate_poisoning_pressure_does_not_create_authority
+   * status: PASS
+   * boundary: duplicate/spam and repeated external pointer pressure create review pressure only.
+   * key reason: duplicate_poisoning_pressure_does_not_create_authority
+
+7. root_review_required_before_reuse_affects_final_output
+   * status: PASS
+   * boundary: reuse candidates cannot affect final output before Root review.
+   * key reason: root_review_required_before_reuse_affects_final_output
+
+8. writeback_records_root_final_without_action_side_effects
+   * status: PASS
+   * boundary: RootFinal-derived local writeback records outcome without connector/action side effects.
+   * key reason: writeback_without_action_side_effects
+
+## 7. Aggregate Counters
+
+Observed runner counters:
+
+* scenarios_total: 8
+* scenarios_passed: 8
+* records_written_count: 9
+* resolve_queries_count: 7
+* candidates_returned_count: 8
+* direct_reuse_allowed_count: 0
+* root_review_required_count: 8
+* stale_record_reuse_blocked_count: 1
+* quarantine_reuse_blocked_count: 1
+* changed_worldstate_reuse_blocked_count: 1
+* conflicting_provenance_blocked_count: 1
+* duplicate_poisoning_records_seen_count: 2
+* poisoning_pressure_authority_claimed_count: 0
+* action_permission_granted_count: 0
+* manifest_mutation_count: 0
+* transition_matrix_mutation_count: 0
+* production_drs_used_count: 0
+* external_drs_used_count: 0
+* network_used_count: 0
+* gemini_used_count: 0
+* root_final_authority_preserved_count: 8
+
+## 8. Validation Commands
+
+Validation commands recorded for the committed runtime patch:
+
+```bash
+python3 -m demo.run_real_local_drs_resolver_writeback_v01
+
+PYTHONPATH=. .venv/bin/python -m pytest -q \
+  tests/test_real_local_drs_resolver_writeback_v01_runner.py \
+  tests/test_drs_runtime.py
+
+PYTHONPATH=. .venv/bin/python -m pytest
+```
+
+Observed:
+
+* runner_result: FINAL STATUS: PASS
+* focused_test_result: 35 passed, 2 warnings
+* full_pytest_result: 1754 passed, 60 warnings in 934.65s
+
+## 9. Required Invariants
+
+Audited invariants:
+
+* DRS record is not truth
+* DRS hit is not authority
+* DRS reuse candidate is not action permission
+* DRS freshness is advisory, not final authority
+* stale DRS record cannot silently reuse
+* quarantined/deadend proximity forces review
+* conflicting provenance blocks direct ready/reuse
+* Root remains final authority
+* resolver cannot mutate manifest
+* resolver cannot mutate transition matrix
+* resolver cannot call network/Gemini/connectors
+* writeback cannot create production persistence claims
+* local file-backed DRS is still not production DRS
+
+## 10. Limitations
+
+* not production DRS
+* not external/global DRS
+* no network
+* no Gemini
+* no autonomous action
+* no connector side effects
+* no public WOW
+* no whitepaper/public auditor packet
+* no Marennya
+* no UP
+* no self-modifying manifest
+* no transition matrix mutation
+* not separate DRS Poisoning Resistance v0.1
+* not Economic Adversary v0.1
+* Real Semantic Runtime MVP not complete
+
+## 11. Auditor Conclusion
+
+PASS.
+
+Real Local DRS Resolver / Writeback v0.1 successfully adds a bounded local
+runtime-facing DRS primitive for writing meaning, resolving meaning, and
+presenting reuse candidates under Root review.
+
+The implementation preserves the central boundary: local DRS records and hits
+can inform review, but they do not become truth, authority, direct reuse
+permission, action permission, production persistence, or Root Final authority.
+
+Root remains final authority.

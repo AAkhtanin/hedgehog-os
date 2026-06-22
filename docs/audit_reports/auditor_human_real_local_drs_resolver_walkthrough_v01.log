@@ -1,0 +1,182 @@
+# Auditor Report - Human Real Local DRS Resolver Walkthrough v0.1
+
+## 1. Audit Status
+
+* audit_id: auditor_human_real_local_drs_resolver_walkthrough_v01
+* audit_status: PASS
+* audited_commit: 118f040
+* technical_audit_commit: 6bb2422
+* runtime_commit: 2a18df5
+* patch_plan_commit: cbe170c
+* preflight_commit: 55ab2cd
+* runtime_gate_commit: 1e1afe6
+* audit_scope: human_readable_walkthrough_and_focused_tests
+* full_pytest_run: false
+* full_pytest_required_for_this_audit: false
+* underlying_runtime_status: PASS
+* walkthrough_required_counters_match: True
+* focused_tests_status: PASS
+* focused_tests_passed: 4
+
+Full pytest was not run for this audit because it covers only the
+human-readable walkthrough and focused walkthrough tests. Runtime behavior was
+already audited at `6bb2422`, and that runtime audit recorded the full-suite
+result.
+
+## 2. Audited Artifacts
+
+Audited human walkthrough and focused test:
+
+* `demo/run_human_real_local_drs_resolver_walkthrough_v01.py`
+* `tests/test_human_real_local_drs_resolver_walkthrough_v01_runner.py`
+
+## 3. Validation Facts
+
+Validation commands recorded for the committed walkthrough:
+
+```bash
+python3 -m demo.run_human_real_local_drs_resolver_walkthrough_v01
+
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_real_local_drs_resolver_walkthrough_v01_runner.py
+```
+
+Observed:
+
+* command result: exits 0
+* focused test result: 4 passed in 0.10s
+* underlying_runtime_status: PASS
+* walkthrough_required_counters_match: True
+
+Runtime validation facts referenced by the walkthrough:
+
+* runtime audit commit: 6bb2422
+* runtime commit: 2a18df5
+* full pytest: 1754 passed, 60 warnings in 934.65s
+* focused runtime tests: 35 passed, 2 warnings
+* runtime runner: FINAL STATUS: PASS
+
+## 4. Walkthrough Coverage
+
+The walkthrough confirms all 17 required sections:
+
+1. WHAT THIS WALKTHROUGH IS
+2. WHY THIS LAYER MATTERS
+3. CORE PIPELINE
+4. ACT 1 - WRITE MEANING
+5. ACT 2 - RESOLVE MEANING
+6. ACT 3 - ROOT REVIEW BEFORE REUSE
+7. ACT 4 - STALE / TTL PRESSURE
+8. ACT 5 - QUARANTINE / DEADEND PRESSURE
+9. ACT 6 - WORLDSTATE CHANGE
+10. ACT 7 - CONFLICTING PROVENANCE
+11. ACT 8 - POISONING PRESSURE
+12. ACT 9 - ROOTFINAL WRITEBACK
+13. SAFETY BOUNDARIES
+14. COUNTERS
+15. VALIDATION SUMMARY
+16. LIMITATIONS
+17. FINAL HUMAN SUMMARY
+
+The walkthrough confirms all 9 ACT sections and all 8 runtime scenario names:
+
+* write_then_resolve_semantic_record_candidate_only
+* stale_record_forces_root_review
+* quarantine_proximity_blocks_direct_reuse
+* changed_worldstate_blocks_old_reuse
+* conflicting_provenance_blocks_reuse
+* duplicate_poisoning_pressure_does_not_create_authority
+* root_review_required_before_reuse_affects_final_output
+* writeback_records_root_final_without_action_side_effects
+
+Raw-shape rejection concepts are explicitly covered:
+
+* ValidationPacket-like
+* EvidenceCandidate-like
+* ResultProposal-like
+* ConnectorObservation-like
+
+## 5. What The Walkthrough Explains
+
+The human walkthrough accurately explains the audited Real Local DRS Resolver /
+Writeback v0.1 runtime layer. It shows that Hedgehog OS can now locally write
+semantic memory, resolve candidate memory, and record RootFinal-derived
+outcomes while preserving Root authority.
+
+Core explanation:
+
+* DRS records do not become truth.
+* DRS hits do not become authority.
+* Reuse candidates do not become permission.
+* Writeback does not become action.
+* Root remains final authority.
+
+## 6. Counter Coverage
+
+Exact counters shown by the walkthrough:
+
+* scenarios_total: 8
+* scenarios_passed: 8
+* records_written_count: 9
+* resolve_queries_count: 7
+* candidates_returned_count: 8
+* direct_reuse_allowed_count: 0
+* root_review_required_count: 8
+* stale_record_reuse_blocked_count: 1
+* quarantine_reuse_blocked_count: 1
+* changed_worldstate_reuse_blocked_count: 1
+* conflicting_provenance_blocked_count: 1
+* duplicate_poisoning_records_seen_count: 2
+* poisoning_pressure_authority_claimed_count: 0
+* action_permission_granted_count: 0
+* manifest_mutation_count: 0
+* transition_matrix_mutation_count: 0
+* production_drs_used_count: 0
+* external_drs_used_count: 0
+* network_used_count: 0
+* gemini_used_count: 0
+* root_final_authority_preserved_count: 8
+
+## 7. Boundary Audit
+
+* walkthrough is explanatory only
+* walkthrough creates no new runtime capability
+* walkthrough creates no production DRS
+* walkthrough creates no external/global DRS
+* walkthrough creates no connector
+* walkthrough creates no network or Gemini behavior
+* walkthrough creates no autonomous action
+* walkthrough creates no connector side effect
+* walkthrough creates no public WOW
+* walkthrough creates no whitepaper/public auditor packet
+* walkthrough creates no Marennya or UP activation
+* walkthrough creates no self-modifying manifest
+* walkthrough creates no transition matrix mutation
+* walkthrough creates no separate DRS Poisoning Resistance v0.1
+* walkthrough creates no Economic Adversary v0.1
+* Real Semantic Runtime MVP is not complete
+* Root remains final authority
+
+## 8. Limitations
+
+This walkthrough is explanatory only. It creates no new runtime capability,
+production DRS, external/global DRS, network/Gemini behavior, autonomous
+action, connector side effect, public WOW, whitepaper/public auditor packet,
+Marennya/UP, self-modifying manifest, transition matrix mutation, separate DRS
+Poisoning Resistance v0.1, or Economic Adversary v0.1.
+
+Real Semantic Runtime MVP is not complete.
+
+## 9. Auditor Conclusion
+
+PASS.
+
+The human walkthrough accurately translates the audited Real Local DRS Resolver
+/ Writeback v0.1 runtime behavior into a human-readable story. It explains that
+Hedgehog OS can now locally write semantic memory, resolve candidate memory,
+and record RootFinal-derived outcomes while preserving the critical boundary:
+memory can inform review, but it does not decide reality.
+
+DRS records do not become truth. DRS hits do not become authority. Reuse
+candidates do not become permission. Writeback does not become action.
+
+Root remains final authority.

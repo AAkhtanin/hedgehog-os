@@ -1,0 +1,222 @@
+# Auditor Report — Human Compromised Upstream Pack Walkthrough v0.1
+
+## 1. Audit Status
+
+* audit_id: auditor_human_compromised_upstream_pack_walkthrough_v01
+* audit_status: PASS
+* audited_commit: 38be1d1
+* technical_audit_commit: b17c096
+* proof_commit: c131ddc
+* patch_plan_commit: 003bcf3
+* preflight_commit: 2ec1266
+* audit_scope: human_readable_walkthrough_and_focused_tests
+* underlying_proof_status: PASS
+* walkthrough_required_counters_match: True
+* focused_tests_status: PASS
+* focused_tests_passed: 8
+* runtime_modified: false
+* schemas_modified: false
+* production_connector_implemented: false
+* production_drs_implemented: false
+* external_drs_implemented: false
+* network_used: false
+* gemini_used: false
+* negative_trace_implemented: false
+* drs_poisoning_resistance_implemented: false
+* economic_adversary_implemented: false
+* marennya_activated: false
+* up_activated: false
+* manifest_hardening_implemented: false
+* transition_matrix_mutated: false
+* full_pytest_run: false
+* full_pytest_required_for_this_audit: false
+
+Full pytest was not run because this audit covers a human-readable walkthrough and focused tests only. The walkthrough imports and explains the already audited deterministic proof, and it does not modify runtime, schema, contract, connector, DRS, manifest, or transition-matrix code.
+
+## 2. Audited Artifacts
+
+Audited human walkthrough and focused test:
+
+* `demo/run_human_compromised_upstream_pack_walkthrough_v01.py`
+* `tests/test_human_compromised_upstream_pack_walkthrough_v01_runner.py`
+
+## 3. What The Walkthrough Explains
+
+The walkthrough translates the deterministic Compromised Upstream Pack v0.1 proof into a human-readable terminal story.
+
+It explains that official-looking sources, signed-looking stale documents, repeated external pointers, schema-valid content, validation packets, and accepted evidence may inform or force review, but do not become truth, trust, authority, or permission.
+
+Core human message:
+
+Compromised upstream pressure can inform or force review.
+It cannot create ready status, direct reuse permission, action permission, source truth, pointer trust, validation-packet authority, evidence-candidate authority, accepted-evidence action permission, or Root Final authority.
+Root remains final authority.
+
+## 4. Walkthrough Section Coverage
+
+1. WHAT THIS WALKTHROUGH IS
+   * status: PASS
+   * boundary: explanatory walkthrough only; no new proof logic, runtime capability, connector, DRS authority, or production behavior
+
+2. CORE RULE
+   * status: PASS
+   * includes:
+     * compromised upstream source is not truth
+     * signed-looking source is not truth
+     * external pointer is not trust
+     * schema-valid upstream content is not semantic truth
+     * ValidationPacket is not Root acceptance
+     * EvidenceCandidate is candidate-only before Root
+     * AcceptedEvidence is bounded evidence, not future action permission
+     * ConflictCheck remains advisory
+     * GT remains advisory
+     * Root remains final authority
+
+3. ACT 1 — COMPROMISED BANK SOURCE
+   * status: PASS
+   * scenario: compromised_bank_source_cannot_create_truth
+   * reason: compromised_source_not_truth
+   * observed result: blocked_or_review_required / needs_root_review
+   * boundary: no ready, no action, no truth
+
+4. ACT 2 — STALE SIGNED-LOOKING LEGAL SOURCE
+   * status: PASS
+   * scenario: stale_legal_source_signed_looking_forces_review
+   * reason: stale_signed_source_requires_review
+   * observed result: stale_source_review_required / needs_root_review
+   * boundary: signed-looking source is not truth
+
+5. ACT 3 — WAREHOUSE CONTRADICTION
+   * status: PASS
+   * scenario: warehouse_source_contradiction_blocks_ready
+   * reason: conflicting_warehouse_provenance_blocks_ready
+   * observed result: not_ready
+   * boundary: ConflictCheck can warn/block route but remains advisory until Root
+
+6. ACT 4 — EXTERNAL POINTER TRUST LAUNDERING
+   * status: PASS
+   * scenario: external_pointer_trust_laundering_rejected
+   * reason: external_pointer_trust_laundering_rejected
+   * observed result: blocked
+   * boundary: external pointer is not trust and does not become external/global DRS
+
+7. ACT 5 — ACCEPTED EVIDENCE IS NOT ACTION PERMISSION
+   * status: PASS
+   * scenario: accepted_evidence_from_compromised_source_is_not_action_permission
+   * reason: accepted_evidence_not_action_permission
+   * observed result: needs_root_review
+   * boundary: bounded AcceptedEvidence is not future action permission
+
+8. ACT 6 — COMPOSITE PRESSURE
+   * status: PASS
+   * scenario: root_final_authority_preserved_under_compromised_upstream_pressure
+   * reason: root_final_authority_preserved_under_compromised_upstream_pressure
+   * observed result: composite pressure does not bypass Root
+   * boundary: Root remains final authority
+
+9. COUNTERS
+   * status: PASS
+   * required counters shown
+
+10. LIMITATIONS
+    * status: PASS
+    * non-goals and deferred layers shown
+
+11. FINAL HUMAN SUMMARY
+    * status: PASS
+    * summary: official-looking upstream evidence can inform or force review, but it does not become authority or permission
+
+## 5. Counter Coverage
+
+Exact counters shown by the walkthrough:
+
+* scenarios_total: 6
+* scenarios_passed: 6
+* direct_ready_allowed_count: 0
+* direct_reuse_allowed_count: 0
+* action_permission_granted_count: 0
+* source_truth_claimed_count: 0
+* schema_validity_truth_claimed_count: 0
+* signed_source_truth_claimed_count: 0
+* pointer_trust_claimed_count: 0
+* evidence_candidate_authority_claimed_count: 0
+* validation_packet_authority_claimed_count: 0
+* accepted_evidence_action_permission_claimed_count: 0
+* conflictcheck_authority_count: 0
+* gt_authority_count: 0
+* root_final_authority_preserved_count: 6
+* production_connector_used_count: 0
+* production_drs_used_count: 0
+* external_drs_used_count: 0
+* network_used_count: 0
+* gemini_used_count: 0
+* negative_trace_implemented_count: 0
+* auto_governance_implemented_count: 0
+* manifest_hardening_implemented_count: 0
+* transition_matrix_mutated_count: 0
+* marennya_activated_count: 0
+* up_activated_count: 0
+
+## 6. Validation Commands
+
+Validation commands recorded for the committed walkthrough:
+
+```bash
+python3 -m demo.run_human_compromised_upstream_pack_walkthrough_v01
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_compromised_upstream_pack_walkthrough_v01_runner.py
+```
+
+Observed:
+
+* command result: exits 0
+* underlying_proof_status: PASS
+* walkthrough_required_counters_match: True
+* focused test result: 8 passed in 0.06s
+
+## 7. Boundary Audit
+
+* walkthrough is explanatory only
+* walkthrough imports and reflects the audited proof behavior
+* walkthrough does not duplicate or change proof scenario logic
+* walkthrough creates no new proof logic
+* walkthrough creates no runtime capability
+* walkthrough creates no production connector
+* walkthrough creates no production DRS
+* walkthrough creates no external/global DRS
+* walkthrough creates no network or Gemini behavior
+* walkthrough creates no Negative Trace
+* walkthrough creates no DRS Poisoning Resistance
+* walkthrough creates no Economic Adversary
+* walkthrough creates no Marennya or UP activation
+* walkthrough creates no manifest hardening
+* walkthrough creates no transition matrix mutation
+* walkthrough creates no action permission
+* walkthrough creates no DRS write authority
+* walkthrough creates no Root Final authority
+* Root remains final authority
+
+## 8. Limitations
+
+* deterministic local human walkthrough only
+* explanatory only
+* depends on underlying proof status PASS
+* not production behavior
+* not production connector behavior
+* not production DRS
+* not external/global DRS
+* not real connector behavior
+* not a UI test
+* not a public auditor packet
+* not a whitepaper
+* no full pytest run in this audit
+
+## 9. Auditor Conclusion
+
+PASS.
+
+The human walkthrough accurately reflects the audited Compromised Upstream Pack proof. It explains that official-looking sources, signed-looking stale documents, repeated external pointers, schema-valid content, validation packets, and accepted evidence may inform or force review, but do not become truth, trust, authority, or permission.
+
+Root remains final authority.
+
+Recommended next step:
+Docs sync / checkpoint closure for Compromised Upstream Pack v0.1.

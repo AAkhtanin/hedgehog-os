@@ -1,0 +1,115 @@
+# HUMAN AVF Candidate Advisory Evaluator Walkthrough v0.1 Audit Log
+
+audit_id: auditor_human_avf_candidate_advisory_evaluator_walkthrough_v01
+audit_status: PASS
+audited_commit: 5f7cfe7
+technical_audit_commit: 7cbcb77
+runtime_commit: b0ce686
+patch_plan_commit: d00fa21
+preflight_commit: c9ff238
+previous_checkpoint_commit: 762239c
+runtime_gate_commit: 1e1afe6
+audit_scope: human_readable_walkthrough_and_focused_tests
+full_pytest_run: false
+full_pytest_required_for_this_audit: false
+
+## Audited Files
+
+- demo/run_human_avf_candidate_advisory_evaluator_walkthrough_v01.py
+- tests/test_human_avf_candidate_advisory_evaluator_walkthrough_v01_runner.py
+
+## Validation Facts
+
+- walkthrough_command: python3 -m demo.run_human_avf_candidate_advisory_evaluator_walkthrough_v01
+- walkthrough_command_result: exits 0
+- focused_tests: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_avf_candidate_advisory_evaluator_walkthrough_v01_runner.py
+- focused_test_result: 4 passed in 0.11s
+- underlying_runtime_status: PASS
+- walkthrough_required_counters_match: True
+
+## Topology Clarification
+
+- human-facing name: AVF Candidate Advisory Evaluator
+- internal runtime layer: GT/LGT Advisory Evaluator v0.1
+- this layer does not relocate canonical terminal GTValidator
+- canonical GTValidator remains after Executor/Post V&V and before Root FinalOutput
+- this layer is pre-Architect candidate-level advisory review over AVF-ranked DRS candidates
+- it emits GT-style advisory signals only
+- it does not command Architect
+- it returns advisory signals to Root/Orchestrator route decision
+- Architect receives only Root-shaped tasks/routes
+- LGT is deferred/local placeholder only
+- Root remains final authority
+
+## Sections Confirmed
+
+- WHAT THIS WALKTHROUGH IS
+- TOPOLOGY CLARIFICATION
+- PIPELINE
+- ACT 1 - AVF RANKED REPORT BECOMES ADVISORY INPUT ONLY
+- ACT 2 - GT-STYLE ACCEPT STILL REQUIRES ROOT REVIEW
+- ACT 3 - DEGRADE / REJECT ROUTE TO REVIEW, NOT FINAL
+- ACT 4 - LGT IS DEFERRED PLACEHOLDER ONLY
+- ACT 5 - SAFETY PRESSURE OVERRIDES HIGH SCORE
+- ACT 6 - ROOT FINAL AUTHORITY PRESERVED
+- COUNTERS
+- LIMITATIONS
+- FINAL HUMAN SUMMARY
+
+## Scenario Coverage
+
+- avf_ranked_report_becomes_advisory_input_only
+- gt_accept_signal_requires_root_final_review
+- gt_degrade_signal_routes_to_review_not_final
+- gt_reject_signal_blocks_candidate_not_root_final
+- lgt_absent_or_local_signal_remains_advisory
+- stale_high_score_candidate_cannot_silent_accept
+- quarantine_deadend_overrides_high_score_to_review
+- conflicting_provenance_blocks_advisory_accept
+- duplicate_spam_cannot_force_gt_lgt_accept
+- root_final_authority_preserved_across_gt_lgt_advisory
+
+## Counters
+
+- scenarios_total: 10
+- scenarios_passed: 10
+- advisory_inputs_count: 10
+- gt_signals_emitted_count: 10
+- lgt_signals_emitted_count: 10
+- lgt_deferred_count: 10
+- advisory_reports_created_count: 10
+- root_review_required_count: 10
+- root_final_authority_preserved_count: 10
+- direct_reuse_allowed_count: 0
+- action_permission_granted_count: 0
+- final_output_created_count: 0
+- gt_authority_claimed_count: 0
+- lgt_authority_claimed_count: 0
+- advisory_truth_claimed_count: 0
+- advisory_accept_as_root_final_count: 0
+- network_used_count: 0
+- gemini_used_count: 0
+- walkthrough_required_counters_match: True
+
+## Authority Boundary Conclusion
+
+The walkthrough accurately explains that this is a small pre-Architect candidate advisory review stage. It can label AVF-ranked memory candidates as advisory accept/degrade/reject/needs-review, but it cannot decide truth, cannot command Architect, cannot create FinalOutput, cannot move canonical GTValidator upstream, and cannot override Root. Root remains final authority.
+
+## Limitations
+
+- No production GT/LGT.
+- No production LGT.
+- No canonical GTValidator relocation.
+- No Architect command.
+- No Root behavior modification.
+- No FinalOutput authority.
+- No production DRS/AVF.
+- No external/global DRS.
+- No network/Gemini.
+- No embeddings.
+- No LLM semantic matching.
+- No Fractal Cell Runtime integration.
+- No Marennya/UP.
+- No manifest mutation.
+- No transition matrix mutation.
+- Real Semantic Runtime MVP is not complete.

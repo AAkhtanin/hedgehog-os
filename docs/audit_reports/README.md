@@ -403,6 +403,22 @@ Current reports:
   - Combined counters: `combined_direct_reuse_allowed_count: 0`, `combined_action_permission_granted_count: 0`, `combined_network_used_count: 0`, and `combined_gemini_used_count: 0`.
   - Boundary conclusion: Hedgehog OS can now write meaning into local memory, resolve candidate memory, turn candidates into bounded vectors, and score/rank them for review. DRS hits do not become truth, AVF scores do not become authority, top-ranked candidates do not become permission, and Root remains final authority.
 
+- `auditor_gt_lgt_advisory_evaluator_v01.log`
+  - GT/LGT Advisory Evaluator v0.1 technical audit for commit `b0ce686`; audit commit `7cbcb77`; preflight `c9ff238`; patch plan `d00fa21`; previous checkpoint `762239c`; runtime gate `1e1afe6`.
+  - Audit status: PASS. Scope: runtime implementation and tests. Runner: `FINAL STATUS: PASS`. Targeted tests: `68 passed, 40 warnings`. Full pytest evidence: `1792 passed, 60 warnings`.
+  - Topology/naming clarification: the human-facing alias is AVF Candidate Advisory Evaluator v0.1; the internal runtime/checkpoint name remains GT/LGT Advisory Evaluator v0.1. It is pre-Architect candidate-level advisory review over AVF-ranked DRS candidates, emits GT-style advisory signals, does not relocate canonical terminal GTValidator, does not command Architect, returns advisory signals to Root/Orchestrator route decision, and Root remains final authority.
+  - LGT handling: LGT is deferred/local placeholder only; no concrete production LGT runtime/schema exists; LGT signals remain advisory-only.
+  - Key counters: `scenarios_total: 10`, `scenarios_passed: 10`, `advisory_inputs_count: 10`, `gt_signals_emitted_count: 10`, `lgt_signals_emitted_count: 10`, `lgt_deferred_count: 10`, `advisory_reports_created_count: 10`, `root_review_required_count: 10`, `root_final_authority_preserved_count: 10`, `direct_reuse_allowed_count: 0`, `action_permission_granted_count: 0`, `final_output_created_count: 0`, `gt_authority_claimed_count: 0`, `lgt_authority_claimed_count: 0`, `advisory_truth_claimed_count: 0`, `advisory_accept_as_root_final_count: 0`, `network_used_count: 0`, and `gemini_used_count: 0`.
+  - Boundary conclusion: advisory accept/degrade/reject/needs-review signals cannot decide truth, create FinalOutput, grant action permission, grant direct reuse permission, move canonical GTValidator upstream, or override Root.
+
+- `auditor_human_avf_candidate_advisory_evaluator_walkthrough_v01.log`
+  - Human AVF Candidate Advisory Evaluator walkthrough audit for commit `5f7cfe7`; audit commit `bc80aae`; technical audit `7cbcb77`; runtime commit `b0ce686`.
+  - Audit status: PASS. Scope: human-readable walkthrough and focused tests. Walkthrough command exits 0. Focused tests: `4 passed in 0.11s`.
+  - Confirms `underlying_runtime_status: PASS`, `walkthrough_required_counters_match: True`, `scenarios_total: 10`, and `scenarios_passed: 10`.
+  - Topology/naming clarification: AVF Candidate Advisory Evaluator v0.1 is the human-facing name for GT/LGT Advisory Evaluator v0.1. It does not relocate canonical terminal GTValidator; canonical GTValidator remains after Executor/Post V&V and before Root FinalOutput. The layer is pre-Architect candidate-level advisory review, does not command Architect, and returns advisory signals to Root/Orchestrator.
+  - LGT handling: LGT is deferred/local placeholder only with `lgt_deferred_count: 10` and `lgt_authority_claimed_count: 0`.
+  - Boundary conclusion: the walkthrough accurately explains that this small advisory stage cannot decide truth, cannot create FinalOutput, cannot grant action permission, cannot grant direct reuse permission, cannot move canonical GTValidator upstream, and cannot override Root. Root remains final authority.
+
 ## Current Applied Auditor Commands
 
 ```bash

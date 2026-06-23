@@ -1895,7 +1895,95 @@ action permission, FinalOutput, production AVF, production DRS,
 external/global DRS, network/Gemini, embeddings, LLM semantic matching,
 manifest mutation, or transition matrix mutation.
 
-Next planned layer: GT/LGT advisory evaluator v0.1 preflight.
+Next runtime-facing layer after this checkpoint is now closed as GT/LGT
+Advisory Evaluator v0.1 / AVF Candidate Advisory Evaluator v0.1.
+
+## GT/LGT Advisory Evaluator v0.1 / AVF Candidate Advisory Evaluator v0.1
+
+GT/LGT Advisory Evaluator v0.1 — CLOSED.
+Human-facing alias: AVF Candidate Advisory Evaluator v0.1.
+
+This is the third runtime-facing primitive under Real Semantic Runtime MVP.
+It is pre-Architect candidate-level advisory review over AVF-ranked DRS
+candidates. It emits GT-style advisory signals, returns advisory signals to
+Root/Orchestrator route decision, and keeps Architect behind Root-shaped
+tasks/routes.
+
+Topology/naming clarification: this layer does not relocate canonical
+terminal GTValidator. The canonical GTValidator remains after Executor/Post
+V&V and before Root FinalOutput. This layer does not command Architect. LGT
+is deferred/local placeholder only, and no concrete production LGT
+runtime/schema exists. Root remains final authority. Real Semantic Runtime
+MVP is not complete.
+
+Commit chain: preflight_commit: c9ff238; patch_plan_commit: d00fa21;
+runtime_commit: b0ce686; technical_audit_commit: 7cbcb77;
+human_walkthrough_commit: 5f7cfe7; human_walkthrough_audit_commit: bc80aae;
+previous_checkpoint: 762239c; runtime_gate_commit: 1e1afe6.
+
+Runtime files: `hedgehog/gt_lgt_advisory_evaluator.py`,
+`demo/run_gt_lgt_advisory_evaluator_v01.py`, and
+`tests/test_gt_lgt_advisory_evaluator_v01_runner.py`.
+
+Human walkthrough files:
+`demo/run_human_avf_candidate_advisory_evaluator_walkthrough_v01.py` and
+`tests/test_human_avf_candidate_advisory_evaluator_walkthrough_v01_runner.py`.
+
+Audit logs: `docs/audit_reports/auditor_gt_lgt_advisory_evaluator_v01.log`
+and
+`docs/audit_reports/auditor_human_avf_candidate_advisory_evaluator_walkthrough_v01.log`.
+
+Validation facts: Runtime runner `FINAL STATUS: PASS`; targeted tests
+`68 passed, 40 warnings`; full pytest `1792 passed, 60 warnings`; Human
+walkthrough command exits 0; Human walkthrough focused tests
+`4 passed in 0.11s`; underlying_runtime_status PASS; and
+`walkthrough_required_counters_match: True`.
+
+Scenario coverage:
+
+- avf_ranked_report_becomes_advisory_input_only
+- gt_accept_signal_requires_root_final_review
+- gt_degrade_signal_routes_to_review_not_final
+- gt_reject_signal_blocks_candidate_not_root_final
+- lgt_absent_or_local_signal_remains_advisory
+- stale_high_score_candidate_cannot_silent_accept
+- quarantine_deadend_overrides_high_score_to_review
+- conflicting_provenance_blocks_advisory_accept
+- duplicate_spam_cannot_force_gt_lgt_accept
+- root_final_authority_preserved_across_gt_lgt_advisory
+
+Advisory checkpoint counters: `scenarios_total: 10`,
+`scenarios_passed: 10`, `advisory_inputs_count: 10`,
+`gt_signals_emitted_count: 10`, `lgt_signals_emitted_count: 10`,
+`lgt_deferred_count: 10`, `advisory_reports_created_count: 10`,
+`root_review_required_count: 10`,
+`root_final_authority_preserved_count: 10`,
+`direct_reuse_allowed_count: 0`, `action_permission_granted_count: 0`,
+`final_output_created_count: 0`, `gt_authority_claimed_count: 0`,
+`lgt_authority_claimed_count: 0`, `advisory_truth_claimed_count: 0`,
+`advisory_accept_as_root_final_count: 0`, `network_used_count: 0`, and
+`gemini_used_count: 0`.
+
+Boundary meaning: this stage can label AVF-ranked memory candidates as
+advisory accept/degrade/reject/needs-review. It cannot decide truth, cannot
+create FinalOutput, cannot grant action permission, cannot grant direct reuse
+permission, cannot move canonical GTValidator upstream, and cannot override
+Root. Root remains final authority.
+
+Limitations: this checkpoint is not production GT/LGT, not production LGT,
+not production DRS/AVF, not external/global DRS, uses no network/Gemini, no
+embeddings, no LLM semantic matching, no Fractal Cell Runtime integration, no
+Marennya/UP, no manifest mutation, no transition matrix mutation, no
+FinalOutput authority, and no Root behavior modification.
+
+NEXT: Bounded LLM/SLM Actors v0.1 preflight. THEN: Fractal Cell Runtime
+integration preflight after bounded actor contracts. Fractal Cell Runtime is a
+logical later path, not an equal-choice branch. Fractal Cell Runtime depends
+on bounded actor contracts: Intake, Orchestrator, Architect, Executor, Post
+V&V / GT route, and Root return boundary. Without bounded actor contracts, a
+fractal shell would not know who may speak, route, propose, verify, or return
+to Root. DRS poisoning resistance remains gated only if needed to protect or
+unblock real runtime.
 
 ## General Plan Runtime Gate
 
@@ -2207,9 +2295,14 @@ Next engineering focus:
 - Completed: Compromised Upstream Pack v0.1.
 - Completed: Real Local DRS Resolver / Writeback v0.1, the first runtime-facing primitive under Real Semantic Runtime MVP.
 - Completed: CandidateVectorGenerator + Real AVF Scoring v0.1, the second runtime-facing primitive under Real Semantic Runtime MVP.
-- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback and bounded CandidateVectorGenerator/AVF scoring are now checkpointed.
-- Next Real Semantic Runtime MVP layer: GT/LGT advisory evaluator v0.1 preflight.
-- Later Real Semantic Runtime MVP layers may include bounded LLM / SLM actors, Fractal Cell Runtime v0.1 integration with real semantic DRS, and DRS poisoning resistance only if needed to protect or unblock real DRS behavior.
+- Completed: GT/LGT Advisory Evaluator v0.1 / AVF Candidate Advisory Evaluator v0.1, the pre-Architect advisory review stage over AVF-ranked DRS candidates.
+- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, and candidate advisory review are now checkpointed.
+- NEXT: Bounded LLM/SLM Actors v0.1 preflight.
+- THEN: Fractal Cell Runtime integration preflight after bounded actor contracts.
+- Fractal Cell Runtime is a logical later path, not an equal-choice branch.
+- Fractal Cell Runtime depends on bounded actor contracts: Intake, Orchestrator, Architect, Executor, Post V&V / GT route, and Root return boundary.
+- Without bounded actor contracts, a fractal shell would not know who may speak, route, propose, verify, or return to Root.
+- DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 - Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.
 - Later, after Real Semantic Runtime MVP: Real Semantic Runtime WOW Demo, Public Auditor Packet, and Whitepaper engineering draft.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.

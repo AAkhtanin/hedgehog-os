@@ -1,0 +1,166 @@
+audit_id: auditor_human_bounded_llm_slm_actors_walkthrough_v01
+audit_status: PASS
+audited_commit: df45900
+technical_audit_commit: dfd43b9
+runtime_commit: 6802d14
+patch_plan_commit: be4995d
+preflight_commit: a0e3145
+previous_checkpoint_commit: 68ca777
+runtime_gate_commit: 1e1afe6
+audit_scope: human_readable_walkthrough_and_focused_tests
+full_pytest_run: false
+full_pytest_required_for_this_audit: false
+
+Audited files:
+
+- demo/run_human_bounded_llm_slm_actors_walkthrough_v01.py
+- tests/test_human_bounded_llm_slm_actors_walkthrough_v01_runner.py
+
+Validation facts:
+
+- command: python3 -m demo.run_human_bounded_llm_slm_actors_walkthrough_v01
+- command result: exits 0
+- focused tests: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_bounded_llm_slm_actors_walkthrough_v01_runner.py
+- focused test result: 5 passed in 0.05s
+- underlying_runtime_status: PASS
+- walkthrough_required_counters_match: True
+
+Walkthrough explanation confirmed:
+
+- This layer does NOT create autonomous agents.
+- This layer does NOT activate LLM/SLM/Gemini/network.
+- It creates bounded actor contracts and transition checks.
+- It defines who may speak, route, propose, execute, verify, and return to Root.
+- Fractal Cell Runtime integration depends on these bounded actor contracts.
+- Root remains final authority.
+
+Required section coverage:
+
+- WHAT THIS WALKTHROUGH IS
+- WHY THIS LAYER MATTERS
+- CORE RULE
+- ACT 1 — INTAKE MAY NORMALIZE, NOT DECIDE
+- ACT 2 — ORCHESTRATOR CONSUMES SIGNALS, NOT COMMANDS
+- ACT 3 — ARCHITECT RECEIVES ONLY ROOT-SHAPED TASKS
+- ACT 4 — EXECUTOR RECEIVES ONLY BOUNDED PLANGRAPH
+- ACT 5 — VERIFIER / POST V&V VALIDATES, NOT FINALIZES
+- ACT 6 — PROMPT INJECTION CANNOT PROMOTE ACTOR TO ROOT
+- ACT 7 — TARGET BOUNDARY FIX
+- ACT 8 — CANONICAL CHAIN IS STILL ALLOWED
+- ACT 9 — ROOT FINAL AUTHORITY PRESERVED
+- COUNTERS
+- VALIDATION SUMMARY
+- LIMITATIONS
+- FINAL HUMAN SUMMARY
+
+Required scenario coverage:
+
+- intake_actor_normalizes_intent_without_authority
+- orchestrator_actor_consumes_advisory_report_as_signal_only
+- orchestrator_route_proposal_requires_root_boundary
+- architect_actor_accepts_only_root_shaped_task
+- architect_actor_outputs_plangraph_proposal_only
+- executor_actor_accepts_only_bounded_plangraph
+- executor_actor_outputs_resultproposal_only
+- verifier_actor_validates_without_finaloutput
+- prompt_injection_cannot_promote_actor_to_root
+- actor_role_confusion_is_blocked
+- model_confidence_does_not_create_authority
+- root_final_authority_preserved_across_actor_chain
+
+Required target-boundary coverage:
+
+- final_output_target_boundary_blocked
+- Architect PlanGraph -> final_output
+- Architect PlanGraph -> root_return
+- Executor ResultProposal -> final_output
+- Executor ResultProposal -> root_return
+- Verifier VVReport -> final_output
+- Verifier VVReport -> root_return
+- GTReport -> final_output
+- GTReport -> Architect
+
+Required canonical chain coverage:
+
+- intake -> Root/Orchestrator
+- Root-shaped route -> Architect
+- PlanGraph -> Executor
+- ResultProposal -> Verifier/Post V&V
+- VVReport -> GT boundary
+- GTReport -> Root return
+- Root return -> Root/Orchestrator
+
+Required counters:
+
+- underlying_runtime_status: PASS
+- scenarios_total: 12
+- scenarios_passed: 12
+- actor_inputs_seen_count: 22
+- actor_outputs_emitted_count: 16
+- intake_outputs_count: 2
+- route_proposals_count: 4
+- plangraph_proposals_count: 3
+- result_proposals_count: 3
+- validation_reports_count: 2
+- root_review_required_count: 16
+- final_output_created_count: 0
+- action_permission_granted_count: 0
+- actor_authority_claimed_count: 0
+- llm_truth_claimed_count: 0
+- slm_truth_claimed_count: 0
+- model_confidence_authority_claimed_count: 0
+- prompt_injection_escalation_count: 0
+- actor_self_promotion_count: 0
+- raw_advisory_command_accepted_count: 0
+- raw_drs_memory_instruction_accepted_count: 0
+- root_boundary_bypass_count: 0
+- post_vv_bypass_count: 0
+- gt_bypass_count: 0
+- manifest_mutation_count: 0
+- transition_matrix_mutation_count: 0
+- network_used_count: 0
+- gemini_used_count: 0
+- connector_side_effect_count: 0
+- root_final_authority_preserved_count: 12
+- walkthrough_required_counters_match: True
+
+Required validation summary:
+
+- runtime commit: 6802d14
+- technical audit: dfd43b9
+- targeted tests: 92 passed, 50 warnings
+- full pytest: 1819 passed, 60 warnings
+- runner: FINAL STATUS: PASS
+
+Required limitations:
+
+- No production LLM autonomy.
+- No production SLM autonomy.
+- No real model calls.
+- No Gemini activation.
+- No network.
+- No embeddings.
+- No external tool calls.
+- No connector side effects.
+- No autonomous action.
+- No Fractal Cell Runtime integration in this layer.
+- No Root behavior modification.
+- No Architect command from AVF/advisory evaluator.
+- No Executor command from LLM actor without Root-shaped route.
+- No FinalOutput creation.
+- No action permission.
+- No direct reuse permission.
+- No manifest mutation.
+- No transition matrix mutation.
+- No Marennya/UP.
+- No public WOW.
+- No whitepaper/public auditor packet.
+- Real Semantic Runtime MVP is not complete.
+
+Authority boundary conclusion:
+
+The walkthrough accurately explains that Hedgehog OS now has a role-boundary
+skeleton for bounded actors. It does not make autonomous agents. It prevents
+role confusion before Fractal Cell Runtime integration. Actors cannot
+self-promote, cannot command sideways, cannot create FinalOutput, and cannot
+bypass Root. Root remains final authority.

@@ -385,7 +385,23 @@ Current reports:
   - Confirms `underlying_runtime_status: PASS`, `walkthrough_required_counters_match: True`, focused human walkthrough tests: `4 passed in 0.10s`, `scenarios_total: 8`, `scenarios_passed: 8`, and `root_final_authority_preserved_count: 8`.
   - Confirms all eight runtime scenarios are explained: write_then_resolve_semantic_record_candidate_only, stale_record_forces_root_review, quarantine_proximity_blocks_direct_reuse, changed_worldstate_blocks_old_reuse, conflicting_provenance_blocks_reuse, duplicate_poisoning_pressure_does_not_create_authority, root_review_required_before_reuse_affects_final_output, and writeback_records_root_final_without_action_side_effects.
   - Confirms the human message: DRS record is not truth, DRS hit is not authority, DRS reuse candidate is not action permission, and Root remains final authority.
-  - Next Real Semantic Runtime MVP layers may include CandidateVectorGenerator + real AVF scoring v0.1, GT / LGT advisory evaluator v0.1, bounded LLM / SLM actors, Fractal Cell Runtime v0.1 integration with real semantic DRS, and DRS poisoning resistance only if needed to protect or unblock real DRS behavior. They are not implemented by this checkpoint.
+  - CandidateVectorGenerator + Real AVF Scoring v0.1 is now closed separately after this checkpoint.
+
+- `auditor_candidate_vector_generator_avf_scoring_v01.log`
+  - CandidateVectorGenerator + Real AVF Scoring v0.1 technical audit for commit `1506eea`; audit commit `cf3da99`; preflight `97a1437`; patch plan `8f8f78d`; previous runtime checkpoint `4f513d1`; runtime gate `1e1afe6`.
+  - Audit status: PASS. Scope: runtime implementation and tests. Runner: `FINAL STATUS: PASS`. Focused tests: `51 passed, 1 warning in 0.27s`. Full pytest evidence: `1772 passed, 60 warnings in 957.62s`.
+  - Scope summary: audits `hedgehog/candidate_vector_generator.py`, `demo/run_candidate_vector_generator_avf_scoring_v01.py`, and `tests/test_candidate_vector_generator_avf_scoring_v01_runner.py`.
+  - Confirms the second runtime-facing primitive under Real Semantic Runtime MVP: resolved local DRS candidates -> bounded candidate vectors -> deterministic AVF scores -> ranked/reviewable candidate report.
+  - Key counters: `avf_scenarios_total: 9`, `avf_scenarios_passed: 9`, `drs_candidates_input_count: 17`, `candidate_vectors_generated_count: 17`, `avf_scores_computed_count: 17`, `ranked_candidates_count: 17`, `top_ranked_candidates_count: 9`, `avf_direct_reuse_allowed_count: 0`, `avf_action_permission_granted_count: 0`, `avf_authority_claimed_count: 0`, `vector_truth_claimed_count: 0`, `schema_validity_truth_claimed_count: 0`, `duplicate_spam_authority_claimed_count: 0`, `high_score_direct_reuse_granted_count: 0`, `avf_network_used_count: 0`, `avf_gemini_used_count: 0`, and `avf_root_final_authority_preserved_count: 9`.
+  - Boundary conclusion: Candidate vector is not truth, AVF score is not authority, Top-ranked candidate outputs do not become action permission or direct reuse permission, GT/LGT remains advisory, and Root remains final authority.
+
+- `auditor_human_real_semantic_drs_avf_walkthrough_v01.log`
+  - Human Real Semantic DRS -> AVF walkthrough audit for commit `e0ccf54`; audit commit `51bd000`; AVF technical audit `cf3da99`; AVF runtime `1506eea`; DRS checkpoint `4f513d1`; DRS runtime `2a18df5`; DRS technical audit `6bb2422`.
+  - Audit status: PASS. Scope: human-readable combined walkthrough and focused tests. Walkthrough command exits 0. Focused tests: `8 passed in 0.24s`.
+  - Confirms `walkthrough_required_counters_match: True`, DRS underlying status PASS, AVF underlying status PASS, `drs_scenarios_total: 8`, and `avf_scenarios_total: 9`.
+  - Confirms the combined thread: write meaning -> resolve meaning -> candidate only -> generate candidate vector -> deterministic AVF score -> ranked review report -> GT/LGT review required -> Root remains final authority.
+  - Combined counters: `combined_direct_reuse_allowed_count: 0`, `combined_action_permission_granted_count: 0`, `combined_network_used_count: 0`, and `combined_gemini_used_count: 0`.
+  - Boundary conclusion: Hedgehog OS can now write meaning into local memory, resolve candidate memory, turn candidates into bounded vectors, and score/rank them for review. DRS hits do not become truth, AVF scores do not become authority, top-ranked candidates do not become permission, and Root remains final authority.
 
 ## Current Applied Auditor Commands
 

@@ -1817,11 +1817,85 @@ whitepaper/public auditor packet, no Marennya/UP, no self-modifying manifest,
 no transition matrix mutation, not separate DRS Poisoning Resistance v0.1, not
 Economic Adversary v0.1, and Real Semantic Runtime MVP not complete.
 
-Next Real Semantic Runtime MVP layers may include CandidateVectorGenerator +
-real AVF scoring v0.1, GT / LGT advisory evaluator v0.1, bounded LLM / SLM
-actors, Fractal Cell Runtime v0.1 integration with real semantic DRS, and DRS
-poisoning resistance only if needed to protect or unblock real DRS behavior.
-None of those are implemented by this checkpoint.
+Next Real Semantic Runtime MVP layer after this checkpoint is
+CandidateVectorGenerator + Real AVF Scoring v0.1.
+
+## CandidateVectorGenerator + Real AVF Scoring v0.1
+
+CandidateVectorGenerator + Real AVF Scoring v0.1 — CLOSED.
+
+This is the second runtime-facing primitive under Real Semantic Runtime MVP
+after Real Local DRS Resolver / Writeback v0.1. Hedgehog OS can now write
+meaning into local memory, resolve candidate memory, convert resolved
+candidates into bounded candidate vectors, score/rank them deterministically
+with AVF, and produce reviewable reports.
+
+Commit chain: preflight_commit: 97a1437; patch_plan_commit: 8f8f78d;
+runtime_commit: 1506eea; technical_audit_commit: cf3da99;
+human_walkthrough_commit: e0ccf54; human_walkthrough_audit_commit: 51bd000;
+previous_runtime_checkpoint: 4f513d1; runtime_gate_commit: 1e1afe6.
+
+Runtime files: `hedgehog/candidate_vector_generator.py`,
+`demo/run_candidate_vector_generator_avf_scoring_v01.py`, and
+`tests/test_candidate_vector_generator_avf_scoring_v01_runner.py`.
+
+Human walkthrough files:
+`demo/run_human_real_semantic_drs_avf_walkthrough_v01.py` and
+`tests/test_human_real_semantic_drs_avf_walkthrough_v01_runner.py`.
+
+Audit logs:
+`docs/audit_reports/auditor_candidate_vector_generator_avf_scoring_v01.log`
+and
+`docs/audit_reports/auditor_human_real_semantic_drs_avf_walkthrough_v01.log`.
+
+Validation facts: CandidateVector/AVF runner `FINAL STATUS: PASS`;
+CandidateVector/AVF focused tests `51 passed, 1 warning in 0.27s`;
+CandidateVector/AVF full pytest `1772 passed, 60 warnings in 957.62s`;
+Human DRS->AVF walkthrough exits 0; Human DRS->AVF focused tests
+`8 passed in 0.24s`; DRS underlying status PASS; AVF underlying status PASS;
+`walkthrough_required_counters_match: True`.
+
+Scenario coverage:
+
+- drs_resolved_candidates_generate_candidate_vectors
+- exact_domain_and_claim_match_scores_higher_but_not_authority
+- stale_candidate_gets_review_required_penalty
+- quarantine_deadend_candidate_blocked_from_top_reuse
+- conflicting_provenance_penalizes_or_blocks_candidate
+- duplicate_spam_candidates_do_not_win_by_volume
+- high_score_candidate_still_requires_gt_lgt_root_review
+- schema_valid_vector_is_not_semantic_truth
+- root_final_authority_preserved_across_avf_scoring
+
+AVF checkpoint counters: `avf_scenarios_total: 9`,
+`avf_scenarios_passed: 9`, `drs_candidates_input_count: 17`,
+`candidate_vectors_generated_count: 17`, `avf_scores_computed_count: 17`,
+`ranked_candidates_count: 17`, `top_ranked_candidates_count: 9`,
+`avf_direct_reuse_allowed_count: 0`,
+`avf_action_permission_granted_count: 0`,
+`avf_authority_claimed_count: 0`, `vector_truth_claimed_count: 0`,
+`schema_validity_truth_claimed_count: 0`,
+`duplicate_spam_authority_claimed_count: 0`,
+`high_score_direct_reuse_granted_count: 0`, `avf_network_used_count: 0`,
+`avf_gemini_used_count: 0`, and
+`avf_root_final_authority_preserved_count: 9`.
+
+Combined human walkthrough counters: `combined_direct_reuse_allowed_count: 0`,
+`combined_action_permission_granted_count: 0`,
+`combined_network_used_count: 0`, and `combined_gemini_used_count: 0`.
+
+Core meaning: DRS hits do not become truth. Candidate vectors do not become
+truth or authority. Candidate vector is not truth. AVF score is not authority.
+Top-ranked candidate outputs do not become action permission or direct reuse
+permission. GT/LGT remains advisory. Root remains final authority. Real
+Semantic Runtime MVP is not complete.
+
+Limitations: this checkpoint does not grant truth, authority, direct reuse,
+action permission, FinalOutput, production AVF, production DRS,
+external/global DRS, network/Gemini, embeddings, LLM semantic matching,
+manifest mutation, or transition matrix mutation.
+
+Next planned layer: GT/LGT advisory evaluator v0.1 preflight.
 
 ## General Plan Runtime Gate
 
@@ -2132,8 +2206,10 @@ Next engineering focus:
 - Completed: DRS Lineage / Provenance Pressure v0.1.
 - Completed: Compromised Upstream Pack v0.1.
 - Completed: Real Local DRS Resolver / Writeback v0.1, the first runtime-facing primitive under Real Semantic Runtime MVP.
-- Current block: Real Semantic Runtime MVP remains open; the local DRS write/resolve/reuse-under-Root-review primitive is now checkpointed.
-- Next Real Semantic Runtime MVP layers may include CandidateVectorGenerator + real AVF scoring v0.1, GT / LGT advisory evaluator v0.1, bounded LLM / SLM actors, Fractal Cell Runtime v0.1 integration with real semantic DRS, and DRS poisoning resistance only if needed to protect or unblock real DRS behavior.
+- Completed: CandidateVectorGenerator + Real AVF Scoring v0.1, the second runtime-facing primitive under Real Semantic Runtime MVP.
+- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback and bounded CandidateVectorGenerator/AVF scoring are now checkpointed.
+- Next Real Semantic Runtime MVP layer: GT/LGT advisory evaluator v0.1 preflight.
+- Later Real Semantic Runtime MVP layers may include bounded LLM / SLM actors, Fractal Cell Runtime v0.1 integration with real semantic DRS, and DRS poisoning resistance only if needed to protect or unblock real DRS behavior.
 - Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.
 - Later, after Real Semantic Runtime MVP: Real Semantic Runtime WOW Demo, Public Auditor Packet, and Whitepaper engineering draft.
 - Manifest Auto-Hardening from AVF/DRS Negative Traces v0.1 remains a post-Killer-Demo future extension, not current work.

@@ -3033,11 +3033,90 @@ activates no Marennya/UP, creates no self-modifying manifest, performs no
 transition matrix mutation, is not separate DRS Poisoning Resistance v0.1, is
 not Economic Adversary v0.1, and Real Semantic Runtime MVP not complete.
 
-Next Real Semantic Runtime MVP layers may include CandidateVectorGenerator +
-real AVF scoring v0.1, GT / LGT advisory evaluator v0.1, bounded LLM / SLM
-actors, Fractal Cell Runtime v0.1 integration with real semantic DRS, and DRS
-poisoning resistance only if needed to protect or unblock real DRS behavior.
-None of those are implemented by this checkpoint.
+CandidateVectorGenerator + Real AVF Scoring v0.1 is CLOSED through human
+walkthrough audit. Evidence chain: preflight_commit: 97a1437,
+patch_plan_commit: 8f8f78d, runtime_commit: 1506eea,
+technical_audit_commit: cf3da99, human_walkthrough_commit: e0ccf54,
+human_walkthrough_audit_commit: 51bd000,
+previous_runtime_checkpoint: 4f513d1, and runtime_gate_commit: 1e1afe6.
+
+This is the second runtime-facing primitive under Real Semantic Runtime MVP
+after Real Local DRS Resolver / Writeback v0.1. The current semantic runtime
+thread is:
+
+write meaning
+-> resolve candidate memory
+-> convert resolved candidates into bounded candidate vectors
+-> score/rank deterministically with AVF
+-> produce reviewable reports
+-> GT/LGT advisory review remains required
+-> Root remains final authority
+
+Runtime artifacts: `hedgehog/candidate_vector_generator.py`,
+`demo/run_candidate_vector_generator_avf_scoring_v01.py`, and
+`tests/test_candidate_vector_generator_avf_scoring_v01_runner.py`. Human
+walkthrough artifacts:
+`demo/run_human_real_semantic_drs_avf_walkthrough_v01.py` and
+`tests/test_human_real_semantic_drs_avf_walkthrough_v01_runner.py`.
+
+Audit evidence:
+`docs/audit_reports/auditor_candidate_vector_generator_avf_scoring_v01.log`
+and
+`docs/audit_reports/auditor_human_real_semantic_drs_avf_walkthrough_v01.log`.
+
+Status evidence: CandidateVector/AVF runner `FINAL STATUS: PASS`; focused
+CandidateVector/AVF tests `51 passed, 1 warning in 0.27s`; full pytest
+`1772 passed, 60 warnings in 957.62s`; Human DRS->AVF walkthrough exits 0;
+Human DRS->AVF focused tests `8 passed in 0.24s`; DRS underlying status PASS;
+AVF underlying status PASS; `walkthrough_required_counters_match: True`.
+
+Scenario coverage: drs_resolved_candidates_generate_candidate_vectors,
+exact_domain_and_claim_match_scores_higher_but_not_authority,
+stale_candidate_gets_review_required_penalty,
+quarantine_deadend_candidate_blocked_from_top_reuse,
+conflicting_provenance_penalizes_or_blocks_candidate,
+duplicate_spam_candidates_do_not_win_by_volume,
+high_score_candidate_still_requires_gt_lgt_root_review,
+schema_valid_vector_is_not_semantic_truth, and
+root_final_authority_preserved_across_avf_scoring.
+
+AVF checkpoint counters: `avf_scenarios_total: 9`,
+`avf_scenarios_passed: 9`, `drs_candidates_input_count: 17`,
+`candidate_vectors_generated_count: 17`, `avf_scores_computed_count: 17`,
+`ranked_candidates_count: 17`, `top_ranked_candidates_count: 9`,
+`avf_direct_reuse_allowed_count: 0`,
+`avf_action_permission_granted_count: 0`,
+`avf_authority_claimed_count: 0`, `vector_truth_claimed_count: 0`,
+`schema_validity_truth_claimed_count: 0`,
+`duplicate_spam_authority_claimed_count: 0`,
+`high_score_direct_reuse_granted_count: 0`, `avf_network_used_count: 0`,
+`avf_gemini_used_count: 0`, and
+`avf_root_final_authority_preserved_count: 9`.
+
+Combined human walkthrough counters: `combined_direct_reuse_allowed_count: 0`,
+`combined_action_permission_granted_count: 0`,
+`combined_network_used_count: 0`, and `combined_gemini_used_count: 0`.
+
+A human should understand the current semantic runtime thread this way: Real
+Local DRS Resolver writes/resolves candidate memory. CandidateVectorGenerator
+converts candidates into bounded vectors. AVF scores/ranks deterministically
+for review. DRS record is not truth. DRS hit is not authority. Candidate vector
+is not truth. Candidate vector is not authority. AVF score is not authority.
+Top-ranked candidate is not permission. GT/LGT remains advisory. Root remains
+final authority. Real Semantic Runtime MVP is not complete.
+
+This checkpoint does not implement production AVF, production DRS,
+external/global DRS, network/Gemini, embeddings, LLM semantic matching,
+manifest mutation, transition matrix mutation, direct reuse permission, action
+permission, FinalOutput authority, GT/LGT runtime evaluator, Fractal Cell
+Runtime integration with real semantic DRS, public WOW, or whitepaper/public
+auditor packet.
+
+Current roadmap state:
+
+- CLOSED: Real Local DRS Resolver / Writeback v0.1.
+- CLOSED: CandidateVectorGenerator + Real AVF Scoring v0.1.
+- NEXT: GT/LGT advisory evaluator v0.1 preflight.
 
 Hardening-plan: APPROVED.
 Full path to living Hedgehog OS: PATCHED.

@@ -1,0 +1,172 @@
+audit_id: auditor_bounded_llm_slm_actors_v01
+audit_status: PASS
+audited_commit: 6802d14
+patch_plan_commit: be4995d
+preflight_commit: a0e3145
+previous_checkpoint_commit: 68ca777
+runtime_gate_commit: 1e1afe6
+audit_scope: runtime_implementation_and_tests
+runner_result: FINAL STATUS: PASS
+targeted_test_result: 92 passed, 50 warnings
+full_pytest_run: true
+full_pytest_result: 1819 passed, 60 warnings
+
+Audited files:
+
+- hedgehog/bounded_actor_contracts.py
+- demo/run_bounded_llm_slm_actors_v01.py
+- tests/test_bounded_llm_slm_actors_v01_runner.py
+
+Implementation seam audited:
+
+- added `hedgehog/bounded_actor_contracts.py`
+- contract adapter / validator only
+- not a new execution engine
+- does not replace RootOrchestrator
+- does not replace Architect
+- does not replace Executor
+- does not replace Post V&V
+- does not replace GTValidator
+- does not modify schemas
+- does not activate Gemini/network/model calls
+
+## Target Boundary Fix
+
+- The initial implementation risk was that validate_actor_transition could validate actor input/output claims without strictly enforcing target boundary.
+- This was fixed before commit.
+- Final implementation blocks final-output target aliases:
+  - final_output
+  - finaloutput
+  - root_final
+  - root_final_output
+  - final
+  - user_final
+- Reason code:
+  - final_output_target_boundary_blocked
+
+Dangerous transitions confirmed blocked:
+
+- Architect PlanGraph -> final_output
+- Architect PlanGraph -> root_return
+- Executor ResultProposal -> final_output
+- Executor ResultProposal -> root_return
+- Verifier VVReport -> final_output
+- Verifier VVReport -> root_return
+- GTReport -> final_output
+- GTReport -> Architect
+
+Canonical chain confirmed accepted:
+
+- intake -> Root/Orchestrator
+- Root-shaped route -> Architect
+- PlanGraph -> Executor
+- ResultProposal -> Verifier/Post V&V
+- VVReport -> GT boundary
+- GTReport -> Root return
+- Root return -> Root/Orchestrator
+
+Scenario coverage:
+
+1. intake_actor_normalizes_intent_without_authority
+2. orchestrator_actor_consumes_advisory_report_as_signal_only
+3. orchestrator_route_proposal_requires_root_boundary
+4. architect_actor_accepts_only_root_shaped_task
+5. architect_actor_outputs_plangraph_proposal_only
+6. executor_actor_accepts_only_bounded_plangraph
+7. executor_actor_outputs_resultproposal_only
+8. verifier_actor_validates_without_finaloutput
+9. prompt_injection_cannot_promote_actor_to_root
+10. actor_role_confusion_is_blocked
+11. model_confidence_does_not_create_authority
+12. root_final_authority_preserved_across_actor_chain
+
+Required counters:
+
+- scenarios_total: 12
+- scenarios_passed: 12
+- actor_inputs_seen_count: 22
+- actor_outputs_emitted_count: 16
+- intake_outputs_count: 2
+- route_proposals_count: 4
+- plangraph_proposals_count: 3
+- result_proposals_count: 3
+- validation_reports_count: 2
+- root_review_required_count: 16
+- final_output_created_count: 0
+- action_permission_granted_count: 0
+- actor_authority_claimed_count: 0
+- llm_truth_claimed_count: 0
+- slm_truth_claimed_count: 0
+- model_confidence_authority_claimed_count: 0
+- prompt_injection_escalation_count: 0
+- actor_self_promotion_count: 0
+- raw_advisory_command_accepted_count: 0
+- raw_drs_memory_instruction_accepted_count: 0
+- root_boundary_bypass_count: 0
+- post_vv_bypass_count: 0
+- gt_bypass_count: 0
+- manifest_mutation_count: 0
+- transition_matrix_mutation_count: 0
+- network_used_count: 0
+- gemini_used_count: 0
+- connector_side_effect_count: 0
+- root_final_authority_preserved_count: 12
+
+Required invariants:
+
+- actor output is not truth
+- actor output is not authority
+- actor output is not action permission
+- actor output is not FinalOutput
+- LLM output is not truth
+- SLM output is not truth
+- model confidence is not authority
+- tool capability is not permission
+- route proposal is not Root decision
+- PlanGraph proposal is not execution authority
+- ResultProposal is not FinalOutput
+- advisory report is not command
+- Architect receives only Root-shaped tasks/routes
+- Executor receives only bounded PlanGraph
+- Post V&V / GT remains downstream validation/advisory boundary
+- Root remains final authority
+- actor cannot mutate manifest
+- actor cannot mutate transition matrix
+- actor cannot call network/Gemini/connectors in v0.1
+- actor cannot execute external actions in v0.1
+
+Required limitations:
+
+- no production LLM autonomy
+- no production SLM autonomy
+- no real model calls
+- no Gemini activation
+- no network
+- no embeddings
+- no external tool calls
+- no connector side effects
+- no autonomous action
+- no Fractal Cell Runtime integration in this layer
+- no Root behavior modification
+- no Architect command from AVF/advisory evaluator
+- no Executor command from LLM actor without Root-shaped route
+- no FinalOutput creation
+- no action permission
+- no direct reuse permission
+- no manifest mutation
+- no transition matrix mutation
+- no Marennya/UP
+- no public WOW
+- no whitepaper/public auditor packet
+- Real Semantic Runtime MVP is not complete
+
+Authority boundary conclusion:
+
+Bounded LLM/SLM Actors v0.1 defines deterministic actor contracts and target
+boundary validation for Intake, Orchestrator, Architect, Executor, Verifier/Post
+V&V, GT boundary, and Root return. Actor outputs, LLM/SLM outputs, model
+confidence, tool capability, route proposals, PlanGraph proposals, ResultProposal
+artifacts, validation reports, and GT reports remain bounded. The layer does not
+create a new execution engine, does not activate live model paths, does not
+change Root behavior, and does not create final authority below Root. Root
+remains final authority.

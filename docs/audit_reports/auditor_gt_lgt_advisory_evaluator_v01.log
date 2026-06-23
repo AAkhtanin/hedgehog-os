@@ -1,0 +1,148 @@
+audit_id: auditor_gt_lgt_advisory_evaluator_v01
+audit_status: PASS
+audited_commit: b0ce686
+patch_plan_commit: d00fa21
+preflight_commit: c9ff238
+previous_runtime_checkpoint: 762239c
+runtime_gate_commit: 1e1afe6
+audit_scope: runtime_implementation_and_tests
+full_pytest_run: true
+full_pytest_result: 1792 passed, 60 warnings
+runner_result: FINAL STATUS: PASS
+targeted_test_result: 68 passed, 40 warnings
+
+Audited files:
+
+- hedgehog/gt_lgt_advisory_evaluator.py
+- demo/run_gt_lgt_advisory_evaluator_v01.py
+- tests/test_gt_lgt_advisory_evaluator_v01_runner.py
+
+## Topology / Naming Clarification
+
+- This layer does not relocate canonical terminal GTValidator.
+- This layer is not the canonical post-Executor/Post V&V GTValidator.
+- Canonical GTValidator remains after Executor/Post V&V and before Root FinalOutput.
+- This layer is a pre-Architect candidate-level advisory review over AVF-ranked DRS candidates.
+- It may emit GT-style advisory signals, but those signals are not Root Final, not action permission, and not direct reuse permission.
+- It returns advisory signals to Root/Orchestrator route decision.
+- It must not command Architect directly.
+- Architect must receive only Root-shaped tasks/routes, not commands from DRS/AVF/advisory evaluator.
+- Human-facing alias may be: AVF Candidate Advisory Evaluator.
+- Internal module name remains `hedgehog/gt_lgt_advisory_evaluator.py` for this checkpoint.
+- LGT is deferred/local placeholder only.
+- No concrete production LGT runtime/schema/test exists.
+- Root remains final authority.
+
+Implementation seam audited:
+
+- added `hedgehog/gt_lgt_advisory_evaluator.py`
+- composes CandidateVector/AVF reports and GT payoff/decision concepts
+- does not modify GTValidator
+- does not modify Post V&V
+- does not modify RootOrchestrator
+- does not modify Architect
+- does not modify schemas
+- does not create FinalOutput
+- does not create production GT/LGT
+- does not create production LGT
+
+LGT handling:
+
+- LGT represented only as lgt_deferred / lgt_placeholder
+- no LGT schema created
+- no LGT runtime authority created
+- LGT signal is advisory-only
+- authority_claimed: false
+- truth_claimed: false
+- action_permission_claimed: false
+- final_output_claimed: false
+- direct_reuse_allowed: false
+- root_review_required: true
+
+Scenario coverage:
+
+1. avf_ranked_report_becomes_advisory_input_only
+2. gt_accept_signal_requires_root_final_review
+3. gt_degrade_signal_routes_to_review_not_final
+4. gt_reject_signal_blocks_candidate_not_root_final
+5. lgt_absent_or_local_signal_remains_advisory
+6. stale_high_score_candidate_cannot_silent_accept
+7. quarantine_deadend_overrides_high_score_to_review
+8. conflicting_provenance_blocks_advisory_accept
+9. duplicate_spam_cannot_force_gt_lgt_accept
+10. root_final_authority_preserved_across_gt_lgt_advisory
+
+Required counters:
+
+- scenarios_total: 10
+- scenarios_passed: 10
+- advisory_inputs_count: 10
+- gt_signals_emitted_count: 10
+- lgt_signals_emitted_count: 10
+- lgt_deferred_count: 10
+- advisory_reports_created_count: 10
+- root_review_required_count: 10
+- root_final_authority_preserved_count: 10
+- direct_reuse_allowed_count: 0
+- action_permission_granted_count: 0
+- final_output_created_count: 0
+- gt_authority_claimed_count: 0
+- lgt_authority_claimed_count: 0
+- advisory_truth_claimed_count: 0
+- advisory_accept_as_root_final_count: 0
+- high_score_forced_accept_count: 0
+- duplicate_spam_forced_accept_count: 0
+- stale_silent_accept_count: 0
+- quarantine_deadend_override_count: 0
+- conflicting_provenance_hidden_count: 0
+- manifest_mutation_count: 0
+- transition_matrix_mutation_count: 0
+- network_used_count: 0
+- gemini_used_count: 0
+
+Required invariants:
+
+- GT is advisory.
+- LGT is advisory or deferred.
+- GT/LGT report is not truth.
+- GT/LGT report is not Root Final.
+- GT/LGT advisory accept is not action permission.
+- GT/LGT advisory accept is not direct reuse permission.
+- AVF score is not authority.
+- Candidate vector is not truth.
+- DRS hit is not authority.
+- DRS reuse candidate is not action permission.
+- Root remains final authority.
+- This layer does not move GTValidator upstream.
+- This layer does not command Architect.
+- This layer does not modify Root behavior.
+- This layer does not create FinalOutput.
+
+Limitations:
+
+- no production GT/LGT
+- no production LGT
+- no production DRS
+- no production AVF
+- no external/global DRS
+- no network
+- no Gemini
+- no embeddings
+- no LLM semantic matching
+- no Fractal Cell Runtime integration
+- no Marennya/UP
+- no manifest mutation
+- no transition matrix mutation
+- no direct reuse permission
+- no action permission
+- no FinalOutput authority
+- Real Semantic Runtime MVP is not complete
+
+Authority boundary conclusion:
+
+GT/LGT Advisory Evaluator v0.1 is a candidate-level advisory evaluator over
+AVF-ranked DRS candidates. It does not relocate canonical GTValidator and does
+not command Architect. GT-style signals and LGT deferred/local placeholder
+signals may inform Root/Orchestrator route review, but they do not become truth,
+Root Final, direct reuse permission, action permission, FinalOutput, or
+production GT/LGT behavior. Root remains final authority.

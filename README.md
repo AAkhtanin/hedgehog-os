@@ -1976,14 +1976,127 @@ embeddings, no LLM semantic matching, no Fractal Cell Runtime integration, no
 Marennya/UP, no manifest mutation, no transition matrix mutation, no
 FinalOutput authority, and no Root behavior modification.
 
-NEXT: Bounded LLM/SLM Actors v0.1 preflight. THEN: Fractal Cell Runtime
-integration preflight after bounded actor contracts. Fractal Cell Runtime is a
-logical later path, not an equal-choice branch. Fractal Cell Runtime depends
-on bounded actor contracts: Intake, Orchestrator, Architect, Executor, Post
-V&V / GT route, and Root return boundary. Without bounded actor contracts, a
-fractal shell would not know who may speak, route, propose, verify, or return
-to Root. DRS poisoning resistance remains gated only if needed to protect or
-unblock real runtime.
+Next runtime-facing layer after this checkpoint is now closed as Bounded
+LLM/SLM Actors v0.1.
+
+## Bounded LLM/SLM Actors v0.1
+
+Bounded LLM/SLM Actors v0.1 — CLOSED.
+
+This is the bounded actor contract layer before Fractal Cell Runtime
+integration. Hedgehog OS now has a role-boundary skeleton for Intake,
+Orchestrator, Architect, Executor, Verifier / Post V&V, GT boundary, and Root
+return boundary.
+
+Required meaning: this layer does NOT create autonomous agents. It does NOT
+activate LLM/SLM/Gemini/network. It creates bounded actor contracts and
+transition checks so future Fractal Cell Runtime knows who may speak, route,
+propose, execute, verify, and return to Root.
+
+Implementation seam: `hedgehog/bounded_actor_contracts.py`. It is a contract
+adapter / validator only and not a new execution engine. It does not replace
+RootOrchestrator, Architect, Executor, Post V&V, GTValidator, or schemas.
+
+Commit chain: preflight_commit: a0e3145; patch_plan_commit: be4995d;
+runtime_commit: 6802d14; technical_audit_commit: dfd43b9;
+human_walkthrough_commit: df45900; human_walkthrough_audit_commit: 388749c;
+previous_checkpoint: 68ca777; runtime_gate_commit: 1e1afe6.
+
+Runtime files: `hedgehog/bounded_actor_contracts.py`,
+`demo/run_bounded_llm_slm_actors_v01.py`, and
+`tests/test_bounded_llm_slm_actors_v01_runner.py`.
+
+Human walkthrough files:
+`demo/run_human_bounded_llm_slm_actors_walkthrough_v01.py` and
+`tests/test_human_bounded_llm_slm_actors_walkthrough_v01_runner.py`.
+
+Audit logs: `docs/audit_reports/auditor_bounded_llm_slm_actors_v01.log` and
+`docs/audit_reports/auditor_human_bounded_llm_slm_actors_walkthrough_v01.log`.
+
+Validation facts: runtime runner `FINAL STATUS: PASS`; targeted tests
+`92 passed, 50 warnings`; full pytest `1819 passed, 60 warnings`; human
+walkthrough focused tests `5 passed in 0.05s`; human walkthrough audit status:
+PASS.
+
+Scenario coverage:
+
+- intake_actor_normalizes_intent_without_authority
+- orchestrator_actor_consumes_advisory_report_as_signal_only
+- orchestrator_route_proposal_requires_root_boundary
+- architect_actor_accepts_only_root_shaped_task
+- architect_actor_outputs_plangraph_proposal_only
+- executor_actor_accepts_only_bounded_plangraph
+- executor_actor_outputs_resultproposal_only
+- verifier_actor_validates_without_finaloutput
+- prompt_injection_cannot_promote_actor_to_root
+- actor_role_confusion_is_blocked
+- model_confidence_does_not_create_authority
+- root_final_authority_preserved_across_actor_chain
+
+Actor checkpoint counters: `scenarios_total: 12`,
+`scenarios_passed: 12`, `actor_inputs_seen_count: 22`,
+`actor_outputs_emitted_count: 16`, `intake_outputs_count: 2`,
+`route_proposals_count: 4`, `plangraph_proposals_count: 3`,
+`result_proposals_count: 3`, `validation_reports_count: 2`,
+`root_review_required_count: 16`, `final_output_created_count: 0`,
+`action_permission_granted_count: 0`, `actor_authority_claimed_count: 0`,
+`llm_truth_claimed_count: 0`, `slm_truth_claimed_count: 0`,
+`model_confidence_authority_claimed_count: 0`,
+`prompt_injection_escalation_count: 0`, `actor_self_promotion_count: 0`,
+`raw_advisory_command_accepted_count: 0`,
+`raw_drs_memory_instruction_accepted_count: 0`,
+`root_boundary_bypass_count: 0`, `post_vv_bypass_count: 0`,
+`gt_bypass_count: 0`, `manifest_mutation_count: 0`,
+`transition_matrix_mutation_count: 0`, `network_used_count: 0`,
+`gemini_used_count: 0`, `connector_side_effect_count: 0`, and
+`root_final_authority_preserved_count: 12`.
+
+Target Boundary Fix: it is not enough to check what an actor outputs; the
+system must check where the output is being sent. Dangerous transitions now
+blocked:
+
+- Architect PlanGraph -> final_output
+- Architect PlanGraph -> root_return
+- Executor ResultProposal -> final_output
+- Executor ResultProposal -> root_return
+- Verifier VVReport -> final_output
+- Verifier VVReport -> root_return
+- GTReport -> final_output
+- GTReport -> Architect
+
+Reason code: `final_output_target_boundary_blocked`.
+
+Canonical chain remains accepted:
+
+- intake -> Root/Orchestrator
+- Root-shaped route -> Architect
+- PlanGraph -> Executor
+- ResultProposal -> Verifier/Post V&V
+- VVReport -> GT boundary
+- GTReport -> Root return
+- Root return -> Root/Orchestrator
+
+Boundary meaning: actor output is not truth, actor output is not authority,
+actor output is not action permission, actor output is not FinalOutput, LLM
+output is not truth, SLM output is not truth, model confidence is not
+authority, tool capability is not permission, route proposal is not Root
+decision, PlanGraph proposal is not execution authority, ResultProposal is not
+FinalOutput, advisory report is not command, Architect receives only
+Root-shaped tasks/routes, Executor receives only bounded PlanGraph, Post V&V /
+GT remains downstream validation/advisory boundary, and Root remains final
+authority.
+
+Limitations: no production LLM autonomy, no production SLM autonomy, no real
+model calls, no Gemini activation, no network, no embeddings, no external tool
+calls, no connector side effects, no autonomous action, no Fractal Cell
+Runtime integration in this layer, no Root behavior modification, no Architect
+command from AVF/advisory evaluator, no Executor command from LLM actor without
+Root-shaped route, no FinalOutput creation, no action permission, no direct
+reuse permission, no manifest mutation, no transition matrix mutation, no
+Marennya/UP, no public WOW, no whitepaper/public auditor packet, and Real
+Semantic Runtime MVP is not complete.
+
+NEXT: Fractal Cell Runtime integration preflight.
 
 ## General Plan Runtime Gate
 
@@ -2296,9 +2409,9 @@ Next engineering focus:
 - Completed: Real Local DRS Resolver / Writeback v0.1, the first runtime-facing primitive under Real Semantic Runtime MVP.
 - Completed: CandidateVectorGenerator + Real AVF Scoring v0.1, the second runtime-facing primitive under Real Semantic Runtime MVP.
 - Completed: GT/LGT Advisory Evaluator v0.1 / AVF Candidate Advisory Evaluator v0.1, the pre-Architect advisory review stage over AVF-ranked DRS candidates.
-- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, and candidate advisory review are now checkpointed.
-- NEXT: Bounded LLM/SLM Actors v0.1 preflight.
-- THEN: Fractal Cell Runtime integration preflight after bounded actor contracts.
+- Completed: Bounded LLM/SLM Actors v0.1, the role-boundary contract layer before Fractal Cell Runtime integration.
+- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, candidate advisory review, and bounded actor contracts are now checkpointed.
+- NEXT: Fractal Cell Runtime integration preflight.
 - Fractal Cell Runtime is a logical later path, not an equal-choice branch.
 - Fractal Cell Runtime depends on bounded actor contracts: Intake, Orchestrator, Architect, Executor, Post V&V / GT route, and Root return boundary.
 - Without bounded actor contracts, a fractal shell would not know who may speak, route, propose, verify, or return to Root.

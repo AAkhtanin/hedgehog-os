@@ -2197,8 +2197,93 @@ child action permission, no manifest mutation, no transition matrix mutation,
 no Marennya/UP, no public WOW, no whitepaper/public auditor packet, and Real
 Semantic Runtime MVP is not complete.
 
-NEXT: Real Semantic Runtime Thread Human Walkthrough v0.1.
-THEN: Real Semantic Runtime Thread Composite Smoke v0.1.
+Next human-facing thread walkthrough after this checkpoint is now closed as
+Human Real Semantic Runtime Thread Walkthrough v0.1.
+
+## Human Real Semantic Runtime Thread Walkthrough v0.1
+
+Status:
+
+- CLOSED
+
+This checkpoint records the maximal human-readable composite evidence thread
+over already closed / working layers. It is not a new runtime integration
+layer, not full production E2E, not public WOW, and not Real Semantic Runtime
+MVP completion.
+
+Commit chain: human_walkthrough_commit: 4fa59d7;
+human_walkthrough_audit_commit: 3c21206; previous_docs_checkpoint: bc7ec63;
+runtime_gate_commit: 1e1afe6.
+
+Audited files:
+
+- `demo/run_human_real_semantic_runtime_thread_walkthrough_v01.py`
+- `tests/test_human_real_semantic_runtime_thread_walkthrough_v01_runner.py`
+- `docs/audit_reports/auditor_human_real_semantic_runtime_thread_walkthrough_v01.log`
+
+Validation facts: walkthrough command exits 0; focused tests
+`10 passed, 2 warnings`; audit_status: PASS; overclaim_grep_result: no hits.
+
+Invoked deterministic core layers:
+
+1. Real Local DRS Resolver / Writeback
+2. CandidateVectorGenerator + Real AVF Scoring
+3. AVF Candidate Advisory / GT-LGT Advisory
+4. Bounded LLM/SLM Actors
+5. Fractal Cell Runtime Integration
+
+Composite counters: `walkthrough_required_counters_match: True`,
+`closed_layers_invoked_count: 5`, `closed_layers_status_pass_count: 5`,
+`combined_direct_reuse_allowed_count: 0`,
+`combined_action_permission_granted_count: 0`,
+`combined_final_output_created_by_non_root_count: 0`,
+`combined_authority_claimed_by_non_root_count: 0`,
+`combined_parent_boundary_bypass_count: 0`,
+`combined_post_vv_bypass_count: 0`, `combined_gt_bypass_count: 0`,
+`combined_network_used_count: 0`, `combined_gemini_used_count: 0`,
+`optional_live_llm_lane_default_enabled: False`,
+`optional_live_llm_core_pass_dependency: False`,
+`root_final_authority_preserved_across_thread: True`,
+`full_e2e_claimed_count: 0`, `production_readiness_claimed_count: 0`,
+`historical_closed_layers_listed_count: 36`,
+`optional_live_llm_evidence_paths_listed_count: 4`,
+`live_llm_authority_claimed_count: 0`, and
+`live_llm_final_output_created_count: 0`.
+
+Composite thread meaning:
+
+Root-shaped request
+-> semantic memory write/resolve
+-> DRS candidates
+-> candidate vectors
+-> AVF scoring/ranking
+-> candidate advisory review
+-> bounded LLM/SLM actor contracts
+-> bounded Fractal Cell child execution
+-> child ResultProposal / cell report
+-> parent Post V&V / GT route
+-> parent Root final review
+-> DRS writeback evidence
+
+Boundary meaning: Root remains final authority. DRS record is not truth. DRS
+hit is not authority. Candidate vector is not truth. AVF score is not
+authority. Top-ranked candidate is not action permission. GT-style advisory
+signal is not Root Final. LGT is deferred/local placeholder only. Canonical
+terminal GTValidator is not relocated upstream. Actor output is not truth,
+authority, action permission, or FinalOutput. Fractal Cell is not Root. Child
+ResultProposal is not FinalOutput. Child cell output must return to
+parent/Root boundary. Post V&V fallback fails closed. Live LLM/Gemini output
+is not truth, authority, action permission, Root Final, or PASS dependency.
+
+Historical catalog: 36 closed / working historical layers are listed as
+evidence-only. The catalog does not imply one live object traverses every
+layer. It is historical evidence, not new runtime authority. Enterprise
+Document Killer Demo B v0.1 is historical showcase evidence, not current
+runtime authority. Optional live Gemini/LLM smoke paths, including optional
+live Gemini Architect smoke, are historical optional evidence, not default PASS
+dependencies.
+
+NEXT: Real Semantic Runtime Thread Composite Smoke v0.1.
 THEN LATER: Zero Trust Supplier Payment WOW v0.1 preflight.
 DRS poisoning resistance remains gated only if needed to protect or unblock
 real runtime.
@@ -2516,14 +2601,15 @@ Next engineering focus:
 - Completed: GT/LGT Advisory Evaluator v0.1 / AVF Candidate Advisory Evaluator v0.1, the pre-Architect advisory review stage over AVF-ranked DRS candidates.
 - Completed: Bounded LLM/SLM Actors v0.1, the role-boundary contract layer before Fractal Cell Runtime integration.
 - Completed: Fractal Cell Runtime Integration v0.1, the bounded child execution container integration after bounded actor contracts.
-- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, candidate advisory review, bounded actor contracts, and bounded child-cell integration are now checkpointed.
+- Completed: Human Real Semantic Runtime Thread Walkthrough v0.1, the maximal human-readable composite evidence thread over closed / working layers.
+- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, candidate advisory review, bounded actor contracts, bounded child-cell integration, and the human composite walkthrough are now checkpointed.
 - CLOSED: Real Local DRS Resolver / Writeback v0.1.
 - CLOSED: CandidateVectorGenerator + Real AVF Scoring v0.1.
 - CLOSED: AVF Candidate Advisory Evaluator v0.1 / GT-LGT Advisory Evaluator v0.1.
 - CLOSED: Bounded LLM/SLM Actors v0.1.
 - CLOSED: Fractal Cell Runtime Integration v0.1.
-- NEXT: Real Semantic Runtime Thread Human Walkthrough v0.1.
-- THEN: Real Semantic Runtime Thread Composite Smoke v0.1.
+- CLOSED: Human Real Semantic Runtime Thread Walkthrough v0.1.
+- NEXT: Real Semantic Runtime Thread Composite Smoke v0.1.
 - THEN LATER: Zero Trust Supplier Payment WOW v0.1 preflight.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 - Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.

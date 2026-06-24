@@ -3435,7 +3435,7 @@ Validation evidence: runner_result: FINAL STATUS: PASS; focused tests:
 Zero Trust Supplier Payment WOW v0.1 is CLOSED.
 
 Status: CLOSED. Evidence chain: runtime_commit: 87665d2,
-audit_commit: AUDIT_COMMIT_HERE, patch_plan_commit: 8509ab9,
+audit_commit: 02b836f, patch_plan_commit: 8509ab9,
 preflight_commit: fdc9abd, previous_docs_checkpoint: 5a1e0fe, and
 runtime_gate_commit: 1e1afe6.
 

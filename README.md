@@ -419,11 +419,11 @@ bash python -m demo.run_root_dag_integration_smoke
 
 The exact proposal ids are deterministic but verbose. The important parts should look like this:
 
-text Scenario: cold_start run:   illegal_coercion blocked: true   GT winner vector id: official_online_request   FinalOutput created_by: root_orchestrator 
+text Scenario: cold_start run:   illegal_coercion blocked: true   GT winner vector id: official_online_request   FinalOutput authority: root_orchestrator
 
-text Scenario: reuse second_run:   memory_context_applied: true   reuse_decision: context_only   reuse_applied: false   illegal_coercion blocked: true   GT winner vector id: official_online_request   FinalOutput created_by: root_orchestrator 
+text Scenario: reuse second_run:   memory_context_applied: true   reuse_decision: context_only   reuse_applied: false   illegal_coercion blocked: true   GT winner vector id: official_online_request   FinalOutput authority: root_orchestrator
 
-text Scenario: direct_reuse run:   memory_context_applied: true   reuse_decision: direct_reuse   reuse_applied: true   architect_skipped: true   executor_skipped: true   FinalOutput created_by: root_orchestrator   FinalOutput status: success 
+text Scenario: direct_reuse run:   memory_context_applied: true   reuse_decision: direct_reuse   reuse_applied: true   architect_skipped: true   executor_skipped: true   FinalOutput authority: root_orchestrator   FinalOutput status: success
 
 ---
 
@@ -2096,7 +2096,112 @@ reuse permission, no manifest mutation, no transition matrix mutation, no
 Marennya/UP, no public WOW, no whitepaper/public auditor packet, and Real
 Semantic Runtime MVP is not complete.
 
-NEXT: Fractal Cell Runtime integration preflight.
+Next runtime-facing layer after this checkpoint is now closed as Fractal Cell
+Runtime Integration v0.1.
+
+## Fractal Cell Runtime Integration v0.1
+
+Fractal Cell Runtime Integration v0.1 — CLOSED.
+
+This is a bounded child execution container integration. It can host bounded
+child actors and return child reports upward, but Fractal Cell is not Root.
+Bounded actor contracts apply inside child cell, and child Architect /
+Executor / Verifier / GT-like reports are not authority.
+
+Required meaning: child ResultProposal is not FinalOutput. Child cell output
+must return to parent / Post V&V / GT / Root boundary. Child cell cannot
+command parent Architect. Recursive child depth is bounded. Child consensus is
+not authority. Root remains final authority.
+
+Commit chain: preflight_commit: 84303eb; patch_plan_commit: 9f49cbc;
+runtime_commit: 96755ba; technical_audit_commit: 643d6cd;
+human_walkthrough_commit: b6b53f8; human_walkthrough_audit_commit: 1f1a196;
+previous_checkpoint: 09523bf; runtime_gate_commit: 1e1afe6.
+
+Runtime files: `hedgehog/fractal_cell_integration.py`,
+`demo/run_fractal_cell_runtime_integration_v01.py`, and
+`tests/test_fractal_cell_runtime_integration_v01_runner.py`.
+
+Human walkthrough files:
+`demo/run_human_fractal_cell_runtime_integration_walkthrough_v01.py` and
+`tests/test_human_fractal_cell_runtime_integration_walkthrough_v01_runner.py`.
+
+Audit logs: `docs/audit_reports/auditor_fractal_cell_runtime_integration_v01.log`
+and
+`docs/audit_reports/auditor_human_fractal_cell_runtime_integration_walkthrough_v01.log`.
+
+Validation facts: runtime runner `FINAL STATUS: PASS`; targeted tests
+`99 passed, 40 warnings`; full pytest `1845 passed, 60 warnings`; human
+walkthrough command exits 0; human walkthrough focused tests
+`5 passed, 2 warnings`; `underlying_runtime_status: PASS`; and
+`walkthrough_required_counters_match: True`.
+
+Scenario coverage:
+
+- root_shaped_task_enters_fractal_cell_boundary
+- child_architect_accepts_only_root_shaped_task
+- child_executor_outputs_resultproposal_only
+- child_verifier_validates_without_finaloutput
+- child_gt_report_returns_to_parent_root_boundary
+- child_finaloutput_claim_is_blocked
+- child_actor_self_promotion_to_root_is_blocked
+- child_cell_cannot_command_parent_architect
+- recursive_child_cell_depth_is_bounded
+- child_consensus_does_not_create_authority
+- child_output_returns_to_parent_post_vv_gt_route
+- root_final_authority_preserved_across_fractal_cell
+
+Fractal Cell checkpoint counters: `scenarios_total: 12`,
+`scenarios_passed: 12`, `cells_started_count: 4`,
+`child_actor_inputs_seen_count: 21`,
+`child_actor_outputs_emitted_count: 21`,
+`child_result_proposals_count: 5`, `child_validation_reports_count: 3`,
+`child_gt_reports_count: 3`, `parent_return_reports_count: 3`,
+`root_review_required_count: 12`, `post_vv_fallback_used_count: 3`,
+`final_output_created_count: 0`, `action_permission_granted_count: 0`,
+`child_root_claimed_count: 0`, `child_authority_claimed_count: 0`,
+`child_finaloutput_claimed_count: 0`,
+`child_action_permission_claimed_count: 0`,
+`child_actor_self_promotion_count: 0`, `parent_boundary_bypass_count: 0`,
+`post_vv_bypass_count: 0`, `gt_bypass_count: 0`,
+`parent_architect_commanded_count: 0`,
+`recursive_depth_limit_exceeded_count: 0`,
+`unbounded_child_spawn_count: 0`,
+`child_consensus_authority_claimed_count: 0`,
+`manifest_mutation_count: 0`, `transition_matrix_mutation_count: 0`,
+`network_used_count: 0`, `gemini_used_count: 0`,
+`connector_side_effect_count: 0`, and
+`root_final_authority_preserved_count: 12`.
+
+Post V&V fallback fails closed as review-required / needs-revision, not
+accepted authority. Required reason codes:
+
+- `post_vv_runtime_unavailable_review_required`
+- `post_vv_fallback_not_authority`
+- `child_output_requires_real_post_vv_or_root_review`
+- `post_vv_fallback_used_review_required`
+
+Target boundary guardrail: `child_target_boundary_blocked`. It blocks child
+outputs from going directly to `final_output` or parent Architect command.
+
+Boundary meaning: Fractal Cell is not Root; bounded actor contracts apply
+inside child cell; child ResultProposal is not FinalOutput; child cell output
+must return to parent / Post V&V / GT / Root boundary; child cell cannot
+command parent Architect; recursive child depth is bounded; child consensus is
+not authority; and Root remains final authority.
+
+Limitations: not production Fractal Cell runtime, not production distributed
+runtime, no network/Gemini/real model calls, no connector side effects, no
+Root behavior modification, no child Root, no child FinalOutput authority, no
+child action permission, no manifest mutation, no transition matrix mutation,
+no Marennya/UP, no public WOW, no whitepaper/public auditor packet, and Real
+Semantic Runtime MVP is not complete.
+
+NEXT: Real Semantic Runtime Thread Human Walkthrough v0.1.
+THEN: Real Semantic Runtime Thread Composite Smoke v0.1.
+THEN LATER: Zero Trust Supplier Payment WOW v0.1 preflight.
+DRS poisoning resistance remains gated only if needed to protect or unblock
+real runtime.
 
 ## General Plan Runtime Gate
 
@@ -2155,7 +2260,7 @@ BLOCK — Real Semantic Runtime MVP:
 - CandidateVectorGenerator + real AVF scoring v0.1
 - GT / LGT advisory evaluator v0.1
 - bounded LLM / SLM actors: Intake / Orchestrator / Architect / Executor
-- Fractal Cell Runtime v0.1
+- Fractal Cell Runtime Integration v0.1
 - DRS reuse cycle: write meaning -> resolve meaning -> reuse under Root review
 - End-to-end local semantic runtime demo
 
@@ -2410,11 +2515,16 @@ Next engineering focus:
 - Completed: CandidateVectorGenerator + Real AVF Scoring v0.1, the second runtime-facing primitive under Real Semantic Runtime MVP.
 - Completed: GT/LGT Advisory Evaluator v0.1 / AVF Candidate Advisory Evaluator v0.1, the pre-Architect advisory review stage over AVF-ranked DRS candidates.
 - Completed: Bounded LLM/SLM Actors v0.1, the role-boundary contract layer before Fractal Cell Runtime integration.
-- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, candidate advisory review, and bounded actor contracts are now checkpointed.
-- NEXT: Fractal Cell Runtime integration preflight.
-- Fractal Cell Runtime is a logical later path, not an equal-choice branch.
-- Fractal Cell Runtime depends on bounded actor contracts: Intake, Orchestrator, Architect, Executor, Post V&V / GT route, and Root return boundary.
-- Without bounded actor contracts, a fractal shell would not know who may speak, route, propose, verify, or return to Root.
+- Completed: Fractal Cell Runtime Integration v0.1, the bounded child execution container integration after bounded actor contracts.
+- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, candidate advisory review, bounded actor contracts, and bounded child-cell integration are now checkpointed.
+- CLOSED: Real Local DRS Resolver / Writeback v0.1.
+- CLOSED: CandidateVectorGenerator + Real AVF Scoring v0.1.
+- CLOSED: AVF Candidate Advisory Evaluator v0.1 / GT-LGT Advisory Evaluator v0.1.
+- CLOSED: Bounded LLM/SLM Actors v0.1.
+- CLOSED: Fractal Cell Runtime Integration v0.1.
+- NEXT: Real Semantic Runtime Thread Human Walkthrough v0.1.
+- THEN: Real Semantic Runtime Thread Composite Smoke v0.1.
+- THEN LATER: Zero Trust Supplier Payment WOW v0.1 preflight.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 - Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.
 - Later, after Real Semantic Runtime MVP: Real Semantic Runtime WOW Demo, Public Auditor Packet, and Whitepaper engineering draft.

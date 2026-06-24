@@ -3125,6 +3125,7 @@ Real Local DRS Resolver / Writeback v0.1
 -> CandidateVectorGenerator + Real AVF Scoring v0.1
 -> AVF Candidate Advisory Evaluator v0.1
 -> Bounded LLM/SLM Actors v0.1
+-> Fractal Cell Runtime Integration v0.1
 
 Internal runtime name is GT/LGT Advisory Evaluator v0.1. This is not
 canonical terminal GTValidator. It is pre-Architect candidate-level advisory
@@ -3152,7 +3153,8 @@ outputs, forbidden outputs, and transition checks.
 This layer does not create autonomous agents. It does not activate
 LLM/SLM/Gemini/network. It prepares the geometry for Fractal Cell Runtime
 integration by defining who may speak, route, propose, execute, verify, and
-return to Root. Fractal Cell Runtime integration is NEXT after this checkpoint.
+return to Root. Fractal Cell Runtime Integration v0.1 is now closed after this
+checkpoint.
 
 Target Boundary Fix: it is not enough to check what an actor outputs; the
 system must check where the output is being sent. Dangerous transitions now
@@ -3209,6 +3211,87 @@ Root-shaped route, no FinalOutput creation, no action permission, no direct
 reuse permission, no manifest mutation, no transition matrix mutation, no
 Marennya/UP, no public WOW, and no whitepaper/public auditor packet. Real
 Semantic Runtime MVP is not complete.
+
+Fractal Cell Runtime Integration v0.1 is CLOSED through human walkthrough
+audit. Evidence chain: preflight_commit: 84303eb, patch_plan_commit: 9f49cbc,
+runtime_commit: 96755ba, technical_audit_commit: 643d6cd,
+human_walkthrough_commit: b6b53f8,
+human_walkthrough_audit_commit: 1f1a196, previous_checkpoint: 09523bf, and
+runtime_gate_commit: 1e1afe6.
+
+Current semantic runtime thread:
+
+Real Local DRS Resolver / Writeback v0.1
+-> CandidateVectorGenerator + Real AVF Scoring v0.1
+-> AVF Candidate Advisory Evaluator v0.1
+-> Bounded LLM/SLM Actors v0.1
+-> Fractal Cell Runtime Integration v0.1
+
+Fractal Cell is a bounded recursive execution container, not Root. Bounded
+actor contracts apply inside child cell. Child Architect, child Executor,
+child Verifier, and child GT-like reports are not authority. Child
+ResultProposal is not FinalOutput. Child cell output must return to parent /
+Post V&V / GT / Root boundary. Child cell cannot command parent Architect.
+Recursive depth is bounded. Child consensus is not authority. Root remains
+final authority. Real Semantic Runtime MVP is not complete.
+
+Post V&V fallback fails closed as review-required / needs-revision, not
+accepted authority. Required reason codes are
+`post_vv_runtime_unavailable_review_required`,
+`post_vv_fallback_not_authority`,
+`child_output_requires_real_post_vv_or_root_review`, and
+`post_vv_fallback_used_review_required`.
+
+Target boundary prevents child output from going directly to final_output or
+parent Architect command. The child target-boundary reason code is
+`child_target_boundary_blocked`.
+
+Status evidence: runtime runner `FINAL STATUS: PASS`; targeted tests
+`99 passed, 40 warnings`; full pytest `1845 passed, 60 warnings`; human
+walkthrough command exits 0; human walkthrough focused tests
+`5 passed, 2 warnings`; `underlying_runtime_status: PASS`; and
+`walkthrough_required_counters_match: True`.
+
+Fractal cell checkpoint counters: `scenarios_total: 12`,
+`scenarios_passed: 12`, `cells_started_count: 4`,
+`child_actor_inputs_seen_count: 21`,
+`child_actor_outputs_emitted_count: 21`,
+`child_result_proposals_count: 5`, `child_validation_reports_count: 3`,
+`child_gt_reports_count: 3`, `parent_return_reports_count: 3`,
+`root_review_required_count: 12`, `post_vv_fallback_used_count: 3`,
+`final_output_created_count: 0`, `action_permission_granted_count: 0`,
+`child_root_claimed_count: 0`, `child_authority_claimed_count: 0`,
+`child_finaloutput_claimed_count: 0`,
+`child_action_permission_claimed_count: 0`,
+`child_actor_self_promotion_count: 0`, `parent_boundary_bypass_count: 0`,
+`post_vv_bypass_count: 0`, `gt_bypass_count: 0`,
+`parent_architect_commanded_count: 0`,
+`recursive_depth_limit_exceeded_count: 0`,
+`unbounded_child_spawn_count: 0`,
+`child_consensus_authority_claimed_count: 0`,
+`manifest_mutation_count: 0`, `transition_matrix_mutation_count: 0`,
+`network_used_count: 0`, `gemini_used_count: 0`,
+`connector_side_effect_count: 0`, and
+`root_final_authority_preserved_count: 12`.
+
+Runtime artifacts: `hedgehog/fractal_cell_integration.py`,
+`demo/run_fractal_cell_runtime_integration_v01.py`, and
+`tests/test_fractal_cell_runtime_integration_v01_runner.py`. Human walkthrough
+artifacts:
+`demo/run_human_fractal_cell_runtime_integration_walkthrough_v01.py` and
+`tests/test_human_fractal_cell_runtime_integration_walkthrough_v01_runner.py`.
+
+Audit evidence:
+`docs/audit_reports/auditor_fractal_cell_runtime_integration_v01.log` and
+`docs/audit_reports/auditor_human_fractal_cell_runtime_integration_walkthrough_v01.log`.
+
+This checkpoint is not production Fractal Cell runtime, not production
+distributed runtime, not external/global DRS, uses no network/Gemini, no real
+model calls, no connector side effects, no autonomous action, no Root behavior
+modification, no child Root, no child FinalOutput authority, no child action
+permission, no manifest mutation, no transition matrix mutation, no Marennya/UP,
+no public WOW, and no whitepaper/public auditor packet. Real Semantic Runtime
+MVP is not complete.
 
 Runtime artifacts: `hedgehog/gt_lgt_advisory_evaluator.py`,
 `demo/run_gt_lgt_advisory_evaluator_v01.py`, and
@@ -3268,10 +3351,10 @@ Current roadmap state:
 - CLOSED: CandidateVectorGenerator + Real AVF Scoring v0.1.
 - CLOSED: GT/LGT Advisory Evaluator v0.1 / AVF Candidate Advisory Evaluator v0.1.
 - CLOSED: Bounded LLM/SLM Actors v0.1.
-- NEXT: Fractal Cell Runtime integration preflight.
-- Fractal Cell Runtime is a logical later path, not an equal-choice branch.
-- Fractal Cell Runtime depends on bounded actor contracts: Intake, Orchestrator, Architect, Executor, Post V&V / GT route, and Root return boundary.
-- Without bounded actor contracts, a fractal shell would not know who may speak, route, propose, verify, or return to Root.
+- CLOSED: Fractal Cell Runtime Integration v0.1.
+- NEXT: Real Semantic Runtime Thread Human Walkthrough v0.1.
+- THEN: Real Semantic Runtime Thread Composite Smoke v0.1.
+- THEN LATER: Zero Trust Supplier Payment WOW v0.1 preflight.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 
 Hardening-plan: APPROVED.
@@ -3313,7 +3396,7 @@ BLOCK — Real Semantic Runtime MVP:
 - CandidateVectorGenerator + real AVF scoring v0.1
 - GT / LGT advisory evaluator v0.1
 - bounded LLM / SLM actors: Intake / Orchestrator / Architect / Executor
-- Fractal Cell Runtime v0.1
+- Fractal Cell Runtime Integration v0.1
 - DRS reuse cycle: write meaning -> resolve meaning -> reuse under Root review
 - End-to-end local semantic runtime demo
 

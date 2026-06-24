@@ -1,0 +1,171 @@
+# Human Fractal Cell Runtime Integration Walkthrough v0.1 Audit Log
+
+## 1. Audit facts
+
+- audit_id: auditor_human_fractal_cell_runtime_integration_walkthrough_v01
+- audit_status: PASS
+- audited_commit: b6b53f8
+- technical_audit_commit: 643d6cd
+- runtime_commit: 96755ba
+- patch_plan_commit: 9f49cbc
+- preflight_commit: 84303eb
+- previous_checkpoint_commit: 09523bf
+- runtime_gate_commit: 1e1afe6
+- audit_scope: human_readable_walkthrough_and_focused_tests
+- full_pytest_run: false
+- full_pytest_required_for_this_audit: false
+
+## 2. Audited files
+
+- demo/run_human_fractal_cell_runtime_integration_walkthrough_v01.py
+- tests/test_human_fractal_cell_runtime_integration_walkthrough_v01_runner.py
+
+## 3. Validation facts
+
+- command: python3 -m demo.run_human_fractal_cell_runtime_integration_walkthrough_v01
+- command result: exits 0
+- focused tests: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_fractal_cell_runtime_integration_walkthrough_v01_runner.py
+- focused test result: 5 passed, 2 warnings
+- underlying_runtime_status: PASS
+- walkthrough_required_counters_match: True
+
+## 4. Topology explanation audited
+
+- Fractal Cell is a bounded child execution container, not Root.
+- Fractal Cell is not Root.
+- bounded actor contracts apply inside child cell.
+- Child Architect is not Root.
+- Child Executor is not Root.
+- Child Verifier is not Root.
+- Child GT/advisory report is not Root Final.
+- child ResultProposal is not FinalOutput.
+- child cell output must return to parent/Root boundary.
+- child cell cannot command parent Architect.
+- recursive child depth is bounded.
+- child consensus is not authority.
+- Root remains final authority.
+
+## 5. Post V&V fallback boundary explanation audited
+
+- Post V&V fallback fails closed as review-required / needs-revision.
+- fallback is shape-compatible only, not accepted authority.
+- required reason codes:
+  - post_vv_runtime_unavailable_review_required
+  - post_vv_fallback_not_authority
+  - child_output_requires_real_post_vv_or_root_review
+  - post_vv_fallback_used_review_required
+
+## 6. Child target-boundary explanation audited
+
+- child_target_boundary_blocked
+- child Architect PlanGraph cannot go to final_output
+- child Executor ResultProposal cannot go to final_output
+- child Verifier VVReport cannot go to final_output
+- child GTReport cannot go to final_output
+- child GTReport cannot command parent Architect
+- child Root-like return cannot become user FinalOutput
+
+## 7. Section coverage
+
+- WHAT THIS WALKTHROUGH IS
+- WHY THIS LAYER MATTERS
+- CORE TOPOLOGY
+- ACT 1 — ROOT-SHAPED TASK ENTERS FRACTAL CELL BOUNDARY
+- ACT 2 — CHILD ACTORS STAY BOUNDED
+- ACT 3 — CHILD FINALOUTPUT / SELF-PROMOTION IS BLOCKED
+- ACT 4 — POST V&V FALLBACK FAILS CLOSED
+- ACT 5 — RECURSION AND CONSENSUS DO NOT CREATE AUTHORITY
+- ACT 6 — CHILD OUTPUT RETURNS TO PARENT ROUTE
+- ACT 7 — ROOT FINAL AUTHORITY PRESERVED
+- COUNTERS
+- VALIDATION SUMMARY
+- LIMITATIONS
+- FINAL HUMAN SUMMARY
+
+## 8. Scenario coverage
+
+- root_shaped_task_enters_fractal_cell_boundary
+- child_architect_accepts_only_root_shaped_task
+- child_executor_outputs_resultproposal_only
+- child_verifier_validates_without_finaloutput
+- child_gt_report_returns_to_parent_root_boundary
+- child_finaloutput_claim_is_blocked
+- child_actor_self_promotion_to_root_is_blocked
+- child_cell_cannot_command_parent_architect
+- recursive_child_cell_depth_is_bounded
+- child_consensus_does_not_create_authority
+- child_output_returns_to_parent_post_vv_gt_route
+- root_final_authority_preserved_across_fractal_cell
+
+## 9. Counters
+
+- underlying_runtime_status: PASS
+- scenarios_total: 12
+- scenarios_passed: 12
+- cells_started_count: 4
+- child_actor_inputs_seen_count: 21
+- child_actor_outputs_emitted_count: 21
+- child_result_proposals_count: 5
+- child_validation_reports_count: 3
+- child_gt_reports_count: 3
+- parent_return_reports_count: 3
+- root_review_required_count: 12
+- post_vv_fallback_used_count: 3
+- final_output_created_count: 0
+- action_permission_granted_count: 0
+- child_root_claimed_count: 0
+- child_authority_claimed_count: 0
+- child_finaloutput_claimed_count: 0
+- child_action_permission_claimed_count: 0
+- child_actor_self_promotion_count: 0
+- parent_boundary_bypass_count: 0
+- post_vv_bypass_count: 0
+- gt_bypass_count: 0
+- parent_architect_commanded_count: 0
+- recursive_depth_limit_exceeded_count: 0
+- unbounded_child_spawn_count: 0
+- child_consensus_authority_claimed_count: 0
+- manifest_mutation_count: 0
+- transition_matrix_mutation_count: 0
+- network_used_count: 0
+- gemini_used_count: 0
+- connector_side_effect_count: 0
+- root_final_authority_preserved_count: 12
+- walkthrough_required_counters_match: True
+
+## 10. Validation summary
+
+- runtime commit: 96755ba
+- technical audit commit: 643d6cd
+- patch plan commit: 9f49cbc
+- preflight commit: 84303eb
+- previous checkpoint: 09523bf
+- runner: FINAL STATUS: PASS
+- targeted tests: 99 passed, 40 warnings
+- full pytest: 1845 passed, 60 warnings
+- human walkthrough tests: 5 passed, 2 warnings
+
+## 11. Limitations
+
+- No production Fractal Cell runtime.
+- No production distributed runtime.
+- No external/global DRS.
+- No network.
+- No Gemini.
+- No real model calls.
+- No autonomous action.
+- No connector side effects.
+- No Marennya/UP.
+- No manifest mutation.
+- No transition matrix mutation.
+- No Root behavior modification.
+- No child Root.
+- No child FinalOutput authority.
+- No child action permission.
+- No public WOW.
+- No whitepaper/public auditor packet.
+- Real Semantic Runtime MVP is not complete.
+
+## 12. Authority boundary conclusion
+
+The human walkthrough accurately explains that a Fractal Cell is a bounded recursive execution container. It can host bounded child actors and return child reports upward, but it cannot become Root, cannot create FinalOutput, cannot grant action permission, cannot bypass Post V&V/GT/Root, cannot command parent Architect, and cannot turn child consensus into authority. Root remains final authority.

@@ -1,0 +1,184 @@
+# Real Semantic Runtime Thread Composite Smoke v0.1 Technical Audit Log
+
+## 1. Audit facts
+
+- audit_id: auditor_real_semantic_runtime_thread_composite_smoke_v01
+- audit_status: PASS
+- audited_commit: 7736fe8
+- audit_scope: composite_smoke_runner_and_focused_tests
+- full_pytest_run: false
+- full_pytest_required_for_this_audit: false
+- runner_result: FINAL STATUS: PASS
+- focused_test_result: 8 passed, 2 warnings
+- static_checks_result: clean
+- overclaim_grep_result: no hits
+- runtime_gate_commit: 1e1afe6
+- human_walkthrough_commit: 4fa59d7
+- human_walkthrough_audit_commit: 3c21206
+- human_walkthrough_docs_checkpoint: 90cf0d4
+
+This audit records a deterministic machine composite smoke over five already
+closed runtime-facing layers. It is not a new runtime integration layer. It is
+not full production E2E. It is not public WOW. It does not create Root
+behavior, action permission, or FinalOutput authority. It does not claim Real
+Semantic Runtime MVP is complete.
+
+## 2. Audited files
+
+- demo/run_real_semantic_runtime_thread_composite_smoke_v01.py
+- tests/test_real_semantic_runtime_thread_composite_smoke_v01_runner.py
+
+## 3. Validation commands recorded
+
+```bash
+python3 -m demo.run_real_semantic_runtime_thread_composite_smoke_v01
+
+PYTHONPATH=. .venv/bin/python -m pytest -q \
+  tests/test_real_semantic_runtime_thread_composite_smoke_v01_runner.py
+```
+
+Observed validation:
+
+- runner exits 0
+- runner prints FINAL STATUS: PASS
+- focused tests: 8 passed, 2 warnings
+- git diff --check: clean
+- changed files at implementation time: exactly the two audited files
+- positive grep passed
+- overclaim grep: no hits
+
+## 4. Invoked Runtime Layers
+
+The composite smoke invokes existing public scenario functions / runners for
+five closed runtime-facing layers:
+
+1. Real Local DRS Resolver / Writeback
+2. CandidateVectorGenerator + Real AVF Scoring
+3. AVF Candidate Advisory / GT-LGT Advisory
+4. Bounded LLM/SLM Actors
+5. Fractal Cell Runtime Integration
+
+Layer statuses:
+
+- drs_final_status: PASS
+- avf_final_status: PASS
+- advisory_final_status: PASS
+- bounded_actor_final_status: PASS
+- fractal_cell_final_status: PASS
+
+Scenario totals:
+
+- drs_scenarios_total: 8
+- avf_scenarios_total: 9
+- advisory_scenarios_total: 10
+- bounded_actor_scenarios_total: 12
+- fractal_cell_scenarios_total: 12
+- composite_layers_total: 5
+- composite_layers_passed: 5
+- composite_scenarios_total: 51
+- composite_required_scenarios_present: True
+
+## 5. Machine Smoke Hardening
+
+- composite_required_counter_keys_present: True
+- missing_required_counter_keys: {}
+
+The smoke fails closed if any critical underlying counter key is missing. This
+prevents a renamed or missing safety counter from silently defaulting to zero.
+A negative focused test proves missing critical counters flip the smoke to
+FAIL.
+
+## 6. Aggregate counters
+
+- composite_required_counters_match: True
+- composite_direct_reuse_allowed_count: 0
+- composite_action_permission_granted_count: 0
+- composite_final_output_created_by_non_root_count: 0
+- composite_authority_claimed_by_non_root_count: 0
+- composite_truth_claimed_by_non_root_count: 0
+- composite_poisoning_or_spam_authority_claimed_count: 0
+- composite_high_score_or_advisory_forced_accept_count: 0
+- composite_silent_or_hidden_safety_failure_count: 0
+- composite_actor_escalation_or_raw_command_accept_count: 0
+- composite_root_boundary_bypass_count: 0
+- composite_parent_boundary_bypass_count: 0
+- composite_post_vv_bypass_count: 0
+- composite_gt_bypass_count: 0
+- composite_child_boundary_violation_count: 0
+- composite_network_used_count: 0
+- composite_gemini_used_count: 0
+- composite_connector_side_effect_count: 0
+- composite_production_or_external_drs_used_count: 0
+- composite_manifest_mutation_count: 0
+- composite_transition_matrix_mutation_count: 0
+- optional_live_llm_lane_default_enabled: False
+- optional_live_llm_core_pass_dependency: False
+- live_llm_authority_claimed_count: 0
+- live_llm_final_output_created_count: 0
+- full_e2e_claimed_count: 0
+- production_readiness_claimed_count: 0
+- root_final_authority_preserved_across_thread: True
+
+## 7. Authority boundary conclusion
+
+- DRS record is not truth
+- DRS hit is not authority
+- Candidate vector is not truth
+- AVF score is not authority
+- Top-ranked candidate is not action permission
+- GT-style advisory signal is not Root Final
+- LGT is deferred/local placeholder only
+- actor output is not truth
+- actor output is not authority
+- actor output is not action permission
+- actor output is not FinalOutput
+- Fractal Cell is not Root
+- child ResultProposal is not FinalOutput
+- child cell output must return to parent/Root boundary
+- Post V&V fallback fails closed
+- Root remains final authority
+
+## 8. Validation summary
+
+- Real Local DRS Resolver / Writeback runtime commit: 2a18df5
+- Real Local DRS Resolver / Writeback technical audit: 6bb2422
+- Real Local DRS Resolver / Writeback checkpoint: 4f513d1
+- CandidateVectorGenerator + Real AVF Scoring runtime commit: 1506eea
+- CandidateVectorGenerator + Real AVF Scoring technical audit: cf3da99
+- CandidateVectorGenerator + Real AVF Scoring checkpoint: 762239c
+- AVF Candidate Advisory / GT-LGT Advisory runtime commit: b0ce686
+- AVF Candidate Advisory / GT-LGT Advisory technical audit: 7cbcb77
+- AVF Candidate Advisory / GT-LGT Advisory checkpoint: 68ca777
+- Bounded LLM/SLM Actors runtime commit: 6802d14
+- Bounded LLM/SLM Actors technical audit: dfd43b9
+- Bounded LLM/SLM Actors checkpoint: 09523bf
+- Fractal Cell Runtime Integration runtime commit: 96755ba
+- Fractal Cell Runtime Integration technical audit: 643d6cd
+- Fractal Cell Runtime Integration docs checkpoint: bc7ec63
+- Composite smoke commit: 7736fe8
+
+## 9. Limitations
+
+This composite smoke is deterministic and machine-checking only.
+
+It does not implement production E2E, production Fractal Cell runtime,
+production distributed runtime, production DRS, production AVF, production
+GT/LGT, production LGT, external/global DRS, autonomous action, connector side
+effects, public WOW, whitepaper/public auditor packet, manifest mutation,
+transition matrix mutation, direct reuse permission, action permission, or
+FinalOutput authority.
+
+Default run does not use network/Gemini/real model calls.
+
+Real Semantic Runtime MVP is not complete.
+
+## 10. Auditor conclusion
+
+PASS.
+
+The Composite Smoke v0.1 safely machine-checks the current Real Semantic
+Runtime Thread across five closed runtime-facing layers. It verifies layer PASS
+status, scenario totals, required scenario presence, required counter-key
+presence, zero authority/action/network/bypass counters, optional live LLM
+disabled state, and Root final authority preservation. It does not create new
+runtime authority or full E2E claims.

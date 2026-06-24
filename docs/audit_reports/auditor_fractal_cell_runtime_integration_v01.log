@@ -1,0 +1,188 @@
+# Fractal Cell Runtime Integration v0.1 Technical Audit Log
+
+## 1. Audit facts
+
+- audit_id: auditor_fractal_cell_runtime_integration_v01
+- audit_status: PASS
+- audited_commit: 96755ba
+- patch_plan_commit: 9f49cbc
+- preflight_commit: 84303eb
+- previous_checkpoint_commit: 09523bf
+- runtime_gate_commit: 1e1afe6
+- audit_scope: runtime_implementation_and_tests
+- runner_result: FINAL STATUS: PASS
+- targeted_test_result: 99 passed, 40 warnings
+- full_pytest_run: true
+- full_pytest_result: 1845 passed, 60 warnings
+
+## 2. Audited files
+
+- hedgehog/fractal_cell_integration.py
+- demo/run_fractal_cell_runtime_integration_v01.py
+- tests/test_fractal_cell_runtime_integration_v01_runner.py
+
+## 3. Implementation seam audited
+
+- added `hedgehog/fractal_cell_integration.py`
+- bounded integration adapter only
+- not a production Fractal Cell runtime
+- not a production distributed runtime
+- composes existing `hedgehog/fractal_dag_executor.py`
+- composes existing `hedgehog/bounded_actor_contracts.py`
+- uses existing PlanGraph / ResultProposal / Post V&V / GT boundaries
+- does not replace RootOrchestrator
+- does not replace fractal_dag_executor
+- does not replace bounded_actor_contracts
+- does not replace Architect
+- does not replace Executor
+- does not replace Post V&V
+- does not replace GTValidator
+- does not modify schemas
+- does not activate network/Gemini/model calls
+
+## Post V&V Fallback Boundary Fix
+
+Initial implementation risk: lazy Post V&V fallback could return accepted-like VV reports when real Post V&V import was unavailable.
+
+This was fixed before runtime commit closure.
+
+Fallback Post V&V now fails closed as review-required / needs-revision, not accepted authority. Fallback reports are shape-compatible only; they do not create acceptance, FinalOutput, action permission, or child authority.
+
+Required reason codes:
+
+- post_vv_runtime_unavailable_review_required
+- post_vv_fallback_not_authority
+- child_output_requires_real_post_vv_or_root_review
+- post_vv_fallback_used_review_required
+
+Counter:
+
+- post_vv_fallback_used_count
+
+Forced fallback test exists and passes. Normal real Post V&V path test exists and passes.
+
+## Target Boundary / Child Boundary Fix
+
+It is not enough to check what a child actor outputs; the system must check where child output is being sent.
+
+Dangerous child transitions are blocked:
+
+- child Architect PlanGraph -> final_output
+- child Executor ResultProposal -> final_output
+- child Verifier VVReport -> final_output
+- child GTReport -> final_output
+- child GTReport -> parent Architect command
+- child Root return -> user FinalOutput
+
+Required reason:
+
+- child_target_boundary_blocked
+
+Canonical child path remains bounded:
+
+- Parent Root / Orchestrator
+- Root-shaped task / route
+- Fractal Cell boundary
+- bounded child actor chain
+- child ResultProposal / cell report
+- parent Post V&V / GT route
+- parent Root final review
+
+## 6. Scenario coverage
+
+1. root_shaped_task_enters_fractal_cell_boundary
+2. child_architect_accepts_only_root_shaped_task
+3. child_executor_outputs_resultproposal_only
+4. child_verifier_validates_without_finaloutput
+5. child_gt_report_returns_to_parent_root_boundary
+6. child_finaloutput_claim_is_blocked
+7. child_actor_self_promotion_to_root_is_blocked
+8. child_cell_cannot_command_parent_architect
+9. recursive_child_cell_depth_is_bounded
+10. child_consensus_does_not_create_authority
+11. child_output_returns_to_parent_post_vv_gt_route
+12. root_final_authority_preserved_across_fractal_cell
+
+## 7. Counters
+
+- scenarios_total: 12
+- scenarios_passed: 12
+- cells_started_count: 4
+- child_actor_inputs_seen_count: 21
+- child_actor_outputs_emitted_count: 21
+- child_result_proposals_count: 5
+- child_validation_reports_count: 3
+- child_gt_reports_count: 3
+- parent_return_reports_count: 3
+- root_review_required_count: 12
+- post_vv_fallback_used_count: 3
+- final_output_created_count: 0
+- action_permission_granted_count: 0
+- child_root_claimed_count: 0
+- child_authority_claimed_count: 0
+- child_finaloutput_claimed_count: 0
+- child_action_permission_claimed_count: 0
+- child_actor_self_promotion_count: 0
+- parent_boundary_bypass_count: 0
+- post_vv_bypass_count: 0
+- gt_bypass_count: 0
+- parent_architect_commanded_count: 0
+- recursive_depth_limit_exceeded_count: 0
+- unbounded_child_spawn_count: 0
+- child_consensus_authority_claimed_count: 0
+- manifest_mutation_count: 0
+- transition_matrix_mutation_count: 0
+- network_used_count: 0
+- gemini_used_count: 0
+- connector_side_effect_count: 0
+- root_final_authority_preserved_count: 12
+
+## 8. Required invariants
+
+- Fractal Cell is not Root
+- child Orchestrator is not Root
+- child Architect is not Root
+- child Executor is not Root
+- child GT/advisory report is not Root Final
+- child ResultProposal is not FinalOutput
+- child cell output is not action permission
+- child cell output must return to parent/Root boundary
+- parent Root remains final authority
+- bounded actor contracts apply inside child cell
+- child actor output is not truth
+- child actor output is not authority
+- child actor output is not action permission
+- child actor output is not FinalOutput
+- child cell cannot mutate manifest
+- child cell cannot mutate transition matrix
+- child cell cannot call network/Gemini/connectors in v0.1
+- child cell cannot execute external actions in v0.1
+- recursive nesting depth is bounded
+- child consensus is not Root Final
+- child majority vote is not authority
+- child compute volume is not authority
+
+## 9. Limitations
+
+- no production Fractal Cell runtime
+- no production distributed runtime
+- no external/global DRS
+- no network
+- no Gemini
+- no real model calls
+- no autonomous action
+- no connector side effects
+- no Marennya/UP
+- no manifest mutation
+- no transition matrix mutation
+- no Root behavior modification
+- no child Root
+- no child FinalOutput authority
+- no child action permission
+- no public WOW
+- no whitepaper/public auditor packet
+- Real Semantic Runtime MVP is not complete
+
+## 10. Audit conclusion
+
+Fractal Cell Runtime Integration v0.1 passes technical audit for the committed runtime-facing implementation. The layer is a bounded integration adapter that composes existing Fractal DAG executor behavior with bounded actor contracts and existing Post V&V / GT boundaries. It preserves parent Root final authority, blocks child target-boundary escapes, fails closed when Post V&V fallback is used, and keeps all final-output, action, authority, bypass, mutation, network, Gemini, and connector counters at zero.

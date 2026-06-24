@@ -3432,6 +3432,84 @@ parent/Root boundary. Post V&V fallback fails closed.
 Validation evidence: runner_result: FINAL STATUS: PASS; focused tests:
 8 passed, 2 warnings; audit_status: PASS; overclaim_grep_result: no hits.
 
+Zero Trust Supplier Payment WOW v0.1 is CLOSED.
+
+Status: CLOSED. Evidence chain: runtime_commit: 87665d2,
+audit_commit: AUDIT_COMMIT_HERE, patch_plan_commit: 8509ab9,
+preflight_commit: fdc9abd, previous_docs_checkpoint: 5a1e0fe, and
+runtime_gate_commit: 1e1afe6.
+
+This is the first business-semantic sandbox WOW runner. It demonstrates
+supplier payment / shipment release review through deterministic local fake
+evidence. It preserves Root final authority. It does not prove production E2E.
+It does not call real bank/supplier/warehouse APIs. It does not execute real
+payment or shipment release. It does not call network/Gemini/live
+model/connectors/secrets. It does not complete Real Semantic Runtime MVP.
+
+Business scenario: supplier payment / shipment release review.
+
+Local fake evidence: warehouse stock evidence, purchase order, supplier
+invoice, supplier provenance record, legal/compliance document, bank/payment
+slot, stale prior DRS memory, conflicting supplier record, mock human approval,
+and mock receipt.
+
+Topology:
+
+dirty business request
+-> local fake business evidence
+-> semantic evidence intake
+-> local DRS write/resolve
+-> candidate vectors
+-> AVF scoring/ranking
+-> candidate advisory review
+-> bounded actor route
+-> bounded Fractal Cell branch execution
+-> child branch reports return upward
+-> parent Post V&V / GT review
+-> Root final business summary
+-> second-run DRS reuse as candidate only
+
+Scenario coverage:
+
+1. shipment_release_blocked_by_stock_shortage_and_missing_legal_doc
+2. invoice_payment_blocked_by_conflicting_supplier_provenance
+3. stale_drs_memory_cannot_release_supplier_payment
+4. high_avf_score_cannot_override_legal_hold
+5. bounded_actor_route_cannot_command_bank_or_supplier
+6. fractal_child_cell_returns_supplier_branch_report_to_parent
+7. post_vv_gt_root_review_blocks_action_without_approval
+8. second_run_reuses_prior_memory_as_candidate_only
+9. mock_human_approval_allows_mock_receipt_only
+10. root_final_business_summary_preserves_no_real_action
+
+Validation evidence: runner: FINAL STATUS: PASS; targeted tests:
+87 passed, 2 warnings; audit_status: PASS.
+
+Key counters: `scenarios_total: 10`, `scenarios_passed: 10`,
+`local_fake_evidence_records_count: 10`, `mock_approval_present_count: 1`,
+`mock_receipt_created_count: 1`, `real_payment_executed_count: 0`,
+`real_shipment_released_count: 0`, `real_supplier_api_called_count: 0`,
+`real_bank_api_called_count: 0`, `connector_side_effect_count: 0`,
+`secrets_accessed_count: 0`, `network_used_count: 0`,
+`gemini_used_count: 0`, `real_model_call_count: 0`, and
+`root_final_authority_preserved_count: 10`.
+
+Authority boundary: warehouse stock evidence is not authority. Invoice is not
+authority. DRS hit is not authority. Stale DRS memory cannot authorize
+payment. AVF score is not authority. High AVF score cannot override legal
+hold. Advisory report is not Root Final. Bounded actor route cannot command
+bank or supplier. Fractal Cell is not Root. Child branch report is not
+FinalOutput. Mock approval is local sandbox signal only. Mock receipt is not
+real payment. Mock receipt is not real shipment release. Root remains final
+authority.
+
+Next default step: Live LLM Semantic Evidence Reader / Extractor v0.1
+preflight. This optional lane must be default off and not a core PASS
+dependency. Live LLM output is not truth. Live LLM output is not authority.
+Live LLM output must return bounded semantic claims to a Root-shaped route.
+It must have no connector side effects, no secrets access, and no action
+permission.
+
 Runtime artifacts: `hedgehog/gt_lgt_advisory_evaluator.py`,
 `demo/run_gt_lgt_advisory_evaluator_v01.py`, and
 `tests/test_gt_lgt_advisory_evaluator_v01_runner.py`. Human walkthrough
@@ -3493,7 +3571,8 @@ Current roadmap state:
 - CLOSED: Fractal Cell Runtime Integration v0.1.
 - CLOSED: Human Real Semantic Runtime Thread Walkthrough v0.1.
 - CLOSED: Real Semantic Runtime Thread Composite Smoke v0.1.
-- NEXT: Zero Trust Supplier Payment WOW v0.1 preflight.
+- CLOSED: Zero Trust Supplier Payment WOW v0.1.
+- NEXT: Live LLM Semantic Evidence Reader / Extractor v0.1 preflight.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 
 Hardening-plan: APPROVED.

@@ -1,0 +1,284 @@
+# Human Real Semantic Runtime Thread Walkthrough v0.1 Audit Log
+
+## 1. Audit facts
+
+- audit_id: auditor_human_real_semantic_runtime_thread_walkthrough_v01
+- audit_status: PASS
+- audited_commit: 4fa59d7
+- audit_scope: human_composite_walkthrough_and_focused_tests
+- full_pytest_run: false
+- full_pytest_required_for_this_audit: false
+- walkthrough_command_result: exits 0
+- focused_test_result: 10 passed, 2 warnings
+- static_checks_result: clean
+- overclaim_grep_result: no hits
+- runtime_gate_commit: 1e1afe6
+- fractal_cell_docs_checkpoint: bc7ec63
+
+This audit records a maximal human-readable composite walkthrough over already
+closed / working layers. It is not a new runtime integration layer. It is not
+a full production E2E. It is not public WOW. It does not create Root behavior,
+action permission, or FinalOutput authority. It does not claim Real Semantic
+Runtime MVP is complete.
+
+## 2. Audited files
+
+- demo/run_human_real_semantic_runtime_thread_walkthrough_v01.py
+- tests/test_human_real_semantic_runtime_thread_walkthrough_v01_runner.py
+
+## 3. Validation commands recorded
+
+```bash
+python3 -m demo.run_human_real_semantic_runtime_thread_walkthrough_v01
+
+PYTHONPATH=. .venv/bin/python -m pytest -q \
+  tests/test_human_real_semantic_runtime_thread_walkthrough_v01_runner.py
+```
+
+Observed validation:
+
+- walkthrough command exits 0
+- focused tests: 10 passed, 2 warnings
+- git diff --check: clean
+- changed files at implementation time: exactly the two audited files
+- positive grep passed
+- overclaim grep: no hits
+
+## 4. Invoked Deterministic Core Layers
+
+The walkthrough invokes existing public scenario functions / runners for five
+closed runtime-facing layers:
+
+1. Real Local DRS Resolver / Writeback
+2. CandidateVectorGenerator + Real AVF Scoring
+3. AVF Candidate Advisory / GT-LGT Advisory
+4. Bounded LLM/SLM Actors
+5. Fractal Cell Runtime Integration
+
+Counters:
+
+- closed_layers_invoked_count: 5
+- closed_layers_status_pass_count: 5
+- walkthrough_required_counters_match: True
+
+## 5. Composite Thread Meaning
+
+The human walkthrough presents this semantic thread:
+
+Root-shaped request
+-> semantic memory write/resolve
+-> DRS candidates
+-> candidate vectors
+-> AVF scoring/ranking
+-> candidate advisory review
+-> bounded LLM/SLM actor contracts
+-> bounded Fractal Cell child execution
+-> child ResultProposal / cell report
+-> parent Post V&V / GT route
+-> parent Root final review
+-> DRS writeback evidence
+
+Root remains final authority.
+
+## 6. DRS / AVF / Advisory Boundary Coverage
+
+- DRS record is not truth.
+- DRS hit is not authority.
+- Candidate vector is not truth.
+- AVF score is not authority.
+- Top-ranked candidate is not action permission.
+- GT-style advisory signal is not Root Final.
+- LGT is deferred/local placeholder only.
+- canonical terminal GTValidator is not relocated upstream.
+- advisory evaluator does not command Architect.
+
+## 7. Bounded Actor Boundary Coverage
+
+- Intake
+- Orchestrator
+- Architect
+- Executor
+- Verifier
+- Root boundary
+- actor output is not truth
+- actor output is not authority
+- actor output is not action permission
+- actor output is not FinalOutput
+- actor output returns to Root/Orchestrator boundary
+
+## 8. Fractal Cell Boundary Coverage
+
+- Fractal Cell is not Root.
+- child ResultProposal is not FinalOutput.
+- child cell output must return to parent/Root boundary.
+- bounded actor contracts apply inside child cell.
+- child_target_boundary_blocked
+- recursive_child_cell_depth_is_bounded
+- child_consensus_does_not_create_authority
+- Post V&V fallback fails closed.
+
+Post V&V fallback reason codes:
+
+- post_vv_runtime_unavailable_review_required
+- post_vv_fallback_not_authority
+- child_output_requires_real_post_vv_or_root_review
+- post_vv_fallback_used_review_required
+
+## 9. Historical Layer Catalog
+
+- historical_closed_layers_listed_count: 36
+
+Thirty-six historical closed / working layers are listed as evidence-only.
+This catalog does not imply one live object traverses every layer. This catalog
+is historical evidence, not new runtime authority.
+
+Historical labels:
+
+- Controlled Orchestrator matrix gate
+- AVF attractor formation
+- Architect from bounded AttractorPacket
+- DAG Executor from valid PlanGraph
+- Post V&V from ResultProposal
+- GT from ValidationReport
+- Root Final from GTDecision
+- DRS writeback from Root Final
+- Root-native canonical trace
+- Root-native semantic reuse E2E trace
+- ReuseScore advisory proof
+- typed DRS lineage edges
+- DRS layer taxonomy
+- DRS lineage provenance pressure
+- long-lived DRS TTL aging
+- compromised upstream pack
+- External DRS pointer protocol
+- cross-domain DRS bridge
+- Needle adversarial safety
+- read-only enterprise connector sandbox
+- External Evidence Acceptance Gate
+- Bounded LLM Semantic Executor Node
+- Enterprise Chaos Pack
+- Compute Collapse Enterprise Bench
+- Kernel Enforcement Transition Matrix
+- Developer Facade Capability Manifest UX
+- Production Boundary Design
+- Enterprise Killer Demo v0.1
+- Enterprise Document Killer Demo B v0.1
+- Schema Contract Alignment Phase 1
+- Schema Contract Alignment Phase 2
+- Runtime JSON Schema Validation Hardening
+- Outgoing VVReport Runtime Validation
+- EvidenceItem kind Alignment
+- NeedleRuntime audit evidence shape
+- Artifact type runtime vocabulary map
+
+## 10. Optional Live LLM / Gemini Evidence
+
+- optional_live_llm_evidence_paths_listed_count: 4
+- optional_live_llm_lane_default_enabled: False
+- optional_live_llm_core_pass_dependency: False
+- combined_network_used_count: 0
+- combined_gemini_used_count: 0
+- live_llm_authority_claimed_count: 0
+- live_llm_final_output_created_count: 0
+
+Historical optional live evidence paths listed:
+
+- optional live Gemini Architect smoke
+- optional live Gemini Orchestrator smoke
+- ordered live Gemini Orchestrator Architect smoke
+- live dual-Gemini full chain smoke
+
+These are historical optional live evidence paths, not default PASS
+dependencies. The walkthrough does not call network/Gemini by default. Live
+LLM/Gemini output is not truth, not authority, not action permission, not Root
+Final, and not a PASS dependency.
+
+## 11. Composite Human Scenario IDs
+
+- memory_candidate_to_advisory_to_child_cell_review_only
+- stale_memory_cannot_become_actor_command
+- compromised_upstream_cannot_poison_avf_advisory
+- external_evidence_connector_readonly_no_action
+- schema_valid_artifact_is_not_semantic_truth
+- bounded_actor_live_llm_text_is_not_authority
+- child_cell_resultproposal_returns_to_parent_post_vv_gt
+- historical_spine_root_final_writeback_evidence_only
+- enterprise_demo_b_is_showcase_not_runtime_authority
+- target_boundary_guards_block_illegal_transitions
+
+## 12. Composite counters
+
+- walkthrough_required_counters_match: True
+- closed_layers_invoked_count: 5
+- closed_layers_status_pass_count: 5
+- combined_direct_reuse_allowed_count: 0
+- combined_action_permission_granted_count: 0
+- combined_final_output_created_by_non_root_count: 0
+- combined_authority_claimed_by_non_root_count: 0
+- combined_parent_boundary_bypass_count: 0
+- combined_post_vv_bypass_count: 0
+- combined_gt_bypass_count: 0
+- combined_network_used_count: 0
+- combined_gemini_used_count: 0
+- optional_live_llm_lane_default_enabled: False
+- optional_live_llm_core_pass_dependency: False
+- root_final_authority_preserved_across_thread: True
+- full_e2e_claimed_count: 0
+- production_readiness_claimed_count: 0
+- historical_closed_layers_listed_count: 36
+- optional_live_llm_evidence_paths_listed_count: 4
+- live_llm_authority_claimed_count: 0
+- live_llm_final_output_created_count: 0
+
+## 13. Validation summary
+
+- DRS runtime commit: 2a18df5
+- DRS technical audit: 6bb2422
+- DRS checkpoint: 4f513d1
+- CandidateVector/AVF runtime commit: 1506eea
+- CandidateVector/AVF technical audit: cf3da99
+- CandidateVector/AVF checkpoint: 762239c
+- AVF Candidate Advisory runtime commit: b0ce686
+- AVF Candidate Advisory technical audit: 7cbcb77
+- AVF Candidate Advisory human walkthrough: 5f7cfe7
+- AVF Candidate Advisory human audit: bc80aae
+- Bounded LLM/SLM Actors runtime commit: 6802d14
+- Bounded LLM/SLM Actors technical audit: dfd43b9
+- Bounded LLM/SLM Actors human walkthrough: df45900
+- Bounded LLM/SLM Actors human audit: 388749c
+- Bounded LLM/SLM Actors checkpoint: 09523bf
+- Bounded LLM/SLM Actors targeted tests: 92 passed, 50 warnings
+- Bounded LLM/SLM Actors full pytest: 1819 passed, 60 warnings
+- Fractal Cell runtime commit: 96755ba
+- Fractal Cell technical audit: 643d6cd
+- Fractal Cell human walkthrough: b6b53f8
+- Fractal Cell human audit: 1f1a196
+- Fractal Cell docs checkpoint: bc7ec63
+- Fractal Cell full pytest: 1845 passed, 60 warnings
+
+## 14. Limitations
+
+This walkthrough is explanatory/composite only.
+
+It does not implement production E2E, production Fractal Cell runtime,
+production distributed runtime, production DRS, production AVF, production
+GT/LGT, production LGT, external/global DRS, autonomous action, connector side
+effects, public WOW, whitepaper/public auditor packet, manifest mutation,
+transition matrix mutation, direct reuse permission, action permission, or
+FinalOutput authority.
+
+Default run does not use network/Gemini/real model calls.
+
+Real Semantic Runtime MVP is not complete.
+
+## 15. Auditor conclusion
+
+PASS.
+
+The walkthrough safely presents the broadest current semantic runtime thread
+without creating new authority. It shows that Hedgehog OS can write/resolve
+memory, vectorize and rank candidates, apply advisory review, enforce bounded
+actor contracts, run bounded child Fractal Cell execution, and return outputs
+upward for parent/Post V&V/GT/Root review. It also catalogs historical layers
+and optional live LLM/Gemini evidence without making them default PASS
+dependencies or authority. Root remains final authority.

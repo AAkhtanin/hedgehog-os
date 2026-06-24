@@ -3373,6 +3373,65 @@ mutation, direct reuse permission, action permission, or FinalOutput authority.
 Default run does not use network/Gemini/real model calls. Real Semantic
 Runtime MVP is not complete.
 
+Real Semantic Runtime Thread Composite Smoke v0.1 is CLOSED through technical
+audit. Evidence chain: composite_smoke_commit: 7736fe8,
+composite_smoke_audit_commit: 821675b, previous_docs_checkpoint: 90cf0d4, and
+runtime_gate_commit: 1e1afe6.
+
+Composite Smoke closes machine stitched proof over current five closed
+runtime-facing layers. It is deterministic machine checking only, not a new
+runtime integration layer, not full E2E, not public WOW, and not Real Semantic
+Runtime MVP completion. Zero Trust Supplier Payment WOW v0.1 preflight is the
+next step toward a business semantic run.
+
+Invoked runtime layers: Real Local DRS Resolver / Writeback,
+CandidateVectorGenerator + Real AVF Scoring, AVF Candidate Advisory /
+GT-LGT Advisory, Bounded LLM/SLM Actors, and Fractal Cell Runtime Integration.
+
+Composite smoke scenario totals: `drs_scenarios_total: 8`,
+`avf_scenarios_total: 9`, `advisory_scenarios_total: 10`,
+`bounded_actor_scenarios_total: 12`, `fractal_cell_scenarios_total: 12`,
+`composite_layers_total: 5`, `composite_layers_passed: 5`,
+`composite_scenarios_total: 51`, and
+`composite_required_scenarios_present: True`.
+
+Machine smoke hardening: `composite_required_counter_keys_present: True`;
+`missing_required_counter_keys: {}`. The smoke fails closed if any critical
+underlying counter key is missing, preventing renamed/missing safety counters
+from silently defaulting to zero.
+
+Composite smoke counters: `composite_required_counters_match: True`,
+`composite_direct_reuse_allowed_count: 0`,
+`composite_action_permission_granted_count: 0`,
+`composite_final_output_created_by_non_root_count: 0`,
+`composite_authority_claimed_by_non_root_count: 0`,
+`composite_truth_claimed_by_non_root_count: 0`,
+`composite_poisoning_or_spam_authority_claimed_count: 0`,
+`composite_high_score_or_advisory_forced_accept_count: 0`,
+`composite_silent_or_hidden_safety_failure_count: 0`,
+`composite_actor_escalation_or_raw_command_accept_count: 0`,
+`composite_root_boundary_bypass_count: 0`,
+`composite_child_boundary_violation_count: 0`,
+`composite_production_or_external_drs_used_count: 0`,
+`composite_network_used_count: 0`, `composite_gemini_used_count: 0`,
+`optional_live_llm_lane_default_enabled: False`,
+`optional_live_llm_core_pass_dependency: False`,
+`live_llm_authority_claimed_count: 0`,
+`live_llm_final_output_created_count: 0`,
+`full_e2e_claimed_count: 0`, `production_readiness_claimed_count: 0`, and
+`root_final_authority_preserved_across_thread: True`.
+
+Composite smoke boundary: Root remains final authority. DRS record is not
+truth. DRS hit is not authority. Candidate vector is not truth. AVF score is
+not authority. Top-ranked candidate is not action permission. GT-style advisory
+signal is not Root Final. LGT is deferred/local placeholder only. Actor output
+is not truth, authority, action permission, or FinalOutput. Fractal Cell is not
+Root. Child ResultProposal is not FinalOutput. Child cell output must return to
+parent/Root boundary. Post V&V fallback fails closed.
+
+Validation evidence: runner_result: FINAL STATUS: PASS; focused tests:
+8 passed, 2 warnings; audit_status: PASS; overclaim_grep_result: no hits.
+
 Runtime artifacts: `hedgehog/gt_lgt_advisory_evaluator.py`,
 `demo/run_gt_lgt_advisory_evaluator_v01.py`, and
 `tests/test_gt_lgt_advisory_evaluator_v01_runner.py`. Human walkthrough
@@ -3433,8 +3492,8 @@ Current roadmap state:
 - CLOSED: Bounded LLM/SLM Actors v0.1.
 - CLOSED: Fractal Cell Runtime Integration v0.1.
 - CLOSED: Human Real Semantic Runtime Thread Walkthrough v0.1.
-- NEXT: Real Semantic Runtime Thread Composite Smoke v0.1.
-- THEN LATER: Zero Trust Supplier Payment WOW v0.1 preflight.
+- CLOSED: Real Semantic Runtime Thread Composite Smoke v0.1.
+- NEXT: Zero Trust Supplier Payment WOW v0.1 preflight.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 
 Hardening-plan: APPROVED.

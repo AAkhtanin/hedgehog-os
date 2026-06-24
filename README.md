@@ -2283,8 +2283,86 @@ runtime authority. Optional live Gemini/LLM smoke paths, including optional
 live Gemini Architect smoke, are historical optional evidence, not default PASS
 dependencies.
 
-NEXT: Real Semantic Runtime Thread Composite Smoke v0.1.
-THEN LATER: Zero Trust Supplier Payment WOW v0.1 preflight.
+## Real Semantic Runtime Thread Composite Smoke v0.1
+
+Status:
+
+- CLOSED
+
+This checkpoint records deterministic machine checking over five closed
+runtime-facing layers. It is not a new runtime integration layer, not full
+production E2E, not public WOW, and not Real Semantic Runtime MVP completion.
+
+Commit chain: composite_smoke_commit: 7736fe8;
+composite_smoke_audit_commit: 821675b; previous_docs_checkpoint: 90cf0d4;
+runtime_gate_commit: 1e1afe6.
+
+Audited files:
+
+- `demo/run_real_semantic_runtime_thread_composite_smoke_v01.py`
+- `tests/test_real_semantic_runtime_thread_composite_smoke_v01_runner.py`
+- `docs/audit_reports/auditor_real_semantic_runtime_thread_composite_smoke_v01.log`
+
+Validation facts: runner_result: FINAL STATUS: PASS; focused tests:
+8 passed, 2 warnings; audit_status: PASS; overclaim_grep_result: no hits.
+
+Invoked runtime layers:
+
+1. Real Local DRS Resolver / Writeback
+2. CandidateVectorGenerator + Real AVF Scoring
+3. AVF Candidate Advisory / GT-LGT Advisory
+4. Bounded LLM/SLM Actors
+5. Fractal Cell Runtime Integration
+
+Scenario totals: `drs_scenarios_total: 8`,
+`avf_scenarios_total: 9`, `advisory_scenarios_total: 10`,
+`bounded_actor_scenarios_total: 12`, `fractal_cell_scenarios_total: 12`,
+`composite_layers_total: 5`, `composite_layers_passed: 5`,
+`composite_scenarios_total: 51`, and
+`composite_required_scenarios_present: True`.
+
+Machine smoke hardening: `composite_required_counter_keys_present: True`;
+`missing_required_counter_keys: {}`. The smoke fails closed if any critical
+underlying counter key is missing. This prevents renamed/missing safety
+counters from silently defaulting to zero. A negative focused test proves
+missing critical counters flip the smoke to FAIL.
+
+Aggregate counters: `composite_required_counters_match: True`,
+`composite_direct_reuse_allowed_count: 0`,
+`composite_action_permission_granted_count: 0`,
+`composite_final_output_created_by_non_root_count: 0`,
+`composite_authority_claimed_by_non_root_count: 0`,
+`composite_truth_claimed_by_non_root_count: 0`,
+`composite_poisoning_or_spam_authority_claimed_count: 0`,
+`composite_high_score_or_advisory_forced_accept_count: 0`,
+`composite_silent_or_hidden_safety_failure_count: 0`,
+`composite_actor_escalation_or_raw_command_accept_count: 0`,
+`composite_root_boundary_bypass_count: 0`,
+`composite_parent_boundary_bypass_count: 0`,
+`composite_post_vv_bypass_count: 0`, `composite_gt_bypass_count: 0`,
+`composite_child_boundary_violation_count: 0`,
+`composite_network_used_count: 0`, `composite_gemini_used_count: 0`,
+`composite_connector_side_effect_count: 0`,
+`composite_production_or_external_drs_used_count: 0`,
+`composite_manifest_mutation_count: 0`,
+`composite_transition_matrix_mutation_count: 0`,
+`optional_live_llm_lane_default_enabled: False`,
+`optional_live_llm_core_pass_dependency: False`,
+`live_llm_authority_claimed_count: 0`,
+`live_llm_final_output_created_count: 0`, `full_e2e_claimed_count: 0`,
+`production_readiness_claimed_count: 0`, and
+`root_final_authority_preserved_across_thread: True`.
+
+Authority boundaries: DRS record is not truth. DRS hit is not authority.
+Candidate vector is not truth. AVF score is not authority. Top-ranked
+candidate is not action permission. GT-style advisory signal is not Root
+Final. LGT is deferred/local placeholder only. Actor output is not truth,
+authority, action permission, or FinalOutput. Fractal Cell is not Root. Child
+ResultProposal is not FinalOutput. Child cell output must return to
+parent/Root boundary. Post V&V fallback fails closed. Root remains final
+authority.
+
+NEXT: Zero Trust Supplier Payment WOW v0.1 preflight.
 DRS poisoning resistance remains gated only if needed to protect or unblock
 real runtime.
 
@@ -2602,15 +2680,16 @@ Next engineering focus:
 - Completed: Bounded LLM/SLM Actors v0.1, the role-boundary contract layer before Fractal Cell Runtime integration.
 - Completed: Fractal Cell Runtime Integration v0.1, the bounded child execution container integration after bounded actor contracts.
 - Completed: Human Real Semantic Runtime Thread Walkthrough v0.1, the maximal human-readable composite evidence thread over closed / working layers.
-- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, candidate advisory review, bounded actor contracts, bounded child-cell integration, and the human composite walkthrough are now checkpointed.
+- Completed: Real Semantic Runtime Thread Composite Smoke v0.1, the deterministic machine stitched proof over the current five closed runtime-facing layers.
+- Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, candidate advisory review, bounded actor contracts, bounded child-cell integration, the human composite walkthrough, and the composite smoke are now checkpointed.
 - CLOSED: Real Local DRS Resolver / Writeback v0.1.
 - CLOSED: CandidateVectorGenerator + Real AVF Scoring v0.1.
 - CLOSED: AVF Candidate Advisory Evaluator v0.1 / GT-LGT Advisory Evaluator v0.1.
 - CLOSED: Bounded LLM/SLM Actors v0.1.
 - CLOSED: Fractal Cell Runtime Integration v0.1.
 - CLOSED: Human Real Semantic Runtime Thread Walkthrough v0.1.
-- NEXT: Real Semantic Runtime Thread Composite Smoke v0.1.
-- THEN LATER: Zero Trust Supplier Payment WOW v0.1 preflight.
+- CLOSED: Real Semantic Runtime Thread Composite Smoke v0.1.
+- NEXT: Zero Trust Supplier Payment WOW v0.1 preflight.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 - Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.
 - Later, after Real Semantic Runtime MVP: Real Semantic Runtime WOW Demo, Public Auditor Packet, and Whitepaper engineering draft.

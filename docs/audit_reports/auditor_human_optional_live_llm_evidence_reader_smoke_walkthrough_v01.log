@@ -1,0 +1,102 @@
+audit_id: auditor_human_optional_live_llm_evidence_reader_smoke_walkthrough_v01
+audit_status: PASS
+audited_layer: Human Optional Live LLM Evidence Reader Smoke Walkthrough v0.1
+audit_scope: human_walkthrough_for_response_file_optional_live_smoke_runtime
+base_commit: 0b202f9
+preflight_commit: f397190
+patch_plan_commit: e88657d
+runtime_commit: 9e58dad
+technical_audit_commit: 0695ace
+human_walkthrough_commit: 0b202f9
+
+## Audited Files
+
+- demo/run_human_optional_live_llm_evidence_reader_smoke_walkthrough_v01.py
+- tests/test_human_optional_live_llm_evidence_reader_smoke_walkthrough_v01_runner.py
+- demo/run_optional_live_llm_evidence_reader_smoke_v01.py
+- tests/test_optional_live_llm_evidence_reader_smoke_v01_runner.py
+- docs/audit_reports/auditor_optional_live_llm_evidence_reader_smoke_v01.log
+
+## Commands Run
+
+- git status --short --untracked-files=all
+- git --no-pager log --oneline --max-count=16
+- python3 -m demo.run_human_optional_live_llm_evidence_reader_smoke_walkthrough_v01
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_optional_live_llm_evidence_reader_smoke_walkthrough_v01_runner.py tests/test_optional_live_llm_evidence_reader_smoke_v01_runner.py
+- git status --short --untracked-files=all
+- git diff --check
+- git diff --stat
+- git diff --name-only
+- positive rg checks
+- dangerous/overclaim rg checks
+
+## Recorded Results
+
+- human walkthrough runner result: FINAL STATUS: PASS
+- underlying runtime status recorded by walkthrough: SKIPPED_CLOSED
+- walkthrough_required_counters_match: True
+- focused pytest: 29 passed
+- human walkthrough exits 0
+- changed file expected after audit creation: docs/audit_reports/auditor_human_optional_live_llm_evidence_reader_smoke_walkthrough_v01.log only
+
+## Walkthrough Scope Observations
+
+- walkthrough imports/calls the committed optional smoke runtime
+- walkthrough adds no runtime capability
+- walkthrough explains the already audited runtime
+- walkthrough states response-file mode only
+- walkthrough states command adapter absent/deferred
+- walkthrough states default mode is SKIPPED_CLOSED
+- walkthrough states SKIPPED_CLOSED is safe closure, not proof that live provider call occurred
+- walkthrough states explicit response-file mode is future live-smoke path
+- walkthrough states the default walkthrough does not execute a live provider read
+- walkthrough states response-file artifact is untrusted input
+- walkthrough states a valid response file can create exactly one locally validated SemanticEvidenceClaim candidate
+- walkthrough states SemanticEvidenceClaim is candidate evidence only
+- walkthrough states claim is not truth, authority, action permission, or FinalOutput
+- walkthrough states Root review is required
+- walkthrough states invalid JSON fails closed
+- walkthrough states authority/action/FinalOutput/connector claims fail closed
+- walkthrough states unexpected fields fail closed
+- walkthrough states secret-like keys and values fail closed
+- walkthrough states decision-like wording remains non-authoritative
+- walkthrough states deterministic_fixture_reader remains unchanged
+- walkthrough states ReaderMode.live_llm_reader remains fail-closed in the closed deterministic runtime
+- walkthrough states Root remains final authority
+
+## Counter Observations
+
+- live_model_call_count: 0
+- network_used_count: 0
+- semantic_claim_created_count: 0
+- silent_fallback_to_deterministic_pass_count: 0
+- deterministic_reader_mutated_count: 0
+- root_final_authority_preserved_count: 1
+
+## Limitations
+
+- Human walkthrough does not execute explicit response-file mode.
+- Human walkthrough does not validate a real provider session.
+- Human walkthrough does not call live model, Gemini, or network.
+- Human walkthrough does not start WOW v0.2.
+- Human walkthrough does not add connectors, secrets, ActionCommitPacket, Permission UX, Marennya, UP, or NeedleFactory.
+- Human walkthrough does not claim production live integration.
+- Human walkthrough does not claim production end-to-end behavior.
+- Human walkthrough does not claim public auditor readiness.
+
+## Static And Grep Results
+
+- git status before audit creation: clean
+- walkthrough and focused test validation: PASS
+- git diff --check: clean
+- expected changed file after audit creation: docs/audit_reports/auditor_human_optional_live_llm_evidence_reader_smoke_walkthrough_v01.log only
+- positive rg checks: passed
+- dangerous/overclaim rg checks: no dangerous positive claims
+
+## Conclusion
+
+Human Optional Live LLM Evidence Reader Smoke Walkthrough v0.1 PASS.
+The walkthrough accurately explains the already audited optional response-file
+smoke runtime, clearly distinguishes walkthrough PASS from underlying runtime
+SKIPPED_CLOSED, avoids claiming any live provider/model/network call occurred,
+and preserves Root final authority.

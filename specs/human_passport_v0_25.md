@@ -3577,12 +3577,40 @@ cases, not the limit of the construct. The construct is universal across dirty
 evidence domains. Live LLM is not active in this layer. Root remains final
 authority. Real Semantic Runtime MVP is not complete.
 
-Next default step: Optional Live LLM Evidence Reader Smoke v0.1 preflight.
-This is future optional live model reading only. It must not execute actions,
-call bank/supplier/warehouse connectors, access secrets, become Root
-authority, or become a core PASS dependency. It should prove one controlled
-live model read can return a bounded SemanticEvidenceClaim that validates
-locally and remains candidate-only.
+Optional Live LLM Evidence Reader Smoke v0.1 is CLOSED.
+
+Status: CLOSED. Evidence chain: preflight_commit: f397190,
+patch_plan_commit: e88657d, runtime_commit: 9e58dad,
+technical_audit_commit: 0695ace, human_walkthrough_commit: 0b202f9, and
+human_walkthrough_audit_commit: 69cf748.
+
+This layer closes the optional smoke boundary before WOW v0.2. It is an
+optional response-file smoke lane: any external/manual live provider read is
+outside the runner, and the runner validates a response file locally. Default
+no-config mode returns FINAL STATUS: SKIPPED_CLOSED and exits 0.
+SKIPPED_CLOSED is safe closure, not proof that a live provider call occurred.
+The runner does not call a live model, Gemini, network, connectors, or
+secrets; it does not execute payments or release shipments; and it does not
+create FinalOutput from live model output.
+
+Validation evidence: runtime runner default: FINAL STATUS: SKIPPED_CLOSED;
+runtime focused tests: 33 passed; human walkthrough: FINAL STATUS: PASS;
+human walkthrough underlying runtime status: SKIPPED_CLOSED; human walkthrough
+focused tests: 29 passed; technical audit status: PASS; human audit status:
+PASS.
+
+Response-file boundary: explicit response-file mode can validate exactly one
+SemanticEvidenceClaim-compatible candidate. The raw response file is untrusted
+input. Invalid JSON fails closed. Authority/action/FinalOutput/connector
+claims fail closed. Unexpected extra fields fail closed. Secret-like keys and
+values fail closed. Decision-like wording remains non-authoritative.
+SemanticEvidenceClaim remains candidate-only, Root review is required, and no
+action/authority/FinalOutput exists below Root. `deterministic_fixture_reader`
+remains unchanged. ReaderMode.live_llm_reader remains fail-closed in the
+closed deterministic runtime. Root remains final authority.
+
+Next/future: WOW v0.2 remains future work and is not started by this
+checkpoint.
 
 Runtime artifacts: `hedgehog/gt_lgt_advisory_evaluator.py`,
 `demo/run_gt_lgt_advisory_evaluator_v01.py`, and
@@ -3647,7 +3675,8 @@ Current roadmap state:
 - CLOSED: Real Semantic Runtime Thread Composite Smoke v0.1.
 - CLOSED: Zero Trust Supplier Payment WOW v0.1.
 - CLOSED: Live LLM Semantic Evidence Reader / Extractor v0.1.
-- NEXT: Optional Live LLM Evidence Reader Smoke v0.1 preflight.
+- CLOSED: Optional Live LLM Evidence Reader Smoke v0.1.
+- NEXT: WOW v0.2 remains future work and is not started by this checkpoint.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 
 Hardening-plan: APPROVED.

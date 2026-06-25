@@ -500,6 +500,20 @@ Current reports:
   - Confirms `walkthrough_required_counters_match: True`, `scenarios_total: 10`, `scenarios_passed: 10`, `live_model_call_count: 0`, `network_used_count: 0`, `gemini_used_count: 0`, `secrets_accessed_count: 0`, and `root_final_authority_preserved_count: 10`.
   - Human explanation coverage: Live LLM is not active in this layer; this layer creates the bounded contract for future live LLM evidence reading; SemanticEvidenceClaim is not truth, authority, action permission, or FinalOutput; prompt injection text is evidence, not instruction; bank/supplier/warehouse examples are demo-domain stress cases; the construct is universal across dirty evidence domains; Root remains final authority; and Real Semantic Runtime MVP is not complete.
 
+- `auditor_optional_live_llm_evidence_reader_smoke_v01.log`
+  - Optional Live LLM Evidence Reader Smoke v0.1 technical audit for runtime commit `9e58dad`; preflight `f397190`; patch plan `e88657d`; audit commit `0695ace`.
+  - audit_status: PASS. Scope: response-file optional smoke runtime. Runner default: FINAL STATUS: SKIPPED_CLOSED. Focused pytest: `33 passed`.
+  - Confirms response-file optional smoke, no model/network/connector call by runner, no Gemini call, no secrets access, no payment or shipment action, and Root final authority preserved.
+  - Confirms explicit response-file mode can validate exactly one SemanticEvidenceClaim-compatible candidate; invalid JSON, authority/action/FinalOutput/connector claims, unexpected fields, and secret-like keys and values fail closed.
+  - Confirms `deterministic_fixture_reader` remains unchanged and ReaderMode.live_llm_reader remains fail-closed in the closed deterministic runtime.
+
+- `auditor_human_optional_live_llm_evidence_reader_smoke_walkthrough_v01.log`
+  - Human Optional Live LLM Evidence Reader Smoke walkthrough audit for commit `0b202f9`; audit commit `69cf748`; technical audit `0695ace`; runtime commit `9e58dad`; patch plan `e88657d`; preflight `f397190`.
+  - audit_status: PASS. Scope: human walkthrough for response-file optional smoke runtime. Walkthrough runner: FINAL STATUS: PASS. Underlying runtime status: SKIPPED_CLOSED. Focused pytest: `29 passed`.
+  - Confirms the walkthrough calls the committed optional smoke runtime, adds no capability, explains response-file mode only, command adapter absent/deferred, and no model/network/connector call by runner.
+  - Confirms `walkthrough_required_counters_match: True`, `live_model_call_count: 0`, `network_used_count: 0`, `semantic_claim_created_count: 0`, `silent_fallback_to_deterministic_pass_count: 0`, `deterministic_reader_mutated_count: 0`, and `root_final_authority_preserved_count: 1`.
+  - Human explanation coverage: SKIPPED_CLOSED is safe closure, not proof that a live provider call occurred; the default walkthrough does not execute a live provider read; the response-file artifact is untrusted input; SemanticEvidenceClaim is candidate evidence only; decision-like wording remains non-authoritative; ReaderMode.live_llm_reader remains fail-closed; and Root remains final authority.
+
 ## Current Applied Auditor Commands
 
 ```bash

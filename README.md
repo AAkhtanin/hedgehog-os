@@ -2532,12 +2532,38 @@ cases, not the limit of the construct. The construct is universal across dirty
 evidence domains. Live LLM is not active in this layer. Root remains final
 authority. Real Semantic Runtime MVP is not complete.
 
-NEXT: Optional Live LLM Evidence Reader Smoke v0.1 preflight. This is future
-optional live model reading only. It must not execute actions, call
-bank/supplier/warehouse connectors, access secrets, become Root authority, or
-become a core PASS dependency. It should prove one controlled live model read
-can return a bounded SemanticEvidenceClaim that validates locally and remains
-candidate-only.
+## Optional Live LLM Evidence Reader Smoke v0.1
+
+Status: CLOSED
+
+This checkpoint records the optional response-file smoke lane over the closed
+Live LLM Semantic Evidence Reader contract. The runner does not call a live
+model, does not call Gemini, does not use network, does not use connectors,
+does not access secrets, does not execute payments, does not release shipments,
+and does not create FinalOutput from live model output. Default no-config mode
+returns FINAL STATUS: SKIPPED_CLOSED and exits 0. SKIPPED_CLOSED is safe
+closure, not proof that a live provider call occurred.
+
+Commit chain: preflight_commit: f397190; patch_plan_commit: e88657d;
+runtime_commit: 9e58dad; technical_audit_commit: 0695ace;
+human_walkthrough_commit: 0b202f9; human_walkthrough_audit_commit: 69cf748.
+
+Validation facts: runtime runner default: FINAL STATUS: SKIPPED_CLOSED;
+runtime focused tests: 33 passed; human walkthrough: FINAL STATUS: PASS;
+human walkthrough underlying runtime status: SKIPPED_CLOSED; human walkthrough
+focused tests: 29 passed; technical audit status: PASS; human audit status:
+PASS.
+
+Response-file boundary: explicit response-file mode can validate exactly one
+SemanticEvidenceClaim-compatible candidate. The raw response file is untrusted
+input. Invalid JSON fails closed. Authority/action/FinalOutput/connector
+claims fail closed. Unexpected extra fields fail closed. Secret-like keys and
+values fail closed. Decision-like wording remains non-authoritative.
+`deterministic_fixture_reader` remains unchanged. ReaderMode.live_llm_reader
+remains fail-closed in the closed deterministic runtime. Root remains final
+authority.
+
+Next/future: WOW v0.2 remains future work and is not started by this checkpoint.
 
 DRS poisoning resistance remains gated only if needed to protect or unblock
 real runtime.
@@ -2859,6 +2885,7 @@ Next engineering focus:
 - Completed: Real Semantic Runtime Thread Composite Smoke v0.1, the deterministic machine stitched proof over the current five closed runtime-facing layers.
 - Completed: Zero Trust Supplier Payment WOW v0.1, the first business-semantic sandbox WOW runner over local fake supplier payment / shipment release evidence.
 - Completed: Live LLM Semantic Evidence Reader / Extractor v0.1, the deterministic fixture reader contract for future bounded live model evidence reading.
+- Completed: Optional Live LLM Evidence Reader Smoke v0.1, the response-file optional smoke lane that keeps live provider reads outside the runner and preserves Root authority.
 - Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, candidate advisory review, bounded actor contracts, bounded child-cell integration, the human composite walkthrough, the composite smoke, the supplier payment sandbox WOW, and the deterministic live-evidence reader contract are now checkpointed.
 - CLOSED: Real Local DRS Resolver / Writeback v0.1.
 - CLOSED: CandidateVectorGenerator + Real AVF Scoring v0.1.
@@ -2869,7 +2896,8 @@ Next engineering focus:
 - CLOSED: Real Semantic Runtime Thread Composite Smoke v0.1.
 - CLOSED: Zero Trust Supplier Payment WOW v0.1.
 - CLOSED: Live LLM Semantic Evidence Reader / Extractor v0.1.
-- NEXT: Optional Live LLM Evidence Reader Smoke v0.1 preflight.
+- CLOSED: Optional Live LLM Evidence Reader Smoke v0.1.
+- NEXT: WOW v0.2 remains future work and is not started by this checkpoint.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 - Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.
 - Later, after Real Semantic Runtime MVP: Real Semantic Runtime WOW Demo, Public Auditor Packet, and Whitepaper engineering draft.

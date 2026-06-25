@@ -3584,10 +3584,11 @@ patch_plan_commit: e88657d, runtime_commit: 9e58dad,
 technical_audit_commit: 0695ace, human_walkthrough_commit: 0b202f9, and
 human_walkthrough_audit_commit: 69cf748.
 
-This layer closes the optional smoke boundary before WOW v0.2. It is an
-optional response-file smoke lane: any external/manual live provider read is
-outside the runner, and the runner validates a response file locally. Default
-no-config mode returns FINAL STATUS: SKIPPED_CLOSED and exits 0.
+This layer closes the optional smoke boundary before the next live evidence
+adapter preflight. It is an optional response-file smoke lane: any
+external/manual live provider read is outside the runner, and the runner
+validates a response file locally. Default no-config mode returns FINAL STATUS:
+SKIPPED_CLOSED and exits 0.
 SKIPPED_CLOSED is safe closure, not proof that a live provider call occurred.
 The runner does not call a live model, Gemini, network, connectors, or
 secrets; it does not execute payments or release shipments; and it does not
@@ -3609,8 +3610,10 @@ action/authority/FinalOutput exists below Root. `deterministic_fixture_reader`
 remains unchanged. ReaderMode.live_llm_reader remains fail-closed in the
 closed deterministic runtime. Root remains final authority.
 
-Next/future: WOW v0.2 remains future work and is not started by this
-checkpoint.
+Next engineering layer: Live Provider Adapter / Response Capture v0.1
+preflight. Supplier Payment remains the integration spine for later live
+evidence integration. Public WOW remains later, after Full Semantic E2E and
+E2E hardening.
 
 Runtime artifacts: `hedgehog/gt_lgt_advisory_evaluator.py`,
 `demo/run_gt_lgt_advisory_evaluator_v01.py`, and
@@ -3676,7 +3679,9 @@ Current roadmap state:
 - CLOSED: Zero Trust Supplier Payment WOW v0.1.
 - CLOSED: Live LLM Semantic Evidence Reader / Extractor v0.1.
 - CLOSED: Optional Live LLM Evidence Reader Smoke v0.1.
-- NEXT: WOW v0.2 remains future work and is not started by this checkpoint.
+- NEXT: Live Provider Adapter / Response Capture v0.1 preflight.
+- Supplier Payment remains the integration spine for later live evidence integration.
+- Public WOW remains later, after Full Semantic E2E and E2E hardening.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 
 Hardening-plan: APPROVED.

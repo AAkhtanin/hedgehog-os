@@ -2563,7 +2563,10 @@ values fail closed. Decision-like wording remains non-authoritative.
 remains fail-closed in the closed deterministic runtime. Root remains final
 authority.
 
-Next/future: WOW v0.2 remains future work and is not started by this checkpoint.
+Next engineering layer: Live Provider Adapter / Response Capture v0.1
+preflight. Supplier Payment remains the integration spine for later live
+evidence integration. Public WOW remains later, after Full Semantic E2E and
+E2E hardening.
 
 DRS poisoning resistance remains gated only if needed to protect or unblock
 real runtime.
@@ -2897,7 +2900,9 @@ Next engineering focus:
 - CLOSED: Zero Trust Supplier Payment WOW v0.1.
 - CLOSED: Live LLM Semantic Evidence Reader / Extractor v0.1.
 - CLOSED: Optional Live LLM Evidence Reader Smoke v0.1.
-- NEXT: WOW v0.2 remains future work and is not started by this checkpoint.
+- NEXT: Live Provider Adapter / Response Capture v0.1 preflight.
+- Supplier Payment remains the integration spine for later live evidence integration.
+- Public WOW remains later, after Full Semantic E2E and E2E hardening.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 - Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.
 - Later, after Real Semantic Runtime MVP: Real Semantic Runtime WOW Demo, Public Auditor Packet, and Whitepaper engineering draft.

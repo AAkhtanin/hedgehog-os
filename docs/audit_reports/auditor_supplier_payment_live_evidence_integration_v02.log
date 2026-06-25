@@ -1,0 +1,69 @@
+audit_id: auditor_supplier_payment_live_evidence_integration_v02
+audit_status: PASS
+runtime_commit: 995fb1d
+preflight_commit: 896001a
+patch_plan_commit: 2644c3d
+layer: Supplier Payment Live Evidence Integration v0.2
+verdict: runtime composes closed provider/response-file/supplier-payment surfaces into an integration spine
+
+runtime files changed:
+- demo/run_supplier_payment_live_evidence_integration_v02.py
+- tests/test_supplier_payment_live_evidence_integration_v02_runner.py
+
+validation commands run:
+- python3 -m demo.run_supplier_payment_live_evidence_integration_v02
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_supplier_payment_live_evidence_integration_v02_runner.py tests/test_live_provider_adapter_response_capture_v01_runner.py tests/test_optional_live_llm_evidence_reader_smoke_v01_runner.py tests/test_zero_trust_supplier_payment_wow_v01_runner.py
+- git status --short --untracked-files=all
+- git diff --stat
+- git diff --check
+- git diff --name-only
+- positive rg checks
+- forbidden/overclaim rg checks
+
+results:
+- default runner result: FINAL STATUS: SKIPPED_CLOSED
+- focused pytest: 67 passed
+- default final_status: SKIPPED_CLOSED
+- valid explicit/fake-provider final_status: PASS
+- invalid/unsafe evidence final_status: FAIL_CLOSED
+- semantic_claim_created_count: 1 in valid explicit mode
+
+audit facts:
+- live/captured evidence enters supplier-payment spine as candidate-only SemanticEvidenceClaim
+- provider output is not truth
+- provider output is not authority
+- provider output is not action permission
+- provider output is not FinalOutput
+- DRS candidate context is not truth
+- CandidateVector context is not truth
+- AVF/advisory is not authority
+- Post V&V / GT-LGT represented boundaries are not direct invocation unless invoked_count says so
+- represented_count values are not reported as invoked_count values
+- Root remains final authority
+- legal_hold_beats_payable_invoice
+- stock_shortage_blocks_shipment_release
+- no payment executed
+- no shipment released
+- no connector called
+- no real provider/network/Gemini/Groq/model call in validation
+- no secrets accessed/logged
+- no WOW v0.2 started
+- no public WOW
+- no Full Semantic E2E complete claim
+- no Real Semantic Runtime MVP complete claim
+- no production ready claim
+- no NeedleFactory / Marennya / UP
+
+counter observations:
+- payment_executed_count: 0
+- shipment_released_count: 0
+- connector_called_count: 0
+- full_semantic_e2e_claimed_count: 0
+- real_semantic_runtime_mvp_complete_claimed_count: 0
+- wow_started_count: 0
+- production_ready_claimed_count: 0
+- provider_final_output_created_count: 0
+- root_final_authority_preserved_count: 1
+
+final conclusion:
+Supplier Payment Live Evidence Integration v0.2 runtime PASS. The runtime adds a focused integration spine for candidate-only captured/live-like semantic evidence inside the supplier-payment sandbox while preserving response-file validation, represented-vs-invoked accounting, zero external action, and Root final authority.

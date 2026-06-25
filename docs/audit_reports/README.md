@@ -485,6 +485,21 @@ Current reports:
   - Authority boundary conclusion: warehouse stock evidence is not authority, invoice is not authority, DRS hit is not authority, stale DRS memory cannot authorize payment, AVF score is not authority, high AVF score cannot override legal hold, advisory report is not Root Final, bounded actor route cannot command bank or supplier, Fractal Cell is not Root, child branch report is not FinalOutput, mock approval is local sandbox signal only, mock receipt is not real payment, mock receipt is not real shipment release, and Root remains final authority.
   - Limitations: not production E2E, no real bank/supplier/warehouse integration, no network/Gemini/live model/connectors/secrets, and Real Semantic Runtime MVP is not complete.
 
+- `auditor_live_llm_semantic_evidence_reader_v01.log`
+  - Live LLM Semantic Evidence Reader / Extractor v0.1 technical audit for commit `2c7eaed`; audit commit `8750634`; patch plan `b626544`; preflight `42551c1`.
+  - audit_status: PASS. Scope: deterministic fixture semantic evidence reader runtime. Runner: FINAL STATUS: PASS. Targeted pytest: `29 passed, 2 warnings`; warnings are existing jsonschema.RefResolver deprecations from the composite smoke dependency path.
+  - Confirms `ReaderMode`, `SemanticEvidenceInput`, `SemanticEvidenceClaim`, `SemanticEvidenceReaderReport`, `build_semantic_evidence_claims`, `evaluate_semantic_evidence_inputs`, and `run_live_llm_semantic_evidence_reader_scenarios`.
+  - Confirms `deterministic_fixture_reader` is the active default, `live_llm_reader` is default off, and explicit live mode fails closed with `ValueError("live_llm_reader is disabled in v0.1 deterministic runner")`.
+  - Key counters: `scenarios_total: 10`, `scenarios_passed: 10`, `llm_inputs_seen_count: 11`, `semantic_claims_created_count: 11`, `uncertainty_notes_created_count: 11`, `contradiction_flags_created_count: 2`, `unsafe_instruction_flags_created_count: 6`, `root_review_required_count: 11`, `deterministic_fixture_reader_used_count: 1`, `live_llm_default_enabled_count: 0`, `live_llm_core_pass_dependency_count: 0`, `live_model_call_count: 0`, `network_used_count: 0`, `gemini_used_count: 0`, `secrets_accessed_count: 0`, `truth_claimed_count: 0`, `authority_claimed_count: 0`, `action_permission_claimed_count: 0`, `final_output_claimed_count: 0`, `connector_command_created_count: 0`, `payment_executed_count: 0`, `shipment_released_count: 0`, `prompt_injection_escalation_count: 0`, and `root_final_authority_preserved_count: 10`.
+  - Authority boundary conclusion: LLM output is not truth, LLM output is not authority, LLM confidence is not authority, LLM extracted claim is not action permission, SemanticEvidenceClaim is candidate evidence only, SemanticEvidenceClaim is not FinalOutput, prompt injection cannot escalate authority, contradiction detection is review signal only, semantic claims return to a Root-shaped route, and Root remains final authority.
+
+- `auditor_human_live_llm_semantic_evidence_reader_walkthrough_v01.log`
+  - Human Live LLM Semantic Evidence Reader walkthrough audit for commit `e904b8d`; audit commit `7f0a21d`; technical audit `8750634`; runtime commit `2c7eaed`; patch plan `b626544`; preflight `42551c1`.
+  - audit_status: PASS. Scope: human walkthrough for deterministic Live LLM Semantic Evidence Reader. Walkthrough runner: FINAL STATUS: PASS. Focused pytest: `22 passed`.
+  - Confirms the walkthrough imports and calls the committed runtime scenario function, explains the returned facts, and does not add runtime capability or live model behavior.
+  - Confirms `walkthrough_required_counters_match: True`, `scenarios_total: 10`, `scenarios_passed: 10`, `live_model_call_count: 0`, `network_used_count: 0`, `gemini_used_count: 0`, `secrets_accessed_count: 0`, and `root_final_authority_preserved_count: 10`.
+  - Human explanation coverage: Live LLM is not active in this layer; this layer creates the bounded contract for future live LLM evidence reading; SemanticEvidenceClaim is not truth, authority, action permission, or FinalOutput; prompt injection text is evidence, not instruction; bank/supplier/warehouse examples are demo-domain stress cases; the construct is universal across dirty evidence domains; Root remains final authority; and Real Semantic Runtime MVP is not complete.
+
 ## Current Applied Auditor Commands
 
 ```bash

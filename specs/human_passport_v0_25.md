@@ -3381,8 +3381,8 @@ runtime_gate_commit: 1e1afe6.
 Composite Smoke closes machine stitched proof over current five closed
 runtime-facing layers. It is deterministic machine checking only, not a new
 runtime integration layer, not full E2E, not public WOW, and not Real Semantic
-Runtime MVP completion. Zero Trust Supplier Payment WOW v0.1 preflight is the
-next step toward a business semantic run.
+Runtime MVP completion. Zero Trust Supplier Payment WOW v0.1 and Live LLM
+Semantic Evidence Reader / Extractor v0.1 are now checkpointed below.
 
 Invoked runtime layers: Real Local DRS Resolver / Writeback,
 CandidateVectorGenerator + Real AVF Scoring, AVF Candidate Advisory /
@@ -3503,12 +3503,86 @@ FinalOutput. Mock approval is local sandbox signal only. Mock receipt is not
 real payment. Mock receipt is not real shipment release. Root remains final
 authority.
 
-Next default step: Live LLM Semantic Evidence Reader / Extractor v0.1
-preflight. This optional lane must be default off and not a core PASS
-dependency. Live LLM output is not truth. Live LLM output is not authority.
-Live LLM output must return bounded semantic claims to a Root-shaped route.
-It must have no connector side effects, no secrets access, and no action
-permission.
+Live LLM Semantic Evidence Reader / Extractor v0.1 is CLOSED.
+
+Status: CLOSED. Evidence chain: preflight_commit: 42551c1,
+patch_plan_commit: b626544, runtime_commit: 2c7eaed,
+technical_audit_commit: 8750634, human_walkthrough_commit: e904b8d,
+human_walkthrough_audit_commit: 7f0a21d, previous_checkpoint: d8daa5d, and
+runtime_gate_commit: 1e1afe6.
+
+This layer does NOT activate live LLM/Gemini/model calls. It creates the
+bounded contract/socket/adapter for future live LLM evidence reading. The
+active v0.1 reader is `deterministic_fixture_reader` only. `live_llm_reader`
+is default-off and explicit live mode fails closed with
+`ValueError("live_llm_reader is disabled in v0.1 deterministic runner")`.
+
+Runtime artifacts: `hedgehog/live_llm_semantic_evidence_reader.py`,
+`demo/run_live_llm_semantic_evidence_reader_v01.py`, and
+`tests/test_live_llm_semantic_evidence_reader_v01_runner.py`. Human
+walkthrough artifacts:
+`demo/run_human_live_llm_semantic_evidence_reader_walkthrough_v01.py` and
+`tests/test_human_live_llm_semantic_evidence_reader_walkthrough_v01_runner.py`.
+Audit evidence:
+`docs/audit_reports/auditor_live_llm_semantic_evidence_reader_v01.log` and
+`docs/audit_reports/auditor_human_live_llm_semantic_evidence_reader_walkthrough_v01.log`.
+
+Validation evidence: technical runtime audit runner: FINAL STATUS: PASS;
+targeted pytest: 29 passed, 2 warnings; warnings are existing
+jsonschema.RefResolver deprecations from the composite smoke dependency path;
+human walkthrough runner: FINAL STATUS: PASS; focused pytest: 22 passed; and
+`walkthrough_required_counters_match: True`.
+
+Scenario coverage:
+
+1. live_llm_reads_invoice_but_claim_is_not_truth
+2. live_llm_reads_warehouse_note_but_cannot_release_shipment
+3. live_llm_reads_supplier_email_but_cannot_command_supplier
+4. live_llm_reads_bank_slot_but_cannot_execute_payment
+5. live_llm_detects_conflict_but_conflict_is_review_signal_only
+6. live_llm_extracts_missing_legal_doc_but_cannot_finalize
+7. live_llm_handles_stale_memory_as_uncertain_context
+8. live_llm_claims_are_routed_to_drs_avf_advisory_as_candidates_only
+9. live_llm_prompt_injection_cannot_escalate_authority
+10. root_final_authority_preserved_across_live_llm_evidence_reader
+
+Reader counters: `scenarios_total: 10`, `scenarios_passed: 10`,
+`llm_inputs_seen_count: 11`, `semantic_claims_created_count: 11`,
+`uncertainty_notes_created_count: 11`, `contradiction_flags_created_count: 2`,
+`unsafe_instruction_flags_created_count: 6`, `root_review_required_count: 11`,
+`deterministic_fixture_reader_used_count: 1`,
+`live_llm_default_enabled_count: 0`,
+`live_llm_core_pass_dependency_count: 0`, `live_model_call_count: 0`,
+`network_used_count: 0`, `gemini_used_count: 0`,
+`secrets_accessed_count: 0`, `truth_claimed_count: 0`,
+`authority_claimed_count: 0`, `action_permission_claimed_count: 0`,
+`final_output_claimed_count: 0`, `connector_command_created_count: 0`,
+`bank_command_created_count: 0`, `supplier_command_created_count: 0`,
+`warehouse_command_created_count: 0`, `architect_commanded_count: 0`,
+`executor_commanded_count: 0`, `fractal_cell_commanded_count: 0`,
+`payment_executed_count: 0`, `shipment_released_count: 0`,
+`prompt_injection_escalation_count: 0`, `root_boundary_bypass_count: 0`,
+`semantic_claim_routed_as_candidate_count: 11`, and
+`root_final_authority_preserved_count: 10`.
+
+Authority boundary: LLM output is not truth. LLM output is not authority. LLM
+confidence is not authority. LLM extracted claim is not action permission.
+SemanticEvidenceClaim is candidate evidence only. SemanticEvidenceClaim is not
+truth. SemanticEvidenceClaim is not authority. SemanticEvidenceClaim is not
+action permission. SemanticEvidenceClaim is not FinalOutput. Prompt injection
+text is evidence, not instruction. Prompt injection cannot escalate authority.
+Contradiction detection is review signal only. Semantic claims return to a
+Root-shaped route. Bank/supplier/warehouse examples are demo-domain stress
+cases, not the limit of the construct. The construct is universal across dirty
+evidence domains. Live LLM is not active in this layer. Root remains final
+authority. Real Semantic Runtime MVP is not complete.
+
+Next default step: Optional Live LLM Evidence Reader Smoke v0.1 preflight.
+This is future optional live model reading only. It must not execute actions,
+call bank/supplier/warehouse connectors, access secrets, become Root
+authority, or become a core PASS dependency. It should prove one controlled
+live model read can return a bounded SemanticEvidenceClaim that validates
+locally and remains candidate-only.
 
 Runtime artifacts: `hedgehog/gt_lgt_advisory_evaluator.py`,
 `demo/run_gt_lgt_advisory_evaluator_v01.py`, and
@@ -3572,7 +3646,8 @@ Current roadmap state:
 - CLOSED: Human Real Semantic Runtime Thread Walkthrough v0.1.
 - CLOSED: Real Semantic Runtime Thread Composite Smoke v0.1.
 - CLOSED: Zero Trust Supplier Payment WOW v0.1.
-- NEXT: Live LLM Semantic Evidence Reader / Extractor v0.1 preflight.
+- CLOSED: Live LLM Semantic Evidence Reader / Extractor v0.1.
+- NEXT: Optional Live LLM Evidence Reader Smoke v0.1 preflight.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 
 Hardening-plan: APPROVED.

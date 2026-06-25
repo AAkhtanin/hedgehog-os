@@ -2563,10 +2563,50 @@ values fail closed. Decision-like wording remains non-authoritative.
 remains fail-closed in the closed deterministic runtime. Root remains final
 authority.
 
-Next engineering layer: Live Provider Adapter / Response Capture v0.1
-preflight. Supplier Payment remains the integration spine for later live
-evidence integration. Public WOW remains later, after Full Semantic E2E and
-E2E hardening.
+The next engineering layer after this optional smoke was Live Provider Adapter
+/ Response Capture v0.1, now closed below. Supplier Payment remains the
+integration spine for later live evidence integration. Public WOW remains
+later, after Full Semantic E2E and E2E hardening.
+
+## Live Provider Adapter / Response Capture v0.1
+
+Status: CLOSED
+
+This checkpoint closes the controlled adapter + response capture boundary after
+the Optional Live LLM Evidence Reader Smoke. The default runner remains
+offline and returns FINAL STATUS: SKIPPED_CLOSED. Provider use is explicit-only:
+raw provider response artifacts can be captured locally and then validated
+through the existing response-file validation gate. A valid artifact can
+produce exactly one candidate-only SemanticEvidenceClaim, while invalid JSON,
+authority/action/FinalOutput/connector claims, secret-like keys or values, and
+other unsafe artifacts fail closed. Prompt injection remains evidence, not
+instruction. ReaderMode.live_llm_reader remains disabled/fail-closed in the
+underlying reader, arbitrary command adapter is not approved, and Root remains
+final authority.
+
+Commit chain: preflight_commit: 50922fb; patch_plan_commit: 9448f67;
+runtime_commit: 3c88ede; technical_audit_commit: d405c45;
+human_walkthrough_commit: 87b484b; human_walkthrough_audit_commit: 1b6f716.
+
+Validation facts: default runner: FINAL STATUS: SKIPPED_CLOSED; adapter
+focused tests: 38 passed; human walkthrough: FINAL STATUS: PASS; human
+walkthrough focused tests: 22 passed; technical audit status: PASS; human audit
+status: PASS.
+
+Boundary facts: fake provider tests do not count live model/network/Gemini.
+The real Gemini configured path counts env credential access without writing
+the key to artifacts. Raw provider response artifact capture remains untrusted
+evidence; the response-file validation gate is reused; candidate claims remain
+non-authoritative and Root-reviewed. This is not Supplier Payment integration,
+not WOW v0.2, not Full Semantic E2E, not production, not public WOW, not
+NeedleFactory / Marennya / UP, no real bank/supplier/warehouse connector, no
+real payment, no real shipment release, no provider FinalOutput, and no Root
+authority below Root.
+
+Next engineering layer: Supplier Payment Live Evidence Integration v0.2
+preflight. This is an integration spine step, not a public WOW demo. Supplier
+Payment / Shipment Release remains the business axis. Public WOW remains later,
+after Full Semantic E2E and E2E hardening.
 
 DRS poisoning resistance remains gated only if needed to protect or unblock
 real runtime.
@@ -2889,6 +2929,7 @@ Next engineering focus:
 - Completed: Zero Trust Supplier Payment WOW v0.1, the first business-semantic sandbox WOW runner over local fake supplier payment / shipment release evidence.
 - Completed: Live LLM Semantic Evidence Reader / Extractor v0.1, the deterministic fixture reader contract for future bounded live model evidence reading.
 - Completed: Optional Live LLM Evidence Reader Smoke v0.1, the response-file optional smoke lane that keeps live provider reads outside the runner and preserves Root authority.
+- Completed: Live Provider Adapter / Response Capture v0.1, the controlled adapter + response capture boundary with response-file validation gate reuse.
 - Current block: Real Semantic Runtime MVP remains open; local DRS write/resolve/writeback, bounded CandidateVectorGenerator/AVF scoring, candidate advisory review, bounded actor contracts, bounded child-cell integration, the human composite walkthrough, the composite smoke, the supplier payment sandbox WOW, and the deterministic live-evidence reader contract are now checkpointed.
 - CLOSED: Real Local DRS Resolver / Writeback v0.1.
 - CLOSED: CandidateVectorGenerator + Real AVF Scoring v0.1.
@@ -2900,8 +2941,9 @@ Next engineering focus:
 - CLOSED: Zero Trust Supplier Payment WOW v0.1.
 - CLOSED: Live LLM Semantic Evidence Reader / Extractor v0.1.
 - CLOSED: Optional Live LLM Evidence Reader Smoke v0.1.
-- NEXT: Live Provider Adapter / Response Capture v0.1 preflight.
-- Supplier Payment remains the integration spine for later live evidence integration.
+- CLOSED: Live Provider Adapter / Response Capture v0.1.
+- NEXT: Supplier Payment Live Evidence Integration v0.2 preflight.
+- Supplier Payment remains the integration spine and business axis for later live evidence integration.
 - Public WOW remains later, after Full Semantic E2E and E2E hardening.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 - Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.

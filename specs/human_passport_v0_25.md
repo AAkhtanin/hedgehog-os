@@ -3610,10 +3610,48 @@ action/authority/FinalOutput exists below Root. `deterministic_fixture_reader`
 remains unchanged. ReaderMode.live_llm_reader remains fail-closed in the
 closed deterministic runtime. Root remains final authority.
 
-Next engineering layer: Live Provider Adapter / Response Capture v0.1
-preflight. Supplier Payment remains the integration spine for later live
-evidence integration. Public WOW remains later, after Full Semantic E2E and
-E2E hardening.
+The next engineering layer after this optional smoke was Live Provider Adapter
+/ Response Capture v0.1, now closed below. Supplier Payment remains the
+integration spine for later live evidence integration. Public WOW remains
+later, after Full Semantic E2E and E2E hardening.
+
+Live Provider Adapter / Response Capture v0.1 is CLOSED.
+
+Status: CLOSED. Evidence chain: preflight_commit: 50922fb,
+patch_plan_commit: 9448f67, runtime_commit: 3c88ede,
+technical_audit_commit: d405c45, human_walkthrough_commit: 87b484b, and
+human_walkthrough_audit_commit: 1b6f716.
+
+This layer closes the controlled adapter + response capture boundary above the
+already closed response-file smoke lane. The default runtime is offline and
+returns FINAL STATUS: SKIPPED_CLOSED. Provider access is explicit-only. Raw
+provider response artifact capture remains untrusted evidence and is validated
+through the response-file validation gate. A valid artifact can create exactly
+one candidate-only SemanticEvidenceClaim. Fake provider tests do not count
+live model/network/Gemini. The real Gemini configured path counts env
+credential access without writing the key to artifacts.
+
+Validation evidence: default runner: FINAL STATUS: SKIPPED_CLOSED; adapter
+focused tests: 38 passed; human walkthrough: FINAL STATUS: PASS; human
+walkthrough focused tests: 22 passed; technical audit status: PASS; human audit
+status: PASS.
+
+Boundary evidence: invalid/unsafe artifacts fail closed. Prompt injection is
+preserved as evidence, not instruction. ReaderMode.live_llm_reader remains
+disabled/fail-closed in the underlying reader. Arbitrary command adapter is
+not approved. The provider may read, but it cannot decide. SemanticEvidenceClaim
+remains candidate-only, Root review is required, no action/authority/FinalOutput
+exists below Root, and Root remains final authority.
+
+Limitations: this is not Supplier Payment integration, not WOW v0.2, not Full
+Semantic E2E, not production, not public WOW, not NeedleFactory / Marennya /
+UP, no real bank/supplier/warehouse connector, no real payment, no real
+shipment release, no provider FinalOutput, and no Root authority below Root.
+
+Next engineering layer: Supplier Payment Live Evidence Integration v0.2
+preflight. This is an integration spine step, not a public WOW demo. Supplier
+Payment / Shipment Release remains the business axis. Public WOW remains
+later, after Full Semantic E2E and E2E hardening.
 
 Runtime artifacts: `hedgehog/gt_lgt_advisory_evaluator.py`,
 `demo/run_gt_lgt_advisory_evaluator_v01.py`, and
@@ -3679,8 +3717,9 @@ Current roadmap state:
 - CLOSED: Zero Trust Supplier Payment WOW v0.1.
 - CLOSED: Live LLM Semantic Evidence Reader / Extractor v0.1.
 - CLOSED: Optional Live LLM Evidence Reader Smoke v0.1.
-- NEXT: Live Provider Adapter / Response Capture v0.1 preflight.
-- Supplier Payment remains the integration spine for later live evidence integration.
+- CLOSED: Live Provider Adapter / Response Capture v0.1.
+- NEXT: Supplier Payment Live Evidence Integration v0.2 preflight.
+- Supplier Payment remains the integration spine and business axis for later live evidence integration.
 - Public WOW remains later, after Full Semantic E2E and E2E hardening.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 

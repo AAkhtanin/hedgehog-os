@@ -514,6 +514,18 @@ Current reports:
   - Confirms `walkthrough_required_counters_match: True`, `live_model_call_count: 0`, `network_used_count: 0`, `semantic_claim_created_count: 0`, `silent_fallback_to_deterministic_pass_count: 0`, `deterministic_reader_mutated_count: 0`, and `root_final_authority_preserved_count: 1`.
   - Human explanation coverage: SKIPPED_CLOSED is safe closure, not proof that a live provider call occurred; the default walkthrough does not execute a live provider read; the response-file artifact is untrusted input; SemanticEvidenceClaim is candidate evidence only; decision-like wording remains non-authoritative; ReaderMode.live_llm_reader remains fail-closed; and Root remains final authority.
 
+- `auditor_live_provider_adapter_response_capture_v01.log`
+  - Live Provider Adapter / Response Capture v0.1 technical audit for runtime commit `3c88ede`; audit commit `d405c45`; preflight `50922fb`; patch plan `9448f67`.
+  - audit_status: PASS. Scope: controlled adapter + response capture boundary. Default runner: FINAL STATUS: SKIPPED_CLOSED. Focused pytest: `38 passed`.
+  - Confirms explicit-only provider path, raw provider response artifact capture, response-file validation gate reuse, exactly one candidate-only SemanticEvidenceClaim for valid artifacts, and fail-closed handling for invalid/unsafe artifacts.
+  - Confirms fake provider tests do not count live model/network/Gemini, real Gemini configured path counts env credential access without writing key to artifacts, ReaderMode.live_llm_reader remains disabled/fail-closed, arbitrary command adapter is not approved, and Root remains final authority.
+
+- `auditor_human_live_provider_adapter_response_capture_walkthrough_v01.log`
+  - Human Live Provider Adapter / Response Capture walkthrough audit for commit `87b484b`; audit commit `1b6f716`; technical audit `d405c45`; runtime commit `3c88ede`; patch plan `9448f67`; preflight `50922fb`.
+  - audit_status: PASS. Scope: human walkthrough for the closed Live Provider Adapter / Response Capture runtime. Walkthrough runner: FINAL STATUS: PASS. Focused pytest: `22 passed`.
+  - Confirms the walkthrough explains default SKIPPED_CLOSED behavior, fake-provider zero live model/network/Gemini counts, monkeypatched real-Gemini credential access without artifact leakage, response-file validation gate reuse, unsafe-output fail-closed behavior, and provider may read, but provider cannot decide.
+  - Confirms the walkthrough adds no runtime capability, no provider/network/model call, no connector, no provider FinalOutput, and Root remains final authority.
+
 ## Current Applied Auditor Commands
 
 ```bash

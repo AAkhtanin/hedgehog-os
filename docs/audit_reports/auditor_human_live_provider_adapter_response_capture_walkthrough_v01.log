@@ -1,0 +1,80 @@
+audit_id: auditor_human_live_provider_adapter_response_capture_walkthrough_v01
+audit_status: PASS
+walkthrough_commit: 87b484b
+runtime_commit: 3c88ede
+runtime_audit_commit: d405c45
+preflight_commit: 50922fb
+patch_plan_commit: 9448f67
+layer: Live Provider Adapter / Response Capture v0.1 human walkthrough
+walkthrough_result: FINAL STATUS: PASS
+focused_pytest: 22 passed
+
+audited_files:
+  - demo/run_human_live_provider_adapter_response_capture_walkthrough_v01.py
+  - tests/test_human_live_provider_adapter_response_capture_walkthrough_v01_runner.py
+  - demo/run_live_provider_adapter_response_capture_v01.py
+  - tests/test_live_provider_adapter_response_capture_v01_runner.py
+
+commands_run:
+  - python3 -m demo.run_human_live_provider_adapter_response_capture_walkthrough_v01
+  - PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_live_provider_adapter_response_capture_walkthrough_v01_runner.py tests/test_live_provider_adapter_response_capture_v01_runner.py
+  - git status --short --untracked-files=all
+  - git diff --stat
+  - git diff --check
+  - git diff --name-only
+  - positive rg checks
+  - forbidden/overclaim rg checks
+
+walkthrough_facts:
+  - walkthrough explains controlled adapter + response capture boundary.
+  - underlying default runtime status is SKIPPED_CLOSED.
+  - fake provider path does not count live model/network/Gemini.
+  - monkeypatched real-Gemini path counts env credential access without writing key to artifacts.
+  - raw provider response artifact remains untrusted evidence.
+  - response-file lane is used as validation gate.
+  - candidate claim remains non-authoritative and Root-reviewed.
+  - unsafe outputs fail closed.
+  - prompt injection is preserved as evidence, not instruction.
+  - ReaderMode.live_llm_reader remains disabled/fail-closed.
+  - provider may read, but provider cannot decide.
+  - Root remains final authority.
+
+observed_markers:
+  - underlying_default_status: SKIPPED_CLOSED
+  - fake_provider_live_model_count: 0
+  - fake_provider_network_count: 0
+  - fake_provider_gemini_count: 0
+  - real_gemini_credential_access_count: 1
+  - credential_written_to_artifacts: false
+  - response_file_lane_used_count: 1
+  - semantic_claim_created_count: 1
+  - unsafe_outputs_fail_closed: True
+  - walkthrough_required_counters_match: True
+  - root_final_authority_preserved_count: 1
+
+authority_boundary:
+  - Provider output is not truth.
+  - Provider output is not authority.
+  - Provider output is not action permission.
+  - Provider output is not FinalOutput.
+  - Captured artifact is untrusted evidence.
+  - SemanticEvidenceClaim remains candidate evidence only.
+  - Response-file validation remains the gate.
+  - Root review is required.
+  - Root remains final authority.
+
+limitations:
+  - not Supplier Payment integration
+  - not WOW v0.2
+  - not Full Semantic E2E
+  - not production
+  - not public WOW
+  - not NeedleFactory / Marennya / UP
+  - no real bank/supplier/warehouse connector
+  - no real payment
+  - no real shipment release
+  - no provider FinalOutput
+
+final_conclusion:
+  Human Live Provider Adapter / Response Capture Walkthrough v0.1 PASS.
+  The walkthrough accurately explains the closed runtime and audit facts, distinguishes default SKIPPED_CLOSED behavior from the explanatory walkthrough PASS, avoids claiming a live provider/network call occurred, and preserves Root final authority.

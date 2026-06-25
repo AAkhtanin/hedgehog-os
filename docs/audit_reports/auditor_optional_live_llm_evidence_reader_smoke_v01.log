@@ -1,0 +1,127 @@
+audit_id: auditor_optional_live_llm_evidence_reader_smoke_v01
+audit_status: PASS
+audited_layer: Optional Live LLM Evidence Reader Smoke v0.1
+audit_scope: response_file_optional_live_smoke_runtime
+base_commit: 9e58dad
+preflight_commit: f397190
+patch_plan_commit: e88657d
+runtime_commit: 9e58dad
+
+## Audited Files
+
+- demo/run_optional_live_llm_evidence_reader_smoke_v01.py
+- tests/test_optional_live_llm_evidence_reader_smoke_v01_runner.py
+- docs/optional_live_llm_evidence_reader_smoke_preflight_v01.md
+- docs/optional_live_llm_evidence_reader_smoke_patch_plan_v01.md
+- hedgehog/live_llm_semantic_evidence_reader.py
+- tests/test_live_llm_semantic_evidence_reader_v01_runner.py
+
+## Commands Run
+
+- git status --short --untracked-files=all
+- git --no-pager log --oneline --max-count=16
+- python3 -m demo.run_optional_live_llm_evidence_reader_smoke_v01
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_optional_live_llm_evidence_reader_smoke_v01_runner.py tests/test_live_llm_semantic_evidence_reader_v01_runner.py
+- git status --short --untracked-files=all
+- git diff --check
+- git diff --stat
+- git diff --name-only
+- positive rg checks
+- dangerous/overclaim rg checks
+
+## Recorded Results
+
+- runner result: FINAL STATUS: SKIPPED_CLOSED
+- runner default exits 0
+- focused pytest: 33 passed
+- scenarios_total: 10
+- default final_status: SKIPPED_CLOSED
+- explicit valid response final_status: PASS
+- invalid explicit response final_status: FAIL_CLOSED
+
+## Runtime Observations
+
+- runner default output includes FINAL STATUS: SKIPPED_CLOSED
+- default no-config path creates zero claims
+- default no-config path is not deterministic PASS fallback
+- explicit response-file mode is tested
+- valid response-file mode creates exactly one locally validated SemanticEvidenceClaim candidate
+- invalid JSON fails closed
+- authority-claiming output fails closed
+- action-permission output fails closed
+- FinalOutput-claiming output fails closed
+- connector-command output fails closed
+- unexpected extra fields fail closed
+- secret-like values and keys fail closed
+- decision-like wording remains non-authoritative
+- deterministic reader remains unchanged
+- ReaderMode.live_llm_reader in the closed deterministic runtime still fails closed
+- command adapter is absent/deferred
+- response-file validation is not a model call by runner
+- no live model call by runner
+- no network call by runner
+- no Gemini call by runner
+- no connector call
+- no bank/supplier/warehouse call
+- no secrets access
+- no payment executed
+- no shipment released
+- no FinalOutput created by live model
+- Root remains final authority
+
+## Counter Observations
+
+- live_model_call_count: 0
+- network_used_count: 0
+- connector_called_count: 0
+- bank_connector_called_count: 0
+- supplier_connector_called_count: 0
+- warehouse_connector_called_count: 0
+- payment_executed_count: 0
+- shipment_released_count: 0
+- secrets_logged_count: 0
+- action_permission_created_count: 0
+- non_root_final_output_created_count: 0
+- root_authority_claimed_by_llm_count: 0
+- silent_fallback_to_deterministic_pass_count: 0
+- deterministic_reader_mutated_count: 0
+- root_final_authority_preserved_count: 1
+
+## Boundary Checks
+
+- Optional live smoke uses response-file mode only.
+- The runner consumes an explicit response file only when configured.
+- The runner does not call a live model.
+- The runner does not call network, Gemini, connectors, bank, supplier, warehouse, or secrets.
+- The response-file artifact is untrusted input.
+- A locally validated SemanticEvidenceClaim remains candidate evidence only.
+- A decision-like phrase in extracted text does not become truth, permission, FinalOutput, or Root decision.
+- Unsafe explicit outputs fail closed rather than falling back to deterministic PASS.
+- Existing deterministic fixture reader behavior remains unchanged.
+- Root remains final authority.
+
+## Limitations
+
+- The runner does not prove production live integration.
+- The runner does not prove production E2E.
+- The runner does not start WOW v0.2.
+- The runner does not add connectors, secrets, ActionCommitPacket, Permission UX, Marennya, UP, or NeedleFactory.
+- This audit does not claim public auditor readiness.
+- This audit does not claim Real Semantic Runtime MVP completion.
+
+## Static And Grep Results
+
+- git status before audit creation: clean
+- focused runtime/test validation: PASS
+- git diff --check: clean
+- expected changed file after audit creation: docs/audit_reports/auditor_optional_live_llm_evidence_reader_smoke_v01.log only
+- positive rg checks: passed
+- dangerous/overclaim rg checks: no dangerous positive claims
+
+## Conclusion
+
+Optional Live LLM Evidence Reader Smoke v0.1 runtime PASS.
+The layer proves a controlled optional response-file smoke lane: no config skips
+closed; explicit raw response file can produce one locally validated
+candidate-only SemanticEvidenceClaim; invalid/unsafe model outputs fail closed;
+existing deterministic reader remains unchanged; Root remains final authority.

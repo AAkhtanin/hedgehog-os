@@ -1,0 +1,95 @@
+audit_id: auditor_live_provider_adapter_response_capture_v01
+audit_status: PASS
+runtime_commit: 3c88ede
+preflight_commit: 50922fb
+patch_plan_commit: 9448f67
+layer: Live Provider Adapter / Response Capture v0.1
+previous_closed_layer: Optional Live LLM Evidence Reader Smoke v0.1
+previous_response_file_smoke_commit: 9e58dad
+base_mode: controlled adapter + response capture runtime
+default_runner_result: FINAL STATUS: SKIPPED_CLOSED
+focused_pytest: 38 passed
+
+files_changed:
+  - demo/run_live_provider_adapter_response_capture_v01.py
+  - tests/test_live_provider_adapter_response_capture_v01_runner.py
+
+audited_files:
+  - demo/run_live_provider_adapter_response_capture_v01.py
+  - tests/test_live_provider_adapter_response_capture_v01_runner.py
+  - demo/run_optional_live_llm_evidence_reader_smoke_v01.py
+  - tests/test_optional_live_llm_evidence_reader_smoke_v01_runner.py
+  - hedgehog/live_llm_semantic_evidence_reader.py
+
+commands_run:
+  - python3 -m demo.run_live_provider_adapter_response_capture_v01
+  - PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_live_provider_adapter_response_capture_v01_runner.py tests/test_optional_live_llm_evidence_reader_smoke_v01_runner.py
+  - git status --short --untracked-files=all
+  - git diff --stat
+  - git diff --check
+  - git diff --name-only
+  - positive rg checks
+  - forbidden/overclaim rg checks
+
+runtime_observations:
+  - default mode is offline/SKIPPED_CLOSED.
+  - no explicit config means no provider call.
+  - fake provider tests do not count as live model/network/Gemini use.
+  - real Gemini configured path counts env credential access without logging/writing the key.
+  - raw provider response can be saved as local artifact.
+  - saved artifact is validated through the existing response-file smoke lane.
+  - valid artifact can create exactly one candidate-only SemanticEvidenceClaim.
+  - invalid JSON fails closed.
+  - authority/action/FinalOutput/connector claims fail closed.
+  - secret-like keys/values fail closed.
+  - prompt injection is preserved as evidence, not instruction.
+  - arbitrary command adapter is not approved.
+  - Response-file lane boundary remains unchanged.
+  - ReaderMode.live_llm_reader remains disabled/fail-closed in the underlying reader.
+  - Root remains final authority.
+
+default_counter_observations:
+  - provider_call_attempted_count: 0 in default mode
+  - live_model_call_count: 0 in default mode
+  - network_used_count: 0 in default mode
+  - gemini_called_count: 0 in default mode
+  - connector_called_count: 0 in default mode
+  - payment_executed_count: 0
+  - shipment_released_count: 0
+  - silent_fallback_to_deterministic_pass_count: 0
+  - root_final_authority_preserved_count: 1
+
+validation_summary:
+  - default runner exits 0 and reports FINAL STATUS: SKIPPED_CLOSED.
+  - focused tests report 38 passed.
+  - default path creates no artifact and makes no provider, model, network, connector, payment, shipment, or secrets call.
+  - explicit fake-provider path validates response capture behavior without counting as live model/network/Gemini use.
+  - monkeypatched real Gemini configured path records credential access and proves the key is not written to raw response or metadata artifacts.
+  - captured artifacts return to the closed response-file validation lane.
+  - invalid or unsafe artifacts fail closed.
+
+authority_boundary:
+  - Provider output is not truth.
+  - Provider output is not authority.
+  - Provider output is not action permission.
+  - Provider output is not FinalOutput.
+  - Captured artifact is untrusted evidence.
+  - SemanticEvidenceClaim remains candidate evidence only.
+  - Response-file validation remains the gate.
+  - Root review is required.
+  - Root remains final authority.
+
+limitations:
+  - not Supplier Payment integration
+  - not WOW v0.2
+  - not Full Semantic E2E
+  - not production
+  - not public WOW
+  - not NeedleFactory / Marennya / UP
+  - no real bank/supplier/warehouse connector
+  - no real payment
+  - no real shipment release
+
+final_conclusion:
+  Live Provider Adapter / Response Capture v0.1 runtime PASS.
+  The layer adds a controlled adapter and response-capture boundary while preserving the closed response-file validation lane, fail-closed behavior, candidate-only semantics, and Root final authority.

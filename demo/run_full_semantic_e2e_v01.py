@@ -144,6 +144,9 @@ COUNTER_KEYS = (
     "legal_hold_overrode_payable_invoice_count",
     "stale_drs_reuse_blocked_count",
     "conflicting_drs_review_only_count",
+    "stale_drs_memory_blocked_count",
+    "conflicting_drs_memory_blocked_count",
+    "high_avf_override_blocked_count",
     "slice2_core_promoted_count",
     "bounded_route_created_count",
     "plan_graph_nodes_created_count",
@@ -158,6 +161,45 @@ COUNTER_KEYS = (
     "external_global_drs_write_count",
     "production_persistence_claimed_count",
     "writeback_before_root_blocked_count",
+    "result_proposal_authority_claim_blocked_count",
+    "result_proposal_action_claim_blocked_count",
+    "result_proposal_final_output_blocked_count",
+    "post_vv_final_output_blocked_count",
+    "post_vv_action_permission_blocked_count",
+    "gt_lgt_finalization_blocked_count",
+    "gt_lgt_root_claim_blocked_count",
+    "pre_root_writeback_blocked_count",
+)
+
+AUTHORITY_CLAIM_KEYS = frozenset(
+    {
+        "authority",
+        "authority_claimed",
+        "root_authority",
+        "root_authority_claimed",
+    }
+)
+ACTION_CLAIM_KEYS = frozenset(
+    {
+        "action_permission",
+        "action_permission_claimed",
+        "action_authorized",
+        "action_permission_created",
+        "payment_executed",
+        "shipment_released",
+        "connector_called",
+        "connector_command",
+        "connector_command_claimed",
+    }
+)
+FINAL_OUTPUT_CLAIM_KEYS = frozenset(
+    {
+        "final_output",
+        "final_output_claimed",
+        "finalizes",
+        "provider_final_output_created",
+        "root_final_output_created",
+    }
 )
 
 ProviderCallable = Callable[[str, str, int, Mapping[str, str]], str]
@@ -407,6 +449,23 @@ def _apply_spine_counters(
     counters["conflicting_drs_review_only_count"] = drs_report.counters[
         "conflicting_provenance_blocked_count"
     ]
+    counters["stale_drs_memory_blocked_count"] = int(
+        drs_report.counters["stale_record_reuse_blocked_count"] > 0
+        and candidate_report.counters["stale_candidate_review_required_count"] > 0
+        and root_boundary["decision"] == "not_ready"
+    )
+    counters["conflicting_drs_memory_blocked_count"] = int(
+        drs_report.counters["conflicting_provenance_blocked_count"] > 0
+        and candidate_report.counters["conflicting_provenance_penalized_count"] > 0
+        and root_boundary["decision"] == "not_ready"
+    )
+    counters["high_avf_override_blocked_count"] = int(
+        any(score.score >= 1.0 for score in candidate_report.ranked_candidates)
+        and slice1_result["legal_hold_present"]
+        and root_boundary["decision"] == "not_ready"
+        and counters["payment_executed_count"] == 0
+        and counters["shipment_released_count"] == 0
+    )
     counters["bounded_orchestrator_invoked_count"] = 1
     counters["architect_invoked_count"] = 1
     counters["plangraph_invoked_count"] = 1
@@ -471,6 +530,30 @@ def _apply_spine_counters(
     counters["slice3_core_promoted_count"] = 5
     counters["writeback_before_root_blocked_count"] = int(
         slice3_hardening["writeback_before_root_blocked"]
+    )
+    counters["result_proposal_authority_claim_blocked_count"] = int(
+        slice3_hardening["result_proposal_authority_claim_blocked"]
+    )
+    counters["result_proposal_action_claim_blocked_count"] = int(
+        slice3_hardening["result_proposal_action_claim_blocked"]
+    )
+    counters["result_proposal_final_output_blocked_count"] = int(
+        slice3_hardening["result_proposal_final_output_blocked"]
+    )
+    counters["post_vv_final_output_blocked_count"] = int(
+        slice3_hardening["post_vv_final_output_blocked"]
+    )
+    counters["post_vv_action_permission_blocked_count"] = int(
+        slice3_hardening["post_vv_action_permission_blocked"]
+    )
+    counters["gt_lgt_finalization_blocked_count"] = int(
+        slice3_hardening["gt_lgt_finalization_blocked"]
+    )
+    counters["gt_lgt_root_claim_blocked_count"] = int(
+        slice3_hardening["gt_lgt_root_claim_blocked"]
+    )
+    counters["pre_root_writeback_blocked_count"] = int(
+        slice3_hardening["pre_root_writeback_blocked"]
     )
 
 
@@ -1018,6 +1101,36 @@ def _contains_text(value: Any, forbidden: str) -> bool:
     return forbidden.lower() in str(value).lower()
 
 
+def _truthy_claim_present(value: Any, forbidden_keys: frozenset[str]) -> bool:
+    if isinstance(value, Mapping):
+        for key, child in value.items():
+            if str(key).lower() in forbidden_keys and bool(child):
+                return True
+            if _truthy_claim_present(child, forbidden_keys):
+                return True
+        return False
+    if isinstance(value, list | tuple | set):
+        return any(_truthy_claim_present(child, forbidden_keys) for child in value)
+    return False
+
+
+def _reject_forbidden_boundary_claims(
+    value: Any,
+    *,
+    authority: bool = False,
+    action: bool = False,
+    final_output: bool = False,
+) -> tuple[bool, tuple[str, ...]]:
+    reasons: list[str] = []
+    if authority and _truthy_claim_present(value, AUTHORITY_CLAIM_KEYS):
+        reasons.append("authority_claim_forbidden")
+    if action and _truthy_claim_present(value, ACTION_CLAIM_KEYS):
+        reasons.append("action_permission_or_external_action_claim_forbidden")
+    if final_output and _truthy_claim_present(value, FINAL_OUTPUT_CLAIM_KEYS):
+        reasons.append("final_output_or_finalization_claim_forbidden")
+    return bool(reasons), tuple(reasons)
+
+
 def _validate_slice2_plan_graph(
     plan_graph: Mapping[str, Any],
     attractor_packet: Mapping[str, Any],
@@ -1363,11 +1476,98 @@ def _drs_writeback_record(root_boundary: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _probe_slice3_hardening_checks(result_proposals: tuple[dict[str, Any], ...]) -> dict[str, bool]:
+def _probe_slice3_hardening_checks(
+    result_proposals: tuple[dict[str, Any], ...],
+    vv_reports: tuple[dict[str, Any], ...],
+    gt_report: Mapping[str, Any],
+) -> dict[str, Any]:
     malformed_report = _validate_result_proposals_runtime([{"proposal_id": "malformed"}])[0]
+    clean_proposals_have_no_authority_claim = not _truthy_claim_present(
+        result_proposals,
+        AUTHORITY_CLAIM_KEYS,
+    )
+    clean_proposals_have_no_action_claim = not _truthy_claim_present(
+        result_proposals,
+        ACTION_CLAIM_KEYS,
+    )
+    clean_proposals_have_no_final_output_claim = not _truthy_claim_present(
+        result_proposals,
+        FINAL_OUTPUT_CLAIM_KEYS,
+    )
+    authority_probe = _json_clone(result_proposals[0])
+    authority_probe["authority_claimed"] = True
+    action_probe = _json_clone(result_proposals[0])
+    action_probe["action_permission_claimed"] = True
+    action_probe["result_payload"]["payment_executed"] = True
+    action_probe["result_payload"]["shipment_released"] = True
+    action_probe["result_payload"]["connector_called"] = True
     final_output_probe = _json_clone(result_proposals[0])
     final_output_probe["final_output"] = {"status": "forbidden"}
     final_output_report = _validate_result_proposals_runtime([final_output_probe])[0]
+
+    clean_post_vv_has_no_final_output = not _truthy_claim_present(
+        vv_reports,
+        FINAL_OUTPUT_CLAIM_KEYS,
+    )
+    clean_post_vv_has_no_action_permission = not _truthy_claim_present(
+        vv_reports,
+        ACTION_CLAIM_KEYS,
+    )
+    post_vv_final_output_probe = _json_clone(vv_reports[0])
+    post_vv_final_output_probe["final_output"] = {"status": "forbidden"}
+    post_vv_action_probe = _json_clone(vv_reports[0])
+    post_vv_action_probe["action_permission_created"] = True
+
+    clean_gt_has_no_finalization = (
+        not gt_report.get("finalizes", False)
+        and not _truthy_claim_present(gt_report, FINAL_OUTPUT_CLAIM_KEYS)
+    )
+    clean_gt_has_no_root_claim = not _truthy_claim_present(
+        gt_report,
+        AUTHORITY_CLAIM_KEYS,
+    )
+    gt_finalization_probe = _json_clone(gt_report)
+    gt_finalization_probe["finalizes"] = True
+    gt_finalization_probe["final_output"] = {"status": "forbidden"}
+    gt_root_claim_probe = _json_clone(gt_report)
+    gt_root_claim_probe["root_authority_claimed"] = True
+    authority_rejected, authority_reasons = _reject_forbidden_boundary_claims(
+        authority_probe,
+        authority=True,
+    )
+    action_rejected, action_reasons = _reject_forbidden_boundary_claims(
+        action_probe,
+        action=True,
+    )
+    final_output_rejected, final_output_reasons = _reject_forbidden_boundary_claims(
+        final_output_probe,
+        final_output=True,
+    )
+    post_vv_final_output_rejected, post_vv_final_output_reasons = (
+        _reject_forbidden_boundary_claims(
+            post_vv_final_output_probe,
+            final_output=True,
+        )
+    )
+    post_vv_action_rejected, post_vv_action_reasons = (
+        _reject_forbidden_boundary_claims(
+            post_vv_action_probe,
+            action=True,
+        )
+    )
+    gt_finalization_rejected, gt_finalization_reasons = (
+        _reject_forbidden_boundary_claims(
+            gt_finalization_probe,
+            final_output=True,
+        )
+    )
+    gt_root_claim_rejected, gt_root_claim_reasons = (
+        _reject_forbidden_boundary_claims(
+            gt_root_claim_probe,
+            authority=True,
+        )
+    )
+
     try:
         with tempfile.TemporaryDirectory(prefix="hedgehog_full_e2e_pre_root_writeback_") as tmp_dir:
             write_root_final_record(
@@ -1384,7 +1584,44 @@ def _probe_slice3_hardening_checks(result_proposals: tuple[dict[str, Any], ...])
     return {
         "malformed_result_proposal_rejected": malformed_report["decision"] == "reject",
         "final_output_result_proposal_rejected": final_output_report["decision"] == "reject",
+        "result_proposal_authority_claim_blocked": (
+            clean_proposals_have_no_authority_claim
+            and authority_rejected
+        ),
+        "result_proposal_authority_claim_block_reasons": authority_reasons,
+        "result_proposal_action_claim_blocked": (
+            clean_proposals_have_no_action_claim
+            and action_rejected
+        ),
+        "result_proposal_action_claim_block_reasons": action_reasons,
+        "result_proposal_final_output_blocked": (
+            clean_proposals_have_no_final_output_claim
+            and final_output_rejected
+            and final_output_report["decision"] == "reject"
+        ),
+        "result_proposal_final_output_block_reasons": final_output_reasons,
+        "post_vv_final_output_blocked": (
+            clean_post_vv_has_no_final_output
+            and post_vv_final_output_rejected
+        ),
+        "post_vv_final_output_block_reasons": post_vv_final_output_reasons,
+        "post_vv_action_permission_blocked": (
+            clean_post_vv_has_no_action_permission
+            and post_vv_action_rejected
+        ),
+        "post_vv_action_permission_block_reasons": post_vv_action_reasons,
+        "gt_lgt_finalization_blocked": (
+            clean_gt_has_no_finalization
+            and gt_finalization_rejected
+        ),
+        "gt_lgt_finalization_block_reasons": gt_finalization_reasons,
+        "gt_lgt_root_claim_blocked": (
+            clean_gt_has_no_root_claim
+            and gt_root_claim_rejected
+        ),
+        "gt_lgt_root_claim_block_reasons": gt_root_claim_reasons,
         "writeback_before_root_blocked": writeback_before_root_blocked,
+        "pre_root_writeback_blocked": writeback_before_root_blocked,
     }
 
 
@@ -1424,7 +1661,11 @@ def _run_slice3_core_primitives(
         "gt_lgt_context": gt_lgt_context,
         "root_boundary": root_boundary,
         "drs_writeback_record": writeback,
-        "hardening_checks": _probe_slice3_hardening_checks(result_proposals),
+        "hardening_checks": _probe_slice3_hardening_checks(
+            result_proposals,
+            vv_reports,
+            gt_report,
+        ),
     }
 
 
@@ -1508,6 +1749,7 @@ def _result(
     gt_lgt_context: Mapping[str, Any] | None = None,
     root_final_output_boundary: Mapping[str, Any] | None = None,
     drs_writeback_record: Mapping[str, Any] | None = None,
+    runtime_hardening_checks: Mapping[str, Any] | None = None,
     validation_errors: tuple[str, ...] = (),
     supplier_live_result: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -1533,6 +1775,7 @@ def _result(
         "gt_lgt_context": dict(gt_lgt_context or {}),
         "root_final_output_boundary": dict(root_final_output_boundary or {}),
         "drs_writeback_record": dict(drs_writeback_record or {}),
+        "runtime_hardening_checks": dict(runtime_hardening_checks or {}),
         "stage_map": stage_map,
         "counters": counters,
         "scenarios": scenarios,
@@ -1633,6 +1876,7 @@ def run_full_semantic_e2e(
         gt_lgt_context=gt_lgt,
         root_final_output_boundary=root_boundary,
         drs_writeback_record=writeback,
+        runtime_hardening_checks=slice3_result["hardening_checks"],
         supplier_live_result=supplier_result,
     )
 
@@ -1693,6 +1937,9 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         "",
         "DRS writeback:",
         str(result["drs_writeback_record"]),
+        "",
+        "Runtime hardening checks:",
+        str(result["runtime_hardening_checks"]),
         "",
         "Scenarios:",
         *[

@@ -389,6 +389,7 @@ def test_drs_writeback_is_real_local_and_after_root() -> None:
     assert result["counters"]["local_drs_writeback_only_count"] == 1
     assert result["counters"]["external_global_drs_write_count"] == 0
     assert result["counters"]["production_persistence_claimed_count"] == 0
+    assert result["counters"]["pre_root_writeback_blocked_count"] == 1
 
 
 def test_slice3_hardening_rejects_malformed_finaloutput_and_pre_root_writeback() -> None:
@@ -404,6 +405,56 @@ def test_slice3_hardening_rejects_malformed_finaloutput_and_pre_root_writeback()
     final_output_probe["final_output"] = {"status": "forbidden"}
     final_output_report = runner._validate_result_proposals_runtime([final_output_probe])[0]
     assert final_output_report["decision"] == "reject"
+
+
+def test_resultproposal_authority_action_and_finaloutput_claims_are_blocked() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    checks = result["runtime_hardening_checks"]
+    counters = result["counters"]
+
+    assert checks["result_proposal_authority_claim_blocked"] is True
+    assert checks["result_proposal_action_claim_blocked"] is True
+    assert checks["result_proposal_final_output_blocked"] is True
+    assert checks["result_proposal_authority_claim_block_reasons"]
+    assert checks["result_proposal_action_claim_block_reasons"]
+    assert checks["result_proposal_final_output_block_reasons"]
+    assert counters["result_proposal_authority_claim_blocked_count"] == 1
+    assert counters["result_proposal_action_claim_blocked_count"] == 1
+    assert counters["result_proposal_final_output_blocked_count"] == 1
+    assert counters["result_proposal_final_output_claimed_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_post_vv_finaloutput_and_action_permission_claims_are_blocked() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    checks = result["runtime_hardening_checks"]
+    counters = result["counters"]
+
+    assert checks["post_vv_final_output_blocked"] is True
+    assert checks["post_vv_action_permission_blocked"] is True
+    assert checks["post_vv_final_output_block_reasons"]
+    assert checks["post_vv_action_permission_block_reasons"]
+    assert counters["post_vv_final_output_blocked_count"] == 1
+    assert counters["post_vv_action_permission_blocked_count"] == 1
+    assert counters["post_vv_final_output_created_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+
+
+def test_gt_lgt_finalization_and_root_claims_are_blocked() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    checks = result["runtime_hardening_checks"]
+    counters = result["counters"]
+
+    assert checks["gt_lgt_finalization_blocked"] is True
+    assert checks["gt_lgt_root_claim_blocked"] is True
+    assert checks["gt_lgt_finalization_block_reasons"]
+    assert checks["gt_lgt_root_claim_block_reasons"]
+    assert counters["gt_lgt_finalization_blocked_count"] == 1
+    assert counters["gt_lgt_root_claim_blocked_count"] == 1
+    assert counters["gt_final_output_created_count"] == 0
+    assert counters["gt_root_authority_claimed_count"] == 0
 
 
 def test_slice2_hardening_probes_block_invalid_plangraphs() -> None:
@@ -464,6 +515,7 @@ def test_legal_hold_beats_payable_invoice_in_slice1_core_path() -> None:
     assert root["shipment_released"] is False
     assert result["advisory_context"]["action_permission_granted"] is False
     assert result["advisory_context"]["root_finality_claimed"] is False
+    assert counters["high_avf_override_blocked_count"] == 1
 
 
 def test_stale_and_conflicting_drs_memory_remain_review_only() -> None:
@@ -474,6 +526,8 @@ def test_stale_and_conflicting_drs_memory_remain_review_only() -> None:
 
     assert counters["stale_drs_reuse_blocked_count"] == 1
     assert counters["conflicting_drs_review_only_count"] == 1
+    assert counters["stale_drs_memory_blocked_count"] == 1
+    assert counters["conflicting_drs_memory_blocked_count"] == 1
     assert drs_context["stale_candidates"] == 1
     assert drs_context["conflicting_candidates"] == 1
     assert drs_context["direct_reuse_applied"] is False
@@ -590,6 +644,9 @@ def test_drs_writeback_after_root_boundary() -> None:
     assert writeback["root_decision"] == result["root_final_output_boundary"]["decision"]
     assert writeback["payment_executed"] is False
     assert writeback["shipment_released"] is False
+    assert writeback["local_writeback_only"] is True
+    assert writeback["external_global_drs_write"] is False
+    assert result["counters"]["pre_root_writeback_blocked_count"] == 1
 
 
 def test_report_contains_required_markers() -> None:

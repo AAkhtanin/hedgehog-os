@@ -102,16 +102,33 @@ def test_only_root_final_output_boundary_creates_final_output() -> None:
     assert result["counters"]["root_final_output_created_count"] == 1
 
 
-def test_represented_stages_are_not_reported_as_invoked() -> None:
+def test_slice1_stages_are_invoked_and_later_stages_remain_represented() -> None:
     result = runner.run_full_semantic_e2e(env={})
     counters = result["counters"]
+    stage_map = result["stage_map"]
 
-    assert counters["drs_resolve_represented_count"] == 1
-    assert counters["drs_resolve_invoked_count"] == 0
-    assert counters["candidate_vector_represented_count"] == 1
-    assert counters["candidate_vector_invoked_count"] == 0
-    assert counters["avf_represented_count"] == 1
-    assert counters["avf_invoked_count"] == 0
+    assert stage_map["drs_resolve_reuse"]["status"] == "invoked"
+    assert stage_map["candidate_vector_generation"]["status"] == "invoked"
+    assert stage_map["avf_scoring"]["status"] == "invoked"
+    assert stage_map["advisory_review"]["status"] == "invoked"
+    assert counters["drs_resolve_invoked_count"] == 1
+    assert counters["drs_resolve_represented_count"] == 0
+    assert counters["candidate_vector_invoked_count"] == 1
+    assert counters["candidate_vector_represented_count"] == 0
+    assert counters["avf_invoked_count"] == 1
+    assert counters["avf_represented_count"] == 0
+    assert counters["advisory_invoked_count"] == 1
+    assert counters["advisory_represented_count"] == 0
+    assert counters["slice1_core_promoted_count"] == 4
+
+    assert stage_map["bounded_orchestrator"]["status"] == "represented"
+    assert stage_map["architect"]["status"] == "represented"
+    assert stage_map["plangraph"]["status"] == "represented"
+    assert stage_map["fractal_cell_executor_branch"]["status"] == "represented"
+    assert stage_map["result_proposal"]["status"] == "represented"
+    assert stage_map["post_vv"]["status"] == "represented"
+    assert stage_map["gt_lgt"]["status"] == "represented"
+    assert stage_map["drs_writeback"]["status"] == "represented"
     assert counters["post_vv_represented_count"] == 1
     assert counters["post_vv_invoked_count"] == 0
     assert counters["gt_lgt_represented_count"] == 1
@@ -129,6 +146,84 @@ def test_semantic_evidence_claim_remains_candidate_only() -> None:
     assert claim["action_permission_claimed"] is False
     assert claim["final_output_claimed"] is False
     assert result["counters"]["semantic_claim_candidate_only_count"] == 1
+
+
+def test_drs_candidate_context_is_from_actual_local_drs_resolve_reuse() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    context = result["drs_candidate_context"]
+    counters = result["counters"]
+
+    assert context["implementation"] == (
+        "hedgehog.local_drs_resolver.resolve_semantic_candidates"
+    )
+    assert context["resolved_as"] == "actual_local_drs_candidate_context"
+    assert context["candidate_count"] == 3
+    assert counters["drs_candidates_resolved_count"] == 3
+    assert context["truth_claimed"] is False
+    assert context["authority_claimed"] is False
+    assert context["action_permission_granted"] is False
+    assert context["direct_reuse_applied"] is False
+    assert any(candidate["stale"] for candidate in context["candidates"])
+    assert any(candidate["conflicting_provenance"] for candidate in context["candidates"])
+
+
+def test_candidate_vector_and_avf_report_are_real_structured_outputs() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    candidate_context = result["candidate_vector_context"]
+    avf_context = result["avf_context"]
+    counters = result["counters"]
+
+    assert candidate_context["implementation"] == (
+        "hedgehog.candidate_vector_generator.build_avf_candidate_report"
+    )
+    assert candidate_context["report_type"] == "CandidateVectorReport"
+    assert candidate_context["candidate_vector_count"] == 3
+    assert candidate_context["counters"]["candidate_vectors_generated_count"] == 3
+    assert candidate_context["counters"]["avf_scores_computed_count"] == 3
+    assert candidate_context["truth_claimed"] is False
+    assert candidate_context["authority_claimed"] is False
+    assert candidate_context["action_permission_claimed"] is False
+    assert candidate_context["direct_reuse_allowed"] is False
+
+    assert avf_context["AVF"] == "invoked score/rank"
+    assert avf_context["hard_masked_count"] == 2
+    assert len(avf_context["scores"]) == 3
+    assert all(score["score_is_authority"] is False for score in avf_context["scores"])
+    assert all(
+        score["action_permission_granted"] is False for score in avf_context["scores"]
+    )
+    assert counters["candidate_vector_ranked_count"] == 3
+    assert counters["avf_hard_mask_applied_count"] == 2
+
+
+def test_legal_hold_beats_payable_invoice_in_slice1_core_path() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+    root = result["root_final_output_boundary"]
+
+    assert counters["legal_hold_overrode_payable_invoice_count"] == 1
+    assert "legal hold" in root["reason"]
+    assert root["payment_executed"] is False
+    assert root["shipment_released"] is False
+    assert result["advisory_context"]["action_permission_granted"] is False
+    assert result["advisory_context"]["root_finality_claimed"] is False
+
+
+def test_stale_and_conflicting_drs_memory_remain_review_only() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+    drs_context = result["drs_candidate_context"]
+    candidate_context = result["candidate_vector_context"]
+
+    assert counters["stale_drs_reuse_blocked_count"] == 1
+    assert counters["conflicting_drs_review_only_count"] == 1
+    assert drs_context["stale_candidates"] == 1
+    assert drs_context["conflicting_candidates"] == 1
+    assert drs_context["direct_reuse_applied"] is False
+    assert drs_context["action_permission_granted"] is False
+    assert candidate_context["direct_reuse_allowed"] is False
+    assert candidate_context["counters"]["stale_candidate_review_required_count"] == 1
+    assert candidate_context["counters"]["conflicting_provenance_penalized_count"] == 1
 
 
 def test_drs_candidate_vector_avf_and_advisory_boundaries() -> None:

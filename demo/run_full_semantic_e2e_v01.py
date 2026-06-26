@@ -7,11 +7,23 @@ from pathlib import Path
 from typing import Any, Callable, Mapping
 
 from demo import run_supplier_payment_live_evidence_integration_v02 as supplier_live
+from hedgehog.candidate_vector_generator import build_avf_candidate_report
+from hedgehog.candidate_vector_generator import candidate_inputs_from_resolved_report
+from hedgehog.drs import LocalDRS
+from hedgehog.gt_lgt_advisory_evaluator import evaluate_candidate_report
 from hedgehog.live_llm_semantic_evidence_reader import SemanticEvidenceClaim
+from hedgehog.local_drs_resolver import SemanticDRSRecordInput
+from hedgehog.local_drs_resolver import SemanticResolveQuery
+from hedgehog.local_drs_resolver import resolve_semantic_candidates
+from hedgehog.local_drs_resolver import write_semantic_record
 
 
 TITLE = "HEDGEHOG OS - FULL SEMANTIC E2E v0.1"
 EXPECTED_DEFAULT_FINAL_STATUS_LINE = "FINAL STATUS: PASS"
+SLICE1_SESSION_ANCHOR = "sess_full_semantic_e2e_slice1_v01"
+SLICE1_NOW = "2026-06-22T12:00:00+00:00"
+SLICE1_OLD = "2026-01-01T00:00:00+00:00"
+SUPPLIER_PAYMENT_DOMAIN = "supplier_payment_shipment"
 
 STAGES = (
     "intake_dirty_business_request",
@@ -105,6 +117,13 @@ COUNTER_KEYS = (
     "live_model_call_count",
     "network_used_count",
     "gemini_called_count",
+    "slice1_core_promoted_count",
+    "drs_candidates_resolved_count",
+    "candidate_vector_ranked_count",
+    "avf_hard_mask_applied_count",
+    "legal_hold_overrode_payable_invoice_count",
+    "stale_drs_reuse_blocked_count",
+    "conflicting_drs_review_only_count",
 )
 
 ProviderCallable = Callable[[str, str, int, Mapping[str, str]], str]
@@ -285,13 +304,38 @@ def _represented_count_is_honest(counters: Mapping[str, int]) -> bool:
     )
 
 
-def _apply_represented_spine_counters(counters: dict[str, int]) -> None:
-    counters["drs_resolve_represented_count"] = 1
+def _apply_spine_counters(
+    counters: dict[str, int],
+    slice1_result: Mapping[str, Any],
+) -> None:
+    drs_report = slice1_result["drs_report"]
+    candidate_report = slice1_result["candidate_report"]
+    advisory_report = slice1_result["advisory_report"]
+    counters["drs_resolve_invoked_count"] = 1
     counters["drs_writeback_represented_count"] = 1
-    counters["candidate_vector_created_count"] = 1
-    counters["candidate_vector_represented_count"] = 1
-    counters["avf_represented_count"] = 1
-    counters["advisory_represented_count"] = 1
+    counters["candidate_vector_created_count"] = candidate_report.counters[
+        "candidate_vectors_generated_count"
+    ]
+    counters["candidate_vector_invoked_count"] = 1
+    counters["avf_invoked_count"] = 1
+    counters["advisory_invoked_count"] = 1
+    counters["slice1_core_promoted_count"] = 4
+    counters["drs_candidates_resolved_count"] = drs_report.candidate_count
+    counters["candidate_vector_ranked_count"] = len(candidate_report.ranked_candidates)
+    counters["avf_hard_mask_applied_count"] = sum(
+        1 for score in candidate_report.ranked_candidates if score.hard_blocks
+    )
+    counters["legal_hold_overrode_payable_invoice_count"] = int(
+        slice1_result["legal_hold_present"]
+        and advisory_report.action_permission_granted_count == 0
+        and counters["payment_executed_count"] == 0
+    )
+    counters["stale_drs_reuse_blocked_count"] = drs_report.counters[
+        "stale_record_reuse_blocked_count"
+    ]
+    counters["conflicting_drs_review_only_count"] = drs_report.counters[
+        "conflicting_provenance_blocked_count"
+    ]
     counters["bounded_orchestrator_represented_count"] = 1
     counters["architect_represented_count"] = 1
     counters["plangraph_created_count"] = 1
@@ -322,24 +366,24 @@ def _stage_map_success() -> dict[str, dict[str, Any]]:
             notes="closed SemanticEvidenceClaim validation lane creates candidate-only evidence",
         ),
         "drs_resolve_reuse": _stage(
-            "represented",
+            "invoked",
             "candidate",
-            notes="DRS candidate context represented; DRS candidate context is not truth",
+            notes="hedgehog.local_drs_resolver.resolve_semantic_candidates invoked; DRS candidate context is not truth",
         ),
         "candidate_vector_generation": _stage(
-            "represented",
+            "invoked",
             "candidate",
-            notes="CandidateVector context represented without truth claim",
+            notes="hedgehog.candidate_vector_generator.build_avf_candidate_report invoked for real CandidateVector output",
         ),
         "avf_scoring": _stage(
-            "represented",
+            "invoked",
             "advisory",
-            notes="AVF score/rank represented; AVF is advisory only",
+            notes="AVF score/rank invoked through CandidateVectorReport; AVF is advisory only",
         ),
         "advisory_review": _stage(
-            "represented",
+            "invoked",
             "advisory",
-            notes="advisory review represented without root finality",
+            notes="hedgehog.gt_lgt_advisory_evaluator.evaluate_candidate_report invoked without root finality",
         ),
         "bounded_orchestrator": _stage(
             "represented",
@@ -390,6 +434,218 @@ def _stage_map_success() -> dict[str, dict[str, Any]]:
     }
 
 
+def _time_envelope(created_at: str, freshness_class: str) -> dict[str, Any]:
+    return {
+        "pt_created_at": created_at,
+        "kt_asof": created_at,
+        "et_observed_at": created_at,
+        "ct_session_anchor": SLICE1_SESSION_ANCHOR,
+        "ttl_seconds": 86_400,
+        "freshness_class": freshness_class,
+        "valid_from": created_at,
+        "valid_to": None,
+    }
+
+
+def _temporal_query() -> dict[str, Any]:
+    return {
+        "as_of": SLICE1_NOW,
+        "time_range": {"from": None, "to": SLICE1_NOW},
+        "freshness_bias": "prefer_recent",
+        "max_age_seconds": 86_400,
+        "freshness_required": "normal",
+    }
+
+
+def _trace_ref(span_id: str) -> dict[str, str]:
+    return {
+        "trace_id": "trace:full_semantic_e2e_slice1",
+        "span_id": span_id,
+        "kind": "full_semantic_e2e_slice1",
+    }
+
+
+def _source_ref(claim: SemanticEvidenceClaim, span_id: str) -> dict[str, Any]:
+    return {
+        "source": claim.source_kind,
+        "source_id": claim.source_id,
+        "trace_ref": _trace_ref(span_id),
+    }
+
+
+def _semantic_record_input(
+    claim: SemanticEvidenceClaim,
+    dirty_request: Mapping[str, Any],
+    *,
+    record_id: str,
+    summary: str,
+    claim_value: str,
+    freshness_class: str = "normal",
+    created_at: str = SLICE1_NOW,
+    conflicting: bool = False,
+) -> SemanticDRSRecordInput:
+    legal_hold = "insurance certificate may be expired"
+    content = {
+        "summary": summary,
+        "subject_key": dirty_request["subject"],
+        "claim_key": "supplier_payment_shipment_readiness",
+        "claim_value": claim_value,
+        "semantic_claim_id": claim.claim_id,
+        "source_claim_is_candidate_only": True,
+        "schema_valid": True,
+        "invoice_payable_signal": True,
+        "legal_hold": legal_hold,
+        "legal_hold_present": True,
+        "warehouse_stock_status": "water_filter short by 2",
+        "water_filter_shortage": True,
+        "worldstate": {
+            "stock_status": "short_by_2",
+            "legal_hold": True,
+            "insurance_certificate": "may_be_expired",
+        },
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "drs_record_is_truth": False,
+        "drs_hit_is_authority": False,
+        "drs_reuse_candidate_is_action_permission": False,
+        "conflicting_provenance": conflicting,
+    }
+    return SemanticDRSRecordInput(
+        record_id=record_id,
+        domain=SUPPLIER_PAYMENT_DOMAIN,
+        content=content,
+        semantic_keys=(
+            "supplier_payment",
+            "shipment_release",
+            "INV-2042",
+            "SH-2042",
+            "water_filter",
+            "legal_hold",
+            "payable_invoice",
+            "candidate_evidence",
+        ),
+        record_type="supplier_payment_live_evidence_candidate",
+        time_envelope=_time_envelope(created_at, freshness_class),
+        provenance={
+            "request_id": dirty_request["request_id"],
+            "created_by": "root_orchestrator",
+            "trace_refs": [_trace_ref(record_id)],
+        },
+        trace_refs=(_trace_ref(record_id),),
+        source_refs=(_source_ref(claim, record_id),),
+        status="active",
+    )
+
+
+def _run_slice1_core_primitives(
+    claim: SemanticEvidenceClaim,
+    dirty_request: Mapping[str, Any],
+) -> dict[str, Any]:
+    with tempfile.TemporaryDirectory(prefix="hedgehog_full_e2e_slice1_") as tmp_dir:
+        drs = LocalDRS(tmp_dir)
+        records_by_id: dict[str, dict[str, Any]] = {}
+        record_inputs = (
+            _semantic_record_input(
+                claim,
+                dirty_request,
+                record_id="record:supplier_live_candidate_current",
+                summary=(
+                    "Current candidate evidence says invoice looks payable, but legal hold "
+                    "and water_filter shortage require Root review."
+                ),
+                claim_value="needs_root_review_not_ready",
+            ),
+            _semantic_record_input(
+                claim,
+                dirty_request,
+                record_id="record:supplier_live_candidate_stale",
+                summary=(
+                    "Stale supplier-payment memory previously looked payable, but it remains "
+                    "candidate-only and cannot authorize action."
+                ),
+                claim_value="stale_payable_memory_review_only",
+                freshness_class="stale",
+                created_at=SLICE1_OLD,
+            ),
+            _semantic_record_input(
+                claim,
+                dirty_request,
+                record_id="record:supplier_live_candidate_conflicting",
+                summary=(
+                    "Conflicting supplier provenance says stock is available while warehouse "
+                    "reports water_filter short by 2."
+                ),
+                claim_value="conflicting_supplier_stock_review_only",
+                conflicting=True,
+            ),
+        )
+        for record_input in record_inputs:
+            record = write_semantic_record(drs, record_input)
+            records_by_id[record["record_id"]] = record
+
+        query = SemanticResolveQuery(
+            query_id="query:full_semantic_e2e_supplier_payment_slice1",
+            domain=SUPPLIER_PAYMENT_DOMAIN,
+            semantic_terms=(
+                "supplier_payment",
+                "shipment_release",
+                "INV-2042",
+                "SH-2042",
+                "water_filter",
+                "legal_hold",
+                "payable_invoice",
+            ),
+            content_filters={"subject_key": dirty_request["subject"]},
+            temporal_query=_temporal_query(),
+            worldstate={
+                "stock_status": "short_by_2",
+                "legal_hold": True,
+                "insurance_certificate": "may_be_expired",
+            },
+            source_refs=(_source_ref(claim, "query"),),
+            trace_refs=(_trace_ref("query"),),
+            max_candidates=5,
+            require_root_review=True,
+            risk_class="supplier_payment_review",
+        )
+        drs_report = resolve_semantic_candidates(drs, query, layers=("work",))
+        candidate_inputs = candidate_inputs_from_resolved_report(
+            drs_report,
+            records_by_id=records_by_id,
+            extra_tokens=("legal_hold", "water_filter", "supplier_payment"),
+        )
+        candidate_report = build_avf_candidate_report(candidate_inputs, top_n=3)
+        advisory_report = evaluate_candidate_report(
+            candidate_report,
+            report_id="full_semantic_e2e_slice1_candidate_report",
+        )
+        return {
+            "records_by_id": records_by_id,
+            "drs_report": drs_report,
+            "candidate_inputs": candidate_inputs,
+            "candidate_report": candidate_report,
+            "advisory_report": advisory_report,
+            "legal_hold_present": True,
+        }
+
+
+def _drs_candidate_row(candidate: Any) -> dict[str, Any]:
+    return {
+        "candidate_id": candidate.candidate_id,
+        "record_id": candidate.record_id,
+        "match_score": candidate.match_score,
+        "review_required": candidate.review_required,
+        "blocked": candidate.blocked,
+        "direct_reuse_allowed": candidate.direct_reuse_allowed,
+        "action_permission_granted": candidate.action_permission_granted,
+        "stale": candidate.stale,
+        "conflicting_provenance": candidate.conflicting_provenance,
+        "reason_codes": candidate.reason_codes,
+    }
+
+
 def _stage_map_fail_closed() -> dict[str, dict[str, Any]]:
     stage_map = {
         stage_name: _stage("skipped", "none", notes="skipped after fail-closed evidence gate")
@@ -413,39 +669,109 @@ def _stage_map_fail_closed() -> dict[str, dict[str, Any]]:
     return stage_map
 
 
-def _drs_context(claim: SemanticEvidenceClaim) -> dict[str, Any]:
+def _drs_context(
+    claim: SemanticEvidenceClaim,
+    slice1_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    report = slice1_result["drs_report"]
     return {
         "context_type": "DRS candidate context",
+        "implementation": "hedgehog.local_drs_resolver.resolve_semantic_candidates",
         "source_claim_id": claim.claim_id,
-        "resolved_as": "candidate_memory_context",
-        "truth_claimed": False,
-        "direct_reuse_applied": False,
+        "resolved_as": "actual_local_drs_candidate_context",
+        "candidate_count": report.candidate_count,
+        "candidate_ids": tuple(candidate.candidate_id for candidate in report.candidates),
+        "candidates": tuple(_drs_candidate_row(candidate) for candidate in report.candidates),
+        "reason_codes": report.reason_codes,
+        "truth_claimed": report.authority_boundary["drs_record_is_truth"],
+        "authority_claimed": report.authority_boundary["drs_hit_is_authority"],
+        "action_permission_granted": report.counters["action_permission_granted_count"] > 0,
+        "direct_reuse_applied": report.direct_reuse_allowed_count > 0,
+        "stale_candidates": report.counters["stale_record_reuse_blocked_count"],
+        "conflicting_candidates": report.counters["conflicting_provenance_blocked_count"],
     }
 
 
-def _candidate_vector_context(claim: SemanticEvidenceClaim) -> dict[str, Any]:
+def _candidate_vector_context(
+    claim: SemanticEvidenceClaim,
+    slice1_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    report = slice1_result["candidate_report"]
     return {
-        "context_type": "CandidateVector supplier-payment direction",
+        "context_type": "CandidateVector generated from real DRS candidate context",
+        "implementation": "hedgehog.candidate_vector_generator.build_avf_candidate_report",
+        "report_type": type(report).__name__,
         "source_claim_id": claim.claim_id,
-        "direction": "needs_review_not_ready",
-        "truth_claimed": False,
+        "candidate_vector_count": len(report.candidates),
+        "ranked_candidate_ids": tuple(score.candidate_id for score in report.ranked_candidates),
+        "top_candidate_ids": report.top_candidate_ids,
+        "truth_claimed": any(candidate.truth_claimed for candidate in report.candidates),
+        "authority_claimed": any(candidate.authority_claimed for candidate in report.candidates),
+        "action_permission_claimed": any(
+            candidate.action_permission_claimed for candidate in report.candidates
+        ),
+        "direct_reuse_allowed": report.direct_reuse_allowed_count > 0,
+        "root_review_required": report.root_review_required,
+        "counters": dict(report.counters),
+        "reason_codes": report.reason_codes,
     }
 
 
-def _avf_context() -> dict[str, Any]:
+def _avf_context(slice1_result: Mapping[str, Any]) -> dict[str, Any]:
+    report = slice1_result["candidate_report"]
+    scores = tuple(
+        {
+            "candidate_id": score.candidate_id,
+            "vector_id": score.vector_id,
+            "score": score.score,
+            "hard_blocks": score.hard_blocks,
+            "review_required": score.review_required,
+            "score_is_authority": score.score_is_authority,
+            "action_permission_granted": score.action_permission_granted,
+        }
+        for score in report.ranked_candidates
+    )
+    top_score = scores[0]["score"] if scores else 0.0
     return {
-        "AVF": "represented score/rank",
-        "score": 0.58,
+        "AVF": "invoked score/rank",
+        "implementation": "hedgehog.candidate_vector_generator.build_avf_candidate_report",
+        "score": top_score,
         "rank": "review_required",
-        "authority_claimed": False,
+        "scores": scores,
+        "hard_masked_count": sum(1 for score in report.ranked_candidates if score.hard_blocks),
+        "authority_claimed": any(score.score_is_authority for score in report.ranked_candidates),
+        "action_permission_granted": any(
+            score.action_permission_granted for score in report.ranked_candidates
+        ),
+        "counters": dict(report.counters),
     }
 
 
-def _advisory_context() -> dict[str, Any]:
+def _advisory_context(slice1_result: Mapping[str, Any]) -> dict[str, Any]:
+    report = slice1_result["advisory_report"]
     return {
+        "implementation": "hedgehog.gt_lgt_advisory_evaluator.evaluate_candidate_report",
+        "report_type": type(report).__name__,
         "review": "legal hold and stock shortage require Root review",
-        "authority_claimed": False,
-        "root_finality_claimed": False,
+        "recommended_review_route": report.recommended_review_route,
+        "signals": tuple(
+            {
+                "signal_kind": signal.signal_kind,
+                "advisory_decision": signal.advisory_decision,
+                "authority_claimed": signal.authority_claimed,
+                "truth_claimed": signal.truth_claimed,
+                "action_permission_claimed": signal.action_permission_claimed,
+                "final_output_claimed": signal.final_output_claimed,
+                "root_review_required": signal.root_review_required,
+            }
+            for signal in report.signals
+        ),
+        "authority_claimed": any(signal.authority_claimed for signal in report.signals),
+        "truth_claimed": any(signal.truth_claimed for signal in report.signals),
+        "action_permission_granted": report.action_permission_granted_count > 0,
+        "root_finality_claimed": report.final_output_created_count > 0,
+        "counters": dict(report.counters),
+        "reason_codes": report.reason_codes,
     }
 
 
@@ -691,11 +1017,12 @@ def run_full_semantic_e2e(
         )
 
     claim = supplier_result["claims"][0]
-    _apply_represented_spine_counters(counters)
-    drs_context = _drs_context(claim)
-    candidate_context = _candidate_vector_context(claim)
-    avf = _avf_context()
-    advisory = _advisory_context()
+    slice1_result = _run_slice1_core_primitives(claim, dirty_request)
+    _apply_spine_counters(counters, slice1_result)
+    drs_context = _drs_context(claim, slice1_result)
+    candidate_context = _candidate_vector_context(claim, slice1_result)
+    avf = _avf_context(slice1_result)
+    advisory = _advisory_context(slice1_result)
     bounded_orchestrator = _bounded_orchestrator_context()
     architect = _architect_context()
     plangraph = _plangraph_context()

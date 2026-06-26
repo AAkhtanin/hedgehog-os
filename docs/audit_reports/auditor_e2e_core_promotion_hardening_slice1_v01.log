@@ -1,0 +1,71 @@
+audit_id: auditor_e2e_core_promotion_hardening_slice1_v01
+audit_status: PASS
+runtime_commit: 3d5b090
+base_preflight_commit: f21a2ee
+previous_full_e2e_audit_commit: 11df12c
+layer: E2E Core Promotion & Hardening v0.1 Slice 1
+
+Scope:
+- Existing Full Semantic E2E route was extended; no new runner was created.
+- Changed files in runtime commit:
+  - demo/run_full_semantic_e2e_v01.py
+  - tests/test_full_semantic_e2e_v01_runner.py
+
+Validation recorded:
+- python3 -m demo.run_full_semantic_e2e_v01
+- FINAL STATUS: PASS
+- focused pytest: 89 passed
+- git diff --check: clean
+- changed files exactly:
+  - demo/run_full_semantic_e2e_v01.py
+  - tests/test_full_semantic_e2e_v01_runner.py
+
+Slice 1 promotion facts:
+- DRS resolve/reuse is now invoked.
+- CandidateVectorGenerator is now invoked.
+- AVF scoring/ranking is now invoked.
+- Advisory review is now invoked in the runtime result through the compatible advisory evaluator.
+- represented counts decreased for Slice 1.
+- invoked counts increased for Slice 1.
+- Downstream stages remain represented:
+  - bounded Orchestrator
+  - Architect
+  - PlanGraph
+  - Fractal Cell / Executor
+  - ResultProposal
+  - Post V&V
+  - GT/LGT
+  - DRS writeback
+
+Key counters:
+- drs_resolve_invoked_count: 1
+- drs_resolve_represented_count: 0
+- candidate_vector_invoked_count: 1
+- candidate_vector_represented_count: 0
+- avf_invoked_count: 1
+- avf_represented_count: 0
+- slice1_core_promoted_count: 4
+- payment_executed_count: 0
+- shipment_released_count: 0
+- connector_called_count: 0
+- root_final_authority_preserved_count: 1
+
+Hardening observations:
+- legal hold beats payable invoice.
+- stale DRS memory stays review-only.
+- conflicting DRS provenance stays review-only.
+- CandidateVector is not truth.
+- AVF is not authority.
+- advisory is not Root.
+- Root remains final authority.
+
+Boundary notes:
+- This audit does not claim Public WOW readiness.
+- This audit does not claim production readiness.
+- This audit does not claim real-world external action execution.
+- This audit does not claim NeedleFactory readiness.
+- This audit does not claim every middle stage is directly invoked.
+- Slice 2 and Slice 3 remain future work.
+
+Conclusion:
+E2E Core Promotion & Hardening v0.1 Slice 1 PASS. The committed Full Semantic E2E route now invokes the Slice 1 DRS, CandidateVectorGenerator, AVF, and compatible advisory surfaces while preserving represented/invoked honesty, zero external action counters, and Root final authority.

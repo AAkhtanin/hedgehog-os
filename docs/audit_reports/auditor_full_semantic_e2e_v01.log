@@ -1,0 +1,113 @@
+audit_id: auditor_full_semantic_e2e_v01
+audit_status: PASS
+layer: Full Semantic E2E v0.1 technical audit
+preflight_commit: 3008a10
+patch_plan_commit: a70c8f6
+runtime_commit: cbae479
+
+Audited runtime files:
+- demo/run_full_semantic_e2e_v01.py
+- tests/test_full_semantic_e2e_v01_runner.py
+
+Validation commands run:
+- python3 -m demo.run_full_semantic_e2e_v01
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_full_semantic_e2e_v01_runner.py tests/test_supplier_payment_live_evidence_integration_v02_runner.py
+
+Observed validation results:
+- runner exits 0
+- runner result: FINAL STATUS: PASS
+- focused pytest: 37 passed in 0.05s
+
+Stage map summary:
+- intake_dirty_business_request: status=invoked, authority=none, creates_final_output=false
+- live_or_captured_evidence_lane: status=invoked, authority=candidate, creates_final_output=false
+- semantic_evidence_claim_validation: status=invoked, authority=candidate, creates_final_output=false
+- drs_resolve_reuse: status=represented, authority=candidate, creates_final_output=false
+- candidate_vector_generation: status=represented, authority=candidate, creates_final_output=false
+- avf_scoring: status=represented, authority=advisory, creates_final_output=false
+- advisory_review: status=represented, authority=advisory, creates_final_output=false
+- bounded_orchestrator: status=represented, authority=advisory, creates_final_output=false
+- architect: status=represented, authority=advisory, creates_final_output=false
+- plangraph: status=represented, authority=advisory, creates_final_output=false
+- fractal_cell_executor_branch: status=represented, authority=advisory, creates_final_output=false
+- result_proposal: status=represented, authority=advisory, creates_final_output=false
+- post_vv: status=represented, authority=advisory, creates_final_output=false
+- gt_lgt: status=represented, authority=advisory, creates_final_output=false
+- root_final_output_boundary: status=invoked, authority=root_only, creates_final_output=true
+- drs_writeback: status=represented, authority=candidate, creates_final_output=false
+
+Invoked vs represented finding:
+- Invoked stages are limited to intake, captured evidence lane, SemanticEvidenceClaim validation, and root_final_output_boundary.
+- Represented stages are not reported as directly invoked.
+- represented_count values are not reported as invoked_count values.
+- Several middle stages are represented through the existing supplier-payment integration spine rather than directly invoked as core hedgehog runtime modules.
+
+Authority and boundary findings:
+- SemanticEvidenceClaim remains candidate-only.
+- Provider output is not truth, authority, permission, action, or FinalOutput.
+- Only root_final_output_boundary creates FinalOutput.
+- ResultProposal does not create FinalOutput.
+- Post V&V does not finalize.
+- GT-LGT does not finalize.
+- DRS is not truth.
+- AVF is not authority.
+- Root remains final authority.
+- legal hold blocks payment readiness.
+- water_filter stock shortage blocks shipment readiness.
+- Unsafe/invalid evidence paths fail closed in focused tests.
+- DRS writeback is downstream of Root finalization.
+
+Observed zero-boundary facts:
+- network/model/provider calls in the default run: 0
+- live_model_call_count: 0
+- network_used_count: 0
+- gemini_called_count: 0
+- connectors called: 0
+- connector_called_count: 0
+- payment executed: 0
+- payment_executed_count: 0
+- shipment released: 0
+- shipment_released_count: 0
+- provider-created FinalOutput: 0
+- provider_final_output_created_count: 0
+- ResultProposal-created FinalOutput: 0
+- result_proposal_final_output_claimed_count: 0
+- public WOW claimed: 0
+- public_wow_claimed_count: 0
+- production readiness claimed: 0
+- production_ready_claimed_count: 0
+- root_final_authority_preserved_count: 1
+
+Runtime scenario evidence:
+- no_config_runs_deterministic_full_spine_without_live_provider: PASS
+- captured_live_evidence_enters_e2e_as_candidate_only: PASS
+- drs_candidate_context_resolved_without_truth_claim: PASS
+- candidate_vector_created_without_truth_claim: PASS
+- avf_scores_without_authority: PASS
+- advisory_reviews_without_root_finality: PASS
+- result_proposal_not_final_output: PASS
+- post_vv_checks_without_finalizing: PASS
+- gt_lgt_reviews_without_root_authority: PASS
+- root_creates_only_final_output_boundary: PASS
+- drs_writeback_after_root_boundary: PASS
+- legal_hold_blocks_payment_even_with_payable_invoice: PASS
+- stock_shortage_blocks_shipment_release: PASS
+- prompt_injection_preserved_as_evidence: PASS
+- represented_not_reported_as_invoked: PASS
+- no_payment_or_shipment_release_executed: PASS
+- no_public_wow_or_production_claim: PASS
+- root_final_authority_preserved: PASS
+
+Limitation statement:
+Full Semantic E2E v0.1 is a committed deterministic end-to-end runtime composition.
+Its orchestration currently lives in demo/run_full_semantic_e2e_v01.py.
+Several middle stages are represented through the existing supplier-payment integration spine rather than directly invoked as core hedgehog runtime modules.
+This checkpoint is not production, not Public WOW, and not NeedleFactory readiness.
+
+Next engineering direction:
+E2E Hardening Pack v0.1 is next.
+It must protect the existing full spine and progressively replace represented stages with invoked runtime primitives where callable contracts already exist.
+Do not start Public WOW before the hardening/core-promotion gate is satisfied.
+
+Conclusion:
+Full Semantic E2E v0.1 technical audit PASS. The committed runtime produces a deterministic end-to-end supplier-payment spine result, preserves candidate-only evidence, separates invoked and represented semantics, keeps all external-action counters at zero, creates only the Root FinalOutput boundary, and preserves Root final authority.

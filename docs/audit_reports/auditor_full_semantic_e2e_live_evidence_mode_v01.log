@@ -1,0 +1,126 @@
+audit_id: auditor_full_semantic_e2e_live_evidence_mode_v01
+audit_status: PASS
+runtime_commit: c0dd92b
+previous_audit_commit: f38a834
+adapter_fix_commits:
+- b1b16b5 Fix Gemini SDK path in live provider adapter
+- 7e81fb5 Improve Gemini response schema adherence
+scope: Full Semantic E2E Live Evidence Mode v0.1 with real manual Gemini smoke
+
+Summary:
+Existing Full Semantic E2E runner was extended in place.
+No standalone runner/proof island was created.
+Default mode remains deterministic/offline and returns FINAL STATUS: PASS.
+Live evidence mode is explicit-only through HEDGEHOG_FULL_E2E_LIVE_EVIDENCE.
+Live evidence mode reuses the existing Live Provider Adapter / Response Capture v0.1.
+Adapter now uses google-genai SDK path: from google import genai.
+Adapter requests JSON response via response_mime_type: application/json.
+Adapter uses response_json_schema / response_schema fallback plus explicit JSON skeleton.
+Raw provider response is captured as artifact before validation.
+Response-file validation creates candidate-only SemanticEvidenceClaim.
+SemanticEvidenceClaim enters the existing Full E2E route as candidate-only evidence.
+
+Manual real Gemini smoke:
+Manual live provider was real Gemini, not fake provider.
+provider_name: gemini
+provider_model: gemini-2.5-flash
+raw response artifact was created locally.
+metadata artifact was created locally.
+validation_status: PASS
+final_status: PASS
+SemanticEvidenceClaim was created candidate-only.
+
+Manual smoke observed raw claim summary:
+extracted_claim: Invoice INV-2042 looks payable according to Accounting.
+confidence: 0.7
+truth_claimed: false
+authority_claimed: false
+action_permission_claimed: false
+final_output_claimed: false
+connector_command_claimed: false
+root_review_required: true
+
+Full E2E path:
+Full E2E continued through DRS, CandidateVector, AVF, advisory, bounded route, Architect, PlanGraph, Fractal executor, ResultProposal, Post V&V, GT/LGT, Root boundary, and local DRS writeback.
+
+Provider boundary:
+Provider/Gemini output is not truth.
+Provider/Gemini output is not authority.
+Provider/Gemini output is not FinalOutput.
+Provider/Gemini output is not action permission.
+No bounded Gemini actor role was started.
+Root remains final authority.
+No payment executed.
+No shipment released.
+No connector called.
+No public WOW claim.
+No production readiness claim.
+
+Honesty note:
+This layer proves safe live evidence intake into Full E2E.
+This proves live Gemini evidence intake into Full E2E.
+It does not yet prove full claim-content-driven mutation of all supplier facts.
+Supplier business context may still contain deterministic fixture facts.
+Manual artifacts are local .tmp files and must not be committed.
+Next runtime debt: validated live claim content should explicitly influence supplier facts / DRS candidate context while remaining candidate-only.
+
+Observed validation:
+default runner: FINAL STATUS: PASS
+focused pytest: 97 passed, 2 warnings
+git diff --check before commit: clean
+changed files:
+- demo/run_full_semantic_e2e_v01.py
+- tests/test_full_semantic_e2e_v01_runner.py
+
+Observed explicit fake live-evidence counters:
+full_e2e_live_evidence_mode_count: 1 in explicit fake live-evidence test
+live_provider_adapter_invoked_count: 1
+raw_provider_response_artifact_created_count: 1
+raw_provider_response_validated_count: 1
+live_evidence_semantic_claim_created_count: 1
+live_evidence_claim_candidate_only_count: 1
+provider_output_used_as_truth_count: 0
+provider_output_used_as_authority_count: 0
+provider_final_output_created_count: 0
+bounded_gemini_actor_role_started_count: 0
+payment_executed_count: 0
+shipment_released_count: 0
+connector_called_count: 0
+
+Manual Full E2E observed counters:
+full_e2e_live_evidence_mode_count: 1
+live_provider_adapter_invoked_count: 1
+raw_provider_response_artifact_created_count: 1
+raw_provider_response_validated_count: 1
+live_evidence_semantic_claim_created_count: 1
+live_evidence_claim_candidate_only_count: 1
+live_model_call_count: 1
+network_used_count: 1
+gemini_called_count: 1
+semantic_claim_created_count: 1
+drs_resolve_invoked_count: 1
+candidate_vector_invoked_count: 1
+avf_invoked_count: 1
+advisory_invoked_count: 1
+architect_invoked_count: 1
+plangraph_invoked_count: 1
+fractal_branch_invoked_count: 1
+result_proposal_invoked_count: 1
+post_vv_invoked_count: 1
+gt_lgt_invoked_count: 1
+root_final_output_created_count: 1
+drs_writeback_invoked_count: 1
+payment_executed_count: 0
+shipment_released_count: 0
+connector_called_count: 0
+provider_output_used_as_truth_count: 0
+provider_output_used_as_authority_count: 0
+provider_final_output_created_count: 0
+bounded_gemini_actor_role_started_count: 0
+
+Next vector:
+Full Semantic E2E Live Evidence Influence v0.1.
+Validated live claim content must influence supplier facts / DRS candidate context.
+Still candidate-only.
+Still no bounded Gemini actor roles.
+Still no public WOW.

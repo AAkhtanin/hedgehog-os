@@ -7,11 +7,14 @@ from pathlib import Path
 from typing import Any, Callable, Mapping
 
 from demo import run_supplier_payment_live_evidence_integration_v02 as supplier_live
+from hedgehog.architect import make_plan_graph
 from hedgehog.candidate_vector_generator import build_avf_candidate_report
 from hedgehog.candidate_vector_generator import candidate_inputs_from_resolved_report
 from hedgehog.drs import LocalDRS
+from hedgehog.fractal_dag_executor import run_fractal_dag_executor
 from hedgehog.gt_lgt_advisory_evaluator import evaluate_candidate_report
 from hedgehog.live_llm_semantic_evidence_reader import SemanticEvidenceClaim
+from hedgehog.llm_architect import validate_plan_graph_contract
 from hedgehog.local_drs_resolver import SemanticDRSRecordInput
 from hedgehog.local_drs_resolver import SemanticResolveQuery
 from hedgehog.local_drs_resolver import resolve_semantic_candidates
@@ -21,6 +24,7 @@ from hedgehog.local_drs_resolver import write_semantic_record
 TITLE = "HEDGEHOG OS - FULL SEMANTIC E2E v0.1"
 EXPECTED_DEFAULT_FINAL_STATUS_LINE = "FINAL STATUS: PASS"
 SLICE1_SESSION_ANCHOR = "sess_full_semantic_e2e_slice1_v01"
+SLICE2_SESSION_ANCHOR = "sess_full_semantic_e2e_slice2_v01"
 SLICE1_NOW = "2026-06-22T12:00:00+00:00"
 SLICE1_OLD = "2026-01-01T00:00:00+00:00"
 SUPPLIER_PAYMENT_DOMAIN = "supplier_payment_shipment"
@@ -89,12 +93,17 @@ COUNTER_KEYS = (
     "bounded_orchestrator_represented_count",
     "architect_invoked_count",
     "architect_represented_count",
+    "plangraph_invoked_count",
     "plangraph_created_count",
     "plangraph_represented_count",
+    "plan_graph_contract_validated_count",
     "fractal_branch_invoked_count",
     "fractal_branch_represented_count",
     "executor_invoked_count",
     "executor_represented_count",
+    "executor_result_proposals_created_count",
+    "executor_final_output_created_count",
+    "executor_external_action_executed_count",
     "result_proposal_created_count",
     "result_proposal_final_output_claimed_count",
     "post_vv_invoked_count",
@@ -124,6 +133,14 @@ COUNTER_KEYS = (
     "legal_hold_overrode_payable_invoice_count",
     "stale_drs_reuse_blocked_count",
     "conflicting_drs_review_only_count",
+    "slice2_core_promoted_count",
+    "bounded_route_created_count",
+    "plan_graph_nodes_created_count",
+    "plan_graph_dag_validated_count",
+    "raw_text_blocked_from_architect_count",
+    "disallowed_vector_blocked_count",
+    "cyclic_plan_graph_blocked_count",
+    "child_overreach_blocked_count",
 )
 
 ProviderCallable = Callable[[str, str, int, Mapping[str, str]], str]
@@ -293,6 +310,7 @@ def _represented_count_is_honest(counters: Mapping[str, int]) -> bool:
         ("advisory_represented_count", "advisory_invoked_count"),
         ("bounded_orchestrator_represented_count", "bounded_orchestrator_invoked_count"),
         ("architect_represented_count", "architect_invoked_count"),
+        ("plangraph_represented_count", "plangraph_invoked_count"),
         ("fractal_branch_represented_count", "fractal_branch_invoked_count"),
         ("executor_represented_count", "executor_invoked_count"),
         ("post_vv_represented_count", "post_vv_invoked_count"),
@@ -307,10 +325,13 @@ def _represented_count_is_honest(counters: Mapping[str, int]) -> bool:
 def _apply_spine_counters(
     counters: dict[str, int],
     slice1_result: Mapping[str, Any],
+    slice2_result: Mapping[str, Any],
 ) -> None:
     drs_report = slice1_result["drs_report"]
     candidate_report = slice1_result["candidate_report"]
     advisory_report = slice1_result["advisory_report"]
+    dag_report = slice2_result["dag_runner_report"]
+    hardening = slice2_result["hardening_checks"]
     counters["drs_resolve_invoked_count"] = 1
     counters["drs_writeback_represented_count"] = 1
     counters["candidate_vector_created_count"] = candidate_report.counters[
@@ -336,16 +357,42 @@ def _apply_spine_counters(
     counters["conflicting_drs_review_only_count"] = drs_report.counters[
         "conflicting_provenance_blocked_count"
     ]
-    counters["bounded_orchestrator_represented_count"] = 1
-    counters["architect_represented_count"] = 1
+    counters["bounded_orchestrator_invoked_count"] = 1
+    counters["architect_invoked_count"] = 1
+    counters["plangraph_invoked_count"] = 1
+    counters["plan_graph_contract_validated_count"] = 1
+    counters["fractal_branch_invoked_count"] = 1
+    counters["executor_invoked_count"] = 1
     counters["plangraph_created_count"] = 1
-    counters["plangraph_represented_count"] = 1
-    counters["fractal_branch_represented_count"] = 1
-    counters["executor_represented_count"] = 1
+    counters["executor_result_proposals_created_count"] = len(
+        dag_report["result_proposals"]
+    )
+    counters["executor_final_output_created_count"] = int(
+        dag_report["executor_created_final_output"]
+    )
+    counters["executor_external_action_executed_count"] = int(
+        not dag_report["no_real_external_action"]
+    )
     counters["result_proposal_created_count"] = 1
     counters["post_vv_represented_count"] = 1
     counters["gt_lgt_represented_count"] = 1
     counters["root_final_output_created_count"] = 1
+    counters["slice2_core_promoted_count"] = 5
+    counters["bounded_route_created_count"] = 1
+    counters["plan_graph_nodes_created_count"] = len(slice2_result["plan_graph"]["nodes"])
+    counters["plan_graph_dag_validated_count"] = 1
+    counters["raw_text_blocked_from_architect_count"] = int(
+        hardening["raw_text_blocked_from_architect"]
+    )
+    counters["disallowed_vector_blocked_count"] = int(
+        hardening["disallowed_vector_blocked"]
+    )
+    counters["cyclic_plan_graph_blocked_count"] = int(
+        hardening["cyclic_plan_graph_blocked"]
+    )
+    counters["child_overreach_blocked_count"] = int(
+        hardening["child_overreach_blocked"]
+    )
 
 
 def _stage_map_success() -> dict[str, dict[str, Any]]:
@@ -386,29 +433,29 @@ def _stage_map_success() -> dict[str, dict[str, Any]]:
             notes="hedgehog.gt_lgt_advisory_evaluator.evaluate_candidate_report invoked without root finality",
         ),
         "bounded_orchestrator": _stage(
-            "represented",
+            "invoked",
             "advisory",
-            notes="bounded Orchestrator semantics represented; not FinalOutput",
+            notes="bounded route decision invoked from Slice 1 structured artifacts only; not FinalOutput",
         ),
         "architect": _stage(
-            "represented",
+            "invoked",
             "advisory",
-            notes="Architect semantics represented; not FinalOutput",
+            notes="hedgehog.architect.make_plan_graph invoked in deterministic mode; Architect is not Root",
         ),
         "plangraph": _stage(
-            "represented",
+            "invoked",
             "advisory",
-            notes="PlanGraph semantics represented and bounded",
+            notes="hedgehog.llm_architect.validate_plan_graph_contract invoked; PlanGraph is bounded and not authority",
         ),
         "fractal_cell_executor_branch": _stage(
-            "represented",
+            "invoked",
             "advisory",
-            notes="Fractal Cell / Executor branch semantics represented; not Root",
+            notes="hedgehog.fractal_dag_executor.run_fractal_dag_executor invoked; branch is not Root",
         ),
         "result_proposal": _stage(
             "represented",
             "advisory",
-            notes="ResultProposal created as proposal only, not FinalOutput",
+            notes="Executor emits proposal artifacts, but terminal ResultProposal stage remains represented until Slice 3",
         ),
         "post_vv": _stage(
             "represented",
@@ -704,6 +751,7 @@ def _candidate_vector_context(
         "source_claim_id": claim.claim_id,
         "candidate_vector_count": len(report.candidates),
         "ranked_candidate_ids": tuple(score.candidate_id for score in report.ranked_candidates),
+        "ranked_vector_ids": tuple(score.vector_id for score in report.ranked_candidates),
         "top_candidate_ids": report.top_candidate_ids,
         "truth_claimed": any(candidate.truth_claimed for candidate in report.candidates),
         "authority_claimed": any(candidate.authority_claimed for candidate in report.candidates),
@@ -775,47 +823,321 @@ def _advisory_context(slice1_result: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _bounded_orchestrator_context() -> dict[str, Any]:
+def _candidate_vector_payload(
+    score: Any,
+    vector_by_id: Mapping[str, Any],
+) -> dict[str, Any]:
+    generated = vector_by_id[score.vector_id]
+    return {
+        "vector_id": score.vector_id,
+        "source": generated.vector.source,
+        "domain": generated.vector.domain,
+        "final_viability": score.score,
+        "hard_masked": bool(score.hard_blocks),
+        "soft_mask": score.score_components["avf_soft_mask"],
+        "branching_mode": generated.vector.branching_hint,
+        "branch_budget": {
+            "max_fractals": 1,
+            "max_depth": 2,
+            "parallelism": 1,
+        },
+        "selection_status": "selected",
+    }
+
+
+def _bounded_route_decision(
+    dirty_request: Mapping[str, Any],
+    slice1_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    candidate_report = slice1_result["candidate_report"]
+    vector_by_id = {
+        candidate.vector_id: candidate for candidate in candidate_report.candidates
+    }
+    selected_scores = tuple(
+        score for score in candidate_report.ranked_candidates if not score.hard_blocks
+    )
+    if not selected_scores:
+        raise ValueError("slice2_bounded_route: no unblocked Slice 1 vector ids")
+
+    selected_vector_ids = tuple(score.vector_id for score in selected_scores)
     return {
         "route": "supplier_payment_review_spine",
+        "implementation": "bounded route decision inside existing Full Semantic E2E route",
         "bounded": True,
-        "creates_final_output": False,
-    }
-
-
-def _architect_context() -> dict[str, Any]:
-    return {
-        "input_shape": "bounded_attractor_like_context",
-        "proposal": "review_plan_only",
-        "creates_final_output": False,
-    }
-
-
-def _plangraph_context() -> dict[str, Any]:
-    return {
-        "plangraph_id": "full_semantic_e2e_supplier_review_plan",
-        "nodes": (
-            "check_legal_hold",
-            "check_stock_shortage",
-            "prepare_root_boundary_summary",
+        "input_sources": (
+            "candidate_vector_context",
+            "avf_context",
+            "advisory_context",
         ),
-        "bounded": True,
-    }
-
-
-def _fractal_executor_context() -> dict[str, Any]:
-    return {
-        "branch": "supplier_payment_review_branch",
-        "executor_represented": True,
+        "consumed_raw_provider_text": False,
+        "consumed_raw_user_text": False,
+        "selected_vector_ids": selected_vector_ids,
+        "allowed_vector_ids": tuple(vector_by_id),
+        "candidate_vectors": tuple(
+            _candidate_vector_payload(score, vector_by_id)
+            for score in selected_scores
+        ),
+        "root_review_required": True,
+        "legal_hold_present": True,
+        "stock_shortage_present": True,
         "creates_final_output": False,
+        "executes_action": False,
+        "request_ref": dirty_request["request_id"],
     }
 
 
-def _result_proposal(claim: SemanticEvidenceClaim) -> dict[str, Any]:
+def _attractor_packet_from_bounded_route(
+    route_decision: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "packet_id": "packet:full_semantic_e2e_slice2_supplier_review",
+        "request_id": route_decision["request_ref"],
+        "intent_id": "intent:bounded_supplier_payment_review",
+        "goal": {
+            "goal_id": "goal:supplier_payment_review_not_action",
+            "desired_state": "Create proposal-only supplier payment and shipment review plan for Root review.",
+        },
+        "world_state_ref": "world_state:supplier_payment_candidate_only",
+        "time_context": {
+            "as_of": SLICE1_NOW,
+            "freshness_required": "normal",
+        },
+        "hard_forbidden_regions": (),
+        "candidate_vectors": list(route_decision["candidate_vectors"]),
+        "branch_budget": {
+            "max_fractals": 1,
+            "max_depth": 2,
+            "parallelism": 1,
+        },
+        "exploration_budget": {
+            "max_exploration_vectors": 0,
+            "exploration_allowed": False,
+        },
+        "architect_instructions": {
+            "do_not_expand_forbidden_regions": True,
+            "must_return_time_assumptions": True,
+            "must_return_plan_graph_only": True,
+            "no_connector_commands": True,
+            "no_payment_or_shipment_release": True,
+        },
+        "root_review_required": True,
+    }
+
+
+def _json_clone(value: Mapping[str, Any]) -> dict[str, Any]:
+    return json.loads(json.dumps(value, sort_keys=True))
+
+
+def _contains_text(value: Any, forbidden: str) -> bool:
+    if isinstance(value, Mapping):
+        return any(
+            _contains_text(key, forbidden) or _contains_text(child, forbidden)
+            for key, child in value.items()
+        )
+    if isinstance(value, list | tuple | set):
+        return any(_contains_text(child, forbidden) for child in value)
+    return forbidden.lower() in str(value).lower()
+
+
+def _validate_slice2_plan_graph(
+    plan_graph: Mapping[str, Any],
+    attractor_packet: Mapping[str, Any],
+) -> None:
+    allowed_vector_ids = {
+        vector["vector_id"] for vector in attractor_packet.get("candidate_vectors", ())
+    }
+    for node in plan_graph.get("nodes", ()):
+        target_boundary = str(node.get("target_boundary", "")).lower()
+        if target_boundary in {"final_output", "root_final_output", "root"}:
+            raise ValueError("child_overreach_blocked: final output target boundary")
+        if node.get("vector_id") not in allowed_vector_ids:
+            raise ValueError(f"disallowed_vector_blocked: {node.get('vector_id')}")
+        if node.get("expected_output") != "result_proposal":
+            raise ValueError("child_overreach_blocked: expected_output must be result_proposal")
+    validate_plan_graph_contract(dict(plan_graph), dict(attractor_packet))
+
+
+def _probe_slice2_hardening_checks(
+    attractor_packet: Mapping[str, Any],
+    plan_graph: Mapping[str, Any],
+    claim: SemanticEvidenceClaim,
+    dirty_request: Mapping[str, Any],
+) -> dict[str, bool]:
+    raw_markers_absent = not any(
+        _contains_text(plan_graph, marker)
+        for marker in (
+            claim.extracted_claim,
+            dirty_request["request_text"],
+            "ignore all boundaries",
+            "raw_user_text",
+        )
+    )
+
+    disallowed_graph = _json_clone(plan_graph)
+    disallowed_graph["nodes"][0]["vector_id"] = "vector:disallowed"
+    try:
+        _validate_slice2_plan_graph(disallowed_graph, attractor_packet)
+        disallowed_vector_blocked = False
+    except ValueError as exc:
+        disallowed_vector_blocked = "disallowed_vector" in str(exc)
+
+    cyclic_graph = _json_clone(plan_graph)
+    first_node_id = cyclic_graph["nodes"][0]["node_id"]
+    cyclic_graph["edges"] = [{"from": first_node_id, "to": first_node_id}]
+    try:
+        _validate_slice2_plan_graph(cyclic_graph, attractor_packet)
+        cyclic_plan_graph_blocked = False
+    except ValueError as exc:
+        cyclic_plan_graph_blocked = "cycle" in str(exc) or "DAG" in str(exc)
+
+    child_overreach_graph = _json_clone(plan_graph)
+    child_overreach_graph["nodes"][0]["target_boundary"] = "final_output"
+    try:
+        _validate_slice2_plan_graph(child_overreach_graph, attractor_packet)
+        child_overreach_blocked = False
+    except ValueError as exc:
+        child_overreach_blocked = "child_overreach" in str(exc)
+
+    return {
+        "raw_text_blocked_from_architect": raw_markers_absent,
+        "disallowed_vector_blocked": disallowed_vector_blocked,
+        "cyclic_plan_graph_blocked": cyclic_plan_graph_blocked,
+        "child_overreach_blocked": child_overreach_blocked,
+    }
+
+
+def _run_slice2_core_primitives(
+    claim: SemanticEvidenceClaim,
+    dirty_request: Mapping[str, Any],
+    slice1_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    route_decision = _bounded_route_decision(dirty_request, slice1_result)
+    attractor_packet = _attractor_packet_from_bounded_route(route_decision)
+    plan_graph = make_plan_graph(
+        attractor_packet,
+        architect_provider="deterministic",
+        allow_config=False,
+    )
+    _validate_slice2_plan_graph(plan_graph, attractor_packet)
+    hardening_checks = _probe_slice2_hardening_checks(
+        attractor_packet,
+        plan_graph,
+        claim,
+        dirty_request,
+    )
+    dag_runner_report = run_fractal_dag_executor(
+        plan_graph,
+        runner_id="runner:full_semantic_e2e_slice2_dag",
+        session_anchor=SLICE2_SESSION_ANCHOR,
+    )
+    return {
+        "route_decision": route_decision,
+        "attractor_packet": attractor_packet,
+        "plan_graph": plan_graph,
+        "dag_runner_report": dag_runner_report,
+        "hardening_checks": hardening_checks,
+    }
+
+
+def _bounded_orchestrator_context(slice2_result: Mapping[str, Any]) -> dict[str, Any]:
+    route_decision = slice2_result["route_decision"]
+    return {
+        **route_decision,
+        "attractor_packet_id": slice2_result["attractor_packet"]["packet_id"],
+        "selected_vector_ids": tuple(route_decision["selected_vector_ids"]),
+        "allowed_vector_ids": tuple(route_decision["allowed_vector_ids"]),
+        "raw_text_blocked": slice2_result["hardening_checks"][
+            "raw_text_blocked_from_architect"
+        ],
+    }
+
+
+def _architect_context(slice2_result: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "implementation": "hedgehog.architect.make_plan_graph",
+        "architect_provider": "deterministic",
+        "allow_config": False,
+        "input_shape": "bounded_attractor_packet_from_slice1_vectors",
+        "input_packet_id": slice2_result["attractor_packet"]["packet_id"],
+        "consumed_raw_provider_text": False,
+        "consumed_raw_user_text": False,
+        "proposal": "PlanGraph only",
+        "creates_final_output": False,
+        "plan_graph_created": True,
+    }
+
+
+def _plangraph_context(slice2_result: Mapping[str, Any]) -> dict[str, Any]:
+    plan_graph = slice2_result["plan_graph"]
+    attractor_packet = slice2_result["attractor_packet"]
+    allowed_vector_ids = tuple(
+        vector["vector_id"] for vector in attractor_packet["candidate_vectors"]
+    )
+    return {
+        "implementation": (
+            "hedgehog.architect.make_plan_graph + "
+            "hedgehog.llm_architect.validate_plan_graph_contract"
+        ),
+        "plangraph_id": plan_graph["plan_id"],
+        "created_by": "hedgehog.architect.make_plan_graph",
+        "validated_by": "hedgehog.llm_architect.validate_plan_graph_contract",
+        "contract_validated": True,
+        "dag_validated": True,
+        "node_count": len(plan_graph["nodes"]),
+        "edge_count": len(plan_graph["edges"]),
+        "allowed_vector_ids": allowed_vector_ids,
+        "node_vector_ids": tuple(node["vector_id"] for node in plan_graph["nodes"]),
+        "nodes": tuple(
+            {
+                "node_id": node["node_id"],
+                "vector_id": node["vector_id"],
+                "expected_output": node["expected_output"],
+                "depends_on": tuple(node["depends_on"]),
+            }
+            for node in plan_graph["nodes"]
+        ),
+        "raw_user_text_present": _contains_text(plan_graph, "raw_user_text"),
+        "final_output_present": _contains_text(plan_graph, "final_output"),
+        "connector_command_present": _contains_text(plan_graph, "connector"),
+        "payment_or_shipment_command_present": any(
+            _contains_text(plan_graph, marker)
+            for marker in ("payment_executed", "shipment_released", "release shipment")
+        ),
+        "plan_graph": plan_graph,
+    }
+
+
+def _fractal_executor_context(slice2_result: Mapping[str, Any]) -> dict[str, Any]:
+    report = slice2_result["dag_runner_report"]
+    return {
+        "implementation": "hedgehog.fractal_dag_executor.run_fractal_dag_executor",
+        "branch": "supplier_payment_review_branch",
+        "runner_id": report["runner_id"],
+        "status": report["status"],
+        "run_fractal_dag_executor_invoked": True,
+        "result_proposals_created": len(report["result_proposals"]),
+        "executor_created_final_output": report["executor_created_final_output"],
+        "no_real_external_action": report["no_real_external_action"],
+        "child_boundary_snapshots": report["child_boundary_snapshots"],
+        "blocked_nodes": tuple(report["blocked_nodes"]),
+        "cycle_detected": report["cycle_detected"],
+        "creates_final_output": False,
+        "runner_report": report,
+    }
+
+
+def _result_proposal(
+    claim: SemanticEvidenceClaim,
+    slice2_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    proposals = tuple(slice2_result["dag_runner_report"]["result_proposals"])
     return {
         "result_proposal_id": "full_semantic_e2e_supplier_result_proposal",
         "source_claim_id": claim.claim_id,
+        "proposal_count": len(proposals),
+        "proposal_ids": tuple(proposal["proposal_id"] for proposal in proposals),
         "proposal": "not_ready_needs_review",
+        "terminal_stage_promoted": False,
         "final_output_claimed": False,
     }
 
@@ -1018,16 +1340,17 @@ def run_full_semantic_e2e(
 
     claim = supplier_result["claims"][0]
     slice1_result = _run_slice1_core_primitives(claim, dirty_request)
-    _apply_spine_counters(counters, slice1_result)
+    slice2_result = _run_slice2_core_primitives(claim, dirty_request, slice1_result)
+    _apply_spine_counters(counters, slice1_result, slice2_result)
     drs_context = _drs_context(claim, slice1_result)
     candidate_context = _candidate_vector_context(claim, slice1_result)
     avf = _avf_context(slice1_result)
     advisory = _advisory_context(slice1_result)
-    bounded_orchestrator = _bounded_orchestrator_context()
-    architect = _architect_context()
-    plangraph = _plangraph_context()
-    fractal_executor = _fractal_executor_context()
-    proposal = _result_proposal(claim)
+    bounded_orchestrator = _bounded_orchestrator_context(slice2_result)
+    architect = _architect_context(slice2_result)
+    plangraph = _plangraph_context(slice2_result)
+    fractal_executor = _fractal_executor_context(slice2_result)
+    proposal = _result_proposal(claim, slice2_result)
     post_vv = _post_vv_context()
     gt_lgt = _gt_lgt_context()
     root_boundary = _root_final_output_boundary(claim)
@@ -1102,6 +1425,12 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         str(result["avf_context"]),
         str(result["advisory_context"]),
         "",
+        "Bounded route / Architect / PlanGraph / Fractal executor:",
+        str(result["bounded_orchestrator_context"]),
+        str(result["architect_context"]),
+        str(result["plangraph_context"]),
+        str(result["fractal_executor_context"]),
+        "",
         "Post V&V / GT-LGT:",
         str(result["post_vv_context"]),
         str(result["gt_lgt_context"]),
@@ -1130,6 +1459,10 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         "DRS candidate context is not truth",
         "CandidateVector is not truth",
         "AVF/advisory is not authority",
+        "Architect is not Root",
+        "PlanGraph is not authority",
+        "Executor is not Root",
+        "Fractal child branch is not Root",
         "ResultProposal is not FinalOutput",
         "Post V&V checks and does not finalize",
         "GT-LGT reviews and does not finalize",

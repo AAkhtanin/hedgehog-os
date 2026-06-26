@@ -4,6 +4,7 @@ import json
 
 import demo.run_full_semantic_e2e_v01 as runner
 import demo.run_supplier_payment_live_evidence_integration_v02 as supplier_live
+from hedgehog.llm_architect import validate_plan_graph_contract
 
 
 def _valid_payload(**overrides):
@@ -102,7 +103,7 @@ def test_only_root_final_output_boundary_creates_final_output() -> None:
     assert result["counters"]["root_final_output_created_count"] == 1
 
 
-def test_slice1_stages_are_invoked_and_later_stages_remain_represented() -> None:
+def test_slice1_stages_are_invoked() -> None:
     result = runner.run_full_semantic_e2e(env={})
     counters = result["counters"]
     stage_map = result["stage_map"]
@@ -121,14 +122,33 @@ def test_slice1_stages_are_invoked_and_later_stages_remain_represented() -> None
     assert counters["advisory_represented_count"] == 0
     assert counters["slice1_core_promoted_count"] == 4
 
-    assert stage_map["bounded_orchestrator"]["status"] == "represented"
-    assert stage_map["architect"]["status"] == "represented"
-    assert stage_map["plangraph"]["status"] == "represented"
-    assert stage_map["fractal_cell_executor_branch"]["status"] == "represented"
+
+def test_slice2_stages_are_invoked_and_slice3_stages_remain_represented() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+    stage_map = result["stage_map"]
+
+    assert stage_map["bounded_orchestrator"]["status"] == "invoked"
+    assert stage_map["architect"]["status"] == "invoked"
+    assert stage_map["plangraph"]["status"] == "invoked"
+    assert stage_map["fractal_cell_executor_branch"]["status"] == "invoked"
+    assert counters["bounded_orchestrator_invoked_count"] == 1
+    assert counters["bounded_orchestrator_represented_count"] == 0
+    assert counters["architect_invoked_count"] == 1
+    assert counters["architect_represented_count"] == 0
+    assert counters["plangraph_invoked_count"] == 1
+    assert counters["plangraph_represented_count"] == 0
+    assert counters["fractal_branch_invoked_count"] == 1
+    assert counters["fractal_branch_represented_count"] == 0
+    assert counters["executor_invoked_count"] == 1
+    assert counters["executor_represented_count"] == 0
+    assert counters["slice2_core_promoted_count"] == 5
+
     assert stage_map["result_proposal"]["status"] == "represented"
     assert stage_map["post_vv"]["status"] == "represented"
     assert stage_map["gt_lgt"]["status"] == "represented"
     assert stage_map["drs_writeback"]["status"] == "represented"
+    assert counters["result_proposal_created_count"] == 1
     assert counters["post_vv_represented_count"] == 1
     assert counters["post_vv_invoked_count"] == 0
     assert counters["gt_lgt_represented_count"] == 1
@@ -194,6 +214,139 @@ def test_candidate_vector_and_avf_report_are_real_structured_outputs() -> None:
     )
     assert counters["candidate_vector_ranked_count"] == 3
     assert counters["avf_hard_mask_applied_count"] == 2
+
+
+def test_bounded_route_uses_only_slice1_vector_ids_and_no_raw_text() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    route = result["bounded_orchestrator_context"]
+    candidate_context = result["candidate_vector_context"]
+
+    assert route["implementation"] == (
+        "bounded route decision inside existing Full Semantic E2E route"
+    )
+    assert route["consumed_raw_provider_text"] is False
+    assert route["consumed_raw_user_text"] is False
+    assert route["creates_final_output"] is False
+    assert route["executes_action"] is False
+    assert route["root_review_required"] is True
+    assert set(route["selected_vector_ids"]) <= set(route["allowed_vector_ids"])
+    assert set(route["allowed_vector_ids"]) == set(candidate_context["ranked_vector_ids"])
+    assert route["raw_text_blocked"] is True
+    assert result["counters"]["bounded_route_created_count"] == 1
+    assert result["counters"]["raw_text_blocked_from_architect_count"] == 1
+
+
+def test_plangraph_is_real_structured_output_from_architect_and_contract_validator() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    architect = result["architect_context"]
+    plangraph = result["plangraph_context"]
+    route = result["bounded_orchestrator_context"]
+    plan_graph = plangraph["plan_graph"]
+
+    assert architect["implementation"] == "hedgehog.architect.make_plan_graph"
+    assert architect["architect_provider"] == "deterministic"
+    assert architect["allow_config"] is False
+    assert architect["consumed_raw_provider_text"] is False
+    assert architect["consumed_raw_user_text"] is False
+    assert architect["creates_final_output"] is False
+
+    assert plangraph["created_by"] == "hedgehog.architect.make_plan_graph"
+    assert plangraph["validated_by"] == (
+        "hedgehog.llm_architect.validate_plan_graph_contract"
+    )
+    assert plangraph["contract_validated"] is True
+    assert plangraph["dag_validated"] is True
+    assert plangraph["node_count"] > 0
+    assert plangraph["edge_count"] >= 0
+    assert set(plangraph["node_vector_ids"]) <= set(route["selected_vector_ids"])
+    assert set(plangraph["node_vector_ids"]) <= set(plangraph["allowed_vector_ids"])
+    assert plangraph["raw_user_text_present"] is False
+    assert plangraph["final_output_present"] is False
+    assert plangraph["connector_command_present"] is False
+    assert plangraph["payment_or_shipment_command_present"] is False
+    assert all(node["expected_output"] == "result_proposal" for node in plangraph["nodes"])
+
+    validator_packet = {
+        "request_id": result["dirty_business_request"]["request_id"],
+        "candidate_vectors": list(route["candidate_vectors"]),
+    }
+    validate_plan_graph_contract(plan_graph, validator_packet)
+    assert result["counters"]["plangraph_invoked_count"] == 1
+    assert result["counters"]["plan_graph_contract_validated_count"] == 1
+    assert result["counters"]["plan_graph_nodes_created_count"] == plangraph["node_count"]
+    assert result["counters"]["plan_graph_dag_validated_count"] == 1
+
+
+def test_executor_branch_is_real_structured_output_and_proposal_only() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    fractal = result["fractal_executor_context"]
+    report = fractal["runner_report"]
+    proposal = result["result_proposal"]
+
+    assert fractal["implementation"] == (
+        "hedgehog.fractal_dag_executor.run_fractal_dag_executor"
+    )
+    assert fractal["run_fractal_dag_executor_invoked"] is True
+    assert fractal["status"] == "completed"
+    assert fractal["result_proposals_created"] > 0
+    assert fractal["executor_created_final_output"] is False
+    assert fractal["no_real_external_action"] is True
+    assert report["result_proposals"]
+    assert all("final_output" not in item for item in report["result_proposals"])
+    assert proposal["proposal_count"] == fractal["result_proposals_created"]
+    assert proposal["terminal_stage_promoted"] is False
+    assert proposal["final_output_claimed"] is False
+    assert result["counters"]["executor_invoked_count"] == 1
+    assert result["counters"]["executor_result_proposals_created_count"] > 0
+    assert result["counters"]["executor_final_output_created_count"] == 0
+    assert result["counters"]["executor_external_action_executed_count"] == 0
+
+
+def test_slice2_hardening_probes_block_invalid_plangraphs() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+
+    assert counters["disallowed_vector_blocked_count"] == 1
+    assert counters["cyclic_plan_graph_blocked_count"] == 1
+    assert counters["child_overreach_blocked_count"] == 1
+
+
+def test_local_slice2_plan_validation_rejects_disallowed_vector_cycle_and_overreach() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    packet = result["bounded_orchestrator_context"]["candidate_vectors"]
+    attractor_packet = {
+        "request_id": result["dirty_business_request"]["request_id"],
+        "candidate_vectors": list(packet),
+    }
+    plan_graph = result["plangraph_context"]["plan_graph"]
+
+    disallowed = json.loads(json.dumps(plan_graph))
+    disallowed["nodes"][0]["vector_id"] = "vector:not_from_slice1"
+    try:
+        runner._validate_slice2_plan_graph(disallowed, attractor_packet)
+    except ValueError as exc:
+        assert "disallowed_vector" in str(exc)
+    else:
+        raise AssertionError("disallowed vector id was accepted")
+
+    cyclic = json.loads(json.dumps(plan_graph))
+    first_node_id = cyclic["nodes"][0]["node_id"]
+    cyclic["edges"] = [{"from": first_node_id, "to": first_node_id}]
+    try:
+        runner._validate_slice2_plan_graph(cyclic, attractor_packet)
+    except ValueError as exc:
+        assert "cycle" in str(exc) or "DAG" in str(exc)
+    else:
+        raise AssertionError("cyclic PlanGraph was accepted")
+
+    overreach = json.loads(json.dumps(plan_graph))
+    overreach["nodes"][0]["target_boundary"] = "final_output"
+    try:
+        runner._validate_slice2_plan_graph(overreach, attractor_packet)
+    except ValueError as exc:
+        assert "child_overreach" in str(exc)
+    else:
+        raise AssertionError("child final-output overreach was accepted")
 
 
 def test_legal_hold_beats_payable_invoice_in_slice1_core_path() -> None:

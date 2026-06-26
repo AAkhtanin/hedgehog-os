@@ -1,0 +1,76 @@
+audit_id: auditor_e2e_core_promotion_hardening_slice2_v01
+audit_status: PASS
+runtime_commit: 097241d
+previous_slice1_runtime_commit: 3d5b090
+previous_slice1_audit_commit: c074838
+layer: E2E Core Promotion & Hardening v0.1 Slice 2
+
+Scope:
+- Existing Full Semantic E2E route was extended; no new runner was created.
+- Changed files in runtime commit:
+  - demo/run_full_semantic_e2e_v01.py
+  - tests/test_full_semantic_e2e_v01_runner.py
+
+Validation recorded:
+- python3 -m demo.run_full_semantic_e2e_v01
+- FINAL STATUS: PASS
+- focused pytest: 106 passed
+- git diff --check: clean
+- changed files exactly:
+  - demo/run_full_semantic_e2e_v01.py
+  - tests/test_full_semantic_e2e_v01_runner.py
+
+Slice 2 promotion facts:
+- Slice 1 remains invoked.
+- bounded route decision is now invoked inside the existing runner.
+- Deterministic Architect is now invoked through hedgehog.architect.make_plan_graph.
+- PlanGraph contract validation is now invoked through hedgehog.llm_architect.validate_plan_graph_contract.
+- Fractal/DAG executor branch is now invoked through hedgehog.fractal_dag_executor.run_fractal_dag_executor.
+- Slice 2 represented counts decreased.
+- Slice 2 invoked counts increased.
+- bounded_orchestrator is a local bounded route decision inside the existing Full E2E runner, not RootOrchestrator.process_event.
+- Executor emits proposal artifacts, but terminal ResultProposal promotion remains deferred to Slice 3.
+- Slice 3 remains represented:
+  - terminal ResultProposal stage
+  - Post V&V
+  - GT/LGT
+  - DRS writeback
+
+Key counters:
+- bounded_orchestrator_invoked_count: 1
+- bounded_orchestrator_represented_count: 0
+- architect_invoked_count: 1
+- architect_represented_count: 0
+- plangraph_invoked_count: 1
+- plangraph_represented_count: 0
+- plan_graph_contract_validated_count: 1
+- fractal_branch_invoked_count: 1
+- fractal_branch_represented_count: 0
+- executor_invoked_count: 1
+- executor_represented_count: 0
+- slice2_core_promoted_count: 5
+- payment_executed_count: 0
+- shipment_released_count: 0
+- connector_called_count: 0
+- root_final_authority_preserved_count: 1
+
+Hardening observations:
+- raw provider/user text does not enter Architect/PlanGraph.
+- PlanGraph references only allowed Slice 1 vector ids.
+- disallowed vector id is blocked.
+- cyclic PlanGraph is blocked.
+- child/final-output overreach is blocked.
+- PlanGraph is not authority.
+- Executor is not Root.
+- ResultProposal is not FinalOutput.
+- Root remains final authority.
+
+Boundary notes:
+- This audit makes no Public WOW readiness claim.
+- This audit makes no production-readiness claim.
+- This audit records no real-world external action readiness.
+- This audit makes no NeedleFactory readiness claim.
+- Slice 3 work remains future work.
+
+Conclusion:
+E2E Core Promotion & Hardening v0.1 Slice 2 PASS. The committed Full Semantic E2E route now invokes bounded route decision, deterministic Architect, PlanGraph contract validation, and Fractal/DAG executor branch while preserving Slice 1 promotion, Slice 3 represented status, zero external-action counters, and Root final authority.

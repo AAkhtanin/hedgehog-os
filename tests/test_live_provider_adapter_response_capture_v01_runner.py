@@ -58,8 +58,14 @@ def _provider_returning(raw_text):
     return provider
 
 
-def _install_fake_google_genai(monkeypatch, response=None, exc: Exception | None = None):
+def _install_fake_google_genai(
+    monkeypatch,
+    response=None,
+    exc: Exception | None = None,
+    effects=None,
+):
     calls = []
+    pending_effects = list(effects or ())
     fake_google = types.ModuleType("google")
     fake_genai = types.ModuleType("google.genai")
 
@@ -72,6 +78,11 @@ def _install_fake_google_genai(monkeypatch, response=None, exc: Exception | None
                     "config": config,
                 }
             )
+            if pending_effects:
+                effect = pending_effects.pop(0)
+                if isinstance(effect, Exception):
+                    raise effect
+                return effect
             if exc is not None:
                 raise exc
             return response
@@ -88,6 +99,17 @@ def _install_fake_google_genai(monkeypatch, response=None, exc: Exception | None
     return calls
 
 
+def _wrong_shape_payload():
+    return {
+        "claim_id": "wrong-shape-001",
+        "claim_text": "invoice looks payable",
+        "source": "gemini",
+        "subject": "INV-2042",
+        "predicate": "payable",
+        "root_review": "required",
+    }
+
+
 def _scenario_statuses(result):
     return {scenario["scenario_id"]: scenario["status"] for scenario in result["scenarios"]}
 
@@ -98,6 +120,18 @@ def test_module_imports_and_required_api_exist() -> None:
     assert callable(runner.run_live_provider_adapter_response_capture)
     assert callable(runner.render_report)
     assert callable(runner.main)
+
+
+def test_extraction_prompt_contains_required_schema_fields() -> None:
+    prompt = runner.build_extraction_prompt()
+
+    for field in runner.SEMANTIC_EVIDENCE_RESPONSE_FIELDS:
+        assert field in prompt
+    assert "no extra keys" in prompt
+    assert "source_id" in prompt
+    assert "extracted_claim" in prompt
+    assert "confidence" in prompt
+    assert "root_review_required" in prompt
 
 
 def test_no_config_skips_closed_without_provider_call() -> None:
@@ -207,6 +241,12 @@ def test_google_genai_parsed_dict_response_is_accepted_and_serialized(
     assert calls[1]["model"] == "gemini-test-model"
     assert "SemanticEvidenceClaim-compatible JSON object" in calls[1]["contents"]
     assert calls[1]["config"]["response_mime_type"] == "application/json"
+    assert calls[1]["config"]["response_json_schema"] == (
+        runner.SEMANTIC_EVIDENCE_RESPONSE_SCHEMA
+    )
+    assert "source_id" in calls[1]["config"]["system_instruction"]
+    assert "extracted_claim" in calls[1]["config"]["system_instruction"]
+    assert "root_review_required" in calls[1]["config"]["system_instruction"]
     assert counters["provider_call_attempted_count"] == 1
     assert counters["provider_call_succeeded_count"] == 1
     assert counters["live_model_call_count"] == 1
@@ -232,6 +272,7 @@ def test_google_genai_text_response_is_accepted(tmp_path, monkeypatch) -> None:
     assert result["final_status"] == "PASS"
     assert calls[0] == {"client_api_key_present": True}
     assert calls[1]["config"]["response_mime_type"] == "application/json"
+    assert "response_json_schema" in calls[1]["config"]
     assert counters["provider_call_succeeded_count"] == 1
     assert counters["secrets_accessed_count"] == 1
     assert counters["secrets_logged_count"] == 0
@@ -239,6 +280,74 @@ def test_google_genai_text_response_is_accepted(tmp_path, monkeypatch) -> None:
         assert "fallback-test-key" not in (tmp_path / artifact.split("/")[-1]).read_text(
             encoding="utf-8"
         )
+
+
+def test_google_genai_schema_key_rejection_falls_back_to_response_schema(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    response = types.SimpleNamespace(parsed=_valid_payload())
+    calls = _install_fake_google_genai(
+        monkeypatch,
+        effects=(TypeError("response_json_schema unsupported"), response),
+    )
+    env = _capture_env(tmp_path, **{runner.ENV_GEMINI_API_KEY: "fake-test-key"})
+
+    result = runner.run_live_provider_adapter_response_capture(env=env)
+
+    assert result["final_status"] == "PASS"
+    assert "response_json_schema" in calls[1]["config"]
+    assert "response_schema" in calls[2]["config"]
+    assert calls[2]["config"]["response_schema"] == runner.SEMANTIC_EVIDENCE_RESPONSE_SCHEMA
+    assert calls[2]["config"]["response_mime_type"] == "application/json"
+    assert "fake-test-key" not in json.dumps(result, default=str)
+
+
+def test_google_genai_schema_keys_can_fall_back_to_json_mime_only(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    response = types.SimpleNamespace(parsed=_valid_payload())
+    calls = _install_fake_google_genai(
+        monkeypatch,
+        effects=(
+            TypeError("response_json_schema unsupported"),
+            ValueError("response_schema unsupported"),
+            response,
+        ),
+    )
+    env = _capture_env(tmp_path, **{runner.ENV_GEMINI_API_KEY: "fake-test-key"})
+
+    result = runner.run_live_provider_adapter_response_capture(env=env)
+
+    assert result["final_status"] == "PASS"
+    assert "response_json_schema" in calls[1]["config"]
+    assert "response_schema" in calls[2]["config"]
+    assert "response_json_schema" not in calls[3]["config"]
+    assert "response_schema" not in calls[3]["config"]
+    assert calls[3]["config"]["response_mime_type"] == "application/json"
+    assert "source_id" in calls[3]["contents"]
+    assert "root_review_required" in calls[3]["contents"]
+
+
+def test_google_genai_wrong_shape_response_fails_closed_with_missing_fields(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    response = types.SimpleNamespace(parsed=_wrong_shape_payload())
+    _install_fake_google_genai(monkeypatch, response=response)
+    env = _capture_env(tmp_path, **{runner.ENV_GEMINI_API_KEY: "fake-test-key"})
+
+    result = runner.run_live_provider_adapter_response_capture(env=env)
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "missing_required_field:source_id" in result["validation_errors"]
+    assert "missing_required_field:extracted_claim" in result["validation_errors"]
+    assert "missing_required_field:root_review_required" in result["validation_errors"]
+    assert result["counters"]["semantic_claim_rejected_count"] == 1
+    assert result["counters"]["raw_response_artifact_created_count"] == 1
+    assert result["counters"]["raw_response_artifact_validated_count"] == 0
+    assert "fake-test-key" not in json.dumps(result, default=str)
 
 
 def test_missing_google_genai_fails_closed_as_sdk_or_key_missing(

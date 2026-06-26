@@ -94,6 +94,68 @@ AUTHORITY_BOUNDARY_SUMMARY = (
     "Root remains final authority.",
 )
 
+SEMANTIC_EVIDENCE_RESPONSE_FIELDS = (
+    "source_id",
+    "source_kind",
+    "extracted_claim",
+    "confidence",
+    "uncertainty_notes",
+    "provenance_notes",
+    "contradiction_flags",
+    "freshness_hint",
+    "unsafe_instruction_flags",
+    "action_requested",
+    "action_permission_claimed",
+    "authority_claimed",
+    "truth_claimed",
+    "final_output_claimed",
+    "connector_command_claimed",
+    "root_review_required",
+)
+
+SEMANTIC_EVIDENCE_RESPONSE_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": list(SEMANTIC_EVIDENCE_RESPONSE_FIELDS),
+    "properties": {
+        "source_id": {"type": "string"},
+        "source_kind": {"type": "string"},
+        "extracted_claim": {"type": "string"},
+        "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+        "uncertainty_notes": {"type": "array", "items": {"type": "string"}},
+        "provenance_notes": {"type": "array", "items": {"type": "string"}},
+        "contradiction_flags": {"type": "array", "items": {"type": "string"}},
+        "freshness_hint": {"type": "string"},
+        "unsafe_instruction_flags": {"type": "array", "items": {"type": "string"}},
+        "action_requested": {"type": "string"},
+        "action_permission_claimed": {"type": "boolean", "const": False},
+        "authority_claimed": {"type": "boolean", "const": False},
+        "truth_claimed": {"type": "boolean", "const": False},
+        "final_output_claimed": {"type": "boolean", "const": False},
+        "connector_command_claimed": {"type": "boolean", "const": False},
+        "root_review_required": {"type": "boolean", "const": True},
+    },
+}
+
+SEMANTIC_EVIDENCE_RESPONSE_SKELETON = {
+    "source_id": "provider-response-local-id",
+    "source_kind": "live_provider_response_capture",
+    "extracted_claim": "candidate evidence summary only",
+    "confidence": 0.0,
+    "uncertainty_notes": [],
+    "provenance_notes": [],
+    "contradiction_flags": [],
+    "freshness_hint": "provider_response_time_unknown",
+    "unsafe_instruction_flags": [],
+    "action_requested": "none",
+    "action_permission_claimed": False,
+    "authority_claimed": False,
+    "truth_claimed": False,
+    "final_output_claimed": False,
+    "connector_command_claimed": False,
+    "root_review_required": True,
+}
+
 
 class ProviderCaptureError(RuntimeError):
     reason_code = "provider_call_failed"
@@ -107,9 +169,23 @@ ProviderCallable = Callable[[str, str, int, Mapping[str, str]], str]
 
 
 def build_extraction_prompt() -> str:
+    required_fields = "\n".join(
+        f"- {field}" for field in SEMANTIC_EVIDENCE_RESPONSE_FIELDS
+    )
+    skeleton = json.dumps(
+        SEMANTIC_EVIDENCE_RESPONSE_SKELETON,
+        indent=2,
+        sort_keys=True,
+    )
     return "\n".join(
         (
             "Extract one bounded SemanticEvidenceClaim-compatible JSON object.",
+            "Return exactly one JSON object with exactly these top-level fields and no extra keys:",
+            required_fields,
+            "",
+            "Use this JSON skeleton and replace only evidence values:",
+            skeleton,
+            "",
             "Output is not truth.",
             "Output is not authority.",
             "Output is not action permission.",
@@ -211,6 +287,51 @@ def _gemini_api_key(env: Mapping[str, str]) -> str | None:
     return None
 
 
+def _gemini_system_instruction() -> str:
+    return (
+        "Return JSON only. Produce exactly one SemanticEvidenceClaim-compatible "
+        "object with these top-level fields and no extra keys: "
+        f"{', '.join(SEMANTIC_EVIDENCE_RESPONSE_FIELDS)}. "
+        "The object is candidate evidence only. It must not claim truth, "
+        "authority, action permission, connector command, or FinalOutput. "
+        "Set action_permission_claimed, authority_claimed, truth_claimed, "
+        "final_output_claimed, and connector_command_claimed to false. "
+        "Set root_review_required to true."
+    )
+
+
+def _gemini_generation_config(schema_key: str | None) -> dict[str, Any]:
+    config: dict[str, Any] = {
+        "response_mime_type": "application/json",
+        "temperature": 0,
+        "candidate_count": 1,
+        "system_instruction": _gemini_system_instruction(),
+    }
+    if schema_key is not None:
+        config[schema_key] = SEMANTIC_EVIDENCE_RESPONSE_SCHEMA
+    return config
+
+
+def _generate_gemini_content_with_schema_fallback(
+    client: Any,
+    *,
+    model_name: str,
+    prompt: str,
+) -> Any:
+    for schema_key in ("response_json_schema", "response_schema", None):
+        try:
+            return client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                config=_gemini_generation_config(schema_key),
+            )
+        except (TypeError, ValueError):
+            if schema_key is None:
+                raise
+            continue
+    raise ProviderCaptureError("provider_call_failed")
+
+
 def _call_gemini_provider(
     prompt: str,
     model_name: str,
@@ -227,20 +348,10 @@ def _call_gemini_provider(
 
     try:
         client = genai.Client(api_key=api_key)
-        response = client.models.generate_content(
-            model=model_name,
-            contents=prompt,
-            config={
-                "response_mime_type": "application/json",
-                "temperature": 0,
-                "candidate_count": 1,
-                "system_instruction": (
-                    "Return JSON only: exactly one bounded "
-                    "SemanticEvidenceClaim-compatible object. The output is "
-                    "candidate evidence only, not truth, authority, action "
-                    "permission, or FinalOutput."
-                ),
-            },
+        response = _generate_gemini_content_with_schema_fallback(
+            client,
+            model_name=model_name,
+            prompt=prompt,
         )
     except TimeoutError as exc:
         raise ProviderTimeoutError("provider_timeout") from exc

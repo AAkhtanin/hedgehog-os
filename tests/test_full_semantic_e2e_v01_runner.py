@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 
+import demo.run_live_provider_adapter_response_capture_v01 as provider_adapter
 import demo.run_full_semantic_e2e_v01 as runner
 import demo.run_supplier_payment_live_evidence_integration_v02 as supplier_live
 from hedgehog.llm_architect import validate_plan_graph_contract
@@ -42,6 +43,30 @@ def _response_file_env(tmp_path, payload_text):
     }
 
 
+def _full_e2e_live_env(tmp_path, **overrides):
+    env = {
+        runner.ENV_FULL_E2E_LIVE_EVIDENCE: "1",
+        provider_adapter.ENV_CAPTURE: "1",
+        provider_adapter.ENV_PROVIDER_NAME: "gemini",
+        provider_adapter.ENV_PROVIDER_MODEL: "full-e2e-live-test-model",
+        provider_adapter.ENV_OUTPUT_DIR: str(tmp_path),
+        provider_adapter.ENV_CAPTURE_ID: "full-e2e-live-test",
+    }
+    env.update(overrides)
+    return env
+
+
+def _provider_returning(raw_text):
+    def provider(prompt, model_name, timeout_seconds, env):
+        assert "Extract one bounded SemanticEvidenceClaim-compatible JSON object." in prompt
+        assert model_name == "full-e2e-live-test-model"
+        assert timeout_seconds >= 1
+        assert env[provider_adapter.ENV_PROVIDER_NAME] == "gemini"
+        return raw_text
+
+    return provider
+
+
 def _scenario_statuses(result):
     return {item["scenario_id"]: item["status"] for item in result["scenarios"]}
 
@@ -66,9 +91,15 @@ def test_default_runner_returns_pass_and_runs_deterministic_full_spine() -> None
     assert counters["network_used_count"] == 0
     assert counters["gemini_called_count"] == 0
     assert counters["secrets_logged_count"] == 0
+    assert counters["full_e2e_live_evidence_mode_count"] == 0
+    assert counters["live_provider_adapter_invoked_count"] == 0
+    assert counters["raw_provider_response_artifact_created_count"] == 0
+    assert counters["raw_provider_response_validated_count"] == 0
+    assert counters["live_evidence_semantic_claim_created_count"] == 0
 
 
 def test_default_main_exits_zero_and_prints_pass(monkeypatch, capsys) -> None:
+    monkeypatch.delenv(runner.ENV_FULL_E2E_LIVE_EVIDENCE, raising=False)
     monkeypatch.delenv(supplier_live.ENV_ENABLE, raising=False)
     monkeypatch.delenv(supplier_live.ENV_RESPONSE_FILE, raising=False)
     monkeypatch.delenv(supplier_live.ENV_OUTPUT_DIR, raising=False)
@@ -77,6 +108,77 @@ def test_default_main_exits_zero_and_prints_pass(monkeypatch, capsys) -> None:
     output = capsys.readouterr().out
     assert runner.TITLE in output
     assert "FINAL STATUS: PASS" in output
+
+
+def test_explicit_fake_live_evidence_mode_invokes_adapter_and_creates_artifact(tmp_path) -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_full_e2e_live_env(tmp_path),
+        provider=_provider_returning(json.dumps(_valid_payload())),
+    )
+    counters = result["counters"]
+    upstream = result["supplier_live_result"]["provider_adapter_result"]
+
+    assert result["final_status"] == "PASS"
+    assert counters["full_e2e_live_evidence_mode_count"] == 1
+    assert counters["live_provider_adapter_invoked_count"] == 1
+    assert counters["raw_provider_response_artifact_created_count"] == 1
+    assert counters["raw_provider_response_validated_count"] == 1
+    assert counters["live_evidence_semantic_claim_created_count"] == 1
+    assert counters["live_evidence_claim_candidate_only_count"] == 1
+    assert counters["provider_output_used_as_truth_count"] == 0
+    assert counters["provider_output_used_as_authority_count"] == 0
+    assert counters["provider_final_output_created_count"] == 0
+    assert counters["bounded_gemini_actor_role_started_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert len(upstream["artifacts"]) == 2
+    for artifact in upstream["artifacts"]:
+        assert (tmp_path / artifact.split("/")[-1]).exists()
+
+
+def test_validated_live_evidence_enters_full_e2e_as_candidate_only(tmp_path) -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_full_e2e_live_env(tmp_path),
+        provider=_provider_returning(json.dumps(_valid_payload())),
+    )
+    claim = result["semantic_evidence_claim"]
+    supplier_context = result["supplier_payment_context"]
+
+    assert claim["candidate_only"] is True
+    assert claim["truth_claimed"] is False
+    assert claim["authority_claimed"] is False
+    assert claim["action_permission_claimed"] is False
+    assert claim["final_output_claimed"] is False
+    assert supplier_context["claim_added_as"] == "candidate-only SemanticEvidenceClaim"
+    assert supplier_context["provider_output_entered_full_e2e_after_response_file_validation"] is True
+    assert result["root_final_output_boundary"]["source_claim_is_candidate_only"] is True
+    assert result["root_final_output_boundary"]["provider_output_used_as_truth"] is False
+    assert result["counters"]["live_evidence_root_final_authority_preserved_count"] == 1
+    assert result["counters"]["root_final_authority_preserved_count"] == 1
+
+
+def test_unsafe_live_provider_output_fails_closed_before_root(tmp_path) -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_full_e2e_live_env(tmp_path),
+        provider=_provider_returning(json.dumps(_valid_payload(authority_claimed=True))),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "authority_claimed_must_be_false" in result["validation_errors"]
+    assert counters["full_e2e_live_evidence_mode_count"] == 1
+    assert counters["live_provider_adapter_invoked_count"] == 1
+    assert counters["raw_provider_response_artifact_created_count"] == 1
+    assert counters["raw_provider_response_validated_count"] == 0
+    assert counters["live_evidence_semantic_claim_created_count"] == 0
+    assert counters["root_final_output_created_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
 
 
 def test_stage_map_contains_all_required_stages() -> None:

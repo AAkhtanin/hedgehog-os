@@ -7,6 +7,7 @@ import tempfile
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
+from demo import run_live_provider_adapter_response_capture_v01 as provider_adapter
 from demo import run_supplier_payment_live_evidence_integration_v02 as supplier_live
 from hedgehog.architect import make_plan_graph
 from hedgehog.candidate_vector_generator import build_avf_candidate_report
@@ -31,6 +32,7 @@ SLICE2_SESSION_ANCHOR = "sess_full_semantic_e2e_slice2_v01"
 SLICE1_NOW = "2026-06-22T12:00:00+00:00"
 SLICE1_OLD = "2026-01-01T00:00:00+00:00"
 SUPPLIER_PAYMENT_DOMAIN = "supplier_payment_shipment"
+ENV_FULL_E2E_LIVE_EVIDENCE = "HEDGEHOG_FULL_E2E_LIVE_EVIDENCE"
 
 STAGES = (
     "intake_dirty_business_request",
@@ -78,7 +80,17 @@ SCENARIOS = (
 
 COUNTER_KEYS = (
     "full_semantic_e2e_invoked_count",
+    "full_e2e_live_evidence_mode_count",
     "live_evidence_lane_invoked_count",
+    "live_provider_adapter_invoked_count",
+    "raw_provider_response_artifact_created_count",
+    "raw_provider_response_validated_count",
+    "live_evidence_semantic_claim_created_count",
+    "live_evidence_claim_candidate_only_count",
+    "provider_output_used_as_truth_count",
+    "provider_output_used_as_authority_count",
+    "bounded_gemini_actor_role_started_count",
+    "live_evidence_root_final_authority_preserved_count",
     "semantic_claim_created_count",
     "semantic_claim_candidate_only_count",
     "drs_resolve_invoked_count",
@@ -311,24 +323,116 @@ def _stage(
     }
 
 
+def _full_e2e_live_evidence_enabled(env: Mapping[str, str]) -> bool:
+    return env.get(ENV_FULL_E2E_LIVE_EVIDENCE) == "1"
+
+
+def _provider_adapter_env(env: Mapping[str, str]) -> dict[str, str]:
+    output_dir = env.get(provider_adapter.ENV_OUTPUT_DIR, "").strip()
+    if not output_dir:
+        raise ValueError("full_e2e_live_provider_output_dir_missing")
+    adapter_env = {
+        provider_adapter.ENV_CAPTURE: env.get(provider_adapter.ENV_CAPTURE, "1"),
+        provider_adapter.ENV_PROVIDER_NAME: env.get(
+            provider_adapter.ENV_PROVIDER_NAME,
+            "gemini",
+        ),
+        provider_adapter.ENV_PROVIDER_MODEL: env.get(
+            provider_adapter.ENV_PROVIDER_MODEL,
+            "full-e2e-live-evidence-test-model",
+        ),
+        provider_adapter.ENV_OUTPUT_DIR: output_dir,
+        provider_adapter.ENV_CAPTURE_ID: env.get(
+            provider_adapter.ENV_CAPTURE_ID,
+            "full-e2e-live-evidence-01",
+        ),
+    }
+    if provider_adapter.ENV_TIMEOUT_SECONDS in env:
+        adapter_env[provider_adapter.ENV_TIMEOUT_SECONDS] = env[
+            provider_adapter.ENV_TIMEOUT_SECONDS
+        ]
+    if provider_adapter.ENV_GEMINI_API_KEY in env:
+        adapter_env[provider_adapter.ENV_GEMINI_API_KEY] = env[
+            provider_adapter.ENV_GEMINI_API_KEY
+        ]
+    return adapter_env
+
+
+def _supplier_context_from_live_claim(claim: SemanticEvidenceClaim) -> dict[str, Any]:
+    return {
+        "business_context": {
+            "subject": "SH-2042 / INV-2042",
+            "warehouse_stock": "water_filter short by 2",
+            "accounting_claim": "invoice INV-2042 looks payable",
+            "legal_status": "insurance certificate may be expired",
+            "requested_action": "pay supplier and release shipment",
+        },
+        "claim_source_id": claim.source_id,
+        "claim_added_as": "candidate-only SemanticEvidenceClaim",
+        "claim_is_truth": False,
+        "claim_is_authority": False,
+        "claim_is_action_permission": False,
+        "claim_is_final_output": False,
+        "root_review_required": claim.root_review_required,
+        "provider_output_entered_full_e2e_after_response_file_validation": True,
+        "bounded_gemini_actor_role_started": False,
+    }
+
+
+def _supplier_result_from_provider_adapter(
+    adapter_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    response_result = adapter_result.get("response_file_result") or {}
+    claims = tuple(response_result.get("claims", ()))
+    claim = claims[0] if len(claims) == 1 else None
+    adapter_counters = adapter_result["counters"]
+    return {
+        "title": "Full Semantic E2E live evidence mode via provider adapter",
+        "final_status": adapter_result["final_status"],
+        "validation_errors": tuple(adapter_result.get("validation_errors", ())),
+        "claims": claims,
+        "supplier_context": (
+            _supplier_context_from_live_claim(claim)
+            if claim is not None
+            else {}
+        ),
+        "artifacts": tuple(adapter_result.get("artifacts", ())),
+        "provider_adapter_result": adapter_result,
+        "full_e2e_live_evidence_mode": True,
+        "counters": {
+            "semantic_claim_created_count": adapter_counters[
+                "semantic_claim_created_count"
+            ],
+            "provider_final_output_created_count": adapter_counters[
+                "final_output_created_from_provider_count"
+            ],
+            "action_permission_created_count": adapter_counters[
+                "action_permission_created_count"
+            ],
+            "connector_called_count": adapter_counters["connector_called_count"],
+            "payment_executed_count": adapter_counters["payment_executed_count"],
+            "shipment_released_count": adapter_counters["shipment_released_count"],
+            "secrets_logged_count": adapter_counters["secrets_logged_count"],
+            "live_model_call_count": adapter_counters["live_model_call_count"],
+            "network_used_count": adapter_counters["network_used_count"],
+            "gemini_called_count": adapter_counters["gemini_called_count"],
+        },
+    }
+
+
 def _call_supplier_live_lane(
     env: Mapping[str, str],
     provider: ProviderCallable | None,
 ) -> dict[str, Any]:
-    if provider is not None:
-        if supplier_live.ENV_OUTPUT_DIR in env:
-            return supplier_live.run_supplier_payment_live_evidence_integration(
-                env=env,
-                provider=provider,
-            )
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            provider_env = dict(env)
-            provider_env[supplier_live.ENV_ENABLE] = "1"
-            provider_env[supplier_live.ENV_OUTPUT_DIR] = tmp_dir
-            return supplier_live.run_supplier_payment_live_evidence_integration(
-                env=provider_env,
-                provider=provider,
-            )
+    if _full_e2e_live_evidence_enabled(env):
+        adapter_result = provider_adapter.run_live_provider_adapter_response_capture(
+            env=_provider_adapter_env(env),
+            provider=provider,
+        )
+        return _supplier_result_from_provider_adapter(adapter_result)
+
+    # Provider injection is explicit-only for Full E2E live evidence mode.
+    # Without the Full E2E live flag, preserve the deterministic fixture lane.
 
     if supplier_live.ENV_RESPONSE_FILE in env:
         response_env = {
@@ -364,6 +468,9 @@ def _claim_from_supplier_result(
 
 def _copy_supplier_counters(counters: dict[str, int], supplier_result: Mapping[str, Any]) -> None:
     supplier_counters = supplier_result["counters"]
+    live_mode = supplier_result.get("full_e2e_live_evidence_mode") is True
+    adapter_result = supplier_result.get("provider_adapter_result") or {}
+    adapter_counters = adapter_result.get("counters", {})
     counters["live_evidence_lane_invoked_count"] = 1
     counters["semantic_claim_created_count"] = supplier_counters[
         "semantic_claim_created_count"
@@ -384,6 +491,41 @@ def _copy_supplier_counters(counters: dict[str, int], supplier_result: Mapping[s
     counters["live_model_call_count"] = supplier_counters["live_model_call_count"]
     counters["network_used_count"] = supplier_counters["network_used_count"]
     counters["gemini_called_count"] = supplier_counters["gemini_called_count"]
+    if live_mode:
+        response_result = adapter_result.get("response_file_result") or {}
+        response_claims = tuple(response_result.get("claims", ()))
+        counters["full_e2e_live_evidence_mode_count"] = 1
+        counters["live_provider_adapter_invoked_count"] = 1
+        counters["raw_provider_response_artifact_created_count"] = adapter_counters.get(
+            "raw_response_artifact_created_count",
+            0,
+        )
+        counters["raw_provider_response_validated_count"] = adapter_counters.get(
+            "raw_response_artifact_validated_count",
+            0,
+        )
+        counters["live_evidence_semantic_claim_created_count"] = adapter_counters.get(
+            "semantic_claim_created_count",
+            0,
+        )
+        counters["live_evidence_claim_candidate_only_count"] = int(
+            len(response_claims) == 1
+            and response_claims[0].truth_claimed is False
+            and response_claims[0].authority_claimed is False
+            and response_claims[0].action_permission_claimed is False
+            and response_claims[0].final_output_claimed is False
+            and response_claims[0].root_review_required is True
+        )
+        counters["provider_output_used_as_truth_count"] = int(
+            any(claim.truth_claimed for claim in response_claims)
+        )
+        counters["provider_output_used_as_authority_count"] = int(
+            any(claim.authority_claimed for claim in response_claims)
+        )
+        counters["bounded_gemini_actor_role_started_count"] = 0
+        counters["live_evidence_root_final_authority_preserved_count"] = int(
+            adapter_counters.get("root_final_authority_preserved_count", 0) == 1
+        )
 
 
 def _represented_count_is_honest(counters: Mapping[str, int]) -> bool:

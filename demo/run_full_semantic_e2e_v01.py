@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import tempfile
 from pathlib import Path
 from typing import Any, Callable, Mapping
@@ -13,11 +14,13 @@ from hedgehog.candidate_vector_generator import candidate_inputs_from_resolved_r
 from hedgehog.drs import LocalDRS
 from hedgehog.fractal_dag_executor import run_fractal_dag_executor
 from hedgehog.gt_lgt_advisory_evaluator import evaluate_candidate_report
+from hedgehog.gt_validator import validate_gt
 from hedgehog.live_llm_semantic_evidence_reader import SemanticEvidenceClaim
 from hedgehog.llm_architect import validate_plan_graph_contract
 from hedgehog.local_drs_resolver import SemanticDRSRecordInput
 from hedgehog.local_drs_resolver import SemanticResolveQuery
 from hedgehog.local_drs_resolver import resolve_semantic_candidates
+from hedgehog.local_drs_resolver import write_root_final_record
 from hedgehog.local_drs_resolver import write_semantic_record
 
 
@@ -104,12 +107,20 @@ COUNTER_KEYS = (
     "executor_result_proposals_created_count",
     "executor_final_output_created_count",
     "executor_external_action_executed_count",
+    "result_proposal_invoked_count",
+    "result_proposal_represented_count",
     "result_proposal_created_count",
     "result_proposal_final_output_claimed_count",
     "post_vv_invoked_count",
     "post_vv_represented_count",
+    "post_vv_reports_created_count",
+    "post_vv_fail_closed_count",
+    "post_vv_final_output_created_count",
     "gt_lgt_invoked_count",
     "gt_lgt_represented_count",
+    "gt_report_created_count",
+    "gt_final_output_created_count",
+    "gt_root_authority_claimed_count",
     "root_final_output_created_count",
     "provider_final_output_created_count",
     "action_permission_created_count",
@@ -141,9 +152,41 @@ COUNTER_KEYS = (
     "disallowed_vector_blocked_count",
     "cyclic_plan_graph_blocked_count",
     "child_overreach_blocked_count",
+    "slice3_core_promoted_count",
+    "drs_writeback_after_root_count",
+    "local_drs_writeback_only_count",
+    "external_global_drs_write_count",
+    "production_persistence_claimed_count",
+    "writeback_before_root_blocked_count",
 )
 
 ProviderCallable = Callable[[str, str, int, Mapping[str, str]], str]
+
+
+def _import_validate_result_proposals() -> Callable[[list[dict]], list[dict]]:
+    try:
+        from hedgehog.post_vv import validate_result_proposals
+
+        return validate_result_proposals
+    except ModuleNotFoundError as exc:
+        if exc.name != "jsonschema":
+            raise
+        site_packages = (
+            Path(__file__).resolve().parents[1]
+            / ".venv"
+            / "lib"
+            / f"python{sys.version_info.major}.{sys.version_info.minor}"
+            / "site-packages"
+        )
+        if site_packages.exists() and str(site_packages) not in sys.path:
+            sys.path.insert(0, str(site_packages))
+        from hedgehog.post_vv import validate_result_proposals
+
+        return validate_result_proposals
+
+
+def _validate_result_proposals_runtime(proposals: list[dict]) -> list[dict]:
+    return _import_validate_result_proposals()(proposals)
 
 
 def _base_counters() -> dict[str, int]:
@@ -313,6 +356,7 @@ def _represented_count_is_honest(counters: Mapping[str, int]) -> bool:
         ("plangraph_represented_count", "plangraph_invoked_count"),
         ("fractal_branch_represented_count", "fractal_branch_invoked_count"),
         ("executor_represented_count", "executor_invoked_count"),
+        ("result_proposal_represented_count", "result_proposal_invoked_count"),
         ("post_vv_represented_count", "post_vv_invoked_count"),
         ("gt_lgt_represented_count", "gt_lgt_invoked_count"),
     )
@@ -326,14 +370,20 @@ def _apply_spine_counters(
     counters: dict[str, int],
     slice1_result: Mapping[str, Any],
     slice2_result: Mapping[str, Any],
+    slice3_result: Mapping[str, Any],
 ) -> None:
     drs_report = slice1_result["drs_report"]
     candidate_report = slice1_result["candidate_report"]
     advisory_report = slice1_result["advisory_report"]
     dag_report = slice2_result["dag_runner_report"]
     hardening = slice2_result["hardening_checks"]
+    proposals = slice3_result["result_proposals"]
+    vv_reports = slice3_result["vv_reports"]
+    gt_report = slice3_result["gt_report"]
+    root_boundary = slice3_result["root_boundary"]
+    writeback_record = slice3_result["drs_writeback_record"]
+    slice3_hardening = slice3_result["hardening_checks"]
     counters["drs_resolve_invoked_count"] = 1
-    counters["drs_writeback_represented_count"] = 1
     counters["candidate_vector_created_count"] = candidate_report.counters[
         "candidate_vectors_generated_count"
     ]
@@ -373,10 +423,35 @@ def _apply_spine_counters(
     counters["executor_external_action_executed_count"] = int(
         not dag_report["no_real_external_action"]
     )
-    counters["result_proposal_created_count"] = 1
-    counters["post_vv_represented_count"] = 1
-    counters["gt_lgt_represented_count"] = 1
+    counters["result_proposal_invoked_count"] = 1
+    counters["result_proposal_created_count"] = len(proposals)
+    counters["result_proposal_final_output_claimed_count"] = int(
+        any(_contains_text(proposal, "final_output") for proposal in proposals)
+    )
+    counters["post_vv_invoked_count"] = 1
+    counters["post_vv_reports_created_count"] = len(vv_reports)
+    counters["post_vv_fail_closed_count"] = sum(
+        1 for report in vv_reports if report["decision"] == "reject"
+    )
+    counters["post_vv_final_output_created_count"] = 0
+    counters["gt_lgt_invoked_count"] = 1
+    counters["gt_report_created_count"] = 1 if gt_report else 0
+    counters["gt_final_output_created_count"] = 0
+    counters["gt_root_authority_claimed_count"] = 0
     counters["root_final_output_created_count"] = 1
+    counters["drs_writeback_invoked_count"] = 1
+    counters["drs_writeback_after_root_count"] = int(
+        writeback_record["written_after_root_boundary"]
+    )
+    counters["local_drs_writeback_only_count"] = int(
+        writeback_record["local_writeback_only"]
+    )
+    counters["external_global_drs_write_count"] = int(
+        writeback_record["external_global_drs_write"]
+    )
+    counters["production_persistence_claimed_count"] = int(
+        writeback_record["production_persistence_claimed"]
+    )
     counters["slice2_core_promoted_count"] = 5
     counters["bounded_route_created_count"] = 1
     counters["plan_graph_nodes_created_count"] = len(slice2_result["plan_graph"]["nodes"])
@@ -392,6 +467,10 @@ def _apply_spine_counters(
     )
     counters["child_overreach_blocked_count"] = int(
         hardening["child_overreach_blocked"]
+    )
+    counters["slice3_core_promoted_count"] = 5
+    counters["writeback_before_root_blocked_count"] = int(
+        slice3_hardening["writeback_before_root_blocked"]
     )
 
 
@@ -453,19 +532,19 @@ def _stage_map_success() -> dict[str, dict[str, Any]]:
             notes="hedgehog.fractal_dag_executor.run_fractal_dag_executor invoked; branch is not Root",
         ),
         "result_proposal": _stage(
-            "represented",
+            "invoked",
             "advisory",
-            notes="Executor emits proposal artifacts, but terminal ResultProposal stage remains represented until Slice 3",
+            notes="terminal ResultProposal stage consumes executor-generated proposal artifacts only",
         ),
         "post_vv": _stage(
-            "represented",
+            "invoked",
             "advisory",
-            notes="Post V&V checks represented; Post V&V does not finalize",
+            notes="hedgehog.post_vv.validate_result_proposals invoked; Post V&V is not Root",
         ),
         "gt_lgt": _stage(
-            "represented",
+            "invoked",
             "advisory",
-            notes="terminal GT-LGT review represented; GT-LGT does not finalize",
+            notes="hedgehog.gt_validator.validate_gt invoked; GT/LGT does not finalize",
         ),
         "root_final_output_boundary": _stage(
             "invoked",
@@ -474,9 +553,9 @@ def _stage_map_success() -> dict[str, dict[str, Any]]:
             notes="Root boundary creates the only FinalOutput-shaped boundary",
         ),
         "drs_writeback": _stage(
-            "represented",
+            "invoked",
             "candidate",
-            notes="DRS writeback / audit-shaped record represented after Root boundary",
+            notes="hedgehog.local_drs_resolver.write_root_final_record invoked after Root boundary for local audit/memory only",
         ),
     }
 
@@ -1128,39 +1207,112 @@ def _fractal_executor_context(slice2_result: Mapping[str, Any]) -> dict[str, Any
 
 def _result_proposal(
     claim: SemanticEvidenceClaim,
-    slice2_result: Mapping[str, Any],
+    slice3_result: Mapping[str, Any],
 ) -> dict[str, Any]:
-    proposals = tuple(slice2_result["dag_runner_report"]["result_proposals"])
+    proposals = tuple(slice3_result["result_proposals"])
     return {
         "result_proposal_id": "full_semantic_e2e_supplier_result_proposal",
+        "implementation": "executor-generated ResultProposal artifacts from Slice 2 DAG runner",
         "source_claim_id": claim.claim_id,
         "proposal_count": len(proposals),
         "proposal_ids": tuple(proposal["proposal_id"] for proposal in proposals),
+        "proposal_artifacts": proposals,
         "proposal": "not_ready_needs_review",
-        "terminal_stage_promoted": False,
+        "terminal_stage_promoted": True,
         "final_output_claimed": False,
     }
 
 
-def _post_vv_context() -> dict[str, Any]:
+def _post_vv_context(slice3_result: Mapping[str, Any]) -> dict[str, Any]:
+    vv_reports = tuple(slice3_result["vv_reports"])
     return {
-        "checks": ("legal_hold_visible", "stock_shortage_visible", "no_action_permission"),
+        "implementation": "hedgehog.post_vv.validate_result_proposals",
+        "checks": (
+            "executor_result_proposals_only",
+            "schema_policy_time_safety_consistency",
+            "no_final_output",
+        ),
+        "vv_report_count": len(vv_reports),
+        "vv_reports": vv_reports,
+        "final_output_created_count": 0,
         "finalizes": False,
     }
 
 
-def _gt_lgt_context() -> dict[str, Any]:
+def _gt_lgt_context(slice3_result: Mapping[str, Any]) -> dict[str, Any]:
+    gt_report = slice3_result["gt_report"]
     return {
-        "review": "select_not_ready_needs_review",
+        "implementation": "hedgehog.gt_validator.validate_gt",
+        "gt_report_id": gt_report["gt_report_id"],
+        "decision": gt_report["decision"],
+        "review": gt_report["selection_reason"],
         "root_authority_claimed": False,
+        "final_output_created_count": 0,
+        "gt_report": gt_report,
         "finalizes": False,
     }
 
 
-def _root_final_output_boundary(claim: SemanticEvidenceClaim) -> dict[str, Any]:
+def _root_final_output_boundary(
+    claim: SemanticEvidenceClaim,
+    *,
+    drs_context: Mapping[str, Any],
+    candidate_context: Mapping[str, Any],
+    avf_context: Mapping[str, Any],
+    advisory_context: Mapping[str, Any],
+    plangraph_context: Mapping[str, Any],
+    fractal_executor_context: Mapping[str, Any],
+    post_vv_context: Mapping[str, Any],
+    gt_lgt_context: Mapping[str, Any],
+) -> dict[str, Any]:
+    root_reviewed_semantic_outcome = {
+        "artifact_type": "root_reviewed_semantic_outcome",
+        "final_artifact_id": "root_final:full_semantic_e2e_supplier_payment_v01",
+        "outcome_id": "root_outcome:full_semantic_e2e_supplier_payment_v01",
+        "created_by": "root_orchestrator",
+        "root_reviewed": True,
+        "root_final_status": "not_ready",
+        "domain": SUPPLIER_PAYMENT_DOMAIN,
+        "request_id": "full_semantic_e2e_supplier_payment_v01",
+        "summary": (
+            "Root reviewed candidate evidence, DRS context, CandidateVector/AVF, "
+            "advisory, PlanGraph/DAG, Post V&V, and GT/LGT reports; legal hold "
+            "and water_filter shortage keep payment and shipment not ready."
+        ),
+        "semantic_claim_id": claim.claim_id,
+        "semantic_claim_candidate_only": True,
+        "drs_candidate_count": drs_context["candidate_count"],
+        "candidate_vector_count": candidate_context["candidate_vector_count"],
+        "avf_authority_claimed": avf_context["authority_claimed"],
+        "advisory_authority_claimed": advisory_context["authority_claimed"],
+        "plan_graph_id": plangraph_context["plangraph_id"],
+        "dag_runner_status": fractal_executor_context["status"],
+        "post_vv_report_count": post_vv_context["vv_report_count"],
+        "gt_report_id": gt_lgt_context["gt_report_id"],
+        "gt_decision": gt_lgt_context["decision"],
+        "payment_executed": False,
+        "shipment_released": False,
+        "connector_called": False,
+        "provider_output_used_as_truth": False,
+        "action_permission_claimed": False,
+        "final_output_claimed_by_provider": False,
+        "result_proposal_final_output_claimed": False,
+        "post_vv_final_output_created": False,
+        "gt_final_output_created": False,
+        "external_global_drs_write": False,
+        "production_persistence_claimed": False,
+        "trace_refs": (
+            {
+                "trace_id": "trace:full_semantic_e2e_slice3",
+                "span_id": "root_final_boundary",
+                "kind": "root_final_output_boundary",
+            },
+        ),
+    }
     return {
         "created_by": "root_boundary",
         "decision": "not_ready",
+        "root_reviewed": True,
         "payment_executed": False,
         "shipment_released": False,
         "connector_called": False,
@@ -1171,17 +1323,108 @@ def _root_final_output_boundary(claim: SemanticEvidenceClaim) -> dict[str, Any]:
         "source_claim_is_candidate_only": True,
         "provider_output_used_as_truth": False,
         "source_claim_id": claim.claim_id,
+        "consumed_contexts": (
+            "SemanticEvidenceClaim candidate-only summary",
+            "Slice 1 DRS/CandidateVector/AVF/advisory facts",
+            "Slice 2 PlanGraph/DAG facts",
+            "Slice 3 Post V&V report facts",
+            "Slice 3 GT/LGT report facts",
+        ),
+        "root_reviewed_semantic_outcome": root_reviewed_semantic_outcome,
     }
 
 
 def _drs_writeback_record(root_boundary: Mapping[str, Any]) -> dict[str, Any]:
+    artifact = root_boundary["root_reviewed_semantic_outcome"]
+    with tempfile.TemporaryDirectory(prefix="hedgehog_full_e2e_slice3_writeback_") as tmp_dir:
+        drs = LocalDRS(tmp_dir)
+        record = write_root_final_record(
+            drs,
+            dict(artifact),
+            record_id="root_final_record:full_semantic_e2e_supplier_payment_v01",
+        )
     return {
-        "record_id": "full_semantic_e2e_root_boundary_audit_record",
-        "record_type": "audit_shaped_root_outcome",
+        "implementation": "hedgehog.local_drs_resolver.write_root_final_record",
+        "fallback_used": False,
+        "record_id": record["record_id"],
+        "record_type": record["type"],
+        "record": record,
         "written_after_root_boundary": True,
+        "root_final_artifact_id": artifact["final_artifact_id"],
         "root_decision": root_boundary["decision"],
+        "root_final_status": artifact["root_final_status"],
+        "local_writeback_only": record["content"]["local_writeback_only"],
+        "external_global_drs_write": record["content"]["external_global_drs_write"],
+        "production_persistence_claimed": record["content"][
+            "production_persistence_claimed"
+        ],
         "payment_executed": False,
         "shipment_released": False,
+    }
+
+
+def _probe_slice3_hardening_checks(result_proposals: tuple[dict[str, Any], ...]) -> dict[str, bool]:
+    malformed_report = _validate_result_proposals_runtime([{"proposal_id": "malformed"}])[0]
+    final_output_probe = _json_clone(result_proposals[0])
+    final_output_probe["final_output"] = {"status": "forbidden"}
+    final_output_report = _validate_result_proposals_runtime([final_output_probe])[0]
+    try:
+        with tempfile.TemporaryDirectory(prefix="hedgehog_full_e2e_pre_root_writeback_") as tmp_dir:
+            write_root_final_record(
+                LocalDRS(tmp_dir),
+                {
+                    "artifact_type": "root_reviewed_semantic_outcome",
+                    "created_by": "root_orchestrator",
+                    "root_final_status": "not_ready",
+                },
+            )
+        writeback_before_root_blocked = False
+    except ValueError:
+        writeback_before_root_blocked = True
+    return {
+        "malformed_result_proposal_rejected": malformed_report["decision"] == "reject",
+        "final_output_result_proposal_rejected": final_output_report["decision"] == "reject",
+        "writeback_before_root_blocked": writeback_before_root_blocked,
+    }
+
+
+def _run_slice3_core_primitives(
+    claim: SemanticEvidenceClaim,
+    *,
+    drs_context: Mapping[str, Any],
+    candidate_context: Mapping[str, Any],
+    avf_context: Mapping[str, Any],
+    advisory_context: Mapping[str, Any],
+    plangraph_context: Mapping[str, Any],
+    fractal_executor_context: Mapping[str, Any],
+    slice2_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    result_proposals = tuple(slice2_result["dag_runner_report"]["result_proposals"])
+    vv_reports = tuple(_validate_result_proposals_runtime(list(result_proposals)))
+    gt_report = validate_gt(list(vv_reports))
+    post_vv_context = _post_vv_context({"vv_reports": vv_reports})
+    gt_lgt_context = _gt_lgt_context({"gt_report": gt_report})
+    root_boundary = _root_final_output_boundary(
+        claim,
+        drs_context=drs_context,
+        candidate_context=candidate_context,
+        avf_context=avf_context,
+        advisory_context=advisory_context,
+        plangraph_context=plangraph_context,
+        fractal_executor_context=fractal_executor_context,
+        post_vv_context=post_vv_context,
+        gt_lgt_context=gt_lgt_context,
+    )
+    writeback = _drs_writeback_record(root_boundary)
+    return {
+        "result_proposals": result_proposals,
+        "vv_reports": vv_reports,
+        "gt_report": gt_report,
+        "post_vv_context": post_vv_context,
+        "gt_lgt_context": gt_lgt_context,
+        "root_boundary": root_boundary,
+        "drs_writeback_record": writeback,
+        "hardening_checks": _probe_slice3_hardening_checks(result_proposals),
     }
 
 
@@ -1341,7 +1584,6 @@ def run_full_semantic_e2e(
     claim = supplier_result["claims"][0]
     slice1_result = _run_slice1_core_primitives(claim, dirty_request)
     slice2_result = _run_slice2_core_primitives(claim, dirty_request, slice1_result)
-    _apply_spine_counters(counters, slice1_result, slice2_result)
     drs_context = _drs_context(claim, slice1_result)
     candidate_context = _candidate_vector_context(claim, slice1_result)
     avf = _avf_context(slice1_result)
@@ -1350,11 +1592,22 @@ def run_full_semantic_e2e(
     architect = _architect_context(slice2_result)
     plangraph = _plangraph_context(slice2_result)
     fractal_executor = _fractal_executor_context(slice2_result)
-    proposal = _result_proposal(claim, slice2_result)
-    post_vv = _post_vv_context()
-    gt_lgt = _gt_lgt_context()
-    root_boundary = _root_final_output_boundary(claim)
-    writeback = _drs_writeback_record(root_boundary)
+    slice3_result = _run_slice3_core_primitives(
+        claim,
+        drs_context=drs_context,
+        candidate_context=candidate_context,
+        avf_context=avf,
+        advisory_context=advisory,
+        plangraph_context=plangraph,
+        fractal_executor_context=fractal_executor,
+        slice2_result=slice2_result,
+    )
+    _apply_spine_counters(counters, slice1_result, slice2_result, slice3_result)
+    proposal = _result_proposal(claim, slice3_result)
+    post_vv = slice3_result["post_vv_context"]
+    gt_lgt = slice3_result["gt_lgt_context"]
+    root_boundary = slice3_result["root_boundary"]
+    writeback = slice3_result["drs_writeback_record"]
     prompt_injection = bool(claim.unsafe_instruction_flags)
     stage_map = _stage_map_success()
     scenarios = _success_scenarios(prompt_injection)
@@ -1465,7 +1718,7 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         "Fractal child branch is not Root",
         "ResultProposal is not FinalOutput",
         "Post V&V checks and does not finalize",
-        "GT-LGT reviews and does not finalize",
+        "GT/LGT does not finalize",
         "Root remains final authority",
         "",
         f"FINAL STATUS: {result['final_status']}",

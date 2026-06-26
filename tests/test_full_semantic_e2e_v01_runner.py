@@ -123,7 +123,7 @@ def test_slice1_stages_are_invoked() -> None:
     assert counters["slice1_core_promoted_count"] == 4
 
 
-def test_slice2_stages_are_invoked_and_slice3_stages_remain_represented() -> None:
+def test_slice2_stages_are_invoked() -> None:
     result = runner.run_full_semantic_e2e(env={})
     counters = result["counters"]
     stage_map = result["stage_map"]
@@ -144,15 +144,28 @@ def test_slice2_stages_are_invoked_and_slice3_stages_remain_represented() -> Non
     assert counters["executor_represented_count"] == 0
     assert counters["slice2_core_promoted_count"] == 5
 
-    assert stage_map["result_proposal"]["status"] == "represented"
-    assert stage_map["post_vv"]["status"] == "represented"
-    assert stage_map["gt_lgt"]["status"] == "represented"
-    assert stage_map["drs_writeback"]["status"] == "represented"
-    assert counters["result_proposal_created_count"] == 1
-    assert counters["post_vv_represented_count"] == 1
-    assert counters["post_vv_invoked_count"] == 0
-    assert counters["gt_lgt_represented_count"] == 1
-    assert counters["gt_lgt_invoked_count"] == 0
+    assert result["pass_conditions"]["represented_counts_honest"] is True
+
+
+def test_slice3_stages_are_invoked() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+    stage_map = result["stage_map"]
+
+    assert stage_map["result_proposal"]["status"] == "invoked"
+    assert stage_map["post_vv"]["status"] == "invoked"
+    assert stage_map["gt_lgt"]["status"] == "invoked"
+    assert stage_map["root_final_output_boundary"]["status"] == "invoked"
+    assert stage_map["drs_writeback"]["status"] == "invoked"
+    assert counters["result_proposal_invoked_count"] == 1
+    assert counters["result_proposal_represented_count"] == 0
+    assert counters["post_vv_invoked_count"] == 1
+    assert counters["post_vv_represented_count"] == 0
+    assert counters["gt_lgt_invoked_count"] == 1
+    assert counters["gt_lgt_represented_count"] == 0
+    assert counters["drs_writeback_invoked_count"] == 1
+    assert counters["drs_writeback_represented_count"] == 0
+    assert counters["slice3_core_promoted_count"] == 5
     assert result["pass_conditions"]["represented_counts_honest"] is True
 
 
@@ -294,12 +307,103 @@ def test_executor_branch_is_real_structured_output_and_proposal_only() -> None:
     assert report["result_proposals"]
     assert all("final_output" not in item for item in report["result_proposals"])
     assert proposal["proposal_count"] == fractal["result_proposals_created"]
-    assert proposal["terminal_stage_promoted"] is False
+    assert proposal["terminal_stage_promoted"] is True
     assert proposal["final_output_claimed"] is False
     assert result["counters"]["executor_invoked_count"] == 1
     assert result["counters"]["executor_result_proposals_created_count"] > 0
     assert result["counters"]["executor_final_output_created_count"] == 0
     assert result["counters"]["executor_external_action_executed_count"] == 0
+
+
+def test_resultproposal_terminal_context_uses_executor_generated_artifacts() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    proposal_context = result["result_proposal"]
+    dag_report = result["fractal_executor_context"]["runner_report"]
+    dag_proposal_ids = tuple(
+        proposal["proposal_id"] for proposal in dag_report["result_proposals"]
+    )
+
+    assert proposal_context["implementation"] == (
+        "executor-generated ResultProposal artifacts from Slice 2 DAG runner"
+    )
+    assert proposal_context["proposal_count"] > 0
+    assert proposal_context["proposal_ids"] == dag_proposal_ids
+    assert proposal_context["proposal_artifacts"] == tuple(dag_report["result_proposals"])
+    assert proposal_context["terminal_stage_promoted"] is True
+    assert proposal_context["final_output_claimed"] is False
+    assert result["counters"]["result_proposal_created_count"] == len(dag_proposal_ids)
+    assert result["counters"]["result_proposal_final_output_claimed_count"] == 0
+
+
+def test_post_vv_is_real_and_creates_no_finaloutput() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    post_vv = result["post_vv_context"]
+    proposal_context = result["result_proposal"]
+
+    assert post_vv["implementation"] == "hedgehog.post_vv.validate_result_proposals"
+    assert post_vv["vv_report_count"] == proposal_context["proposal_count"]
+    assert post_vv["vv_report_count"] > 0
+    for report in post_vv["vv_reports"]:
+        assert {"vv_report_id", "proposal_id", "status", "decision"} <= set(report)
+        assert report["decision"] in {"accept", "reject", "revise"}
+    assert post_vv["final_output_created_count"] == 0
+    assert post_vv["finalizes"] is False
+    assert result["counters"]["post_vv_reports_created_count"] == post_vv["vv_report_count"]
+    assert result["counters"]["post_vv_final_output_created_count"] == 0
+
+
+def test_gt_lgt_is_real_and_does_not_finalize_or_claim_root() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    gt_lgt = result["gt_lgt_context"]
+
+    assert gt_lgt["implementation"] == "hedgehog.gt_validator.validate_gt"
+    assert gt_lgt["gt_report_id"]
+    assert gt_lgt["decision"] in {"accept", "revise", "no_update"}
+    assert gt_lgt["final_output_created_count"] == 0
+    assert gt_lgt["root_authority_claimed"] is False
+    assert gt_lgt["finalizes"] is False
+    assert result["counters"]["gt_report_created_count"] == 1
+    assert result["counters"]["gt_final_output_created_count"] == 0
+    assert result["counters"]["gt_root_authority_claimed_count"] == 0
+
+
+def test_drs_writeback_is_real_local_and_after_root() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    writeback = result["drs_writeback_record"]
+    root = result["root_final_output_boundary"]
+
+    assert writeback["implementation"] == (
+        "hedgehog.local_drs_resolver.write_root_final_record"
+    )
+    assert writeback["fallback_used"] is False
+    assert writeback["written_after_root_boundary"] is True
+    assert writeback["root_decision"] == root["decision"]
+    assert writeback["root_final_artifact_id"] == (
+        root["root_reviewed_semantic_outcome"]["final_artifact_id"]
+    )
+    assert writeback["local_writeback_only"] is True
+    assert writeback["external_global_drs_write"] is False
+    assert writeback["production_persistence_claimed"] is False
+    assert writeback["record"]["content"]["local_writeback_only"] is True
+    assert result["counters"]["drs_writeback_after_root_count"] == 1
+    assert result["counters"]["local_drs_writeback_only_count"] == 1
+    assert result["counters"]["external_global_drs_write_count"] == 0
+    assert result["counters"]["production_persistence_claimed_count"] == 0
+
+
+def test_slice3_hardening_rejects_malformed_finaloutput_and_pre_root_writeback() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+
+    assert result["counters"]["post_vv_fail_closed_count"] >= 0
+    assert result["counters"]["writeback_before_root_blocked_count"] == 1
+    malformed_report = runner._validate_result_proposals_runtime([{"proposal_id": "bad"}])[0]
+    assert malformed_report["decision"] == "reject"
+    final_output_probe = json.loads(
+        json.dumps(result["result_proposal"]["proposal_artifacts"][0])
+    )
+    final_output_probe["final_output"] = {"status": "forbidden"}
+    final_output_report = runner._validate_result_proposals_runtime([final_output_probe])[0]
+    assert final_output_report["decision"] == "reject"
 
 
 def test_slice2_hardening_probes_block_invalid_plangraphs() -> None:

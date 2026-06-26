@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 from datetime import datetime, timezone
-from importlib import import_module
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -25,6 +24,9 @@ ENV_TIMEOUT_SECONDS = "HEDGEHOG_LIVE_PROVIDER_TIMEOUT_SECONDS"
 ENV_OUTPUT_DIR = "HEDGEHOG_LIVE_PROVIDER_OUTPUT_DIR"
 ENV_CAPTURE_ID = "HEDGEHOG_LIVE_PROVIDER_CAPTURE_ID"
 ENV_GEMINI_API_KEY = "HEDGEHOG_GEMINI_API_KEY"
+ENV_GOOGLE_API_KEY = "GOOGLE_API_KEY"
+ENV_GEMINI_API_KEY_FALLBACK = "GEMINI_API_KEY"
+ENV_GOOGLE_GEMINI_API_KEY = "GOOGLE_GEMINI_API_KEY"
 
 SCENARIOS = (
     "no_config_skips_closed_without_provider_call",
@@ -196,31 +198,58 @@ def _write_artifacts(
     }
 
 
+def _gemini_api_key(env: Mapping[str, str]) -> str | None:
+    for key_name in (
+        ENV_GEMINI_API_KEY,
+        ENV_GOOGLE_API_KEY,
+        ENV_GEMINI_API_KEY_FALLBACK,
+        ENV_GOOGLE_GEMINI_API_KEY,
+    ):
+        candidate = env.get(key_name, "").strip()
+        if candidate:
+            return candidate
+    return None
+
+
 def _call_gemini_provider(
     prompt: str,
     model_name: str,
     timeout_seconds: int,
     env: Mapping[str, str],
 ) -> str:
-    api_key = env.get(ENV_GEMINI_API_KEY)
+    api_key = _gemini_api_key(env)
     if not api_key:
         raise ProviderCaptureError("provider_sdk_or_key_missing")
     try:
-        genai = import_module("google.generativeai")
+        from google import genai
     except ImportError as exc:
         raise ProviderCaptureError("provider_sdk_or_key_missing") from exc
 
     try:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel(model_name)
-        response = model.generate_content(
-            prompt,
-            request_options={"timeout": timeout_seconds},
+        client = genai.Client(api_key=api_key)
+        response = client.models.generate_content(
+            model=model_name,
+            contents=prompt,
+            config={
+                "response_mime_type": "application/json",
+                "temperature": 0,
+                "candidate_count": 1,
+                "system_instruction": (
+                    "Return JSON only: exactly one bounded "
+                    "SemanticEvidenceClaim-compatible object. The output is "
+                    "candidate evidence only, not truth, authority, action "
+                    "permission, or FinalOutput."
+                ),
+            },
         )
     except TimeoutError as exc:
         raise ProviderTimeoutError("provider_timeout") from exc
     except Exception as exc:  # pragma: no cover - real provider path only
         raise ProviderCaptureError("provider_call_failed") from exc
+
+    parsed = getattr(response, "parsed", None)
+    if isinstance(parsed, dict):
+        return json.dumps(parsed, sort_keys=True)
 
     text = getattr(response, "text", None)
     if not isinstance(text, str) or not text.strip():
@@ -332,7 +361,7 @@ def run_live_provider_adapter_response_capture(
     real_gemini_provider_configured = (
         provider is None
         and provider_name == "gemini"
-        and bool(observed_env.get(ENV_GEMINI_API_KEY))
+        and bool(_gemini_api_key(observed_env))
     )
     if real_gemini_provider_configured:
         counters["secrets_accessed_count"] = 1

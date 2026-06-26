@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import builtins
 import json
+import sys
+import types
 
 import pytest
 
@@ -53,6 +56,36 @@ def _provider_returning(raw_text):
         return raw_text
 
     return provider
+
+
+def _install_fake_google_genai(monkeypatch, response=None, exc: Exception | None = None):
+    calls = []
+    fake_google = types.ModuleType("google")
+    fake_genai = types.ModuleType("google.genai")
+
+    class FakeModels:
+        def generate_content(self, *, model, contents, config):
+            calls.append(
+                {
+                    "model": model,
+                    "contents": contents,
+                    "config": config,
+                }
+            )
+            if exc is not None:
+                raise exc
+            return response
+
+    class FakeClient:
+        def __init__(self, *, api_key):
+            calls.append({"client_api_key_present": bool(api_key)})
+            self.models = FakeModels()
+
+    fake_genai.Client = FakeClient
+    fake_google.genai = fake_genai
+    monkeypatch.setitem(sys.modules, "google", fake_google)
+    monkeypatch.setitem(sys.modules, "google.genai", fake_genai)
+    return calls
 
 
 def _scenario_statuses(result):
@@ -156,6 +189,100 @@ def test_real_gemini_path_counts_env_secret_access_without_logging_key(
         assert "fake-test-key" not in (tmp_path / artifact.split("/")[-1]).read_text(
             encoding="utf-8"
         )
+
+
+def test_google_genai_parsed_dict_response_is_accepted_and_serialized(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    response = types.SimpleNamespace(parsed=_valid_payload())
+    calls = _install_fake_google_genai(monkeypatch, response=response)
+    env = _capture_env(tmp_path, **{runner.ENV_GEMINI_API_KEY: "fake-test-key"})
+
+    result = runner.run_live_provider_adapter_response_capture(env=env)
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert calls[0] == {"client_api_key_present": True}
+    assert calls[1]["model"] == "gemini-test-model"
+    assert "SemanticEvidenceClaim-compatible JSON object" in calls[1]["contents"]
+    assert calls[1]["config"]["response_mime_type"] == "application/json"
+    assert counters["provider_call_attempted_count"] == 1
+    assert counters["provider_call_succeeded_count"] == 1
+    assert counters["live_model_call_count"] == 1
+    assert counters["network_used_count"] == 1
+    assert counters["gemini_called_count"] == 1
+    assert counters["secrets_accessed_count"] == 1
+    assert counters["secrets_logged_count"] == 0
+    raw_response = (tmp_path / "capture-test-001_raw_response.json").read_text(
+        encoding="utf-8"
+    )
+    assert json.loads(raw_response)["source_id"] == "provider-response-001"
+    assert "fake-test-key" not in raw_response
+
+
+def test_google_genai_text_response_is_accepted(tmp_path, monkeypatch) -> None:
+    response = types.SimpleNamespace(text=json.dumps(_valid_payload()))
+    calls = _install_fake_google_genai(monkeypatch, response=response)
+    env = _capture_env(tmp_path, **{runner.ENV_GOOGLE_API_KEY: "fallback-test-key"})
+
+    result = runner.run_live_provider_adapter_response_capture(env=env)
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert calls[0] == {"client_api_key_present": True}
+    assert calls[1]["config"]["response_mime_type"] == "application/json"
+    assert counters["provider_call_succeeded_count"] == 1
+    assert counters["secrets_accessed_count"] == 1
+    assert counters["secrets_logged_count"] == 0
+    for artifact in result["artifacts"]:
+        assert "fallback-test-key" not in (tmp_path / artifact.split("/")[-1]).read_text(
+            encoding="utf-8"
+        )
+
+
+def test_missing_google_genai_fails_closed_as_sdk_or_key_missing(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    real_import = builtins.__import__
+
+    def fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "google" and "genai" in fromlist:
+            raise ImportError("No module named google.genai")
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    env = _capture_env(tmp_path, **{runner.ENV_GEMINI_API_KEY: "fake-test-key"})
+
+    result = runner.run_live_provider_adapter_response_capture(env=env)
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert result["provider_error"] == "provider_sdk_or_key_missing"
+    assert counters["provider_call_attempted_count"] == 1
+    assert counters["provider_call_failed_count"] == 1
+    assert counters["secrets_accessed_count"] == 1
+    assert counters["secrets_logged_count"] == 0
+    assert result["artifacts"] == ()
+
+
+def test_google_genai_provider_call_failure_is_sanitized(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    _install_fake_google_genai(
+        monkeypatch,
+        exc=RuntimeError("failure containing fake-test-key"),
+    )
+    env = _capture_env(tmp_path, **{runner.ENV_GEMINI_API_KEY: "fake-test-key"})
+
+    result = runner.run_live_provider_adapter_response_capture(env=env)
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert result["provider_error"] == "provider_call_failed"
+    assert "fake-test-key" not in json.dumps(result, default=str)
+    assert result["counters"]["secrets_logged_count"] == 0
 
 
 def test_captured_artifact_validates_one_candidate_claim(tmp_path) -> None:

@@ -76,6 +76,18 @@ def _gemini_architect_env(**overrides):
     return env
 
 
+def _dual_gemini_env(**overrides):
+    env = {
+        runner.ENV_FULL_E2E_DUAL_GEMINI_ROLES: "1",
+        runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR: "1",
+        runner.ENV_FULL_E2E_GEMINI_ARCHITECT: "1",
+        provider_adapter.ENV_PROVIDER_NAME: "gemini",
+        provider_adapter.ENV_PROVIDER_MODEL: "gemini-dual-test-model",
+    }
+    env.update(overrides)
+    return env
+
+
 def _bounded_orchestrator_input_from_prompt(prompt):
     marker = "BOUNDED_GEMINI_ORCHESTRATOR_INPUT_JSON:\n"
     return json.loads(prompt.split(marker, 1)[1])
@@ -180,7 +192,7 @@ def _gemini_orchestrator_provider(factory, captured=None):
         if captured is not None:
             captured["prompt"] = prompt
             captured["context"] = context
-        assert model_name == "gemini-orchestrator-test-model"
+        assert model_name == env[provider_adapter.ENV_PROVIDER_MODEL]
         assert timeout_seconds >= 1
         assert env[provider_adapter.ENV_PROVIDER_NAME] == "gemini"
         return json.dumps(factory(context), sort_keys=True)
@@ -194,7 +206,7 @@ def _gemini_architect_provider(factory, captured=None):
         if captured is not None:
             captured["prompt"] = prompt
             captured["context"] = context
-        assert model_name == "gemini-architect-test-model"
+        assert model_name == env[provider_adapter.ENV_PROVIDER_MODEL]
         assert timeout_seconds >= 1
         assert env[provider_adapter.ENV_PROVIDER_NAME] == "gemini"
         return json.dumps(factory(context), sort_keys=True)
@@ -253,6 +265,10 @@ def test_default_runner_returns_pass_and_runs_deterministic_full_spine() -> None
         assert counters[key] == 0
     for key in runner.GEMINI_ARCHITECT_COUNTER_KEYS:
         assert counters[key] == 0
+    for key in runner.DUAL_GEMINI_COUNTER_KEYS:
+        assert counters[key] == 0
+    assert result["dual_gemini_context"]["sequence_status"] == "not_started"
+    assert result["dual_gemini_context"]["gate_enabled"] is False
     assert result["gemini_architect_context"]["provider_call_path"] == "not_started"
 
 
@@ -1281,10 +1297,264 @@ def test_dual_gemini_orchestrator_and_architect_gate_is_not_supported() -> None:
     assert counters["bounded_gemini_orchestrator_role_started_count"] == 0
     assert counters["bounded_gemini_architect_role_started_count"] == 0
     assert counters["bounded_gemini_actor_role_started_count"] == 0
+    assert counters["dual_gemini_roles_started_count"] == 0
     assert counters["gemini_architect_plan_graph_rejected_count"] == 1
     assert counters["payment_executed_count"] == 0
     assert counters["shipment_released_count"] == 0
     assert counters["connector_called_count"] == 0
+
+
+def test_dual_gate_without_both_role_gates_fails_closed() -> None:
+    result = runner.run_full_semantic_e2e(
+        env={
+            runner.ENV_FULL_E2E_DUAL_GEMINI_ROLES: "1",
+            provider_adapter.ENV_PROVIDER_NAME: "gemini",
+            provider_adapter.ENV_PROVIDER_MODEL: "gemini-dual-test-model",
+        },
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "dual_gemini_requires_both_role_gates" in result["validation_errors"]
+    assert result["dual_gemini_context"]["sequence_status"] == (
+        "dual_gemini_requires_both_role_gates"
+    )
+    assert counters["bounded_gemini_orchestrator_role_started_count"] == 0
+    assert counters["bounded_gemini_architect_role_started_count"] == 0
+    assert counters["dual_gemini_roles_started_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_dual_fake_valid_orchestrator_then_architect_path_passes() -> None:
+    captured_architect = {}
+    result = runner.run_full_semantic_e2e(
+        env=_dual_gemini_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context)
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(context),
+            captured=captured_architect,
+        ),
+    )
+    counters = result["counters"]
+    dual = result["dual_gemini_context"]
+    architect_input = captured_architect["context"]
+    route = result["bounded_orchestrator_context"]
+
+    assert result["final_status"] == "PASS"
+    assert counters["dual_gemini_roles_started_count"] == 2
+    assert counters["dual_gemini_roles_completed_count"] == 2
+    assert counters["dual_gemini_orchestrator_then_architect_sequence_validated_count"] == 1
+    assert counters["dual_gemini_orchestrator_validated_before_architect_count"] == 1
+    assert counters["dual_gemini_architect_consumed_validated_route_count"] == 1
+    assert counters["dual_gemini_raw_cross_role_text_blocked_count"] == 1
+    assert counters["dual_gemini_role_lane_separation_preserved_count"] == 1
+    assert dual["sequence_status"] == "orchestrator_validated_then_architect_validated"
+    assert dual["orchestrator_validated"] is True
+    assert dual["architect_validated"] is True
+    assert dual["architect_consumed_validated_route"] is True
+    assert route["route_source"] == "bounded_gemini_orchestrator_validated_proposal"
+    assert architect_input["route_context"]["orchestrator_route_validated"] is True
+    assert architect_input["route_context"]["validated_orchestrator_proposal_id"] == (
+        result["gemini_orchestrator_context"]["proposal"]["proposal_id"]
+    )
+    assert tuple(architect_input["route_context"]["selected_vector_ids"]) == tuple(
+        result["gemini_orchestrator_context"]["selected_vector_ids"]
+    )
+    assert result["plangraph_context"]["contract_validated"] is True
+    assert result["fractal_executor_context"]["run_fractal_dag_executor_invoked"] is True
+    assert result["root_final_output_boundary"]["decision"] == "not_ready"
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_dual_fake_orchestrator_invalid_fails_before_architect() -> None:
+    calls = {"architect": 0}
+
+    def architect_provider(prompt, model_name, timeout_seconds, env):
+        calls["architect"] += 1
+        raise AssertionError("Architect provider should not be called")
+
+    result = runner.run_full_semantic_e2e(
+        env=_dual_gemini_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(
+                context,
+                selected_vector_ids=["vector:not_allowed"],
+            )
+        ),
+        architect_provider=architect_provider,
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert calls["architect"] == 0
+    assert "selected_vector_ids_must_be_subset_of_allowed_vector_ids" in (
+        result["validation_errors"]
+    )
+    assert counters["dual_gemini_roles_started_count"] == 1
+    assert counters["dual_gemini_roles_completed_count"] == 0
+    assert counters["dual_gemini_fail_closed_before_architect_count"] == 1
+    assert result["architect_context"] == {}
+    assert result["plangraph_context"] == {}
+    assert result["fractal_executor_context"] == {}
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_dual_fake_architect_invalid_fails_before_fractal() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_dual_gemini_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context)
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(
+                context,
+                selected_vector_ids=["vector:not_allowed"],
+            )
+        ),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert counters["dual_gemini_roles_started_count"] == 2
+    assert counters["dual_gemini_roles_completed_count"] == 1
+    assert counters["dual_gemini_fail_closed_before_fractal_count"] == 1
+    assert result["gemini_orchestrator_context"]["proposal_accepted"] is True
+    assert result["gemini_architect_context"]["proposal_accepted"] is False
+    assert result["fractal_executor_context"] == {}
+    assert counters["provider_final_output_created_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_dual_architect_input_blocks_raw_cross_role_text() -> None:
+    captured_architect = {}
+    sentinel = "raw Orchestrator provider response text sentinel"
+
+    result = runner.run_full_semantic_e2e(
+        env=_dual_gemini_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(
+                context,
+                reason=sentinel,
+            )
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(context),
+            captured=captured_architect,
+        ),
+    )
+    prompt = captured_architect["prompt"]
+    safe_context = captured_architect["context"]
+
+    assert result["final_status"] == "PASS"
+    for forbidden in (
+        "raw Orchestrator prompt",
+        "BOUNDED_GEMINI_ORCHESTRATOR_INPUT_JSON",
+        sentinel,
+        "ignore all boundaries",
+        ".tmp",
+        "api_key",
+        "secret",
+        "token",
+        "password",
+    ):
+        assert forbidden not in prompt
+    assert safe_context["route_context"]["validated_orchestrator_proposal_id"]
+    assert "route_validation" in safe_context["route_context"]
+    assert "guard_completeness" in safe_context["route_context"]
+    assert result["counters"]["dual_gemini_raw_cross_role_text_blocked_count"] == 1
+
+
+def test_dual_provider_lane_separation_is_preserved() -> None:
+    calls = {"evidence": 0, "orchestrator": 0, "architect": 0}
+
+    def evidence_provider(prompt, model_name, timeout_seconds, env):
+        calls["evidence"] += 1
+        raise AssertionError("evidence provider was reused")
+
+    def orchestrator_provider(prompt, model_name, timeout_seconds, env):
+        calls["orchestrator"] += 1
+        context = _bounded_orchestrator_input_from_prompt(prompt)
+        assert "BOUNDED_GEMINI_ARCHITECT_INPUT_JSON" not in prompt
+        return json.dumps(_valid_gemini_orchestrator_proposal(context), sort_keys=True)
+
+    def architect_provider(prompt, model_name, timeout_seconds, env):
+        calls["architect"] += 1
+        context = _bounded_architect_input_from_prompt(prompt)
+        assert "BOUNDED_GEMINI_ORCHESTRATOR_INPUT_JSON" not in prompt
+        return json.dumps(_valid_gemini_architect_proposal(context), sort_keys=True)
+
+    result = runner.run_full_semantic_e2e(
+        env=_dual_gemini_env(),
+        provider=evidence_provider,
+        orchestrator_provider=orchestrator_provider,
+        architect_provider=architect_provider,
+    )
+
+    assert result["final_status"] == "PASS"
+    assert calls == {"evidence": 0, "orchestrator": 1, "architect": 1}
+    assert result["counters"]["dual_gemini_role_lane_separation_preserved_count"] == 1
+
+
+def test_mocked_real_dual_gemini_path_counts_two_model_network_calls(
+    monkeypatch,
+) -> None:
+    def fake_real_orchestrator(prompt, model_name, timeout_seconds, env):
+        context = _bounded_orchestrator_input_from_prompt(prompt)
+        assert model_name == "gemini-dual-test-model"
+        return json.dumps(_valid_gemini_orchestrator_proposal(context), sort_keys=True)
+
+    def fake_real_architect(prompt, model_name, timeout_seconds, env):
+        context = _bounded_architect_input_from_prompt(prompt)
+        assert model_name == "gemini-dual-test-model"
+        return json.dumps(_valid_gemini_architect_proposal(context), sort_keys=True)
+
+    monkeypatch.setattr(
+        runner,
+        "_call_gemini_orchestrator_provider",
+        fake_real_orchestrator,
+    )
+    monkeypatch.setattr(
+        runner,
+        "_call_gemini_architect_provider",
+        fake_real_architect,
+    )
+
+    result = runner.run_full_semantic_e2e(env=_dual_gemini_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert result["gemini_orchestrator_context"]["provider_call_path"] == (
+        "real_gemini_orchestrator_provider"
+    )
+    assert result["gemini_architect_context"]["provider_call_path"] == (
+        "real_gemini_architect_provider"
+    )
+    assert counters["gemini_orchestrator_model_call_count"] == 1
+    assert counters["gemini_orchestrator_network_used_count"] == 1
+    assert counters["gemini_architect_model_call_count"] == 1
+    assert counters["gemini_architect_network_used_count"] == 1
+    assert counters["dual_gemini_model_call_count"] == 2
+    assert counters["dual_gemini_network_used_count"] == 2
+    assert counters["live_model_call_count"] == 2
+    assert counters["network_used_count"] == 2
+    assert counters["gemini_called_count"] == 2
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["root_final_authority_preserved_count"] == 1
 
 
 def test_plangraph_is_real_structured_output_from_architect_and_contract_validator() -> None:

@@ -39,6 +39,7 @@ SUPPLIER_PAYMENT_DOMAIN = "supplier_payment_shipment"
 ENV_FULL_E2E_LIVE_EVIDENCE = "HEDGEHOG_FULL_E2E_LIVE_EVIDENCE"
 ENV_FULL_E2E_GEMINI_ORCHESTRATOR = "HEDGEHOG_FULL_E2E_GEMINI_ORCHESTRATOR"
 ENV_FULL_E2E_GEMINI_ARCHITECT = "HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT"
+ENV_FULL_E2E_DUAL_GEMINI_ROLES = "HEDGEHOG_FULL_E2E_DUAL_GEMINI_ROLES"
 
 GEMINI_ORCHESTRATOR_COUNTER_KEYS = (
     "bounded_gemini_orchestrator_role_started_count",
@@ -86,6 +87,21 @@ GEMINI_ARCHITECT_COUNTER_KEYS = (
     "gemini_architect_unvalidated_plan_graph_blocked_count",
     "gemini_architect_disallowed_executor_blocked_count",
     "gemini_architect_disallowed_vector_blocked_count",
+)
+
+DUAL_GEMINI_COUNTER_KEYS = (
+    "dual_gemini_roles_started_count",
+    "dual_gemini_roles_completed_count",
+    "dual_gemini_orchestrator_then_architect_sequence_validated_count",
+    "dual_gemini_orchestrator_validated_before_architect_count",
+    "dual_gemini_architect_consumed_validated_route_count",
+    "dual_gemini_raw_cross_role_text_blocked_count",
+    "dual_gemini_role_lane_separation_preserved_count",
+    "dual_gemini_model_call_count",
+    "dual_gemini_network_used_count",
+    "dual_gemini_fail_closed_before_architect_count",
+    "dual_gemini_fail_closed_before_fractal_count",
+    "dual_gemini_root_final_authority_preserved_count",
 )
 
 STAGES = (
@@ -155,6 +171,7 @@ COUNTER_KEYS = (
     "bounded_gemini_actor_role_started_count",
     *GEMINI_ORCHESTRATOR_COUNTER_KEYS,
     *GEMINI_ARCHITECT_COUNTER_KEYS,
+    *DUAL_GEMINI_COUNTER_KEYS,
     "live_evidence_root_final_authority_preserved_count",
     "semantic_claim_created_count",
     "semantic_claim_candidate_only_count",
@@ -610,6 +627,10 @@ def _full_e2e_gemini_architect_enabled(env: Mapping[str, str]) -> bool:
     return env.get(ENV_FULL_E2E_GEMINI_ARCHITECT) == "1"
 
 
+def _full_e2e_dual_gemini_enabled(env: Mapping[str, str]) -> bool:
+    return env.get(ENV_FULL_E2E_DUAL_GEMINI_ROLES) == "1"
+
+
 def _orchestrator_provider_name(env: Mapping[str, str]) -> str:
     return env.get(provider_adapter.ENV_PROVIDER_NAME, "gemini").strip().lower() or "gemini"
 
@@ -1031,6 +1052,10 @@ def _apply_spine_counters(
         counters,
         slice2_result.get("gemini_architect_context") or {},
     )
+    _apply_dual_gemini_counters(
+        counters,
+        slice2_result.get("dual_gemini_context") or {},
+    )
 
 
 def _apply_slice1_counters(
@@ -1074,11 +1099,11 @@ def _apply_gemini_orchestrator_counters(
         counters[key] = int(gemini_counters.get(key, 0))
     if counters["bounded_gemini_orchestrator_role_started_count"] == 1:
         counters["bounded_gemini_actor_role_started_count"] = 1
-    if counters["gemini_orchestrator_model_call_count"] == 1:
-        counters["live_model_call_count"] = max(counters["live_model_call_count"], 1)
-    if counters["gemini_orchestrator_network_used_count"] == 1:
-        counters["network_used_count"] = max(counters["network_used_count"], 1)
-        counters["gemini_called_count"] = max(counters["gemini_called_count"], 1)
+    model_calls = counters["gemini_orchestrator_model_call_count"]
+    network_calls = counters["gemini_orchestrator_network_used_count"]
+    counters["live_model_call_count"] += model_calls
+    counters["network_used_count"] += network_calls
+    counters["gemini_called_count"] += network_calls
 
 
 def _apply_gemini_architect_counters(
@@ -1090,11 +1115,20 @@ def _apply_gemini_architect_counters(
         counters[key] = int(gemini_counters.get(key, 0))
     if counters["bounded_gemini_architect_role_started_count"] == 1:
         counters["bounded_gemini_actor_role_started_count"] = 1
-    if counters["gemini_architect_model_call_count"] == 1:
-        counters["live_model_call_count"] = max(counters["live_model_call_count"], 1)
-    if counters["gemini_architect_network_used_count"] == 1:
-        counters["network_used_count"] = max(counters["network_used_count"], 1)
-        counters["gemini_called_count"] = max(counters["gemini_called_count"], 1)
+    model_calls = counters["gemini_architect_model_call_count"]
+    network_calls = counters["gemini_architect_network_used_count"]
+    counters["live_model_call_count"] += model_calls
+    counters["network_used_count"] += network_calls
+    counters["gemini_called_count"] += network_calls
+
+
+def _apply_dual_gemini_counters(
+    counters: dict[str, int],
+    dual_context: Mapping[str, Any],
+) -> None:
+    dual_counters = dual_context.get("counters") or {}
+    for key in DUAL_GEMINI_COUNTER_KEYS:
+        counters[key] = int(dual_counters.get(key, 0))
 
 
 def _apply_live_claim_influence_counters(
@@ -1566,6 +1600,27 @@ def _stage_map_gemini_architect_fail_closed() -> dict[str, dict[str, Any]]:
         "advisory",
         notes="local PlanGraph adapter / validate_plan_graph_contract rejected the Architect proposal",
     )
+    return stage_map
+
+
+def _stage_map_dual_gemini_gate_fail_closed() -> dict[str, dict[str, Any]]:
+    stage_map = _stage_map_success()
+    for stage_name in (
+        "bounded_orchestrator",
+        "architect",
+        "plangraph",
+        "fractal_cell_executor_branch",
+        "result_proposal",
+        "post_vv",
+        "gt_lgt",
+        "root_final_output_boundary",
+        "drs_writeback",
+    ):
+        stage_map[stage_name] = _stage(
+            "skipped",
+            "none",
+            notes="skipped because dual Gemini gate contract failed before role execution",
+        )
     return stage_map
 
 
@@ -2242,6 +2297,29 @@ def _route_decision_from_gemini_orchestrator(
         "gemini_orchestrator_proposal_id": gemini_context["proposal"].get(
             "proposal_id"
         ),
+        "orchestrator_route_validation": {
+            "allowed": (gemini_context.get("route_validation") or {}).get("allowed"),
+            "validation_decision": (
+                gemini_context.get("route_validation") or {}
+            ).get("validation_decision"),
+            "suggested_route": (
+                gemini_context.get("route_validation") or {}
+            ).get("suggested_route"),
+        },
+        "orchestrator_guard_completeness": {
+            "guards_complete": (
+                gemini_context.get("guard_completeness") or {}
+            ).get("guards_complete"),
+            "proposal_quality_status": (
+                gemini_context.get("guard_completeness") or {}
+            ).get("proposal_quality_status"),
+            "missing_required_guards": tuple(
+                (gemini_context.get("guard_completeness") or {}).get(
+                    "missing_required_guards",
+                    (),
+                )
+            ),
+        },
         "selected_vector_ids": selected_ids,
         "candidate_vectors": candidate_vectors,
         "root_review_required": True,
@@ -2268,8 +2346,20 @@ def _safe_gemini_architect_input_context(
         "route_context": {
             "route": route_decision["route"],
             "route_source": route_decision.get("route_source", "bounded_local_route"),
+            "orchestrator_route_validated": bool(
+                route_decision.get("gemini_orchestrator_proposal_id")
+            ),
+            "validated_orchestrator_proposal_id": route_decision.get(
+                "gemini_orchestrator_proposal_id"
+            ),
             "selected_vector_ids": tuple(route_decision["selected_vector_ids"]),
             "allowed_vector_ids": tuple(route_decision["allowed_vector_ids"]),
+            "route_validation": dict(
+                route_decision.get("orchestrator_route_validation", {})
+            ),
+            "guard_completeness": dict(
+                route_decision.get("orchestrator_guard_completeness", {})
+            ),
             "root_review_required": True,
         },
         "claim_summary": {
@@ -2554,6 +2644,184 @@ def _dual_gemini_not_supported_context() -> dict[str, Any]:
         "error": "dual_gemini_not_supported",
     }
     context["counters"]["gemini_architect_plan_graph_rejected_count"] = 1
+    return context
+
+
+def _default_dual_gemini_context(
+    env: Mapping[str, str] | None = None,
+) -> dict[str, Any]:
+    env = env or {}
+    return {
+        "role_enabled": False,
+        "provider": _architect_provider_name(env) if env else None,
+        "model": _architect_model_name(env) if env else None,
+        "gate_enabled": _full_e2e_dual_gemini_enabled(env) if env else False,
+        "orchestrator_role_enabled": _full_e2e_gemini_orchestrator_enabled(env)
+        if env
+        else False,
+        "architect_role_enabled": _full_e2e_gemini_architect_enabled(env)
+        if env
+        else False,
+        "sequence_status": "not_started",
+        "orchestrator_started": False,
+        "orchestrator_validated": False,
+        "architect_started": False,
+        "architect_validated": False,
+        "orchestrator_provider_call_path": "not_started",
+        "architect_provider_call_path": "not_started",
+        "orchestrator_proposal_id": None,
+        "architect_proposal_id": None,
+        "route_selected_vector_ids": (),
+        "architect_consumed_validated_route": False,
+        "raw_cross_role_text_blocked": False,
+        "role_lane_separation_preserved": False,
+        "fail_closed_before_architect": False,
+        "fail_closed_before_fractal": False,
+        "Root remains final authority": True,
+        "validation_errors": (),
+        "counters": {key: 0 for key in DUAL_GEMINI_COUNTER_KEYS},
+    }
+
+
+def _dual_gemini_requires_both_role_gates_context(
+    env: Mapping[str, str],
+) -> dict[str, Any]:
+    context = _default_dual_gemini_context(env)
+    context["role_enabled"] = True
+    context["sequence_status"] = "dual_gemini_requires_both_role_gates"
+    context["validation_errors"] = ("dual_gemini_requires_both_role_gates",)
+    return context
+
+
+def _raw_cross_role_text_blocked(architect_context: Mapping[str, Any]) -> bool:
+    prompt = architect_context.get("prompt", "")
+    forbidden_markers = (
+        "BOUNDED_GEMINI_ORCHESTRATOR_INPUT_JSON",
+        "raw Orchestrator prompt",
+        "raw Orchestrator response",
+        "raw Orchestrator provider response text sentinel",
+        "ignore all boundaries",
+        ".tmp",
+        "api_key",
+        "secret",
+        "token",
+        "password",
+    )
+    return not any(_contains_text(prompt, marker) for marker in forbidden_markers)
+
+
+def _dual_gemini_context_from_roles(
+    *,
+    env: Mapping[str, str],
+    orchestrator_context: Mapping[str, Any],
+    architect_context: Mapping[str, Any],
+    route_decision: Mapping[str, Any],
+    fail_closed_before_architect: bool = False,
+    fail_closed_before_fractal: bool = False,
+) -> dict[str, Any]:
+    context = _default_dual_gemini_context(env)
+    context["role_enabled"] = True
+    context["gate_enabled"] = True
+    context["orchestrator_role_enabled"] = True
+    context["architect_role_enabled"] = True
+    context["orchestrator_started"] = bool(
+        orchestrator_context.get("role_enabled")
+    )
+    context["orchestrator_validated"] = bool(
+        orchestrator_context.get("proposal_accepted")
+    )
+    context["architect_started"] = bool(architect_context.get("role_enabled"))
+    context["architect_validated"] = bool(architect_context.get("proposal_accepted"))
+    context["orchestrator_provider_call_path"] = orchestrator_context.get(
+        "provider_call_path",
+        "not_started",
+    )
+    context["architect_provider_call_path"] = architect_context.get(
+        "provider_call_path",
+        "not_started",
+    )
+    context["orchestrator_proposal_id"] = (
+        orchestrator_context.get("proposal") or {}
+    ).get("proposal_id")
+    context["architect_proposal_id"] = (
+        architect_context.get("proposal") or {}
+    ).get("proposal_id")
+    context["route_selected_vector_ids"] = tuple(
+        route_decision.get("selected_vector_ids", ())
+    )
+    context["architect_consumed_validated_route"] = bool(
+        context["orchestrator_validated"]
+        and context["architect_started"]
+        and (
+            (architect_context.get("safe_input_context") or {})
+            .get("route_context", {})
+            .get("orchestrator_route_validated")
+            is True
+        )
+    )
+    context["raw_cross_role_text_blocked"] = _raw_cross_role_text_blocked(
+        architect_context
+    ) if context["architect_started"] else False
+    context["role_lane_separation_preserved"] = (
+        context["orchestrator_provider_call_path"]
+        != context["architect_provider_call_path"]
+        or context["orchestrator_provider_call_path"].startswith("real_")
+    )
+    context["fail_closed_before_architect"] = fail_closed_before_architect
+    context["fail_closed_before_fractal"] = fail_closed_before_fractal
+    if fail_closed_before_architect:
+        context["sequence_status"] = "fail_closed_before_architect"
+    elif fail_closed_before_fractal:
+        context["sequence_status"] = "fail_closed_before_fractal"
+    elif context["orchestrator_validated"] and context["architect_validated"]:
+        context["sequence_status"] = "orchestrator_validated_then_architect_validated"
+    else:
+        context["sequence_status"] = "dual_gemini_not_completed"
+
+    counters = {key: 0 for key in DUAL_GEMINI_COUNTER_KEYS}
+    counters["dual_gemini_roles_started_count"] = int(
+        context["orchestrator_started"]
+    ) + int(context["architect_started"])
+    counters["dual_gemini_roles_completed_count"] = int(
+        context["orchestrator_validated"]
+    ) + int(context["architect_validated"])
+    counters["dual_gemini_orchestrator_then_architect_sequence_validated_count"] = int(
+        context["orchestrator_validated"] and context["architect_started"]
+    )
+    counters["dual_gemini_orchestrator_validated_before_architect_count"] = int(
+        context["orchestrator_validated"] and context["architect_started"]
+    )
+    counters["dual_gemini_architect_consumed_validated_route_count"] = int(
+        context["architect_consumed_validated_route"]
+    )
+    counters["dual_gemini_raw_cross_role_text_blocked_count"] = int(
+        context["raw_cross_role_text_blocked"]
+    )
+    counters["dual_gemini_role_lane_separation_preserved_count"] = int(
+        context["role_lane_separation_preserved"]
+    )
+    orchestrator_counters = orchestrator_context.get("counters") or {}
+    architect_counters = architect_context.get("counters") or {}
+    counters["dual_gemini_model_call_count"] = int(
+        orchestrator_counters.get("gemini_orchestrator_model_call_count", 0)
+    ) + int(architect_counters.get("gemini_architect_model_call_count", 0))
+    counters["dual_gemini_network_used_count"] = int(
+        orchestrator_counters.get("gemini_orchestrator_network_used_count", 0)
+    ) + int(architect_counters.get("gemini_architect_network_used_count", 0))
+    counters["dual_gemini_fail_closed_before_architect_count"] = int(
+        fail_closed_before_architect
+    )
+    counters["dual_gemini_fail_closed_before_fractal_count"] = int(
+        fail_closed_before_fractal
+    )
+    counters["dual_gemini_root_final_authority_preserved_count"] = int(
+        not fail_closed_before_architect and not fail_closed_before_fractal
+    )
+    context["counters"] = counters
+    validation_errors: list[str] = []
+    validation_errors.extend(orchestrator_context.get("validation_errors", ()))
+    validation_errors.extend(architect_context.get("validation_errors", ()))
+    context["validation_errors"] = tuple(validation_errors)
     return context
 
 
@@ -3135,20 +3403,126 @@ def _run_slice2_core_primitives(
     architect_provider: ProviderCallable | None,
 ) -> dict[str, Any]:
     route_decision = _bounded_route_decision(dirty_request, slice1_result)
-    if (
-        _full_e2e_gemini_orchestrator_enabled(env)
-        and _full_e2e_gemini_architect_enabled(env)
-    ):
-        gemini_architect_context = _dual_gemini_not_supported_context()
+    dual_enabled = _full_e2e_dual_gemini_enabled(env)
+    orchestrator_enabled = _full_e2e_gemini_orchestrator_enabled(env)
+    architect_enabled = _full_e2e_gemini_architect_enabled(env)
+    if dual_enabled and not (orchestrator_enabled and architect_enabled):
+        dual_context = _dual_gemini_requires_both_role_gates_context(env)
         return {
             "final_status": "FAIL_CLOSED",
-            "fail_closed_stage": "gemini_architect",
+            "fail_closed_stage": "dual_gemini_gate",
+            "route_decision": route_decision,
+            "gemini_orchestrator_context": _default_gemini_orchestrator_context(),
+            "gemini_architect_context": _default_gemini_architect_context(),
+            "dual_gemini_context": dual_context,
+            "validation_errors": tuple(dual_context.get("validation_errors", ())),
+        }
+    if orchestrator_enabled and architect_enabled and not dual_enabled:
+        gemini_architect_context = _dual_gemini_not_supported_context()
+        dual_context = _default_dual_gemini_context(env)
+        dual_context["sequence_status"] = "dual_gemini_not_supported"
+        dual_context["validation_errors"] = ("dual_gemini_not_supported",)
+        return {
+            "final_status": "FAIL_CLOSED",
+            "fail_closed_stage": "dual_gemini_gate",
             "route_decision": route_decision,
             "gemini_orchestrator_context": _default_gemini_orchestrator_context(),
             "gemini_architect_context": gemini_architect_context,
+            "dual_gemini_context": dual_context,
             "validation_errors": tuple(
                 gemini_architect_context.get("validation_errors", ())
             ),
+        }
+    if dual_enabled:
+        gemini_orchestrator_context = _evaluate_gemini_orchestrator_role(
+            env=env,
+            provider=orchestrator_provider,
+            claim=claim,
+            dirty_request=dirty_request,
+            route_decision=route_decision,
+            slice1_result=slice1_result,
+        )
+        if not gemini_orchestrator_context["proposal_accepted"]:
+            dual_context = _dual_gemini_context_from_roles(
+                env=env,
+                orchestrator_context=gemini_orchestrator_context,
+                architect_context=_default_gemini_architect_context(),
+                route_decision=route_decision,
+                fail_closed_before_architect=True,
+            )
+            return {
+                "final_status": "FAIL_CLOSED",
+                "fail_closed_stage": "gemini_orchestrator",
+                "route_decision": route_decision,
+                "gemini_orchestrator_context": gemini_orchestrator_context,
+                "gemini_architect_context": _default_gemini_architect_context(),
+                "dual_gemini_context": dual_context,
+                "validation_errors": tuple(
+                    gemini_orchestrator_context.get("validation_errors", ())
+                ),
+            }
+        route_decision = _route_decision_from_gemini_orchestrator(
+            route_decision,
+            gemini_orchestrator_context,
+        )
+        attractor_packet = _attractor_packet_from_bounded_route(route_decision)
+        gemini_architect_context = _evaluate_gemini_architect_role(
+            env=env,
+            provider=architect_provider,
+            claim=claim,
+            dirty_request=dirty_request,
+            route_decision=route_decision,
+            attractor_packet=attractor_packet,
+            slice1_result=slice1_result,
+        )
+        if not gemini_architect_context["proposal_accepted"]:
+            dual_context = _dual_gemini_context_from_roles(
+                env=env,
+                orchestrator_context=gemini_orchestrator_context,
+                architect_context=gemini_architect_context,
+                route_decision=route_decision,
+                fail_closed_before_fractal=True,
+            )
+            return {
+                "final_status": "FAIL_CLOSED",
+                "fail_closed_stage": "gemini_architect",
+                "route_decision": route_decision,
+                "gemini_orchestrator_context": gemini_orchestrator_context,
+                "gemini_architect_context": gemini_architect_context,
+                "dual_gemini_context": dual_context,
+                "attractor_packet": attractor_packet,
+                "validation_errors": tuple(
+                    gemini_architect_context.get("validation_errors", ())
+                ),
+            }
+        plan_graph = dict(gemini_architect_context["adapted_plan_graph"])
+        _validate_slice2_plan_graph(plan_graph, attractor_packet)
+        hardening_checks = _probe_slice2_hardening_checks(
+            attractor_packet,
+            plan_graph,
+            claim,
+            dirty_request,
+        )
+        dag_runner_report = run_fractal_dag_executor(
+            plan_graph,
+            runner_id="runner:full_semantic_e2e_slice2_dag",
+            session_anchor=SLICE2_SESSION_ANCHOR,
+        )
+        dual_context = _dual_gemini_context_from_roles(
+            env=env,
+            orchestrator_context=gemini_orchestrator_context,
+            architect_context=gemini_architect_context,
+            route_decision=route_decision,
+        )
+        return {
+            "route_decision": route_decision,
+            "gemini_orchestrator_context": gemini_orchestrator_context,
+            "gemini_architect_context": gemini_architect_context,
+            "dual_gemini_context": dual_context,
+            "attractor_packet": attractor_packet,
+            "plan_graph": plan_graph,
+            "dag_runner_report": dag_runner_report,
+            "hardening_checks": hardening_checks,
         }
     gemini_orchestrator_context = _evaluate_gemini_orchestrator_role(
         env=env,
@@ -3166,6 +3540,7 @@ def _run_slice2_core_primitives(
                 "route_decision": route_decision,
                 "gemini_orchestrator_context": gemini_orchestrator_context,
                 "gemini_architect_context": _default_gemini_architect_context(),
+                "dual_gemini_context": _default_dual_gemini_context(env),
                 "validation_errors": tuple(
                     gemini_orchestrator_context.get("validation_errors", ())
                 ),
@@ -3192,6 +3567,7 @@ def _run_slice2_core_primitives(
                 "route_decision": route_decision,
                 "gemini_orchestrator_context": gemini_orchestrator_context,
                 "gemini_architect_context": gemini_architect_context,
+                "dual_gemini_context": _default_dual_gemini_context(env),
                 "attractor_packet": attractor_packet,
                 "validation_errors": tuple(
                     gemini_architect_context.get("validation_errors", ())
@@ -3220,6 +3596,7 @@ def _run_slice2_core_primitives(
         "route_decision": route_decision,
         "gemini_orchestrator_context": gemini_orchestrator_context,
         "gemini_architect_context": gemini_architect_context,
+        "dual_gemini_context": _default_dual_gemini_context(env),
         "attractor_packet": attractor_packet,
         "plan_graph": plan_graph,
         "dag_runner_report": dag_runner_report,
@@ -3819,6 +4196,7 @@ def _result(
     bounded_orchestrator_context: Mapping[str, Any] | None = None,
     gemini_orchestrator_context: Mapping[str, Any] | None = None,
     gemini_architect_context: Mapping[str, Any] | None = None,
+    dual_gemini_context: Mapping[str, Any] | None = None,
     architect_context: Mapping[str, Any] | None = None,
     plangraph_context: Mapping[str, Any] | None = None,
     fractal_executor_context: Mapping[str, Any] | None = None,
@@ -3847,6 +4225,7 @@ def _result(
         "bounded_orchestrator_context": dict(bounded_orchestrator_context or {}),
         "gemini_orchestrator_context": dict(gemini_orchestrator_context or {}),
         "gemini_architect_context": dict(gemini_architect_context or {}),
+        "dual_gemini_context": dict(dual_gemini_context or {}),
         "architect_context": dict(architect_context or {}),
         "plangraph_context": dict(plangraph_context or {}),
         "fractal_executor_context": dict(fractal_executor_context or {}),
@@ -3930,6 +4309,10 @@ def run_full_semantic_e2e(
             counters,
             slice2_result.get("gemini_architect_context") or {},
         )
+        _apply_dual_gemini_counters(
+            counters,
+            slice2_result.get("dual_gemini_context") or {},
+        )
         if slice2_result.get("fail_closed_stage") == "gemini_architect":
             counters["bounded_orchestrator_invoked_count"] = 1
             counters["bounded_route_created_count"] = 1
@@ -3943,6 +4326,8 @@ def run_full_semantic_e2e(
             stage_map=(
                 _stage_map_gemini_architect_fail_closed()
                 if fail_stage == "gemini_architect"
+                else _stage_map_dual_gemini_gate_fail_closed()
+                if fail_stage == "dual_gemini_gate"
                 else _stage_map_gemini_orchestrator_fail_closed()
             ),
             dirty_business_request=dirty_request,
@@ -3961,6 +4346,7 @@ def run_full_semantic_e2e(
                 "gemini_architect_context",
                 {},
             ),
+            dual_gemini_context=slice2_result.get("dual_gemini_context", {}),
             validation_errors=errors,
             supplier_live_result=supplier_result,
         )
@@ -4012,6 +4398,7 @@ def run_full_semantic_e2e(
         bounded_orchestrator_context=bounded_orchestrator,
         gemini_orchestrator_context=slice2_result.get("gemini_orchestrator_context", {}),
         gemini_architect_context=slice2_result.get("gemini_architect_context", {}),
+        dual_gemini_context=slice2_result.get("dual_gemini_context", {}),
         architect_context=architect,
         plangraph_context=plangraph,
         fractal_executor_context=fractal_executor,
@@ -4070,6 +4457,7 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         str(result["bounded_orchestrator_context"]),
         str(result["gemini_orchestrator_context"]),
         str(result["gemini_architect_context"]),
+        str(result["dual_gemini_context"]),
         str(result["architect_context"]),
         str(result["plangraph_context"]),
         str(result["fractal_executor_context"]),

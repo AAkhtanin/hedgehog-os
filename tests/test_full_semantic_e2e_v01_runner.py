@@ -520,6 +520,7 @@ def test_explicit_fake_gemini_orchestrator_valid_proposal_is_locally_validated()
     assert counters["gemini_orchestrator_route_allowed_count"] == 1
     assert counters["gemini_orchestrator_guard_completeness_validated_count"] == 1
     assert counters["gemini_orchestrator_selected_only_allowed_vectors_count"] == 1
+    assert context["provider_call_path"] == "injected_orchestrator_provider"
     assert context["proposal_accepted"] is True
     assert context["route_validation"]["allowed"] is True
     assert context["guard_completeness"]["guards_complete"] is True
@@ -582,6 +583,10 @@ def test_evidence_provider_is_not_reused_as_gemini_orchestrator_provider() -> No
     assert result["gemini_orchestrator_context"]["proposal_error"] == (
         "provider_sdk_or_key_missing"
     )
+    assert result["gemini_orchestrator_context"]["provider_call_path"] == (
+        "real_gemini_orchestrator_provider_failed"
+    )
+    assert counters["gemini_orchestrator_proposal_created_count"] == 0
     assert counters["bounded_gemini_orchestrator_role_started_count"] == 1
     assert counters["bounded_gemini_actor_role_started_count"] == 1
     assert counters["gemini_orchestrator_route_rejected_count"] == 1
@@ -593,6 +598,45 @@ def test_evidence_provider_is_not_reused_as_gemini_orchestrator_provider() -> No
     assert counters["payment_executed_count"] == 0
     assert counters["shipment_released_count"] == 0
     assert counters["connector_called_count"] == 0
+
+
+def test_mocked_real_gemini_orchestrator_path_counts_model_network_and_gemini(
+    monkeypatch,
+) -> None:
+    def fake_real_provider(prompt, model_name, timeout_seconds, env):
+        context = _bounded_orchestrator_input_from_prompt(prompt)
+        assert model_name == "gemini-orchestrator-test-model"
+        assert timeout_seconds >= 1
+        return json.dumps(
+            _valid_gemini_orchestrator_proposal(context),
+            sort_keys=True,
+        )
+
+    monkeypatch.setattr(
+        runner,
+        "_call_gemini_orchestrator_provider",
+        fake_real_provider,
+    )
+    result = runner.run_full_semantic_e2e(env=_gemini_orchestrator_env())
+    counters = result["counters"]
+    context = result["gemini_orchestrator_context"]
+
+    assert result["final_status"] == "PASS"
+    assert context["provider_call_path"] == "real_gemini_orchestrator_provider"
+    assert counters["bounded_gemini_orchestrator_role_started_count"] == 1
+    assert counters["bounded_gemini_actor_role_started_count"] == 1
+    assert counters["gemini_orchestrator_model_call_count"] == 1
+    assert counters["gemini_orchestrator_network_used_count"] == 1
+    assert counters["live_model_call_count"] == 1
+    assert counters["network_used_count"] == 1
+    assert counters["gemini_called_count"] == 1
+    assert counters["gemini_orchestrator_proposal_created_count"] == 1
+    assert counters["gemini_orchestrator_proposal_validated_count"] == 1
+    assert counters["gemini_orchestrator_route_allowed_count"] == 1
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["root_final_authority_preserved_count"] == 1
 
 
 def test_gemini_orchestrator_missing_critical_guards_fails_closed() -> None:

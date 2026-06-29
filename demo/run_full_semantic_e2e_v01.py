@@ -1701,6 +1701,7 @@ def _default_gemini_orchestrator_context() -> dict[str, Any]:
         "proposal_validated": False,
         "proposal_accepted": False,
         "proposal_error": None,
+        "provider_call_path": "not_started",
         "proposal": {},
         "safe_input_context": {},
         "prompt": "",
@@ -1913,9 +1914,15 @@ def _evaluate_gemini_orchestrator_role(
     context["role_enabled"] = True
     context["provider"] = _orchestrator_provider_name(env)
     context["model"] = _orchestrator_model_name(env)
+    context["provider_call_path"] = (
+        "injected_orchestrator_provider"
+        if provider is not None
+        else "real_gemini_orchestrator_provider"
+    )
     context["counters"]["bounded_gemini_orchestrator_role_started_count"] = 1
 
     if context["provider"] != "gemini":
+        context["provider_call_path"] = "real_gemini_orchestrator_provider_failed"
         context["proposal_error"] = "gemini_orchestrator_provider_must_be_gemini"
         context["validation_errors"] = ("gemini_orchestrator_provider_must_be_gemini",)
         context["counters"]["gemini_orchestrator_route_rejected_count"] = 1
@@ -1955,11 +1962,15 @@ def _evaluate_gemini_orchestrator_role(
         proposal = _parse_gemini_orchestrator_proposal(raw_response)
     except provider_adapter.ProviderCaptureError as exc:
         reason = _provider_capture_reason(exc)
+        if provider is None:
+            context["provider_call_path"] = "real_gemini_orchestrator_provider_failed"
         context["proposal_error"] = reason
         context["validation_errors"] = (reason,)
         context["counters"]["gemini_orchestrator_route_rejected_count"] = 1
         return context
     except (TypeError, ValueError) as exc:
+        if provider is None:
+            context["provider_call_path"] = "real_gemini_orchestrator_provider_failed"
         context["proposal_error"] = str(exc)
         context["validation_errors"] = (str(exc),)
         context["counters"]["gemini_orchestrator_route_rejected_count"] = 1
@@ -1971,6 +1982,10 @@ def _evaluate_gemini_orchestrator_role(
         safe_context=safe_context,
         prompt=prompt,
     )
+    merged_counters = dict(context["counters"])
+    for key, value in validation["counters"].items():
+        merged_counters[key] = max(int(merged_counters.get(key, 0)), int(value))
+    validation = {**validation, "counters": merged_counters}
     context.update(validation)
     return context
 

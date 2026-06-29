@@ -1,0 +1,215 @@
+audit_id: auditor_dual_gemini_orchestrator_architect_runtime_v01
+audit_status: PASS
+scope: Dual Gemini Orchestrator+Architect integration runtime v0.1 inside existing Full Semantic E2E supplier-payment spine
+
+committed_chain:
+- 13bafb4 Add dual Gemini role integration preflight
+- 9b7d970 Add dual Gemini role integration runtime
+
+closed_dependencies:
+- eabe9f7 Add bounded Gemini Orchestrator role audit log
+- 22ee25f Add bounded Gemini Architect role audit log
+
+runtime_scope:
+- implemented inside existing Full Semantic E2E runner
+- no new runner
+- no public WOW
+- not production
+- no NeedleFactory / Marennya / UP
+- no real payment/shipment/connector
+- dual mode requires explicit gate:
+  - HEDGEHOG_FULL_E2E_DUAL_GEMINI_ROLES=1
+  - HEDGEHOG_FULL_E2E_GEMINI_ORCHESTRATOR=1
+  - HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT=1
+- both role gates without dual gate remain fail-closed with dual_gemini_not_supported
+- dual gate without both role gates fails closed with dual_gemini_requires_both_role_gates
+- Orchestrator role remains bounded route proposal only
+- Architect role remains bounded PlanGraph proposal only
+- deterministic/local validators remain downstream
+- Root remains final authority
+
+validation_evidence_before_commit:
+- default CLI: FINAL STATUS: PASS
+- focused suite: 138 passed, 2 warnings
+- changed files were limited to:
+  - demo/run_full_semantic_e2e_v01.py
+  - tests/test_full_semantic_e2e_v01_runner.py
+- commit: 9b7d970 Add dual Gemini role integration runtime
+
+real_dual_gemini_smoke_001:
+- source_summary: .tmp/full_e2e_dual_gemini_roles/manual-full-e2e-dual-gemini-001_summary.json
+- source_log: .tmp/full_e2e_dual_gemini_roles/manual-full-e2e-dual-gemini-001_summary.log
+- final_status: PASS
+- validation_errors: []
+- provider: gemini
+- model: gemini-2.5-flash
+- sequence_status: orchestrator_validated_then_architect_validated
+
+dual_role_provider_paths:
+- orchestrator_provider_call_path: real_gemini_orchestrator_provider
+- architect_provider_call_path: real_gemini_architect_provider
+- orchestrator_started: true
+- orchestrator_validated: true
+- architect_started: true
+- architect_validated: true
+- architect_consumed_validated_route: true
+- raw_cross_role_text_blocked: true
+- role_lane_separation_preserved: true
+- fail_closed_before_architect: false
+- fail_closed_before_fractal: false
+
+dual_counters:
+- dual_gemini_roles_started_count: 2
+- dual_gemini_roles_completed_count: 2
+- dual_gemini_orchestrator_then_architect_sequence_validated_count: 1
+- dual_gemini_orchestrator_validated_before_architect_count: 1
+- dual_gemini_architect_consumed_validated_route_count: 1
+- dual_gemini_raw_cross_role_text_blocked_count: 1
+- dual_gemini_role_lane_separation_preserved_count: 1
+- dual_gemini_model_call_count: 2
+- dual_gemini_network_used_count: 2
+- dual_gemini_fail_closed_before_architect_count: 0
+- dual_gemini_fail_closed_before_fractal_count: 0
+- dual_gemini_root_final_authority_preserved_count: 1
+
+real_model_network_counters:
+- gemini_orchestrator_model_call_count: 1
+- gemini_orchestrator_network_used_count: 1
+- gemini_architect_model_call_count: 1
+- gemini_architect_network_used_count: 1
+- live_model_call_count: 2
+- network_used_count: 2
+- gemini_called_count: 2
+
+orchestrator_semantic_evidence:
+- proposal_role: bounded_gemini_orchestrator
+- proposal_id: gemini-orchestrator-proposal-001
+- suggested_route: proof_full_pipeline
+- selected_vector_ids:
+  - vector_record_supplier_live_candidate_current
+- selected_only_allowed_vectors: true
+- route_validation.allowed: true
+- route_validation.validation_decision: allow_with_guards
+- guard_completeness.guards_complete: true
+- guard_completeness.proposal_quality_status: PASS_COMPLETE
+- required guards included:
+  - AVF
+  - HardMask
+  - PlanGraph contract
+  - Post V&V
+  - GT/LGT
+  - Root final authority
+- unsafe claims all false:
+  - authority_claimed
+  - truth_claimed
+  - action_permission_claimed
+  - final_output_claimed
+  - connector_command_claimed
+  - drs_write_claimed
+  - plan_graph_claimed
+  - bypass_avf_claimed
+  - bypass_root_claimed
+
+architect_semantic_evidence:
+- proposal_role: bounded_gemini_architect
+- proposal_id: gemini-architect-proposal-001
+- plan_graph_proposal_id: plan:gemini-architect-proposal-001
+- provider_call_path: real_gemini_architect_provider
+- proposal_accepted: true
+- proposal_validated: true
+- proposal_error: null
+- selected_vector_ids:
+  - vector_record_supplier_live_candidate_current
+- executor_assignments_allowed: true
+- node_vector_subset_validated: true
+- raw_text_blocked: true
+- Architect input consumed only bounded validated route context:
+  - validated_orchestrator_proposal_id: gemini-orchestrator-proposal-001
+  - route_source: bounded_gemini_orchestrator_validated_proposal
+  - route_validation.validation_decision: allow_with_guards
+  - guard_completeness.proposal_quality_status: PASS_COMPLETE
+- Architect did not receive raw Orchestrator prompt/response as authority.
+
+plangraph_validation:
+- adapted_plan_graph_summary.created_by: bounded_gemini_architect_proposal_local_adapter
+- adapted_plan_graph_summary.validated_by: hedgehog.llm_architect.validate_plan_graph_contract
+- node_count: 1
+- edge_count: 0
+- plan_graph_contract_validation.validated: true
+- plan_graph_contract_validation.error: null
+- gemini_architect_plan_graph_contract_validated_count: 1
+- gemini_architect_plan_graph_allowed_count: 1
+- gemini_architect_plan_graph_rejected_count: 0
+- plan_graph_contract_validated_count: 1
+- plangraph_invoked_count: 1
+
+full_e2e_spine_evidence:
+- drs_resolve_invoked_count: 1
+- drs_candidate_count: 3
+- candidate_vector_created_count: 3
+- candidate_vector_invoked_count: 1
+- candidate_vector_ranked_count: 3
+- avf_invoked_count: 1
+- avf_hard_mask_applied_count: 2
+- advisory_invoked_count: 1
+- advisory_route: root_block_or_review_required
+- bounded_orchestrator_invoked_count: 1
+- architect_invoked_count: 1
+- fractal_branch_invoked_count: 1
+- executor_invoked_count: 1
+- fractal_executor_status: completed
+- result_proposal_invoked_count: 1
+- post_vv_invoked_count: 1
+- post_vv_report_count: 1
+- gt_lgt_invoked_count: 1
+- gt_lgt_decision: accept
+- root_final_output_created_count: 1
+- drs_writeback_invoked_count: 1
+
+stage_status_invoked:
+- drs_resolve_reuse
+- candidate_vector_generation
+- avf_scoring
+- advisory_review
+- bounded_orchestrator
+- architect
+- plangraph
+- fractal_cell_executor_branch
+- result_proposal
+- post_vv
+- gt_lgt
+- root_final_output_boundary
+- drs_writeback
+
+root_output_safety:
+- root.decision: not_ready
+- root.reason: legal hold / expired insurance risk and water_filter shortage block payment and shipment release
+- payment_executed: false
+- shipment_released: false
+- connector_called: false
+- payment_executed_count: 0
+- shipment_released_count: 0
+- connector_called_count: 0
+- root_final_authority_preserved_count: 1
+- Root remains final authority
+
+limitations:
+- this is not public WOW
+- this is not production
+- no real payment/shipment/connector
+- no live evidence provider call in this dual smoke; evidence lane remained captured/local fixture so aggregate Gemini calls are exactly 2
+- no NeedleFactory / Marennya / UP
+- claims bounded dual-role integration success, not general autonomous reasoning quality
+- role outputs are proposal-only and remain subject to local validation and Root boundary
+
+audit_verdict:
+- audit_status: PASS
+- Dual Gemini Orchestrator+Architect runtime is accepted as bounded Full Semantic E2E integration.
+- Real Orchestrator and real Architect calls both succeeded.
+- Orchestrator was validated before Architect.
+- Architect consumed only validated bounded route context.
+- PlanGraph was locally adapted and validated.
+- Full E2E spine completed to Root.
+- Root remained final authority and blocked payment/shipment/connector.
+
+next_step: Public WOW preflight / human-readable dual Gemini walkthrough, only after this audit is committed.

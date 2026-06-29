@@ -1,0 +1,113 @@
+audit_id: auditor_full_semantic_e2e_live_evidence_influence_v01
+audit_status: PASS
+runtime_commit: 9714fed
+previous_live_evidence_audit_commit: 8951c67
+provider_adapter_fix_commits:
+- b1b16b5 Fix Gemini SDK path in live provider adapter
+- 7e81fb5 Improve Gemini response schema adherence
+
+scope: Full Semantic E2E Live Evidence Influence v0.1 with real manual Gemini influence smoke
+
+Runtime scope:
+Existing Full Semantic E2E runner was extended in place.
+No new runner/proof island was created.
+No hedgehog core module was modified in this runtime commit.
+Runtime changed only:
+- demo/run_full_semantic_e2e_v01.py
+- tests/test_full_semantic_e2e_v01_runner.py
+Live evidence mode remains explicit-only through HEDGEHOG_FULL_E2E_LIVE_EVIDENCE.
+
+Manual provider facts:
+Real manual provider was Gemini.
+provider_model: gemini-2.5-flash.
+live_model_call_count: 1
+network_used_count: 1
+gemini_called_count: 1
+raw provider response artifact was created locally.
+raw provider response artifact was validated.
+one SemanticEvidenceClaim was created.
+SemanticEvidenceClaim remained candidate-only.
+
+Manual live claim summary:
+extracted_claim: Invoice INV-2042 looks payable according to Accounting.
+confidence: 0.7
+truth_claimed: false
+authority_claimed: false
+action_permission_claimed: false
+final_output_claimed: false
+root_review_required: true
+
+Influence facts:
+live claim content influenced supplier context.
+live claim content influenced DRS candidate context.
+live claim content influenced CandidateVector context.
+live claim content influenced AVF/advisory context.
+live claim did not override legal hold.
+live claim did not override stock shortage.
+live claim was not promoted to truth.
+live claim was not promoted to authority.
+live claim was not promoted to action permission.
+
+Observed manual influence counters:
+full_e2e_live_evidence_mode_count: 1
+live_provider_adapter_invoked_count: 1
+raw_provider_response_artifact_created_count: 1
+raw_provider_response_validated_count: 1
+live_evidence_semantic_claim_created_count: 1
+live_evidence_claim_candidate_only_count: 1
+live_claim_content_influenced_supplier_context_count: 1
+live_claim_content_influenced_drs_context_count: 1
+live_claim_content_influenced_candidate_vector_count: 1
+live_claim_content_influenced_avf_context_count: 1
+live_claim_overrode_legal_hold_count: 0
+live_claim_overrode_stock_shortage_count: 0
+live_claim_promoted_to_truth_count: 0
+live_claim_promoted_to_authority_count: 0
+live_claim_promoted_to_action_permission_count: 0
+provider_output_used_as_truth_count: 0
+provider_output_used_as_authority_count: 0
+bounded_gemini_actor_role_started_count: 0
+live_evidence_root_final_authority_preserved_count: 1
+semantic_claim_created_count: 1
+semantic_claim_candidate_only_count: 1
+drs_resolve_invoked_count: 1
+candidate_vector_invoked_count: 1
+avf_invoked_count: 1
+advisory_invoked_count: 1
+bounded_orchestrator_invoked_count: 1
+architect_invoked_count: 1
+plangraph_invoked_count: 1
+fractal_branch_invoked_count: 1
+result_proposal_invoked_count: 1
+post_vv_invoked_count: 1
+gt_lgt_invoked_count: 1
+root_final_output_created_count: 1
+drs_writeback_invoked_count: 1
+payment_executed_count: 0
+shipment_released_count: 0
+connector_called_count: 0
+production_ready_claimed_count: 0
+public_wow_claimed_count: 0
+needlefactory_started_count: 0
+marennya_started_count: 0
+up_started_count: 0
+root_final_authority_preserved_count: 1
+
+Root result:
+Root decision: not_ready.
+Reason: legal hold / expired insurance risk and water_filter shortage block payment and shipment release.
+Root remains final authority.
+
+Honesty note:
+This proves real Gemini live claim content can influence Full Semantic E2E supplier/DRS/CandidateVector/AVF contexts while remaining candidate-only.
+This is still local controlled runtime/audit evidence.
+Manual .tmp artifacts are local and must not be committed.
+This is not production.
+This is not public WOW.
+This is not real payment or shipment release.
+This is not a bounded Gemini actor role.
+This is not NeedleFactory / Marennya / UP.
+
+Next vector:
+Prepare for Bounded Gemini Actor Role v0.1 preflight only after confirming whether the live evidence influence layer is sufficient.
+Do not start public WOW yet.

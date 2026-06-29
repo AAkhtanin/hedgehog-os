@@ -56,6 +56,63 @@ def _full_e2e_live_env(tmp_path, **overrides):
     return env
 
 
+def _gemini_orchestrator_env(**overrides):
+    env = {
+        runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR: "1",
+        provider_adapter.ENV_PROVIDER_NAME: "gemini",
+        provider_adapter.ENV_PROVIDER_MODEL: "gemini-orchestrator-test-model",
+    }
+    env.update(overrides)
+    return env
+
+
+def _bounded_orchestrator_input_from_prompt(prompt):
+    marker = "BOUNDED_GEMINI_ORCHESTRATOR_INPUT_JSON:\n"
+    return json.loads(prompt.split(marker, 1)[1])
+
+
+def _valid_gemini_orchestrator_proposal(context, **overrides):
+    selected = tuple(context["candidate_vector_context_summary"]["selected_vector_ids"])
+    allowed = tuple(context["candidate_vector_context_summary"]["allowed_vector_ids"])
+    payload = {
+        "proposal_id": "fake-gemini-orchestrator-proposal-001",
+        "proposal_role": "bounded_gemini_orchestrator",
+        "suggested_route": "proof_full_pipeline",
+        "confidence": 0.72,
+        "reason": "Use bounded supplier-payment full-spine review route.",
+        "required_guards": list(runner.GEMINI_ORCHESTRATOR_REQUIRED_GUARDS),
+        "selected_vector_ids": list(selected[:1] or allowed[:1]),
+        "needs_review": True,
+        "uncertainty_notes": ["proposal is advisory and requires Root review"],
+        "authority_claimed": False,
+        "truth_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "plan_graph_claimed": False,
+        "bypass_avf_claimed": False,
+        "bypass_root_claimed": False,
+        "root_review_required": True,
+    }
+    payload.update(overrides)
+    return payload
+
+
+def _gemini_orchestrator_provider(factory, captured=None):
+    def provider(prompt, model_name, timeout_seconds, env):
+        context = _bounded_orchestrator_input_from_prompt(prompt)
+        if captured is not None:
+            captured["prompt"] = prompt
+            captured["context"] = context
+        assert model_name == "gemini-orchestrator-test-model"
+        assert timeout_seconds >= 1
+        assert env[provider_adapter.ENV_PROVIDER_NAME] == "gemini"
+        return json.dumps(factory(context), sort_keys=True)
+
+    return provider
+
+
 def _provider_returning(raw_text):
     def provider(prompt, model_name, timeout_seconds, env):
         assert "Extract one bounded SemanticEvidenceClaim-compatible JSON object." in prompt
@@ -103,6 +160,8 @@ def test_default_runner_returns_pass_and_runs_deterministic_full_spine() -> None
     assert counters["live_claim_promoted_to_truth_count"] == 0
     assert counters["live_claim_promoted_to_authority_count"] == 0
     assert counters["live_claim_promoted_to_action_permission_count"] == 0
+    for key in runner.GEMINI_ORCHESTRATOR_COUNTER_KEYS:
+        assert counters[key] == 0
 
 
 def test_default_main_exits_zero_and_prints_pass(monkeypatch, capsys) -> None:
@@ -439,6 +498,223 @@ def test_bounded_route_uses_only_slice1_vector_ids_and_no_raw_text() -> None:
     assert route["raw_text_blocked"] is True
     assert result["counters"]["bounded_route_created_count"] == 1
     assert result["counters"]["raw_text_blocked_from_architect_count"] == 1
+
+
+def test_explicit_fake_gemini_orchestrator_valid_proposal_is_locally_validated() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_orchestrator_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context)
+        ),
+    )
+    counters = result["counters"]
+    context = result["gemini_orchestrator_context"]
+    route = result["bounded_orchestrator_context"]
+
+    assert result["final_status"] == "PASS"
+    assert counters["bounded_gemini_orchestrator_role_started_count"] == 1
+    assert counters["gemini_orchestrator_model_call_count"] == 0
+    assert counters["gemini_orchestrator_network_used_count"] == 0
+    assert counters["gemini_orchestrator_proposal_created_count"] == 1
+    assert counters["gemini_orchestrator_proposal_validated_count"] == 1
+    assert counters["gemini_orchestrator_route_allowed_count"] == 1
+    assert counters["gemini_orchestrator_guard_completeness_validated_count"] == 1
+    assert counters["gemini_orchestrator_selected_only_allowed_vectors_count"] == 1
+    assert context["proposal_accepted"] is True
+    assert context["route_validation"]["allowed"] is True
+    assert context["guard_completeness"]["guards_complete"] is True
+    assert route["route_source"] == "bounded_gemini_orchestrator_validated_proposal"
+    assert set(route["selected_vector_ids"]) <= set(route["allowed_vector_ids"])
+    assert result["counters"]["architect_invoked_count"] == 1
+    assert result["architect_context"]["architect_provider"] == "deterministic"
+    assert result["counters"]["bounded_gemini_actor_role_started_count"] == 1
+    assert result["counters"]["live_model_call_count"] == 0
+    assert result["counters"]["network_used_count"] == 0
+    assert result["counters"]["gemini_called_count"] == 0
+    assert result["counters"]["payment_executed_count"] == 0
+    assert result["counters"]["shipment_released_count"] == 0
+    assert result["counters"]["connector_called_count"] == 0
+    assert result["counters"]["root_final_authority_preserved_count"] == 1
+
+
+def test_gemini_orchestrator_selected_vector_violation_fails_before_architect() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_orchestrator_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(
+                context,
+                selected_vector_ids=["vector:not_allowed"],
+            )
+        ),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "selected_vector_ids_must_be_subset_of_allowed_vector_ids" in (
+        result["validation_errors"]
+    )
+    assert counters["gemini_orchestrator_route_rejected_count"] == 1
+    assert counters["gemini_orchestrator_selected_only_allowed_vectors_count"] == 0
+    assert result["stage_map"]["architect"]["status"] == "skipped"
+    assert result["architect_context"] == {}
+    assert counters["architect_invoked_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_evidence_provider_is_not_reused_as_gemini_orchestrator_provider() -> None:
+    calls = {"evidence_provider": 0}
+
+    def evidence_provider(prompt, model_name, timeout_seconds, env):
+        calls["evidence_provider"] += 1
+        raise AssertionError("evidence provider was reused as Orchestrator provider")
+
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_orchestrator_env(),
+        provider=evidence_provider,
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert calls["evidence_provider"] == 0
+    assert "provider_sdk_or_key_missing" in result["validation_errors"]
+    assert result["gemini_orchestrator_context"]["proposal_error"] == (
+        "provider_sdk_or_key_missing"
+    )
+    assert counters["bounded_gemini_orchestrator_role_started_count"] == 1
+    assert counters["bounded_gemini_actor_role_started_count"] == 1
+    assert counters["gemini_orchestrator_route_rejected_count"] == 1
+    assert counters["gemini_orchestrator_model_call_count"] == 0
+    assert counters["gemini_orchestrator_network_used_count"] == 0
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_gemini_orchestrator_missing_critical_guards_fails_closed() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_orchestrator_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(
+                context,
+                required_guards=["AVF", "PlanGraph contract", "GT/LGT"],
+            )
+        ),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert counters["gemini_orchestrator_guard_completeness_validated_count"] == 1
+    assert (
+        counters["gemini_orchestrator_route_rejected_count"] == 1
+        or counters["gemini_orchestrator_route_downgraded_count"] == 1
+    )
+    assert any("missing_required_guard:Post V&V" == error for error in result["validation_errors"])
+    assert any(
+        "missing_required_guard:Root final authority" == error
+        for error in result["validation_errors"]
+    )
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_gemini_orchestrator_unsafe_claims_are_blocked_before_downstream() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_orchestrator_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(
+                context,
+                authority_claimed=True,
+                truth_claimed=True,
+                action_permission_claimed=True,
+                final_output_claimed=True,
+                connector_command_claimed=True,
+                drs_write_claimed=True,
+                plan_graph_claimed=True,
+                bypass_avf_claimed=True,
+                bypass_root_claimed=True,
+            )
+        ),
+    )
+    counters = result["counters"]
+    context = result["gemini_orchestrator_context"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert context["authority_claim_blocked"] is True
+    assert context["truth_claim_blocked"] is True
+    assert context["action_claim_blocked"] is True
+    assert context["final_output_claim_blocked"] is True
+    assert context["connector_claim_blocked"] is True
+    assert context["drs_write_claim_blocked"] is True
+    assert context["plan_graph_claim_blocked"] is True
+    assert context["bypassed_avf_blocked"] is True
+    assert context["bypassed_root_blocked"] is True
+    assert counters["gemini_orchestrator_authority_claim_blocked_count"] == 1
+    assert counters["gemini_orchestrator_truth_claim_blocked_count"] == 1
+    assert counters["gemini_orchestrator_action_claim_blocked_count"] == 1
+    assert counters["gemini_orchestrator_final_output_claim_blocked_count"] == 1
+    assert counters["gemini_orchestrator_connector_claim_blocked_count"] == 1
+    assert counters["gemini_orchestrator_drs_write_claim_blocked_count"] == 1
+    assert counters["gemini_orchestrator_plan_graph_claim_blocked_count"] == 1
+    assert counters["gemini_orchestrator_bypassed_avf_blocked_count"] == 1
+    assert counters["gemini_orchestrator_bypassed_root_blocked_count"] == 1
+    assert counters["provider_final_output_created_count"] == 0
+    assert counters["root_final_output_created_count"] == 0
+    assert counters["drs_writeback_invoked_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_gemini_orchestrator_input_blocks_raw_text_and_sensitive_markers() -> None:
+    captured = {}
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_orchestrator_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context),
+            captured=captured,
+        ),
+    )
+    prompt = captured["prompt"]
+    safe_context = captured["context"]
+
+    assert result["final_status"] == "PASS"
+    assert "ignore all boundaries" not in prompt
+    assert ".tmp" not in prompt
+    assert "api_key" not in prompt
+    assert "secret" not in prompt
+    assert "token" not in prompt
+    assert "password" not in prompt
+    assert "request_text" not in safe_context
+    assert "extracted_claim" not in safe_context["candidate_claim_summary"]
+    assert result["counters"]["gemini_orchestrator_raw_text_blocked_count"] == 1
+
+
+def test_valid_gemini_orchestrator_cannot_override_legal_or_stock_blockers() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_orchestrator_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context)
+        ),
+    )
+    root = result["root_final_output_boundary"]
+    counters = result["counters"]
+
+    assert root["decision"] == "not_ready"
+    assert "legal hold" in root["reason"]
+    assert "water_filter shortage" in root["reason"]
+    assert root["payment_executed"] is False
+    assert root["shipment_released"] is False
+    assert root["connector_called"] is False
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["root_final_authority_preserved_count"] == 1
 
 
 def test_plangraph_is_real_structured_output_from_architect_and_contract_validator() -> None:

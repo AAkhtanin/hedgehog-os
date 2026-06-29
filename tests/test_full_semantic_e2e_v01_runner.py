@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import json
 
 import demo.run_live_provider_adapter_response_capture_v01 as provider_adapter
@@ -93,6 +94,17 @@ def _root_mock_approval_env(**overrides):
         runner.ENV_FULL_E2E_ACTION_COMMIT_PACKET: "1",
         runner.ENV_FULL_E2E_ROOT_MOCK_APPROVAL: "1",
     }
+    env.update(overrides)
+    return env
+
+
+def _mock_connector_sandbox_env(**overrides):
+    env = _root_mock_approval_env(
+        **{
+            runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1",
+            runner.ENV_FULL_E2E_MOCK_CONNECTOR_SANDBOX: "1",
+        }
+    )
     env.update(overrides)
     return env
 
@@ -2106,6 +2118,539 @@ def test_action_commit_packet_requires_post_vv_gt_lgt_and_records_local_trace() 
     assert result["gt_lgt_context"]["root_authority_claimed"] is False
     assert writeback["root_mock_approval_trace"]["approval_granted"] is True
     assert writeback["action_commit_packet_trace"]["packet_created"] is True
+    assert writeback["external_global_drs_write"] is False
+    assert writeback["production_persistence_claimed"] is False
+    assert result["counters"]["external_global_drs_write_count"] == 0
+    assert result["counters"]["production_persistence_claimed_count"] == 0
+
+
+def test_mock_connector_sandbox_default_mode_is_inactive() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert result["mock_connector_receipts"] == ()
+    assert result["execution_evidence"] == {}
+    assert result["root_mock_execution_summary_context"] == {}
+    assert result["mock_connector_sandbox_context"]["invoked"] is False
+    assert result["stage_map"]["mock_connector_sandbox"]["status"] == "skipped"
+    for key in runner.MOCK_CONNECTOR_SANDBOX_COUNTER_KEYS:
+        assert counters[key] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+
+
+def test_mock_connector_sandbox_gate_without_packet_gates_fails_closed() -> None:
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_MOCK_CONNECTOR_SANDBOX: "1"}
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "mock_connector_sandbox_requires_valid_action_commit_packet" in (
+        result["validation_errors"]
+    )
+    assert result["mock_connector_sandbox_context"]["invoked"] is True
+    assert result["mock_connector_sandbox_context"]["denied"] is True
+    assert result["mock_connector_receipts"] == ()
+    assert result["execution_evidence"] == {}
+    assert counters["mock_connector_sandbox_invoked_count"] == 1
+    assert counters["mock_connector_sandbox_denied_count"] == 1
+    assert counters["mock_connector_sandbox_requires_packet_count"] == 1
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["fake_supplier_adapter_invoked_count"] == 0
+    assert counters["fake_warehouse_adapter_invoked_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+    assert counters["execution_evidence_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+
+
+def test_mock_connector_sandbox_gate_with_blocked_scenario_denies_before_adapters() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_CONNECTOR_SANDBOX: "1"}
+        )
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert result["root_final_output_boundary"]["decision"] == "not_ready"
+    assert result["action_commit_packet"] == {}
+    assert result["mock_connector_sandbox_context"]["denied"] is True
+    assert result["mock_connector_receipts"] == ()
+    assert result["execution_evidence"] == {}
+    assert counters["root_mock_approval_denied_count"] == 1
+    assert counters["mock_connector_sandbox_requires_packet_count"] == 1
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["fake_supplier_adapter_invoked_count"] == 0
+    assert counters["fake_warehouse_adapter_invoked_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+    assert counters["execution_evidence_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+
+
+def test_valid_mock_ready_sandbox_creates_receipts_evidence_and_summary() -> None:
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert result["action_commit_packet"]["packet_type"] == "mock_action_commit_packet"
+    assert result["mock_connector_sandbox_context"]["completed"] is True
+    assert result["mock_execution_validation_context"]["accepted"] is True
+    assert result["root_mock_execution_summary_context"]["decision"] == (
+        "mock_execution_recorded"
+    )
+    assert counters["mock_connector_sandbox_invoked_count"] == 1
+    assert counters["mock_connector_sandbox_completed_count"] == 1
+    assert counters["mock_connector_sandbox_packet_validated_count"] == 1
+    assert counters["fake_bank_adapter_invoked_count"] == 1
+    assert counters["fake_supplier_adapter_invoked_count"] == 1
+    assert counters["fake_warehouse_adapter_invoked_count"] == 1
+    assert counters["fake_bank_connector_called_count"] == 1
+    assert counters["fake_supplier_connector_called_count"] == 1
+    assert counters["fake_warehouse_connector_called_count"] == 1
+    assert counters["mock_bank_receipt_created_count"] == 1
+    assert counters["mock_supplier_receipt_created_count"] == 1
+    assert counters["mock_warehouse_receipt_created_count"] == 1
+    assert counters["mock_connector_receipts_created_count"] == 3
+    assert counters["mock_receipt_created_count"] == 3
+    assert counters["execution_evidence_created_count"] == 1
+    assert counters["execution_evidence_validated_count"] == 1
+    assert counters["root_mock_execution_summary_created_count"] == 1
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_bank_api_called_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+
+
+def test_mock_connector_receipts_keep_fake_and_real_safety_flags_separate() -> None:
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    packet = result["action_commit_packet"]
+    receipts = result["mock_connector_receipts"]
+    by_adapter = {receipt["adapter_name"]: receipt for receipt in receipts}
+
+    assert len(receipts) == 3
+    assert set(by_adapter) == set(runner.MOCK_CONNECTOR_SANDBOX_ADAPTERS)
+    for receipt in receipts:
+        assert receipt["source_packet_id"] == packet["packet_id"]
+        assert receipt["mock_only"] is True
+        assert receipt["real_world_effects_allowed"] is False
+        assert receipt["evidence_kind"] == "mock_receipt"
+    assert by_adapter["fake_bank_adapter_v0"]["receipt_type"] == (
+        "mock_bank_payment_review_receipt"
+    )
+    assert by_adapter["fake_bank_adapter_v0"]["bank_api_called"] is False
+    assert by_adapter["fake_bank_adapter_v0"]["payment_executed"] is False
+    assert by_adapter["fake_bank_adapter_v0"]["amount_moved"] == 0
+    assert by_adapter["fake_supplier_adapter_v0"]["receipt_type"] == (
+        "mock_supplier_confirmation_receipt"
+    )
+    assert by_adapter["fake_supplier_adapter_v0"]["supplier_api_called"] is False
+    assert by_adapter["fake_supplier_adapter_v0"]["supplier_order_created"] is False
+    assert by_adapter["fake_warehouse_adapter_v0"]["receipt_type"] == (
+        "mock_warehouse_reservation_receipt"
+    )
+    assert by_adapter["fake_warehouse_adapter_v0"]["warehouse_api_called"] is False
+    assert by_adapter["fake_warehouse_adapter_v0"]["shipment_released"] is False
+    assert by_adapter["fake_warehouse_adapter_v0"]["inventory_reserved"] == (
+        "mock_reserved_only"
+    )
+
+
+def test_mock_connector_execution_evidence_shape_is_validated() -> None:
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    evidence = result["execution_evidence"]
+
+    assert evidence["evidence_type"] == "mock_connector_execution_evidence"
+    assert evidence["created_by"] == "mock_connector_sandbox"
+    assert evidence["receipt_count"] == 3
+    assert set(evidence["adapter_names"]) == set(runner.MOCK_CONNECTOR_SANDBOX_ADAPTERS)
+    assert evidence["packet_not_expired_at_scenario_time"] is True
+    assert evidence["real_connector_called"] is False
+    assert evidence["payment_executed"] is False
+    assert evidence["shipment_released"] is False
+    assert result["mock_execution_validation_context"]["accepted"] is True
+
+
+def test_mock_connector_sandbox_rejects_missing_bank_receipt_false_field(
+    monkeypatch,
+) -> None:
+    original_bank = runner._fake_bank_adapter_v0
+
+    def missing_bank_flag(packet, scenario_time, context):
+        receipt = original_bank(packet, scenario_time, context)
+        receipt.pop("bank_api_called")
+        return receipt
+
+    monkeypatch.setattr(runner, "_fake_bank_adapter_v0", missing_bank_flag)
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert (
+        "missing_required_receipt_field:fake_bank_adapter_v0:bank_api_called"
+        in result["validation_errors"]
+    )
+    assert counters["root_mock_execution_summary_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_bank_api_called_count"] == 0
+
+
+def test_mock_connector_sandbox_rejects_missing_supplier_receipt_field(
+    monkeypatch,
+) -> None:
+    original_supplier = runner._fake_supplier_adapter_v0
+
+    def missing_supplier_flag(packet, scenario_time, context):
+        receipt = original_supplier(packet, scenario_time, context)
+        receipt.pop("supplier_api_called")
+        return receipt
+
+    monkeypatch.setattr(runner, "_fake_supplier_adapter_v0", missing_supplier_flag)
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert (
+        "missing_required_receipt_field:fake_supplier_adapter_v0:supplier_api_called"
+        in result["validation_errors"]
+    )
+    assert result["counters"]["root_mock_execution_summary_created_count"] == 0
+
+
+def test_mock_connector_sandbox_rejects_missing_warehouse_receipt_field(
+    monkeypatch,
+) -> None:
+    original_warehouse = runner._fake_warehouse_adapter_v0
+
+    def missing_warehouse_field(packet, scenario_time, context):
+        receipt = original_warehouse(packet, scenario_time, context)
+        receipt.pop("inventory_reserved")
+        return receipt
+
+    monkeypatch.setattr(runner, "_fake_warehouse_adapter_v0", missing_warehouse_field)
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert (
+        "missing_required_receipt_field:fake_warehouse_adapter_v0:inventory_reserved"
+        in result["validation_errors"]
+    )
+    assert result["counters"]["root_mock_execution_summary_created_count"] == 0
+
+
+def test_mock_connector_sandbox_does_not_treat_absent_false_field_as_false() -> None:
+    valid = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    packet = valid["action_commit_packet"]
+    receipt = dict(valid["mock_connector_receipts"][0])
+    receipt.pop("bank_api_called")
+
+    validation = runner._validate_mock_receipt(
+        receipt,
+        packet,
+        runner.SLICE1_NOW,
+    )
+
+    assert validation["accepted"] is False
+    assert (
+        "missing_required_receipt_field:fake_bank_adapter_v0:bank_api_called"
+        in validation["reasons"]
+    )
+
+
+def test_mock_connector_sandbox_rejects_execution_evidence_missing_required_fields(
+    monkeypatch,
+) -> None:
+    original_builder = runner._build_mock_connector_execution_evidence
+    removed_fields = (
+        "source_root_outcome_id",
+        "business_subject",
+        "connector_sandbox_completed",
+        "root_final_authority_preserved",
+    )
+
+    def missing_evidence_fields(packet, receipts, scenario_time):
+        evidence = original_builder(packet, receipts, scenario_time)
+        for field in removed_fields:
+            evidence.pop(field)
+        return evidence
+
+    monkeypatch.setattr(
+        runner,
+        "_build_mock_connector_execution_evidence",
+        missing_evidence_fields,
+    )
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    for field in removed_fields:
+        assert (
+            f"missing_required_execution_evidence_field:{field}"
+            in result["validation_errors"]
+        )
+    assert result["counters"]["root_mock_execution_summary_created_count"] == 0
+
+
+def test_mock_connector_sandbox_rejects_execution_evidence_root_outcome_mismatch(
+    monkeypatch,
+) -> None:
+    original_builder = runner._build_mock_connector_execution_evidence
+
+    def wrong_root_outcome(packet, receipts, scenario_time):
+        evidence = original_builder(packet, receipts, scenario_time)
+        evidence["source_root_outcome_id"] = "root_outcome:wrong"
+        return evidence
+
+    monkeypatch.setattr(
+        runner,
+        "_build_mock_connector_execution_evidence",
+        wrong_root_outcome,
+    )
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "execution_evidence_source_root_outcome_mismatch" in (
+        result["validation_errors"]
+    )
+    assert result["counters"]["root_mock_execution_summary_created_count"] == 0
+
+
+def test_mock_connector_sandbox_rejects_execution_evidence_incomplete_marker(
+    monkeypatch,
+) -> None:
+    original_builder = runner._build_mock_connector_execution_evidence
+
+    def incomplete_evidence(packet, receipts, scenario_time):
+        evidence = original_builder(packet, receipts, scenario_time)
+        evidence["connector_sandbox_completed"] = False
+        return evidence
+
+    monkeypatch.setattr(
+        runner,
+        "_build_mock_connector_execution_evidence",
+        incomplete_evidence,
+    )
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "execution_evidence_connector_sandbox_completed_required" in (
+        result["validation_errors"]
+    )
+    assert result["counters"]["root_mock_execution_summary_created_count"] == 0
+
+
+def test_mock_connector_sandbox_rejects_expired_packet_before_adapters(
+    monkeypatch,
+) -> None:
+    original_builder = runner._build_mock_action_commit_packet
+
+    def expired_builder(**kwargs):
+        packet = original_builder(**kwargs)
+        packet["expires_at"] = "2026-06-22T11:59:59+00:00"
+        return packet
+
+    monkeypatch.setattr(runner, "_build_mock_action_commit_packet", expired_builder)
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "packet_expired_at_scenario_time" in result["validation_errors"]
+    assert counters["mock_connector_sandbox_packet_expired_count"] == 1
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+    assert result["execution_evidence"] == {}
+
+
+def test_mock_connector_sandbox_rejects_non_root_packet_source() -> None:
+    valid = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    packet = json.loads(json.dumps(valid["action_commit_packet"]))
+    packet["created_by"] = "gemini"
+
+    validation = runner._validate_mock_connector_sandbox_packet(
+        packet,
+        valid["root_final_output_boundary"],
+        runner.SLICE1_NOW,
+    )
+
+    assert validation["accepted"] is False
+    assert "packet_must_be_root_created" in validation["reasons"]
+
+
+def test_mock_connector_sandbox_rejects_real_world_effects_allowed() -> None:
+    valid = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    packet = json.loads(json.dumps(valid["action_commit_packet"]))
+    packet["real_world_effects_allowed"] = True
+    result = runner._run_mock_connector_sandbox(
+        env=_mock_connector_sandbox_env(),
+        root_boundary=valid["root_final_output_boundary"],
+        action_commit_packet_context={
+            "packet_created": True,
+            "validation": {"accepted": True},
+        },
+        action_commit_packet=packet,
+        supplier_context=valid["supplier_payment_context"],
+    )
+
+    assert result["fail_closed"] is True
+    assert result["mock_connector_sandbox_context"]["counters"][
+        "mock_connector_sandbox_real_world_effects_blocked_count"
+    ] == 1
+    assert result["mock_connector_receipts"] == ()
+
+
+def test_mock_connector_sandbox_rejects_unknown_adapter() -> None:
+    valid = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    packet = json.loads(json.dumps(valid["action_commit_packet"]))
+    packet["allowed_future_adapters"] = (*packet["allowed_future_adapters"], "fake_unknown_adapter_v0")
+    result = runner._run_mock_connector_sandbox(
+        env=_mock_connector_sandbox_env(),
+        root_boundary=valid["root_final_output_boundary"],
+        action_commit_packet_context={
+            "packet_created": True,
+            "validation": {"accepted": True},
+        },
+        action_commit_packet=packet,
+        supplier_context=valid["supplier_payment_context"],
+    )
+
+    assert result["fail_closed"] is True
+    assert result["mock_connector_sandbox_context"]["counters"][
+        "mock_connector_sandbox_unknown_adapter_blocked_count"
+    ] == 1
+    assert result["mock_connector_receipts"] == ()
+
+
+def test_mock_connector_sandbox_blocks_missing_receipt(monkeypatch) -> None:
+    def missing_adapter(packet, scenario_time, context):
+        return None
+
+    monkeypatch.setattr(runner, "_fake_warehouse_adapter_v0", missing_adapter)
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert counters["mock_connector_sandbox_missing_receipt_blocked_count"] == 1
+    assert counters["root_mock_execution_summary_created_count"] == 0
+    assert result["execution_evidence"] == {}
+
+
+def test_mock_connector_sandbox_blocks_duplicate_receipt(monkeypatch) -> None:
+    original_bank = runner._fake_bank_adapter_v0
+
+    def duplicate_supplier(packet, scenario_time, context):
+        return original_bank(packet, scenario_time, context)
+
+    monkeypatch.setattr(runner, "_fake_supplier_adapter_v0", duplicate_supplier)
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert counters["mock_connector_sandbox_duplicate_receipt_blocked_count"] == 1
+    assert counters["root_mock_execution_summary_created_count"] == 0
+
+
+def test_mock_connector_sandbox_blocks_receipt_real_action_claim(monkeypatch) -> None:
+    original_bank = runner._fake_bank_adapter_v0
+
+    def unsafe_bank(packet, scenario_time, context):
+        receipt = original_bank(packet, scenario_time, context)
+        receipt["bank_api_called"] = True
+        receipt["payment_executed"] = True
+        return receipt
+
+    monkeypatch.setattr(runner, "_fake_bank_adapter_v0", unsafe_bank)
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert result["mock_execution_validation_context"]["accepted"] is False
+    assert counters["mock_connector_sandbox_rejected_count"] == 1
+    assert counters["real_bank_api_called_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["root_mock_execution_summary_created_count"] == 0
+
+
+def test_mock_connector_sandbox_helpers_have_no_network_or_sensitive_markers() -> None:
+    source = "\n".join(
+        inspect.getsource(fn)
+        for fn in (
+            runner._fake_bank_adapter_v0,
+            runner._fake_supplier_adapter_v0,
+            runner._fake_warehouse_adapter_v0,
+        )
+    )
+    for forbidden in ("requests", "httpx", "urllib", "socket", "subprocess", "os.system"):
+        assert forbidden not in source
+
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    artifacts = json.dumps(
+        {
+            "receipts": result["mock_connector_receipts"],
+            "execution_evidence": result["execution_evidence"],
+        },
+        sort_keys=True,
+    ).lower()
+    for forbidden in ("api_key", "secret", "token", "password", ".tmp"):
+        assert forbidden not in artifacts
+
+
+def test_mock_connector_sandbox_requires_packet_even_with_dual_gemini() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_dual_gemini_env(
+            **{runner.ENV_FULL_E2E_MOCK_CONNECTOR_SANDBOX: "1"}
+        ),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context)
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(context)
+        ),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "mock_connector_sandbox_requires_valid_action_commit_packet" in (
+        result["validation_errors"]
+    )
+    assert counters["dual_gemini_roles_completed_count"] == 2
+    assert counters["mock_connector_sandbox_requires_packet_count"] == 1
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_mock_connector_sandbox_writeback_records_local_trace_only() -> None:
+    result = runner.run_full_semantic_e2e(env=_mock_connector_sandbox_env())
+    writeback = result["drs_writeback_record"]
+
+    assert writeback["mock_connector_sandbox_trace"]["completed"] is True
+    assert len(writeback["mock_connector_receipts_trace"]) == 3
+    assert writeback["execution_evidence_trace"]["evidence_type"] == (
+        "mock_connector_execution_evidence"
+    )
+    assert writeback["root_mock_execution_summary_trace"]["decision"] == (
+        "mock_execution_recorded"
+    )
     assert writeback["external_global_drs_write"] is False
     assert writeback["production_persistence_claimed"] is False
     assert result["counters"]["external_global_drs_write_count"] == 0

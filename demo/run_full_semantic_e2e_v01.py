@@ -43,6 +43,7 @@ ENV_FULL_E2E_DUAL_GEMINI_ROLES = "HEDGEHOG_FULL_E2E_DUAL_GEMINI_ROLES"
 ENV_FULL_E2E_ACTION_COMMIT_PACKET = "HEDGEHOG_FULL_E2E_ACTION_COMMIT_PACKET"
 ENV_FULL_E2E_ROOT_MOCK_APPROVAL = "HEDGEHOG_FULL_E2E_ROOT_MOCK_APPROVAL"
 ENV_FULL_E2E_MOCK_READY_FIXTURE = "HEDGEHOG_FULL_E2E_MOCK_READY_FIXTURE"
+ENV_FULL_E2E_MOCK_CONNECTOR_SANDBOX = "HEDGEHOG_FULL_E2E_MOCK_CONNECTOR_SANDBOX"
 
 GEMINI_ORCHESTRATOR_COUNTER_KEYS = (
     "bounded_gemini_orchestrator_role_started_count",
@@ -133,6 +134,29 @@ ACTION_COMMIT_PACKET_COUNTER_KEYS = (
     "execution_evidence_created_count",
 )
 
+MOCK_CONNECTOR_SANDBOX_COUNTER_KEYS = (
+    "mock_connector_sandbox_invoked_count",
+    "mock_connector_sandbox_completed_count",
+    "mock_connector_sandbox_denied_count",
+    "mock_connector_sandbox_requires_packet_count",
+    "mock_connector_sandbox_packet_validated_count",
+    "mock_connector_sandbox_packet_expired_count",
+    "mock_connector_sandbox_rejected_count",
+    "mock_connector_sandbox_real_world_effects_blocked_count",
+    "mock_connector_sandbox_unknown_adapter_blocked_count",
+    "mock_connector_sandbox_duplicate_receipt_blocked_count",
+    "mock_connector_sandbox_missing_receipt_blocked_count",
+    "mock_connector_receipts_created_count",
+    "mock_bank_receipt_created_count",
+    "mock_supplier_receipt_created_count",
+    "mock_warehouse_receipt_created_count",
+    "fake_bank_adapter_invoked_count",
+    "fake_supplier_adapter_invoked_count",
+    "fake_warehouse_adapter_invoked_count",
+    "execution_evidence_validated_count",
+    "root_mock_execution_summary_created_count",
+)
+
 STAGES = (
     "intake_dirty_business_request",
     "live_or_captured_evidence_lane",
@@ -151,6 +175,11 @@ STAGES = (
     "root_final_output_boundary",
     "root_mock_approval_gate",
     "action_commit_packet_candidate",
+    "mock_connector_sandbox",
+    "mock_receipt_collection",
+    "execution_evidence",
+    "mock_execution_validation",
+    "root_mock_execution_summary",
     "drs_writeback",
 )
 
@@ -204,6 +233,7 @@ COUNTER_KEYS = (
     *GEMINI_ARCHITECT_COUNTER_KEYS,
     *DUAL_GEMINI_COUNTER_KEYS,
     *ACTION_COMMIT_PACKET_COUNTER_KEYS,
+    *MOCK_CONNECTOR_SANDBOX_COUNTER_KEYS,
     "live_evidence_root_final_authority_preserved_count",
     "semantic_claim_created_count",
     "semantic_claim_candidate_only_count",
@@ -675,6 +705,10 @@ def _full_e2e_mock_ready_fixture_enabled(env: Mapping[str, str]) -> bool:
     return env.get(ENV_FULL_E2E_MOCK_READY_FIXTURE) == "1"
 
 
+def _full_e2e_mock_connector_sandbox_enabled(env: Mapping[str, str]) -> bool:
+    return env.get(ENV_FULL_E2E_MOCK_CONNECTOR_SANDBOX) == "1"
+
+
 def _root_mock_approval_gate_partial_enabled(env: Mapping[str, str]) -> bool:
     action_packet = _full_e2e_action_commit_packet_enabled(env)
     root_approval = _full_e2e_root_mock_approval_enabled(env)
@@ -1105,6 +1139,10 @@ def _apply_spine_counters(
         counters,
         slice3_result.get("root_mock_approval_context") or {},
     )
+    _apply_mock_connector_sandbox_counters(
+        counters,
+        slice3_result.get("mock_connector_sandbox_context") or {},
+    )
     _apply_gemini_orchestrator_counters(
         counters,
         slice2_result.get("gemini_orchestrator_context") or {},
@@ -1199,6 +1237,23 @@ def _apply_action_commit_packet_counters(
     packet_counters = root_mock_approval_context.get("counters") or {}
     for key in ACTION_COMMIT_PACKET_COUNTER_KEYS:
         counters[key] = int(packet_counters.get(key, 0))
+
+
+def _apply_mock_connector_sandbox_counters(
+    counters: dict[str, int],
+    sandbox_context: Mapping[str, Any],
+) -> None:
+    sandbox_counters = sandbox_context.get("counters") or {}
+    for key in MOCK_CONNECTOR_SANDBOX_COUNTER_KEYS:
+        counters[key] = int(sandbox_counters.get(key, 0))
+    for key in (
+        "fake_bank_connector_called_count",
+        "fake_supplier_connector_called_count",
+        "fake_warehouse_connector_called_count",
+        "mock_receipt_created_count",
+        "execution_evidence_created_count",
+    ):
+        counters[key] = int(sandbox_counters.get(key, counters.get(key, 0)))
 
 
 def _apply_live_claim_influence_counters(
@@ -1380,6 +1435,31 @@ def _stage_map_success() -> dict[str, dict[str, Any]]:
             "skipped",
             "candidate",
             notes="ActionCommitPacket candidate is explicit-only, mock-only, and not execution",
+        ),
+        "mock_connector_sandbox": _stage(
+            "skipped",
+            "candidate",
+            notes="Mock Connector Sandbox is explicit-only and consumes only validated Root-created mock packets",
+        ),
+        "mock_receipt_collection": _stage(
+            "skipped",
+            "candidate",
+            notes="mock receipts are explicit-only local evidence and not real connector output",
+        ),
+        "execution_evidence": _stage(
+            "skipped",
+            "candidate",
+            notes="mock execution evidence is explicit-only and records no real-world effect",
+        ),
+        "mock_execution_validation": _stage(
+            "skipped",
+            "advisory",
+            notes="mock execution validation is local and does not become Root",
+        ),
+        "root_mock_execution_summary": _stage(
+            "skipped",
+            "root_only",
+            notes="Root mock execution summary is explicit-only and creates no payment or shipment",
         ),
         "drs_writeback": _stage(
             "invoked",
@@ -4165,6 +4245,72 @@ ACTION_COMMIT_PACKET_REQUIRED_FORBIDDEN_REAL_ADAPTERS = (
     "supplier_api",
     "warehouse_api",
 )
+MOCK_CONNECTOR_SANDBOX_ADAPTERS = (
+    "fake_bank_adapter_v0",
+    "fake_supplier_adapter_v0",
+    "fake_warehouse_adapter_v0",
+)
+MOCK_CONNECTOR_SANDBOX_SHARED_COUNTER_KEYS = (
+    "fake_bank_connector_called_count",
+    "fake_supplier_connector_called_count",
+    "fake_warehouse_connector_called_count",
+    "mock_receipt_created_count",
+    "execution_evidence_created_count",
+)
+MOCK_CONNECTOR_SANDBOX_SECRET_MARKERS = (
+    "api_key",
+    "secret",
+    "token",
+    "password",
+    ".tmp",
+)
+MOCK_RECEIPT_BASE_REQUIRED_FIELDS = (
+    "receipt_type",
+    "adapter_name",
+    "source_packet_id",
+    "idempotency_key",
+    "business_subject",
+    "scenario_time",
+    "mock_only",
+    "real_world_effects_allowed",
+    "status",
+    "evidence_kind",
+)
+MOCK_BANK_RECEIPT_REQUIRED_FIELDS = (
+    "bank_api_called",
+    "payment_executed",
+    "amount_moved",
+)
+MOCK_SUPPLIER_RECEIPT_REQUIRED_FIELDS = (
+    "supplier_api_called",
+    "supplier_order_created",
+)
+MOCK_WAREHOUSE_RECEIPT_REQUIRED_FIELDS = (
+    "warehouse_api_called",
+    "shipment_released",
+    "inventory_reserved",
+)
+MOCK_EXECUTION_EVIDENCE_REQUIRED_FIELDS = (
+    "evidence_type",
+    "evidence_id",
+    "created_by",
+    "source_packet_id",
+    "source_root_outcome_id",
+    "business_subject",
+    "mock_only",
+    "real_world_effects_allowed",
+    "adapter_receipts",
+    "receipt_count",
+    "adapter_names",
+    "scenario_time",
+    "packet_expires_at",
+    "packet_not_expired_at_scenario_time",
+    "connector_sandbox_completed",
+    "real_connector_called",
+    "payment_executed",
+    "shipment_released",
+    "root_final_authority_preserved",
+)
 
 
 def _root_mock_approval_context_default() -> dict[str, Any]:
@@ -4527,11 +4673,568 @@ def _run_root_mock_approval_gate(
     }
 
 
+def _mock_connector_sandbox_zero_counters() -> dict[str, int]:
+    return {
+        key: 0
+        for key in (
+            *MOCK_CONNECTOR_SANDBOX_COUNTER_KEYS,
+            *MOCK_CONNECTOR_SANDBOX_SHARED_COUNTER_KEYS,
+        )
+    }
+
+
+def _mock_connector_sandbox_context_default() -> dict[str, Any]:
+    return {
+        "layer": "Mock Connector Sandbox",
+        "gate_enabled": False,
+        "invoked": False,
+        "completed": False,
+        "denied": False,
+        "denial_reasons": (),
+        "packet_validated": False,
+        "scenario_time": SLICE1_NOW,
+        "adapter_names": (),
+        "receipt_count": 0,
+        "real_connector_called": False,
+        "payment_executed": False,
+        "shipment_released": False,
+        "Root remains final authority": True,
+        "counters": _mock_connector_sandbox_zero_counters(),
+    }
+
+
+def _mock_execution_validation_default() -> dict[str, Any]:
+    return {
+        "validated": False,
+        "accepted": False,
+        "reasons": (),
+        "missing_receipt_blocked": False,
+        "duplicate_receipt_blocked": False,
+        "unknown_adapter_blocked": False,
+        "real_world_effects_blocked": False,
+    }
+
+
+def _fake_bank_adapter_v0(
+    packet: Mapping[str, Any],
+    scenario_time: str,
+    context: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "receipt_type": "mock_bank_payment_review_receipt",
+        "adapter_name": "fake_bank_adapter_v0",
+        "source_packet_id": packet["packet_id"],
+        "idempotency_key": packet["idempotency_key"],
+        "business_subject": context.get("business_subject", packet["business_subject"]),
+        "scenario_time": scenario_time,
+        "mock_only": True,
+        "real_world_effects_allowed": False,
+        "bank_api_called": False,
+        "payment_executed": False,
+        "amount_moved": 0,
+        "status": "mock_payment_review_recorded",
+        "evidence_kind": "mock_receipt",
+    }
+
+
+def _fake_supplier_adapter_v0(
+    packet: Mapping[str, Any],
+    scenario_time: str,
+    context: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "receipt_type": "mock_supplier_confirmation_receipt",
+        "adapter_name": "fake_supplier_adapter_v0",
+        "source_packet_id": packet["packet_id"],
+        "idempotency_key": packet["idempotency_key"],
+        "business_subject": context.get("business_subject", packet["business_subject"]),
+        "scenario_time": scenario_time,
+        "mock_only": True,
+        "real_world_effects_allowed": False,
+        "supplier_api_called": False,
+        "supplier_order_created": False,
+        "status": "mock_supplier_review_recorded",
+        "evidence_kind": "mock_receipt",
+    }
+
+
+def _fake_warehouse_adapter_v0(
+    packet: Mapping[str, Any],
+    scenario_time: str,
+    context: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "receipt_type": "mock_warehouse_reservation_receipt",
+        "adapter_name": "fake_warehouse_adapter_v0",
+        "source_packet_id": packet["packet_id"],
+        "idempotency_key": packet["idempotency_key"],
+        "business_subject": context.get("business_subject", packet["business_subject"]),
+        "scenario_time": scenario_time,
+        "mock_only": True,
+        "real_world_effects_allowed": False,
+        "warehouse_api_called": False,
+        "shipment_released": False,
+        "inventory_reserved": "mock_reserved_only",
+        "status": "mock_reservation_review_recorded",
+        "evidence_kind": "mock_receipt",
+    }
+
+
+def _validate_mock_connector_sandbox_packet(
+    packet: Mapping[str, Any] | None,
+    root_boundary: Mapping[str, Any],
+    scenario_time: str,
+) -> dict[str, Any]:
+    reasons: list[str] = []
+    if not packet:
+        reasons.append("mock_connector_sandbox_requires_valid_action_commit_packet")
+        return {"accepted": False, "reasons": tuple(reasons)}
+
+    packet_validation = _validate_action_commit_packet(
+        packet,
+        root_boundary=root_boundary,
+    )
+    if not packet_validation["accepted"]:
+        reasons.append("mock_connector_sandbox_requires_valid_action_commit_packet")
+        reasons.extend(packet_validation["reasons"])
+    if packet.get("created_by") != "root_mock_approval_gate":
+        reasons.append("packet_must_be_root_created")
+    if packet.get("mock_only") is not True:
+        reasons.append("packet_mock_only_required")
+    if packet.get("real_world_effects_allowed") is not False:
+        reasons.append("packet_real_world_effects_forbidden")
+    if scenario_time > str(packet.get("expires_at", "")):
+        reasons.append("packet_expired_at_scenario_time")
+    adapter_names = tuple(packet.get("allowed_future_adapters", ()))
+    if set(adapter_names) != set(MOCK_CONNECTOR_SANDBOX_ADAPTERS):
+        reasons.append("unknown_adapter")
+    if any(_contains_text(packet, marker) for marker in MOCK_CONNECTOR_SANDBOX_SECRET_MARKERS):
+        reasons.append("secret_or_tmp_marker_forbidden")
+
+    return {
+        "accepted": not reasons,
+        "reasons": tuple(reasons),
+    }
+
+
+def _validate_mock_receipt(
+    receipt: Mapping[str, Any] | None,
+    packet: Mapping[str, Any],
+    scenario_time: str,
+) -> dict[str, Any]:
+    reasons: list[str] = []
+    if not receipt:
+        return {"accepted": False, "reasons": ("missing_receipt",)}
+    adapter_name = receipt.get("adapter_name")
+    adapter_label = str(adapter_name or "unknown")
+    for field in MOCK_RECEIPT_BASE_REQUIRED_FIELDS:
+        if field not in receipt:
+            reasons.append(
+                f"missing_required_receipt_field:{adapter_label}:{field}"
+            )
+    if adapter_name not in MOCK_CONNECTOR_SANDBOX_ADAPTERS:
+        reasons.append("unknown_adapter")
+    if receipt.get("source_packet_id") != packet.get("packet_id"):
+        reasons.append("receipt_source_packet_id_mismatch")
+    if receipt.get("idempotency_key") != packet.get("idempotency_key"):
+        reasons.append("receipt_idempotency_key_mismatch")
+    if receipt.get("business_subject") != packet.get("business_subject"):
+        reasons.append("receipt_business_subject_mismatch")
+    if receipt.get("scenario_time") != scenario_time:
+        reasons.append("receipt_scenario_time_mismatch")
+    if receipt.get("mock_only") is not True:
+        reasons.append("receipt_mock_only_required")
+    if receipt.get("real_world_effects_allowed") is not False:
+        reasons.append("receipt_real_world_effects_forbidden")
+    if receipt.get("evidence_kind") != "mock_receipt":
+        reasons.append("receipt_evidence_kind_invalid")
+
+    if adapter_name == "fake_bank_adapter_v0":
+        for field in MOCK_BANK_RECEIPT_REQUIRED_FIELDS:
+            if field not in receipt:
+                reasons.append(
+                    f"missing_required_receipt_field:{adapter_label}:{field}"
+                )
+        if receipt.get("receipt_type") != "mock_bank_payment_review_receipt":
+            reasons.append("bank_receipt_type_invalid")
+        if receipt.get("bank_api_called") is not False:
+            reasons.append("receipt_real_action_forbidden:bank_api_called")
+        if receipt.get("payment_executed") is not False:
+            reasons.append("receipt_real_action_forbidden:payment_executed")
+        if receipt.get("amount_moved") != 0:
+            reasons.append("bank_receipt_amount_moved_must_be_zero")
+        if receipt.get("status") != "mock_payment_review_recorded":
+            reasons.append("bank_receipt_status_invalid")
+    elif adapter_name == "fake_supplier_adapter_v0":
+        for field in MOCK_SUPPLIER_RECEIPT_REQUIRED_FIELDS:
+            if field not in receipt:
+                reasons.append(
+                    f"missing_required_receipt_field:{adapter_label}:{field}"
+                )
+        if receipt.get("receipt_type") != "mock_supplier_confirmation_receipt":
+            reasons.append("supplier_receipt_type_invalid")
+        if receipt.get("supplier_api_called") is not False:
+            reasons.append("receipt_real_action_forbidden:supplier_api_called")
+        if receipt.get("supplier_order_created") is not False:
+            reasons.append("receipt_real_action_forbidden:supplier_order_created")
+        if receipt.get("status") != "mock_supplier_review_recorded":
+            reasons.append("supplier_receipt_status_invalid")
+    elif adapter_name == "fake_warehouse_adapter_v0":
+        for field in MOCK_WAREHOUSE_RECEIPT_REQUIRED_FIELDS:
+            if field not in receipt:
+                reasons.append(
+                    f"missing_required_receipt_field:{adapter_label}:{field}"
+                )
+        if receipt.get("receipt_type") != "mock_warehouse_reservation_receipt":
+            reasons.append("warehouse_receipt_type_invalid")
+        if receipt.get("warehouse_api_called") is not False:
+            reasons.append("receipt_real_action_forbidden:warehouse_api_called")
+        if receipt.get("shipment_released") is not False:
+            reasons.append("receipt_real_action_forbidden:shipment_released")
+        if receipt.get("inventory_reserved") != "mock_reserved_only":
+            reasons.append("warehouse_receipt_inventory_reserved_invalid")
+        if receipt.get("status") != "mock_reservation_review_recorded":
+            reasons.append("warehouse_receipt_status_invalid")
+    if any(_contains_text(receipt, marker) for marker in MOCK_CONNECTOR_SANDBOX_SECRET_MARKERS):
+        reasons.append("secret_or_tmp_marker_forbidden")
+    return {
+        "accepted": not reasons,
+        "reasons": tuple(dict.fromkeys(reasons)),
+    }
+
+
+def _build_mock_connector_execution_evidence(
+    packet: Mapping[str, Any],
+    receipts: tuple[Mapping[str, Any], ...],
+    scenario_time: str,
+) -> dict[str, Any]:
+    return {
+        "evidence_type": "mock_connector_execution_evidence",
+        "evidence_id": f"mock_connector_execution_evidence:{packet['packet_id']}",
+        "created_by": "mock_connector_sandbox",
+        "source_packet_id": packet["packet_id"],
+        "source_root_outcome_id": packet["source_root_outcome_id"],
+        "business_subject": packet["business_subject"],
+        "mock_only": True,
+        "real_world_effects_allowed": False,
+        "adapter_receipts": receipts,
+        "receipt_count": len(receipts),
+        "adapter_names": tuple(receipt.get("adapter_name") for receipt in receipts),
+        "scenario_time": scenario_time,
+        "packet_expires_at": packet["expires_at"],
+        "packet_not_expired_at_scenario_time": scenario_time <= packet["expires_at"],
+        "connector_sandbox_completed": True,
+        "real_connector_called": False,
+        "payment_executed": False,
+        "shipment_released": False,
+        "root_final_authority_preserved": True,
+    }
+
+
+def _validate_mock_execution_evidence(
+    evidence: Mapping[str, Any],
+    packet: Mapping[str, Any],
+    scenario_time: str,
+) -> dict[str, Any]:
+    reasons: list[str] = []
+    receipts = tuple(evidence.get("adapter_receipts", ()))
+    adapter_names = tuple(evidence.get("adapter_names", ()))
+    expected_adapters = set(MOCK_CONNECTOR_SANDBOX_ADAPTERS)
+    adapter_set = set(adapter_names)
+
+    for field in MOCK_EXECUTION_EVIDENCE_REQUIRED_FIELDS:
+        if field not in evidence:
+            reasons.append(f"missing_required_execution_evidence_field:{field}")
+    if evidence.get("evidence_type") != "mock_connector_execution_evidence":
+        reasons.append("execution_evidence_type_invalid")
+    if evidence.get("created_by") != "mock_connector_sandbox":
+        reasons.append("execution_evidence_creator_invalid")
+    if evidence.get("source_packet_id") != packet.get("packet_id"):
+        reasons.append("execution_evidence_source_packet_mismatch")
+    if evidence.get("source_root_outcome_id") != packet.get("source_root_outcome_id"):
+        reasons.append("execution_evidence_source_root_outcome_mismatch")
+    if evidence.get("business_subject") != packet.get("business_subject"):
+        reasons.append("execution_evidence_business_subject_mismatch")
+    if evidence.get("packet_expires_at") != packet.get("expires_at"):
+        reasons.append("execution_evidence_packet_expiry_mismatch")
+    if evidence.get("scenario_time") != scenario_time:
+        reasons.append("execution_evidence_scenario_time_mismatch")
+    if evidence.get("mock_only") is not True:
+        reasons.append("execution_evidence_mock_only_required")
+    if evidence.get("real_world_effects_allowed") is not False:
+        reasons.append("execution_evidence_real_world_effects_forbidden")
+    if evidence.get("packet_not_expired_at_scenario_time") is not True:
+        reasons.append("packet_expired_at_scenario_time")
+    if evidence.get("connector_sandbox_completed") is not True:
+        reasons.append("execution_evidence_connector_sandbox_completed_required")
+    if evidence.get("real_connector_called") is not False:
+        reasons.append("real_connector_marker_forbidden")
+    if evidence.get("payment_executed") is not False:
+        reasons.append("payment_execution_forbidden")
+    if evidence.get("shipment_released") is not False:
+        reasons.append("shipment_release_forbidden")
+    if evidence.get("root_final_authority_preserved") is not True:
+        reasons.append("execution_evidence_root_final_authority_required")
+    if len(adapter_names) != len(set(adapter_names)):
+        reasons.append("duplicate_receipt")
+    if adapter_names != MOCK_CONNECTOR_SANDBOX_ADAPTERS:
+        reasons.append("adapter_names_must_match_mock_connector_sandbox_adapters")
+    if adapter_set != expected_adapters:
+        if not expected_adapters.issubset(adapter_set):
+            reasons.append("missing_receipt")
+        if adapter_set - expected_adapters:
+            reasons.append("unknown_adapter")
+    if evidence.get("receipt_count") != len(MOCK_CONNECTOR_SANDBOX_ADAPTERS):
+        reasons.append("missing_receipt")
+
+    for receipt in receipts:
+        receipt_validation = _validate_mock_receipt(receipt, packet, scenario_time)
+        if not receipt_validation["accepted"]:
+            reasons.extend(receipt_validation["reasons"])
+    if any(_contains_text(evidence, marker) for marker in MOCK_CONNECTOR_SANDBOX_SECRET_MARKERS):
+        reasons.append("secret_or_tmp_marker_forbidden")
+
+    return {
+        "accepted": not reasons,
+        "reasons": tuple(dict.fromkeys(reasons)),
+    }
+
+
+def _root_mock_execution_summary(
+    packet: Mapping[str, Any],
+    evidence: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "summary_type": "root_mock_execution_summary",
+        "created_by": "root_mock_execution_summary_boundary",
+        "source_packet_id": packet["packet_id"],
+        "source_execution_evidence_id": evidence["evidence_id"],
+        "business_subject": packet["business_subject"],
+        "receipt_count": evidence["receipt_count"],
+        "mock_only": True,
+        "real_world_effects_allowed": False,
+        "real_actions_executed": False,
+        "payment_executed": False,
+        "shipment_released": False,
+        "connector_called": False,
+        "root_final_authority_preserved": True,
+        "decision": "mock_execution_recorded",
+        "reason": (
+            "local fake connector receipts recorded; no real-world action occurred"
+        ),
+    }
+
+
+def _sandbox_failure_result(
+    sandbox_context: dict[str, Any],
+    validation_context: dict[str, Any],
+    counters: dict[str, int],
+    reasons: tuple[str, ...],
+) -> dict[str, Any]:
+    counters["mock_connector_sandbox_denied_count"] = 1
+    counters["mock_connector_sandbox_rejected_count"] = 1
+    if "mock_connector_sandbox_requires_valid_action_commit_packet" in reasons:
+        counters["mock_connector_sandbox_requires_packet_count"] = 1
+    if "packet_expired_at_scenario_time" in reasons:
+        counters["mock_connector_sandbox_packet_expired_count"] = 1
+    if any("real_world_effects" in reason for reason in reasons):
+        counters["mock_connector_sandbox_real_world_effects_blocked_count"] = 1
+    if "unknown_adapter" in reasons:
+        counters["mock_connector_sandbox_unknown_adapter_blocked_count"] = 1
+    if "duplicate_receipt" in reasons:
+        counters["mock_connector_sandbox_duplicate_receipt_blocked_count"] = 1
+    if "missing_receipt" in reasons or any(
+        reason.startswith("missing_required_receipt_field:")
+        or reason.startswith("missing_required_execution_evidence_field:")
+        for reason in reasons
+    ):
+        counters["mock_connector_sandbox_missing_receipt_blocked_count"] = 1
+    sandbox_context.update(
+        {
+            "denied": True,
+            "denial_reasons": reasons,
+            "counters": counters,
+        }
+    )
+    validation_context.update(
+        {
+            "validated": True,
+            "accepted": False,
+            "reasons": reasons,
+            "missing_receipt_blocked": "missing_receipt" in reasons
+            or any(
+                reason.startswith("missing_required_receipt_field:")
+                or reason.startswith("missing_required_execution_evidence_field:")
+                for reason in reasons
+            ),
+            "duplicate_receipt_blocked": "duplicate_receipt" in reasons,
+            "unknown_adapter_blocked": "unknown_adapter" in reasons,
+            "real_world_effects_blocked": any(
+                "real_world_effects" in reason for reason in reasons
+            ),
+        }
+    )
+    return {
+        "mock_connector_sandbox_context": sandbox_context,
+        "mock_connector_receipts": (),
+        "execution_evidence": {},
+        "mock_execution_validation_context": validation_context,
+        "root_mock_execution_summary_context": {},
+        "fail_closed": True,
+        "validation_errors": reasons,
+    }
+
+
+def _run_mock_connector_sandbox(
+    *,
+    env: Mapping[str, str],
+    root_boundary: Mapping[str, Any],
+    action_commit_packet_context: Mapping[str, Any],
+    action_commit_packet: Mapping[str, Any] | None,
+    supplier_context: Mapping[str, Any],
+) -> dict[str, Any]:
+    sandbox_context = _mock_connector_sandbox_context_default()
+    validation_context = _mock_execution_validation_default()
+    if not _full_e2e_mock_connector_sandbox_enabled(env):
+        return {
+            "mock_connector_sandbox_context": sandbox_context,
+            "mock_connector_receipts": (),
+            "execution_evidence": {},
+            "mock_execution_validation_context": validation_context,
+            "root_mock_execution_summary_context": {},
+            "fail_closed": False,
+            "validation_errors": (),
+        }
+
+    counters = _mock_connector_sandbox_zero_counters()
+    counters["mock_connector_sandbox_invoked_count"] = 1
+    sandbox_context.update(
+        {
+            "gate_enabled": True,
+            "invoked": True,
+            "scenario_time": SLICE1_NOW,
+        }
+    )
+    packet = dict(action_commit_packet or {})
+    packet_accepted = (
+        action_commit_packet_context.get("packet_created") is True
+        and (action_commit_packet_context.get("validation") or {}).get("accepted")
+        is True
+        and bool(packet)
+    )
+    if not packet_accepted:
+        reasons = ("mock_connector_sandbox_requires_valid_action_commit_packet",)
+        return _sandbox_failure_result(
+            sandbox_context,
+            validation_context,
+            counters,
+            reasons,
+        )
+
+    packet_validation = _validate_mock_connector_sandbox_packet(
+        packet,
+        root_boundary,
+        SLICE1_NOW,
+    )
+    if not packet_validation["accepted"]:
+        return _sandbox_failure_result(
+            sandbox_context,
+            validation_context,
+            counters,
+            tuple(packet_validation["reasons"]),
+        )
+
+    counters["mock_connector_sandbox_packet_validated_count"] = 1
+    context = {
+        "business_subject": packet["business_subject"],
+        "supplier_payment_context_summary": {
+            "mock_ready_fixture": bool(supplier_context.get("mock_ready_fixture")),
+            "legal_hold_present": bool(supplier_context.get("legal_hold_present")),
+            "water_filter_shortage": bool(supplier_context.get("water_filter_shortage")),
+        },
+    }
+    adapter_functions = {
+        "fake_bank_adapter_v0": _fake_bank_adapter_v0,
+        "fake_supplier_adapter_v0": _fake_supplier_adapter_v0,
+        "fake_warehouse_adapter_v0": _fake_warehouse_adapter_v0,
+    }
+    receipts: list[Mapping[str, Any]] = []
+    for adapter_name in MOCK_CONNECTOR_SANDBOX_ADAPTERS:
+        counters[f"{adapter_name.removesuffix('_v0')}_invoked_count"] = 1
+        receipt = adapter_functions[adapter_name](packet, SLICE1_NOW, context)
+        if receipt:
+            receipts.append(receipt)
+
+    receipt_tuple = tuple(receipts)
+    evidence = _build_mock_connector_execution_evidence(
+        packet,
+        receipt_tuple,
+        SLICE1_NOW,
+    )
+    evidence_validation = _validate_mock_execution_evidence(
+        evidence,
+        packet,
+        SLICE1_NOW,
+    )
+    if not evidence_validation["accepted"]:
+        return _sandbox_failure_result(
+            sandbox_context,
+            validation_context,
+            counters,
+            tuple(evidence_validation["reasons"]),
+        )
+
+    counters["mock_connector_sandbox_completed_count"] = 1
+    counters["fake_bank_connector_called_count"] = 1
+    counters["fake_supplier_connector_called_count"] = 1
+    counters["fake_warehouse_connector_called_count"] = 1
+    counters["mock_bank_receipt_created_count"] = 1
+    counters["mock_supplier_receipt_created_count"] = 1
+    counters["mock_warehouse_receipt_created_count"] = 1
+    counters["mock_connector_receipts_created_count"] = 3
+    counters["mock_receipt_created_count"] = 3
+    counters["execution_evidence_created_count"] = 1
+    counters["execution_evidence_validated_count"] = 1
+    counters["root_mock_execution_summary_created_count"] = 1
+    summary = _root_mock_execution_summary(packet, evidence)
+    sandbox_context.update(
+        {
+            "completed": True,
+            "packet_validated": True,
+            "adapter_names": evidence["adapter_names"],
+            "receipt_count": evidence["receipt_count"],
+            "counters": counters,
+        }
+    )
+    validation_context.update(
+        {
+            "validated": True,
+            "accepted": True,
+            "reasons": (),
+            "execution_evidence_validated": True,
+        }
+    )
+    return {
+        "mock_connector_sandbox_context": sandbox_context,
+        "mock_connector_receipts": receipt_tuple,
+        "execution_evidence": evidence,
+        "mock_execution_validation_context": validation_context,
+        "root_mock_execution_summary_context": summary,
+        "fail_closed": False,
+        "validation_errors": (),
+    }
+
+
 def _drs_writeback_record(
     root_boundary: Mapping[str, Any],
     *,
     root_mock_approval_context: Mapping[str, Any] | None = None,
     action_commit_packet_context: Mapping[str, Any] | None = None,
+    mock_connector_sandbox_context: Mapping[str, Any] | None = None,
+    mock_connector_receipts: tuple[Mapping[str, Any], ...] = (),
+    execution_evidence: Mapping[str, Any] | None = None,
+    mock_execution_validation_context: Mapping[str, Any] | None = None,
+    root_mock_execution_summary_context: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     artifact = root_boundary["root_reviewed_semantic_outcome"]
     with tempfile.TemporaryDirectory(prefix="hedgehog_full_e2e_slice3_writeback_") as tmp_dir:
@@ -4558,6 +5261,15 @@ def _drs_writeback_record(
         ],
         "root_mock_approval_trace": dict(root_mock_approval_context or {}),
         "action_commit_packet_trace": dict(action_commit_packet_context or {}),
+        "mock_connector_sandbox_trace": dict(mock_connector_sandbox_context or {}),
+        "mock_connector_receipts_trace": tuple(dict(item) for item in mock_connector_receipts),
+        "execution_evidence_trace": dict(execution_evidence or {}),
+        "mock_execution_validation_trace": dict(
+            mock_execution_validation_context or {}
+        ),
+        "root_mock_execution_summary_trace": dict(
+            root_mock_execution_summary_context or {}
+        ),
         "payment_executed": False,
         "shipment_released": False,
     }
@@ -4723,6 +5435,7 @@ def _run_slice3_core_primitives(
     plangraph_context: Mapping[str, Any],
     fractal_executor_context: Mapping[str, Any],
     slice2_result: Mapping[str, Any],
+    supplier_context: Mapping[str, Any],
     mock_ready_fixture: bool = False,
 ) -> dict[str, Any]:
     result_proposals = tuple(slice2_result["dag_runner_report"]["result_proposals"])
@@ -4748,10 +5461,28 @@ def _run_slice3_core_primitives(
         post_vv_context=post_vv_context,
         gt_lgt_context=gt_lgt_context,
     )
+    sandbox_result = _run_mock_connector_sandbox(
+        env=env,
+        root_boundary=root_boundary,
+        action_commit_packet_context=approval_result["action_commit_packet_context"],
+        action_commit_packet=approval_result["action_commit_packet"],
+        supplier_context=supplier_context,
+    )
     writeback = _drs_writeback_record(
         root_boundary,
         root_mock_approval_context=approval_result["root_mock_approval_context"],
         action_commit_packet_context=approval_result["action_commit_packet_context"],
+        mock_connector_sandbox_context=sandbox_result[
+            "mock_connector_sandbox_context"
+        ],
+        mock_connector_receipts=sandbox_result["mock_connector_receipts"],
+        execution_evidence=sandbox_result["execution_evidence"],
+        mock_execution_validation_context=sandbox_result[
+            "mock_execution_validation_context"
+        ],
+        root_mock_execution_summary_context=sandbox_result[
+            "root_mock_execution_summary_context"
+        ],
     )
     return {
         "result_proposals": result_proposals,
@@ -4763,6 +5494,21 @@ def _run_slice3_core_primitives(
         "root_mock_approval_context": approval_result["root_mock_approval_context"],
         "action_commit_packet_context": approval_result["action_commit_packet_context"],
         "action_commit_packet": approval_result["action_commit_packet"],
+        "mock_connector_sandbox_context": sandbox_result[
+            "mock_connector_sandbox_context"
+        ],
+        "mock_connector_receipts": sandbox_result["mock_connector_receipts"],
+        "execution_evidence": sandbox_result["execution_evidence"],
+        "mock_execution_validation_context": sandbox_result[
+            "mock_execution_validation_context"
+        ],
+        "root_mock_execution_summary_context": sandbox_result[
+            "root_mock_execution_summary_context"
+        ],
+        "mock_connector_sandbox_fail_closed": sandbox_result["fail_closed"],
+        "mock_connector_sandbox_validation_errors": sandbox_result[
+            "validation_errors"
+        ],
         "drs_writeback_record": writeback,
         "hardening_checks": _probe_slice3_hardening_checks(
             result_proposals,
@@ -4857,6 +5603,11 @@ def _result(
     root_mock_approval_context: Mapping[str, Any] | None = None,
     action_commit_packet_context: Mapping[str, Any] | None = None,
     action_commit_packet: Mapping[str, Any] | None = None,
+    mock_connector_sandbox_context: Mapping[str, Any] | None = None,
+    mock_connector_receipts: tuple[Mapping[str, Any], ...] = (),
+    execution_evidence: Mapping[str, Any] | None = None,
+    mock_execution_validation_context: Mapping[str, Any] | None = None,
+    root_mock_execution_summary_context: Mapping[str, Any] | None = None,
     drs_writeback_record: Mapping[str, Any] | None = None,
     runtime_hardening_checks: Mapping[str, Any] | None = None,
     validation_errors: tuple[str, ...] = (),
@@ -4889,6 +5640,17 @@ def _result(
         "root_mock_approval_context": dict(root_mock_approval_context or {}),
         "action_commit_packet_context": dict(action_commit_packet_context or {}),
         "action_commit_packet": dict(action_commit_packet or {}),
+        "mock_connector_sandbox_context": dict(mock_connector_sandbox_context or {}),
+        "mock_connector_receipts": tuple(
+            dict(receipt) for receipt in mock_connector_receipts
+        ),
+        "execution_evidence": dict(execution_evidence or {}),
+        "mock_execution_validation_context": dict(
+            mock_execution_validation_context or {}
+        ),
+        "root_mock_execution_summary_context": dict(
+            root_mock_execution_summary_context or {}
+        ),
         "drs_writeback_record": dict(drs_writeback_record or {}),
         "runtime_hardening_checks": dict(runtime_hardening_checks or {}),
         "stage_map": stage_map,
@@ -5105,6 +5867,7 @@ def run_full_semantic_e2e(
         plangraph_context=plangraph,
         fractal_executor_context=fractal_executor,
         slice2_result=slice2_result,
+        supplier_context=supplier_context,
         mock_ready_fixture=mock_ready_fixture,
     )
     _apply_spine_counters(counters, slice1_result, slice2_result, slice3_result)
@@ -5126,6 +5889,15 @@ def run_full_semantic_e2e(
     stage_map = _stage_map_success()
     root_mock_approval = slice3_result["root_mock_approval_context"]
     action_commit_packet_context = slice3_result["action_commit_packet_context"]
+    mock_connector_sandbox_context = slice3_result["mock_connector_sandbox_context"]
+    mock_connector_receipts = slice3_result["mock_connector_receipts"]
+    execution_evidence = slice3_result["execution_evidence"]
+    mock_execution_validation_context = slice3_result[
+        "mock_execution_validation_context"
+    ]
+    root_mock_execution_summary_context = slice3_result[
+        "root_mock_execution_summary_context"
+    ]
     if root_mock_approval.get("invoked"):
         stage_map["root_mock_approval_gate"] = {
             **stage_map["root_mock_approval_gate"],
@@ -5144,6 +5916,91 @@ def run_full_semantic_e2e(
                 "Root boundary; no connector executes"
             ),
         }
+    if mock_connector_sandbox_context.get("invoked"):
+        stage_map["mock_connector_sandbox"] = {
+            **stage_map["mock_connector_sandbox"],
+            "status": (
+                "fail_closed"
+                if mock_connector_sandbox_context.get("denied")
+                else "invoked"
+            ),
+            "notes": (
+                "Mock Connector Sandbox invoked after validated Root-created "
+                "mock packet; no real connector is called"
+            ),
+        }
+    if mock_connector_receipts:
+        stage_map["mock_receipt_collection"] = {
+            **stage_map["mock_receipt_collection"],
+            "status": "invoked",
+            "notes": "three local fake adapter mock receipts collected",
+        }
+    if execution_evidence:
+        stage_map["execution_evidence"] = {
+            **stage_map["execution_evidence"],
+            "status": "invoked",
+            "notes": "mock connector execution evidence created with no real-world effect",
+        }
+    if mock_execution_validation_context.get("validated"):
+        stage_map["mock_execution_validation"] = {
+            **stage_map["mock_execution_validation"],
+            "status": (
+                "fail_closed"
+                if not mock_execution_validation_context.get("accepted")
+                else "invoked"
+            ),
+            "notes": "mock execution evidence validated locally before summary",
+        }
+    if root_mock_execution_summary_context:
+        stage_map["root_mock_execution_summary"] = {
+            **stage_map["root_mock_execution_summary"],
+            "status": "invoked",
+            "notes": "Root mock execution summary records local mock receipts only",
+        }
+    if slice3_result.get("mock_connector_sandbox_fail_closed"):
+        errors = tuple(slice3_result.get("mock_connector_sandbox_validation_errors", ()))
+        return _result(
+            final_status="FAIL_CLOSED",
+            counters=counters,
+            scenarios=_failure_scenarios(errors),
+            stage_map=stage_map,
+            dirty_business_request=dirty_request,
+            semantic_evidence_claim=_claim_summary(claim),
+            supplier_payment_context=supplier_context,
+            drs_candidate_context=drs_context,
+            candidate_vector_context=candidate_context,
+            avf_context=avf,
+            advisory_context=advisory,
+            bounded_orchestrator_context=bounded_orchestrator,
+            gemini_orchestrator_context=slice2_result.get(
+                "gemini_orchestrator_context",
+                {},
+            ),
+            gemini_architect_context=slice2_result.get(
+                "gemini_architect_context",
+                {},
+            ),
+            dual_gemini_context=slice2_result.get("dual_gemini_context", {}),
+            architect_context=architect,
+            plangraph_context=plangraph,
+            fractal_executor_context=fractal_executor,
+            result_proposal=proposal,
+            post_vv_context=post_vv,
+            gt_lgt_context=gt_lgt,
+            root_final_output_boundary=root_boundary,
+            root_mock_approval_context=root_mock_approval,
+            action_commit_packet_context=action_commit_packet_context,
+            action_commit_packet=slice3_result.get("action_commit_packet") or {},
+            mock_connector_sandbox_context=mock_connector_sandbox_context,
+            mock_connector_receipts=mock_connector_receipts,
+            execution_evidence=execution_evidence,
+            mock_execution_validation_context=mock_execution_validation_context,
+            root_mock_execution_summary_context=root_mock_execution_summary_context,
+            drs_writeback_record=writeback,
+            runtime_hardening_checks=slice3_result["hardening_checks"],
+            validation_errors=errors,
+            supplier_live_result=supplier_result,
+        )
     scenarios = _success_scenarios(prompt_injection)
 
     return _result(
@@ -5172,6 +6029,11 @@ def run_full_semantic_e2e(
         root_mock_approval_context=root_mock_approval,
         action_commit_packet_context=action_commit_packet_context,
         action_commit_packet=slice3_result.get("action_commit_packet") or {},
+        mock_connector_sandbox_context=mock_connector_sandbox_context,
+        mock_connector_receipts=mock_connector_receipts,
+        execution_evidence=execution_evidence,
+        mock_execution_validation_context=mock_execution_validation_context,
+        root_mock_execution_summary_context=root_mock_execution_summary_context,
         drs_writeback_record=writeback,
         runtime_hardening_checks=slice3_result["hardening_checks"],
         supplier_live_result=supplier_result,
@@ -5239,6 +6101,13 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         str(result["root_mock_approval_context"]),
         str(result["action_commit_packet_context"]),
         str(result["action_commit_packet"]),
+        "",
+        "Mock Connector Sandbox:",
+        str(result["mock_connector_sandbox_context"]),
+        str(result["mock_connector_receipts"]),
+        str(result["execution_evidence"]),
+        str(result["mock_execution_validation_context"]),
+        str(result["root_mock_execution_summary_context"]),
         "",
         "DRS writeback:",
         str(result["drs_writeback_record"]),

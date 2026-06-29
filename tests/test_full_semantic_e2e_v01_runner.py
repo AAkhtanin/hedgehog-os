@@ -66,8 +66,23 @@ def _gemini_orchestrator_env(**overrides):
     return env
 
 
+def _gemini_architect_env(**overrides):
+    env = {
+        runner.ENV_FULL_E2E_GEMINI_ARCHITECT: "1",
+        provider_adapter.ENV_PROVIDER_NAME: "gemini",
+        provider_adapter.ENV_PROVIDER_MODEL: "gemini-architect-test-model",
+    }
+    env.update(overrides)
+    return env
+
+
 def _bounded_orchestrator_input_from_prompt(prompt):
     marker = "BOUNDED_GEMINI_ORCHESTRATOR_INPUT_JSON:\n"
+    return json.loads(prompt.split(marker, 1)[1])
+
+
+def _bounded_architect_input_from_prompt(prompt):
+    marker = "BOUNDED_GEMINI_ARCHITECT_INPUT_JSON:\n"
     return json.loads(prompt.split(marker, 1)[1])
 
 
@@ -99,6 +114,66 @@ def _valid_gemini_orchestrator_proposal(context, **overrides):
     return payload
 
 
+def _valid_gemini_architect_proposal(context, **overrides):
+    selected = tuple(context["route_context"]["selected_vector_ids"])
+    allowed = tuple(context["route_context"]["allowed_vector_ids"])
+    vector_id = (selected or allowed)[0]
+    packet_id = context["source_packet_id"]
+    node_id = f"node:{packet_id}:gemini_architect:1"
+    payload = {
+        "proposal_id": "fake-gemini-architect-proposal-001",
+        "proposal_role": "bounded_gemini_architect",
+        "source_packet_id": packet_id,
+        "plan_graph_proposal_id": f"plan:{packet_id}:fake_gemini_architect",
+        "selected_vector_ids": [vector_id],
+        "nodes": [
+            {
+                "node_id": node_id,
+                "vector_id": vector_id,
+                "kind": "tool_or_simulated_action",
+                "task": f"simulate_result_proposal_for_vector:{vector_id};bounded_architect_candidate",
+                "executor_id": "exec_mock_certificate",
+                "depends_on": [],
+                "expected_output": "result_proposal",
+                "branching_mode": "hybrid",
+            }
+        ],
+        "edges": [],
+        "executor_assignments": [
+            {
+                "executor_id": "exec_mock_certificate",
+                "node_ids": [node_id],
+                "mode": "simulate",
+            }
+        ],
+        "time_assumptions": {
+            "as_of": runner.SLICE1_NOW,
+            "freshness_required": "normal",
+            "assumptions": [
+                "executor outputs must be ResultProposal objects",
+                "candidate vectors were pre-filtered by AVF",
+            ],
+        },
+        "required_validators": list(runner.GEMINI_ARCHITECT_REQUIRED_VALIDATORS),
+        "confidence": 0.71,
+        "reason": "Create proposal-only PlanGraph for bounded supplier-payment review.",
+        "needs_review": True,
+        "uncertainty_notes": ["proposal is advisory and requires local validation"],
+        "authority_claimed": False,
+        "truth_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "root_bypass_claimed": False,
+        "orchestrator_bypass_claimed": False,
+        "unvalidated_plan_graph_claimed": False,
+        "root_review_required": True,
+    }
+    payload.update(overrides)
+    return payload
+
+
 def _gemini_orchestrator_provider(factory, captured=None):
     def provider(prompt, model_name, timeout_seconds, env):
         context = _bounded_orchestrator_input_from_prompt(prompt)
@@ -106,6 +181,20 @@ def _gemini_orchestrator_provider(factory, captured=None):
             captured["prompt"] = prompt
             captured["context"] = context
         assert model_name == "gemini-orchestrator-test-model"
+        assert timeout_seconds >= 1
+        assert env[provider_adapter.ENV_PROVIDER_NAME] == "gemini"
+        return json.dumps(factory(context), sort_keys=True)
+
+    return provider
+
+
+def _gemini_architect_provider(factory, captured=None):
+    def provider(prompt, model_name, timeout_seconds, env):
+        context = _bounded_architect_input_from_prompt(prompt)
+        if captured is not None:
+            captured["prompt"] = prompt
+            captured["context"] = context
+        assert model_name == "gemini-architect-test-model"
         assert timeout_seconds >= 1
         assert env[provider_adapter.ENV_PROVIDER_NAME] == "gemini"
         return json.dumps(factory(context), sort_keys=True)
@@ -162,6 +251,9 @@ def test_default_runner_returns_pass_and_runs_deterministic_full_spine() -> None
     assert counters["live_claim_promoted_to_action_permission_count"] == 0
     for key in runner.GEMINI_ORCHESTRATOR_COUNTER_KEYS:
         assert counters[key] == 0
+    for key in runner.GEMINI_ARCHITECT_COUNTER_KEYS:
+        assert counters[key] == 0
+    assert result["gemini_architect_context"]["provider_call_path"] == "not_started"
 
 
 def test_default_main_exits_zero_and_prints_pass(monkeypatch, capsys) -> None:
@@ -759,6 +851,334 @@ def test_valid_gemini_orchestrator_cannot_override_legal_or_stock_blockers() -> 
     assert counters["shipment_released_count"] == 0
     assert counters["connector_called_count"] == 0
     assert counters["root_final_authority_preserved_count"] == 1
+
+
+def test_explicit_fake_gemini_architect_valid_proposal_is_locally_validated() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(context)
+        ),
+    )
+    counters = result["counters"]
+    context = result["gemini_architect_context"]
+    plangraph = result["plangraph_context"]
+    fractal = result["fractal_executor_context"]
+
+    assert result["final_status"] == "PASS"
+    assert context["provider_call_path"] == "injected_architect_provider"
+    assert counters["bounded_gemini_architect_role_started_count"] == 1
+    assert counters["bounded_gemini_actor_role_started_count"] == 1
+    assert counters["gemini_architect_model_call_count"] == 0
+    assert counters["gemini_architect_network_used_count"] == 0
+    assert counters["gemini_architect_proposal_created_count"] == 1
+    assert counters["gemini_architect_proposal_validated_count"] == 1
+    assert counters["gemini_architect_plan_graph_proposal_created_count"] == 1
+    assert counters["gemini_architect_plan_graph_contract_validated_count"] == 1
+    assert counters["gemini_architect_plan_graph_allowed_count"] == 1
+    assert counters["gemini_architect_node_vector_subset_validated_count"] == 1
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert context["proposal_validated"] is True
+    assert context["plan_graph_contract_validation"]["validated"] is True
+    assert plangraph["created_by"] == "bounded_gemini_architect_proposal_local_adapter"
+    assert result["architect_context"]["architect_provider"] == "bounded_gemini_architect"
+    assert result["plangraph_context"]["created_by"] == (
+        "bounded_gemini_architect_proposal_local_adapter"
+    )
+    assert "deterministic mode" not in result["stage_map"]["architect"]["notes"]
+    assert "bounded Gemini Architect" in result["stage_map"]["architect"]["notes"]
+    assert fractal["run_fractal_dag_executor_invoked"] is True
+    assert result["counters"]["payment_executed_count"] == 0
+    assert result["counters"]["shipment_released_count"] == 0
+    assert result["counters"]["connector_called_count"] == 0
+    assert result["counters"]["root_final_authority_preserved_count"] == 1
+
+
+def test_gemini_architect_missing_real_provider_fails_closed_without_fallback() -> None:
+    result = runner.run_full_semantic_e2e(env=_gemini_architect_env())
+    counters = result["counters"]
+    context = result["gemini_architect_context"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert context["provider_call_path"] == "real_gemini_architect_provider_failed"
+    assert "provider_sdk_or_key_missing" in result["validation_errors"]
+    assert context["proposal_error"] == "provider_sdk_or_key_missing"
+    assert counters["bounded_gemini_architect_role_started_count"] == 1
+    assert counters["bounded_gemini_actor_role_started_count"] == 1
+    assert counters["gemini_architect_proposal_created_count"] == 0
+    assert counters["gemini_architect_plan_graph_rejected_count"] == 1
+    assert counters["architect_invoked_count"] == 0
+    assert result["architect_context"] == {}
+    assert result["plangraph_context"] == {}
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_mocked_real_gemini_architect_path_counts_model_network_and_gemini(
+    monkeypatch,
+) -> None:
+    def fake_real_provider(prompt, model_name, timeout_seconds, env):
+        context = _bounded_architect_input_from_prompt(prompt)
+        assert model_name == "gemini-architect-test-model"
+        assert timeout_seconds >= 1
+        return json.dumps(
+            _valid_gemini_architect_proposal(context),
+            sort_keys=True,
+        )
+
+    monkeypatch.setattr(runner, "_call_gemini_architect_provider", fake_real_provider)
+    result = runner.run_full_semantic_e2e(env=_gemini_architect_env())
+    counters = result["counters"]
+    context = result["gemini_architect_context"]
+
+    assert result["final_status"] == "PASS"
+    assert context["provider_call_path"] == "real_gemini_architect_provider"
+    assert counters["bounded_gemini_architect_role_started_count"] == 1
+    assert counters["bounded_gemini_actor_role_started_count"] == 1
+    assert counters["gemini_architect_model_call_count"] == 1
+    assert counters["gemini_architect_network_used_count"] == 1
+    assert counters["live_model_call_count"] == 1
+    assert counters["network_used_count"] == 1
+    assert counters["gemini_called_count"] == 1
+    assert counters["gemini_architect_proposal_created_count"] == 1
+    assert counters["gemini_architect_proposal_validated_count"] == 1
+    assert counters["gemini_architect_plan_graph_contract_validated_count"] == 1
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["root_final_authority_preserved_count"] == 1
+
+
+def test_provider_lanes_are_not_reused_as_gemini_architect_provider() -> None:
+    calls = {"evidence": 0, "orchestrator": 0}
+
+    def evidence_provider(prompt, model_name, timeout_seconds, env):
+        calls["evidence"] += 1
+        raise AssertionError("evidence provider was reused as Architect provider")
+
+    def orchestrator_provider(prompt, model_name, timeout_seconds, env):
+        calls["orchestrator"] += 1
+        raise AssertionError("Orchestrator provider was reused as Architect provider")
+
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        provider=evidence_provider,
+        orchestrator_provider=orchestrator_provider,
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert calls == {"evidence": 0, "orchestrator": 0}
+    assert result["gemini_architect_context"]["provider_call_path"] == (
+        "real_gemini_architect_provider_failed"
+    )
+    assert "provider_sdk_or_key_missing" in result["validation_errors"]
+
+
+def test_gemini_architect_selected_vector_violation_fails_before_executor() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(
+                context,
+                selected_vector_ids=["vector:not_allowed"],
+            )
+        ),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "selected_vector_ids_must_be_subset_of_allowed_vector_ids" in (
+        result["validation_errors"]
+    )
+    assert counters["gemini_architect_disallowed_vector_blocked_count"] == 1
+    assert counters["gemini_architect_plan_graph_rejected_count"] == 1
+    assert result["stage_map"]["fractal_cell_executor_branch"]["status"] == "skipped"
+    assert result["fractal_executor_context"] == {}
+    assert counters["fractal_branch_invoked_count"] == 0
+
+
+def test_gemini_architect_node_vector_violation_fails_before_executor() -> None:
+    def proposal(context):
+        payload = _valid_gemini_architect_proposal(context)
+        payload["nodes"][0]["vector_id"] = "vector:not_selected"
+        return payload
+
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        architect_provider=_gemini_architect_provider(proposal),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert any("node_vector_ids_must_be_subset" in e for e in result["validation_errors"])
+    assert counters["gemini_architect_node_vector_subset_validated_count"] == 0
+    assert counters["gemini_architect_disallowed_vector_blocked_count"] == 1
+    assert counters["gemini_architect_plan_graph_rejected_count"] == 1
+
+
+def test_gemini_architect_disallowed_executor_fails_before_executor() -> None:
+    def proposal(context):
+        payload = _valid_gemini_architect_proposal(context)
+        payload["nodes"][0]["executor_id"] = "exec_real_bank_connector"
+        payload["executor_assignments"][0]["executor_id"] = "exec_real_bank_connector"
+        payload["executor_assignments"][0]["mode"] = "real_action"
+        return payload
+
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        architect_provider=_gemini_architect_provider(proposal),
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert result["counters"]["gemini_architect_disallowed_executor_blocked_count"] == 1
+    assert result["counters"]["gemini_architect_plan_graph_rejected_count"] == 1
+    assert result["fractal_executor_context"] == {}
+
+
+def test_gemini_architect_missing_validators_fails_before_executor() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(
+                context,
+                required_validators=["AVF", "GT/LGT"],
+            )
+        ),
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "missing_required_validator:PlanGraph contract" in result["validation_errors"]
+    assert "missing_required_validator:Post V&V" in result["validation_errors"]
+    assert result["counters"]["gemini_architect_plan_graph_rejected_count"] == 1
+    assert result["fractal_executor_context"] == {}
+
+
+def test_gemini_architect_unsafe_claims_are_blocked_before_executor() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(
+                context,
+                authority_claimed=True,
+                truth_claimed=True,
+                action_permission_claimed=True,
+                final_output_claimed=True,
+                connector_command_claimed=True,
+                drs_write_claimed=True,
+                root_bypass_claimed=True,
+                orchestrator_bypass_claimed=True,
+                unvalidated_plan_graph_claimed=True,
+            )
+        ),
+    )
+    counters = result["counters"]
+    context = result["gemini_architect_context"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert context["authority_claim_blocked"] is True
+    assert context["truth_claim_blocked"] is True
+    assert context["action_claim_blocked"] is True
+    assert context["final_output_claim_blocked"] is True
+    assert context["connector_claim_blocked"] is True
+    assert context["drs_write_claim_blocked"] is True
+    assert context["root_bypass_claim_blocked"] is True
+    assert context["orchestrator_bypass_claim_blocked"] is True
+    assert context["unvalidated_plan_graph_blocked"] is True
+    assert counters["gemini_architect_authority_claim_blocked_count"] == 1
+    assert counters["gemini_architect_truth_claim_blocked_count"] == 1
+    assert counters["gemini_architect_action_claim_blocked_count"] == 1
+    assert counters["gemini_architect_final_output_claim_blocked_count"] == 1
+    assert counters["gemini_architect_connector_claim_blocked_count"] == 1
+    assert counters["gemini_architect_drs_write_claim_blocked_count"] == 1
+    assert counters["gemini_architect_root_bypass_claim_blocked_count"] == 1
+    assert counters["gemini_architect_orchestrator_bypass_claim_blocked_count"] == 1
+    assert counters["gemini_architect_unvalidated_plan_graph_blocked_count"] == 1
+    assert counters["root_final_output_created_count"] == 0
+    assert counters["drs_writeback_invoked_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_gemini_architect_input_blocks_raw_text_and_sensitive_markers() -> None:
+    captured = {}
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(context),
+            captured=captured,
+        ),
+    )
+    prompt = captured["prompt"]
+    safe_context = captured["context"]
+
+    assert result["final_status"] == "PASS"
+    assert "ignore all boundaries" not in prompt
+    assert ".tmp" not in prompt
+    assert "api_key" not in prompt
+    assert "secret" not in prompt
+    assert "token" not in prompt
+    assert "password" not in prompt
+    assert "request_text" not in safe_context
+    assert "extracted_claim" not in safe_context["claim_summary"]
+    assert result["counters"]["gemini_architect_raw_text_blocked_count"] == 1
+
+
+def test_gemini_architect_invalid_graphs_fail_before_executor() -> None:
+    def cycle(context):
+        payload = _valid_gemini_architect_proposal(context)
+        node_id = payload["nodes"][0]["node_id"]
+        payload["edges"] = [{"from": node_id, "to": node_id}]
+        return payload
+
+    def final_output_field(context):
+        payload = _valid_gemini_architect_proposal(context)
+        payload["nodes"][0]["final_output"] = {"status": "forbidden"}
+        return payload
+
+    def connector_command(context):
+        payload = _valid_gemini_architect_proposal(context)
+        payload["nodes"][0]["connector_command"] = "call bank connector"
+        return payload
+
+    for factory in (cycle, final_output_field, connector_command):
+        result = runner.run_full_semantic_e2e(
+            env=_gemini_architect_env(),
+            architect_provider=_gemini_architect_provider(factory),
+        )
+        assert result["final_status"] == "FAIL_CLOSED"
+        assert result["counters"]["gemini_architect_plan_graph_rejected_count"] == 1
+        assert result["fractal_executor_context"] == {}
+        assert result["counters"]["payment_executed_count"] == 0
+        assert result["counters"]["shipment_released_count"] == 0
+        assert result["counters"]["connector_called_count"] == 0
+
+
+def test_dual_gemini_orchestrator_and_architect_gate_is_not_supported() -> None:
+    env = _gemini_architect_env(**{runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR: "1"})
+    result = runner.run_full_semantic_e2e(
+        env=env,
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(context)
+        ),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context)
+        ),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "dual_gemini_not_supported" in result["validation_errors"]
+    assert counters["bounded_gemini_orchestrator_role_started_count"] == 0
+    assert counters["bounded_gemini_architect_role_started_count"] == 0
+    assert counters["bounded_gemini_actor_role_started_count"] == 0
+    assert counters["gemini_architect_plan_graph_rejected_count"] == 1
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
 
 
 def test_plangraph_is_real_structured_output_from_architect_and_contract_validator() -> None:

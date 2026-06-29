@@ -38,6 +38,7 @@ SLICE1_OLD = "2026-01-01T00:00:00+00:00"
 SUPPLIER_PAYMENT_DOMAIN = "supplier_payment_shipment"
 ENV_FULL_E2E_LIVE_EVIDENCE = "HEDGEHOG_FULL_E2E_LIVE_EVIDENCE"
 ENV_FULL_E2E_GEMINI_ORCHESTRATOR = "HEDGEHOG_FULL_E2E_GEMINI_ORCHESTRATOR"
+ENV_FULL_E2E_GEMINI_ARCHITECT = "HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT"
 
 GEMINI_ORCHESTRATOR_COUNTER_KEYS = (
     "bounded_gemini_orchestrator_role_started_count",
@@ -60,6 +61,31 @@ GEMINI_ORCHESTRATOR_COUNTER_KEYS = (
     "gemini_orchestrator_plan_graph_claim_blocked_count",
     "gemini_orchestrator_bypassed_avf_blocked_count",
     "gemini_orchestrator_bypassed_root_blocked_count",
+)
+
+GEMINI_ARCHITECT_COUNTER_KEYS = (
+    "bounded_gemini_architect_role_started_count",
+    "gemini_architect_model_call_count",
+    "gemini_architect_network_used_count",
+    "gemini_architect_proposal_created_count",
+    "gemini_architect_proposal_validated_count",
+    "gemini_architect_plan_graph_proposal_created_count",
+    "gemini_architect_plan_graph_contract_validated_count",
+    "gemini_architect_plan_graph_allowed_count",
+    "gemini_architect_plan_graph_rejected_count",
+    "gemini_architect_node_vector_subset_validated_count",
+    "gemini_architect_raw_text_blocked_count",
+    "gemini_architect_authority_claim_blocked_count",
+    "gemini_architect_truth_claim_blocked_count",
+    "gemini_architect_action_claim_blocked_count",
+    "gemini_architect_final_output_claim_blocked_count",
+    "gemini_architect_connector_claim_blocked_count",
+    "gemini_architect_drs_write_claim_blocked_count",
+    "gemini_architect_root_bypass_claim_blocked_count",
+    "gemini_architect_orchestrator_bypass_claim_blocked_count",
+    "gemini_architect_unvalidated_plan_graph_blocked_count",
+    "gemini_architect_disallowed_executor_blocked_count",
+    "gemini_architect_disallowed_vector_blocked_count",
 )
 
 STAGES = (
@@ -128,6 +154,7 @@ COUNTER_KEYS = (
     "provider_output_used_as_authority_count",
     "bounded_gemini_actor_role_started_count",
     *GEMINI_ORCHESTRATOR_COUNTER_KEYS,
+    *GEMINI_ARCHITECT_COUNTER_KEYS,
     "live_evidence_root_final_authority_preserved_count",
     "semantic_claim_created_count",
     "semantic_claim_candidate_only_count",
@@ -316,6 +343,62 @@ GEMINI_ORCHESTRATOR_FORBIDDEN_PROMPT_MARKERS = (
     "raw_user_text",
 )
 
+GEMINI_ARCHITECT_REQUIRED_FIELDS = (
+    "proposal_id",
+    "proposal_role",
+    "source_packet_id",
+    "plan_graph_proposal_id",
+    "selected_vector_ids",
+    "nodes",
+    "edges",
+    "executor_assignments",
+    "time_assumptions",
+    "required_validators",
+    "confidence",
+    "reason",
+    "needs_review",
+    "uncertainty_notes",
+    "authority_claimed",
+    "truth_claimed",
+    "action_permission_claimed",
+    "final_output_claimed",
+    "connector_command_claimed",
+    "drs_write_claimed",
+    "root_bypass_claimed",
+    "orchestrator_bypass_claimed",
+    "unvalidated_plan_graph_claimed",
+    "root_review_required",
+)
+
+GEMINI_ARCHITECT_REQUIRED_VALIDATORS = (
+    "AVF",
+    "PlanGraph contract",
+    "Post V&V",
+    "GT/LGT",
+    "Root final authority",
+)
+
+GEMINI_ARCHITECT_ALLOWED_EXECUTOR_IDS = ("exec_mock_certificate",)
+GEMINI_ARCHITECT_ALLOWED_EXECUTOR_MODES = ("simulate",)
+
+GEMINI_ARCHITECT_FORBIDDEN_PROMPT_MARKERS = (
+    "ignore all boundaries",
+    ".tmp",
+    "api_key",
+    "secret",
+    "token",
+    "password",
+    "raw_user_text",
+)
+
+GEMINI_ARCHITECT_FORBIDDEN_PLAN_MARKERS = (
+    "connector",
+    "payment_executed",
+    "shipment_released",
+    "release shipment",
+    "execute payment",
+)
+
 ProviderCallable = Callable[[str, str, int, Mapping[str, str]], str]
 
 
@@ -433,11 +516,26 @@ def _full_e2e_gemini_orchestrator_enabled(env: Mapping[str, str]) -> bool:
     return env.get(ENV_FULL_E2E_GEMINI_ORCHESTRATOR) == "1"
 
 
+def _full_e2e_gemini_architect_enabled(env: Mapping[str, str]) -> bool:
+    return env.get(ENV_FULL_E2E_GEMINI_ARCHITECT) == "1"
+
+
 def _orchestrator_provider_name(env: Mapping[str, str]) -> str:
     return env.get(provider_adapter.ENV_PROVIDER_NAME, "gemini").strip().lower() or "gemini"
 
 
 def _orchestrator_model_name(env: Mapping[str, str]) -> str:
+    return (
+        env.get(provider_adapter.ENV_PROVIDER_MODEL, "").strip()
+        or "gemini-2.5-flash"
+    )
+
+
+def _architect_provider_name(env: Mapping[str, str]) -> str:
+    return env.get(provider_adapter.ENV_PROVIDER_NAME, "gemini").strip().lower() or "gemini"
+
+
+def _architect_model_name(env: Mapping[str, str]) -> str:
     return (
         env.get(provider_adapter.ENV_PROVIDER_MODEL, "").strip()
         or "gemini-2.5-flash"
@@ -839,6 +937,10 @@ def _apply_spine_counters(
         counters,
         slice2_result.get("gemini_orchestrator_context") or {},
     )
+    _apply_gemini_architect_counters(
+        counters,
+        slice2_result.get("gemini_architect_context") or {},
+    )
 
 
 def _apply_slice1_counters(
@@ -885,6 +987,22 @@ def _apply_gemini_orchestrator_counters(
     if counters["gemini_orchestrator_model_call_count"] == 1:
         counters["live_model_call_count"] = max(counters["live_model_call_count"], 1)
     if counters["gemini_orchestrator_network_used_count"] == 1:
+        counters["network_used_count"] = max(counters["network_used_count"], 1)
+        counters["gemini_called_count"] = max(counters["gemini_called_count"], 1)
+
+
+def _apply_gemini_architect_counters(
+    counters: dict[str, int],
+    gemini_context: Mapping[str, Any],
+) -> None:
+    gemini_counters = gemini_context.get("counters") or {}
+    for key in GEMINI_ARCHITECT_COUNTER_KEYS:
+        counters[key] = int(gemini_counters.get(key, 0))
+    if counters["bounded_gemini_architect_role_started_count"] == 1:
+        counters["bounded_gemini_actor_role_started_count"] = 1
+    if counters["gemini_architect_model_call_count"] == 1:
+        counters["live_model_call_count"] = max(counters["live_model_call_count"], 1)
+    if counters["gemini_architect_network_used_count"] == 1:
         counters["network_used_count"] = max(counters["network_used_count"], 1)
         counters["gemini_called_count"] = max(counters["gemini_called_count"], 1)
 
@@ -1026,7 +1144,7 @@ def _stage_map_success() -> dict[str, dict[str, Any]]:
         "architect": _stage(
             "invoked",
             "advisory",
-            notes="hedgehog.architect.make_plan_graph invoked in deterministic mode; Architect is not Root",
+            notes="Architect stage invoked through deterministic local Architect or locally validated bounded Gemini Architect proposal; Architect is not Root",
         ),
         "plangraph": _stage(
             "invoked",
@@ -1329,6 +1447,34 @@ def _stage_map_gemini_orchestrator_fail_closed() -> dict[str, dict[str, Any]]:
         "fail_closed",
         "advisory",
         notes="bounded Gemini Orchestrator proposal role rejected before deterministic Architect",
+    )
+    return stage_map
+
+
+def _stage_map_gemini_architect_fail_closed() -> dict[str, dict[str, Any]]:
+    stage_map = _stage_map_success()
+    for stage_name in (
+        "fractal_cell_executor_branch",
+        "result_proposal",
+        "post_vv",
+        "gt_lgt",
+        "root_final_output_boundary",
+        "drs_writeback",
+    ):
+        stage_map[stage_name] = _stage(
+            "skipped",
+            "none",
+            notes="skipped because explicit bounded Gemini Architect proposal failed closed before Fractal executor",
+        )
+    stage_map["architect"] = _stage(
+        "fail_closed",
+        "advisory",
+        notes="bounded Gemini Architect proposal role rejected before Fractal executor",
+    )
+    stage_map["plangraph"] = _stage(
+        "fail_closed",
+        "advisory",
+        notes="local PlanGraph adapter / validate_plan_graph_contract rejected the Architect proposal",
     )
     return stage_map
 
@@ -2014,6 +2160,633 @@ def _route_decision_from_gemini_orchestrator(
     }
 
 
+def _safe_gemini_architect_input_context(
+    *,
+    claim: SemanticEvidenceClaim,
+    dirty_request: Mapping[str, Any],
+    route_decision: Mapping[str, Any],
+    attractor_packet: Mapping[str, Any],
+    slice1_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    candidate_report = slice1_result["candidate_report"]
+    advisory_report = slice1_result["advisory_report"]
+    return {
+        "context_kind": "bounded_gemini_architect_input",
+        "request_ref": dirty_request["request_id"],
+        "subject": dirty_request["subject"],
+        "source_packet_id": attractor_packet["packet_id"],
+        "route_context": {
+            "route": route_decision["route"],
+            "route_source": route_decision.get("route_source", "bounded_local_route"),
+            "selected_vector_ids": tuple(route_decision["selected_vector_ids"]),
+            "allowed_vector_ids": tuple(route_decision["allowed_vector_ids"]),
+            "root_review_required": True,
+        },
+        "claim_summary": {
+            "claim_id": claim.claim_id,
+            "source_id": claim.source_id,
+            "confidence": claim.confidence,
+            "candidate_only": True,
+            "truth_claimed": claim.truth_claimed,
+            "authority_claimed": claim.authority_claimed,
+            "action_permission_claimed": claim.action_permission_claimed,
+            "final_output_claimed": claim.final_output_claimed,
+            "root_review_required": claim.root_review_required,
+        },
+        "candidate_vectors": tuple(
+            {
+                "vector_id": vector["vector_id"],
+                "final_viability": vector["final_viability"],
+                "hard_masked": vector["hard_masked"],
+                "soft_mask": vector["soft_mask"],
+                "branching_mode": vector["branching_mode"],
+                "selection_status": vector["selection_status"],
+            }
+            for vector in attractor_packet["candidate_vectors"]
+        ),
+        "candidate_vector_report_summary": {
+            "ranked_vector_ids": tuple(
+                score.vector_id for score in candidate_report.ranked_candidates
+            ),
+            "hard_blocks_present": any(
+                bool(score.hard_blocks) for score in candidate_report.ranked_candidates
+            ),
+        },
+        "avf_advisory_summary": {
+            "recommended_review_route": advisory_report.recommended_review_route,
+            "action_permission_granted": False,
+            "avf_is_authority": False,
+            "advisory_is_root": False,
+        },
+        "blocker_summary": {
+            "legal_hold_present": True,
+            "water_filter_shortage_present": True,
+            "payment_readiness": "blocked_for_root_review",
+            "shipment_readiness": "blocked_for_root_review",
+        },
+        "required_validators": GEMINI_ARCHITECT_REQUIRED_VALIDATORS,
+        "allowed_executor_contract": {
+            "allowed_executor_ids": GEMINI_ARCHITECT_ALLOWED_EXECUTOR_IDS,
+            "allowed_executor_modes": GEMINI_ARCHITECT_ALLOWED_EXECUTOR_MODES,
+        },
+        "plan_graph_constraints": {
+            "proposal_role": "bounded_gemini_architect",
+            "selected_vector_ids_must_be_subset_of_allowed_vector_ids": True,
+            "node_vector_ids_must_be_subset_of_selected_vector_ids": True,
+            "expected_output": "result_proposal",
+            "no_connector_commands": True,
+            "no_payment_or_shipment_release": True,
+            "Gemini Architect is not Root": True,
+            "Gemini Architect is not Orchestrator": True,
+            "Gemini Architect is not Executor": True,
+            "does not create FinalOutput": True,
+            "does not execute actions": True,
+            "does not mutate DRS": True,
+            "Root remains final authority": True,
+        },
+    }
+
+
+def _gemini_architect_prompt(safe_context: Mapping[str, Any]) -> str:
+    skeleton = {
+        "proposal_id": "gemini-architect-proposal-001",
+        "proposal_role": "bounded_gemini_architect",
+        "source_packet_id": safe_context["source_packet_id"],
+        "plan_graph_proposal_id": "plan:gemini-architect-proposal-001",
+        "selected_vector_ids": [],
+        "nodes": [],
+        "edges": [],
+        "executor_assignments": [],
+        "time_assumptions": {
+            "as_of": SLICE1_NOW,
+            "freshness_required": "normal",
+            "assumptions": [
+                "executor outputs must be ResultProposal objects",
+                "candidate vectors were pre-filtered by AVF",
+            ],
+        },
+        "required_validators": list(GEMINI_ARCHITECT_REQUIRED_VALIDATORS),
+        "confidence": 0.0,
+        "reason": "advisory PlanGraph proposal only",
+        "needs_review": True,
+        "uncertainty_notes": [],
+        "authority_claimed": False,
+        "truth_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "root_bypass_claimed": False,
+        "orchestrator_bypass_claimed": False,
+        "unvalidated_plan_graph_claimed": False,
+        "root_review_required": True,
+    }
+    return "\n".join(
+        (
+            "Bounded Gemini Architect proposal role for Hedgehog OS.",
+            "Return JSON only. Return exactly one bounded ArchitectPlanProposal object.",
+            "Use only the structured context below. Do not infer hidden facts.",
+            "Gemini Architect is not Root, Gemini Architect is not Orchestrator, "
+            "and Gemini Architect is not Executor.",
+            "The role may propose PlanGraph structure, but does not create FinalOutput.",
+            "The role does not execute actions and does not mutate DRS.",
+            "Node vector ids must come from selected_vector_ids and allowed_vector_ids.",
+            "Root remains final authority.",
+            "",
+            "Required fields:",
+            "\n".join(f"- {field}" for field in GEMINI_ARCHITECT_REQUIRED_FIELDS),
+            "",
+            "JSON skeleton:",
+            json.dumps(skeleton, indent=2, sort_keys=True),
+            "",
+            "BOUNDED_GEMINI_ARCHITECT_INPUT_JSON:",
+            json.dumps(safe_context, indent=2, sort_keys=True),
+        )
+    )
+
+
+def _call_gemini_architect_provider(
+    prompt: str,
+    model_name: str,
+    timeout_seconds: int,
+    env: Mapping[str, str],
+) -> str:
+    api_key = provider_adapter._gemini_api_key(env)
+    if not api_key:
+        raise provider_adapter.ProviderCaptureError("provider_sdk_or_key_missing")
+    try:
+        from google import genai
+    except ImportError as exc:
+        raise provider_adapter.ProviderCaptureError("provider_sdk_or_key_missing") from exc
+
+    try:
+        client = genai.Client(api_key=api_key)
+        response = client.models.generate_content(
+            model=model_name,
+            contents=prompt,
+            config={
+                "response_mime_type": "application/json",
+                "temperature": 0,
+                "candidate_count": 1,
+            },
+        )
+    except TimeoutError as exc:
+        raise provider_adapter.ProviderTimeoutError("provider_timeout") from exc
+    except Exception as exc:  # pragma: no cover - real provider path only
+        raise provider_adapter.ProviderCaptureError("provider_call_failed") from exc
+
+    parsed = getattr(response, "parsed", None)
+    if isinstance(parsed, dict):
+        return json.dumps(parsed, sort_keys=True)
+    text = getattr(response, "text", None)
+    if not isinstance(text, str) or not text.strip():
+        raise provider_adapter.ProviderCaptureError("provider_empty_response")
+    return text
+
+
+def _parse_gemini_architect_proposal(raw_response: str) -> dict[str, Any]:
+    try:
+        proposal = json.loads(raw_response)
+    except json.JSONDecodeError as exc:
+        raise ValueError("gemini_architect_invalid_json") from exc
+    if not isinstance(proposal, dict):
+        raise ValueError("gemini_architect_response_must_be_object")
+    return proposal
+
+
+def _default_gemini_architect_context() -> dict[str, Any]:
+    return {
+        "role_enabled": False,
+        "provider": None,
+        "model": None,
+        "provider_call_path": "not_started",
+        "proposal_created": False,
+        "proposal_validated": False,
+        "proposal_accepted": False,
+        "proposal_error": None,
+        "proposal": {},
+        "safe_input_context": {},
+        "prompt": "",
+        "adapted_plan_graph": None,
+        "adapted_plan_graph_summary": {},
+        "plan_graph_contract_validation": {},
+        "selected_vector_ids": (),
+        "selected_only_allowed_vectors": False,
+        "node_vector_subset_validated": False,
+        "executor_assignments_allowed": False,
+        "raw_text_blocked": False,
+        "authority_claim_blocked": False,
+        "truth_claim_blocked": False,
+        "action_claim_blocked": False,
+        "final_output_claim_blocked": False,
+        "connector_claim_blocked": False,
+        "drs_write_claim_blocked": False,
+        "root_bypass_claim_blocked": False,
+        "orchestrator_bypass_claim_blocked": False,
+        "unvalidated_plan_graph_blocked": False,
+        "disallowed_executor_blocked": False,
+        "disallowed_vector_blocked": False,
+        "Gemini Architect is not Root": True,
+        "Gemini Architect is not Orchestrator": True,
+        "Gemini Architect is not Executor": True,
+        "does not create FinalOutput": True,
+        "does not execute actions": True,
+        "does not mutate DRS": True,
+        "Root remains final authority": True,
+        "validation_errors": (),
+        "counters": {key: 0 for key in GEMINI_ARCHITECT_COUNTER_KEYS},
+    }
+
+
+def _dual_gemini_not_supported_context() -> dict[str, Any]:
+    context = _default_gemini_architect_context()
+    context["proposal_error"] = "dual_gemini_not_supported"
+    context["validation_errors"] = ("dual_gemini_not_supported",)
+    context["plan_graph_contract_validation"] = {
+        "validated": False,
+        "error": "dual_gemini_not_supported",
+    }
+    context["counters"]["gemini_architect_plan_graph_rejected_count"] = 1
+    return context
+
+
+def _sequence_tuple(value: Any) -> tuple[Any, ...]:
+    if isinstance(value, (list, tuple)):
+        return tuple(value)
+    return ()
+
+
+def _adapt_gemini_architect_proposal_to_plan_graph(
+    proposal: Mapping[str, Any],
+    attractor_packet: Mapping[str, Any],
+) -> dict[str, Any]:
+    nodes = proposal.get("nodes", [])
+    edges = proposal.get("edges", [])
+    executor_assignments = proposal.get("executor_assignments", [])
+    time_assumptions = proposal.get("time_assumptions")
+    if not isinstance(nodes, list):
+        nodes = []
+    if not isinstance(edges, list):
+        edges = []
+    if not isinstance(executor_assignments, list):
+        executor_assignments = []
+    if not isinstance(time_assumptions, dict):
+        time_assumptions = {
+            "as_of": SLICE1_NOW,
+            "freshness_required": "normal",
+            "assumptions": [
+                "executor outputs must be ResultProposal objects",
+                "candidate vectors were pre-filtered by AVF",
+            ],
+        }
+    return {
+        "plan_id": str(
+            proposal.get("plan_graph_proposal_id")
+            or f"plan:{attractor_packet['packet_id']}:gemini_architect"
+        ),
+        "source_packet_id": str(
+            proposal.get("source_packet_id") or attractor_packet["packet_id"]
+        ),
+        "time_assumptions": time_assumptions,
+        "nodes": nodes,
+        "edges": edges,
+        "executor_assignments": executor_assignments,
+        "request_id": attractor_packet.get("request_id"),
+    }
+
+
+def _executor_assignments_allowed(plan_graph: Mapping[str, Any]) -> bool:
+    nodes = plan_graph.get("nodes", ())
+    assignments = plan_graph.get("executor_assignments", ())
+    node_executor_ids = {
+        node.get("executor_id") for node in nodes if isinstance(node, Mapping)
+    }
+    assignment_executor_ids = {
+        assignment.get("executor_id")
+        for assignment in assignments
+        if isinstance(assignment, Mapping)
+    }
+    assignment_modes = {
+        assignment.get("mode")
+        for assignment in assignments
+        if isinstance(assignment, Mapping)
+    }
+    return (
+        bool(assignments)
+        and node_executor_ids.issubset(set(GEMINI_ARCHITECT_ALLOWED_EXECUTOR_IDS))
+        and assignment_executor_ids.issubset(set(GEMINI_ARCHITECT_ALLOWED_EXECUTOR_IDS))
+        and assignment_modes.issubset(set(GEMINI_ARCHITECT_ALLOWED_EXECUTOR_MODES))
+    )
+
+
+def _plan_graph_has_forbidden_command_surface(plan_graph: Mapping[str, Any]) -> bool:
+    return any(
+        _contains_text(plan_graph, marker)
+        for marker in GEMINI_ARCHITECT_FORBIDDEN_PLAN_MARKERS
+    )
+
+
+def _validate_gemini_architect_proposal(
+    proposal: Mapping[str, Any],
+    *,
+    safe_context: Mapping[str, Any],
+    prompt: str,
+    attractor_packet: Mapping[str, Any],
+) -> dict[str, Any]:
+    errors: list[str] = []
+    counters = {key: 0 for key in GEMINI_ARCHITECT_COUNTER_KEYS}
+    counters["bounded_gemini_architect_role_started_count"] = 1
+    counters["gemini_architect_proposal_created_count"] = 1
+
+    missing = [field for field in GEMINI_ARCHITECT_REQUIRED_FIELDS if field not in proposal]
+    if missing:
+        errors.extend(f"missing_required_field:{field}" for field in missing)
+
+    allowed_vector_ids = tuple(safe_context["route_context"]["allowed_vector_ids"])
+    selected_vector_ids = _sequence_tuple(proposal.get("selected_vector_ids", ()))
+    selected_only_allowed = bool(selected_vector_ids) and set(selected_vector_ids).issubset(
+        set(allowed_vector_ids)
+    )
+    if selected_only_allowed:
+        counters["gemini_architect_node_vector_subset_validated_count"] = 0
+    else:
+        counters["gemini_architect_disallowed_vector_blocked_count"] = 1
+        errors.append("selected_vector_ids_must_be_subset_of_allowed_vector_ids")
+
+    raw_text_blocked = not any(
+        _contains_text(prompt, marker)
+        for marker in GEMINI_ARCHITECT_FORBIDDEN_PROMPT_MARKERS
+    )
+    if raw_text_blocked:
+        counters["gemini_architect_raw_text_blocked_count"] = 1
+    else:
+        errors.append("raw_text_entered_gemini_architect_input")
+
+    if proposal.get("proposal_role") != "bounded_gemini_architect":
+        errors.append("proposal_role_must_be_bounded_gemini_architect")
+    if proposal.get("source_packet_id") != safe_context["source_packet_id"]:
+        errors.append("source_packet_id_must_match_attractor_packet")
+    if proposal.get("root_review_required") is not True:
+        errors.append("root_review_required_must_be_true")
+
+    raw_validators = tuple(str(item) for item in _sequence_tuple(proposal.get("required_validators", ())))
+    missing_validators = [
+        validator
+        for validator in GEMINI_ARCHITECT_REQUIRED_VALIDATORS
+        if validator not in raw_validators
+    ]
+    if missing_validators:
+        errors.extend(f"missing_required_validator:{item}" for item in missing_validators)
+
+    authority_claim_blocked = _proposal_bool(proposal, "authority_claimed")
+    truth_claim_blocked = _proposal_bool(proposal, "truth_claimed")
+    action_claim_blocked = _proposal_bool(proposal, "action_permission_claimed")
+    final_output_claim_blocked = _proposal_bool(proposal, "final_output_claimed")
+    connector_claim_blocked = _proposal_bool(proposal, "connector_command_claimed")
+    drs_write_claim_blocked = _proposal_bool(proposal, "drs_write_claimed")
+    root_bypass_claim_blocked = _proposal_bool(proposal, "root_bypass_claimed")
+    orchestrator_bypass_claim_blocked = _proposal_bool(
+        proposal,
+        "orchestrator_bypass_claimed",
+    )
+    unvalidated_plan_graph_blocked = _proposal_bool(
+        proposal,
+        "unvalidated_plan_graph_claimed",
+    )
+    blocked_flags = {
+        "authority_claim_forbidden": authority_claim_blocked,
+        "truth_claim_forbidden": truth_claim_blocked,
+        "action_permission_claim_forbidden": action_claim_blocked,
+        "final_output_claim_forbidden": final_output_claim_blocked,
+        "connector_command_claim_forbidden": connector_claim_blocked,
+        "drs_write_claim_forbidden": drs_write_claim_blocked,
+        "root_bypass_claim_forbidden": root_bypass_claim_blocked,
+        "orchestrator_bypass_claim_forbidden": orchestrator_bypass_claim_blocked,
+        "unvalidated_plan_graph_claim_forbidden": unvalidated_plan_graph_blocked,
+    }
+    for error, blocked in blocked_flags.items():
+        if blocked:
+            errors.append(error)
+
+    counters["gemini_architect_authority_claim_blocked_count"] = int(
+        authority_claim_blocked
+    )
+    counters["gemini_architect_truth_claim_blocked_count"] = int(truth_claim_blocked)
+    counters["gemini_architect_action_claim_blocked_count"] = int(action_claim_blocked)
+    counters["gemini_architect_final_output_claim_blocked_count"] = int(
+        final_output_claim_blocked
+    )
+    counters["gemini_architect_connector_claim_blocked_count"] = int(
+        connector_claim_blocked
+    )
+    counters["gemini_architect_drs_write_claim_blocked_count"] = int(
+        drs_write_claim_blocked
+    )
+    counters["gemini_architect_root_bypass_claim_blocked_count"] = int(
+        root_bypass_claim_blocked
+    )
+    counters["gemini_architect_orchestrator_bypass_claim_blocked_count"] = int(
+        orchestrator_bypass_claim_blocked
+    )
+    counters["gemini_architect_unvalidated_plan_graph_blocked_count"] = int(
+        unvalidated_plan_graph_blocked
+    )
+
+    adapted_plan_graph = _adapt_gemini_architect_proposal_to_plan_graph(
+        proposal,
+        attractor_packet,
+    )
+    counters["gemini_architect_plan_graph_proposal_created_count"] = int(
+        bool(adapted_plan_graph.get("nodes"))
+    )
+
+    node_vector_ids = tuple(
+        node.get("vector_id")
+        for node in adapted_plan_graph.get("nodes", ())
+        if isinstance(node, Mapping)
+    )
+    node_vector_subset_validated = (
+        bool(node_vector_ids)
+        and set(node_vector_ids).issubset(set(selected_vector_ids))
+        and set(node_vector_ids).issubset(set(allowed_vector_ids))
+    )
+    if node_vector_subset_validated:
+        counters["gemini_architect_node_vector_subset_validated_count"] = 1
+    else:
+        counters["gemini_architect_disallowed_vector_blocked_count"] = 1
+        errors.append("node_vector_ids_must_be_subset_of_selected_and_allowed_vectors")
+
+    executor_assignments_allowed = _executor_assignments_allowed(adapted_plan_graph)
+    if not executor_assignments_allowed:
+        counters["gemini_architect_disallowed_executor_blocked_count"] = 1
+        errors.append("executor_assignments_must_use_allowed_executor_contract")
+
+    command_surface_present = _plan_graph_has_forbidden_command_surface(adapted_plan_graph)
+    if command_surface_present:
+        errors.append("connector_payment_or_shipment_command_surface_forbidden")
+
+    contract_validation: dict[str, Any]
+    try:
+        validate_plan_graph_contract(dict(adapted_plan_graph), dict(attractor_packet))
+        _validate_slice2_plan_graph(adapted_plan_graph, attractor_packet)
+    except ValueError as exc:
+        contract_validation = {
+            "validated": False,
+            "error": str(exc),
+            "implementation": "hedgehog.llm_architect.validate_plan_graph_contract",
+        }
+        counters["gemini_architect_unvalidated_plan_graph_blocked_count"] = 1
+        errors.append(str(exc))
+    else:
+        contract_validation = {
+            "validated": True,
+            "error": None,
+            "implementation": "hedgehog.llm_architect.validate_plan_graph_contract",
+        }
+        counters["gemini_architect_plan_graph_contract_validated_count"] = 1
+
+    accepted = not errors and contract_validation["validated"]
+    if accepted:
+        counters["gemini_architect_proposal_validated_count"] = 1
+        counters["gemini_architect_plan_graph_allowed_count"] = 1
+    else:
+        counters["gemini_architect_plan_graph_rejected_count"] = 1
+
+    summary = {
+        "plan_id": adapted_plan_graph.get("plan_id"),
+        "source_packet_id": adapted_plan_graph.get("source_packet_id"),
+        "node_count": len(adapted_plan_graph.get("nodes", ())),
+        "edge_count": len(adapted_plan_graph.get("edges", ())),
+        "created_by": "bounded_gemini_architect_proposal_local_adapter",
+        "validated_by": "hedgehog.llm_architect.validate_plan_graph_contract",
+    }
+    return {
+        "proposal_created": True,
+        "proposal_validated": accepted,
+        "proposal_accepted": accepted,
+        "proposal_error": None if accepted else "gemini_architect_proposal_rejected",
+        "validation_errors": tuple(errors),
+        "adapted_plan_graph": adapted_plan_graph if accepted else None,
+        "adapted_plan_graph_summary": summary,
+        "plan_graph_contract_validation": contract_validation,
+        "selected_vector_ids": selected_vector_ids,
+        "selected_only_allowed_vectors": selected_only_allowed,
+        "node_vector_subset_validated": node_vector_subset_validated,
+        "executor_assignments_allowed": executor_assignments_allowed,
+        "raw_text_blocked": raw_text_blocked,
+        "authority_claim_blocked": authority_claim_blocked,
+        "truth_claim_blocked": truth_claim_blocked,
+        "action_claim_blocked": action_claim_blocked,
+        "final_output_claim_blocked": final_output_claim_blocked,
+        "connector_claim_blocked": connector_claim_blocked,
+        "drs_write_claim_blocked": drs_write_claim_blocked,
+        "root_bypass_claim_blocked": root_bypass_claim_blocked,
+        "orchestrator_bypass_claim_blocked": orchestrator_bypass_claim_blocked,
+        "unvalidated_plan_graph_blocked": unvalidated_plan_graph_blocked
+        or not contract_validation["validated"],
+        "disallowed_executor_blocked": not executor_assignments_allowed,
+        "disallowed_vector_blocked": not (
+            selected_only_allowed and node_vector_subset_validated
+        ),
+        "counters": counters,
+    }
+
+
+def _evaluate_gemini_architect_role(
+    *,
+    env: Mapping[str, str],
+    provider: ProviderCallable | None,
+    claim: SemanticEvidenceClaim,
+    dirty_request: Mapping[str, Any],
+    route_decision: Mapping[str, Any],
+    attractor_packet: Mapping[str, Any],
+    slice1_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    if not _full_e2e_gemini_architect_enabled(env):
+        return _default_gemini_architect_context()
+
+    context = _default_gemini_architect_context()
+    context["role_enabled"] = True
+    context["provider"] = _architect_provider_name(env)
+    context["model"] = _architect_model_name(env)
+    context["provider_call_path"] = (
+        "injected_architect_provider"
+        if provider is not None
+        else "real_gemini_architect_provider"
+    )
+    context["counters"]["bounded_gemini_architect_role_started_count"] = 1
+
+    if context["provider"] != "gemini":
+        context["provider_call_path"] = "real_gemini_architect_provider_failed"
+        context["proposal_error"] = "gemini_architect_provider_must_be_gemini"
+        context["validation_errors"] = ("gemini_architect_provider_must_be_gemini",)
+        context["counters"]["gemini_architect_plan_graph_rejected_count"] = 1
+        return context
+
+    safe_context = _safe_gemini_architect_input_context(
+        claim=claim,
+        dirty_request=dirty_request,
+        route_decision=route_decision,
+        attractor_packet=attractor_packet,
+        slice1_result=slice1_result,
+    )
+    prompt = _gemini_architect_prompt(safe_context)
+    context["safe_input_context"] = safe_context
+    context["prompt"] = prompt
+    context["raw_text_blocked"] = not any(
+        _contains_text(prompt, marker)
+        for marker in GEMINI_ARCHITECT_FORBIDDEN_PROMPT_MARKERS
+    )
+    context["counters"]["gemini_architect_raw_text_blocked_count"] = int(
+        context["raw_text_blocked"]
+    )
+
+    try:
+        raw_response = (
+            provider
+            if provider is not None
+            else _call_gemini_architect_provider
+        )(
+            prompt,
+            str(context["model"]),
+            provider_adapter._timeout_seconds(env),
+            env,
+        )
+        if provider is None:
+            context["counters"]["gemini_architect_model_call_count"] = 1
+            context["counters"]["gemini_architect_network_used_count"] = 1
+        proposal = _parse_gemini_architect_proposal(raw_response)
+    except provider_adapter.ProviderCaptureError as exc:
+        reason = _provider_capture_reason(exc)
+        if provider is None:
+            context["provider_call_path"] = "real_gemini_architect_provider_failed"
+        context["proposal_error"] = reason
+        context["validation_errors"] = (reason,)
+        context["counters"]["gemini_architect_plan_graph_rejected_count"] = 1
+        return context
+    except (TypeError, ValueError) as exc:
+        if provider is None:
+            context["provider_call_path"] = "real_gemini_architect_provider_failed"
+        context["proposal_error"] = str(exc)
+        context["validation_errors"] = (str(exc),)
+        context["counters"]["gemini_architect_plan_graph_rejected_count"] = 1
+        return context
+
+    context["proposal"] = proposal
+    validation = _validate_gemini_architect_proposal(
+        proposal,
+        safe_context=safe_context,
+        prompt=prompt,
+        attractor_packet=attractor_packet,
+    )
+    merged_counters = dict(context["counters"])
+    for key, value in validation["counters"].items():
+        merged_counters[key] = max(int(merged_counters.get(key, 0)), int(value))
+    validation = {**validation, "counters": merged_counters}
+    context.update(validation)
+    return context
+
+
 def _bounded_route_decision(
     dirty_request: Mapping[str, Any],
     slice1_result: Mapping[str, Any],
@@ -2212,8 +2985,24 @@ def _run_slice2_core_primitives(
     *,
     env: Mapping[str, str],
     orchestrator_provider: ProviderCallable | None,
+    architect_provider: ProviderCallable | None,
 ) -> dict[str, Any]:
     route_decision = _bounded_route_decision(dirty_request, slice1_result)
+    if (
+        _full_e2e_gemini_orchestrator_enabled(env)
+        and _full_e2e_gemini_architect_enabled(env)
+    ):
+        gemini_architect_context = _dual_gemini_not_supported_context()
+        return {
+            "final_status": "FAIL_CLOSED",
+            "fail_closed_stage": "gemini_architect",
+            "route_decision": route_decision,
+            "gemini_orchestrator_context": _default_gemini_orchestrator_context(),
+            "gemini_architect_context": gemini_architect_context,
+            "validation_errors": tuple(
+                gemini_architect_context.get("validation_errors", ())
+            ),
+        }
     gemini_orchestrator_context = _evaluate_gemini_orchestrator_role(
         env=env,
         provider=orchestrator_provider,
@@ -2226,8 +3015,10 @@ def _run_slice2_core_primitives(
         if not gemini_orchestrator_context["proposal_accepted"]:
             return {
                 "final_status": "FAIL_CLOSED",
+                "fail_closed_stage": "gemini_orchestrator",
                 "route_decision": route_decision,
                 "gemini_orchestrator_context": gemini_orchestrator_context,
+                "gemini_architect_context": _default_gemini_architect_context(),
                 "validation_errors": tuple(
                     gemini_orchestrator_context.get("validation_errors", ())
                 ),
@@ -2237,11 +3028,35 @@ def _run_slice2_core_primitives(
             gemini_orchestrator_context,
         )
     attractor_packet = _attractor_packet_from_bounded_route(route_decision)
-    plan_graph = make_plan_graph(
-        attractor_packet,
-        architect_provider="deterministic",
-        allow_config=False,
+    gemini_architect_context = _evaluate_gemini_architect_role(
+        env=env,
+        provider=architect_provider,
+        claim=claim,
+        dirty_request=dirty_request,
+        route_decision=route_decision,
+        attractor_packet=attractor_packet,
+        slice1_result=slice1_result,
     )
+    if gemini_architect_context["role_enabled"]:
+        if not gemini_architect_context["proposal_accepted"]:
+            return {
+                "final_status": "FAIL_CLOSED",
+                "fail_closed_stage": "gemini_architect",
+                "route_decision": route_decision,
+                "gemini_orchestrator_context": gemini_orchestrator_context,
+                "gemini_architect_context": gemini_architect_context,
+                "attractor_packet": attractor_packet,
+                "validation_errors": tuple(
+                    gemini_architect_context.get("validation_errors", ())
+                ),
+            }
+        plan_graph = dict(gemini_architect_context["adapted_plan_graph"])
+    else:
+        plan_graph = make_plan_graph(
+            attractor_packet,
+            architect_provider="deterministic",
+            allow_config=False,
+        )
     _validate_slice2_plan_graph(plan_graph, attractor_packet)
     hardening_checks = _probe_slice2_hardening_checks(
         attractor_packet,
@@ -2257,6 +3072,7 @@ def _run_slice2_core_primitives(
     return {
         "route_decision": route_decision,
         "gemini_orchestrator_context": gemini_orchestrator_context,
+        "gemini_architect_context": gemini_architect_context,
         "attractor_packet": attractor_packet,
         "plan_graph": plan_graph,
         "dag_runner_report": dag_runner_report,
@@ -2312,6 +3128,45 @@ def _bounded_orchestrator_context(slice2_result: Mapping[str, Any]) -> dict[str,
 
 
 def _architect_context(slice2_result: Mapping[str, Any]) -> dict[str, Any]:
+    gemini_context = slice2_result.get("gemini_architect_context") or (
+        _default_gemini_architect_context()
+    )
+    if gemini_context.get("role_enabled"):
+        return {
+            "implementation": (
+                "bounded Gemini Architect proposal envelope + local PlanGraph adapter"
+            ),
+            "architect_provider": "bounded_gemini_architect",
+            "allow_config": False,
+            "input_shape": "bounded_attractor_packet_from_slice1_vectors",
+            "input_packet_id": slice2_result["attractor_packet"]["packet_id"],
+            "provider_call_path": gemini_context["provider_call_path"],
+            "proposal_id": gemini_context["proposal"].get("proposal_id"),
+            "plan_graph_proposal_id": gemini_context["proposal"].get(
+                "plan_graph_proposal_id"
+            ),
+            "proposal_validated": gemini_context["proposal_validated"],
+            "consumed_raw_provider_text": False,
+            "consumed_raw_user_text": False,
+            "proposal": "PlanGraph candidate only",
+            "creates_final_output": False,
+            "plan_graph_created": True,
+            "Gemini Architect is not Root": gemini_context[
+                "Gemini Architect is not Root"
+            ],
+            "Gemini Architect is not Orchestrator": gemini_context[
+                "Gemini Architect is not Orchestrator"
+            ],
+            "Gemini Architect is not Executor": gemini_context[
+                "Gemini Architect is not Executor"
+            ],
+            "does not create FinalOutput": gemini_context[
+                "does not create FinalOutput"
+            ],
+            "Root remains final authority": gemini_context[
+                "Root remains final authority"
+            ],
+        }
     return {
         "implementation": "hedgehog.architect.make_plan_graph",
         "architect_provider": "deterministic",
@@ -2329,16 +3184,23 @@ def _architect_context(slice2_result: Mapping[str, Any]) -> dict[str, Any]:
 def _plangraph_context(slice2_result: Mapping[str, Any]) -> dict[str, Any]:
     plan_graph = slice2_result["plan_graph"]
     attractor_packet = slice2_result["attractor_packet"]
+    gemini_context = slice2_result.get("gemini_architect_context") or (
+        _default_gemini_architect_context()
+    )
+    created_by = (
+        "bounded_gemini_architect_proposal_local_adapter"
+        if gemini_context.get("role_enabled")
+        else "hedgehog.architect.make_plan_graph"
+    )
     allowed_vector_ids = tuple(
         vector["vector_id"] for vector in attractor_packet["candidate_vectors"]
     )
     return {
         "implementation": (
-            "hedgehog.architect.make_plan_graph + "
-            "hedgehog.llm_architect.validate_plan_graph_contract"
+            f"{created_by} + hedgehog.llm_architect.validate_plan_graph_contract"
         ),
         "plangraph_id": plan_graph["plan_id"],
-        "created_by": "hedgehog.architect.make_plan_graph",
+        "created_by": created_by,
         "validated_by": "hedgehog.llm_architect.validate_plan_graph_contract",
         "contract_validated": True,
         "dag_validated": True,
@@ -2809,6 +3671,7 @@ def _result(
     advisory_context: Mapping[str, Any] | None = None,
     bounded_orchestrator_context: Mapping[str, Any] | None = None,
     gemini_orchestrator_context: Mapping[str, Any] | None = None,
+    gemini_architect_context: Mapping[str, Any] | None = None,
     architect_context: Mapping[str, Any] | None = None,
     plangraph_context: Mapping[str, Any] | None = None,
     fractal_executor_context: Mapping[str, Any] | None = None,
@@ -2836,6 +3699,7 @@ def _result(
         "advisory_context": dict(advisory_context or {}),
         "bounded_orchestrator_context": dict(bounded_orchestrator_context or {}),
         "gemini_orchestrator_context": dict(gemini_orchestrator_context or {}),
+        "gemini_architect_context": dict(gemini_architect_context or {}),
         "architect_context": dict(architect_context or {}),
         "plangraph_context": dict(plangraph_context or {}),
         "fractal_executor_context": dict(fractal_executor_context or {}),
@@ -2876,6 +3740,7 @@ def run_full_semantic_e2e(
     *,
     provider: ProviderCallable | None = None,
     orchestrator_provider: ProviderCallable | None = None,
+    architect_provider: ProviderCallable | None = None,
 ) -> dict[str, Any]:
     observed_env = env if env is not None else os.environ
     dirty_request = _dirty_business_request()
@@ -2906,6 +3771,7 @@ def run_full_semantic_e2e(
         slice1_result,
         env=observed_env,
         orchestrator_provider=orchestrator_provider,
+        architect_provider=architect_provider,
     )
     if slice2_result.get("final_status") == "FAIL_CLOSED":
         _apply_slice1_counters(counters, slice1_result)
@@ -2913,13 +3779,25 @@ def run_full_semantic_e2e(
             counters,
             slice2_result.get("gemini_orchestrator_context") or {},
         )
+        _apply_gemini_architect_counters(
+            counters,
+            slice2_result.get("gemini_architect_context") or {},
+        )
+        if slice2_result.get("fail_closed_stage") == "gemini_architect":
+            counters["bounded_orchestrator_invoked_count"] = 1
+            counters["bounded_route_created_count"] = 1
         bounded_orchestrator = _bounded_orchestrator_context(slice2_result)
         errors = tuple(slice2_result.get("validation_errors", ()))
+        fail_stage = slice2_result.get("fail_closed_stage")
         return _result(
             final_status="FAIL_CLOSED",
             counters=counters,
             scenarios=_failure_scenarios(errors),
-            stage_map=_stage_map_gemini_orchestrator_fail_closed(),
+            stage_map=(
+                _stage_map_gemini_architect_fail_closed()
+                if fail_stage == "gemini_architect"
+                else _stage_map_gemini_orchestrator_fail_closed()
+            ),
             dirty_business_request=dirty_request,
             semantic_evidence_claim=_claim_summary(claim),
             supplier_payment_context=supplier_result["supplier_context"],
@@ -2930,6 +3808,10 @@ def run_full_semantic_e2e(
             bounded_orchestrator_context=bounded_orchestrator,
             gemini_orchestrator_context=slice2_result.get(
                 "gemini_orchestrator_context",
+                {},
+            ),
+            gemini_architect_context=slice2_result.get(
+                "gemini_architect_context",
                 {},
             ),
             validation_errors=errors,
@@ -2982,6 +3864,7 @@ def run_full_semantic_e2e(
         advisory_context=advisory,
         bounded_orchestrator_context=bounded_orchestrator,
         gemini_orchestrator_context=slice2_result.get("gemini_orchestrator_context", {}),
+        gemini_architect_context=slice2_result.get("gemini_architect_context", {}),
         architect_context=architect,
         plangraph_context=plangraph,
         fractal_executor_context=fractal_executor,
@@ -3039,6 +3922,7 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         "Bounded route / Architect / PlanGraph / Fractal executor:",
         str(result["bounded_orchestrator_context"]),
         str(result["gemini_orchestrator_context"]),
+        str(result["gemini_architect_context"]),
         str(result["architect_context"]),
         str(result["plangraph_context"]),
         str(result["fractal_executor_context"]),
@@ -3078,8 +3962,12 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         "Gemini is not Root",
         "Gemini is not Architect",
         "Gemini is not Executor",
+        "Gemini Architect is not Root",
+        "Gemini Architect is not Orchestrator",
+        "Gemini Architect is not Executor",
         "bounded Gemini Orchestrator role does not create PlanGraph",
         "bounded Gemini Orchestrator role does not create FinalOutput",
+        "bounded Gemini Architect role does not create FinalOutput",
         "PlanGraph is not authority",
         "Executor is not Root",
         "Fractal child branch is not Root",

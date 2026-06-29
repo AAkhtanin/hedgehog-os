@@ -896,6 +896,41 @@ def test_explicit_fake_gemini_architect_valid_proposal_is_locally_validated() ->
     assert result["counters"]["root_final_authority_preserved_count"] == 1
 
 
+def test_gemini_architect_prompt_contains_exact_plangraph_contract_fields() -> None:
+    captured = {}
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(context),
+            captured=captured,
+        ),
+    )
+    prompt = captured["prompt"]
+
+    assert result["final_status"] == "PASS"
+    for required in (
+        "depends_on",
+        "executor_id",
+        "expected_output",
+        "task",
+        "node_ids",
+        '"edges": []',
+        "exec_mock_certificate",
+        "result_proposal",
+        "simulate",
+    ):
+        assert required in prompt
+    for forbidden_shape in (
+        "node_name",
+        "node_role",
+        "node_type",
+        "source_node_id",
+        "target_node_id",
+        "executor_assignments.node_id",
+    ):
+        assert forbidden_shape in prompt
+
+
 def test_gemini_architect_missing_real_provider_fails_closed_without_fallback() -> None:
     result = runner.run_full_semantic_e2e(env=_gemini_architect_env())
     counters = result["counters"]
@@ -998,6 +1033,77 @@ def test_gemini_architect_selected_vector_violation_fails_before_executor() -> N
     assert result["stage_map"]["fractal_cell_executor_branch"]["status"] == "skipped"
     assert result["fractal_executor_context"] == {}
     assert counters["fractal_branch_invoked_count"] == 0
+
+
+def test_gemini_architect_observed_bad_shape_still_fails_closed() -> None:
+    def observed_bad_shape(context):
+        selected = tuple(context["route_context"]["selected_vector_ids"])
+        packet_id = context["source_packet_id"]
+        return {
+            "proposal_id": "observed-bad-gemini-architect-shape",
+            "proposal_role": "bounded_gemini_architect",
+            "source_packet_id": packet_id,
+            "plan_graph_proposal_id": f"plan:{packet_id}:observed_bad_shape",
+            "selected_vector_ids": [selected[0]],
+            "nodes": [
+                {
+                    "node_id": "bad-node-1",
+                    "node_name": "Assess invoice readiness",
+                    "node_role": "planner",
+                    "node_type": "analysis",
+                    "vector_id": selected[0],
+                },
+                {
+                    "node_id": "bad-node-2",
+                    "node_name": "Prepare release proposal",
+                    "node_role": "planner",
+                    "node_type": "analysis",
+                },
+            ],
+            "edges": [{"source_node_id": "bad-node-1", "target_node_id": "bad-node-2"}],
+            "executor_assignments": [
+                {
+                    "executor_id": "exec_mock_certificate",
+                    "node_id": "bad-node-1",
+                    "mode": "simulate",
+                }
+            ],
+            "time_assumptions": {
+                "as_of": runner.SLICE1_NOW,
+                "freshness_required": "normal",
+                "assumptions": [],
+            },
+            "required_validators": list(runner.GEMINI_ARCHITECT_REQUIRED_VALIDATORS),
+            "confidence": 0.7,
+            "reason": "Semantically plausible but not local PlanGraph contract shape.",
+            "needs_review": True,
+            "uncertainty_notes": [],
+            "authority_claimed": False,
+            "truth_claimed": False,
+            "action_permission_claimed": False,
+            "final_output_claimed": False,
+            "connector_command_claimed": False,
+            "drs_write_claimed": False,
+            "root_bypass_claimed": False,
+            "orchestrator_bypass_claimed": False,
+            "unvalidated_plan_graph_claimed": False,
+            "root_review_required": True,
+        }
+
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        architect_provider=_gemini_architect_provider(observed_bad_shape),
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert any("invalid_plan_graph_contract" in error for error in result["validation_errors"])
+    assert any("missing required fields" in error for error in result["validation_errors"])
+    assert result["counters"]["gemini_architect_plan_graph_rejected_count"] == 1
+    assert result["fractal_executor_context"] == {}
+    assert result["stage_map"]["fractal_cell_executor_branch"]["status"] == "skipped"
+    assert result["counters"]["payment_executed_count"] == 0
+    assert result["counters"]["shipment_released_count"] == 0
+    assert result["counters"]["connector_called_count"] == 0
 
 
 def test_gemini_architect_node_vector_violation_fails_before_executor() -> None:

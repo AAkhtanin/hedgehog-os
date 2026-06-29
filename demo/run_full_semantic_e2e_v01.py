@@ -399,6 +399,96 @@ GEMINI_ARCHITECT_FORBIDDEN_PLAN_MARKERS = (
     "execute payment",
 )
 
+GEMINI_ARCHITECT_RESPONSE_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "required": list(GEMINI_ARCHITECT_REQUIRED_FIELDS),
+    "properties": {
+        "proposal_id": {"type": "string"},
+        "proposal_role": {"type": "string", "enum": ["bounded_gemini_architect"]},
+        "source_packet_id": {"type": "string"},
+        "plan_graph_proposal_id": {"type": "string"},
+        "selected_vector_ids": {"type": "array", "items": {"type": "string"}},
+        "nodes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "node_id",
+                    "vector_id",
+                    "kind",
+                    "task",
+                    "executor_id",
+                    "depends_on",
+                    "expected_output",
+                    "branching_mode",
+                ],
+                "properties": {
+                    "node_id": {"type": "string"},
+                    "vector_id": {"type": "string"},
+                    "kind": {"type": "string"},
+                    "task": {"type": "string"},
+                    "executor_id": {
+                        "type": "string",
+                        "enum": list(GEMINI_ARCHITECT_ALLOWED_EXECUTOR_IDS),
+                    },
+                    "depends_on": {"type": "array", "items": {"type": "string"}},
+                    "expected_output": {"type": "string", "enum": ["result_proposal"]},
+                    "branching_mode": {"type": "string"},
+                },
+                "additionalProperties": False,
+            },
+        },
+        "edges": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["from", "to"],
+                "properties": {
+                    "from": {"type": "string"},
+                    "to": {"type": "string"},
+                },
+                "additionalProperties": False,
+            },
+        },
+        "executor_assignments": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["executor_id", "node_ids", "mode"],
+                "properties": {
+                    "executor_id": {
+                        "type": "string",
+                        "enum": list(GEMINI_ARCHITECT_ALLOWED_EXECUTOR_IDS),
+                    },
+                    "node_ids": {"type": "array", "items": {"type": "string"}},
+                    "mode": {
+                        "type": "string",
+                        "enum": list(GEMINI_ARCHITECT_ALLOWED_EXECUTOR_MODES),
+                    },
+                },
+                "additionalProperties": False,
+            },
+        },
+        "time_assumptions": {"type": "object"},
+        "required_validators": {"type": "array", "items": {"type": "string"}},
+        "confidence": {"type": "number"},
+        "reason": {"type": "string"},
+        "needs_review": {"type": "boolean"},
+        "uncertainty_notes": {"type": "array", "items": {"type": "string"}},
+        "authority_claimed": {"type": "boolean"},
+        "truth_claimed": {"type": "boolean"},
+        "action_permission_claimed": {"type": "boolean"},
+        "final_output_claimed": {"type": "boolean"},
+        "connector_command_claimed": {"type": "boolean"},
+        "drs_write_claimed": {"type": "boolean"},
+        "root_bypass_claimed": {"type": "boolean"},
+        "orchestrator_bypass_claimed": {"type": "boolean"},
+        "unvalidated_plan_graph_claimed": {"type": "boolean"},
+        "root_review_required": {"type": "boolean"},
+    },
+    "additionalProperties": False,
+}
+
 ProviderCallable = Callable[[str, str, int, Mapping[str, str]], str]
 
 
@@ -2248,15 +2338,39 @@ def _safe_gemini_architect_input_context(
 
 
 def _gemini_architect_prompt(safe_context: Mapping[str, Any]) -> str:
+    selected = tuple(safe_context["route_context"]["selected_vector_ids"])
+    allowed = tuple(safe_context["route_context"]["allowed_vector_ids"])
+    example_vector_id = (selected or allowed)[0]
+    example_node_id = f"node:{safe_context['source_packet_id']}:gemini_architect:1"
     skeleton = {
         "proposal_id": "gemini-architect-proposal-001",
         "proposal_role": "bounded_gemini_architect",
         "source_packet_id": safe_context["source_packet_id"],
         "plan_graph_proposal_id": "plan:gemini-architect-proposal-001",
-        "selected_vector_ids": [],
-        "nodes": [],
+        "selected_vector_ids": [example_vector_id],
+        "nodes": [
+            {
+                "node_id": example_node_id,
+                "vector_id": example_vector_id,
+                "kind": "tool_or_simulated_action",
+                "task": (
+                    "simulate_result_proposal_for_vector:"
+                    f"{example_vector_id};bounded_architect_candidate"
+                ),
+                "executor_id": "exec_mock_certificate",
+                "depends_on": [],
+                "expected_output": "result_proposal",
+                "branching_mode": "hybrid",
+            }
+        ],
         "edges": [],
-        "executor_assignments": [],
+        "executor_assignments": [
+            {
+                "executor_id": "exec_mock_certificate",
+                "node_ids": [example_node_id],
+                "mode": "simulate",
+            }
+        ],
         "time_assumptions": {
             "as_of": SLICE1_NOW,
             "freshness_required": "normal",
@@ -2291,6 +2405,17 @@ def _gemini_architect_prompt(safe_context: Mapping[str, Any]) -> str:
             "The role may propose PlanGraph structure, but does not create FinalOutput.",
             "The role does not execute actions and does not mutate DRS.",
             "Node vector ids must come from selected_vector_ids and allowed_vector_ids.",
+            "Every node must include exactly these PlanGraph node fields: node_id, "
+            "vector_id, kind, task, executor_id, depends_on, expected_output, "
+            "branching_mode.",
+            "Every node executor_id must be exec_mock_certificate.",
+            "Every node expected_output must be result_proposal.",
+            "Edges must be [] unless a dependency is needed; dependency edges must use "
+            "only from and to.",
+            "Executor assignments must use executor_id, node_ids, and mode. node_ids "
+            "must be a list. mode must be simulate.",
+            "Do not invent node_name, node_role, node_type, source_node_id, "
+            "target_node_id, or executor_assignments.node_id.",
             "Root remains final authority.",
             "",
             "Required fields:",
@@ -2319,17 +2444,39 @@ def _call_gemini_architect_provider(
     except ImportError as exc:
         raise provider_adapter.ProviderCaptureError("provider_sdk_or_key_missing") from exc
 
+    def generation_config(schema_key: str | None) -> dict[str, Any]:
+        config: dict[str, Any] = {
+            "response_mime_type": "application/json",
+            "temperature": 0,
+            "candidate_count": 1,
+            "system_instruction": (
+                "Return JSON only. Return one bounded Gemini Architect proposal "
+                "using the exact local PlanGraph node shape. Do not use node_name, "
+                "node_role, node_type, source_node_id, target_node_id, or "
+                "executor_assignments.node_id."
+            ),
+        }
+        if schema_key is not None:
+            config[schema_key] = GEMINI_ARCHITECT_RESPONSE_SCHEMA
+        return config
+
     try:
         client = genai.Client(api_key=api_key)
-        response = client.models.generate_content(
-            model=model_name,
-            contents=prompt,
-            config={
-                "response_mime_type": "application/json",
-                "temperature": 0,
-                "candidate_count": 1,
-            },
-        )
+        response = None
+        for schema_key in ("response_json_schema", "response_schema", None):
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=generation_config(schema_key),
+                )
+                break
+            except (TypeError, ValueError):
+                if schema_key is None:
+                    raise
+                continue
+        if response is None:
+            raise provider_adapter.ProviderCaptureError("provider_call_failed")
     except TimeoutError as exc:
         raise provider_adapter.ProviderTimeoutError("provider_timeout") from exc
     except Exception as exc:  # pragma: no cover - real provider path only

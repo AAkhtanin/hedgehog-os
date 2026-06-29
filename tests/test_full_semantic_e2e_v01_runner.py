@@ -88,6 +88,15 @@ def _dual_gemini_env(**overrides):
     return env
 
 
+def _root_mock_approval_env(**overrides):
+    env = {
+        runner.ENV_FULL_E2E_ACTION_COMMIT_PACKET: "1",
+        runner.ENV_FULL_E2E_ROOT_MOCK_APPROVAL: "1",
+    }
+    env.update(overrides)
+    return env
+
+
 def _bounded_orchestrator_input_from_prompt(prompt):
     marker = "BOUNDED_GEMINI_ORCHESTRATOR_INPUT_JSON:\n"
     return json.loads(prompt.split(marker, 1)[1])
@@ -267,9 +276,15 @@ def test_default_runner_returns_pass_and_runs_deterministic_full_spine() -> None
         assert counters[key] == 0
     for key in runner.DUAL_GEMINI_COUNTER_KEYS:
         assert counters[key] == 0
+    for key in runner.ACTION_COMMIT_PACKET_COUNTER_KEYS:
+        assert counters[key] == 0
     assert result["dual_gemini_context"]["sequence_status"] == "not_started"
     assert result["dual_gemini_context"]["gate_enabled"] is False
     assert result["gemini_architect_context"]["provider_call_path"] == "not_started"
+    assert result["root_final_output_boundary"]["decision"] == "not_ready"
+    assert result["root_mock_approval_context"]["invoked"] is False
+    assert result["action_commit_packet_context"]["packet_created"] is False
+    assert result["action_commit_packet"] == {}
 
 
 def test_default_main_exits_zero_and_prints_pass(monkeypatch, capsys) -> None:
@@ -1698,6 +1713,403 @@ def test_drs_writeback_is_real_local_and_after_root() -> None:
     assert result["counters"]["external_global_drs_write_count"] == 0
     assert result["counters"]["production_persistence_claimed_count"] == 0
     assert result["counters"]["pre_root_writeback_blocked_count"] == 1
+
+
+def test_root_mock_approval_default_mode_is_inactive() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert result["root_final_output_boundary"]["decision"] == "not_ready"
+    assert result["root_mock_approval_context"]["invoked"] is False
+    assert result["action_commit_packet_context"]["packet_created"] is False
+    assert result["action_commit_packet"] == {}
+    assert result["stage_map"]["root_mock_approval_gate"]["status"] == "skipped"
+    assert result["stage_map"]["action_commit_packet_candidate"]["status"] == "skipped"
+    assert counters["root_mock_approval_gate_invoked_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["mock_action_commit_packet_created_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+
+
+def test_root_mock_approval_partial_gate_fails_closed() -> None:
+    for env in (
+        {runner.ENV_FULL_E2E_ACTION_COMMIT_PACKET: "1"},
+        {runner.ENV_FULL_E2E_ROOT_MOCK_APPROVAL: "1"},
+    ):
+        result = runner.run_full_semantic_e2e(env=env)
+        counters = result["counters"]
+
+        assert result["final_status"] == "FAIL_CLOSED"
+        assert "root_mock_approval_requires_both_gates" in result["validation_errors"]
+        assert result["root_mock_approval_context"]["invoked"] is False
+        assert result["action_commit_packet_context"]["packet_created"] is False
+        assert result["action_commit_packet"] == {}
+        assert counters["root_mock_approval_gate_invoked_count"] == 0
+        assert counters["action_commit_packet_created_count"] == 0
+        assert counters["mock_action_commit_packet_created_count"] == 0
+        assert counters["payment_executed_count"] == 0
+        assert counters["shipment_released_count"] == 0
+        assert counters["connector_called_count"] == 0
+        assert counters["action_permission_created_count"] == 0
+
+
+def test_mock_ready_fixture_without_gates_fails_closed_without_fixture_mutation() -> None:
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "mock_ready_fixture_requires_root_mock_approval_gates" in (
+        result["validation_errors"]
+    )
+    assert result["root_final_output_boundary"] == {}
+    assert result["action_commit_packet"] == {}
+    assert result["action_commit_packet_context"]["packet_created"] is False
+    assert counters["root_mock_approval_gate_invoked_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_mock_ready_fixture_with_partial_gate_fails_without_ready_root() -> None:
+    result = runner.run_full_semantic_e2e(
+        env={
+            runner.ENV_FULL_E2E_ACTION_COMMIT_PACKET: "1",
+            runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1",
+        }
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "root_mock_approval_requires_both_gates" in result["validation_errors"]
+    assert "mock_ready_fixture_requires_root_mock_approval_gates" in (
+        result["validation_errors"]
+    )
+    assert result["root_final_output_boundary"] == {}
+    assert result["action_commit_packet"] == {}
+    assert counters["root_mock_approval_gate_invoked_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_root_mock_approval_gate_denies_current_blocked_scenario() -> None:
+    result = runner.run_full_semantic_e2e(env=_root_mock_approval_env())
+    counters = result["counters"]
+    approval = result["root_mock_approval_context"]
+
+    assert result["final_status"] == "PASS"
+    assert result["root_final_output_boundary"]["decision"] == "not_ready"
+    assert approval["invoked"] is True
+    assert approval["approval_granted"] is False
+    assert approval["approval_denied"] is True
+    assert "legal_hold_not_clear" in approval["denial_reasons"]
+    assert "stock_not_available_or_mock_reservable" in approval["denial_reasons"]
+    assert counters["root_mock_approval_gate_invoked_count"] == 1
+    assert counters["root_mock_approval_denied_count"] == 1
+    assert counters["root_mock_approval_blocked_by_legal_hold_count"] == 1
+    assert counters["root_mock_approval_blocked_by_stock_shortage_count"] == 1
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["mock_action_commit_packet_created_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+    assert result["stage_map"]["root_mock_approval_gate"]["status"] == "invoked"
+
+
+def test_mock_ready_fixture_creates_one_mock_only_action_commit_packet() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    counters = result["counters"]
+    approval = result["root_mock_approval_context"]
+    packet_context = result["action_commit_packet_context"]
+    packet = result["action_commit_packet"]
+
+    assert result["final_status"] == "PASS"
+    assert result["root_final_output_boundary"]["decision"] == "ready_for_mock_action"
+    assert approval["invoked"] is True
+    assert approval["approval_granted"] is True
+    assert approval["approval_denied"] is False
+    assert approval["legal_hold_clear"] is True
+    assert approval["stock_available_or_mock_reservable"] is True
+    assert packet_context["packet_created"] is True
+    assert packet_context["validation"]["accepted"] is True
+    assert packet["packet_type"] == "mock_action_commit_packet"
+    assert packet["created_by"] == "root_mock_approval_gate"
+    assert packet["source_root_decision"] == "ready_for_mock_action"
+    assert packet["mock_only"] is True
+    assert packet["real_world_effects_allowed"] is False
+    assert packet["root_reviewed"] is True
+    assert packet["root_approved"] is True
+    assert packet["root_final_authority_preserved"] is True
+    assert counters["root_mock_approval_gate_invoked_count"] == 1
+    assert counters["root_mock_approval_granted_count"] == 1
+    assert counters["action_commit_packet_created_count"] == 1
+    assert counters["mock_action_commit_packet_created_count"] == 1
+    assert counters["action_commit_packet_created_by_root_count"] == 1
+    assert counters["action_commit_packet_created_by_gemini_count"] == 0
+    assert counters["action_commit_packet_mock_only_count"] == 1
+    assert counters["action_commit_packet_real_world_effects_allowed_count"] == 0
+    assert counters["action_commit_packet_executed_connector_count"] == 0
+    assert counters["fake_bank_connector_called_count"] == 0
+    assert counters["fake_supplier_connector_called_count"] == 0
+    assert counters["fake_warehouse_connector_called_count"] == 0
+    assert counters["real_bank_api_called_count"] == 0
+    assert counters["real_supplier_api_called_count"] == 0
+    assert counters["real_warehouse_api_called_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+    assert counters["execution_evidence_created_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+    assert counters["root_final_authority_preserved_count"] == 1
+    assert result["stage_map"]["action_commit_packet_candidate"]["status"] == "invoked"
+
+
+def test_action_commit_packet_shape_excludes_forbidden_real_action_fields() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    packet = result["action_commit_packet"]
+
+    assert packet["packet_type"] == "mock_action_commit_packet"
+    assert packet["created_by"] == "root_mock_approval_gate"
+    assert packet["action_scope"] == "local_mock_connector_sandbox"
+    assert packet["mock_only"] is True
+    assert packet["real_world_effects_allowed"] is False
+    assert packet["root_reviewed"] is True
+    assert packet["root_approved"] is True
+    assert packet["root_final_authority_preserved"] is True
+    assert packet["blockers_checked"]["legal_hold_clear"] is True
+    assert packet["blockers_checked"]["stock_available_or_mock_reservable"] is True
+    for field in runner.ACTION_COMMIT_PACKET_FORBIDDEN_FIELDS:
+        assert field not in packet
+
+
+def test_gemini_cannot_create_action_commit_packet() -> None:
+    env = _dual_gemini_env(
+        **{
+            runner.ENV_FULL_E2E_ACTION_COMMIT_PACKET: "1",
+            runner.ENV_FULL_E2E_ROOT_MOCK_APPROVAL: "1",
+            runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1",
+        }
+    )
+    result = runner.run_full_semantic_e2e(
+        env=env,
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(
+                context,
+                action_commit_packet_claimed=True,
+                gemini_created_packet=True,
+            )
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(
+                context,
+                action_commit_packet_claimed=True,
+                gemini_created_packet=True,
+            )
+        ),
+    )
+    packet = result["action_commit_packet"]
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert packet["created_by"] == "root_mock_approval_gate"
+    assert counters["action_commit_packet_created_by_gemini_count"] == 0
+    assert counters["action_commit_packet_created_by_root_count"] == 1
+    assert counters["mock_action_commit_packet_created_count"] == 1
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_pre_root_action_commit_packet_is_rejected_by_validator() -> None:
+    packet = {
+        "packet_type": "mock_action_commit_packet",
+        "created_by": "root_mock_approval_gate",
+        "source_root_decision": "ready_for_mock_action",
+        "mock_only": True,
+        "real_world_effects_allowed": False,
+        "allowed_action_kinds": ["mock_supplier_payment_review"],
+        "root_reviewed": True,
+        "root_approved": True,
+        "blockers_checked": {
+            "legal_hold_clear": True,
+            "stock_available_or_mock_reservable": True,
+            "post_vv_passed": True,
+            "gt_lgt_reviewed": True,
+        },
+    }
+
+    validation = runner._validate_action_commit_packet(packet, root_boundary=None)
+    result = runner.run_full_semantic_e2e(env={})
+
+    assert validation["accepted"] is False
+    assert "root_boundary_required" in validation["reasons"]
+    assert result["counters"]["action_commit_packet_created_before_root_count"] == 0
+
+
+def test_action_commit_packet_validator_rejects_not_ready_root_boundary() -> None:
+    valid = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    default = runner.run_full_semantic_e2e(env={})
+    packet = json.loads(json.dumps(valid["action_commit_packet"]))
+    packet["source_root_decision"] = "ready_for_mock_action"
+
+    validation = runner._validate_action_commit_packet(
+        packet,
+        root_boundary=default["root_final_output_boundary"],
+    )
+
+    assert default["root_final_output_boundary"]["decision"] == "not_ready"
+    assert validation["accepted"] is False
+    assert "root_decision_not_ready_for_mock_action" in validation["reasons"]
+    assert "source_root_decision_must_match_root_boundary" in validation["reasons"]
+
+
+def test_action_commit_packet_validator_rejects_missing_required_fields() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    removed_fields = (
+        "packet_id",
+        "source_root_outcome_id",
+        "action_scope",
+        "validator_receipts",
+        "trace_refs",
+        "idempotency_key",
+        "expires_at",
+    )
+    packet = json.loads(json.dumps(result["action_commit_packet"]))
+    for field in removed_fields:
+        packet.pop(field)
+
+    validation = runner._validate_action_commit_packet(
+        packet,
+        root_boundary=result["root_final_output_boundary"],
+    )
+
+    assert validation["accepted"] is False
+    assert "missing_required_field:packet_id" in validation["reasons"]
+    for field in removed_fields:
+        assert f"missing_required_field:{field}" in validation["reasons"]
+
+
+def test_malformed_runtime_action_commit_packet_is_rejected(monkeypatch) -> None:
+    original_builder = runner._build_mock_action_commit_packet
+
+    def malformed_builder(**kwargs):
+        packet = original_builder(**kwargs)
+        packet["allowed_action_kinds"] = ("real_wire_transfer",)
+        packet["connector_called"] = True
+        return packet
+
+    monkeypatch.setattr(runner, "_build_mock_action_commit_packet", malformed_builder)
+    result = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    counters = result["counters"]
+
+    assert result["action_commit_packet"] == {}
+    assert result["action_commit_packet_context"]["packet_created"] is False
+    assert result["root_mock_approval_context"]["approval_denied"] is True
+    assert counters["root_mock_approval_denied_count"] == 1
+    assert counters["action_commit_packet_rejected_count"] == 1
+    assert counters["mock_action_commit_packet_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+    assert counters["execution_evidence_created_count"] == 0
+
+
+def test_action_commit_packet_cannot_execute_itself() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    packet = json.loads(json.dumps(result["action_commit_packet"]))
+    packet["connector_called"] = True
+    packet["payment_executed"] = True
+    packet["shipment_released"] = True
+
+    validation = runner._validate_action_commit_packet(
+        packet,
+        root_boundary=result["root_final_output_boundary"],
+    )
+
+    assert validation["accepted"] is False
+    assert "forbidden_packet_field:connector_called" in validation["reasons"]
+    assert "forbidden_packet_field:payment_executed" in validation["reasons"]
+    assert "forbidden_packet_field:shipment_released" in validation["reasons"]
+    assert result["counters"]["action_commit_packet_executed_connector_count"] == 0
+    assert result["counters"]["connector_called_count"] == 0
+
+
+def test_action_commit_packet_rejects_unknown_action_kind() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    packet = json.loads(json.dumps(result["action_commit_packet"]))
+    packet["allowed_action_kinds"] = ["real_wire_transfer"]
+
+    validation = runner._validate_action_commit_packet(
+        packet,
+        root_boundary=result["root_final_output_boundary"],
+    )
+
+    assert validation["accepted"] is False
+    assert "unsupported_action_kind" in validation["reasons"]
+    assert result["counters"]["mock_receipt_created_count"] == 0
+    assert result["counters"]["connector_called_count"] == 0
+
+
+def test_action_commit_packet_requires_post_vv_gt_lgt_and_records_local_trace() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1"}
+        )
+    )
+    packet = result["action_commit_packet"]
+    writeback = result["drs_writeback_record"]
+
+    assert packet["blockers_checked"]["post_vv_passed"] is True
+    assert packet["blockers_checked"]["gt_lgt_reviewed"] is True
+    assert "post_vv" in packet["validator_receipts"]
+    assert "gt_lgt" in packet["validator_receipts"]
+    assert result["gt_lgt_context"]["finalizes"] is False
+    assert result["gt_lgt_context"]["root_authority_claimed"] is False
+    assert writeback["root_mock_approval_trace"]["approval_granted"] is True
+    assert writeback["action_commit_packet_trace"]["packet_created"] is True
+    assert writeback["external_global_drs_write"] is False
+    assert writeback["production_persistence_claimed"] is False
+    assert result["counters"]["external_global_drs_write_count"] == 0
+    assert result["counters"]["production_persistence_claimed_count"] == 0
 
 
 def test_slice3_hardening_rejects_malformed_finaloutput_and_pre_root_writeback() -> None:

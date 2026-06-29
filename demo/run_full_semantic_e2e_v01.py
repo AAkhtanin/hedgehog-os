@@ -40,6 +40,9 @@ ENV_FULL_E2E_LIVE_EVIDENCE = "HEDGEHOG_FULL_E2E_LIVE_EVIDENCE"
 ENV_FULL_E2E_GEMINI_ORCHESTRATOR = "HEDGEHOG_FULL_E2E_GEMINI_ORCHESTRATOR"
 ENV_FULL_E2E_GEMINI_ARCHITECT = "HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT"
 ENV_FULL_E2E_DUAL_GEMINI_ROLES = "HEDGEHOG_FULL_E2E_DUAL_GEMINI_ROLES"
+ENV_FULL_E2E_ACTION_COMMIT_PACKET = "HEDGEHOG_FULL_E2E_ACTION_COMMIT_PACKET"
+ENV_FULL_E2E_ROOT_MOCK_APPROVAL = "HEDGEHOG_FULL_E2E_ROOT_MOCK_APPROVAL"
+ENV_FULL_E2E_MOCK_READY_FIXTURE = "HEDGEHOG_FULL_E2E_MOCK_READY_FIXTURE"
 
 GEMINI_ORCHESTRATOR_COUNTER_KEYS = (
     "bounded_gemini_orchestrator_role_started_count",
@@ -104,6 +107,32 @@ DUAL_GEMINI_COUNTER_KEYS = (
     "dual_gemini_root_final_authority_preserved_count",
 )
 
+ACTION_COMMIT_PACKET_COUNTER_KEYS = (
+    "root_mock_approval_gate_invoked_count",
+    "root_mock_approval_granted_count",
+    "root_mock_approval_denied_count",
+    "root_mock_approval_blocked_by_legal_hold_count",
+    "root_mock_approval_blocked_by_stock_shortage_count",
+    "action_commit_packet_created_count",
+    "mock_action_commit_packet_created_count",
+    "action_commit_packet_created_by_root_count",
+    "action_commit_packet_created_by_gemini_count",
+    "action_commit_packet_created_before_root_count",
+    "action_commit_packet_rejected_count",
+    "action_commit_packet_mock_only_count",
+    "action_commit_packet_real_world_effects_allowed_count",
+    "action_commit_packet_used_as_final_output_count",
+    "action_commit_packet_executed_connector_count",
+    "fake_bank_connector_called_count",
+    "fake_supplier_connector_called_count",
+    "fake_warehouse_connector_called_count",
+    "real_bank_api_called_count",
+    "real_supplier_api_called_count",
+    "real_warehouse_api_called_count",
+    "mock_receipt_created_count",
+    "execution_evidence_created_count",
+)
+
 STAGES = (
     "intake_dirty_business_request",
     "live_or_captured_evidence_lane",
@@ -120,6 +149,8 @@ STAGES = (
     "post_vv",
     "gt_lgt",
     "root_final_output_boundary",
+    "root_mock_approval_gate",
+    "action_commit_packet_candidate",
     "drs_writeback",
 )
 
@@ -172,6 +203,7 @@ COUNTER_KEYS = (
     *GEMINI_ORCHESTRATOR_COUNTER_KEYS,
     *GEMINI_ARCHITECT_COUNTER_KEYS,
     *DUAL_GEMINI_COUNTER_KEYS,
+    *ACTION_COMMIT_PACKET_COUNTER_KEYS,
     "live_evidence_root_final_authority_preserved_count",
     "semantic_claim_created_count",
     "semantic_claim_candidate_only_count",
@@ -631,6 +663,31 @@ def _full_e2e_dual_gemini_enabled(env: Mapping[str, str]) -> bool:
     return env.get(ENV_FULL_E2E_DUAL_GEMINI_ROLES) == "1"
 
 
+def _full_e2e_action_commit_packet_enabled(env: Mapping[str, str]) -> bool:
+    return env.get(ENV_FULL_E2E_ACTION_COMMIT_PACKET) == "1"
+
+
+def _full_e2e_root_mock_approval_enabled(env: Mapping[str, str]) -> bool:
+    return env.get(ENV_FULL_E2E_ROOT_MOCK_APPROVAL) == "1"
+
+
+def _full_e2e_mock_ready_fixture_enabled(env: Mapping[str, str]) -> bool:
+    return env.get(ENV_FULL_E2E_MOCK_READY_FIXTURE) == "1"
+
+
+def _root_mock_approval_gate_partial_enabled(env: Mapping[str, str]) -> bool:
+    action_packet = _full_e2e_action_commit_packet_enabled(env)
+    root_approval = _full_e2e_root_mock_approval_enabled(env)
+    return action_packet != root_approval
+
+
+def _root_mock_approval_gate_enabled(env: Mapping[str, str]) -> bool:
+    return (
+        _full_e2e_action_commit_packet_enabled(env)
+        and _full_e2e_root_mock_approval_enabled(env)
+    )
+
+
 def _orchestrator_provider_name(env: Mapping[str, str]) -> str:
     return env.get(provider_adapter.ENV_PROVIDER_NAME, "gemini").strip().lower() or "gemini"
 
@@ -1044,6 +1101,10 @@ def _apply_spine_counters(
     counters["pre_root_writeback_blocked_count"] = int(
         slice3_hardening["pre_root_writeback_blocked"]
     )
+    _apply_action_commit_packet_counters(
+        counters,
+        slice3_result.get("root_mock_approval_context") or {},
+    )
     _apply_gemini_orchestrator_counters(
         counters,
         slice2_result.get("gemini_orchestrator_context") or {},
@@ -1129,6 +1190,15 @@ def _apply_dual_gemini_counters(
     dual_counters = dual_context.get("counters") or {}
     for key in DUAL_GEMINI_COUNTER_KEYS:
         counters[key] = int(dual_counters.get(key, 0))
+
+
+def _apply_action_commit_packet_counters(
+    counters: dict[str, int],
+    root_mock_approval_context: Mapping[str, Any],
+) -> None:
+    packet_counters = root_mock_approval_context.get("counters") or {}
+    for key in ACTION_COMMIT_PACKET_COUNTER_KEYS:
+        counters[key] = int(packet_counters.get(key, 0))
 
 
 def _apply_live_claim_influence_counters(
@@ -1301,6 +1371,16 @@ def _stage_map_success() -> dict[str, dict[str, Any]]:
             creates_final_output=True,
             notes="Root boundary creates the only FinalOutput-shaped boundary",
         ),
+        "root_mock_approval_gate": _stage(
+            "skipped",
+            "root_only",
+            notes="Root Mock Approval Gate is explicit-only and creates no FinalOutput",
+        ),
+        "action_commit_packet_candidate": _stage(
+            "skipped",
+            "candidate",
+            notes="ActionCommitPacket candidate is explicit-only, mock-only, and not execution",
+        ),
         "drs_writeback": _stage(
             "invoked",
             "candidate",
@@ -1358,8 +1438,18 @@ def _semantic_record_input(
     freshness_class: str = "normal",
     created_at: str = SLICE1_NOW,
     conflicting: bool = False,
+    mock_ready_fixture: bool = False,
 ) -> SemanticDRSRecordInput:
-    legal_hold = "insurance certificate may be expired"
+    legal_hold = (
+        "cleared for mock approval fixture"
+        if mock_ready_fixture
+        else "insurance certificate may be expired"
+    )
+    stock_status = (
+        "water_filter available for local mock reservation"
+        if mock_ready_fixture
+        else "water_filter short by 2"
+    )
     content = {
         "summary": summary,
         "subject_key": dirty_request["subject"],
@@ -1376,13 +1466,23 @@ def _semantic_record_input(
         "schema_valid": True,
         "invoice_payable_signal": True,
         "legal_hold": legal_hold,
-        "legal_hold_present": True,
-        "warehouse_stock_status": "water_filter short by 2",
-        "water_filter_shortage": True,
+        "legal_hold_present": False if mock_ready_fixture else True,
+        "warehouse_stock_status": stock_status,
+        "water_filter_shortage": False if mock_ready_fixture else True,
+        "stock_available_or_mock_reservable": True if mock_ready_fixture else False,
+        "mock_ready_fixture": bool(mock_ready_fixture),
         "worldstate": {
-            "stock_status": "short_by_2",
-            "legal_hold": True,
-            "insurance_certificate": "may_be_expired",
+            "stock_status": (
+                "available_for_mock_reservation"
+                if mock_ready_fixture
+                else "short_by_2"
+            ),
+            "legal_hold": False if mock_ready_fixture else True,
+            "insurance_certificate": (
+                "cleared_for_mock_fixture"
+                if mock_ready_fixture
+                else "may_be_expired"
+            ),
         },
         "truth_claimed": False,
         "authority_claimed": False,
@@ -1423,6 +1523,8 @@ def _semantic_record_input(
 def _run_slice1_core_primitives(
     claim: SemanticEvidenceClaim,
     dirty_request: Mapping[str, Any],
+    *,
+    mock_ready_fixture: bool = False,
 ) -> dict[str, Any]:
     with tempfile.TemporaryDirectory(prefix="hedgehog_full_e2e_slice1_") as tmp_dir:
         drs = LocalDRS(tmp_dir)
@@ -1433,10 +1535,18 @@ def _run_slice1_core_primitives(
                 dirty_request,
                 record_id="record:supplier_live_candidate_current",
                 summary=(
-                    "Current candidate evidence says invoice looks payable, but legal hold "
+                    "Current candidate evidence says invoice looks payable; legal hold "
+                    "is clear and water_filter is available for local mock reservation."
+                    if mock_ready_fixture
+                    else "Current candidate evidence says invoice looks payable, but legal hold "
                     "and water_filter shortage require Root review."
                 ),
-                claim_value="needs_root_review_not_ready",
+                claim_value=(
+                    "ready_for_root_mock_approval_review"
+                    if mock_ready_fixture
+                    else "needs_root_review_not_ready"
+                ),
+                mock_ready_fixture=mock_ready_fixture,
             ),
             _semantic_record_input(
                 claim,
@@ -1449,6 +1559,7 @@ def _run_slice1_core_primitives(
                 claim_value="stale_payable_memory_review_only",
                 freshness_class="stale",
                 created_at=SLICE1_OLD,
+                mock_ready_fixture=mock_ready_fixture,
             ),
             _semantic_record_input(
                 claim,
@@ -1460,6 +1571,7 @@ def _run_slice1_core_primitives(
                 ),
                 claim_value="conflicting_supplier_stock_review_only",
                 conflicting=True,
+                mock_ready_fixture=mock_ready_fixture,
             ),
         )
         for record_input in record_inputs:
@@ -1481,9 +1593,17 @@ def _run_slice1_core_primitives(
             content_filters={"subject_key": dirty_request["subject"]},
             temporal_query=_temporal_query(),
             worldstate={
-                "stock_status": "short_by_2",
-                "legal_hold": True,
-                "insurance_certificate": "may_be_expired",
+                "stock_status": (
+                    "available_for_mock_reservation"
+                    if mock_ready_fixture
+                    else "short_by_2"
+                ),
+                "legal_hold": False if mock_ready_fixture else True,
+                "insurance_certificate": (
+                    "cleared_for_mock_fixture"
+                    if mock_ready_fixture
+                    else "may_be_expired"
+                ),
             },
             source_refs=(_source_ref(claim, "query"),),
             trace_refs=(_trace_ref("query"),),
@@ -1508,7 +1628,10 @@ def _run_slice1_core_primitives(
             "candidate_inputs": candidate_inputs,
             "candidate_report": candidate_report,
             "advisory_report": advisory_report,
-            "legal_hold_present": True,
+            "legal_hold_present": False if mock_ready_fixture else True,
+            "stock_shortage_present": False if mock_ready_fixture else True,
+            "stock_available_or_mock_reservable": True if mock_ready_fixture else False,
+            "mock_ready_fixture": bool(mock_ready_fixture),
         }
 
 
@@ -1621,6 +1744,38 @@ def _stage_map_dual_gemini_gate_fail_closed() -> dict[str, dict[str, Any]]:
             "none",
             notes="skipped because dual Gemini gate contract failed before role execution",
         )
+    return stage_map
+
+
+def _stage_map_root_mock_approval_gate_fail_closed() -> dict[str, dict[str, Any]]:
+    stage_map = {
+        stage_name: _stage(
+            "skipped",
+            "none",
+            notes="skipped because Root Mock Approval Gate env contract failed",
+        )
+        for stage_name in STAGES
+    }
+    stage_map["intake_dirty_business_request"] = _stage(
+        "invoked",
+        "none",
+        notes="runner builds the dirty business request fixture",
+    )
+    stage_map["live_or_captured_evidence_lane"] = _stage(
+        "invoked",
+        "candidate",
+        notes="captured/live-like evidence lane completed before gate contract check",
+    )
+    stage_map["semantic_evidence_claim_validation"] = _stage(
+        "invoked",
+        "candidate",
+        notes="SemanticEvidenceClaim validation completed before gate contract check",
+    )
+    stage_map["root_mock_approval_gate"] = _stage(
+        "fail_closed",
+        "root_only",
+        notes="Root Mock Approval Gate requires both explicit env gates",
+    )
     return stage_map
 
 
@@ -1814,10 +1969,20 @@ def _safe_gemini_orchestrator_input_context(
         "supplier_payment_context_summary": {
             "invoice_id": "INV-2042",
             "shipment_id": "SH-2042",
-            "payment_readiness": "blocked_for_root_review",
-            "shipment_readiness": "blocked_for_root_review",
-            "legal_hold_present": True,
-            "water_filter_shortage_present": True,
+            "payment_readiness": (
+                "ready_for_mock_root_review"
+                if slice1_result["mock_ready_fixture"]
+                else "blocked_for_root_review"
+            ),
+            "shipment_readiness": (
+                "mock_reservation_ready_for_root_review"
+                if slice1_result["mock_ready_fixture"]
+                else "blocked_for_root_review"
+            ),
+            "legal_hold_present": bool(slice1_result["legal_hold_present"]),
+            "water_filter_shortage_present": bool(
+                slice1_result["stock_shortage_present"]
+            ),
         },
         "candidate_claim_summary": {
             "claim_id": claim.claim_id,
@@ -2399,10 +2564,23 @@ def _safe_gemini_architect_input_context(
             "advisory_is_root": False,
         },
         "blocker_summary": {
-            "legal_hold_present": True,
-            "water_filter_shortage_present": True,
-            "payment_readiness": "blocked_for_root_review",
-            "shipment_readiness": "blocked_for_root_review",
+            "legal_hold_present": bool(slice1_result["legal_hold_present"]),
+            "water_filter_shortage_present": bool(
+                slice1_result["stock_shortage_present"]
+            ),
+            "stock_available_or_mock_reservable": bool(
+                slice1_result["stock_available_or_mock_reservable"]
+            ),
+            "payment_readiness": (
+                "ready_for_mock_root_review"
+                if slice1_result["mock_ready_fixture"]
+                else "blocked_for_root_review"
+            ),
+            "shipment_readiness": (
+                "mock_reservation_ready_for_root_review"
+                if slice1_result["mock_ready_fixture"]
+                else "blocked_for_root_review"
+            ),
         },
         "required_validators": GEMINI_ARCHITECT_REQUIRED_VALIDATORS,
         "allowed_executor_contract": {
@@ -3235,8 +3413,12 @@ def _bounded_route_decision(
             for score in selected_scores
         ),
         "root_review_required": True,
-        "legal_hold_present": True,
-        "stock_shortage_present": True,
+        "legal_hold_present": bool(slice1_result["legal_hold_present"]),
+        "stock_shortage_present": bool(slice1_result["stock_shortage_present"]),
+        "stock_available_or_mock_reservable": bool(
+            slice1_result["stock_available_or_mock_reservable"]
+        ),
+        "mock_ready_fixture": bool(slice1_result["mock_ready_fixture"]),
         "creates_final_output": False,
         "executes_action": False,
         "request_ref": dirty_request["request_id"],
@@ -3830,21 +4012,43 @@ def _root_final_output_boundary(
     fractal_executor_context: Mapping[str, Any],
     post_vv_context: Mapping[str, Any],
     gt_lgt_context: Mapping[str, Any],
+    mock_ready_fixture: bool = False,
 ) -> dict[str, Any]:
+    decision = "ready_for_mock_action" if mock_ready_fixture else "not_ready"
+    reason = (
+        "legal hold is clear and water_filter stock is available or mock-reservable; "
+        "Root approves mock-only action attempt packet creation"
+        if mock_ready_fixture
+        else "legal hold / expired insurance risk and water_filter shortage block "
+        "payment and shipment release"
+    )
+    root_final_status = decision
+    blocker_summary = {
+        "legal_hold_clear": bool(mock_ready_fixture),
+        "stock_available_or_mock_reservable": bool(mock_ready_fixture),
+        "post_vv_passed": post_vv_context["vv_report_count"] > 0,
+        "gt_lgt_reviewed": bool(gt_lgt_context["gt_report_id"]),
+    }
     root_reviewed_semantic_outcome = {
         "artifact_type": "root_reviewed_semantic_outcome",
         "final_artifact_id": "root_final:full_semantic_e2e_supplier_payment_v01",
         "outcome_id": "root_outcome:full_semantic_e2e_supplier_payment_v01",
         "created_by": "root_orchestrator",
         "root_reviewed": True,
-        "root_final_status": "not_ready",
+        "root_final_status": root_final_status,
         "domain": SUPPLIER_PAYMENT_DOMAIN,
         "request_id": "full_semantic_e2e_supplier_payment_v01",
         "summary": (
+            "Root reviewed all upstream semantic reports; blockers are clear for "
+            "mock-only packet consideration, with no real-world action allowed."
+            if mock_ready_fixture
+            else
             "Root reviewed candidate evidence, DRS context, CandidateVector/AVF, "
             "advisory, PlanGraph/DAG, Post V&V, and GT/LGT reports; legal hold "
             "and water_filter shortage keep payment and shipment not ready."
         ),
+        "mock_ready_fixture": bool(mock_ready_fixture),
+        "blockers_checked": blocker_summary,
         "semantic_claim_id": claim.claim_id,
         "semantic_claim_candidate_only": True,
         "drs_candidate_count": drs_context["candidate_count"],
@@ -3877,15 +4081,14 @@ def _root_final_output_boundary(
     }
     return {
         "created_by": "root_boundary",
-        "decision": "not_ready",
+        "decision": decision,
         "root_reviewed": True,
         "payment_executed": False,
         "shipment_released": False,
         "connector_called": False,
-        "reason": (
-            "legal hold / expired insurance risk and water_filter shortage block "
-            "payment and shipment release"
-        ),
+        "reason": reason,
+        "mock_ready_fixture": bool(mock_ready_fixture),
+        "blockers_checked": blocker_summary,
         "source_claim_is_candidate_only": True,
         "provider_output_used_as_truth": False,
         "source_claim_id": claim.claim_id,
@@ -3900,7 +4103,436 @@ def _root_final_output_boundary(
     }
 
 
-def _drs_writeback_record(root_boundary: Mapping[str, Any]) -> dict[str, Any]:
+ACTION_COMMIT_PACKET_ALLOWED_ACTION_KINDS = (
+    "mock_supplier_payment_review",
+    "mock_shipment_reservation_review",
+)
+ACTION_COMMIT_PACKET_FORBIDDEN_ACTION_KINDS = (
+    "real_payment",
+    "real_shipment_release",
+    "bank_api_call",
+    "supplier_api_call",
+    "warehouse_api_call",
+    "connector_execution",
+)
+ACTION_COMMIT_PACKET_FORBIDDEN_FIELDS = frozenset(
+    {
+        "real_payment_executed",
+        "real_shipment_released",
+        "bank_api_called",
+        "warehouse_api_called",
+        "supplier_api_called",
+        "connector_called",
+        "connector_command",
+        "payment_executed",
+        "shipment_released",
+        "final_output_created_by_packet",
+        "authority_claimed_by_packet",
+        "gemini_created_packet",
+    }
+)
+ACTION_COMMIT_PACKET_REQUIRED_FIELDS = (
+    "packet_type",
+    "packet_id",
+    "created_by",
+    "source_root_outcome_id",
+    "source_root_decision",
+    "business_subject",
+    "action_scope",
+    "mock_only",
+    "real_world_effects_allowed",
+    "allowed_action_kinds",
+    "forbidden_action_kinds",
+    "allowed_future_adapters",
+    "forbidden_real_adapters",
+    "root_reviewed",
+    "root_approved",
+    "approval_reason",
+    "blockers_checked",
+    "validator_receipts",
+    "trace_refs",
+    "idempotency_key",
+    "expires_at",
+    "root_final_authority_preserved",
+)
+ACTION_COMMIT_PACKET_REQUIRED_FAKE_ADAPTERS = (
+    "fake_bank_adapter_v0",
+    "fake_supplier_adapter_v0",
+    "fake_warehouse_adapter_v0",
+)
+ACTION_COMMIT_PACKET_REQUIRED_FORBIDDEN_REAL_ADAPTERS = (
+    "bank_api",
+    "supplier_api",
+    "warehouse_api",
+)
+
+
+def _root_mock_approval_context_default() -> dict[str, Any]:
+    return {
+        "layer": "Root Mock Approval Gate",
+        "gate_enabled": False,
+        "invoked": False,
+        "approval_granted": False,
+        "approval_denied": False,
+        "denial_reasons": (),
+        "root_decision": None,
+        "root_boundary_required": True,
+        "created_after_root_boundary": False,
+        "legal_hold_clear": False,
+        "stock_available_or_mock_reservable": False,
+        "post_vv_passed": False,
+        "gt_lgt_reviewed": False,
+        "Root remains final authority": True,
+        "counters": {key: 0 for key in ACTION_COMMIT_PACKET_COUNTER_KEYS},
+    }
+
+
+def _action_commit_packet_default() -> dict[str, Any]:
+    return {
+        "packet_created": False,
+        "packet": None,
+        "validation": {
+            "accepted": False,
+            "reasons": (),
+        },
+        "mock_only": False,
+        "real_world_effects_allowed": False,
+        "connector_executed": False,
+        "mock_receipt_created": False,
+        "execution_evidence_created": False,
+    }
+
+
+def _build_mock_action_commit_packet(
+    *,
+    root_boundary: Mapping[str, Any],
+    post_vv_context: Mapping[str, Any],
+    gt_lgt_context: Mapping[str, Any],
+) -> dict[str, Any]:
+    root_artifact = root_boundary["root_reviewed_semantic_outcome"]
+    packet_id = f"mock_action_commit_packet:{root_artifact['outcome_id']}"
+    return {
+        "packet_type": "mock_action_commit_packet",
+        "packet_id": packet_id,
+        "created_by": "root_mock_approval_gate",
+        "source_root_outcome_id": root_artifact["outcome_id"],
+        "source_root_decision": root_boundary["decision"],
+        "business_subject": "SH-2042 / INV-2042",
+        "action_scope": "local_mock_connector_sandbox",
+        "mock_only": True,
+        "real_world_effects_allowed": False,
+        "allowed_action_kinds": ACTION_COMMIT_PACKET_ALLOWED_ACTION_KINDS,
+        "forbidden_action_kinds": ACTION_COMMIT_PACKET_FORBIDDEN_ACTION_KINDS,
+        "allowed_future_adapters": (
+            "fake_bank_adapter_v0",
+            "fake_supplier_adapter_v0",
+            "fake_warehouse_adapter_v0",
+        ),
+        "forbidden_real_adapters": (
+            "bank_api",
+            "supplier_api",
+            "warehouse_api",
+        ),
+        "root_reviewed": True,
+        "root_approved": True,
+        "approval_reason": root_boundary["reason"],
+        "blockers_checked": {
+            "legal_hold_clear": True,
+            "stock_available_or_mock_reservable": True,
+            "post_vv_passed": post_vv_context["vv_report_count"] > 0,
+            "gt_lgt_reviewed": bool(gt_lgt_context["gt_report_id"]),
+        },
+        "validator_receipts": {
+            "post_vv": {
+                "implementation": post_vv_context["implementation"],
+                "vv_report_count": post_vv_context["vv_report_count"],
+                "finalizes": post_vv_context["finalizes"],
+            },
+            "gt_lgt": {
+                "implementation": gt_lgt_context["implementation"],
+                "gt_report_id": gt_lgt_context["gt_report_id"],
+                "decision": gt_lgt_context["decision"],
+                "finalizes": gt_lgt_context["finalizes"],
+            },
+            "root": {
+                "created_by": root_boundary["created_by"],
+                "decision": root_boundary["decision"],
+                "root_reviewed": root_boundary["root_reviewed"],
+            },
+        },
+        "trace_refs": (
+            {
+                "trace_id": "trace:full_semantic_e2e_action_commit_packet_v01",
+                "span_id": "root_mock_approval_gate",
+                "kind": "mock_action_commit_packet_candidate",
+            },
+        ),
+        "idempotency_key": (
+            "idem:mock_action_commit_packet:"
+            "root_outcome:full_semantic_e2e_supplier_payment_v01"
+        ),
+        "expires_at": "2026-06-22T13:00:00+00:00",
+        "root_final_authority_preserved": True,
+    }
+
+
+def _validate_action_commit_packet(
+    packet: Mapping[str, Any],
+    *,
+    root_boundary: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    reasons: list[str] = []
+    for field in ACTION_COMMIT_PACKET_REQUIRED_FIELDS:
+        if field not in packet:
+            reasons.append(f"missing_required_field:{field}")
+
+    if not root_boundary or not root_boundary.get("root_reviewed"):
+        reasons.append("root_boundary_required")
+    root_decision = root_boundary.get("decision") if root_boundary else None
+    if root_decision != "ready_for_mock_action":
+        reasons.append("root_decision_not_ready_for_mock_action")
+    root_artifact = (
+        root_boundary.get("root_reviewed_semantic_outcome") if root_boundary else {}
+    ) or {}
+    root_outcome_id = root_artifact.get("outcome_id")
+    if packet.get("source_root_decision") != root_decision:
+        reasons.append("source_root_decision_must_match_root_boundary")
+    if packet.get("source_root_outcome_id") != root_outcome_id:
+        reasons.append("source_root_outcome_id_must_match_root_boundary")
+    if packet.get("packet_type") != "mock_action_commit_packet":
+        reasons.append("packet_type_must_be_mock_action_commit_packet")
+    if packet.get("created_by") != "root_mock_approval_gate":
+        reasons.append("packet_created_by_must_be_root_mock_approval_gate")
+    if packet.get("action_scope") != "local_mock_connector_sandbox":
+        reasons.append("action_scope_must_be_local_mock_connector_sandbox")
+    if packet.get("mock_only") is not True:
+        reasons.append("mock_only_must_be_true")
+    if packet.get("real_world_effects_allowed") is not False:
+        reasons.append("real_world_effects_must_be_false")
+    if packet.get("root_reviewed") is not True or packet.get("root_approved") is not True:
+        reasons.append("root_review_and_approval_required")
+    if packet.get("root_final_authority_preserved") is not True:
+        reasons.append("root_final_authority_must_be_preserved")
+
+    allowed_action_kinds = set(ACTION_COMMIT_PACKET_ALLOWED_ACTION_KINDS)
+    requested_kinds = set(packet.get("allowed_action_kinds", ()))
+    if not requested_kinds or not requested_kinds.issubset(allowed_action_kinds):
+        reasons.append("unsupported_action_kind")
+    forbidden_action_kinds = set(packet.get("forbidden_action_kinds", ()))
+    if not set(ACTION_COMMIT_PACKET_FORBIDDEN_ACTION_KINDS).issubset(
+        forbidden_action_kinds
+    ):
+        reasons.append("forbidden_action_kinds_incomplete")
+    allowed_future_adapters = tuple(packet.get("allowed_future_adapters", ()))
+    if not set(ACTION_COMMIT_PACKET_REQUIRED_FAKE_ADAPTERS).issubset(
+        set(allowed_future_adapters)
+    ):
+        reasons.append("allowed_future_adapters_must_be_fake_only")
+    real_adapter_markers = ("bank_api", "supplier_api", "warehouse_api")
+    if any(
+        marker in str(adapter)
+        for adapter in allowed_future_adapters
+        for marker in real_adapter_markers
+    ):
+        reasons.append("real_adapter_forbidden_in_allowed_future_adapters")
+    forbidden_real_adapters = set(packet.get("forbidden_real_adapters", ()))
+    if not set(ACTION_COMMIT_PACKET_REQUIRED_FORBIDDEN_REAL_ADAPTERS).issubset(
+        forbidden_real_adapters
+    ):
+        reasons.append("forbidden_real_adapters_incomplete")
+
+    blockers = packet.get("blockers_checked") or {}
+    for blocker in (
+        "legal_hold_clear",
+        "stock_available_or_mock_reservable",
+        "post_vv_passed",
+        "gt_lgt_reviewed",
+    ):
+        if blockers.get(blocker) is not True:
+            reasons.append(f"blocker_check_failed:{blocker}")
+
+    validator_receipts = packet.get("validator_receipts") or {}
+    for receipt in ("post_vv", "gt_lgt", "root"):
+        if receipt not in validator_receipts:
+            reasons.append(f"validator_receipt_missing:{receipt}")
+    if (validator_receipts.get("post_vv") or {}).get("finalizes") is not False:
+        reasons.append("post_vv_receipt_must_not_finalize")
+    if (validator_receipts.get("gt_lgt") or {}).get("finalizes") is not False:
+        reasons.append("gt_lgt_receipt_must_not_finalize")
+    if (
+        (validator_receipts.get("root") or {}).get("decision")
+        != "ready_for_mock_action"
+    ):
+        reasons.append("root_receipt_decision_must_be_ready_for_mock_action")
+
+    present_forbidden = [
+        key
+        for key in ACTION_COMMIT_PACKET_FORBIDDEN_FIELDS
+        if key in packet
+    ]
+    if present_forbidden:
+        reasons.extend(f"forbidden_packet_field:{key}" for key in present_forbidden)
+    if _contains_text(packet, "connector_command"):
+        reasons.append("connector_command_forbidden")
+    if _contains_text(packet, "payment_executed"):
+        reasons.append("payment_execution_field_forbidden")
+    if _contains_text(packet, "shipment_released"):
+        reasons.append("shipment_release_field_forbidden")
+    if _contains_text(packet, "FinalOutput"):
+        reasons.append("packet_must_not_create_final_output")
+
+    return {
+        "accepted": not reasons,
+        "reasons": tuple(reasons),
+    }
+
+
+def _run_root_mock_approval_gate(
+    *,
+    env: Mapping[str, str],
+    root_boundary: Mapping[str, Any],
+    post_vv_context: Mapping[str, Any],
+    gt_lgt_context: Mapping[str, Any],
+) -> dict[str, Any]:
+    approval = _root_mock_approval_context_default()
+    packet_context = _action_commit_packet_default()
+    if not _root_mock_approval_gate_enabled(env):
+        return {
+            "root_mock_approval_context": approval,
+            "action_commit_packet_context": packet_context,
+            "action_commit_packet": None,
+        }
+
+    counters = {key: 0 for key in ACTION_COMMIT_PACKET_COUNTER_KEYS}
+    counters["root_mock_approval_gate_invoked_count"] = 1
+    approval.update(
+        {
+            "gate_enabled": True,
+            "invoked": True,
+            "root_decision": root_boundary.get("decision"),
+            "created_after_root_boundary": bool(root_boundary.get("root_reviewed")),
+            "legal_hold_clear": bool(
+                (root_boundary.get("blockers_checked") or {}).get("legal_hold_clear")
+            ),
+            "stock_available_or_mock_reservable": bool(
+                (root_boundary.get("blockers_checked") or {}).get(
+                    "stock_available_or_mock_reservable"
+                )
+            ),
+            "post_vv_passed": post_vv_context["vv_report_count"] > 0,
+            "gt_lgt_reviewed": bool(gt_lgt_context["gt_report_id"]),
+        }
+    )
+
+    denial_reasons: list[str] = []
+    if root_boundary.get("decision") != "ready_for_mock_action":
+        denial_reasons.append("root_decision_not_ready_for_mock_action")
+    if not approval["legal_hold_clear"]:
+        denial_reasons.append("legal_hold_not_clear")
+        counters["root_mock_approval_blocked_by_legal_hold_count"] = 1
+    if not approval["stock_available_or_mock_reservable"]:
+        denial_reasons.append("stock_not_available_or_mock_reservable")
+        counters["root_mock_approval_blocked_by_stock_shortage_count"] = 1
+    if not approval["post_vv_passed"]:
+        denial_reasons.append("post_vv_required")
+    if not approval["gt_lgt_reviewed"]:
+        denial_reasons.append("gt_lgt_required")
+
+    if denial_reasons:
+        counters["root_mock_approval_denied_count"] = 1
+        approval.update(
+            {
+                "approval_denied": True,
+                "approval_granted": False,
+                "denial_reasons": tuple(denial_reasons),
+                "counters": counters,
+            }
+        )
+        packet_context["validation"] = {
+            "accepted": False,
+            "reasons": tuple(denial_reasons),
+        }
+        return {
+            "root_mock_approval_context": approval,
+            "action_commit_packet_context": packet_context,
+            "action_commit_packet": None,
+        }
+
+    packet = _build_mock_action_commit_packet(
+        root_boundary=root_boundary,
+        post_vv_context=post_vv_context,
+        gt_lgt_context=gt_lgt_context,
+    )
+    validation = _validate_action_commit_packet(
+        packet,
+        root_boundary=root_boundary,
+    )
+    if not validation["accepted"]:
+        counters["root_mock_approval_denied_count"] = 1
+        counters["action_commit_packet_rejected_count"] = 1
+        approval.update(
+            {
+                "approval_denied": True,
+                "approval_granted": False,
+                "denial_reasons": tuple(validation["reasons"]),
+                "counters": counters,
+            }
+        )
+        packet_context.update(
+            {
+                "validation": validation,
+                "packet_created": False,
+                "packet": None,
+            }
+        )
+        return {
+            "root_mock_approval_context": approval,
+            "action_commit_packet_context": packet_context,
+            "action_commit_packet": None,
+        }
+
+    counters["root_mock_approval_granted_count"] = 1
+    counters["action_commit_packet_created_count"] = 1
+    counters["mock_action_commit_packet_created_count"] = 1
+    counters["action_commit_packet_created_by_root_count"] = 1
+    counters["action_commit_packet_mock_only_count"] = 1
+    counters["action_commit_packet_real_world_effects_allowed_count"] = int(
+        packet["real_world_effects_allowed"] is True
+    )
+    approval.update(
+        {
+            "approval_granted": True,
+            "approval_denied": False,
+            "denial_reasons": (),
+            "approval_reason": packet["approval_reason"],
+            "counters": counters,
+        }
+    )
+    packet_context.update(
+        {
+            "packet_created": True,
+            "packet": packet,
+            "validation": validation,
+            "mock_only": True,
+            "real_world_effects_allowed": False,
+            "connector_executed": False,
+            "mock_receipt_created": False,
+            "execution_evidence_created": False,
+        }
+    )
+    return {
+        "root_mock_approval_context": approval,
+        "action_commit_packet_context": packet_context,
+        "action_commit_packet": packet,
+    }
+
+
+def _drs_writeback_record(
+    root_boundary: Mapping[str, Any],
+    *,
+    root_mock_approval_context: Mapping[str, Any] | None = None,
+    action_commit_packet_context: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     artifact = root_boundary["root_reviewed_semantic_outcome"]
     with tempfile.TemporaryDirectory(prefix="hedgehog_full_e2e_slice3_writeback_") as tmp_dir:
         drs = LocalDRS(tmp_dir)
@@ -3924,6 +4556,8 @@ def _drs_writeback_record(root_boundary: Mapping[str, Any]) -> dict[str, Any]:
         "production_persistence_claimed": record["content"][
             "production_persistence_claimed"
         ],
+        "root_mock_approval_trace": dict(root_mock_approval_context or {}),
+        "action_commit_packet_trace": dict(action_commit_packet_context or {}),
         "payment_executed": False,
         "shipment_released": False,
     }
@@ -4081,6 +4715,7 @@ def _probe_slice3_hardening_checks(
 def _run_slice3_core_primitives(
     claim: SemanticEvidenceClaim,
     *,
+    env: Mapping[str, str],
     drs_context: Mapping[str, Any],
     candidate_context: Mapping[str, Any],
     avf_context: Mapping[str, Any],
@@ -4088,6 +4723,7 @@ def _run_slice3_core_primitives(
     plangraph_context: Mapping[str, Any],
     fractal_executor_context: Mapping[str, Any],
     slice2_result: Mapping[str, Any],
+    mock_ready_fixture: bool = False,
 ) -> dict[str, Any]:
     result_proposals = tuple(slice2_result["dag_runner_report"]["result_proposals"])
     vv_reports = tuple(_validate_result_proposals_runtime(list(result_proposals)))
@@ -4104,8 +4740,19 @@ def _run_slice3_core_primitives(
         fractal_executor_context=fractal_executor_context,
         post_vv_context=post_vv_context,
         gt_lgt_context=gt_lgt_context,
+        mock_ready_fixture=mock_ready_fixture,
     )
-    writeback = _drs_writeback_record(root_boundary)
+    approval_result = _run_root_mock_approval_gate(
+        env=env,
+        root_boundary=root_boundary,
+        post_vv_context=post_vv_context,
+        gt_lgt_context=gt_lgt_context,
+    )
+    writeback = _drs_writeback_record(
+        root_boundary,
+        root_mock_approval_context=approval_result["root_mock_approval_context"],
+        action_commit_packet_context=approval_result["action_commit_packet_context"],
+    )
     return {
         "result_proposals": result_proposals,
         "vv_reports": vv_reports,
@@ -4113,6 +4760,9 @@ def _run_slice3_core_primitives(
         "post_vv_context": post_vv_context,
         "gt_lgt_context": gt_lgt_context,
         "root_boundary": root_boundary,
+        "root_mock_approval_context": approval_result["root_mock_approval_context"],
+        "action_commit_packet_context": approval_result["action_commit_packet_context"],
+        "action_commit_packet": approval_result["action_commit_packet"],
         "drs_writeback_record": writeback,
         "hardening_checks": _probe_slice3_hardening_checks(
             result_proposals,
@@ -4204,6 +4854,9 @@ def _result(
     post_vv_context: Mapping[str, Any] | None = None,
     gt_lgt_context: Mapping[str, Any] | None = None,
     root_final_output_boundary: Mapping[str, Any] | None = None,
+    root_mock_approval_context: Mapping[str, Any] | None = None,
+    action_commit_packet_context: Mapping[str, Any] | None = None,
+    action_commit_packet: Mapping[str, Any] | None = None,
     drs_writeback_record: Mapping[str, Any] | None = None,
     runtime_hardening_checks: Mapping[str, Any] | None = None,
     validation_errors: tuple[str, ...] = (),
@@ -4233,6 +4886,9 @@ def _result(
         "post_vv_context": dict(post_vv_context or {}),
         "gt_lgt_context": dict(gt_lgt_context or {}),
         "root_final_output_boundary": dict(root_final_output_boundary or {}),
+        "root_mock_approval_context": dict(root_mock_approval_context or {}),
+        "action_commit_packet_context": dict(action_commit_packet_context or {}),
+        "action_commit_packet": dict(action_commit_packet or {}),
         "drs_writeback_record": dict(drs_writeback_record or {}),
         "runtime_hardening_checks": dict(runtime_hardening_checks or {}),
         "stage_map": stage_map,
@@ -4261,6 +4917,35 @@ def _claim_summary(claim: SemanticEvidenceClaim) -> dict[str, Any]:
     }
 
 
+def _supplier_context_with_mock_ready_fixture(
+    supplier_context: Mapping[str, Any],
+    *,
+    mock_ready_fixture: bool,
+) -> dict[str, Any]:
+    context = dict(supplier_context)
+    business_context = dict(context.get("business_context") or {})
+    if mock_ready_fixture:
+        business_context.update(
+            {
+                "warehouse_stock": "water_filter available for local mock reservation",
+                "legal_status": "insurance certificate cleared for local mock fixture",
+                "mock_ready_fixture": True,
+            }
+        )
+        context.update(
+            {
+                "mock_ready_fixture": True,
+                "legal_hold_present": False,
+                "water_filter_shortage": False,
+                "stock_available_or_mock_reservable": True,
+                "claim_is_action_permission": False,
+                "claim_is_final_output": False,
+            }
+        )
+    context["business_context"] = business_context
+    return context
+
+
 def run_full_semantic_e2e(
     env: Mapping[str, str] | None = None,
     *,
@@ -4273,6 +4958,9 @@ def run_full_semantic_e2e(
     counters = _base_counters()
     supplier_result = _call_supplier_live_lane(observed_env, provider)
     _copy_supplier_counters(counters, supplier_result)
+    mock_ready_fixture_requested = _full_e2e_mock_ready_fixture_enabled(observed_env)
+    root_mock_approval_enabled = _root_mock_approval_gate_enabled(observed_env)
+    mock_ready_fixture = mock_ready_fixture_requested and root_mock_approval_enabled
 
     if supplier_result["final_status"] != "PASS":
         return _result(
@@ -4285,8 +4973,61 @@ def run_full_semantic_e2e(
             supplier_live_result=supplier_result,
         )
 
+    if mock_ready_fixture_requested and not root_mock_approval_enabled and not (
+        _root_mock_approval_gate_partial_enabled(observed_env)
+    ):
+        errors = ("mock_ready_fixture_requires_root_mock_approval_gates",)
+        return _result(
+            final_status="FAIL_CLOSED",
+            counters=counters,
+            scenarios=_failure_scenarios(errors),
+            stage_map=_stage_map_root_mock_approval_gate_fail_closed(),
+            dirty_business_request=dirty_request,
+            semantic_evidence_claim=_claim_summary(supplier_result["claims"][0]),
+            supplier_payment_context=_supplier_context_with_mock_ready_fixture(
+                supplier_result["supplier_context"],
+                mock_ready_fixture=False,
+            ),
+            root_mock_approval_context=_root_mock_approval_context_default(),
+            action_commit_packet_context=_action_commit_packet_default(),
+            validation_errors=errors,
+            supplier_live_result=supplier_result,
+        )
+
+    if _root_mock_approval_gate_partial_enabled(observed_env):
+        errors = ("root_mock_approval_requires_both_gates",)
+        if mock_ready_fixture_requested:
+            errors = (
+                "root_mock_approval_requires_both_gates",
+                "mock_ready_fixture_requires_root_mock_approval_gates",
+            )
+        return _result(
+            final_status="FAIL_CLOSED",
+            counters=counters,
+            scenarios=_failure_scenarios(errors),
+            stage_map=_stage_map_root_mock_approval_gate_fail_closed(),
+            dirty_business_request=dirty_request,
+            semantic_evidence_claim=_claim_summary(supplier_result["claims"][0]),
+            supplier_payment_context=_supplier_context_with_mock_ready_fixture(
+                supplier_result["supplier_context"],
+                mock_ready_fixture=False,
+            ),
+            root_mock_approval_context=_root_mock_approval_context_default(),
+            action_commit_packet_context=_action_commit_packet_default(),
+            validation_errors=errors,
+            supplier_live_result=supplier_result,
+        )
+
     claim = supplier_result["claims"][0]
-    slice1_result = _run_slice1_core_primitives(claim, dirty_request)
+    supplier_context = _supplier_context_with_mock_ready_fixture(
+        supplier_result["supplier_context"],
+        mock_ready_fixture=mock_ready_fixture,
+    )
+    slice1_result = _run_slice1_core_primitives(
+        claim,
+        dirty_request,
+        mock_ready_fixture=mock_ready_fixture,
+    )
     drs_context = _drs_context(claim, slice1_result)
     candidate_context = _candidate_vector_context(claim, slice1_result)
     avf = _avf_context(claim, slice1_result)
@@ -4332,7 +5073,7 @@ def run_full_semantic_e2e(
             ),
             dirty_business_request=dirty_request,
             semantic_evidence_claim=_claim_summary(claim),
-            supplier_payment_context=supplier_result["supplier_context"],
+            supplier_payment_context=supplier_context,
             drs_candidate_context=drs_context,
             candidate_vector_context=candidate_context,
             avf_context=avf,
@@ -4356,6 +5097,7 @@ def run_full_semantic_e2e(
     fractal_executor = _fractal_executor_context(slice2_result)
     slice3_result = _run_slice3_core_primitives(
         claim,
+        env=observed_env,
         drs_context=drs_context,
         candidate_context=candidate_context,
         avf_context=avf,
@@ -4363,13 +5105,14 @@ def run_full_semantic_e2e(
         plangraph_context=plangraph,
         fractal_executor_context=fractal_executor,
         slice2_result=slice2_result,
+        mock_ready_fixture=mock_ready_fixture,
     )
     _apply_spine_counters(counters, slice1_result, slice2_result, slice3_result)
     root_boundary = slice3_result["root_boundary"]
     _apply_live_claim_influence_counters(
         counters,
         supplier_result,
-        supplier_context=supplier_result["supplier_context"],
+        supplier_context=supplier_context,
         drs_context=drs_context,
         candidate_context=candidate_context,
         avf_context=avf,
@@ -4381,6 +5124,26 @@ def run_full_semantic_e2e(
     writeback = slice3_result["drs_writeback_record"]
     prompt_injection = bool(claim.unsafe_instruction_flags)
     stage_map = _stage_map_success()
+    root_mock_approval = slice3_result["root_mock_approval_context"]
+    action_commit_packet_context = slice3_result["action_commit_packet_context"]
+    if root_mock_approval.get("invoked"):
+        stage_map["root_mock_approval_gate"] = {
+            **stage_map["root_mock_approval_gate"],
+            "status": "invoked",
+            "notes": (
+                "Root Mock Approval Gate invoked after Root boundary; "
+                "mock approval is Root-only and not execution"
+            ),
+        }
+    if action_commit_packet_context.get("packet_created"):
+        stage_map["action_commit_packet_candidate"] = {
+            **stage_map["action_commit_packet_candidate"],
+            "status": "invoked",
+            "notes": (
+                "Root-created mock-only ActionCommitPacket candidate created after "
+                "Root boundary; no connector executes"
+            ),
+        }
     scenarios = _success_scenarios(prompt_injection)
 
     return _result(
@@ -4390,7 +5153,7 @@ def run_full_semantic_e2e(
         stage_map=stage_map,
         dirty_business_request=dirty_request,
         semantic_evidence_claim=_claim_summary(claim),
-        supplier_payment_context=supplier_result["supplier_context"],
+        supplier_payment_context=supplier_context,
         drs_candidate_context=drs_context,
         candidate_vector_context=candidate_context,
         avf_context=avf,
@@ -4406,6 +5169,9 @@ def run_full_semantic_e2e(
         post_vv_context=post_vv,
         gt_lgt_context=gt_lgt,
         root_final_output_boundary=root_boundary,
+        root_mock_approval_context=root_mock_approval,
+        action_commit_packet_context=action_commit_packet_context,
+        action_commit_packet=slice3_result.get("action_commit_packet") or {},
         drs_writeback_record=writeback,
         runtime_hardening_checks=slice3_result["hardening_checks"],
         supplier_live_result=supplier_result,
@@ -4468,6 +5234,11 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         "",
         "Root boundary:",
         str(result["root_final_output_boundary"]),
+        "",
+        "Root Mock Approval Gate / ActionCommitPacket:",
+        str(result["root_mock_approval_context"]),
+        str(result["action_commit_packet_context"]),
+        str(result["action_commit_packet"]),
         "",
         "DRS writeback:",
         str(result["drs_writeback_record"]),

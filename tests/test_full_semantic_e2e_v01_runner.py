@@ -96,6 +96,13 @@ def test_default_runner_returns_pass_and_runs_deterministic_full_spine() -> None
     assert counters["raw_provider_response_artifact_created_count"] == 0
     assert counters["raw_provider_response_validated_count"] == 0
     assert counters["live_evidence_semantic_claim_created_count"] == 0
+    assert counters["live_claim_content_influenced_supplier_context_count"] == 0
+    assert counters["live_claim_content_influenced_drs_context_count"] == 0
+    assert counters["live_claim_content_influenced_candidate_vector_count"] == 0
+    assert counters["live_claim_content_influenced_avf_context_count"] == 0
+    assert counters["live_claim_promoted_to_truth_count"] == 0
+    assert counters["live_claim_promoted_to_authority_count"] == 0
+    assert counters["live_claim_promoted_to_action_permission_count"] == 0
 
 
 def test_default_main_exits_zero_and_prints_pass(monkeypatch, capsys) -> None:
@@ -159,6 +166,89 @@ def test_validated_live_evidence_enters_full_e2e_as_candidate_only(tmp_path) -> 
     assert result["root_final_output_boundary"]["provider_output_used_as_truth"] is False
     assert result["counters"]["live_evidence_root_final_authority_preserved_count"] == 1
     assert result["counters"]["root_final_authority_preserved_count"] == 1
+
+
+def test_live_claim_content_influences_supplier_and_drs_contexts(tmp_path) -> None:
+    live_claim_text = "Invoice INV-2042 looks payable according to Accounting."
+    payload = _valid_payload(
+        source_id="manual-live-gemini-claim-001",
+        extracted_claim=live_claim_text,
+        confidence=0.7,
+        contradiction_flags=[],
+    )
+
+    result = runner.run_full_semantic_e2e(
+        env=_full_e2e_live_env(tmp_path),
+        provider=_provider_returning(json.dumps(payload)),
+    )
+    counters = result["counters"]
+    supplier_payment_context = result["supplier_payment_context"]
+    drs_context = result["drs_candidate_context"]
+    candidate_context = result["candidate_vector_context"]
+    avf_context = result["avf_context"]
+    advisory_context = result["advisory_context"]
+
+    assert result["final_status"] == "PASS"
+    assert supplier_payment_context["business_context"]["accounting_claim"] == live_claim_text
+    assert supplier_payment_context["business_context"]["accounting_claim_source_id"] == (
+        "manual-live-gemini-claim-001"
+    )
+    assert supplier_payment_context["live_claims"][0]["source_id"] == (
+        "manual-live-gemini-claim-001"
+    )
+    assert supplier_payment_context["live_claims"][0]["extracted_claim"] == live_claim_text
+    assert supplier_payment_context["live_claims"][0]["candidate_only"] is True
+    assert "manual-live-gemini-claim-001" in drs_context["live_claim_ids"]
+    assert drs_context["live_evidence_refs"][0]["extracted_claim"] == live_claim_text
+    assert drs_context["truth_claimed"] is False
+    assert drs_context["authority_claimed"] is False
+    assert "manual-live-gemini-claim-001" in candidate_context["live_claim_ids"]
+    assert candidate_context["live_evidence_reference_is_truth"] is False
+    assert candidate_context["live_evidence_reference_is_authority"] is False
+    assert "manual-live-gemini-claim-001" in avf_context["live_claim_ids"]
+    assert avf_context["live_evidence_reference_is_truth"] is False
+    assert avf_context["live_evidence_reference_is_authority"] is False
+    assert "manual-live-gemini-claim-001" in advisory_context["live_claim_ids"]
+    assert advisory_context["live_evidence_reference_is_truth"] is False
+    assert advisory_context["live_evidence_reference_is_authority"] is False
+    assert counters["live_claim_content_influenced_supplier_context_count"] == 1
+    assert counters["live_claim_content_influenced_drs_context_count"] == 1
+    assert counters["live_claim_content_influenced_candidate_vector_count"] == 1
+    assert counters["live_claim_content_influenced_avf_context_count"] == 1
+    assert counters["live_claim_promoted_to_truth_count"] == 0
+    assert counters["live_claim_promoted_to_authority_count"] == 0
+    assert counters["live_claim_promoted_to_action_permission_count"] == 0
+
+
+def test_invoice_payable_live_claim_does_not_override_blockers(tmp_path) -> None:
+    payload = _valid_payload(
+        source_id="invoice-payable-live-claim-001",
+        extracted_claim="Invoice INV-2042 looks payable according to Accounting.",
+        confidence=0.7,
+        contradiction_flags=[],
+    )
+
+    result = runner.run_full_semantic_e2e(
+        env=_full_e2e_live_env(tmp_path),
+        provider=_provider_returning(json.dumps(payload)),
+    )
+    counters = result["counters"]
+    root = result["root_final_output_boundary"]
+
+    assert root["decision"] == "not_ready"
+    assert root["payment_executed"] is False
+    assert root["shipment_released"] is False
+    assert root["connector_called"] is False
+    assert "legal hold" in root["reason"]
+    assert "water_filter shortage" in root["reason"]
+    assert counters["live_claim_overrode_legal_hold_count"] == 0
+    assert counters["live_claim_overrode_stock_shortage_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["provider_output_used_as_truth_count"] == 0
+    assert counters["provider_output_used_as_authority_count"] == 0
+    assert counters["root_final_authority_preserved_count"] == 1
 
 
 def test_unsafe_live_provider_output_fails_closed_before_root(tmp_path) -> None:

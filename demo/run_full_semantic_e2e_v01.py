@@ -87,6 +87,15 @@ COUNTER_KEYS = (
     "raw_provider_response_validated_count",
     "live_evidence_semantic_claim_created_count",
     "live_evidence_claim_candidate_only_count",
+    "live_claim_content_influenced_supplier_context_count",
+    "live_claim_content_influenced_drs_context_count",
+    "live_claim_content_influenced_candidate_vector_count",
+    "live_claim_content_influenced_avf_context_count",
+    "live_claim_overrode_legal_hold_count",
+    "live_claim_overrode_stock_shortage_count",
+    "live_claim_promoted_to_truth_count",
+    "live_claim_promoted_to_authority_count",
+    "live_claim_promoted_to_action_permission_count",
     "provider_output_used_as_truth_count",
     "provider_output_used_as_authority_count",
     "bounded_gemini_actor_role_started_count",
@@ -358,15 +367,36 @@ def _provider_adapter_env(env: Mapping[str, str]) -> dict[str, str]:
     return adapter_env
 
 
+def _live_claim_reference(claim: SemanticEvidenceClaim) -> dict[str, Any]:
+    return {
+        "claim_id": claim.claim_id,
+        "source_id": claim.source_id,
+        "source_kind": claim.source_kind,
+        "extracted_claim": claim.extracted_claim,
+        "confidence": claim.confidence,
+        "candidate_only": True,
+        "truth_claimed": claim.truth_claimed,
+        "authority_claimed": claim.authority_claimed,
+        "action_permission_claimed": claim.action_permission_claimed,
+        "final_output_claimed": claim.final_output_claimed,
+        "root_review_required": claim.root_review_required,
+    }
+
+
 def _supplier_context_from_live_claim(claim: SemanticEvidenceClaim) -> dict[str, Any]:
+    live_claim = _live_claim_reference(claim)
     return {
         "business_context": {
             "subject": "SH-2042 / INV-2042",
             "warehouse_stock": "water_filter short by 2",
-            "accounting_claim": "invoice INV-2042 looks payable",
+            "accounting_claim": claim.extracted_claim,
+            "accounting_claim_source": "validated_live_claim",
+            "accounting_claim_source_id": claim.source_id,
             "legal_status": "insurance certificate may be expired",
             "requested_action": "pay supplier and release shipment",
         },
+        "live_claims": (live_claim,),
+        "live_claim_influenced_supplier_facts": ("accounting_claim",),
         "claim_source_id": claim.source_id,
         "claim_added_as": "candidate-only SemanticEvidenceClaim",
         "claim_is_truth": False,
@@ -699,6 +729,98 @@ def _apply_spine_counters(
     )
 
 
+def _apply_live_claim_influence_counters(
+    counters: dict[str, int],
+    supplier_result: Mapping[str, Any],
+    *,
+    supplier_context: Mapping[str, Any],
+    drs_context: Mapping[str, Any],
+    candidate_context: Mapping[str, Any],
+    avf_context: Mapping[str, Any],
+    root_boundary: Mapping[str, Any],
+) -> None:
+    if supplier_result.get("full_e2e_live_evidence_mode") is not True:
+        return
+
+    live_claims = tuple(supplier_context.get("live_claims", ()))
+    live_claim_ids = tuple(
+        claim.get("source_id")
+        for claim in live_claims
+        if isinstance(claim, Mapping) and claim.get("source_id")
+    )
+    candidate_only = bool(live_claims) and all(
+        claim.get("candidate_only") is True
+        and claim.get("truth_claimed") is False
+        and claim.get("authority_claimed") is False
+        and claim.get("action_permission_claimed") is False
+        for claim in live_claims
+        if isinstance(claim, Mapping)
+    )
+
+    counters["live_claim_content_influenced_supplier_context_count"] = int(
+        bool(live_claim_ids)
+        and "accounting_claim" in supplier_context.get(
+            "live_claim_influenced_supplier_facts",
+            (),
+        )
+        and candidate_only
+    )
+    counters["live_claim_content_influenced_drs_context_count"] = int(
+        bool(live_claim_ids)
+        and set(live_claim_ids).issubset(set(drs_context.get("live_claim_ids", ())))
+        and drs_context.get("truth_claimed") is False
+        and drs_context.get("authority_claimed") is False
+    )
+    counters["live_claim_content_influenced_candidate_vector_count"] = int(
+        bool(live_claim_ids)
+        and set(live_claim_ids).issubset(
+            set(candidate_context.get("live_claim_ids", ()))
+        )
+        and candidate_context.get("truth_claimed") is False
+        and candidate_context.get("authority_claimed") is False
+    )
+    counters["live_claim_content_influenced_avf_context_count"] = int(
+        bool(live_claim_ids)
+        and set(live_claim_ids).issubset(set(avf_context.get("live_claim_ids", ())))
+        and avf_context.get("authority_claimed") is False
+    )
+    counters["live_claim_overrode_legal_hold_count"] = int(
+        root_boundary.get("payment_executed") is True
+        or root_boundary.get("decision") not in {"not_ready", "needs_review"}
+    )
+    counters["live_claim_overrode_stock_shortage_count"] = int(
+        root_boundary.get("shipment_released") is True
+    )
+    counters["live_claim_promoted_to_truth_count"] = int(
+        any(
+            claim.get("truth_claimed")
+            for claim in live_claims
+            if isinstance(claim, Mapping)
+        )
+        or drs_context.get("truth_claimed") is True
+        or candidate_context.get("truth_claimed") is True
+    )
+    counters["live_claim_promoted_to_authority_count"] = int(
+        any(
+            claim.get("authority_claimed")
+            for claim in live_claims
+            if isinstance(claim, Mapping)
+        )
+        or drs_context.get("authority_claimed") is True
+        or candidate_context.get("authority_claimed") is True
+        or avf_context.get("authority_claimed") is True
+    )
+    counters["live_claim_promoted_to_action_permission_count"] = int(
+        any(
+            claim.get("action_permission_claimed")
+            for claim in live_claims
+            if isinstance(claim, Mapping)
+        )
+        or root_boundary.get("payment_executed") is True
+        or root_boundary.get("shipment_released") is True
+    )
+
+
 def _stage_map_success() -> dict[str, dict[str, Any]]:
     return {
         "intake_dirty_business_request": _stage(
@@ -842,6 +964,12 @@ def _semantic_record_input(
         "claim_key": "supplier_payment_shipment_readiness",
         "claim_value": claim_value,
         "semantic_claim_id": claim.claim_id,
+        "live_claim_ids": [claim.source_id],
+        "live_claim_reference": _live_claim_reference(claim),
+        "live_claim_extracted_claim": claim.extracted_claim,
+        "live_claim_confidence": claim.confidence,
+        "live_claim_candidate_only": True,
+        "live_claim_influenced_drs_context": True,
         "source_claim_is_candidate_only": True,
         "schema_valid": True,
         "invoice_payable_signal": True,
@@ -1025,10 +1153,24 @@ def _drs_context(
     slice1_result: Mapping[str, Any],
 ) -> dict[str, Any]:
     report = slice1_result["drs_report"]
+    live_claim_ids = tuple(
+        sorted(
+            {
+                claim_id
+                for record in slice1_result["records_by_id"].values()
+                for claim_id in record.get("content", {}).get("live_claim_ids", ())
+            }
+        )
+    )
     return {
         "context_type": "DRS candidate context",
         "implementation": "hedgehog.local_drs_resolver.resolve_semantic_candidates",
         "source_claim_id": claim.claim_id,
+        "source_live_claim_id": claim.source_id,
+        "live_claim_ids": live_claim_ids,
+        "live_evidence_refs": (_live_claim_reference(claim),),
+        "live_claim_candidate_only": True,
+        "live_claim_influenced_context": bool(live_claim_ids),
         "resolved_as": "actual_local_drs_candidate_context",
         "candidate_count": report.candidate_count,
         "candidate_ids": tuple(candidate.candidate_id for candidate in report.candidates),
@@ -1053,6 +1195,11 @@ def _candidate_vector_context(
         "implementation": "hedgehog.candidate_vector_generator.build_avf_candidate_report",
         "report_type": type(report).__name__,
         "source_claim_id": claim.claim_id,
+        "source_live_claim_id": claim.source_id,
+        "live_claim_ids": (claim.source_id,),
+        "live_evidence_refs": (_live_claim_reference(claim),),
+        "live_evidence_reference_is_truth": False,
+        "live_evidence_reference_is_authority": False,
         "candidate_vector_count": len(report.candidates),
         "ranked_candidate_ids": tuple(score.candidate_id for score in report.ranked_candidates),
         "ranked_vector_ids": tuple(score.vector_id for score in report.ranked_candidates),
@@ -1069,7 +1216,10 @@ def _candidate_vector_context(
     }
 
 
-def _avf_context(slice1_result: Mapping[str, Any]) -> dict[str, Any]:
+def _avf_context(
+    claim: SemanticEvidenceClaim,
+    slice1_result: Mapping[str, Any],
+) -> dict[str, Any]:
     report = slice1_result["candidate_report"]
     scores = tuple(
         {
@@ -1087,6 +1237,11 @@ def _avf_context(slice1_result: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "AVF": "invoked score/rank",
         "implementation": "hedgehog.candidate_vector_generator.build_avf_candidate_report",
+        "source_live_claim_id": claim.source_id,
+        "live_claim_ids": (claim.source_id,),
+        "live_evidence_refs": (_live_claim_reference(claim),),
+        "live_evidence_reference_is_truth": False,
+        "live_evidence_reference_is_authority": False,
         "score": top_score,
         "rank": "review_required",
         "scores": scores,
@@ -1099,11 +1254,19 @@ def _avf_context(slice1_result: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _advisory_context(slice1_result: Mapping[str, Any]) -> dict[str, Any]:
+def _advisory_context(
+    claim: SemanticEvidenceClaim,
+    slice1_result: Mapping[str, Any],
+) -> dict[str, Any]:
     report = slice1_result["advisory_report"]
     return {
         "implementation": "hedgehog.gt_lgt_advisory_evaluator.evaluate_candidate_report",
         "report_type": type(report).__name__,
+        "source_live_claim_id": claim.source_id,
+        "live_claim_ids": (claim.source_id,),
+        "live_evidence_refs": (_live_claim_reference(claim),),
+        "live_evidence_reference_is_truth": False,
+        "live_evidence_reference_is_authority": False,
         "review": "legal hold and stock shortage require Root review",
         "recommended_review_route": report.recommended_review_route,
         "signals": tuple(
@@ -1971,8 +2134,8 @@ def run_full_semantic_e2e(
     slice2_result = _run_slice2_core_primitives(claim, dirty_request, slice1_result)
     drs_context = _drs_context(claim, slice1_result)
     candidate_context = _candidate_vector_context(claim, slice1_result)
-    avf = _avf_context(slice1_result)
-    advisory = _advisory_context(slice1_result)
+    avf = _avf_context(claim, slice1_result)
+    advisory = _advisory_context(claim, slice1_result)
     bounded_orchestrator = _bounded_orchestrator_context(slice2_result)
     architect = _architect_context(slice2_result)
     plangraph = _plangraph_context(slice2_result)
@@ -1988,10 +2151,19 @@ def run_full_semantic_e2e(
         slice2_result=slice2_result,
     )
     _apply_spine_counters(counters, slice1_result, slice2_result, slice3_result)
+    root_boundary = slice3_result["root_boundary"]
+    _apply_live_claim_influence_counters(
+        counters,
+        supplier_result,
+        supplier_context=supplier_result["supplier_context"],
+        drs_context=drs_context,
+        candidate_context=candidate_context,
+        avf_context=avf,
+        root_boundary=root_boundary,
+    )
     proposal = _result_proposal(claim, slice3_result)
     post_vv = slice3_result["post_vv_context"]
     gt_lgt = slice3_result["gt_lgt_context"]
-    root_boundary = slice3_result["root_boundary"]
     writeback = slice3_result["drs_writeback_record"]
     prompt_injection = bool(claim.unsafe_instruction_flags)
     stage_map = _stage_map_success()

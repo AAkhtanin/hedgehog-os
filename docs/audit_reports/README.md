@@ -7,6 +7,15 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_core_extraction_action_mock_fractal_v01.log`
+  - Audit status: PASS.
+  - Core Extraction checkpoint for ActionCommitPacket, MockConnectorSandbox, and FractalFulfillmentTopology.
+  - Extracted modules: `hedgehog.action_commit_packet`, `hedgehog.mock_connector_sandbox`, and `hedgehog.fractal_fulfillment`.
+  - Related docs: `docs/full_semantic_e2e_core_contracts_v01.md`, `docs/core_extraction_checkpoint_v01.md`, and `docs/public_wow_core_extracted_fractal_fulfillment_walkthrough_v01.md`.
+  - Deterministic extracted-core smoke PASS and dual Gemini extracted-core smoke PASS.
+  - Real/external counters remain zero, including connector/payment/shipment/API counters.
+  - Root remains final authority.
+
 - `auditor_root_native_dag_drs_audit_report.log`
   - Root-native DAG path, DRS writeback, audit/provenance, sensitive-scan checkpoint.
 

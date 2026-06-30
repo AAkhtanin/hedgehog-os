@@ -33,6 +33,46 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ---
 
+## Current Checkpoint
+
+Core Extraction: ActionCommitPacket + MockConnectorSandbox + FractalFulfillmentTopology — CLOSED.
+
+Checkpoint source:
+
+- Audit: `docs/audit_reports/auditor_core_extraction_action_mock_fractal_v01.log`
+- Core contracts: `hedgehog.action_commit_packet`, `hedgehog.mock_connector_sandbox`, `hedgehog.fractal_fulfillment`
+- Closed commits: `c62ab84`, `be4f40d`, `e26c05a`, `4723830`
+- Default CLI: `FINAL STATUS: PASS`
+- Regression suite: 272 passed, 2 warnings
+- deterministic extracted-core smoke PASS
+- dual Gemini extracted-core smoke PASS
+
+Stable contracts moved from `demo/run_full_semantic_e2e_v01.py` into
+`hedgehog/*` core modules. The Full Semantic E2E runner remains integration
+spine / harness: it wires the supplier-payment route, gates, stage map,
+counters, DRS writeback, and report rendering around the extracted contracts.
+
+Safety ledger at this checkpoint:
+
+- Root remains final authority.
+- Gemini proposes, Root disposes.
+- ActionCommitPacket is created by `root_mock_approval_gate`.
+- MockConnectorSandbox is the only fake-adapter execution layer.
+- FractalFulfillmentTopology preserves child O/A/I topology.
+- Child branch is not Root.
+- ExecutionEvidence is not FinalOutput.
+- mock receipt is not real payment.
+- connector_called_count remains zero.
+- payment_executed_count remains 0.
+- shipment_released_count remains 0.
+- real_bank_api_called_count remains 0.
+
+This checkpoint is not production and not public WOW ready yet. Documentation /
+public wrapper work remains a presentation layer, not runtime. NEXT: Rich
+Context / Bounded Context Packets preflight.
+
+---
+
 ## What Hedgehog OS Is
 
 Hedgehog OS / Fractal Reflexive OS is a fractal controlled-runtime topology for role-bounded intelligence.
@@ -2942,9 +2982,13 @@ Next engineering focus:
 - CLOSED: Live LLM Semantic Evidence Reader / Extractor v0.1.
 - CLOSED: Optional Live LLM Evidence Reader Smoke v0.1.
 - CLOSED: Live Provider Adapter / Response Capture v0.1.
-- NEXT: Supplier Payment Live Evidence Integration v0.2 preflight.
+- CLOSED: Core Extraction Action + Mock + Fractal v0.1, with ActionCommitPacket,
+  MockConnectorSandbox, and FractalFulfillmentTopology contracts extracted to
+  `hedgehog.action_commit_packet`, `hedgehog.mock_connector_sandbox`, and
+  `hedgehog.fractal_fulfillment`.
+- NEXT: Rich Context / Bounded Context Packets preflight.
 - Supplier Payment remains the integration spine and business axis for later live evidence integration.
-- Public WOW remains later, after Full Semantic E2E and E2E hardening.
+- Documentation / public wrapper work remains a presentation layer, not runtime.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.
 - Kernel Hardening Auditor Packet may happen as an engineering hardening packet after enforcement/boundary, but it is not the Real Semantic Runtime WOW Demo.
 - Later, after Real Semantic Runtime MVP: Real Semantic Runtime WOW Demo, Public Auditor Packet, and Whitepaper engineering draft.

@@ -125,6 +125,53 @@ API/needle execution is not enabled here. Live Gemini/SLM Orchestrator is a
 later layer, not the default. `fallback` vs `fallback_template` naming cleanup
 is minor backlog.
 
+### Core Extraction Action + Mock + Fractal v0.1
+
+Core Extraction Action + Mock + Fractal v0.1 is CLOSED.
+
+Checkpoint audit: `auditor_core_extraction_action_mock_fractal_v01`.
+
+Closed commits:
+
+- `c62ab84` Extract ActionCommitPacket core contract
+- `be4f40d` Extract Mock Connector Sandbox core contract
+- `e26c05a` Extract Fractal Fulfillment topology core contract
+- `4723830` Harden Mock Connector Sandbox adapter registry
+
+The Full Semantic E2E runner remains integration spine / harness. Stable
+contracts now live in:
+
+- `hedgehog.action_commit_packet`
+- `hedgehog.mock_connector_sandbox`
+- `hedgehog.fractal_fulfillment`
+
+Passport boundary facts:
+
+- ActionCommitPacket is a Root-created permission artifact.
+- MockConnectorSandbox is only fake-adapter execution layer.
+- FractalFulfillmentTopology preserves child O/A/I topology.
+- child branch is not Root.
+- Gemini proposes, Root disposes.
+- ExecutionEvidence is not FinalOutput.
+- mock receipt is not real payment/shipment.
+- Root remains final authority.
+
+Validation facts:
+
+- Default CLI: FINAL STATUS: PASS.
+- Regression suite: 272 passed, 2 warnings.
+- deterministic extracted-core smoke PASS.
+- dual Gemini extracted-core smoke PASS.
+
+Non-claims:
+
+- not production
+- not public WOW ready yet
+- no real connector/payment/shipment/API
+- no NeedleFactory / Marennya / UP
+
+Next engineering layer: Rich Context / Bounded Context Packets preflight.
+
 Current bounded graph and lineage checkpoints:
 
 - Large Graph / Bounded Fractal Stress v0.1 proves deterministic bounded

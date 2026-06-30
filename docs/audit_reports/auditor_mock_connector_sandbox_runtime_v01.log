@@ -1,0 +1,275 @@
+audit_id: auditor_mock_connector_sandbox_runtime_v01
+audit_status: PASS
+runtime_commit: 518f810
+preflight_commit: 41672cd
+action_commit_packet_audit_dependency: c9c1e3d
+action_commit_packet_runtime_dependency: 096bd48
+dual_gemini_audit_dependency: 8b59c63
+scope: Mock Connector Sandbox v0.1 runtime inside existing Full Semantic E2E supplier-payment spine
+
+committed_chain:
+- 41672cd Add Mock Connector Sandbox preflight
+- 518f810 Add Mock Connector Sandbox runtime
+
+closed_dependencies:
+- c9c1e3d Add ActionCommitPacket Root mock approval gate audit log
+- 096bd48 Add ActionCommitPacket Root mock approval gate runtime
+- 8b59c63 Add dual Gemini role integration audit log
+
+runtime_scope:
+- implemented inside existing Full Semantic E2E runner
+- no new runner
+- no real connector
+- no real payment
+- no real shipment
+- no production
+- no public-WOW-readiness claim
+- no NeedleFactory / Marennya / UP
+- no model/network/Gemini calls introduced by sandbox
+- sandbox consumes only a validated Root-created mock_action_commit_packet
+- ActionCommitPacket does not execute itself
+- Gemini cannot bypass ActionCommitPacket
+- Orchestrator cannot bypass ActionCommitPacket
+- Architect cannot bypass ActionCommitPacket
+- Fractal executor cannot bypass ActionCommitPacket
+- Root remains final authority
+
+validation_evidence_before_commit:
+- default CLI: FINAL STATUS: PASS
+- focused suite: 176 passed, 2 warnings
+- changed files were limited to:
+  - demo/run_full_semantic_e2e_v01.py
+  - tests/test_full_semantic_e2e_v01_runner.py
+- forbidden grep was clean
+- commit: 518f810 Add Mock Connector Sandbox runtime
+
+manual_smoke_evidence:
+source_summary: .tmp/mock_connector_sandbox/manual-mock-connector-sandbox-001_summary.json
+source_log: .tmp/mock_connector_sandbox/manual-mock-connector-sandbox-001_summary.log
+smoke_id: manual-mock-connector-sandbox-001
+runtime_commit_expected: 518f810
+final_status: PASS
+validation_errors: []
+Root decision: ready_for_mock_action
+mock_ready_fixture: true
+
+action_commit_packet_evidence:
+packet_type: mock_action_commit_packet
+packet_id: mock_action_commit_packet:root_outcome:full_semantic_e2e_supplier_payment_v01
+created_by: root_mock_approval_gate
+source_root_decision: ready_for_mock_action
+source_root_outcome_id: root_outcome:full_semantic_e2e_supplier_payment_v01
+business_subject: SH-2042 / INV-2042
+action_scope: local_mock_connector_sandbox
+mock_only: true
+real_world_effects_allowed: false
+allowed_future_adapters:
+- fake_bank_adapter_v0
+- fake_supplier_adapter_v0
+- fake_warehouse_adapter_v0
+forbidden_real_adapters:
+- bank_api
+- supplier_api
+- warehouse_api
+idempotency_key present: true
+expires_at present: true
+root_final_authority_preserved: true
+
+mock_connector_sandbox_context:
+mock_connector_sandbox_context.invoked: true
+completed: true
+denied: false
+packet_validated: true
+scenario_time: 2026-06-22T12:00:00+00:00
+adapter_names:
+- fake_bank_adapter_v0
+- fake_supplier_adapter_v0
+- fake_warehouse_adapter_v0
+rejection_reasons: none
+Root remains final authority: true
+mock_connector_sandbox_completed_count: 1
+mock_connector_sandbox_packet_validated_count: 1
+
+fake_adapter_receipt_evidence:
+fake_bank_adapter_invoked_count: 1
+fake_supplier_adapter_invoked_count: 1
+fake_warehouse_adapter_invoked_count: 1
+fake_bank_connector_called_count: 1
+fake_supplier_connector_called_count: 1
+fake_warehouse_connector_called_count: 1
+
+mock_bank_payment_review_receipt:
+adapter_name: fake_bank_adapter_v0
+bank_api_called: false
+payment_executed: false
+amount_moved: 0
+mock_only: true
+real_world_effects_allowed: false
+
+mock_supplier_confirmation_receipt:
+adapter_name: fake_supplier_adapter_v0
+supplier_api_called: false
+supplier_order_created: false
+mock_only: true
+real_world_effects_allowed: false
+
+mock_warehouse_reservation_receipt:
+adapter_name: fake_warehouse_adapter_v0
+warehouse_api_called: false
+shipment_released: false
+inventory_reserved: mock_reserved_only
+mock_only: true
+real_world_effects_allowed: false
+
+mock_receipt_counters:
+mock_bank_receipt_created_count: 1
+mock_supplier_receipt_created_count: 1
+mock_warehouse_receipt_created_count: 1
+mock_connector_receipts_created_count: 3
+mock_receipt_created_count: 3
+
+execution_evidence:
+evidence_type: mock_connector_execution_evidence
+created_by: mock_connector_sandbox
+source_packet_id: mock_action_commit_packet:root_outcome:full_semantic_e2e_supplier_payment_v01
+source_packet_id matches ActionCommitPacket packet_id: true
+source_root_outcome_id: root_outcome:full_semantic_e2e_supplier_payment_v01
+business_subject: SH-2042 / INV-2042
+mock_only: true
+real_world_effects_allowed: false
+receipt_count: 3
+adapter_names exactly:
+- fake_bank_adapter_v0
+- fake_supplier_adapter_v0
+- fake_warehouse_adapter_v0
+scenario_time: 2026-06-22T12:00:00+00:00
+packet_expires_at: 2026-06-22T13:00:00+00:00
+packet_not_expired_at_scenario_time: true
+connector_sandbox_completed: true
+real_connector_called: false
+payment_executed: false
+shipment_released: false
+root_final_authority_preserved: true
+execution_evidence_created_count: 1
+execution_evidence_validated_count: 1
+
+root_mock_execution_summary:
+summary_type: root_mock_execution_summary
+created_by: root_mock_execution_summary_boundary
+decision: mock_execution_recorded
+reason: local fake connector receipts recorded; no real-world action occurred
+receipt_count: 3
+mock_only: true
+real_world_effects_allowed: false
+real_actions_executed: false
+payment_executed: false
+shipment_released: false
+connector_called: false
+root_final_authority_preserved: true
+root_mock_execution_summary_created_count: 1
+
+full_e2e_spine_evidence:
+full_semantic_e2e_invoked_count: 1
+drs_resolve_invoked_count: 1
+candidate_vector_created_count: 3
+candidate_vector_invoked_count: 1
+candidate_vector_ranked_count: 3
+avf_invoked_count: 1
+avf_hard_mask_applied_count: 2
+advisory_invoked_count: 1
+bounded_orchestrator_invoked_count: 1
+architect_invoked_count: 1
+plangraph_invoked_count: 1
+plan_graph_contract_validated_count: 1
+fractal_branch_invoked_count: 1
+executor_invoked_count: 1
+result_proposal_invoked_count: 1
+post_vv_invoked_count: 1
+gt_lgt_invoked_count: 1
+root_final_output_created_count: 1
+root_mock_approval_gate_invoked_count: 1
+root_mock_approval_granted_count: 1
+action_commit_packet_created_count: 1
+mock_action_commit_packet_created_count: 1
+drs_writeback local trace includes:
+- mock connector receipts
+- execution evidence
+- root mock execution summary
+local_writeback_only: true
+external_global_drs_write: false
+production_persistence_claimed: false
+
+stage_status_invoked:
+- drs_resolve_reuse
+- candidate_vector_generation
+- avf_scoring
+- advisory_review
+- bounded_orchestrator
+- architect
+- plangraph
+- fractal_cell_executor_branch
+- result_proposal
+- post_vv
+- gt_lgt
+- root_final_output_boundary
+- root_mock_approval_gate
+- action_commit_packet_candidate
+- mock_connector_sandbox
+- mock_receipt_collection
+- execution_evidence
+- mock_execution_validation
+- root_mock_execution_summary
+- drs_writeback
+
+real_external_safety:
+connector_called_count: 0
+payment_executed_count: 0
+shipment_released_count: 0
+real_bank_api_called_count: 0
+real_supplier_api_called_count: 0
+real_warehouse_api_called_count: 0
+action_permission_created_count: 0
+live_model_call_count: 0
+network_used_count: 0
+gemini_called_count: 0
+root_final_authority_preserved_count: 1
+distinction:
+- fake_bank_connector_called_count may be 1 because it is local/fake
+- connector_called_count remains 0 because it represents real/external connector use
+
+validator_discipline:
+- receipt validators require explicit adapter-specific required fields
+- missing bank_api_called is rejected
+- missing supplier_api_called is rejected
+- missing inventory_reserved is rejected
+- absent false flags are not treated as safe false
+- ExecutionEvidence validator requires full shape
+- source_root_outcome_id mismatch is rejected
+- connector_sandbox_completed false is rejected
+- expired packet is rejected before adapters
+- non-Root-created packet is rejected before adapters
+- unknown adapter is rejected
+- duplicate receipt is rejected
+- missing receipt is rejected
+- receipt claiming real action is rejected
+- no network/secrets static checks passed
+
+limitation:
+- expiry uses deterministic scenario time in v0.1
+- scenario_time: 2026-06-22T12:00:00+00:00
+- packet_expires_at: 2026-06-22T13:00:00+00:00
+- later production work must replace this with signed TTL / wall-clock policy
+- still not real payment, not real shipment, not production
+
+audit_verdict:
+- audit_status: PASS
+- Mock Connector Sandbox can consume valid Root-created mock_action_commit_packet
+- it runs three local fake adapters
+- it creates three mock receipts
+- it creates and validates one mock_connector_execution_evidence
+- it creates Root mock execution summary
+- it records local DRS trace
+- no real connector/payment/shipment/API/model call occurs
+- Root remains final authority
+
+next_step: Fractal Order Fulfillment DAG v0.1 preflight

@@ -17,6 +17,7 @@ from hedgehog.mock_connector_sandbox import fake_warehouse_adapter_v0
 from hedgehog.mock_connector_sandbox import mock_connector_sandbox_context_default
 from hedgehog.mock_connector_sandbox import mock_execution_validation_context_default
 from hedgehog.mock_connector_sandbox import run_mock_connector_sandbox
+from hedgehog.mock_connector_sandbox import validate_mock_connector_adapter_registry
 from hedgehog.mock_connector_sandbox import validate_mock_connector_execution_evidence
 from hedgehog.mock_connector_sandbox import validate_mock_connector_sandbox_packet
 from hedgehog.mock_connector_sandbox import validate_mock_receipt
@@ -101,6 +102,57 @@ def _supplier_context() -> dict:
         "legal_hold_present": False,
         "water_filter_shortage": False,
     }
+
+
+def _run_valid_sandbox(adapter_functions=None) -> dict:
+    return run_mock_connector_sandbox(
+        gate_enabled=True,
+        root_boundary=_root_boundary(),
+        action_commit_packet_context=_packet_context(),
+        action_commit_packet=_valid_packet(),
+        supplier_context=_supplier_context(),
+        scenario_time=SCENARIO_TIME,
+        adapter_functions=adapter_functions,
+    )
+
+
+def _complete_adapter_registry() -> dict:
+    return {
+        "fake_bank_adapter_v0": fake_bank_adapter_v0,
+        "fake_supplier_adapter_v0": fake_supplier_adapter_v0,
+        "fake_warehouse_adapter_v0": fake_warehouse_adapter_v0,
+    }
+
+
+def _assert_adapter_registry_failure(result: dict, reason: str) -> None:
+    context = result["mock_connector_sandbox_context"]
+    validation_context = result["mock_execution_validation_context"]
+    counters = context["counters"]
+
+    assert result["fail_closed"] is True
+    assert reason in result["validation_errors"]
+    assert reason in context["denial_reasons"]
+    assert reason in validation_context["reasons"]
+    assert context["completed"] is False
+    assert context["denied"] is True
+    assert result["mock_connector_receipts"] == ()
+    assert result["execution_evidence"] == {}
+    assert result["root_mock_execution_summary_context"] == {}
+    assert counters["mock_connector_sandbox_invoked_count"] == 1
+    assert counters["mock_connector_sandbox_completed_count"] == 0
+    assert counters["mock_connector_sandbox_denied_count"] == 1
+    assert counters["mock_connector_sandbox_rejected_count"] == 1
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["fake_supplier_adapter_invoked_count"] == 0
+    assert counters["fake_warehouse_adapter_invoked_count"] == 0
+    assert counters["fake_bank_connector_called_count"] == 0
+    assert counters["fake_supplier_connector_called_count"] == 0
+    assert counters["fake_warehouse_connector_called_count"] == 0
+    assert counters["mock_connector_receipts_created_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+    assert counters["execution_evidence_created_count"] == 0
+    assert counters["execution_evidence_validated_count"] == 0
+    assert counters["root_mock_execution_summary_created_count"] == 0
 
 
 def test_default_contexts_are_inactive() -> None:
@@ -348,6 +400,102 @@ def test_expired_packet_is_rejected_before_adapters_run() -> None:
         "mock_connector_sandbox_packet_expired_count"
     ] == 1
     assert calls == []
+
+
+@pytest.mark.parametrize(
+    "missing_adapter",
+    (
+        "fake_bank_adapter_v0",
+        "fake_supplier_adapter_v0",
+        "fake_warehouse_adapter_v0",
+    ),
+)
+def test_partial_adapter_registry_missing_required_adapter_fails_closed(
+    missing_adapter: str,
+) -> None:
+    adapter_functions = _complete_adapter_registry()
+    adapter_functions.pop(missing_adapter)
+
+    validation = validate_mock_connector_adapter_registry(adapter_functions)
+    result = _run_valid_sandbox(adapter_functions=adapter_functions)
+
+    reason = f"mock_connector_sandbox_missing_adapter_function:{missing_adapter}"
+    assert validation["accepted"] is False
+    assert missing_adapter in validation["missing_adapters"]
+    assert reason in validation["reasons"]
+    _assert_adapter_registry_failure(result, reason)
+
+
+def test_non_callable_adapter_registry_value_fails_closed_before_dispatch() -> None:
+    adapter_functions = _complete_adapter_registry()
+    adapter_functions["fake_bank_adapter_v0"] = object()
+
+    validation = validate_mock_connector_adapter_registry(adapter_functions)
+    result = _run_valid_sandbox(adapter_functions=adapter_functions)
+
+    reason = "mock_connector_sandbox_invalid_adapter_function:fake_bank_adapter_v0"
+    assert validation["accepted"] is False
+    assert "fake_bank_adapter_v0" in validation["invalid_adapters"]
+    assert reason in validation["reasons"]
+    _assert_adapter_registry_failure(result, reason)
+
+
+def test_partial_adapter_registry_does_not_dispatch_any_adapter() -> None:
+    calls: list[str] = []
+
+    def spy_bank(packet, scenario_time, context):
+        calls.append("bank")
+        return fake_bank_adapter_v0(packet, scenario_time, context)
+
+    def spy_supplier(packet, scenario_time, context):
+        calls.append("supplier")
+        return fake_supplier_adapter_v0(packet, scenario_time, context)
+
+    result = _run_valid_sandbox(
+        adapter_functions={
+            "fake_bank_adapter_v0": spy_bank,
+            "fake_supplier_adapter_v0": spy_supplier,
+        },
+    )
+
+    assert calls == []
+    _assert_adapter_registry_failure(
+        result,
+        "mock_connector_sandbox_missing_adapter_function:fake_warehouse_adapter_v0",
+    )
+
+
+def test_complete_custom_adapter_registry_still_runs_happy_path() -> None:
+    result = _run_valid_sandbox(adapter_functions=_complete_adapter_registry())
+    counters = result["mock_connector_sandbox_context"]["counters"]
+
+    assert result["fail_closed"] is False
+    assert result["mock_connector_sandbox_context"]["completed"] is True
+    assert result["mock_execution_validation_context"]["accepted"] is True
+    assert len(result["mock_connector_receipts"]) == 3
+    assert result["execution_evidence"]["evidence_type"] == (
+        "mock_connector_execution_evidence"
+    )
+    assert counters["mock_connector_sandbox_completed_count"] == 1
+    assert counters["fake_bank_adapter_invoked_count"] == 1
+    assert counters["fake_supplier_adapter_invoked_count"] == 1
+    assert counters["fake_warehouse_adapter_invoked_count"] == 1
+    assert counters["mock_receipt_created_count"] == 3
+    assert counters["execution_evidence_created_count"] == 1
+
+
+def test_default_adapter_registry_still_runs_happy_path() -> None:
+    result = _run_valid_sandbox(adapter_functions=None)
+    counters = result["mock_connector_sandbox_context"]["counters"]
+
+    assert result["fail_closed"] is False
+    assert result["mock_connector_sandbox_context"]["completed"] is True
+    assert len(result["mock_connector_receipts"]) == 3
+    assert counters["fake_bank_adapter_invoked_count"] == 1
+    assert counters["fake_supplier_adapter_invoked_count"] == 1
+    assert counters["fake_warehouse_adapter_invoked_count"] == 1
+    assert counters["mock_receipt_created_count"] == 3
+    assert counters["execution_evidence_created_count"] == 1
 
 
 @pytest.mark.parametrize("created_by", ("gemini", "orchestrator", "architect", "executor"))

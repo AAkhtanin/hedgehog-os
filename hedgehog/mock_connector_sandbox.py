@@ -111,6 +111,41 @@ ReceiptValidator = Callable[[Mapping[str, Any] | None, Mapping[str, Any], str], 
 EvidenceValidator = Callable[[Mapping[str, Any], Mapping[str, Any], str], Mapping[str, Any]]
 
 
+def validate_mock_connector_adapter_registry(
+    adapter_functions: Mapping[str, AdapterFunction] | None,
+) -> dict[str, Any]:
+    if adapter_functions is None:
+        return {
+            "accepted": True,
+            "reasons": (),
+            "missing_adapters": (),
+            "invalid_adapters": (),
+        }
+
+    reasons: list[str] = []
+    missing_adapters: list[str] = []
+    invalid_adapters: list[str] = []
+    for adapter_name in MOCK_CONNECTOR_SANDBOX_ADAPTERS:
+        if adapter_name not in adapter_functions:
+            missing_adapters.append(adapter_name)
+            reasons.append(
+                f"mock_connector_sandbox_missing_adapter_function:{adapter_name}"
+            )
+            continue
+        if not callable(adapter_functions[adapter_name]):
+            invalid_adapters.append(adapter_name)
+            reasons.append(
+                f"mock_connector_sandbox_invalid_adapter_function:{adapter_name}"
+            )
+
+    return {
+        "accepted": not reasons,
+        "reasons": tuple(dict.fromkeys(reasons)),
+        "missing_adapters": tuple(missing_adapters),
+        "invalid_adapters": tuple(invalid_adapters),
+    }
+
+
 def _contains_text(value: Any, forbidden: str) -> bool:
     if isinstance(value, str):
         return forbidden in value
@@ -617,6 +652,17 @@ def run_mock_connector_sandbox(
         )
 
     counters["mock_connector_sandbox_packet_validated_count"] = 1
+    adapter_registry_validation = validate_mock_connector_adapter_registry(
+        adapter_functions,
+    )
+    if not adapter_registry_validation["accepted"]:
+        return sandbox_failure_result(
+            sandbox_context,
+            validation_context,
+            counters,
+            tuple(adapter_registry_validation["reasons"]),
+        )
+
     context = {
         "business_subject": packet["business_subject"],
         "supplier_payment_context_summary": {

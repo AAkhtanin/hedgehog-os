@@ -1,0 +1,375 @@
+audit_id: auditor_dual_gemini_fractal_fulfillment_composition_v01
+audit_status: PASS
+scope: Dual Gemini + Fractal Fulfillment + Mock Connector Sandbox composition smoke v0.1
+runtime_commit_expected: 303f67e
+fractal_fulfillment_audit_commit: e1fc0e1
+
+composition_scope:
+- no new runtime
+- no new runner
+- no test changes
+- no production claim
+- no public-WOW-readiness claim
+- composition over already-closed layers
+- uses existing Full Semantic E2E runner
+- local .tmp smoke evidence is not committed
+- this is a milestone audit, not a new proof island
+
+closed_layers_included:
+- Dual Gemini Orchestrator+Architect integration
+- ActionCommitPacket / Root Mock Approval Gate
+- Mock Connector Sandbox
+- Fractal Order Fulfillment DAG
+
+source_commits_and_dependencies:
+- 8b59c63 Add dual Gemini role integration audit log
+- c9c1e3d Add ActionCommitPacket Root mock approval gate audit log
+- fbe634f Add Mock Connector Sandbox audit log
+- 303f67e Add Fractal Order Fulfillment DAG runtime
+- e1fc0e1 Add Fractal Order Fulfillment DAG audit log
+
+manual_composition_smoke_evidence:
+source_summary: .tmp/dual_gemini_fractal_fulfillment/manual-dual-gemini-fractal-fulfillment-001_summary.json
+source_log: .tmp/dual_gemini_fractal_fulfillment/manual-dual-gemini-fractal-fulfillment-001_summary.log
+smoke_id: manual-dual-gemini-fractal-fulfillment-001
+runtime_commit_expected: 303f67e
+final_status: PASS
+validation_errors: []
+
+dual_gemini_evidence:
+orchestrator_provider_call_path: real_gemini_orchestrator_provider
+architect_provider_call_path: real_gemini_architect_provider
+sequence_status: orchestrator_validated_then_architect_validated
+orchestrator_validated: true
+architect_validated: true
+architect_consumed_validated_route: true
+raw_cross_role_text_blocked: true
+role_lane_separation_preserved: true
+
+dual_gemini_counters:
+bounded_gemini_orchestrator_role_started_count: 1
+bounded_gemini_architect_role_started_count: 1
+gemini_orchestrator_model_call_count: 1
+gemini_orchestrator_network_used_count: 1
+gemini_architect_model_call_count: 1
+gemini_architect_network_used_count: 1
+dual_gemini_roles_started_count: 2
+dual_gemini_roles_completed_count: 2
+dual_gemini_model_call_count: 2
+dual_gemini_network_used_count: 2
+live_model_call_count: 2
+network_used_count: 2
+gemini_called_count: 2
+
+orchestrator_semantic_evidence:
+proposal_role: bounded_gemini_orchestrator
+provider_call_path: real_gemini_orchestrator_provider
+suggested_route: proof_full_pipeline
+selected_vector_ids:
+- vector_record_supplier_live_candidate_current
+route_validation.validation_decision: allow_with_guards
+guard_completeness.proposal_quality_status: PASS_COMPLETE
+
+orchestrator_boundary:
+- Orchestrator is not Root
+- Orchestrator does not create ActionCommitPacket
+- Orchestrator does not call adapters
+- Orchestrator does not create FinalOutput
+
+architect_semantic_evidence:
+proposal_role: bounded_gemini_architect
+provider_call_path: real_gemini_architect_provider
+adapted_plan_graph_summary.created_by: bounded_gemini_architect_proposal_local_adapter
+adapted_plan_graph_summary.validated_by: hedgehog.llm_architect.validate_plan_graph_contract
+plan_graph_contract_validation.validated: true
+selected_vector_ids:
+- vector_record_supplier_live_candidate_current
+
+architect_boundary:
+- Architect is not Root
+- Architect is not Executor
+- Architect does not create ActionCommitPacket
+- Architect does not call adapters
+- Architect does not create FinalOutput
+
+root_and_action_commit_packet_evidence:
+root.decision: ready_for_mock_action
+root.mock_ready_fixture: true
+root.payment_executed: false
+root.shipment_released: false
+root.connector_called: false
+
+root_mock_approval:
+root_mock_approval_context.invoked: true
+approval_granted: true
+approval_denied: false
+created_after_root_boundary: true
+Root remains final authority: true
+
+action_commit_packet:
+packet_type: mock_action_commit_packet
+packet_id: mock_action_commit_packet:root_outcome:full_semantic_e2e_supplier_payment_v01
+created_by: root_mock_approval_gate
+source_root_decision: ready_for_mock_action
+business_subject: SH-2042 / INV-2042
+action_scope: local_mock_connector_sandbox
+mock_only: true
+real_world_effects_allowed: false
+allowed_future_adapters:
+- fake_bank_adapter_v0
+- fake_supplier_adapter_v0
+- fake_warehouse_adapter_v0
+forbidden_real_adapters:
+- bank_api
+- supplier_api
+- warehouse_api
+root_final_authority_preserved: true
+
+action_commit_packet_counters:
+action_commit_packet_created_count: 1
+mock_action_commit_packet_created_count: 1
+action_commit_packet_created_by_root_count: 1
+action_commit_packet_created_by_gemini_count: 0
+action_commit_packet_mock_only_count: 1
+action_permission_created_count: 0
+
+fractal_order_fulfillment_evidence:
+fractal_order_fulfillment_context.invoked: true
+completed: true
+denied: false
+packet_validated: true
+branch_count: 3
+merge_completed: true
+topology_preserved: true
+Root remains final authority: true
+
+fractal_order_fulfillment_counters:
+fractal_order_fulfillment_dag_invoked_count: 1
+fractal_order_fulfillment_dag_completed_count: 1
+fulfillment_child_cells_started_count: 3
+fulfillment_child_cells_completed_count: 3
+fulfillment_child_orchestrator_invoked_count: 3
+fulfillment_child_architect_invoked_count: 3
+fulfillment_child_executor_invoked_count: 3
+fulfillment_branch_result_proposals_created_count: 3
+fulfillment_branch_merge_completed_count: 1
+fulfillment_topology_preserved_count: 1
+fulfillment_child_root_created_count: 0
+fulfillment_child_final_output_created_count: 0
+fulfillment_child_action_commit_packet_created_count: 0
+fulfillment_child_direct_adapter_bypass_blocked_count: 0
+fulfillment_branch_real_action_claim_blocked_count: 0
+fulfillment_root_final_authority_preserved_count: 1
+
+child_oai_topology:
+branches:
+- payment_review_branch
+- supplier_confirmation_branch
+- warehouse_reservation_branch
+
+payment_review_branch:
+child_orchestrator: bounded_branch_router
+child_architect: bounded_branch_plan
+child_executor: mock_sandbox_task_executor
+returns_to_parent: true
+child_root_created: false
+child_final_output_created: false
+child_action_commit_packet_created: false
+connector_bypass_attempted: false
+real_world_effects_allowed: false
+
+supplier_confirmation_branch:
+child_orchestrator: bounded_branch_router
+child_architect: bounded_branch_plan
+child_executor: mock_sandbox_task_executor
+returns_to_parent: true
+child_root_created: false
+child_final_output_created: false
+child_action_commit_packet_created: false
+connector_bypass_attempted: false
+real_world_effects_allowed: false
+
+warehouse_reservation_branch:
+child_orchestrator: bounded_branch_router
+child_architect: bounded_branch_plan
+child_executor: mock_sandbox_task_executor
+returns_to_parent: true
+child_root_created: false
+child_final_output_created: false
+child_action_commit_packet_created: false
+connector_bypass_attempted: false
+real_world_effects_allowed: false
+
+branch_result_proposals_and_merge:
+fulfillment_branch_result_proposals_created_count: 3
+payment branch maps:
+- fake_bank_adapter_v0
+- mock_bank_payment_review_receipt
+supplier branch maps:
+- fake_supplier_adapter_v0
+- mock_supplier_confirmation_receipt
+warehouse branch maps:
+- fake_warehouse_adapter_v0
+- mock_warehouse_reservation_receipt
+
+fulfillment_merge:
+merge_completed: true
+consumes_branch_outputs: 3
+missing_branches: []
+duplicate_branches: []
+unknown_branches: []
+receipt_mismatches: []
+all_branches_returned_upward: true
+creates_final_output: false
+creates_action_commit_packet: false
+real_world_effects_allowed: false
+
+mock_connector_sandbox_evidence:
+mock_connector_sandbox.completed: true
+mock_connector_sandbox.packet_validated: true
+adapter_names:
+- fake_bank_adapter_v0
+- fake_supplier_adapter_v0
+- fake_warehouse_adapter_v0
+
+mock_connector_sandbox_counters:
+mock_connector_sandbox_completed_count: 1
+mock_connector_sandbox_packet_validated_count: 1
+fake_bank_adapter_invoked_count: 1
+fake_supplier_adapter_invoked_count: 1
+fake_warehouse_adapter_invoked_count: 1
+fake_bank_connector_called_count: 1
+fake_supplier_connector_called_count: 1
+fake_warehouse_connector_called_count: 1
+mock_bank_receipt_created_count: 1
+mock_supplier_receipt_created_count: 1
+mock_warehouse_receipt_created_count: 1
+mock_connector_receipts_created_count: 3
+mock_receipt_created_count: 3
+
+connector_counter_distinction:
+- fake_*_connector_called_count may be 1 because these are local/fake sandbox calls
+- connector_called_count remains 0 because it represents real/external connector use
+
+execution_evidence:
+evidence_type: mock_connector_execution_evidence
+created_by: mock_connector_sandbox
+receipt_count: 3
+adapter_names:
+- fake_bank_adapter_v0
+- fake_supplier_adapter_v0
+- fake_warehouse_adapter_v0
+connector_sandbox_completed: true
+real_connector_called: false
+payment_executed: false
+shipment_released: false
+mock_only: true
+real_world_effects_allowed: false
+root_final_authority_preserved: true
+
+execution_evidence_counters:
+execution_evidence_created_count: 1
+execution_evidence_validated_count: 1
+
+root_mock_execution_summary:
+summary_type: root_mock_execution_summary
+decision: mock_execution_recorded
+reason: local fake connector receipts recorded; no real-world action occurred
+receipt_count: 3
+mock_only: true
+real_world_effects_allowed: false
+real_actions_executed: false
+payment_executed: false
+shipment_released: false
+connector_called: false
+root_mock_execution_summary_created_count: 1
+
+full_e2e_spine_evidence:
+full_semantic_e2e_invoked_count: 1
+drs_resolve_invoked_count: 1
+candidate_vector_created_count: 3
+candidate_vector_invoked_count: 1
+candidate_vector_ranked_count: 3
+avf_invoked_count: 1
+avf_hard_mask_applied_count: 2
+advisory_invoked_count: 1
+bounded_orchestrator_invoked_count: 1
+architect_invoked_count: 1
+plangraph_invoked_count: 1
+plan_graph_contract_validated_count: 1
+fractal_branch_invoked_count: 1
+executor_invoked_count: 1
+result_proposal_invoked_count: 1
+post_vv_invoked_count: 1
+gt_lgt_invoked_count: 1
+root_final_output_created_count: 1
+
+stage_status_invoked:
+- root_final_output_boundary
+- root_mock_approval_gate
+- action_commit_packet_candidate
+- fractal_order_fulfillment_dag
+- fulfillment_payment_review_branch
+- fulfillment_supplier_confirmation_branch
+- fulfillment_warehouse_reservation_branch
+- fulfillment_branch_merge
+- mock_connector_sandbox
+- mock_receipt_collection
+- execution_evidence
+- mock_execution_validation
+- root_mock_execution_summary
+- drs_writeback
+
+drs_writeback:
+local_writeback_only: true
+external_global_drs_write: false
+production_persistence_claimed: false
+has_fractal_order_fulfillment_trace: true
+has_fulfillment_branch_result_proposals_trace: true
+has_fulfillment_branch_merge_trace: true
+has_execution_evidence_trace: true
+has_root_mock_execution_summary_trace: true
+
+real_external_safety:
+connector_called_count: 0
+payment_executed_count: 0
+shipment_released_count: 0
+real_bank_api_called_count: 0
+real_supplier_api_called_count: 0
+real_warehouse_api_called_count: 0
+action_permission_created_count: 0
+root_final_authority_preserved_count: 1
+
+validator_authority_discipline:
+- Gemini does not create ActionCommitPacket
+- child branches do not create Root
+- child branches do not create FinalOutput
+- child branches do not create ActionCommitPacket
+- child branches do not call fake adapters directly
+- Mock Connector Sandbox remains the only fake-adapter execution layer
+- ExecutionEvidence is not FinalOutput
+- Root mock execution summary records sandbox outcome but does not become real payment/shipment
+- Root remains final authority
+
+limitation:
+- this is not production
+- this is not public-WOW-ready
+- this is not real payment
+- this is not real shipment
+- this is not real connector/API execution
+- this is still local mock sandbox fulfillment
+- .tmp smoke artifacts are local and intentionally not committed
+- core contracts still live in the integration runner and should be extracted later
+
+audit_verdict:
+- audit_status: PASS
+- Composite smoke accepted
+- two real Gemini roles participated as bounded proposal roles
+- Root created the mock-only ActionCommitPacket
+- Fractal Order Fulfillment preserved child O/A/I topology
+- Mock Connector Sandbox created local mock receipts and ExecutionEvidence
+- Root mock execution summary recorded the local fake outcome
+- no real connector/payment/shipment/API call occurred
+- Root remains final authority
+
+next_step: Core Extraction preflight for ActionCommitPacket, MockConnectorSandbox, and FractalFulfillmentTopology contracts

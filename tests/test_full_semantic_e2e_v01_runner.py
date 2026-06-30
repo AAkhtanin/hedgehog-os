@@ -109,6 +109,14 @@ def _mock_connector_sandbox_env(**overrides):
     return env
 
 
+def _fractal_order_fulfillment_env(**overrides):
+    env = _mock_connector_sandbox_env(
+        **{runner.ENV_FULL_E2E_FRACTAL_ORDER_FULFILLMENT_DAG: "1"}
+    )
+    env.update(overrides)
+    return env
+
+
 def _bounded_orchestrator_input_from_prompt(prompt):
     marker = "BOUNDED_GEMINI_ORCHESTRATOR_INPUT_JSON:\n"
     return json.loads(prompt.split(marker, 1)[1])
@@ -2655,6 +2663,494 @@ def test_mock_connector_sandbox_writeback_records_local_trace_only() -> None:
     assert writeback["production_persistence_claimed"] is False
     assert result["counters"]["external_global_drs_write_count"] == 0
     assert result["counters"]["production_persistence_claimed_count"] == 0
+
+
+def test_fractal_order_fulfillment_default_mode_is_inactive() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert result["fractal_order_fulfillment_context"]["invoked"] is False
+    assert result["fulfillment_branch_contexts"] == ()
+    assert result["fulfillment_branch_result_proposals"] == ()
+    assert result["stage_map"]["fractal_order_fulfillment_dag"]["status"] == "skipped"
+    for key in runner.FRACTAL_ORDER_FULFILLMENT_COUNTER_KEYS:
+        assert counters[key] == 0
+
+
+def test_fractal_order_fulfillment_gate_without_packet_gates_fails_closed() -> None:
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_FRACTAL_ORDER_FULFILLMENT_DAG: "1"}
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "fractal_order_fulfillment_requires_valid_action_commit_packet" in (
+        result["validation_errors"]
+    )
+    assert result["fractal_order_fulfillment_context"]["invoked"] is True
+    assert result["fractal_order_fulfillment_context"]["denied"] is True
+    assert result["fulfillment_branch_contexts"] == ()
+    assert counters["fractal_order_fulfillment_dag_invoked_count"] == 1
+    assert counters["fractal_order_fulfillment_dag_denied_count"] == 1
+    assert counters["fractal_order_fulfillment_requires_packet_count"] == 1
+    assert counters["fulfillment_child_cells_started_count"] == 0
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+    assert counters["execution_evidence_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+
+
+def test_fractal_order_fulfillment_requires_mock_connector_sandbox_gate() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{
+                runner.ENV_FULL_E2E_MOCK_READY_FIXTURE: "1",
+                runner.ENV_FULL_E2E_FRACTAL_ORDER_FULFILLMENT_DAG: "1",
+            }
+        )
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "fractal_order_fulfillment_requires_mock_connector_sandbox" in (
+        result["validation_errors"]
+    )
+    assert result["action_commit_packet"]["packet_type"] == "mock_action_commit_packet"
+    assert counters["fractal_order_fulfillment_requires_sandbox_count"] == 1
+    assert counters["fulfillment_child_cells_started_count"] == 0
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+    assert result["mock_connector_receipts"] == ()
+    assert result["execution_evidence"] == {}
+
+
+def test_fractal_order_fulfillment_blocked_current_scenario_denies_before_branches() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_root_mock_approval_env(
+            **{
+                runner.ENV_FULL_E2E_MOCK_CONNECTOR_SANDBOX: "1",
+                runner.ENV_FULL_E2E_FRACTAL_ORDER_FULFILLMENT_DAG: "1",
+            }
+        )
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert result["root_final_output_boundary"]["decision"] == "not_ready"
+    assert result["action_commit_packet"] == {}
+    assert "fractal_order_fulfillment_requires_valid_action_commit_packet" in (
+        result["validation_errors"]
+    )
+    assert counters["fractal_order_fulfillment_dag_denied_count"] == 1
+    assert counters["fulfillment_child_cells_started_count"] == 0
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert result["mock_connector_receipts"] == ()
+    assert result["execution_evidence"] == {}
+
+
+def test_valid_fractal_order_fulfillment_routes_sandbox_work_through_branches() -> None:
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    counters = result["counters"]
+    branch_contexts = result["fulfillment_branch_contexts"]
+    proposals = result["fulfillment_branch_result_proposals"]
+
+    assert result["final_status"] == "PASS"
+    assert result["fractal_order_fulfillment_context"]["completed"] is True
+    assert result["fulfillment_merge_context"]["merge_completed"] is True
+    assert result["topology_preservation_context"]["accepted"] is True
+    assert len(branch_contexts) == 3
+    assert len(proposals) == 3
+    assert {
+        branch["branch_name"] for branch in branch_contexts
+    } == {
+        "payment_review_branch",
+        "supplier_confirmation_branch",
+        "warehouse_reservation_branch",
+    }
+    for branch in branch_contexts:
+        topology = branch["child_role_topology"]
+        assert topology["child_orchestrator"] == "bounded_branch_router"
+        assert topology["child_architect"] == "bounded_branch_plan"
+        assert topology["child_executor"] == "mock_sandbox_task_executor"
+        assert branch["returns_to_parent"] is True
+        assert branch["child_root_created"] is False
+        assert branch["child_final_output_created"] is False
+        assert branch["child_action_commit_packet_created"] is False
+        assert branch["root_authority_claimed"] is False
+        assert branch["connector_bypass_attempted"] is False
+        assert branch["real_world_effects_allowed"] is False
+    assert counters["fractal_order_fulfillment_dag_invoked_count"] == 1
+    assert counters["fractal_order_fulfillment_dag_completed_count"] == 1
+    assert counters["fulfillment_child_cells_started_count"] == 3
+    assert counters["fulfillment_child_cells_completed_count"] == 3
+    assert counters["fulfillment_payment_branch_started_count"] == 1
+    assert counters["fulfillment_payment_branch_completed_count"] == 1
+    assert counters["fulfillment_supplier_branch_started_count"] == 1
+    assert counters["fulfillment_supplier_branch_completed_count"] == 1
+    assert counters["fulfillment_warehouse_branch_started_count"] == 1
+    assert counters["fulfillment_warehouse_branch_completed_count"] == 1
+    assert counters["fulfillment_branch_result_proposals_created_count"] == 3
+    assert counters["fulfillment_branch_merge_completed_count"] == 1
+    assert counters["fulfillment_topology_preserved_count"] == 1
+    assert counters["fulfillment_child_orchestrator_invoked_count"] == 3
+    assert counters["fulfillment_child_architect_invoked_count"] == 3
+    assert counters["fulfillment_child_executor_invoked_count"] == 3
+    assert counters["fulfillment_child_root_created_count"] == 0
+    assert counters["fulfillment_child_final_output_created_count"] == 0
+    assert counters["fulfillment_child_action_commit_packet_created_count"] == 0
+    assert counters["fulfillment_child_direct_adapter_bypass_blocked_count"] == 0
+    assert counters["fulfillment_root_final_authority_preserved_count"] == 1
+    assert counters["fake_bank_adapter_invoked_count"] == 1
+    assert counters["fake_supplier_adapter_invoked_count"] == 1
+    assert counters["fake_warehouse_adapter_invoked_count"] == 1
+    assert counters["mock_receipt_created_count"] == 3
+    assert counters["execution_evidence_created_count"] == 1
+    assert counters["root_mock_execution_summary_created_count"] == 1
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_bank_api_called_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+
+
+def test_fractal_order_fulfillment_branch_result_proposal_shape() -> None:
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    proposals = result["fulfillment_branch_result_proposals"]
+
+    by_branch = {proposal["branch_id"]: proposal for proposal in proposals}
+    assert set(by_branch) == set(runner.FULFILLMENT_EXPECTED_BRANCH_IDS)
+    for proposal in proposals:
+        assert proposal["proposal_type"] == "fulfillment_branch_result_proposal"
+        assert proposal["parent_fractal_id"] == runner.FULFILLMENT_PARENT_FRACTAL_ID
+        assert proposal["source_packet_id"] == result["action_commit_packet"]["packet_id"]
+        assert proposal["branch_status"] == "completed"
+        assert proposal["mock_only"] is True
+        assert proposal["real_world_effects_allowed"] is False
+        assert proposal["returns_to_parent"] is True
+        assert proposal["child_root_created"] is False
+        assert proposal["child_final_output_created"] is False
+        assert proposal["child_action_commit_packet_created"] is False
+        assert proposal["direct_adapter_bypass_attempted"] is False
+        assert proposal["root_final_authority_preserved"] is True
+    assert by_branch["fulfillment_branch:payment_review"]["actual_receipt_type"] == (
+        "mock_bank_payment_review_receipt"
+    )
+    assert by_branch["fulfillment_branch:supplier_confirmation"][
+        "actual_receipt_type"
+    ] == "mock_supplier_confirmation_receipt"
+    assert by_branch["fulfillment_branch:warehouse_reservation"][
+        "actual_receipt_type"
+    ] == "mock_warehouse_reservation_receipt"
+
+
+def test_fractal_order_fulfillment_blocks_missing_branch(monkeypatch) -> None:
+    original_builder = runner._build_fulfillment_branch_contexts
+
+    def missing_supplier(packet):
+        branches = original_builder(packet)
+        return tuple(
+            branch
+            for branch in branches
+            if branch["branch_id"] != "fulfillment_branch:supplier_confirmation"
+        )
+
+    monkeypatch.setattr(
+        runner,
+        "_build_fulfillment_branch_contexts",
+        missing_supplier,
+    )
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "missing_branch" in result["validation_errors"]
+    assert counters["fulfillment_missing_branch_blocked_count"] == 1
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["root_mock_execution_summary_created_count"] == 0
+
+
+def test_fractal_order_fulfillment_blocks_duplicate_branch(monkeypatch) -> None:
+    original_builder = runner._build_fulfillment_branch_contexts
+
+    def duplicate_payment(packet):
+        branches = list(original_builder(packet))
+        branches[1] = dict(branches[0])
+        return tuple(branches)
+
+    monkeypatch.setattr(
+        runner,
+        "_build_fulfillment_branch_contexts",
+        duplicate_payment,
+    )
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "duplicate_branch" in result["validation_errors"]
+    assert result["counters"]["fulfillment_duplicate_branch_blocked_count"] == 1
+    assert result["counters"]["root_mock_execution_summary_created_count"] == 0
+
+
+def test_fractal_order_fulfillment_blocks_wrong_adapter_or_receipt(monkeypatch) -> None:
+    original_builder = runner._build_fulfillment_branch_contexts
+
+    def wrong_payment_adapter(packet):
+        branches = [dict(branch) for branch in original_builder(packet)]
+        branches[0]["allowed_adapter"] = "fake_warehouse_adapter_v0"
+        return tuple(branches)
+
+    monkeypatch.setattr(
+        runner,
+        "_build_fulfillment_branch_contexts",
+        wrong_payment_adapter,
+    )
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "branch_receipt_mismatch" in result["validation_errors"]
+    assert result["counters"]["fulfillment_branch_receipt_mismatch_blocked_count"] == 1
+    assert result["counters"]["fake_bank_adapter_invoked_count"] == 0
+
+
+def test_fractal_order_fulfillment_blocks_direct_adapter_bypass(monkeypatch) -> None:
+    original_builder = runner._build_fulfillment_branch_contexts
+
+    def bypass_claim(packet):
+        branches = [dict(branch) for branch in original_builder(packet)]
+        branches[0]["connector_bypass_attempted"] = True
+        return tuple(branches)
+
+    monkeypatch.setattr(runner, "_build_fulfillment_branch_contexts", bypass_claim)
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "direct_adapter_bypass_attempted" in result["validation_errors"]
+    assert (
+        result["counters"]["fulfillment_child_direct_adapter_bypass_blocked_count"]
+        == 1
+    )
+    assert result["counters"]["fake_bank_adapter_invoked_count"] == 0
+
+
+def test_fractal_order_fulfillment_blocks_branch_real_action_claim(monkeypatch) -> None:
+    original_builder = runner._build_fulfillment_branch_result_proposals
+
+    def unsafe_branch_proposal(branches, receipts, packet):
+        proposals = [
+            dict(proposal) for proposal in original_builder(branches, receipts, packet)
+        ]
+        proposals[0]["payment_executed"] = True
+        return tuple(proposals)
+
+    monkeypatch.setattr(
+        runner,
+        "_build_fulfillment_branch_result_proposals",
+        unsafe_branch_proposal,
+    )
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "branch_real_action_claimed" in result["validation_errors"]
+    assert counters["fulfillment_branch_real_action_claim_blocked_count"] == 1
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["root_mock_execution_summary_created_count"] == 0
+
+
+def test_fractal_order_fulfillment_blocks_branch_connector_called_claim(
+    monkeypatch,
+) -> None:
+    original_builder = runner._build_fulfillment_branch_result_proposals
+
+    def connector_claim(branches, receipts, packet):
+        proposals = [
+            dict(proposal) for proposal in original_builder(branches, receipts, packet)
+        ]
+        proposals[0]["connector_called"] = True
+        return tuple(proposals)
+
+    monkeypatch.setattr(
+        runner,
+        "_build_fulfillment_branch_result_proposals",
+        connector_claim,
+    )
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "branch_connector_claimed" in result["validation_errors"]
+    assert counters["fulfillment_branch_real_action_claim_blocked_count"] == 1
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_bank_api_called_count"] == 0
+    assert counters["root_mock_execution_summary_created_count"] == 0
+
+
+def test_fractal_order_fulfillment_blocks_branch_real_bank_api_claim(
+    monkeypatch,
+) -> None:
+    original_builder = runner._build_fulfillment_branch_result_proposals
+
+    def real_bank_api_claim(branches, receipts, packet):
+        proposals = [
+            dict(proposal) for proposal in original_builder(branches, receipts, packet)
+        ]
+        proposals[0]["real_bank_api_called"] = True
+        return tuple(proposals)
+
+    monkeypatch.setattr(
+        runner,
+        "_build_fulfillment_branch_result_proposals",
+        real_bank_api_claim,
+    )
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "branch_connector_claimed" in result["validation_errors"]
+    assert "branch_real_action_claimed" in result["validation_errors"]
+    assert counters["fulfillment_branch_real_action_claim_blocked_count"] == 1
+    assert counters["real_bank_api_called_count"] == 0
+    assert counters["root_mock_execution_summary_created_count"] == 0
+
+
+def test_fractal_order_fulfillment_blocks_branch_context_direct_adapter_claim(
+    monkeypatch,
+) -> None:
+    original_builder = runner._build_fulfillment_branch_contexts
+
+    def direct_adapter_claim(packet):
+        branches = [dict(branch) for branch in original_builder(packet)]
+        branches[0]["fake_adapter_called_directly"] = True
+        branches[0]["adapter_called_directly"] = True
+        return tuple(branches)
+
+    monkeypatch.setattr(
+        runner,
+        "_build_fulfillment_branch_contexts",
+        direct_adapter_claim,
+    )
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "branch_connector_claimed" in result["validation_errors"]
+    assert "direct_adapter_bypass_attempted" in result["validation_errors"]
+    assert (
+        counters["fulfillment_child_direct_adapter_bypass_blocked_count"]
+        == 1
+    )
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_fractal_order_fulfillment_blocks_branch_drs_write_claim(
+    monkeypatch,
+) -> None:
+    original_builder = runner._build_fulfillment_branch_contexts
+
+    def drs_write_claim(packet):
+        branches = [dict(branch) for branch in original_builder(packet)]
+        branches[0]["drs_write_claimed"] = True
+        return tuple(branches)
+
+    monkeypatch.setattr(runner, "_build_fulfillment_branch_contexts", drs_write_claim)
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "branch_drs_write_forbidden" in result["validation_errors"]
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+    assert counters["execution_evidence_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+
+
+def test_fractal_order_fulfillment_blocks_child_authority_flags(monkeypatch) -> None:
+    original_builder = runner._build_fulfillment_branch_contexts
+
+    def child_authority_claim(packet):
+        branches = [dict(branch) for branch in original_builder(packet)]
+        branches[0]["child_root_created"] = True
+        branches[0]["child_final_output_created"] = True
+        branches[0]["child_action_commit_packet_created"] = True
+        return tuple(branches)
+
+    monkeypatch.setattr(
+        runner,
+        "_build_fulfillment_branch_contexts",
+        child_authority_claim,
+    )
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "child_root_authority_forbidden" in result["validation_errors"]
+    assert "child_final_output_forbidden" in result["validation_errors"]
+    assert "child_action_commit_packet_forbidden" in result["validation_errors"]
+    assert counters["fulfillment_child_root_created_count"] == 0
+    assert counters["fulfillment_child_final_output_created_count"] == 0
+    assert counters["fulfillment_child_action_commit_packet_created_count"] == 0
+    assert counters["root_mock_execution_summary_created_count"] == 0
+
+
+def test_fractal_order_fulfillment_rejects_expired_packet_before_branches(
+    monkeypatch,
+) -> None:
+    original_builder = runner._build_mock_action_commit_packet
+
+    def expired_builder(**kwargs):
+        packet = original_builder(**kwargs)
+        packet["expires_at"] = "2026-06-22T11:59:59+00:00"
+        return packet
+
+    monkeypatch.setattr(runner, "_build_mock_action_commit_packet", expired_builder)
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "packet_expired_at_scenario_time" in result["validation_errors"]
+    assert counters["fulfillment_child_cells_started_count"] == 0
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["mock_receipt_created_count"] == 0
+
+
+def test_fractal_order_fulfillment_writeback_records_local_trace_only() -> None:
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    writeback = result["drs_writeback_record"]
+
+    assert writeback["fractal_order_fulfillment_trace"]["completed"] is True
+    assert len(writeback["fulfillment_branch_result_proposals_trace"]) == 3
+    assert writeback["fulfillment_branch_merge_trace"]["merge_completed"] is True
+    assert writeback["execution_evidence_trace"]["evidence_type"] == (
+        "mock_connector_execution_evidence"
+    )
+    assert writeback["root_mock_execution_summary_trace"]["decision"] == (
+        "mock_execution_recorded"
+    )
+    assert writeback["external_global_drs_write"] is False
+    assert writeback["production_persistence_claimed"] is False
+    assert result["counters"]["external_global_drs_write_count"] == 0
+    assert result["counters"]["production_persistence_claimed_count"] == 0
+
+
+def test_fractal_order_fulfillment_does_not_require_dual_gemini() -> None:
+    result = runner.run_full_semantic_e2e(env=_fractal_order_fulfillment_env())
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert counters["fractal_order_fulfillment_dag_completed_count"] == 1
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
 
 
 def test_slice3_hardening_rejects_malformed_finaloutput_and_pre_root_writeback() -> None:

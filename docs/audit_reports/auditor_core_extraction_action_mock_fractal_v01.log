@@ -1,0 +1,204 @@
+audit_id: auditor_core_extraction_action_mock_fractal_v01
+audit_status: PASS
+base_head: 4723830
+audit_scope: core extraction checkpoint
+
+Metadata:
+- no_new_runner: true
+- production_claimed: false
+- public_wow_readiness_claimed: false
+- real_connector_executed: false
+- real_payment_executed: false
+- real_shipment_executed: false
+- new_gemini_model_network_calls_introduced_by_extraction: false
+- existing_full_semantic_e2e_runner_remains_integration_harness: true
+
+Committed extraction chain:
+- d0ebf82 Add dual Gemini fractal fulfillment composition audit log
+- bbd5108 Add core extraction preflight for action mock fractal contracts
+- c62ab84 Extract ActionCommitPacket core contract
+- be4f40d Extract Mock Connector Sandbox core contract
+- e26c05a Extract Fractal Fulfillment topology core contract
+- 4723830 Harden Mock Connector Sandbox adapter registry
+
+Extracted core modules:
+
+ActionCommitPacket:
+- module: hedgehog.action_commit_packet
+- ActionCommitPacket: hedgehog.action_commit_packet
+- moved stable packet required fields, builder, validator, default contexts, and root mock approval precondition validation
+- runner delegates to core through compatibility wrapper calls
+- output shape preserved
+- idempotency_key derives from root_outcome_id
+- Gemini does not create ActionCommitPacket
+- ActionCommitPacket remains mock_only: true
+- ActionCommitPacket remains non_executing: true
+
+MockConnectorSandbox:
+- module: hedgehog.mock_connector_sandbox
+- MockConnectorSandbox: hedgehog.mock_connector_sandbox
+- moved fake adapter contracts, receipt validators, ExecutionEvidence builder/validator, sandbox packet validation, and deterministic expiry validation
+- runner delegates to core through compatibility wrapper calls
+- Mock Connector Sandbox remains the only fake-adapter execution layer
+- fake_*_connector_called_count may rise for local fake adapters
+- connector_called_count remains the real/external safety counter and remains zero
+- B.1 hardening: partial or non-callable adapter registry fails closed before any adapter dispatch
+- reason: mock_connector_sandbox_missing_adapter_function:<adapter>
+- reason: mock_connector_sandbox_invalid_adapter_function:<adapter>
+
+FractalFulfillmentTopology:
+- module: hedgehog.fractal_fulfillment
+- FractalFulfillmentTopology: hedgehog.fractal_fulfillment
+- moved branch definitions, child O/A/I topology envelope, branch context builder/validator, branch ResultProposal builder/validator, parent merge builder/validator, and topology preservation context
+- runner delegates to core through compatibility wrapper calls
+- does not run fake adapters directly
+- uses MockConnectorSandbox as execution layer
+- child branches do not create Root
+- child branches do not create FinalOutput
+- child branches do not create ActionCommitPacket
+
+Validation evidence:
+- default CLI: FINAL STATUS: PASS
+- regression suite: 272 passed, 2 warnings
+- B.1 changed files were limited to:
+  - hedgehog/mock_connector_sandbox.py
+  - tests/test_mock_connector_sandbox_core.py
+- forbidden grep was clean
+- direct core tests exist:
+  - tests/test_action_commit_packet_core.py
+  - tests/test_mock_connector_sandbox_core.py
+  - tests/test_fractal_fulfillment_core.py
+
+Deterministic extracted-core smoke:
+- source_summary: .tmp/core_extraction_fractal_fulfillment/manual-core-extracted-fractal-fulfillment-001_summary.json
+- source_log: .tmp/core_extraction_fractal_fulfillment/manual-core-extracted-fractal-fulfillment-001_summary.log
+- smoke_id: manual-core-extracted-fractal-fulfillment-001
+- core_extraction_head_expected: 4723830
+- final_status: PASS
+- validation_errors: []
+- core_contracts_expected:
+  - ActionCommitPacket: hedgehog.action_commit_packet
+  - MockConnectorSandbox: hedgehog.mock_connector_sandbox
+  - FractalFulfillmentTopology: hedgehog.fractal_fulfillment
+- live_model_call_count: 0
+- network_used_count: 0
+- gemini_called_count: 0
+- Root decision: ready_for_mock_action
+- ActionCommitPacket created_by: root_mock_approval_gate
+- fractal_order_fulfillment_dag_completed_count: 1
+- fulfillment_child_cells_started_count: 3
+- fulfillment_child_orchestrator_invoked_count: 3
+- fulfillment_child_architect_invoked_count: 3
+- fulfillment_child_executor_invoked_count: 3
+- fulfillment_topology_preserved_count: 1
+- fulfillment_child_root_created_count: 0
+- fulfillment_child_final_output_created_count: 0
+- fulfillment_child_action_commit_packet_created_count: 0
+- mock_receipt_created_count: 3
+- execution_evidence_created_count: 1
+- root_mock_execution_summary_created_count: 1
+- connector_called_count: 0
+- payment_executed_count: 0
+- shipment_released_count: 0
+- real_bank_api_called_count: 0
+- real_supplier_api_called_count: 0
+- real_warehouse_api_called_count: 0
+- action_permission_created_count: 0
+
+Dual Gemini extracted-core composition smoke:
+- source_summary: .tmp/core_extraction_dual_gemini_fractal_fulfillment/manual-core-extracted-dual-gemini-fractal-fulfillment-001_summary.json
+- source_log: .tmp/core_extraction_dual_gemini_fractal_fulfillment/manual-core-extracted-dual-gemini-fractal-fulfillment-001_summary.log
+- smoke_id: manual-core-extracted-dual-gemini-fractal-fulfillment-001
+- core_extraction_head_expected: 4723830
+- final_status: PASS
+- validation_errors: []
+- orchestrator_provider_call_path: real_gemini_orchestrator_provider
+- architect_provider_call_path: real_gemini_architect_provider
+- sequence_status: orchestrator_validated_then_architect_validated
+- raw_cross_role_text_blocked: true
+- role_lane_separation_preserved: true
+- dual_gemini_model_call_count: 2
+- dual_gemini_network_used_count: 2
+- live_model_call_count: 2
+- network_used_count: 2
+- gemini_called_count: 2
+- ActionCommitPacket created_by: root_mock_approval_gate
+- action_commit_packet_created_by_root_count: 1
+- action_commit_packet_created_by_gemini_count: 0
+- fractal_order_fulfillment_dag_completed_count: 1
+- fulfillment_child_cells_started_count: 3
+- fulfillment_child_orchestrator_invoked_count: 3
+- fulfillment_child_architect_invoked_count: 3
+- fulfillment_child_executor_invoked_count: 3
+- fulfillment_topology_preserved_count: 1
+- fulfillment_child_root_created_count: 0
+- fulfillment_child_final_output_created_count: 0
+- fulfillment_child_action_commit_packet_created_count: 0
+- mock_connector_sandbox_completed_count: 1
+- mock_connector_sandbox_packet_validated_count: 1
+- mock_receipt_created_count: 3
+- execution_evidence_created_count: 1
+- execution_evidence_validated_count: 1
+- root_mock_execution_summary_created_count: 1
+- connector_called_count: 0
+- payment_executed_count: 0
+- shipment_released_count: 0
+- real_bank_api_called_count: 0
+- real_supplier_api_called_count: 0
+- real_warehouse_api_called_count: 0
+- action_permission_created_count: 0
+- root_final_authority_preserved_count: 1
+
+Stage evidence from dual extracted-core smoke:
+- root_final_output_boundary: invoked
+- root_mock_approval_gate: invoked
+- action_commit_packet_candidate: invoked
+- fractal_order_fulfillment_dag: invoked
+- fulfillment_payment_review_branch: invoked
+- fulfillment_supplier_confirmation_branch: invoked
+- fulfillment_warehouse_reservation_branch: invoked
+- fulfillment_branch_merge: invoked
+- mock_connector_sandbox: invoked
+- mock_receipt_collection: invoked
+- execution_evidence: invoked
+- mock_execution_validation: invoked
+- root_mock_execution_summary: invoked
+- drs_writeback: invoked
+
+DRS writeback:
+- local_writeback_only: true
+- external_global_drs_write: false
+- production_persistence_claimed: false
+- has_fractal_order_fulfillment_trace: true
+- has_fulfillment_branch_result_proposals_trace: true
+- has_fulfillment_branch_merge_trace: true
+- has_execution_evidence_trace: true
+- has_root_mock_execution_summary_trace: true
+
+Authority and safety verdict:
+- Gemini proposes route/plan only
+- Gemini does not create ActionCommitPacket
+- Root creates ActionCommitPacket
+- Fractal child branches preserve O/A/I topology but do not become Root
+- child branches do not create FinalOutput
+- child branches do not create ActionCommitPacket
+- child branches do not directly call adapters
+- MockConnectorSandbox is the only fake adapter execution layer
+- ExecutionEvidence is not FinalOutput
+- Root remains final authority
+- no real connector/payment/shipment/API call occurred
+
+Limitations:
+- still not production
+- still not public_wow_ready
+- still local mock sandbox fulfillment
+- current Gemini/PlanGraph context is still intentionally bounded/simple
+- richer Gemini/PlanGraph context comes after documentation sync / next preflight
+- docs sync required next
+
+Audit verdict:
+- audit_status: PASS
+- core extraction accepted
+- behavior preserved across deterministic and dual-Gemini composition smokes
+- no output/counter/stage_map/fail-closed drift observed in tested paths
+- next_step: Core Contracts Documentation Sync v0.1

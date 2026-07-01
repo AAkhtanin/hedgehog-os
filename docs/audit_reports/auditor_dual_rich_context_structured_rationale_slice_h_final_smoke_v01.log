@@ -1,0 +1,148 @@
+audit_id: auditor_dual_rich_context_structured_rationale_slice_h_final_smoke_v01
+audit_status: PASS
+base_head: e0be4f8
+audit_scope: Final dual rich-context structured rationale smoke over ContextPackets plus Orchestrator and Architect rationales
+
+source_commits:
+- ContextPacket Slice A core contracts: 3f780b4 Add bounded context packet core contracts
+- ContextPacket Slice B runner adapter: 9af295c Wire bounded context packets into Full Semantic E2E runner
+- ContextPacket Slice C Orchestrator input: 5b92725 Feed Orchestrator context packet into Gemini input
+- ContextPacket Slice D Architect input: 93eda30 Feed Architect context packet into Gemini input
+- Structured Rationale preflight: 1916963 Add dual rich context structured rationale preflight
+- Structured Rationale Slice E core: 4774f78 Add structured rationale core contracts
+- Structured Rationale Slice E audit: 8310475 Add structured rationale Slice E audit log
+- Structured Rationale Slice F runtime: 2c98976 Validate Orchestrator structured rationale output
+- Structured Rationale Slice F audit: 3f9bb39 Add structured rationale Slice F audit log
+- Structured Rationale Slice G runtime: 192ee97 Validate Architect structured rationale output
+- Structured Rationale Slice G audit: e0be4f8 Add structured rationale Slice G audit log
+
+smoke_evidence:
+- Slice H smoke: manual-dual-rich-context-structured-rationale-slice-h-001 PASS
+
+slice_h_smoke_facts:
+- smoke_id manual-dual-rich-context-structured-rationale-slice-h-001
+- slice_h_base_head e0be4f8
+- final_status PASS
+- scope Final dual rich-context structured rationale smoke over ContextPackets plus Orchestrator and Architect rationales
+
+default_and_rationale_gates_alone:
+- final_status PASS
+- output_keys_equal_default true
+- counters_equal_default true
+- stage_map_equal_default true
+- orchestrator_provider_call_path not_started
+- architect_provider_call_path not_started
+- gates_alone_start_gemini false
+
+response_schema_alignment:
+- default_schema_contains_structured_architect_rationale false
+- gated_schema_contains_structured_architect_rationale true
+- gated_schema_requires_structured_architect_rationale true
+- gated_schema_additional_properties_false true
+
+full_dual_current_layers_path:
+- final_status PASS
+- sequence_status orchestrator_validated_then_architect_validated
+- orchestrator_packet_type OrchestratorRouteContextPacket
+- architect_packet_type ArchitectPlanContextPacket
+- orchestrator_context_packet_validation_accepted true
+- architect_context_packet_validation_accepted true
+- orchestrator_structured_rationale_type structured_orchestrator_rationale
+- architect_structured_rationale_type structured_architect_rationale
+- orchestrator_structured_rationale_validation_accepted true
+- architect_structured_rationale_validation_accepted true
+- architect_consumed_validated_route true
+- raw_cross_role_text_blocked true
+- live_model_call_count 0
+- network_used_count 0
+- gemini_called_count 0
+
+invalid_orchestrator_rationale_blocks_architect:
+- final_status FAIL_CLOSED
+- architect_provider_calls 0
+- has_failed_reason true
+- orchestrator_structured_rationale_validation_failed
+- dual_gemini_fail_closed_before_architect_count 1
+- architect_context_empty true
+- plangraph_context_empty true
+- fractal_executor_context_empty true
+
+invalid_architect_rationale_blocks_fractal:
+- final_status FAIL_CLOSED
+- has_failed_reason true
+- architect_structured_rationale_validation_failed
+- dual_gemini_roles_completed_count 1
+- dual_gemini_fail_closed_before_fractal_count 1
+- plangraph_context_empty true
+- fractal_executor_context_empty true
+
+real_action_counters_zero:
+- connector_called_count 0
+- payment_executed_count 0
+- shipment_released_count 0
+- action_permission_created_count 0
+- real_bank_api_called_count 0
+- real_supplier_api_called_count 0
+- real_warehouse_api_called_count 0
+
+authority_invariants:
+- ContextPacket is not truth true
+- ContextPacket is not authority true
+- structured rationale is explanation only true
+- structured rationale is not truth true
+- structured rationale is not authority true
+- structured rationale is not action permission true
+- structured rationale is not FinalOutput true
+- structured rationale is not ActionCommitPacket true
+- structured rationale is not connector command true
+- Orchestrator is not Root true
+- Architect is not Root true
+- PlanGraph is not authority true
+- Gemini proposes, Root disposes true
+- Root remains final authority true
+
+audit_conclusions:
+- Slice H is the final integrated smoke over the committed Dual Rich Context Structured Rationale layers.
+- No runtime code was added in Slice H.
+- No tests were modified in Slice H.
+- Both rationale gates alone do not start Gemini.
+- Default output shape is unchanged.
+- Default counters are unchanged.
+- Default stage_map is unchanged.
+- Full current dual path passes with OrchestratorRouteContextPacket, ArchitectPlanContextPacket, structured_orchestrator_rationale, and structured_architect_rationale.
+- Architect consumes only a validated Orchestrator route.
+- Raw cross-role text remains blocked.
+- Valid structured rationales do not bypass context packet validation.
+- Valid structured rationales do not bypass route validation.
+- Valid structured rationales do not bypass guard completeness validation.
+- Valid structured rationales do not bypass PlanGraph contract validation.
+- Invalid Orchestrator rationale blocks Architect before Architect provider is called.
+- Invalid Architect rationale blocks Fractal before execution.
+- No PlanGraph downstream acceptance occurs in invalid Architect rationale path.
+- No Fractal downstream execution occurs in invalid Architect rationale path.
+- Real-provider Architect response schema remains aligned with gated structured_architect_rationale.
+- ContextPacket is not truth.
+- ContextPacket is not authority.
+- Structured rationale is JSON explanation.
+- Structured rationale is not hidden chain-of-thought.
+- Structured rationale is not raw Gemini text.
+- Structured rationale is not truth.
+- Structured rationale is not authority.
+- Structured rationale is not action permission.
+- Structured rationale is not FinalOutput.
+- Structured rationale is not ActionCommitPacket.
+- Structured rationale is not connector command.
+- Structured rationale is not DRS write permission.
+- Orchestrator is not Root.
+- Architect is not Root.
+- PlanGraph is not authority.
+- Gemini proposes, Root disposes.
+- Root remains final authority.
+- No real connector.
+- No payment execution.
+- No shipment release.
+- No action permission creation.
+- No real bank/supplier/warehouse API call.
+- No production/public WOW claim.
+- No NeedleFactory/Marennya/UP.
+- Ready for applied non-warehouse/non-certificate domain smoke after this audit is committed.

@@ -10,6 +10,13 @@ from hedgehog.context_packets import build_architect_plan_context_packet
 from hedgehog.context_packets import build_orchestrator_route_context_packet
 from hedgehog.context_packets import validate_architect_plan_context_packet
 from hedgehog.context_packets import validate_orchestrator_route_context_packet
+from hedgehog.structured_rationale import ARCHITECT_STRUCTURED_RATIONALE_REQUIRED_FIELDS
+from hedgehog.structured_rationale import ARCHITECT_STRUCTURED_RATIONALE_TYPE
+from hedgehog.structured_rationale import ORCHESTRATOR_STRUCTURED_RATIONALE_REQUIRED_FIELDS
+from hedgehog.structured_rationale import ORCHESTRATOR_STRUCTURED_RATIONALE_TYPE
+from hedgehog.structured_rationale import STRUCTURED_RATIONALE_SCHEMA_VERSION
+from hedgehog.structured_rationale import build_architect_structured_rationale
+from hedgehog.structured_rationale import build_orchestrator_structured_rationale
 from hedgehog.structured_rationale import validate_architect_structured_rationale
 from hedgehog.structured_rationale import validate_orchestrator_structured_rationale
 
@@ -124,6 +131,63 @@ FORBIDDEN_ARCHITECT_CLAIMS = {
     "root_bypass_claimed": "architect_root_bypass_claim_forbidden",
 }
 
+STRUCTURED_RATIONALE_COMMON_SCHEMA_FIELDS = (
+    "rationale_type",
+    "schema_version",
+    "truth_claimed",
+    "authority_claimed",
+    "action_permission_claimed",
+    "final_output_claimed",
+    "connector_command_claimed",
+    "drs_write_claimed",
+    "action_commit_packet_claimed",
+    "root_bypass_claimed",
+    "root_final_authority_preserved",
+    "Root remains final authority",
+)
+
+ORCHESTRATOR_STRUCTURED_RATIONALE_SCHEMA_FIELDS = (
+    *STRUCTURED_RATIONALE_COMMON_SCHEMA_FIELDS,
+    *ORCHESTRATOR_STRUCTURED_RATIONALE_REQUIRED_FIELDS,
+    "orchestrator_is_root",
+    "creates_action_commit_packet",
+    "calls_connectors",
+)
+
+ARCHITECT_STRUCTURED_RATIONALE_SCHEMA_FIELDS = (
+    *STRUCTURED_RATIONALE_COMMON_SCHEMA_FIELDS,
+    *ARCHITECT_STRUCTURED_RATIONALE_REQUIRED_FIELDS,
+    "architect_is_root",
+    "creates_action_commit_packet",
+    "calls_connectors",
+)
+
+
+def _structured_rationale_schema(
+    required_fields: tuple[str, ...],
+    explanation_fields: tuple[str, ...],
+    role_boolean_fields: tuple[str, ...],
+) -> dict[str, Any]:
+    properties: dict[str, Any] = {
+        "rationale_type": {"type": "string"},
+        "schema_version": {"type": "string"},
+        "root_review_required": {"type": "boolean"},
+    }
+    for field in STRUCTURED_RATIONALE_COMMON_SCHEMA_FIELDS:
+        if field not in ("rationale_type", "schema_version"):
+            properties[field] = {"type": "boolean"}
+    for field in explanation_fields:
+        if field != "root_review_required":
+            properties[field] = {"type": "array", "items": {"type": "object"}}
+    for field in role_boolean_fields:
+        properties[field] = {"type": "boolean"}
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": list(required_fields),
+        "properties": properties,
+    }
+
 ORCHESTRATOR_RESPONSE_SCHEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -146,7 +210,15 @@ ORCHESTRATOR_RESPONSE_SCHEMA: dict[str, Any] = {
         "drs_write_claimed": {"type": "boolean"},
         "plan_graph_claimed": {"type": "boolean"},
         "bypass_root_claimed": {"type": "boolean"},
-        "structured_orchestrator_rationale": {"type": "object"},
+        "structured_orchestrator_rationale": _structured_rationale_schema(
+            ORCHESTRATOR_STRUCTURED_RATIONALE_SCHEMA_FIELDS,
+            ORCHESTRATOR_STRUCTURED_RATIONALE_REQUIRED_FIELDS,
+            (
+                "orchestrator_is_root",
+                "creates_action_commit_packet",
+                "calls_connectors",
+            ),
+        ),
     },
 }
 
@@ -169,7 +241,15 @@ ARCHITECT_RESPONSE_SCHEMA: dict[str, Any] = {
         "connector_command_claimed": {"type": "boolean"},
         "drs_write_claimed": {"type": "boolean"},
         "root_bypass_claimed": {"type": "boolean"},
-        "structured_architect_rationale": {"type": "object"},
+        "structured_architect_rationale": _structured_rationale_schema(
+            ARCHITECT_STRUCTURED_RATIONALE_SCHEMA_FIELDS,
+            ARCHITECT_STRUCTURED_RATIONALE_REQUIRED_FIELDS,
+            (
+                "architect_is_root",
+                "creates_action_commit_packet",
+                "calls_connectors",
+            ),
+        ),
     },
 }
 
@@ -212,6 +292,35 @@ def _json_response(value: Any) -> dict[str, Any]:
     if not isinstance(parsed, dict):
         raise ValueError("provider_response_must_be_object")
     return parsed
+
+
+def _provider_response_shape(
+    response: Mapping[str, Any] | None,
+    *,
+    rationale_key: str,
+) -> dict[str, Any]:
+    if not isinstance(response, Mapping):
+        return {
+            "top_level_keys": (),
+            f"{rationale_key}_type": None,
+            f"{rationale_key}_keys": (),
+        }
+    rationale = response.get(rationale_key)
+    rationale_type = type(rationale).__name__ if rationale is not None else None
+    rationale_keys: tuple[str, ...] = ()
+    if isinstance(rationale, Mapping):
+        rationale_keys = tuple(sorted(str(key) for key in rationale.keys()))
+    return {
+        "top_level_keys": tuple(sorted(str(key) for key in response.keys())),
+        f"{rationale_key}_type": rationale_type,
+        f"{rationale_key}_keys": rationale_keys,
+    }
+
+
+def _mapping_or_empty(value: Any) -> dict[str, Any]:
+    if isinstance(value, Mapping):
+        return dict(value)
+    return {}
 
 
 def _system_instruction(role: str) -> str:
@@ -312,6 +421,58 @@ def _orchestrator_provider_context(request_text: str) -> dict[str, Any]:
     }
 
 
+def _orchestrator_structured_rationale_skeleton(
+    context: Mapping[str, Any],
+) -> dict[str, Any]:
+    return build_orchestrator_structured_rationale(
+        observed_semantics=(
+            {
+                "summary": "raw unknown request requires bounded semantic review",
+                "candidate_only": True,
+                "rationale_type": ORCHESTRATOR_STRUCTURED_RATIONALE_TYPE,
+                "schema_version": STRUCTURED_RATIONALE_SCHEMA_VERSION,
+            },
+        ),
+        route_selection_reason=(
+            {
+                "allowed_routes": tuple(context.get("allowed_routes") or ()),
+                "selected_route": "unknown_request_root_review",
+                "reason": "Gemini may propose only an allowed route for Root review",
+            },
+        ),
+        rejected_routes=(
+            {
+                "route": "direct_real_world_action",
+                "reason": "external action is outside Orchestrator authority",
+            },
+        ),
+        required_guards_reasoning=tuple(
+            {"guard": guard, "status": "required"}
+            for guard in tuple(context.get("required_guards") or ())
+        ),
+        selected_vector_reasoning=(
+            {
+                "allowed_vector_ids": tuple(context.get("allowed_vector_ids") or ()),
+                "selected_vector_ids": ("unknown_request_semantic_review",),
+                "reason": "vectors are advisory and must remain allowed",
+            },
+        ),
+        uncertainty_notes=(
+            {"note": "unknown request remains subject to Root review"},
+        ),
+        authority_boundary=(
+            {
+                "ContextPacket is not truth": True,
+                "ContextPacket is not authority": True,
+                "structured rationale is explanation only": True,
+                "Orchestrator is not Root": True,
+                "Gemini proposes, Root disposes": True,
+                "Root remains final authority": True,
+            },
+        ),
+    )
+
+
 def _orchestrator_prompt(context: Mapping[str, Any]) -> str:
     skeleton = {
         "proposal_id": "orchestrator-proposal-unknown-request-001",
@@ -331,15 +492,20 @@ def _orchestrator_prompt(context: Mapping[str, Any]) -> str:
         "drs_write_claimed": False,
         "plan_graph_claimed": False,
         "bypass_root_claimed": False,
-        "structured_orchestrator_rationale": {
-            "rationale_type": "structured_orchestrator_rationale"
-        },
+        "structured_orchestrator_rationale": (
+            _orchestrator_structured_rationale_skeleton(context)
+        ),
     }
     return "\n".join(
         (
             TITLE,
             "Role: bounded Gemini Orchestrator.",
             "Return one JSON object matching the skeleton.",
+            "structured_orchestrator_rationale MUST be a complete JSON object.",
+            "structured_orchestrator_rationale MUST NOT be null.",
+            "structured_orchestrator_rationale MUST include every field shown in the skeleton.",
+            "Structured rationale is explanation only, not hidden chain-of-thought.",
+            "Structured rationale is not truth, not authority, not action permission, not FinalOutput, not ActionCommitPacket, and not connector command.",
             "Do not create a PlanGraph, FinalOutput, ActionCommitPacket, or connector command.",
             "Gemini proposes, Root disposes.",
             "Root remains final authority.",
@@ -380,6 +546,66 @@ def _architect_provider_context(
     }
 
 
+def _architect_structured_rationale_skeleton(
+    context: Mapping[str, Any],
+) -> dict[str, Any]:
+    return build_architect_structured_rationale(
+        plan_shape_reason=(
+            {
+                "shape": "bounded_unknown_request_plan_graph",
+                "source_route_id": context.get("source_route_id"),
+                "reason": "PlanGraph remains non-authority and bounded",
+            },
+        ),
+        node_selection_reasoning=(
+            {
+                "allowed_node_kinds": tuple(context.get("allowed_node_kinds") or ()),
+                "selected_vector_ids": tuple(context.get("selected_vector_ids") or ()),
+                "reason": "nodes must stay inside validated route context",
+            },
+        ),
+        executor_constraint_reasoning=(
+            {
+                "allowed_executor_ids": tuple(context.get("allowed_executor_ids") or ()),
+                "reason": "executor selection is constrained metadata only",
+            },
+        ),
+        forbidden_surface_review=(
+            {
+                "forbidden_surfaces": (
+                    "action_permission",
+                    "connector_command",
+                    "final_output",
+                ),
+                "status": "blocked",
+            },
+        ),
+        validator_coverage_reasoning=tuple(
+            {"validator": validator, "status": "required"}
+            for validator in tuple(context.get("required_validators") or ())
+        ),
+        return_to_root_path=(
+            {
+                "path": "Architect proposal to validation to Root boundary",
+                "ResultProposal is not FinalOutput": True,
+                "Root remains final authority": True,
+            },
+        ),
+        uncertainty_notes=(
+            {"note": "unknown request remains subject to Root review"},
+        ),
+        authority_boundary=(
+            {
+                "Architect is not Root": True,
+                "PlanGraph is not authority": True,
+                "structured rationale is explanation only": True,
+                "Gemini proposes, Root disposes": True,
+                "Root remains final authority": True,
+            },
+        ),
+    )
+
+
 def _architect_prompt(context: Mapping[str, Any]) -> str:
     skeleton = {
         "proposal_id": "architect-proposal-unknown-request-001",
@@ -403,15 +629,20 @@ def _architect_prompt(context: Mapping[str, Any]) -> str:
         "connector_command_claimed": False,
         "drs_write_claimed": False,
         "root_bypass_claimed": False,
-        "structured_architect_rationale": {
-            "rationale_type": "structured_architect_rationale"
-        },
+        "structured_architect_rationale": (
+            _architect_structured_rationale_skeleton(context)
+        ),
     }
     return "\n".join(
         (
             TITLE,
             "Role: bounded Gemini Architect.",
             "Return one JSON object matching the skeleton.",
+            "structured_architect_rationale MUST be a complete JSON object.",
+            "structured_architect_rationale MUST NOT be null.",
+            "structured_architect_rationale MUST include every field shown in the skeleton.",
+            "Structured rationale is explanation only, not hidden chain-of-thought.",
+            "Structured rationale is not truth, not authority, not action permission, not FinalOutput, not ActionCommitPacket, and not connector command.",
             "Do not create FinalOutput, ActionCommitPacket, action permission, or connector command.",
             "PlanGraph is not authority.",
             "ResultProposal is not FinalOutput.",
@@ -618,6 +849,8 @@ def _fail_result(
     architect_plan_context_packet_validation: Mapping[str, Any] | None = None,
     structured_architect_rationale: Mapping[str, Any] | None = None,
     structured_architect_rationale_validation: Mapping[str, Any] | None = None,
+    orchestrator_provider_response_shape: Mapping[str, Any] | None = None,
+    architect_provider_response_shape: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     return {
         "title": TITLE,
@@ -641,6 +874,12 @@ def _fail_result(
         "structured_architect_rationale": dict(structured_architect_rationale or {}),
         "structured_architect_rationale_validation": dict(
             structured_architect_rationale_validation or {}
+        ),
+        "orchestrator_provider_response_shape": dict(
+            orchestrator_provider_response_shape or {}
+        ),
+        "architect_provider_response_shape": dict(
+            architect_provider_response_shape or {}
         ),
         "plan_graph_context": {},
         "result_proposal": {},
@@ -813,6 +1052,8 @@ def run_live_unknown_request_dual_rich_context(
     counters = _empty_counters()
     request = (request_text or "").strip()
     semantic_context = _semantic_intake_context(request) if request else {}
+    orchestrator_response_shape: dict[str, Any] = {}
+    architect_response_shape: dict[str, Any] = {}
 
     if not request:
         return _fail_result(
@@ -860,6 +1101,10 @@ def run_live_unknown_request_dual_rich_context(
             validation_errors=(str(exc),),
         )
 
+    orchestrator_response_shape = _provider_response_shape(
+        orchestrator_proposal,
+        rationale_key="structured_orchestrator_rationale",
+    )
     orchestrator_errors = (
         *_missing_fields(orchestrator_proposal, ORCHESTRATOR_REQUIRED_FIELDS),
         *_claim_errors(orchestrator_proposal, FORBIDDEN_ORCHESTRATOR_CLAIMS),
@@ -868,8 +1113,8 @@ def run_live_unknown_request_dual_rich_context(
             orchestrator_context,
         ),
     )
-    orchestrator_rationale = dict(
-        orchestrator_proposal.get("structured_orchestrator_rationale") or {}
+    orchestrator_rationale = _mapping_or_empty(
+        orchestrator_proposal.get("structured_orchestrator_rationale")
     )
     orchestrator_rationale_validation = validate_orchestrator_structured_rationale(
         orchestrator_rationale
@@ -891,6 +1136,7 @@ def run_live_unknown_request_dual_rich_context(
             ),
             counters=counters,
             validation_errors=tuple(orchestrator_errors),
+            orchestrator_provider_response_shape=orchestrator_response_shape,
         )
 
     route_packet = _route_packet_from_proposal(
@@ -914,6 +1160,7 @@ def run_live_unknown_request_dual_rich_context(
                 "orchestrator_route_context_packet_validation_failed",
                 *tuple(route_packet_validation["reasons"]),
             ),
+            orchestrator_provider_response_shape=orchestrator_response_shape,
         )
     counters["context_packet_validated_count"] += 1
     counters["structured_rationale_validated_count"] += 1
@@ -946,6 +1193,7 @@ def run_live_unknown_request_dual_rich_context(
                 "architect_plan_context_packet_validation_failed",
                 *tuple(architect_packet_validation["reasons"]),
             ),
+            orchestrator_provider_response_shape=orchestrator_response_shape,
         )
     counters["context_packet_validated_count"] += 1
 
@@ -976,6 +1224,7 @@ def run_live_unknown_request_dual_rich_context(
             architect_plan_context_packet_validation=architect_packet_validation,
             counters=counters,
             validation_errors=(_provider_reason(exc),),
+            orchestrator_provider_response_shape=orchestrator_response_shape,
         )
     except (TypeError, ValueError, json.JSONDecodeError) as exc:
         return _fail_result(
@@ -993,8 +1242,13 @@ def run_live_unknown_request_dual_rich_context(
             architect_plan_context_packet_validation=architect_packet_validation,
             counters=counters,
             validation_errors=(str(exc),),
+            orchestrator_provider_response_shape=orchestrator_response_shape,
         )
 
+    architect_response_shape = _provider_response_shape(
+        architect_proposal,
+        rationale_key="structured_architect_rationale",
+    )
     architect_errors = (
         *_missing_fields(architect_proposal, ARCHITECT_REQUIRED_FIELDS),
         *_claim_errors(architect_proposal, FORBIDDEN_ARCHITECT_CLAIMS),
@@ -1004,8 +1258,8 @@ def run_live_unknown_request_dual_rich_context(
         ),
         *_validate_architect_plan_surface(architect_proposal),
     )
-    architect_rationale = dict(
-        architect_proposal.get("structured_architect_rationale") or {}
+    architect_rationale = _mapping_or_empty(
+        architect_proposal.get("structured_architect_rationale")
     )
     architect_rationale_validation = validate_architect_structured_rationale(
         architect_rationale
@@ -1034,6 +1288,8 @@ def run_live_unknown_request_dual_rich_context(
             structured_architect_rationale_validation=architect_rationale_validation,
             counters=counters,
             validation_errors=tuple(architect_errors),
+            orchestrator_provider_response_shape=orchestrator_response_shape,
+            architect_provider_response_shape=architect_response_shape,
         )
     counters["structured_rationale_validated_count"] += 1
 
@@ -1063,6 +1319,8 @@ def run_live_unknown_request_dual_rich_context(
         "architect_plan_context_packet_validation": architect_packet_validation,
         "structured_architect_rationale": architect_rationale,
         "structured_architect_rationale_validation": architect_rationale_validation,
+        "orchestrator_provider_response_shape": orchestrator_response_shape,
+        "architect_provider_response_shape": architect_response_shape,
         "plan_graph_context": plan_graph,
         "result_proposal": result_proposal,
         "root_final_output_boundary": root_boundary,

@@ -3,8 +3,12 @@ from __future__ import annotations
 import json
 
 import demo.run_live_unknown_request_dual_rich_context_v01 as runner
+from hedgehog.structured_rationale import ARCHITECT_STRUCTURED_RATIONALE_REQUIRED_FIELDS
+from hedgehog.structured_rationale import ORCHESTRATOR_STRUCTURED_RATIONALE_REQUIRED_FIELDS
 from hedgehog.structured_rationale import build_architect_structured_rationale
 from hedgehog.structured_rationale import build_orchestrator_structured_rationale
+from hedgehog.structured_rationale import validate_architect_structured_rationale
+from hedgehog.structured_rationale import validate_orchestrator_structured_rationale
 
 
 HOTEL_LIKE_REQUEST = (
@@ -222,6 +226,74 @@ def test_missing_request_fails_closed() -> None:
     assert "request_required" in result["validation_errors"]
 
 
+def test_orchestrator_prompt_contains_full_structured_rationale_skeleton() -> None:
+    context = runner._orchestrator_provider_context(HOTEL_LIKE_REQUEST)
+    prompt = runner._orchestrator_prompt(context)
+
+    for field in ORCHESTRATOR_STRUCTURED_RATIONALE_REQUIRED_FIELDS:
+        assert field in prompt
+    assert "rationale_type" in prompt
+    assert "schema_version" in prompt
+    assert "structured_rationale_v0.1" in prompt
+    assert (
+        "structured_orchestrator_rationale MUST be a complete JSON object"
+        in prompt
+    )
+    assert "MUST NOT be null" in prompt
+
+
+def test_architect_prompt_contains_full_structured_rationale_skeleton() -> None:
+    orchestrator_context = runner._orchestrator_provider_context(HOTEL_LIKE_REQUEST)
+    orchestrator_proposal = _valid_orchestrator_proposal()
+    route_packet = runner._route_packet_from_proposal(
+        orchestrator_proposal,
+        orchestrator_context,
+    )
+    architect_context = runner._architect_provider_context(
+        route_packet=route_packet,
+        route_validation={"accepted": True},
+        orchestrator_proposal=orchestrator_proposal,
+    )
+    prompt = runner._architect_prompt(architect_context)
+
+    for field in ARCHITECT_STRUCTURED_RATIONALE_REQUIRED_FIELDS:
+        assert field in prompt
+    assert "rationale_type" in prompt
+    assert "schema_version" in prompt
+    assert "structured_rationale_v0.1" in prompt
+    assert "structured_architect_rationale MUST be a complete JSON object" in prompt
+    assert "MUST NOT be null" in prompt
+
+
+def test_prompt_skeleton_structured_rationales_validate_locally() -> None:
+    orchestrator_context = runner._orchestrator_provider_context(HOTEL_LIKE_REQUEST)
+    orchestrator_skeleton = runner._orchestrator_structured_rationale_skeleton(
+        orchestrator_context
+    )
+    orchestrator_validation = validate_orchestrator_structured_rationale(
+        orchestrator_skeleton
+    )
+    orchestrator_proposal = _valid_orchestrator_proposal()
+    route_packet = runner._route_packet_from_proposal(
+        orchestrator_proposal,
+        orchestrator_context,
+    )
+    architect_context = runner._architect_provider_context(
+        route_packet=route_packet,
+        route_validation={"accepted": True},
+        orchestrator_proposal=orchestrator_proposal,
+    )
+    architect_skeleton = runner._architect_structured_rationale_skeleton(
+        architect_context
+    )
+    architect_validation = validate_architect_structured_rationale(
+        architect_skeleton
+    )
+
+    assert orchestrator_validation["accepted"] is True
+    assert architect_validation["accepted"] is True
+
+
 def test_injected_unknown_hotel_robot_request_reaches_root_not_ready() -> None:
     captured = {}
     result = _run_success(HOTEL_LIKE_REQUEST, captured)
@@ -333,6 +405,65 @@ def test_invalid_orchestrator_claims_fail_closed_before_architect() -> None:
     assert "orchestrator_action_claim_forbidden" in result["validation_errors"]
     assert "orchestrator_final_output_claim_forbidden" in result["validation_errors"]
     assert result["architect_provider_context"] == {}
+
+
+def test_orchestrator_null_structured_rationale_still_fails_closed_before_architect() -> None:
+    calls = {"architect": 0}
+
+    def orchestrator(prompt, model, timeout, env):
+        return json.dumps(
+            _valid_orchestrator_proposal(structured_orchestrator_rationale=None)
+        )
+
+    def architect(prompt, model, timeout, env):
+        calls["architect"] += 1
+        return json.dumps(_valid_architect_proposal())
+
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        orchestrator_provider=orchestrator,
+        architect_provider=architect,
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "orchestrator_structured_rationale_validation_failed" in (
+        result["validation_errors"]
+    )
+    assert calls["architect"] == 0
+    assert result["orchestrator_provider_response_shape"][
+        "structured_orchestrator_rationale_type"
+    ] is None
+
+
+def test_orchestrator_empty_structured_rationale_still_fails_closed_before_architect() -> None:
+    calls = {"architect": 0}
+
+    def orchestrator(prompt, model, timeout, env):
+        return json.dumps(
+            _valid_orchestrator_proposal(structured_orchestrator_rationale={})
+        )
+
+    def architect(prompt, model, timeout, env):
+        calls["architect"] += 1
+        return json.dumps(_valid_architect_proposal())
+
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        orchestrator_provider=orchestrator,
+        architect_provider=architect,
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "orchestrator_structured_rationale_validation_failed" in (
+        result["validation_errors"]
+    )
+    assert "structured_rationale_missing_required_field:rationale_type" in (
+        result["validation_errors"]
+    )
+    assert calls["architect"] == 0
+    assert result["orchestrator_provider_response_shape"][
+        "structured_orchestrator_rationale_keys"
+    ] == ()
 
 
 def test_orchestrator_suggested_route_must_be_allowed() -> None:
@@ -507,6 +638,27 @@ def test_architect_required_validators_must_be_complete() -> None:
     assert result["result_proposal"] == {}
 
 
+def test_architect_null_structured_rationale_fails_before_plangraph() -> None:
+    orchestrator, architect = _providers(
+        architect_overrides={"structured_architect_rationale": None}
+    )
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        orchestrator_provider=orchestrator,
+        architect_provider=architect,
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "architect_structured_rationale_validation_failed" in (
+        result["validation_errors"]
+    )
+    assert result["plan_graph_context"] == {}
+    assert result["result_proposal"] == {}
+    assert result["architect_provider_response_shape"][
+        "structured_architect_rationale_type"
+    ] is None
+
+
 def test_architect_nested_action_surface_fails_before_plan_graph() -> None:
     orchestrator, architect = _providers(
         architect_overrides={
@@ -662,6 +814,28 @@ def test_unknown_request_response_schemas_are_closed_top_level() -> None:
     assert "structured_architect_rationale" in (
         runner.ARCHITECT_RESPONSE_SCHEMA["properties"]
     )
+
+
+def test_response_schemas_require_nested_structured_rationale_fields() -> None:
+    orchestrator_schema = runner.ORCHESTRATOR_RESPONSE_SCHEMA["properties"][
+        "structured_orchestrator_rationale"
+    ]
+    architect_schema = runner.ARCHITECT_RESPONSE_SCHEMA["properties"][
+        "structured_architect_rationale"
+    ]
+
+    assert runner.ORCHESTRATOR_RESPONSE_SCHEMA["additionalProperties"] is False
+    assert runner.ARCHITECT_RESPONSE_SCHEMA["additionalProperties"] is False
+    assert orchestrator_schema["type"] == "object"
+    assert architect_schema["type"] == "object"
+    assert orchestrator_schema["additionalProperties"] is False
+    assert architect_schema["additionalProperties"] is False
+    for field in runner.ORCHESTRATOR_STRUCTURED_RATIONALE_SCHEMA_FIELDS:
+        assert field in orchestrator_schema["required"]
+        assert field in orchestrator_schema["properties"]
+    for field in runner.ARCHITECT_STRUCTURED_RATIONALE_SCHEMA_FIELDS:
+        assert field in architect_schema["required"]
+        assert field in architect_schema["properties"]
 
 
 def test_no_action_counters() -> None:

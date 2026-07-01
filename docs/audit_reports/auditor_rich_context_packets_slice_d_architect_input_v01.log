@@ -1,0 +1,103 @@
+audit_id: auditor_rich_context_packets_slice_d_architect_input_v01
+audit_status: PASS
+base_head: 93eda30
+audit_scope: Rich Context / Bounded Context Packets Slice D Gemini Architect input post-smoke audit
+
+source_commits:
+- Slice A commit: 3f780b4 Add bounded context packet core contracts
+- Slice B commit: 9af295c Wire bounded context packets into Full Semantic E2E runner
+- Slice A+B audit commit: 44acb06 Add rich context packets Slice A+B audit log
+- Slice C commit: 5b92725 Feed Orchestrator context packet into Gemini input
+- Slice C audit commit: 6b3db8b Add rich context packets Slice C audit log
+- Slice D commit: 93eda30 Feed Architect context packet into Gemini input
+
+smoke_evidence:
+- Slice D smoke: manual-rich-context-architect-slice-d-001 PASS
+
+slice_d_smoke_facts:
+- final_status PASS
+- scope: Slice D Gemini Architect consumes validated ArchitectPlanContextPacket only under explicit gate
+- architect_context_packet_input_path:
+  - packet_type ArchitectPlanContextPacket
+  - validation_accepted true
+  - allowed_executor_ids ["exec_mock_certificate"]
+  - required_validators ["AVF", "PlanGraph contract", "Post V&V", "GT/LGT", "Root final authority"]
+  - architect_is_root false
+  - creates_action_commit_packet false
+  - provider_path injected_architect_provider
+  - live_model_call_count 0
+  - network_used_count 0
+  - gemini_called_count 0
+- default_and_gate_alone:
+  - gate_alone_final_status PASS
+  - gate_alone_counters_equal_default true
+  - gate_alone_stage_map_equal_default true
+  - gate_alone_provider_call_path not_started
+  - gate_alone_starts_gemini false
+- existing_architect_mode_without_new_gate:
+  - final_status PASS
+  - safe_input_contains_packet false
+  - live_model_call_count 0
+  - network_used_count 0
+  - gemini_called_count 0
+- validation_failure_blocks_provider:
+  - final_status FAIL_CLOSED
+  - provider_calls 0
+  - has_failed_reason true
+  - has_architect_root_reason true
+  - has_action_packet_reason true
+  - gemini_architect_plan_graph_rejected_count 1
+  - gemini_architect_proposal_created_count 0
+  - gemini_architect_plan_graph_proposal_created_count 0
+  - live_model_call_count 0
+  - network_used_count 0
+  - gemini_called_count 0
+- dual_both_packet_inputs_path:
+  - final_status PASS
+  - orchestrator_packet_type OrchestratorRouteContextPacket
+  - architect_packet_type ArchitectPlanContextPacket
+  - orchestrator_validation_accepted true
+  - architect_validation_accepted true
+  - architect_consumed_validated_route true
+  - raw_cross_role_text_blocked true
+  - live_model_call_count 0
+  - network_used_count 0
+  - gemini_called_count 0
+- real_action_counters_zero:
+  - connector_called_count 0
+  - payment_executed_count 0
+  - shipment_released_count 0
+  - action_permission_created_count 0
+
+audit_conclusions:
+- Slice D is input plumbing only.
+- ArchitectPlanContextPacket enters Gemini Architect input only under explicit gate.
+- The new Architect packet input gate alone does not start Gemini.
+- Existing Gemini Architect mode without the new gate is unchanged.
+- ArchitectPlanContextPacket is validated before provider dispatch.
+- Validation failure blocks provider before model/network/Gemini call.
+- ArchitectPlanContextPacket is not execution authority.
+- Architect is not Root.
+- Architect does not create ActionCommitPacket.
+- Plan packet is not execution authority.
+- ContextPacket is not truth.
+- ContextPacket is not authority.
+- ContextPacket is not action permission.
+- ContextPacket is not FinalOutput.
+- ContextPacket is not ActionCommitPacket.
+- Gemini proposes, Root disposes.
+- Root remains final authority.
+- Dual path now consumes both OrchestratorRouteContextPacket and ArchitectPlanContextPacket.
+- Architect still consumes validated route as before.
+- No raw cross-role text.
+- No default output shape drift.
+- No counter drift.
+- No stage_map drift.
+- No production/public WOW claim.
+- No NeedleFactory/Marennya/UP.
+- Ready for Dual Rich Context smoke / next rationale layer only after this audit is committed.
+
+verdict:
+- Rich Context / Bounded Context Packets Slice D accepted as gated Gemini Architect input plumbing.
+- The packet input preserves Root authority and leaves PlanGraph runtime, AVF, DRS, GT/LGT, and Root behavior unchanged.
+- Root remains final authority.

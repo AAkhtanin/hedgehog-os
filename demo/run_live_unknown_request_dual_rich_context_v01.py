@@ -33,6 +33,12 @@ ENV_UNKNOWN_REQUEST_LIVE_ARCHITECT_PRE_DELAY_SECONDS = (
 ENV_UNKNOWN_REQUEST_LIVE_ARCHITECT_NO_EXPLICIT_TIMEOUT = (
     "HEDGEHOG_UNKNOWN_REQUEST_LIVE_ARCHITECT_NO_EXPLICIT_TIMEOUT"
 )
+ENV_UNKNOWN_REQUEST_LIVE_SEMANTIC_REASONING_CONTRACT = (
+    "HEDGEHOG_UNKNOWN_REQUEST_LIVE_SEMANTIC_REASONING_CONTRACT"
+)
+ENV_UNKNOWN_REQUEST_LIVE_SCHEMALESS_JSON = (
+    "HEDGEHOG_UNKNOWN_REQUEST_LIVE_SCHEMALESS_JSON"
+)
 DEFAULT_MODEL = "gemini-2.5-flash"
 
 ProviderCallable = Callable[[str, str, int, Mapping[str, str]], Any]
@@ -153,6 +159,77 @@ ARCHITECT_COMPACT_REQUIRED_FIELDS = (
     "rationale_authority_boundary",
 )
 
+ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS = (
+    "proposal_id",
+    "suggested_route",
+    "selected_vector_ids",
+    "required_guards",
+    "reason",
+    "confidence",
+    "needs_review",
+    "uncertainty_notes",
+    "root_review_required",
+    "truth_claimed",
+    "authority_claimed",
+    "action_permission_claimed",
+    "final_output_claimed",
+    "connector_command_claimed",
+    "drs_write_claimed",
+    "plan_graph_claimed",
+    "bypass_root_claimed",
+    "semantic_observations",
+    "route_reasoning",
+    "rejected_route_reasoning",
+    "guard_reasoning",
+    "vector_reasoning",
+    "authority_boundary_reasoning",
+)
+
+ARCHITECT_SEMANTIC_REASONING_REQUIRED_FIELDS = (
+    "proposal_id",
+    "source_route_id",
+    "selected_vector_ids",
+    "root_recommendation",
+    "result_proposal_summary",
+    "required_validators",
+    "truth_claimed",
+    "authority_claimed",
+    "action_permission_claimed",
+    "final_output_claimed",
+    "connector_command_claimed",
+    "drs_write_claimed",
+    "root_bypass_claimed",
+    "plan_shape_reasoning",
+    "node_intent_reasoning",
+    "executor_constraint_reasoning",
+    "forbidden_surface_reasoning",
+    "validator_coverage_reasoning",
+    "return_to_root_reasoning",
+    "uncertainty_notes",
+    "authority_boundary_reasoning",
+)
+
+ORCHESTRATOR_SEMANTIC_REASONING_FIELDS = (
+    "semantic_observations",
+    "route_reasoning",
+    "rejected_route_reasoning",
+    "guard_reasoning",
+    "vector_reasoning",
+    "uncertainty_notes",
+    "authority_boundary_reasoning",
+)
+
+ARCHITECT_SEMANTIC_REASONING_FIELDS = (
+    "plan_shape_reasoning",
+    "node_intent_reasoning",
+    "executor_constraint_reasoning",
+    "forbidden_surface_reasoning",
+    "validator_coverage_reasoning",
+    "return_to_root_reasoning",
+    "uncertainty_notes",
+    "authority_boundary_reasoning",
+)
+
 COUNTER_KEYS = (
     "orchestrator_provider_call_count",
     "architect_provider_call_count",
@@ -170,6 +247,9 @@ COUNTER_KEYS = (
     "compact_adapter_used_count",
     "compact_adapter_expanded_orchestrator_count",
     "compact_adapter_expanded_architect_count",
+    "semantic_reasoning_adapter_used_count",
+    "semantic_reasoning_expanded_orchestrator_count",
+    "semantic_reasoning_expanded_architect_count",
     "root_final_authority_preserved_count",
 )
 
@@ -255,6 +335,16 @@ def _structured_rationale_schema(
 def _compact_rationale_array_schema() -> dict[str, Any]:
     return {"type": "array", "items": {"type": "object"}}
 
+
+def _semantic_reasoning_field_schema() -> dict[str, Any]:
+    return {
+        "anyOf": [
+            {"type": "string"},
+            {"type": "array", "items": {"type": "string"}},
+        ]
+    }
+
+
 ORCHESTRATOR_RESPONSE_SCHEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -320,6 +410,37 @@ ORCHESTRATOR_COMPACT_RESPONSE_SCHEMA: dict[str, Any] = {
     },
 }
 
+ORCHESTRATOR_SEMANTIC_REASONING_RESPONSE_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": list(ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS),
+    "properties": {
+        "proposal_id": {"type": "string"},
+        "suggested_route": {"type": "string"},
+        "selected_vector_ids": {"type": "array", "items": {"type": "string"}},
+        "required_guards": {"type": "array", "items": {"type": "string"}},
+        "reason": {"type": "string"},
+        "confidence": {"type": "number"},
+        "needs_review": {"type": "boolean"},
+        "uncertainty_notes": _semantic_reasoning_field_schema(),
+        "root_review_required": {"type": "boolean"},
+        "truth_claimed": {"type": "boolean"},
+        "authority_claimed": {"type": "boolean"},
+        "action_permission_claimed": {"type": "boolean"},
+        "final_output_claimed": {"type": "boolean"},
+        "connector_command_claimed": {"type": "boolean"},
+        "drs_write_claimed": {"type": "boolean"},
+        "plan_graph_claimed": {"type": "boolean"},
+        "bypass_root_claimed": {"type": "boolean"},
+        "semantic_observations": _semantic_reasoning_field_schema(),
+        "route_reasoning": _semantic_reasoning_field_schema(),
+        "rejected_route_reasoning": _semantic_reasoning_field_schema(),
+        "guard_reasoning": _semantic_reasoning_field_schema(),
+        "vector_reasoning": _semantic_reasoning_field_schema(),
+        "authority_boundary_reasoning": _semantic_reasoning_field_schema(),
+    },
+}
+
 ARCHITECT_RESPONSE_SCHEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -348,6 +469,35 @@ ARCHITECT_RESPONSE_SCHEMA: dict[str, Any] = {
                 "calls_connectors",
             ),
         ),
+    },
+}
+
+ARCHITECT_SEMANTIC_REASONING_RESPONSE_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": list(ARCHITECT_SEMANTIC_REASONING_REQUIRED_FIELDS),
+    "properties": {
+        "proposal_id": {"type": "string"},
+        "source_route_id": {"type": "string"},
+        "selected_vector_ids": {"type": "array", "items": {"type": "string"}},
+        "root_recommendation": {"type": "string"},
+        "result_proposal_summary": {"type": "string"},
+        "required_validators": {"type": "array", "items": {"type": "string"}},
+        "truth_claimed": {"type": "boolean"},
+        "authority_claimed": {"type": "boolean"},
+        "action_permission_claimed": {"type": "boolean"},
+        "final_output_claimed": {"type": "boolean"},
+        "connector_command_claimed": {"type": "boolean"},
+        "drs_write_claimed": {"type": "boolean"},
+        "root_bypass_claimed": {"type": "boolean"},
+        "plan_shape_reasoning": _semantic_reasoning_field_schema(),
+        "node_intent_reasoning": _semantic_reasoning_field_schema(),
+        "executor_constraint_reasoning": _semantic_reasoning_field_schema(),
+        "forbidden_surface_reasoning": _semantic_reasoning_field_schema(),
+        "validator_coverage_reasoning": _semantic_reasoning_field_schema(),
+        "return_to_root_reasoning": _semantic_reasoning_field_schema(),
+        "uncertainty_notes": _semantic_reasoning_field_schema(),
+        "authority_boundary_reasoning": _semantic_reasoning_field_schema(),
     },
 }
 
@@ -395,17 +545,48 @@ def _live_enabled(env: Mapping[str, str]) -> bool:
     return env.get(ENV_UNKNOWN_REQUEST_LIVE_GEMINI) == "1"
 
 
+def _env_enabled_value(raw: str) -> bool | None:
+    value = raw.strip().lower()
+    if value in ("0", "false", "no", "off"):
+        return False
+    if value in ("1", "true", "yes", "on"):
+        return True
+    return None
+
+
+def _semantic_reasoning_contract_enabled(
+    env: Mapping[str, str],
+    *,
+    real_live_provider_path: bool,
+) -> bool:
+    parsed = _env_enabled_value(
+        env.get(ENV_UNKNOWN_REQUEST_LIVE_SEMANTIC_REASONING_CONTRACT, "")
+    )
+    if parsed is not None:
+        return parsed
+    return real_live_provider_path and _live_enabled(env)
+
+
 def _compact_rationale_enabled(
     env: Mapping[str, str],
     *,
     real_live_provider_path: bool,
 ) -> bool:
-    raw = env.get(ENV_UNKNOWN_REQUEST_LIVE_COMPACT_RATIONALE, "").strip().lower()
-    if raw in ("0", "false", "no", "off"):
-        return False
-    if raw in ("1", "true", "yes", "on"):
-        return True
-    return real_live_provider_path and _live_enabled(env)
+    parsed = _env_enabled_value(env.get(ENV_UNKNOWN_REQUEST_LIVE_COMPACT_RATIONALE, ""))
+    if parsed is not None:
+        return parsed
+    return False
+
+
+def _schemaless_json_enabled(
+    env: Mapping[str, str],
+    *,
+    real_semantic_live_path: bool,
+) -> bool:
+    parsed = _env_enabled_value(env.get(ENV_UNKNOWN_REQUEST_LIVE_SCHEMALESS_JSON, ""))
+    if parsed is not None:
+        return parsed
+    return real_semantic_live_path and _live_enabled(env)
 
 
 def _architect_pre_delay_seconds(env: Mapping[str, str]) -> int:
@@ -582,7 +763,7 @@ def _call_live_gemini_provider(
     timeout_seconds: int | None,
     explicit_http_timeout: bool = True,
     env: Mapping[str, str],
-    response_schema: Mapping[str, Any],
+    response_schema: Mapping[str, Any] | None,
     role: str,
 ) -> str:
     api_key = provider_adapter._gemini_api_key(env)
@@ -613,7 +794,7 @@ def _call_live_gemini_provider(
             "candidate_count": 1,
             "system_instruction": _system_instruction(role),
         }
-        if schema_key is not None:
+        if schema_key is not None and response_schema is not None:
             config[schema_key] = dict(response_schema)
         return config
 
@@ -630,7 +811,12 @@ def _call_live_gemini_provider(
                 ) from exc
             raise
         response = None
-        for schema_key in ("response_json_schema", "response_schema", None):
+        schema_keys = (
+            (None,)
+            if response_schema is None
+            else ("response_json_schema", "response_schema", None)
+        )
+        for schema_key in schema_keys:
             try:
                 response = client.models.generate_content(
                     model=model_name,
@@ -859,6 +1045,73 @@ def _orchestrator_compact_prompt(context: Mapping[str, Any]) -> str:
     )
 
 
+def _orchestrator_semantic_reasoning_prompt(context: Mapping[str, Any]) -> str:
+    skeleton = {
+        "proposal_id": "orchestrator-semantic-proposal-unknown-request-001",
+        "suggested_route": "unknown_request_root_review",
+        "selected_vector_ids": ["unknown_request_semantic_review"],
+        "required_guards": list(context["required_guards"]),
+        "reason": "concise semantic route proposal",
+        "confidence": 0.0,
+        "needs_review": True,
+        "uncertainty_notes": [
+            "Unknown or missing evidence remains uncertainty for Root review."
+        ],
+        "root_review_required": True,
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "plan_graph_claimed": False,
+        "bypass_root_claimed": False,
+        "semantic_observations": [
+            "Describe the request evidence and uncertainty boundary."
+        ],
+        "route_reasoning": [
+            "Explain why the suggested route is one of the allowed routes."
+        ],
+        "rejected_route_reasoning": [
+            "Explain why direct external action routes are rejected."
+        ],
+        "guard_reasoning": [
+            "Explain why each required guard remains required."
+        ],
+        "vector_reasoning": [
+            "Explain why selected vectors stay inside allowed_vector_ids."
+        ],
+        "authority_boundary_reasoning": [
+            "Explain that provider output is advisory only and Root remains final authority."
+        ],
+    }
+    return "\n".join(
+        (
+            TITLE,
+            "Role: bounded Gemini Orchestrator semantic proposal.",
+            "Return JSON only matching the skeleton field names.",
+            "Reasoning is structured explanation, not hidden chain-of-thought.",
+            "Use concise but meaningful reasons.",
+            "Do not output empty strings.",
+            "Do not output empty objects.",
+            "Do not invent evidence.",
+            "Unknown/missing evidence should remain uncertainty.",
+            "Do not include structured_orchestrator_rationale directly.",
+            "The runtime will build canonical structured rationale locally.",
+            "Provider output is advisory only.",
+            "No action permission, no connector command, no FinalOutput, no ActionCommitPacket.",
+            "Gemini proposes, Root disposes.",
+            "Root remains final authority.",
+            "",
+            "JSON skeleton:",
+            json.dumps(skeleton, indent=2, sort_keys=True),
+            "",
+            "BOUNDED_UNKNOWN_REQUEST_ORCHESTRATOR_INPUT_JSON:",
+            json.dumps(context, indent=2, sort_keys=True),
+        )
+    )
+
+
 def _architect_provider_context(
     *,
     route_packet: Mapping[str, Any],
@@ -1071,6 +1324,279 @@ def _architect_compact_prompt(context: Mapping[str, Any]) -> str:
             json.dumps(context, indent=2, sort_keys=True),
         )
     )
+
+
+def _architect_semantic_reasoning_prompt(context: Mapping[str, Any]) -> str:
+    skeleton = {
+        "proposal_id": "architect-semantic-proposal-unknown-request-001",
+        "source_route_id": context["source_route_id"],
+        "selected_vector_ids": list(context["selected_vector_ids"]),
+        "result_proposal_summary": "Unknown request needs Root review before any action.",
+        "root_recommendation": "needs_more_evidence",
+        "required_validators": list(context["required_validators"]),
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "root_bypass_claimed": False,
+        "plan_shape_reasoning": [
+            "Explain the safe advisory plan shape without listing plan_nodes."
+        ],
+        "node_intent_reasoning": [
+            "Describe intended local review nodes in words only."
+        ],
+        "executor_constraint_reasoning": [
+            "Explain why execution stays within allowed local review constraints."
+        ],
+        "forbidden_surface_reasoning": [
+            "Explain why action, connector, and final-output surfaces stay blocked."
+        ],
+        "validator_coverage_reasoning": [
+            "Explain why each required validator remains required."
+        ],
+        "return_to_root_reasoning": [
+            "Explain why the proposal must return to Root."
+        ],
+        "uncertainty_notes": [
+            "Unknown or missing evidence remains uncertainty for Root review."
+        ],
+        "authority_boundary_reasoning": [
+            "Explain that PlanGraph is not authority and Root remains final authority."
+        ],
+    }
+    return "\n".join(
+        (
+            TITLE,
+            "Role: bounded Gemini Architect semantic proposal.",
+            "Return JSON only matching the skeleton field names.",
+            "Reasoning is structured explanation, not hidden chain-of-thought.",
+            "Use concise but meaningful reasons.",
+            "Do not output empty strings.",
+            "Do not output empty objects.",
+            "Do not invent evidence.",
+            "Unknown/missing evidence should remain uncertainty.",
+            "Do not include structured_architect_rationale directly.",
+            "Do not include plan_nodes directly.",
+            "The runtime will build canonical structured rationale locally.",
+            "The runtime will build PlanGraph locally from validated semantic intent.",
+            "Provider output is advisory only.",
+            "No action permission, no connector command, no FinalOutput, no ActionCommitPacket.",
+            "PlanGraph is not authority.",
+            "ResultProposal is not FinalOutput.",
+            "Gemini proposes, Root disposes.",
+            "Root remains final authority.",
+            "",
+            "JSON skeleton:",
+            json.dumps(skeleton, indent=2, sort_keys=True),
+            "",
+            "BOUNDED_UNKNOWN_REQUEST_ARCHITECT_INPUT_JSON:",
+            json.dumps(context, indent=2, sort_keys=True),
+        )
+    )
+
+
+def _semantic_reasoning_string_list(value: Any) -> tuple[str, ...]:
+    if isinstance(value, str):
+        stripped = value.strip()
+        return (stripped,) if stripped else ()
+    if isinstance(value, (list, tuple)):
+        items: list[str] = []
+        for item in value:
+            if not isinstance(item, str):
+                return ()
+            stripped = item.strip()
+            if not stripped:
+                return ()
+            items.append(stripped)
+        return tuple(items)
+    return ()
+
+
+def _validate_semantic_reasoning_fields(
+    payload: Mapping[str, Any],
+    required_reasoning_fields: tuple[str, ...],
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    for field in required_reasoning_fields:
+        if field not in payload:
+            errors.append(f"semantic_reasoning_missing_field:{field}")
+            continue
+        value = payload[field]
+        if isinstance(value, str):
+            if not value.strip():
+                errors.append(f"semantic_reasoning_empty_field:{field}")
+            continue
+        if not isinstance(value, (list, tuple)):
+            errors.append(f"semantic_reasoning_invalid_type:{field}")
+            continue
+        if not value:
+            errors.append(f"semantic_reasoning_empty_field:{field}")
+            continue
+        for item in value:
+            if isinstance(item, str):
+                if not item.strip():
+                    errors.append(f"semantic_reasoning_empty_item:{field}")
+            elif isinstance(item, Mapping) and not item:
+                errors.append(f"semantic_reasoning_empty_item:{field}")
+            else:
+                errors.append(f"semantic_reasoning_invalid_type:{field}")
+    return tuple(errors)
+
+
+def _semantic_reasoning_entries(
+    payload: Mapping[str, Any],
+    field: str,
+) -> tuple[dict[str, str], ...]:
+    return tuple(
+        {"text": item, "source": "provider_semantic_reasoning"}
+        for item in _semantic_reasoning_string_list(payload.get(field))
+    )
+
+
+def _semantic_reasoning_fields_present(
+    payload: Mapping[str, Any],
+    fields: tuple[str, ...],
+) -> tuple[str, ...]:
+    return tuple(field for field in fields if field in payload)
+
+
+def _safe_local_plan_nodes_from_semantic_reasoning(
+    architect_context: Mapping[str, Any],
+) -> tuple[dict[str, Any], ...]:
+    return (
+        {
+            "node_id": "node:unknown_request_semantic_review",
+            "kind": "semantic_review",
+            "executor_id": "local_unknown_request_review_executor",
+            "expected_output": "ResultProposal",
+            "advisory_only": True,
+            "source_route_id": architect_context.get("source_route_id"),
+        },
+        {
+            "node_id": "node:root_review_gate",
+            "kind": "root_review_gate",
+            "executor_id": "local_unknown_request_review_executor",
+            "expected_output": "ResultProposal",
+            "depends_on": ("node:unknown_request_semantic_review",),
+            "advisory_only": True,
+            "Root remains final authority": True,
+        },
+    )
+
+
+def _expand_orchestrator_semantic_reasoning_proposal(
+    proposal: Mapping[str, Any],
+    context: Mapping[str, Any],
+) -> dict[str, Any]:
+    expanded = dict(proposal)
+    expanded["structured_orchestrator_rationale"] = (
+        build_orchestrator_structured_rationale(
+            observed_semantics=_semantic_reasoning_entries(
+                proposal,
+                "semantic_observations",
+            ),
+            route_selection_reason=_semantic_reasoning_entries(
+                proposal,
+                "route_reasoning",
+            )
+            + (
+                {
+                    "suggested_route": str(proposal.get("suggested_route") or ""),
+                    "source": "provider_semantic_reasoning",
+                },
+            ),
+            rejected_routes=_semantic_reasoning_entries(
+                proposal,
+                "rejected_route_reasoning",
+            ),
+            required_guards_reasoning=_semantic_reasoning_entries(
+                proposal,
+                "guard_reasoning",
+            ),
+            selected_vector_reasoning=_semantic_reasoning_entries(
+                proposal,
+                "vector_reasoning",
+            ),
+            uncertainty_notes=_semantic_reasoning_entries(
+                proposal,
+                "uncertainty_notes",
+            ),
+            authority_boundary=_semantic_reasoning_entries(
+                proposal,
+                "authority_boundary_reasoning",
+            )
+            + (
+                {
+                    "ContextPacket is not truth": True,
+                    "ContextPacket is not authority": True,
+                    "structured rationale is explanation only": True,
+                    "Orchestrator is not Root": True,
+                    "Root remains final authority": True,
+                },
+            ),
+            root_review_required=True,
+        )
+    )
+    return expanded
+
+
+def _expand_architect_semantic_reasoning_proposal(
+    proposal: Mapping[str, Any],
+    architect_context: Mapping[str, Any],
+) -> dict[str, Any]:
+    expanded = dict(proposal)
+    expanded["plan_nodes"] = _safe_local_plan_nodes_from_semantic_reasoning(
+        architect_context
+    )
+    expanded["structured_architect_rationale"] = build_architect_structured_rationale(
+        plan_shape_reason=_semantic_reasoning_entries(
+            proposal,
+            "plan_shape_reasoning",
+        ),
+        node_selection_reasoning=_semantic_reasoning_entries(
+            proposal,
+            "node_intent_reasoning",
+        ),
+        executor_constraint_reasoning=_semantic_reasoning_entries(
+            proposal,
+            "executor_constraint_reasoning",
+        ),
+        forbidden_surface_review=_semantic_reasoning_entries(
+            proposal,
+            "forbidden_surface_reasoning",
+        ),
+        validator_coverage_reasoning=_semantic_reasoning_entries(
+            proposal,
+            "validator_coverage_reasoning",
+        ),
+        return_to_root_path=_semantic_reasoning_entries(
+            proposal,
+            "return_to_root_reasoning",
+        ),
+        uncertainty_notes=_semantic_reasoning_entries(
+            proposal,
+            "uncertainty_notes",
+        ),
+        authority_boundary=_semantic_reasoning_entries(
+            proposal,
+            "authority_boundary_reasoning",
+        )
+        + (
+            {
+                "ContextPacket is not truth": True,
+                "ContextPacket is not authority": True,
+                "structured rationale is explanation only": True,
+                "Architect is not Root": True,
+                "PlanGraph is not authority": True,
+                "ResultProposal is not FinalOutput": True,
+                "Root remains final authority": True,
+            },
+        ),
+        root_review_required=True,
+    )
+    return expanded
 
 
 def _expand_orchestrator_compact_proposal(
@@ -1293,7 +1819,7 @@ def _call_provider(
     role: str,
     env: Mapping[str, str],
     provider: ProviderCallable | None,
-    response_schema: Mapping[str, Any],
+    response_schema: Mapping[str, Any] | None,
     counters: dict[str, int],
     explicit_http_timeout: bool = True,
 ) -> dict[str, Any]:
@@ -1346,11 +1872,14 @@ def _fail_result(
     live_provider_role_in_progress: str | None = None,
     provider_timeout_seconds: int | None = None,
     live_provider_contract_mode: str = "full_structured_rationale",
+    live_schema_mode: str = "response_schema",
     provider_error_shape: Mapping[str, Any] | None = None,
     architect_pre_delay_seconds: int = 0,
     architect_pre_delay_applied: bool = False,
     architect_explicit_http_timeout_enabled: bool = True,
     architect_no_explicit_timeout_enabled: bool = False,
+    semantic_reasoning_orchestrator_fields_present: tuple[str, ...] = (),
+    semantic_reasoning_architect_fields_present: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     return {
         "title": TITLE,
@@ -1386,6 +1915,7 @@ def _fail_result(
         "live_provider_role_in_progress": live_provider_role_in_progress,
         "provider_timeout_seconds": provider_timeout_seconds,
         "live_provider_contract_mode": live_provider_contract_mode,
+        "live_schema_mode": live_schema_mode,
         "provider_error_shape": dict(provider_error_shape or {}),
         "architect_pre_delay_seconds": architect_pre_delay_seconds,
         "architect_pre_delay_applied": architect_pre_delay_applied,
@@ -1394,6 +1924,12 @@ def _fail_result(
         ),
         "architect_no_explicit_timeout_enabled": (
             architect_no_explicit_timeout_enabled
+        ),
+        "semantic_reasoning_orchestrator_fields_present": (
+            semantic_reasoning_orchestrator_fields_present
+        ),
+        "semantic_reasoning_architect_fields_present": (
+            semantic_reasoning_architect_fields_present
         ),
         "plan_graph_context": {},
         "result_proposal": {},
@@ -1573,6 +2109,10 @@ def run_live_unknown_request_dual_rich_context(
     last_live_provider_role: str | None = None
     live_provider_role_in_progress: str | None = None
     provider_error_shape: dict[str, Any] = {}
+    real_live_provider_path = (
+        (orchestrator_provider is None or architect_provider is None)
+        and _live_enabled(observed_env)
+    )
     architect_real_live_provider_path = (
         architect_provider is None and _live_enabled(observed_env)
     )
@@ -1584,17 +2124,40 @@ def run_live_unknown_request_dual_rich_context(
     architect_explicit_http_timeout_enabled = not (
         architect_real_live_provider_path and architect_no_explicit_timeout_enabled
     )
-    compact_mode = _compact_rationale_enabled(
+    semantic_reasoning_mode = _semantic_reasoning_contract_enabled(
         observed_env,
-        real_live_provider_path=(
-            orchestrator_provider is None or architect_provider is None
-        ),
+        real_live_provider_path=real_live_provider_path,
+    )
+    compact_mode = (
+        False
+        if semantic_reasoning_mode
+        else _compact_rationale_enabled(
+            observed_env,
+            real_live_provider_path=real_live_provider_path,
+        )
+    )
+    schemaless_json_mode = _schemaless_json_enabled(
+        observed_env,
+        real_semantic_live_path=semantic_reasoning_mode and real_live_provider_path,
     )
     live_provider_contract_mode = (
-        "compact_rationale_adapter" if compact_mode else "full_structured_rationale"
+        "semantic_reasoning_adapter"
+        if semantic_reasoning_mode
+        else (
+            "compact_rationale_adapter" if compact_mode else "full_structured_rationale"
+        )
     )
+    live_schema_mode = (
+        "json_mime_only"
+        if semantic_reasoning_mode and schemaless_json_mode
+        else "response_schema"
+    )
+    semantic_reasoning_orchestrator_fields_present: tuple[str, ...] = ()
+    semantic_reasoning_architect_fields_present: tuple[str, ...] = ()
     if compact_mode:
         counters["compact_adapter_used_count"] = 1
+    if semantic_reasoning_mode:
+        counters["semantic_reasoning_adapter_used_count"] = 1
 
     def fail(**kwargs: Any) -> dict[str, Any]:
         return _fail_result(
@@ -1603,6 +2166,7 @@ def run_live_unknown_request_dual_rich_context(
             last_live_provider_role=last_live_provider_role,
             live_provider_role_in_progress=live_provider_role_in_progress,
             live_provider_contract_mode=live_provider_contract_mode,
+            live_schema_mode=live_schema_mode,
             provider_error_shape=provider_error_shape,
             architect_pre_delay_seconds=architect_pre_delay_seconds,
             architect_pre_delay_applied=architect_pre_delay_applied,
@@ -1611,6 +2175,12 @@ def run_live_unknown_request_dual_rich_context(
             ),
             architect_no_explicit_timeout_enabled=(
                 architect_no_explicit_timeout_enabled
+            ),
+            semantic_reasoning_orchestrator_fields_present=(
+                semantic_reasoning_orchestrator_fields_present
+            ),
+            semantic_reasoning_architect_fields_present=(
+                semantic_reasoning_architect_fields_present
             ),
             **kwargs,
         )
@@ -1633,15 +2203,28 @@ def run_live_unknown_request_dual_rich_context(
         )
 
     orchestrator_context = _orchestrator_provider_context(request)
-    orchestrator_prompt = (
-        _orchestrator_compact_prompt(orchestrator_context)
-        if compact_mode
-        else _orchestrator_prompt(orchestrator_context)
-    )
-    orchestrator_response_schema = (
-        ORCHESTRATOR_COMPACT_RESPONSE_SCHEMA
-        if compact_mode
-        else ORCHESTRATOR_RESPONSE_SCHEMA
+    if semantic_reasoning_mode:
+        orchestrator_prompt = _orchestrator_semantic_reasoning_prompt(
+            orchestrator_context
+        )
+    else:
+        orchestrator_prompt = (
+            _orchestrator_compact_prompt(orchestrator_context)
+            if compact_mode
+            else _orchestrator_prompt(orchestrator_context)
+        )
+    orchestrator_response_schema: Mapping[str, Any] | None = (
+        None
+        if semantic_reasoning_mode and schemaless_json_mode
+        else (
+            ORCHESTRATOR_SEMANTIC_REASONING_RESPONSE_SCHEMA
+            if semantic_reasoning_mode
+            else (
+                ORCHESTRATOR_COMPACT_RESPONSE_SCHEMA
+                if compact_mode
+                else ORCHESTRATOR_RESPONSE_SCHEMA
+            )
+        )
     )
     try:
         live_provider_stage = "orchestrator_provider_call"
@@ -1681,7 +2264,38 @@ def run_live_unknown_request_dual_rich_context(
         orchestrator_proposal,
         rationale_key="structured_orchestrator_rationale",
     )
-    if compact_mode:
+    if semantic_reasoning_mode:
+        semantic_reasoning_orchestrator_fields_present = (
+            _semantic_reasoning_fields_present(
+                orchestrator_proposal,
+                ORCHESTRATOR_SEMANTIC_REASONING_FIELDS,
+            )
+        )
+        semantic_errors = (
+            *_missing_fields(
+                orchestrator_proposal,
+                ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS,
+            ),
+            *_validate_semantic_reasoning_fields(
+                orchestrator_proposal,
+                ORCHESTRATOR_SEMANTIC_REASONING_FIELDS,
+            ),
+        )
+        if semantic_errors:
+            return fail(
+                request_text=request,
+                semantic_context=semantic_context,
+                orchestrator_provider_context=orchestrator_context,
+                counters=counters,
+                validation_errors=tuple(semantic_errors),
+                orchestrator_provider_response_shape=orchestrator_response_shape,
+            )
+        orchestrator_proposal = _expand_orchestrator_semantic_reasoning_proposal(
+            orchestrator_proposal,
+            orchestrator_context,
+        )
+        counters["semantic_reasoning_expanded_orchestrator_count"] += 1
+    elif compact_mode:
         compact_errors = _missing_fields(
             orchestrator_proposal,
             ORCHESTRATOR_COMPACT_REQUIRED_FIELDS,
@@ -1792,15 +2406,26 @@ def run_live_unknown_request_dual_rich_context(
         )
     counters["context_packet_validated_count"] += 1
 
-    architect_prompt = (
-        _architect_compact_prompt(architect_context)
-        if compact_mode
-        else _architect_prompt(architect_context)
-    )
-    architect_response_schema = (
-        ARCHITECT_COMPACT_RESPONSE_SCHEMA
-        if compact_mode
-        else ARCHITECT_RESPONSE_SCHEMA
+    if semantic_reasoning_mode:
+        architect_prompt = _architect_semantic_reasoning_prompt(architect_context)
+    else:
+        architect_prompt = (
+            _architect_compact_prompt(architect_context)
+            if compact_mode
+            else _architect_prompt(architect_context)
+        )
+    architect_response_schema: Mapping[str, Any] | None = (
+        None
+        if semantic_reasoning_mode and schemaless_json_mode
+        else (
+            ARCHITECT_SEMANTIC_REASONING_RESPONSE_SCHEMA
+            if semantic_reasoning_mode
+            else (
+                ARCHITECT_COMPACT_RESPONSE_SCHEMA
+                if compact_mode
+                else ARCHITECT_RESPONSE_SCHEMA
+            )
+        )
     )
     try:
         if architect_real_live_provider_path and architect_pre_delay_seconds > 0:
@@ -1864,7 +2489,53 @@ def run_live_unknown_request_dual_rich_context(
         architect_proposal,
         rationale_key="structured_architect_rationale",
     )
-    if compact_mode:
+    if semantic_reasoning_mode:
+        semantic_reasoning_architect_fields_present = (
+            _semantic_reasoning_fields_present(
+                architect_proposal,
+                ARCHITECT_SEMANTIC_REASONING_FIELDS,
+            )
+        )
+        semantic_errors = (
+            *_missing_fields(
+                architect_proposal,
+                ARCHITECT_SEMANTIC_REASONING_REQUIRED_FIELDS,
+            ),
+            *_validate_semantic_reasoning_fields(
+                architect_proposal,
+                ARCHITECT_SEMANTIC_REASONING_FIELDS,
+            ),
+        )
+        if "plan_nodes" in architect_proposal:
+            semantic_errors = (
+                *semantic_errors,
+                "architect_provider_plan_nodes_forbidden_in_semantic_mode",
+            )
+        if semantic_errors:
+            return fail(
+                request_text=request,
+                semantic_context=semantic_context,
+                orchestrator_provider_context=orchestrator_context,
+                orchestrator_route_context_packet=route_packet,
+                orchestrator_route_context_packet_validation=route_packet_validation,
+                structured_orchestrator_rationale=orchestrator_rationale,
+                structured_orchestrator_rationale_validation=(
+                    orchestrator_rationale_validation
+                ),
+                architect_provider_context=architect_context,
+                architect_plan_context_packet=architect_packet,
+                architect_plan_context_packet_validation=architect_packet_validation,
+                counters=counters,
+                validation_errors=tuple(semantic_errors),
+                orchestrator_provider_response_shape=orchestrator_response_shape,
+                architect_provider_response_shape=architect_response_shape,
+            )
+        architect_proposal = _expand_architect_semantic_reasoning_proposal(
+            architect_proposal,
+            architect_context,
+        )
+        counters["semantic_reasoning_expanded_architect_count"] += 1
+    elif compact_mode:
         compact_errors = _missing_fields(
             architect_proposal,
             ARCHITECT_COMPACT_REQUIRED_FIELDS,
@@ -1972,6 +2643,7 @@ def run_live_unknown_request_dual_rich_context(
         "live_provider_role_in_progress": live_provider_role_in_progress,
         "provider_timeout_seconds": provider_timeout_seconds,
         "live_provider_contract_mode": live_provider_contract_mode,
+        "live_schema_mode": live_schema_mode,
         "provider_error_shape": provider_error_shape,
         "architect_pre_delay_seconds": architect_pre_delay_seconds,
         "architect_pre_delay_applied": architect_pre_delay_applied,
@@ -1980,6 +2652,12 @@ def run_live_unknown_request_dual_rich_context(
         ),
         "architect_no_explicit_timeout_enabled": (
             architect_no_explicit_timeout_enabled
+        ),
+        "semantic_reasoning_orchestrator_fields_present": (
+            semantic_reasoning_orchestrator_fields_present
+        ),
+        "semantic_reasoning_architect_fields_present": (
+            semantic_reasoning_architect_fields_present
         ),
         "plan_graph_context": plan_graph,
         "result_proposal": result_proposal,

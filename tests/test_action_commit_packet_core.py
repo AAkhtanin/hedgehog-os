@@ -105,6 +105,10 @@ def test_valid_mock_action_commit_packet_is_accepted() -> None:
 
 
 def test_build_packet_identity_is_derived_from_root_outcome_id() -> None:
+    default_idempotency_key = (
+        "idem:mock_action_commit_packet:"
+        "root_outcome:full_semantic_e2e_supplier_payment_v01"
+    )
     root_boundary = _root_boundary(outcome_id="root_outcome:custom_core_identity_v01")
     packet = build_mock_action_commit_packet(
         root_boundary=root_boundary,
@@ -124,7 +128,51 @@ def test_build_packet_identity_is_derived_from_root_outcome_id() -> None:
         == "idem:mock_action_commit_packet:root_outcome:custom_core_identity_v01"
     )
     assert packet["business_subject"] == "CUSTOM-SUBJECT"
+    assert packet["idempotency_key"] != default_idempotency_key
     assert validation["accepted"] is True
+
+
+def test_packet_id_must_derive_from_root_outcome_id() -> None:
+    packet = _valid_packet()
+    packet["packet_id"] = "mock_action_commit_packet:wrong"
+
+    validation = validate_action_commit_packet(packet, root_boundary=_root_boundary())
+
+    assert validation["accepted"] is False
+    assert "packet_id_must_derive_from_root_outcome_id" in validation["reasons"]
+
+
+def test_idempotency_key_must_derive_from_root_outcome_id() -> None:
+    packet = _valid_packet()
+    packet["idempotency_key"] = "idem:mock_action_commit_packet:wrong"
+
+    validation = validate_action_commit_packet(packet, root_boundary=_root_boundary())
+
+    assert validation["accepted"] is False
+    assert (
+        "idempotency_key_must_derive_from_root_outcome_id"
+        in validation["reasons"]
+    )
+
+
+@pytest.mark.parametrize(
+    "root_reviewed_semantic_outcome",
+    (
+        {},
+        {"outcome_id": ""},
+    ),
+)
+def test_root_outcome_id_is_required_for_identity_validation(
+    root_reviewed_semantic_outcome: dict,
+) -> None:
+    packet = _valid_packet()
+    root_boundary = _root_boundary()
+    root_boundary["root_reviewed_semantic_outcome"] = root_reviewed_semantic_outcome
+
+    validation = validate_action_commit_packet(packet, root_boundary=root_boundary)
+
+    assert validation["accepted"] is False
+    assert "root_outcome_id_required" in validation["reasons"]
 
 
 def test_not_ready_root_boundary_is_rejected() -> None:

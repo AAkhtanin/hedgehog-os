@@ -277,6 +277,15 @@ def validate_action_commit_packet(
         root_boundary.get("root_reviewed_semantic_outcome") if root_boundary else {}
     ) or {}
     root_outcome_id = root_artifact.get("outcome_id")
+    if not root_outcome_id:
+        reasons.append("root_outcome_id_required")
+    else:
+        expected_packet_id = f"mock_action_commit_packet:{root_outcome_id}"
+        expected_idempotency_key = f"idem:mock_action_commit_packet:{root_outcome_id}"
+        if packet.get("packet_id") != expected_packet_id:
+            reasons.append("packet_id_must_derive_from_root_outcome_id")
+        if packet.get("idempotency_key") != expected_idempotency_key:
+            reasons.append("idempotency_key_must_derive_from_root_outcome_id")
     if packet.get("source_root_decision") != root_decision:
         reasons.append("source_root_decision_must_match_root_boundary")
     if packet.get("source_root_outcome_id") != root_outcome_id:

@@ -27,6 +27,12 @@ ENV_UNKNOWN_REQUEST_LIVE_GEMINI = "HEDGEHOG_UNKNOWN_REQUEST_LIVE_GEMINI"
 ENV_UNKNOWN_REQUEST_LIVE_COMPACT_RATIONALE = (
     "HEDGEHOG_UNKNOWN_REQUEST_LIVE_COMPACT_RATIONALE"
 )
+ENV_UNKNOWN_REQUEST_LIVE_ARCHITECT_PRE_DELAY_SECONDS = (
+    "HEDGEHOG_UNKNOWN_REQUEST_LIVE_ARCHITECT_PRE_DELAY_SECONDS"
+)
+ENV_UNKNOWN_REQUEST_LIVE_ARCHITECT_NO_EXPLICIT_TIMEOUT = (
+    "HEDGEHOG_UNKNOWN_REQUEST_LIVE_ARCHITECT_NO_EXPLICIT_TIMEOUT"
+)
 DEFAULT_MODEL = "gemini-2.5-flash"
 
 ProviderCallable = Callable[[str, str, int, Mapping[str, str]], Any]
@@ -402,6 +408,31 @@ def _compact_rationale_enabled(
     return real_live_provider_path and _live_enabled(env)
 
 
+def _architect_pre_delay_seconds(env: Mapping[str, str]) -> int:
+    raw = env.get(
+        ENV_UNKNOWN_REQUEST_LIVE_ARCHITECT_PRE_DELAY_SECONDS,
+        "",
+    ).strip()
+    if not raw:
+        return 0
+    try:
+        return max(0, int(float(raw)))
+    except ValueError:
+        return 0
+
+
+def _architect_no_explicit_timeout_enabled(env: Mapping[str, str]) -> bool:
+    raw = env.get(
+        ENV_UNKNOWN_REQUEST_LIVE_ARCHITECT_NO_EXPLICIT_TIMEOUT,
+        "",
+    ).strip().lower()
+    return raw in ("1", "true", "yes", "on")
+
+
+def _sleep_before_architect(seconds: int) -> None:
+    time.sleep(seconds)
+
+
 def _provider_model(env: Mapping[str, str]) -> str:
     return env.get(provider_adapter.ENV_PROVIDER_MODEL, "").strip() or DEFAULT_MODEL
 
@@ -548,7 +579,8 @@ def _call_live_gemini_provider(
     *,
     prompt: str,
     model_name: str,
-    timeout_seconds: int,
+    timeout_seconds: int | None,
+    explicit_http_timeout: bool = True,
     env: Mapping[str, str],
     response_schema: Mapping[str, Any],
     role: str,
@@ -562,9 +594,17 @@ def _call_live_gemini_provider(
     except ImportError as exc:
         raise provider_adapter.ProviderCaptureError("provider_sdk_or_key_missing") from exc
 
-    http_options = _gemini_http_options(timeout_seconds)
-    if http_options is None:
-        raise provider_adapter.ProviderCaptureError("provider_timeout_not_supported")
+    http_options = None
+    if explicit_http_timeout:
+        if timeout_seconds is None:
+            raise provider_adapter.ProviderCaptureError(
+                "provider_timeout_not_supported"
+            )
+        http_options = _gemini_http_options(timeout_seconds)
+        if http_options is None:
+            raise provider_adapter.ProviderCaptureError(
+                "provider_timeout_not_supported"
+            )
 
     def generation_config(schema_key: str | None) -> dict[str, Any]:
         config: dict[str, Any] = {
@@ -579,11 +619,16 @@ def _call_live_gemini_provider(
 
     try:
         try:
-            client = genai.Client(api_key=api_key, http_options=http_options)
+            if explicit_http_timeout:
+                client = genai.Client(api_key=api_key, http_options=http_options)
+            else:
+                client = genai.Client(api_key=api_key)
         except TypeError as exc:
-            raise provider_adapter.ProviderCaptureError(
-                "provider_timeout_not_supported"
-            ) from exc
+            if explicit_http_timeout:
+                raise provider_adapter.ProviderCaptureError(
+                    "provider_timeout_not_supported"
+                ) from exc
+            raise
         response = None
         for schema_key in ("response_json_schema", "response_schema", None):
             try:
@@ -1250,6 +1295,7 @@ def _call_provider(
     provider: ProviderCallable | None,
     response_schema: Mapping[str, Any],
     counters: dict[str, int],
+    explicit_http_timeout: bool = True,
 ) -> dict[str, Any]:
     model = _provider_model(env)
     timeout = provider_adapter._timeout_seconds(env)
@@ -1266,6 +1312,7 @@ def _call_provider(
             prompt=prompt,
             model_name=model,
             timeout_seconds=timeout,
+            explicit_http_timeout=explicit_http_timeout,
             env=env,
             response_schema=response_schema,
             role=role,
@@ -1300,6 +1347,10 @@ def _fail_result(
     provider_timeout_seconds: int | None = None,
     live_provider_contract_mode: str = "full_structured_rationale",
     provider_error_shape: Mapping[str, Any] | None = None,
+    architect_pre_delay_seconds: int = 0,
+    architect_pre_delay_applied: bool = False,
+    architect_explicit_http_timeout_enabled: bool = True,
+    architect_no_explicit_timeout_enabled: bool = False,
 ) -> dict[str, Any]:
     return {
         "title": TITLE,
@@ -1336,6 +1387,14 @@ def _fail_result(
         "provider_timeout_seconds": provider_timeout_seconds,
         "live_provider_contract_mode": live_provider_contract_mode,
         "provider_error_shape": dict(provider_error_shape or {}),
+        "architect_pre_delay_seconds": architect_pre_delay_seconds,
+        "architect_pre_delay_applied": architect_pre_delay_applied,
+        "architect_explicit_http_timeout_enabled": (
+            architect_explicit_http_timeout_enabled
+        ),
+        "architect_no_explicit_timeout_enabled": (
+            architect_no_explicit_timeout_enabled
+        ),
         "plan_graph_context": {},
         "result_proposal": {},
         "root_final_output_boundary": {},
@@ -1514,6 +1573,17 @@ def run_live_unknown_request_dual_rich_context(
     last_live_provider_role: str | None = None
     live_provider_role_in_progress: str | None = None
     provider_error_shape: dict[str, Any] = {}
+    architect_real_live_provider_path = (
+        architect_provider is None and _live_enabled(observed_env)
+    )
+    architect_pre_delay_seconds = _architect_pre_delay_seconds(observed_env)
+    architect_pre_delay_applied = False
+    architect_no_explicit_timeout_enabled = _architect_no_explicit_timeout_enabled(
+        observed_env
+    )
+    architect_explicit_http_timeout_enabled = not (
+        architect_real_live_provider_path and architect_no_explicit_timeout_enabled
+    )
     compact_mode = _compact_rationale_enabled(
         observed_env,
         real_live_provider_path=(
@@ -1534,6 +1604,14 @@ def run_live_unknown_request_dual_rich_context(
             live_provider_role_in_progress=live_provider_role_in_progress,
             live_provider_contract_mode=live_provider_contract_mode,
             provider_error_shape=provider_error_shape,
+            architect_pre_delay_seconds=architect_pre_delay_seconds,
+            architect_pre_delay_applied=architect_pre_delay_applied,
+            architect_explicit_http_timeout_enabled=(
+                architect_explicit_http_timeout_enabled
+            ),
+            architect_no_explicit_timeout_enabled=(
+                architect_no_explicit_timeout_enabled
+            ),
             **kwargs,
         )
 
@@ -1725,6 +1803,9 @@ def run_live_unknown_request_dual_rich_context(
         else ARCHITECT_RESPONSE_SCHEMA
     )
     try:
+        if architect_real_live_provider_path and architect_pre_delay_seconds > 0:
+            _sleep_before_architect(architect_pre_delay_seconds)
+            architect_pre_delay_applied = True
         live_provider_stage = "architect_provider_call"
         last_live_provider_role = "architect"
         live_provider_role_in_progress = "architect"
@@ -1736,6 +1817,7 @@ def run_live_unknown_request_dual_rich_context(
             provider=architect_provider,
             response_schema=architect_response_schema,
             counters=counters,
+            explicit_http_timeout=architect_explicit_http_timeout_enabled,
         )
         live_provider_stage = "architect_provider_returned"
         live_provider_role_in_progress = None
@@ -1891,6 +1973,14 @@ def run_live_unknown_request_dual_rich_context(
         "provider_timeout_seconds": provider_timeout_seconds,
         "live_provider_contract_mode": live_provider_contract_mode,
         "provider_error_shape": provider_error_shape,
+        "architect_pre_delay_seconds": architect_pre_delay_seconds,
+        "architect_pre_delay_applied": architect_pre_delay_applied,
+        "architect_explicit_http_timeout_enabled": (
+            architect_explicit_http_timeout_enabled
+        ),
+        "architect_no_explicit_timeout_enabled": (
+            architect_no_explicit_timeout_enabled
+        ),
         "plan_graph_context": plan_graph,
         "result_proposal": result_proposal,
         "root_final_output_boundary": root_boundary,

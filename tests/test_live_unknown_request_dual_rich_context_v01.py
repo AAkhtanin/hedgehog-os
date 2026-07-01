@@ -1096,6 +1096,34 @@ def test_live_provider_timeout_seconds_is_passed_to_gemini_client(monkeypatch) -
     assert captured["generate_content_kwargs"]["model"] == "gemini-test"
 
 
+def test_live_provider_can_construct_client_without_explicit_http_timeout(
+    monkeypatch,
+) -> None:
+    class FakeResponse:
+        parsed = _valid_architect_compact_proposal()
+        text = ""
+
+    captured = _install_fake_google_genai(
+        monkeypatch,
+        generate_content=lambda **kwargs: FakeResponse(),
+    )
+
+    raw = runner._call_live_gemini_provider(
+        prompt="bounded prompt",
+        model_name="gemini-test",
+        timeout_seconds=7,
+        explicit_http_timeout=False,
+        env={runner.provider_adapter.ENV_GOOGLE_API_KEY: "test-key"},
+        response_schema=runner.ARCHITECT_COMPACT_RESPONSE_SCHEMA,
+        role="architect",
+    )
+
+    assert json.loads(raw)["proposal_id"] == "arch-compact-proposal-test-001"
+    assert captured["http_options"] is None
+    assert "http_options_timeout" not in captured
+    assert captured["generate_content_kwargs"]["model"] == "gemini-test"
+
+
 def test_live_provider_timeout_exception_maps_to_provider_timeout(monkeypatch) -> None:
     def timeout_response(**kwargs):
         raise TimeoutError("simulated timeout")
@@ -1161,6 +1189,97 @@ def test_live_architect_timeout_after_valid_orchestrator_fails_closed(monkeypatc
     assert result["live_provider_role_in_progress"] == "architect"
     assert result["provider_timeout_seconds"] == 4
     assert result["provider_error_shape"]["exception_type"] == "ProviderTimeoutError"
+
+
+def test_architect_pre_delay_is_applied_for_real_live_path(monkeypatch) -> None:
+    calls = []
+    sleep_calls = []
+
+    def fake_sleep(seconds):
+        sleep_calls.append(seconds)
+
+    def fake_live_provider(**kwargs):
+        calls.append(kwargs["role"])
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_compact_proposal())
+        return json.dumps(_valid_architect_compact_proposal())
+
+    monkeypatch.setattr(runner, "_sleep_before_architect", fake_sleep)
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.ENV_UNKNOWN_REQUEST_LIVE_ARCHITECT_PRE_DELAY_SECONDS: "30",
+        },
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert calls == ["orchestrator", "architect"]
+    assert sleep_calls == [30]
+    assert result["architect_pre_delay_seconds"] == 30
+    assert result["architect_pre_delay_applied"] is True
+    assert counters["action_permission_created_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_architect_pre_delay_not_applied_for_injected_providers(monkeypatch) -> None:
+    sleep_calls = []
+
+    def fake_sleep(seconds):
+        sleep_calls.append(seconds)
+
+    orchestrator, architect = _providers()
+    monkeypatch.setattr(runner, "_sleep_before_architect", fake_sleep)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={runner.ENV_UNKNOWN_REQUEST_LIVE_ARCHITECT_PRE_DELAY_SECONDS: "30"},
+        orchestrator_provider=orchestrator,
+        architect_provider=architect,
+    )
+
+    assert result["final_status"] == "PASS"
+    assert sleep_calls == []
+    assert result["architect_pre_delay_seconds"] == 30
+    assert result["architect_pre_delay_applied"] is False
+    assert result["counters"]["action_permission_created_count"] == 0
+
+
+def test_architect_can_disable_explicit_http_timeout(monkeypatch) -> None:
+    calls = []
+
+    def fake_live_provider(**kwargs):
+        calls.append(
+            {
+                "role": kwargs["role"],
+                "explicit_http_timeout": kwargs["explicit_http_timeout"],
+                "timeout_seconds": kwargs["timeout_seconds"],
+            }
+        )
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_compact_proposal())
+        return json.dumps(_valid_architect_compact_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.ENV_UNKNOWN_REQUEST_LIVE_ARCHITECT_NO_EXPLICIT_TIMEOUT: "1",
+        },
+    )
+
+    assert result["final_status"] == "PASS"
+    assert calls[0]["role"] == "orchestrator"
+    assert calls[0]["explicit_http_timeout"] is True
+    assert calls[1]["role"] == "architect"
+    assert calls[1]["explicit_http_timeout"] is False
+    assert result["architect_no_explicit_timeout_enabled"] is True
+    assert result["architect_explicit_http_timeout_enabled"] is False
+    assert result["counters"]["action_permission_created_count"] == 0
 
 
 def test_live_real_path_uses_compact_contract_by_default(monkeypatch) -> None:

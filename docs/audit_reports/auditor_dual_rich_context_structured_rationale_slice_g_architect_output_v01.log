@@ -1,0 +1,191 @@
+audit_id: auditor_dual_rich_context_structured_rationale_slice_g_architect_output_v01
+audit_status: PASS
+base_head: 192ee97
+audit_scope: Dual Rich Context Structured Rationale Slice G Gemini Architect structured rationale output post-smoke audit
+
+source_commits:
+- ContextPacket Slice A core contracts: 3f780b4 Add bounded context packet core contracts
+- ContextPacket Slice B runner adapter: 9af295c Wire bounded context packets into Full Semantic E2E runner
+- ContextPacket Slice C Orchestrator input: 5b92725 Feed Orchestrator context packet into Gemini input
+- ContextPacket Slice D Architect input: 93eda30 Feed Architect context packet into Gemini input
+- Structured Rationale preflight: 1916963 Add dual rich context structured rationale preflight
+- Structured Rationale Slice E core: 4774f78 Add structured rationale core contracts
+- Structured Rationale Slice E audit: 8310475 Add structured rationale Slice E audit log
+- Structured Rationale Slice F runtime: 2c98976 Validate Orchestrator structured rationale output
+- Structured Rationale Slice F audit: 3f9bb39 Add structured rationale Slice F audit log
+- Structured Rationale Slice G runtime: 192ee97 Validate Architect structured rationale output
+
+slice_g_files_changed:
+- demo/run_full_semantic_e2e_v01.py
+- tests/test_full_semantic_e2e_v01_runner.py
+
+validation_evidence:
+- python3 -m demo.run_full_semantic_e2e_v01 -> FINAL STATUS: PASS
+- python3 -m py_compile demo/run_full_semantic_e2e_v01.py -> passed
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_structured_rationale_core.py tests/test_context_packets_core.py tests/test_full_semantic_e2e_v01_runner.py -> 215 passed, 2 warnings
+- commit pushed to origin/main
+
+negative_integration_facts:
+- hedgehog/structured_rationale.py unchanged
+- hedgehog/context_packets.py unchanged
+- build_architect_structured_rationale not imported in runtime
+- validate_architect_structured_rationale imported only for validation
+- no new connectors
+- no ActionCommitPacket creation path
+- no Root decision change
+- no AVF/DRS/GT/LGT/Post V&V behavior change
+- no real Gemini/provider/network call in injected-provider smoke
+
+smoke_evidence:
+- Slice G smoke: manual-structured-rationale-architect-slice-g-001 PASS
+
+slice_g_smoke_facts:
+- final_status PASS
+- scope: Slice G Gemini Architect structured rationale output validation under explicit gate
+- slice_g_commit_expected 192ee97
+
+default_and_gate_alone:
+- gate_alone_final_status PASS
+- gate_alone_output_keys_equal_default true
+- gate_alone_counters_equal_default true
+- gate_alone_stage_map_equal_default true
+- gate_alone_provider_call_path not_started
+- gate_alone_starts_gemini false
+
+response_schema_alignment:
+- default_schema_contains_structured_architect_rationale false
+- gated_schema_contains_structured_architect_rationale true
+- gated_schema_requires_structured_architect_rationale true
+- gated_schema_additional_properties_false true
+
+existing_architect_mode_without_new_gate:
+- final_status PASS
+- proposal_contains_structured_rationale false
+- context_contains_structured_rationale false
+- live_model_call_count 0
+- network_used_count 0
+- gemini_called_count 0
+
+architect_structured_rationale_path:
+- final_status PASS
+- rationale_type structured_architect_rationale
+- validation_accepted true
+- proposal_accepted true
+- plan_graph_contract_validated true
+- provider_path injected_architect_provider
+- live_model_call_count 0
+- network_used_count 0
+- gemini_called_count 0
+
+missing_rationale_failure:
+- final_status FAIL_CLOSED
+- has_required_reason true
+- has_mapping_reason true
+- architect_structured_rationale_required
+- structured_rationale_must_be_mapping
+- gemini_architect_plan_graph_rejected_count 1
+- gemini_architect_proposal_created_count 0
+- gemini_architect_plan_graph_proposal_created_count 0
+
+invalid_rationale_failure:
+- final_status FAIL_CLOSED
+- has_failed_reason true
+- has_authority_reason true
+- has_architect_root_reason true
+- has_action_packet_reason true
+- architect_structured_rationale_validation_failed
+- structured_rationale_authority_claim_forbidden
+- architect_is_not_root
+- architect_cannot_create_action_commit_packet
+- gemini_architect_plan_graph_rejected_count 1
+- gemini_architect_proposal_created_count 0
+- gemini_architect_plan_graph_proposal_created_count 0
+
+dual_invalid_architect_rationale_blocks_fractal:
+- final_status FAIL_CLOSED
+- has_failed_reason true
+- dual_gemini_roles_completed_count 1
+- dual_gemini_fail_closed_before_fractal_count 1
+- plan_graph_context_empty true
+- fractal_executor_context_empty true
+
+dual_full_current_layers_path:
+- final_status PASS
+- orchestrator_packet_type OrchestratorRouteContextPacket
+- architect_packet_type ArchitectPlanContextPacket
+- orchestrator_structured_rationale_type structured_orchestrator_rationale
+- architect_structured_rationale_type structured_architect_rationale
+- orchestrator_context_packet_validation_accepted true
+- architect_context_packet_validation_accepted true
+- orchestrator_structured_rationale_validation_accepted true
+- architect_structured_rationale_validation_accepted true
+- architect_consumed_validated_route true
+- raw_cross_role_text_blocked true
+- live_model_call_count 0
+- network_used_count 0
+- gemini_called_count 0
+
+real_action_counters_zero:
+- connector_called_count 0
+- payment_executed_count 0
+- shipment_released_count 0
+- action_permission_created_count 0
+
+authority_invariants:
+- structured rationale is explanation only true
+- structured rationale is not truth true
+- structured rationale is not authority true
+- structured rationale is not action permission true
+- structured rationale is not FinalOutput true
+- structured rationale is not ActionCommitPacket true
+- structured rationale is not connector command true
+- Architect is not Root true
+- Architect does not create ActionCommitPacket true
+- PlanGraph is not authority true
+- Gemini proposes, Root disposes true
+- Root remains final authority true
+
+audit_conclusions:
+- Slice G is runtime integration of Architect output structured rationale.
+- structured_architect_rationale is required only when HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE=1 and Gemini Architect role is enabled.
+- The new Architect rationale gate alone does not start Gemini.
+- Existing Gemini Architect mode without the new gate is unchanged.
+- Valid structured_architect_rationale is validated before accepting the Architect proposal.
+- Valid structured rationale does not bypass PlanGraph contract validation.
+- Valid structured rationale does not bypass selected vector validation.
+- Valid structured rationale does not bypass executor/forbidden surface checks.
+- Missing structured_architect_rationale fails closed under gate.
+- Invalid structured_architect_rationale fails closed under gate.
+- Invalid Architect rationale in dual mode blocks Fractal before execution.
+- Real-provider Architect response schema is aligned with the new gate.
+- Default Architect response schema remains unchanged when gate is disabled.
+- Gated Architect response schema allows and requires structured_architect_rationale while preserving additionalProperties false.
+- Runtime does not import build_architect_structured_rationale.
+- Full current dual path passes with OrchestratorRouteContextPacket, ArchitectPlanContextPacket, structured_orchestrator_rationale, and structured_architect_rationale.
+- No raw cross-role text.
+- No default output shape drift.
+- No counter drift.
+- No stage_map drift.
+- No real connector.
+- No payment execution.
+- No shipment release.
+- No action permission creation.
+- No ActionCommitPacket creation by Gemini.
+- Structured rationale is JSON explanation.
+- Structured rationale is not hidden chain-of-thought.
+- Structured rationale is not raw Gemini text.
+- Structured rationale is not truth.
+- Structured rationale is not authority.
+- Structured rationale is not action permission.
+- Structured rationale is not FinalOutput.
+- Structured rationale is not ActionCommitPacket.
+- Structured rationale is not connector command.
+- Structured rationale is not DRS write permission.
+- Architect is not Root.
+- Architect does not create ActionCommitPacket.
+- PlanGraph is not authority.
+- Gemini proposes, Root disposes.
+- Root remains final authority.
+- No production/public WOW claim.
+- No NeedleFactory/Marennya/UP.
+- Ready for Slice H / final dual rich-context structured rationale smoke audit only after this audit is committed.

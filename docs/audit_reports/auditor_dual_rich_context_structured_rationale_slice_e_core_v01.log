@@ -1,0 +1,122 @@
+audit_id: auditor_dual_rich_context_structured_rationale_slice_e_core_v01
+audit_status: PASS
+base_head: 4774f78
+audit_scope: Dual Rich Context Structured Rationale Slice E deterministic core validators/builders audit
+
+source_commits:
+- ContextPacket Slice A core contracts: 3f780b4 Add bounded context packet core contracts
+- ContextPacket Slice B runner adapter: 9af295c Wire bounded context packets into Full Semantic E2E runner
+- ContextPacket Slice C Orchestrator input: 5b92725 Feed Orchestrator context packet into Gemini input
+- ContextPacket Slice D Architect input: 93eda30 Feed Architect context packet into Gemini input
+- Structured Rationale preflight: 1916963 Add dual rich context structured rationale preflight
+- Structured Rationale Slice E core: 4774f78 Add structured rationale core contracts
+
+files_created:
+- hedgehog/structured_rationale.py
+- tests/test_structured_rationale_core.py
+
+validation_evidence:
+- python3 -m py_compile hedgehog/structured_rationale.py -> passed
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_structured_rationale_core.py tests/test_context_packets_core.py -> 52 passed
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_full_semantic_e2e_v01_runner.py -> 144 passed, 2 warnings
+- git diff --cached --check before commit -> clean
+- commit pushed to origin/main
+
+core_exports:
+- STRUCTURED_RATIONALE_SCHEMA_VERSION
+- ORCHESTRATOR_STRUCTURED_RATIONALE_TYPE
+- ARCHITECT_STRUCTURED_RATIONALE_TYPE
+- ORCHESTRATOR_STRUCTURED_RATIONALE_REQUIRED_FIELDS
+- ARCHITECT_STRUCTURED_RATIONALE_REQUIRED_FIELDS
+- build_orchestrator_structured_rationale
+- validate_orchestrator_structured_rationale
+- build_architect_structured_rationale
+- validate_architect_structured_rationale
+
+implemented_artifacts:
+- structured_orchestrator_rationale
+- structured_architect_rationale
+
+validator_return_shape:
+- accepted bool
+- reasons tuple
+- rationale_type str or None
+
+hardening_facts:
+- schema_version mismatch fails closed with structured_rationale_schema_version_invalid
+- wrong rationale_type fails closed with structured_rationale_unexpected_type
+- missing required rationale fields fail closed with structured_rationale_missing_required_field:<field>
+- missing role boundary fields fail closed with structured_rationale_missing_required_field:<field>
+- raw string top-level explanation fields fail closed
+- raw marker keys fail closed recursively
+- raw marker values fail closed recursively
+- unbounded dumps fail closed
+- secret markers fail closed with structured_rationale_secret_marker_forbidden:<marker>
+- non-mapping artifacts fail closed with structured_rationale_must_be_mapping
+- root_review_required false fails closed with root_review_required_must_be_true
+- root_final_authority_preserved false fails closed with root_final_authority_must_be_preserved
+- "Root remains final authority" false fails closed with root_final_authority_must_be_preserved
+
+rejected_authority_claims:
+- truth_claimed true -> structured_rationale_truth_claim_forbidden
+- authority_claimed true -> structured_rationale_authority_claim_forbidden
+- action_permission_claimed true -> structured_rationale_action_permission_claim_forbidden
+- final_output_claimed true -> structured_rationale_final_output_claim_forbidden
+- connector_command_claimed true -> structured_rationale_connector_command_forbidden
+- drs_write_claimed true -> structured_rationale_drs_write_forbidden
+- action_commit_packet_claimed true -> structured_rationale_action_commit_packet_forbidden
+- root_bypass_claimed true -> structured_rationale_root_bypass_forbidden
+
+role_boundary_rejections:
+- orchestrator_is_root true -> orchestrator_is_not_root
+- architect_is_root true -> architect_is_not_root
+- creates_action_commit_packet true -> role-specific cannot_create_action_commit_packet reason
+- calls_connectors true -> role-specific cannot_call_connectors reason
+
+universal_domain_smoke:
+- hotel robot access accepted
+- museum artifact transfer accepted
+- cycling route safety accepted
+- no supplier_payment hardcode required
+
+negative_integration_facts:
+- demo runner unchanged
+- hedgehog/context_packets.py unchanged
+- no runtime integration added
+- no Gemini integration added
+- no provider/model/network path touched
+- no connector added
+- no DRS write permission added
+- no FinalOutput path added
+- no ActionCommitPacket path added
+
+audit_conclusions:
+- Slice E is core-only.
+- Structured rationale is JSON explanation.
+- Structured rationale is bounded, auditable, user-readable, and machine-validatable.
+- Structured rationale is not hidden chain-of-thought.
+- Structured rationale is not raw Gemini text.
+- Structured rationale is not truth.
+- Structured rationale is not authority.
+- Structured rationale is not action permission.
+- Structured rationale is not FinalOutput.
+- Structured rationale is not ActionCommitPacket.
+- Structured rationale is not connector command.
+- Structured rationale is not DRS write permission.
+- Structured rationale is not Root bypass.
+- Orchestrator is not Root.
+- Architect is not Root.
+- Gemini proposes, Root disposes.
+- Root remains final authority.
+- Slice E does not alter ContextPacket behavior.
+- Slice E does not alter Full Semantic E2E runner behavior.
+- Slice E does not alter PlanGraph, AVF, DRS, GT/LGT, Post V&V, Root, Fractal, Sandbox, or ActionCommitPacket behavior.
+- No default runner drift observed in regression suite.
+- No production/public WOW claim.
+- No NeedleFactory/Marennya/UP.
+- Ready for Slice F only after this audit is committed.
+
+verdict:
+- Dual Rich Context Structured Rationale Slice E accepted as deterministic core-only validator/builder layer.
+- Structured rationale remains explanation only and preserves Root authority.
+- Root remains final authority.

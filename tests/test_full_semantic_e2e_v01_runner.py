@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import inspect
 import json
+from typing import Any, Mapping
 
 import demo.run_live_provider_adapter_response_capture_v01 as provider_adapter
 import demo.run_full_semantic_e2e_v01 as runner
@@ -258,6 +259,85 @@ def _scenario_statuses(result):
     return {item["scenario_id"]: item["status"] for item in result["scenarios"]}
 
 
+def _context_packet_values(
+    packets: Mapping[str, Any],
+) -> tuple[Mapping[str, Any], ...]:
+    values: list[Mapping[str, Any]] = []
+    for packet in packets.values():
+        if isinstance(packet, tuple):
+            values.extend(packet)
+        else:
+            values.append(packet)
+    return tuple(values)
+
+
+def _context_packet_validation_values(
+    validations: Mapping[str, Any],
+) -> tuple[Mapping[str, Any], ...]:
+    values: list[Mapping[str, Any]] = []
+    for validation in validations.values():
+        if isinstance(validation, tuple):
+            values.extend(validation)
+        else:
+            values.append(validation)
+    return tuple(values)
+
+
+def _context_packet_keys(value: Any) -> tuple[str, ...]:
+    keys: list[str] = []
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            keys.append(str(key))
+            keys.extend(_context_packet_keys(item))
+    elif isinstance(value, (list, tuple)):
+        for item in value:
+            keys.extend(_context_packet_keys(item))
+    return tuple(keys)
+
+
+def _assert_no_raw_context_dump_keys(packets: Mapping[str, Any]) -> None:
+    forbidden_keys = (
+        "raw_user_text",
+        "raw_gemini_text",
+        "raw_cross_role_text",
+        "full_runner_state" + "_dump",
+        "unbounded_context" + "_dump",
+        "raw_plan_graph_context",
+        "raw_plangraph_context",
+        "api_key",
+        "secret",
+        "token",
+        "password",
+        ".tmp",
+    )
+    for key in _context_packet_keys(packets):
+        assert all(marker not in key for marker in forbidden_keys)
+
+
+def _assert_context_packets_preserve_authority(
+    packets: Mapping[str, Any],
+) -> None:
+    for packet in _context_packet_values(packets):
+        assert packet["truth_claimed"] is False
+        assert packet["authority_claimed"] is False
+        assert packet["action_permission_claimed"] is False
+        assert packet["final_output_claimed"] is False
+        assert packet["connector_command_claimed"] is False
+        assert packet["drs_write_claimed"] is False
+        assert packet["root_bypass_claimed"] is False
+        assert packet["real_world_effects_allowed"] is False
+        assert packet["root_final_authority_preserved"] is True
+        assert packet["Root remains final authority"] is True
+
+
+def _assert_all_context_packet_validations_accepted(
+    validations: Mapping[str, Any],
+) -> None:
+    for validation in _context_packet_validation_values(validations):
+        assert validation["accepted"] is True
+        assert validation["reasons"] == ()
+
+
 def test_module_imports_and_public_api_exists() -> None:
     assert runner.TITLE == "HEDGEHOG OS - FULL SEMANTIC E2E v0.1"
     assert callable(runner.run_full_semantic_e2e)
@@ -305,6 +385,118 @@ def test_default_runner_returns_pass_and_runs_deterministic_full_spine() -> None
     assert result["root_mock_approval_context"]["invoked"] is False
     assert result["action_commit_packet_context"]["packet_created"] is False
     assert result["action_commit_packet"] == {}
+    assert "bounded_context_packets" not in result
+    assert "bounded_context_packet_validations" not in result
+    assert "bounded_context_packets_context" not in result
+
+
+def test_context_packet_gate_builds_accepted_base_packets() -> None:
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_CONTEXT_PACKETS: "1"}
+    )
+    packets = result["bounded_context_packets"]
+    validations = result["bounded_context_packet_validations"]
+    context = result["bounded_context_packets_context"]
+
+    assert result["final_status"] == "PASS"
+    assert context["gate_enabled"] is True
+    assert context["completed"] is True
+    assert context["rejected_count"] == 0
+    assert context["packet_count"] >= 8
+    assert {
+        "business_request",
+        "evidence",
+        "drs_candidate",
+        "candidate_vector",
+        "avf_attractor",
+        "orchestrator_route",
+        "architect_plan",
+        "root_review",
+    }.issubset(set(packets))
+    _assert_all_context_packet_validations_accepted(validations)
+    _assert_context_packets_preserve_authority(packets)
+    _assert_no_raw_context_dump_keys(packets)
+    assert result["validation_errors"] == ()
+
+
+def test_context_packet_gate_does_not_change_default_counters_or_stage_map() -> None:
+    default = runner.run_full_semantic_e2e(env={})
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_CONTEXT_PACKETS: "1"}
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert result["stage_map"] == default["stage_map"]
+    assert result["counters"] == default["counters"]
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_bank_api_called_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+    assert counters["public_wow_claimed_count"] == 0
+    assert counters["production_ready_claimed_count"] == 0
+    assert counters["root_final_authority_preserved_count"] == 1
+
+
+def test_context_packet_gate_with_fractal_fulfillment_and_sandbox_packets() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_fractal_order_fulfillment_env(
+            **{runner.ENV_FULL_E2E_CONTEXT_PACKETS: "1"}
+        )
+    )
+    packets = result["bounded_context_packets"]
+    validations = result["bounded_context_packet_validations"]
+    branch_packets = packets["fractal_branch_tasks"]
+    sandbox_packet = packets["sandbox_receipt"]
+
+    assert result["final_status"] == "PASS"
+    assert result["bounded_context_packets_context"]["rejected_count"] == 0
+    assert len(branch_packets) == 3
+    for packet, validation in zip(branch_packets, validations["fractal_branch_tasks"]):
+        assert validation["accepted"] is True
+        assert packet["returns_to_parent"] is True
+        assert packet["child_root_created"] is False
+        assert packet["child_final_output_created"] is False
+        assert packet["child_action_commit_packet_created"] is False
+        assert packet["adapter_metadata_only"] is True
+    assert validations["sandbox_receipt"]["accepted"] is True
+    assert all(
+        value == 0
+        for value in sandbox_packet["real_external_counter_expectations"].values()
+    )
+    assert result["counters"]["fake_bank_connector_called_count"] == 1
+    assert result["counters"]["fake_supplier_connector_called_count"] == 1
+    assert result["counters"]["fake_warehouse_connector_called_count"] == 1
+    assert result["counters"]["connector_called_count"] == 0
+    assert result["counters"]["payment_executed_count"] == 0
+    assert result["counters"]["shipment_released_count"] == 0
+    assert result["counters"]["real_bank_api_called_count"] == 0
+    _assert_all_context_packet_validations_accepted(validations)
+    _assert_no_raw_context_dump_keys(packets)
+
+
+def test_context_packets_are_not_used_by_gemini_yet() -> None:
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_CONTEXT_PACKETS: "1"}
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert result["gemini_orchestrator_context"]["provider_call_path"] == "not_started"
+    assert result["gemini_architect_context"]["provider_call_path"] == "not_started"
+
+
+def test_context_packet_gate_omits_raw_runner_dumps() -> None:
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_CONTEXT_PACKETS: "1"}
+    )
+
+    assert result["final_status"] == "PASS"
+    _assert_no_raw_context_dump_keys(result["bounded_context_packets"])
 
 
 def test_default_main_exits_zero_and_prints_pass(monkeypatch, capsys) -> None:

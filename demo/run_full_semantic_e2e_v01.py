@@ -41,6 +41,28 @@ from hedgehog.action_commit_packet import (
 from hedgehog.architect import make_plan_graph
 from hedgehog.candidate_vector_generator import build_avf_candidate_report
 from hedgehog.candidate_vector_generator import candidate_inputs_from_resolved_report
+from hedgehog.context_packets import (
+    build_architect_plan_context_packet,
+    build_avf_attractor_context_packet,
+    build_business_request_context_packet,
+    build_candidate_vector_context_packet,
+    build_drs_candidate_context_packet,
+    build_evidence_context_packet,
+    build_fractal_branch_task_context_packet,
+    build_orchestrator_route_context_packet,
+    build_root_review_context_packet,
+    build_sandbox_receipt_context_packet,
+    validate_architect_plan_context_packet,
+    validate_avf_attractor_context_packet,
+    validate_business_request_context_packet,
+    validate_candidate_vector_context_packet,
+    validate_drs_candidate_context_packet,
+    validate_evidence_context_packet,
+    validate_fractal_branch_task_context_packet,
+    validate_orchestrator_route_context_packet,
+    validate_root_review_context_packet,
+    validate_sandbox_receipt_context_packet,
+)
 from hedgehog.drs import LocalDRS
 from hedgehog.fractal_dag_executor import run_fractal_dag_executor
 from hedgehog.fractal_fulfillment import FULFILLMENT_BRANCH_DEFINITIONS
@@ -174,6 +196,7 @@ ENV_FULL_E2E_MOCK_CONNECTOR_SANDBOX = "HEDGEHOG_FULL_E2E_MOCK_CONNECTOR_SANDBOX"
 ENV_FULL_E2E_FRACTAL_ORDER_FULFILLMENT_DAG = (
     "HEDGEHOG_FULL_E2E_FRACTAL_ORDER_FULFILLMENT_DAG"
 )
+ENV_FULL_E2E_CONTEXT_PACKETS = "HEDGEHOG_FULL_E2E_CONTEXT_PACKETS"
 
 GEMINI_ORCHESTRATOR_COUNTER_KEYS = (
     "bounded_gemini_orchestrator_role_started_count",
@@ -881,6 +904,10 @@ def _full_e2e_fractal_order_fulfillment_dag_enabled(
     env: Mapping[str, str],
 ) -> bool:
     return env.get(ENV_FULL_E2E_FRACTAL_ORDER_FULFILLMENT_DAG) == "1"
+
+
+def _full_e2e_context_packets_enabled(env: Mapping[str, str]) -> bool:
+    return env.get(ENV_FULL_E2E_CONTEXT_PACKETS) == "1"
 
 
 def _root_mock_approval_gate_partial_enabled(env: Mapping[str, str]) -> bool:
@@ -5320,13 +5347,16 @@ def _result(
     root_mock_execution_summary_context: Mapping[str, Any] | None = None,
     drs_writeback_record: Mapping[str, Any] | None = None,
     runtime_hardening_checks: Mapping[str, Any] | None = None,
+    bounded_context_packets: Mapping[str, Any] | None = None,
+    bounded_context_packet_validations: Mapping[str, Any] | None = None,
+    bounded_context_packets_context: Mapping[str, Any] | None = None,
     validation_errors: tuple[str, ...] = (),
     supplier_live_result: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     counters["scenarios_passed"] = sum(
         1 for scenario in scenarios if scenario["status"] == "PASS"
     )
-    return {
+    result = {
         "title": TITLE,
         "final_status": final_status,
         "dirty_business_request": dict(dirty_business_request),
@@ -5381,6 +5411,17 @@ def _result(
         "supplier_live_result": supplier_live_result,
         "pass_conditions": _pass_conditions(counters, stage_map),
     }
+    if bounded_context_packets is not None:
+        result["bounded_context_packets"] = dict(bounded_context_packets)
+    if bounded_context_packet_validations is not None:
+        result["bounded_context_packet_validations"] = dict(
+            bounded_context_packet_validations
+        )
+    if bounded_context_packets_context is not None:
+        result["bounded_context_packets_context"] = dict(
+            bounded_context_packets_context
+        )
+    return result
 
 
 def _claim_summary(claim: SemanticEvidenceClaim) -> dict[str, Any]:
@@ -5397,6 +5438,492 @@ def _claim_summary(claim: SemanticEvidenceClaim) -> dict[str, Any]:
         "final_output_claimed": claim.final_output_claimed,
         "unsafe_instruction_flags": claim.unsafe_instruction_flags,
         "root_review_required": claim.root_review_required,
+    }
+
+
+def _candidate_flag_map(
+    drs_context: Mapping[str, Any],
+    field: str,
+) -> dict[str, bool]:
+    return {
+        str(candidate.get("candidate_id")): bool(candidate.get(field))
+        for candidate in drs_context.get("candidates", ())
+    }
+
+
+def _unique_tuple(values: tuple[Any, ...]) -> tuple[Any, ...]:
+    seen: set[Any] = set()
+    unique: list[Any] = []
+    for value in values:
+        if value in seen:
+            continue
+        seen.add(value)
+        unique.append(value)
+    return tuple(unique)
+
+
+def _bounded_context_packet_validation_failures(
+    validations: Mapping[str, Any],
+) -> tuple[str, ...]:
+    failures: list[str] = []
+    for key, validation in validations.items():
+        validation_items = validation if isinstance(validation, tuple) else (validation,)
+        if any(not item.get("accepted") for item in validation_items):
+            failures.append(f"bounded_context_packet_validation_failed:{key}")
+    return tuple(failures)
+
+
+def _bounded_context_packet_counts(
+    packets: Mapping[str, Any],
+    validations: Mapping[str, Any],
+) -> tuple[int, int, int, tuple[str, ...]]:
+    packet_items: list[Mapping[str, Any]] = []
+    validation_items: list[Mapping[str, Any]] = []
+    for key, packet in packets.items():
+        validation = validations[key]
+        if isinstance(packet, tuple):
+            packet_items.extend(packet)
+            validation_items.extend(validation)
+        else:
+            packet_items.append(packet)
+            validation_items.append(validation)
+    packet_count = len(packet_items)
+    accepted_count = sum(1 for item in validation_items if item.get("accepted"))
+    packet_types = tuple(str(packet.get("packet_type")) for packet in packet_items)
+    return packet_count, accepted_count, packet_count - accepted_count, packet_types
+
+
+def _build_bounded_context_packets_from_result(
+    *,
+    dirty_business_request: Mapping[str, Any],
+    semantic_evidence_claim: SemanticEvidenceClaim,
+    drs_candidate_context: Mapping[str, Any],
+    candidate_vector_context: Mapping[str, Any],
+    avf_context: Mapping[str, Any],
+    advisory_context: Mapping[str, Any],
+    bounded_orchestrator_context: Mapping[str, Any],
+    architect_context: Mapping[str, Any],
+    plangraph_context: Mapping[str, Any],
+    post_vv_context: Mapping[str, Any],
+    gt_lgt_context: Mapping[str, Any],
+    root_final_output_boundary: Mapping[str, Any],
+    fulfillment_branch_contexts: tuple[Mapping[str, Any], ...] = (),
+    mock_connector_receipts: tuple[Mapping[str, Any], ...] = (),
+) -> dict[str, Any]:
+    claim = semantic_evidence_claim
+    domain = SUPPLIER_PAYMENT_DOMAIN
+    request_id = str(dirty_business_request.get("request_id") or "request:unknown")
+    root_outcome = root_final_output_boundary.get("root_reviewed_semantic_outcome") or {}
+    root_blockers = root_outcome.get("blockers_checked") or (
+        root_final_output_boundary.get("blockers_checked") or {}
+    )
+    explicit_blockers = tuple(
+        key for key, value in root_blockers.items() if value is False
+    )
+    source_refs = (
+        {
+            "source": "full_semantic_e2e_runner",
+            "request_id": request_id,
+        },
+    )
+
+    business_request_packet = build_business_request_context_packet(
+        packet_id=f"context_packet:business_request:{request_id}",
+        source_refs=source_refs,
+        domain=domain,
+        request_id=request_id,
+        business_subject=str(dirty_business_request.get("subject") or request_id),
+        requested_action=str(
+            dirty_business_request.get("requested_action")
+            or dirty_business_request.get("action_requested")
+            or "review"
+        ),
+        explicit_blockers=explicit_blockers,
+        user_visible_summary=str(dirty_business_request.get("request_text") or ""),
+        forbidden_authority_fields=(
+            "truth_claimed",
+            "authority_claimed",
+            "final_output_claimed",
+        ),
+        forbidden_action_fields=(
+            "action_permission_claimed",
+            "connector_command_claimed",
+            "real_world_effects_allowed",
+        ),
+    )
+    evidence_packet = build_evidence_context_packet(
+        packet_id=f"context_packet:evidence:{claim.claim_id}",
+        source_refs=(
+            {
+                "source": "semantic_evidence_claim",
+                "claim_id": claim.claim_id,
+                "source_id": claim.source_id,
+            },
+        ),
+        domain=domain,
+        evidence_refs=(
+            {
+                "claim_id": claim.claim_id,
+                "source_id": claim.source_id,
+                "source_kind": claim.source_kind,
+            },
+        ),
+        semantic_evidence_claim_refs=(claim.claim_id,),
+        candidate_only=True,
+        provenance_summary=f"{claim.source_kind}:{claim.source_id}",
+        contradiction_flags=claim.contradiction_flags,
+        unsafe_instruction_flags=claim.unsafe_instruction_flags,
+    )
+    candidate_ids = tuple(drs_candidate_context.get("candidate_ids", ()))
+    drs_candidate_packet = build_drs_candidate_context_packet(
+        packet_id=f"context_packet:drs_candidate:{request_id}",
+        source_refs=(
+            {
+                "source": "drs_candidate_context",
+                "source_claim_id": drs_candidate_context.get("source_claim_id"),
+            },
+        ),
+        domain=domain,
+        candidate_ids=candidate_ids,
+        stale_flags=_candidate_flag_map(drs_candidate_context, "stale"),
+        conflict_flags=_candidate_flag_map(
+            drs_candidate_context,
+            "conflicting_provenance",
+        ),
+        reuse_eligibility_flags=_candidate_flag_map(
+            drs_candidate_context,
+            "direct_reuse_allowed",
+        ),
+        direct_reuse_allowed=bool(
+            drs_candidate_context.get("direct_reuse_applied")
+        ),
+        drs_write_permission_claimed=False,
+    )
+    selected_vector_ids = tuple(
+        bounded_orchestrator_context.get("selected_vector_ids") or ()
+    )
+    allowed_vector_ids = tuple(
+        bounded_orchestrator_context.get("allowed_vector_ids")
+        or candidate_vector_context.get("ranked_vector_ids")
+        or ()
+    )
+    masked_candidates = _unique_tuple(
+        tuple(
+            str(score.get("candidate_id"))
+            for score in avf_context.get("scores", ())
+            if score.get("hard_blocks")
+        )
+    )
+    candidate_vector_packet = build_candidate_vector_context_packet(
+        packet_id=f"context_packet:candidate_vector:{request_id}",
+        source_refs=(
+            {
+                "source": "candidate_vector_context",
+                "source_claim_id": candidate_vector_context.get("source_claim_id"),
+            },
+        ),
+        domain=domain,
+        vector_ids=tuple(candidate_vector_context.get("ranked_vector_ids", ())),
+        selected_vector_ids=selected_vector_ids,
+        allowed_vector_ids=allowed_vector_ids,
+        ranking_summary={
+            "ranked_candidate_ids": tuple(
+                candidate_vector_context.get("ranked_candidate_ids", ())
+            ),
+            "top_candidate_ids": tuple(
+                candidate_vector_context.get("top_candidate_ids", ())
+            ),
+        },
+        blocked_candidates=tuple(
+            str(candidate.get("candidate_id"))
+            for candidate in drs_candidate_context.get("candidates", ())
+            if candidate.get("blocked")
+        ),
+        masked_candidates=masked_candidates,
+    )
+    hard_masks = _unique_tuple(
+        tuple(
+            str(mask)
+            for score in avf_context.get("scores", ())
+            for mask in score.get("hard_blocks", ())
+        )
+    )
+    avf_attractor_packet = build_avf_attractor_context_packet(
+        packet_id=f"context_packet:avf_attractor:{request_id}",
+        source_refs=(
+            {
+                "source": "avf_context",
+                "source_claim_id": candidate_vector_context.get("source_claim_id"),
+            },
+        ),
+        domain=domain,
+        hard_masks=hard_masks,
+        soft_pressures_planned=(
+            "risk_pressure",
+            "conflict_pressure",
+            "freshness_pressure",
+            "reuse_pressure",
+        ),
+        risk_pressure={
+            "hard_masked_count": int(avf_context.get("hard_masked_count") or 0),
+        },
+        conflict_pressure={
+            "conflicting_candidates": int(
+                drs_candidate_context.get("conflicting_candidates") or 0
+            ),
+        },
+        freshness_pressure={
+            "stale_candidates": int(drs_candidate_context.get("stale_candidates") or 0),
+        },
+        reuse_pressure={
+            "direct_reuse_allowed": bool(
+                candidate_vector_context.get("direct_reuse_allowed")
+            ),
+            "recommended_review_route": advisory_context.get(
+                "recommended_review_route"
+            ),
+        },
+        advisory_only=True,
+    )
+    orchestrator_route_packet = build_orchestrator_route_context_packet(
+        packet_id=f"context_packet:orchestrator_route:{request_id}",
+        source_refs=(
+            {
+                "source": "bounded_orchestrator_context",
+                "request_ref": bounded_orchestrator_context.get("request_ref"),
+            },
+        ),
+        domain=domain,
+        allowed_routes=(str(bounded_orchestrator_context.get("route") or "bounded"),),
+        required_guards=GEMINI_ORCHESTRATOR_REQUIRED_GUARDS,
+        selected_vector_ids=selected_vector_ids,
+        route_validation_expectations={
+            "root_review_required": bool(
+                bounded_orchestrator_context.get("root_review_required")
+            ),
+            "selected_only_allowed_vectors": bool(
+                set(selected_vector_ids).issubset(set(allowed_vector_ids))
+            ),
+        },
+        orchestrator_is_root=False,
+        creates_action_commit_packet=False,
+        calls_connectors=False,
+    )
+    plan_graph = plangraph_context.get("plan_graph") or {}
+    architect_plan_packet = build_architect_plan_context_packet(
+        packet_id=f"context_packet:architect_plan:{request_id}",
+        source_refs=(
+            {
+                "source": "plangraph_context",
+                "plangraph_id": plangraph_context.get("plangraph_id"),
+            },
+        ),
+        domain=domain,
+        source_route_id=str(bounded_orchestrator_context.get("route") or "bounded"),
+        allowed_executor_ids=tuple(
+            assignment.get("executor_id")
+            for assignment in plan_graph.get("executor_assignments", ())
+        ),
+        allowed_node_kinds=tuple(
+            node.get("kind") or node.get("expected_output")
+            for node in plan_graph.get("nodes", ())
+        ),
+        required_validators=(str(plangraph_context.get("validated_by")),),
+        forbidden_connector_claims=("connector_command_claimed",),
+        forbidden_action_claims=("action_permission_claimed",),
+        forbidden_final_output_claims=("final_output_claimed",),
+        architect_is_root=False,
+        creates_action_commit_packet=False,
+    )
+    root_review_packet = build_root_review_context_packet(
+        packet_id=f"context_packet:root_review:{request_id}",
+        source_refs=(
+            {
+                "source": "root_final_output_boundary",
+                "outcome_id": root_outcome.get("outcome_id"),
+            },
+        ),
+        domain=domain,
+        pre_root_advisory_summary={
+            "recommended_review_route": advisory_context.get(
+                "recommended_review_route"
+            ),
+            "authority_claimed": bool(advisory_context.get("authority_claimed")),
+            "truth_claimed": bool(advisory_context.get("truth_claimed")),
+        },
+        post_vv_summary={
+            "vv_report_count": int(post_vv_context.get("vv_report_count") or 0),
+            "final_output_created_count": int(
+                post_vv_context.get("final_output_created_count") or 0
+            ),
+        },
+        gt_lgt_summary={
+            "gt_report_id": gt_lgt_context.get("gt_report_id"),
+            "decision": gt_lgt_context.get("decision"),
+            "final_output_created_count": int(
+                gt_lgt_context.get("final_output_created_count") or 0
+            ),
+        },
+        root_boundary_expectations={
+            "decision": root_final_output_boundary.get("decision"),
+            "root_reviewed": bool(root_final_output_boundary.get("root_reviewed")),
+            "payment_executed": bool(root_final_output_boundary.get("payment_executed")),
+            "shipment_released": bool(
+                root_final_output_boundary.get("shipment_released")
+            ),
+            "connector_called": bool(root_final_output_boundary.get("connector_called")),
+        },
+        final_output_creator="root_only",
+        action_commit_packet_creator="root_mock_approval_gate_only",
+    )
+
+    packets: dict[str, Any] = {
+        "business_request": business_request_packet,
+        "evidence": evidence_packet,
+        "drs_candidate": drs_candidate_packet,
+        "candidate_vector": candidate_vector_packet,
+        "avf_attractor": avf_attractor_packet,
+        "orchestrator_route": orchestrator_route_packet,
+        "architect_plan": architect_plan_packet,
+        "root_review": root_review_packet,
+    }
+    validations: dict[str, Any] = {
+        "business_request": validate_business_request_context_packet(
+            business_request_packet
+        ),
+        "evidence": validate_evidence_context_packet(evidence_packet),
+        "drs_candidate": validate_drs_candidate_context_packet(drs_candidate_packet),
+        "candidate_vector": validate_candidate_vector_context_packet(
+            candidate_vector_packet
+        ),
+        "avf_attractor": validate_avf_attractor_context_packet(avf_attractor_packet),
+        "orchestrator_route": validate_orchestrator_route_context_packet(
+            orchestrator_route_packet
+        ),
+        "architect_plan": validate_architect_plan_context_packet(
+            architect_plan_packet
+        ),
+        "root_review": validate_root_review_context_packet(root_review_packet),
+    }
+
+    if fulfillment_branch_contexts:
+        branch_packets = tuple(
+            build_fractal_branch_task_context_packet(
+                packet_id=f"context_packet:fractal_branch_task:{branch.get('branch_id')}",
+                source_refs=(
+                    {
+                        "source": "fulfillment_branch_context",
+                        "branch_id": branch.get("branch_id"),
+                    },
+                ),
+                domain=domain,
+                parent_fractal_id=str(
+                    branch.get("parent_fractal_id") or FULFILLMENT_PARENT_FRACTAL_ID
+                ),
+                branch_id=str(branch.get("branch_id")),
+                child_oai_topology=branch.get("child_role_topology") or {},
+                child_orchestrator=str(
+                    (branch.get("child_role_topology") or {}).get(
+                        "child_orchestrator",
+                        "bounded_branch_router",
+                    )
+                ),
+                child_architect=str(
+                    (branch.get("child_role_topology") or {}).get(
+                        "child_architect",
+                        "bounded_branch_plan",
+                    )
+                ),
+                child_executor=str(
+                    (branch.get("child_role_topology") or {}).get(
+                        "child_executor",
+                        "mock_sandbox_task_executor",
+                    )
+                ),
+                allowed_adapter_name=str(branch.get("allowed_adapter")),
+                adapter_metadata_only=True,
+                expected_receipt_type=str(branch.get("expected_receipt_type")),
+                returns_to_parent=branch.get("returns_to_parent") is True,
+                child_root_created=branch.get("child_root_created") is True,
+                child_final_output_created=branch.get("child_final_output_created")
+                is True,
+                child_action_commit_packet_created=(
+                    branch.get("child_action_commit_packet_created") is True
+                ),
+                direct_adapter_bypass_attempted=(
+                    branch.get("connector_bypass_attempted") is True
+                    or branch.get("direct_adapter_bypass_attempted") is True
+                ),
+            )
+            for branch in fulfillment_branch_contexts
+        )
+        packets["fractal_branch_tasks"] = branch_packets
+        validations["fractal_branch_tasks"] = tuple(
+            validate_fractal_branch_task_context_packet(packet)
+            for packet in branch_packets
+        )
+
+    if mock_connector_receipts:
+        sandbox_receipt_packet = build_sandbox_receipt_context_packet(
+            packet_id=f"context_packet:sandbox_receipt:{request_id}",
+            source_refs=(
+                {
+                    "source": "mock_connector_receipts",
+                    "receipt_count": len(mock_connector_receipts),
+                },
+            ),
+            domain=domain,
+            mock_receipt_refs=tuple(
+                {
+                    "receipt_id": receipt.get("receipt_id"),
+                    "receipt_type": receipt.get("receipt_type"),
+                    "adapter_name": receipt.get("adapter_name"),
+                }
+                for receipt in mock_connector_receipts
+            ),
+            adapter_names=tuple(
+                str(receipt.get("adapter_name")) for receipt in mock_connector_receipts
+            ),
+            mock_only=True,
+            real_world_effects_allowed=False,
+            real_external_counter_expectations={
+                "connector_called_count": 0,
+                "payment_executed_count": 0,
+                "shipment_released_count": 0,
+                "real_bank_api_called_count": 0,
+                "real_supplier_api_called_count": 0,
+                "real_warehouse_api_called_count": 0,
+                "action_permission_created_count": 0,
+            },
+        )
+        packets["sandbox_receipt"] = sandbox_receipt_packet
+        validations["sandbox_receipt"] = validate_sandbox_receipt_context_packet(
+            sandbox_receipt_packet
+        )
+
+    packet_count, accepted_count, rejected_count, packet_types = (
+        _bounded_context_packet_counts(packets, validations)
+    )
+    validation_errors = _bounded_context_packet_validation_failures(validations)
+    context = {
+        "gate_enabled": True,
+        "invoked": True,
+        "completed": rejected_count == 0,
+        "packet_count": packet_count,
+        "accepted_count": accepted_count,
+        "rejected_count": rejected_count,
+        "packet_types": packet_types,
+        "notes": (
+            "Context packet is not truth",
+            "bounded context packets, not raw dumps",
+        ),
+        "Root remains final authority": True,
+    }
+    return {
+        "packets": packets,
+        "validations": validations,
+        "context": context,
+        "validation_errors": validation_errors,
     }
 
 
@@ -5792,6 +6319,28 @@ def run_full_semantic_e2e(
             supplier_live_result=supplier_result,
         )
     scenarios = _success_scenarios(prompt_injection)
+    context_packet_bundle: dict[str, Any] | None = None
+    context_packet_validation_errors: tuple[str, ...] = ()
+    if _full_e2e_context_packets_enabled(observed_env):
+        context_packet_bundle = _build_bounded_context_packets_from_result(
+            dirty_business_request=dirty_request,
+            semantic_evidence_claim=claim,
+            drs_candidate_context=drs_context,
+            candidate_vector_context=candidate_context,
+            avf_context=avf,
+            advisory_context=advisory,
+            bounded_orchestrator_context=bounded_orchestrator,
+            architect_context=architect,
+            plangraph_context=plangraph,
+            post_vv_context=post_vv,
+            gt_lgt_context=gt_lgt,
+            root_final_output_boundary=root_boundary,
+            fulfillment_branch_contexts=fulfillment_branch_contexts,
+            mock_connector_receipts=mock_connector_receipts,
+        )
+        context_packet_validation_errors = tuple(
+            context_packet_bundle["validation_errors"]
+        )
 
     return _result(
         final_status="PASS",
@@ -5831,6 +6380,16 @@ def run_full_semantic_e2e(
         root_mock_execution_summary_context=root_mock_execution_summary_context,
         drs_writeback_record=writeback,
         runtime_hardening_checks=slice3_result["hardening_checks"],
+        bounded_context_packets=(
+            context_packet_bundle["packets"] if context_packet_bundle else None
+        ),
+        bounded_context_packet_validations=(
+            context_packet_bundle["validations"] if context_packet_bundle else None
+        ),
+        bounded_context_packets_context=(
+            context_packet_bundle["context"] if context_packet_bundle else None
+        ),
+        validation_errors=context_packet_validation_errors,
         supplier_live_result=supplier_result,
     )
 

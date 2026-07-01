@@ -1,0 +1,91 @@
+audit_id: auditor_live_unknown_request_dual_rich_context_smoke_v01
+audit_status: PASS
+base_head: 040feea
+audit_scope: Raw unknown request through dual rich-context provider spine
+
+smoke_evidence:
+- smoke_id: manual-live-unknown-request-dual-rich-context-001
+- summary_json: .tmp/live_unknown_request_dual_rich_context/manual-live-unknown-request-dual-rich-context-001_summary.json
+- summary_log: .tmp/live_unknown_request_dual_rich_context/manual-live-unknown-request-dual-rich-context-001_summary.log
+- final_status: PASS
+
+scope_facts:
+- This was not a prepared domain fixture.
+- This was not real Gemini network run yet.
+- Injected providers proved raw request reaches Orchestrator input.
+- Architect consumes validated_orchestrator_route.
+- Architect does not receive raw cross-role text.
+
+injected_unknown_request_paths:
+- hotel-like unknown request PASS.
+- hotel-like unknown request Root decision not_ready.
+- hotel-like unknown request action_permission_created_count 0.
+- hotel-like unknown request action_commit_packet_created_count 0.
+- hotel-like unknown request connector_called_count 0.
+- hotel-like unknown request real_world_effects_count 0.
+- museum unknown request PASS.
+- museum unknown request Root decision not_ready.
+- museum unknown request action_permission_created_count 0.
+- museum unknown request action_commit_packet_created_count 0.
+- museum unknown request connector_called_count 0.
+- museum unknown request real_world_effects_count 0.
+
+orchestrator_hardening:
+- suggested_route_not_allowed fails closed before Architect.
+- selected_vector_ids_must_be_subset_of_allowed_vector_ids fails closed before Architect.
+- missing_required_guard:Root final authority fails closed before Architect.
+
+architect_semantic_contract:
+- architect_source_route_id_must_match_validated_route fails closed before PlanGraph/ResultProposal.
+- architect_selected_vector_ids_must_be_subset_of_validated_route_vectors fails closed before PlanGraph/ResultProposal.
+- missing_required_architect_validator:Root final authority fails closed before PlanGraph/ResultProposal.
+
+architect_plan_surface_hardening:
+- architect_plan_action_surface_forbidden covers nested action surface and fails closed.
+- empty connector_command key fails closed.
+- empty final_output key fails closed.
+- external action phrase fails closed.
+- PlanGraph context remains empty on these failures.
+- ResultProposal remains empty on these failures.
+
+live_gate_behavior:
+- HEDGEHOG_UNKNOWN_REQUEST_LIVE_GEMINI without configured provider key fails closed.
+- provider_sdk_or_key_missing is reported.
+- no fake fallback creates success.
+- live_model_call_count 0 on missing-key path.
+
+monkeypatched_live_path:
+- final_status PASS.
+- live_model_call_count 2.
+- network_used_count 2.
+- gemini_called_count 2.
+- roles called orchestrator then architect.
+- action_permission_created_count 0.
+- action_commit_packet_created_count 0.
+- connector_called_count 0.
+- real_world_effects_count 0.
+
+validated_artifacts:
+- OrchestratorRouteContextPacket accepted.
+- ArchitectPlanContextPacket accepted.
+- structured_orchestrator_rationale accepted.
+- structured_architect_rationale accepted.
+- PlanGraph is not authority.
+- ResultProposal is not FinalOutput.
+- Root remains final authority.
+
+real_action_counters_zero:
+- action_permission_created_count 0.
+- action_commit_packet_created_count 0.
+- connector_called_count 0.
+- real_world_effects_count 0.
+
+audit_conclusion:
+- The committed runner at 040feea establishes the first raw unknown-request spine.
+- It does not yet prove a real Gemini provider run.
+- Next safe step after audit is a controlled real Gemini live unknown request run behind HEDGEHOG_UNKNOWN_REQUEST_LIVE_GEMINI=1.
+- Future core extraction candidate: orchestrator semantic contract validator.
+- Future core extraction candidate: architect semantic contract validator.
+- Future core extraction candidate: recursive plan surface scanner.
+- Future core extraction candidate: closed provider response schema helpers.
+- Future core extraction candidate: policy object for allowed routes/vectors/guards/validators.

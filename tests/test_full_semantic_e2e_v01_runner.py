@@ -8,6 +8,7 @@ import demo.run_live_provider_adapter_response_capture_v01 as provider_adapter
 import demo.run_full_semantic_e2e_v01 as runner
 import demo.run_supplier_payment_live_evidence_integration_v02 as supplier_live
 from hedgehog.llm_architect import validate_plan_graph_contract
+from hedgehog.structured_rationale import build_architect_structured_rationale
 from hedgehog.structured_rationale import build_orchestrator_structured_rationale
 
 
@@ -263,6 +264,60 @@ def _valid_gemini_architect_proposal(context, **overrides):
     }
     payload.update(overrides)
     return payload
+
+
+def _valid_gemini_architect_structured_rationale():
+    return build_architect_structured_rationale(
+        plan_shape_reason=(
+            {
+                "shape": "bounded_plan_graph",
+                "reason": "PlanGraph remains advisory until validation",
+            },
+        ),
+        node_selection_reasoning=(
+            {
+                "node_scope": "selected_vector_subset",
+                "reason": "nodes use selected vectors only",
+            },
+        ),
+        executor_constraint_reasoning=(
+            {
+                "executor": "exec_mock_certificate",
+                "reason": "executor is allowed by local contract",
+            },
+        ),
+        forbidden_surface_review=(
+            {
+                "surface": "connector_action_final_output",
+                "status": "blocked",
+            },
+        ),
+        validator_coverage_reasoning=(
+            {
+                "validators": tuple(runner.GEMINI_ARCHITECT_REQUIRED_VALIDATORS),
+                "reason": "proposal returns through local validators",
+            },
+        ),
+        return_to_root_path=(
+            {
+                "path": "proposal_to_validation_to_root",
+                "final_authority": "root_only",
+            },
+        ),
+        uncertainty_notes=(
+            {
+                "note": "bounded proposal still requires Root review",
+            },
+        ),
+        authority_boundary=(
+            {
+                "role": "bounded_gemini_architect",
+                "is_root": False,
+                "creates_final_output": False,
+            },
+        ),
+        root_review_required=True,
+    )
 
 
 def _gemini_orchestrator_provider(factory, captured=None):
@@ -597,6 +652,59 @@ def test_gemini_architect_context_packet_input_gate_alone_does_not_start_role() 
     assert "bounded_context_packets_context" not in result
 
 
+def test_gemini_architect_structured_rationale_gate_alone_does_not_start_role() -> None:
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE: "1"}
+    )
+    counters = result["counters"]
+    context = result["gemini_architect_context"]
+
+    assert result["final_status"] == "PASS"
+    assert context["provider_call_path"] == "not_started"
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert "structured_architect_rationale" not in context
+    assert "structured_architect_rationale_validation" not in context
+    assert "structured_rationale_gate_enabled" not in context
+
+
+def test_gemini_architect_response_schema_default_unchanged_without_rationale_gate() -> None:
+    schema = runner._gemini_architect_response_schema(env={})
+
+    assert schema is runner.GEMINI_ARCHITECT_RESPONSE_SCHEMA
+    assert "structured_architect_rationale" not in schema["properties"]
+    assert "structured_architect_rationale" not in schema["required"]
+    assert schema["additionalProperties"] is False
+    assert tuple(schema["required"]) == runner.GEMINI_ARCHITECT_REQUIRED_FIELDS
+
+
+def test_gemini_architect_response_schema_allows_structured_rationale_with_gate() -> None:
+    schema = runner._gemini_architect_response_schema(
+        env={runner.ENV_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE: "1"}
+    )
+
+    assert schema is not runner.GEMINI_ARCHITECT_RESPONSE_SCHEMA
+    assert "structured_architect_rationale" in schema["properties"]
+    assert "structured_architect_rationale" in schema["required"]
+    assert schema["properties"]["structured_architect_rationale"]["type"] == "object"
+    assert schema["additionalProperties"] is False
+    for field in runner.GEMINI_ARCHITECT_REQUIRED_FIELDS:
+        assert field in schema["required"]
+    assert "structured_architect_rationale" not in (
+        runner.GEMINI_ARCHITECT_RESPONSE_SCHEMA["properties"]
+    )
+    assert "structured_architect_rationale" not in (
+        runner.GEMINI_ARCHITECT_RESPONSE_SCHEMA["required"]
+    )
+
+
+def test_runtime_does_not_import_architect_rationale_builder() -> None:
+    source = inspect.getsource(runner)
+
+    assert "build_architect_structured_rationale" not in source
+
+
 def test_context_packet_input_does_not_change_default_counters_or_stage_map() -> None:
     default = runner.run_full_semantic_e2e(env={})
     result = runner.run_full_semantic_e2e(
@@ -617,6 +725,18 @@ def test_orchestrator_structured_rationale_gate_does_not_change_default_counters
     assert result["final_status"] == "PASS"
     assert result["counters"] == default["counters"]
     assert result["stage_map"] == default["stage_map"]
+
+
+def test_architect_structured_rationale_gate_does_not_change_default_counters_or_stage_map() -> None:
+    default = runner.run_full_semantic_e2e(env={})
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE: "1"}
+    )
+
+    assert result["final_status"] == "PASS"
+    assert result["counters"] == default["counters"]
+    assert result["stage_map"] == default["stage_map"]
+    assert set(result.keys()) == set(default.keys())
 
 
 def test_architect_context_packet_input_does_not_change_default_counters_or_stage_map() -> None:
@@ -1544,6 +1664,25 @@ def test_gemini_architect_without_context_packet_gate_keeps_existing_input_shape
     assert result["counters"]["gemini_called_count"] == 0
 
 
+def test_gemini_architect_without_structured_rationale_gate_keeps_existing_proposal_shape() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(context)
+        ),
+    )
+    context = result["gemini_architect_context"]
+
+    assert result["final_status"] == "PASS"
+    assert "structured_architect_rationale" not in context["proposal"]
+    assert "structured_architect_rationale" not in context
+    assert "structured_architect_rationale_validation" not in context
+    assert context["proposal_accepted"] is True
+    assert result["counters"]["gemini_architect_proposal_created_count"] == 1
+    assert result["counters"]["gemini_architect_plan_graph_proposal_created_count"] == 1
+    assert result["counters"]["gemini_architect_proposal_validated_count"] == 1
+
+
 def test_gemini_architect_consumes_valid_architect_plan_context_packet() -> None:
     captured = {}
     result = runner.run_full_semantic_e2e(
@@ -1645,6 +1784,126 @@ def test_gemini_architect_context_packet_validation_failure_blocks_provider(
     assert counters["live_model_call_count"] == 0
     assert counters["network_used_count"] == 0
     assert counters["gemini_called_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+
+
+def test_gemini_architect_accepts_valid_structured_rationale_when_gate_enabled() -> None:
+    captured = {}
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(
+            **{runner.ENV_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE: "1"}
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(
+                context,
+                structured_architect_rationale=(
+                    _valid_gemini_architect_structured_rationale()
+                ),
+            ),
+            captured=captured,
+        ),
+    )
+    counters = result["counters"]
+    context = result["gemini_architect_context"]
+    rationale = context["structured_architect_rationale"]
+    validation = context["structured_architect_rationale_validation"]
+
+    assert result["final_status"] == "PASS"
+    assert "structured rationale is JSON explanation" in captured["prompt"]
+    assert "structured rationale is not hidden chain-of-thought" in captured["prompt"]
+    assert "structured rationale is not raw Gemini text" in captured["prompt"]
+    assert "Architect is not Root" in captured["prompt"]
+    assert "Architect does not create ActionCommitPacket" in captured["prompt"]
+    assert "PlanGraph is not authority" in captured["prompt"]
+    assert context["structured_rationale_gate_enabled"] is True
+    assert context["structured_rationale_source"] == "structured_architect_rationale"
+    assert context["structured_architect_rationale_validation_accepted"] is True
+    assert validation["accepted"] is True
+    assert validation["reasons"] == ()
+    assert rationale["rationale_type"] == "structured_architect_rationale"
+    assert rationale["root_review_required"] is True
+    assert rationale["truth_claimed"] is False
+    assert rationale["authority_claimed"] is False
+    assert rationale["action_permission_claimed"] is False
+    assert rationale["final_output_claimed"] is False
+    assert rationale["connector_command_claimed"] is False
+    assert rationale["drs_write_claimed"] is False
+    assert rationale["action_commit_packet_claimed"] is False
+    assert rationale["root_bypass_claimed"] is False
+    assert rationale["architect_is_root"] is False
+    assert rationale["creates_action_commit_packet"] is False
+    assert rationale["calls_connectors"] is False
+    assert rationale["root_final_authority_preserved"] is True
+    assert rationale["Root remains final authority"] is True
+    assert context["proposal_accepted"] is True
+    assert context["plan_graph_contract_validation"]["validated"] is True
+    assert counters["gemini_architect_proposal_created_count"] == 1
+    assert counters["gemini_architect_plan_graph_proposal_created_count"] == 1
+    assert counters["gemini_architect_proposal_validated_count"] == 1
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+
+
+def test_gemini_architect_missing_structured_rationale_fails_when_gate_enabled() -> None:
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(
+            **{runner.ENV_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE: "1"}
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(context)
+        ),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "architect_structured_rationale_required" in result["validation_errors"]
+    assert "structured_rationale_must_be_mapping" in result["validation_errors"]
+    assert counters["gemini_architect_plan_graph_rejected_count"] == 1
+    assert counters["gemini_architect_proposal_created_count"] == 0
+    assert counters["gemini_architect_plan_graph_proposal_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+
+
+def test_gemini_architect_invalid_structured_rationale_fails_when_gate_enabled() -> None:
+    invalid_rationale = _valid_gemini_architect_structured_rationale()
+    invalid_rationale["authority_claimed"] = True
+    invalid_rationale["architect_is_root"] = True
+    invalid_rationale["creates_action_commit_packet"] = True
+
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_architect_env(
+            **{runner.ENV_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE: "1"}
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(
+                context,
+                structured_architect_rationale=invalid_rationale,
+            )
+        ),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "architect_structured_rationale_validation_failed" in (
+        result["validation_errors"]
+    )
+    assert "structured_rationale_authority_claim_forbidden" in (
+        result["validation_errors"]
+    )
+    assert "architect_is_not_root" in result["validation_errors"]
+    assert "architect_cannot_create_action_commit_packet" in (
+        result["validation_errors"]
+    )
+    assert counters["gemini_architect_plan_graph_rejected_count"] == 1
+    assert counters["gemini_architect_proposal_created_count"] == 0
+    assert counters["gemini_architect_plan_graph_proposal_created_count"] == 0
     assert counters["connector_called_count"] == 0
     assert counters["payment_executed_count"] == 0
     assert counters["shipment_released_count"] == 0
@@ -2320,6 +2579,128 @@ def test_dual_gemini_orchestrator_context_packet_and_structured_rationale_path_p
     assert counters["action_permission_created_count"] == 0
     _assert_context_packets_preserve_authority({"orchestrator_route": packet})
     _assert_no_raw_context_dump_keys({"orchestrator_route": packet})
+
+
+def test_dual_gemini_architect_structured_rationale_failure_blocks_fractal() -> None:
+    invalid_rationale = _valid_gemini_architect_structured_rationale()
+    invalid_rationale["authority_claimed"] = True
+    invalid_rationale["architect_is_root"] = True
+    invalid_rationale["creates_action_commit_packet"] = True
+
+    result = runner.run_full_semantic_e2e(
+        env=_dual_gemini_env(
+            **{runner.ENV_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE: "1"}
+        ),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context)
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(
+                context,
+                structured_architect_rationale=invalid_rationale,
+            )
+        ),
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "architect_structured_rationale_validation_failed" in (
+        result["validation_errors"]
+    )
+    assert counters["dual_gemini_roles_completed_count"] == 1
+    assert counters["dual_gemini_fail_closed_before_fractal_count"] == 1
+    assert result["gemini_orchestrator_context"]["proposal_accepted"] is True
+    assert result["gemini_architect_context"]["proposal_accepted"] is False
+    assert result["plangraph_context"] == {}
+    assert result["fractal_executor_context"] == {}
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+
+
+def test_dual_gemini_both_context_packets_and_both_structured_rationales_path_passes() -> None:
+    captured_orchestrator = {}
+    captured_architect = {}
+    result = runner.run_full_semantic_e2e(
+        env=_dual_gemini_env(
+            **{
+                runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT: "1",
+                runner.ENV_FULL_E2E_GEMINI_ARCHITECT_CONTEXT_PACKET_INPUT: "1",
+                runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR_STRUCTURED_RATIONALE: "1",
+                runner.ENV_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE: "1",
+            }
+        ),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(
+                context,
+                structured_orchestrator_rationale=(
+                    _valid_gemini_orchestrator_structured_rationale()
+                ),
+            ),
+            captured=captured_orchestrator,
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(
+                context,
+                structured_architect_rationale=(
+                    _valid_gemini_architect_structured_rationale()
+                ),
+            ),
+            captured=captured_architect,
+        ),
+    )
+    counters = result["counters"]
+    orchestrator_input = captured_orchestrator["context"]
+    architect_input = captured_architect["context"]
+    orchestrator_packet = orchestrator_input["orchestrator_route_context_packet"]
+    architect_packet = architect_input["architect_plan_context_packet"]
+    orchestrator_context = result["gemini_orchestrator_context"]
+    architect_context = result["gemini_architect_context"]
+
+    assert result["final_status"] == "PASS"
+    assert orchestrator_packet["packet_type"] == "OrchestratorRouteContextPacket"
+    assert architect_packet["packet_type"] == "ArchitectPlanContextPacket"
+    assert orchestrator_context["structured_orchestrator_rationale"][
+        "rationale_type"
+    ] == "structured_orchestrator_rationale"
+    assert architect_context["structured_architect_rationale"]["rationale_type"] == (
+        "structured_architect_rationale"
+    )
+    assert orchestrator_input["orchestrator_route_context_packet_validation"][
+        "accepted"
+    ] is True
+    assert architect_input["architect_plan_context_packet_validation"][
+        "accepted"
+    ] is True
+    assert orchestrator_context["structured_orchestrator_rationale_validation"][
+        "accepted"
+    ] is True
+    assert architect_context["structured_architect_rationale_validation"][
+        "accepted"
+    ] is True
+    assert result["dual_gemini_context"]["architect_consumed_validated_route"] is True
+    assert result["dual_gemini_context"]["raw_cross_role_text_blocked"] is True
+    assert counters["dual_gemini_roles_completed_count"] == 2
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+    _assert_context_packets_preserve_authority(
+        {
+            "orchestrator_route": orchestrator_packet,
+            "architect_plan": architect_packet,
+        }
+    )
+    _assert_no_raw_context_dump_keys(
+        {
+            "orchestrator_route": orchestrator_packet,
+            "architect_plan": architect_packet,
+        }
+    )
 
 
 def test_dual_fake_orchestrator_invalid_fails_before_architect() -> None:

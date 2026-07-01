@@ -169,6 +169,7 @@ from hedgehog.mock_connector_sandbox import (
 from hedgehog.mock_connector_sandbox import (
     validate_mock_receipt as _core_validate_mock_receipt,
 )
+from hedgehog.structured_rationale import validate_architect_structured_rationale
 from hedgehog.structured_rationale import validate_orchestrator_structured_rationale
 from hedgehog.live_llm_semantic_evidence_reader import SemanticEvidenceClaim
 from hedgehog.llm_architect import validate_plan_graph_contract
@@ -198,6 +199,9 @@ ENV_FULL_E2E_GEMINI_ORCHESTRATOR_STRUCTURED_RATIONALE = (
 )
 ENV_FULL_E2E_GEMINI_ARCHITECT_CONTEXT_PACKET_INPUT = (
     "HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT_CONTEXT_PACKET_INPUT"
+)
+ENV_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE = (
+    "HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE"
 )
 ENV_FULL_E2E_ACTION_COMMIT_PACKET = "HEDGEHOG_FULL_E2E_ACTION_COMMIT_PACKET"
 ENV_FULL_E2E_ROOT_MOCK_APPROVAL = "HEDGEHOG_FULL_E2E_ROOT_MOCK_APPROVAL"
@@ -769,6 +773,21 @@ GEMINI_ARCHITECT_RESPONSE_SCHEMA: dict[str, Any] = {
     "additionalProperties": False,
 }
 
+
+def _gemini_architect_response_schema(env: Mapping[str, str]) -> dict[str, Any]:
+    if not _full_e2e_gemini_architect_structured_rationale_enabled(env):
+        return GEMINI_ARCHITECT_RESPONSE_SCHEMA
+
+    schema = json.loads(json.dumps(GEMINI_ARCHITECT_RESPONSE_SCHEMA))
+    schema["properties"]["structured_architect_rationale"] = {"type": "object"}
+    required = list(schema["required"])
+    if "structured_architect_rationale" not in required:
+        required.append("structured_architect_rationale")
+    schema["required"] = required
+    schema["additionalProperties"] = False
+    return schema
+
+
 ProviderCallable = Callable[[str, str, int, Mapping[str, str]], str]
 
 
@@ -910,6 +929,12 @@ def _full_e2e_gemini_architect_context_packet_input_enabled(
     env: Mapping[str, str],
 ) -> bool:
     return env.get(ENV_FULL_E2E_GEMINI_ARCHITECT_CONTEXT_PACKET_INPUT) == "1"
+
+
+def _full_e2e_gemini_architect_structured_rationale_enabled(
+    env: Mapping[str, str],
+) -> bool:
+    return env.get(ENV_FULL_E2E_GEMINI_ARCHITECT_STRUCTURED_RATIONALE) == "1"
 
 
 def _full_e2e_action_commit_packet_enabled(env: Mapping[str, str]) -> bool:
@@ -3212,7 +3237,11 @@ def _inject_architect_plan_context_packet_input(
     return safe_context
 
 
-def _gemini_architect_prompt(safe_context: Mapping[str, Any]) -> str:
+def _gemini_architect_prompt(
+    safe_context: Mapping[str, Any],
+    *,
+    structured_rationale_enabled: bool = False,
+) -> str:
     selected = tuple(safe_context["route_context"]["selected_vector_ids"])
     allowed = tuple(safe_context["route_context"]["allowed_vector_ids"])
     example_vector_id = (selected or allowed)[0]
@@ -3270,6 +3299,59 @@ def _gemini_architect_prompt(safe_context: Mapping[str, Any]) -> str:
         "unvalidated_plan_graph_claimed": False,
         "root_review_required": True,
     }
+    rationale_lines: tuple[str, ...] = ()
+    if structured_rationale_enabled:
+        skeleton["structured_architect_rationale"] = {
+            "rationale_type": "structured_architect_rationale",
+            "schema_version": "structured_rationale_v0.1",
+            "plan_shape_reason": [],
+            "node_selection_reasoning": [],
+            "executor_constraint_reasoning": [],
+            "forbidden_surface_review": [],
+            "validator_coverage_reasoning": [],
+            "return_to_root_path": [],
+            "uncertainty_notes": [],
+            "authority_boundary": [],
+            "root_review_required": True,
+            "truth_claimed": False,
+            "authority_claimed": False,
+            "action_permission_claimed": False,
+            "final_output_claimed": False,
+            "connector_command_claimed": False,
+            "drs_write_claimed": False,
+            "action_commit_packet_claimed": False,
+            "root_bypass_claimed": False,
+            "root_final_authority_preserved": True,
+            "Root remains final authority": True,
+            "architect_is_root": False,
+            "creates_action_commit_packet": False,
+            "calls_connectors": False,
+        }
+        rationale_lines = (
+            "When enabled, include structured_architect_rationale.",
+            "structured rationale is JSON explanation.",
+            "structured rationale is not hidden chain-of-thought.",
+            "structured rationale is not raw Gemini text.",
+            "structured rationale is not truth.",
+            "structured rationale is not authority.",
+            "structured rationale is not action permission.",
+            "structured rationale is not FinalOutput.",
+            "structured rationale is not ActionCommitPacket.",
+            "structured rationale is not connector command.",
+            "structured rationale is not DRS write permission.",
+            "Architect is not Root.",
+            "Architect does not create ActionCommitPacket.",
+            "PlanGraph is not authority.",
+            "Gemini proposes, Root disposes.",
+            "Root remains final authority.",
+            "Use only bounded structured rationale fields: plan_shape_reason, "
+            "node_selection_reasoning, executor_constraint_reasoning, "
+            "forbidden_surface_review, validator_coverage_reasoning, "
+            "return_to_root_path, uncertainty_notes, authority_boundary, "
+            "root_review_required.",
+            "Do not provide private chain-of-thought, hidden reasoning, "
+            "raw internal monologue, raw role text, or raw context dumps.",
+        )
     return "\n".join(
         (
             "Bounded Gemini Architect proposal role for Hedgehog OS.",
@@ -3292,6 +3374,7 @@ def _gemini_architect_prompt(safe_context: Mapping[str, Any]) -> str:
             "Do not invent node_name, node_role, node_type, source_node_id, "
             "target_node_id, or executor_assignments.node_id.",
             "Root remains final authority.",
+            *rationale_lines,
             "",
             "Required fields:",
             "\n".join(f"- {field}" for field in GEMINI_ARCHITECT_REQUIRED_FIELDS),
@@ -3332,7 +3415,7 @@ def _call_gemini_architect_provider(
             ),
         }
         if schema_key is not None:
-            config[schema_key] = GEMINI_ARCHITECT_RESPONSE_SCHEMA
+            config[schema_key] = _gemini_architect_response_schema(env)
         return config
 
     try:
@@ -3959,7 +4042,13 @@ def _evaluate_gemini_architect_role(
             )
             context["counters"]["gemini_architect_plan_graph_rejected_count"] = 1
             return context
-    prompt = _gemini_architect_prompt(safe_context)
+    structured_rationale_enabled = (
+        _full_e2e_gemini_architect_structured_rationale_enabled(env)
+    )
+    prompt = _gemini_architect_prompt(
+        safe_context,
+        structured_rationale_enabled=structured_rationale_enabled,
+    )
     context["safe_input_context"] = safe_context
     context["prompt"] = prompt
     context["raw_text_blocked"] = not any(
@@ -4002,6 +4091,40 @@ def _evaluate_gemini_architect_role(
         return context
 
     context["proposal"] = proposal
+    if structured_rationale_enabled:
+        rationale_artifact = proposal.get("structured_architect_rationale")
+        rationale_validation = validate_architect_structured_rationale(
+            rationale_artifact
+        )
+        context["structured_rationale_gate_enabled"] = True
+        context["structured_rationale_source"] = "structured_architect_rationale"
+        if rationale_artifact is not None:
+            context["structured_architect_rationale"] = rationale_artifact
+        context["structured_architect_rationale_validation"] = rationale_validation
+        context["structured_architect_rationale_validation_accepted"] = bool(
+            rationale_validation.get("accepted")
+        )
+        if not rationale_validation.get("accepted"):
+            errors = tuple(rationale_validation.get("reasons", ()))
+            missing_reason = (
+                ("architect_structured_rationale_required",)
+                if rationale_artifact is None
+                else ()
+            )
+            context["proposal_created"] = False
+            context["proposal_validated"] = False
+            context["proposal_accepted"] = False
+            context["proposal_error"] = (
+                "architect_structured_rationale_validation_failed"
+            )
+            context["validation_errors"] = (
+                "architect_structured_rationale_validation_failed",
+                *missing_reason,
+                *errors,
+            )
+            context["counters"]["gemini_architect_plan_graph_rejected_count"] = 1
+            return context
+
     validation = _validate_gemini_architect_proposal(
         proposal,
         safe_context=safe_context,

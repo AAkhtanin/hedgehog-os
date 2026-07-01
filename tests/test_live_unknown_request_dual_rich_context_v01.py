@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import sys
+import types as py_types
 
 import demo.run_live_unknown_request_dual_rich_context_v01 as runner
 from hedgehog.structured_rationale import ARCHITECT_STRUCTURED_RATIONALE_REQUIRED_FIELDS
@@ -210,6 +212,38 @@ def _run_success(request=HOTEL_LIKE_REQUEST, captured=None):
         orchestrator_provider=orchestrator,
         architect_provider=architect,
     )
+
+
+def _install_fake_google_genai(monkeypatch, *, generate_content):
+    captured = {}
+
+    class FakeHttpOptions:
+        def __init__(self, *, timeout=None):
+            self.timeout = timeout
+            captured["http_options_timeout"] = timeout
+
+    class FakeModels:
+        def generate_content(self, **kwargs):
+            captured["generate_content_kwargs"] = kwargs
+            return generate_content(**kwargs)
+
+    class FakeClient:
+        def __init__(self, *, api_key, http_options=None):
+            captured["api_key"] = api_key
+            captured["http_options"] = http_options
+            self.models = FakeModels()
+
+    google_module = py_types.ModuleType("google")
+    genai_module = py_types.ModuleType("google.genai")
+    types_module = py_types.ModuleType("google.genai.types")
+    types_module.HttpOptions = FakeHttpOptions
+    genai_module.Client = FakeClient
+    genai_module.types = types_module
+    google_module.genai = genai_module
+    monkeypatch.setitem(sys.modules, "google", google_module)
+    monkeypatch.setitem(sys.modules, "google.genai", genai_module)
+    monkeypatch.setitem(sys.modules, "google.genai.types", types_module)
+    return captured
 
 
 def test_module_imports_public_api_exists() -> None:
@@ -862,6 +896,101 @@ def test_live_gate_without_provider_key_fails_closed_without_fake_fallback() -> 
     assert result["counters"]["architect_provider_call_count"] == 0
     assert result["counters"]["live_model_call_count"] == 0
     assert result["root_final_output_boundary"] == {}
+
+
+def test_live_provider_timeout_seconds_is_passed_to_gemini_client(monkeypatch) -> None:
+    assert (
+        runner.provider_adapter.ENV_TIMEOUT_SECONDS
+        == "HEDGEHOG_LIVE_PROVIDER_TIMEOUT_SECONDS"
+    )
+
+    class FakeResponse:
+        parsed = _valid_orchestrator_proposal()
+        text = ""
+
+    captured = _install_fake_google_genai(
+        monkeypatch,
+        generate_content=lambda **kwargs: FakeResponse(),
+    )
+
+    raw = runner._call_live_gemini_provider(
+        prompt="bounded prompt",
+        model_name="gemini-test",
+        timeout_seconds=7,
+        env={runner.provider_adapter.ENV_GOOGLE_API_KEY: "test-key"},
+        response_schema=runner.ORCHESTRATOR_RESPONSE_SCHEMA,
+        role="orchestrator",
+    )
+
+    assert json.loads(raw)["proposal_id"] == "orch-proposal-test-001"
+    assert captured["http_options_timeout"] == 7000
+    assert captured["http_options"].timeout == 7000
+    assert captured["generate_content_kwargs"]["model"] == "gemini-test"
+
+
+def test_live_provider_timeout_exception_maps_to_provider_timeout(monkeypatch) -> None:
+    def timeout_response(**kwargs):
+        raise TimeoutError("simulated timeout")
+
+    _install_fake_google_genai(monkeypatch, generate_content=timeout_response)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.provider_adapter.ENV_GOOGLE_API_KEY: "test-key",
+            runner.provider_adapter.ENV_TIMEOUT_SECONDS: "3",
+        },
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "provider_timeout" in result["validation_errors"]
+    assert counters["orchestrator_provider_call_count"] == 1
+    assert counters["architect_provider_call_count"] == 0
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["action_permission_created_count"] == 0
+    assert result["last_live_provider_role"] == "orchestrator"
+    assert result["live_provider_role_in_progress"] == "orchestrator"
+    assert result["provider_timeout_seconds"] == 3
+
+
+def test_live_architect_timeout_after_valid_orchestrator_fails_closed(monkeypatch) -> None:
+    calls = []
+
+    def fake_live_provider(**kwargs):
+        calls.append(kwargs["role"])
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_proposal())
+        raise runner.provider_adapter.ProviderTimeoutError("provider_timeout")
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.provider_adapter.ENV_TIMEOUT_SECONDS: "4",
+        },
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert "provider_timeout" in result["validation_errors"]
+    assert calls == ["orchestrator", "architect"]
+    assert result["orchestrator_route_context_packet_validation"]["accepted"] is True
+    assert result["structured_orchestrator_rationale_validation"]["accepted"] is True
+    assert result["architect_plan_context_packet_validation"]["accepted"] is True
+    assert result["plan_graph_context"] == {}
+    assert result["result_proposal"] == {}
+    assert result["root_final_output_boundary"] == {}
+    assert counters["live_model_call_count"] == 1
+    assert counters["network_used_count"] == 1
+    assert counters["gemini_called_count"] == 1
+    assert counters["action_permission_created_count"] == 0
+    assert result["last_live_provider_role"] == "architect"
+    assert result["live_provider_role_in_progress"] == "architect"
+    assert result["provider_timeout_seconds"] == 4
 
 
 def test_monkeypatched_live_provider_counts_two_model_network_gemini_calls(

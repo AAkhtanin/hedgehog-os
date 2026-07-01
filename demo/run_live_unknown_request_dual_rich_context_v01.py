@@ -278,7 +278,11 @@ def _provider_name(env: Mapping[str, str]) -> str:
 
 def _provider_reason(exc: provider_adapter.ProviderCaptureError) -> str:
     reason = str(exc).strip()
-    if reason in ("provider_sdk_or_key_missing", "provider_empty_response"):
+    if reason in (
+        "provider_sdk_or_key_missing",
+        "provider_empty_response",
+        "provider_timeout_not_supported",
+    ):
         return reason
     return getattr(exc, "reason_code", "provider_call_failed")
 
@@ -332,6 +336,52 @@ def _system_instruction(role: str) -> str:
     )
 
 
+def _gemini_http_options(timeout_seconds: int) -> object | None:
+    try:
+        from google.genai import types
+    except ImportError as exc:
+        raise provider_adapter.ProviderCaptureError(
+            "provider_timeout_not_supported"
+        ) from exc
+
+    http_options_cls = getattr(types, "HttpOptions", None)
+    if http_options_cls is None:
+        raise provider_adapter.ProviderCaptureError("provider_timeout_not_supported")
+    try:
+        return http_options_cls(timeout=max(1, int(timeout_seconds)) * 1000)
+    except Exception as exc:
+        raise provider_adapter.ProviderCaptureError(
+            "provider_timeout_not_supported"
+        ) from exc
+
+
+def _timeout_exception_types() -> tuple[type[BaseException], ...]:
+    exception_types: list[type[BaseException]] = [TimeoutError]
+    try:
+        import httpx
+
+        exception_types.append(httpx.TimeoutException)
+    except Exception:
+        pass
+    try:
+        import httpcore
+
+        exception_types.append(httpcore.TimeoutException)
+    except Exception:
+        pass
+    return tuple(exception_types)
+
+
+def _is_timeout_exception(exc: BaseException) -> bool:
+    if isinstance(exc, _timeout_exception_types()):
+        return True
+    class_name = exc.__class__.__name__.lower()
+    module_name = exc.__class__.__module__.lower()
+    return "timeout" in class_name and (
+        "google" in module_name or "genai" in module_name
+    )
+
+
 def _call_live_gemini_provider(
     *,
     prompt: str,
@@ -349,6 +399,10 @@ def _call_live_gemini_provider(
     except ImportError as exc:
         raise provider_adapter.ProviderCaptureError("provider_sdk_or_key_missing") from exc
 
+    http_options = _gemini_http_options(timeout_seconds)
+    if http_options is None:
+        raise provider_adapter.ProviderCaptureError("provider_timeout_not_supported")
+
     def generation_config(schema_key: str | None) -> dict[str, Any]:
         config: dict[str, Any] = {
             "response_mime_type": "application/json",
@@ -361,7 +415,12 @@ def _call_live_gemini_provider(
         return config
 
     try:
-        client = genai.Client(api_key=api_key)
+        try:
+            client = genai.Client(api_key=api_key, http_options=http_options)
+        except TypeError as exc:
+            raise provider_adapter.ProviderCaptureError(
+                "provider_timeout_not_supported"
+            ) from exc
         response = None
         for schema_key in ("response_json_schema", "response_schema", None):
             try:
@@ -377,9 +436,11 @@ def _call_live_gemini_provider(
                 continue
         if response is None:
             raise provider_adapter.ProviderCaptureError("provider_call_failed")
-    except TimeoutError as exc:
-        raise provider_adapter.ProviderTimeoutError("provider_timeout") from exc
+    except provider_adapter.ProviderCaptureError:
+        raise
     except Exception as exc:  # pragma: no cover - real provider path only
+        if _is_timeout_exception(exc):
+            raise provider_adapter.ProviderTimeoutError("provider_timeout") from exc
         raise provider_adapter.ProviderCaptureError("provider_call_failed") from exc
 
     parsed = getattr(response, "parsed", None)
@@ -851,6 +912,10 @@ def _fail_result(
     structured_architect_rationale_validation: Mapping[str, Any] | None = None,
     orchestrator_provider_response_shape: Mapping[str, Any] | None = None,
     architect_provider_response_shape: Mapping[str, Any] | None = None,
+    live_provider_stage: str = "not_started",
+    last_live_provider_role: str | None = None,
+    live_provider_role_in_progress: str | None = None,
+    provider_timeout_seconds: int | None = None,
 ) -> dict[str, Any]:
     return {
         "title": TITLE,
@@ -881,6 +946,10 @@ def _fail_result(
         "architect_provider_response_shape": dict(
             architect_provider_response_shape or {}
         ),
+        "live_provider_stage": live_provider_stage,
+        "last_live_provider_role": last_live_provider_role,
+        "live_provider_role_in_progress": live_provider_role_in_progress,
+        "provider_timeout_seconds": provider_timeout_seconds,
         "plan_graph_context": {},
         "result_proposal": {},
         "root_final_output_boundary": {},
@@ -1054,9 +1123,22 @@ def run_live_unknown_request_dual_rich_context(
     semantic_context = _semantic_intake_context(request) if request else {}
     orchestrator_response_shape: dict[str, Any] = {}
     architect_response_shape: dict[str, Any] = {}
+    provider_timeout_seconds = provider_adapter._timeout_seconds(observed_env)
+    live_provider_stage = "not_started"
+    last_live_provider_role: str | None = None
+    live_provider_role_in_progress: str | None = None
+
+    def fail(**kwargs: Any) -> dict[str, Any]:
+        return _fail_result(
+            provider_timeout_seconds=provider_timeout_seconds,
+            live_provider_stage=live_provider_stage,
+            last_live_provider_role=last_live_provider_role,
+            live_provider_role_in_progress=live_provider_role_in_progress,
+            **kwargs,
+        )
 
     if not request:
-        return _fail_result(
+        return fail(
             request_text=request,
             semantic_context=semantic_context,
             counters=counters,
@@ -1065,7 +1147,7 @@ def run_live_unknown_request_dual_rich_context(
     if not _live_enabled(observed_env) and (
         orchestrator_provider is None or architect_provider is None
     ):
-        return _fail_result(
+        return fail(
             request_text=request,
             semantic_context=semantic_context,
             counters=counters,
@@ -1075,6 +1157,9 @@ def run_live_unknown_request_dual_rich_context(
     orchestrator_context = _orchestrator_provider_context(request)
     orchestrator_prompt = _orchestrator_prompt(orchestrator_context)
     try:
+        live_provider_stage = "orchestrator_provider_call"
+        last_live_provider_role = "orchestrator"
+        live_provider_role_in_progress = "orchestrator"
         counters["orchestrator_provider_call_count"] = 1
         orchestrator_proposal = _call_provider(
             prompt=orchestrator_prompt,
@@ -1084,8 +1169,10 @@ def run_live_unknown_request_dual_rich_context(
             response_schema=ORCHESTRATOR_RESPONSE_SCHEMA,
             counters=counters,
         )
+        live_provider_stage = "orchestrator_provider_returned"
+        live_provider_role_in_progress = None
     except provider_adapter.ProviderCaptureError as exc:
-        return _fail_result(
+        return fail(
             request_text=request,
             semantic_context=semantic_context,
             orchestrator_provider_context=orchestrator_context,
@@ -1093,7 +1180,7 @@ def run_live_unknown_request_dual_rich_context(
             validation_errors=(_provider_reason(exc),),
         )
     except (TypeError, ValueError, json.JSONDecodeError) as exc:
-        return _fail_result(
+        return fail(
             request_text=request,
             semantic_context=semantic_context,
             orchestrator_provider_context=orchestrator_context,
@@ -1124,9 +1211,9 @@ def run_live_unknown_request_dual_rich_context(
             *orchestrator_errors,
             "orchestrator_structured_rationale_validation_failed",
             *tuple(orchestrator_rationale_validation["reasons"]),
-        )
+    )
     if orchestrator_errors:
-        return _fail_result(
+        return fail(
             request_text=request,
             semantic_context=semantic_context,
             orchestrator_provider_context=orchestrator_context,
@@ -1145,7 +1232,7 @@ def run_live_unknown_request_dual_rich_context(
     )
     route_packet_validation = validate_orchestrator_route_context_packet(route_packet)
     if not route_packet_validation["accepted"]:
-        return _fail_result(
+        return fail(
             request_text=request,
             semantic_context=semantic_context,
             orchestrator_provider_context=orchestrator_context,
@@ -1175,7 +1262,7 @@ def run_live_unknown_request_dual_rich_context(
         architect_packet
     )
     if not architect_packet_validation["accepted"]:
-        return _fail_result(
+        return fail(
             request_text=request,
             semantic_context=semantic_context,
             orchestrator_provider_context=orchestrator_context,
@@ -1199,6 +1286,9 @@ def run_live_unknown_request_dual_rich_context(
 
     architect_prompt = _architect_prompt(architect_context)
     try:
+        live_provider_stage = "architect_provider_call"
+        last_live_provider_role = "architect"
+        live_provider_role_in_progress = "architect"
         counters["architect_provider_call_count"] = 1
         architect_proposal = _call_provider(
             prompt=architect_prompt,
@@ -1208,8 +1298,10 @@ def run_live_unknown_request_dual_rich_context(
             response_schema=ARCHITECT_RESPONSE_SCHEMA,
             counters=counters,
         )
+        live_provider_stage = "architect_provider_returned"
+        live_provider_role_in_progress = None
     except provider_adapter.ProviderCaptureError as exc:
-        return _fail_result(
+        return fail(
             request_text=request,
             semantic_context=semantic_context,
             orchestrator_provider_context=orchestrator_context,
@@ -1227,7 +1319,7 @@ def run_live_unknown_request_dual_rich_context(
             orchestrator_provider_response_shape=orchestrator_response_shape,
         )
     except (TypeError, ValueError, json.JSONDecodeError) as exc:
-        return _fail_result(
+        return fail(
             request_text=request,
             semantic_context=semantic_context,
             orchestrator_provider_context=orchestrator_context,
@@ -1269,9 +1361,9 @@ def run_live_unknown_request_dual_rich_context(
             *architect_errors,
             "architect_structured_rationale_validation_failed",
             *tuple(architect_rationale_validation["reasons"]),
-        )
+    )
     if architect_errors:
-        return _fail_result(
+        return fail(
             request_text=request,
             semantic_context=semantic_context,
             orchestrator_provider_context=orchestrator_context,
@@ -1301,6 +1393,8 @@ def run_live_unknown_request_dual_rich_context(
     )
     counters["final_output_created_by_root_count"] = 1
     counters["root_final_authority_preserved_count"] = 1
+    live_provider_stage = "completed"
+    live_provider_role_in_progress = None
 
     result: dict[str, Any] = {
         "title": TITLE,
@@ -1321,6 +1415,10 @@ def run_live_unknown_request_dual_rich_context(
         "structured_architect_rationale_validation": architect_rationale_validation,
         "orchestrator_provider_response_shape": orchestrator_response_shape,
         "architect_provider_response_shape": architect_response_shape,
+        "live_provider_stage": live_provider_stage,
+        "last_live_provider_role": last_live_provider_role,
+        "live_provider_role_in_progress": live_provider_role_in_progress,
+        "provider_timeout_seconds": provider_timeout_seconds,
         "plan_graph_context": plan_graph,
         "result_proposal": result_proposal,
         "root_final_output_boundary": root_boundary,

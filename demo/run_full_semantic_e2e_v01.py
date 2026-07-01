@@ -192,6 +192,9 @@ ENV_FULL_E2E_DUAL_GEMINI_ROLES = "HEDGEHOG_FULL_E2E_DUAL_GEMINI_ROLES"
 ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT = (
     "HEDGEHOG_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT"
 )
+ENV_FULL_E2E_GEMINI_ARCHITECT_CONTEXT_PACKET_INPUT = (
+    "HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT_CONTEXT_PACKET_INPUT"
+)
 ENV_FULL_E2E_ACTION_COMMIT_PACKET = "HEDGEHOG_FULL_E2E_ACTION_COMMIT_PACKET"
 ENV_FULL_E2E_ROOT_MOCK_APPROVAL = "HEDGEHOG_FULL_E2E_ROOT_MOCK_APPROVAL"
 ENV_FULL_E2E_MOCK_READY_FIXTURE = "HEDGEHOG_FULL_E2E_MOCK_READY_FIXTURE"
@@ -891,6 +894,12 @@ def _full_e2e_gemini_orchestrator_context_packet_input_enabled(
     env: Mapping[str, str],
 ) -> bool:
     return env.get(ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT) == "1"
+
+
+def _full_e2e_gemini_architect_context_packet_input_enabled(
+    env: Mapping[str, str],
+) -> bool:
+    return env.get(ENV_FULL_E2E_GEMINI_ARCHITECT_CONTEXT_PACKET_INPUT) == "1"
 
 
 def _full_e2e_action_commit_packet_enabled(env: Mapping[str, str]) -> bool:
@@ -3023,6 +3032,82 @@ def _safe_gemini_architect_input_context(
     }
 
 
+def _build_gemini_architect_plan_context_packet_input(
+    *,
+    dirty_request: Mapping[str, Any],
+    route_decision: Mapping[str, Any],
+    attractor_packet: Mapping[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    request_id = str(dirty_request.get("request_id") or "request:unknown")
+    packet_id = str(attractor_packet.get("packet_id") or request_id)
+    packet = build_architect_plan_context_packet(
+        packet_id=f"context_packet:architect_plan:{packet_id}:gemini_input",
+        source_refs=(
+            {
+                "source": "bounded_architect_planning_constraints",
+                "request_ref": route_decision.get("request_ref", request_id),
+                "source_packet_id": packet_id,
+            },
+        ),
+        domain=SUPPLIER_PAYMENT_DOMAIN,
+        source_route_id=str(
+            route_decision.get("route_source")
+            or route_decision.get("route")
+            or "bounded_local_route"
+        ),
+        allowed_executor_ids=GEMINI_ARCHITECT_ALLOWED_EXECUTOR_IDS,
+        allowed_node_kinds=("tool_or_simulated_action",),
+        required_validators=GEMINI_ARCHITECT_REQUIRED_VALIDATORS,
+        forbidden_connector_claims=(
+            "connector_command",
+            "connector_command_claimed",
+            "connector_called",
+            "bank_connector_called",
+            "supplier_connector_called",
+            "warehouse_connector_called",
+        ),
+        forbidden_action_claims=(
+            "action_permission_claimed",
+            "payment_executed",
+            "shipment_released",
+            "release shipment",
+            "execute payment",
+        ),
+        forbidden_final_output_claims=(
+            "final_output",
+            "final_output_claimed",
+            "finalizes",
+        ),
+        architect_is_root=False,
+        creates_action_commit_packet=False,
+    )
+    validation = validate_architect_plan_context_packet(packet)
+    return packet, validation
+
+
+def _inject_architect_plan_context_packet_input(
+    safe_context: dict[str, Any],
+    *,
+    packet: Mapping[str, Any],
+    validation: Mapping[str, Any],
+) -> dict[str, Any]:
+    safe_context.update(
+        {
+            "input_context_source": "ArchitectPlanContextPacket",
+            "architect_plan_context_packet": dict(packet),
+            "architect_plan_context_packet_validation": dict(validation),
+            "Context packet is not truth": True,
+            "Context packet is not authority": True,
+            "Context packet is not action permission": True,
+            "Context packet is not FinalOutput": True,
+            "Architect is not Root": True,
+            "Architect does not create ActionCommitPacket": True,
+            "Root remains final authority": True,
+        }
+    )
+    return safe_context
+
+
 def _gemini_architect_prompt(safe_context: Mapping[str, Any]) -> str:
     selected = tuple(safe_context["route_context"]["selected_vector_ids"])
     allowed = tuple(safe_context["route_context"]["allowed_vector_ids"])
@@ -3741,6 +3826,35 @@ def _evaluate_gemini_architect_role(
         attractor_packet=attractor_packet,
         slice1_result=slice1_result,
     )
+    if _full_e2e_gemini_architect_context_packet_input_enabled(env):
+        packet, validation = _build_gemini_architect_plan_context_packet_input(
+            dirty_request=dirty_request,
+            route_decision=route_decision,
+            attractor_packet=attractor_packet,
+        )
+        context["context_packet_input_gate_enabled"] = True
+        context["context_packet_input_source"] = "ArchitectPlanContextPacket"
+        context["context_packet_input_packet"] = packet
+        context["context_packet_input_validation"] = validation
+        context["context_packet_input_validation_accepted"] = bool(
+            validation.get("accepted")
+        )
+        _inject_architect_plan_context_packet_input(
+            safe_context,
+            packet=packet,
+            validation=validation,
+        )
+        if not validation.get("accepted"):
+            context["safe_input_context"] = safe_context
+            context["proposal_error"] = (
+                "architect_plan_context_packet_validation_failed"
+            )
+            context["validation_errors"] = (
+                "architect_plan_context_packet_validation_failed",
+                *tuple(validation.get("reasons", ())),
+            )
+            context["counters"]["gemini_architect_plan_graph_rejected_count"] = 1
+            return context
     prompt = _gemini_architect_prompt(safe_context)
     context["safe_input_context"] = safe_context
     context["prompt"] = prompt

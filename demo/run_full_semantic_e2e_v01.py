@@ -189,6 +189,9 @@ ENV_FULL_E2E_LIVE_EVIDENCE = "HEDGEHOG_FULL_E2E_LIVE_EVIDENCE"
 ENV_FULL_E2E_GEMINI_ORCHESTRATOR = "HEDGEHOG_FULL_E2E_GEMINI_ORCHESTRATOR"
 ENV_FULL_E2E_GEMINI_ARCHITECT = "HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT"
 ENV_FULL_E2E_DUAL_GEMINI_ROLES = "HEDGEHOG_FULL_E2E_DUAL_GEMINI_ROLES"
+ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT = (
+    "HEDGEHOG_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT"
+)
 ENV_FULL_E2E_ACTION_COMMIT_PACKET = "HEDGEHOG_FULL_E2E_ACTION_COMMIT_PACKET"
 ENV_FULL_E2E_ROOT_MOCK_APPROVAL = "HEDGEHOG_FULL_E2E_ROOT_MOCK_APPROVAL"
 ENV_FULL_E2E_MOCK_READY_FIXTURE = "HEDGEHOG_FULL_E2E_MOCK_READY_FIXTURE"
@@ -882,6 +885,12 @@ def _full_e2e_gemini_architect_enabled(env: Mapping[str, str]) -> bool:
 
 def _full_e2e_dual_gemini_enabled(env: Mapping[str, str]) -> bool:
     return env.get(ENV_FULL_E2E_DUAL_GEMINI_ROLES) == "1"
+
+
+def _full_e2e_gemini_orchestrator_context_packet_input_enabled(
+    env: Mapping[str, str],
+) -> bool:
+    return env.get(ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT) == "1"
 
 
 def _full_e2e_action_commit_packet_enabled(env: Mapping[str, str]) -> bool:
@@ -2353,6 +2362,68 @@ def _safe_gemini_orchestrator_input_context(
     }
 
 
+def _build_gemini_orchestrator_route_context_packet_input(
+    *,
+    dirty_request: Mapping[str, Any],
+    route_decision: Mapping[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    request_id = str(dirty_request.get("request_id") or "request:unknown")
+    selected_vector_ids = tuple(route_decision.get("selected_vector_ids", ()))
+    allowed_vector_ids = tuple(route_decision.get("allowed_vector_ids", ()))
+    packet = build_orchestrator_route_context_packet(
+        packet_id=f"context_packet:orchestrator_route:{request_id}:gemini_input",
+        source_refs=(
+            {
+                "source": "bounded_route_decision",
+                "request_ref": route_decision.get("request_ref", request_id),
+            },
+        ),
+        domain=SUPPLIER_PAYMENT_DOMAIN,
+        allowed_routes=("proof_full_pipeline",),
+        required_guards=GEMINI_ORCHESTRATOR_REQUIRED_GUARDS,
+        selected_vector_ids=selected_vector_ids,
+        route_validation_expectations={
+            "selected_vector_ids_must_be_subset_of_allowed_vector_ids": True,
+            "selected_only_allowed_vectors": bool(
+                selected_vector_ids
+                and set(selected_vector_ids).issubset(set(allowed_vector_ids))
+            ),
+            "root_review_required": bool(route_decision.get("root_review_required")),
+            "orchestrator_role": "bounded_gemini_orchestrator",
+            "source_runtime_route": str(route_decision.get("route") or ""),
+            "route_source": str(
+                route_decision.get("route_source") or "bounded_local_route"
+            ),
+        },
+        orchestrator_is_root=False,
+        creates_action_commit_packet=False,
+        calls_connectors=False,
+    )
+    validation = validate_orchestrator_route_context_packet(packet)
+    return packet, validation
+
+
+def _inject_orchestrator_route_context_packet_input(
+    safe_context: dict[str, Any],
+    *,
+    packet: Mapping[str, Any],
+    validation: Mapping[str, Any],
+) -> dict[str, Any]:
+    safe_context.update(
+        {
+            "input_context_source": "OrchestratorRouteContextPacket",
+            "orchestrator_route_context_packet": dict(packet),
+            "orchestrator_route_context_packet_validation": dict(validation),
+            "Context packet is not truth": True,
+            "Context packet is not authority": True,
+            "Context packet is not action permission": True,
+            "Context packet is not FinalOutput": True,
+            "Root remains final authority": True,
+        }
+    )
+    return safe_context
+
+
 def _gemini_orchestrator_prompt(safe_context: Mapping[str, Any]) -> str:
     skeleton = {
         "proposal_id": "gemini-orchestrator-proposal-001",
@@ -2709,6 +2780,34 @@ def _evaluate_gemini_orchestrator_role(
         route_decision=route_decision,
         slice1_result=slice1_result,
     )
+    if _full_e2e_gemini_orchestrator_context_packet_input_enabled(env):
+        packet, validation = _build_gemini_orchestrator_route_context_packet_input(
+            dirty_request=dirty_request,
+            route_decision=route_decision,
+        )
+        context["context_packet_input_gate_enabled"] = True
+        context["context_packet_input_source"] = "OrchestratorRouteContextPacket"
+        context["context_packet_input_packet"] = packet
+        context["context_packet_input_validation"] = validation
+        context["context_packet_input_validation_accepted"] = bool(
+            validation.get("accepted")
+        )
+        _inject_orchestrator_route_context_packet_input(
+            safe_context,
+            packet=packet,
+            validation=validation,
+        )
+        if not validation.get("accepted"):
+            context["safe_input_context"] = safe_context
+            context["proposal_error"] = (
+                "orchestrator_route_context_packet_validation_failed"
+            )
+            context["validation_errors"] = (
+                "orchestrator_route_context_packet_validation_failed",
+                *tuple(validation.get("reasons", ())),
+            )
+            context["counters"]["gemini_orchestrator_route_rejected_count"] = 1
+            return context
     prompt = _gemini_orchestrator_prompt(safe_context)
     context["safe_input_context"] = safe_context
     context["prompt"] = prompt

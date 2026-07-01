@@ -499,6 +499,33 @@ def test_context_packet_gate_omits_raw_runner_dumps() -> None:
     _assert_no_raw_context_dump_keys(result["bounded_context_packets"])
 
 
+def test_gemini_orchestrator_context_packet_input_gate_alone_does_not_start_role() -> None:
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT: "1"}
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert result["gemini_orchestrator_context"]["provider_call_path"] == "not_started"
+    assert "bounded_context_packets" not in result
+    assert "bounded_context_packet_validations" not in result
+    assert "bounded_context_packets_context" not in result
+
+
+def test_context_packet_input_does_not_change_default_counters_or_stage_map() -> None:
+    default = runner.run_full_semantic_e2e(env={})
+    result = runner.run_full_semantic_e2e(
+        env={runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT: "1"}
+    )
+
+    assert result["final_status"] == "PASS"
+    assert result["counters"] == default["counters"]
+    assert result["stage_map"] == default["stage_map"]
+
+
 def test_default_main_exits_zero_and_prints_pass(monkeypatch, capsys) -> None:
     monkeypatch.delenv(runner.ENV_FULL_E2E_LIVE_EVIDENCE, raising=False)
     monkeypatch.delenv(supplier_live.ENV_ENABLE, raising=False)
@@ -871,6 +898,122 @@ def test_explicit_fake_gemini_orchestrator_valid_proposal_is_locally_validated()
     assert result["counters"]["shipment_released_count"] == 0
     assert result["counters"]["connector_called_count"] == 0
     assert result["counters"]["root_final_authority_preserved_count"] == 1
+
+
+def test_gemini_orchestrator_without_context_packet_gate_keeps_existing_input_shape() -> None:
+    captured = {}
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_orchestrator_env(),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context),
+            captured=captured,
+        ),
+    )
+    safe_context = captured["context"]
+
+    assert result["final_status"] == "PASS"
+    assert "orchestrator_route_context_packet" not in safe_context
+    assert "orchestrator_route_context_packet_validation" not in safe_context
+    assert "context_packet_input_packet" not in result["gemini_orchestrator_context"]
+    assert result["counters"]["gemini_orchestrator_proposal_created_count"] == 1
+    assert result["counters"]["gemini_orchestrator_proposal_validated_count"] == 1
+    assert result["counters"]["live_model_call_count"] == 0
+    assert result["counters"]["network_used_count"] == 0
+    assert result["counters"]["gemini_called_count"] == 0
+
+
+def test_gemini_orchestrator_consumes_valid_orchestrator_route_context_packet() -> None:
+    captured = {}
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_orchestrator_env(
+            **{runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT: "1"}
+        ),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context),
+            captured=captured,
+        ),
+    )
+    safe_context = captured["context"]
+    packet = safe_context["orchestrator_route_context_packet"]
+    validation = safe_context["orchestrator_route_context_packet_validation"]
+    gemini_context = result["gemini_orchestrator_context"]
+
+    assert result["final_status"] == "PASS"
+    assert safe_context["input_context_source"] == "OrchestratorRouteContextPacket"
+    assert packet["packet_type"] == "OrchestratorRouteContextPacket"
+    assert validation["accepted"] is True
+    assert tuple(validation["reasons"]) == ()
+    assert gemini_context["context_packet_input_gate_enabled"] is True
+    assert gemini_context["context_packet_input_source"] == "OrchestratorRouteContextPacket"
+    assert gemini_context["context_packet_input_packet"]["packet_id"] == packet[
+        "packet_id"
+    ]
+    assert gemini_context["context_packet_input_packet"]["packet_type"] == packet[
+        "packet_type"
+    ]
+    assert gemini_context["context_packet_input_validation"]["accepted"] is True
+    assert packet["allowed_routes"]
+    assert "proof_full_pipeline" in tuple(packet["allowed_routes"])
+    assert packet["route_validation_expectations"]["source_runtime_route"]
+    assert packet["route_validation_expectations"]["route_source"]
+    assert tuple(packet["selected_vector_ids"]) == tuple(
+        safe_context["candidate_vector_context_summary"]["selected_vector_ids"]
+    )
+    _assert_context_packets_preserve_authority({"orchestrator_route": packet})
+    _assert_no_raw_context_dump_keys({"orchestrator_route": packet})
+    assert safe_context["Context packet is not truth"] is True
+    assert safe_context["Context packet is not authority"] is True
+    assert safe_context["Context packet is not action permission"] is True
+    assert safe_context["Context packet is not FinalOutput"] is True
+    assert safe_context["Root remains final authority"] is True
+    assert result["counters"]["live_model_call_count"] == 0
+    assert result["counters"]["network_used_count"] == 0
+    assert result["counters"]["gemini_called_count"] == 0
+
+
+def test_gemini_orchestrator_context_packet_validation_failure_blocks_provider(
+    monkeypatch,
+) -> None:
+    calls = {"provider": 0}
+    original_builder = runner.build_orchestrator_route_context_packet
+
+    def invalid_packet(*args, **kwargs):
+        packet = original_builder(*args, **kwargs)
+        packet["orchestrator_is_root"] = True
+        return packet
+
+    def provider(prompt, model_name, timeout_seconds, env):
+        calls["provider"] += 1
+        raise AssertionError("provider must not be called")
+
+    monkeypatch.setattr(
+        runner,
+        "build_orchestrator_route_context_packet",
+        invalid_packet,
+    )
+    result = runner.run_full_semantic_e2e(
+        env=_gemini_orchestrator_env(
+            **{runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT: "1"}
+        ),
+        orchestrator_provider=provider,
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert calls["provider"] == 0
+    assert "orchestrator_route_context_packet_validation_failed" in (
+        result["validation_errors"]
+    )
+    assert "orchestrator_is_not_root" in result["validation_errors"]
+    assert counters["gemini_orchestrator_route_rejected_count"] == 1
+    assert counters["gemini_orchestrator_proposal_created_count"] == 0
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["action_permission_created_count"] == 0
 
 
 def test_gemini_orchestrator_selected_vector_violation_fails_before_architect() -> None:
@@ -1600,6 +1743,50 @@ def test_dual_fake_valid_orchestrator_then_architect_path_passes() -> None:
     assert counters["payment_executed_count"] == 0
     assert counters["shipment_released_count"] == 0
     assert counters["connector_called_count"] == 0
+
+
+def test_dual_gemini_orchestrator_context_packet_input_path_passes() -> None:
+    captured_orchestrator = {}
+    captured_architect = {}
+    result = runner.run_full_semantic_e2e(
+        env=_dual_gemini_env(
+            **{runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT: "1"}
+        ),
+        orchestrator_provider=_gemini_orchestrator_provider(
+            lambda context: _valid_gemini_orchestrator_proposal(context),
+            captured=captured_orchestrator,
+        ),
+        architect_provider=_gemini_architect_provider(
+            lambda context: _valid_gemini_architect_proposal(context),
+            captured=captured_architect,
+        ),
+    )
+    counters = result["counters"]
+    orchestrator_input = captured_orchestrator["context"]
+    architect_input = captured_architect["context"]
+    packet = orchestrator_input["orchestrator_route_context_packet"]
+
+    assert result["final_status"] == "PASS"
+    assert packet["packet_type"] == "OrchestratorRouteContextPacket"
+    assert "proof_full_pipeline" in tuple(packet["allowed_routes"])
+    assert orchestrator_input["orchestrator_route_context_packet_validation"][
+        "accepted"
+    ] is True
+    assert result["gemini_orchestrator_context"][
+        "context_packet_input_validation_accepted"
+    ] is True
+    assert result["dual_gemini_context"]["architect_consumed_validated_route"] is True
+    assert architect_input["route_context"]["orchestrator_route_validated"] is True
+    assert result["dual_gemini_context"]["raw_cross_role_text_blocked"] is True
+    assert counters["dual_gemini_roles_completed_count"] == 2
+    assert counters["live_model_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    _assert_context_packets_preserve_authority({"orchestrator_route": packet})
+    _assert_no_raw_context_dump_keys({"orchestrator_route": packet})
 
 
 def test_dual_fake_orchestrator_invalid_fails_before_architect() -> None:

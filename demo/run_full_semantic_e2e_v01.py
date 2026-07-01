@@ -169,6 +169,7 @@ from hedgehog.mock_connector_sandbox import (
 from hedgehog.mock_connector_sandbox import (
     validate_mock_receipt as _core_validate_mock_receipt,
 )
+from hedgehog.structured_rationale import validate_orchestrator_structured_rationale
 from hedgehog.live_llm_semantic_evidence_reader import SemanticEvidenceClaim
 from hedgehog.llm_architect import validate_plan_graph_contract
 from hedgehog.local_drs_resolver import SemanticDRSRecordInput
@@ -191,6 +192,9 @@ ENV_FULL_E2E_GEMINI_ARCHITECT = "HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT"
 ENV_FULL_E2E_DUAL_GEMINI_ROLES = "HEDGEHOG_FULL_E2E_DUAL_GEMINI_ROLES"
 ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT = (
     "HEDGEHOG_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT"
+)
+ENV_FULL_E2E_GEMINI_ORCHESTRATOR_STRUCTURED_RATIONALE = (
+    "HEDGEHOG_FULL_E2E_GEMINI_ORCHESTRATOR_STRUCTURED_RATIONALE"
 )
 ENV_FULL_E2E_GEMINI_ARCHITECT_CONTEXT_PACKET_INPUT = (
     "HEDGEHOG_FULL_E2E_GEMINI_ARCHITECT_CONTEXT_PACKET_INPUT"
@@ -894,6 +898,12 @@ def _full_e2e_gemini_orchestrator_context_packet_input_enabled(
     env: Mapping[str, str],
 ) -> bool:
     return env.get(ENV_FULL_E2E_GEMINI_ORCHESTRATOR_CONTEXT_PACKET_INPUT) == "1"
+
+
+def _full_e2e_gemini_orchestrator_structured_rationale_enabled(
+    env: Mapping[str, str],
+) -> bool:
+    return env.get(ENV_FULL_E2E_GEMINI_ORCHESTRATOR_STRUCTURED_RATIONALE) == "1"
 
 
 def _full_e2e_gemini_architect_context_packet_input_enabled(
@@ -2433,7 +2443,11 @@ def _inject_orchestrator_route_context_packet_input(
     return safe_context
 
 
-def _gemini_orchestrator_prompt(safe_context: Mapping[str, Any]) -> str:
+def _gemini_orchestrator_prompt(
+    safe_context: Mapping[str, Any],
+    *,
+    structured_rationale_enabled: bool = False,
+) -> str:
     skeleton = {
         "proposal_id": "gemini-orchestrator-proposal-001",
         "proposal_role": "bounded_gemini_orchestrator",
@@ -2455,6 +2469,55 @@ def _gemini_orchestrator_prompt(safe_context: Mapping[str, Any]) -> str:
         "bypass_root_claimed": False,
         "root_review_required": True,
     }
+    rationale_lines: tuple[str, ...] = ()
+    if structured_rationale_enabled:
+        skeleton["structured_orchestrator_rationale"] = {
+            "rationale_type": "structured_orchestrator_rationale",
+            "schema_version": "structured_rationale_v0.1",
+            "observed_semantics": [],
+            "route_selection_reason": [],
+            "rejected_routes": [],
+            "required_guards_reasoning": [],
+            "selected_vector_reasoning": [],
+            "uncertainty_notes": [],
+            "authority_boundary": [],
+            "root_review_required": True,
+            "truth_claimed": False,
+            "authority_claimed": False,
+            "action_permission_claimed": False,
+            "final_output_claimed": False,
+            "connector_command_claimed": False,
+            "drs_write_claimed": False,
+            "action_commit_packet_claimed": False,
+            "root_bypass_claimed": False,
+            "root_final_authority_preserved": True,
+            "Root remains final authority": True,
+            "orchestrator_is_root": False,
+            "creates_action_commit_packet": False,
+            "calls_connectors": False,
+        }
+        rationale_lines = (
+            "When enabled, include structured_orchestrator_rationale.",
+            "structured rationale is JSON explanation.",
+            "structured rationale is not hidden chain-of-thought.",
+            "structured rationale is not raw Gemini text.",
+            "structured rationale is not truth.",
+            "structured rationale is not authority.",
+            "structured rationale is not action permission.",
+            "structured rationale is not FinalOutput.",
+            "structured rationale is not ActionCommitPacket.",
+            "structured rationale is not connector command.",
+            "structured rationale is not DRS write permission.",
+            "Orchestrator is not Root.",
+            "Gemini proposes, Root disposes.",
+            "Root remains final authority.",
+            "Use only bounded structured rationale fields: "
+            "observed_semantics, route_selection_reason, rejected_routes, "
+            "required_guards_reasoning, selected_vector_reasoning, "
+            "uncertainty_notes, authority_boundary, root_review_required.",
+            "Do not provide private chain-of-thought, hidden reasoning, "
+            "raw internal monologue, raw role text, or raw context dumps.",
+        )
     return "\n".join(
         (
             "Bounded Gemini Orchestrator proposal role for Hedgehog OS.",
@@ -2465,6 +2528,7 @@ def _gemini_orchestrator_prompt(safe_context: Mapping[str, Any]) -> str:
             "The role does not create PlanGraph and does not create FinalOutput.",
             "Selected vector ids must be selected_vector_ids from allowed_vector_ids.",
             "Root remains final authority.",
+            *rationale_lines,
             "",
             "Required fields:",
             "\n".join(f"- {field}" for field in GEMINI_ORCHESTRATOR_REQUIRED_FIELDS),
@@ -2817,7 +2881,13 @@ def _evaluate_gemini_orchestrator_role(
             )
             context["counters"]["gemini_orchestrator_route_rejected_count"] = 1
             return context
-    prompt = _gemini_orchestrator_prompt(safe_context)
+    structured_rationale_enabled = (
+        _full_e2e_gemini_orchestrator_structured_rationale_enabled(env)
+    )
+    prompt = _gemini_orchestrator_prompt(
+        safe_context,
+        structured_rationale_enabled=structured_rationale_enabled,
+    )
     context["safe_input_context"] = safe_context
     context["prompt"] = prompt
     context["raw_text_blocked"] = not any(
@@ -2860,6 +2930,40 @@ def _evaluate_gemini_orchestrator_role(
         return context
 
     context["proposal"] = proposal
+    if structured_rationale_enabled:
+        rationale_artifact = proposal.get("structured_orchestrator_rationale")
+        rationale_validation = validate_orchestrator_structured_rationale(
+            rationale_artifact
+        )
+        context["structured_rationale_gate_enabled"] = True
+        context["structured_rationale_source"] = "structured_orchestrator_rationale"
+        if rationale_artifact is not None:
+            context["structured_orchestrator_rationale"] = rationale_artifact
+        context["structured_orchestrator_rationale_validation"] = rationale_validation
+        context["structured_orchestrator_rationale_validation_accepted"] = bool(
+            rationale_validation.get("accepted")
+        )
+        if not rationale_validation.get("accepted"):
+            errors = tuple(rationale_validation.get("reasons", ()))
+            missing_reason = (
+                ("orchestrator_structured_rationale_required",)
+                if rationale_artifact is None
+                else ()
+            )
+            context["proposal_created"] = False
+            context["proposal_validated"] = False
+            context["proposal_accepted"] = False
+            context["proposal_error"] = (
+                "orchestrator_structured_rationale_validation_failed"
+            )
+            context["validation_errors"] = (
+                "orchestrator_structured_rationale_validation_failed",
+                *missing_reason,
+                *errors,
+            )
+            context["counters"]["gemini_orchestrator_route_rejected_count"] = 1
+            return context
+
     validation = _validate_gemini_orchestrator_proposal(
         proposal,
         safe_context=safe_context,

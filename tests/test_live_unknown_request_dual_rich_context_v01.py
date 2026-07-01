@@ -183,6 +183,126 @@ def _valid_architect_proposal(**overrides):
     return payload
 
 
+def _valid_orchestrator_compact_proposal(**overrides):
+    payload = {
+        "proposal_id": "orch-compact-proposal-test-001",
+        "suggested_route": "unknown_request_root_review",
+        "selected_vector_ids": (
+            "unknown_request_semantic_review",
+            "external_action_boundary_review",
+        ),
+        "required_guards": (
+            "ContextPacket validation",
+            "structured rationale validation",
+            "route validation",
+            "Root final authority",
+        ),
+        "reason": "compact bounded route for unknown request",
+        "confidence": 0.0,
+        "needs_review": True,
+        "uncertainty_notes": ("missing evidence or authority remains unresolved",),
+        "root_review_required": True,
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "plan_graph_claimed": False,
+        "bypass_root_claimed": False,
+        "rationale_observed_semantics": (
+            {"summary": "unknown request requires bounded Root review"},
+        ),
+        "rationale_route_selection_reason": (
+            {
+                "route": "unknown_request_root_review",
+                "reason": "Root review required",
+            },
+        ),
+        "rationale_rejected_routes": (
+            {"route": "direct_real_world_action", "reason": "not allowed"},
+        ),
+        "rationale_required_guards_reasoning": (
+            {"guard": "Root final authority", "status": "required"},
+        ),
+        "rationale_selected_vector_reasoning": (
+            {
+                "vector": "unknown_request_semantic_review",
+                "reason": "advisory only",
+            },
+        ),
+        "rationale_authority_boundary": (
+            {
+                "Orchestrator is not Root": True,
+                "Root remains final authority": True,
+            },
+        ),
+    }
+    payload.update(overrides)
+    return payload
+
+
+def _valid_architect_compact_proposal(**overrides):
+    payload = {
+        "proposal_id": "arch-compact-proposal-test-001",
+        "source_route_id": "unknown_request_root_review",
+        "selected_vector_ids": ("unknown_request_semantic_review",),
+        "plan_nodes": (
+            {
+                "node_id": "node:unknown_request_semantic_review",
+                "kind": "semantic_review",
+                "executor_id": "local_unknown_request_review_executor",
+                "expected_output": "ResultProposal",
+            },
+        ),
+        "result_proposal_summary": "unknown request requires Root review",
+        "root_recommendation": "not_ready",
+        "required_validators": (
+            "ArchitectPlanContextPacket validation",
+            "structured rationale validation",
+            "PlanGraph contract",
+            "ResultProposal boundary",
+            "Root final authority",
+        ),
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "root_bypass_claimed": False,
+        "rationale_plan_shape_reason": (
+            {"shape": "bounded_unknown_request_review", "reason": "review only"},
+        ),
+        "rationale_node_selection_reasoning": (
+            {"node": "node:unknown_request_semantic_review", "reason": "bounded"},
+        ),
+        "rationale_executor_constraint_reasoning": (
+            {
+                "executor": "local_unknown_request_review_executor",
+                "reason": "allowed executor",
+            },
+        ),
+        "rationale_forbidden_surface_review": (
+            {"surface": "forbidden_command_surface", "status": "blocked"},
+        ),
+        "rationale_validator_coverage_reasoning": (
+            {"validator": "Root final authority", "status": "required"},
+        ),
+        "rationale_return_to_root_path": (
+            {"path": "proposal_to_root_boundary", "status": "required"},
+        ),
+        "rationale_authority_boundary": (
+            {
+                "Architect is not Root": True,
+                "PlanGraph is not authority": True,
+            },
+        ),
+    }
+    payload.update(overrides)
+    return payload
+
+
 def _providers(captured=None, *, architect_overrides=None, orchestrator_overrides=None):
     captured = captured if captured is not None else {}
 
@@ -326,6 +446,54 @@ def test_prompt_skeleton_structured_rationales_validate_locally() -> None:
 
     assert orchestrator_validation["accepted"] is True
     assert architect_validation["accepted"] is True
+
+
+def test_compact_orchestrator_prompt_excludes_full_structured_rationale_schema() -> None:
+    context = runner._orchestrator_provider_context(HOTEL_LIKE_REQUEST)
+    prompt = runner._orchestrator_compact_prompt(context)
+
+    assert "rationale_observed_semantics" in prompt
+    assert "rationale_route_selection_reason" in prompt
+    assert "rationale_authority_boundary" in prompt
+    assert "runtime will build canonical structured rationale" in prompt
+    assert "Do not include structured_orchestrator_rationale directly" in prompt
+    assert "structured_orchestrator_rationale MUST be a complete JSON object" not in prompt
+
+
+def test_expand_orchestrator_compact_proposal_builds_valid_structured_rationale() -> None:
+    context = runner._orchestrator_provider_context(HOTEL_LIKE_REQUEST)
+    compact = _valid_orchestrator_compact_proposal(authority_claimed=True)
+    expanded = runner._expand_orchestrator_compact_proposal(compact, context)
+    validation = validate_orchestrator_structured_rationale(
+        expanded["structured_orchestrator_rationale"]
+    )
+
+    assert validation["accepted"] is True
+    assert expanded["authority_claimed"] is True
+    assert expanded["structured_orchestrator_rationale"]["authority_claimed"] is False
+
+
+def test_expand_architect_compact_proposal_builds_valid_structured_rationale() -> None:
+    orchestrator_context = runner._orchestrator_provider_context(HOTEL_LIKE_REQUEST)
+    orchestrator_proposal = _valid_orchestrator_proposal()
+    route_packet = runner._route_packet_from_proposal(
+        orchestrator_proposal,
+        orchestrator_context,
+    )
+    architect_context = runner._architect_provider_context(
+        route_packet=route_packet,
+        route_validation={"accepted": True},
+        orchestrator_proposal=orchestrator_proposal,
+    )
+    compact = _valid_architect_compact_proposal(final_output_claimed=True)
+    expanded = runner._expand_architect_compact_proposal(compact, architect_context)
+    validation = validate_architect_structured_rationale(
+        expanded["structured_architect_rationale"]
+    )
+
+    assert validation["accepted"] is True
+    assert expanded["final_output_claimed"] is True
+    assert expanded["structured_architect_rationale"]["final_output_claimed"] is False
 
 
 def test_injected_unknown_hotel_robot_request_reaches_root_not_ready() -> None:
@@ -954,6 +1122,7 @@ def test_live_provider_timeout_exception_maps_to_provider_timeout(monkeypatch) -
     assert result["last_live_provider_role"] == "orchestrator"
     assert result["live_provider_role_in_progress"] == "orchestrator"
     assert result["provider_timeout_seconds"] == 3
+    assert result["provider_error_shape"]["exception_type"] == "TimeoutError"
 
 
 def test_live_architect_timeout_after_valid_orchestrator_fails_closed(monkeypatch) -> None:
@@ -962,7 +1131,7 @@ def test_live_architect_timeout_after_valid_orchestrator_fails_closed(monkeypatc
     def fake_live_provider(**kwargs):
         calls.append(kwargs["role"])
         if kwargs["role"] == "orchestrator":
-            return json.dumps(_valid_orchestrator_proposal())
+            return json.dumps(_valid_orchestrator_compact_proposal())
         raise runner.provider_adapter.ProviderTimeoutError("provider_timeout")
 
     monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
@@ -991,6 +1160,106 @@ def test_live_architect_timeout_after_valid_orchestrator_fails_closed(monkeypatc
     assert result["last_live_provider_role"] == "architect"
     assert result["live_provider_role_in_progress"] == "architect"
     assert result["provider_timeout_seconds"] == 4
+    assert result["provider_error_shape"]["exception_type"] == "ProviderTimeoutError"
+
+
+def test_live_real_path_uses_compact_contract_by_default(monkeypatch) -> None:
+    calls = []
+
+    def fake_live_provider(**kwargs):
+        calls.append(kwargs)
+        if kwargs["role"] == "orchestrator":
+            assert "rationale_observed_semantics" in kwargs["prompt"]
+            assert "structured_orchestrator_rationale MUST" not in kwargs["prompt"]
+            assert kwargs["response_schema"] is runner.ORCHESTRATOR_COMPACT_RESPONSE_SCHEMA
+            return json.dumps(_valid_orchestrator_compact_proposal())
+        assert "rationale_plan_shape_reason" in kwargs["prompt"]
+        assert "structured_architect_rationale MUST" not in kwargs["prompt"]
+        assert kwargs["response_schema"] is runner.ARCHITECT_COMPACT_RESPONSE_SCHEMA
+        return json.dumps(_valid_architect_compact_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1"},
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert [call["role"] for call in calls] == ["orchestrator", "architect"]
+    assert result["root_final_output_boundary"]["decision"] in (
+        "not_ready",
+        "needs_more_evidence",
+    )
+    assert result["live_provider_contract_mode"] == "compact_rationale_adapter"
+    assert counters["compact_adapter_used_count"] == 1
+    assert counters["compact_adapter_expanded_orchestrator_count"] == 1
+    assert counters["compact_adapter_expanded_architect_count"] == 1
+    assert counters["action_permission_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_compact_orchestrator_forbidden_claims_still_fail_closed_before_architect(
+    monkeypatch,
+) -> None:
+    calls = []
+
+    def fake_live_provider(**kwargs):
+        calls.append(kwargs["role"])
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(
+                _valid_orchestrator_compact_proposal(
+                    authority_claimed=True,
+                    action_permission_claimed=True,
+                    final_output_claimed=True,
+                )
+            )
+        return json.dumps(_valid_architect_compact_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1"},
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert calls == ["orchestrator"]
+    assert "orchestrator_authority_claim_forbidden" in result["validation_errors"]
+    assert "orchestrator_action_claim_forbidden" in result["validation_errors"]
+    assert "orchestrator_final_output_claim_forbidden" in result["validation_errors"]
+
+
+def test_compact_architect_forbidden_claims_still_fail_closed_before_plangraph(
+    monkeypatch,
+) -> None:
+    calls = []
+
+    def fake_live_provider(**kwargs):
+        calls.append(kwargs["role"])
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_compact_proposal())
+        return json.dumps(
+            _valid_architect_compact_proposal(
+                action_permission_claimed=True,
+                connector_command_claimed=True,
+                final_output_claimed=True,
+            )
+        )
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1"},
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert calls == ["orchestrator", "architect"]
+    assert "architect_action_claim_forbidden" in result["validation_errors"]
+    assert "architect_connector_claim_forbidden" in result["validation_errors"]
+    assert "architect_final_output_claim_forbidden" in result["validation_errors"]
+    assert result["plan_graph_context"] == {}
+    assert result["result_proposal"] == {}
+    assert result["root_final_output_boundary"] == {}
 
 
 def test_monkeypatched_live_provider_counts_two_model_network_gemini_calls(
@@ -1001,8 +1270,8 @@ def test_monkeypatched_live_provider_counts_two_model_network_gemini_calls(
     def fake_live_provider(**kwargs):
         calls.append(kwargs["role"])
         if kwargs["role"] == "orchestrator":
-            return json.dumps(_valid_orchestrator_proposal())
-        return json.dumps(_valid_architect_proposal())
+            return json.dumps(_valid_orchestrator_compact_proposal())
+        return json.dumps(_valid_architect_compact_proposal())
 
     monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
     result = runner.run_live_unknown_request_dual_rich_context(
@@ -1016,6 +1285,7 @@ def test_monkeypatched_live_provider_counts_two_model_network_gemini_calls(
     assert counters["live_model_call_count"] == 2
     assert counters["network_used_count"] == 2
     assert counters["gemini_called_count"] == 2
+    assert result["root_final_output_boundary"]
     assert counters["action_permission_created_count"] == 0
     assert counters["action_commit_packet_created_count"] == 0
     assert counters["connector_called_count"] == 0

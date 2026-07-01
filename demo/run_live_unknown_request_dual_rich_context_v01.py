@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import time
 from typing import Any, Callable, Mapping
 
 from demo import run_live_provider_adapter_response_capture_v01 as provider_adapter
@@ -23,6 +24,9 @@ from hedgehog.structured_rationale import validate_orchestrator_structured_ratio
 
 TITLE = "LIVE UNKNOWN REQUEST DUAL RICH CONTEXT SPINE v0.1"
 ENV_UNKNOWN_REQUEST_LIVE_GEMINI = "HEDGEHOG_UNKNOWN_REQUEST_LIVE_GEMINI"
+ENV_UNKNOWN_REQUEST_LIVE_COMPACT_RATIONALE = (
+    "HEDGEHOG_UNKNOWN_REQUEST_LIVE_COMPACT_RATIONALE"
+)
 DEFAULT_MODEL = "gemini-2.5-flash"
 
 ProviderCallable = Callable[[str, str, int, Mapping[str, str]], Any]
@@ -93,6 +97,56 @@ ARCHITECT_REQUIRED_FIELDS = (
     "structured_architect_rationale",
 )
 
+ORCHESTRATOR_COMPACT_REQUIRED_FIELDS = (
+    "proposal_id",
+    "suggested_route",
+    "selected_vector_ids",
+    "required_guards",
+    "reason",
+    "confidence",
+    "needs_review",
+    "uncertainty_notes",
+    "root_review_required",
+    "truth_claimed",
+    "authority_claimed",
+    "action_permission_claimed",
+    "final_output_claimed",
+    "connector_command_claimed",
+    "drs_write_claimed",
+    "plan_graph_claimed",
+    "bypass_root_claimed",
+    "rationale_observed_semantics",
+    "rationale_route_selection_reason",
+    "rationale_rejected_routes",
+    "rationale_required_guards_reasoning",
+    "rationale_selected_vector_reasoning",
+    "rationale_authority_boundary",
+)
+
+ARCHITECT_COMPACT_REQUIRED_FIELDS = (
+    "proposal_id",
+    "source_route_id",
+    "selected_vector_ids",
+    "plan_nodes",
+    "result_proposal_summary",
+    "root_recommendation",
+    "required_validators",
+    "truth_claimed",
+    "authority_claimed",
+    "action_permission_claimed",
+    "final_output_claimed",
+    "connector_command_claimed",
+    "drs_write_claimed",
+    "root_bypass_claimed",
+    "rationale_plan_shape_reason",
+    "rationale_node_selection_reasoning",
+    "rationale_executor_constraint_reasoning",
+    "rationale_forbidden_surface_review",
+    "rationale_validator_coverage_reasoning",
+    "rationale_return_to_root_path",
+    "rationale_authority_boundary",
+)
+
 COUNTER_KEYS = (
     "orchestrator_provider_call_count",
     "architect_provider_call_count",
@@ -107,6 +161,9 @@ COUNTER_KEYS = (
     "final_output_created_by_non_root_count",
     "context_packet_validated_count",
     "structured_rationale_validated_count",
+    "compact_adapter_used_count",
+    "compact_adapter_expanded_orchestrator_count",
+    "compact_adapter_expanded_architect_count",
     "root_final_authority_preserved_count",
 )
 
@@ -188,6 +245,10 @@ def _structured_rationale_schema(
         "properties": properties,
     }
 
+
+def _compact_rationale_array_schema() -> dict[str, Any]:
+    return {"type": "array", "items": {"type": "object"}}
+
 ORCHESTRATOR_RESPONSE_SCHEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -222,6 +283,37 @@ ORCHESTRATOR_RESPONSE_SCHEMA: dict[str, Any] = {
     },
 }
 
+ORCHESTRATOR_COMPACT_RESPONSE_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": list(ORCHESTRATOR_COMPACT_REQUIRED_FIELDS),
+    "properties": {
+        "proposal_id": {"type": "string"},
+        "suggested_route": {"type": "string"},
+        "selected_vector_ids": {"type": "array", "items": {"type": "string"}},
+        "required_guards": {"type": "array", "items": {"type": "string"}},
+        "reason": {"type": "string"},
+        "confidence": {"type": "number"},
+        "needs_review": {"type": "boolean"},
+        "uncertainty_notes": {"type": "array", "items": {"type": "string"}},
+        "root_review_required": {"type": "boolean"},
+        "truth_claimed": {"type": "boolean"},
+        "authority_claimed": {"type": "boolean"},
+        "action_permission_claimed": {"type": "boolean"},
+        "final_output_claimed": {"type": "boolean"},
+        "connector_command_claimed": {"type": "boolean"},
+        "drs_write_claimed": {"type": "boolean"},
+        "plan_graph_claimed": {"type": "boolean"},
+        "bypass_root_claimed": {"type": "boolean"},
+        "rationale_observed_semantics": _compact_rationale_array_schema(),
+        "rationale_route_selection_reason": _compact_rationale_array_schema(),
+        "rationale_rejected_routes": _compact_rationale_array_schema(),
+        "rationale_required_guards_reasoning": _compact_rationale_array_schema(),
+        "rationale_selected_vector_reasoning": _compact_rationale_array_schema(),
+        "rationale_authority_boundary": _compact_rationale_array_schema(),
+    },
+}
+
 ARCHITECT_RESPONSE_SCHEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -253,6 +345,35 @@ ARCHITECT_RESPONSE_SCHEMA: dict[str, Any] = {
     },
 }
 
+ARCHITECT_COMPACT_RESPONSE_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": list(ARCHITECT_COMPACT_REQUIRED_FIELDS),
+    "properties": {
+        "proposal_id": {"type": "string"},
+        "source_route_id": {"type": "string"},
+        "selected_vector_ids": {"type": "array", "items": {"type": "string"}},
+        "plan_nodes": {"type": "array", "items": {"type": "object"}},
+        "result_proposal_summary": {"type": "string"},
+        "root_recommendation": {"type": "string"},
+        "required_validators": {"type": "array", "items": {"type": "string"}},
+        "truth_claimed": {"type": "boolean"},
+        "authority_claimed": {"type": "boolean"},
+        "action_permission_claimed": {"type": "boolean"},
+        "final_output_claimed": {"type": "boolean"},
+        "connector_command_claimed": {"type": "boolean"},
+        "drs_write_claimed": {"type": "boolean"},
+        "root_bypass_claimed": {"type": "boolean"},
+        "rationale_plan_shape_reason": _compact_rationale_array_schema(),
+        "rationale_node_selection_reasoning": _compact_rationale_array_schema(),
+        "rationale_executor_constraint_reasoning": _compact_rationale_array_schema(),
+        "rationale_forbidden_surface_review": _compact_rationale_array_schema(),
+        "rationale_validator_coverage_reasoning": _compact_rationale_array_schema(),
+        "rationale_return_to_root_path": _compact_rationale_array_schema(),
+        "rationale_authority_boundary": _compact_rationale_array_schema(),
+    },
+}
+
 
 def _empty_counters() -> dict[str, int]:
     return {key: 0 for key in COUNTER_KEYS}
@@ -266,6 +387,19 @@ def _observed_env(env: Mapping[str, str] | None) -> dict[str, str]:
 
 def _live_enabled(env: Mapping[str, str]) -> bool:
     return env.get(ENV_UNKNOWN_REQUEST_LIVE_GEMINI) == "1"
+
+
+def _compact_rationale_enabled(
+    env: Mapping[str, str],
+    *,
+    real_live_provider_path: bool,
+) -> bool:
+    raw = env.get(ENV_UNKNOWN_REQUEST_LIVE_COMPACT_RATIONALE, "").strip().lower()
+    if raw in ("0", "false", "no", "off"):
+        return False
+    if raw in ("1", "true", "yes", "on"):
+        return True
+    return real_live_provider_path and _live_enabled(env)
 
 
 def _provider_model(env: Mapping[str, str]) -> str:
@@ -321,6 +455,21 @@ def _provider_response_shape(
     }
 
 
+def _provider_error_shape(exc: BaseException | None) -> dict[str, Any]:
+    if exc is None:
+        return {}
+    source = exc.__cause__ if exc.__cause__ is not None else exc
+    message = str(source).replace("\n", " ").strip()
+    lower_message = message.lower()
+    if any(marker in lower_message for marker in ("api_key", "token", "secret")):
+        message = "[redacted_provider_error_message]"
+    return {
+        "exception_type": source.__class__.__name__,
+        "exception_module": source.__class__.__module__,
+        "message_prefix": message[:200],
+    }
+
+
 def _mapping_or_empty(value: Any) -> dict[str, Any]:
     if isinstance(value, Mapping):
         return dict(value)
@@ -372,13 +521,26 @@ def _timeout_exception_types() -> tuple[type[BaseException], ...]:
     return tuple(exception_types)
 
 
-def _is_timeout_exception(exc: BaseException) -> bool:
+def _is_timeout_exception(
+    exc: BaseException,
+    *,
+    timeout_seconds: int | None = None,
+    elapsed_seconds: float | None = None,
+) -> bool:
     if isinstance(exc, _timeout_exception_types()):
         return True
     class_name = exc.__class__.__name__.lower()
     module_name = exc.__class__.__module__.lower()
-    return "timeout" in class_name and (
-        "google" in module_name or "genai" in module_name
+    message = str(exc).lower()
+    descriptor = f"{class_name} {module_name} {message}"
+    timeout_markers = ("timeout", "timed out", "deadline", "read timeout")
+    if "timeout" in class_name and ("google" in module_name or "genai" in module_name):
+        return True
+    return (
+        timeout_seconds is not None
+        and elapsed_seconds is not None
+        and elapsed_seconds >= max(1, timeout_seconds) * 0.9
+        and any(marker in descriptor for marker in timeout_markers)
     )
 
 
@@ -394,6 +556,7 @@ def _call_live_gemini_provider(
     api_key = provider_adapter._gemini_api_key(env)
     if not api_key:
         raise provider_adapter.ProviderCaptureError("provider_sdk_or_key_missing")
+    started_at = time.monotonic()
     try:
         from google import genai
     except ImportError as exc:
@@ -439,7 +602,12 @@ def _call_live_gemini_provider(
     except provider_adapter.ProviderCaptureError:
         raise
     except Exception as exc:  # pragma: no cover - real provider path only
-        if _is_timeout_exception(exc):
+        elapsed = time.monotonic() - started_at
+        if _is_timeout_exception(
+            exc,
+            timeout_seconds=timeout_seconds,
+            elapsed_seconds=elapsed,
+        ):
             raise provider_adapter.ProviderTimeoutError("provider_timeout") from exc
         raise provider_adapter.ProviderCaptureError("provider_call_failed") from exc
 
@@ -568,6 +736,72 @@ def _orchestrator_prompt(context: Mapping[str, Any]) -> str:
             "Structured rationale is explanation only, not hidden chain-of-thought.",
             "Structured rationale is not truth, not authority, not action permission, not FinalOutput, not ActionCommitPacket, and not connector command.",
             "Do not create a PlanGraph, FinalOutput, ActionCommitPacket, or connector command.",
+            "Gemini proposes, Root disposes.",
+            "Root remains final authority.",
+            "",
+            "JSON skeleton:",
+            json.dumps(skeleton, indent=2, sort_keys=True),
+            "",
+            "BOUNDED_UNKNOWN_REQUEST_ORCHESTRATOR_INPUT_JSON:",
+            json.dumps(context, indent=2, sort_keys=True),
+        )
+    )
+
+
+def _orchestrator_compact_prompt(context: Mapping[str, Any]) -> str:
+    skeleton = {
+        "proposal_id": "orchestrator-proposal-unknown-request-001",
+        "suggested_route": "unknown_request_root_review",
+        "selected_vector_ids": ["unknown_request_semantic_review"],
+        "required_guards": list(context["required_guards"]),
+        "reason": "bounded route proposal only",
+        "confidence": 0.0,
+        "needs_review": True,
+        "uncertainty_notes": ["unknown request requires Root review"],
+        "root_review_required": True,
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "plan_graph_claimed": False,
+        "bypass_root_claimed": False,
+        "rationale_observed_semantics": [
+            {"summary": "bounded semantic observation only"}
+        ],
+        "rationale_route_selection_reason": [
+            {"route": "unknown_request_root_review", "reason": "requires Root review"}
+        ],
+        "rationale_rejected_routes": [
+            {"route": "direct_real_world_action", "reason": "not allowed"}
+        ],
+        "rationale_required_guards_reasoning": [
+            {"guard": guard, "status": "required"}
+            for guard in tuple(context.get("required_guards") or ())
+        ],
+        "rationale_selected_vector_reasoning": [
+            {
+                "vector": "unknown_request_semantic_review",
+                "reason": "allowed advisory vector",
+            }
+        ],
+        "rationale_authority_boundary": [
+            {
+                "Orchestrator is not Root": True,
+                "Gemini proposes, Root disposes": True,
+                "Root remains final authority": True,
+            }
+        ],
+    }
+    return "\n".join(
+        (
+            TITLE,
+            "Role: bounded Gemini Orchestrator.",
+            "Return compact JSON only matching the skeleton.",
+            "Do not include structured_orchestrator_rationale directly.",
+            "The runtime will build canonical structured rationale envelope locally.",
+            "No action permission, no connector command, no FinalOutput.",
             "Gemini proposes, Root disposes.",
             "Root remains final authority.",
             "",
@@ -717,6 +951,154 @@ def _architect_prompt(context: Mapping[str, Any]) -> str:
             json.dumps(context, indent=2, sort_keys=True),
         )
     )
+
+
+def _architect_compact_prompt(context: Mapping[str, Any]) -> str:
+    skeleton = {
+        "proposal_id": "architect-proposal-unknown-request-001",
+        "source_route_id": context["source_route_id"],
+        "selected_vector_ids": list(context["selected_vector_ids"]),
+        "plan_nodes": [
+            {
+                "node_id": "node:unknown_request_semantic_review",
+                "kind": "semantic_review",
+                "executor_id": "local_unknown_request_review_executor",
+                "expected_output": "ResultProposal",
+            }
+        ],
+        "result_proposal_summary": "Return a non-final ResultProposal for Root review.",
+        "root_recommendation": "needs_more_evidence",
+        "required_validators": list(context["required_validators"]),
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "root_bypass_claimed": False,
+        "rationale_plan_shape_reason": [
+            {"shape": "bounded_unknown_request_plan_graph", "reason": "review only"}
+        ],
+        "rationale_node_selection_reasoning": [
+            {"node": "node:unknown_request_semantic_review", "reason": "bounded review"}
+        ],
+        "rationale_executor_constraint_reasoning": [
+            {
+                "executor": "local_unknown_request_review_executor",
+                "reason": "allowed executor only",
+            }
+        ],
+        "rationale_forbidden_surface_review": [
+            {"surface": "action_or_connector_or_final", "status": "blocked"}
+        ],
+        "rationale_validator_coverage_reasoning": [
+            {"validator": validator, "status": "required"}
+            for validator in tuple(context.get("required_validators") or ())
+        ],
+        "rationale_return_to_root_path": [
+            {"path": "proposal_to_root_boundary", "status": "required"}
+        ],
+        "rationale_authority_boundary": [
+            {
+                "Architect is not Root": True,
+                "PlanGraph is not authority": True,
+                "Root remains final authority": True,
+            }
+        ],
+    }
+    return "\n".join(
+        (
+            TITLE,
+            "Role: bounded Gemini Architect.",
+            "Return compact JSON only matching the skeleton.",
+            "Do not include structured_architect_rationale directly.",
+            "The runtime will build canonical structured rationale envelope locally.",
+            "No action permission, no connector command, no FinalOutput.",
+            "PlanGraph is not authority.",
+            "ResultProposal is not FinalOutput.",
+            "Gemini proposes, Root disposes.",
+            "Root remains final authority.",
+            "",
+            "JSON skeleton:",
+            json.dumps(skeleton, indent=2, sort_keys=True),
+            "",
+            "BOUNDED_UNKNOWN_REQUEST_ARCHITECT_INPUT_JSON:",
+            json.dumps(context, indent=2, sort_keys=True),
+        )
+    )
+
+
+def _expand_orchestrator_compact_proposal(
+    compact: Mapping[str, Any],
+    context: Mapping[str, Any],
+) -> dict[str, Any]:
+    expanded = dict(compact)
+    expanded["structured_orchestrator_rationale"] = (
+        build_orchestrator_structured_rationale(
+            observed_semantics=compact.get("rationale_observed_semantics"),
+            route_selection_reason=compact.get("rationale_route_selection_reason"),
+            rejected_routes=compact.get("rationale_rejected_routes"),
+            required_guards_reasoning=compact.get(
+                "rationale_required_guards_reasoning"
+            ),
+            selected_vector_reasoning=compact.get(
+                "rationale_selected_vector_reasoning"
+            ),
+            uncertainty_notes=compact.get("uncertainty_notes"),
+            authority_boundary=compact.get("rationale_authority_boundary"),
+            root_review_required=True,
+        )
+    )
+    expanded["structured_orchestrator_rationale"]["authority_boundary"] = tuple(
+        expanded["structured_orchestrator_rationale"].get("authority_boundary") or ()
+    ) + (
+        {
+            "ContextPacket is not truth": True,
+            "ContextPacket is not authority": True,
+            "runtime_expanded_compact_rationale": True,
+            "Root remains final authority": True,
+            "allowed_routes": tuple(context.get("allowed_routes") or ()),
+        },
+    )
+    return expanded
+
+
+def _expand_architect_compact_proposal(
+    compact: Mapping[str, Any],
+    architect_context: Mapping[str, Any],
+) -> dict[str, Any]:
+    expanded = dict(compact)
+    expanded["structured_architect_rationale"] = build_architect_structured_rationale(
+        plan_shape_reason=compact.get("rationale_plan_shape_reason"),
+        node_selection_reasoning=compact.get("rationale_node_selection_reasoning"),
+        executor_constraint_reasoning=compact.get(
+            "rationale_executor_constraint_reasoning"
+        ),
+        forbidden_surface_review=compact.get("rationale_forbidden_surface_review"),
+        validator_coverage_reasoning=compact.get(
+            "rationale_validator_coverage_reasoning"
+        ),
+        return_to_root_path=compact.get("rationale_return_to_root_path"),
+        uncertainty_notes=(
+            {
+                "note": "compact Architect proposal remains subject to Root review",
+                "source_route_id": architect_context.get("source_route_id"),
+            },
+        ),
+        authority_boundary=compact.get("rationale_authority_boundary"),
+        root_review_required=True,
+    )
+    expanded["structured_architect_rationale"]["authority_boundary"] = tuple(
+        expanded["structured_architect_rationale"].get("authority_boundary") or ()
+    ) + (
+        {
+            "PlanGraph is not authority": True,
+            "ResultProposal is not FinalOutput": True,
+            "runtime_expanded_compact_rationale": True,
+            "Root remains final authority": True,
+        },
+    )
+    return expanded
 
 
 def _missing_fields(payload: Mapping[str, Any], required: tuple[str, ...]) -> tuple[str, ...]:
@@ -916,6 +1298,8 @@ def _fail_result(
     last_live_provider_role: str | None = None,
     live_provider_role_in_progress: str | None = None,
     provider_timeout_seconds: int | None = None,
+    live_provider_contract_mode: str = "full_structured_rationale",
+    provider_error_shape: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     return {
         "title": TITLE,
@@ -950,6 +1334,8 @@ def _fail_result(
         "last_live_provider_role": last_live_provider_role,
         "live_provider_role_in_progress": live_provider_role_in_progress,
         "provider_timeout_seconds": provider_timeout_seconds,
+        "live_provider_contract_mode": live_provider_contract_mode,
+        "provider_error_shape": dict(provider_error_shape or {}),
         "plan_graph_context": {},
         "result_proposal": {},
         "root_final_output_boundary": {},
@@ -1127,6 +1513,18 @@ def run_live_unknown_request_dual_rich_context(
     live_provider_stage = "not_started"
     last_live_provider_role: str | None = None
     live_provider_role_in_progress: str | None = None
+    provider_error_shape: dict[str, Any] = {}
+    compact_mode = _compact_rationale_enabled(
+        observed_env,
+        real_live_provider_path=(
+            orchestrator_provider is None or architect_provider is None
+        ),
+    )
+    live_provider_contract_mode = (
+        "compact_rationale_adapter" if compact_mode else "full_structured_rationale"
+    )
+    if compact_mode:
+        counters["compact_adapter_used_count"] = 1
 
     def fail(**kwargs: Any) -> dict[str, Any]:
         return _fail_result(
@@ -1134,6 +1532,8 @@ def run_live_unknown_request_dual_rich_context(
             live_provider_stage=live_provider_stage,
             last_live_provider_role=last_live_provider_role,
             live_provider_role_in_progress=live_provider_role_in_progress,
+            live_provider_contract_mode=live_provider_contract_mode,
+            provider_error_shape=provider_error_shape,
             **kwargs,
         )
 
@@ -1155,7 +1555,16 @@ def run_live_unknown_request_dual_rich_context(
         )
 
     orchestrator_context = _orchestrator_provider_context(request)
-    orchestrator_prompt = _orchestrator_prompt(orchestrator_context)
+    orchestrator_prompt = (
+        _orchestrator_compact_prompt(orchestrator_context)
+        if compact_mode
+        else _orchestrator_prompt(orchestrator_context)
+    )
+    orchestrator_response_schema = (
+        ORCHESTRATOR_COMPACT_RESPONSE_SCHEMA
+        if compact_mode
+        else ORCHESTRATOR_RESPONSE_SCHEMA
+    )
     try:
         live_provider_stage = "orchestrator_provider_call"
         last_live_provider_role = "orchestrator"
@@ -1166,12 +1575,13 @@ def run_live_unknown_request_dual_rich_context(
             role="orchestrator",
             env=observed_env,
             provider=orchestrator_provider,
-            response_schema=ORCHESTRATOR_RESPONSE_SCHEMA,
+            response_schema=orchestrator_response_schema,
             counters=counters,
         )
         live_provider_stage = "orchestrator_provider_returned"
         live_provider_role_in_progress = None
     except provider_adapter.ProviderCaptureError as exc:
+        provider_error_shape = _provider_error_shape(exc)
         return fail(
             request_text=request,
             semantic_context=semantic_context,
@@ -1180,6 +1590,7 @@ def run_live_unknown_request_dual_rich_context(
             validation_errors=(_provider_reason(exc),),
         )
     except (TypeError, ValueError, json.JSONDecodeError) as exc:
+        provider_error_shape = _provider_error_shape(exc)
         return fail(
             request_text=request,
             semantic_context=semantic_context,
@@ -1192,6 +1603,25 @@ def run_live_unknown_request_dual_rich_context(
         orchestrator_proposal,
         rationale_key="structured_orchestrator_rationale",
     )
+    if compact_mode:
+        compact_errors = _missing_fields(
+            orchestrator_proposal,
+            ORCHESTRATOR_COMPACT_REQUIRED_FIELDS,
+        )
+        if compact_errors:
+            return fail(
+                request_text=request,
+                semantic_context=semantic_context,
+                orchestrator_provider_context=orchestrator_context,
+                counters=counters,
+                validation_errors=tuple(compact_errors),
+                orchestrator_provider_response_shape=orchestrator_response_shape,
+            )
+        orchestrator_proposal = _expand_orchestrator_compact_proposal(
+            orchestrator_proposal,
+            orchestrator_context,
+        )
+        counters["compact_adapter_expanded_orchestrator_count"] += 1
     orchestrator_errors = (
         *_missing_fields(orchestrator_proposal, ORCHESTRATOR_REQUIRED_FIELDS),
         *_claim_errors(orchestrator_proposal, FORBIDDEN_ORCHESTRATOR_CLAIMS),
@@ -1284,7 +1714,16 @@ def run_live_unknown_request_dual_rich_context(
         )
     counters["context_packet_validated_count"] += 1
 
-    architect_prompt = _architect_prompt(architect_context)
+    architect_prompt = (
+        _architect_compact_prompt(architect_context)
+        if compact_mode
+        else _architect_prompt(architect_context)
+    )
+    architect_response_schema = (
+        ARCHITECT_COMPACT_RESPONSE_SCHEMA
+        if compact_mode
+        else ARCHITECT_RESPONSE_SCHEMA
+    )
     try:
         live_provider_stage = "architect_provider_call"
         last_live_provider_role = "architect"
@@ -1295,12 +1734,13 @@ def run_live_unknown_request_dual_rich_context(
             role="architect",
             env=observed_env,
             provider=architect_provider,
-            response_schema=ARCHITECT_RESPONSE_SCHEMA,
+            response_schema=architect_response_schema,
             counters=counters,
         )
         live_provider_stage = "architect_provider_returned"
         live_provider_role_in_progress = None
     except provider_adapter.ProviderCaptureError as exc:
+        provider_error_shape = _provider_error_shape(exc)
         return fail(
             request_text=request,
             semantic_context=semantic_context,
@@ -1319,6 +1759,7 @@ def run_live_unknown_request_dual_rich_context(
             orchestrator_provider_response_shape=orchestrator_response_shape,
         )
     except (TypeError, ValueError, json.JSONDecodeError) as exc:
+        provider_error_shape = _provider_error_shape(exc)
         return fail(
             request_text=request,
             semantic_context=semantic_context,
@@ -1341,6 +1782,35 @@ def run_live_unknown_request_dual_rich_context(
         architect_proposal,
         rationale_key="structured_architect_rationale",
     )
+    if compact_mode:
+        compact_errors = _missing_fields(
+            architect_proposal,
+            ARCHITECT_COMPACT_REQUIRED_FIELDS,
+        )
+        if compact_errors:
+            return fail(
+                request_text=request,
+                semantic_context=semantic_context,
+                orchestrator_provider_context=orchestrator_context,
+                orchestrator_route_context_packet=route_packet,
+                orchestrator_route_context_packet_validation=route_packet_validation,
+                structured_orchestrator_rationale=orchestrator_rationale,
+                structured_orchestrator_rationale_validation=(
+                    orchestrator_rationale_validation
+                ),
+                architect_provider_context=architect_context,
+                architect_plan_context_packet=architect_packet,
+                architect_plan_context_packet_validation=architect_packet_validation,
+                counters=counters,
+                validation_errors=tuple(compact_errors),
+                orchestrator_provider_response_shape=orchestrator_response_shape,
+                architect_provider_response_shape=architect_response_shape,
+            )
+        architect_proposal = _expand_architect_compact_proposal(
+            architect_proposal,
+            architect_context,
+        )
+        counters["compact_adapter_expanded_architect_count"] += 1
     architect_errors = (
         *_missing_fields(architect_proposal, ARCHITECT_REQUIRED_FIELDS),
         *_claim_errors(architect_proposal, FORBIDDEN_ARCHITECT_CLAIMS),
@@ -1419,6 +1889,8 @@ def run_live_unknown_request_dual_rich_context(
         "last_live_provider_role": last_live_provider_role,
         "live_provider_role_in_progress": live_provider_role_in_progress,
         "provider_timeout_seconds": provider_timeout_seconds,
+        "live_provider_contract_mode": live_provider_contract_mode,
+        "provider_error_shape": provider_error_shape,
         "plan_graph_context": plan_graph,
         "result_proposal": result_proposal,
         "root_final_output_boundary": root_boundary,

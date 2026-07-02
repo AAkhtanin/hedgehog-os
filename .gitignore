@@ -15,3 +15,6 @@ data/drs/**/*.json
 # Local Repomix exports.
 repomix*.xml
 *repomix*.xml
+
+# Local Repomix/audit exports; never commit generated repository dumps.
+_audit_exports/

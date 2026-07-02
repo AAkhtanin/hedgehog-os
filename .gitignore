@@ -8,3 +8,10 @@ config.py
 logs/
 data/logs/
 data/drs/**/*.json
+
+# Local proof/runtime scratch evidence; never commit raw provider outputs/prompts.
+.tmp/
+
+# Local Repomix exports.
+repomix*.xml
+*repomix*.xml

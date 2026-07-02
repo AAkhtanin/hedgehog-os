@@ -205,7 +205,125 @@ Current engineering order:
 44. Enterprise Killer Demo v0.1 / Demo A - complete through docs sync.
 45. Enterprise Document Killer Demo B v0.1 - complete through docs sync.
 46. Schema Contract Alignment v0.1 Phase 1 - complete through patch and audit.
-47. Next: Schema Contract Alignment Phase 2 patch plan after review, not broad fix.
+47. Real Gemini Unknown Request 007 - complete through audit and docs sync.
+    Run `manual-live-unknown-request-real-gemini-007`, audit
+    `auditor_live_unknown_request_real_gemini_007_v01`, run base `fa8877d`,
+    audit commit/head context `d2a0968`, model `gemini-2.5-flash`,
+    `semantic_reasoning_adapter`, `json_mime_only`, final_status PASS.
+48. Next: core extraction preflight for semantic reasoning adapter.
+49. Next: BoundedSemanticEvidencePacket Orchestrator -> Architect.
+50. Next: replay/stability proof, multi-domain live unknown proof, adversarial
+    live proof, DRS v0.2, AVF v0.2, and mock permission/action/connector
+    sandbox before physical-world action domains.
+
+## Current Hedgehog Core Baseline
+
+Current hedgehog core baseline:
+
+- `hedgehog.context_packets` contains bounded ContextPacket contracts.
+- `hedgehog.structured_rationale` contains canonical structured rationale
+  contracts, builders, and validators.
+- `hedgehog.action_commit_packet` contains the Root-created/mock-only
+  ActionCommitPacket contract.
+- `hedgehog.mock_connector_sandbox` contains the fake-adapter/local-only
+  sandbox contract.
+- `hedgehog.fractal_fulfillment` contains the child branch / fulfillment
+  topology contract.
+
+Rich Context / Structured Rationale core checkpoint:
+
+- `hedgehog.context_packets`
+- `tests/test_context_packets_core.py`
+- `hedgehog.structured_rationale`
+- `tests/test_structured_rationale_core.py`
+- ContextPacket is not truth.
+- ContextPacket is not authority.
+- structured rationale is explanation only.
+- Root remains final authority.
+
+Core Extraction Action + Mock + Fractal checkpoint remains closed:
+
+- Audit: `auditor_core_extraction_action_mock_fractal_v01`
+- `c62ab84` Extract ActionCommitPacket core contract
+- `be4f40d` Extract Mock Connector Sandbox core contract
+- `e26c05a` Extract Fractal Fulfillment topology core contract
+- `4723830` Harden Mock Connector Sandbox adapter registry
+- Regression suite: 272 passed, 2 warnings
+- deterministic extracted-core smoke PASS
+- dual Gemini extracted-core smoke PASS
+
+Current integration/live spine:
+
+- `demo/run_full_semantic_e2e_v01.py` remains an integration harness /
+  integration spine.
+- `demo/run_live_unknown_request_dual_rich_context_v01.py` is the current live
+  unknown-request provider spine.
+- These demo runners are not the same as `hedgehog` core modules.
+- The live semantic reasoning adapter currently lives in the live
+  unknown-request spine and is `approved_live_provider_architecture` but
+  `pending_core_extraction`.
+
+## Real Gemini Unknown Request 007 Geometry Checkpoint
+
+Real Gemini Unknown Request 007 is the first successful real live
+unknown-request run through real Gemini Orchestrator and real Gemini Architect.
+It was not injected provider, not monkeypatched provider, and not a prepared
+domain fixture. The raw unknown request reached the live provider spine, Root
+boundary was created, and Root decision was `needs_more_evidence`.
+
+This is a happy path for a safety/uncertainty request: full chain reached
+Root, not physical-action approval.
+
+Approved live-provider architecture:
+
+```text
+Provider proposes semantics.
+Runtime canonicalizes.
+Validators verify.
+Root decides.
+```
+
+The external provider returns semantic reasoning proposals only. Runtime
+canonicalizes those proposals into `structured_orchestrator_rationale`,
+`structured_architect_rationale`, and safe local PlanGraph nodes. The provider
+does not need to emit internal canonical `structured_rationale` objects.
+Validators accept or reject each boundary before Root decides.
+
+007 validated artifacts:
+
+- OrchestratorRouteContextPacket accepted.
+- ArchitectPlanContextPacket accepted.
+- structured_orchestrator_rationale accepted.
+- structured_architect_rationale accepted.
+- PlanGraph is not authority.
+- ResultProposal is not FinalOutput.
+- Root remains final authority.
+- validation_errors: []
+- action_permission_created_count: 0
+- action_commit_packet_created_count: 0
+- connector_called_count: 0
+- real_world_effects_count: 0
+
+Provider semantic summary: Orchestrator observed sealed historical artifact
+movement after hours; missing approval and unknown climate status remained
+uncertainty; suggested route was `unknown_request_root_review`; selected vector
+was `unknown_request_semantic_review`; direct external action was rejected.
+Architect recommended `needs_more_evidence` and described local advisory
+review plus a Root review gate. Runtime built safe local nodes
+`node:unknown_request_semantic_review` and `node:root_review_gate`.
+
+Authority boundaries remain unchanged: provider output is not truth, provider
+output is not authority, ContextPacket is not truth, ContextPacket is not
+authority, structured rationale is explanation only, DRS is not truth,
+AVF/route/vector selection is not authority, Gemini does not create
+ActionCommitPacket, Gemini does not create FinalOutput, and Root remains final
+authority.
+
+Prior real-live attempts 001-006 are superseded diagnostics. They remain proof
+history, but they are not the current architecture. Lessons: the full
+provider-canonical structured rationale contract was too heavy, the compact
+object-array rationale contract was still weak or timeout-prone, and
+`semantic_reasoning_adapter` + `json_mime_only` resolved the live happy path.
 
 Do not implement Marennya or UP before the applied Root-controlled canonical
 path passes practical semantic demos cleanly. The current priority is proving

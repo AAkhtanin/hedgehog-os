@@ -13,6 +13,40 @@ Core modules:
 - hedgehog.mock_connector_sandbox
 - hedgehog.fractal_fulfillment
 
+Current hedgehog core baseline:
+
+- `hedgehog.context_packets` contains bounded ContextPacket contracts.
+- `hedgehog.structured_rationale` contains canonical structured rationale
+  contracts, builders, and validators.
+- `hedgehog.action_commit_packet` contains the Root-created/mock-only
+  ActionCommitPacket contract.
+- `hedgehog.mock_connector_sandbox` contains the fake-adapter/local-only
+  sandbox contract.
+- `hedgehog.fractal_fulfillment` contains the child branch / fulfillment
+  topology contract.
+
+Rich Context / Structured Rationale core checkpoint:
+
+- `hedgehog.context_packets`
+- `tests/test_context_packets_core.py`
+- `hedgehog.structured_rationale`
+- `tests/test_structured_rationale_core.py`
+- ContextPacket is not truth.
+- ContextPacket is not authority.
+- structured rationale is explanation only.
+- Root remains final authority.
+
+Current integration/live spine:
+
+- `demo/run_full_semantic_e2e_v01.py` remains an integration harness /
+  integration spine.
+- `demo/run_live_unknown_request_dual_rich_context_v01.py` is the current live
+  unknown-request provider spine.
+- These demo runners are not the same as `hedgehog` core modules.
+- The live semantic reasoning adapter currently lives in the live
+  unknown-request spine and is `approved_live_provider_architecture` but
+  `pending_core_extraction`.
+
 ## 1. What moved to core
 
 The core extraction moved stable contracts out of the Full Semantic E2E integration runner and into reusable `hedgehog/*` modules.
@@ -195,14 +229,19 @@ Recorded smoke facts:
 - Gemini/PlanGraph context remains intentionally bounded/simple
 - no real connector, payment, shipment, or API call occurs
 - no NeedleFactory, Marennya, or UP activation is part of this checkpoint
-- core contracts are extracted, but richer context packets are not yet implemented
+- later core contracts for bounded ContextPackets and canonical structured
+  rationale are implemented in `hedgehog.context_packets` and
+  `hedgehog.structured_rationale`; this d433fa0 document remains the
+  Action/Mock/Fractal core-contract checkpoint
 - not NeedleFactory / Marennya / UP
 
 ## 14. What comes next
 
-Next engineering direction should be one of:
+Historical next engineering direction from this checkpoint:
 
 - Rich Context / Bounded Context Packets preflight
-- Public WOW wrapper preflight
 
-This should still avoid NeedleFactory, Marennya, UP, real connectors, and production claims.
+Current next direction after Real Gemini Unknown Request 007 is core extraction
+preflight for `semantic_reasoning_adapter`, followed by
+BoundedSemanticEvidencePacket Orchestrator -> Architect. This should still
+avoid NeedleFactory, Marennya, UP, real connectors, and production claims.

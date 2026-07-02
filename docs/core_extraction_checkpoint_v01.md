@@ -22,6 +22,45 @@ Checkpoint summary:
 - deterministic extracted-core smoke PASS
 - dual Gemini extracted-core smoke PASS
 
+## Current hedgehog core baseline
+
+This checkpoint remains valid for Action + Mock + Fractal extraction. It is not
+the full current core baseline by itself.
+
+Current hedgehog core baseline:
+
+- `hedgehog.context_packets` contains bounded ContextPacket contracts.
+- `hedgehog.structured_rationale` contains canonical structured rationale
+  contracts, builders, and validators.
+- `hedgehog.action_commit_packet` contains the Root-created/mock-only
+  ActionCommitPacket contract.
+- `hedgehog.mock_connector_sandbox` contains the fake-adapter/local-only
+  sandbox contract.
+- `hedgehog.fractal_fulfillment` contains the child branch / fulfillment
+  topology contract.
+
+Rich Context / Structured Rationale core checkpoint:
+
+- `hedgehog.context_packets`
+- `tests/test_context_packets_core.py`
+- `hedgehog.structured_rationale`
+- `tests/test_structured_rationale_core.py`
+- ContextPacket is not truth.
+- ContextPacket is not authority.
+- structured rationale is explanation only.
+- Root remains final authority.
+
+Current integration/live spine:
+
+- `demo/run_full_semantic_e2e_v01.py` remains an integration harness /
+  integration spine.
+- `demo/run_live_unknown_request_dual_rich_context_v01.py` is the current live
+  unknown-request provider spine.
+- These demo runners are not the same as `hedgehog` core modules.
+- The live semantic reasoning adapter currently lives in the live
+  unknown-request spine and is `approved_live_provider_architecture` but
+  `pending_core_extraction`.
+
 ## What was validated
 
 The checkpoint validates that the Full Semantic E2E runner can delegate stable contracts to:
@@ -115,17 +154,21 @@ Root remains final authority.
 
 ## Next recommended engineering direction
 
-Recommended next direction:
+Historical next direction from this checkpoint:
 
 - Rich Context / Bounded Context Packets preflight
-- or Public WOW wrapper preflight
 
-Explicitly not next:
+That context-packet and structured-rationale core work now exists in
+`hedgehog.context_packets` and `hedgehog.structured_rationale`. Current next
+direction after Real Gemini Unknown Request 007 is core extraction preflight
+for `semantic_reasoning_adapter`, then BoundedSemanticEvidencePacket
+Orchestrator -> Architect.
+
+Explicitly still not next:
 
 - NeedleFactory
 - Marennya / UP
 - production connector integration
 - real payment or shipment behavior
-- public WOW ready claim
 
 The context layer should pass bounded context packets through validated core contracts, not raw dumps from the integration runner.

@@ -11,6 +11,45 @@ The story in one line:
 
 Gemini proposes, Root disposes. Root remains final authority.
 
+## Current hedgehog core baseline
+
+This walkthrough remains a valid closed Action + Mock + Fractal core extraction
+walkthrough. It is not a replacement for the full current core baseline.
+
+Current hedgehog core baseline:
+
+- `hedgehog.context_packets` contains bounded ContextPacket contracts.
+- `hedgehog.structured_rationale` contains canonical structured rationale
+  contracts, builders, and validators.
+- `hedgehog.action_commit_packet` contains the Root-created/mock-only
+  ActionCommitPacket contract.
+- `hedgehog.mock_connector_sandbox` contains the fake-adapter/local-only
+  sandbox contract.
+- `hedgehog.fractal_fulfillment` contains the child branch / fulfillment
+  topology contract.
+
+Rich Context / Structured Rationale core checkpoint:
+
+- `hedgehog.context_packets`
+- `tests/test_context_packets_core.py`
+- `hedgehog.structured_rationale`
+- `tests/test_structured_rationale_core.py`
+- ContextPacket is not truth.
+- ContextPacket is not authority.
+- structured rationale is explanation only.
+- Root remains final authority.
+
+Current integration/live spine:
+
+- `demo/run_full_semantic_e2e_v01.py` remains an integration harness /
+  integration spine.
+- `demo/run_live_unknown_request_dual_rich_context_v01.py` is the current live
+  unknown-request provider spine.
+- These demo runners are not the same as `hedgehog` core modules.
+- The live semantic reasoning adapter currently lives in the live
+  unknown-request spine and is `approved_live_provider_architecture` but
+  `pending_core_extraction`.
+
 ## Card 1. Business request
 
 A supplier-payment and shipment review arrives with mixed evidence:
@@ -172,9 +211,10 @@ The checkpoint smoke evidence records:
 - not Marennya / UP
 - not a public WOW ready claim
 
-## Card 13. Why this is the current WOW checkpoint
+## Card 13. Why this remains a closed core-extraction walkthrough
 
-This is the current WOW checkpoint because the architecture now shows the full controlled chain with extracted core contracts:
+This remains a valid closed walkthrough because the architecture shows the full
+controlled chain with extracted Action/Mock/Fractal core contracts:
 
 - two real Gemini roles can participate as bounded proposal roles
 - Orchestrator proposes route
@@ -194,12 +234,22 @@ The important change is that the proven contracts no longer live only inside the
 - hedgehog.mock_connector_sandbox
 - hedgehog.fractal_fulfillment
 
+The current live-provider checkpoint is Real Gemini Unknown Request 007:
+`manual-live-unknown-request-real-gemini-007`,
+`auditor_live_unknown_request_real_gemini_007_v01`,
+`semantic_reasoning_adapter`, `json_mime_only`, Root decision
+`needs_more_evidence`, and `real_world_effects_count: 0`.
+
 ## Card 14. What comes next
 
-Next recommended direction:
+Historical next recommended direction:
 
 - Rich Context / Bounded Context Packets preflight
-- or Public WOW wrapper preflight
+
+That core work now exists in `hedgehog.context_packets` and
+`hedgehog.structured_rationale`. Current next direction is core extraction
+preflight for `semantic_reasoning_adapter`, then BoundedSemanticEvidencePacket
+Orchestrator -> Architect.
 
 The next layer should keep the same authority topology:
 

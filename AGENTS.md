@@ -57,27 +57,122 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Core Extraction Action + Mock + Fractal CLOSED.
+Current checkpoint: Real Gemini Unknown Request 007 PASS.
 
-Core modules are the source for stable contracts:
+Official checkpoint facts:
 
-- `hedgehog.action_commit_packet`
-- `hedgehog.mock_connector_sandbox`
-- `hedgehog.fractal_fulfillment`
+- run_id: `manual-live-unknown-request-real-gemini-007`
+- audit_id: `auditor_live_unknown_request_real_gemini_007_v01`
+- run base_head: `fa8877d`
+- audit commit/head context: `d2a0968`
+- final_status: PASS
+- model: `gemini-2.5-flash`
+- contract_mode: `semantic_reasoning_adapter`
+- schema_mode: `json_mime_only`
 
-The Full Semantic E2E runner remains integration harness / integration spine.
-Root remains final authority. Gemini proposes, Root disposes. Child branch is
-not Root. ExecutionEvidence is not FinalOutput. mock receipt is not real
-payment.
+Current hedgehog core baseline:
 
-Current next approved engineering layer:
+- `hedgehog.context_packets` contains bounded ContextPacket contracts.
+- `hedgehog.structured_rationale` contains canonical structured rationale
+  contracts, builders, and validators.
+- `hedgehog.action_commit_packet` contains the Root-created/mock-only
+  ActionCommitPacket contract.
+- `hedgehog.mock_connector_sandbox` contains the fake-adapter/local-only
+  sandbox contract.
+- `hedgehog.fractal_fulfillment` contains the child branch / fulfillment
+  topology contract.
 
-`Rich Context / Bounded Context Packets preflight`
+Rich Context / Structured Rationale core checkpoint:
+
+- `hedgehog.context_packets`
+- `tests/test_context_packets_core.py`
+- `hedgehog.structured_rationale`
+- `tests/test_structured_rationale_core.py`
+- ContextPacket is not truth.
+- ContextPacket is not authority.
+- structured rationale is explanation only.
+- Root remains final authority.
+
+Core Extraction Action + Mock + Fractal checkpoint remains closed:
+
+- Audit: `auditor_core_extraction_action_mock_fractal_v01`
+- `c62ab84` Extract ActionCommitPacket core contract
+- `be4f40d` Extract Mock Connector Sandbox core contract
+- `e26c05a` Extract Fractal Fulfillment topology core contract
+- `4723830` Harden Mock Connector Sandbox adapter registry
+- Regression suite: 272 passed, 2 warnings
+- deterministic extracted-core smoke PASS
+- dual Gemini extracted-core smoke PASS
+
+Current integration/live spine:
+
+- `demo/run_full_semantic_e2e_v01.py` remains an integration harness /
+  integration spine.
+- `demo/run_live_unknown_request_dual_rich_context_v01.py` is the current live
+  unknown-request provider spine.
+- These demo runners are not the same as `hedgehog` core modules.
+- The live semantic reasoning adapter currently lives in the live
+  unknown-request spine and is `approved_live_provider_architecture` but
+  `pending_core_extraction`.
+
+This is the first successful real live unknown-request run through real Gemini
+Orchestrator and real Gemini Architect. It was not injected provider, not
+monkeypatched provider, and not a prepared domain fixture. Raw unknown request
+reached the real live provider spine, Root boundary was created, and Root
+decision was `needs_more_evidence`.
+
+Approved live-provider architecture:
+
+```text
+Provider proposes semantics.
+Runtime canonicalizes.
+Validators verify.
+Root decides.
+```
+
+`semantic_reasoning_adapter` is now the approved live-provider architecture.
+External provider output is an untrusted semantic reasoning proposal; the
+provider does not emit internal canonical `structured_rationale` objects.
+Runtime builds `structured_orchestrator_rationale`,
+`structured_architect_rationale`, and safe local PlanGraph nodes. Validators
+accept or reject. Root remains final authority.
+
+Validated 007 artifacts: OrchestratorRouteContextPacket accepted,
+ArchitectPlanContextPacket accepted, structured_orchestrator_rationale
+accepted, structured_architect_rationale accepted, PlanGraph is not authority,
+ResultProposal is not FinalOutput, validation_errors: [], and
+`real_world_effects_count: 0`.
+
+Authority boundaries: provider output is not truth, provider output is not
+authority, ContextPacket is not truth, ContextPacket is not authority,
+structured rationale is explanation only, DRS is not truth, AVF/route/vector
+selection is not authority, Gemini does not create ActionCommitPacket, Gemini
+does not create FinalOutput, and Root remains final authority.
+
+Prior real-live attempts 001-006 are superseded diagnostics, not the current
+architecture. Do not delete proof history and do not claim failed attempts
+never happened. The full provider-canonical structured rationale contract was
+too heavy; the compact object-array rationale contract was still weak or
+timeout-prone; `semantic_reasoning_adapter` + `json_mime_only` resolved the
+live happy path.
+
+Current next approved engineering layers:
+
+- Core extraction preflight for semantic reasoning adapter.
+- BoundedSemanticEvidencePacket Orchestrator -> Architect.
+- Replay/stability proof for a 007-style run.
+- Multi-domain live unknown proof.
+- Adversarial live proof.
+- DRS v0.2 expansion.
+- AVF v0.2 expansion.
+- Mock permission/action/connector sandbox before any physical-world action domain.
+- Later: applied robot/hotel domain with permission gate and mock connector only.
 
 Future agents must not jump directly to NeedleFactory, Marennya, UP,
 production connectors, real payment/shipment, unbounded Gemini context payloads,
-unbounded PlanGraph context payloads, or a public WOW ready claim. Rich context
-must be introduced as bounded context packets, not raw dumps.
+unbounded PlanGraph context payloads, or public launch claims. This checkpoint
+is not production autonomy: no real external actions, no connector calls, and
+no production persistence.
 
 Long-lived DRS TTL Aging Stress v0.1 is complete through proof, audit, docs
 sync, human walkthrough, and human walkthrough audit. The human walkthrough

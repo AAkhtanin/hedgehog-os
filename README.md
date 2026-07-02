@@ -35,41 +35,154 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-Core Extraction: ActionCommitPacket + MockConnectorSandbox + FractalFulfillmentTopology — CLOSED.
+Real Gemini Unknown Request 007 — PASS.
 
 Checkpoint source:
 
-- Audit: `docs/audit_reports/auditor_core_extraction_action_mock_fractal_v01.log`
-- Core contracts: `hedgehog.action_commit_packet`, `hedgehog.mock_connector_sandbox`, `hedgehog.fractal_fulfillment`
-- Closed commits: `c62ab84`, `be4f40d`, `e26c05a`, `4723830`
-- Default CLI: `FINAL STATUS: PASS`
+- Run id: `manual-live-unknown-request-real-gemini-007`
+- Audit id: `auditor_live_unknown_request_real_gemini_007_v01`
+- Run base head: `fa8877d`
+- Audit commit/head context: `d2a0968`
+- Audit: `docs/audit_reports/auditor_live_unknown_request_real_gemini_007_v01.log`
+- Model: `gemini-2.5-flash`
+- Contract mode: `semantic_reasoning_adapter`
+- Schema mode: `json_mime_only`
+- Final status: PASS
+
+Current hedgehog core baseline:
+
+- `hedgehog.context_packets` contains bounded ContextPacket contracts.
+- `hedgehog.structured_rationale` contains canonical structured rationale
+  contracts, builders, and validators.
+- `hedgehog.action_commit_packet` contains the Root-created/mock-only
+  ActionCommitPacket contract.
+- `hedgehog.mock_connector_sandbox` contains the fake-adapter/local-only
+  sandbox contract.
+- `hedgehog.fractal_fulfillment` contains the child branch / fulfillment
+  topology contract.
+
+Rich Context / Structured Rationale core checkpoint:
+
+- `hedgehog.context_packets`
+- `tests/test_context_packets_core.py`
+- `hedgehog.structured_rationale`
+- `tests/test_structured_rationale_core.py`
+- ContextPacket is not truth.
+- ContextPacket is not authority.
+- structured rationale is explanation only.
+- Root remains final authority.
+
+Core Extraction Action + Mock + Fractal checkpoint remains closed:
+
+- Audit: `auditor_core_extraction_action_mock_fractal_v01`
+- `c62ab84` Extract ActionCommitPacket core contract
+- `be4f40d` Extract Mock Connector Sandbox core contract
+- `e26c05a` Extract Fractal Fulfillment topology core contract
+- `4723830` Harden Mock Connector Sandbox adapter registry
 - Regression suite: 272 passed, 2 warnings
 - deterministic extracted-core smoke PASS
 - dual Gemini extracted-core smoke PASS
 
-Stable contracts moved from `demo/run_full_semantic_e2e_v01.py` into
-`hedgehog/*` core modules. The Full Semantic E2E runner remains integration
-spine / harness: it wires the supplier-payment route, gates, stage map,
-counters, DRS writeback, and report rendering around the extracted contracts.
+Current integration/live spine:
 
-Safety ledger at this checkpoint:
+- `demo/run_full_semantic_e2e_v01.py` remains an integration harness /
+  integration spine.
+- `demo/run_live_unknown_request_dual_rich_context_v01.py` is the current live
+  unknown-request provider spine.
+- These demo runners are not the same as `hedgehog` core modules.
+- The live semantic reasoning adapter currently lives in the live
+  unknown-request spine and is `approved_live_provider_architecture` but
+  `pending_core_extraction`.
 
+This is the first successful real live unknown-request run through real Gemini
+Orchestrator and real Gemini Architect. It was not an injected provider path,
+not a monkeypatched provider path, and not a prepared domain fixture. A raw
+unknown request reached the real live provider spine, the Root boundary was
+created, and the Root decision was `needs_more_evidence`.
+
+This is a happy path for a safety/uncertainty request: the full chain reached
+Root, not physical-action approval.
+
+Approved live-provider architecture:
+
+```text
+Provider proposes semantics.
+Runtime canonicalizes.
+Validators verify.
+Root decides.
+```
+
+`semantic_reasoning_adapter` means the external provider returns an untrusted
+semantic reasoning proposal. The external provider does not need to emit
+internal canonical `structured_rationale` objects. Runtime builds
+`structured_orchestrator_rationale`, `structured_architect_rationale`, and safe
+local PlanGraph nodes, then validators accept or reject before Root decides.
+
+007 validated artifacts and counters:
+
+- OrchestratorRouteContextPacket accepted.
+- ArchitectPlanContextPacket accepted.
+- structured_orchestrator_rationale accepted.
+- structured_architect_rationale accepted.
+- PlanGraph is not authority.
+- ResultProposal is not FinalOutput.
 - Root remains final authority.
-- Gemini proposes, Root disposes.
-- ActionCommitPacket is created by `root_mock_approval_gate`.
-- MockConnectorSandbox is the only fake-adapter execution layer.
-- FractalFulfillmentTopology preserves child O/A/I topology.
-- Child branch is not Root.
-- ExecutionEvidence is not FinalOutput.
-- mock receipt is not real payment.
-- connector_called_count remains zero.
-- payment_executed_count remains 0.
-- shipment_released_count remains 0.
-- real_bank_api_called_count remains 0.
+- validation_errors: []
+- action_permission_created_count: 0
+- action_commit_packet_created_count: 0
+- connector_called_count: 0
+- real_world_effects_count: 0
 
-This checkpoint is not production and not public WOW ready yet. Documentation /
-public wrapper work remains a presentation layer, not runtime. NEXT: Rich
-Context / Bounded Context Packets preflight.
+Provider semantic summary:
+
+- Orchestrator observed sealed historical artifact movement after hours.
+- Missing approval and unknown climate status remained uncertainty.
+- Suggested route: `unknown_request_root_review`.
+- Selected vector: `unknown_request_semantic_review`.
+- Direct external action was rejected.
+- Architect recommended `needs_more_evidence`.
+- Architect described local advisory review and a Root review gate.
+- Runtime built safe local nodes:
+  - `node:unknown_request_semantic_review`
+  - `node:root_review_gate`
+
+Authority ledger at this checkpoint:
+
+- Provider output is not truth.
+- Provider output is not authority.
+- ContextPacket is not truth.
+- ContextPacket is not authority.
+- structured rationale is explanation only.
+- PlanGraph is not authority.
+- ResultProposal is not FinalOutput.
+- DRS is not truth.
+- AVF/route/vector selection is not authority.
+- Gemini does not create ActionCommitPacket.
+- Gemini does not create FinalOutput.
+- Root remains final authority.
+
+Prior real-live attempts 001-006 are superseded diagnostics. They remain proof
+history, but they are not the current architecture. The full
+provider-canonical structured rationale contract was too heavy, and the compact
+object-array rationale contract was still weak or timeout-prone.
+`semantic_reasoning_adapter` + `json_mime_only` resolved the live happy path.
+
+Current status: the project now has a real live unknown-request semantic
+decision spine. This is still not production autonomy: no real external
+actions, no connector calls, no production persistence, and no public launch
+claim.
+
+Next roadmap:
+
+- Core extraction preflight for semantic reasoning adapter.
+- BoundedSemanticEvidencePacket Orchestrator -> Architect.
+- Replay/stability proof for a 007-style run.
+- Multi-domain live unknown proof.
+- Adversarial live proof.
+- DRS v0.2 expansion.
+- AVF v0.2 expansion.
+- Mock permission/action/connector sandbox before any physical-world action domain.
+- Later: applied robot/hotel domain with permission gate and mock connector only.
 
 ---
 
@@ -2939,6 +3052,8 @@ Completed recent layers:
 - EvidenceItem.kind Alignment v0.1.
 - NeedleRuntime Audit Evidence Shape v0.1.
 - Strategic Expansion Map.
+- Real Gemini Unknown Request 007 — first real live unknown-request semantic
+  decision spine PASS.
 
 Next engineering focus:
 
@@ -2986,7 +3101,17 @@ Next engineering focus:
   MockConnectorSandbox, and FractalFulfillmentTopology contracts extracted to
   `hedgehog.action_commit_packet`, `hedgehog.mock_connector_sandbox`, and
   `hedgehog.fractal_fulfillment`.
-- NEXT: Rich Context / Bounded Context Packets preflight.
+- CLOSED: Real Gemini Unknown Request 007, run
+  `manual-live-unknown-request-real-gemini-007`, audit
+  `auditor_live_unknown_request_real_gemini_007_v01`, model
+  `gemini-2.5-flash`, `semantic_reasoning_adapter`, `json_mime_only`,
+  Root decision `needs_more_evidence`, with no action permission, no
+  connector call, and `real_world_effects_count: 0`.
+- NEXT: Core extraction preflight for semantic reasoning adapter.
+- NEXT: BoundedSemanticEvidencePacket Orchestrator -> Architect.
+- NEXT: Replay/stability proof for a 007-style run.
+- NEXT: Multi-domain live unknown proof and adversarial live proof.
+- NEXT: DRS v0.2 expansion and AVF v0.2 expansion.
 - Supplier Payment remains the integration spine and business axis for later live evidence integration.
 - Documentation / public wrapper work remains a presentation layer, not runtime.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.

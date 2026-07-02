@@ -147,12 +147,7 @@ def validate_semantic_reasoning_fields(
             continue
 
         if isinstance(value, Mapping):
-            reason = (
-                SEMANTIC_REASONING_EMPTY_FIELD_REASON
-                if not value
-                else SEMANTIC_REASONING_INVALID_TYPE_REASON
-            )
-            errors.append(f"{reason}:{field}")
+            errors.append(f"{SEMANTIC_REASONING_INVALID_TYPE_REASON}:{field}")
             continue
 
         if not isinstance(value, (list, tuple)):
@@ -242,45 +237,67 @@ def build_safe_local_plan_nodes_from_semantic_reasoning(
     *,
     review_node_id: str | None = None,
     root_gate_node_id: str = _DEFAULT_ROOT_GATE_NODE_ID,
+    review_node_kind: str = "semantic_reasoning_review",
+    executor_id: str | None = None,
+    include_source_route_on_root_gate: bool = True,
 ) -> tuple[dict[str, Any], ...]:
     resolved_review_node_id = (
         review_node_id
         or _first_string(architect_context.get("semantic_review_node_id"))
         or _DEFAULT_REVIEW_NODE_ID
     )
-    executor_id = (
-        _first_string(architect_context.get("allowed_executor_ids"))
+    resolved_executor_id = (
+        executor_id
+        or _first_string(architect_context.get("allowed_executor_ids"))
         or _DEFAULT_EXECUTOR_ID
     )
     source_route_id = architect_context.get("source_route_id")
 
+    review_node = {
+        "node_id": resolved_review_node_id,
+        "kind": review_node_kind,
+        "executor_id": resolved_executor_id,
+        "expected_output": "ResultProposal",
+        "advisory_only": True,
+        "source_route_id": source_route_id,
+    }
+    root_gate_node = {
+        "node_id": root_gate_node_id,
+        "kind": "root_review_gate",
+        "executor_id": resolved_executor_id,
+        "expected_output": "ResultProposal",
+        "depends_on": (resolved_review_node_id,),
+        "advisory_only": True,
+        "Root remains final authority": True,
+    }
+    if include_source_route_on_root_gate:
+        root_gate_node["source_route_id"] = source_route_id
+
     return (
-        {
-            "node_id": resolved_review_node_id,
-            "kind": "semantic_reasoning_review",
-            "executor_id": executor_id,
-            "expected_output": "ResultProposal",
-            "advisory_only": True,
-            "source_route_id": source_route_id,
-        },
-        {
-            "node_id": root_gate_node_id,
-            "kind": "root_review_gate",
-            "executor_id": executor_id,
-            "expected_output": "ResultProposal",
-            "depends_on": (resolved_review_node_id,),
-            "advisory_only": True,
-            "source_route_id": source_route_id,
-            "Root remains final authority": True,
-        },
+        review_node,
+        root_gate_node,
     )
 
 
 def expand_orchestrator_semantic_reasoning_proposal(
     proposal: Mapping[str, Any],
     context: Mapping[str, Any],
+    *,
+    include_gemini_proposes_boundary: bool = True,
+    include_context_available_boundary: bool = True,
 ) -> dict[str, Any]:
     expanded = dict(proposal)
+    runtime_authority_boundary: dict[str, Any] = {
+        "ContextPacket is not truth": True,
+        "ContextPacket is not authority": True,
+        "structured rationale is explanation only": True,
+        "Orchestrator is not Root": True,
+        "Root remains final authority": True,
+    }
+    if include_gemini_proposes_boundary:
+        runtime_authority_boundary["Gemini proposes, Root disposes"] = True
+    if include_context_available_boundary:
+        runtime_authority_boundary["context_available"] = bool(context)
     expanded["structured_orchestrator_rationale"] = (
         build_orchestrator_structured_rationale(
             observed_semantics=semantic_reasoning_entries(
@@ -317,17 +334,7 @@ def expand_orchestrator_semantic_reasoning_proposal(
                 proposal,
                 "authority_boundary_reasoning",
             )
-            + (
-                {
-                    "ContextPacket is not truth": True,
-                    "ContextPacket is not authority": True,
-                    "structured rationale is explanation only": True,
-                    "Orchestrator is not Root": True,
-                    "Gemini proposes, Root disposes": True,
-                    "Root remains final authority": True,
-                    "context_available": bool(context),
-                },
-            ),
+            + (runtime_authority_boundary,),
             root_review_required=True,
         )
     )
@@ -340,6 +347,10 @@ def expand_architect_semantic_reasoning_proposal(
     *,
     review_node_id: str | None = None,
     root_gate_node_id: str = _DEFAULT_ROOT_GATE_NODE_ID,
+    review_node_kind: str = "semantic_reasoning_review",
+    executor_id: str | None = None,
+    include_source_route_on_root_gate: bool = True,
+    include_gemini_proposes_boundary: bool = True,
 ) -> dict[str, Any]:
     if "plan_nodes" in proposal:
         raise ValueError(ARCHITECT_PROVIDER_PLAN_NODES_FORBIDDEN_REASON)
@@ -349,7 +360,21 @@ def expand_architect_semantic_reasoning_proposal(
         architect_context,
         review_node_id=review_node_id,
         root_gate_node_id=root_gate_node_id,
+        review_node_kind=review_node_kind,
+        executor_id=executor_id,
+        include_source_route_on_root_gate=include_source_route_on_root_gate,
     )
+    runtime_authority_boundary: dict[str, Any] = {
+        "ContextPacket is not truth": True,
+        "ContextPacket is not authority": True,
+        "structured rationale is explanation only": True,
+        "Architect is not Root": True,
+        "PlanGraph is not authority": True,
+        "ResultProposal is not FinalOutput": True,
+        "Root remains final authority": True,
+    }
+    if include_gemini_proposes_boundary:
+        runtime_authority_boundary["Gemini proposes, Root disposes"] = True
     expanded["structured_architect_rationale"] = build_architect_structured_rationale(
         plan_shape_reason=semantic_reasoning_entries(
             proposal,
@@ -383,18 +408,7 @@ def expand_architect_semantic_reasoning_proposal(
             proposal,
             "authority_boundary_reasoning",
         )
-        + (
-            {
-                "ContextPacket is not truth": True,
-                "ContextPacket is not authority": True,
-                "structured rationale is explanation only": True,
-                "Architect is not Root": True,
-                "PlanGraph is not authority": True,
-                "ResultProposal is not FinalOutput": True,
-                "Gemini proposes, Root disposes": True,
-                "Root remains final authority": True,
-            },
-        ),
+        + (runtime_authority_boundary,),
         root_review_required=True,
     )
     return expanded

@@ -4,7 +4,10 @@ import json
 import sys
 import types as py_types
 
+import pytest
+
 import demo.run_live_unknown_request_dual_rich_context_v01 as runner
+from hedgehog import semantic_reasoning_adapter as core_semantic_reasoning_adapter
 from hedgehog.structured_rationale import ARCHITECT_STRUCTURED_RATIONALE_REQUIRED_FIELDS
 from hedgehog.structured_rationale import ORCHESTRATOR_STRUCTURED_RATIONALE_REQUIRED_FIELDS
 from hedgehog.structured_rationale import build_architect_structured_rationale
@@ -28,6 +31,16 @@ MUSEUM_REQUEST = (
 def _context_from_prompt(prompt: str, marker: str) -> dict:
     raw = prompt.split(marker, 1)[1].strip()
     return json.loads(raw)
+
+
+def _flatten_value(value) -> str:
+    if isinstance(value, dict):
+        return " ".join(
+            f"{key} {_flatten_value(item)}" for key, item in value.items()
+        )
+    if isinstance(value, (list, tuple)):
+        return " ".join(_flatten_value(item) for item in value)
+    return str(value)
 
 
 def _valid_orchestrator_rationale():
@@ -587,6 +600,120 @@ def test_semantic_reasoning_architect_prompt_has_meaningful_reasoning_fields() -
     assert "Do not include plan_nodes directly" in prompt
     assert "structured_architect_rationale MUST" not in prompt
     assert '"plan_nodes"' not in prompt
+
+
+def test_runner_semantic_constants_are_core_constants() -> None:
+    assert runner.ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS == (
+        core_semantic_reasoning_adapter.ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS
+    )
+    assert runner.ARCHITECT_SEMANTIC_REASONING_REQUIRED_FIELDS == (
+        core_semantic_reasoning_adapter.ARCHITECT_SEMANTIC_REASONING_REQUIRED_FIELDS
+    )
+    assert runner.ORCHESTRATOR_SEMANTIC_REASONING_FIELDS == (
+        core_semantic_reasoning_adapter.ORCHESTRATOR_SEMANTIC_REASONING_FIELDS
+    )
+    assert runner.ARCHITECT_SEMANTIC_REASONING_FIELDS == (
+        core_semantic_reasoning_adapter.ARCHITECT_SEMANTIC_REASONING_FIELDS
+    )
+
+
+def test_runner_semantic_helpers_delegate_to_core() -> None:
+    reasoning_payload = {"reasoning": (" first ", "second")}
+    invalid_payload = {"reasoning": (" ",)}
+
+    assert runner._semantic_reasoning_string_list((" first ", "second")) == (
+        core_semantic_reasoning_adapter.semantic_reasoning_string_list(
+            (" first ", "second")
+        )
+    )
+    assert runner._validate_semantic_reasoning_fields(
+        invalid_payload,
+        ("reasoning",),
+    ) == core_semantic_reasoning_adapter.validate_semantic_reasoning_fields(
+        invalid_payload,
+        ("reasoning",),
+    )
+    assert runner._semantic_reasoning_entries(
+        reasoning_payload,
+        "reasoning",
+    ) == core_semantic_reasoning_adapter.semantic_reasoning_entries(
+        reasoning_payload,
+        "reasoning",
+    )
+    assert runner._semantic_reasoning_fields_present(
+        {"one": "present"},
+        ("one", "two"),
+    ) == core_semantic_reasoning_adapter.semantic_reasoning_fields_present(
+        {"one": "present"},
+        ("one", "two"),
+    )
+
+    orchestrator_context = runner._orchestrator_provider_context(HOTEL_LIKE_REQUEST)
+    orchestrator_proposal = _valid_orchestrator_semantic_reasoning_proposal(
+        authority_claimed=True,
+    )
+    runner_orchestrator = runner._expand_orchestrator_semantic_reasoning_proposal(
+        orchestrator_proposal,
+        orchestrator_context,
+    )
+    core_orchestrator = (
+        core_semantic_reasoning_adapter.expand_orchestrator_semantic_reasoning_proposal(
+            orchestrator_proposal,
+            orchestrator_context,
+            include_gemini_proposes_boundary=False,
+            include_context_available_boundary=False,
+        )
+    )
+    assert runner_orchestrator["structured_orchestrator_rationale"] == (
+        core_orchestrator["structured_orchestrator_rationale"]
+    )
+    assert runner_orchestrator["authority_claimed"] is True
+
+    full_orchestrator_proposal = _valid_orchestrator_proposal()
+    route_packet = runner._route_packet_from_proposal(
+        full_orchestrator_proposal,
+        orchestrator_context,
+    )
+    architect_context = runner._architect_provider_context(
+        route_packet=route_packet,
+        route_validation={"accepted": True},
+        orchestrator_proposal=full_orchestrator_proposal,
+    )
+    architect_proposal = _valid_architect_semantic_reasoning_proposal(
+        final_output_claimed=True,
+    )
+    runner_architect = runner._expand_architect_semantic_reasoning_proposal(
+        architect_proposal,
+        architect_context,
+    )
+    core_architect = (
+        core_semantic_reasoning_adapter.expand_architect_semantic_reasoning_proposal(
+            architect_proposal,
+            architect_context,
+            review_node_id="node:unknown_request_semantic_review",
+            review_node_kind="semantic_review",
+            executor_id="local_unknown_request_review_executor",
+            include_source_route_on_root_gate=False,
+            include_gemini_proposes_boundary=False,
+        )
+    )
+    assert runner_architect["structured_architect_rationale"] == (
+        core_architect["structured_architect_rationale"]
+    )
+    assert runner_architect["plan_nodes"] == core_architect["plan_nodes"]
+    assert runner_architect["final_output_claimed"] is True
+
+    with pytest.raises(ValueError) as exc_info:
+        runner._expand_architect_semantic_reasoning_proposal(
+            _valid_architect_semantic_reasoning_proposal(
+                plan_nodes=({"node_id": "provider-node"},),
+            ),
+            architect_context,
+        )
+    assert (
+        core_semantic_reasoning_adapter.ARCHITECT_PROVIDER_PLAN_NODES_FORBIDDEN_REASON
+        in str(exc_info.value)
+    )
 
 
 def test_compact_orchestrator_prompt_excludes_full_structured_rationale_schema() -> None:
@@ -1538,6 +1665,82 @@ def test_real_live_path_uses_semantic_reasoning_contract_by_default(monkeypatch)
     assert counters["connector_called_count"] == 0
 
 
+def test_runner_semantic_plan_nodes_preserve_007_shape(monkeypatch) -> None:
+    def fake_live_provider(**kwargs):
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_semantic_reasoning_proposal())
+        return json.dumps(_valid_architect_semantic_reasoning_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1"},
+    )
+    nodes = result["plan_graph_context"]["nodes"]
+
+    assert result["final_status"] == "PASS"
+    assert nodes == (
+        {
+            "node_id": "node:unknown_request_semantic_review",
+            "kind": "semantic_review",
+            "executor_id": "local_unknown_request_review_executor",
+            "expected_output": "ResultProposal",
+            "advisory_only": True,
+            "source_route_id": "unknown_request_root_review",
+        },
+        {
+            "node_id": "node:root_review_gate",
+            "kind": "root_review_gate",
+            "executor_id": "local_unknown_request_review_executor",
+            "expected_output": "ResultProposal",
+            "depends_on": ("node:unknown_request_semantic_review",),
+            "advisory_only": True,
+            "Root remains final authority": True,
+        },
+    )
+
+    flattened = _flatten_value(nodes)
+    for marker in (
+        "action_permission",
+        "connector_command",
+        "final_output",
+        "ActionCommitPacket",
+        "real_world_effect",
+    ):
+        assert marker not in flattened
+
+
+def test_runner_semantic_reasoning_default_still_reaches_root(monkeypatch) -> None:
+    calls = []
+
+    def fake_live_provider(**kwargs):
+        calls.append(kwargs)
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_semantic_reasoning_proposal())
+        return json.dumps(_valid_architect_semantic_reasoning_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1"},
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert [call["role"] for call in calls] == ["orchestrator", "architect"]
+    assert result["live_provider_contract_mode"] == "semantic_reasoning_adapter"
+    assert result["live_schema_mode"] == "json_mime_only"
+    assert result["root_final_output_boundary"]
+    assert result["root_final_output_boundary"]["decision"] in (
+        "not_ready",
+        "needs_more_evidence",
+    )
+    assert counters["action_permission_created_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
 def test_compact_live_path_available_when_explicitly_enabled(monkeypatch) -> None:
     calls = []
 
@@ -1566,6 +1769,38 @@ def test_compact_live_path_available_when_explicitly_enabled(monkeypatch) -> Non
     assert result["live_provider_contract_mode"] == "compact_rationale_adapter"
     assert result["counters"]["compact_adapter_expanded_orchestrator_count"] == 1
     assert result["counters"]["compact_adapter_expanded_architect_count"] == 1
+
+
+def test_full_structured_live_path_available_when_explicitly_enabled(
+    monkeypatch,
+) -> None:
+    calls = []
+
+    def fake_live_provider(**kwargs):
+        calls.append(kwargs)
+        if kwargs["role"] == "orchestrator":
+            assert "structured_orchestrator_rationale MUST" in kwargs["prompt"]
+            assert kwargs["response_schema"] is runner.ORCHESTRATOR_RESPONSE_SCHEMA
+            return json.dumps(_valid_orchestrator_proposal())
+        assert "structured_architect_rationale MUST" in kwargs["prompt"]
+        assert kwargs["response_schema"] is runner.ARCHITECT_RESPONSE_SCHEMA
+        return json.dumps(_valid_architect_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.ENV_UNKNOWN_REQUEST_LIVE_SEMANTIC_REASONING_CONTRACT: "0",
+            runner.ENV_UNKNOWN_REQUEST_LIVE_COMPACT_RATIONALE: "0",
+        },
+    )
+
+    assert result["final_status"] == "PASS"
+    assert [call["role"] for call in calls] == ["orchestrator", "architect"]
+    assert result["live_provider_contract_mode"] == "full_structured_rationale"
+    assert result["live_schema_mode"] == "response_schema"
+    assert result["counters"]["action_permission_created_count"] == 0
 
 
 def test_semantic_reasoning_forbidden_orchestrator_claims_fail_closed_before_architect(

@@ -7,6 +7,7 @@ import time
 from typing import Any, Callable, Mapping
 
 from demo import run_live_provider_adapter_response_capture_v01 as provider_adapter
+from hedgehog import semantic_reasoning_adapter
 from hedgehog.context_packets import build_architect_plan_context_packet
 from hedgehog.context_packets import build_orchestrator_route_context_packet
 from hedgehog.context_packets import validate_architect_plan_context_packet
@@ -160,74 +161,16 @@ ARCHITECT_COMPACT_REQUIRED_FIELDS = (
 )
 
 ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS = (
-    "proposal_id",
-    "suggested_route",
-    "selected_vector_ids",
-    "required_guards",
-    "reason",
-    "confidence",
-    "needs_review",
-    "uncertainty_notes",
-    "root_review_required",
-    "truth_claimed",
-    "authority_claimed",
-    "action_permission_claimed",
-    "final_output_claimed",
-    "connector_command_claimed",
-    "drs_write_claimed",
-    "plan_graph_claimed",
-    "bypass_root_claimed",
-    "semantic_observations",
-    "route_reasoning",
-    "rejected_route_reasoning",
-    "guard_reasoning",
-    "vector_reasoning",
-    "authority_boundary_reasoning",
+    semantic_reasoning_adapter.ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS
 )
-
 ARCHITECT_SEMANTIC_REASONING_REQUIRED_FIELDS = (
-    "proposal_id",
-    "source_route_id",
-    "selected_vector_ids",
-    "root_recommendation",
-    "result_proposal_summary",
-    "required_validators",
-    "truth_claimed",
-    "authority_claimed",
-    "action_permission_claimed",
-    "final_output_claimed",
-    "connector_command_claimed",
-    "drs_write_claimed",
-    "root_bypass_claimed",
-    "plan_shape_reasoning",
-    "node_intent_reasoning",
-    "executor_constraint_reasoning",
-    "forbidden_surface_reasoning",
-    "validator_coverage_reasoning",
-    "return_to_root_reasoning",
-    "uncertainty_notes",
-    "authority_boundary_reasoning",
+    semantic_reasoning_adapter.ARCHITECT_SEMANTIC_REASONING_REQUIRED_FIELDS
 )
-
 ORCHESTRATOR_SEMANTIC_REASONING_FIELDS = (
-    "semantic_observations",
-    "route_reasoning",
-    "rejected_route_reasoning",
-    "guard_reasoning",
-    "vector_reasoning",
-    "uncertainty_notes",
-    "authority_boundary_reasoning",
+    semantic_reasoning_adapter.ORCHESTRATOR_SEMANTIC_REASONING_FIELDS
 )
-
 ARCHITECT_SEMANTIC_REASONING_FIELDS = (
-    "plan_shape_reasoning",
-    "node_intent_reasoning",
-    "executor_constraint_reasoning",
-    "forbidden_surface_reasoning",
-    "validator_coverage_reasoning",
-    "return_to_root_reasoning",
-    "uncertainty_notes",
-    "authority_boundary_reasoning",
+    semantic_reasoning_adapter.ARCHITECT_SEMANTIC_REASONING_FIELDS
 )
 
 COUNTER_KEYS = (
@@ -1398,60 +1341,26 @@ def _architect_semantic_reasoning_prompt(context: Mapping[str, Any]) -> str:
 
 
 def _semantic_reasoning_string_list(value: Any) -> tuple[str, ...]:
-    if isinstance(value, str):
-        stripped = value.strip()
-        return (stripped,) if stripped else ()
-    if isinstance(value, (list, tuple)):
-        items: list[str] = []
-        for item in value:
-            if not isinstance(item, str):
-                return ()
-            stripped = item.strip()
-            if not stripped:
-                return ()
-            items.append(stripped)
-        return tuple(items)
-    return ()
+    return semantic_reasoning_adapter.semantic_reasoning_string_list(value)
 
 
 def _validate_semantic_reasoning_fields(
     payload: Mapping[str, Any],
     required_reasoning_fields: tuple[str, ...],
 ) -> tuple[str, ...]:
-    errors: list[str] = []
-    for field in required_reasoning_fields:
-        if field not in payload:
-            errors.append(f"semantic_reasoning_missing_field:{field}")
-            continue
-        value = payload[field]
-        if isinstance(value, str):
-            if not value.strip():
-                errors.append(f"semantic_reasoning_empty_field:{field}")
-            continue
-        if not isinstance(value, (list, tuple)):
-            errors.append(f"semantic_reasoning_invalid_type:{field}")
-            continue
-        if not value:
-            errors.append(f"semantic_reasoning_empty_field:{field}")
-            continue
-        for item in value:
-            if isinstance(item, str):
-                if not item.strip():
-                    errors.append(f"semantic_reasoning_empty_item:{field}")
-            elif isinstance(item, Mapping) and not item:
-                errors.append(f"semantic_reasoning_empty_item:{field}")
-            else:
-                errors.append(f"semantic_reasoning_invalid_type:{field}")
-    return tuple(errors)
+    return semantic_reasoning_adapter.validate_semantic_reasoning_fields(
+        payload,
+        required_reasoning_fields,
+    )
 
 
 def _semantic_reasoning_entries(
     payload: Mapping[str, Any],
     field: str,
 ) -> tuple[dict[str, str], ...]:
-    return tuple(
-        {"text": item, "source": "provider_semantic_reasoning"}
-        for item in _semantic_reasoning_string_list(payload.get(field))
+    return semantic_reasoning_adapter.semantic_reasoning_entries(
+        payload,
+        field,
     )
 
 
@@ -1459,30 +1368,21 @@ def _semantic_reasoning_fields_present(
     payload: Mapping[str, Any],
     fields: tuple[str, ...],
 ) -> tuple[str, ...]:
-    return tuple(field for field in fields if field in payload)
+    return semantic_reasoning_adapter.semantic_reasoning_fields_present(
+        payload,
+        fields,
+    )
 
 
 def _safe_local_plan_nodes_from_semantic_reasoning(
     architect_context: Mapping[str, Any],
 ) -> tuple[dict[str, Any], ...]:
-    return (
-        {
-            "node_id": "node:unknown_request_semantic_review",
-            "kind": "semantic_review",
-            "executor_id": "local_unknown_request_review_executor",
-            "expected_output": "ResultProposal",
-            "advisory_only": True,
-            "source_route_id": architect_context.get("source_route_id"),
-        },
-        {
-            "node_id": "node:root_review_gate",
-            "kind": "root_review_gate",
-            "executor_id": "local_unknown_request_review_executor",
-            "expected_output": "ResultProposal",
-            "depends_on": ("node:unknown_request_semantic_review",),
-            "advisory_only": True,
-            "Root remains final authority": True,
-        },
+    return semantic_reasoning_adapter.build_safe_local_plan_nodes_from_semantic_reasoning(
+        architect_context,
+        review_node_id="node:unknown_request_semantic_review",
+        review_node_kind="semantic_review",
+        executor_id="local_unknown_request_review_executor",
+        include_source_route_on_root_gate=False,
     )
 
 
@@ -1490,113 +1390,27 @@ def _expand_orchestrator_semantic_reasoning_proposal(
     proposal: Mapping[str, Any],
     context: Mapping[str, Any],
 ) -> dict[str, Any]:
-    expanded = dict(proposal)
-    expanded["structured_orchestrator_rationale"] = (
-        build_orchestrator_structured_rationale(
-            observed_semantics=_semantic_reasoning_entries(
-                proposal,
-                "semantic_observations",
-            ),
-            route_selection_reason=_semantic_reasoning_entries(
-                proposal,
-                "route_reasoning",
-            )
-            + (
-                {
-                    "suggested_route": str(proposal.get("suggested_route") or ""),
-                    "source": "provider_semantic_reasoning",
-                },
-            ),
-            rejected_routes=_semantic_reasoning_entries(
-                proposal,
-                "rejected_route_reasoning",
-            ),
-            required_guards_reasoning=_semantic_reasoning_entries(
-                proposal,
-                "guard_reasoning",
-            ),
-            selected_vector_reasoning=_semantic_reasoning_entries(
-                proposal,
-                "vector_reasoning",
-            ),
-            uncertainty_notes=_semantic_reasoning_entries(
-                proposal,
-                "uncertainty_notes",
-            ),
-            authority_boundary=_semantic_reasoning_entries(
-                proposal,
-                "authority_boundary_reasoning",
-            )
-            + (
-                {
-                    "ContextPacket is not truth": True,
-                    "ContextPacket is not authority": True,
-                    "structured rationale is explanation only": True,
-                    "Orchestrator is not Root": True,
-                    "Root remains final authority": True,
-                },
-            ),
-            root_review_required=True,
-        )
+    return semantic_reasoning_adapter.expand_orchestrator_semantic_reasoning_proposal(
+        proposal,
+        context,
+        include_gemini_proposes_boundary=False,
+        include_context_available_boundary=False,
     )
-    return expanded
 
 
 def _expand_architect_semantic_reasoning_proposal(
     proposal: Mapping[str, Any],
     architect_context: Mapping[str, Any],
 ) -> dict[str, Any]:
-    expanded = dict(proposal)
-    expanded["plan_nodes"] = _safe_local_plan_nodes_from_semantic_reasoning(
-        architect_context
+    return semantic_reasoning_adapter.expand_architect_semantic_reasoning_proposal(
+        proposal,
+        architect_context,
+        review_node_id="node:unknown_request_semantic_review",
+        review_node_kind="semantic_review",
+        executor_id="local_unknown_request_review_executor",
+        include_source_route_on_root_gate=False,
+        include_gemini_proposes_boundary=False,
     )
-    expanded["structured_architect_rationale"] = build_architect_structured_rationale(
-        plan_shape_reason=_semantic_reasoning_entries(
-            proposal,
-            "plan_shape_reasoning",
-        ),
-        node_selection_reasoning=_semantic_reasoning_entries(
-            proposal,
-            "node_intent_reasoning",
-        ),
-        executor_constraint_reasoning=_semantic_reasoning_entries(
-            proposal,
-            "executor_constraint_reasoning",
-        ),
-        forbidden_surface_review=_semantic_reasoning_entries(
-            proposal,
-            "forbidden_surface_reasoning",
-        ),
-        validator_coverage_reasoning=_semantic_reasoning_entries(
-            proposal,
-            "validator_coverage_reasoning",
-        ),
-        return_to_root_path=_semantic_reasoning_entries(
-            proposal,
-            "return_to_root_reasoning",
-        ),
-        uncertainty_notes=_semantic_reasoning_entries(
-            proposal,
-            "uncertainty_notes",
-        ),
-        authority_boundary=_semantic_reasoning_entries(
-            proposal,
-            "authority_boundary_reasoning",
-        )
-        + (
-            {
-                "ContextPacket is not truth": True,
-                "ContextPacket is not authority": True,
-                "structured rationale is explanation only": True,
-                "Architect is not Root": True,
-                "PlanGraph is not authority": True,
-                "ResultProposal is not FinalOutput": True,
-                "Root remains final authority": True,
-            },
-        ),
-        root_review_required=True,
-    )
-    return expanded
 
 
 def _expand_orchestrator_compact_proposal(
@@ -2272,14 +2086,9 @@ def run_live_unknown_request_dual_rich_context(
             )
         )
         semantic_errors = (
-            *_missing_fields(
-                orchestrator_proposal,
-                ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS,
-            ),
-            *_validate_semantic_reasoning_fields(
-                orchestrator_proposal,
-                ORCHESTRATOR_SEMANTIC_REASONING_FIELDS,
-            ),
+            semantic_reasoning_adapter.validate_orchestrator_semantic_reasoning_proposal(
+                orchestrator_proposal
+            )
         )
         if semantic_errors:
             return fail(
@@ -2497,20 +2306,10 @@ def run_live_unknown_request_dual_rich_context(
             )
         )
         semantic_errors = (
-            *_missing_fields(
-                architect_proposal,
-                ARCHITECT_SEMANTIC_REASONING_REQUIRED_FIELDS,
-            ),
-            *_validate_semantic_reasoning_fields(
-                architect_proposal,
-                ARCHITECT_SEMANTIC_REASONING_FIELDS,
-            ),
-        )
-        if "plan_nodes" in architect_proposal:
-            semantic_errors = (
-                *semantic_errors,
-                "architect_provider_plan_nodes_forbidden_in_semantic_mode",
+            semantic_reasoning_adapter.validate_architect_semantic_reasoning_proposal(
+                architect_proposal
             )
+        )
         if semantic_errors:
             return fail(
                 request_text=request,

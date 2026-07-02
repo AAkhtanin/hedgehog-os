@@ -145,6 +145,9 @@ def test_validate_semantic_reasoning_fields_rejects_missing_empty_invalid() -> N
     assert adapter.validate_semantic_reasoning_fields({field: [1]}, (field,)) == (
         "semantic_reasoning_invalid_type:reasoning",
     )
+    assert adapter.validate_semantic_reasoning_fields({field: {}}, (field,)) == (
+        "semantic_reasoning_invalid_type:reasoning",
+    )
     assert adapter.validate_semantic_reasoning_fields({field: 1}, (field,)) == (
         "semantic_reasoning_invalid_type:reasoning",
     )
@@ -291,6 +294,63 @@ def test_safe_local_plan_nodes_are_context_driven() -> None:
     flattened = _flatten_text(nodes).lower()
     for marker in ("archive", "hotel", "supplier"):
         assert marker not in flattened
+
+
+def test_safe_local_plan_nodes_support_backwards_compatible_shape_options() -> None:
+    nodes = adapter.build_safe_local_plan_nodes_from_semantic_reasoning(
+        {"source_route_id": "route:context"},
+        review_node_id="node:unknown_request_semantic_review",
+        review_node_kind="semantic_review",
+        executor_id="local_unknown_request_review_executor",
+        include_source_route_on_root_gate=False,
+    )
+
+    assert nodes == (
+        {
+            "node_id": "node:unknown_request_semantic_review",
+            "kind": "semantic_review",
+            "executor_id": "local_unknown_request_review_executor",
+            "expected_output": "ResultProposal",
+            "advisory_only": True,
+            "source_route_id": "route:context",
+        },
+        {
+            "node_id": "node:root_review_gate",
+            "kind": "root_review_gate",
+            "executor_id": "local_unknown_request_review_executor",
+            "expected_output": "ResultProposal",
+            "depends_on": ("node:unknown_request_semantic_review",),
+            "advisory_only": True,
+            "Root remains final authority": True,
+        },
+    )
+
+
+def test_expand_semantic_reasoning_supports_runner_boundary_options() -> None:
+    orchestrator = adapter.expand_orchestrator_semantic_reasoning_proposal(
+        _valid_orchestrator_payload(),
+        {"context": True},
+        include_gemini_proposes_boundary=False,
+        include_context_available_boundary=False,
+    )
+    architect = adapter.expand_architect_semantic_reasoning_proposal(
+        _valid_architect_payload(),
+        {"source_route_id": "route:root_review"},
+        include_gemini_proposes_boundary=False,
+    )
+
+    orchestrator_boundary = _flatten_text(
+        orchestrator["structured_orchestrator_rationale"]["authority_boundary"]
+    )
+    architect_boundary = _flatten_text(
+        architect["structured_architect_rationale"]["authority_boundary"]
+    )
+
+    assert "Gemini proposes, Root disposes" not in orchestrator_boundary
+    assert "context_available" not in orchestrator_boundary
+    assert "Gemini proposes, Root disposes" not in architect_boundary
+    assert "Root remains final authority" in orchestrator_boundary
+    assert "Root remains final authority" in architect_boundary
 
 
 def test_missing_required_top_level_fields_are_reported() -> None:

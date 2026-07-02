@@ -8,8 +8,11 @@ from typing import Any, Callable, Mapping
 
 from demo import run_live_provider_adapter_response_capture_v01 as provider_adapter
 from hedgehog import semantic_reasoning_adapter
+from hedgehog.context_packets import build_bounded_semantic_evidence_packet
 from hedgehog.context_packets import build_architect_plan_context_packet
 from hedgehog.context_packets import build_orchestrator_route_context_packet
+from hedgehog.context_packets import semantic_evidence_item
+from hedgehog.context_packets import validate_bounded_semantic_evidence_packet
 from hedgehog.context_packets import validate_architect_plan_context_packet
 from hedgehog.context_packets import validate_orchestrator_route_context_packet
 from hedgehog.structured_rationale import ARCHITECT_STRUCTURED_RATIONALE_REQUIRED_FIELDS
@@ -39,6 +42,9 @@ ENV_UNKNOWN_REQUEST_LIVE_SEMANTIC_REASONING_CONTRACT = (
 )
 ENV_UNKNOWN_REQUEST_LIVE_SCHEMALESS_JSON = (
     "HEDGEHOG_UNKNOWN_REQUEST_LIVE_SCHEMALESS_JSON"
+)
+ENV_UNKNOWN_REQUEST_BOUNDED_SEMANTIC_EVIDENCE_PACKET = (
+    "HEDGEHOG_UNKNOWN_REQUEST_BOUNDED_SEMANTIC_EVIDENCE_PACKET"
 )
 DEFAULT_MODEL = "gemini-2.5-flash"
 
@@ -530,6 +536,13 @@ def _schemaless_json_enabled(
     if parsed is not None:
         return parsed
     return real_semantic_live_path and _live_enabled(env)
+
+
+def _bounded_semantic_evidence_packet_enabled(env: Mapping[str, str]) -> bool:
+    parsed = _env_enabled_value(
+        env.get(ENV_UNKNOWN_REQUEST_BOUNDED_SEMANTIC_EVIDENCE_PACKET, "")
+    )
+    return bool(parsed)
 
 
 def _architect_pre_delay_seconds(env: Mapping[str, str]) -> int:
@@ -1060,9 +1073,11 @@ def _architect_provider_context(
     route_packet: Mapping[str, Any],
     route_validation: Mapping[str, Any],
     orchestrator_proposal: Mapping[str, Any],
+    bounded_semantic_evidence_packet: Mapping[str, Any] | None = None,
+    bounded_semantic_evidence_packet_validation: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     selected = tuple(orchestrator_proposal.get("selected_vector_ids") or ())
-    return {
+    context = {
         "context_type": "bounded_unknown_request_architect_input",
         "input_route_source": "validated_orchestrator_route",
         "source_route_id": str(orchestrator_proposal.get("suggested_route") or ""),
@@ -1080,6 +1095,48 @@ def _architect_provider_context(
         "Gemini proposes, Root disposes": True,
         "Root remains final authority": True,
     }
+    if bounded_semantic_evidence_packet is not None:
+        context.update(
+            {
+                "bounded_semantic_evidence_packet": dict(
+                    bounded_semantic_evidence_packet
+                ),
+                "bounded_semantic_evidence_packet_validation_accepted": bool(
+                    (bounded_semantic_evidence_packet_validation or {}).get("accepted")
+                ),
+                "bounded_semantic_evidence_packet_id": (
+                    bounded_semantic_evidence_packet.get("packet_id")
+                ),
+                "observed_semantic_facts": tuple(
+                    bounded_semantic_evidence_packet.get("observed_semantic_facts")
+                    or ()
+                ),
+                "missing_evidence": tuple(
+                    bounded_semantic_evidence_packet.get("missing_evidence") or ()
+                ),
+                "uncertainty_notes": tuple(
+                    bounded_semantic_evidence_packet.get("uncertainty_notes") or ()
+                ),
+                "risk_boundary_notes": tuple(
+                    bounded_semantic_evidence_packet.get("risk_boundary_notes") or ()
+                ),
+                "rejected_action_routes": tuple(
+                    bounded_semantic_evidence_packet.get("rejected_action_routes")
+                    or ()
+                ),
+                "required_approvals_or_conditions": tuple(
+                    bounded_semantic_evidence_packet.get(
+                        "required_approvals_or_conditions"
+                    )
+                    or ()
+                ),
+                "authority_boundary_notes": tuple(
+                    bounded_semantic_evidence_packet.get("authority_boundary_notes")
+                    or ()
+                ),
+            }
+        )
+    return context
 
 
 def _architect_structured_rationale_skeleton(
@@ -1413,6 +1470,150 @@ def _expand_architect_semantic_reasoning_proposal(
     )
 
 
+def _bounded_semantic_evidence_items_from_semantic_reasoning(
+    proposal: Mapping[str, Any],
+    field: str,
+    *,
+    evidence_kind: str,
+    source: str = "provider_semantic_reasoning",
+) -> tuple[dict[str, Any], ...]:
+    return tuple(
+        semantic_evidence_item(
+            item,
+            source=source,
+            evidence_kind=evidence_kind,
+            confidence_label="unknown",
+            candidate_only=True,
+            raw_quote=False,
+        )
+        for item in _semantic_reasoning_string_list(proposal.get(field))
+    )
+
+
+def _bounded_semantic_evidence_packet_from_orchestrator(
+    *,
+    orchestrator_proposal: Mapping[str, Any],
+    orchestrator_context: Mapping[str, Any],
+    route_packet: Mapping[str, Any],
+    route_packet_validation: Mapping[str, Any],
+    structured_orchestrator_rationale: Mapping[str, Any],
+    structured_orchestrator_rationale_validation: Mapping[str, Any],
+) -> dict[str, Any]:
+    del orchestrator_context
+    del structured_orchestrator_rationale
+    proposal_id = str(orchestrator_proposal.get("proposal_id") or "proposal")
+    return build_bounded_semantic_evidence_packet(
+        packet_id=f"context_packet:unknown_request:bounded_semantic_evidence:{proposal_id}",
+        source_refs=(
+            {
+                "source": "validated_orchestrator_route_context_packet",
+                "source_id": str(route_packet.get("packet_id") or ""),
+                "accepted": bool(route_packet_validation.get("accepted")),
+            },
+            {
+                "source": "structured_orchestrator_rationale",
+                "source_id": f"structured_orchestrator_rationale:{proposal_id}",
+                "accepted": bool(
+                    structured_orchestrator_rationale_validation.get("accepted")
+                ),
+            },
+            {
+                "source": "orchestrator_semantic_proposal",
+                "source_id": proposal_id,
+                "accepted": True,
+            },
+        ),
+        domain="unknown_request",
+        source_route_id=str(orchestrator_proposal.get("suggested_route") or ""),
+        source_proposal_id=proposal_id,
+        source_context_packet_id=str(route_packet.get("packet_id") or ""),
+        source_structured_rationale_ref=(
+            f"structured_orchestrator_rationale:{proposal_id}:accepted"
+        ),
+        observed_semantic_facts=(
+            _bounded_semantic_evidence_items_from_semantic_reasoning(
+                orchestrator_proposal,
+                "semantic_observations",
+                evidence_kind="observed_fact",
+            )
+        ),
+        missing_evidence=(
+            _bounded_semantic_evidence_items_from_semantic_reasoning(
+                orchestrator_proposal,
+                "uncertainty_notes",
+                evidence_kind="missing_evidence",
+            )
+        ),
+        uncertainty_notes=(
+            _bounded_semantic_evidence_items_from_semantic_reasoning(
+                orchestrator_proposal,
+                "uncertainty_notes",
+                evidence_kind="uncertainty",
+            )
+        ),
+        risk_boundary_notes=(
+            _bounded_semantic_evidence_items_from_semantic_reasoning(
+                orchestrator_proposal,
+                "rejected_route_reasoning",
+                evidence_kind="risk_boundary",
+            )
+            + _bounded_semantic_evidence_items_from_semantic_reasoning(
+                orchestrator_proposal,
+                "authority_boundary_reasoning",
+                evidence_kind="risk_boundary",
+            )
+        ),
+        rejected_action_routes=(
+            _bounded_semantic_evidence_items_from_semantic_reasoning(
+                orchestrator_proposal,
+                "rejected_route_reasoning",
+                evidence_kind="rejected_route",
+            )
+        ),
+        required_approvals_or_conditions=(
+            _bounded_semantic_evidence_items_from_semantic_reasoning(
+                orchestrator_proposal,
+                "guard_reasoning",
+                evidence_kind="approval_condition",
+            )
+        ),
+        authority_boundary_notes=(
+            _bounded_semantic_evidence_items_from_semantic_reasoning(
+                orchestrator_proposal,
+                "authority_boundary_reasoning",
+                evidence_kind="authority_boundary",
+            )
+        ),
+        selected_vector_ids=tuple(orchestrator_proposal.get("selected_vector_ids") or ()),
+        required_guards=tuple(orchestrator_proposal.get("required_guards") or ()),
+    )
+
+
+def _walk_string_values(value: Any) -> tuple[str, ...]:
+    strings: list[str] = []
+    if isinstance(value, Mapping):
+        for item in value.values():
+            strings.extend(_walk_string_values(item))
+    elif isinstance(value, (list, tuple, set, frozenset)):
+        for item in value:
+            strings.extend(_walk_string_values(item))
+    elif isinstance(value, str):
+        strings.append(value)
+    return tuple(strings)
+
+
+def _bounded_semantic_evidence_raw_request_value_reasons(
+    packet: Mapping[str, Any],
+    request_text: str,
+) -> tuple[str, ...]:
+    request = (request_text or "").strip()
+    if len(request) < 16:
+        return ()
+    if any(request in value for value in _walk_string_values(packet)):
+        return ("bounded_semantic_evidence_raw_user_request_value_forbidden",)
+    return ()
+
+
 def _expand_orchestrator_compact_proposal(
     compact: Mapping[str, Any],
     context: Mapping[str, Any],
@@ -1675,6 +1876,8 @@ def _fail_result(
     orchestrator_route_context_packet_validation: Mapping[str, Any] | None = None,
     structured_orchestrator_rationale: Mapping[str, Any] | None = None,
     structured_orchestrator_rationale_validation: Mapping[str, Any] | None = None,
+    bounded_semantic_evidence_packet: Mapping[str, Any] | None = None,
+    bounded_semantic_evidence_packet_validation: Mapping[str, Any] | None = None,
     architect_plan_context_packet: Mapping[str, Any] | None = None,
     architect_plan_context_packet_validation: Mapping[str, Any] | None = None,
     structured_architect_rationale: Mapping[str, Any] | None = None,
@@ -1695,7 +1898,7 @@ def _fail_result(
     semantic_reasoning_orchestrator_fields_present: tuple[str, ...] = (),
     semantic_reasoning_architect_fields_present: tuple[str, ...] = (),
 ) -> dict[str, Any]:
-    return {
+    result = {
         "title": TITLE,
         "final_status": "FAIL_CLOSED",
         "raw_user_request": request_text,
@@ -1752,6 +1955,15 @@ def _fail_result(
         "validation_errors": validation_errors,
         "pass_conditions": {},
     }
+    if bounded_semantic_evidence_packet is not None:
+        result["bounded_semantic_evidence_packet"] = dict(
+            bounded_semantic_evidence_packet
+        )
+    if bounded_semantic_evidence_packet_validation is not None:
+        result["bounded_semantic_evidence_packet_validation"] = dict(
+            bounded_semantic_evidence_packet_validation
+        )
+    return result
 
 
 def _route_packet_from_proposal(
@@ -1861,7 +2073,7 @@ def _root_boundary(
 
 def _pass_conditions(result: Mapping[str, Any]) -> dict[str, bool]:
     counters = result["counters"]
-    return {
+    conditions = {
         "orchestrator_packet_validated": result[
             "orchestrator_route_context_packet_validation"
         ].get("accepted")
@@ -1904,6 +2116,11 @@ def _pass_conditions(result: Mapping[str, Any]) -> dict[str, bool]:
             )
         ),
     }
+    if "bounded_semantic_evidence_packet_validation" in result:
+        conditions["bounded_semantic_evidence_packet_validated"] = result[
+            "bounded_semantic_evidence_packet_validation"
+        ].get("accepted") is True
+    return conditions
 
 
 def run_live_unknown_request_dual_rich_context(
@@ -1966,6 +2183,12 @@ def run_live_unknown_request_dual_rich_context(
         if semantic_reasoning_mode and schemaless_json_mode
         else "response_schema"
     )
+    bounded_semantic_evidence_packet_enabled = (
+        _bounded_semantic_evidence_packet_enabled(observed_env)
+    )
+    if bounded_semantic_evidence_packet_enabled:
+        counters["bounded_semantic_evidence_packet_created_count"] = 0
+        counters["bounded_semantic_evidence_packet_validated_count"] = 0
     semantic_reasoning_orchestrator_fields_present: tuple[str, ...] = ()
     semantic_reasoning_architect_fields_present: tuple[str, ...] = ()
     if compact_mode:
@@ -2014,6 +2237,15 @@ def run_live_unknown_request_dual_rich_context(
             semantic_context=semantic_context,
             counters=counters,
             validation_errors=("provider_injection_or_live_gate_required",),
+        )
+    if bounded_semantic_evidence_packet_enabled and not semantic_reasoning_mode:
+        return fail(
+            request_text=request,
+            semantic_context=semantic_context,
+            counters=counters,
+            validation_errors=(
+                "bounded_semantic_evidence_requires_semantic_reasoning_adapter",
+            ),
         )
 
     orchestrator_context = _orchestrator_provider_context(request)
@@ -2183,10 +2415,87 @@ def run_live_unknown_request_dual_rich_context(
     counters["context_packet_validated_count"] += 1
     counters["structured_rationale_validated_count"] += 1
 
+    bounded_semantic_evidence_packet: dict[str, Any] | None = None
+    bounded_semantic_evidence_packet_validation: dict[str, Any] | None = None
+    if bounded_semantic_evidence_packet_enabled:
+        bounded_semantic_evidence_packet = (
+            _bounded_semantic_evidence_packet_from_orchestrator(
+                orchestrator_proposal=orchestrator_proposal,
+                orchestrator_context=orchestrator_context,
+                route_packet=route_packet,
+                route_packet_validation=route_packet_validation,
+                structured_orchestrator_rationale=orchestrator_rationale,
+                structured_orchestrator_rationale_validation=(
+                    orchestrator_rationale_validation
+                ),
+            )
+        )
+        counters["bounded_semantic_evidence_packet_created_count"] = 1
+        bounded_semantic_evidence_packet_validation = (
+            validate_bounded_semantic_evidence_packet(
+                bounded_semantic_evidence_packet,
+                route_context_packet=route_packet,
+                orchestrator_proposal=orchestrator_proposal,
+                structured_rationale_validation=orchestrator_rationale_validation,
+            )
+        )
+        raw_request_value_reasons = (
+            _bounded_semantic_evidence_raw_request_value_reasons(
+                bounded_semantic_evidence_packet,
+                request,
+            )
+        )
+        if raw_request_value_reasons:
+            merged_reasons = tuple(
+                dict.fromkeys(
+                    (
+                        *tuple(
+                            bounded_semantic_evidence_packet_validation.get(
+                                "reasons",
+                                (),
+                            )
+                        ),
+                        *raw_request_value_reasons,
+                    )
+                )
+            )
+            bounded_semantic_evidence_packet_validation = {
+                **bounded_semantic_evidence_packet_validation,
+                "accepted": False,
+                "reasons": merged_reasons,
+            }
+        if not bounded_semantic_evidence_packet_validation["accepted"]:
+            return fail(
+                request_text=request,
+                semantic_context=semantic_context,
+                orchestrator_provider_context=orchestrator_context,
+                orchestrator_route_context_packet=route_packet,
+                orchestrator_route_context_packet_validation=route_packet_validation,
+                structured_orchestrator_rationale=orchestrator_rationale,
+                structured_orchestrator_rationale_validation=(
+                    orchestrator_rationale_validation
+                ),
+                bounded_semantic_evidence_packet=bounded_semantic_evidence_packet,
+                bounded_semantic_evidence_packet_validation=(
+                    bounded_semantic_evidence_packet_validation
+                ),
+                counters=counters,
+                validation_errors=(
+                    "bounded_semantic_evidence_packet_validation_failed",
+                    *tuple(bounded_semantic_evidence_packet_validation["reasons"]),
+                ),
+                orchestrator_provider_response_shape=orchestrator_response_shape,
+            )
+        counters["bounded_semantic_evidence_packet_validated_count"] = 1
+
     architect_context = _architect_provider_context(
         route_packet=route_packet,
         route_validation=route_packet_validation,
         orchestrator_proposal=orchestrator_proposal,
+        bounded_semantic_evidence_packet=bounded_semantic_evidence_packet,
+        bounded_semantic_evidence_packet_validation=(
+            bounded_semantic_evidence_packet_validation
+        ),
     )
     architect_packet = _architect_packet_from_context(architect_context)
     architect_packet_validation = validate_architect_plan_context_packet(
@@ -2202,6 +2511,10 @@ def run_live_unknown_request_dual_rich_context(
             structured_orchestrator_rationale=orchestrator_rationale,
             structured_orchestrator_rationale_validation=(
                 orchestrator_rationale_validation
+            ),
+            bounded_semantic_evidence_packet=bounded_semantic_evidence_packet,
+            bounded_semantic_evidence_packet_validation=(
+                bounded_semantic_evidence_packet_validation
             ),
             architect_provider_context=architect_context,
             architect_plan_context_packet=architect_packet,
@@ -2267,6 +2580,10 @@ def run_live_unknown_request_dual_rich_context(
             structured_orchestrator_rationale_validation=(
                 orchestrator_rationale_validation
             ),
+            bounded_semantic_evidence_packet=bounded_semantic_evidence_packet,
+            bounded_semantic_evidence_packet_validation=(
+                bounded_semantic_evidence_packet_validation
+            ),
             architect_provider_context=architect_context,
             architect_plan_context_packet=architect_packet,
             architect_plan_context_packet_validation=architect_packet_validation,
@@ -2285,6 +2602,10 @@ def run_live_unknown_request_dual_rich_context(
             structured_orchestrator_rationale=orchestrator_rationale,
             structured_orchestrator_rationale_validation=(
                 orchestrator_rationale_validation
+            ),
+            bounded_semantic_evidence_packet=bounded_semantic_evidence_packet,
+            bounded_semantic_evidence_packet_validation=(
+                bounded_semantic_evidence_packet_validation
             ),
             architect_provider_context=architect_context,
             architect_plan_context_packet=architect_packet,
@@ -2321,6 +2642,10 @@ def run_live_unknown_request_dual_rich_context(
                 structured_orchestrator_rationale_validation=(
                     orchestrator_rationale_validation
                 ),
+                bounded_semantic_evidence_packet=bounded_semantic_evidence_packet,
+                bounded_semantic_evidence_packet_validation=(
+                    bounded_semantic_evidence_packet_validation
+                ),
                 architect_provider_context=architect_context,
                 architect_plan_context_packet=architect_packet,
                 architect_plan_context_packet_validation=architect_packet_validation,
@@ -2349,6 +2674,10 @@ def run_live_unknown_request_dual_rich_context(
                 structured_orchestrator_rationale=orchestrator_rationale,
                 structured_orchestrator_rationale_validation=(
                     orchestrator_rationale_validation
+                ),
+                bounded_semantic_evidence_packet=bounded_semantic_evidence_packet,
+                bounded_semantic_evidence_packet_validation=(
+                    bounded_semantic_evidence_packet_validation
                 ),
                 architect_provider_context=architect_context,
                 architect_plan_context_packet=architect_packet,
@@ -2394,6 +2723,10 @@ def run_live_unknown_request_dual_rich_context(
             structured_orchestrator_rationale=orchestrator_rationale,
             structured_orchestrator_rationale_validation=(
                 orchestrator_rationale_validation
+            ),
+            bounded_semantic_evidence_packet=bounded_semantic_evidence_packet,
+            bounded_semantic_evidence_packet_validation=(
+                bounded_semantic_evidence_packet_validation
             ),
             architect_provider_context=architect_context,
             architect_plan_context_packet=architect_packet,
@@ -2464,6 +2797,13 @@ def run_live_unknown_request_dual_rich_context(
         "counters": counters,
         "validation_errors": (),
     }
+    if bounded_semantic_evidence_packet_enabled:
+        result["bounded_semantic_evidence_packet"] = (
+            bounded_semantic_evidence_packet or {}
+        )
+        result["bounded_semantic_evidence_packet_validation"] = (
+            bounded_semantic_evidence_packet_validation or {}
+        )
     result["pass_conditions"] = _pass_conditions(result)
     if not all(result["pass_conditions"].values()):
         result["final_status"] = "FAIL_CLOSED"

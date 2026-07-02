@@ -1741,6 +1741,287 @@ def test_runner_semantic_reasoning_default_still_reaches_root(monkeypatch) -> No
     assert counters["real_world_effects_count"] == 0
 
 
+def test_bounded_semantic_evidence_gate_off_preserves_existing_shape(
+    monkeypatch,
+) -> None:
+    def fake_live_provider(**kwargs):
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_semantic_reasoning_proposal())
+        return json.dumps(_valid_architect_semantic_reasoning_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1"},
+    )
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert "bounded_semantic_evidence_packet" not in result
+    assert "bounded_semantic_evidence_packet_validation" not in result
+    assert "bounded_semantic_evidence_packet_created_count" not in counters
+    assert "bounded_semantic_evidence_packet_validated_count" not in counters
+    assert result["live_provider_contract_mode"] == "semantic_reasoning_adapter"
+    assert counters["action_permission_created_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_bounded_semantic_evidence_gate_requires_semantic_reasoning_mode() -> None:
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.ENV_UNKNOWN_REQUEST_BOUNDED_SEMANTIC_EVIDENCE_PACKET: "1",
+            runner.ENV_UNKNOWN_REQUEST_LIVE_SEMANTIC_REASONING_CONTRACT: "0",
+            runner.ENV_UNKNOWN_REQUEST_LIVE_COMPACT_RATIONALE: "1",
+        },
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert (
+        "bounded_semantic_evidence_requires_semantic_reasoning_adapter"
+        in result["validation_errors"]
+    )
+    assert result["counters"]["architect_provider_call_count"] == 0
+    assert result["plan_graph_context"] == {}
+    assert result["root_final_output_boundary"] == {}
+
+
+def test_bounded_semantic_evidence_packet_built_and_validated_before_architect(
+    monkeypatch,
+) -> None:
+    calls = []
+
+    def fake_live_provider(**kwargs):
+        calls.append(kwargs["role"])
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_semantic_reasoning_proposal())
+        return json.dumps(_valid_architect_semantic_reasoning_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.ENV_UNKNOWN_REQUEST_BOUNDED_SEMANTIC_EVIDENCE_PACKET: "1",
+        },
+    )
+    packet = result["bounded_semantic_evidence_packet"]
+    validation = result["bounded_semantic_evidence_packet_validation"]
+    route_packet = result["orchestrator_route_context_packet"]
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert calls == ["orchestrator", "architect"]
+    assert validation["accepted"] is True
+    assert packet["packet_type"] == "BoundedSemanticEvidencePacket"
+    assert packet["source_role"] == "orchestrator"
+    assert packet["target_role"] == "architect"
+    assert packet["source_context_packet_id"] == route_packet["packet_id"]
+    assert packet["source_proposal_id"] == "orch-semantic-proposal-test-001"
+    assert packet["source_route_id"] == "unknown_request_root_review"
+    assert tuple(packet["selected_vector_ids"]) == (
+        "unknown_request_semantic_review",
+        "external_action_boundary_review",
+    )
+    assert counters["bounded_semantic_evidence_packet_created_count"] == 1
+    assert counters["bounded_semantic_evidence_packet_validated_count"] == 1
+    assert counters["architect_provider_call_count"] == 1
+    assert counters["action_permission_created_count"] == 0
+    assert counters["connector_called_count"] == 0
+
+
+def test_architect_receives_bounded_evidence_without_raw_text(monkeypatch) -> None:
+    captured = {}
+
+    def fake_live_provider(**kwargs):
+        captured.setdefault("calls", []).append(kwargs)
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_semantic_reasoning_proposal())
+        captured["architect_prompt"] = kwargs["prompt"]
+        captured["architect_context"] = _context_from_prompt(
+            kwargs["prompt"],
+            "BOUNDED_UNKNOWN_REQUEST_ARCHITECT_INPUT_JSON:",
+        )
+        return json.dumps(_valid_architect_semantic_reasoning_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.ENV_UNKNOWN_REQUEST_BOUNDED_SEMANTIC_EVIDENCE_PACKET: "1",
+        },
+    )
+    prompt = captured["architect_prompt"]
+    context = captured["architect_context"]
+    context_text = json.dumps(context, sort_keys=True)
+
+    assert result["final_status"] == "PASS"
+    assert "bounded_semantic_evidence_packet" in context
+    for marker in (
+        "observed_semantic_facts",
+        "missing_evidence",
+        "uncertainty_notes",
+        "risk_boundary_notes",
+        "rejected_action_routes",
+        "required_approvals_or_conditions",
+        "authority_boundary_notes",
+    ):
+        assert marker in prompt
+        assert marker in context
+    assert HOTEL_LIKE_REQUEST not in prompt
+    assert HOTEL_LIKE_REQUEST not in context_text
+    assert '"raw_user_text":' not in prompt
+    assert '"raw_cross_role_text":' not in prompt
+    assert "raw_gemini_text" not in prompt
+    assert '"raw_user_text":' not in context_text
+    assert '"raw_cross_role_text":' not in context_text
+    assert "raw_gemini_text" not in context_text
+    assert context["bounded_semantic_evidence_packet"]["raw_user_text_included"] is False
+    assert (
+        context["bounded_semantic_evidence_packet"]["raw_cross_role_text_included"]
+        is False
+    )
+    assert context["raw_user_request_present"] is False
+    assert context["raw_cross_role_text_present"] is False
+
+
+def test_invalid_bounded_semantic_evidence_packet_blocks_architect(
+    monkeypatch,
+) -> None:
+    calls = []
+    original_builder = runner.build_bounded_semantic_evidence_packet
+
+    def invalid_builder(**kwargs):
+        packet = original_builder(**kwargs)
+        packet["raw_user_text"] = "forbidden raw text"
+        return packet
+
+    def fake_live_provider(**kwargs):
+        calls.append(kwargs["role"])
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_semantic_reasoning_proposal())
+        return json.dumps(_valid_architect_semantic_reasoning_proposal())
+
+    monkeypatch.setattr(runner, "build_bounded_semantic_evidence_packet", invalid_builder)
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.ENV_UNKNOWN_REQUEST_BOUNDED_SEMANTIC_EVIDENCE_PACKET: "1",
+        },
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert calls == ["orchestrator"]
+    assert result["counters"]["architect_provider_call_count"] == 0
+    assert (
+        "bounded_semantic_evidence_packet_validation_failed"
+        in result["validation_errors"]
+    )
+    assert (
+        "bounded_semantic_evidence_raw_user_text_forbidden"
+        in result["validation_errors"]
+    )
+    assert result["plan_graph_context"] == {}
+    assert result["result_proposal"] == {}
+    assert result["root_final_output_boundary"] == {}
+
+
+def test_bounded_semantic_evidence_rejects_orchestrator_raw_request_echo_before_architect(
+    monkeypatch,
+) -> None:
+    calls = []
+
+    def fake_live_provider(**kwargs):
+        calls.append(kwargs["role"])
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(
+                _valid_orchestrator_semantic_reasoning_proposal(
+                    semantic_observations=(HOTEL_LIKE_REQUEST,)
+                )
+            )
+        return json.dumps(_valid_architect_semantic_reasoning_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.ENV_UNKNOWN_REQUEST_BOUNDED_SEMANTIC_EVIDENCE_PACKET: "1",
+        },
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert calls == ["orchestrator"]
+    assert result["counters"]["architect_provider_call_count"] == 0
+    assert (
+        "bounded_semantic_evidence_packet_validation_failed"
+        in result["validation_errors"]
+    )
+    assert (
+        "bounded_semantic_evidence_raw_user_request_value_forbidden"
+        in result["validation_errors"]
+    )
+    assert result["bounded_semantic_evidence_packet_validation"]["accepted"] is False
+    assert result["plan_graph_context"] == {}
+    assert result["result_proposal"] == {}
+    assert result["root_final_output_boundary"] == {}
+
+
+def test_bounded_semantic_evidence_preserves_007_plan_node_shape(
+    monkeypatch,
+) -> None:
+    def fake_live_provider(**kwargs):
+        if kwargs["role"] == "orchestrator":
+            return json.dumps(_valid_orchestrator_semantic_reasoning_proposal())
+        return json.dumps(_valid_architect_semantic_reasoning_proposal())
+
+    monkeypatch.setattr(runner, "_call_live_gemini_provider", fake_live_provider)
+    result = runner.run_live_unknown_request_dual_rich_context(
+        HOTEL_LIKE_REQUEST,
+        env={
+            runner.ENV_UNKNOWN_REQUEST_LIVE_GEMINI: "1",
+            runner.ENV_UNKNOWN_REQUEST_BOUNDED_SEMANTIC_EVIDENCE_PACKET: "1",
+        },
+    )
+    nodes = result["plan_graph_context"]["nodes"]
+
+    assert result["final_status"] == "PASS"
+    assert nodes == (
+        {
+            "node_id": "node:unknown_request_semantic_review",
+            "kind": "semantic_review",
+            "executor_id": "local_unknown_request_review_executor",
+            "expected_output": "ResultProposal",
+            "advisory_only": True,
+            "source_route_id": "unknown_request_root_review",
+        },
+        {
+            "node_id": "node:root_review_gate",
+            "kind": "root_review_gate",
+            "executor_id": "local_unknown_request_review_executor",
+            "expected_output": "ResultProposal",
+            "depends_on": ("node:unknown_request_semantic_review",),
+            "advisory_only": True,
+            "Root remains final authority": True,
+        },
+    )
+    flattened = _flatten_value(nodes)
+    for marker in (
+        "action_permission",
+        "connector_command",
+        "final_output",
+        "ActionCommitPacket",
+        "real_world_effect",
+    ):
+        assert marker not in flattened
+
+
 def test_compact_live_path_available_when_explicitly_enabled(monkeypatch) -> None:
     calls = []
 
@@ -1769,6 +2050,8 @@ def test_compact_live_path_available_when_explicitly_enabled(monkeypatch) -> Non
     assert result["live_provider_contract_mode"] == "compact_rationale_adapter"
     assert result["counters"]["compact_adapter_expanded_orchestrator_count"] == 1
     assert result["counters"]["compact_adapter_expanded_architect_count"] == 1
+    assert "bounded_semantic_evidence_packet" not in result
+    assert "bounded_semantic_evidence_packet_created_count" not in result["counters"]
 
 
 def test_full_structured_live_path_available_when_explicitly_enabled(
@@ -1801,6 +2084,8 @@ def test_full_structured_live_path_available_when_explicitly_enabled(
     assert result["live_provider_contract_mode"] == "full_structured_rationale"
     assert result["live_schema_mode"] == "response_schema"
     assert result["counters"]["action_permission_created_count"] == 0
+    assert "bounded_semantic_evidence_packet" not in result
+    assert "bounded_semantic_evidence_packet_created_count" not in result["counters"]
 
 
 def test_semantic_reasoning_forbidden_orchestrator_claims_fail_closed_before_architect(

@@ -12,6 +12,7 @@ from hedgehog.structured_rationale import (
 )
 
 
+
 def _valid_orchestrator_payload(**overrides: Any) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "proposal_id": "proposal:orchestrator:semantic",
@@ -97,8 +98,23 @@ def _flatten_text(value: Any) -> str:
     return str(value)
 
 
+def _walk_strings(value: Any) -> tuple[str, ...]:
+    strings: list[str] = []
+    if isinstance(value, dict):
+        for key, item in value.items():
+            strings.append(str(key))
+            strings.extend(_walk_strings(item))
+    elif isinstance(value, (list, tuple)):
+        for item in value:
+            strings.extend(_walk_strings(item))
+    elif isinstance(value, str):
+        strings.append(value)
+    return tuple(strings)
+
+
 def test_public_api_and_constants_exist() -> None:
     for name in (
+        "SEMANTIC_REASONING_MAX_ENTRY_TEXT_CHARS",
         "ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS",
         "ARCHITECT_SEMANTIC_REASONING_REQUIRED_FIELDS",
         "ORCHESTRATOR_SEMANTIC_REASONING_FIELDS",
@@ -165,6 +181,19 @@ def test_semantic_reasoning_entries_wrap_provider_text() -> None:
     )
 
 
+def test_semantic_reasoning_entries_bounds_long_provider_text() -> None:
+    long_text = "  " + ("bounded provider reasoning text " * 30) + "  "
+
+    entries = adapter.semantic_reasoning_entries({"reasoning": long_text}, "reasoning")
+
+    assert len(long_text) > 700
+    assert len(entries) == 1
+    assert entries[0]["source"] == "provider_semantic_reasoning"
+    assert len(entries[0]["text"]) <= adapter.SEMANTIC_REASONING_MAX_ENTRY_TEXT_CHARS
+    assert entries[0]["text"] == entries[0]["text"].strip()
+    assert entries[0]["text"]
+
+
 def test_validate_orchestrator_semantic_reasoning_proposal_accepts_valid_payload() -> None:
     assert adapter.validate_orchestrator_semantic_reasoning_proposal(
         _valid_orchestrator_payload()
@@ -214,6 +243,35 @@ def test_expand_orchestrator_semantic_reasoning_builds_valid_structured_rational
     assert rationale["Root remains final authority"] is True
 
 
+def test_expand_orchestrator_semantic_reasoning_bounds_long_reasoning_for_structured_rationale() -> None:
+    long_text = "Rejected route remains bounded before Root review. " * 20
+    expanded = adapter.expand_orchestrator_semantic_reasoning_proposal(
+        _valid_orchestrator_payload(
+            rejected_route_reasoning=(long_text,),
+            authority_claimed=True,
+            action_permission_claimed=True,
+            final_output_claimed=True,
+            connector_command_claimed=True,
+        ),
+        {"context_packet_type": "OrchestratorRouteContextPacket"},
+    )
+
+    rationale = expanded["structured_orchestrator_rationale"]
+    validation = validate_orchestrator_structured_rationale(rationale)
+
+    assert len(long_text) > 700
+    assert validation["accepted"] is True, validation
+    assert max(len(item) for item in _walk_strings(rationale)) <= 512
+    assert expanded["authority_claimed"] is True
+    assert expanded["action_permission_claimed"] is True
+    assert expanded["final_output_claimed"] is True
+    assert expanded["connector_command_claimed"] is True
+    assert rationale["authority_claimed"] is False
+    assert rationale["action_permission_claimed"] is False
+    assert rationale["final_output_claimed"] is False
+    assert rationale["connector_command_claimed"] is False
+
+
 def test_expand_architect_semantic_reasoning_builds_valid_structured_rationale_and_safe_nodes() -> None:
     expanded = adapter.expand_architect_semantic_reasoning_proposal(
         _valid_architect_payload(final_output_claimed=True),
@@ -245,6 +303,35 @@ def test_expand_architect_semantic_reasoning_builds_valid_structured_rationale_a
         "real_world_effect",
     ):
         assert marker not in flattened
+
+
+def test_expand_architect_semantic_reasoning_bounds_long_validator_reasoning_for_structured_rationale() -> None:
+    long_text = "Validator coverage stays bounded before Root review. " * 20
+    expanded = adapter.expand_architect_semantic_reasoning_proposal(
+        _valid_architect_payload(
+            validator_coverage_reasoning=(long_text,),
+            action_permission_claimed=True,
+            final_output_claimed=True,
+            connector_command_claimed=True,
+        ),
+        {
+            "source_route_id": "route:root_review",
+            "allowed_executor_ids": ("executor:semantic_review",),
+        },
+    )
+
+    rationale = expanded["structured_architect_rationale"]
+    validation = validate_architect_structured_rationale(rationale)
+
+    assert len(long_text) > 700
+    assert validation["accepted"] is True, validation
+    assert max(len(item) for item in _walk_strings(rationale)) <= 512
+    assert expanded["action_permission_claimed"] is True
+    assert expanded["final_output_claimed"] is True
+    assert expanded["connector_command_claimed"] is True
+    assert rationale["action_permission_claimed"] is False
+    assert rationale["final_output_claimed"] is False
+    assert rationale["connector_command_claimed"] is False
 
 
 def test_expand_architect_semantic_reasoning_still_builds_safe_local_nodes_for_valid_payload() -> None:

@@ -27,6 +27,7 @@ Root remains final authority.
 
 
 PROVIDER_SEMANTIC_REASONING_SOURCE = "provider_semantic_reasoning"
+SEMANTIC_REASONING_MAX_ENTRY_TEXT_CHARS = 480
 
 SEMANTIC_REASONING_MISSING_FIELD_REASON = "semantic_reasoning_missing_field"
 SEMANTIC_REASONING_EMPTY_FIELD_REASON = "semantic_reasoning_empty_field"
@@ -130,6 +131,14 @@ def semantic_reasoning_string_list(value: Any) -> tuple[str, ...]:
     return ()
 
 
+def _bounded_semantic_reasoning_text(value: str) -> str:
+    stripped = value.strip()
+    if len(stripped) <= SEMANTIC_REASONING_MAX_ENTRY_TEXT_CHARS:
+        return stripped
+    bounded = stripped[:SEMANTIC_REASONING_MAX_ENTRY_TEXT_CHARS].rstrip()
+    return bounded or stripped[:SEMANTIC_REASONING_MAX_ENTRY_TEXT_CHARS]
+
+
 def validate_semantic_reasoning_fields(
     payload: Mapping[str, Any],
     required_reasoning_fields: tuple[str, ...],
@@ -174,7 +183,10 @@ def semantic_reasoning_entries(
     field: str,
 ) -> tuple[dict[str, str], ...]:
     return tuple(
-        {"text": item, "source": PROVIDER_SEMANTIC_REASONING_SOURCE}
+        {
+            "text": _bounded_semantic_reasoning_text(item),
+            "source": PROVIDER_SEMANTIC_REASONING_SOURCE,
+        }
         for item in semantic_reasoning_string_list(payload.get(field))
     )
 
@@ -416,6 +428,7 @@ def expand_architect_semantic_reasoning_proposal(
 
 __all__ = (
     "PROVIDER_SEMANTIC_REASONING_SOURCE",
+    "SEMANTIC_REASONING_MAX_ENTRY_TEXT_CHARS",
     "SEMANTIC_REASONING_MISSING_FIELD_REASON",
     "SEMANTIC_REASONING_EMPTY_FIELD_REASON",
     "SEMANTIC_REASONING_INVALID_TYPE_REASON",

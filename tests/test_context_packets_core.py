@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -62,6 +63,14 @@ def _all_valid_packets() -> tuple[tuple[dict, object], ...]:
                 selected_vector_ids=("vector:warehouse:001",),
             ),
             packets.validate_orchestrator_route_context_packet,
+        ),
+        (
+            packets.build_bounded_semantic_evidence_packet(
+                domain="warehouse_dispatch",
+                source_route_id="review_route",
+                selected_vector_ids=("vector:warehouse:001",),
+            ),
+            packets.validate_bounded_semantic_evidence_packet,
         ),
         (
             packets.build_architect_plan_context_packet(
@@ -441,3 +450,629 @@ def test_context_packet_is_not_final_output_or_action_commit_packet(
 
     assert validation["accepted"] is False
     assert reason in validation["reasons"]
+
+
+def _semantic_item(
+    text: str = "Generic bounded evidence remains candidate only.",
+    *,
+    evidence_kind: str = "observed_fact",
+) -> dict:
+    return packets.semantic_evidence_item(
+        text,
+        source="runtime_canonicalization",
+        evidence_kind=evidence_kind,
+    )
+
+
+def _valid_bounded_semantic_evidence_packet() -> dict:
+    return packets.build_bounded_semantic_evidence_packet(
+        source_route_id="route:generic_review",
+        source_proposal_id="proposal:generic_review",
+        source_context_packet_id="context_packet:orchestrator_route:generic",
+        selected_vector_ids=("vector:generic_review",),
+        required_guards=("ContextPacket validation", "Root final authority"),
+    )
+
+
+def _valid_route_context_for_bsep() -> dict:
+    return packets.build_orchestrator_route_context_packet(
+        packet_id="context_packet:orchestrator_route:generic",
+        allowed_routes=("route:generic_review",),
+        selected_vector_ids=("vector:generic_review",),
+        required_guards=("ContextPacket validation", "Root final authority"),
+    )
+
+
+def test_bounded_semantic_evidence_packet_builder_produces_valid_packet() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is True
+    assert validation["reasons"] == ()
+    assert packet["packet_type"] == packets.BOUNDED_SEMANTIC_EVIDENCE_PACKET_TYPE
+    assert (
+        packet["created_by"]
+        == packets.BOUNDED_SEMANTIC_EVIDENCE_PACKET_CREATED_BY_DEFAULT
+    )
+    assert packet["truth_claimed"] is False
+    assert packet["authority_claimed"] is False
+    assert packet["action_permission_claimed"] is False
+    assert packet["final_output_claimed"] is False
+    assert packet["connector_command_claimed"] is False
+    assert packet["action_commit_packet_claimed"] is False
+    assert packet["root_bypass_claimed"] is False
+    assert packet["raw_user_text_included"] is False
+    assert packet["raw_cross_role_text_included"] is False
+    assert packet["ContextPacket is not truth"] is True
+    assert packet["ContextPacket is not authority"] is True
+    assert packet["BoundedSemanticEvidencePacket is not truth"] is True
+    assert packet["BoundedSemanticEvidencePacket is not authority"] is True
+    assert packet["BoundedSemanticEvidencePacket is not FinalOutput"] is True
+    assert packet["BoundedSemanticEvidencePacket is not ActionCommitPacket"] is True
+    assert packet["Evidence packet is not action permission"] is True
+    assert packet["Root remains final authority"] is True
+    assert "action_permission" not in packet
+    assert "connector_command" not in packet
+    assert "final_output" not in packet
+
+
+def test_bounded_semantic_evidence_packet_item_helper_shape() -> None:
+    item = packets.semantic_evidence_item(
+        "  Bounded fact  ",
+        source="validated_context_packet",
+        evidence_kind="observed_fact",
+        confidence_label="medium",
+    )
+
+    assert item == {
+        "text": "Bounded fact",
+        "source": "validated_context_packet",
+        "evidence_kind": "observed_fact",
+        "confidence_label": "medium",
+        "candidate_only": True,
+        "raw_quote": False,
+    }
+
+
+def test_bounded_semantic_evidence_packet_validator_rejects_missing_required_fields() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet.pop("packet_id")
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_missing_required_field:packet_id"
+        in validation["reasons"]
+    )
+
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet.pop("source_route_id")
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_missing_required_field:source_route_id"
+        in validation["reasons"]
+    )
+
+
+def test_bounded_semantic_evidence_packet_validator_rejects_wrong_packet_type() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["packet_type"] = "OtherPacket"
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert "unexpected_packet_type:BoundedSemanticEvidencePacket" in validation["reasons"]
+
+
+def test_bounded_semantic_evidence_packet_creator_must_be_runtime() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["created_by"] = "Gemini/provider"
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_packet_creator_must_be_runtime"
+        in validation["reasons"]
+    )
+
+
+def test_bounded_semantic_evidence_packet_rejects_production_and_public_wow_claims() -> None:
+    cases = (
+        ("production_ready", "production_readiness_claim_forbidden"),
+        ("production_ready_claimed", "production_readiness_claim_forbidden"),
+        ("public_wow_ready", "public_wow_readiness_claim_forbidden"),
+        ("public_wow_ready_claimed", "public_wow_readiness_claim_forbidden"),
+    )
+
+    for field, reason in cases:
+        packet = _valid_bounded_semantic_evidence_packet()
+        packet[field] = True
+        validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+        assert validation["accepted"] is False
+        assert reason in validation["reasons"]
+
+        false_packet = _valid_bounded_semantic_evidence_packet()
+        false_packet[field] = False
+        false_validation = packets.validate_bounded_semantic_evidence_packet(
+            false_packet
+        )
+
+        assert false_validation["accepted"] is True
+        assert reason not in false_validation["reasons"]
+
+
+def test_bounded_semantic_evidence_packet_schema_version_must_match() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["schema_version"] = "wrong_version"
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert "bounded_semantic_evidence_schema_version_invalid" in validation["reasons"]
+
+
+def test_bounded_semantic_evidence_packet_roles_are_fixed() -> None:
+    valid = _valid_bounded_semantic_evidence_packet()
+    valid_validation = packets.validate_bounded_semantic_evidence_packet(valid)
+
+    assert valid_validation["accepted"] is True
+
+    source_cases = ("provider", "gemini")
+    for role in source_cases:
+        packet = _valid_bounded_semantic_evidence_packet()
+        packet["source_role"] = role
+        validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+        assert validation["accepted"] is False
+        assert (
+            "bounded_semantic_evidence_source_role_must_be_orchestrator"
+            in validation["reasons"]
+        )
+
+    target_cases = ("root", "provider")
+    for role in target_cases:
+        packet = _valid_bounded_semantic_evidence_packet()
+        packet["target_role"] = role
+        validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+        assert validation["accepted"] is False
+        assert (
+            "bounded_semantic_evidence_target_role_must_be_architect"
+            in validation["reasons"]
+        )
+
+
+def test_bounded_semantic_evidence_packet_boundaries_are_required() -> None:
+    cases = (
+        (
+            "BoundedSemanticEvidencePacket is not truth",
+            "bounded_semantic_evidence_packet_truth_boundary_required",
+        ),
+        (
+            "BoundedSemanticEvidencePacket is not authority",
+            "bounded_semantic_evidence_packet_authority_boundary_required",
+        ),
+        (
+            "Root remains final authority",
+            "bounded_semantic_evidence_root_final_authority_required",
+        ),
+    )
+
+    for field, reason in cases:
+        packet = _valid_bounded_semantic_evidence_packet()
+        packet.pop(field)
+        validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+        assert validation["accepted"] is False
+        assert reason in validation["reasons"]
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "reason"),
+    (
+        (
+            "raw_user_request",
+            "raw request",
+            "bounded_semantic_evidence_raw_user_text_forbidden",
+        ),
+        (
+            "raw_user_text",
+            "raw text",
+            "bounded_semantic_evidence_raw_user_text_forbidden",
+        ),
+        (
+            "raw_cross_role_text",
+            "raw role text",
+            "bounded_semantic_evidence_raw_cross_role_text_forbidden",
+        ),
+        (
+            "raw_gemini_text",
+            "raw provider text",
+            "bounded_semantic_evidence_raw_gemini_text_forbidden",
+        ),
+    ),
+)
+def test_bounded_semantic_evidence_packet_rejects_raw_text_and_raw_cross_role_text(
+    field: str,
+    value: object,
+    reason: str,
+) -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet[field] = value
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert reason in validation["reasons"]
+
+
+@pytest.mark.parametrize(
+    ("field", "reason"),
+    (
+        ("full_runner_state_dump", "unbounded_context_dump_forbidden"),
+        ("unbounded_context_dump", "unbounded_context_dump_forbidden"),
+        ("raw_plan_graph_context", "unbounded_plangraph_context_dump_forbidden"),
+        ("raw_plangraph_context", "unbounded_plangraph_context_dump_forbidden"),
+    ),
+)
+def test_bounded_semantic_evidence_packet_rejects_unbounded_raw_dumps(
+    field: str,
+    reason: str,
+) -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet[field] = {"dump": "too much context"}
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert reason in validation["reasons"]
+
+
+@pytest.mark.parametrize(
+    ("field", "reason"),
+    (
+        ("truth_claimed", "bounded_semantic_evidence_truth_claim_forbidden"),
+        ("authority_claimed", "bounded_semantic_evidence_authority_claim_forbidden"),
+        (
+            "action_permission_claimed",
+            "bounded_semantic_evidence_action_permission_claim_forbidden",
+        ),
+        ("final_output_claimed", "bounded_semantic_evidence_final_output_claim_forbidden"),
+        (
+            "connector_command_claimed",
+            "bounded_semantic_evidence_connector_command_claim_forbidden",
+        ),
+        (
+            "action_commit_packet_claimed",
+            "bounded_semantic_evidence_action_commit_packet_claim_forbidden",
+        ),
+        ("root_bypass_claimed", "bounded_semantic_evidence_root_bypass_claim_forbidden"),
+    ),
+)
+def test_bounded_semantic_evidence_packet_rejects_claims(
+    field: str,
+    reason: str,
+) -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet[field] = True
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert reason in validation["reasons"]
+
+
+@pytest.mark.parametrize(
+    ("mutator", "reason"),
+    (
+        (
+            lambda packet: packet.update({"observed_semantic_facts": ()}),
+            "bounded_semantic_evidence_empty_field:observed_semantic_facts",
+        ),
+        (
+            lambda packet: packet.update(
+                {"observed_semantic_facts": (_semantic_item("   "),)}
+            ),
+            "bounded_semantic_evidence_item_empty_text:observed_semantic_facts",
+        ),
+        (
+            lambda packet: packet["observed_semantic_facts"][0].pop("source"),
+            "bounded_semantic_evidence_item_missing_source:observed_semantic_facts",
+        ),
+        (
+            lambda packet: packet["observed_semantic_facts"][0].pop("evidence_kind"),
+            "bounded_semantic_evidence_item_missing_kind:observed_semantic_facts",
+        ),
+        (
+            lambda packet: packet["observed_semantic_facts"][0].update(
+                {"source": "unbounded_source"}
+            ),
+            "bounded_semantic_evidence_item_source_not_allowed:observed_semantic_facts",
+        ),
+        (
+            lambda packet: packet["observed_semantic_facts"][0].update(
+                {"evidence_kind": "unbounded_kind"}
+            ),
+            "bounded_semantic_evidence_item_kind_not_allowed:observed_semantic_facts",
+        ),
+        (
+            lambda packet: packet["observed_semantic_facts"][0].update(
+                {"confidence_label": "certain"}
+            ),
+            "bounded_semantic_evidence_item_confidence_label_not_allowed:observed_semantic_facts",
+        ),
+        (
+            lambda packet: packet["observed_semantic_facts"][0].update(
+                {"candidate_only": False}
+            ),
+            "bounded_semantic_evidence_item_candidate_only_must_be_true:observed_semantic_facts",
+        ),
+        (
+            lambda packet: packet["observed_semantic_facts"][0].update(
+                {"raw_quote": True}
+            ),
+            "bounded_semantic_evidence_item_raw_quote_must_be_false:observed_semantic_facts",
+        ),
+    ),
+)
+def test_bounded_semantic_evidence_packet_rejects_empty_and_invalid_items(
+    mutator: object,
+    reason: str,
+) -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    mutator(packet)
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert reason in validation["reasons"]
+
+
+def test_bounded_semantic_evidence_packet_rejects_overlong_and_too_many_items() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["observed_semantic_facts"] = (
+        _semantic_item("x" * (packets.BOUNDED_SEMANTIC_EVIDENCE_MAX_ITEM_TEXT_LENGTH + 1)),
+    )
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_item_text_too_long:observed_semantic_facts"
+        in validation["reasons"]
+    )
+
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["observed_semantic_facts"] = tuple(
+        _semantic_item(f"item {index}")
+        for index in range(
+            packets.BOUNDED_SEMANTIC_EVIDENCE_MAX_ITEMS_PER_FIELD + 1
+        )
+    )
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_too_many_items:observed_semantic_facts"
+        in validation["reasons"]
+    )
+
+    packet = _valid_bounded_semantic_evidence_packet()
+    for field in packets.BOUNDED_SEMANTIC_EVIDENCE_ITEM_FIELDS:
+        packet[field] = tuple(
+            packets.semantic_evidence_item(
+                f"{field} item {index}",
+                source="runtime_canonicalization",
+                evidence_kind="observed_fact",
+            )
+            for index in range(7)
+        )
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert "bounded_semantic_evidence_too_many_total_items" in validation["reasons"]
+
+
+def test_bounded_semantic_evidence_packet_source_lineage_matches_context() -> None:
+    route_context = _valid_route_context_for_bsep()
+    proposal = {"proposal_id": "proposal:generic_review"}
+    rationale_validation = {"accepted": True}
+    packet = _valid_bounded_semantic_evidence_packet()
+
+    validation = packets.validate_bounded_semantic_evidence_packet(
+        packet,
+        route_context_packet=route_context,
+        orchestrator_proposal=proposal,
+        structured_rationale_validation=rationale_validation,
+    )
+
+    assert validation["accepted"] is True
+
+    route_mismatch = deepcopy(packet)
+    route_mismatch["source_route_id"] = "route:other"
+    route_validation = packets.validate_bounded_semantic_evidence_packet(
+        route_mismatch,
+        route_context_packet=route_context,
+    )
+    assert route_validation["accepted"] is False
+    assert "bounded_semantic_evidence_source_route_mismatch" in route_validation["reasons"]
+
+    proposal_mismatch = deepcopy(packet)
+    proposal_mismatch["source_proposal_id"] = "proposal:other"
+    proposal_validation = packets.validate_bounded_semantic_evidence_packet(
+        proposal_mismatch,
+        orchestrator_proposal=proposal,
+    )
+    assert proposal_validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_source_proposal_mismatch"
+        in proposal_validation["reasons"]
+    )
+
+    context_mismatch = deepcopy(packet)
+    context_mismatch["source_context_packet_id"] = "context_packet:other"
+    context_validation = packets.validate_bounded_semantic_evidence_packet(
+        context_mismatch,
+        route_context_packet=route_context,
+    )
+    assert context_validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_source_context_packet_mismatch"
+        in context_validation["reasons"]
+    )
+
+    rationale_validation = packets.validate_bounded_semantic_evidence_packet(
+        packet,
+        structured_rationale_validation={"accepted": False},
+    )
+    assert rationale_validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_source_rationale_missing_or_unaccepted"
+        in rationale_validation["reasons"]
+    )
+
+
+def test_bounded_semantic_evidence_packet_selected_vectors_must_match_route_context() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["selected_vector_ids"] = ("vector:not_from_route",)
+
+    validation = packets.validate_bounded_semantic_evidence_packet(
+        packet,
+        route_context_packet=_valid_route_context_for_bsep(),
+    )
+
+    assert validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_selected_vectors_must_be_subset_of_route_vectors"
+        in validation["reasons"]
+    )
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "reason"),
+    (
+        (
+            "selected_vector_ids",
+            (" ",),
+            "bounded_semantic_evidence_empty_item:selected_vector_ids",
+        ),
+        (
+            "selected_vector_ids",
+            ({"id": "vector"},),
+            "bounded_semantic_evidence_item_must_be_string:selected_vector_ids",
+        ),
+        (
+            "required_guards",
+            (" ",),
+            "bounded_semantic_evidence_empty_item:required_guards",
+        ),
+        (
+            "required_guards",
+            ({"guard": "Root"},),
+            "bounded_semantic_evidence_item_must_be_string:required_guards",
+        ),
+    ),
+)
+def test_bounded_semantic_evidence_packet_selected_vectors_and_guards_require_non_empty_strings(
+    field: str,
+    value: object,
+    reason: str,
+) -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet[field] = value
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert reason in validation["reasons"]
+
+    valid_packet = _valid_bounded_semantic_evidence_packet()
+    valid_packet["selected_vector_ids"] = ("vector:generic_review",)
+    valid_packet["required_guards"] = ("Root final authority",)
+    valid_validation = packets.validate_bounded_semantic_evidence_packet(valid_packet)
+
+    assert valid_validation["accepted"] is True
+
+
+def test_bounded_semantic_evidence_packet_rejects_real_world_action_surface() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["nested"] = {"connector_command": ""}
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_real_world_action_surface_forbidden"
+        in validation["reasons"]
+    )
+
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["observed_semantic_facts"] = (
+        _semantic_item("real_world_effect remains forbidden"),
+    )
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_real_world_action_surface_forbidden"
+        in validation["reasons"]
+    )
+
+    safe_packet = _valid_bounded_semantic_evidence_packet()
+    safe_packet["action_permission_claimed"] = False
+    safe_packet["connector_command_claimed"] = False
+    safe_packet["final_output_claimed"] = False
+    safe_packet["real_world_effects_allowed"] = False
+    safe_validation = packets.validate_bounded_semantic_evidence_packet(safe_packet)
+
+    assert safe_validation["accepted"] is True
+
+
+def test_bounded_semantic_evidence_packet_is_not_truth_authority_final_action_permission() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is True
+    assert packet["ContextPacket is not truth"] is True
+    assert packet["ContextPacket is not authority"] is True
+    assert packet["BoundedSemanticEvidencePacket is not truth"] is True
+    assert packet["BoundedSemanticEvidencePacket is not authority"] is True
+    assert packet["BoundedSemanticEvidencePacket is not FinalOutput"] is True
+    assert packet["Evidence packet is not action permission"] is True
+    assert packet["Root remains final authority"] is True
+
+
+def test_context_packets_core_no_bsep_fixture_hardcodes() -> None:
+    source = Path(packets.__file__).read_text()
+    for forbidden in (
+        "manual-live-unknown-request-real-gemini-007",
+        "gemini-2.5-flash",
+        "city archive",
+        "sealed historical artifact",
+        "HOTEL-17",
+        "ROBOT-CLEAN-2042",
+        "R-101",
+        "supplier payment",
+        "warehouse",
+        "certificate",
+    ):
+        assert forbidden not in source
+
+
+def test_context_packets_core_no_provider_network_imports() -> None:
+    source = Path(packets.__file__).read_text()
+    for forbidden in (
+        "google",
+        "genai",
+        "requests",
+        "httpx",
+        "urllib",
+        "socket",
+        "subprocess",
+        "provider_adapter",
+        "run_live_unknown_request",
+    ):
+        assert forbidden not in source

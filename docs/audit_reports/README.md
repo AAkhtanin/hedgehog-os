@@ -12,12 +12,13 @@ Current reports:
   - First successful real live unknown-request run through real Gemini Orchestrator and real Gemini Architect.
   - Run id: `manual-live-unknown-request-real-gemini-007`; run base head: `fa8877d`; audit commit/head context: `d2a0968`.
   - Model: `gemini-2.5-flash`; contract mode: `semantic_reasoning_adapter`; schema mode: `json_mime_only`.
-  - Current hedgehog core baseline remains `hedgehog.context_packets`, `hedgehog.structured_rationale`, `hedgehog.action_commit_packet`, `hedgehog.mock_connector_sandbox`, and `hedgehog.fractal_fulfillment`.
-  - `hedgehog.context_packets` contains bounded ContextPacket contracts; `hedgehog.structured_rationale` contains canonical structured rationale contracts/builders/validators; `hedgehog.action_commit_packet` contains the Root-created/mock-only ActionCommitPacket contract; `hedgehog.mock_connector_sandbox` contains fake-adapter/local-only sandbox contracts; `hedgehog.fractal_fulfillment` contains child branch / fulfillment topology contracts.
+  - Current hedgehog core baseline is `hedgehog.context_packets`, `hedgehog.structured_rationale`, `hedgehog.semantic_reasoning_adapter`, `hedgehog.action_commit_packet`, `hedgehog.mock_connector_sandbox`, and `hedgehog.fractal_fulfillment`.
+  - `hedgehog.context_packets` contains bounded ContextPacket contracts; `hedgehog.structured_rationale` contains canonical structured rationale contracts/builders/validators; `hedgehog.semantic_reasoning_adapter` contains stable semantic reasoning provider contracts, reasoning normalization/validation, semantic-to-canonical rationale conversion, safe local advisory PlanGraph node builders, provider claim boolean preservation, and no Gemini/provider/network/runtime imports; `hedgehog.action_commit_packet` contains the Root-created/mock-only ActionCommitPacket contract; `hedgehog.mock_connector_sandbox` contains fake-adapter/local-only sandbox contracts; `hedgehog.fractal_fulfillment` contains child branch / fulfillment topology contracts.
   - Rich Context / Structured Rationale core checkpoint files remain `hedgehog.context_packets`, `tests/test_context_packets_core.py`, `hedgehog.structured_rationale`, and `tests/test_structured_rationale_core.py`.
   - Core Extraction Action + Mock + Fractal remains closed under `auditor_core_extraction_action_mock_fractal_v01`: `c62ab84`, `be4f40d`, `e26c05a`, `4723830`; regression suite 272 passed, 2 warnings; deterministic extracted-core smoke PASS; dual Gemini extracted-core smoke PASS.
   - Integration separation: `demo/run_full_semantic_e2e_v01.py` remains integration harness / integration spine; `demo/run_live_unknown_request_dual_rich_context_v01.py` is the current live unknown-request provider spine; these runners are not `hedgehog` core modules.
-  - The live semantic reasoning adapter currently lives in the live unknown-request spine and is `approved_live_provider_architecture` but `pending_core_extraction`.
+  - `semantic_reasoning_adapter` status is `approved_live_provider_architecture`, `core_extracted`, `runner_delegated`, and `slice_c_audited`; the live unknown-request runner delegates semantic adapter mechanics to `hedgehog.semantic_reasoning_adapter`.
+  - The live runner still owns Gemini/provider/env/prompt/timeout/pre-delay/orchestration behavior, 007 integration policy, and prompt policy; core does not own Gemini or network.
   - This was not injected provider, not monkeypatched provider, and not a prepared domain fixture.
   - Root boundary was created with Root decision `needs_more_evidence`; this is a happy path for a safety/uncertainty request, not physical-action approval.
   - Provider proposes semantics. Runtime canonicalizes. Validators verify. Root decides.
@@ -27,7 +28,18 @@ Current reports:
   - Provider semantic summary: sealed historical artifact movement after hours, missing approval and unknown climate status remained uncertainty, route `unknown_request_root_review`, vector `unknown_request_semantic_review`, Architect recommendation `needs_more_evidence`.
   - Runtime built safe local nodes `node:unknown_request_semantic_review` and `node:root_review_gate`.
   - Prior real-live attempts 001-006 are superseded diagnostics: the full provider-canonical structured rationale contract was too heavy, compact object-array rationale remained weak/timeout-prone, and `semantic_reasoning_adapter` + `json_mime_only` resolved the live happy path.
-  - Next steps: core extraction preflight for semantic reasoning adapter, BoundedSemanticEvidencePacket Orchestrator -> Architect, replay/stability proof, multi-domain live unknown proof, adversarial live proof, DRS v0.2 expansion, AVF v0.2 expansion, and mock permission/action/connector sandbox before physical-world action domains.
+  - Next steps: BoundedSemanticEvidencePacket Orchestrator -> Architect preflight, replay/stability proof, multi-domain live unknown proof, adversarial live proof, DRS v0.2 expansion, AVF v0.2 expansion, and mock permission/action/connector sandbox before physical-world action domains.
+
+- `auditor_semantic_reasoning_adapter_delegation_slice_c_v01.log`
+  - Audit status: PASS.
+  - Slice A/B/C are closed for semantic reasoning adapter core extraction and runner delegation.
+  - `hedgehog.semantic_reasoning_adapter` is now core.
+  - The live unknown-request runner delegates semantic adapter mechanics to core while retaining Gemini/provider/env/prompt/orchestration behavior.
+  - 007-compatible shape preserved with `node:unknown_request_semantic_review` and `node:root_review_gate`.
+  - Compact/full compatibility paths preserved: `compact_rationale_adapter` and `full_structured_rationale`.
+  - Replay smoke was monkeypatched and network-free: `no_real_gemini_or_network: true`.
+  - Action counters remained zero.
+  - Slice D docs sync records this status; next engineering layer is BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
 
 - `auditor_core_extraction_action_mock_fractal_v01.log`
   - Audit status: PASS.

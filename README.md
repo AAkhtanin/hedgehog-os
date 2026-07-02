@@ -54,6 +54,12 @@ Current hedgehog core baseline:
 - `hedgehog.context_packets` contains bounded ContextPacket contracts.
 - `hedgehog.structured_rationale` contains canonical structured rationale
   contracts, builders, and validators.
+- `hedgehog.semantic_reasoning_adapter` contains stable semantic reasoning
+  provider contracts, required field constants, reasoning field normalization
+  and validation, conversion from provider semantic reasoning into canonical
+  structured rationales, safe local advisory PlanGraph node builders, provider
+  claim boolean preservation for downstream validators, and no
+  Gemini/provider/network/runtime imports.
 - `hedgehog.action_commit_packet` contains the Root-created/mock-only
   ActionCommitPacket contract.
 - `hedgehog.mock_connector_sandbox` contains the fake-adapter/local-only
@@ -90,9 +96,14 @@ Current integration/live spine:
 - `demo/run_live_unknown_request_dual_rich_context_v01.py` is the current live
   unknown-request provider spine.
 - These demo runners are not the same as `hedgehog` core modules.
-- The live semantic reasoning adapter currently lives in the live
-  unknown-request spine and is `approved_live_provider_architecture` but
-  `pending_core_extraction`.
+- `semantic_reasoning_adapter` status is now
+  `approved_live_provider_architecture`, `core_extracted`,
+  `runner_delegated`, and `slice_c_audited`.
+- `demo/run_live_unknown_request_dual_rich_context_v01.py` delegates semantic
+  adapter mechanics to `hedgehog.semantic_reasoning_adapter`.
+- The live runner still owns Gemini/provider/env/prompt/timeout/pre-delay/
+  orchestration behavior, the 007 integration policy, and prompt policy.
+- Core does not own Gemini or network.
 
 This is the first successful real live unknown-request run through real Gemini
 Orchestrator and real Gemini Architect. It was not an injected provider path,
@@ -114,9 +125,26 @@ Root decides.
 
 `semantic_reasoning_adapter` means the external provider returns an untrusted
 semantic reasoning proposal. The external provider does not need to emit
-internal canonical `structured_rationale` objects. Runtime builds
-`structured_orchestrator_rationale`, `structured_architect_rationale`, and safe
-local PlanGraph nodes, then validators accept or reject before Root decides.
+internal canonical `structured_rationale` objects.
+`hedgehog.semantic_reasoning_adapter` canonicalizes provider semantic reasoning
+into `structured_orchestrator_rationale`, `structured_architect_rationale`, and
+safe local PlanGraph nodes. `hedgehog.structured_rationale` validates canonical
+rationale. `hedgehog.context_packets` validates bounded packets. The runner
+orchestrates live provider calls and env gates. Root remains final authority.
+
+Semantic Reasoning Adapter core extraction status:
+
+- Core module: `hedgehog.semantic_reasoning_adapter`.
+- Direct tests: `tests/test_semantic_reasoning_adapter_core.py`.
+- Runner delegation commit: `12f7e96`.
+- Slice C audit: `auditor_semantic_reasoning_adapter_delegation_slice_c_v01`.
+- Slice C smoke: `manual-semantic-reasoning-adapter-delegation-slice-c-001`.
+- Slice C replay smoke PASS was monkeypatched and network-free:
+  `no_real_gemini_or_network: true`.
+- 007-compatible safe local nodes remain `node:unknown_request_semantic_review`
+  and `node:root_review_gate`.
+- Compact and full compatibility paths remain preserved:
+  `compact_rationale_adapter` and `full_structured_rationale`.
 
 007 validated artifacts and counters:
 
@@ -174,8 +202,7 @@ claim.
 
 Next roadmap:
 
-- Core extraction preflight for semantic reasoning adapter.
-- BoundedSemanticEvidencePacket Orchestrator -> Architect.
+- BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
 - Replay/stability proof for a 007-style run.
 - Multi-domain live unknown proof.
 - Adversarial live proof.
@@ -3107,8 +3134,12 @@ Next engineering focus:
   `gemini-2.5-flash`, `semantic_reasoning_adapter`, `json_mime_only`,
   Root decision `needs_more_evidence`, with no action permission, no
   connector call, and `real_world_effects_count: 0`.
-- NEXT: Core extraction preflight for semantic reasoning adapter.
-- NEXT: BoundedSemanticEvidencePacket Orchestrator -> Architect.
+- CLOSED: Semantic Reasoning Adapter core extraction and runner delegation
+  through Slice C audit, with `hedgehog.semantic_reasoning_adapter`,
+  `tests/test_semantic_reasoning_adapter_core.py`, runner delegation at
+  `12f7e96`, and audit
+  `auditor_semantic_reasoning_adapter_delegation_slice_c_v01`.
+- NEXT: BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
 - NEXT: Replay/stability proof for a 007-style run.
 - NEXT: Multi-domain live unknown proof and adversarial live proof.
 - NEXT: DRS v0.2 expansion and AVF v0.2 expansion.

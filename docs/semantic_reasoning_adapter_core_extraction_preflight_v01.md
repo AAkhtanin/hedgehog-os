@@ -4,6 +4,16 @@ document_id: semantic_reasoning_adapter_core_extraction_preflight_v01
 document_status: PREFLIGHT
 base_head: 377ecb0
 
+completion_note:
+- Completion status: CLOSED through Slice C audit.
+- Core module created: `hedgehog.semantic_reasoning_adapter`.
+- Direct tests created: `tests/test_semantic_reasoning_adapter_core.py`.
+- Runner delegated at `12f7e96`.
+- Audit committed at `092042f`.
+- Docs sync is completed by the Slice D patch.
+- The original preflight remains historically valid as the plan for the closed
+  extraction.
+
 ## Scope
 
 This is a docs-only preflight for semantic_reasoning_adapter core extraction.
@@ -33,6 +43,7 @@ Current hedgehog core baseline:
 
 - `hedgehog.context_packets`
 - `hedgehog.structured_rationale`
+- `hedgehog.semantic_reasoning_adapter`
 - `hedgehog.action_commit_packet`
 - `hedgehog.mock_connector_sandbox`
 - `hedgehog.fractal_fulfillment`
@@ -42,7 +53,8 @@ Current hedgehog core baseline:
 The preflight is based on the current source locations below:
 
 - `demo/run_live_unknown_request_dual_rich_context_v01.py`
-  - current home of `semantic_reasoning_adapter` runtime behavior.
+  - current live unknown-request provider spine.
+  - delegates semantic adapter mechanics to `hedgehog.semantic_reasoning_adapter`.
   - contains semantic reasoning required-field constants.
   - contains `_semantic_reasoning_string_list`.
   - contains `_validate_semantic_reasoning_fields`.
@@ -81,14 +93,17 @@ The preflight is based on the current source locations below:
 - `specs/machine_manifest_v0_25.json`
   - records `latest_live_provider_checkpoint:
     real_gemini_unknown_request_007`.
-  - records `semantic_reasoning_adapter_status:
-    approved_live_provider_architecture, pending_core_extraction`.
+  - now records `semantic_reasoning_adapter_status:
+    approved_live_provider_architecture, core_extracted, runner_delegated,
+    slice_c_audited`.
 
 ## Why This Extraction Exists
 
-`semantic_reasoning_adapter` is approved live-provider architecture. It
-currently lives in `demo/run_live_unknown_request_dual_rich_context_v01.py` and
-is marked pending core extraction.
+`semantic_reasoning_adapter` is approved live-provider architecture. At
+preflight time, its stable mechanics lived in
+`demo/run_live_unknown_request_dual_rich_context_v01.py`. The extraction is now
+closed through Slice C audit, and the mechanics live in
+`hedgehog.semantic_reasoning_adapter`.
 
 The goal is to move stable semantic provider contracts and canonicalization
 helpers into hedgehog core. The target is a reusable, deterministic, local

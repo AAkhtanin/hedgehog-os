@@ -32,6 +32,12 @@ Current hedgehog core baseline:
 - `hedgehog.context_packets` contains bounded ContextPacket contracts.
 - `hedgehog.structured_rationale` contains canonical structured rationale
   contracts, builders, and validators.
+- `hedgehog.semantic_reasoning_adapter` contains stable semantic reasoning
+  provider contracts, required field constants, reasoning field normalization
+  and validation, conversion from provider semantic reasoning into canonical
+  structured rationales, safe local advisory PlanGraph node builders, provider
+  claim boolean preservation for downstream validators, and no
+  Gemini/provider/network/runtime imports.
 - `hedgehog.action_commit_packet` contains the Root-created/mock-only
   ActionCommitPacket contract.
 - `hedgehog.mock_connector_sandbox` contains the fake-adapter/local-only
@@ -57,9 +63,14 @@ Current integration/live spine:
 - `demo/run_live_unknown_request_dual_rich_context_v01.py` is the current live
   unknown-request provider spine.
 - These demo runners are not the same as `hedgehog` core modules.
-- The live semantic reasoning adapter currently lives in the live
-  unknown-request spine and is `approved_live_provider_architecture` but
-  `pending_core_extraction`.
+- `semantic_reasoning_adapter` status is now
+  `approved_live_provider_architecture`, `core_extracted`,
+  `runner_delegated`, and `slice_c_audited`.
+- `demo/run_live_unknown_request_dual_rich_context_v01.py` delegates semantic
+  adapter mechanics to `hedgehog.semantic_reasoning_adapter`.
+- The live runner still owns Gemini/provider/env/prompt/timeout/pre-delay/
+  orchestration behavior, the 007 integration policy, and prompt policy.
+- Core does not own Gemini or network.
 
 ## What was validated
 
@@ -159,10 +170,10 @@ Historical next direction from this checkpoint:
 - Rich Context / Bounded Context Packets preflight
 
 That context-packet and structured-rationale core work now exists in
-`hedgehog.context_packets` and `hedgehog.structured_rationale`. Current next
-direction after Real Gemini Unknown Request 007 is core extraction preflight
-for `semantic_reasoning_adapter`, then BoundedSemanticEvidencePacket
-Orchestrator -> Architect.
+`hedgehog.context_packets` and `hedgehog.structured_rationale`.
+`hedgehog.semantic_reasoning_adapter` is also now core-extracted and delegated
+from the live unknown-request runner. Current next direction is
+BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
 
 Explicitly still not next:
 

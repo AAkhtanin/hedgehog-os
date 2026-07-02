@@ -177,6 +177,12 @@ Current hedgehog core baseline:
 - `hedgehog.context_packets` contains bounded ContextPacket contracts.
 - `hedgehog.structured_rationale` contains canonical structured rationale
   contracts, builders, and validators.
+- `hedgehog.semantic_reasoning_adapter` contains stable semantic reasoning
+  provider contracts, required field constants, reasoning field normalization
+  and validation, conversion from provider semantic reasoning into canonical
+  structured rationales, safe local advisory PlanGraph node builders, provider
+  claim boolean preservation for downstream validators, and no
+  Gemini/provider/network/runtime imports.
 - `hedgehog.action_commit_packet` contains the Root-created/mock-only
   ActionCommitPacket contract.
 - `hedgehog.mock_connector_sandbox` contains the fake-adapter/local-only
@@ -213,9 +219,14 @@ Current integration/live spine:
 - `demo/run_live_unknown_request_dual_rich_context_v01.py` is the current live
   unknown-request provider spine.
 - These demo runners are not the same as `hedgehog` core modules.
-- The live semantic reasoning adapter currently lives in the live
-  unknown-request spine and is `approved_live_provider_architecture` but
-  `pending_core_extraction`.
+- `semantic_reasoning_adapter` status is now
+  `approved_live_provider_architecture`, `core_extracted`,
+  `runner_delegated`, and `slice_c_audited`.
+- `demo/run_live_unknown_request_dual_rich_context_v01.py` delegates semantic
+  adapter mechanics to `hedgehog.semantic_reasoning_adapter`.
+- The live runner still owns Gemini/provider/env/prompt/timeout/pre-delay/
+  orchestration behavior, the 007 integration policy, and prompt policy.
+- Core does not own Gemini or network.
 
 ### Real Gemini Unknown Request 007
 
@@ -250,9 +261,26 @@ Root decides.
 
 `semantic_reasoning_adapter` means the external provider returns an untrusted
 semantic reasoning proposal. The external provider does not need to emit
-internal canonical `structured_rationale` objects. Runtime builds
-`structured_orchestrator_rationale`, `structured_architect_rationale`, and safe
-local PlanGraph nodes. Validators then accept or reject before Root decides.
+internal canonical `structured_rationale` objects.
+`hedgehog.semantic_reasoning_adapter` canonicalizes provider semantic reasoning
+into `structured_orchestrator_rationale`, `structured_architect_rationale`, and
+safe local PlanGraph nodes. `hedgehog.structured_rationale` validates canonical
+rationale, `hedgehog.context_packets` validates bounded packets, the runner
+orchestrates live provider calls and env gates, and Root decides.
+
+Semantic Reasoning Adapter core extraction status:
+
+- Core module: `hedgehog.semantic_reasoning_adapter`.
+- Direct tests: `tests/test_semantic_reasoning_adapter_core.py`.
+- Runner delegation commit: `12f7e96`.
+- Slice C audit: `auditor_semantic_reasoning_adapter_delegation_slice_c_v01`.
+- Slice C smoke: `manual-semantic-reasoning-adapter-delegation-slice-c-001`.
+- Slice C replay smoke PASS was monkeypatched and network-free:
+  `no_real_gemini_or_network: true`.
+- 007-compatible safe local nodes remain `node:unknown_request_semantic_review`
+  and `node:root_review_gate`.
+- Compact and full compatibility paths remain preserved:
+  `compact_rationale_adapter` and `full_structured_rationale`.
 
 Validated 007 artifacts:
 
@@ -307,12 +335,14 @@ Current status: the project has a real live unknown-request semantic decision
 spine. This is still not production autonomy: no real external actions, no
 connector calls, and no production persistence.
 
-Next engineering layers: core extraction preflight for semantic reasoning
-adapter; BoundedSemanticEvidencePacket Orchestrator -> Architect;
-replay/stability proof for a 007-style run; multi-domain live unknown proof;
-adversarial live proof; DRS v0.2 expansion; AVF v0.2 expansion; mock
-permission/action/connector sandbox before any physical-world action domain;
-later applied robot/hotel domain with permission gate and mock connector only.
+Next engineering layer: BoundedSemanticEvidencePacket Orchestrator -> Architect
+preflight. Now that `semantic_reasoning_adapter` is core, the next
+rich-context layer can pass validated bounded evidence from Orchestrator to
+Architect. It must not become a raw text dump, an unbounded Gemini context dump,
+or production action. Later layers remain replay/stability proof for a
+007-style run, multi-domain live unknown proof, adversarial live proof, DRS
+v0.2 expansion, AVF v0.2 expansion, and mock permission/action/connector
+sandbox before any physical-world action domain.
 
 Current bounded graph and lineage checkpoints:
 

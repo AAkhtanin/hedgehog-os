@@ -40,14 +40,30 @@
     "latest_live_provider_action_commit_packet_created_count": 0,
     "latest_live_provider_connector_called_count": 0,
     "latest_live_provider_real_world_effects_count": 0,
+    "latest_core_extraction_checkpoint": "semantic_reasoning_adapter_core_extraction_v01",
+    "latest_core_extraction_audit_id": "auditor_semantic_reasoning_adapter_delegation_slice_c_v01",
+    "latest_core_extraction_status": "complete_through_slice_c_audit_and_docs_sync",
     "semantic_reasoning_adapter_status": [
       "approved_live_provider_architecture",
-      "pending_core_extraction"
+      "core_extracted",
+      "runner_delegated",
+      "slice_c_audited"
     ],
-    "semantic_reasoning_adapter_current_location": "demo/run_live_unknown_request_dual_rich_context_v01.py",
+    "semantic_reasoning_adapter_core_module": "hedgehog.semantic_reasoning_adapter",
+    "semantic_reasoning_adapter_core_tests": "tests/test_semantic_reasoning_adapter_core.py",
+    "semantic_reasoning_adapter_runner_delegation_commit": "12f7e96",
+    "semantic_reasoning_adapter_core_commit": "04d55d8",
+    "semantic_reasoning_adapter_audit_commit": "092042f",
+    "semantic_reasoning_adapter_runner": "demo/run_live_unknown_request_dual_rich_context_v01.py",
+    "semantic_reasoning_adapter_runner_owns": [
+      "Gemini/provider/env/prompt/timeout/pre-delay/orchestration behavior",
+      "007 integration policy",
+      "prompt policy"
+    ],
     "current_core_baseline_modules": [
       "context_packets",
       "structured_rationale",
+      "semantic_reasoning_adapter",
       "action_commit_packet",
       "mock_connector_sandbox",
       "fractal_fulfillment"
@@ -55,6 +71,7 @@
     "current_core_baseline_module_paths": [
       "hedgehog.context_packets",
       "hedgehog.structured_rationale",
+      "hedgehog.semantic_reasoning_adapter",
       "hedgehog.action_commit_packet",
       "hedgehog.mock_connector_sandbox",
       "hedgehog.fractal_fulfillment"
@@ -244,7 +261,7 @@
     "hardening_plan_status": "APPROVED",
     "full_path_to_living_hedgehog_os_status": "PATCHED",
     "stop_proof_only_expansion_gate": true,
-    "next_engineering_layer": "semantic_reasoning_adapter_core_extraction_preflight",
+    "next_engineering_layer": "bounded_semantic_evidence_packet_orchestrator_to_architect_preflight",
     "roadmap_correct_path": "proof hardening -> enforcement hardening -> gated DRS/adversary protection where needed -> real semantic runtime -> real WOW / public packet / whitepaper",
     "roadmap_rejected_path": "proof hardening -> another pretty proof/public packet -> whitepaper",
     "drs_lineage_provenance_pressure_v01_closed_between_ttl_and_compromised_upstream": true,

@@ -1031,6 +1031,88 @@ def test_bounded_semantic_evidence_packet_rejects_real_world_action_surface() ->
     assert safe_validation["accepted"] is True
 
 
+def test_bounded_semantic_evidence_allows_safe_negative_action_surface_evidence_text() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["rejected_action_routes"] = (
+        packets.semantic_evidence_item(
+            (
+                "Direct external action routes are rejected because there is "
+                "no delegated authority or action permission."
+            ),
+            source="provider_semantic_reasoning",
+            evidence_kind="rejected_route",
+        ),
+    )
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is True
+
+
+def test_bounded_semantic_evidence_allows_root_review_rather_than_direct_action_text() -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["risk_boundary_notes"] = (
+        packets.semantic_evidence_item(
+            "Root review is required rather than direct action.",
+            source="provider_semantic_reasoning",
+            evidence_kind="risk_boundary",
+        ),
+    )
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is True
+
+
+@pytest.mark.parametrize(
+    "text",
+    (
+        "execute payment now",
+        "payment executed",
+        "connector command should run",
+        "ActionCommitPacket created",
+    ),
+)
+def test_bounded_semantic_evidence_still_rejects_positive_action_surface_evidence_text(
+    text: str,
+) -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["observed_semantic_facts"] = (
+        packets.semantic_evidence_item(
+            text,
+            source="provider_semantic_reasoning",
+            evidence_kind="observed_fact",
+        ),
+    )
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_real_world_action_surface_forbidden"
+        in validation["reasons"]
+    )
+
+
+@pytest.mark.parametrize(
+    "key",
+    ("connector_command", "final_output", "action_permission", "real_world_effect"),
+)
+def test_bounded_semantic_evidence_still_rejects_unsafe_surface_keys(
+    key: str,
+) -> None:
+    packet = _valid_bounded_semantic_evidence_packet()
+    packet["nested"] = {key: ""}
+
+    validation = packets.validate_bounded_semantic_evidence_packet(packet)
+
+    assert validation["accepted"] is False
+    assert (
+        "bounded_semantic_evidence_real_world_action_surface_forbidden"
+        in validation["reasons"]
+    )
+
+
 def test_bounded_semantic_evidence_packet_is_not_truth_authority_final_action_permission() -> None:
     packet = _valid_bounded_semantic_evidence_packet()
     validation = packets.validate_bounded_semantic_evidence_packet(packet)

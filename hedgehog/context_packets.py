@@ -840,10 +840,13 @@ def _bounded_surface_text_has_marker(text: str) -> bool:
         "final output",
         "real world effect",
         "real robot api",
+        "direct action",
         "door unlock",
         "dispatch robot",
+        "execute payment",
         "payment executed",
         "shipment released",
+        "create action permission",
     )
     compact_markers = ("actioncommitpacket",)
     return any(marker in spaced for marker in phrase_markers) or any(
@@ -851,31 +854,109 @@ def _bounded_surface_text_has_marker(text: str) -> bool:
     )
 
 
+def _bounded_evidence_item_text_is_safe_negative_surface_context(
+    item: Mapping[str, Any],
+) -> bool:
+    text = item.get("text")
+    if not isinstance(text, str):
+        return False
+    if item.get("candidate_only") is not True or item.get("raw_quote") is not False:
+        return False
+    if item.get("evidence_kind") not in {
+        "rejected_route",
+        "risk_boundary",
+        "authority_boundary",
+        "approval_condition",
+        "missing_evidence",
+        "uncertainty",
+    }:
+        return False
+
+    lowered = text.lower()
+    spaced = lowered.replace("_", " ").replace("-", " ")
+    compact = spaced.replace(" ", "")
+    unsafe_positive_markers = (
+        "execute payment",
+        "payment executed",
+        "shipment released",
+        "connector command should run",
+        "create action permission",
+        "real world effect allowed",
+    )
+    unsafe_positive_compact_markers = ("actioncommitpacketcreated",)
+    if any(marker in spaced for marker in unsafe_positive_markers):
+        return False
+    if any(marker in compact for marker in unsafe_positive_compact_markers):
+        return False
+
+    safe_negative_markers = (
+        "rejected",
+        "blocked",
+        "forbidden",
+        "not allowed",
+        "no delegated authority",
+        "no action permission",
+        "without authority",
+        "cannot be authorized",
+        "not authority",
+        "not permission",
+        "root review",
+        "rather than direct action",
+        "must not",
+        "do not",
+        "does not",
+        "is not",
+        "are not",
+    )
+    return any(marker in spaced for marker in safe_negative_markers)
+
+
+def _bounded_semantic_evidence_surface_value_forbidden(value: Any) -> bool:
+    if isinstance(value, Mapping):
+        allowed_boundary_keys = {
+            "BoundedSemanticEvidencePacket is not FinalOutput",
+            "BoundedSemanticEvidencePacket is not ActionCommitPacket",
+            "Evidence packet is not action permission",
+        }
+        allowed_false_keys = {
+            "action_permission_claimed",
+            "final_output_claimed",
+            "connector_command_claimed",
+            "action_commit_packet_claimed",
+            "real_world_effects_allowed",
+        }
+        for key, item in value.items():
+            key_text = str(key)
+            if key_text in allowed_boundary_keys:
+                continue
+            if key_text in allowed_false_keys and item is False:
+                continue
+            if _bounded_surface_text_has_marker(key_text):
+                return True
+            if (
+                key_text == "text"
+                and isinstance(item, str)
+                and _bounded_surface_text_has_marker(item)
+                and _bounded_evidence_item_text_is_safe_negative_surface_context(value)
+            ):
+                continue
+            if _bounded_semantic_evidence_surface_value_forbidden(item):
+                return True
+    elif isinstance(value, (list, tuple, set, frozenset)):
+        return any(
+            _bounded_semantic_evidence_surface_value_forbidden(item)
+            for item in value
+        )
+    elif isinstance(value, str):
+        return _bounded_surface_text_has_marker(value)
+    return False
+
+
 def _bounded_semantic_evidence_real_world_surface_reasons(
     packet: Mapping[str, Any],
 ) -> tuple[str, ...]:
-    allowed_boundary_keys = {
-        "BoundedSemanticEvidencePacket is not FinalOutput",
-        "BoundedSemanticEvidencePacket is not ActionCommitPacket",
-        "Evidence packet is not action permission",
-    }
-    allowed_false_keys = {
-        "action_permission_claimed",
-        "final_output_claimed",
-        "connector_command_claimed",
-        "action_commit_packet_claimed",
-        "real_world_effects_allowed",
-    }
-    for key, value in _walk_key_values(packet):
-        key_text = key or ""
-        if key_text in allowed_boundary_keys:
-            continue
-        if key_text in allowed_false_keys and value is False:
-            continue
-        if _bounded_surface_text_has_marker(key_text):
-            return ("bounded_semantic_evidence_real_world_action_surface_forbidden",)
-        if isinstance(value, str) and _bounded_surface_text_has_marker(value):
-            return ("bounded_semantic_evidence_real_world_action_surface_forbidden",)
+    if _bounded_semantic_evidence_surface_value_forbidden(packet):
+        return ("bounded_semantic_evidence_real_world_action_surface_forbidden",)
     return ()
 
 

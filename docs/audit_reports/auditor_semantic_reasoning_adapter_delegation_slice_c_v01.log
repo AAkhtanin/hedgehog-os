@@ -1,0 +1,111 @@
+audit_id: auditor_semantic_reasoning_adapter_delegation_slice_c_v01
+audit_status: PASS
+smoke_id: manual-semantic-reasoning-adapter-delegation-slice-c-001
+smoke_base_head: 12f7e96
+current_cleanup_head_context: 821613b
+final_status: PASS
+audit_scope: Slice C replay smoke after semantic_reasoning_adapter runner delegation
+
+source_commits:
+- preflight: cdd5316 Add semantic reasoning adapter core extraction preflight
+- Slice A core: 04d55d8 Extract semantic reasoning adapter core contracts
+- Slice B runner delegation: 12f7e96 Delegate live semantic reasoning adapter to core
+- cleanup-only after smoke: 821613b Ignore and remove local audit exports
+
+smoke_evidence:
+- summary_json: .tmp/semantic_reasoning_adapter_delegation/manual-semantic-reasoning-adapter-delegation-slice-c-001_summary.json
+- summary_log: .tmp/semantic_reasoning_adapter_delegation/manual-semantic-reasoning-adapter-delegation-slice-c-001_summary.log
+
+core_delegation_facts:
+- runner_constants_equal_core: true
+- runner_helpers_delegate_to_core: true
+- direct_provider_plan_nodes_fail_fast: true
+- runner delegates semantic adapter mechanics to hedgehog.semantic_reasoning_adapter
+- no cyclic import observed
+- no Gemini/provider/network imports added to hedgehog.semantic_reasoning_adapter
+
+semantic_default_path_after_delegation:
+- final_status: PASS
+- contract_mode: semantic_reasoning_adapter
+- schema_mode: json_mime_only
+- roles_called: orchestrator, architect
+- root_boundary_created: true
+- root_decision: not_ready
+- semantic_reasoning_adapter_used_count: 1
+- semantic_reasoning_expanded_orchestrator_count: 1
+- semantic_reasoning_expanded_architect_count: 1
+- live_model_call_count: 2
+- network_used_count: 2
+- gemini_called_count: 2
+- These are monkeypatched live-path counters in the replay smoke.
+- no_real_gemini_or_network: true
+- No actual Gemini or external network call occurred during this smoke.
+
+compatibility_shape_007_preserved:
+- matches_007_shape: true
+- plan_node: node:unknown_request_semantic_review
+- plan_node: node:root_review_gate
+- executor_id: local_unknown_request_review_executor
+- root_gate_root_final_authority: true
+- forbidden_surface_absent: true
+- no action_permission
+- no connector_command
+- no final_output
+- no ActionCommitPacket
+- no real_world_effect
+
+compatibility_paths_preserved:
+- compact_path_final_status: PASS
+- compact_contract_mode: compact_rationale_adapter
+- full_path_final_status: PASS
+- full_contract_mode: full_structured_rationale
+- action counters zero in compact path
+- action counters zero in full structured path
+
+fail_closed_probe:
+- provider_plan_nodes_final_status: FAIL_CLOSED
+- provider_plan_nodes_reason_present: true
+- validation_reason: architect_provider_plan_nodes_forbidden_in_semantic_mode
+- plan_graph_context_empty: true
+- result_proposal_empty: true
+- root_boundary_empty: true
+- This proves provider-supplied plan_nodes remain forbidden after delegation.
+
+validated_artifacts:
+- OrchestratorRouteContextPacket accepted.
+- ArchitectPlanContextPacket accepted.
+- structured_orchestrator_rationale accepted.
+- structured_architect_rationale accepted.
+- PlanGraph is not authority.
+- ResultProposal is not FinalOutput.
+- Root remains final authority.
+
+action_counters:
+- action_permission_created_count: 0
+- action_commit_packet_created_count: 0
+- connector_called_count: 0
+- real_world_effects_count: 0
+
+authority_and_architecture_conclusion:
+- Provider proposes semantics.
+- Runtime canonicalizes.
+- Validators verify.
+- Root decides.
+- semantic_reasoning_adapter is now in hedgehog core.
+- live runner delegates semantic adapter mechanics to core.
+- live runner still owns Gemini/provider/env/prompt/orchestration behavior.
+- 007 behavior remains preserved after delegation.
+- This is not production autonomy.
+- This is not public WOW ready.
+- No real connector or physical-world action occurred.
+
+next_steps:
+- Slice D audit/docs sync for semantic_reasoning_adapter core extraction.
+- Update docs/manifest so semantic_reasoning_adapter is no longer only pending core extraction.
+- BoundedSemanticEvidencePacket Orchestrator -> Architect.
+- Replay/stability proof and multi-domain/adversarial live proofs.
+
+audit_conclusion:
+- Slice C replay smoke passed after delegating live semantic reasoning adapter mechanics to hedgehog.semantic_reasoning_adapter.
+- Delegation preserved semantic default behavior, 007-compatible local PlanGraph shape, compact/full compatibility paths, and fail-closed handling for provider-supplied plan_nodes.
+- No real action counters moved above zero.

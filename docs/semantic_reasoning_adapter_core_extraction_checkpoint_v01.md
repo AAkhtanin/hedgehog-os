@@ -177,12 +177,12 @@ Current hedgehog core baseline is six modules:
 - no ActionCommitPacket from Gemini.
 - no FinalOutput from Gemini.
 
-## Next Step
+## Next Step Completion
 
-Next engineering layer:
+The next engineering layer identified by this checkpoint has now progressed:
+BoundedSemanticEvidencePacket lives in `hedgehog.context_packets` as a bounded
+ContextPacket family and reached real Gemini Slice D 004 PASS.
 
-- BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
-
-Now that `semantic_reasoning_adapter` is core, the next rich-context layer can
-pass validated bounded evidence from Orchestrator to Architect. It must not be
-raw text dump, unbounded Gemini context dump, or production action.
+Current next major gate: Supplier Payment / Shipment Release LIVE DUAL-ROLE
+WOW v1 preflight. The completed BSEP layer remains bounded evidence transfer,
+not raw text dump, unbounded Gemini context dump, or production action.

@@ -214,16 +214,27 @@ Current engineering order:
     through Slice C audit. `hedgehog.semantic_reasoning_adapter` is now core;
     the live runner delegates semantic adapter mechanics to core while keeping
     Gemini/provider/env/prompt/orchestration behavior in the runner.
-49. Next: BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
-50. Next: replay/stability proof, multi-domain live unknown proof, adversarial
-    live proof, DRS v0.2, AVF v0.2, and mock permission/action/connector
-    sandbox before physical-world action domains.
+49. BoundedSemanticEvidencePacket Real Gemini Slice D 004 - complete through
+    real Gemini replay and audit. Run
+    `manual-bounded-semantic-evidence-real-gemini-slice-d-004`, audit
+    `auditor_bounded_semantic_evidence_real_gemini_slice_d_004_v01`, base
+    `6a2950a`, final_status PASS, Root decision `needs_more_evidence`,
+    validation_errors: [], `live_model_call_count: 2`,
+    `network_used_count: 2`, `gemini_called_count: 2`,
+    `bounded_semantic_evidence_packet_created_count: 1`,
+    `bounded_semantic_evidence_packet_validated_count: 1`, and
+    `real_world_effects_count: 0`.
+50. Next: Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1
+    preflight, then replay/stability proof, multi-domain live unknown proof,
+    adversarial live proof, DRS v0.2, AVF v0.2, and mock permission/action/
+    connector sandbox before physical-world action domains.
 
 ## Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:
 
-- `hedgehog.context_packets` contains bounded ContextPacket contracts.
+- `hedgehog.context_packets` contains bounded ContextPacket contracts,
+  including BoundedSemanticEvidencePacket as a bounded ContextPacket family.
 - `hedgehog.structured_rationale` contains canonical structured rationale
   contracts, builders, and validators.
 - `hedgehog.semantic_reasoning_adapter` contains stable semantic reasoning

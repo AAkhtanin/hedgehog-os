@@ -256,7 +256,8 @@ Historical next engineering direction from this checkpoint:
 - Rich Context / Bounded Context Packets preflight
 
 `hedgehog.semantic_reasoning_adapter` is now core-extracted and delegated from
-the live unknown-request runner. Current next direction is
-BoundedSemanticEvidencePacket Orchestrator -> Architect preflight. This should
-still avoid NeedleFactory, Marennya, UP, real connectors, and production
-claims.
+the live unknown-request runner. BoundedSemanticEvidencePacket now lives in
+`hedgehog.context_packets` as a bounded ContextPacket family and has reached
+real Gemini Slice D 004 PASS. Current next direction is Supplier Payment /
+Shipment Release LIVE DUAL-ROLE WOW v1 preflight. This should still avoid
+NeedleFactory, Marennya, UP, real connectors, and production claims.

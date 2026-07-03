@@ -35,7 +35,39 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-Real Gemini Unknown Request 007 — PASS.
+BoundedSemanticEvidencePacket Real Gemini Slice D 004 — PASS.
+
+Checkpoint source:
+
+- Run id: `manual-bounded-semantic-evidence-real-gemini-slice-d-004`
+- Audit id: `auditor_bounded_semantic_evidence_real_gemini_slice_d_004_v01`
+- Runtime base head: `6a2950a`
+- Audit: `docs/audit_reports/auditor_bounded_semantic_evidence_real_gemini_slice_d_004_v01.log`
+- Checkpoint doc:
+  `docs/bounded_semantic_evidence_packet_real_gemini_checkpoint_v01.md`
+- Model: `gemini-2.5-flash`
+- Contract mode: `semantic_reasoning_adapter`
+- Schema mode: `json_mime_only`
+- BSEP gate: enabled
+- Final status: PASS
+- Root decision: `needs_more_evidence`
+- validation_errors: []
+- live_model_call_count: 2
+- network_used_count: 2
+- gemini_called_count: 2
+- bounded_semantic_evidence_packet_created_count: 1
+- bounded_semantic_evidence_packet_validated_count: 1
+- action_permission_created_count: 0
+- action_commit_packet_created_count: 0
+- connector_called_count: 0
+- real_world_effects_count: 0
+
+This is the current live rich-context checkpoint. It proves the real Gemini
+Orchestrator -> runtime BoundedSemanticEvidencePacket -> real Gemini Architect
+-> Root boundary path with BSEP accepted, structured rationales accepted, and
+all action counters zero.
+
+Real Gemini Unknown Request 007 remains the prior live-provider checkpoint.
 
 Checkpoint source:
 
@@ -52,6 +84,9 @@ Checkpoint source:
 Current hedgehog core baseline:
 
 - `hedgehog.context_packets` contains bounded ContextPacket contracts.
+  BoundedSemanticEvidencePacket now lives here as a bounded ContextPacket
+  family; it is not a new core module and does not change the six-module
+  core baseline count.
 - `hedgehog.structured_rationale` contains canonical structured rationale
   contracts, builders, and validators.
 - `hedgehog.semantic_reasoning_adapter` contains stable semantic reasoning
@@ -196,14 +231,43 @@ object-array rationale contract was still weak or timeout-prone.
 `semantic_reasoning_adapter` + `json_mime_only` resolved the live happy path.
 
 Current status: the project now has a real live unknown-request semantic
-decision spine. This is still not production autonomy: no real external
-actions, no connector calls, no production persistence, and no public launch
-claim.
+decision spine plus a real-live BSEP bounded evidence bridge from Orchestrator
+to Architect. This is still not production autonomy: no real external actions,
+no connector calls, no production persistence, and no public launch claim.
+
+### Provider Contract Modes — future-compatible design
+
+Hedgehog OS separates provider formatting from authority.
+
+- Current default is `semantic_json_mode`: provider returns simple semantic
+  JSON, runtime canonicalizes, validators verify, and Root decides.
+- `provider_schema_lite_mode` is a future optional ergonomics/reliability
+  helper only.
+- `provider_canonical_schema_mode` is not the current preferred route and may
+  only be revisited as a gated experiment.
+- Provider proposes semantics.
+- Runtime canonicalizes.
+- Validators verify.
+- Root decides.
+- Provider-side schema is not authority.
+- JSON MIME is not authority.
+- SDK schema is not authority.
+- Root remains final authority.
+
+Anti-overclaim lines:
+
+- This does not mean SDK schema mode is implemented now.
+- This does not mean Hedgehog OS returned to provider-owned canonical objects.
+- This does not mean provider-side schema replaces local validation.
+- This does not mean LangChain/provider framework controls Hedgehog authority.
+- This does not change the current BSEP / WOW route.
+
+See `docs/provider_contract_modes_v01.md`.
 
 Next roadmap:
 
-- BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
-- Replay/stability proof for a 007-style run.
+- Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
+- Replay/stability proof for a BSEP 004-style run.
 - Multi-domain live unknown proof.
 - Adversarial live proof.
 - DRS v0.2 expansion.
@@ -3139,10 +3203,20 @@ Next engineering focus:
   `tests/test_semantic_reasoning_adapter_core.py`, runner delegation at
   `12f7e96`, and audit
   `auditor_semantic_reasoning_adapter_delegation_slice_c_v01`.
-- NEXT: BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
-- NEXT: Replay/stability proof for a 007-style run.
+- CLOSED: BoundedSemanticEvidencePacket Real Gemini Slice D 004 PASS, run
+  `manual-bounded-semantic-evidence-real-gemini-slice-d-004`, audit
+  `auditor_bounded_semantic_evidence_real_gemini_slice_d_004_v01`, base head
+  `6a2950a`, `semantic_reasoning_adapter`, `json_mime_only`, BSEP gate
+  enabled, Root decision `needs_more_evidence`, validation_errors: [],
+  `live_model_call_count: 2`, `network_used_count: 2`,
+  `gemini_called_count: 2`,
+  `bounded_semantic_evidence_packet_created_count: 1`,
+  `bounded_semantic_evidence_packet_validated_count: 1`, and
+  `real_world_effects_count: 0`.
+- NEXT: Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
+- NEXT: Replay/stability proof for a BSEP 004-style run.
 - NEXT: Multi-domain live unknown proof and adversarial live proof.
-- NEXT: DRS v0.2 expansion and AVF v0.2 expansion.
+- LATER: DRS v0.2 expansion and AVF v0.2 expansion.
 - Supplier Payment remains the integration spine and business axis for later live evidence integration.
 - Documentation / public wrapper work remains a presentation layer, not runtime.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.

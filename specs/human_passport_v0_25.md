@@ -175,6 +175,9 @@ Non-claims:
 Current hedgehog core baseline:
 
 - `hedgehog.context_packets` contains bounded ContextPacket contracts.
+  BoundedSemanticEvidencePacket now lives here as a bounded ContextPacket
+  family; it is not a new core module and does not change the six-module
+  core baseline count.
 - `hedgehog.structured_rationale` contains canonical structured rationale
   contracts, builders, and validators.
 - `hedgehog.semantic_reasoning_adapter` contains stable semantic reasoning
@@ -227,6 +230,100 @@ Current integration/live spine:
 - The live runner still owns Gemini/provider/env/prompt/timeout/pre-delay/
   orchestration behavior, the 007 integration policy, and prompt policy.
 - Core does not own Gemini or network.
+
+### BoundedSemanticEvidencePacket Real Gemini Slice D 004
+
+BoundedSemanticEvidencePacket Real Gemini Slice D 004 is the current live
+rich-context checkpoint.
+
+Checkpoint facts:
+
+- run_id: `manual-bounded-semantic-evidence-real-gemini-slice-d-004`
+- audit_id: `auditor_bounded_semantic_evidence_real_gemini_slice_d_004_v01`
+- base_head: `6a2950a`
+- final_status: PASS
+- root_decision: `needs_more_evidence`
+- model: `gemini-2.5-flash`
+- contract_mode: `semantic_reasoning_adapter`
+- schema_mode: `json_mime_only`
+- bsep_gate: enabled
+- validation_errors: []
+- live_model_call_count: 2
+- network_used_count: 2
+- gemini_called_count: 2
+- bounded_semantic_evidence_packet_created_count: 1
+- bounded_semantic_evidence_packet_validated_count: 1
+- action_permission_created_count: 0
+- action_commit_packet_created_count: 0
+- connector_called_count: 0
+- real_world_effects_count: 0
+
+Validated artifacts:
+
+- OrchestratorRouteContextPacket accepted.
+- ArchitectPlanContextPacket accepted.
+- structured_orchestrator_rationale accepted.
+- structured_architect_rationale accepted.
+- BoundedSemanticEvidencePacket accepted.
+- PlanGraph is not authority.
+- ResultProposal is not FinalOutput.
+- Root remains final authority.
+
+Architect context safety:
+
+- contains BSEP: true.
+- raw request absent from prompt: true.
+- raw request absent from context: true.
+- forbidden raw dump keys absent from context: true.
+- boundary flags present but false: true.
+
+This proves a real-live architecture happy path, not full
+stability/adversarial completeness. Negative/adversarial provider suites remain
+future hardening. `json_mime_only` is intentional current default for
+`semantic_json_mode`. JSON MIME is not authority. Provider-side schema is not
+authority. Local validators remain required. Runtime canonicalization remains
+required.
+
+Architect explicit HTTP timeout was disabled in this manual replay; this is a
+reliability debt to separate `provider_timeout_seconds`,
+`http_client_timeout_enabled`, `architect_pre_delay_seconds`, and outer
+wall-clock/watchdog timeout. This timeout taxonomy is documentation only.
+
+Prior Slice D diagnostics: 001 failed closed before model call due
+provider_sdk_or_key_missing; 002 reached real Orchestrator and created BSEP,
+then false-positive BSEP surface scan blocked safe negative action-boundary
+evidence; 003 reached both real roles and BSEP accepted, then
+structured_architect_rationale failed on overlong provider reasoning text; 004
+passed after `6b3e094` safe negative BSEP action-boundary evidence text and
+`6a2950a` bounded semantic reasoning text before rationale expansion.
+
+### Provider Contract Modes
+
+Provider Contract Modes — future-compatible design:
+
+- Hedgehog OS separates provider formatting from authority.
+- Current default is `semantic_json_mode`: provider returns simple semantic
+  JSON, runtime canonicalizes, validators verify, and Root decides.
+- `provider_schema_lite_mode` is a future optional ergonomics/reliability
+  helper only.
+- `provider_canonical_schema_mode` is not the current preferred route and may
+  only be revisited as a gated experiment.
+- Provider proposes semantics.
+- Runtime canonicalizes.
+- Validators verify.
+- Root decides.
+- Provider-side schema is not authority.
+- JSON MIME is not authority.
+- SDK schema is not authority.
+- Root remains final authority.
+
+Anti-overclaim lines:
+
+- This does not mean SDK schema mode is implemented now.
+- This does not mean Hedgehog OS returned to provider-owned canonical objects.
+- This does not mean provider-side schema replaces local validation.
+- This does not mean LangChain/provider framework controls Hedgehog authority.
+- This does not change the current BSEP / WOW route.
 
 ### Real Gemini Unknown Request 007
 
@@ -335,14 +432,12 @@ Current status: the project has a real live unknown-request semantic decision
 spine. This is still not production autonomy: no real external actions, no
 connector calls, and no production persistence.
 
-Next engineering layer: BoundedSemanticEvidencePacket Orchestrator -> Architect
-preflight. Now that `semantic_reasoning_adapter` is core, the next
-rich-context layer can pass validated bounded evidence from Orchestrator to
-Architect. It must not become a raw text dump, an unbounded Gemini context dump,
-or production action. Later layers remain replay/stability proof for a
-007-style run, multi-domain live unknown proof, adversarial live proof, DRS
-v0.2 expansion, AVF v0.2 expansion, and mock permission/action/connector
-sandbox before any physical-world action domain.
+Next major gate: Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1
+preflight. BSEP is now through real Gemini Slice D 004 PASS. Later layers
+remain replay/stability proof for a BSEP 004-style run, multi-domain live
+unknown proof, adversarial live proof, DRS v0.2 expansion, AVF v0.2 expansion,
+and mock permission/action/connector sandbox before any physical-world action
+domain.
 
 Current bounded graph and lineage checkpoints:
 
@@ -3937,7 +4032,8 @@ Current roadmap state:
 - CLOSED: Live LLM Semantic Evidence Reader / Extractor v0.1.
 - CLOSED: Optional Live LLM Evidence Reader Smoke v0.1.
 - CLOSED: Live Provider Adapter / Response Capture v0.1.
-- NEXT: Supplier Payment Live Evidence Integration v0.2 preflight.
+- CLOSED: BoundedSemanticEvidencePacket Real Gemini Slice D 004 PASS.
+- NEXT: Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
 - Supplier Payment remains the integration spine and business axis for later live evidence integration.
 - Public WOW remains later, after Full Semantic E2E and E2E hardening.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.

@@ -245,11 +245,15 @@ The important change is that the proven contracts no longer live only inside the
 - hedgehog.mock_connector_sandbox
 - hedgehog.fractal_fulfillment
 
-The current live-provider checkpoint is Real Gemini Unknown Request 007:
-`manual-live-unknown-request-real-gemini-007`,
-`auditor_live_unknown_request_real_gemini_007_v01`,
-`semantic_reasoning_adapter`, `json_mime_only`, Root decision
-`needs_more_evidence`, and `real_world_effects_count: 0`.
+The current live rich-context checkpoint is BoundedSemanticEvidencePacket Real
+Gemini Slice D 004: `manual-bounded-semantic-evidence-real-gemini-slice-d-004`,
+`auditor_bounded_semantic_evidence_real_gemini_slice_d_004_v01`, base_head:
+6a2950a, `semantic_reasoning_adapter`, `json_mime_only`, Root decision
+`needs_more_evidence`, validation_errors: [], `live_model_call_count: 2`,
+`network_used_count: 2`, `gemini_called_count: 2`,
+`bounded_semantic_evidence_packet_created_count: 1`,
+`bounded_semantic_evidence_packet_validated_count: 1`, and
+`real_world_effects_count: 0`.
 
 ## Card 14. What comes next
 
@@ -259,8 +263,9 @@ Historical next recommended direction:
 
 That core work now exists in `hedgehog.context_packets` and
 `hedgehog.structured_rationale`. `hedgehog.semantic_reasoning_adapter` is now
-core-extracted and delegated from the live unknown-request runner. Current next
-direction is BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
+core-extracted and delegated from the live unknown-request runner. BSEP has now
+reached real Gemini Slice D 004 PASS. Current next direction is Supplier
+Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
 
 The next layer should keep the same authority topology:
 

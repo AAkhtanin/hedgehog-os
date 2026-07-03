@@ -7,6 +7,18 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_bounded_semantic_evidence_real_gemini_slice_d_004_v01.log`
+  - Audit status: PASS.
+  - Run id: `manual-bounded-semantic-evidence-real-gemini-slice-d-004`; base_head: `6a2950a`.
+  - Real Gemini dual role: Orchestrator called once and Architect called once.
+  - Contract mode: `semantic_reasoning_adapter`; schema mode: `json_mime_only`; BSEP gate enabled.
+  - BoundedSemanticEvidencePacket accepted, OrchestratorRouteContextPacket accepted, ArchitectPlanContextPacket accepted, structured_orchestrator_rationale accepted, and structured_architect_rationale accepted.
+  - Root decision: `needs_more_evidence`; validation_errors: [].
+  - Counters: `live_model_call_count: 2`, `network_used_count: 2`, `gemini_called_count: 2`, `bounded_semantic_evidence_packet_created_count: 1`, and `bounded_semantic_evidence_packet_validated_count: 1`.
+  - Action counters stayed zero: action_permission_created_count: 0, action_commit_packet_created_count: 0, connector_called_count: 0, real_world_effects_count: 0.
+  - Non-claims: not production autonomy, no real connector, no real-world action, no ActionCommitPacket from Gemini, and no FinalOutput from Gemini.
+  - Next major gate: Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
+
 - `auditor_live_unknown_request_real_gemini_007_v01.log`
   - Audit status: PASS.
   - First successful real live unknown-request run through real Gemini Orchestrator and real Gemini Architect.
@@ -28,7 +40,7 @@ Current reports:
   - Provider semantic summary: sealed historical artifact movement after hours, missing approval and unknown climate status remained uncertainty, route `unknown_request_root_review`, vector `unknown_request_semantic_review`, Architect recommendation `needs_more_evidence`.
   - Runtime built safe local nodes `node:unknown_request_semantic_review` and `node:root_review_gate`.
   - Prior real-live attempts 001-006 are superseded diagnostics: the full provider-canonical structured rationale contract was too heavy, compact object-array rationale remained weak/timeout-prone, and `semantic_reasoning_adapter` + `json_mime_only` resolved the live happy path.
-  - Next steps: BoundedSemanticEvidencePacket Orchestrator -> Architect preflight, replay/stability proof, multi-domain live unknown proof, adversarial live proof, DRS v0.2 expansion, AVF v0.2 expansion, and mock permission/action/connector sandbox before physical-world action domains.
+  - Superseded next-step note: BoundedSemanticEvidencePacket has now reached real Gemini Slice D 004 PASS; current next major gate is Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
 
 - `auditor_semantic_reasoning_adapter_delegation_slice_c_v01.log`
   - Audit status: PASS.
@@ -39,7 +51,7 @@ Current reports:
   - Compact/full compatibility paths preserved: `compact_rationale_adapter` and `full_structured_rationale`.
   - Replay smoke was monkeypatched and network-free: `no_real_gemini_or_network: true`.
   - Action counters remained zero.
-  - Slice D docs sync records this status; next engineering layer is BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
+  - Slice D docs sync records this status; BoundedSemanticEvidencePacket has now progressed through core, runner integration, and real Gemini Slice D 004 PASS.
 
 - `auditor_core_extraction_action_mock_fractal_v01.log`
   - Audit status: PASS.

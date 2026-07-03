@@ -172,8 +172,10 @@ Historical next direction from this checkpoint:
 That context-packet and structured-rationale core work now exists in
 `hedgehog.context_packets` and `hedgehog.structured_rationale`.
 `hedgehog.semantic_reasoning_adapter` is also now core-extracted and delegated
-from the live unknown-request runner. Current next direction is
-BoundedSemanticEvidencePacket Orchestrator -> Architect preflight.
+from the live unknown-request runner. BoundedSemanticEvidencePacket now lives
+in `hedgehog.context_packets` as a bounded ContextPacket family and has reached
+real Gemini Slice D 004 PASS. Current next direction is Supplier Payment /
+Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
 
 Explicitly still not next:
 

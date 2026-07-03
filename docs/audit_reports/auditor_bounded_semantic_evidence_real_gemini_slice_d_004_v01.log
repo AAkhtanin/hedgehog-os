@@ -1,0 +1,106 @@
+audit_id: auditor_bounded_semantic_evidence_real_gemini_slice_d_004_v01
+audit_status: PASS
+run_id: manual-bounded-semantic-evidence-real-gemini-slice-d-004
+base_head: 6a2950a
+audit_scope: Successful BoundedSemanticEvidencePacket real Gemini Slice D replay through Orchestrator, bounded evidence bridge, Architect, and Root boundary
+
+identity:
+- model: gemini-2.5-flash
+- contract_mode: semantic_reasoning_adapter
+- schema_mode: json_mime_only
+- bsep_gate: enabled
+- evidence_summary_json: .tmp/bounded_semantic_evidence_real_gemini/manual-bounded-semantic-evidence-real-gemini-slice-d-004_summary.json
+- evidence_summary_log: .tmp/bounded_semantic_evidence_real_gemini/manual-bounded-semantic-evidence-real-gemini-slice-d-004_summary.log
+- evidence_report: .tmp/bounded_semantic_evidence_real_gemini/manual-bounded-semantic-evidence-real-gemini-slice-d-004_report.txt
+- orchestrator_raw_provider_output: .tmp/bounded_semantic_evidence_real_gemini/manual-bounded-semantic-evidence-real-gemini-slice-d-004_orchestrator_raw_provider_response.json
+- architect_raw_provider_output: .tmp/bounded_semantic_evidence_real_gemini/manual-bounded-semantic-evidence-real-gemini-slice-d-004_architect_raw_provider_response.json
+- bounded_semantic_evidence_packet: .tmp/bounded_semantic_evidence_real_gemini/manual-bounded-semantic-evidence-real-gemini-slice-d-004_bounded_semantic_evidence_packet.json
+- bounded_semantic_evidence_packet_validation: .tmp/bounded_semantic_evidence_real_gemini/manual-bounded-semantic-evidence-real-gemini-slice-d-004_bounded_semantic_evidence_packet_validation.json
+- architect_provider_context: .tmp/bounded_semantic_evidence_real_gemini/manual-bounded-semantic-evidence-real-gemini-slice-d-004_architect_provider_context.json
+- orchestrator_prompt: .tmp/bounded_semantic_evidence_real_gemini/manual-bounded-semantic-evidence-real-gemini-slice-d-004_orchestrator_prompt.txt
+- architect_prompt: .tmp/bounded_semantic_evidence_real_gemini/manual-bounded-semantic-evidence-real-gemini-slice-d-004_architect_prompt.txt
+
+result:
+- final_status: PASS
+- root_decision: needs_more_evidence
+- validation_errors: []
+- elapsed_seconds: 52.856
+
+provider_counts:
+- orchestrator_provider_call_count: 1
+- architect_provider_call_count: 1
+- live_model_call_count: 2
+- network_used_count: 2
+- gemini_called_count: 2
+
+bounded_semantic_evidence_packet:
+- packet_type: BoundedSemanticEvidencePacket
+- source_role: orchestrator
+- target_role: architect
+- validation_accepted: true
+- bounded_semantic_evidence_packet_created_count: 1
+- bounded_semantic_evidence_packet_validated_count: 1
+- raw_user_text_included: false
+- raw_cross_role_text_included: false
+- truth_claimed: false
+- authority_claimed: false
+
+architect_context_safety:
+- contains_bsep: true
+- raw_request_absent_from_prompt: true
+- raw_request_absent_from_context: true
+- forbidden_raw_dump_keys_absent_from_context: true
+- boundary_flags_present_but_false: true
+
+validated_artifacts:
+- OrchestratorRouteContextPacket accepted: true
+- ArchitectPlanContextPacket accepted: true
+- structured_orchestrator_rationale accepted: true
+- structured_architect_rationale accepted: true
+- BoundedSemanticEvidencePacket accepted: true
+- PlanGraph is not authority: true
+- ResultProposal is not FinalOutput: true
+- Root remains final authority: true
+
+action_counters:
+- action_permission_created_count: 0
+- action_commit_packet_created_count: 0
+- connector_called_count: 0
+- real_world_effects_count: 0
+
+architecture_conclusion:
+- Provider proposes semantics.
+- Runtime canonicalizes.
+- Validators verify.
+- Root decides.
+- BSEP is the bounded evidence bridge from Orchestrator to Architect.
+- BSEP is not truth.
+- BSEP is not authority.
+- BSEP is not FinalOutput.
+- BSEP is not ActionCommitPacket.
+- Evidence packet is not action permission.
+- Gemini does not create ActionCommitPacket.
+- Gemini does not create FinalOutput.
+- Root remains final authority.
+
+prior_slice_d_diagnostics:
+- 001 failed closed before model call due provider_sdk_or_key_missing.
+- 002 reached real Orchestrator and created BSEP, then false-positive BSEP surface scan blocked safe negative action-boundary evidence.
+- 003 reached both real roles and BSEP accepted, then structured_architect_rationale failed on overlong provider reasoning text.
+- 004 passed after:
+  - 6b3e094 Allow safe negative BSEP action-boundary evidence text
+  - 6a2950a Bound semantic reasoning text before rationale expansion
+
+non_claims:
+- not production autonomy.
+- not public WOW ready.
+- no real connector.
+- no real-world action.
+- no real bank/API/robot/door/payment/shipment action.
+- no ActionCommitPacket from Gemini.
+- no FinalOutput from Gemini.
+
+audit_conclusion:
+- manual-bounded-semantic-evidence-real-gemini-slice-d-004 is the successful real Gemini Slice D replay for the BoundedSemanticEvidencePacket bridge.
+- The run reached real Gemini Orchestrator, validated BSEP, real Gemini Architect, validated structured rationale and context artifacts, and Root boundary with needs_more_evidence.
+- No action permission, connector call, ActionCommitPacket, FinalOutput from Gemini, or real-world effect was created.

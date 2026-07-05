@@ -122,6 +122,20 @@ Supplier Payment / Shipment Release Review WOW v1.1 invariant examples:
   its blockers.
 - Root remains final authority.
 
+Full Semantic E2E WOW v1.1 alignment invariant examples:
+
+- Closed receipt is evidence only when observed by Full E2E.
+- Observed closed ActionCommitPacket is not newly created by Full E2E.
+- Full E2E must not create a new ActionCommitPacket from a closed WOW summary.
+- Full E2E must not create a new receipt from a closed WOW summary.
+- Full E2E must not execute a new mock payment from a closed WOW summary.
+- invoked_count means direct runner/helper invocation.
+- represented_count must not be reported as invoked_count.
+- Root alone creates FinalOutput.
+- SemanticEvidenceClaim remains candidate-only.
+- Supplier B remains blocked when observed through the Full E2E alignment.
+- shipment release remains held when observed through the Full E2E alignment.
+
 DRS registry invariant:
 
 - DRS is a registry/resolver/index, not a raw memory dump.

@@ -35,6 +35,36 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
+Full Semantic E2E v0.1 aligned to Supplier Payment / Shipment Release Review WOW v1.1 — PASS.
+
+Checkpoint source:
+
+- Audit: `docs/audit_reports/auditor_full_semantic_e2e_wow_v1_1_alignment_v01.log`.
+- Runtime alignment commit: `160f6c5`.
+- Preflight: `docs/supplier_payment_integration_runtime_full_semantic_e2e_reentry_preflight_v01.md`.
+- Runner: `demo/run_full_semantic_e2e_v01.py`.
+- Tests: `tests/test_full_semantic_e2e_v01_runner.py`.
+- Existing Full Semantic E2E runner was patched, not replaced.
+- No new bridge runner was created.
+- Full Semantic E2E invokes the closed WOW v1.1 summary runner as
+  `supplier_payment_wow_v1_1_summary`.
+- WOW v1.1 summary is observed as bounded context/evidence.
+- Closed mock ActionCommitPacket and closed receipt are observed only.
+- Full Semantic E2E creates no new ActionCommitPacket, no new receipt, and no
+  new mock payment.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt is evidence only.
+- SemanticEvidenceClaim remains candidate-only.
+- No real payment, no real shipment release, no real bank/supplier/warehouse
+  API effects, and no real-world effects.
+- Root alone creates FinalOutput.
+- Root remains final authority.
+- This is not production.
+- This is not public auditor final package.
+
+Closed basis:
+
 Supplier Payment / Shipment Release Review WOW v1.1 — PASS.
 
 Checkpoint source:
@@ -304,7 +334,8 @@ See `docs/provider_contract_modes_v01.md`.
 
 Next roadmap:
 
-- Supplier Payment Integration Runtime -> Full Semantic E2E v0.1.
+- Reviewed preflight for the next runtime step after Full Semantic E2E WOW
+  v1.1 alignment.
 - Audit-approved optional live lane only if explicitly requested.
 - Replay/stability proof for a BSEP 004-style run.
 - Multi-domain live unknown proof.
@@ -3255,7 +3286,9 @@ Next engineering focus:
 - CLOSED: Supplier Payment / Shipment Release Review WOW v1.1 deterministic
   sandbox business WOW PASS, audit
   `auditor_supplier_payment_shipment_release_review_wow_v1_1`.
-- NEXT: Supplier Payment Integration Runtime -> Full Semantic E2E v0.1.
+- CLOSED: Full Semantic E2E v0.1 WOW v1.1 alignment PASS, audit
+  `auditor_full_semantic_e2e_wow_v1_1_alignment_v01`.
+- NEXT: Reviewed preflight for the next runtime step.
 - NEXT: Replay/stability proof for a BSEP 004-style run.
 - NEXT: Multi-domain live unknown proof and adversarial live proof.
 - LATER: DRS v0.2 expansion and AVF v0.2 expansion.

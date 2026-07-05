@@ -203,6 +203,39 @@ Authority invariants preserved:
 - Mock payment receipt does not release shipment.
 - Root remains final authority.
 
+### Full Semantic E2E v0.1 WOW v1.1 Alignment
+
+Full Semantic E2E v0.1 is now aligned to the closed Supplier Payment /
+Shipment Release Review WOW v1.1 summary.
+
+Checkpoint facts:
+
+- Audit: `docs/audit_reports/auditor_full_semantic_e2e_wow_v1_1_alignment_v01.log`.
+- Runtime alignment commit: `160f6c5`.
+- Existing Full Semantic E2E runner was patched, not replaced.
+- No new bridge runner was created.
+- Full Semantic E2E observes the closed WOW v1.1 summary as bounded
+  context/evidence through `supplier_payment_wow_v1_1_summary`.
+- Closed mock ActionCommitPacket and closed receipt are observed only.
+- Full Semantic E2E creates no new ActionCommitPacket, no new receipt, and no
+  new mock payment.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- SemanticEvidenceClaim remains candidate-only.
+- Root alone creates FinalOutput.
+- No real payment, no real shipment release, no real bank/supplier/warehouse
+  API effects, and no real-world effects.
+
+Authority invariants preserved:
+
+- Closed receipt observed by Full E2E is evidence only.
+- Observed closed ActionCommitPacket is not newly created by Full E2E.
+- invoked_count means direct runner/helper invocation.
+- represented_count must not be reported as invoked_count.
+- Root alone creates FinalOutput.
+- Root remains final authority.
+
 Non-claims:
 
 - not production
@@ -4077,7 +4110,8 @@ Current roadmap state:
 - CLOSED: BoundedSemanticEvidencePacket Real Gemini Slice D 004 PASS.
 - CLOSED: Supplier Payment / Shipment Release Review WOW v1.1 deterministic
   sandbox business WOW PASS.
-- NEXT: Supplier Payment Integration Runtime -> Full Semantic E2E v0.1.
+- CLOSED: Full Semantic E2E v0.1 WOW v1.1 alignment PASS.
+- NEXT: Reviewed preflight for the next runtime step.
 - Supplier Payment remains the integration spine and business axis for later live evidence integration.
 - Public WOW remains later, after Full Semantic E2E and E2E hardening.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.

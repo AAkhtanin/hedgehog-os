@@ -91,6 +91,27 @@ review domain while preserving authority boundaries. BSEP carries bounded
 semantic evidence, DRS is context-only, CandidateVector and AVF are advisory,
 human approval is scoped evidence, and Root remains final authority.
 
+## Applied Full Semantic E2E Alignment Checkpoint
+
+Full Semantic E2E v0.1 now observes the closed Supplier Payment / Shipment
+Release Review WOW v1.1 summary inside the existing integration spine.
+
+Status:
+
+- PASS through audit
+  `docs/audit_reports/auditor_full_semantic_e2e_wow_v1_1_alignment_v01.log`.
+- Existing runner patched in place: `demo/run_full_semantic_e2e_v01.py`.
+- No new bridge runner.
+- WOW v1.1 summary observed as bounded context/evidence.
+- Closed ActionCommitPacket and receipt observed only.
+- No new ActionCommitPacket, receipt, or mock payment created by Full E2E.
+- SemanticEvidenceClaim remains candidate-only.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- Root alone creates FinalOutput.
+- no real payment, no real shipment release, and no real connector/API effects.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

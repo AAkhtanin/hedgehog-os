@@ -7,6 +7,21 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_full_semantic_e2e_wow_v1_1_alignment_v01.log`
+  - Audit status: PASS.
+  - Audits Full Semantic E2E v0.1 alignment to Supplier Payment / Shipment Release Review WOW v1.1.
+  - Runtime alignment commit: `160f6c5`; preflight commit: `b4ac7fa`; WOW audit commit: `2aa3f13`.
+  - Existing Full Semantic E2E runner was patched, not replaced; no new bridge runner was created.
+  - Full Semantic E2E invokes the closed WOW v1.1 summary runner as `supplier_payment_wow_v1_1_summary`.
+  - WOW v1.1 summary is observed as bounded context/evidence.
+  - Closed mock ActionCommitPacket and closed receipt are observed only.
+  - Full Semantic E2E creates no new ActionCommitPacket, no new receipt, and no new mock payment.
+  - Supplier B remains blocked; shipment release remains held; receipt is evidence only.
+  - SemanticEvidenceClaim remains candidate-only.
+  - Root alone creates FinalOutput and Root remains final authority.
+  - Counters preserve no real payment, no real shipment release, no real bank/supplier/warehouse API effects, and `real_world_effects_count: 0`.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_supplier_payment_shipment_release_review_wow_v1_1.log`
   - Audit status: PASS.
   - Audits the deterministic sandbox business WOW through Slice E:

@@ -57,10 +57,35 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Supplier Payment / Shipment Release Review WOW v1.1
-deterministic sandbox business WOW PASS.
+Current checkpoint: Full Semantic E2E v0.1 aligned to Supplier Payment /
+Shipment Release Review WOW v1.1 PASS.
 
-Current WOW facts:
+Current alignment facts:
+
+- Audit log:
+  `docs/audit_reports/auditor_full_semantic_e2e_wow_v1_1_alignment_v01.log`.
+- Runtime alignment commit: `160f6c5`.
+- Existing Full Semantic E2E runner was patched, not replaced.
+- No new bridge runner was created.
+- Full Semantic E2E invokes the closed WOW v1.1 summary runner as
+  `supplier_payment_wow_v1_1_summary`.
+- WOW v1.1 summary is observed as bounded context/evidence.
+- Closed mock ActionCommitPacket and closed receipt are observed only.
+- Full Semantic E2E creates no new ActionCommitPacket, no new receipt, and no
+  new mock payment.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt is evidence only.
+- SemanticEvidenceClaim remains candidate-only.
+- Root alone creates FinalOutput.
+- No real payment, no real shipment release, no real bank/supplier/warehouse
+  API effects, and no real-world effects.
+- Not production.
+- Not public auditor final package.
+
+BSEP 004 and Supplier Payment WOW v1.1 remain the closed basis.
+
+Closed WOW facts:
 
 - Title: Supplier Payment / Shipment Release Review LIVE-DUAL-ROLE WOW v1.1.
 - Short name: HEDGEHOG OS — ZERO-TRUST SUPPLIER PAYMENT WOW v1.1.
@@ -83,7 +108,11 @@ Current WOW facts:
 - Not production.
 - Not public auditor final package.
 
-BSEP 004 remains the closed live rich-context basis under this WOW.
+BSEP 004 remains the closed live rich-context basis under this alignment.
+
+Next direction after this audit/docs sync is a reviewed preflight for the next
+runtime step. Do not start new domain demos, NeedleFactory, Marennya, UP,
+production connectors, or public auditor packaging from this checkpoint.
 
 Official checkpoint facts:
 
@@ -279,7 +308,8 @@ Provider Contract Modes — future-compatible operator rules:
 
 Current next approved engineering direction:
 
-- Supplier Payment Integration Runtime -> Full Semantic E2E v0.1.
+- Reviewed preflight for the next runtime step after Full Semantic E2E WOW
+  v1.1 alignment.
 - Audit-approved optional live lane only if explicitly requested.
 
 Do not start new domain demos, NeedleFactory, Marennya, or UP from this

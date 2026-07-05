@@ -121,6 +121,27 @@ Non-claims:
 - no real bank/supplier/warehouse connector effects
 - optional live Gemini lane remains manual and was not enabled
 
+### full_semantic_e2e_wow_v1_1_alignment
+
+The SH-2042 Supplier Payment / Shipment Release Review WOW v1.1 summary is now
+observed inside Full Semantic E2E v0.1 as bounded context/evidence.
+
+Scenario alignment:
+
+- Full Semantic E2E remains the existing integration spine.
+- Supplier Payment Live Evidence Integration v0.2 remains the
+  SemanticEvidenceClaim lane.
+- `supplier_payment_wow_v1_1_summary` invokes the closed WOW summary runner.
+- Closed ActionCommitPacket and receipt are observed only.
+- Full Semantic E2E creates no new ActionCommitPacket, receipt, or mock
+  payment.
+- Supplier A remains the only closed scoped mock payment path.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- SemanticEvidenceClaim remains candidate-only.
+- Root alone creates FinalOutput.
+
 ## What The Demo Must Prove
 
 - Root authority.

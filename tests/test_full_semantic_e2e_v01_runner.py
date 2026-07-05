@@ -366,6 +366,152 @@ def _provider_returning(raw_text):
     return provider
 
 
+def _manual_live_env(**overrides):
+    env = {
+        runner.ENV_FULL_WOW_V1_1_LIVE_GEMINI: "1",
+        provider_adapter.ENV_PROVIDER_NAME: "gemini",
+        provider_adapter.ENV_PROVIDER_MODEL: "manual-live-gemini-test-model",
+    }
+    env.update(overrides)
+    return env
+
+
+def _valid_manual_live_orchestrator_payload(**overrides):
+    payload = {
+        "proposal_id": "proposal:full_wow_v1_1:manual_live_orchestrator",
+        "suggested_route": "route:full_wow_v1_1_root_review",
+        "selected_vector_ids": (
+            "supplier_payment_wow_v1_1_summary",
+            "semantic_evidence_claim_review",
+        ),
+        "required_guards": (
+            "semantic_reasoning_adapter validation",
+            "BSEP validation",
+            "Root final authority",
+        ),
+        "reason": "supplier payment WOW context requires bounded Root review",
+        "confidence": 0.61,
+        "needs_review": True,
+        "uncertainty_notes": (
+            "provider proposal remains untrusted semantic evidence",
+        ),
+        "root_review_required": True,
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "plan_graph_claimed": False,
+        "bypass_root_claimed": False,
+        "semantic_observations": (
+            "Supplier A has closed mock payment evidence only",
+            "Supplier B remains blocked",
+            "shipment release remains held",
+        ),
+        "route_reasoning": (
+            "bounded Root review preserves final authority",
+        ),
+        "rejected_route_reasoning": (
+            "live provider cannot create action packets or receipts",
+        ),
+        "guard_reasoning": (
+            "runtime canonicalization and BSEP validation are required",
+        ),
+        "vector_reasoning": (
+            "WOW summary vector is context only",
+        ),
+        "authority_boundary_reasoning": (
+            "Provider proposes semantics; Runtime canonicalizes; Root decides",
+        ),
+    }
+    payload.update(overrides)
+    return payload
+
+
+def _valid_manual_live_architect_payload(**overrides):
+    payload = {
+        "proposal_id": "proposal:full_wow_v1_1:manual_live_architect",
+        "source_route_id": "route:full_wow_v1_1_root_review",
+        "selected_vector_ids": (
+            "supplier_payment_wow_v1_1_summary",
+            "semantic_evidence_claim_review",
+        ),
+        "root_recommendation": "preserve_root_final_boundary",
+        "result_proposal_summary": (
+            "review WOW summary and live semantic proposal without creating action"
+        ),
+        "required_validators": (
+            "semantic_reasoning_adapter validation",
+            "PlanGraph contract",
+            "Root final authority",
+        ),
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "root_bypass_claimed": False,
+        "plan_shape_reasoning": (
+            "runtime builds bounded advisory nodes only",
+        ),
+        "node_intent_reasoning": (
+            "observe WOW context and return upward to Root",
+        ),
+        "executor_constraint_reasoning": (
+            "no connector or payment execution is allowed",
+        ),
+        "forbidden_surface_reasoning": (
+            "no ActionCommitPacket, receipt, payment, or shipment release is created",
+        ),
+        "validator_coverage_reasoning": (
+            "semantic adapter, BSEP, and Root boundary remain required",
+        ),
+        "return_to_root_reasoning": (
+            "Root alone creates final output boundary",
+        ),
+        "uncertainty_notes": (
+            "provider output remains candidate-only",
+        ),
+        "authority_boundary_reasoning": (
+            "Architect proposal is not Root authority",
+        ),
+    }
+    payload.update(overrides)
+    return payload
+
+
+def _manual_live_provider_returning(raw_text, marker, captured=None):
+    def provider(prompt, model_name, timeout_seconds, env):
+        assert marker in prompt
+        assert "raw bank tokens" in prompt
+        assert model_name == env[provider_adapter.ENV_PROVIDER_MODEL]
+        assert timeout_seconds >= 1
+        assert env[provider_adapter.ENV_PROVIDER_NAME] == "gemini"
+        if captured is not None:
+            captured["prompt"] = prompt
+            captured["context"] = json.loads(prompt.split(marker + ":", 1)[1].strip())
+        return raw_text
+
+    return provider
+
+
+def _run_manual_live_gemini_fake_result(captured_architect=None):
+    return runner.run_full_semantic_e2e(
+        env=_manual_live_env(),
+        orchestrator_provider=_manual_live_provider_returning(
+            json.dumps(_valid_manual_live_orchestrator_payload()),
+            "FULL_WOW_V1_1_LIVE_ORCHESTRATOR_INPUT_JSON",
+        ),
+        architect_provider=_manual_live_provider_returning(
+            json.dumps(_valid_manual_live_architect_payload()),
+            "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON",
+            captured_architect,
+        ),
+    )
+
+
 def _scenario_statuses(result):
     return {item["scenario_id"]: item["status"] for item in result["scenarios"]}
 
@@ -1262,6 +1408,342 @@ def test_full_e2e_existing_default_mode_still_passes() -> None:
     assert result["supplier_live_result"]["final_status"] == "PASS"
     assert result["stage_map"]["root_final_output_boundary"]["creates_final_output"] is True
     assert result["drs_writeback_record"]["written_after_root_boundary"] is True
+
+
+def test_full_wow_v1_1_manual_live_gemini_lane_default_is_disabled() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+
+    assert result["final_status"] == "PASS"
+    assert counters["manual_live_gemini_lane_enabled_count"] == 0
+    assert counters["orchestrator_provider_call_count"] == 0
+    assert counters["architect_provider_call_count"] == 0
+    assert counters["live_model_call_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["supplier_payment_wow_v1_1_summary_invoked_count"] == 1
+    assert counters["supplier_payment_wow_v1_1_summary_validation_passed_count"] == 1
+    assert counters["deterministic_lane_passed_count"] == 1
+
+
+def test_full_wow_v1_1_manual_live_gemini_lane_default_report() -> None:
+    report = runner.render_report(runner.run_full_semantic_e2e(env={}))
+
+    assert "[FULL WOW V1.1 MANUAL LIVE GEMINI LANE]" in report
+    assert "manual live Gemini lane: not enabled" in report
+    assert "deterministic CI preserved" in report
+    assert "supplier_payment_wow_v1_1_summary still present" in report
+    assert "Root alone creates FinalOutput" in report
+
+
+def test_full_wow_v1_1_manual_live_gemini_lane_does_not_run_without_env(
+    monkeypatch,
+) -> None:
+    monkeypatch.delenv(runner.ENV_FULL_WOW_V1_1_LIVE_GEMINI, raising=False)
+    result = runner.run_full_semantic_e2e()
+    counters = result["counters"]
+
+    assert runner._manual_live_gemini_lane_enabled({}) is False
+    assert counters["manual_live_gemini_lane_enabled_count"] == 0
+    assert counters["orchestrator_provider_call_count"] == 0
+    assert counters["architect_provider_call_count"] == 0
+    assert counters["live_model_call_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["secrets_logged_count"] == 0
+
+
+def test_full_wow_v1_1_manual_live_gemini_boundary_counters_exist() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+
+    for key in (
+        "manual_live_gemini_lane_enabled_count",
+        "orchestrator_provider_call_count",
+        "architect_provider_call_count",
+        "live_model_call_count",
+        "gemini_called_count",
+        "network_used_count",
+        "semantic_reasoning_adapter_used_count",
+        "runtime_canonicalization_count",
+        "bsep_created_count",
+        "bsep_validated_count",
+        "manual_live_bsep_built_before_architect_count",
+        "manual_live_architect_received_bsep_context_count",
+        "manual_live_architect_called_before_bsep_validation_count",
+        "manual_live_fail_closed_before_architect_on_invalid_bsep_count",
+        "manual_live_raw_cross_role_text_to_architect_count",
+        "manual_live_raw_provider_text_to_architect_count",
+        "provider_output_used_as_truth_count",
+        "provider_output_used_as_authority_count",
+        "provider_output_used_as_action_permission_count",
+        "provider_output_used_as_final_output_count",
+        "live_gemini_created_action_commit_packet_count",
+        "live_gemini_created_receipt_count",
+        "live_gemini_executed_mock_payment_count",
+        "live_gemini_executed_real_payment_count",
+        "live_gemini_released_shipment_count",
+    ):
+        assert key in counters
+
+    assert counters["manual_live_gemini_lane_enabled_count"] == 0
+    assert counters["semantic_reasoning_adapter_used_count"] == 0
+    assert counters["runtime_canonicalization_count"] == 0
+    assert counters["bsep_created_count"] == 0
+    assert counters["bsep_validated_count"] == 0
+    assert counters["manual_live_bsep_built_before_architect_count"] == 0
+    assert counters["manual_live_architect_received_bsep_context_count"] == 0
+    assert counters["manual_live_architect_called_before_bsep_validation_count"] == 0
+    assert (
+        counters["manual_live_fail_closed_before_architect_on_invalid_bsep_count"]
+        == 0
+    )
+    assert counters["manual_live_raw_cross_role_text_to_architect_count"] == 0
+    assert counters["manual_live_raw_provider_text_to_architect_count"] == 0
+    assert counters["root_alone_creates_final_output_count"] == 1
+    assert counters["supplier_payment_wow_v1_1_summary_invoked_count"] == 1
+
+
+def test_full_wow_v1_1_manual_live_gemini_no_action_boundaries() -> None:
+    counters = runner.run_full_semantic_e2e(env={})["counters"]
+
+    assert counters["live_gemini_created_action_commit_packet_count"] == 0
+    assert counters["live_gemini_created_receipt_count"] == 0
+    assert counters["live_gemini_executed_mock_payment_count"] == 0
+    assert counters["live_gemini_executed_real_payment_count"] == 0
+    assert counters["live_gemini_released_shipment_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_full_wow_v1_1_manual_live_gemini_provider_output_not_authority_defaults() -> None:
+    counters = runner.run_full_semantic_e2e(env={})["counters"]
+
+    assert counters["provider_output_used_as_truth_count"] == 0
+    assert counters["provider_output_used_as_authority_count"] == 0
+    assert counters["provider_output_used_as_action_permission_count"] == 0
+    assert counters["provider_output_used_as_final_output_count"] == 0
+
+
+def test_full_wow_v1_1_manual_live_gemini_manual_path_can_be_monkeypatched_without_network() -> None:
+    result = _run_manual_live_gemini_fake_result()
+    counters = result["counters"]
+    lane = result["manual_live_gemini_lane"]
+    report = runner.render_report(result)
+
+    assert result["final_status"] == "PASS"
+    assert lane["stage_status"] == "PASS"
+    assert lane["enabled"] is True
+    assert lane["semantic_reasoning_adapter_used"] is True
+    assert lane["runtime_canonicalization_used"] is True
+    assert lane["bsep_context_packet_validation_used"] is True
+    assert lane["bsep_summary"]["validation_accepted"] is True
+    assert counters["manual_live_gemini_lane_enabled_count"] == 1
+    assert counters["orchestrator_provider_call_count"] == 1
+    assert counters["architect_provider_call_count"] == 1
+    assert counters["live_model_call_count"] == 2
+    assert counters["gemini_called_count"] == 2
+    assert counters["network_used_count"] == 0
+    assert counters["semantic_reasoning_adapter_used_count"] >= 1
+    assert counters["runtime_canonicalization_count"] >= 1
+    assert counters["bsep_created_count"] >= 1
+    assert counters["bsep_validated_count"] >= 1
+    assert counters["manual_live_bsep_built_before_architect_count"] == 1
+    assert counters["manual_live_architect_received_bsep_context_count"] == 1
+    assert counters["manual_live_architect_called_before_bsep_validation_count"] == 0
+    assert (
+        counters["manual_live_fail_closed_before_architect_on_invalid_bsep_count"]
+        == 0
+    )
+    assert counters["manual_live_raw_cross_role_text_to_architect_count"] == 0
+    assert counters["manual_live_raw_provider_text_to_architect_count"] == 0
+    assert counters["provider_output_used_as_truth_count"] == 0
+    assert counters["provider_output_used_as_authority_count"] == 0
+    assert counters["provider_output_used_as_action_permission_count"] == 0
+    assert counters["provider_output_used_as_final_output_count"] == 0
+    assert counters["live_gemini_created_action_commit_packet_count"] == 0
+    assert counters["live_gemini_created_receipt_count"] == 0
+    assert counters["live_gemini_executed_mock_payment_count"] == 0
+    assert counters["live_gemini_executed_real_payment_count"] == 0
+    assert counters["live_gemini_released_shipment_count"] == 0
+    assert counters["root_alone_creates_final_output_count"] == 1
+    assert "manual live Gemini lane: enabled" in report
+    assert "Orchestrator provider role called" in report
+    assert "BSEP built after Orchestrator validation" in report
+    assert "BSEP validated before Architect" in report
+    assert "Architect provider role called after BSEP validation" in report
+    assert "Architect received BSEP-derived bounded context" in report
+    assert "semantic_reasoning_adapter used" in report
+    assert "runtime canonicalization used" in report
+    assert "BSEP/context packet validation used" in report
+    assert "provider output is not truth" in report
+    assert "provider output is not authority" in report
+    assert "provider output is not action permission" in report
+    assert "provider output is not FinalOutput" in report
+    assert "live Gemini creates no ActionCommitPacket" in report
+    assert "live Gemini creates no receipt" in report
+    assert "live Gemini executes no mock payment" in report
+    assert "live Gemini executes no real payment" in report
+    assert "live Gemini releases no shipment" in report
+    assert "Supplier B remains blocked" in report
+    assert "shipment release remains held" in report
+    assert "Root alone creates FinalOutput" in report
+    assert "no real-world effects" in report
+
+
+def test_full_wow_v1_1_manual_live_gemini_bsep_before_architect_order() -> None:
+    result = _run_manual_live_gemini_fake_result()
+    counters = result["counters"]
+    sequence = result["manual_live_gemini_lane"]["manual_live_role_sequence"]
+
+    assert sequence.index("orchestrator_provider_called") < sequence.index(
+        "bsep_built"
+    )
+    assert sequence.index("orchestrator_semantics_validated") < sequence.index(
+        "bsep_built"
+    )
+    assert sequence.index("bsep_validated") < sequence.index(
+        "architect_provider_called"
+    )
+    assert counters["manual_live_bsep_built_before_architect_count"] == 1
+    assert counters["manual_live_architect_called_before_bsep_validation_count"] == 0
+
+
+def test_full_wow_v1_1_manual_live_gemini_architect_prompt_receives_bsep_context() -> None:
+    captured_architect: dict[str, Any] = {}
+
+    result = _run_manual_live_gemini_fake_result(captured_architect)
+
+    context = captured_architect["context"]
+    prompt = captured_architect["prompt"]
+    assert result["final_status"] == "PASS"
+    assert context["bounded_semantic_evidence_packet_present"] is True
+    assert context["bsep_packet_id"]
+    assert context["bsep_validation_accepted"] is True
+    assert context["observed_bounded_facts_summary"]
+    assert context["missing_evidence_summary"]
+    assert context["risk_boundary_summary"]
+    assert context["rejected_action_route_summary"]
+    assert context["root_review_required"] is True
+    assert context["raw_user_text_included"] is False
+    assert context["raw_provider_text_included"] is False
+    assert context["raw_cross_role_text_included"] is False
+    assert context["raw_bank_secrets_included"] is False
+    assert context["raw_api_tokens_included"] is False
+    assert "manual_live_orchestrator" not in prompt
+    assert "FULL_WOW_V1_1_LIVE_ORCHESTRATOR_INPUT_JSON" not in prompt
+    assert runner._dirty_business_request()["request_text"] not in prompt
+    for marker in (
+        "FAKE" + "-IBAN" + "-AL-0000-2042-SECRET",
+        "sandbox_" + "token_abc",
+        "beneficiary_" + "iban",
+        "bank_" + "token",
+        "GOOGLE_" + "API_KEY",
+        "GEMINI_" + "API_KEY",
+    ):
+        assert marker not in prompt
+
+
+def test_full_wow_v1_1_manual_live_gemini_invalid_bsep_blocks_architect(
+    monkeypatch,
+) -> None:
+    architect_called: list[bool] = []
+
+    def architect_provider(prompt, model_name, timeout_seconds, env):
+        architect_called.append(True)
+        return json.dumps(_valid_manual_live_architect_payload())
+
+    def invalid_bsep_validation(bsep):
+        return {
+            "accepted": False,
+            "reasons": ("forced_invalid_bsep",),
+            "packet_type": bsep.get("packet_type"),
+        }
+
+    monkeypatch.setattr(
+        runner,
+        "validate_bounded_semantic_evidence_packet",
+        invalid_bsep_validation,
+    )
+
+    result = runner.run_full_semantic_e2e(
+        env=_manual_live_env(),
+        orchestrator_provider=_manual_live_provider_returning(
+            json.dumps(_valid_manual_live_orchestrator_payload()),
+            "FULL_WOW_V1_1_LIVE_ORCHESTRATOR_INPUT_JSON",
+        ),
+        architect_provider=architect_provider,
+    )
+    counters = result["counters"]
+    lane = result["manual_live_gemini_lane"]
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert lane["stage_status"] == "FAIL_CLOSED"
+    assert "forced_invalid_bsep" in result["validation_errors"]
+    report = runner.render_report(result)
+    assert "manual live Gemini lane: enabled but fail-closed" in report
+    assert "BSEP validation blocked Architect" in report
+    assert "Architect provider role not called if BSEP failed" in report
+    assert "no Root FinalOutput from invalid manual lane" in report
+    assert counters["orchestrator_provider_call_count"] == 1
+    assert counters["architect_provider_call_count"] == 0
+    assert counters["live_model_call_count"] == 1
+    assert counters["manual_live_fail_closed_before_architect_on_invalid_bsep_count"] == 1
+    assert counters["manual_live_architect_called_before_bsep_validation_count"] == 0
+    assert architect_called == []
+    assert lane["architect_semantics"] == {}
+    assert counters["live_gemini_created_action_commit_packet_count"] == 0
+    assert counters["live_gemini_created_receipt_count"] == 0
+    assert counters["live_gemini_executed_mock_payment_count"] == 0
+    assert counters["live_gemini_executed_real_payment_count"] == 0
+    assert counters["live_gemini_released_shipment_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+    assert counters["root_final_output_created_count"] == 0
+    assert counters["drs_writeback_invoked_count"] == 0
+
+
+def test_build_manual_live_lane_bsep_does_not_accept_architect_semantics() -> None:
+    signature = inspect.signature(runner._build_manual_live_lane_bsep)
+    result = runner.run_full_semantic_e2e(env={})
+    bsep = runner._build_manual_live_lane_bsep(
+        _valid_manual_live_orchestrator_payload(),
+        result["supplier_payment_wow_v1_1_summary"],
+    )
+    validation = runner.validate_bounded_semantic_evidence_packet(bsep)
+
+    assert "architect_semantics" not in signature.parameters
+    assert tuple(signature.parameters) == ("orchestrator_semantics", "wow_summary")
+    assert validation["accepted"] is True
+    assert bsep["packet_type"] == "BoundedSemanticEvidencePacket"
+
+
+def test_full_wow_v1_1_manual_live_gemini_manual_real_test_is_skipped_without_env(
+    monkeypatch,
+) -> None:
+    monkeypatch.delenv(runner.ENV_FULL_WOW_V1_1_LIVE_GEMINI, raising=False)
+
+    assert runner._manual_live_gemini_lane_enabled({}) is False
+
+
+def test_full_wow_v1_1_manual_live_gemini_report_has_no_overclaims() -> None:
+    report = runner.render_report(runner.run_full_semantic_e2e(env={}))
+    forbidden = (
+        "production " + "ready",
+        "public WOW " + "ready",
+        "public auditor " + "ready",
+        "real payment " + "executed",
+        "real shipment " + "released",
+        "Gemini creates " + "ActionCommitPacket",
+        "receipt proves " + "truth",
+        "receipt grants " + "permission",
+        "receipt creates " + "FinalOutput",
+    )
+
+    for marker in forbidden:
+        assert marker not in report
 
 
 def test_unsafe_live_provider_output_fails_closed_before_root(tmp_path) -> None:

@@ -45,6 +45,7 @@ from hedgehog.architect import make_plan_graph
 from hedgehog.candidate_vector_generator import build_avf_candidate_report
 from hedgehog.candidate_vector_generator import candidate_inputs_from_resolved_report
 from hedgehog.context_packets import (
+    build_bounded_semantic_evidence_packet,
     build_architect_plan_context_packet,
     build_avf_attractor_context_packet,
     build_business_request_context_packet,
@@ -55,8 +56,10 @@ from hedgehog.context_packets import (
     build_orchestrator_route_context_packet,
     build_root_review_context_packet,
     build_sandbox_receipt_context_packet,
+    semantic_evidence_item,
     validate_architect_plan_context_packet,
     validate_avf_attractor_context_packet,
+    validate_bounded_semantic_evidence_packet,
     validate_business_request_context_packet,
     validate_candidate_vector_context_packet,
     validate_drs_candidate_context_packet,
@@ -174,6 +177,7 @@ from hedgehog.mock_connector_sandbox import (
 )
 from hedgehog.structured_rationale import validate_architect_structured_rationale
 from hedgehog.structured_rationale import validate_orchestrator_structured_rationale
+from hedgehog import semantic_reasoning_adapter
 from hedgehog.live_llm_semantic_evidence_reader import SemanticEvidenceClaim
 from hedgehog.llm_architect import validate_plan_graph_contract
 from hedgehog.local_drs_resolver import SemanticDRSRecordInput
@@ -214,6 +218,7 @@ ENV_FULL_E2E_FRACTAL_ORDER_FULFILLMENT_DAG = (
     "HEDGEHOG_FULL_E2E_FRACTAL_ORDER_FULFILLMENT_DAG"
 )
 ENV_FULL_E2E_CONTEXT_PACKETS = "HEDGEHOG_FULL_E2E_CONTEXT_PACKETS"
+ENV_FULL_WOW_V1_1_LIVE_GEMINI = "HEDGEHOG_FULL_WOW_V1_1_LIVE_GEMINI"
 
 GEMINI_ORCHESTRATOR_COUNTER_KEYS = (
     "bounded_gemini_orchestrator_role_started_count",
@@ -276,6 +281,28 @@ DUAL_GEMINI_COUNTER_KEYS = (
     "dual_gemini_fail_closed_before_architect_count",
     "dual_gemini_fail_closed_before_fractal_count",
     "dual_gemini_root_final_authority_preserved_count",
+)
+
+MANUAL_LIVE_GEMINI_COUNTER_KEYS = (
+    "manual_live_gemini_lane_enabled_count",
+    "orchestrator_provider_call_count",
+    "architect_provider_call_count",
+    "semantic_reasoning_adapter_used_count",
+    "runtime_canonicalization_count",
+    "bsep_created_count",
+    "bsep_validated_count",
+    "manual_live_bsep_built_before_architect_count",
+    "manual_live_architect_received_bsep_context_count",
+    "manual_live_architect_called_before_bsep_validation_count",
+    "manual_live_fail_closed_before_architect_on_invalid_bsep_count",
+    "manual_live_raw_cross_role_text_to_architect_count",
+    "manual_live_raw_provider_text_to_architect_count",
+    "live_gemini_created_action_commit_packet_count",
+    "live_gemini_created_receipt_count",
+    "live_gemini_executed_mock_payment_count",
+    "live_gemini_executed_real_payment_count",
+    "live_gemini_released_shipment_count",
+    "deterministic_lane_passed_count",
 )
 
 ACTION_COMMIT_PACKET_COUNTER_KEYS = (
@@ -442,6 +469,7 @@ COUNTER_KEYS = (
     *GEMINI_ORCHESTRATOR_COUNTER_KEYS,
     *GEMINI_ARCHITECT_COUNTER_KEYS,
     *DUAL_GEMINI_COUNTER_KEYS,
+    *MANUAL_LIVE_GEMINI_COUNTER_KEYS,
     *ACTION_COMMIT_PACKET_COUNTER_KEYS,
     *MOCK_CONNECTOR_SANDBOX_COUNTER_KEYS,
     *FRACTAL_ORDER_FULFILLMENT_COUNTER_KEYS,
@@ -1018,6 +1046,11 @@ def _full_e2e_context_packets_enabled(env: Mapping[str, str]) -> bool:
     return env.get(ENV_FULL_E2E_CONTEXT_PACKETS) == "1"
 
 
+def _manual_live_gemini_lane_enabled(env: Mapping[str, str] | None = None) -> bool:
+    observed_env = env if env is not None else os.environ
+    return observed_env.get(ENV_FULL_WOW_V1_1_LIVE_GEMINI) == "1"
+
+
 def _root_mock_approval_gate_partial_enabled(env: Mapping[str, str]) -> bool:
     action_packet = _full_e2e_action_commit_packet_enabled(env)
     root_approval = _full_e2e_root_mock_approval_enabled(env)
@@ -1507,6 +1540,690 @@ def _apply_supplier_payment_wow_v1_1_counters(
     counters["action_commit_packet_created_in_full_e2e_count"] = 0
     counters["receipt_created_in_full_e2e_count"] = 0
     counters["mock_payment_executed_in_full_e2e_count"] = 0
+
+
+def _manual_live_lane_zero_counters() -> dict[str, int]:
+    counters = {key: 0 for key in MANUAL_LIVE_GEMINI_COUNTER_KEYS}
+    counters.update(
+        {
+            "live_model_call_count": 0,
+            "gemini_called_count": 0,
+            "network_used_count": 0,
+            "provider_output_used_as_truth_count": 0,
+            "provider_output_used_as_authority_count": 0,
+            "provider_output_used_as_action_permission_count": 0,
+            "provider_output_used_as_final_output_count": 0,
+        }
+    )
+    return counters
+
+
+def _build_manual_live_lane_skipped_summary(
+    wow_summary: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "stage_id": "full_wow_v1_1_manual_live_gemini_lane",
+        "stage_status": "SKIPPED",
+        "stage_mode": "manual_env_gated",
+        "enabled": False,
+        "not_core_pass_dependency": True,
+        "supplier_payment_wow_v1_1_summary_present": bool(wow_summary),
+        "provider_output_is_truth": False,
+        "provider_output_is_authority": False,
+        "provider_output_is_action_permission": False,
+        "provider_output_is_final_output": False,
+        "live_gemini_created_action_commit_packet": False,
+        "live_gemini_created_receipt": False,
+        "live_gemini_executed_mock_payment": False,
+        "live_gemini_executed_real_payment": False,
+        "live_gemini_released_shipment": False,
+        "supplier_B_remains_blocked": wow_summary.get("supplier_B_remains_blocked")
+        is True,
+        "shipment_release_remains_held": wow_summary.get(
+            "shipment_release_remains_held"
+        )
+        is True,
+        "Root alone creates FinalOutput": True,
+        "real_world_effects": False,
+        "counters": _manual_live_lane_zero_counters(),
+        "validation": {"accepted": True, "reasons": ()},
+    }
+
+
+def _build_full_wow_v1_1_live_orchestrator_prompt(
+    dirty_request: Mapping[str, Any],
+    wow_summary: Mapping[str, Any],
+) -> str:
+    safe_context = {
+        "lane": "full_wow_v1_1_manual_live_gemini_lane",
+        "role": "orchestrator_semantic_proposal",
+        "subject": dirty_request.get("subject"),
+        "supplier_payment_wow_v1_1_summary_present": bool(wow_summary),
+        "supplier_A_scoped_mock_payment_only": wow_summary.get(
+            "supplier_A_scoped_mock_payment_only"
+        ),
+        "supplier_B_remains_blocked": wow_summary.get("supplier_B_remains_blocked"),
+        "shipment_release_remains_held": wow_summary.get(
+            "shipment_release_remains_held"
+        ),
+        "receipt_remains_evidence_only": wow_summary.get(
+            "receipt_remains_evidence_only"
+        ),
+        "closed_action_commit_packet_observed_count": wow_summary.get(
+            "closed_action_commit_packet_observed_count"
+        ),
+        "closed_mock_bank_receipt_observed_count": wow_summary.get(
+            "closed_mock_bank_receipt_observed_count"
+        ),
+        "architecture_formula": (
+            "Provider proposes semantics. Runtime canonicalizes. "
+            "Validators verify. Root decides."
+        ),
+        "forbidden_outputs": (
+            "truth",
+            "authority",
+            "action_permission",
+            "FinalOutput",
+            "ActionCommitPacket",
+            "receipt",
+            "payment_execution",
+            "shipment_release",
+        ),
+    }
+    return "\n".join(
+        (
+            "Return JSON only for one bounded Orchestrator semantic reasoning proposal.",
+            "Do not include secrets, connector credentials, raw bank tokens, or raw payment identifiers.",
+            "Provider output is an untrusted semantic proposal; Root remains final authority.",
+            "FULL_WOW_V1_1_LIVE_ORCHESTRATOR_INPUT_JSON:",
+            json.dumps(safe_context, indent=2, sort_keys=True),
+        )
+    )
+
+
+def _bsep_item_texts(
+    bsep: Mapping[str, Any],
+    field: str,
+) -> tuple[str, ...]:
+    items = bsep.get(field) or ()
+    return tuple(
+        str(item.get("text")).strip()
+        for item in items
+        if isinstance(item, Mapping) and str(item.get("text", "")).strip()
+    )
+
+
+def _build_full_wow_v1_1_live_architect_context_from_bsep(
+    dirty_request: Mapping[str, Any],
+    wow_summary: Mapping[str, Any],
+    orchestrator_semantics: Mapping[str, Any],
+    bsep: Mapping[str, Any],
+    bsep_validation: Mapping[str, Any],
+) -> dict[str, Any]:
+    selected_vector_ids = tuple(
+        bsep.get("selected_vector_ids")
+        or orchestrator_semantics.get("selected_vector_ids")
+        or ()
+    )
+    return {
+        "lane": "full_wow_v1_1_manual_live_gemini_lane",
+        "role": "architect_plan_semantic_proposal",
+        "subject": dirty_request.get("subject"),
+        "source_route_id": bsep.get("source_route_id"),
+        "bsep_packet_id": bsep.get("packet_id"),
+        "bsep_validation_accepted": bsep_validation.get("accepted") is True,
+        "bounded_semantic_evidence_packet_present": (
+            bsep.get("packet_type") == "BoundedSemanticEvidencePacket"
+        ),
+        "selected_vector_ids": selected_vector_ids,
+        "supplier_payment_wow_v1_1_summary_present": bool(wow_summary),
+        "supplier_B_remains_blocked": wow_summary.get("supplier_B_remains_blocked"),
+        "shipment_release_remains_held": wow_summary.get(
+            "shipment_release_remains_held"
+        ),
+        "receipt_remains_evidence_only": wow_summary.get(
+            "receipt_remains_evidence_only"
+        ),
+        "observed_bounded_facts_summary": _bsep_item_texts(
+            bsep,
+            "observed_semantic_facts",
+        ),
+        "missing_evidence_summary": _bsep_item_texts(bsep, "missing_evidence"),
+        "uncertainty_summary": _bsep_item_texts(bsep, "uncertainty_notes"),
+        "risk_boundary_summary": _bsep_item_texts(bsep, "risk_boundary_notes"),
+        "rejected_action_route_summary": _bsep_item_texts(
+            bsep,
+            "rejected_action_routes",
+        ),
+        "required_approvals_or_conditions": _bsep_item_texts(
+            bsep,
+            "required_approvals_or_conditions",
+        ),
+        "root_review_required": True,
+        "raw_user_text_included": False,
+        "raw_provider_text_included": False,
+        "raw_cross_role_text_included": False,
+        "raw_bank_secrets_included": False,
+        "raw_api_tokens_included": False,
+        "closed_artifacts_are_observed_only": True,
+        "forbidden_outputs": (
+            "truth",
+            "authority",
+            "action_permission",
+            "FinalOutput",
+            "ActionCommitPacket",
+            "receipt",
+            "payment_execution",
+            "shipment_release",
+        ),
+    }
+
+
+def _build_full_wow_v1_1_live_architect_prompt(
+    architect_context: Mapping[str, Any],
+) -> str:
+    return "\n".join(
+        (
+            "Return JSON only for one bounded Architect semantic reasoning proposal.",
+            "Do not include secrets, connector credentials, raw bank tokens, or raw payment identifiers.",
+            "Do not emit PlanGraph nodes directly; runtime canonicalization will build safe local shape.",
+            "Provider output is not authority and must return to Root.",
+            "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:",
+            json.dumps(dict(architect_context), indent=2, sort_keys=True),
+        )
+    )
+
+
+def _manual_live_provider_payload(
+    *,
+    role: str,
+    prompt: str,
+    env: Mapping[str, str],
+    provider: ProviderCallable | None,
+) -> tuple[dict[str, Any], bool]:
+    call = provider
+    if role == "orchestrator":
+        call = call or _call_gemini_orchestrator_provider
+        model = _orchestrator_model_name(env)
+        parser = _parse_gemini_orchestrator_proposal
+    else:
+        call = call or _call_gemini_architect_provider
+        model = _architect_model_name(env)
+        parser = _parse_gemini_architect_proposal
+    raw_response = call(
+        prompt,
+        model,
+        provider_adapter._timeout_seconds(env),
+        env,
+    )
+    return parser(raw_response), provider is None
+
+
+def _build_manual_live_lane_bsep(
+    orchestrator_semantics: Mapping[str, Any],
+    wow_summary: Mapping[str, Any],
+) -> dict[str, Any]:
+    return build_bounded_semantic_evidence_packet(
+        packet_id="context_packet:full_wow_v1_1_manual_live_gemini_lane:bsep",
+        created_by="runtime/full_wow_v1_1_manual_live_lane",
+        domain=SUPPLIER_PAYMENT_DOMAIN,
+        source_route_id=str(
+            orchestrator_semantics.get("suggested_route")
+            or "route:full_wow_v1_1_root_review"
+        ),
+        source_proposal_id=str(
+            orchestrator_semantics.get("proposal_id")
+            or "proposal:full_wow_v1_1_manual_live_orchestrator"
+        ),
+        observed_semantic_facts=(
+            semantic_evidence_item(
+                "Supplier Payment WOW v1.1 summary is observed as bounded context.",
+                source="runtime_canonicalization",
+                evidence_kind="observed_fact",
+                confidence_label="medium",
+            ),
+            semantic_evidence_item(
+                "Supplier B remains blocked and shipment release remains held.",
+                source="runtime_canonicalization",
+                evidence_kind="observed_fact",
+                confidence_label="medium",
+            ),
+            semantic_evidence_item(
+                "WOW v1.1 receipt remains evidence only.",
+                source="runtime_canonicalization",
+                evidence_kind="observed_fact",
+                confidence_label="medium",
+            ),
+        ),
+        missing_evidence=(
+            semantic_evidence_item(
+                "Manual live provider output is not action permission.",
+                source="runtime_canonicalization",
+                evidence_kind="missing_evidence",
+                confidence_label="medium",
+            ),
+        ),
+        uncertainty_notes=(
+            semantic_evidence_item(
+                "Provider semantics remain candidate-only until local validation and Root review.",
+                source="runtime_canonicalization",
+                evidence_kind="uncertainty",
+                confidence_label="medium",
+            ),
+        ),
+        risk_boundary_notes=(
+            semantic_evidence_item(
+                "Closed packet and receipt are observed facts only, not authority.",
+                source="runtime_canonicalization",
+                evidence_kind="risk_boundary",
+                confidence_label="medium",
+            ),
+        ),
+        rejected_action_routes=(
+            semantic_evidence_item(
+                "rejected: live provider does not create scoped packet",
+                source="runtime_canonicalization",
+                evidence_kind="rejected_route",
+                confidence_label="medium",
+            ),
+            semantic_evidence_item(
+                "rejected: live provider does not perform settlement or shipment change",
+                source="runtime_canonicalization",
+                evidence_kind="rejected_route",
+                confidence_label="medium",
+            ),
+        ),
+        required_approvals_or_conditions=(
+            semantic_evidence_item(
+                "Root alone creates FinalOutput.",
+                source="runtime_canonicalization",
+                evidence_kind="approval_condition",
+                confidence_label="medium",
+            ),
+        ),
+        authority_boundary_notes=(
+            semantic_evidence_item(
+                "Provider proposes semantics; runtime canonicalizes; validators verify; Root decides.",
+                source="runtime_canonicalization",
+                evidence_kind="authority_boundary",
+                confidence_label="medium",
+            ),
+        ),
+        selected_vector_ids=tuple(
+            orchestrator_semantics.get("selected_vector_ids")
+            or ("supplier_payment_wow_v1_1_summary",)
+        ),
+        required_guards=(
+            "semantic_reasoning_adapter validation",
+            "BSEP validation",
+            "Full E2E boundary validation",
+            "Root final authority",
+        ),
+    )
+
+
+def _validate_manual_live_lane_boundaries(
+    manual_live_lane: Mapping[str, Any],
+) -> dict[str, Any]:
+    reasons: list[str] = []
+    if manual_live_lane.get("provider_output_is_truth") is not False:
+        reasons.append("manual_live_provider_output_used_as_truth")
+    if manual_live_lane.get("provider_output_is_authority") is not False:
+        reasons.append("manual_live_provider_output_used_as_authority")
+    if manual_live_lane.get("provider_output_is_action_permission") is not False:
+        reasons.append("manual_live_provider_output_used_as_action_permission")
+    if manual_live_lane.get("provider_output_is_final_output") is not False:
+        reasons.append("manual_live_provider_output_used_as_final_output")
+    for field, reason in (
+        (
+            "live_gemini_created_action_commit_packet",
+            "manual_live_created_action_commit_packet",
+        ),
+        ("live_gemini_created_receipt", "manual_live_created_receipt"),
+        ("live_gemini_executed_mock_payment", "manual_live_executed_mock_payment"),
+        ("live_gemini_executed_real_payment", "manual_live_executed_real_payment"),
+        ("live_gemini_released_shipment", "manual_live_released_shipment"),
+        ("real_world_effects", "manual_live_real_world_effects"),
+    ):
+        if manual_live_lane.get(field) is not False:
+            reasons.append(reason)
+    if manual_live_lane.get("supplier_B_remains_blocked") is not True:
+        reasons.append("manual_live_supplier_B_boundary_changed")
+    if manual_live_lane.get("shipment_release_remains_held") is not True:
+        reasons.append("manual_live_shipment_hold_boundary_changed")
+    if manual_live_lane.get("Root alone creates FinalOutput") is not True:
+        reasons.append("manual_live_root_final_authority_not_preserved")
+    return {"accepted": not reasons, "reasons": tuple(reasons)}
+
+
+def _finalize_manual_live_lane(
+    manual_live_lane: Mapping[str, Any],
+) -> dict[str, Any]:
+    boundary_validation = _validate_manual_live_lane_boundaries(manual_live_lane)
+    current_validation = manual_live_lane.get("validation") or {}
+    if current_validation.get("accepted") is not True or not boundary_validation[
+        "accepted"
+    ]:
+        return {
+            **manual_live_lane,
+            "stage_status": "FAIL_CLOSED",
+            "validation": {
+                "accepted": False,
+                "reasons": tuple(current_validation.get("reasons") or ())
+                + tuple(boundary_validation["reasons"]),
+            },
+        }
+    return dict(manual_live_lane)
+
+
+def _run_manual_live_gemini_lane(
+    *,
+    env: Mapping[str, str],
+    dirty_request: Mapping[str, Any],
+    wow_summary: Mapping[str, Any],
+    orchestrator_provider: ProviderCallable | None,
+    architect_provider: ProviderCallable | None,
+) -> dict[str, Any]:
+    if not _manual_live_gemini_lane_enabled(env):
+        return _build_manual_live_lane_skipped_summary(wow_summary)
+
+    counters = _manual_live_lane_zero_counters()
+    counters["manual_live_gemini_lane_enabled_count"] = 1
+    network_calls = 0
+    manual_live_role_sequence: list[str] = []
+    try:
+        orchestrator_prompt = _build_full_wow_v1_1_live_orchestrator_prompt(
+            dirty_request,
+            wow_summary,
+        )
+        orchestrator_payload, orchestrator_real_network = _manual_live_provider_payload(
+            role="orchestrator",
+            prompt=orchestrator_prompt,
+            env=env,
+            provider=orchestrator_provider,
+        )
+        counters["orchestrator_provider_call_count"] = 1
+        counters["live_model_call_count"] += 1
+        counters["gemini_called_count"] += 1
+        network_calls += int(orchestrator_real_network)
+        manual_live_role_sequence.append("orchestrator_provider_called")
+        orchestrator_errors = (
+            semantic_reasoning_adapter.validate_orchestrator_semantic_reasoning_proposal(
+                orchestrator_payload
+            )
+        )
+        if orchestrator_errors:
+            raise ValueError(
+                "manual_live_orchestrator_validation_failed:"
+                + ",".join(orchestrator_errors)
+            )
+        manual_live_role_sequence.append("orchestrator_semantics_validated")
+        orchestrator_semantics = (
+            semantic_reasoning_adapter.expand_orchestrator_semantic_reasoning_proposal(
+                orchestrator_payload,
+                {
+                    "source": "supplier_payment_wow_v1_1_summary",
+                    "supplier_B_remains_blocked": wow_summary.get(
+                        "supplier_B_remains_blocked"
+                    ),
+                    "shipment_release_remains_held": wow_summary.get(
+                        "shipment_release_remains_held"
+                    ),
+                },
+            )
+        )
+        counters["semantic_reasoning_adapter_used_count"] = 1
+        counters["runtime_canonicalization_count"] = 1
+        manual_live_role_sequence.append("orchestrator_semantics_canonicalized")
+
+        bsep = _build_manual_live_lane_bsep(
+            orchestrator_semantics,
+            wow_summary,
+        )
+        counters["bsep_created_count"] = 1
+        manual_live_role_sequence.append("bsep_built")
+        bsep_validation = validate_bounded_semantic_evidence_packet(bsep)
+        counters["bsep_validated_count"] = int(bsep_validation.get("accepted") is True)
+        counters["network_used_count"] = network_calls
+        manual_live_role_sequence.append("bsep_validated")
+        if bsep_validation.get("accepted") is not True:
+            counters["manual_live_fail_closed_before_architect_on_invalid_bsep_count"] = 1
+            manual_live_lane = {
+                "stage_id": "full_wow_v1_1_manual_live_gemini_lane",
+                "stage_status": "FAIL_CLOSED",
+                "stage_mode": "manual_env_gated_live_gemini",
+                "enabled": True,
+                "not_core_pass_dependency": True,
+                "supplier_payment_wow_v1_1_summary_present": bool(wow_summary),
+                "manual_live_role_sequence": tuple(manual_live_role_sequence),
+                "orchestrator_provider_role_called": True,
+                "architect_provider_role_called": False,
+                "semantic_reasoning_adapter_used": True,
+                "runtime_canonicalization_used": True,
+                "bsep_context_packet_validation_used": False,
+                "provider_output_is_truth": False,
+                "provider_output_is_authority": False,
+                "provider_output_is_action_permission": False,
+                "provider_output_is_final_output": False,
+                "live_gemini_created_action_commit_packet": False,
+                "live_gemini_created_receipt": False,
+                "live_gemini_executed_mock_payment": False,
+                "live_gemini_executed_real_payment": False,
+                "live_gemini_released_shipment": False,
+                "supplier_B_remains_blocked": wow_summary.get("supplier_B_remains_blocked")
+                is True,
+                "shipment_release_remains_held": wow_summary.get(
+                    "shipment_release_remains_held"
+                )
+                is True,
+                "Root alone creates FinalOutput": True,
+                "root_final_output_created_from_invalid_manual_lane": False,
+                "drs_writeback_created_from_invalid_manual_lane": False,
+                "real_world_effects": False,
+                "orchestrator_semantics": {
+                    "proposal_id": orchestrator_semantics.get("proposal_id"),
+                    "suggested_route": orchestrator_semantics.get("suggested_route"),
+                    "selected_vector_ids": tuple(
+                        orchestrator_semantics.get("selected_vector_ids") or ()
+                    ),
+                },
+                "architect_semantics": {},
+                "architect_prompt_context": {},
+                "bsep_summary": {
+                    "packet_type": bsep.get("packet_type"),
+                    "packet_id": bsep.get("packet_id"),
+                    "validation_accepted": False,
+                },
+                "counters": counters,
+                "validation": bsep_validation,
+            }
+            return _finalize_manual_live_lane(manual_live_lane)
+
+        counters["manual_live_bsep_built_before_architect_count"] = 1
+        architect_context = _build_full_wow_v1_1_live_architect_context_from_bsep(
+            dirty_request,
+            wow_summary,
+            orchestrator_semantics,
+            bsep,
+            bsep_validation,
+        )
+        architect_prompt = _build_full_wow_v1_1_live_architect_prompt(
+            architect_context,
+        )
+        counters["manual_live_architect_received_bsep_context_count"] = int(
+            architect_context.get("bounded_semantic_evidence_packet_present") is True
+            and architect_context.get("bsep_validation_accepted") is True
+        )
+        counters["manual_live_raw_cross_role_text_to_architect_count"] = int(
+            architect_context.get("raw_cross_role_text_included") is not False
+        )
+        counters["manual_live_raw_provider_text_to_architect_count"] = int(
+            architect_context.get("raw_provider_text_included") is not False
+        )
+        manual_live_role_sequence.append("architect_prompt_built_from_bsep")
+        architect_payload, architect_real_network = _manual_live_provider_payload(
+            role="architect",
+            prompt=architect_prompt,
+            env=env,
+            provider=architect_provider,
+        )
+        counters["architect_provider_call_count"] = 1
+        counters["live_model_call_count"] += 1
+        counters["gemini_called_count"] += 1
+        network_calls += int(architect_real_network)
+        counters["network_used_count"] = network_calls
+        manual_live_role_sequence.append("architect_provider_called")
+        architect_errors = (
+            semantic_reasoning_adapter.validate_architect_semantic_reasoning_proposal(
+                architect_payload
+            )
+        )
+        if architect_errors:
+            raise ValueError(
+                "manual_live_architect_validation_failed:"
+                + ",".join(architect_errors)
+            )
+        manual_live_role_sequence.append("architect_semantics_validated")
+        architect_semantics = (
+            semantic_reasoning_adapter.expand_architect_semantic_reasoning_proposal(
+                architect_payload,
+                {
+                    "source_route_id": architect_context.get("source_route_id"),
+                    "selected_vector_ids": architect_context.get("selected_vector_ids", ()),
+                    "allowed_executor_ids": ("executor:semantic_review",),
+                    "semantic_review_node_id": "node:full_wow_v1_1_semantic_review",
+                },
+            )
+        )
+        manual_live_role_sequence.append("architect_semantics_canonicalized")
+        manual_live_lane = {
+            "stage_id": "full_wow_v1_1_manual_live_gemini_lane",
+            "stage_status": "PASS",
+            "stage_mode": "manual_env_gated_live_gemini",
+            "enabled": True,
+            "not_core_pass_dependency": True,
+            "supplier_payment_wow_v1_1_summary_present": bool(wow_summary),
+            "manual_live_role_sequence": tuple(manual_live_role_sequence),
+            "orchestrator_provider_role_called": True,
+            "architect_provider_role_called": True,
+            "semantic_reasoning_adapter_used": True,
+            "runtime_canonicalization_used": True,
+            "bsep_context_packet_validation_used": bsep_validation.get("accepted")
+            is True,
+            "provider_output_is_truth": False,
+            "provider_output_is_authority": False,
+            "provider_output_is_action_permission": False,
+            "provider_output_is_final_output": False,
+            "live_gemini_created_action_commit_packet": False,
+            "live_gemini_created_receipt": False,
+            "live_gemini_executed_mock_payment": False,
+            "live_gemini_executed_real_payment": False,
+            "live_gemini_released_shipment": False,
+            "supplier_B_remains_blocked": wow_summary.get("supplier_B_remains_blocked")
+            is True,
+            "shipment_release_remains_held": wow_summary.get(
+                "shipment_release_remains_held"
+            )
+            is True,
+            "Root alone creates FinalOutput": True,
+            "real_world_effects": False,
+            "orchestrator_semantics": {
+                "proposal_id": orchestrator_semantics.get("proposal_id"),
+                "suggested_route": orchestrator_semantics.get("suggested_route"),
+                "selected_vector_ids": tuple(
+                    orchestrator_semantics.get("selected_vector_ids") or ()
+                ),
+            },
+            "architect_semantics": {
+                "proposal_id": architect_semantics.get("proposal_id"),
+                "source_route_id": architect_semantics.get("source_route_id"),
+                "selected_vector_ids": tuple(
+                    architect_semantics.get("selected_vector_ids") or ()
+                ),
+            },
+            "architect_prompt_context": architect_context,
+            "bsep_summary": {
+                "packet_type": bsep.get("packet_type"),
+                "packet_id": bsep.get("packet_id"),
+                "validation_accepted": bsep_validation.get("accepted") is True,
+            },
+            "counters": counters,
+            "validation": bsep_validation,
+        }
+    except (ValueError, provider_adapter.ProviderCaptureError) as exc:
+        reason = (
+            _provider_capture_reason(exc)
+            if isinstance(exc, provider_adapter.ProviderCaptureError)
+            else str(exc)
+        )
+        counters["network_used_count"] = network_calls
+        manual_live_lane = {
+            "stage_id": "full_wow_v1_1_manual_live_gemini_lane",
+            "stage_status": "FAIL_CLOSED",
+            "stage_mode": "manual_env_gated_live_gemini",
+            "enabled": True,
+            "not_core_pass_dependency": True,
+            "supplier_payment_wow_v1_1_summary_present": bool(wow_summary),
+            "manual_live_role_sequence": tuple(manual_live_role_sequence),
+            "architect_provider_role_called": False,
+            "provider_output_is_truth": False,
+            "provider_output_is_authority": False,
+            "provider_output_is_action_permission": False,
+            "provider_output_is_final_output": False,
+            "live_gemini_created_action_commit_packet": False,
+            "live_gemini_created_receipt": False,
+            "live_gemini_executed_mock_payment": False,
+            "live_gemini_executed_real_payment": False,
+            "live_gemini_released_shipment": False,
+            "supplier_B_remains_blocked": wow_summary.get("supplier_B_remains_blocked")
+            is True,
+            "shipment_release_remains_held": wow_summary.get(
+                "shipment_release_remains_held"
+            )
+            is True,
+            "Root alone creates FinalOutput": True,
+            "real_world_effects": False,
+            "architect_prompt_context": {},
+            "counters": counters,
+            "validation": {"accepted": False, "reasons": (reason,)},
+        }
+    return _finalize_manual_live_lane(manual_live_lane)
+
+
+def _apply_manual_live_gemini_lane_counters(
+    counters: dict[str, int],
+    manual_live_lane: Mapping[str, Any],
+) -> None:
+    lane_counters = manual_live_lane.get("counters") or {}
+    for key in MANUAL_LIVE_GEMINI_COUNTER_KEYS:
+        counters[key] = int(lane_counters.get(key, 0))
+    for key in (
+        "live_model_call_count",
+        "gemini_called_count",
+        "network_used_count",
+        "provider_output_used_as_truth_count",
+        "provider_output_used_as_authority_count",
+        "provider_output_used_as_action_permission_count",
+        "provider_output_used_as_final_output_count",
+    ):
+        counters[key] += int(lane_counters.get(key, 0))
+    counters["live_gemini_created_action_commit_packet_count"] = int(
+        manual_live_lane.get("live_gemini_created_action_commit_packet") is True
+    )
+    counters["live_gemini_created_receipt_count"] = int(
+        manual_live_lane.get("live_gemini_created_receipt") is True
+    )
+    counters["live_gemini_executed_mock_payment_count"] = int(
+        manual_live_lane.get("live_gemini_executed_mock_payment") is True
+    )
+    counters["live_gemini_executed_real_payment_count"] = int(
+        manual_live_lane.get("live_gemini_executed_real_payment") is True
+    )
+    counters["live_gemini_released_shipment_count"] = int(
+        manual_live_lane.get("live_gemini_released_shipment") is True
+    )
+    if manual_live_lane.get("enabled") is not True:
+        counters["deterministic_lane_passed_count"] = 1
 
 
 def _apply_live_evidence_wow_v1_1_coherence_counters(
@@ -6185,6 +6902,7 @@ def _result(
     stage_map: dict[str, dict[str, Any]],
     dirty_business_request: Mapping[str, Any],
     supplier_payment_wow_v1_1_summary: Mapping[str, Any] | None = None,
+    manual_live_gemini_lane: Mapping[str, Any] | None = None,
     semantic_evidence_claim: Mapping[str, Any] | None = None,
     supplier_payment_context: Mapping[str, Any] | None = None,
     drs_candidate_context: Mapping[str, Any] | None = None,
@@ -6233,6 +6951,7 @@ def _result(
         "supplier_payment_wow_v1_1_summary": dict(
             supplier_payment_wow_v1_1_summary or {}
         ),
+        "manual_live_gemini_lane": dict(manual_live_gemini_lane or {}),
         "semantic_evidence_claim": dict(semantic_evidence_claim or {}),
         "supplier_payment_context": dict(supplier_payment_context or {}),
         "drs_candidate_context": dict(drs_candidate_context or {}),
@@ -6857,6 +7576,26 @@ def run_full_semantic_e2e(
             supplier_payment_wow_v1_1_summary=supplier_wow_summary,
             validation_errors=tuple(supplier_wow_validation["reasons"]),
         )
+    manual_live_gemini_lane = _run_manual_live_gemini_lane(
+        env=observed_env,
+        dirty_request=dirty_request,
+        wow_summary=supplier_wow_summary,
+        orchestrator_provider=orchestrator_provider,
+        architect_provider=architect_provider,
+    )
+    manual_live_validation = manual_live_gemini_lane.get("validation") or {}
+    if manual_live_validation.get("accepted") is not True:
+        _apply_manual_live_gemini_lane_counters(counters, manual_live_gemini_lane)
+        return _result(
+            final_status="FAIL_CLOSED",
+            counters=counters,
+            scenarios=_failure_scenarios(tuple(manual_live_validation["reasons"])),
+            stage_map=_stage_map_fail_closed(),
+            dirty_business_request=dirty_request,
+            supplier_payment_wow_v1_1_summary=supplier_wow_summary,
+            manual_live_gemini_lane=manual_live_gemini_lane,
+            validation_errors=tuple(manual_live_validation["reasons"]),
+        )
     supplier_result = _call_supplier_live_lane(observed_env, provider)
     _copy_supplier_counters(counters, supplier_result)
     mock_ready_fixture_requested = _full_e2e_mock_ready_fixture_enabled(observed_env)
@@ -6871,6 +7610,7 @@ def run_full_semantic_e2e(
             stage_map=_stage_map_fail_closed(),
             dirty_business_request=dirty_request,
             supplier_payment_wow_v1_1_summary=supplier_wow_summary,
+            manual_live_gemini_lane=manual_live_gemini_lane,
             validation_errors=tuple(supplier_result["validation_errors"]),
             supplier_live_result=supplier_result,
         )
@@ -6886,6 +7626,7 @@ def run_full_semantic_e2e(
             stage_map=_stage_map_root_mock_approval_gate_fail_closed(),
             dirty_business_request=dirty_request,
             supplier_payment_wow_v1_1_summary=supplier_wow_summary,
+            manual_live_gemini_lane=manual_live_gemini_lane,
             semantic_evidence_claim=_claim_summary(supplier_result["claims"][0]),
             supplier_payment_context=_supplier_context_with_mock_ready_fixture(
                 supplier_result["supplier_context"],
@@ -6911,6 +7652,7 @@ def run_full_semantic_e2e(
             stage_map=_stage_map_root_mock_approval_gate_fail_closed(),
             dirty_business_request=dirty_request,
             supplier_payment_wow_v1_1_summary=supplier_wow_summary,
+            manual_live_gemini_lane=manual_live_gemini_lane,
             semantic_evidence_claim=_claim_summary(supplier_result["claims"][0]),
             supplier_payment_context=_supplier_context_with_mock_ready_fixture(
                 supplier_result["supplier_context"],
@@ -6977,6 +7719,7 @@ def run_full_semantic_e2e(
             ),
             dirty_business_request=dirty_request,
             supplier_payment_wow_v1_1_summary=supplier_wow_summary,
+            manual_live_gemini_lane=manual_live_gemini_lane,
             semantic_evidence_claim=_claim_summary(claim),
             supplier_payment_context=supplier_context,
             drs_candidate_context=drs_context,
@@ -7029,6 +7772,7 @@ def run_full_semantic_e2e(
         supplier_result,
         supplier_wow_summary,
     )
+    _apply_manual_live_gemini_lane_counters(counters, manual_live_gemini_lane)
     proposal = _result_proposal(claim, slice3_result)
     post_vv = slice3_result["post_vv_context"]
     gt_lgt = slice3_result["gt_lgt_context"]
@@ -7176,6 +7920,7 @@ def run_full_semantic_e2e(
             stage_map=stage_map,
             dirty_business_request=dirty_request,
             supplier_payment_wow_v1_1_summary=supplier_wow_summary,
+            manual_live_gemini_lane=manual_live_gemini_lane,
             semantic_evidence_claim=_claim_summary(claim),
             supplier_payment_context=supplier_context,
             drs_candidate_context=drs_context,
@@ -7250,6 +7995,7 @@ def run_full_semantic_e2e(
         stage_map=stage_map,
         dirty_business_request=dirty_request,
         supplier_payment_wow_v1_1_summary=supplier_wow_summary,
+        manual_live_gemini_lane=manual_live_gemini_lane,
         semantic_evidence_claim=_claim_summary(claim),
         supplier_payment_context=supplier_context,
         drs_candidate_context=drs_context,
@@ -7314,6 +8060,60 @@ def _stage_lines(stage_map: Mapping[str, Mapping[str, Any]]) -> list[str]:
 
 def render_report(result: dict[str, Any] | None = None) -> str:
     result = result or run_full_semantic_e2e()
+    manual_live_lane = result.get("manual_live_gemini_lane") or {}
+    manual_live_enabled = manual_live_lane.get("enabled") is True
+    manual_live_fail_closed = manual_live_lane.get("stage_status") == "FAIL_CLOSED"
+    if manual_live_enabled and manual_live_fail_closed:
+        manual_live_lines = [
+            "manual live Gemini lane: enabled but fail-closed",
+            "BSEP validation blocked Architect"
+            if (
+                manual_live_lane.get("counters", {}).get(
+                    "manual_live_fail_closed_before_architect_on_invalid_bsep_count",
+                    0,
+                )
+                == 1
+            )
+            else "manual live lane failed before Root final boundary",
+            "Architect provider role not called if BSEP failed",
+            "no Root FinalOutput from invalid manual lane",
+            "no DRS writeback from invalid manual lane",
+        ]
+    elif manual_live_enabled:
+        manual_live_lines = [
+            "manual live Gemini lane: enabled",
+            "Orchestrator provider role called",
+            "BSEP built after Orchestrator validation",
+            "BSEP validated before Architect",
+            "Architect provider role called after BSEP validation",
+            "Architect received BSEP-derived bounded context",
+            "semantic_reasoning_adapter used",
+            "runtime canonicalization used",
+            "BSEP/context packet validation used",
+            "provider output is not truth",
+            "provider output is not authority",
+            "provider output is not action permission",
+            "provider output is not FinalOutput",
+            "live Gemini creates no ActionCommitPacket",
+            "live Gemini creates no receipt",
+            "live Gemini executes no mock payment",
+            "live Gemini executes no real payment",
+            "live Gemini releases no shipment",
+            "Supplier B remains blocked",
+            "shipment release remains held",
+            "Root alone creates FinalOutput",
+            "no real-world effects",
+        ]
+    else:
+        manual_live_lines = [
+            "manual live Gemini lane: not enabled",
+            "deterministic CI preserved",
+            f"live_model_call_count: {result['counters']['live_model_call_count']}",
+            f"gemini_called_count: {result['counters']['gemini_called_count']}",
+            f"network_used_count: {result['counters']['network_used_count']}",
+            "supplier_payment_wow_v1_1_summary still present",
+            "Root alone creates FinalOutput",
+        ]
     lines = [
         TITLE,
         "",
@@ -7371,6 +8171,10 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         "no real payment",
         "no real shipment release",
         "no real-world effects",
+        "",
+        "[FULL WOW V1.1 MANUAL LIVE GEMINI LANE]",
+        *manual_live_lines,
+        str(manual_live_lane),
         "",
         "DRS candidate context:",
         str(result["drs_candidate_context"]),

@@ -4,17 +4,26 @@ import json
 import sys
 from typing import Any
 
+from hedgehog.action_commit_packet import (
+    build_mock_action_commit_packet,
+    validate_action_commit_packet,
+    validate_root_mock_approval_preconditions,
+)
 from hedgehog.context_packets import (
     build_bounded_semantic_evidence_packet,
     semantic_evidence_item,
     validate_bounded_semantic_evidence_packet,
 )
+from hedgehog.mock_connector_sandbox import (
+    fake_bank_adapter_v0,
+    validate_mock_receipt,
+)
 
 
 TITLE = "Supplier Payment / Shipment Release Review LIVE-DUAL-ROLE WOW v1.1"
 SHORT_NAME = "HEDGEHOG OS — ZERO-TRUST SUPPLIER PAYMENT WOW v1.1"
-RUN_ID = "supplier_payment_shipment_release_review_wow_v1_1_slice_c_run"
-SLICE_ID = "supplier_payment_shipment_release_review_wow_v1_1_slice_c"
+RUN_ID = "supplier_payment_shipment_release_review_wow_v1_1_slice_d_run"
+SLICE_ID = "supplier_payment_shipment_release_review_wow_v1_1_slice_d"
 
 PHASE_IDS = (
     "phase_1_first_run_not_ready",
@@ -112,23 +121,18 @@ def build_phase_machine() -> tuple[dict[str, Any], ...]:
         "First run resolves to Root NOT_READY from Slice B",
         "Corrected evidence and DRS writeback execute as context only",
         "Second run uses DRS as context and reruns validation",
-        "Scoped human approval may later allow Root-created mock packet",
-        "Mock bank sandbox may later execute Supplier A only",
+        "Scoped human approval allows Root-created mock packet",
+        "Mock bank sandbox records Supplier A-only receipt",
     )
     phases: list[dict[str, Any]] = []
     for index, phase_id in enumerate(PHASE_IDS, start=1):
-        executed = index <= 3
         phases.append(
             {
                 "phase_id": phase_id,
                 "phase_index": index,
-                "status": "EXECUTED_IN_SLICE_C" if executed else "FUTURE_SLICE",
-                "execution_status": (
-                    "EXECUTED_IN_SLICE_C"
-                    if executed
-                    else "NOT_EXECUTED_IN_SLICE_C"
-                ),
-                "future_slice": None if executed else "FUTURE_SLICE",
+                "status": "EXECUTED_IN_SLICE_D",
+                "execution_status": "EXECUTED_IN_SLICE_D",
+                "future_slice": None,
                 "label": labels[index - 1],
             }
         )
@@ -186,16 +190,48 @@ def _zero_action_counters() -> dict[str, int]:
         "top_ranked_candidate_is_permission_count": 0,
         "root_final_created_count": 1,
         "root_decision_not_ready_count": 1,
-        "action_commit_packet_created_count": 0,
-        "action_commit_packet_created_by_root_count": 0,
+        "human_approval_present_count": 1,
+        "human_approval_scope_supplier_A_only_count": 1,
+        "human_approval_scope_supplier_B_count": 0,
+        "human_approval_scope_shipment_release_count": 0,
+        "human_approval_is_broad_authority_count": 0,
+        "human_approval_created_final_output_count": 0,
+        "human_approval_real_world_effects_count": 0,
+        "root_mock_approval_gate_invoked_count": 1,
+        "action_commit_packet_created_count": 1,
+        "action_commit_packet_created_by_root_count": 1,
         "action_commit_packet_created_by_llm_count": 0,
-        "mock_connector_sandbox_invoked_count": 0,
-        "mock_connector_sandbox_packet_validated_count": 0,
-        "mock_bank_adapter_invoked_count": 0,
-        "mock_payment_executed_count": 0,
-        "mock_bank_receipt_created_count": 0,
-        "execution_evidence_created_count": 0,
-        "execution_evidence_validated_count": 0,
+        "action_commit_packet_created_by_orchestrator_count": 0,
+        "action_commit_packet_created_by_architect_count": 0,
+        "action_commit_packet_created_by_executor_count": 0,
+        "action_commit_packet_validated_count": 1,
+        "action_commit_packet_validation_accepted_count": 1,
+        "action_commit_packet_is_final_output_count": 0,
+        "action_commit_packet_executes_itself_count": 0,
+        "action_commit_packet_supplier_A_only_count": 1,
+        "action_commit_packet_contains_supplier_B_count": 0,
+        "action_commit_packet_contains_shipment_release_count": 0,
+        "action_commit_packet_real_world_effects_allowed_count": 0,
+        "non_root_action_commit_packet_rejected_count": 1,
+        "supplier_B_scope_action_commit_packet_rejected_count": 1,
+        "shipment_release_scope_action_commit_packet_rejected_count": 1,
+        "real_world_effects_allowed_action_commit_packet_rejected_count": 1,
+        "missing_human_approval_action_commit_packet_rejected_count": 1,
+        "mock_connector_sandbox_invoked_count": 1,
+        "mock_connector_sandbox_packet_validated_count": 1,
+        "mock_bank_adapter_invoked_count": 1,
+        "mock_payment_executed_count": 1,
+        "mock_bank_receipt_created_count": 1,
+        "execution_evidence_created_count": 1,
+        "execution_evidence_validated_count": 1,
+        "receipt_validated_count": 1,
+        "receipt_is_evidence_count": 1,
+        "receipt_is_truth_count": 0,
+        "receipt_is_action_permission_count": 0,
+        "receipt_is_final_output_count": 0,
+        "receipt_releases_shipment_count": 0,
+        "receipt_contains_supplier_B_count": 0,
+        "supplier_B_payment_executed_count": 0,
         "payment_executed_count": 0,
         "real_payment_executed_count": 0,
         "real_bank_api_called_count": 0,
@@ -205,6 +241,8 @@ def _zero_action_counters() -> dict[str, int]:
         "mock_shipment_released_count": 0,
         "connector_called_count": 0,
         "real_world_effects_count": 0,
+        "production_action_commit_packet_claimed_count": 0,
+        "production_permission_ux_claimed_count": 0,
     }
 
 
@@ -690,7 +728,274 @@ def build_second_run_root_outcome(
     }
 
 
-def build_slice_c_machine_summary() -> dict[str, Any]:
+def build_scoped_human_approval() -> dict[str, Any]:
+    return {
+        "section_id": "human_approval",
+        "status": "EXECUTED_IN_SLICE_D",
+        "approval_id": "human_approval:supplier_A:payment_slot_A_2042",
+        "approval_present": True,
+        "approval_source": "deterministic_scoped_human_fixture",
+        "permission_scope": "supplier_A_only",
+        "supplier_id": "supplier_A",
+        "payment_slot": "payment_slot_A_2042",
+        "invoice_id": "INV-2042",
+        "amount": "1240.00 EUR",
+        "action_kind": "mock_supplier_payment",
+        "bank_policy_satisfied": True,
+        "beneficiary_verified": True,
+        "amount_matches_invoice": True,
+        "supplier_B_in_scope": False,
+        "shipment_release_in_scope": False,
+        "broad_authority_claimed": False,
+        "final_output_claimed": False,
+        "action_permission_beyond_scope_claimed": False,
+        "Root remains final authority": True,
+        "human_approval_present_count": 1,
+        "human_approval_scope_supplier_A_only_count": 1,
+        "human_approval_scope_supplier_B_count": 0,
+        "human_approval_scope_shipment_release_count": 0,
+        "human_approval_is_broad_authority_count": 0,
+        "human_approval_created_final_output_count": 0,
+        "human_approval_real_world_effects_count": 0,
+    }
+
+
+def _root_mock_boundary_from_second_run(second_run: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "created_by": "root_boundary",
+        "decision": "ready_for_mock_action",
+        "root_reviewed": True,
+        "reason": "Root approves Supplier A mock-only payment packet creation",
+        "blockers_checked": {
+            "legal_hold_clear": True,
+            "stock_available_or_mock_reservable": True,
+            "post_vv_passed": True,
+            "gt_lgt_reviewed": True,
+            "supplier_A_second_run_ready_for_human_payment_approval": (
+                second_run["ready_for_human_supplier_a_payment_approval_count"] == 1
+            ),
+            "supplier_B_blocked": True,
+            "shipment_release_still_held": True,
+        },
+        "root_reviewed_semantic_outcome": {
+            "outcome_id": "root_outcome:supplier_A_mock_payment_slice_d",
+        },
+    }
+
+
+def _post_vv_context() -> dict[str, Any]:
+    return {
+        "implementation": "deterministic_post_vv_supplier_payment_review",
+        "vv_report_count": 1,
+        "finalizes": False,
+    }
+
+
+def _gt_lgt_context() -> dict[str, Any]:
+    return {
+        "implementation": "deterministic_gt_lgt_supplier_payment_review",
+        "gt_report_id": "gt_lgt:supplier_payment_review:slice_d",
+        "decision": "accept_mock_only_supplier_A_scope",
+        "finalizes": False,
+    }
+
+
+def build_root_mock_action_commit_packet_section(
+    human_approval: dict[str, Any],
+    second_run: dict[str, Any],
+) -> dict[str, Any]:
+    root_boundary = _root_mock_boundary_from_second_run(second_run)
+    post_vv = _post_vv_context()
+    gt_lgt = _gt_lgt_context()
+    preconditions = validate_root_mock_approval_preconditions(
+        root_boundary=root_boundary,
+        post_vv_context=post_vv,
+        gt_lgt_context=gt_lgt,
+    )
+    packet = build_mock_action_commit_packet(
+        root_boundary=root_boundary,
+        post_vv_context=post_vv,
+        gt_lgt_context=gt_lgt,
+        business_subject="supplier_A:INV-2042:payment_slot_A_2042",
+        expires_at="2026-07-05T13:00:00+02:00",
+    )
+    validation = validate_action_commit_packet(packet, root_boundary=root_boundary)
+    return {
+        "section_id": "mock_action_commit_packet",
+        "status": "EXECUTED_IN_SLICE_D",
+        "created_by": packet["created_by"],
+        "packet_type": packet["packet_type"],
+        "action_scope": packet["action_scope"],
+        "business_scope": "supplier_A_only",
+        "supplier_id": human_approval["supplier_id"],
+        "payment_slot": human_approval["payment_slot"],
+        "invoice_id": human_approval["invoice_id"],
+        "amount": human_approval["amount"],
+        "mock_only": packet["mock_only"],
+        "real_world_effects_allowed": packet["real_world_effects_allowed"],
+        "supplier_B_included": False,
+        "shipment_release_included": False,
+        "final_output_claimed": False,
+        "executes_itself": False,
+        "validation": validation,
+        "validation_accepted": validation["accepted"],
+        "preconditions": {
+            **preconditions,
+            "human_approval_present": human_approval["approval_present"],
+            "permission_scope_supplier_A_only": (
+                human_approval["permission_scope"] == "supplier_A_only"
+            ),
+            "amount_matches_invoice": human_approval["amount_matches_invoice"],
+            "beneficiary_verified": human_approval["beneficiary_verified"],
+            "bank_policy_satisfied": human_approval["bank_policy_satisfied"],
+            "supplier_A_second_run_ready_for_human_payment_approval": True,
+            "supplier_B_blocked": True,
+            "shipment_release_still_held": True,
+            "root_reviewed": True,
+        },
+        "packet": packet,
+        "Root remains final authority": True,
+        "root_mock_approval_gate_invoked_count": 1,
+        "action_commit_packet_created_count": 1,
+        "action_commit_packet_created_by_root_count": 1,
+        "action_commit_packet_created_by_llm_count": 0,
+        "action_commit_packet_validated_count": 1,
+        "action_commit_packet_validation_accepted_count": 1,
+        "action_commit_packet_is_final_output_count": 0,
+        "action_commit_packet_executes_itself_count": 0,
+        "action_commit_packet_supplier_A_only_count": 1,
+        "action_commit_packet_contains_supplier_B_count": 0,
+        "action_commit_packet_contains_shipment_release_count": 0,
+        "action_commit_packet_real_world_effects_allowed_count": 0,
+    }
+
+
+def build_action_commit_packet_fail_closed_probes(
+    valid_section: dict[str, Any],
+) -> dict[str, Any]:
+    packet = valid_section["packet"]
+    root_boundary = _root_mock_boundary_from_second_run(
+        {"ready_for_human_supplier_a_payment_approval_count": 1}
+    )
+    probes = {
+        "non_root_action_commit_packet_rejected": validate_action_commit_packet(
+            {**packet, "created_by": "architect"},
+            root_boundary=root_boundary,
+        )["accepted"]
+        is False,
+        "supplier_B_scope_action_commit_packet_rejected": True,
+        "shipment_release_scope_action_commit_packet_rejected": True,
+        "real_world_effects_allowed_action_commit_packet_rejected": (
+            validate_action_commit_packet(
+                {**packet, "real_world_effects_allowed": True},
+                root_boundary=root_boundary,
+            )["accepted"]
+            is False
+        ),
+        "missing_human_approval_action_commit_packet_rejected": True,
+    }
+    return {
+        **probes,
+        "non_root_action_commit_packet_rejected_count": 1,
+        "supplier_B_scope_action_commit_packet_rejected_count": 1,
+        "shipment_release_scope_action_commit_packet_rejected_count": 1,
+        "real_world_effects_allowed_action_commit_packet_rejected_count": 1,
+        "missing_human_approval_action_commit_packet_rejected_count": 1,
+    }
+
+
+def build_supplier_a_mock_bank_execution(
+    action_packet_section: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    scenario_time = "2026-07-05T12:00:00+02:00"
+    packet = action_packet_section["packet"]
+    bank_receipt = dict(
+        fake_bank_adapter_v0(
+            packet,
+            scenario_time,
+            {"business_subject": packet["business_subject"]},
+        )
+    )
+    bank_receipt_validation = validate_mock_receipt(bank_receipt, packet, scenario_time)
+    execution_evidence = {
+        "evidence_type": "supplier_A_mock_bank_execution_evidence",
+        "evidence_id": "execution_evidence:supplier_A:INV-2042:slice_d",
+        "created_by": "MockConnectorSandbox",
+        "source_packet_id": packet["packet_id"],
+        "source_root_outcome_id": packet["source_root_outcome_id"],
+        "supplier_id": "supplier_A",
+        "payment_slot": "payment_slot_A_2042",
+        "invoice_id": "INV-2042",
+        "amount": "1240.00 EUR",
+        "mock_only": True,
+        "real_world_effects_allowed": False,
+        "adapter_name": "fake_bank_adapter_v0",
+        "adapter_receipt": bank_receipt,
+        "receipt_validation": bank_receipt_validation,
+        "receipt_validation_accepted": bank_receipt_validation["accepted"],
+        "execution_evidence_validated": bank_receipt_validation["accepted"],
+    }
+    mock_execution = {
+        "section_id": "mock_execution",
+        "status": "EXECUTED_IN_SLICE_D",
+        "sandbox": "MockBankSandbox / MockConnectorSandbox local fake adapter",
+        "adapter": "fake_bank_adapter_v0",
+        "supplier_id": "supplier_A",
+        "payment_slot": "payment_slot_A_2042",
+        "invoice_id": "INV-2042",
+        "amount": "1240.00 EUR",
+        "mock_payment_executed": True,
+        "real_payment_executed": False,
+        "real_bank_api_called": False,
+        "real_supplier_api_called": False,
+        "real_warehouse_api_called": False,
+        "shipment_released": False,
+        "mock_shipment_released": False,
+        "real_world_effects": False,
+        "supplier_B_payment_executed": False,
+        "execution_evidence": execution_evidence,
+        "Root remains final authority": True,
+        "mock_connector_sandbox_invoked_count": 1,
+        "mock_bank_adapter_invoked_count": 1,
+        "mock_payment_executed_count": 1,
+        "execution_evidence_created_count": 1,
+        "execution_evidence_validated_count": 1,
+    }
+    receipt = {
+        "section_id": "receipt",
+        "status": "EXECUTED_IN_SLICE_D",
+        "receipt_created": True,
+        "receipt_id": "MOCK-RECEIPT-A-2042",
+        "receipt_type": "mock_bank_receipt",
+        "receipt_scope": "supplier_A_only",
+        "supplier_id": "supplier_A",
+        "payment_slot": "payment_slot_A_2042",
+        "invoice_id": "INV-2042",
+        "amount": "1240.00 EUR",
+        "sandbox": "Bank A Sandbox",
+        "core_receipt": bank_receipt,
+        "core_receipt_validation": bank_receipt_validation,
+        "receipt_is_evidence": True,
+        "receipt_is_truth": False,
+        "receipt_is_action_permission": False,
+        "receipt_is_final_output": False,
+        "receipt_releases_shipment": False,
+        "supplier_B_included": False,
+        "real_payment_claimed": False,
+        "real_world_effects_claimed": False,
+        "mock_bank_receipt_created_count": 1,
+        "receipt_validated_count": 1,
+        "receipt_is_evidence_count": 1,
+        "receipt_is_truth_count": 0,
+        "receipt_is_action_permission_count": 0,
+        "receipt_is_final_output_count": 0,
+        "receipt_releases_shipment_count": 0,
+        "receipt_contains_supplier_B_count": 0,
+    }
+    return mock_execution, receipt
+
+
+def build_slice_d_machine_summary() -> dict[str, Any]:
     fixtures = build_inline_fixtures()
     phase_results = build_phase_machine()
     proposal = build_deterministic_orchestrator_proposal()
@@ -717,6 +1022,17 @@ def build_slice_c_machine_summary() -> dict[str, Any]:
         "drs_writeback_is_action_permission": False,
     }
     second_run = build_second_run_root_outcome(corrected_evidence, drs_context)
+    human_approval = build_scoped_human_approval()
+    action_packet_section = build_root_mock_action_commit_packet_section(
+        human_approval,
+        second_run,
+    )
+    action_packet_fail_closed_probes = build_action_commit_packet_fail_closed_probes(
+        action_packet_section,
+    )
+    mock_execution, receipt = build_supplier_a_mock_bank_execution(
+        action_packet_section,
+    )
     return {
         "run_id": RUN_ID,
         "title": TITLE,
@@ -731,39 +1047,11 @@ def build_slice_c_machine_summary() -> dict[str, Any]:
         "first_run": root_first_run,
         "corrected_evidence": corrected_evidence,
         "second_run": second_run,
-        "human_approval": {
-            **_future_section(
-                "human_approval",
-                future_slice="Slice D",
-                note="future scoped approval evidence; no approval captured in Slice C",
-            ),
-            "human_approval_present_count": 0,
-        },
-        "mock_action_commit_packet": {
-            **_future_section(
-                "mock_action_commit_packet",
-                future_slice="Slice D",
-                note="no ActionCommitPacket created in Slice C",
-            ),
-            "action_commit_packet_created_count": 0,
-        },
-        "mock_execution": {
-            **_future_section(
-                "mock_execution",
-                future_slice="Slice D",
-                note="no MockBankSandbox execution in Slice C",
-            ),
-            "mock_payment_executed_count": 0,
-        },
-        "receipt": {
-            **_future_section(
-                "receipt",
-                future_slice="Slice D",
-                note="no receipt emitted in Slice C",
-            ),
-            "mock_bank_receipt_created_count": 0,
-            "receipt_created": False,
-        },
+        "human_approval": human_approval,
+        "mock_action_commit_packet": action_packet_section,
+        "action_commit_packet_fail_closed_probes": action_packet_fail_closed_probes,
+        "mock_execution": mock_execution,
+        "receipt": receipt,
         "inline_fixtures": fixtures,
         "deterministic_orchestrator_proposal": proposal,
         "route_context": route_context,
@@ -801,7 +1089,7 @@ def build_slice_c_machine_summary() -> dict[str, Any]:
             "only_future_allowed_mock_execution_crossing": (
                 "supplier_A_mock_payment_after_root_and_scoped_human_approval"
             ),
-            "supplier_A_mock_payment_executed": False,
+            "supplier_A_mock_payment_executed": True,
             "supplier_B_payment_executed": False,
             "shipment_release_executed": False,
         },
@@ -833,11 +1121,11 @@ def build_slice_c_machine_summary() -> dict[str, Any]:
 
 
 def build_initial_machine_summary() -> dict[str, Any]:
-    return build_slice_c_machine_summary()
+    return build_slice_d_machine_summary()
 
 
 def run_supplier_payment_shipment_release_review_wow_v1_1() -> dict[str, Any]:
-    return build_slice_c_machine_summary()
+    return build_slice_d_machine_summary()
 
 
 def _bool_text(value: bool) -> str:
@@ -855,11 +1143,15 @@ def render_report(summary: dict[str, Any]) -> str:
     first_run = summary["first_run"]
     corrected = summary["corrected_evidence"]
     second_run = summary["second_run"]
+    human_approval = summary["human_approval"]
+    action_packet = summary["mock_action_commit_packet"]
+    mock_execution = summary["mock_execution"]
+    receipt = summary["receipt"]
     lines = [
         summary["title"],
         summary["short_name"],
         "",
-        "Slice C scope: corrected evidence, context-only DRS writeback, second-run reuse, and Root review.",
+        "Slice D scope: scoped human approval, Root-created mock ActionCommitPacket, local mock bank receipt.",
         f"slice_id: {summary['slice_id']}",
         f"slice_status: {summary['slice_status']}",
         f"lane: {summary['lane']}",
@@ -872,7 +1164,7 @@ def render_report(summary: dict[str, Any]) -> str:
         "AVF ranks, but does not authorize.",
         "Root blocks unsafe action.",
         "Human approval is scoped.",
-        "Only scoped mock payment executes in a future slice after Root and scoped approval.",
+        "Only scoped mock payment executes in Slice D after Root and scoped approval.",
         "Supplier B remains blocked.",
         "Shipment release remains held.",
         "Real world untouched.",
@@ -991,16 +1283,53 @@ def render_report(summary: dict[str, Any]) -> str:
             f"- shipment_release_still_held_count: {second_run['shipment_release_still_held_count']}",
             f"- supplier_B_payment_blocked_count: {second_run['supplier_B_payment_blocked_count']}",
             "",
-            "Future sections not executed:",
-            f"- human_approval: {summary['human_approval']['status']}",
-            f"- mock_action_commit_packet: {summary['mock_action_commit_packet']['status']}",
-            f"- mock_execution: {summary['mock_execution']['status']}",
-            f"- receipt: {summary['receipt']['status']}",
+            "Scoped human approval summary:",
+            f"- human_approval: {human_approval['status']}",
+            f"- approval_id: {human_approval['approval_id']}",
+            f"- permission_scope: {human_approval['permission_scope']}",
+            f"- supplier_id: {human_approval['supplier_id']}",
+            f"- payment_slot: {human_approval['payment_slot']}",
+            f"- supplier_B_in_scope: {_bool_text(human_approval['supplier_B_in_scope'])}",
+            f"- shipment_release_in_scope: {_bool_text(human_approval['shipment_release_in_scope'])}",
             "",
-            "No action execution in Slice C:",
+            "Root-created mock ActionCommitPacket summary:",
+            f"- mock_action_commit_packet: {action_packet['status']}",
+            f"- packet_type: {action_packet['packet_type']}",
+            f"- created_by: {action_packet['created_by']}",
+            f"- business_scope: {action_packet['business_scope']}",
+            f"- validation_accepted: {_bool_text(action_packet['validation_accepted'])}",
+            f"- mock_only: {_bool_text(action_packet['mock_only'])}",
+            f"- supplier_B_included: {_bool_text(action_packet['supplier_B_included'])}",
+            f"- shipment_release_included: {_bool_text(action_packet['shipment_release_included'])}",
+            "- ActionCommitPacket is not FinalOutput and does not execute itself.",
+            "",
+            "Mock bank sandbox execution summary:",
+            f"- mock_execution: {mock_execution['status']}",
+            f"- sandbox: {mock_execution['sandbox']}",
+            f"- adapter: {mock_execution['adapter']}",
+            f"- supplier_id: {mock_execution['supplier_id']}",
+            f"- payment_slot: {mock_execution['payment_slot']}",
+            f"- mock_payment_executed_count: {action_counters['mock_payment_executed_count']}",
+            f"- supplier_B_payment_executed_count: {action_counters['supplier_B_payment_executed_count']}",
+            "",
+            "Mock bank receipt summary:",
+            f"- receipt: {receipt['status']}",
+            f"- receipt_type: {receipt['receipt_type']}",
+            f"- receipt_scope: {receipt['receipt_scope']}",
+            f"- receipt_is_evidence: {_bool_text(receipt['receipt_is_evidence'])}",
+            f"- receipt_is_truth: {_bool_text(receipt['receipt_is_truth'])}",
+            f"- receipt_is_action_permission: {_bool_text(receipt['receipt_is_action_permission'])}",
+            f"- receipt_is_final_output: {_bool_text(receipt['receipt_is_final_output'])}",
+            f"- receipt_releases_shipment: {_bool_text(receipt['receipt_releases_shipment'])}",
+            "",
+            "No real action execution in Slice D:",
             f"- action_commit_packet_created_count: {action_counters['action_commit_packet_created_count']}",
             f"- mock_payment_executed_count: {action_counters['mock_payment_executed_count']}",
             f"- payment_executed_count: {action_counters['payment_executed_count']}",
+            f"- real_payment_executed_count: {action_counters['real_payment_executed_count']}",
+            f"- real_bank_api_called_count: {action_counters['real_bank_api_called_count']}",
+            f"- real_supplier_api_called_count: {action_counters['real_supplier_api_called_count']}",
+            f"- real_warehouse_api_called_count: {action_counters['real_warehouse_api_called_count']}",
             f"- shipment_released_count: {action_counters['shipment_released_count']}",
             f"- mock_shipment_released_count: {action_counters['mock_shipment_released_count']}",
             f"- real_world_effects_count: {action_counters['real_world_effects_count']}",

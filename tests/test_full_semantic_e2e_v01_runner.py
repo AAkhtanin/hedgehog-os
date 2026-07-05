@@ -494,6 +494,178 @@ def test_default_runner_returns_pass_and_runs_deterministic_full_spine() -> None
     assert "bounded_context_packets_context" not in result
 
 
+def test_full_semantic_e2e_observes_supplier_payment_wow_v1_1_summary() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    summary = result["supplier_payment_wow_v1_1_summary"]
+
+    assert summary["stage_status"] == "PASS"
+    assert summary["stage_mode"] == "invoked_closed_summary_runner"
+    assert (
+        summary["source_run_id"]
+        == "supplier_payment_shipment_release_review_wow_v1_1_slice_d_run"
+    )
+    assert summary["source_slice_id"] == "supplier_payment_shipment_release_review_wow_v1_1_slice_d"
+    assert summary["source_final_status"] == "PASS"
+    assert summary["observed_as_bounded_context"] is True
+    assert summary["observed_as_authority"] is False
+    assert summary["observed_as_action_permission"] is False
+    assert summary["observed_as_final_output"] is False
+
+
+def test_full_semantic_e2e_wow_v1_1_stage_accounting_is_honest() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+    stage = result["stage_map"]["supplier_payment_wow_v1_1_summary"]
+
+    assert stage["status"] == "PASS"
+    assert stage["invocation_mode"] == "invoked"
+    assert stage["invoked_count"] == 1
+    assert stage["represented_count"] == 0
+    assert stage["skipped_count"] == 0
+    assert stage["fail_closed_count"] == 0
+    assert counters["supplier_payment_wow_v1_1_summary_invoked_count"] == 1
+    assert counters["supplier_payment_wow_v1_1_summary_represented_count"] == 0
+    assert counters["supplier_payment_wow_v1_1_summary_validation_passed_count"] == 1
+    assert counters["supplier_payment_wow_v1_1_summary_validation_failed_count"] == 0
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["action_commit_packet_created_in_full_e2e_count"] == 0
+    assert counters["receipt_created_in_full_e2e_count"] == 0
+
+
+def test_full_semantic_e2e_wow_v1_1_receipt_is_evidence_only() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    summary = result["supplier_payment_wow_v1_1_summary"]
+    counters = result["counters"]
+
+    assert summary["receipt_remains_evidence_only"] is True
+    assert summary["receipt_is_truth"] is False
+    assert summary["receipt_is_action_permission"] is False
+    assert summary["receipt_is_final_output"] is False
+    assert summary["receipt_releases_shipment"] is False
+    assert counters["supplier_payment_wow_v1_1_receipt_observed_as_evidence_count"] == 1
+    assert counters["supplier_payment_wow_v1_1_receipt_used_as_truth_count"] == 0
+    assert counters["supplier_payment_wow_v1_1_receipt_used_as_action_permission_count"] == 0
+    assert counters["supplier_payment_wow_v1_1_receipt_used_as_final_output_count"] == 0
+    assert counters["supplier_payment_wow_v1_1_receipt_released_shipment_count"] == 0
+
+
+def test_full_semantic_e2e_wow_v1_1_supplier_b_and_shipment_boundaries() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    summary = result["supplier_payment_wow_v1_1_summary"]
+    counters = result["counters"]
+
+    assert summary["supplier_B_remains_blocked"] is True
+    assert summary["shipment_release_remains_held"] is True
+    assert counters["supplier_payment_wow_v1_1_supplier_B_blocked_count"] == 1
+    assert counters["supplier_payment_wow_v1_1_shipment_release_held_count"] == 1
+    assert counters["shipment_released_count"] == 0
+    assert counters["mock_shipment_released_count"] == 0
+
+
+def test_full_semantic_e2e_does_not_create_new_action_or_receipt_from_wow_summary() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    summary = result["supplier_payment_wow_v1_1_summary"]
+    counters = result["counters"]
+
+    assert summary["closed_action_commit_packet_observed_count"] == 1
+    assert summary["closed_mock_bank_receipt_observed_count"] == 1
+    assert summary["new_action_commit_packet_created_count"] == 0
+    assert summary["new_receipt_created_count"] == 0
+    assert summary["new_mock_payment_executed_count"] == 0
+    assert counters["supplier_payment_wow_v1_1_new_action_commit_packet_created_count"] == 0
+    assert counters["supplier_payment_wow_v1_1_new_receipt_created_count"] == 0
+    assert counters["supplier_payment_wow_v1_1_new_mock_payment_executed_count"] == 0
+    assert counters["action_commit_packet_created_in_full_e2e_count"] == 0
+    assert counters["receipt_created_in_full_e2e_count"] == 0
+    assert counters["mock_payment_executed_in_full_e2e_count"] == 0
+
+
+def test_full_semantic_e2e_wow_v1_1_no_real_world_effects() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    counters = result["counters"]
+
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["real_bank_api_called_count"] == 0
+    assert counters["real_supplier_api_called_count"] == 0
+    assert counters["real_warehouse_api_called_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["live_model_call_count"] == 0
+
+
+def test_full_semantic_e2e_report_contains_wow_v1_1_alignment() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    report = runner.render_report(result)
+
+    assert "[SUPPLIER PAYMENT WOW V1.1 SUMMARY ALIGNMENT]" in report
+    assert "Supplier Payment / Shipment Release Review WOW v1.1" in report
+    assert "observed as bounded context/evidence" in report
+    assert "Supplier A scoped mock payment only" in report
+    assert "Supplier B remains blocked" in report
+    assert "shipment release remains held" in report
+    assert "receipt remains evidence only" in report
+    assert "receipt is not truth" in report
+    assert "receipt is not action permission" in report
+    assert "receipt is not FinalOutput" in report
+    assert "no new ActionCommitPacket created in Full Semantic E2E" in report
+    assert "no new receipt created in Full Semantic E2E" in report
+    assert "no real payment" in report
+    assert "no real shipment release" in report
+    assert "Root alone creates FinalOutput" in report
+    assert "Root remains final authority" in report
+
+
+def test_full_semantic_e2e_wow_v1_1_report_has_no_overclaims() -> None:
+    report = runner.render_report(runner.run_full_semantic_e2e(env={}))
+    forbidden = (
+        "production " + "ready",
+        "public WOW " + "ready",
+        "public auditor " + "ready",
+        "real payment " + "executed",
+        "real shipment " + "released",
+        "receipt proves " + "truth",
+        "receipt grants " + "permission",
+        "receipt creates " + "FinalOutput",
+        "Full Semantic E2E creates " + "ActionCommitPacket",
+        "Gemini creates " + "ActionCommitPacket",
+    )
+
+    for marker in forbidden:
+        assert marker not in report
+
+
+def test_full_semantic_e2e_wow_v1_1_summary_validation_fail_closed() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    invalid = {
+        **result["supplier_payment_wow_v1_1_summary"],
+        "receipt_releases_shipment": True,
+    }
+
+    validation = runner.validate_supplier_payment_wow_v1_1_summary_for_e2e(invalid)
+
+    assert validation["accepted"] is False
+    assert "supplier_payment_wow_v1_1_receipt_releases_shipment" in validation["reasons"]
+    assert validation["root_final_output_created"] is False
+    assert validation["drs_writeback_created"] is False
+
+
+def test_full_semantic_e2e_existing_core_spine_still_present() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    stage_map = result["stage_map"]
+
+    assert result["semantic_evidence_claim"]["candidate_only"] is True
+    assert result["supplier_live_result"]["final_status"] == "PASS"
+    assert "live_or_captured_evidence_lane" in stage_map
+    assert stage_map["root_final_output_boundary"]["creates_final_output"] is True
+    assert result["root_final_output_boundary"]["created_by"] == "root_boundary"
+    assert result["drs_writeback_record"]["written_after_root_boundary"] is True
+    assert "invoked_count" in stage_map["supplier_payment_wow_v1_1_summary"]
+    assert "represented_count" in stage_map["supplier_payment_wow_v1_1_summary"]
+
+
 def test_context_packet_gate_builds_accepted_base_packets() -> None:
     result = runner.run_full_semantic_e2e(
         env={runner.ENV_FULL_E2E_CONTEXT_PACKETS: "1"}
@@ -921,7 +1093,14 @@ def test_stage_map_contains_all_required_stages() -> None:
 
     assert tuple(result["stage_map"]) == runner.STAGES
     for stage in result["stage_map"].values():
-        assert stage["status"] in {"invoked", "represented", "skipped", "fail_closed"}
+        assert stage["status"] in {
+            "PASS",
+            "FAIL_CLOSED",
+            "invoked",
+            "represented",
+            "skipped",
+            "fail_closed",
+        }
         assert stage["authority"] in {"none", "candidate", "advisory", "root_only"}
         assert "creates_final_output" in stage
         assert stage["notes"]

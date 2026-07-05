@@ -12,6 +12,9 @@ from demo.run_orchestrator_guard_completeness import audit_guard_scenario
 from demo.run_orchestrator_route_validator import RouteProposal
 from demo.run_orchestrator_route_validator import validate_route_proposal
 from demo import run_live_provider_adapter_response_capture_v01 as provider_adapter
+from demo import (
+    run_supplier_payment_shipment_release_review_wow_v1_1 as supplier_wow_v1_1_runner,
+)
 from demo import run_supplier_payment_live_evidence_integration_v02 as supplier_live
 from hedgehog.action_commit_packet import ACTION_COMMIT_PACKET_ALLOWED_ACTION_KINDS
 from hedgehog.action_commit_packet import ACTION_COMMIT_PACKET_FORBIDDEN_ACTION_KINDS
@@ -360,6 +363,7 @@ STAGES = (
     "intake_dirty_business_request",
     "live_or_captured_evidence_lane",
     "semantic_evidence_claim_validation",
+    "supplier_payment_wow_v1_1_summary",
     "drs_resolve_reuse",
     "candidate_vector_generation",
     "avf_scoring",
@@ -440,6 +444,23 @@ COUNTER_KEYS = (
     *MOCK_CONNECTOR_SANDBOX_COUNTER_KEYS,
     *FRACTAL_ORDER_FULFILLMENT_COUNTER_KEYS,
     "live_evidence_root_final_authority_preserved_count",
+    "supplier_payment_wow_v1_1_summary_invoked_count",
+    "supplier_payment_wow_v1_1_summary_represented_count",
+    "supplier_payment_wow_v1_1_summary_validation_passed_count",
+    "supplier_payment_wow_v1_1_summary_validation_failed_count",
+    "supplier_payment_wow_v1_1_receipt_observed_as_evidence_count",
+    "supplier_payment_wow_v1_1_receipt_used_as_truth_count",
+    "supplier_payment_wow_v1_1_receipt_used_as_action_permission_count",
+    "supplier_payment_wow_v1_1_receipt_used_as_final_output_count",
+    "supplier_payment_wow_v1_1_receipt_released_shipment_count",
+    "supplier_payment_wow_v1_1_supplier_B_blocked_count",
+    "supplier_payment_wow_v1_1_shipment_release_held_count",
+    "supplier_payment_wow_v1_1_new_action_commit_packet_created_count",
+    "supplier_payment_wow_v1_1_new_receipt_created_count",
+    "supplier_payment_wow_v1_1_new_mock_payment_executed_count",
+    "action_commit_packet_created_in_full_e2e_count",
+    "receipt_created_in_full_e2e_count",
+    "mock_payment_executed_in_full_e2e_count",
     "semantic_claim_created_count",
     "semantic_claim_candidate_only_count",
     "drs_resolve_invoked_count",
@@ -487,7 +508,10 @@ COUNTER_KEYS = (
     "action_permission_created_count",
     "connector_called_count",
     "payment_executed_count",
+    "real_payment_executed_count",
     "shipment_released_count",
+    "mock_shipment_released_count",
+    "real_world_effects_count",
     "secrets_logged_count",
     "public_wow_claimed_count",
     "production_ready_claimed_count",
@@ -888,13 +912,29 @@ def _stage(
     *,
     creates_final_output: bool = False,
     notes: str,
+    invocation_mode: str | None = None,
+    invoked_count: int | None = None,
+    represented_count: int | None = None,
+    skipped_count: int | None = None,
+    fail_closed_count: int | None = None,
 ) -> dict[str, Any]:
-    return {
+    stage = {
         "status": status,
         "authority": authority,
         "creates_final_output": creates_final_output,
         "notes": notes,
     }
+    if invocation_mode is not None:
+        stage["invocation_mode"] = invocation_mode
+    if invoked_count is not None:
+        stage["invoked_count"] = invoked_count
+    if represented_count is not None:
+        stage["represented_count"] = represented_count
+    if skipped_count is not None:
+        stage["skipped_count"] = skipped_count
+    if fail_closed_count is not None:
+        stage["fail_closed_count"] = fail_closed_count
+    return stage
 
 
 def _full_e2e_live_evidence_enabled(env: Mapping[str, str]) -> bool:
@@ -1220,8 +1260,237 @@ def _copy_supplier_counters(counters: dict[str, int], supplier_result: Mapping[s
         )
 
 
+def _summary_counter(summary: Mapping[str, Any], key: str) -> int:
+    value = summary.get(key)
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    action_counters = summary.get("action_counters")
+    if isinstance(action_counters, Mapping):
+        nested_value = action_counters.get(key)
+        if isinstance(nested_value, bool):
+            return int(nested_value)
+        if isinstance(nested_value, int):
+            return nested_value
+    return 0
+
+
+def _supplier_wow_v1_1_root_authority_preserved(
+    summary: Mapping[str, Any],
+) -> bool:
+    authority_invariants = summary.get("authority_invariants")
+    return (
+        summary.get("Root remains final authority") is True
+        or (
+            isinstance(authority_invariants, Mapping)
+            and authority_invariants.get("Root remains final authority") is True
+        )
+    )
+
+
+def _supplier_wow_v1_1_supplier_b_blocked(summary: Mapping[str, Any]) -> bool:
+    if summary.get("supplier_B_remains_blocked") is True:
+        return True
+    second_run = summary.get("second_run")
+    if isinstance(second_run, Mapping):
+        supplier_b_status = second_run.get("supplier_B_status")
+        return (
+            isinstance(supplier_b_status, Mapping)
+            and supplier_b_status.get("SUPPLIER_B_REMAINS_BLOCKED") is True
+        ) or _summary_counter(summary, "supplier_B_payment_blocked_count") == 1
+    return _summary_counter(summary, "supplier_B_payment_blocked_count") == 1
+
+
+def _supplier_wow_v1_1_shipment_release_held(summary: Mapping[str, Any]) -> bool:
+    return (
+        summary.get("shipment_release_remains_held") is True
+        or _summary_counter(summary, "shipment_release_still_held_count") == 1
+    )
+
+
+def _supplier_wow_v1_1_receipt_evidence_only(summary: Mapping[str, Any]) -> bool:
+    receipt = summary.get("receipt")
+    receipt_mapping = receipt if isinstance(receipt, Mapping) else summary
+    return (
+        (
+            receipt_mapping.get("receipt_is_evidence") is True
+            or summary.get("receipt_remains_evidence_only") is True
+        )
+        and receipt_mapping.get("receipt_is_truth") is False
+        and receipt_mapping.get("receipt_is_action_permission") is False
+        and receipt_mapping.get("receipt_is_final_output") is False
+    )
+
+
+def _supplier_wow_v1_1_receipt_releases_shipment(summary: Mapping[str, Any]) -> bool:
+    receipt = summary.get("receipt")
+    receipt_mapping = receipt if isinstance(receipt, Mapping) else summary
+    return (
+        receipt_mapping.get("receipt_releases_shipment") is True
+        or _summary_counter(summary, "receipt_releases_shipment_count") > 0
+    )
+
+
+def validate_supplier_payment_wow_v1_1_summary_for_e2e(
+    summary: Mapping[str, Any],
+) -> dict[str, Any]:
+    reasons: list[str] = []
+    source_final_status = summary.get("source_final_status", summary.get("final_status"))
+    if source_final_status != "PASS":
+        reasons.append("supplier_payment_wow_v1_1_source_final_status_not_pass")
+    if not _supplier_wow_v1_1_supplier_b_blocked(summary):
+        reasons.append("supplier_payment_wow_v1_1_supplier_b_not_blocked")
+    if not _supplier_wow_v1_1_shipment_release_held(summary):
+        reasons.append("supplier_payment_wow_v1_1_shipment_release_not_held")
+    if not _supplier_wow_v1_1_receipt_evidence_only(summary):
+        reasons.append("supplier_payment_wow_v1_1_receipt_not_evidence_only")
+    if _supplier_wow_v1_1_receipt_releases_shipment(summary):
+        reasons.append("supplier_payment_wow_v1_1_receipt_releases_shipment")
+    if _summary_counter(summary, "real_payment_executed_count") != 0:
+        reasons.append("supplier_payment_wow_v1_1_real_payment_executed")
+    if _summary_counter(summary, "shipment_released_count") != 0:
+        reasons.append("supplier_payment_wow_v1_1_shipment_release_executed")
+    if _summary_counter(summary, "real_world_effects_count") != 0:
+        reasons.append("supplier_payment_wow_v1_1_real_world_effects")
+    if _summary_counter(summary, "action_commit_packet_created_in_full_e2e_count") != 0:
+        reasons.append("supplier_payment_wow_v1_1_new_action_commit_packet_in_full_e2e")
+    if not _supplier_wow_v1_1_root_authority_preserved(summary):
+        reasons.append("supplier_payment_wow_v1_1_root_final_authority_not_preserved")
+    return {
+        "accepted": not reasons,
+        "reasons": tuple(reasons),
+        "root_final_output_created": False,
+        "drs_writeback_created": False,
+    }
+
+
+def _supplier_payment_wow_v1_1_summary_for_e2e(
+    source_summary: Mapping[str, Any],
+) -> dict[str, Any]:
+    validation = validate_supplier_payment_wow_v1_1_summary_for_e2e(source_summary)
+    receipt = source_summary.get("receipt")
+    receipt_mapping = receipt if isinstance(receipt, Mapping) else {}
+    mock_packet = source_summary.get("mock_action_commit_packet")
+    mock_packet_mapping = mock_packet if isinstance(mock_packet, Mapping) else {}
+    action_counters = source_summary.get("action_counters")
+    action_counter_mapping = action_counters if isinstance(action_counters, Mapping) else {}
+    return {
+        "stage_id": "supplier_payment_wow_v1_1_summary",
+        "stage_status": "PASS" if validation["accepted"] else "FAIL_CLOSED",
+        "stage_mode": "invoked_closed_summary_runner",
+        "source_run_id": source_summary.get("run_id"),
+        "source_slice_id": source_summary.get("slice_id"),
+        "source_final_status": source_summary.get("final_status"),
+        "source_wow_accepted": source_summary.get("wow_accepted"),
+        "observed_as_bounded_context": validation["accepted"],
+        "observed_as_authority": False,
+        "observed_as_action_permission": False,
+        "observed_as_final_output": False,
+        "supplier_A_scoped_mock_payment_only": (
+            source_summary.get("human_approval", {}).get("permission_scope")
+            == "supplier_A_only"
+        ),
+        "supplier_B_remains_blocked": _supplier_wow_v1_1_supplier_b_blocked(
+            source_summary
+        ),
+        "shipment_release_remains_held": _supplier_wow_v1_1_shipment_release_held(
+            source_summary
+        ),
+        "receipt_remains_evidence_only": _supplier_wow_v1_1_receipt_evidence_only(
+            source_summary
+        ),
+        "receipt_is_truth": receipt_mapping.get("receipt_is_truth"),
+        "receipt_is_action_permission": receipt_mapping.get(
+            "receipt_is_action_permission"
+        ),
+        "receipt_is_final_output": receipt_mapping.get("receipt_is_final_output"),
+        "receipt_releases_shipment": receipt_mapping.get("receipt_releases_shipment"),
+        "closed_action_commit_packet_observed_count": int(
+            mock_packet_mapping.get("action_commit_packet_created_count") == 1
+            or action_counter_mapping.get("action_commit_packet_created_count") == 1
+        ),
+        "closed_mock_bank_receipt_observed_count": int(
+            receipt_mapping.get("mock_bank_receipt_created_count") == 1
+            or action_counter_mapping.get("mock_bank_receipt_created_count") == 1
+        ),
+        "new_action_commit_packet_created_count": 0,
+        "new_receipt_created_count": 0,
+        "new_mock_payment_executed_count": 0,
+        "real_payment_executed_count": action_counter_mapping.get(
+            "real_payment_executed_count",
+            0,
+        ),
+        "shipment_released_count": action_counter_mapping.get(
+            "shipment_released_count",
+            0,
+        ),
+        "real_world_effects_count": action_counter_mapping.get(
+            "real_world_effects_count",
+            0,
+        ),
+        "Root remains final authority": _supplier_wow_v1_1_root_authority_preserved(
+            source_summary
+        ),
+        "validation": validation,
+    }
+
+
+def _apply_supplier_payment_wow_v1_1_counters(
+    counters: dict[str, int],
+    wow_summary: Mapping[str, Any],
+) -> None:
+    validation = wow_summary.get("validation") or {}
+    validation_accepted = validation.get("accepted") is True
+    counters["supplier_payment_wow_v1_1_summary_invoked_count"] = 1
+    counters["supplier_payment_wow_v1_1_summary_represented_count"] = 0
+    counters["supplier_payment_wow_v1_1_summary_validation_passed_count"] = int(
+        validation_accepted
+    )
+    counters["supplier_payment_wow_v1_1_summary_validation_failed_count"] = int(
+        not validation_accepted
+    )
+    counters["supplier_payment_wow_v1_1_receipt_observed_as_evidence_count"] = int(
+        wow_summary.get("receipt_remains_evidence_only") is True
+    )
+    counters["supplier_payment_wow_v1_1_receipt_used_as_truth_count"] = int(
+        wow_summary.get("receipt_is_truth") is True
+    )
+    counters["supplier_payment_wow_v1_1_receipt_used_as_action_permission_count"] = int(
+        wow_summary.get("receipt_is_action_permission") is True
+    )
+    counters["supplier_payment_wow_v1_1_receipt_used_as_final_output_count"] = int(
+        wow_summary.get("receipt_is_final_output") is True
+    )
+    counters["supplier_payment_wow_v1_1_receipt_released_shipment_count"] = int(
+        wow_summary.get("receipt_releases_shipment") is True
+    )
+    counters["supplier_payment_wow_v1_1_supplier_B_blocked_count"] = int(
+        wow_summary.get("supplier_B_remains_blocked") is True
+    )
+    counters["supplier_payment_wow_v1_1_shipment_release_held_count"] = int(
+        wow_summary.get("shipment_release_remains_held") is True
+    )
+    counters["supplier_payment_wow_v1_1_new_action_commit_packet_created_count"] = int(
+        wow_summary.get("new_action_commit_packet_created_count", 0)
+    )
+    counters["supplier_payment_wow_v1_1_new_receipt_created_count"] = int(
+        wow_summary.get("new_receipt_created_count", 0)
+    )
+    counters["supplier_payment_wow_v1_1_new_mock_payment_executed_count"] = int(
+        wow_summary.get("new_mock_payment_executed_count", 0)
+    )
+    counters["action_commit_packet_created_in_full_e2e_count"] = 0
+    counters["receipt_created_in_full_e2e_count"] = 0
+    counters["mock_payment_executed_in_full_e2e_count"] = 0
+
+
 def _represented_count_is_honest(counters: Mapping[str, int]) -> bool:
     pairs = (
+        (
+            "supplier_payment_wow_v1_1_summary_represented_count",
+            "supplier_payment_wow_v1_1_summary_invoked_count",
+        ),
         ("drs_resolve_represented_count", "drs_resolve_invoked_count"),
         ("drs_writeback_represented_count", "drs_writeback_invoked_count"),
         ("candidate_vector_represented_count", "candidate_vector_invoked_count"),
@@ -1631,6 +1900,19 @@ def _stage_map_success() -> dict[str, dict[str, Any]]:
             "invoked",
             "candidate",
             notes="closed SemanticEvidenceClaim validation lane creates candidate-only evidence",
+        ),
+        "supplier_payment_wow_v1_1_summary": _stage(
+            "PASS",
+            "candidate",
+            notes=(
+                "Supplier Payment / Shipment Release Review WOW v1.1 closed "
+                "summary runner invoked as bounded context; receipt remains evidence only"
+            ),
+            invocation_mode="invoked",
+            invoked_count=1,
+            represented_count=0,
+            skipped_count=0,
+            fail_closed_count=0,
         ),
         "drs_resolve_reuse": _stage(
             "invoked",
@@ -2042,6 +2324,49 @@ def _stage_map_fail_closed() -> dict[str, dict[str, Any]]:
         "candidate",
         notes="SemanticEvidenceClaim validation rejected unsafe evidence",
     )
+    stage_map["supplier_payment_wow_v1_1_summary"] = _stage(
+        "PASS",
+        "candidate",
+        notes=(
+            "Supplier Payment / Shipment Release Review WOW v1.1 summary "
+            "validated before the evidence lane failed closed"
+        ),
+        invocation_mode="invoked",
+        invoked_count=1,
+        represented_count=0,
+        skipped_count=0,
+        fail_closed_count=0,
+    )
+    return stage_map
+
+
+def _stage_map_supplier_wow_v1_1_fail_closed() -> dict[str, dict[str, Any]]:
+    stage_map = {
+        stage_name: _stage(
+            "skipped",
+            "none",
+            notes="skipped because Supplier Payment WOW v1.1 summary validation failed",
+        )
+        for stage_name in STAGES
+    }
+    stage_map["intake_dirty_business_request"] = _stage(
+        "invoked",
+        "none",
+        notes="runner builds the dirty business request fixture",
+    )
+    stage_map["supplier_payment_wow_v1_1_summary"] = _stage(
+        "FAIL_CLOSED",
+        "candidate",
+        notes=(
+            "Supplier Payment / Shipment Release Review WOW v1.1 summary did "
+            "not satisfy E2E bounded context checks"
+        ),
+        invocation_mode="invoked",
+        invoked_count=1,
+        represented_count=0,
+        skipped_count=0,
+        fail_closed_count=1,
+    )
     return stage_map
 
 
@@ -2142,6 +2467,19 @@ def _stage_map_root_mock_approval_gate_fail_closed() -> dict[str, dict[str, Any]
         "invoked",
         "candidate",
         notes="SemanticEvidenceClaim validation completed before gate contract check",
+    )
+    stage_map["supplier_payment_wow_v1_1_summary"] = _stage(
+        "PASS",
+        "candidate",
+        notes=(
+            "Supplier Payment / Shipment Release Review WOW v1.1 summary "
+            "validated before gate contract check"
+        ),
+        invocation_mode="invoked",
+        invoked_count=1,
+        represented_count=0,
+        skipped_count=0,
+        fail_closed_count=0,
     )
     stage_map["root_mock_approval_gate"] = _stage(
         "fail_closed",
@@ -5755,6 +6093,7 @@ def _result(
     scenarios: tuple[dict[str, Any], ...],
     stage_map: dict[str, dict[str, Any]],
     dirty_business_request: Mapping[str, Any],
+    supplier_payment_wow_v1_1_summary: Mapping[str, Any] | None = None,
     semantic_evidence_claim: Mapping[str, Any] | None = None,
     supplier_payment_context: Mapping[str, Any] | None = None,
     drs_candidate_context: Mapping[str, Any] | None = None,
@@ -5800,6 +6139,9 @@ def _result(
         "title": TITLE,
         "final_status": final_status,
         "dirty_business_request": dict(dirty_business_request),
+        "supplier_payment_wow_v1_1_summary": dict(
+            supplier_payment_wow_v1_1_summary or {}
+        ),
         "semantic_evidence_claim": dict(semantic_evidence_claim or {}),
         "supplier_payment_context": dict(supplier_payment_context or {}),
         "drs_candidate_context": dict(drs_candidate_context or {}),
@@ -6406,6 +6748,24 @@ def run_full_semantic_e2e(
     observed_env = env if env is not None else os.environ
     dirty_request = _dirty_business_request()
     counters = _base_counters()
+    supplier_wow_source_summary = (
+        supplier_wow_v1_1_runner.run_supplier_payment_shipment_release_review_wow_v1_1()
+    )
+    supplier_wow_summary = _supplier_payment_wow_v1_1_summary_for_e2e(
+        supplier_wow_source_summary
+    )
+    _apply_supplier_payment_wow_v1_1_counters(counters, supplier_wow_summary)
+    supplier_wow_validation = supplier_wow_summary["validation"]
+    if supplier_wow_validation["accepted"] is not True:
+        return _result(
+            final_status="FAIL_CLOSED",
+            counters=counters,
+            scenarios=_failure_scenarios(tuple(supplier_wow_validation["reasons"])),
+            stage_map=_stage_map_supplier_wow_v1_1_fail_closed(),
+            dirty_business_request=dirty_request,
+            supplier_payment_wow_v1_1_summary=supplier_wow_summary,
+            validation_errors=tuple(supplier_wow_validation["reasons"]),
+        )
     supplier_result = _call_supplier_live_lane(observed_env, provider)
     _copy_supplier_counters(counters, supplier_result)
     mock_ready_fixture_requested = _full_e2e_mock_ready_fixture_enabled(observed_env)
@@ -6419,6 +6779,7 @@ def run_full_semantic_e2e(
             scenarios=_failure_scenarios(tuple(supplier_result["validation_errors"])),
             stage_map=_stage_map_fail_closed(),
             dirty_business_request=dirty_request,
+            supplier_payment_wow_v1_1_summary=supplier_wow_summary,
             validation_errors=tuple(supplier_result["validation_errors"]),
             supplier_live_result=supplier_result,
         )
@@ -6433,6 +6794,7 @@ def run_full_semantic_e2e(
             scenarios=_failure_scenarios(errors),
             stage_map=_stage_map_root_mock_approval_gate_fail_closed(),
             dirty_business_request=dirty_request,
+            supplier_payment_wow_v1_1_summary=supplier_wow_summary,
             semantic_evidence_claim=_claim_summary(supplier_result["claims"][0]),
             supplier_payment_context=_supplier_context_with_mock_ready_fixture(
                 supplier_result["supplier_context"],
@@ -6457,6 +6819,7 @@ def run_full_semantic_e2e(
             scenarios=_failure_scenarios(errors),
             stage_map=_stage_map_root_mock_approval_gate_fail_closed(),
             dirty_business_request=dirty_request,
+            supplier_payment_wow_v1_1_summary=supplier_wow_summary,
             semantic_evidence_claim=_claim_summary(supplier_result["claims"][0]),
             supplier_payment_context=_supplier_context_with_mock_ready_fixture(
                 supplier_result["supplier_context"],
@@ -6522,6 +6885,7 @@ def run_full_semantic_e2e(
                 else _stage_map_gemini_orchestrator_fail_closed()
             ),
             dirty_business_request=dirty_request,
+            supplier_payment_wow_v1_1_summary=supplier_wow_summary,
             semantic_evidence_claim=_claim_summary(claim),
             supplier_payment_context=supplier_context,
             drs_candidate_context=drs_context,
@@ -6715,6 +7079,7 @@ def run_full_semantic_e2e(
             scenarios=_failure_scenarios(errors),
             stage_map=stage_map,
             dirty_business_request=dirty_request,
+            supplier_payment_wow_v1_1_summary=supplier_wow_summary,
             semantic_evidence_claim=_claim_summary(claim),
             supplier_payment_context=supplier_context,
             drs_candidate_context=drs_context,
@@ -6788,6 +7153,7 @@ def run_full_semantic_e2e(
         scenarios=scenarios,
         stage_map=stage_map,
         dirty_business_request=dirty_request,
+        supplier_payment_wow_v1_1_summary=supplier_wow_summary,
         semantic_evidence_claim=_claim_summary(claim),
         supplier_payment_context=supplier_context,
         drs_candidate_context=drs_context,
@@ -6866,6 +7232,24 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         "",
         "SemanticEvidenceClaim:",
         str(result["semantic_evidence_claim"]),
+        "",
+        "[SUPPLIER PAYMENT WOW V1.1 SUMMARY ALIGNMENT]",
+        "Supplier Payment / Shipment Release Review WOW v1.1",
+        "observed as bounded context/evidence",
+        "Supplier A scoped mock payment only",
+        "Supplier B remains blocked",
+        "shipment release remains held",
+        "receipt remains evidence only",
+        "receipt is not truth",
+        "receipt is not action permission",
+        "receipt is not FinalOutput",
+        "no new ActionCommitPacket created in Full Semantic E2E",
+        "no new receipt created in Full Semantic E2E",
+        "no real payment",
+        "no real shipment release",
+        "Root alone creates FinalOutput",
+        "Root remains final authority",
+        str(result["supplier_payment_wow_v1_1_summary"]),
         "",
         "DRS candidate context:",
         str(result["drs_candidate_context"]),

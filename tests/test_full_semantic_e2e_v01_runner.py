@@ -2058,13 +2058,14 @@ def test_full_wow_v1_1_manual_live_architect_prompt_separates_semantic_architect
     assert "Root decides" in prompt
 
 
-def test_full_wow_v1_1_manual_live_architect_prompt_matches_004_order() -> None:
+def test_full_wow_v1_1_manual_live_architect_prompt_final_shape_last_order() -> None:
     prompt = _manual_live_architect_prompt()
 
-    assert prompt.index("JSON skeleton:") < prompt.index(
-        "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:"
+    assert prompt.index("FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:") < prompt.index(
+        "OUTPUT_SHAPE_CONTRACT:"
     )
-    assert "Return JSON only matching the skeleton field names" in prompt
+    assert prompt.index("OUTPUT_SHAPE_CONTRACT:") < prompt.index("JSON skeleton:")
+    assert "Return exactly one JSON object" in prompt
     assert "Role: bounded Semantic Architect proposal writer" in prompt
     assert "Provider proposes semantics" in prompt
     assert "Runtime canonicalizes" in prompt
@@ -2076,8 +2077,9 @@ def test_full_wow_v1_1_manual_live_architect_output_shape_contract_is_copy_only_
     prompt = _manual_live_architect_prompt()
 
     assert "OUTPUT_SHAPE_CONTRACT" in prompt
-    assert "Use the provided JSON object as the exact output shape" in prompt
-    assert "Keep exactly the same top-level keys" in prompt
+    assert "Return exactly one JSON object" in prompt
+    assert "complete top-level shape" in prompt
+    assert "The top-level key set must match the JSON object below exactly" in prompt
     assert "Do not add top-level keys" in prompt
     assert "Do not remove top-level keys" in prompt
     assert "Do not rename top-level keys" in prompt
@@ -2091,8 +2093,12 @@ def test_full_wow_v1_1_manual_live_architect_output_shape_contract_is_copy_only_
 def test_full_wow_v1_1_manual_live_architect_prompt_uses_whitelist_only_contract() -> None:
     prompt = _manual_live_architect_prompt()
 
-    assert "Use the provided JSON object as the exact output shape." in prompt
-    assert "Keep exactly the same top-level keys." in prompt
+    assert "Return exactly one JSON object." in prompt
+    assert (
+        "The final response must use the JSON object below as its complete top-level "
+        "shape."
+    ) in prompt
+    assert "The top-level key set must match the JSON object below exactly." in prompt
     assert "Do not add top-level keys." in prompt
     assert "Do not remove top-level keys." in prompt
     assert "Do not rename top-level keys." in prompt
@@ -2101,16 +2107,25 @@ def test_full_wow_v1_1_manual_live_architect_prompt_uses_whitelist_only_contract
     assert prompt.index("OUTPUT_SHAPE_CONTRACT:") < prompt.index("JSON skeleton:")
 
 
-def test_full_wow_v1_1_manual_live_architect_prompt_uses_004_skeleton_before_input_order() -> None:
+def test_full_wow_v1_1_manual_live_architect_prompt_final_shape_is_last() -> None:
     prompt = _manual_live_architect_prompt()
 
+    input_index = prompt.index("FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:")
     contract_index = prompt.index("OUTPUT_SHAPE_CONTRACT:")
     skeleton_index = prompt.index("JSON skeleton:")
-    input_index = prompt.index("FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:")
+    skeleton_json, end_index = json.JSONDecoder().raw_decode(
+        prompt[skeleton_index + len("JSON skeleton:") :].lstrip()
+    )
+    after_skeleton = prompt[
+        skeleton_index + len("JSON skeleton:") :
+    ].lstrip()[end_index:]
 
-    assert contract_index < skeleton_index < input_index
+    assert input_index < contract_index < skeleton_index
     assert prompt.rfind("JSON skeleton:") == skeleton_index
+    assert "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:" not in prompt[skeleton_index:]
     assert "OUTPUT_SHAPE_CONTRACT:" not in prompt[skeleton_index:]
+    assert isinstance(skeleton_json, dict)
+    assert after_skeleton.strip() == ""
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_does_not_prime_plan_graph_keys() -> None:
@@ -2188,7 +2203,8 @@ def test_full_wow_v1_1_manual_live_architect_prompt_does_not_request_plan_graph_
 def test_full_wow_v1_1_manual_live_architect_final_contract_rejects_plan_graph_shape() -> None:
     prompt = _manual_live_architect_prompt()
 
-    assert "Use the provided JSON object as the exact output shape." in prompt
+    assert "Return exactly one JSON object." in prompt
+    assert "complete top-level shape." in prompt
     assert "Fill only the existing semantic reasoning fields." in prompt
     assert "The provider returns semantic Architect reasoning only." in prompt
     assert "Runtime canonicalizes." in prompt

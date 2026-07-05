@@ -2208,10 +2208,15 @@ def _build_full_wow_v1_1_live_architect_prompt(
                 "Do not include secrets, connector credentials, raw bank tokens, "
                 "or raw payment identifiers."
             ),
+            "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:",
+            json.dumps(provider_input, indent=2, sort_keys=True),
             "OUTPUT_SHAPE_CONTRACT:",
-            "Return JSON only matching the skeleton field names.",
-            "Use the provided JSON object as the exact output shape.",
-            "Keep exactly the same top-level keys.",
+            "Return exactly one JSON object.",
+            (
+                "The final response must use the JSON object below as its complete "
+                "top-level shape."
+            ),
+            "The top-level key set must match the JSON object below exactly.",
             "Do not add top-level keys.",
             "Do not remove top-level keys.",
             "Do not rename top-level keys.",
@@ -2223,8 +2228,6 @@ def _build_full_wow_v1_1_live_architect_prompt(
             "Root decides.",
             "JSON skeleton:",
             json.dumps(skeleton, indent=2, sort_keys=True),
-            "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:",
-            json.dumps(provider_input, indent=2, sort_keys=True),
         )
     )
 

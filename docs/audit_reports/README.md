@@ -7,6 +7,22 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01.log`
+  - Audit status: PASS.
+  - Audits Full Semantic E2E live evidence + Supplier Payment WOW v1.1 coherence.
+  - Runtime coherence commit: `b4a3f31`; preflight commit: `4adebf4`; previous alignment audit commit: `82b896d`.
+  - Existing Full E2E runner remains the spine; no new bridge runner was created.
+  - Explicit live/captured evidence mode includes `supplier_payment_wow_v1_1_summary`.
+  - `supplier_payment_wow_v1_1_summary` is PASS in live/captured mode.
+  - SemanticEvidenceClaim remains candidate-only.
+  - Provider output is not truth, authority, action permission, or FinalOutput.
+  - Closed ActionCommitPacket and closed receipt are observed only.
+  - Live evidence creates no ActionCommitPacket, no receipt, and no mock payment.
+  - Supplier B remains blocked; shipment release remains held; receipt is evidence only.
+  - Root alone creates FinalOutput and Root remains final authority.
+  - Counters preserve no real payment, no real shipment release, no real bank/supplier/warehouse API effects, and `real_world_effects_count: 0`.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_full_semantic_e2e_wow_v1_1_alignment_v01.log`
   - Audit status: PASS.
   - Audits Full Semantic E2E v0.1 alignment to Supplier Payment / Shipment Release Review WOW v1.1.

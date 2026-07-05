@@ -142,6 +142,28 @@ Scenario alignment:
 - SemanticEvidenceClaim remains candidate-only.
 - Root alone creates FinalOutput.
 
+### full_semantic_e2e_live_evidence_wow_v1_1_coherence
+
+Explicit live/captured evidence mode now coexists with the SH-2042 WOW summary
+inside Full Semantic E2E.
+
+Scenario coherence:
+
+- Full Semantic E2E remains the existing spine.
+- No new bridge runner is introduced.
+- Explicit live/captured evidence mode includes
+  `supplier_payment_wow_v1_1_summary`.
+- `supplier_payment_wow_v1_1_summary` remains PASS in live/captured mode.
+- SemanticEvidenceClaim remains candidate-only.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Closed ActionCommitPacket and receipt are observed only.
+- Live evidence creates no ActionCommitPacket, no receipt, and no mock
+  payment.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- Root alone creates FinalOutput.
+
 ## What The Demo Must Prove
 
 - Root authority.

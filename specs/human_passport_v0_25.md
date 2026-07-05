@@ -245,6 +245,42 @@ Non-claims:
 - no real bank/supplier/warehouse connector effects
 - no real-world effects
 
+### Full Semantic E2E Live Evidence + WOW v1.1 Coherence
+
+Full Semantic E2E live evidence mode now explicitly coexists with the closed
+Supplier Payment / Shipment Release Review WOW v1.1 summary.
+
+Checkpoint facts:
+
+- Audit:
+  `docs/audit_reports/auditor_full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01.log`.
+- Runtime coherence commit: `b4a3f31`.
+- Existing Full E2E runner remains the spine.
+- No new bridge runner was created.
+- Explicit live/captured evidence mode includes
+  `supplier_payment_wow_v1_1_summary`.
+- `supplier_payment_wow_v1_1_summary` is PASS in live/captured mode.
+- SemanticEvidenceClaim remains candidate-only.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Closed ActionCommitPacket and receipt are observed only.
+- Live evidence creates no ActionCommitPacket, no receipt, and no mock
+  payment.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- Root alone creates FinalOutput.
+- No real payment, no real shipment release, no real bank/supplier/warehouse
+  API effects, and no real-world effects.
+
+Authority invariants preserved:
+
+- Live/captured evidence cannot mutate closed ActionCommitPacket.
+- Live/captured evidence cannot mutate closed receipt.
+- Live/captured evidence cannot alter Supplier B blocked boundary.
+- Live/captured evidence cannot alter shipment-held boundary.
+- Provider output is not action permission or FinalOutput.
+- Root alone creates FinalOutput.
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:

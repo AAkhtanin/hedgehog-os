@@ -112,6 +112,31 @@ Status:
 - Root alone creates FinalOutput.
 - no real payment, no real shipment release, and no real connector/API effects.
 
+## Applied Full Semantic E2E Live Evidence + WOW Coherence Checkpoint
+
+Explicit live/captured evidence mode now coexists with the SH-2042 Supplier
+Payment / Shipment Release Review WOW v1.1 summary inside Full Semantic E2E.
+
+Status:
+
+- PASS through audit
+  `docs/audit_reports/auditor_full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01.log`.
+- Existing Full E2E runner remains the spine:
+  `demo/run_full_semantic_e2e_v01.py`.
+- No new bridge runner.
+- Explicit live/captured evidence mode includes
+  `supplier_payment_wow_v1_1_summary`.
+- `supplier_payment_wow_v1_1_summary` is PASS in live/captured mode.
+- SemanticEvidenceClaim remains candidate-only.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Closed ActionCommitPacket and receipt observed only.
+- Live evidence creates no ActionCommitPacket, receipt, or mock payment.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- Root alone creates FinalOutput.
+- no real payment, no real shipment release, and no real connector/API effects.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

@@ -136,6 +136,19 @@ Full Semantic E2E WOW v1.1 alignment invariant examples:
 - Supplier B remains blocked when observed through the Full E2E alignment.
 - shipment release remains held when observed through the Full E2E alignment.
 
+Full Semantic E2E live evidence + WOW v1.1 coherence invariant examples:
+
+- Live/captured evidence cannot mutate closed ActionCommitPacket.
+- Live/captured evidence cannot mutate closed receipt.
+- Live/captured evidence cannot alter Supplier B blocked boundary.
+- Live/captured evidence cannot alter shipment-held boundary.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- SemanticEvidenceClaim remains candidate-only.
+- Closed ActionCommitPacket remains observed only.
+- Closed receipt remains evidence only.
+- Root alone creates FinalOutput.
+- invoked_count and represented_count must remain honest.
+
 DRS registry invariant:
 
 - DRS is a registry/resolver/index, not a raw memory dump.

@@ -1,0 +1,164 @@
+audit_id: auditor_full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01
+audit_status: PASS
+audited_layer: Full Semantic E2E Live Evidence Mode + Supplier Payment / Shipment Release Review WOW v1.1 coherence
+base_commit: b4a3f31
+preflight_commit: 4adebf4
+previous_alignment_commit: 160f6c5
+previous_alignment_audit_commit: 82b896d
+runtime_coherence_commit: b4a3f31
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+optional_live_gemini_lane_enabled: false
+
+Audited files:
+- docs/full_semantic_e2e_live_evidence_mode_after_wow_v1_1_reentry_preflight_v01.md
+- demo/run_full_semantic_e2e_v01.py
+- tests/test_full_semantic_e2e_v01_runner.py
+- demo/run_supplier_payment_shipment_release_review_wow_v1_1.py
+- demo/run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough.py
+
+Validation commands:
+
+python3 -m py_compile \
+  demo/run_full_semantic_e2e_v01.py \
+  demo/run_supplier_payment_shipment_release_review_wow_v1_1.py \
+  demo/run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough.py
+result: PASS
+
+python3 -m demo.run_full_semantic_e2e_v01
+result: PASS
+observed_markers:
+- FINAL STATUS: PASS
+- supplier_payment_wow_v1_1_summary
+- FULL E2E LIVE EVIDENCE + WOW V1.1 COHERENCE
+- Supplier B remains blocked
+- shipment release remains held
+- Root alone creates FinalOutput
+
+PYTHONPATH=. .venv/bin/python -m pytest -q \
+  tests/test_full_semantic_e2e_v01_runner.py \
+  tests/test_supplier_payment_live_evidence_integration_v02_runner.py \
+  tests/test_supplier_payment_shipment_release_review_wow_v1_1_runner.py \
+  tests/test_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough_runner.py \
+  tests/test_optional_live_llm_evidence_reader_smoke_v01_runner.py \
+  tests/test_live_llm_semantic_evidence_reader_v01_runner.py \
+  tests/test_live_provider_adapter_response_capture_v01_runner.py
+result: PASS
+tests: 288 passed, 2 warnings
+warning_note: jsonschema RefResolver deprecation warning from hedgehog/post_vv.py
+
+python3 -m json.tool specs/machine_manifest_v0_25.json >/dev/null
+result: PASS
+
+git status --short --untracked-files=all
+result: docs-only allowed files changed during audit/docs sync
+
+git diff --stat
+result: docs-only audit/docs sync diff
+
+git diff --check
+result: PASS
+
+git diff --name-only
+result: allowed audit/docs sync files only
+
+Positive grep:
+rg -n "FULL E2E LIVE EVIDENCE \\+ WOW V1.1 COHERENCE|full_e2e_live_evidence_mode_count|supplier_payment_wow_v1_1_summary|supplier_payment_wow_v1_1_summary_invoked_count|live_evidence_and_wow_v1_1_coexistence_asserted_count|SemanticEvidenceClaim remains candidate-only|Provider output is not truth|Provider output is not authority|WOW v1.1 receipt remains evidence only|closed ActionCommitPacket observed only|live evidence created no ActionCommitPacket|live evidence created no receipt|live evidence executed no mock payment|Supplier B remains blocked|shipment release remains held|Root alone creates FinalOutput|invoked_count|represented_count|real_world_effects_count" \
+  demo/run_full_semantic_e2e_v01.py \
+  tests/test_full_semantic_e2e_v01_runner.py
+result: PASS
+
+Forbidden grep:
+rg -n forbidden_overclaim_markers \
+  demo/run_full_semantic_e2e_v01.py \
+  tests/test_full_semantic_e2e_v01_runner.py \
+  README.md AGENTS.md specs docs/audit_reports/README.md || true
+result: PASS
+
+Audit findings:
+- finding_existing_full_e2e_runner_remains_spine: PASS
+- finding_no_new_bridge_runner: PASS
+- finding_explicit_live_captured_evidence_mode_includes_wow_v1_1_summary: PASS
+- finding_supplier_payment_wow_v1_1_summary_pass_in_live_mode: PASS
+- finding_live_evidence_wow_v1_1_coexistence_tested: PASS
+- finding_semantic_evidence_claim_candidate_only: PASS
+- finding_provider_output_not_truth: PASS
+- finding_provider_output_not_authority: PASS
+- finding_provider_output_not_action_permission: PASS
+- finding_provider_output_not_finaloutput: PASS
+- finding_closed_action_commit_packet_observed_only: PASS
+- finding_closed_receipt_observed_only: PASS
+- finding_live_evidence_created_no_action_commit_packet: PASS
+- finding_live_evidence_created_no_receipt: PASS
+- finding_live_evidence_executed_no_mock_payment: PASS
+- finding_supplier_b_blocked: PASS
+- finding_shipment_release_held: PASS
+- finding_receipt_evidence_only: PASS
+- finding_root_alone_creates_finaloutput: PASS
+- finding_invoked_represented_accounting_honest: PASS
+- finding_no_provider_network_gemini: PASS
+- finding_no_secrets_accessed: PASS
+- finding_no_real_bank_supplier_warehouse_api: PASS
+- finding_no_real_payment: PASS
+- finding_no_real_shipment_release: PASS
+- finding_no_real_world_effects: PASS
+- finding_no_production_claim: PASS
+- finding_no_public_auditor_claim: PASS
+
+Counter summary:
+- full_e2e_live_evidence_mode_count: 1
+- supplier_payment_wow_v1_1_summary_invoked_count: 1
+- supplier_payment_wow_v1_1_summary_represented_count: 0
+- supplier_payment_wow_v1_1_summary_validation_passed_count: 1
+- supplier_payment_wow_v1_1_summary_validation_failed_count: 0
+- live_evidence_and_wow_v1_1_coexistence_asserted_count: 1
+- live_evidence_mutated_closed_action_commit_packet_count: 0
+- live_evidence_mutated_closed_receipt_count: 0
+- live_evidence_mutated_supplier_B_boundary_count: 0
+- live_evidence_mutated_shipment_held_boundary_count: 0
+- live_evidence_created_action_commit_packet_count: 0
+- live_evidence_created_receipt_count: 0
+- live_evidence_executed_mock_payment_count: 0
+- live_evidence_executed_real_payment_count: 0
+- live_evidence_released_shipment_count: 0
+- live_evidence_called_bank_supplier_warehouse_connector_count: 0
+- provider_output_used_as_truth_count: 0
+- provider_output_used_as_authority_count: 0
+- provider_output_used_as_action_permission_count: 0
+- provider_output_used_as_final_output_count: 0
+- semantic_evidence_claim_candidate_only_count: 1
+- root_alone_creates_final_output_count: 1
+- real_payment_executed_count: 0
+- shipment_released_count: 0
+- mock_shipment_released_count: 0
+- connector_called_count: 0
+- real_bank_api_called_count: 0
+- real_supplier_api_called_count: 0
+- real_warehouse_api_called_count: 0
+- real_world_effects_count: 0
+- network_used_count: 0
+- gemini_called_count: 0
+
+Interpretation:
+- Existing Full E2E runner remains the spine.
+- No new bridge runner was created.
+- Explicit live/captured evidence mode includes supplier_payment_wow_v1_1_summary.
+- supplier_payment_wow_v1_1_summary is PASS in live/captured mode.
+- Live evidence + WOW v1.1 coexistence is tested.
+- SemanticEvidenceClaim remains candidate-only.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Closed ActionCommitPacket and receipt are observed only.
+- Live evidence creates no ActionCommitPacket, no receipt, and no mock payment.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- Root alone creates FinalOutput.
+- invoked_count / represented_count accounting remains honest.
+- No Gemini/network/provider calls were made in this audit.
+- No secrets were accessed.
+- No real bank/supplier/warehouse API effects occurred.
+- No real payment occurred.
+- No real shipment release occurred.
+- No real-world effects occurred.
+- This is not production.
+- This is not public auditor final package.

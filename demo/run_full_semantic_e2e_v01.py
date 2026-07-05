@@ -2031,12 +2031,92 @@ def _build_full_wow_v1_1_live_architect_context_from_bsep(
 def _build_full_wow_v1_1_live_architect_prompt(
     architect_context: Mapping[str, Any],
 ) -> str:
+    skeleton = {
+        "action_permission_claimed": False,
+        "authority_boundary_reasoning": [
+            "Explain that PlanGraph is not authority and Root remains final authority.",
+        ],
+        "authority_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "executor_constraint_reasoning": [
+            "Explain why execution stays within allowed local review constraints.",
+        ],
+        "final_output_claimed": False,
+        "forbidden_surface_reasoning": [
+            (
+                "Explain why action, connector, receipt, payment, shipment release, "
+                "and final-output surfaces stay blocked."
+            ),
+        ],
+        "node_intent_reasoning": [
+            "Describe intended local review nodes in words only.",
+        ],
+        "plan_shape_reasoning": [
+            "Explain the safe advisory plan shape without listing plan_nodes.",
+        ],
+        "proposal_id": "architect-semantic-proposal-full-wow-v1-1-001",
+        "required_validators": [
+            "ArchitectPlanContextPacket validation",
+            "structured rationale validation",
+            "PlanGraph contract",
+            "ResultProposal boundary",
+            "Root final authority",
+        ],
+        "result_proposal_summary": (
+            "Supplier payment WOW v1.1 needs Root review; Supplier B remains "
+            "blocked; shipment release remains held; receipt remains evidence only."
+        ),
+        "return_to_root_reasoning": [
+            "Explain why the proposal must return to Root.",
+        ],
+        "root_bypass_claimed": False,
+        "root_recommendation": "needs_more_evidence",
+        "selected_vector_ids": [
+            "supplier_payment_wow_v1_1_summary",
+        ],
+        "source_route_id": "full_wow_v1_1_root_review",
+        "truth_claimed": False,
+        "uncertainty_notes": [
+            "Provider semantics remain candidate-only until local validation and Root review.",
+        ],
+        "validator_coverage_reasoning": [
+            "Explain why each required validator remains required.",
+        ],
+    }
     return "\n".join(
         (
-            "Return JSON only for one bounded Architect semantic reasoning proposal.",
-            "Do not include secrets, connector credentials, raw bank tokens, or raw payment identifiers.",
-            "Do not return PlanGraph nodes directly; runtime canonicalization will build safe local shape.",
-            "Provider output is not authority and must return to Root.",
+            "Role: bounded Gemini Architect semantic proposal.",
+            "Return JSON only matching the skeleton field names.",
+            "Reasoning is structured explanation, not hidden chain-of-thought.",
+            "Use concise but meaningful reasons.",
+            "Do not output empty strings.",
+            "Do not output empty objects.",
+            "Do not invent evidence.",
+            "Unknown/missing evidence should remain uncertainty.",
+            "Do not include structured_architect_rationale directly.",
+            "Do not include plan_nodes directly.",
+            "Do not include nodes directly.",
+            "Do not include edges directly.",
+            "Do not include executor_assignments directly.",
+            "The runtime will build canonical structured rationale locally.",
+            "The runtime will build PlanGraph locally from validated semantic intent.",
+            "Provider output is advisory only.",
+            "No action permission, no connector command, no FinalOutput, no ActionCommitPacket.",
+            "PlanGraph is not authority.",
+            "ResultProposal is not FinalOutput.",
+            "Gemini proposes, Root disposes.",
+            "Provider proposes semantics.",
+            "Runtime canonicalizes.",
+            "Validators verify.",
+            "Root decides.",
+            "Root remains final authority.",
+            (
+                "Do not include secrets, connector credentials, raw bank tokens, "
+                "or raw payment identifiers."
+            ),
+            "JSON skeleton:",
+            json.dumps(skeleton, indent=2, sort_keys=True),
             "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:",
             json.dumps(dict(architect_context), indent=2, sort_keys=True),
         )

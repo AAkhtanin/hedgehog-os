@@ -438,13 +438,16 @@ def _valid_manual_live_architect_payload(**overrides):
             "supplier_payment_wow_v1_1_summary",
             "semantic_evidence_claim_review",
         ),
-        "root_recommendation": "preserve_root_final_boundary",
+        "root_recommendation": "needs_more_evidence",
         "result_proposal_summary": (
-            "review WOW summary and live semantic proposal without creating action"
+            "Supplier payment WOW v1.1 needs Root review; Supplier B remains blocked; "
+            "shipment release remains held; receipt remains evidence only."
         ),
         "required_validators": (
-            "semantic_reasoning_adapter validation",
+            "ArchitectPlanContextPacket validation",
+            "structured rationale validation",
             "PlanGraph contract",
+            "ResultProposal boundary",
             "Root final authority",
         ),
         "truth_claimed": False,
@@ -519,6 +522,40 @@ def _manual_live_orchestrator_prompt():
         runner._dirty_business_request(),
         result["supplier_payment_wow_v1_1_summary"],
     )
+
+
+def _manual_live_architect_prompt():
+    result = runner.run_full_semantic_e2e(env={})
+    wow_summary = result["supplier_payment_wow_v1_1_summary"]
+    dirty_request = runner._dirty_business_request()
+    orchestrator_payload = _valid_manual_live_orchestrator_payload()
+    orchestrator_semantics = (
+        runner.semantic_reasoning_adapter.expand_orchestrator_semantic_reasoning_proposal(
+            orchestrator_payload,
+            {
+                "source": "supplier_payment_wow_v1_1_summary",
+                "supplier_B_remains_blocked": wow_summary.get(
+                    "supplier_B_remains_blocked"
+                ),
+                "shipment_release_remains_held": wow_summary.get(
+                    "shipment_release_remains_held"
+                ),
+            },
+        )
+    )
+    bsep = runner._build_manual_live_lane_bsep(
+        orchestrator_semantics,
+        wow_summary,
+    )
+    bsep_validation = runner.validate_bounded_semantic_evidence_packet(bsep)
+    architect_context = runner._build_full_wow_v1_1_live_architect_context_from_bsep(
+        dirty_request,
+        wow_summary,
+        orchestrator_semantics,
+        bsep,
+        bsep_validation,
+    )
+    return runner._build_full_wow_v1_1_live_architect_prompt(architect_context)
 
 
 def _artifact_json(path):
@@ -1840,6 +1877,168 @@ def test_full_wow_v1_1_manual_live_orchestrator_prompt_matches_004_operator_rule
         '"truth_claimed": false',
     ):
         assert marker in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_prompt_uses_004_json_skeleton_not_sdk_schema() -> None:
+    prompt = _manual_live_architect_prompt()
+
+    assert "JSON skeleton:" in prompt
+    assert "Return JSON only matching the skeleton field names" in prompt
+    assert "Do not include structured_architect_rationale directly" in prompt
+    assert "Do not include plan_nodes directly" in prompt
+    assert "The runtime will build canonical structured rationale locally" in prompt
+    assert "The runtime will build PlanGraph locally from validated semantic intent" in prompt
+    assert "REQUIRED_OUTPUT_JSON_SCHEMA" not in prompt
+    assert "response_schema" not in prompt
+    assert "SDK schema" not in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_prompt_contains_semantic_adapter_skeleton_fields() -> None:
+    prompt = _manual_live_architect_prompt()
+    required_fields = (
+        "proposal_id",
+        "source_route_id",
+        "selected_vector_ids",
+        "root_recommendation",
+        "result_proposal_summary",
+        "required_validators",
+        "truth_claimed",
+        "authority_claimed",
+        "action_permission_claimed",
+        "final_output_claimed",
+        "connector_command_claimed",
+        "drs_write_claimed",
+        "root_bypass_claimed",
+        "plan_shape_reasoning",
+        "node_intent_reasoning",
+        "executor_constraint_reasoning",
+        "forbidden_surface_reasoning",
+        "validator_coverage_reasoning",
+        "return_to_root_reasoning",
+        "uncertainty_notes",
+        "authority_boundary_reasoning",
+    )
+
+    for field in required_fields:
+        assert field in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_prompt_does_not_request_plan_graph_objects() -> None:
+    prompt = _manual_live_architect_prompt()
+
+    for noun in (
+        "BSEP",
+        "ContextPacket",
+        "structured_architect_rationale",
+        "PlanGraph",
+        "plan_nodes",
+        "nodes",
+        "edges",
+        "executor_assignments",
+        "ActionCommitPacket",
+        "FinalOutput",
+        "receipt",
+    ):
+        assert f"emit {noun}" not in prompt
+    for marker in (
+        "return nodes",
+        "return edges",
+        "return executor_assignments",
+    ):
+        assert marker not in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_prompt_matches_004_operator_rules() -> None:
+    prompt = _manual_live_architect_prompt()
+
+    assert "Provider output is advisory only" in prompt
+    assert "Gemini proposes, Root disposes" in prompt
+    assert "Root remains final authority" in prompt
+    assert "Provider proposes semantics" in prompt
+    assert "Runtime canonicalizes" in prompt
+    assert "Validators verify" in prompt
+    assert "Root decides" in prompt
+    assert "PlanGraph is not authority" in prompt
+    assert "ResultProposal is not FinalOutput" in prompt
+    for marker in (
+        '"action_permission_claimed": false',
+        '"authority_claimed": false',
+        '"connector_command_claimed": false',
+        '"drs_write_claimed": false',
+        '"final_output_claimed": false',
+        '"root_bypass_claimed": false',
+        '"truth_claimed": false',
+    ):
+        assert marker in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_freeform_plangraph_like_output_fails_closed() -> None:
+    def bad_architect_provider(prompt, model_name, timeout_seconds, env):
+        assert "JSON skeleton:" in prompt
+        assert "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON" in prompt
+        return json.dumps(
+            {
+                "proposal_id": "observed-plan-graph-like-architect-response",
+                "proposal_role": "bounded_gemini_architect",
+                "plan_graph_proposal_id": "plan:observed_bad_shape",
+                "nodes": [
+                    {
+                        "node_id": "node:bad",
+                        "kind": "review",
+                        "executor_id": "executor:semantic_review",
+                    },
+                ],
+                "edges": [],
+                "executor_assignments": [
+                    {
+                        "node_id": "node:bad",
+                        "executor_id": "executor:semantic_review",
+                        "mode": "local_only",
+                    },
+                ],
+            }
+        )
+
+    result = runner.run_full_semantic_e2e(
+        env=_manual_live_env(),
+        orchestrator_provider=_manual_live_provider_returning(
+            json.dumps(_valid_manual_live_orchestrator_payload()),
+            "FULL_WOW_V1_1_LIVE_ORCHESTRATOR_INPUT_JSON",
+        ),
+        architect_provider=bad_architect_provider,
+    )
+    counters = result["counters"]
+    errors = "\n".join(result["validation_errors"])
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert result["manual_live_gemini_lane"]["stage_status"] == "FAIL_CLOSED"
+    assert "manual_live_architect_validation_failed" in errors
+    for field in (
+        "source_route_id",
+        "root_recommendation",
+        "result_proposal_summary",
+        "plan_shape_reasoning",
+        "node_intent_reasoning",
+        "executor_constraint_reasoning",
+        "forbidden_surface_reasoning",
+        "validator_coverage_reasoning",
+        "return_to_root_reasoning",
+        "authority_boundary_reasoning",
+    ):
+        assert f"missing_required_field:{field}" in errors
+    assert counters["orchestrator_provider_call_count"] == 1
+    assert counters["architect_provider_call_count"] == 1
+    assert counters["bsep_created_count"] == 1
+    assert counters["bsep_validated_count"] == 1
+    assert counters["root_final_output_created_count"] == 0
+    assert counters["live_gemini_created_action_commit_packet_count"] == 0
+    assert counters["live_gemini_created_receipt_count"] == 0
+    assert counters["live_gemini_executed_mock_payment_count"] == 0
+    assert counters["live_gemini_executed_real_payment_count"] == 0
+    assert counters["live_gemini_released_shipment_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_world_effects_count"] == 0
 
 
 def test_full_wow_v1_1_manual_live_gemini_artifact_pack_created_on_orchestrator_fail_closed(

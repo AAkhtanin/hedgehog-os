@@ -2056,26 +2056,41 @@ def _build_full_wow_v1_1_live_architect_prompt(
     skeleton = {
         "action_permission_claimed": False,
         "authority_boundary_reasoning": [
-            "Explain that local plan artifacts are advisory and Root remains final authority.",
+            (
+                "Provider output is advisory semantic architecture only. Runtime "
+                "canonicalizes. Validators verify. Root decides."
+            ),
         ],
         "authority_claimed": False,
         "connector_command_claimed": False,
         "drs_write_claimed": False,
         "executor_constraint_reasoning": [
-            "Explain why execution stays within allowed local review constraints.",
+            (
+                "No executor is authorized by this provider output. Any later local "
+                "execution shape remains runtime-built, validator-checked, and "
+                "Root-controlled."
+            ),
         ],
         "final_output_claimed": False,
         "forbidden_surface_reasoning": [
             (
-                "Explain why action, connector, receipt, payment, shipment release, "
-                "and final-output surfaces stay blocked."
+                "Payment, shipment release, receipt creation, connector commands, "
+                "ActionCommitPacket creation, and FinalOutput creation remain outside "
+                "provider authority."
             ),
         ],
         "node_intent_reasoning": [
-            "Describe intended local review intent in words only.",
+            (
+                "The semantic plan intent is to keep Supplier B blocked, keep shipment "
+                "release held, preserve the receipt as evidence only, and return the "
+                "bounded supplier payment summary to Root review."
+            ),
         ],
         "plan_shape_reasoning": [
-            "Explain the safe advisory local review shape.",
+            (
+                "The safe advisory plan shape is expressed only as semantic reasoning. "
+                "The provider does not create runtime plan artifacts."
+            ),
         ],
         "proposal_id": "architect-semantic-proposal-full-wow-v1-1-001",
         "required_validators": [
@@ -2086,11 +2101,15 @@ def _build_full_wow_v1_1_live_architect_prompt(
             "Root final authority",
         ],
         "result_proposal_summary": (
-            "Supplier payment WOW v1.1 needs Root review; Supplier B remains "
-            "blocked; shipment release remains held; receipt remains evidence only."
+            "Supplier Payment WOW v1.1 remains bounded evidence for Root review. "
+            "Supplier B remains blocked. Shipment release remains held. Receipt "
+            "remains evidence only."
         ),
         "return_to_root_reasoning": [
-            "Explain why the proposal must return to Root.",
+            (
+                "The proposal must return to Root because provider output is not truth, "
+                "authority, action permission, or FinalOutput."
+            ),
         ],
         "root_bypass_claimed": False,
         "root_recommendation": "needs_more_evidence",
@@ -2103,13 +2122,24 @@ def _build_full_wow_v1_1_live_architect_prompt(
             "Provider semantics remain candidate-only until local validation and Root review.",
         ],
         "validator_coverage_reasoning": [
-            "Explain why each required validator remains required.",
+            (
+                "Semantic proposal validation, structured rationale validation, local "
+                "plan-shape checks, ResultProposal boundary checks, and Root final "
+                "authority remain required."
+            ),
         ],
     }
     return "\n".join(
         (
-            "Role: bounded Gemini Architect semantic proposal.",
-            "Return JSON only matching the skeleton field names.",
+            "Role: bounded Semantic Architect proposal writer.",
+            "The provider acts as a semantic Architect only.",
+            (
+                "It proposes plan intent, validator coverage, execution constraints, "
+                "forbidden surfaces, and return-to-Root reasoning in the allowed "
+                "semantic fields."
+            ),
+            "This is not removing Architect.",
+            "It does not output runtime plan objects or runtime execution graph structures.",
             "Reasoning is structured explanation, not hidden chain-of-thought.",
             "Use concise but meaningful reasons.",
             "Do not output empty strings.",
@@ -2117,7 +2147,7 @@ def _build_full_wow_v1_1_live_architect_prompt(
             "Do not invent evidence.",
             "Unknown/missing evidence should remain uncertainty.",
             "The runtime will build canonical structured rationale locally.",
-            "The runtime may build local plan artifacts after validation.",
+            "Runtime may build local plan artifacts later after validation.",
             "Provider output is advisory only.",
             "No action permission, no connector command, no FinalOutput, no ActionCommitPacket.",
             "ResultProposal is not FinalOutput.",
@@ -2133,16 +2163,15 @@ def _build_full_wow_v1_1_live_architect_prompt(
             ),
             "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:",
             json.dumps(dict(architect_context), indent=2, sort_keys=True),
-            "FINAL_OUTPUT_CONTRACT:",
-            "Return exactly one JSON object.",
-            "The top-level key set must equal the JSON skeleton key set.",
-            "No additional top-level keys are allowed.",
-            "Use only the field names shown in the JSON skeleton below.",
-            "Do not add any top-level key that is not literally shown in the JSON skeleton.",
-            "If you need to describe plan shape, use plan_shape_reasoning.",
-            "If you need to describe local review intent, use node_intent_reasoning.",
-            "If you need to describe execution constraints, use executor_constraint_reasoning.",
-            "The provider returns semantic reasoning only.",
+            "OUTPUT_SHAPE_CONTRACT:",
+            "Use the provided JSON object as the exact output shape.",
+            "Keep exactly the same top-level keys.",
+            "Do not add top-level keys.",
+            "Do not remove top-level keys.",
+            "Do not rename top-level keys.",
+            "Fill only the existing semantic reasoning fields.",
+            "Boolean authority/action/final-output claim fields must remain false where shown.",
+            "The provider returns semantic Architect reasoning only.",
             "Runtime canonicalizes.",
             "Validators verify.",
             "Root decides.",

@@ -1937,36 +1937,79 @@ def test_full_wow_v1_1_manual_live_architect_prompt_uses_004_json_skeleton_not_s
     prompt = _manual_live_architect_prompt()
 
     assert "JSON skeleton:" in prompt
-    assert "Return JSON only matching the skeleton field names" in prompt
     assert "The runtime will build canonical structured rationale locally" in prompt
-    assert "The runtime may build local plan artifacts after validation" in prompt
+    assert "Runtime may build local plan artifacts later after validation" in prompt
     assert "REQUIRED_OUTPUT_JSON_SCHEMA" not in prompt
     assert "response_schema" not in prompt
     assert "SDK schema" not in prompt
 
 
+def test_full_wow_v1_1_manual_live_architect_prompt_role_is_semantic_architect_not_formatter() -> None:
+    prompt = _manual_live_architect_prompt()
+
+    assert "Role: bounded Semantic Architect proposal writer" in prompt
+    assert "semantic Architect only" in prompt
+    assert "proposes plan intent" in prompt
+    assert "validator coverage" in prompt
+    assert "execution constraints" in prompt
+    assert "forbidden surfaces" in prompt
+    assert "return-to-Root reasoning" in prompt
+    assert "bounded semantic proposal formatter" not in prompt
+    assert "copy bot" not in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_prompt_separates_semantic_architect_from_runtime_plan_artifacts() -> None:
+    prompt = _manual_live_architect_prompt()
+
+    assert "This is not removing Architect" in prompt
+    assert "semantic Architect" in prompt
+    assert "Runtime may build local plan artifacts later after validation" in prompt
+    assert "The provider returns semantic Architect reasoning only" in prompt
+    assert "Runtime canonicalizes" in prompt
+    assert "Validators verify" in prompt
+    assert "Root decides" in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_output_shape_contract_is_copy_only_shape_not_copy_bot() -> None:
+    prompt = _manual_live_architect_prompt()
+
+    assert "OUTPUT_SHAPE_CONTRACT" in prompt
+    assert "Use the provided JSON object as the exact output shape" in prompt
+    assert "Keep exactly the same top-level keys" in prompt
+    assert "Do not add top-level keys" in prompt
+    assert "Do not remove top-level keys" in prompt
+    assert "Do not rename top-level keys" in prompt
+    assert "Fill only the existing semantic reasoning fields" in prompt
+    assert "bounded semantic proposal formatter" not in prompt
+    assert "copy bot" not in prompt
+    assert "JSON skeleton:" in prompt
+    assert prompt.rfind("JSON skeleton:") > prompt.rfind("OUTPUT_SHAPE_CONTRACT:")
+
+
 def test_full_wow_v1_1_manual_live_architect_prompt_uses_whitelist_only_contract() -> None:
     prompt = _manual_live_architect_prompt()
 
-    assert "Return exactly one JSON object." in prompt
-    assert "The top-level key set must equal the JSON skeleton key set." in prompt
-    assert "No additional top-level keys are allowed." in prompt
-    assert "Use only the field names shown in the JSON skeleton below." in prompt
+    assert "Use the provided JSON object as the exact output shape." in prompt
+    assert "Keep exactly the same top-level keys." in prompt
+    assert "Do not add top-level keys." in prompt
+    assert "Do not remove top-level keys." in prompt
+    assert "Do not rename top-level keys." in prompt
+    assert "Fill only the existing semantic reasoning fields." in prompt
     assert "JSON skeleton:" in prompt
-    assert prompt.rfind("JSON skeleton:") > prompt.rfind("FINAL_OUTPUT_CONTRACT:")
+    assert prompt.rfind("JSON skeleton:") > prompt.rfind("OUTPUT_SHAPE_CONTRACT:")
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_skeleton_is_last_major_section() -> None:
     prompt = _manual_live_architect_prompt()
 
     input_index = prompt.index("FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:")
-    contract_index = prompt.index("FINAL_OUTPUT_CONTRACT:")
+    contract_index = prompt.index("OUTPUT_SHAPE_CONTRACT:")
     skeleton_index = prompt.index("JSON skeleton:")
 
     assert input_index < contract_index < skeleton_index
     assert prompt.rfind("JSON skeleton:") == skeleton_index
     assert "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:" not in prompt[skeleton_index:]
-    assert "FINAL_OUTPUT_CONTRACT:" not in prompt[skeleton_index:]
+    assert "OUTPUT_SHAPE_CONTRACT:" not in prompt[skeleton_index:]
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_does_not_prime_plan_graph_keys() -> None:
@@ -2041,14 +2084,12 @@ def test_full_wow_v1_1_manual_live_architect_prompt_does_not_request_plan_graph_
 def test_full_wow_v1_1_manual_live_architect_final_contract_rejects_plan_graph_shape() -> None:
     prompt = _manual_live_architect_prompt()
 
-    assert "Return exactly one JSON object." in prompt
-    assert "The provider returns semantic reasoning only." in prompt
-    assert "If you need to describe plan shape, use plan_shape_reasoning." in prompt
-    assert "If you need to describe local review intent, use node_intent_reasoning." in prompt
-    assert (
-        "If you need to describe execution constraints, use "
-        "executor_constraint_reasoning."
-    ) in prompt
+    assert "Use the provided JSON object as the exact output shape." in prompt
+    assert "Fill only the existing semantic reasoning fields." in prompt
+    assert "The provider returns semantic Architect reasoning only." in prompt
+    assert "Runtime canonicalizes." in prompt
+    assert "Validators verify." in prompt
+    assert "Root decides." in prompt
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_required_validators_avoid_plan_graph_trigger() -> None:
@@ -2087,6 +2128,74 @@ def test_full_wow_v1_1_manual_live_architect_skeleton_exact_key_set() -> None:
     }
 
     assert set(skeleton) == expected_key_set
+
+
+def test_full_wow_v1_1_manual_live_architect_skeleton_has_concrete_semantic_values() -> None:
+    prompt = _manual_live_architect_prompt()
+    skeleton = _json_after_marker(prompt, "JSON skeleton")
+    placeholders = (
+        "Explain why",
+        "Describe intended",
+        "Explain the safe",
+        "Explain why each",
+    )
+
+    assert set(skeleton) == {
+        "proposal_id",
+        "source_route_id",
+        "selected_vector_ids",
+        "root_recommendation",
+        "result_proposal_summary",
+        "required_validators",
+        "truth_claimed",
+        "authority_claimed",
+        "action_permission_claimed",
+        "final_output_claimed",
+        "connector_command_claimed",
+        "drs_write_claimed",
+        "root_bypass_claimed",
+        "plan_shape_reasoning",
+        "node_intent_reasoning",
+        "executor_constraint_reasoning",
+        "forbidden_surface_reasoning",
+        "validator_coverage_reasoning",
+        "return_to_root_reasoning",
+        "uncertainty_notes",
+        "authority_boundary_reasoning",
+    }
+    skeleton_text = json.dumps(skeleton)
+    for placeholder in placeholders:
+        assert placeholder not in skeleton_text
+    assert "Supplier B remains blocked" in skeleton["result_proposal_summary"]
+    assert "Shipment release remains held" in skeleton["result_proposal_summary"]
+    assert "Receipt remains evidence only" in skeleton["result_proposal_summary"]
+    for field in (
+        "truth_claimed",
+        "authority_claimed",
+        "action_permission_claimed",
+        "final_output_claimed",
+        "connector_command_claimed",
+        "drs_write_claimed",
+        "root_bypass_claimed",
+    ):
+        assert skeleton[field] is False
+
+
+def test_full_wow_v1_1_manual_live_architect_provider_prompt_does_not_leak_runtime_graph_object_key_family() -> None:
+    prompt = _manual_live_architect_prompt()
+    forbidden_prompt_terms = (
+        "edges",
+        "executor_assignments",
+        "plan_graph_proposal_id",
+        "source_packet_id",
+        "proposal_role",
+        "time_assumptions",
+    )
+
+    for term in forbidden_prompt_terms:
+        assert term not in prompt
+    assert "node_intent_reasoning" in prompt
+    assert "plan_shape_reasoning" in prompt
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_matches_004_operator_rules() -> None:

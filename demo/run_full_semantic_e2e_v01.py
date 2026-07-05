@@ -2244,7 +2244,7 @@ def _manual_live_provider_payload(
         call = call or _call_gemini_orchestrator_provider
         model = _orchestrator_model_name(env)
     else:
-        call = call or _call_gemini_architect_provider
+        call = call or _call_full_wow_v1_1_live_architect_semantic_provider
         model = _architect_model_name(env)
     raw_response = call(
         prompt,
@@ -4400,6 +4400,56 @@ def _call_gemini_orchestrator_provider(
                 "response_mime_type": "application/json",
                 "temperature": 0,
                 "candidate_count": 1,
+            },
+        )
+    except TimeoutError as exc:
+        raise provider_adapter.ProviderTimeoutError("provider_timeout") from exc
+    except Exception as exc:  # pragma: no cover - real provider path only
+        raise provider_adapter.ProviderCaptureError("provider_call_failed") from exc
+
+    parsed = getattr(response, "parsed", None)
+    if isinstance(parsed, dict):
+        return json.dumps(parsed, sort_keys=True)
+    text = getattr(response, "text", None)
+    if not isinstance(text, str) or not text.strip():
+        raise provider_adapter.ProviderCaptureError("provider_empty_response")
+    return text
+
+
+def _call_full_wow_v1_1_live_architect_semantic_provider(
+    prompt: str,
+    model_name: str,
+    timeout_seconds: int,
+    env: Mapping[str, str],
+) -> str:
+    # Full WOW v1.1 manual live Architect lane is semantic_reasoning_adapter mode.
+    # It must not use the legacy PlanGraph-shaped Architect provider wrapper.
+    api_key = provider_adapter._gemini_api_key(env)
+    if not api_key:
+        raise provider_adapter.ProviderCaptureError("provider_sdk_or_key_missing")
+    try:
+        from google import genai
+    except ImportError as exc:
+        raise provider_adapter.ProviderCaptureError("provider_sdk_or_key_missing") from exc
+
+    try:
+        client = genai.Client(api_key=api_key)
+        response = client.models.generate_content(
+            model=model_name,
+            contents=prompt,
+            config={
+                "response_mime_type": "application/json",
+                "temperature": 0,
+                "candidate_count": 1,
+                "system_instruction": (
+                    "Return JSON only. Return exactly one Architect semantic "
+                    "reasoning proposal matching the prompt JSON skeleton. The "
+                    "provider proposes semantic Architect reasoning only. Runtime "
+                    "canonicalizes. Validators verify. Root decides. Do not return "
+                    "runtime plan objects or execution graph structures. Do not "
+                    "claim truth, authority, action permission, FinalOutput, "
+                    "connector command, DRS write, or Root bypass."
+                ),
             },
         )
     except TimeoutError as exc:

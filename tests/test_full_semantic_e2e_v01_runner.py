@@ -3,6 +3,8 @@ from __future__ import annotations
 import inspect
 import json
 import re
+import sys
+import types
 from typing import Any, Mapping
 
 import demo.run_live_provider_adapter_response_capture_v01 as provider_adapter
@@ -568,6 +570,49 @@ def _manual_live_architect_prompt():
 def _manual_live_architect_provider_input():
     prompt = _manual_live_architect_prompt()
     return _json_after_marker(prompt, "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON")
+
+
+def _call_semantic_architect_provider_with_fake_google(monkeypatch):
+    captured: dict[str, Any] = {}
+
+    class FakeModels:
+        def generate_content(self, *, model, contents, config):
+            captured["model"] = model
+            captured["contents"] = contents
+            captured["config"] = config
+            return types.SimpleNamespace(text='{"proposal_id":"fake"}')
+
+    class FakeClient:
+        def __init__(self, api_key):
+            captured["api_key"] = api_key
+            self.models = FakeModels()
+
+    fake_genai = types.SimpleNamespace(Client=FakeClient)
+    fake_google = types.ModuleType("google")
+    fake_google.genai = fake_genai
+
+    monkeypatch.setitem(sys.modules, "google", fake_google)
+    monkeypatch.setattr(
+        runner.provider_adapter,
+        "_gemini_api_key",
+        lambda env: "fake-gemini-key",
+    )
+
+    def forbidden_schema_call(env):
+        raise AssertionError("_gemini_architect_response_schema should not be called")
+
+    monkeypatch.setattr(
+        runner,
+        "_gemini_architect_response_schema",
+        forbidden_schema_call,
+    )
+    result = runner._call_full_wow_v1_1_live_architect_semantic_provider(
+        "semantic architect prompt",
+        "fake-model",
+        5,
+        {},
+    )
+    return result, captured
 
 
 def _json_after_marker(prompt, marker):
@@ -1966,6 +2011,84 @@ def test_full_wow_v1_1_manual_live_architect_prompt_role_is_semantic_architect_n
     assert "return-to-Root reasoning" in prompt
     assert "bounded semantic proposal formatter" not in prompt
     assert "copy bot" not in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_uses_semantic_provider_wrapper_not_legacy_plangraph_wrapper(
+    monkeypatch,
+) -> None:
+    calls: list[str] = []
+    legacy_source = inspect.getsource(runner._call_gemini_architect_provider)
+
+    def semantic_provider(prompt, model_name, timeout_seconds, env):
+        calls.append("semantic")
+        assert model_name == env[provider_adapter.ENV_PROVIDER_MODEL]
+        assert timeout_seconds >= 1
+        return '{"proposal_id":"semantic"}'
+
+    def legacy_provider(prompt, model_name, timeout_seconds, env):
+        raise AssertionError("legacy PlanGraph provider wrapper must not be used")
+
+    monkeypatch.setattr(
+        runner,
+        "_call_full_wow_v1_1_live_architect_semantic_provider",
+        semantic_provider,
+    )
+    monkeypatch.setattr(runner, "_call_gemini_architect_provider", legacy_provider)
+
+    raw_response, real_network = runner._manual_live_provider_payload(
+        role="architect",
+        prompt="prompt",
+        env=_manual_live_env(),
+        provider=None,
+    )
+    source = inspect.getsource(runner._manual_live_provider_payload)
+
+    assert raw_response == '{"proposal_id":"semantic"}'
+    assert real_network is True
+    assert calls == ["semantic"]
+    assert "_call_full_wow_v1_1_live_architect_semantic_provider" in source
+    assert "_call_gemini_architect_provider" not in source
+    assert "exact local PlanGraph node shape" in legacy_source
+
+
+def test_full_wow_v1_1_manual_live_architect_semantic_provider_system_instruction_has_no_plangraph_shape(
+    monkeypatch,
+) -> None:
+    result, captured = _call_semantic_architect_provider_with_fake_google(monkeypatch)
+    system_instruction = captured["config"]["system_instruction"]
+
+    assert result == '{"proposal_id":"fake"}'
+    assert "Architect semantic reasoning proposal" in system_instruction
+    assert "prompt JSON skeleton" in system_instruction
+    assert "Runtime canonicalizes" in system_instruction
+    assert "Validators verify" in system_instruction
+    assert "Root decides" in system_instruction
+    for marker in (
+        "exact local PlanGraph node shape",
+        "PlanGraph node shape",
+        "node shape",
+        "nodes",
+        "edges",
+        "executor_assignments",
+        "plan_graph_proposal_id",
+    ):
+        assert marker not in system_instruction
+
+
+def test_full_wow_v1_1_manual_live_architect_semantic_provider_does_not_use_response_schema(
+    monkeypatch,
+) -> None:
+    _result, captured = _call_semantic_architect_provider_with_fake_google(monkeypatch)
+    config = captured["config"]
+
+    assert captured["api_key"] == "fake-gemini-key"
+    assert captured["model"] == "fake-model"
+    assert captured["contents"] == "semantic architect prompt"
+    assert config["response_mime_type"] == "application/json"
+    assert config["temperature"] == 0
+    assert config["candidate_count"] == 1
+    assert "response_json_schema" not in config
+    assert "response_schema" not in config
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_uses_separate_provider_input_membrane() -> None:

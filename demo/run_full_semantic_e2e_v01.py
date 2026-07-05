@@ -436,6 +436,8 @@ COUNTER_KEYS = (
     "live_claim_promoted_to_action_permission_count",
     "provider_output_used_as_truth_count",
     "provider_output_used_as_authority_count",
+    "provider_output_used_as_action_permission_count",
+    "provider_output_used_as_final_output_count",
     "bounded_gemini_actor_role_started_count",
     *GEMINI_ORCHESTRATOR_COUNTER_KEYS,
     *GEMINI_ARCHITECT_COUNTER_KEYS,
@@ -458,11 +460,24 @@ COUNTER_KEYS = (
     "supplier_payment_wow_v1_1_new_action_commit_packet_created_count",
     "supplier_payment_wow_v1_1_new_receipt_created_count",
     "supplier_payment_wow_v1_1_new_mock_payment_executed_count",
+    "live_evidence_and_wow_v1_1_coexistence_asserted_count",
+    "live_evidence_mutated_closed_action_commit_packet_count",
+    "live_evidence_mutated_closed_receipt_count",
+    "live_evidence_mutated_supplier_B_boundary_count",
+    "live_evidence_mutated_shipment_held_boundary_count",
+    "live_evidence_created_action_commit_packet_count",
+    "live_evidence_created_receipt_count",
+    "live_evidence_executed_mock_payment_count",
+    "live_evidence_executed_real_payment_count",
+    "live_evidence_released_shipment_count",
+    "live_evidence_called_bank_supplier_warehouse_connector_count",
     "action_commit_packet_created_in_full_e2e_count",
     "receipt_created_in_full_e2e_count",
     "mock_payment_executed_in_full_e2e_count",
+    "root_alone_creates_final_output_count",
     "semantic_claim_created_count",
     "semantic_claim_candidate_only_count",
+    "semantic_evidence_claim_candidate_only_count",
     "drs_resolve_invoked_count",
     "drs_resolve_represented_count",
     "drs_writeback_invoked_count",
@@ -1210,6 +1225,9 @@ def _copy_supplier_counters(counters: dict[str, int], supplier_result: Mapping[s
     counters["semantic_claim_candidate_only_count"] = (
         1 if supplier_counters["semantic_claim_created_count"] == 1 else 0
     )
+    counters["semantic_evidence_claim_candidate_only_count"] = counters[
+        "semantic_claim_candidate_only_count"
+    ]
     counters["provider_final_output_created_count"] = supplier_counters[
         "provider_final_output_created_count"
     ]
@@ -1253,6 +1271,12 @@ def _copy_supplier_counters(counters: dict[str, int], supplier_result: Mapping[s
         )
         counters["provider_output_used_as_authority_count"] = int(
             any(claim.authority_claimed for claim in response_claims)
+        )
+        counters["provider_output_used_as_action_permission_count"] = int(
+            any(claim.action_permission_claimed for claim in response_claims)
+        )
+        counters["provider_output_used_as_final_output_count"] = int(
+            any(claim.final_output_claimed for claim in response_claims)
         )
         counters["bounded_gemini_actor_role_started_count"] = 0
         counters["live_evidence_root_final_authority_preserved_count"] = int(
@@ -1485,6 +1509,66 @@ def _apply_supplier_payment_wow_v1_1_counters(
     counters["mock_payment_executed_in_full_e2e_count"] = 0
 
 
+def _apply_live_evidence_wow_v1_1_coherence_counters(
+    counters: dict[str, int],
+    supplier_result: Mapping[str, Any],
+    wow_summary: Mapping[str, Any],
+) -> None:
+    live_mode = supplier_result.get("full_e2e_live_evidence_mode") is True
+    if not live_mode:
+        return
+
+    validation = wow_summary.get("validation") or {}
+    counters["live_evidence_and_wow_v1_1_coexistence_asserted_count"] = int(
+        validation.get("accepted") is True
+        and counters["supplier_payment_wow_v1_1_summary_invoked_count"] == 1
+        and counters["supplier_payment_wow_v1_1_summary_represented_count"] == 0
+    )
+    counters["live_evidence_mutated_closed_action_commit_packet_count"] = 0
+    counters["live_evidence_mutated_closed_receipt_count"] = 0
+    counters["live_evidence_mutated_supplier_B_boundary_count"] = int(
+        wow_summary.get("supplier_B_remains_blocked") is not True
+    )
+    counters["live_evidence_mutated_shipment_held_boundary_count"] = int(
+        wow_summary.get("shipment_release_remains_held") is not True
+    )
+    counters["live_evidence_created_action_commit_packet_count"] = counters[
+        "action_commit_packet_created_in_full_e2e_count"
+    ]
+    counters["live_evidence_created_receipt_count"] = counters[
+        "receipt_created_in_full_e2e_count"
+    ]
+    counters["live_evidence_executed_mock_payment_count"] = counters[
+        "mock_payment_executed_in_full_e2e_count"
+    ]
+    counters["live_evidence_executed_real_payment_count"] = counters[
+        "real_payment_executed_count"
+    ]
+    counters["live_evidence_released_shipment_count"] = counters[
+        "shipment_released_count"
+    ]
+    counters["live_evidence_called_bank_supplier_warehouse_connector_count"] = int(
+        any(
+            counters[key] > 0
+            for key in (
+                "fake_bank_connector_called_count",
+                "fake_supplier_connector_called_count",
+                "fake_warehouse_connector_called_count",
+                "real_bank_api_called_count",
+                "real_supplier_api_called_count",
+                "real_warehouse_api_called_count",
+            )
+        )
+    )
+    counters["root_alone_creates_final_output_count"] = int(
+        counters["root_final_output_created_count"] == 1
+        and counters["provider_final_output_created_count"] == 0
+        and counters["executor_final_output_created_count"] == 0
+        and counters["post_vv_final_output_created_count"] == 0
+        and counters["gt_final_output_created_count"] == 0
+    )
+
+
 def _represented_count_is_honest(counters: Mapping[str, int]) -> bool:
     pairs = (
         (
@@ -1601,6 +1685,13 @@ def _apply_spine_counters(
     counters["gt_final_output_created_count"] = 0
     counters["gt_root_authority_claimed_count"] = 0
     counters["root_final_output_created_count"] = 1
+    counters["root_alone_creates_final_output_count"] = int(
+        counters["root_final_output_created_count"] == 1
+        and counters["provider_final_output_created_count"] == 0
+        and counters["executor_final_output_created_count"] == 0
+        and counters["post_vv_final_output_created_count"] == 0
+        and counters["gt_final_output_created_count"] == 0
+    )
     counters["drs_writeback_invoked_count"] = 1
     counters["drs_writeback_after_root_count"] = int(
         writeback_record["written_after_root_boundary"]
@@ -6933,6 +7024,11 @@ def run_full_semantic_e2e(
         avf_context=avf,
         root_boundary=root_boundary,
     )
+    _apply_live_evidence_wow_v1_1_coherence_counters(
+        counters,
+        supplier_result,
+        supplier_wow_summary,
+    )
     proposal = _result_proposal(claim, slice3_result)
     post_vv = slice3_result["post_vv_context"]
     gt_lgt = slice3_result["gt_lgt_context"]
@@ -7250,6 +7346,31 @@ def render_report(result: dict[str, Any] | None = None) -> str:
         "Root alone creates FinalOutput",
         "Root remains final authority",
         str(result["supplier_payment_wow_v1_1_summary"]),
+        "",
+        "[FULL E2E LIVE EVIDENCE + WOW V1.1 COHERENCE]",
+        (
+            "explicit live/captured evidence mode"
+            if result["counters"]["full_e2e_live_evidence_mode_count"] == 1
+            else "deterministic captured evidence mode"
+        ),
+        "supplier_payment_wow_v1_1_summary present",
+        "Supplier Payment / Shipment Release Review WOW v1.1",
+        "SemanticEvidenceClaim remains candidate-only",
+        "Provider output is not truth",
+        "Provider output is not authority",
+        "Provider output is not action permission",
+        "Provider output is not FinalOutput",
+        "WOW v1.1 receipt remains evidence only",
+        "closed ActionCommitPacket observed only",
+        "live evidence created no ActionCommitPacket",
+        "live evidence created no receipt",
+        "live evidence executed no mock payment",
+        "Supplier B remains blocked",
+        "shipment release remains held",
+        "Root alone creates FinalOutput",
+        "no real payment",
+        "no real shipment release",
+        "no real-world effects",
         "",
         "DRS candidate context:",
         str(result["drs_candidate_context"]),

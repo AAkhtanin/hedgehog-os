@@ -60,6 +60,13 @@ def _full_e2e_live_env(tmp_path, **overrides):
     return env
 
 
+def _run_full_e2e_fake_live_wow_result(tmp_path, payload=None):
+    return runner.run_full_semantic_e2e(
+        env=_full_e2e_live_env(tmp_path),
+        provider=_provider_returning(json.dumps(payload or _valid_payload())),
+    )
+
+
 def _gemini_orchestrator_env(**overrides):
     env = {
         runner.ENV_FULL_E2E_GEMINI_ORCHESTRATOR: "1",
@@ -1066,6 +1073,195 @@ def test_invoice_payable_live_claim_does_not_override_blockers(tmp_path) -> None
     assert counters["provider_output_used_as_truth_count"] == 0
     assert counters["provider_output_used_as_authority_count"] == 0
     assert counters["root_final_authority_preserved_count"] == 1
+
+
+def test_full_e2e_live_evidence_mode_contains_wow_v1_1_summary(tmp_path) -> None:
+    result = _run_full_e2e_fake_live_wow_result(tmp_path)
+    counters = result["counters"]
+    summary = result["supplier_payment_wow_v1_1_summary"]
+
+    assert counters["full_e2e_live_evidence_mode_count"] == 1
+    assert summary["stage_status"] == "PASS"
+    assert summary["stage_mode"] == "invoked_closed_summary_runner"
+    assert summary["observed_as_bounded_context"] is True
+    assert counters["supplier_payment_wow_v1_1_summary_invoked_count"] == 1
+    assert counters["supplier_payment_wow_v1_1_summary_represented_count"] == 0
+    assert counters["supplier_payment_wow_v1_1_summary_validation_passed_count"] == 1
+    assert counters["supplier_payment_wow_v1_1_summary_validation_failed_count"] == 0
+    assert counters["live_evidence_and_wow_v1_1_coexistence_asserted_count"] == 1
+
+
+def test_full_e2e_live_evidence_wow_v1_1_stage_accounting_is_honest(
+    tmp_path,
+) -> None:
+    result = _run_full_e2e_fake_live_wow_result(tmp_path)
+    counters = result["counters"]
+    stage = result["stage_map"]["supplier_payment_wow_v1_1_summary"]
+
+    assert stage["status"] == "PASS"
+    assert stage["invocation_mode"] == "invoked"
+    assert stage["invoked_count"] == 1
+    assert stage["represented_count"] == 0
+    assert stage["skipped_count"] == 0
+    assert stage["fail_closed_count"] == 0
+    assert result["stage_map"]["live_or_captured_evidence_lane"]["authority"] == "candidate"
+    assert "root_final_output_boundary" in result["stage_map"]
+    assert result["drs_writeback_record"]["written_after_root_boundary"] is True
+    assert counters["fake_bank_adapter_invoked_count"] == 0
+    assert counters["action_commit_packet_created_in_full_e2e_count"] == 0
+    assert counters["receipt_created_in_full_e2e_count"] == 0
+    assert result["pass_conditions"]["represented_counts_honest"] is True
+
+
+def test_full_e2e_live_evidence_remains_candidate_only_with_wow_summary(
+    tmp_path,
+) -> None:
+    result = _run_full_e2e_fake_live_wow_result(
+        tmp_path,
+        _valid_payload(
+            source_id="manual-live-gemini-claim-001",
+            extracted_claim="Invoice INV-2042 looks payable according to Accounting.",
+            confidence=0.7,
+            contradiction_flags=[],
+        ),
+    )
+    counters = result["counters"]
+    claim = result["semantic_evidence_claim"]
+
+    assert claim["candidate_only"] is True
+    assert counters["semantic_evidence_claim_candidate_only_count"] == 1
+    assert counters["provider_output_used_as_truth_count"] == 0
+    assert counters["provider_output_used_as_authority_count"] == 0
+    assert counters["provider_output_used_as_action_permission_count"] == 0
+    assert counters["provider_output_used_as_final_output_count"] == 0
+    assert counters["live_claim_content_influenced_supplier_context_count"] == 1
+    assert counters["live_claim_content_influenced_drs_context_count"] == 1
+    assert result["root_final_output_boundary"]["decision"] == "not_ready"
+    assert result["root_final_output_boundary"]["payment_executed"] is False
+    assert result["root_final_output_boundary"]["shipment_released"] is False
+
+
+def test_full_e2e_live_evidence_does_not_mutate_closed_wow_artifacts(
+    tmp_path,
+) -> None:
+    result = _run_full_e2e_fake_live_wow_result(tmp_path)
+    counters = result["counters"]
+    summary = result["supplier_payment_wow_v1_1_summary"]
+
+    assert summary["closed_action_commit_packet_observed_count"] == 1
+    assert summary["closed_mock_bank_receipt_observed_count"] == 1
+    assert summary["new_action_commit_packet_created_count"] == 0
+    assert summary["new_receipt_created_count"] == 0
+    assert summary["new_mock_payment_executed_count"] == 0
+    assert counters["live_evidence_mutated_closed_action_commit_packet_count"] == 0
+    assert counters["live_evidence_mutated_closed_receipt_count"] == 0
+    assert counters["live_evidence_created_action_commit_packet_count"] == 0
+    assert counters["live_evidence_created_receipt_count"] == 0
+    assert counters["live_evidence_executed_mock_payment_count"] == 0
+
+
+def test_full_e2e_live_evidence_preserves_supplier_b_and_shipment_boundaries(
+    tmp_path,
+) -> None:
+    result = _run_full_e2e_fake_live_wow_result(tmp_path)
+    counters = result["counters"]
+    summary = result["supplier_payment_wow_v1_1_summary"]
+
+    assert summary["supplier_B_remains_blocked"] is True
+    assert summary["shipment_release_remains_held"] is True
+    assert counters["supplier_payment_wow_v1_1_supplier_B_blocked_count"] == 1
+    assert counters["supplier_payment_wow_v1_1_shipment_release_held_count"] == 1
+    assert counters["live_evidence_mutated_supplier_B_boundary_count"] == 0
+    assert counters["live_evidence_mutated_shipment_held_boundary_count"] == 0
+    assert counters["live_evidence_released_shipment_count"] == 0
+    assert counters["live_evidence_executed_real_payment_count"] == 0
+
+
+def test_full_e2e_live_evidence_wow_coherence_no_real_world_effects(
+    tmp_path,
+) -> None:
+    result = _run_full_e2e_fake_live_wow_result(tmp_path)
+    counters = result["counters"]
+
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["real_bank_api_called_count"] == 0
+    assert counters["real_supplier_api_called_count"] == 0
+    assert counters["real_warehouse_api_called_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["connector_called_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["live_evidence_called_bank_supplier_warehouse_connector_count"] == 0
+
+
+def test_full_e2e_live_evidence_wow_coherence_report(tmp_path) -> None:
+    report = runner.render_report(_run_full_e2e_fake_live_wow_result(tmp_path))
+
+    assert "[FULL E2E LIVE EVIDENCE + WOW V1.1 COHERENCE]" in report
+    assert "explicit live/captured evidence mode" in report
+    assert "supplier_payment_wow_v1_1_summary present" in report
+    assert "SemanticEvidenceClaim remains candidate-only" in report
+    assert "Provider output is not truth" in report
+    assert "Provider output is not authority" in report
+    assert "WOW v1.1 receipt remains evidence only" in report
+    assert "closed ActionCommitPacket observed only" in report
+    assert "live evidence created no ActionCommitPacket" in report
+    assert "live evidence created no receipt" in report
+    assert "live evidence executed no mock payment" in report
+    assert "Supplier B remains blocked" in report
+    assert "shipment release remains held" in report
+    assert "Root alone creates FinalOutput" in report
+    assert "no real payment" in report
+    assert "no real shipment release" in report
+    assert "no real-world effects" in report
+
+
+def test_full_e2e_live_evidence_wow_coherence_report_has_no_overclaims(
+    tmp_path,
+) -> None:
+    report = runner.render_report(_run_full_e2e_fake_live_wow_result(tmp_path))
+    forbidden = (
+        "production " + "ready",
+        "public WOW " + "ready",
+        "public auditor " + "ready",
+        "real payment " + "executed",
+        "real shipment " + "released",
+        "receipt proves " + "truth",
+        "receipt grants " + "permission",
+        "receipt creates " + "FinalOutput",
+        "Full Semantic E2E creates " + "ActionCommitPacket",
+        "Gemini creates " + "ActionCommitPacket",
+    )
+
+    for marker in forbidden:
+        assert marker not in report
+
+
+def test_full_e2e_live_evidence_wow_coherence_fail_closed_if_summary_invalid() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+    invalid = {
+        **result["supplier_payment_wow_v1_1_summary"],
+        "receipt_releases_shipment": True,
+    }
+
+    validation = runner.validate_supplier_payment_wow_v1_1_summary_for_e2e(invalid)
+
+    assert validation["accepted"] is False
+    assert "supplier_payment_wow_v1_1_receipt_releases_shipment" in validation["reasons"]
+    assert validation["root_final_output_created"] is False
+    assert validation["drs_writeback_created"] is False
+
+
+def test_full_e2e_existing_default_mode_still_passes() -> None:
+    result = runner.run_full_semantic_e2e(env={})
+
+    assert result["final_status"] == "PASS"
+    assert result["supplier_payment_wow_v1_1_summary"]["stage_status"] == "PASS"
+    assert result["semantic_evidence_claim"]["candidate_only"] is True
+    assert result["supplier_live_result"]["final_status"] == "PASS"
+    assert result["stage_map"]["root_final_output_boundary"]["creates_final_output"] is True
+    assert result["drs_writeback_record"]["written_after_root_boundary"] is True
 
 
 def test_unsafe_live_provider_output_fails_closed_before_root(tmp_path) -> None:

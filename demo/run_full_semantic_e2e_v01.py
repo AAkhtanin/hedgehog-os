@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import tempfile
+import time
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -222,6 +223,9 @@ ENV_FULL_WOW_V1_1_LIVE_GEMINI = "HEDGEHOG_FULL_WOW_V1_1_LIVE_GEMINI"
 ENV_FULL_WOW_V1_1_LIVE_GEMINI_ARTIFACT_DIR = (
     "HEDGEHOG_FULL_WOW_V1_1_LIVE_GEMINI_ARTIFACT_DIR"
 )
+ENV_FULL_WOW_V1_1_ARCHITECT_PRE_DELAY_SECONDS = (
+    "HEDGEHOG_FULL_WOW_V1_1_ARCHITECT_PRE_DELAY_SECONDS"
+)
 FULL_WOW_V1_1_LIVE_GEMINI_DEFAULT_ARTIFACT_ROOT = (
     ".tmp/full_wow_v1_1_manual_live_gemini"
 )
@@ -311,6 +315,8 @@ MANUAL_LIVE_GEMINI_COUNTER_KEYS = (
     "manual_live_fail_closed_before_architect_on_invalid_bsep_count",
     "manual_live_raw_cross_role_text_to_architect_count",
     "manual_live_raw_provider_text_to_architect_count",
+    "architect_pre_delay_seconds",
+    "architect_pre_delay_applied_count",
     "live_gemini_created_action_commit_packet_count",
     "live_gemini_created_receipt_count",
     "live_gemini_executed_mock_payment_count",
@@ -1063,6 +1069,22 @@ def _full_e2e_context_packets_enabled(env: Mapping[str, str]) -> bool:
 def _manual_live_gemini_lane_enabled(env: Mapping[str, str] | None = None) -> bool:
     observed_env = env if env is not None else os.environ
     return observed_env.get(ENV_FULL_WOW_V1_1_LIVE_GEMINI) == "1"
+
+
+def _manual_live_architect_pre_delay_seconds(
+    env: Mapping[str, str],
+    architect_provider: Any,
+) -> int:
+    configured = env.get(ENV_FULL_WOW_V1_1_ARCHITECT_PRE_DELAY_SECONDS)
+    if configured is None:
+        return 30 if architect_provider is None else 0
+    try:
+        seconds = int(configured.strip())
+    except ValueError as exc:
+        raise ValueError("manual_live_architect_pre_delay_seconds_invalid") from exc
+    if seconds < 0:
+        raise ValueError("manual_live_architect_pre_delay_seconds_negative")
+    return seconds
 
 
 def _root_mock_approval_gate_partial_enabled(env: Mapping[str, str]) -> bool:
@@ -1976,7 +1998,7 @@ def _build_full_wow_v1_1_live_architect_context_from_bsep(
     )
     return {
         "lane": "full_wow_v1_1_manual_live_gemini_lane",
-        "role": "architect_plan_semantic_proposal",
+        "role": "architect_semantic_proposal_context",
         "subject": dirty_request.get("subject"),
         "source_route_id": bsep.get("source_route_id"),
         "bsep_packet_id": bsep.get("packet_id"),
@@ -2057,9 +2079,9 @@ def _build_full_wow_v1_1_live_architect_prompt(
         ],
         "proposal_id": "architect-semantic-proposal-full-wow-v1-1-001",
         "required_validators": [
-            "ArchitectPlanContextPacket validation",
+            "Architect semantic proposal validation",
             "structured rationale validation",
-            "PlanGraph contract",
+            "local plan-shape contract",
             "ResultProposal boundary",
             "Root final authority",
         ],
@@ -2100,7 +2122,7 @@ def _build_full_wow_v1_1_live_architect_prompt(
             "Do not include edges directly.",
             "Do not include executor_assignments directly.",
             "The runtime will build canonical structured rationale locally.",
-            "The runtime will build PlanGraph locally from validated semantic intent.",
+            "The runtime may build local plan artifacts after validation.",
             "Provider output is advisory only.",
             "No action permission, no connector command, no FinalOutput, no ActionCommitPacket.",
             "PlanGraph is not authority.",
@@ -2115,10 +2137,39 @@ def _build_full_wow_v1_1_live_architect_prompt(
                 "Do not include secrets, connector credentials, raw bank tokens, "
                 "or raw payment identifiers."
             ),
-            "JSON skeleton:",
-            json.dumps(skeleton, indent=2, sort_keys=True),
             "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:",
             json.dumps(dict(architect_context), indent=2, sort_keys=True),
+            "FINAL_OUTPUT_CONTRACT:",
+            "Return exactly one JSON object using ONLY the JSON skeleton field names below.",
+            "This is a semantic reasoning proposal, not a PlanGraph.",
+            "Do not output nodes.",
+            "Do not output edges.",
+            "Do not output executor_assignments.",
+            "Do not output plan_graph_proposal_id.",
+            "Do not output source_packet_id.",
+            "Do not output proposal_role.",
+            "Do not output time_assumptions.",
+            "Do not output confidence.",
+            "Do not output needs_review.",
+            "Do not output root_review_required.",
+            (
+                "If you want to describe nodes, put the description in "
+                "node_intent_reasoning as strings."
+            ),
+            (
+                "If you want to describe plan shape, put the description in "
+                "plan_shape_reasoning as strings."
+            ),
+            (
+                "If you want to describe executor constraints, put the description in "
+                "executor_constraint_reasoning as strings."
+            ),
+            (
+                "The runtime will build canonical PlanGraph later if Root-controlled "
+                "validators accept this semantic proposal."
+            ),
+            "JSON skeleton:",
+            json.dumps(skeleton, indent=2, sort_keys=True),
         )
     )
 
@@ -2554,6 +2605,22 @@ def _run_manual_live_gemini_lane(
             architect_context.get("raw_provider_text_included") is not False
         )
         manual_live_role_sequence.append("architect_prompt_built_from_bsep")
+        architect_pre_delay_seconds = _manual_live_architect_pre_delay_seconds(
+            env,
+            architect_provider,
+        )
+        counters["architect_pre_delay_seconds"] = architect_pre_delay_seconds
+        if architect_pre_delay_seconds > 0:
+            counters["architect_pre_delay_applied_count"] = 1
+            _manual_live_artifact_event(
+                artifact_recorder,
+                f"ARCHITECT_PRE_DELAY_START seconds={architect_pre_delay_seconds}",
+            )
+            time.sleep(architect_pre_delay_seconds)
+            _manual_live_artifact_event(
+                artifact_recorder,
+                f"ARCHITECT_PRE_DELAY_END seconds={architect_pre_delay_seconds}",
+            )
         _manual_live_artifact_event(
             artifact_recorder,
             "REAL_PROVIDER_CALL_ENTER role=architect",

@@ -444,9 +444,9 @@ def _valid_manual_live_architect_payload(**overrides):
             "shipment release remains held; receipt remains evidence only."
         ),
         "required_validators": (
-            "ArchitectPlanContextPacket validation",
+            "Architect semantic proposal validation",
             "structured rationale validation",
-            "PlanGraph contract",
+            "local plan-shape contract",
             "ResultProposal boundary",
             "Root final authority",
         ),
@@ -495,7 +495,8 @@ def _manual_live_provider_returning(raw_text, marker, captured=None):
         assert env[provider_adapter.ENV_PROVIDER_NAME] == "gemini"
         if captured is not None:
             captured["prompt"] = prompt
-            captured["context"] = json.loads(prompt.split(marker + ":", 1)[1].strip())
+            context_text = prompt.split(marker + ":", 1)[1].lstrip()
+            captured["context"] = json.JSONDecoder().raw_decode(context_text)[0]
         return raw_text
 
     return provider
@@ -524,7 +525,7 @@ def _manual_live_orchestrator_prompt():
     )
 
 
-def _manual_live_architect_prompt():
+def _manual_live_architect_prompt_and_context():
     result = runner.run_full_semantic_e2e(env={})
     wow_summary = result["supplier_payment_wow_v1_1_summary"]
     dirty_request = runner._dirty_business_request()
@@ -555,7 +556,19 @@ def _manual_live_architect_prompt():
         bsep,
         bsep_validation,
     )
-    return runner._build_full_wow_v1_1_live_architect_prompt(architect_context)
+    prompt = runner._build_full_wow_v1_1_live_architect_prompt(architect_context)
+    return prompt, architect_context
+
+
+def _manual_live_architect_prompt():
+    prompt, _context = _manual_live_architect_prompt_and_context()
+    return prompt
+
+
+def _json_after_marker(prompt, marker):
+    marker_text = marker + ":"
+    value_text = prompt.split(marker_text, 1)[1].lstrip()
+    return json.JSONDecoder().raw_decode(value_text)[0]
 
 
 def _artifact_json(path):
@@ -1668,6 +1681,46 @@ def test_full_wow_v1_1_manual_live_gemini_bsep_before_architect_order() -> None:
     assert counters["manual_live_architect_called_before_bsep_validation_count"] == 0
 
 
+def test_full_wow_v1_1_manual_live_architect_pre_delay_default_or_env(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    assert runner._manual_live_architect_pre_delay_seconds(_manual_live_env(), None) == 30
+    assert (
+        runner._manual_live_architect_pre_delay_seconds(
+            _manual_live_env(),
+            object(),
+        )
+        == 0
+    )
+
+    no_delay_result = _run_manual_live_gemini_fake_result(
+        env_overrides={runner.ENV_FULL_WOW_V1_1_ARCHITECT_PRE_DELAY_SECONDS: "0"}
+    )
+    assert no_delay_result["counters"]["architect_pre_delay_seconds"] == 0
+    assert no_delay_result["counters"]["architect_pre_delay_applied_count"] == 0
+
+    slept: list[int] = []
+    monkeypatch.setattr(runner.time, "sleep", lambda seconds: slept.append(seconds))
+    artifact_dir = tmp_path / "manual_live_delay_artifacts"
+
+    delay_result = _run_manual_live_gemini_fake_result(
+        env_overrides={
+            runner.ENV_FULL_WOW_V1_1_ARCHITECT_PRE_DELAY_SECONDS: "2",
+            runner.ENV_FULL_WOW_V1_1_LIVE_GEMINI_ARTIFACT_DIR: str(artifact_dir),
+        }
+    )
+    counters = delay_result["counters"]
+    summary_log = (artifact_dir / "summary.log").read_text(encoding="utf-8")
+
+    assert slept == [2]
+    assert counters["architect_pre_delay_seconds"] == 2
+    assert counters["architect_pre_delay_applied_count"] == 1
+    assert "ARCHITECT_PRE_DELAY_START seconds=2" in summary_log
+    assert "ARCHITECT_PRE_DELAY_END seconds=2" in summary_log
+    assert delay_result["final_status"] == "PASS"
+
+
 def test_full_wow_v1_1_manual_live_gemini_architect_prompt_receives_bsep_context() -> None:
     captured_architect: dict[str, Any] = {}
 
@@ -1887,10 +1940,35 @@ def test_full_wow_v1_1_manual_live_architect_prompt_uses_004_json_skeleton_not_s
     assert "Do not include structured_architect_rationale directly" in prompt
     assert "Do not include plan_nodes directly" in prompt
     assert "The runtime will build canonical structured rationale locally" in prompt
-    assert "The runtime will build PlanGraph locally from validated semantic intent" in prompt
+    assert (
+        "The runtime will build canonical PlanGraph later if Root-controlled "
+        "validators accept this semantic proposal."
+    ) in prompt
     assert "REQUIRED_OUTPUT_JSON_SCHEMA" not in prompt
     assert "response_schema" not in prompt
     assert "SDK schema" not in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_prompt_skeleton_is_last_major_section() -> None:
+    prompt = _manual_live_architect_prompt()
+
+    input_index = prompt.index("FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:")
+    contract_index = prompt.index("FINAL_OUTPUT_CONTRACT:")
+    skeleton_index = prompt.index("JSON skeleton:")
+
+    assert input_index < contract_index < skeleton_index
+    assert prompt.rfind("JSON skeleton:") == skeleton_index
+    assert "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:" not in prompt[skeleton_index:]
+    assert "FINAL_OUTPUT_CONTRACT:" not in prompt[skeleton_index:]
+
+
+def test_full_wow_v1_1_manual_live_architect_context_role_is_not_plan_proposal() -> None:
+    prompt, context = _manual_live_architect_prompt_and_context()
+
+    assert context["role"] == "architect_semantic_proposal_context"
+    assert "architect_plan_semantic_proposal" not in prompt
+    assert "architect_plan_semantic_proposal" not in context.values()
+    assert "plan_graph_proposal as an allowed output shape" not in prompt
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_contains_semantic_adapter_skeleton_fields() -> None:
@@ -1946,6 +2024,36 @@ def test_full_wow_v1_1_manual_live_architect_prompt_does_not_request_plan_graph_
         "return executor_assignments",
     ):
         assert marker not in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_final_contract_rejects_plan_graph_shape() -> None:
+    prompt = _manual_live_architect_prompt()
+
+    assert (
+        "Return exactly one JSON object using ONLY the JSON skeleton field names below"
+        in prompt
+    )
+    assert "This is a semantic reasoning proposal, not a PlanGraph" in prompt
+    assert "Do not output nodes" in prompt
+    assert "Do not output edges" in prompt
+    assert "Do not output executor_assignments" in prompt
+    assert "Do not output plan_graph_proposal_id" in prompt
+    assert (
+        "If you want to describe nodes, put the description in "
+        "node_intent_reasoning as strings"
+    ) in prompt
+    assert (
+        "If you want to describe plan shape, put the description in "
+        "plan_shape_reasoning as strings"
+    ) in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_prompt_required_validators_avoid_plan_graph_trigger() -> None:
+    prompt = _manual_live_architect_prompt()
+    skeleton = _json_after_marker(prompt, "JSON skeleton")
+
+    assert "local plan-shape contract" in tuple(skeleton["required_validators"])
+    assert "PlanGraph contract" not in tuple(skeleton["required_validators"])
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_matches_004_operator_rules() -> None:

@@ -565,6 +565,11 @@ def _manual_live_architect_prompt():
     return prompt
 
 
+def _manual_live_architect_provider_input():
+    prompt = _manual_live_architect_prompt()
+    return _json_after_marker(prompt, "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON")
+
+
 def _json_after_marker(prompt, marker):
     marker_text = marker + ":"
     value_text = prompt.split(marker_text, 1)[1].lstrip()
@@ -1726,22 +1731,27 @@ def test_full_wow_v1_1_manual_live_gemini_architect_prompt_receives_bsep_context
 
     result = _run_manual_live_gemini_fake_result(captured_architect)
 
-    context = captured_architect["context"]
+    provider_input = captured_architect["context"]
+    internal_context = result["manual_live_gemini_lane"]["architect_prompt_context"]
     prompt = captured_architect["prompt"]
     assert result["final_status"] == "PASS"
-    assert context["bounded_semantic_evidence_packet_present"] is True
-    assert context["bsep_packet_id"]
-    assert context["bsep_validation_accepted"] is True
-    assert context["observed_bounded_facts_summary"]
-    assert context["missing_evidence_summary"]
-    assert context["risk_boundary_summary"]
-    assert context["rejected_action_route_summary"]
-    assert context["root_review_needed"] is True
-    assert context["raw_user_text_included"] is False
-    assert context["raw_provider_text_included"] is False
-    assert context["raw_cross_role_text_included"] is False
-    assert context["raw_bank_secrets_included"] is False
-    assert context["raw_api_tokens_included"] is False
+    assert internal_context["bounded_semantic_evidence_packet_present"] is True
+    assert internal_context["bsep_packet_id"]
+    assert internal_context["bsep_validation_accepted"] is True
+    assert internal_context["observed_bounded_facts_summary"]
+    assert internal_context["missing_evidence_summary"]
+    assert internal_context["risk_boundary_summary"]
+    assert internal_context["rejected_action_route_summary"]
+    assert internal_context["root_review_needed"] is True
+    assert internal_context["raw_user_text_included"] is False
+    assert internal_context["raw_provider_text_included"] is False
+    assert internal_context["raw_cross_role_text_included"] is False
+    assert internal_context["raw_bank_secrets_included"] is False
+    assert internal_context["raw_api_tokens_included"] is False
+    assert provider_input["bounded_evidence_context_present"] is True
+    assert provider_input["bounded_evidence_validation_accepted"] is True
+    assert "Supplier B remains blocked." in provider_input["semantic_business_facts"]
+    assert "Root remains final authority." in provider_input["semantic_boundaries"]
     assert "manual_live_orchestrator" not in prompt
     assert "FULL_WOW_V1_1_LIVE_ORCHESTRATOR_INPUT_JSON" not in prompt
     assert runner._dirty_business_request()["request_text"] not in prompt
@@ -1958,6 +1968,84 @@ def test_full_wow_v1_1_manual_live_architect_prompt_role_is_semantic_architect_n
     assert "copy bot" not in prompt
 
 
+def test_full_wow_v1_1_manual_live_architect_prompt_uses_separate_provider_input_membrane() -> None:
+    prompt, internal_context = _manual_live_architect_prompt_and_context()
+    provider_input = _json_after_marker(
+        prompt,
+        "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON",
+    )
+
+    assert internal_context["bsep_packet_id"]
+    assert internal_context["bsep_validation_accepted"] is True
+    assert "bsep_packet_id" not in provider_input
+    assert "source_packet_id" not in provider_input
+    assert "proposal_role" not in provider_input
+    assert "forbidden_outputs" not in provider_input
+    assert '"bsep_packet_id"' not in prompt
+    assert '"source_packet_id"' not in prompt
+    assert '"proposal_role"' not in prompt
+    assert '"forbidden_outputs"' not in prompt
+    assert '"lane"' not in prompt
+    assert '"role"' not in prompt
+    assert '"subject"' not in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_provider_input_is_minimal_semantic_context() -> None:
+    provider_input = _manual_live_architect_provider_input()
+    allowed_keys = {
+        "context_type",
+        "bounded_evidence_context_present",
+        "bounded_evidence_validation_accepted",
+        "selected_vector_ids",
+        "semantic_business_facts",
+        "semantic_boundaries",
+        "raw_user_text_included",
+        "raw_provider_text_included",
+        "raw_cross_role_text_included",
+        "raw_secret_values_included",
+    }
+    forbidden_keys = {
+        "bsep_packet_id",
+        "source_packet_id",
+        "source_context_packet_id",
+        "source_proposal_id",
+        "proposal_role",
+        "role",
+        "lane",
+        "subject",
+        "source_route_id",
+        "root_review_required",
+        "root_review_needed",
+        "forbidden_outputs",
+        "plan_graph_proposal_id",
+        "nodes",
+        "edges",
+        "executor_assignments",
+        "confidence",
+        "needs_review",
+        "time_assumptions",
+    }
+
+    assert set(provider_input) == allowed_keys
+    assert provider_input["context_type"] == (
+        "bounded_supplier_payment_architect_semantic_input"
+    )
+    assert provider_input["bounded_evidence_context_present"] is True
+    assert provider_input["bounded_evidence_validation_accepted"] is True
+    assert provider_input["selected_vector_ids"] == [
+        "supplier_payment_wow_v1_1_summary"
+    ]
+    assert "Supplier B remains blocked." in provider_input["semantic_business_facts"]
+    assert "Shipment release remains held." in provider_input["semantic_business_facts"]
+    assert "Receipt remains evidence only." in provider_input["semantic_business_facts"]
+    assert "Root remains final authority." in provider_input["semantic_boundaries"]
+    assert provider_input["raw_user_text_included"] is False
+    assert provider_input["raw_provider_text_included"] is False
+    assert provider_input["raw_cross_role_text_included"] is False
+    assert provider_input["raw_secret_values_included"] is False
+    assert forbidden_keys.isdisjoint(provider_input)
+
+
 def test_full_wow_v1_1_manual_live_architect_prompt_separates_semantic_architect_from_runtime_plan_artifacts() -> None:
     prompt = _manual_live_architect_prompt()
 
@@ -1965,6 +2053,20 @@ def test_full_wow_v1_1_manual_live_architect_prompt_separates_semantic_architect
     assert "semantic Architect" in prompt
     assert "Runtime may build local plan artifacts later after validation" in prompt
     assert "The provider returns semantic Architect reasoning only" in prompt
+    assert "Runtime canonicalizes" in prompt
+    assert "Validators verify" in prompt
+    assert "Root decides" in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_prompt_matches_004_order() -> None:
+    prompt = _manual_live_architect_prompt()
+
+    assert prompt.index("JSON skeleton:") < prompt.index(
+        "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:"
+    )
+    assert "Return JSON only matching the skeleton field names" in prompt
+    assert "Role: bounded Semantic Architect proposal writer" in prompt
+    assert "Provider proposes semantics" in prompt
     assert "Runtime canonicalizes" in prompt
     assert "Validators verify" in prompt
     assert "Root decides" in prompt
@@ -1983,7 +2085,7 @@ def test_full_wow_v1_1_manual_live_architect_output_shape_contract_is_copy_only_
     assert "bounded semantic proposal formatter" not in prompt
     assert "copy bot" not in prompt
     assert "JSON skeleton:" in prompt
-    assert prompt.rfind("JSON skeleton:") > prompt.rfind("OUTPUT_SHAPE_CONTRACT:")
+    assert prompt.index("OUTPUT_SHAPE_CONTRACT:") < prompt.index("JSON skeleton:")
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_uses_whitelist_only_contract() -> None:
@@ -1996,25 +2098,25 @@ def test_full_wow_v1_1_manual_live_architect_prompt_uses_whitelist_only_contract
     assert "Do not rename top-level keys." in prompt
     assert "Fill only the existing semantic reasoning fields." in prompt
     assert "JSON skeleton:" in prompt
-    assert prompt.rfind("JSON skeleton:") > prompt.rfind("OUTPUT_SHAPE_CONTRACT:")
+    assert prompt.index("OUTPUT_SHAPE_CONTRACT:") < prompt.index("JSON skeleton:")
 
 
-def test_full_wow_v1_1_manual_live_architect_prompt_skeleton_is_last_major_section() -> None:
+def test_full_wow_v1_1_manual_live_architect_prompt_uses_004_skeleton_before_input_order() -> None:
     prompt = _manual_live_architect_prompt()
 
-    input_index = prompt.index("FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:")
     contract_index = prompt.index("OUTPUT_SHAPE_CONTRACT:")
     skeleton_index = prompt.index("JSON skeleton:")
+    input_index = prompt.index("FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:")
 
-    assert input_index < contract_index < skeleton_index
+    assert contract_index < skeleton_index < input_index
     assert prompt.rfind("JSON skeleton:") == skeleton_index
-    assert "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:" not in prompt[skeleton_index:]
     assert "OUTPUT_SHAPE_CONTRACT:" not in prompt[skeleton_index:]
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_does_not_prime_plan_graph_keys() -> None:
     prompt = _manual_live_architect_prompt()
     forbidden_prompt_terms = (
+        "bsep_packet_id",
         "nodes",
         "edges",
         "executor_assignments",
@@ -2025,6 +2127,8 @@ def test_full_wow_v1_1_manual_live_architect_prompt_does_not_prime_plan_graph_ke
         "confidence",
         "needs_review",
         "root_review_required",
+        "root_review_needed",
+        "forbidden_outputs",
     )
 
     for term in forbidden_prompt_terms:

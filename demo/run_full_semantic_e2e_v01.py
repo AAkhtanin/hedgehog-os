@@ -2050,9 +2050,56 @@ def _build_full_wow_v1_1_live_architect_context_from_bsep(
     }
 
 
+def _build_full_wow_v1_1_live_architect_provider_prompt_input(
+    architect_context: Mapping[str, Any],
+) -> dict[str, Any]:
+    context_vector_ids = tuple(architect_context.get("selected_vector_ids") or ())
+    selected_vector_ids = tuple(
+        vector_id
+        for vector_id in context_vector_ids
+        if vector_id == "supplier_payment_wow_v1_1_summary"
+    )
+    if (
+        not selected_vector_ids
+        and architect_context.get("supplier_payment_wow_v1_1_summary_present") is True
+    ):
+        selected_vector_ids = ("supplier_payment_wow_v1_1_summary",)
+    return {
+        "context_type": "bounded_supplier_payment_architect_semantic_input",
+        "bounded_evidence_context_present": (
+            architect_context.get("bounded_semantic_evidence_packet_present") is True
+        ),
+        "bounded_evidence_validation_accepted": (
+            architect_context.get("bsep_validation_accepted") is True
+        ),
+        "selected_vector_ids": selected_vector_ids,
+        "semantic_business_facts": (
+            "Supplier Payment WOW v1.1 summary is bounded context.",
+            "Supplier B remains blocked.",
+            "Shipment release remains held.",
+            "Receipt remains evidence only.",
+        ),
+        "semantic_boundaries": (
+            "Provider output is not truth.",
+            "Provider output is not authority.",
+            "Provider output is not action permission.",
+            "Provider output is not FinalOutput.",
+            "Runtime builds local plan artifacts after validation.",
+            "Root remains final authority.",
+        ),
+        "raw_user_text_included": False,
+        "raw_provider_text_included": False,
+        "raw_cross_role_text_included": False,
+        "raw_secret_values_included": False,
+    }
+
+
 def _build_full_wow_v1_1_live_architect_prompt(
     architect_context: Mapping[str, Any],
 ) -> str:
+    provider_input = _build_full_wow_v1_1_live_architect_provider_prompt_input(
+        architect_context,
+    )
     skeleton = {
         "action_permission_claimed": False,
         "authority_boundary_reasoning": [
@@ -2161,9 +2208,8 @@ def _build_full_wow_v1_1_live_architect_prompt(
                 "Do not include secrets, connector credentials, raw bank tokens, "
                 "or raw payment identifiers."
             ),
-            "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:",
-            json.dumps(dict(architect_context), indent=2, sort_keys=True),
             "OUTPUT_SHAPE_CONTRACT:",
+            "Return JSON only matching the skeleton field names.",
             "Use the provided JSON object as the exact output shape.",
             "Keep exactly the same top-level keys.",
             "Do not add top-level keys.",
@@ -2177,6 +2223,8 @@ def _build_full_wow_v1_1_live_architect_prompt(
             "Root decides.",
             "JSON skeleton:",
             json.dumps(skeleton, indent=2, sort_keys=True),
+            "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:",
+            json.dumps(provider_input, indent=2, sort_keys=True),
         )
     )
 

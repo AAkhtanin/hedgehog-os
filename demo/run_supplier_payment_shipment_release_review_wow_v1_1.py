@@ -13,8 +13,8 @@ from hedgehog.context_packets import (
 
 TITLE = "Supplier Payment / Shipment Release Review LIVE-DUAL-ROLE WOW v1.1"
 SHORT_NAME = "HEDGEHOG OS — ZERO-TRUST SUPPLIER PAYMENT WOW v1.1"
-RUN_ID = "supplier_payment_shipment_release_review_wow_v1_1_slice_b_run"
-SLICE_ID = "supplier_payment_shipment_release_review_wow_v1_1_slice_b"
+RUN_ID = "supplier_payment_shipment_release_review_wow_v1_1_slice_c_run"
+SLICE_ID = "supplier_payment_shipment_release_review_wow_v1_1_slice_c"
 
 PHASE_IDS = (
     "phase_1_first_run_not_ready",
@@ -109,24 +109,24 @@ def build_inline_fixtures() -> dict[str, Any]:
 
 def build_phase_machine() -> tuple[dict[str, Any], ...]:
     labels = (
-        "First run resolves to Root NOT_READY in Slice B",
-        "Corrected evidence and DRS writeback are future context-only steps",
-        "Second run may become Supplier A human-approval-ready only",
+        "First run resolves to Root NOT_READY from Slice B",
+        "Corrected evidence and DRS writeback execute as context only",
+        "Second run uses DRS as context and reruns validation",
         "Scoped human approval may later allow Root-created mock packet",
         "Mock bank sandbox may later execute Supplier A only",
     )
     phases: list[dict[str, Any]] = []
     for index, phase_id in enumerate(PHASE_IDS, start=1):
-        executed = index == 1
+        executed = index <= 3
         phases.append(
             {
                 "phase_id": phase_id,
                 "phase_index": index,
-                "status": "EXECUTED_IN_SLICE_B" if executed else "FUTURE_SLICE",
+                "status": "EXECUTED_IN_SLICE_C" if executed else "FUTURE_SLICE",
                 "execution_status": (
-                    "EXECUTED_IN_SLICE_B"
+                    "EXECUTED_IN_SLICE_C"
                     if executed
-                    else "NOT_EXECUTED_IN_SLICE_B"
+                    else "NOT_EXECUTED_IN_SLICE_C"
                 ),
                 "future_slice": None if executed else "FUTURE_SLICE",
                 "label": labels[index - 1],
@@ -161,7 +161,16 @@ def _zero_action_counters() -> dict[str, int]:
         "drs_prior_success_found_count": 1,
         "drs_prior_success_used_as_context_count": 1,
         "drs_prior_success_used_as_permission_count": 0,
-        "drs_writeback_count": 0,
+        "drs_writeback_count": 3,
+        "corrected_evidence_drs_writeback_count": 3,
+        "corrected_evidence_is_authority_count": 0,
+        "prior_root_final_mutated_count": 0,
+        "second_run_reuse_used_count": 1,
+        "reuse_authority_claimed_count": 0,
+        "changed_facts_rerun_validation_count": 1,
+        "ready_for_human_supplier_a_payment_approval_count": 1,
+        "shipment_release_still_held_count": 1,
+        "supplier_B_payment_blocked_count": 1,
         "candidate_vectors_generated_count": 7,
         "candidate_vector_is_truth_count": 0,
         "candidate_vector_is_authority_count": 0,
@@ -228,7 +237,7 @@ def _non_claim_counters() -> dict[str, int]:
 def _future_section(section_id: str, *, note: str, future_slice: str) -> dict[str, Any]:
     return {
         "section_id": section_id,
-        "status": "NOT_EXECUTED_IN_SLICE_B",
+        "status": "NOT_EXECUTED_IN_SLICE_C",
         "future_slice": future_slice,
         "note": note,
     }
@@ -574,7 +583,114 @@ def build_first_run_root_final() -> dict[str, Any]:
     }
 
 
-def build_slice_b_machine_summary() -> dict[str, Any]:
+def build_corrected_evidence_context() -> dict[str, Any]:
+    return {
+        "section_id": "corrected_evidence",
+        "status": "EXECUTED_IN_SLICE_C",
+        "corrected_supplier_A_evidence": {
+            "insurance_certificate": "valid",
+            "warehouse_water_filter": "+2 arrived",
+            "warehouse_shortage_cleared": True,
+            "supplier_A_stock_confirmed": True,
+            "payment_form_status": "shape_valid",
+            "payment_permission_status": "not_granted",
+            "bank_policy": "human_approval_required",
+        },
+        "supplier_B_blockers": {
+            "invoice_B": "mismatch_with_PO",
+            "supplier_B_delivery": "delayed",
+            "legal_status": "needs_review",
+            "payment_form_status": "prepared_but_blocked",
+            "payment_permission_status": "not_granted",
+        },
+        "drs_writeback_traces": (
+            "corrected_insurance_trace",
+            "corrected_inventory_trace",
+            "supplier_B_still_blocked_trace",
+        ),
+        "corrected_insurance_trace": {
+            "trace_id": "corrected_insurance_trace",
+            "evidence_only": True,
+            "authority_claimed": False,
+        },
+        "corrected_inventory_trace": {
+            "trace_id": "corrected_inventory_trace",
+            "evidence_only": True,
+            "authority_claimed": False,
+        },
+        "supplier_B_still_blocked_trace": {
+            "trace_id": "supplier_B_still_blocked_trace",
+            "evidence_only": True,
+            "authority_claimed": False,
+        },
+        "corrected_evidence_drs_writeback_count": 3,
+        "corrected_evidence_is_authority_count": 0,
+        "prior_root_final_mutated": False,
+        "prior_root_final_mutated_count": 0,
+        "action_commit_packet_created": False,
+        "payment_executed": False,
+        "shipment_release_executed": False,
+        "receipt_created": False,
+    }
+
+
+def build_second_run_root_outcome(
+    corrected_evidence: dict[str, Any],
+    drs_context: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        "section_id": "second_run",
+        "status": "EXECUTED_IN_SLICE_C",
+        "input": "Check SH-2042 again after document and inventory correction.",
+        "drs_prior_trace_found": drs_context["drs_candidates_found"],
+        "reuse_allowed_as_context": True,
+        "reuse_is_authority": False,
+        "second_run_reuse_used_count": 1,
+        "reuse_authority_claimed_count": 0,
+        "changed_facts_rerun_validation": True,
+        "changed_facts_rerun_validation_count": 1,
+        "corrected_facts_used": (
+            "insurance_certificate valid",
+            "warehouse water_filter +2 arrived",
+            "Supplier A stock confirmed",
+        ),
+        "supplier_A_status": {
+            "ready_for_human_reviewed_payment_approval_only": True,
+            "payment_form_status": corrected_evidence["corrected_supplier_A_evidence"][
+                "payment_form_status"
+            ],
+            "payment_permission_status": corrected_evidence[
+                "corrected_supplier_A_evidence"
+            ]["payment_permission_status"],
+            "bank_policy": corrected_evidence["corrected_supplier_A_evidence"][
+                "bank_policy"
+            ],
+        },
+        "supplier_B_status": {
+            "SUPPLIER_B_REMAINS_BLOCKED": True,
+            "invoice_B": "mismatch_with_PO",
+            "supplier_B_delivery": "delayed",
+            "legal_status": "needs_review",
+            "included_in_future_action_scope": False,
+        },
+        "root_outcome": (
+            "READY_FOR_HUMAN_REVIEWED_SUPPLIER_A_PAYMENT_APPROVAL",
+            "SHIPMENT_RELEASE_STILL_HELD_OR_SEPARATE_APPROVAL_REQUIRED",
+            "SUPPLIER_B_REMAINS_BLOCKED",
+        ),
+        "ready_for_human_supplier_a_payment_approval_count": 1,
+        "shipment_release_still_held_count": 1,
+        "supplier_B_payment_blocked_count": 1,
+        "payment_executed_count": 0,
+        "action_commit_packet_created_count": 0,
+        "mock_bank_receipt_created_count": 0,
+        "shipment_released_count": 0,
+        "mock_shipment_released_count": 0,
+        "Root remains final authority": True,
+    }
+
+
+def build_slice_c_machine_summary() -> dict[str, Any]:
     fixtures = build_inline_fixtures()
     phase_results = build_phase_machine()
     proposal = build_deterministic_orchestrator_proposal()
@@ -590,6 +706,17 @@ def build_slice_b_machine_summary() -> dict[str, Any]:
     candidate_vectors = build_candidate_vectors()
     avf_ranking = score_candidate_vectors_with_avf(candidate_vectors)
     root_first_run = build_first_run_root_final()
+    corrected_evidence = build_corrected_evidence_context()
+    drs_context = {
+        **drs_context,
+        "drs_writeback_executed": True,
+        "drs_writeback_count": corrected_evidence[
+            "corrected_evidence_drs_writeback_count"
+        ],
+        "drs_writeback_is_authority": False,
+        "drs_writeback_is_action_permission": False,
+    }
+    second_run = build_second_run_root_outcome(corrected_evidence, drs_context)
     return {
         "run_id": RUN_ID,
         "title": TITLE,
@@ -602,32 +729,13 @@ def build_slice_b_machine_summary() -> dict[str, Any]:
         "lane": "deterministic_ci",
         "phase_results": phase_results,
         "first_run": root_first_run,
-        "corrected_evidence": {
-            **_future_section(
-                "corrected_evidence",
-                future_slice="Slice C",
-                note="future context-only DRS writeback; not executed in Slice B",
-            ),
-            "corrected_evidence_drs_writeback_count": 0,
-            "drs_writeback_count": 0,
-            "prior_root_final_mutated": False,
-        },
-        "second_run": {
-            **_future_section(
-                "second_run",
-                future_slice="Slice C",
-                note="future Supplier A approval-ready review only; no action",
-            ),
-            "ready_for_human_supplier_a_payment_approval_count": 0,
-            "supplier_B_remains_blocked": True,
-            "shipment_release_remains_held": True,
-            "payment_executed_count": 0,
-        },
+        "corrected_evidence": corrected_evidence,
+        "second_run": second_run,
         "human_approval": {
             **_future_section(
                 "human_approval",
                 future_slice="Slice D",
-                note="future scoped approval evidence; no approval captured in Slice B",
+                note="future scoped approval evidence; no approval captured in Slice C",
             ),
             "human_approval_present_count": 0,
         },
@@ -635,7 +743,7 @@ def build_slice_b_machine_summary() -> dict[str, Any]:
             **_future_section(
                 "mock_action_commit_packet",
                 future_slice="Slice D",
-                note="no ActionCommitPacket created in Slice B",
+                note="no ActionCommitPacket created in Slice C",
             ),
             "action_commit_packet_created_count": 0,
         },
@@ -643,7 +751,7 @@ def build_slice_b_machine_summary() -> dict[str, Any]:
             **_future_section(
                 "mock_execution",
                 future_slice="Slice D",
-                note="no MockBankSandbox execution in Slice B",
+                note="no MockBankSandbox execution in Slice C",
             ),
             "mock_payment_executed_count": 0,
         },
@@ -651,7 +759,7 @@ def build_slice_b_machine_summary() -> dict[str, Any]:
             **_future_section(
                 "receipt",
                 future_slice="Slice D",
-                note="no receipt emitted in Slice B",
+                note="no receipt emitted in Slice C",
             ),
             "mock_bank_receipt_created_count": 0,
             "receipt_created": False,
@@ -725,11 +833,11 @@ def build_slice_b_machine_summary() -> dict[str, Any]:
 
 
 def build_initial_machine_summary() -> dict[str, Any]:
-    return build_slice_b_machine_summary()
+    return build_slice_c_machine_summary()
 
 
 def run_supplier_payment_shipment_release_review_wow_v1_1() -> dict[str, Any]:
-    return build_slice_b_machine_summary()
+    return build_slice_c_machine_summary()
 
 
 def _bool_text(value: bool) -> str:
@@ -745,11 +853,13 @@ def render_report(summary: dict[str, Any]) -> str:
     drs = summary["drs_context"]
     avf = summary["avf_ranking"]
     first_run = summary["first_run"]
+    corrected = summary["corrected_evidence"]
+    second_run = summary["second_run"]
     lines = [
         summary["title"],
         summary["short_name"],
         "",
-        "Slice B scope: deterministic BSEP, DRS context, CandidateVector, AVF, and first-run Root review.",
+        "Slice C scope: corrected evidence, context-only DRS writeback, second-run reuse, and Root review.",
         f"slice_id: {summary['slice_id']}",
         f"slice_status: {summary['slice_status']}",
         f"lane: {summary['lane']}",
@@ -856,15 +966,38 @@ def render_report(summary: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
+            "Corrected evidence summary:",
+            f"- corrected_evidence: {corrected['status']}",
+            f"- corrected_insurance_trace: {corrected['corrected_insurance_trace']['trace_id']}",
+            f"- corrected_inventory_trace: {corrected['corrected_inventory_trace']['trace_id']}",
+            f"- supplier_B_still_blocked_trace: {corrected['supplier_B_still_blocked_trace']['trace_id']}",
+            f"- corrected_evidence_drs_writeback_count: {corrected['corrected_evidence_drs_writeback_count']}",
+            f"- corrected_evidence_is_authority_count: {corrected['corrected_evidence_is_authority_count']}",
+            f"- prior_root_final_mutated_count: {corrected['prior_root_final_mutated_count']}",
+            "",
+            "Second run DRS context-only reuse:",
+            f"- second_run_reuse_used_count: {second_run['second_run_reuse_used_count']}",
+            f"- reuse_is_authority: {_bool_text(second_run['reuse_is_authority'])}",
+            f"- changed_facts_rerun_validation: {_bool_text(second_run['changed_facts_rerun_validation'])}",
+            f"- changed_facts_rerun_validation_count: {second_run['changed_facts_rerun_validation_count']}",
+            "",
+            "Second run Root outcome:",
+        ]
+    )
+    lines.extend(f"- {outcome}" for outcome in second_run["root_outcome"])
+    lines.extend(
+        [
+            f"- ready_for_human_supplier_a_payment_approval_count: {second_run['ready_for_human_supplier_a_payment_approval_count']}",
+            f"- shipment_release_still_held_count: {second_run['shipment_release_still_held_count']}",
+            f"- supplier_B_payment_blocked_count: {second_run['supplier_B_payment_blocked_count']}",
+            "",
             "Future sections not executed:",
-            f"- corrected_evidence: {summary['corrected_evidence']['status']}",
-            f"- second_run: {summary['second_run']['status']}",
             f"- human_approval: {summary['human_approval']['status']}",
             f"- mock_action_commit_packet: {summary['mock_action_commit_packet']['status']}",
             f"- mock_execution: {summary['mock_execution']['status']}",
             f"- receipt: {summary['receipt']['status']}",
             "",
-            "No action execution in Slice B:",
+            "No action execution in Slice C:",
             f"- action_commit_packet_created_count: {action_counters['action_commit_packet_created_count']}",
             f"- mock_payment_executed_count: {action_counters['mock_payment_executed_count']}",
             f"- payment_executed_count: {action_counters['payment_executed_count']}",

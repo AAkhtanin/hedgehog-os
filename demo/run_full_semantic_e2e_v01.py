@@ -219,6 +219,20 @@ ENV_FULL_E2E_FRACTAL_ORDER_FULFILLMENT_DAG = (
 )
 ENV_FULL_E2E_CONTEXT_PACKETS = "HEDGEHOG_FULL_E2E_CONTEXT_PACKETS"
 ENV_FULL_WOW_V1_1_LIVE_GEMINI = "HEDGEHOG_FULL_WOW_V1_1_LIVE_GEMINI"
+ENV_FULL_WOW_V1_1_LIVE_GEMINI_ARTIFACT_DIR = (
+    "HEDGEHOG_FULL_WOW_V1_1_LIVE_GEMINI_ARTIFACT_DIR"
+)
+FULL_WOW_V1_1_LIVE_GEMINI_DEFAULT_ARTIFACT_ROOT = (
+    ".tmp/full_wow_v1_1_manual_live_gemini"
+)
+MANUAL_LIVE_ARTIFACT_SECRET_MARKERS = (
+    "FAKE-IBAN-AL-0000-2042-SECRET",
+    "sandbox_token_abc",
+    "beneficiary_iban",
+    "bank_token",
+    "GEMINI_API_KEY",
+    "GOOGLE_API_KEY",
+)
 
 GEMINI_ORCHESTRATOR_COUNTER_KEYS = (
     "bounded_gemini_orchestrator_role_started_count",
@@ -1590,6 +1604,230 @@ def _build_manual_live_lane_skipped_summary(
     }
 
 
+def _manual_live_artifact_safe_text(value: str) -> str:
+    safe = value
+    for marker in MANUAL_LIVE_ARTIFACT_SECRET_MARKERS:
+        safe = safe.replace(marker, "[REDACTED]")
+    return safe
+
+
+def _manual_live_artifact_safe_value(value: Any) -> Any:
+    if isinstance(value, str):
+        return _manual_live_artifact_safe_text(value)
+    if isinstance(value, Mapping):
+        return {
+            str(key): _manual_live_artifact_safe_value(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [_manual_live_artifact_safe_value(item) for item in value]
+    return value
+
+
+def _manual_live_artifact_path(env: Mapping[str, str]) -> tuple[Path, str]:
+    configured_dir = env.get(ENV_FULL_WOW_V1_1_LIVE_GEMINI_ARTIFACT_DIR, "").strip()
+    if configured_dir:
+        path = Path(configured_dir)
+        path.mkdir(parents=True, exist_ok=True)
+        return path, path.name or "manual_live_gemini_artifacts"
+    root = Path(FULL_WOW_V1_1_LIVE_GEMINI_DEFAULT_ARTIFACT_ROOT)
+    root.mkdir(parents=True, exist_ok=True)
+    path = Path(tempfile.mkdtemp(prefix="run_", dir=str(root)))
+    return path, path.name
+
+
+def _current_git_head_short() -> str:
+    head_path = Path(".git/HEAD")
+    try:
+        head = head_path.read_text(encoding="utf-8").strip()
+        if head.startswith("ref: "):
+            ref_path = Path(".git") / head.removeprefix("ref: ").strip()
+            ref = ref_path.read_text(encoding="utf-8").strip()
+            return ref[:7] if ref else "unknown"
+        return head[:7] if head else "unknown"
+    except OSError:
+        return "unknown"
+
+
+def _manual_live_artifact_recorder(env: Mapping[str, str]) -> dict[str, Any]:
+    artifact_dir, run_id = _manual_live_artifact_path(env)
+    recorder: dict[str, Any] = {
+        "artifact_dir": artifact_dir,
+        "run_id": run_id,
+        "events": [],
+        "files_written": [],
+        "secret_scan": {},
+    }
+    for event in (
+        f"RUN_ID {run_id}",
+        f"BASE_HEAD {_current_git_head_short()}",
+        f"MODEL {_orchestrator_model_name(env)}",
+        "CONTRACT_MODE semantic_reasoning_adapter",
+        "SCHEMA_MODE json_mime_only",
+        "BSEP_GATE 1",
+        (
+            "TARGET Full WOW v1.1 real Gemini Orchestrator + BSEP + "
+            "real Gemini Architect"
+        ),
+    ):
+        _manual_live_artifact_event(recorder, event)
+    return recorder
+
+
+def _manual_live_artifact_event(
+    recorder: dict[str, Any] | None,
+    event: str,
+) -> None:
+    if recorder is not None:
+        recorder.setdefault("events", []).append(_manual_live_artifact_safe_text(event))
+
+
+def _manual_live_artifact_write_text(
+    recorder: dict[str, Any] | None,
+    filename: str,
+    content: str,
+) -> None:
+    if recorder is None:
+        return
+    path = Path(recorder["artifact_dir"]) / filename
+    path.write_text(_manual_live_artifact_safe_text(content), encoding="utf-8")
+    recorder.setdefault("files_written", []).append(filename)
+
+
+def _manual_live_artifact_write_json(
+    recorder: dict[str, Any] | None,
+    filename: str,
+    content: Any,
+) -> None:
+    if recorder is None:
+        return
+    path = Path(recorder["artifact_dir"]) / filename
+    safe_content = _manual_live_artifact_safe_value(content)
+    path.write_text(
+        json.dumps(safe_content, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    recorder.setdefault("files_written", []).append(filename)
+
+
+def _manual_live_artifact_secret_scan(
+    recorder: dict[str, Any] | None,
+) -> dict[str, Any]:
+    if recorder is None:
+        return {}
+    artifact_dir = Path(recorder["artifact_dir"])
+    combined = ""
+    for path in sorted(artifact_dir.iterdir()):
+        if not path.is_file() or path.name == "secret_scan.json":
+            continue
+        combined += path.read_text(encoding="utf-8", errors="replace")
+    scan = {
+        "api_key_value_logged": False,
+        "raw_bank_secret_logged": "FAKE-IBAN-AL-0000-2042-SECRET" in combined,
+        "raw_iban_logged": "beneficiary_iban" in combined,
+        "sandbox_token_logged": "sandbox_token_abc" in combined,
+    }
+    scan["secret_scan_passed"] = not any(scan.values())
+    return scan
+
+
+def _manual_live_artifact_finalize(
+    recorder: dict[str, Any] | None,
+    manual_live_lane: Mapping[str, Any],
+) -> None:
+    if recorder is None:
+        return
+    validation = manual_live_lane.get("validation") or {}
+    counters = manual_live_lane.get("counters") or {}
+    final_status = (
+        "PASS"
+        if manual_live_lane.get("stage_status") == "PASS"
+        and validation.get("accepted") is True
+        else "FAIL_CLOSED"
+    )
+    summary = {
+        "run_id": recorder["run_id"],
+        "final_status": final_status,
+        "stage_status": manual_live_lane.get("stage_status"),
+        "stage_mode": manual_live_lane.get("stage_mode"),
+        "failure_reasons": tuple(validation.get("reasons") or ()),
+        "manual_live_role_sequence": tuple(
+            manual_live_lane.get("manual_live_role_sequence") or ()
+        ),
+        "artifact_dir": str(recorder["artifact_dir"]),
+        "files_written": tuple(recorder.get("files_written") or ()),
+        "counters": counters,
+        "orchestrator_provider_called": counters.get(
+            "orchestrator_provider_call_count",
+            0,
+        ),
+        "architect_provider_called": counters.get("architect_provider_call_count", 0),
+        "bsep_created_count": counters.get("bsep_created_count", 0),
+        "bsep_validated_count": counters.get("bsep_validated_count", 0),
+        "provider_output_used_as_truth_count": counters.get(
+            "provider_output_used_as_truth_count",
+            0,
+        ),
+        "provider_output_used_as_authority_count": counters.get(
+            "provider_output_used_as_authority_count",
+            0,
+        ),
+        "provider_output_used_as_action_permission_count": counters.get(
+            "provider_output_used_as_action_permission_count",
+            0,
+        ),
+        "provider_output_used_as_final_output_count": counters.get(
+            "provider_output_used_as_final_output_count",
+            0,
+        ),
+        "live_gemini_created_action_commit_packet_count": counters.get(
+            "live_gemini_created_action_commit_packet_count",
+            0,
+        ),
+        "live_gemini_created_receipt_count": counters.get(
+            "live_gemini_created_receipt_count",
+            0,
+        ),
+        "live_gemini_executed_mock_payment_count": counters.get(
+            "live_gemini_executed_mock_payment_count",
+            0,
+        ),
+        "live_gemini_executed_real_payment_count": counters.get(
+            "live_gemini_executed_real_payment_count",
+            0,
+        ),
+        "live_gemini_released_shipment_count": counters.get(
+            "live_gemini_released_shipment_count",
+            0,
+        ),
+        "real_world_effects_count": counters.get("real_world_effects_count", 0),
+    }
+    _manual_live_artifact_event(recorder, "SUMMARY_WRITTEN")
+    _manual_live_artifact_write_json(recorder, "summary.json", summary)
+    _manual_live_artifact_write_json(
+        recorder,
+        "console_safe_summary.json",
+        {
+            "run_id": recorder["run_id"],
+            "final_status": final_status,
+            "stage_status": manual_live_lane.get("stage_status"),
+            "failure_reasons": tuple(validation.get("reasons") or ()),
+            "manual_live_role_sequence": tuple(
+                manual_live_lane.get("manual_live_role_sequence") or ()
+            ),
+            "counters": counters,
+        },
+    )
+    _manual_live_artifact_write_text(
+        recorder,
+        "summary.log",
+        "\n".join(str(event) for event in recorder.get("events", ())) + "\n",
+    )
+    scan = _manual_live_artifact_secret_scan(recorder)
+    recorder["secret_scan"] = scan
+    _manual_live_artifact_write_json(recorder, "secret_scan.json", scan)
+
+
 def _build_full_wow_v1_1_live_orchestrator_prompt(
     dirty_request: Mapping[str, Any],
     wow_summary: Mapping[str, Any],
@@ -1630,13 +1868,84 @@ def _build_full_wow_v1_1_live_orchestrator_prompt(
             "shipment_release",
         ),
     }
+    skeleton = {
+        "action_permission_claimed": False,
+        "authority_boundary_reasoning": [
+            "Explain that provider output is advisory only and Root remains final authority.",
+        ],
+        "authority_claimed": False,
+        "bypass_root_claimed": False,
+        "confidence": 0.0,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "final_output_claimed": False,
+        "guard_reasoning": [
+            "Explain why each required guard remains required.",
+        ],
+        "needs_review": True,
+        "plan_graph_claimed": False,
+        "proposal_id": "orchestrator-semantic-proposal-full-wow-v1-1-001",
+        "reason": "concise semantic route proposal",
+        "rejected_route_reasoning": [
+            (
+                "Explain why direct action, payment execution, receipt creation, "
+                "and shipment release routes are rejected."
+            ),
+        ],
+        "required_guards": [
+            "semantic_reasoning_adapter validation",
+            "runtime canonicalization",
+            "BSEP validation",
+            "Root final authority",
+        ],
+        "root_review_required": True,
+        "route_reasoning": [
+            "Explain why the suggested route stays inside bounded Root review.",
+        ],
+        "selected_vector_ids": [
+            "supplier_payment_wow_v1_1_summary",
+        ],
+        "semantic_observations": [
+            "Describe bounded observed business facts without claiming truth.",
+        ],
+        "suggested_route": "full_wow_v1_1_root_review",
+        "truth_claimed": False,
+        "uncertainty_notes": [
+            "Unknown or missing evidence remains uncertainty for Root review.",
+        ],
+        "vector_reasoning": [
+            "Explain why selected vectors remain context only.",
+        ],
+    }
     return "\n".join(
         (
-            "Return JSON only for one bounded Orchestrator semantic reasoning proposal.",
-            "Do not include secrets, connector credentials, raw bank tokens, or raw payment identifiers.",
-            "Provider output is an untrusted semantic proposal; Root remains final authority.",
+            "Role: bounded Gemini Orchestrator semantic proposal.",
+            "Return JSON only matching the skeleton field names.",
+            "Reasoning is structured explanation, not hidden chain-of-thought.",
+            "Use concise but meaningful reasons.",
+            "Do not output empty strings.",
+            "Do not output empty objects.",
+            "Do not invent evidence.",
+            "Unknown/missing evidence should remain uncertainty.",
+            "Do not include structured_orchestrator_rationale directly.",
+            "The runtime will build canonical structured rationale locally.",
+            "The runtime will build BSEP locally after validation.",
+            "Provider output is advisory only.",
+            "No action permission, no connector command, no FinalOutput, no ActionCommitPacket.",
+            "Gemini proposes, Root disposes.",
+            "Provider proposes semantics.",
+            "Runtime canonicalizes.",
+            "Validators verify.",
+            "Root decides.",
+            "Root remains final authority.",
+            (
+                "Do not include secrets, connector credentials, raw bank tokens, "
+                "or raw payment identifiers."
+            ),
             "FULL_WOW_V1_1_LIVE_ORCHESTRATOR_INPUT_JSON:",
             json.dumps(safe_context, indent=2, sort_keys=True),
+            "JSON skeleton:",
+            json.dumps(skeleton, indent=2, sort_keys=True),
         )
     )
 
@@ -1726,7 +2035,7 @@ def _build_full_wow_v1_1_live_architect_prompt(
         (
             "Return JSON only for one bounded Architect semantic reasoning proposal.",
             "Do not include secrets, connector credentials, raw bank tokens, or raw payment identifiers.",
-            "Do not emit PlanGraph nodes directly; runtime canonicalization will build safe local shape.",
+            "Do not return PlanGraph nodes directly; runtime canonicalization will build safe local shape.",
             "Provider output is not authority and must return to Root.",
             "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:",
             json.dumps(dict(architect_context), indent=2, sort_keys=True),
@@ -1740,23 +2049,21 @@ def _manual_live_provider_payload(
     prompt: str,
     env: Mapping[str, str],
     provider: ProviderCallable | None,
-) -> tuple[dict[str, Any], bool]:
+) -> tuple[str, bool]:
     call = provider
     if role == "orchestrator":
         call = call or _call_gemini_orchestrator_provider
         model = _orchestrator_model_name(env)
-        parser = _parse_gemini_orchestrator_proposal
     else:
         call = call or _call_gemini_architect_provider
         model = _architect_model_name(env)
-        parser = _parse_gemini_architect_proposal
     raw_response = call(
         prompt,
         model,
         provider_adapter._timeout_seconds(env),
         env,
     )
-    return parser(raw_response), provider is None
+    return str(raw_response), provider is None
 
 
 def _build_manual_live_lane_bsep(
@@ -1931,26 +2238,108 @@ def _run_manual_live_gemini_lane(
     counters["manual_live_gemini_lane_enabled_count"] = 1
     network_calls = 0
     manual_live_role_sequence: list[str] = []
+    artifact_recorder = _manual_live_artifact_recorder(env)
     try:
         orchestrator_prompt = _build_full_wow_v1_1_live_orchestrator_prompt(
             dirty_request,
             wow_summary,
         )
-        orchestrator_payload, orchestrator_real_network = _manual_live_provider_payload(
-            role="orchestrator",
-            prompt=orchestrator_prompt,
-            env=env,
-            provider=orchestrator_provider,
+        _manual_live_artifact_write_json(
+            artifact_recorder,
+            "orchestrator_provider_context.json",
+            {
+                "role": "orchestrator",
+                "model": _orchestrator_model_name(env),
+                "contract_mode": "semantic_reasoning_adapter",
+                "schema_mode": "json_mime_only",
+                "bsep_gate": True,
+                "target": (
+                    "Full WOW v1.1 real Gemini Orchestrator + BSEP + "
+                    "real Gemini Architect"
+                ),
+                "supplier_payment_wow_v1_1_summary_present": bool(wow_summary),
+                "supplier_B_remains_blocked": wow_summary.get(
+                    "supplier_B_remains_blocked"
+                ),
+                "shipment_release_remains_held": wow_summary.get(
+                    "shipment_release_remains_held"
+                ),
+                "receipt_remains_evidence_only": wow_summary.get(
+                    "receipt_remains_evidence_only"
+                ),
+                "raw_user_text_included": False,
+                "raw_bank_secrets_included": False,
+                "raw_api_tokens_included": False,
+            },
+        )
+        _manual_live_artifact_write_text(
+            artifact_recorder,
+            "orchestrator_prompt.txt",
+            orchestrator_prompt,
+        )
+        _manual_live_artifact_event(
+            artifact_recorder,
+            "REAL_PROVIDER_CALL_ENTER role=orchestrator",
+        )
+        orchestrator_raw_response, orchestrator_real_network = (
+            _manual_live_provider_payload(
+                role="orchestrator",
+                prompt=orchestrator_prompt,
+                env=env,
+                provider=orchestrator_provider,
+            )
+        )
+        _manual_live_artifact_event(
+            artifact_recorder,
+            f"REAL_PROVIDER_CALL_RETURN role=orchestrator raw_chars={len(orchestrator_raw_response)}",
+        )
+        _manual_live_artifact_write_text(
+            artifact_recorder,
+            "orchestrator_provider_raw_response.txt",
+            orchestrator_raw_response,
         )
         counters["orchestrator_provider_call_count"] = 1
         counters["live_model_call_count"] += 1
         counters["gemini_called_count"] += 1
         network_calls += int(orchestrator_real_network)
         manual_live_role_sequence.append("orchestrator_provider_called")
+        try:
+            orchestrator_payload = _parse_gemini_orchestrator_proposal(
+                orchestrator_raw_response
+            )
+        except ValueError as exc:
+            _manual_live_artifact_write_json(
+                artifact_recorder,
+                "orchestrator_validation.json",
+                {
+                    "accepted": False,
+                    "errors": (str(exc),),
+                    "parsed_json_candidate": False,
+                    "semantic_reasoning_adapter_used": False,
+                    "runtime_canonicalization_used": False,
+                },
+            )
+            raise
+        _manual_live_artifact_write_json(
+            artifact_recorder,
+            "orchestrator_provider_extracted_json_candidate.json",
+            orchestrator_payload,
+        )
         orchestrator_errors = (
             semantic_reasoning_adapter.validate_orchestrator_semantic_reasoning_proposal(
                 orchestrator_payload
             )
+        )
+        _manual_live_artifact_write_json(
+            artifact_recorder,
+            "orchestrator_validation.json",
+            {
+                "accepted": not orchestrator_errors,
+                "errors": tuple(orchestrator_errors),
+                "parsed_json_candidate": True,
+                "semantic_reasoning_adapter_used": True,
+                "runtime_canonicalization_used": not orchestrator_errors,
+            },
         )
         if orchestrator_errors:
             raise ValueError(
@@ -1982,10 +2371,22 @@ def _run_manual_live_gemini_lane(
         )
         counters["bsep_created_count"] = 1
         manual_live_role_sequence.append("bsep_built")
+        _manual_live_artifact_event(artifact_recorder, "BSEP_BUILT")
+        _manual_live_artifact_write_json(
+            artifact_recorder,
+            "bsep_packet.json",
+            bsep,
+        )
         bsep_validation = validate_bounded_semantic_evidence_packet(bsep)
         counters["bsep_validated_count"] = int(bsep_validation.get("accepted") is True)
         counters["network_used_count"] = network_calls
         manual_live_role_sequence.append("bsep_validated")
+        _manual_live_artifact_event(artifact_recorder, "BSEP_VALIDATED")
+        _manual_live_artifact_write_json(
+            artifact_recorder,
+            "bsep_validation.json",
+            bsep_validation,
+        )
         if bsep_validation.get("accepted") is not True:
             counters["manual_live_fail_closed_before_architect_on_invalid_bsep_count"] = 1
             manual_live_lane = {
@@ -2037,7 +2438,9 @@ def _run_manual_live_gemini_lane(
                 "counters": counters,
                 "validation": bsep_validation,
             }
-            return _finalize_manual_live_lane(manual_live_lane)
+            finalized = _finalize_manual_live_lane(manual_live_lane)
+            _manual_live_artifact_finalize(artifact_recorder, finalized)
+            return finalized
 
         counters["manual_live_bsep_built_before_architect_count"] = 1
         architect_context = _build_full_wow_v1_1_live_architect_context_from_bsep(
@@ -2050,6 +2453,16 @@ def _run_manual_live_gemini_lane(
         architect_prompt = _build_full_wow_v1_1_live_architect_prompt(
             architect_context,
         )
+        _manual_live_artifact_write_json(
+            artifact_recorder,
+            "architect_provider_context.json",
+            architect_context,
+        )
+        _manual_live_artifact_write_text(
+            artifact_recorder,
+            "architect_prompt.txt",
+            architect_prompt,
+        )
         counters["manual_live_architect_received_bsep_context_count"] = int(
             architect_context.get("bounded_semantic_evidence_packet_present") is True
             and architect_context.get("bsep_validation_accepted") is True
@@ -2061,11 +2474,24 @@ def _run_manual_live_gemini_lane(
             architect_context.get("raw_provider_text_included") is not False
         )
         manual_live_role_sequence.append("architect_prompt_built_from_bsep")
-        architect_payload, architect_real_network = _manual_live_provider_payload(
+        _manual_live_artifact_event(
+            artifact_recorder,
+            "REAL_PROVIDER_CALL_ENTER role=architect",
+        )
+        architect_raw_response, architect_real_network = _manual_live_provider_payload(
             role="architect",
             prompt=architect_prompt,
             env=env,
             provider=architect_provider,
+        )
+        _manual_live_artifact_event(
+            artifact_recorder,
+            f"REAL_PROVIDER_CALL_RETURN role=architect raw_chars={len(architect_raw_response)}",
+        )
+        _manual_live_artifact_write_text(
+            artifact_recorder,
+            "architect_provider_raw_response.txt",
+            architect_raw_response,
         )
         counters["architect_provider_call_count"] = 1
         counters["live_model_call_count"] += 1
@@ -2073,10 +2499,41 @@ def _run_manual_live_gemini_lane(
         network_calls += int(architect_real_network)
         counters["network_used_count"] = network_calls
         manual_live_role_sequence.append("architect_provider_called")
+        try:
+            architect_payload = _parse_gemini_architect_proposal(architect_raw_response)
+        except ValueError as exc:
+            _manual_live_artifact_write_json(
+                artifact_recorder,
+                "architect_validation.json",
+                {
+                    "accepted": False,
+                    "errors": (str(exc),),
+                    "parsed_json_candidate": False,
+                    "semantic_reasoning_adapter_used": False,
+                    "runtime_canonicalization_used": False,
+                },
+            )
+            raise
+        _manual_live_artifact_write_json(
+            artifact_recorder,
+            "architect_provider_extracted_json_candidate.json",
+            architect_payload,
+        )
         architect_errors = (
             semantic_reasoning_adapter.validate_architect_semantic_reasoning_proposal(
                 architect_payload
             )
+        )
+        _manual_live_artifact_write_json(
+            artifact_recorder,
+            "architect_validation.json",
+            {
+                "accepted": not architect_errors,
+                "errors": tuple(architect_errors),
+                "parsed_json_candidate": True,
+                "semantic_reasoning_adapter_used": True,
+                "runtime_canonicalization_used": not architect_errors,
+            },
         )
         if architect_errors:
             raise ValueError(
@@ -2187,7 +2644,9 @@ def _run_manual_live_gemini_lane(
             "counters": counters,
             "validation": {"accepted": False, "reasons": (reason,)},
         }
-    return _finalize_manual_live_lane(manual_live_lane)
+    finalized = _finalize_manual_live_lane(manual_live_lane)
+    _manual_live_artifact_finalize(artifact_recorder, finalized)
+    return finalized
 
 
 def _apply_manual_live_gemini_lane_counters(
@@ -4567,6 +5026,8 @@ def _call_gemini_architect_provider(
     try:
         client = genai.Client(api_key=api_key)
         response = None
+        # Legacy non-WOW Architect provider path. The Full WOW v1.1 manual
+        # Orchestrator lane remains json_mime_only and does not use this schema.
         for schema_key in ("response_json_schema", "response_schema", None):
             try:
                 response = client.models.generate_content(

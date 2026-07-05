@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import inspect
 import json
+import re
 from typing import Any, Mapping
 
 import demo.run_live_provider_adapter_response_capture_v01 as provider_adapter
@@ -497,9 +498,9 @@ def _manual_live_provider_returning(raw_text, marker, captured=None):
     return provider
 
 
-def _run_manual_live_gemini_fake_result(captured_architect=None):
+def _run_manual_live_gemini_fake_result(captured_architect=None, env_overrides=None):
     return runner.run_full_semantic_e2e(
-        env=_manual_live_env(),
+        env=_manual_live_env(**(env_overrides or {})),
         orchestrator_provider=_manual_live_provider_returning(
             json.dumps(_valid_manual_live_orchestrator_payload()),
             "FULL_WOW_V1_1_LIVE_ORCHESTRATOR_INPUT_JSON",
@@ -510,6 +511,26 @@ def _run_manual_live_gemini_fake_result(captured_architect=None):
             captured_architect,
         ),
     )
+
+
+def _manual_live_orchestrator_prompt():
+    result = runner.run_full_semantic_e2e(env={})
+    return runner._build_full_wow_v1_1_live_orchestrator_prompt(
+        runner._dirty_business_request(),
+        result["supplier_payment_wow_v1_1_summary"],
+    )
+
+
+def _artifact_json(path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _artifact_texts(path):
+    return {
+        item.name: item.read_text(encoding="utf-8")
+        for item in path.iterdir()
+        if item.is_file()
+    }
 
 
 def _scenario_statuses(result):
@@ -1718,6 +1739,267 @@ def test_build_manual_live_lane_bsep_does_not_accept_architect_semantics() -> No
     assert tuple(signature.parameters) == ("orchestrator_semantics", "wow_summary")
     assert validation["accepted"] is True
     assert bsep["packet_type"] == "BoundedSemanticEvidencePacket"
+
+
+def test_full_wow_v1_1_manual_live_orchestrator_prompt_uses_004_json_skeleton_not_sdk_schema() -> None:
+    prompt = _manual_live_orchestrator_prompt()
+
+    assert "JSON skeleton:" in prompt
+    assert "Return JSON only matching the skeleton field names" in prompt
+    assert "Do not include structured_orchestrator_rationale directly" in prompt
+    assert "The runtime will build canonical structured rationale locally" in prompt
+    assert "The runtime will build BSEP locally after validation" in prompt
+    assert "REQUIRED_OUTPUT_JSON_SCHEMA" not in prompt
+    assert "response_schema" not in prompt
+    assert "SDK schema" not in prompt
+
+
+def test_full_wow_v1_1_manual_live_orchestrator_lane_does_not_hide_response_schema_literals() -> None:
+    source = inspect.getsource(runner)
+    split_literal_pattern = re.compile(
+        r'"(?:response_|SDK |REQUIRED_OUTPUT_)"\s*\+\s*"(?:schema|JSON_SCHEMA)"'
+    )
+    orchestrator_prompt_source = inspect.getsource(
+        runner._build_full_wow_v1_1_live_orchestrator_prompt
+    )
+    manual_lane_source = inspect.getsource(runner._run_manual_live_gemini_lane)
+
+    assert split_literal_pattern.search(source) is None
+    assert "response_schema" not in orchestrator_prompt_source
+    assert "response_schema" not in manual_lane_source
+    assert "_gemini_architect_response_schema" in source
+    assert "response_schema" in source
+
+
+def test_full_wow_v1_1_manual_live_orchestrator_prompt_contains_semantic_adapter_skeleton_fields() -> None:
+    prompt = _manual_live_orchestrator_prompt()
+    required_fields = (
+        "proposal_id",
+        "suggested_route",
+        "selected_vector_ids",
+        "required_guards",
+        "reason",
+        "confidence",
+        "needs_review",
+        "uncertainty_notes",
+        "root_review_required",
+        "truth_claimed",
+        "authority_claimed",
+        "action_permission_claimed",
+        "final_output_claimed",
+        "connector_command_claimed",
+        "drs_write_claimed",
+        "plan_graph_claimed",
+        "bypass_root_claimed",
+        "semantic_observations",
+        "route_reasoning",
+        "rejected_route_reasoning",
+        "guard_reasoning",
+        "vector_reasoning",
+        "authority_boundary_reasoning",
+    )
+
+    for field in required_fields:
+        assert field in prompt
+
+
+def test_full_wow_v1_1_manual_live_orchestrator_prompt_does_not_request_internal_runtime_objects() -> None:
+    prompt = _manual_live_orchestrator_prompt()
+    forbidden_requests = (
+        "emit " + "BoundedSemanticEvidencePacket",
+        "emit " + "ContextPacket",
+        "emit " + "structured_orchestrator_rationale",
+        "emit " + "PlanGraph",
+        "emit " + "ActionCommitPacket",
+        "emit " + "FinalOutput",
+        "emit " + "receipt",
+    )
+
+    for marker in forbidden_requests:
+        assert marker not in prompt
+
+
+def test_full_wow_v1_1_manual_live_orchestrator_prompt_matches_004_operator_rules() -> None:
+    prompt = _manual_live_orchestrator_prompt()
+
+    assert "Provider output is advisory only" in prompt
+    assert "Gemini proposes, Root disposes" in prompt
+    assert "Root remains final authority" in prompt
+    assert "Provider proposes semantics" in prompt
+    assert "Runtime canonicalizes" in prompt
+    assert "Validators verify" in prompt
+    assert "Root decides" in prompt
+    for marker in (
+        '"action_permission_claimed": false',
+        '"authority_claimed": false',
+        '"bypass_root_claimed": false',
+        '"connector_command_claimed": false',
+        '"drs_write_claimed": false',
+        '"final_output_claimed": false',
+        '"plan_graph_claimed": false',
+        '"truth_claimed": false',
+    ):
+        assert marker in prompt
+
+
+def test_full_wow_v1_1_manual_live_gemini_artifact_pack_created_on_orchestrator_fail_closed(
+    tmp_path,
+) -> None:
+    architect_called: list[bool] = []
+
+    def architect_provider(prompt, model_name, timeout_seconds, env):
+        architect_called.append(True)
+        return json.dumps(_valid_manual_live_architect_payload())
+
+    result = runner.run_full_semantic_e2e(
+        env=_manual_live_env(
+            **{
+                runner.ENV_FULL_WOW_V1_1_LIVE_GEMINI_ARTIFACT_DIR: str(tmp_path),
+            }
+        ),
+        orchestrator_provider=_manual_live_provider_returning(
+            json.dumps({"wrong_contract": True}),
+            "FULL_WOW_V1_1_LIVE_ORCHESTRATOR_INPUT_JSON",
+        ),
+        architect_provider=architect_provider,
+    )
+
+    assert result["final_status"] == "FAIL_CLOSED"
+    assert architect_called == []
+    assert result["counters"]["architect_provider_call_count"] == 0
+    for filename in (
+        "summary.log",
+        "summary.json",
+        "console_safe_summary.json",
+        "orchestrator_prompt.txt",
+        "orchestrator_provider_context.json",
+        "orchestrator_provider_raw_response.txt",
+        "orchestrator_provider_extracted_json_candidate.json",
+        "orchestrator_validation.json",
+        "secret_scan.json",
+    ):
+        assert (tmp_path / filename).exists(), filename
+    for filename in (
+        "bsep_packet.json",
+        "bsep_validation.json",
+        "architect_provider_context.json",
+        "architect_prompt.txt",
+        "architect_provider_raw_response.txt",
+        "architect_validation.json",
+    ):
+        assert not (tmp_path / filename).exists(), filename
+
+    summary = _artifact_json(tmp_path / "summary.json")
+    validation = _artifact_json(tmp_path / "orchestrator_validation.json")
+    secret_scan = _artifact_json(tmp_path / "secret_scan.json")
+    assert summary["final_status"] == "FAIL_CLOSED"
+    assert summary["architect_provider_called"] == 0
+    assert summary["bsep_created_count"] == 0
+    assert "manual_live_orchestrator_validation_failed" in ",".join(
+        summary["failure_reasons"]
+    )
+    assert validation["accepted"] is False
+    assert validation["parsed_json_candidate"] is True
+    assert secret_scan["secret_scan_passed"] is True
+
+
+def test_full_wow_v1_1_manual_live_gemini_artifact_pack_created_on_monkeypatched_pass(
+    tmp_path,
+) -> None:
+    captured_architect: dict[str, Any] = {}
+
+    result = _run_manual_live_gemini_fake_result(
+        captured_architect,
+        {
+            runner.ENV_FULL_WOW_V1_1_LIVE_GEMINI_ARTIFACT_DIR: str(tmp_path),
+        },
+    )
+
+    assert result["final_status"] == "PASS"
+    for filename in (
+        "summary.log",
+        "summary.json",
+        "console_safe_summary.json",
+        "orchestrator_prompt.txt",
+        "orchestrator_provider_context.json",
+        "orchestrator_provider_raw_response.txt",
+        "orchestrator_provider_extracted_json_candidate.json",
+        "orchestrator_validation.json",
+        "bsep_packet.json",
+        "bsep_validation.json",
+        "architect_provider_context.json",
+        "architect_prompt.txt",
+        "architect_provider_raw_response.txt",
+        "architect_provider_extracted_json_candidate.json",
+        "architect_validation.json",
+        "secret_scan.json",
+    ):
+        assert (tmp_path / filename).exists(), filename
+
+    summary = _artifact_json(tmp_path / "summary.json")
+    bsep_validation = _artifact_json(tmp_path / "bsep_validation.json")
+    architect_context = _artifact_json(tmp_path / "architect_provider_context.json")
+    secret_scan = _artifact_json(tmp_path / "secret_scan.json")
+    event_log = (tmp_path / "summary.log").read_text(encoding="utf-8")
+
+    assert summary["final_status"] == "PASS"
+    assert summary["orchestrator_provider_called"] == 1
+    assert summary["architect_provider_called"] == 1
+    assert bsep_validation["accepted"] is True
+    assert architect_context["bounded_semantic_evidence_packet_present"] is True
+    assert architect_context["bsep_packet_id"]
+    assert architect_context["bsep_validation_accepted"] is True
+    assert secret_scan["secret_scan_passed"] is True
+    assert "REAL_PROVIDER_CALL_ENTER role=orchestrator" in event_log
+    assert "REAL_PROVIDER_CALL_RETURN role=orchestrator raw_chars=" in event_log
+    assert "BSEP_BUILT" in event_log
+    assert "BSEP_VALIDATED" in event_log
+    assert "REAL_PROVIDER_CALL_ENTER role=architect" in event_log
+    assert "REAL_PROVIDER_CALL_RETURN role=architect raw_chars=" in event_log
+    assert "SUMMARY_WRITTEN" in event_log
+
+
+def test_full_wow_v1_1_manual_live_gemini_artifacts_do_not_log_secrets(
+    tmp_path,
+) -> None:
+    result = _run_manual_live_gemini_fake_result(
+        env_overrides={
+            runner.ENV_FULL_WOW_V1_1_LIVE_GEMINI_ARTIFACT_DIR: str(tmp_path),
+        },
+    )
+    texts = _artifact_texts(tmp_path)
+    forbidden = (
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "FAKE-IBAN-AL-0000-2042-SECRET",
+        "sandbox_token_abc",
+        "beneficiary_iban",
+        "bank_token",
+    )
+
+    assert result["final_status"] == "PASS"
+    for filename, text in texts.items():
+        for marker in forbidden:
+            assert marker not in text, f"{marker} leaked in {filename}"
+    assert _artifact_json(tmp_path / "secret_scan.json")["secret_scan_passed"] is True
+
+
+def test_default_deterministic_lane_does_not_create_live_artifacts(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    artifact_root = tmp_path / "full_wow_default_artifacts"
+    monkeypatch.setattr(
+        runner,
+        "FULL_WOW_V1_1_LIVE_GEMINI_DEFAULT_ARTIFACT_ROOT",
+        str(artifact_root),
+    )
+
+    result = runner.run_full_semantic_e2e(env={})
+
+    assert result["final_status"] == "PASS"
+    assert result["counters"]["manual_live_gemini_lane_enabled_count"] == 0
+    assert not artifact_root.exists()
 
 
 def test_full_wow_v1_1_manual_live_gemini_manual_real_test_is_skipped_without_env(

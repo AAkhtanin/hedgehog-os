@@ -164,6 +164,30 @@ Scenario coherence:
 - receipt remains evidence only.
 - Root alone creates FinalOutput.
 
+### full_wow_v1_1_manual_live_gemini_bsep_topology_repair
+
+The manual live Gemini lane scaffold for the SH-2042 WOW path now follows the
+accepted Orchestrator -> BSEP -> Architect order inside the existing Full E2E
+spine.
+
+Scenario topology:
+
+- Manual live Gemini lane is env-gated.
+- Default deterministic lane remains no Gemini/network/provider.
+- This is monkeypatched/no-network topology proof, not final real Gemini lane
+  closure.
+- Orchestrator provider output is validated and canonicalized first.
+- Runtime builds BSEP from Orchestrator-derived bounded semantics and the
+  observed WOW summary.
+- Runtime validates BSEP before Architect provider call.
+- Architect receives BSEP-derived bounded context.
+- Invalid BSEP blocks Architect provider call.
+- Architect does not receive raw Orchestrator provider text, raw Orchestrator
+  prompt, raw user request text, or raw secret markers.
+- Manual lane creates no ActionCommitPacket, receipt, mock payment, real
+  payment, or shipment release.
+- Root remains final authority.
+
 ## What The Demo Must Prove
 
 - Root authority.

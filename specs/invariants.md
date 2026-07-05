@@ -149,6 +149,23 @@ Full Semantic E2E live evidence + WOW v1.1 coherence invariant examples:
 - Root alone creates FinalOutput.
 - invoked_count and represented_count must remain honest.
 
+Full WOW v1.1 manual live Gemini BSEP topology invariant examples:
+
+- BSEP must be built after Orchestrator validation.
+- BSEP must be built after Orchestrator semantic canonicalization.
+- BSEP must be validated before Architect provider call.
+- Architect must consume BSEP-derived bounded context.
+- Invalid BSEP blocks Architect provider call.
+- BSEP builder must not depend on Architect semantics.
+- Architect must not receive raw Orchestrator provider text.
+- Architect must not receive raw Orchestrator prompt text.
+- Architect must not receive raw user request text.
+- Architect must not receive raw secret markers.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Manual live lane must not create ActionCommitPacket, receipt, payment, or
+  shipment release.
+- Root remains final authority.
+
 DRS registry invariant:
 
 - DRS is a registry/resolver/index, not a raw memory dump.

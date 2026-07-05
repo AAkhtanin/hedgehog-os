@@ -7,6 +7,24 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01.log`
+  - Audit status: PASS.
+  - Audits Full WOW v1.1 manual live Gemini lane BSEP topology repair.
+  - Runtime repair commit: `920e5b3`; preflight commit: `b58226a`; previous live evidence coherence commit: `f119d7c`.
+  - Existing Full E2E runner remains the spine; no new bridge runner was created.
+  - Manual live Gemini lane is env-gated, and default deterministic mode remains no Gemini/network/provider.
+  - This is monkeypatched/no-network topology proof, not final real Gemini lane closure.
+  - BSEP is built after Orchestrator validation and semantic canonicalization.
+  - BSEP is validated before Architect provider call.
+  - Architect receives BSEP-derived bounded context.
+  - Invalid BSEP blocks Architect provider call.
+  - The BSEP builder no longer accepts Architect semantics.
+  - Raw Orchestrator/provider/user/secret text is not passed to Architect.
+  - Manual lane creates no ActionCommitPacket, no receipt, no mock payment, no real payment, and no shipment release.
+  - Root remains final authority.
+  - Counters preserve `real_world_effects_count: 0`.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01.log`
   - Audit status: PASS.
   - Audits Full Semantic E2E live evidence + Supplier Payment WOW v1.1 coherence.

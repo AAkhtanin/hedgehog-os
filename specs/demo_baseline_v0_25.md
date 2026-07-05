@@ -137,6 +137,34 @@ Status:
 - Root alone creates FinalOutput.
 - no real payment, no real shipment release, and no real connector/API effects.
 
+## Applied Full WOW Manual Live Lane Topology Checkpoint
+
+Full WOW v1.1 manual live Gemini lane now follows the accepted BSEP bridge
+topology inside the existing Full Semantic E2E spine.
+
+Status:
+
+- PASS through audit
+  `docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01.log`.
+- Runtime repair commit: `920e5b3`.
+- Existing Full E2E runner remains the spine:
+  `demo/run_full_semantic_e2e_v01.py`.
+- No new bridge runner.
+- Manual live Gemini lane is env-gated.
+- Default deterministic lane remains no Gemini/network/provider.
+- This is monkeypatched/no-network topology proof, not final real Gemini lane
+  closure.
+- BSEP is built after Orchestrator validation and semantic canonicalization.
+- BSEP is validated before Architect provider call.
+- Architect receives BSEP-derived bounded context.
+- Invalid BSEP blocks Architect provider call.
+- BSEP builder does not depend on Architect semantics.
+- Raw Orchestrator/provider/user/secret text does not reach Architect.
+- Manual lane creates no ActionCommitPacket, receipt, mock payment, real
+  payment, or shipment release.
+- Root remains final authority.
+- no real-world effects.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

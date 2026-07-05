@@ -1,0 +1,204 @@
+audit_id: auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01
+audit_status: PASS
+audited_layer: Full WOW v1.1 manual live Gemini lane BSEP topology repair
+base_commit: 920e5b3
+preflight_commit: b58226a
+previous_live_evidence_coherence_commit: f119d7c
+runtime_repair_commit: 920e5b3
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_gemini_lane_executed: false
+monkeypatched_no_network_topology_proof: true
+
+audited_files:
+- docs/full_wow_v1_1_manual_live_gemini_lane_preflight_v01.md
+- demo/run_full_semantic_e2e_v01.py
+- tests/test_full_semantic_e2e_v01_runner.py
+- demo/run_live_unknown_request_dual_rich_context_v01.py
+- tests/test_live_unknown_request_dual_rich_context_v01.py
+
+validation_commands:
+
+command: python3 -m py_compile demo/run_full_semantic_e2e_v01.py demo/run_live_unknown_request_dual_rich_context_v01.py demo/run_supplier_payment_shipment_release_review_wow_v1_1.py demo/run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough.py
+result: PASS
+
+command: python3 -m demo.run_full_semantic_e2e_v01
+result: PASS
+observed_tail:
+- Post V&V checks and does not finalize
+- GT/LGT does not finalize
+- Root remains final authority
+- FINAL STATUS: PASS
+
+command: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_full_semantic_e2e_v01_runner.py tests/test_supplier_payment_live_evidence_integration_v02_runner.py tests/test_supplier_payment_shipment_release_review_wow_v1_1_runner.py tests/test_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough_runner.py tests/test_live_unknown_request_dual_rich_context_v01.py tests/test_semantic_reasoning_adapter_core.py tests/test_context_packets_core.py tests/test_structured_rationale_core.py
+result: PASS
+observed: 437 passed, 2 warnings
+warning_note: warnings are jsonschema RefResolver deprecation warnings from hedgehog/post_vv.py
+
+command: python3 -m json.tool specs/machine_manifest_v0_25.json >/dev/null
+result: PASS
+
+command: git status --short --untracked-files=all
+result: PASS
+observed: clean before docs sync
+
+command: git diff --stat
+result: PASS
+observed: no diff before docs sync
+
+command: git diff --check
+result: PASS
+observed: no whitespace errors before docs sync
+
+command: git diff --name-only
+result: PASS
+observed: no changed files before docs sync
+
+command: rg -n "manual_live_bsep_built_before_architect_count|manual_live_architect_received_bsep_context_count|manual_live_architect_called_before_bsep_validation_count|manual_live_fail_closed_before_architect_on_invalid_bsep_count|architect_prompt_built_from_bsep|bounded_semantic_evidence_packet_present|bsep_validation_accepted|BSEP built after Orchestrator validation|BSEP validated before Architect|Architect received BSEP-derived bounded context" demo/run_full_semantic_e2e_v01.py tests/test_full_semantic_e2e_v01_runner.py
+result: PASS
+observed: expected topology counter, context, and report markers found
+
+command: rg -n "_build_manual_live_lane_bsep\\([^\\n]*architect_semantics|architect_semantics.*_build_manual_live_lane_bsep|architect_provider_called.*bsep_built|architect_payload.*bsep_validation" demo/run_full_semantic_e2e_v01.py tests/test_full_semantic_e2e_v01_runner.py || true
+result: PASS
+observed: no negative topology matches
+
+command: rg -n "production ready|public WOW ready|public auditor ready|real payment executed|real shipment released|Gemini creates ActionCommitPacket|receipt proves truth|receipt grants permission|receipt creates FinalOutput|shipment released$|live_gemini_created_action_commit_packet_count: [1-9]|live_gemini_created_receipt_count: [1-9]|live_gemini_executed_real_payment_count: [1-9]|real_world_effects_count: [1-9]" demo/run_full_semantic_e2e_v01.py tests/test_full_semantic_e2e_v01_runner.py README.md AGENTS.md specs docs/audit_reports/README.md || true
+result: PASS
+observed: no forbidden matches before docs sync
+
+post_docs_sync_validation:
+
+command: python3 -m json.tool specs/machine_manifest_v0_25.json >/dev/null
+result: PASS
+
+command: python3 -m py_compile demo/run_full_semantic_e2e_v01.py demo/run_live_unknown_request_dual_rich_context_v01.py demo/run_supplier_payment_shipment_release_review_wow_v1_1.py demo/run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough.py
+result: PASS
+
+command: python3 -m demo.run_full_semantic_e2e_v01
+result: PASS
+observed: FINAL STATUS: PASS
+
+command: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_full_semantic_e2e_v01_runner.py tests/test_supplier_payment_live_evidence_integration_v02_runner.py tests/test_supplier_payment_shipment_release_review_wow_v1_1_runner.py tests/test_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough_runner.py tests/test_live_unknown_request_dual_rich_context_v01.py tests/test_semantic_reasoning_adapter_core.py tests/test_context_packets_core.py tests/test_structured_rationale_core.py
+result: PASS
+observed: 437 passed, 2 warnings
+
+command: git status --short --untracked-files=all
+result: PASS
+observed_docs_only_changes:
+- AGENTS.md
+- README.md
+- docs/audit_reports/README.md
+- docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01.log
+- specs/demo_baseline_v0_25.md
+- specs/demo_scenario.md
+- specs/human_passport_v0_25.md
+- specs/invariants.md
+- specs/machine_manifest_v0_25.json
+
+command: git diff --stat
+result: PASS
+observed: tracked docs/spec/manifest changes only; new audit log is untracked until commit
+
+command: git diff --check
+result: PASS
+observed: no whitespace errors
+
+command: git diff --name-only
+result: PASS
+observed_tracked_files:
+- AGENTS.md
+- README.md
+- docs/audit_reports/README.md
+- specs/demo_baseline_v0_25.md
+- specs/demo_scenario.md
+- specs/human_passport_v0_25.md
+- specs/invariants.md
+- specs/machine_manifest_v0_25.json
+
+command: rg -n "manual_live_bsep_built_before_architect_count|manual_live_architect_received_bsep_context_count|manual_live_architect_called_before_bsep_validation_count|manual_live_fail_closed_before_architect_on_invalid_bsep_count|architect_prompt_built_from_bsep|bounded_semantic_evidence_packet_present|bsep_validation_accepted|BSEP built after Orchestrator validation|BSEP validated before Architect|Architect received BSEP-derived bounded context" demo/run_full_semantic_e2e_v01.py tests/test_full_semantic_e2e_v01_runner.py
+result: PASS
+
+command: rg -n "_build_manual_live_lane_bsep\\([^\\n]*architect_semantics|architect_semantics.*_build_manual_live_lane_bsep|architect_provider_called.*bsep_built|architect_payload.*bsep_validation" demo/run_full_semantic_e2e_v01.py tests/test_full_semantic_e2e_v01_runner.py || true
+result: PASS
+observed: no negative topology matches
+
+command: rg -n "production ready|public WOW ready|public auditor ready|real payment executed|real shipment released|Gemini creates ActionCommitPacket|receipt proves truth|receipt grants permission|receipt creates FinalOutput|shipment released$|live_gemini_created_action_commit_packet_count: [1-9]|live_gemini_created_receipt_count: [1-9]|live_gemini_executed_real_payment_count: [1-9]|real_world_effects_count: [1-9]" demo/run_full_semantic_e2e_v01.py tests/test_full_semantic_e2e_v01_runner.py README.md AGENTS.md specs docs/audit_reports/README.md || true
+result: PASS
+observed: no forbidden matches after docs sync
+
+audit_findings:
+- finding_existing_full_e2e_runner_remains_spine: PASS
+- finding_no_new_bridge_runner: PASS
+- finding_default_deterministic_lane_preserved: PASS
+- finding_manual_live_lane_env_gated: PASS
+- finding_bsep_built_after_orchestrator_validation: PASS
+- finding_bsep_validated_before_architect_provider_call: PASS
+- finding_architect_receives_bsep_derived_bounded_context: PASS
+- finding_invalid_bsep_blocks_architect_provider_call: PASS
+- finding_bsep_builder_no_longer_accepts_architect_semantics: PASS
+- finding_no_raw_orchestrator_provider_text_to_architect: PASS
+- finding_no_raw_orchestrator_prompt_to_architect: PASS
+- finding_no_raw_user_request_text_to_architect: PASS
+- finding_no_raw_secret_markers_to_architect: PASS
+- finding_provider_output_not_truth: PASS
+- finding_provider_output_not_authority: PASS
+- finding_provider_output_not_action_permission: PASS
+- finding_provider_output_not_finaloutput: PASS
+- finding_live_gemini_created_no_action_commit_packet: PASS
+- finding_live_gemini_created_no_receipt: PASS
+- finding_live_gemini_executed_no_mock_payment: PASS
+- finding_live_gemini_executed_no_real_payment: PASS
+- finding_live_gemini_released_no_shipment: PASS
+- finding_root_remains_final_authority: PASS
+- finding_no_real_world_effects: PASS
+- finding_no_production_claim: PASS
+- finding_no_public_auditor_claim: PASS
+- finding_real_gemini_lane_not_executed_in_this_audit: PASS
+
+counter_summary:
+- manual_live_bsep_built_before_architect_count: 1
+- manual_live_architect_received_bsep_context_count: 1
+- manual_live_architect_called_before_bsep_validation_count: 0
+- manual_live_fail_closed_before_architect_on_invalid_bsep_count: 1
+- manual_live_raw_cross_role_text_to_architect_count: 0
+- manual_live_raw_provider_text_to_architect_count: 0
+- orchestrator_provider_call_count: 1 in monkeypatched manual path
+- architect_provider_call_count: 1 in monkeypatched PASS path
+- architect_provider_call_count: 0 in invalid-BSEP fail-closed path
+- live_model_call_count: 2 in monkeypatched PASS path
+- live_model_call_count: 1 in invalid-BSEP fail-closed path
+- semantic_reasoning_adapter_used_count: >= 1
+- runtime_canonicalization_count: >= 1
+- bsep_created_count: >= 1
+- bsep_validated_count: >= 1
+- live_gemini_created_action_commit_packet_count: 0
+- live_gemini_created_receipt_count: 0
+- live_gemini_executed_mock_payment_count: 0
+- live_gemini_executed_real_payment_count: 0
+- live_gemini_released_shipment_count: 0
+- real_payment_executed_count: 0
+- shipment_released_count: 0
+- real_world_effects_count: 0
+
+topology_summary:
+- Existing Full E2E runner remains the spine.
+- No new bridge runner was created.
+- Manual live Gemini lane is env-gated.
+- Default deterministic lane remains no Gemini/network/provider.
+- BSEP is built after Orchestrator provider call, Orchestrator validation, and semantic canonicalization.
+- BSEP is validated before Architect provider call.
+- Architect receives BSEP-derived bounded context with bsep_packet_id, bsep_validation_accepted, and bounded_semantic_evidence_packet_present.
+- Invalid BSEP blocks Architect provider call fail-closed.
+- _build_manual_live_lane_bsep no longer accepts architect_semantics.
+- Architect prompt/context does not receive raw Orchestrator provider text, raw Orchestrator prompt, raw user request text, or raw secret markers.
+- Manual lane creates no ActionCommitPacket, no receipt, no mock payment, no real payment, and no shipment release.
+- Root remains final authority.
+
+non_claims:
+- This is monkeypatched/no-network topology proof, not final real Gemini lane closure.
+- This is not production.
+- This is not public auditor final package.
+- No real payment.
+- No real shipment release.
+- No bank, supplier, or warehouse API effects.
+- No real-world effects.

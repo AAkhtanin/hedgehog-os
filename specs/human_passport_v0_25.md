@@ -281,6 +281,41 @@ Authority invariants preserved:
 - Provider output is not action permission or FinalOutput.
 - Root alone creates FinalOutput.
 
+### Full WOW v1.1 Manual Live Gemini BSEP Topology Repair
+
+Full WOW v1.1 manual live Gemini lane topology is repaired at the BSEP bridge
+between Orchestrator and Architect.
+
+Checkpoint facts:
+
+- Audit:
+  `docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01.log`.
+- Runtime repair commit: `920e5b3`.
+- Existing Full E2E runner remains the spine.
+- No new bridge runner was created.
+- Manual live Gemini lane is env-gated.
+- Default deterministic lane remains no Gemini/network/provider.
+- This is monkeypatched/no-network topology proof, not final real Gemini lane
+  closure.
+- BSEP is built after Orchestrator validation and semantic canonicalization.
+- BSEP is validated before Architect provider call.
+- Architect receives BSEP-derived bounded context.
+- Invalid BSEP blocks Architect provider call.
+- The BSEP builder does not depend on Architect semantics.
+- Raw Orchestrator provider text, Orchestrator prompt text, user request text,
+  and secret markers do not reach Architect.
+- Manual lane creates no ActionCommitPacket, no receipt, no mock payment, no
+  real payment, and no shipment release.
+- Root remains final authority.
+- No real-world effects.
+
+Authority invariants preserved:
+
+- BSEP is the bounded evidence bridge from Orchestrator to Architect.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Architect receives bounded BSEP-derived context, not raw cross-role text.
+- Root alone creates FinalOutput.
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:

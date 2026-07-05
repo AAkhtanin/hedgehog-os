@@ -66,6 +66,31 @@ v0.25 also contains an L0 deterministic_reflex proof path. L0 exists only to pro
 
 Production runtime may later enable adaptive routing after tests prove each shortcut path is safe.
 
+## Applied Business WOW Checkpoint
+
+Supplier Payment / Shipment Release Review WOW v1.1 is a separate applied
+semantic business demonstration after BSEP, not a replacement for the original
+mock government certificate baseline.
+
+Status:
+
+- deterministic sandbox business WOW PASS through Slice E.
+- Audit: `docs/audit_reports/auditor_supplier_payment_shipment_release_review_wow_v1_1.log`.
+- Machine runner:
+  `demo/run_supplier_payment_shipment_release_review_wow_v1_1.py`.
+- Human walkthrough:
+  `demo/run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough.py`.
+- Supplier A scoped mock payment only.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt is evidence only.
+- no real payment, no real shipment release, and no real connector/API effects.
+
+This applied WOW proves that the Root-controlled path transfers to a business
+review domain while preserving authority boundaries. BSEP carries bounded
+semantic evidence, DRS is context-only, CandidateVector and AVF are advisory,
+human approval is scoped evidence, and Root remains final authority.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

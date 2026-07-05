@@ -92,6 +92,35 @@ Expected behavior:
 
 Direct reuse must never happen accidentally.
 
+### supplier_payment_shipment_release_review_wow_v1_1
+
+Supplier Payment / Shipment Release Review WOW v1.1 is an applied business
+scenario layered after the BSEP checkpoint. It does not replace the mock
+government certificate baseline.
+
+Scenario:
+
+- Shipment: `SH-2042`.
+- Supplier A: water_filter, `INV-2042`, scoped mock payment path after Root
+  and scoped human approval.
+- Supplier B: pump_valve, `INV-2043`, invoice mismatch and delivery delay.
+- First run Root outcome: `NOT_READY`.
+- Corrected evidence is written as context/evidence only.
+- Second run outcome: Supplier A is ready for human-reviewed payment approval
+  only; Supplier B remains blocked; shipment release remains held.
+- Root creates a mock-only scoped ActionCommitPacket for Supplier A only.
+- MockBankSandbox records a Supplier A-only mock bank receipt.
+- receipt is evidence only.
+
+Non-claims:
+
+- not production
+- not public auditor final package
+- no real payment
+- no real shipment release
+- no real bank/supplier/warehouse connector effects
+- optional live Gemini lane remains manual and was not enabled
+
 ## What The Demo Must Prove
 
 - Root authority.

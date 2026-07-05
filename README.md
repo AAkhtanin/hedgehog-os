@@ -35,6 +35,44 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
+Supplier Payment / Shipment Release Review WOW v1.1 — PASS.
+
+Checkpoint source:
+
+- Title: Supplier Payment / Shipment Release Review LIVE-DUAL-ROLE WOW v1.1.
+- Short name: HEDGEHOG OS — ZERO-TRUST SUPPLIER PAYMENT WOW v1.1.
+- Commit chain: `78fb37d` -> `06f4c55` -> `84d5c6d` -> `06744b2` -> `9ac174b` -> `f7ca348`.
+- Audit: `docs/audit_reports/auditor_supplier_payment_shipment_release_review_wow_v1_1.log`.
+- Machine runner:
+  `demo/run_supplier_payment_shipment_release_review_wow_v1_1.py`.
+- Human walkthrough:
+  `demo/run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough.py`.
+- Tests:
+  `tests/test_supplier_payment_shipment_release_review_wow_v1_1_runner.py` and
+  `tests/test_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough_runner.py`.
+- Deterministic lane: PASS.
+- Optional live Gemini lane remains manual and was not enabled; it is not a
+  core PASS dependency.
+- Supplier A scoped mock payment only.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt is evidence only.
+- No real payment, no real shipment release, and no real connector/API effects.
+- Root remains final authority.
+- This is not production.
+- This is not public auditor final package.
+
+This checkpoint is the current deterministic sandbox business WOW. It builds
+on the BSEP 004 live rich-context checkpoint and keeps the same authority
+formula:
+
+```text
+Provider proposes semantics.
+Runtime canonicalizes.
+Validators verify.
+Root decides.
+```
+
 BoundedSemanticEvidencePacket Real Gemini Slice D 004 — PASS.
 
 Checkpoint source:
@@ -266,7 +304,8 @@ See `docs/provider_contract_modes_v01.md`.
 
 Next roadmap:
 
-- Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
+- Supplier Payment Integration Runtime -> Full Semantic E2E v0.1.
+- Audit-approved optional live lane only if explicitly requested.
 - Replay/stability proof for a BSEP 004-style run.
 - Multi-domain live unknown proof.
 - Adversarial live proof.
@@ -3213,7 +3252,10 @@ Next engineering focus:
   `bounded_semantic_evidence_packet_created_count: 1`,
   `bounded_semantic_evidence_packet_validated_count: 1`, and
   `real_world_effects_count: 0`.
-- NEXT: Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
+- CLOSED: Supplier Payment / Shipment Release Review WOW v1.1 deterministic
+  sandbox business WOW PASS, audit
+  `auditor_supplier_payment_shipment_release_review_wow_v1_1`.
+- NEXT: Supplier Payment Integration Runtime -> Full Semantic E2E v0.1.
 - NEXT: Replay/stability proof for a BSEP 004-style run.
 - NEXT: Multi-domain live unknown proof and adversarial live proof.
 - LATER: DRS v0.2 expansion and AVF v0.2 expansion.

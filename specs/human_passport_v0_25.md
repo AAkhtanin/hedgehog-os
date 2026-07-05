@@ -170,6 +170,48 @@ Non-claims:
 - no real connector/payment/shipment/API
 - no NeedleFactory / Marennya / UP
 
+### Supplier Payment / Shipment Release Review WOW v1.1
+
+Supplier Payment / Shipment Release Review WOW v1.1 is CLOSED through Slice E
+as a deterministic sandbox business WOW.
+
+Checkpoint facts:
+
+- Audit: `docs/audit_reports/auditor_supplier_payment_shipment_release_review_wow_v1_1.log`.
+- Commit chain: `78fb37d` -> `06f4c55` -> `84d5c6d` -> `06744b2` -> `9ac174b` -> `f7ca348`.
+- Machine runner:
+  `demo/run_supplier_payment_shipment_release_review_wow_v1_1.py`.
+- Human walkthrough:
+  `demo/run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough.py`.
+- Supplier A scoped mock payment only.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt is evidence only.
+- Optional live Gemini lane remains manual and was not enabled.
+
+Authority invariants preserved:
+
+- Provider output is not truth.
+- Provider output is not authority.
+- BSEP is not truth.
+- BSEP is not authority.
+- DRS hit is not authority.
+- AVF score is not authority.
+- Human approval is scoped evidence, not broad authority.
+- Root-created mock ActionCommitPacket is scoped only.
+- Mock receipt is evidence, not truth/action permission/final output.
+- Mock payment receipt does not release shipment.
+- Root remains final authority.
+
+Non-claims:
+
+- not production
+- not public auditor final package
+- no real payment
+- no real shipment release
+- no real bank/supplier/warehouse connector effects
+- no real-world effects
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:
@@ -4033,7 +4075,9 @@ Current roadmap state:
 - CLOSED: Optional Live LLM Evidence Reader Smoke v0.1.
 - CLOSED: Live Provider Adapter / Response Capture v0.1.
 - CLOSED: BoundedSemanticEvidencePacket Real Gemini Slice D 004 PASS.
-- NEXT: Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
+- CLOSED: Supplier Payment / Shipment Release Review WOW v1.1 deterministic
+  sandbox business WOW PASS.
+- NEXT: Supplier Payment Integration Runtime -> Full Semantic E2E v0.1.
 - Supplier Payment remains the integration spine and business axis for later live evidence integration.
 - Public WOW remains later, after Full Semantic E2E and E2E hardening.
 - DRS poisoning resistance remains gated only if needed to protect or unblock real runtime.

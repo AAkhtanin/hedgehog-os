@@ -108,6 +108,20 @@ Executor / DAG ResultProposal boundary:
    - Every DRS retrieval requires TemporalQuery.
    - Retrieval must be explicit about as_of, range, freshness bias, and maximum age policy.
 
+Supplier Payment / Shipment Release Review WOW v1.1 invariant examples:
+
+- DRS hit is not payment permission.
+- AVF score is not payment permission.
+- Human approval is scoped evidence only.
+- Root-created mock ActionCommitPacket is scoped only.
+- Mock receipt is evidence only.
+- Mock payment receipt does not release shipment.
+- Supplier A approval does not authorize Supplier B.
+- Shipment release review is not shipment release.
+- Supplier B remains blocked unless a future Root-reviewed correction clears
+  its blockers.
+- Root remains final authority.
+
 DRS registry invariant:
 
 - DRS is a registry/resolver/index, not a raw memory dump.

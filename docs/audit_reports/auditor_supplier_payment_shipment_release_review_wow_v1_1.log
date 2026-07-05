@@ -1,0 +1,196 @@
+audit_id: auditor_supplier_payment_shipment_release_review_wow_v1_1
+audit_status: PASS
+audited_layer: Supplier Payment / Shipment Release Review LIVE-DUAL-ROLE WOW v1.1
+short_name: HEDGEHOG OS — ZERO-TRUST SUPPLIER PAYMENT WOW v1.1
+base_commit: f7ca348
+preflight_commit: 78fb37d
+slice_a_commit: 06f4c55
+slice_b_commit: 84d5c6d
+slice_c_commit: 06744b2
+slice_d_commit: 9ac174b
+slice_e_commit: f7ca348
+optional_live_gemini_lane_enabled: false
+optional_live_gemini_lane_required_for_core_pass: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+audited_files:
+- docs/supplier_payment_shipment_release_review_wow_v1_1_preflight.md
+- demo/run_supplier_payment_shipment_release_review_wow_v1_1.py
+- tests/test_supplier_payment_shipment_release_review_wow_v1_1_runner.py
+- demo/run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough.py
+- tests/test_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough_runner.py
+
+commands:
+- py_compile_machine_and_walkthrough:
+  command: python3 -m py_compile demo/run_supplier_payment_shipment_release_review_wow_v1_1.py demo/run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough.py
+  exit_code: 0
+  output: none
+- machine_runner:
+  command: python3 -m demo.run_supplier_payment_shipment_release_review_wow_v1_1
+  exit_code: 0
+  observed_markers:
+  - FINAL STATUS: PASS
+  - WOW ACCEPTED: false
+  - supplier_payment_shipment_release_review_wow_v1_1_slice_d
+  - BoundedSemanticEvidencePacket validation accepted
+  - Root Final: NOT_READY
+  - READY_FOR_HUMAN_REVIEWED_SUPPLIER_A_PAYMENT_APPROVAL
+  - SUPPLIER_B_REMAINS_BLOCKED
+  - SHIPMENT_RELEASE_STILL_HELD_OR_SEPARATE_APPROVAL_REQUIRED
+  - Root-created mock ActionCommitPacket
+  - MockBankSandbox / MockConnectorSandbox local fake adapter
+  - mock_bank_receipt
+- human_walkthrough_runner:
+  command: python3 -m demo.run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough
+  exit_code: 0
+  observed_markers:
+  - FINAL STATUS: PASS
+  - WOW ACCEPTED: false
+  - supplier_payment_shipment_release_review_wow_v1_1_slice_e_human_walkthrough
+  - MockBankSandbox / Supplier A-only fake bank adapter path
+  - Supplier B remains blocked
+  - shipment release remains held
+  - receipt is evidence only
+  - The business process is visible, but sovereignty never leaves Root.
+- focused_regression_and_core_contract_tests:
+  command: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_supplier_payment_shipment_release_review_wow_v1_1_runner.py tests/test_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough_runner.py tests/test_action_commit_packet_core.py tests/test_mock_connector_sandbox_core.py tests/test_context_packets_core.py tests/test_semantic_reasoning_adapter_core.py tests/test_live_unknown_request_dual_rich_context_v01.py tests/test_structured_rationale_core.py
+  exit_code: 0
+  result: 275 passed in 0.27s
+- git_status_before_docs_sync:
+  command: git status --short --untracked-files=all
+  exit_code: 0
+  output: clean
+- git_diff_stat_before_docs_sync:
+  command: git diff --stat
+  exit_code: 0
+  output: none
+- git_diff_check_before_docs_sync:
+  command: git diff --check
+  exit_code: 0
+  output: none
+- git_diff_name_only_before_docs_sync:
+  command: git diff --name-only
+  exit_code: 0
+  output: none
+- positive_runtime_grep:
+  command: requested positive runtime/test marker scan
+  exit_code: 0
+  result: required markers found
+- forbidden_runtime_grep:
+  command: requested forbidden runtime/test marker scan
+  exit_code: 0_with_expected_negative_assertion_match
+  result: no runtime/report overclaim found; one test-source negative assertion intentionally checks that the generic sandbox overclaim phrase is absent.
+
+full_suite_run: not_run_in_this_audit
+reason: focused WOW regression and core contract suite run only
+
+findings:
+finding_machine_runner_pass: PASS
+finding_human_walkthrough_pass: PASS
+finding_focused_tests_pass: PASS
+finding_deterministic_lane_pass: PASS
+finding_optional_live_gemini_lane_not_enabled: PASS
+finding_optional_live_gemini_lane_not_core_dependency: PASS
+finding_bsep_created_and_validated: PASS
+finding_drs_context_only: PASS
+finding_candidate_vectors_advisory_only: PASS
+finding_avf_advisory_only: PASS
+finding_first_run_root_not_ready: PASS
+finding_corrected_evidence_context_only: PASS
+finding_second_run_supplier_a_approval_ready_only: PASS
+finding_human_approval_scoped_supplier_a_only: PASS
+finding_root_created_mock_action_commit_packet: PASS
+finding_mock_bank_receipt_supplier_a_only: PASS
+finding_receipt_evidence_only: PASS
+finding_supplier_b_blocked: PASS
+finding_shipment_release_held: PASS
+finding_no_real_payment: PASS
+finding_no_real_shipment_release: PASS
+finding_no_real_bank_supplier_warehouse_api: PASS
+finding_no_real_world_effects: PASS
+finding_no_provider_authority: PASS
+finding_root_final_authority_preserved: PASS
+finding_no_production_claim: PASS
+finding_no_public_auditor_claim: PASS
+
+counter_summary:
+final_status: PASS
+wow_accepted: false
+wow_completion_claimed: false
+deterministic_lane_passed_count: 1
+bsep_created_count: 1
+bsep_validated_count: 1
+drs_prior_success_used_as_context_count: 1
+drs_prior_success_used_as_permission_count: 0
+candidate_vectors_generated_count: 7
+avf_scored_count: 1
+root_decision_not_ready_count: 1
+corrected_evidence_drs_writeback_count: 3
+prior_root_final_mutated_count: 0
+second_run_reuse_used_count: 1
+changed_facts_rerun_validation_count: 1
+ready_for_human_supplier_a_payment_approval_count: 1
+shipment_release_still_held_count: 1
+supplier_B_payment_blocked_count: 1
+human_approval_present_count: 1
+human_approval_scope_supplier_A_only_count: 1
+human_approval_scope_supplier_B_count: 0
+human_approval_scope_shipment_release_count: 0
+action_commit_packet_created_count: 1
+action_commit_packet_created_by_root_count: 1
+action_commit_packet_created_by_llm_count: 0
+mock_payment_executed_count: 1
+mock_bank_receipt_created_count: 1
+receipt_is_evidence_count: 1
+receipt_is_truth_count: 0
+receipt_is_action_permission_count: 0
+receipt_is_final_output_count: 0
+receipt_releases_shipment_count: 0
+supplier_B_payment_executed_count: 0
+payment_executed_count: 0
+real_payment_executed_count: 0
+real_bank_api_called_count: 0
+real_supplier_api_called_count: 0
+real_warehouse_api_called_count: 0
+shipment_released_count: 0
+mock_shipment_released_count: 0
+connector_called_count: 0
+real_world_effects_count: 0
+network_used_count: 0
+gemini_called_count: 0
+real_model_call_count: 0
+live_model_call_count: 0
+orchestrator_provider_call_count: 0
+architect_provider_call_count: 0
+
+architecture:
+Provider proposes semantics.
+Runtime canonicalizes.
+Validators verify.
+Root decides.
+
+authority_ledger:
+- Provider output is not truth.
+- Provider output is not authority.
+- BSEP is not truth.
+- BSEP is not authority.
+- DRS hit is not authority.
+- CandidateVector is not action permission.
+- AVF score is not authority.
+- Human approval is scoped evidence, not broad authority.
+- Root-created mock ActionCommitPacket is scoped only.
+- Mock receipt is evidence, not truth/action permission/final output.
+- Mock payment receipt does not release shipment.
+- Root remains final authority.
+
+conclusion:
+The business process is visible, but sovereignty never leaves Root.
+
+This WOW is accepted as a deterministic sandbox business WOW.
+It is not production.
+It is not public auditor final package.
+It is not real payment.
+It is not real shipment release.
+It is not production connector readiness.
+Optional live Gemini lane remains manual/optional and was not enabled in this audit.

@@ -7,6 +7,20 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_supplier_payment_shipment_release_review_wow_v1_1.log`
+  - Audit status: PASS.
+  - Audits the deterministic sandbox business WOW through Slice E:
+    Supplier Payment / Shipment Release Review WOW v1.1.
+  - Commit chain: `78fb37d` -> `06f4c55` -> `84d5c6d` -> `06744b2` -> `9ac174b` -> `f7ca348`.
+  - Machine runner: `demo/run_supplier_payment_shipment_release_review_wow_v1_1.py`.
+  - Human walkthrough: `demo/run_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough.py`.
+  - Focused regression and core contract suite: 275 passed.
+  - Deterministic lane PASS; optional live Gemini lane remains manual and was not enabled.
+  - Supplier A scoped mock payment only; Supplier B remains blocked; shipment release remains held; receipt is evidence only.
+  - Counters preserve no real payment, no real shipment release, no real bank/supplier/warehouse API effects, and `real_world_effects_count: 0`.
+  - Root remains final authority.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_bounded_semantic_evidence_real_gemini_slice_d_004_v01.log`
   - Audit status: PASS.
   - Run id: `manual-bounded-semantic-evidence-real-gemini-slice-d-004`; base_head: `6a2950a`.
@@ -17,7 +31,7 @@ Current reports:
   - Counters: `live_model_call_count: 2`, `network_used_count: 2`, `gemini_called_count: 2`, `bounded_semantic_evidence_packet_created_count: 1`, and `bounded_semantic_evidence_packet_validated_count: 1`.
   - Action counters stayed zero: action_permission_created_count: 0, action_commit_packet_created_count: 0, connector_called_count: 0, real_world_effects_count: 0.
   - Non-claims: not production autonomy, no real connector, no real-world action, no ActionCommitPacket from Gemini, and no FinalOutput from Gemini.
-  - Next major gate: Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
+  - Later status: Supplier Payment / Shipment Release Review WOW v1.1 deterministic sandbox business WOW is now PASS.
 
 - `auditor_live_unknown_request_real_gemini_007_v01.log`
   - Audit status: PASS.
@@ -40,7 +54,7 @@ Current reports:
   - Provider semantic summary: sealed historical artifact movement after hours, missing approval and unknown climate status remained uncertainty, route `unknown_request_root_review`, vector `unknown_request_semantic_review`, Architect recommendation `needs_more_evidence`.
   - Runtime built safe local nodes `node:unknown_request_semantic_review` and `node:root_review_gate`.
   - Prior real-live attempts 001-006 are superseded diagnostics: the full provider-canonical structured rationale contract was too heavy, compact object-array rationale remained weak/timeout-prone, and `semantic_reasoning_adapter` + `json_mime_only` resolved the live happy path.
-  - Superseded next-step note: BoundedSemanticEvidencePacket has now reached real Gemini Slice D 004 PASS; current next major gate is Supplier Payment / Shipment Release LIVE DUAL-ROLE WOW v1 preflight.
+  - Superseded next-step note: BoundedSemanticEvidencePacket has now reached real Gemini Slice D 004 PASS; Supplier Payment / Shipment Release Review WOW v1.1 deterministic sandbox business WOW is now PASS.
 
 - `auditor_semantic_reasoning_adapter_delegation_slice_c_v01.log`
   - Audit status: PASS.

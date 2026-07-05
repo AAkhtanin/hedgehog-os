@@ -2030,7 +2030,7 @@ def _build_full_wow_v1_1_live_architect_context_from_bsep(
             bsep,
             "required_approvals_or_conditions",
         ),
-        "root_review_required": True,
+        "root_review_needed": True,
         "raw_user_text_included": False,
         "raw_provider_text_included": False,
         "raw_cross_role_text_included": False,
@@ -2056,7 +2056,7 @@ def _build_full_wow_v1_1_live_architect_prompt(
     skeleton = {
         "action_permission_claimed": False,
         "authority_boundary_reasoning": [
-            "Explain that PlanGraph is not authority and Root remains final authority.",
+            "Explain that local plan artifacts are advisory and Root remains final authority.",
         ],
         "authority_claimed": False,
         "connector_command_claimed": False,
@@ -2072,10 +2072,10 @@ def _build_full_wow_v1_1_live_architect_prompt(
             ),
         ],
         "node_intent_reasoning": [
-            "Describe intended local review nodes in words only.",
+            "Describe intended local review intent in words only.",
         ],
         "plan_shape_reasoning": [
-            "Explain the safe advisory plan shape without listing plan_nodes.",
+            "Explain the safe advisory local review shape.",
         ],
         "proposal_id": "architect-semantic-proposal-full-wow-v1-1-001",
         "required_validators": [
@@ -2116,16 +2116,10 @@ def _build_full_wow_v1_1_live_architect_prompt(
             "Do not output empty objects.",
             "Do not invent evidence.",
             "Unknown/missing evidence should remain uncertainty.",
-            "Do not include structured_architect_rationale directly.",
-            "Do not include plan_nodes directly.",
-            "Do not include nodes directly.",
-            "Do not include edges directly.",
-            "Do not include executor_assignments directly.",
             "The runtime will build canonical structured rationale locally.",
             "The runtime may build local plan artifacts after validation.",
             "Provider output is advisory only.",
             "No action permission, no connector command, no FinalOutput, no ActionCommitPacket.",
-            "PlanGraph is not authority.",
             "ResultProposal is not FinalOutput.",
             "Gemini proposes, Root disposes.",
             "Provider proposes semantics.",
@@ -2140,34 +2134,18 @@ def _build_full_wow_v1_1_live_architect_prompt(
             "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:",
             json.dumps(dict(architect_context), indent=2, sort_keys=True),
             "FINAL_OUTPUT_CONTRACT:",
-            "Return exactly one JSON object using ONLY the JSON skeleton field names below.",
-            "This is a semantic reasoning proposal, not a PlanGraph.",
-            "Do not output nodes.",
-            "Do not output edges.",
-            "Do not output executor_assignments.",
-            "Do not output plan_graph_proposal_id.",
-            "Do not output source_packet_id.",
-            "Do not output proposal_role.",
-            "Do not output time_assumptions.",
-            "Do not output confidence.",
-            "Do not output needs_review.",
-            "Do not output root_review_required.",
-            (
-                "If you want to describe nodes, put the description in "
-                "node_intent_reasoning as strings."
-            ),
-            (
-                "If you want to describe plan shape, put the description in "
-                "plan_shape_reasoning as strings."
-            ),
-            (
-                "If you want to describe executor constraints, put the description in "
-                "executor_constraint_reasoning as strings."
-            ),
-            (
-                "The runtime will build canonical PlanGraph later if Root-controlled "
-                "validators accept this semantic proposal."
-            ),
+            "Return exactly one JSON object.",
+            "The top-level key set must equal the JSON skeleton key set.",
+            "No additional top-level keys are allowed.",
+            "Use only the field names shown in the JSON skeleton below.",
+            "Do not add any top-level key that is not literally shown in the JSON skeleton.",
+            "If you need to describe plan shape, use plan_shape_reasoning.",
+            "If you need to describe local review intent, use node_intent_reasoning.",
+            "If you need to describe execution constraints, use executor_constraint_reasoning.",
+            "The provider returns semantic reasoning only.",
+            "Runtime canonicalizes.",
+            "Validators verify.",
+            "Root decides.",
             "JSON skeleton:",
             json.dumps(skeleton, indent=2, sort_keys=True),
         )

@@ -1736,7 +1736,7 @@ def test_full_wow_v1_1_manual_live_gemini_architect_prompt_receives_bsep_context
     assert context["missing_evidence_summary"]
     assert context["risk_boundary_summary"]
     assert context["rejected_action_route_summary"]
-    assert context["root_review_required"] is True
+    assert context["root_review_needed"] is True
     assert context["raw_user_text_included"] is False
     assert context["raw_provider_text_included"] is False
     assert context["raw_cross_role_text_included"] is False
@@ -1754,6 +1754,7 @@ def test_full_wow_v1_1_manual_live_gemini_architect_prompt_receives_bsep_context
         "GEMINI_" + "API_KEY",
     ):
         assert marker not in prompt
+    assert "root_review_required" not in prompt
 
 
 def test_full_wow_v1_1_manual_live_gemini_invalid_bsep_blocks_architect(
@@ -1937,16 +1938,22 @@ def test_full_wow_v1_1_manual_live_architect_prompt_uses_004_json_skeleton_not_s
 
     assert "JSON skeleton:" in prompt
     assert "Return JSON only matching the skeleton field names" in prompt
-    assert "Do not include structured_architect_rationale directly" in prompt
-    assert "Do not include plan_nodes directly" in prompt
     assert "The runtime will build canonical structured rationale locally" in prompt
-    assert (
-        "The runtime will build canonical PlanGraph later if Root-controlled "
-        "validators accept this semantic proposal."
-    ) in prompt
+    assert "The runtime may build local plan artifacts after validation" in prompt
     assert "REQUIRED_OUTPUT_JSON_SCHEMA" not in prompt
     assert "response_schema" not in prompt
     assert "SDK schema" not in prompt
+
+
+def test_full_wow_v1_1_manual_live_architect_prompt_uses_whitelist_only_contract() -> None:
+    prompt = _manual_live_architect_prompt()
+
+    assert "Return exactly one JSON object." in prompt
+    assert "The top-level key set must equal the JSON skeleton key set." in prompt
+    assert "No additional top-level keys are allowed." in prompt
+    assert "Use only the field names shown in the JSON skeleton below." in prompt
+    assert "JSON skeleton:" in prompt
+    assert prompt.rfind("JSON skeleton:") > prompt.rfind("FINAL_OUTPUT_CONTRACT:")
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_skeleton_is_last_major_section() -> None:
@@ -1960,6 +1967,27 @@ def test_full_wow_v1_1_manual_live_architect_prompt_skeleton_is_last_major_secti
     assert prompt.rfind("JSON skeleton:") == skeleton_index
     assert "FULL_WOW_V1_1_LIVE_ARCHITECT_INPUT_JSON:" not in prompt[skeleton_index:]
     assert "FINAL_OUTPUT_CONTRACT:" not in prompt[skeleton_index:]
+
+
+def test_full_wow_v1_1_manual_live_architect_prompt_does_not_prime_plan_graph_keys() -> None:
+    prompt = _manual_live_architect_prompt()
+    forbidden_prompt_terms = (
+        "nodes",
+        "edges",
+        "executor_assignments",
+        "plan_graph_proposal_id",
+        "source_packet_id",
+        "proposal_role",
+        "time_assumptions",
+        "confidence",
+        "needs_review",
+        "root_review_required",
+    )
+
+    for term in forbidden_prompt_terms:
+        assert term not in prompt
+    assert "node_intent_reasoning" in prompt
+    assert "plan_shape_reasoning" in prompt
 
 
 def test_full_wow_v1_1_manual_live_architect_context_role_is_not_plan_proposal() -> None:
@@ -2004,47 +2032,22 @@ def test_full_wow_v1_1_manual_live_architect_prompt_contains_semantic_adapter_sk
 def test_full_wow_v1_1_manual_live_architect_prompt_does_not_request_plan_graph_objects() -> None:
     prompt = _manual_live_architect_prompt()
 
-    for noun in (
-        "BSEP",
-        "ContextPacket",
-        "structured_architect_rationale",
-        "PlanGraph",
-        "plan_nodes",
-        "nodes",
-        "edges",
-        "executor_assignments",
-        "ActionCommitPacket",
-        "FinalOutput",
-        "receipt",
-    ):
-        assert f"emit {noun}" not in prompt
-    for marker in (
-        "return nodes",
-        "return edges",
-        "return executor_assignments",
-    ):
-        assert marker not in prompt
+    assert "emit PlanGraph" not in prompt
+    assert "emit ActionCommitPacket" not in prompt
+    assert "emit FinalOutput" not in prompt
+    assert "emit receipt" not in prompt
 
 
 def test_full_wow_v1_1_manual_live_architect_final_contract_rejects_plan_graph_shape() -> None:
     prompt = _manual_live_architect_prompt()
 
+    assert "Return exactly one JSON object." in prompt
+    assert "The provider returns semantic reasoning only." in prompt
+    assert "If you need to describe plan shape, use plan_shape_reasoning." in prompt
+    assert "If you need to describe local review intent, use node_intent_reasoning." in prompt
     assert (
-        "Return exactly one JSON object using ONLY the JSON skeleton field names below"
-        in prompt
-    )
-    assert "This is a semantic reasoning proposal, not a PlanGraph" in prompt
-    assert "Do not output nodes" in prompt
-    assert "Do not output edges" in prompt
-    assert "Do not output executor_assignments" in prompt
-    assert "Do not output plan_graph_proposal_id" in prompt
-    assert (
-        "If you want to describe nodes, put the description in "
-        "node_intent_reasoning as strings"
-    ) in prompt
-    assert (
-        "If you want to describe plan shape, put the description in "
-        "plan_shape_reasoning as strings"
+        "If you need to describe execution constraints, use "
+        "executor_constraint_reasoning."
     ) in prompt
 
 
@@ -2054,6 +2057,36 @@ def test_full_wow_v1_1_manual_live_architect_prompt_required_validators_avoid_pl
 
     assert "local plan-shape contract" in tuple(skeleton["required_validators"])
     assert "PlanGraph contract" not in tuple(skeleton["required_validators"])
+
+
+def test_full_wow_v1_1_manual_live_architect_skeleton_exact_key_set() -> None:
+    prompt = _manual_live_architect_prompt()
+    skeleton = _json_after_marker(prompt, "JSON skeleton")
+    expected_key_set = {
+        "proposal_id",
+        "source_route_id",
+        "selected_vector_ids",
+        "root_recommendation",
+        "result_proposal_summary",
+        "required_validators",
+        "truth_claimed",
+        "authority_claimed",
+        "action_permission_claimed",
+        "final_output_claimed",
+        "connector_command_claimed",
+        "drs_write_claimed",
+        "root_bypass_claimed",
+        "plan_shape_reasoning",
+        "node_intent_reasoning",
+        "executor_constraint_reasoning",
+        "forbidden_surface_reasoning",
+        "validator_coverage_reasoning",
+        "return_to_root_reasoning",
+        "uncertainty_notes",
+        "authority_boundary_reasoning",
+    }
+
+    assert set(skeleton) == expected_key_set
 
 
 def test_full_wow_v1_1_manual_live_architect_prompt_matches_004_operator_rules() -> None:
@@ -2066,7 +2099,6 @@ def test_full_wow_v1_1_manual_live_architect_prompt_matches_004_operator_rules()
     assert "Runtime canonicalizes" in prompt
     assert "Validators verify" in prompt
     assert "Root decides" in prompt
-    assert "PlanGraph is not authority" in prompt
     assert "ResultProposal is not FinalOutput" in prompt
     for marker in (
         '"action_permission_claimed": false',

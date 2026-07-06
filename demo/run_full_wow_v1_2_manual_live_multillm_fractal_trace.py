@@ -184,6 +184,121 @@ BRANCH_SEMANTIC_REQUIRED_FIELDS = {
     "shipment_release_claimed",
 }
 
+ORCHESTRATOR_JSON_SKELETON = {
+    "proposal_id": "orchestrator-semantic-wow-v1-2-001",
+    "suggested_route": "supplier_payment_shipment_review_v1_2",
+    "selected_branch_ids": [
+        "warehouse_branch",
+        "supplier_a_branch",
+        "supplier_b_branch",
+        "legal_branch",
+        "accounting_branch",
+        "bank_a_branch",
+        "bank_b_branch",
+        "root_merge_branch",
+    ],
+    "required_guards": [
+        "BSEP validation",
+        "semantic proposal validation",
+        "Root final authority",
+    ],
+    "route_reasoning": [
+        "Route API-like business evidence through bounded semantic review."
+    ],
+    "evidence_needed": [
+        "warehouse inventory",
+        "supplier availability and blockers",
+        "legal insurance and contract status",
+        "accounting invoice and PO reconciliation",
+        "bank payment slot and policy preview",
+    ],
+    "uncertainty_notes": [
+        "Provider semantics remain candidate-only until runtime validation and Root review."
+    ],
+    "truth_claimed": False,
+    "authority_claimed": False,
+    "action_permission_claimed": False,
+    "final_output_claimed": False,
+    "connector_command_claimed": False,
+    "drs_write_claimed": False,
+    "plan_graph_claimed": False,
+    "bypass_root_claimed": False,
+    "root_review_required": True,
+}
+
+ARCHITECT_JSON_SKELETON = {
+    "proposal_id": "architect-semantic-wow-v1-2-001",
+    "source_route_id": "orchestrator-semantic-wow-v1-2-001",
+    "selected_branch_ids": [
+        "warehouse_branch",
+        "supplier_a_branch",
+        "supplier_b_branch",
+        "legal_branch",
+        "accounting_branch",
+        "bank_a_branch",
+        "bank_b_branch",
+        "root_merge_branch",
+    ],
+    "root_recommendation": "needs_more_evidence",
+    "result_proposal_summary": "Supplier A may proceed only to scoped review. Supplier B remains blocked. Shipment release remains held. Receipt remains evidence only.",
+    "required_validators": [
+        "Architect semantic proposal validation",
+        "branch ResultProposal validation",
+        "Post V&V",
+        "GT/LGT advisory review",
+        "Root final boundary",
+    ],
+    "plan_shape_reasoning": [
+        "Runtime builds local plan artifacts after semantic validation."
+    ],
+    "branch_intent_reasoning": [
+        "Branch cells collect bounded evidence and return ResultProposals."
+    ],
+    "executor_constraint_reasoning": [
+        "No executor is authorized by provider output."
+    ],
+    "forbidden_surface_reasoning": [
+        "Provider output cannot create ActionCommitPacket, receipt, payment, shipment release, connector command, or FinalOutput."
+    ],
+    "validator_coverage_reasoning": [
+        "Semantic, BSEP, branch, Post V&V, GT/LGT, and Root checks remain required."
+    ],
+    "return_to_root_reasoning": [
+        "The semantic proposal returns to Root because provider output is advisory only."
+    ],
+    "authority_boundary_reasoning": [
+        "Provider proposes semantics. Runtime canonicalizes. Validators verify. Root decides."
+    ],
+    "truth_claimed": False,
+    "authority_claimed": False,
+    "action_permission_claimed": False,
+    "final_output_claimed": False,
+    "connector_command_claimed": False,
+    "drs_write_claimed": False,
+    "root_bypass_claimed": False,
+}
+
+BRANCH_SEMANTIC_JSON_SKELETON = {
+    "branch_semantic_proposal_id": "branch-semantic-proposal-wow-v1-2-001",
+    "source_branch_id": "branch_id_from_prompt",
+    "semantic_summary": "Branch semantic observation remains advisory.",
+    "evidence_interpretation": "Evidence supports bounded parent and Root review only.",
+    "uncertainty_notes": [
+        "Branch semantics remain candidate-only until validation and Root review."
+    ],
+    "recommended_branch_status": "accepted_for_parent_review",
+    "return_to_parent_reasoning": "Branch output returns to parent/root boundary as semantic evidence only.",
+    "truth_claimed": False,
+    "authority_claimed": False,
+    "action_permission_claimed": False,
+    "final_output_claimed": False,
+    "connector_command_claimed": False,
+    "action_commit_packet_claimed": False,
+    "receipt_claimed": False,
+    "payment_execution_claimed": False,
+    "shipment_release_claimed": False,
+}
+
 SECRET_MARKERS = (
     "FAKE-IBAN-AL-0000-2042-SECRET",
     "sandbox_token_abc",
@@ -263,6 +378,9 @@ def _base_report(
         "model": model_name,
         "provider_mode": provider_mode,
         "skip_reason": skip_reason,
+        "failed_role": None,
+        "failed_stage": None,
+        "validation_errors": (),
         "env_enabled": env.get(ENABLE_ENV) == "1",
         "core_ci_dependency": False,
         "production_ready_claimed": False,
@@ -441,14 +559,50 @@ def _validate_branch_semantics(
 
 
 def _build_orchestrator_prompt() -> str:
+    bounded_input = {
+        "context_type": "full_wow_v1_2_manual_live_multillm_fractal_orchestrator_input",
+        "product_trace_basis": "Full WOW v1.2 deterministic product trace PASS",
+        "business_modules": [
+            "WarehouseAPI",
+            "SupplierA",
+            "SupplierB",
+            "Legal",
+            "Accounting",
+            "BankA",
+            "BankB",
+        ],
+        "business_facts": [
+            "Supplier B remains blocked.",
+            "Shipment release remains held.",
+            "Receipt remains evidence only.",
+            "Runtime owns PlanGraph/local plan artifacts.",
+        ],
+        "raw_user_text_included": False,
+        "raw_provider_text_included": False,
+        "raw_bank_secrets_included": False,
+        "raw_iban_included": False,
+        "bank_token_included": False,
+    }
     return "\n".join(
         (
             "FULL WOW V1.2 MANUAL LIVE MULTI-LLM FRACTAL TRACE",
             "Role: top-level semantic Orchestrator proposal actor.",
-            "Return JSON only matching the Orchestrator semantic proposal shape.",
             "Provider proposes semantics. Runtime canonicalizes. Validators verify. Root decides.",
-            "Do not claim truth, authority, action permission, FinalOutput, connector command, DRS write, PlanGraph ownership, or Root bypass.",
-            "Business context: Supplier Payment / Shipment Release Review WOW v1.2 product trace.",
+            "Provider output is not truth, authority, action permission, or FinalOutput.",
+            "Runtime owns PlanGraph/local plan artifacts. Provider does not own PlanGraph.",
+            "BOUNDED_INPUT_CONTEXT:",
+            json.dumps(bounded_input, indent=2, sort_keys=True),
+            "OUTPUT_SHAPE_CONTRACT:",
+            "Return exactly one JSON object.",
+            "The final response must use the JSON object below as its complete top-level shape.",
+            "The top-level key set must match the JSON object below exactly.",
+            "Do not add top-level keys.",
+            "Do not remove top-level keys.",
+            "Do not rename top-level keys.",
+            "Boolean claim fields must remain false where shown.",
+            "root_review_required must remain true.",
+            "JSON skeleton:",
+            json.dumps(ORCHESTRATOR_JSON_SKELETON, indent=2, sort_keys=True),
         )
     )
 
@@ -458,24 +612,66 @@ def _build_architect_prompt(bsep_packet: Mapping[str, Any]) -> str:
         (
             "FULL WOW V1.2 MANUAL LIVE MULTI-LLM FRACTAL TRACE",
             "Role: top-level Semantic Architect proposal actor.",
-            "Return JSON only matching the Architect semantic proposal shape.",
             "Use only BSEP-derived bounded context.",
-            f"BSEP_CONTEXT: {json.dumps(bsep_packet, sort_keys=True)}",
-            "Runtime owns PlanGraph/local plan artifacts. PlanGraph is not authority.",
             "Provider proposes semantics. Runtime canonicalizes. Validators verify. Root decides.",
+            "Provider output is not truth, authority, action permission, or FinalOutput.",
+            "Runtime owns PlanGraph/local plan artifacts. Provider does not own PlanGraph.",
+            "PlanGraph is not authority.",
+            "BSEP_CONTEXT:",
+            json.dumps(bsep_packet, indent=2, sort_keys=True),
+            "OUTPUT_SHAPE_CONTRACT:",
+            "Return exactly one JSON object.",
+            "The final response must use the JSON object below as its complete top-level shape.",
+            "The top-level key set must match the JSON object below exactly.",
+            "Do not add top-level keys.",
+            "Do not remove top-level keys.",
+            "Do not rename top-level keys.",
+            "Boolean claim fields must remain false where shown.",
+            "JSON skeleton:",
+            json.dumps(ARCHITECT_JSON_SKELETON, indent=2, sort_keys=True),
         )
     )
 
 
 def _build_branch_prompt(role: str, branch_id: str) -> str:
+    skeleton = {
+        **BRANCH_SEMANTIC_JSON_SKELETON,
+        "branch_semantic_proposal_id": f"{role}-semantic-001",
+        "source_branch_id": branch_id,
+    }
+    bounded_input = {
+        "context_type": "full_wow_v1_2_branch_semantic_input",
+        "role": role,
+        "branch_id": branch_id,
+        "branch_context": _branch_context(branch_id),
+        "branch_evidence": _branch_evidence(branch_id),
+        "raw_user_text_included": False,
+        "raw_provider_text_included": False,
+        "raw_bank_secrets_included": False,
+        "raw_iban_included": False,
+        "bank_token_included": False,
+    }
     return "\n".join(
         (
             "FULL WOW V1.2 MANUAL LIVE MULTI-LLM FRACTAL TRACE",
             f"Role: {role}.",
             f"Branch: {branch_id}.",
-            "Return JSON only matching the branch-local semantic proposal shape.",
             "Branch LLM/SLM output is advisory only and returns to parent/root review.",
-            "Do not claim truth, authority, action permission, FinalOutput, ActionCommitPacket, receipt, payment execution, or shipment release.",
+            "Provider proposes semantics. Runtime canonicalizes. Validators verify. Root decides.",
+            "Branch LLM/SLM output does not create ActionCommitPacket, receipt, payment, or shipment release.",
+            "Branch LLM/SLM output is not truth, authority, action permission, or FinalOutput.",
+            "BOUNDED_BRANCH_INPUT_CONTEXT:",
+            json.dumps(bounded_input, indent=2, sort_keys=True),
+            "OUTPUT_SHAPE_CONTRACT:",
+            "Return exactly one JSON object.",
+            "The final response must use the JSON object below as its complete top-level shape.",
+            "The top-level key set must match the JSON object below exactly.",
+            "Do not add top-level keys.",
+            "Do not remove top-level keys.",
+            "Do not rename top-level keys.",
+            "Boolean claim fields must remain false where shown.",
+            "JSON skeleton:",
+            json.dumps(skeleton, indent=2, sort_keys=True),
         )
     )
 
@@ -561,6 +757,15 @@ def _result_proposal(
     }
 
 
+def _branch_artifact_prefix(branch_id: str) -> str:
+    return {
+        "legal_branch": "branch_legal",
+        "accounting_branch": "branch_accounting",
+        "supplier_b_branch": "branch_supplier_b",
+        "bank_b_branch": "branch_bank_policy",
+    }[branch_id]
+
+
 def _scan_text_for_secrets(text: str) -> dict[str, Any]:
     matched = [marker for marker in SECRET_MARKERS if marker in text]
     return {"passed": not matched, "matched_markers": matched}
@@ -591,6 +796,22 @@ def _write_json(path: Path, value: Mapping[str, Any]) -> None:
     path.write_text(json.dumps(value, indent=2, sort_keys=True), encoding="utf-8")
 
 
+def _artifact_text(artifacts: Mapping[str, Any], key: str) -> str:
+    value = artifacts.get(key)
+    if value is None:
+        return "not_run\n"
+    return str(value)
+
+
+def _artifact_json(artifacts: Mapping[str, Any], key: str) -> Mapping[str, Any]:
+    value = artifacts.get(key)
+    if isinstance(value, Mapping):
+        return value
+    if value is None:
+        return {"status": "not_run"}
+    return {"value": value}
+
+
 def _artifact_capture(
     report: Mapping[str, Any],
     artifact_dir: Path,
@@ -600,56 +821,68 @@ def _artifact_capture(
     written: list[str] = []
 
     text_files = {
-        "summary.log": render_full_wow_v1_2_manual_live_multillm_fractal_trace(report),
-        "top_level_orchestrator_prompt.txt": artifacts["top_level_orchestrator_prompt"],
-        "top_level_orchestrator_raw_response.txt": artifacts[
-            "top_level_orchestrator_raw_response"
-        ],
-        "top_level_architect_prompt.txt": artifacts["top_level_architect_prompt"],
-        "top_level_architect_raw_response.txt": artifacts[
-            "top_level_architect_raw_response"
-        ],
-        "branch_legal_prompt.txt": artifacts["branch_legal_prompt"],
-        "branch_legal_raw_response.txt": artifacts["branch_legal_raw_response"],
-        "branch_accounting_prompt.txt": artifacts["branch_accounting_prompt"],
-        "branch_accounting_raw_response.txt": artifacts[
-            "branch_accounting_raw_response"
-        ],
-        "branch_supplier_b_prompt.txt": artifacts["branch_supplier_b_prompt"],
-        "branch_supplier_b_raw_response.txt": artifacts[
-            "branch_supplier_b_raw_response"
-        ],
-        "branch_bank_policy_prompt.txt": artifacts["branch_bank_policy_prompt"],
-        "branch_bank_policy_raw_response.txt": artifacts[
-            "branch_bank_policy_raw_response"
-        ],
+        "top_level_orchestrator_prompt.txt": _artifact_text(
+            artifacts, "top_level_orchestrator_prompt"
+        ),
+        "top_level_orchestrator_raw_response.txt": _artifact_text(
+            artifacts, "top_level_orchestrator_raw_response"
+        ),
+        "top_level_architect_prompt.txt": _artifact_text(
+            artifacts, "top_level_architect_prompt"
+        ),
+        "top_level_architect_raw_response.txt": _artifact_text(
+            artifacts, "top_level_architect_raw_response"
+        ),
+        "branch_legal_prompt.txt": _artifact_text(artifacts, "branch_legal_prompt"),
+        "branch_legal_raw_response.txt": _artifact_text(
+            artifacts, "branch_legal_raw_response"
+        ),
+        "branch_accounting_prompt.txt": _artifact_text(
+            artifacts, "branch_accounting_prompt"
+        ),
+        "branch_accounting_raw_response.txt": _artifact_text(
+            artifacts, "branch_accounting_raw_response"
+        ),
+        "branch_supplier_b_prompt.txt": _artifact_text(
+            artifacts, "branch_supplier_b_prompt"
+        ),
+        "branch_supplier_b_raw_response.txt": _artifact_text(
+            artifacts, "branch_supplier_b_raw_response"
+        ),
+        "branch_bank_policy_prompt.txt": _artifact_text(
+            artifacts, "branch_bank_policy_prompt"
+        ),
+        "branch_bank_policy_raw_response.txt": _artifact_text(
+            artifacts, "branch_bank_policy_raw_response"
+        ),
     }
     json_files = {
-        "summary.json": report,
-        "top_level_orchestrator_extracted_json_candidate.json": artifacts[
-            "top_level_orchestrator_json"
-        ],
-        "top_level_orchestrator_validation.json": artifacts[
-            "top_level_orchestrator_validation"
-        ],
-        "bsep_packet.json": artifacts["bsep_packet"],
-        "bsep_validation.json": artifacts["bsep_validation"],
-        "top_level_architect_extracted_json_candidate.json": artifacts[
-            "top_level_architect_json"
-        ],
-        "top_level_architect_validation.json": artifacts[
-            "top_level_architect_validation"
-        ],
-        "branch_legal_validation.json": artifacts["branch_legal_validation"],
-        "branch_accounting_validation.json": artifacts[
-            "branch_accounting_validation"
-        ],
-        "branch_supplier_b_validation.json": artifacts[
-            "branch_supplier_b_validation"
-        ],
-        "branch_bank_policy_validation.json": artifacts[
-            "branch_bank_policy_validation"
-        ],
+        "top_level_orchestrator_extracted_json_candidate.json": _artifact_json(
+            artifacts, "top_level_orchestrator_json"
+        ),
+        "top_level_orchestrator_validation.json": _artifact_json(
+            artifacts, "top_level_orchestrator_validation"
+        ),
+        "bsep_packet.json": _artifact_json(artifacts, "bsep_packet"),
+        "bsep_validation.json": _artifact_json(artifacts, "bsep_validation"),
+        "top_level_architect_extracted_json_candidate.json": _artifact_json(
+            artifacts, "top_level_architect_json"
+        ),
+        "top_level_architect_validation.json": _artifact_json(
+            artifacts, "top_level_architect_validation"
+        ),
+        "branch_legal_validation.json": _artifact_json(
+            artifacts, "branch_legal_validation"
+        ),
+        "branch_accounting_validation.json": _artifact_json(
+            artifacts, "branch_accounting_validation"
+        ),
+        "branch_supplier_b_validation.json": _artifact_json(
+            artifacts, "branch_supplier_b_validation"
+        ),
+        "branch_bank_policy_validation.json": _artifact_json(
+            artifacts, "branch_bank_policy_validation"
+        ),
     }
     for name, value in text_files.items():
         _write_text(artifact_dir / name, value)
@@ -657,6 +890,21 @@ def _artifact_capture(
     for name, value in json_files.items():
         _write_json(artifact_dir / name, value)
         written.append(name)
+
+    capture = {
+        "artifact_dir": str(artifact_dir),
+        "written_files": tuple(sorted((*written, "secret_scan.json", "summary.json", "summary.log"))),
+        "artifact_capture_enabled": True,
+    }
+    summary_report = dict(report)
+    summary_report["artifacts"] = capture
+    _write_json(artifact_dir / "summary.json", summary_report)
+    written.append("summary.json")
+    _write_text(
+        artifact_dir / "summary.log",
+        render_full_wow_v1_2_manual_live_multillm_fractal_trace(summary_report),
+    )
+    written.append("summary.log")
 
     scan = _scan_artifact_dir(artifact_dir)
     _write_json(artifact_dir / "secret_scan.json", scan)
@@ -754,6 +1002,10 @@ def _fail_closed_report(
     reason: str,
     pipeline_sequence: tuple[str, ...],
     semantic_actor_calls: tuple[Mapping[str, Any], ...],
+    artifacts: Mapping[str, Any] | None = None,
+    failed_role: str | None = None,
+    failed_stage: str | None = None,
+    validation_errors: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     report = _base_report(
         final_status="FAIL_CLOSED",
@@ -766,6 +1018,20 @@ def _fail_closed_report(
     )
     report["pipeline_sequence"] = pipeline_sequence
     report["semantic_actor_calls"] = semantic_actor_calls
+    report["failed_role"] = failed_role
+    report["failed_stage"] = failed_stage
+    report["validation_errors"] = validation_errors
+    artifact_dir_value = env.get(ARTIFACT_DIR_ENV)
+    if artifact_dir_value:
+        capture = _artifact_capture(report, Path(artifact_dir_value), artifacts or {})
+        report["artifacts"] = {
+            "artifact_dir": capture["artifact_dir"],
+            "written_files": capture["written_files"],
+            "artifact_capture_enabled": True,
+        }
+        report["secret_membrane"]["artifact_secret_scan_passed"] = capture[
+            "secret_scan"
+        ]["passed"]
     return report
 
 
@@ -807,6 +1073,7 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
     sequence: list[str] = ["dirty_request_loaded_from_v1_2_product_trace"]
 
     orchestrator_prompt = _build_orchestrator_prompt()
+    artifacts["top_level_orchestrator_prompt"] = orchestrator_prompt
     raw_orchestrator, actual_provider_mode, provider_error = _provider_call(
         role="top_level_orchestrator_llm",
         prompt=orchestrator_prompt,
@@ -820,6 +1087,12 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
     provider_mode = actual_provider_mode
     sequence.append("top_level_orchestrator_provider_called")
     if provider_error:
+        artifacts["top_level_orchestrator_raw_response"] = "not_run"
+        artifacts["top_level_orchestrator_json"] = {"status": "not_run"}
+        artifacts["top_level_orchestrator_validation"] = {
+            "accepted": False,
+            "errors": [provider_error],
+        }
         return _fail_closed_report(
             env=effective_env,
             model_name=model_name,
@@ -828,9 +1101,19 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             reason=provider_error,
             pipeline_sequence=tuple(sequence),
             semantic_actor_calls=tuple(actor_calls),
+            artifacts=artifacts,
+            failed_role="top_level_orchestrator_llm",
+            failed_stage="provider_call",
+            validation_errors=(provider_error,),
         )
     orchestrator_json, parse_error = _extract_json_object(raw_orchestrator)
     if parse_error:
+        artifacts["top_level_orchestrator_raw_response"] = raw_orchestrator
+        artifacts["top_level_orchestrator_json"] = {"status": "parse_failed"}
+        artifacts["top_level_orchestrator_validation"] = {
+            "accepted": False,
+            "errors": [parse_error],
+        }
         return _fail_closed_report(
             env=effective_env,
             model_name=model_name,
@@ -839,6 +1122,10 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             reason=parse_error,
             pipeline_sequence=tuple(sequence),
             semantic_actor_calls=tuple(actor_calls),
+            artifacts=artifacts,
+            failed_role="top_level_orchestrator_llm",
+            failed_stage="json_extraction",
+            validation_errors=(parse_error,),
         )
     orchestrator_validation = _validate_orchestrator(orchestrator_json)
     actor_calls.append(
@@ -867,6 +1154,10 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             reason="orchestrator_validation_failed",
             pipeline_sequence=tuple(sequence),
             semantic_actor_calls=tuple(actor_calls),
+            artifacts=artifacts,
+            failed_role="top_level_orchestrator_llm",
+            failed_stage="orchestrator_validation",
+            validation_errors=tuple(orchestrator_validation["errors"]),
         )
     sequence.extend(
         (
@@ -888,12 +1179,17 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             reason="bsep_validation_failed",
             pipeline_sequence=tuple(sequence),
             semantic_actor_calls=tuple(actor_calls),
+            artifacts=artifacts,
+            failed_role="runtime_bsep",
+            failed_stage="bsep_validation",
+            validation_errors=tuple(bsep_validation["errors"]),
         )
     counters["bsep_created_count"] = 1
     counters["bsep_validated_count"] = 1
     sequence.extend(("bsep_created", "bsep_validated"))
 
     architect_prompt = _build_architect_prompt(bsep_packet)
+    artifacts["top_level_architect_prompt"] = architect_prompt
     sequence.append("top_level_architect_prompt_built_from_bsep")
     counters["architect_received_bsep_context_count"] = 1
     raw_architect, actual_provider_mode, provider_error = _provider_call(
@@ -912,6 +1208,12 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
     provider_mode = actual_provider_mode
     sequence.append("top_level_architect_provider_called")
     if provider_error:
+        artifacts["top_level_architect_raw_response"] = "not_run"
+        artifacts["top_level_architect_json"] = {"status": "not_run"}
+        artifacts["top_level_architect_validation"] = {
+            "accepted": False,
+            "errors": [provider_error],
+        }
         return _fail_closed_report(
             env=effective_env,
             model_name=model_name,
@@ -920,9 +1222,19 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             reason=provider_error,
             pipeline_sequence=tuple(sequence),
             semantic_actor_calls=tuple(actor_calls),
+            artifacts=artifacts,
+            failed_role="top_level_semantic_architect_llm",
+            failed_stage="provider_call",
+            validation_errors=(provider_error,),
         )
     architect_json, parse_error = _extract_json_object(raw_architect)
     if parse_error:
+        artifacts["top_level_architect_raw_response"] = raw_architect
+        artifacts["top_level_architect_json"] = {"status": "parse_failed"}
+        artifacts["top_level_architect_validation"] = {
+            "accepted": False,
+            "errors": [parse_error],
+        }
         return _fail_closed_report(
             env=effective_env,
             model_name=model_name,
@@ -931,6 +1243,10 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             reason=parse_error,
             pipeline_sequence=tuple(sequence),
             semantic_actor_calls=tuple(actor_calls),
+            artifacts=artifacts,
+            failed_role="top_level_semantic_architect_llm",
+            failed_stage="json_extraction",
+            validation_errors=(parse_error,),
         )
     architect_validation = _validate_architect(architect_json)
     actor_calls.append(
@@ -959,6 +1275,10 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             reason="architect_validation_failed",
             pipeline_sequence=tuple(sequence),
             semantic_actor_calls=tuple(actor_calls),
+            artifacts=artifacts,
+            failed_role="top_level_semantic_architect_llm",
+            failed_stage="architect_validation",
+            validation_errors=tuple(architect_validation["errors"]),
         )
     sequence.extend(
         (
@@ -980,6 +1300,8 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
     branch_prompts: dict[str, str] = {}
     for branch_id, role in BRANCH_ACTOR_ROLES.items():
         prompt = _build_branch_prompt(role, branch_id)
+        artifact_prefix = _branch_artifact_prefix(branch_id)
+        artifacts[f"{artifact_prefix}_prompt"] = prompt
         raw, actual_provider_mode, provider_error = _provider_call(
             role=role,
             prompt=prompt,
@@ -992,6 +1314,11 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
         )
         provider_mode = actual_provider_mode
         if provider_error:
+            artifacts[f"{artifact_prefix}_raw_response"] = "not_run"
+            artifacts[f"{artifact_prefix}_validation"] = {
+                "accepted": False,
+                "errors": [provider_error],
+            }
             return _fail_closed_report(
                 env=effective_env,
                 model_name=model_name,
@@ -1000,9 +1327,18 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
                 reason=provider_error,
                 pipeline_sequence=tuple(sequence),
                 semantic_actor_calls=tuple(actor_calls),
+                artifacts=artifacts,
+                failed_role=role,
+                failed_stage="provider_call",
+                validation_errors=(provider_error,),
             )
         branch_json, parse_error = _extract_json_object(raw)
         if parse_error:
+            artifacts[f"{artifact_prefix}_raw_response"] = raw
+            artifacts[f"{artifact_prefix}_validation"] = {
+                "accepted": False,
+                "errors": [parse_error],
+            }
             return _fail_closed_report(
                 env=effective_env,
                 model_name=model_name,
@@ -1011,6 +1347,10 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
                 reason=parse_error,
                 pipeline_sequence=tuple(sequence),
                 semantic_actor_calls=tuple(actor_calls),
+                artifacts=artifacts,
+                failed_role=role,
+                failed_stage="json_extraction",
+                validation_errors=(parse_error,),
             )
         validation = _validate_branch_semantics(branch_json, branch_id)
         actor_calls.append(
@@ -1028,6 +1368,8 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
         branch_semantics[branch_id] = validation["canonical"]
         branch_validations[branch_id] = validation
         if not validation["accepted"]:
+            artifacts[f"{artifact_prefix}_raw_response"] = raw
+            artifacts[f"{artifact_prefix}_validation"] = validation
             return _fail_closed_report(
                 env=effective_env,
                 model_name=model_name,
@@ -1036,6 +1378,10 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
                 reason=f"{branch_id}_validation_failed",
                 pipeline_sequence=tuple(sequence),
                 semantic_actor_calls=tuple(actor_calls),
+                artifacts=artifacts,
+                failed_role=role,
+                failed_stage=f"{branch_id}_validation",
+                validation_errors=tuple(validation["errors"]),
             )
         if branch_id == "legal_branch":
             sequence.extend(
@@ -1224,6 +1570,17 @@ def render_full_wow_v1_2_manual_live_multillm_fractal_trace(
             f"skip_reason: {report.get('skip_reason')}",
         ]
     )
+    if report["final_status"] == "FAIL_CLOSED":
+        lines.extend(
+            [
+                "",
+                "[FAILURE DETAILS]",
+                f"skip_reason: {report.get('skip_reason')}",
+                f"failed_role: {report.get('failed_role')}",
+                f"failed_stage: {report.get('failed_stage')}",
+                f"validation_errors: {tuple(report.get('validation_errors') or ())}",
+            ]
+        )
 
     lines.extend(["", "[SEMANTIC ACTOR CALLS]"])
     for call in report["semantic_actor_calls"]:

@@ -95,6 +95,19 @@ SECRET_MARKERS = (
 )
 
 
+def _final_json_skeleton(prompt: str) -> dict[str, Any]:
+    marker = "JSON skeleton:\n"
+    assert marker in prompt
+    suffix = prompt.split(marker, 1)[1]
+    return json.loads(suffix)
+
+
+def _assert_no_text_after_skeleton(prompt: str) -> None:
+    marker = "JSON skeleton:\n"
+    suffix = prompt.split(marker, 1)[1]
+    json.loads(suffix)
+
+
 def _orchestrator_payload() -> dict[str, Any]:
     return {
         "proposal_id": "orch-semantic-wow-v1-2-001",
@@ -197,10 +210,82 @@ def _invalid_branch_provider(
     return json.dumps(payload)
 
 
+def _invalid_orchestrator_provider(
+    role: str, _prompt: str, context: Mapping[str, Any]
+) -> str:
+    if role == "top_level_orchestrator_llm":
+        return json.dumps({"proposal_id": "missing-required-fields"})
+    return _fake_provider(role, _prompt, context)
+
+
 def _pass_report() -> dict[str, Any]:
     return runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
         env=ENABLED_ENV, provider=_fake_provider
     )
+
+
+def test_manual_live_multillm_orchestrator_prompt_has_exact_final_skeleton() -> None:
+    prompt = runner._build_orchestrator_prompt()
+    skeleton = _final_json_skeleton(prompt)
+
+    assert "OUTPUT_SHAPE_CONTRACT" in prompt
+    assert set(skeleton) == runner.ORCHESTRATOR_REQUIRED_FIELDS
+    assert skeleton["truth_claimed"] is False
+    assert skeleton["authority_claimed"] is False
+    assert skeleton["action_permission_claimed"] is False
+    assert skeleton["final_output_claimed"] is False
+    assert skeleton["connector_command_claimed"] is False
+    assert skeleton["drs_write_claimed"] is False
+    assert skeleton["plan_graph_claimed"] is False
+    assert skeleton["bypass_root_claimed"] is False
+    assert skeleton["root_review_required"] is True
+    assert isinstance(skeleton["selected_branch_ids"], list)
+    _assert_no_text_after_skeleton(prompt)
+
+
+def test_manual_live_multillm_architect_prompt_has_exact_final_skeleton() -> None:
+    bsep = runner._build_bsep(_orchestrator_payload())
+    prompt = runner._build_architect_prompt(bsep)
+    skeleton = _final_json_skeleton(prompt)
+
+    assert "OUTPUT_SHAPE_CONTRACT" in prompt
+    assert set(skeleton) == runner.ARCHITECT_REQUIRED_FIELDS
+    for field in (
+        "truth_claimed",
+        "authority_claimed",
+        "action_permission_claimed",
+        "final_output_claimed",
+        "connector_command_claimed",
+        "drs_write_claimed",
+        "root_bypass_claimed",
+    ):
+        assert skeleton[field] is False
+    assert isinstance(skeleton["selected_branch_ids"], list)
+    _assert_no_text_after_skeleton(prompt)
+
+
+def test_manual_live_multillm_branch_prompt_has_exact_final_skeleton() -> None:
+    prompt = runner._build_branch_prompt(
+        "legal_clause_semantic_extractor", "legal_branch"
+    )
+    skeleton = _final_json_skeleton(prompt)
+
+    assert "OUTPUT_SHAPE_CONTRACT" in prompt
+    assert set(skeleton) == runner.BRANCH_SEMANTIC_REQUIRED_FIELDS
+    for field in (
+        "truth_claimed",
+        "authority_claimed",
+        "action_permission_claimed",
+        "final_output_claimed",
+        "connector_command_claimed",
+        "action_commit_packet_claimed",
+        "receipt_claimed",
+        "payment_execution_claimed",
+        "shipment_release_claimed",
+    ):
+        assert skeleton[field] is False
+    assert skeleton["source_branch_id"] == "legal_branch"
+    _assert_no_text_after_skeleton(prompt)
 
 
 def test_manual_live_multillm_fractal_default_skipped_closed() -> None:
@@ -378,6 +463,94 @@ def test_manual_live_multillm_fractal_real_provider_exception_fails_closed_witho
     assert counters["gemini_called_count"] == 1
     assert counters["root_final_boundary_evaluated_count"] == 0
     assert dummy_key not in rendered
+
+
+def test_manual_live_multillm_orchestrator_validation_failure_writes_artifacts(
+    tmp_path: Path,
+) -> None:
+    env = {**ENABLED_ENV, runner.ARTIFACT_DIR_ENV: str(tmp_path)}
+
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=env, provider=_invalid_orchestrator_provider
+    )
+    counters = report["counters"]
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        report
+    )
+
+    assert report["final_status"] == "FAIL_CLOSED"
+    assert report["skip_reason"] == "orchestrator_validation_failed"
+    assert counters["semantic_actor_call_count"] == 1
+    assert counters["fake_provider_call_count"] == 1
+    assert counters["top_level_orchestrator_llm_call_count"] == 1
+    assert counters["bsep_created_count"] == 0
+    assert counters["root_final_boundary_evaluated_count"] == 0
+    assert report["artifacts"]["artifact_capture_enabled"] is True
+    assert "validation_errors" in rendered
+    assert "missing_required_field" in rendered
+    for artifact_name in (
+        "summary.json",
+        "summary.log",
+        "secret_scan.json",
+        "top_level_orchestrator_prompt.txt",
+        "top_level_orchestrator_raw_response.txt",
+        "top_level_orchestrator_extracted_json_candidate.json",
+        "top_level_orchestrator_validation.json",
+    ):
+        assert (tmp_path / artifact_name).exists()
+    json.loads((tmp_path / "summary.json").read_text(encoding="utf-8"))
+    json.loads((tmp_path / "secret_scan.json").read_text(encoding="utf-8"))
+
+
+def test_manual_live_multillm_provider_exception_failure_writes_artifacts(
+    tmp_path: Path,
+) -> None:
+    unsafe_exception_text = "UNSAFE_EXCEPTION_DETAIL"
+
+    def raising_provider(
+        role: str, _prompt: str, _context: Mapping[str, Any]
+    ) -> str:
+        if role == "top_level_orchestrator_llm":
+            raise RuntimeError(unsafe_exception_text)
+        return json.dumps(_branch_payload(role, "unused"))
+
+    env = {**ENABLED_ENV, runner.ARTIFACT_DIR_ENV: str(tmp_path)}
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=env, provider=raising_provider
+    )
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        report
+    )
+    counters = report["counters"]
+
+    assert report["final_status"] == "FAIL_CLOSED"
+    assert report["skip_reason"] == "provider_call_failed:top_level_orchestrator_llm"
+    assert counters["semantic_actor_call_count"] == 1
+    assert counters["fake_provider_call_count"] == 1
+    assert counters["root_final_boundary_evaluated_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["receipt_created_count"] == 0
+    assert counters["mock_payment_executed_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+    assert report["artifacts"]["artifact_capture_enabled"] is True
+    assert unsafe_exception_text not in rendered
+    for artifact_name in (
+        "summary.json",
+        "summary.log",
+        "secret_scan.json",
+        "top_level_orchestrator_prompt.txt",
+        "top_level_orchestrator_raw_response.txt",
+        "top_level_orchestrator_extracted_json_candidate.json",
+        "top_level_orchestrator_validation.json",
+    ):
+        assert (tmp_path / artifact_name).exists()
+    assert unsafe_exception_text not in (tmp_path / "summary.log").read_text(
+        encoding="utf-8"
+    )
+    json.loads((tmp_path / "summary.json").read_text(encoding="utf-8"))
+    json.loads((tmp_path / "secret_scan.json").read_text(encoding="utf-8"))
 
 
 def test_manual_live_multillm_fractal_artifacts_written_with_fake_provider(

@@ -1,0 +1,444 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any, Mapping
+
+from demo import run_full_wow_v1_2_manual_live_multillm_fractal_trace as runner
+
+
+ENABLED_ENV = {runner.ENABLE_ENV: "1"}
+
+REQUIRED_SEQUENCE_SUBSET = (
+    "top_level_orchestrator_provider_called",
+    "top_level_orchestrator_semantics_validated",
+    "bsep_created",
+    "bsep_validated",
+    "top_level_architect_provider_called",
+    "top_level_architect_semantics_validated",
+    "runtime_plangraph_compiled",
+    "fractal_branch_cells_created",
+    "branch_result_proposals_merged",
+    "post_vv_validated",
+    "gt_lgt_advisory_reviewed",
+    "root_final_boundary_evaluated",
+)
+
+REQUIRED_ARTIFACTS = {
+    "summary.json",
+    "summary.log",
+    "secret_scan.json",
+    "top_level_orchestrator_prompt.txt",
+    "top_level_orchestrator_raw_response.txt",
+    "top_level_orchestrator_extracted_json_candidate.json",
+    "top_level_orchestrator_validation.json",
+    "bsep_packet.json",
+    "bsep_validation.json",
+    "top_level_architect_prompt.txt",
+    "top_level_architect_raw_response.txt",
+    "top_level_architect_extracted_json_candidate.json",
+    "top_level_architect_validation.json",
+    "branch_legal_prompt.txt",
+    "branch_legal_raw_response.txt",
+    "branch_legal_validation.json",
+    "branch_accounting_prompt.txt",
+    "branch_accounting_raw_response.txt",
+    "branch_accounting_validation.json",
+    "branch_supplier_b_prompt.txt",
+    "branch_supplier_b_raw_response.txt",
+    "branch_supplier_b_validation.json",
+    "branch_bank_policy_prompt.txt",
+    "branch_bank_policy_raw_response.txt",
+    "branch_bank_policy_validation.json",
+}
+
+REQUIRED_SECTIONS = (
+    "[FULL WOW V1.2 MANUAL LIVE MULTI-LLM FRACTAL TRACE]",
+    "[LANE STATUS]",
+    "[SEMANTIC ACTOR CALLS]",
+    "[TOP-LEVEL ORCHESTRATOR]",
+    "[BSEP MEMBRANE]",
+    "[TOP-LEVEL SEMANTIC ARCHITECT]",
+    "[RUNTIME PLAN AND FRACTAL CELLS]",
+    "[BRANCH-LOCAL LLM/SLM ACTORS]",
+    "[BRANCH RESULT PROPOSALS]",
+    "[POST V&V / GT-LGT / ROOT]",
+    "[SECRET MEMBRANE]",
+    "[AUTHORITY MATRIX]",
+    "[COUNTER MATRIX]",
+    "[ARTIFACTS]",
+    "[NON-CLAIMS]",
+    "[FINAL STATUS]",
+)
+
+FORBIDDEN_PHRASE_PARTS = (
+    ("production", " ready"),
+    ("public WOW", " ready"),
+    ("public auditor", " ready"),
+    ("real payment", " executed"),
+    ("real shipment", " released"),
+    ("Gemini creates", " ActionCommitPacket"),
+    ("Gemini creates", " receipt"),
+    ("receipt proves", " truth"),
+    ("receipt grants", " permission"),
+    ("receipt creates", " FinalOutput"),
+    ("real_world_effects_count: ", "1"),
+)
+
+SECRET_MARKERS = (
+    "FAKE-IBAN-AL-0000-2042-SECRET",
+    "sandbox_token_abc",
+    "beneficiary_iban",
+    "raw_iban_value",
+    "GEMINI_API_KEY=",
+    "GOOGLE_API_KEY=",
+)
+
+
+def _orchestrator_payload() -> dict[str, Any]:
+    return {
+        "proposal_id": "orch-semantic-wow-v1-2-001",
+        "suggested_route": "supplier_payment_shipment_review_v1_2",
+        "selected_branch_ids": list(runner.BRANCH_IDS),
+        "required_guards": ["BSEP", "Post V&V", "Root final authority"],
+        "route_reasoning": [
+            "Route business module evidence through bounded semantic review."
+        ],
+        "evidence_needed": ["warehouse", "supplier", "legal", "accounting", "bank"],
+        "uncertainty_notes": ["Provider semantics remain candidate-only."],
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "plan_graph_claimed": False,
+        "bypass_root_claimed": False,
+        "root_review_required": True,
+    }
+
+
+def _architect_payload() -> dict[str, Any]:
+    return {
+        "proposal_id": "architect-semantic-wow-v1-2-001",
+        "source_route_id": "orch-semantic-wow-v1-2-001",
+        "selected_branch_ids": list(runner.BRANCH_IDS),
+        "root_recommendation": "needs_more_evidence",
+        "result_proposal_summary": "Supplier B remains blocked, shipment held, Supplier A scoped review stays Root-controlled.",
+        "required_validators": ["semantic proposal", "branch proposal", "Root"],
+        "plan_shape_reasoning": [
+            "Runtime builds local plan artifacts after validation."
+        ],
+        "branch_intent_reasoning": [
+            "Branches gather bounded business evidence for Root."
+        ],
+        "executor_constraint_reasoning": [
+            "No executor is authorized by provider output."
+        ],
+        "forbidden_surface_reasoning": [
+            "Payment, shipment release, packet, and receipt remain outside provider authority."
+        ],
+        "validator_coverage_reasoning": [
+            "Semantic, BSEP, branch, Post V&V, GT/LGT, and Root checks apply."
+        ],
+        "return_to_root_reasoning": [
+            "Provider semantics return to Root for final boundary."
+        ],
+        "authority_boundary_reasoning": [
+            "Provider proposes semantics. Runtime canonicalizes. Validators verify. Root decides."
+        ],
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "root_bypass_claimed": False,
+    }
+
+
+def _branch_payload(role: str, branch_id: str) -> dict[str, Any]:
+    return {
+        "branch_semantic_proposal_id": f"{role}-semantic-001",
+        "source_branch_id": branch_id,
+        "semantic_summary": f"{branch_id} semantic observation remains advisory.",
+        "evidence_interpretation": "Evidence supports bounded Root review only.",
+        "uncertainty_notes": ["Manual live observation does not create authority."],
+        "recommended_branch_status": "accepted_for_parent_review",
+        "return_to_parent_reasoning": "Branch returns to parent/root boundary.",
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "action_commit_packet_claimed": False,
+        "receipt_claimed": False,
+        "payment_execution_claimed": False,
+        "shipment_release_claimed": False,
+    }
+
+
+def _fake_provider(
+    role: str, _prompt: str, context: Mapping[str, Any]
+) -> str:
+    if role == "top_level_orchestrator_llm":
+        return json.dumps(_orchestrator_payload())
+    if role == "top_level_semantic_architect_llm":
+        return json.dumps(_architect_payload())
+    return json.dumps(_branch_payload(role, str(context["source_branch_id"])))
+
+
+def _invalid_branch_provider(
+    role: str, prompt: str, context: Mapping[str, Any]
+) -> str:
+    payload = json.loads(_fake_provider(role, prompt, context))
+    if role == "legal_clause_semantic_extractor":
+        payload["authority_claimed"] = True
+    return json.dumps(payload)
+
+
+def _pass_report() -> dict[str, Any]:
+    return runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=ENABLED_ENV, provider=_fake_provider
+    )
+
+
+def test_manual_live_multillm_fractal_default_skipped_closed() -> None:
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env={}
+    )
+
+    assert report["final_status"] == "SKIPPED_CLOSED"
+    assert report["stage_status"] == "SKIPPED_CLOSED"
+    assert report["counters"]["manual_live_multillm_fractal_lane_enabled_count"] == 0
+    assert all(value == 0 for value in report["counters"].values())
+
+
+def test_manual_live_multillm_fractal_fake_provider_returns_pass() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+
+    assert report["final_status"] == "PASS"
+    assert report["stage_status"] == "PASS"
+    assert counters["semantic_actor_call_count"] == 6
+    assert counters["fake_provider_call_count"] == 6
+    assert counters["real_provider_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+
+
+def test_manual_live_multillm_fractal_role_sequence() -> None:
+    sequence = _pass_report()["pipeline_sequence"]
+    positions = [sequence.index(item) for item in REQUIRED_SEQUENCE_SUBSET]
+
+    assert positions == sorted(positions)
+
+
+def test_manual_live_multillm_fractal_bsep_before_architect() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+    sequence = report["pipeline_sequence"]
+
+    assert counters["bsep_created_count"] == 1
+    assert counters["bsep_validated_count"] == 1
+    assert counters["architect_called_before_bsep_validation_count"] == 0
+    assert counters["architect_received_bsep_context_count"] == 1
+    assert sequence.index("bsep_validated") < sequence.index(
+        "top_level_architect_provider_called"
+    )
+
+
+def test_manual_live_multillm_fractal_branch_actors_present() -> None:
+    report = _pass_report()
+    branches = {branch["branch_id"]: branch for branch in report["fractal_branches"]}
+
+    assert report["counters"]["branch_local_llm_slm_call_count"] == 4
+    for branch_id in (
+        "legal_branch",
+        "accounting_branch",
+        "supplier_b_branch",
+        "bank_b_branch",
+    ):
+        output = branches[branch_id]["branch_semantic_actor_output"]
+        assert output is not None
+        assert output["truth_claimed"] is False
+        assert output["authority_claimed"] is False
+        assert output["action_permission_claimed"] is False
+        assert output["final_output_claimed"] is False
+        assert output["action_commit_packet_claimed"] is False
+        assert output["receipt_claimed"] is False
+        assert output["payment_execution_claimed"] is False
+        assert output["shipment_release_claimed"] is False
+
+
+def test_manual_live_multillm_fractal_runtime_owns_plangraph() -> None:
+    counters = _pass_report()["counters"]
+
+    assert counters["runtime_plangraph_compiled_count"] == 1
+    assert counters["provider_owned_plangraph_count"] == 0
+    assert counters["provider_nodes_edges_executor_assignments_accepted_count"] == 0
+
+
+def test_manual_live_multillm_fractal_secret_membrane() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        report
+    )
+
+    assert counters["llm_visible_raw_iban_count"] == 0
+    assert counters["llm_visible_bank_token_count"] == 0
+    assert counters["llm_visible_secret_count"] == 0
+    assert report["secret_membrane"]["prompt_secret_scan_passed"] is True
+    assert report["secret_membrane"]["artifact_secret_scan_passed"] is True
+    assert "Secrets ∩ LLMContext = empty" in rendered
+
+
+def test_manual_live_multillm_fractal_no_execution_or_effects() -> None:
+    counters = _pass_report()["counters"]
+
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["receipt_created_count"] == 0
+    assert counters["mock_payment_executed_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_manual_live_multillm_fractal_invalid_branch_actor_fails_closed() -> None:
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=ENABLED_ENV, provider=_invalid_branch_provider
+    )
+    counters = report["counters"]
+
+    assert report["final_status"] == "FAIL_CLOSED"
+    assert counters["semantic_actor_call_count"] == 3
+    assert counters["fake_provider_call_count"] == 3
+    assert counters["branch_local_llm_slm_call_count"] == 1
+    assert counters["root_final_boundary_evaluated_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["receipt_created_count"] == 0
+    assert counters["mock_payment_executed_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_manual_live_multillm_fractal_provider_exception_fails_closed() -> None:
+    def raising_provider(
+        role: str, _prompt: str, _context: Mapping[str, Any]
+    ) -> str:
+        if role == "top_level_orchestrator_llm":
+            raise RuntimeError("provider unavailable with hidden details")
+        return json.dumps(_branch_payload(role, "unused"))
+
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=ENABLED_ENV, provider=raising_provider
+    )
+    counters = report["counters"]
+
+    assert report["final_status"] == "FAIL_CLOSED"
+    assert report["stage_status"] == "FAIL_CLOSED"
+    assert report["skip_reason"] == "provider_call_failed:top_level_orchestrator_llm"
+    assert counters["semantic_actor_call_count"] == 1
+    assert counters["fake_provider_call_count"] == 1
+    assert counters["root_final_boundary_evaluated_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["receipt_created_count"] == 0
+    assert counters["mock_payment_executed_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_manual_live_multillm_fractal_real_provider_exception_fails_closed_without_network(
+    monkeypatch: Any,
+) -> None:
+    dummy_key = "DUMMY_TEST_KEY_SHOULD_NOT_RENDER"
+
+    def raising_real_provider(*_args: Any, **_kwargs: Any) -> str:
+        raise RuntimeError("real provider unavailable with hidden details")
+
+    monkeypatch.setattr(runner, "_call_real_provider", raising_real_provider)
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env={runner.ENABLE_ENV: "1", "GEMINI_API_KEY": dummy_key},
+        provider=None,
+    )
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        report
+    )
+    counters = report["counters"]
+
+    assert report["final_status"] == "FAIL_CLOSED"
+    assert report["stage_status"] == "FAIL_CLOSED"
+    assert report["skip_reason"] == "provider_call_failed:top_level_orchestrator_llm"
+    assert counters["semantic_actor_call_count"] == 1
+    assert counters["real_provider_call_count"] == 1
+    assert counters["network_used_count"] == 1
+    assert counters["gemini_called_count"] == 1
+    assert counters["root_final_boundary_evaluated_count"] == 0
+    assert dummy_key not in rendered
+
+
+def test_manual_live_multillm_fractal_artifacts_written_with_fake_provider(
+    tmp_path: Path,
+) -> None:
+    env = {**ENABLED_ENV, runner.ARTIFACT_DIR_ENV: str(tmp_path)}
+
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=env, provider=_fake_provider
+    )
+
+    assert report["final_status"] == "PASS"
+    assert REQUIRED_ARTIFACTS <= {path.name for path in tmp_path.iterdir()}
+    json.loads((tmp_path / "summary.json").read_text(encoding="utf-8"))
+    secret_scan = json.loads(
+        (tmp_path / "secret_scan.json").read_text(encoding="utf-8")
+    )
+    assert secret_scan["passed"] is True
+    for path in tmp_path.iterdir():
+        if path.is_file():
+            text = path.read_text(encoding="utf-8")
+            for marker in SECRET_MARKERS:
+                assert marker not in text
+
+
+def test_manual_live_multillm_fractal_rendered_sections() -> None:
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        _pass_report()
+    )
+
+    for section in REQUIRED_SECTIONS:
+        assert section in rendered
+    assert "FINAL STATUS: PASS" in rendered
+
+
+def test_manual_live_multillm_fractal_forbidden_overclaims() -> None:
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        _pass_report()
+    )
+
+    for left, right in FORBIDDEN_PHRASE_PARTS:
+        assert left + right not in rendered
+
+
+def test_manual_live_multillm_fractal_does_not_call_real_provider_in_tests(
+    monkeypatch: Any,
+) -> None:
+    calls: list[str] = []
+
+    def forbidden_real_provider(*_args: Any, **_kwargs: Any) -> str:
+        calls.append("called")
+        raise AssertionError("real provider must not be called in tests")
+
+    monkeypatch.setattr(runner, "_call_real_provider", forbidden_real_provider)
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=ENABLED_ENV, provider=_fake_provider
+    )
+    source = Path(runner.__file__).read_text(encoding="utf-8")
+
+    assert report["final_status"] == "PASS"
+    assert calls == []
+    assert "GEMINI_API_KEY" in source
+    assert "GOOGLE_API_KEY" in source
+    assert "if provider is None and not" in source

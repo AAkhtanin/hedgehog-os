@@ -1,0 +1,144 @@
+audit_id: auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01
+audit_status: PASS
+audited_layer: Full WOW v1.1 manual live Gemini lane real provider run
+base_commit: 121d22c
+run_id: full_wow_v1_1_manual_live_gemini_real_20260705_232010
+artifact_dir: .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010
+model: gemini-2.5-flash
+contract_mode: semantic_reasoning_adapter
+schema_mode: json_mime_only
+real_gemini_lane_executed: true
+monkeypatched_no_network_topology_proof: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+audited_evidence_files:
+- .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/summary.log
+- .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/summary.json
+- .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/console_safe_summary.json
+- .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/orchestrator_validation.json
+- .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/bsep_validation.json
+- .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/architect_validation.json
+- .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/secret_scan.json
+- .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/orchestrator_provider_extracted_json_candidate.json
+- .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/architect_provider_extracted_json_candidate.json
+- .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/architect_provider_context.json
+
+observed_final_status: PASS
+observed_stage_status: PASS
+observed_orchestrator_validation_accepted: true
+observed_bsep_validation_accepted: true
+observed_architect_validation_accepted: true
+observed_architect_provider_context_bsep_present: true
+observed_architect_provider_context_bsep_validation_accepted: true
+observed_secret_scan_passed: true
+
+role_sequence:
+- orchestrator_provider_called
+- orchestrator_semantics_validated
+- orchestrator_semantics_canonicalized
+- bsep_built
+- bsep_validated
+- architect_prompt_built_from_bsep
+- architect_provider_called
+- architect_semantics_validated
+- architect_semantics_canonicalized
+
+audit_findings:
+finding_real_gemini_orchestrator_called_once: PASS
+finding_real_gemini_architect_called_once: PASS
+finding_live_model_call_count_two: PASS
+finding_gemini_called_count_two: PASS
+finding_network_used_count_two: PASS
+finding_orchestrator_validation_accepted: PASS
+finding_bsep_built_after_orchestrator_validation: PASS
+finding_bsep_validated_before_architect_call: PASS
+finding_architect_received_bsep_context: PASS
+finding_architect_validation_accepted: PASS
+finding_semantic_reasoning_adapter_used: PASS
+finding_runtime_canonicalization_used: PASS
+finding_provider_output_not_truth: PASS
+finding_provider_output_not_authority: PASS
+finding_provider_output_not_action_permission: PASS
+finding_provider_output_not_finaloutput: PASS
+finding_live_gemini_created_no_action_commit_packet: PASS
+finding_live_gemini_created_no_receipt: PASS
+finding_live_gemini_executed_no_mock_payment: PASS
+finding_live_gemini_executed_no_real_payment: PASS
+finding_live_gemini_released_no_shipment: PASS
+finding_real_world_effects_zero: PASS
+finding_secret_scan_passed: PASS
+finding_no_api_key_logged: PASS
+finding_no_raw_bank_secret_logged: PASS
+finding_no_raw_iban_logged: PASS
+finding_no_sandbox_token_logged: PASS
+finding_root_remains_final_authority: PASS
+finding_no_production_claim: PASS
+finding_no_public_auditor_claim: PASS
+
+counter_summary:
+manual_live_gemini_lane_enabled_count: 1
+orchestrator_provider_call_count: 1
+architect_provider_call_count: 1
+live_model_call_count: 2
+gemini_called_count: 2
+network_used_count: 2
+semantic_reasoning_adapter_used_count: 1
+runtime_canonicalization_count: 1
+bsep_created_count: 1
+bsep_validated_count: 1
+manual_live_bsep_built_before_architect_count: 1
+manual_live_architect_received_bsep_context_count: 1
+manual_live_architect_called_before_bsep_validation_count: 0
+manual_live_fail_closed_before_architect_on_invalid_bsep_count: 0
+manual_live_raw_cross_role_text_to_architect_count: 0
+manual_live_raw_provider_text_to_architect_count: 0
+architect_pre_delay_seconds: 30
+architect_pre_delay_applied_count: 1
+provider_output_used_as_truth_count: 0
+provider_output_used_as_authority_count: 0
+provider_output_used_as_action_permission_count: 0
+provider_output_used_as_final_output_count: 0
+live_gemini_created_action_commit_packet_count: 0
+live_gemini_created_receipt_count: 0
+live_gemini_executed_mock_payment_count: 0
+live_gemini_executed_real_payment_count: 0
+live_gemini_released_shipment_count: 0
+real_world_effects_count: 0
+
+provider_boundary_summary:
+orchestrator_truth_claimed: false
+orchestrator_authority_claimed: false
+orchestrator_action_permission_claimed: false
+orchestrator_final_output_claimed: false
+orchestrator_connector_command_claimed: false
+orchestrator_drs_write_claimed: false
+orchestrator_bypass_root_claimed: false
+architect_truth_claimed: false
+architect_authority_claimed: false
+architect_action_permission_claimed: false
+architect_final_output_claimed: false
+architect_connector_command_claimed: false
+architect_drs_write_claimed: false
+architect_root_bypass_claimed: false
+
+safety_summary:
+live_gemini_created_action_commit_packet: false
+live_gemini_created_receipt: false
+live_gemini_executed_mock_payment: false
+live_gemini_executed_real_payment: false
+live_gemini_released_shipment: false
+real_world_effects_count: 0
+root_remains_final_authority: true
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+
+validation_commands_recorded:
+- python3 -m json.tool .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/summary.json >/dev/null
+- python3 -m json.tool .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/console_safe_summary.json >/dev/null
+- python3 -m json.tool .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/orchestrator_validation.json >/dev/null
+- python3 -m json.tool .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/bsep_validation.json >/dev/null
+- python3 -m json.tool .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/architect_validation.json >/dev/null
+- python3 -m json.tool .tmp/full_wow_v1_1_manual_live_gemini/full_wow_v1_1_manual_live_gemini_real_20260705_232010/secret_scan.json >/dev/null
+
+audit_conclusion: PASS

@@ -7,6 +7,20 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_human_full_wow_v1_1_final_walkthrough_v01.log`
+  - Audit status: PASS.
+  - Audits Full WOW v1.1 final human-facing walkthrough.
+  - Audit commit: `b6c5cb0`; human walkthrough runner commit: `2699bb1`; final rollup docs checkpoint commit: `b074ea8`.
+  - Walkthrough type: `human_product_facing_closed_evidence_walkthrough`.
+  - Observes the final integrated rollup only.
+  - Transition cards created: `15`.
+  - Product/business story visibility is closed for warehouse evidence, Supplier A, Supplier B blocker, legal/accounting review, BSEP membrane, Root / human / action boundary, and MockBankSandbox receipt boundary.
+  - Real Gemini lane is observed, not rerun.
+  - No Gemini/provider/network rerun, no secret access, no ActionCommitPacket creation, no receipt creation, no mock payment execution, no real payment execution, no shipment release, and no connector/API effects.
+  - Counters preserve `real_world_effects_count: 0`.
+  - v1.2 is not implemented.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_full_wow_v1_1_final_integrated_rollup_v01.log`
   - Audit status: PASS.
   - Audits Full WOW v1.1 final integrated rollup runner.

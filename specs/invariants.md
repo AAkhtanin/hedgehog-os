@@ -197,6 +197,25 @@ Full WOW v1.1 final integrated rollup invariant examples:
 - Provider output is not truth, authority, action permission, or FinalOutput.
 - Root remains final authority.
 
+Full WOW v1.1 final human-facing walkthrough invariant examples:
+
+- Human walkthrough must observe final rollup only.
+- Human walkthrough must not rerun Gemini.
+- Human walkthrough must not call provider/network.
+- Human walkthrough must not access secrets.
+- Human walkthrough must not create ActionCommitPacket.
+- Human walkthrough must not create receipt.
+- Human walkthrough must not execute payment.
+- Human walkthrough must not release shipment.
+- Human walkthrough must not call bank/supplier/warehouse APIs.
+- Human walkthrough must not implement v1.2.
+- Transition cards are explanatory evidence, not authority.
+- Semantic Architect output remains semantic proposal.
+- Runtime owns PlanGraph/local plan artifacts.
+- Human approval is scoped evidence only.
+- MockBankSandbox receipt is evidence only.
+- Root remains final authority.
+
 DRS registry invariant:
 
 - DRS is a registry/resolver/index, not a raw memory dump.

@@ -57,9 +57,52 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Full WOW v1.1 final integrated rollup PASS.
+Current checkpoint: Full WOW v1.1 final human-facing walkthrough PASS.
 
-Current final integrated rollup facts:
+Current final human-facing walkthrough facts:
+
+- Audit log:
+  `docs/audit_reports/auditor_human_full_wow_v1_1_final_walkthrough_v01.log`.
+- Runner:
+  `demo/run_human_full_wow_v1_1_final_walkthrough.py`.
+- Focused tests:
+  `tests/test_human_full_wow_v1_1_final_walkthrough_runner.py`.
+- Audit commit: `b6c5cb0`.
+- Human walkthrough runner commit: `2699bb1`.
+- Final rollup docs checkpoint commit: `b074ea8`.
+- Walkthrough type: `human_product_facing_closed_evidence_walkthrough`.
+- This is the closed human-facing product walkthrough layer for v1.1.
+- v1.1 is now closed as proof, audit, final rollup, and human-facing package,
+  pending evidence pack index.
+- The walkthrough observes the final integrated rollup only.
+- Real Gemini lane is observed, not rerun.
+- Transition cards created: `15`.
+- Product/business story visibility is closed for dirty request, warehouse
+  evidence, Supplier A scoped path, Supplier B blocker, legal/accounting
+  review, real Gemini semantic lane observation, BSEP membrane, Root decision,
+  scoped human approval, ActionCommitPacket boundary, and MockBankSandbox
+  receipt boundary.
+- Semantic Architect remains semantic proposal provider.
+- PlanGraph remains runtime-built, not provider-owned.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Human approval is scoped evidence only.
+- MockBankSandbox receipt is evidence only.
+- Root remains final authority.
+- Walkthrough calls no Gemini/provider/network lane, accesses no secrets,
+  creates no ActionCommitPacket, creates no receipt, executes no mock payment,
+  executes no real payment, releases no shipment, calls no
+  bank/supplier/warehouse API, and preserves `real_world_effects_count: 0`.
+- v1.2 is not implemented.
+- Not production.
+- Not public auditor final package.
+
+Next direction should be the Full WOW v1.1 evidence pack index, then WOW v1.2
+product trace preflight. v1.2 is planning only until explicitly started. Do
+not start NeedleFactory, Marennya, UP, production connectors, or public auditor
+package.
+
+Closed final integrated rollup facts:
+
 
 - Audit log:
   `docs/audit_reports/auditor_full_wow_v1_1_final_integrated_rollup_v01.log`.
@@ -93,8 +136,9 @@ Current final integrated rollup facts:
 - Not production.
 - Not public auditor final package.
 
-Next direction should be human-facing pretty walkthrough / evidence pack for
-WOW v1.1, then v1.2 planning only. Do not start NeedleFactory, Marennya, UP,
+The old final-rollup next step of a human-facing walkthrough is now closed by
+the current checkpoint. Continue from the evidence pack index, then WOW v1.2
+product trace preflight only. Do not start NeedleFactory, Marennya, UP,
 production connectors, or public auditor package.
 
 Closed real-provider run facts:

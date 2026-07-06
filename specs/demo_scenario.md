@@ -246,6 +246,36 @@ Scenario result:
   provider/network call, API call, secret access, or real-world effect.
 - Final integrated rollup proof is complete.
 
+### full_wow_v1_1_final_human_walkthrough
+
+Supplier Payment / Shipment Release Review WOW v1.1 now has a final
+human-facing product walkthrough PASS with transition cards across dirty
+request, warehouse, suppliers, legal/accounting, live Gemini semantic lane,
+BSEP, Root, human approval, mock packet, and receipt boundary.
+
+Scenario result:
+
+- Audit:
+  `docs/audit_reports/auditor_human_full_wow_v1_1_final_walkthrough_v01.log`.
+- Runner: `demo/run_human_full_wow_v1_1_final_walkthrough.py`.
+- Walkthrough type: `human_product_facing_closed_evidence_walkthrough`.
+- Source final rollup is observed only.
+- Real Gemini lane is observed, not rerun.
+- Transition cards created: `15`.
+- Warehouse evidence, Supplier A, Supplier B blocked, legal/accounting review,
+  BSEP membrane, Semantic Architect/runtime PlanGraph boundary, Root / human /
+  action boundary, and MockBankSandbox receipt boundary are visible.
+- Provider output remains semantic proposal only, not truth, authority, action
+  permission, or FinalOutput.
+- Runtime owns PlanGraph/local plan artifacts.
+- Human approval is scoped evidence only.
+- Receipt remains evidence only.
+- Root remains final authority.
+- The walkthrough creates no ActionCommitPacket, receipt, payment, shipment
+  release, provider/network call, API call, secret access, or real-world
+  effect.
+- v1.2 is not implemented.
+
 ## What The Demo Must Prove
 
 - Root authority.

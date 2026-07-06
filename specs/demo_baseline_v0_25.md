@@ -230,6 +230,38 @@ Status:
   real-world effect.
 - Final integrated rollup proof is complete.
 
+## Applied Full WOW Final Human-Facing Walkthrough Checkpoint
+
+Full WOW v1.1 final human-facing walkthrough is PASS as a product-facing
+closed-evidence walkthrough over the final rollup.
+
+Status:
+
+- PASS through audit
+  `docs/audit_reports/auditor_human_full_wow_v1_1_final_walkthrough_v01.log`.
+- Runner: `demo/run_human_full_wow_v1_1_final_walkthrough.py`.
+- Focused tests:
+  `tests/test_human_full_wow_v1_1_final_walkthrough_runner.py`.
+- Audit commit: `b6c5cb0`.
+- Human walkthrough runner commit: `2699bb1`.
+- Walkthrough type: `human_product_facing_closed_evidence_walkthrough`.
+- The walkthrough observes the final integrated rollup only.
+- Real Gemini lane is observed, not rerun.
+- Transition cards created: `15`.
+- Product/business story visibility covers dirty request, warehouse evidence,
+  Supplier A, Supplier B blocked, legal/accounting review, BSEP membrane, Root,
+  scoped human approval, ActionCommitPacket boundary, and MockBankSandbox
+  receipt boundary.
+- Semantic Architect proposes semantic plan intent.
+- Runtime owns PlanGraph/local plan artifacts.
+- Human approval is scoped evidence only.
+- MockBankSandbox receipt is evidence only.
+- Root remains final authority.
+- The walkthrough creates no ActionCommitPacket, receipt, mock payment, real
+  payment, shipment release, provider/network call, API call, secret access, or
+  real-world effect.
+- v1.2 is not implemented.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

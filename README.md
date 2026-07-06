@@ -35,6 +35,66 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
+Full WOW v1.1 final human-facing walkthrough — PASS.
+
+Checkpoint source:
+
+- Audit:
+  `docs/audit_reports/auditor_human_full_wow_v1_1_final_walkthrough_v01.log`.
+- Runner: `demo/run_human_full_wow_v1_1_final_walkthrough.py`.
+- Tests: `tests/test_human_full_wow_v1_1_final_walkthrough_runner.py`.
+- Audit commit: `b6c5cb0`.
+- Human walkthrough runner commit: `2699bb1`.
+- Final rollup docs checkpoint commit: `b074ea8`.
+- Walkthrough type: `human_product_facing_closed_evidence_walkthrough`.
+- The walkthrough observes the final integrated rollup only.
+- The real Gemini lane is observed, not rerun.
+- Transition cards created: `15`.
+- Transition-card story: `dirty_request_received`,
+  `warehouse_scope_observed`, `supplier_a_scope_observed`,
+  `supplier_b_blocker_observed`, `legal_accounting_review_observed`,
+  `live_gemini_semantic_lane_observed`, `bsep_membrane_observed`,
+  `drs_candidate_avf_observed`, `semantic_architect_runtime_plan_boundary`,
+  `root_first_decision_not_ready`, `corrected_evidence_second_run`,
+  `human_approval_scoped`, `root_created_mock_packet_observed`,
+  `mock_bank_receipt_observed`, and `final_state_summary`.
+- Product/business story visibility is closed for warehouse evidence, Supplier
+  A, Supplier B blocker, legal/accounting review, Root decision, scoped human
+  approval, ActionCommitPacket boundary, and MockBankSandbox receipt boundary.
+- BSEP membrane and Semantic Architect / runtime PlanGraph boundary are
+  visible.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Semantic Architect proposes semantic plan intent.
+- Runtime owns PlanGraph/local plan artifacts.
+- Human approval is scoped evidence only.
+- MockBankSandbox receipt remains evidence only.
+- Root remains final authority.
+- Walkthrough counters: `human_final_walkthrough_created_count: 1`,
+  `source_final_rollup_observed_count: 1`,
+  `transition_cards_created_count: 15`,
+  `real_gemini_lane_observed_count: 1`,
+  `real_gemini_lane_rerun_count: 0`,
+  `walkthrough_called_gemini_count: 0`,
+  `walkthrough_network_used_count: 0`,
+  `walkthrough_provider_called_count: 0`,
+  `walkthrough_accessed_secrets_count: 0`,
+  `walkthrough_created_action_commit_packet_count: 0`,
+  `walkthrough_created_receipt_count: 0`,
+  `walkthrough_executed_mock_payment_count: 0`,
+  `walkthrough_executed_real_payment_count: 0`,
+  `walkthrough_released_shipment_count: 0`,
+  `walkthrough_called_bank_supplier_warehouse_api_count: 0`, and
+  `real_world_effects_count: 0`.
+- The walkthrough creates no ActionCommitPacket, creates no receipt, executes
+  no mock payment, executes no real payment, releases no shipment, calls no
+  provider/network/Gemini lane, accesses no secrets, calls no
+  bank/supplier/warehouse API, and creates no real-world effects.
+- v1.2 is not implemented.
+- This is not production.
+- This is not public auditor final package.
+
+Closed basis:
+
 Full WOW v1.1 final integrated rollup — PASS.
 
 Checkpoint source:

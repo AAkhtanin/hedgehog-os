@@ -409,6 +409,45 @@ Authority formula preserved:
 - Runtime builds and owns local plan artifacts after validation.
 - Root remains final authority.
 
+### Full WOW v1.1 Final Human-Facing Walkthrough
+
+Full WOW v1.1 now has a final human-facing walkthrough PASS over the closed
+final integrated rollup.
+
+Checkpoint facts:
+
+- Audit:
+  `docs/audit_reports/auditor_human_full_wow_v1_1_final_walkthrough_v01.log`.
+- Runner: `demo/run_human_full_wow_v1_1_final_walkthrough.py`.
+- Focused tests:
+  `tests/test_human_full_wow_v1_1_final_walkthrough_runner.py`.
+- Audit commit: `b6c5cb0`.
+- Human walkthrough runner commit: `2699bb1`.
+- Walkthrough type: `human_product_facing_closed_evidence_walkthrough`.
+- The walkthrough observes the final integrated rollup only.
+- Real Gemini lane is observed, not rerun.
+- Transition cards created: `15`.
+- Product/business story visibility covers dirty request, warehouse evidence,
+  Supplier A scoped path, Supplier B blocker, legal/accounting review, BSEP,
+  Root, scoped human approval, ActionCommitPacket boundary, and MockBankSandbox
+  receipt boundary.
+- Provider proposes semantics.
+- Runtime canonicalizes.
+- Validators verify.
+- Root decides.
+- Semantic Architect proposes semantic plan intent.
+- Runtime owns PlanGraph/local plan artifacts.
+- Human approval is scoped.
+- MockBankSandbox receipt is evidence only.
+- Root remains final authority.
+- The walkthrough calls no Gemini/provider/network lane, accesses no secrets,
+  creates no ActionCommitPacket, creates no receipt, executes no mock payment,
+  executes no real payment, releases no shipment, calls no
+  bank/supplier/warehouse API, and preserves `real_world_effects_count: 0`.
+- v1.2 is not implemented.
+- This is not production.
+- This is not public auditor final package.
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:

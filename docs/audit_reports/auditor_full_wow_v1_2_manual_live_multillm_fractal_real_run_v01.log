@@ -1,0 +1,213 @@
+audit_id: auditor_full_wow_v1_2_manual_live_multillm_fractal_real_run_v01
+audit_status: PASS
+audited_layer: Full WOW v1.2 manual live multi-LLM/fractal real provider run
+base_commit: 0443d23
+deterministic_product_trace_audit_commit: ff9cb1e
+deterministic_product_trace_runner_commit: a66ad44
+preflight_commit: 9053f93
+v1_1_evidence_pack_commit: 0f7318a
+run_id: full_wow_v1_2_manual_live_multillm_fractal_real_20260706_170024
+artifact_dir: .tmp/full_wow_v1_2_manual_live_multillm_fractal/full_wow_v1_2_manual_live_multillm_fractal_real_20260706_170024
+provider_mode: real_provider
+model: gemini-2.5-flash
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_world_effects_count: 0
+
+[EVIDENCE FILES READ]
+- console.log
+- summary.log
+- summary.json
+- secret_scan.json
+- top_level_orchestrator_prompt.txt
+- top_level_orchestrator_raw_response.txt
+- top_level_orchestrator_extracted_json_candidate.json
+- top_level_orchestrator_validation.json
+- bsep_packet.json
+- bsep_validation.json
+- top_level_architect_prompt.txt
+- top_level_architect_raw_response.txt
+- top_level_architect_extracted_json_candidate.json
+- top_level_architect_validation.json
+- branch_legal_prompt.txt
+- branch_legal_raw_response.txt
+- branch_legal_validation.json
+- branch_accounting_prompt.txt
+- branch_accounting_raw_response.txt
+- branch_accounting_validation.json
+- branch_supplier_b_prompt.txt
+- branch_supplier_b_raw_response.txt
+- branch_supplier_b_validation.json
+- branch_bank_policy_prompt.txt
+- branch_bank_policy_raw_response.txt
+- branch_bank_policy_validation.json
+
+[JSON VALIDATION COMMANDS]
+- python3 -m json.tool artifact_dir/summary.json
+  result: PASS
+- python3 -m json.tool artifact_dir/secret_scan.json
+  result: PASS
+- python3 -m json.tool artifact_dir/top_level_orchestrator_validation.json
+  result: PASS
+- python3 -m json.tool artifact_dir/bsep_validation.json
+  result: PASS
+- python3 -m json.tool artifact_dir/top_level_architect_validation.json
+  result: PASS
+- python3 -m json.tool artifact_dir/branch_legal_validation.json
+  result: PASS
+- python3 -m json.tool artifact_dir/branch_accounting_validation.json
+  result: PASS
+- python3 -m json.tool artifact_dir/branch_supplier_b_validation.json
+  result: PASS
+- python3 -m json.tool artifact_dir/branch_bank_policy_validation.json
+  result: PASS
+
+[OBSERVED SUMMARY]
+summary_stage_status: PASS
+summary_final_status: PASS
+summary_provider_mode: real_provider
+summary_model: gemini-2.5-flash
+secret_scan_passed: true
+top_level_orchestrator_validation_accepted: true
+bsep_validation_accepted: true
+top_level_architect_validation_accepted: true
+branch_legal_validation_accepted: true
+branch_accounting_validation_accepted: true
+branch_supplier_b_validation_accepted: true
+branch_bank_policy_validation_accepted: true
+
+[REQUIRED FINDINGS]
+finding_final_status_pass: PASS
+finding_stage_status_pass: PASS
+finding_provider_mode_real_provider: PASS
+finding_semantic_actor_call_count_six: PASS
+finding_real_provider_call_count_six: PASS
+finding_network_used_count_six: PASS
+finding_gemini_called_count_six: PASS
+finding_top_level_orchestrator_called_once: PASS
+finding_top_level_orchestrator_validation_accepted: PASS
+finding_bsep_created_after_orchestrator: PASS
+finding_bsep_validated_before_architect: PASS
+finding_top_level_architect_called_once: PASS
+finding_top_level_architect_validation_accepted: PASS
+finding_branch_legal_semantic_actor_called_and_validated: PASS
+finding_branch_accounting_semantic_actor_called_and_validated: PASS
+finding_branch_supplier_b_semantic_actor_called_and_validated: PASS
+finding_branch_bank_policy_semantic_actor_called_and_validated: PASS
+finding_branch_local_llm_slm_call_count_four: PASS
+finding_runtime_plangraph_compiled_once: PASS
+finding_provider_owned_plangraph_zero: PASS
+finding_fractal_branch_cells_created_eight: PASS
+finding_branch_result_proposals_created_eight: PASS
+finding_post_vv_validated: PASS
+finding_gt_lgt_advisory_reviewed: PASS
+finding_root_final_boundary_evaluated: PASS
+finding_secret_scan_passed: PASS
+finding_no_api_key_logged: PASS
+finding_no_raw_bank_secret_logged: PASS
+finding_no_raw_iban_logged: PASS
+finding_no_sandbox_token_logged: PASS
+finding_no_action_commit_packet_created: PASS
+finding_no_receipt_created: PASS
+finding_no_mock_payment_executed: PASS
+finding_no_real_payment_executed: PASS
+finding_no_shipment_released: PASS
+finding_real_world_effects_zero: PASS
+finding_no_production_claim: PASS
+finding_no_public_auditor_claim: PASS
+
+[COUNTER SUMMARY]
+semantic_actor_call_count: 6
+real_provider_call_count: 6
+fake_provider_call_count: 0
+network_used_count: 6
+gemini_called_count: 6
+top_level_orchestrator_llm_call_count: 1
+top_level_architect_llm_call_count: 1
+branch_local_llm_slm_call_count: 4
+bsep_created_count: 1
+bsep_validated_count: 1
+architect_received_bsep_context_count: 1
+architect_called_before_bsep_validation_count: 0
+runtime_plangraph_compiled_count: 1
+provider_owned_plangraph_count: 0
+provider_nodes_edges_executor_assignments_accepted_count: 0
+fractal_branch_cells_created_count: 8
+branch_result_proposals_created_count: 8
+post_vv_validated_count: 1
+gt_lgt_advisory_review_count: 1
+root_final_boundary_evaluated_count: 1
+action_commit_packet_created_count: 0
+receipt_created_count: 0
+mock_payment_executed_count: 0
+real_payment_executed_count: 0
+shipment_released_count: 0
+real_world_effects_count: 0
+
+[ROLE SEQUENCE]
+1. dirty_request_loaded_from_v1_2_product_trace
+2. top_level_orchestrator_provider_called
+3. top_level_orchestrator_semantics_validated
+4. top_level_orchestrator_semantics_canonicalized
+5. bsep_created
+6. bsep_validated
+7. top_level_architect_prompt_built_from_bsep
+8. top_level_architect_provider_called
+9. top_level_architect_semantics_validated
+10. top_level_architect_semantics_canonicalized
+11. runtime_plangraph_compiled
+12. fractal_branch_cells_created
+13. warehouse_branch_api_evidence_observed
+14. supplier_a_branch_api_evidence_observed
+15. supplier_b_branch_api_evidence_observed
+16. legal_branch_semantic_actor_called
+17. legal_branch_result_proposal_created
+18. accounting_branch_semantic_actor_called
+19. accounting_branch_result_proposal_created
+20. supplier_b_branch_semantic_actor_called
+21. supplier_b_branch_result_proposal_created
+22. bank_policy_branch_semantic_actor_called
+23. bank_branch_result_proposal_created
+24. branch_result_proposals_merged
+25. post_vv_validated
+26. gt_lgt_advisory_reviewed
+27. root_final_boundary_evaluated
+
+[AUTHORITY BOUNDARIES]
+- Provider output is not truth.
+- Provider output is not authority.
+- Provider output is not action permission.
+- Provider output is not FinalOutput.
+- Branch LLM/SLM output is not truth.
+- Branch LLM/SLM output is not authority.
+- Branch LLM/SLM output is not action permission.
+- Branch LLM/SLM output is not FinalOutput.
+- Branch LLM/SLM output does not create ActionCommitPacket.
+- Branch LLM/SLM output does not create receipt.
+- Branch LLM/SLM output does not execute payment.
+- Branch LLM/SLM output does not release shipment.
+- BSEP is not truth.
+- BSEP is not authority.
+- Runtime owns PlanGraph/local plan artifacts.
+- Provider does not own PlanGraph.
+- PlanGraph is not authority.
+- Branch ResultProposal is not FinalOutput.
+- Post V&V does not finalize.
+- GT/LGT does not finalize.
+- Root remains final authority.
+
+[NON-CLAIMS]
+- not production
+- not public auditor final package
+- no real payment
+- no real shipment release
+- no production connectors
+- no real bank/supplier/warehouse API
+- no real-world effects
+
+[AUDIT CONCLUSION]
+The closed Full WOW v1.2 manual live multi-LLM/fractal real provider run is PASS.
+The run used six real semantic actor calls: top-level Orchestrator, top-level Semantic Architect, and four branch-local semantic actors.
+The observed path is Orchestrator -> BSEP -> Architect -> branch actors -> ResultProposals -> Post V&V -> GT/LGT -> Root.
+Secret scan passed, no action or receipt was created, no mock or real payment was executed, no shipment was released, and real_world_effects_count remained 0.
+No production or public auditor readiness claim is made.

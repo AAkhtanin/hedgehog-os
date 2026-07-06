@@ -1,0 +1,142 @@
+audit_id: auditor_full_wow_v1_1_final_integrated_rollup_v01
+audit_status: PASS
+audited_layer: Full WOW v1.1 final integrated rollup runner
+base_commit: f22d452
+preflight_commit: 2993b46
+real_gemini_docs_checkpoint_commit: 9c0ab75
+real_gemini_audit_commit: 8318be9
+real_gemini_runtime_base_commit: 121d22c
+rollup_runner_commit: f22d452
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_world_effects_count: 0
+
+audited_files:
+- docs/full_wow_v1_1_final_integrated_rollup_preflight_v01.md
+- demo/run_full_wow_v1_1_final_integrated_rollup.py
+- tests/test_full_wow_v1_1_final_integrated_rollup_runner.py
+- docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01.log
+- docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01.log
+- docs/audit_reports/auditor_supplier_payment_shipment_release_review_wow_v1_1.log
+- docs/audit_reports/auditor_full_semantic_e2e_wow_v1_1_alignment_v01.log
+- docs/audit_reports/auditor_full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01.log
+
+validation_commands:
+- command: python3 -m py_compile demo/run_full_wow_v1_1_final_integrated_rollup.py
+  result: PASS
+- command: python3 -m demo.run_full_wow_v1_1_final_integrated_rollup
+  result: PASS
+  observed_final_status: PASS
+  observed_rollup_type: deterministic_closed_evidence_observer
+  observed_source_inventory: FOUND
+  observed_real_gemini_lane_rerun_count: 0
+  observed_rollup_called_gemini_count: 0
+  observed_rollup_network_used_count: 0
+  observed_rollup_provider_called_count: 0
+  observed_real_world_effects_count: 0
+- command: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_full_wow_v1_1_final_integrated_rollup_runner.py tests/test_supplier_payment_shipment_release_review_wow_v1_1_runner.py tests/test_human_supplier_payment_shipment_release_review_wow_v1_1_walkthrough_runner.py tests/test_full_semantic_e2e_v01_runner.py
+  result: PASS
+  tests_passed: 266
+  warnings: 2
+
+static_checks:
+- command: git status --short --untracked-files=all
+  expected_changed_file_only: docs/audit_reports/auditor_full_wow_v1_1_final_integrated_rollup_v01.log
+- command: git diff --stat
+  expected_result: no tracked diff before staging
+- command: git diff --check
+  expected_result: PASS
+- command: git diff --name-only
+  expected_result: no tracked diff before staging
+- command: positive rollup marker grep on runner and focused test
+  result: PASS
+- command: forbidden overclaim grep on runner, focused test, and this audit log
+  result: PASS
+
+audit_findings:
+- finding_final_rollup_runner_created: PASS
+- finding_final_rollup_runner_returns_pass: PASS
+- finding_final_rollup_is_deterministic_local: PASS
+- finding_final_rollup_observes_closed_evidence_only: PASS
+- finding_final_rollup_does_not_import_or_call_supplier_wow_runner: PASS
+- finding_final_rollup_does_not_import_or_call_full_e2e_runner: PASS
+- finding_final_rollup_does_not_rerun_gemini: PASS
+- finding_final_rollup_does_not_call_provider_network: PASS
+- finding_final_rollup_does_not_access_secrets: PASS
+- finding_final_rollup_creates_no_action_commit_packet: PASS
+- finding_final_rollup_creates_no_receipt: PASS
+- finding_final_rollup_executes_no_mock_payment: PASS
+- finding_final_rollup_executes_no_real_payment: PASS
+- finding_final_rollup_releases_no_shipment: PASS
+- finding_real_world_effects_zero: PASS
+- finding_source_inventory_complete: PASS
+- finding_state_machine_phases_present: PASS
+- finding_real_gemini_lane_observed_not_rerun: PASS
+- finding_bsep_before_architect_sequence_present: PASS
+- finding_semantic_architect_runtime_plangraph_boundary_present: PASS
+- finding_supplier_b_blocked: PASS
+- finding_shipment_release_held: PASS
+- finding_receipt_evidence_only: PASS
+- finding_root_remains_final_authority: PASS
+- finding_no_production_claim: PASS
+- finding_no_public_auditor_claim: PASS
+
+counter_summary:
+- final_integrated_rollup_created_count: 1
+- source_supplier_wow_summary_observed_count: 1
+- source_human_walkthrough_observed_count: 1
+- source_full_e2e_summary_observed_count: 1
+- source_real_gemini_audit_observed_count: 1
+- source_bsep_topology_audit_observed_count: 1
+- real_gemini_lane_observed_count: 1
+- real_gemini_lane_rerun_count: 0
+- rollup_called_gemini_count: 0
+- rollup_network_used_count: 0
+- rollup_provider_called_count: 0
+- rollup_accessed_secrets_count: 0
+- rollup_created_action_commit_packet_count: 0
+- rollup_created_receipt_count: 0
+- rollup_executed_mock_payment_count: 0
+- rollup_executed_real_payment_count: 0
+- rollup_released_shipment_count: 0
+- rollup_called_bank_supplier_warehouse_api_count: 0
+- real_world_effects_count: 0
+
+authority_matrix:
+- Provider output is not truth.
+- Provider output is not authority.
+- Provider output is not action permission.
+- Provider output is not FinalOutput.
+- DRS candidate context is not truth.
+- CandidateVector is not truth.
+- AVF/advisory is not authority.
+- BSEP is not truth.
+- BSEP is not authority.
+- Semantic Architect is not Root.
+- PlanGraph is not authority.
+- ResultProposal is not FinalOutput.
+- Post V&V does not finalize.
+- GT/LGT does not finalize.
+- Human approval is scoped evidence only.
+- Root-created mock ActionCommitPacket is scoped only.
+- MockBankSandbox receipt is evidence only.
+- Receipt does not release shipment.
+- Root remains final authority.
+
+non_claims:
+- not production
+- not public auditor final package
+- no real payment
+- no real shipment release
+- no connector/API effects
+- no real-world effects
+
+audit_conclusion:
+The Full WOW v1.1 final integrated rollup runner is PASS. It is a
+deterministic local observer over closed committed evidence. It returns PASS,
+renders the required final integrated rollup sections, observes source
+checkpoints, reports the real Gemini semantic lane as closed evidence without
+rerunning it, preserves BSEP-before-Architect topology, preserves the Semantic
+Architect/runtime-owned PlanGraph boundary, and reports zero rollup-side
+provider, network, secret, action, receipt, payment, shipment, connector/API,
+and real-world effect counters.

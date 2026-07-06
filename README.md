@@ -35,6 +35,67 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
+Full WOW v1.1 manual live Gemini lane real provider run — PASS.
+
+Checkpoint source:
+
+- Audit: `docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01.log`.
+- Run id: `full_wow_v1_1_manual_live_gemini_real_20260705_232010`.
+- Runtime/audit base commit: `121d22c`; audit commit: `8318be9`.
+- Model: `gemini-2.5-flash`.
+- Contract mode: `semantic_reasoning_adapter`; schema mode:
+  `json_mime_only`.
+- Preflight: `docs/full_wow_v1_1_manual_live_gemini_lane_preflight_v01.md`.
+- Runner: `demo/run_full_semantic_e2e_v01.py`.
+- Tests: `tests/test_full_semantic_e2e_v01_runner.py`.
+- Existing Full E2E runner remains the spine.
+- Manual live Gemini lane is env-gated.
+- Real Gemini Orchestrator and real Gemini Architect both executed.
+- Orchestrator semantic proposal validation accepted.
+- Runtime canonicalization was used.
+- BSEP was built and validated between Orchestrator and Architect.
+- Architect received BSEP-derived bounded context after a 30-second pre-delay.
+- Architect semantic proposal validation accepted.
+- `semantic_reasoning_adapter` was used for both live provider roles.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Gemini creates no ActionCommitPacket, no receipt, no mock payment, no real
+  payment, and no shipment release.
+- Supplier B remains blocked.
+- Shipment release remains held.
+- Receipt remains evidence only.
+- Root remains final authority.
+- Counter summary: `manual_live_gemini_lane_enabled_count: 1`,
+  `orchestrator_provider_call_count: 1`,
+  `architect_provider_call_count: 1`, `live_model_call_count: 2`,
+  `gemini_called_count: 2`, `network_used_count: 2`,
+  `bsep_created_count: 1`, `bsep_validated_count: 1`,
+  `manual_live_bsep_built_before_architect_count: 1`,
+  `manual_live_architect_received_bsep_context_count: 1`,
+  `manual_live_architect_called_before_bsep_validation_count: 0`,
+  `manual_live_fail_closed_before_architect_on_invalid_bsep_count: 0`,
+  `provider_output_used_as_truth_count: 0`,
+  `provider_output_used_as_authority_count: 0`,
+  `provider_output_used_as_action_permission_count: 0`,
+  `provider_output_used_as_final_output_count: 0`,
+  `live_gemini_created_action_commit_packet_count: 0`,
+  `live_gemini_created_receipt_count: 0`,
+  `live_gemini_executed_mock_payment_count: 0`,
+  `live_gemini_executed_real_payment_count: 0`,
+  `live_gemini_released_shipment_count: 0`, and
+  `real_world_effects_count: 0`.
+- Role sequence: `orchestrator_provider_called` ->
+  `orchestrator_semantics_validated` ->
+  `orchestrator_semantics_canonicalized` -> `bsep_built` ->
+  `bsep_validated` -> `architect_prompt_built_from_bsep` ->
+  `architect_provider_called` -> `architect_semantics_validated` ->
+  `architect_semantics_canonicalized`.
+- Secret scan passed: no API key, raw bank secret, raw IBAN, or sandbox token
+  was logged.
+- This is not production.
+- This is not public auditor final package.
+
+Closed basis:
+
 Full WOW v1.1 manual live Gemini BSEP topology repair — PASS.
 
 Checkpoint source:
@@ -43,14 +104,12 @@ Checkpoint source:
   `docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01.log`.
 - Runtime repair commit: `920e5b3`.
 - Preflight: `docs/full_wow_v1_1_manual_live_gemini_lane_preflight_v01.md`.
-- Runner: `demo/run_full_semantic_e2e_v01.py`.
-- Tests: `tests/test_full_semantic_e2e_v01_runner.py`.
 - Existing Full E2E runner remains the spine.
 - No new bridge runner was created.
 - Manual live Gemini lane is env-gated.
 - Default deterministic lane remains no Gemini/network/provider.
-- This is monkeypatched/no-network topology proof, not final real Gemini lane
-  closure.
+- This was the monkeypatched/no-network topology proof that preceded the real
+  provider PASS.
 - BSEP is built after Orchestrator validation and semantic canonicalization.
 - BSEP is validated before Architect provider call.
 - Architect receives BSEP-derived bounded context.

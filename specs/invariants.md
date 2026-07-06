@@ -166,6 +166,21 @@ Full WOW v1.1 manual live Gemini BSEP topology invariant examples:
   shipment release.
 - Root remains final authority.
 
+Full WOW v1.1 manual live Gemini real provider invariant examples:
+
+- Live Orchestrator output must validate before BSEP is built.
+- BSEP must validate before Architect provider call.
+- Live Architect output is a semantic proposal, not runtime PlanGraph
+  ownership.
+- Runtime builds local plan artifacts after validation.
+- Provider output cannot create ActionCommitPacket.
+- Provider output cannot create receipt.
+- Provider output cannot execute payment.
+- Provider output cannot release shipment.
+- Provider output cannot create FinalOutput.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Root remains final authority.
+
 DRS registry invariant:
 
 - DRS is a registry/resolver/index, not a raw memory dump.

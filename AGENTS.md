@@ -57,9 +57,56 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Full WOW v1.1 manual live Gemini BSEP topology repair PASS.
+Current checkpoint: Full WOW v1.1 manual live Gemini lane real provider run
+PASS.
 
-Current topology repair facts:
+Current real-provider run facts:
+
+- Audit log:
+  `docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01.log`.
+- Run id: `full_wow_v1_1_manual_live_gemini_real_20260705_232010`.
+- Runtime/audit base commit: `121d22c`; audit commit: `8318be9`.
+- Model: `gemini-2.5-flash`.
+- Contract mode: `semantic_reasoning_adapter`; schema mode:
+  `json_mime_only`.
+- Existing Full E2E runner remains the spine.
+- No new bridge runner was created.
+- Manual live Gemini lane is env-gated.
+- Real Gemini Orchestrator was called once and real Gemini Architect was
+  called once.
+- Orchestrator semantic proposal validation accepted.
+- Runtime canonicalization was used.
+- BSEP was built after Orchestrator validation and semantic canonicalization.
+- BSEP was validated before Architect provider call.
+- Architect receives BSEP-derived bounded context.
+- The 30-second Architect pre-delay was applied.
+- Architect semantic proposal validation accepted.
+- `semantic_reasoning_adapter` was used for both live provider roles.
+- PlanGraph remains runtime-built, not provider-owned.
+- Full WOW live Architect uses the semantic provider wrapper, not the legacy
+  PlanGraph provider wrapper.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Gemini creates no ActionCommitPacket, no receipt, no mock payment, no real
+  payment, and no shipment release.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- Root remains final authority.
+- `real_world_effects_count: 0`.
+- Secret scan passed: no API key, raw bank secret, raw IBAN, or sandbox token
+  was logged.
+- Not production.
+- Not public auditor final package.
+
+BSEP 004 remains the topology source of truth. Supplier Payment WOW v1.1, Full
+E2E WOW alignment, Full E2E live evidence + WOW v1.1 coherence, and the
+monkeypatched/no-network BSEP topology repair remain the closed basis.
+
+Next direction should be reviewed docs/audit rollup or the final integrated
+WOW v1.1 checkpoint, not a new domain demo. Do not start NeedleFactory,
+Marennya, UP, production connectors, or public auditor package.
+
+Closed Full WOW manual live Gemini topology repair facts:
 
 - Audit log:
   `docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01.log`.
@@ -68,8 +115,6 @@ Current topology repair facts:
 - No new bridge runner was created.
 - Manual live Gemini lane is env-gated.
 - Default deterministic lane remains no Gemini/network/provider.
-- This is monkeypatched/no-network topology proof, not final real Gemini lane
-  closure.
 - BSEP is built after Orchestrator validation and semantic canonicalization.
 - BSEP is validated before Architect provider call.
 - Architect receives BSEP-derived bounded context.
@@ -85,10 +130,6 @@ Current topology repair facts:
 - No real-world effects.
 - Not production.
 - Not public auditor final package.
-
-BSEP 004 remains the topology source of truth. Supplier Payment WOW v1.1, Full
-E2E WOW alignment, and Full E2E live evidence + WOW v1.1 coherence remain the
-closed basis.
 
 Closed Full E2E live evidence + WOW coherence facts:
 

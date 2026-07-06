@@ -7,6 +7,22 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01.log`
+  - Audit status: PASS.
+  - Audits Full WOW v1.1 manual live Gemini lane real provider run.
+  - Run id: `full_wow_v1_1_manual_live_gemini_real_20260705_232010`; runtime/audit base commit: `121d22c`; audit commit: `8318be9`.
+  - Model: `gemini-2.5-flash`; contract mode: `semantic_reasoning_adapter`; schema mode: `json_mime_only`.
+  - Real Gemini Orchestrator was called once and real Gemini Architect was called once.
+  - `live_model_call_count: 2`, `gemini_called_count: 2`, and `network_used_count: 2`.
+  - Orchestrator validation accepted, runtime canonicalization was used, BSEP was built after Orchestrator validation, and BSEP was validated before Architect.
+  - Architect received BSEP-derived bounded context after the 30-second pre-delay, and Architect validation accepted.
+  - Provider output is not truth, authority, action permission, or FinalOutput.
+  - Gemini creates no ActionCommitPacket, no receipt, no mock payment, no real payment, and no shipment release.
+  - Supplier B remains blocked; shipment release remains held; receipt remains evidence only.
+  - Counters preserve `real_world_effects_count: 0`.
+  - Secret scan passed: no API key, raw bank secret, raw IBAN, or sandbox token was logged.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01.log`
   - Audit status: PASS.
   - Audits Full WOW v1.1 manual live Gemini lane BSEP topology repair.

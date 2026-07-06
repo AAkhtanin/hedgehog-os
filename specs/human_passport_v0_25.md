@@ -316,6 +316,51 @@ Authority invariants preserved:
 - Architect receives bounded BSEP-derived context, not raw cross-role text.
 - Root alone creates FinalOutput.
 
+### Full WOW v1.1 Manual Live Gemini Real Provider Run
+
+Full WOW v1.1 manual live Gemini lane reached a real-provider PASS inside the
+existing Full Semantic E2E spine.
+
+Checkpoint facts:
+
+- Audit:
+  `docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01.log`.
+- Run id: `full_wow_v1_1_manual_live_gemini_real_20260705_232010`.
+- Runtime/audit base commit: `121d22c`.
+- Model: `gemini-2.5-flash`.
+- Contract mode: `semantic_reasoning_adapter`.
+- Schema mode: `json_mime_only`.
+- Real Gemini Orchestrator was called once.
+- Orchestrator semantic proposal validation accepted.
+- Runtime canonicalization was used.
+- Runtime built BSEP after Orchestrator validation.
+- BSEP validated before Architect provider call.
+- Architect received BSEP-derived bounded context.
+- The 30-second Architect pre-delay was applied.
+- Real Gemini Architect was called once.
+- Architect semantic proposal validation accepted.
+- `semantic_reasoning_adapter` was used for both live provider roles.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Gemini creates no ActionCommitPacket, no receipt, no mock payment, no real
+  payment, and no shipment release.
+- Supplier B remains blocked.
+- Shipment release remains held.
+- Receipt remains evidence only.
+- Root remains final authority.
+- `real_world_effects_count: 0`.
+- Secret scan passed: no API key, raw bank secret, raw IBAN, or sandbox token
+  was logged.
+
+Authority formula preserved:
+
+- Provider proposes semantics.
+- Runtime canonicalizes.
+- Validators verify.
+- Root decides.
+- Architect remains a semantic Architect.
+- Runtime builds local plan artifacts after validation.
+- Gemini does not own PlanGraph.
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:

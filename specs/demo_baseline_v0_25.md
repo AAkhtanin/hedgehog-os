@@ -165,6 +165,39 @@ Status:
 - Root remains final authority.
 - no real-world effects.
 
+## Applied Full WOW Manual Live Gemini Real Provider Run Checkpoint
+
+Full WOW v1.1 manual live Gemini lane now has a real provider PASS through the
+existing Full Semantic E2E spine.
+
+Status:
+
+- PASS through audit
+  `docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01.log`.
+- Run id: `full_wow_v1_1_manual_live_gemini_real_20260705_232010`.
+- Runtime/audit base commit: `121d22c`.
+- Model: `gemini-2.5-flash`.
+- Contract mode: `semantic_reasoning_adapter`; schema mode:
+  `json_mime_only`.
+- Real Gemini Orchestrator called once.
+- Orchestrator semantic proposal validation accepted.
+- Runtime canonicalization used.
+- BSEP built after Orchestrator validation and validated before Architect.
+- Architect received BSEP-derived bounded context.
+- 30-second Architect pre-delay applied.
+- Real Gemini Architect called once.
+- Architect semantic proposal validation accepted.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Gemini creates no ActionCommitPacket, receipt, mock payment, real payment, or
+  shipment release.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- Root remains final authority.
+- `real_world_effects_count: 0`.
+- Secret scan passed: no API key, raw bank secret, raw IBAN, or sandbox token
+  was logged.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

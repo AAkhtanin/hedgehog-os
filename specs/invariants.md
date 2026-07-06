@@ -181,6 +181,22 @@ Full WOW v1.1 manual live Gemini real provider invariant examples:
 - Provider output is not truth, authority, action permission, or FinalOutput.
 - Root remains final authority.
 
+Full WOW v1.1 final integrated rollup invariant examples:
+
+- Final rollup must observe closed evidence only.
+- Final rollup must not rerun Gemini.
+- Final rollup must not call provider/network.
+- Final rollup must not access secrets.
+- Final rollup must not create ActionCommitPacket.
+- Final rollup must not create receipt.
+- Final rollup must not execute payment.
+- Final rollup must not release shipment.
+- Final rollup must not call bank/supplier/warehouse APIs.
+- Semantic Architect output remains semantic proposal.
+- Runtime owns PlanGraph/local plan artifacts.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Root remains final authority.
+
 DRS registry invariant:
 
 - DRS is a registry/resolver/index, not a raw memory dump.

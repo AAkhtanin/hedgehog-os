@@ -7,6 +7,19 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_full_wow_v1_1_final_integrated_rollup_v01.log`
+  - Audit status: PASS.
+  - Audits Full WOW v1.1 final integrated rollup runner.
+  - Audit commit: `a958204`; rollup runner commit: `f22d452`; preflight commit: `2993b46`.
+  - Rollup type: `deterministic_closed_evidence_observer`.
+  - Observes closed evidence only: Supplier WOW deterministic state machine, human walkthrough, Full Semantic E2E spine, BSEP topology repair, and the real Gemini semantic lane audit.
+  - Real Gemini lane PASS is observed, not rerun.
+  - BSEP-before-Architect sequence and Semantic Architect / runtime-owned PlanGraph boundary are preserved.
+  - Final rollup calls no Gemini/provider/network lane and accesses no secrets.
+  - Final rollup creates no ActionCommitPacket, creates no receipt, executes no mock payment, executes no real payment, releases no shipment, and calls no bank/supplier/warehouse API.
+  - Counters preserve `real_world_effects_count: 0`.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01.log`
   - Audit status: PASS.
   - Audits Full WOW v1.1 manual live Gemini lane real provider run.

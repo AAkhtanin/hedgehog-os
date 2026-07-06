@@ -35,6 +35,62 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
+Full WOW v1.1 final integrated rollup — PASS.
+
+Checkpoint source:
+
+- Audit:
+  `docs/audit_reports/auditor_full_wow_v1_1_final_integrated_rollup_v01.log`.
+- Runner: `demo/run_full_wow_v1_1_final_integrated_rollup.py`.
+- Tests: `tests/test_full_wow_v1_1_final_integrated_rollup_runner.py`.
+- Audit commit: `a958204`.
+- Rollup runner commit: `f22d452`.
+- Preflight commit: `2993b46`.
+- Rollup type: `deterministic_closed_evidence_observer`.
+- The final rollup observes closed evidence only.
+- Supplier Payment / Shipment Release Review WOW v1.1 deterministic state
+  machine is observed.
+- Human walkthrough is observed.
+- Full Semantic E2E spine is observed.
+- BSEP topology repair is observed.
+- Real Gemini semantic lane PASS is observed, not rerun.
+- Real Gemini Orchestrator and real Gemini Architect PASS are observed from
+  the closed real-run audit.
+- BSEP was built after Orchestrator validation and validated before Architect.
+- Semantic Architect remains semantic proposal provider.
+- Runtime owns PlanGraph/local plan artifacts.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Supplier B remains blocked.
+- Shipment release remains held.
+- Receipt remains evidence only.
+- Root remains final authority.
+- Final integrated rollup proof is complete.
+- Rollup counters: `final_integrated_rollup_created_count: 1`,
+  `source_supplier_wow_summary_observed_count: 1`,
+  `source_human_walkthrough_observed_count: 1`,
+  `source_full_e2e_summary_observed_count: 1`,
+  `source_real_gemini_audit_observed_count: 1`,
+  `source_bsep_topology_audit_observed_count: 1`,
+  `real_gemini_lane_observed_count: 1`,
+  `real_gemini_lane_rerun_count: 0`, `rollup_called_gemini_count: 0`,
+  `rollup_network_used_count: 0`, `rollup_provider_called_count: 0`,
+  `rollup_accessed_secrets_count: 0`,
+  `rollup_created_action_commit_packet_count: 0`,
+  `rollup_created_receipt_count: 0`,
+  `rollup_executed_mock_payment_count: 0`,
+  `rollup_executed_real_payment_count: 0`,
+  `rollup_released_shipment_count: 0`,
+  `rollup_called_bank_supplier_warehouse_api_count: 0`, and
+  `real_world_effects_count: 0`.
+- The rollup creates no ActionCommitPacket, creates no receipt, executes no
+  mock payment, executes no real payment, releases no shipment, calls no
+  provider/network/Gemini lane, accesses no secrets, and creates no real-world
+  effects.
+- This is not production.
+- This is not public auditor final package.
+
+Closed basis:
+
 Full WOW v1.1 manual live Gemini lane real provider run — PASS.
 
 Checkpoint source:

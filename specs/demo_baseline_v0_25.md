@@ -198,6 +198,38 @@ Status:
 - Secret scan passed: no API key, raw bank secret, raw IBAN, or sandbox token
   was logged.
 
+## Applied Full WOW Final Integrated Rollup Checkpoint
+
+Full WOW v1.1 final integrated rollup is PASS as a deterministic closed-evidence
+observer.
+
+Status:
+
+- PASS through audit
+  `docs/audit_reports/auditor_full_wow_v1_1_final_integrated_rollup_v01.log`.
+- Runner: `demo/run_full_wow_v1_1_final_integrated_rollup.py`.
+- Focused tests:
+  `tests/test_full_wow_v1_1_final_integrated_rollup_runner.py`.
+- Audit commit: `a958204`.
+- Rollup runner commit: `f22d452`.
+- Preflight commit: `2993b46`.
+- Supplier Payment WOW deterministic state machine is observed.
+- Human walkthrough is observed.
+- Full Semantic E2E spine is observed.
+- Real Gemini semantic lane PASS is observed, not rerun.
+- BSEP topology repair is observed.
+- Semantic Architect remains semantic proposal provider.
+- Runtime owns PlanGraph/local plan artifacts.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- Root remains final authority.
+- Rollup creates no ActionCommitPacket, receipt, mock payment, real payment,
+  shipment release, provider/network call, API call, secret access, or
+  real-world effect.
+- Final integrated rollup proof is complete.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

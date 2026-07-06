@@ -216,6 +216,36 @@ Scenario result:
 - `real_world_effects_count: 0`.
 - Secret scan passed.
 
+### full_wow_v1_1_final_integrated_rollup
+
+Supplier Payment / Shipment Release Review WOW v1.1 has final integrated
+rollup PASS across the deterministic state machine, human walkthrough, Full E2E
+spine, BSEP repair, and real Gemini lane audit.
+
+Scenario result:
+
+- Audit:
+  `docs/audit_reports/auditor_full_wow_v1_1_final_integrated_rollup_v01.log`.
+- Runner: `demo/run_full_wow_v1_1_final_integrated_rollup.py`.
+- Rollup type: `deterministic_closed_evidence_observer`.
+- Supplier WOW deterministic state machine is observed.
+- Human walkthrough is observed.
+- Full Semantic E2E spine is observed.
+- Real Gemini semantic lane PASS is observed, not rerun.
+- BSEP topology repair is observed.
+- Real Gemini Orchestrator and Architect PASS are observed from the closed
+  real-run audit.
+- BSEP was built after Orchestrator validation and validated before Architect.
+- Semantic Architect remains semantic proposal provider.
+- Runtime owns PlanGraph/local plan artifacts.
+- Supplier B remains blocked.
+- shipment release remains held.
+- receipt remains evidence only.
+- Root remains final authority.
+- Rollup creates no ActionCommitPacket, receipt, payment, shipment release,
+  provider/network call, API call, secret access, or real-world effect.
+- Final integrated rollup proof is complete.
+
 ## What The Demo Must Prove
 
 - Root authority.

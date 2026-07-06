@@ -361,6 +361,54 @@ Authority formula preserved:
 - Runtime builds local plan artifacts after validation.
 - Gemini does not own PlanGraph.
 
+### Full WOW v1.1 Final Integrated Rollup
+
+Full WOW v1.1 now has a deterministic final integrated rollup PASS over closed
+evidence.
+
+Checkpoint facts:
+
+- Audit:
+  `docs/audit_reports/auditor_full_wow_v1_1_final_integrated_rollup_v01.log`.
+- Runner:
+  `demo/run_full_wow_v1_1_final_integrated_rollup.py`.
+- Focused tests:
+  `tests/test_full_wow_v1_1_final_integrated_rollup_runner.py`.
+- Audit commit: `a958204`.
+- Rollup runner commit: `f22d452`.
+- Preflight commit: `2993b46`.
+- Rollup type: `deterministic_closed_evidence_observer`.
+- Final rollup observes closed evidence only.
+- Deterministic Supplier Payment WOW v1.1 state machine is observed.
+- Human walkthrough is observed.
+- Full Semantic E2E spine is observed.
+- Real Gemini semantic lane PASS is observed, not rerun.
+- BSEP topology repair is observed.
+- BSEP is built after Orchestrator validation and validated before Architect.
+- Semantic Architect proposes semantic plan intent.
+- Runtime owns PlanGraph/local plan artifacts.
+- Provider output is not truth, authority, action permission, or FinalOutput.
+- Supplier B remains blocked.
+- Shipment release remains held.
+- Receipt remains evidence only.
+- Root remains final authority.
+- Rollup creates no ActionCommitPacket, no receipt, executes no mock payment,
+  executes no real payment, releases no shipment, calls no provider/network/API
+  lane, accesses no secrets, and preserves `real_world_effects_count: 0`.
+- Final integrated rollup proof is complete.
+- This is not production.
+- This is not public auditor final package.
+
+Authority formula preserved:
+
+- Provider proposes semantics.
+- Runtime canonicalizes.
+- Validators verify.
+- Root decides.
+- Semantic Architect remains semantic proposal provider.
+- Runtime builds and owns local plan artifacts after validation.
+- Root remains final authority.
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:

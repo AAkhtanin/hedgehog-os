@@ -1,0 +1,150 @@
+audit_id: auditor_human_full_wow_v1_1_final_walkthrough_v01
+audit_status: PASS
+audited_layer: Full WOW v1.1 final human-facing walkthrough
+base_commit: 2699bb1
+final_rollup_docs_checkpoint_commit: b074ea8
+final_rollup_audit_commit: a958204
+final_rollup_runner_commit: f22d452
+real_gemini_docs_checkpoint_commit: 9c0ab75
+real_gemini_audit_commit: 8318be9
+real_gemini_runtime_base_commit: 121d22c
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+v1_2_implemented: false
+real_world_effects_count: 0
+
+audited_files:
+- demo/run_human_full_wow_v1_1_final_walkthrough.py
+- tests/test_human_full_wow_v1_1_final_walkthrough_runner.py
+- demo/run_full_wow_v1_1_final_integrated_rollup.py
+- docs/audit_reports/auditor_full_wow_v1_1_final_integrated_rollup_v01.log
+- docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01.log
+
+validation_commands_run:
+- git status --short --untracked-files=all
+  result: clean before audit log creation
+- git --no-pager log --oneline --max-count=5
+  result: base HEAD confirmed as 2699bb1 Add Full WOW v1.1 final human walkthrough
+- python3 -m py_compile demo/run_human_full_wow_v1_1_final_walkthrough.py
+  result: PASS
+- python3 -m demo.run_human_full_wow_v1_1_final_walkthrough
+  result: PASS; rendered report included FINAL STATUS: PASS
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_full_wow_v1_1_final_walkthrough_runner.py tests/test_full_wow_v1_1_final_integrated_rollup_runner.py
+  result: PASS; 19 passed in 0.02s
+- rg positive walkthrough marker scan
+  result: PASS; required section, counter, non-claim, and final-status markers found
+
+audit_findings:
+- finding_human_final_walkthrough_created: PASS
+- finding_human_final_walkthrough_returns_pass: PASS
+- finding_human_final_walkthrough_observes_final_rollup_only: PASS
+- finding_transition_cards_present: PASS
+- finding_transition_cards_have_required_fields: PASS
+- finding_business_story_visible: PASS
+- finding_warehouse_evidence_visible: PASS
+- finding_supplier_a_visible: PASS
+- finding_supplier_b_blocked_visible: PASS
+- finding_legal_accounting_visible: PASS
+- finding_bank_sandbox_boundary_visible: PASS
+- finding_real_gemini_lane_observed_not_rerun: PASS
+- finding_bsep_membrane_visible: PASS
+- finding_semantic_architect_runtime_plan_boundary_visible: PASS
+- finding_root_human_action_boundary_visible: PASS
+- finding_mock_bank_receipt_boundary_visible: PASS
+- finding_authority_matrix_present: PASS
+- finding_non_claims_present: PASS
+- finding_no_gemini_provider_network_rerun: PASS
+- finding_no_secrets_accessed: PASS
+- finding_no_action_commit_packet_created: PASS
+- finding_no_receipt_created: PASS
+- finding_no_mock_payment_executed: PASS
+- finding_no_real_payment_executed: PASS
+- finding_no_shipment_released: PASS
+- finding_no_connector_api_effects: PASS
+- finding_real_world_effects_zero: PASS
+- finding_v1_2_not_implemented: PASS
+- finding_no_production_claim: PASS
+- finding_no_public_auditor_claim: PASS
+
+counter_summary:
+- human_final_walkthrough_created_count: 1
+- source_final_rollup_observed_count: 1
+- transition_cards_created_count: 15
+- real_gemini_lane_observed_count: 1
+- real_gemini_lane_rerun_count: 0
+- walkthrough_called_gemini_count: 0
+- walkthrough_network_used_count: 0
+- walkthrough_provider_called_count: 0
+- walkthrough_accessed_secrets_count: 0
+- walkthrough_created_action_commit_packet_count: 0
+- walkthrough_created_receipt_count: 0
+- walkthrough_executed_mock_payment_count: 0
+- walkthrough_executed_real_payment_count: 0
+- walkthrough_released_shipment_count: 0
+- walkthrough_called_bank_supplier_warehouse_api_count: 0
+- real_world_effects_count: 0
+
+transition_cards:
+- dirty_request_received
+- warehouse_scope_observed
+- supplier_a_scope_observed
+- supplier_b_blocker_observed
+- legal_accounting_review_observed
+- live_gemini_semantic_lane_observed
+- bsep_membrane_observed
+- drs_candidate_avf_observed
+- semantic_architect_runtime_plan_boundary
+- root_first_decision_not_ready
+- corrected_evidence_second_run
+- human_approval_scoped
+- root_created_mock_packet_observed
+- mock_bank_receipt_observed
+- final_state_summary
+
+authority_matrix_facts:
+- Provider output is not truth.
+- Provider output is not authority.
+- Provider output is not action permission.
+- Provider output is not FinalOutput.
+- BSEP is not truth.
+- BSEP is not authority.
+- DRS candidate context is not truth.
+- CandidateVector is not truth.
+- AVF/advisory is not authority.
+- Semantic Architect is not Root.
+- Runtime owns PlanGraph/local plan artifacts.
+- PlanGraph is not authority.
+- Human approval is scoped evidence only.
+- Root-created mock ActionCommitPacket is scoped only.
+- MockBankSandbox receipt is evidence only.
+- Receipt does not release shipment.
+- Root remains final authority.
+
+required_non_claims:
+- not production
+- not public auditor final package
+- no real payment
+- no real shipment release
+- no real connector/API effects
+- no real-world effects
+- v1.2 not implemented
+
+walkthrough_scope:
+- product_business_story_visible: true
+- source_final_rollup_observed_only: true
+- lower_execution_runners_imported: false
+- live_gemini_rerun: false
+- provider_network_model_api_called: false
+- secrets_accessed: false
+- new_action_commit_packet_created: false
+- new_receipt_created: false
+- mock_payment_executed_by_walkthrough: false
+- real_payment_executed_by_walkthrough: false
+- shipment_released_by_walkthrough: false
+- connector_api_effects: false
+- v1_2_modules_implemented: false
+
+audit_conclusion:
+The Full WOW v1.1 final human-facing walkthrough is PASS. It presents a product-facing closed-evidence story over the completed final rollup, including dirty request, warehouse evidence, Supplier A scoped path, Supplier B blocker, legal/accounting review, real Gemini semantic lane observation, BSEP membrane, DRS/CandidateVector/AVF advisory layers, Semantic Architect/runtime plan artifact boundary, Root review, scoped human approval, Root-created mock packet observation, MockBankSandbox receipt evidence, authority matrix, counters, and non-claims.
+
+The walkthrough observes the final rollup only. It does not rerun Gemini, call provider/network/model APIs, access secrets, create action or receipt artifacts, execute mock or real payment paths, release shipment, call bank/supplier/warehouse APIs, implement v1.2, or claim production/public-auditor readiness.

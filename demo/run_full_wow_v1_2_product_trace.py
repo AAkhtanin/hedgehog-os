@@ -259,6 +259,11 @@ AUTHORITY_MATRIX = (
     "CandidateVector is not FinalOutput.",
     "HardMask is not Root.",
     "AVF report is advisory only.",
+    "High score does not override HardMask.",
+    "Top rank does not grant permission.",
+    "AVF cannot bypass Root.",
+    "AVF cannot create FinalOutput.",
+    "AVF cannot create ActionCommitPacket, receipt, payment, or shipment release.",
     "CandidateVector is not truth.",
     "AVF/advisory is not authority.",
     "Runtime owns PlanGraph/local plan artifacts.",
@@ -308,6 +313,11 @@ AVF_V0_2_NON_AUTHORITY_BOUNDARIES = (
     "CandidateVector is not FinalOutput.",
     "HardMask is not Root.",
     "AVF report is advisory only.",
+    "High score does not override HardMask.",
+    "Top rank does not grant permission.",
+    "AVF cannot bypass Root.",
+    "AVF cannot create FinalOutput.",
+    "AVF cannot create ActionCommitPacket, receipt, payment, or shipment release.",
     "Root remains final authority.",
 )
 
@@ -890,6 +900,7 @@ def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
             "avf_v0_2_root_review_required_count": avf_evaluation[
                 "root_review_required_count"
             ],
+            "avf_v0_2_high_score_hardmask_override_count": 0,
             "avf_v0_2_top_ranked_candidate_permission_granted_count": 0,
             "avf_v0_2_action_permission_granted_count": 0,
             "avf_v0_2_final_output_created_count": 0,
@@ -1219,6 +1230,11 @@ def render_full_wow_v1_2_product_trace(report: Mapping[str, Any]) -> str:
             "top-ranked candidate is not permission.",
             "AVF score is not authority.",
             "HardMask is not Root.",
+            "High score does not override HardMask.",
+            "Top rank does not grant permission.",
+            "AVF cannot bypass Root.",
+            "AVF cannot create FinalOutput.",
+            "AVF cannot create ActionCommitPacket, receipt, payment, or shipment release.",
             "Root remains final authority.",
             "ranked_candidates:",
         ]

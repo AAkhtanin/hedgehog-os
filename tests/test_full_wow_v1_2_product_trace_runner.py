@@ -94,6 +94,11 @@ REQUIRED_AUTHORITY_FACTS = {
     "CandidateVector is not FinalOutput.",
     "HardMask is not Root.",
     "AVF report is advisory only.",
+    "High score does not override HardMask.",
+    "Top rank does not grant permission.",
+    "AVF cannot bypass Root.",
+    "AVF cannot create FinalOutput.",
+    "AVF cannot create ActionCommitPacket, receipt, payment, or shipment release.",
     "CandidateVector is not truth.",
     "AVF/advisory is not authority.",
     "Runtime owns PlanGraph/local plan artifacts.",
@@ -299,6 +304,7 @@ def test_v1_2_product_trace_no_real_execution_or_effects() -> None:
     assert counters["avf_v0_2_provider_called_count"] == 0
     assert counters["avf_v0_2_network_called_count"] == 0
     assert counters["avf_v0_2_gemini_called_count"] == 0
+    assert counters["avf_v0_2_high_score_hardmask_override_count"] == 0
     assert counters["real_world_effects_count"] == 0
 
 
@@ -435,6 +441,7 @@ def test_v1_2_product_trace_avf_v0_2_evaluation_present() -> None:
 def test_v1_2_product_trace_avf_v0_2_hardmasks_unsafe_candidates() -> None:
     avf = _report()["avf_v0_2_evaluation"]
     rows = {row["candidate_id"]: row for row in avf["ranked_candidates"]}
+    hard_mask_rows = {row["candidate_id"]: row for row in avf["hard_mask_table"]}
 
     release_all = rows["release_all_and_pay_all"]
     supplier_b = rows["pay_supplier_b"]
@@ -442,6 +449,24 @@ def test_v1_2_product_trace_avf_v0_2_hardmasks_unsafe_candidates() -> None:
     assert release_all["final_avf_score"] == 0.0
     assert supplier_b["hard_mask_value"] == 0
     assert supplier_b["final_avf_score"] == 0.0
+    assert "high_score_does_not_override_hardmask" in hard_mask_rows[
+        "release_all_and_pay_all"
+    ]["hard_mask_reasons"]
+    assert "hardmasked_candidate_score_forced_zero" in hard_mask_rows[
+        "pay_supplier_b"
+    ]["hard_mask_reasons"]
+
+
+def test_v1_2_product_trace_avf_v0_2_hardmask_beats_high_score_visible() -> None:
+    avf = _report()["avf_v0_2_evaluation"]
+    rows = {row["candidate_id"]: row for row in avf["ranked_candidates"]}
+    rendered = _rendered()
+
+    assert rows["release_all_and_pay_all"]["base_viability_score"] == 0.95
+    assert rows["release_all_and_pay_all"]["final_avf_score"] == 0.0
+    assert rows["pay_supplier_b"]["base_viability_score"] == 0.8
+    assert rows["pay_supplier_b"]["final_avf_score"] == 0.0
+    assert "High score does not override HardMask" in rendered
 
 
 def test_v1_2_product_trace_avf_v0_2_safe_candidates_rank_without_permission() -> None:
@@ -465,7 +490,8 @@ def test_v1_2_product_trace_avf_v0_2_safe_candidates_rank_without_permission() -
 
 
 def test_v1_2_product_trace_avf_v0_2_top_candidate_not_permission() -> None:
-    avf = _report()["avf_v0_2_evaluation"]
+    report = _report()
+    avf = report["avf_v0_2_evaluation"]
     top_candidate_id = avf["top_candidate_id"]
     decisions = {
         decision["candidate_id"]: decision
@@ -477,6 +503,20 @@ def test_v1_2_product_trace_avf_v0_2_top_candidate_not_permission() -> None:
     assert decisions[top_candidate_id]["payment_allowed"] is False
     assert decisions[top_candidate_id]["final_output_claimed"] is False
     assert decisions[top_candidate_id]["final_decision"] is False
+    assert (
+        report["counters"]["avf_v0_2_top_ranked_candidate_permission_granted_count"]
+        == 0
+    )
+
+
+def test_v1_2_product_trace_avf_v0_2_top_rank_still_not_permission() -> None:
+    rendered = _rendered()
+    report = _report()
+    avf = report["avf_v0_2_evaluation"]
+
+    assert avf["top_candidate_id"] is not None
+    assert report["counters"]["avf_v0_2_top_ranked_candidate_permission_granted_count"] == 0
+    assert "Top rank does not grant permission" in rendered
 
 
 def test_v1_2_product_trace_avf_v0_2_score_explanations_visible() -> None:
@@ -524,6 +564,29 @@ def test_v1_2_product_trace_avf_v0_2_no_authority_or_effects() -> None:
     assert "CandidateVector is not FinalOutput." in authority
     assert "HardMask is not Root." in authority
     assert "AVF report is advisory only." in authority
+    assert "AVF cannot bypass Root." in authority
+    assert "AVF cannot create FinalOutput." in authority
+
+
+def test_v1_2_product_trace_avf_v0_2_no_root_bypass_or_final_output() -> None:
+    report = _report()
+    counters = report["counters"]
+    authority = set(report["authority_matrix"])
+
+    assert counters["avf_v0_2_root_bypass_count"] == 0
+    assert counters["avf_v0_2_final_output_created_count"] == 0
+    assert "AVF cannot bypass Root." in authority
+    assert "Root remains final authority." in authority
+
+
+def test_v1_2_product_trace_avf_v0_2_no_action_effects() -> None:
+    counters = _report()["counters"]
+
+    assert counters["avf_v0_2_action_commit_packet_created_count"] == 0
+    assert counters["avf_v0_2_receipt_created_count"] == 0
+    assert counters["avf_v0_2_payment_executed_count"] == 0
+    assert counters["avf_v0_2_shipment_released_count"] == 0
+    assert counters["real_world_effects_count"] == 0
 
 
 def test_v1_2_product_trace_authority_matrix() -> None:
@@ -561,6 +624,14 @@ def test_v1_2_product_trace_rendered_sections() -> None:
     assert "top-ranked candidate is not permission" in rendered
     assert "AVF score is not authority" in rendered
     assert "HardMask is not Root" in rendered
+    assert "High score does not override HardMask" in rendered
+    assert "Top rank does not grant permission" in rendered
+    assert "AVF cannot bypass Root" in rendered
+    assert "AVF cannot create FinalOutput" in rendered
+    assert (
+        "AVF cannot create ActionCommitPacket, receipt, payment, or shipment release"
+        in rendered
+    )
     assert "Root remains final authority" in rendered
     assert "FINAL STATUS: PASS" in rendered
 

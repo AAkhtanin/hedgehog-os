@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 import hedgehog.avf_v02 as avf_v02
 
@@ -372,6 +374,229 @@ def test_avf_v02_evaluator_no_actions_or_outputs() -> None:
         assert decision.score_explanation.authority_claimed is False
         assert decision.score_explanation.action_permission_claimed is False
         assert decision.score_explanation.final_output_claimed is False
+
+
+def test_avf_v02_high_score_does_not_override_hardmask() -> None:
+    candidate = _candidate(
+        candidate_id=avf_v02.CANDIDATE_RELEASE_ALL_AND_PAY_ALL,
+        candidate_label="Release all and pay all",
+        base_viability_score=1.0,
+        release_all_candidate=True,
+    )
+    explanation = avf_v02.build_score_explanation_v02(candidate)
+
+    assert explanation.hard_mask_value == 0
+    assert explanation.final_avf_score == 0.0
+    assert (
+        avf_v02.REASON_HIGH_SCORE_DOES_NOT_OVERRIDE_HARDMASK
+        in explanation.hard_mask_reasons
+    )
+    assert (
+        avf_v02.REASON_HARDMASKED_CANDIDATE_SCORE_FORCED_ZERO
+        in explanation.hard_mask_reasons
+    )
+
+
+def test_avf_v02_top_rank_does_not_grant_permission() -> None:
+    report = _evaluation_report()
+    top_row = report.ranked_candidates[0]
+    top_decision = _decision_by_id(report, top_row.candidate_id)
+
+    assert top_row.final_avf_score > 0.0
+    assert top_row.top_ranked_candidate_not_permission is True
+    assert report.top_ranked_candidate_not_permission is True
+    assert avf_v02.REASON_TOP_RANK_DOES_NOT_GRANT_PERMISSION
+    assert top_decision.approved is False
+    assert top_decision.execute is False
+    assert top_decision.payment_allowed is False
+    assert top_decision.shipment_release_allowed is False
+    assert top_decision.final_decision is False
+
+
+def test_avf_v02_all_candidates_hardmasked_still_no_permission() -> None:
+    candidates = (
+        _candidate(
+            candidate_id=avf_v02.CANDIDATE_RELEASE_ALL_AND_PAY_ALL,
+            candidate_label="Release all and pay all",
+            base_viability_score=1.0,
+            release_all_candidate=True,
+        ),
+        _candidate(
+            candidate_id=avf_v02.CANDIDATE_PAY_SUPPLIER_B,
+            candidate_label="Pay Supplier B",
+            base_viability_score=1.0,
+            supplier_b_payment=True,
+        ),
+        _candidate(base_viability_score=1.0, old_receipt_as_permission=True),
+        _candidate(
+            base_viability_score=1.0,
+            old_root_final_as_current_decision=True,
+        ),
+        _candidate(base_viability_score=1.0, shipment_release_candidate=True),
+    )
+    report = avf_v02.evaluate_avf_candidates_v02(
+        avf_v02.AVFEvaluationInputV02(
+            evaluation_id="all-hardmasked",
+            candidates=candidates,
+        )
+    )
+
+    assert all(row.final_avf_score == 0.0 for row in report.ranked_candidates)
+    assert all(row.hard_mask_value == 0 for row in report.ranked_candidates)
+    assert report.advisory_only is True
+    assert report.real_world_effects_count == 0
+    for decision in report.decision_reports:
+        assert decision.approved is False
+        assert decision.execute is False
+        assert decision.payment_allowed is False
+        assert decision.shipment_release_allowed is False
+        assert decision.final_decision is False
+
+
+def test_avf_v02_avf_cannot_bypass_root() -> None:
+    malicious = SimpleNamespace(root_bypass_claimed=True, final_decision=True)
+    ok, reasons = avf_v02.assert_no_authority_fields(malicious)
+    report = avf_v02.build_avf_decision_report_v02(_candidate())
+
+    assert ok is False
+    assert avf_v02.REASON_AVF_CANNOT_BYPASS_ROOT in reasons
+    assert report.final_decision is False
+    assert report.root_review_required is True
+
+
+def test_avf_v02_report_cannot_create_final_output() -> None:
+    candidate = _candidate(final_output_claimed=True)
+    valid, reasons = avf_v02.validate_avf_candidate_v02(candidate)
+    report = avf_v02.build_avf_decision_report_v02(candidate)
+
+    assert valid is False
+    assert avf_v02.REASON_FINAL_OUTPUT_CLAIMED in reasons
+    assert (
+        avf_v02.REASON_CANDIDATE_VECTOR_NOT_FINAL_OUTPUT
+        in report.hard_mask.hard_mask_reasons
+    )
+    assert report.final_decision is False
+
+
+def test_avf_v02_report_cannot_create_action_commit_packet_or_receipt() -> None:
+    malicious = SimpleNamespace(
+        action_commit_packet_created=True,
+        receipt_created=True,
+        payment_executed=True,
+        shipment_released=True,
+    )
+    ok, reasons = avf_v02.assert_no_authority_fields(malicious)
+
+    assert ok is False
+    assert avf_v02.REASON_AVF_CANNOT_CREATE_ACTION_COMMIT_PACKET in reasons
+    assert avf_v02.REASON_AVF_CANNOT_CREATE_RECEIPT in reasons
+    assert avf_v02.REASON_AVF_CANNOT_EXECUTE_PAYMENT in reasons
+    assert avf_v02.REASON_AVF_CANNOT_RELEASE_SHIPMENT in reasons
+
+
+def test_avf_v02_old_receipt_high_score_still_hardmasked() -> None:
+    explanation = avf_v02.build_score_explanation_v02(
+        _candidate(base_viability_score=1.0, old_receipt_as_permission=True)
+    )
+
+    assert explanation.hard_mask_value == 0
+    assert explanation.final_avf_score == 0.0
+    assert avf_v02.REASON_OLD_RECEIPT_NOT_PERMISSION in explanation.hard_mask_reasons
+    assert (
+        avf_v02.REASON_HIGH_SCORE_DOES_NOT_OVERRIDE_HARDMASK
+        in explanation.hard_mask_reasons
+    )
+
+
+def test_avf_v02_supplier_b_high_score_still_hardmasked() -> None:
+    explanation = avf_v02.build_score_explanation_v02(
+        _candidate(
+            candidate_id=avf_v02.CANDIDATE_PAY_SUPPLIER_B,
+            candidate_label="Pay Supplier B",
+            base_viability_score=1.0,
+            supplier_b_payment=True,
+        )
+    )
+
+    assert explanation.hard_mask_value == 0
+    assert explanation.final_avf_score == 0.0
+    assert (
+        avf_v02.REASON_SUPPLIER_B_PAYMENT_BLOCKED
+        in explanation.hard_mask_reasons
+    )
+
+
+def test_avf_v02_shipment_release_high_score_still_hardmasked() -> None:
+    explanation = avf_v02.build_score_explanation_v02(
+        _candidate(base_viability_score=1.0, shipment_release_candidate=True)
+    )
+
+    assert explanation.hard_mask_value == 0
+    assert explanation.final_avf_score == 0.0
+    assert avf_v02.REASON_SHIPMENT_RELEASE_HELD in explanation.hard_mask_reasons
+
+
+def test_avf_v02_permission_trace_pressure_high_score_still_hardmasked() -> None:
+    explanation = avf_v02.build_score_explanation_v02(
+        _candidate(base_viability_score=1.0, permission_trace_pressure=0.1)
+    )
+
+    assert explanation.hard_mask_value == 0
+    assert explanation.final_avf_score == 0.0
+    assert (
+        avf_v02.REASON_PERMISSION_TRACE_PRESSURE_HARD_MASK
+        in explanation.hard_mask_reasons
+    )
+
+
+def test_avf_v02_report_validation_rejects_effects() -> None:
+    report = avf_v02.build_avf_decision_report_v02(_candidate())
+
+    effects_report = replace(report, real_world_effects_count=1)
+    production_report = replace(report, production_ready_claimed=True)
+    public_report = replace(report, public_auditor_ready_claimed=True)
+    payment_report = replace(report, payment_allowed=True)
+    final_report = replace(report, final_decision=True)
+
+    ok, reasons = avf_v02.validate_avf_decision_report_v02(effects_report)
+    assert ok is False
+    assert avf_v02.REASON_EFFECTS_NOT_ALLOWED in reasons
+
+    ok, reasons = avf_v02.validate_avf_decision_report_v02(production_report)
+    assert ok is False
+    assert avf_v02.REASON_PRODUCTION_CLAIM_NOT_ALLOWED in reasons
+
+    ok, reasons = avf_v02.validate_avf_decision_report_v02(public_report)
+    assert ok is False
+    assert avf_v02.REASON_PUBLIC_AUDITOR_CLAIM_NOT_ALLOWED in reasons
+
+    ok, reasons = avf_v02.validate_avf_decision_report_v02(payment_report)
+    assert ok is False
+    assert avf_v02.REASON_PAYMENT_ALLOWED_NOT_ALLOWED in reasons
+    assert avf_v02.REASON_AVF_CANNOT_EXECUTE_PAYMENT in reasons
+
+    ok, reasons = avf_v02.validate_avf_decision_report_v02(final_report)
+    assert ok is False
+    assert avf_v02.REASON_FINAL_DECISION_NOT_ALLOWED in reasons
+    assert avf_v02.REASON_AVF_CANNOT_CREATE_FINAL_OUTPUT in reasons
+
+
+def test_avf_v02_safe_rank_is_still_advisory() -> None:
+    report = avf_v02.build_avf_decision_report_v02(
+        _candidate(base_viability_score=0.9),
+        rank=1,
+    )
+    valid, reasons = avf_v02.validate_avf_decision_report_v02(report)
+
+    assert valid is True
+    assert reasons == ()
+    assert report.score_explanation.final_avf_score > 0.0
+    assert avf_v02.REASON_SAFE_RANK_IS_STILL_ADVISORY
+    assert report.score_explanation.score_is_not_permission is True
+    assert report.approved is False
+    assert report.execute is False
+    assert report.payment_allowed is False
+    assert report.final_decision is False
 
 
 def test_avf_v02_wow_evaluation_input_includes_drs_refs() -> None:

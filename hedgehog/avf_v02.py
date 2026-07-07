@@ -57,6 +57,22 @@ REASON_CANDIDATE_VECTOR_NOT_FINAL_OUTPUT = "candidate_vector_not_final_output"
 REASON_HARDMASK_IS_NOT_ROOT = "hardmask_is_not_root"
 REASON_ROOT_REVIEW_REQUIRED = "root_review_required"
 REASON_ROOT_REMAINS_FINAL_AUTHORITY = "root_remains_final_authority"
+REASON_HIGH_SCORE_DOES_NOT_OVERRIDE_HARDMASK = (
+    "high_score_does_not_override_hardmask"
+)
+REASON_TOP_RANK_DOES_NOT_GRANT_PERMISSION = "top_rank_does_not_grant_permission"
+REASON_AVF_CANNOT_BYPASS_ROOT = "avf_cannot_bypass_root"
+REASON_AVF_CANNOT_CREATE_FINAL_OUTPUT = "avf_cannot_create_final_output"
+REASON_AVF_CANNOT_CREATE_ACTION_COMMIT_PACKET = (
+    "avf_cannot_create_action_commit_packet"
+)
+REASON_AVF_CANNOT_CREATE_RECEIPT = "avf_cannot_create_receipt"
+REASON_AVF_CANNOT_EXECUTE_PAYMENT = "avf_cannot_execute_payment"
+REASON_AVF_CANNOT_RELEASE_SHIPMENT = "avf_cannot_release_shipment"
+REASON_SAFE_RANK_IS_STILL_ADVISORY = "safe_rank_is_still_advisory"
+REASON_HARDMASKED_CANDIDATE_SCORE_FORCED_ZERO = (
+    "hardmasked_candidate_score_forced_zero"
+)
 
 REASON_CANDIDATE_ID_REQUIRED = "candidate_id_required"
 REASON_CANDIDATE_LABEL_REQUIRED = "candidate_label_required"
@@ -73,6 +89,10 @@ REASON_SHIPMENT_RELEASE_ALLOWED_NOT_ALLOWED = "shipment_release_allowed_not_allo
 REASON_FINAL_DECISION_NOT_ALLOWED = "final_decision_not_allowed"
 REASON_FINAL_SCORE_OUT_OF_RANGE = "final_avf_score_out_of_range"
 REASON_HARD_MASK_SCORE_MUST_BE_ZERO = "hard_mask_score_must_be_zero"
+REASON_ADVISORY_ONLY_REQUIRED = "advisory_only_required"
+REASON_PRODUCTION_CLAIM_NOT_ALLOWED = "production_claim_not_allowed"
+REASON_PUBLIC_AUDITOR_CLAIM_NOT_ALLOWED = "public_auditor_claim_not_allowed"
+REASON_EFFECTS_NOT_ALLOWED = "effects_not_allowed"
 
 
 @dataclass(frozen=True)
@@ -318,6 +338,12 @@ def assert_no_authority_fields(candidate_or_report: object) -> tuple[bool, tuple
         ("payment_allowed", REASON_PAYMENT_ALLOWED_NOT_ALLOWED),
         ("shipment_release_allowed", REASON_SHIPMENT_RELEASE_ALLOWED_NOT_ALLOWED),
         ("final_decision", REASON_FINAL_DECISION_NOT_ALLOWED),
+        ("action_commit_packet_created", REASON_AVF_CANNOT_CREATE_ACTION_COMMIT_PACKET),
+        ("receipt_created", REASON_AVF_CANNOT_CREATE_RECEIPT),
+        ("payment_executed", REASON_AVF_CANNOT_EXECUTE_PAYMENT),
+        ("shipment_released", REASON_AVF_CANNOT_RELEASE_SHIPMENT),
+        ("root_bypass_claimed", REASON_AVF_CANNOT_BYPASS_ROOT),
+        ("bypass_root_claimed", REASON_AVF_CANNOT_BYPASS_ROOT),
     )
     reasons: list[str] = []
     for field_name, reason in checks:
@@ -369,6 +395,9 @@ def build_hard_mask_v02(candidate: AVFCandidateV02) -> AVFHardMaskV02:
         _append_reason(reasons, REASON_ROOT_REVIEW_REQUIRED)
 
     hard_mask_value = 0 if reasons else 1
+    if hard_mask_value == 0 and candidate.base_viability_score > 0.0:
+        _append_reason(reasons, REASON_HIGH_SCORE_DOES_NOT_OVERRIDE_HARDMASK)
+        _append_reason(reasons, REASON_HARDMASKED_CANDIDATE_SCORE_FORCED_ZERO)
     return AVFHardMaskV02(
         hard_mask_applied=hard_mask_value == 0,
         hard_mask_value=hard_mask_value,
@@ -500,6 +529,58 @@ def validate_score_explanation_v02(
     for reason in authority_reasons:
         _append_reason(reasons, reason)
     return authority_ok and not reasons, tuple(reasons)
+
+
+def validate_avf_decision_report_v02(
+    report: AVFDecisionReportV02,
+) -> tuple[bool, tuple[str, ...]]:
+    reasons: list[str] = []
+
+    if not report.advisory_only:
+        _append_reason(reasons, REASON_ADVISORY_ONLY_REQUIRED)
+    if not report.root_review_required:
+        _append_reason(reasons, REASON_ROOT_REVIEW_REQUIRED)
+    if report.approved:
+        _append_reason(reasons, REASON_APPROVED_NOT_ALLOWED)
+        _append_reason(reasons, REASON_AVF_CANNOT_BYPASS_ROOT)
+    if report.execute:
+        _append_reason(reasons, REASON_EXECUTE_NOT_ALLOWED)
+        _append_reason(reasons, REASON_AVF_CANNOT_EXECUTE_PAYMENT)
+    if report.ready:
+        _append_reason(reasons, REASON_READY_NOT_ALLOWED)
+        _append_reason(reasons, REASON_AVF_CANNOT_BYPASS_ROOT)
+    if report.payment_allowed:
+        _append_reason(reasons, REASON_PAYMENT_ALLOWED_NOT_ALLOWED)
+        _append_reason(reasons, REASON_AVF_CANNOT_EXECUTE_PAYMENT)
+    if report.shipment_release_allowed:
+        _append_reason(reasons, REASON_SHIPMENT_RELEASE_ALLOWED_NOT_ALLOWED)
+        _append_reason(reasons, REASON_AVF_CANNOT_RELEASE_SHIPMENT)
+    if report.final_decision:
+        _append_reason(reasons, REASON_FINAL_DECISION_NOT_ALLOWED)
+        _append_reason(reasons, REASON_AVF_CANNOT_CREATE_FINAL_OUTPUT)
+    if report.production_ready_claimed:
+        _append_reason(reasons, REASON_PRODUCTION_CLAIM_NOT_ALLOWED)
+    if report.public_auditor_ready_claimed:
+        _append_reason(reasons, REASON_PUBLIC_AUDITOR_CLAIM_NOT_ALLOWED)
+    if report.real_world_effects_count != 0:
+        _append_reason(reasons, REASON_EFFECTS_NOT_ALLOWED)
+    if (
+        report.hard_mask.hard_mask_value == 0
+        and report.score_explanation.final_avf_score != 0.0
+    ):
+        _append_reason(reasons, REASON_HARDMASKED_CANDIDATE_SCORE_FORCED_ZERO)
+
+    explanation_ok, explanation_reasons = validate_score_explanation_v02(
+        report.score_explanation
+    )
+    for reason in explanation_reasons:
+        _append_reason(reasons, reason)
+
+    authority_ok, authority_reasons = assert_no_authority_fields(report)
+    for reason in authority_reasons:
+        _append_reason(reasons, reason)
+
+    return authority_ok and explanation_ok and not reasons, tuple(reasons)
 
 
 def build_wow_v1_2_avf_v02_candidate_fixtures() -> tuple[AVFCandidateV02, ...]:

@@ -23,6 +23,7 @@ FRESHNESS_BLOCKED_BY_POLICY_OR_CONFLICT = "blocked_by_policy_or_conflict"
 
 REASON_MISSING_TIME_ENVELOPE = "missing_time_envelope"
 REASON_MISSING_TEMPORAL_QUERY = "missing_temporal_query"
+REASON_INVALID_TTL_SECONDS = "invalid_ttl_seconds"
 REASON_STALE_RECORD_NOT_PERMISSION = "stale_record_not_permission"
 REASON_OLD_RECEIPT_NOT_PERMISSION = "old_receipt_not_permission"
 REASON_PRIOR_ROOT_FINAL_NOT_SILENT_REUSE = "prior_root_final_not_silent_reuse"
@@ -256,18 +257,23 @@ def validate_freshness_envelope(
     if envelope is None:
         return False, (REASON_MISSING_TIME_ENVELOPE,)
 
-    invalid = not (
+    reasons: list[str] = []
+    invalid_required_time = not (
         _non_empty_string(envelope.physical_time)
         and _non_empty_string(envelope.knowledge_time)
         and _non_empty_string(envelope.event_time)
         and _non_empty_string(envelope.context_time)
     )
-    invalid = invalid or not (
+    if invalid_required_time:
+        reasons.append(REASON_MISSING_TIME_ENVELOPE)
+    invalid_ttl = not (
         envelope.ttl_seconds is None
         or (isinstance(envelope.ttl_seconds, int) and envelope.ttl_seconds >= 0)
     )
-    if invalid:
-        return False, (REASON_MISSING_TIME_ENVELOPE,)
+    if invalid_ttl:
+        reasons.append(REASON_INVALID_TTL_SECONDS)
+    if reasons:
+        return False, tuple(reasons)
     return True, ()
 
 

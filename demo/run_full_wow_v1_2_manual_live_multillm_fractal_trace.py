@@ -600,7 +600,38 @@ def _build_local_drs_v0_2_writeback_candidate() -> dict[str, Any]:
         "action_commit_packet_created": False,
         "local_proof_audit_only": True,
         "future_permission_created": False,
+        "production_persisted": False,
+        "persisted_to_global_drs": False,
     }
+
+
+def validate_local_drs_v0_2_writeback_candidate(
+    candidate: Mapping[str, Any],
+) -> dict[str, Any]:
+    errors: list[str] = []
+    required_true_fields = (
+        "source_root_boundary_evaluated",
+        "local_proof_audit_only",
+    )
+    required_false_fields = (
+        "direct_reuse_allowed",
+        "future_permission_created",
+        "action_permission_created",
+        "final_output_created_by_drs",
+        "payment_executed",
+        "shipment_released",
+        "receipt_created",
+        "action_commit_packet_created",
+        "production_persisted",
+        "persisted_to_global_drs",
+    )
+    for field in required_true_fields:
+        if candidate.get(field) is not True:
+            errors.append(f"required_true_field:{field}")
+    for field in required_false_fields:
+        if candidate.get(field) is not False:
+            errors.append(f"required_false_field:{field}")
+    return {"accepted": not errors, "errors": tuple(errors)}
 
 
 def _base_report(

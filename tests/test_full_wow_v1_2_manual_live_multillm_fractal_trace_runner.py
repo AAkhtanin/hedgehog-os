@@ -484,6 +484,62 @@ def test_manual_live_drs_v0_2_bsep_contains_bounded_drs_context() -> None:
         assert marker not in bsep_text
 
 
+def test_manual_live_drs_v0_2_bsep_contains_resolve_invoked_true() -> None:
+    bsep = _pass_report()["bsep_packet"]
+
+    assert bsep["local_drs_v0_2_resolve_invoked"] is True
+
+
+def test_manual_live_drs_v0_2_bsep_contains_direct_reuse_zero() -> None:
+    bsep = _pass_report()["bsep_packet"]
+
+    assert bsep["local_drs_v0_2_bounded_context"][
+        "direct_reuse_allowed_count"
+    ] == 0
+
+
+def test_manual_live_drs_v0_2_bsep_contains_root_review_required_count() -> None:
+    bsep = _pass_report()["bsep_packet"]
+
+    assert bsep["local_drs_v0_2_bounded_context"][
+        "root_review_required_count"
+    ] == 11
+
+
+def test_manual_live_drs_v0_2_bsep_does_not_contain_raw_drs_tables() -> None:
+    bsep_text = json.dumps(_pass_report()["bsep_packet"], sort_keys=True)
+
+    for raw_key in (
+        "freshness_table",
+        "lineage_table",
+        "provenance_table",
+        "reuse_decision_table",
+        "physical_time",
+        "knowledge_time",
+        "source_observed_at",
+        "system_ingested_at",
+        "artifact_refs",
+        "validation_refs",
+    ):
+        assert raw_key not in bsep_text
+
+
+def test_manual_live_drs_v0_2_bsep_does_not_contain_drs_authority() -> None:
+    bsep = _pass_report()["bsep_packet"]
+    bsep_text = json.dumps(bsep, sort_keys=True)
+
+    assert bsep["raw_drs_authority_included"] is False
+    for forbidden in (
+        "raw_drs_authority_included true",
+        "DRS grants" + " permission",
+        "DRS" + " decides",
+        "DRS is" + " authority",
+        "DRS hit is" + " truth",
+        "Root" + " bypass",
+    ):
+        assert forbidden not in bsep_text
+
+
 def test_manual_live_drs_v0_2_writeback_candidate_after_root() -> None:
     report = _pass_report()
     counters = report["counters"]
@@ -497,9 +553,56 @@ def test_manual_live_drs_v0_2_writeback_candidate_after_root() -> None:
     assert candidate["shipment_released"] is False
     assert candidate["receipt_created"] is False
     assert candidate["action_commit_packet_created"] is False
+    assert candidate["production_persisted"] is False
+    assert candidate["persisted_to_global_drs"] is False
     assert counters["local_drs_v0_2_writeback_candidate_created_count"] == 1
     assert counters["local_drs_v0_2_writeback_persisted_count"] == 0
     assert counters["local_drs_v0_2_writeback_local_proof_only_count"] == 1
+
+
+def test_manual_live_drs_writeback_candidate_cannot_create_action_permission() -> None:
+    candidate = dict(_pass_report()["local_drs_v0_2_writeback_candidate"])
+    candidate["action_permission_created"] = True
+
+    validation = runner.validate_local_drs_v0_2_writeback_candidate(candidate)
+
+    assert validation["accepted"] is False
+    assert "required_false_field:action_permission_created" in validation["errors"]
+
+
+def test_manual_live_drs_writeback_candidate_cannot_create_final_output() -> None:
+    candidate = dict(_pass_report()["local_drs_v0_2_writeback_candidate"])
+    candidate["final_output_created_by_drs"] = True
+
+    validation = runner.validate_local_drs_v0_2_writeback_candidate(candidate)
+
+    assert validation["accepted"] is False
+    assert "required_false_field:final_output_created_by_drs" in validation["errors"]
+
+
+def test_manual_live_drs_writeback_candidate_cannot_persist_production_record() -> None:
+    candidate = dict(_pass_report()["local_drs_v0_2_writeback_candidate"])
+    candidate["production_persisted"] = True
+    candidate["persisted_to_global_drs"] = True
+
+    validation = runner.validate_local_drs_v0_2_writeback_candidate(candidate)
+
+    assert validation["accepted"] is False
+    assert "required_false_field:production_persisted" in validation["errors"]
+    assert "required_false_field:persisted_to_global_drs" in validation["errors"]
+
+
+def test_manual_live_drs_writeback_candidate_before_root_rejected() -> None:
+    report = _pass_report()
+    candidate = dict(report["local_drs_v0_2_writeback_candidate"])
+    candidate["source_root_boundary_evaluated"] = False
+
+    validation = runner.validate_local_drs_v0_2_writeback_candidate(candidate)
+
+    assert report["counters"]["root_final_boundary_evaluated_count"] == 1
+    assert report["counters"]["local_drs_v0_2_writeback_candidate_created_count"] == 1
+    assert validation["accepted"] is False
+    assert "required_true_field:source_root_boundary_evaluated" in validation["errors"]
 
 
 def test_manual_live_multillm_fractal_role_sequence() -> None:

@@ -190,7 +190,7 @@ Observed DRS classifications
 - changed_warehouse_fact: rerun_required; changed_facts_require_rerun_validation present.
 - stale_legal_accounting_evidence: warning_only; stale/high-similarity advisory reasons present.
 - quarantined_record: blocked; quarantine_proximity_blocks_direct_reuse present.
-- deadend_record: warning_only; deadend_proximity_blocks_or_downgrades_reuse present.
+- deadend_record: blocked; deadend_proximity_blocks_or_downgrades_reuse present.
 - wrong_domain_near_match: rerun_required; wrong_domain_near_match_not_direct_reuse present.
 - permission_trace_completed_action_attempt: blocked; permission_trace_not_completed_action present.
 

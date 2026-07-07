@@ -7,13 +7,14 @@ import hedgehog.local_drs_v02 as drs_v02
 
 def _fresh_envelope(
     freshness_class: str = drs_v02.FRESHNESS_FRESH_CONTEXT,
+    ttl_seconds: int | None = 3600,
 ) -> drs_v02.DRSFreshnessEnvelope:
     return drs_v02.DRSFreshnessEnvelope(
         physical_time="2026-07-06T17:00:24Z",
         knowledge_time="2026-07-06T17:00:24Z",
         event_time="2026-07-06T17:00:24Z",
         context_time="full_wow_v1_2",
-        ttl_seconds=3600,
+        ttl_seconds=ttl_seconds,
         validity_start="2026-07-06T17:00:24Z",
         validity_end="2026-07-06T18:00:24Z",
         source_observed_at="2026-07-06T17:00:24Z",
@@ -79,6 +80,43 @@ def test_drs_v02_temporal_query_required() -> None:
     assert decision.reuse_decision_class == drs_v02.REUSE_BLOCKED
     assert drs_v02.REASON_MISSING_TEMPORAL_QUERY in decision.reason_codes
     assert decision.direct_reuse_allowed is False
+    assert decision.root_review_required is True
+
+
+def test_drs_v02_missing_time_envelope_rejected() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(
+        _record(time_envelope=None),
+        _query(),
+    )
+
+    assert decision.reuse_decision_class == drs_v02.REUSE_BLOCKED
+    assert drs_v02.REASON_MISSING_TIME_ENVELOPE in decision.reason_codes
+    assert decision.direct_reuse_allowed is False
+    assert decision.root_review_required is True
+
+
+def test_drs_v02_missing_temporal_query_rejected() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(_record(), None)
+
+    assert decision.reuse_decision_class == drs_v02.REUSE_BLOCKED
+    assert drs_v02.REASON_MISSING_TEMPORAL_QUERY in decision.reason_codes
+    assert decision.direct_reuse_allowed is False
+    assert decision.root_review_required is True
+
+
+def test_drs_v02_invalid_ttl_rejected() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(
+        _record(time_envelope=_fresh_envelope(ttl_seconds=-1)),
+        _query(),
+    )
+
+    assert decision.reuse_decision_class in {
+        drs_v02.REUSE_BLOCKED,
+        drs_v02.REUSE_RERUN_REQUIRED,
+    }
+    assert drs_v02.REASON_INVALID_TTL_SECONDS in decision.reason_codes
+    assert decision.direct_reuse_allowed is False
+    assert decision.root_review_required is True
 
 
 def test_drs_v02_hit_is_context_not_authority() -> None:

@@ -535,7 +535,42 @@ Checkpoint facts:
 - This is not production.
 - This is not public auditor final package.
 
-Next direction: DRS v0.2 live observation over Full WOW v1.2 before AVF v0.2.
+Next direction: Local DRS v0.2 live observation and closure before AVF v0.2.
+
+### Local DRS v0.2 Closure Before AVF Checkpoint
+
+Local DRS v0.2 closure/boundary hardening before AVF is PASS.
+
+Checkpoint facts:
+
+- Audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log`.
+- Source live observation audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
+- Deadend audit wording is aligned: `deadend_record` is blocked.
+- Missing TimeEnvelope is rejected.
+- Missing TemporalQuery is rejected.
+- Invalid TTL is rejected.
+- DRS is not truth.
+- DRS is not authority.
+- DRS is not permission.
+- DRS hit is context only.
+- BSEP must carry bounded DRS context, not raw DRS tables.
+- BSEP must not carry DRS authority.
+- DRS writeback after Root is local proof/audit only.
+- DRS writeback candidate cannot create action permission.
+- DRS writeback candidate cannot create FinalOutput.
+- DRS writeback candidate cannot persist a production/global record.
+- DRS writeback candidate before Root is rejected.
+- Root remains final authority.
+- Direct reuse remains default false.
+- Provider/network/Gemini calls during this closure checkpoint: `0`.
+- ActionCommitPacket, receipt, mock payment, real payment, shipment release,
+  and effect counters remain `0`.
+- This is not production.
+- This is not public auditor final package.
+
+Next direction: AVF v0.2 preflight.
 
 ### Current Hedgehog Core Baseline
 

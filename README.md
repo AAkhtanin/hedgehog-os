@@ -35,20 +35,25 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-Local DRS v0.2 lineage/freshness/provenance/reuse/trace after Full WOW v1.2
-— PASS.
+Local DRS v0.2 closure/boundary hardening before AVF — PASS.
 
 Checkpoint source:
 
+- Closure audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log`.
+- Source live observation audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
 - Audit:
   `docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log`.
 - Preflight:
   `docs/local_drs_v0_2_after_full_wow_v1_2_preflight_v01.md`.
-- Observed checkpoint base: `246715a`.
+- Observed checkpoint base: `9749616`.
 - Slice A record/time/lineage model: PASS.
 - Slice B local resolver/reuse decision report: PASS.
 - Slice C Full WOW v1.2 deterministic product trace integration: PASS.
 - Slice D adversarial/stale/quarantine/deadend hardening: PASS.
+- Local DRS v0.2 live observation after Full WOW v1.2 is closed, and the
+  closure audit hardens the boundary before AVF v0.2.
 - Full WOW v1.2 remains the baseline regression scenario.
 - Local DRS v0.2 upgrades DRS from simple context lookup into a local
   lineage/freshness/provenance/reuse/trace layer.
@@ -57,8 +62,13 @@ Checkpoint source:
   does not create FinalOutput.
 - Root decides.
 - TimeEnvelope and TemporalQuery are required.
+- Missing TimeEnvelope is rejected.
+- Missing TemporalQuery is rejected.
+- Invalid TTL is rejected.
 - Lineage, source, and provenance refs are preserved.
 - Freshness and staleness are explicit.
+- BSEP carries bounded DRS context only and does not carry raw DRS tables or
+  DRS authority.
 - Old receipt is not current permission.
 - Old Root Final is not silently reused.
 - Accepted evidence ancestry is not future action permission.
@@ -74,14 +84,18 @@ Checkpoint source:
 - Direct reuse remains default false, with Root review required by default.
 - The clean all-gates direct reuse path still works as a local decision class,
   but it does not create FinalOutput or action permission.
+- DRS writeback candidate remains local proof/audit only.
+- DRS writeback candidate cannot create action permission, cannot create
+  FinalOutput, cannot persist a production/global record, and is rejected
+  before Root.
 - DRS v0.2 regression records count: `11`.
 - Default WOW trace `direct_reuse_allowed_count: 0`.
 - Default WOW trace `root_review_required_count: 11`.
 - Provider/network/Gemini calls during this checkpoint: `0`.
 - ActionCommitPacket, receipt, mock payment, real payment, shipment release,
   and effect counters remain `0`.
-- Next major gate: Local DRS v0.2 + Full WOW v1.2 live observation preflight.
-- AVF v0.2 comes after the DRS live observation checkpoint.
+- Next major gate: AVF v0.2 preflight after Local DRS v0.2 closure.
+- AVF v0.2 runtime implementation has not started.
 - This is not production.
 - This is not public auditor final package.
 

@@ -328,6 +328,33 @@ Status:
 - No provider/network/Gemini call, action packet, receipt, payment, shipment
   release, or real-world effect is created by the checkpoint.
 
+## Applied Local DRS v0.2 Closure Before AVF Checkpoint
+
+Local DRS v0.2 closure/boundary hardening before AVF is PASS.
+
+Status:
+
+- Audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log`.
+- Source live observation audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
+- Full WOW v1.2 + Local DRS v0.2 remains the baseline for AVF v0.2
+  preflight.
+- Missing TimeEnvelope is rejected.
+- Missing TemporalQuery is rejected.
+- Invalid TTL is rejected.
+- BSEP carries bounded DRS context only, without raw DRS tables or DRS
+  authority.
+- DRS writeback candidate remains local proof/audit only.
+- DRS writeback candidate cannot create action permission, create FinalOutput,
+  persist a production/global record, or run before Root.
+- DRS v0.2 remains not truth, not authority, and not permission.
+- DRS hit remains context only.
+- Direct reuse remains default false.
+- Root remains final authority.
+- Provider/network/Gemini calls and action/effect counters remain `0`.
+- AVF v0.2 runtime implementation has not started.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

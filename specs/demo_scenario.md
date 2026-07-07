@@ -338,6 +338,31 @@ Scenario result:
 - Conflicting provenance blocks reuse.
 - Duplicate poisoning does not create authority.
 - Wrong-domain near match is not direct reuse.
+
+### local_drs_v0_2_closure_before_avf
+
+Supplier Payment / Shipment Release Review WOW v1.2 now has Local DRS v0.2
+live observation plus closure hardening.
+
+Scenario result:
+
+- Audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log`.
+- Source live observation audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
+- Deadend audit wording is aligned: `deadend_record` is blocked.
+- Missing TimeEnvelope is rejected.
+- Missing TemporalQuery is rejected.
+- Invalid TTL is rejected.
+- BSEP carries bounded DRS context only and does not carry raw DRS tables or
+  DRS authority.
+- DRS writeback candidate remains local proof/audit only and cannot create
+  action permission, create FinalOutput, persist a production/global record, or
+  run before Root.
+- DRS is ready to feed AVF candidates as advisory/context/rerun/block signals,
+  not permission.
+- Direct reuse remains default false.
+- Root remains final authority.
 - Permission trace cannot become completed action.
 - ReuseScore is not Root.
 - Semantic similarity is not authority.

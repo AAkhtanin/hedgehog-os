@@ -265,6 +265,15 @@ Local DRS v0.2 lineage/freshness/reuse invariant examples:
 - Permission trace cannot become completed action.
 - ReuseScore is not Root.
 - Semantic similarity is not authority.
+- DRS candidate without TimeEnvelope is rejected.
+- DRS resolve without TemporalQuery is rejected.
+- Invalid TTL is rejected.
+- BSEP must not carry raw DRS tables.
+- BSEP must not carry DRS authority.
+- DRS writeback candidate cannot create action permission.
+- DRS writeback candidate cannot create FinalOutput.
+- DRS writeback candidate cannot persist a production/global record.
+- DRS writeback before Root is rejected.
 - Root remains final authority.
 
 DRS registry invariant:

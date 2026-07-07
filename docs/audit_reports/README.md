@@ -7,6 +7,24 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_local_drs_v0_2_closure_before_avf_v01.log`
+  - Audit status: PASS.
+  - Audits Local DRS v0.2 closure/boundary hardening before AVF v0.2.
+  - Observed checkpoint base: `9749616`.
+  - Source live observation audit:
+    `docs/audit_reports/auditor_local_drs_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
+  - Confirms deadend audit wording is aligned: `deadend_record` is blocked.
+  - Confirms missing TimeEnvelope, missing TemporalQuery, and invalid TTL are
+    rejected.
+  - Confirms BSEP carries bounded DRS context only, without raw DRS tables or
+    DRS authority.
+  - Confirms DRS writeback candidate cannot create action permission, cannot
+    create FinalOutput, cannot persist a production/global record, and is
+    rejected before Root.
+  - No AVF v0.2 implementation, no provider/network/Gemini calls, and no
+    action/effect counters.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_drs_v0_2_local_lineage_reuse_v01.log`
   - Audit status: PASS.
   - Audits Local DRS v0.2 lineage/freshness/provenance/reuse/trace after

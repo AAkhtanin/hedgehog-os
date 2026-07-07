@@ -4,6 +4,10 @@ from dataclasses import asdict
 import json
 from typing import Any, Mapping
 
+from hedgehog.avf_v02 import (
+    build_wow_v1_2_avf_v02_evaluation_input,
+    evaluate_avf_candidates_v02,
+)
 from hedgehog.local_drs_v02 import (
     LocalDRSResolveInputV02,
     TemporalQueryV02,
@@ -36,6 +40,7 @@ RENDERED_SECTIONS = (
     "[SECRET MEMBRANE]",
     "[TRANSITION CARDS]",
     "[LOCAL DRS V0.2 RESOLVE]",
+    "[LOCAL AVF V0.2 ADVISORY EVALUATION]",
     "[AUTHORITY MATRIX]",
     "[COUNTER MATRIX]",
     "[NON-CLAIMS]",
@@ -246,6 +251,14 @@ AUTHORITY_MATRIX = (
     "DRS v0.2 direct reuse candidate is not direct reuse.",
     "Old receipt is not current permission.",
     "Old Root Final is not silently reused.",
+    "AVF v0.2 score is not truth.",
+    "AVF v0.2 score is not authority.",
+    "AVF v0.2 score is not permission.",
+    "Top-ranked AVF candidate is not permission.",
+    "CandidateVector is not action permission.",
+    "CandidateVector is not FinalOutput.",
+    "HardMask is not Root.",
+    "AVF report is advisory only.",
     "CandidateVector is not truth.",
     "AVF/advisory is not authority.",
     "Runtime owns PlanGraph/local plan artifacts.",
@@ -283,6 +296,19 @@ DRS_V0_2_NON_AUTHORITY_BOUNDARIES = (
     "Old Root Final is not silently reused.",
     "Root remains final authority.",
     "DRS writeback after Root is local proof/audit only.",
+)
+
+AVF_V0_2_NON_AUTHORITY_BOUNDARIES = (
+    "AVF is not truth.",
+    "AVF is not authority.",
+    "AVF is not permission.",
+    "AVF score is not Root.",
+    "Top-ranked candidate is not permission.",
+    "CandidateVector is not action permission.",
+    "CandidateVector is not FinalOutput.",
+    "HardMask is not Root.",
+    "AVF report is advisory only.",
+    "Root remains final authority.",
 )
 
 
@@ -754,10 +780,80 @@ def _drs_v0_2_resolve() -> dict[str, Any]:
     }
 
 
+def _avf_v0_2_evaluation() -> dict[str, Any]:
+    evaluation_input = build_wow_v1_2_avf_v02_evaluation_input()
+    report = evaluate_avf_candidates_v02(evaluation_input)
+    decision_reports_summary = tuple(
+        {
+            "candidate_id": decision.candidate_id,
+            "source_drs_record_refs": decision.source_drs_record_refs,
+            "hard_mask_value": decision.hard_mask.hard_mask_value,
+            "hard_mask_reasons": decision.hard_mask.hard_mask_reasons,
+            "soft_penalty": decision.soft_mask.soft_penalty,
+            "soft_penalty_reasons": decision.soft_mask.soft_penalty_reasons,
+            "final_avf_score": decision.score_explanation.final_avf_score,
+            "rank": decision.score_explanation.rank,
+            "score_is_not_permission": (
+                decision.score_explanation.score_is_not_permission
+            ),
+            "top_ranked_candidate_not_permission": (
+                decision.score_explanation.top_ranked_candidate_not_permission
+            ),
+            "candidate_is_not_action": decision.score_explanation.candidate_is_not_action,
+            "candidate_vector_is_not_final_output": (
+                decision.score_explanation.candidate_vector_is_not_final_output
+            ),
+            "truth_claimed": decision.score_explanation.truth_claimed,
+            "authority_claimed": decision.score_explanation.authority_claimed,
+            "action_permission_claimed": (
+                decision.score_explanation.action_permission_claimed
+            ),
+            "final_output_claimed": decision.score_explanation.final_output_claimed,
+            "approved": decision.approved,
+            "execute": decision.execute,
+            "ready": decision.ready,
+            "payment_allowed": decision.payment_allowed,
+            "shipment_release_allowed": decision.shipment_release_allowed,
+            "final_decision": decision.final_decision,
+        }
+        for decision in report.decision_reports
+    )
+    avf_status = (
+        "PASS"
+        if report.candidates_evaluated_count == 9
+        and report.advisory_only
+        and report.top_ranked_candidate_not_permission
+        and report.avf_score_is_not_authority
+        and report.hardmask_is_not_root
+        and report.real_world_effects_count == 0
+        else "FAIL_CLOSED"
+    )
+    return {
+        "avf_v0_2_status": avf_status,
+        "evaluation_id": report.evaluation_id,
+        "resolver_mode": report.resolver_mode,
+        "candidates_evaluated_count": report.candidates_evaluated_count,
+        "top_candidate_id": report.top_candidate_id,
+        "top_candidate_score": report.top_candidate_score,
+        "hard_masked_count": report.hard_masked_count,
+        "unmasked_count": report.unmasked_count,
+        "root_review_required_count": report.root_review_required_count,
+        "ranked_candidates": tuple(asdict(row) for row in report.ranked_candidates),
+        "hard_mask_table": report.hard_mask_table,
+        "soft_mask_table": report.soft_mask_table,
+        "score_explanation_table": report.score_explanation_table,
+        "decision_reports_summary": decision_reports_summary,
+        "source_drs_report_ref": evaluation_input.source_drs_report_ref,
+        "source_drs_record_refs": evaluation_input.source_drs_record_refs,
+        "avf_non_authority_boundaries": AVF_V0_2_NON_AUTHORITY_BOUNDARIES,
+    }
+
+
 def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
     branches = _fractal_branches()
     result_proposals = _result_proposals(branches)
     drs_resolve = _drs_v0_2_resolve()
+    avf_evaluation = _avf_v0_2_evaluation()
     counters = _counters()
     counters.update(
         {
@@ -785,6 +881,26 @@ def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
             "drs_v0_2_embeddings_required_count": 0,
             "drs_v0_2_permission_granted_count": 0,
             "drs_v0_2_root_bypass_count": 0,
+            "avf_v0_2_evaluation_invoked_count": 1,
+            "avf_v0_2_candidates_evaluated_count": avf_evaluation[
+                "candidates_evaluated_count"
+            ],
+            "avf_v0_2_hard_masked_count": avf_evaluation["hard_masked_count"],
+            "avf_v0_2_unmasked_count": avf_evaluation["unmasked_count"],
+            "avf_v0_2_root_review_required_count": avf_evaluation[
+                "root_review_required_count"
+            ],
+            "avf_v0_2_top_ranked_candidate_permission_granted_count": 0,
+            "avf_v0_2_action_permission_granted_count": 0,
+            "avf_v0_2_final_output_created_count": 0,
+            "avf_v0_2_action_commit_packet_created_count": 0,
+            "avf_v0_2_receipt_created_count": 0,
+            "avf_v0_2_payment_executed_count": 0,
+            "avf_v0_2_shipment_released_count": 0,
+            "avf_v0_2_root_bypass_count": 0,
+            "avf_v0_2_provider_called_count": 0,
+            "avf_v0_2_network_called_count": 0,
+            "avf_v0_2_gemini_called_count": 0,
         }
     )
     transition_cards = _transition_cards()
@@ -794,8 +910,11 @@ def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
         and len(branches) == counters["fractal_branch_cells_created_count"]
         and len(result_proposals) == counters["branch_result_proposals_created_count"]
         and drs_resolve["drs_v0_2_status"] == "PASS"
+        and avf_evaluation["avf_v0_2_status"] == "PASS"
         and counters["drs_v0_2_records_evaluated_count"] == 11
         and counters["drs_v0_2_direct_reuse_allowed_count"] == 0
+        and counters["avf_v0_2_candidates_evaluated_count"] == 9
+        and counters["avf_v0_2_top_ranked_candidate_permission_granted_count"] == 0
         else "FAIL_CLOSED"
     )
 
@@ -882,6 +1001,7 @@ def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
             "receipt_shipment_boundary": "receipt != shipment release",
         },
         "drs_v0_2_resolve": drs_resolve,
+        "avf_v0_2_evaluation": avf_evaluation,
         "manual_live_multillm_fractal_lane": _manual_live_lane_reservation(),
         "authority_matrix": AUTHORITY_MATRIX,
         "counters": counters,
@@ -942,6 +1062,7 @@ def render_full_wow_v1_2_product_trace(report: Mapping[str, Any]) -> str:
         "WarehouseAPI, SupplierA, SupplierB, Legal, Accounting, BankA, and BankB are visible as deterministic API-like modules.",
         "Fractal branch cells and branch ResultProposals are represented as bounded deterministic branch work items.",
         "Local DRS v0.2 resolve table is now observed in the deterministic product trace.",
+        "Local AVF v0.2 advisory evaluation is now observed in the deterministic product trace.",
         "This remains deterministic/local; no external DRS, global DRS, vector DB, or embeddings path is used.",
         "manual live multi-LLM/fractal lane not implemented in this patch; Patch 2 reserves env-gated observation.",
         "",
@@ -1066,6 +1187,59 @@ def render_full_wow_v1_2_product_trace(report: Mapping[str, Any]) -> str:
         for boundary in drs_resolve["drs_non_authority_boundaries"]
     )
 
+    avf_evaluation = report["avf_v0_2_evaluation"]
+    lines.extend(["", "[LOCAL AVF V0.2 ADVISORY EVALUATION]"])
+    lines.extend(
+        _render_mapping(
+            {
+                "avf_v0_2_status": avf_evaluation["avf_v0_2_status"],
+                "evaluation_id": avf_evaluation["evaluation_id"],
+                "resolver_mode": avf_evaluation["resolver_mode"],
+                "candidates_evaluated_count": avf_evaluation[
+                    "candidates_evaluated_count"
+                ],
+                "top_candidate_id": avf_evaluation["top_candidate_id"],
+                "top_candidate_score": avf_evaluation["top_candidate_score"],
+                "hard_masked_count": avf_evaluation["hard_masked_count"],
+                "unmasked_count": avf_evaluation["unmasked_count"],
+                "root_review_required_count": avf_evaluation[
+                    "root_review_required_count"
+                ],
+            }
+        )
+    )
+    lines.extend(
+        [
+            "AVF consumed Local DRS v0.2 candidate/reuse signals.",
+            "AVF built CandidateVector pressure rows.",
+            "AVF applied HardMask / SoftMask / score explanation.",
+            "release_all_and_pay_all was hard masked.",
+            "Supplier B payment was hard masked.",
+            "safe candidates may rank but do not grant permission.",
+            "top-ranked candidate is not permission.",
+            "AVF score is not authority.",
+            "HardMask is not Root.",
+            "Root remains final authority.",
+            "ranked_candidates:",
+        ]
+    )
+    for row in avf_evaluation["ranked_candidates"]:
+        lines.append(
+            "- {candidate_id}: rank={rank}; final_avf_score={final_avf_score}; hard_mask_value={hard_mask_value}; root_review_required={root_review_required}".format(
+                **{
+                    **row,
+                    "root_review_required": _format_bool(
+                        row["root_review_required"]
+                    ),
+                }
+            )
+        )
+    lines.append("avf_non_authority_boundaries:")
+    lines.extend(
+        f"  - {boundary}"
+        for boundary in avf_evaluation["avf_non_authority_boundaries"]
+    )
+
     lines.extend(["", "[AUTHORITY MATRIX]"])
     lines.extend(f"- {item}" for item in report["authority_matrix"])
 
@@ -1102,6 +1276,15 @@ def render_full_wow_v1_2_product_trace(report: Mapping[str, Any]) -> str:
                         "root_review_required_count": drs_resolve[
                             "root_review_required_count"
                         ],
+                    },
+                    "avf_v0_2_evaluation": {
+                        "avf_v0_2_status": avf_evaluation["avf_v0_2_status"],
+                        "candidates_evaluated_count": avf_evaluation[
+                            "candidates_evaluated_count"
+                        ],
+                        "top_candidate_id": avf_evaluation["top_candidate_id"],
+                        "hard_masked_count": avf_evaluation["hard_masked_count"],
+                        "unmasked_count": avf_evaluation["unmasked_count"],
                     },
                     "non_claims": report["non_claims"],
                 },

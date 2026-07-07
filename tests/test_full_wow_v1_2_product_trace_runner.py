@@ -86,6 +86,14 @@ REQUIRED_AUTHORITY_FACTS = {
     "DRS v0.2 direct reuse candidate is not direct reuse.",
     "Old receipt is not current permission.",
     "Old Root Final is not silently reused.",
+    "AVF v0.2 score is not truth.",
+    "AVF v0.2 score is not authority.",
+    "AVF v0.2 score is not permission.",
+    "Top-ranked AVF candidate is not permission.",
+    "CandidateVector is not action permission.",
+    "CandidateVector is not FinalOutput.",
+    "HardMask is not Root.",
+    "AVF report is advisory only.",
     "CandidateVector is not truth.",
     "AVF/advisory is not authority.",
     "Runtime owns PlanGraph/local plan artifacts.",
@@ -122,6 +130,7 @@ REQUIRED_SECTIONS = (
     "[SECRET MEMBRANE]",
     "[TRANSITION CARDS]",
     "[LOCAL DRS V0.2 RESOLVE]",
+    "[LOCAL AVF V0.2 ADVISORY EVALUATION]",
     "[AUTHORITY MATRIX]",
     "[COUNTER MATRIX]",
     "[NON-CLAIMS]",
@@ -287,6 +296,9 @@ def test_v1_2_product_trace_no_real_execution_or_effects() -> None:
     assert counters["drs_v0_2_global_drs_used_count"] == 0
     assert counters["drs_v0_2_vector_db_used_count"] == 0
     assert counters["drs_v0_2_embeddings_required_count"] == 0
+    assert counters["avf_v0_2_provider_called_count"] == 0
+    assert counters["avf_v0_2_network_called_count"] == 0
+    assert counters["avf_v0_2_gemini_called_count"] == 0
     assert counters["real_world_effects_count"] == 0
 
 
@@ -405,6 +417,115 @@ def test_v1_2_product_trace_drs_v0_2_no_authority_or_permission() -> None:
     assert "DRS v0.2 direct reuse candidate is not direct reuse." in authority
 
 
+def test_v1_2_product_trace_avf_v0_2_evaluation_present() -> None:
+    report = _report()
+    avf = report["avf_v0_2_evaluation"]
+
+    assert avf["avf_v0_2_status"] == "PASS"
+    assert avf["resolver_mode"] == "deterministic_local"
+    assert avf["candidates_evaluated_count"] == 9
+    assert avf["ranked_candidates"]
+    assert avf["hard_mask_table"]
+    assert avf["soft_mask_table"]
+    assert avf["score_explanation_table"]
+    assert report["counters"]["avf_v0_2_evaluation_invoked_count"] == 1
+    assert report["counters"]["avf_v0_2_candidates_evaluated_count"] == 9
+
+
+def test_v1_2_product_trace_avf_v0_2_hardmasks_unsafe_candidates() -> None:
+    avf = _report()["avf_v0_2_evaluation"]
+    rows = {row["candidate_id"]: row for row in avf["ranked_candidates"]}
+
+    release_all = rows["release_all_and_pay_all"]
+    supplier_b = rows["pay_supplier_b"]
+    assert release_all["hard_mask_value"] == 0
+    assert release_all["final_avf_score"] == 0.0
+    assert supplier_b["hard_mask_value"] == 0
+    assert supplier_b["final_avf_score"] == 0.0
+
+
+def test_v1_2_product_trace_avf_v0_2_safe_candidates_rank_without_permission() -> None:
+    avf = _report()["avf_v0_2_evaluation"]
+    rows = {row["candidate_id"]: row for row in avf["ranked_candidates"]}
+    decisions = {
+        decision["candidate_id"]: decision
+        for decision in avf["decision_reports_summary"]
+    }
+
+    for candidate_id in {
+        "prepare_supplier_a_payment_form_only",
+        "root_review_only",
+        "keep_shipment_held",
+    }:
+        assert rows[candidate_id]["final_avf_score"] > 0.0
+        assert rows[candidate_id]["score_is_not_permission"] is True
+        assert decisions[candidate_id]["payment_allowed"] is False
+        assert decisions[candidate_id]["final_decision"] is False
+        assert decisions[candidate_id]["execute"] is False
+
+
+def test_v1_2_product_trace_avf_v0_2_top_candidate_not_permission() -> None:
+    avf = _report()["avf_v0_2_evaluation"]
+    top_candidate_id = avf["top_candidate_id"]
+    decisions = {
+        decision["candidate_id"]: decision
+        for decision in avf["decision_reports_summary"]
+    }
+
+    assert top_candidate_id is not None
+    assert decisions[top_candidate_id]["top_ranked_candidate_not_permission"] is True
+    assert decisions[top_candidate_id]["payment_allowed"] is False
+    assert decisions[top_candidate_id]["final_output_claimed"] is False
+    assert decisions[top_candidate_id]["final_decision"] is False
+
+
+def test_v1_2_product_trace_avf_v0_2_score_explanations_visible() -> None:
+    rows = _report()["avf_v0_2_evaluation"]["score_explanation_table"]
+
+    assert rows
+    for row in rows:
+        assert row["score_is_not_permission"] is True
+        assert row["candidate_is_not_action"] is True
+        assert row["candidate_vector_is_not_final_output"] is True
+        assert row["root_review_required"] is True
+
+
+def test_v1_2_product_trace_avf_v0_2_uses_drs_refs() -> None:
+    avf = _report()["avf_v0_2_evaluation"]
+
+    assert avf["source_drs_report_ref"] == "local_drs_v0_2_reuse_decision_report"
+    assert REQUIRED_DRS_SCENARIO_IDS <= set(avf["source_drs_record_refs"])
+
+
+def test_v1_2_product_trace_avf_v0_2_no_authority_or_effects() -> None:
+    report = _report()
+    counters = report["counters"]
+    authority = set(report["authority_matrix"])
+
+    assert counters["avf_v0_2_action_permission_granted_count"] == 0
+    assert counters["avf_v0_2_final_output_created_count"] == 0
+    assert counters["avf_v0_2_root_bypass_count"] == 0
+    assert counters["avf_v0_2_action_commit_packet_created_count"] == 0
+    assert counters["avf_v0_2_receipt_created_count"] == 0
+    assert counters["avf_v0_2_payment_executed_count"] == 0
+    assert counters["avf_v0_2_shipment_released_count"] == 0
+    assert counters["product_trace_created_action_commit_packet_count"] == 0
+    assert counters["product_trace_created_receipt_count"] == 0
+    assert counters["product_trace_executed_mock_payment_count"] == 0
+    assert counters["product_trace_executed_real_payment_count"] == 0
+    assert counters["product_trace_released_shipment_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+    assert "AVF v0.2 score is not truth." in authority
+    assert "AVF v0.2 score is not authority." in authority
+    assert "AVF v0.2 score is not permission." in authority
+    assert "Top-ranked AVF candidate is not permission." in authority
+    assert "CandidateVector is not action permission." in authority
+    assert "CandidateVector is not FinalOutput." in authority
+    assert "HardMask is not Root." in authority
+    assert "AVF report is advisory only." in authority
+
+
 def test_v1_2_product_trace_authority_matrix() -> None:
     authority = set(_report()["authority_matrix"])
 
@@ -415,6 +536,8 @@ def test_v1_2_product_trace_authority_matrix() -> None:
     assert "Branch LLM/SLM output is not action permission." in authority
     assert "Branch LLM/SLM output is not FinalOutput." in authority
     assert "DRS v0.2 hit is not authority." in authority
+    assert "AVF v0.2 score is not authority." in authority
+    assert "Top-ranked AVF candidate is not permission." in authority
 
 
 def test_v1_2_product_trace_rendered_sections() -> None:
@@ -431,6 +554,13 @@ def test_v1_2_product_trace_rendered_sections() -> None:
     assert "DRS did not authorize shipment release" in rendered
     assert "Old receipt is not current permission" in rendered
     assert "Old Root Final is not silently reused" in rendered
+    assert "AVF consumed Local DRS v0.2 candidate/reuse signals" in rendered
+    assert "release_all_and_pay_all was hard masked" in rendered
+    assert "Supplier B payment was hard masked" in rendered
+    assert "safe candidates may rank but do not grant permission" in rendered
+    assert "top-ranked candidate is not permission" in rendered
+    assert "AVF score is not authority" in rendered
+    assert "HardMask is not Root" in rendered
     assert "Root remains final authority" in rendered
     assert "FINAL STATUS: PASS" in rendered
 
@@ -452,6 +582,7 @@ def test_v1_2_product_trace_does_not_import_live_or_execution_runners() -> None:
 
     assert "google.genai" not in source
     assert "hedgehog.local_drs_v02" in source
+    assert "hedgehog.avf_v02" in source
     assert "run_full_semantic_e2e_v01" not in source
     assert "run_supplier_payment_shipment_release_review_wow_v1_1" not in source
     assert "run_human_full_wow_v1_1_final_walkthrough" not in source

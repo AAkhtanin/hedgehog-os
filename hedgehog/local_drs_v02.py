@@ -42,6 +42,16 @@ REASON_DIRECT_REUSE_DEFAULT_FALSE = "direct_reuse_default_false"
 REASON_LINEAGE_REFS_PRESERVED = "lineage_refs_preserved"
 REASON_PROVENANCE_REFS_PRESERVED = "provenance_refs_preserved"
 REASON_CONTEXT_ONLY_NOT_AUTHORITY = "context_only_not_authority"
+REASON_PERMISSION_TRACE_NOT_COMPLETED_ACTION = "permission_trace_not_completed_action"
+REASON_WRONG_DOMAIN_NEAR_MATCH_NOT_DIRECT_REUSE = (
+    "wrong_domain_near_match_not_direct_reuse"
+)
+REASON_DUPLICATE_POISONING_PRESSURE_DOES_NOT_CREATE_AUTHORITY = (
+    "duplicate_poisoning_pressure_does_not_create_authority"
+)
+REASON_CONFLICTING_PROVENANCE_BLOCKS_REUSE = "conflicting_provenance_blocks_reuse"
+REASON_REUSE_SCORE_NOT_ROOT = "reuse_score_not_root"
+REASON_SEMANTIC_SIMILARITY_NOT_AUTHORITY = "semantic_similarity_not_authority"
 
 _STALE_FRESHNESS_CLASSES = {
     FRESHNESS_STALE_WARNING,
@@ -105,12 +115,16 @@ class DRSRecordV02:
     accepted_evidence: bool = False
     changed_facts: bool = False
     conflict_pressure: bool = False
+    conflicting_provenance: bool = False
+    duplicate_poisoning_pressure: bool = False
+    wrong_domain_near_match: bool = False
     quarantine_proximity: bool = False
     deadend_proximity: bool = False
     policy_ok: bool = True
     permission_ok: bool = False
     root_shortcut_allowed: bool = False
     reuse_score: float = 0.0
+    semantic_similarity_score: float | None = None
     truth_claimed: bool = False
     authority_claimed: bool = False
     action_permission_claimed: bool = False
@@ -217,6 +231,25 @@ def _with_boundary_reasons(record: DRSRecordV02, reasons: list[str]) -> None:
     _append_reason(reasons, REASON_CONTEXT_ONLY_NOT_AUTHORITY)
 
 
+def _with_advisory_score_reasons(
+    record: DRSRecordV02,
+    reasons: list[str],
+    tau_reuse: float,
+) -> None:
+    if record.reuse_score >= tau_reuse:
+        _append_reason(reasons, REASON_REUSE_SCORE_NOT_ROOT)
+    if record.semantic_similarity_score is not None:
+        _append_reason(reasons, REASON_SEMANTIC_SIMILARITY_NOT_AUTHORITY)
+
+
+def _has_conflicting_provenance(record: DRSRecordV02) -> bool:
+    provenance_fragments = record.provenance_refs + record.source_refs
+    return record.conflicting_provenance or any(
+        "conflict" in fragment or "contradict" in fragment
+        for fragment in provenance_fragments
+    )
+
+
 def validate_freshness_envelope(
     envelope: DRSFreshnessEnvelope | None,
 ) -> tuple[bool, tuple[str, ...]]:
@@ -285,6 +318,9 @@ def _hard_gates_allow_direct_reuse(
         and _freshness_class(record) == FRESHNESS_FRESH_CONTEXT
         and not record.changed_facts
         and not record.conflict_pressure
+        and not _has_conflicting_provenance(record)
+        and not record.duplicate_poisoning_pressure
+        and not record.wrong_domain_near_match
         and not record.quarantine_proximity
         and not record.deadend_proximity
         and not record.contains_receipt
@@ -298,6 +334,9 @@ def _candidate_shape(record: DRSRecordV02, tau_reuse: float) -> bool:
     return record.policy_ok and record.reuse_score >= tau_reuse and not (
         record.changed_facts
         or record.conflict_pressure
+        or _has_conflicting_provenance(record)
+        or record.duplicate_poisoning_pressure
+        or record.wrong_domain_near_match
         or record.quarantine_proximity
         or record.deadend_proximity
         or _freshness_class(record) in _STALE_FRESHNESS_CLASSES
@@ -347,6 +386,7 @@ def evaluate_drs_record_v02(
     envelope_valid, envelope_reasons = validate_freshness_envelope(record.time_envelope)
     reasons: list[str] = []
     _with_boundary_reasons(record, reasons)
+    _with_advisory_score_reasons(record, reasons, tau_reuse)
 
     if not query_valid:
         reasons.extend(query_reasons)
@@ -368,6 +408,9 @@ def evaluate_drs_record_v02(
             query=query,
         )
 
+    if record.contains_action_permission:
+        _append_reason(reasons, REASON_PERMISSION_TRACE_NOT_COMPLETED_ACTION)
+
     if _claims_boundary(record):
         return _make_decision(
             record,
@@ -383,6 +426,29 @@ def evaluate_drs_record_v02(
         _append_reason(reasons, REASON_PRIOR_ROOT_FINAL_NOT_SILENT_REUSE)
     if record.accepted_evidence:
         _append_reason(reasons, REASON_ACCEPTED_EVIDENCE_NOT_FUTURE_ACTION_PERMISSION)
+
+    if record.duplicate_poisoning_pressure:
+        _append_reason(
+            reasons,
+            REASON_DUPLICATE_POISONING_PRESSURE_DOES_NOT_CREATE_AUTHORITY,
+        )
+        return _make_decision(
+            record,
+            decision_class=REUSE_BLOCKED,
+            direct_reuse_allowed=False,
+            reason_codes=reasons,
+            query=query,
+        )
+
+    if record.wrong_domain_near_match:
+        _append_reason(reasons, REASON_WRONG_DOMAIN_NEAR_MATCH_NOT_DIRECT_REUSE)
+        return _make_decision(
+            record,
+            decision_class=REUSE_RERUN_REQUIRED,
+            direct_reuse_allowed=False,
+            reason_codes=reasons,
+            query=query,
+        )
 
     if record.quarantine_proximity:
         _append_reason(reasons, REASON_QUARANTINE_PROXIMITY_BLOCKS_DIRECT_REUSE)
@@ -414,8 +480,10 @@ def evaluate_drs_record_v02(
             query=query,
         )
 
-    if record.conflict_pressure:
+    if record.conflict_pressure or _has_conflicting_provenance(record):
         _append_reason(reasons, REASON_CONFLICT_REQUIRES_RERUN_VALIDATION)
+        if _has_conflicting_provenance(record):
+            _append_reason(reasons, REASON_CONFLICTING_PROVENANCE_BLOCKS_REUSE)
         return _make_decision(
             record,
             decision_class=REUSE_RERUN_REQUIRED,
@@ -772,7 +840,8 @@ def build_wow_v1_2_drs_v02_regression_records() -> tuple[DRSRecordV02, ...]:
             summary="Stale legal/accounting evidence gets freshness downgrade.",
             relation="stale_warning",
             freshness_class=FRESHNESS_STALE_WARNING,
-            reuse_score=0.9,
+            reuse_score=0.97,
+            semantic_similarity_score=0.98,
         ),
         _wow_record(
             record_id="quarantined_record",
@@ -795,7 +864,8 @@ def build_wow_v1_2_drs_v02_regression_records() -> tuple[DRSRecordV02, ...]:
             record_kind="wrong_domain_near_match",
             summary="Wrong-domain near match cannot be reused directly.",
             relation="conflicts_with_scope",
-            conflict_pressure=True,
+            wrong_domain_near_match=True,
+            semantic_similarity_score=0.99,
             reuse_score=0.97,
         ),
         _wow_record(

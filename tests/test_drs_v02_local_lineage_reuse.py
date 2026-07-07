@@ -227,6 +227,192 @@ def test_drs_v02_direct_reuse_requires_all_hard_gates() -> None:
     assert decision.final_output_claimed is False
 
 
+def test_drs_v02_stale_high_similarity_does_not_permit_reuse() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(
+        _record(
+            record_id="stale_high_similarity",
+            time_envelope=_fresh_envelope(drs_v02.FRESHNESS_STALE_WARNING),
+            reuse_score=0.99,
+            semantic_similarity_score=0.99,
+            root_shortcut_allowed=True,
+            policy_ok=True,
+            permission_ok=True,
+        ),
+        _query(allow_direct=True),
+    )
+
+    assert decision.reuse_decision_class in {
+        drs_v02.REUSE_WARNING_ONLY,
+        drs_v02.REUSE_RERUN_REQUIRED,
+    }
+    assert decision.direct_reuse_allowed is False
+    assert decision.root_review_required is True
+    assert drs_v02.REASON_STALE_RECORD_NOT_PERMISSION in decision.reason_codes
+    assert (
+        drs_v02.REASON_REUSE_SCORE_NOT_ROOT in decision.reason_codes
+        or drs_v02.REASON_SEMANTIC_SIMILARITY_NOT_AUTHORITY in decision.reason_codes
+    )
+
+
+def test_drs_v02_quarantine_blocks_even_all_other_gates() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(
+        _record(
+            record_kind="prior_successful_work",
+            reuse_score=0.99,
+            root_shortcut_allowed=True,
+            policy_ok=True,
+            permission_ok=True,
+            quarantine_proximity=True,
+        ),
+        _query(allow_direct=True),
+    )
+
+    assert decision.reuse_decision_class == drs_v02.REUSE_BLOCKED
+    assert decision.direct_reuse_allowed is False
+    assert drs_v02.REASON_QUARANTINE_PROXIMITY_BLOCKS_DIRECT_REUSE in decision.reason_codes
+
+
+def test_drs_v02_deadend_blocks_or_downgrades_even_high_score() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(
+        _record(
+            deadend_proximity=True,
+            reuse_score=0.99,
+            semantic_similarity_score=0.98,
+        ),
+        _query(allow_direct=True),
+    )
+
+    assert decision.reuse_decision_class in {
+        drs_v02.REUSE_BLOCKED,
+        drs_v02.REUSE_WARNING_ONLY,
+    }
+    assert decision.direct_reuse_allowed is False
+    assert (
+        drs_v02.REASON_DEADEND_PROXIMITY_BLOCKS_OR_DOWNGRADES_REUSE
+        in decision.reason_codes
+    )
+
+
+def test_drs_v02_changed_worldstate_blocks_old_reuse() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(
+        _record(changed_facts=True, reuse_score=0.99),
+        _query(allow_direct=True),
+    )
+
+    assert decision.reuse_decision_class == drs_v02.REUSE_RERUN_REQUIRED
+    assert decision.direct_reuse_allowed is False
+    assert drs_v02.REASON_CHANGED_FACTS_REQUIRE_RERUN_VALIDATION in decision.reason_codes
+
+
+def test_drs_v02_conflicting_provenance_blocks_reuse() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(
+        _record(
+            conflicting_provenance=True,
+            provenance_refs=("audit:full_wow_v1_2", "conflict:other_trace"),
+            reuse_score=0.99,
+        ),
+        _query(allow_direct=True),
+    )
+
+    assert decision.reuse_decision_class in {
+        drs_v02.REUSE_RERUN_REQUIRED,
+        drs_v02.REUSE_BLOCKED,
+    }
+    assert decision.direct_reuse_allowed is False
+    assert drs_v02.REASON_CONFLICT_REQUIRES_RERUN_VALIDATION in decision.reason_codes
+    assert drs_v02.REASON_CONFLICTING_PROVENANCE_BLOCKS_REUSE in decision.reason_codes
+
+
+def test_drs_v02_duplicate_poisoning_pressure_does_not_create_authority() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(
+        _record(
+            duplicate_poisoning_pressure=True,
+            reuse_score=0.99,
+            semantic_similarity_score=0.99,
+        ),
+        _query(allow_direct=True),
+    )
+
+    assert decision.reuse_decision_class == drs_v02.REUSE_BLOCKED
+    assert decision.direct_reuse_allowed is False
+    assert decision.authority_claimed is False
+    assert (
+        drs_v02.REASON_DUPLICATE_POISONING_PRESSURE_DOES_NOT_CREATE_AUTHORITY
+        in decision.reason_codes
+    )
+
+
+def test_drs_v02_wrong_domain_near_match_score_is_not_authority() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(
+        _record(
+            wrong_domain_near_match=True,
+            reuse_score=0.99,
+            semantic_similarity_score=0.99,
+        ),
+        _query(allow_direct=True),
+    )
+
+    assert decision.reuse_decision_class in {
+        drs_v02.REUSE_RERUN_REQUIRED,
+        drs_v02.REUSE_BLOCKED,
+    }
+    assert decision.direct_reuse_allowed is False
+    assert drs_v02.REASON_WRONG_DOMAIN_NEAR_MATCH_NOT_DIRECT_REUSE in decision.reason_codes
+    assert (
+        drs_v02.REASON_SEMANTIC_SIMILARITY_NOT_AUTHORITY in decision.reason_codes
+        or drs_v02.REASON_REUSE_SCORE_NOT_ROOT in decision.reason_codes
+    )
+
+
+def test_drs_v02_permission_trace_cannot_be_completed_action_has_explicit_reason() -> None:
+    decision = drs_v02.evaluate_drs_record_v02(
+        _record(contains_action_permission=True, reuse_score=0.99),
+        _query(allow_direct=True),
+    )
+
+    assert decision.reuse_decision_class == drs_v02.REUSE_BLOCKED
+    assert decision.direct_reuse_allowed is False
+    assert decision.action_permission_claimed is False
+    assert drs_v02.REASON_PERMISSION_TRACE_NOT_COMPLETED_ACTION in decision.reason_codes
+
+
+def test_drs_v02_all_gates_direct_reuse_still_requires_clean_record() -> None:
+    clean = {
+        "record_kind": "prior_successful_work",
+        "reuse_score": 0.99,
+        "root_shortcut_allowed": True,
+        "policy_ok": True,
+        "permission_ok": True,
+    }
+    clean_decision = drs_v02.evaluate_drs_record_v02(
+        _record(**clean),
+        _query(allow_direct=True),
+    )
+
+    assert clean_decision.direct_reuse_allowed is True
+    assert clean_decision.reuse_decision_class == drs_v02.REUSE_DIRECT_REUSE_ALLOWED
+    assert clean_decision.final_output_claimed is False
+
+    poison_flags = (
+        {"duplicate_poisoning_pressure": True},
+        {"wrong_domain_near_match": True},
+        {"changed_facts": True},
+        {"conflict_pressure": True},
+        {"conflicting_provenance": True},
+        {"quarantine_proximity": True},
+        {"deadend_proximity": True},
+        {"contains_receipt": True},
+        {"contains_action_permission": True},
+        {"root_final_ref": "root-final:old"},
+    )
+    for poison in poison_flags:
+        poisoned_decision = drs_v02.evaluate_drs_record_v02(
+            _record(**clean, **poison),
+            _query(allow_direct=True),
+        )
+        assert poisoned_decision.direct_reuse_allowed is False
+
+
 def test_drs_v02_resolve_report_counts_and_boundaries() -> None:
     query = _query(allow_direct=True)
     records = [
@@ -262,6 +448,10 @@ def test_drs_v02_module_has_no_provider_network_runtime_imports() -> None:
         "urllib",
         "openai",
         "subprocess",
+        "Path(",
+        "open(",
+        "write_text(",
+        "read_text(",
         "run_full_wow",
         "run_full_semantic",
         "ActionCommitPacket " + "creation",
@@ -403,6 +593,36 @@ def test_drs_v02_permission_trace_cannot_be_completed_action() -> None:
     assert decision.action_permission_claimed is False
 
 
+def test_drs_v02_wow_regression_records_include_slice_d_reason_codes() -> None:
+    report = _resolve_wow_regression()
+    decisions = {decision.record_id: decision for decision in report.decisions}
+
+    assert drs_v02.REASON_STALE_RECORD_NOT_PERMISSION in decisions[
+        "stale_legal_accounting_evidence"
+    ].reason_codes
+    assert (
+        drs_v02.REASON_REUSE_SCORE_NOT_ROOT
+        in decisions["stale_legal_accounting_evidence"].reason_codes
+        or drs_v02.REASON_SEMANTIC_SIMILARITY_NOT_AUTHORITY
+        in decisions["stale_legal_accounting_evidence"].reason_codes
+    )
+    assert drs_v02.REASON_QUARANTINE_PROXIMITY_BLOCKS_DIRECT_REUSE in decisions[
+        "quarantined_record"
+    ].reason_codes
+    assert (
+        drs_v02.REASON_DEADEND_PROXIMITY_BLOCKS_OR_DOWNGRADES_REUSE
+        in decisions["deadend_record"].reason_codes
+    )
+    assert (
+        drs_v02.REASON_WRONG_DOMAIN_NEAR_MATCH_NOT_DIRECT_REUSE
+        in decisions["wrong_domain_near_match"].reason_codes
+    )
+    assert (
+        drs_v02.REASON_PERMISSION_TRACE_NOT_COMPLETED_ACTION
+        in decisions["permission_trace_completed_action_attempt"].reason_codes
+    )
+
+
 def test_drs_v02_resolver_no_side_effect_imports() -> None:
     source = Path(drs_v02.__file__).read_text(encoding="utf-8")
     forbidden_fragments = (
@@ -411,6 +631,10 @@ def test_drs_v02_resolver_no_side_effect_imports() -> None:
         "urllib",
         "openai",
         "subprocess",
+        "Path(",
+        "open(",
+        "write_text(",
+        "read_text(",
         "run_full_wow",
         "run_full_semantic",
         "ActionCommitPacket " + "creation",

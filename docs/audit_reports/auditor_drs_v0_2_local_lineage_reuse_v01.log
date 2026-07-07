@@ -1,0 +1,230 @@
+audit_id: auditor_drs_v0_2_local_lineage_reuse_v01
+audit_status: PASS
+audited_layer: Local DRS v0.2 lineage/freshness/provenance/reuse/trace after Full WOW v1.2
+base_commit: 3dbae1d
+preflight: docs/local_drs_v0_2_after_full_wow_v1_2_preflight_v01.md
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_world_effects_count: 0
+
+observed_repository_state:
+  pre_edit_git_status_short_untracked_all: clean
+  observed_head_short: 3dbae1d
+  expected_operator_head: 3dbae1d
+  observed_head_matches_expected_operator_head: true
+  recent_commits:
+    - 3dbae1d Harden Local DRS v0.2 Slice D adversarial reuse boundaries
+    - 2139f00 Integrate Local DRS v0.2 resolve into Full WOW v1.2 product trace
+    - b3b8f80 Add Local DRS v0.2 resolver reuse decision report
+    - 6eebb46 Add Local DRS v0.2 record time lineage model
+    - 2cdae48 Add Local DRS v0.2 after Full WOW v1.2 preflight
+    - e3f2c7e Document Full WOW v1.2 live multi-LLM fractal checkpoint
+    - e42116b Add Full WOW v1.2 live fractal story renderer audit
+    - 29560c7 Add Full WOW v1.2 live fractal artifact story renderer
+    - 4e335ee Add Full WOW v1.2 live fractal run human story
+    - 9986006 Add Full WOW v1.2 manual live multi-LLM fractal real run audit
+    - 0443d23 Capture fail-closed artifacts for Full WOW v1.2 live fractal lane
+    - 42de19d Add Full WOW v1.2 manual live multi-LLM fractal lane
+
+audited_files:
+  - docs/local_drs_v0_2_after_full_wow_v1_2_preflight_v01.md
+  - hedgehog/local_drs_v02.py
+  - tests/test_drs_v02_local_lineage_reuse.py
+  - demo/run_full_wow_v1_2_product_trace.py
+  - tests/test_full_wow_v1_2_product_trace_runner.py
+
+scope:
+  slice_a_record_time_lineage_model: audited
+  slice_b_local_resolver_reuse_decision_report: audited
+  slice_c_full_wow_v1_2_baseline_integration: audited
+  slice_d_adversarial_stale_quarantine_deadend_hardening: audited
+  avf_v0_2_implemented: false
+  action_commit_packet_hardening_started: false
+  new_domain_demo_started: false
+
+validation_commands:
+  - command: git status --short --untracked-files=all
+    result: PASS
+    observed_output: clean
+  - command: git --no-pager log --oneline --max-count=12
+    result: PASS
+    observed_head_line: 3dbae1d Harden Local DRS v0.2 Slice D adversarial reuse boundaries
+  - command: git rev-parse --short HEAD
+    result: PASS
+    observed_output: 3dbae1d
+  - command: python3 -m py_compile hedgehog/local_drs_v02.py
+    result: PASS
+    observed_output: no output
+  - command: python3 -m py_compile demo/run_full_wow_v1_2_product_trace.py
+    result: PASS
+    observed_output: no output
+  - command: python3 -m demo.run_full_wow_v1_2_product_trace
+    result: PASS
+    observed_key_output:
+      product_trace_status: PASS
+      final_status: PASS
+      LOCAL_DRS_V0_2_RESOLVE_visible: true
+      drs_v0_2_records_evaluated_count: 11
+      drs_v0_2_direct_reuse_allowed_count: 0
+      drs_v0_2_root_review_required_count: 11
+      FINAL_STATUS: PASS
+  - command: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_drs_v02_local_lineage_reuse.py
+    result: PASS
+    tests_passed: 33
+  - command: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_full_wow_v1_2_product_trace_runner.py
+    result: PASS
+    tests_passed: 20
+  - command: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_drs_v02_local_lineage_reuse.py tests/test_full_wow_v1_2_product_trace_runner.py tests/test_human_full_wow_v1_2_live_fractal_story_runner.py
+    result: PASS
+    tests_passed: 62
+  - command: git status --short --untracked-files=all
+    result: PASS
+    observed_before_audit_file: clean
+  - command: git diff --stat
+    result: PASS
+    observed_before_audit_file: empty
+  - command: git diff --check
+    result: PASS
+    observed_before_audit_file: no output
+  - command: git diff --name-only
+    result: PASS
+    observed_before_audit_file: empty
+  - command: positive Local DRS v0.2 grep over hedgehog/local_drs_v02.py and tests/test_drs_v02_local_lineage_reuse.py
+    result: PASS
+    matched_required_markers: true
+  - command: positive WOW integration grep over demo/run_full_wow_v1_2_product_trace.py and tests/test_full_wow_v1_2_product_trace_runner.py
+    result: PASS
+    matched_required_markers: true
+  - command: forbidden boundary grep over audited runtime/test files
+    result: PASS
+    forbidden_matches_found: 0
+
+final_static_after_audit_file_created:
+  command_git_status_short_untracked_all: git status --short --untracked-files=all
+  command_git_status_result: PASS
+  command_git_status_observed_output:
+    - "?? docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log"
+  command_git_diff_stat: git diff --stat
+  command_git_diff_stat_result: PASS
+  command_git_diff_stat_observed_output: empty_untracked_file_not_in_diff
+  command_git_diff_check: git diff --check
+  command_git_diff_check_result: PASS
+  command_git_diff_check_observed_output: no output
+  command_git_diff_name_only: git diff --name-only
+  command_git_diff_name_only_result: PASS
+  command_git_diff_name_only_observed_output: empty_untracked_file_not_in_diff
+  expected_changed_file_only_confirmed_by_status: docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log
+  final_forbidden_grep_including_audit_log: PASS
+  final_forbidden_matches_found: 0
+
+slice_a_findings:
+  finding_slice_a_record_time_lineage_model_present: PASS
+  finding_drs_record_v02_present: PASS
+  finding_drs_lineage_ref_present: PASS
+  finding_drs_freshness_envelope_present: PASS
+  finding_temporal_query_v02_present: PASS
+  finding_drs_reuse_decision_present: PASS
+  finding_drs_resolve_report_present: PASS
+  finding_time_envelope_required: PASS
+  finding_temporal_query_required: PASS
+  finding_lineage_refs_preserved: PASS
+  finding_source_refs_preserved: PASS
+  finding_provenance_refs_preserved: PASS
+
+slice_b_findings:
+  finding_slice_b_local_resolver_present: PASS
+  finding_local_drs_resolve_input_present: PASS
+  finding_reuse_decision_report_present: PASS
+  finding_resolver_creates_freshness_table: PASS
+  finding_resolver_creates_lineage_table: PASS
+  finding_resolver_creates_provenance_table: PASS
+  finding_resolver_creates_reuse_decision_table: PASS
+  finding_wow_v1_2_regression_records_present: PASS
+  finding_old_proof_cases_covered: PASS
+  finding_direct_reuse_default_false: PASS
+
+slice_c_findings:
+  finding_slice_c_wow_v1_2_baseline_integration_present: PASS
+  finding_local_drs_v0_2_resolve_section_visible: PASS
+  finding_wow_v1_2_not_new_demo: PASS
+  finding_regression_scenario_ids_visible: PASS
+  finding_old_receipt_not_current_permission_visible: PASS
+  finding_old_root_final_not_silent_reuse_visible: PASS
+  finding_changed_facts_require_rerun_visible: PASS
+  finding_drs_v0_2_direct_reuse_allowed_count_zero_in_wow_trace: PASS
+  finding_drs_v0_2_root_review_required_count_eleven_in_wow_trace: PASS
+
+slice_d_findings:
+  finding_slice_d_adversarial_hardening_present: PASS
+  finding_stale_high_similarity_does_not_permit_reuse: PASS
+  finding_quarantine_blocks_direct_reuse: PASS
+  finding_deadend_blocks_or_downgrades_reuse: PASS
+  finding_changed_worldstate_blocks_old_reuse: PASS
+  finding_conflicting_provenance_blocks_reuse: PASS
+  finding_duplicate_poisoning_does_not_create_authority: PASS
+  finding_wrong_domain_near_match_not_direct_reuse: PASS
+  finding_permission_trace_not_completed_action: PASS
+  finding_reuse_score_not_root: PASS
+  finding_semantic_similarity_not_authority: PASS
+  finding_clean_all_gates_direct_reuse_path_preserved: PASS
+
+authority_safety_findings:
+  finding_drs_is_not_truth: PASS
+  finding_drs_is_not_authority: PASS
+  finding_drs_is_not_permission: PASS
+  finding_drs_hit_is_context_only: PASS
+  finding_reuse_candidate_is_not_direct_reuse: PASS
+  finding_old_receipt_is_not_current_permission: PASS
+  finding_old_root_final_not_silently_reused: PASS
+  finding_root_remains_final_authority: PASS
+  finding_drs_writeback_after_root_is_local_proof_audit_only: PASS
+  finding_no_avf_implementation: PASS
+  finding_no_action_commit_packet_hardening_started: PASS
+  finding_no_new_domain_demo: PASS
+  finding_no_provider_network_gemini_calls: PASS
+  finding_no_secrets_accessed: PASS
+  finding_no_action_receipt_payment_shipment_effects: PASS
+  finding_no_production_claim: PASS
+  finding_no_public_auditor_claim: PASS
+
+counter_summary:
+  drs_v0_2_regression_records_count: 11
+  drs_v0_2_direct_reuse_allowed_count_in_default_wow_trace: 0
+  drs_v0_2_root_review_required_count_in_default_wow_trace: 11
+  real_world_effects_count: 0
+  provider_called_count: 0
+  network_called_count: 0
+  gemini_called_count: 0
+  action_commit_packet_created_count: 0
+  receipt_created_count: 0
+  mock_payment_executed_count: 0
+  real_payment_executed_count: 0
+  shipment_released_count: 0
+
+interpretation:
+  summary: Local DRS v0.2 upgrades DRS from simple context lookup into a local lineage/freshness/provenance/reuse/trace layer over the closed Full WOW v1.2 baseline.
+  drs_remembers_links_warns: true
+  drs_does_not_decide: true
+  drs_does_not_grant_permission: true
+  drs_does_not_create_truth: true
+  drs_does_not_create_final_output: true
+  root_decides: true
+
+non_claims:
+  not_production: true
+  not_public_auditor_final_package: true
+  no_real_payment: true
+  no_real_shipment_release: true
+  no_production_connectors: true
+  no_real_bank_supplier_warehouse_api: true
+  no_real_world_effects: true
+
+audit_conclusion:
+  status: PASS
+  local_drs_v0_2_after_full_wow_v1_2_audited: true
+  slices_a_b_c_d_covered: true
+  wow_v1_2_baseline_integration_audited: true
+  old_proof_only_drs_regression_pressure_preserved: true
+  direct_reuse_default_false: true
+  clean_all_gates_direct_reuse_path_still_works: true
+  expected_changed_file_only: docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log

@@ -79,6 +79,13 @@ REQUIRED_AUTHORITY_FACTS = {
     "BSEP is not truth.",
     "BSEP is not authority.",
     "DRS candidate context is not truth.",
+    "DRS v0.2 hit is not truth.",
+    "DRS v0.2 hit is not authority.",
+    "DRS v0.2 hit is not permission.",
+    "DRS v0.2 reuse decision is not FinalOutput.",
+    "DRS v0.2 direct reuse candidate is not direct reuse.",
+    "Old receipt is not current permission.",
+    "Old Root Final is not silently reused.",
     "CandidateVector is not truth.",
     "AVF/advisory is not authority.",
     "Runtime owns PlanGraph/local plan artifacts.",
@@ -114,6 +121,7 @@ REQUIRED_SECTIONS = (
     "[APPROVAL / PACKET / RECEIPT BOUNDARY]",
     "[SECRET MEMBRANE]",
     "[TRANSITION CARDS]",
+    "[LOCAL DRS V0.2 RESOLVE]",
     "[AUTHORITY MATRIX]",
     "[COUNTER MATRIX]",
     "[NON-CLAIMS]",
@@ -133,6 +141,20 @@ FORBIDDEN_PHRASE_PARTS = (
     ("receipt creates", " FinalOutput"),
     ("real_world_effects_count: ", "1"),
 )
+
+REQUIRED_DRS_SCENARIO_IDS = {
+    "supplier_a_prior_scoped_trace",
+    "supplier_b_blocker_trace",
+    "old_receipt_trace",
+    "old_shipment_held_trace",
+    "old_root_final_trace",
+    "changed_warehouse_fact",
+    "stale_legal_accounting_evidence",
+    "quarantined_record",
+    "deadend_record",
+    "wrong_domain_near_match",
+    "permission_trace_completed_action_attempt",
+}
 
 
 def _report() -> dict:
@@ -261,7 +283,126 @@ def test_v1_2_product_trace_no_real_execution_or_effects() -> None:
     assert counters["product_trace_executed_real_payment_count"] == 0
     assert counters["product_trace_released_shipment_count"] == 0
     assert counters["product_trace_called_real_bank_supplier_warehouse_api_count"] == 0
+    assert counters["drs_v0_2_external_drs_used_count"] == 0
+    assert counters["drs_v0_2_global_drs_used_count"] == 0
+    assert counters["drs_v0_2_vector_db_used_count"] == 0
+    assert counters["drs_v0_2_embeddings_required_count"] == 0
     assert counters["real_world_effects_count"] == 0
+
+
+def test_v1_2_product_trace_drs_v0_2_resolve_present() -> None:
+    report = _report()
+    drs = report["drs_v0_2_resolve"]
+
+    assert drs["drs_v0_2_status"] == "PASS"
+    assert drs["resolver_mode"] == "deterministic_local"
+    assert drs["temporal_query_present"] is True
+    assert drs["records_evaluated_count"] == 11
+    assert drs["direct_reuse_allowed_count"] == 0
+    assert drs["root_review_required_count"] == 11
+    assert report["counters"]["drs_v0_2_resolve_invoked_count"] == 1
+    assert report["counters"]["drs_v0_2_records_evaluated_count"] == 11
+    assert report["counters"]["drs_v0_2_direct_reuse_allowed_count"] == 0
+    assert report["counters"]["drs_v0_2_root_review_required_count"] == 11
+
+
+def test_v1_2_product_trace_drs_v0_2_regression_scenarios_present() -> None:
+    drs = _report()["drs_v0_2_resolve"]
+
+    assert set(drs["baseline_regression_scenario_ids"]) == REQUIRED_DRS_SCENARIO_IDS
+
+
+def test_v1_2_product_trace_drs_v0_2_tables_present() -> None:
+    drs = _report()["drs_v0_2_resolve"]
+
+    assert drs["freshness_table"]
+    assert drs["lineage_table"]
+    assert drs["provenance_table"]
+    assert drs["reuse_decision_table"]
+    assert all(row["ref_id"] for row in drs["lineage_table"])
+    assert all(row["provenance_refs"] for row in drs["provenance_table"])
+    assert all(
+        row["direct_reuse_allowed"] is False
+        for row in drs["reuse_decision_table"]
+    )
+
+
+def test_v1_2_product_trace_drs_v0_2_old_receipt_not_permission() -> None:
+    report = _report()
+    decisions = {
+        decision["record_id"]: decision
+        for decision in report["drs_v0_2_resolve"]["decisions_summary"]
+    }
+    decision = decisions["old_receipt_trace"]
+    rendered = runner.render_full_wow_v1_2_product_trace(report)
+
+    assert "old_receipt_not_permission" in decision["reason_codes"]
+    assert decision["direct_reuse_allowed"] is False
+    assert "Old receipt is not current permission" in rendered
+
+
+def test_v1_2_product_trace_drs_v0_2_root_final_not_silent_reuse() -> None:
+    report = _report()
+    decisions = {
+        decision["record_id"]: decision
+        for decision in report["drs_v0_2_resolve"]["decisions_summary"]
+    }
+    decision = decisions["old_root_final_trace"]
+    rendered = runner.render_full_wow_v1_2_product_trace(report)
+
+    assert "prior_root_final_not_silent_reuse" in decision["reason_codes"]
+    assert decision["direct_reuse_allowed"] is False
+    assert "Old Root Final is not silently reused" in rendered
+
+
+def test_v1_2_product_trace_drs_v0_2_changed_facts_require_rerun() -> None:
+    decisions = {
+        decision["record_id"]: decision
+        for decision in _report()["drs_v0_2_resolve"]["decisions_summary"]
+    }
+    decision = decisions["changed_warehouse_fact"]
+
+    assert decision["reuse_decision_class"] == "rerun_required"
+    assert "changed_facts_require_rerun_validation" in decision["reason_codes"]
+    assert decision["direct_reuse_allowed"] is False
+
+
+def test_v1_2_product_trace_drs_v0_2_quarantine_deadend_wrong_domain_blocked() -> None:
+    decisions = {
+        decision["record_id"]: decision
+        for decision in _report()["drs_v0_2_resolve"]["decisions_summary"]
+    }
+
+    assert decisions["quarantined_record"]["reuse_decision_class"] == "blocked"
+    assert decisions["deadend_record"]["reuse_decision_class"] in {
+        "blocked",
+        "warning_only",
+    }
+    assert decisions["wrong_domain_near_match"]["reuse_decision_class"] in {
+        "rerun_required",
+        "blocked",
+    }
+    assert all(decision["direct_reuse_allowed"] is False for decision in decisions.values())
+
+
+def test_v1_2_product_trace_drs_v0_2_no_authority_or_permission() -> None:
+    report = _report()
+    counters = report["counters"]
+    authority = set(report["authority_matrix"])
+
+    assert counters["drs_v0_2_permission_granted_count"] == 0
+    assert counters["drs_v0_2_root_bypass_count"] == 0
+    for decision in report["drs_v0_2_resolve"]["decisions_summary"]:
+        assert decision["truth_claimed"] is False
+        assert decision["authority_claimed"] is False
+        assert decision["action_permission_claimed"] is False
+        assert decision["final_output_claimed"] is False
+
+    assert "DRS v0.2 hit is not truth." in authority
+    assert "DRS v0.2 hit is not authority." in authority
+    assert "DRS v0.2 hit is not permission." in authority
+    assert "DRS v0.2 reuse decision is not FinalOutput." in authority
+    assert "DRS v0.2 direct reuse candidate is not direct reuse." in authority
 
 
 def test_v1_2_product_trace_authority_matrix() -> None:
@@ -273,6 +414,7 @@ def test_v1_2_product_trace_authority_matrix() -> None:
     assert "Branch LLM/SLM output is not authority." in authority
     assert "Branch LLM/SLM output is not action permission." in authority
     assert "Branch LLM/SLM output is not FinalOutput." in authority
+    assert "DRS v0.2 hit is not authority." in authority
 
 
 def test_v1_2_product_trace_rendered_sections() -> None:
@@ -283,6 +425,13 @@ def test_v1_2_product_trace_rendered_sections() -> None:
     assert "real Gemini Semantic Architect" in rendered
     assert "Architect semantic validation accepted" in rendered
     assert "runtime retained PlanGraph ownership" in rendered
+    assert "DRS found prior traces" in rendered
+    assert "DRS classified them as context" in rendered
+    assert "DRS did not authorize payment" in rendered
+    assert "DRS did not authorize shipment release" in rendered
+    assert "Old receipt is not current permission" in rendered
+    assert "Old Root Final is not silently reused" in rendered
+    assert "Root remains final authority" in rendered
     assert "FINAL STATUS: PASS" in rendered
 
 
@@ -302,6 +451,7 @@ def test_v1_2_product_trace_does_not_import_live_or_execution_runners() -> None:
     source = Path(runner.__file__).read_text(encoding="utf-8")
 
     assert "google.genai" not in source
+    assert "hedgehog.local_drs_v02" in source
     assert "run_full_semantic_e2e_v01" not in source
     assert "run_supplier_payment_shipment_release_review_wow_v1_1" not in source
     assert "run_human_full_wow_v1_1_final_walkthrough" not in source

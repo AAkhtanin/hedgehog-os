@@ -1,7 +1,15 @@
 from __future__ import annotations
 
+from dataclasses import asdict
 import json
 from typing import Any, Mapping
+
+from hedgehog.local_drs_v02 import (
+    LocalDRSResolveInputV02,
+    TemporalQueryV02,
+    build_wow_v1_2_drs_v02_regression_records,
+    resolve_drs_records_v02,
+)
 
 
 RUN_ID = "full_wow_v1_2_product_trace_v01"
@@ -27,6 +35,7 @@ RENDERED_SECTIONS = (
     "[APPROVAL / PACKET / RECEIPT BOUNDARY]",
     "[SECRET MEMBRANE]",
     "[TRANSITION CARDS]",
+    "[LOCAL DRS V0.2 RESOLVE]",
     "[AUTHORITY MATRIX]",
     "[COUNTER MATRIX]",
     "[NON-CLAIMS]",
@@ -230,6 +239,13 @@ AUTHORITY_MATRIX = (
     "BSEP is not truth.",
     "BSEP is not authority.",
     "DRS candidate context is not truth.",
+    "DRS v0.2 hit is not truth.",
+    "DRS v0.2 hit is not authority.",
+    "DRS v0.2 hit is not permission.",
+    "DRS v0.2 reuse decision is not FinalOutput.",
+    "DRS v0.2 direct reuse candidate is not direct reuse.",
+    "Old receipt is not current permission.",
+    "Old Root Final is not silently reused.",
     "CandidateVector is not truth.",
     "AVF/advisory is not authority.",
     "Runtime owns PlanGraph/local plan artifacts.",
@@ -255,6 +271,18 @@ NON_CLAIMS = (
     "no real bank/supplier/warehouse API",
     "no real-world effects",
     "manual live multi-LLM/fractal lane not implemented in this patch",
+)
+
+DRS_V0_2_NON_AUTHORITY_BOUNDARIES = (
+    "DRS is not truth.",
+    "DRS is not authority.",
+    "DRS is not permission.",
+    "DRS hit is context only.",
+    "Reuse candidate is not direct reuse.",
+    "Old receipt is not current permission.",
+    "Old Root Final is not silently reused.",
+    "Root remains final authority.",
+    "DRS writeback after Root is local proof/audit only.",
 )
 
 
@@ -660,16 +688,114 @@ def _counters() -> dict[str, int]:
     }
 
 
+def _drs_v0_2_resolve() -> dict[str, Any]:
+    query = TemporalQueryV02(
+        query_id="tq_full_wow_v1_2_drs_v0_2_baseline",
+        as_of="2026-07-06T17:10:00Z",
+        context_time="full_wow_v1_2",
+        freshness_bias="current",
+        require_root_review=True,
+        allow_direct_reuse_if_all_gates_pass=False,
+    )
+    records = build_wow_v1_2_drs_v02_regression_records()
+    report = resolve_drs_records_v02(
+        LocalDRSResolveInputV02(
+            temporal_query=query,
+            records=records,
+        )
+    )
+    drs_status = (
+        "PASS"
+        if report.temporal_query_present
+        and report.records_evaluated_count == len(records) == 11
+        and report.direct_reuse_allowed_count == 0
+        and report.root_review_required_count == len(records)
+        else "FAIL_CLOSED"
+    )
+    decisions_summary = tuple(
+        {
+            "record_id": decision.record_id,
+            "reuse_decision_class": decision.reuse_decision_class,
+            "freshness_class": decision.freshness_class,
+            "direct_reuse_allowed": decision.direct_reuse_allowed,
+            "context_only": decision.context_only,
+            "root_review_required": decision.root_review_required,
+            "reason_codes": decision.reason_codes,
+            "truth_claimed": decision.truth_claimed,
+            "authority_claimed": decision.authority_claimed,
+            "action_permission_claimed": decision.action_permission_claimed,
+            "final_output_claimed": decision.final_output_claimed,
+        }
+        for decision in report.decisions
+    )
+    return {
+        "drs_v0_2_status": drs_status,
+        "query_id": query.query_id,
+        "resolver_mode": report.resolver_mode,
+        "temporal_query_present": report.temporal_query_present,
+        "records_evaluated_count": report.records_evaluated_count,
+        "direct_reuse_allowed_count": report.direct_reuse_allowed_count,
+        "direct_reuse_candidate_count": report.direct_reuse_candidate_count,
+        "context_only_count": report.context_only_count,
+        "warning_only_count": report.warning_only_count,
+        "rerun_required_count": report.rerun_required_count,
+        "blocked_count": report.blocked_count,
+        "root_review_required_count": report.root_review_required_count,
+        "freshness_table": report.freshness_table,
+        "lineage_table": report.lineage_table,
+        "provenance_table": report.provenance_table,
+        "reuse_decision_table": report.reuse_decision_table,
+        "resolve_rows": tuple(asdict(row) for row in report.rows),
+        "decisions_summary": decisions_summary,
+        "baseline_regression_scenario_ids": tuple(
+            record.record_id for record in records
+        ),
+        "drs_non_authority_boundaries": DRS_V0_2_NON_AUTHORITY_BOUNDARIES,
+    }
+
+
 def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
     branches = _fractal_branches()
     result_proposals = _result_proposals(branches)
+    drs_resolve = _drs_v0_2_resolve()
     counters = _counters()
+    counters.update(
+        {
+            "drs_v0_2_resolve_invoked_count": 1,
+            "drs_v0_2_records_evaluated_count": drs_resolve[
+                "records_evaluated_count"
+            ],
+            "drs_v0_2_direct_reuse_allowed_count": drs_resolve[
+                "direct_reuse_allowed_count"
+            ],
+            "drs_v0_2_context_only_count": drs_resolve["context_only_count"],
+            "drs_v0_2_warning_only_count": drs_resolve["warning_only_count"],
+            "drs_v0_2_rerun_required_count": drs_resolve["rerun_required_count"],
+            "drs_v0_2_blocked_count": drs_resolve["blocked_count"],
+            "drs_v0_2_root_review_required_count": drs_resolve[
+                "root_review_required_count"
+            ],
+            "drs_v0_2_lineage_table_created_count": 1,
+            "drs_v0_2_freshness_table_created_count": 1,
+            "drs_v0_2_provenance_table_created_count": 1,
+            "drs_v0_2_reuse_decision_table_created_count": 1,
+            "drs_v0_2_external_drs_used_count": 0,
+            "drs_v0_2_global_drs_used_count": 0,
+            "drs_v0_2_vector_db_used_count": 0,
+            "drs_v0_2_embeddings_required_count": 0,
+            "drs_v0_2_permission_granted_count": 0,
+            "drs_v0_2_root_bypass_count": 0,
+        }
+    )
     transition_cards = _transition_cards()
     final_status = (
         "PASS"
         if len(transition_cards) == counters["transition_cards_created_count"]
         and len(branches) == counters["fractal_branch_cells_created_count"]
         and len(result_proposals) == counters["branch_result_proposals_created_count"]
+        and drs_resolve["drs_v0_2_status"] == "PASS"
+        and counters["drs_v0_2_records_evaluated_count"] == 11
+        and counters["drs_v0_2_direct_reuse_allowed_count"] == 0
         else "FAIL_CLOSED"
     )
 
@@ -755,6 +881,7 @@ def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
             "receipt_truth_boundary": "receipt != truth",
             "receipt_shipment_boundary": "receipt != shipment release",
         },
+        "drs_v0_2_resolve": drs_resolve,
         "manual_live_multillm_fractal_lane": _manual_live_lane_reservation(),
         "authority_matrix": AUTHORITY_MATRIX,
         "counters": counters,
@@ -814,6 +941,8 @@ def render_full_wow_v1_2_product_trace(report: Mapping[str, Any]) -> str:
         "same architecture, richer business surface.",
         "WarehouseAPI, SupplierA, SupplierB, Legal, Accounting, BankA, and BankB are visible as deterministic API-like modules.",
         "Fractal branch cells and branch ResultProposals are represented as bounded deterministic branch work items.",
+        "Local DRS v0.2 resolve table is now observed in the deterministic product trace.",
+        "This remains deterministic/local; no external DRS, global DRS, vector DB, or embeddings path is used.",
         "manual live multi-LLM/fractal lane not implemented in this patch; Patch 2 reserves env-gated observation.",
         "",
         "[LANE MODEL]",
@@ -877,6 +1006,66 @@ def render_full_wow_v1_2_product_trace(report: Mapping[str, Any]) -> str:
             )
         )
 
+    drs_resolve = report["drs_v0_2_resolve"]
+    lines.extend(["", "[LOCAL DRS V0.2 RESOLVE]"])
+    lines.extend(
+        _render_mapping(
+            {
+                "drs_v0_2_status": drs_resolve["drs_v0_2_status"],
+                "query_id": drs_resolve["query_id"],
+                "resolver_mode": drs_resolve["resolver_mode"],
+                "temporal_query_present": drs_resolve["temporal_query_present"],
+                "records_evaluated_count": drs_resolve["records_evaluated_count"],
+                "direct_reuse_allowed_count": drs_resolve[
+                    "direct_reuse_allowed_count"
+                ],
+                "root_review_required_count": drs_resolve[
+                    "root_review_required_count"
+                ],
+            }
+        )
+    )
+    lines.extend(
+        [
+            "DRS found prior traces in the Full WOW v1.2 deterministic baseline.",
+            "DRS classified them as context, warning, rerun, or blocked evidence.",
+            "DRS did not authorize payment.",
+            "DRS did not authorize shipment release.",
+            "DRS did not make old receipt current permission.",
+            "DRS did not silently reuse old Root Final.",
+            "Old receipt is not current permission.",
+            "Old Root Final is not silently reused.",
+            "Changed facts require rerun validation.",
+            "Root remains final authority.",
+            "baseline_regression_scenario_ids:",
+        ]
+    )
+    lines.extend(
+        f"  - {scenario_id}"
+        for scenario_id in drs_resolve["baseline_regression_scenario_ids"]
+    )
+    lines.append("reuse_decision_summary:")
+    for decision in drs_resolve["decisions_summary"]:
+        lines.append(
+            "- {record_id}: class={reuse_decision_class}; direct_reuse_allowed={direct_reuse_allowed}; root_review_required={root_review_required}; reason_codes={reason_codes}".format(
+                **{
+                    **decision,
+                    "direct_reuse_allowed": _format_bool(
+                        decision["direct_reuse_allowed"]
+                    ),
+                    "root_review_required": _format_bool(
+                        decision["root_review_required"]
+                    ),
+                    "reason_codes": ", ".join(decision["reason_codes"]),
+                }
+            )
+        )
+    lines.append("drs_non_authority_boundaries:")
+    lines.extend(
+        f"  - {boundary}"
+        for boundary in drs_resolve["drs_non_authority_boundaries"]
+    )
+
     lines.extend(["", "[AUTHORITY MATRIX]"])
     lines.extend(f"- {item}" for item in report["authority_matrix"])
 
@@ -902,6 +1091,18 @@ def render_full_wow_v1_2_product_trace(report: Mapping[str, Any]) -> str:
                     "manual_live_multillm_fractal_lane": report[
                         "manual_live_multillm_fractal_lane"
                     ],
+                    "drs_v0_2_resolve": {
+                        "drs_v0_2_status": drs_resolve["drs_v0_2_status"],
+                        "records_evaluated_count": drs_resolve[
+                            "records_evaluated_count"
+                        ],
+                        "direct_reuse_allowed_count": drs_resolve[
+                            "direct_reuse_allowed_count"
+                        ],
+                        "root_review_required_count": drs_resolve[
+                            "root_review_required_count"
+                        ],
+                    },
                     "non_claims": report["non_claims"],
                 },
                 sort_keys=True,

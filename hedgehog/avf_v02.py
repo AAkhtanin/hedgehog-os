@@ -175,6 +175,62 @@ class AVFDecisionReportV02:
     real_world_effects_count: int = 0
 
 
+@dataclass(frozen=True)
+class AVFEvaluationInputV02:
+    evaluation_id: str
+    candidates: tuple[AVFCandidateV02, ...]
+    source_drs_report_ref: str | None = None
+    source_drs_record_refs: tuple[str, ...] = ()
+    resolver_mode: str = "deterministic_local"
+    root_review_required: bool = True
+    production_ready_claimed: bool = False
+    public_auditor_ready_claimed: bool = False
+
+
+@dataclass(frozen=True)
+class AVFRankedCandidateRowV02:
+    candidate_id: str
+    candidate_label: str
+    rank: int
+    base_viability_score: float
+    hard_mask_value: int
+    hard_mask_applied: bool
+    hard_mask_reasons: tuple[str, ...]
+    soft_penalty: float
+    soft_penalty_reasons: tuple[str, ...]
+    final_avf_score: float
+    root_review_required: bool
+    score_is_not_permission: bool = True
+    top_ranked_candidate_not_permission: bool = True
+    candidate_is_not_action: bool = True
+    candidate_vector_is_not_final_output: bool = True
+
+
+@dataclass(frozen=True)
+class AVFEvaluationReportV02:
+    report_id: str
+    evaluation_id: str
+    resolver_mode: str
+    candidates_evaluated_count: int
+    ranked_candidates: tuple[AVFRankedCandidateRowV02, ...]
+    decision_reports: tuple[AVFDecisionReportV02, ...]
+    hard_mask_table: tuple[dict[str, object], ...]
+    soft_mask_table: tuple[dict[str, object], ...]
+    score_explanation_table: tuple[dict[str, object], ...]
+    top_candidate_id: str | None
+    top_candidate_score: float | None
+    hard_masked_count: int
+    unmasked_count: int
+    root_review_required_count: int
+    advisory_only: bool = True
+    top_ranked_candidate_not_permission: bool = True
+    avf_score_is_not_authority: bool = True
+    hardmask_is_not_root: bool = True
+    production_ready_claimed: bool = False
+    public_auditor_ready_claimed: bool = False
+    real_world_effects_count: int = 0
+
+
 def _non_empty_string(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
@@ -514,4 +570,150 @@ def build_wow_v1_2_avf_v02_candidate_fixtures() -> tuple[AVFCandidateV02, ...]:
             base_viability_score=0.85,
             source_drs_record_refs=("supplier_b_blocker_trace",),
         ),
+    )
+
+
+def _ranked_row_from_report(
+    candidate: AVFCandidateV02,
+    report: AVFDecisionReportV02,
+    rank: int,
+) -> AVFRankedCandidateRowV02:
+    explanation = report.score_explanation
+    return AVFRankedCandidateRowV02(
+        candidate_id=candidate.candidate_id,
+        candidate_label=candidate.candidate_label,
+        rank=rank,
+        base_viability_score=explanation.base_viability_score,
+        hard_mask_value=explanation.hard_mask_value,
+        hard_mask_applied=explanation.hard_mask_applied,
+        hard_mask_reasons=explanation.hard_mask_reasons,
+        soft_penalty=explanation.soft_penalty,
+        soft_penalty_reasons=explanation.soft_penalty_reasons,
+        final_avf_score=explanation.final_avf_score,
+        root_review_required=True,
+        score_is_not_permission=True,
+        top_ranked_candidate_not_permission=True,
+        candidate_is_not_action=True,
+        candidate_vector_is_not_final_output=True,
+    )
+
+
+def _hard_mask_table_row(report: AVFDecisionReportV02) -> dict[str, object]:
+    return {
+        "candidate_id": report.candidate_id,
+        "hard_mask_value": report.hard_mask.hard_mask_value,
+        "hard_mask_applied": report.hard_mask.hard_mask_applied,
+        "hard_mask_reasons": report.hard_mask.hard_mask_reasons,
+    }
+
+
+def _soft_mask_table_row(report: AVFDecisionReportV02) -> dict[str, object]:
+    return {
+        "candidate_id": report.candidate_id,
+        "soft_penalty": report.soft_mask.soft_penalty,
+        "soft_penalty_reasons": report.soft_mask.soft_penalty_reasons,
+    }
+
+
+def _score_explanation_table_row(report: AVFDecisionReportV02) -> dict[str, object]:
+    explanation = report.score_explanation
+    return {
+        "candidate_id": report.candidate_id,
+        "rank": explanation.rank,
+        "base_viability_score": explanation.base_viability_score,
+        "final_avf_score": explanation.final_avf_score,
+        "score_is_not_permission": explanation.score_is_not_permission,
+        "top_ranked_candidate_not_permission": (
+            explanation.top_ranked_candidate_not_permission
+        ),
+        "candidate_is_not_action": explanation.candidate_is_not_action,
+        "candidate_vector_is_not_final_output": (
+            explanation.candidate_vector_is_not_final_output
+        ),
+        "root_review_required": explanation.root_review_required,
+    }
+
+
+def evaluate_avf_candidates_v02(
+    input: AVFEvaluationInputV02,
+) -> AVFEvaluationReportV02:
+    initial_reports = tuple(
+        build_avf_decision_report_v02(candidate)
+        for candidate in input.candidates
+    )
+    indexed = tuple(zip(range(len(input.candidates)), input.candidates, initial_reports))
+    ranked = sorted(
+        indexed,
+        key=lambda item: (
+            item[2].score_explanation.final_avf_score,
+            -item[0],
+        ),
+        reverse=True,
+    )
+
+    ranked_rows: list[AVFRankedCandidateRowV02] = []
+    ranked_reports: list[AVFDecisionReportV02] = []
+    for rank, (_index, candidate, _report) in enumerate(ranked, start=1):
+        ranked_report = build_avf_decision_report_v02(candidate, rank=rank)
+        ranked_reports.append(ranked_report)
+        ranked_rows.append(_ranked_row_from_report(candidate, ranked_report, rank))
+
+    hard_mask_table = tuple(_hard_mask_table_row(report) for report in ranked_reports)
+    soft_mask_table = tuple(_soft_mask_table_row(report) for report in ranked_reports)
+    score_table = tuple(_score_explanation_table_row(report) for report in ranked_reports)
+
+    top_row = ranked_rows[0] if ranked_rows else None
+    hard_masked_count = sum(1 for row in ranked_rows if row.hard_mask_value == 0)
+    root_review_required_count = sum(
+        1 for row in ranked_rows
+        if row.root_review_required
+    )
+
+    return AVFEvaluationReportV02(
+        report_id=f"avf_v0_2_evaluation:{input.evaluation_id}",
+        evaluation_id=input.evaluation_id,
+        resolver_mode=input.resolver_mode,
+        candidates_evaluated_count=len(input.candidates),
+        ranked_candidates=tuple(ranked_rows),
+        decision_reports=tuple(ranked_reports),
+        hard_mask_table=hard_mask_table,
+        soft_mask_table=soft_mask_table,
+        score_explanation_table=score_table,
+        top_candidate_id=top_row.candidate_id if top_row else None,
+        top_candidate_score=top_row.final_avf_score if top_row else None,
+        hard_masked_count=hard_masked_count,
+        unmasked_count=len(ranked_rows) - hard_masked_count,
+        root_review_required_count=root_review_required_count,
+        advisory_only=True,
+        top_ranked_candidate_not_permission=True,
+        avf_score_is_not_authority=True,
+        hardmask_is_not_root=True,
+        production_ready_claimed=False,
+        public_auditor_ready_claimed=False,
+        real_world_effects_count=0,
+    )
+
+
+def build_wow_v1_2_avf_v02_evaluation_input() -> AVFEvaluationInputV02:
+    return AVFEvaluationInputV02(
+        evaluation_id="avf_v0_2_full_wow_v1_2_local_evaluation",
+        candidates=build_wow_v1_2_avf_v02_candidate_fixtures(),
+        source_drs_report_ref="local_drs_v0_2_reuse_decision_report",
+        source_drs_record_refs=(
+            "supplier_a_prior_scoped_trace",
+            "supplier_b_blocker_trace",
+            "old_receipt_trace",
+            "old_shipment_held_trace",
+            "old_root_final_trace",
+            "changed_warehouse_fact",
+            "stale_legal_accounting_evidence",
+            "quarantined_record",
+            "deadend_record",
+            "wrong_domain_near_match",
+            "permission_trace_completed_action_attempt",
+        ),
+        resolver_mode="deterministic_local",
+        root_review_required=True,
+        production_ready_claimed=False,
+        public_auditor_ready_claimed=False,
     )

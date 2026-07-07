@@ -1,0 +1,135 @@
+audit_id: auditor_avf_v0_2_after_local_drs_v0_2_v01
+audit_status: PASS
+audited_layer: AVF v0.2 advisory hard-mask / soft-mask / ranking after Local DRS v0.2 closure
+base_commit: 91b682e
+source_preflight: docs/avf_v0_2_after_local_drs_v0_2_closure_preflight_v01.md
+source_drs_closure_audit: docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_world_effects_count: 0
+
+audited_files:
+- docs/avf_v0_2_after_local_drs_v0_2_closure_preflight_v01.md
+- hedgehog/avf_v02.py
+- tests/test_avf_v02_after_local_drs_v02.py
+- demo/run_full_wow_v1_2_product_trace.py
+- tests/test_full_wow_v1_2_product_trace_runner.py
+
+observed_repository_state_before_audit:
+- git status --short --untracked-files=all: clean
+- git --no-pager log --oneline --max-count=12: latest 91b682e Harden AVF v0.2 adversarial non-authority boundaries
+- git rev-parse --short HEAD: 91b682e
+
+validation_commands_run:
+- python3 -m py_compile hedgehog/avf_v02.py: PASS
+- python3 -m py_compile demo/run_full_wow_v1_2_product_trace.py: PASS
+- python3 -m demo.run_full_wow_v1_2_product_trace: PASS, final_status PASS
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_avf_v02_after_local_drs_v02.py: PASS, 37 passed
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_full_wow_v1_2_product_trace_runner.py: PASS, 31 passed
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_avf_v02_after_local_drs_v02.py tests/test_full_wow_v1_2_product_trace_runner.py tests/test_drs_v02_local_lineage_reuse.py tests/test_human_full_wow_v1_2_live_fractal_story_runner.py: PASS, 113 passed
+- rg positive AVF model/evaluator/adversarial markers over hedgehog/avf_v02.py and tests/test_avf_v02_after_local_drs_v02.py: PASS
+- rg positive product trace AVF markers over demo/run_full_wow_v1_2_product_trace.py and tests/test_full_wow_v1_2_product_trace_runner.py: PASS
+- git status --short --untracked-files=all: PASS, untracked audit log only after creation
+- git diff --stat: PASS, no tracked runtime/test/docs drift
+- git diff --check: PASS
+- git diff --name-only: PASS, no tracked file diffs; audit log is the only untracked new file
+- rg forbidden over AVF runtime/tests/product trace/audit log: PASS, no matches
+
+slice_a_findings:
+- finding_slice_a_local_candidate_risk_model_present: PASS
+- finding_avf_candidate_v02_present: PASS
+- finding_avf_hard_mask_present: PASS
+- finding_avf_soft_mask_present: PASS
+- finding_avf_score_explanation_present: PASS
+- finding_avf_decision_report_present: PASS
+- finding_time_drs_pressure_fields_present: PASS
+- finding_old_receipt_hardmask_present: PASS
+- finding_old_root_final_hardmask_present: PASS
+- finding_missing_time_temporal_ttl_hardmasks_present: PASS
+- finding_supplier_b_and_release_all_hardmasks_present: PASS
+
+slice_b_findings:
+- finding_slice_b_local_evaluator_present: PASS
+- finding_ranked_advisory_report_present: PASS
+- finding_candidates_evaluated_count_nine: PASS
+- finding_hard_mask_table_present: PASS
+- finding_soft_mask_table_present: PASS
+- finding_score_explanation_table_present: PASS
+- finding_top_ranked_candidate_not_permission: PASS
+- finding_hardmask_beats_high_score: PASS
+- finding_safe_candidates_can_rank_without_permission: PASS
+
+slice_c_findings:
+- finding_slice_c_product_trace_integration_present: PASS
+- finding_local_avf_v0_2_advisory_evaluation_section_visible: PASS
+- finding_drs_to_candidatevectors_to_avf_visible: PASS
+- finding_release_all_hardmasked_in_product_trace: PASS
+- finding_supplier_b_hardmasked_in_product_trace: PASS
+- finding_safe_candidates_rank_without_permission_in_product_trace: PASS
+- finding_avf_counters_zero_for_action_effects: PASS
+
+slice_d_findings:
+- finding_slice_d_adversarial_hardening_present: PASS
+- finding_high_score_does_not_override_hardmask: PASS
+- finding_top_rank_does_not_grant_permission: PASS
+- finding_all_hardmasked_candidates_still_no_permission: PASS
+- finding_avf_cannot_bypass_root: PASS
+- finding_avf_cannot_create_final_output: PASS
+- finding_avf_cannot_create_action_commit_packet: PASS
+- finding_avf_cannot_create_receipt: PASS
+- finding_avf_cannot_execute_payment: PASS
+- finding_avf_cannot_release_shipment: PASS
+- finding_safe_rank_is_still_advisory: PASS
+- finding_report_validation_rejects_effects: PASS
+
+authority_safety_findings:
+- finding_avf_is_not_truth: PASS
+- finding_avf_is_not_authority: PASS
+- finding_avf_is_not_permission: PASS
+- finding_avf_score_is_not_root: PASS
+- finding_top_ranked_candidate_not_permission: PASS
+- finding_candidate_vector_not_action_permission: PASS
+- finding_candidate_vector_not_final_output: PASS
+- finding_hardmask_is_not_root: PASS
+- finding_root_remains_final_authority: PASS
+- finding_no_provider_network_gemini_calls: PASS
+- finding_no_secrets_accessed: PASS
+- finding_no_action_receipt_payment_shipment_effects: PASS
+- finding_no_production_claim: PASS
+- finding_no_public_auditor_claim: PASS
+
+counter_summary:
+- avf_v0_2_candidates_evaluated_count: 9
+- avf_v0_2_top_ranked_candidate_permission_granted_count: 0
+- avf_v0_2_action_permission_granted_count: 0
+- avf_v0_2_final_output_created_count: 0
+- avf_v0_2_action_commit_packet_created_count: 0
+- avf_v0_2_receipt_created_count: 0
+- avf_v0_2_payment_executed_count: 0
+- avf_v0_2_shipment_released_count: 0
+- avf_v0_2_root_bypass_count: 0
+- avf_v0_2_provider_called_count: 0
+- avf_v0_2_network_called_count: 0
+- avf_v0_2_gemini_called_count: 0
+- real_world_effects_count: 0
+
+interpretation:
+AVF v0.2 consumes Local DRS v0.2 advisory/reuse/risk signals and produces candidate pressure, hard masks, soft penalties, score explanations, and a ranked advisory report.
+
+AVF v0.2 has the right to say where to look.
+AVF v0.2 has the right to say where not to go.
+AVF v0.2 does not have the right to say that action is allowed.
+AVF v0.2 does not decide.
+AVF v0.2 does not grant permission.
+AVF v0.2 does not create truth.
+AVF v0.2 does not create FinalOutput.
+AVF v0.2 does not create ActionCommitPacket.
+AVF v0.2 does not create receipt.
+AVF v0.2 does not execute payment.
+AVF v0.2 does not release shipment.
+AVF v0.2 cannot bypass Root.
+
+Root remains final authority.
+
+audit_conclusion:
+AVF v0.2 after Local DRS v0.2 closure is PASS for local candidate/risk model, deterministic evaluator/advisory ranking, deterministic Full WOW v1.2 product trace integration, and adversarial hard-mask/non-authority hardening. The audited layer remains advisory, local, deterministic, and effect-free.

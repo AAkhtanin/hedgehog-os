@@ -355,6 +355,40 @@ Status:
 - Provider/network/Gemini calls and action/effect counters remain `0`.
 - AVF v0.2 runtime implementation has not started.
 
+## Applied AVF v0.2 After Local DRS v0.2 Checkpoint
+
+AVF v0.2 advisory hard-mask / soft-mask / ranking after Local DRS v0.2 is
+PASS.
+
+Status:
+
+- Audit:
+  `docs/audit_reports/auditor_avf_v0_2_after_local_drs_v0_2_v01.log`.
+- Source preflight:
+  `docs/avf_v0_2_after_local_drs_v0_2_closure_preflight_v01.md`.
+- Source Local DRS closure audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log`.
+- AVF Slice A local candidate/risk model: PASS.
+- AVF Slice B local evaluator / advisory ranking report: PASS.
+- AVF Slice C Full WOW v1.2 deterministic product trace integration: PASS.
+- AVF Slice D adversarial hard-mask / non-authority hardening: PASS.
+- Full WOW v1.2 + Local DRS v0.2 remains the baseline for the next AVF live
+  observation preflight.
+- Full WOW v1.2 product trace now observes Local DRS v0.2 resolve ->
+  CandidateVector pressure -> AVF v0.2 advisory hard/soft/rank report -> still
+  not permission.
+- AVF can say where to look and where not to go, but cannot say action is
+  allowed.
+- High score does not override HardMask.
+- Top rank does not grant permission.
+- Safe rank remains advisory.
+- AVF score is not authority.
+- HardMask is not Root.
+- Root remains final authority.
+- AVF creates no FinalOutput, ActionCommitPacket, receipt, payment, shipment
+  release, bypass-Root path, provider/network/Gemini call, or real-world
+  effect.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

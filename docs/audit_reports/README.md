@@ -7,6 +7,25 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_avf_v0_2_after_local_drs_v0_2_v01.log`
+  - Audit status: PASS.
+  - Audits AVF v0.2 advisory hard-mask / soft-mask / ranking after Local DRS
+    v0.2 closure.
+  - Observed checkpoint base: `91b682e`; docs sync base: `d70ea58`.
+  - Covers Slice A local candidate/risk model, Slice B local evaluator /
+    advisory ranking report, Slice C Full WOW v1.2 deterministic product trace
+    integration, and Slice D adversarial hard-mask / non-authority hardening.
+  - Confirms product trace integration: Local DRS v0.2 signals flow into
+    CandidateVector pressure, AVF HardMask / SoftMask, score explanations, and
+    a ranked advisory report.
+  - Confirms high-score and top-rank pressure cannot turn AVF into truth,
+    authority, permission, action, or FinalOutput.
+  - Confirms high score does not override HardMask, top rank does not grant
+    permission, safe rank remains advisory, AVF cannot bypass Root, AVF score is
+    not authority, and HardMask is not Root.
+  - No provider/network/Gemini calls and no action/effect counters.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_local_drs_v0_2_closure_before_avf_v01.log`
   - Audit status: PASS.
   - Audits Local DRS v0.2 closure/boundary hardening before AVF v0.2.

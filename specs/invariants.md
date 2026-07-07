@@ -122,6 +122,27 @@ Supplier Payment / Shipment Release Review WOW v1.1 invariant examples:
   its blockers.
 - Root remains final authority.
 
+AVF v0.2 after Local DRS v0.2 invariant examples:
+
+- AVF v0.2 is not truth.
+- AVF v0.2 is not authority.
+- AVF v0.2 is not permission.
+- AVF score is not Root.
+- Top-ranked AVF candidate is not permission.
+- CandidateVector is not action permission.
+- CandidateVector is not FinalOutput.
+- HardMask is not Root.
+- High score does not override HardMask.
+- Top rank does not override HardMask.
+- Safe candidate rank remains advisory.
+- AVF cannot bypass Root.
+- AVF cannot create FinalOutput.
+- AVF cannot create ActionCommitPacket.
+- AVF cannot create receipt.
+- AVF cannot execute payment.
+- AVF cannot release shipment.
+- Root remains final authority.
+
 Full Semantic E2E WOW v1.1 alignment invariant examples:
 
 - Closed receipt is evidence only when observed by Full E2E.

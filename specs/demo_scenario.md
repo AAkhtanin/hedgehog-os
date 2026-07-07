@@ -367,6 +367,32 @@ Scenario result:
 - ReuseScore is not Root.
 - Semantic similarity is not authority.
 
+### avf_v0_2_after_local_drs_v0_2_visibility
+
+Supplier Payment / Shipment Release Review WOW v1.2 now includes Local DRS
+v0.2 and AVF v0.2 advisory visibility.
+
+Scenario result:
+
+- Audit:
+  `docs/audit_reports/auditor_avf_v0_2_after_local_drs_v0_2_v01.log`.
+- Source preflight:
+  `docs/avf_v0_2_after_local_drs_v0_2_closure_preflight_v01.md`.
+- AVF consumes Local DRS v0.2 advisory/reuse/risk signals.
+- AVF produces CandidateVector pressure, HardMask, SoftMask, score
+  explanations, and a ranked advisory report.
+- Unsafe candidates are hard-masked: `release_all_and_pay_all`, Supplier B
+  payment, old receipt as permission, old Root Final as current decision, and
+  shipment release.
+- Safe candidates may rank but do not grant permission.
+- High score does not override HardMask.
+- Top rank does not grant permission.
+- AVF score is not authority.
+- HardMask is not Root.
+- AVF cannot bypass Root, create FinalOutput, create ActionCommitPacket, create
+  receipt, execute payment, or release shipment.
+- Root remains final authority.
+
 ## What The Demo Must Prove
 
 - Root authority.

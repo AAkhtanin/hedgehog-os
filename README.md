@@ -35,67 +35,43 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-Local DRS v0.2 closure/boundary hardening before AVF — PASS.
+AVF v0.2 advisory hard-mask / soft-mask / ranking after Local DRS v0.2 — PASS.
 
 Checkpoint source:
 
-- Closure audit:
-  `docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log`.
-- Source live observation audit:
-  `docs/audit_reports/auditor_local_drs_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
 - Audit:
-  `docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log`.
+  `docs/audit_reports/auditor_avf_v0_2_after_local_drs_v0_2_v01.log`.
 - Preflight:
-  `docs/local_drs_v0_2_after_full_wow_v1_2_preflight_v01.md`.
-- Observed checkpoint base: `9749616`.
-- Slice A record/time/lineage model: PASS.
-- Slice B local resolver/reuse decision report: PASS.
-- Slice C Full WOW v1.2 deterministic product trace integration: PASS.
-- Slice D adversarial/stale/quarantine/deadend hardening: PASS.
-- Local DRS v0.2 live observation after Full WOW v1.2 is closed, and the
-  closure audit hardens the boundary before AVF v0.2.
-- Full WOW v1.2 remains the baseline regression scenario.
-- Local DRS v0.2 upgrades DRS from simple context lookup into a local
-  lineage/freshness/provenance/reuse/trace layer.
-- DRS remembers / links / warns.
-- DRS does not decide, does not grant permission, does not create truth, and
-  does not create FinalOutput.
-- Root decides.
-- TimeEnvelope and TemporalQuery are required.
-- Missing TimeEnvelope is rejected.
-- Missing TemporalQuery is rejected.
-- Invalid TTL is rejected.
-- Lineage, source, and provenance refs are preserved.
-- Freshness and staleness are explicit.
-- BSEP carries bounded DRS context only and does not carry raw DRS tables or
-  DRS authority.
-- Old receipt is not current permission.
-- Old Root Final is not silently reused.
-- Accepted evidence ancestry is not future action permission.
-- Changed facts require rerun validation.
-- Quarantine proximity blocks direct reuse.
-- Deadend proximity blocks or downgrades reuse.
-- Conflicting provenance blocks reuse.
-- Duplicate poisoning does not create authority.
-- Wrong-domain near match is not direct reuse.
-- Permission trace cannot become completed action.
-- ReuseScore is not Root.
-- Semantic similarity is not authority.
-- Direct reuse remains default false, with Root review required by default.
-- The clean all-gates direct reuse path still works as a local decision class,
-  but it does not create FinalOutput or action permission.
-- DRS writeback candidate remains local proof/audit only.
-- DRS writeback candidate cannot create action permission, cannot create
-  FinalOutput, cannot persist a production/global record, and is rejected
-  before Root.
-- DRS v0.2 regression records count: `11`.
-- Default WOW trace `direct_reuse_allowed_count: 0`.
-- Default WOW trace `root_review_required_count: 11`.
-- Provider/network/Gemini calls during this checkpoint: `0`.
-- ActionCommitPacket, receipt, mock payment, real payment, shipment release,
-  and effect counters remain `0`.
-- Next major gate: AVF v0.2 preflight after Local DRS v0.2 closure.
-- AVF v0.2 runtime implementation has not started.
+  `docs/avf_v0_2_after_local_drs_v0_2_closure_preflight_v01.md`.
+- Source Local DRS closure audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log`.
+- Observed checkpoint base: `d70ea58`.
+- AVF Slice A local candidate/risk model: PASS.
+- AVF Slice B local evaluator / advisory ranking report: PASS.
+- AVF Slice C Full WOW v1.2 deterministic product trace integration: PASS.
+- AVF Slice D adversarial hard-mask / non-authority hardening: PASS.
+- Full WOW v1.2 + Local DRS v0.2 remains the baseline.
+- AVF v0.2 consumes Local DRS v0.2 advisory/reuse/risk signals and produces
+  CandidateVector pressure, HardMask, SoftMask, score explanations, and a
+  ranked advisory report.
+- AVF v0.2 is advisory only: it can say where to look and where not to go, but
+  it does not have the right to say action is allowed.
+- AVF v0.2 does not decide, grant permission, create truth, create FinalOutput,
+  create ActionCommitPacket, create receipt, execute payment, release shipment,
+  or bypass Root.
+- High score does not override HardMask.
+- Top rank does not grant permission.
+- Safe rank remains advisory.
+- HardMask is not Root.
+- AVF score is not authority.
+- Root remains final authority.
+- AVF v0.2 candidates evaluated count: `9`.
+- AVF v0.2 top-ranked candidate permission granted count: `0`.
+- AVF v0.2 action permission, FinalOutput, ActionCommitPacket, receipt,
+  payment, shipment, bypass-Root, provider/network/Gemini, and effect counters
+  remain `0`.
+- Next major gate: AVF v0.2 + Full WOW v1.2 live observation preflight.
+- ActionCommitPacket hardening comes after the AVF live observation checkpoint.
 - This is not production.
 - This is not public auditor final package.
 

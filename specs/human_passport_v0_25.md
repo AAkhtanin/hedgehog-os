@@ -572,6 +572,50 @@ Checkpoint facts:
 
 Next direction: AVF v0.2 preflight.
 
+### AVF v0.2 After Local DRS v0.2 Checkpoint
+
+AVF v0.2 advisory hard-mask / soft-mask / ranking after Local DRS v0.2 is
+PASS.
+
+Checkpoint facts:
+
+- Audit:
+  `docs/audit_reports/auditor_avf_v0_2_after_local_drs_v0_2_v01.log`.
+- Source preflight:
+  `docs/avf_v0_2_after_local_drs_v0_2_closure_preflight_v01.md`.
+- Source Local DRS closure audit:
+  `docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log`.
+- Slice A local candidate/risk model: PASS.
+- Slice B local evaluator / advisory ranking report: PASS.
+- Slice C Full WOW v1.2 deterministic product trace integration: PASS.
+- Slice D adversarial hard-mask / non-authority hardening: PASS.
+- Full WOW v1.2 + Local DRS v0.2 remains the baseline.
+- AVF consumes Local DRS v0.2 advisory/reuse/risk signals and produces
+  CandidateVector pressure, HardMask, SoftMask, score explanations, and a
+  ranked advisory report.
+- AVF is not truth.
+- AVF is not authority.
+- AVF is not permission.
+- AVF score is not Root.
+- Top-ranked candidate is not permission.
+- CandidateVector is not action permission.
+- CandidateVector is not FinalOutput.
+- HardMask is not Root.
+- High score does not override HardMask.
+- Top rank does not grant permission.
+- Safe rank remains advisory.
+- AVF cannot bypass Root, create FinalOutput, create ActionCommitPacket, create
+  receipt, execute payment, or release shipment.
+- Root remains final authority.
+- Provider/network/Gemini calls during this checkpoint: `0`.
+- ActionCommitPacket, receipt, mock payment, real payment, shipment release,
+  and effect counters remain `0`.
+- This is not production.
+- This is not public auditor final package.
+
+Next direction: AVF v0.2 live observation over Full WOW v1.2 before
+ActionCommitPacket hardening.
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:
@@ -2134,8 +2178,8 @@ returned snapshots.
 
 AVF is the pre-fractal branch viability field.
 
-AVF does not solve the task. AVF decides which branches have the right to be
-born.
+AVF does not solve the task. AVF scores and filters which branch candidates may
+be born before Root review.
 
 Position:
 

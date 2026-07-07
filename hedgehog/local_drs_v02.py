@@ -150,6 +150,56 @@ class DRSResolveReport:
     real_world_effects_count: int = 0
 
 
+@dataclass(frozen=True)
+class LocalDRSResolveInputV02:
+    temporal_query: TemporalQueryV02 | None
+    records: tuple[DRSRecordV02, ...]
+    query_scope: str = "local_drs_v0_2"
+    resolver_mode: str = "deterministic_local"
+    production_ready_claimed: bool = False
+    public_auditor_ready_claimed: bool = False
+
+
+@dataclass(frozen=True)
+class DRSResolveTableRowV02:
+    record_id: str
+    record_kind: str
+    freshness_class: str
+    reuse_decision_class: str
+    direct_reuse_allowed: bool
+    context_only: bool
+    root_review_required: bool
+    reason_codes: tuple[str, ...]
+    lineage_ref_count: int
+    source_ref_count: int
+    provenance_ref_count: int
+
+
+@dataclass(frozen=True)
+class DRSReuseDecisionReportV02:
+    report_id: str
+    query_id: str
+    resolver_mode: str
+    temporal_query_present: bool
+    records_evaluated_count: int
+    rows: tuple[DRSResolveTableRowV02, ...]
+    decisions: tuple[DRSReuseDecision, ...]
+    freshness_table: tuple[dict[str, object], ...]
+    lineage_table: tuple[dict[str, object], ...]
+    provenance_table: tuple[dict[str, object], ...]
+    reuse_decision_table: tuple[dict[str, object], ...]
+    direct_reuse_allowed_count: int
+    direct_reuse_candidate_count: int
+    context_only_count: int
+    warning_only_count: int
+    rerun_required_count: int
+    blocked_count: int
+    root_review_required_count: int
+    production_ready_claimed: bool = False
+    public_auditor_ready_claimed: bool = False
+    real_world_effects_count: int = 0
+
+
 def _non_empty_string(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
@@ -474,4 +524,286 @@ def build_drs_resolve_report_v02(
         production_ready_claimed=False,
         public_auditor_ready_claimed=False,
         real_world_effects_count=0,
+    )
+
+
+def _row_for_decision(
+    record: DRSRecordV02,
+    decision: DRSReuseDecision,
+) -> DRSResolveTableRowV02:
+    return DRSResolveTableRowV02(
+        record_id=record.record_id,
+        record_kind=record.record_kind,
+        freshness_class=decision.freshness_class,
+        reuse_decision_class=decision.reuse_decision_class,
+        direct_reuse_allowed=decision.direct_reuse_allowed,
+        context_only=decision.context_only,
+        root_review_required=decision.root_review_required,
+        reason_codes=decision.reason_codes,
+        lineage_ref_count=len(record.lineage_refs),
+        source_ref_count=len(record.source_refs),
+        provenance_ref_count=len(record.provenance_refs),
+    )
+
+
+def _freshness_row(record: DRSRecordV02, decision: DRSReuseDecision) -> dict[str, object]:
+    envelope = record.time_envelope
+    return {
+        "record_id": record.record_id,
+        "freshness_class": decision.freshness_class,
+        "has_time_envelope": envelope is not None,
+        "physical_time": envelope.physical_time if envelope else None,
+        "knowledge_time": envelope.knowledge_time if envelope else None,
+        "event_time": envelope.event_time if envelope else None,
+        "context_time": envelope.context_time if envelope else None,
+        "ttl_seconds": envelope.ttl_seconds if envelope else None,
+    }
+
+
+def _lineage_rows(record: DRSRecordV02) -> tuple[dict[str, object], ...]:
+    return tuple(
+        {
+            "record_id": record.record_id,
+            "ref_id": ref.ref_id,
+            "ref_kind": ref.ref_kind,
+            "relation": ref.relation,
+            "source_observed_at": ref.source_observed_at,
+            "system_ingested_at": ref.system_ingested_at,
+            "notes": ref.notes,
+        }
+        for ref in record.lineage_refs
+    )
+
+
+def _provenance_row(record: DRSRecordV02) -> dict[str, object]:
+    return {
+        "record_id": record.record_id,
+        "source_refs": record.source_refs,
+        "provenance_refs": record.provenance_refs,
+        "prior_trace_ref": record.prior_trace_ref,
+        "root_final_ref": record.root_final_ref,
+        "artifact_refs": record.artifact_refs,
+        "validation_refs": record.validation_refs,
+    }
+
+
+def _reuse_decision_row(decision: DRSReuseDecision) -> dict[str, object]:
+    return {
+        "record_id": decision.record_id,
+        "reuse_decision_class": decision.reuse_decision_class,
+        "direct_reuse_allowed": decision.direct_reuse_allowed,
+        "context_only": decision.context_only,
+        "root_review_required": decision.root_review_required,
+        "reason_codes": decision.reason_codes,
+        "truth_claimed": decision.truth_claimed,
+        "authority_claimed": decision.authority_claimed,
+        "action_permission_claimed": decision.action_permission_claimed,
+        "final_output_claimed": decision.final_output_claimed,
+    }
+
+
+def resolve_drs_records_v02(
+    input: LocalDRSResolveInputV02,
+) -> DRSReuseDecisionReportV02:
+    decisions = tuple(
+        evaluate_drs_record_v02(record, input.temporal_query) for record in input.records
+    )
+    rows = tuple(
+        _row_for_decision(record, decision)
+        for record, decision in zip(input.records, decisions, strict=True)
+    )
+    lineage_table = tuple(
+        row
+        for record in input.records
+        for row in _lineage_rows(record)
+    )
+    return DRSReuseDecisionReportV02(
+        report_id="local_drs_v0_2_reuse_decision_report",
+        query_id=input.temporal_query.query_id if input.temporal_query else "",
+        resolver_mode=input.resolver_mode,
+        temporal_query_present=validate_temporal_query(input.temporal_query)[0],
+        records_evaluated_count=len(input.records),
+        rows=rows,
+        decisions=decisions,
+        freshness_table=tuple(
+            _freshness_row(record, decision)
+            for record, decision in zip(input.records, decisions, strict=True)
+        ),
+        lineage_table=lineage_table,
+        provenance_table=tuple(_provenance_row(record) for record in input.records),
+        reuse_decision_table=tuple(_reuse_decision_row(decision) for decision in decisions),
+        direct_reuse_allowed_count=sum(
+            1 for decision in decisions if decision.direct_reuse_allowed
+        ),
+        direct_reuse_candidate_count=sum(
+            1
+            for decision in decisions
+            if decision.reuse_decision_class == REUSE_DIRECT_REUSE_CANDIDATE
+        ),
+        context_only_count=sum(
+            1 for decision in decisions if decision.reuse_decision_class == REUSE_CONTEXT_ONLY
+        ),
+        warning_only_count=sum(
+            1 for decision in decisions if decision.reuse_decision_class == REUSE_WARNING_ONLY
+        ),
+        rerun_required_count=sum(
+            1 for decision in decisions if decision.reuse_decision_class == REUSE_RERUN_REQUIRED
+        ),
+        blocked_count=sum(
+            1 for decision in decisions if decision.reuse_decision_class == REUSE_BLOCKED
+        ),
+        root_review_required_count=sum(
+            1 for decision in decisions if decision.root_review_required
+        ),
+        production_ready_claimed=False,
+        public_auditor_ready_claimed=False,
+        real_world_effects_count=0,
+    )
+
+
+def _wow_time(
+    freshness_class: str = FRESHNESS_FRESH_CONTEXT,
+) -> DRSFreshnessEnvelope:
+    return DRSFreshnessEnvelope(
+        physical_time="2026-07-06T17:00:24Z",
+        knowledge_time="2026-07-06T17:00:24Z",
+        event_time="2026-07-06T17:00:24Z",
+        context_time="full_wow_v1_2",
+        ttl_seconds=3600,
+        validity_start="2026-07-06T17:00:24Z",
+        validity_end="2026-07-06T18:00:24Z",
+        source_observed_at="2026-07-06T17:00:24Z",
+        system_ingested_at="2026-07-06T17:00:25Z",
+        freshness_class=freshness_class,
+    )
+
+
+def _wow_lineage(record_id: str, relation: str) -> tuple[DRSLineageRef, ...]:
+    return (
+        DRSLineageRef(
+            ref_id=f"full_wow_v1_2:{record_id}",
+            ref_kind="full_wow_v1_2_trace",
+            relation=relation,
+            source_observed_at="2026-07-06T17:00:24Z",
+            system_ingested_at="2026-07-06T17:00:25Z",
+            notes=("local proof-level WOW v1.2 regression record",),
+        ),
+    )
+
+
+def _wow_record(
+    *,
+    record_id: str,
+    record_kind: str,
+    summary: str,
+    relation: str,
+    freshness_class: str = FRESHNESS_FRESH_CONTEXT,
+    **overrides: object,
+) -> DRSRecordV02:
+    values = {
+        "record_id": record_id,
+        "record_kind": record_kind,
+        "summary": summary,
+        "time_envelope": _wow_time(freshness_class),
+        "lineage_refs": _wow_lineage(record_id, relation),
+        "source_refs": (f"source:{record_id}",),
+        "provenance_refs": ("audit:full_wow_v1_2",),
+        "prior_trace_ref": "full_wow_v1_2_manual_live_multillm_fractal_real_run",
+        "artifact_refs": (f"artifact:{record_id}",),
+        "validation_refs": (f"validation:{record_id}",),
+    }
+    values.update(overrides)
+    return DRSRecordV02(**values)
+
+
+def build_wow_v1_2_drs_v02_regression_records() -> tuple[DRSRecordV02, ...]:
+    return (
+        _wow_record(
+            record_id="supplier_a_prior_scoped_trace",
+            record_kind="supplier_a_prior_scoped_trace",
+            summary="Supplier A prior scoped trace may inform context only.",
+            relation="supports_context",
+            accepted_evidence=True,
+            reuse_score=0.88,
+        ),
+        _wow_record(
+            record_id="supplier_b_blocker_trace",
+            record_kind="supplier_b_blocker_trace",
+            summary="Supplier B blocker trace warns against reuse.",
+            relation="warns_against",
+            conflict_pressure=True,
+            reuse_score=0.1,
+        ),
+        _wow_record(
+            record_id="old_receipt_trace",
+            record_kind="old_receipt_trace",
+            summary="Old receipt trace remains evidence only.",
+            relation="evidence_only",
+            contains_receipt=True,
+            reuse_score=0.95,
+        ),
+        _wow_record(
+            record_id="old_shipment_held_trace",
+            record_kind="old_shipment_held_trace",
+            summary="Old shipment-held trace warns that shipment remains held.",
+            relation="warns_against",
+            freshness_class=FRESHNESS_STALE_WARNING,
+            reuse_score=0.7,
+        ),
+        _wow_record(
+            record_id="old_root_final_trace",
+            record_kind="old_root_final_trace",
+            summary="Old Root Final trace is lineage/provenance only.",
+            relation="root_final_lineage",
+            root_final_ref="root-final:full_wow_v1_2",
+            reuse_score=0.96,
+        ),
+        _wow_record(
+            record_id="changed_warehouse_fact",
+            record_kind="changed_warehouse_fact",
+            summary="Changed warehouse fact requires rerun validation.",
+            relation="requires_rerun",
+            changed_facts=True,
+            reuse_score=0.2,
+        ),
+        _wow_record(
+            record_id="stale_legal_accounting_evidence",
+            record_kind="stale_legal_accounting_evidence",
+            summary="Stale legal/accounting evidence gets freshness downgrade.",
+            relation="stale_warning",
+            freshness_class=FRESHNESS_STALE_WARNING,
+            reuse_score=0.9,
+        ),
+        _wow_record(
+            record_id="quarantined_record",
+            record_kind="quarantined_record",
+            summary="Quarantine proximity blocks direct reuse.",
+            relation="blocked_by_quarantine",
+            quarantine_proximity=True,
+            reuse_score=0.99,
+        ),
+        _wow_record(
+            record_id="deadend_record",
+            record_kind="deadend_record",
+            summary="Deadend proximity blocks or downgrades reuse.",
+            relation="blocked_by_deadend",
+            deadend_proximity=True,
+            reuse_score=0.99,
+        ),
+        _wow_record(
+            record_id="wrong_domain_near_match",
+            record_kind="wrong_domain_near_match",
+            summary="Wrong-domain near match cannot be reused directly.",
+            relation="conflicts_with_scope",
+            conflict_pressure=True,
+            reuse_score=0.97,
+        ),
+        _wow_record(
+            record_id="permission_trace_completed_action_attempt",
+            record_kind="permission_trace_completed_action_attempt",
+            summary="Permission trace cannot become completed action.",
+            relation="blocked_permission_trace",
+            contains_action_permission=True,
+            reuse_score=0.99,
+        ),
     )

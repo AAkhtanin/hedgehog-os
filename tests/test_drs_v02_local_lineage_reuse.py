@@ -271,3 +271,152 @@ def test_drs_v02_module_has_no_provider_network_runtime_imports() -> None:
 
     for fragment in forbidden_fragments:
         assert fragment not in source
+
+
+def _resolve_wow_regression() -> drs_v02.DRSReuseDecisionReportV02:
+    return drs_v02.resolve_drs_records_v02(
+        drs_v02.LocalDRSResolveInputV02(
+            temporal_query=_query(),
+            records=drs_v02.build_wow_v1_2_drs_v02_regression_records(),
+        )
+    )
+
+
+def test_drs_v02_resolver_builds_tables() -> None:
+    records = drs_v02.build_wow_v1_2_drs_v02_regression_records()
+    report = drs_v02.resolve_drs_records_v02(
+        drs_v02.LocalDRSResolveInputV02(
+            temporal_query=_query(),
+            records=records,
+        )
+    )
+
+    assert report.report_id == "local_drs_v0_2_reuse_decision_report"
+    assert report.resolver_mode == "deterministic_local"
+    assert report.records_evaluated_count == len(records)
+    assert len(report.rows) == len(records)
+    assert len(report.freshness_table) == len(records)
+    assert len(report.provenance_table) == len(records)
+    assert len(report.reuse_decision_table) == len(records)
+    assert report.real_world_effects_count == 0
+
+
+def test_drs_v02_resolver_preserves_lineage_source_provenance_tables() -> None:
+    record = _record(
+        record_id="lineage-source-provenance",
+        source_refs=("source:a", "source:b"),
+        provenance_refs=("audit:a", "story:b"),
+    )
+    report = drs_v02.resolve_drs_records_v02(
+        drs_v02.LocalDRSResolveInputV02(temporal_query=_query(), records=(record,))
+    )
+
+    assert report.lineage_table[0]["ref_id"] == record.lineage_refs[0].ref_id
+    assert report.provenance_table[0]["source_refs"] == record.source_refs
+    assert report.provenance_table[0]["provenance_refs"] == record.provenance_refs
+    assert report.decisions[0].authority_claimed is False
+    assert drs_v02.REASON_CONTEXT_ONLY_NOT_AUTHORITY in report.decisions[0].reason_codes
+
+
+def test_drs_v02_resolver_counts_decision_classes() -> None:
+    report = _resolve_wow_regression()
+
+    assert report.direct_reuse_allowed_count == 0
+    assert report.context_only_count >= 3
+    assert report.warning_only_count >= 2
+    assert report.rerun_required_count >= 3
+    assert report.blocked_count >= 3
+    assert (
+        report.context_only_count
+        + report.warning_only_count
+        + report.rerun_required_count
+        + report.blocked_count
+        + report.direct_reuse_candidate_count
+        + report.direct_reuse_allowed_count
+        == report.records_evaluated_count
+    )
+
+
+def test_drs_v02_wow_v1_2_regression_records_cover_old_proof_cases() -> None:
+    records = drs_v02.build_wow_v1_2_drs_v02_regression_records()
+    record_ids = {record.record_id for record in records}
+
+    assert record_ids == {
+        "supplier_a_prior_scoped_trace",
+        "supplier_b_blocker_trace",
+        "old_receipt_trace",
+        "old_shipment_held_trace",
+        "old_root_final_trace",
+        "changed_warehouse_fact",
+        "stale_legal_accounting_evidence",
+        "quarantined_record",
+        "deadend_record",
+        "wrong_domain_near_match",
+        "permission_trace_completed_action_attempt",
+    }
+
+
+def test_drs_v02_wow_v1_2_regression_records_do_not_authorize() -> None:
+    report = _resolve_wow_regression()
+
+    assert report.direct_reuse_allowed_count == 0
+    assert report.root_review_required_count == report.records_evaluated_count
+    for decision in report.decisions:
+        assert decision.truth_claimed is False
+        assert decision.authority_claimed is False
+        assert decision.action_permission_claimed is False
+        assert decision.final_output_claimed is False
+
+
+def test_drs_v02_old_receipt_and_payment_slot_not_permission() -> None:
+    report = _resolve_wow_regression()
+    decisions = {decision.record_id: decision for decision in report.decisions}
+    decision = decisions["old_receipt_trace"]
+
+    assert decision.direct_reuse_allowed is False
+    assert decision.action_permission_claimed is False
+    assert drs_v02.REASON_OLD_RECEIPT_NOT_PERMISSION in decision.reason_codes
+
+
+def test_drs_v02_wrong_domain_near_match_not_reused_directly() -> None:
+    report = _resolve_wow_regression()
+    decisions = {decision.record_id: decision for decision in report.decisions}
+    decision = decisions["wrong_domain_near_match"]
+
+    assert decision.reuse_decision_class in {
+        drs_v02.REUSE_BLOCKED,
+        drs_v02.REUSE_RERUN_REQUIRED,
+    }
+    assert decision.direct_reuse_allowed is False
+
+
+def test_drs_v02_permission_trace_cannot_be_completed_action() -> None:
+    report = _resolve_wow_regression()
+    decisions = {decision.record_id: decision for decision in report.decisions}
+    decision = decisions["permission_trace_completed_action_attempt"]
+
+    assert decision.reuse_decision_class in {
+        drs_v02.REUSE_BLOCKED,
+        drs_v02.REUSE_RERUN_REQUIRED,
+    }
+    assert decision.direct_reuse_allowed is False
+    assert decision.action_permission_claimed is False
+
+
+def test_drs_v02_resolver_no_side_effect_imports() -> None:
+    source = Path(drs_v02.__file__).read_text(encoding="utf-8")
+    forbidden_fragments = (
+        "google.genai",
+        "requests",
+        "urllib",
+        "openai",
+        "subprocess",
+        "run_full_wow",
+        "run_full_semantic",
+        "ActionCommitPacket " + "creation",
+        "MockBankSandbox " + "execution",
+        "real payment " + "executed",
+    )
+
+    for fragment in forbidden_fragments:
+        assert fragment not in source

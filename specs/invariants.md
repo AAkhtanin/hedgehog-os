@@ -241,6 +241,32 @@ Full WOW v1.2 live multi-LLM/fractal invariant examples:
 - Story renderer must not release shipment.
 - Root remains final authority.
 
+Local DRS v0.2 lineage/freshness/reuse invariant examples:
+
+- DRS v0.2 is not truth.
+- DRS v0.2 is not authority.
+- DRS v0.2 is not permission.
+- DRS v0.2 hit is context only.
+- Reuse candidate is not direct reuse.
+- Direct reuse default false.
+- TimeEnvelope is required.
+- TemporalQuery is required.
+- Lineage, source, and provenance refs must be preserved.
+- Freshness and staleness must be explicit.
+- Old receipt is not current permission.
+- Old Root Final is not silently reused.
+- Accepted evidence ancestry is not future action permission.
+- Changed facts require rerun validation.
+- Quarantine proximity blocks direct reuse.
+- Deadend proximity blocks or downgrades reuse.
+- Conflicting provenance blocks reuse.
+- Duplicate poisoning does not create authority.
+- Wrong-domain near match is not direct reuse.
+- Permission trace cannot become completed action.
+- ReuseScore is not Root.
+- Semantic similarity is not authority.
+- Root remains final authority.
+
 DRS registry invariant:
 
 - DRS is a registry/resolver/index, not a raw memory dump.
@@ -342,7 +368,7 @@ Semantic Reuse Pipeline Integration invariant:
 - Semantic Reuse Pipeline Integration v0.1 is an engineering integration proof.
 - It is a bounded LocalDRS semantic reuse integration proof, not production RootOrchestrator integration.
 - It connects LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback.
-- It is not production autonomy, global DRS, external DRS, a ReuseGate replacement, a Root bypass, direct reuse execution, FinalOutput creation, real external action, live Gemini, or Telegram action.
+- It is not production autonomy, global DRS, external DRS, a ReuseGate replacement, a bypassing Root, direct reuse execution, FinalOutput creation, real external action, live Gemini, or Telegram action.
 - It must structurally consume collect_reuse_score() and preserve the source Typed DRS Lineage Edges report.
 - All six pipeline stages must be represented: local_drs_retrieval, taxonomy_filtering, typed_edge_interpretation, graph_proximity, reuse_score, and reuse_gate_root_boundary.
 - Scenario rows must separate recommendations from authority: eligible direct reuse may be recommended but not committed by the pipeline; context memory does not equal direct reuse; contradiction routes to needs_conflict_check; high score does not override policy; quarantine, needs_user, degraded, and dead_end records are not reused.
@@ -433,7 +459,7 @@ Semantic Reuse Pipeline Integration invariant:
 - Fractal Cell Runtime proof status: PASS, scenarios_verified=12, completed/degraded/blocked_or_failed=1/1/2, malicious_child_claims_rejected=5, focused tests passed=56, full suite passed=1069, sensitive scan clear. Evidence: `docs/audit_reports/auditor_fractal_cell_runtime.log`.
 - Live Child Executor in Fractal Cell v0.1 is complete. Opt-in live Gemini may substitute only one child Executor role inside a bounded child cell and receives an Architect-provided node contract, never a free instruction.
 - Live child result invariant: Gemini returns only ChildExecutionResult JSON/evidence; ChildExecutionResult becomes ChildBoundarySnapshot evidence and must pass through parent adapter, Post V&V, GT, and Root. It is not FinalOutput, DRS writeback, a needle, a protocol template, or production action execution.
-- Live child authority invariant: child Executor is not Root, child Orchestrator, or child Architect; action-like requests are blocked/rejected/permission-required/sandbox-only; no API/tool calls, real actions, child FinalOutput, parent DRS write, Root bypass, or Post V&V / GT / Root bypass is allowed.
+- Live child authority invariant: child Executor is not Root, child Orchestrator, or child Architect; action-like requests are blocked/rejected/permission-required/sandbox-only; no API/tool calls, real actions, child FinalOutput, parent DRS write, bypassing Root, or Post V&V / GT / bypassing Root is allowed.
 - Live child proof status: PASS, live opt-in/network used, completed proof task accepted, action-like request blocked and rejected through Root, malicious_claims_rejected=6, focused deterministic tests passed=36, full suite passed=1082, sensitive scan clear. Evidence: `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log` and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`.
 - DRS Lifecycle Semantics v0.2 is complete. It consumes current proof collectors and creates local/proof-level, pointer-first ExperienceRecord objects for Root Final audit, sandbox NeedleRuntime, child-cell boundary, live child Executor, blocked-action, and synthetic promotion examples.
 - Lifecycle status invariant: completed, degraded, blocked, failed, rejected, quarantined, deadend, and promotion_candidate remain distinct and visible.

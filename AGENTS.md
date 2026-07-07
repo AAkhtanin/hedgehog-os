@@ -57,50 +57,51 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Full WOW v1.2 live multi-LLM/fractal human story PASS.
+Current checkpoint: Local DRS v0.2 lineage/freshness/provenance/reuse/trace
+after Full WOW v1.2 PASS.
 
-Current Full WOW v1.2 facts:
+Current Local DRS v0.2 facts:
 
-- Deterministic product trace PASS through
-  `docs/audit_reports/auditor_full_wow_v1_2_product_trace_v01.log`.
-- Manual live multi-LLM/fractal real provider run PASS through
-  `docs/audit_reports/auditor_full_wow_v1_2_manual_live_multillm_fractal_real_run_v01.log`.
-- Human story PASS through
-  `docs/full_wow_v1_2_manual_live_multillm_fractal_real_run_human_story_v01.md`.
-- Artifact-backed story renderer PASS through
-  `docs/audit_reports/auditor_human_full_wow_v1_2_live_fractal_story_renderer_v01.log`.
-- Renderer:
-  `demo/run_human_full_wow_v1_2_live_fractal_story.py`.
-- Renderer focused tests:
-  `tests/test_human_full_wow_v1_2_live_fractal_story_runner.py`.
-- Six real Gemini semantic actors participated in the real run: top-level
-  Orchestrator, top-level Semantic Architect, Legal branch, Accounting branch,
-  Supplier B branch, and Bank Policy branch.
-- Real run provider mode: `real_provider`; model: `gemini-2.5-flash`.
-- Real run counters include `semantic_actor_call_count: 6`,
-  `real_provider_call_count: 6`, `network_used_count: 6`,
-  `gemini_called_count: 6`, `bsep_created_count: 1`,
-  `bsep_validated_count: 1`, `runtime_plangraph_compiled_count: 1`,
-  `fractal_branch_cells_created_count: 8`,
-  `branch_result_proposals_created_count: 8`, and
-  `root_final_boundary_evaluated_count: 1`.
-- PlanGraph remains runtime-built, not provider-owned.
-- Branch ResultProposal is not FinalOutput.
-- DRS and AVF remain non-authority.
-- Root remains final authority.
-- The artifact story renderer reads artifacts only, calls no
-  provider/network/Gemini lane, emits no raw provider response by default, and
-  fails closed on missing/invalid artifact evidence or nonzero effect counters.
-- The checkpoint creates no ActionCommitPacket, creates no receipt, executes no
-  mock payment, executes no real payment, releases no shipment, calls no real
-  bank/supplier/warehouse API, and preserves `real_world_effects_count: 0`.
+- Audit:
+  `docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log`.
+- Preflight:
+  `docs/local_drs_v0_2_after_full_wow_v1_2_preflight_v01.md`.
+- Observed checkpoint base: `246715a`.
+- Slice A record/time/lineage model: PASS.
+- Slice B local resolver/reuse decision report: PASS.
+- Slice C Full WOW v1.2 deterministic product trace integration: PASS.
+- Slice D adversarial/stale/quarantine/deadend hardening: PASS.
+- Full WOW v1.2 remains the baseline regression scenario.
+- Local DRS v0.2 upgrades DRS from simple context lookup into a local
+  lineage/freshness/provenance/reuse/trace layer.
+- DRS remembers / links / warns.
+- DRS does not decide, does not grant permission, does not create truth, and
+  does not create FinalOutput.
+- Root decides.
+- TimeEnvelope and TemporalQuery are required.
+- Lineage, source, and provenance refs are preserved.
+- Freshness/staleness, changed facts, quarantine proximity, deadend proximity,
+  conflicting provenance, duplicate poisoning, wrong-domain near matches,
+  permission traces, ReuseScore, and semantic similarity are all bounded as
+  non-authority signals.
+- Direct reuse remains default false and Root review is required by default.
+- Clean all-gates direct reuse still works as a local decision class, but it
+  does not create FinalOutput or action permission.
+- DRS v0.2 regression records count: `11`.
+- Default WOW trace `direct_reuse_allowed_count: 0`.
+- Default WOW trace `root_review_required_count: 11`.
+- Provider/network/Gemini calls during this checkpoint: `0`.
+- ActionCommitPacket, receipt, mock payment, real payment, shipment release,
+  and effect counters remain `0`.
 - Not production.
 - Not public auditor final package.
 
-WOW v1.2 is now baseline regression for DRS/AVF hardening. Current next step:
-Local DRS v0.2 preflight after WOW v1.2. Do not start Airline, Privacy,
-Finance Kill-Switch, Vendor onboarding, NeedleFactory, Marennya, UP, real
-connectors, or public auditor package from this checkpoint.
+WOW v1.2 + Local DRS v0.2 is now the baseline for the next live observation
+run. Current next immediate task: Local DRS v0.2 + Full WOW v1.2 live
+observation preflight. Do not start AVF v0.2 implementation,
+ActionCommitPacket hardening, Airline, Privacy, Finance Kill-Switch, Vendor
+onboarding, NeedleFactory, Marennya, UP, real connectors, or public auditor
+package from this checkpoint.
 
 Closed final integrated rollup facts:
 
@@ -615,7 +616,7 @@ Anti-reduction rules:
 - Applied demos must not automatically create `protocol_candidate` or
   `needle_candidate` unless that lifecycle is explicitly under test.
 - Before NeedleForge or action needles, the Permission/NeedsUser boundary must remain intact: permission is not execution, approval is not completed action, and `needs_user` is not failure.
-- NeedleCandidate lifecycle may create proof-level candidate objects, but any installed needle, production persistence, external action, or Root bypass remains forbidden.
+- NeedleCandidate lifecycle may create proof-level candidate objects, but any installed needle, production persistence, external action, or bypassing Root remains forbidden.
 - DRS retrieval, semantic similarity, and ReuseScore are advisory and cannot bypass Root, Permission/NeedsUser, ConflictCheck, freshness, WorldState compatibility, quarantine/deadend checks, or audit.
 - Child-cell candidates are local bounded proof-mode structures, not real
   autonomous agents.
@@ -933,7 +934,7 @@ See `docs/passport_geometry_root_needles.md`.
 58. Applied demos must not automatically create `protocol_candidate` or `needle_candidate` unless that lifecycle is explicitly under test.
 59. Applied Certificate / Document Readiness Demo v0.1 proves `not_ready` from expired/missing documents and rejects an invalid ready certificate. It creates no protocol candidate, needle candidate, or installed needle.
 60. Permission / NeedsUser UX Proof v0.1 rejects permission bypass and completed-action-without-execution claims. Permission is not execution, proof-only approval is future-action permission only, user denial remains blocked, `needs_user` is not failure, and the proof creates no protocol candidate, needle candidate, or installed needle.
-61. NeedleCandidate lifecycle / NeedleForge prototype v0.1 may create bounded proof-level NeedleCandidate objects only. NeedleCandidate is not an installed Needle; GT cannot install needles; Root alone disposes candidates as pending review, rejected, or quarantined; production persistence, global DRS writes, external actions, and Root bypass remain forbidden.
+61. NeedleCandidate lifecycle / NeedleForge prototype v0.1 may create bounded proof-level NeedleCandidate objects only. NeedleCandidate is not an installed Needle; GT cannot install needles; Root alone disposes candidates as pending review, rejected, or quarantined; production persistence, global DRS writes, external actions, and bypassing Root remain forbidden.
 62. Applied DRS Retrieval / Reuse v0.1 is deterministic local proof only. DRS retrieval is not authority, ReuseScore is not Root, semantic similarity is insufficient, and Root alone decides final reuse after freshness, WorldState, permission, quarantine/deadend, ConflictCheck, GT, and audit boundaries. This layer creates no protocol candidate, NeedleCandidate, installed needle, direct ready, completed external action, production persistence, or global/external DRS write.
 
 ---
@@ -1048,7 +1049,7 @@ ReuseScore v0.1 is the next completed hardening step. It is a LocalDRS-only advi
 
 Safety examples: a high-ish scoring unsafe `blocked_trace` remains not reusable because `policy_allowed=false`; a `work_candidate` with contradiction_penalty becomes `needs_conflict_check` rather than direct reuse; `unsafe_direct_reuse_candidates` remains 0. ReuseScore is not Root, not ReuseGate, and not policy override.
 
-Semantic Reuse Pipeline Integration v0.1 is the next completed engineering integration proof. It connects LocalDRS retrieval → taxonomy-aware filtering → typed edge interpretation → graph proximity → ReuseScore → ReuseGate / Root boundary → direct reuse candidate or full pipeline fallback. It structurally consumes `collect_reuse_score()`, preserves the source Typed DRS Lineage Edges report, evaluates scenario rows, and separates recommendations from authority. It is not production RootOrchestrator integration, production autonomy, global DRS, external DRS, a ReuseGate replacement, a Root bypass, direct reuse execution, FinalOutput creation, real external action, live Gemini, or Telegram action.
+Semantic Reuse Pipeline Integration v0.1 is the next completed engineering integration proof. It connects LocalDRS retrieval → taxonomy-aware filtering → typed edge interpretation → graph proximity → ReuseScore → ReuseGate / Root boundary → direct reuse candidate or full pipeline fallback. It structurally consumes `collect_reuse_score()`, preserves the source Typed DRS Lineage Edges report, evaluates scenario rows, and separates recommendations from authority. It is not production RootOrchestrator integration, production autonomy, global DRS, external DRS, a ReuseGate replacement, a bypassing Root, direct reuse execution, FinalOutput creation, real external action, live Gemini, or Telegram action.
 
 Scenario semantics: `eligible_direct_reuse_candidate` is recommended but not committed by the pipeline; `context_memory_not_reuse` falls back to full pipeline because context memory is not direct reuse; `contradiction_needs_conflict_check` routes to needs_conflict_check; high score does not override policy; quarantine is not reused; needs_user is not completed action; degraded trace is not stable success; dead_end is not reused.
 
@@ -1090,7 +1091,7 @@ Root Final from GTDecision v0.1 is complete. It consumes GT from ValidationRepor
 
 DRS Writeback / Audit from Root Final v0.1 is complete. It is a deterministic proof-level boundary that actually consumes `collect_root_final_from_gt_decision()` without hardcoding Root Final PASS. Only valid RootFinalArtifact inputs create `local_audit_only` records. Raw upstream artifacts and real action output are blocked; malformed RootFinalArtifact inputs and malicious global DRS, external DRS network, production persistence, Root DRS write, and real action claims are rejected. DRS is not the full memory, a decision authority, or a vector store; it is an address/resonance/lineage/audit layer for Root-authorized memory access, while Root remains commit authority. Proof status: scenarios_verified=16, writeback records=3 (accepted/degraded/rejected=1/1/1), focused tests passed=98, full suite passed=1037, sensitive scan found no secret terms. Evidence: `docs/audit_reports/auditor_drs_writeback_from_root_final.log`.
 
-Root-native sandbox NeedleRuntime E2E v0.1 is complete. It sources a validated PlanGraph node from the existing Architect proof and demonstrates Root-approved bounded sandbox/mock capability execution through NeedleExecutionResult → ResultProposal → Post V&V → GTDecision → Root FinalArtifact. NeedleRuntime is not authority; needle outcome is evidence, not final truth; degraded/blocked/failed outcomes remain visible; raw output and malicious FinalOutput, DRS write, Root bypass, and external-action claims are rejected. Proof status: PASS, scenarios_verified=11, completed/degraded/blocked_or_failed=1/1/4, malicious_claims_rejected=4, focused tests passed=70, full suite passed=1057, sensitive scan clear. Evidence: `docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log`.
+Root-native sandbox NeedleRuntime E2E v0.1 is complete. It sources a validated PlanGraph node from the existing Architect proof and demonstrates Root-approved bounded sandbox/mock capability execution through NeedleExecutionResult → ResultProposal → Post V&V → GTDecision → Root FinalArtifact. NeedleRuntime is not authority; needle outcome is evidence, not final truth; degraded/blocked/failed outcomes remain visible; raw output and malicious FinalOutput, DRS write, bypassing Root, and external-action claims are rejected. Proof status: PASS, scenarios_verified=11, completed/degraded/blocked_or_failed=1/1/4, malicious_claims_rejected=4, focused tests passed=70, full suite passed=1057, sensitive scan clear. Evidence: `docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log`.
 
 Fractal Cell Runtime v0.1 is complete. It proves the third execution route inside a parent PlanGraph: atomic node → ordinary Executor; needle-bound node → sandbox NeedleRuntime; non-atomic node with `child_cell_required=true` → bounded child fractal cell. This is not a long chain. The deterministic child mini-cell may run child Orchestrator / Architect / Executor roles, returns ChildBoundarySnapshot upward, and is adapted into a ResultProposal-compatible artifact visible to Post V&V, GT, and Root Final. Completed, degraded, blocked, and failed child states remain visible.
 
@@ -1098,7 +1099,7 @@ Child-cell boundaries: child cell and child Orchestrator are not Root; child out
 
 Live Child Executor in Fractal Cell v0.1 is complete. It is an opt-in live Gemini proof inside one bounded child cell, not a long chain. Gemini substitutes only child Executor, receives one Architect-provided bounded node contract rather than a free instruction, and returns ChildExecutionResult JSON/evidence only. It is not child Orchestrator, child Architect, Root, FinalOutput, DRS writeback, a needle, a protocol template, or production action execution.
 
-Verified live behavior: the proof-only task completed and reached accepted Root Final; the action-like request was detected, blocked, and preserved through ChildBoundarySnapshot, parent adapter, Post V&V, GT, and rejected Root Final with no hidden success. Live status=PASS, live opt-in/network used, child Executor only, no fallback, malicious_claims_rejected=6, no child FinalOutput, parent DRS write, API/tool call, real action, Root bypass, or Post V&V / GT / Root bypass. Deterministic safe-fallback proof and live PASS evidence: `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log` and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`. Focused deterministic tests passed=36, full suite passed=1082, sensitive scan clear.
+Verified live behavior: the proof-only task completed and reached accepted Root Final; the action-like request was detected, blocked, and preserved through ChildBoundarySnapshot, parent adapter, Post V&V, GT, and rejected Root Final with no hidden success. Live status=PASS, live opt-in/network used, child Executor only, no fallback, malicious_claims_rejected=6, no child FinalOutput, parent DRS write, API/tool call, real action, bypassing Root, or Post V&V / GT / bypassing Root. Deterministic safe-fallback proof and live PASS evidence: `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log` and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`. Focused deterministic tests passed=36, full suite passed=1082, sensitive scan clear.
 
 DRS Lifecycle Semantics v0.2 is complete. It consumes the current DRS writeback, sandbox NeedleRuntime, Fractal Cell Runtime, and deterministic Live Child Executor collectors and creates local/proof-level, pointer-first ExperienceRecord objects. It represents completed, degraded, blocked, failed, rejected, quarantined, deadend, and promotion_candidate states plus experience_record, reuse_candidate, protocol_candidate, needle_candidate, and supported installed_needle_ref stages. installed_needle_count=0 and automatic needle creation remains blocked.
 

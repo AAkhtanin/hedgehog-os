@@ -35,61 +35,53 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-Full WOW v1.2 live multi-LLM/fractal human story + artifact renderer — PASS.
+Local DRS v0.2 lineage/freshness/provenance/reuse/trace after Full WOW v1.2
+— PASS.
 
 Checkpoint source:
 
 - Audit:
-  `docs/audit_reports/auditor_human_full_wow_v1_2_live_fractal_story_renderer_v01.log`.
-- Deterministic product trace audit:
-  `docs/audit_reports/auditor_full_wow_v1_2_product_trace_v01.log`.
-- Real multi-LLM/fractal run audit:
-  `docs/audit_reports/auditor_full_wow_v1_2_manual_live_multillm_fractal_real_run_v01.log`.
-- Human story:
-  `docs/full_wow_v1_2_manual_live_multillm_fractal_real_run_human_story_v01.md`.
-- Reusable artifact story renderer:
-  `demo/run_human_full_wow_v1_2_live_fractal_story.py`.
-- Renderer tests:
-  `tests/test_human_full_wow_v1_2_live_fractal_story_runner.py`.
-- Product trace preflight commit: `9053f93`.
-- Deterministic product trace runner commit: `a66ad44`; audit commit:
-  `ff9cb1e`.
-- Manual live multi-LLM/fractal lane commit: `42de19d`.
-- Fail-closed artifact/prompt skeleton repair commit: `0443d23`.
-- Real multi-LLM/fractal run audit commit: `9986006`.
-- Human story commit: `4e335ee`.
-- Artifact story renderer commit: `29560c7`; renderer audit commit:
-  `e42116b`.
-- Real run provider mode: `real_provider`; model: `gemini-2.5-flash`.
-- Six real Gemini semantic actors participated in the real run: top-level
-  Orchestrator, top-level Semantic Architect, Legal branch, Accounting branch,
-  Supplier B branch, and Bank Policy branch.
-- Real run counters: `semantic_actor_call_count: 6`,
-  `real_provider_call_count: 6`, `network_used_count: 6`,
-  `gemini_called_count: 6`, `bsep_created_count: 1`,
-  `bsep_validated_count: 1`, `runtime_plangraph_compiled_count: 1`,
-  `fractal_branch_cells_created_count: 8`,
-  `branch_result_proposals_created_count: 8`, and
-  `root_final_boundary_evaluated_count: 1`.
-- The v1.2 story makes BSEP, runtime-owned PlanGraph/local artifacts, Branch
-  ResultProposals, Post V&V, GT/LGT, and the Root boundary visible.
-- Branch ResultProposals are not FinalOutput.
-- Runtime owns PlanGraph/local artifacts.
-- Root remains final authority.
-- Renderer counters: `renderer_provider_called_count: 0`,
-  `renderer_network_called_count: 0`, and
-  `renderer_gemini_called_count: 0`.
-- The renderer reads artifacts only, emits no raw provider response by default,
-  and fails closed on missing/invalid artifact evidence or nonzero effect
-  counters.
-- No action packet was created by the renderer, no receipt was created by the
-  renderer, no payment occurred, no shipment release occurred, and
-  `real_world_effects_count: 0`.
-- WOW v1.2 is now closed as product trace + live multi-LLM/fractal observation
-  + human-readable story.
-- WOW v1.2 is now the baseline regression scenario for DRS v0.2 and AVF v0.2
-  hardening.
-- Next major gate: Local DRS v0.2 preflight after WOW v1.2.
+  `docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log`.
+- Preflight:
+  `docs/local_drs_v0_2_after_full_wow_v1_2_preflight_v01.md`.
+- Observed checkpoint base: `246715a`.
+- Slice A record/time/lineage model: PASS.
+- Slice B local resolver/reuse decision report: PASS.
+- Slice C Full WOW v1.2 deterministic product trace integration: PASS.
+- Slice D adversarial/stale/quarantine/deadend hardening: PASS.
+- Full WOW v1.2 remains the baseline regression scenario.
+- Local DRS v0.2 upgrades DRS from simple context lookup into a local
+  lineage/freshness/provenance/reuse/trace layer.
+- DRS remembers / links / warns.
+- DRS does not decide, does not grant permission, does not create truth, and
+  does not create FinalOutput.
+- Root decides.
+- TimeEnvelope and TemporalQuery are required.
+- Lineage, source, and provenance refs are preserved.
+- Freshness and staleness are explicit.
+- Old receipt is not current permission.
+- Old Root Final is not silently reused.
+- Accepted evidence ancestry is not future action permission.
+- Changed facts require rerun validation.
+- Quarantine proximity blocks direct reuse.
+- Deadend proximity blocks or downgrades reuse.
+- Conflicting provenance blocks reuse.
+- Duplicate poisoning does not create authority.
+- Wrong-domain near match is not direct reuse.
+- Permission trace cannot become completed action.
+- ReuseScore is not Root.
+- Semantic similarity is not authority.
+- Direct reuse remains default false, with Root review required by default.
+- The clean all-gates direct reuse path still works as a local decision class,
+  but it does not create FinalOutput or action permission.
+- DRS v0.2 regression records count: `11`.
+- Default WOW trace `direct_reuse_allowed_count: 0`.
+- Default WOW trace `root_review_required_count: 11`.
+- Provider/network/Gemini calls during this checkpoint: `0`.
+- ActionCommitPacket, receipt, mock payment, real payment, shipment release,
+  and effect counters remain `0`.
+- Next major gate: Local DRS v0.2 + Full WOW v1.2 live observation preflight.
+- AVF v0.2 comes after the DRS live observation checkpoint.
 - This is not production.
 - This is not public auditor final package.
 
@@ -1045,7 +1037,7 @@ Typed DRS Lineage Edges v0.1 is the next hardening layer after taxonomy. It is a
 
 ReuseScore v0.1 is the next completed engineering hardening layer. It is a LocalDRS-only advisory/ranking proof that consumes Typed DRS Lineage Edges candidates and computes deterministic illustrative scores from visible components: quality, freshness, gt_trust, semantic_similarity, graph_proximity, typed_positive_signal, warning_penalty, blocking_penalty, needs_user_penalty, degraded_penalty, contradiction_penalty, and risk_penalty. Raw scores are computed first; policy gates are applied separately afterward. ReuseScore is not Root, not ReuseGate, not a policy override, not production ConflictCheck, not global/external DRS, not real token billing, and not production autonomy. High score cannot override policy: direct reuse still requires eligible successful Work; context memory is not direct reuse; Quarantine, dead_end, blocked_trace, degraded_trace, and needs_user_trace records are not direct-reuse candidates. Contradiction does not auto-reuse: a work_candidate with contradiction_penalty becomes needs_conflict_check, not direct_reuse. The proof includes a high-ish scoring unsafe blocked_trace that remains not reusable because policy_allowed=false, and unsafe_direct_reuse_candidates remains 0.
 
-Semantic Reuse Pipeline Integration v0.1 is the next completed engineering integration proof. It connects the completed LocalDRS semantic stack as one bounded proof: LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback. It is not production RootOrchestrator integration, production autonomy, global DRS, external DRS, a ReuseGate replacement, a Root bypass, direct reuse execution, FinalOutput creation, real external action, live Gemini, or Telegram action. It structurally consumes `collect_reuse_score()`, preserves the source Typed DRS Lineage Edges report, evaluates scenario rows, and separates recommendations from authority. All six stages pass: local_drs_retrieval, taxonomy_filtering, typed_edge_interpretation, graph_proximity, reuse_score, and reuse_gate_root_boundary. Scenario proofs include eligible_direct_reuse_candidate recommended but not committed, context_memory_not_reuse falling back to full pipeline, contradiction_needs_conflict_check, high_score_blocked_by_policy, quarantine_not_reused, needs_user_not_completed_action, degraded_not_stable_success, and dead_end_not_reused. `semantic_pipeline_committed_final_output=false`, `semantic_pipeline_bypassed_root=false`, `semantic_pipeline_bypassed_reuse_gate=false`, `unsafe_reuse_candidates=0`, and PASS is derived from stages, scenarios, and boundary facts.
+Semantic Reuse Pipeline Integration v0.1 is the next completed engineering integration proof. It connects the completed LocalDRS semantic stack as one bounded proof: LocalDRS retrieval -> taxonomy-aware filtering -> typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root boundary -> direct reuse candidate or full pipeline fallback. It is not production RootOrchestrator integration, production autonomy, global DRS, external DRS, a ReuseGate replacement, a bypassing Root, direct reuse execution, FinalOutput creation, real external action, live Gemini, or Telegram action. It structurally consumes `collect_reuse_score()`, preserves the source Typed DRS Lineage Edges report, evaluates scenario rows, and separates recommendations from authority. All six stages pass: local_drs_retrieval, taxonomy_filtering, typed_edge_interpretation, graph_proximity, reuse_score, and reuse_gate_root_boundary. Scenario proofs include eligible_direct_reuse_candidate recommended but not committed, context_memory_not_reuse falling back to full pipeline, contradiction_needs_conflict_check, high_score_blocked_by_policy, quarantine_not_reused, needs_user_not_completed_action, degraded_not_stable_success, and dead_end_not_reused. `semantic_pipeline_committed_final_output=false`, `semantic_pipeline_bypassed_root=false`, `semantic_pipeline_bypassed_reuse_gate=false`, `unsafe_reuse_candidates=0`, and PASS is derived from stages, scenarios, and boundary facts.
 
 Root-controlled Semantic Reuse Decision Trace v0.1 is a deterministic Root-controlled dry-run proof. It consumes Semantic Reuse Pipeline recommendations, does not change production RootOrchestrator behavior, does not execute direct reuse, does not create production FinalOutput, does not write production Work records, and does not grant authority to the semantic pipeline. Root classifies recommendations into controlled decisions: direct_reuse_candidate -> root_accepts_direct_reuse_candidate_for_gate_review; needs_full_pipeline -> root_selects_full_pipeline_fallback; needs_conflict_check -> root_requires_conflict_check; blocked -> root_blocks_policy_blocked_route; quarantine -> root_routes_to_quarantine; needs_user -> root_requires_user_input; degraded -> root_marks_degraded_trace; dead_end -> root_rejects_dead_end. ReuseGate remains required for direct reuse candidate review, and the trace still does not execute production direct reuse or create production FinalOutput.
 
@@ -1129,7 +1121,7 @@ The proof-level canonical cycle now closes through Live Gemini Orchestrator -> R
 
 Root-native sandbox NeedleRuntime E2E v0.1 is complete. It is a deterministic proof-level sandbox capability boundary sourced from a validated PlanGraph node in the existing Architect proof. A Root-approved PlanGraph node may invoke a bounded sandbox/mock needle, but NeedleRuntime is not authority and NeedleExecutionResult is evidence, not final truth. NeedleRuntime does not bypass Root, policy, permission, Post V&V, GT, Root Final, or audit. The canonical proof path is Root-approved PlanGraph node -> sandbox NeedleRuntime -> NeedleExecutionResult -> ResultProposal -> Post V&V -> GTDecision -> Root FinalArtifact.
 
-Verified scenarios cover completed, timeout/degraded, invalid JSON/failed, contract mismatch/blocked, permission-required/blocked, forbidden external action/blocked, raw output blocking, and rejection of malicious FinalOutput, DRS write, Root bypass, and external-action claims. Unsafe, degraded, blocked, and failed outcomes remain visible through ResultProposal, Post V&V, GT, and Root Final. Proof status: root_native_sandbox_needleruntime_e2e_status=PASS, scenarios_verified=11, completed/degraded/blocked_or_failed=1/1/4, malicious_claims_rejected=4, raw_needleruntime_output_blocked=true, needleruntime_is_authority=false, root_remains_authority=true, root_is_only_final_output_authority=true, no_real_external_actions=true, no_drs_write_by_needle=true, no_production_persistence=true, focused tests passed=70, full suite passed=1057, and sensitive scan found no secret terms. Evidence: `docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log`.
+Verified scenarios cover completed, timeout/degraded, invalid JSON/failed, contract mismatch/blocked, permission-required/blocked, forbidden external action/blocked, raw output blocking, and rejection of malicious FinalOutput, DRS write, bypassing Root, and external-action claims. Unsafe, degraded, blocked, and failed outcomes remain visible through ResultProposal, Post V&V, GT, and Root Final. Proof status: root_native_sandbox_needleruntime_e2e_status=PASS, scenarios_verified=11, completed/degraded/blocked_or_failed=1/1/4, malicious_claims_rejected=4, raw_needleruntime_output_blocked=true, needleruntime_is_authority=false, root_remains_authority=true, root_is_only_final_output_authority=true, no_real_external_actions=true, no_drs_write_by_needle=true, no_production_persistence=true, focused tests passed=70, full suite passed=1057, and sensitive scan found no secret terms. Evidence: `docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log`.
 
 Needles are bounded capability contracts, not Executor-owned plugins. This proof uses sandbox/mock needles only: no default RootOrchestrator integration, production external execution, real API/device access, Telegram, credential vault, production DRS persistence, or global/external DRS. Real external needles require future permission, policy, audit/hash-chain, credential-vault, and controlled Root integration. Marennya / UP remain deferred.
 
@@ -1227,7 +1219,7 @@ This is deterministic local proof only, not production DRS, persistence, a real 
 
 The deterministic local applied stack is closed through DRS Adversarial Stress Pack v0.1, the all-layers applied super-smoke, and the human applied auditor walkthrough.
 
-DRS Adversarial Stress Pack v0.1 verifies that hostile DRS records cannot force reuse, Root bypass, ready state, action completion, protocol or NeedleCandidate creation, installed-needle creation, production persistence, or global/external DRS writes. Its eight scenarios are `spoofed_high_similarity_score`, `fake_freshness_on_stale_record`, `quarantine_laundering_attempt`, `deadend_laundering_attempt`, `permission_laundering_attempt`, `domain_camouflage_attempt`, `fake_audit_hash_attempt`, and `root_final_injection_attempt`. Root-governed gates block, reject, or downgrade every attack.
+DRS Adversarial Stress Pack v0.1 verifies that hostile DRS records cannot force reuse, bypassing Root, ready state, action completion, protocol or NeedleCandidate creation, installed-needle creation, production persistence, or global/external DRS writes. Its eight scenarios are `spoofed_high_similarity_score`, `fake_freshness_on_stale_record`, `quarantine_laundering_attempt`, `deadend_laundering_attempt`, `permission_laundering_attempt`, `domain_camouflage_attempt`, `fake_audit_hash_attempt`, and `root_final_injection_attempt`. Root-governed gates block, reject, or downgrade every attack.
 
 The all-layers applied super-smoke observes eight completed layers together: `warehouse_applied_layer`, `certificate_applied_layer`, `permission_needsuser_layer`, `needlecandidate_lifecycle_layer`, `applied_drs_retrieval_reuse_layer`, `drs_adversarial_stress_layer`, `conflictcheck_layer`, and `audit_hash_chain_layer`. All source statuses PASS. Root remains final authority; DRS retrieval, ReuseScore, GT, ConflictCheck, audit/hash-chain, NeedleCandidate, and permission approval are not final authority. Permission approval is not completed action.
 
@@ -2131,7 +2123,7 @@ Status: `complete_through_audit: true`, `proof_status: PASS`,
 `19 focused tests` passed, and `root_final_authority_preserved_count: 25`.
 `direct_reuse_allowed_count: 1` is expected and safe: it is the positive
 control scenario where all hard gates pass and `RootShortcutAllowed` is true.
-It is not a Root bypass and not production DRS behavior.
+It is not a bypassing Root and not production DRS behavior.
 
 Proof counters: `direct_reuse_blocked_count: 24`, `context_only_count: 3`,
 `warning_only_count: 2`, `historical_replay_count: 2`,

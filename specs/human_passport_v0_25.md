@@ -486,6 +486,57 @@ Checkpoint facts:
 Next direction: Local DRS v0.2 lineage/freshness/reuse/trace preflight after
 WOW v1.2.
 
+### Local DRS v0.2 Lineage / Freshness / Reuse Checkpoint
+
+Local DRS v0.2 after Full WOW v1.2 is PASS.
+
+Checkpoint facts:
+
+- Preflight:
+  `docs/local_drs_v0_2_after_full_wow_v1_2_preflight_v01.md`.
+- Audit:
+  `docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log`.
+- Slice A record/time/lineage model: PASS.
+- Slice B local resolver/reuse decision report: PASS.
+- Slice C Full WOW v1.2 deterministic product trace integration: PASS.
+- Slice D adversarial/stale/quarantine/deadend hardening: PASS.
+- Full WOW v1.2 remains the baseline regression scenario.
+- Local DRS v0.2 upgrades DRS from simple context lookup into a local
+  lineage/freshness/provenance/reuse/trace layer.
+- TimeEnvelope and TemporalQuery are required.
+- Lineage, source, and provenance refs are preserved.
+- Freshness and staleness are explicit.
+- DRS is not truth.
+- DRS is not authority.
+- DRS is not permission.
+- DRS hit is context only.
+- Old receipt is not current permission.
+- Old Root Final is not silently reused.
+- Accepted evidence ancestry is not future action permission.
+- Changed facts require rerun validation.
+- Quarantine proximity blocks direct reuse.
+- Deadend proximity blocks or downgrades reuse.
+- Conflicting provenance blocks reuse.
+- Duplicate poisoning does not create authority.
+- Wrong-domain near match is not direct reuse.
+- Permission trace cannot become completed action.
+- ReuseScore is not Root.
+- Semantic similarity is not authority.
+- Root remains final authority.
+- Direct reuse remains default false, with Root review required by default.
+- Clean all-gates direct reuse still works as a local decision class, but it
+  does not create FinalOutput or action permission.
+- DRS v0.2 regression records count: `11`.
+- Default WOW trace `direct_reuse_allowed_count: 0`.
+- Default WOW trace `root_review_required_count: 11`.
+- Provider/network/Gemini calls during this checkpoint: `0`.
+- ActionCommitPacket, receipt, mock payment, real payment, shipment release,
+  and effect counters remain `0`.
+- This is not production.
+- This is not public auditor final package.
+
+Next direction: DRS v0.2 live observation over Full WOW v1.2 before AVF v0.2.
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:
@@ -834,7 +885,7 @@ Current bounded graph and lineage checkpoints:
   collect_reuse_score(), preserves the source Typed DRS Lineage Edges report,
   evaluates scenario rows, and separates recommendations from authority. It is
   not production RootOrchestrator integration, production autonomy, global DRS,
-  external DRS, a ReuseGate replacement, a Root bypass, direct reuse execution,
+  external DRS, a ReuseGate replacement, a bypassing Root, direct reuse execution,
   FinalOutput creation, real external action, live Gemini, or Telegram action.
   It proves eligible direct reuse can be recommended but not committed by the
   pipeline, context memory is not direct reuse, contradiction routes to
@@ -1220,8 +1271,8 @@ rejected Root Final with no hidden success.
 
 ChildExecutionResult is bounded experience/evidence only. It is not FinalOutput,
 DRS writeback, a needle, a protocol template, or production action execution.
-No API/tool call, real action, child FinalOutput, parent DRS write, Root bypass,
-or Post V&V / GT / Root bypass is allowed.
+No API/tool call, real action, child FinalOutput, parent DRS write, bypassing Root,
+or Post V&V / GT / bypassing Root is allowed.
 
 Live proof status: PASS, mode=live_opt_in, live network used, child Executor
 only, malicious_claims_rejected=6, focused deterministic tests passed=36, full
@@ -3112,7 +3163,7 @@ views:
 Root remains final authority. DRS retrieval, ReuseScore, GT, ConflictCheck,
 audit/hash-chain, NeedleCandidate, and permission approval are not final
 authority. Permission approval is not completed action. Hostile DRS records
-cannot force reuse, Root bypass, ready state, completed action, candidate or
+cannot force reuse, bypassing Root, ready state, completed action, candidate or
 installed-needle creation, production persistence, or global/external DRS
 writes.
 

@@ -289,6 +289,45 @@ Status:
   real bank/supplier/warehouse API call, or real-world effect is created by the
   checkpoint.
 
+## Applied Local DRS v0.2 Lineage / Freshness / Reuse Checkpoint
+
+Local DRS v0.2 lineage/freshness/provenance/reuse/trace is PASS after Full
+WOW v1.2.
+
+Status:
+
+- Preflight:
+  `docs/local_drs_v0_2_after_full_wow_v1_2_preflight_v01.md`.
+- Audit:
+  `docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log`.
+- Slice A record/time/lineage model: PASS.
+- Slice B local resolver/reuse decision report: PASS.
+- Slice C Full WOW v1.2 deterministic product trace integration: PASS.
+- Slice D adversarial/stale/quarantine/deadend hardening: PASS.
+- Full WOW v1.2 remains the baseline regression scenario.
+- Full WOW v1.2 product trace now observes the Local DRS v0.2 resolve table.
+- Local DRS v0.2 upgrades DRS from simple context lookup into a local
+  lineage/freshness/provenance/reuse/trace layer.
+- TimeEnvelope and TemporalQuery are required.
+- Lineage, source, and provenance refs are preserved.
+- Direct reuse remains default false and Root review is required by default.
+- DRS v0.2 regression records count: `11`.
+- Default WOW trace `direct_reuse_allowed_count: 0`.
+- Default WOW trace `root_review_required_count: 11`.
+- Old receipt is not current permission.
+- Old Root Final is not silently reused.
+- Changed facts require rerun validation.
+- Quarantine proximity blocks direct reuse.
+- Deadend proximity blocks or downgrades reuse.
+- Conflicting provenance blocks reuse.
+- Duplicate poisoning does not create authority.
+- Wrong-domain near match is not direct reuse.
+- Permission trace cannot become completed action.
+- ReuseScore is not Root.
+- Semantic similarity is not authority.
+- No provider/network/Gemini call, action packet, receipt, payment, shipment
+  release, or real-world effect is created by the checkpoint.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.
@@ -655,7 +694,7 @@ not a claim of production retrieval or a production semantic internet.
 
 ReuseScore v0.1 is engineering hardening after typed lineage edges. It is a
 LocalDRS-only advisory/ranking proof, not a showcase, schema refactor,
-ReuseGate change, Root bypass, production ConflictCheck, global DRS, external
+ReuseGate change, bypassing Root, production ConflictCheck, global DRS, external
 DRS, production autonomy, or token billing benchmark.
 
 It consumes Typed DRS Lineage Edges candidates and computes deterministic
@@ -712,7 +751,7 @@ LocalDRS retrieval
 ```
 
 It is not production RootOrchestrator integration, production autonomy, global
-DRS, external DRS, a ReuseGate replacement, a Root bypass, direct reuse
+DRS, external DRS, a ReuseGate replacement, a bypassing Root, direct reuse
 execution, FinalOutput creation, real external action, live Gemini, or Telegram
 action.
 
@@ -1429,7 +1468,7 @@ commits `0bbf81a`, `3fdc78e`, and `420b005`.
 ## Applied Stack Checkpoint — DRS Adversarial / Super-Smoke / Human Walkthrough
 
 DRS Adversarial Stress Pack v0.1 verifies eight hostile DRS scenarios cannot
-force direct reuse, Root bypass, ready state, completed action, candidate or
+force direct reuse, bypassing Root, ready state, completed action, candidate or
 installed-needle creation, production persistence, or global/external DRS
 writes. Spoofed score, fake freshness, quarantine/deadend/permission
 laundering, domain camouflage, fake audit hash, and injected Root Final are

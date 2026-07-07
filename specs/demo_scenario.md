@@ -306,6 +306,42 @@ Scenario result:
   provider/network/API call by the renderer, secret access, or real-world
   effect is created by the story renderer.
 
+### local_drs_v0_2_wow_v1_2_resolve_visibility
+
+Supplier Payment / Shipment Release Review WOW v1.2 now includes Local DRS
+v0.2 resolve visibility.
+
+Scenario result:
+
+- Preflight:
+  `docs/local_drs_v0_2_after_full_wow_v1_2_preflight_v01.md`.
+- Audit:
+  `docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log`.
+- Full WOW v1.2 remains the baseline regression scenario.
+- The deterministic product trace observes Local DRS v0.2 resolve output.
+- Local DRS v0.2 covers 11 regression records:
+  Supplier A prior trace, Supplier B blocker trace, old receipt trace, old
+  shipment-held trace, old Root Final trace, changed warehouse fact, stale
+  legal/accounting evidence, quarantined record, deadend record, wrong-domain
+  near match, and permission trace completed action attempt.
+- Default WOW trace `direct_reuse_allowed_count: 0`.
+- Default WOW trace `root_review_required_count: 11`.
+- DRS remembers / links / warns.
+- DRS does not decide, does not grant permission, does not create truth, and
+  does not create FinalOutput.
+- Root remains final authority.
+- Old receipt is not current permission.
+- Old Root Final is not silently reused.
+- Changed facts require rerun validation.
+- Quarantine proximity blocks direct reuse.
+- Deadend proximity blocks or downgrades reuse.
+- Conflicting provenance blocks reuse.
+- Duplicate poisoning does not create authority.
+- Wrong-domain near match is not direct reuse.
+- Permission trace cannot become completed action.
+- ReuseScore is not Root.
+- Semantic similarity is not authority.
+
 ## What The Demo Must Prove
 
 - Root authority.
@@ -522,7 +558,7 @@ typed edge interpretation -> graph proximity -> ReuseScore -> ReuseGate / Root
 boundary -> direct reuse candidate or full pipeline fallback.
 
 It is not production RootOrchestrator integration, production autonomy, global
-DRS, external DRS, a ReuseGate replacement, a Root bypass, direct reuse
+DRS, external DRS, a ReuseGate replacement, a bypassing Root, direct reuse
 execution, FinalOutput creation, real external action, live Gemini, or Telegram
 action.
 
@@ -950,7 +986,7 @@ degraded, blocked, and failed states remain visible downstream.
 
 Verified cases: completed; timeout/degraded; invalid_json/failed; contract
 mismatch/blocked; permission_required/blocked; forbidden_external_action/blocked;
-raw output blocked; and malicious FinalOutput, DRS write, Root bypass, and real
+raw output blocked; and malicious FinalOutput, DRS write, bypassing Root, and real
 external action claims rejected. Proof status: PASS, scenarios_verified=11,
 completed/degraded/blocked_or_failed=1/1/4, malicious_claims_rejected=4, focused
 tests passed=70, full suite passed=1057, sensitive scan clear. Evidence:
@@ -999,7 +1035,7 @@ ResultProposal-compatible artifacts.
 
 Live status is PASS with live opt-in/network used, child Executor only, no
 fallback, and six malicious claims rejected. No API/tool call, real action,
-child FinalOutput, parent DRS write, Root bypass, or downstream-boundary bypass
+child FinalOutput, parent DRS write, bypassing Root, or downstream-boundary bypass
 occurred. Evidence:
 `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log`
 and `docs/audit_reports/auditor_live_child_executor_in_fractal_cell_LIVE.log`.

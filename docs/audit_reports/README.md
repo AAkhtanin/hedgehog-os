@@ -7,6 +7,32 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_drs_v0_2_local_lineage_reuse_v01.log`
+  - Audit status: PASS.
+  - Audits Local DRS v0.2 lineage/freshness/provenance/reuse/trace after
+    Full WOW v1.2.
+  - Observed checkpoint base: `246715a`.
+  - Covers Slice A record/time/lineage model, Slice B local resolver/reuse
+    decision report, Slice C Full WOW v1.2 deterministic product trace
+    integration, and Slice D adversarial/stale/quarantine/deadend hardening.
+  - Confirms Full WOW v1.2 remains the baseline regression scenario.
+  - Confirms DRS remembers / links / warns, while Root decides.
+  - Confirms direct reuse remains default false and Root review is required by
+    default.
+  - Confirms `drs_v0_2_regression_records_count: 11`,
+    default WOW trace `direct_reuse_allowed_count: 0`, and default WOW trace
+    `root_review_required_count: 11`.
+  - Confirms old receipt is not current permission, old Root Final is not
+    silently reused, changed facts require rerun validation, quarantine
+    proximity blocks direct reuse, deadend proximity blocks or downgrades
+    reuse, conflicting provenance blocks reuse, duplicate poisoning does not
+    create authority, wrong-domain near match is not direct reuse, permission
+    trace cannot become completed action, ReuseScore is not Root, and semantic
+    similarity is not authority.
+  - No AVF v0.2 implementation, no provider/network/Gemini calls, and no
+    action/effect counters.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_human_full_wow_v1_2_live_fractal_story_renderer_v01.log`
   - Audit status: PASS.
   - Audits Full WOW v1.2 live fractal artifact-backed human story renderer.
@@ -252,7 +278,7 @@ Current reports:
 - `auditor_root_native_sandbox_needleruntime_e2e.log`
   - Proof for Root-native sandbox NeedleRuntime E2E v0.1.
   - Shows a validated Root-approved PlanGraph node invoking bounded sandbox/mock NeedleRuntime and flowing through NeedleExecutionResult, ResultProposal, Post V&V, GTDecision, and Root FinalArtifact.
-  - Confirms completed/degraded/blocked/failed outcomes remain visible and raw output plus malicious FinalOutput, DRS write, Root bypass, and external-action claims are rejected.
+  - Confirms completed/degraded/blocked/failed outcomes remain visible and raw output plus malicious FinalOutput, DRS write, bypassing Root, and external-action claims are rejected.
   - Confirms NeedleRuntime is not authority and no real external action, production persistence, Telegram, or global/external DRS is claimed.
 
 - `auditor_fractal_cell_runtime.log`
@@ -267,7 +293,7 @@ Current reports:
 
 - `auditor_live_child_executor_in_fractal_cell_LIVE.log`
   - Live Gemini PASS proof for Live Child Executor in Fractal Cell v0.1.
-  - Confirms live opt-in/network use with Gemini only as bounded child Executor, valid completed proof-task output, valid action-like request blocking, no fallback, and no API/tool call, real action, child FinalOutput, parent DRS write, Root bypass, or Post V&V / GT / Root bypass.
+  - Confirms live opt-in/network use with Gemini only as bounded child Executor, valid completed proof-task output, valid action-like request blocking, no fallback, and no API/tool call, real action, child FinalOutput, parent DRS write, bypassing Root, or Post V&V / GT / bypassing Root.
 
 - `auditor_drs_lifecycle_semantics.log`
   - Proof for DRS Lifecycle Semantics v0.2.

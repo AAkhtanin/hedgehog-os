@@ -1,0 +1,234 @@
+audit_id: auditor_local_drs_v0_2_full_wow_v1_2_live_observation_real_run_v01
+audit_status: PASS
+audited_layer: Local DRS v0.2 + Full WOW v1.2 live multi-LLM/fractal observation real provider run
+base_commit: 1e7f0d0
+runtime_commit: 1e7f0d0
+preflight: docs/local_drs_v0_2_full_wow_v1_2_live_observation_preflight_v01.md
+local_drs_v0_2_audit: docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log
+provider_mode: real_provider
+model: gemini-2.5-flash
+run_id: full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033
+artifact_dir: .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_world_effects_count: 0
+
+Scope
+- Audit-only.
+- Runtime not modified.
+- Tests not modified.
+- Provider/model/network lane not rerun during this audit.
+- Secrets not printed.
+- No payment, shipment release, ActionCommitPacket, receipt, mock payment, sandbox adapter, or real bank/supplier/warehouse API call was executed by this audit.
+- AVF v0.2, ActionCommitPacket hardening, Airline demo, and new domains were not started.
+- No production or public-auditor final-package claim.
+
+Observed repository base
+- git status --short --untracked-files=all: clean before audit log creation.
+- git --no-pager log --oneline --max-count=12: latest commit observed as 1e7f0d0 Integrate Local DRS v0.2 into Full WOW v1.2 live lane.
+- git rev-parse --short HEAD: 1e7f0d0.
+
+Evidence files read
+- console.log
+- summary.log
+- summary.json
+- secret_scan.json
+- local_drs_v0_2_resolve_report.json
+- local_drs_v0_2_freshness_table.json
+- local_drs_v0_2_lineage_table.json
+- local_drs_v0_2_provenance_table.json
+- local_drs_v0_2_reuse_decision_table.json
+- local_drs_v0_2_writeback_candidate.json
+- top_level_orchestrator_prompt.txt
+- top_level_orchestrator_raw_response.txt
+- top_level_orchestrator_extracted_json_candidate.json
+- top_level_orchestrator_validation.json
+- bsep_packet.json
+- bsep_validation.json
+- top_level_architect_prompt.txt
+- top_level_architect_raw_response.txt
+- top_level_architect_extracted_json_candidate.json
+- top_level_architect_validation.json
+- branch_legal_validation.json
+- branch_accounting_validation.json
+- branch_supplier_b_validation.json
+- branch_bank_policy_validation.json
+
+Validation commands run
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/summary.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/secret_scan.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/local_drs_v0_2_resolve_report.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/local_drs_v0_2_freshness_table.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/local_drs_v0_2_lineage_table.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/local_drs_v0_2_provenance_table.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/local_drs_v0_2_reuse_decision_table.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/local_drs_v0_2_writeback_candidate.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/top_level_orchestrator_validation.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/bsep_validation.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/top_level_architect_validation.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/branch_legal_validation.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/branch_accounting_validation.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/branch_supplier_b_validation.json >/dev/null: PASS
+- python3 -m json.tool .tmp/full_wow_v1_2_manual_live_multillm_fractal_drs_v02/full_wow_v1_2_manual_live_multillm_fractal_drs_v02_real_20260707_134033/branch_bank_policy_validation.json >/dev/null: PASS
+
+Static checks run before audit log creation
+- git status --short --untracked-files=all: clean
+- git diff --stat: no diff
+- git diff --check: PASS
+- git diff --name-only: no files
+
+Secret scan
+- Artifact secret_scan.json reports passed: true.
+- Artifact secret_scan.json reports matched_markers: [].
+- Secret-marker scan over this audit log and the artifact directory was run after audit log creation; marker terms are intentionally not reproduced in this log.
+
+Required findings
+- finding_final_status_pass: PASS
+- finding_stage_status_pass: PASS
+- finding_provider_mode_real_provider: PASS
+- finding_six_semantic_actor_calls: PASS
+- finding_real_provider_call_count_six: PASS
+- finding_network_used_count_six: PASS
+- finding_gemini_called_count_six: PASS
+- finding_local_drs_v0_2_resolve_ran_before_orchestrator: PASS
+- finding_local_drs_v0_2_records_evaluated_eleven: PASS
+- finding_local_drs_v0_2_direct_reuse_allowed_zero: PASS
+- finding_local_drs_v0_2_root_review_required_eleven: PASS
+- finding_local_drs_v0_2_context_warning_rerun_blocked_classes_visible: PASS
+- finding_supplier_a_prior_scoped_trace_context_only: PASS
+- finding_supplier_b_blocker_trace_rerun_required: PASS
+- finding_old_receipt_not_current_permission: PASS
+- finding_old_root_final_not_silent_reuse: PASS
+- finding_changed_facts_require_rerun_validation: PASS
+- finding_stale_legal_accounting_evidence_warning_or_rerun: PASS
+- finding_quarantine_blocks_direct_reuse: PASS
+- finding_deadend_blocks_or_downgrades_reuse: PASS
+- finding_wrong_domain_near_match_not_direct_reuse: PASS
+- finding_permission_trace_cannot_be_completed_action: PASS
+- finding_bsep_created_after_orchestrator_validation: PASS
+- finding_bsep_validated_before_architect: PASS
+- finding_bsep_contains_bounded_drs_informed_context: PASS
+- finding_bsep_contains_no_raw_user_provider_or_secret_text: PASS
+- finding_architect_received_bsep_derived_drs_informed_context: PASS
+- finding_branch_actors_validated: PASS
+- finding_runtime_plangraph_compiled_once: PASS
+- finding_provider_owned_plangraph_zero: PASS
+- finding_fractal_branch_cells_created_eight: PASS
+- finding_branch_result_proposals_created_eight: PASS
+- finding_post_vv_validated: PASS
+- finding_gt_lgt_advisory_reviewed: PASS
+- finding_root_final_boundary_evaluated: PASS
+- finding_local_drs_writeback_candidate_created_after_root: PASS
+- finding_local_drs_writeback_candidate_local_proof_audit_only: PASS
+- finding_local_drs_writeback_not_persisted: PASS
+- finding_local_drs_writeback_creates_no_future_permission: PASS
+- finding_secret_scan_passed: PASS
+- finding_no_api_key_logged: PASS
+- finding_no_raw_bank_secret_logged: PASS
+- finding_no_raw_iban_logged: PASS
+- finding_no_sandbox_token_logged: PASS
+- finding_no_action_commit_packet_created: PASS
+- finding_no_receipt_created: PASS
+- finding_no_mock_payment_executed: PASS
+- finding_no_real_payment_executed: PASS
+- finding_no_shipment_released: PASS
+- finding_real_world_effects_zero: PASS
+- finding_no_production_claim: PASS
+- finding_no_public_auditor_claim: PASS
+- finding_no_avf_v0_2_implementation: PASS
+
+Counter summary
+- semantic_actor_call_count: 6
+- real_provider_call_count: 6
+- fake_provider_call_count: 0
+- network_used_count: 6
+- gemini_called_count: 6
+- top_level_orchestrator_llm_call_count: 1
+- top_level_architect_llm_call_count: 1
+- branch_local_llm_slm_call_count: 4
+- local_drs_v0_2_resolve_invoked_count: 1
+- local_drs_v0_2_records_evaluated_count: 11
+- local_drs_v0_2_direct_reuse_allowed_count: 0
+- local_drs_v0_2_root_review_required_count: 11
+- local_drs_v0_2_context_only_count: 3
+- local_drs_v0_2_warning_only_count: 2
+- local_drs_v0_2_rerun_required_count: 3
+- local_drs_v0_2_blocked_count: 3
+- local_drs_v0_2_permission_granted_count: 0
+- local_drs_v0_2_root_bypass_count: 0
+- local_drs_v0_2_external_drs_used_count: 0
+- local_drs_v0_2_global_drs_used_count: 0
+- local_drs_v0_2_vector_db_used_count: 0
+- local_drs_v0_2_embeddings_required_count: 0
+- bsep_created_count: 1
+- bsep_validated_count: 1
+- architect_received_bsep_context_count: 1
+- architect_called_before_bsep_validation_count: 0
+- runtime_plangraph_compiled_count: 1
+- provider_owned_plangraph_count: 0
+- provider_nodes_edges_executor_assignments_accepted_count: 0
+- fractal_branch_cells_created_count: 8
+- branch_result_proposals_created_count: 8
+- post_vv_validated_count: 1
+- gt_lgt_advisory_review_count: 1
+- root_final_boundary_evaluated_count: 1
+- local_drs_v0_2_writeback_candidate_created_count: 1
+- local_drs_v0_2_writeback_persisted_count: 0
+- local_drs_v0_2_writeback_local_proof_only_count: 1
+- action_commit_packet_created_count: 0
+- receipt_created_count: 0
+- mock_payment_executed_count: 0
+- real_payment_executed_count: 0
+- shipment_released_count: 0
+- real_world_effects_count: 0
+
+Observed DRS classifications
+- supplier_a_prior_scoped_trace: context_only; direct_reuse_allowed=false; root_review_required=true.
+- supplier_b_blocker_trace: rerun_required; direct_reuse_allowed=false; root_review_required=true.
+- old_receipt_trace: context_only; old_receipt_not_permission present; direct_reuse_allowed=false.
+- old_root_final_trace: context_only; prior_root_final_not_silent_reuse present; direct_reuse_allowed=false.
+- changed_warehouse_fact: rerun_required; changed_facts_require_rerun_validation present.
+- stale_legal_accounting_evidence: warning_only; stale/high-similarity advisory reasons present.
+- quarantined_record: blocked; quarantine_proximity_blocks_direct_reuse present.
+- deadend_record: warning_only; deadend_proximity_blocks_or_downgrades_reuse present.
+- wrong_domain_near_match: rerun_required; wrong_domain_near_match_not_direct_reuse present.
+- permission_trace_completed_action_attempt: blocked; permission_trace_not_completed_action present.
+
+BSEP and bounded context findings
+- BSEP was created after Orchestrator validation.
+- BSEP was validated before Architect.
+- BSEP records Local DRS v0.2 resolve invoked: true.
+- BSEP bounded context records direct_reuse_allowed_count: 0.
+- BSEP bounded context records root_review_required_count: 11.
+- BSEP flags raw user text, raw provider text, raw DRS authority, raw bank secrets, raw IBAN, and bank token as not included.
+- Architect received BSEP-derived DRS-informed context.
+
+Writeback candidate findings
+- writeback_candidate_id: local_drs_v0_2_writeback_full_wow_v1_2_live_observation_001
+- source_root_boundary_evaluated: true
+- decision_class: context_only_after_root_review
+- direct_reuse_allowed: false
+- root_review_required: true
+- action_permission_created: false
+- final_output_created_by_drs: false
+- payment_executed: false
+- shipment_released: false
+- receipt_created: false
+- action_commit_packet_created: false
+- local_proof_audit_only: true
+- future_permission_created: false
+
+Interpretation
+This is the first real-provider Full WOW v1.2 live observation where Local DRS v0.2 read/resolve is visible inside the live multi-LLM/fractal lane.
+
+DRS v0.2:
+- remembers / links / warns;
+- classifies prior traces;
+- does not decide;
+- does not grant permission;
+- does not create truth;
+- does not create FinalOutput;
+- does not authorize payment or shipment release;
+- creates only a local proof/audit writeback candidate after Root boundary.
+
+Root remains final authority.

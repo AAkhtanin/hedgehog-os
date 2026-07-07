@@ -1,0 +1,182 @@
+audit_id: auditor_human_full_wow_v1_2_live_fractal_story_renderer_v01
+audit_status: PASS
+audited_layer: Full WOW v1.2 live fractal artifact-backed human story renderer
+base_commit: 29560c7
+source_real_run_audit_commit: 9986006
+source_human_story_commit: 4e335ee
+renderer_commit: 29560c7
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_world_effects_count: 0
+
+[AUDITED FILES]
+- demo/run_human_full_wow_v1_2_live_fractal_story.py
+- tests/test_human_full_wow_v1_2_live_fractal_story_runner.py
+- docs/audit_reports/auditor_full_wow_v1_2_manual_live_multillm_fractal_real_run_v01.log
+- docs/full_wow_v1_2_manual_live_multillm_fractal_real_run_human_story_v01.md
+
+[CLOSED SOURCE EVIDENCE]
+- source_real_run_audit: docs/audit_reports/auditor_full_wow_v1_2_manual_live_multillm_fractal_real_run_v01.log
+- source_human_story: docs/full_wow_v1_2_manual_live_multillm_fractal_real_run_human_story_v01.md
+- canonical_real_artifact_dir: .tmp/full_wow_v1_2_manual_live_multillm_fractal/full_wow_v1_2_manual_live_multillm_fractal_real_20260706_170024
+- renderer_path: demo/run_human_full_wow_v1_2_live_fractal_story.py
+- tests_path: tests/test_human_full_wow_v1_2_live_fractal_story_runner.py
+
+[VALIDATION COMMANDS RUN]
+1. python3 -m py_compile demo/run_human_full_wow_v1_2_live_fractal_story.py
+   result: PASS
+
+2. python3 -m demo.run_human_full_wow_v1_2_live_fractal_story
+   result: PASS
+   observed final_status: SKIPPED_CLOSED
+   observed story_status: SKIPPED_CLOSED
+   observed skip_reason: artifact_dir_not_provided
+   observed renderer provider/network/Gemini calls: 0
+   observed action/receipt/payment/shipment/effects by renderer: 0
+
+3. PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_full_wow_v1_2_live_fractal_story_runner.py
+   result: PASS
+   tests_passed: 9
+   pytest_output: 9 passed in 0.02s
+
+4. HEDGEHOG_FULL_WOW_V1_2_LIVE_FRACTAL_STORY_ARTIFACT_DIR=.tmp/full_wow_v1_2_manual_live_multillm_fractal/full_wow_v1_2_manual_live_multillm_fractal_real_20260706_170024 PYTHONPATH=. .venv/bin/python -m demo.run_human_full_wow_v1_2_live_fractal_story
+   result: PASS
+   observed final_status: PASS
+   observed story_status: PASS
+   observed provider_mode: real_provider
+   observed source_artifact_dir: .tmp/full_wow_v1_2_manual_live_multillm_fractal/full_wow_v1_2_manual_live_multillm_fractal_real_20260706_170024
+   observed renderer provider/network/Gemini calls: 0
+   observed action/receipt/payment/shipment/effects by renderer: 0
+
+5. git status --short --untracked-files=all
+   result before audit file creation: clean
+   expected result after audit file creation: only docs/audit_reports/auditor_human_full_wow_v1_2_live_fractal_story_renderer_v01.log untracked/changed
+
+6. git diff --stat
+   result before audit file creation: no tracked diff
+
+7. git diff --check
+   result before audit file creation: PASS
+
+8. git diff --name-only
+   result before audit file creation: no tracked diff
+
+9. rg -n "FULL WOW V1.2 LIVE FRACTAL HUMAN STORY|Six semantic actors|BSEP was created after Orchestrator validation|Runtime retained PlanGraph ownership|Branch ResultProposals are not FinalOutput|payment_slot != permission|receipt != shipment release|Root remained final authority|FINAL STATUS" demo/run_human_full_wow_v1_2_live_fractal_story.py tests/test_human_full_wow_v1_2_live_fractal_story_runner.py
+   result: PASS
+   observed markers include title, six semantic actors, BSEP ordering, Runtime retained PlanGraph ownership, Branch ResultProposal boundary, bank boundaries, Root final authority, and FINAL STATUS.
+
+10. forbidden-overclaim rg check from task against renderer and tests
+    result: PASS
+    observed forbidden matches: none
+
+11. rg -n "google.genai|run_full_wow_v1_2_manual_live_multillm_fractal_trace|run_full_semantic_e2e_v01|effect_counter_nonzero|missing_summary_json|validation_artifact_not_accepted|secret_scan_failed|raw_provider_response_rendered|artifact_files_observed_only" demo/run_human_full_wow_v1_2_live_fractal_story.py tests/test_human_full_wow_v1_2_live_fractal_story_runner.py
+    result: PASS
+    observed source/test evidence:
+    - no google.genai import accepted by tests
+    - no live lane runner import accepted by tests
+    - no full semantic E2E import accepted by tests
+    - artifact_files_observed_only is reported by the renderer
+    - raw_provider_response_rendered is false by default
+    - missing_summary_json fail-closed path is tested
+    - validation_artifact_not_accepted fail-closed path is tested
+    - secret_scan_failed path is present
+    - effect_counter_nonzero fail-closed guard is present
+
+[REQUIRED FINDINGS]
+- finding_renderer_created: PASS
+- finding_default_skipped_closed: PASS
+- finding_fixture_pass_story_renders: PASS
+- finding_real_artifact_dir_story_renders_pass: PASS
+- finding_reads_artifact_files_only: PASS
+- finding_does_not_import_live_runner: PASS
+- finding_does_not_import_google_genai: PASS
+- finding_does_not_call_provider_network_gemini: PASS
+- finding_no_raw_response_output_by_default: PASS
+- finding_secret_scan_required: PASS
+- finding_secret_markers_blocked_from_rendered_output: PASS
+- finding_required_validation_files_required: PASS
+- finding_missing_summary_fails_closed: PASS
+- finding_validation_failure_fails_closed: PASS
+- finding_nonzero_effect_counter_fails_closed: PASS
+- finding_human_semantic_story_visible: PASS
+- finding_bsep_story_visible: PASS
+- finding_runtime_plangraph_boundary_visible: PASS
+- finding_branch_resultproposal_boundary_visible: PASS
+- finding_bank_boundary_visible: PASS
+- finding_root_final_authority_visible: PASS
+- finding_no_action_receipt_payment_shipment_effects: PASS
+- finding_no_production_claim: PASS
+- finding_no_public_auditor_claim: PASS
+
+[COUNTERS / EFFECTS]
+- renderer_provider_called_count: 0
+- renderer_network_called_count: 0
+- renderer_gemini_called_count: 0
+- action_commit_packet_created_count: 0
+- receipt_created_count: 0
+- mock_payment_executed_count: 0
+- real_payment_executed_count: 0
+- shipment_released_count: 0
+- real_world_effects_count: 0
+
+[STORY RENDERER BEHAVIOR]
+- default_without_artifact_dir: SKIPPED_CLOSED
+- valid_fixture_artifact_dir: PASS in focused tests
+- canonical_real_artifact_dir: PASS in local artifact-backed render
+- source_artifact_files_required_for_pass:
+  - summary.json
+  - secret_scan.json
+  - top_level_orchestrator_validation.json
+  - bsep_validation.json
+  - top_level_architect_validation.json
+  - branch_legal_validation.json
+  - branch_accounting_validation.json
+  - branch_supplier_b_validation.json
+  - branch_bank_policy_validation.json
+- raw_provider_response_output_default: false
+- renderer_imports_live_runner: false
+- renderer_imports_google_genai: false
+- renderer_calls_provider_network_gemini: false
+
+[SECRET BOUNDARY]
+- secret_scan_required: true
+- secret_scan_passed_required_for_pass: true
+- matched_markers_empty_required_for_pass: true
+- known_secret_markers_blocked_from_rendered_output: true
+- raw_response_files_required_for_rendering: false
+- raw_response_text_printed_by_renderer: false
+
+[HUMAN STORY FACTS VERIFIED]
+- FULL WOW V1.2 LIVE FRACTAL HUMAN STORY title visible.
+- Six semantic actors are visible in the rendered story.
+- BSEP was created after Orchestrator validation is visible.
+- BSEP was validated before Architect is visible.
+- Runtime retained PlanGraph ownership is visible.
+- Branch ResultProposals are not FinalOutput is visible.
+- payment_slot != permission is visible.
+- receipt != truth is visible.
+- receipt != shipment release is visible.
+- Root remained final authority is visible.
+- FINAL STATUS is visible for both SKIPPED_CLOSED and PASS render paths.
+
+[NON-CLAIMS]
+- not production
+- not public auditor final package
+- no real payment
+- no real shipment release
+- no production connectors
+- no real bank/supplier/warehouse API
+- no real-world effects
+
+[FINAL STATUS]
+audit_status: PASS
+renderer_audit_status: PASS
+audited_changed_file_only_expected: docs/audit_reports/auditor_human_full_wow_v1_2_live_fractal_story_renderer_v01.log
+runtime_modified: false
+tests_modified: false
+provider_network_gemini_called_by_audit: false
+secrets_accessed_or_printed: false
+action_receipt_payment_shipment_effects: false
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_world_effects_count: 0

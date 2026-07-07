@@ -1,10 +1,18 @@
 from __future__ import annotations
 
+from dataclasses import asdict
 import json
 import os
 import time
 from pathlib import Path
 from typing import Any, Callable, Mapping
+
+from hedgehog.local_drs_v02 import (
+    LocalDRSResolveInputV02,
+    TemporalQueryV02,
+    build_wow_v1_2_drs_v02_regression_records,
+    resolve_drs_records_v02,
+)
 
 
 Provider = Callable[[str, str, Mapping[str, Any]], str]
@@ -21,6 +29,7 @@ RENDERED_SECTIONS = (
     "[FULL WOW V1.2 MANUAL LIVE MULTI-LLM FRACTAL TRACE]",
     "[LANE STATUS]",
     "[SEMANTIC ACTOR CALLS]",
+    "[LOCAL DRS V0.2 LIVE OBSERVATION]",
     "[TOP-LEVEL ORCHESTRATOR]",
     "[BSEP MEMBRANE]",
     "[TOP-LEVEL SEMANTIC ARCHITECT]",
@@ -84,6 +93,49 @@ BRANCH_ACTOR_ROLES = {
     "bank_b_branch": "bank_policy_semantic_reviewer",
 }
 
+LOCAL_DRS_V0_2_SCENARIO_IDS = (
+    "supplier_a_prior_scoped_trace",
+    "supplier_b_blocker_trace",
+    "old_receipt_trace",
+    "old_shipment_held_trace",
+    "old_root_final_trace",
+    "changed_warehouse_fact",
+    "stale_legal_accounting_evidence",
+    "quarantined_record",
+    "deadend_record",
+    "wrong_domain_near_match",
+    "permission_trace_completed_action_attempt",
+)
+
+LOCAL_DRS_V0_2_SCENARIO_SUMMARIES = (
+    "Supplier A prior trace may inform bounded context.",
+    "Supplier B blocker trace may warn or block.",
+    "old receipt remains context, not current permission.",
+    "old Root Final is not silently reused.",
+    "changed warehouse facts require rerun validation.",
+    "stale legal/accounting evidence receives freshness downgrade.",
+    "quarantined records block direct reuse.",
+    "deadend proximity blocks or downgrades reuse.",
+    "wrong-domain near match is not direct reuse.",
+    "permission trace cannot become completed action.",
+)
+
+LOCAL_DRS_V0_2_NON_AUTHORITY_BOUNDARIES = (
+    "DRS v0.2 is not truth.",
+    "DRS v0.2 is not authority.",
+    "DRS v0.2 is not permission.",
+    "DRS hit is context only.",
+    "DRS v0.2 reuse decision is not FinalOutput.",
+    "DRS v0.2 direct reuse candidate is not direct reuse.",
+    "old receipt is not current permission.",
+    "old Root Final is not silently reused.",
+    "permission trace cannot become completed action.",
+    "ReuseScore is not Root.",
+    "Semantic similarity is not authority.",
+    "DRS writeback after Root is local proof/audit only.",
+    "Root remains final authority.",
+)
+
 AUTHORITY_MATRIX = (
     "Provider output is not truth.",
     "Provider output is not authority.",
@@ -110,6 +162,7 @@ AUTHORITY_MATRIX = (
     "MockBankSandbox receipt is evidence only and only observed here.",
     "Receipt does not release shipment.",
     "payment_slot is not permission.",
+    *LOCAL_DRS_V0_2_NON_AUTHORITY_BOUNDARIES,
     "Root remains final authority.",
 )
 
@@ -333,6 +386,24 @@ def _zero_counters() -> dict[str, int]:
         "post_vv_validated_count": 0,
         "gt_lgt_advisory_review_count": 0,
         "root_final_boundary_evaluated_count": 0,
+        "manual_live_drs_v0_2_observation_enabled_count": 0,
+        "local_drs_v0_2_resolve_invoked_count": 0,
+        "local_drs_v0_2_records_evaluated_count": 0,
+        "local_drs_v0_2_direct_reuse_allowed_count": 0,
+        "local_drs_v0_2_root_review_required_count": 0,
+        "local_drs_v0_2_context_only_count": 0,
+        "local_drs_v0_2_warning_only_count": 0,
+        "local_drs_v0_2_rerun_required_count": 0,
+        "local_drs_v0_2_blocked_count": 0,
+        "local_drs_v0_2_writeback_candidate_created_count": 0,
+        "local_drs_v0_2_writeback_persisted_count": 0,
+        "local_drs_v0_2_writeback_local_proof_only_count": 0,
+        "local_drs_v0_2_permission_granted_count": 0,
+        "local_drs_v0_2_root_bypass_count": 0,
+        "local_drs_v0_2_external_drs_used_count": 0,
+        "local_drs_v0_2_global_drs_used_count": 0,
+        "local_drs_v0_2_vector_db_used_count": 0,
+        "local_drs_v0_2_embeddings_required_count": 0,
         "bank_internal_raw_iban_present_count": 0,
         "bank_internal_token_present_count": 0,
         "llm_visible_raw_iban_count": 0,
@@ -352,11 +423,184 @@ def _enabled_counters() -> dict[str, int]:
     counters.update(
         {
             "manual_live_multillm_fractal_lane_enabled_count": 1,
+            "manual_live_drs_v0_2_observation_enabled_count": 1,
             "bank_internal_raw_iban_present_count": 1,
             "bank_internal_token_present_count": 1,
         }
     )
     return counters
+
+
+def _empty_local_drs_v0_2_observation() -> dict[str, Any]:
+    return {
+        "local_drs_v0_2_status": "not_run",
+        "resolver_mode": "deterministic_local",
+        "temporal_query_present": False,
+        "records_evaluated_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "direct_reuse_candidate_count": 0,
+        "context_only_count": 0,
+        "warning_only_count": 0,
+        "rerun_required_count": 0,
+        "blocked_count": 0,
+        "root_review_required_count": 0,
+        "freshness_table": (),
+        "lineage_table": (),
+        "provenance_table": (),
+        "reuse_decision_table": (),
+        "decisions_summary": {},
+        "baseline_regression_scenario_ids": (),
+        "bounded_context_summary": {
+            "records_evaluated_count": 0,
+            "direct_reuse_allowed_count": 0,
+            "root_review_required_count": 0,
+            "scenario_summaries": (),
+            "non_authority_boundaries": LOCAL_DRS_V0_2_NON_AUTHORITY_BOUNDARIES,
+        },
+        "drs_non_authority_boundaries": LOCAL_DRS_V0_2_NON_AUTHORITY_BOUNDARIES,
+    }
+
+
+def _local_drs_v0_2_report_artifacts(
+    observation: Mapping[str, Any],
+) -> dict[str, Mapping[str, Any]]:
+    return {
+        "local_drs_v0_2_resolve_report": dict(observation),
+        "local_drs_v0_2_freshness_table": {
+            "rows": observation["freshness_table"]
+        },
+        "local_drs_v0_2_lineage_table": {"rows": observation["lineage_table"]},
+        "local_drs_v0_2_provenance_table": {
+            "rows": observation["provenance_table"]
+        },
+        "local_drs_v0_2_reuse_decision_table": {
+            "rows": observation["reuse_decision_table"]
+        },
+    }
+
+
+def _collect_local_drs_v0_2_observation(
+    counters: dict[str, int],
+) -> dict[str, Any]:
+    counters["local_drs_v0_2_resolve_invoked_count"] += 1
+    temporal_query = TemporalQueryV02(
+        query_id="tq_full_wow_v1_2_live_observation_drs_v0_2",
+        as_of="2026-07-06T17:10:00Z",
+        context_time="full_wow_v1_2_live_observation",
+        freshness_bias="current",
+        require_root_review=True,
+        allow_direct_reuse_if_all_gates_pass=False,
+    )
+    records = build_wow_v1_2_drs_v02_regression_records()
+    resolve_report = resolve_drs_records_v02(
+        LocalDRSResolveInputV02(
+            temporal_query=temporal_query,
+            records=records,
+            query_scope="full_wow_v1_2_live_observation",
+            resolver_mode="deterministic_local",
+            production_ready_claimed=False,
+            public_auditor_ready_claimed=False,
+        )
+    )
+    rows = tuple(asdict(row) for row in resolve_report.rows)
+    decisions_summary = {
+        row["record_id"]: {
+            "record_id": row["record_id"],
+            "record_kind": row["record_kind"],
+            "freshness_class": row["freshness_class"],
+            "reuse_decision_class": row["reuse_decision_class"],
+            "direct_reuse_allowed": row["direct_reuse_allowed"],
+            "context_only": row["context_only"],
+            "root_review_required": row["root_review_required"],
+            "reason_codes": tuple(row["reason_codes"]),
+        }
+        for row in rows
+    }
+    status = "PASS"
+    if not (
+        resolve_report.records_evaluated_count == 11
+        and resolve_report.direct_reuse_allowed_count == 0
+        and resolve_report.root_review_required_count == 11
+        and resolve_report.real_world_effects_count == 0
+        and resolve_report.production_ready_claimed is False
+        and resolve_report.public_auditor_ready_claimed is False
+    ):
+        status = "FAIL_CLOSED"
+
+    counters["local_drs_v0_2_records_evaluated_count"] = (
+        resolve_report.records_evaluated_count
+    )
+    counters["local_drs_v0_2_direct_reuse_allowed_count"] = (
+        resolve_report.direct_reuse_allowed_count
+    )
+    counters["local_drs_v0_2_root_review_required_count"] = (
+        resolve_report.root_review_required_count
+    )
+    counters["local_drs_v0_2_context_only_count"] = (
+        resolve_report.context_only_count
+    )
+    counters["local_drs_v0_2_warning_only_count"] = (
+        resolve_report.warning_only_count
+    )
+    counters["local_drs_v0_2_rerun_required_count"] = (
+        resolve_report.rerun_required_count
+    )
+    counters["local_drs_v0_2_blocked_count"] = resolve_report.blocked_count
+
+    return {
+        "local_drs_v0_2_status": status,
+        "resolver_mode": resolve_report.resolver_mode,
+        "temporal_query_present": resolve_report.temporal_query_present,
+        "records_evaluated_count": resolve_report.records_evaluated_count,
+        "direct_reuse_allowed_count": resolve_report.direct_reuse_allowed_count,
+        "direct_reuse_candidate_count": resolve_report.direct_reuse_candidate_count,
+        "context_only_count": resolve_report.context_only_count,
+        "warning_only_count": resolve_report.warning_only_count,
+        "rerun_required_count": resolve_report.rerun_required_count,
+        "blocked_count": resolve_report.blocked_count,
+        "root_review_required_count": resolve_report.root_review_required_count,
+        "freshness_table": resolve_report.freshness_table,
+        "lineage_table": resolve_report.lineage_table,
+        "provenance_table": resolve_report.provenance_table,
+        "reuse_decision_table": resolve_report.reuse_decision_table,
+        "decisions_summary": decisions_summary,
+        "baseline_regression_scenario_ids": tuple(
+            record.record_id for record in records
+        ),
+        "bounded_context_summary": {
+            "records_evaluated_count": resolve_report.records_evaluated_count,
+            "direct_reuse_allowed_count": resolve_report.direct_reuse_allowed_count,
+            "root_review_required_count": resolve_report.root_review_required_count,
+            "scenario_summaries": LOCAL_DRS_V0_2_SCENARIO_SUMMARIES,
+            "non_authority_boundaries": LOCAL_DRS_V0_2_NON_AUTHORITY_BOUNDARIES,
+        },
+        "drs_non_authority_boundaries": LOCAL_DRS_V0_2_NON_AUTHORITY_BOUNDARIES,
+    }
+
+
+def _build_local_drs_v0_2_writeback_candidate() -> dict[str, Any]:
+    return {
+        "writeback_candidate_id": "local_drs_v0_2_writeback_full_wow_v1_2_live_observation_001",
+        "source_run_id": RUN_ID,
+        "source_trace_type": "manual_live_multillm_fractal_observation_lane",
+        "source_root_boundary_evaluated": True,
+        "summary": "Local proof/audit-only DRS writeback candidate after Root boundary evaluation.",
+        "lineage_refs": (
+            "full_wow_v1_2_manual_live_multillm_fractal_trace_v01",
+            "local_drs_v0_2_reuse_decision_report",
+        ),
+        "decision_class": "context_only_after_root_review",
+        "direct_reuse_allowed": False,
+        "root_review_required": True,
+        "action_permission_created": False,
+        "final_output_created_by_drs": False,
+        "payment_executed": False,
+        "shipment_released": False,
+        "receipt_created": False,
+        "action_commit_packet_created": False,
+        "local_proof_audit_only": True,
+        "future_permission_created": False,
+    }
 
 
 def _base_report(
@@ -387,6 +631,8 @@ def _base_report(
         "public_auditor_ready_claimed": False,
         "pipeline_sequence": (),
         "semantic_actor_calls": (),
+        "local_drs_v0_2_observation": _empty_local_drs_v0_2_observation(),
+        "local_drs_v0_2_writeback_candidate": None,
         "top_level_orchestrator": None,
         "top_level_architect": None,
         "bsep_packet": None,
@@ -558,7 +804,10 @@ def _validate_branch_semantics(
     }
 
 
-def _build_orchestrator_prompt() -> str:
+def _build_orchestrator_prompt(
+    local_drs_v0_2_bounded_context: Mapping[str, Any] | None = None,
+) -> str:
+    local_drs_context = dict(local_drs_v0_2_bounded_context or {})
     bounded_input = {
         "context_type": "full_wow_v1_2_manual_live_multillm_fractal_orchestrator_input",
         "product_trace_basis": "Full WOW v1.2 deterministic product trace PASS",
@@ -577,11 +826,16 @@ def _build_orchestrator_prompt() -> str:
             "Receipt remains evidence only.",
             "Runtime owns PlanGraph/local plan artifacts.",
         ],
+        "local_drs_v0_2_bounded_context": local_drs_context,
         "raw_user_text_included": False,
         "raw_provider_text_included": False,
+        "raw_drs_authority_included": False,
         "raw_bank_secrets_included": False,
         "raw_iban_included": False,
         "bank_token_included": False,
+        "action_permission_included": False,
+        "final_output_included": False,
+        "provider_owned_plangraph_included": False,
     }
     return "\n".join(
         (
@@ -590,6 +844,13 @@ def _build_orchestrator_prompt() -> str:
             "Provider proposes semantics. Runtime canonicalizes. Validators verify. Root decides.",
             "Provider output is not truth, authority, action permission, or FinalOutput.",
             "Runtime owns PlanGraph/local plan artifacts. Provider does not own PlanGraph.",
+            "Local DRS v0.2 context is advisory context only.",
+            "DRS v0.2 is not truth.",
+            "DRS v0.2 is not authority.",
+            "DRS v0.2 is not permission.",
+            "DRS hit is context only.",
+            "Direct reuse remains default false.",
+            "Root remains final authority.",
             "BOUNDED_INPUT_CONTEXT:",
             json.dumps(bounded_input, indent=2, sort_keys=True),
             "OUTPUT_SHAPE_CONTRACT:",
@@ -676,7 +937,11 @@ def _build_branch_prompt(role: str, branch_id: str) -> str:
     )
 
 
-def _build_bsep(orchestrator: Mapping[str, Any]) -> dict[str, Any]:
+def _build_bsep(
+    orchestrator: Mapping[str, Any],
+    local_drs_v0_2_bounded_context: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    drs_context = dict(local_drs_v0_2_bounded_context or {})
     return {
         "bsep_packet_id": "bsep-full-wow-v1-2-manual-live-001",
         "source_orchestrator_proposal_id": orchestrator["proposal_id"],
@@ -688,9 +953,21 @@ def _build_bsep(orchestrator: Mapping[str, Any]) -> dict[str, Any]:
             "Supplier B remains blocked.",
             "Shipment release remains held.",
             "Receipt remains evidence only.",
+            "Local DRS v0.2 resolve report was invoked.",
+            "Local DRS v0.2 direct_reuse_allowed_count is 0.",
+            "Local DRS v0.2 root_review_required_count is 11.",
+            "Supplier A prior trace may inform bounded context.",
+            "Supplier B blocker trace may warn or block.",
+            "old receipt is not current permission.",
+            "old Root Final is not silently reused.",
+            "changed facts require rerun validation.",
+            "DRS writeback after Root remains local proof/audit only.",
         ],
+        "local_drs_v0_2_resolve_invoked": bool(drs_context),
+        "local_drs_v0_2_bounded_context": drs_context,
         "raw_user_text_included": False,
         "raw_provider_text_included": False,
+        "raw_drs_authority_included": False,
         "raw_bank_secrets_included": False,
         "raw_iban_included": False,
         "bank_token_included": False,
@@ -857,6 +1134,24 @@ def _artifact_capture(
         ),
     }
     json_files = {
+        "local_drs_v0_2_resolve_report.json": _artifact_json(
+            artifacts, "local_drs_v0_2_resolve_report"
+        ),
+        "local_drs_v0_2_freshness_table.json": _artifact_json(
+            artifacts, "local_drs_v0_2_freshness_table"
+        ),
+        "local_drs_v0_2_lineage_table.json": _artifact_json(
+            artifacts, "local_drs_v0_2_lineage_table"
+        ),
+        "local_drs_v0_2_provenance_table.json": _artifact_json(
+            artifacts, "local_drs_v0_2_provenance_table"
+        ),
+        "local_drs_v0_2_reuse_decision_table.json": _artifact_json(
+            artifacts, "local_drs_v0_2_reuse_decision_table"
+        ),
+        "local_drs_v0_2_writeback_candidate.json": _artifact_json(
+            artifacts, "local_drs_v0_2_writeback_candidate"
+        ),
         "top_level_orchestrator_extracted_json_candidate.json": _artifact_json(
             artifacts, "top_level_orchestrator_json"
         ),
@@ -1021,6 +1316,10 @@ def _fail_closed_report(
     report["failed_role"] = failed_role
     report["failed_stage"] = failed_stage
     report["validation_errors"] = validation_errors
+    if artifacts and isinstance(artifacts.get("local_drs_v0_2_resolve_report"), Mapping):
+        report["local_drs_v0_2_observation"] = artifacts[
+            "local_drs_v0_2_resolve_report"
+        ]
     artifact_dir_value = env.get(ARTIFACT_DIR_ENV)
     if artifact_dir_value:
         capture = _artifact_capture(report, Path(artifact_dir_value), artifacts or {})
@@ -1072,7 +1371,27 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
     artifacts: dict[str, Any] = {}
     sequence: list[str] = ["dirty_request_loaded_from_v1_2_product_trace"]
 
-    orchestrator_prompt = _build_orchestrator_prompt()
+    local_drs_observation = _collect_local_drs_v0_2_observation(counters)
+    artifacts.update(_local_drs_v0_2_report_artifacts(local_drs_observation))
+    sequence.append("local_drs_v0_2_resolve_invoked")
+    if local_drs_observation["local_drs_v0_2_status"] != "PASS":
+        return _fail_closed_report(
+            env=effective_env,
+            model_name=model_name,
+            provider_mode=provider_mode,
+            counters=counters,
+            reason="local_drs_v0_2_resolve_failed",
+            pipeline_sequence=tuple(sequence),
+            semantic_actor_calls=tuple(actor_calls),
+            artifacts=artifacts,
+            failed_role="local_drs_v0_2_resolver",
+            failed_stage="local_drs_v0_2_resolve",
+            validation_errors=("local_drs_v0_2_resolve_failed",),
+        )
+
+    orchestrator_prompt = _build_orchestrator_prompt(
+        local_drs_observation["bounded_context_summary"]
+    )
     artifacts["top_level_orchestrator_prompt"] = orchestrator_prompt
     raw_orchestrator, actual_provider_mode, provider_error = _provider_call(
         role="top_level_orchestrator_llm",
@@ -1166,7 +1485,10 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
         )
     )
 
-    bsep_packet = _build_bsep(orchestrator_validation["canonical"])
+    bsep_packet = _build_bsep(
+        orchestrator_validation["canonical"],
+        local_drs_observation["bounded_context_summary"],
+    )
     bsep_validation = _validate_bsep(bsep_packet)
     artifacts["bsep_packet"] = bsep_packet
     artifacts["bsep_validation"] = bsep_validation
@@ -1457,6 +1779,11 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
     counters["gt_lgt_advisory_review_count"] = 1
     counters["root_final_boundary_evaluated_count"] = 1
     counters["manual_live_multillm_fractal_lane_passed_count"] = 1
+    local_drs_writeback_candidate = _build_local_drs_v0_2_writeback_candidate()
+    counters["local_drs_v0_2_writeback_candidate_created_count"] = 1
+    counters["local_drs_v0_2_writeback_persisted_count"] = 0
+    counters["local_drs_v0_2_writeback_local_proof_only_count"] = 1
+    artifacts["local_drs_v0_2_writeback_candidate"] = local_drs_writeback_candidate
     sequence.extend(
         (
             "branch_result_proposals_merged",
@@ -1478,6 +1805,8 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
         {
             "pipeline_sequence": tuple(sequence),
             "semantic_actor_calls": tuple(actor_calls),
+            "local_drs_v0_2_observation": local_drs_observation,
+            "local_drs_v0_2_writeback_candidate": local_drs_writeback_candidate,
             "top_level_orchestrator": orchestrator_validation["canonical"],
             "top_level_architect": architect_validation["canonical"],
             "bsep_packet": bsep_packet,
@@ -1589,6 +1918,66 @@ def render_full_wow_v1_2_manual_live_multillm_fractal_trace(
                 **call
             )
         )
+
+    local_drs = report["local_drs_v0_2_observation"]
+    lines.extend(["", "[LOCAL DRS V0.2 LIVE OBSERVATION]"])
+    if local_drs["local_drs_v0_2_status"] == "not_run":
+        lines.append("DRS v0.2 read/resolve did not run because the lane is closed.")
+    else:
+        lines.extend(
+            [
+                "DRS v0.2 read/resolve ran before Orchestrator.",
+                "DRS found prior traces.",
+                "DRS classified records as context/warning/rerun/blocked.",
+                "DRS direct reuse allowed count remained 0.",
+                "DRS did not authorize payment.",
+                "DRS did not authorize shipment release.",
+                "old receipt is not current permission.",
+                "old Root Final is not silently reused.",
+                "changed facts require rerun validation.",
+                "DRS writeback candidate after Root is local proof/audit only.",
+                "Root remains final authority.",
+            ]
+        )
+    lines.extend(
+        _render_mapping(
+            {
+                "local_drs_v0_2_status": local_drs["local_drs_v0_2_status"],
+                "resolver_mode": local_drs["resolver_mode"],
+                "records_evaluated_count": local_drs["records_evaluated_count"],
+                "direct_reuse_allowed_count": local_drs[
+                    "direct_reuse_allowed_count"
+                ],
+                "root_review_required_count": local_drs[
+                    "root_review_required_count"
+                ],
+                "context_only_count": local_drs["context_only_count"],
+                "warning_only_count": local_drs["warning_only_count"],
+                "rerun_required_count": local_drs["rerun_required_count"],
+                "blocked_count": local_drs["blocked_count"],
+            }
+        )
+    )
+    for scenario_id in local_drs["baseline_regression_scenario_ids"]:
+        decision = local_drs["decisions_summary"].get(scenario_id, {})
+        lines.append(
+            "- {scenario_id}: reuse_decision_class={reuse_decision_class}; direct_reuse_allowed={direct_reuse_allowed}; root_review_required={root_review_required}; reason_codes={reason_codes}".format(
+                scenario_id=scenario_id,
+                reuse_decision_class=decision.get("reuse_decision_class"),
+                direct_reuse_allowed=decision.get("direct_reuse_allowed"),
+                root_review_required=decision.get("root_review_required"),
+                reason_codes=decision.get("reason_codes"),
+            )
+        )
+    writeback = report.get("local_drs_v0_2_writeback_candidate")
+    if writeback:
+        lines.append(
+            "local_drs_v0_2_writeback_candidate: {writeback_candidate_id}; local_proof_audit_only={local_proof_audit_only}; direct_reuse_allowed={direct_reuse_allowed}; future_permission_created={future_permission_created}".format(
+                **writeback
+            )
+        )
+    else:
+        lines.append("local_drs_v0_2_writeback_candidate: not_run")
 
     lines.extend(["", "[TOP-LEVEL ORCHESTRATOR]"])
     if report["top_level_orchestrator"]:

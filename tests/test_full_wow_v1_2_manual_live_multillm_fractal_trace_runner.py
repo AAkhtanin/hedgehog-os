@@ -28,6 +28,12 @@ REQUIRED_ARTIFACTS = {
     "summary.json",
     "summary.log",
     "secret_scan.json",
+    "local_drs_v0_2_resolve_report.json",
+    "local_drs_v0_2_freshness_table.json",
+    "local_drs_v0_2_lineage_table.json",
+    "local_drs_v0_2_provenance_table.json",
+    "local_drs_v0_2_reuse_decision_table.json",
+    "local_drs_v0_2_writeback_candidate.json",
     "top_level_orchestrator_prompt.txt",
     "top_level_orchestrator_raw_response.txt",
     "top_level_orchestrator_extracted_json_candidate.json",
@@ -56,6 +62,7 @@ REQUIRED_SECTIONS = (
     "[FULL WOW V1.2 MANUAL LIVE MULTI-LLM FRACTAL TRACE]",
     "[LANE STATUS]",
     "[SEMANTIC ACTOR CALLS]",
+    "[LOCAL DRS V0.2 LIVE OBSERVATION]",
     "[TOP-LEVEL ORCHESTRATOR]",
     "[BSEP MEMBRANE]",
     "[TOP-LEVEL SEMANTIC ARCHITECT]",
@@ -93,6 +100,20 @@ SECRET_MARKERS = (
     "GEMINI_API_KEY=",
     "GOOGLE_API_KEY=",
 )
+
+REQUIRED_DRS_SCENARIOS = {
+    "supplier_a_prior_scoped_trace",
+    "supplier_b_blocker_trace",
+    "old_receipt_trace",
+    "old_shipment_held_trace",
+    "old_root_final_trace",
+    "changed_warehouse_fact",
+    "stale_legal_accounting_evidence",
+    "quarantined_record",
+    "deadend_record",
+    "wrong_domain_near_match",
+    "permission_trace_completed_action_attempt",
+}
 
 
 def _final_json_skeleton(prompt: str) -> dict[str, Any]:
@@ -299,6 +320,26 @@ def test_manual_live_multillm_fractal_default_skipped_closed() -> None:
     assert all(value == 0 for value in report["counters"].values())
 
 
+def test_manual_live_drs_v0_2_default_skipped_closed() -> None:
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env={}
+    )
+    counters = report["counters"]
+
+    assert report["final_status"] == "SKIPPED_CLOSED"
+    assert counters["manual_live_drs_v0_2_observation_enabled_count"] == 0
+    assert counters["local_drs_v0_2_resolve_invoked_count"] == 0
+    assert counters["local_drs_v0_2_records_evaluated_count"] == 0
+    assert counters["local_drs_v0_2_direct_reuse_allowed_count"] == 0
+    assert counters["local_drs_v0_2_root_review_required_count"] == 0
+    assert counters["real_provider_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["receipt_created_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
 def test_manual_live_multillm_fractal_fake_provider_returns_pass() -> None:
     report = _pass_report()
     counters = report["counters"]
@@ -310,6 +351,155 @@ def test_manual_live_multillm_fractal_fake_provider_returns_pass() -> None:
     assert counters["real_provider_call_count"] == 0
     assert counters["network_used_count"] == 0
     assert counters["gemini_called_count"] == 0
+
+
+def test_manual_live_drs_v0_2_fake_provider_pass_observes_drs() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+
+    assert report["final_status"] == "PASS"
+    assert report["local_drs_v0_2_observation"]["local_drs_v0_2_status"] == "PASS"
+    assert counters["local_drs_v0_2_resolve_invoked_count"] == 1
+    assert counters["local_drs_v0_2_records_evaluated_count"] == 11
+    assert counters["local_drs_v0_2_direct_reuse_allowed_count"] == 0
+    assert counters["local_drs_v0_2_root_review_required_count"] == 11
+    assert counters["semantic_actor_call_count"] == 6
+    assert counters["fake_provider_call_count"] == 6
+    assert counters["root_final_boundary_evaluated_count"] == 1
+
+
+def test_manual_live_drs_v0_2_regression_scenarios_visible() -> None:
+    observation = _pass_report()["local_drs_v0_2_observation"]
+
+    assert set(observation["baseline_regression_scenario_ids"]) == REQUIRED_DRS_SCENARIOS
+    assert set(observation["decisions_summary"]) == REQUIRED_DRS_SCENARIOS
+
+
+def test_manual_live_drs_v0_2_old_receipt_not_permission() -> None:
+    report = _pass_report()
+    decision = report["local_drs_v0_2_observation"]["decisions_summary"][
+        "old_receipt_trace"
+    ]
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        report
+    )
+
+    assert "old_receipt_not_permission" in decision["reason_codes"]
+    assert decision["direct_reuse_allowed"] is False
+    assert "old receipt is not current permission" in rendered
+
+
+def test_manual_live_drs_v0_2_old_root_final_not_silent_reuse() -> None:
+    report = _pass_report()
+    decision = report["local_drs_v0_2_observation"]["decisions_summary"][
+        "old_root_final_trace"
+    ]
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        report
+    )
+
+    assert "prior_root_final_not_silent_reuse" in decision["reason_codes"]
+    assert decision["direct_reuse_allowed"] is False
+    assert "old Root Final is not silently reused" in rendered
+
+
+def test_manual_live_drs_v0_2_changed_facts_require_rerun() -> None:
+    decision = _pass_report()["local_drs_v0_2_observation"]["decisions_summary"][
+        "changed_warehouse_fact"
+    ]
+
+    assert decision["reuse_decision_class"] == "rerun_required"
+    assert "changed_facts_require_rerun_validation" in decision["reason_codes"]
+    assert decision["direct_reuse_allowed"] is False
+
+
+def test_manual_live_drs_v0_2_quarantine_deadend_wrong_domain_permission_trace() -> None:
+    decisions = _pass_report()["local_drs_v0_2_observation"]["decisions_summary"]
+
+    assert decisions["quarantined_record"]["reuse_decision_class"] == "blocked"
+    assert decisions["deadend_record"]["reuse_decision_class"] in {
+        "blocked",
+        "warning_only",
+    }
+    assert decisions["wrong_domain_near_match"]["reuse_decision_class"] in {
+        "rerun_required",
+        "blocked",
+    }
+    assert decisions["permission_trace_completed_action_attempt"][
+        "reuse_decision_class"
+    ] in {"rerun_required", "blocked"}
+    for decision in decisions.values():
+        assert decision["direct_reuse_allowed"] is False
+
+
+def test_manual_live_drs_v0_2_orchestrator_prompt_has_bounded_drs_context() -> None:
+    prompts: list[str] = []
+
+    def capturing_provider(
+        role: str, prompt: str, context: Mapping[str, Any]
+    ) -> str:
+        if role == "top_level_orchestrator_llm":
+            prompts.append(prompt)
+        return _fake_provider(role, prompt, context)
+
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=ENABLED_ENV, provider=capturing_provider
+    )
+    prompt = prompts[0]
+
+    assert report["final_status"] == "PASS"
+    assert "local_drs_v0_2_bounded_context" in prompt
+    assert '"direct_reuse_allowed_count": 0' in prompt
+    assert '"root_review_required_count": 11' in prompt
+    assert "Local DRS v0.2 context is advisory context only." in prompt
+    assert "DRS v0.2 is not truth." in prompt
+    assert "DRS v0.2 is not authority." in prompt
+    assert "DRS v0.2 is not permission." in prompt
+    assert "DRS hit is context only." in prompt
+    for marker in SECRET_MARKERS:
+        assert marker not in prompt
+    assert "raw_iban_value" not in prompt
+    assert "sandbox_token_abc" not in prompt
+    assert "DRS grants" + " permission" not in prompt
+
+
+def test_manual_live_drs_v0_2_bsep_contains_bounded_drs_context() -> None:
+    report = _pass_report()
+    bsep = report["bsep_packet"]
+    bsep_text = json.dumps(bsep, sort_keys=True)
+
+    assert report["bsep_validation"]["accepted"] is True
+    assert bsep["local_drs_v0_2_resolve_invoked"] is True
+    assert bsep["local_drs_v0_2_bounded_context"][
+        "direct_reuse_allowed_count"
+    ] == 0
+    assert bsep["local_drs_v0_2_bounded_context"][
+        "root_review_required_count"
+    ] == 11
+    assert bsep["raw_drs_authority_included"] is False
+    assert bsep["raw_user_text_included"] is False
+    assert bsep["raw_provider_text_included"] is False
+    assert bsep["raw_bank_secrets_included"] is False
+    for marker in SECRET_MARKERS:
+        assert marker not in bsep_text
+
+
+def test_manual_live_drs_v0_2_writeback_candidate_after_root() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+    candidate = report["local_drs_v0_2_writeback_candidate"]
+
+    assert candidate["source_root_boundary_evaluated"] is True
+    assert candidate["direct_reuse_allowed"] is False
+    assert candidate["future_permission_created"] is False
+    assert candidate["local_proof_audit_only"] is True
+    assert candidate["payment_executed"] is False
+    assert candidate["shipment_released"] is False
+    assert candidate["receipt_created"] is False
+    assert candidate["action_commit_packet_created"] is False
+    assert counters["local_drs_v0_2_writeback_candidate_created_count"] == 1
+    assert counters["local_drs_v0_2_writeback_persisted_count"] == 0
+    assert counters["local_drs_v0_2_writeback_local_proof_only_count"] == 1
 
 
 def test_manual_live_multillm_fractal_role_sequence() -> None:
@@ -388,6 +578,62 @@ def test_manual_live_multillm_fractal_no_execution_or_effects() -> None:
     assert counters["real_payment_executed_count"] == 0
     assert counters["shipment_released_count"] == 0
     assert counters["real_world_effects_count"] == 0
+
+
+def test_manual_live_drs_v0_2_no_real_execution_or_effects() -> None:
+    counters = _pass_report()["counters"]
+
+    assert counters["local_drs_v0_2_permission_granted_count"] == 0
+    assert counters["local_drs_v0_2_external_drs_used_count"] == 0
+    assert counters["local_drs_v0_2_global_drs_used_count"] == 0
+    assert counters["local_drs_v0_2_vector_db_used_count"] == 0
+    assert counters["local_drs_v0_2_embeddings_required_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["receipt_created_count"] == 0
+    assert counters["mock_payment_executed_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_manual_live_drs_v0_2_no_new_semantic_actor() -> None:
+    report = _pass_report()
+    roles = {call["role"] for call in report["semantic_actor_calls"]}
+
+    assert report["counters"]["semantic_actor_call_count"] == 6
+    assert report["counters"]["branch_local_llm_slm_call_count"] == 4
+    assert not any("drs" in role.lower() for role in roles)
+
+
+def test_manual_live_drs_v0_2_no_authority_or_permission() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+    matrix = report["authority_matrix"]
+    decisions = report["local_drs_v0_2_observation"]["reuse_decision_table"]
+
+    assert counters["local_drs_v0_2_permission_granted_count"] == 0
+    assert counters["local_drs_v0_2_root_bypass_count"] == 0
+    for row in decisions:
+        assert row["truth_claimed"] is False
+        assert row["authority_claimed"] is False
+        assert row["action_permission_claimed"] is False
+        assert row["final_output_claimed"] is False
+    for fact in (
+        "DRS v0.2 is not truth.",
+        "DRS v0.2 is not authority.",
+        "DRS v0.2 is not permission.",
+        "DRS hit is context only.",
+        "DRS v0.2 reuse decision is not FinalOutput.",
+        "DRS v0.2 direct reuse candidate is not direct reuse.",
+        "old receipt is not current permission.",
+        "old Root Final is not silently reused.",
+        "permission trace cannot become completed action.",
+        "ReuseScore is not Root.",
+        "Semantic similarity is not authority.",
+        "DRS writeback after Root is local proof/audit only.",
+        "Root remains final authority.",
+    ):
+        assert fact in matrix
 
 
 def test_manual_live_multillm_fractal_invalid_branch_actor_fails_closed() -> None:
@@ -565,6 +811,15 @@ def test_manual_live_multillm_fractal_artifacts_written_with_fake_provider(
     assert report["final_status"] == "PASS"
     assert REQUIRED_ARTIFACTS <= {path.name for path in tmp_path.iterdir()}
     json.loads((tmp_path / "summary.json").read_text(encoding="utf-8"))
+    for artifact_name in (
+        "local_drs_v0_2_resolve_report.json",
+        "local_drs_v0_2_freshness_table.json",
+        "local_drs_v0_2_lineage_table.json",
+        "local_drs_v0_2_provenance_table.json",
+        "local_drs_v0_2_reuse_decision_table.json",
+        "local_drs_v0_2_writeback_candidate.json",
+    ):
+        json.loads((tmp_path / artifact_name).read_text(encoding="utf-8"))
     secret_scan = json.loads(
         (tmp_path / "secret_scan.json").read_text(encoding="utf-8")
     )
@@ -576,6 +831,74 @@ def test_manual_live_multillm_fractal_artifacts_written_with_fake_provider(
                 assert marker not in text
 
 
+def test_manual_live_drs_v0_2_artifacts_written(tmp_path: Path) -> None:
+    env = {**ENABLED_ENV, runner.ARTIFACT_DIR_ENV: str(tmp_path)}
+
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=env, provider=_fake_provider
+    )
+    summary = json.loads((tmp_path / "summary.json").read_text(encoding="utf-8"))
+    resolve_report = json.loads(
+        (tmp_path / "local_drs_v0_2_resolve_report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    secret_scan = json.loads(
+        (tmp_path / "secret_scan.json").read_text(encoding="utf-8")
+    )
+
+    assert report["final_status"] == "PASS"
+    assert summary["final_status"] == "PASS"
+    assert resolve_report["local_drs_v0_2_status"] == "PASS"
+    assert resolve_report["records_evaluated_count"] == 11
+    assert secret_scan["passed"] is True
+    for path in tmp_path.iterdir():
+        if path.is_file():
+            text = path.read_text(encoding="utf-8")
+            for marker in SECRET_MARKERS:
+                assert marker not in text
+
+
+def test_manual_live_drs_v0_2_fail_closed_writes_available_drs_artifacts(
+    tmp_path: Path,
+) -> None:
+    def raising_provider(
+        role: str, _prompt: str, _context: Mapping[str, Any]
+    ) -> str:
+        if role == "top_level_orchestrator_llm":
+            raise RuntimeError("hidden provider detail")
+        return json.dumps(_branch_payload(role, "unused"))
+
+    env = {**ENABLED_ENV, runner.ARTIFACT_DIR_ENV: str(tmp_path)}
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=env, provider=raising_provider
+    )
+    counters = report["counters"]
+
+    assert report["final_status"] == "FAIL_CLOSED"
+    assert counters["local_drs_v0_2_resolve_invoked_count"] == 1
+    assert counters["local_drs_v0_2_records_evaluated_count"] == 11
+    assert counters["local_drs_v0_2_writeback_candidate_created_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["receipt_created_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+    for artifact_name in (
+        "local_drs_v0_2_resolve_report.json",
+        "local_drs_v0_2_freshness_table.json",
+        "local_drs_v0_2_lineage_table.json",
+        "local_drs_v0_2_provenance_table.json",
+        "local_drs_v0_2_reuse_decision_table.json",
+    ):
+        assert (tmp_path / artifact_name).exists()
+        json.loads((tmp_path / artifact_name).read_text(encoding="utf-8"))
+    writeback = json.loads(
+        (tmp_path / "local_drs_v0_2_writeback_candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert writeback["status"] == "not_run"
+
+
 def test_manual_live_multillm_fractal_rendered_sections() -> None:
     rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
         _pass_report()
@@ -584,6 +907,13 @@ def test_manual_live_multillm_fractal_rendered_sections() -> None:
     for section in REQUIRED_SECTIONS:
         assert section in rendered
     assert "FINAL STATUS: PASS" in rendered
+    assert "DRS v0.2 read/resolve ran before Orchestrator." in rendered
+    assert "DRS classified records as context/warning/rerun/blocked." in rendered
+    assert "DRS did not authorize payment." in rendered
+    assert "DRS did not authorize shipment release." in rendered
+    assert "old receipt is not current permission." in rendered
+    assert "old Root Final is not silently reused." in rendered
+    assert "Root remains final authority." in rendered
 
 
 def test_manual_live_multillm_fractal_forbidden_overclaims() -> None:
@@ -615,3 +945,16 @@ def test_manual_live_multillm_fractal_does_not_call_real_provider_in_tests(
     assert "GEMINI_API_KEY" in source
     assert "GOOGLE_API_KEY" in source
     assert "if provider is None and not" in source
+
+
+def test_manual_live_drs_v0_2_source_import_boundary() -> None:
+    source = Path(runner.__file__).read_text(encoding="utf-8")
+
+    assert "from hedgehog.local_drs_v02 import" in source
+    assert "run_full_wow_v1_2_product_trace" not in source
+    assert "run_full_semantic_e2e_v01" not in source
+    assert "run_supplier_payment_shipment_release_review_wow_v1_1" not in source
+    assert "avf_v02" not in source
+    assert "real_bank" not in source
+    assert "real_supplier" not in source
+    assert "real_warehouse" not in source

@@ -7,6 +7,10 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
+from hedgehog.avf_v02 import (
+    build_wow_v1_2_avf_v02_evaluation_input,
+    evaluate_avf_candidates_v02,
+)
 from hedgehog.local_drs_v02 import (
     LocalDRSResolveInputV02,
     TemporalQueryV02,
@@ -30,6 +34,7 @@ RENDERED_SECTIONS = (
     "[LANE STATUS]",
     "[SEMANTIC ACTOR CALLS]",
     "[LOCAL DRS V0.2 LIVE OBSERVATION]",
+    "[LOCAL AVF V0.2 LIVE OBSERVATION]",
     "[TOP-LEVEL ORCHESTRATOR]",
     "[BSEP MEMBRANE]",
     "[TOP-LEVEL SEMANTIC ARCHITECT]",
@@ -47,6 +52,8 @@ RENDERED_SECTIONS = (
 
 PIPELINE_SEQUENCE = (
     "dirty_request_loaded_from_v1_2_product_trace",
+    "local_drs_v0_2_resolve_invoked",
+    "avf_v0_2_evaluation_invoked",
     "top_level_orchestrator_provider_called",
     "top_level_orchestrator_semantics_validated",
     "top_level_orchestrator_semantics_canonicalized",
@@ -136,6 +143,27 @@ LOCAL_DRS_V0_2_NON_AUTHORITY_BOUNDARIES = (
     "Root remains final authority.",
 )
 
+AVF_V0_2_NON_AUTHORITY_BOUNDARIES = (
+    "AVF v0.2 is not truth.",
+    "AVF v0.2 is not authority.",
+    "AVF v0.2 is not permission.",
+    "AVF score is not Root.",
+    "Top-ranked AVF candidate is not permission.",
+    "CandidateVector is not action permission.",
+    "CandidateVector is not FinalOutput.",
+    "HardMask is not Root.",
+    "High score does not override HardMask.",
+    "Top rank does not override HardMask.",
+    "Safe rank remains advisory.",
+    "AVF cannot bypass Root.",
+    "AVF cannot create FinalOutput.",
+    "AVF cannot create ActionCommitPacket.",
+    "AVF cannot create receipt.",
+    "AVF cannot execute payment.",
+    "AVF cannot release shipment.",
+    "Root remains final authority.",
+)
+
 AUTHORITY_MATRIX = (
     "Provider output is not truth.",
     "Provider output is not authority.",
@@ -163,6 +191,7 @@ AUTHORITY_MATRIX = (
     "Receipt does not release shipment.",
     "payment_slot is not permission.",
     *LOCAL_DRS_V0_2_NON_AUTHORITY_BOUNDARIES,
+    *AVF_V0_2_NON_AUTHORITY_BOUNDARIES,
     "Root remains final authority.",
 )
 
@@ -404,6 +433,23 @@ def _zero_counters() -> dict[str, int]:
         "local_drs_v0_2_global_drs_used_count": 0,
         "local_drs_v0_2_vector_db_used_count": 0,
         "local_drs_v0_2_embeddings_required_count": 0,
+        "manual_live_avf_v0_2_observation_enabled_count": 0,
+        "avf_v0_2_evaluation_invoked_count": 0,
+        "avf_v0_2_candidates_evaluated_count": 0,
+        "avf_v0_2_hard_masked_count": 0,
+        "avf_v0_2_unmasked_count": 0,
+        "avf_v0_2_root_review_required_count": 0,
+        "avf_v0_2_top_ranked_candidate_permission_granted_count": 0,
+        "avf_v0_2_action_permission_granted_count": 0,
+        "avf_v0_2_final_output_created_count": 0,
+        "avf_v0_2_action_commit_packet_created_count": 0,
+        "avf_v0_2_receipt_created_count": 0,
+        "avf_v0_2_payment_executed_count": 0,
+        "avf_v0_2_shipment_released_count": 0,
+        "avf_v0_2_root_bypass_count": 0,
+        "avf_v0_2_provider_called_count": 0,
+        "avf_v0_2_network_called_count": 0,
+        "avf_v0_2_gemini_called_count": 0,
         "bank_internal_raw_iban_present_count": 0,
         "bank_internal_token_present_count": 0,
         "llm_visible_raw_iban_count": 0,
@@ -424,6 +470,7 @@ def _enabled_counters() -> dict[str, int]:
         {
             "manual_live_multillm_fractal_lane_enabled_count": 1,
             "manual_live_drs_v0_2_observation_enabled_count": 1,
+            "manual_live_avf_v0_2_observation_enabled_count": 1,
             "bank_internal_raw_iban_present_count": 1,
             "bank_internal_token_present_count": 1,
         }
@@ -476,6 +523,190 @@ def _local_drs_v0_2_report_artifacts(
         "local_drs_v0_2_reuse_decision_table": {
             "rows": observation["reuse_decision_table"]
         },
+    }
+
+
+def _empty_avf_v0_2_observation() -> dict[str, Any]:
+    return {
+        "avf_v0_2_status": "not_run",
+        "resolver_mode": "deterministic_local",
+        "candidates_evaluated_count": 0,
+        "top_candidate_id": None,
+        "top_candidate_score": None,
+        "hard_masked_count": 0,
+        "unmasked_count": 0,
+        "root_review_required_count": 0,
+        "ranked_candidates": (),
+        "hard_mask_table": (),
+        "soft_mask_table": (),
+        "score_explanation_table": (),
+        "decision_reports_summary": (),
+        "source_drs_report_ref": None,
+        "source_drs_record_refs": (),
+        "candidate_observations": {},
+        "bounded_context_summary": {
+            "evaluation_invoked": False,
+            "candidates_evaluated_count": 0,
+            "top_candidate_id": None,
+            "top_candidate_score": None,
+            "hard_masked_count": 0,
+            "unmasked_count": 0,
+            "candidate_observations": {},
+            "non_authority_boundaries": AVF_V0_2_NON_AUTHORITY_BOUNDARIES,
+        },
+        "avf_non_authority_boundaries": AVF_V0_2_NON_AUTHORITY_BOUNDARIES,
+    }
+
+
+def _avf_v0_2_report_artifacts(
+    observation: Mapping[str, Any],
+) -> dict[str, Mapping[str, Any]]:
+    return {
+        "avf_v0_2_evaluation_report": dict(observation),
+        "avf_v0_2_ranked_candidates": {
+            "rows": observation["ranked_candidates"]
+        },
+        "avf_v0_2_hard_mask_table": {"rows": observation["hard_mask_table"]},
+        "avf_v0_2_soft_mask_table": {"rows": observation["soft_mask_table"]},
+        "avf_v0_2_score_explanation_table": {
+            "rows": observation["score_explanation_table"]
+        },
+    }
+
+
+def _avf_v0_2_candidate_observations(
+    ranked_candidates: tuple[dict[str, Any], ...],
+) -> dict[str, dict[str, Any]]:
+    rows_by_id = {row["candidate_id"]: row for row in ranked_candidates}
+
+    def row_observation(candidate_id: str) -> dict[str, Any]:
+        row = rows_by_id[candidate_id]
+        return {
+            "candidate_id": candidate_id,
+            "rank": row["rank"],
+            "hard_masked": row["hard_mask_value"] == 0,
+            "hard_mask_value": row["hard_mask_value"],
+            "final_avf_score": row["final_avf_score"],
+            "may_rank": row["final_avf_score"] > 0,
+            "permission_granted": False,
+            "action_created": False,
+            "final_output_created": False,
+            "root_review_required": row["root_review_required"],
+        }
+
+    return {
+        "release_all_and_pay_all": row_observation("release_all_and_pay_all"),
+        "pay_supplier_b": row_observation("pay_supplier_b"),
+        "prepare_supplier_a_payment_form_only": row_observation(
+            "prepare_supplier_a_payment_form_only"
+        ),
+        "request_fresh_warehouse_validation": row_observation(
+            "request_fresh_warehouse_validation"
+        ),
+        "request_fresh_legal_accounting_validation": row_observation(
+            "request_fresh_legal_accounting_validation"
+        ),
+        "keep_shipment_held": row_observation("keep_shipment_held"),
+        "root_review_only": row_observation("root_review_only"),
+        "block_supplier_b_and_hold_shipment": row_observation(
+            "block_supplier_b_and_hold_shipment"
+        ),
+        "old_receipt_as_permission": {
+            "candidate_id": "old_receipt_as_permission",
+            "hard_masked": True,
+            "hard_mask_value": 0,
+            "final_avf_score": 0.0,
+            "reason_code": "old_receipt_not_permission",
+            "permission_granted": False,
+        },
+        "old_root_final_as_current_decision": {
+            "candidate_id": "old_root_final_as_current_decision",
+            "hard_masked": True,
+            "hard_mask_value": 0,
+            "final_avf_score": 0.0,
+            "reason_code": "old_root_final_not_current_decision",
+            "final_output_created": False,
+        },
+    }
+
+
+def _collect_avf_v0_2_observation(
+    counters: dict[str, int],
+    local_drs_observation: Mapping[str, Any],
+) -> dict[str, Any]:
+    counters["avf_v0_2_evaluation_invoked_count"] += 1
+    evaluation_input = build_wow_v1_2_avf_v02_evaluation_input()
+    evaluation_report = evaluate_avf_candidates_v02(evaluation_input)
+
+    ranked_candidates = tuple(
+        asdict(row) for row in evaluation_report.ranked_candidates
+    )
+    decision_reports_summary = tuple(
+        asdict(report) for report in evaluation_report.decision_reports
+    )
+    candidate_observations = _avf_v0_2_candidate_observations(ranked_candidates)
+
+    counters["avf_v0_2_candidates_evaluated_count"] = (
+        evaluation_report.candidates_evaluated_count
+    )
+    counters["avf_v0_2_hard_masked_count"] = evaluation_report.hard_masked_count
+    counters["avf_v0_2_unmasked_count"] = evaluation_report.unmasked_count
+    counters["avf_v0_2_root_review_required_count"] = (
+        evaluation_report.root_review_required_count
+    )
+
+    avf_gate_passed = (
+        evaluation_report.candidates_evaluated_count == 9
+        and counters["avf_v0_2_top_ranked_candidate_permission_granted_count"] == 0
+        and counters["avf_v0_2_action_permission_granted_count"] == 0
+        and counters["avf_v0_2_final_output_created_count"] == 0
+        and counters["avf_v0_2_action_commit_packet_created_count"] == 0
+        and counters["avf_v0_2_receipt_created_count"] == 0
+        and counters["avf_v0_2_payment_executed_count"] == 0
+        and counters["avf_v0_2_shipment_released_count"] == 0
+        and counters["avf_v0_2_root_bypass_count"] == 0
+        and counters["avf_v0_2_provider_called_count"] == 0
+        and counters["avf_v0_2_network_called_count"] == 0
+        and counters["avf_v0_2_gemini_called_count"] == 0
+        and evaluation_report.real_world_effects_count == 0
+        and evaluation_report.production_ready_claimed is False
+        and evaluation_report.public_auditor_ready_claimed is False
+        and evaluation_report.advisory_only is True
+        and evaluation_report.top_ranked_candidate_not_permission is True
+        and evaluation_report.avf_score_is_not_authority is True
+        and evaluation_report.hardmask_is_not_root is True
+        and local_drs_observation["direct_reuse_allowed_count"] == 0
+        and local_drs_observation["root_review_required_count"] == 11
+    )
+
+    return {
+        "avf_v0_2_status": "PASS" if avf_gate_passed else "FAIL_CLOSED",
+        "resolver_mode": evaluation_report.resolver_mode,
+        "candidates_evaluated_count": evaluation_report.candidates_evaluated_count,
+        "top_candidate_id": evaluation_report.top_candidate_id,
+        "top_candidate_score": evaluation_report.top_candidate_score,
+        "hard_masked_count": evaluation_report.hard_masked_count,
+        "unmasked_count": evaluation_report.unmasked_count,
+        "root_review_required_count": evaluation_report.root_review_required_count,
+        "ranked_candidates": ranked_candidates,
+        "hard_mask_table": evaluation_report.hard_mask_table,
+        "soft_mask_table": evaluation_report.soft_mask_table,
+        "score_explanation_table": evaluation_report.score_explanation_table,
+        "decision_reports_summary": decision_reports_summary,
+        "source_drs_report_ref": evaluation_input.source_drs_report_ref,
+        "source_drs_record_refs": evaluation_input.source_drs_record_refs,
+        "candidate_observations": candidate_observations,
+        "bounded_context_summary": {
+            "evaluation_invoked": True,
+            "candidates_evaluated_count": evaluation_report.candidates_evaluated_count,
+            "top_candidate_id": evaluation_report.top_candidate_id,
+            "top_candidate_score": evaluation_report.top_candidate_score,
+            "hard_masked_count": evaluation_report.hard_masked_count,
+            "unmasked_count": evaluation_report.unmasked_count,
+            "candidate_observations": candidate_observations,
+            "non_authority_boundaries": AVF_V0_2_NON_AUTHORITY_BOUNDARIES,
+        },
+        "avf_non_authority_boundaries": AVF_V0_2_NON_AUTHORITY_BOUNDARIES,
     }
 
 
@@ -663,6 +894,7 @@ def _base_report(
         "pipeline_sequence": (),
         "semantic_actor_calls": (),
         "local_drs_v0_2_observation": _empty_local_drs_v0_2_observation(),
+        "avf_v0_2_observation": _empty_avf_v0_2_observation(),
         "local_drs_v0_2_writeback_candidate": None,
         "top_level_orchestrator": None,
         "top_level_architect": None,
@@ -837,8 +1069,10 @@ def _validate_branch_semantics(
 
 def _build_orchestrator_prompt(
     local_drs_v0_2_bounded_context: Mapping[str, Any] | None = None,
+    avf_v0_2_bounded_context: Mapping[str, Any] | None = None,
 ) -> str:
     local_drs_context = dict(local_drs_v0_2_bounded_context or {})
+    avf_context = dict(avf_v0_2_bounded_context or {})
     bounded_input = {
         "context_type": "full_wow_v1_2_manual_live_multillm_fractal_orchestrator_input",
         "product_trace_basis": "Full WOW v1.2 deterministic product trace PASS",
@@ -858,15 +1092,19 @@ def _build_orchestrator_prompt(
             "Runtime owns PlanGraph/local plan artifacts.",
         ],
         "local_drs_v0_2_bounded_context": local_drs_context,
+        "avf_v0_2_bounded_context": avf_context,
         "raw_user_text_included": False,
         "raw_provider_text_included": False,
         "raw_drs_authority_included": False,
+        "raw_drs_tables_included": False,
+        "raw_avf_tables_included": False,
         "raw_bank_secrets_included": False,
         "raw_iban_included": False,
         "bank_token_included": False,
         "action_permission_included": False,
         "final_output_included": False,
         "provider_owned_plangraph_included": False,
+        "avf_as_root_wording_included": False,
     }
     return "\n".join(
         (
@@ -881,6 +1119,14 @@ def _build_orchestrator_prompt(
             "DRS v0.2 is not permission.",
             "DRS hit is context only.",
             "Direct reuse remains default false.",
+            "AVF v0.2 context is advisory pressure/ranking only.",
+            "AVF v0.2 is not truth.",
+            "AVF v0.2 is not authority.",
+            "AVF v0.2 is not permission.",
+            "Top-ranked AVF candidate is not permission.",
+            "AVF score is not Root.",
+            "AVF score is not authority.",
+            "HardMask is not Root.",
             "Root remains final authority.",
             "BOUNDED_INPUT_CONTEXT:",
             json.dumps(bounded_input, indent=2, sort_keys=True),
@@ -971,8 +1217,10 @@ def _build_branch_prompt(role: str, branch_id: str) -> str:
 def _build_bsep(
     orchestrator: Mapping[str, Any],
     local_drs_v0_2_bounded_context: Mapping[str, Any] | None = None,
+    avf_v0_2_bounded_context: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     drs_context = dict(local_drs_v0_2_bounded_context or {})
+    avf_context = dict(avf_v0_2_bounded_context or {})
     return {
         "bsep_packet_id": "bsep-full-wow-v1-2-manual-live-001",
         "source_orchestrator_proposal_id": orchestrator["proposal_id"],
@@ -993,15 +1241,30 @@ def _build_bsep(
             "old Root Final is not silently reused.",
             "changed facts require rerun validation.",
             "DRS writeback after Root remains local proof/audit only.",
+            "AVF v0.2 evaluation report was invoked.",
+            "AVF v0.2 candidates evaluated count is 9.",
+            "AVF hard-masked release_all_and_pay_all.",
+            "AVF hard-masked Supplier B payment.",
+            "top-ranked AVF candidate is not permission.",
+            "AVF score is not authority.",
+            "HardMask is not Root.",
+            "Root remains final authority.",
         ],
         "local_drs_v0_2_resolve_invoked": bool(drs_context),
         "local_drs_v0_2_bounded_context": drs_context,
+        "avf_v0_2_evaluation_invoked": bool(avf_context),
+        "avf_v0_2_bounded_context": avf_context,
         "raw_user_text_included": False,
         "raw_provider_text_included": False,
         "raw_drs_authority_included": False,
+        "raw_drs_tables_included": False,
+        "raw_avf_tables_included": False,
         "raw_bank_secrets_included": False,
         "raw_iban_included": False,
         "bank_token_included": False,
+        "action_permission_included": False,
+        "final_output_included": False,
+        "avf_as_root_wording_included": False,
         "validation_required_before_architect": True,
     }
 
@@ -1016,6 +1279,11 @@ def _validate_bsep(bsep_packet: Mapping[str, Any]) -> dict[str, Any]:
         "raw_bank_secrets_included",
         "raw_iban_included",
         "bank_token_included",
+        "raw_drs_tables_included",
+        "raw_avf_tables_included",
+        "action_permission_included",
+        "final_output_included",
+        "avf_as_root_wording_included",
     ):
         if bsep_packet.get(field) is not False:
             errors.append(f"forbidden_bsep_field:{field}")
@@ -1182,6 +1450,21 @@ def _artifact_capture(
         ),
         "local_drs_v0_2_writeback_candidate.json": _artifact_json(
             artifacts, "local_drs_v0_2_writeback_candidate"
+        ),
+        "avf_v0_2_evaluation_report.json": _artifact_json(
+            artifacts, "avf_v0_2_evaluation_report"
+        ),
+        "avf_v0_2_ranked_candidates.json": _artifact_json(
+            artifacts, "avf_v0_2_ranked_candidates"
+        ),
+        "avf_v0_2_hard_mask_table.json": _artifact_json(
+            artifacts, "avf_v0_2_hard_mask_table"
+        ),
+        "avf_v0_2_soft_mask_table.json": _artifact_json(
+            artifacts, "avf_v0_2_soft_mask_table"
+        ),
+        "avf_v0_2_score_explanation_table.json": _artifact_json(
+            artifacts, "avf_v0_2_score_explanation_table"
         ),
         "top_level_orchestrator_extracted_json_candidate.json": _artifact_json(
             artifacts, "top_level_orchestrator_json"
@@ -1351,6 +1634,8 @@ def _fail_closed_report(
         report["local_drs_v0_2_observation"] = artifacts[
             "local_drs_v0_2_resolve_report"
         ]
+    if artifacts and isinstance(artifacts.get("avf_v0_2_evaluation_report"), Mapping):
+        report["avf_v0_2_observation"] = artifacts["avf_v0_2_evaluation_report"]
     artifact_dir_value = env.get(ARTIFACT_DIR_ENV)
     if artifact_dir_value:
         capture = _artifact_capture(report, Path(artifact_dir_value), artifacts or {})
@@ -1420,8 +1705,27 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             validation_errors=("local_drs_v0_2_resolve_failed",),
         )
 
+    avf_observation = _collect_avf_v0_2_observation(counters, local_drs_observation)
+    artifacts.update(_avf_v0_2_report_artifacts(avf_observation))
+    sequence.append("avf_v0_2_evaluation_invoked")
+    if avf_observation["avf_v0_2_status"] != "PASS":
+        return _fail_closed_report(
+            env=effective_env,
+            model_name=model_name,
+            provider_mode=provider_mode,
+            counters=counters,
+            reason="avf_v0_2_evaluation_failed",
+            pipeline_sequence=tuple(sequence),
+            semantic_actor_calls=tuple(actor_calls),
+            artifacts=artifacts,
+            failed_role="avf_v0_2_evaluator",
+            failed_stage="avf_v0_2_evaluation",
+            validation_errors=("avf_v0_2_evaluation_failed",),
+        )
+
     orchestrator_prompt = _build_orchestrator_prompt(
-        local_drs_observation["bounded_context_summary"]
+        local_drs_observation["bounded_context_summary"],
+        avf_observation["bounded_context_summary"],
     )
     artifacts["top_level_orchestrator_prompt"] = orchestrator_prompt
     raw_orchestrator, actual_provider_mode, provider_error = _provider_call(
@@ -1519,6 +1823,7 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
     bsep_packet = _build_bsep(
         orchestrator_validation["canonical"],
         local_drs_observation["bounded_context_summary"],
+        avf_observation["bounded_context_summary"],
     )
     bsep_validation = _validate_bsep(bsep_packet)
     artifacts["bsep_packet"] = bsep_packet
@@ -1837,6 +2142,7 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             "pipeline_sequence": tuple(sequence),
             "semantic_actor_calls": tuple(actor_calls),
             "local_drs_v0_2_observation": local_drs_observation,
+            "avf_v0_2_observation": avf_observation,
             "local_drs_v0_2_writeback_candidate": local_drs_writeback_candidate,
             "top_level_orchestrator": orchestrator_validation["canonical"],
             "top_level_architect": architect_validation["canonical"],
@@ -2009,6 +2315,57 @@ def render_full_wow_v1_2_manual_live_multillm_fractal_trace(
         )
     else:
         lines.append("local_drs_v0_2_writeback_candidate: not_run")
+
+    avf = report["avf_v0_2_observation"]
+    lines.extend(["", "[LOCAL AVF V0.2 LIVE OBSERVATION]"])
+    if avf["avf_v0_2_status"] == "not_run":
+        lines.append(
+            "AVF v0.2 advisory evaluation did not run because the lane is closed."
+        )
+    else:
+        lines.extend(
+            [
+                "AVF v0.2 ran after Local DRS v0.2 and before Orchestrator.",
+                "AVF consumed Local DRS v0.2 candidate/reuse/risk signals.",
+                "AVF built CandidateVector pressure rows.",
+                "AVF applied HardMask / SoftMask / score explanation.",
+                "release_all_and_pay_all was hard-masked.",
+                "Supplier B payment was hard-masked.",
+                "old receipt as permission was hard-masked.",
+                "old Root Final as current decision was hard-masked.",
+                "safe candidates may rank but do not grant permission.",
+                "top-ranked candidate is not permission.",
+                "AVF score is not authority.",
+                "HardMask is not Root.",
+                "AVF cannot bypass Root.",
+                "AVF cannot create FinalOutput.",
+                "AVF cannot create ActionCommitPacket, receipt, payment, or shipment release.",
+                "Root remains final authority.",
+            ]
+        )
+    lines.extend(
+        _render_mapping(
+            {
+                "avf_v0_2_status": avf["avf_v0_2_status"],
+                "resolver_mode": avf["resolver_mode"],
+                "candidates_evaluated_count": avf["candidates_evaluated_count"],
+                "top_candidate_id": avf["top_candidate_id"],
+                "top_candidate_score": avf["top_candidate_score"],
+                "hard_masked_count": avf["hard_masked_count"],
+                "unmasked_count": avf["unmasked_count"],
+                "root_review_required_count": avf["root_review_required_count"],
+            }
+        )
+    )
+    for candidate_id, observation in avf["candidate_observations"].items():
+        lines.append(
+            "- {candidate_id}: hard_masked={hard_masked}; final_avf_score={final_avf_score}; permission_granted={permission_granted}".format(
+                candidate_id=candidate_id,
+                hard_masked=observation.get("hard_masked"),
+                final_avf_score=observation.get("final_avf_score"),
+                permission_granted=observation.get("permission_granted", False),
+            )
+        )
 
     lines.extend(["", "[TOP-LEVEL ORCHESTRATOR]"])
     if report["top_level_orchestrator"]:

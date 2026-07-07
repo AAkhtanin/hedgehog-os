@@ -10,6 +10,8 @@ from demo import run_full_wow_v1_2_manual_live_multillm_fractal_trace as runner
 ENABLED_ENV = {runner.ENABLE_ENV: "1"}
 
 REQUIRED_SEQUENCE_SUBSET = (
+    "local_drs_v0_2_resolve_invoked",
+    "avf_v0_2_evaluation_invoked",
     "top_level_orchestrator_provider_called",
     "top_level_orchestrator_semantics_validated",
     "bsep_created",
@@ -34,6 +36,11 @@ REQUIRED_ARTIFACTS = {
     "local_drs_v0_2_provenance_table.json",
     "local_drs_v0_2_reuse_decision_table.json",
     "local_drs_v0_2_writeback_candidate.json",
+    "avf_v0_2_evaluation_report.json",
+    "avf_v0_2_ranked_candidates.json",
+    "avf_v0_2_hard_mask_table.json",
+    "avf_v0_2_soft_mask_table.json",
+    "avf_v0_2_score_explanation_table.json",
     "top_level_orchestrator_prompt.txt",
     "top_level_orchestrator_raw_response.txt",
     "top_level_orchestrator_extracted_json_candidate.json",
@@ -63,6 +70,7 @@ REQUIRED_SECTIONS = (
     "[LANE STATUS]",
     "[SEMANTIC ACTOR CALLS]",
     "[LOCAL DRS V0.2 LIVE OBSERVATION]",
+    "[LOCAL AVF V0.2 LIVE OBSERVATION]",
     "[TOP-LEVEL ORCHESTRATOR]",
     "[BSEP MEMBRANE]",
     "[TOP-LEVEL SEMANTIC ARCHITECT]",
@@ -113,6 +121,18 @@ REQUIRED_DRS_SCENARIOS = {
     "deadend_record",
     "wrong_domain_near_match",
     "permission_trace_completed_action_attempt",
+}
+
+REQUIRED_AVF_CANDIDATES = {
+    "release_all_and_pay_all",
+    "pay_supplier_a_only",
+    "pay_supplier_b",
+    "prepare_supplier_a_payment_form_only",
+    "request_fresh_warehouse_validation",
+    "request_fresh_legal_accounting_validation",
+    "keep_shipment_held",
+    "root_review_only",
+    "block_supplier_b_and_hold_shipment",
 }
 
 
@@ -340,6 +360,28 @@ def test_manual_live_drs_v0_2_default_skipped_closed() -> None:
     assert counters["real_world_effects_count"] == 0
 
 
+def test_manual_live_avf_v0_2_default_skipped_closed() -> None:
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env={}
+    )
+    counters = report["counters"]
+
+    assert report["final_status"] == "SKIPPED_CLOSED"
+    assert counters["manual_live_drs_v0_2_observation_enabled_count"] == 0
+    assert counters["manual_live_avf_v0_2_observation_enabled_count"] == 0
+    assert counters["local_drs_v0_2_resolve_invoked_count"] == 0
+    assert counters["avf_v0_2_evaluation_invoked_count"] == 0
+    assert counters["avf_v0_2_candidates_evaluated_count"] == 0
+    assert counters["avf_v0_2_action_permission_granted_count"] == 0
+    assert counters["avf_v0_2_final_output_created_count"] == 0
+    assert counters["real_provider_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["receipt_created_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
 def test_manual_live_multillm_fractal_fake_provider_returns_pass() -> None:
     report = _pass_report()
     counters = report["counters"]
@@ -366,6 +408,82 @@ def test_manual_live_drs_v0_2_fake_provider_pass_observes_drs() -> None:
     assert counters["semantic_actor_call_count"] == 6
     assert counters["fake_provider_call_count"] == 6
     assert counters["root_final_boundary_evaluated_count"] == 1
+
+
+def test_manual_live_avf_v0_2_fake_provider_pass_observes_avf() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+
+    assert report["final_status"] == "PASS"
+    assert report["avf_v0_2_observation"]["avf_v0_2_status"] == "PASS"
+    assert counters["avf_v0_2_evaluation_invoked_count"] == 1
+    assert counters["avf_v0_2_candidates_evaluated_count"] == 9
+    assert counters["avf_v0_2_top_ranked_candidate_permission_granted_count"] == 0
+    assert counters["avf_v0_2_action_permission_granted_count"] == 0
+    assert counters["avf_v0_2_final_output_created_count"] == 0
+    assert counters["avf_v0_2_action_commit_packet_created_count"] == 0
+    assert counters["avf_v0_2_receipt_created_count"] == 0
+    assert counters["avf_v0_2_payment_executed_count"] == 0
+    assert counters["avf_v0_2_shipment_released_count"] == 0
+    assert counters["avf_v0_2_root_bypass_count"] == 0
+    assert counters["local_drs_v0_2_resolve_invoked_count"] == 1
+    assert counters["semantic_actor_call_count"] == 6
+    assert counters["fake_provider_call_count"] == 6
+    assert counters["root_final_boundary_evaluated_count"] == 1
+
+
+def test_manual_live_avf_v0_2_candidate_observations_visible() -> None:
+    observation = _pass_report()["avf_v0_2_observation"]
+    rows = {
+        row["candidate_id"]: row
+        for row in observation["ranked_candidates"]
+    }
+    decisions = {
+        row["candidate_id"]: row
+        for row in observation["decision_reports_summary"]
+    }
+
+    assert set(rows) == REQUIRED_AVF_CANDIDATES
+    assert observation["candidate_observations"]["release_all_and_pay_all"][
+        "hard_masked"
+    ] is True
+    assert rows["release_all_and_pay_all"]["final_avf_score"] == 0.0
+    assert observation["candidate_observations"]["pay_supplier_b"][
+        "hard_masked"
+    ] is True
+    assert rows["pay_supplier_b"]["final_avf_score"] == 0.0
+    for candidate_id in (
+        "prepare_supplier_a_payment_form_only",
+        "request_fresh_warehouse_validation",
+        "request_fresh_legal_accounting_validation",
+        "keep_shipment_held",
+        "root_review_only",
+        "block_supplier_b_and_hold_shipment",
+    ):
+        assert rows[candidate_id]["final_avf_score"] >= 0.0
+        assert decisions[candidate_id]["approved"] is False
+        assert decisions[candidate_id]["execute"] is False
+        assert decisions[candidate_id]["payment_allowed"] is False
+        assert decisions[candidate_id]["shipment_release_allowed"] is False
+        assert decisions[candidate_id]["final_decision"] is False
+
+
+def test_manual_live_avf_v0_2_top_ranked_candidate_not_permission() -> None:
+    report = _pass_report()
+    observation = report["avf_v0_2_observation"]
+    top_id = observation["top_candidate_id"]
+    decisions = {
+        row["candidate_id"]: row
+        for row in observation["decision_reports_summary"]
+    }
+
+    assert top_id is not None
+    assert report["counters"]["avf_v0_2_top_ranked_candidate_permission_granted_count"] == 0
+    assert decisions[top_id]["approved"] is False
+    assert decisions[top_id]["execute"] is False
+    assert decisions[top_id]["payment_allowed"] is False
+    assert decisions[top_id]["shipment_release_allowed"] is False
+    assert decisions[top_id]["final_decision"] is False
 
 
 def test_manual_live_drs_v0_2_regression_scenarios_visible() -> None:
@@ -463,6 +581,50 @@ def test_manual_live_drs_v0_2_orchestrator_prompt_has_bounded_drs_context() -> N
     assert "DRS grants" + " permission" not in prompt
 
 
+def test_manual_live_avf_v0_2_orchestrator_prompt_has_bounded_avf_drs_context() -> None:
+    prompts: list[str] = []
+
+    def capturing_provider(
+        role: str, prompt: str, context: Mapping[str, Any]
+    ) -> str:
+        if role == "top_level_orchestrator_llm":
+            prompts.append(prompt)
+        return _fake_provider(role, prompt, context)
+
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=ENABLED_ENV, provider=capturing_provider
+    )
+    prompt = prompts[0]
+
+    assert report["final_status"] == "PASS"
+    assert "local_drs_v0_2_bounded_context" in prompt
+    assert "avf_v0_2_bounded_context" in prompt
+    assert '"direct_reuse_allowed_count": 0' in prompt
+    assert '"root_review_required_count": 11' in prompt
+    assert '"candidates_evaluated_count": 9' in prompt
+    assert "release_all_and_pay_all" in prompt
+    assert "pay_supplier_b" in prompt
+    assert "Top-ranked AVF candidate is not permission." in prompt
+    assert "AVF score is not authority." in prompt
+    assert "HardMask is not Root." in prompt
+    for raw_key in (
+        "ranked_candidates",
+        "hard_mask_table",
+        "soft_mask_table",
+        "score_explanation_table",
+        "freshness_table",
+        "lineage_table",
+        "provenance_table",
+        "reuse_decision_table",
+    ):
+        assert raw_key not in prompt
+    for marker in SECRET_MARKERS:
+        assert marker not in prompt
+    assert "raw_iban_value" not in prompt
+    assert "sandbox_token_abc" not in prompt
+    assert "AVF grants" + " permission" not in prompt
+
+
 def test_manual_live_drs_v0_2_bsep_contains_bounded_drs_context() -> None:
     report = _pass_report()
     bsep = report["bsep_packet"]
@@ -480,6 +642,52 @@ def test_manual_live_drs_v0_2_bsep_contains_bounded_drs_context() -> None:
     assert bsep["raw_user_text_included"] is False
     assert bsep["raw_provider_text_included"] is False
     assert bsep["raw_bank_secrets_included"] is False
+    for marker in SECRET_MARKERS:
+        assert marker not in bsep_text
+
+
+def test_manual_live_avf_v0_2_bsep_contains_bounded_avf_drs_context() -> None:
+    report = _pass_report()
+    bsep = report["bsep_packet"]
+    bsep_text = json.dumps(bsep, sort_keys=True)
+
+    assert report["bsep_validation"]["accepted"] is True
+    assert bsep["local_drs_v0_2_resolve_invoked"] is True
+    assert bsep["avf_v0_2_evaluation_invoked"] is True
+    assert bsep["local_drs_v0_2_bounded_context"][
+        "direct_reuse_allowed_count"
+    ] == 0
+    assert bsep["local_drs_v0_2_bounded_context"][
+        "root_review_required_count"
+    ] == 11
+    avf_context = bsep["avf_v0_2_bounded_context"]
+    assert avf_context["candidates_evaluated_count"] == 9
+    assert avf_context["candidate_observations"]["release_all_and_pay_all"][
+        "hard_masked"
+    ] is True
+    assert avf_context["candidate_observations"]["pay_supplier_b"][
+        "hard_masked"
+    ] is True
+    assert "top-ranked AVF candidate is not permission." in bsep[
+        "bounded_business_context"
+    ]
+    assert "AVF score is not authority." in bsep["bounded_business_context"]
+    assert bsep["raw_avf_tables_included"] is False
+    assert bsep["raw_drs_tables_included"] is False
+    assert bsep["raw_user_text_included"] is False
+    assert bsep["raw_provider_text_included"] is False
+    assert bsep["raw_bank_secrets_included"] is False
+    for raw_key in (
+        "ranked_candidates",
+        "hard_mask_table",
+        "soft_mask_table",
+        "score_explanation_table",
+        "freshness_table",
+        "lineage_table",
+        "provenance_table",
+        "reuse_decision_table",
+    ):
+        assert raw_key not in bsep_text
     for marker in SECRET_MARKERS:
         assert marker not in bsep_text
 
@@ -699,6 +907,27 @@ def test_manual_live_drs_v0_2_no_real_execution_or_effects() -> None:
     assert counters["real_world_effects_count"] == 0
 
 
+def test_manual_live_avf_v0_2_no_real_execution_or_effects() -> None:
+    counters = _pass_report()["counters"]
+
+    assert counters["avf_v0_2_action_permission_granted_count"] == 0
+    assert counters["avf_v0_2_final_output_created_count"] == 0
+    assert counters["avf_v0_2_action_commit_packet_created_count"] == 0
+    assert counters["avf_v0_2_receipt_created_count"] == 0
+    assert counters["avf_v0_2_payment_executed_count"] == 0
+    assert counters["avf_v0_2_shipment_released_count"] == 0
+    assert counters["avf_v0_2_root_bypass_count"] == 0
+    assert counters["avf_v0_2_provider_called_count"] == 0
+    assert counters["avf_v0_2_network_called_count"] == 0
+    assert counters["avf_v0_2_gemini_called_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["receipt_created_count"] == 0
+    assert counters["mock_payment_executed_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["shipment_released_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
 def test_manual_live_drs_v0_2_no_new_semantic_actor() -> None:
     report = _pass_report()
     roles = {call["role"] for call in report["semantic_actor_calls"]}
@@ -706,6 +935,15 @@ def test_manual_live_drs_v0_2_no_new_semantic_actor() -> None:
     assert report["counters"]["semantic_actor_call_count"] == 6
     assert report["counters"]["branch_local_llm_slm_call_count"] == 4
     assert not any("drs" in role.lower() for role in roles)
+
+
+def test_manual_live_avf_v0_2_no_new_semantic_actor() -> None:
+    report = _pass_report()
+    roles = {call["role"] for call in report["semantic_actor_calls"]}
+
+    assert report["counters"]["semantic_actor_call_count"] == 6
+    assert report["counters"]["branch_local_llm_slm_call_count"] == 4
+    assert not any("avf" in role.lower() for role in roles)
 
 
 def test_manual_live_drs_v0_2_no_authority_or_permission() -> None:
@@ -734,6 +972,49 @@ def test_manual_live_drs_v0_2_no_authority_or_permission() -> None:
         "ReuseScore is not Root.",
         "Semantic similarity is not authority.",
         "DRS writeback after Root is local proof/audit only.",
+        "Root remains final authority.",
+    ):
+        assert fact in matrix
+
+
+def test_manual_live_avf_v0_2_no_authority_or_permission() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+    matrix = report["authority_matrix"]
+    decisions = report["avf_v0_2_observation"]["decision_reports_summary"]
+
+    assert counters["avf_v0_2_action_permission_granted_count"] == 0
+    assert counters["avf_v0_2_final_output_created_count"] == 0
+    assert counters["avf_v0_2_root_bypass_count"] == 0
+    for row in decisions:
+        explanation = row["score_explanation"]
+        assert explanation["truth_claimed"] is False
+        assert explanation["authority_claimed"] is False
+        assert explanation["action_permission_claimed"] is False
+        assert explanation["final_output_claimed"] is False
+        assert row["approved"] is False
+        assert row["execute"] is False
+        assert row["payment_allowed"] is False
+        assert row["shipment_release_allowed"] is False
+        assert row["final_decision"] is False
+    for fact in (
+        "AVF v0.2 is not truth.",
+        "AVF v0.2 is not authority.",
+        "AVF v0.2 is not permission.",
+        "AVF score is not Root.",
+        "Top-ranked AVF candidate is not permission.",
+        "CandidateVector is not action permission.",
+        "CandidateVector is not FinalOutput.",
+        "HardMask is not Root.",
+        "High score does not override HardMask.",
+        "Top rank does not override HardMask.",
+        "Safe rank remains advisory.",
+        "AVF cannot bypass Root.",
+        "AVF cannot create FinalOutput.",
+        "AVF cannot create ActionCommitPacket.",
+        "AVF cannot create receipt.",
+        "AVF cannot execute payment.",
+        "AVF cannot release shipment.",
         "Root remains final authority.",
     ):
         assert fact in matrix
@@ -921,6 +1202,11 @@ def test_manual_live_multillm_fractal_artifacts_written_with_fake_provider(
         "local_drs_v0_2_provenance_table.json",
         "local_drs_v0_2_reuse_decision_table.json",
         "local_drs_v0_2_writeback_candidate.json",
+        "avf_v0_2_evaluation_report.json",
+        "avf_v0_2_ranked_candidates.json",
+        "avf_v0_2_hard_mask_table.json",
+        "avf_v0_2_soft_mask_table.json",
+        "avf_v0_2_score_explanation_table.json",
     ):
         json.loads((tmp_path / artifact_name).read_text(encoding="utf-8"))
     secret_scan = json.loads(
@@ -955,6 +1241,45 @@ def test_manual_live_drs_v0_2_artifacts_written(tmp_path: Path) -> None:
     assert resolve_report["local_drs_v0_2_status"] == "PASS"
     assert resolve_report["records_evaluated_count"] == 11
     assert secret_scan["passed"] is True
+    for path in tmp_path.iterdir():
+        if path.is_file():
+            text = path.read_text(encoding="utf-8")
+            for marker in SECRET_MARKERS:
+                assert marker not in text
+
+
+def test_manual_live_avf_v0_2_artifacts_written(tmp_path: Path) -> None:
+    env = {**ENABLED_ENV, runner.ARTIFACT_DIR_ENV: str(tmp_path)}
+
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=env, provider=_fake_provider
+    )
+    summary = json.loads((tmp_path / "summary.json").read_text(encoding="utf-8"))
+    avf_report = json.loads(
+        (tmp_path / "avf_v0_2_evaluation_report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    secret_scan = json.loads(
+        (tmp_path / "secret_scan.json").read_text(encoding="utf-8")
+    )
+
+    assert report["final_status"] == "PASS"
+    assert summary["final_status"] == "PASS"
+    assert avf_report["avf_v0_2_status"] == "PASS"
+    assert avf_report["candidates_evaluated_count"] == 9
+    assert secret_scan["passed"] is True
+    for artifact_name in (
+        "avf_v0_2_evaluation_report.json",
+        "avf_v0_2_ranked_candidates.json",
+        "avf_v0_2_hard_mask_table.json",
+        "avf_v0_2_soft_mask_table.json",
+        "avf_v0_2_score_explanation_table.json",
+        "local_drs_v0_2_resolve_report.json",
+        "local_drs_v0_2_reuse_decision_table.json",
+    ):
+        assert (tmp_path / artifact_name).exists()
+        json.loads((tmp_path / artifact_name).read_text(encoding="utf-8"))
     for path in tmp_path.iterdir():
         if path.is_file():
             text = path.read_text(encoding="utf-8")
@@ -1002,6 +1327,49 @@ def test_manual_live_drs_v0_2_fail_closed_writes_available_drs_artifacts(
     assert writeback["status"] == "not_run"
 
 
+def test_manual_live_avf_v0_2_fail_closed_writes_available_avf_artifacts(
+    tmp_path: Path,
+) -> None:
+    def raising_provider(
+        role: str, _prompt: str, _context: Mapping[str, Any]
+    ) -> str:
+        if role == "top_level_orchestrator_llm":
+            raise RuntimeError("hidden provider detail")
+        return json.dumps(_branch_payload(role, "unused"))
+
+    env = {**ENABLED_ENV, runner.ARTIFACT_DIR_ENV: str(tmp_path)}
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=env, provider=raising_provider
+    )
+    counters = report["counters"]
+
+    assert report["final_status"] == "FAIL_CLOSED"
+    assert counters["local_drs_v0_2_resolve_invoked_count"] == 1
+    assert counters["avf_v0_2_evaluation_invoked_count"] == 1
+    assert counters["avf_v0_2_candidates_evaluated_count"] == 9
+    assert counters["local_drs_v0_2_writeback_candidate_created_count"] == 0
+    assert counters["action_commit_packet_created_count"] == 0
+    assert counters["receipt_created_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+    for artifact_name in (
+        "local_drs_v0_2_resolve_report.json",
+        "local_drs_v0_2_reuse_decision_table.json",
+        "avf_v0_2_evaluation_report.json",
+        "avf_v0_2_ranked_candidates.json",
+        "avf_v0_2_hard_mask_table.json",
+        "avf_v0_2_soft_mask_table.json",
+        "avf_v0_2_score_explanation_table.json",
+    ):
+        assert (tmp_path / artifact_name).exists()
+        json.loads((tmp_path / artifact_name).read_text(encoding="utf-8"))
+    writeback = json.loads(
+        (tmp_path / "local_drs_v0_2_writeback_candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert writeback["status"] == "not_run"
+
+
 def test_manual_live_multillm_fractal_rendered_sections() -> None:
     rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
         _pass_report()
@@ -1016,6 +1384,15 @@ def test_manual_live_multillm_fractal_rendered_sections() -> None:
     assert "DRS did not authorize shipment release." in rendered
     assert "old receipt is not current permission." in rendered
     assert "old Root Final is not silently reused." in rendered
+    assert "AVF v0.2 ran after Local DRS v0.2 and before Orchestrator." in rendered
+    assert "AVF consumed Local DRS v0.2 candidate/reuse/risk signals." in rendered
+    assert "release_all_and_pay_all was hard-masked." in rendered
+    assert "Supplier B payment was hard-masked." in rendered
+    assert "safe candidates may rank but do not grant permission." in rendered
+    assert "top-ranked candidate is not permission." in rendered
+    assert "AVF score is not authority." in rendered
+    assert "HardMask is not Root." in rendered
+    assert "AVF cannot bypass Root." in rendered
     assert "Root remains final authority." in rendered
 
 
@@ -1050,14 +1427,18 @@ def test_manual_live_multillm_fractal_does_not_call_real_provider_in_tests(
     assert "if provider is None and not" in source
 
 
-def test_manual_live_drs_v0_2_source_import_boundary() -> None:
+def test_manual_live_avf_v0_2_source_import_boundary() -> None:
     source = Path(runner.__file__).read_text(encoding="utf-8")
 
     assert "from hedgehog.local_drs_v02 import" in source
+    assert "from hedgehog.avf_v02 import" in source
     assert "run_full_wow_v1_2_product_trace" not in source
     assert "run_full_semantic_e2e_v01" not in source
     assert "run_supplier_payment_shipment_release_review_wow_v1_1" not in source
-    assert "avf_v02" not in source
+    assert "import ActionCommitPacket" not in source
+    assert "from hedgehog.action" not in source
     assert "real_bank" not in source
     assert "real_supplier" not in source
     assert "real_warehouse" not in source
+    assert "airline" not in source.lower()
+    assert "privacy" not in source.lower()

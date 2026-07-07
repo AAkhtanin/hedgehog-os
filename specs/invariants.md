@@ -216,6 +216,31 @@ Full WOW v1.1 final human-facing walkthrough invariant examples:
 - MockBankSandbox receipt is evidence only.
 - Root remains final authority.
 
+Full WOW v1.2 live multi-LLM/fractal invariant examples:
+
+- Live semantic actors are not truth.
+- Live semantic actors are not authority.
+- Live semantic actors are not action permission.
+- Live semantic actors are not FinalOutput.
+- Branch LLM/SLM output is not action permission.
+- Branch ResultProposal is not FinalOutput.
+- Runtime owns PlanGraph/local artifacts.
+- Provider does not own PlanGraph.
+- DRS remains non-authority.
+- AVF remains non-authority.
+- Post V&V does not finalize.
+- GT/LGT does not finalize.
+- Story renderer reads artifacts only.
+- Story renderer must not call provider/network/Gemini.
+- Story renderer must not access secrets.
+- Story renderer must fail closed on missing or invalid artifact evidence.
+- Nonzero effect counter invalidates a PASS story.
+- Story renderer must not create ActionCommitPacket.
+- Story renderer must not create receipt.
+- Story renderer must not execute payment.
+- Story renderer must not release shipment.
+- Root remains final authority.
+
 DRS registry invariant:
 
 - DRS is a registry/resolver/index, not a raw memory dump.

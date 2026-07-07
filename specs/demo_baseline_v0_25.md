@@ -262,6 +262,33 @@ Status:
   real-world effect.
 - v1.2 is not implemented.
 
+## Applied Full WOW v1.2 Live Multi-LLM / Fractal Checkpoint
+
+Full WOW v1.2 live multi-LLM/fractal product trace is PASS and is now the
+baseline regression scenario for Local DRS v0.2 and AVF v0.2 hardening.
+
+Status:
+
+- Deterministic product trace PASS through audit
+  `docs/audit_reports/auditor_full_wow_v1_2_product_trace_v01.log`.
+- Manual live multi-LLM/fractal real provider run PASS through audit
+  `docs/audit_reports/auditor_full_wow_v1_2_manual_live_multillm_fractal_real_run_v01.log`.
+- Human story PASS:
+  `docs/full_wow_v1_2_manual_live_multillm_fractal_real_run_human_story_v01.md`.
+- Artifact-backed story renderer PASS through audit
+  `docs/audit_reports/auditor_human_full_wow_v1_2_live_fractal_story_renderer_v01.log`.
+- Six real Gemini semantic actors participated in the real run.
+- BSEP, runtime-owned PlanGraph/local artifacts, eight fractal branch cells,
+  Branch ResultProposals, Post V&V, GT/LGT, and Root final boundary are
+  visible.
+- Branch ResultProposal is not FinalOutput.
+- Runtime owns PlanGraph/local artifacts.
+- Root remains final authority.
+- Renderer calls no provider/network/Gemini lane and reads artifacts only.
+- No ActionCommitPacket, receipt, mock payment, real payment, shipment release,
+  real bank/supplier/warehouse API call, or real-world effect is created by the
+  checkpoint.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

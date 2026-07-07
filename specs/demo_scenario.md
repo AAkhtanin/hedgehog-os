@@ -276,6 +276,36 @@ Scenario result:
   effect.
 - v1.2 is not implemented.
 
+### full_wow_v1_2_live_multillm_fractal_story
+
+Supplier Payment / Shipment Release Review now has a Full WOW v1.2 product
+trace and live multi-LLM/fractal human story.
+
+Scenario result:
+
+- Product trace audit:
+  `docs/audit_reports/auditor_full_wow_v1_2_product_trace_v01.log`.
+- Real multi-LLM/fractal run audit:
+  `docs/audit_reports/auditor_full_wow_v1_2_manual_live_multillm_fractal_real_run_v01.log`.
+- Human story:
+  `docs/full_wow_v1_2_manual_live_multillm_fractal_real_run_human_story_v01.md`.
+- Artifact-backed story renderer:
+  `demo/run_human_full_wow_v1_2_live_fractal_story.py`.
+- Six semantic actors participated in the real run: top-level Orchestrator,
+  top-level Semantic Architect, Legal branch, Accounting branch, Supplier B
+  branch, and Bank Policy branch.
+- BSEP was created and validated before Architect.
+- Runtime owns PlanGraph/local artifacts.
+- Eight fractal branch cells and eight Branch ResultProposals are visible.
+- Branch ResultProposal is not FinalOutput.
+- Post V&V and GT/LGT check but do not finalize.
+- Root final boundary is evaluated and Root remains final authority.
+- Supplier B remains blocked, shipment remains held, and receipt remains
+  evidence only.
+- No ActionCommitPacket, receipt, payment, shipment release,
+  provider/network/API call by the renderer, secret access, or real-world
+  effect is created by the story renderer.
+
 ## What The Demo Must Prove
 
 - Root authority.

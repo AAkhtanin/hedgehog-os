@@ -448,6 +448,44 @@ Checkpoint facts:
 - This is not production.
 - This is not public auditor final package.
 
+### Full WOW v1.2 Live Multi-LLM / Fractal Checkpoint
+
+Full WOW v1.2 is closed as product trace + live multi-LLM/fractal observation
++ human-readable story.
+
+Checkpoint facts:
+
+- Product trace audit:
+  `docs/audit_reports/auditor_full_wow_v1_2_product_trace_v01.log`.
+- Real multi-LLM/fractal audit:
+  `docs/audit_reports/auditor_full_wow_v1_2_manual_live_multillm_fractal_real_run_v01.log`.
+- Human story:
+  `docs/full_wow_v1_2_manual_live_multillm_fractal_real_run_human_story_v01.md`.
+- Artifact story renderer audit:
+  `docs/audit_reports/auditor_human_full_wow_v1_2_live_fractal_story_renderer_v01.log`.
+- Six real Gemini semantic actors participated: top-level Orchestrator,
+  top-level Semantic Architect, Legal branch, Accounting branch, Supplier B
+  branch, and Bank Policy branch.
+- BSEP was created and validated, runtime compiled PlanGraph/local artifacts,
+  eight fractal branch cells were represented, eight Branch ResultProposals
+  were created, and Root final boundary was evaluated.
+- Multiple semantic actors may participate, but live semantic actors are not
+  truth, authority, action permission, or FinalOutput.
+- Runtime owns PlanGraph/local artifacts.
+- Branch ResultProposal is not FinalOutput.
+- DRS and AVF remain advisory/non-authority layers.
+- Root remains final authority.
+- The artifact-backed renderer reads artifacts only and calls no
+  provider/network/Gemini lane.
+- The checkpoint creates no ActionCommitPacket, creates no receipt, executes no
+  mock payment, executes no real payment, releases no shipment, calls no real
+  bank/supplier/warehouse API, and preserves `real_world_effects_count: 0`.
+- This is not production.
+- This is not public auditor final package.
+
+Next direction: Local DRS v0.2 lineage/freshness/reuse/trace preflight after
+WOW v1.2.
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:

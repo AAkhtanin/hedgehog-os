@@ -35,61 +35,61 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-Full WOW v1.1 final human-facing walkthrough — PASS.
+Full WOW v1.2 live multi-LLM/fractal human story + artifact renderer — PASS.
 
 Checkpoint source:
 
 - Audit:
-  `docs/audit_reports/auditor_human_full_wow_v1_1_final_walkthrough_v01.log`.
-- Runner: `demo/run_human_full_wow_v1_1_final_walkthrough.py`.
-- Tests: `tests/test_human_full_wow_v1_1_final_walkthrough_runner.py`.
-- Audit commit: `b6c5cb0`.
-- Human walkthrough runner commit: `2699bb1`.
-- Final rollup docs checkpoint commit: `b074ea8`.
-- Walkthrough type: `human_product_facing_closed_evidence_walkthrough`.
-- The walkthrough observes the final integrated rollup only.
-- The real Gemini lane is observed, not rerun.
-- Transition cards created: `15`.
-- Transition-card story: `dirty_request_received`,
-  `warehouse_scope_observed`, `supplier_a_scope_observed`,
-  `supplier_b_blocker_observed`, `legal_accounting_review_observed`,
-  `live_gemini_semantic_lane_observed`, `bsep_membrane_observed`,
-  `drs_candidate_avf_observed`, `semantic_architect_runtime_plan_boundary`,
-  `root_first_decision_not_ready`, `corrected_evidence_second_run`,
-  `human_approval_scoped`, `root_created_mock_packet_observed`,
-  `mock_bank_receipt_observed`, and `final_state_summary`.
-- Product/business story visibility is closed for warehouse evidence, Supplier
-  A, Supplier B blocker, legal/accounting review, Root decision, scoped human
-  approval, ActionCommitPacket boundary, and MockBankSandbox receipt boundary.
-- BSEP membrane and Semantic Architect / runtime PlanGraph boundary are
-  visible.
-- Provider output is not truth, authority, action permission, or FinalOutput.
-- Semantic Architect proposes semantic plan intent.
-- Runtime owns PlanGraph/local plan artifacts.
-- Human approval is scoped evidence only.
-- MockBankSandbox receipt remains evidence only.
+  `docs/audit_reports/auditor_human_full_wow_v1_2_live_fractal_story_renderer_v01.log`.
+- Deterministic product trace audit:
+  `docs/audit_reports/auditor_full_wow_v1_2_product_trace_v01.log`.
+- Real multi-LLM/fractal run audit:
+  `docs/audit_reports/auditor_full_wow_v1_2_manual_live_multillm_fractal_real_run_v01.log`.
+- Human story:
+  `docs/full_wow_v1_2_manual_live_multillm_fractal_real_run_human_story_v01.md`.
+- Reusable artifact story renderer:
+  `demo/run_human_full_wow_v1_2_live_fractal_story.py`.
+- Renderer tests:
+  `tests/test_human_full_wow_v1_2_live_fractal_story_runner.py`.
+- Product trace preflight commit: `9053f93`.
+- Deterministic product trace runner commit: `a66ad44`; audit commit:
+  `ff9cb1e`.
+- Manual live multi-LLM/fractal lane commit: `42de19d`.
+- Fail-closed artifact/prompt skeleton repair commit: `0443d23`.
+- Real multi-LLM/fractal run audit commit: `9986006`.
+- Human story commit: `4e335ee`.
+- Artifact story renderer commit: `29560c7`; renderer audit commit:
+  `e42116b`.
+- Real run provider mode: `real_provider`; model: `gemini-2.5-flash`.
+- Six real Gemini semantic actors participated in the real run: top-level
+  Orchestrator, top-level Semantic Architect, Legal branch, Accounting branch,
+  Supplier B branch, and Bank Policy branch.
+- Real run counters: `semantic_actor_call_count: 6`,
+  `real_provider_call_count: 6`, `network_used_count: 6`,
+  `gemini_called_count: 6`, `bsep_created_count: 1`,
+  `bsep_validated_count: 1`, `runtime_plangraph_compiled_count: 1`,
+  `fractal_branch_cells_created_count: 8`,
+  `branch_result_proposals_created_count: 8`, and
+  `root_final_boundary_evaluated_count: 1`.
+- The v1.2 story makes BSEP, runtime-owned PlanGraph/local artifacts, Branch
+  ResultProposals, Post V&V, GT/LGT, and the Root boundary visible.
+- Branch ResultProposals are not FinalOutput.
+- Runtime owns PlanGraph/local artifacts.
 - Root remains final authority.
-- Walkthrough counters: `human_final_walkthrough_created_count: 1`,
-  `source_final_rollup_observed_count: 1`,
-  `transition_cards_created_count: 15`,
-  `real_gemini_lane_observed_count: 1`,
-  `real_gemini_lane_rerun_count: 0`,
-  `walkthrough_called_gemini_count: 0`,
-  `walkthrough_network_used_count: 0`,
-  `walkthrough_provider_called_count: 0`,
-  `walkthrough_accessed_secrets_count: 0`,
-  `walkthrough_created_action_commit_packet_count: 0`,
-  `walkthrough_created_receipt_count: 0`,
-  `walkthrough_executed_mock_payment_count: 0`,
-  `walkthrough_executed_real_payment_count: 0`,
-  `walkthrough_released_shipment_count: 0`,
-  `walkthrough_called_bank_supplier_warehouse_api_count: 0`, and
+- Renderer counters: `renderer_provider_called_count: 0`,
+  `renderer_network_called_count: 0`, and
+  `renderer_gemini_called_count: 0`.
+- The renderer reads artifacts only, emits no raw provider response by default,
+  and fails closed on missing/invalid artifact evidence or nonzero effect
+  counters.
+- No action packet was created by the renderer, no receipt was created by the
+  renderer, no payment occurred, no shipment release occurred, and
   `real_world_effects_count: 0`.
-- The walkthrough creates no ActionCommitPacket, creates no receipt, executes
-  no mock payment, executes no real payment, releases no shipment, calls no
-  provider/network/Gemini lane, accesses no secrets, calls no
-  bank/supplier/warehouse API, and creates no real-world effects.
-- v1.2 is not implemented.
+- WOW v1.2 is now closed as product trace + live multi-LLM/fractal observation
+  + human-readable story.
+- WOW v1.2 is now the baseline regression scenario for DRS v0.2 and AVF v0.2
+  hardening.
+- Next major gate: Local DRS v0.2 preflight after WOW v1.2.
 - This is not production.
 - This is not public auditor final package.
 

@@ -7,6 +7,25 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_human_full_wow_v1_2_live_fractal_story_renderer_v01.log`
+  - Audit status: PASS.
+  - Audits Full WOW v1.2 live fractal artifact-backed human story renderer.
+  - Renderer commit: `29560c7`; renderer audit commit: `e42116b`.
+  - Reads artifact files only and renders a reusable human story over completed
+    v1.2 manual live multi-LLM/fractal artifact directories.
+  - Default renderer state is `SKIPPED_CLOSED` when no artifact directory is
+    provided.
+  - Canonical real artifact directory renders PASS.
+  - Calls no provider/network/Gemini lane.
+  - Emits no raw provider response by default.
+  - Requires secret scan and required validation artifacts.
+  - Fails closed on missing summary, invalid validation evidence, failed secret
+    scan, or nonzero effect counters.
+  - Creates no ActionCommitPacket, creates no receipt, executes no mock
+    payment, executes no real payment, releases no shipment, and creates no
+    real-world effects.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_human_full_wow_v1_1_final_walkthrough_v01.log`
   - Audit status: PASS.
   - Audits Full WOW v1.1 final human-facing walkthrough.

@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import asdict
 import json
 import os
+import re
 import time
 from pathlib import Path
 from typing import Any, Callable, Mapping
@@ -1497,6 +1498,8 @@ def _base_report(
         "failed_role": None,
         "failed_stage": None,
         "provider_error_kind": None,
+        "provider_error_status_code": None,
+        "provider_error_message_sanitized": None,
         "provider_error_sanitized": None,
         "validation_errors": (),
         "env_enabled": env.get(ENABLE_ENV) == "1",
@@ -2040,39 +2043,83 @@ def _secret_values_for_redaction(env: Mapping[str, str]) -> tuple[str, ...]:
     return tuple(values)
 
 
-def _sanitize_provider_error_text(text: str, env: Mapping[str, str]) -> str:
+def _sanitize_provider_error_text(
+    text: str,
+    env: Mapping[str, str],
+    *,
+    max_length: int = 500,
+) -> str:
     sanitized = " ".join(text.split())
     for value in _secret_values_for_redaction(env):
         sanitized = sanitized.replace(value, "[REDACTED]")
+    sanitized = re.sub(r"AIza[0-9A-Za-z_-]{10,}", "[REDACTED]", sanitized)
+    sanitized = re.sub(
+        r"(?i)(api[_ -]?key|token)\s*[:=]\s*['\"]?[^'\"\s,;})]+",
+        r"\1=[REDACTED]",
+        sanitized,
+    )
     for marker in (
         "GEMINI_API_KEY",
         "GOOGLE_API_KEY",
         "GOOGLE_GEMINI_API_KEY",
-        "SECRET",
-        "TOKEN",
     ):
         sanitized = sanitized.replace(marker, "[REDACTED]")
-    return sanitized[:240] if sanitized else "provider_error"
+    return sanitized[:max_length] if sanitized else "provider_error"
+
+
+def _provider_error_status_code(exc: Exception) -> int | str | None:
+    for attr_name in ("status_code", "code"):
+        value = getattr(exc, attr_name, None)
+        if value is not None:
+            return int(value) if isinstance(value, str) and value.isdigit() else value
+
+    response = getattr(exc, "response", None)
+    if response is not None:
+        for attr_name in ("status_code", "status"):
+            value = getattr(response, attr_name, None)
+            if value is not None:
+                return (
+                    int(value)
+                    if isinstance(value, str) and value.isdigit()
+                    else value
+                )
+    return None
+
+
+def _provider_error_raw_message(exc: Exception) -> str:
+    message = getattr(exc, "message", None)
+    if isinstance(message, str) and message.strip():
+        return message
+    return str(exc)
 
 
 def _provider_error_info(
     role: str,
     exc: Exception,
     env: Mapping[str, str],
-) -> dict[str, str]:
+) -> dict[str, Any]:
     raw_message = str(exc)
+    status_code = _provider_error_status_code(exc)
     if raw_message.startswith("missing_gemini_api_key"):
         kind = "missing_gemini_api_key"
-        sanitized = "missing_gemini_api_key"
+        message_sanitized = "missing_gemini_api_key"
     elif raw_message.startswith("empty_provider_response"):
         kind = "empty_provider_response"
-        sanitized = "empty_provider_response"
+        message_sanitized = "empty_provider_response"
     else:
         kind = exc.__class__.__name__
-        sanitized = _sanitize_provider_error_text(kind, env)
+        if status_code is not None or kind.endswith("ClientError"):
+            raw_detail = _provider_error_raw_message(exc)
+        else:
+            raw_detail = kind
+        message_sanitized = _sanitize_provider_error_text(raw_detail, env)
+    status_part = f" status={status_code}" if status_code is not None else ""
+    sanitized = f"{kind}{status_part} message={message_sanitized}"[:500]
     return {
         "reason": f"provider_call_failed:{role}",
         "provider_error_kind": kind,
+        "provider_error_status_code": status_code,
+        "provider_error_message_sanitized": message_sanitized,
         "provider_error_sanitized": sanitized,
     }
 
@@ -2315,7 +2362,7 @@ def _provider_call(
     model_name: str,
     counters: dict[str, int],
     actor_counter: str,
-) -> tuple[str | None, str, dict[str, str] | None]:
+) -> tuple[str | None, str, dict[str, Any] | None]:
     counters["semantic_actor_call_count"] += 1
     counters[actor_counter] += 1
     if provider is not None:
@@ -2358,6 +2405,8 @@ def _fail_closed_report(
     failed_role: str | None = None,
     failed_stage: str | None = None,
     provider_error_kind: str | None = None,
+    provider_error_status_code: int | str | None = None,
+    provider_error_message_sanitized: str | None = None,
     provider_error_sanitized: str | None = None,
     validation_errors: tuple[str, ...] = (),
 ) -> dict[str, Any]:
@@ -2375,6 +2424,8 @@ def _fail_closed_report(
     report["failed_role"] = failed_role
     report["failed_stage"] = failed_stage
     report["provider_error_kind"] = provider_error_kind
+    report["provider_error_status_code"] = provider_error_status_code
+    report["provider_error_message_sanitized"] = provider_error_message_sanitized
     report["provider_error_sanitized"] = provider_error_sanitized
     report["validation_errors"] = validation_errors
     if artifacts and isinstance(artifacts.get("local_drs_v0_2_resolve_report"), Mapping):
@@ -2437,6 +2488,8 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             skip_reason="Gemini key missing; live lane remains closed.",
         )
         report["provider_error_kind"] = "missing_gemini_api_key"
+        report["provider_error_status_code"] = None
+        report["provider_error_message_sanitized"] = "missing_gemini_api_key"
         report["provider_error_sanitized"] = "missing_gemini_api_key"
         return report
 
@@ -2508,6 +2561,12 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             "accepted": False,
             "errors": [provider_error_reason],
             "provider_error_kind": provider_error["provider_error_kind"],
+            "provider_error_status_code": provider_error[
+                "provider_error_status_code"
+            ],
+            "provider_error_message_sanitized": provider_error[
+                "provider_error_message_sanitized"
+            ],
             "provider_error_sanitized": provider_error[
                 "provider_error_sanitized"
             ],
@@ -2524,6 +2583,12 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             failed_role="top_level_orchestrator_llm",
             failed_stage="provider_call",
             provider_error_kind=provider_error["provider_error_kind"],
+            provider_error_status_code=provider_error[
+                "provider_error_status_code"
+            ],
+            provider_error_message_sanitized=provider_error[
+                "provider_error_message_sanitized"
+            ],
             provider_error_sanitized=provider_error["provider_error_sanitized"],
             validation_errors=(provider_error_reason,),
         )
@@ -2640,6 +2705,12 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             "accepted": False,
             "errors": [provider_error_reason],
             "provider_error_kind": provider_error["provider_error_kind"],
+            "provider_error_status_code": provider_error[
+                "provider_error_status_code"
+            ],
+            "provider_error_message_sanitized": provider_error[
+                "provider_error_message_sanitized"
+            ],
             "provider_error_sanitized": provider_error[
                 "provider_error_sanitized"
             ],
@@ -2656,6 +2727,12 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             failed_role="top_level_semantic_architect_llm",
             failed_stage="provider_call",
             provider_error_kind=provider_error["provider_error_kind"],
+            provider_error_status_code=provider_error[
+                "provider_error_status_code"
+            ],
+            provider_error_message_sanitized=provider_error[
+                "provider_error_message_sanitized"
+            ],
             provider_error_sanitized=provider_error["provider_error_sanitized"],
             validation_errors=(provider_error_reason,),
         )
@@ -2752,6 +2829,12 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
                 "accepted": False,
                 "errors": [provider_error_reason],
                 "provider_error_kind": provider_error["provider_error_kind"],
+                "provider_error_status_code": provider_error[
+                    "provider_error_status_code"
+                ],
+                "provider_error_message_sanitized": provider_error[
+                    "provider_error_message_sanitized"
+                ],
                 "provider_error_sanitized": provider_error[
                     "provider_error_sanitized"
                 ],
@@ -2768,6 +2851,12 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
                 failed_role=role,
                 failed_stage="provider_call",
                 provider_error_kind=provider_error["provider_error_kind"],
+                provider_error_status_code=provider_error[
+                    "provider_error_status_code"
+                ],
+                provider_error_message_sanitized=provider_error[
+                    "provider_error_message_sanitized"
+                ],
                 provider_error_sanitized=provider_error[
                     "provider_error_sanitized"
                 ],
@@ -3095,6 +3184,8 @@ def render_full_wow_v1_2_manual_live_multillm_fractal_trace(
                 f"failed_role: {report.get('failed_role')}",
                 f"failed_stage: {report.get('failed_stage')}",
                 f"provider_error_kind: {report.get('provider_error_kind')}",
+                f"provider_error_status_code: {report.get('provider_error_status_code')}",
+                f"provider_error_message_sanitized: {report.get('provider_error_message_sanitized')}",
                 f"provider_error_sanitized: {report.get('provider_error_sanitized')}",
                 f"validation_errors: {tuple(report.get('validation_errors') or ())}",
             ]

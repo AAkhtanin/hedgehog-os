@@ -1353,6 +1353,41 @@ def test_provider_failure_reports_sanitized_error_kind(monkeypatch: Any) -> None
         assert marker not in report_json
 
 
+def test_provider_client_error_reports_safe_status_and_message(
+    monkeypatch: Any,
+) -> None:
+    class ClientError(Exception):
+        def __init__(self) -> None:
+            self.status_code = 403
+            self.message = "API key not valid"
+            super().__init__("API key not valid fake-client-key")
+
+    def raising_real_provider(*_args: Any, **_kwargs: Any) -> str:
+        raise ClientError()
+
+    monkeypatch.setattr(runner, "_call_real_provider", raising_real_provider)
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env={runner.ENABLE_ENV: "1", "GOOGLE_API_KEY": "fake-client-key"},
+        provider=None,
+    )
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        report
+    )
+    report_json = json.dumps(report, sort_keys=True)
+
+    assert report["final_status"] == "FAIL_CLOSED"
+    assert report["failed_role"] == "top_level_orchestrator_llm"
+    assert report["failed_stage"] == "provider_call"
+    assert report["provider_error_kind"] == "ClientError"
+    assert report["provider_error_status_code"] == 403
+    assert report["provider_error_message_sanitized"] == "API key not valid"
+    assert "ClientError status=403 message=API key not valid" in report[
+        "provider_error_sanitized"
+    ]
+    assert "fake-client-key" not in rendered
+    assert "fake-client-key" not in report_json
+
+
 def test_manual_live_multillm_orchestrator_validation_failure_writes_artifacts(
     tmp_path: Path,
 ) -> None:

@@ -445,6 +445,330 @@ def test_llm_avf_drs_gt_lgt_cannot_create_action_commit_packet() -> None:
         assert expected_reason in reasons
 
 
+def test_empty_packet_registry_is_local_proof_only() -> None:
+    registry = acp.build_empty_action_commit_packet_registry_v02()
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(registry)
+
+    assert valid is True
+    assert reasons == ()
+    assert registry.local_proof_only is True
+    assert registry.production_persistence is False
+    assert registry.global_drs_write is False
+    assert registry.external_drs_write is False
+    assert registry.creates_permission is False
+    assert registry.creates_receipt is False
+    assert registry.executes_payment is False
+    assert registry.releases_shipment is False
+    assert registry.real_world_effects_count == 0
+
+
+def test_packet_registry_rejects_production_or_effect_claims() -> None:
+    base = acp.build_empty_action_commit_packet_registry_v02()
+    cases = (
+        (
+            replace(base, production_persistence=True),
+            acp.REASON_REGISTRY_PRODUCTION_PERSISTENCE_FORBIDDEN,
+        ),
+        (replace(base, global_drs_write=True), acp.REASON_REGISTRY_GLOBAL_DRS_WRITE_FORBIDDEN),
+        (
+            replace(base, external_drs_write=True),
+            acp.REASON_REGISTRY_EXTERNAL_DRS_WRITE_FORBIDDEN,
+        ),
+        (replace(base, creates_permission=True), acp.REASON_REGISTRY_IS_NOT_PERMISSION),
+        (replace(base, creates_receipt=True), acp.REASON_REGISTRY_CANNOT_CREATE_RECEIPT),
+        (replace(base, executes_payment=True), acp.REASON_REGISTRY_CANNOT_EXECUTE_PAYMENT),
+        (replace(base, releases_shipment=True), acp.REASON_REGISTRY_CANNOT_RELEASE_SHIPMENT),
+        (
+            replace(base, real_world_effects_count=1),
+            acp.REASON_REGISTRY_REAL_WORLD_EFFECTS_FORBIDDEN,
+        ),
+    )
+
+    for registry, reason in cases:
+        valid, reasons = acp.validate_action_commit_packet_registry_v02(registry)
+        assert valid is False
+        assert reason in reasons
+
+
+def test_unseen_valid_packet_passes_registry_validation() -> None:
+    packet = _packet()
+    registry = acp.build_empty_action_commit_packet_registry_v02()
+    report = acp.validate_packet_against_registry_v02(packet, registry)
+
+    assert report.validation_status == acp.STATUS_PASS
+    assert report.return_to_root_required is False
+    assert report.packet_accepted_for_corridor_validation is True
+    assert report.retry_allowed is False
+    assert report.registry_is_authority is False
+    assert report.registry_grants_permission is False
+    assert report.registry_creates_receipt is False
+    assert report.registry_executes_payment is False
+    assert report.registry_releases_shipment is False
+    assert report.real_world_effects_count == 0
+
+
+def test_registry_cannot_repair_invalid_packet() -> None:
+    packet = _packet(root_created=False)
+    registry = acp.build_empty_action_commit_packet_registry_v02()
+    report = acp.validate_packet_against_registry_v02(packet, registry)
+
+    assert report.validation_status == acp.STATUS_FAIL_CLOSED
+    assert report.return_to_root_required is True
+    assert acp.REASON_REGISTRY_CANNOT_REPAIR_INVALID_PACKET in report.reason_codes
+    assert acp.REASON_MISSING_ROOT_CREATION in report.reason_codes
+
+
+def test_duplicate_packet_id_rejected() -> None:
+    packet = _packet()
+    registry = acp.build_registry_with_seen_packet_v02(packet)
+    report = acp.validate_packet_against_registry_v02(packet, registry)
+
+    assert report.validation_status == acp.STATUS_FAIL_CLOSED
+    assert report.return_to_root_required is True
+    assert acp.REASON_PACKET_REGISTRY_DUPLICATE_PACKET_ID in report.reason_codes
+
+
+def test_duplicate_idempotency_key_rejected() -> None:
+    packet = _packet()
+    registry = replace(
+        acp.build_empty_action_commit_packet_registry_v02(),
+        used_idempotency_keys=(packet.idempotency.key,),
+    )
+    report = acp.validate_packet_against_registry_v02(packet, registry)
+
+    assert report.validation_status == acp.STATUS_FAIL_CLOSED
+    assert report.return_to_root_required is True
+    assert acp.REASON_PACKET_REGISTRY_DUPLICATE_IDEMPOTENCY_KEY in report.reason_codes
+
+
+def test_retry_before_terminal_receipt_allowed_only_when_explicit() -> None:
+    packet = _packet()
+    registry = acp.build_registry_with_seen_packet_v02(packet)
+    denied = acp.validate_packet_against_registry_v02(packet, registry)
+    allowed = acp.validate_packet_against_registry_v02(
+        packet,
+        registry,
+        allow_retry_before_terminal_receipt=True,
+    )
+
+    assert denied.validation_status == acp.STATUS_FAIL_CLOSED
+    assert denied.retry_allowed is False
+    assert allowed.validation_status == acp.STATUS_PASS
+    assert allowed.retry_allowed is True
+    assert allowed.packet_accepted_for_corridor_validation is True
+    assert acp.REASON_RETRY_BEFORE_TERMINAL_RECEIPT_ALLOWED in allowed.reason_codes
+
+
+def test_retry_after_terminal_receipt_rejected() -> None:
+    packet = _packet()
+    registry = acp.build_registry_with_terminal_receipt_v02(packet)
+    report = acp.validate_packet_against_registry_v02(
+        packet,
+        registry,
+        allow_retry_before_terminal_receipt=True,
+    )
+
+    assert report.validation_status == acp.STATUS_FAIL_CLOSED
+    assert report.return_to_root_required is True
+    assert acp.REASON_PACKET_REGISTRY_TERMINAL_RECEIPT_EXISTS in report.reason_codes
+    assert acp.REASON_RETRY_AFTER_TERMINAL_RECEIPT_REJECTED in report.reason_codes
+
+
+def test_expired_packet_id_rejected_by_registry() -> None:
+    packet = _packet()
+    registry = replace(
+        acp.build_empty_action_commit_packet_registry_v02(),
+        expired_packet_ids=(packet.packet_id,),
+    )
+    report = acp.validate_packet_against_registry_v02(packet, registry)
+
+    assert report.validation_status == acp.STATUS_FAIL_CLOSED
+    assert report.return_to_root_required is True
+    assert acp.REASON_PACKET_REGISTRY_EXPIRED_PACKET in report.reason_codes
+
+
+def test_packet_corridor_entry_passes_for_valid_supplier_a_fixture() -> None:
+    packet, corridor, step, registry = (
+        acp.build_supplier_a_packet_corridor_validation_fixture_v02()
+    )
+    report = acp.validate_packet_corridor_entry_v02(
+        packet,
+        corridor,
+        step,
+        registry,
+    )
+
+    assert report.validation_status == acp.STATUS_PASS
+    assert report.return_to_root_required is False
+    assert report.accepted_for_mock_corridor is True
+    assert report.packet_valid is True
+    assert report.registry_valid is True
+    assert report.corridor_valid is True
+    assert report.receipt_policy_valid is True
+    assert report.creates_action_commit_packet is False
+    assert report.creates_receipt is False
+    assert report.executes_payment is False
+    assert report.releases_shipment is False
+    assert report.creates_final_output is False
+    assert report.real_world_effects_count == 0
+
+
+def test_packet_corridor_entry_fails_closed_on_invalid_packet() -> None:
+    packet, corridor, step, registry = (
+        acp.build_supplier_a_packet_corridor_validation_fixture_v02()
+    )
+    invalid_packet = replace(packet, root_created=False)
+    report = acp.validate_packet_corridor_entry_v02(
+        invalid_packet,
+        corridor,
+        _step(invalid_packet),
+        registry,
+    )
+
+    assert report.validation_status == acp.STATUS_FAIL_CLOSED
+    assert report.return_to_root_required is True
+    assert report.accepted_for_mock_corridor is False
+    assert acp.REASON_REGISTRY_CANNOT_REPAIR_INVALID_PACKET in report.reason_codes
+
+
+def test_packet_corridor_entry_fails_closed_on_invalid_registry() -> None:
+    packet, corridor, step, registry = (
+        acp.build_supplier_a_packet_corridor_validation_fixture_v02()
+    )
+    invalid_registry = replace(registry, production_persistence=True)
+    report = acp.validate_packet_corridor_entry_v02(
+        packet,
+        corridor,
+        step,
+        invalid_registry,
+    )
+
+    assert report.validation_status == acp.STATUS_FAIL_CLOSED
+    assert report.return_to_root_required is True
+    assert acp.REASON_REGISTRY_PRODUCTION_PERSISTENCE_FORBIDDEN in report.reason_codes
+
+
+def test_packet_corridor_entry_fails_closed_on_corridor_reasoning_restart() -> None:
+    packet, corridor, step, registry = (
+        acp.build_supplier_a_packet_corridor_validation_fixture_v02()
+    )
+    invalid_corridor = replace(corridor, reasoning_restarted_after_root=True)
+    report = acp.validate_packet_corridor_entry_v02(
+        packet,
+        invalid_corridor,
+        step,
+        registry,
+    )
+
+    assert report.validation_status == acp.STATUS_FAIL_CLOSED
+    assert report.return_to_root_required is True
+    assert acp.REASON_REASONING_DOES_NOT_RESTART_AFTER_ROOT in report.reason_codes
+
+
+def test_packet_corridor_entry_fails_closed_on_step_mismatch() -> None:
+    packet, corridor, step, registry = (
+        acp.build_supplier_a_packet_corridor_validation_fixture_v02()
+    )
+    wrong_adapter_report = acp.validate_packet_corridor_entry_v02(
+        packet,
+        corridor,
+        replace(step, adapter_id=acp.ADAPTER_REAL_BANK),
+        registry,
+    )
+    wrong_amount_report = acp.validate_packet_corridor_entry_v02(
+        packet,
+        corridor,
+        replace(step, amount="999.00"),
+        registry,
+    )
+
+    assert wrong_adapter_report.validation_status == acp.STATUS_FAIL_CLOSED
+    assert wrong_adapter_report.return_to_root_required is True
+    assert acp.REASON_CHILD_ADAPTER_NOT_ALLOWED_BY_PACKET in wrong_adapter_report.reason_codes
+    assert wrong_amount_report.validation_status == acp.STATUS_FAIL_CLOSED
+    assert wrong_amount_report.return_to_root_required is True
+    assert acp.REASON_CHILD_AMOUNT_MISMATCH in wrong_amount_report.reason_codes
+
+
+def test_record_packet_seen_returns_new_local_registry_without_effects() -> None:
+    packet = _packet()
+    registry = acp.build_empty_action_commit_packet_registry_v02()
+    updated = acp.record_packet_seen_v02(registry, packet)
+
+    assert registry is not updated
+    assert packet.packet_id not in registry.seen_packet_ids
+    assert packet.idempotency.key not in registry.used_idempotency_keys
+    assert packet.packet_id in updated.seen_packet_ids
+    assert packet.idempotency.key in updated.used_idempotency_keys
+    assert updated.local_proof_only is True
+    assert updated.creates_permission is False
+    assert updated.creates_receipt is False
+    assert updated.executes_payment is False
+    assert updated.releases_shipment is False
+    assert updated.real_world_effects_count == 0
+
+
+def test_record_terminal_receipt_observation_records_terminal_only_after_valid_receipt() -> None:
+    packet = _packet()
+    receipt = _receipt(packet)
+    registry = acp.build_empty_action_commit_packet_registry_v02()
+    updated, reasons = acp.record_terminal_receipt_observation_v02(
+        registry,
+        packet,
+        receipt,
+    )
+
+    assert reasons == ()
+    assert packet.packet_id in updated.seen_packet_ids
+    assert packet.idempotency.key in updated.used_idempotency_keys
+    assert packet.packet_id in updated.terminal_receipt_packet_ids
+    assert packet.idempotency.key in updated.terminal_receipt_idempotency_keys
+    assert updated.creates_receipt is False
+    assert updated.executes_payment is False
+    assert updated.releases_shipment is False
+    assert updated.real_world_effects_count == 0
+
+
+def test_record_terminal_receipt_observation_rejects_invalid_receipt() -> None:
+    packet = _packet()
+    registry = acp.build_empty_action_commit_packet_registry_v02()
+    updated, reasons = acp.record_terminal_receipt_observation_v02(
+        registry,
+        packet,
+        _receipt(packet, packet_id="wrong_packet"),
+    )
+
+    assert updated == registry
+    assert acp.REASON_RECEIPT_WRONG_PACKET_ID in reasons
+
+
+def test_registry_is_not_drs_authority_or_permission() -> None:
+    registry = replace(
+        acp.build_empty_action_commit_packet_registry_v02(),
+        local_proof_only=False,
+        global_drs_write=True,
+        creates_permission=True,
+        creates_receipt=True,
+        executes_payment=True,
+        releases_shipment=True,
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(registry)
+    report = acp.validate_packet_against_registry_v02(_packet(), registry)
+
+    assert valid is False
+    assert acp.REASON_REGISTRY_IS_NOT_DRS in reasons
+    assert acp.REASON_REGISTRY_IS_NOT_AUTHORITY in reasons
+    assert acp.REASON_REGISTRY_IS_NOT_PERMISSION in reasons
+    assert acp.REASON_REGISTRY_CANNOT_CREATE_RECEIPT in reasons
+    assert acp.REASON_REGISTRY_CANNOT_EXECUTE_PAYMENT in reasons
+    assert acp.REASON_REGISTRY_CANNOT_RELEASE_SHIPMENT in reasons
+    assert report.registry_is_authority is False
+    assert report.registry_grants_permission is False
+    assert report.registry_creates_receipt is False
+    assert report.registry_executes_payment is False
+    assert report.registry_releases_shipment is False
+
+
 def test_source_import_boundary() -> None:
     source = Path("hedgehog/action_commit_packet_v02.py").read_text()
 

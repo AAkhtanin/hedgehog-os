@@ -86,6 +86,42 @@ REASON_NO_POST_ROOT_LLM_REASONING = "no_post_root_llm_reasoning"
 REASON_NO_EXPANSION_AFTER_ROOT = "no_expansion_after_root"
 REASON_PRODUCTION_CLAIM_NOT_ALLOWED = "production_claim_not_allowed"
 REASON_PUBLIC_AUDITOR_CLAIM_NOT_ALLOWED = "public_auditor_claim_not_allowed"
+REASON_REGISTRY_IS_NOT_AUTHORITY = "registry_is_not_authority"
+REASON_REGISTRY_IS_NOT_PERMISSION = "registry_is_not_permission"
+REASON_REGISTRY_IS_NOT_DRS = "registry_is_not_drs"
+REASON_REGISTRY_IS_LOCAL_PROOF_ONLY = "registry_is_local_proof_only"
+REASON_REGISTRY_CANNOT_REPAIR_INVALID_PACKET = (
+    "registry_cannot_repair_invalid_packet"
+)
+REASON_REGISTRY_CANNOT_CREATE_RECEIPT = "registry_cannot_create_receipt"
+REASON_REGISTRY_CANNOT_EXECUTE_PAYMENT = "registry_cannot_execute_payment"
+REASON_REGISTRY_CANNOT_RELEASE_SHIPMENT = "registry_cannot_release_shipment"
+REASON_PACKET_REGISTRY_DUPLICATE_PACKET_ID = (
+    "packet_registry_duplicate_packet_id"
+)
+REASON_PACKET_REGISTRY_DUPLICATE_IDEMPOTENCY_KEY = (
+    "packet_registry_duplicate_idempotency_key"
+)
+REASON_PACKET_REGISTRY_TERMINAL_RECEIPT_EXISTS = (
+    "packet_registry_terminal_receipt_exists"
+)
+REASON_PACKET_REGISTRY_EXPIRED_PACKET = "packet_registry_expired_packet"
+REASON_RETRY_BEFORE_TERMINAL_RECEIPT_ALLOWED = (
+    "retry_before_terminal_receipt_allowed"
+)
+REASON_RETRY_AFTER_TERMINAL_RECEIPT_REJECTED = (
+    "retry_after_terminal_receipt_rejected"
+)
+REASON_REGISTRY_PRODUCTION_PERSISTENCE_FORBIDDEN = (
+    "registry_production_persistence_forbidden"
+)
+REASON_REGISTRY_GLOBAL_DRS_WRITE_FORBIDDEN = "registry_global_drs_write_forbidden"
+REASON_REGISTRY_EXTERNAL_DRS_WRITE_FORBIDDEN = (
+    "registry_external_drs_write_forbidden"
+)
+REASON_REGISTRY_REAL_WORLD_EFFECTS_FORBIDDEN = (
+    "registry_real_world_effects_forbidden"
+)
 
 CONTAINMENT_LAWS_V02 = (
     "Allowed(child) <= Allowed(parent)",
@@ -230,6 +266,63 @@ class MockReceiptEvidenceV01:
     real_world_effects_count: int = 0
 
 
+@dataclass(frozen=True)
+class ActionCommitPacketRegistryV02:
+    registry_id: str
+    seen_packet_ids: tuple[str, ...] = ()
+    used_idempotency_keys: tuple[str, ...] = ()
+    terminal_receipt_packet_ids: tuple[str, ...] = ()
+    terminal_receipt_idempotency_keys: tuple[str, ...] = ()
+    expired_packet_ids: tuple[str, ...] = ()
+    failed_packet_ids: tuple[str, ...] = ()
+    local_proof_only: bool = True
+    production_persistence: bool = False
+    global_drs_write: bool = False
+    external_drs_write: bool = False
+    creates_permission: bool = False
+    creates_receipt: bool = False
+    executes_payment: bool = False
+    releases_shipment: bool = False
+    real_world_effects_count: int = 0
+
+
+@dataclass(frozen=True)
+class PacketRegistryValidationReportV02:
+    validation_status: str
+    return_to_root_required: bool
+    reason_codes: tuple[str, ...]
+    packet_id: str
+    registry_id: str
+    retry_allowed: bool = False
+    packet_accepted_for_corridor_validation: bool = False
+    registry_is_authority: bool = False
+    registry_grants_permission: bool = False
+    registry_creates_receipt: bool = False
+    registry_executes_payment: bool = False
+    registry_releases_shipment: bool = False
+    real_world_effects_count: int = 0
+
+
+@dataclass(frozen=True)
+class PacketCorridorValidationReportV02:
+    validation_status: str
+    return_to_root_required: bool
+    reason_codes: tuple[str, ...]
+    packet_id: str
+    registry_id: str
+    packet_valid: bool
+    registry_valid: bool
+    corridor_valid: bool
+    receipt_policy_valid: bool
+    accepted_for_mock_corridor: bool = False
+    creates_action_commit_packet: bool = False
+    creates_receipt: bool = False
+    executes_payment: bool = False
+    releases_shipment: bool = False
+    creates_final_output: bool = False
+    real_world_effects_count: int = 0
+
+
 def _append_reason(reasons: list[str], reason: str) -> None:
     if reason not in reasons:
         reasons.append(reason)
@@ -249,6 +342,12 @@ def _is_subset(child: tuple[str, ...], parent: tuple[str, ...]) -> bool:
 
 def _includes(parent_forbidden: tuple[str, ...], child_forbidden: tuple[str, ...]) -> bool:
     return set(parent_forbidden).issubset(set(child_forbidden))
+
+
+def _tuple_add_unique(values: tuple[str, ...], value: str) -> tuple[str, ...]:
+    if value in values:
+        return values
+    return (*values, value)
 
 
 def _source_creator_reason(created_by: str) -> str | None:
@@ -583,3 +682,277 @@ def build_supplier_a_mock_receipt_evidence_fixture_v01(
         currency=packet.scope.currency,
         idempotency_key=packet.idempotency.key,
     )
+
+
+def build_empty_action_commit_packet_registry_v02() -> ActionCommitPacketRegistryV02:
+    return ActionCommitPacketRegistryV02(registry_id="acp_v02:local_registry")
+
+
+def build_registry_with_seen_packet_v02(
+    packet: ActionCommitPacketV02,
+) -> ActionCommitPacketRegistryV02:
+    return ActionCommitPacketRegistryV02(
+        registry_id="acp_v02:local_registry:seen_packet",
+        seen_packet_ids=(packet.packet_id,),
+        used_idempotency_keys=(packet.idempotency.key,),
+    )
+
+
+def build_registry_with_terminal_receipt_v02(
+    packet: ActionCommitPacketV02,
+) -> ActionCommitPacketRegistryV02:
+    return ActionCommitPacketRegistryV02(
+        registry_id="acp_v02:local_registry:terminal_receipt",
+        seen_packet_ids=(packet.packet_id,),
+        used_idempotency_keys=(packet.idempotency.key,),
+        terminal_receipt_packet_ids=(packet.packet_id,),
+        terminal_receipt_idempotency_keys=(packet.idempotency.key,),
+    )
+
+
+def validate_action_commit_packet_registry_v02(
+    registry: ActionCommitPacketRegistryV02,
+) -> tuple[bool, tuple[str, ...]]:
+    reasons: list[str] = []
+
+    if not registry.local_proof_only:
+        _append_reason(reasons, REASON_REGISTRY_IS_LOCAL_PROOF_ONLY)
+        _append_reason(reasons, REASON_REGISTRY_IS_NOT_DRS)
+    if registry.production_persistence:
+        _append_reason(reasons, REASON_REGISTRY_PRODUCTION_PERSISTENCE_FORBIDDEN)
+        _append_reason(reasons, REASON_REGISTRY_IS_NOT_DRS)
+    if registry.global_drs_write:
+        _append_reason(reasons, REASON_REGISTRY_GLOBAL_DRS_WRITE_FORBIDDEN)
+        _append_reason(reasons, REASON_REGISTRY_IS_NOT_DRS)
+    if registry.external_drs_write:
+        _append_reason(reasons, REASON_REGISTRY_EXTERNAL_DRS_WRITE_FORBIDDEN)
+        _append_reason(reasons, REASON_REGISTRY_IS_NOT_DRS)
+    if registry.creates_permission:
+        _append_reason(reasons, REASON_REGISTRY_IS_NOT_PERMISSION)
+        _append_reason(reasons, REASON_REGISTRY_IS_NOT_AUTHORITY)
+    if registry.creates_receipt:
+        _append_reason(reasons, REASON_REGISTRY_CANNOT_CREATE_RECEIPT)
+    if registry.executes_payment:
+        _append_reason(reasons, REASON_REGISTRY_CANNOT_EXECUTE_PAYMENT)
+    if registry.releases_shipment:
+        _append_reason(reasons, REASON_REGISTRY_CANNOT_RELEASE_SHIPMENT)
+    if registry.real_world_effects_count != 0:
+        _append_reason(reasons, REASON_REGISTRY_REAL_WORLD_EFFECTS_FORBIDDEN)
+
+    return not reasons, tuple(reasons)
+
+
+def validate_packet_against_registry_v02(
+    packet: ActionCommitPacketV02,
+    registry: ActionCommitPacketRegistryV02,
+    *,
+    allow_retry_before_terminal_receipt: bool = False,
+) -> PacketRegistryValidationReportV02:
+    reasons: list[str] = []
+    retry_allowed = False
+    packet_accepted = False
+
+    registry_valid, registry_reasons = validate_action_commit_packet_registry_v02(
+        registry,
+    )
+    if not registry_valid:
+        reasons.extend(registry_reasons)
+
+    packet_valid, packet_reasons = validate_action_commit_packet_v02(packet)
+    if not packet_valid:
+        _append_reason(reasons, REASON_REGISTRY_CANNOT_REPAIR_INVALID_PACKET)
+        reasons.extend(packet_reasons)
+
+    if registry_valid and packet_valid:
+        terminal_packet_seen = packet.packet_id in registry.terminal_receipt_packet_ids
+        terminal_key_seen = (
+            packet.idempotency.key in registry.terminal_receipt_idempotency_keys
+        )
+        packet_seen = packet.packet_id in registry.seen_packet_ids
+        key_seen = packet.idempotency.key in registry.used_idempotency_keys
+
+        if packet.packet_id in registry.expired_packet_ids:
+            _append_reason(reasons, REASON_PACKET_REGISTRY_EXPIRED_PACKET)
+        if terminal_packet_seen:
+            _append_reason(reasons, REASON_PACKET_REGISTRY_TERMINAL_RECEIPT_EXISTS)
+            _append_reason(reasons, REASON_RETRY_AFTER_TERMINAL_RECEIPT_REJECTED)
+        if terminal_key_seen:
+            _append_reason(reasons, REASON_PACKET_REGISTRY_TERMINAL_RECEIPT_EXISTS)
+            _append_reason(reasons, REASON_RETRY_AFTER_TERMINAL_RECEIPT_REJECTED)
+
+        duplicate_reasons_before_retry = len(reasons)
+        if packet_seen and not terminal_packet_seen:
+            if allow_retry_before_terminal_receipt:
+                retry_allowed = True
+                _append_reason(reasons, REASON_RETRY_BEFORE_TERMINAL_RECEIPT_ALLOWED)
+            else:
+                _append_reason(reasons, REASON_PACKET_REGISTRY_DUPLICATE_PACKET_ID)
+        if key_seen and not terminal_key_seen:
+            if allow_retry_before_terminal_receipt:
+                retry_allowed = True
+                _append_reason(reasons, REASON_RETRY_BEFORE_TERMINAL_RECEIPT_ALLOWED)
+            else:
+                _append_reason(
+                    reasons,
+                    REASON_PACKET_REGISTRY_DUPLICATE_IDEMPOTENCY_KEY,
+                )
+
+        retry_only = (
+            retry_allowed
+            and duplicate_reasons_before_retry == 0
+            and len(reasons) == 1
+            and reasons[-1] == REASON_RETRY_BEFORE_TERMINAL_RECEIPT_ALLOWED
+        )
+        packet_accepted = not reasons or retry_only
+
+    status = STATUS_PASS if packet_accepted else STATUS_FAIL_CLOSED
+    return PacketRegistryValidationReportV02(
+        validation_status=status,
+        return_to_root_required=not packet_accepted,
+        reason_codes=tuple(reasons),
+        packet_id=packet.packet_id,
+        registry_id=registry.registry_id,
+        retry_allowed=retry_allowed and packet_accepted,
+        packet_accepted_for_corridor_validation=packet_accepted,
+    )
+
+
+def validate_packet_corridor_entry_v02(
+    packet: ActionCommitPacketV02,
+    corridor: ContractFulfillmentCorridorV01,
+    step: CorridorStepV01,
+    registry: ActionCommitPacketRegistryV02,
+    *,
+    allow_retry_before_terminal_receipt: bool = False,
+) -> PacketCorridorValidationReportV02:
+    reasons: list[str] = []
+
+    packet_valid, packet_reasons = validate_action_commit_packet_v02(packet)
+    if not packet_valid:
+        reasons.extend(packet_reasons)
+
+    registry_valid, registry_reasons = validate_action_commit_packet_registry_v02(
+        registry,
+    )
+    if not registry_valid:
+        reasons.extend(registry_reasons)
+
+    registry_report = validate_packet_against_registry_v02(
+        packet,
+        registry,
+        allow_retry_before_terminal_receipt=allow_retry_before_terminal_receipt,
+    )
+    if registry_report.validation_status != STATUS_PASS:
+        reasons.extend(registry_report.reason_codes)
+
+    corridor_valid, corridor_reasons = validate_corridor_no_post_root_reasoning_v01(
+        corridor,
+    )
+    if not corridor_valid:
+        reasons.extend(corridor_reasons)
+
+    step_report = validate_corridor_step_against_packet_v01(packet, step)
+    if step_report.validation_status != STATUS_PASS:
+        reasons.extend(step_report.reason_codes)
+
+    receipt_policy_valid = bool(packet.receipt_evidence_only)
+    if not receipt_policy_valid:
+        _append_reason(reasons, REASON_RECEIPT_IS_EVIDENCE_ONLY)
+
+    deduped_reasons: list[str] = []
+    for reason in reasons:
+        _append_reason(deduped_reasons, reason)
+
+    accepted = not deduped_reasons
+    return PacketCorridorValidationReportV02(
+        validation_status=STATUS_PASS if accepted else STATUS_FAIL_CLOSED,
+        return_to_root_required=not accepted,
+        reason_codes=tuple(deduped_reasons),
+        packet_id=packet.packet_id,
+        registry_id=registry.registry_id,
+        packet_valid=packet_valid,
+        registry_valid=registry_valid,
+        corridor_valid=corridor_valid and step_report.validation_status == STATUS_PASS,
+        receipt_policy_valid=receipt_policy_valid,
+        accepted_for_mock_corridor=accepted,
+    )
+
+
+def record_packet_seen_v02(
+    registry: ActionCommitPacketRegistryV02,
+    packet: ActionCommitPacketV02,
+) -> ActionCommitPacketRegistryV02:
+    return ActionCommitPacketRegistryV02(
+        registry_id=registry.registry_id,
+        seen_packet_ids=_tuple_add_unique(registry.seen_packet_ids, packet.packet_id),
+        used_idempotency_keys=_tuple_add_unique(
+            registry.used_idempotency_keys,
+            packet.idempotency.key,
+        ),
+        terminal_receipt_packet_ids=registry.terminal_receipt_packet_ids,
+        terminal_receipt_idempotency_keys=registry.terminal_receipt_idempotency_keys,
+        expired_packet_ids=registry.expired_packet_ids,
+        failed_packet_ids=registry.failed_packet_ids,
+        local_proof_only=registry.local_proof_only,
+        production_persistence=registry.production_persistence,
+        global_drs_write=registry.global_drs_write,
+        external_drs_write=registry.external_drs_write,
+        creates_permission=registry.creates_permission,
+        creates_receipt=registry.creates_receipt,
+        executes_payment=registry.executes_payment,
+        releases_shipment=registry.releases_shipment,
+        real_world_effects_count=registry.real_world_effects_count,
+    )
+
+
+def record_terminal_receipt_observation_v02(
+    registry: ActionCommitPacketRegistryV02,
+    packet: ActionCommitPacketV02,
+    receipt: MockReceiptEvidenceV01,
+) -> tuple[ActionCommitPacketRegistryV02, tuple[str, ...]]:
+    receipt_valid, receipt_reasons = validate_mock_receipt_evidence_v01(packet, receipt)
+    if not receipt_valid:
+        return registry, receipt_reasons
+
+    seen_registry = record_packet_seen_v02(registry, packet)
+    terminal_registry = ActionCommitPacketRegistryV02(
+        registry_id=seen_registry.registry_id,
+        seen_packet_ids=seen_registry.seen_packet_ids,
+        used_idempotency_keys=seen_registry.used_idempotency_keys,
+        terminal_receipt_packet_ids=_tuple_add_unique(
+            seen_registry.terminal_receipt_packet_ids,
+            packet.packet_id,
+        ),
+        terminal_receipt_idempotency_keys=_tuple_add_unique(
+            seen_registry.terminal_receipt_idempotency_keys,
+            packet.idempotency.key,
+        ),
+        expired_packet_ids=seen_registry.expired_packet_ids,
+        failed_packet_ids=seen_registry.failed_packet_ids,
+        local_proof_only=seen_registry.local_proof_only,
+        production_persistence=seen_registry.production_persistence,
+        global_drs_write=seen_registry.global_drs_write,
+        external_drs_write=seen_registry.external_drs_write,
+        creates_permission=seen_registry.creates_permission,
+        creates_receipt=seen_registry.creates_receipt,
+        executes_payment=seen_registry.executes_payment,
+        releases_shipment=seen_registry.releases_shipment,
+        real_world_effects_count=seen_registry.real_world_effects_count,
+    )
+    return terminal_registry, ()
+
+
+def build_supplier_a_packet_corridor_validation_fixture_v02() -> tuple[
+    ActionCommitPacketV02,
+    ContractFulfillmentCorridorV01,
+    CorridorStepV01,
+    ActionCommitPacketRegistryV02,
+]:
+    packet = build_supplier_a_mock_action_commit_packet_fixture_v02()
+    corridor = ContractFulfillmentCorridorV01(
+        corridor_id="corridor:supplier_a_mock_payment:v02",
+        packet_id=packet.packet_id,
+    )
+    step = build_supplier_a_corridor_step_fixture_v01(packet)
+    registry = build_empty_action_commit_packet_registry_v02()
+    return packet, corridor, step, registry

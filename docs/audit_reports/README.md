@@ -7,6 +7,39 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log`
+  - Audit status: PASS.
+  - Audits the artifact-backed human story renderer for the AVF v0.2 + Full
+    WOW v1.2 live observation.
+  - Source real-run audit:
+    `docs/audit_reports/auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
+  - Confirms the renderer reads closed artifacts only, explains DRS memory, AVF
+    hard-mask/ranking pressure, Orchestrator, BSEP, Architect, branch actors,
+    and Root, and does not rerun provider calls.
+  - Confirms raw provider responses are not printed by default.
+  - Focused tests: `13 passed`; compatibility tests: `142 passed`.
+  - No provider/network/Gemini calls by the renderer and no action/effect
+    counters.
+  - Non-claims: not production and not public auditor final package.
+
+- `auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`
+  - Audit status: PASS.
+  - Audits AVF v0.2 + Full WOW v1.2 live multi-LLM/fractal observation with a
+    real provider.
+  - Model: `gemini-2.5-flash`.
+  - Confirms six semantic actor calls, DRS before AVF and Orchestrator, AVF
+    after DRS and before Orchestrator, bounded AVF/DRS-informed Orchestrator
+    context, bounded BSEP context, and BSEP-derived Architect context.
+  - Confirms `release_all_and_pay_all`, Supplier B payment, old receipt as
+    permission, and old Root Final as current decision were hard-masked.
+  - Confirms safe candidates may rank without permission, top-ranked AVF
+    candidate is not permission, AVF score is not authority, HardMask is not
+    Root, and Root remains final authority.
+  - Secret scan passed.
+  - No ActionCommitPacket, receipt, mock payment, real payment, shipment
+    release, or effect counters.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_avf_v0_2_after_local_drs_v0_2_v01.log`
   - Audit status: PASS.
   - Audits AVF v0.2 advisory hard-mask / soft-mask / ranking after Local DRS

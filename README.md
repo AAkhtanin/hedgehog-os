@@ -35,43 +35,49 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-AVF v0.2 advisory hard-mask / soft-mask / ranking after Local DRS v0.2 — PASS.
+AVF v0.2 + Full WOW v1.2 live observation + human story renderer — PASS.
 
 Checkpoint source:
 
-- Audit:
-  `docs/audit_reports/auditor_avf_v0_2_after_local_drs_v0_2_v01.log`.
-- Preflight:
-  `docs/avf_v0_2_after_local_drs_v0_2_closure_preflight_v01.md`.
-- Source Local DRS closure audit:
-  `docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log`.
-- Observed checkpoint base: `d70ea58`.
-- AVF Slice A local candidate/risk model: PASS.
-- AVF Slice B local evaluator / advisory ranking report: PASS.
-- AVF Slice C Full WOW v1.2 deterministic product trace integration: PASS.
-- AVF Slice D adversarial hard-mask / non-authority hardening: PASS.
-- Full WOW v1.2 + Local DRS v0.2 remains the baseline.
-- AVF v0.2 consumes Local DRS v0.2 advisory/reuse/risk signals and produces
-  CandidateVector pressure, HardMask, SoftMask, score explanations, and a
-  ranked advisory report.
-- AVF v0.2 is advisory only: it can say where to look and where not to go, but
-  it does not have the right to say action is allowed.
-- AVF v0.2 does not decide, grant permission, create truth, create FinalOutput,
-  create ActionCommitPacket, create receipt, execute payment, release shipment,
-  or bypass Root.
-- High score does not override HardMask.
-- Top rank does not grant permission.
-- Safe rank remains advisory.
-- HardMask is not Root.
+- Real-run audit:
+  `docs/audit_reports/auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
+- Human story renderer audit:
+  `docs/audit_reports/auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log`.
+- Observed checkpoint base: `2d1d25c`.
+- Source artifact dir:
+  `.tmp/full_wow_v1_2_manual_live_multillm_fractal_avf_v02/full_wow_v1_2_manual_live_multillm_fractal_avf_v02_real_20260707_191053`.
+- Real-provider model: `gemini-2.5-flash`.
+- This closes the DRS+AVF live semantic observation package.
+- Six real Gemini semantic actors participated in the closed real run.
+- DRS v0.2 ran before AVF and Orchestrator; it remembers, links, warns, and
+  does not decide.
+- AVF v0.2 ran after DRS and before Orchestrator; it hard-masks and ranks but
+  does not authorize.
+- Orchestrator received bounded AVF/DRS-informed context.
+- BSEP carried bounded AVF/DRS-informed context.
+- Architect received BSEP-derived AVF/DRS-informed context.
+- Branch actors remained advisory.
+- Root remained final authority.
+- Unsafe directions were hard-masked: `release_all_and_pay_all`, Supplier B
+  payment, old receipt as permission, and old Root Final as current decision.
+- Safe candidates may rank but do not grant permission.
+- Top-ranked AVF candidate is not permission.
 - AVF score is not authority.
-- Root remains final authority.
-- AVF v0.2 candidates evaluated count: `9`.
-- AVF v0.2 top-ranked candidate permission granted count: `0`.
-- AVF v0.2 action permission, FinalOutput, ActionCommitPacket, receipt,
-  payment, shipment, bypass-Root, provider/network/Gemini, and effect counters
-  remain `0`.
-- Next major gate: AVF v0.2 + Full WOW v1.2 live observation preflight.
-- ActionCommitPacket hardening comes after the AVF live observation checkpoint.
+- HardMask is not Root.
+- AVF cannot bypass Root, create FinalOutput, create ActionCommitPacket, create
+  receipt, execute payment, or release shipment.
+- The human story explains DRS memory, AVF pressure, Orchestrator, BSEP,
+  Architect, branch actors, and Root from closed artifacts.
+- The human story renderer is artifact-backed, does not rerun provider calls,
+  and does not print raw provider responses by default.
+- Human story optional real artifact render: PASS.
+- Human story focused tests: `13 passed`.
+- Human story compatibility tests: `142 passed`.
+- Secret scan passed.
+- ActionCommitPacket, receipt, mock payment, real payment, shipment release,
+  and effect counters remain `0`.
+- Next major gate: ActionCommitPacket / permission hardening preflight.
+- ActionCommitPacket hardening implementation has not started.
 - This is not production.
 - This is not public auditor final package.
 

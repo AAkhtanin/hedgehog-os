@@ -143,6 +143,19 @@ AVF v0.2 after Local DRS v0.2 invariant examples:
 - AVF cannot release shipment.
 - Root remains final authority.
 
+AVF v0.2 live observation human story invariant examples:
+
+- DRS remembered context is not authority.
+- AVF ranked candidate is not permission.
+- AVF hard mask is not Root.
+- Top-ranked candidate cannot create action permission.
+- BSEP must not carry raw DRS/AVF tables.
+- Human story renderer must not print raw provider responses by default.
+- Human story renderer must not call provider/network/Gemini.
+- Human story renderer cannot create ActionCommitPacket, receipt, payment,
+  shipment release, FinalOutput, or effects.
+- Root remains final authority.
+
 Full Semantic E2E WOW v1.1 alignment invariant examples:
 
 - Closed receipt is evidence only when observed by Full E2E.

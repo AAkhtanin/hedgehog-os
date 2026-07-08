@@ -393,6 +393,28 @@ Scenario result:
   receipt, execute payment, or release shipment.
 - Root remains final authority.
 
+### full_wow_v1_2_drs_avf_live_observation_human_story
+
+Supplier Payment / Shipment Release Review WOW v1.2 now includes DRS+AVF live
+observation and a human-readable artifact-backed story.
+
+Scenario result:
+
+- Real-run audit:
+  `docs/audit_reports/auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
+- Human story renderer audit:
+  `docs/audit_reports/auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log`.
+- Human-readable story: DRS remembered prior traces.
+- Human-readable story: AVF hard-masked unsafe routes.
+- Safe candidates ranked without authorization.
+- Orchestrator, BSEP, and Architect saw bounded AVF/DRS-informed context.
+- Branch actors remained advisory.
+- Root remained final authority.
+- The renderer reads closed artifacts only, does not rerun provider calls, and
+  does not print raw provider responses by default.
+- No ActionCommitPacket, receipt, payment, shipment release, or effect occurred
+  in the renderer or the closed observation package.
+
 ## What The Demo Must Prove
 
 - Root authority.

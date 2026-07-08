@@ -57,47 +57,52 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: AVF v0.2 after Local DRS v0.2 PASS.
+Current checkpoint: AVF v0.2 live observation human story PASS.
 
-Current AVF v0.2 facts:
+Current DRS+AVF live observation facts:
 
-- Audit:
-  `docs/audit_reports/auditor_avf_v0_2_after_local_drs_v0_2_v01.log`.
-- Source preflight:
-  `docs/avf_v0_2_after_local_drs_v0_2_closure_preflight_v01.md`.
-- Source Local DRS closure audit:
-  `docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log`.
-- Observed checkpoint base: `d70ea58`.
-- AVF Slice A local candidate/risk model: PASS.
-- AVF Slice B local evaluator / advisory ranking report: PASS.
-- AVF Slice C Full WOW v1.2 deterministic product trace integration: PASS.
-- AVF Slice D adversarial hard-mask / non-authority hardening: PASS.
-- Full WOW v1.2 + Local DRS v0.2 remains the baseline.
-- AVF v0.2 consumes Local DRS v0.2 advisory/reuse/risk signals and produces
-  CandidateVector pressure, HardMask, SoftMask, score explanations, and a
-  ranked advisory report.
-- AVF v0.2 is advisory/risk/ranking only and is not Root.
-- AVF v0.2 can say where to look and where not to go, but it cannot say action
-  is allowed.
-- AVF v0.2 does not decide, grant permission, create truth, create FinalOutput,
-  create ActionCommitPacket, create receipt, execute payment, release shipment,
-  or bypass Root.
-- High score does not override HardMask.
-- Top rank does not grant permission.
-- Safe rank remains advisory.
-- HardMask is not Root.
+- Real-run audit:
+  `docs/audit_reports/auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
+- Human story renderer audit:
+  `docs/audit_reports/auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log`.
+- Observed checkpoint base: `2d1d25c`.
+- Real-provider model: `gemini-2.5-flash`.
+- DRS+AVF live observation is now closed as a baseline for the next
+  permission/action boundary layer.
+- Six real Gemini semantic actors participated in the closed real run.
+- DRS v0.2 ran before AVF and Orchestrator; it remembers, links, warns, and is
+  not authority.
+- AVF v0.2 ran after DRS and before Orchestrator; it is advisory/risk/ranking
+  only and is not Root.
+- Orchestrator, BSEP, and Architect carried bounded AVF/DRS-informed context.
+- Branch actors remained advisory.
+- Root remained final authority.
+- AVF hard-masked unsafe routes and ranked safe candidates without
+  authorization.
+- Top-ranked AVF candidate is not permission.
 - AVF score is not authority.
-- Root remains final authority.
-- Provider/network/Gemini calls during this checkpoint: `0`.
+- HardMask is not Root.
+- AVF cannot bypass Root, create FinalOutput, create ActionCommitPacket, create
+  receipt, execute payment, or release shipment.
+- Human story renderer explains DRS memory, AVF pressure, Orchestrator, BSEP,
+  Architect, branch actors, and Root from closed artifacts only.
+- Human story renderer does not rerun provider calls and does not print raw
+  provider responses by default.
+- Human story optional real artifact render: PASS.
+- Human story focused tests: `13 passed`.
+- Human story compatibility tests: `142 passed`.
+- Secret scan passed.
+- Provider/network/Gemini calls by the human story renderer: `0`.
 - ActionCommitPacket, receipt, mock payment, real payment, shipment release,
   and effect counters remain `0`.
 - Not production.
 - Not public auditor final package.
 
-Current next immediate task: AVF v0.2 + Full WOW v1.2 live observation
-preflight. Do not start ActionCommitPacket hardening, Airline, Privacy,
-Finance Kill-Switch, Vendor onboarding, NeedleFactory, Marennya, UP, real
-connectors, or public auditor package from this checkpoint.
+Current next immediate task: ActionCommitPacket / permission hardening
+preflight. Do not start ActionCommitPacket hardening implementation before that
+preflight. Do not start Airline, Privacy, Finance Kill-Switch, Vendor
+onboarding, NeedleFactory, Marennya, UP, real connectors, or public auditor
+package from this checkpoint.
 
 Closed final integrated rollup facts:
 

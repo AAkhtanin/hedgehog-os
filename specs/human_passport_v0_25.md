@@ -613,8 +613,44 @@ Checkpoint facts:
 - This is not production.
 - This is not public auditor final package.
 
-Next direction: AVF v0.2 live observation over Full WOW v1.2 before
-ActionCommitPacket hardening.
+Closed forward basis: the AVF v0.2 live observation over Full WOW v1.2 is
+captured in the next checkpoint note.
+
+### AVF v0.2 Live Observation + Human Story Checkpoint
+
+AVF v0.2 + Full WOW v1.2 live observation + human story renderer is PASS.
+
+Checkpoint facts:
+
+- Real-run audit:
+  `docs/audit_reports/auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
+- Human story renderer audit:
+  `docs/audit_reports/auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log`.
+- Six real Gemini semantic actors participated in the closed real run.
+- DRS ran before AVF and Orchestrator.
+- AVF ran after DRS and before Orchestrator.
+- Orchestrator received bounded AVF/DRS-informed context.
+- BSEP carried bounded context only.
+- Architect received BSEP-derived AVF/DRS-informed context.
+- Branch actors remained advisory.
+- DRS is not truth, not authority, and not permission.
+- AVF is not truth, not authority, and not permission.
+- AVF score is not Root.
+- HardMask is not Root.
+- Top-ranked candidate is not permission.
+- CandidateVector is not action permission.
+- CandidateVector is not FinalOutput.
+- AVF cannot bypass Root, create FinalOutput, create ActionCommitPacket, create
+  receipt, execute payment, or release shipment.
+- Root remains final authority.
+- The human story renderer is artifact-backed, does not rerun provider calls,
+  and does not print raw provider responses by default.
+- ActionCommitPacket, receipt, mock payment, real payment, shipment release,
+  and effect counters remain `0`.
+- This is not production.
+- This is not public auditor final package.
+
+Next direction: ActionCommitPacket / permission hardening preflight.
 
 ### Current Hedgehog Core Baseline
 

@@ -372,8 +372,8 @@ Status:
 - AVF Slice B local evaluator / advisory ranking report: PASS.
 - AVF Slice C Full WOW v1.2 deterministic product trace integration: PASS.
 - AVF Slice D adversarial hard-mask / non-authority hardening: PASS.
-- Full WOW v1.2 + Local DRS v0.2 remains the baseline for the next AVF live
-  observation preflight.
+- Full WOW v1.2 + Local DRS v0.2 remains the baseline for the AVF live
+  observation package.
 - Full WOW v1.2 product trace now observes Local DRS v0.2 resolve ->
   CandidateVector pressure -> AVF v0.2 advisory hard/soft/rank report -> still
   not permission.
@@ -388,6 +388,38 @@ Status:
 - AVF creates no FinalOutput, ActionCommitPacket, receipt, payment, shipment
   release, bypass-Root path, provider/network/Gemini call, or real-world
   effect.
+
+## Applied AVF v0.2 Live Observation + Human Story Checkpoint
+
+Full WOW v1.2 baseline now observes:
+
+Local DRS v0.2 resolve
+-> AVF v0.2 advisory pressure/ranking
+-> bounded LLM semantic route
+-> BSEP
+-> Architect
+-> branch actors
+-> Root boundary
+-> human story renderer.
+
+Status:
+
+- Real-run audit:
+  `docs/audit_reports/auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
+- Human story renderer audit:
+  `docs/audit_reports/auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log`.
+- Real-provider model: `gemini-2.5-flash`.
+- Six semantic actors participated in the closed live observation.
+- DRS remembered prior traces and stayed non-authority.
+- AVF hard-masked unsafe routes and ranked safe candidates without
+  authorization.
+- Orchestrator, BSEP, and Architect saw bounded AVF/DRS-informed context.
+- Branch actors remained advisory.
+- Root remained final authority.
+- The human story renderer explains the closed artifacts without rerunning the
+  provider and without printing raw provider responses by default.
+- This is still not production and creates no ActionCommitPacket, receipt,
+  mock payment, real payment, shipment release, or effect.
 
 ## 4. Cold Start Expected Behavior
 

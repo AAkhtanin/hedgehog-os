@@ -104,6 +104,19 @@ preflight. Do not start Airline, Privacy, Finance Kill-Switch, Vendor
 onboarding, NeedleFactory, Marennya, UP, real connectors, or public auditor
 package from this checkpoint.
 
+Architecture correction guard:
+
+- Root-centered phase loops and ActionCommitPacket geometry are recorded in
+  `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
+- ActionCommitPacket / Contract Fulfillment Corridor Slice A may start only
+  after this correction is recorded.
+- Slice A remains local packet/corridor model only.
+- No ActionCommitPacket runtime has started yet.
+- Do not implement generic RootScopedContractEnvelope runtime,
+  SemanticWorkContract runtime, DeliveryEnvelope runtime, Airline, Privacy,
+  Finance Kill-Switch, Vendor onboarding, NeedleFactory, Marennya, UP, real
+  connectors, or public auditor package from this checkpoint.
+
 Closed final integrated rollup facts:
 
 

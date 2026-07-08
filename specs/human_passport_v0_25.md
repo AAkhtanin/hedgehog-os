@@ -652,6 +652,41 @@ Checkpoint facts:
 
 Next direction: ActionCommitPacket / permission hardening preflight.
 
+### Root-Centered Phase Loops / ActionCommitPacket Corridor
+
+Architecture correction:
+
+- Spec:
+  `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
+- Root is the phase boundary, not only the final endpoint.
+- A task may move through Root -> bounded phase-loop / petal -> Root -> next
+  bounded phase-loop / petal -> Root.
+- RootReview evaluates a bounded phase and may open the next scoped phase.
+- RootFinal is terminal FinalOutput authority.
+- RootAudit receives evidence/status after bounded fulfillment or delivery.
+- Before Root is the semantic/reasoning plane: DRS, AVF, LLM semantic actors,
+  branch actors, ResultProposals, Post V&V, and GT/LGT remain advisory.
+- After Root is the contract/commit plane: Root may emit a scoped
+  ActionCommitPacket into a deterministic ContractFulfillmentCorridor.
+- The corridor validates and consumes the packet; it does not restart LLM
+  reasoning and does not expand scope.
+- `RootScopedContractEnvelope`, `SemanticWorkContract`, and `DeliveryEnvelope`
+  are architecture vocabulary only and are not current runtime implementation.
+- Current implementation scope is ActionCommitPacket / permission hardening for
+  Supplier A mock payment only.
+- ActionCommitPacket is Root-created, sealed, scoped, and replay-protected; it
+  is not FinalOutput, receipt, real payment, shipment release, DRS memory, AVF
+  permission, or future permission.
+- Human approval is scoped evidence for Root. Only Root creates
+  ActionCommitPacket.
+- Receipt is evidence only; it cannot create future permission, shipment
+  release, payment permission for Supplier B, Root decision, FinalOutput, or
+  ActionCommitPacket.
+- Scope containment laws apply: Allowed(child) ⊆ Allowed(parent),
+  Scope(child) ⊆ Scope(parent), Forbidden(child) ⊇ Forbidden(parent),
+  TTL(child) ≤ TTL(parent), and Adapter(child) ∈ AllowedAdapters(parent).
+- Slice A remains local packet/corridor model only.
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:

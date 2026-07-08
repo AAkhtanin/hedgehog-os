@@ -29,6 +29,18 @@ This is planning only. It does not implement runtime, tests, schemas, provider
 calls, connector calls, payment, shipment release, receipt creation, FinalOutput
 creation, or an ActionCommitPacket runtime.
 
+## Architecture Correction Source
+
+This preflight is governed by:
+
+- `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`
+
+Slice A must follow that Root-centered phase-loop geometry and
+ActionCommitPacket corridor semantics. In particular, Root is the phase
+boundary, ActionCommitPacket is a Root-created scoped capability for the
+contract/commit plane, and the Contract Fulfillment Corridor returns
+evidence/status without expanding authority or restarting reasoning.
+
 ## 2. Closed Basis
 
 Closed checkpoint:

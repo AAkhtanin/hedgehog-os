@@ -421,6 +421,27 @@ Status:
 - This is still not production and creates no ActionCommitPacket, receipt,
   mock payment, real payment, shipment release, or effect.
 
+## ActionCommitPacket Permission Hardening Architecture Correction
+
+ActionCommitPacket permission hardening preflight is governed by the
+Root-centered phase-loop correction:
+
+- `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`
+- Accepted preflight:
+  `docs/action_commit_packet_contract_fulfillment_corridor_preflight_v01.md`
+- Root is the phase boundary.
+- Before Root remains semantic/reasoning plane work.
+- After Root is contract/commit plane work.
+- RootReview and RootFinal are distinct boundaries.
+- ActionCommitPacket is Root-created, scoped, replay-protected, and not action
+  itself.
+- ContractFulfillmentCorridor validates and consumes packet scope without
+  widening scope.
+- Receipt is evidence only.
+- Slice A local packet/corridor model remains the next implementation.
+- No ActionCommitPacket runtime, receipt, mock payment, real payment, shipment
+  release, or effect has started in this correction.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

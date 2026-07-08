@@ -156,6 +156,39 @@ AVF v0.2 live observation human story invariant examples:
   shipment release, FinalOutput, or effects.
 - Root remains final authority.
 
+Root-centered phase-loop / ActionCommitPacket corridor invariant examples:
+
+- Root is the phase boundary, not only the final endpoint.
+- RootReview may close one bounded phase and open the next scoped phase.
+- RootFinal is terminal FinalOutput authority.
+- RootAudit receives evidence/status after bounded fulfillment or delivery.
+- Before Root remains the semantic/reasoning plane.
+- After Root is the contract/commit plane.
+- Post-Root reasoning must not restart inside the action corridor.
+- Only Root creates ActionCommitPacket.
+- Human approval is scoped evidence for Root and does not create the packet by
+  itself.
+- LLM, DRS, AVF, and GT/LGT cannot create ActionCommitPacket.
+- ActionCommitPacket is sealed, scoped, Root-created, replay-protected, and not
+  action itself.
+- ContractFulfillmentCorridor validates and consumes a scoped ActionCommitPacket
+  without widening scope.
+- NoExpansionAfterRoot must remain true.
+- Receipt is evidence only.
+- Receipt is not permission, not FinalOutput, not future permission, and not
+  shipment release.
+- Receipt must bind to packet id, subject scope, adapter, and idempotency key.
+- Duplicate packet, duplicate idempotency key after terminal receipt, expired
+  packet, wrong packet receipt, and receipt replay must be rejected.
+- Scope containment laws apply: Allowed(child) ⊆ Allowed(parent),
+  Scope(child) ⊆ Scope(parent), Forbidden(child) ⊇ Forbidden(parent),
+  TTL(child) ≤ TTL(parent), and Adapter(child) ∈ AllowedAdapters(parent).
+- Supplier A mock payment only is in scope for the next ActionCommitPacket
+  permission hardening layer.
+- Supplier B, shipment release, real bank, real supplier API, real warehouse
+  API, and all real-world effects remain blocked.
+- Root remains final authority.
+
 Full Semantic E2E WOW v1.1 alignment invariant examples:
 
 - Closed receipt is evidence only when observed by Full E2E.

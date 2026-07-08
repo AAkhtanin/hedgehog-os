@@ -78,6 +78,13 @@ Checkpoint source:
   and effect counters remain `0`.
 - Next major gate: ActionCommitPacket / permission hardening preflight.
 - ActionCommitPacket hardening implementation has not started.
+- Architecture correction for Root-centered phase loops and ActionCommitPacket
+  geometry:
+  `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
+- ActionCommitPacket / Contract Fulfillment Corridor Slice A may start only
+  after this correction is recorded.
+- Slice A remains local packet/corridor model only; no ActionCommitPacket
+  runtime has started yet.
 - This is not production.
 - This is not public auditor final package.
 

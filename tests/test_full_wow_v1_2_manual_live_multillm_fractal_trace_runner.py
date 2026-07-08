@@ -1308,6 +1308,20 @@ def test_config_key_detection_accepts_config_module(monkeypatch: Any) -> None:
     )
 
 
+def test_config_key_detection_accepts_config_module_for_provider_adapter(
+    monkeypatch: Any,
+) -> None:
+    config_module = SimpleNamespace()
+    setattr(config_module, "GOOGLE_API_KEY", "test-config-key")
+    monkeypatch.setitem(sys.modules, "config", config_module)
+    env = {runner.ENABLE_ENV: "1"}
+
+    adapter_env = runner._provider_adapter_env(env)
+
+    assert runner.provider_adapter._gemini_api_key(adapter_env) == "test-config-key"
+    assert "GOOGLE_API_KEY" not in env
+
+
 def test_missing_key_still_skips_closed_when_no_env_and_no_config(
     monkeypatch: Any,
 ) -> None:
@@ -1351,6 +1365,52 @@ def test_provider_failure_reports_sanitized_error_kind(monkeypatch: Any) -> None
     for marker in SECRET_MARKERS:
         assert marker not in rendered
         assert marker not in report_json
+
+
+def test_real_provider_path_delegates_to_shared_adapter_and_unwraps_client_error(
+    monkeypatch: Any,
+) -> None:
+    calls: list[Mapping[str, Any]] = []
+
+    class ClientError(Exception):
+        def __init__(self) -> None:
+            self.status_code = 403
+            self.message = "API key not valid"
+            super().__init__("API key not valid fake-client-key")
+
+    def raising_shared_provider(**kwargs: Any) -> str:
+        calls.append(kwargs)
+        raise runner.provider_adapter.ProviderCaptureError(
+            "provider_call_failed"
+        ) from ClientError()
+
+    monkeypatch.setattr(
+        runner,
+        "_shared_live_gemini_provider",
+        raising_shared_provider,
+    )
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env={runner.ENABLE_ENV: "1", "GOOGLE_API_KEY": "fake-client-key"},
+        provider=None,
+    )
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        report
+    )
+    report_json = json.dumps(report, sort_keys=True)
+
+    assert len(calls) == 1
+    assert calls[0]["model_name"] == runner.DEFAULT_MODEL
+    assert calls[0]["response_schema"] is None
+    assert calls[0]["explicit_http_timeout"] is False
+    assert calls[0]["role"] == "top_level_orchestrator_llm"
+    assert report["final_status"] == "FAIL_CLOSED"
+    assert report["failed_role"] == "top_level_orchestrator_llm"
+    assert report["failed_stage"] == "provider_call"
+    assert report["provider_error_kind"] == "ClientError"
+    assert report["provider_error_status_code"] == 403
+    assert report["provider_error_message_sanitized"] == "API key not valid"
+    assert "fake-client-key" not in rendered
+    assert "fake-client-key" not in report_json
 
 
 def test_provider_client_error_reports_safe_status_and_message(
@@ -1779,7 +1839,15 @@ def test_manual_live_multillm_fractal_does_not_call_real_provider_in_tests(
     assert "_config_value_from_env_or_config" in source
     assert "_live_gemini_config_available" in source
     assert "GOOGLE_GEMINI_API_KEY" in source
+    assert "run_live_provider_adapter_response_capture_v01" in source
+    assert "run_live_unknown_request_dual_rich_context_v01" in source
+    assert "_shared_live_gemini_provider" in source
+    assert "_provider_adapter_env" in source
+    assert "response_schema=None" in source
+    assert "explicit_http_timeout=False" in source
     assert "if provider is None and not (" not in source
+    assert "from google import genai" not in source
+    assert "genai.Client" not in source
 
 
 def test_live_lane_action_corridor_source_import_boundary() -> None:

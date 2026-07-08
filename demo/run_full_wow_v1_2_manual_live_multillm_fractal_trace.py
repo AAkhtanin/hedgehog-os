@@ -8,6 +8,10 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
+from demo import run_live_provider_adapter_response_capture_v01 as provider_adapter
+from demo.run_live_unknown_request_dual_rich_context_v01 import (
+    _call_live_gemini_provider as _shared_live_gemini_provider,
+)
 from hedgehog.action_commit_packet_v02 import (
     STATUS_PASS,
     build_supplier_a_mock_receipt_evidence_fixture_v01,
@@ -438,12 +442,14 @@ SECRET_MARKERS = (
     "sandbox_token_abc",
     "beneficiary_iban",
     "raw_iban_value",
+    "HEDGEHOG_GEMINI_API_KEY" + "=",
     "GEMINI_API_KEY" + "=",
     "GOOGLE_API_KEY" + "=",
     "GOOGLE_GEMINI_API_KEY" + "=",
 )
 
 GEMINI_KEY_NAMES = (
+    "HEDGEHOG_GEMINI_API_KEY",
     "GEMINI_API_KEY",
     "GOOGLE_API_KEY",
     "GOOGLE_GEMINI_API_KEY",
@@ -2019,14 +2025,25 @@ def _config_value_from_env_or_config(
 
 
 def _live_gemini_config_available(env: Mapping[str, str]) -> bool:
-    return bool(
-        _config_value_from_env_or_config(
-            env,
-            "GEMINI_API_KEY",
-            "GOOGLE_API_KEY",
-            "GOOGLE_GEMINI_API_KEY",
-        )
-    )
+    return bool(_config_value_from_env_or_config(env, *GEMINI_KEY_NAMES))
+
+
+def _provider_adapter_env(env: Mapping[str, str]) -> dict[str, str]:
+    adapter_env = dict(env)
+    if provider_adapter._gemini_api_key(adapter_env):
+        return adapter_env
+
+    for key_name in (
+        provider_adapter.ENV_GEMINI_API_KEY,
+        provider_adapter.ENV_GOOGLE_API_KEY,
+        provider_adapter.ENV_GEMINI_API_KEY_FALLBACK,
+        provider_adapter.ENV_GOOGLE_GEMINI_API_KEY,
+    ):
+        config_key = _config_value_from_env_or_config(env, key_name)
+        if config_key:
+            adapter_env[key_name] = config_key
+            break
+    return adapter_env
 
 
 def _secret_values_for_redaction(env: Mapping[str, str]) -> tuple[str, ...]:
@@ -2098,18 +2115,21 @@ def _provider_error_info(
     exc: Exception,
     env: Mapping[str, str],
 ) -> dict[str, Any]:
+    diagnostic_exc = exc.__cause__ if isinstance(exc.__cause__, Exception) else exc
     raw_message = str(exc)
-    status_code = _provider_error_status_code(exc)
+    status_code = _provider_error_status_code(diagnostic_exc)
     if raw_message.startswith("missing_gemini_api_key"):
         kind = "missing_gemini_api_key"
         message_sanitized = "missing_gemini_api_key"
-    elif raw_message.startswith("empty_provider_response"):
+    elif raw_message.startswith("empty_provider_response") or raw_message.startswith(
+        "provider_empty_response"
+    ):
         kind = "empty_provider_response"
         message_sanitized = "empty_provider_response"
     else:
-        kind = exc.__class__.__name__
+        kind = diagnostic_exc.__class__.__name__
         if status_code is not None or kind.endswith("ClientError"):
-            raw_detail = _provider_error_raw_message(exc)
+            raw_detail = _provider_error_raw_message(diagnostic_exc)
         else:
             raw_detail = kind
         message_sanitized = _sanitize_provider_error_text(raw_detail, env)
@@ -2320,36 +2340,20 @@ def _call_real_provider(
     model_name: str,
     delay_seconds: int,
 ) -> str:
-    api_key = _config_value_from_env_or_config(
-        env,
-        "GOOGLE_API_KEY",
-        "GEMINI_API_KEY",
-        "GOOGLE_GEMINI_API_KEY",
-    )
-    if not api_key:
+    if not _live_gemini_config_available(env):
         raise RuntimeError("missing_gemini_api_key")
     if delay_seconds > 0:
         time.sleep(delay_seconds)
-    from google import genai  # type: ignore
 
-    client = genai.Client(api_key=api_key)
-    response = client.models.generate_content(
-        model=model_name,
-        contents=prompt,
-        config={
-            "response_mime_type": "application/json",
-            "temperature": 0,
-            "candidate_count": 1,
-            "system_instruction": (
-                "Return JSON only. Provider output is semantic reasoning only. "
-                "Runtime canonicalizes. Validators verify. Root decides."
-            ),
-        },
+    return _shared_live_gemini_provider(
+        prompt=prompt,
+        model_name=model_name,
+        timeout_seconds=None,
+        explicit_http_timeout=False,
+        env=_provider_adapter_env(env),
+        response_schema=None,
+        role=role,
     )
-    text = getattr(response, "text", None)
-    if not text:
-        raise RuntimeError(f"empty_provider_response:{role}:{context.get('role')}")
-    return text
 
 
 def _provider_call(

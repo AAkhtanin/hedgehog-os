@@ -24,6 +24,18 @@ REQUIRED_SEQUENCE_SUBSET = (
     "post_vv_validated",
     "gt_lgt_advisory_reviewed",
     "root_final_boundary_evaluated",
+    "action_commit_packet_v0_2_integration_invoked",
+    "action_commit_packet_v0_2_packet_validated",
+    "action_commit_packet_v0_2_registry_validated",
+    "action_commit_packet_v0_2_corridor_entry_validated",
+    "action_commit_packet_v0_2_packet_seen_recorded",
+    "mock_bank_sandbox_v0_2_corridor_invoked",
+    "mock_bank_sandbox_v0_2_mock_payment_intent_created",
+    "mock_bank_sandbox_v0_2_mock_payment_consent_created",
+    "mock_bank_sandbox_v0_2_mock_payment_order_created",
+    "mock_bank_sandbox_v0_2_mock_receipt_evidence_created",
+    "mock_bank_sandbox_v0_2_receipt_validated",
+    "mock_bank_sandbox_v0_2_terminal_receipt_observed",
 )
 
 REQUIRED_ARTIFACTS = {
@@ -63,6 +75,17 @@ REQUIRED_ARTIFACTS = {
     "branch_bank_policy_prompt.txt",
     "branch_bank_policy_raw_response.txt",
     "branch_bank_policy_validation.json",
+    "action_commit_packet_v0_2_integration.json",
+    "action_commit_packet_v0_2_packet_validation.json",
+    "action_commit_packet_v0_2_registry_validation.json",
+    "action_commit_packet_v0_2_corridor_entry_validation.json",
+    "mock_bank_sandbox_v0_2_corridor_execution.json",
+    "mock_bank_sandbox_v0_2_corridor_sequence.json",
+    "mock_bank_sandbox_v0_2_mock_payment_intent.json",
+    "mock_bank_sandbox_v0_2_mock_payment_consent.json",
+    "mock_bank_sandbox_v0_2_mock_payment_order.json",
+    "mock_bank_sandbox_v0_2_mock_receipt_evidence.json",
+    "mock_bank_sandbox_v0_2_receipt_validation.json",
 }
 
 REQUIRED_SECTIONS = (
@@ -78,6 +101,8 @@ REQUIRED_SECTIONS = (
     "[BRANCH-LOCAL LLM/SLM ACTORS]",
     "[BRANCH RESULT PROPOSALS]",
     "[POST V&V / GT-LGT / ROOT]",
+    "[ACTIONCOMMITPACKET V0.2 LIVE OBSERVATION]",
+    "[MOCKBANKSANDBOX V0.2 LIVE CONTRACT CORRIDOR OBSERVATION]",
     "[SECRET MEMBRANE]",
     "[AUTHORITY MATRIX]",
     "[COUNTER MATRIX]",
@@ -382,6 +407,19 @@ def test_manual_live_avf_v0_2_default_skipped_closed() -> None:
     assert counters["real_world_effects_count"] == 0
 
 
+def test_live_lane_action_corridor_default_skipped_closed() -> None:
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env={}
+    )
+    counters = report["counters"]
+
+    assert report["final_status"] == "SKIPPED_CLOSED"
+    assert report["action_commit_packet_v0_2_integration"]["status"] == "not_run"
+    assert report["mock_bank_sandbox_v0_2_corridor_execution"]["status"] == "not_run"
+    assert counters["action_commit_packet_v0_2_integration_invoked_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_corridor_invoked_count"] == 0
+
+
 def test_manual_live_multillm_fractal_fake_provider_returns_pass() -> None:
     report = _pass_report()
     counters = report["counters"]
@@ -393,6 +431,28 @@ def test_manual_live_multillm_fractal_fake_provider_returns_pass() -> None:
     assert counters["real_provider_call_count"] == 0
     assert counters["network_used_count"] == 0
     assert counters["gemini_called_count"] == 0
+
+
+def test_live_lane_action_corridor_fake_provider_pass() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+
+    assert report["final_status"] == "PASS"
+    assert counters["semantic_actor_call_count"] == 6
+    assert counters["fake_provider_call_count"] == 6
+    assert counters["real_provider_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert report["action_commit_packet_v0_2_integration"]["status"] == "PASS"
+    assert report["mock_bank_sandbox_v0_2_corridor_execution"]["status"] == "PASS"
+    assert counters["action_commit_packet_v0_2_integration_invoked_count"] == 1
+    assert counters["action_commit_packet_v0_2_root_created_model_packet_count"] == 1
+    assert counters["action_commit_packet_v0_2_packet_corridor_entry_validated_count"] == 1
+    assert counters["mock_bank_sandbox_v0_2_corridor_invoked_count"] == 1
+    assert counters["mock_bank_sandbox_v0_2_mock_receipt_evidence_created_count"] == 1
+    assert counters["mock_bank_sandbox_v0_2_provider_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_network_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_gemini_called_count"] == 0
 
 
 def test_manual_live_drs_v0_2_fake_provider_pass_observes_drs() -> None:
@@ -692,6 +752,32 @@ def test_manual_live_avf_v0_2_bsep_contains_bounded_avf_drs_context() -> None:
         assert marker not in bsep_text
 
 
+def test_live_lane_action_corridor_bsep_does_not_include_raw_action_tables() -> None:
+    report = _pass_report()
+    bsep = report["bsep_packet"]
+    bsep_text = json.dumps(bsep, sort_keys=True)
+
+    assert report["final_status"] == "PASS"
+    assert bsep["raw_drs_tables_included"] is False
+    assert bsep["raw_avf_tables_included"] is False
+    assert bsep["raw_bank_secrets_included"] is False
+    assert bsep["action_permission_included"] is False
+    assert bsep["final_output_included"] is False
+    for raw_key in (
+        "ActionCommitPacketV02",
+        "MockReceiptEvidenceV01",
+        "mock_payment_order",
+        "mock_receipt_evidence",
+        "terminal_receipt_packet_ids",
+        "used_idempotency_keys",
+        "action_commit_packet_v0_2_integration",
+        "mock_bank_sandbox_v0_2_corridor_execution",
+    ):
+        assert raw_key not in bsep_text
+    for marker in SECRET_MARKERS:
+        assert marker not in bsep_text
+
+
 def test_manual_live_drs_v0_2_bsep_contains_resolve_invoked_true() -> None:
     bsep = _pass_report()["bsep_packet"]
 
@@ -820,6 +906,26 @@ def test_manual_live_multillm_fractal_role_sequence() -> None:
     assert positions == sorted(positions)
 
 
+def test_live_lane_action_corridor_sequence_order() -> None:
+    sequence = _pass_report()["pipeline_sequence"]
+
+    assert sequence.index("local_drs_v0_2_resolve_invoked") < sequence.index(
+        "avf_v0_2_evaluation_invoked"
+    )
+    assert sequence.index("avf_v0_2_evaluation_invoked") < sequence.index(
+        "top_level_orchestrator_provider_called"
+    )
+    assert sequence.index("root_final_boundary_evaluated") < sequence.index(
+        "action_commit_packet_v0_2_integration_invoked"
+    )
+    assert sequence.index(
+        "action_commit_packet_v0_2_packet_seen_recorded"
+    ) < sequence.index("mock_bank_sandbox_v0_2_corridor_invoked")
+    assert sequence.index(
+        "mock_bank_sandbox_v0_2_mock_payment_order_created"
+    ) < sequence.index("mock_bank_sandbox_v0_2_mock_receipt_evidence_created")
+
+
 def test_manual_live_multillm_fractal_bsep_before_architect() -> None:
     report = _pass_report()
     counters = report["counters"]
@@ -891,6 +997,59 @@ def test_manual_live_multillm_fractal_no_execution_or_effects() -> None:
     assert counters["real_world_effects_count"] == 0
 
 
+def test_live_lane_action_commit_packet_boundaries() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+    packet = report["action_commit_packet_v0_2_integration"]
+
+    assert packet["status"] == "PASS"
+    assert packet["created_by"] == "root"
+    assert packet["root_created"] is True
+    assert packet["human_approval_is_scoped_evidence_only"] is True
+    assert counters["action_commit_packet_v0_2_created_by_root_count"] == 1
+    assert counters["action_commit_packet_v0_2_created_by_human_count"] == 0
+    assert counters["action_commit_packet_v0_2_created_by_llm_count"] == 0
+    assert counters["action_commit_packet_v0_2_created_by_drs_count"] == 0
+    assert counters["action_commit_packet_v0_2_created_by_avf_count"] == 0
+    assert counters["action_commit_packet_v0_2_created_by_gt_lgt_count"] == 0
+    assert "supplier_a_adriatic_filters" in packet["allowed_subjects"]
+    assert "supplier_b_balkan_pumps" in packet["forbidden_subjects"]
+    assert "shipment_sh_2042" in packet["forbidden_subjects"]
+    assert "real_bank" in packet["forbidden_adapters"]
+    assert "real_supplier_api" in packet["forbidden_adapters"]
+    assert "real_warehouse_api" in packet["forbidden_adapters"]
+    assert packet["registry_is_local_proof_only"] is True
+    assert packet["registry_is_not_drs"] is True
+    assert packet["registry_is_not_authority"] is True
+    assert packet["registry_is_not_permission"] is True
+
+
+def test_live_lane_mock_bank_corridor_boundaries() -> None:
+    report = _pass_report()
+    counters = report["counters"]
+    corridor = report["mock_bank_sandbox_v0_2_corridor_execution"]
+    receipt = corridor["mock_receipt_evidence"]
+
+    assert corridor["status"] == "PASS"
+    assert counters["mock_bank_sandbox_v0_2_mock_payment_intent_created_count"] == 1
+    assert counters["mock_bank_sandbox_v0_2_mock_payment_consent_created_count"] == 1
+    assert counters["mock_bank_sandbox_v0_2_mock_payment_order_created_count"] == 1
+    assert counters["mock_bank_sandbox_v0_2_mock_receipt_evidence_created_count"] == 1
+    assert receipt["evidence_only"] is True
+    assert counters["mock_bank_sandbox_v0_2_receipt_permission_created_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_receipt_future_permission_created_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_receipt_final_output_created_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_receipt_supplier_b_authorization_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_receipt_shipment_release_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_receipt_production_drs_write_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_real_bank_api_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_real_supplier_api_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_real_warehouse_api_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_real_payment_executed_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_shipment_released_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_real_world_effects_count"] == 0
+
+
 def test_manual_live_drs_v0_2_no_real_execution_or_effects() -> None:
     counters = _pass_report()["counters"]
 
@@ -944,6 +1103,18 @@ def test_manual_live_avf_v0_2_no_new_semantic_actor() -> None:
     assert report["counters"]["semantic_actor_call_count"] == 6
     assert report["counters"]["branch_local_llm_slm_call_count"] == 4
     assert not any("avf" in role.lower() for role in roles)
+
+
+def test_live_lane_action_corridor_no_new_semantic_actor() -> None:
+    report = _pass_report()
+    roles = {call["role"] for call in report["semantic_actor_calls"]}
+
+    assert report["counters"]["semantic_actor_call_count"] == 6
+    assert "action_commit_packet_actor" not in roles
+    assert "mock_bank_sandbox_actor" not in roles
+    assert "bank_b_hedgehog_native_actor" not in roles
+    assert not any("action_commit_packet" in role for role in roles)
+    assert not any("mock_bank_sandbox" in role for role in roles)
 
 
 def test_manual_live_drs_v0_2_no_authority_or_permission() -> None:
@@ -1018,6 +1189,16 @@ def test_manual_live_avf_v0_2_no_authority_or_permission() -> None:
         "Root remains final authority.",
     ):
         assert fact in matrix
+
+
+def test_live_lane_action_corridor_no_post_root_reasoning_or_authority() -> None:
+    matrix = _pass_report()["authority_matrix"]
+
+    assert "No post-Root reasoning restart." in matrix
+    assert "MockBankSandbox does not decide." in matrix
+    assert "MockBankSandbox does not create authority." in matrix
+    assert "Mock receipt is not permission." in matrix
+    assert "Root remains final authority." in matrix
 
 
 def test_manual_live_multillm_fractal_invalid_branch_actor_fails_closed() -> None:
@@ -1220,6 +1401,42 @@ def test_manual_live_multillm_fractal_artifacts_written_with_fake_provider(
                 assert marker not in text
 
 
+def test_live_lane_action_corridor_artifacts_written(tmp_path: Path) -> None:
+    env = {**ENABLED_ENV, runner.ARTIFACT_DIR_ENV: str(tmp_path)}
+
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env=env, provider=_fake_provider
+    )
+    summary = json.loads((tmp_path / "summary.json").read_text(encoding="utf-8"))
+
+    action_artifacts = {
+        "action_commit_packet_v0_2_integration.json",
+        "action_commit_packet_v0_2_packet_validation.json",
+        "action_commit_packet_v0_2_registry_validation.json",
+        "action_commit_packet_v0_2_corridor_entry_validation.json",
+        "mock_bank_sandbox_v0_2_corridor_execution.json",
+        "mock_bank_sandbox_v0_2_corridor_sequence.json",
+        "mock_bank_sandbox_v0_2_mock_payment_intent.json",
+        "mock_bank_sandbox_v0_2_mock_payment_consent.json",
+        "mock_bank_sandbox_v0_2_mock_payment_order.json",
+        "mock_bank_sandbox_v0_2_mock_receipt_evidence.json",
+        "mock_bank_sandbox_v0_2_receipt_validation.json",
+    }
+
+    assert report["final_status"] == "PASS"
+    assert action_artifacts <= {path.name for path in tmp_path.iterdir()}
+    assert action_artifacts <= set(summary["artifacts"]["written_files"])
+    for artifact_name in action_artifacts:
+        json.loads((tmp_path / artifact_name).read_text(encoding="utf-8"))
+    execution = json.loads(
+        (tmp_path / "mock_bank_sandbox_v0_2_corridor_execution.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert execution["status"] == "PASS"
+    assert execution["receipt_evidence_only"] is True
+
+
 def test_manual_live_drs_v0_2_artifacts_written(tmp_path: Path) -> None:
     env = {**ENABLED_ENV, runner.ARTIFACT_DIR_ENV: str(tmp_path)}
 
@@ -1396,6 +1613,29 @@ def test_manual_live_multillm_fractal_rendered_sections() -> None:
     assert "Root remains final authority." in rendered
 
 
+def test_live_lane_action_corridor_rendered_sections() -> None:
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        _pass_report()
+    )
+
+    assert "[ACTIONCOMMITPACKET V0.2 LIVE OBSERVATION]" in rendered
+    assert "[MOCKBANKSANDBOX V0.2 LIVE CONTRACT CORRIDOR OBSERVATION]" in rendered
+    assert "Root created one scoped Supplier A ActionCommitPacket model." in rendered
+    assert "Human approval is scoped evidence only." in rendered
+    assert "LLM/DRS/AVF/GT-LGT did not create the packet." in rendered
+    assert "Supplier B is excluded." in rendered
+    assert "Shipment release is excluded." in rendered
+    assert "MockBankSandbox consumed the scoped packet." in rendered
+    assert "The corridor created mock intent/consent/order." in rendered
+    assert "The corridor returned mock receipt evidence." in rendered
+    assert "Receipt is evidence only." in rendered
+    assert "Receipt did not create permission." in rendered
+    assert "Receipt did not authorize Supplier B." in rendered
+    assert "Receipt did not release shipment." in rendered
+    assert "Root remains final authority." in rendered
+    assert "No real-world effect occurred." in rendered
+
+
 def test_manual_live_multillm_fractal_forbidden_overclaims() -> None:
     rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
         _pass_report()
@@ -1427,18 +1667,39 @@ def test_manual_live_multillm_fractal_does_not_call_real_provider_in_tests(
     assert "if provider is None and not" in source
 
 
-def test_manual_live_avf_v0_2_source_import_boundary() -> None:
+def test_live_lane_action_corridor_source_import_boundary() -> None:
     source = Path(runner.__file__).read_text(encoding="utf-8")
 
     assert "from hedgehog.local_drs_v02 import" in source
     assert "from hedgehog.avf_v02 import" in source
+    assert "from hedgehog.action_commit_packet_v02 import" in source
     assert "run_full_wow_v1_2_product_trace" not in source
     assert "run_full_semantic_e2e_v01" not in source
     assert "run_supplier_payment_shipment_release_review_wow_v1_1" not in source
     assert "import ActionCommitPacket" not in source
-    assert "from hedgehog.action" not in source
-    assert "real_bank" not in source
-    assert "real_supplier" not in source
-    assert "real_warehouse" not in source
+    assert "from hedgehog.action_commit_packet import" not in source
+    assert "hedgehog.mock_connector_sandbox" not in source
+    assert "google.genai" not in source
+    assert "import requests" not in source
+    assert "import urllib" not in source
+    assert "import openai" not in source
+    assert "import subprocess" not in source
+    assert "call_real_bank" not in source
+    assert "call_real_supplier" not in source
+    assert "call_real_warehouse" not in source
     assert "airline" not in source.lower()
     assert "privacy" not in source.lower()
+    for left, right in (
+        ("authority flows", " upward"),
+        ("adapter returns", " authority"),
+        ("receipt returns", " authority"),
+        ("bank returns", " authority"),
+        ("corridor", " decides"),
+        ("adapter", " decides"),
+        ("post-Root reasoning", " restarts"),
+        ("receipt grants", " permission"),
+        ("receipt releases", " shipment"),
+        ("human approval directly creates", " ActionCommitPacket"),
+    ):
+        forbidden = left + right
+        assert forbidden not in source

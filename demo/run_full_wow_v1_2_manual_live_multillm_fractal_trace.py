@@ -7,6 +7,17 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
+from hedgehog.action_commit_packet_v02 import (
+    STATUS_PASS,
+    build_supplier_a_mock_receipt_evidence_fixture_v01,
+    build_supplier_a_packet_corridor_validation_fixture_v02,
+    record_packet_seen_v02,
+    record_terminal_receipt_observation_v02,
+    validate_action_commit_packet_v02,
+    validate_mock_receipt_evidence_v01,
+    validate_packet_against_registry_v02,
+    validate_packet_corridor_entry_v02,
+)
 from hedgehog.avf_v02 import (
     build_wow_v1_2_avf_v02_evaluation_input,
     evaluate_avf_candidates_v02,
@@ -42,6 +53,8 @@ RENDERED_SECTIONS = (
     "[BRANCH-LOCAL LLM/SLM ACTORS]",
     "[BRANCH RESULT PROPOSALS]",
     "[POST V&V / GT-LGT / ROOT]",
+    "[ACTIONCOMMITPACKET V0.2 LIVE OBSERVATION]",
+    "[MOCKBANKSANDBOX V0.2 LIVE CONTRACT CORRIDOR OBSERVATION]",
     "[SECRET MEMBRANE]",
     "[AUTHORITY MATRIX]",
     "[COUNTER MATRIX]",
@@ -80,6 +93,18 @@ PIPELINE_SEQUENCE = (
     "post_vv_validated",
     "gt_lgt_advisory_reviewed",
     "root_final_boundary_evaluated",
+    "action_commit_packet_v0_2_integration_invoked",
+    "action_commit_packet_v0_2_packet_validated",
+    "action_commit_packet_v0_2_registry_validated",
+    "action_commit_packet_v0_2_corridor_entry_validated",
+    "action_commit_packet_v0_2_packet_seen_recorded",
+    "mock_bank_sandbox_v0_2_corridor_invoked",
+    "mock_bank_sandbox_v0_2_mock_payment_intent_created",
+    "mock_bank_sandbox_v0_2_mock_payment_consent_created",
+    "mock_bank_sandbox_v0_2_mock_payment_order_created",
+    "mock_bank_sandbox_v0_2_mock_receipt_evidence_created",
+    "mock_bank_sandbox_v0_2_receipt_validated",
+    "mock_bank_sandbox_v0_2_terminal_receipt_observed",
 )
 
 BRANCH_IDS = (
@@ -188,6 +213,32 @@ AUTHORITY_MATRIX = (
     "Human approval is scoped evidence only.",
     "Root-created mock ActionCommitPacket is scoped only and only observed here.",
     "MockBankSandbox receipt is evidence only and only observed here.",
+    "Only Root creates ActionCommitPacket v0.2.",
+    "Human approval does not directly create ActionCommitPacket.",
+    "LLM does not create ActionCommitPacket.",
+    "DRS does not create ActionCommitPacket.",
+    "AVF does not create ActionCommitPacket.",
+    "GT/LGT does not create ActionCommitPacket.",
+    "ActionCommitPacket is not FinalOutput.",
+    "ActionCommitPacket is not receipt.",
+    "ActionCommitPacket is not payment execution.",
+    "ActionCommitPacket is not shipment release.",
+    "Local packet registry is not DRS.",
+    "Local packet registry is not authority.",
+    "Local packet registry is not permission.",
+    "Packet accepted for mock corridor is not payment execution.",
+    "MockBankSandbox corridor is deterministic and not reasoning.",
+    "No post-Root reasoning restart.",
+    "MockBankSandbox does not decide.",
+    "MockBankSandbox does not restart LLM reasoning after Root.",
+    "MockBankSandbox does not create authority.",
+    "Mock receipt is evidence only.",
+    "Mock receipt is not permission.",
+    "Mock receipt is not FinalOutput.",
+    "Mock receipt does not authorize Supplier B.",
+    "Mock receipt does not release shipment.",
+    "Mock receipt does not create future permission.",
+    "Terminal receipt observation is local proof-only.",
     "Receipt does not release shipment.",
     "payment_slot is not permission.",
     *LOCAL_DRS_V0_2_NON_AUTHORITY_BOUNDARIES,
@@ -450,6 +501,60 @@ def _zero_counters() -> dict[str, int]:
         "avf_v0_2_provider_called_count": 0,
         "avf_v0_2_network_called_count": 0,
         "avf_v0_2_gemini_called_count": 0,
+        "action_commit_packet_v0_2_integration_invoked_count": 0,
+        "action_commit_packet_v0_2_root_created_model_packet_count": 0,
+        "action_commit_packet_v0_2_root_created_packet_validated_count": 0,
+        "action_commit_packet_v0_2_created_by_root_count": 0,
+        "action_commit_packet_v0_2_created_by_human_count": 0,
+        "action_commit_packet_v0_2_created_by_llm_count": 0,
+        "action_commit_packet_v0_2_created_by_drs_count": 0,
+        "action_commit_packet_v0_2_created_by_avf_count": 0,
+        "action_commit_packet_v0_2_created_by_gt_lgt_count": 0,
+        "action_commit_packet_v0_2_human_approval_used_as_evidence_count": 0,
+        "action_commit_packet_v0_2_supplier_a_scope_allowed_count": 0,
+        "action_commit_packet_v0_2_supplier_b_scope_allowed_count": 0,
+        "action_commit_packet_v0_2_shipment_release_allowed_count": 0,
+        "action_commit_packet_v0_2_real_bank_allowed_count": 0,
+        "action_commit_packet_v0_2_real_supplier_api_allowed_count": 0,
+        "action_commit_packet_v0_2_real_warehouse_api_allowed_count": 0,
+        "action_commit_packet_v0_2_packet_registry_validated_count": 0,
+        "action_commit_packet_v0_2_packet_corridor_entry_validated_count": 0,
+        "action_commit_packet_v0_2_accepted_for_mock_corridor_count": 0,
+        "action_commit_packet_v0_2_packet_seen_recorded_count": 0,
+        "action_commit_packet_v0_2_terminal_receipt_recorded_count": 0,
+        "mock_bank_sandbox_v0_2_corridor_invoked_count": 0,
+        "mock_bank_sandbox_v0_2_packet_consumed_count": 0,
+        "mock_bank_sandbox_v0_2_packet_validated_count": 0,
+        "mock_bank_sandbox_v0_2_scope_check_passed_count": 0,
+        "mock_bank_sandbox_v0_2_amount_check_passed_count": 0,
+        "mock_bank_sandbox_v0_2_creditor_check_passed_count": 0,
+        "mock_bank_sandbox_v0_2_payment_slot_check_passed_count": 0,
+        "mock_bank_sandbox_v0_2_adapter_binding_check_passed_count": 0,
+        "mock_bank_sandbox_v0_2_idempotency_check_passed_count": 0,
+        "mock_bank_sandbox_v0_2_expiry_ttl_check_passed_count": 0,
+        "mock_bank_sandbox_v0_2_forbidden_surface_check_passed_count": 0,
+        "mock_bank_sandbox_v0_2_mock_payment_intent_created_count": 0,
+        "mock_bank_sandbox_v0_2_mock_payment_consent_created_count": 0,
+        "mock_bank_sandbox_v0_2_mock_payment_order_created_count": 0,
+        "mock_bank_sandbox_v0_2_mock_receipt_evidence_created_count": 0,
+        "mock_bank_sandbox_v0_2_receipt_validated_count": 0,
+        "mock_bank_sandbox_v0_2_terminal_receipt_observed_count": 0,
+        "mock_bank_sandbox_v0_2_receipt_permission_created_count": 0,
+        "mock_bank_sandbox_v0_2_receipt_future_permission_created_count": 0,
+        "mock_bank_sandbox_v0_2_receipt_final_output_created_count": 0,
+        "mock_bank_sandbox_v0_2_receipt_supplier_b_authorization_count": 0,
+        "mock_bank_sandbox_v0_2_receipt_shipment_release_count": 0,
+        "mock_bank_sandbox_v0_2_receipt_scope_mutation_count": 0,
+        "mock_bank_sandbox_v0_2_receipt_production_drs_write_count": 0,
+        "mock_bank_sandbox_v0_2_real_bank_api_called_count": 0,
+        "mock_bank_sandbox_v0_2_real_supplier_api_called_count": 0,
+        "mock_bank_sandbox_v0_2_real_warehouse_api_called_count": 0,
+        "mock_bank_sandbox_v0_2_real_payment_executed_count": 0,
+        "mock_bank_sandbox_v0_2_shipment_released_count": 0,
+        "mock_bank_sandbox_v0_2_provider_called_count": 0,
+        "mock_bank_sandbox_v0_2_network_called_count": 0,
+        "mock_bank_sandbox_v0_2_gemini_called_count": 0,
+        "mock_bank_sandbox_v0_2_real_world_effects_count": 0,
         "bank_internal_raw_iban_present_count": 0,
         "bank_internal_token_present_count": 0,
         "llm_visible_raw_iban_count": 0,
@@ -572,6 +677,504 @@ def _avf_v0_2_report_artifacts(
             "rows": observation["score_explanation_table"]
         },
     }
+
+
+def _empty_action_commit_packet_v0_2_integration() -> dict[str, Any]:
+    return {
+        "status": "not_run",
+        "action_commit_packet_v0_2_status": "not_run",
+        "packet_id": None,
+        "created_by": None,
+        "root_created": False,
+        "human_approval_is_scoped_evidence_only": False,
+        "packet_validated": False,
+        "packet_validation_reasons": (),
+        "registry_validated": False,
+        "registry_is_local_proof_only": False,
+        "registry_is_not_drs": True,
+        "registry_is_not_authority": True,
+        "registry_is_not_permission": True,
+        "packet_corridor_entry_validated": False,
+        "accepted_for_mock_corridor": False,
+        "packet_seen_recorded_in_local_registry": False,
+        "terminal_receipt_recorded_before_corridor": False,
+        "allowed_subjects": (),
+        "forbidden_subjects": (),
+        "allowed_actions": (),
+        "forbidden_actions": (),
+        "allowed_adapters": (),
+        "forbidden_adapters": (),
+        "payment_slot_ref": None,
+        "creditor_ref": None,
+        "amount": None,
+        "currency": None,
+        "idempotency_key": None,
+    }
+
+
+def _empty_mock_bank_sandbox_v0_2_corridor_execution() -> dict[str, Any]:
+    return {
+        "status": "not_run",
+        "mock_bank_sandbox_v0_2_status": "not_run",
+        "source_packet_id": None,
+        "source_packet_validated": False,
+        "source_packet_corridor_entry_validated": False,
+        "source_packet_seen_in_registry": False,
+        "corridor_sequence": (),
+        "mock_payment_intent": {},
+        "mock_payment_consent": {},
+        "mock_payment_order": {},
+        "mock_receipt_evidence": {},
+        "receipt_validated": False,
+        "terminal_receipt_observed_in_local_registry": False,
+        "receipt_evidence_only": False,
+        "receipt_permission_created": False,
+        "receipt_future_permission_created": False,
+        "receipt_final_output_created": False,
+        "receipt_authorizes_supplier_b": False,
+        "receipt_releases_shipment": False,
+        "receipt_mutates_packet_scope": False,
+        "receipt_creates_production_drs_record": False,
+        "supplier_b_excluded": False,
+        "shipment_release_excluded": False,
+        "real_bank_excluded": False,
+        "real_payment_executed": False,
+        "real_world_effects_count": 0,
+    }
+
+
+def _action_corridor_step(
+    step_id: str,
+    input_summary: str,
+    output_summary: str,
+    meaning: str,
+    next_step: str,
+) -> dict[str, str]:
+    return {
+        "step_id": step_id,
+        "input_summary": input_summary,
+        "output_summary": output_summary,
+        "meaning": meaning,
+        "does_not_authorize": (
+            "permission, Supplier B payment, shipment release, FinalOutput, "
+            "or real-world effects"
+        ),
+        "next_step": next_step,
+    }
+
+
+def _action_corridor_report_artifacts(
+    action_integration: Mapping[str, Any],
+    mock_corridor: Mapping[str, Any],
+) -> dict[str, Mapping[str, Any]]:
+    return {
+        "action_commit_packet_v0_2_integration": dict(action_integration),
+        "action_commit_packet_v0_2_packet_validation": {
+            "packet_id": action_integration["packet_id"],
+            "packet_validated": action_integration["packet_validated"],
+            "reason_codes": action_integration["packet_validation_reasons"],
+        },
+        "action_commit_packet_v0_2_registry_validation": {
+            "packet_id": action_integration["packet_id"],
+            "registry_validated": action_integration["registry_validated"],
+            "reason_codes": action_integration["registry_validation_reasons"],
+            "registry_is_local_proof_only": action_integration[
+                "registry_is_local_proof_only"
+            ],
+        },
+        "action_commit_packet_v0_2_corridor_entry_validation": {
+            "packet_id": action_integration["packet_id"],
+            "packet_corridor_entry_validated": action_integration[
+                "packet_corridor_entry_validated"
+            ],
+            "accepted_for_mock_corridor": action_integration[
+                "accepted_for_mock_corridor"
+            ],
+            "reason_codes": action_integration[
+                "corridor_entry_validation_reasons"
+            ],
+        },
+        "mock_bank_sandbox_v0_2_corridor_execution": dict(mock_corridor),
+        "mock_bank_sandbox_v0_2_corridor_sequence": {
+            "rows": mock_corridor["corridor_sequence"]
+        },
+        "mock_bank_sandbox_v0_2_mock_payment_intent": mock_corridor[
+            "mock_payment_intent"
+        ],
+        "mock_bank_sandbox_v0_2_mock_payment_consent": mock_corridor[
+            "mock_payment_consent"
+        ],
+        "mock_bank_sandbox_v0_2_mock_payment_order": mock_corridor[
+            "mock_payment_order"
+        ],
+        "mock_bank_sandbox_v0_2_mock_receipt_evidence": mock_corridor[
+            "mock_receipt_evidence"
+        ],
+        "mock_bank_sandbox_v0_2_receipt_validation": {
+            "receipt_validated": mock_corridor["receipt_validated"],
+            "reason_codes": mock_corridor["receipt_validation_reasons"],
+            "terminal_receipt_observed_in_local_registry": mock_corridor[
+                "terminal_receipt_observed_in_local_registry"
+            ],
+        },
+    }
+
+
+def _collect_action_corridor_observation(
+    counters: dict[str, int],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Mapping[str, Any]]]:
+    packet, corridor, step, registry = (
+        build_supplier_a_packet_corridor_validation_fixture_v02()
+    )
+    packet_valid, packet_reasons = validate_action_commit_packet_v02(packet)
+    registry_report = validate_packet_against_registry_v02(packet, registry)
+    corridor_entry_report = validate_packet_corridor_entry_v02(
+        packet,
+        corridor,
+        step,
+        registry,
+    )
+    packet_seen_registry = record_packet_seen_v02(registry, packet)
+    source_packet_seen = (
+        packet.packet_id in packet_seen_registry.seen_packet_ids
+        and packet.idempotency.key in packet_seen_registry.used_idempotency_keys
+    )
+    terminal_receipt_before_corridor = bool(
+        packet_seen_registry.terminal_receipt_packet_ids
+        or packet_seen_registry.terminal_receipt_idempotency_keys
+    )
+
+    mock_payment_intent = {
+        "intent_id": "mock_payment_intent:supplier_a:inv_2042",
+        "packet_id": packet.packet_id,
+        "subject": packet.scope.creditor_ref,
+        "payment_slot_ref": packet.scope.payment_slot_ref,
+        "creditor_ref": packet.scope.creditor_ref,
+        "amount": packet.scope.amount,
+        "currency": packet.scope.currency,
+        "adapter_id": packet.adapter_binding.adapter_id,
+        "mock_only": True,
+        "real_payment": False,
+        "permission_source": "Root-created ActionCommitPacket only",
+    }
+    mock_payment_consent = {
+        "consent_id": "mock_payment_consent:supplier_a:inv_2042",
+        "packet_id": packet.packet_id,
+        "consent_status": "mock_consent_validated",
+        "scope_matches_packet": True,
+        "supplier_b_excluded": True,
+        "shipment_release_excluded": True,
+        "real_bank_excluded": True,
+    }
+    mock_payment_order = {
+        "order_id": "mock_payment_order:supplier_a:inv_2042",
+        "packet_id": packet.packet_id,
+        "intent_id": mock_payment_intent["intent_id"],
+        "consent_id": mock_payment_consent["consent_id"],
+        "order_status": "mock_order_created",
+        "subject": packet.scope.creditor_ref,
+        "amount": packet.scope.amount,
+        "currency": packet.scope.currency,
+        "payment_slot_ref": packet.scope.payment_slot_ref,
+        "idempotency_key": packet.idempotency.key,
+        "adapter_id": packet.adapter_binding.adapter_id,
+        "mock_only": True,
+        "real_payment_executed": False,
+        "shipment_released": False,
+    }
+
+    receipt = build_supplier_a_mock_receipt_evidence_fixture_v01(packet)
+    receipt_valid, receipt_reasons = validate_mock_receipt_evidence_v01(
+        packet,
+        receipt,
+    )
+    terminal_registry, terminal_reasons = record_terminal_receipt_observation_v02(
+        packet_seen_registry,
+        packet,
+        receipt,
+    )
+    terminal_receipt_observed = (
+        packet.packet_id in terminal_registry.terminal_receipt_packet_ids
+        and packet.idempotency.key
+        in terminal_registry.terminal_receipt_idempotency_keys
+    )
+
+    corridor_sequence = (
+        _action_corridor_step(
+            "root_created_action_commit_packet",
+            "Root-created Supplier A packet model.",
+            "Packet enters deterministic contract corridor.",
+            "Scoped capability starts after Root only.",
+            "packet_validation",
+        ),
+        _action_corridor_step(
+            "packet_validation",
+            "ActionCommitPacketV02 model.",
+            f"packet_validated={str(packet_valid).lower()}",
+            "Shape, Root creation, scope, TTL, idempotency, and adapter binding are checked.",
+            "local_registry_replay_guard",
+        ),
+        _action_corridor_step(
+            "local_registry_replay_guard",
+            "Empty local proof-only registry.",
+            f"packet_accepted_for_corridor={str(registry_report.packet_accepted_for_corridor_validation).lower()}",
+            "Registry checks replay locally and remains non-authority.",
+            "corridor_entry_validation",
+        ),
+        _action_corridor_step(
+            "corridor_entry_validation",
+            "Packet, corridor, child step, and registry.",
+            f"accepted_for_mock_corridor={str(corridor_entry_report.accepted_for_mock_corridor).lower()}",
+            "Entry validates packet plus child corridor containment.",
+            "mock_payment_intent_consent",
+        ),
+        _action_corridor_step(
+            "mock_payment_intent_consent",
+            "Validated packet scope.",
+            "mock payment intent and mock consent created.",
+            "Intent and consent are deterministic local structures.",
+            "scope_check",
+        ),
+        _action_corridor_step(
+            "scope_check",
+            "Child corridor allowed subjects/actions.",
+            "Supplier A remains the only allowed subject.",
+            "Scope is contained by packet scope.",
+            "amount_check",
+        ),
+        _action_corridor_step(
+            "amount_check",
+            "Packet amount and child step amount.",
+            "amount matches packet.",
+            "Amount cannot drift after Root.",
+            "creditor_check",
+        ),
+        _action_corridor_step(
+            "creditor_check",
+            "Packet creditor and child step creditor.",
+            "creditor matches Supplier A.",
+            "Creditor cannot drift to Supplier B.",
+            "payment_slot_check",
+        ),
+        _action_corridor_step(
+            "payment_slot_check",
+            "Packet payment slot and child step payment slot.",
+            "payment_slot matches packet.",
+            "Payment slot remains evidence-bound and not permission.",
+            "adapter_binding_check",
+        ),
+        _action_corridor_step(
+            "adapter_binding_check",
+            "Packet adapter binding and allowed adapters.",
+            "mock_bank_sandbox adapter is inside allowed scope.",
+            "Real bank, supplier API, and warehouse API remain excluded.",
+            "idempotency_check",
+        ),
+        _action_corridor_step(
+            "idempotency_check",
+            "Packet idempotency key and child step key.",
+            "idempotency key matches packet.",
+            "Replay guard remains local proof-only.",
+            "expiry_ttl_check",
+        ),
+        _action_corridor_step(
+            "expiry_ttl_check",
+            "Packet TTL and child step TTL.",
+            "child TTL does not exceed packet TTL.",
+            "Expired or wider TTL would fail closed.",
+            "forbidden_surface_check",
+        ),
+        _action_corridor_step(
+            "forbidden_surface_check",
+            "Packet forbidden subjects, actions, and adapters.",
+            "Supplier B, shipment release, and real APIs remain forbidden.",
+            "Forbidden surface cannot shrink after Root.",
+            "mock_payment_order",
+        ),
+        _action_corridor_step(
+            "mock_payment_order",
+            "Mock intent, mock consent, and validated packet.",
+            "mock payment order created.",
+            "Order is deterministic mock evidence, not real payment.",
+            "mock_receipt_evidence",
+        ),
+        _action_corridor_step(
+            "mock_receipt_evidence",
+            "Mock payment order and packet.",
+            f"receipt_validated={str(receipt_valid).lower()}",
+            "Receipt evidence is bound to packet, adapter, amount, currency, and idempotency.",
+            "terminal_receipt_observation",
+        ),
+        _action_corridor_step(
+            "terminal_receipt_observation",
+            "Validated receipt evidence and local registry.",
+            f"terminal_receipt_observed={str(terminal_receipt_observed).lower()}",
+            "Registry observes terminal receipt locally and creates no receipt.",
+            "status_evidence_returns_to_root",
+        ),
+        _action_corridor_step(
+            "status_evidence_returns_to_root",
+            "Mock receipt evidence and local registry status.",
+            "status/evidence returns to Root.",
+            "Root remains final authority.",
+            "root_boundary",
+        ),
+    )
+
+    status = (
+        STATUS_PASS
+        if packet_valid
+        and registry_report.validation_status == STATUS_PASS
+        and corridor_entry_report.validation_status == STATUS_PASS
+        and corridor_entry_report.accepted_for_mock_corridor
+        and source_packet_seen
+        and not terminal_receipt_before_corridor
+        and receipt_valid
+        and not terminal_reasons
+        and terminal_receipt_observed
+        and receipt.evidence_only
+        and not receipt.creates_future_permission
+        and not receipt.creates_action_permission
+        and not receipt.creates_final_output
+        and not receipt.authorizes_supplier_b
+        and not receipt.releases_shipment
+        and not receipt.mutates_packet_scope
+        and not receipt.creates_production_drs_record
+        and receipt.real_world_effects_count == 0
+        else "FAIL_CLOSED"
+    )
+
+    action_integration = {
+        "status": status,
+        "action_commit_packet_v0_2_status": status,
+        "packet_id": packet.packet_id,
+        "packet_type": packet.packet_type,
+        "created_by": packet.created_by,
+        "root_created": packet.root_created,
+        "source_root_decision_ref": packet.source_root_decision_ref,
+        "human_approval_ref": packet.human_approval_ref,
+        "human_approval_is_scoped_evidence_only": True,
+        "packet_validated": packet_valid,
+        "packet_validation_reasons": packet_reasons,
+        "registry_validated": registry_report.validation_status == STATUS_PASS,
+        "registry_validation_reasons": registry_report.reason_codes,
+        "registry_is_local_proof_only": registry.local_proof_only,
+        "registry_is_not_drs": True,
+        "registry_is_not_authority": True,
+        "registry_is_not_permission": True,
+        "packet_corridor_entry_validated": (
+            corridor_entry_report.validation_status == STATUS_PASS
+        ),
+        "corridor_entry_validation_reasons": corridor_entry_report.reason_codes,
+        "accepted_for_mock_corridor": (
+            corridor_entry_report.accepted_for_mock_corridor
+        ),
+        "packet_seen_recorded_in_local_registry": source_packet_seen,
+        "terminal_receipt_recorded_before_corridor": terminal_receipt_before_corridor,
+        "allowed_subjects": packet.scope.allowed_subjects,
+        "forbidden_subjects": packet.scope.forbidden_subjects,
+        "allowed_actions": packet.scope.allowed_actions,
+        "forbidden_actions": packet.scope.forbidden_actions,
+        "allowed_adapters": packet.scope.allowed_adapters,
+        "forbidden_adapters": packet.scope.forbidden_adapters,
+        "payment_slot_ref": packet.scope.payment_slot_ref,
+        "creditor_ref": packet.scope.creditor_ref,
+        "amount": packet.scope.amount,
+        "currency": packet.scope.currency,
+        "idempotency_key": packet.idempotency.key,
+    }
+    mock_corridor = {
+        "status": status,
+        "mock_bank_sandbox_v0_2_status": status,
+        "source_packet_id": packet.packet_id,
+        "source_packet_validated": packet_valid,
+        "source_packet_validation_reasons": packet_reasons,
+        "source_packet_corridor_entry_validated": (
+            corridor_entry_report.validation_status == STATUS_PASS
+        ),
+        "source_packet_corridor_entry_reasons": (
+            corridor_entry_report.reason_codes
+        ),
+        "source_packet_seen_in_registry": source_packet_seen,
+        "corridor_sequence": corridor_sequence,
+        "mock_payment_intent": mock_payment_intent,
+        "mock_payment_consent": mock_payment_consent,
+        "mock_payment_order": mock_payment_order,
+        "mock_receipt_evidence": asdict(receipt),
+        "receipt_validated": receipt_valid,
+        "receipt_validation_reasons": receipt_reasons,
+        "terminal_receipt_observed_in_local_registry": terminal_receipt_observed,
+        "terminal_receipt_observation_reasons": terminal_reasons,
+        "terminal_receipt_observation_is_local_proof_only": (
+            terminal_registry.local_proof_only
+            and not terminal_registry.production_persistence
+            and not terminal_registry.global_drs_write
+            and not terminal_registry.external_drs_write
+        ),
+        "receipt_evidence_only": receipt.evidence_only,
+        "receipt_permission_created": receipt.creates_action_permission,
+        "receipt_future_permission_created": receipt.creates_future_permission,
+        "receipt_final_output_created": receipt.creates_final_output,
+        "receipt_authorizes_supplier_b": receipt.authorizes_supplier_b,
+        "receipt_releases_shipment": receipt.releases_shipment,
+        "receipt_mutates_packet_scope": receipt.mutates_packet_scope,
+        "receipt_creates_production_drs_record": (
+            receipt.creates_production_drs_record
+        ),
+        "supplier_b_excluded": "supplier_b_balkan_pumps"
+        in packet.scope.forbidden_subjects,
+        "shipment_release_excluded": "shipment_release" in packet.scope.forbidden_actions,
+        "real_bank_excluded": "real_bank" in packet.scope.forbidden_adapters,
+        "real_payment_executed": False,
+        "real_world_effects_count": receipt.real_world_effects_count,
+    }
+
+    if status == STATUS_PASS:
+        counters.update(
+            {
+                "action_commit_packet_v0_2_integration_invoked_count": 1,
+                "action_commit_packet_v0_2_root_created_model_packet_count": 1,
+                "action_commit_packet_v0_2_root_created_packet_validated_count": 1,
+                "action_commit_packet_v0_2_created_by_root_count": 1,
+                "action_commit_packet_v0_2_created_by_human_count": 0,
+                "action_commit_packet_v0_2_created_by_llm_count": 0,
+                "action_commit_packet_v0_2_created_by_drs_count": 0,
+                "action_commit_packet_v0_2_created_by_avf_count": 0,
+                "action_commit_packet_v0_2_created_by_gt_lgt_count": 0,
+                "action_commit_packet_v0_2_human_approval_used_as_evidence_count": 1,
+                "action_commit_packet_v0_2_supplier_a_scope_allowed_count": 1,
+                "action_commit_packet_v0_2_supplier_b_scope_allowed_count": 0,
+                "action_commit_packet_v0_2_shipment_release_allowed_count": 0,
+                "action_commit_packet_v0_2_real_bank_allowed_count": 0,
+                "action_commit_packet_v0_2_real_supplier_api_allowed_count": 0,
+                "action_commit_packet_v0_2_real_warehouse_api_allowed_count": 0,
+                "action_commit_packet_v0_2_packet_registry_validated_count": 1,
+                "action_commit_packet_v0_2_packet_corridor_entry_validated_count": 1,
+                "action_commit_packet_v0_2_accepted_for_mock_corridor_count": 1,
+                "action_commit_packet_v0_2_packet_seen_recorded_count": 1,
+                "action_commit_packet_v0_2_terminal_receipt_recorded_count": 1,
+                "mock_bank_sandbox_v0_2_corridor_invoked_count": 1,
+                "mock_bank_sandbox_v0_2_packet_consumed_count": 1,
+                "mock_bank_sandbox_v0_2_packet_validated_count": 1,
+                "mock_bank_sandbox_v0_2_scope_check_passed_count": 1,
+                "mock_bank_sandbox_v0_2_amount_check_passed_count": 1,
+                "mock_bank_sandbox_v0_2_creditor_check_passed_count": 1,
+                "mock_bank_sandbox_v0_2_payment_slot_check_passed_count": 1,
+                "mock_bank_sandbox_v0_2_adapter_binding_check_passed_count": 1,
+                "mock_bank_sandbox_v0_2_idempotency_check_passed_count": 1,
+                "mock_bank_sandbox_v0_2_expiry_ttl_check_passed_count": 1,
+                "mock_bank_sandbox_v0_2_forbidden_surface_check_passed_count": 1,
+                "mock_bank_sandbox_v0_2_mock_payment_intent_created_count": 1,
+                "mock_bank_sandbox_v0_2_mock_payment_consent_created_count": 1,
+                "mock_bank_sandbox_v0_2_mock_payment_order_created_count": 1,
+                "mock_bank_sandbox_v0_2_mock_receipt_evidence_created_count": 1,
+                "mock_bank_sandbox_v0_2_receipt_validated_count": 1,
+                "mock_bank_sandbox_v0_2_terminal_receipt_observed_count": 1,
+            }
+        )
+
+    artifacts = _action_corridor_report_artifacts(action_integration, mock_corridor)
+    return action_integration, mock_corridor, artifacts
 
 
 def _avf_v0_2_candidate_observations(
@@ -921,6 +1524,12 @@ def _base_report(
             "receipt_final_status": None,
             "root_remains_final_authority": True,
         },
+        "action_commit_packet_v0_2_integration": (
+            _empty_action_commit_packet_v0_2_integration()
+        ),
+        "mock_bank_sandbox_v0_2_corridor_execution": (
+            _empty_mock_bank_sandbox_v0_2_corridor_execution()
+        ),
         "secret_membrane": {
             "bank_internal_raw_iban_present_count": counters[
                 "bank_internal_raw_iban_present_count"
@@ -1492,6 +2101,39 @@ def _artifact_capture(
         "branch_bank_policy_validation.json": _artifact_json(
             artifacts, "branch_bank_policy_validation"
         ),
+        "action_commit_packet_v0_2_integration.json": _artifact_json(
+            artifacts, "action_commit_packet_v0_2_integration"
+        ),
+        "action_commit_packet_v0_2_packet_validation.json": _artifact_json(
+            artifacts, "action_commit_packet_v0_2_packet_validation"
+        ),
+        "action_commit_packet_v0_2_registry_validation.json": _artifact_json(
+            artifacts, "action_commit_packet_v0_2_registry_validation"
+        ),
+        "action_commit_packet_v0_2_corridor_entry_validation.json": _artifact_json(
+            artifacts, "action_commit_packet_v0_2_corridor_entry_validation"
+        ),
+        "mock_bank_sandbox_v0_2_corridor_execution.json": _artifact_json(
+            artifacts, "mock_bank_sandbox_v0_2_corridor_execution"
+        ),
+        "mock_bank_sandbox_v0_2_corridor_sequence.json": _artifact_json(
+            artifacts, "mock_bank_sandbox_v0_2_corridor_sequence"
+        ),
+        "mock_bank_sandbox_v0_2_mock_payment_intent.json": _artifact_json(
+            artifacts, "mock_bank_sandbox_v0_2_mock_payment_intent"
+        ),
+        "mock_bank_sandbox_v0_2_mock_payment_consent.json": _artifact_json(
+            artifacts, "mock_bank_sandbox_v0_2_mock_payment_consent"
+        ),
+        "mock_bank_sandbox_v0_2_mock_payment_order.json": _artifact_json(
+            artifacts, "mock_bank_sandbox_v0_2_mock_payment_order"
+        ),
+        "mock_bank_sandbox_v0_2_mock_receipt_evidence.json": _artifact_json(
+            artifacts, "mock_bank_sandbox_v0_2_mock_receipt_evidence"
+        ),
+        "mock_bank_sandbox_v0_2_receipt_validation.json": _artifact_json(
+            artifacts, "mock_bank_sandbox_v0_2_receipt_validation"
+        ),
     }
     for name, value in text_files.items():
         _write_text(artifact_dir / name, value)
@@ -1636,6 +2278,18 @@ def _fail_closed_report(
         ]
     if artifacts and isinstance(artifacts.get("avf_v0_2_evaluation_report"), Mapping):
         report["avf_v0_2_observation"] = artifacts["avf_v0_2_evaluation_report"]
+    if artifacts and isinstance(
+        artifacts.get("action_commit_packet_v0_2_integration"), Mapping
+    ):
+        report["action_commit_packet_v0_2_integration"] = artifacts[
+            "action_commit_packet_v0_2_integration"
+        ]
+    if artifacts and isinstance(
+        artifacts.get("mock_bank_sandbox_v0_2_corridor_execution"), Mapping
+    ):
+        report["mock_bank_sandbox_v0_2_corridor_execution"] = artifacts[
+            "mock_bank_sandbox_v0_2_corridor_execution"
+        ]
     artifact_dir_value = env.get(ARTIFACT_DIR_ENV)
     if artifact_dir_value:
         capture = _artifact_capture(report, Path(artifact_dir_value), artifacts or {})
@@ -2129,6 +2783,67 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
         )
     )
 
+    (
+        action_commit_packet_integration,
+        mock_bank_corridor_execution,
+        action_corridor_artifacts,
+    ) = _collect_action_corridor_observation(counters)
+    artifacts.update(action_corridor_artifacts)
+    sequence.extend(
+        (
+            "action_commit_packet_v0_2_integration_invoked",
+            "action_commit_packet_v0_2_packet_validated",
+            "action_commit_packet_v0_2_registry_validated",
+            "action_commit_packet_v0_2_corridor_entry_validated",
+            "action_commit_packet_v0_2_packet_seen_recorded",
+            "mock_bank_sandbox_v0_2_corridor_invoked",
+            "mock_bank_sandbox_v0_2_mock_payment_intent_created",
+            "mock_bank_sandbox_v0_2_mock_payment_consent_created",
+            "mock_bank_sandbox_v0_2_mock_payment_order_created",
+            "mock_bank_sandbox_v0_2_mock_receipt_evidence_created",
+            "mock_bank_sandbox_v0_2_receipt_validated",
+            "mock_bank_sandbox_v0_2_terminal_receipt_observed",
+        )
+    )
+    if (
+        action_commit_packet_integration["status"] != STATUS_PASS
+        or mock_bank_corridor_execution["status"] != STATUS_PASS
+    ):
+        return _fail_closed_report(
+            env=effective_env,
+            model_name=model_name,
+            provider_mode=provider_mode,
+            counters=counters,
+            reason="action_corridor_validation_failed",
+            pipeline_sequence=tuple(sequence),
+            semantic_actor_calls=tuple(actor_calls),
+            artifacts=artifacts,
+            failed_role="deterministic_action_corridor",
+            failed_stage="action_commit_packet_v0_2_corridor",
+            validation_errors=(
+                *tuple(
+                    action_commit_packet_integration[
+                        "packet_validation_reasons"
+                    ]
+                ),
+                *tuple(
+                    action_commit_packet_integration[
+                        "registry_validation_reasons"
+                    ]
+                ),
+                *tuple(
+                    action_commit_packet_integration[
+                        "corridor_entry_validation_reasons"
+                    ]
+                ),
+                *tuple(
+                    mock_bank_corridor_execution[
+                        "receipt_validation_reasons"
+                    ]
+                ),
+            ),
+        )
+
     report = _base_report(
         final_status="PASS",
         stage_status="PASS",
@@ -2165,6 +2880,12 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
                 "receipt_final_status": "EVIDENCE_ONLY",
                 "root_remains_final_authority": True,
             },
+            "action_commit_packet_v0_2_integration": (
+                action_commit_packet_integration
+            ),
+            "mock_bank_sandbox_v0_2_corridor_execution": (
+                mock_bank_corridor_execution
+            ),
         }
     )
 
@@ -2415,6 +3136,169 @@ def render_full_wow_v1_2_manual_live_multillm_fractal_trace(
 
     lines.extend(["", "[POST V&V / GT-LGT / ROOT]"])
     lines.extend(_render_mapping(report["post_vv_gt_root"]))
+
+    acp_v0_2 = report["action_commit_packet_v0_2_integration"]
+    lines.extend(["", "[ACTIONCOMMITPACKET V0.2 LIVE OBSERVATION]"])
+    lines.extend(
+        _render_mapping(
+            {
+                "status": acp_v0_2["status"],
+                "packet_id": acp_v0_2["packet_id"],
+                "created_by": acp_v0_2["created_by"],
+                "root_created": acp_v0_2["root_created"],
+                "packet_validated": acp_v0_2["packet_validated"],
+                "registry_validated": acp_v0_2["registry_validated"],
+                "registry_is_local_proof_only": acp_v0_2[
+                    "registry_is_local_proof_only"
+                ],
+                "packet_corridor_entry_validated": acp_v0_2[
+                    "packet_corridor_entry_validated"
+                ],
+                "accepted_for_mock_corridor": acp_v0_2[
+                    "accepted_for_mock_corridor"
+                ],
+                "packet_seen_recorded_in_local_registry": acp_v0_2[
+                    "packet_seen_recorded_in_local_registry"
+                ],
+                "terminal_receipt_recorded_before_corridor": acp_v0_2[
+                    "terminal_receipt_recorded_before_corridor"
+                ],
+            }
+        )
+    )
+    if acp_v0_2["status"] == STATUS_PASS:
+        lines.extend(
+            [
+                "Root created one scoped Supplier A ActionCommitPacket model.",
+                "Human approval is scoped evidence only.",
+                "LLM/DRS/AVF/GT-LGT did not create the packet.",
+                "Supplier A is allowed.",
+                "Supplier B is excluded.",
+                "Shipment release is excluded.",
+                "Real bank/supplier/warehouse APIs are excluded.",
+                "Packet accepted for mock corridor only.",
+                "Root remains final authority.",
+                "allowed_subjects:",
+            ]
+        )
+        lines.extend(f"  - {subject}" for subject in acp_v0_2["allowed_subjects"])
+        lines.append("forbidden_subjects:")
+        lines.extend(
+            f"  - {subject}" for subject in acp_v0_2["forbidden_subjects"]
+        )
+        lines.append("allowed_actions:")
+        lines.extend(f"  - {action}" for action in acp_v0_2["allowed_actions"])
+        lines.append("forbidden_actions:")
+        lines.extend(f"  - {action}" for action in acp_v0_2["forbidden_actions"])
+        lines.append("allowed_adapters:")
+        lines.extend(f"  - {adapter}" for adapter in acp_v0_2["allowed_adapters"])
+        lines.append("forbidden_adapters:")
+        lines.extend(
+            f"  - {adapter}" for adapter in acp_v0_2["forbidden_adapters"]
+        )
+    else:
+        lines.append("ActionCommitPacket v0.2 observation did not run.")
+
+    mock_corridor = report["mock_bank_sandbox_v0_2_corridor_execution"]
+    lines.extend(
+        ["", "[MOCKBANKSANDBOX V0.2 LIVE CONTRACT CORRIDOR OBSERVATION]"]
+    )
+    lines.extend(
+        _render_mapping(
+            {
+                "status": mock_corridor["status"],
+                "source_packet_id": mock_corridor["source_packet_id"],
+                "source_packet_validated": mock_corridor[
+                    "source_packet_validated"
+                ],
+                "source_packet_corridor_entry_validated": mock_corridor[
+                    "source_packet_corridor_entry_validated"
+                ],
+                "source_packet_seen_in_registry": mock_corridor[
+                    "source_packet_seen_in_registry"
+                ],
+                "receipt_validated": mock_corridor["receipt_validated"],
+                "terminal_receipt_observed_in_local_registry": mock_corridor[
+                    "terminal_receipt_observed_in_local_registry"
+                ],
+                "receipt_evidence_only": mock_corridor["receipt_evidence_only"],
+                "receipt_permission_created": mock_corridor[
+                    "receipt_permission_created"
+                ],
+                "receipt_future_permission_created": mock_corridor[
+                    "receipt_future_permission_created"
+                ],
+                "receipt_final_output_created": mock_corridor[
+                    "receipt_final_output_created"
+                ],
+                "receipt_authorizes_supplier_b": mock_corridor[
+                    "receipt_authorizes_supplier_b"
+                ],
+                "receipt_releases_shipment": mock_corridor[
+                    "receipt_releases_shipment"
+                ],
+                "receipt_mutates_packet_scope": mock_corridor[
+                    "receipt_mutates_packet_scope"
+                ],
+                "receipt_creates_production_drs_record": mock_corridor[
+                    "receipt_creates_production_drs_record"
+                ],
+                "real_payment_executed": mock_corridor[
+                    "real_payment_executed"
+                ],
+                "real_world_effects_count": mock_corridor[
+                    "real_world_effects_count"
+                ],
+            }
+        )
+    )
+    if mock_corridor["status"] == STATUS_PASS:
+        lines.extend(
+            [
+                "MockBankSandbox consumed the scoped packet.",
+                "The corridor created mock intent/consent/order.",
+                "The corridor returned mock receipt evidence.",
+                "Receipt is evidence only.",
+                "Receipt did not create permission.",
+                "Receipt did not authorize Supplier B.",
+                "Receipt did not release shipment.",
+                "Receipt did not create FinalOutput.",
+                "Terminal receipt was observed in local proof-only registry.",
+                "Supplier B remains blocked.",
+                "Shipment release remains held.",
+                "Root remains final authority.",
+                "No real-world effect occurred.",
+                "corridor_sequence:",
+            ]
+        )
+        for step_row in mock_corridor["corridor_sequence"]:
+            lines.append(
+                "- {step_id}: input_summary={input_summary}; output_summary={output_summary}; meaning={meaning}; does_not_authorize={does_not_authorize}; next_step={next_step}".format(
+                    **step_row
+                )
+            )
+        lines.append("mock_payment_intent:")
+        lines.extend(
+            f"  {line}"
+            for line in _render_mapping(mock_corridor["mock_payment_intent"])
+        )
+        lines.append("mock_payment_consent:")
+        lines.extend(
+            f"  {line}"
+            for line in _render_mapping(mock_corridor["mock_payment_consent"])
+        )
+        lines.append("mock_payment_order:")
+        lines.extend(
+            f"  {line}"
+            for line in _render_mapping(mock_corridor["mock_payment_order"])
+        )
+        lines.append("mock_receipt_evidence:")
+        lines.extend(
+            f"  {line}"
+            for line in _render_mapping(mock_corridor["mock_receipt_evidence"])
+        )
+    else:
+        lines.append("MockBankSandbox v0.2 corridor observation did not run.")
 
     lines.extend(["", "[SECRET MEMBRANE]"])
     lines.extend(_render_mapping(report["secret_membrane"]))

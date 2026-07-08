@@ -415,6 +415,28 @@ Scenario result:
 - No ActionCommitPacket, receipt, payment, shipment release, or effect occurred
   in the renderer or the closed observation package.
 
+### action_commit_packet_v0_2_slice_a_local_packet_corridor_model
+
+Supplier Payment / Shipment Release Review WOW v1.2 now has a local
+ActionCommitPacket v0.2 Slice A packet/corridor model checkpoint.
+
+Scenario note:
+
+- Audit:
+  `docs/audit_reports/auditor_action_commit_packet_v0_2_slice_a_local_packet_corridor_model_v01.log`.
+- Current target remains Supplier A mock payment packet only.
+- Supplier B is excluded.
+- Shipment release is excluded.
+- Real bank, real supplier API, and real warehouse API are excluded.
+- Human approval is scoped evidence only.
+- Packet adapter binding must be allowed by packet scope.
+- Corridor step `parent_packet_id` must match packet `packet_id`.
+- Receipt is evidence only.
+- Receipt validation rejects an invalid source packet.
+- No runtime ActionCommitPacket, runtime receipt, mock payment, sandbox
+  adapter execution, real payment, shipment release, or real-world effect is
+  created by Slice A.
+
 ## What The Demo Must Prove
 
 - Root authority.

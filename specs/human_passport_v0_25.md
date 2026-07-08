@@ -687,6 +687,39 @@ Architecture correction:
   TTL(child) ≤ TTL(parent), and Adapter(child) ∈ AllowedAdapters(parent).
 - Slice A remains local packet/corridor model only.
 
+### ActionCommitPacket v0.2 Slice A Checkpoint
+
+ActionCommitPacket v0.2 Slice A local packet/corridor model is PASS.
+
+Checkpoint facts:
+
+- Audit log:
+  `docs/audit_reports/auditor_action_commit_packet_v0_2_slice_a_local_packet_corridor_model_v01.log`.
+- Model file: `hedgehog/action_commit_packet_v02.py`.
+- Tests: `tests/test_action_commit_packet_contract_corridor_v02.py`.
+- Focused tests: `24 passed`.
+- Compatibility tests: `151 passed`.
+- Root creates ActionCommitPacket.
+- Human approval is scoped evidence only and does not create the packet by
+  itself.
+- DRS, AVF, LLM, and GT/LGT cannot create ActionCommitPacket.
+- Post-Root corridor is deterministic contract/commit plane.
+- Reasoning does not restart after Root.
+- Packet adapter binding must be allowed by packet scope.
+- Corridor step `parent_packet_id` must match packet `packet_id`.
+- Child corridor allowed/scope surfaces must stay within the parent, forbidden
+  surfaces must include the parent forbidden surface, TTL must not exceed the
+  parent TTL, adapter must be allowed, and amount, creditor, payment slot, and
+  idempotency must match.
+- Receipt is evidence only.
+- Receipt validation rejects an invalid source packet.
+- No runtime packet emission, mock execution, runtime receipt creation,
+  sandbox adapter execution, provider/network/Gemini call, secret access,
+  action, payment, shipment release, or effect occurred.
+- Root remains final authority.
+- Next direction: ActionCommitPacket v0.2 Slice B packet/corridor validator +
+  local registry/replay guard.
+
 ### Current Hedgehog Core Baseline
 
 Current hedgehog core baseline:

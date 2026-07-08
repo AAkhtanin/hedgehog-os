@@ -57,61 +57,60 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: AVF v0.2 live observation human story PASS.
+Current checkpoint: ActionCommitPacket v0.2 Slice A local packet/corridor model PASS.
 
-Current DRS+AVF live observation facts:
+Current ActionCommitPacket Slice A facts:
 
-- Real-run audit:
-  `docs/audit_reports/auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
-- Human story renderer audit:
-  `docs/audit_reports/auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log`.
-- Observed checkpoint base: `2d1d25c`.
-- Real-provider model: `gemini-2.5-flash`.
-- DRS+AVF live observation is now closed as a baseline for the next
-  permission/action boundary layer.
-- Six real Gemini semantic actors participated in the closed real run.
-- DRS v0.2 ran before AVF and Orchestrator; it remembers, links, warns, and is
-  not authority.
-- AVF v0.2 ran after DRS and before Orchestrator; it is advisory/risk/ranking
-  only and is not Root.
-- Orchestrator, BSEP, and Architect carried bounded AVF/DRS-informed context.
-- Branch actors remained advisory.
+- Audit log:
+  `docs/audit_reports/auditor_action_commit_packet_v0_2_slice_a_local_packet_corridor_model_v01.log`.
+- Observed checkpoint base: `2ca45f8`.
+- Governing geometry:
+  `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
+- Accepted preflight:
+  `docs/action_commit_packet_contract_fulfillment_corridor_preflight_v01.md`.
+- Slice A is local model only and does not execute actions.
+- ActionCommitPacketV02, PermissionScopeV02,
+  ContractFulfillmentCorridorV01, CorridorStepV01,
+  CorridorValidationReportV01, and MockReceiptEvidenceV01 are present.
+- Only Root can create ActionCommitPacket.
+- Human approval is scoped evidence only.
+- LLM, DRS, AVF, and GT/LGT cannot create ActionCommitPacket.
+- Supplier A mock payment is the only current target scope.
+- Supplier B, shipment release, real bank, real supplier API, real warehouse
+  API, and real-world effects remain forbidden.
+- Packet adapter binding must be allowed by packet scope.
+- Corridor step `parent_packet_id` must match packet `packet_id`.
+- Child corridor allowed/scope surfaces must stay within the parent, forbidden
+  surfaces must include the parent forbidden surface, TTL must not exceed the
+  parent TTL, adapter must be allowed, and amount, creditor, payment slot, and
+  idempotency must match.
+- Receipt is evidence only.
+- Receipt validation rejects an invalid source packet.
+- Reasoning does not restart after Root.
 - Root remained final authority.
-- AVF hard-masked unsafe routes and ranked safe candidates without
-  authorization.
-- Top-ranked AVF candidate is not permission.
-- AVF score is not authority.
-- HardMask is not Root.
-- AVF cannot bypass Root, create FinalOutput, create ActionCommitPacket, create
-  receipt, execute payment, or release shipment.
-- Human story renderer explains DRS memory, AVF pressure, Orchestrator, BSEP,
-  Architect, branch actors, and Root from closed artifacts only.
-- Human story renderer does not rerun provider calls and does not print raw
-  provider responses by default.
-- Human story optional real artifact render: PASS.
-- Human story focused tests: `13 passed`.
-- Human story compatibility tests: `142 passed`.
-- Secret scan passed.
-- Provider/network/Gemini calls by the human story renderer: `0`.
-- ActionCommitPacket, receipt, mock payment, real payment, shipment release,
-  and effect counters remain `0`.
+- Focused tests: `24 passed`.
+- Compatibility tests: `151 passed`.
+- No runtime packet emission, mock execution, runtime receipt creation,
+  sandbox adapter execution, provider/network/Gemini calls, secret access,
+  action, payment, shipment release, or effects.
 - Not production.
 - Not public auditor final package.
 
-Current next immediate task: ActionCommitPacket / permission hardening
-preflight. Do not start ActionCommitPacket hardening implementation before that
-preflight. Do not start Airline, Privacy, Finance Kill-Switch, Vendor
-onboarding, NeedleFactory, Marennya, UP, real connectors, or public auditor
-package from this checkpoint.
+Current next immediate task: ActionCommitPacket v0.2 Slice B packet/corridor
+validator + local registry/replay guard. Do not start Slice B before this docs
+sync is committed. Do not start Slice C Supplier A integration, Slice D
+MockBankSandbox corridor execution, Airline, Privacy, Finance Kill-Switch,
+Vendor onboarding, NeedleFactory, Marennya, UP, real connectors, or public
+auditor package from this checkpoint.
 
 Architecture correction guard:
 
 - Root-centered phase loops and ActionCommitPacket geometry are recorded in
   `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
-- ActionCommitPacket / Contract Fulfillment Corridor Slice A may start only
-  after this correction is recorded.
-- Slice A remains local packet/corridor model only.
-- No ActionCommitPacket runtime has started yet.
+- ActionCommitPacket / Contract Fulfillment Corridor Slice A is closed as a
+  local packet/corridor model checkpoint.
+- Slice B remains the next validator/registry/replay-guard gate and has not
+  started.
 - Do not implement generic RootScopedContractEnvelope runtime,
   SemanticWorkContract runtime, DeliveryEnvelope runtime, Airline, Privacy,
   Finance Kill-Switch, Vendor onboarding, NeedleFactory, Marennya, UP, real

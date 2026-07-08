@@ -7,6 +7,27 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_action_commit_packet_v0_2_slice_a_local_packet_corridor_model_v01.log`
+  - Audit status: PASS.
+  - Audits ActionCommitPacket v0.2 Slice A local packet/corridor model.
+  - Governing geometry:
+    `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
+  - Accepted preflight:
+    `docs/action_commit_packet_contract_fulfillment_corridor_preflight_v01.md`.
+  - Confirms ActionCommitPacketV02, PermissionScopeV02,
+    ContractFulfillmentCorridorV01, CorridorStepV01,
+    CorridorValidationReportV01, and MockReceiptEvidenceV01 are present.
+  - Confirms Root-only packet creation, human approval as scoped evidence only,
+    LLM/DRS/AVF/GT-LGT non-creation boundaries, Supplier A mock-payment scope,
+    corridor containment, packet adapter-binding validation, parent packet-id
+    binding, and receipt evidence-only boundaries.
+  - Confirms receipt validation rejects invalid source packets.
+  - Focused tests: `24 passed`; compatibility tests: `151 passed`.
+  - No runtime packet emission, mock execution, runtime receipt creation,
+    sandbox adapter execution, provider/network/Gemini calls, secret access, or
+    action/effect counters.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log`
   - Audit status: PASS.
   - Audits the artifact-backed human story renderer for the AVF v0.2 + Full

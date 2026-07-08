@@ -35,56 +35,46 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-AVF v0.2 + Full WOW v1.2 live observation + human story renderer — PASS.
+ActionCommitPacket v0.2 Slice A local packet/corridor model — PASS.
 
 Checkpoint source:
 
-- Real-run audit:
-  `docs/audit_reports/auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log`.
-- Human story renderer audit:
-  `docs/audit_reports/auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log`.
-- Observed checkpoint base: `2d1d25c`.
-- Source artifact dir:
-  `.tmp/full_wow_v1_2_manual_live_multillm_fractal_avf_v02/full_wow_v1_2_manual_live_multillm_fractal_avf_v02_real_20260707_191053`.
-- Real-provider model: `gemini-2.5-flash`.
-- This closes the DRS+AVF live semantic observation package.
-- Six real Gemini semantic actors participated in the closed real run.
-- DRS v0.2 ran before AVF and Orchestrator; it remembers, links, warns, and
-  does not decide.
-- AVF v0.2 ran after DRS and before Orchestrator; it hard-masks and ranks but
-  does not authorize.
-- Orchestrator received bounded AVF/DRS-informed context.
-- BSEP carried bounded AVF/DRS-informed context.
-- Architect received BSEP-derived AVF/DRS-informed context.
-- Branch actors remained advisory.
-- Root remained final authority.
-- Unsafe directions were hard-masked: `release_all_and_pay_all`, Supplier B
-  payment, old receipt as permission, and old Root Final as current decision.
-- Safe candidates may rank but do not grant permission.
-- Top-ranked AVF candidate is not permission.
-- AVF score is not authority.
-- HardMask is not Root.
-- AVF cannot bypass Root, create FinalOutput, create ActionCommitPacket, create
-  receipt, execute payment, or release shipment.
-- The human story explains DRS memory, AVF pressure, Orchestrator, BSEP,
-  Architect, branch actors, and Root from closed artifacts.
-- The human story renderer is artifact-backed, does not rerun provider calls,
-  and does not print raw provider responses by default.
-- Human story optional real artifact render: PASS.
-- Human story focused tests: `13 passed`.
-- Human story compatibility tests: `142 passed`.
-- Secret scan passed.
-- ActionCommitPacket, receipt, mock payment, real payment, shipment release,
-  and effect counters remain `0`.
-- Next major gate: ActionCommitPacket / permission hardening preflight.
-- ActionCommitPacket hardening implementation has not started.
+- Audit:
+  `docs/audit_reports/auditor_action_commit_packet_v0_2_slice_a_local_packet_corridor_model_v01.log`.
+- Observed checkpoint base: `2ca45f8`.
 - Architecture correction for Root-centered phase loops and ActionCommitPacket
   geometry:
   `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
-- ActionCommitPacket / Contract Fulfillment Corridor Slice A may start only
-  after this correction is recorded.
-- Slice A remains local packet/corridor model only; no ActionCommitPacket
-  runtime has started yet.
+- Accepted preflight:
+  `docs/action_commit_packet_contract_fulfillment_corridor_preflight_v01.md`.
+- Slice A implements local model contracts only:
+  `hedgehog/action_commit_packet_v02.py`.
+- Slice A tests:
+  `tests/test_action_commit_packet_contract_corridor_v02.py`.
+- Focused tests: `24 passed`.
+- Compatibility tests: `151 passed`.
+- Only Root can create an ActionCommitPacket.
+- Human approval is scoped evidence only and does not create the packet by
+  itself.
+- Current packet scope is Supplier A mock payment only.
+- Supplier B, shipment release, real bank, real supplier API, real warehouse
+  API, and real-world effects remain forbidden.
+- Packet adapter binding must be allowed by packet scope.
+- Corridor child steps must bind to the same packet id, keep allowed/scope
+  surfaces within the parent, preserve the parent forbidden surface, keep TTL
+  within the parent, use an allowed adapter, and match amount, creditor,
+  payment slot, and idempotency.
+- Receipt remains evidence only and cannot create future permission, action
+  permission, FinalOutput, Supplier B authorization, production DRS record,
+  shipment release, or effects.
+- Receipt validation rejects an invalid source packet.
+- Reasoning does not restart after Root.
+- No runtime packet emission, mock execution, runtime receipt creation,
+  sandbox adapter execution, provider/network/Gemini call, secret access,
+  action, payment, shipment release, or effect occurred.
+- Next major gate: ActionCommitPacket v0.2 Slice B packet/corridor validator
+  + local registry/replay guard.
+- Slice B implementation has not started.
 - This is not production.
 - This is not public auditor final package.
 

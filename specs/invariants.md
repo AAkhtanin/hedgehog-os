@@ -189,6 +189,33 @@ Root-centered phase-loop / ActionCommitPacket corridor invariant examples:
   API, and all real-world effects remain blocked.
 - Root remains final authority.
 
+ActionCommitPacket v0.2 Slice A local packet/corridor model invariants:
+
+- Only Root can create ActionCommitPacket.
+- Human approval is scoped evidence only and cannot create ActionCommitPacket
+  by itself.
+- LLM cannot create ActionCommitPacket.
+- DRS cannot create ActionCommitPacket.
+- AVF cannot create ActionCommitPacket.
+- GT/LGT cannot create ActionCommitPacket.
+- Packet adapter binding must be allowed by packet scope.
+- Corridor step `parent_packet_id` must match packet `packet_id`.
+- Allowed(child) must be subset of Allowed(parent).
+- Scope(child) must be subset of Scope(parent).
+- Forbidden(child) must include Forbidden(parent).
+- TTL(child) must not exceed TTL(parent).
+- Adapter(child) must be allowed by packet.
+- Amount, creditor, payment_slot, and idempotency must not drift.
+- Corridor step cannot create permission, FinalOutput, or real effects.
+- Mismatch returns FAIL_CLOSED and RETURN_TO_ROOT.
+- Receipt is evidence only.
+- Receipt validation inherits source packet validity.
+- Receipt cannot create future permission, action permission, FinalOutput,
+  shipment release, Supplier B authorization, production DRS record, or
+  effects.
+- Reasoning does not restart after Root.
+- Root remains final authority.
+
 Full Semantic E2E WOW v1.1 alignment invariant examples:
 
 - Closed receipt is evidence only when observed by Full E2E.

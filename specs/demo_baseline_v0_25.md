@@ -442,6 +442,34 @@ Root-centered phase-loop correction:
 - No ActionCommitPacket runtime, receipt, mock payment, real payment, shipment
   release, or effect has started in this correction.
 
+## ActionCommitPacket v0.2 Slice A Local Model Checkpoint
+
+Supplier Payment / Shipment Release Review baseline now has ActionCommitPacket
+v0.2 Slice A local model contracts.
+
+Status:
+
+- Audit:
+  `docs/audit_reports/auditor_action_commit_packet_v0_2_slice_a_local_packet_corridor_model_v01.log`.
+- Governing geometry:
+  `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
+- Local model file: `hedgehog/action_commit_packet_v02.py`.
+- Focused tests: `24 passed`.
+- Compatibility tests: `151 passed`.
+- ActionCommitPacketV02 and PermissionScopeV02 model Root-created Supplier A
+  mock-payment packet scope.
+- ContractFulfillmentCorridorV01, CorridorStepV01, and
+  CorridorValidationReportV01 model deterministic corridor containment.
+- MockReceiptEvidenceV01 models receipt evidence only.
+- Human approval is scoped evidence only.
+- Packet adapter binding must be allowed by packet scope.
+- Corridor step `parent_packet_id` must match packet `packet_id`.
+- Receipt validation rejects an invalid source packet.
+- This does not yet integrate into the Full WOW runner.
+- This does not execute mock payment, create runtime receipt, emit a runtime
+  ActionCommitPacket, execute a sandbox adapter, call provider/network/Gemini,
+  or create real-world effects.
+
 ## 4. Cold Start Expected Behavior
 
 The cold_start scenario runs once against an empty LocalDRS.

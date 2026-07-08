@@ -437,8 +437,15 @@ SECRET_MARKERS = (
     "sandbox_token_abc",
     "beneficiary_iban",
     "raw_iban_value",
-    "GEMINI_API_KEY=",
-    "GOOGLE_API_KEY=",
+    "GEMINI_API_KEY" + "=",
+    "GOOGLE_API_KEY" + "=",
+    "GOOGLE_GEMINI_API_KEY" + "=",
+)
+
+GEMINI_KEY_NAMES = (
+    "GEMINI_API_KEY",
+    "GOOGLE_API_KEY",
+    "GOOGLE_GEMINI_API_KEY",
 )
 
 
@@ -1489,6 +1496,8 @@ def _base_report(
         "skip_reason": skip_reason,
         "failed_role": None,
         "failed_stage": None,
+        "provider_error_kind": None,
+        "provider_error_sanitized": None,
         "validation_errors": (),
         "env_enabled": env.get(ENABLE_ENV) == "1",
         "core_ci_dependency": False,
@@ -1981,6 +1990,93 @@ def _write_json(path: Path, value: Mapping[str, Any]) -> None:
     path.write_text(json.dumps(value, indent=2, sort_keys=True), encoding="utf-8")
 
 
+def _config_value_from_env_or_config(
+    env: Mapping[str, str],
+    *names: str,
+    allow_config: bool = True,
+) -> str | None:
+    for name in names:
+        value = env.get(name)
+        if isinstance(value, str) and value.strip():
+            return value
+
+    if not allow_config:
+        return None
+
+    try:
+        config = __import__("config")
+    except Exception:
+        return None
+
+    for name in names:
+        value = getattr(config, name, None)
+        if isinstance(value, str) and value.strip():
+            return value
+    return None
+
+
+def _live_gemini_config_available(env: Mapping[str, str]) -> bool:
+    return bool(
+        _config_value_from_env_or_config(
+            env,
+            "GEMINI_API_KEY",
+            "GOOGLE_API_KEY",
+            "GOOGLE_GEMINI_API_KEY",
+        )
+    )
+
+
+def _secret_values_for_redaction(env: Mapping[str, str]) -> tuple[str, ...]:
+    values: list[str] = []
+    for name in GEMINI_KEY_NAMES:
+        for allow_config in (False, True):
+            value = _config_value_from_env_or_config(
+                env,
+                name,
+                allow_config=allow_config,
+            )
+            if value and value not in values:
+                values.append(value)
+    return tuple(values)
+
+
+def _sanitize_provider_error_text(text: str, env: Mapping[str, str]) -> str:
+    sanitized = " ".join(text.split())
+    for value in _secret_values_for_redaction(env):
+        sanitized = sanitized.replace(value, "[REDACTED]")
+    for marker in (
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GEMINI_API_KEY",
+        "SECRET",
+        "TOKEN",
+    ):
+        sanitized = sanitized.replace(marker, "[REDACTED]")
+    return sanitized[:240] if sanitized else "provider_error"
+
+
+def _provider_error_info(
+    role: str,
+    exc: Exception,
+    env: Mapping[str, str],
+) -> dict[str, str]:
+    raw_message = str(exc)
+    if raw_message.startswith("missing_gemini_api_key"):
+        kind = "missing_gemini_api_key"
+        sanitized = "missing_gemini_api_key"
+    elif raw_message.startswith("empty_provider_response"):
+        kind = "empty_provider_response"
+        sanitized = "empty_provider_response"
+    else:
+        kind = exc.__class__.__name__
+        sanitized = _sanitize_provider_error_text(kind, env)
+    return {
+        "reason": f"provider_call_failed:{role}",
+        "provider_error_kind": kind,
+        "provider_error_sanitized": sanitized,
+    }
+
+
 def _artifact_text(artifacts: Mapping[str, Any], key: str) -> str:
     value = artifacts.get(key)
     if value is None:
@@ -2177,7 +2273,12 @@ def _call_real_provider(
     model_name: str,
     delay_seconds: int,
 ) -> str:
-    api_key = env.get("GEMINI_API_KEY") or env.get("GOOGLE_API_KEY")
+    api_key = _config_value_from_env_or_config(
+        env,
+        "GOOGLE_API_KEY",
+        "GEMINI_API_KEY",
+        "GOOGLE_GEMINI_API_KEY",
+    )
     if not api_key:
         raise RuntimeError("missing_gemini_api_key")
     if delay_seconds > 0:
@@ -2214,15 +2315,15 @@ def _provider_call(
     model_name: str,
     counters: dict[str, int],
     actor_counter: str,
-) -> tuple[str | None, str, str | None]:
+) -> tuple[str | None, str, dict[str, str] | None]:
     counters["semantic_actor_call_count"] += 1
     counters[actor_counter] += 1
     if provider is not None:
         counters["fake_provider_call_count"] += 1
         try:
             return provider(role, prompt, context), "fake_injected", None
-        except Exception:
-            return None, "fake_injected", f"provider_call_failed:{role}"
+        except Exception as exc:
+            return None, "fake_injected", _provider_error_info(role, exc, env)
     delay = int(env.get(CALL_DELAY_ENV, "30") or "30")
     counters["real_provider_call_count"] += 1
     counters["network_used_count"] += 1
@@ -2240,8 +2341,8 @@ def _provider_call(
             "real_provider",
             None,
         )
-    except Exception:
-        return None, "real_provider", f"provider_call_failed:{role}"
+    except Exception as exc:
+        return None, "real_provider", _provider_error_info(role, exc, env)
 
 
 def _fail_closed_report(
@@ -2256,6 +2357,8 @@ def _fail_closed_report(
     artifacts: Mapping[str, Any] | None = None,
     failed_role: str | None = None,
     failed_stage: str | None = None,
+    provider_error_kind: str | None = None,
+    provider_error_sanitized: str | None = None,
     validation_errors: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     report = _base_report(
@@ -2271,6 +2374,8 @@ def _fail_closed_report(
     report["semantic_actor_calls"] = semantic_actor_calls
     report["failed_role"] = failed_role
     report["failed_stage"] = failed_stage
+    report["provider_error_kind"] = provider_error_kind
+    report["provider_error_sanitized"] = provider_error_sanitized
     report["validation_errors"] = validation_errors
     if artifacts and isinstance(artifacts.get("local_drs_v0_2_resolve_report"), Mapping):
         report["local_drs_v0_2_observation"] = artifacts[
@@ -2321,10 +2426,8 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             skip_reason=f"{ENABLE_ENV} is not 1",
         )
 
-    if provider is None and not (
-        effective_env.get("GEMINI_API_KEY") or effective_env.get("GOOGLE_API_KEY")
-    ):
-        return _base_report(
+    if provider is None and not _live_gemini_config_available(effective_env):
+        report = _base_report(
             final_status="SKIPPED_CLOSED",
             stage_status="SKIPPED_CLOSED",
             env=effective_env,
@@ -2333,6 +2436,9 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
             counters=_zero_counters(),
             skip_reason="Gemini key missing; live lane remains closed.",
         )
+        report["provider_error_kind"] = "missing_gemini_api_key"
+        report["provider_error_sanitized"] = "missing_gemini_api_key"
+        return report
 
     counters = _enabled_counters()
     provider_mode = "fake_injected" if provider is not None else "real_provider"
@@ -2395,24 +2501,31 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
     provider_mode = actual_provider_mode
     sequence.append("top_level_orchestrator_provider_called")
     if provider_error:
+        provider_error_reason = provider_error["reason"]
         artifacts["top_level_orchestrator_raw_response"] = "not_run"
         artifacts["top_level_orchestrator_json"] = {"status": "not_run"}
         artifacts["top_level_orchestrator_validation"] = {
             "accepted": False,
-            "errors": [provider_error],
+            "errors": [provider_error_reason],
+            "provider_error_kind": provider_error["provider_error_kind"],
+            "provider_error_sanitized": provider_error[
+                "provider_error_sanitized"
+            ],
         }
         return _fail_closed_report(
             env=effective_env,
             model_name=model_name,
             provider_mode=provider_mode,
             counters=counters,
-            reason=provider_error,
+            reason=provider_error_reason,
             pipeline_sequence=tuple(sequence),
             semantic_actor_calls=tuple(actor_calls),
             artifacts=artifacts,
             failed_role="top_level_orchestrator_llm",
             failed_stage="provider_call",
-            validation_errors=(provider_error,),
+            provider_error_kind=provider_error["provider_error_kind"],
+            provider_error_sanitized=provider_error["provider_error_sanitized"],
+            validation_errors=(provider_error_reason,),
         )
     orchestrator_json, parse_error = _extract_json_object(raw_orchestrator)
     if parse_error:
@@ -2520,24 +2633,31 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
     provider_mode = actual_provider_mode
     sequence.append("top_level_architect_provider_called")
     if provider_error:
+        provider_error_reason = provider_error["reason"]
         artifacts["top_level_architect_raw_response"] = "not_run"
         artifacts["top_level_architect_json"] = {"status": "not_run"}
         artifacts["top_level_architect_validation"] = {
             "accepted": False,
-            "errors": [provider_error],
+            "errors": [provider_error_reason],
+            "provider_error_kind": provider_error["provider_error_kind"],
+            "provider_error_sanitized": provider_error[
+                "provider_error_sanitized"
+            ],
         }
         return _fail_closed_report(
             env=effective_env,
             model_name=model_name,
             provider_mode=provider_mode,
             counters=counters,
-            reason=provider_error,
+            reason=provider_error_reason,
             pipeline_sequence=tuple(sequence),
             semantic_actor_calls=tuple(actor_calls),
             artifacts=artifacts,
             failed_role="top_level_semantic_architect_llm",
             failed_stage="provider_call",
-            validation_errors=(provider_error,),
+            provider_error_kind=provider_error["provider_error_kind"],
+            provider_error_sanitized=provider_error["provider_error_sanitized"],
+            validation_errors=(provider_error_reason,),
         )
     architect_json, parse_error = _extract_json_object(raw_architect)
     if parse_error:
@@ -2626,23 +2746,32 @@ def collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
         )
         provider_mode = actual_provider_mode
         if provider_error:
+            provider_error_reason = provider_error["reason"]
             artifacts[f"{artifact_prefix}_raw_response"] = "not_run"
             artifacts[f"{artifact_prefix}_validation"] = {
                 "accepted": False,
-                "errors": [provider_error],
+                "errors": [provider_error_reason],
+                "provider_error_kind": provider_error["provider_error_kind"],
+                "provider_error_sanitized": provider_error[
+                    "provider_error_sanitized"
+                ],
             }
             return _fail_closed_report(
                 env=effective_env,
                 model_name=model_name,
                 provider_mode=provider_mode,
                 counters=counters,
-                reason=provider_error,
+                reason=provider_error_reason,
                 pipeline_sequence=tuple(sequence),
                 semantic_actor_calls=tuple(actor_calls),
                 artifacts=artifacts,
                 failed_role=role,
                 failed_stage="provider_call",
-                validation_errors=(provider_error,),
+                provider_error_kind=provider_error["provider_error_kind"],
+                provider_error_sanitized=provider_error[
+                    "provider_error_sanitized"
+                ],
+                validation_errors=(provider_error_reason,),
             )
         branch_json, parse_error = _extract_json_object(raw)
         if parse_error:
@@ -2965,6 +3094,8 @@ def render_full_wow_v1_2_manual_live_multillm_fractal_trace(
                 f"skip_reason: {report.get('skip_reason')}",
                 f"failed_role: {report.get('failed_role')}",
                 f"failed_stage: {report.get('failed_stage')}",
+                f"provider_error_kind: {report.get('provider_error_kind')}",
+                f"provider_error_sanitized: {report.get('provider_error_sanitized')}",
                 f"validation_errors: {tuple(report.get('validation_errors') or ())}",
             ]
         )

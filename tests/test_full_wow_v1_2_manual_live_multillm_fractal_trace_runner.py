@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import sys
+from types import SimpleNamespace
 from typing import Any, Mapping
 
 from demo import run_full_wow_v1_2_manual_live_multillm_fractal_trace as runner
@@ -130,8 +132,9 @@ SECRET_MARKERS = (
     "sandbox_token_abc",
     "beneficiary_iban",
     "raw_iban_value",
-    "GEMINI_API_KEY=",
-    "GOOGLE_API_KEY=",
+    "GEMINI_API_KEY" + "=",
+    "GOOGLE_API_KEY" + "=",
+    "GOOGLE_GEMINI_API_KEY" + "=",
 )
 
 REQUIRED_DRS_SCENARIOS = {
@@ -1276,6 +1279,80 @@ def test_manual_live_multillm_fractal_real_provider_exception_fails_closed_witho
     assert dummy_key not in rendered
 
 
+def test_config_key_detection_accepts_env_google_gemini_key() -> None:
+    env = {runner.ENABLE_ENV: "1", "GOOGLE_GEMINI_API_KEY": "test-key"}
+
+    assert runner._live_gemini_config_available(env) is True
+    assert (
+        runner._config_value_from_env_or_config(
+            env,
+            "GOOGLE_GEMINI_API_KEY",
+        )
+        == "test-key"
+    )
+
+
+def test_config_key_detection_accepts_config_module(monkeypatch: Any) -> None:
+    config_module = SimpleNamespace()
+    setattr(config_module, "GOOGLE_API_KEY", "test-config-key")
+    monkeypatch.setitem(sys.modules, "config", config_module)
+    env = {runner.ENABLE_ENV: "1"}
+
+    assert runner._live_gemini_config_available(env) is True
+    assert (
+        runner._config_value_from_env_or_config(
+            env,
+            "GOOGLE_API_KEY",
+        )
+        == "test-config-key"
+    )
+
+
+def test_missing_key_still_skips_closed_when_no_env_and_no_config(
+    monkeypatch: Any,
+) -> None:
+    monkeypatch.setitem(sys.modules, "config", SimpleNamespace())
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env={runner.ENABLE_ENV: "1"},
+        provider=None,
+    )
+
+    assert report["final_status"] == "SKIPPED_CLOSED"
+    assert report["provider_mode"] == "missing_key"
+    assert "Gemini key missing" in report["skip_reason"]
+    assert report["provider_error_kind"] == "missing_gemini_api_key"
+    assert report["provider_error_sanitized"] == "missing_gemini_api_key"
+    assert report["counters"]["real_provider_call_count"] == 0
+    assert report["counters"]["network_used_count"] == 0
+    assert report["counters"]["gemini_called_count"] == 0
+
+
+def test_provider_failure_reports_sanitized_error_kind(monkeypatch: Any) -> None:
+    def raising_real_provider(*_args: Any, **_kwargs: Any) -> str:
+        raise RuntimeError("boom SECRET test-key should not leak")
+
+    monkeypatch.setattr(runner, "_call_real_provider", raising_real_provider)
+    report = runner.collect_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        env={runner.ENABLE_ENV: "1", "GOOGLE_API_KEY": "test-key"},
+        provider=None,
+    )
+    rendered = runner.render_full_wow_v1_2_manual_live_multillm_fractal_trace(
+        report
+    )
+    report_json = json.dumps(report, sort_keys=True)
+
+    assert report["final_status"] == "FAIL_CLOSED"
+    assert report["failed_role"] == "top_level_orchestrator_llm"
+    assert report["failed_stage"] == "provider_call"
+    assert report["provider_error_kind"] == "RuntimeError"
+    assert report["provider_error_sanitized"]
+    assert "test-key" not in rendered
+    assert "test-key" not in report_json
+    for marker in SECRET_MARKERS:
+        assert marker not in rendered
+        assert marker not in report_json
+
+
 def test_manual_live_multillm_orchestrator_validation_failure_writes_artifacts(
     tmp_path: Path,
 ) -> None:
@@ -1664,7 +1741,10 @@ def test_manual_live_multillm_fractal_does_not_call_real_provider_in_tests(
     assert calls == []
     assert "GEMINI_API_KEY" in source
     assert "GOOGLE_API_KEY" in source
-    assert "if provider is None and not" in source
+    assert "_config_value_from_env_or_config" in source
+    assert "_live_gemini_config_available" in source
+    assert "GOOGLE_GEMINI_API_KEY" in source
+    assert "if provider is None and not (" not in source
 
 
 def test_live_lane_action_corridor_source_import_boundary() -> None:

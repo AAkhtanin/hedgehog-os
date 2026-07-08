@@ -1,0 +1,154 @@
+audit_id: auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01
+audit_status: PASS
+audited_layer: Artifact-backed human story renderer for AVF v0.2 + Full WOW v1.2 live observation
+base_commit: 4ca908e
+source_real_run_audit: docs/audit_reports/auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log
+source_artifact_dir: .tmp/full_wow_v1_2_manual_live_multillm_fractal_avf_v02/full_wow_v1_2_manual_live_multillm_fractal_avf_v02_real_20260707_191053
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_world_effects_count: 0
+
+audited_files:
+- demo/run_human_full_wow_v1_2_avf_live_observation_story.py
+- tests/test_human_full_wow_v1_2_avf_live_observation_story_runner.py
+
+observed_repository_base:
+- git status --short --untracked-files=all: clean before this audit log was created
+- git --no-pager log --oneline --max-count=12:
+  - 4ca908e Add AVF v0.2 live observation human story renderer
+  - 8da0bae Add AVF v0.2 Full WOW v1.2 live observation audit
+  - e6b7e31 Integrate AVF v0.2 into Full WOW v1.2 live lane
+  - 9b8a2f3 Add AVF v0.2 Full WOW v1.2 live observation preflight
+  - 62d028e Document AVF v0.2 after Local DRS v0.2 checkpoint
+  - d70ea58 Add AVF v0.2 after Local DRS v0.2 audit
+  - 91b682e Harden AVF v0.2 adversarial non-authority boundaries
+  - 01d9358 Integrate AVF v0.2 advisory evaluation into Full WOW v1.2 product trace
+  - da807b9 Add AVF v0.2 local evaluator advisory ranking report
+  - f3c5840 Add AVF v0.2 local candidate risk model
+  - bf3a7e6 Add AVF v0.2 after Local DRS v0.2 closure preflight
+  - dc6dac0 Document Local DRS v0.2 closure before AVF checkpoint
+- git rev-parse --short HEAD: 4ca908e
+
+validation_commands_run:
+- python3 -m py_compile demo/run_human_full_wow_v1_2_avf_live_observation_story.py
+  result: PASS
+- python3 -m demo.run_human_full_wow_v1_2_avf_live_observation_story
+  result: PASS
+  observed_default_final_status: SKIPPED_CLOSED
+  observed_renderer_provider_network_gemini_calls: 0
+  observed_renderer_action_receipt_payment_shipment_effects: 0
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_full_wow_v1_2_avf_live_observation_story_runner.py
+  result: PASS
+  tests_passed: 13
+- HEDGEHOG_FULL_WOW_V1_2_AVF_LIVE_STORY_ARTIFACT_DIR=.tmp/full_wow_v1_2_manual_live_multillm_fractal_avf_v02/full_wow_v1_2_manual_live_multillm_fractal_avf_v02_real_20260707_191053 PYTHONPATH=. .venv/bin/python -m demo.run_human_full_wow_v1_2_avf_live_observation_story
+  result: PASS
+  observed_story_status: PASS
+  observed_final_status: PASS
+  observed_raw_provider_response_rendered: false
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_full_wow_v1_2_avf_live_observation_story_runner.py tests/test_full_wow_v1_2_manual_live_multillm_fractal_trace_runner.py tests/test_avf_v02_after_local_drs_v02.py tests/test_drs_v02_local_lineage_reuse.py
+  result: PASS
+  tests_passed: 142
+- git status --short --untracked-files=all
+  result: PASS
+- git diff --stat
+  result: PASS
+- git diff --check
+  result: PASS
+- git diff --name-only
+  result: PASS
+- rg -n "FULL WOW V1.2 \\+ DRS V0.2 \\+ AVF V0.2 LIVE HUMAN STORY|WHAT DRS REMEMBERED|WHAT AVF HARD-MASKED|WHAT AVF RANKED WITHOUT AUTHORIZING|release_all_and_pay_all was hard-masked|Supplier B payment was hard-masked|old receipt was not current permission|top rank did not grant permission|AVF score is not authority|HardMask is not Root|Root remained final authority|artifact_files_observed_only" demo/run_human_full_wow_v1_2_avf_live_observation_story.py tests/test_human_full_wow_v1_2_avf_live_observation_story_runner.py
+  result: PASS
+- requested forbidden grep over demo/run_human_full_wow_v1_2_avf_live_observation_story.py, tests/test_human_full_wow_v1_2_avf_live_observation_story_runner.py, and this audit log
+  result: PASS
+  matches: 0
+
+required_findings:
+- finding_renderer_compile_passed: PASS
+- finding_default_run_skipped_closed: PASS
+- finding_focused_tests_passed: PASS
+- finding_optional_real_artifact_render_passed: PASS
+- finding_compatibility_tests_passed: PASS
+- finding_artifact_backed_story_renderer: PASS
+- finding_no_live_rerun: PASS
+- finding_no_provider_network_gemini_calls: PASS
+- finding_no_secrets_accessed_or_printed: PASS
+- finding_raw_provider_responses_not_printed_by_default: PASS
+- finding_drs_memory_story_explained: PASS
+- finding_avf_hardmask_ranking_story_explained: PASS
+- finding_orchestrator_story_explained: PASS
+- finding_bsep_story_explained: PASS
+- finding_architect_story_explained: PASS
+- finding_branch_actor_story_explained: PASS
+- finding_root_story_explained: PASS
+- finding_no_action_receipt_payment_shipment_effects: PASS
+- finding_no_production_claim: PASS
+- finding_no_public_auditor_claim: PASS
+
+story_renderer_evidence:
+- renderer_identity: human_full_wow_v1_2_avf_live_observation_story_v01
+- story_type: artifact_backed_human_avf_drs_live_observation_story
+- source_mode: closed_artifacts_only
+- default_without_artifact_dir: SKIPPED_CLOSED
+- optional_real_artifact_render_status: PASS
+- source_artifact_dir_status: observed
+- raw_provider_responses_printed_by_default: false
+- provider_network_gemini_calls_by_renderer: 0
+- secrets_accessed_or_printed: false
+- action_commit_packet_created_count: 0
+- receipt_created_count: 0
+- mock_payment_executed_count: 0
+- real_payment_executed_count: 0
+- shipment_released_count: 0
+- real_world_effects_count: 0
+
+story_sections_confirmed:
+- FULL WOW V1.2 + DRS V0.2 + AVF V0.2 LIVE HUMAN STORY: PASS
+- ONE-SCREEN SUMMARY: PASS
+- BUSINESS SCENE: PASS
+- CAST OF SEMANTIC ACTORS: PASS
+- TIMELINE: PASS
+- WHAT DRS REMEMBERED: PASS
+- WHAT AVF HARD-MASKED: PASS
+- WHAT AVF RANKED WITHOUT AUTHORIZING: PASS
+- WHAT ORCHESTRATOR UNDERSTOOD: PASS
+- WHAT BSEP DID: PASS
+- WHAT ARCHITECT UNDERSTOOD: PASS
+- WHAT BRANCH-LOCAL ACTORS DID: PASS
+- WHAT ROOT DID: PASS
+- WHY THIS MATTERS: PASS
+- COUNTER TABLE: PASS
+- ARTIFACT EVIDENCE: PASS
+- NON-CLAIMS: PASS
+- FINAL STATUS: PASS
+
+audited_story_interpretation:
+- The renderer turns the closed AVF v0.2 + Full WOW v1.2 live observation artifacts into a human-readable story.
+- DRS v0.2 is explained as memory, lineage, warning, rerun, and blocked context; it remains non-authority.
+- AVF v0.2 is explained as advisory hard-mask, soft-mask, and ranking pressure over bounded DRS signals.
+- release_all_and_pay_all, Supplier B payment, old receipt as permission, and old Root Final as current decision are explained as hard-masked unsafe directions.
+- Safe candidates may rank, but ranking remains advisory and does not authorize action.
+- Orchestrator and Architect are explained from validated canonical artifacts, not raw provider responses.
+- BSEP is explained as carrying bounded AVF/DRS-informed context only.
+- Branch actors are explained as advisory contributors returning to parent and Root boundaries.
+- Root remained final authority in the story.
+- The renderer created no FinalOutput, ActionCommitPacket, receipt, payment, shipment release, or real-world effect.
+
+non_claims:
+- no_live_rerun: true
+- no_provider_network_model_api_call_by_renderer: true
+- no_secret_access_or_printing: true
+- no_raw_provider_response_printed_by_default: true
+- no_action_commit_packet: true
+- no_receipt: true
+- no_final_output_created_by_renderer: true
+- no_mock_payment: true
+- no_real_payment_counter_increment: true
+- no_shipment_release: true
+- no_real_world_effect: true
+- production_ready_claimed: false
+- public_auditor_ready_claimed: false
+
+expected_changed_file_only:
+- docs/audit_reports/auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log
+
+audit_conclusion: PASS

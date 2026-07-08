@@ -108,6 +108,20 @@ REQUIRED_AUTHORITY_FACTS = {
     "Post V&V does not finalize.",
     "GT/LGT does not finalize.",
     "Human approval is scoped evidence only.",
+    "Only Root creates ActionCommitPacket v0.2.",
+    "Human approval does not directly create ActionCommitPacket.",
+    "LLM does not create ActionCommitPacket.",
+    "DRS does not create ActionCommitPacket.",
+    "AVF does not create ActionCommitPacket.",
+    "GT/LGT does not create ActionCommitPacket.",
+    "ActionCommitPacket is not FinalOutput.",
+    "ActionCommitPacket is not receipt.",
+    "ActionCommitPacket is not payment execution.",
+    "ActionCommitPacket is not shipment release.",
+    "Local packet registry is not DRS.",
+    "Local packet registry is not authority.",
+    "Local packet registry is not permission.",
+    "Packet accepted for mock corridor is not payment execution.",
     "Root-created mock ActionCommitPacket is scoped only.",
     "MockBankSandbox receipt is evidence only.",
     "Receipt does not release shipment.",
@@ -136,6 +150,7 @@ REQUIRED_SECTIONS = (
     "[TRANSITION CARDS]",
     "[LOCAL DRS V0.2 RESOLVE]",
     "[LOCAL AVF V0.2 ADVISORY EVALUATION]",
+    "[ACTIONCOMMITPACKET V0.2 ROOT-CREATED PACKET BOUNDARY]",
     "[AUTHORITY MATRIX]",
     "[COUNTER MATRIX]",
     "[NON-CLAIMS]",
@@ -292,6 +307,10 @@ def test_v1_2_product_trace_no_real_execution_or_effects() -> None:
     counters = _report()["counters"]
 
     assert counters["product_trace_created_action_commit_packet_count"] == 0
+    assert (
+        counters["product_trace_created_action_commit_packet_v0_2_model_packet_count"]
+        == 1
+    )
     assert counters["product_trace_created_receipt_count"] == 0
     assert counters["product_trace_executed_mock_payment_count"] == 0
     assert counters["product_trace_executed_real_payment_count"] == 0
@@ -589,6 +608,124 @@ def test_v1_2_product_trace_avf_v0_2_no_action_effects() -> None:
     assert counters["real_world_effects_count"] == 0
 
 
+def test_v1_2_product_trace_action_commit_packet_v0_2_integration_present() -> None:
+    report = _report()
+    acp = report["action_commit_packet_v0_2_integration"]
+
+    assert acp["action_commit_packet_v0_2_status"] == "PASS"
+    assert acp["packet_id"]
+    assert acp["root_created"] is True
+    assert acp["packet_validated"] is True
+    assert acp["registry_validated"] is True
+    assert acp["packet_corridor_entry_validated"] is True
+    assert acp["accepted_for_mock_corridor"] is True
+
+
+def test_v1_2_product_trace_action_commit_packet_v0_2_scope_is_supplier_a_only() -> None:
+    acp = _report()["action_commit_packet_v0_2_integration"]
+
+    assert "supplier_a_adriatic_filters" in acp["allowed_subjects"]
+    assert "supplier_b_balkan_pumps" in acp["forbidden_subjects"]
+    assert "shipment_sh_2042" in acp["forbidden_subjects"]
+    assert "mock_supplier_a_payment_intent" in acp["allowed_actions"]
+    assert "mock_supplier_a_payment_order" in acp["allowed_actions"]
+    assert "supplier_b_payment" in acp["forbidden_actions"]
+    assert "shipment_release" in acp["forbidden_actions"]
+    assert "real_payment" in acp["forbidden_actions"]
+    assert "real_bank_transfer" in acp["forbidden_actions"]
+    assert "mock_bank_sandbox" in acp["allowed_adapters"]
+    assert "bank_a_mock" in acp["allowed_adapters"]
+    assert "real_bank" in acp["forbidden_adapters"]
+    assert "real_supplier_api" in acp["forbidden_adapters"]
+    assert "real_warehouse_api" in acp["forbidden_adapters"]
+
+
+def test_v1_2_product_trace_action_commit_packet_v0_2_creator_boundaries() -> None:
+    report = _report()
+    acp = report["action_commit_packet_v0_2_integration"]
+    counters = report["counters"]
+    authority = set(report["authority_matrix"])
+
+    assert acp["created_by"] == "root"
+    assert counters["action_commit_packet_v0_2_created_by_root_count"] == 1
+    assert counters["action_commit_packet_v0_2_created_by_human_count"] == 0
+    assert counters["action_commit_packet_v0_2_created_by_llm_count"] == 0
+    assert counters["action_commit_packet_v0_2_created_by_drs_count"] == 0
+    assert counters["action_commit_packet_v0_2_created_by_avf_count"] == 0
+    assert counters["action_commit_packet_v0_2_created_by_gt_lgt_count"] == 0
+    assert (
+        counters["action_commit_packet_v0_2_human_approval_used_as_evidence_count"]
+        == 1
+    )
+    assert "Only Root creates ActionCommitPacket v0.2." in authority
+    assert "Human approval is scoped evidence only." in authority
+    assert "Human approval does not directly create ActionCommitPacket." in authority
+    assert "LLM does not create ActionCommitPacket." in authority
+    assert "DRS does not create ActionCommitPacket." in authority
+    assert "AVF does not create ActionCommitPacket." in authority
+    assert "GT/LGT does not create ActionCommitPacket." in authority
+
+
+def test_v1_2_product_trace_action_commit_packet_v0_2_registry_observes_without_authority() -> None:
+    report = _report()
+    acp = report["action_commit_packet_v0_2_integration"]
+    counters = report["counters"]
+
+    assert acp["registry_is_local_proof_only"] is True
+    assert acp["registry_is_not_drs"] is True
+    assert acp["registry_is_not_authority"] is True
+    assert acp["registry_is_not_permission"] is True
+    assert counters["action_commit_packet_v0_2_packet_seen_recorded_count"] == 1
+    assert counters["action_commit_packet_v0_2_terminal_receipt_recorded_count"] == 0
+    assert counters["action_commit_packet_v0_2_mock_receipt_created_count"] == 0
+    assert counters["action_commit_packet_v0_2_payment_executed_count"] == 0
+    assert counters["action_commit_packet_v0_2_shipment_released_count"] == 0
+    assert counters["action_commit_packet_v0_2_real_world_effects_count"] == 0
+
+
+def test_v1_2_product_trace_action_commit_packet_v0_2_corridor_entry_validated_but_not_executed() -> None:
+    counters = _report()["counters"]
+
+    assert counters["action_commit_packet_v0_2_accepted_for_mock_corridor_count"] == 1
+    assert counters["action_commit_packet_v0_2_mock_bank_sandbox_executed_count"] == 0
+    assert counters["action_commit_packet_v0_2_mock_payment_order_created_count"] == 0
+    assert counters["action_commit_packet_v0_2_mock_receipt_created_count"] == 0
+    assert counters["action_commit_packet_v0_2_payment_executed_count"] == 0
+    assert counters["action_commit_packet_v0_2_shipment_released_count"] == 0
+    assert counters["action_commit_packet_v0_2_final_output_created_count"] == 0
+
+
+def test_v1_2_product_trace_action_commit_packet_v0_2_rendered_section() -> None:
+    rendered = _rendered()
+
+    assert "[ACTIONCOMMITPACKET V0.2 ROOT-CREATED PACKET BOUNDARY]" in rendered
+    assert "Root created a scoped Supplier A ActionCommitPacket model" in rendered
+    assert "Human approval is scoped evidence only" in rendered
+    assert "LLM/DRS/AVF/GT-LGT did not create the packet" in rendered
+    assert "Supplier B is excluded" in rendered
+    assert "Shipment release is excluded" in rendered
+    assert "Packet is accepted for future mock corridor only" in rendered
+    assert "Slice C does not execute MockBankSandbox" in rendered
+    assert "Slice C does not create receipt" in rendered
+    assert "Root remains final authority" in rendered
+
+
+def test_v1_2_product_trace_action_commit_packet_v0_2_no_execution_or_effects() -> None:
+    counters = _report()["counters"]
+
+    assert counters["product_trace_created_receipt_count"] == 0
+    assert counters["product_trace_executed_mock_payment_count"] == 0
+    assert counters["product_trace_executed_real_payment_count"] == 0
+    assert counters["product_trace_released_shipment_count"] == 0
+    assert counters["action_commit_packet_v0_2_mock_payment_order_created_count"] == 0
+    assert counters["action_commit_packet_v0_2_mock_receipt_created_count"] == 0
+    assert counters["action_commit_packet_v0_2_mock_bank_sandbox_executed_count"] == 0
+    assert counters["action_commit_packet_v0_2_provider_called_count"] == 0
+    assert counters["action_commit_packet_v0_2_network_called_count"] == 0
+    assert counters["action_commit_packet_v0_2_gemini_called_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
 def test_v1_2_product_trace_authority_matrix() -> None:
     authority = set(_report()["authority_matrix"])
 
@@ -601,6 +738,9 @@ def test_v1_2_product_trace_authority_matrix() -> None:
     assert "DRS v0.2 hit is not authority." in authority
     assert "AVF v0.2 score is not authority." in authority
     assert "Top-ranked AVF candidate is not permission." in authority
+    assert "Only Root creates ActionCommitPacket v0.2." in authority
+    assert "Local packet registry is not authority." in authority
+    assert "Packet accepted for mock corridor is not payment execution." in authority
 
 
 def test_v1_2_product_trace_rendered_sections() -> None:
@@ -632,6 +772,9 @@ def test_v1_2_product_trace_rendered_sections() -> None:
         "AVF cannot create ActionCommitPacket, receipt, payment, or shipment release"
         in rendered
     )
+    assert "Root created a scoped Supplier A ActionCommitPacket model" in rendered
+    assert "Packet is accepted for future mock corridor only" in rendered
+    assert "Slice C does not execute MockBankSandbox" in rendered
     assert "Root remains final authority" in rendered
     assert "FINAL STATUS: PASS" in rendered
 
@@ -654,6 +797,38 @@ def test_v1_2_product_trace_does_not_import_live_or_execution_runners() -> None:
     assert "google.genai" not in source
     assert "hedgehog.local_drs_v02" in source
     assert "hedgehog.avf_v02" in source
+    assert "hedgehog.action_commit_packet_v02" in source
     assert "run_full_semantic_e2e_v01" not in source
     assert "run_supplier_payment_shipment_release_review_wow_v1_1" not in source
     assert "run_human_full_wow_v1_1_final_walkthrough" not in source
+
+
+def test_v1_2_product_trace_action_commit_packet_v0_2_source_import_boundary() -> None:
+    source = Path(runner.__file__).read_text(encoding="utf-8")
+    forbidden_phrases = (
+        "authority " + "flows upward",
+        "adapter " + "returns authority",
+        "receipt " + "returns authority",
+        "bank " + "returns authority",
+        "corridor " + "decides",
+        "adapter " + "decides",
+        "post-Root " + "reasoning restarts",
+        "receipt " + "grants permission",
+        "receipt " + "releases shipment",
+        "human approval " + "directly creates ActionCommitPacket",
+    )
+
+    assert "hedgehog.action_commit_packet_v02" in source
+    assert "from hedgehog.action_commit_packet import" not in source
+    assert "import hedgehog.action_commit_packet\n" not in source
+    assert "hedgehog.mock_connector_sandbox" not in source
+    assert "google.genai" not in source
+    assert "requests" not in source
+    assert "urllib" not in source
+    assert "openai" not in source
+    assert "subprocess" not in source
+    assert "call_real_bank" not in source
+    assert "call_real_supplier" not in source
+    assert "call_real_warehouse" not in source
+    for phrase in forbidden_phrases:
+        assert phrase not in source

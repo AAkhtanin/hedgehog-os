@@ -4,6 +4,14 @@ from dataclasses import asdict
 import json
 from typing import Any, Mapping
 
+from hedgehog.action_commit_packet_v02 import (
+    STATUS_PASS,
+    build_supplier_a_packet_corridor_validation_fixture_v02,
+    record_packet_seen_v02,
+    validate_action_commit_packet_v02,
+    validate_packet_against_registry_v02,
+    validate_packet_corridor_entry_v02,
+)
 from hedgehog.avf_v02 import (
     build_wow_v1_2_avf_v02_evaluation_input,
     evaluate_avf_candidates_v02,
@@ -41,6 +49,7 @@ RENDERED_SECTIONS = (
     "[TRANSITION CARDS]",
     "[LOCAL DRS V0.2 RESOLVE]",
     "[LOCAL AVF V0.2 ADVISORY EVALUATION]",
+    "[ACTIONCOMMITPACKET V0.2 ROOT-CREATED PACKET BOUNDARY]",
     "[AUTHORITY MATRIX]",
     "[COUNTER MATRIX]",
     "[NON-CLAIMS]",
@@ -273,6 +282,20 @@ AUTHORITY_MATRIX = (
     "Post V&V does not finalize.",
     "GT/LGT does not finalize.",
     "Human approval is scoped evidence only.",
+    "Only Root creates ActionCommitPacket v0.2.",
+    "Human approval does not directly create ActionCommitPacket.",
+    "LLM does not create ActionCommitPacket.",
+    "DRS does not create ActionCommitPacket.",
+    "AVF does not create ActionCommitPacket.",
+    "GT/LGT does not create ActionCommitPacket.",
+    "ActionCommitPacket is not FinalOutput.",
+    "ActionCommitPacket is not receipt.",
+    "ActionCommitPacket is not payment execution.",
+    "ActionCommitPacket is not shipment release.",
+    "Local packet registry is not DRS.",
+    "Local packet registry is not authority.",
+    "Local packet registry is not permission.",
+    "Packet accepted for mock corridor is not payment execution.",
     "Root-created mock ActionCommitPacket is scoped only.",
     "MockBankSandbox receipt is evidence only.",
     "Receipt does not release shipment.",
@@ -859,11 +882,110 @@ def _avf_v0_2_evaluation() -> dict[str, Any]:
     }
 
 
+ACTION_COMMIT_PACKET_V0_2_NON_AUTHORITY_BOUNDARIES = (
+    "Only Root creates ActionCommitPacket v0.2.",
+    "Human approval is scoped evidence only.",
+    "Human approval does not directly create ActionCommitPacket.",
+    "LLM does not create ActionCommitPacket.",
+    "DRS does not create ActionCommitPacket.",
+    "AVF does not create ActionCommitPacket.",
+    "GT/LGT does not create ActionCommitPacket.",
+    "ActionCommitPacket is not FinalOutput.",
+    "ActionCommitPacket is not receipt.",
+    "ActionCommitPacket is not payment execution.",
+    "ActionCommitPacket is not shipment release.",
+    "Local packet registry is not DRS.",
+    "Local packet registry is not authority.",
+    "Local packet registry is not permission.",
+    "Packet accepted for mock corridor is not payment execution.",
+    "Root remains final authority.",
+)
+
+
+def _action_commit_packet_v0_2_integration() -> dict[str, Any]:
+    packet, corridor, step, registry = (
+        build_supplier_a_packet_corridor_validation_fixture_v02()
+    )
+    packet_valid, packet_reasons = validate_action_commit_packet_v02(packet)
+    registry_report = validate_packet_against_registry_v02(packet, registry)
+    corridor_entry_report = validate_packet_corridor_entry_v02(
+        packet,
+        corridor,
+        step,
+        registry,
+    )
+    packet_seen_registry = record_packet_seen_v02(registry, packet)
+    packet_seen_recorded = (
+        packet.packet_id in packet_seen_registry.seen_packet_ids
+        and packet.idempotency.key in packet_seen_registry.used_idempotency_keys
+    )
+    terminal_receipt_recorded = bool(
+        packet_seen_registry.terminal_receipt_packet_ids
+        or packet_seen_registry.terminal_receipt_idempotency_keys
+    )
+    status = (
+        "PASS"
+        if packet_valid
+        and registry_report.validation_status == STATUS_PASS
+        and corridor_entry_report.validation_status == STATUS_PASS
+        and corridor_entry_report.accepted_for_mock_corridor
+        and packet_seen_recorded
+        and not terminal_receipt_recorded
+        else "FAIL_CLOSED"
+    )
+
+    return {
+        "action_commit_packet_v0_2_status": status,
+        "packet_id": packet.packet_id,
+        "packet_type": packet.packet_type,
+        "created_by": packet.created_by,
+        "root_created": packet.root_created,
+        "source_root_decision_ref": packet.source_root_decision_ref,
+        "human_approval_ref": packet.human_approval_ref,
+        "human_approval_is_scoped_evidence_only": True,
+        "packet_validated": packet_valid,
+        "packet_validation_reasons": packet_reasons,
+        "registry_validated": registry_report.validation_status == STATUS_PASS,
+        "registry_validation_reasons": registry_report.reason_codes,
+        "registry_is_local_proof_only": registry.local_proof_only,
+        "registry_is_not_drs": True,
+        "registry_is_not_authority": True,
+        "registry_is_not_permission": True,
+        "packet_corridor_entry_validated": (
+            corridor_entry_report.validation_status == STATUS_PASS
+        ),
+        "corridor_entry_validation_reasons": corridor_entry_report.reason_codes,
+        "accepted_for_mock_corridor": (
+            corridor_entry_report.accepted_for_mock_corridor
+        ),
+        "packet_seen_recorded_in_local_registry": packet_seen_recorded,
+        "terminal_receipt_recorded": terminal_receipt_recorded,
+        "mock_payment_order_created": False,
+        "mock_receipt_created": False,
+        "mock_bank_sandbox_executed": False,
+        "allowed_subjects": packet.scope.allowed_subjects,
+        "forbidden_subjects": packet.scope.forbidden_subjects,
+        "allowed_actions": packet.scope.allowed_actions,
+        "forbidden_actions": packet.scope.forbidden_actions,
+        "allowed_adapters": packet.scope.allowed_adapters,
+        "forbidden_adapters": packet.scope.forbidden_adapters,
+        "payment_slot_ref": packet.scope.payment_slot_ref,
+        "creditor_ref": packet.scope.creditor_ref,
+        "amount": packet.scope.amount,
+        "currency": packet.scope.currency,
+        "idempotency_key": packet.idempotency.key,
+        "packet_non_authority_boundaries": (
+            ACTION_COMMIT_PACKET_V0_2_NON_AUTHORITY_BOUNDARIES
+        ),
+    }
+
+
 def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
     branches = _fractal_branches()
     result_proposals = _result_proposals(branches)
     drs_resolve = _drs_v0_2_resolve()
     avf_evaluation = _avf_v0_2_evaluation()
+    action_commit_packet_integration = _action_commit_packet_v0_2_integration()
     counters = _counters()
     counters.update(
         {
@@ -912,6 +1034,40 @@ def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
             "avf_v0_2_provider_called_count": 0,
             "avf_v0_2_network_called_count": 0,
             "avf_v0_2_gemini_called_count": 0,
+            "product_trace_created_action_commit_packet_v0_2_model_packet_count": 1,
+            "action_commit_packet_v0_2_integration_invoked_count": 1,
+            "action_commit_packet_v0_2_root_created_model_packet_count": 1,
+            "action_commit_packet_v0_2_root_created_packet_validated_count": 1,
+            "action_commit_packet_v0_2_created_by_root_count": 1,
+            "action_commit_packet_v0_2_created_by_human_count": 0,
+            "action_commit_packet_v0_2_created_by_llm_count": 0,
+            "action_commit_packet_v0_2_created_by_drs_count": 0,
+            "action_commit_packet_v0_2_created_by_avf_count": 0,
+            "action_commit_packet_v0_2_created_by_gt_lgt_count": 0,
+            "action_commit_packet_v0_2_human_approval_used_as_evidence_count": 1,
+            "action_commit_packet_v0_2_supplier_a_scope_allowed_count": 1,
+            "action_commit_packet_v0_2_supplier_b_scope_allowed_count": 0,
+            "action_commit_packet_v0_2_shipment_release_allowed_count": 0,
+            "action_commit_packet_v0_2_real_bank_allowed_count": 0,
+            "action_commit_packet_v0_2_real_supplier_api_allowed_count": 0,
+            "action_commit_packet_v0_2_real_warehouse_api_allowed_count": 0,
+            "action_commit_packet_v0_2_packet_registry_validated_count": 1,
+            "action_commit_packet_v0_2_packet_corridor_entry_validated_count": 1,
+            "action_commit_packet_v0_2_accepted_for_mock_corridor_count": 1,
+            "action_commit_packet_v0_2_packet_seen_recorded_count": 1,
+            "action_commit_packet_v0_2_terminal_receipt_recorded_count": 0,
+            "action_commit_packet_v0_2_mock_payment_order_created_count": 0,
+            "action_commit_packet_v0_2_mock_receipt_created_count": 0,
+            "action_commit_packet_v0_2_mock_bank_sandbox_executed_count": 0,
+            "action_commit_packet_v0_2_sandbox_adapter_execution_count": 0,
+            "action_commit_packet_v0_2_payment_executed_count": 0,
+            "action_commit_packet_v0_2_shipment_released_count": 0,
+            "action_commit_packet_v0_2_final_output_created_count": 0,
+            "action_commit_packet_v0_2_root_bypass_count": 0,
+            "action_commit_packet_v0_2_provider_called_count": 0,
+            "action_commit_packet_v0_2_network_called_count": 0,
+            "action_commit_packet_v0_2_gemini_called_count": 0,
+            "action_commit_packet_v0_2_real_world_effects_count": 0,
         }
     )
     transition_cards = _transition_cards()
@@ -922,10 +1078,18 @@ def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
         and len(result_proposals) == counters["branch_result_proposals_created_count"]
         and drs_resolve["drs_v0_2_status"] == "PASS"
         and avf_evaluation["avf_v0_2_status"] == "PASS"
+        and action_commit_packet_integration[
+            "action_commit_packet_v0_2_status"
+        ] == "PASS"
         and counters["drs_v0_2_records_evaluated_count"] == 11
         and counters["drs_v0_2_direct_reuse_allowed_count"] == 0
         and counters["avf_v0_2_candidates_evaluated_count"] == 9
         and counters["avf_v0_2_top_ranked_candidate_permission_granted_count"] == 0
+        and counters["action_commit_packet_v0_2_accepted_for_mock_corridor_count"]
+        == 1
+        and counters["action_commit_packet_v0_2_terminal_receipt_recorded_count"] == 0
+        and counters["action_commit_packet_v0_2_mock_bank_sandbox_executed_count"]
+        == 0
         else "FAIL_CLOSED"
     )
 
@@ -1013,6 +1177,7 @@ def collect_full_wow_v1_2_product_trace() -> dict[str, Any]:
         },
         "drs_v0_2_resolve": drs_resolve,
         "avf_v0_2_evaluation": avf_evaluation,
+        "action_commit_packet_v0_2_integration": action_commit_packet_integration,
         "manual_live_multillm_fractal_lane": _manual_live_lane_reservation(),
         "authority_matrix": AUTHORITY_MATRIX,
         "counters": counters,
@@ -1256,6 +1421,81 @@ def render_full_wow_v1_2_product_trace(report: Mapping[str, Any]) -> str:
         for boundary in avf_evaluation["avf_non_authority_boundaries"]
     )
 
+    acp_v0_2 = report["action_commit_packet_v0_2_integration"]
+    lines.extend(["", "[ACTIONCOMMITPACKET V0.2 ROOT-CREATED PACKET BOUNDARY]"])
+    lines.extend(
+        _render_mapping(
+            {
+                "action_commit_packet_v0_2_status": acp_v0_2[
+                    "action_commit_packet_v0_2_status"
+                ],
+                "packet_id": acp_v0_2["packet_id"],
+                "packet_type": acp_v0_2["packet_type"],
+                "created_by": acp_v0_2["created_by"],
+                "root_created": acp_v0_2["root_created"],
+                "packet_validated": acp_v0_2["packet_validated"],
+                "registry_validated": acp_v0_2["registry_validated"],
+                "packet_corridor_entry_validated": acp_v0_2[
+                    "packet_corridor_entry_validated"
+                ],
+                "accepted_for_mock_corridor": acp_v0_2[
+                    "accepted_for_mock_corridor"
+                ],
+                "packet_seen_recorded_in_local_registry": acp_v0_2[
+                    "packet_seen_recorded_in_local_registry"
+                ],
+                "terminal_receipt_recorded": acp_v0_2[
+                    "terminal_receipt_recorded"
+                ],
+                "mock_payment_order_created": acp_v0_2[
+                    "mock_payment_order_created"
+                ],
+                "mock_receipt_created": acp_v0_2["mock_receipt_created"],
+                "mock_bank_sandbox_executed": acp_v0_2[
+                    "mock_bank_sandbox_executed"
+                ],
+            }
+        )
+    )
+    lines.extend(
+        [
+            "Root created a scoped Supplier A ActionCommitPacket model.",
+            "Human approval is scoped evidence only and did not create the packet.",
+            "LLM/DRS/AVF/GT-LGT did not create the packet.",
+            "Supplier A is allowed.",
+            "Supplier B is excluded.",
+            "Shipment release is excluded.",
+            "Real bank / real supplier API / real warehouse API are excluded.",
+            "Packet adapter binding is inside allowed scope.",
+            "Local registry accepted an unseen valid packet for corridor validation.",
+            "Registry is local proof-only, not DRS, not authority, and not permission.",
+            "Packet is accepted for future mock corridor only.",
+            "Slice C does not execute MockBankSandbox.",
+            "Slice C does not create mock payment order.",
+            "Slice C does not create receipt.",
+            "Slice C does not execute payment.",
+            "Slice C does not release shipment.",
+            "Root remains final authority.",
+            "allowed_subjects:",
+        ]
+    )
+    lines.extend(f"  - {subject}" for subject in acp_v0_2["allowed_subjects"])
+    lines.append("forbidden_subjects:")
+    lines.extend(f"  - {subject}" for subject in acp_v0_2["forbidden_subjects"])
+    lines.append("allowed_actions:")
+    lines.extend(f"  - {action}" for action in acp_v0_2["allowed_actions"])
+    lines.append("forbidden_actions:")
+    lines.extend(f"  - {action}" for action in acp_v0_2["forbidden_actions"])
+    lines.append("allowed_adapters:")
+    lines.extend(f"  - {adapter}" for adapter in acp_v0_2["allowed_adapters"])
+    lines.append("forbidden_adapters:")
+    lines.extend(f"  - {adapter}" for adapter in acp_v0_2["forbidden_adapters"])
+    lines.append("packet_non_authority_boundaries:")
+    lines.extend(
+        f"  - {boundary}"
+        for boundary in acp_v0_2["packet_non_authority_boundaries"]
+    )
+
     lines.extend(["", "[AUTHORITY MATRIX]"])
     lines.extend(f"- {item}" for item in report["authority_matrix"])
 
@@ -1301,6 +1541,20 @@ def render_full_wow_v1_2_product_trace(report: Mapping[str, Any]) -> str:
                         "top_candidate_id": avf_evaluation["top_candidate_id"],
                         "hard_masked_count": avf_evaluation["hard_masked_count"],
                         "unmasked_count": avf_evaluation["unmasked_count"],
+                    },
+                    "action_commit_packet_v0_2_integration": {
+                        "action_commit_packet_v0_2_status": acp_v0_2[
+                            "action_commit_packet_v0_2_status"
+                        ],
+                        "packet_id": acp_v0_2["packet_id"],
+                        "packet_validated": acp_v0_2["packet_validated"],
+                        "registry_validated": acp_v0_2["registry_validated"],
+                        "accepted_for_mock_corridor": acp_v0_2[
+                            "accepted_for_mock_corridor"
+                        ],
+                        "terminal_receipt_recorded": acp_v0_2[
+                            "terminal_receipt_recorded"
+                        ],
                     },
                     "non_claims": report["non_claims"],
                 },

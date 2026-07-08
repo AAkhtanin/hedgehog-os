@@ -122,6 +122,17 @@ REQUIRED_AUTHORITY_FACTS = {
     "Local packet registry is not authority.",
     "Local packet registry is not permission.",
     "Packet accepted for mock corridor is not payment execution.",
+    "MockBankSandbox corridor is deterministic, not reasoning.",
+    "MockBankSandbox does not restart LLM reasoning after Root.",
+    "MockBankSandbox does not decide.",
+    "MockBankSandbox does not create authority.",
+    "Mock receipt is evidence only.",
+    "Mock receipt is not permission.",
+    "Mock receipt is not FinalOutput.",
+    "Mock receipt does not authorize Supplier B.",
+    "Mock receipt does not release shipment.",
+    "Mock receipt does not create future permission.",
+    "Terminal receipt observation is local proof-only.",
     "Root-created mock ActionCommitPacket is scoped only.",
     "MockBankSandbox receipt is evidence only.",
     "Receipt does not release shipment.",
@@ -151,6 +162,7 @@ REQUIRED_SECTIONS = (
     "[LOCAL DRS V0.2 RESOLVE]",
     "[LOCAL AVF V0.2 ADVISORY EVALUATION]",
     "[ACTIONCOMMITPACKET V0.2 ROOT-CREATED PACKET BOUNDARY]",
+    "[MOCKBANKSANDBOX V0.2 CONTRACT FULFILLMENT CORRIDOR]",
     "[AUTHORITY MATRIX]",
     "[COUNTER MATRIX]",
     "[NON-CLAIMS]",
@@ -726,6 +738,158 @@ def test_v1_2_product_trace_action_commit_packet_v0_2_no_execution_or_effects() 
     assert counters["real_world_effects_count"] == 0
 
 
+def test_v1_2_product_trace_mock_bank_sandbox_v0_2_execution_present() -> None:
+    mock = _report()["mock_bank_sandbox_v0_2_corridor_execution"]
+
+    assert mock["mock_bank_sandbox_v0_2_status"] == "PASS"
+    assert mock["source_packet_validated"] is True
+    assert mock["source_packet_corridor_entry_validated"] is True
+    assert mock["source_packet_seen_in_registry"] is True
+    assert mock["mock_payment_intent"]
+    assert mock["mock_payment_consent"]
+    assert mock["mock_payment_order"]
+    assert mock["mock_receipt_evidence"]
+    assert mock["receipt_validated"] is True
+    assert mock["terminal_receipt_observed_in_local_registry"] is True
+
+
+def test_v1_2_product_trace_mock_bank_sandbox_v0_2_sequence_visible() -> None:
+    sequence = _report()["mock_bank_sandbox_v0_2_corridor_execution"][
+        "corridor_sequence"
+    ]
+    step_ids = {step["step_id"] for step in sequence}
+    required_steps = {
+        "packet_validation",
+        "local_registry_replay_guard",
+        "scope_check",
+        "amount_check",
+        "creditor_check",
+        "payment_slot_check",
+        "adapter_binding_check",
+        "idempotency_check",
+        "expiry_ttl_check",
+        "forbidden_surface_check",
+        "mock_payment_order",
+        "mock_receipt_evidence",
+    }
+
+    assert required_steps <= step_ids
+    for step in sequence:
+        assert "input_summary" in step
+        assert "output_summary" in step
+        assert "meaning" in step
+        assert "does_not_authorize" in step
+        assert "next_step" in step
+
+
+def test_v1_2_product_trace_mock_bank_sandbox_v0_2_receipt_evidence_only() -> None:
+    receipt = _report()["mock_bank_sandbox_v0_2_corridor_execution"][
+        "mock_receipt_evidence"
+    ]
+
+    assert receipt["evidence_only"] is True
+    assert receipt["creates_future_permission"] is False
+    assert receipt["creates_action_permission"] is False
+    assert receipt["creates_final_output"] is False
+    assert receipt["releases_shipment"] is False
+    assert receipt["authorizes_supplier_b"] is False
+    assert receipt["mutates_packet_scope"] is False
+    assert receipt["creates_production_drs_record"] is False
+    assert receipt["real_world_effects_count"] == 0
+
+
+def test_v1_2_product_trace_mock_bank_sandbox_v0_2_keeps_supplier_b_and_shipment_blocked() -> None:
+    report = _report()
+    mock = report["mock_bank_sandbox_v0_2_corridor_execution"]
+    counters = report["counters"]
+
+    assert mock["supplier_b_excluded"] is True
+    assert mock["shipment_release_excluded"] is True
+    assert counters["mock_bank_sandbox_v0_2_receipt_supplier_b_authorization_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_receipt_shipment_release_count"] == 0
+    assert counters["product_trace_released_shipment_count"] == 0
+
+
+def test_v1_2_product_trace_mock_bank_sandbox_v0_2_no_real_api_or_provider_calls() -> None:
+    counters = _report()["counters"]
+
+    assert counters["mock_bank_sandbox_v0_2_real_bank_api_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_real_supplier_api_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_real_warehouse_api_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_provider_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_network_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_gemini_called_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_real_world_effects_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_v1_2_product_trace_mock_bank_sandbox_v0_2_registry_records_terminal_receipt_only() -> None:
+    report = _report()
+    mock = report["mock_bank_sandbox_v0_2_corridor_execution"]
+    counters = report["counters"]
+
+    assert counters["mock_bank_sandbox_v0_2_terminal_receipt_observed_count"] == 1
+    assert mock["terminal_receipt_observation_is_local_proof_only"] is True
+    assert counters["mock_bank_sandbox_v0_2_receipt_permission_created_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_real_payment_executed_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_shipment_released_count"] == 0
+    assert counters["mock_bank_sandbox_v0_2_real_world_effects_count"] == 0
+
+
+def test_v1_2_product_trace_mock_bank_sandbox_v0_2_rendered_section() -> None:
+    rendered = _rendered()
+
+    assert "[MOCKBANKSANDBOX V0.2 CONTRACT FULFILLMENT CORRIDOR]" in rendered
+    assert "MockBankSandbox consumed the Root-created Supplier A packet" in rendered
+    assert "The corridor validated packet shape" in rendered
+    assert "The corridor created a mock payment intent/consent/order" in rendered
+    assert "The corridor returned mock receipt evidence" in rendered
+    assert "Receipt is evidence only" in rendered
+    assert "Supplier B remains blocked" in rendered
+    assert "Shipment remains held" in rendered
+    assert "No real-world effect occurred" in rendered
+    assert "Root remains final authority" in rendered
+
+
+def test_v1_2_product_trace_mock_bank_sandbox_v0_2_no_post_root_reasoning_or_authority() -> None:
+    authority = set(_report()["authority_matrix"])
+
+    assert "MockBankSandbox does not restart LLM reasoning after Root." in authority
+    assert "MockBankSandbox does not decide." in authority
+    assert "Mock receipt is not permission." in authority
+    assert "Root remains final authority." in authority
+
+
+def test_v1_2_product_trace_mock_bank_sandbox_v0_2_source_import_boundary() -> None:
+    source = Path(runner.__file__).read_text(encoding="utf-8")
+    forbidden_phrases = (
+        "authority " + "flows upward",
+        "adapter " + "returns authority",
+        "receipt " + "returns authority",
+        "bank " + "returns authority",
+        "corridor " + "decides",
+        "adapter " + "decides",
+        "post-Root " + "reasoning restarts",
+        "receipt " + "grants permission",
+        "receipt " + "releases shipment",
+        "human approval " + "directly creates ActionCommitPacket",
+    )
+
+    assert "hedgehog.mock_connector_sandbox" not in source
+    assert "from hedgehog.action_commit_packet import" not in source
+    assert "import hedgehog.action_commit_packet\n" not in source
+    assert "google.genai" not in source
+    assert "requests" not in source
+    assert "urllib" not in source
+    assert "openai" not in source
+    assert "subprocess" not in source
+    assert "call_real_bank" not in source
+    assert "call_real_supplier" not in source
+    assert "call_real_warehouse" not in source
+    for phrase in forbidden_phrases:
+        assert phrase not in source
+
+
 def test_v1_2_product_trace_authority_matrix() -> None:
     authority = set(_report()["authority_matrix"])
 
@@ -741,6 +905,9 @@ def test_v1_2_product_trace_authority_matrix() -> None:
     assert "Only Root creates ActionCommitPacket v0.2." in authority
     assert "Local packet registry is not authority." in authority
     assert "Packet accepted for mock corridor is not payment execution." in authority
+    assert "MockBankSandbox corridor is deterministic, not reasoning." in authority
+    assert "Mock receipt is evidence only." in authority
+    assert "Terminal receipt observation is local proof-only." in authority
 
 
 def test_v1_2_product_trace_rendered_sections() -> None:
@@ -775,6 +942,12 @@ def test_v1_2_product_trace_rendered_sections() -> None:
     assert "Root created a scoped Supplier A ActionCommitPacket model" in rendered
     assert "Packet is accepted for future mock corridor only" in rendered
     assert "Slice C does not execute MockBankSandbox" in rendered
+    assert "MockBankSandbox consumed the Root-created Supplier A packet" in rendered
+    assert "The corridor returned mock receipt evidence" in rendered
+    assert "Receipt is evidence only" in rendered
+    assert "Supplier B remains blocked" in rendered
+    assert "Shipment remains held" in rendered
+    assert "No real-world effect occurred" in rendered
     assert "Root remains final authority" in rendered
     assert "FINAL STATUS: PASS" in rendered
 

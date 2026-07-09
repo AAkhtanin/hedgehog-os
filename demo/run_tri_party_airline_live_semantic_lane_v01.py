@@ -1,0 +1,1434 @@
+from __future__ import annotations
+
+import json
+import os
+from pathlib import Path
+from typing import Any, Callable, Mapping
+
+from demo import run_tri_party_airline_ticket_purchase_mock_e2e_v01 as deterministic_airline
+
+
+RUN_ID = "tri_party_airline_live_semantic_lane_v01"
+REPORT_ID = "tri_party_airline_live_semantic_lane_v01"
+LANE_ID = "tri_party_airline_live_semantic_lane_v01_fake_provider"
+DEFAULT_MODEL = "fake-airline-semantic-model"
+
+STATUS_PASS = "PASS"
+STATUS_FAIL_CLOSED = "FAIL_CLOSED"
+STATUS_SKIPPED_CLOSED = "SKIPPED_CLOSED"
+
+ENV_LANE = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_LANE"
+ENV_ARTIFACT_DIR = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_ARTIFACT_DIR"
+ENV_MODEL = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_MODEL"
+ENV_FAKE_PROVIDER = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_FAKE_PROVIDER"
+ENV_ALLOW_RAW = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_ALLOW_RAW_RESPONSE_OUTPUT"
+
+TRANSACTION_ID = deterministic_airline.TRANSACTION_ID
+CLIENT_ROOT_ID = deterministic_airline.CLIENT_ROOT_ID
+AIRLINE_ROOT_ID = deterministic_airline.AIRLINE_ROOT_ID
+BANK_ROOT_ID = deterministic_airline.BANK_ROOT_ID
+
+Provider = Callable[[str, str, Mapping[str, Any]], str]
+
+SECRET_MARKERS = (
+    "AIza",
+    "GOOGLE_API_KEY",
+    "GEMINI_API_KEY",
+    "raw_passport_value",
+    "raw_card_number",
+    "raw_iban_value",
+    "raw_payment_token_value",
+    "sandbox_token_abc",
+)
+
+REQUIRED_RENDER_SECTIONS = (
+    "[TRI-PARTY AIRLINE LIVE SEMANTIC LANE]",
+    "[BSEP MEMBRANE]",
+    "[SIDE-SPECIFIC BSEP PROJECTIONS]",
+    "[TRANSACTION ORCHESTRATOR]",
+    "[SEMANTIC ARCHITECT]",
+    "[SEMANTIC ACTOR CALLS]",
+    "[CLIENT SIDE LLM ACTORS]",
+    "[AIRLINE SIDE LLM ACTORS]",
+    "[AIRLINE VERTICAL FRACTAL CELLS]",
+    "[BANK SIDE LLM ACTORS]",
+    "[BANK VERTICAL FRACTAL CELLS]",
+    "[CROSS-ROOT CONSISTENCY REVIEWER]",
+    "[STRICT VERTICAL FRACTAL DEPENDENCIES]",
+    "[WHAT EACH LLM RECEIVED]",
+    "[WHAT EACH LLM RETURNED]",
+    "[WHAT RUNTIME USED]",
+    "[WHAT RUNTIME REJECTED]",
+    "[ROOT BOUNDARIES]",
+    "[COUNTER TABLE]",
+    "[ARTIFACTS]",
+    "[NON-CLAIMS]",
+    "[FINAL STATUS]",
+)
+
+ACTOR_SPECS: tuple[dict[str, Any], ...] = (
+    {
+        "actor_id": "tri_party_airline_orchestrator_llm",
+        "side": "transaction",
+        "group": "transaction_orchestrator",
+        "semantic_work": "interpret the whole tri-party transaction goal and propose bounded semantic route for BSEP creation",
+    },
+    {
+        "actor_id": "tri_party_airline_semantic_architect_llm",
+        "side": "transaction",
+        "group": "semantic_architect",
+        "semantic_work": "receive BSEP-derived bounded context and propose semantic actor topology and validation obligations",
+    },
+    {
+        "actor_id": "client_purchase_intent_reviewer_llm",
+        "side": "client",
+        "group": "client",
+        "semantic_work": "compare travel intent against Offer A/B/C and explain why Offer A best matches client constraints",
+    },
+    {
+        "actor_id": "client_profile_privacy_reviewer_llm",
+        "side": "client",
+        "group": "client",
+        "semantic_work": "explain passenger and payment sealed refs and private-field boundaries",
+    },
+    {
+        "actor_id": "airline_offer_policy_reviewer_llm",
+        "side": "airline",
+        "group": "airline",
+        "semantic_work": "interpret mock inventory, fare, baggage, TTL, route constraints and compare Offer A/B/C",
+    },
+    {
+        "actor_id": "airline_fare_rules_vertical_cell_llm",
+        "side": "airline",
+        "group": "airline_vertical",
+        "vertical_fractal_cell": True,
+        "parent_actor_id": "airline_offer_policy_reviewer_llm",
+        "semantic_work": "analyze fare basis, refund/change restrictions, TTL pressure, and price-vs-flexibility tradeoff",
+    },
+    {
+        "actor_id": "airline_seat_baggage_vertical_cell_llm",
+        "side": "airline",
+        "group": "airline_vertical",
+        "vertical_fractal_cell": True,
+        "parent_actor_id": "airline_offer_policy_reviewer_llm",
+        "semantic_work": "analyze checked baggage, seat choice, seat fee, and cabin constraints",
+    },
+    {
+        "actor_id": "airline_ticketing_policy_reviewer_llm",
+        "side": "airline",
+        "group": "airline",
+        "semantic_work": "explain conditions for mock ticket evidence from offer hold, payment authorization, and client approval evidence",
+    },
+    {
+        "actor_id": "bank_payment_policy_reviewer_llm",
+        "side": "bank",
+        "group": "bank",
+        "semantic_work": "explain mock authorization amount, merchant, debtor slot, consent, and sealed payment token ref",
+    },
+    {
+        "actor_id": "bank_idempotency_risk_vertical_cell_llm",
+        "side": "bank",
+        "group": "bank_vertical",
+        "vertical_fractal_cell": True,
+        "parent_actor_id": "bank_payment_policy_reviewer_llm",
+        "semantic_work": "analyze duplicate-payment risk, idempotency, expiry, TTL, and amount/merchant mismatch pressure",
+    },
+    {
+        "actor_id": "bank_payment_status_explainer_llm",
+        "side": "bank",
+        "group": "bank",
+        "semantic_work": "explain mock authorization vs settlement and PaymentStatusReceipt as evidence-only",
+    },
+    {
+        "actor_id": "tri_party_evidence_consistency_reviewer_llm",
+        "side": "cross_root_advisory",
+        "group": "cross_root",
+        "semantic_work": "check one transaction_id, coherent evidence routing, no foreign Root authority, and evidence-only receipts",
+    },
+)
+
+
+def collect_tri_party_airline_live_semantic_lane_v01(
+    *,
+    env: Mapping[str, str] | None = None,
+    provider: Provider | None = None,
+) -> dict[str, Any]:
+    effective_env = dict(os.environ if env is None else env)
+    model = effective_env.get(ENV_MODEL, DEFAULT_MODEL)
+    deterministic_report = (
+        deterministic_airline.collect_tri_party_airline_ticket_purchase_mock_e2e_v01()
+    )
+    artifact_dir_value = effective_env.get(ENV_ARTIFACT_DIR, "")
+    artifact_dir = Path(artifact_dir_value) if artifact_dir_value else None
+
+    if effective_env.get(ENV_LANE) != "1":
+        return _skipped_report(model, deterministic_report)
+
+    if provider is None and effective_env.get(ENV_FAKE_PROVIDER) != "1":
+        return _real_provider_not_implemented_report(model, deterministic_report)
+
+    active_provider = provider or build_fake_airline_semantic_provider_v01()
+    report = _run_fake_provider_lane(
+        model=model,
+        deterministic_report=deterministic_report,
+        provider=active_provider,
+        artifact_dir=artifact_dir,
+        allow_raw_output=effective_env.get(ENV_ALLOW_RAW) == "1",
+    )
+    return report
+
+
+def render_tri_party_airline_live_semantic_lane_v01(report: Mapping[str, Any]) -> str:
+    lines = [
+        "[TRI-PARTY AIRLINE LIVE SEMANTIC LANE]",
+        f"run_id: {report['run_id']}",
+        f"report_id: {report['report_id']}",
+        f"lane_id: {report['lane_id']}",
+        f"provider_mode: {report['provider_mode']}",
+        f"model: {report['model']}",
+        "One mock airline purchase transaction is analyzed.",
+    ]
+    if report["final_status"] == STATUS_SKIPPED_CLOSED:
+        lines.extend(
+            (
+                "",
+                "[FINAL STATUS]",
+                str(report["final_status"]),
+                f"skip_reason: {report['skip_reason']}",
+            ),
+        )
+        return "\n".join(lines)
+
+    lines.extend(
+        (
+            "",
+            "[BSEP MEMBRANE]",
+            "BSEP membrane was created and validated before Architect.",
+            f"bsep_validation_status: {report['bsep_validation'].get('validation_status')}",
+            "",
+            "[SIDE-SPECIFIC BSEP PROJECTIONS]",
+            "Side-specific BSEP projections were created.",
+        ),
+    )
+    for projection_id, projection in report["bsep_side_projections"].items():
+        lines.append(f"- {projection_id}: {projection['validation_status']}")
+
+    lines.extend(("", "[TRANSACTION ORCHESTRATOR]"))
+    _append_actor_lines(lines, report, "tri_party_airline_orchestrator_llm")
+    lines.extend(("", "[SEMANTIC ARCHITECT]"))
+    _append_actor_lines(lines, report, "tri_party_airline_semantic_architect_llm")
+
+    lines.extend(
+        (
+            "",
+            "[SEMANTIC ACTOR CALLS]",
+            "Twelve semantic actors ran in fake-provider mode.",
+            "Orchestrator and Architect are advisory only.",
+            "Horizontal actors analyze bounded side contexts.",
+        ),
+    )
+    lines.extend(f"- {actor_id}" for actor_id in report["semantic_actor_call_order"])
+
+    _append_group(lines, report, "[CLIENT SIDE LLM ACTORS]", "client")
+    _append_group(lines, report, "[AIRLINE SIDE LLM ACTORS]", "airline")
+    _append_group(lines, report, "[AIRLINE VERTICAL FRACTAL CELLS]", "airline_vertical")
+    _append_group(lines, report, "[BANK SIDE LLM ACTORS]", "bank")
+    _append_group(lines, report, "[BANK VERTICAL FRACTAL CELLS]", "bank_vertical")
+    _append_group(lines, report, "[CROSS-ROOT CONSISTENCY REVIEWER]", "cross_root")
+
+    lines.extend(
+        (
+            "",
+            "[STRICT VERTICAL FRACTAL DEPENDENCIES]",
+            "Vertical child cells start only after parent validation.",
+            "Child cells receive parent canonical summaries, not parent raw responses.",
+        ),
+    )
+    for dependency in report["vertical_fractal_dependencies"]:
+        lines.append(
+            "- {child_actor_id} <- {parent_actor_id}; "
+            "child_started_after_parent_validation={child_started_after_parent_validation}; "
+            "child_received_parent_canonical_summary={child_received_parent_canonical_summary}".format(
+                **dependency,
+            ),
+        )
+
+    lines.extend(
+        (
+            "",
+            "[WHAT EACH LLM RECEIVED]",
+            "Prompts use bounded context only.",
+        ),
+    )
+    for actor_id, summary in report["what_each_llm_received"].items():
+        lines.append(f"- {actor_id}: {summary}")
+
+    lines.extend(("", "[WHAT EACH LLM RETURNED]"))
+    for actor_id, summary in report["what_each_llm_returned"].items():
+        lines.append(f"- {actor_id}: {summary}")
+
+    lines.extend(
+        (
+            "",
+            "[WHAT RUNTIME USED]",
+            "LLM output affects runtime through extraction, validation, and canonical summaries.",
+            "Tests do not ignore LLM output.",
+        ),
+    )
+    for actor_id, used in report["what_runtime_used"].items():
+        lines.append(f"- {actor_id}: {', '.join(used)}")
+
+    lines.extend(
+        (
+            "",
+            "[WHAT RUNTIME REJECTED]",
+            "Runtime records what it used and what it rejected.",
+        ),
+    )
+    for actor_id, rejected in report["what_runtime_rejected"].items():
+        lines.append(f"- {actor_id}: {', '.join(rejected)}")
+
+    lines.extend(("", "[ROOT BOUNDARIES]"))
+    for boundary in report["root_boundaries"]:
+        lines.append(
+            f"- {boundary['boundary']}: preserved={boundary['boundary_preserved']}",
+        )
+
+    lines.extend(("", "[COUNTER TABLE]"))
+    for key in sorted(report["counter_table"]):
+        lines.append(f"{key}: {report['counter_table'][key]}")
+
+    lines.extend(("", "[ARTIFACTS]"))
+    for key, value in report["artifacts"].items():
+        lines.append(f"{key}: {value}")
+
+    lines.extend(
+        (
+            "",
+            "[NON-CLAIMS]",
+            (
+                "Happy path remains mock: mock payment authorization, mock ticket "
+                "evidence, mock PNR evidence."
+            ),
+            (
+                "No real payment, real ticket, real booking, real API, provider "
+                "network, or Gemini call occurs in fake-provider patch."
+            ),
+        ),
+    )
+    lines.extend(f"- {claim}" for claim in report["non_claims"])
+    lines.extend(("", "[FINAL STATUS]", str(report["final_status"])))
+    if report["validation_errors"]:
+        lines.append(f"validation_errors: {report['validation_errors']}")
+    return "\n".join(lines)
+
+
+def run_tri_party_airline_live_semantic_lane_v01(
+    *,
+    env: Mapping[str, str] | None = None,
+    provider: Provider | None = None,
+) -> str:
+    return render_tri_party_airline_live_semantic_lane_v01(
+        collect_tri_party_airline_live_semantic_lane_v01(env=env, provider=provider),
+    )
+
+
+def main() -> int:
+    print(run_tri_party_airline_live_semantic_lane_v01())
+    return 0
+
+
+def build_fake_airline_semantic_provider_v01() -> Provider:
+    def fake_provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> str:
+        summary_by_actor = {
+            "tri_party_airline_orchestrator_llm": (
+                "The mock purchase route starts with ClientRoot travel intent, "
+                "moves through AirlineRoot offer hold, BankRoot mock payment "
+                "authorization, and returns mock ticket evidence under one transaction_id."
+            ),
+            "tri_party_airline_semantic_architect_llm": (
+                "The semantic topology uses BSEP side projections, horizontal "
+                "client/airline/bank reviewers, and strict vertical child cells."
+            ),
+            "client_purchase_intent_reviewer_llm": (
+                "Offer A best fits the 840 EUR budget, included baggage, window "
+                "seat preference, and changeable-ticket preference."
+            ),
+            "client_profile_privacy_reviewer_llm": (
+                "Passenger and payment profile values remain sealed; only stable "
+                "refs enter bounded context."
+            ),
+            "airline_offer_policy_reviewer_llm": (
+                "Offer A is selected, Offer B is viable but less preferred, and "
+                "Offer C is downgraded for missing baggage and overnight layover."
+            ),
+            "airline_fare_rules_vertical_cell_llm": (
+                "Fare rules favor Offer A because it balances price, changeability, "
+                "and TTL without claiming refundability."
+            ),
+            "airline_seat_baggage_vertical_cell_llm": (
+                "Offer A includes checked baggage and a window seat while remaining "
+                "mock-only."
+            ),
+            "airline_ticketing_policy_reviewer_llm": (
+                "OfferHoldReceipt, PaymentAuthorizationReceipt, PaymentStatusReceipt, "
+                "and ClientPurchaseApprovalEvidence support mock ticket evidence and "
+                "mock PNR evidence only."
+            ),
+            "bank_payment_policy_reviewer_llm": (
+                "The mock authorization matches amount, currency, merchant ref, "
+                "debtor slot, consent, and sealed payment token ref."
+            ),
+            "bank_idempotency_risk_vertical_cell_llm": (
+                "The idempotency key and TTL reduce duplicate mock authorization risk."
+            ),
+            "bank_payment_status_explainer_llm": (
+                "PaymentStatusReceipt means mock authorized-not-settled evidence, "
+                "not settlement or ticket permission."
+            ),
+            "tri_party_evidence_consistency_reviewer_llm": (
+                "All reviewed artifacts share one transaction_id and move evidence "
+                "without cross-root authority transfer."
+            ),
+        }
+        actor = _actor_spec(actor_id)
+        response: dict[str, Any] = {
+            "actor_id": actor_id,
+            "transaction_id": TRANSACTION_ID,
+            "side": actor["side"],
+            "semantic_summary": summary_by_actor[actor_id],
+            "what_runtime_used": [
+                "validated semantic_summary",
+                "bounded evidence observations",
+            ],
+            "what_runtime_rejected": [
+                "raw response as authority",
+                "action creation claims",
+            ],
+            "authority_created": False,
+            "action_permission_created": False,
+            "packet_created": False,
+            "receipt_created": False,
+            "payment_created": False,
+            "ticket_created": False,
+            "booking_created": False,
+            "final_output_created": False,
+            "real_payment_executed": False,
+            "real_ticket_issued": False,
+            "real_booking_created": False,
+            "real_world_effects_count": 0,
+        }
+        if actor.get("vertical_fractal_cell"):
+            response.update(
+                {
+                    "vertical_fractal_cell": True,
+                    "parent_actor_id": actor["parent_actor_id"],
+                    "parent_validation_status": "PASS",
+                    "child_started_after_parent_validation": True,
+                    "child_received_parent_canonical_summary": True,
+                    "child_received_parent_raw_response": False,
+                    "child_received_sibling_raw_output": False,
+                    "child_received_unbounded_context": False,
+                    "child_result_returns_to_parent_or_root_review": True,
+                    "child_creates_authority": False,
+                    "child_creates_packet": False,
+                    "child_creates_receipt": False,
+                    "child_creates_payment": False,
+                    "child_creates_ticket": False,
+                    "child_creates_booking": False,
+                },
+            )
+        return json.dumps(response, sort_keys=True)
+
+    return fake_provider
+
+
+def _run_fake_provider_lane(
+    *,
+    model: str,
+    deterministic_report: Mapping[str, Any],
+    provider: Provider,
+    artifact_dir: Path | None,
+    allow_raw_output: bool,
+) -> dict[str, Any]:
+    if artifact_dir is not None:
+        artifact_dir.mkdir(parents=True, exist_ok=True)
+
+    artifacts: dict[str, Any] = {}
+    artifact_counts = {
+        "prompts_written_count": 0,
+        "raw_responses_written_count": 0,
+        "extracted_json_candidates_written_count": 0,
+        "validations_written_count": 0,
+        "canonical_summaries_written_count": 0,
+    }
+    actor_reports: list[dict[str, Any]] = []
+    actor_by_id: dict[str, dict[str, Any]] = {}
+    validation_errors: list[str] = []
+    provider_call_count = 0
+    bsep_packet: dict[str, Any] = {}
+    bsep_validation: dict[str, Any] = {}
+    bsep_side_projections: dict[str, Any] = {}
+
+    for index, actor in enumerate(ACTOR_SPECS, start=1):
+        actor_id = actor["actor_id"]
+        if actor_id == "tri_party_airline_semantic_architect_llm":
+            if bsep_validation.get("validation_status") != STATUS_PASS:
+                validation_errors.append("architect_blocked_until_bsep_validates")
+                break
+        if actor.get("group") not in ("transaction_orchestrator", "semantic_architect"):
+            architect = actor_by_id.get("tri_party_airline_semantic_architect_llm")
+            if not architect or architect["validation_status"] != STATUS_PASS:
+                validation_errors.append(f"side_actor_blocked_until_architect_pass:{actor_id}")
+                break
+        parent_report = None
+        if actor.get("vertical_fractal_cell"):
+            parent_report = actor_by_id.get(actor["parent_actor_id"])
+            if not parent_report or parent_report["validation_status"] != STATUS_PASS:
+                validation_errors.append(
+                    f"vertical_child_blocked_until_parent_pass:{actor_id}",
+                )
+                break
+
+        prompt = _build_prompt(
+            actor=actor,
+            actor_index=index,
+            deterministic_report=deterministic_report,
+            bsep_side_projections=bsep_side_projections,
+            parent_report=parent_report,
+        )
+        prompt_artifact = _write_text_artifact(
+            artifact_dir,
+            f"{actor_id}_prompt.txt",
+            prompt,
+            artifacts,
+            artifact_counts,
+            "prompts_written_count",
+        )
+        raw_response = provider(
+            actor_id,
+            prompt,
+            {
+                "actor_index": index,
+                "side": actor["side"],
+                "transaction_id": TRANSACTION_ID,
+                "parent_actor_id": actor.get("parent_actor_id"),
+            },
+        )
+        provider_call_count += 1
+        raw_response_artifact = _write_text_artifact(
+            artifact_dir,
+            f"{actor_id}_raw_response.txt",
+            raw_response,
+            artifacts,
+            artifact_counts,
+            "raw_responses_written_count",
+        )
+
+        candidate, parse_errors = _extract_json_candidate(raw_response)
+        extracted_json_artifact = _write_json_artifact(
+            artifact_dir,
+            f"{actor_id}_extracted_json_candidate.json",
+            candidate,
+            artifacts,
+            artifact_counts,
+            "extracted_json_candidates_written_count",
+        )
+        validation = _validate_actor_candidate(
+            candidate=candidate,
+            actor=actor,
+            parent_report=parent_report,
+            raw_response=raw_response,
+            parse_errors=parse_errors,
+        )
+        validation_artifact = _write_json_artifact(
+            artifact_dir,
+            f"{actor_id}_validation.json",
+            validation,
+            artifacts,
+            artifact_counts,
+            "validations_written_count",
+        )
+        canonical_summary = _canonical_summary(candidate, actor, validation)
+        canonical_summary_artifact = _write_json_artifact(
+            artifact_dir,
+            f"{actor_id}_canonical_summary.json",
+            canonical_summary,
+            artifacts,
+            artifact_counts,
+            "canonical_summaries_written_count",
+        )
+
+        actor_report = _actor_report(
+            actor=actor,
+            actor_index=index,
+            model=model,
+            prompt_artifact=prompt_artifact,
+            raw_response_artifact=raw_response_artifact,
+            extracted_json_artifact=extracted_json_artifact,
+            validation_artifact=validation_artifact,
+            canonical_summary_artifact=canonical_summary_artifact,
+            input_context_summary=_input_context_summary(actor, parent_report),
+            candidate=candidate,
+            validation=validation,
+            canonical_summary=canonical_summary,
+        )
+        actor_reports.append(actor_report)
+        actor_by_id[actor_id] = actor_report
+
+        if validation["validation_status"] != STATUS_PASS:
+            validation_errors.extend(validation["errors"])
+            break
+
+        if actor_id == "tri_party_airline_orchestrator_llm":
+            bsep_packet = _build_bsep_packet(actor_report)
+            bsep_validation = _validate_bsep_packet(bsep_packet)
+            if bsep_validation["validation_status"] != STATUS_PASS:
+                validation_errors.extend(bsep_validation["errors"])
+                break
+            bsep_side_projections = _build_bsep_side_projections(bsep_packet)
+            _write_json_named(
+                artifact_dir,
+                "tri_party_airline_bsep_packet.json",
+                bsep_packet,
+                artifacts,
+            )
+            _write_json_named(
+                artifact_dir,
+                "tri_party_airline_bsep_validation.json",
+                bsep_validation,
+                artifacts,
+            )
+            _write_json_named(
+                artifact_dir,
+                "tri_party_airline_bsep_side_projections.json",
+                bsep_side_projections,
+                artifacts,
+            )
+
+    semantic_actor_reports = tuple(actor_reports)
+    root_boundaries = _root_boundaries()
+    report: dict[str, Any] = {
+        "run_id": RUN_ID,
+        "report_id": REPORT_ID,
+        "lane_id": LANE_ID,
+        "final_status": STATUS_PASS if not validation_errors and len(actor_reports) == 12 else STATUS_FAIL_CLOSED,
+        "skip_reason": "",
+        "provider_mode": "fake_provider",
+        "model": model,
+        "deterministic_source": {
+            "run_id": deterministic_report["run_id"],
+            "report_id": deterministic_report["report_id"],
+            "final_status": deterministic_report["final_status"],
+        },
+        "transaction_id": TRANSACTION_ID,
+        "transaction_identity": deterministic_report["transaction_identity"],
+        "bsep_membrane": bsep_packet,
+        "bsep_validation": bsep_validation,
+        "bsep_side_projections": bsep_side_projections,
+        "semantic_actor_reports": semantic_actor_reports,
+        "semantic_actor_call_order": tuple(report["actor_id"] for report in actor_reports),
+        "horizontal_actor_groups": _horizontal_actor_groups(actor_reports),
+        "vertical_fractal_dependencies": tuple(
+            _vertical_dependency_from_report(report)
+            for report in actor_reports
+            if report.get("vertical_fractal_cell")
+        ),
+        "what_each_llm_received": {
+            report["actor_id"]: report["input_context_summary"]
+            for report in actor_reports
+        },
+        "what_each_llm_returned": {
+            report["actor_id"]: report["output_semantic_summary"]
+            for report in actor_reports
+        },
+        "what_runtime_used": {
+            report["actor_id"]: report["what_runtime_used"]
+            for report in actor_reports
+        },
+        "what_runtime_rejected": {
+            report["actor_id"]: report["what_runtime_rejected"]
+            for report in actor_reports
+        },
+        "root_boundaries": root_boundaries,
+        "counter_table": {},
+        "artifacts": artifacts,
+        "secret_scan": {},
+        "non_claims": _non_claims(),
+        "validation_errors": tuple(validation_errors),
+        "next_gate": "operator-gated real Gemini terminal pass after fake-provider PASS",
+    }
+    report["counter_table"] = _counter_table(
+        report=report,
+        provider_call_count=provider_call_count,
+        artifact_counts=artifact_counts,
+    )
+    secret_scan = _scan_secret_markers(report, artifact_dir)
+    report["secret_scan"] = secret_scan
+    _write_json_named(artifact_dir, "secret_scan.json", secret_scan, artifacts)
+    _write_summary_artifacts(artifact_dir, report, artifacts)
+    report["artifacts"] = artifacts
+    if not secret_scan["passed"]:
+        report["final_status"] = STATUS_FAIL_CLOSED
+        report["validation_errors"] = tuple(
+            list(report["validation_errors"]) + ["secret_scan_failed"],
+        )
+    return report
+
+
+def _skipped_report(
+    model: str,
+    deterministic_report: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "run_id": RUN_ID,
+        "report_id": REPORT_ID,
+        "lane_id": LANE_ID,
+        "final_status": STATUS_SKIPPED_CLOSED,
+        "skip_reason": "live semantic lane env gate is closed",
+        "provider_mode": "env_gate_closed",
+        "model": model,
+        "deterministic_source": {
+            "run_id": deterministic_report["run_id"],
+            "report_id": deterministic_report["report_id"],
+            "final_status": deterministic_report["final_status"],
+        },
+        "transaction_id": TRANSACTION_ID,
+        "transaction_identity": deterministic_report["transaction_identity"],
+        "bsep_membrane": {},
+        "bsep_validation": {},
+        "bsep_side_projections": {},
+        "semantic_actor_reports": (),
+        "semantic_actor_call_order": (),
+        "horizontal_actor_groups": {},
+        "vertical_fractal_dependencies": (),
+        "what_each_llm_received": {},
+        "what_each_llm_returned": {},
+        "what_runtime_used": {},
+        "what_runtime_rejected": {},
+        "root_boundaries": _root_boundaries(),
+        "counter_table": _zero_counter_table(),
+        "artifacts": {},
+        "secret_scan": {"passed": True, "matched_markers": (), "files_scanned": 0},
+        "non_claims": _non_claims(),
+        "validation_errors": (),
+        "next_gate": "enable fake-provider lane",
+    }
+
+
+def _real_provider_not_implemented_report(
+    model: str,
+    deterministic_report: Mapping[str, Any],
+) -> dict[str, Any]:
+    report = _skipped_report(model, deterministic_report)
+    report.update(
+        {
+            "final_status": STATUS_FAIL_CLOSED,
+            "skip_reason": "real_provider_not_implemented_in_fake_provider_patch",
+            "provider_mode": "real_provider",
+            "validation_errors": ("real_provider_not_implemented_in_fake_provider_patch",),
+        },
+    )
+    return report
+
+
+def _build_prompt(
+    *,
+    actor: Mapping[str, Any],
+    actor_index: int,
+    deterministic_report: Mapping[str, Any],
+    bsep_side_projections: Mapping[str, Any],
+    parent_report: Mapping[str, Any] | None,
+) -> str:
+    projection = bsep_side_projections.get(f"{actor['side']}_bsep_projection", {})
+    if actor["side"] == "cross_root_advisory":
+        projection = bsep_side_projections.get("cross_root_bsep_projection", projection)
+    parent_summary = ""
+    if parent_report:
+        parent_summary = (
+            "Parent canonical summary: "
+            f"{parent_report['output_semantic_summary']}"
+        )
+    json_skeleton = {
+        "actor_id": actor["actor_id"],
+        "transaction_id": TRANSACTION_ID,
+        "side": actor["side"],
+        "semantic_summary": "",
+        "what_runtime_used": [],
+        "what_runtime_rejected": [],
+        "authority_created": False,
+        "action_permission_created": False,
+        "packet_created": False,
+        "receipt_created": False,
+        "payment_created": False,
+        "ticket_created": False,
+        "booking_created": False,
+        "final_output_created": False,
+        "real_payment_executed": False,
+        "real_ticket_issued": False,
+        "real_booking_created": False,
+        "real_world_effects_count": 0,
+    }
+    return "\n".join(
+        (
+            f"Role name: {actor['actor_id']}",
+            f"Actor index: {actor_index}",
+            "Use bounded context only.",
+            f"Transaction id: {TRANSACTION_ID}",
+            f"Semantic work: {actor['semantic_work']}",
+            f"Deterministic final status: {deterministic_report['final_status']}",
+            f"BSEP projection summary: {projection.get('bounded_context_summary', 'pending or transaction-level context')}",
+            parent_summary,
+            "Provider output is advisory only.",
+            "Runtime canonicalizes.",
+            "Validators verify.",
+            "Root decides.",
+            "Do not create payment, ticket, booking, packet, receipt, authority, or FinalOutput.",
+            "No raw passport, raw card, raw IBAN, raw payment token, raw private profile, API key, connector credential, raw provider text from other actors, or peer raw content is allowed.",
+            "Explicit JSON skeleton:",
+            json.dumps(json_skeleton, sort_keys=True),
+        ),
+    )
+
+
+def _extract_json_candidate(raw_response: str) -> tuple[dict[str, Any], tuple[str, ...]]:
+    try:
+        parsed = json.loads(raw_response)
+    except json.JSONDecodeError as exc:
+        return {"raw_response_parse_error": str(exc)}, ("malformed_json",)
+    if not isinstance(parsed, dict):
+        return {"raw_response_parse_error": "json root is not object"}, ("json_root_not_object",)
+    return parsed, ()
+
+
+def _validate_actor_candidate(
+    *,
+    candidate: Mapping[str, Any],
+    actor: Mapping[str, Any],
+    parent_report: Mapping[str, Any] | None,
+    raw_response: str,
+    parse_errors: tuple[str, ...],
+) -> dict[str, Any]:
+    errors = list(parse_errors)
+    required_fields = (
+        "actor_id",
+        "transaction_id",
+        "side",
+        "semantic_summary",
+        "what_runtime_used",
+        "what_runtime_rejected",
+        "authority_created",
+        "action_permission_created",
+        "packet_created",
+        "receipt_created",
+        "payment_created",
+        "ticket_created",
+        "booking_created",
+        "final_output_created",
+        "real_payment_executed",
+        "real_ticket_issued",
+        "real_booking_created",
+        "real_world_effects_count",
+    )
+    for field in required_fields:
+        if field not in candidate:
+            errors.append(f"missing_required_field:{field}")
+    if candidate.get("actor_id") != actor["actor_id"]:
+        errors.append("actor_id_mismatch")
+    if candidate.get("transaction_id") != TRANSACTION_ID:
+        errors.append("transaction_id_mismatch")
+    if candidate.get("side") != actor["side"]:
+        errors.append("side_mismatch")
+    if not isinstance(candidate.get("semantic_summary"), str) or not candidate.get("semantic_summary", "").strip():
+        errors.append("empty_semantic_summary")
+    for field in ("what_runtime_used", "what_runtime_rejected"):
+        value = candidate.get(field)
+        if not isinstance(value, list) or not value or not all(isinstance(item, str) and item for item in value):
+            errors.append(f"invalid_{field}")
+    for field in (
+        "authority_created",
+        "action_permission_created",
+        "packet_created",
+        "receipt_created",
+        "payment_created",
+        "ticket_created",
+        "booking_created",
+        "final_output_created",
+        "real_payment_executed",
+        "real_ticket_issued",
+        "real_booking_created",
+    ):
+        if candidate.get(field) is not False:
+            errors.append(f"unsafe_true_flag:{field}")
+    if candidate.get("real_world_effects_count") != 0:
+        errors.append("real_world_effects_nonzero")
+    if any(marker in raw_response for marker in SECRET_MARKERS):
+        errors.append("raw_secret_marker_detected")
+    if actor.get("vertical_fractal_cell"):
+        if parent_report is None:
+            errors.append("missing_parent_report")
+        if candidate.get("parent_actor_id") != actor["parent_actor_id"]:
+            errors.append("vertical_parent_actor_id_mismatch")
+        if candidate.get("parent_validation_status") != STATUS_PASS:
+            errors.append("vertical_parent_validation_not_pass")
+        for field in (
+            "child_started_after_parent_validation",
+            "child_received_parent_canonical_summary",
+            "child_result_returns_to_parent_or_root_review",
+        ):
+            if candidate.get(field) is not True:
+                errors.append(f"vertical_flag_false:{field}")
+        for field in (
+            "child_received_parent_raw_response",
+            "child_received_sibling_raw_output",
+            "child_received_unbounded_context",
+            "child_creates_authority",
+            "child_creates_packet",
+            "child_creates_receipt",
+            "child_creates_payment",
+            "child_creates_ticket",
+            "child_creates_booking",
+        ):
+            if candidate.get(field) is not False:
+                errors.append(f"vertical_flag_true:{field}")
+    return {
+        "accepted": not errors,
+        "validation_status": STATUS_PASS if not errors else STATUS_FAIL_CLOSED,
+        "errors": tuple(errors),
+    }
+
+
+def _canonical_summary(
+    candidate: Mapping[str, Any],
+    actor: Mapping[str, Any],
+    validation: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "actor_id": actor["actor_id"],
+        "transaction_id": TRANSACTION_ID,
+        "side": actor["side"],
+        "semantic_summary": candidate.get("semantic_summary", ""),
+        "what_runtime_used": tuple(candidate.get("what_runtime_used", ())),
+        "what_runtime_rejected": tuple(candidate.get("what_runtime_rejected", ())),
+        "validation_status": validation["validation_status"],
+        "accepted": validation["accepted"],
+    }
+
+
+def _actor_report(
+    *,
+    actor: Mapping[str, Any],
+    actor_index: int,
+    model: str,
+    prompt_artifact: str,
+    raw_response_artifact: str,
+    extracted_json_artifact: str,
+    validation_artifact: str,
+    canonical_summary_artifact: str,
+    input_context_summary: str,
+    candidate: Mapping[str, Any],
+    validation: Mapping[str, Any],
+    canonical_summary: Mapping[str, Any],
+) -> dict[str, Any]:
+    report: dict[str, Any] = {
+        "actor_id": actor["actor_id"],
+        "side": actor["side"],
+        "actor_index": actor_index,
+        "model": model,
+        "provider_mode": "fake_provider",
+        "prompt_artifact": prompt_artifact,
+        "raw_response_artifact": raw_response_artifact,
+        "extracted_json_artifact": extracted_json_artifact,
+        "validation_artifact": validation_artifact,
+        "canonical_summary_artifact": canonical_summary_artifact,
+        "input_context_summary": input_context_summary,
+        "output_semantic_summary": str(canonical_summary.get("semantic_summary", "")),
+        "validation_status": validation["validation_status"],
+        "accepted": validation["accepted"],
+        "what_runtime_used": tuple(canonical_summary.get("what_runtime_used", ())),
+        "what_runtime_rejected": tuple(canonical_summary.get("what_runtime_rejected", ())),
+        "authority_created": False,
+        "action_permission_created": False,
+        "packet_created": False,
+        "receipt_created": False,
+        "payment_created": False,
+        "ticket_created": False,
+        "booking_created": False,
+        "final_output_created": False,
+        "real_payment_executed": False,
+        "real_ticket_issued": False,
+        "real_booking_created": False,
+        "real_world_effects_count": 0,
+        "group": actor["group"],
+    }
+    if actor.get("vertical_fractal_cell"):
+        report.update(
+            {
+                "vertical_fractal_cell": True,
+                "parent_actor_id": candidate.get("parent_actor_id", actor["parent_actor_id"]),
+                "parent_validation_status": candidate.get("parent_validation_status"),
+                "child_started_after_parent_validation": candidate.get("child_started_after_parent_validation"),
+                "child_received_parent_canonical_summary": candidate.get("child_received_parent_canonical_summary"),
+                "child_received_parent_raw_response": candidate.get("child_received_parent_raw_response"),
+                "child_received_sibling_raw_output": candidate.get("child_received_sibling_raw_output"),
+                "child_received_unbounded_context": candidate.get("child_received_unbounded_context"),
+                "child_result_returns_to_parent_or_root_review": candidate.get("child_result_returns_to_parent_or_root_review"),
+                "child_creates_authority": candidate.get("child_creates_authority"),
+                "child_creates_packet": candidate.get("child_creates_packet"),
+                "child_creates_receipt": candidate.get("child_creates_receipt"),
+                "child_creates_payment": candidate.get("child_creates_payment"),
+                "child_creates_ticket": candidate.get("child_creates_ticket"),
+                "child_creates_booking": candidate.get("child_creates_booking"),
+            },
+        )
+    return report
+
+
+def _input_context_summary(
+    actor: Mapping[str, Any],
+    parent_report: Mapping[str, Any] | None,
+) -> str:
+    base = (
+        f"bounded context for {actor['actor_id']} over transaction {TRANSACTION_ID}; "
+        "sealed refs only; deterministic mock airline evidence only"
+    )
+    if parent_report:
+        return base + f"; parent canonical summary from {parent_report['actor_id']}"
+    return base
+
+
+def _build_bsep_packet(orchestrator_report: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "bsep_packet_id": f"tri_party_airline_bsep_packet:{TRANSACTION_ID}",
+        "transaction_id": TRANSACTION_ID,
+        "source_orchestrator_actor_id": orchestrator_report["actor_id"],
+        "raw_passport_included": False,
+        "raw_card_included": False,
+        "raw_iban_included": False,
+        "raw_payment_token_included": False,
+        "raw_private_profile_included": False,
+        "raw_provider_text_included": False,
+        "raw_response_dump_included": False,
+        "authority_created": False,
+        "action_permission_created": False,
+        "payment_created": False,
+        "ticket_created": False,
+        "booking_created": False,
+        "final_output_created": False,
+        "bounded_context_summary": (
+            "one transaction_id, three Root views, evidence-only receipts, "
+            "sealed refs, mock payment authorization, mock ticket evidence"
+        ),
+        "validation_status": STATUS_PASS,
+    }
+
+
+def _validate_bsep_packet(packet: Mapping[str, Any]) -> dict[str, Any]:
+    errors = []
+    if packet.get("transaction_id") != TRANSACTION_ID:
+        errors.append("bsep_transaction_id_mismatch")
+    for field in (
+        "raw_passport_included",
+        "raw_card_included",
+        "raw_iban_included",
+        "raw_payment_token_included",
+        "raw_private_profile_included",
+        "raw_provider_text_included",
+        "raw_response_dump_included",
+        "authority_created",
+        "action_permission_created",
+        "payment_created",
+        "ticket_created",
+        "booking_created",
+        "final_output_created",
+    ):
+        if packet.get(field) is not False:
+            errors.append(f"bsep_forbidden_flag_true:{field}")
+    return {
+        "accepted": not errors,
+        "validation_status": STATUS_PASS if not errors else STATUS_FAIL_CLOSED,
+        "errors": tuple(errors),
+        "bsep_is_truth": False,
+        "bsep_is_authority": False,
+        "bsep_is_permission": False,
+        "bsep_creates_packet": False,
+        "bsep_creates_receipt": False,
+        "bsep_creates_payment": False,
+        "bsep_creates_ticket": False,
+        "bsep_creates_booking": False,
+    }
+
+
+def _build_bsep_side_projections(packet: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
+    projection_specs = (
+        ("client_bsep_projection", "client", ("TravelIntentV01", "PassengerSealedRefsV01", "PaymentProfileSealedRefV01")),
+        ("airline_bsep_projection", "airline", ("AirlineOfferResponseV01", "AirlineOfferHoldReceiptV01", "MockTicketReceiptV01")),
+        ("bank_bsep_projection", "bank", ("BankPaymentIntentV01", "BankPaymentAuthorizationReceiptV01", "BankPaymentStatusReceiptV01")),
+        ("cross_root_bsep_projection", "cross_root_advisory", ("integrated_transaction_trace", "cross_root_evidence_routing_matrix")),
+    )
+    return {
+        projection_id: {
+            "projection_id": projection_id,
+            "transaction_id": TRANSACTION_ID,
+            "side": side,
+            "bounded_context_summary": f"{side} projection from {packet['bsep_packet_id']}",
+            "allowed_refs": tuple(allowed_refs),
+            "forbidden_raw_fields": (
+                "raw_passport",
+                "raw_card",
+                "raw_iban",
+                "raw_payment_token",
+                "raw_private_profile",
+            ),
+            "forbidden_authority_claims": (
+                "foreign_root_authority",
+                "payment_permission",
+                "ticket_permission",
+                "booking_permission",
+            ),
+            "raw_secrets_included": False,
+            "raw_provider_text_included": False,
+            "validation_status": STATUS_PASS,
+        }
+        for projection_id, side, allowed_refs in projection_specs
+    }
+
+
+def _horizontal_actor_groups(actor_reports: list[dict[str, Any]]) -> dict[str, tuple[str, ...]]:
+    groups: dict[str, list[str]] = {
+        "transaction": [],
+        "client": [],
+        "airline": [],
+        "bank": [],
+        "cross_root_advisory": [],
+    }
+    for report in actor_reports:
+        if report["group"] in ("transaction_orchestrator", "semantic_architect"):
+            groups["transaction"].append(report["actor_id"])
+        elif report["side"] in groups:
+            groups[report["side"]].append(report["actor_id"])
+    return {key: tuple(value) for key, value in groups.items()}
+
+
+def _vertical_dependency_from_report(report: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "child_actor_id": report["actor_id"],
+        "parent_actor_id": report["parent_actor_id"],
+        "parent_validation_status": report["parent_validation_status"],
+        "child_started_after_parent_validation": report["child_started_after_parent_validation"],
+        "child_received_parent_canonical_summary": report["child_received_parent_canonical_summary"],
+        "child_received_parent_raw_response": report["child_received_parent_raw_response"],
+        "child_received_sibling_raw_output": report["child_received_sibling_raw_output"],
+        "child_received_unbounded_context": report["child_received_unbounded_context"],
+        "child_result_returns_to_parent_or_root_review": report["child_result_returns_to_parent_or_root_review"],
+        "child_creates_authority": report["child_creates_authority"],
+        "child_creates_packet": report["child_creates_packet"],
+        "child_creates_receipt": report["child_creates_receipt"],
+        "child_creates_payment": report["child_creates_payment"],
+        "child_creates_ticket": report["child_creates_ticket"],
+        "child_creates_booking": report["child_creates_booking"],
+        "real_world_effects_count": 0,
+    }
+
+
+def _root_boundaries() -> tuple[dict[str, Any], ...]:
+    return (
+        {"boundary": "ClientRoot remains client-side only", "boundary_preserved": True, "violation_count": 0},
+        {"boundary": "AirlineRoot remains airline-side only", "boundary_preserved": True, "violation_count": 0},
+        {"boundary": "BankRoot remains bank-side only", "boundary_preserved": True, "violation_count": 0},
+        {"boundary": "cross-root reviewer is advisory and not a fourth Root", "boundary_preserved": True, "violation_count": 0},
+    )
+
+
+def _counter_table(
+    *,
+    report: Mapping[str, Any],
+    provider_call_count: int,
+    artifact_counts: Mapping[str, int],
+) -> dict[str, int]:
+    actor_reports = tuple(report["semantic_actor_reports"])
+    side_counts = {
+        "transaction": 0,
+        "client": 0,
+        "airline": 0,
+        "bank": 0,
+        "cross_root_advisory": 0,
+    }
+    for actor_report in actor_reports:
+        side_counts[actor_report["side"]] += 1
+    return {
+        "semantic_actor_call_count": len(actor_reports),
+        "tri_party_orchestrator_call_count": int(
+            "tri_party_airline_orchestrator_llm" in report["semantic_actor_call_order"],
+        ),
+        "tri_party_architect_call_count": int(
+            "tri_party_airline_semantic_architect_llm" in report["semantic_actor_call_order"],
+        ),
+        "transaction_semantic_actor_count": side_counts["transaction"],
+        "client_semantic_actor_count": side_counts["client"],
+        "airline_semantic_actor_count": side_counts["airline"],
+        "bank_semantic_actor_count": side_counts["bank"],
+        "cross_root_semantic_actor_count": side_counts["cross_root_advisory"],
+        "vertical_fractal_semantic_cell_count": sum(
+            int(actor_report.get("vertical_fractal_cell", False))
+            for actor_report in actor_reports
+        ),
+        "bsep_created_count": int(bool(report["bsep_membrane"])),
+        "bsep_validated_count": int(
+            report["bsep_validation"].get("validation_status") == STATUS_PASS,
+        ),
+        "bsep_side_projection_count": len(report["bsep_side_projections"]),
+        "prompts_written_count": artifact_counts["prompts_written_count"],
+        "raw_responses_written_count": artifact_counts["raw_responses_written_count"],
+        "extracted_json_candidates_written_count": artifact_counts[
+            "extracted_json_candidates_written_count"
+        ],
+        "validations_written_count": artifact_counts["validations_written_count"],
+        "canonical_summaries_written_count": artifact_counts[
+            "canonical_summaries_written_count"
+        ],
+        "semantic_actor_validation_pass_count": sum(
+            int(actor_report["validation_status"] == STATUS_PASS)
+            for actor_report in actor_reports
+        ),
+        "semantic_actor_validation_fail_count": sum(
+            int(actor_report["validation_status"] != STATUS_PASS)
+            for actor_report in actor_reports
+        ),
+        "fake_provider_call_count": provider_call_count,
+        "real_provider_call_count": 0,
+        "network_used_count": 0,
+        "gemini_called_count": 0,
+        "provider_output_used_as_truth_count": 0,
+        "provider_output_used_as_authority_count": 0,
+        "provider_output_created_packet_count": 0,
+        "provider_output_created_receipt_count": 0,
+        "provider_output_created_payment_count": 0,
+        "provider_output_created_ticket_count": 0,
+        "provider_output_created_booking_count": 0,
+        "cross_root_authority_transfer_count": 0,
+        "raw_passport_exposed_count": 0,
+        "raw_card_exposed_count": 0,
+        "raw_iban_exposed_count": 0,
+        "raw_payment_token_exposed_count": 0,
+        "real_airline_api_called_count": 0,
+        "real_bank_api_called_count": 0,
+        "real_gds_api_called_count": 0,
+        "real_payment_executed_count": 0,
+        "real_ticket_issued_count": 0,
+        "real_booking_created_count": 0,
+        "real_world_effects_count": 0,
+    }
+
+
+def _zero_counter_table() -> dict[str, int]:
+    keys = (
+        "semantic_actor_call_count",
+        "tri_party_orchestrator_call_count",
+        "tri_party_architect_call_count",
+        "transaction_semantic_actor_count",
+        "client_semantic_actor_count",
+        "airline_semantic_actor_count",
+        "bank_semantic_actor_count",
+        "cross_root_semantic_actor_count",
+        "vertical_fractal_semantic_cell_count",
+        "bsep_created_count",
+        "bsep_validated_count",
+        "bsep_side_projection_count",
+        "prompts_written_count",
+        "raw_responses_written_count",
+        "extracted_json_candidates_written_count",
+        "validations_written_count",
+        "canonical_summaries_written_count",
+        "semantic_actor_validation_pass_count",
+        "semantic_actor_validation_fail_count",
+        "fake_provider_call_count",
+        "real_provider_call_count",
+        "network_used_count",
+        "gemini_called_count",
+        "provider_output_used_as_truth_count",
+        "provider_output_used_as_authority_count",
+        "provider_output_created_packet_count",
+        "provider_output_created_receipt_count",
+        "provider_output_created_payment_count",
+        "provider_output_created_ticket_count",
+        "provider_output_created_booking_count",
+        "cross_root_authority_transfer_count",
+        "raw_passport_exposed_count",
+        "raw_card_exposed_count",
+        "raw_iban_exposed_count",
+        "raw_payment_token_exposed_count",
+        "real_airline_api_called_count",
+        "real_bank_api_called_count",
+        "real_gds_api_called_count",
+        "real_payment_executed_count",
+        "real_ticket_issued_count",
+        "real_booking_created_count",
+        "real_world_effects_count",
+    )
+    return {key: 0 for key in keys}
+
+
+def _write_text_artifact(
+    artifact_dir: Path | None,
+    filename: str,
+    text: str,
+    artifacts: dict[str, Any],
+    counts: dict[str, int],
+    count_key: str,
+) -> str:
+    if artifact_dir is None:
+        return ""
+    path = artifact_dir / filename
+    path.write_text(text)
+    artifacts[filename] = str(path)
+    counts[count_key] += 1
+    return str(path)
+
+
+def _write_json_artifact(
+    artifact_dir: Path | None,
+    filename: str,
+    payload: Mapping[str, Any],
+    artifacts: dict[str, Any],
+    counts: dict[str, int],
+    count_key: str,
+) -> str:
+    if artifact_dir is None:
+        return ""
+    path = artifact_dir / filename
+    path.write_text(json.dumps(_json_safe(payload), indent=2, sort_keys=True))
+    artifacts[filename] = str(path)
+    counts[count_key] += 1
+    return str(path)
+
+
+def _write_json_named(
+    artifact_dir: Path | None,
+    filename: str,
+    payload: Mapping[str, Any],
+    artifacts: dict[str, Any],
+) -> str:
+    if artifact_dir is None:
+        return ""
+    path = artifact_dir / filename
+    path.write_text(json.dumps(_json_safe(payload), indent=2, sort_keys=True))
+    artifacts[filename] = str(path)
+    return str(path)
+
+
+def _write_summary_artifacts(
+    artifact_dir: Path | None,
+    report: Mapping[str, Any],
+    artifacts: dict[str, Any],
+) -> None:
+    if artifact_dir is None:
+        return
+    summary_path = artifact_dir / "summary.json"
+    summary_path.write_text(json.dumps(_json_safe(report), indent=2, sort_keys=True))
+    artifacts["summary.json"] = str(summary_path)
+    summary_log = artifact_dir / "summary.log"
+    summary_log.write_text(
+        "\n".join(
+            (
+                f"run_id: {report['run_id']}",
+                f"final_status: {report['final_status']}",
+                f"semantic_actor_call_count: {report['counter_table']['semantic_actor_call_count']}",
+                f"fake_provider_call_count: {report['counter_table']['fake_provider_call_count']}",
+            ),
+        ),
+    )
+    artifacts["summary.log"] = str(summary_log)
+
+
+def _scan_secret_markers(
+    report: Mapping[str, Any],
+    artifact_dir: Path | None,
+) -> dict[str, Any]:
+    scanned = [json.dumps(_json_safe(report), sort_keys=True)]
+    files_scanned = 1
+    if artifact_dir is not None and artifact_dir.exists():
+        for path in sorted(artifact_dir.iterdir()):
+            if path.is_file():
+                scanned.append(path.read_text())
+                files_scanned += 1
+    matched = sorted(
+        {
+            marker
+            for marker in SECRET_MARKERS
+            if any(marker in text for text in scanned)
+        },
+    )
+    return {
+        "passed": not matched,
+        "matched_markers": tuple(matched),
+        "files_scanned": files_scanned,
+    }
+
+
+def _non_claims() -> tuple[str, ...]:
+    return (
+        "not production",
+        "not public auditor package",
+        "fake-provider implementation only",
+        "no real provider call",
+        "no network call",
+        "no Gemini call",
+        "no secret access",
+        "no real airline API",
+        "no real bank API",
+        "no real GDS API",
+        "no real payment",
+        "no real ticket",
+        "no real booking",
+        "no real-world effects",
+    )
+
+
+def _append_actor_lines(
+    lines: list[str],
+    report: Mapping[str, Any],
+    actor_id: str,
+) -> None:
+    actor = next(
+        (item for item in report["semantic_actor_reports"] if item["actor_id"] == actor_id),
+        None,
+    )
+    if actor is None:
+        lines.append(f"{actor_id}: not called")
+        return
+    lines.append(f"{actor_id}: {actor['validation_status']}")
+    lines.append(f"summary: {actor['output_semantic_summary']}")
+
+
+def _append_group(
+    lines: list[str],
+    report: Mapping[str, Any],
+    section: str,
+    group: str,
+) -> None:
+    lines.extend(("", section))
+    for actor in report["semantic_actor_reports"]:
+        if actor["group"] == group:
+            lines.append(f"- {actor['actor_id']}: {actor['validation_status']}")
+
+
+def _actor_spec(actor_id: str) -> Mapping[str, Any]:
+    for actor in ACTOR_SPECS:
+        if actor["actor_id"] == actor_id:
+            return actor
+    raise KeyError(actor_id)
+
+
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, tuple):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, list):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    return value
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

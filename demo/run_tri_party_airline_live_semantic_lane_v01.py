@@ -2,16 +2,22 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
+from demo import run_live_provider_adapter_response_capture_v01 as provider_adapter
 from demo import run_tri_party_airline_ticket_purchase_mock_e2e_v01 as deterministic_airline
+from demo.run_live_unknown_request_dual_rich_context_v01 import (
+    _call_live_gemini_provider as _shared_live_gemini_provider,
+)
 
 
 RUN_ID = "tri_party_airline_live_semantic_lane_v01"
 REPORT_ID = "tri_party_airline_live_semantic_lane_v01"
 LANE_ID = "tri_party_airline_live_semantic_lane_v01_fake_provider"
 DEFAULT_MODEL = "fake-airline-semantic-model"
+DEFAULT_REAL_PROVIDER_MODEL = "gemini-2.5-flash"
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
@@ -21,7 +27,13 @@ ENV_LANE = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_LANE"
 ENV_ARTIFACT_DIR = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_ARTIFACT_DIR"
 ENV_MODEL = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_MODEL"
 ENV_FAKE_PROVIDER = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_FAKE_PROVIDER"
+ENV_REAL_PROVIDER = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_REAL_PROVIDER"
+ENV_CALL_DELAY_SECONDS = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_CALL_DELAY_SECONDS"
 ENV_ALLOW_RAW = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_ALLOW_RAW_RESPONSE_OUTPUT"
+
+PROVIDER_MODE_SKIPPED = "skipped_closed"
+PROVIDER_MODE_FAKE = "fake_provider"
+PROVIDER_MODE_REAL = "real_provider"
 
 TRANSACTION_ID = deterministic_airline.TRANSACTION_ID
 CLIENT_ROOT_ID = deterministic_airline.CLIENT_ROOT_ID
@@ -154,7 +166,6 @@ def collect_tri_party_airline_live_semantic_lane_v01(
     provider: Provider | None = None,
 ) -> dict[str, Any]:
     effective_env = dict(os.environ if env is None else env)
-    model = effective_env.get(ENV_MODEL, DEFAULT_MODEL)
     deterministic_report = (
         deterministic_airline.collect_tri_party_airline_ticket_purchase_mock_e2e_v01()
     )
@@ -162,18 +173,51 @@ def collect_tri_party_airline_live_semantic_lane_v01(
     artifact_dir = Path(artifact_dir_value) if artifact_dir_value else None
 
     if effective_env.get(ENV_LANE) != "1":
+        model = effective_env.get(ENV_MODEL, DEFAULT_MODEL)
         return _skipped_report(model, deterministic_report)
 
-    if provider is None and effective_env.get(ENV_FAKE_PROVIDER) != "1":
-        return _real_provider_not_implemented_report(model, deterministic_report)
+    fake_selected = effective_env.get(ENV_FAKE_PROVIDER) == "1"
+    real_selected = effective_env.get(ENV_REAL_PROVIDER) == "1"
+    if fake_selected and real_selected:
+        return _fail_closed_report(
+            reason="ambiguous_provider_mode",
+            provider_mode=PROVIDER_MODE_SKIPPED,
+            model=effective_env.get(ENV_MODEL, DEFAULT_MODEL),
+            deterministic_report=deterministic_report,
+        )
+    if not fake_selected and not real_selected:
+        return _fail_closed_report(
+            reason="provider_mode_not_selected",
+            provider_mode=PROVIDER_MODE_SKIPPED,
+            model=effective_env.get(ENV_MODEL, DEFAULT_MODEL),
+            deterministic_report=deterministic_report,
+        )
 
-    active_provider = provider or build_fake_airline_semantic_provider_v01()
-    report = _run_fake_provider_lane(
+    if fake_selected:
+        provider_mode = PROVIDER_MODE_FAKE
+        model = effective_env.get(ENV_MODEL, DEFAULT_MODEL)
+        active_provider = provider or build_fake_airline_semantic_provider_v01()
+    else:
+        provider_mode = PROVIDER_MODE_REAL
+        model = effective_env.get(ENV_MODEL, DEFAULT_REAL_PROVIDER_MODEL)
+        if artifact_dir is None:
+            return _fail_closed_report(
+                reason="real_provider_requires_artifact_dir",
+                provider_mode=provider_mode,
+                model=model,
+                deterministic_report=deterministic_report,
+            )
+        active_provider = provider or build_real_airline_semantic_provider_v01(model)
+
+    report = _run_provider_lane(
+        provider_mode=provider_mode,
         model=model,
         deterministic_report=deterministic_report,
         provider=active_provider,
         artifact_dir=artifact_dir,
         allow_raw_output=effective_env.get(ENV_ALLOW_RAW) == "1",
+        call_delay_seconds=_call_delay_seconds(effective_env, provider_mode),
+        provider_env=effective_env,
     )
     return report
 
@@ -188,6 +232,16 @@ def render_tri_party_airline_live_semantic_lane_v01(report: Mapping[str, Any]) -
         f"model: {report['model']}",
         "One mock airline purchase transaction is analyzed.",
     ]
+    counters = report.get("counter_table", {})
+    if report["provider_mode"] == PROVIDER_MODE_REAL:
+        lines.extend(
+            (
+                f"semantic_actor_call_count: {counters.get('semantic_actor_call_count', 0)}",
+                f"real_provider_call_count: {counters.get('real_provider_call_count', 0)}",
+                f"network_used_count: {counters.get('network_used_count', 0)}",
+                f"gemini_called_count: {counters.get('gemini_called_count', 0)}",
+            ),
+        )
     if report["final_status"] == STATUS_SKIPPED_CLOSED:
         lines.extend(
             (
@@ -222,7 +276,7 @@ def render_tri_party_airline_live_semantic_lane_v01(report: Mapping[str, Any]) -
         (
             "",
             "[SEMANTIC ACTOR CALLS]",
-            "Twelve semantic actors ran in fake-provider mode.",
+            f"Twelve semantic actors ran in {report['provider_mode']} mode.",
             "Orchestrator and Architect are advisory only.",
             "Horizontal actors analyze bounded side contexts.",
         ),
@@ -311,13 +365,21 @@ def render_tri_party_airline_live_semantic_lane_v01(report: Mapping[str, Any]) -
                 "evidence, mock PNR evidence."
             ),
             (
-                "No real payment, real ticket, real booking, real API, provider "
-                "network, or Gemini call occurs in fake-provider patch."
+                "No real airline API, bank API, GDS API, payment, ticket, "
+                "booking, or production effect occurs in this lane."
             ),
         ),
     )
     lines.extend(f"- {claim}" for claim in report["non_claims"])
     lines.extend(("", "[FINAL STATUS]", str(report["final_status"])))
+    if report.get("skip_reason"):
+        lines.append(f"skip_reason: {report['skip_reason']}")
+    if report.get("failed_actor_id"):
+        lines.append(f"failed_actor_id: {report['failed_actor_id']}")
+    if report.get("failed_stage"):
+        lines.append(f"failed_stage: {report['failed_stage']}")
+    if report.get("provider_error_sanitized"):
+        lines.append(f"provider_error_sanitized: {report['provider_error_sanitized']}")
     if report["validation_errors"]:
         lines.append(f"validation_errors: {report['validation_errors']}")
     return "\n".join(lines)
@@ -443,13 +505,33 @@ def build_fake_airline_semantic_provider_v01() -> Provider:
     return fake_provider
 
 
-def _run_fake_provider_lane(
+def build_real_airline_semantic_provider_v01(model: str) -> Provider:
+    def real_provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> str:
+        env_value = metadata.get("provider_env", {})
+        provider_env = dict(env_value) if isinstance(env_value, Mapping) else dict(os.environ)
+        return _shared_live_gemini_provider(
+            prompt=prompt,
+            model_name=model,
+            timeout_seconds=provider_adapter._timeout_seconds(provider_env),
+            explicit_http_timeout=True,
+            env=provider_env,
+            response_schema=None,
+            role=actor_id,
+        )
+
+    return real_provider
+
+
+def _run_provider_lane(
     *,
+    provider_mode: str,
     model: str,
     deterministic_report: Mapping[str, Any],
     provider: Provider,
     artifact_dir: Path | None,
     allow_raw_output: bool,
+    call_delay_seconds: float,
+    provider_env: Mapping[str, str],
 ) -> dict[str, Any]:
     if artifact_dir is not None:
         artifact_dir.mkdir(parents=True, exist_ok=True)
@@ -466,6 +548,10 @@ def _run_fake_provider_lane(
     actor_by_id: dict[str, dict[str, Any]] = {}
     validation_errors: list[str] = []
     provider_call_count = 0
+    delay_applied_count = 0
+    failed_actor_id = ""
+    failed_stage = ""
+    provider_error_sanitized = ""
     bsep_packet: dict[str, Any] = {}
     bsep_validation: dict[str, Any] = {}
     bsep_side_projections: dict[str, Any] = {}
@@ -505,17 +591,36 @@ def _run_fake_provider_lane(
             artifact_counts,
             "prompts_written_count",
         )
-        raw_response = provider(
-            actor_id,
-            prompt,
-            {
-                "actor_index": index,
-                "side": actor["side"],
-                "transaction_id": TRANSACTION_ID,
-                "parent_actor_id": actor.get("parent_actor_id"),
-            },
-        )
+        metadata = {
+            "actor_index": index,
+            "side": actor["side"],
+            "transaction_id": TRANSACTION_ID,
+            "parent_actor_id": actor.get("parent_actor_id"),
+            "provider_env": provider_env,
+            "provider_mode": provider_mode,
+        }
+        if provider_mode == PROVIDER_MODE_REAL and call_delay_seconds > 0:
+            time.sleep(call_delay_seconds)
+            delay_applied_count += 1
         provider_call_count += 1
+        try:
+            raw_response = provider(actor_id, prompt, metadata)
+        except Exception as exc:
+            failed_actor_id = actor_id
+            failed_stage = "provider_call"
+            provider_error_sanitized = _sanitize_provider_exception(exc)
+            validation_errors.append(f"provider_call_failed:{actor_id}")
+            _write_json_named(
+                artifact_dir,
+                f"{actor_id}_provider_error.json",
+                {
+                    "actor_id": actor_id,
+                    "failed_stage": failed_stage,
+                    "provider_error_sanitized": provider_error_sanitized,
+                },
+                artifacts,
+            )
+            break
         raw_response_artifact = _write_text_artifact(
             artifact_dir,
             f"{actor_id}_raw_response.txt",
@@ -563,6 +668,7 @@ def _run_fake_provider_lane(
             actor=actor,
             actor_index=index,
             model=model,
+            provider_mode=provider_mode,
             prompt_artifact=prompt_artifact,
             raw_response_artifact=raw_response_artifact,
             extracted_json_artifact=extracted_json_artifact,
@@ -577,6 +683,8 @@ def _run_fake_provider_lane(
         actor_by_id[actor_id] = actor_report
 
         if validation["validation_status"] != STATUS_PASS:
+            failed_actor_id = actor_id
+            failed_stage = "actor_validation"
             validation_errors.extend(validation["errors"])
             break
 
@@ -614,7 +722,7 @@ def _run_fake_provider_lane(
         "lane_id": LANE_ID,
         "final_status": STATUS_PASS if not validation_errors and len(actor_reports) == 12 else STATUS_FAIL_CLOSED,
         "skip_reason": "",
-        "provider_mode": "fake_provider",
+        "provider_mode": provider_mode,
         "model": model,
         "deterministic_source": {
             "run_id": deterministic_report["run_id"],
@@ -654,6 +762,10 @@ def _run_fake_provider_lane(
         "counter_table": {},
         "artifacts": artifacts,
         "secret_scan": {},
+        "failed_actor_id": failed_actor_id,
+        "failed_stage": failed_stage,
+        "provider_error_sanitized": provider_error_sanitized,
+        "raw_response_terminal_output_allowed": allow_raw_output,
         "non_claims": _non_claims(),
         "validation_errors": tuple(validation_errors),
         "next_gate": "operator-gated real Gemini terminal pass after fake-provider PASS",
@@ -662,6 +774,9 @@ def _run_fake_provider_lane(
         report=report,
         provider_call_count=provider_call_count,
         artifact_counts=artifact_counts,
+        provider_mode=provider_mode,
+        delay_applied_count=delay_applied_count,
+        call_delay_seconds=call_delay_seconds,
     )
     secret_scan = _scan_secret_markers(report, artifact_dir)
     report["secret_scan"] = secret_scan
@@ -670,6 +785,7 @@ def _run_fake_provider_lane(
     report["artifacts"] = artifacts
     if not secret_scan["passed"]:
         report["final_status"] = STATUS_FAIL_CLOSED
+        report["failed_stage"] = "secret_scan"
         report["validation_errors"] = tuple(
             list(report["validation_errors"]) + ["secret_scan_failed"],
         )
@@ -686,7 +802,7 @@ def _skipped_report(
         "lane_id": LANE_ID,
         "final_status": STATUS_SKIPPED_CLOSED,
         "skip_reason": "live semantic lane env gate is closed",
-        "provider_mode": "env_gate_closed",
+        "provider_mode": PROVIDER_MODE_SKIPPED,
         "model": model,
         "deterministic_source": {
             "run_id": deterministic_report["run_id"],
@@ -710,13 +826,20 @@ def _skipped_report(
         "counter_table": _zero_counter_table(),
         "artifacts": {},
         "secret_scan": {"passed": True, "matched_markers": (), "files_scanned": 0},
+        "failed_actor_id": "",
+        "failed_stage": "",
+        "provider_error_sanitized": "",
+        "raw_response_terminal_output_allowed": False,
         "non_claims": _non_claims(),
         "validation_errors": (),
         "next_gate": "enable fake-provider lane",
     }
 
 
-def _real_provider_not_implemented_report(
+def _fail_closed_report(
+    *,
+    reason: str,
+    provider_mode: str,
     model: str,
     deterministic_report: Mapping[str, Any],
 ) -> dict[str, Any]:
@@ -724,12 +847,38 @@ def _real_provider_not_implemented_report(
     report.update(
         {
             "final_status": STATUS_FAIL_CLOSED,
-            "skip_reason": "real_provider_not_implemented_in_fake_provider_patch",
-            "provider_mode": "real_provider",
-            "validation_errors": ("real_provider_not_implemented_in_fake_provider_patch",),
+            "skip_reason": reason,
+            "provider_mode": provider_mode,
+            "validation_errors": (reason,),
         },
     )
     return report
+
+
+def _call_delay_seconds(env: Mapping[str, str], provider_mode: str) -> float:
+    if provider_mode != PROVIDER_MODE_REAL:
+        return 0.0
+    raw_value = env.get(ENV_CALL_DELAY_SECONDS, "0").strip()
+    try:
+        delay = float(raw_value)
+    except ValueError:
+        return 0.0
+    return max(0.0, min(delay, 120.0))
+
+
+def _sanitize_provider_exception(exc: Exception) -> str:
+    text = str(exc) or exc.__class__.__name__
+    collapsed = " ".join(text.split())
+    lowered = collapsed.lower()
+    secretish = any(marker in collapsed for marker in SECRET_MARKERS) or any(
+        token in lowered
+        for token in ("api_key", "apikey", "token", "credential", "secret", "traceback")
+    )
+    if secretish:
+        return f"{exc.__class__.__name__}:provider_error_redacted"
+    if not collapsed or not all(char.isalnum() or char in "_:-. " for char in collapsed):
+        collapsed = exc.__class__.__name__
+    return collapsed[:240]
 
 
 def _build_prompt(
@@ -920,6 +1069,7 @@ def _actor_report(
     actor: Mapping[str, Any],
     actor_index: int,
     model: str,
+    provider_mode: str,
     prompt_artifact: str,
     raw_response_artifact: str,
     extracted_json_artifact: str,
@@ -935,7 +1085,7 @@ def _actor_report(
         "side": actor["side"],
         "actor_index": actor_index,
         "model": model,
-        "provider_mode": "fake_provider",
+        "provider_mode": provider_mode,
         "prompt_artifact": prompt_artifact,
         "raw_response_artifact": raw_response_artifact,
         "extracted_json_artifact": extracted_json_artifact,
@@ -1145,7 +1295,10 @@ def _counter_table(
     report: Mapping[str, Any],
     provider_call_count: int,
     artifact_counts: Mapping[str, int],
-) -> dict[str, int]:
+    provider_mode: str,
+    delay_applied_count: int,
+    call_delay_seconds: float,
+) -> dict[str, int | float]:
     actor_reports = tuple(report["semantic_actor_reports"])
     side_counts = {
         "transaction": 0,
@@ -1195,10 +1348,20 @@ def _counter_table(
             int(actor_report["validation_status"] != STATUS_PASS)
             for actor_report in actor_reports
         ),
-        "fake_provider_call_count": provider_call_count,
-        "real_provider_call_count": 0,
-        "network_used_count": 0,
-        "gemini_called_count": 0,
+        "fake_provider_call_count": (
+            provider_call_count if provider_mode == PROVIDER_MODE_FAKE else 0
+        ),
+        "real_provider_call_count": (
+            provider_call_count if provider_mode == PROVIDER_MODE_REAL else 0
+        ),
+        "network_used_count": (
+            provider_call_count if provider_mode == PROVIDER_MODE_REAL else 0
+        ),
+        "gemini_called_count": (
+            provider_call_count if provider_mode == PROVIDER_MODE_REAL else 0
+        ),
+        "real_provider_call_delay_applied_count": delay_applied_count,
+        "real_provider_call_delay_seconds": call_delay_seconds,
         "provider_output_used_as_truth_count": 0,
         "provider_output_used_as_authority_count": 0,
         "provider_output_created_packet_count": 0,
@@ -1246,6 +1409,8 @@ def _zero_counter_table() -> dict[str, int]:
         "real_provider_call_count",
         "network_used_count",
         "gemini_called_count",
+        "real_provider_call_delay_applied_count",
+        "real_provider_call_delay_seconds",
         "provider_output_used_as_truth_count",
         "provider_output_used_as_authority_count",
         "provider_output_created_packet_count",
@@ -1370,10 +1535,8 @@ def _non_claims() -> tuple[str, ...]:
     return (
         "not production",
         "not public auditor package",
-        "fake-provider implementation only",
-        "no real provider call",
-        "no network call",
-        "no Gemini call",
+        "provider output is advisory only",
+        "runtime validation is required",
         "no secret access",
         "no real airline API",
         "no real bank API",

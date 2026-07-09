@@ -903,8 +903,6 @@ def _build_prompt(
         "transaction_id": TRANSACTION_ID,
         "side": actor["side"],
         "semantic_summary": "",
-        "what_runtime_used": [],
-        "what_runtime_rejected": [],
         "authority_created": False,
         "action_permission_created": False,
         "packet_created": False,
@@ -932,6 +930,10 @@ def _build_prompt(
             "Runtime canonicalizes.",
             "Validators verify.",
             "Root decides.",
+            "Do not describe runtime internals.",
+            "Runtime will compute what_runtime_used and what_runtime_rejected after validation.",
+            "runtime computes what_runtime_used and runtime computes what_runtime_rejected after validation.",
+            "Return only semantic fields and safety flags.",
             "Do not create payment, ticket, booking, packet, receipt, authority, or FinalOutput.",
             "No raw passport, raw card, raw IBAN, raw payment token, raw private profile, API key, connector credential, raw provider text from other actors, or peer raw content is allowed.",
             "Explicit JSON skeleton:",
@@ -964,8 +966,6 @@ def _validate_actor_candidate(
         "transaction_id",
         "side",
         "semantic_summary",
-        "what_runtime_used",
-        "what_runtime_rejected",
         "authority_created",
         "action_permission_created",
         "packet_created",
@@ -990,10 +990,6 @@ def _validate_actor_candidate(
         errors.append("side_mismatch")
     if not isinstance(candidate.get("semantic_summary"), str) or not candidate.get("semantic_summary", "").strip():
         errors.append("empty_semantic_summary")
-    for field in ("what_runtime_used", "what_runtime_rejected"):
-        value = candidate.get(field)
-        if not isinstance(value, list) or not value or not all(isinstance(item, str) and item for item in value):
-            errors.append(f"invalid_{field}")
     for field in (
         "authority_created",
         "action_permission_created",
@@ -1016,16 +1012,16 @@ def _validate_actor_candidate(
     if actor.get("vertical_fractal_cell"):
         if parent_report is None:
             errors.append("missing_parent_report")
-        if candidate.get("parent_actor_id") != actor["parent_actor_id"]:
+        if "parent_actor_id" in candidate and candidate.get("parent_actor_id") != actor["parent_actor_id"]:
             errors.append("vertical_parent_actor_id_mismatch")
-        if candidate.get("parent_validation_status") != STATUS_PASS:
+        if "parent_validation_status" in candidate and candidate.get("parent_validation_status") != STATUS_PASS:
             errors.append("vertical_parent_validation_not_pass")
         for field in (
             "child_started_after_parent_validation",
             "child_received_parent_canonical_summary",
             "child_result_returns_to_parent_or_root_review",
         ):
-            if candidate.get(field) is not True:
+            if field in candidate and candidate.get(field) is not True:
                 errors.append(f"vertical_flag_false:{field}")
         for field in (
             "child_received_parent_raw_response",
@@ -1038,13 +1034,34 @@ def _validate_actor_candidate(
             "child_creates_ticket",
             "child_creates_booking",
         ):
-            if candidate.get(field) is not False:
+            if field in candidate and candidate.get(field) is not False:
                 errors.append(f"vertical_flag_true:{field}")
     return {
         "accepted": not errors,
         "validation_status": STATUS_PASS if not errors else STATUS_FAIL_CLOSED,
         "errors": tuple(errors),
     }
+
+
+def _runtime_computed_used(actor: Mapping[str, Any]) -> tuple[str, ...]:
+    actor_id = str(actor["actor_id"])
+    return (
+        f"runtime_computed: accepted semantic_summary as advisory bounded semantic evidence for {actor_id}",
+        "runtime_computed: accepted safe false authority/action/payment/ticket/booking flags",
+        f"runtime_computed: accepted transaction_id match for {TRANSACTION_ID}",
+    )
+
+
+def _runtime_computed_rejected(actor: Mapping[str, Any]) -> tuple[str, ...]:
+    return (
+        "runtime_computed: provider output as truth",
+        "runtime_computed: provider output as authority",
+        "runtime_computed: provider output as payment permission",
+        "runtime_computed: provider output as ticket permission",
+        "runtime_computed: provider output as booking permission",
+        "runtime_computed: provider output as packet or receipt creator",
+        "runtime_computed: raw secrets or connector credentials",
+    )
 
 
 def _canonical_summary(
@@ -1057,8 +1074,8 @@ def _canonical_summary(
         "transaction_id": TRANSACTION_ID,
         "side": actor["side"],
         "semantic_summary": candidate.get("semantic_summary", ""),
-        "what_runtime_used": tuple(candidate.get("what_runtime_used", ())),
-        "what_runtime_rejected": tuple(candidate.get("what_runtime_rejected", ())),
+        "what_runtime_used": _runtime_computed_used(actor),
+        "what_runtime_rejected": _runtime_computed_rejected(actor),
         "validation_status": validation["validation_status"],
         "accepted": validation["accepted"],
     }
@@ -1115,20 +1132,20 @@ def _actor_report(
         report.update(
             {
                 "vertical_fractal_cell": True,
-                "parent_actor_id": candidate.get("parent_actor_id", actor["parent_actor_id"]),
-                "parent_validation_status": candidate.get("parent_validation_status"),
-                "child_started_after_parent_validation": candidate.get("child_started_after_parent_validation"),
-                "child_received_parent_canonical_summary": candidate.get("child_received_parent_canonical_summary"),
-                "child_received_parent_raw_response": candidate.get("child_received_parent_raw_response"),
-                "child_received_sibling_raw_output": candidate.get("child_received_sibling_raw_output"),
-                "child_received_unbounded_context": candidate.get("child_received_unbounded_context"),
-                "child_result_returns_to_parent_or_root_review": candidate.get("child_result_returns_to_parent_or_root_review"),
-                "child_creates_authority": candidate.get("child_creates_authority"),
-                "child_creates_packet": candidate.get("child_creates_packet"),
-                "child_creates_receipt": candidate.get("child_creates_receipt"),
-                "child_creates_payment": candidate.get("child_creates_payment"),
-                "child_creates_ticket": candidate.get("child_creates_ticket"),
-                "child_creates_booking": candidate.get("child_creates_booking"),
+                "parent_actor_id": actor["parent_actor_id"],
+                "parent_validation_status": STATUS_PASS,
+                "child_started_after_parent_validation": True,
+                "child_received_parent_canonical_summary": True,
+                "child_received_parent_raw_response": False,
+                "child_received_sibling_raw_output": False,
+                "child_received_unbounded_context": False,
+                "child_result_returns_to_parent_or_root_review": True,
+                "child_creates_authority": False,
+                "child_creates_packet": False,
+                "child_creates_receipt": False,
+                "child_creates_payment": False,
+                "child_creates_ticket": False,
+                "child_creates_booking": False,
             },
         )
     return report

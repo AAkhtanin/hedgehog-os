@@ -58,6 +58,38 @@ def _real_provider() -> runner.Provider:
     return runner.build_fake_airline_semantic_provider_v01()
 
 
+def _minimal_safe_provider(*, include_empty_runtime_fields: bool = False) -> runner.Provider:
+    def provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> str:
+        actor = runner._actor_spec(actor_id)
+        payload: dict[str, Any] = {
+            "actor_id": actor_id,
+            "transaction_id": runner.TRANSACTION_ID,
+            "side": actor["side"],
+            "semantic_summary": (
+                f"Safe real-Gemini-like semantic summary for {actor_id}; "
+                "advisory bounded airline semantic evidence only."
+            ),
+            "authority_created": False,
+            "action_permission_created": False,
+            "packet_created": False,
+            "receipt_created": False,
+            "payment_created": False,
+            "ticket_created": False,
+            "booking_created": False,
+            "final_output_created": False,
+            "real_payment_executed": False,
+            "real_ticket_issued": False,
+            "real_booking_created": False,
+            "real_world_effects_count": 0,
+        }
+        if include_empty_runtime_fields:
+            payload["what_runtime_used"] = []
+            payload["what_runtime_rejected"] = []
+        return json.dumps(payload, sort_keys=True)
+
+    return provider
+
+
 def test_airline_live_semantic_default_skipped_closed() -> None:
     report = runner.collect_tri_party_airline_live_semantic_lane_v01(env={})
     counters = report["counter_table"]
@@ -77,6 +109,84 @@ def test_airline_live_semantic_fake_provider_pass() -> None:
     assert counters["semantic_actor_call_count"] == 12
     assert counters["fake_provider_call_count"] == 12
     assert counters["real_provider_call_count"] == 0
+
+
+def test_airline_live_semantic_runtime_computes_used_rejected_when_provider_omits_them() -> None:
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_enabled_env(),
+        provider=_minimal_safe_provider(),
+    )
+
+    assert report["final_status"] == runner.STATUS_PASS
+    for actor in report["semantic_actor_reports"]:
+        assert actor["what_runtime_used"]
+        assert actor["what_runtime_rejected"]
+        assert all("runtime_computed" in item for item in actor["what_runtime_used"])
+        assert "provider output as truth" in actor["what_runtime_rejected"][0]
+        assert "provider output as authority" in actor["what_runtime_rejected"][1]
+
+
+def test_airline_live_semantic_runtime_computes_used_rejected_when_provider_returns_empty_lists() -> None:
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_enabled_env(),
+        provider=_minimal_safe_provider(include_empty_runtime_fields=True),
+    )
+
+    assert report["final_status"] == runner.STATUS_PASS
+    for actor in report["semantic_actor_reports"]:
+        assert actor["what_runtime_used"]
+        assert actor["what_runtime_rejected"]
+        assert "runtime_computed" in actor["what_runtime_used"][0]
+        assert any(
+            "provider output as packet or receipt creator" in item
+            for item in actor["what_runtime_rejected"]
+        )
+
+
+def test_airline_live_semantic_prompt_does_not_ask_llm_to_fill_runtime_used_rejected(
+    tmp_path: Path,
+) -> None:
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_enabled_env(tmp_path),
+        provider=_minimal_safe_provider(),
+    )
+    prompt_text = "\n".join(path.read_text() for path in tmp_path.glob("*_prompt.txt"))
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert '"what_runtime_used"' + ": []" not in prompt_text
+    assert '"what_runtime_rejected"' + ": []" not in prompt_text
+    assert "Runtime will compute what_runtime_used and what_runtime_rejected" in prompt_text
+    assert "runtime computes what_runtime_used" in prompt_text
+    assert "Return only semantic fields and safety flags." in prompt_text
+
+
+def test_airline_live_semantic_real_gemini_like_orchestrator_response_no_runtime_fields_passes(
+    tmp_path: Path,
+) -> None:
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_real_env(tmp_path),
+        provider=_minimal_safe_provider(),
+    )
+    counters = report["counter_table"]
+    call_order = report["semantic_actor_call_order"]
+    dependency = next(
+        item
+        for item in report["vertical_fractal_dependencies"]
+        if item["child_actor_id"] == "bank_idempotency_risk_vertical_cell_llm"
+    )
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert counters["semantic_actor_call_count"] == 12
+    assert counters["bsep_created_count"] == 1
+    assert counters["bsep_validated_count"] == 1
+    assert call_order.index("tri_party_airline_semantic_architect_llm") > call_order.index(
+        "tri_party_airline_orchestrator_llm",
+    )
+    assert dependency["child_started_after_parent_validation"] is True
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["real_ticket_issued_count"] == 0
+    assert counters["real_booking_created_count"] == 0
+    assert counters["real_world_effects_count"] == 0
 
 
 def test_airline_live_semantic_real_provider_requires_explicit_flag() -> None:

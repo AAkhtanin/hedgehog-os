@@ -747,7 +747,153 @@ def test_airline_slice_f_fail_closed_on_mock_ticket_becoming_real_ticket() -> No
     ) in errors
 
 
-def test_airline_slice_f_source_import_boundary() -> None:
+def test_airline_slice_g_integrated_trace_passes() -> None:
+    report = _report()
+    trace = report["integrated_transaction_trace"]
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert trace
+    assert len(trace) == 17
+    assert {row["transaction_id"] for row in trace} == {runner.TRANSACTION_ID}
+
+
+def test_airline_slice_g_trace_is_one_transaction_not_three_demos() -> None:
+    report = _report()
+    trace = report["integrated_transaction_trace"]
+    counters = report["counter_table"]
+    final_summary = report["final_tri_party_mock_summary"]
+
+    assert counters["integrated_tri_party_transaction_trace_created_count"] == 1
+    assert counters["shared_transaction_id_count"] == 1
+    assert all(row["transaction_id"] == runner.TRANSACTION_ID for row in trace)
+    assert final_summary["transaction_id"] == runner.TRANSACTION_ID
+
+
+def test_airline_slice_g_cross_root_evidence_routing_matrix() -> None:
+    routing = _report()["cross_root_evidence_routing_matrix"]
+    route_pairs = [
+        (row["source_root_id"], row["target_root_id"]) for row in routing
+    ]
+
+    assert len(routing) == 6
+    assert all(row["authority_transferred"] is False for row in routing)
+    assert route_pairs == [
+        (runner.CLIENT_ROOT_ID, runner.AIRLINE_ROOT_ID),
+        (runner.AIRLINE_ROOT_ID, runner.CLIENT_ROOT_ID),
+        (runner.CLIENT_ROOT_ID, runner.BANK_ROOT_ID),
+        (runner.BANK_ROOT_ID, runner.CLIENT_ROOT_ID),
+        (runner.CLIENT_ROOT_ID, runner.AIRLINE_ROOT_ID),
+        (runner.AIRLINE_ROOT_ID, runner.CLIENT_ROOT_ID),
+    ]
+
+
+def test_airline_slice_g_no_authority_transfer_or_real_effects() -> None:
+    counters = _report()["counter_table"]
+
+    assert counters["cross_root_authority_transfer_count"] == 0
+    assert counters["cross_root_real_world_effects_count"] == 0
+    assert counters["final_authority_transferred_between_roots_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_airline_slice_g_final_tri_party_mock_summary() -> None:
+    summary = _report()["final_tri_party_mock_summary"]
+
+    assert summary["final_status"] == runner.STATUS_PASS
+    assert (
+        summary["client_view_status"]
+        == "mock_ticket_evidence_received_no_real_travel_booking"
+    )
+    assert summary["airline_view_status"] == "mock_order_ticket_pnr_evidence_created"
+    assert summary["bank_view_status"] == "mock_payment_authorized_not_settled"
+    assert summary["real_ticket_issued"] is False
+    assert summary["real_payment_executed"] is False
+    assert summary["real_booking_created"] is False
+
+
+def test_airline_slice_g_preserves_slice_b_c_d_e_f_boundaries() -> None:
+    report = _report()
+
+    assert set(report["participants"]) == {"ClientRoot", "AirlineRoot", "BankRoot"}
+    assert report["airline_offer_hold_sandbox"]["sandbox_status"] == runner.STATUS_PASS
+    assert (
+        report["bank_payment_authorization_sandbox"]["sandbox_status"]
+        == runner.STATUS_PASS
+    )
+    assert (
+        report["client_purchase_orchestration"]["orchestration_status"]
+        == runner.STATUS_PASS
+    )
+    assert (
+        report["airline_ticket_issue_mock_corridor"]["corridor_status"]
+        == runner.STATUS_PASS
+    )
+    assert (
+        report["airline_offer_hold_sandbox"]["offer_hold_receipt_evidence_only"]
+        is True
+    )
+    assert (
+        report["bank_payment_authorization_sandbox"][
+            "payment_authorization_receipt_evidence_only"
+        ]
+        is True
+    )
+    assert (
+        report["client_purchase_orchestration"][
+            "client_purchase_approval_evidence_evidence_only"
+        ]
+        is True
+    )
+    assert (
+        report["airline_ticket_issue_mock_corridor"][
+            "mock_ticket_receipt_evidence_only"
+        ]
+        is True
+    )
+    assert all(
+        actor["executed_in_slice_b"] is False
+        for actor in report["future_semantic_actor_topology"]
+    )
+    assert all(
+        cell["executed_in_slice_b"] is False
+        for cells in report["future_vertical_fractal_map"].values()
+        for cell in cells
+    )
+
+
+def test_airline_slice_g_renderer_sections() -> None:
+    rendered = runner.render_tri_party_airline_ticket_purchase_mock_e2e_v01(_report())
+
+    assert "[INTEGRATED TRI-PARTY TRANSACTION TRACE]" in rendered
+    assert "[CROSS-ROOT EVIDENCE ROUTING MATRIX]" in rendered
+    assert "[FINAL TRI-PARTY MOCK SUMMARY]" in rendered
+    assert "one transaction, not three unrelated demos" in rendered
+    assert "exchange evidence, not authority" in rendered
+    assert "No real-world effect occurred" in rendered
+    assert "cross_root_authority_transfer_count: 0" in rendered
+
+
+def test_airline_slice_g_fail_closed_on_mixed_transaction_id_in_integrated_trace() -> None:
+    report = deepcopy(_report())
+
+    report["integrated_transaction_trace"][3]["transaction_id"] = (
+        "tri_airline_purchase:wrong"
+    )
+    errors = runner._validate_report(report)
+
+    assert "integrated_trace_transaction_id_mismatch" in errors
+
+
+def test_airline_slice_g_fail_closed_on_cross_root_authority_transfer() -> None:
+    report = deepcopy(_report())
+
+    report["cross_root_evidence_routing_matrix"][0]["authority_transferred"] = True
+    errors = runner._validate_report(report)
+
+    assert "cross_root_routing_authority_transfer" in errors
+
+
+def test_airline_slice_g_source_import_boundary() -> None:
     source = Path(runner.__file__).read_text()
 
     assert "google.genai" not in source
@@ -778,5 +924,6 @@ def test_airline_slice_f_source_import_boundary() -> None:
         ("ClientPurchaseApprovalEvidence grants", " ticket"),
         ("MockTicketReceipt grants", " payment"),
         ("MockTicketReceipt is", " real ticket"),
+        ("authority transferred", " between roots"),
     ):
         assert left + right not in source

@@ -5,7 +5,7 @@ from typing import Any, Mapping
 
 RUN_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01"
 REPORT_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01"
-SLICE_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01_slice_f"
+SLICE_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01_slice_g"
 TRANSACTION_ID = "tri_airline_purchase:PAR-LIM:2026-08-12:client_001"
 
 STATUS_PASS = "PASS"
@@ -26,6 +26,9 @@ REQUIRED_SECTIONS = (
     "[BANKROOT PAYMENT AUTHORIZATION SANDBOX]",
     "[CLIENTROOT PURCHASE ORCHESTRATION]",
     "[AIRLINEROOT TICKET ISSUE MOCK CORRIDOR]",
+    "[INTEGRATED TRI-PARTY TRANSACTION TRACE]",
+    "[CROSS-ROOT EVIDENCE ROUTING MATRIX]",
+    "[FINAL TRI-PARTY MOCK SUMMARY]",
     "[MOCK PROTOCOL FIXTURES]",
     "[SHARED TRANSACTION LEDGER]",
     "[ROOT BOUNDARY MATRIX]",
@@ -61,6 +64,11 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         mock_protocol_fixtures,
     )
     shared_transaction_ledger = _shared_transaction_ledger(mock_protocol_fixtures)
+    integrated_transaction_trace = _integrated_transaction_trace(
+        mock_protocol_fixtures,
+    )
+    cross_root_evidence_routing_matrix = _cross_root_evidence_routing_matrix()
+    final_tri_party_mock_summary = _final_tri_party_mock_summary()
     future_semantic_actor_topology = _future_semantic_actor_topology()
     future_vertical_fractal_map = _future_vertical_fractal_map()
     privacy_boundary_matrix = _privacy_boundary_matrix()
@@ -72,6 +80,9 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         bank_payment_authorization_sandbox,
         client_purchase_orchestration,
         airline_ticket_issue_mock_corridor,
+        integrated_transaction_trace,
+        cross_root_evidence_routing_matrix,
+        final_tri_party_mock_summary,
     )
 
     report: dict[str, Any] = {
@@ -91,6 +102,9 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         "bank_payment_authorization_sandbox": bank_payment_authorization_sandbox,
         "client_purchase_orchestration": client_purchase_orchestration,
         "airline_ticket_issue_mock_corridor": airline_ticket_issue_mock_corridor,
+        "integrated_transaction_trace": integrated_transaction_trace,
+        "cross_root_evidence_routing_matrix": cross_root_evidence_routing_matrix,
+        "final_tri_party_mock_summary": final_tri_party_mock_summary,
         "mock_protocol_fixtures": mock_protocol_fixtures,
         "shared_transaction_ledger": shared_transaction_ledger,
         "root_boundary_matrix": _root_boundary_matrix(),
@@ -102,7 +116,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         "counter_table": counter_table,
         "non_claims": _non_claims(),
         "validation_errors": (),
-        "next_gate": "Slice G integrated tri-party transaction trace",
+        "next_gate": "Slice H three human renderers",
     }
     errors = _validate_report(report)
     if errors:
@@ -222,8 +236,67 @@ def render_tri_party_airline_ticket_purchase_mock_e2e_v01(
         "No real payment or settlement happened.",
         f"corridor_status: {report['airline_ticket_issue_mock_corridor']['corridor_status']}",
         "",
-        "[MOCK PROTOCOL FIXTURES]",
+        "[INTEGRATED TRI-PARTY TRANSACTION TRACE]",
+        "This is one transaction, not three unrelated demos.",
+        "Every phase carries the same transaction_id.",
+        "ClientRoot, AirlineRoot, and BankRoot exchange evidence, not authority.",
+        "Offer hold, payment authorization, and mock ticket evidence all remain evidence-only.",
+        "No real payment, ticket, booking, API, provider, network, or Gemini call occurs.",
     ]
+    for row in report["integrated_transaction_trace"]:
+        lines.append(
+            "{trace_index}. {phase_id}: {source_root_id} -> {target_root_id}".format(
+                **row,
+            ),
+        )
+
+    lines.extend(
+        (
+            "",
+            "[CROSS-ROOT EVIDENCE ROUTING MATRIX]",
+            "ClientRoot sends bounded offer request to AirlineRoot.",
+            "AirlineRoot returns offer/hold evidence.",
+            "ClientRoot sends purchase approval and payment profile sealed ref to BankRoot.",
+            "BankRoot returns payment authorization/status evidence.",
+            "ClientRoot forwards payment evidence to AirlineRoot.",
+            "AirlineRoot returns mock order/ticket/PNR evidence.",
+            "Every route transfers evidence only, not authority.",
+        ),
+    )
+    for row in report["cross_root_evidence_routing_matrix"]:
+        lines.append(
+            "- {route_id}: {source_root_id} -> {target_root_id}; {artifact}".format(
+                **row,
+            ),
+        )
+
+    final_summary = report["final_tri_party_mock_summary"]
+    lines.extend(
+        (
+            "",
+            "[FINAL TRI-PARTY MOCK SUMMARY]",
+            (
+                "Client view: mock ticket evidence received, "
+                "no real travel booking."
+            ),
+            (
+                "Airline view: mock order/ticket/PNR evidence created, "
+                "no real airline API."
+            ),
+            "Bank view: mock payment authorized/not settled, no real payment.",
+            "Receipts remain evidence only.",
+            "Root boundaries remain side-specific.",
+            "No real-world effect occurred.",
+            f"summary_id: {final_summary['summary_id']}",
+            f"final_status: {final_summary['final_status']}",
+        ),
+    )
+    lines.extend(
+        (
+            "",
+        "[MOCK PROTOCOL FIXTURES]",
+        ),
+    )
     for fixture_name in report["mock_protocol_fixtures"]:
         lines.append(f"- {fixture_name}")
 
@@ -934,6 +1007,271 @@ def _shared_transaction_ledger(
     return tuple(ledger_rows)
 
 
+def _integrated_transaction_trace(
+    fixtures: Mapping[str, Mapping[str, Any]],
+) -> tuple[dict[str, Any], ...]:
+    offer_id = fixtures["AirlineOfferCandidateV01"]["offer_id"]
+    phases = (
+        (
+            "client_travel_intent_recorded",
+            CLIENT_ROOT_ID,
+            CLIENT_ROOT_ID,
+            ("TravelIntentV01",),
+        ),
+        (
+            "client_to_airline_offer_request",
+            CLIENT_ROOT_ID,
+            AIRLINE_ROOT_ID,
+            ("AirlineOfferRequestV01",),
+        ),
+        (
+            "airline_offer_hold_sandbox_completed",
+            AIRLINE_ROOT_ID,
+            AIRLINE_ROOT_ID,
+            (
+                "AirlineOfferResponseV01",
+                "AirlineOfferHoldCommitPacketV01",
+                "AirlineOfferHoldReceiptV01",
+            ),
+        ),
+        (
+            "airline_to_client_offer_hold_receipt_returned",
+            AIRLINE_ROOT_ID,
+            CLIENT_ROOT_ID,
+            ("AirlineOfferResponseV01", "AirlineOfferHoldReceiptV01"),
+        ),
+        (
+            "client_offer_selected",
+            CLIENT_ROOT_ID,
+            CLIENT_ROOT_ID,
+            (offer_id,),
+        ),
+        (
+            "client_purchase_approval_evidence_created",
+            CLIENT_ROOT_ID,
+            CLIENT_ROOT_ID,
+            ("ClientPurchaseApprovalEvidenceV01",),
+        ),
+        (
+            "client_to_bank_payment_authorization_request",
+            CLIENT_ROOT_ID,
+            BANK_ROOT_ID,
+            ("ClientPurchaseApprovalEvidenceV01", "PaymentProfileSealedRefV01"),
+        ),
+        (
+            "bank_payment_authorization_sandbox_completed",
+            BANK_ROOT_ID,
+            BANK_ROOT_ID,
+            (
+                "BankPaymentIntentV01",
+                "BankPaymentConsentV01",
+                "BankPaymentAuthorizationCommitPacketV01",
+                "BankPaymentAuthorizationReceiptV01",
+                "BankPaymentStatusReceiptV01",
+            ),
+        ),
+        (
+            "bank_to_client_payment_authorization_receipt_returned",
+            BANK_ROOT_ID,
+            CLIENT_ROOT_ID,
+            ("BankPaymentAuthorizationReceiptV01",),
+        ),
+        (
+            "bank_to_client_payment_status_receipt_returned",
+            BANK_ROOT_ID,
+            CLIENT_ROOT_ID,
+            ("BankPaymentStatusReceiptV01",),
+        ),
+        (
+            "client_to_airline_payment_evidence_forwarded",
+            CLIENT_ROOT_ID,
+            AIRLINE_ROOT_ID,
+            (
+                "ClientPurchaseApprovalEvidenceV01",
+                "BankPaymentAuthorizationReceiptV01",
+                "BankPaymentStatusReceiptV01",
+            ),
+        ),
+        (
+            "airline_ticket_issue_mock_corridor_completed",
+            AIRLINE_ROOT_ID,
+            AIRLINE_ROOT_ID,
+            (
+                "AirlineTicketIssueCommitPacketV01",
+                "AirlineOrderCreatedReceiptV01",
+                "MockTicketReceiptV01",
+                "MockPNRV01",
+            ),
+        ),
+        (
+            "airline_to_client_order_created_receipt_returned",
+            AIRLINE_ROOT_ID,
+            CLIENT_ROOT_ID,
+            ("AirlineOrderCreatedReceiptV01",),
+        ),
+        (
+            "airline_to_client_mock_ticket_receipt_returned",
+            AIRLINE_ROOT_ID,
+            CLIENT_ROOT_ID,
+            ("MockTicketReceiptV01",),
+        ),
+        (
+            "airline_to_client_mock_pnr_returned",
+            AIRLINE_ROOT_ID,
+            CLIENT_ROOT_ID,
+            ("MockPNRV01",),
+        ),
+        (
+            "client_final_mock_travel_summary_created",
+            CLIENT_ROOT_ID,
+            CLIENT_ROOT_ID,
+            ("ClientFinalTravelSummaryV01",),
+        ),
+        (
+            "final_shared_summary_fixture_created",
+            CLIENT_ROOT_ID,
+            CLIENT_ROOT_ID,
+            ("ClientFinalTravelSummaryV01", "FinalTriPartyMockSummaryV01"),
+        ),
+    )
+    return tuple(
+        {
+            "trace_index": index,
+            "transaction_id": TRANSACTION_ID,
+            "phase_id": phase_id,
+            "source_root_id": source_root_id,
+            "target_root_id": target_root_id,
+            "artifact_refs": tuple(
+                _artifact_ref(artifact_name, fixtures)
+                for artifact_name in artifact_names
+            ),
+            "evidence_only": True,
+            "authority_transferred": False,
+            "raw_secrets_exposed": False,
+            "real_ticket_claimed": False,
+            "real_payment_claimed": False,
+            "real_booking_claimed": False,
+            "real_world_effects_count": 0,
+        }
+        for index, (phase_id, source_root_id, target_root_id, artifact_names)
+        in enumerate(phases, start=1)
+    )
+
+
+def _cross_root_evidence_routing_matrix() -> tuple[dict[str, Any], ...]:
+    rows = (
+        {
+            "route_id": "A",
+            "source_root_id": CLIENT_ROOT_ID,
+            "target_root_id": AIRLINE_ROOT_ID,
+            "artifact": "AirlineOfferRequestV01",
+            "purpose": "request mock offers",
+            "evidence_only": True,
+            "authority_transferred": False,
+            "raw_passport_exposed": False,
+            "raw_card_exposed": False,
+        },
+        {
+            "route_id": "B",
+            "source_root_id": AIRLINE_ROOT_ID,
+            "target_root_id": CLIENT_ROOT_ID,
+            "artifact": "AirlineOfferResponseV01 + OfferHoldReceipt",
+            "purpose": "return mock offer and hold evidence",
+            "evidence_only": True,
+            "payment_permission_created": False,
+            "ticket_permission_created": False,
+            "authority_transferred": False,
+        },
+        {
+            "route_id": "C",
+            "source_root_id": CLIENT_ROOT_ID,
+            "target_root_id": BANK_ROOT_ID,
+            "artifact": "ClientPurchaseApprovalEvidence + PaymentProfileSealedRef",
+            "purpose": "request mock payment authorization",
+            "evidence_only": True,
+            "bank_authority_created_by_client": False,
+            "raw_card_exposed": False,
+            "raw_iban_exposed": False,
+            "authority_transferred": False,
+        },
+        {
+            "route_id": "D",
+            "source_root_id": BANK_ROOT_ID,
+            "target_root_id": CLIENT_ROOT_ID,
+            "artifact": "PaymentAuthorizationReceipt + PaymentStatusReceipt",
+            "purpose": "return mock payment authorization evidence",
+            "evidence_only": True,
+            "ticket_permission_created": False,
+            "real_payment_executed": False,
+            "authority_transferred": False,
+        },
+        {
+            "route_id": "E",
+            "source_root_id": CLIENT_ROOT_ID,
+            "target_root_id": AIRLINE_ROOT_ID,
+            "artifact": (
+                "ClientPurchaseApprovalEvidence + PaymentAuthorizationReceipt "
+                "+ PaymentStatusReceipt"
+            ),
+            "purpose": (
+                "ask AirlineRoot to validate payment evidence and issue mock "
+                "ticket evidence"
+            ),
+            "evidence_only": True,
+            "airline_authority_created_by_client": False,
+            "ticket_permission_created_by_payment_receipt": False,
+            "authority_transferred": False,
+        },
+        {
+            "route_id": "F",
+            "source_root_id": AIRLINE_ROOT_ID,
+            "target_root_id": CLIENT_ROOT_ID,
+            "artifact": "OrderCreatedReceipt + MockTicketReceipt + MockPNR",
+            "purpose": "return mock order/ticket/PNR evidence",
+            "evidence_only": True,
+            "real_ticket_issued": False,
+            "real_booking_created": False,
+            "payment_created": False,
+            "authority_transferred": False,
+        },
+    )
+    return tuple({**row, "transaction_id": TRANSACTION_ID, "real_world_effects_count": 0} for row in rows)
+
+
+def _final_tri_party_mock_summary() -> dict[str, Any]:
+    return {
+        "summary_id": f"final_tri_party_mock_summary:{TRANSACTION_ID}",
+        "transaction_id": TRANSACTION_ID,
+        "final_status": STATUS_PASS,
+        "client_view_status": "mock_ticket_evidence_received_no_real_travel_booking",
+        "airline_view_status": "mock_order_ticket_pnr_evidence_created",
+        "bank_view_status": "mock_payment_authorized_not_settled",
+        "selected_offer_id": "offer:mock_airline_al:PAR-LIM:001",
+        "offer_hold_receipt_id": "offer_hold_receipt:mock_airline_al:001",
+        "payment_authorization_receipt_id": "payment_authorization_receipt:mock_bank_a:001",
+        "payment_status_receipt_id": "payment_status_receipt:mock_bank_a:001",
+        "order_created_receipt_id": "order_created_receipt:mock_airline_al:001",
+        "mock_ticket_receipt_id": "mock_ticket_receipt:mock_airline_al:001",
+        "mock_pnr": "PNR-EEH01",
+        "receipts_evidence_only": True,
+        "authority_transferred_between_roots": False,
+        "client_root_issued_ticket": False,
+        "airline_root_authorized_payment": False,
+        "bank_root_created_ticket": False,
+        "real_airline_api_called": False,
+        "real_bank_api_called": False,
+        "real_gds_api_called": False,
+        "real_payment_executed": False,
+        "real_settlement_executed": False,
+        "real_ticket_issued": False,
+        "real_booking_created": False,
+        "provider_called": False,
+        "network_used": False,
+        "gemini_called": False,
+        "real_world_effects_count": 0,
+    }
+
+
 def _artifact_ref(artifact_name: str, fixtures: Mapping[str, Mapping[str, Any]]) -> str:
     fixture = fixtures.get(artifact_name)
     if fixture is None:
@@ -1197,6 +1535,9 @@ def _counter_table(
     bank_payment_authorization_sandbox: Mapping[str, Any],
     client_purchase_orchestration: Mapping[str, Any],
     airline_ticket_issue_mock_corridor: Mapping[str, Any],
+    integrated_transaction_trace: tuple[dict[str, Any], ...],
+    cross_root_evidence_routing_matrix: tuple[dict[str, Any], ...],
+    final_tri_party_mock_summary: Mapping[str, Any],
 ) -> dict[str, int]:
     fractal_cells = tuple(
         cell for cells in fractal_map.values() for cell in cells
@@ -1591,6 +1932,48 @@ def _counter_table(
         "airline_root_called_real_gds_api_count": int(
             airline_ticket_issue_mock_corridor["airline_root_called_real_gds_api"],
         ),
+        "integrated_tri_party_transaction_trace_created_count": int(
+            bool(integrated_transaction_trace),
+        ),
+        "integrated_trace_phase_count": len(integrated_transaction_trace),
+        "cross_root_evidence_routing_rows_count": len(
+            cross_root_evidence_routing_matrix,
+        ),
+        "cross_root_authority_transfer_count": sum(
+            int(row["authority_transferred"])
+            for row in cross_root_evidence_routing_matrix
+        ),
+        "cross_root_real_world_effects_count": sum(
+            int(row["real_world_effects_count"])
+            for row in cross_root_evidence_routing_matrix
+        ),
+        "final_tri_party_mock_summary_created_count": int(
+            final_tri_party_mock_summary.get("final_status") == STATUS_PASS,
+        ),
+        "final_client_view_mock_ticket_evidence_received_count": int(
+            final_tri_party_mock_summary.get("client_view_status")
+            == "mock_ticket_evidence_received_no_real_travel_booking",
+        ),
+        "final_airline_view_mock_order_ticket_pnr_evidence_created_count": int(
+            final_tri_party_mock_summary.get("airline_view_status")
+            == "mock_order_ticket_pnr_evidence_created",
+        ),
+        "final_bank_view_mock_payment_authorized_not_settled_count": int(
+            final_tri_party_mock_summary.get("bank_view_status")
+            == "mock_payment_authorized_not_settled",
+        ),
+        "final_real_ticket_issued_count": int(
+            final_tri_party_mock_summary["real_ticket_issued"],
+        ),
+        "final_real_payment_executed_count": int(
+            final_tri_party_mock_summary["real_payment_executed"],
+        ),
+        "final_real_booking_created_count": int(
+            final_tri_party_mock_summary["real_booking_created"],
+        ),
+        "final_authority_transferred_between_roots_count": int(
+            final_tri_party_mock_summary["authority_transferred_between_roots"],
+        ),
         "future_semantic_actor_roles_planned_count": len(actors),
         "future_semantic_actor_roles_executed_count": sum(
             int(actor["executed_in_slice_b"]) for actor in actors
@@ -1647,6 +2030,9 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     bank_sandbox = report["bank_payment_authorization_sandbox"]
     client_orchestration = report["client_purchase_orchestration"]
     ticket_corridor = report["airline_ticket_issue_mock_corridor"]
+    integrated_trace = report["integrated_transaction_trace"]
+    routing_matrix = report["cross_root_evidence_routing_matrix"]
+    final_summary = report["final_tri_party_mock_summary"]
     fixtures = report["mock_protocol_fixtures"]
 
     if report.get("transaction_id") != TRANSACTION_ID:
@@ -1665,6 +2051,9 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     transaction_ids.add(bank_sandbox.get("transaction_id"))
     transaction_ids.add(client_orchestration.get("transaction_id"))
     transaction_ids.add(ticket_corridor.get("transaction_id"))
+    transaction_ids.update(row["transaction_id"] for row in integrated_trace)
+    transaction_ids.update(row["transaction_id"] for row in routing_matrix)
+    transaction_ids.add(final_summary.get("transaction_id"))
     if transaction_ids != {TRANSACTION_ID}:
         errors += ("transaction_id_set_mismatch",)
     if {row["transaction_id"] for row in ledger} != {TRANSACTION_ID}:
@@ -1998,6 +2387,133 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         errors += ("client_final_summary_status_mismatch",)
     if client_summary.get("mock_ticket_evidence_received") is not True:
         errors += ("client_final_summary_mock_ticket_evidence_missing",)
+
+    if len(integrated_trace) != 17:
+        errors += ("integrated_trace_phase_count_mismatch",)
+    if {row["transaction_id"] for row in integrated_trace} != {TRANSACTION_ID}:
+        errors += ("integrated_trace_transaction_id_mismatch",)
+    expected_phase_ids = (
+        "client_travel_intent_recorded",
+        "client_to_airline_offer_request",
+        "airline_offer_hold_sandbox_completed",
+        "airline_to_client_offer_hold_receipt_returned",
+        "client_offer_selected",
+        "client_purchase_approval_evidence_created",
+        "client_to_bank_payment_authorization_request",
+        "bank_payment_authorization_sandbox_completed",
+        "bank_to_client_payment_authorization_receipt_returned",
+        "bank_to_client_payment_status_receipt_returned",
+        "client_to_airline_payment_evidence_forwarded",
+        "airline_ticket_issue_mock_corridor_completed",
+        "airline_to_client_order_created_receipt_returned",
+        "airline_to_client_mock_ticket_receipt_returned",
+        "airline_to_client_mock_pnr_returned",
+        "client_final_mock_travel_summary_created",
+        "final_shared_summary_fixture_created",
+    )
+    if tuple(row["phase_id"] for row in integrated_trace) != expected_phase_ids:
+        errors += ("integrated_trace_phase_order_mismatch",)
+    for row in integrated_trace:
+        if row.get("authority_transferred") is not False:
+            errors += ("integrated_trace_authority_transfer",)
+        if row.get("real_world_effects_count") != 0:
+            errors += ("integrated_trace_effects_nonzero",)
+        for key in (
+            "raw_secrets_exposed",
+            "real_ticket_claimed",
+            "real_payment_claimed",
+            "real_booking_claimed",
+        ):
+            if row.get(key) is not False:
+                errors += (f"integrated_trace_forbidden_flag_true:{key}",)
+
+    if len(routing_matrix) != 6:
+        errors += ("cross_root_routing_row_count_mismatch",)
+    expected_routes = (
+        (CLIENT_ROOT_ID, AIRLINE_ROOT_ID),
+        (AIRLINE_ROOT_ID, CLIENT_ROOT_ID),
+        (CLIENT_ROOT_ID, BANK_ROOT_ID),
+        (BANK_ROOT_ID, CLIENT_ROOT_ID),
+        (CLIENT_ROOT_ID, AIRLINE_ROOT_ID),
+        (AIRLINE_ROOT_ID, CLIENT_ROOT_ID),
+    )
+    actual_routes = tuple(
+        (row["source_root_id"], row["target_root_id"]) for row in routing_matrix
+    )
+    if actual_routes != expected_routes:
+        errors += ("cross_root_routing_order_mismatch",)
+    for row in routing_matrix:
+        if row.get("evidence_only") is not True:
+            errors += ("cross_root_routing_not_evidence_only",)
+        if row.get("authority_transferred") is not False:
+            errors += ("cross_root_routing_authority_transfer",)
+        if row.get("real_world_effects_count") != 0:
+            errors += ("cross_root_routing_effects_nonzero",)
+    for key in (
+        "raw_passport_exposed",
+        "raw_card_exposed",
+        "payment_permission_created",
+        "ticket_permission_created",
+        "bank_authority_created_by_client",
+        "raw_iban_exposed",
+        "real_payment_executed",
+        "airline_authority_created_by_client",
+        "ticket_permission_created_by_payment_receipt",
+        "real_ticket_issued",
+        "real_booking_created",
+        "payment_created",
+    ):
+        for row in routing_matrix:
+            if key in row and row[key] is not False:
+                errors += (f"cross_root_routing_forbidden_flag_true:{key}",)
+
+    if final_summary.get("final_status") != STATUS_PASS:
+        errors += ("final_tri_party_mock_summary_not_pass",)
+    if final_summary.get("transaction_id") != TRANSACTION_ID:
+        errors += ("final_tri_party_mock_summary_transaction_id_mismatch",)
+    for key, expected in (
+        (
+            "client_view_status",
+            "mock_ticket_evidence_received_no_real_travel_booking",
+        ),
+        ("airline_view_status", "mock_order_ticket_pnr_evidence_created"),
+        ("bank_view_status", "mock_payment_authorized_not_settled"),
+        ("selected_offer_id", "offer:mock_airline_al:PAR-LIM:001"),
+        ("offer_hold_receipt_id", "offer_hold_receipt:mock_airline_al:001"),
+        (
+            "payment_authorization_receipt_id",
+            "payment_authorization_receipt:mock_bank_a:001",
+        ),
+        ("payment_status_receipt_id", "payment_status_receipt:mock_bank_a:001"),
+        ("order_created_receipt_id", "order_created_receipt:mock_airline_al:001"),
+        ("mock_ticket_receipt_id", "mock_ticket_receipt:mock_airline_al:001"),
+        ("mock_pnr", "PNR-EEH01"),
+    ):
+        if final_summary.get(key) != expected:
+            errors += (f"final_tri_party_mock_summary_value_mismatch:{key}",)
+    if final_summary.get("receipts_evidence_only") is not True:
+        errors += ("final_tri_party_mock_summary_receipts_not_evidence_only",)
+    for key in (
+        "authority_transferred_between_roots",
+        "client_root_issued_ticket",
+        "airline_root_authorized_payment",
+        "bank_root_created_ticket",
+        "real_airline_api_called",
+        "real_bank_api_called",
+        "real_gds_api_called",
+        "real_payment_executed",
+        "real_settlement_executed",
+        "real_ticket_issued",
+        "real_booking_created",
+        "provider_called",
+        "network_used",
+        "gemini_called",
+    ):
+        if final_summary.get(key) is not False:
+            errors += (f"final_tri_party_mock_summary_flag_true:{key}",)
+    if final_summary.get("real_world_effects_count") != 0:
+        errors += ("final_tri_party_mock_summary_effects_nonzero",)
+
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["root_boundary_matrix"]):
         errors += ("root_boundary_violation",)
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["receipt_boundary_matrix"]):
@@ -2097,6 +2613,12 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         "offer_hold_receipt_created_ticket_count",
         "airline_root_called_real_airline_api_count",
         "airline_root_called_real_gds_api_count",
+        "cross_root_authority_transfer_count",
+        "cross_root_real_world_effects_count",
+        "final_real_ticket_issued_count",
+        "final_real_payment_executed_count",
+        "final_real_booking_created_count",
+        "final_authority_transferred_between_roots_count",
     )
     for key in required_zero_counter_keys:
         if counters.get(key) != 0:
@@ -2219,6 +2741,19 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         ("offer_hold_receipt_created_ticket_count", 0),
         ("airline_root_called_real_airline_api_count", 0),
         ("airline_root_called_real_gds_api_count", 0),
+        ("integrated_tri_party_transaction_trace_created_count", 1),
+        ("integrated_trace_phase_count", 17),
+        ("cross_root_evidence_routing_rows_count", 6),
+        ("cross_root_authority_transfer_count", 0),
+        ("cross_root_real_world_effects_count", 0),
+        ("final_tri_party_mock_summary_created_count", 1),
+        ("final_client_view_mock_ticket_evidence_received_count", 1),
+        ("final_airline_view_mock_order_ticket_pnr_evidence_created_count", 1),
+        ("final_bank_view_mock_payment_authorized_not_settled_count", 1),
+        ("final_real_ticket_issued_count", 0),
+        ("final_real_payment_executed_count", 0),
+        ("final_real_booking_created_count", 0),
+        ("final_authority_transferred_between_roots_count", 0),
         ("future_semantic_actor_roles_planned_count", 6),
         ("future_vertical_fractal_cells_planned_count", 14),
     ):

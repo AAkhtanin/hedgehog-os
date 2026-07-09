@@ -153,7 +153,118 @@ def test_airline_slice_b_renderer_sections_and_human_meaning() -> None:
     assert "No real airline API" in rendered
 
 
-def test_airline_slice_b_source_import_boundary() -> None:
+def test_airline_slice_c_offer_hold_sandbox_passes() -> None:
+    report = _report()
+    sandbox = report["airline_offer_hold_sandbox"]
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert sandbox["sandbox_status"] == runner.STATUS_PASS
+    assert sandbox["offer_request_validated"] is True
+    assert sandbox["mock_inventory_checked"] is True
+    assert sandbox["mock_fare_checked"] is True
+    assert sandbox["baggage_rule_checked"] is True
+    assert sandbox["offer_ttl_checked"] is True
+
+
+def test_airline_slice_c_airline_root_creates_offer_hold_packet() -> None:
+    report = _report()
+    sandbox = report["airline_offer_hold_sandbox"]
+    packet = report["mock_protocol_fixtures"]["AirlineOfferHoldCommitPacketV01"]
+    counters = report["counter_table"]
+
+    assert sandbox["offer_hold_commit_packet_created_by"] == "airline_root"
+    assert packet["created_by"] == "airline_root"
+    assert packet["root_created"] is True
+    assert counters["airline_offer_hold_commit_packet_created_count"] == 1
+    assert (
+        counters["airline_offer_hold_commit_packet_created_by_airline_root_count"]
+        == 1
+    )
+    assert (
+        counters["airline_offer_hold_commit_packet_created_by_client_root_count"]
+        == 0
+    )
+    assert (
+        counters["airline_offer_hold_commit_packet_created_by_bank_root_count"]
+        == 0
+    )
+    assert sandbox["offer_hold_commit_packet_validated"] is True
+
+
+def test_airline_slice_c_offer_hold_receipt_evidence_only() -> None:
+    report = _report()
+    sandbox = report["airline_offer_hold_sandbox"]
+    receipt = report["mock_protocol_fixtures"]["AirlineOfferHoldReceiptV01"]
+    counters = report["counter_table"]
+
+    assert sandbox["offer_hold_receipt_created"] is True
+    assert sandbox["offer_hold_receipt_validated"] is True
+    assert sandbox["offer_hold_receipt_evidence_only"] is True
+    assert receipt["evidence_only"] is True
+    assert sandbox["offer_hold_receipt_payment_permission_created"] is False
+    assert sandbox["offer_hold_receipt_ticket_permission_created"] is False
+    assert counters["offer_hold_receipt_payment_permission_created_count"] == 0
+    assert counters["offer_hold_receipt_ticket_permission_created_count"] == 0
+
+
+def test_airline_slice_c_no_real_airline_api_or_booking() -> None:
+    counters = _report()["counter_table"]
+
+    assert counters["real_airline_api_called_count"] == 0
+    assert counters["real_booking_created_count"] == 0
+    assert counters["real_ticket_issued_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_airline_slice_c_preserves_slice_b_boundaries() -> None:
+    report = _report()
+    ledger = report["shared_transaction_ledger"]
+    offer_rows = [
+        row for row in ledger if row.get("sandbox_stage") == "airline_offer_hold_sandbox"
+    ]
+
+    assert set(report["participants"]) == {"ClientRoot", "AirlineRoot", "BankRoot"}
+    assert {row["transaction_id"] for row in ledger} == {runner.TRANSACTION_ID}
+    assert len(offer_rows) == 4
+    assert all(row["validated_by_airline_root"] is True for row in offer_rows)
+    assert all(row["boundary_preserved"] for row in report["receipt_boundary_matrix"])
+    assert report["privacy_boundary_matrix"]["raw_passport_exposed_count"] == 0
+    assert report["privacy_boundary_matrix"]["raw_card_exposed_count"] == 0
+    assert all(
+        actor["executed_in_slice_b"] is False
+        for actor in report["future_semantic_actor_topology"]
+    )
+    assert all(
+        cell["executed_in_slice_b"] is False
+        for cells in report["future_vertical_fractal_map"].values()
+        for cell in cells
+    )
+
+
+def test_airline_slice_c_renderer_section() -> None:
+    rendered = runner.render_tri_party_airline_ticket_purchase_mock_e2e_v01(_report())
+
+    assert "[AIRLINEROOT OFFER HOLD SANDBOX]" in rendered
+    assert "OfferHoldReceipt is evidence only" in rendered
+    assert "not payment permission" in rendered
+    assert "not ticket permission" in rendered
+    assert "No real airline API was called" in rendered
+    assert "real_airline_api_called_count: 0" in rendered
+    assert "real_booking_created_count: 0" in rendered
+
+
+def test_airline_slice_c_fail_closed_on_wrong_offer_hold_packet_creator() -> None:
+    report = deepcopy(_report())
+
+    report["airline_offer_hold_sandbox"][
+        "offer_hold_commit_packet_created_by"
+    ] = "client_root"
+    errors = runner._validate_report(report)
+
+    assert "offer_hold_commit_packet_creator_not_airline_root" in errors
+
+
+def test_airline_slice_c_source_import_boundary() -> None:
     source = Path(runner.__file__).read_text()
 
     assert "google.genai" not in source
@@ -164,6 +275,7 @@ def test_airline_slice_b_source_import_boundary() -> None:
     assert "from hedgehog" not in source
     assert "import hedgehog" not in source
     assert "manual_live" not in source
+    assert "run_live" not in source
     assert "provider adapter" not in source
     assert "GDS connector" not in source
     assert "NDC connector" not in source

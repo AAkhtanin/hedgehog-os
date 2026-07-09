@@ -5,7 +5,7 @@ from typing import Any, Mapping
 
 RUN_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01"
 REPORT_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01"
-SLICE_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01_slice_b"
+SLICE_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01_slice_c"
 TRANSACTION_ID = "tri_airline_purchase:PAR-LIM:2026-08-12:client_001"
 
 STATUS_PASS = "PASS"
@@ -22,6 +22,7 @@ REQUIRED_SECTIONS = (
     "[CLIENT ROOT VIEW]",
     "[AIRLINE ROOT VIEW]",
     "[BANK ROOT VIEW]",
+    "[AIRLINEROOT OFFER HOLD SANDBOX]",
     "[MOCK PROTOCOL FIXTURES]",
     "[SHARED TRANSACTION LEDGER]",
     "[ROOT BOUNDARY MATRIX]",
@@ -43,6 +44,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
     travel_intent = _travel_intent()
     sealed_refs = _sealed_refs()
     mock_protocol_fixtures = _mock_protocol_fixtures(travel_intent, sealed_refs)
+    airline_offer_hold_sandbox = _airline_offer_hold_sandbox(mock_protocol_fixtures)
     shared_transaction_ledger = _shared_transaction_ledger(mock_protocol_fixtures)
     future_semantic_actor_topology = _future_semantic_actor_topology()
     future_vertical_fractal_map = _future_vertical_fractal_map()
@@ -51,6 +53,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         shared_transaction_ledger,
         future_semantic_actor_topology,
         future_vertical_fractal_map,
+        airline_offer_hold_sandbox,
     )
 
     report: dict[str, Any] = {
@@ -66,6 +69,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         "client_root_view": _client_root_view(participants, mock_protocol_fixtures),
         "airline_root_view": _airline_root_view(participants, mock_protocol_fixtures),
         "bank_root_view": _bank_root_view(participants, mock_protocol_fixtures),
+        "airline_offer_hold_sandbox": airline_offer_hold_sandbox,
         "mock_protocol_fixtures": mock_protocol_fixtures,
         "shared_transaction_ledger": shared_transaction_ledger,
         "root_boundary_matrix": _root_boundary_matrix(),
@@ -77,7 +81,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         "counter_table": counter_table,
         "non_claims": _non_claims(),
         "validation_errors": (),
-        "next_gate": "Slice C deterministic AirlineRoot Offer/Order sandbox",
+        "next_gate": "Slice D deterministic BankRoot payment authorization sandbox",
     }
     errors = _validate_report(report)
     if errors:
@@ -114,6 +118,22 @@ def render_tri_party_airline_ticket_purchase_mock_e2e_v01(
         "",
         "[BANK ROOT VIEW]",
         _format_view(report["bank_root_view"]),
+        "",
+        "[AIRLINEROOT OFFER HOLD SANDBOX]",
+        "AirlineRoot received offer request.",
+        "AirlineRoot checked mock inventory.",
+        "AirlineRoot checked mock fare.",
+        "AirlineRoot checked baggage rule.",
+        "AirlineRoot checked offer TTL.",
+        "AirlineRoot created OfferResponse.",
+        "AirlineRoot created AirlineOfferHoldCommitPacket.",
+        "AirlineRoot created OfferHoldReceipt.",
+        "OfferHoldReceipt is evidence only.",
+        "OfferHoldReceipt is not payment permission.",
+        "OfferHoldReceipt is not ticket permission.",
+        "No real airline API was called.",
+        "No real booking was created.",
+        f"sandbox_status: {report['airline_offer_hold_sandbox']['sandbox_status']}",
         "",
         "[MOCK PROTOCOL FIXTURES]",
     ]
@@ -379,6 +399,25 @@ def _mock_protocol_fixtures(
             "offer_candidates_count": 1,
             "selected_candidate_ref": offer_id,
         },
+        "AirlineOfferHoldCommitPacketV01": {
+            "packet_id": "airline_offer_hold_commit_packet:mock_airline_al:001",
+            "transaction_id": TRANSACTION_ID,
+            "created_by": "airline_root",
+            "root_created": True,
+            "allowed_root_id": AIRLINE_ROOT_ID,
+            "allowed_action": "mock_offer_hold",
+            "allowed_offer_id": offer_id,
+            "allowed_passenger_ref": passenger["passenger_ref"],
+            "allowed_amount": amount,
+            "currency": currency,
+            "ttl_seconds": 900,
+            "idempotency_key": "idem:airline_offer_hold:001",
+            "evidence_only_downstream": True,
+            "payment_permission_created": False,
+            "ticket_permission_created": False,
+            "real_airline_api_allowed": False,
+            "real_booking_allowed": False,
+        },
         "AirlineOfferHoldReceiptV01": {
             "receipt_id": "offer_hold_receipt:mock_airline_al:001",
             "transaction_id": TRANSACTION_ID,
@@ -461,6 +500,42 @@ def _mock_protocol_fixtures(
     }
 
 
+def _airline_offer_hold_sandbox(
+    fixtures: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    offer_response = fixtures["AirlineOfferResponseV01"]
+    offer_hold_packet = fixtures["AirlineOfferHoldCommitPacketV01"]
+    offer_hold_receipt = fixtures["AirlineOfferHoldReceiptV01"]
+    return {
+        "sandbox_id": "airline_offer_hold_sandbox_v01",
+        "transaction_id": TRANSACTION_ID,
+        "airline_root_id": AIRLINE_ROOT_ID,
+        "sandbox_status": STATUS_PASS,
+        "offer_request_validated": True,
+        "mock_inventory_checked": True,
+        "mock_fare_checked": True,
+        "baggage_rule_checked": True,
+        "offer_ttl_checked": True,
+        "selected_offer_id": offer_response["selected_candidate_ref"],
+        "offer_response_created": True,
+        "offer_hold_commit_packet_created": True,
+        "offer_hold_commit_packet_created_by": "airline_root",
+        "offer_hold_commit_packet_root_created": True,
+        "offer_hold_commit_packet_validated": True,
+        "offer_hold_commit_packet_ref": offer_hold_packet["packet_id"],
+        "offer_hold_receipt_created": True,
+        "offer_hold_receipt_validated": True,
+        "offer_hold_receipt_ref": offer_hold_receipt["receipt_id"],
+        "offer_hold_receipt_evidence_only": True,
+        "offer_hold_receipt_payment_permission_created": False,
+        "offer_hold_receipt_ticket_permission_created": False,
+        "real_airline_api_called": False,
+        "real_booking_created": False,
+        "real_ticket_issued": False,
+        "real_world_effects_count": 0,
+    }
+
+
 def _shared_transaction_ledger(
     fixtures: Mapping[str, Mapping[str, Any]],
 ) -> tuple[dict[str, Any], ...]:
@@ -480,8 +555,18 @@ def _shared_transaction_ledger(
         (AIRLINE_ROOT_ID, "mock_pnr_fixture_created", "MockPNRV01", True),
         (CLIENT_ROOT_ID, "final_shared_summary_fixture_created", "TriPartyAirlineFinalSummaryV01", True),
     )
-    return tuple(
-        {
+    sandbox_stage_events = {
+        "airline_offer_request_fixture_created",
+        "airline_offer_candidate_fixture_created",
+        "airline_offer_response_fixture_created",
+        "airline_offer_hold_receipt_fixture_created",
+    }
+    ledger_rows = []
+    for index, (actor_root_id, event_type, artifact_name, evidence_only) in enumerate(
+        rows,
+        start=1,
+    ):
+        row = {
             "ledger_index": index,
             "transaction_id": TRANSACTION_ID,
             "actor_root_id": actor_root_id,
@@ -491,9 +576,11 @@ def _shared_transaction_ledger(
             "authority_created": False,
             "real_world_effects_count": 0,
         }
-        for index, (actor_root_id, event_type, artifact_name, evidence_only)
-        in enumerate(rows, start=1)
-    )
+        if event_type in sandbox_stage_events:
+            row["sandbox_stage"] = "airline_offer_hold_sandbox"
+            row["validated_by_airline_root"] = True
+        ledger_rows.append(row)
+    return tuple(ledger_rows)
 
 
 def _artifact_ref(artifact_name: str, fixtures: Mapping[str, Mapping[str, Any]]) -> str:
@@ -502,6 +589,7 @@ def _artifact_ref(artifact_name: str, fixtures: Mapping[str, Mapping[str, Any]])
         return f"artifact_ref:{artifact_name}"
     return str(
         fixture.get("receipt_id")
+        or fixture.get("packet_id")
         or fixture.get("response_id")
         or fixture.get("offer_id")
         or fixture.get("approval_id")
@@ -753,6 +841,7 @@ def _counter_table(
     ledger: tuple[dict[str, Any], ...],
     actors: tuple[dict[str, Any], ...],
     fractal_map: Mapping[str, tuple[dict[str, Any], ...]],
+    airline_offer_hold_sandbox: Mapping[str, Any],
 ) -> dict[str, int]:
     fractal_cells = tuple(
         cell for cells in fractal_map.values() for cell in cells
@@ -766,6 +855,59 @@ def _counter_table(
         "shared_ledger_entry_count": len(ledger),
         "offer_candidates_created_count": 1,
         "offer_hold_receipt_fixture_count": 1,
+        "airline_offer_hold_sandbox_invoked_count": 1,
+        "airline_offer_request_validated_count": int(
+            airline_offer_hold_sandbox["offer_request_validated"],
+        ),
+        "mock_inventory_checked_count": int(
+            airline_offer_hold_sandbox["mock_inventory_checked"],
+        ),
+        "mock_fare_checked_count": int(
+            airline_offer_hold_sandbox["mock_fare_checked"],
+        ),
+        "baggage_rule_checked_count": int(
+            airline_offer_hold_sandbox["baggage_rule_checked"],
+        ),
+        "offer_ttl_checked_count": int(
+            airline_offer_hold_sandbox["offer_ttl_checked"],
+        ),
+        "airline_offer_response_created_count": int(
+            airline_offer_hold_sandbox["offer_response_created"],
+        ),
+        "airline_offer_hold_commit_packet_created_count": int(
+            airline_offer_hold_sandbox["offer_hold_commit_packet_created"],
+        ),
+        "airline_offer_hold_commit_packet_created_by_airline_root_count": int(
+            airline_offer_hold_sandbox["offer_hold_commit_packet_created_by"]
+            == "airline_root",
+        ),
+        "airline_offer_hold_commit_packet_created_by_client_root_count": int(
+            airline_offer_hold_sandbox["offer_hold_commit_packet_created_by"]
+            == "client_root",
+        ),
+        "airline_offer_hold_commit_packet_created_by_bank_root_count": int(
+            airline_offer_hold_sandbox["offer_hold_commit_packet_created_by"]
+            == "bank_root",
+        ),
+        "airline_offer_hold_commit_packet_validated_count": int(
+            airline_offer_hold_sandbox["offer_hold_commit_packet_validated"],
+        ),
+        "airline_offer_hold_receipt_created_count": int(
+            airline_offer_hold_sandbox["offer_hold_receipt_created"],
+        ),
+        "airline_offer_hold_receipt_validated_count": int(
+            airline_offer_hold_sandbox["offer_hold_receipt_validated"],
+        ),
+        "offer_hold_receipt_payment_permission_created_count": int(
+            airline_offer_hold_sandbox[
+                "offer_hold_receipt_payment_permission_created"
+            ],
+        ),
+        "offer_hold_receipt_ticket_permission_created_count": int(
+            airline_offer_hold_sandbox[
+                "offer_hold_receipt_ticket_permission_created"
+            ],
+        ),
         "client_purchase_approval_evidence_fixture_count": 1,
         "bank_payment_intent_fixture_count": 1,
         "bank_payment_consent_fixture_count": 1,
@@ -794,6 +936,7 @@ def _counter_table(
         "real_airline_api_called_count": 0,
         "real_bank_api_called_count": 0,
         "real_payment_executed_count": 0,
+        "real_booking_created_count": 0,
         "real_ticket_issued_count": 0,
         "real_travel_booking_created_count": 0,
         "provider_called_count": 0,
@@ -824,6 +967,8 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     errors: tuple[str, ...] = ()
     ledger = report["shared_transaction_ledger"]
     counters = report["counter_table"]
+    sandbox = report["airline_offer_hold_sandbox"]
+    fixtures = report["mock_protocol_fixtures"]
 
     if report.get("transaction_id") != TRANSACTION_ID:
         errors += ("transaction_id_mismatch",)
@@ -834,9 +979,10 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     transaction_ids.update(row["transaction_id"] for row in ledger)
     transaction_ids.update(
         fixture["transaction_id"]
-        for fixture in report["mock_protocol_fixtures"].values()
+        for fixture in fixtures.values()
         if "transaction_id" in fixture
     )
+    transaction_ids.add(sandbox.get("transaction_id"))
     if transaction_ids != {TRANSACTION_ID}:
         errors += ("transaction_id_set_mismatch",)
     if {row["transaction_id"] for row in ledger} != {TRANSACTION_ID}:
@@ -848,6 +994,63 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     for view_key in ("client_root_view", "airline_root_view", "bank_root_view"):
         if not report.get(view_key):
             errors += (f"missing_root_view:{view_key}",)
+    if sandbox.get("sandbox_status") != STATUS_PASS:
+        errors += ("airline_offer_hold_sandbox_not_pass",)
+    if sandbox.get("transaction_id") != TRANSACTION_ID:
+        errors += ("airline_offer_hold_sandbox_transaction_id_mismatch",)
+    for key in (
+        "offer_request_validated",
+        "mock_inventory_checked",
+        "mock_fare_checked",
+        "baggage_rule_checked",
+        "offer_ttl_checked",
+        "offer_response_created",
+        "offer_hold_commit_packet_created",
+        "offer_hold_commit_packet_root_created",
+        "offer_hold_commit_packet_validated",
+        "offer_hold_receipt_created",
+        "offer_hold_receipt_validated",
+        "offer_hold_receipt_evidence_only",
+    ):
+        if sandbox.get(key) is not True:
+            errors += (f"airline_offer_hold_sandbox_flag_false:{key}",)
+    if sandbox.get("offer_hold_commit_packet_created_by") != "airline_root":
+        errors += ("offer_hold_commit_packet_creator_not_airline_root",)
+    for key in (
+        "offer_hold_receipt_payment_permission_created",
+        "offer_hold_receipt_ticket_permission_created",
+        "real_airline_api_called",
+        "real_booking_created",
+        "real_ticket_issued",
+    ):
+        if sandbox.get(key) is not False:
+            errors += (f"airline_offer_hold_sandbox_flag_true:{key}",)
+    if sandbox.get("real_world_effects_count") != 0:
+        errors += ("airline_offer_hold_sandbox_effects_nonzero",)
+
+    offer_hold_packet = fixtures["AirlineOfferHoldCommitPacketV01"]
+    if offer_hold_packet.get("created_by") != "airline_root":
+        errors += ("offer_hold_packet_fixture_creator_not_airline_root",)
+    if offer_hold_packet.get("root_created") is not True:
+        errors += ("offer_hold_packet_fixture_not_root_created",)
+    if offer_hold_packet.get("allowed_root_id") != AIRLINE_ROOT_ID:
+        errors += ("offer_hold_packet_fixture_wrong_root",)
+    for key in (
+        "payment_permission_created",
+        "ticket_permission_created",
+        "real_airline_api_allowed",
+        "real_booking_allowed",
+    ):
+        if offer_hold_packet.get(key) is not False:
+            errors += (f"offer_hold_packet_forbidden_flag_true:{key}",)
+
+    offer_hold_receipt = fixtures["AirlineOfferHoldReceiptV01"]
+    if offer_hold_receipt.get("evidence_only") is not True:
+        errors += ("offer_hold_receipt_not_evidence_only",)
+    if offer_hold_receipt.get("payment_permission_created") is not False:
+        errors += ("offer_hold_receipt_payment_permission_created",)
+    if offer_hold_receipt.get("ticket_permission_created") is not False:
+        errors += ("offer_hold_receipt_ticket_permission_created",)
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["root_boundary_matrix"]):
         errors += ("root_boundary_violation",)
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["receipt_boundary_matrix"]):
@@ -914,6 +1117,7 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         "real_airline_api_called_count",
         "real_bank_api_called_count",
         "real_payment_executed_count",
+        "real_booking_created_count",
         "real_ticket_issued_count",
         "real_travel_booking_created_count",
         "provider_called_count",
@@ -933,6 +1137,22 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         ("shared_ledger_entry_count", 14),
         ("offer_candidates_created_count", 1),
         ("offer_hold_receipt_fixture_count", 1),
+        ("airline_offer_hold_sandbox_invoked_count", 1),
+        ("airline_offer_request_validated_count", 1),
+        ("mock_inventory_checked_count", 1),
+        ("mock_fare_checked_count", 1),
+        ("baggage_rule_checked_count", 1),
+        ("offer_ttl_checked_count", 1),
+        ("airline_offer_response_created_count", 1),
+        ("airline_offer_hold_commit_packet_created_count", 1),
+        ("airline_offer_hold_commit_packet_created_by_airline_root_count", 1),
+        ("airline_offer_hold_commit_packet_created_by_client_root_count", 0),
+        ("airline_offer_hold_commit_packet_created_by_bank_root_count", 0),
+        ("airline_offer_hold_commit_packet_validated_count", 1),
+        ("airline_offer_hold_receipt_created_count", 1),
+        ("airline_offer_hold_receipt_validated_count", 1),
+        ("offer_hold_receipt_payment_permission_created_count", 0),
+        ("offer_hold_receipt_ticket_permission_created_count", 0),
         ("client_purchase_approval_evidence_fixture_count", 1),
         ("bank_payment_intent_fixture_count", 1),
         ("bank_payment_consent_fixture_count", 1),

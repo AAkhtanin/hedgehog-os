@@ -565,7 +565,189 @@ def test_airline_slice_e_fail_closed_on_client_issuing_ticket() -> None:
     assert "client_purchase_orchestration_flag_true:client_root_issued_ticket" in errors
 
 
-def test_airline_slice_e_source_import_boundary() -> None:
+def test_airline_slice_f_ticket_issue_mock_corridor_passes() -> None:
+    report = _report()
+    corridor = report["airline_ticket_issue_mock_corridor"]
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert corridor["corridor_status"] == runner.STATUS_PASS
+    assert corridor["offer_hold_receipt_observed"] is True
+    assert corridor["client_purchase_approval_evidence_observed"] is True
+    assert corridor["payment_authorization_receipt_observed"] is True
+    assert corridor["payment_status_receipt_observed"] is True
+    assert corridor["selected_offer_match_validated"] is True
+    assert corridor["amount_currency_match_validated"] is True
+
+
+def test_airline_slice_f_airline_root_creates_ticket_issue_packet() -> None:
+    report = _report()
+    corridor = report["airline_ticket_issue_mock_corridor"]
+    packet = report["mock_protocol_fixtures"]["AirlineTicketIssueCommitPacketV01"]
+    counters = report["counter_table"]
+
+    assert corridor["airline_ticket_issue_commit_packet_created_by"] == "airline_root"
+    assert packet["created_by"] == "airline_root"
+    assert packet["root_created"] is True
+    assert counters["airline_ticket_issue_commit_packet_created_count"] == 1
+    assert (
+        counters["airline_ticket_issue_commit_packet_created_by_airline_root_count"]
+        == 1
+    )
+    assert (
+        counters["airline_ticket_issue_commit_packet_created_by_client_root_count"]
+        == 0
+    )
+    assert (
+        counters["airline_ticket_issue_commit_packet_created_by_bank_root_count"]
+        == 0
+    )
+    assert corridor["airline_ticket_issue_commit_packet_validated"] is True
+
+
+def test_airline_slice_f_order_ticket_pnr_receipts_created_as_mock_evidence() -> None:
+    report = _report()
+    corridor = report["airline_ticket_issue_mock_corridor"]
+    ticket_receipt = report["mock_protocol_fixtures"]["MockTicketReceiptV01"]
+    mock_pnr = report["mock_protocol_fixtures"]["MockPNRV01"]
+
+    assert corridor["airline_order_created_receipt_created"] is True
+    assert corridor["airline_order_created_receipt_validated"] is True
+    assert corridor["mock_ticket_receipt_created"] is True
+    assert corridor["mock_ticket_receipt_validated"] is True
+    assert corridor["mock_pnr_created"] is True
+    assert corridor["mock_pnr_validated"] is True
+    assert corridor["mock_ticket_receipt_evidence_only"] is True
+    assert ticket_receipt["evidence_only"] is True
+    assert ticket_receipt["real_ticket"] is False
+    assert mock_pnr["real_booking"] is False
+
+
+def test_airline_slice_f_receipts_do_not_cross_authorize_ticket_or_payment() -> None:
+    report = _report()
+    counters = report["counter_table"]
+    ticket_receipt = report["mock_protocol_fixtures"]["MockTicketReceiptV01"]
+
+    assert counters["payment_authorization_receipt_created_ticket_count"] == 0
+    assert counters["client_purchase_approval_created_ticket_count"] == 0
+    assert counters["offer_hold_receipt_created_ticket_count"] == 0
+    assert counters["airline_root_authorized_payment_count"] == 0
+    assert ticket_receipt["payment_created"] is False
+
+
+def test_airline_slice_f_client_summary_gets_mock_ticket_evidence_only() -> None:
+    summary = _report()["mock_protocol_fixtures"]["ClientFinalTravelSummaryV01"]
+
+    assert summary["mock_ticket_receipt_id"] == "mock_ticket_receipt:mock_airline_al:001"
+    assert (
+        summary["current_client_status"]
+        == "mock_ticket_evidence_received_no_real_travel_booking"
+    )
+    assert summary["mock_ticket_evidence_received"] is True
+    assert summary["ticket_issued"] is False
+    assert summary["real_ticket_issued"] is False
+    assert summary["real_booking_created"] is False
+
+
+def test_airline_slice_f_no_real_airline_gds_ticket_booking_or_payment() -> None:
+    counters = _report()["counter_table"]
+
+    assert counters["airline_root_called_real_airline_api_count"] == 0
+    assert counters["airline_root_called_real_gds_api_count"] == 0
+    assert counters["real_ticket_issued_count"] == 0
+    assert counters["real_booking_created_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["real_settlement_executed_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_airline_slice_f_preserves_slice_b_c_d_e_boundaries() -> None:
+    report = _report()
+    ledger = report["shared_transaction_ledger"]
+    ticket_rows = [
+        row
+        for row in ledger
+        if row.get("corridor_stage") == "airline_ticket_issue_mock_corridor"
+    ]
+
+    assert set(report["participants"]) == {"ClientRoot", "AirlineRoot", "BankRoot"}
+    assert {row["transaction_id"] for row in ledger} == {runner.TRANSACTION_ID}
+    assert report["airline_offer_hold_sandbox"]["sandbox_status"] == runner.STATUS_PASS
+    assert (
+        report["bank_payment_authorization_sandbox"]["sandbox_status"]
+        == runner.STATUS_PASS
+    )
+    assert (
+        report["client_purchase_orchestration"]["orchestration_status"]
+        == runner.STATUS_PASS
+    )
+    assert (
+        report["airline_offer_hold_sandbox"]["offer_hold_receipt_evidence_only"]
+        is True
+    )
+    assert (
+        report["bank_payment_authorization_sandbox"][
+            "payment_authorization_receipt_evidence_only"
+        ]
+        is True
+    )
+    assert (
+        report["client_purchase_orchestration"][
+            "client_purchase_approval_evidence_evidence_only"
+        ]
+        is True
+    )
+    assert len(ticket_rows) == 4
+    assert all(row["validated_by_airline_root"] is True for row in ticket_rows)
+    assert all(
+        actor["executed_in_slice_b"] is False
+        for actor in report["future_semantic_actor_topology"]
+    )
+    assert all(
+        cell["executed_in_slice_b"] is False
+        for cells in report["future_vertical_fractal_map"].values()
+        for cell in cells
+    )
+
+
+def test_airline_slice_f_renderer_section() -> None:
+    rendered = runner.render_tri_party_airline_ticket_purchase_mock_e2e_v01(_report())
+
+    assert "[AIRLINEROOT TICKET ISSUE MOCK CORRIDOR]" in rendered
+    assert "AirlineRoot created AirlineTicketIssueCommitPacket" in rendered
+    assert "MockTicketReceipt is evidence only" in rendered
+    assert "not a real ticket" in rendered
+    assert "no real airline api" in rendered.lower()
+    assert "no real ticket was issued" in rendered.lower()
+    assert "no real booking was created" in rendered.lower()
+    assert "real_ticket_issued_count: 0" in rendered
+    assert "real_booking_created_count: 0" in rendered
+
+
+def test_airline_slice_f_fail_closed_on_wrong_ticket_packet_creator() -> None:
+    report = deepcopy(_report())
+
+    report["airline_ticket_issue_mock_corridor"][
+        "airline_ticket_issue_commit_packet_created_by"
+    ] = "bank_root"
+    errors = runner._validate_report(report)
+
+    assert "airline_ticket_issue_packet_creator_not_airline_root" in errors
+
+
+def test_airline_slice_f_fail_closed_on_mock_ticket_becoming_real_ticket() -> None:
+    report = deepcopy(_report())
+
+    report["airline_ticket_issue_mock_corridor"][
+        "mock_ticket_receipt_real_ticket"
+    ] = True
+    errors = runner._validate_report(report)
+
+    assert (
+        "airline_ticket_issue_corridor_flag_true:mock_ticket_receipt_real_ticket"
+    ) in errors
+
+
+def test_airline_slice_f_source_import_boundary() -> None:
     source = Path(runner.__file__).read_text()
 
     assert "google.genai" not in source
@@ -594,5 +776,7 @@ def test_airline_slice_e_source_import_boundary() -> None:
         ("PaymentStatusReceipt grants", " ticket"),
         ("ClientPurchaseApprovalEvidence grants", " payment"),
         ("ClientPurchaseApprovalEvidence grants", " ticket"),
+        ("MockTicketReceipt grants", " payment"),
+        ("MockTicketReceipt is", " real ticket"),
     ):
         assert left + right not in source

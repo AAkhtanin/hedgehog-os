@@ -1,0 +1,120 @@
+audit_id: auditor_non_action_direct_reuse_positive_control_v01
+audit_status: PASS
+audited_layer: Non-Action Direct Reuse Positive Control v0.1 deterministic runner
+base_commit: f01ae20
+source_preflight: docs/non_action_direct_reuse_positive_control_preflight_v01.md
+source_model_commit: f01ae20
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_world_effects_count: 0
+
+scope:
+- Deterministic runner plus audit only.
+- No human walkthrough created.
+- No live provider path used.
+- No Gemini, provider, or network call.
+- No secret access.
+- No external API or connector call.
+- No payment, shipment release, ticket issue, ActionCommitPacket, receipt, FinalOutput, or effect.
+- Airline implementation was not started.
+- Bank B Hedgehog-native work was not started.
+- NeedleFactory, Middle Factory, Marennya, and UP were not started.
+
+observed_repository_base:
+- git status --short --untracked-files=all before editing: clean.
+- git --no-pager log --oneline --max-count=15 latest: f01ae20 Add Non-Action Direct Reuse local model.
+- git rev-parse --short HEAD: f01ae20.
+
+validation_commands_recorded:
+- python3 -m py_compile hedgehog/non_action_reuse_positive_control.py
+  result: PASS
+- python3 -m py_compile demo/run_non_action_direct_reuse_positive_control_v01.py
+  result: PASS
+- python3 -m demo.run_non_action_direct_reuse_positive_control_v01
+  result: PASS
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_non_action_reuse_positive_control.py
+  result: PASS
+  tests_passed: 14
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_non_action_direct_reuse_positive_control_v01_runner.py
+  result: PASS
+  tests_passed: 9
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_non_action_reuse_positive_control.py tests/test_non_action_direct_reuse_positive_control_v01_runner.py tests/test_drs_v02_local_lineage_reuse.py tests/test_avf_v02_after_local_drs_v02.py tests/test_action_commit_packet_contract_corridor_v02.py
+  result: PASS
+  tests_passed: 138
+- git diff --check
+  result: PASS
+- positive grep over runner, runner tests, and audit log
+  result: PASS
+- forbidden grep over runner, runner tests, and audit log
+  result: PASS
+
+required_findings:
+- finding_runner_final_status_pass: PASS
+- finding_model_report_validated: PASS
+- finding_scenarios_total_6: PASS
+- finding_scenarios_passed_6: PASS
+- finding_positive_informational_direct_reuse_allowed: PASS
+- finding_root_shortcut_allowed_required: PASS
+- finding_root_created_informational_artifact: PASS
+- finding_architect_skipped_for_safe_information: PASS
+- finding_executor_skipped_for_safe_information: PASS
+- finding_heavy_pipeline_skipped_for_safe_information: PASS
+- finding_payment_reuse_blocked: PASS
+- finding_shipment_reuse_blocked: PASS
+- finding_ticket_purchase_reuse_blocked: PASS
+- finding_action_commit_packet_creation_blocked: PASS
+- finding_receipt_creation_blocked: PASS
+- finding_stale_policy_summary_context_only: PASS
+- finding_high_score_without_root_shortcut_blocked: PASS
+- finding_quarantine_near_direct_reuse_blocked_by_focused_model_test: PASS
+- finding_drs_hit_not_truth: PASS
+- finding_avf_score_not_permission: PASS
+- finding_reuse_score_not_authority: PASS
+- finding_semantic_similarity_not_authority: PASS
+- finding_root_remains_final_authority: PASS
+- finding_provider_network_gemini_zero: PASS
+- finding_no_payment_shipment_ticket_action_receipt_effects: PASS
+- finding_airline_not_started: PASS
+
+counter_summary:
+- scenarios_total: 6
+- scenarios_passed: 6
+- direct_reuse_allowed_count: 1
+- non_action_direct_reuse_allowed_count: 1
+- root_shortcut_allowed_count: 1
+- root_final_from_reuse_created_count: 1
+- architect_skipped_for_safe_informational_reuse_count: 1
+- executor_skipped_for_safe_informational_reuse_count: 1
+- heavy_pipeline_skipped_count: 1
+- payment_direct_reuse_allowed_count: 0
+- shipment_direct_reuse_allowed_count: 0
+- ticket_purchase_direct_reuse_allowed_count: 0
+- action_permission_granted_count: 0
+- action_commit_packet_created_count: 0
+- receipt_created_count: 0
+- payment_executed_count: 0
+- shipment_released_count: 0
+- ticket_issued_count: 0
+- avf_score_used_as_authority_count: 0
+- drs_hit_used_as_authority_count: 0
+- reuse_gate_used_as_root_count: 0
+- root_bypass_count: 0
+- provider_called_count: 0
+- network_used_count: 0
+- gemini_called_count: 0
+- real_world_effects_count: 0
+- root_final_authority_preserved_count: 6
+
+interpretation:
+The deterministic runner observes the Patch 1 six-scenario report. It proves
+that a fresh Root-approved informational policy summary can be reused for an
+informational answer only, through RootShortcutAllowed and a Root-created
+informational reuse artifact. Architect, Executor, and the heavy pipeline are
+skipped only for that safe informational case.
+
+The same memory cannot authorize payment, shipment release, ticket purchase,
+permission, receipt, ActionCommitPacket, or any real-world action. Stale memory
+is context-only. High score without RootShortcutAllowed is blocked. Quarantine
+near direct reuse is blocked by the focused Patch 1 model test.
+
+audit_conclusion: PASS

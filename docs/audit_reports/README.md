@@ -7,6 +7,28 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_non_action_direct_reuse_positive_control_v01.log`
+  - Audit status: PASS.
+  - Audits the Non-Action Direct Reuse Positive Control v0.1 deterministic
+    runner.
+  - Confirms six scenarios, one informational direct reuse, and a
+    Root-created informational reuse artifact.
+  - Confirms RootShortcutGate / RootShortcutAllowed is required.
+  - Confirms payment direct reuse, shipment direct reuse, ticket purchase
+    direct reuse, ActionCommitPacket creation, and receipt creation are
+    blocked.
+  - Confirms stale policy summary remains context-only and high score without
+    RootShortcutAllowed is blocked.
+  - Confirms quarantine-near direct reuse is blocked by focused model coverage.
+  - Confirms DRS hit is not truth, AVF score is not permission, ReuseScore is
+    not authority, semantic similarity is not authority, and Root remains final
+    authority.
+  - Confirms deterministic runner calls no Gemini/provider/network lane and
+    creates no payment, shipment release, ticket issue, ActionCommitPacket,
+    receipt, FinalOutput, connector/API call, or real-world effect.
+  - Non-claims: not production, not public auditor final package, no real token
+    benchmark, and no production cost savings claim.
+
 - `auditor_full_wow_v1_2_live_action_corridor_integrated_organism_real_run_v01.log`
   - Audit status: PASS.
   - Audits the Full WOW v1.2 live action corridor integrated organism real

@@ -1995,6 +1995,39 @@ The next baseline extension is Airline demo preflight only after the
 post-Action Corridor boundary document is accepted. Airline demo is not
 implemented.
 
+Non-Action Direct Reuse Positive Control v0.1 is PASS as an explicit shortcut
+proof.
+
+Shortcut evidence:
+
+- Preflight:
+  `docs/non_action_direct_reuse_positive_control_preflight_v01.md`.
+- Model/evaluator:
+  `hedgehog/non_action_reuse_positive_control.py`.
+- Runner:
+  `demo/run_non_action_direct_reuse_positive_control_v01.py`.
+- Audit:
+  `docs/audit_reports/auditor_non_action_direct_reuse_positive_control_v01.log`.
+
+Baseline interpretation:
+
+- The full pipeline remains the maximum cognitive loop.
+- Safe informational reuse can skip the heavy pipeline with
+  RootShortcutAllowed.
+- Root creates informational reuse artifact.
+- Direct reuse for information is not direct reuse for action.
+- This complements older direct_reuse discussion by constraining this completed
+  checkpoint to non-action informational reuse.
+- Payment, shipment, ticket, ActionCommitPacket, receipt, FinalOutput,
+  connector/API, provider/network/Gemini, and real-world effects remain zero.
+- Economics-ready counters are visible:
+  `heavy_pipeline_skipped_count: 1`,
+  `architect_skipped_for_safe_informational_reuse_count: 1`, and
+  `executor_skipped_for_safe_informational_reuse_count: 1`.
+- This is still proof-of-architecture, not production.
+- No real token benchmark or production cost savings are claimed.
+- Airline tri-party preflight is the next baseline gate.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

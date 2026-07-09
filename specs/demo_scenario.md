@@ -1594,6 +1594,50 @@ Scenario status:
 Next planned domain: Airline demo preflight after the post-Action Corridor
 boundary is accepted. Airline demo is not implemented.
 
+## Non-Action Direct Reuse Positive Control Scenario Checkpoint
+
+Non-Action Direct Reuse Positive Control v0.1 PASS adds an informational reuse
+scenario to the Supplier Payment / Shipment Release Review baseline.
+
+Scenario evidence:
+
+- Preflight:
+  `docs/non_action_direct_reuse_positive_control_preflight_v01.md`.
+- Model/evaluator:
+  `hedgehog/non_action_reuse_positive_control.py`.
+- Runner:
+  `demo/run_non_action_direct_reuse_positive_control_v01.py`.
+- Audit:
+  `docs/audit_reports/auditor_non_action_direct_reuse_positive_control_v01.log`.
+
+Scenario status:
+
+- A prior Root-approved informational policy summary says Supplier B remains
+  blocked, shipment SH-2042 remains held, and Supplier A mock receipt is
+  evidence only.
+- That summary can be reused as an informational answer only.
+- RootShortcutGate is required.
+- Root creates informational reuse artifact.
+- Architect, Executor, and the heavy pipeline are skipped for the safe
+  informational case.
+- `old_memory_can_help_but_cannot_act`.
+- Supplier B remains blocked.
+- Shipment remains held.
+- Supplier A receipt evidence-only summary does not create permission.
+- Payment direct reuse is blocked.
+- Shipment direct reuse is blocked.
+- Ticket purchase direct reuse is blocked.
+- ActionCommitPacket creation is blocked.
+- Receipt creation is blocked.
+- DRS hit is not truth.
+- AVF score is not permission.
+- ReuseScore is not authority.
+- Semantic similarity is not authority.
+- Root remains final authority.
+- Economics-ready counters are visible, but no real token benchmark or
+  production cost savings are claimed.
+- Airline tri-party preflight is next; Airline demo is not implemented.
+
 ## Exclusions
 
 - No real external APIs.

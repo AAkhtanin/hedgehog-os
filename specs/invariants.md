@@ -1076,3 +1076,38 @@ Full WOW v1.2 live action corridor integrated organism invariants:
   manifest / hash-chain / signature work.
 - cryptography is not implemented.
 - Root remains final authority.
+
+Non-Action Direct Reuse Positive Control v0.1 invariants:
+
+- Checkpoint status: PASS.
+- Audit:
+  docs/audit_reports/auditor_non_action_direct_reuse_positive_control_v01.log.
+- Direct reuse for information is not direct reuse for action.
+- Informational answer is not permission.
+- RootShortcutGate is not Root.
+- RootShortcutGate may allow informational shortcut only.
+- Root creates informational reuse artifact.
+- ReuseGate does not create answer.
+- DRS does not create answer.
+- AVF does not create answer.
+- `old_memory_can_help_but_cannot_act`.
+- Old memory can help but cannot act.
+- Prior Root-approved policy summary is not future ActionCommitPacket.
+- Old receipt is not permission.
+- Old ticket receipt is not future ticket permission.
+- Old quote is not ticket permission.
+- ReuseScore is not authority.
+- Semantic similarity is not authority.
+- DRS hit is not truth.
+- Payment direct reuse is blocked.
+- Shipment direct reuse is blocked.
+- Ticket purchase direct reuse is blocked.
+- ActionCommitPacket creation is blocked.
+- Receipt creation is blocked.
+- Stale policy summary is context-only.
+- High score without RootShortcutAllowed is blocked.
+- Quarantine-near direct reuse is blocked.
+- Direct reuse saves compute; it does not transfer authority.
+- Economics-ready counters may be exposed for future benchmark work, but no
+  real token benchmark or production cost savings are claimed.
+- Root remains final authority.

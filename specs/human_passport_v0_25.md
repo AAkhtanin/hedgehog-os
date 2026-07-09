@@ -4700,6 +4700,55 @@ Interpretation:
 - This remains proof-of-architecture, not production, and not public auditor
   final package.
 
+## 20.2 Non-Action Direct Reuse Positive Control v0.1 Checkpoint
+
+Non-Action Direct Reuse Positive Control v0.1 PASS is the economics-ready
+informational reuse checkpoint before Airline tri-party preflight.
+
+Evidence:
+
+- Preflight:
+  `docs/non_action_direct_reuse_positive_control_preflight_v01.md`.
+- Model/evaluator:
+  `hedgehog/non_action_reuse_positive_control.py`.
+- Runner:
+  `demo/run_non_action_direct_reuse_positive_control_v01.py`.
+- Audit:
+  `docs/audit_reports/auditor_non_action_direct_reuse_positive_control_v01.log`.
+- Explainer:
+  `docs/non_action_direct_reuse_positive_control_explainer_v01.md`.
+
+Interpretation:
+
+- Memory can reduce compute for safe informational questions.
+- Memory cannot authorize action.
+- Direct reuse for information is not direct reuse for action.
+- Informational answer is not permission.
+- `old_memory_can_help_but_cannot_act`.
+- RootShortcutGate may allow an informational shortcut only.
+- Root creates informational reuse artifact.
+- ReuseGate does not create answer.
+- DRS does not create answer.
+- AVF does not create answer.
+- Prior Root-approved policy summary is not future ActionCommitPacket.
+- Old receipt is not permission.
+- Old ticket receipt is not future ticket permission.
+- Old quote is not ticket permission.
+- ReuseScore is not authority.
+- Semantic similarity is not authority.
+- DRS hit is not truth.
+- Root remains final authority.
+- Any action-like request must route to validation, Root, and the appropriate
+  action corridor, not direct informational reuse.
+- Economics-ready counters include `heavy_pipeline_skipped_count: 1`,
+  `architect_skipped_for_safe_informational_reuse_count: 1`,
+  `executor_skipped_for_safe_informational_reuse_count: 1`,
+  `provider_called_count: 0`, `network_used_count: 0`,
+  `gemini_called_count: 0`, and `real_world_effects_count: 0`.
+- This layer is not a real token benchmark.
+- No production cost savings are claimed.
+- Airline tri-party preflight is the next gate.
+
 ## 21. Legacy Code Position
 
 Legacy code is donor/reference only.

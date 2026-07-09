@@ -35,6 +35,51 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
+Non-Action Direct Reuse Positive Control v0.1 — PASS.
+
+Checkpoint source:
+
+- Preflight:
+  `docs/non_action_direct_reuse_positive_control_preflight_v01.md`.
+- Model/evaluator:
+  `hedgehog/non_action_reuse_positive_control.py`.
+- Runner:
+  `demo/run_non_action_direct_reuse_positive_control_v01.py`.
+- Audit:
+  `docs/audit_reports/auditor_non_action_direct_reuse_positive_control_v01.log`.
+- Explainer:
+  `docs/non_action_direct_reuse_positive_control_explainer_v01.md`.
+- Memory may safely answer informational questions without the heavy loop, but
+  it cannot authorize actions.
+- Positive informational direct reuse is allowed only for a fresh
+  Root-approved policy summary through `RootShortcutGate`.
+- Root creates informational reuse artifact; DRS, AVF, and ReuseGate do not
+  create the answer.
+- `old_memory_can_help_but_cannot_act`.
+- Payment direct reuse, shipment direct reuse, ticket purchase direct reuse,
+  ActionCommitPacket creation, and receipt creation are blocked.
+- Stale policy summary remains context-only.
+- High score without RootShortcutAllowed is blocked.
+- Quarantine-near direct reuse is blocked by focused model coverage.
+- Economics-ready counters are visible:
+  `heavy_pipeline_skipped_count: 1`,
+  `architect_skipped_for_safe_informational_reuse_count: 1`,
+  `executor_skipped_for_safe_informational_reuse_count: 1`,
+  `provider_called_count: 0`, `network_used_count: 0`,
+  `gemini_called_count: 0`, and `real_world_effects_count: 0`.
+- This is an economics-ready signal, not a production benchmark.
+- No real token benchmark or production cost savings are claimed.
+- No payment, shipment release, ticket issue, ActionCommitPacket, receipt,
+  FinalOutput, connector/API call, provider/network/Gemini call, or real-world
+  effect occurred.
+- Next major gate: Airline tri-party preflight after this reuse checkpoint docs
+  sync.
+- Airline demo is not implemented.
+- This is not production.
+- This is not public auditor final package.
+
+Closed basis:
+
 Full WOW v1.2 live action corridor integrated organism — PASS.
 
 Checkpoint source:

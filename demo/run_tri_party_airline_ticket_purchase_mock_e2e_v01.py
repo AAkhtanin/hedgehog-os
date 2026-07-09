@@ -5,7 +5,7 @@ from typing import Any, Mapping
 
 RUN_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01"
 REPORT_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01"
-SLICE_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01_slice_d"
+SLICE_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01_slice_e"
 TRANSACTION_ID = "tri_airline_purchase:PAR-LIM:2026-08-12:client_001"
 
 STATUS_PASS = "PASS"
@@ -24,6 +24,7 @@ REQUIRED_SECTIONS = (
     "[BANK ROOT VIEW]",
     "[AIRLINEROOT OFFER HOLD SANDBOX]",
     "[BANKROOT PAYMENT AUTHORIZATION SANDBOX]",
+    "[CLIENTROOT PURCHASE ORCHESTRATION]",
     "[MOCK PROTOCOL FIXTURES]",
     "[SHARED TRANSACTION LEDGER]",
     "[ROOT BOUNDARY MATRIX]",
@@ -50,6 +51,11 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         mock_protocol_fixtures,
         sealed_refs,
     )
+    client_purchase_orchestration = _client_purchase_orchestration(
+        travel_intent,
+        sealed_refs,
+        mock_protocol_fixtures,
+    )
     shared_transaction_ledger = _shared_transaction_ledger(mock_protocol_fixtures)
     future_semantic_actor_topology = _future_semantic_actor_topology()
     future_vertical_fractal_map = _future_vertical_fractal_map()
@@ -60,6 +66,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         future_vertical_fractal_map,
         airline_offer_hold_sandbox,
         bank_payment_authorization_sandbox,
+        client_purchase_orchestration,
     )
 
     report: dict[str, Any] = {
@@ -77,6 +84,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         "bank_root_view": _bank_root_view(participants, mock_protocol_fixtures),
         "airline_offer_hold_sandbox": airline_offer_hold_sandbox,
         "bank_payment_authorization_sandbox": bank_payment_authorization_sandbox,
+        "client_purchase_orchestration": client_purchase_orchestration,
         "mock_protocol_fixtures": mock_protocol_fixtures,
         "shared_transaction_ledger": shared_transaction_ledger,
         "root_boundary_matrix": _root_boundary_matrix(),
@@ -88,7 +96,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         "counter_table": counter_table,
         "non_claims": _non_claims(),
         "validation_errors": (),
-        "next_gate": "Slice E deterministic ClientRoot purchase orchestration",
+        "next_gate": "Slice F Airline ticket issue mock corridor",
     }
     errors = _validate_report(report)
     if errors:
@@ -163,6 +171,26 @@ def render_tri_party_airline_ticket_purchase_mock_e2e_v01(
         "No real payment was executed.",
         "No real settlement happened.",
         f"sandbox_status: {report['bank_payment_authorization_sandbox']['sandbox_status']}",
+        "",
+        "[CLIENTROOT PURCHASE ORCHESTRATION]",
+        "ClientRoot received the travel intent.",
+        "ClientRoot observed AirlineRoot OfferResponse.",
+        "ClientRoot observed OfferHoldReceipt as evidence only.",
+        "ClientRoot selected the mock offer.",
+        "ClientRoot created ClientPurchaseApprovalEvidence.",
+        "ClientRoot routed bounded purchase approval evidence to BankRoot.",
+        "ClientRoot routed bounded selected-offer evidence to AirlineRoot.",
+        "ClientRoot observed BankRoot PaymentAuthorizationReceipt as evidence only.",
+        "ClientRoot observed PaymentStatusReceipt as evidence only.",
+        "ClientRoot does not authorize bank payment.",
+        "ClientRoot does not issue ticket.",
+        "ClientRoot does not create airline order.",
+        "ClientRoot does not create bank receipt.",
+        "ClientRoot does not expose raw passport/card/IBAN/payment token.",
+        "No real payment was executed.",
+        "No real ticket was issued.",
+        "No real booking was created.",
+        f"orchestration_status: {report['client_purchase_orchestration']['orchestration_status']}",
         "",
         "[MOCK PROTOCOL FIXTURES]",
     ]
@@ -463,9 +491,16 @@ def _mock_protocol_fixtures(
             "selected_offer_id": offer_id,
             "max_price_amount": travel_intent["max_price_amount"],
             "currency": currency,
+            "created_by": "client_root",
+            "root_created": True,
+            "evidence_only": True,
             "scoped_evidence_only": True,
             "bank_authority_created": False,
             "airline_authority_created": False,
+            "payment_permission_created": False,
+            "ticket_permission_created": False,
+            "action_commit_packet_created": False,
+            "receipt_created": False,
         },
         "BankPaymentIntentV01": {
             "intent_id": "bank_payment_intent:mock_bank_a:001",
@@ -546,6 +581,79 @@ def _mock_protocol_fixtures(
             "mock_only": True,
             "real_booking": False,
         },
+        "ClientFinalTravelSummaryV01": {
+            "summary_id": "client_final_travel_summary:client_001:001",
+            "transaction_id": TRANSACTION_ID,
+            "client_root_id": CLIENT_ROOT_ID,
+            "selected_offer_id": offer_id,
+            "offer_hold_receipt_id": "offer_hold_receipt:mock_airline_al:001",
+            "payment_authorization_receipt_id": (
+                "payment_authorization_receipt:mock_bank_a:001"
+            ),
+            "payment_status_receipt_id": "payment_status_receipt:mock_bank_a:001",
+            "mock_ticket_receipt_id": None,
+            "current_client_status": "payment_authorized_mock_ticket_not_yet_issued",
+            "evidence_only": True,
+            "ticket_issued": False,
+            "real_ticket_issued": False,
+            "real_payment_executed": False,
+            "real_booking_created": False,
+        },
+    }
+
+
+def _client_purchase_orchestration(
+    travel_intent: Mapping[str, Any],
+    sealed_refs: Mapping[str, Mapping[str, Any]],
+    fixtures: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    passenger = sealed_refs["PassengerSealedRefsV01"]
+    payment = sealed_refs["PaymentProfileSealedRefV01"]
+    offer_response = fixtures["AirlineOfferResponseV01"]
+    offer_candidate = fixtures["AirlineOfferCandidateV01"]
+    approval = fixtures["ClientPurchaseApprovalEvidenceV01"]
+    return {
+        "orchestration_id": "client_purchase_orchestration_v01",
+        "transaction_id": TRANSACTION_ID,
+        "client_root_id": CLIENT_ROOT_ID,
+        "orchestration_status": STATUS_PASS,
+        "travel_intent_observed": True,
+        "passenger_sealed_refs_observed": True,
+        "passenger_ref": passenger["passenger_ref"],
+        "payment_profile_sealed_ref_observed": True,
+        "payment_profile_ref": payment["payment_profile_ref"],
+        "offer_response_observed": True,
+        "offer_hold_receipt_observed": True,
+        "selected_offer_id": offer_response["selected_candidate_ref"],
+        "selected_offer_amount": offer_candidate["price_amount"],
+        "selected_offer_currency": offer_candidate["currency"],
+        "selected_offer_within_user_max_price": (
+            offer_candidate["price_amount"] <= travel_intent["max_price_amount"]
+        ),
+        "client_purchase_approval_evidence_created": True,
+        "client_purchase_approval_evidence_created_by": "client_root",
+        "client_purchase_approval_evidence_root_created": True,
+        "client_purchase_approval_evidence_validated": True,
+        "client_purchase_approval_evidence_evidence_only": True,
+        "client_purchase_approval_evidence_ref": approval["approval_id"],
+        "routed_to_bank_root": True,
+        "routed_to_airline_root": True,
+        "bank_payment_authorization_receipt_observed": True,
+        "bank_payment_status_receipt_observed": True,
+        "client_final_purchase_summary_created": True,
+        "client_root_authorized_bank_payment": False,
+        "client_root_issued_ticket": False,
+        "client_root_created_airline_order": False,
+        "client_root_created_bank_receipt": False,
+        "client_root_created_action_commit_packet": False,
+        "raw_passport_exposed": False,
+        "raw_card_exposed": False,
+        "raw_iban_exposed": False,
+        "raw_payment_token_exposed": False,
+        "real_payment_executed": False,
+        "real_ticket_issued": False,
+        "real_booking_created": False,
+        "real_world_effects_count": 0,
     }
 
 
@@ -654,7 +762,7 @@ def _shared_transaction_ledger(
         (AIRLINE_ROOT_ID, "airline_order_created_receipt_fixture_created", "AirlineOrderCreatedReceiptV01", True),
         (AIRLINE_ROOT_ID, "mock_ticket_receipt_fixture_created", "MockTicketReceiptV01", True),
         (AIRLINE_ROOT_ID, "mock_pnr_fixture_created", "MockPNRV01", True),
-        (CLIENT_ROOT_ID, "final_shared_summary_fixture_created", "TriPartyAirlineFinalSummaryV01", True),
+        (CLIENT_ROOT_ID, "final_shared_summary_fixture_created", "ClientFinalTravelSummaryV01", True),
     )
     sandbox_stage_events = {
         "airline_offer_request_fixture_created",
@@ -689,6 +797,9 @@ def _shared_transaction_ledger(
         if event_type in bank_sandbox_stage_events:
             row["sandbox_stage"] = "bank_payment_authorization_sandbox"
             row["validated_by_bank_root"] = True
+        if event_type == "client_purchase_approval_evidence_fixture_created":
+            row["orchestration_stage"] = "client_purchase_orchestration"
+            row["validated_by_client_root"] = True
         ledger_rows.append(row)
     return tuple(ledger_rows)
 
@@ -699,6 +810,7 @@ def _artifact_ref(artifact_name: str, fixtures: Mapping[str, Mapping[str, Any]])
         return f"artifact_ref:{artifact_name}"
     return str(
         fixture.get("receipt_id")
+        or fixture.get("summary_id")
         or fixture.get("packet_id")
         or fixture.get("response_id")
         or fixture.get("offer_id")
@@ -953,6 +1065,7 @@ def _counter_table(
     fractal_map: Mapping[str, tuple[dict[str, Any], ...]],
     airline_offer_hold_sandbox: Mapping[str, Any],
     bank_payment_authorization_sandbox: Mapping[str, Any],
+    client_purchase_orchestration: Mapping[str, Any],
 ) -> dict[str, int]:
     fractal_cells = tuple(
         cell for cells in fractal_map.values() for cell in cells
@@ -1020,6 +1133,101 @@ def _counter_table(
             ],
         ),
         "client_purchase_approval_evidence_fixture_count": 1,
+        "client_purchase_orchestration_invoked_count": 1,
+        "client_travel_intent_observed_count": int(
+            client_purchase_orchestration["travel_intent_observed"],
+        ),
+        "client_passenger_sealed_refs_observed_count": int(
+            client_purchase_orchestration["passenger_sealed_refs_observed"],
+        ),
+        "client_payment_profile_sealed_ref_observed_count": int(
+            client_purchase_orchestration[
+                "payment_profile_sealed_ref_observed"
+            ],
+        ),
+        "client_offer_response_observed_count": int(
+            client_purchase_orchestration["offer_response_observed"],
+        ),
+        "client_offer_hold_receipt_observed_count": int(
+            client_purchase_orchestration["offer_hold_receipt_observed"],
+        ),
+        "client_offer_selected_count": int(
+            bool(client_purchase_orchestration["selected_offer_id"]),
+        ),
+        "client_selected_offer_within_user_max_price_count": int(
+            client_purchase_orchestration["selected_offer_within_user_max_price"],
+        ),
+        "client_purchase_approval_evidence_created_count": int(
+            client_purchase_orchestration[
+                "client_purchase_approval_evidence_created"
+            ],
+        ),
+        "client_purchase_approval_evidence_created_by_client_root_count": int(
+            client_purchase_orchestration[
+                "client_purchase_approval_evidence_created_by"
+            ]
+            == "client_root",
+        ),
+        "client_purchase_approval_evidence_created_by_airline_root_count": int(
+            client_purchase_orchestration[
+                "client_purchase_approval_evidence_created_by"
+            ]
+            == "airline_root",
+        ),
+        "client_purchase_approval_evidence_created_by_bank_root_count": int(
+            client_purchase_orchestration[
+                "client_purchase_approval_evidence_created_by"
+            ]
+            == "bank_root",
+        ),
+        "client_purchase_approval_evidence_validated_count": int(
+            client_purchase_orchestration[
+                "client_purchase_approval_evidence_validated"
+            ],
+        ),
+        "client_purchase_approval_evidence_routed_to_bank_root_count": int(
+            client_purchase_orchestration["routed_to_bank_root"],
+        ),
+        "client_purchase_approval_evidence_routed_to_airline_root_count": int(
+            client_purchase_orchestration["routed_to_airline_root"],
+        ),
+        "client_bank_payment_authorization_receipt_observed_count": int(
+            client_purchase_orchestration[
+                "bank_payment_authorization_receipt_observed"
+            ],
+        ),
+        "client_bank_payment_status_receipt_observed_count": int(
+            client_purchase_orchestration["bank_payment_status_receipt_observed"],
+        ),
+        "client_final_purchase_summary_created_count": int(
+            client_purchase_orchestration["client_final_purchase_summary_created"],
+        ),
+        "client_root_authorized_bank_payment_count": int(
+            client_purchase_orchestration["client_root_authorized_bank_payment"],
+        ),
+        "client_root_created_airline_order_count": int(
+            client_purchase_orchestration["client_root_created_airline_order"],
+        ),
+        "client_root_created_bank_receipt_count": int(
+            client_purchase_orchestration["client_root_created_bank_receipt"],
+        ),
+        "client_root_created_action_commit_packet_count": int(
+            client_purchase_orchestration[
+                "client_root_created_action_commit_packet"
+            ],
+        ),
+        "client_raw_passport_exposed_count": int(
+            client_purchase_orchestration["raw_passport_exposed"],
+        ),
+        "client_raw_card_exposed_count": int(
+            client_purchase_orchestration["raw_card_exposed"],
+        ),
+        "client_raw_iban_exposed_count": int(
+            client_purchase_orchestration["raw_iban_exposed"],
+        ),
+        "client_raw_payment_token_exposed_count": int(
+            client_purchase_orchestration["raw_payment_token_exposed"],
+        ),
         "bank_payment_intent_fixture_count": 1,
         "bank_payment_consent_fixture_count": 1,
         "bank_payment_authorization_receipt_fixture_count": 1,
@@ -1183,6 +1391,7 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     counters = report["counter_table"]
     sandbox = report["airline_offer_hold_sandbox"]
     bank_sandbox = report["bank_payment_authorization_sandbox"]
+    client_orchestration = report["client_purchase_orchestration"]
     fixtures = report["mock_protocol_fixtures"]
 
     if report.get("transaction_id") != TRANSACTION_ID:
@@ -1199,6 +1408,7 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     )
     transaction_ids.add(sandbox.get("transaction_id"))
     transaction_ids.add(bank_sandbox.get("transaction_id"))
+    transaction_ids.add(client_orchestration.get("transaction_id"))
     if transaction_ids != {TRANSACTION_ID}:
         errors += ("transaction_id_set_mismatch",)
     if {row["transaction_id"] for row in ledger} != {TRANSACTION_ID}:
@@ -1345,6 +1555,83 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         errors += ("payment_status_receipt_settlement_executed",)
     if payment_status_receipt.get("real_payment_executed") is not False:
         errors += ("payment_status_receipt_real_payment_executed",)
+
+    if client_orchestration.get("orchestration_status") != STATUS_PASS:
+        errors += ("client_purchase_orchestration_not_pass",)
+    if client_orchestration.get("transaction_id") != TRANSACTION_ID:
+        errors += ("client_purchase_orchestration_transaction_id_mismatch",)
+    for key in (
+        "travel_intent_observed",
+        "passenger_sealed_refs_observed",
+        "payment_profile_sealed_ref_observed",
+        "offer_response_observed",
+        "offer_hold_receipt_observed",
+        "selected_offer_within_user_max_price",
+        "client_purchase_approval_evidence_created",
+        "client_purchase_approval_evidence_root_created",
+        "client_purchase_approval_evidence_validated",
+        "client_purchase_approval_evidence_evidence_only",
+        "routed_to_bank_root",
+        "routed_to_airline_root",
+        "bank_payment_authorization_receipt_observed",
+        "bank_payment_status_receipt_observed",
+        "client_final_purchase_summary_created",
+    ):
+        if client_orchestration.get(key) is not True:
+            errors += (f"client_purchase_orchestration_flag_false:{key}",)
+    if (
+        client_orchestration.get("client_purchase_approval_evidence_created_by")
+        != "client_root"
+    ):
+        errors += ("client_purchase_approval_creator_not_client_root",)
+    for key in (
+        "client_root_authorized_bank_payment",
+        "client_root_issued_ticket",
+        "client_root_created_airline_order",
+        "client_root_created_bank_receipt",
+        "client_root_created_action_commit_packet",
+        "raw_passport_exposed",
+        "raw_card_exposed",
+        "raw_iban_exposed",
+        "raw_payment_token_exposed",
+        "real_payment_executed",
+        "real_ticket_issued",
+        "real_booking_created",
+    ):
+        if client_orchestration.get(key) is not False:
+            errors += (f"client_purchase_orchestration_flag_true:{key}",)
+    if client_orchestration.get("real_world_effects_count") != 0:
+        errors += ("client_purchase_orchestration_effects_nonzero",)
+
+    client_purchase_approval = fixtures["ClientPurchaseApprovalEvidenceV01"]
+    if client_purchase_approval.get("created_by") != "client_root":
+        errors += ("client_purchase_approval_fixture_creator_not_client_root",)
+    if client_purchase_approval.get("root_created") is not True:
+        errors += ("client_purchase_approval_fixture_not_root_created",)
+    if client_purchase_approval.get("evidence_only") is not True:
+        errors += ("client_purchase_approval_fixture_not_evidence_only",)
+    for key in (
+        "bank_authority_created",
+        "airline_authority_created",
+        "payment_permission_created",
+        "ticket_permission_created",
+        "action_commit_packet_created",
+        "receipt_created",
+    ):
+        if client_purchase_approval.get(key) is not False:
+            errors += (f"client_purchase_approval_forbidden_flag_true:{key}",)
+
+    client_summary = fixtures["ClientFinalTravelSummaryV01"]
+    if client_summary.get("evidence_only") is not True:
+        errors += ("client_final_summary_not_evidence_only",)
+    for key in (
+        "ticket_issued",
+        "real_ticket_issued",
+        "real_payment_executed",
+        "real_booking_created",
+    ):
+        if client_summary.get(key) is not False:
+            errors += (f"client_final_summary_forbidden_flag_true:{key}",)
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["root_boundary_matrix"]):
         errors += ("root_boundary_violation",)
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["receipt_boundary_matrix"]):
@@ -1425,6 +1712,16 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         "payment_authorization_receipt_real_payment_executed_count",
         "payment_status_receipt_ticket_permission_created_count",
         "payment_status_receipt_settlement_executed_count",
+        "client_purchase_approval_evidence_created_by_airline_root_count",
+        "client_purchase_approval_evidence_created_by_bank_root_count",
+        "client_root_authorized_bank_payment_count",
+        "client_root_created_airline_order_count",
+        "client_root_created_bank_receipt_count",
+        "client_root_created_action_commit_packet_count",
+        "client_raw_passport_exposed_count",
+        "client_raw_card_exposed_count",
+        "client_raw_iban_exposed_count",
+        "client_raw_payment_token_exposed_count",
     )
     for key in required_zero_counter_keys:
         if counters.get(key) != 0:
@@ -1455,6 +1752,33 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         ("offer_hold_receipt_payment_permission_created_count", 0),
         ("offer_hold_receipt_ticket_permission_created_count", 0),
         ("client_purchase_approval_evidence_fixture_count", 1),
+        ("client_purchase_orchestration_invoked_count", 1),
+        ("client_travel_intent_observed_count", 1),
+        ("client_passenger_sealed_refs_observed_count", 1),
+        ("client_payment_profile_sealed_ref_observed_count", 1),
+        ("client_offer_response_observed_count", 1),
+        ("client_offer_hold_receipt_observed_count", 1),
+        ("client_offer_selected_count", 1),
+        ("client_selected_offer_within_user_max_price_count", 1),
+        ("client_purchase_approval_evidence_created_count", 1),
+        ("client_purchase_approval_evidence_created_by_client_root_count", 1),
+        ("client_purchase_approval_evidence_created_by_airline_root_count", 0),
+        ("client_purchase_approval_evidence_created_by_bank_root_count", 0),
+        ("client_purchase_approval_evidence_validated_count", 1),
+        ("client_purchase_approval_evidence_routed_to_bank_root_count", 1),
+        ("client_purchase_approval_evidence_routed_to_airline_root_count", 1),
+        ("client_bank_payment_authorization_receipt_observed_count", 1),
+        ("client_bank_payment_status_receipt_observed_count", 1),
+        ("client_final_purchase_summary_created_count", 1),
+        ("client_root_authorized_bank_payment_count", 0),
+        ("client_root_issued_ticket_count", 0),
+        ("client_root_created_airline_order_count", 0),
+        ("client_root_created_bank_receipt_count", 0),
+        ("client_root_created_action_commit_packet_count", 0),
+        ("client_raw_passport_exposed_count", 0),
+        ("client_raw_card_exposed_count", 0),
+        ("client_raw_iban_exposed_count", 0),
+        ("client_raw_payment_token_exposed_count", 0),
         ("bank_payment_intent_fixture_count", 1),
         ("bank_payment_consent_fixture_count", 1),
         ("bank_payment_authorization_receipt_fixture_count", 1),

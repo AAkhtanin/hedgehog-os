@@ -417,7 +417,155 @@ def test_airline_slice_d_fail_closed_on_payment_receipt_ticket_permission() -> N
     ) in errors
 
 
-def test_airline_slice_d_source_import_boundary() -> None:
+def test_airline_slice_e_client_purchase_orchestration_passes() -> None:
+    report = _report()
+    orchestration = report["client_purchase_orchestration"]
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert orchestration["orchestration_status"] == runner.STATUS_PASS
+    assert orchestration["travel_intent_observed"] is True
+    assert orchestration["passenger_sealed_refs_observed"] is True
+    assert orchestration["payment_profile_sealed_ref_observed"] is True
+    assert orchestration["offer_response_observed"] is True
+    assert orchestration["offer_hold_receipt_observed"] is True
+    assert orchestration["selected_offer_within_user_max_price"] is True
+
+
+def test_airline_slice_e_client_root_creates_purchase_approval_evidence() -> None:
+    report = _report()
+    orchestration = report["client_purchase_orchestration"]
+    evidence = report["mock_protocol_fixtures"]["ClientPurchaseApprovalEvidenceV01"]
+    counters = report["counter_table"]
+
+    assert orchestration["client_purchase_approval_evidence_created"] is True
+    assert orchestration["client_purchase_approval_evidence_created_by"] == "client_root"
+    assert evidence["created_by"] == "client_root"
+    assert evidence["root_created"] is True
+    assert evidence["evidence_only"] is True
+    assert counters["client_purchase_approval_evidence_created_count"] == 1
+    assert (
+        counters["client_purchase_approval_evidence_created_by_client_root_count"]
+        == 1
+    )
+    assert (
+        counters["client_purchase_approval_evidence_created_by_airline_root_count"]
+        == 0
+    )
+    assert (
+        counters["client_purchase_approval_evidence_created_by_bank_root_count"]
+        == 0
+    )
+    assert orchestration["client_purchase_approval_evidence_validated"] is True
+
+
+def test_airline_slice_e_client_routes_bounded_evidence() -> None:
+    orchestration = _report()["client_purchase_orchestration"]
+
+    assert orchestration["routed_to_bank_root"] is True
+    assert orchestration["routed_to_airline_root"] is True
+    assert orchestration["bank_payment_authorization_receipt_observed"] is True
+    assert orchestration["bank_payment_status_receipt_observed"] is True
+
+
+def test_airline_slice_e_client_root_cannot_authorize_payment_or_issue_ticket() -> None:
+    counters = _report()["counter_table"]
+
+    assert counters["client_root_authorized_bank_payment_count"] == 0
+    assert counters["client_root_issued_ticket_count"] == 0
+    assert counters["client_root_created_airline_order_count"] == 0
+    assert counters["client_root_created_bank_receipt_count"] == 0
+    assert counters["client_root_created_action_commit_packet_count"] == 0
+
+
+def test_airline_slice_e_privacy_and_no_real_effects() -> None:
+    counters = _report()["counter_table"]
+
+    assert counters["client_raw_passport_exposed_count"] == 0
+    assert counters["client_raw_card_exposed_count"] == 0
+    assert counters["client_raw_iban_exposed_count"] == 0
+    assert counters["client_raw_payment_token_exposed_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["real_ticket_issued_count"] == 0
+    assert counters["real_booking_created_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_airline_slice_e_preserves_slice_b_c_d_boundaries() -> None:
+    report = _report()
+    ledger = report["shared_transaction_ledger"]
+    client_rows = [
+        row
+        for row in ledger
+        if row.get("orchestration_stage") == "client_purchase_orchestration"
+    ]
+
+    assert set(report["participants"]) == {"ClientRoot", "AirlineRoot", "BankRoot"}
+    assert {row["transaction_id"] for row in ledger} == {runner.TRANSACTION_ID}
+    assert report["airline_offer_hold_sandbox"]["sandbox_status"] == runner.STATUS_PASS
+    assert (
+        report["bank_payment_authorization_sandbox"]["sandbox_status"]
+        == runner.STATUS_PASS
+    )
+    assert (
+        report["airline_offer_hold_sandbox"]["offer_hold_receipt_evidence_only"]
+        is True
+    )
+    assert (
+        report["bank_payment_authorization_sandbox"][
+            "payment_authorization_receipt_evidence_only"
+        ]
+        is True
+    )
+    assert len(client_rows) == 1
+    assert client_rows[0]["validated_by_client_root"] is True
+    assert all(
+        actor["executed_in_slice_b"] is False
+        for actor in report["future_semantic_actor_topology"]
+    )
+    assert all(
+        cell["executed_in_slice_b"] is False
+        for cells in report["future_vertical_fractal_map"].values()
+        for cell in cells
+    )
+
+
+def test_airline_slice_e_renderer_section() -> None:
+    rendered = runner.render_tri_party_airline_ticket_purchase_mock_e2e_v01(_report())
+
+    assert "[CLIENTROOT PURCHASE ORCHESTRATION]" in rendered
+    assert "ClientRoot selected the mock offer" in rendered
+    assert "ClientPurchaseApprovalEvidence" in rendered
+    assert "routed bounded purchase approval evidence to BankRoot" in rendered
+    assert "routed bounded selected-offer evidence to AirlineRoot" in rendered
+    assert "ClientRoot does not authorize bank payment" in rendered
+    assert "ClientRoot does not issue ticket" in rendered
+    assert "no real payment was executed" in rendered.lower()
+    assert "no real ticket was issued" in rendered.lower()
+    assert "real_payment_executed_count: 0" in rendered
+    assert "real_ticket_issued_count: 0" in rendered
+
+
+def test_airline_slice_e_fail_closed_on_wrong_purchase_approval_creator() -> None:
+    report = deepcopy(_report())
+
+    report["client_purchase_orchestration"][
+        "client_purchase_approval_evidence_created_by"
+    ] = "airline_root"
+    errors = runner._validate_report(report)
+
+    assert "client_purchase_approval_creator_not_client_root" in errors
+
+
+def test_airline_slice_e_fail_closed_on_client_issuing_ticket() -> None:
+    report = deepcopy(_report())
+
+    report["client_purchase_orchestration"]["client_root_issued_ticket"] = True
+    errors = runner._validate_report(report)
+
+    assert "client_purchase_orchestration_flag_true:client_root_issued_ticket" in errors
+
+
+def test_airline_slice_e_source_import_boundary() -> None:
     source = Path(runner.__file__).read_text()
 
     assert "google.genai" not in source
@@ -444,5 +592,7 @@ def test_airline_slice_d_source_import_boundary() -> None:
         ("old quote grants", " ticket"),
         ("PaymentAuthorizationReceipt grants", " ticket"),
         ("PaymentStatusReceipt grants", " ticket"),
+        ("ClientPurchaseApprovalEvidence grants", " payment"),
+        ("ClientPurchaseApprovalEvidence grants", " ticket"),
     ):
         assert left + right not in source

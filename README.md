@@ -35,46 +35,58 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-ActionCommitPacket v0.2 Slice A local packet/corridor model — PASS.
+Full WOW v1.2 live action corridor integrated organism — PASS.
 
 Checkpoint source:
 
 - Audit:
-  `docs/audit_reports/auditor_action_commit_packet_v0_2_slice_a_local_packet_corridor_model_v01.log`.
-- Observed checkpoint base: `2ca45f8`.
-- Architecture correction for Root-centered phase loops and ActionCommitPacket
-  geometry:
-  `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
-- Accepted preflight:
-  `docs/action_commit_packet_contract_fulfillment_corridor_preflight_v01.md`.
-- Slice A implements local model contracts only:
-  `hedgehog/action_commit_packet_v02.py`.
-- Slice A tests:
-  `tests/test_action_commit_packet_contract_corridor_v02.py`.
-- Focused tests: `24 passed`.
-- Compatibility tests: `151 passed`.
-- Only Root can create an ActionCommitPacket.
-- Human approval is scoped evidence only and does not create the packet by
-  itself.
-- Current packet scope is Supplier A mock payment only.
-- Supplier B, shipment release, real bank, real supplier API, real warehouse
-  API, and real-world effects remain forbidden.
-- Packet adapter binding must be allowed by packet scope.
-- Corridor child steps must bind to the same packet id, keep allowed/scope
-  surfaces within the parent, preserve the parent forbidden surface, keep TTL
-  within the parent, use an allowed adapter, and match amount, creditor,
-  payment slot, and idempotency.
-- Receipt remains evidence only and cannot create future permission, action
-  permission, FinalOutput, Supplier B authorization, production DRS record,
-  shipment release, or effects.
-- Receipt validation rejects an invalid source packet.
-- Reasoning does not restart after Root.
-- No runtime packet emission, mock execution, runtime receipt creation,
-  sandbox adapter execution, provider/network/Gemini call, secret access,
-  action, payment, shipment release, or effect occurred.
-- Next major gate: ActionCommitPacket v0.2 Slice B packet/corridor validator
-  + local registry/replay guard.
-- Slice B implementation has not started.
+  `docs/audit_reports/auditor_full_wow_v1_2_live_action_corridor_integrated_organism_real_run_v01.log`.
+- Human story renderer:
+  `demo/run_human_full_wow_v1_2_live_action_corridor_integrated_story.py`.
+- Human story tests:
+  `tests/test_human_full_wow_v1_2_live_action_corridor_integrated_story_runner.py`.
+- Source artifact dir:
+  `.tmp/full_wow_v1_2_manual_live_multillm_fractal_action_corridor/full_wow_v1_2_manual_live_multillm_fractal_action_corridor_real_20260708_180020`.
+- Six real Gemini semantic actors participated.
+- Local DRS v0.2 live observation remembered prior traces but did not decide.
+- AVF v0.2 live observation hard-masked unsafe routes and ranked safe
+  directions but did not authorize.
+- Orchestrator validation, BSEP bounded context, Architect validation, branch
+  semantic actors, and Root boundary all passed.
+- Root remained final authority.
+- Root created one scoped Supplier A ActionCommitPacket v0.2 model.
+- Human approval was scoped evidence only.
+- LLM, DRS, AVF, and GT/LGT did not create ActionCommitPacket.
+- MockBankSandbox consumed only the scoped Supplier A packet.
+- MockBankSandbox created mock payment intent, mock consent, mock payment
+  order, mock receipt evidence, and terminal receipt observation in a local
+  proof-only registry.
+- Receipt is evidence only.
+- Supplier B remains blocked.
+- Shipment remains held.
+- Bank A legacy/API-like deterministic mock corridor was observed.
+- Bank B Hedgehog-native remains preview / future path; no Hedgehog-to-Hedgehog
+  bank corridor is implemented yet.
+- No real bank, supplier, or warehouse API was called.
+- No real payment, shipment release, or real-world effect happened.
+- Counter summary: `semantic_actor_call_count: 6`,
+  `real_provider_call_count: 6`, `gemini_called_count: 6`,
+  `network_used_count: 6`, `local_drs_v0_2_direct_reuse_allowed_count: 0`,
+  `avf_v0_2_action_permission_granted_count: 0`,
+  `action_commit_packet_v0_2_root_created_model_packet_count: 1`,
+  `action_commit_packet_v0_2_created_by_root_count: 1`,
+  non-Root packet creator counts all `0`,
+  `mock_bank_sandbox_v0_2_corridor_invoked_count: 1`,
+  mock intent/consent/order/receipt counters all `1`, receipt permission,
+  Supplier B authorization, and shipment-release counters all `0`, and
+  `real_world_effects_count: 0`.
+- The artifact set is a crypto-ready artifact set only in the limited future
+  sense that stable artifacts, counters, validations, source commit, and audit
+  references exist for later hash manifest / hash-chain / signature work;
+  cryptography is not implemented.
+- Next major gate: Post-Action Corridor strategic boundary / Airline demo
+  preflight.
+- Airline demo is not implemented.
 - This is not production.
 - This is not public auditor final package.
 

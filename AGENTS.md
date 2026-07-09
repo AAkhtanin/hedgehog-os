@@ -57,64 +57,59 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: ActionCommitPacket v0.2 Slice A local packet/corridor model PASS.
+Current checkpoint: Full WOW v1.2 live action corridor integrated organism PASS.
 
-Current ActionCommitPacket Slice A facts:
+Current Full WOW v1.2 live action corridor facts:
 
 - Audit log:
-  `docs/audit_reports/auditor_action_commit_packet_v0_2_slice_a_local_packet_corridor_model_v01.log`.
-- Observed checkpoint base: `2ca45f8`.
-- Governing geometry:
-  `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
-- Accepted preflight:
-  `docs/action_commit_packet_contract_fulfillment_corridor_preflight_v01.md`.
-- Slice A is local model only and does not execute actions.
-- ActionCommitPacketV02, PermissionScopeV02,
-  ContractFulfillmentCorridorV01, CorridorStepV01,
-  CorridorValidationReportV01, and MockReceiptEvidenceV01 are present.
-- Only Root can create ActionCommitPacket.
-- Human approval is scoped evidence only.
-- LLM, DRS, AVF, and GT/LGT cannot create ActionCommitPacket.
-- Supplier A mock payment is the only current target scope.
-- Supplier B, shipment release, real bank, real supplier API, real warehouse
-  API, and real-world effects remain forbidden.
-- Packet adapter binding must be allowed by packet scope.
-- Corridor step `parent_packet_id` must match packet `packet_id`.
-- Child corridor allowed/scope surfaces must stay within the parent, forbidden
-  surfaces must include the parent forbidden surface, TTL must not exceed the
-  parent TTL, adapter must be allowed, and amount, creditor, payment slot, and
-  idempotency must match.
-- Receipt is evidence only.
-- Receipt validation rejects an invalid source packet.
-- Reasoning does not restart after Root.
+  `docs/audit_reports/auditor_full_wow_v1_2_live_action_corridor_integrated_organism_real_run_v01.log`.
+- Human artifact story renderer:
+  `demo/run_human_full_wow_v1_2_live_action_corridor_integrated_story.py`.
+- Human artifact story tests:
+  `tests/test_human_full_wow_v1_2_live_action_corridor_integrated_story_runner.py`.
+- Source artifact dir:
+  `.tmp/full_wow_v1_2_manual_live_multillm_fractal_action_corridor/full_wow_v1_2_manual_live_multillm_fractal_action_corridor_real_20260708_180020`.
+- Six real Gemini semantic actors participated.
+- Local DRS v0.2 remembered prior traces but did not decide.
+- AVF v0.2 hard-masked unsafe routes and ranked safe directions without
+  authorizing.
+- Orchestrator validation, BSEP bounded context, Architect validation, branch
+  semantic actors, and Root boundary passed.
 - Root remained final authority.
-- Focused tests: `24 passed`.
-- Compatibility tests: `151 passed`.
-- No runtime packet emission, mock execution, runtime receipt creation,
-  sandbox adapter execution, provider/network/Gemini calls, secret access,
-  action, payment, shipment release, or effects.
+- Root created one scoped Supplier A ActionCommitPacket model.
+- Human approval was scoped evidence only.
+- LLM, DRS, AVF, and GT/LGT did not create ActionCommitPacket.
+- MockBankSandbox consumed only the scoped Supplier A packet and produced mock
+  intent, consent, order, receipt evidence, and terminal receipt observation in
+  a local proof-only registry.
+- Receipt is evidence only.
+- Supplier B remains blocked.
+- Shipment remains held.
+- Bank A legacy/API-like deterministic mock corridor is the current corridor.
+- Bank B Hedgehog-native remains preview / future work; no bank-to-bank
+  corridor is implemented yet.
+- Real bank, supplier, and warehouse APIs were not called.
+- No real payment, shipment release, or real-world effect happened.
+- The artifact set is local `.tmp` evidence, not committed runtime state.
+- The artifact set is crypto-ready only in the limited future artifact-set
+  sense; cryptography is not implemented.
 - Not production.
 - Not public auditor final package.
 
-Current next immediate task: ActionCommitPacket v0.2 Slice B packet/corridor
-validator + local registry/replay guard. Do not start Slice B before this docs
-sync is committed. Do not start Slice C Supplier A integration, Slice D
-MockBankSandbox corridor execution, Airline, Privacy, Finance Kill-Switch,
-Vendor onboarding, NeedleFactory, Marennya, UP, real connectors, or public
-auditor package from this checkpoint.
+Current next operator input expected: “Рубеж после Action Corridor” /
+post-Action Corridor plan. Do not start Airline until the post-Action Corridor
+boundary document is accepted. Do not start NeedleFactory, Marennya, UP, Bank B
+Hedgehog-native bank-to-bank, real connectors, production package, or public
+auditor package without an explicit next prompt.
 
-Architecture correction guard:
+Action corridor checkpoint guard:
 
-- Root-centered phase loops and ActionCommitPacket geometry are recorded in
-  `docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md`.
-- ActionCommitPacket / Contract Fulfillment Corridor Slice A is closed as a
-  local packet/corridor model checkpoint.
-- Slice B remains the next validator/registry/replay-guard gate and has not
-  started.
-- Do not implement generic RootScopedContractEnvelope runtime,
-  SemanticWorkContract runtime, DeliveryEnvelope runtime, Airline, Privacy,
-  Finance Kill-Switch, Vendor onboarding, NeedleFactory, Marennya, UP, real
-  connectors, or public auditor package from this checkpoint.
+- The live action corridor integrated organism is closed as a checkpoint.
+- Next gate is post-Action Corridor boundary, then Airline demo preflight if
+  accepted.
+- Airline demo is not implemented.
+- Bank B Hedgehog-native bank-to-bank is not implemented.
+- Do not use `.tmp` artifacts as committed runtime state.
 
 Closed final integrated rollup facts:
 

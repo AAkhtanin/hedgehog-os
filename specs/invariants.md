@@ -1036,3 +1036,43 @@ DRS Lineage / Provenance Pressure v0.1 invariant:
   provenance_truth_claimed_count: 0, audit_hash_truth_claimed_count: 0.
 - Human walkthrough counters: underlying_proof_status: PASS,
   walkthrough_required_counters_match: True, 7 passed.
+
+Full WOW v1.2 live action corridor integrated organism invariants:
+
+- Checkpoint status: PASS.
+- Audit:
+  docs/audit_reports/auditor_full_wow_v1_2_live_action_corridor_integrated_organism_real_run_v01.log.
+- Six real Gemini semantic actors participated.
+- Provider proposes semantics, runtime canonicalizes, validators verify, Root
+  decides.
+- DRS is not truth, authority, or permission.
+- AVF score is not authority or permission.
+- Top-ranked candidate is not permission.
+- BSEP is bounded context only and is not truth or authority.
+- Only Root creates ActionCommitPacket.
+- Human approval is scoped evidence only.
+- LLM cannot create ActionCommitPacket.
+- DRS cannot create ActionCommitPacket.
+- AVF cannot create ActionCommitPacket.
+- GT/LGT cannot create ActionCommitPacket.
+- MockBankSandbox corridor does not decide.
+- Adapter does not create authority.
+- Receipt is evidence only.
+- Receipt cannot create future permission.
+- Receipt cannot create action permission.
+- Receipt cannot create FinalOutput.
+- Receipt cannot create Supplier B authorization.
+- Receipt cannot create shipment release.
+- Receipt cannot mutate packet scope.
+- Receipt cannot create production DRS record.
+- Receipt cannot create effects.
+- Supplier B remains blocked.
+- Shipment remains held.
+- Bank A legacy/API-like deterministic mock corridor is the current corridor.
+- Bank B Hedgehog-native bank-to-bank is not implemented.
+- No real bank, supplier, or warehouse API is called.
+- No real payment or shipment release happens.
+- The artifact set is a crypto-ready artifact set only for future hash
+  manifest / hash-chain / signature work.
+- cryptography is not implemented.
+- Root remains final authority.

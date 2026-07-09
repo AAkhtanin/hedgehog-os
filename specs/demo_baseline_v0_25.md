@@ -1956,6 +1956,45 @@ ancestry is not future action permission; bridge traversal is not authority
 transfer; quarantine/deadend proximity is bounded; ConflictCheck remains
 advisory; GT remains advisory; Root remains final authority.
 
+Full WOW v1.2 live action corridor integrated organism PASS updates the
+current business WOW baseline.
+
+Baseline evidence:
+
+- Audit:
+  `docs/audit_reports/auditor_full_wow_v1_2_live_action_corridor_integrated_organism_real_run_v01.log`.
+- Human story renderer:
+  `demo/run_human_full_wow_v1_2_live_action_corridor_integrated_story.py`.
+- Real artifact dir:
+  `.tmp/full_wow_v1_2_manual_live_multillm_fractal_action_corridor/full_wow_v1_2_manual_live_multillm_fractal_action_corridor_real_20260708_180020`.
+
+Completed package:
+
+- real Gemini semantic actors: 6;
+- Local DRS v0.2 live observation;
+- AVF v0.2 live observation;
+- BSEP bounded context;
+- Orchestrator / Architect / branch validation;
+- Root boundary;
+- Root-created Supplier A ActionCommitPacket v0.2 model;
+- deterministic MockBankSandbox v0.2 corridor;
+- mock payment intent / consent / order;
+- mock receipt evidence;
+- terminal receipt observation in local proof-only registry;
+- artifact-backed human story renderer.
+
+The baseline remains proof-of-architecture, not production. Supplier B remains
+blocked. Shipment remains held. Receipt is evidence only. No real bank,
+supplier, or warehouse API was called. No real payment, shipment release, or
+real-world effect happened.
+
+Bank A legacy/API-like deterministic mock corridor is the observed corridor in
+this checkpoint. Bank B Hedgehog-native bank-to-bank remains future work.
+
+The next baseline extension is Airline demo preflight only after the
+post-Action Corridor boundary document is accepted. Airline demo is not
+implemented.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

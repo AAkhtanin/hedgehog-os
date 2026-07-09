@@ -1555,6 +1555,45 @@ ancestry is not future action permission; bridge traversal is not authority
 transfer; quarantine/deadend proximity is bounded; ConflictCheck remains
 advisory; GT remains advisory; Root remains final authority.
 
+## Full WOW v1.2 Live Action Corridor Scenario Checkpoint
+
+Full WOW v1.2 live action corridor integrated organism PASS updates the
+Supplier Payment / Shipment Release Review scenario.
+
+Scenario evidence:
+
+- Audit:
+  `docs/audit_reports/auditor_full_wow_v1_2_live_action_corridor_integrated_organism_real_run_v01.log`.
+- Human story renderer:
+  `demo/run_human_full_wow_v1_2_live_action_corridor_integrated_story.py`.
+- Real artifact dir:
+  `.tmp/full_wow_v1_2_manual_live_multillm_fractal_action_corridor/full_wow_v1_2_manual_live_multillm_fractal_action_corridor_real_20260708_180020`.
+
+Scenario status:
+
+- Six real Gemini semantic actors participated.
+- Local DRS v0.2 remembered prior traces but did not decide.
+- AVF v0.2 hard-masked unsafe routes and ranked safe directions without
+  authorizing.
+- Root remained final authority.
+- Root created one scoped Supplier A ActionCommitPacket model.
+- Supplier A mock payment evidence path completed inside scoped corridor.
+- MockBankSandbox created mock payment intent, mock consent, mock payment
+  order, and mock receipt evidence.
+- Receipt is evidence only.
+- Supplier B remains blocked.
+- Shipment remains held.
+- Bank A legacy/API-like deterministic mock corridor was observed.
+- Bank B Hedgehog-native remains future work.
+- No Bank B Hedgehog-to-Hedgehog bank corridor is implemented yet.
+- No real bank, supplier, or warehouse API was called.
+- No real payment, shipment release, or real-world effect happened.
+- The artifact set is a crypto-ready artifact set only in the limited future
+  sense; cryptography is not implemented.
+
+Next planned domain: Airline demo preflight after the post-Action Corridor
+boundary is accepted. Airline demo is not implemented.
+
 ## Exclusions
 
 - No real external APIs.

@@ -4651,6 +4651,55 @@ expansion, dual coupling, DRS bridge evidence, chaos/failure traces, math
 alignment, and production-boundary design. They are not early decorative
 analytics.
 
+## 20.1 Full WOW v1.2 Live Action Corridor Integrated Organism Checkpoint
+
+Full WOW v1.2 live action corridor integrated organism PASS is now the current
+business WOW checkpoint.
+
+Evidence:
+
+- Audit:
+  `docs/audit_reports/auditor_full_wow_v1_2_live_action_corridor_integrated_organism_real_run_v01.log`.
+- Artifact-backed human story renderer:
+  `demo/run_human_full_wow_v1_2_live_action_corridor_integrated_story.py`.
+- Real artifact dir:
+  `.tmp/full_wow_v1_2_manual_live_multillm_fractal_action_corridor/full_wow_v1_2_manual_live_multillm_fractal_action_corridor_real_20260708_180020`.
+
+Interpretation:
+
+- Six real Gemini semantic actors participated.
+- Provider proposes semantics, runtime canonicalizes, validators verify, Root
+  decides.
+- Local DRS v0.2 remembered prior traces but did not decide.
+- DRS is not authority.
+- AVF v0.2 hard-masked unsafe routes and ranked safe directions without
+  authorizing.
+- AVF is not permission.
+- BSEP carried bounded context only and is not truth or authority.
+- Architect proposed semantic intent only.
+- Branch actors returned advisory ResultProposals only.
+- ActionCommitPacket is Root-created scoped capability.
+- Human approval is scoped evidence only.
+- LLM, DRS, AVF, and GT/LGT did not create ActionCommitPacket.
+- MockBankSandbox corridor is deterministic contract/commit plane.
+- Receipt is evidence only.
+- Receipt did not create permission, future permission, FinalOutput, Supplier B
+  authorization, shipment release, packet-scope mutation, production DRS
+  record, or real-world effects.
+- Supplier B remains blocked.
+- Shipment remains held.
+- Bank A legacy/API-like corridor was observed.
+- Bank B Hedgehog-native remains preview / future path.
+- No real bank, supplier, or warehouse API was called.
+- No real payment or shipment release happened.
+- Root remains final authority.
+- The artifact set is a crypto-ready artifact set only in the limited future
+  sense that stable artifacts, counters, validations, source commit, and audit
+  references exist for later hash manifest / hash-chain / signature work;
+  cryptography is not implemented.
+- This remains proof-of-architecture, not production, and not public auditor
+  final package.
+
 ## 21. Legacy Code Position
 
 Legacy code is donor/reference only.

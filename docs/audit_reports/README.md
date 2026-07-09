@@ -7,6 +7,28 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_full_wow_v1_2_live_action_corridor_integrated_organism_real_run_v01.log`
+  - Audit status: PASS.
+  - Audits the Full WOW v1.2 live action corridor integrated organism real
+    provider run.
+  - Confirms six real Gemini semantic actors, Local DRS v0.2 live observation,
+    AVF v0.2 live observation, BSEP bounded context, Orchestrator validation,
+    Architect validation, branch semantic actors, Root boundary,
+    ActionCommitPacket v0.2, and MockBankSandbox v0.2 corridor.
+  - Confirms Root created one scoped Supplier A ActionCommitPacket model and
+    MockBankSandbox produced mock payment intent, mock consent, mock payment
+    order, mock receipt evidence, and terminal receipt observation in a local
+    proof-only registry.
+  - Receipt is evidence only.
+  - Supplier B remains blocked.
+  - Shipment remains held.
+  - Bank A legacy/API-like deterministic mock corridor is observed; Bank B
+    Hedgehog-native remains future work.
+  - Secret scan passed.
+  - Real bank/supplier/warehouse API calls, real payment, shipment release, and
+    real-world effects remain zero.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_action_commit_packet_v0_2_slice_a_local_packet_corridor_model_v01.log`
   - Audit status: PASS.
   - Audits ActionCommitPacket v0.2 Slice A local packet/corridor model.

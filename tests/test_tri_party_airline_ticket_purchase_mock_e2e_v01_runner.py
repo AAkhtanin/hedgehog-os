@@ -264,7 +264,160 @@ def test_airline_slice_c_fail_closed_on_wrong_offer_hold_packet_creator() -> Non
     assert "offer_hold_commit_packet_creator_not_airline_root" in errors
 
 
-def test_airline_slice_c_source_import_boundary() -> None:
+def test_airline_slice_d_bank_payment_authorization_sandbox_passes() -> None:
+    report = _report()
+    sandbox = report["bank_payment_authorization_sandbox"]
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert sandbox["sandbox_status"] == runner.STATUS_PASS
+    assert sandbox["amount_currency_validated"] is True
+    assert sandbox["merchant_airline_ref_validated"] is True
+    assert sandbox["payment_token_ref_validated"] is True
+    assert sandbox["debtor_slot_ref_validated"] is True
+    assert sandbox["idempotency_checked"] is True
+    assert sandbox["expiry_ttl_checked"] is True
+
+
+def test_airline_slice_d_bank_root_creates_payment_authorization_packet() -> None:
+    report = _report()
+    sandbox = report["bank_payment_authorization_sandbox"]
+    packet = report["mock_protocol_fixtures"][
+        "BankPaymentAuthorizationCommitPacketV01"
+    ]
+    counters = report["counter_table"]
+
+    assert (
+        sandbox["bank_payment_authorization_commit_packet_created_by"]
+        == "bank_root"
+    )
+    assert packet["created_by"] == "bank_root"
+    assert packet["root_created"] is True
+    assert counters["bank_payment_authorization_commit_packet_created_count"] == 1
+    assert (
+        counters[
+            "bank_payment_authorization_commit_packet_created_by_bank_root_count"
+        ]
+        == 1
+    )
+    assert (
+        counters[
+            "bank_payment_authorization_commit_packet_created_by_client_root_count"
+        ]
+        == 0
+    )
+    assert (
+        counters[
+            "bank_payment_authorization_commit_packet_created_by_airline_root_count"
+        ]
+        == 0
+    )
+    assert sandbox["bank_payment_authorization_commit_packet_validated"] is True
+
+
+def test_airline_slice_d_payment_receipts_evidence_only() -> None:
+    report = _report()
+    sandbox = report["bank_payment_authorization_sandbox"]
+    auth_receipt = report["mock_protocol_fixtures"][
+        "BankPaymentAuthorizationReceiptV01"
+    ]
+    status_receipt = report["mock_protocol_fixtures"]["BankPaymentStatusReceiptV01"]
+
+    assert sandbox["payment_authorization_receipt_created"] is True
+    assert sandbox["payment_authorization_receipt_validated"] is True
+    assert sandbox["payment_status_receipt_created"] is True
+    assert sandbox["payment_status_receipt_validated"] is True
+    assert sandbox["payment_authorization_receipt_evidence_only"] is True
+    assert sandbox["payment_status_receipt_evidence_only"] is True
+    assert auth_receipt["evidence_only"] is True
+    assert status_receipt["evidence_only"] is True
+    assert sandbox["payment_authorization_receipt_ticket_permission_created"] is False
+    assert sandbox["payment_status_receipt_ticket_permission_created"] is False
+    assert sandbox["payment_authorization_receipt_real_payment_executed"] is False
+    assert sandbox["payment_status_receipt_settlement_executed"] is False
+
+
+def test_airline_slice_d_no_real_bank_api_payment_or_settlement() -> None:
+    counters = _report()["counter_table"]
+
+    assert counters["real_bank_api_called_count"] == 0
+    assert counters["real_payment_executed_count"] == 0
+    assert counters["real_settlement_executed_count"] == 0
+    assert counters["real_ticket_issued_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+
+
+def test_airline_slice_d_preserves_slice_b_c_boundaries() -> None:
+    report = _report()
+    ledger = report["shared_transaction_ledger"]
+    bank_rows = [
+        row
+        for row in ledger
+        if row.get("sandbox_stage") == "bank_payment_authorization_sandbox"
+    ]
+
+    assert set(report["participants"]) == {"ClientRoot", "AirlineRoot", "BankRoot"}
+    assert {row["transaction_id"] for row in ledger} == {runner.TRANSACTION_ID}
+    assert report["airline_offer_hold_sandbox"]["sandbox_status"] == runner.STATUS_PASS
+    assert (
+        report["airline_offer_hold_sandbox"]["offer_hold_receipt_evidence_only"]
+        is True
+    )
+    assert len(bank_rows) == 4
+    assert all(row["validated_by_bank_root"] is True for row in bank_rows)
+    assert report["privacy_boundary_matrix"]["raw_passport_exposed_count"] == 0
+    assert report["privacy_boundary_matrix"]["raw_card_exposed_count"] == 0
+    assert all(
+        actor["executed_in_slice_b"] is False
+        for actor in report["future_semantic_actor_topology"]
+    )
+    assert all(
+        cell["executed_in_slice_b"] is False
+        for cells in report["future_vertical_fractal_map"].values()
+        for cell in cells
+    )
+
+
+def test_airline_slice_d_renderer_section() -> None:
+    rendered = runner.render_tri_party_airline_ticket_purchase_mock_e2e_v01(_report())
+
+    assert "[BANKROOT PAYMENT AUTHORIZATION SANDBOX]" in rendered
+    assert "PaymentAuthorizationReceipt is evidence only" in rendered
+    assert "PaymentStatusReceipt is evidence only" in rendered
+    assert "not ticket permission" in rendered
+    assert "real bank API" in rendered
+    assert "no real payment was executed" in rendered.lower()
+    assert "no real settlement happened" in rendered.lower()
+    assert "real_bank_api_called_count: 0" in rendered
+    assert "real_payment_executed_count: 0" in rendered
+    assert "real_settlement_executed_count: 0" in rendered
+
+
+def test_airline_slice_d_fail_closed_on_wrong_payment_packet_creator() -> None:
+    report = deepcopy(_report())
+
+    report["bank_payment_authorization_sandbox"][
+        "bank_payment_authorization_commit_packet_created_by"
+    ] = "airline_root"
+    errors = runner._validate_report(report)
+
+    assert "bank_payment_authorization_packet_creator_not_bank_root" in errors
+
+
+def test_airline_slice_d_fail_closed_on_payment_receipt_ticket_permission() -> None:
+    report = deepcopy(_report())
+
+    report["bank_payment_authorization_sandbox"][
+        "payment_authorization_receipt_ticket_permission_created"
+    ] = True
+    errors = runner._validate_report(report)
+
+    assert (
+        "bank_payment_authorization_sandbox_flag_true:"
+        "payment_authorization_receipt_ticket_permission_created"
+    ) in errors
+
+
+def test_airline_slice_d_source_import_boundary() -> None:
     source = Path(runner.__file__).read_text()
 
     assert "google.genai" not in source
@@ -289,5 +442,7 @@ def test_airline_slice_c_source_import_boundary() -> None:
         ("payment receipt creates", " ticket"),
         ("ticket receipt creates", " payment"),
         ("old quote grants", " ticket"),
+        ("PaymentAuthorizationReceipt grants", " ticket"),
+        ("PaymentStatusReceipt grants", " ticket"),
     ):
         assert left + right not in source

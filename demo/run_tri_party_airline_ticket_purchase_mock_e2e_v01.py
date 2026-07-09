@@ -5,7 +5,7 @@ from typing import Any, Mapping
 
 RUN_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01"
 REPORT_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01"
-SLICE_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01_slice_c"
+SLICE_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01_slice_d"
 TRANSACTION_ID = "tri_airline_purchase:PAR-LIM:2026-08-12:client_001"
 
 STATUS_PASS = "PASS"
@@ -23,6 +23,7 @@ REQUIRED_SECTIONS = (
     "[AIRLINE ROOT VIEW]",
     "[BANK ROOT VIEW]",
     "[AIRLINEROOT OFFER HOLD SANDBOX]",
+    "[BANKROOT PAYMENT AUTHORIZATION SANDBOX]",
     "[MOCK PROTOCOL FIXTURES]",
     "[SHARED TRANSACTION LEDGER]",
     "[ROOT BOUNDARY MATRIX]",
@@ -45,6 +46,10 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
     sealed_refs = _sealed_refs()
     mock_protocol_fixtures = _mock_protocol_fixtures(travel_intent, sealed_refs)
     airline_offer_hold_sandbox = _airline_offer_hold_sandbox(mock_protocol_fixtures)
+    bank_payment_authorization_sandbox = _bank_payment_authorization_sandbox(
+        mock_protocol_fixtures,
+        sealed_refs,
+    )
     shared_transaction_ledger = _shared_transaction_ledger(mock_protocol_fixtures)
     future_semantic_actor_topology = _future_semantic_actor_topology()
     future_vertical_fractal_map = _future_vertical_fractal_map()
@@ -54,6 +59,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         future_semantic_actor_topology,
         future_vertical_fractal_map,
         airline_offer_hold_sandbox,
+        bank_payment_authorization_sandbox,
     )
 
     report: dict[str, Any] = {
@@ -70,6 +76,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         "airline_root_view": _airline_root_view(participants, mock_protocol_fixtures),
         "bank_root_view": _bank_root_view(participants, mock_protocol_fixtures),
         "airline_offer_hold_sandbox": airline_offer_hold_sandbox,
+        "bank_payment_authorization_sandbox": bank_payment_authorization_sandbox,
         "mock_protocol_fixtures": mock_protocol_fixtures,
         "shared_transaction_ledger": shared_transaction_ledger,
         "root_boundary_matrix": _root_boundary_matrix(),
@@ -81,7 +88,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         "counter_table": counter_table,
         "non_claims": _non_claims(),
         "validation_errors": (),
-        "next_gate": "Slice D deterministic BankRoot payment authorization sandbox",
+        "next_gate": "Slice E deterministic ClientRoot purchase orchestration",
     }
     errors = _validate_report(report)
     if errors:
@@ -134,6 +141,28 @@ def render_tri_party_airline_ticket_purchase_mock_e2e_v01(
         "No real airline API was called.",
         "No real booking was created.",
         f"sandbox_status: {report['airline_offer_hold_sandbox']['sandbox_status']}",
+        "",
+        "[BANKROOT PAYMENT AUTHORIZATION SANDBOX]",
+        "BankRoot received mock payment authorization request.",
+        "BankRoot validated selected offer amount/currency against OfferHoldReceipt.",
+        "BankRoot validated merchant/airline ref.",
+        "BankRoot validated payment token sealed ref.",
+        "BankRoot validated debtor slot ref.",
+        "BankRoot validated idempotency.",
+        "BankRoot validated expiry/TTL.",
+        "BankRoot created BankPaymentIntent.",
+        "BankRoot created BankPaymentConsent.",
+        "BankRoot created BankPaymentAuthorizationCommitPacket.",
+        "BankRoot created PaymentAuthorizationReceipt.",
+        "BankRoot created PaymentStatusReceipt.",
+        "PaymentAuthorizationReceipt is evidence only.",
+        "PaymentAuthorizationReceipt is not ticket permission.",
+        "PaymentStatusReceipt is evidence only.",
+        "BankRoot does not create ticket.",
+        "BankRoot does not call real bank API.",
+        "No real payment was executed.",
+        "No real settlement happened.",
+        f"sandbox_status: {report['bank_payment_authorization_sandbox']['sandbox_status']}",
         "",
         "[MOCK PROTOCOL FIXTURES]",
     ]
@@ -455,6 +484,26 @@ def _mock_protocol_fixtures(
             "evidence_only": True,
             "ticket_permission_created": False,
         },
+        "BankPaymentAuthorizationCommitPacketV01": {
+            "packet_id": "bank_payment_authorization_commit_packet:mock_bank_a:001",
+            "transaction_id": TRANSACTION_ID,
+            "created_by": "bank_root",
+            "root_created": True,
+            "allowed_root_id": BANK_ROOT_ID,
+            "allowed_action": "mock_payment_authorization",
+            "allowed_merchant_ref": "merchant_ref:mock_airline_al",
+            "allowed_payment_token_ref": payment["payment_token_ref"],
+            "allowed_debtor_slot_ref": payment["debtor_slot_ref"],
+            "allowed_amount": amount,
+            "currency": currency,
+            "idempotency_key": "idem:bank_payment_authorization:001",
+            "ttl_seconds": 900,
+            "evidence_only_downstream": True,
+            "ticket_permission_created": False,
+            "real_payment_allowed": False,
+            "real_bank_api_allowed": False,
+            "real_settlement_allowed": False,
+        },
         "BankPaymentAuthorizationReceiptV01": {
             "receipt_id": "payment_authorization_receipt:mock_bank_a:001",
             "transaction_id": TRANSACTION_ID,
@@ -497,6 +546,58 @@ def _mock_protocol_fixtures(
             "mock_only": True,
             "real_booking": False,
         },
+    }
+
+
+def _bank_payment_authorization_sandbox(
+    fixtures: Mapping[str, Mapping[str, Any]],
+    sealed_refs: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    payment = sealed_refs["PaymentProfileSealedRefV01"]
+    payment_packet = fixtures["BankPaymentAuthorizationCommitPacketV01"]
+    payment_auth_receipt = fixtures["BankPaymentAuthorizationReceiptV01"]
+    payment_status_receipt = fixtures["BankPaymentStatusReceiptV01"]
+    return {
+        "sandbox_id": "bank_payment_authorization_sandbox_v01",
+        "transaction_id": TRANSACTION_ID,
+        "bank_root_id": BANK_ROOT_ID,
+        "sandbox_status": STATUS_PASS,
+        "offer_hold_receipt_observed": True,
+        "client_purchase_approval_evidence_observed": True,
+        "payment_profile_sealed_ref_observed": True,
+        "amount_currency_validated": True,
+        "merchant_airline_ref_validated": True,
+        "payment_token_ref_validated": True,
+        "payment_token_ref": payment["payment_token_ref"],
+        "debtor_slot_ref_validated": True,
+        "debtor_slot_ref": payment["debtor_slot_ref"],
+        "idempotency_checked": True,
+        "expiry_ttl_checked": True,
+        "bank_payment_intent_created": True,
+        "bank_payment_consent_created": True,
+        "bank_payment_authorization_commit_packet_created": True,
+        "bank_payment_authorization_commit_packet_created_by": "bank_root",
+        "bank_payment_authorization_commit_packet_root_created": True,
+        "bank_payment_authorization_commit_packet_validated": True,
+        "bank_payment_authorization_commit_packet_ref": payment_packet["packet_id"],
+        "payment_authorization_receipt_created": True,
+        "payment_authorization_receipt_validated": True,
+        "payment_authorization_receipt_ref": payment_auth_receipt["receipt_id"],
+        "payment_status_receipt_created": True,
+        "payment_status_receipt_validated": True,
+        "payment_status_receipt_ref": payment_status_receipt["receipt_id"],
+        "payment_authorization_receipt_evidence_only": True,
+        "payment_authorization_receipt_ticket_permission_created": False,
+        "payment_authorization_receipt_real_payment_executed": False,
+        "payment_status_receipt_evidence_only": True,
+        "payment_status_receipt_settlement_executed": False,
+        "payment_status_receipt_ticket_permission_created": False,
+        "bank_root_created_ticket": False,
+        "real_bank_api_called": False,
+        "real_payment_executed": False,
+        "real_settlement_executed": False,
+        "real_ticket_issued": False,
+        "real_world_effects_count": 0,
     }
 
 
@@ -561,6 +662,12 @@ def _shared_transaction_ledger(
         "airline_offer_response_fixture_created",
         "airline_offer_hold_receipt_fixture_created",
     }
+    bank_sandbox_stage_events = {
+        "bank_payment_intent_fixture_created",
+        "bank_payment_consent_fixture_created",
+        "bank_payment_authorization_receipt_fixture_created",
+        "bank_payment_status_receipt_fixture_created",
+    }
     ledger_rows = []
     for index, (actor_root_id, event_type, artifact_name, evidence_only) in enumerate(
         rows,
@@ -579,6 +686,9 @@ def _shared_transaction_ledger(
         if event_type in sandbox_stage_events:
             row["sandbox_stage"] = "airline_offer_hold_sandbox"
             row["validated_by_airline_root"] = True
+        if event_type in bank_sandbox_stage_events:
+            row["sandbox_stage"] = "bank_payment_authorization_sandbox"
+            row["validated_by_bank_root"] = True
         ledger_rows.append(row)
     return tuple(ledger_rows)
 
@@ -842,6 +952,7 @@ def _counter_table(
     actors: tuple[dict[str, Any], ...],
     fractal_map: Mapping[str, tuple[dict[str, Any], ...]],
     airline_offer_hold_sandbox: Mapping[str, Any],
+    bank_payment_authorization_sandbox: Mapping[str, Any],
 ) -> dict[str, int]:
     fractal_cells = tuple(
         cell for cells in fractal_map.values() for cell in cells
@@ -913,6 +1024,108 @@ def _counter_table(
         "bank_payment_consent_fixture_count": 1,
         "bank_payment_authorization_receipt_fixture_count": 1,
         "bank_payment_status_receipt_fixture_count": 1,
+        "bank_payment_authorization_sandbox_invoked_count": 1,
+        "bank_offer_hold_receipt_observed_count": int(
+            bank_payment_authorization_sandbox["offer_hold_receipt_observed"],
+        ),
+        "bank_client_purchase_approval_evidence_observed_count": int(
+            bank_payment_authorization_sandbox[
+                "client_purchase_approval_evidence_observed"
+            ],
+        ),
+        "bank_payment_profile_sealed_ref_observed_count": int(
+            bank_payment_authorization_sandbox[
+                "payment_profile_sealed_ref_observed"
+            ],
+        ),
+        "bank_amount_currency_validated_count": int(
+            bank_payment_authorization_sandbox["amount_currency_validated"],
+        ),
+        "bank_merchant_airline_ref_validated_count": int(
+            bank_payment_authorization_sandbox["merchant_airline_ref_validated"],
+        ),
+        "bank_payment_token_ref_validated_count": int(
+            bank_payment_authorization_sandbox["payment_token_ref_validated"],
+        ),
+        "bank_debtor_slot_ref_validated_count": int(
+            bank_payment_authorization_sandbox["debtor_slot_ref_validated"],
+        ),
+        "bank_idempotency_checked_count": int(
+            bank_payment_authorization_sandbox["idempotency_checked"],
+        ),
+        "bank_expiry_ttl_checked_count": int(
+            bank_payment_authorization_sandbox["expiry_ttl_checked"],
+        ),
+        "bank_payment_intent_created_count": int(
+            bank_payment_authorization_sandbox["bank_payment_intent_created"],
+        ),
+        "bank_payment_consent_created_count": int(
+            bank_payment_authorization_sandbox["bank_payment_consent_created"],
+        ),
+        "bank_payment_authorization_commit_packet_created_count": int(
+            bank_payment_authorization_sandbox[
+                "bank_payment_authorization_commit_packet_created"
+            ],
+        ),
+        "bank_payment_authorization_commit_packet_created_by_bank_root_count": int(
+            bank_payment_authorization_sandbox[
+                "bank_payment_authorization_commit_packet_created_by"
+            ]
+            == "bank_root",
+        ),
+        "bank_payment_authorization_commit_packet_created_by_client_root_count": int(
+            bank_payment_authorization_sandbox[
+                "bank_payment_authorization_commit_packet_created_by"
+            ]
+            == "client_root",
+        ),
+        "bank_payment_authorization_commit_packet_created_by_airline_root_count": int(
+            bank_payment_authorization_sandbox[
+                "bank_payment_authorization_commit_packet_created_by"
+            ]
+            == "airline_root",
+        ),
+        "bank_payment_authorization_commit_packet_validated_count": int(
+            bank_payment_authorization_sandbox[
+                "bank_payment_authorization_commit_packet_validated"
+            ],
+        ),
+        "payment_authorization_receipt_created_count": int(
+            bank_payment_authorization_sandbox[
+                "payment_authorization_receipt_created"
+            ],
+        ),
+        "payment_authorization_receipt_validated_count": int(
+            bank_payment_authorization_sandbox[
+                "payment_authorization_receipt_validated"
+            ],
+        ),
+        "payment_status_receipt_created_count": int(
+            bank_payment_authorization_sandbox["payment_status_receipt_created"],
+        ),
+        "payment_status_receipt_validated_count": int(
+            bank_payment_authorization_sandbox["payment_status_receipt_validated"],
+        ),
+        "payment_authorization_receipt_ticket_permission_created_count": int(
+            bank_payment_authorization_sandbox[
+                "payment_authorization_receipt_ticket_permission_created"
+            ],
+        ),
+        "payment_authorization_receipt_real_payment_executed_count": int(
+            bank_payment_authorization_sandbox[
+                "payment_authorization_receipt_real_payment_executed"
+            ],
+        ),
+        "payment_status_receipt_ticket_permission_created_count": int(
+            bank_payment_authorization_sandbox[
+                "payment_status_receipt_ticket_permission_created"
+            ],
+        ),
+        "payment_status_receipt_settlement_executed_count": int(
+            bank_payment_authorization_sandbox[
+                "payment_status_receipt_settlement_executed"
+            ],
+        ),
         "airline_order_created_receipt_fixture_count": 1,
         "mock_ticket_receipt_fixture_count": 1,
         "mock_pnr_fixture_count": 1,
@@ -936,6 +1149,7 @@ def _counter_table(
         "real_airline_api_called_count": 0,
         "real_bank_api_called_count": 0,
         "real_payment_executed_count": 0,
+        "real_settlement_executed_count": 0,
         "real_booking_created_count": 0,
         "real_ticket_issued_count": 0,
         "real_travel_booking_created_count": 0,
@@ -968,6 +1182,7 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     ledger = report["shared_transaction_ledger"]
     counters = report["counter_table"]
     sandbox = report["airline_offer_hold_sandbox"]
+    bank_sandbox = report["bank_payment_authorization_sandbox"]
     fixtures = report["mock_protocol_fixtures"]
 
     if report.get("transaction_id") != TRANSACTION_ID:
@@ -983,6 +1198,7 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         if "transaction_id" in fixture
     )
     transaction_ids.add(sandbox.get("transaction_id"))
+    transaction_ids.add(bank_sandbox.get("transaction_id"))
     if transaction_ids != {TRANSACTION_ID}:
         errors += ("transaction_id_set_mismatch",)
     if {row["transaction_id"] for row in ledger} != {TRANSACTION_ID}:
@@ -1051,6 +1267,84 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         errors += ("offer_hold_receipt_payment_permission_created",)
     if offer_hold_receipt.get("ticket_permission_created") is not False:
         errors += ("offer_hold_receipt_ticket_permission_created",)
+
+    if bank_sandbox.get("sandbox_status") != STATUS_PASS:
+        errors += ("bank_payment_authorization_sandbox_not_pass",)
+    if bank_sandbox.get("transaction_id") != TRANSACTION_ID:
+        errors += ("bank_payment_authorization_sandbox_transaction_id_mismatch",)
+    for key in (
+        "offer_hold_receipt_observed",
+        "client_purchase_approval_evidence_observed",
+        "payment_profile_sealed_ref_observed",
+        "amount_currency_validated",
+        "merchant_airline_ref_validated",
+        "payment_token_ref_validated",
+        "debtor_slot_ref_validated",
+        "idempotency_checked",
+        "expiry_ttl_checked",
+        "bank_payment_intent_created",
+        "bank_payment_consent_created",
+        "bank_payment_authorization_commit_packet_created",
+        "bank_payment_authorization_commit_packet_root_created",
+        "bank_payment_authorization_commit_packet_validated",
+        "payment_authorization_receipt_created",
+        "payment_authorization_receipt_validated",
+        "payment_status_receipt_created",
+        "payment_status_receipt_validated",
+        "payment_authorization_receipt_evidence_only",
+        "payment_status_receipt_evidence_only",
+    ):
+        if bank_sandbox.get(key) is not True:
+            errors += (f"bank_payment_authorization_sandbox_flag_false:{key}",)
+    if bank_sandbox.get("bank_payment_authorization_commit_packet_created_by") != "bank_root":
+        errors += ("bank_payment_authorization_packet_creator_not_bank_root",)
+    for key in (
+        "payment_authorization_receipt_ticket_permission_created",
+        "payment_authorization_receipt_real_payment_executed",
+        "payment_status_receipt_settlement_executed",
+        "payment_status_receipt_ticket_permission_created",
+        "bank_root_created_ticket",
+        "real_bank_api_called",
+        "real_payment_executed",
+        "real_settlement_executed",
+        "real_ticket_issued",
+    ):
+        if bank_sandbox.get(key) is not False:
+            errors += (f"bank_payment_authorization_sandbox_flag_true:{key}",)
+    if bank_sandbox.get("real_world_effects_count") != 0:
+        errors += ("bank_payment_authorization_sandbox_effects_nonzero",)
+
+    bank_payment_packet = fixtures["BankPaymentAuthorizationCommitPacketV01"]
+    if bank_payment_packet.get("created_by") != "bank_root":
+        errors += ("bank_payment_packet_fixture_creator_not_bank_root",)
+    if bank_payment_packet.get("root_created") is not True:
+        errors += ("bank_payment_packet_fixture_not_root_created",)
+    if bank_payment_packet.get("allowed_root_id") != BANK_ROOT_ID:
+        errors += ("bank_payment_packet_fixture_wrong_root",)
+    for key in (
+        "ticket_permission_created",
+        "real_payment_allowed",
+        "real_bank_api_allowed",
+        "real_settlement_allowed",
+    ):
+        if bank_payment_packet.get(key) is not False:
+            errors += (f"bank_payment_packet_forbidden_flag_true:{key}",)
+
+    payment_authorization_receipt = fixtures["BankPaymentAuthorizationReceiptV01"]
+    if payment_authorization_receipt.get("evidence_only") is not True:
+        errors += ("payment_authorization_receipt_not_evidence_only",)
+    if payment_authorization_receipt.get("ticket_created") is not False:
+        errors += ("payment_authorization_receipt_ticket_created",)
+    if payment_authorization_receipt.get("real_payment_executed") is not False:
+        errors += ("payment_authorization_receipt_real_payment_executed",)
+
+    payment_status_receipt = fixtures["BankPaymentStatusReceiptV01"]
+    if payment_status_receipt.get("evidence_only") is not True:
+        errors += ("payment_status_receipt_not_evidence_only",)
+    if payment_status_receipt.get("settlement_executed") is not False:
+        errors += ("payment_status_receipt_settlement_executed",)
+    if payment_status_receipt.get("real_payment_executed") is not False:
+        errors += ("payment_status_receipt_real_payment_executed",)
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["root_boundary_matrix"]):
         errors += ("root_boundary_violation",)
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["receipt_boundary_matrix"]):
@@ -1117,6 +1411,7 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         "real_airline_api_called_count",
         "real_bank_api_called_count",
         "real_payment_executed_count",
+        "real_settlement_executed_count",
         "real_booking_created_count",
         "real_ticket_issued_count",
         "real_travel_booking_created_count",
@@ -1124,6 +1419,12 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         "network_used_count",
         "gemini_called_count",
         "real_world_effects_count",
+        "bank_payment_authorization_commit_packet_created_by_client_root_count",
+        "bank_payment_authorization_commit_packet_created_by_airline_root_count",
+        "payment_authorization_receipt_ticket_permission_created_count",
+        "payment_authorization_receipt_real_payment_executed_count",
+        "payment_status_receipt_ticket_permission_created_count",
+        "payment_status_receipt_settlement_executed_count",
     )
     for key in required_zero_counter_keys:
         if counters.get(key) != 0:
@@ -1158,6 +1459,31 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         ("bank_payment_consent_fixture_count", 1),
         ("bank_payment_authorization_receipt_fixture_count", 1),
         ("bank_payment_status_receipt_fixture_count", 1),
+        ("bank_payment_authorization_sandbox_invoked_count", 1),
+        ("bank_offer_hold_receipt_observed_count", 1),
+        ("bank_client_purchase_approval_evidence_observed_count", 1),
+        ("bank_payment_profile_sealed_ref_observed_count", 1),
+        ("bank_amount_currency_validated_count", 1),
+        ("bank_merchant_airline_ref_validated_count", 1),
+        ("bank_payment_token_ref_validated_count", 1),
+        ("bank_debtor_slot_ref_validated_count", 1),
+        ("bank_idempotency_checked_count", 1),
+        ("bank_expiry_ttl_checked_count", 1),
+        ("bank_payment_intent_created_count", 1),
+        ("bank_payment_consent_created_count", 1),
+        ("bank_payment_authorization_commit_packet_created_count", 1),
+        ("bank_payment_authorization_commit_packet_created_by_bank_root_count", 1),
+        ("bank_payment_authorization_commit_packet_created_by_client_root_count", 0),
+        ("bank_payment_authorization_commit_packet_created_by_airline_root_count", 0),
+        ("bank_payment_authorization_commit_packet_validated_count", 1),
+        ("payment_authorization_receipt_created_count", 1),
+        ("payment_authorization_receipt_validated_count", 1),
+        ("payment_status_receipt_created_count", 1),
+        ("payment_status_receipt_validated_count", 1),
+        ("payment_authorization_receipt_ticket_permission_created_count", 0),
+        ("payment_authorization_receipt_real_payment_executed_count", 0),
+        ("payment_status_receipt_ticket_permission_created_count", 0),
+        ("payment_status_receipt_settlement_executed_count", 0),
         ("airline_order_created_receipt_fixture_count", 1),
         ("mock_ticket_receipt_fixture_count", 1),
         ("mock_pnr_fixture_count", 1),

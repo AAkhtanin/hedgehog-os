@@ -1,0 +1,366 @@
+audit_id: auditor_tri_party_airline_live_semantic_lane_real_run_v01
+audit_status: PASS
+audited_layer: Tri-Party Airline Live Semantic Lane v0.1 real Gemini provider run
+source_artifact_dir: .tmp/tri_party_airline_live_semantic_lane/tri_party_airline_live_semantic_lane_real_20260709_184306
+observed_base_head: 79888d7
+provider_mode: real_provider
+model: gemini-2.5-flash
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+real_world_effects_count: 0
+
+header:
+  This audit records the operator-gated real Gemini provider run for the
+  Tri-Party Airline Live Semantic Lane v0.1. The audit observes existing
+  artifacts only. It does not rerun the live lane and does not print raw
+  provider responses.
+
+observed repository state:
+  git_status_short_pre_edit: clean
+  observed_head: 79888d7
+  latest_commit: 79888d7 Fix Airline live semantic runtime used rejected contract
+  recent_closed_commits_observed:
+    - 79888d7 Fix Airline live semantic runtime used rejected contract
+    - 2b1e864 Route Airline live semantic lane through provider adapter
+    - 26d257f Add Airline tri-party live semantic fake-provider lane
+    - 12b9085 Add Airline tri-party live semantic lane preflight
+  runtime_test_uncommitted_changes_present_before_audit: false
+
+source artifact directory:
+  source_artifact_dir: .tmp/tri_party_airline_live_semantic_lane/tri_party_airline_live_semantic_lane_real_20260709_184306
+  required_artifacts_present: PASS
+  required_source_files:
+    - summary.json
+    - summary.log
+    - console.log
+    - secret_scan.json
+    - tri_party_airline_bsep_packet.json
+    - tri_party_airline_bsep_validation.json
+    - tri_party_airline_bsep_side_projections.json
+
+commands run:
+  repository:
+    - git status --short --untracked-files=all
+    - git --no-pager log --oneline --max-count=15
+    - git rev-parse --short HEAD
+  artifact_validation:
+    - python3 artifact existence and JSON validation script
+  focused_validation:
+    - python3 -m py_compile demo/run_tri_party_airline_live_semantic_lane_v01.py
+    - PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_tri_party_airline_live_semantic_lane_v01_runner.py
+  optional_compatibility:
+    - PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_tri_party_airline_live_semantic_lane_v01_runner.py tests/test_tri_party_airline_ticket_purchase_mock_e2e_v01_runner.py tests/test_non_action_reuse_positive_control.py tests/test_non_action_direct_reuse_positive_control_v01_runner.py
+  static:
+    - git diff --check
+    - git diff --stat
+    - git diff --name-only
+    - git status --short --untracked-files=all
+  audit_scans_after_log_creation:
+    - secret marker scan over audit log and source artifact directory
+    - positive marker scan over audit log
+
+source JSON validation:
+  artifact_json_validation: PASS
+  summary_json_valid: PASS
+  secret_scan_json_valid: PASS
+  bsep_packet_json_valid: PASS
+  bsep_validation_json_valid: PASS
+  bsep_side_projections_json_valid: PASS
+  extracted_json_candidates_valid: PASS
+  validation_json_files_valid: PASS
+  canonical_summary_json_files_valid: PASS
+  final_status_from_summary: PASS
+  provider_mode_from_summary: real_provider
+  model_from_summary: gemini-2.5-flash
+  validation_errors_from_summary: []
+
+actor artifact inventory:
+  actor_prompt_files: 12
+  actor_raw_response_files: 12
+  actor_extracted_json_files: 12
+  actor_validation_files: 12
+  actor_canonical_summary_files: 12
+  artifact_transparency_complete: PASS
+  raw_responses_saved_as_artifacts_not_authority: PASS
+  raw_response_terminal_dump_in_audit_log: false
+
+semantic actor status matrix:
+  tri_party_airline_orchestrator_llm:
+    actor_index: 1
+    side: transaction
+    group: transaction_orchestrator
+    validation_status: PASS
+    accepted: true
+  tri_party_airline_semantic_architect_llm:
+    actor_index: 2
+    side: transaction
+    group: semantic_architect
+    validation_status: PASS
+    accepted: true
+  client_purchase_intent_reviewer_llm:
+    actor_index: 3
+    side: client
+    group: client
+    validation_status: PASS
+    accepted: true
+  client_profile_privacy_reviewer_llm:
+    actor_index: 4
+    side: client
+    group: client
+    validation_status: PASS
+    accepted: true
+  airline_offer_policy_reviewer_llm:
+    actor_index: 5
+    side: airline
+    group: airline
+    validation_status: PASS
+    accepted: true
+  airline_fare_rules_vertical_cell_llm:
+    actor_index: 6
+    side: airline
+    group: airline_vertical
+    validation_status: PASS
+    accepted: true
+  airline_seat_baggage_vertical_cell_llm:
+    actor_index: 7
+    side: airline
+    group: airline_vertical
+    validation_status: PASS
+    accepted: true
+  airline_ticketing_policy_reviewer_llm:
+    actor_index: 8
+    side: airline
+    group: airline
+    validation_status: PASS
+    accepted: true
+  bank_payment_policy_reviewer_llm:
+    actor_index: 9
+    side: bank
+    group: bank
+    validation_status: PASS
+    accepted: true
+  bank_idempotency_risk_vertical_cell_llm:
+    actor_index: 10
+    side: bank
+    group: bank_vertical
+    validation_status: PASS
+    accepted: true
+  bank_payment_status_explainer_llm:
+    actor_index: 11
+    side: bank
+    group: bank
+    validation_status: PASS
+    accepted: true
+  tri_party_evidence_consistency_reviewer_llm:
+    actor_index: 12
+    side: cross_root_advisory
+    group: cross_root
+    validation_status: PASS
+    accepted: true
+
+BSEP membrane findings:
+  finding_bsep_created_before_architect: PASS
+  finding_bsep_validated: PASS
+  bsep_validation_status: PASS
+  bsep_validation_accepted: true
+  bsep_created_count: 1
+  bsep_validated_count: 1
+  bsep_is_truth: false
+  bsep_is_authority: false
+  bsep_is_permission: false
+
+side-specific BSEP projection findings:
+  finding_bsep_side_projection_count_4: PASS
+  finding_client_bsep_projection_pass: PASS
+  finding_airline_bsep_projection_pass: PASS
+  finding_bank_bsep_projection_pass: PASS
+  finding_cross_root_bsep_projection_pass: PASS
+  client_bsep_projection_status: PASS
+  airline_bsep_projection_status: PASS
+  bank_bsep_projection_status: PASS
+  cross_root_bsep_projection_status: PASS
+
+vertical fractal dependency findings:
+  finding_vertical_parent_child_dependencies_preserved: PASS
+  airline_fare_rules_vertical_cell_llm:
+    parent_actor_id: airline_offer_policy_reviewer_llm
+    parent_validation_status: PASS
+    child_started_after_parent_validation: true
+    child_received_parent_canonical_summary: true
+    child_received_parent_raw_response: false
+  airline_seat_baggage_vertical_cell_llm:
+    parent_actor_id: airline_offer_policy_reviewer_llm
+    parent_validation_status: PASS
+    child_started_after_parent_validation: true
+    child_received_parent_canonical_summary: true
+    child_received_parent_raw_response: false
+  bank_idempotency_risk_vertical_cell_llm:
+    parent_actor_id: bank_payment_policy_reviewer_llm
+    parent_validation_status: PASS
+    child_started_after_parent_validation: true
+    child_received_parent_canonical_summary: true
+    child_received_parent_raw_response: false
+
+runtime used/rejected findings:
+  finding_runtime_used_rejected_fields_runtime_computed: PASS
+  what_runtime_used_source: runtime_computed
+  what_runtime_rejected_source: runtime_computed
+  provider_response_not_required_to_own_runtime_used_rejected: true
+  finding_provider_output_not_truth: PASS
+  finding_provider_output_not_authority: PASS
+  finding_provider_output_created_no_packet_receipt_payment_ticket_booking: PASS
+  provider_output_used_as_truth_count: 0
+  provider_output_used_as_authority_count: 0
+  provider_output_created_packet_count: 0
+  provider_output_created_receipt_count: 0
+  provider_output_created_payment_count: 0
+  provider_output_created_ticket_count: 0
+  provider_output_created_booking_count: 0
+
+root boundary findings:
+  finding_root_boundaries_preserved: PASS
+  finding_cross_root_reviewer_not_fourth_root: PASS
+  client_root_boundary_preserved: true
+  airline_root_boundary_preserved: true
+  bank_root_boundary_preserved: true
+  cross_root_reviewer_advisory_only: true
+  cross_root_authority_transfer_count: 0
+
+required audit findings:
+  finding_final_status_pass: PASS
+  finding_real_provider_mode: PASS
+  finding_model_gemini_2_5_flash: PASS
+  finding_semantic_actor_call_count_12: PASS
+  finding_real_provider_call_count_12: PASS
+  finding_fake_provider_call_count_0: PASS
+  finding_network_used_count_12: PASS
+  finding_gemini_called_count_12: PASS
+  finding_bsep_created_before_architect: PASS
+  finding_bsep_validated: PASS
+  finding_bsep_side_projection_count_4: PASS
+  finding_client_bsep_projection_pass: PASS
+  finding_airline_bsep_projection_pass: PASS
+  finding_bank_bsep_projection_pass: PASS
+  finding_cross_root_bsep_projection_pass: PASS
+  finding_orchestrator_pass: PASS
+  finding_architect_pass: PASS
+  finding_client_side_actors_pass: PASS
+  finding_airline_side_actors_pass: PASS
+  finding_airline_vertical_cells_pass: PASS
+  finding_bank_side_actors_pass: PASS
+  finding_bank_vertical_cell_pass: PASS
+  finding_cross_root_consistency_reviewer_pass: PASS
+  finding_vertical_parent_child_dependencies_preserved: PASS
+  finding_runtime_used_rejected_fields_runtime_computed: PASS
+  finding_provider_output_not_truth: PASS
+  finding_provider_output_not_authority: PASS
+  finding_provider_output_created_no_packet_receipt_payment_ticket_booking: PASS
+  finding_root_boundaries_preserved: PASS
+  finding_cross_root_reviewer_not_fourth_root: PASS
+  finding_secret_scan_passed: PASS
+  finding_raw_secret_markers_absent: PASS
+  finding_no_real_airline_api: PASS
+  finding_no_real_bank_api: PASS
+  finding_no_real_gds_api: PASS
+  finding_no_real_payment: PASS
+  finding_no_real_ticket: PASS
+  finding_no_real_booking: PASS
+  finding_no_real_world_effects: PASS
+  finding_artifact_transparency_complete: PASS
+  finding_raw_responses_saved_as_artifacts_not_authority: PASS
+
+counter table:
+  semantic_actor_call_count: 12
+  real_provider_call_count: 12
+  fake_provider_call_count: 0
+  network_used_count: 12
+  gemini_called_count: 12
+  tri_party_orchestrator_call_count: 1
+  tri_party_architect_call_count: 1
+  transaction_semantic_actor_count: 2
+  client_semantic_actor_count: 2
+  airline_semantic_actor_count: 4
+  bank_semantic_actor_count: 3
+  cross_root_semantic_actor_count: 1
+  vertical_fractal_semantic_cell_count: 3
+  bsep_created_count: 1
+  bsep_validated_count: 1
+  bsep_side_projection_count: 4
+  prompts_written_count: 12
+  raw_responses_written_count: 12
+  extracted_json_candidates_written_count: 12
+  validations_written_count: 12
+  canonical_summaries_written_count: 12
+  semantic_actor_validation_pass_count: 12
+  semantic_actor_validation_fail_count: 0
+  provider_output_used_as_truth_count: 0
+  provider_output_used_as_authority_count: 0
+  provider_output_created_packet_count: 0
+  provider_output_created_receipt_count: 0
+  provider_output_created_payment_count: 0
+  provider_output_created_ticket_count: 0
+  provider_output_created_booking_count: 0
+  cross_root_authority_transfer_count: 0
+  raw_passport_exposed_count: 0
+  raw_card_exposed_count: 0
+  raw_iban_exposed_count: 0
+  raw_payment_token_exposed_count: 0
+  real_airline_api_called_count: 0
+  real_bank_api_called_count: 0
+  real_gds_api_called_count: 0
+  real_payment_executed_count: 0
+  real_ticket_issued_count: 0
+  real_booking_created_count: 0
+  real_world_effects_count: 0
+  secret_scan_files_scanned: 65
+  secret_scan_matched_markers_count: 0
+  real_provider_call_delay_applied_count: 12
+  real_provider_call_delay_seconds: 30.0
+
+secret scan result:
+  finding_secret_scan_passed: PASS
+  finding_raw_secret_markers_absent: PASS
+  secret_scan_passed: true
+  secret_scan_files_scanned: 65
+  secret_scan_matched_markers_count: 0
+  raw_secret_markers_absent: true
+  raw_provider_response_content_in_audit_log: false
+
+non-claims:
+  not_production: true
+  not_public_auditor_package: true
+  no_live_rerun_by_audit: true
+  no_provider_network_gemini_call_by_audit: true
+  no_secret_access_by_audit: true
+  no_raw_provider_response_printed: true
+  no_real_airline_api: true
+  no_real_bank_api: true
+  no_real_gds_api: true
+  no_payment: true
+  no_ticket: true
+  no_booking: true
+  no_real_world_effects: true
+
+non-blocking notes:
+  non_blocking_note_lane_id_suffix_stale: true
+  lane_id: tri_party_airline_live_semantic_lane_v01_fake_provider
+  provider_mode: real_provider
+  real_provider_call_count: 12
+  fake_provider_call_count: 0
+  network_used_count: 12
+  gemini_called_count: 12
+  lane_id_not_used_as_provider_truth: true
+  note: lane_id suffix is a cosmetic stale label. Provider mode and call counters are the source of truth.
+
+validation results:
+  artifact_json_validation: PASS
+  focused_tests: 30 passed
+  optional_compatibility_tests: 107 passed
+  py_compile: PASS
+  git_diff_check: PASS
+  git_diff_stat_before_audit_log: clean
+  git_diff_name_only_before_audit_log: clean
+
+final audit verdict:
+  audit_status: PASS
+  verdict: Real Gemini provider artifacts show a PASS real-provider semantic lane run with 12 actor calls, BSEP validation before Architect, four side projections, preserved vertical parent-child dependencies, runtime-computed used/rejected fields, complete artifact transparency, passing secret scan, and zero real-world effects.

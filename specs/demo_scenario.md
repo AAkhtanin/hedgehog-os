@@ -1638,6 +1638,58 @@ Scenario status:
   production cost savings are claimed.
 - Airline tri-party preflight is next; Airline demo is not implemented.
 
+## Airline Tri-Party Live Semantic Lane v0.1 Scenario Checkpoint
+
+Airline Tri-Party Live Semantic Lane v0.1 is REAL GEMINI PASS.
+
+Scenario evidence:
+
+- Audit commit: `8f1d5d6`.
+- Audit:
+  `docs/audit_reports/auditor_tri_party_airline_live_semantic_lane_real_run_v01.log`.
+- Closed live runner:
+  `demo/run_tri_party_airline_live_semantic_lane_v01.py`.
+- Closed focused tests:
+  `tests/test_tri_party_airline_live_semantic_lane_v01_runner.py`.
+- `provider_mode: real_provider`.
+- Model: `gemini-2.5-flash`.
+- `semantic_actor_call_count: 12`.
+- `real_provider_call_count: 12`.
+- `fake_provider_call_count: 0`.
+- `network_used_count: 12`.
+- `gemini_called_count: 12`.
+
+Scenario status:
+
+- One tri-party Airline transaction is analyzed with real multi-actor semantic
+  participation.
+- BSEP remains the bounded membrane.
+- BSEP was created before Architect and BSEP validation was PASS.
+- Four BSEP side projections were PASS: client, airline, bank, and cross-root.
+- Horizontal actors operate on bounded side projections.
+- Strict vertical parent -> child validation dependency is preserved.
+- Vertical child actors receive parent canonical summaries, not raw parent
+  output.
+- Runtime computes `what_runtime_used` / `what_runtime_rejected`.
+- Runtime extracts, validates, canonicalizes, uses accepted semantics, and
+  records rejected semantics; runtime does not ignore LLM output.
+- Provider output is not truth.
+- Provider output is not authority.
+- Secret scan passed with 65 files scanned and 0 matched secret markers.
+- The completed happy path is mock-only: mock payment authorization, mock
+  ticket evidence, and mock PNR evidence.
+- Real airline API calls, real bank API calls, real GDS API calls, real
+  payment, real ticket, real booking, and real-world effects are all 0.
+- Next immediate gate is
+  `artifact_backed_human_airline_live_semantic_story_renderer`.
+- Next engineering preflight after story is
+  `airline_ticket_purchase_corridor_artifact_ledger_crypto_replay_preflight`.
+- Engineering order is recorded only: Airline Ticket/Purchase Corridor,
+  Airline Transaction Artifact Ledger, Airline Crypto Artifact Seal, Airline
+  Sealed Trace Replay Verifier.
+- Ticket/Purchase Corridor, Transaction Artifact Ledger, Crypto Artifact Seal,
+  and Sealed Trace Replay Verifier remain future gates.
+
 ## Exclusions
 
 - No real external APIs.

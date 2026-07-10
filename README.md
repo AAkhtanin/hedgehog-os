@@ -35,46 +35,47 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-Non-Action Direct Reuse Positive Control v0.1 — PASS.
+Airline Tri-Party Live Semantic Lane v0.1 — REAL GEMINI PASS.
 
 Checkpoint source:
 
-- Preflight:
-  `docs/non_action_direct_reuse_positive_control_preflight_v01.md`.
-- Model/evaluator:
-  `hedgehog/non_action_reuse_positive_control.py`.
-- Runner:
-  `demo/run_non_action_direct_reuse_positive_control_v01.py`.
+- Audit commit: `8f1d5d6`.
 - Audit:
-  `docs/audit_reports/auditor_non_action_direct_reuse_positive_control_v01.log`.
-- Explainer:
-  `docs/non_action_direct_reuse_positive_control_explainer_v01.md`.
-- Memory may safely answer informational questions without the heavy loop, but
-  it cannot authorize actions.
-- Positive informational direct reuse is allowed only for a fresh
-  Root-approved policy summary through `RootShortcutGate`.
-- Root creates informational reuse artifact; DRS, AVF, and ReuseGate do not
-  create the answer.
-- `old_memory_can_help_but_cannot_act`.
-- Payment direct reuse, shipment direct reuse, ticket purchase direct reuse,
-  ActionCommitPacket creation, and receipt creation are blocked.
-- Stale policy summary remains context-only.
-- High score without RootShortcutAllowed is blocked.
-- Quarantine-near direct reuse is blocked by focused model coverage.
-- Economics-ready counters are visible:
-  `heavy_pipeline_skipped_count: 1`,
-  `architect_skipped_for_safe_informational_reuse_count: 1`,
-  `executor_skipped_for_safe_informational_reuse_count: 1`,
-  `provider_called_count: 0`, `network_used_count: 0`,
-  `gemini_called_count: 0`, and `real_world_effects_count: 0`.
-- This is an economics-ready signal, not a production benchmark.
-- No real token benchmark or production cost savings are claimed.
-- No payment, shipment release, ticket issue, ActionCommitPacket, receipt,
-  FinalOutput, connector/API call, provider/network/Gemini call, or real-world
-  effect occurred.
-- Next major gate: Airline tri-party preflight after this reuse checkpoint docs
-  sync.
-- Airline demo is not implemented.
+  `docs/audit_reports/auditor_tri_party_airline_live_semantic_lane_real_run_v01.log`.
+- Runner:
+  `demo/run_tri_party_airline_live_semantic_lane_v01.py`.
+- Focused tests:
+  `tests/test_tri_party_airline_live_semantic_lane_v01_runner.py`.
+- `provider_mode: real_provider`, model `gemini-2.5-flash`.
+- `semantic_actor_call_count: 12`, `real_provider_call_count: 12`,
+  `fake_provider_call_count: 0`, `network_used_count: 12`, and
+  `gemini_called_count: 12`.
+- BSEP was created before Architect and BSEP validation was PASS.
+- Four side projections were PASS: client, airline, bank, and cross-root.
+- Orchestrator, Architect, client semantic actors, airline semantic actors,
+  airline vertical child actors, bank semantic actors, the bank vertical child
+  actor, and the cross-root reviewer were PASS.
+- Strict vertical parent -> child validation dependency is preserved; child
+  actors receive parent canonical summaries, not raw parent output.
+- Runtime does not ignore LLM output: it extracts, validates, canonicalizes,
+  computes `what_runtime_used` / `what_runtime_rejected`, uses accepted
+  semantics, and records rejected semantics.
+- Provider output is not truth and provider output is not authority.
+- Secret scan passed: 65 files scanned, 0 matched secret markers.
+- The completed happy path remains mock-only: mock payment authorization, mock
+  ticket evidence, and mock PNR evidence.
+- Real airline API calls, real bank API calls, real GDS API calls, real payment,
+  real ticket, real booking, and real-world effects are all 0.
+- Next immediate gate:
+  `artifact_backed_human_airline_live_semantic_story_renderer`.
+- Next engineering preflight after story:
+  `airline_ticket_purchase_corridor_artifact_ledger_crypto_replay_preflight`.
+- Recorded engineering order only: Airline Ticket/Purchase Corridor, Airline
+  Transaction Artifact Ledger, Airline Crypto Artifact Seal, Airline Sealed
+  Trace Replay Verifier.
+- Ticket/Purchase Corridor, Transaction Artifact Ledger, Crypto Artifact Seal,
+  and Sealed Trace Replay Verifier are planned gates, not completed
+  implementations.
 - This is not production.
 - This is not public auditor final package.
 

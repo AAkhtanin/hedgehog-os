@@ -2028,6 +2028,56 @@ Baseline interpretation:
 - No real token benchmark or production cost savings are claimed.
 - Airline tri-party preflight is the next baseline gate.
 
+Airline Tri-Party Live Semantic Lane v0.1 is REAL GEMINI PASS.
+
+Checkpoint evidence:
+
+- Audit commit: `8f1d5d6`.
+- Audit:
+  `docs/audit_reports/auditor_tri_party_airline_live_semantic_lane_real_run_v01.log`.
+- Live runner:
+  `demo/run_tri_party_airline_live_semantic_lane_v01.py`.
+- Focused tests:
+  `tests/test_tri_party_airline_live_semantic_lane_v01_runner.py`.
+- `provider_mode: real_provider`.
+- Model: `gemini-2.5-flash`.
+- `semantic_actor_call_count: 12`.
+- `real_provider_call_count: 12`.
+- `fake_provider_call_count: 0`.
+- `network_used_count: 12`.
+- `gemini_called_count: 12`.
+
+Baseline interpretation:
+
+- One tri-party Airline transaction was analyzed by real multi-actor semantic
+  participation.
+- BSEP remains the bounded membrane, was created before Architect, and
+  validated PASS.
+- BSEP side projections count is 4: client, airline, bank, and cross-root.
+- Horizontal actors operate on bounded side projections.
+- Strict vertical parent -> child validation dependency is preserved.
+- Vertical child actors receive parent canonical summaries, not raw parent
+  output.
+- Runtime computes `what_runtime_used` / `what_runtime_rejected`.
+- Runtime extracts, validates, canonicalizes, uses accepted semantics, and
+  records rejected semantics; runtime does not ignore LLM output.
+- Provider output is not truth and provider output is not authority.
+- Secret scan passed with 65 files scanned and 0 matched secret markers.
+- The happy path remains mock-only: mock payment authorization, mock ticket
+  evidence, and mock PNR evidence.
+- Real airline API calls, real bank API calls, real GDS API calls, real
+  payment, real ticket, real booking, and real-world effects are all 0.
+- This is not production and not a real booking/payment system.
+- Next immediate gate:
+  `artifact_backed_human_airline_live_semantic_story_renderer`.
+- Next engineering preflight after story:
+  `airline_ticket_purchase_corridor_artifact_ledger_crypto_replay_preflight`.
+- Next implementation gate after preflight:
+  `airline_ticket_purchase_corridor_v01`.
+- Engineering order recorded only: Airline Ticket/Purchase Corridor, Airline
+  Transaction Artifact Ledger, Airline Crypto Artifact Seal, Airline Sealed
+  Trace Replay Verifier.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

@@ -7,6 +7,38 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_tri_party_airline_live_semantic_lane_real_run_v01.log`
+  - Audit status: PASS.
+  - Audits the Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI PASS
+    checkpoint at audit commit `8f1d5d6`.
+  - Confirms `provider_mode: real_provider`, model `gemini-2.5-flash`,
+    `semantic_actor_call_count: 12`, `real_provider_call_count: 12`,
+    `fake_provider_call_count: 0`, `network_used_count: 12`, and
+    `gemini_called_count: 12`.
+  - Confirms BSEP was created before Architect, BSEP validation was PASS, and
+    four BSEP side projections were PASS for client, airline, bank, and
+    cross-root bounded contexts.
+  - Confirms Orchestrator, Architect, client semantic actors, airline semantic
+    actors, airline vertical child actors, bank semantic actors, the bank
+    vertical child actor, and the cross-root reviewer were PASS.
+  - Confirms strict vertical parent -> child validation dependency, where child
+    actors receive parent canonical summaries and not raw parent output.
+  - Confirms runtime computes `what_runtime_used` / `what_runtime_rejected`,
+    extracts, validates, canonicalizes, uses accepted semantics, and records
+    rejected semantics.
+  - Confirms provider output is not truth, provider output is not authority,
+    and LLM semantics do not create authority, payment, ticket, booking,
+    packet, receipt, or FinalOutput.
+  - Confirms secret scan passed with 65 files scanned and 0 matched secret
+    markers.
+  - Confirms real airline API calls, real bank API calls, real GDS API calls,
+    real payment, real ticket, real booking, and real-world effects are all 0.
+  - Next recorded gates: artifact-backed human Airline live semantic story
+    renderer, then Airline Ticket/Purchase Corridor preflight with Transaction
+    Artifact Ledger, Crypto Artifact Seal, and Sealed Trace Replay Verifier
+    roadmap ordering.
+  - Non-claims: not production and not public auditor final package.
+
 - `auditor_non_action_direct_reuse_positive_control_v01.log`
   - Audit status: PASS.
   - Audits the Non-Action Direct Reuse Positive Control v0.1 deterministic

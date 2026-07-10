@@ -515,7 +515,7 @@ Slice B — local Airline corridor contracts and validators.
 
 Recommended files:
 
-- `hedgehog/airline_ticket_purchase_corridor_v01.py`
+- `hedgehog/domains/airline/ticket_purchase_corridor_v01.py`
 - `tests/test_airline_ticket_purchase_corridor_v01.py`
 
 Scope:
@@ -530,6 +530,23 @@ Scope:
 - no Gemini/provider/network
 - no real APIs
 - no real effects
+
+## Core / Domain Boundary
+
+- Hedgehog core remains domain-neutral.
+- Airline contracts live under `hedgehog.domains.airline`.
+- The domain module depends on core; core does not depend on the domain.
+- Airline-specific Offer/Hold/Ticket/PNR concepts are not universal core types.
+- This Slice is a domain contract projection, not a Needle implementation.
+- Generic core extraction may be considered only after the same contract
+  structures are demonstrated in at least two actually implemented and
+  explicitly approved domain projections.
+- Existing Supplier Payment and Airline Ticket/Purchase evidence may be
+  compared where their contracts are genuinely equivalent.
+- Any future comparison domain must be introduced by an accepted roadmap or
+  specification; no unnamed or invented domain may be assumed.
+- Domain-specific Offer/Hold/Ticket/PNR fields must remain outside core.
+- No second universal authority engine is introduced.
 
 Important:
 

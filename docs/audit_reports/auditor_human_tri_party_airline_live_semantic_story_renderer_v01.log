@@ -1,0 +1,157 @@
+audit_id: auditor_human_tri_party_airline_live_semantic_story_renderer_v01
+audit_status: PASS
+audited_layer: Artifact-backed Human Airline Tri-Party Live Semantic Story Renderer v0.1
+observed_head: a95d05c
+observed_latest_commit: Add Airline tri-party live semantic human story renderer
+audit_mode: local_artifact_backed_renderer_audit
+
+audited_files:
+- demo/run_human_tri_party_airline_live_semantic_story_v01.py
+- tests/test_human_tri_party_airline_live_semantic_story_v01_runner.py
+
+source_real_run_audit:
+- docs/audit_reports/auditor_tri_party_airline_live_semantic_lane_real_run_v01.log
+
+source_real_artifact_directory:
+- .tmp/tri_party_airline_live_semantic_lane/tri_party_airline_live_semantic_lane_real_20260709_184306
+
+repository_state_before_audit_log:
+- git status --short --untracked-files=all: clean
+- git rev-parse --short HEAD: a95d05c
+- recent head:
+  - a95d05c Add Airline tri-party live semantic human story renderer
+  - d2a78c0 Document Airline tri-party real Gemini semantic checkpoint
+  - 8f1d5d6 Add Airline tri-party live semantic lane real run audit
+  - 79888d7 Fix Airline live semantic runtime used rejected contract
+  - 2b1e864 Route Airline live semantic lane through provider adapter
+
+commands_run:
+- python3 -m py_compile demo/run_human_tri_party_airline_live_semantic_story_v01.py
+  result: PASS
+- python3 -m demo.run_human_tri_party_airline_live_semantic_story_v01
+  result: PASS
+  observed_default_state: SKIPPED_CLOSED
+  observed_skip_reason: source_artifact_dir_not_selected
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_tri_party_airline_live_semantic_story_v01_runner.py
+  result: PASS
+  tests: 16 passed
+- PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_human_tri_party_airline_live_semantic_story_v01_runner.py tests/test_tri_party_airline_live_semantic_lane_v01_runner.py tests/test_tri_party_airline_ticket_purchase_mock_e2e_v01_runner.py
+  result: PASS
+  tests: 100 passed
+- HEDGEHOG_AIRLINE_LIVE_SEMANTIC_STORY_ARTIFACT_DIR=.tmp/tri_party_airline_live_semantic_lane/tri_party_airline_live_semantic_lane_real_20260709_184306 HEDGEHOG_AIRLINE_LIVE_SEMANTIC_STORY_AUDIT_LOG=docs/audit_reports/auditor_tri_party_airline_live_semantic_lane_real_run_v01.log python3 -m demo.run_human_tri_party_airline_live_semantic_story_v01
+  result: PASS
+  render_final_status: PASS
+
+audit_findings:
+- finding_renderer_default_state_skipped_closed: PASS
+- finding_focused_tests_16_passed: PASS
+- finding_compatibility_tests_100_passed: PASS
+- finding_real_artifact_compatibility_render_pass: PASS
+- finding_source_provider_mode_real_provider: PASS
+- finding_source_model_gemini_2_5_flash: PASS
+- finding_source_actor_count_12: PASS
+- finding_actor_cards_rendered_12: PASS
+- finding_all_actor_input_output_used_rejected_fields_visible: PASS
+- finding_canonical_semantic_summaries_loaded_from_artifacts: PASS
+- finding_no_hard_coded_semantic_replacement: PASS
+- finding_bsep_story_rendered_before_architect: PASS
+- finding_four_bsep_side_projections_rendered: PASS
+- finding_horizontal_actor_groups_rendered: PASS
+- finding_three_strict_parent_child_vertical_dependencies_rendered: PASS
+- finding_parent_canonical_summaries_used: PASS
+- finding_parent_raw_outputs_not_passed_to_children: PASS
+- finding_sibling_raw_outputs_not_passed_to_children: PASS
+- finding_raw_responses_hidden_by_default: PASS
+- finding_full_prompts_hidden_by_default: PASS
+- finding_explicit_transparency_guarded_by_source_secret_scan: PASS
+- finding_failed_secret_scan_disables_raw_and_full_prompt_output: PASS
+- finding_nonzero_real_effect_source_counters_fail_closed: PASS
+- finding_renderer_provider_network_gemini_calls_zero: PASS
+- finding_renderer_payment_ticket_booking_effects_zero: PASS
+- finding_no_real_apis: PASS
+- finding_next_gate_recorded: PASS
+
+source_facts_confirmed_by_renderer:
+- source_provider_mode: real_provider
+- source_model: gemini-2.5-flash
+- source_semantic_actor_call_count: 12
+- source_real_provider_call_count: 12
+- source_fake_provider_call_count: 0
+- source_network_used_count: 12
+- source_gemini_called_count: 12
+- source_bsep_created_count: 1
+- source_bsep_validated_count: 1
+- source_bsep_projection_count: 4
+- source_vertical_fractal_cell_count: 3
+- source_secret_scan_files_scanned: 65
+- source_secret_marker_match_count: 0
+- source_real_world_effects_count: 0
+
+renderer_counters_confirmed:
+- actor_cards_created_count: 12
+- actor_input_summaries_rendered_count: 12
+- actor_output_summaries_rendered_count: 12
+- runtime_used_sections_rendered_count: 12
+- runtime_rejected_sections_rendered_count: 12
+- vertical_dependency_cards_created_count: 3
+- horizontal_side_groups_created_count: 3
+- bsep_story_created_count: 1
+- bsep_projection_story_count: 4
+- full_prompts_printed_count: 0 by default
+- raw_responses_printed_count: 0 by default
+- renderer_provider_called_count: 0
+- renderer_network_called_count: 0
+- renderer_gemini_called_count: 0
+- renderer_payment_created_count: 0
+- renderer_ticket_created_count: 0
+- renderer_booking_created_count: 0
+- renderer_real_world_effects_count: 0
+
+human_story_findings:
+- The story is artifact-backed and reads the completed source artifacts.
+- The story does not invoke the source live lane.
+- The story does not call Gemini, a provider, or network.
+- The story exposes actor input summaries, canonical semantic summaries,
+  runtime-used decisions, and runtime-rejected decisions for all 12 actors.
+- The story shows BSEP before Architect and renders four side projections.
+- The story shows client, airline, bank, and cross-root semantic participation.
+- The story shows strict vertical dependencies: fare-rules and seat/baggage
+  children start after Airline offer parent PASS; bank risk child starts after
+  Bank payment parent PASS.
+- The story shows child actors receiving parent canonical summaries, not parent
+  raw output or sibling raw output.
+- The story shows the mock-only happy path: mock payment authorization, mock
+  ticket evidence, and mock PNR evidence.
+
+non_blocking_limitations:
+- renderer currently checks source audit by `audit_status: PASS` marker rather
+  than strict audit-id/run binding.
+- explicit transparency relies on the completed source secret_scan artifact
+  rather than performing a second render-time rescan.
+- These limitations do not change the PASS verdict for the local proof
+  renderer.
+
+non_claims:
+- not production
+- not public auditor final package
+- no live rerun
+- no provider call by renderer
+- no network call by renderer
+- no Gemini call by renderer
+- no config/API key access
+- no real airline API
+- no real bank API
+- no real GDS API
+- no real payment
+- no real ticket
+- no real booking
+- no Ticket/Purchase Corridor implementation
+- no Transaction Artifact Ledger implementation
+- no Crypto Artifact Seal implementation
+- no Sealed Trace Replay Verifier implementation
+
+next_gate:
+- airline_ticket_purchase_corridor_artifact_ledger_crypto_replay_preflight
+
+final_audit_verdict:
+- PASS

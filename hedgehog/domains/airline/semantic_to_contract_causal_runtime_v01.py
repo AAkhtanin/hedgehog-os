@@ -217,6 +217,9 @@ class AirlineSemanticCausalRunReportV01:
     provider_created_contract_count: int
     runtime_receipt_created_count: int
     corridor_execution_count: int
+    externally_observed_provider_call_count: int
+    provider_calls_performed_inside_precollected_entrypoint: int
+    duplicate_provider_call_count: int
     provider_network_call_count: int
     gemini_call_count: int
     real_world_effects_count: int
@@ -448,6 +451,23 @@ def _actor_request(
         provider_may_create_receipt=False,
         provider_may_execute_action=False,
         raw_secret_included=False,
+    )
+
+
+def build_airline_semantic_actor_request_v01(
+    *,
+    actor_id: str,
+    selection_input: binding.AirlineSemanticSelectionInputV01,
+    constraints: binding.ClientRootTravelConstraintSetV01,
+    snapshot: binding.AirlineRootOfferCandidateSetSnapshotV01,
+    proposed_offer_id: str,
+) -> AirlineInjectedSemanticActorRequestV01:
+    return _actor_request(
+        actor_id=actor_id,
+        selection_input=selection_input,
+        constraints=constraints,
+        snapshot=snapshot,
+        proposed_offer_id=proposed_offer_id,
     )
 
 
@@ -1136,6 +1156,10 @@ def validate_airline_semantic_causal_run_report_v01(
             or report.provider_created_authority_count != expected_authority_count
             or report.provider_created_contract_count != expected_contract_count
             or report.provider_call_count != len(report.provider_call_records)
+            or report.externally_observed_provider_call_count
+            != len(report.provider_call_records)
+            or report.provider_calls_performed_inside_precollected_entrypoint != 0
+            or report.duplicate_provider_call_count != 0
         ):
             reasons.append(REASON_CAUSAL_RUN_DERIVED_FIELD_MISMATCH)
         if (
@@ -1143,6 +1167,7 @@ def validate_airline_semantic_causal_run_report_v01(
             or report.silent_fallback_used
             or report.runtime_receipt_created_count != 0
             or report.corridor_execution_count != 0
+            or report.externally_observed_provider_call_count != 5
             or report.provider_network_call_count != 0
             or report.gemini_call_count != 0
             or report.real_world_effects_count != 0
@@ -1158,6 +1183,8 @@ def validate_airline_semantic_causal_run_report_v01(
         if (
             report.runtime_receipt_created_count != 0
             or report.corridor_execution_count != 0
+            or report.provider_calls_performed_inside_precollected_entrypoint != 0
+            or report.duplicate_provider_call_count != 0
             or report.provider_network_call_count != 0
             or report.gemini_call_count != 0
             or report.real_world_effects_count != 0
@@ -1260,6 +1287,12 @@ def _run_report(
         provider_created_contract_count=_provider_created_contract_count(proposal),
         runtime_receipt_created_count=0,
         corridor_execution_count=0,
+        externally_observed_provider_call_count=len(provider_call_records),
+        provider_calls_performed_inside_precollected_entrypoint=0,
+        duplicate_provider_call_count=(
+            len(provider_call_records)
+            - len({record.actor_id for record in provider_call_records})
+        ),
         provider_network_call_count=0,
         gemini_call_count=0,
         real_world_effects_count=0,
@@ -1311,6 +1344,487 @@ def _fail_run(
         local_chain_validation=local_chain_validation,
         validation_errors=_dedupe(validation_errors),
     )
+
+
+def collect_airline_semantic_to_contract_causal_run_from_precollected_payloads_v01(
+    *,
+    scenario_id: str,
+    constraints: binding.ClientRootTravelConstraintSetV01,
+    bsep_projection: binding.AirlineBSEPProjectionRefV01,
+    snapshot: binding.AirlineRootOfferCandidateSetSnapshotV01,
+    proposer_payload: Mapping[str, Any],
+    reviewer_payloads: Mapping[str, Mapping[str, Any]],
+    provider_call_records: tuple[AirlineSemanticProviderCallRecordV01, ...],
+) -> AirlineSemanticCausalRunReportV01:
+    bsep_report = binding.validate_airline_bsep_projection_ref_v01(bsep_projection)
+    if bsep_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_BSEP,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            local_chain_validation=bsep_report,
+            validation_errors=bsep_report.reason_codes,
+        )
+
+    constraints_report = binding.validate_client_root_travel_constraint_set_v01(
+        constraints,
+    )
+    if constraints_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_CONSTRAINTS,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            local_chain_validation=constraints_report,
+            validation_errors=constraints_report.reason_codes,
+        )
+
+    snapshot_report = binding.validate_airline_candidate_snapshot_v01(snapshot)
+    if snapshot_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_SNAPSHOT,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            local_chain_validation=snapshot_report,
+            validation_errors=snapshot_report.reason_codes,
+        )
+
+    selection_input = binding.build_selection_input_v01(
+        bsep_projection,
+        constraints,
+        snapshot,
+    )
+    selection_report = binding.validate_airline_semantic_selection_input_v01(
+        bsep_projection,
+        constraints,
+        snapshot,
+        selection_input,
+    )
+    if selection_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_SELECTION_INPUT,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            local_chain_validation=selection_report,
+            validation_errors=selection_report.reason_codes,
+        )
+
+    proposer_request = build_airline_semantic_actor_request_v01(
+        actor_id=ACTOR_ORDER[0],
+        selection_input=selection_input,
+        constraints=constraints,
+        snapshot=snapshot,
+        proposed_offer_id="",
+    )
+    proposal, proposal_report = (
+        binding.build_airline_semantic_offer_selection_proposal_from_payload_v01(
+            selection_input,
+            proposer_payload,
+        )
+    )
+    if proposal is None or proposal_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_PROPOSAL_VALIDATION,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            validation_errors=proposal_report.reason_codes,
+        )
+
+    proposer_review = _proposer_review_from_proposal(proposal)
+    proposer_review_report = binding.validate_airline_canonical_actor_selection_review_v01(
+        selection_input,
+        proposer_review,
+    )
+    if proposer_review_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_PROPOSER_REVIEW,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            proposal=proposal,
+            actor_reviews=(proposer_review,),
+            local_chain_validation=proposer_review_report,
+            validation_errors=proposer_review_report.reason_codes,
+        )
+
+    reviewer_request_records: list[AirlineInjectedSemanticActorRequestV01] = []
+    reviewer_responses: list[AirlineInjectedReviewerResponseV01] = []
+    actor_reviews: list[binding.AirlineCanonicalActorSelectionReviewV01] = [
+        proposer_review,
+    ]
+    for actor_id in ACTOR_ORDER[1:]:
+        request = build_airline_semantic_actor_request_v01(
+            actor_id=actor_id,
+            selection_input=selection_input,
+            constraints=constraints,
+            snapshot=snapshot,
+            proposed_offer_id=proposal.recommended_offer_id,
+        )
+        reviewer_request_records.append(request)
+        payload = reviewer_payloads.get(actor_id)
+        if payload is None:
+            return _fail_run(
+                scenario_id=scenario_id,
+                failed_stage=STAGE_REVIEWER_CALLS,
+                constraints=constraints,
+                snapshot=snapshot,
+                provider_call_records=provider_call_records,
+                proposer_request=proposer_request,
+                proposer_payload=proposer_payload,
+                proposal=proposal,
+                reviewer_request_records=tuple(reviewer_request_records),
+                reviewer_responses=tuple(reviewer_responses),
+                actor_reviews=tuple(actor_reviews),
+                validation_errors=(REASON_EXACT_FIVE_SEMANTIC_ACTOR_CALLS_REQUIRED,),
+            )
+        response, response_reasons = parse_injected_reviewer_response_v01(
+            request=request,
+            selection_input=selection_input,
+            proposed_offer_id=proposal.recommended_offer_id,
+            payload=payload,
+        )
+        if response is None:
+            return _fail_run(
+                scenario_id=scenario_id,
+                failed_stage=STAGE_REVIEWER_CALLS,
+                constraints=constraints,
+                snapshot=snapshot,
+                provider_call_records=provider_call_records,
+                proposer_request=proposer_request,
+                proposer_payload=proposer_payload,
+                proposal=proposal,
+                reviewer_request_records=tuple(reviewer_request_records),
+                reviewer_responses=tuple(reviewer_responses),
+                actor_reviews=tuple(actor_reviews),
+                validation_errors=(
+                    (REASON_REVIEWER_RESPONSE_INVALID,) + response_reasons
+                ),
+            )
+        reviewer_responses.append(response)
+        actor_reviews.append(_review_from_response(response))
+
+    actor_reviews_tuple = tuple(actor_reviews)
+    review_reasons: list[str] = []
+    for review in actor_reviews_tuple:
+        review_reasons.extend(
+            binding.validate_airline_canonical_actor_selection_review_v01(
+                selection_input,
+                review,
+            ).reason_codes,
+        )
+    if review_reasons:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_ACTOR_REVIEWS,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            proposal=proposal,
+            reviewer_request_records=tuple(reviewer_request_records),
+            reviewer_responses=tuple(reviewer_responses),
+            actor_reviews=actor_reviews_tuple,
+            validation_errors=review_reasons,
+        )
+
+    if (
+        len(provider_call_records) != 5
+        or tuple(record.actor_id for record in provider_call_records) != ACTOR_ORDER
+        or tuple(record.call_index for record in provider_call_records)
+        != (1, 2, 3, 4, 5)
+    ):
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_ACTOR_REVIEWS,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            proposal=proposal,
+            reviewer_request_records=tuple(reviewer_request_records),
+            reviewer_responses=tuple(reviewer_responses),
+            actor_reviews=actor_reviews_tuple,
+            validation_errors=(REASON_ACTOR_CALL_ORDER_MISMATCH,),
+        )
+
+    synthesis = binding.build_valid_synthesis_report_v01(
+        selection_input=selection_input,
+        actor_reviews=actor_reviews_tuple,
+        synthesized_recommended_offer_id=proposal.recommended_offer_id,
+    )
+    synthesis_report = binding.validate_airline_semantic_selection_synthesis_report_v01(
+        selection_input,
+        actor_reviews_tuple,
+        synthesis,
+    )
+    if synthesis_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_SYNTHESIS,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            proposal=proposal,
+            reviewer_request_records=tuple(reviewer_request_records),
+            reviewer_responses=tuple(reviewer_responses),
+            actor_reviews=actor_reviews_tuple,
+            synthesis=synthesis,
+            local_chain_validation=synthesis_report,
+            validation_errors=synthesis_report.reason_codes,
+        )
+
+    evidence = binding.build_valid_canonical_selection_evidence_v01(
+        selection_input=selection_input,
+        proposal=proposal,
+        synthesis=synthesis,
+    )
+    evidence_report = binding.validate_validated_airline_semantic_selection_evidence_v01(
+        selection_input,
+        proposal,
+        actor_reviews_tuple,
+        synthesis,
+        evidence,
+    )
+    if evidence_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_CANONICAL_EVIDENCE,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            proposal=proposal,
+            reviewer_request_records=tuple(reviewer_request_records),
+            reviewer_responses=tuple(reviewer_responses),
+            actor_reviews=actor_reviews_tuple,
+            synthesis=synthesis,
+            canonical_evidence=evidence,
+            local_chain_validation=evidence_report,
+            validation_errors=evidence_report.reason_codes,
+        )
+
+    decision = binding.build_valid_client_root_decision_v01(
+        selection_input=selection_input,
+        evidence=evidence,
+        selected_offer_id=evidence.recommended_offer_id,
+        recommendation_accepted=True,
+        root_override_used=False,
+    )
+    decision_report = binding.validate_client_root_offer_selection_decision_v01(
+        selection_input,
+        evidence,
+        decision,
+    )
+    if decision_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_CLIENT_ROOT_DECISION,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            proposal=proposal,
+            reviewer_request_records=tuple(reviewer_request_records),
+            reviewer_responses=tuple(reviewer_responses),
+            actor_reviews=actor_reviews_tuple,
+            synthesis=synthesis,
+            canonical_evidence=evidence,
+            client_root_decision=decision,
+            local_chain_validation=decision_report,
+            validation_errors=decision_report.reason_codes,
+        )
+
+    resolution = binding.build_valid_airline_root_resolution_v01(
+        selection_input=selection_input,
+        snapshot=snapshot,
+        decision=decision,
+    )
+    resolution_report = binding.validate_airline_root_selected_offer_resolution_v01(
+        selection_input,
+        snapshot,
+        evidence,
+        decision,
+        resolution,
+    )
+    if resolution_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_AIRLINE_ROOT_RESOLUTION,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            proposal=proposal,
+            reviewer_request_records=tuple(reviewer_request_records),
+            reviewer_responses=tuple(reviewer_responses),
+            actor_reviews=actor_reviews_tuple,
+            synthesis=synthesis,
+            canonical_evidence=evidence,
+            client_root_decision=decision,
+            airline_root_resolution=resolution,
+            local_chain_validation=resolution_report,
+            validation_errors=resolution_report.reason_codes,
+        )
+
+    hold_packet = project_airline_hold_packet_from_resolution_v01(resolution)
+    hold_binding = binding.build_valid_hold_contract_binding_v01(
+        resolution=resolution,
+        hold_packet=hold_packet,
+    )
+    hold_report = binding.validate_airline_semantic_hold_contract_binding_v01(
+        resolution,
+        hold_packet,
+        hold_binding,
+        resolution_report=resolution_report,
+    )
+    if hold_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_HOLD_BINDING,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            proposal=proposal,
+            reviewer_request_records=tuple(reviewer_request_records),
+            reviewer_responses=tuple(reviewer_responses),
+            actor_reviews=actor_reviews_tuple,
+            synthesis=synthesis,
+            canonical_evidence=evidence,
+            client_root_decision=decision,
+            airline_root_resolution=resolution,
+            local_chain_validation=hold_report,
+            validation_errors=hold_report.reason_codes,
+        )
+
+    causal_binding_report = binding.build_valid_semantic_to_contract_binding_report_v01(
+        bsep_projection=bsep_projection,
+        constraints=constraints,
+        snapshot=snapshot,
+        selection_input=selection_input,
+        proposal=proposal,
+        actor_reviews=actor_reviews_tuple,
+        synthesis=synthesis,
+        evidence=evidence,
+        decision=decision,
+        resolution=resolution,
+        hold_packet=hold_packet,
+        hold_binding=hold_binding,
+    )
+    binding_report = binding.validate_airline_semantic_to_contract_binding_report_v01(
+        causal_binding_report,
+    )
+    if binding_report.validation_status != binding.STATUS_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_BINDING_REPORT,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            proposal=proposal,
+            reviewer_request_records=tuple(reviewer_request_records),
+            reviewer_responses=tuple(reviewer_responses),
+            actor_reviews=actor_reviews_tuple,
+            synthesis=synthesis,
+            canonical_evidence=evidence,
+            client_root_decision=decision,
+            airline_root_resolution=resolution,
+            local_chain_validation=binding_report,
+            validation_errors=binding_report.reason_codes,
+        )
+
+    local_chain = binding.validate_airline_semantic_to_contract_local_chain_v01(
+        bsep_projection=bsep_projection,
+        constraints=constraints,
+        snapshot=snapshot,
+        selection_input=selection_input,
+        proposal=proposal,
+        actor_reviews=actor_reviews_tuple,
+        synthesis=synthesis,
+        evidence=evidence,
+        decision=decision,
+        resolution=resolution,
+        hold_packet=hold_packet,
+        hold_binding=hold_binding,
+        binding_report=causal_binding_report,
+    )
+    if local_chain.validation_status != binding.STATUS_LOCAL_MODEL_PASS:
+        return _fail_run(
+            scenario_id=scenario_id,
+            failed_stage=STAGE_LOCAL_CHAIN,
+            constraints=constraints,
+            snapshot=snapshot,
+            provider_call_records=provider_call_records,
+            proposer_request=proposer_request,
+            proposer_payload=proposer_payload,
+            proposal=proposal,
+            reviewer_request_records=tuple(reviewer_request_records),
+            reviewer_responses=tuple(reviewer_responses),
+            actor_reviews=actor_reviews_tuple,
+            synthesis=synthesis,
+            canonical_evidence=evidence,
+            client_root_decision=decision,
+            airline_root_resolution=resolution,
+            local_chain_validation=local_chain,
+            validation_errors=local_chain.reason_codes,
+        )
+
+    report = _run_report(
+        scenario_id=scenario_id,
+        final_status=STATUS_LOCAL_MODEL_PASS,
+        failed_stage="",
+        constraints=constraints,
+        snapshot=snapshot,
+        provider_call_records=provider_call_records,
+        proposer_request=proposer_request,
+        proposer_payload=proposer_payload,
+        proposal=proposal,
+        reviewer_request_records=tuple(reviewer_request_records),
+        reviewer_responses=tuple(reviewer_responses),
+        actor_reviews=actor_reviews_tuple,
+        synthesis=synthesis,
+        canonical_evidence=evidence,
+        client_root_decision=decision,
+        airline_root_resolution=resolution,
+        hold_packet=hold_packet,
+        hold_binding=hold_binding,
+        causal_binding_report=causal_binding_report,
+        local_chain_validation=local_chain,
+        validation_errors=(),
+    )
+    accepted, reasons = validate_airline_semantic_causal_run_report_v01(report)
+    if not accepted:
+        return replace(
+            report,
+            final_status=STATUS_FAIL_CLOSED,
+            failed_stage=STAGE_LOCAL_CHAIN,
+            validation_errors=reasons,
+        )
+    return report
 
 
 def collect_airline_semantic_to_contract_causal_run_v01(

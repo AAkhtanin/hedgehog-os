@@ -3,12 +3,105 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
+from typing import Any, Mapping
 
 from demo import run_tri_party_airline_ticket_purchase_mock_e2e_v01 as runner
+from hedgehog.domains.airline import (
+    semantic_to_contract_binding_v01 as binding,
+)
+from hedgehog.domains.airline import (
+    semantic_to_contract_causal_runtime_v01 as causal_runtime,
+)
 
 
 def _report() -> dict[str, object]:
     return runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01()
+
+
+def _proposal_payload(request: Mapping[str, Any], offer_id: str) -> dict[str, Any]:
+    return {
+        "proposal_id": f"semantic_offer_selection_proposal:{offer_id}",
+        "transaction_id": request["transaction_id"],
+        "actor_id": request["actor_id"],
+        "source_selection_input_id": request["source_selection_input_id"],
+        "source_bsep_projection_ref": request["source_bsep_projection_ref"],
+        "source_client_constraint_set_id": request["source_client_constraint_set_id"],
+        "source_candidate_set_snapshot_id": request[
+            "source_candidate_set_snapshot_id"
+        ],
+        "source_candidate_set_digest": request["source_candidate_set_digest"],
+        "candidate_set_ref": request["source_candidate_set_ref"],
+        "recommended_offer_id": offer_id,
+        "ranked_offer_ids": (offer_id,),
+        "decision_factors": ("deterministic_test_semantics",),
+        "preference_matches": ("explicit_offer_from_test_provider",),
+        "uncertainty_notes": ("requires_client_root_review",),
+        "requires_root_review": True,
+        "semantic_summary": "Test-only injected advisory semantics.",
+        "authority_created": False,
+        "action_permission_created": False,
+        "packet_created": False,
+        "receipt_created": False,
+        "payment_created": False,
+        "ticket_created": False,
+        "booking_created": False,
+        "final_output_created": False,
+        "real_world_effects_count": 0,
+    }
+
+
+def _reviewer_payload(request: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "response_id": (
+            f"canonical_actor_output:{request['actor_id']}:"
+            f"{request['proposed_offer_id']}"
+        ),
+        "transaction_id": request["transaction_id"],
+        "actor_id": request["actor_id"],
+        "source_request_id": request["request_id"],
+        "source_selection_input_id": request["source_selection_input_id"],
+        "source_candidate_set_snapshot_id": request[
+            "source_candidate_set_snapshot_id"
+        ],
+        "source_candidate_set_digest": request["source_candidate_set_digest"],
+        "reviewed_offer_id": request["proposed_offer_id"],
+        "review_role": request["actor_role"],
+        "review_status": binding.STATUS_PASS,
+        "semantic_factors": ("review_supports_explicit_offer",),
+        "blocking_conflicts": (),
+        "supports_proposed_offer": True,
+        "validation_status": binding.STATUS_PASS,
+        "raw_output_used": False,
+        "authority_created": False,
+        "permission_created": False,
+        "real_world_effects_count": 0,
+    }
+
+
+def _semantic_provider_for_offer(
+    offer_id: str,
+) -> causal_runtime.AirlineInjectedSemanticProviderV01:
+    def provider(actor_id: str, request: Mapping[str, Any]) -> Mapping[str, Any]:
+        if actor_id == binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER:
+            return _proposal_payload(request, offer_id)
+        return _reviewer_payload(request)
+
+    return provider
+
+
+def _causal_run_for_offer(
+    offer_id: str,
+) -> causal_runtime.AirlineSemanticCausalRunReportV01:
+    constraints = (
+        binding.build_client_constraints_preference_b_v01()
+        if offer_id == binding.OFFER_B_ID
+        else binding.build_client_constraints_preference_a_v01()
+    )
+    return causal_runtime.collect_airline_semantic_to_contract_causal_run_v01(
+        scenario_id=f"deterministic_runner:{offer_id}",
+        constraints=constraints,
+        semantic_provider=_semantic_provider_for_offer(offer_id),
+    )
 
 
 def test_airline_slice_b_collects_pass_report() -> None:
@@ -1580,3 +1673,253 @@ def test_source_receipt_creator_tamper_fails_closed() -> None:
 
         assert expected_error in errors
         _assert_corridor_source_mutation_fails(report)
+
+
+def test_no_argument_deterministic_runner_remains_pass() -> None:
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01()
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert (
+        report["mock_protocol_fixtures"]["AirlineOfferCandidateV01"]["offer_id"]
+        == binding.OFFER_A_ID
+    )
+
+
+def test_valid_causal_offer_a_drives_existing_transaction_a() -> None:
+    causal_run = _causal_run_for_offer(binding.OFFER_A_ID)
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=causal_run,
+    )
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert (
+        report["mock_protocol_fixtures"]["AirlineOfferCandidateV01"]["offer_id"]
+        == binding.OFFER_A_ID
+    )
+
+
+def test_valid_causal_offer_b_drives_existing_transaction_b() -> None:
+    causal_run = _causal_run_for_offer(binding.OFFER_B_ID)
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=causal_run,
+    )
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert (
+        report["mock_protocol_fixtures"]["AirlineOfferCandidateV01"]["offer_id"]
+        == binding.OFFER_B_ID
+    )
+    assert report["final_tri_party_mock_summary"]["selected_offer_id"] == (
+        binding.OFFER_B_ID
+    )
+
+
+def test_deterministic_runner_has_no_direct_offer_id_argument() -> None:
+    import inspect
+
+    signature = inspect.signature(
+        runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01,
+    )
+
+    assert "offer_id" not in signature.parameters
+    assert "selected_offer_id" not in signature.parameters
+    assert "recommended_offer_id" not in signature.parameters
+
+
+def test_airline_root_resolution_is_authoritative_source() -> None:
+    causal_run = _causal_run_for_offer(binding.OFFER_B_ID)
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=causal_run,
+    )
+    offer = report["mock_protocol_fixtures"]["AirlineOfferCandidateV01"]
+
+    assert causal_run.airline_root_resolution is not None
+    assert offer["price_amount"] == causal_run.airline_root_resolution.resolved_amount
+    assert offer["currency"] == causal_run.airline_root_resolution.resolved_currency
+    assert offer["route_ref"] == causal_run.airline_root_resolution.resolved_route_ref
+
+
+def test_provider_proposal_amount_is_not_used_as_authority() -> None:
+    def provider(actor_id: str, request: Mapping[str, Any]) -> Mapping[str, Any]:
+        if actor_id == binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER:
+            payload = _proposal_payload(request, binding.OFFER_B_ID)
+            payload["amount"] = 1
+            return payload
+        return _reviewer_payload(request)
+
+    causal_run = causal_runtime.collect_airline_semantic_to_contract_causal_run_v01(
+        scenario_id="provider_amount_injection",
+        constraints=binding.build_client_constraints_preference_b_v01(),
+        semantic_provider=provider,
+    )
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=causal_run,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert "semantic_causal_run_validation_rejected" in report["validation_errors"]
+
+
+def test_invalid_causal_run_fails_before_corridor() -> None:
+    causal_run = _causal_run_for_offer(binding.OFFER_A_ID)
+    invalid = replace(causal_run, final_status=causal_runtime.STATUS_FAIL_CLOSED)
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=invalid,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert report["counter_table"]["ticket_purchase_corridor_execution_count"] == 0
+
+
+def test_causal_offer_mismatch_fails_closed() -> None:
+    causal_run = _causal_run_for_offer(binding.OFFER_B_ID)
+    invalid = replace(causal_run, root_selected_offer_id=binding.OFFER_A_ID)
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=invalid,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert "semantic_causal_offer_chain_mismatch" in report["validation_errors"]
+
+
+def test_one_deterministic_collection_one_corridor_execution() -> None:
+    causal_run = _causal_run_for_offer(binding.OFFER_A_ID)
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=causal_run,
+    )
+    counters = report["counter_table"]
+
+    assert counters["deterministic_airline_collection_count"] == 1
+    assert counters["ticket_purchase_corridor_execution_count"] == 1
+
+
+def test_no_default_or_silent_fallback() -> None:
+    causal_run = _causal_run_for_offer(binding.OFFER_B_ID)
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=causal_run,
+    )
+    counters = report["counter_table"]
+
+    assert counters["default_offer_count"] == 0
+    assert counters["silent_fallback_count"] == 0
+
+
+def test_deterministic_runner_contains_no_corridor_global_assignment() -> None:
+    source = Path(runner.__file__).read_text()
+
+    assert "corridor_contracts.OFFER_ID =" not in source
+    assert "corridor_contracts.HOLD_ID =" not in source
+    assert "corridor_contracts.AMOUNT =" not in source
+
+
+def test_independent_a_b_a_runs_do_not_share_mutable_contract_state() -> None:
+    original_constants = (
+        runner.corridor_contracts.OFFER_ID,
+        runner.corridor_contracts.HOLD_ID,
+        runner.corridor_contracts.AMOUNT,
+    )
+
+    first_a = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=_causal_run_for_offer(binding.OFFER_A_ID),
+    )
+    b_report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=_causal_run_for_offer(binding.OFFER_B_ID),
+    )
+    second_a = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=_causal_run_for_offer(binding.OFFER_A_ID),
+    )
+
+    assert first_a["final_status"] == runner.STATUS_PASS
+    assert b_report["final_status"] == runner.STATUS_PASS
+    assert second_a["final_status"] == runner.STATUS_PASS
+    assert first_a["final_tri_party_mock_summary"]["selected_offer_id"] == (
+        binding.OFFER_A_ID
+    )
+    assert b_report["final_tri_party_mock_summary"]["selected_offer_id"] == (
+        binding.OFFER_B_ID
+    )
+    assert second_a["final_tri_party_mock_summary"]["selected_offer_id"] == (
+        binding.OFFER_A_ID
+    )
+    assert (
+        runner.corridor_contracts.OFFER_ID,
+        runner.corridor_contracts.HOLD_ID,
+        runner.corridor_contracts.AMOUNT,
+    ) == original_constants
+
+
+def test_independent_b_a_b_runs_do_not_share_mutable_contract_state() -> None:
+    first_b = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=_causal_run_for_offer(binding.OFFER_B_ID),
+    )
+    a_report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=_causal_run_for_offer(binding.OFFER_A_ID),
+    )
+    second_b = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=_causal_run_for_offer(binding.OFFER_B_ID),
+    )
+
+    assert first_b["final_status"] == runner.STATUS_PASS
+    assert a_report["final_status"] == runner.STATUS_PASS
+    assert second_b["final_status"] == runner.STATUS_PASS
+    assert first_b["final_tri_party_mock_summary"]["selected_offer_id"] == (
+        binding.OFFER_B_ID
+    )
+    assert a_report["final_tri_party_mock_summary"]["selected_offer_id"] == (
+        binding.OFFER_A_ID
+    )
+    assert second_b["final_tri_party_mock_summary"]["selected_offer_id"] == (
+        binding.OFFER_B_ID
+    )
+
+
+def test_a_report_validates_after_b_collection_under_a_context() -> None:
+    a_report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=_causal_run_for_offer(binding.OFFER_A_ID),
+    )
+    runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=_causal_run_for_offer(binding.OFFER_B_ID),
+    )
+    fixture_bundle = runner._build_airline_ticket_purchase_corridor_fixture_bundle_v01(
+        a_report,
+    )
+    corridor_report = a_report["airline_ticket_purchase_corridor_v0_1"]
+
+    accepted, errors = (
+        runner.corridor_runtime
+        .validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
+            fixture_bundle,
+            corridor_report,
+            contract_context=corridor_report.contract_context,
+        )
+    )
+
+    assert accepted is True
+    assert errors == ()
+    assert runner._validate_report(a_report) == ()
+
+
+def test_b_report_validates_after_a_collection_under_b_context() -> None:
+    b_report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=_causal_run_for_offer(binding.OFFER_B_ID),
+    )
+    runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=_causal_run_for_offer(binding.OFFER_A_ID),
+    )
+    fixture_bundle = runner._build_airline_ticket_purchase_corridor_fixture_bundle_v01(
+        b_report,
+    )
+    corridor_report = b_report["airline_ticket_purchase_corridor_v0_1"]
+
+    accepted, errors = (
+        runner.corridor_runtime
+        .validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
+            fixture_bundle,
+            corridor_report,
+            contract_context=corridor_report.contract_context,
+        )
+    )
+
+    assert accepted is True
+    assert errors == ()
+    assert runner._validate_report(b_report) == ()

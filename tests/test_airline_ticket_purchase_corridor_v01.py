@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 from hedgehog.domains.airline import ticket_purchase_corridor_v01 as corridor
 
@@ -70,6 +71,65 @@ def _assert_fails_with(
     assert report.validation_status == corridor.FAIL_CLOSED
     assert report.return_to_root_required is True
     assert reason in report.reason_codes
+
+
+def test_contract_context_defaults_to_canonical_offer_a() -> None:
+    context = corridor.build_canonical_airline_ticket_purchase_contract_context_v01()
+
+    assert context.offer_id == corridor.OFFER_ID
+    assert context.hold_id == corridor.HOLD_ID
+    assert context.amount == corridor.AMOUNT
+    _assert_pass(
+        corridor.validate_airline_hold_commit_packet_v01(
+            corridor.build_valid_airline_offer_packet_v01(),
+            corridor.build_valid_airline_hold_commit_packet_v01(),
+            contract_context=context,
+        ),
+    )
+
+
+def test_contract_context_from_resolution_validates_noncanonical_offer_b() -> None:
+    offer_id = "offer:mock_airline_al:PAR-LIM:002"
+    hold_id = "hold:mock_airline_al:002"
+    amount = 806
+    offer_packet = replace(
+        corridor.build_valid_airline_offer_packet_v01(),
+        offer_id=offer_id,
+        amount=amount,
+    )
+    hold_packet = replace(
+        corridor.build_valid_airline_hold_commit_packet_v01(),
+        parent_offer_packet_id=offer_packet.packet_id,
+        offer_id=offer_id,
+        hold_id=hold_id,
+        amount=amount,
+    )
+    resolution = SimpleNamespace(
+        transaction_id=corridor.TRANSACTION_ID,
+        selected_offer_id=offer_id,
+        resolved_amount=amount,
+        resolved_currency=corridor.CURRENCY,
+        resolved_route_ref=corridor.ROUTE_REF,
+    )
+    context = corridor.build_airline_ticket_purchase_contract_context_from_resolution_v01(
+        resolution=resolution,
+        hold_packet=hold_packet,
+    )
+
+    _assert_pass(
+        corridor.validate_airline_hold_commit_packet_v01(
+            offer_packet,
+            hold_packet,
+            contract_context=context,
+        ),
+    )
+    _assert_fails_with(
+        corridor.validate_airline_hold_commit_packet_v01(
+            offer_packet,
+            hold_packet,
+        ),
+        corridor.REASON_SELECTED_OFFER_MISMATCH,
+    )
 
 
 def test_valid_airline_offer_packet_passes() -> None:

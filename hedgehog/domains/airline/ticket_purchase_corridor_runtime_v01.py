@@ -154,6 +154,7 @@ class AirlineTicketPurchaseCorridorRunReportV01:
     root_boundary_summary: tuple[Mapping[str, Any], ...]
     receipt_boundary_summary: Mapping[str, Any]
     counter_table: Mapping[str, int]
+    contract_context: contracts.AirlineTicketPurchaseContractContextV01
     validation_errors: tuple[str, ...]
     next_gate: str
 
@@ -174,6 +175,18 @@ def _merge_report_reasons(
 
 def _status_from_reasons(reasons: tuple[str, ...]) -> str:
     return STATUS_PASS if not reasons else STATUS_FAIL_CLOSED
+
+
+def _contract_context(
+    contract_context: (
+        contracts.AirlineTicketPurchaseContractContextV01 | None
+    ),
+) -> contracts.AirlineTicketPurchaseContractContextV01:
+    return (
+        contract_context
+        if contract_context is not None
+        else contracts.build_canonical_airline_ticket_purchase_contract_context_v01()
+    )
 
 
 def _core_phase_corridor(
@@ -413,16 +426,19 @@ def _core_domain_delegation_matrix() -> tuple[AirlineCoreDelegationRowV01, ...]:
 def _validate_airline_offer_hold_phase(
     fixtures: Mapping[str, Any],
     core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None,
+    contract_context: contracts.AirlineTicketPurchaseContractContextV01,
 ) -> AirlineCorridorPhaseResultV01:
     gate_report = contracts.validate_root_phase_gate_v01(
         fixtures["airline_offer_hold_gate"],
     )
     offer_report = contracts.validate_airline_offer_packet_v01(
         fixtures["offer_packet"],
+        contract_context=contract_context,
     )
     hold_report = contracts.validate_airline_hold_commit_packet_v01(
         fixtures["offer_packet"],
         fixtures["hold_packet"],
+        contract_context=contract_context,
     )
     receipt_report = contracts.validate_airline_offer_hold_receipt_v01(
         fixtures["hold_packet"],
@@ -468,18 +484,21 @@ def _validate_airline_offer_hold_phase(
 def _validate_client_purchase_intent_phase(
     fixtures: Mapping[str, Any],
     core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None,
+    contract_context: contracts.AirlineTicketPurchaseContractContextV01,
 ) -> AirlineCorridorPhaseResultV01:
     gate_report = contracts.validate_root_phase_gate_v01(
         fixtures["client_purchase_gate"],
     )
     human_report = contracts.validate_human_approval_evidence_ref_v01(
         fixtures["human_approval"],
+        contract_context=contract_context,
     )
     purchase_report = contracts.validate_client_purchase_intent_v01(
         fixtures["human_approval"],
         fixtures["offer_packet"],
         fixtures["hold_receipt"],
         fixtures["purchase_intent"],
+        contract_context=contract_context,
     )
     core_valid, core_reasons = _validate_core_guard(
         phase_id=PHASE_CLIENT_PURCHASE_INTENT,
@@ -513,11 +532,13 @@ def _validate_client_purchase_intent_phase(
 def _validate_bank_payment_authorization_phase(
     fixtures: Mapping[str, Any],
     core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None,
+    contract_context: contracts.AirlineTicketPurchaseContractContextV01,
 ) -> AirlineCorridorPhaseResultV01:
     gate_report = contracts.validate_root_phase_gate_v01(fixtures["bank_gate"])
     auth_report = contracts.validate_bank_payment_authorization_ref_v01(
         fixtures["purchase_intent"],
         fixtures["authorization_ref"],
+        contract_context=contract_context,
     )
     core_valid, core_reasons = _validate_core_guard(
         phase_id=PHASE_BANK_PAYMENT_AUTHORIZATION,
@@ -546,6 +567,7 @@ def _validate_bank_payment_authorization_phase(
 def _validate_airline_ticket_issue_phase(
     fixtures: Mapping[str, Any],
     core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None,
+    contract_context: contracts.AirlineTicketPurchaseContractContextV01,
 ) -> AirlineCorridorPhaseResultV01:
     gate_report = contracts.validate_root_phase_gate_v01(
         fixtures["airline_ticket_gate"],
@@ -557,10 +579,12 @@ def _validate_airline_ticket_issue_phase(
         fixtures["purchase_intent"],
         fixtures["authorization_ref"],
         fixtures["ticket_issue_intent"],
+        contract_context=contract_context,
     )
     ticket_receipt_report = contracts.validate_mock_ticket_receipt_v01(
         fixtures["ticket_issue_intent"],
         fixtures["ticket_receipt"],
+        contract_context=contract_context,
     )
     core_valid, core_reasons = _validate_core_guard(
         phase_id=PHASE_AIRLINE_TICKET_ISSUE,
@@ -599,6 +623,7 @@ def _validate_airline_ticket_issue_phase(
 def _validate_client_completion_phase(
     fixtures: Mapping[str, Any],
     core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None,
+    contract_context: contracts.AirlineTicketPurchaseContractContextV01,
 ) -> AirlineCorridorPhaseResultV01:
     gate_report = contracts.validate_root_phase_gate_v01(fixtures["completion_gate"])
     purchase_receipt_report = contracts.validate_mock_purchase_receipt_v01(
@@ -645,19 +670,25 @@ def validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
     fixtures: Mapping[str, Any],
     *,
     core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None = None,
+    contract_context: (
+        contracts.AirlineTicketPurchaseContractContextV01 | None
+    ) = None,
 ) -> tuple[bool, tuple[str, ...]]:
     """Validate projected fixtures without constructing a corridor run report."""
 
+    context = _contract_context(contract_context)
     reasons: list[str] = []
     gate_report = contracts.validate_root_phase_gate_v01(
         fixtures["airline_offer_hold_gate"],
     )
     offer_report = contracts.validate_airline_offer_packet_v01(
         fixtures["offer_packet"],
+        contract_context=context,
     )
     hold_report = contracts.validate_airline_hold_commit_packet_v01(
         fixtures["offer_packet"],
         fixtures["hold_packet"],
+        contract_context=context,
     )
     hold_receipt_report = contracts.validate_airline_offer_hold_receipt_v01(
         fixtures["hold_packet"],
@@ -685,12 +716,14 @@ def validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
     )
     human_report = contracts.validate_human_approval_evidence_ref_v01(
         fixtures["human_approval"],
+        contract_context=context,
     )
     purchase_report = contracts.validate_client_purchase_intent_v01(
         fixtures["human_approval"],
         fixtures["offer_packet"],
         fixtures["hold_receipt"],
         fixtures["purchase_intent"],
+        contract_context=context,
     )
     client_core_valid, client_core_reasons = _validate_core_guard(
         phase_id=PHASE_CLIENT_PURCHASE_INTENT,
@@ -714,6 +747,7 @@ def validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
     auth_report = contracts.validate_bank_payment_authorization_ref_v01(
         fixtures["purchase_intent"],
         fixtures["authorization_ref"],
+        contract_context=context,
     )
     bank_core_valid, bank_core_reasons = _validate_core_guard(
         phase_id=PHASE_BANK_PAYMENT_AUTHORIZATION,
@@ -736,10 +770,12 @@ def validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
         fixtures["purchase_intent"],
         fixtures["authorization_ref"],
         fixtures["ticket_issue_intent"],
+        contract_context=context,
     )
     ticket_receipt_report = contracts.validate_mock_ticket_receipt_v01(
         fixtures["ticket_issue_intent"],
         fixtures["ticket_receipt"],
+        contract_context=context,
     )
     ticket_core_valid, ticket_core_reasons = _validate_core_guard(
         phase_id=PHASE_AIRLINE_TICKET_ISSUE,
@@ -783,8 +819,13 @@ def validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
 def validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
     fixtures: Mapping[str, Any],
     report: AirlineTicketPurchaseCorridorRunReportV01,
+    *,
+    contract_context: (
+        contracts.AirlineTicketPurchaseContractContextV01 | None
+    ) = None,
 ) -> tuple[bool, tuple[str, ...]]:
     reasons: list[str] = []
+    context = _contract_context(contract_context or report.contract_context)
     fixture_transaction_ids = tuple(
         getattr(artifact, "transaction_id")
         for artifact in fixtures.values()
@@ -792,6 +833,7 @@ def validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
     )
     if (
         report.transaction_id != contracts.TRANSACTION_ID
+        or report.contract_context != context
         or any(transaction_id != report.transaction_id for transaction_id in fixture_transaction_ids)
         or any(phase.transaction_id != report.transaction_id for phase in report.phase_results)
         or any(transition.transaction_id != report.transaction_id for transition in report.transitions)
@@ -1092,8 +1134,12 @@ def _run_airline_ticket_purchase_corridor_state_machine_v01(
     fixtures: Mapping[str, Any] | None = None,
     *,
     core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None = None,
+    contract_context: (
+        contracts.AirlineTicketPurchaseContractContextV01 | None
+    ) = None,
 ) -> AirlineTicketPurchaseCorridorRunReportV01:
     fixture_bundle = dict(fixtures or _build_valid_fixture_bundle_v01())
+    context = _contract_context(contract_context)
     phase_results: list[AirlineCorridorPhaseResultV01] = []
     failed_phase_id = ""
     return_to_root_id = ""
@@ -1113,6 +1159,7 @@ def _run_airline_ticket_purchase_corridor_state_machine_v01(
         phase_result = PHASE_VALIDATORS[phase_id](
             fixture_bundle,
             core_corridor_overrides,
+            context,
         )
         phase_results.append(phase_result)
         if phase_result.phase_status != STATUS_PASS:
@@ -1143,6 +1190,7 @@ def _run_airline_ticket_purchase_corridor_state_machine_v01(
         root_boundary_summary=_root_boundary_summary(),
         receipt_boundary_summary=_receipt_boundary_summary(phase_tuple),
         counter_table=counter_table,
+        contract_context=context,
         validation_errors=validation_errors,
         next_gate=NEXT_GATE,
     )
@@ -1158,6 +1206,13 @@ def validate_airline_ticket_purchase_corridor_run_v01(
     report: AirlineTicketPurchaseCorridorRunReportV01,
 ) -> tuple[bool, tuple[str, ...]]:
     errors: list[str] = []
+    if not isinstance(
+        report.contract_context,
+        contracts.AirlineTicketPurchaseContractContextV01,
+    ):
+        _append_reason(errors, REASON_FIXTURE_REPORT_BINDING_FAILED)
+    elif report.contract_context.transaction_id != report.transaction_id:
+        _append_reason(errors, contracts.REASON_WRONG_TRANSACTION_ID)
     if report.run_id != RUN_ID:
         _append_reason(errors, "run_id_mismatch")
     if report.slice_id != SLICE_ID:
@@ -1387,10 +1442,14 @@ def collect_airline_ticket_purchase_corridor_state_machine_v01(
     *,
     fixtures: Mapping[str, Any] | None = None,
     core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None = None,
+    contract_context: (
+        contracts.AirlineTicketPurchaseContractContextV01 | None
+    ) = None,
 ) -> AirlineTicketPurchaseCorridorRunReportV01:
     return _run_airline_ticket_purchase_corridor_state_machine_v01(
         fixtures,
         core_corridor_overrides=core_corridor_overrides,
+        contract_context=contract_context,
     )
 
 

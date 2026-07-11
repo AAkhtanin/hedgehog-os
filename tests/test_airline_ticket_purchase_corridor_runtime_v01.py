@@ -15,6 +15,71 @@ def _fixtures() -> dict[str, object]:
     return runtime._build_valid_fixture_bundle_v01()
 
 
+def _b_context() -> contracts.AirlineTicketPurchaseContractContextV01:
+    return contracts.AirlineTicketPurchaseContractContextV01(
+        transaction_id=contracts.TRANSACTION_ID,
+        offer_id="offer:mock_airline_al:PAR-LIM:002",
+        hold_id="hold:mock_airline_al:002",
+        amount=806,
+        currency=contracts.CURRENCY,
+        route_ref=contracts.ROUTE_REF,
+        passenger_ref=contracts.PASSENGER_REF,
+        max_amount=contracts.MAX_AMOUNT,
+        merchant_ref=contracts.MERCHANT_REF,
+    )
+
+
+def _b_fixtures() -> dict[str, object]:
+    fixtures = _fixtures()
+    context = _b_context()
+    fixtures["human_approval"] = replace(
+        fixtures["human_approval"],
+        selected_offer_id=context.offer_id,
+    )
+    fixtures["offer_packet"] = replace(
+        fixtures["offer_packet"],
+        offer_id=context.offer_id,
+        amount=context.amount,
+    )
+    fixtures["hold_packet"] = replace(
+        fixtures["hold_packet"],
+        offer_id=context.offer_id,
+        hold_id=context.hold_id,
+        amount=context.amount,
+    )
+    fixtures["hold_receipt"] = replace(
+        fixtures["hold_receipt"],
+        offer_id=context.offer_id,
+        hold_id=context.hold_id,
+        amount=context.amount,
+    )
+    fixtures["purchase_intent"] = replace(
+        fixtures["purchase_intent"],
+        offer_id=context.offer_id,
+        hold_id=context.hold_id,
+        selected_amount=context.amount,
+    )
+    fixtures["authorization_ref"] = replace(
+        fixtures["authorization_ref"],
+        offer_id=context.offer_id,
+        hold_id=context.hold_id,
+        amount=context.amount,
+    )
+    fixtures["ticket_issue_intent"] = replace(
+        fixtures["ticket_issue_intent"],
+        offer_id=context.offer_id,
+        hold_id=context.hold_id,
+        amount=context.amount,
+    )
+    fixtures["ticket_receipt"] = replace(
+        fixtures["ticket_receipt"],
+        offer_id=context.offer_id,
+        hold_id=context.hold_id,
+        amount=context.amount,
+    )
+    return fixtures
+
+
 def _run_with(**overrides: object) -> runtime.AirlineTicketPurchaseCorridorRunReportV01:
     fixtures = _fixtures()
     fixtures.update(overrides)
@@ -732,3 +797,90 @@ def test_corridor_report_wrong_phase_evidence_ref_rejected() -> None:
     assert accepted is False
     assert runtime.REASON_PHASE_EVIDENCE_REFS_MISMATCH in errors
     assert runtime.REASON_FIXTURE_REPORT_BINDING_FAILED in errors
+
+
+def test_b_context_fixture_bundle_and_run_pass() -> None:
+    accepted, errors = (
+        runtime.validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
+            _b_fixtures(),
+            contract_context=_b_context(),
+        )
+    )
+    report = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
+        fixtures=_b_fixtures(),
+        contract_context=_b_context(),
+    )
+
+    assert accepted is True
+    assert errors == ()
+    assert report.final_status == runtime.STATUS_PASS
+    assert report.contract_context == _b_context()
+
+
+def test_a_b_a_and_b_a_b_context_runs_remain_independent() -> None:
+    original_constants = (
+        contracts.OFFER_ID,
+        contracts.HOLD_ID,
+        contracts.AMOUNT,
+    )
+
+    a_first = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01()
+    b_first = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
+        fixtures=_b_fixtures(),
+        contract_context=_b_context(),
+    )
+    a_second = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01()
+    b_second = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
+        fixtures=_b_fixtures(),
+        contract_context=_b_context(),
+    )
+
+    assert a_first.final_status == runtime.STATUS_PASS
+    assert b_first.final_status == runtime.STATUS_PASS
+    assert a_second.final_status == runtime.STATUS_PASS
+    assert b_second.final_status == runtime.STATUS_PASS
+    assert a_first.contract_context.offer_id == contracts.OFFER_ID
+    assert b_first.contract_context.offer_id == _b_context().offer_id
+    assert a_second.contract_context.offer_id == contracts.OFFER_ID
+    assert b_second.contract_context.offer_id == _b_context().offer_id
+    assert (contracts.OFFER_ID, contracts.HOLD_ID, contracts.AMOUNT) == (
+        original_constants
+    )
+
+
+def test_a_report_validates_after_b_collection_under_a_context() -> None:
+    a_report = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01()
+    runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
+        fixtures=_b_fixtures(),
+        contract_context=_b_context(),
+    )
+
+    accepted, errors = (
+        runtime.validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
+            _fixtures(),
+            a_report,
+            contract_context=a_report.contract_context,
+        )
+    )
+
+    assert accepted is True
+    assert errors == ()
+
+
+def test_b_report_validates_after_a_collection_under_b_context() -> None:
+    b_report = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
+        fixtures=_b_fixtures(),
+        contract_context=_b_context(),
+    )
+    runtime.collect_airline_ticket_purchase_corridor_state_machine_v01()
+
+    accepted, errors = (
+        runtime.validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
+            _b_fixtures(),
+            b_report,
+            contract_context=b_report.contract_context,
+        )
+    )
+
+    assert accepted is True
+    assert errors == ()

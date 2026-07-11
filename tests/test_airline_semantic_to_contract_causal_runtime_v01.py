@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import ast
 import inspect
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -1420,3 +1420,161 @@ def test_runtime_does_not_implement_ledger_crypto_replay() -> None:
     assert "Ledger implementation" not in source
     assert "Crypto implementation" not in source
     assert "Replay implementation" not in source
+
+
+def _precollected_from_injected(
+    report: runtime.AirlineSemanticCausalRunReportV01,
+    constraints: binding.ClientRootTravelConstraintSetV01,
+) -> runtime.AirlineSemanticCausalRunReportV01:
+    assert report.proposal is not None
+    assert report.proposer_payload
+    return (
+        runtime
+        .collect_airline_semantic_to_contract_causal_run_from_precollected_payloads_v01(
+            scenario_id=f"precollected:{report.scenario_id}",
+            constraints=constraints,
+            bsep_projection=binding.build_valid_airline_bsep_projection_ref_v01(),
+            snapshot=binding.build_airline_candidate_snapshot_v01(),
+            proposer_payload=report.proposer_payload,
+            reviewer_payloads={
+                response.actor_id: asdict(response)
+                for response in report.reviewer_responses
+            },
+            provider_call_records=report.provider_call_records,
+        )
+    )
+
+
+def test_precollected_valid_a_payloads_pass() -> None:
+    report = _precollected_from_injected(
+        _run_a(),
+        binding.build_client_constraints_preference_a_v01(),
+    )
+
+    assert report.final_status == binding.STATUS_LOCAL_MODEL_PASS
+    assert report.semantic_recommendation_id == binding.OFFER_A_ID
+
+
+def test_precollected_valid_b_payloads_pass() -> None:
+    report = _precollected_from_injected(
+        _run_b(),
+        binding.build_client_constraints_preference_b_v01(),
+    )
+
+    assert report.final_status == binding.STATUS_LOCAL_MODEL_PASS
+    assert report.semantic_recommendation_id == binding.OFFER_B_ID
+
+
+def test_precollected_entrypoint_performs_zero_provider_calls() -> None:
+    report = _precollected_from_injected(
+        _run_a(),
+        binding.build_client_constraints_preference_a_v01(),
+    )
+
+    assert report.externally_observed_provider_call_count == 5
+    assert report.provider_calls_performed_inside_precollected_entrypoint == 0
+    assert report.duplicate_provider_call_count == 0
+
+
+def test_precollected_actor_payload_order_and_identity_validated() -> None:
+    injected = _run_a()
+    report = (
+        runtime
+        .collect_airline_semantic_to_contract_causal_run_from_precollected_payloads_v01(
+            scenario_id="precollected_bad_order",
+            constraints=binding.build_client_constraints_preference_a_v01(),
+            bsep_projection=binding.build_valid_airline_bsep_projection_ref_v01(),
+            snapshot=binding.build_airline_candidate_snapshot_v01(),
+            proposer_payload=injected.proposer_payload,
+            reviewer_payloads={
+                response.actor_id: asdict(response)
+                for response in injected.reviewer_responses
+            },
+            provider_call_records=tuple(reversed(injected.provider_call_records)),
+        )
+    )
+
+    assert report.final_status == binding.STATUS_FAIL_CLOSED
+    assert runtime.REASON_ACTOR_CALL_ORDER_MISMATCH in report.validation_errors
+
+
+def test_precollected_missing_reviewer_fails_closed() -> None:
+    injected = _run_a()
+    payloads = {
+        response.actor_id: asdict(response)
+        for response in injected.reviewer_responses
+    }
+    payloads.pop(binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER)
+    report = (
+        runtime
+        .collect_airline_semantic_to_contract_causal_run_from_precollected_payloads_v01(
+            scenario_id="precollected_missing_reviewer",
+            constraints=binding.build_client_constraints_preference_a_v01(),
+            bsep_projection=binding.build_valid_airline_bsep_projection_ref_v01(),
+            snapshot=binding.build_airline_candidate_snapshot_v01(),
+            proposer_payload=injected.proposer_payload,
+            reviewer_payloads=payloads,
+            provider_call_records=injected.provider_call_records,
+        )
+    )
+
+    assert report.final_status == binding.STATUS_FAIL_CLOSED
+
+
+def test_precollected_reviewer_conflict_fails_closed() -> None:
+    injected = _run_a()
+    payloads = {
+        response.actor_id: asdict(response)
+        for response in injected.reviewer_responses
+    }
+    actor_id = binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER
+    payloads[actor_id] = {
+        **payloads[actor_id],
+        "blocking_conflicts": ("conflict",),
+        "supports_proposed_offer": False,
+    }
+    report = (
+        runtime
+        .collect_airline_semantic_to_contract_causal_run_from_precollected_payloads_v01(
+            scenario_id="precollected_conflict",
+            constraints=binding.build_client_constraints_preference_a_v01(),
+            bsep_projection=binding.build_valid_airline_bsep_projection_ref_v01(),
+            snapshot=binding.build_airline_candidate_snapshot_v01(),
+            proposer_payload=injected.proposer_payload,
+            reviewer_payloads=payloads,
+            provider_call_records=injected.provider_call_records,
+        )
+    )
+
+    assert report.final_status == binding.STATUS_FAIL_CLOSED
+    assert binding.REASON_MULTI_ACTOR_CONFLICT in report.validation_errors
+
+
+def test_public_actor_request_builder_has_no_offer_default() -> None:
+    signature = inspect.signature(runtime.build_airline_semantic_actor_request_v01)
+
+    assert signature.parameters["proposed_offer_id"].default is inspect._empty
+
+
+def test_precollected_and_injected_paths_produce_equivalent_a_chain() -> None:
+    injected = _run_a()
+    precollected = _precollected_from_injected(
+        injected,
+        binding.build_client_constraints_preference_a_v01(),
+    )
+
+    assert precollected.semantic_recommendation_id == injected.semantic_recommendation_id
+    assert precollected.root_selected_offer_id == injected.root_selected_offer_id
+    assert precollected.hold_contract_offer_id == injected.hold_contract_offer_id
+
+
+def test_precollected_and_injected_paths_produce_equivalent_b_chain() -> None:
+    injected = _run_b()
+    precollected = _precollected_from_injected(
+        injected,
+        binding.build_client_constraints_preference_b_v01(),
+    )
+
+    assert precollected.semantic_recommendation_id == injected.semantic_recommendation_id
+    assert precollected.root_selected_offer_id == injected.root_selected_offer_id
+    assert precollected.hold_contract_offer_id == injected.hold_contract_offer_id

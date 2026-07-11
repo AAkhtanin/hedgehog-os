@@ -75,6 +75,64 @@ MERCHANT_REF = "merchant_ref:mock_airline_al"
 MOCK_TICKET_ID = "mock_ticket:001"
 MOCK_PNR = "PNR-EEH01"
 
+
+@dataclass(frozen=True)
+class AirlineTicketPurchaseContractContextV01:
+    transaction_id: str
+    offer_id: str
+    hold_id: str
+    amount: int
+    currency: str
+    route_ref: str
+    passenger_ref: str
+    max_amount: int
+    merchant_ref: str
+
+
+def build_canonical_airline_ticket_purchase_contract_context_v01() -> (
+    AirlineTicketPurchaseContractContextV01
+):
+    return AirlineTicketPurchaseContractContextV01(
+        transaction_id=TRANSACTION_ID,
+        offer_id=OFFER_ID,
+        hold_id=HOLD_ID,
+        amount=AMOUNT,
+        currency=CURRENCY,
+        route_ref=ROUTE_REF,
+        passenger_ref=PASSENGER_REF,
+        max_amount=MAX_AMOUNT,
+        merchant_ref=MERCHANT_REF,
+    )
+
+
+def _contract_context(
+    contract_context: AirlineTicketPurchaseContractContextV01 | None,
+) -> AirlineTicketPurchaseContractContextV01:
+    return (
+        contract_context
+        if contract_context is not None
+        else build_canonical_airline_ticket_purchase_contract_context_v01()
+    )
+
+
+def build_airline_ticket_purchase_contract_context_from_resolution_v01(
+    *,
+    resolution: Any,
+    hold_packet: AirlineHoldCommitPacketV01,
+) -> AirlineTicketPurchaseContractContextV01:
+    return AirlineTicketPurchaseContractContextV01(
+        transaction_id=resolution.transaction_id,
+        offer_id=resolution.selected_offer_id,
+        hold_id=hold_packet.hold_id,
+        amount=resolution.resolved_amount,
+        currency=resolution.resolved_currency,
+        route_ref=resolution.resolved_route_ref,
+        passenger_ref=hold_packet.passenger_ref,
+        max_amount=MAX_AMOUNT,
+        merchant_ref=MERCHANT_REF,
+    )
+
+
 ARTIFACT_AIRLINE_OFFER_PACKET = "AirlineOfferPacketV01"
 ARTIFACT_AIRLINE_HOLD_COMMIT_PACKET = "AirlineHoldCommitPacketV01"
 ARTIFACT_AIRLINE_OFFER_HOLD_RECEIPT = "AirlineOfferHoldReceiptV01"
@@ -612,18 +670,22 @@ def validate_root_phase_gate_v01(
 
 def validate_human_approval_evidence_ref_v01(
     evidence: AirlinePurchaseApprovalEvidenceRefV01,
+    contract_context: AirlineTicketPurchaseContractContextV01 | None = None,
 ) -> AirlineCorridorValidationReportV01:
+    context = _contract_context(contract_context)
     reasons: list[str] = []
-    if evidence.transaction_id != TRANSACTION_ID:
+    if evidence.transaction_id != context.transaction_id:
         _append_reason(reasons, REASON_WRONG_TRANSACTION_ID)
     if evidence.client_root_id != CLIENT_ROOT_ID:
         _append_reason(reasons, REASON_WRONG_ROOT_OWNER)
-    if evidence.selected_offer_id != OFFER_ID:
+    if evidence.selected_offer_id != context.offer_id:
         _append_reason(reasons, REASON_SELECTED_OFFER_MISMATCH)
-    if evidence.passenger_ref != PASSENGER_REF:
+    if evidence.passenger_ref != context.passenger_ref:
         _append_reason(reasons, REASON_PASSENGER_REF_MISMATCH)
-    if evidence.currency != CURRENCY:
+    if evidence.currency != context.currency:
         _append_reason(reasons, REASON_CURRENCY_MISMATCH)
+    if evidence.max_amount != context.max_amount:
+        _append_reason(reasons, REASON_AMOUNT_EXCEEDS_HUMAN_APPROVAL)
     if not evidence.evidence_only:
         _append_reason(reasons, REASON_HUMAN_APPROVAL_IS_EVIDENCE_ONLY)
     if evidence.creates_client_purchase_intent:
@@ -656,7 +718,9 @@ def validate_human_approval_evidence_ref_v01(
 
 def validate_airline_offer_packet_v01(
     packet: AirlineOfferPacketV01,
+    contract_context: AirlineTicketPurchaseContractContextV01 | None = None,
 ) -> AirlineCorridorValidationReportV01:
+    context = _contract_context(contract_context)
     reasons: list[str] = []
     _check_transaction(reasons, packet)
     _check_created_by_root(
@@ -671,15 +735,17 @@ def validate_airline_offer_packet_v01(
     )
     if packet.airline_root_id != AIRLINE_ROOT_ID:
         _append_reason(reasons, REASON_WRONG_ROOT_OWNER)
-    if packet.offer_id != OFFER_ID:
+    if packet.transaction_id != context.transaction_id:
+        _append_reason(reasons, REASON_WRONG_TRANSACTION_ID)
+    if packet.offer_id != context.offer_id:
         _append_reason(reasons, REASON_SELECTED_OFFER_MISMATCH)
-    if packet.passenger_ref != PASSENGER_REF:
+    if packet.passenger_ref != context.passenger_ref:
         _append_reason(reasons, REASON_PASSENGER_REF_MISMATCH)
-    if packet.route_ref != ROUTE_REF:
+    if packet.route_ref != context.route_ref:
         _append_reason(reasons, REASON_ROUTE_REF_MISMATCH)
-    if packet.amount != AMOUNT:
+    if packet.amount != context.amount:
         _append_reason(reasons, REASON_AMOUNT_MISMATCH)
-    if packet.currency != CURRENCY:
+    if packet.currency != context.currency:
         _append_reason(reasons, REASON_CURRENCY_MISMATCH)
     if packet.expired:
         _append_reason(reasons, REASON_EXPIRED_OFFER)
@@ -711,8 +777,15 @@ def validate_airline_offer_packet_v01(
 def validate_airline_hold_commit_packet_v01(
     offer_packet: AirlineOfferPacketV01,
     hold_packet: AirlineHoldCommitPacketV01,
+    contract_context: AirlineTicketPurchaseContractContextV01 | None = None,
 ) -> AirlineCorridorValidationReportV01:
-    reasons: list[str] = list(validate_airline_offer_packet_v01(offer_packet).reason_codes)
+    context = _contract_context(contract_context)
+    reasons: list[str] = list(
+        validate_airline_offer_packet_v01(
+            offer_packet,
+            contract_context=context,
+        ).reason_codes,
+    )
     _check_transaction(reasons, offer_packet, hold_packet)
     _check_created_by_root(
         reasons,
@@ -727,6 +800,8 @@ def validate_airline_hold_commit_packet_v01(
     if hold_packet.parent_offer_packet_id != offer_packet.packet_id:
         _append_reason(reasons, REASON_PARENT_ARTIFACT_BINDING_MISMATCH)
         _append_reason(reasons, REASON_MISSING_OFFER_PACKET)
+    if hold_packet.hold_id != context.hold_id:
+        _append_reason(reasons, REASON_HOLD_ID_MISMATCH)
     _check_offer_hold_match(reasons, offer_packet, hold_packet)
     if hold_packet.ttl_seconds > offer_packet.ttl_seconds:
         _append_reason(reasons, REASON_CHILD_TTL_EXCEEDS_PARENT_TTL)
@@ -811,9 +886,14 @@ def validate_client_purchase_intent_v01(
     offer_packet: AirlineOfferPacketV01 | None,
     hold_receipt: AirlineOfferHoldReceiptV01 | None,
     purchase_intent: ClientPurchaseIntentV01,
+    contract_context: AirlineTicketPurchaseContractContextV01 | None = None,
 ) -> AirlineCorridorValidationReportV01:
+    context = _contract_context(contract_context)
     reasons: list[str] = list(
-        validate_human_approval_evidence_ref_v01(human_approval).reason_codes,
+        validate_human_approval_evidence_ref_v01(
+            human_approval,
+            contract_context=context,
+        ).reason_codes,
     )
     if offer_packet is None:
         _append_reason(reasons, REASON_MISSING_OFFER_PACKET)
@@ -840,6 +920,16 @@ def validate_client_purchase_intent_v01(
     )
     if purchase_intent.client_root_id != CLIENT_ROOT_ID:
         _append_reason(reasons, REASON_WRONG_ROOT_OWNER)
+    if purchase_intent.offer_id != context.offer_id:
+        _append_reason(reasons, REASON_SELECTED_OFFER_MISMATCH)
+    if purchase_intent.hold_id != context.hold_id:
+        _append_reason(reasons, REASON_HOLD_ID_MISMATCH)
+    if purchase_intent.route_ref != context.route_ref:
+        _append_reason(reasons, REASON_ROUTE_REF_MISMATCH)
+    if purchase_intent.selected_amount != context.amount:
+        _append_reason(reasons, REASON_AMOUNT_MISMATCH)
+    if purchase_intent.currency != context.currency:
+        _append_reason(reasons, REASON_CURRENCY_MISMATCH)
     if purchase_intent.source_human_approval_ref != human_approval.approval_ref:
         _append_reason(reasons, REASON_HUMAN_APPROVAL_IS_EVIDENCE_ONLY)
     if offer_packet is not None:
@@ -894,7 +984,9 @@ def validate_client_purchase_intent_v01(
 def validate_bank_payment_authorization_ref_v01(
     purchase_intent: ClientPurchaseIntentV01,
     authorization_ref: BankPaymentAuthorizationRefV01,
+    contract_context: AirlineTicketPurchaseContractContextV01 | None = None,
 ) -> AirlineCorridorValidationReportV01:
+    context = _contract_context(contract_context)
     reasons: list[str] = []
     _check_transaction(reasons, purchase_intent, authorization_ref)
     _check_created_by_root(
@@ -912,8 +1004,18 @@ def validate_bank_payment_authorization_ref_v01(
     if authorization_ref.source_purchase_intent_id != purchase_intent.intent_id:
         _append_reason(reasons, REASON_TICKET_ISSUE_WITHOUT_CLIENT_PURCHASE_INTENT)
     _check_auth_purchase_match(reasons, authorization_ref, purchase_intent)
-    if authorization_ref.merchant_ref != MERCHANT_REF:
+    if authorization_ref.merchant_ref != context.merchant_ref:
         _append_reason(reasons, REASON_MERCHANT_MISMATCH)
+    if authorization_ref.offer_id != context.offer_id:
+        _append_reason(reasons, REASON_SELECTED_OFFER_MISMATCH)
+    if authorization_ref.hold_id != context.hold_id:
+        _append_reason(reasons, REASON_HOLD_ID_MISMATCH)
+    if authorization_ref.route_ref != context.route_ref:
+        _append_reason(reasons, REASON_ROUTE_REF_MISMATCH)
+    if authorization_ref.amount != context.amount:
+        _append_reason(reasons, REASON_AMOUNT_MISMATCH)
+    if authorization_ref.currency != context.currency:
+        _append_reason(reasons, REASON_CURRENCY_MISMATCH)
     if authorization_ref.expired:
         _append_reason(reasons, REASON_EXPIRED_PAYMENT_AUTHORIZATION)
     _check_idempotency(reasons, authorization_ref.idempotency_key)
@@ -945,7 +1047,9 @@ def validate_airline_ticket_issue_intent_v01(
     purchase_intent: ClientPurchaseIntentV01 | None,
     authorization_ref: BankPaymentAuthorizationRefV01 | None,
     ticket_issue_intent: AirlineTicketIssueIntentV01,
+    contract_context: AirlineTicketPurchaseContractContextV01 | None = None,
 ) -> AirlineCorridorValidationReportV01:
+    context = _contract_context(contract_context)
     reasons: list[str] = []
     if purchase_intent is None:
         _append_reason(reasons, REASON_TICKET_ISSUE_WITHOUT_CLIENT_PURCHASE_INTENT)
@@ -971,6 +1075,18 @@ def validate_airline_ticket_issue_intent_v01(
     )
     if ticket_issue_intent.airline_root_id != AIRLINE_ROOT_ID:
         _append_reason(reasons, REASON_WRONG_ROOT_OWNER)
+    if ticket_issue_intent.offer_id != context.offer_id:
+        _append_reason(reasons, REASON_SELECTED_OFFER_MISMATCH)
+    if ticket_issue_intent.hold_id != context.hold_id:
+        _append_reason(reasons, REASON_HOLD_ID_MISMATCH)
+    if ticket_issue_intent.route_ref != context.route_ref:
+        _append_reason(reasons, REASON_ROUTE_REF_MISMATCH)
+    if ticket_issue_intent.amount != context.amount:
+        _append_reason(reasons, REASON_AMOUNT_MISMATCH)
+    if ticket_issue_intent.currency != context.currency:
+        _append_reason(reasons, REASON_CURRENCY_MISMATCH)
+    if ticket_issue_intent.merchant_ref != context.merchant_ref:
+        _append_reason(reasons, REASON_MERCHANT_MISMATCH)
     if ticket_issue_intent.required_offer_packet_id != offer_packet.packet_id:
         _append_reason(reasons, REASON_MISSING_OFFER_PACKET)
     if ticket_issue_intent.required_hold_packet_id != hold_packet.packet_id:
@@ -1022,7 +1138,9 @@ def validate_airline_ticket_issue_intent_v01(
 def validate_mock_ticket_receipt_v01(
     ticket_issue_intent: AirlineTicketIssueIntentV01,
     receipt: MockTicketReceiptV01,
+    contract_context: AirlineTicketPurchaseContractContextV01 | None = None,
 ) -> AirlineCorridorValidationReportV01:
+    context = _contract_context(contract_context)
     reasons: list[str] = []
     _check_transaction(reasons, ticket_issue_intent, receipt)
     if receipt.created_by != ADAPTER_AIRLINE_TICKET_SANDBOX:
@@ -1036,6 +1154,16 @@ def validate_mock_ticket_receipt_v01(
         _append_reason(reasons, REASON_PARENT_ARTIFACT_BINDING_MISMATCH)
     if receipt.source_idempotency_key != ticket_issue_intent.idempotency_key:
         _append_reason(reasons, REASON_DUPLICATE_IDEMPOTENCY_KEY)
+    if receipt.offer_id != context.offer_id:
+        _append_reason(reasons, REASON_SELECTED_OFFER_MISMATCH)
+    if receipt.hold_id != context.hold_id:
+        _append_reason(reasons, REASON_HOLD_ID_MISMATCH)
+    if receipt.route_ref != context.route_ref:
+        _append_reason(reasons, REASON_ROUTE_REF_MISMATCH)
+    if receipt.amount != context.amount:
+        _append_reason(reasons, REASON_AMOUNT_MISMATCH)
+    if receipt.currency != context.currency:
+        _append_reason(reasons, REASON_CURRENCY_MISMATCH)
     _check_ticket_receipt_match(reasons, ticket_issue_intent, receipt)
     _check_receipt_evidence(
         reasons,
@@ -1122,11 +1250,17 @@ def validate_corridor_dependency_chain_v01(
     ticket_receipt: MockTicketReceiptV01,
     completion_gate: AirlineRootPhaseGateV01,
     purchase_receipt: MockPurchaseReceiptV01,
+    contract_context: AirlineTicketPurchaseContractContextV01 | None = None,
 ) -> AirlineCorridorValidationReportV01:
+    context = _contract_context(contract_context)
     reports = (
         validate_root_phase_gate_v01(airline_offer_hold_gate),
-        validate_airline_offer_packet_v01(offer_packet),
-        validate_airline_hold_commit_packet_v01(offer_packet, hold_packet),
+        validate_airline_offer_packet_v01(offer_packet, contract_context=context),
+        validate_airline_hold_commit_packet_v01(
+            offer_packet,
+            hold_packet,
+            contract_context=context,
+        ),
         validate_airline_offer_hold_receipt_v01(hold_packet, hold_receipt),
         validate_root_phase_gate_v01(client_purchase_gate),
         validate_client_purchase_intent_v01(
@@ -1134,9 +1268,14 @@ def validate_corridor_dependency_chain_v01(
             offer_packet,
             hold_receipt,
             purchase_intent,
+            contract_context=context,
         ),
         validate_root_phase_gate_v01(bank_gate),
-        validate_bank_payment_authorization_ref_v01(purchase_intent, authorization_ref),
+        validate_bank_payment_authorization_ref_v01(
+            purchase_intent,
+            authorization_ref,
+            contract_context=context,
+        ),
         validate_root_phase_gate_v01(airline_ticket_gate),
         validate_airline_ticket_issue_intent_v01(
             offer_packet,
@@ -1145,8 +1284,13 @@ def validate_corridor_dependency_chain_v01(
             purchase_intent,
             authorization_ref,
             ticket_issue_intent,
+            contract_context=context,
         ),
-        validate_mock_ticket_receipt_v01(ticket_issue_intent, ticket_receipt),
+        validate_mock_ticket_receipt_v01(
+            ticket_issue_intent,
+            ticket_receipt,
+            contract_context=context,
+        ),
         validate_root_phase_gate_v01(completion_gate),
         validate_mock_purchase_receipt_v01(
             purchase_intent,

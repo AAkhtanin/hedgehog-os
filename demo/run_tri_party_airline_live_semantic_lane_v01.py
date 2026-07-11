@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import time
+from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -11,6 +12,8 @@ from demo import run_tri_party_airline_ticket_purchase_mock_e2e_v01 as determini
 from demo.run_live_unknown_request_dual_rich_context_v01 import (
     _call_live_gemini_provider as _shared_live_gemini_provider,
 )
+from hedgehog.domains.airline import semantic_to_contract_binding_v01 as binding
+from hedgehog.domains.airline import semantic_to_contract_causal_runtime_v01 as causal_runtime
 
 
 RUN_ID = "tri_party_airline_live_semantic_lane_v01"
@@ -30,6 +33,7 @@ ENV_FAKE_PROVIDER = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_FAKE_PROVIDER"
 ENV_REAL_PROVIDER = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_REAL_PROVIDER"
 ENV_CALL_DELAY_SECONDS = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_CALL_DELAY_SECONDS"
 ENV_ALLOW_RAW = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_ALLOW_RAW_RESPONSE_OUTPUT"
+ENV_CAUSAL_BINDING = "HEDGEHOG_AIRLINE_SEMANTIC_TO_CONTRACT_CAUSAL_BINDING"
 
 PROVIDER_MODE_SKIPPED = "skipped_closed"
 PROVIDER_MODE_FAKE = "fake_provider"
@@ -41,6 +45,18 @@ AIRLINE_ROOT_ID = deterministic_airline.AIRLINE_ROOT_ID
 BANK_ROOT_ID = deterministic_airline.BANK_ROOT_ID
 
 Provider = Callable[[str, str, Mapping[str, Any]], str]
+
+CAUSAL_ACTOR_IDS = causal_runtime.ACTOR_ORDER
+
+REASON_LIVE_BSEP_NOT_VALIDATED_BEFORE_CAUSAL_SELECTION = (
+    "live_bsep_not_validated_before_causal_selection"
+)
+REASON_LIVE_AIRLINE_BSEP_PROJECTION_MISSING = (
+    "live_airline_bsep_projection_missing"
+)
+REASON_LIVE_BSEP_CAUSAL_PROJECTION_LINEAGE_MISMATCH = (
+    "live_bsep_causal_projection_lineage_mismatch"
+)
 
 SECRET_MARKERS = (
     "AIza",
@@ -95,7 +111,7 @@ ACTOR_SPECS: tuple[dict[str, Any], ...] = (
         "actor_id": "client_purchase_intent_reviewer_llm",
         "side": "client",
         "group": "client",
-        "semantic_work": "compare travel intent against Offer A/B/C and explain why Offer A best matches client constraints",
+        "semantic_work": "compare the hard-compatible bounded offers, interpret declared soft preferences, recommend one existing offer id, explain the tradeoff, and remain advisory only",
     },
     {
         "actor_id": "client_profile_privacy_reviewer_llm",
@@ -164,10 +180,15 @@ def collect_tri_party_airline_live_semantic_lane_v01(
     *,
     env: Mapping[str, str] | None = None,
     provider: Provider | None = None,
+    causal_constraints: binding.ClientRootTravelConstraintSetV01 | None = None,
+    causal_snapshot: binding.AirlineRootOfferCandidateSetSnapshotV01 | None = None,
 ) -> dict[str, Any]:
     effective_env = dict(os.environ if env is None else env)
+    causal_gate_open = effective_env.get(ENV_CAUSAL_BINDING) == "1"
     deterministic_report = (
-        deterministic_airline.collect_tri_party_airline_ticket_purchase_mock_e2e_v01()
+        deterministic_airline.build_tri_party_airline_semantic_source_context_v01()
+        if causal_gate_open
+        else deterministic_airline.collect_tri_party_airline_ticket_purchase_mock_e2e_v01()
     )
     artifact_dir_value = effective_env.get(ENV_ARTIFACT_DIR, "")
     artifact_dir = Path(artifact_dir_value) if artifact_dir_value else None
@@ -181,6 +202,14 @@ def collect_tri_party_airline_live_semantic_lane_v01(
     if fake_selected and real_selected:
         return _fail_closed_report(
             reason="ambiguous_provider_mode",
+            provider_mode=PROVIDER_MODE_SKIPPED,
+            model=effective_env.get(ENV_MODEL, DEFAULT_MODEL),
+            deterministic_report=deterministic_report,
+        )
+
+    if causal_gate_open and causal_constraints is None:
+        return _fail_closed_report(
+            reason="causal_constraints_required",
             provider_mode=PROVIDER_MODE_SKIPPED,
             model=effective_env.get(ENV_MODEL, DEFAULT_MODEL),
             deterministic_report=deterministic_report,
@@ -218,6 +247,9 @@ def collect_tri_party_airline_live_semantic_lane_v01(
         allow_raw_output=effective_env.get(ENV_ALLOW_RAW) == "1",
         call_delay_seconds=_call_delay_seconds(effective_env, provider_mode),
         provider_env=effective_env,
+        causal_gate_open=causal_gate_open,
+        causal_constraints=causal_constraints,
+        causal_snapshot=causal_snapshot,
     )
     return report
 
@@ -348,6 +380,21 @@ def render_tri_party_airline_live_semantic_lane_v01(report: Mapping[str, Any]) -
             f"- {boundary['boundary']}: preserved={boundary['boundary_preserved']}",
         )
 
+    if report.get("semantic_to_contract_causal_binding_v0_1", {}).get(
+        "binding_status",
+    ) not in {"NOT_ENABLED", None}:
+        bridge = report["semantic_to_contract_deterministic_bridge"]
+        lines.extend(
+            (
+                "",
+                "[SEMANTIC-TO-CONTRACT CAUSAL BINDING]",
+                f"bridge_status: {bridge['bridge_status']}",
+                f"semantic_recommendation_id: {bridge['semantic_recommendation_id']}",
+                f"deterministic_transaction_offer_id: {bridge['deterministic_transaction_offer_id']}",
+                f"all_offer_ids_match: {bridge['all_offer_ids_match']}",
+            ),
+        )
+
     lines.extend(("", "[COUNTER TABLE]"))
     for key in sorted(report["counter_table"]):
         lines.append(f"{key}: {report['counter_table'][key]}")
@@ -389,9 +436,16 @@ def run_tri_party_airline_live_semantic_lane_v01(
     *,
     env: Mapping[str, str] | None = None,
     provider: Provider | None = None,
+    causal_constraints: binding.ClientRootTravelConstraintSetV01 | None = None,
+    causal_snapshot: binding.AirlineRootOfferCandidateSetSnapshotV01 | None = None,
 ) -> str:
     return render_tri_party_airline_live_semantic_lane_v01(
-        collect_tri_party_airline_live_semantic_lane_v01(env=env, provider=provider),
+        collect_tri_party_airline_live_semantic_lane_v01(
+            env=env,
+            provider=provider,
+            causal_constraints=causal_constraints,
+            causal_snapshot=causal_snapshot,
+        ),
     )
 
 
@@ -532,6 +586,9 @@ def _run_provider_lane(
     allow_raw_output: bool,
     call_delay_seconds: float,
     provider_env: Mapping[str, str],
+    causal_gate_open: bool = False,
+    causal_constraints: binding.ClientRootTravelConstraintSetV01 | None = None,
+    causal_snapshot: binding.AirlineRootOfferCandidateSetSnapshotV01 | None = None,
 ) -> dict[str, Any]:
     if artifact_dir is not None:
         artifact_dir.mkdir(parents=True, exist_ok=True)
@@ -555,6 +612,18 @@ def _run_provider_lane(
     bsep_packet: dict[str, Any] = {}
     bsep_validation: dict[str, Any] = {}
     bsep_side_projections: dict[str, Any] = {}
+    actual_causal_snapshot = (
+        causal_snapshot or binding.build_airline_candidate_snapshot_v01()
+    )
+    causal_bsep_projection: binding.AirlineBSEPProjectionRefV01 | None = None
+    causal_selection_input: binding.AirlineSemanticSelectionInputV01 | None = None
+    causal_proposal: binding.AirlineSemanticOfferSelectionProposalV01 | None = None
+    causal_proposer_payload: Mapping[str, Any] = {}
+    causal_reviewer_payloads: dict[str, Mapping[str, Any]] = {}
+    causal_provider_call_records: list[
+        causal_runtime.AirlineSemanticProviderCallRecordV01
+    ] = []
+    causal_actor_payload_validation_errors: list[str] = []
 
     for index, actor in enumerate(ACTOR_SPECS, start=1):
         actor_id = actor["actor_id"]
@@ -576,12 +645,62 @@ def _run_provider_lane(
                 )
                 break
 
+        causal_request = None
+        if causal_gate_open and actor_id in CAUSAL_ACTOR_IDS:
+            if causal_constraints is None:
+                validation_errors.append("causal_constraints_required")
+                break
+            if causal_bsep_projection is None:
+                validation_errors.append(
+                    REASON_LIVE_BSEP_NOT_VALIDATED_BEFORE_CAUSAL_SELECTION,
+                )
+                break
+            if causal_selection_input is None:
+                causal_selection_input = binding.build_selection_input_v01(
+                    causal_bsep_projection,
+                    causal_constraints,
+                    actual_causal_snapshot,
+                )
+                selection_report = (
+                    binding.validate_airline_semantic_selection_input_v01(
+                        causal_bsep_projection,
+                        causal_constraints,
+                        actual_causal_snapshot,
+                        causal_selection_input,
+                    )
+                )
+                if selection_report.validation_status != STATUS_PASS:
+                    validation_errors.extend(selection_report.reason_codes)
+                    break
+            proposed_offer_id = (
+                ""
+                if actor_id == causal_runtime.ACTOR_ORDER[0]
+                else (
+                    causal_proposal.recommended_offer_id
+                    if causal_proposal is not None
+                    else ""
+                )
+            )
+            if actor_id != causal_runtime.ACTOR_ORDER[0] and not proposed_offer_id:
+                validation_errors.append(
+                    f"causal_reviewer_blocked_until_proposer_valid:{actor_id}",
+                )
+                break
+            causal_request = causal_runtime.build_airline_semantic_actor_request_v01(
+                actor_id=actor_id,
+                selection_input=causal_selection_input,
+                constraints=causal_constraints,
+                snapshot=actual_causal_snapshot,
+                proposed_offer_id=proposed_offer_id,
+            )
+
         prompt = _build_prompt(
             actor=actor,
             actor_index=index,
             deterministic_report=deterministic_report,
             bsep_side_projections=bsep_side_projections,
             parent_report=parent_report,
+            causal_request=causal_request,
         )
         prompt_artifact = _write_text_artifact(
             artifact_dir,
@@ -599,6 +718,8 @@ def _run_provider_lane(
             "provider_env": provider_env,
             "provider_mode": provider_mode,
         }
+        if causal_request is not None:
+            metadata["semantic_to_contract_request"] = asdict(causal_request)
         if provider_mode == PROVIDER_MODE_REAL and call_delay_seconds > 0:
             time.sleep(call_delay_seconds)
             delay_applied_count += 1
@@ -639,13 +760,49 @@ def _run_provider_lane(
             artifact_counts,
             "extracted_json_candidates_written_count",
         )
-        validation = _validate_actor_candidate(
-            candidate=candidate,
-            actor=actor,
-            parent_report=parent_report,
-            raw_response=raw_response,
-            parse_errors=parse_errors,
-        )
+        if causal_request is not None and causal_selection_input is not None:
+            validation = _validate_causal_actor_candidate(
+                candidate=candidate,
+                actor=actor,
+                causal_request=causal_request,
+                selection_input=causal_selection_input,
+                parse_errors=parse_errors,
+            )
+            causal_actor_payload_validation_errors.extend(validation["errors"])
+            causal_call_index = len(causal_provider_call_records) + 1
+            causal_provider_call_records.append(
+                causal_runtime.AirlineSemanticProviderCallRecordV01(
+                    call_index=causal_call_index,
+                    actor_id=actor_id,
+                    actor_role=causal_request.actor_role,
+                    request_id=causal_request.request_id,
+                    proposed_offer_id=causal_request.proposed_offer_id,
+                    provider_returned=True,
+                    validation_status=validation["validation_status"],
+                    reason_codes=tuple(validation["errors"]),
+                ),
+            )
+            if validation["validation_status"] == STATUS_PASS:
+                if actor_id == causal_runtime.ACTOR_ORDER[0]:
+                    causal_proposer_payload = candidate
+                    proposal, _ = (
+                        binding
+                        .build_airline_semantic_offer_selection_proposal_from_payload_v01(
+                            causal_selection_input,
+                            candidate,
+                        )
+                    )
+                    causal_proposal = proposal
+                else:
+                    causal_reviewer_payloads[actor_id] = candidate
+        else:
+            validation = _validate_actor_candidate(
+                candidate=candidate,
+                actor=actor,
+                parent_report=parent_report,
+                raw_response=raw_response,
+                parse_errors=parse_errors,
+            )
         validation_artifact = _write_json_artifact(
             artifact_dir,
             f"{actor_id}_validation.json",
@@ -655,6 +812,12 @@ def _run_provider_lane(
             "validations_written_count",
         )
         canonical_summary = _canonical_summary(candidate, actor, validation)
+        if causal_request is not None:
+            canonical_summary = _causal_canonical_summary(
+                candidate,
+                actor,
+                validation,
+            )
         canonical_summary_artifact = _write_json_artifact(
             artifact_dir,
             f"{actor_id}_canonical_summary.json",
@@ -695,6 +858,19 @@ def _run_provider_lane(
                 validation_errors.extend(bsep_validation["errors"])
                 break
             bsep_side_projections = _build_bsep_side_projections(bsep_packet)
+            if causal_gate_open:
+                causal_bsep_projection, bsep_lineage_errors = (
+                    _typed_airline_bsep_projection_ref_from_live_projection(
+                        bsep_packet=bsep_packet,
+                        bsep_validation=bsep_validation,
+                        airline_projection=bsep_side_projections.get(
+                            "airline_bsep_projection",
+                        ),
+                    )
+                )
+                if bsep_lineage_errors:
+                    validation_errors.extend(bsep_lineage_errors)
+                    break
             _write_json_named(
                 artifact_dir,
                 "tri_party_airline_bsep_packet.json",
@@ -714,8 +890,97 @@ def _run_provider_lane(
                 artifacts,
             )
 
+    causal_report: causal_runtime.AirlineSemanticCausalRunReportV01 | None = None
+    integrated_deterministic_report: Mapping[str, Any] | None = None
+    deterministic_collection_count = 0
+    corridor_execution_count = 0
+    if causal_gate_open and not validation_errors and len(actor_reports) == 12:
+        if (
+            causal_constraints is None
+            or causal_selection_input is None
+            or causal_bsep_projection is None
+            or len(causal_provider_call_records) != 5
+            or len(causal_reviewer_payloads) != 4
+            or causal_proposal is None
+        ):
+            validation_errors.append("causal_actor_payload_collection_incomplete")
+        elif (
+            causal_bsep_projection.projection_ref
+            != bsep_side_projections.get("airline_bsep_projection", {}).get(
+                "projection_ref",
+            )
+        ):
+            validation_errors.append(
+                REASON_LIVE_BSEP_CAUSAL_PROJECTION_LINEAGE_MISMATCH,
+            )
+        else:
+            causal_report = (
+                causal_runtime
+                .collect_airline_semantic_to_contract_causal_run_from_precollected_payloads_v01(
+                    scenario_id="existing_live_lane_precollected_causal_binding",
+                    constraints=causal_constraints,
+                    bsep_projection=causal_bsep_projection,
+                    snapshot=actual_causal_snapshot,
+                    proposer_payload=causal_proposer_payload,
+                    reviewer_payloads=causal_reviewer_payloads,
+                    provider_call_records=tuple(causal_provider_call_records),
+                )
+            )
+            causal_accepted, causal_reasons = (
+                causal_runtime.validate_airline_semantic_causal_run_report_v01(
+                    causal_report,
+                )
+            )
+            if (
+                not causal_accepted
+                or causal_report.final_status
+                != causal_runtime.STATUS_LOCAL_MODEL_PASS
+            ):
+                validation_errors.extend(
+                    causal_reasons or causal_report.validation_errors,
+                )
+            else:
+                deterministic_collection_count += 1
+                integrated_deterministic_report = (
+                    deterministic_airline
+                    .collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+                        semantic_causal_run=causal_report,
+                    )
+                )
+                if (
+                    integrated_deterministic_report.get("final_status")
+                    != STATUS_PASS
+                ):
+                    validation_errors.extend(
+                        integrated_deterministic_report.get(
+                            "validation_errors",
+                            ("deterministic_airline_integration_failed",),
+                        ),
+                    )
+                else:
+                    corridor_execution_count = 1
+
     semantic_actor_reports = tuple(actor_reports)
     root_boundaries = _root_boundaries()
+    causal_section = _causal_binding_section(
+        causal_report,
+        bsep_packet=bsep_packet,
+        airline_bsep_projection=bsep_side_projections.get(
+            "airline_bsep_projection",
+            {},
+        ),
+        causal_selection_input=causal_selection_input,
+    )
+    bridge_section = _semantic_to_contract_bridge_section(
+        causal_report=causal_report,
+        deterministic_report=integrated_deterministic_report,
+        semantic_actor_reports=semantic_actor_reports,
+        deterministic_collection_count=deterministic_collection_count,
+        corridor_execution_count=corridor_execution_count,
+        causal_section=causal_section,
+    )
+    if causal_gate_open and not _bridge_final_guard_passes(bridge_section):
+        validation_errors.append("semantic_to_contract_bridge_guard_failed")
     report: dict[str, Any] = {
         "run_id": RUN_ID,
         "report_id": REPORT_ID,
@@ -759,6 +1024,11 @@ def _run_provider_lane(
             for report in actor_reports
         },
         "root_boundaries": root_boundaries,
+        "semantic_to_contract_causal_binding_v0_1": causal_section,
+        "semantic_to_contract_deterministic_bridge": bridge_section,
+        "integrated_deterministic_airline_transaction": (
+            _integrated_deterministic_summary(integrated_deterministic_report)
+        ),
         "counter_table": {},
         "artifacts": artifacts,
         "secret_scan": {},
@@ -778,6 +1048,26 @@ def _run_provider_lane(
         delay_applied_count=delay_applied_count,
         call_delay_seconds=call_delay_seconds,
     )
+    if causal_gate_open:
+        if causal_report is not None:
+            _write_json_named(
+                artifact_dir,
+                "semantic_to_contract_causal_run.json",
+                _json_safe(causal_report),
+                artifacts,
+            )
+        _write_json_named(
+            artifact_dir,
+            "semantic_to_contract_bridge.json",
+            report["semantic_to_contract_deterministic_bridge"],
+            artifacts,
+        )
+        _write_json_named(
+            artifact_dir,
+            "integrated_deterministic_airline_summary.json",
+            report["integrated_deterministic_airline_transaction"],
+            artifacts,
+        )
     secret_scan = _scan_secret_markers(report, artifact_dir)
     report["secret_scan"] = secret_scan
     _write_json_named(artifact_dir, "secret_scan.json", secret_scan, artifacts)
@@ -823,6 +1113,19 @@ def _skipped_report(
         "what_runtime_used": {},
         "what_runtime_rejected": {},
         "root_boundaries": _root_boundaries(),
+        "semantic_to_contract_causal_binding_v0_1": _causal_binding_section(None),
+        "semantic_to_contract_deterministic_bridge": (
+            _semantic_to_contract_bridge_section(
+                causal_report=None,
+                deterministic_report=None,
+                semantic_actor_reports=(),
+                deterministic_collection_count=0,
+                corridor_execution_count=0,
+            )
+        ),
+        "integrated_deterministic_airline_transaction": (
+            _integrated_deterministic_summary(None)
+        ),
         "counter_table": _zero_counter_table(),
         "artifacts": {},
         "secret_scan": {"passed": True, "matched_markers": (), "files_scanned": 0},
@@ -888,6 +1191,7 @@ def _build_prompt(
     deterministic_report: Mapping[str, Any],
     bsep_side_projections: Mapping[str, Any],
     parent_report: Mapping[str, Any] | None,
+    causal_request: causal_runtime.AirlineInjectedSemanticActorRequestV01 | None = None,
 ) -> str:
     projection = bsep_side_projections.get(f"{actor['side']}_bsep_projection", {})
     if actor["side"] == "cross_root_advisory":
@@ -916,6 +1220,46 @@ def _build_prompt(
         "real_booking_created": False,
         "real_world_effects_count": 0,
     }
+    if causal_request is not None:
+        if causal_request.actor_id == causal_runtime.ACTOR_ORDER[0]:
+            json_skeleton = {
+                field: ""
+                for field in binding.AirlineSemanticOfferSelectionProposalV01
+                .__dataclass_fields__
+            }
+            for field in (
+                "ranked_offer_ids",
+                "decision_factors",
+                "preference_matches",
+                "uncertainty_notes",
+            ):
+                json_skeleton[field] = []
+            for field in (
+                "requires_root_review",
+                "authority_created",
+                "action_permission_created",
+                "packet_created",
+                "receipt_created",
+                "payment_created",
+                "ticket_created",
+                "booking_created",
+                "final_output_created",
+            ):
+                json_skeleton[field] = False
+            json_skeleton["real_world_effects_count"] = 0
+        else:
+            json_skeleton = {
+                field: ""
+                for field in causal_runtime.AirlineInjectedReviewerResponseV01
+                .__dataclass_fields__
+            }
+            json_skeleton["semantic_factors"] = []
+            json_skeleton["blocking_conflicts"] = []
+            json_skeleton["supports_proposed_offer"] = True
+            json_skeleton["raw_output_used"] = False
+            json_skeleton["authority_created"] = False
+            json_skeleton["permission_created"] = False
+            json_skeleton["real_world_effects_count"] = 0
     return "\n".join(
         (
             f"Role name: {actor['actor_id']}",
@@ -936,6 +1280,12 @@ def _build_prompt(
             "Return only semantic fields and safety flags.",
             "Do not create payment, ticket, booking, packet, receipt, authority, or FinalOutput.",
             "No raw passport, raw card, raw IBAN, raw payment token, raw private profile, API key, connector credential, raw provider text from other actors, or peer raw content is allowed.",
+            (
+                "Causal selection request: "
+                + json.dumps(_json_safe(causal_request), sort_keys=True)
+                if causal_request is not None
+                else "Causal selection request: not applicable"
+            ),
             "Explicit JSON skeleton:",
             json.dumps(json_skeleton, sort_keys=True),
         ),
@@ -1043,6 +1393,42 @@ def _validate_actor_candidate(
     }
 
 
+def _validate_causal_actor_candidate(
+    *,
+    candidate: Mapping[str, Any],
+    actor: Mapping[str, Any],
+    causal_request: causal_runtime.AirlineInjectedSemanticActorRequestV01,
+    selection_input: binding.AirlineSemanticSelectionInputV01,
+    parse_errors: tuple[str, ...],
+) -> dict[str, Any]:
+    errors = list(parse_errors)
+    if actor["actor_id"] == causal_runtime.ACTOR_ORDER[0]:
+        proposal, report = (
+            binding.build_airline_semantic_offer_selection_proposal_from_payload_v01(
+                selection_input,
+                candidate,
+            )
+        )
+        errors.extend(report.reason_codes)
+        if proposal is not None and proposal.actor_id != actor["actor_id"]:
+            errors.append("actor_id_mismatch")
+    else:
+        response, response_errors = causal_runtime.parse_injected_reviewer_response_v01(
+            request=causal_request,
+            selection_input=selection_input,
+            proposed_offer_id=causal_request.proposed_offer_id,
+            payload=candidate,
+        )
+        errors.extend(response_errors)
+        if response is not None and response.actor_id != actor["actor_id"]:
+            errors.append("actor_id_mismatch")
+    return {
+        "accepted": not errors,
+        "validation_status": STATUS_PASS if not errors else STATUS_FAIL_CLOSED,
+        "errors": tuple(dict.fromkeys(errors)),
+    }
+
+
 def _runtime_computed_used(actor: Mapping[str, Any]) -> tuple[str, ...]:
     actor_id = str(actor["actor_id"])
     return (
@@ -1074,6 +1460,32 @@ def _canonical_summary(
         "transaction_id": TRANSACTION_ID,
         "side": actor["side"],
         "semantic_summary": candidate.get("semantic_summary", ""),
+        "what_runtime_used": _runtime_computed_used(actor),
+        "what_runtime_rejected": _runtime_computed_rejected(actor),
+        "validation_status": validation["validation_status"],
+        "accepted": validation["accepted"],
+    }
+
+
+def _causal_canonical_summary(
+    candidate: Mapping[str, Any],
+    actor: Mapping[str, Any],
+    validation: Mapping[str, Any],
+) -> dict[str, Any]:
+    summary = str(
+        candidate.get("semantic_summary")
+        or "strict causal actor payload accepted as advisory semantic evidence",
+    )
+    if actor["actor_id"] != causal_runtime.ACTOR_ORDER[0]:
+        summary = (
+            f"{actor['actor_id']} reviewed "
+            f"{candidate.get('reviewed_offer_id', '')} as advisory evidence."
+        )
+    return {
+        "actor_id": actor["actor_id"],
+        "transaction_id": TRANSACTION_ID,
+        "side": actor["side"],
+        "semantic_summary": summary,
         "what_runtime_used": _runtime_computed_used(actor),
         "what_runtime_rejected": _runtime_computed_rejected(actor),
         "validation_status": validation["validation_status"],
@@ -1236,6 +1648,12 @@ def _build_bsep_side_projections(packet: Mapping[str, Any]) -> dict[str, dict[st
     return {
         projection_id: {
             "projection_id": projection_id,
+            "projection_ref": (
+                f"{binding.BSEP_PROJECTION_REF}:{packet['bsep_packet_id']}"
+                if projection_id == "airline_bsep_projection"
+                else projection_id
+            ),
+            "source_bsep_packet_id": packet["bsep_packet_id"],
             "transaction_id": TRANSACTION_ID,
             "side": side,
             "bounded_context_summary": f"{side} projection from {packet['bsep_packet_id']}",
@@ -1259,6 +1677,55 @@ def _build_bsep_side_projections(packet: Mapping[str, Any]) -> dict[str, dict[st
         }
         for projection_id, side, allowed_refs in projection_specs
     }
+
+
+def _typed_airline_bsep_projection_ref_from_live_projection(
+    *,
+    bsep_packet: Mapping[str, Any],
+    bsep_validation: Mapping[str, Any],
+    airline_projection: Mapping[str, Any] | None,
+) -> tuple[binding.AirlineBSEPProjectionRefV01 | None, tuple[str, ...]]:
+    errors: list[str] = []
+    if bsep_validation.get("validation_status") != STATUS_PASS:
+        errors.append(REASON_LIVE_BSEP_NOT_VALIDATED_BEFORE_CAUSAL_SELECTION)
+    if not airline_projection:
+        errors.append(REASON_LIVE_AIRLINE_BSEP_PROJECTION_MISSING)
+        return None, tuple(errors)
+    if airline_projection.get("side") != "airline":
+        errors.append(REASON_LIVE_AIRLINE_BSEP_PROJECTION_MISSING)
+    if airline_projection.get("transaction_id") != bsep_packet.get("transaction_id"):
+        errors.append(REASON_LIVE_BSEP_CAUSAL_PROJECTION_LINEAGE_MISMATCH)
+    if (
+        airline_projection.get("source_bsep_packet_id")
+        != bsep_packet.get("bsep_packet_id")
+    ):
+        errors.append(REASON_LIVE_BSEP_CAUSAL_PROJECTION_LINEAGE_MISMATCH)
+    if airline_projection.get("validation_status") != STATUS_PASS:
+        errors.append(REASON_LIVE_BSEP_CAUSAL_PROJECTION_LINEAGE_MISMATCH)
+    effects_count = airline_projection.get("real_world_effects_count", 0)
+    if type(effects_count) is not int:
+        errors.append(REASON_LIVE_BSEP_CAUSAL_PROJECTION_LINEAGE_MISMATCH)
+        effects_count = 1
+    typed_projection = binding.AirlineBSEPProjectionRefV01(
+        projection_ref=str(
+            airline_projection.get("projection_ref")
+            or airline_projection.get("projection_id")
+            or ""
+        ),
+        transaction_id=str(airline_projection.get("transaction_id", "")),
+        projection_side="airline_offer_selection",
+        validation_status=str(airline_projection.get("validation_status", "")),
+        raw_secret_included=bool(airline_projection.get("raw_secrets_included")),
+        authority_created=bool(airline_projection.get("authority_created", False)),
+        real_world_effects_count=effects_count,
+    )
+    typed_report = binding.validate_airline_bsep_projection_ref_v01(
+        typed_projection,
+    )
+    if typed_report.validation_status != STATUS_PASS:
+        errors.append(REASON_LIVE_BSEP_CAUSAL_PROJECTION_LINEAGE_MISMATCH)
+        errors.extend(typed_report.reason_codes)
+    return (None if errors else typed_projection), tuple(dict.fromkeys(errors))
 
 
 def _horizontal_actor_groups(actor_reports: list[dict[str, Any]]) -> dict[str, tuple[str, ...]]:
@@ -1307,6 +1774,258 @@ def _root_boundaries() -> tuple[dict[str, Any], ...]:
     )
 
 
+def _causal_binding_section(
+    causal_report: causal_runtime.AirlineSemanticCausalRunReportV01 | None,
+    *,
+    bsep_packet: Mapping[str, Any] | None = None,
+    airline_bsep_projection: Mapping[str, Any] | None = None,
+    causal_selection_input: binding.AirlineSemanticSelectionInputV01 | None = None,
+) -> dict[str, Any]:
+    if causal_report is None:
+        return {
+            "binding_status": "NOT_ENABLED",
+            "precollected_causal_run_count": 0,
+            "externally_observed_provider_call_count": 0,
+            "provider_calls_performed_inside_precollected_entrypoint": 0,
+            "duplicate_provider_call_count": 0,
+            "real_world_effects_count": 0,
+        }
+    actual_bsep_packet_id = str((bsep_packet or {}).get("bsep_packet_id", ""))
+    actual_projection_ref = str(
+        (airline_bsep_projection or {}).get("projection_ref")
+        or (airline_bsep_projection or {}).get("projection_id", ""),
+    )
+    causal_projection_ref = (
+        causal_selection_input.source_bsep_projection_ref
+        if causal_selection_input is not None
+        else ""
+    )
+    return {
+        "binding_status": causal_report.final_status,
+        "transaction_id": causal_report.transaction_id,
+        "actual_bsep_packet_id": actual_bsep_packet_id,
+        "actual_airline_bsep_projection_ref": actual_projection_ref,
+        "causal_selection_bsep_projection_ref": causal_projection_ref,
+        "bsep_refs_match": (
+            bool(actual_bsep_packet_id)
+            and bool(actual_projection_ref)
+            and actual_projection_ref == causal_projection_ref
+        ),
+        "source_candidate_set_ref": (
+            causal_selection_input.source_candidate_set_ref
+            if causal_selection_input is not None
+            else ""
+        ),
+        "source_candidate_set_snapshot_id": (
+            causal_selection_input.source_candidate_set_snapshot_id
+            if causal_selection_input is not None
+            else ""
+        ),
+        "source_candidate_set_digest": (
+            causal_selection_input.source_candidate_set_digest
+            if causal_selection_input is not None
+            else ""
+        ),
+        "visible_candidate_ids": (
+            causal_selection_input.visible_candidate_ids
+            if causal_selection_input is not None
+            else ()
+        ),
+        "airline_valid_candidate_ids": (
+            causal_selection_input.airline_valid_candidate_ids
+            if causal_selection_input is not None
+            else ()
+        ),
+        "client_hard_compatible_candidate_ids": (
+            causal_selection_input.client_hard_compatible_candidate_ids
+            if causal_selection_input is not None
+            else ()
+        ),
+        "semantic_recommendation_id": causal_report.semantic_recommendation_id,
+        "client_root_selected_offer_id": causal_report.root_selected_offer_id,
+        "airline_root_resolved_offer_id": (
+            causal_report.airline_root_resolution.selected_offer_id
+            if causal_report.airline_root_resolution is not None
+            else ""
+        ),
+        "hold_contract_offer_id": causal_report.hold_contract_offer_id,
+        "precollected_causal_run_count": 1,
+        "externally_observed_provider_call_count": (
+            causal_report.externally_observed_provider_call_count
+        ),
+        "provider_calls_performed_inside_precollected_entrypoint": (
+            causal_report.provider_calls_performed_inside_precollected_entrypoint
+        ),
+        "duplicate_provider_call_count": causal_report.duplicate_provider_call_count,
+        "default_offer_used": causal_report.default_offer_used,
+        "silent_fallback_used": causal_report.silent_fallback_used,
+        "provider_created_authority_count": (
+            causal_report.provider_created_authority_count
+        ),
+        "real_world_effects_count": causal_report.real_world_effects_count,
+        "validation_errors": causal_report.validation_errors,
+    }
+
+
+def _semantic_to_contract_bridge_section(
+    *,
+    causal_report: causal_runtime.AirlineSemanticCausalRunReportV01 | None,
+    deterministic_report: Mapping[str, Any] | None,
+    semantic_actor_reports: tuple[Mapping[str, Any], ...],
+    deterministic_collection_count: int,
+    corridor_execution_count: int,
+    causal_section: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    deterministic_offer_id = ""
+    deterministic_corridor_offer_id = ""
+    deterministic_final_status = ""
+    deterministic_corridor_status = ""
+    if deterministic_report is not None:
+        deterministic_final_status = str(deterministic_report.get("final_status", ""))
+        fixtures = deterministic_report.get("mock_protocol_fixtures", {})
+        if isinstance(fixtures, Mapping):
+            offer = fixtures.get("AirlineOfferCandidateV01", {})
+            if isinstance(offer, Mapping):
+                deterministic_offer_id = str(offer.get("offer_id", ""))
+        corridor = deterministic_report.get("airline_ticket_purchase_corridor_v0_1")
+        deterministic_corridor_status = str(getattr(corridor, "final_status", ""))
+        corridor_context = getattr(corridor, "contract_context", None)
+        deterministic_corridor_offer_id = str(
+            getattr(corridor_context, "offer_id", ""),
+        )
+    semantic_offer_id = (
+        causal_report.semantic_recommendation_id if causal_report is not None else ""
+    )
+    root_offer_id = (
+        causal_report.root_selected_offer_id if causal_report is not None else ""
+    )
+    resolution_offer_id = (
+        causal_report.airline_root_resolution.selected_offer_id
+        if causal_report is not None
+        and causal_report.airline_root_resolution is not None
+        else ""
+    )
+    hold_offer_id = (
+        causal_report.hold_contract_offer_id if causal_report is not None else ""
+    )
+    offer_ids = (
+        semantic_offer_id,
+        root_offer_id,
+        resolution_offer_id,
+        hold_offer_id,
+        deterministic_offer_id,
+        deterministic_corridor_offer_id,
+    )
+    causal_actor_calls = sum(
+        int(report["actor_id"] in CAUSAL_ACTOR_IDS)
+        for report in semantic_actor_reports
+    )
+    duplicate_actor_calls = len(semantic_actor_reports) - len(
+        {report["actor_id"] for report in semantic_actor_reports},
+    )
+    return {
+        "bridge_status": (
+            STATUS_PASS
+            if deterministic_final_status == STATUS_PASS
+            and deterministic_corridor_status == STATUS_PASS
+            and causal_report is not None
+            and causal_report.final_status == causal_runtime.STATUS_LOCAL_MODEL_PASS
+            and bool(deterministic_corridor_offer_id)
+            and len(set(offer_ids)) == 1
+            and (causal_section or {}).get("bsep_refs_match") is True
+            and deterministic_collection_count == 1
+            and corridor_execution_count == 1
+            and duplicate_actor_calls == 0
+            else STATUS_FAIL_CLOSED
+            if causal_report is not None
+            else "NOT_ENABLED"
+        ),
+        "transaction_id": TRANSACTION_ID,
+        "semantic_recommendation_id": semantic_offer_id,
+        "client_root_selected_offer_id": root_offer_id,
+        "airline_root_resolved_offer_id": resolution_offer_id,
+        "hold_contract_offer_id": hold_offer_id,
+        "deterministic_transaction_offer_id": deterministic_offer_id,
+        "deterministic_corridor_offer_id": deterministic_corridor_offer_id,
+        "all_offer_ids_match": bool(semantic_offer_id) and len(set(offer_ids)) == 1,
+        "actual_bsep_packet_id": (
+            (causal_section or {}).get("actual_bsep_packet_id", "")
+        ),
+        "actual_airline_bsep_projection_ref": (
+            (causal_section or {}).get("actual_airline_bsep_projection_ref", "")
+        ),
+        "causal_selection_bsep_projection_ref": (
+            (causal_section or {}).get("causal_selection_bsep_projection_ref", "")
+        ),
+        "bsep_refs_match": (causal_section or {}).get("bsep_refs_match") is True,
+        "causal_report_validation_accepted": (
+            causal_report is not None
+            and causal_runtime.validate_airline_semantic_causal_run_report_v01(
+                causal_report,
+            )[0]
+        ),
+        "deterministic_report_final_status": deterministic_final_status,
+        "deterministic_corridor_final_status": deterministic_corridor_status,
+        "semantic_actor_calls_total": len(semantic_actor_reports),
+        "causal_actor_calls_total": causal_actor_calls,
+        "duplicate_actor_calls": duplicate_actor_calls,
+        "deterministic_collection_count": deterministic_collection_count,
+        "corridor_execution_count": corridor_execution_count,
+        "direct_offer_override_used": False,
+        "default_offer_used": False,
+        "silent_fallback_used": False,
+        "provider_created_authority_count": 0,
+        "real_world_effects_count": 0,
+    }
+
+
+def _bridge_final_guard_passes(bridge: Mapping[str, Any]) -> bool:
+    return (
+        bridge.get("bridge_status") == STATUS_PASS
+        and bridge.get("all_offer_ids_match") is True
+        and bridge.get("causal_report_validation_accepted") is True
+        and bridge.get("deterministic_report_final_status") == STATUS_PASS
+        and bridge.get("deterministic_corridor_final_status") == STATUS_PASS
+        and bridge.get("semantic_actor_calls_total") == 12
+        and bridge.get("causal_actor_calls_total") == 5
+        and bridge.get("duplicate_actor_calls") == 0
+        and bridge.get("deterministic_collection_count") == 1
+        and bridge.get("corridor_execution_count") == 1
+        and bridge.get("direct_offer_override_used") is False
+        and bridge.get("default_offer_used") is False
+        and bridge.get("silent_fallback_used") is False
+        and bridge.get("provider_created_authority_count") == 0
+        and bridge.get("real_world_effects_count") == 0
+        and bridge.get("bsep_refs_match") is True
+    )
+
+
+def _integrated_deterministic_summary(
+    deterministic_report: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    if deterministic_report is None:
+        return {
+            "collection_status": "NOT_RUN",
+            "corridor_execution_count": 0,
+            "real_world_effects_count": 0,
+        }
+    corridor = deterministic_report.get("airline_ticket_purchase_corridor_v0_1")
+    return {
+        "collection_status": deterministic_report.get("final_status", ""),
+        "transaction_id": deterministic_report.get("transaction_id", ""),
+        "selected_offer_id": deterministic_report.get(
+            "final_tri_party_mock_summary",
+            {},
+        ).get("selected_offer_id", ""),
+        "corridor_final_status": getattr(corridor, "final_status", ""),
+        "corridor_execution_count": 1 if corridor is not None else 0,
+        "real_world_effects_count": deterministic_report.get(
+            "counter_table",
+            {},
+        ).get("real_world_effects_count", 0),
+    }
+
+
 def _counter_table(
     *,
     report: Mapping[str, Any],
@@ -1326,8 +2045,50 @@ def _counter_table(
     }
     for actor_report in actor_reports:
         side_counts[actor_report["side"]] += 1
+    causal_actor_count = sum(
+        int(actor_report["actor_id"] in CAUSAL_ACTOR_IDS)
+        for actor_report in actor_reports
+    )
+    duplicate_actor_count = len(actor_reports) - len(
+        {actor_report["actor_id"] for actor_report in actor_reports},
+    )
+    causal_section = report.get("semantic_to_contract_causal_binding_v0_1", {})
+    bridge = report.get("semantic_to_contract_deterministic_bridge", {})
     return {
         "semantic_actor_call_count": len(actor_reports),
+        "causal_semantic_actor_call_count": causal_actor_count,
+        "generic_semantic_actor_call_count": len(actor_reports) - causal_actor_count,
+        "duplicate_semantic_actor_call_count": duplicate_actor_count,
+        "precollected_causal_run_count": int(
+            causal_section.get("precollected_causal_run_count", 0),
+        ),
+        "provider_calls_inside_precollected_runtime_count": int(
+            causal_section.get(
+                "provider_calls_performed_inside_precollected_entrypoint",
+                0,
+            ),
+        ),
+        "causal_report_pass_count": int(
+            causal_section.get("binding_status")
+            == causal_runtime.STATUS_LOCAL_MODEL_PASS,
+        ),
+        "deterministic_airline_collection_count": int(
+            bridge.get("deterministic_collection_count", 0),
+        ),
+        "deterministic_airline_pass_count": int(
+            bridge.get("deterministic_report_final_status") == STATUS_PASS,
+        ),
+        "ticket_purchase_corridor_execution_count": int(
+            bridge.get("corridor_execution_count", 0),
+        ),
+        "ticket_purchase_corridor_pass_count": int(
+            bridge.get("deterministic_corridor_final_status") == STATUS_PASS,
+        ),
+        "direct_offer_override_count": int(
+            bridge.get("direct_offer_override_used", False),
+        ),
+        "default_offer_count": int(bridge.get("default_offer_used", False)),
+        "silent_fallback_count": int(bridge.get("silent_fallback_used", False)),
         "tri_party_orchestrator_call_count": int(
             "tri_party_airline_orchestrator_llm" in report["semantic_actor_call_order"],
         ),
@@ -1381,6 +2142,11 @@ def _counter_table(
         "real_provider_call_delay_seconds": call_delay_seconds,
         "provider_output_used_as_truth_count": 0,
         "provider_output_used_as_authority_count": 0,
+        "provider_created_authority_count": int(
+            bridge.get("provider_created_authority_count", 0),
+        ),
+        "provider_created_contract_count": 0,
+        "runtime_receipt_created_count": 0,
         "provider_output_created_packet_count": 0,
         "provider_output_created_receipt_count": 0,
         "provider_output_created_payment_count": 0,
@@ -1404,6 +2170,19 @@ def _counter_table(
 def _zero_counter_table() -> dict[str, int]:
     keys = (
         "semantic_actor_call_count",
+        "causal_semantic_actor_call_count",
+        "generic_semantic_actor_call_count",
+        "duplicate_semantic_actor_call_count",
+        "precollected_causal_run_count",
+        "provider_calls_inside_precollected_runtime_count",
+        "causal_report_pass_count",
+        "deterministic_airline_collection_count",
+        "deterministic_airline_pass_count",
+        "ticket_purchase_corridor_execution_count",
+        "ticket_purchase_corridor_pass_count",
+        "direct_offer_override_count",
+        "default_offer_count",
+        "silent_fallback_count",
         "tri_party_orchestrator_call_count",
         "tri_party_architect_call_count",
         "transaction_semantic_actor_count",
@@ -1430,6 +2209,9 @@ def _zero_counter_table() -> dict[str, int]:
         "real_provider_call_delay_seconds",
         "provider_output_used_as_truth_count",
         "provider_output_used_as_authority_count",
+        "provider_created_authority_count",
+        "provider_created_contract_count",
+        "runtime_receipt_created_count",
         "provider_output_created_packet_count",
         "provider_output_created_receipt_count",
         "provider_output_created_payment_count",
@@ -1601,6 +2383,8 @@ def _actor_spec(actor_id: str) -> Mapping[str, Any]:
 
 
 def _json_safe(value: Any) -> Any:
+    if is_dataclass(value):
+        return _json_safe(asdict(value))
     if isinstance(value, tuple):
         return [_json_safe(item) for item in value]
     if isinstance(value, list):

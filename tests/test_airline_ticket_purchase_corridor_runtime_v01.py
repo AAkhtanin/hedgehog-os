@@ -529,3 +529,206 @@ def test_slice_c_report_validator_accepts_valid_pass_report() -> None:
 
     assert accepted is True
     assert errors == ()
+
+
+def test_slice_d_public_collector_accepts_valid_fixture_injection() -> None:
+    report = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
+        fixtures=_fixtures(),
+    )
+
+    assert report.final_status == runtime.STATUS_PASS
+    accepted, errors = runtime.validate_airline_ticket_purchase_corridor_run_v01(
+        report,
+    )
+    assert accepted is True
+    assert errors == ()
+
+
+def test_slice_d_public_collector_rejects_invalid_fixture_injection() -> None:
+    fixtures = _fixtures()
+    fixtures["hold_packet"] = replace(fixtures["hold_packet"], expired=True)
+
+    report = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
+        fixtures=fixtures,
+    )
+
+    assert report.final_status == runtime.STATUS_FAIL_CLOSED
+    assert report.failed_phase_id == runtime.PHASE_AIRLINE_OFFER_HOLD
+    assert contracts.REASON_EXPIRED_HOLD in report.validation_errors
+
+
+def test_slice_d_public_collector_core_guard_override_fails_closed() -> None:
+    report = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
+        fixtures=_fixtures(),
+        core_corridor_overrides={
+            runtime.PHASE_CLIENT_PURCHASE_INTENT: {
+                "post_root_llm_reasoning_allowed": True,
+            },
+        },
+    )
+
+    assert report.final_status == runtime.STATUS_FAIL_CLOSED
+    assert report.failed_phase_id == runtime.PHASE_CLIENT_PURCHASE_INTENT
+    assert "no_post_root_llm_reasoning" in report.validation_errors
+
+
+def test_slice_d_phase_derived_fields_are_consistent() -> None:
+    report = _valid_report()
+
+    for phase in report.phase_results:
+        assert phase.phase_status == runtime.STATUS_PASS
+        assert phase.return_to_relevant_root is False
+        assert phase.later_phases_allowed is True
+
+    failed = _run_with(
+        hold_packet=replace(
+            contracts.build_valid_airline_hold_commit_packet_v01(),
+            expired=True,
+        ),
+    )
+    assert failed.phase_results[0].phase_status == runtime.STATUS_FAIL_CLOSED
+    assert failed.phase_results[0].return_to_relevant_root is True
+    assert failed.phase_results[0].later_phases_allowed is False
+    for phase in failed.phase_results[1:]:
+        assert phase.phase_status == runtime.STATUS_NOT_RUN
+        assert phase.return_to_relevant_root is False
+        assert phase.later_phases_allowed is False
+
+
+def test_slice_d_transition_derived_fields_are_consistent() -> None:
+    report = _valid_report()
+
+    for transition in report.transitions:
+        assert transition.source_phase_passed is True
+        assert transition.dependency_satisfied is True
+        assert transition.transition_status == runtime.STATUS_PASS
+        assert transition.reason_codes == ()
+
+    failed = _run_with(
+        purchase_intent=replace(
+            contracts.build_valid_client_purchase_intent_v01(),
+            selected_amount=contracts.MAX_AMOUNT + 1,
+        ),
+    )
+    for transition in failed.transitions:
+        source = failed.phase_results[transition.transition_index - 1]
+        target = failed.phase_results[transition.transition_index]
+        assert transition.source_phase_passed is (
+            source.phase_status == runtime.STATUS_PASS
+        )
+        assert transition.dependency_satisfied is (
+            source.phase_status == runtime.STATUS_PASS
+            and target.phase_status != runtime.STATUS_NOT_RUN
+        )
+        if transition.transition_status != runtime.STATUS_PASS:
+            assert transition.reason_codes == (
+                f"dependency_not_satisfied:{source.phase_id}",
+            )
+
+
+def test_slice_d_tampered_derived_fields_are_rejected() -> None:
+    report = _valid_report()
+
+    bad_phase = replace(report.phase_results[0], later_phases_allowed=False)
+    corrupted_phase_report = replace(
+        report,
+        phase_results=(bad_phase,) + report.phase_results[1:],
+    )
+    accepted, errors = runtime.validate_airline_ticket_purchase_corridor_run_v01(
+        corrupted_phase_report,
+    )
+    assert accepted is False
+    assert "phase_derived_field_mismatch" in errors
+
+    bad_transition = replace(report.transitions[0], source_phase_passed=False)
+    corrupted_transition_report = replace(
+        report,
+        transitions=(bad_transition,) + report.transitions[1:],
+    )
+    accepted, errors = runtime.validate_airline_ticket_purchase_corridor_run_v01(
+        corrupted_transition_report,
+    )
+    assert accepted is False
+    assert runtime.REASON_TRANSITION_SHAPE_MISMATCH in errors
+
+
+def test_slice_d_pure_fixture_bundle_validator_accepts_valid_bundle() -> None:
+    accepted, errors = (
+        runtime.validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
+            _fixtures(),
+        )
+    )
+
+    assert accepted is True
+    assert errors == ()
+
+
+def test_slice_d_pure_fixture_bundle_validator_rejects_invalid_bundle() -> None:
+    fixtures = _fixtures()
+    fixtures["authorization_ref"] = replace(
+        fixtures["authorization_ref"],
+        expired=True,
+    )
+
+    accepted, errors = (
+        runtime.validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
+            fixtures,
+        )
+    )
+
+    assert accepted is False
+    assert contracts.REASON_EXPIRED_PAYMENT_AUTHORIZATION in errors
+
+
+def test_slice_d_pure_fixture_bundle_validator_uses_core_guard_without_run_report() -> None:
+    accepted, errors = (
+        runtime.validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
+            _fixtures(),
+            core_corridor_overrides={
+                runtime.PHASE_AIRLINE_TICKET_ISSUE: {
+                    "reasoning_restarted_after_root": True,
+                },
+            },
+        )
+    )
+
+    assert accepted is False
+    assert "reasoning_does_not_restart_after_root" in errors
+    assert runtime.REASON_CORE_CORRIDOR_GUARD_VALIDATION_FAILED in errors
+
+
+def test_corridor_report_is_bound_to_exact_projected_fixture_bundle() -> None:
+    accepted, errors = (
+        runtime
+        .validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
+            _fixtures(),
+            _valid_report(),
+        )
+    )
+
+    assert accepted is True
+    assert errors == ()
+
+
+def test_corridor_report_wrong_phase_evidence_ref_rejected() -> None:
+    report = _valid_report()
+    bad_phase = replace(
+        report.phase_results[0],
+        evidence_refs_observed=("unrelated:offer_packet",),
+    )
+    corrupted = replace(
+        report,
+        phase_results=(bad_phase,) + report.phase_results[1:],
+    )
+
+    accepted, errors = (
+        runtime
+        .validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
+            _fixtures(),
+            corrupted,
+        )
+    )
+
+    assert accepted is False
+    assert runtime.REASON_PHASE_EVIDENCE_REFS_MISMATCH in errors
+    assert runtime.REASON_FIXTURE_REPORT_BINDING_FAILED in errors

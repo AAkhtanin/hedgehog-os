@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Any, Mapping
+
+from hedgehog.domains.airline import ticket_purchase_corridor_runtime_v01 as corridor_runtime
+from hedgehog.domains.airline import ticket_purchase_corridor_v01 as corridor_contracts
 
 
 RUN_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01"
@@ -29,6 +33,7 @@ REQUIRED_SECTIONS = (
     "[INTEGRATED TRI-PARTY TRANSACTION TRACE]",
     "[CROSS-ROOT EVIDENCE ROUTING MATRIX]",
     "[FINAL TRI-PARTY MOCK SUMMARY]",
+    "[AIRLINE TICKET/PURCHASE CORRIDOR V0.1 ROOT-CENTERED INTEGRATION]",
     "[MOCK PROTOCOL FIXTURES]",
     "[SHARED TRANSACTION LEDGER]",
     "[ROOT BOUNDARY MATRIX]",
@@ -72,6 +77,54 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
     future_semantic_actor_topology = _future_semantic_actor_topology()
     future_vertical_fractal_map = _future_vertical_fractal_map()
     privacy_boundary_matrix = _privacy_boundary_matrix()
+    root_boundary_matrix = _root_boundary_matrix()
+    receipt_boundary_matrix = _receipt_boundary_matrix()
+    source_report_for_corridor: dict[str, Any] = {
+        "transaction_id": TRANSACTION_ID,
+        "transaction_identity": transaction_identity,
+        "travel_intent": travel_intent,
+        "sealed_refs": sealed_refs,
+        "mock_protocol_fixtures": mock_protocol_fixtures,
+        "airline_offer_hold_sandbox": airline_offer_hold_sandbox,
+        "bank_payment_authorization_sandbox": bank_payment_authorization_sandbox,
+        "client_purchase_orchestration": client_purchase_orchestration,
+        "airline_ticket_issue_mock_corridor": airline_ticket_issue_mock_corridor,
+        "cross_root_evidence_routing_matrix": cross_root_evidence_routing_matrix,
+        "root_boundary_matrix": root_boundary_matrix,
+        "final_tri_party_mock_summary": final_tri_party_mock_summary,
+    }
+    corridor_fixture_bundle = _build_airline_ticket_purchase_corridor_fixture_bundle_v01(
+        source_report_for_corridor,
+    )
+    corridor_collector_invocation_count = 0
+    corridor_collector_invocation_count += 1
+    airline_ticket_purchase_corridor_v0_1 = (
+        corridor_runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
+            fixtures=corridor_fixture_bundle,
+        )
+    )
+    corridor_public_validation_accepted, corridor_public_validation_errors = (
+        corridor_runtime.validate_airline_ticket_purchase_corridor_run_v01(
+            airline_ticket_purchase_corridor_v0_1,
+        )
+    )
+    airline_ticket_purchase_corridor_binding_matrix = (
+        _airline_ticket_purchase_corridor_binding_matrix_v01(
+            source_report_for_corridor,
+            corridor_fixture_bundle,
+            airline_ticket_purchase_corridor_v0_1,
+        )
+    )
+    airline_ticket_purchase_corridor_integration = (
+        _airline_ticket_purchase_corridor_integration_summary(
+            source_report_for_corridor,
+            corridor_fixture_bundle,
+            airline_ticket_purchase_corridor_v0_1,
+            corridor_public_validation_accepted,
+            airline_ticket_purchase_corridor_binding_matrix,
+            corridor_collector_invocation_count,
+        )
+    )
     counter_table = _counter_table(
         shared_transaction_ledger,
         future_semantic_actor_topology,
@@ -83,6 +136,9 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         integrated_transaction_trace,
         cross_root_evidence_routing_matrix,
         final_tri_party_mock_summary,
+        airline_ticket_purchase_corridor_v0_1,
+        airline_ticket_purchase_corridor_binding_matrix,
+        airline_ticket_purchase_corridor_integration,
     )
 
     report: dict[str, Any] = {
@@ -105,10 +161,17 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         "integrated_transaction_trace": integrated_transaction_trace,
         "cross_root_evidence_routing_matrix": cross_root_evidence_routing_matrix,
         "final_tri_party_mock_summary": final_tri_party_mock_summary,
+        "airline_ticket_purchase_corridor_v0_1": airline_ticket_purchase_corridor_v0_1,
+        "airline_ticket_purchase_corridor_binding_matrix": (
+            airline_ticket_purchase_corridor_binding_matrix
+        ),
+        "airline_ticket_purchase_corridor_integration": (
+            airline_ticket_purchase_corridor_integration
+        ),
         "mock_protocol_fixtures": mock_protocol_fixtures,
         "shared_transaction_ledger": shared_transaction_ledger,
-        "root_boundary_matrix": _root_boundary_matrix(),
-        "receipt_boundary_matrix": _receipt_boundary_matrix(),
+        "root_boundary_matrix": root_boundary_matrix,
+        "receipt_boundary_matrix": receipt_boundary_matrix,
         "privacy_boundary_matrix": privacy_boundary_matrix,
         "non_action_reuse_constraints": _non_action_reuse_constraints(),
         "future_semantic_actor_topology": future_semantic_actor_topology,
@@ -116,8 +179,10 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01() -> dict[str, Any]:
         "counter_table": counter_table,
         "non_claims": _non_claims(),
         "validation_errors": (),
-        "next_gate": "Slice H three human renderers",
+        "next_gate": "airline_ticket_purchase_corridor_v01_slice_e_audit_and_human_story",
     }
+    if not corridor_public_validation_accepted:
+        report["validation_errors"] = tuple(corridor_public_validation_errors)
     errors = _validate_report(report)
     if errors:
         report["final_status"] = STATUS_FAIL_CLOSED
@@ -162,7 +227,8 @@ def render_tri_party_airline_ticket_purchase_mock_e2e_v01(
         "AirlineRoot checked offer TTL.",
         "AirlineRoot created OfferResponse.",
         "AirlineRoot created AirlineOfferHoldCommitPacket.",
-        "AirlineRoot created OfferHoldReceipt.",
+        "AirlineRoot authorized the offer/hold contract phase.",
+        "Airline hold sandbox produced OfferHoldReceipt evidence.",
         "OfferHoldReceipt is evidence only.",
         "OfferHoldReceipt is not payment permission.",
         "OfferHoldReceipt is not ticket permission.",
@@ -221,9 +287,10 @@ def render_tri_party_airline_ticket_purchase_mock_e2e_v01(
         "AirlineRoot validated amount/currency/merchant match.",
         "AirlineRoot validated passenger sealed ref only.",
         "AirlineRoot validated no raw passport/card/payment token exposure.",
+        "AirlineRoot authorized the mock ticket-issue intent.",
         "AirlineRoot created AirlineTicketIssueCommitPacket.",
         "AirlineRoot created AirlineOrderCreatedReceipt.",
-        "AirlineRoot created MockTicketReceipt.",
+        "Airline ticket sandbox produced MockTicketReceipt evidence.",
         "AirlineRoot created MockPNR.",
         "MockTicketReceipt is evidence only.",
         "MockTicketReceipt is not a real ticket.",
@@ -291,6 +358,57 @@ def render_tri_party_airline_ticket_purchase_mock_e2e_v01(
             f"final_status: {final_summary['final_status']}",
         ),
     )
+
+    corridor_report = report["airline_ticket_purchase_corridor_v0_1"]
+    corridor_integration = report["airline_ticket_purchase_corridor_integration"]
+    lines.extend(
+        (
+            "",
+            "[AIRLINE TICKET/PURCHASE CORRIDOR V0.1 ROOT-CENTERED INTEGRATION]",
+            "The existing Airline transaction, not a second demo, entered the corridor.",
+            "Existing deterministic artifacts were projected into Airline domain contracts.",
+            "The universal core no-post-Root reasoning guard ran for all five phases.",
+            (
+                "Airline-specific offer/hold/passenger/route/payment/ticket "
+                "bindings were validated by the Airline domain projection."
+            ),
+            "AirlineRoot reviewed offer/hold.",
+            "ClientRoot reviewed purchase intent.",
+            "BankRoot reviewed payment authorization.",
+            "AirlineRoot reviewed mock ticket issue.",
+            "ClientRoot observed mock completion.",
+            "Completion observer produced MockPurchaseReceipt evidence.",
+            "Three existing fixture receipts were observed.",
+            "The corridor created zero runtime receipts.",
+            "Receipts are evidence only and do not create future permission.",
+            "Evidence crossed Root boundaries; authority did not.",
+            "No real payment, ticket, booking, API, provider, network, or Gemini call occurred.",
+            f"integration_status: {corridor_integration['integration_status']}",
+            f"corridor_final_status: {corridor_report.final_status}",
+        ),
+    )
+    for phase in corridor_report.phase_results:
+        lines.append(
+            (
+                "- phase {phase_index}: {phase_id}; root={relevant_root_id}; "
+                "status={phase_status}"
+            ).format(
+                phase_index=phase.phase_index,
+                phase_id=phase.phase_id,
+                relevant_root_id=phase.relevant_root_id,
+                phase_status=phase.phase_status,
+            ),
+        )
+    lines.append("binding_matrix:")
+    for row in report["airline_ticket_purchase_corridor_binding_matrix"]:
+        lines.append(
+            (
+                "- {binding_id}: {source_report_path} -> "
+                "{corridor_artifact_type}.{corridor_field}; "
+                "values_match={values_match}"
+            ).format(**row),
+        )
+
     lines.extend(
         (
             "",
@@ -524,6 +642,16 @@ def _mock_protocol_fixtures(
     passenger = sealed_refs["PassengerSealedRefsV01"]
     payment = sealed_refs["PaymentProfileSealedRefV01"]
     offer_id = "offer:mock_airline_al:PAR-LIM:001"
+    hold_id = "hold:mock_airline_al:001"
+    client_purchase_approval_ref = "client_purchase_approval:client_001:001"
+    client_purchase_intent_id = "client_purchase_intent:client_001:001"
+    payment_authorization_receipt_id = "payment_authorization_receipt:mock_bank_a:001"
+    payment_authorization_ref_id = "bank_payment_authorization_ref:mock_bank_a:001"
+    mock_purchase_receipt_id = "mock_purchase_receipt:client_001:001"
+    route_ref = (
+        f"route:{travel_intent['origin']}-{travel_intent['destination']}:"
+        f"{travel_intent['depart_date']}:{travel_intent['return_date']}"
+    )
     amount = 782
     currency = "EUR"
     return {
@@ -537,11 +665,15 @@ def _mock_protocol_fixtures(
             "cabin": travel_intent["cabin"],
             "baggage_needed": travel_intent["baggage_needed"],
             "passenger_ref": passenger["passenger_ref"],
+            "route_ref": route_ref,
             "raw_passport_exposed": False,
         },
         "AirlineOfferCandidateV01": {
             "transaction_id": TRANSACTION_ID,
             "offer_id": offer_id,
+            "hold_id": hold_id,
+            "passenger_ref": passenger["passenger_ref"],
+            "route_ref": route_ref,
             "route": "PAR -> LIM",
             "fare_basis": "ECON_SAFE_1",
             "price_amount": amount,
@@ -558,6 +690,7 @@ def _mock_protocol_fixtures(
             "transaction_id": TRANSACTION_ID,
             "offer_candidates_count": 1,
             "selected_candidate_ref": offer_id,
+            "route_ref": route_ref,
         },
         "AirlineOfferHoldCommitPacketV01": {
             "packet_id": "airline_offer_hold_commit_packet:mock_airline_al:001",
@@ -567,10 +700,13 @@ def _mock_protocol_fixtures(
             "allowed_root_id": AIRLINE_ROOT_ID,
             "allowed_action": "mock_offer_hold",
             "allowed_offer_id": offer_id,
+            "allowed_hold_id": hold_id,
             "allowed_passenger_ref": passenger["passenger_ref"],
+            "allowed_route_ref": route_ref,
             "allowed_amount": amount,
             "currency": currency,
             "ttl_seconds": 900,
+            "offer_hold_expired": False,
             "idempotency_key": "idem:airline_offer_hold:001",
             "evidence_only_downstream": True,
             "payment_permission_created": False,
@@ -581,7 +717,14 @@ def _mock_protocol_fixtures(
         "AirlineOfferHoldReceiptV01": {
             "receipt_id": "offer_hold_receipt:mock_airline_al:001",
             "transaction_id": TRANSACTION_ID,
+            "created_by": corridor_contracts.ADAPTER_AIRLINE_HOLD_SANDBOX,
+            "root_owner": AIRLINE_ROOT_ID,
             "offer_id": offer_id,
+            "hold_id": hold_id,
+            "passenger_ref": passenger["passenger_ref"],
+            "route_ref": route_ref,
+            "amount": amount,
+            "currency": currency,
             "hold_status": "held_mock",
             "expires_in_seconds": 900,
             "evidence_only": True,
@@ -589,9 +732,14 @@ def _mock_protocol_fixtures(
             "ticket_permission_created": False,
         },
         "ClientPurchaseApprovalEvidenceV01": {
-            "approval_id": "client_purchase_approval:client_001:001",
+            "approval_id": client_purchase_approval_ref,
             "transaction_id": TRANSACTION_ID,
+            "client_purchase_intent_id": client_purchase_intent_id,
             "selected_offer_id": offer_id,
+            "hold_id": hold_id,
+            "passenger_ref": passenger["passenger_ref"],
+            "route_ref": route_ref,
+            "selected_amount": amount,
             "max_price_amount": travel_intent["max_price_amount"],
             "currency": currency,
             "created_by": "client_root",
@@ -609,6 +757,10 @@ def _mock_protocol_fixtures(
             "intent_id": "bank_payment_intent:mock_bank_a:001",
             "transaction_id": TRANSACTION_ID,
             "merchant_ref": "merchant_ref:mock_airline_al",
+            "offer_id": offer_id,
+            "hold_id": hold_id,
+            "passenger_ref": passenger["passenger_ref"],
+            "route_ref": route_ref,
             "amount": amount,
             "currency": currency,
             "payment_token_ref": payment["payment_token_ref"],
@@ -630,6 +782,10 @@ def _mock_protocol_fixtures(
             "allowed_root_id": BANK_ROOT_ID,
             "allowed_action": "mock_payment_authorization",
             "allowed_merchant_ref": "merchant_ref:mock_airline_al",
+            "allowed_offer_id": offer_id,
+            "allowed_hold_id": hold_id,
+            "allowed_passenger_ref": passenger["passenger_ref"],
+            "allowed_route_ref": route_ref,
             "allowed_payment_token_ref": payment["payment_token_ref"],
             "allowed_debtor_slot_ref": payment["debtor_slot_ref"],
             "allowed_amount": amount,
@@ -643,11 +799,18 @@ def _mock_protocol_fixtures(
             "real_settlement_allowed": False,
         },
         "BankPaymentAuthorizationReceiptV01": {
-            "receipt_id": "payment_authorization_receipt:mock_bank_a:001",
+            "receipt_id": payment_authorization_receipt_id,
             "transaction_id": TRANSACTION_ID,
+            "payment_authorization_ref_id": payment_authorization_ref_id,
+            "merchant_ref": "merchant_ref:mock_airline_al",
+            "offer_id": offer_id,
+            "hold_id": hold_id,
+            "passenger_ref": passenger["passenger_ref"],
+            "route_ref": route_ref,
             "authorized_amount": amount,
             "currency": currency,
             "authorization_status": "authorized_mock",
+            "payment_authorization_expired": False,
             "evidence_only": True,
             "ticket_created": False,
             "real_payment_executed": False,
@@ -668,14 +831,23 @@ def _mock_protocol_fixtures(
             "allowed_root_id": AIRLINE_ROOT_ID,
             "allowed_action": "mock_airline_ticket_issue",
             "allowed_offer_id": offer_id,
+            "allowed_hold_id": hold_id,
             "allowed_order_id": "order:mock_airline_al:001",
             "allowed_passenger_ref": passenger["passenger_ref"],
+            "allowed_route_ref": route_ref,
+            "merchant_ref": "merchant_ref:mock_airline_al",
             "required_offer_hold_receipt_id": "offer_hold_receipt:mock_airline_al:001",
             "required_payment_authorization_receipt_id": (
-                "payment_authorization_receipt:mock_bank_a:001"
+                payment_authorization_receipt_id
+            ),
+            "required_payment_authorization_ref_id": (
+                payment_authorization_ref_id
             ),
             "required_client_purchase_approval_id": (
-                "client_purchase_approval:client_001:001"
+                client_purchase_approval_ref
+            ),
+            "required_client_purchase_intent_id": (
+                client_purchase_intent_id
             ),
             "allowed_amount": amount,
             "currency": currency,
@@ -703,7 +875,14 @@ def _mock_protocol_fixtures(
             "transaction_id": TRANSACTION_ID,
             "mock_ticket_id": "mock_ticket:001",
             "mock_pnr": "PNR-EEH01",
-            "created_by": "airline_root",
+            "created_by": corridor_contracts.ADAPTER_AIRLINE_TICKET_SANDBOX,
+            "root_owner": AIRLINE_ROOT_ID,
+            "offer_id": offer_id,
+            "hold_id": hold_id,
+            "passenger_ref": passenger["passenger_ref"],
+            "route_ref": route_ref,
+            "amount": amount,
+            "currency": currency,
             "evidence_only": True,
             "real_ticket": False,
             "real_travel_booking_created": False,
@@ -717,14 +896,43 @@ def _mock_protocol_fixtures(
             "mock_only": True,
             "real_booking": False,
         },
+        "MockPurchaseReceiptV01": {
+            "receipt_id": mock_purchase_receipt_id,
+            "transaction_id": TRANSACTION_ID,
+            "source_client_purchase_intent_id": client_purchase_intent_id,
+            "source_payment_authorization_ref_id": payment_authorization_ref_id,
+            "source_mock_ticket_receipt_id": "mock_ticket_receipt:mock_airline_al:001",
+            "client_root_id": CLIENT_ROOT_ID,
+            "airline_root_id": AIRLINE_ROOT_ID,
+            "bank_root_id": BANK_ROOT_ID,
+            "created_by": "client_completion_observer",
+            "root_owner": CLIENT_ROOT_ID,
+            "evidence_only": True,
+            "side_root_finals_replaced": False,
+            "root_truth_rewritten": False,
+            "future_permission_created": False,
+            "real_payment_executed": False,
+            "real_ticket_issued": False,
+            "real_booking_created": False,
+            "real_world_effects_count": 0,
+        },
         "ClientFinalTravelSummaryV01": {
             "summary_id": "client_final_travel_summary:client_001:001",
             "transaction_id": TRANSACTION_ID,
             "client_root_id": CLIENT_ROOT_ID,
+            "mock_purchase_receipt_id": mock_purchase_receipt_id,
             "selected_offer_id": offer_id,
+            "hold_id": hold_id,
+            "passenger_ref": passenger["passenger_ref"],
+            "route_ref": route_ref,
+            "amount": amount,
+            "currency": currency,
             "offer_hold_receipt_id": "offer_hold_receipt:mock_airline_al:001",
             "payment_authorization_receipt_id": (
-                "payment_authorization_receipt:mock_bank_a:001"
+                payment_authorization_receipt_id
+            ),
+            "payment_authorization_ref_id": (
+                payment_authorization_ref_id
             ),
             "payment_status_receipt_id": "payment_status_receipt:mock_bank_a:001",
             "mock_ticket_receipt_id": "mock_ticket_receipt:mock_airline_al:001",
@@ -956,6 +1164,7 @@ def _shared_transaction_ledger(
         (AIRLINE_ROOT_ID, "airline_order_created_receipt_fixture_created", "AirlineOrderCreatedReceiptV01", True),
         (AIRLINE_ROOT_ID, "mock_ticket_receipt_fixture_created", "MockTicketReceiptV01", True),
         (AIRLINE_ROOT_ID, "mock_pnr_fixture_created", "MockPNRV01", True),
+        (CLIENT_ROOT_ID, "mock_purchase_receipt_fixture_created", "MockPurchaseReceiptV01", True),
         (CLIENT_ROOT_ID, "final_shared_summary_fixture_created", "ClientFinalTravelSummaryV01", True),
     )
     sandbox_stage_events = {
@@ -974,6 +1183,7 @@ def _shared_transaction_ledger(
         "airline_order_created_receipt_fixture_created",
         "mock_ticket_receipt_fixture_created",
         "mock_pnr_fixture_created",
+        "mock_purchase_receipt_fixture_created",
         "final_shared_summary_fixture_created",
     }
     ledger_rows = []
@@ -1125,13 +1335,17 @@ def _integrated_transaction_trace(
             "client_final_mock_travel_summary_created",
             CLIENT_ROOT_ID,
             CLIENT_ROOT_ID,
-            ("ClientFinalTravelSummaryV01",),
+            ("MockPurchaseReceiptV01", "ClientFinalTravelSummaryV01"),
         ),
         (
             "final_shared_summary_fixture_created",
             CLIENT_ROOT_ID,
             CLIENT_ROOT_ID,
-            ("ClientFinalTravelSummaryV01", "FinalTriPartyMockSummaryV01"),
+            (
+                "MockPurchaseReceiptV01",
+                "ClientFinalTravelSummaryV01",
+                "FinalTriPartyMockSummaryV01",
+            ),
         ),
     )
     return tuple(
@@ -1249,9 +1463,11 @@ def _final_tri_party_mock_summary() -> dict[str, Any]:
         "selected_offer_id": "offer:mock_airline_al:PAR-LIM:001",
         "offer_hold_receipt_id": "offer_hold_receipt:mock_airline_al:001",
         "payment_authorization_receipt_id": "payment_authorization_receipt:mock_bank_a:001",
+        "payment_authorization_ref_id": "bank_payment_authorization_ref:mock_bank_a:001",
         "payment_status_receipt_id": "payment_status_receipt:mock_bank_a:001",
         "order_created_receipt_id": "order_created_receipt:mock_airline_al:001",
         "mock_ticket_receipt_id": "mock_ticket_receipt:mock_airline_al:001",
+        "mock_purchase_receipt_id": "mock_purchase_receipt:client_001:001",
         "mock_pnr": "PNR-EEH01",
         "receipts_evidence_only": True,
         "authority_transferred_between_roots": False,
@@ -1288,6 +1504,792 @@ def _artifact_ref(artifact_name: str, fixtures: Mapping[str, Mapping[str, Any]])
         or fixture.get("pnr")
         or f"artifact_ref:{artifact_name}"
     )
+
+
+def _build_airline_ticket_purchase_corridor_fixture_bundle_v01(
+    report: Mapping[str, Any],
+) -> dict[str, Any]:
+    values = _airline_ticket_purchase_corridor_projection_values(report)
+    offer_packet = replace(
+        corridor_contracts.build_valid_airline_offer_packet_v01(),
+        packet_id=values["offer_packet_id"],
+        transaction_id=values["offer_transaction_id"],
+        created_by=values["airline_root_id"],
+        root_owner=values["airline_root_id"],
+        airline_root_id=values["airline_root_id"],
+        offer_id=values["offer_id"],
+        passenger_ref=values["offer_passenger_ref"],
+        route_ref=values["offer_route_ref"],
+        departure_date=values["departure_date"],
+        return_date=values["return_date"],
+        amount=values["offer_amount"],
+        currency=values["offer_currency"],
+        ttl_seconds=values["offer_ttl_seconds"],
+    )
+    hold_packet = replace(
+        corridor_contracts.build_valid_airline_hold_commit_packet_v01(),
+        packet_id=values["hold_packet_id"],
+        transaction_id=values["hold_packet_transaction_id"],
+        parent_offer_packet_id=offer_packet.packet_id,
+        created_by=values["airline_root_id"],
+        root_owner=values["airline_root_id"],
+        airline_root_id=values["airline_root_id"],
+        offer_id=values["hold_offer_id"],
+        hold_id=values["hold_id"],
+        passenger_ref=values["hold_passenger_ref"],
+        route_ref=values["hold_route_ref"],
+        amount=values["hold_amount"],
+        currency=values["hold_currency"],
+        ttl_seconds=values["hold_ttl_seconds"],
+        expired=values["hold_expired"],
+        idempotency_key=values["hold_idempotency_key"],
+    )
+    hold_receipt = replace(
+        corridor_contracts.build_valid_airline_offer_hold_receipt_v01(),
+        receipt_id=values["offer_hold_receipt_id"],
+        transaction_id=values["hold_receipt_transaction_id"],
+        source_hold_packet_id=hold_packet.packet_id,
+        source_idempotency_key=hold_packet.idempotency_key,
+        created_by=values["offer_hold_receipt_created_by"],
+        root_owner=values["offer_hold_receipt_root_owner"],
+        offer_id=values["hold_receipt_offer_id"],
+        hold_id=values["hold_receipt_hold_id"],
+        passenger_ref=values["hold_receipt_passenger_ref"],
+        route_ref=values["hold_receipt_route_ref"],
+        amount=values["hold_receipt_amount"],
+        currency=values["hold_receipt_currency"],
+        evidence_only=values["offer_hold_receipt_evidence_only"],
+        payment_permission_created=values[
+            "offer_hold_receipt_payment_permission_created"
+        ],
+        ticket_permission_created=values[
+            "offer_hold_receipt_ticket_permission_created"
+        ],
+    )
+    human_approval = replace(
+        corridor_contracts.build_valid_human_approval_evidence_ref_v01(),
+        approval_ref=values["client_purchase_approval_ref"],
+        transaction_id=values["client_approval_transaction_id"],
+        client_root_id=values["client_root_id"],
+        selected_offer_id=values["client_selected_offer_id"],
+        max_amount=values["client_max_amount"],
+        currency=values["client_currency"],
+        passenger_ref=values["client_passenger_ref"],
+        evidence_only=values["client_approval_evidence_only"],
+    )
+    purchase_intent = replace(
+        corridor_contracts.build_valid_client_purchase_intent_v01(),
+        intent_id=values["client_purchase_intent_id"],
+        transaction_id=values["client_approval_transaction_id"],
+        created_by=values["client_root_id"],
+        root_owner=values["client_root_id"],
+        client_root_id=values["client_root_id"],
+        source_human_approval_ref=human_approval.approval_ref,
+        selected_offer_packet_id=offer_packet.packet_id,
+        required_offer_hold_receipt_id=hold_receipt.receipt_id,
+        offer_id=values["client_selected_offer_id"],
+        hold_id=values["client_hold_id"],
+        passenger_ref=values["client_passenger_ref"],
+        route_ref=values["client_route_ref"],
+        max_amount=values["client_max_amount"],
+        selected_amount=values["client_selected_amount"],
+        currency=values["client_currency"],
+    )
+    authorization_ref = replace(
+        corridor_contracts.build_valid_bank_payment_authorization_ref_v01(),
+        authorization_ref_id=values["payment_authorization_ref_id"],
+        transaction_id=values["payment_authorization_transaction_id"],
+        created_by=values["bank_root_id"],
+        root_owner=values["bank_root_id"],
+        bank_root_id=values["bank_root_id"],
+        source_payment_receipt_id=values["payment_authorization_receipt_id"],
+        source_purchase_intent_id=purchase_intent.intent_id,
+        merchant_ref=values["merchant_ref"],
+        offer_id=values["payment_offer_id"],
+        hold_id=values["payment_hold_id"],
+        passenger_ref=values["payment_passenger_ref"],
+        route_ref=values["payment_route_ref"],
+        amount=values["payment_amount"],
+        currency=values["payment_currency"],
+        ttl_seconds=values["payment_ttl_seconds"],
+        expired=values["payment_expired"],
+        idempotency_key=values["payment_idempotency_key"],
+        evidence_only=values["payment_authorization_evidence_only"],
+        real_payment_executed=values["payment_real_payment_executed"],
+        ticket_permission_created=values["payment_ticket_permission_created"],
+    )
+    ticket_issue_intent = replace(
+        corridor_contracts.build_valid_airline_ticket_issue_intent_v01(),
+        intent_id=values["ticket_issue_intent_id"],
+        transaction_id=values["ticket_issue_transaction_id"],
+        created_by=values["airline_root_id"],
+        root_owner=values["airline_root_id"],
+        airline_root_id=values["airline_root_id"],
+        required_offer_packet_id=offer_packet.packet_id,
+        required_hold_packet_id=hold_packet.packet_id,
+        required_offer_hold_receipt_id=hold_receipt.receipt_id,
+        required_client_purchase_intent_id=purchase_intent.intent_id,
+        required_payment_authorization_ref_id=authorization_ref.authorization_ref_id,
+        offer_id=values["ticket_offer_id"],
+        hold_id=values["ticket_hold_id"],
+        passenger_ref=values["ticket_passenger_ref"],
+        route_ref=values["ticket_route_ref"],
+        amount=values["ticket_amount"],
+        currency=values["ticket_currency"],
+        merchant_ref=values["ticket_merchant_ref"],
+        ttl_seconds=values["ticket_ttl_seconds"],
+        idempotency_key=values["ticket_idempotency_key"],
+    )
+    ticket_receipt = replace(
+        corridor_contracts.build_valid_mock_ticket_receipt_v01(),
+        receipt_id=values["mock_ticket_receipt_id"],
+        transaction_id=values["mock_ticket_transaction_id"],
+        source_ticket_issue_intent_id=ticket_issue_intent.intent_id,
+        source_idempotency_key=ticket_issue_intent.idempotency_key,
+        created_by=values["mock_ticket_receipt_created_by"],
+        root_owner=values["mock_ticket_receipt_root_owner"],
+        mock_ticket_id=values["mock_ticket_id"],
+        mock_pnr=values["mock_pnr"],
+        offer_id=values["mock_ticket_offer_id"],
+        hold_id=values["mock_ticket_hold_id"],
+        passenger_ref=values["mock_ticket_passenger_ref"],
+        route_ref=values["mock_ticket_route_ref"],
+        amount=values["mock_ticket_amount"],
+        currency=values["mock_ticket_currency"],
+        evidence_only=values["mock_ticket_evidence_only"],
+        real_ticket=values["mock_ticket_real_ticket"],
+        real_booking=values["mock_ticket_real_booking"],
+        payment_created=values["mock_ticket_payment_created"],
+        future_payment_permission_created=values[
+            "mock_ticket_future_payment_permission_created"
+        ],
+    )
+    purchase_receipt = replace(
+        corridor_contracts.build_valid_mock_purchase_receipt_v01(),
+        receipt_id=values["mock_purchase_receipt_id"],
+        transaction_id=values["mock_purchase_transaction_id"],
+        source_client_purchase_intent_id=purchase_intent.intent_id,
+        source_payment_authorization_ref_id=authorization_ref.authorization_ref_id,
+        source_mock_ticket_receipt_id=ticket_receipt.receipt_id,
+        client_root_id=values["client_root_id"],
+        airline_root_id=values["airline_root_id"],
+        bank_root_id=values["bank_root_id"],
+        created_by=values["mock_purchase_receipt_created_by"],
+        root_owner=values["mock_purchase_receipt_root_owner"],
+        evidence_only=values["mock_purchase_evidence_only"],
+        real_payment_executed=values["mock_purchase_real_payment_executed"],
+        real_ticket_issued=values["mock_purchase_real_ticket_issued"],
+        real_booking_created=values["mock_purchase_real_booking_created"],
+    )
+    return {
+        "airline_offer_hold_gate": replace(
+            corridor_contracts.build_valid_airline_root_offer_hold_gate_v01(),
+            transaction_id=values["offer_hold_gate_transaction_id"],
+            root_id=values["airline_root_id"],
+        ),
+        "offer_packet": offer_packet,
+        "hold_packet": hold_packet,
+        "hold_receipt": hold_receipt,
+        "client_purchase_gate": replace(
+            corridor_contracts.build_valid_client_root_purchase_intent_gate_v01(),
+            transaction_id=values["client_gate_transaction_id"],
+            root_id=values["client_root_id"],
+        ),
+        "human_approval": human_approval,
+        "purchase_intent": purchase_intent,
+        "bank_gate": replace(
+            corridor_contracts.build_valid_bank_root_payment_authorization_gate_v01(),
+            transaction_id=values["bank_gate_transaction_id"],
+            root_id=values["bank_root_id"],
+        ),
+        "authorization_ref": authorization_ref,
+        "airline_ticket_gate": replace(
+            corridor_contracts.build_valid_airline_root_ticket_issue_gate_v01(),
+            transaction_id=values["ticket_gate_transaction_id"],
+            root_id=values["airline_root_id"],
+        ),
+        "ticket_issue_intent": ticket_issue_intent,
+        "ticket_receipt": ticket_receipt,
+        "completion_gate": replace(
+            corridor_contracts.build_valid_client_root_completion_gate_v01(),
+            transaction_id=values["completion_gate_transaction_id"],
+            root_id=values["client_root_id"],
+        ),
+        "purchase_receipt": purchase_receipt,
+    }
+
+
+def _airline_ticket_purchase_corridor_projection_values(
+    report: Mapping[str, Any],
+) -> dict[str, Any]:
+    fixtures = report["mock_protocol_fixtures"]
+    transaction_identity = report["transaction_identity"]
+    travel_intent = report["travel_intent"]
+    offer_request = fixtures["AirlineOfferRequestV01"]
+    offer_candidate = fixtures["AirlineOfferCandidateV01"]
+    offer_response = fixtures["AirlineOfferResponseV01"]
+    hold_packet = fixtures["AirlineOfferHoldCommitPacketV01"]
+    hold_receipt = fixtures["AirlineOfferHoldReceiptV01"]
+    client_approval = fixtures["ClientPurchaseApprovalEvidenceV01"]
+    bank_packet = fixtures["BankPaymentAuthorizationCommitPacketV01"]
+    bank_receipt = fixtures["BankPaymentAuthorizationReceiptV01"]
+    ticket_packet = fixtures["AirlineTicketIssueCommitPacketV01"]
+    ticket_receipt = fixtures["MockTicketReceiptV01"]
+    purchase_receipt = fixtures["MockPurchaseReceiptV01"]
+    final_summary = fixtures["ClientFinalTravelSummaryV01"]
+    return {
+        "transaction_id": report["transaction_id"],
+        "client_root_id": transaction_identity["client_root_id"],
+        "airline_root_id": transaction_identity["airline_root_id"],
+        "bank_root_id": transaction_identity["bank_root_id"],
+        "offer_hold_gate_transaction_id": report["airline_offer_hold_sandbox"][
+            "transaction_id"
+        ],
+        "client_gate_transaction_id": report["client_purchase_orchestration"][
+            "transaction_id"
+        ],
+        "bank_gate_transaction_id": report["bank_payment_authorization_sandbox"][
+            "transaction_id"
+        ],
+        "ticket_gate_transaction_id": report["airline_ticket_issue_mock_corridor"][
+            "transaction_id"
+        ],
+        "completion_gate_transaction_id": final_summary["transaction_id"],
+        "offer_packet_id": offer_response["response_id"],
+        "offer_transaction_id": offer_candidate["transaction_id"],
+        "offer_id": offer_candidate["offer_id"],
+        "offer_passenger_ref": offer_request["passenger_ref"],
+        "offer_route_ref": offer_request["route_ref"],
+        "departure_date": travel_intent["depart_date"],
+        "return_date": travel_intent["return_date"],
+        "offer_amount": offer_candidate["price_amount"],
+        "offer_currency": offer_candidate["currency"],
+        "offer_ttl_seconds": offer_candidate["offer_ttl_seconds"],
+        "hold_packet_id": hold_packet["packet_id"],
+        "hold_packet_transaction_id": hold_packet["transaction_id"],
+        "hold_offer_id": hold_packet["allowed_offer_id"],
+        "hold_id": hold_packet["allowed_hold_id"],
+        "hold_passenger_ref": hold_packet["allowed_passenger_ref"],
+        "hold_route_ref": hold_packet["allowed_route_ref"],
+        "hold_amount": hold_packet["allowed_amount"],
+        "hold_currency": hold_packet["currency"],
+        "hold_ttl_seconds": hold_packet["ttl_seconds"],
+        "hold_expired": hold_packet["offer_hold_expired"],
+        "hold_idempotency_key": hold_packet["idempotency_key"],
+        "offer_hold_receipt_id": hold_receipt["receipt_id"],
+        "hold_receipt_transaction_id": hold_receipt["transaction_id"],
+        "offer_hold_receipt_created_by": hold_receipt["created_by"],
+        "offer_hold_receipt_root_owner": hold_receipt["root_owner"],
+        "hold_receipt_offer_id": hold_receipt["offer_id"],
+        "hold_receipt_hold_id": hold_receipt["hold_id"],
+        "hold_receipt_passenger_ref": hold_receipt["passenger_ref"],
+        "hold_receipt_route_ref": hold_receipt["route_ref"],
+        "hold_receipt_amount": hold_receipt["amount"],
+        "hold_receipt_currency": hold_receipt["currency"],
+        "offer_hold_receipt_evidence_only": hold_receipt["evidence_only"],
+        "offer_hold_receipt_payment_permission_created": hold_receipt[
+            "payment_permission_created"
+        ],
+        "offer_hold_receipt_ticket_permission_created": hold_receipt[
+            "ticket_permission_created"
+        ],
+        "client_purchase_approval_ref": client_approval["approval_id"],
+        "client_purchase_intent_id": client_approval["client_purchase_intent_id"],
+        "client_approval_transaction_id": client_approval["transaction_id"],
+        "client_selected_offer_id": client_approval["selected_offer_id"],
+        "client_hold_id": client_approval["hold_id"],
+        "client_passenger_ref": client_approval["passenger_ref"],
+        "client_route_ref": client_approval["route_ref"],
+        "client_selected_amount": client_approval["selected_amount"],
+        "client_max_amount": client_approval["max_price_amount"],
+        "client_currency": client_approval["currency"],
+        "client_approval_evidence_only": client_approval["evidence_only"],
+        "payment_authorization_receipt_id": bank_receipt["receipt_id"],
+        "payment_authorization_ref_id": bank_receipt[
+            "payment_authorization_ref_id"
+        ],
+        "payment_authorization_transaction_id": bank_receipt["transaction_id"],
+        "merchant_ref": bank_receipt["merchant_ref"],
+        "payment_offer_id": bank_receipt["offer_id"],
+        "payment_hold_id": bank_receipt["hold_id"],
+        "payment_passenger_ref": bank_receipt["passenger_ref"],
+        "payment_route_ref": bank_receipt["route_ref"],
+        "payment_amount": bank_receipt["authorized_amount"],
+        "payment_currency": bank_receipt["currency"],
+        "payment_ttl_seconds": bank_packet["ttl_seconds"],
+        "payment_expired": bank_receipt["payment_authorization_expired"],
+        "payment_idempotency_key": bank_packet["idempotency_key"],
+        "payment_authorization_evidence_only": bank_receipt["evidence_only"],
+        "payment_real_payment_executed": bank_receipt["real_payment_executed"],
+        "payment_ticket_permission_created": bank_receipt["ticket_created"],
+        "ticket_issue_intent_id": ticket_packet["packet_id"],
+        "ticket_issue_transaction_id": ticket_packet["transaction_id"],
+        "ticket_offer_id": ticket_packet["allowed_offer_id"],
+        "ticket_hold_id": ticket_packet["allowed_hold_id"],
+        "ticket_passenger_ref": ticket_packet["allowed_passenger_ref"],
+        "ticket_route_ref": ticket_packet["allowed_route_ref"],
+        "ticket_amount": ticket_packet["allowed_amount"],
+        "ticket_currency": ticket_packet["currency"],
+        "ticket_merchant_ref": ticket_packet["merchant_ref"],
+        "ticket_ttl_seconds": ticket_packet["ttl_seconds"],
+        "ticket_idempotency_key": ticket_packet["idempotency_key"],
+        "mock_ticket_receipt_id": ticket_receipt["receipt_id"],
+        "mock_ticket_transaction_id": ticket_receipt["transaction_id"],
+        "mock_ticket_receipt_created_by": ticket_receipt["created_by"],
+        "mock_ticket_receipt_root_owner": ticket_receipt["root_owner"],
+        "mock_ticket_id": ticket_receipt["mock_ticket_id"],
+        "mock_pnr": ticket_receipt["mock_pnr"],
+        "mock_ticket_offer_id": ticket_receipt["offer_id"],
+        "mock_ticket_hold_id": ticket_receipt["hold_id"],
+        "mock_ticket_passenger_ref": ticket_receipt["passenger_ref"],
+        "mock_ticket_route_ref": ticket_receipt["route_ref"],
+        "mock_ticket_amount": ticket_receipt["amount"],
+        "mock_ticket_currency": ticket_receipt["currency"],
+        "mock_ticket_evidence_only": ticket_receipt["evidence_only"],
+        "mock_ticket_real_ticket": ticket_receipt["real_ticket"],
+        "mock_ticket_real_booking": ticket_receipt[
+            "real_travel_booking_created"
+        ],
+        "mock_ticket_payment_created": ticket_receipt["payment_created"],
+        "mock_ticket_future_payment_permission_created": ticket_receipt[
+            "future_payment_permission_created"
+        ],
+        "mock_purchase_receipt_id": purchase_receipt["receipt_id"],
+        "mock_purchase_transaction_id": purchase_receipt["transaction_id"],
+        "mock_purchase_receipt_created_by": purchase_receipt["created_by"],
+        "mock_purchase_receipt_root_owner": purchase_receipt["root_owner"],
+        "mock_purchase_evidence_only": purchase_receipt["evidence_only"],
+        "mock_purchase_real_payment_executed": purchase_receipt[
+            "real_payment_executed"
+        ],
+        "mock_purchase_real_ticket_issued": purchase_receipt["real_ticket_issued"],
+        "mock_purchase_real_booking_created": purchase_receipt[
+            "real_booking_created"
+        ],
+        "client_final_summary_id": final_summary["summary_id"],
+        "client_final_mock_purchase_receipt_id": final_summary[
+            "mock_purchase_receipt_id"
+        ],
+    }
+
+
+def _iter_transaction_ids_from_value(value: Any) -> tuple[str, ...]:
+    transaction_ids: list[str] = []
+    if isinstance(value, Mapping):
+        if isinstance(value.get("transaction_id"), str):
+            transaction_ids.append(value["transaction_id"])
+        for item in value.values():
+            transaction_ids.extend(_iter_transaction_ids_from_value(item))
+    elif isinstance(value, (tuple, list)):
+        for item in value:
+            transaction_ids.extend(_iter_transaction_ids_from_value(item))
+    elif hasattr(value, "transaction_id"):
+        transaction_id = getattr(value, "transaction_id")
+        if isinstance(transaction_id, str):
+            transaction_ids.append(transaction_id)
+    return tuple(transaction_ids)
+
+
+def _airline_ticket_purchase_corridor_transaction_binding_summary_v01(
+    report: Mapping[str, Any],
+    fixture_bundle: Mapping[str, Any],
+    corridor_report: corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01,
+) -> dict[str, Any]:
+    transaction_ids: list[str] = []
+    transaction_ids.extend(_iter_transaction_ids_from_value(report))
+    transaction_ids.extend(_iter_transaction_ids_from_value(tuple(fixture_bundle.values())))
+    transaction_ids.append(corridor_report.transaction_id)
+    transaction_ids.extend(phase.transaction_id for phase in corridor_report.phase_results)
+    transaction_ids.extend(
+        transition.transaction_id for transition in corridor_report.transitions
+    )
+    non_empty_transaction_ids = tuple(
+        transaction_id for transaction_id in transaction_ids if transaction_id
+    )
+    unique_transaction_ids = tuple(sorted(set(non_empty_transaction_ids)))
+    source_transaction_id = report["transaction_id"]
+    all_transaction_ids_match = unique_transaction_ids == (source_transaction_id,)
+    return {
+        "source_transaction_id": source_transaction_id,
+        "unique_transaction_ids": unique_transaction_ids,
+        "unique_transaction_id_count": len(unique_transaction_ids),
+        "all_transaction_ids_match": all_transaction_ids_match,
+    }
+
+
+def _airline_ticket_purchase_corridor_binding_matrix_v01(
+    report: Mapping[str, Any],
+    fixture_bundle: Mapping[str, Any],
+    corridor_report: corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01,
+) -> tuple[dict[str, Any], ...]:
+    values = _airline_ticket_purchase_corridor_projection_values(report)
+    transaction_binding = (
+        _airline_ticket_purchase_corridor_transaction_binding_summary_v01(
+            report,
+            fixture_bundle,
+            corridor_report,
+        )
+    )
+
+    def binding(
+        binding_id: str,
+        source_report_path: str,
+        source_value: Any,
+        corridor_artifact_type: str,
+        corridor_field: str,
+        projected_value: Any,
+    ) -> dict[str, Any]:
+        return {
+            "binding_id": binding_id,
+            "source_report_path": source_report_path,
+            "source_value": source_value,
+            "corridor_artifact_type": corridor_artifact_type,
+            "corridor_field": corridor_field,
+            "projected_value": projected_value,
+            "values_match": source_value == projected_value,
+            "transaction_id": values["transaction_id"],
+            "raw_secret_used": False,
+            "authority_transferred": False,
+        }
+
+    return (
+        {
+            **binding(
+                "transaction_id",
+                "transaction_id",
+                transaction_binding["source_transaction_id"],
+                "SourceProjectionAndCorridorV01",
+                "all_transaction_ids",
+                transaction_binding["unique_transaction_ids"],
+            ),
+            "values_match": transaction_binding["all_transaction_ids_match"],
+            "unique_transaction_id_count": transaction_binding[
+                "unique_transaction_id_count"
+            ],
+            "all_transaction_ids_match": transaction_binding[
+                "all_transaction_ids_match"
+            ],
+        },
+        binding(
+            "offer_id",
+            "mock_protocol_fixtures.AirlineOfferCandidateV01.offer_id",
+            values["offer_id"],
+            "AirlineOfferPacketV01",
+            "offer_id",
+            fixture_bundle["offer_packet"].offer_id,
+        ),
+        binding(
+            "hold_id",
+            "mock_protocol_fixtures.AirlineOfferHoldCommitPacketV01.allowed_hold_id",
+            values["hold_id"],
+            "AirlineHoldCommitPacketV01",
+            "hold_id",
+            fixture_bundle["hold_packet"].hold_id,
+        ),
+        binding(
+            "passenger_ref",
+            "mock_protocol_fixtures.AirlineOfferRequestV01.passenger_ref",
+            values["offer_passenger_ref"],
+            "AirlineOfferPacketV01",
+            "passenger_ref",
+            fixture_bundle["offer_packet"].passenger_ref,
+        ),
+        binding(
+            "route_ref",
+            "mock_protocol_fixtures.AirlineOfferRequestV01.route_ref",
+            values["offer_route_ref"],
+            "AirlineOfferPacketV01",
+            "route_ref",
+            fixture_bundle["offer_packet"].route_ref,
+        ),
+        binding(
+            "amount",
+            "mock_protocol_fixtures.AirlineOfferCandidateV01.price_amount",
+            values["offer_amount"],
+            "AirlineOfferPacketV01",
+            "amount",
+            fixture_bundle["offer_packet"].amount,
+        ),
+        binding(
+            "currency",
+            "mock_protocol_fixtures.AirlineOfferCandidateV01.currency",
+            values["offer_currency"],
+            "AirlineOfferPacketV01",
+            "currency",
+            fixture_bundle["offer_packet"].currency,
+        ),
+        binding(
+            "merchant_ref",
+            "mock_protocol_fixtures.BankPaymentAuthorizationReceiptV01.merchant_ref",
+            values["merchant_ref"],
+            "BankPaymentAuthorizationRefV01",
+            "merchant_ref",
+            fixture_bundle["authorization_ref"].merchant_ref,
+        ),
+        binding(
+            "offer_hold_receipt_id",
+            "mock_protocol_fixtures.AirlineOfferHoldReceiptV01.receipt_id",
+            values["offer_hold_receipt_id"],
+            "AirlineOfferHoldReceiptV01",
+            "receipt_id",
+            fixture_bundle["hold_receipt"].receipt_id,
+        ),
+        binding(
+            "offer_hold_receipt_created_by",
+            "mock_protocol_fixtures.AirlineOfferHoldReceiptV01.created_by",
+            values["offer_hold_receipt_created_by"],
+            "AirlineOfferHoldReceiptV01",
+            "created_by",
+            fixture_bundle["hold_receipt"].created_by,
+        ),
+        binding(
+            "offer_hold_receipt_root_owner",
+            "mock_protocol_fixtures.AirlineOfferHoldReceiptV01.root_owner",
+            values["offer_hold_receipt_root_owner"],
+            "AirlineOfferHoldReceiptV01",
+            "root_owner",
+            fixture_bundle["hold_receipt"].root_owner,
+        ),
+        binding(
+            "client_purchase_approval_ref",
+            "mock_protocol_fixtures.ClientPurchaseApprovalEvidenceV01.approval_id",
+            values["client_purchase_approval_ref"],
+            "AirlinePurchaseApprovalEvidenceRefV01",
+            "approval_ref",
+            fixture_bundle["human_approval"].approval_ref,
+        ),
+        binding(
+            "client_purchase_intent_id",
+            (
+                "mock_protocol_fixtures.ClientPurchaseApprovalEvidenceV01."
+                "client_purchase_intent_id"
+            ),
+            values["client_purchase_intent_id"],
+            "ClientPurchaseIntentV01",
+            "intent_id",
+            fixture_bundle["purchase_intent"].intent_id,
+        ),
+        binding(
+            "purchase_intent_source_human_approval_ref",
+            "mock_protocol_fixtures.ClientPurchaseApprovalEvidenceV01.approval_id",
+            values["client_purchase_approval_ref"],
+            "ClientPurchaseIntentV01",
+            "source_human_approval_ref",
+            fixture_bundle["purchase_intent"].source_human_approval_ref,
+        ),
+        binding(
+            "payment_authorization_receipt_id",
+            "mock_protocol_fixtures.BankPaymentAuthorizationReceiptV01.receipt_id",
+            values["payment_authorization_receipt_id"],
+            "BankPaymentAuthorizationRefV01",
+            "source_payment_receipt_id",
+            fixture_bundle["authorization_ref"].source_payment_receipt_id,
+        ),
+        binding(
+            "payment_authorization_ref_id",
+            (
+                "mock_protocol_fixtures.BankPaymentAuthorizationReceiptV01."
+                "payment_authorization_ref_id"
+            ),
+            values["payment_authorization_ref_id"],
+            "BankPaymentAuthorizationRefV01",
+            "authorization_ref_id",
+            fixture_bundle["authorization_ref"].authorization_ref_id,
+        ),
+        binding(
+            "authorization_ref_source_receipt_id",
+            "mock_protocol_fixtures.BankPaymentAuthorizationReceiptV01.receipt_id",
+            values["payment_authorization_receipt_id"],
+            "BankPaymentAuthorizationRefV01",
+            "source_payment_receipt_id",
+            fixture_bundle["authorization_ref"].source_payment_receipt_id,
+        ),
+        binding(
+            "ticket_issue_intent_id",
+            "mock_protocol_fixtures.AirlineTicketIssueCommitPacketV01.packet_id",
+            values["ticket_issue_intent_id"],
+            "AirlineTicketIssueIntentV01",
+            "intent_id",
+            fixture_bundle["ticket_issue_intent"].intent_id,
+        ),
+        binding(
+            "mock_ticket_receipt_id",
+            "mock_protocol_fixtures.MockTicketReceiptV01.receipt_id",
+            values["mock_ticket_receipt_id"],
+            "MockTicketReceiptV01",
+            "receipt_id",
+            fixture_bundle["ticket_receipt"].receipt_id,
+        ),
+        binding(
+            "mock_ticket_receipt_created_by",
+            "mock_protocol_fixtures.MockTicketReceiptV01.created_by",
+            values["mock_ticket_receipt_created_by"],
+            "MockTicketReceiptV01",
+            "created_by",
+            fixture_bundle["ticket_receipt"].created_by,
+        ),
+        binding(
+            "mock_ticket_receipt_root_owner",
+            "mock_protocol_fixtures.MockTicketReceiptV01.root_owner",
+            values["mock_ticket_receipt_root_owner"],
+            "MockTicketReceiptV01",
+            "root_owner",
+            fixture_bundle["ticket_receipt"].root_owner,
+        ),
+        binding(
+            "mock_purchase_receipt_id",
+            "mock_protocol_fixtures.MockPurchaseReceiptV01.receipt_id",
+            values["mock_purchase_receipt_id"],
+            "MockPurchaseReceiptV01",
+            "receipt_id",
+            fixture_bundle["purchase_receipt"].receipt_id,
+        ),
+        binding(
+            "mock_purchase_receipt_created_by",
+            "mock_protocol_fixtures.MockPurchaseReceiptV01.created_by",
+            values["mock_purchase_receipt_created_by"],
+            "MockPurchaseReceiptV01",
+            "created_by",
+            fixture_bundle["purchase_receipt"].created_by,
+        ),
+        binding(
+            "mock_purchase_receipt_root_owner",
+            "mock_protocol_fixtures.MockPurchaseReceiptV01.root_owner",
+            values["mock_purchase_receipt_root_owner"],
+            "MockPurchaseReceiptV01",
+            "root_owner",
+            fixture_bundle["purchase_receipt"].root_owner,
+        ),
+        binding(
+            "client_final_summary_mock_purchase_receipt_id",
+            "mock_protocol_fixtures.ClientFinalTravelSummaryV01.mock_purchase_receipt_id",
+            values["client_final_mock_purchase_receipt_id"],
+            "ClientFinalTravelSummaryV01",
+            "mock_purchase_receipt_id",
+            fixture_bundle["purchase_receipt"].receipt_id,
+        ),
+        binding(
+            "mock_pnr",
+            "mock_protocol_fixtures.MockTicketReceiptV01.mock_pnr",
+            values["mock_pnr"],
+            "MockTicketReceiptV01",
+            "mock_pnr",
+            fixture_bundle["ticket_receipt"].mock_pnr,
+        ),
+    )
+
+
+def _airline_ticket_purchase_corridor_integration_summary(
+    report: Mapping[str, Any],
+    fixture_bundle: Mapping[str, Any],
+    corridor_report: corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01,
+    corridor_public_validation_accepted: bool,
+    binding_matrix: tuple[dict[str, Any], ...],
+    corridor_collector_invocation_count: int,
+) -> dict[str, Any]:
+    fixture_bundle_accepted, _ = (
+        corridor_runtime.validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
+            fixture_bundle,
+        )
+    )
+    fixture_report_binding_accepted, _ = (
+        corridor_runtime
+        .validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
+            fixture_bundle,
+            corridor_report,
+        )
+    )
+    binding_match_count = sum(1 for row in binding_matrix if row["values_match"])
+    transaction_binding = (
+        _airline_ticket_purchase_corridor_transaction_binding_summary_v01(
+            report,
+            fixture_bundle,
+            corridor_report,
+        )
+    )
+    existing_runner_artifacts_projected = (
+        fixture_bundle_accepted
+        and binding_match_count == len(binding_matrix)
+        and corridor_public_validation_accepted
+        and fixture_report_binding_accepted
+    )
+    parallel_fixture_transaction_created = (
+        transaction_binding["unique_transaction_id_count"] != 1
+        or not transaction_binding["all_transaction_ids_match"]
+    )
+    duplicate_corridor_execution_count = max(
+        0,
+        corridor_collector_invocation_count - 1,
+    )
+    authority_transferred = (
+        any(phase.authority_transferred for phase in corridor_report.phase_results)
+        or any(
+            transition.authority_transferred
+            for transition in corridor_report.transitions
+        )
+        or any(row["authority_transferred"] for row in binding_matrix)
+        or any(
+            not row.get("boundary_preserved", True)
+            or row.get("violation_count", 0) != 0
+            for row in report.get("root_boundary_matrix", ())
+        )
+        or any(
+            row.get("authority_transferred") is True
+            for row in report.get("cross_root_evidence_routing_matrix", ())
+        )
+        or report.get("final_tri_party_mock_summary", {}).get(
+            "authority_transferred_between_roots",
+        )
+        is True
+    )
+    return {
+        "integration_status": (
+            STATUS_PASS
+            if (
+                corridor_report.final_status == corridor_runtime.STATUS_PASS
+                and corridor_public_validation_accepted
+                and fixture_report_binding_accepted
+                and existing_runner_artifacts_projected
+                and not parallel_fixture_transaction_created
+                and duplicate_corridor_execution_count == 0
+                and not authority_transferred
+            )
+            else STATUS_FAIL_CLOSED
+        ),
+        "transaction_id": TRANSACTION_ID,
+        "source_runner_id": RUN_ID,
+        "corridor_run_id": corridor_report.run_id,
+        "corridor_slice_id": corridor_report.slice_id,
+        "corridor_final_status": corridor_report.final_status,
+        "corridor_public_validation_accepted": corridor_public_validation_accepted,
+        "corridor_report_bound_to_projected_fixtures": (
+            fixture_report_binding_accepted
+        ),
+        "five_root_centered_phases_observed": len(corridor_report.phase_results) == 5,
+        "existing_runner_artifacts_projected": existing_runner_artifacts_projected,
+        "parallel_fixture_transaction_created": parallel_fixture_transaction_created,
+        "duplicate_corridor_execution_count": duplicate_corridor_execution_count,
+        "unique_transaction_id_count": transaction_binding[
+            "unique_transaction_id_count"
+        ],
+        "all_transaction_ids_match": transaction_binding[
+            "all_transaction_ids_match"
+        ],
+        "runtime_packets_created_count": corridor_report.counter_table[
+            "runtime_packets_created_count"
+        ],
+        "runtime_receipts_created_count": corridor_report.counter_table[
+            "runtime_receipts_created_count"
+        ],
+        "adapter_execution_count": corridor_report.counter_table[
+            "adapter_execution_count"
+        ],
+        "authority_transferred": authority_transferred,
+        "real_world_effects_count": corridor_report.counter_table[
+            "real_world_effects_count"
+        ],
+        "next_gate": "airline_ticket_purchase_corridor_v01_slice_e_audit_and_human_story",
+    }
 
 
 def _client_root_view(
@@ -1538,9 +2540,20 @@ def _counter_table(
     integrated_transaction_trace: tuple[dict[str, Any], ...],
     cross_root_evidence_routing_matrix: tuple[dict[str, Any], ...],
     final_tri_party_mock_summary: Mapping[str, Any],
+    airline_ticket_purchase_corridor_v0_1: (
+        corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01
+    ),
+    airline_ticket_purchase_corridor_binding_matrix: tuple[dict[str, Any], ...],
+    airline_ticket_purchase_corridor_integration: Mapping[str, Any],
 ) -> dict[str, int]:
     fractal_cells = tuple(
         cell for cells in fractal_map.values() for cell in cells
+    )
+    corridor_counters = airline_ticket_purchase_corridor_v0_1.counter_table
+    binding_row_count = len(airline_ticket_purchase_corridor_binding_matrix)
+    binding_match_count = sum(
+        int(row["values_match"])
+        for row in airline_ticket_purchase_corridor_binding_matrix
     )
     return {
         "tri_party_airline_transaction_count": 1,
@@ -1809,6 +2822,7 @@ def _counter_table(
         "airline_order_created_receipt_fixture_count": 1,
         "mock_ticket_receipt_fixture_count": 1,
         "mock_pnr_fixture_count": 1,
+        "mock_purchase_receipt_fixture_count": 1,
         "airline_ticket_issue_mock_corridor_invoked_count": 1,
         "airline_ticket_issue_offer_hold_receipt_observed_count": int(
             airline_ticket_issue_mock_corridor["offer_hold_receipt_observed"],
@@ -1974,6 +2988,80 @@ def _counter_table(
         "final_authority_transferred_between_roots_count": int(
             final_tri_party_mock_summary["authority_transferred_between_roots"],
         ),
+        "airline_ticket_purchase_corridor_integration_count": 1,
+        "airline_ticket_purchase_corridor_pass_count": int(
+            airline_ticket_purchase_corridor_v0_1.final_status
+            == corridor_runtime.STATUS_PASS,
+        ),
+        "airline_ticket_purchase_corridor_fail_count": int(
+            airline_ticket_purchase_corridor_v0_1.final_status
+            != corridor_runtime.STATUS_PASS,
+        ),
+        "airline_ticket_purchase_corridor_phase_count": len(
+            airline_ticket_purchase_corridor_v0_1.phase_results,
+        ),
+        "airline_ticket_purchase_corridor_phase_pass_count": sum(
+            int(phase.phase_status == corridor_runtime.STATUS_PASS)
+            for phase in airline_ticket_purchase_corridor_v0_1.phase_results
+        ),
+        "airline_ticket_purchase_corridor_transition_count": len(
+            airline_ticket_purchase_corridor_v0_1.transitions,
+        ),
+        "airline_ticket_purchase_corridor_transition_pass_count": sum(
+            int(transition.transition_status == corridor_runtime.STATUS_PASS)
+            for transition in airline_ticket_purchase_corridor_v0_1.transitions
+        ),
+        "airline_ticket_purchase_corridor_binding_row_count": binding_row_count,
+        "airline_ticket_purchase_corridor_binding_match_count": binding_match_count,
+        "airline_ticket_purchase_corridor_binding_mismatch_count": (
+            binding_row_count - binding_match_count
+        ),
+        "airline_ticket_purchase_corridor_fixture_report_binding_pass_count": int(
+            airline_ticket_purchase_corridor_integration[
+                "corridor_report_bound_to_projected_fixtures"
+            ],
+        ),
+        "airline_ticket_purchase_corridor_parallel_transaction_count": int(
+            airline_ticket_purchase_corridor_integration[
+                "parallel_fixture_transaction_created"
+            ],
+        ),
+        "airline_ticket_purchase_corridor_duplicate_execution_count": int(
+            airline_ticket_purchase_corridor_integration[
+                "duplicate_corridor_execution_count"
+            ],
+        ),
+        "airline_ticket_purchase_corridor_fixture_receipts_observed_count": (
+            corridor_counters["fixture_receipts_observed_count"]
+        ),
+        "airline_ticket_purchase_corridor_runtime_receipts_created_count": (
+            corridor_counters["runtime_receipts_created_count"]
+        ),
+        "airline_ticket_purchase_corridor_runtime_packets_created_count": (
+            corridor_counters["runtime_packets_created_count"]
+        ),
+        "airline_ticket_purchase_corridor_adapter_execution_count": (
+            corridor_counters["adapter_execution_count"]
+        ),
+        "airline_ticket_purchase_corridor_cross_root_authority_transfer_count": (
+            corridor_counters["cross_root_authority_transfer_count"]
+        ),
+        "airline_ticket_purchase_corridor_post_root_reasoning_restart_count": sum(
+            int(transition.semantic_reasoning_restarted)
+            for transition in airline_ticket_purchase_corridor_v0_1.transitions
+        ),
+        "airline_ticket_purchase_corridor_provider_called_count": (
+            corridor_counters["provider_called_count"]
+        ),
+        "airline_ticket_purchase_corridor_network_used_count": (
+            corridor_counters["network_used_count"]
+        ),
+        "airline_ticket_purchase_corridor_gemini_called_count": (
+            corridor_counters["gemini_called_count"]
+        ),
+        "airline_ticket_purchase_corridor_real_world_effects_count": (
+            corridor_counters["real_world_effects_count"]
+        ),
         "future_semantic_actor_roles_planned_count": len(actors),
         "future_semantic_actor_roles_executed_count": sum(
             int(actor["executed_in_slice_b"]) for actor in actors
@@ -2034,6 +3122,14 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     routing_matrix = report["cross_root_evidence_routing_matrix"]
     final_summary = report["final_tri_party_mock_summary"]
     fixtures = report["mock_protocol_fixtures"]
+    corridor_report = report.get("airline_ticket_purchase_corridor_v0_1")
+    binding_matrix = tuple(
+        report.get("airline_ticket_purchase_corridor_binding_matrix", ()),
+    )
+    corridor_integration = report.get(
+        "airline_ticket_purchase_corridor_integration",
+        {},
+    )
 
     if report.get("transaction_id") != TRANSACTION_ID:
         errors += ("transaction_id_mismatch",)
@@ -2054,11 +3150,21 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     transaction_ids.update(row["transaction_id"] for row in integrated_trace)
     transaction_ids.update(row["transaction_id"] for row in routing_matrix)
     transaction_ids.add(final_summary.get("transaction_id"))
+    if isinstance(
+        corridor_report,
+        corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01,
+    ):
+        transaction_ids.add(corridor_report.transaction_id)
+        transaction_ids.update(phase.transaction_id for phase in corridor_report.phase_results)
+        transaction_ids.update(
+            transition.transaction_id for transition in corridor_report.transitions
+        )
+    transaction_ids.update(row.get("transaction_id") for row in binding_matrix)
     if transaction_ids != {TRANSACTION_ID}:
         errors += ("transaction_id_set_mismatch",)
     if {row["transaction_id"] for row in ledger} != {TRANSACTION_ID}:
         errors += ("ledger_transaction_id_mismatch",)
-    if len(ledger) != 14:
+    if len(ledger) != 15:
         errors += ("ledger_entry_count_mismatch",)
     if set(report["participants"]) != {"ClientRoot", "AirlineRoot", "BankRoot"}:
         errors += ("participant_set_mismatch",)
@@ -2116,6 +3222,13 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
             errors += (f"offer_hold_packet_forbidden_flag_true:{key}",)
 
     offer_hold_receipt = fixtures["AirlineOfferHoldReceiptV01"]
+    if (
+        offer_hold_receipt.get("created_by")
+        != corridor_contracts.ADAPTER_AIRLINE_HOLD_SANDBOX
+    ):
+        errors += ("offer_hold_receipt_fixture_creator_not_hold_sandbox",)
+    if offer_hold_receipt.get("root_owner") != AIRLINE_ROOT_ID:
+        errors += ("offer_hold_receipt_fixture_wrong_root_owner",)
     if offer_hold_receipt.get("evidence_only") is not True:
         errors += ("offer_hold_receipt_not_evidence_only",)
     if offer_hold_receipt.get("payment_permission_created") is not False:
@@ -2357,8 +3470,13 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
             errors += (f"order_receipt_forbidden_flag_true:{key}",)
 
     mock_ticket_receipt = fixtures["MockTicketReceiptV01"]
-    if mock_ticket_receipt.get("created_by") != "airline_root":
-        errors += ("mock_ticket_receipt_fixture_creator_not_airline_root",)
+    if (
+        mock_ticket_receipt.get("created_by")
+        != corridor_contracts.ADAPTER_AIRLINE_TICKET_SANDBOX
+    ):
+        errors += ("mock_ticket_receipt_fixture_creator_not_ticket_sandbox",)
+    if mock_ticket_receipt.get("root_owner") != AIRLINE_ROOT_ID:
+        errors += ("mock_ticket_receipt_fixture_wrong_root_owner",)
     if mock_ticket_receipt.get("evidence_only") is not True:
         errors += ("mock_ticket_receipt_not_evidence_only",)
     for key in (
@@ -2378,8 +3496,46 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     if mock_pnr.get("real_booking") is not False:
         errors += ("mock_pnr_real_booking",)
 
+    mock_purchase_receipt = fixtures["MockPurchaseReceiptV01"]
+    if mock_purchase_receipt.get("created_by") != "client_completion_observer":
+        errors += ("mock_purchase_receipt_creator_not_completion_observer",)
+    if mock_purchase_receipt.get("root_owner") != CLIENT_ROOT_ID:
+        errors += ("mock_purchase_receipt_wrong_root_owner",)
+    if mock_purchase_receipt.get("receipt_id") == client_summary.get("summary_id"):
+        errors += ("mock_purchase_receipt_reused_client_final_summary_id",)
+    if mock_purchase_receipt.get("source_client_purchase_intent_id") != (
+        "client_purchase_intent:client_001:001"
+    ):
+        errors += ("mock_purchase_receipt_wrong_purchase_intent_source",)
+    if mock_purchase_receipt.get("source_payment_authorization_ref_id") != (
+        "bank_payment_authorization_ref:mock_bank_a:001"
+    ):
+        errors += ("mock_purchase_receipt_wrong_payment_ref_source",)
+    if mock_purchase_receipt.get("source_mock_ticket_receipt_id") != (
+        "mock_ticket_receipt:mock_airline_al:001"
+    ):
+        errors += ("mock_purchase_receipt_wrong_ticket_receipt_source",)
+    if mock_purchase_receipt.get("evidence_only") is not True:
+        errors += ("mock_purchase_receipt_not_evidence_only",)
+    for key in (
+        "side_root_finals_replaced",
+        "root_truth_rewritten",
+        "future_permission_created",
+        "real_payment_executed",
+        "real_ticket_issued",
+        "real_booking_created",
+    ):
+        if mock_purchase_receipt.get(key) is not False:
+            errors += (f"mock_purchase_receipt_forbidden_flag_true:{key}",)
+    if mock_purchase_receipt.get("real_world_effects_count") != 0:
+        errors += ("mock_purchase_receipt_effects_nonzero",)
+
     if client_summary.get("mock_ticket_receipt_id") != "mock_ticket_receipt:mock_airline_al:001":
         errors += ("client_final_summary_missing_mock_ticket_receipt",)
+    if client_summary.get("mock_purchase_receipt_id") != (
+        "mock_purchase_receipt:client_001:001"
+    ):
+        errors += ("client_final_summary_missing_mock_purchase_receipt",)
     if (
         client_summary.get("current_client_status")
         != "mock_ticket_evidence_received_no_real_travel_booking"
@@ -2484,9 +3640,14 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
             "payment_authorization_receipt_id",
             "payment_authorization_receipt:mock_bank_a:001",
         ),
+        (
+            "payment_authorization_ref_id",
+            "bank_payment_authorization_ref:mock_bank_a:001",
+        ),
         ("payment_status_receipt_id", "payment_status_receipt:mock_bank_a:001"),
         ("order_created_receipt_id", "order_created_receipt:mock_airline_al:001"),
         ("mock_ticket_receipt_id", "mock_ticket_receipt:mock_airline_al:001"),
+        ("mock_purchase_receipt_id", "mock_purchase_receipt:client_001:001"),
         ("mock_pnr", "PNR-EEH01"),
     ):
         if final_summary.get(key) != expected:
@@ -2513,6 +3674,161 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
             errors += (f"final_tri_party_mock_summary_flag_true:{key}",)
     if final_summary.get("real_world_effects_count") != 0:
         errors += ("final_tri_party_mock_summary_effects_nonzero",)
+
+    if not isinstance(
+        corridor_report,
+        corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01,
+    ):
+        errors += ("airline_corridor_report_missing",)
+    else:
+        corridor_accepted, corridor_errors = (
+            corridor_runtime.validate_airline_ticket_purchase_corridor_run_v01(
+                corridor_report,
+            )
+        )
+        if not corridor_accepted or corridor_errors:
+            errors += ("airline_corridor_public_validation_rejected",)
+        if corridor_report.final_status != corridor_runtime.STATUS_PASS:
+            errors += ("airline_corridor_not_pass",)
+        if corridor_report.transaction_id != report["transaction_id"]:
+            errors += ("airline_corridor_transaction_id_mismatch",)
+        if tuple(phase.phase_id for phase in corridor_report.phase_results) != (
+            corridor_runtime.PHASE_ORDER
+        ):
+            errors += ("airline_corridor_phase_order_mismatch",)
+        if len(corridor_report.phase_results) != 5:
+            errors += ("airline_corridor_phase_count_mismatch",)
+        if any(
+            phase.phase_status != corridor_runtime.STATUS_PASS
+            for phase in corridor_report.phase_results
+        ):
+            errors += ("airline_corridor_phase_not_pass",)
+        if len(corridor_report.transitions) != 4:
+            errors += ("airline_corridor_transition_count_mismatch",)
+        if any(
+            transition.transition_status != corridor_runtime.STATUS_PASS
+            for transition in corridor_report.transitions
+        ):
+            errors += ("airline_corridor_transition_not_pass",)
+        corridor_counter_table = corridor_report.counter_table
+        for key, expected in (
+            ("client_root_phase_gate_pass_count", 2),
+            ("airline_root_phase_gate_pass_count", 2),
+            ("bank_root_phase_gate_pass_count", 1),
+            ("fixture_receipts_observed_count", 3),
+            ("runtime_receipts_created_count", 0),
+            ("runtime_packets_created_count", 0),
+            ("adapter_execution_count", 0),
+            ("cross_root_authority_transfer_count", 0),
+            ("core_no_post_root_reasoning_validation_count", 5),
+            ("provider_called_count", 0),
+            ("network_used_count", 0),
+            ("gemini_called_count", 0),
+            ("real_world_effects_count", 0),
+        ):
+            if corridor_counter_table.get(key) != expected:
+                errors += (f"airline_corridor_counter_mismatch:{key}",)
+        if any(phase.authority_transferred for phase in corridor_report.phase_results):
+            errors += ("airline_corridor_authority_transfer",)
+        if any(
+            transition.semantic_reasoning_restarted
+            for transition in corridor_report.transitions
+        ):
+            errors += ("airline_corridor_post_root_reasoning_restart",)
+
+    if len(binding_matrix) < 14:
+        errors += ("airline_corridor_binding_row_count_low",)
+    if any(row.get("values_match") is not True for row in binding_matrix):
+        errors += ("airline_corridor_binding_mismatch",)
+    if any(row.get("raw_secret_used") is not False for row in binding_matrix):
+        errors += ("airline_corridor_binding_raw_secret_used",)
+    if any(row.get("authority_transferred") is not False for row in binding_matrix):
+        errors += ("airline_corridor_binding_authority_transfer",)
+    if {
+        row.get("transaction_id")
+        for row in binding_matrix
+    } != {report["transaction_id"]}:
+        errors += ("airline_corridor_binding_transaction_id_mismatch",)
+    transaction_binding_rows = [
+        row for row in binding_matrix if row.get("binding_id") == "transaction_id"
+    ]
+    if len(transaction_binding_rows) != 1:
+        errors += ("airline_corridor_transaction_binding_row_mismatch",)
+    elif (
+        transaction_binding_rows[0].get("unique_transaction_id_count") != 1
+        or transaction_binding_rows[0].get("all_transaction_ids_match") is not True
+    ):
+        errors += ("airline_corridor_transaction_binding_row_mismatch",)
+
+    if not hasattr(corridor_integration, "get"):
+        errors += ("airline_corridor_integration_missing",)
+    else:
+        for key, expected in (
+            ("integration_status", STATUS_PASS),
+            ("transaction_id", report["transaction_id"]),
+            ("source_runner_id", RUN_ID),
+            ("corridor_final_status", corridor_runtime.STATUS_PASS),
+            ("corridor_public_validation_accepted", True),
+            ("corridor_report_bound_to_projected_fixtures", True),
+            ("five_root_centered_phases_observed", True),
+            ("existing_runner_artifacts_projected", True),
+            ("parallel_fixture_transaction_created", False),
+            ("duplicate_corridor_execution_count", 0),
+            ("unique_transaction_id_count", 1),
+            ("all_transaction_ids_match", True),
+            ("runtime_packets_created_count", 0),
+            ("runtime_receipts_created_count", 0),
+            ("adapter_execution_count", 0),
+            ("authority_transferred", False),
+            ("real_world_effects_count", 0),
+            (
+                "next_gate",
+                "airline_ticket_purchase_corridor_v01_slice_e_audit_and_human_story",
+            ),
+        ):
+            if corridor_integration.get(key) != expected:
+                errors += (f"airline_corridor_integration_mismatch:{key}",)
+
+    try:
+        expected_fixture_bundle = (
+            _build_airline_ticket_purchase_corridor_fixture_bundle_v01(report)
+        )
+        fixture_bundle_accepted, fixture_bundle_errors = (
+            corridor_runtime.validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
+                expected_fixture_bundle,
+            )
+        )
+        expected_binding_matrix = _airline_ticket_purchase_corridor_binding_matrix_v01(
+            report,
+            expected_fixture_bundle,
+            corridor_report,
+        )
+        expected_integration = _airline_ticket_purchase_corridor_integration_summary(
+            report,
+            expected_fixture_bundle,
+            corridor_report,
+            corridor_accepted if "corridor_accepted" in locals() else False,
+            expected_binding_matrix,
+            1,
+        )
+    except (AttributeError, KeyError, TypeError, ValueError):
+        errors += ("airline_corridor_projection_failed",)
+    else:
+        if tuple(binding_matrix) != expected_binding_matrix:
+            errors += ("airline_corridor_binding_matrix_mismatch",)
+        if not fixture_bundle_accepted or fixture_bundle_errors:
+            errors += ("airline_corridor_projected_source_not_pass",)
+        fixture_report_binding_accepted, fixture_report_binding_errors = (
+            corridor_runtime
+            .validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
+                expected_fixture_bundle,
+                corridor_report,
+            )
+        )
+        if not fixture_report_binding_accepted or fixture_report_binding_errors:
+            errors += ("airline_corridor_fixture_report_binding_failed",)
+        if dict(corridor_integration) != expected_integration:
+            errors += ("airline_corridor_integration_mismatch:derived_fields",)
 
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["root_boundary_matrix"]):
         errors += ("root_boundary_violation",)
@@ -2619,6 +3935,19 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         "final_real_payment_executed_count",
         "final_real_booking_created_count",
         "final_authority_transferred_between_roots_count",
+        "airline_ticket_purchase_corridor_fail_count",
+        "airline_ticket_purchase_corridor_binding_mismatch_count",
+        "airline_ticket_purchase_corridor_parallel_transaction_count",
+        "airline_ticket_purchase_corridor_duplicate_execution_count",
+        "airline_ticket_purchase_corridor_runtime_receipts_created_count",
+        "airline_ticket_purchase_corridor_runtime_packets_created_count",
+        "airline_ticket_purchase_corridor_adapter_execution_count",
+        "airline_ticket_purchase_corridor_cross_root_authority_transfer_count",
+        "airline_ticket_purchase_corridor_post_root_reasoning_restart_count",
+        "airline_ticket_purchase_corridor_provider_called_count",
+        "airline_ticket_purchase_corridor_network_used_count",
+        "airline_ticket_purchase_corridor_gemini_called_count",
+        "airline_ticket_purchase_corridor_real_world_effects_count",
     )
     for key in required_zero_counter_keys:
         if counters.get(key) != 0:
@@ -2629,7 +3958,7 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         ("airline_root_count", 1),
         ("bank_root_count", 1),
         ("shared_transaction_id_count", 1),
-        ("shared_ledger_entry_count", 14),
+        ("shared_ledger_entry_count", 15),
         ("offer_candidates_created_count", 1),
         ("offer_hold_receipt_fixture_count", 1),
         ("airline_offer_hold_sandbox_invoked_count", 1),
@@ -2732,6 +4061,7 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         ("mock_ticket_receipt_created_count", 1),
         ("mock_ticket_receipt_validated_count", 1),
         ("mock_pnr_created_count", 1),
+        ("mock_purchase_receipt_fixture_count", 1),
         ("mock_pnr_validated_count", 1),
         ("mock_ticket_receipt_evidence_only_count", 1),
         ("mock_ticket_receipt_real_ticket_count", 0),
@@ -2754,6 +4084,41 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         ("final_real_payment_executed_count", 0),
         ("final_real_booking_created_count", 0),
         ("final_authority_transferred_between_roots_count", 0),
+        ("airline_ticket_purchase_corridor_integration_count", 1),
+        ("airline_ticket_purchase_corridor_pass_count", 1),
+        ("airline_ticket_purchase_corridor_fail_count", 0),
+        ("airline_ticket_purchase_corridor_phase_count", 5),
+        ("airline_ticket_purchase_corridor_phase_pass_count", 5),
+        ("airline_ticket_purchase_corridor_transition_count", 4),
+        ("airline_ticket_purchase_corridor_transition_pass_count", 4),
+        (
+            "airline_ticket_purchase_corridor_binding_row_count",
+            len(binding_matrix),
+        ),
+        (
+            "airline_ticket_purchase_corridor_binding_match_count",
+            len(binding_matrix),
+        ),
+        ("airline_ticket_purchase_corridor_binding_mismatch_count", 0),
+        ("airline_ticket_purchase_corridor_fixture_report_binding_pass_count", 1),
+        ("airline_ticket_purchase_corridor_parallel_transaction_count", 0),
+        ("airline_ticket_purchase_corridor_duplicate_execution_count", 0),
+        ("airline_ticket_purchase_corridor_fixture_receipts_observed_count", 3),
+        ("airline_ticket_purchase_corridor_runtime_receipts_created_count", 0),
+        ("airline_ticket_purchase_corridor_runtime_packets_created_count", 0),
+        ("airline_ticket_purchase_corridor_adapter_execution_count", 0),
+        (
+            "airline_ticket_purchase_corridor_cross_root_authority_transfer_count",
+            0,
+        ),
+        (
+            "airline_ticket_purchase_corridor_post_root_reasoning_restart_count",
+            0,
+        ),
+        ("airline_ticket_purchase_corridor_provider_called_count", 0),
+        ("airline_ticket_purchase_corridor_network_used_count", 0),
+        ("airline_ticket_purchase_corridor_gemini_called_count", 0),
+        ("airline_ticket_purchase_corridor_real_world_effects_count", 0),
         ("future_semantic_actor_roles_planned_count", 6),
         ("future_vertical_fractal_cells_planned_count", 14),
     ):

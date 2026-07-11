@@ -70,7 +70,7 @@ PHASE_ROOTS = {
     PHASE_CLIENT_COMPLETION: contracts.CLIENT_ROOT_ID,
 }
 
-NEXT_GATE = "airline_ticket_purchase_corridor_v01_slice_d_runner_integration"
+NEXT_GATE = "airline_ticket_purchase_corridor_v01_slice_e_audit_and_human_story"
 
 REASON_ROOT_PHASE_GATE_VALIDATION_FAILED = "root_phase_gate_validation_failed"
 REASON_CORE_CORRIDOR_GUARD_VALIDATION_FAILED = (
@@ -83,6 +83,13 @@ REASON_FAILED_PHASE_ID_MISMATCH = "failed_phase_id_mismatch"
 REASON_RETURN_TO_ROOT_ID_MISMATCH = "return_to_root_id_mismatch"
 REASON_COUNTER_TABLE_MISMATCH = "counter_table_mismatch"
 REASON_TRANSITION_SHAPE_MISMATCH = "transition_shape_mismatch"
+REASON_FIXTURE_REPORT_TRANSACTION_MISMATCH = "fixture_report_transaction_mismatch"
+REASON_PHASE_EVIDENCE_REFS_MISMATCH = "phase_evidence_refs_mismatch"
+REASON_PHASE_FIXTURE_ROOT_MISMATCH = "phase_fixture_root_mismatch"
+REASON_ARTIFACT_VALIDATION_SUMMARY_MISMATCH = (
+    "artifact_validation_summary_mismatch"
+)
+REASON_FIXTURE_REPORT_BINDING_FAILED = "fixture_report_binding_failed"
 
 
 @dataclass(frozen=True)
@@ -634,6 +641,233 @@ PHASE_VALIDATORS = {
 }
 
 
+def validate_airline_ticket_purchase_corridor_fixture_bundle_v01(
+    fixtures: Mapping[str, Any],
+    *,
+    core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None = None,
+) -> tuple[bool, tuple[str, ...]]:
+    """Validate projected fixtures without constructing a corridor run report."""
+
+    reasons: list[str] = []
+    gate_report = contracts.validate_root_phase_gate_v01(
+        fixtures["airline_offer_hold_gate"],
+    )
+    offer_report = contracts.validate_airline_offer_packet_v01(
+        fixtures["offer_packet"],
+    )
+    hold_report = contracts.validate_airline_hold_commit_packet_v01(
+        fixtures["offer_packet"],
+        fixtures["hold_packet"],
+    )
+    hold_receipt_report = contracts.validate_airline_offer_hold_receipt_v01(
+        fixtures["hold_packet"],
+        fixtures["hold_receipt"],
+    )
+    offer_core_valid, offer_core_reasons = _validate_core_guard(
+        phase_id=PHASE_AIRLINE_OFFER_HOLD,
+        packet_id=fixtures["hold_packet"].packet_id,
+        core_corridor_overrides=core_corridor_overrides,
+    )
+    for reason in offer_core_reasons:
+        _append_reason(reasons, reason)
+    if not offer_core_valid:
+        _append_reason(reasons, REASON_CORE_CORRIDOR_GUARD_VALIDATION_FAILED)
+    _merge_report_reasons(
+        reasons,
+        gate_report,
+        offer_report,
+        hold_report,
+        hold_receipt_report,
+    )
+
+    human_gate_report = contracts.validate_root_phase_gate_v01(
+        fixtures["client_purchase_gate"],
+    )
+    human_report = contracts.validate_human_approval_evidence_ref_v01(
+        fixtures["human_approval"],
+    )
+    purchase_report = contracts.validate_client_purchase_intent_v01(
+        fixtures["human_approval"],
+        fixtures["offer_packet"],
+        fixtures["hold_receipt"],
+        fixtures["purchase_intent"],
+    )
+    client_core_valid, client_core_reasons = _validate_core_guard(
+        phase_id=PHASE_CLIENT_PURCHASE_INTENT,
+        packet_id=fixtures["purchase_intent"].intent_id,
+        core_corridor_overrides=core_corridor_overrides,
+    )
+    for reason in client_core_reasons:
+        _append_reason(reasons, reason)
+    if not client_core_valid:
+        _append_reason(reasons, REASON_CORE_CORRIDOR_GUARD_VALIDATION_FAILED)
+    _merge_report_reasons(
+        reasons,
+        human_gate_report,
+        human_report,
+        purchase_report,
+    )
+
+    bank_gate_report = contracts.validate_root_phase_gate_v01(
+        fixtures["bank_gate"],
+    )
+    auth_report = contracts.validate_bank_payment_authorization_ref_v01(
+        fixtures["purchase_intent"],
+        fixtures["authorization_ref"],
+    )
+    bank_core_valid, bank_core_reasons = _validate_core_guard(
+        phase_id=PHASE_BANK_PAYMENT_AUTHORIZATION,
+        packet_id=fixtures["authorization_ref"].authorization_ref_id,
+        core_corridor_overrides=core_corridor_overrides,
+    )
+    for reason in bank_core_reasons:
+        _append_reason(reasons, reason)
+    if not bank_core_valid:
+        _append_reason(reasons, REASON_CORE_CORRIDOR_GUARD_VALIDATION_FAILED)
+    _merge_report_reasons(reasons, bank_gate_report, auth_report)
+
+    airline_gate_report = contracts.validate_root_phase_gate_v01(
+        fixtures["airline_ticket_gate"],
+    )
+    ticket_intent_report = contracts.validate_airline_ticket_issue_intent_v01(
+        fixtures["offer_packet"],
+        fixtures["hold_packet"],
+        fixtures["hold_receipt"],
+        fixtures["purchase_intent"],
+        fixtures["authorization_ref"],
+        fixtures["ticket_issue_intent"],
+    )
+    ticket_receipt_report = contracts.validate_mock_ticket_receipt_v01(
+        fixtures["ticket_issue_intent"],
+        fixtures["ticket_receipt"],
+    )
+    ticket_core_valid, ticket_core_reasons = _validate_core_guard(
+        phase_id=PHASE_AIRLINE_TICKET_ISSUE,
+        packet_id=fixtures["ticket_issue_intent"].intent_id,
+        core_corridor_overrides=core_corridor_overrides,
+    )
+    for reason in ticket_core_reasons:
+        _append_reason(reasons, reason)
+    if not ticket_core_valid:
+        _append_reason(reasons, REASON_CORE_CORRIDOR_GUARD_VALIDATION_FAILED)
+    _merge_report_reasons(
+        reasons,
+        airline_gate_report,
+        ticket_intent_report,
+        ticket_receipt_report,
+    )
+
+    completion_gate_report = contracts.validate_root_phase_gate_v01(
+        fixtures["completion_gate"],
+    )
+    purchase_receipt_report = contracts.validate_mock_purchase_receipt_v01(
+        fixtures["purchase_intent"],
+        fixtures["authorization_ref"],
+        fixtures["ticket_receipt"],
+        fixtures["purchase_receipt"],
+    )
+    completion_core_valid, completion_core_reasons = _validate_core_guard(
+        phase_id=PHASE_CLIENT_COMPLETION,
+        packet_id=fixtures["purchase_receipt"].receipt_id,
+        core_corridor_overrides=core_corridor_overrides,
+    )
+    for reason in completion_core_reasons:
+        _append_reason(reasons, reason)
+    if not completion_core_valid:
+        _append_reason(reasons, REASON_CORE_CORRIDOR_GUARD_VALIDATION_FAILED)
+    _merge_report_reasons(reasons, completion_gate_report, purchase_receipt_report)
+
+    return not reasons, tuple(reasons)
+
+
+def validate_airline_ticket_purchase_corridor_report_against_fixture_bundle_v01(
+    fixtures: Mapping[str, Any],
+    report: AirlineTicketPurchaseCorridorRunReportV01,
+) -> tuple[bool, tuple[str, ...]]:
+    reasons: list[str] = []
+    fixture_transaction_ids = tuple(
+        getattr(artifact, "transaction_id")
+        for artifact in fixtures.values()
+        if hasattr(artifact, "transaction_id")
+    )
+    if (
+        report.transaction_id != contracts.TRANSACTION_ID
+        or any(transaction_id != report.transaction_id for transaction_id in fixture_transaction_ids)
+        or any(phase.transaction_id != report.transaction_id for phase in report.phase_results)
+        or any(transition.transaction_id != report.transaction_id for transition in report.transitions)
+    ):
+        _append_reason(reasons, REASON_FIXTURE_REPORT_TRANSACTION_MISMATCH)
+
+    phase_results = tuple(report.phase_results)
+    if (
+        len(phase_results) != 5
+        or tuple(phase.phase_id for phase in phase_results) != PHASE_ORDER
+    ):
+        _append_reason(reasons, "phase_order_mismatch")
+
+    expected_roots = {
+        PHASE_AIRLINE_OFFER_HOLD: fixtures["airline_offer_hold_gate"].root_id,
+        PHASE_CLIENT_PURCHASE_INTENT: fixtures["client_purchase_gate"].root_id,
+        PHASE_BANK_PAYMENT_AUTHORIZATION: fixtures["bank_gate"].root_id,
+        PHASE_AIRLINE_TICKET_ISSUE: fixtures["airline_ticket_gate"].root_id,
+        PHASE_CLIENT_COMPLETION: fixtures["completion_gate"].root_id,
+    }
+    expected_evidence = {
+        PHASE_AIRLINE_OFFER_HOLD: (
+            fixtures["offer_packet"].packet_id,
+            fixtures["hold_packet"].packet_id,
+            fixtures["hold_receipt"].receipt_id,
+        ),
+        PHASE_CLIENT_PURCHASE_INTENT: (
+            fixtures["human_approval"].approval_ref,
+            fixtures["purchase_intent"].intent_id,
+        ),
+        PHASE_BANK_PAYMENT_AUTHORIZATION: (
+            fixtures["authorization_ref"].authorization_ref_id,
+        ),
+        PHASE_AIRLINE_TICKET_ISSUE: (
+            fixtures["ticket_issue_intent"].intent_id,
+            fixtures["ticket_receipt"].receipt_id,
+        ),
+        PHASE_CLIENT_COMPLETION: (
+            fixtures["purchase_receipt"].receipt_id,
+        ),
+    }
+
+    for phase in phase_results:
+        if phase.relevant_root_id != expected_roots.get(phase.phase_id):
+            _append_reason(reasons, REASON_PHASE_FIXTURE_ROOT_MISMATCH)
+        if (
+            phase.phase_status == STATUS_PASS
+            and phase.evidence_refs_observed != expected_evidence.get(phase.phase_id)
+        ):
+            _append_reason(reasons, REASON_PHASE_EVIDENCE_REFS_MISMATCH)
+        if phase.authority_transferred:
+            _append_reason(reasons, contracts.REASON_CROSS_ROOT_AUTHORITY_TRANSFER)
+        if phase.runtime_receipt_created:
+            _append_reason(reasons, "runtime_receipt_created")
+        if phase.real_world_effects_count != 0:
+            _append_reason(reasons, contracts.REASON_NONZERO_REAL_WORLD_EFFECTS)
+
+    if any(transition.authority_transferred for transition in report.transitions):
+        _append_reason(reasons, contracts.REASON_CROSS_ROOT_AUTHORITY_TRANSFER)
+    if dict(report.artifact_validation_summary) != _artifact_validation_summary(
+        phase_results,
+    ):
+        _append_reason(reasons, REASON_ARTIFACT_VALIDATION_SUMMARY_MISMATCH)
+    for key in (
+        "runtime_receipts_created_count",
+        "runtime_packets_created_count",
+        "real_world_effects_count",
+    ):
+        if report.counter_table.get(key) != 0:
+            _append_reason(reasons, REASON_COUNTER_TABLE_MISMATCH)
+
+    if reasons:
+        _append_reason(reasons, REASON_FIXTURE_REPORT_BINDING_FAILED)
+    return not reasons, tuple(reasons)
+
+
 def _build_transitions(
     phase_results: tuple[AirlineCorridorPhaseResultV01, ...],
 ) -> tuple[AirlineCorridorTransitionV01, ...]:
@@ -955,6 +1189,23 @@ def validate_airline_ticket_purchase_corridor_run_v01(
             _append_reason(errors, "provider_or_network_called")
         if phase.real_world_effects_count != 0:
             _append_reason(errors, contracts.REASON_NONZERO_REAL_WORLD_EFFECTS)
+        if phase.phase_status == STATUS_PASS:
+            if phase.return_to_relevant_root is not False:
+                _append_reason(errors, "phase_derived_field_mismatch")
+            if phase.later_phases_allowed is not True:
+                _append_reason(errors, "phase_derived_field_mismatch")
+        elif phase.phase_status == STATUS_FAIL_CLOSED:
+            if phase.return_to_relevant_root is not True:
+                _append_reason(errors, "phase_derived_field_mismatch")
+            if phase.later_phases_allowed is not False:
+                _append_reason(errors, "phase_derived_field_mismatch")
+        elif phase.phase_status == STATUS_NOT_RUN:
+            if phase.return_to_relevant_root is not False:
+                _append_reason(errors, "phase_derived_field_mismatch")
+            if phase.later_phases_allowed is not False:
+                _append_reason(errors, "phase_derived_field_mismatch")
+        else:
+            _append_reason(errors, "phase_status_mismatch")
 
     if len(transitions) != 4:
         _append_reason(errors, REASON_TRANSITION_SHAPE_MISMATCH)
@@ -981,6 +1232,15 @@ def validate_airline_ticket_purchase_corridor_run_v01(
             if len(phase_results) == 5:
                 source = phase_results[expected_index - 1]
                 target = phase_results[expected_index]
+                expected_source_passed = source.phase_status == STATUS_PASS
+                expected_dependency_satisfied = (
+                    expected_source_passed
+                    and target.phase_status != STATUS_NOT_RUN
+                )
+                if transition.source_phase_passed != expected_source_passed:
+                    _append_reason(errors, REASON_TRANSITION_SHAPE_MISMATCH)
+                if transition.dependency_satisfied != expected_dependency_satisfied:
+                    _append_reason(errors, REASON_TRANSITION_SHAPE_MISMATCH)
                 if (
                     source.phase_status == STATUS_PASS
                     and target.phase_status != STATUS_NOT_RUN
@@ -991,6 +1251,25 @@ def validate_airline_ticket_purchase_corridor_run_v01(
                     source.phase_status != STATUS_PASS
                     or target.phase_status == STATUS_NOT_RUN
                 ) and transition.transition_status == STATUS_PASS:
+                    _append_reason(errors, REASON_TRANSITION_SHAPE_MISMATCH)
+                expected_status = (
+                    STATUS_PASS
+                    if expected_dependency_satisfied
+                    else STATUS_NOT_RUN
+                    if (
+                        source.phase_status == STATUS_NOT_RUN
+                        or target.phase_status == STATUS_NOT_RUN
+                    )
+                    else STATUS_FAIL_CLOSED
+                )
+                if transition.transition_status != expected_status:
+                    _append_reason(errors, REASON_TRANSITION_SHAPE_MISMATCH)
+                if transition.transition_status == STATUS_PASS:
+                    if transition.reason_codes != ():
+                        _append_reason(errors, REASON_TRANSITION_SHAPE_MISMATCH)
+                elif transition.reason_codes != (
+                    f"dependency_not_satisfied:{source.phase_id}",
+                ):
                     _append_reason(errors, REASON_TRANSITION_SHAPE_MISMATCH)
 
     failed_phases = [
@@ -1104,10 +1383,15 @@ def validate_airline_ticket_purchase_corridor_run_v01(
     return not errors, tuple(errors)
 
 
-def collect_airline_ticket_purchase_corridor_state_machine_v01() -> (
-    AirlineTicketPurchaseCorridorRunReportV01
-):
-    return build_valid_airline_ticket_purchase_corridor_run_v01()
+def collect_airline_ticket_purchase_corridor_state_machine_v01(
+    *,
+    fixtures: Mapping[str, Any] | None = None,
+    core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None = None,
+) -> AirlineTicketPurchaseCorridorRunReportV01:
+    return _run_airline_ticket_purchase_corridor_state_machine_v01(
+        fixtures,
+        core_corridor_overrides=core_corridor_overrides,
+    )
 
 
 def render_airline_ticket_purchase_corridor_state_machine_v01(

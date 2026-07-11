@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -170,6 +170,32 @@ def _causal_report_for_preference(
         provider=provider or _content_sensitive_causal_provider(),
         causal_constraints=constraints,
     )
+
+
+def _schema_fixture(
+    *,
+    actor_id: str = binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER,
+    proposed_offer_id: str = "",
+) -> tuple[
+    binding.AirlineSemanticSelectionInputV01,
+    causal_runtime.AirlineInjectedSemanticActorRequestV01,
+]:
+    bsep = binding.build_valid_airline_bsep_projection_ref_v01()
+    constraints = binding.build_client_constraints_preference_a_v01()
+    snapshot = binding.build_airline_candidate_snapshot_v01()
+    selection_input = binding.build_selection_input_v01(
+        bsep,
+        constraints,
+        snapshot,
+    )
+    request = causal_runtime.build_airline_semantic_actor_request_v01(
+        actor_id=actor_id,
+        selection_input=selection_input,
+        constraints=constraints,
+        snapshot=snapshot,
+        proposed_offer_id=proposed_offer_id,
+    )
+    return selection_input, request
 
 
 def _minimal_safe_provider(*, include_empty_runtime_fields: bool = False) -> runner.Provider:
@@ -720,6 +746,362 @@ def test_causal_gate_closed_preserves_existing_live_lane() -> None:
         report["semantic_to_contract_causal_binding_v0_1"]["binding_status"]
         == "NOT_ENABLED"
     )
+
+
+def test_exact_observed_bad_causal_proposer_shape_fails_without_repair() -> None:
+    selection_input, request = _schema_fixture()
+    payload = _proposal_payload(asdict(request), binding.OFFER_A_ID)
+    payload.update(
+        {
+            "ranked_offer_ids": (binding.OFFER_A_ID, binding.OFFER_B_ID),
+            "decision_factors": ({"price": "lower"},),
+            "preference_matches": ({"seat": "window"},),
+            "uncertainty_notes": (),
+            "requires_root_review": False,
+        },
+    )
+
+    report = (
+        binding.validate_airline_semantic_offer_selection_proposal_payload_v01(
+            selection_input,
+            payload,
+        )
+    )
+
+    assert report.validation_status == binding.STATUS_FAIL_CLOSED
+    assert binding.REASON_INVALID_PROVIDER_OUTPUT_TYPE in report.reason_codes
+    assert binding.REASON_EMPTY_PROVIDER_OUTPUT_FIELD in report.reason_codes
+    assert payload["decision_factors"] == ({"price": "lower"},)
+    assert payload["preference_matches"] == ({"seat": "window"},)
+    assert payload["uncertainty_notes"] == ()
+    assert payload["requires_root_review"] is False
+
+
+def test_corrected_equivalent_causal_proposer_shape_passes() -> None:
+    selection_input, request = _schema_fixture()
+    payload = _proposal_payload(asdict(request), binding.OFFER_A_ID)
+    payload.update(
+        {
+            "ranked_offer_ids": (binding.OFFER_A_ID, binding.OFFER_B_ID),
+            "decision_factors": (
+                "Offer A has the lower price while preserving baggage, window seat, and changeability.",
+            ),
+            "preference_matches": (
+                "Matches lower price, window preference, included baggage, and changeability.",
+            ),
+            "uncertainty_notes": (
+                "Recommendation remains advisory and requires ClientRoot review.",
+            ),
+            "requires_root_review": True,
+        },
+    )
+
+    proposal, report = (
+        binding.build_airline_semantic_offer_selection_proposal_from_payload_v01(
+            selection_input,
+            payload,
+        )
+    )
+
+    assert report.validation_status == binding.STATUS_PASS
+    assert report.reason_codes == ()
+    assert proposal is not None
+    assert proposal.recommended_offer_id == binding.OFFER_A_ID
+
+
+def test_causal_proposer_schema_allows_a_and_b_without_default_or_bias() -> None:
+    selection_input, request = _schema_fixture()
+    schema = runner._build_causal_proposer_response_schema_v01(
+        request,
+        selection_input,
+    )
+    recommended = schema["properties"]["recommended_offer_id"]
+    ranking_items = schema["properties"]["ranked_offer_ids"]["items"]
+
+    assert set(recommended["enum"]) == {binding.OFFER_A_ID, binding.OFFER_B_ID}
+    assert set(ranking_items["enum"]) == {binding.OFFER_A_ID, binding.OFFER_B_ID}
+    assert recommended["enum"] == list(
+        selection_input.client_hard_compatible_candidate_ids
+    )
+    assert "default" not in recommended
+    assert "const" not in recommended
+    assert schema["properties"]["proposal_id"] == {"type": "string", "minLength": 1}
+    assert schema["properties"]["requires_root_review"]["enum"] == [True]
+    assert schema["required"] == list(runner.CAUSAL_PROPOSER_REQUIRED_FIELDS)
+    assert set(schema["required"]) == set(
+        binding.AirlineSemanticOfferSelectionProposalV01.__dataclass_fields__,
+    )
+
+
+def test_causal_reviewer_schema_lineage_and_conflict_surface() -> None:
+    selection_input, proposer_request = _schema_fixture()
+    reviewer_actor = binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER
+    _, reviewer_request = _schema_fixture(
+        actor_id=reviewer_actor,
+        proposed_offer_id=binding.OFFER_A_ID,
+    )
+    schema = runner._build_causal_reviewer_response_schema_v01(reviewer_request)
+    properties = schema["properties"]
+
+    assert schema["required"] == list(runner.CAUSAL_REVIEWER_REQUIRED_FIELDS)
+    assert set(schema["required"]) == set(
+        causal_runtime.AirlineInjectedReviewerResponseV01.__dataclass_fields__,
+    )
+    assert properties["transaction_id"]["enum"] == [reviewer_request.transaction_id]
+    assert properties["actor_id"]["enum"] == [reviewer_actor]
+    assert properties["source_request_id"]["enum"] == [reviewer_request.request_id]
+    assert properties["source_selection_input_id"]["enum"] == [
+        selection_input.selection_input_id,
+    ]
+    assert properties["source_candidate_set_snapshot_id"]["enum"] == [
+        selection_input.source_candidate_set_snapshot_id,
+    ]
+    assert properties["source_candidate_set_digest"]["enum"] == [
+        selection_input.source_candidate_set_digest,
+    ]
+    assert properties["reviewed_offer_id"]["enum"] == [binding.OFFER_A_ID]
+    assert properties["review_role"]["enum"] == [reviewer_request.actor_role]
+    assert properties["semantic_factors"]["minItems"] == 1
+    assert properties["semantic_factors"]["items"] == {
+        "type": "string",
+        "minLength": 1,
+    }
+    assert "minItems" not in properties["blocking_conflicts"]
+    assert properties["supports_proposed_offer"] == {"type": "boolean"}
+    assert "enum" not in properties["supports_proposed_offer"]
+    assert properties["supports_proposed_offer"].get("enum") is None
+    assert properties["blocking_conflicts"]["items"] == {
+        "type": "string",
+        "minLength": 1,
+    }
+    assert properties["authority_created"]["enum"] == [False]
+    assert properties["permission_created"]["enum"] == [False]
+    assert properties["raw_output_used"]["enum"] == [False]
+    assert properties["real_world_effects_count"]["enum"] == [0]
+    assert schema["additionalProperties"] is False
+    assert proposer_request.actor_id == binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER
+
+
+def test_causal_reviewer_schema_permits_support_reject_and_conflicts() -> None:
+    _, reviewer_request = _schema_fixture(
+        actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
+        proposed_offer_id=binding.OFFER_A_ID,
+    )
+    schema = runner._build_causal_reviewer_response_schema_v01(reviewer_request)
+    properties = schema["properties"]
+
+    assert properties["supports_proposed_offer"] == {"type": "boolean"}
+    assert "enum" not in properties["supports_proposed_offer"]
+    assert properties["blocking_conflicts"]["type"] == "array"
+    assert properties["blocking_conflicts"]["items"] == {
+        "type": "string",
+        "minLength": 1,
+    }
+    assert "minItems" not in properties["blocking_conflicts"]
+
+
+def test_causal_reviewer_prompt_has_no_approval_biased_skeleton() -> None:
+    selection_input, reviewer_request = _schema_fixture(
+        actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
+        proposed_offer_id=binding.OFFER_A_ID,
+    )
+    prompt = runner._build_prompt(
+        actor=runner._actor_spec(binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER),
+        actor_index=5,
+        deterministic_report={"final_status": runner.STATUS_PASS},
+        bsep_side_projections={},
+        parent_report=None,
+        causal_request=reviewer_request,
+        causal_selection_input=selection_input,
+    )
+
+    assert '"supports_proposed_offer": true' not in prompt
+    assert '"blocking_conflicts": []' not in prompt
+    assert '"blocking_conflicts": []' not in prompt.replace(" ", "")
+    assert "unsupported/conflicting outcomes are allowed" in prompt
+    assert "do not copy an empty conflict list by default" in prompt
+    assert "Derive supports_proposed_offer from actual semantic review" in prompt
+    assert "Return false when the proposed offer is not supported" in prompt
+    assert "do not assume PASS" in prompt
+    assert "The placeholder skeleton is not valid output" in prompt
+    assert "Response schema and local validator remain authoritative" in prompt
+
+
+def test_conflicting_reviewer_payload_is_not_repaired_to_pass() -> None:
+    selection_input, reviewer_request = _schema_fixture(
+        actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
+        proposed_offer_id=binding.OFFER_A_ID,
+    )
+    payload = _reviewer_payload(
+        asdict(reviewer_request),
+        overrides={
+            "supports_proposed_offer": False,
+            "blocking_conflicts": ("fare_rule_conflict",),
+        },
+    )
+
+    validation = runner._validate_causal_actor_candidate(
+        candidate=payload,
+        actor=runner._actor_spec(binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER),
+        causal_request=reviewer_request,
+        selection_input=selection_input,
+        parse_errors=(),
+    )
+
+    assert validation["validation_status"] == runner.STATUS_FAIL_CLOSED
+    assert binding.REASON_MULTI_ACTOR_CONFLICT in validation["errors"]
+    assert binding.REASON_ACTOR_OUTPUT_NOT_VALIDATED in validation["errors"]
+    assert payload["supports_proposed_offer"] is False
+    assert payload["blocking_conflicts"] == ("fare_rule_conflict",)
+
+
+def test_clean_supporting_reviewer_payload_still_passes() -> None:
+    selection_input, reviewer_request = _schema_fixture(
+        actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
+        proposed_offer_id=binding.OFFER_A_ID,
+    )
+    payload = _reviewer_payload(asdict(reviewer_request))
+
+    validation = runner._validate_causal_actor_candidate(
+        candidate=payload,
+        actor=runner._actor_spec(binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER),
+        causal_request=reviewer_request,
+        selection_input=selection_input,
+        parse_errors=(),
+    )
+
+    assert validation["validation_status"] == runner.STATUS_PASS
+    assert validation["errors"] == ()
+
+
+def test_causal_proposer_prompt_contract_has_valid_shape_and_no_default() -> None:
+    selection_input, request = _schema_fixture()
+    prompt = runner._build_prompt(
+        actor=runner._actor_spec(binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER),
+        actor_index=3,
+        deterministic_report={"final_status": runner.STATUS_PASS},
+        bsep_side_projections={},
+        parent_report=None,
+        causal_request=request,
+        causal_selection_input=selection_input,
+    )
+
+    assert "JSON arrays of non-empty strings" in prompt
+    assert "Never return objects in these arrays" in prompt
+    assert "requires_root_review must be true" in prompt
+    assert binding.OFFER_A_ID in prompt
+    assert binding.OFFER_B_ID in prompt
+    assert '"decision_factors": []' not in prompt
+    assert '"preference_matches": []' not in prompt
+    assert '"uncertainty_notes": []' not in prompt
+    assert '"requires_root_review": false' not in prompt
+    assert f'"recommended_offer_id": "{binding.OFFER_A_ID}"' not in prompt
+    assert f'"recommended_offer_id": "{binding.OFFER_B_ID}"' not in prompt
+    assert "do not use a default offer" in prompt
+
+
+def test_causal_response_schema_required_keys_match_contract_fields() -> None:
+    selection_input, proposer_request = _schema_fixture()
+    proposer_schema = runner._causal_provider_response_schema_v01(
+        proposer_request,
+        selection_input,
+    )
+    _, reviewer_request = _schema_fixture(
+        actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
+        proposed_offer_id=binding.OFFER_A_ID,
+    )
+    reviewer_schema = runner._causal_provider_response_schema_v01(
+        reviewer_request,
+        selection_input,
+    )
+
+    assert proposer_schema["required"] == list(
+        binding.AirlineSemanticOfferSelectionProposalV01.__dataclass_fields__,
+    )
+    assert reviewer_schema["required"] == list(
+        causal_runtime.AirlineInjectedReviewerResponseV01.__dataclass_fields__,
+    )
+
+
+def test_real_provider_forwards_causal_schema_and_keeps_generic_schema_none(
+    monkeypatch,
+) -> None:
+    calls: list[dict[str, Any]] = []
+
+    def fake_shared_provider(**kwargs: Any) -> str:
+        calls.append(dict(kwargs))
+        return "{}"
+
+    monkeypatch.setattr(runner, "_shared_live_gemini_provider", fake_shared_provider)
+    real_provider = runner.build_real_airline_semantic_provider_v01("gemini-test")
+    selection_input, proposer_request = _schema_fixture()
+    proposer_schema = runner._causal_provider_response_schema_v01(
+        proposer_request,
+        selection_input,
+    )
+    _, reviewer_request = _schema_fixture(
+        actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
+        proposed_offer_id=binding.OFFER_A_ID,
+    )
+    reviewer_schema = runner._causal_provider_response_schema_v01(
+        reviewer_request,
+        selection_input,
+    )
+    env = {"HEDGEHOG_TEST_TIMEOUT_SECONDS": "7"}
+
+    real_provider(
+        proposer_request.actor_id,
+        "proposer prompt",
+        {"provider_env": env, "provider_response_schema": proposer_schema},
+    )
+    real_provider(
+        reviewer_request.actor_id,
+        "reviewer prompt",
+        {"provider_env": env, "provider_response_schema": reviewer_schema},
+    )
+    real_provider(
+        "tri_party_airline_orchestrator_llm",
+        "generic prompt",
+        {"provider_env": env},
+    )
+
+    assert calls[0]["response_schema"] == proposer_schema
+    assert calls[0]["response_schema"] is not proposer_schema
+    assert calls[1]["response_schema"] == reviewer_schema
+    assert calls[1]["response_schema"] is not reviewer_schema
+    assert calls[2]["response_schema"] is None
+    assert [call["model_name"] for call in calls] == ["gemini-test"] * 3
+    assert [call["role"] for call in calls] == [
+        proposer_request.actor_id,
+        reviewer_request.actor_id,
+        "tri_party_airline_orchestrator_llm",
+    ]
+    assert all(
+        call["timeout_seconds"] == runner.provider_adapter._timeout_seconds(env)
+        for call in calls
+    )
+    assert all(call["explicit_http_timeout"] is True for call in calls)
+    assert all(call["env"] == env for call in calls)
+
+
+def test_no_post_provider_causal_repair_source_boundary() -> None:
+    source = Path(runner.__file__).read_text()
+
+    forbidden_snippets = (
+        "str(candidate",
+        "str(payload",
+        "decision_factors = [str",
+        "preference_matches = [str",
+        "uncertainty_notes = (\"Recommendation remains advisory",
+        "requires_root_review\"] = True",
+        "requires_root_review = True",
+        "recommended_offer_id = binding.OFFER_A_ID",
+        "recommended_offer_id = binding.OFFER_B_ID",
+        "return binding.OFFER_A_ID",
+        "return binding.OFFER_B_ID",
+    )
+    for snippet in forbidden_snippets:
+        assert snippet not in source
 
 
 def test_causal_integrated_preference_a_passes() -> None:

@@ -58,6 +58,165 @@ REASON_LIVE_BSEP_CAUSAL_PROJECTION_LINEAGE_MISMATCH = (
     "live_bsep_causal_projection_lineage_mismatch"
 )
 
+CAUSAL_PROPOSER_REQUIRED_FIELDS = tuple(
+    binding.AirlineSemanticOfferSelectionProposalV01.__dataclass_fields__,
+)
+CAUSAL_REVIEWER_REQUIRED_FIELDS = tuple(
+    causal_runtime.AirlineInjectedReviewerResponseV01.__dataclass_fields__,
+)
+
+
+def _non_empty_string_schema() -> dict[str, Any]:
+    return {"type": "string", "minLength": 1}
+
+
+def _single_value_schema(value: Any) -> dict[str, Any]:
+    return {"type": "string", "enum": [value]}
+
+
+def _false_boolean_schema() -> dict[str, Any]:
+    return {"type": "boolean", "enum": [False]}
+
+
+def _zero_integer_schema() -> dict[str, Any]:
+    return {"type": "integer", "enum": [0]}
+
+
+def _non_empty_string_array_schema(
+    *,
+    enum_values: tuple[str, ...] | None = None,
+    unique_items: bool = False,
+) -> dict[str, Any]:
+    item_schema: dict[str, Any] = _non_empty_string_schema()
+    if enum_values is not None:
+        item_schema = {"type": "string", "enum": list(enum_values)}
+    schema: dict[str, Any] = {
+        "type": "array",
+        "minItems": 1,
+        "items": item_schema,
+    }
+    if unique_items:
+        schema["uniqueItems"] = True
+    return schema
+
+
+def _build_causal_proposer_response_schema_v01(
+    causal_request: causal_runtime.AirlineInjectedSemanticActorRequestV01,
+    selection_input: binding.AirlineSemanticSelectionInputV01,
+) -> dict[str, Any]:
+    allowed_offer_ids = tuple(selection_input.client_hard_compatible_candidate_ids)
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": list(CAUSAL_PROPOSER_REQUIRED_FIELDS),
+        "properties": {
+            "proposal_id": _non_empty_string_schema(),
+            "transaction_id": _single_value_schema(causal_request.transaction_id),
+            "actor_id": _single_value_schema(causal_request.actor_id),
+            "source_selection_input_id": _single_value_schema(
+                causal_request.source_selection_input_id,
+            ),
+            "source_bsep_projection_ref": _single_value_schema(
+                causal_request.source_bsep_projection_ref,
+            ),
+            "source_client_constraint_set_id": _single_value_schema(
+                causal_request.source_client_constraint_set_id,
+            ),
+            "source_candidate_set_snapshot_id": _single_value_schema(
+                causal_request.source_candidate_set_snapshot_id,
+            ),
+            "source_candidate_set_digest": _single_value_schema(
+                causal_request.source_candidate_set_digest,
+            ),
+            "candidate_set_ref": _single_value_schema(
+                causal_request.source_candidate_set_ref,
+            ),
+            "recommended_offer_id": {
+                "type": "string",
+                "enum": list(allowed_offer_ids),
+            },
+            "ranked_offer_ids": _non_empty_string_array_schema(
+                enum_values=allowed_offer_ids,
+                unique_items=True,
+            ),
+            "decision_factors": _non_empty_string_array_schema(),
+            "preference_matches": _non_empty_string_array_schema(),
+            "uncertainty_notes": _non_empty_string_array_schema(),
+            "requires_root_review": {"type": "boolean", "enum": [True]},
+            "semantic_summary": _non_empty_string_schema(),
+            "authority_created": _false_boolean_schema(),
+            "action_permission_created": _false_boolean_schema(),
+            "packet_created": _false_boolean_schema(),
+            "receipt_created": _false_boolean_schema(),
+            "payment_created": _false_boolean_schema(),
+            "ticket_created": _false_boolean_schema(),
+            "booking_created": _false_boolean_schema(),
+            "final_output_created": _false_boolean_schema(),
+            "real_world_effects_count": _zero_integer_schema(),
+        },
+    }
+
+
+def _build_causal_reviewer_response_schema_v01(
+    causal_request: causal_runtime.AirlineInjectedSemanticActorRequestV01,
+) -> dict[str, Any]:
+    known_statuses = (
+        binding.STATUS_PASS,
+        binding.STATUS_FAIL_CLOSED,
+        binding.STATUS_REQUIRES_ROOT_REVIEW,
+    )
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": list(CAUSAL_REVIEWER_REQUIRED_FIELDS),
+        "properties": {
+            "response_id": _non_empty_string_schema(),
+            "transaction_id": _single_value_schema(causal_request.transaction_id),
+            "actor_id": _single_value_schema(causal_request.actor_id),
+            "source_request_id": _single_value_schema(causal_request.request_id),
+            "source_selection_input_id": _single_value_schema(
+                causal_request.source_selection_input_id,
+            ),
+            "source_candidate_set_snapshot_id": _single_value_schema(
+                causal_request.source_candidate_set_snapshot_id,
+            ),
+            "source_candidate_set_digest": _single_value_schema(
+                causal_request.source_candidate_set_digest,
+            ),
+            "reviewed_offer_id": _single_value_schema(
+                causal_request.proposed_offer_id,
+            ),
+            "review_role": _single_value_schema(causal_request.actor_role),
+            "review_status": {"type": "string", "enum": list(known_statuses)},
+            "semantic_factors": _non_empty_string_array_schema(),
+            "blocking_conflicts": {
+                "type": "array",
+                "items": _non_empty_string_schema(),
+            },
+            "supports_proposed_offer": {"type": "boolean"},
+            "validation_status": {
+                "type": "string",
+                "enum": list(known_statuses),
+            },
+            "raw_output_used": _false_boolean_schema(),
+            "authority_created": _false_boolean_schema(),
+            "permission_created": _false_boolean_schema(),
+            "real_world_effects_count": _zero_integer_schema(),
+        },
+    }
+
+
+def _causal_provider_response_schema_v01(
+    causal_request: causal_runtime.AirlineInjectedSemanticActorRequestV01,
+    selection_input: binding.AirlineSemanticSelectionInputV01,
+) -> dict[str, Any]:
+    if causal_request.actor_id == causal_runtime.ACTOR_ORDER[0]:
+        return _build_causal_proposer_response_schema_v01(
+            causal_request,
+            selection_input,
+        )
+    return _build_causal_reviewer_response_schema_v01(causal_request)
+
 SECRET_MARKERS = (
     "AIza",
     "GOOGLE_API_KEY",
@@ -563,13 +722,15 @@ def build_real_airline_semantic_provider_v01(model: str) -> Provider:
     def real_provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> str:
         env_value = metadata.get("provider_env", {})
         provider_env = dict(env_value) if isinstance(env_value, Mapping) else dict(os.environ)
+        schema_value = metadata.get("provider_response_schema")
+        response_schema = dict(schema_value) if isinstance(schema_value, Mapping) else None
         return _shared_live_gemini_provider(
             prompt=prompt,
             model_name=model,
             timeout_seconds=provider_adapter._timeout_seconds(provider_env),
             explicit_http_timeout=True,
             env=provider_env,
-            response_schema=None,
+            response_schema=response_schema,
             role=actor_id,
         )
 
@@ -646,6 +807,7 @@ def _run_provider_lane(
                 break
 
         causal_request = None
+        provider_response_schema = None
         if causal_gate_open and actor_id in CAUSAL_ACTOR_IDS:
             if causal_constraints is None:
                 validation_errors.append("causal_constraints_required")
@@ -693,6 +855,10 @@ def _run_provider_lane(
                 snapshot=actual_causal_snapshot,
                 proposed_offer_id=proposed_offer_id,
             )
+            provider_response_schema = _causal_provider_response_schema_v01(
+                causal_request,
+                causal_selection_input,
+            )
 
         prompt = _build_prompt(
             actor=actor,
@@ -701,6 +867,7 @@ def _run_provider_lane(
             bsep_side_projections=bsep_side_projections,
             parent_report=parent_report,
             causal_request=causal_request,
+            causal_selection_input=causal_selection_input,
         )
         prompt_artifact = _write_text_artifact(
             artifact_dir,
@@ -720,6 +887,7 @@ def _run_provider_lane(
         }
         if causal_request is not None:
             metadata["semantic_to_contract_request"] = asdict(causal_request)
+            metadata["provider_response_schema"] = provider_response_schema
         if provider_mode == PROVIDER_MODE_REAL and call_delay_seconds > 0:
             time.sleep(call_delay_seconds)
             delay_applied_count += 1
@@ -1192,6 +1360,7 @@ def _build_prompt(
     bsep_side_projections: Mapping[str, Any],
     parent_report: Mapping[str, Any] | None,
     causal_request: causal_runtime.AirlineInjectedSemanticActorRequestV01 | None = None,
+    causal_selection_input: binding.AirlineSemanticSelectionInputV01 | None = None,
 ) -> str:
     projection = bsep_side_projections.get(f"{actor['side']}_bsep_projection", {})
     if actor["side"] == "cross_root_advisory":
@@ -1223,43 +1392,117 @@ def _build_prompt(
     if causal_request is not None:
         if causal_request.actor_id == causal_runtime.ACTOR_ORDER[0]:
             json_skeleton = {
-                field: ""
-                for field in binding.AirlineSemanticOfferSelectionProposalV01
-                .__dataclass_fields__
+                "proposal_id": "non_empty_proposal_id_not_offer_default",
+                "transaction_id": causal_request.transaction_id,
+                "actor_id": causal_request.actor_id,
+                "source_selection_input_id": (
+                    causal_request.source_selection_input_id
+                ),
+                "source_bsep_projection_ref": (
+                    causal_request.source_bsep_projection_ref
+                ),
+                "source_client_constraint_set_id": (
+                    causal_request.source_client_constraint_set_id
+                ),
+                "source_candidate_set_snapshot_id": (
+                    causal_request.source_candidate_set_snapshot_id
+                ),
+                "source_candidate_set_digest": (
+                    causal_request.source_candidate_set_digest
+                ),
+                "candidate_set_ref": causal_request.source_candidate_set_ref,
+                "recommended_offer_id": (
+                    "choose_one_allowed_hard_compatible_offer_id"
+                ),
+                "ranked_offer_ids": (
+                    "rank_allowed_offer_ids_without_defaulting",
+                ),
+                "decision_factors": (
+                    "Compare price, seat, baggage, changeability, and layover semantics as strings.",
+                ),
+                "preference_matches": (
+                    "Describe which declared soft preferences the recommendation matches as strings.",
+                ),
+                "uncertainty_notes": (
+                    "Recommendation remains advisory and requires ClientRoot review.",
+                ),
+                "requires_root_review": True,
+                "semantic_summary": (
+                    "Non-empty advisory semantic summary; not Root authority."
+                ),
+                "authority_created": False,
+                "action_permission_created": False,
+                "packet_created": False,
+                "receipt_created": False,
+                "payment_created": False,
+                "ticket_created": False,
+                "booking_created": False,
+                "final_output_created": False,
+                "real_world_effects_count": 0,
             }
-            for field in (
-                "ranked_offer_ids",
-                "decision_factors",
-                "preference_matches",
-                "uncertainty_notes",
-            ):
-                json_skeleton[field] = []
-            for field in (
-                "requires_root_review",
-                "authority_created",
-                "action_permission_created",
-                "packet_created",
-                "receipt_created",
-                "payment_created",
-                "ticket_created",
-                "booking_created",
-                "final_output_created",
-            ):
-                json_skeleton[field] = False
-            json_skeleton["real_world_effects_count"] = 0
         else:
             json_skeleton = {
-                field: ""
-                for field in causal_runtime.AirlineInjectedReviewerResponseV01
-                .__dataclass_fields__
+                "response_id": "non_empty_reviewer_response_id",
+                "transaction_id": causal_request.transaction_id,
+                "actor_id": causal_request.actor_id,
+                "source_request_id": causal_request.request_id,
+                "source_selection_input_id": (
+                    causal_request.source_selection_input_id
+                ),
+                "source_candidate_set_snapshot_id": (
+                    causal_request.source_candidate_set_snapshot_id
+                ),
+                "source_candidate_set_digest": (
+                    causal_request.source_candidate_set_digest
+                ),
+                "reviewed_offer_id": causal_request.proposed_offer_id,
+                "review_role": causal_request.actor_role,
+                "review_status": "derive_from_actual_review",
+                "semantic_factors": (
+                    "Review the proposed offer with non-empty string factors.",
+                ),
+                "blocking_conflicts": ("derive_from_actual_review",),
+                "supports_proposed_offer": "derive_boolean_from_actual_review",
+                "validation_status": "derive_from_actual_review",
+                "raw_output_used": False,
+                "authority_created": False,
+                "permission_created": False,
+                "real_world_effects_count": 0,
             }
-            json_skeleton["semantic_factors"] = []
-            json_skeleton["blocking_conflicts"] = []
-            json_skeleton["supports_proposed_offer"] = True
-            json_skeleton["raw_output_used"] = False
-            json_skeleton["authority_created"] = False
-            json_skeleton["permission_created"] = False
-            json_skeleton["real_world_effects_count"] = 0
+    causal_prompt_lines: tuple[str, ...] = ()
+    if causal_request is not None:
+        allowed_ids = tuple(causal_request.client_hard_compatible_candidate_ids)
+        causal_prompt_lines = (
+            "Causal response contract is strict: local typed validator receives the extracted JSON unchanged.",
+            (
+                "Allowed hard-compatible offer ids: "
+                + ", ".join(allowed_ids)
+            ),
+            (
+                "decision_factors, preference_matches, and uncertainty_notes "
+                "must each be JSON arrays of non-empty strings. Never return "
+                "objects in these arrays."
+            ),
+            (
+                "Choose recommended_offer_id from the allowed hard-compatible "
+                "ids using semantic comparison only. Do not choose by list "
+                "order and do not use a default offer."
+            ),
+            "requires_root_review must be true for proposer output.",
+            "The placeholder skeleton is not a valid provider result.",
+            "Provider response schema and local typed validator remain mandatory.",
+        )
+        if causal_request.actor_id != causal_runtime.ACTOR_ORDER[0]:
+            causal_prompt_lines += (
+                "Reviewer semantic_factors must be a non-empty JSON array of non-empty strings.",
+                "Reviewer blocking_conflicts must report every actual blocking conflict; do not copy an empty conflict list by default.",
+                "Reviewer unsupported/conflicting outcomes are allowed; do not assume PASS.",
+                "Derive supports_proposed_offer from actual semantic review.",
+                "Return false when the proposed offer is not supported.",
+                "The placeholder skeleton is not valid output.",
+                "Actual provider response must still use schema-valid types: boolean supports_proposed_offer and string-array blocking_conflicts.",
+                "Response schema and local validator remain authoritative for shape/safety.",
+            )
     return "\n".join(
         (
             f"Role name: {actor['actor_id']}",
@@ -1286,6 +1529,7 @@ def _build_prompt(
                 if causal_request is not None
                 else "Causal selection request: not applicable"
             ),
+            *causal_prompt_lines,
             "Explicit JSON skeleton:",
             json.dumps(json_skeleton, sort_keys=True),
         ),

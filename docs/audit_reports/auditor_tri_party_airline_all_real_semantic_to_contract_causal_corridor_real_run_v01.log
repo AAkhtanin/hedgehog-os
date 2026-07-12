@@ -1,0 +1,300 @@
+audit_id: auditor_tri_party_airline_all_real_semantic_to_contract_causal_corridor_real_run_v01
+audit_status: PASS
+audited_layer: Airline Tri-Party all-real Gemini semantic-to-contract causal binding plus deterministic Ticket/Purchase Corridor integrated real-provider run
+audit_mode: artifact_backed_completed_run_audit_no_rerun
+observed_head: acc1350
+source_run_name: tri_party_airline_live_semantic_causal_all_real_preference_a_20260712_084540
+source_artifact_dir: .tmp/tri_party_airline_live_semantic_causal_all_real/tri_party_airline_live_semantic_causal_all_real_preference_a_20260712_084540
+provider_mode: real_provider
+model: gemini-2.5-flash
+semantic_input: Preference A
+selected_offer_id: offer:mock_airline_al:PAR-LIM:001
+real_world_effects_count: 0
+production_ready_claimed: false
+public_auditor_ready_claimed: false
+transaction_artifact_ledger_implemented: false
+crypto_artifact_seal_implemented: false
+sealed_trace_replay_verifier_implemented: false
+
+Repository Guard
+
+- Repository HEAD was observed as acc1350.
+- Latest commit was observed as: acc1350 Align Airline causal Gemini response contracts and neutral prompts.
+- Worktree was clean before this audit log was created.
+- This audit did not rerun the live lane, call Gemini, call a provider, call a network endpoint, access secrets, execute a payment, issue a ticket, create a booking, or commit.
+
+Authoritative Source
+
+- The audited source is the exact all-real source directory:
+  .tmp/tri_party_airline_live_semantic_causal_all_real/tri_party_airline_live_semantic_causal_all_real_preference_a_20260712_084540
+- The source path does not contain rejected smoke or stale-run markers:
+  causal_reviewer_smoke, proposer_smoke, real_cross_root_consistency_reviewer_smoke, or 20260712_083900.
+- Required source files were present:
+  all_real_operator_gate_check.json
+  summary.json
+  summary.log
+  secret_scan.json
+  semantic_to_contract_causal_run.json
+  semantic_to_contract_bridge.json
+  integrated_deterministic_airline_summary.json
+  console.log
+- All twelve actor artifact packages were present.
+
+Evidence Fingerprints
+
+The following SHA-256 values were recomputed from the authoritative source directory and matched the expected evidence fingerprints:
+
+- integrated_deterministic_airline_summary.json:
+  3bd7ea12f57b754608899fcf80975d67233024767fdc05d36701786fcbd6764c
+- all_real_operator_gate_check.json:
+  11b5de0bfb5f1ec016ca1c91d3996fbddeb83028a11b0ccc89496652b2a87d2f
+- secret_scan.json:
+  c2ddc66f3baa0c4f0cc56b4b23d5b771d56cd5714b49918674064c6b718bfb66
+- semantic_to_contract_bridge.json:
+  ce8ddeb20deb3721b4a4e19f7dd6a7bd13d3ebd1c66c18156d9614108aa865f2
+- semantic_to_contract_causal_run.json:
+  7db2bf5ff162d36855746970343f0aded3193a45cc64d872a5b4cd315ae36406
+- summary.json:
+  64fd49e2cd7cc8ba0cd249c0e2d839e846a98edf53cef3489b078e1ef23afe5d
+- summary.log:
+  2873d9d54f87062b8c811c9a09748cf8167eafccec510dd85bf64a1367daed87
+
+These hashes are audit evidence fingerprints only. They are not a Crypto Artifact Seal, not a production signature, and not key-managed integrity.
+
+Independent JSON Validation
+
+The required JSON artifacts parsed successfully and passed independent checks:
+
+- all_real_operator_gate_check.json:
+  final_status == PASS
+  provider_mode == real_provider
+  all_checks_pass == true
+  selected_offer == offer:mock_airline_al:PAR-LIM:001
+  missing_actor_artifacts == []
+  missing_integrated_artifacts == []
+- summary.json:
+  final_status == PASS
+  provider_mode == real_provider
+  model == gemini-2.5-flash
+  validation_errors == []
+- secret_scan.json:
+  passed == true
+  files_scanned == 67
+  matched_markers == []
+- semantic_to_contract_causal_run.json:
+  final_status == LOCAL_MODEL_PASS
+  validation_errors == []
+  semantic recommendation exists
+  ClientRoot selected offer matches the recommendation
+  AirlineRoot resolution matches ClientRoot selection
+  hold contract matches AirlineRoot resolution
+  provider-created authority count == 0
+  provider-created contract count == 0
+  real_world_effects_count == 0
+- semantic_to_contract_bridge.json:
+  bridge_status == PASS
+  all_offer_ids_match == true
+  bsep_refs_match == true
+  causal_report_validation_accepted == true
+  deterministic_report_final_status == PASS
+  deterministic_corridor_final_status == PASS
+  deterministic_collection_count == 1
+  corridor_execution_count == 1
+  direct_offer_override_used == false
+  default_offer_used == false
+  silent_fallback_used == false
+- integrated_deterministic_airline_summary.json:
+  collection_status == PASS
+  corridor_final_status == PASS
+  corridor_execution_count == 1
+  selected_offer_id == offer:mock_airline_al:PAR-LIM:001
+  real_world_effects_count == 0
+
+Exact Actor Topology
+
+Exactly twelve actor reports were present in this order:
+
+1. tri_party_airline_orchestrator_llm
+2. tri_party_airline_semantic_architect_llm
+3. client_purchase_intent_reviewer_llm
+4. client_profile_privacy_reviewer_llm
+5. airline_offer_policy_reviewer_llm
+6. airline_fare_rules_vertical_cell_llm
+7. airline_seat_baggage_vertical_cell_llm
+8. airline_ticketing_policy_reviewer_llm
+9. bank_payment_policy_reviewer_llm
+10. bank_idempotency_risk_vertical_cell_llm
+11. bank_payment_status_explainer_llm
+12. tri_party_evidence_consistency_reviewer_llm
+
+For every actor, the prompt artifact, raw response artifact, extracted JSON candidate artifact, validation artifact, and canonical summary artifact existed. Every actor validation artifact had validation_status == PASS and errors == [].
+
+Recorded actor counters:
+
+- semantic_actor_call_count: 12
+- causal_semantic_actor_call_count: 5
+- generic_semantic_actor_call_count: 7
+- duplicate_semantic_actor_call_count: 0
+- real_provider_call_count: 12
+- fake_provider_call_count: 0
+- network_used_count: 12
+- gemini_called_count: 12
+
+BSEP And Fractal Findings
+
+- BSEP was created before Architect.
+- BSEP validation status: PASS.
+- Client BSEP projection: PASS.
+- Airline BSEP projection: PASS.
+- Bank BSEP projection: PASS.
+- Cross-root BSEP projection: PASS.
+- The live Airline BSEP ref matched the causal selection BSEP ref:
+  bsep_projection:airline_offer_selection:001:tri_party_airline_bsep_packet:tri_airline_purchase:PAR-LIM:2026-08-12:client_001
+- Actual BSEP packet id:
+  tri_party_airline_bsep_packet:tri_airline_purchase:PAR-LIM:2026-08-12:client_001
+
+Vertical dependency findings:
+
+- Airline fare-rules child started after Airline policy parent PASS.
+- Airline seat/baggage child started after Airline policy parent PASS.
+- Bank idempotency-risk child started after Bank payment parent PASS.
+- Children received parent canonical summaries.
+- Children did not receive parent raw responses.
+- Children did not receive sibling raw outputs.
+- No post-Root semantic reasoning restart occurred.
+
+Causal Semantic-To-Contract Findings
+
+- Gemini semantic proposer recommended an existing hard-compatible offer.
+- Recommendation was Offer 001:
+  offer:mock_airline_al:PAR-LIM:001
+- Provider did not create authority.
+- Provider did not create permission.
+- Provider did not create contract artifacts.
+- Raw provider output was validated and canonicalized.
+- Raw provider output was not used as truth or authority.
+- Canonical semantic evidence was bound to the actual proposal:
+  source_proposal_id == client_purchase_intent_reviewer_llm:proposal:001
+  source_actor_id == client_purchase_intent_reviewer_llm
+- ClientRoot accepted the recommendation within its scope.
+- AirlineRoot resolved authoritative offer facts from its own snapshot.
+- Root-created hold referenced the accepted offer.
+- No direct offer-id override was used.
+- No default offer was used.
+- No silent fallback was used.
+
+Six independent offer references:
+
+- semantic recommendation:
+  offer:mock_airline_al:PAR-LIM:001
+- ClientRoot selected offer:
+  offer:mock_airline_al:PAR-LIM:001
+- AirlineRoot resolved offer:
+  offer:mock_airline_al:PAR-LIM:001
+- hold contract offer:
+  offer:mock_airline_al:PAR-LIM:001
+- deterministic transaction offer:
+  offer:mock_airline_al:PAR-LIM:001
+- actual corridor contract-context offer:
+  offer:mock_airline_al:PAR-LIM:001
+
+Result: all six offer references match Offer 001.
+
+Deterministic Corridor Findings
+
+- deterministic_airline_collection_count: 1
+- ticket_purchase_corridor_execution_count: 1
+- deterministic report final status: PASS
+- corridor final status: PASS
+- Immutable per-run corridor contract context was used.
+- No module-global OFFER_ID, HOLD_ID, or AMOUNT mutation was used by the audited run evidence.
+- ClientRoot, AirlineRoot, and BankRoot remained side-specific.
+- No shared summary became a fourth Root.
+- Corridor receipts remained evidence only.
+- Receipt did not create future permission.
+- Runtime causal layer created no receipt.
+- Corridor mock receipts may exist only as evidence-only deterministic artifacts.
+- No second transaction was created.
+- No duplicate corridor was executed.
+
+Safety And Non-Effect Findings
+
+Exact zero counters:
+
+- direct_offer_override_count: 0
+- default_offer_count: 0
+- silent_fallback_count: 0
+- provider_created_authority_count: 0
+- provider_created_contract_count: 0
+- runtime_receipt_created_count: 0
+- real_airline_api_called_count: 0
+- real_bank_api_called_count: 0
+- real_gds_api_called_count: 0
+- real_payment_executed_count: 0
+- real_ticket_issued_count: 0
+- real_booking_created_count: 0
+- real_world_effects_count: 0
+
+Secret and privacy findings:
+
+- secret scan: PASS
+- files scanned: 67
+- matched markers: 0
+- No API key value was printed.
+- No raw passport, card, IBAN, or payment token appeared in canonical artifacts.
+
+Provenance Distinctions
+
+- This audit covers the all-real continuous 12-call run.
+- This audit does not use the earlier cross-root hybrid smoke package as source evidence.
+- No actor output was replayed in the audited all-real run.
+- No fake provider was used.
+- The audited source directory is the 084540 all-real directory.
+- lane_id still contains the legacy string fake_provider:
+  tri_party_airline_live_semantic_lane_v01_fake_provider
+- The legacy lane_id is a non-blocking naming limitation. It is not runtime mode evidence.
+- provider_mode, call counters, operator checks, and artifacts prove that execution mode was real_provider.
+
+Honest Non-Claims
+
+- This is an all-real Preference A causal run only.
+- No all-real Preference B run is claimed.
+- No real-provider A/B counterfactual is claimed.
+- Injected-provider A/B proof is separate prior evidence.
+- No real airline API was called.
+- No real bank API was called.
+- No real GDS API was called.
+- No real payment was executed.
+- No real ticket was issued.
+- No real booking was created.
+- Mock ticket and mock PNR are evidence only.
+- Not production.
+- Not public-auditor final package.
+- No Transaction Artifact Ledger implementation.
+- No Crypto Artifact Seal implementation.
+- No production signature.
+- No key management.
+- No Sealed Trace Replay Verifier implementation.
+- Audit hashes are evidence fingerprints, not a cryptographic seal.
+
+Final Audit Verdict
+
+- all_real_12_actor_gemini_run: PASS
+- actor_artifact_validation: PASS
+- live_bsep_causal_lineage: PASS
+- semantic_to_contract_causal_binding: PASS
+- clientroot_authority_boundary: PASS
+- airlineroot_authoritative_resolution: PASS
+- deterministic_airline_collection: PASS
+- ticket_purchase_corridor: PASS
+- six_offer_reference_consistency: PASS
+- secret_scan: PASS
+- real_effects_zero: PASS
+- audit_status: PASS
+
+Next Gates
+
+next_presentation_gate: artifact-backed human story for the all-real semantic-to-contract causal corridor run
+next_engineering_gate_after_story: Airline Transaction Artifact Ledger v0.1 preflight / implementation
+
+Ledger, Crypto Artifact Seal, and Sealed Trace Replay remain explicitly unimplemented in this audit.

@@ -4,7 +4,7 @@
 
 - document_id: airline_transaction_artifact_ledger_preflight_v01
 - document_status: PREFLIGHT
-- observed_base_head: ee3a5ae
+- observed_base_head: 2760429
 - planning_only: true
 - runtime_modified: false
 - tests_modified: false
@@ -12,7 +12,12 @@
 - network_called: false
 - gemini_called: false
 - secrets_accessed: false
-- transaction_artifact_ledger_implemented: false
+- transaction_artifact_ledger_slice_b_implemented: true
+- transaction_artifact_ledger_slice_b_status: PASS
+- transaction_artifact_ledger_source_collector_implemented: false
+- transaction_artifact_ledger_integrated: false
+- transaction_artifact_ledger_audited: false
+- transaction_artifact_ledger_full_program_complete: false
 - crypto_artifact_seal_implemented: false
 - sealed_trace_replay_verifier_implemented: false
 - real_airline_api_called: false
@@ -25,9 +30,9 @@
 - production_ready_claimed: false
 - public_auditor_ready_claimed: false
 
-This document is planning only. It creates no runtime, no tests, no ledger,
-no cryptographic seal, no replay verifier, no provider call, no network call,
-and no real-world effect.
+This docs amendment is planning only. It creates no runtime, no tests, no new
+ledger implementation, no collector, no cryptographic seal, no replay verifier,
+no provider call, no network call, and no real-world effect.
 
 ## Source Basis Inspected
 
@@ -54,7 +59,40 @@ The Ledger gate is now open because these prior facts are closed:
 - all-real human story renderer: PASS
 - zero real-world effects
 
-The Ledger itself is not implemented.
+Slice B local contracts and validators are implemented and closed. The
+source-bound collector, deterministic/live integration, Ledger audit, and full
+Ledger program remain unimplemented.
+
+## Slice B Closed Checkpoint
+
+- commit: 2760429 Add Airline Transaction Artifact Ledger contracts and validators
+- committed file: `hedgehog/domains/airline/transaction_artifact_ledger_v01.py`
+- committed file: `tests/test_airline_transaction_artifact_ledger_v01.py`
+- Slice B status: PASS
+
+Closed Slice B facts:
+
+- 19 deterministic Ledger entries
+- 29 dependency edges
+- 3 side-specific Root finals
+- Offer A and Offer B fixture paths
+- frozen local contracts
+- pure validators
+- independent derived-field recomputation
+- A/B/A and B/A/B isolation
+- no runner integration
+- no provider/network/Gemini
+- no Crypto
+- no Replay
+- no real effects
+
+Current program state:
+
+- Slice B contracts and validators are implemented.
+- Slice C source collector is not implemented.
+- deterministic/live integration is not implemented.
+- Ledger audit is not implemented.
+- the complete Ledger program is not closed.
 
 ## Purpose
 
@@ -151,7 +189,8 @@ capability package may compose it, but that is outside this preflight.
 
 ## Planned Contracts
 
-Slice B should plan frozen local contracts.
+The following contracts are the committed Slice B local contract basis. Slice C
+may add source-bundle contracts without weakening these Ledger contracts.
 
 ### AirlineTransactionArtifactLedgerEntryV01
 
@@ -651,15 +690,284 @@ Planned tests must prove:
 - all state is passed explicitly
 - no source artifact is mutated by ledger collection
 
+## Slice C Source Contract Correction
+
+Current source facts are now recorded explicitly for Slice C.
+
+`AirlineSemanticCausalRunReportV01` contains the validated semantic proposal,
+canonical actor reviews, synthesis, canonical evidence, ClientRoot decision,
+AirlineRoot resolution, hold packet, hold binding, causal binding report, and
+local-chain validation.
+
+`AirlineTicketPurchaseCorridorRunReportV01` contains validated phase results,
+transitions, summaries, counters, and immutable contract_context.
+
+`AirlineTicketPurchaseCorridorRunReportV01` does not currently retain the
+exact typed corridor source artifacts that were validated.
+
+`artifact_validation_summary` contains validation facts, not the source
+artifacts themselves.
+
+The local causal report does not contain all four actual BSEP side
+projections.
+
+Therefore Slice C must not accept only those two reports and then reconstruct
+missing artifacts through fixtures. source reconstruction forbidden.
+
+Explicitly forbidden in Slice C:
+
+- deriving missing corridor artifacts from `offer_id`
+- deriving missing corridor artifacts from `contract_context`
+- no fixture builder reconstruction
+- calling committed `build_valid_*` contract builders inside the collector
+- importing or calling `_build_valid_fixture_bundle_v01`
+- calling semantic `collect_*` runtime functions
+- calling corridor `collect_*` runtime functions
+- rerunning semantic logic
+- rerunning the corridor
+- inventing missing Root finals
+- treating validation booleans as stand-ins for source artifacts
+
+## Planned Slice C Source Bundle
+
+Slice C must introduce a frozen source boundary contract:
+
+`AirlineTransactionArtifactLedgerSourceBundleV01`
+
+Required responsibilities:
+
+- source_bundle_id
+- transaction_id
+- source_run_ref
+- source_causal_report_ref
+- source_corridor_report_ref
+- actual Client BSEP projection
+- actual Airline BSEP projection
+- actual Bank BSEP projection
+- actual Cross-root advisory BSEP projection
+- validated `AirlineSemanticCausalRunReportV01`
+- exact `AirlineOfferPacketV01`
+- exact `AirlineHoldCommitPacketV01`
+- exact `AirlineOfferHoldReceiptV01`
+- exact `AirlinePurchaseApprovalEvidenceRefV01`
+- exact `ClientPurchaseIntentV01`
+- exact `BankPaymentAuthorizationRefV01`
+- exact `AirlineTicketIssueIntentV01`
+- exact `MockTicketReceiptV01`
+- exact `MockPurchaseReceiptV01`
+- validated `AirlineTicketPurchaseCorridorRunReportV01`
+- exact ClientRoot final source record
+- exact AirlineRoot final source record
+- exact BankRoot final source record
+- source validation references
+- auxiliary observation references
+
+The exact Root-final source record type may be a new frozen Airline-domain
+source record, but it must carry at least:
+
+- final_id
+- transaction_id
+- root_owner
+- created_by
+- final_status
+- source_artifact_refs
+- authority_created_by_ledger: false
+- permission_created_by_ledger: false
+- real_world_effects_count: 0
+
+The source bundle is not a Ledger, not authority, not permission, not a
+fourth Root, not a packet registry, and not a new semantic conclusion. It
+creates no artifact and creates no action. It only carries the exact
+already-created inputs into the pure collector.
+
+one source bundle produces exactly one Ledger.
+
+## Slice C Source Validation
+
+The future Slice C collector must first validate the source bundle.
+
+Required source checks:
+
+- causal report passes `validate_airline_semantic_causal_run_report_v01`
+- corridor report passes `validate_airline_ticket_purchase_corridor_run_v01`
+- transaction_id matches across every source object
+- all four BSEP projections belong to the same BSEP packet and transaction
+- actual Airline BSEP projection matches the causal report lineage
+- semantic recommendation, ClientRoot decision, AirlineRoot resolution,
+  causal hold packet, corridor contract_context, and all offer-bearing corridor
+  artifacts carry the same offer
+- causal hold packet and corridor hold packet are the same source fact
+- amount, currency, route, hold identity, passenger identity, and transaction
+  identity match across source artifacts
+- every corridor artifact ID observed by phase `evidence_refs_observed`
+  matches the exact supplied typed artifact
+- all five corridor phases are PASS
+- exactly one corridor run is represented
+- exactly three side-specific Root finals are supplied
+- no shared summary is accepted as a Root final
+- provider output remains lineage/advisory only
+- raw provider responses are not accepted as canonical source objects
+- all provider/network/Gemini calls in the collector remain zero
+- all real-world effects remain zero
+
+A stored PASS flag must not override any source contradiction.
+
+## Expected Source Refs
+
+Slice C must produce Ledger source references from the validated source bundle:
+
+- `ledger.source_run_ref`
+- `ledger.source_causal_report_ref`
+- `ledger.source_corridor_report_ref`
+
+The Ledger must not prove its own source references merely because three stored
+strings are non-empty.
+
+Preferred implementation plan:
+
+- add frozen `AirlineTransactionArtifactLedgerExpectedSourceRefsV01`
+- extend the pure Ledger validator with an explicit `expected_source_refs`
+  argument
+- Slice B fixture validation supplies the committed fixture refs
+- Slice C validation supplies source refs from the validated source bundle
+
+An equivalent source-context validator is acceptable only if it provides the
+same independent binding. Existing Slice B fixture validation must not be
+weakened. The domain collector must not hardcode the all-real 084540 run.
+
+## Planned Slice C APIs
+
+Planned public pure APIs, or exact repository-style equivalents:
+
+```python
+validate_airline_transaction_artifact_ledger_source_bundle_v01(
+    source_bundle: AirlineTransactionArtifactLedgerSourceBundleV01,
+) -> AirlineTransactionArtifactLedgerSourceValidationReportV01
+
+collect_airline_transaction_artifact_ledger_from_source_v01(
+    *,
+    source_bundle: AirlineTransactionArtifactLedgerSourceBundleV01,
+) -> AirlineTransactionArtifactLedgerV01
+```
+
+The collector accepts exactly one explicit source bundle.
+
+Rules:
+
+- no default source bundle
+- no default Offer A
+- no silent fallback
+- no reconstruction
+- no file reads
+- no artifact writes
+- no provider/network/Gemini
+- no source mutation
+
+## Planned Slice C Files
+
+Recommended implementation files:
+
+- `hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py`
+- `tests/test_airline_transaction_artifact_ledger_collector_v01.py`
+
+The already committed Slice B module may be changed only as narrowly required
+to support independently supplied expected source refs. If that narrow change
+is required, planned Slice C may touch:
+
+- `hedgehog/domains/airline/transaction_artifact_ledger_v01.py`
+- `tests/test_airline_transaction_artifact_ledger_v01.py`
+
+No other runtime or runner file is part of Slice C. No demo integration belongs
+in Slice C.
+
+## Planned Slice C Fail-Closed Conditions
+
+Stable planned source-bundle failures:
+
+- source_bundle_wrong_type
+- source_bundle_transaction_mismatch
+- source_causal_report_invalid
+- source_corridor_report_invalid
+- source_bsep_projection_missing
+- source_bsep_lineage_mismatch
+- source_artifact_missing
+- source_artifact_wrong_type
+- source_artifact_id_mismatch
+- source_artifact_offer_mismatch
+- source_artifact_hold_mismatch
+- source_artifact_amount_mismatch
+- source_artifact_currency_mismatch
+- source_artifact_route_mismatch
+- source_phase_evidence_ref_mismatch
+- source_root_final_missing
+- source_root_final_wrong_owner
+- source_shared_summary_used_as_root_final
+- source_ref_mismatch
+- source_provider_authority_detected
+- source_real_effect_detected
+- source_reconstruction_forbidden
+
+The collector must never repair a source bundle.
+
+## Planned Slice C Test Plan
+
+Future Slice C tests must include at least:
+
+1. valid Offer A source bundle produces PASS Ledger
+2. valid Offer B source bundle produces PASS Ledger
+3. output Ledger has 19 entries, 29 edges, and 3 Root finals
+4. output source refs equal independently supplied source refs
+5. causal report failure blocks collection
+6. corridor report failure blocks collection
+7. missing Client BSEP projection blocks collection
+8. missing Airline BSEP projection blocks collection
+9. missing Bank BSEP projection blocks collection
+10. missing Cross-root BSEP projection blocks collection
+11. BSEP transaction mismatch blocks collection
+12. Airline BSEP causal-lineage mismatch blocks collection
+13. semantic recommendation / ClientRoot mismatch blocks collection
+14. ClientRoot / AirlineRoot mismatch blocks collection
+15. AirlineRoot / hold mismatch blocks collection
+16. causal hold / corridor hold mismatch blocks collection
+17. corridor context / source offer mismatch blocks collection
+18. amount mismatch blocks collection
+19. currency mismatch blocks collection
+20. route mismatch blocks collection
+21. phase evidence ref / typed source artifact mismatch blocks collection
+22. missing ClientRoot final blocks collection
+23. missing AirlineRoot final blocks collection
+24. missing BankRoot final blocks collection
+25. shared summary used as fourth Root blocks collection
+26. raw provider response cannot become canonical source artifact
+27. report PASS flags cannot override a source-object contradiction
+28. collector never calls contract fixture builders
+29. collector never calls semantic collection functions
+30. collector never calls corridor collection functions
+31. collector never reads files
+32. collector never writes files
+33. collector does not mutate source bundle
+34. collector does not mutate causal report
+35. collector does not mutate corridor report
+36. A/B/A isolation passes
+37. B/A/B isolation passes
+38. no provider/network/Gemini/config/demo import
+39. no Crypto or Replay implementation
+40. real-world effects remain zero
+
 ## Implementation Program
 
 ### Slice A
 
-This dedicated preflight only.
+- dedicated preflight
+- CLOSED
 
 ### Slice B
 
-Recommended files:
+- local Airline Ledger contracts and validators
+- CLOSED / PASS
+- commit: 2760429 Add Airline Transaction Artifact Ledger contracts and validators
+
+Committed files:
 
 - `hedgehog/domains/airline/transaction_artifact_ledger_v01.py`
 - `tests/test_airline_transaction_artifact_ledger_v01.py`
@@ -684,8 +992,13 @@ Scope:
 
 ### Slice C
 
-- pure collector from existing validated semantic causal report and existing
-  deterministic corridor report
+- CURRENT NEXT IMPLEMENTATION GATE
+- immutable source bundle
+- source validation
+- independently bound expected source refs
+- pure one-bundle-to-one-Ledger collector
+- pure collector from exactly one validated
+  `AirlineTransactionArtifactLedgerSourceBundleV01`
 - no semantic rerun
 - no corridor rerun
 - one source transaction
@@ -694,7 +1007,7 @@ Scope:
 
 ### Slice D
 
-- integrate the collector into the existing Airline deterministic/live
+- future integration into the existing Airline deterministic/live
   transaction path
 - no new demo
 - no second transaction
@@ -703,21 +1016,22 @@ Scope:
 
 ### Slice E
 
-- ledger audit
-- artifact-backed human ledger timeline
+- future Ledger audit
+- future artifact-backed human ledger timeline
 - no provider/network/Gemini
 - no Crypto
 - no Replay
 
-Only after Slice E PASS and audit PASS may the next gate open:
+Crypto and Replay remain blocked until after Ledger Slice E and audit PASS.
+Only after that may the next gate open:
 
 - Airline Crypto Artifact Seal v0.1 preflight / implementation
 
-Do not implement any slice in this task.
+Do not implement any slice in this docs amendment.
 
-## Required Slice B Test Plan
+## Committed Slice B Test Basis
 
-Future tests must include at least:
+The earlier planned Slice B tests are now the committed Slice B test basis:
 
 1. valid Offer A ledger passes
 2. valid Offer B ledger passes
@@ -797,8 +1111,7 @@ Record:
 - no tamper-proof claim
 
 The Ledger preflight defines what may later be sealed. It does not seal
-anything. Crypto Artifact Seal remains blocked. Sealed Trace Replay remains
-blocked.
+anything. Crypto Artifact Seal remains blocked. Sealed Trace Replay remains blocked.
 
 ## Non-Claims
 
@@ -834,7 +1147,7 @@ This preflight is complete only because it records:
 - the closed source basis
 - why the Ledger gate is now open
 - the exact core/domain boundary
-- planned local contracts
+- committed Slice B local contracts
 - artifact-to-ledger mapping
 - canonical vs validation vs auxiliary classification
 - event taxonomy
@@ -847,11 +1160,20 @@ This preflight is complete only because it records:
 - fail-closed matrix
 - A/B state isolation
 - Slice B/C/D/E program
+- Slice B preserved
+- Slice C not implemented
+- no runtime/tests changed by this amendment
+- no provider/network/Gemini
+- no Crypto/Replay
+- no real effects
+- no production/public-auditor claim
 - Crypto and Replay gates
 - non-claims
 - runtime/tests unchanged
 
 Final status:
 
-- preflight_status: READY_FOR_REVIEW
-- next_implementation_gate: Airline Transaction Artifact Ledger v0.1 Slice B local contracts and validators only
+- preflight_status: READY_FOR_SLICE_C_REVIEW
+- closed_implementation_checkpoint: Airline Transaction Artifact Ledger v0.1 Slice B contracts and validators
+- closed_checkpoint_commit: 2760429
+- next_implementation_gate: Airline Transaction Artifact Ledger v0.1 Slice C source bundle and pure collector

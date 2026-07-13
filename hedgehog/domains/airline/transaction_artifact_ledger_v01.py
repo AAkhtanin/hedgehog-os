@@ -287,6 +287,7 @@ REASON_LEDGER_STORED_VALIDATION_STATUS_MISMATCH = (
 REASON_LEDGER_ID_MISMATCH = "ledger_id_mismatch"
 REASON_LEDGER_VERSION_MISMATCH = "ledger_version_mismatch"
 REASON_LEDGER_SOURCE_REF_MISMATCH = "ledger_source_ref_mismatch"
+REASON_SOURCE_REF_MISMATCH = "source_ref_mismatch"
 REASON_LEDGER_MALFORMED_VALIDATION_ERRORS = "ledger_malformed_validation_errors"
 REASON_LEDGER_MALFORMED_COUNT = "ledger_malformed_count"
 REASON_SOURCE_VALIDATION_REFS_PROFILE_MISMATCH = (
@@ -294,6 +295,13 @@ REASON_SOURCE_VALIDATION_REFS_PROFILE_MISMATCH = (
 )
 REASON_AUXILIARY_ARTIFACT_REFS_PROFILE_MISMATCH = (
     "auxiliary_artifact_refs_profile_mismatch"
+)
+REASON_SOURCE_VALIDATION_REF_LINEAGE_MISMATCH = (
+    "source_validation_ref_lineage_mismatch"
+)
+REASON_AUXILIARY_REF_LINEAGE_MISMATCH = "auxiliary_ref_lineage_mismatch"
+REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH = (
+    "canonical_source_lineage_mismatch"
 )
 REASON_UNSAFE_SOURCE_OR_AUXILIARY_REF = "unsafe_source_or_auxiliary_ref"
 
@@ -361,6 +369,73 @@ class AirlineTransactionArtifactLedgerV01:
                 "event_type_counts",
                 _freeze_json(self.event_type_counts),
             )
+
+
+@dataclass(frozen=True)
+class AirlineTransactionArtifactLedgerExpectedSourceRefsV01:
+    source_run_ref: str
+    source_causal_report_ref: str
+    source_corridor_report_ref: str
+
+
+@dataclass(frozen=True)
+class AirlineTransactionArtifactLedgerExpectedIdentityV01:
+    expected_source_refs: AirlineTransactionArtifactLedgerExpectedSourceRefsV01
+    expected_artifact_ids: Mapping[str, str]
+    expected_source_validation_refs_by_type: (
+        Mapping[str, tuple[str, ...]] | None
+    ) = None
+    expected_auxiliary_artifact_refs_by_type: (
+        Mapping[str, tuple[str, ...]] | None
+    ) = None
+    expected_source_identity_fields_by_type: (
+        Mapping[str, Mapping[str, Any]] | None
+    ) = None
+
+    def __post_init__(self) -> None:
+        if isinstance(self.expected_artifact_ids, MappingABC):
+            object.__setattr__(
+                self,
+                "expected_artifact_ids",
+                _freeze_json(self.expected_artifact_ids),
+            )
+        source_refs = (
+            self.expected_source_validation_refs_by_type
+            if self.expected_source_validation_refs_by_type is not None
+            else EXPECTED_SOURCE_REFS_BY_ARTIFACT_TYPE
+        )
+        aux_refs = (
+            self.expected_auxiliary_artifact_refs_by_type
+            if self.expected_auxiliary_artifact_refs_by_type is not None
+            else EXPECTED_AUXILIARY_REFS_BY_ARTIFACT_TYPE
+        )
+        source_identity = (
+            self.expected_source_identity_fields_by_type
+            if self.expected_source_identity_fields_by_type is not None
+            else {}
+        )
+        if isinstance(source_refs, MappingABC):
+            object.__setattr__(
+                self,
+                "expected_source_validation_refs_by_type",
+                _freeze_json(source_refs),
+            )
+        if isinstance(aux_refs, MappingABC):
+            object.__setattr__(
+                self,
+                "expected_auxiliary_artifact_refs_by_type",
+                _freeze_json(aux_refs),
+            )
+        if isinstance(source_identity, MappingABC):
+            object.__setattr__(
+                self,
+                "expected_source_identity_fields_by_type",
+                _freeze_json(source_identity),
+            )
+
+    @property
+    def expected_artifact_ids_by_type(self) -> Mapping[str, str]:
+        return self.expected_artifact_ids
 
 
 @dataclass(frozen=True)
@@ -751,12 +826,27 @@ CANONICAL_HASH_INPUT_BASE_KEYS = (
 )
 
 HASH_EXTRA_NONE = ()
-HASH_EXTRA_SELECTED_OFFER = ("selected_offer_id",)
+HASH_EXTRA_SOURCE_SNAPSHOT = ("source_snapshot",)
+HASH_EXTRA_SOURCE_REFS = (
+    "source_run_ref",
+    "source_causal_report_ref",
+    "source_corridor_report_ref",
+    *HASH_EXTRA_SOURCE_SNAPSHOT,
+)
+HASH_EXTRA_BSEP_LINEAGE = (
+    "projection_id",
+    "projection_ref",
+    "bsep_packet_id",
+    "side",
+    *HASH_EXTRA_SOURCE_SNAPSHOT,
+)
+HASH_EXTRA_SELECTED_OFFER = ("selected_offer_id", *HASH_EXTRA_SOURCE_SNAPSHOT)
 HASH_EXTRA_AUTHORITATIVE_OFFER = (
     "selected_offer_id",
     "amount",
     "currency",
     "route_ref",
+    *HASH_EXTRA_SOURCE_SNAPSHOT,
 )
 HASH_EXTRA_HOLD_AND_OFFER = (
     "selected_offer_id",
@@ -764,14 +854,19 @@ HASH_EXTRA_HOLD_AND_OFFER = (
     "amount",
     "currency",
     "route_ref",
+    *HASH_EXTRA_SOURCE_SNAPSHOT,
+)
+HASH_EXTRA_ROOT_FINAL = (
+    *HASH_EXTRA_HOLD_AND_OFFER,
+    "source_artifact_refs",
 )
 
 CANONICAL_HASH_INPUT_EXTRA_KEYS_BY_ARTIFACT_TYPE: Mapping[str, tuple[str, ...]] = MappingProxyType({
-    ARTIFACT_TRANSACTION_SCOPE: HASH_EXTRA_NONE,
-    ARTIFACT_CLIENT_BSEP_PROJECTION: HASH_EXTRA_NONE,
-    ARTIFACT_AIRLINE_BSEP_PROJECTION: HASH_EXTRA_NONE,
-    ARTIFACT_BANK_BSEP_PROJECTION: HASH_EXTRA_NONE,
-    ARTIFACT_CROSS_ROOT_BSEP_PROJECTION: HASH_EXTRA_NONE,
+    ARTIFACT_TRANSACTION_SCOPE: HASH_EXTRA_SOURCE_REFS,
+    ARTIFACT_CLIENT_BSEP_PROJECTION: HASH_EXTRA_BSEP_LINEAGE,
+    ARTIFACT_AIRLINE_BSEP_PROJECTION: HASH_EXTRA_BSEP_LINEAGE,
+    ARTIFACT_BANK_BSEP_PROJECTION: HASH_EXTRA_BSEP_LINEAGE,
+    ARTIFACT_CROSS_ROOT_BSEP_PROJECTION: HASH_EXTRA_BSEP_LINEAGE,
     ARTIFACT_VALIDATED_CANONICAL_SEMANTIC_EVIDENCE: HASH_EXTRA_SELECTED_OFFER,
     ARTIFACT_CLIENT_ROOT_SELECTION_DECISION: HASH_EXTRA_SELECTED_OFFER,
     ARTIFACT_AIRLINE_ROOT_OFFER_RESOLUTION: HASH_EXTRA_AUTHORITATIVE_OFFER,
@@ -783,9 +878,9 @@ CANONICAL_HASH_INPUT_EXTRA_KEYS_BY_ARTIFACT_TYPE: Mapping[str, tuple[str, ...]] 
     ARTIFACT_AIRLINE_TICKET_ISSUE_INTENT: HASH_EXTRA_HOLD_AND_OFFER,
     ARTIFACT_MOCK_TICKET_RECEIPT: HASH_EXTRA_HOLD_AND_OFFER,
     ARTIFACT_MOCK_PURCHASE_RECEIPT: HASH_EXTRA_HOLD_AND_OFFER,
-    ARTIFACT_CLIENT_ROOT_FINAL: HASH_EXTRA_HOLD_AND_OFFER,
-    ARTIFACT_AIRLINE_ROOT_FINAL: HASH_EXTRA_HOLD_AND_OFFER,
-    ARTIFACT_BANK_ROOT_FINAL: HASH_EXTRA_HOLD_AND_OFFER,
+    ARTIFACT_CLIENT_ROOT_FINAL: HASH_EXTRA_ROOT_FINAL,
+    ARTIFACT_AIRLINE_ROOT_FINAL: HASH_EXTRA_ROOT_FINAL,
+    ARTIFACT_BANK_ROOT_FINAL: HASH_EXTRA_ROOT_FINAL,
 })
 
 
@@ -1037,6 +1132,129 @@ def _expected_dependencies_by_artifact_type(
     }
 
 
+def _fixture_source_identity_fields(
+    *,
+    artifact_type: str,
+    artifact_id: str,
+    depends_on: tuple[str, ...],
+    expected_source_refs: AirlineTransactionArtifactLedgerExpectedSourceRefsV01 | None = None,
+) -> Mapping[str, Any]:
+    source_refs = expected_source_refs or build_airline_transaction_artifact_ledger_fixture_source_refs_v01()
+    if artifact_type == ARTIFACT_TRANSACTION_SCOPE:
+        return {
+            "source_run_ref": source_refs.source_run_ref,
+            "source_causal_report_ref": source_refs.source_causal_report_ref,
+            "source_corridor_report_ref": source_refs.source_corridor_report_ref,
+            "source_snapshot": {
+                "transaction_id": TRANSACTION_ID,
+                "source_run_ref": source_refs.source_run_ref,
+                "source_causal_report_ref": source_refs.source_causal_report_ref,
+                "source_corridor_report_ref": source_refs.source_corridor_report_ref,
+            },
+        }
+    bsep_projection_refs = {
+        ARTIFACT_CLIENT_BSEP_PROJECTION: (
+            "bsep_projection:client:001",
+            "client",
+        ),
+        ARTIFACT_AIRLINE_BSEP_PROJECTION: (
+            binding.BSEP_PROJECTION_REF,
+            "airline",
+        ),
+        ARTIFACT_BANK_BSEP_PROJECTION: (
+            "bsep_projection:bank:001",
+            "bank",
+        ),
+        ARTIFACT_CROSS_ROOT_BSEP_PROJECTION: (
+            "bsep_projection:cross_root:001",
+            "cross_root_advisory",
+        ),
+    }
+    if artifact_type in bsep_projection_refs:
+        projection_ref, side = bsep_projection_refs[artifact_type]
+        return {
+            "projection_id": artifact_id,
+            "projection_ref": projection_ref,
+            "bsep_packet_id": "bsep_packet:deterministic_slice_b_fixture:001",
+            "side": side,
+            "source_snapshot": {
+                "projection_id": artifact_id,
+                "projection_ref": projection_ref,
+                "bsep_packet_id": "bsep_packet:deterministic_slice_b_fixture:001",
+                "side": side,
+                "transaction_id": TRANSACTION_ID,
+            },
+        }
+    if artifact_type in {
+        ARTIFACT_CLIENT_ROOT_FINAL,
+        ARTIFACT_AIRLINE_ROOT_FINAL,
+        ARTIFACT_BANK_ROOT_FINAL,
+    }:
+        return {
+            "source_artifact_refs": depends_on,
+            "source_snapshot": {
+                "source_artifact_refs": depends_on,
+                "transaction_id": TRANSACTION_ID,
+            },
+        }
+    return {"source_snapshot": {"artifact_id": artifact_id, "transaction_id": TRANSACTION_ID}}
+
+
+def _expected_source_identity_fields_for_artifact(
+    *,
+    artifact_type: str,
+    offer_id: str,
+    hold_id: str,
+    amount: int,
+    currency: str,
+    route_ref: str,
+    source_identity_fields: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    value: dict[str, Any] = {}
+    for key in CANONICAL_HASH_INPUT_EXTRA_KEYS_BY_ARTIFACT_TYPE[artifact_type]:
+        if key == "selected_offer_id":
+            value[key] = offer_id
+        elif key == "hold_id":
+            value[key] = hold_id
+        elif key == "amount":
+            value[key] = amount
+        elif key == "currency":
+            value[key] = currency
+        elif key == "route_ref":
+            value[key] = route_ref
+        else:
+            value[key] = source_identity_fields.get(key)
+    return value
+
+
+def _fixture_expected_source_identity_fields_by_type(
+    *,
+    offer_id: str,
+    expected_source_refs: AirlineTransactionArtifactLedgerExpectedSourceRefsV01 | None = None,
+) -> Mapping[str, Mapping[str, Any]]:
+    record = _offer_record(offer_id)
+    hold_id = _hold_id_for_offer(offer_id)
+    ids = _artifact_ids_for_offer(offer_id)
+    dependencies = _expected_dependencies_by_artifact_type(ids)
+    return {
+        artifact_type: _expected_source_identity_fields_for_artifact(
+            artifact_type=artifact_type,
+            offer_id=offer_id,
+            hold_id=hold_id,
+            amount=record.amount,
+            currency=record.currency,
+            route_ref=record.route_ref,
+            source_identity_fields=_fixture_source_identity_fields(
+                artifact_type=artifact_type,
+                artifact_id=ids[artifact_type],
+                depends_on=dependencies[artifact_type],
+                expected_source_refs=expected_source_refs,
+            ),
+        )
+        for artifact_type in EXPECTED_ARTIFACT_TYPE_SEQUENCE
+    }
+
+
 def _canonical_hash_input_for_entry(
     *,
     entry_index: int,
@@ -1050,7 +1268,9 @@ def _canonical_hash_input_for_entry(
     amount: int,
     currency: str,
     route_ref: str,
+    source_identity_fields: Mapping[str, Any] | None = None,
 ) -> Mapping[str, Any]:
+    source_fields = source_identity_fields or {}
     value: dict[str, Any] = {
         "schema_version": LEDGER_VERSION,
         "ledger_index": entry_index,
@@ -1076,6 +1296,8 @@ def _canonical_hash_input_for_entry(
             value[key] = currency
         elif key == "route_ref":
             value[key] = route_ref
+        else:
+            value[key] = source_fields.get(key)
     return _freeze_json(value)
 
 
@@ -1098,9 +1320,40 @@ def _entry(
     amount: int,
     currency: str,
     route_ref: str,
+    source_identity_fields: Mapping[str, Any] | None = None,
+) -> AirlineTransactionArtifactLedgerEntryV01:
+    return _entry_with_exact_refs(
+        index=index,
+        artifact_type=artifact_type,
+        artifact_id=artifact_id,
+        depends_on=depends_on,
+        offer_id=offer_id,
+        hold_id=hold_id,
+        amount=amount,
+        currency=currency,
+        route_ref=route_ref,
+        source_validation_refs=_source_refs_for_entry(artifact_type),
+        auxiliary_artifact_refs=_aux_refs_for_entry(artifact_type),
+        source_identity_fields=source_identity_fields,
+    )
+
+
+def _entry_with_exact_refs(
+    *,
+    index: int,
+    artifact_type: str,
+    artifact_id: str,
+    depends_on: tuple[str, ...],
+    offer_id: str,
+    hold_id: str,
+    amount: int,
+    currency: str,
+    route_ref: str,
+    source_validation_refs: tuple[str, ...],
+    auxiliary_artifact_refs: tuple[str, ...],
+    source_identity_fields: Mapping[str, Any] | None = None,
 ) -> AirlineTransactionArtifactLedgerEntryV01:
     profile = ARTIFACT_PROFILES[artifact_type]
-    source_validation_refs = _source_refs_for_entry(artifact_type)
     return AirlineTransactionArtifactLedgerEntryV01(
         ledger_index=index,
         event_type=profile.event_type,
@@ -1115,7 +1368,7 @@ def _entry(
         event_time=_timestamp(FIXED_EVENT_TIME_PREFIX, index),
         recorded_at=_timestamp(FIXED_RECORDED_TIME_PREFIX, index),
         source_validation_refs=source_validation_refs,
-        auxiliary_artifact_refs=_aux_refs_for_entry(artifact_type),
+        auxiliary_artifact_refs=auxiliary_artifact_refs,
         canonical_hash_input=_canonical_hash_input_for_entry(
             entry_index=index,
             profile=profile,
@@ -1128,6 +1381,7 @@ def _entry(
             amount=amount,
             currency=currency,
             route_ref=route_ref,
+            source_identity_fields=source_identity_fields,
         ),
         raw_secret_included=False,
         raw_provider_text_included=False,
@@ -1135,6 +1389,37 @@ def _entry(
         ledger_created_permission=False,
         ledger_created_action=False,
         real_world_effects_count=0,
+    )
+
+
+def build_airline_transaction_artifact_ledger_entry_from_source_v01(
+    *,
+    index: int,
+    artifact_type: str,
+    artifact_id: str,
+    depends_on: tuple[str, ...],
+    offer_id: str,
+    hold_id: str,
+    amount: int,
+    currency: str,
+    route_ref: str,
+    source_validation_refs: tuple[str, ...],
+    auxiliary_artifact_refs: tuple[str, ...],
+    source_identity_fields: Mapping[str, Any],
+) -> AirlineTransactionArtifactLedgerEntryV01:
+    return _entry_with_exact_refs(
+        index=index,
+        artifact_type=artifact_type,
+        artifact_id=artifact_id,
+        depends_on=depends_on,
+        offer_id=offer_id,
+        hold_id=hold_id,
+        amount=amount,
+        currency=currency,
+        route_ref=route_ref,
+        source_validation_refs=source_validation_refs,
+        auxiliary_artifact_refs=auxiliary_artifact_refs,
+        source_identity_fields=source_identity_fields,
     )
 
 
@@ -1175,6 +1460,11 @@ def build_airline_transaction_artifact_ledger_fixture_v01(
             amount=record.amount,
             currency=record.currency,
             route_ref=record.route_ref,
+            source_identity_fields=_fixture_source_identity_fields(
+                artifact_type=artifact_type,
+                artifact_id=ids[artifact_type],
+                depends_on=dependencies[artifact_type],
+            ),
         )
         for index, artifact_type in enumerate(EXPECTED_ARTIFACT_TYPE_SEQUENCE)
     )
@@ -1214,6 +1504,40 @@ def build_valid_airline_transaction_artifact_ledger_offer_b_v01() -> (
     AirlineTransactionArtifactLedgerV01
 ):
     return build_airline_transaction_artifact_ledger_fixture_v01(offer_id=OFFER_B_ID)
+
+
+def build_airline_transaction_artifact_ledger_fixture_source_refs_v01() -> (
+    AirlineTransactionArtifactLedgerExpectedSourceRefsV01
+):
+    return AirlineTransactionArtifactLedgerExpectedSourceRefsV01(
+        source_run_ref=SOURCE_RUN_REF_FIXTURE,
+        source_causal_report_ref=SOURCE_CAUSAL_REPORT_REF_FIXTURE,
+        source_corridor_report_ref=SOURCE_CORRIDOR_REPORT_REF_FIXTURE,
+    )
+
+
+def build_airline_transaction_artifact_ledger_fixture_expected_identity_v01(
+    *,
+    offer_id: str,
+    expected_source_refs: AirlineTransactionArtifactLedgerExpectedSourceRefsV01 | None = None,
+) -> AirlineTransactionArtifactLedgerExpectedIdentityV01:
+    source_refs = (
+        expected_source_refs
+        if expected_source_refs is not None
+        else build_airline_transaction_artifact_ledger_fixture_source_refs_v01()
+    )
+    return AirlineTransactionArtifactLedgerExpectedIdentityV01(
+        expected_source_refs=source_refs,
+        expected_artifact_ids=_artifact_ids_for_offer(offer_id),
+        expected_source_validation_refs_by_type=EXPECTED_SOURCE_REFS_BY_ARTIFACT_TYPE,
+        expected_auxiliary_artifact_refs_by_type=EXPECTED_AUXILIARY_REFS_BY_ARTIFACT_TYPE,
+        expected_source_identity_fields_by_type=(
+            _fixture_expected_source_identity_fields_by_type(
+                offer_id=offer_id,
+                expected_source_refs=source_refs,
+            )
+        ),
+    )
 
 
 def _canonical_hash_input_errors(
@@ -1283,6 +1607,53 @@ def _canonical_hash_input_errors(
                     REASON_CANONICAL_HASH_INPUT_SOURCE_FACT_MISMATCH,
                 )
                 break
+    if entry.artifact_type == ARTIFACT_TRANSACTION_SCOPE:
+        for key in (
+            "source_run_ref",
+            "source_causal_report_ref",
+            "source_corridor_report_ref",
+        ):
+            if not _is_non_empty_string(value.get(key)):
+                _append_reason(
+                    reasons,
+                    REASON_CANONICAL_HASH_INPUT_SOURCE_FACT_MISMATCH,
+                )
+                break
+    expected_bsep_sides = {
+        ARTIFACT_CLIENT_BSEP_PROJECTION: "client",
+        ARTIFACT_AIRLINE_BSEP_PROJECTION: "airline",
+        ARTIFACT_BANK_BSEP_PROJECTION: "bank",
+        ARTIFACT_CROSS_ROOT_BSEP_PROJECTION: "cross_root_advisory",
+    }
+    if (
+        _is_non_empty_string(entry.artifact_type)
+        and entry.artifact_type in expected_bsep_sides
+    ):
+        if (
+            value.get("projection_id") != entry.artifact_id
+            or not _is_non_empty_string(value.get("projection_ref"))
+            or not _is_non_empty_string(value.get("bsep_packet_id"))
+            or value.get("side") != expected_bsep_sides[entry.artifact_type]
+        ):
+            _append_reason(
+                reasons,
+                REASON_CANONICAL_HASH_INPUT_SOURCE_FACT_MISMATCH,
+            )
+    if _is_non_empty_string(entry.artifact_type) and entry.artifact_type in {
+        ARTIFACT_CLIENT_ROOT_FINAL,
+        ARTIFACT_AIRLINE_ROOT_FINAL,
+        ARTIFACT_BANK_ROOT_FINAL,
+    }:
+        source_artifact_refs = value.get("source_artifact_refs")
+        if (
+            type(source_artifact_refs) is not tuple
+            or not source_artifact_refs
+            or not all(_is_non_empty_string(ref) for ref in source_artifact_refs)
+        ):
+            _append_reason(
+                reasons,
+                REASON_CANONICAL_HASH_INPUT_SOURCE_FACT_MISMATCH,
+            )
     return tuple(reasons)
 
 
@@ -1354,9 +1725,6 @@ def validate_airline_transaction_artifact_ledger_entry_v01(
         else:
             _append_reason(reasons, REASON_MALFORMED_SOURCE_REFS)
     elif profile is not None:
-        expected_refs = EXPECTED_SOURCE_REFS_BY_ARTIFACT_TYPE[entry.artifact_type]
-        if entry.source_validation_refs != expected_refs:
-            _append_reason(reasons, REASON_SOURCE_VALIDATION_REFS_PROFILE_MISMATCH)
         if any(_contains_forbidden_ref_token(ref) for ref in entry.source_validation_refs):
             _append_reason(reasons, REASON_UNSAFE_SOURCE_OR_AUXILIARY_REF)
     if not _valid_string_tuple(entry.auxiliary_artifact_refs):
@@ -1365,9 +1733,6 @@ def validate_airline_transaction_artifact_ledger_entry_v01(
         else:
             _append_reason(reasons, REASON_MALFORMED_AUXILIARY_REFS)
     elif profile is not None:
-        expected_aux_refs = EXPECTED_AUXILIARY_REFS_BY_ARTIFACT_TYPE[entry.artifact_type]
-        if entry.auxiliary_artifact_refs != expected_aux_refs:
-            _append_reason(reasons, REASON_AUXILIARY_ARTIFACT_REFS_PROFILE_MISMATCH)
         unexpected_aux_refs = (
             ref
             for ref in entry.auxiliary_artifact_refs
@@ -1434,6 +1799,7 @@ def _dependency_graph_has_cycle(
 
 def _base_ledger_errors(
     ledger: AirlineTransactionArtifactLedgerV01,
+    expected_identity: AirlineTransactionArtifactLedgerExpectedIdentityV01,
 ) -> tuple[str, ...]:
     reasons: list[str] = []
     if not isinstance(ledger, AirlineTransactionArtifactLedgerV01):
@@ -1485,11 +1851,7 @@ def _base_ledger_errors(
     anchor_offer_id = _semantic_claim_anchor_offer_id(entries)
     if anchor_offer_id is None:
         _append_reason(reasons, REASON_OFFER_INCONSISTENCY)
-    expected_ids_by_type = (
-        _artifact_ids_for_offer(anchor_offer_id)
-        if anchor_offer_id in VALID_LEDGER_OFFER_IDS
-        else {}
-    )
+    expected_ids_by_type = expected_identity.expected_artifact_ids
     if expected_ids_by_type:
         supplied_ids_by_type = {
             entry.artifact_type: entry.artifact_id
@@ -1501,6 +1863,26 @@ def _base_ledger_errors(
             if supplied_ids_by_type.get(artifact_type) != expected_artifact_id:
                 _append_reason(reasons, REASON_ARTIFACT_ID_SOURCE_FACT_MISMATCH)
                 break
+    for reason in _expected_lineage_errors(entries, expected_identity):
+        _append_reason(reasons, reason)
+    bsep_packet_ids = []
+    for artifact_type in (
+        ARTIFACT_CLIENT_BSEP_PROJECTION,
+        ARTIFACT_AIRLINE_BSEP_PROJECTION,
+        ARTIFACT_BANK_BSEP_PROJECTION,
+        ARTIFACT_CROSS_ROOT_BSEP_PROJECTION,
+    ):
+        entry = next(
+            (item for item in entries if item.artifact_type == artifact_type),
+            None,
+        )
+        if entry is None or not isinstance(entry.canonical_hash_input, MappingABC):
+            continue
+        packet_id = entry.canonical_hash_input.get("bsep_packet_id")
+        if _is_non_empty_string(packet_id):
+            bsep_packet_ids.append(packet_id)
+    if bsep_packet_ids and len(set(bsep_packet_ids)) != 1:
+        _append_reason(reasons, REASON_CANONICAL_HASH_INPUT_SOURCE_FACT_MISMATCH)
     by_id = {
         entry.artifact_id: entry
         for entry in entries
@@ -1581,36 +1963,10 @@ def _base_ledger_errors(
         and ARTIFACT_CLIENT_PURCHASE_INTENT in index_by_type
     ):
         _append_reason(reasons, REASON_OFFER_HOLD_RECEIPT_NOT_BEFORE_PURCHASE_INTENT)
-    semantic_entry = next(
-        (
-            entry
-            for entry in entries
-            if entry.artifact_type == ARTIFACT_VALIDATED_CANONICAL_SEMANTIC_EVIDENCE
-        ),
-        None,
-    )
-    if semantic_entry is None:
+    if ARTIFACT_VALIDATED_CANONICAL_SEMANTIC_EVIDENCE not in index_by_type:
         _append_reason(reasons, REASON_MISSING_REQUIRED_EVENT)
-    elif (
-        not _valid_string_tuple(semantic_entry.source_validation_refs)
-        or semantic_entry.source_validation_refs != REQUIRED_SEMANTIC_SOURCE_REFS
-    ):
-        _append_reason(reasons, REASON_SEMANTIC_CLAIM_MISSING_SOURCE_REFS)
-    purchase_entry = next(
-        (
-            entry
-            for entry in entries
-            if entry.artifact_type == ARTIFACT_CLIENT_PURCHASE_INTENT
-        ),
-        None,
-    )
-    if purchase_entry is None:
+    if ARTIFACT_CLIENT_PURCHASE_INTENT not in index_by_type:
         _append_reason(reasons, REASON_MISSING_REQUIRED_EVENT)
-    elif (
-        not _valid_string_tuple(purchase_entry.source_validation_refs)
-        or purchase_entry.source_validation_refs != (SOURCE_REF_HUMAN_APPROVAL,)
-    ):
-        _append_reason(reasons, REASON_HUMAN_APPROVAL_NOT_SOURCE_REF)
     if any(
         entry.artifact_type == "AirlinePurchaseApprovalEvidenceRefV01"
         for entry in entries
@@ -1700,11 +2056,191 @@ def _semantic_claim_anchor_offer_id(
     return None
 
 
+def _expected_source_refs_errors(
+    expected_source_refs: Any,
+) -> tuple[str, ...]:
+    if not isinstance(
+        expected_source_refs,
+        AirlineTransactionArtifactLedgerExpectedSourceRefsV01,
+    ):
+        return (REASON_SOURCE_REF_MISMATCH,)
+    if (
+        not _is_non_empty_string(expected_source_refs.source_run_ref)
+        or not _is_non_empty_string(expected_source_refs.source_causal_report_ref)
+        or not _is_non_empty_string(expected_source_refs.source_corridor_report_ref)
+    ):
+        return (REASON_SOURCE_REF_MISMATCH,)
+    return ()
+
+
+def _expected_identity_errors(
+    expected_identity: Any,
+) -> tuple[str, ...]:
+    reasons: list[str] = []
+    if not isinstance(
+        expected_identity,
+        AirlineTransactionArtifactLedgerExpectedIdentityV01,
+    ):
+        return (REASON_SOURCE_REF_MISMATCH,)
+    for reason in _expected_source_refs_errors(expected_identity.expected_source_refs):
+        _append_reason(reasons, reason)
+    if not isinstance(expected_identity.expected_artifact_ids, MappingABC):
+        _append_reason(reasons, REASON_ARTIFACT_ID_SOURCE_FACT_MISMATCH)
+    else:
+        if set(expected_identity.expected_artifact_ids) != set(EXPECTED_ARTIFACT_TYPE_SEQUENCE):
+            _append_reason(reasons, REASON_ARTIFACT_ID_SOURCE_FACT_MISMATCH)
+        values = tuple(expected_identity.expected_artifact_ids.values())
+        if (
+            not all(_is_non_empty_string(value) for value in values)
+            or len(set(values)) != len(values)
+        ):
+            _append_reason(reasons, REASON_ARTIFACT_ID_SOURCE_FACT_MISMATCH)
+    expected_tuple_maps = (
+        (
+            expected_identity.expected_source_validation_refs_by_type,
+            REASON_SOURCE_VALIDATION_REF_LINEAGE_MISMATCH,
+        ),
+        (
+            expected_identity.expected_auxiliary_artifact_refs_by_type,
+            REASON_AUXILIARY_REF_LINEAGE_MISMATCH,
+        ),
+    )
+    for mapping_value, reason in expected_tuple_maps:
+        if not isinstance(mapping_value, MappingABC):
+            _append_reason(reasons, reason)
+            continue
+        if set(mapping_value) != set(EXPECTED_ARTIFACT_TYPE_SEQUENCE):
+            _append_reason(reasons, reason)
+            continue
+        for refs in mapping_value.values():
+            if not _valid_string_tuple(refs):
+                _append_reason(reasons, reason)
+                break
+    source_identity = expected_identity.expected_source_identity_fields_by_type
+    if not isinstance(source_identity, MappingABC):
+        _append_reason(reasons, REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH)
+    elif set(source_identity) != set(EXPECTED_ARTIFACT_TYPE_SEQUENCE):
+        _append_reason(reasons, REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH)
+    else:
+        for artifact_type, fields in source_identity.items():
+            if not isinstance(fields, MappingABC):
+                _append_reason(reasons, REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH)
+                break
+            if any(type(key) is not str for key in fields.keys()):
+                _append_reason(reasons, REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH)
+                break
+            expected_keys = set(
+                CANONICAL_HASH_INPUT_EXTRA_KEYS_BY_ARTIFACT_TYPE[artifact_type],
+            )
+            if set(fields.keys()) != expected_keys or not _is_json_safe(fields):
+                _append_reason(reasons, REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH)
+                break
+    return tuple(reasons)
+
+
+def _expected_lineage_errors(
+    entries: tuple[AirlineTransactionArtifactLedgerEntryV01, ...],
+    expected_identity: AirlineTransactionArtifactLedgerExpectedIdentityV01,
+) -> tuple[str, ...]:
+    reasons: list[str] = []
+    entries_by_type = {
+        entry.artifact_type: entry
+        for entry in entries
+        if _is_non_empty_string(entry.artifact_type)
+    }
+    source_refs_by_type = expected_identity.expected_source_validation_refs_by_type
+    auxiliary_refs_by_type = expected_identity.expected_auxiliary_artifact_refs_by_type
+    source_identity_by_type = expected_identity.expected_source_identity_fields_by_type
+    if not (
+        isinstance(source_refs_by_type, MappingABC)
+        and isinstance(auxiliary_refs_by_type, MappingABC)
+        and isinstance(source_identity_by_type, MappingABC)
+    ):
+        return (
+            REASON_SOURCE_VALIDATION_REF_LINEAGE_MISMATCH,
+            REASON_AUXILIARY_REF_LINEAGE_MISMATCH,
+            REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH,
+        )
+    for artifact_type in EXPECTED_ARTIFACT_TYPE_SEQUENCE:
+        entry = entries_by_type.get(artifact_type)
+        if entry is None:
+            continue
+        expected_source_refs = source_refs_by_type.get(artifact_type)
+        if entry.source_validation_refs != expected_source_refs:
+            _append_reason(reasons, REASON_SOURCE_VALIDATION_REF_LINEAGE_MISMATCH)
+            _append_reason(reasons, REASON_SOURCE_VALIDATION_REFS_PROFILE_MISMATCH)
+            if artifact_type == ARTIFACT_VALIDATED_CANONICAL_SEMANTIC_EVIDENCE:
+                _append_reason(reasons, REASON_SEMANTIC_CLAIM_MISSING_SOURCE_REFS)
+            if artifact_type == ARTIFACT_CLIENT_PURCHASE_INTENT:
+                _append_reason(reasons, REASON_HUMAN_APPROVAL_NOT_SOURCE_REF)
+        expected_aux_refs = auxiliary_refs_by_type.get(artifact_type)
+        if entry.auxiliary_artifact_refs != expected_aux_refs:
+            _append_reason(reasons, REASON_AUXILIARY_REF_LINEAGE_MISMATCH)
+            _append_reason(reasons, REASON_AUXILIARY_ARTIFACT_REFS_PROFILE_MISMATCH)
+        expected_source_identity = source_identity_by_type.get(artifact_type)
+        if not isinstance(entry.canonical_hash_input, MappingABC):
+            _append_reason(reasons, REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH)
+            continue
+        if not isinstance(expected_source_identity, MappingABC):
+            _append_reason(reasons, REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH)
+            continue
+        actual_source_identity = {
+            key: entry.canonical_hash_input.get(key)
+            for key in CANONICAL_HASH_INPUT_EXTRA_KEYS_BY_ARTIFACT_TYPE[
+                artifact_type
+            ]
+        }
+        if actual_source_identity != dict(expected_source_identity):
+            _append_reason(reasons, REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH)
+    return tuple(reasons)
+
+
+def _expected_identity_for_validation(
+    ledger: AirlineTransactionArtifactLedgerV01,
+    entries: tuple[AirlineTransactionArtifactLedgerEntryV01, ...],
+    *,
+    expected_source_refs: AirlineTransactionArtifactLedgerExpectedSourceRefsV01 | None,
+    expected_identity: AirlineTransactionArtifactLedgerExpectedIdentityV01 | None,
+) -> AirlineTransactionArtifactLedgerExpectedIdentityV01:
+    if expected_identity is not None:
+        return expected_identity
+    if expected_source_refs is not None and _expected_source_refs_errors(
+        expected_source_refs,
+    ):
+        return AirlineTransactionArtifactLedgerExpectedIdentityV01(
+            expected_source_refs=expected_source_refs,
+            expected_artifact_ids={},
+            expected_source_validation_refs_by_type={},
+            expected_auxiliary_artifact_refs_by_type={},
+            expected_source_identity_fields_by_type={},
+        )
+    source_refs = (
+        expected_source_refs
+        if expected_source_refs is not None
+        else build_airline_transaction_artifact_ledger_fixture_source_refs_v01()
+    )
+    anchor_offer_id = _semantic_claim_anchor_offer_id(entries)
+    if anchor_offer_id in VALID_LEDGER_OFFER_IDS:
+        return build_airline_transaction_artifact_ledger_fixture_expected_identity_v01(
+            offer_id=anchor_offer_id,
+            expected_source_refs=source_refs,
+        )
+    return AirlineTransactionArtifactLedgerExpectedIdentityV01(
+        expected_source_refs=source_refs,
+        expected_artifact_ids={},
+        expected_source_validation_refs_by_type={},
+        expected_auxiliary_artifact_refs_by_type={},
+        expected_source_identity_fields_by_type={},
+    )
+
+
 def _ledger_envelope_errors(
     ledger: AirlineTransactionArtifactLedgerV01,
     entries: tuple[AirlineTransactionArtifactLedgerEntryV01, ...],
+    expected_identity: AirlineTransactionArtifactLedgerExpectedIdentityV01,
 ) -> tuple[str, ...]:
     reasons: list[str] = []
+    expected_source_refs = expected_identity.expected_source_refs
     offer_id = _semantic_claim_anchor_offer_id(entries)
     expected_ledger_id = (
         f"airline_transaction_artifact_ledger:{offer_id}"
@@ -1722,11 +2258,33 @@ def _ledger_envelope_errors(
     if ledger.transaction_id != TRANSACTION_ID:
         _append_reason(reasons, REASON_MIXED_TRANSACTION_ID)
     if (
-        ledger.source_run_ref != SOURCE_RUN_REF_FIXTURE
-        or ledger.source_causal_report_ref != SOURCE_CAUSAL_REPORT_REF_FIXTURE
-        or ledger.source_corridor_report_ref != SOURCE_CORRIDOR_REPORT_REF_FIXTURE
+        ledger.source_run_ref != expected_source_refs.source_run_ref
+        or ledger.source_causal_report_ref
+        != expected_source_refs.source_causal_report_ref
+        or ledger.source_corridor_report_ref
+        != expected_source_refs.source_corridor_report_ref
     ):
         _append_reason(reasons, REASON_LEDGER_SOURCE_REF_MISMATCH)
+        _append_reason(reasons, REASON_SOURCE_REF_MISMATCH)
+    transaction_entry = next(
+        (
+            entry
+            for entry in entries
+            if entry.artifact_type == ARTIFACT_TRANSACTION_SCOPE
+            and isinstance(entry.canonical_hash_input, MappingABC)
+        ),
+        None,
+    )
+    if transaction_entry is not None:
+        if (
+            transaction_entry.canonical_hash_input.get("source_run_ref")
+            != expected_source_refs.source_run_ref
+            or transaction_entry.canonical_hash_input.get("source_causal_report_ref")
+            != expected_source_refs.source_causal_report_ref
+            or transaction_entry.canonical_hash_input.get("source_corridor_report_ref")
+            != expected_source_refs.source_corridor_report_ref
+        ):
+            _append_reason(reasons, REASON_SOURCE_REF_MISMATCH)
     if ledger.validation_status not in (STATUS_PASS, STATUS_FAIL_CLOSED):
         _append_reason(reasons, REASON_LEDGER_STORED_VALIDATION_STATUS_MISMATCH)
     if not _validation_errors_tuple_valid(ledger.validation_errors):
@@ -1752,6 +2310,13 @@ def _ledger_envelope_errors(
 
 def validate_airline_transaction_artifact_ledger_v01(
     ledger: AirlineTransactionArtifactLedgerV01,
+    *,
+    expected_source_refs: (
+        AirlineTransactionArtifactLedgerExpectedSourceRefsV01 | None
+    ) = None,
+    expected_identity: (
+        AirlineTransactionArtifactLedgerExpectedIdentityV01 | None
+    ) = None,
 ) -> AirlineTransactionArtifactLedgerValidationReportV01:
     if not isinstance(ledger, AirlineTransactionArtifactLedgerV01):
         return AirlineTransactionArtifactLedgerValidationReportV01(
@@ -1784,8 +2349,28 @@ def validate_airline_transaction_artifact_ledger_v01(
         for entry in raw_entries
         if isinstance(entry, AirlineTransactionArtifactLedgerEntryV01)
     )
-    base_errors = list(_base_ledger_errors(ledger))
-    for reason in _ledger_envelope_errors(ledger, entries):
+    actual_expected_identity = _expected_identity_for_validation(
+        ledger,
+        entries,
+        expected_source_refs=expected_source_refs,
+        expected_identity=expected_identity,
+    )
+    expected_identity_errors = _expected_identity_errors(actual_expected_identity)
+    safe_expected_identity = (
+        actual_expected_identity
+        if not expected_identity_errors
+        else build_airline_transaction_artifact_ledger_fixture_expected_identity_v01(
+            offer_id=OFFER_A_ID,
+        )
+    )
+    base_errors = list(_base_ledger_errors(ledger, safe_expected_identity))
+    for reason in expected_identity_errors:
+        _append_reason(base_errors, reason)
+    for reason in _ledger_envelope_errors(
+        ledger,
+        entries,
+        safe_expected_identity,
+    ):
         _append_reason(base_errors, reason)
     counts = _derived_counts(entries)
     event_counts = _event_type_counts(entries)

@@ -857,6 +857,58 @@ def test_ledger_envelope_fields_are_validated(
     _assert_fails(item, reason)
 
 
+def test_expected_source_refs_are_independently_bound() -> None:
+    item = _valid_a()
+    expected_refs = ledger.build_airline_transaction_artifact_ledger_fixture_source_refs_v01()
+    report = ledger.validate_airline_transaction_artifact_ledger_v01(
+        item,
+        expected_source_refs=expected_refs,
+    )
+    assert report.validation_status == ledger.STATUS_PASS
+
+
+def test_wrong_expected_source_refs_fail_closed() -> None:
+    item = _valid_a()
+    expected_refs = replace(
+        ledger.build_airline_transaction_artifact_ledger_fixture_source_refs_v01(),
+        source_run_ref="source_run:independent_wrong_ref",
+    )
+    report = ledger.validate_airline_transaction_artifact_ledger_v01(
+        item,
+        expected_source_refs=expected_refs,
+    )
+    assert report.validation_status == ledger.STATUS_FAIL_CLOSED
+    assert ledger.REASON_SOURCE_REF_MISMATCH in report.validation_errors
+    assert ledger.REASON_LEDGER_STORED_VALIDATION_STATUS_MISMATCH in report.validation_errors
+
+
+@pytest.mark.parametrize(
+    "expected_refs",
+    [
+        object(),
+        ledger.AirlineTransactionArtifactLedgerExpectedSourceRefsV01(
+            source_run_ref="",
+            source_causal_report_ref=ledger.SOURCE_CAUSAL_REPORT_REF_FIXTURE,
+            source_corridor_report_ref=ledger.SOURCE_CORRIDOR_REPORT_REF_FIXTURE,
+        ),
+        ledger.AirlineTransactionArtifactLedgerExpectedSourceRefsV01(
+            source_run_ref=["bad"],  # type: ignore[arg-type]
+            source_causal_report_ref=ledger.SOURCE_CAUSAL_REPORT_REF_FIXTURE,
+            source_corridor_report_ref=ledger.SOURCE_CORRIDOR_REPORT_REF_FIXTURE,
+        ),
+    ],
+)
+def test_malformed_expected_source_refs_fail_without_exception(
+    expected_refs: object,
+) -> None:
+    report = ledger.validate_airline_transaction_artifact_ledger_v01(
+        _valid_a(),
+        expected_source_refs=expected_refs,  # type: ignore[arg-type]
+    )
+    assert report.validation_status == ledger.STATUS_FAIL_CLOSED
+    assert ledger.REASON_SOURCE_REF_MISMATCH in report.validation_errors
+
+
 @pytest.mark.parametrize(
     ("index", "changes"),
     [

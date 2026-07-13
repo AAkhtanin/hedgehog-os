@@ -1593,9 +1593,7 @@ def _canonical_hash_input_errors(
             _append_reason(reasons, REASON_CANONICAL_HASH_INPUT_SOURCE_FACT_MISMATCH)
             return tuple(reasons)
         record = _offer_record(offer_id)
-        expected_hold_id = _hold_id_for_offer(offer_id)
         expected_source_facts = {
-            "hold_id": expected_hold_id,
             "amount": record.amount,
             "currency": record.currency,
             "route_ref": record.route_ref,

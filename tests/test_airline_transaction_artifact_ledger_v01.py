@@ -750,7 +750,6 @@ def test_extra_canonical_hash_input_keys_fail_for_every_entry(
     "updates",
     [
         {"selected_offer_id": ledger.OFFER_B_ID},
-        {"hold_id": "hold:forged"},
         {"amount": 999999},
         {"currency": "FORGED"},
         {"route_ref": "route:forged"},
@@ -761,6 +760,15 @@ def test_coordinated_forged_source_facts_fail(
 ) -> None:
     item = _mutate_all_hash_inputs(_valid_a(), updates, only_existing_keys=True)
     _assert_fails(item, ledger.REASON_CANONICAL_HASH_INPUT_SOURCE_FACT_MISMATCH)
+
+
+def test_fixture_offer_a_coordinated_non_fixture_hold_id_fails_lineage() -> None:
+    item = _mutate_all_hash_inputs(
+        _valid_a(),
+        {"hold_id": "hold:semantic_causal:001"},
+        only_existing_keys=True,
+    )
+    _assert_fails(item, ledger.REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH)
 
 
 def test_selected_offer_cannot_appear_in_transaction_started() -> None:

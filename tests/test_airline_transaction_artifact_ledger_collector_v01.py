@@ -5,7 +5,7 @@ import inspect
 from copy import deepcopy
 from dataclasses import fields, replace
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import pytest
 
@@ -222,6 +222,97 @@ def _proposal_payload(
         "final_output_created": False,
         "real_world_effects_count": 0,
     }
+
+
+def _public_runtime_proposal_payload(
+    request: Mapping[str, Any],
+    offer_id: str,
+) -> dict[str, Any]:
+    return {
+        "proposal_id": f"semantic_offer_selection_proposal:{offer_id}",
+        "transaction_id": request["transaction_id"],
+        "actor_id": request["actor_id"],
+        "source_selection_input_id": request["source_selection_input_id"],
+        "source_bsep_projection_ref": request["source_bsep_projection_ref"],
+        "source_client_constraint_set_id": request["source_client_constraint_set_id"],
+        "source_candidate_set_snapshot_id": request[
+            "source_candidate_set_snapshot_id"
+        ],
+        "source_candidate_set_digest": request["source_candidate_set_digest"],
+        "candidate_set_ref": request["source_candidate_set_ref"],
+        "recommended_offer_id": offer_id,
+        "ranked_offer_ids": (offer_id,),
+        "decision_factors": ("public_causal_runtime_semantics",),
+        "preference_matches": ("explicit_offer_from_test_provider",),
+        "uncertainty_notes": ("requires_client_root_review",),
+        "requires_root_review": True,
+        "semantic_summary": "Test-only injected advisory semantics.",
+        "authority_created": False,
+        "action_permission_created": False,
+        "packet_created": False,
+        "receipt_created": False,
+        "payment_created": False,
+        "ticket_created": False,
+        "booking_created": False,
+        "final_output_created": False,
+        "real_world_effects_count": 0,
+    }
+
+
+def _public_runtime_reviewer_payload(
+    request: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "response_id": (
+            f"canonical_actor_output:{request['actor_id']}:"
+            f"{request['proposed_offer_id']}"
+        ),
+        "transaction_id": request["transaction_id"],
+        "actor_id": request["actor_id"],
+        "source_request_id": request["request_id"],
+        "source_selection_input_id": request["source_selection_input_id"],
+        "source_candidate_set_snapshot_id": request[
+            "source_candidate_set_snapshot_id"
+        ],
+        "source_candidate_set_digest": request["source_candidate_set_digest"],
+        "reviewed_offer_id": request["proposed_offer_id"],
+        "review_role": request["actor_role"],
+        "review_status": binding.STATUS_PASS,
+        "semantic_factors": ("review_supports_explicit_offer",),
+        "blocking_conflicts": (),
+        "supports_proposed_offer": True,
+        "validation_status": binding.STATUS_PASS,
+        "raw_output_used": False,
+        "authority_created": False,
+        "permission_created": False,
+        "real_world_effects_count": 0,
+    }
+
+
+def _public_runtime_provider_for_offer(
+    offer_id: str,
+) -> causal_runtime.AirlineInjectedSemanticProviderV01:
+    def provider(actor_id: str, request: Mapping[str, Any]) -> Mapping[str, Any]:
+        if actor_id == binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER:
+            return _public_runtime_proposal_payload(request, offer_id)
+        return _public_runtime_reviewer_payload(request)
+
+    return provider
+
+
+def _public_runtime_causal_report_for_offer(
+    offer_id: str,
+) -> causal_runtime.AirlineSemanticCausalRunReportV01:
+    constraints = (
+        binding.build_client_constraints_preference_b_v01()
+        if offer_id == binding.OFFER_B_ID
+        else binding.build_client_constraints_preference_a_v01()
+    )
+    return causal_runtime.collect_airline_semantic_to_contract_causal_run_v01(
+        scenario_id=f"public_causal_runtime_hold_lineage:{offer_id}",
+        constraints=constraints,
+        semantic_provider=_public_runtime_provider_for_offer(offer_id),
+    )
 
 
 def _reviewer_response(
@@ -624,6 +715,221 @@ def _source_bundle(
     )
 
 
+def _typed_corridor_artifacts_from_public_causal_report(
+    causal_report: causal_runtime.AirlineSemanticCausalRunReportV01,
+) -> dict[str, object]:
+    assert causal_report.hold_packet is not None
+    offer_id = causal_report.semantic_recommendation_id
+    suffix = _suffix(offer_id)
+    record = _offer_record(offer_id)
+    hold_packet = causal_report.hold_packet
+    context = contracts.AirlineTicketPurchaseContractContextV01(
+        transaction_id=contracts.TRANSACTION_ID,
+        offer_id=offer_id,
+        hold_id=hold_packet.hold_id,
+        amount=record.amount,
+        currency=record.currency,
+        route_ref=record.route_ref,
+        passenger_ref=hold_packet.passenger_ref,
+        max_amount=contracts.MAX_AMOUNT,
+        merchant_ref=contracts.MERCHANT_REF,
+    )
+    offer_packet = replace(
+        contracts.build_valid_airline_offer_packet_v01(),
+        packet_id=hold_packet.parent_offer_packet_id,
+        offer_id=offer_id,
+        passenger_ref=hold_packet.passenger_ref,
+        route_ref=record.route_ref,
+        amount=record.amount,
+        currency=record.currency,
+        ttl_seconds=hold_packet.ttl_seconds,
+        expired=hold_packet.expired,
+    )
+    hold_receipt = replace(
+        contracts.build_valid_airline_offer_hold_receipt_v01(),
+        receipt_id=f"offer_hold_receipt:semantic_causal:{suffix}",
+        source_hold_packet_id=hold_packet.packet_id,
+        source_idempotency_key=hold_packet.idempotency_key,
+        offer_id=offer_id,
+        hold_id=hold_packet.hold_id,
+        passenger_ref=hold_packet.passenger_ref,
+        route_ref=record.route_ref,
+        amount=record.amount,
+        currency=record.currency,
+    )
+    approval = replace(
+        contracts.build_valid_human_approval_evidence_ref_v01(),
+        selected_offer_id=offer_id,
+        max_amount=contracts.MAX_AMOUNT,
+        currency=record.currency,
+        passenger_ref=hold_packet.passenger_ref,
+    )
+    purchase_intent = replace(
+        contracts.build_valid_client_purchase_intent_v01(),
+        intent_id=f"client_purchase_intent:semantic_causal:{suffix}",
+        source_human_approval_ref=approval.approval_ref,
+        selected_offer_packet_id=offer_packet.packet_id,
+        required_offer_hold_receipt_id=hold_receipt.receipt_id,
+        offer_id=offer_id,
+        hold_id=hold_packet.hold_id,
+        passenger_ref=hold_packet.passenger_ref,
+        route_ref=record.route_ref,
+        max_amount=contracts.MAX_AMOUNT,
+        selected_amount=record.amount,
+        currency=record.currency,
+        ttl_seconds=hold_packet.ttl_seconds,
+        expired=hold_packet.expired,
+        idempotency_key=f"idem:client_purchase_intent:semantic_causal:{suffix}",
+    )
+    authorization = replace(
+        contracts.build_valid_bank_payment_authorization_ref_v01(),
+        authorization_ref_id=f"bank_payment_authorization_ref:semantic_causal:{suffix}",
+        source_purchase_intent_id=purchase_intent.intent_id,
+        merchant_ref=contracts.MERCHANT_REF,
+        offer_id=offer_id,
+        hold_id=hold_packet.hold_id,
+        passenger_ref=hold_packet.passenger_ref,
+        route_ref=record.route_ref,
+        amount=record.amount,
+        currency=record.currency,
+        ttl_seconds=hold_packet.ttl_seconds,
+        expired=hold_packet.expired,
+        idempotency_key=f"idem:bank_payment_authorization:semantic_causal:{suffix}",
+    )
+    ticket_intent = replace(
+        contracts.build_valid_airline_ticket_issue_intent_v01(),
+        intent_id=f"airline_ticket_issue_intent:semantic_causal:{suffix}",
+        required_offer_packet_id=offer_packet.packet_id,
+        required_hold_packet_id=hold_packet.packet_id,
+        required_offer_hold_receipt_id=hold_receipt.receipt_id,
+        required_client_purchase_intent_id=purchase_intent.intent_id,
+        required_payment_authorization_ref_id=authorization.authorization_ref_id,
+        offer_id=offer_id,
+        hold_id=hold_packet.hold_id,
+        passenger_ref=hold_packet.passenger_ref,
+        route_ref=record.route_ref,
+        amount=record.amount,
+        currency=record.currency,
+        merchant_ref=contracts.MERCHANT_REF,
+        ttl_seconds=hold_packet.ttl_seconds,
+        expired=hold_packet.expired,
+        idempotency_key=f"idem:airline_ticket_issue:semantic_causal:{suffix}",
+    )
+    ticket_receipt = replace(
+        contracts.build_valid_mock_ticket_receipt_v01(),
+        receipt_id=f"mock_ticket_receipt:semantic_causal:{suffix}",
+        source_ticket_issue_intent_id=ticket_intent.intent_id,
+        source_idempotency_key=ticket_intent.idempotency_key,
+        offer_id=offer_id,
+        hold_id=hold_packet.hold_id,
+        passenger_ref=hold_packet.passenger_ref,
+        route_ref=record.route_ref,
+        amount=record.amount,
+        currency=record.currency,
+    )
+    purchase_receipt = replace(
+        contracts.build_valid_mock_purchase_receipt_v01(),
+        receipt_id=f"mock_purchase_receipt:semantic_causal:{suffix}",
+        source_client_purchase_intent_id=purchase_intent.intent_id,
+        source_payment_authorization_ref_id=authorization.authorization_ref_id,
+        source_mock_ticket_receipt_id=ticket_receipt.receipt_id,
+    )
+    return {
+        "context": context,
+        "offer_packet": offer_packet,
+        "hold_packet": hold_packet,
+        "hold_receipt": hold_receipt,
+        "approval": approval,
+        "purchase_intent": purchase_intent,
+        "authorization": authorization,
+        "ticket_intent": ticket_intent,
+        "ticket_receipt": ticket_receipt,
+        "purchase_receipt": purchase_receipt,
+    }
+
+
+def _source_bundle_from_public_causal_runtime(
+    offer_id: str,
+) -> collector.AirlineTransactionArtifactLedgerSourceBundleV01:
+    causal_report = _public_runtime_causal_report_for_offer(offer_id)
+    artifacts = _typed_corridor_artifacts_from_public_causal_report(causal_report)
+    corridor_report = _corridor_report_for_artifacts(artifacts)
+    suffix = _suffix(offer_id)
+    source_bundle_id = f"source_bundle:public_causal_runtime:{offer_id}"
+    expected_refs = _expected_refs(
+        source_bundle_id=source_bundle_id,
+        causal_report=causal_report,
+        corridor_report=corridor_report,
+    )
+    return collector.AirlineTransactionArtifactLedgerSourceBundleV01(
+        source_bundle_id=source_bundle_id,
+        transaction_id=contracts.TRANSACTION_ID,
+        expected_source_refs=expected_refs,
+        client_bsep_projection=_bsep_projection(
+            projection_id=f"client_bsep_projection:semantic_causal:{suffix}",
+            projection_ref="bsep_projection:client:semantic_causal",
+            side=collector.SIDE_CLIENT,
+        ),
+        airline_bsep_projection=_bsep_projection(
+            projection_id=f"airline_bsep_projection:semantic_causal:{suffix}",
+            projection_ref=binding.BSEP_PROJECTION_REF,
+            side=collector.SIDE_AIRLINE,
+        ),
+        bank_bsep_projection=_bsep_projection(
+            projection_id=f"bank_bsep_projection:semantic_causal:{suffix}",
+            projection_ref="bsep_projection:bank:semantic_causal",
+            side=collector.SIDE_BANK,
+        ),
+        cross_root_bsep_projection=_bsep_projection(
+            projection_id=f"cross_root_bsep_projection:semantic_causal:{suffix}",
+            projection_ref="bsep_projection:cross_root:semantic_causal",
+            side=collector.SIDE_CROSS_ROOT_ADVISORY,
+        ),
+        causal_report=causal_report,
+        offer_packet=artifacts["offer_packet"],
+        hold_packet=artifacts["hold_packet"],
+        hold_receipt=artifacts["hold_receipt"],
+        purchase_approval_evidence=artifacts["approval"],
+        purchase_intent=artifacts["purchase_intent"],
+        payment_authorization_ref=artifacts["authorization"],
+        ticket_issue_intent=artifacts["ticket_intent"],
+        mock_ticket_receipt=artifacts["ticket_receipt"],
+        mock_purchase_receipt=artifacts["purchase_receipt"],
+        corridor_report=corridor_report,
+        client_root_final=_root_final(
+            final_id=f"client_root_final:semantic_causal:{suffix}",
+            root_owner=ledger.CLIENT_ROOT_ID,
+            refs=(
+                causal_report.client_root_decision.decision_id,
+                artifacts["purchase_intent"].intent_id,
+                artifacts["purchase_receipt"].receipt_id,
+            ),
+        ),
+        airline_root_final=_root_final(
+            final_id=f"airline_root_final:semantic_causal:{suffix}",
+            root_owner=ledger.AIRLINE_ROOT_ID,
+            refs=(
+                causal_report.airline_root_resolution.resolution_id,
+                artifacts["offer_packet"].packet_id,
+                artifacts["hold_packet"].packet_id,
+                artifacts["ticket_intent"].intent_id,
+                artifacts["ticket_receipt"].receipt_id,
+            ),
+        ),
+        bank_root_final=_root_final(
+            final_id=f"bank_root_final:semantic_causal:{suffix}",
+            root_owner=ledger.BANK_ROOT_ID,
+            refs=(artifacts["authorization"].authorization_ref_id,),
+        ),
+        source_validation_refs=(
+            expected_refs.source_run_ref,
+            expected_refs.source_causal_report_ref,
+            expected_refs.source_corridor_report_ref,
+        ),
+        auxiliary_observation_refs=collector.EXPECTED_AUXILIARY_OBSERVATION_REFS,
+    )
+
+
 def _collect(
     source_bundle: object,
 ) -> ledger.AirlineTransactionArtifactLedgerV01:
@@ -733,6 +1039,19 @@ def _mutable_json(value: object) -> object:
     return value
 
 
+def _replace_deep_value(value: object, old: object, new: object) -> object:
+    if hasattr(value, "items"):
+        return {
+            key: _replace_deep_value(item, old, new)
+            for key, item in value.items()  # type: ignore[attr-defined]
+        }
+    if isinstance(value, tuple):
+        return tuple(_replace_deep_value(item, old, new) for item in value)
+    if isinstance(value, list):
+        return [_replace_deep_value(item, old, new) for item in value]
+    return new if value == old else value
+
+
 def _replace_entry(
     item: ledger.AirlineTransactionArtifactLedgerV01,
     artifact_type: str,
@@ -756,6 +1075,20 @@ def _replace_hash(
     assert isinstance(value, dict)
     value.update(updates)
     return _replace_entry(item, artifact_type, canonical_hash_input=value)
+
+
+def _replace_hold_id_everywhere_in_ledger(
+    item: ledger.AirlineTransactionArtifactLedgerV01,
+    *,
+    old_hold_id: str,
+    new_hold_id: str,
+) -> ledger.AirlineTransactionArtifactLedgerV01:
+    entries = []
+    for entry in item.entries:
+        value = _mutable_json(entry.canonical_hash_input)
+        value = _replace_deep_value(value, old_hold_id, new_hold_id)
+        entries.append(replace(entry, canonical_hash_input=value))
+    return replace(item, entries=tuple(entries))
 
 
 def _assert_lineage_tamper_fails(
@@ -1144,6 +1477,58 @@ def test_03_collected_ledgers_have_19_entries_29_edges_3_root_finals() -> None:
         assert report.entry_count == 19
         assert report.dependency_edge_count == 29
         assert report.root_final_count == 3
+
+
+def test_public_causal_runtime_semantic_hold_lineage_passes_collection() -> None:
+    source_bundle = _source_bundle_from_public_causal_runtime(binding.OFFER_A_ID)
+    causal_report = source_bundle.causal_report
+    accepted, reasons = causal_runtime.validate_airline_semantic_causal_run_report_v01(
+        causal_report,
+    )
+    assert accepted is True
+    assert reasons == ()
+    assert causal_report.hold_packet is source_bundle.hold_packet
+    assert causal_report.hold_packet.packet_id.startswith(
+        "airline_hold_commit_packet:semantic_causal:",
+    )
+    assert causal_report.hold_packet.hold_id.startswith("hold:semantic_causal:")
+
+    source_report = collector.validate_airline_transaction_artifact_ledger_source_bundle_v01(
+        source_bundle,
+    )
+    assert source_report.validation_status == collector.STATUS_PASS
+    item = _assert_collected_pass(source_bundle)
+    hold_entry = _entry_by_type(item, ledger.ARTIFACT_AIRLINE_HOLD_PACKET)
+    assert hold_entry.artifact_id == causal_report.hold_packet.packet_id
+    assert hold_entry.canonical_hash_input["hold_id"] == causal_report.hold_packet.hold_id
+    assert hold_entry.canonical_hash_input["source_snapshot"]["hold_id"] == (
+        causal_report.hold_packet.hold_id
+    )
+    assert item.entry_count == 19
+    assert item.dependency_edge_count == 29
+    assert item.root_final_count == 3
+    assert item.provider_called_count == 0
+    assert item.network_used_count == 0
+    assert item.gemini_called_count == 0
+    assert item.real_world_effects_count == 0
+    assert causal_report.provider_network_call_count == 0
+    assert causal_report.gemini_call_count == 0
+
+
+def test_actual_causal_hold_lineage_rewrite_fails_expected_identity() -> None:
+    source_bundle = _source_bundle_from_public_causal_runtime(binding.OFFER_A_ID)
+    item = _assert_collected_pass(source_bundle)
+    original_hold_id = source_bundle.hold_packet.hold_id
+    mutated = _replace_hold_id_everywhere_in_ledger(
+        item,
+        old_hold_id=original_hold_id,
+        new_hold_id="hold:semantic_causal:forged",
+    )
+    _assert_lineage_tamper_fails(
+        source_bundle,
+        mutated,
+        ledger.REASON_CANONICAL_SOURCE_LINEAGE_MISMATCH,
+    )
 
 
 def test_04_output_refs_match_independently_supplied_expected_refs() -> None:

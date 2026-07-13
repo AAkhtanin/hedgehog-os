@@ -1512,3 +1512,527 @@ def test_no_provider_selection_algorithm_in_production_modules() -> None:
     assert "preference_A" not in live_source + runtime_source
     assert "preference_B" not in live_source + runtime_source
     assert "if window then" not in live_source + runtime_source
+
+
+def test_slice_d_live_causal_lane_collects_ledger_and_writes_one_artifact(
+    tmp_path: Path,
+) -> None:
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    integration = report["airline_transaction_artifact_ledger_integration"]
+    ledger = report["airline_transaction_artifact_ledger_v0_1"]
+    ledger_path = tmp_path / "airline_transaction_artifact_ledger.json"
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert integration["integration_status"] == runner.STATUS_PASS
+    assert integration["source_bundle_validation_status"] == runner.STATUS_PASS
+    assert integration["ledger_validation_status"] == runner.STATUS_PASS
+    assert integration["entry_count"] == 19
+    assert integration["dependency_edge_count"] == 29
+    assert integration["root_final_count"] == 3
+    assert integration["source_bundle_collection_count"] == 1
+    assert integration["ledger_collection_count"] == 1
+    assert integration["ledger_validation_count"] == 1
+    assert integration["corridor_execution_count"] == 1
+    assert integration["artifact_written_count"] == 1
+    assert ledger.entry_count == 19
+    assert ledger.dependency_edge_count == 29
+    assert ledger.root_final_count == 3
+    assert ledger_path.exists()
+    assert [path.name for path in tmp_path.iterdir()].count(
+        "airline_transaction_artifact_ledger.json",
+    ) == 1
+
+
+def test_slice_d_live_written_ledger_matches_report_semantically(
+    tmp_path: Path,
+) -> None:
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    ledger = report["airline_transaction_artifact_ledger_v0_1"]
+    written = json.loads(
+        (tmp_path / "airline_transaction_artifact_ledger.json").read_text(),
+    )
+
+    assert written == runner._json_safe(ledger)
+
+
+def test_slice_d_live_actual_bsep_lineage_reaches_written_ledger(
+    tmp_path: Path,
+) -> None:
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    projections = report["bsep_side_projections"]
+    written = json.loads(
+        (tmp_path / "airline_transaction_artifact_ledger.json").read_text(),
+    )
+    bsep_entries = {
+        entry["artifact_id"]: entry
+        for entry in written["entries"]
+        if entry["event_type"] == "bsep_projection_created"
+    }
+
+    assert len(bsep_entries) == 4
+    for projection in projections.values():
+        entry = bsep_entries[projection["projection_id"]]
+        assert entry["canonical_hash_input"]["projection_ref"] == (
+            projection["projection_ref"]
+        )
+        assert entry["canonical_hash_input"]["bsep_packet_id"] == (
+            projection["source_bsep_packet_id"]
+        )
+        assert entry["canonical_hash_input"]["side"] == projection["side"]
+    assert report["semantic_to_contract_causal_binding_v0_1"][
+        "actual_airline_bsep_projection_ref"
+    ] == projections["airline_bsep_projection"]["projection_ref"]
+
+
+def test_slice_d_live_ledger_lineage_and_call_counters() -> None:
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+    )
+    counters = report["counter_table"]
+    ledger = report["airline_transaction_artifact_ledger_v0_1"]
+    purchase_entry = next(
+        entry
+        for entry in ledger.entries
+        if entry.artifact_type == "ClientPurchaseIntentV01"
+    )
+
+    assert counters["semantic_actor_call_count"] == 12
+    assert counters["causal_semantic_actor_call_count"] == 5
+    assert counters["generic_semantic_actor_call_count"] == 7
+    assert counters["local_injected_semantic_callback_count"] == 5
+    assert counters["duplicate_semantic_actor_call_count"] == 0
+    assert counters["precollected_causal_run_count"] == 1
+    assert counters["provider_calls_inside_precollected_runtime_count"] == 0
+    assert counters["deterministic_airline_collection_count"] == 1
+    assert counters["ticket_purchase_corridor_execution_count"] == 1
+    assert counters["airline_transaction_artifact_ledger_source_bundle_collection_count"] == 1
+    assert counters["airline_transaction_artifact_ledger_collection_count"] == 1
+    assert counters["airline_transaction_artifact_ledger_validation_count"] == 1
+    assert counters["airline_transaction_artifact_ledger_artifact_written_count"] == 0
+    assert counters["airline_transaction_artifact_ledger_provider_calls_added_count"] == 0
+    assert counters["airline_transaction_artifact_ledger_network_calls_added_count"] == 0
+    assert counters["airline_transaction_artifact_ledger_gemini_calls_added_count"] == 0
+    assert counters["real_world_effects_count"] == 0
+    approval_snapshot = purchase_entry.canonical_hash_input["source_snapshot"][
+        "purchase_approval_evidence"
+    ]
+    assert approval_snapshot["approval_ref"] == purchase_entry.source_validation_refs[0]
+    assert approval_snapshot["approval_scope"] == (
+        "selected_mock_offer_purchase_intent_only"
+    )
+
+
+def test_slice_d_live_integration_call_counts_are_observed(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    calls = {
+        "causal": 0,
+        "deterministic": 0,
+        "corridor": 0,
+        "source_bundle": 0,
+        "ledger_collect": 0,
+        "ledger_validate": 0,
+        "writer": 0,
+    }
+    original_causal = (
+        runner.causal_runtime
+        .collect_airline_semantic_to_contract_causal_run_from_precollected_payloads_v01
+    )
+    original_deterministic = (
+        runner.deterministic_airline
+        .collect_tri_party_airline_ticket_purchase_mock_e2e_v01
+    )
+    original_corridor = (
+        runner.deterministic_airline.corridor_runtime
+        .collect_airline_ticket_purchase_corridor_execution_result_v01
+    )
+    original_bundle = (
+        runner.deterministic_airline
+        ._build_airline_transaction_artifact_ledger_source_bundle_v01
+    )
+    original_collect = (
+        runner.deterministic_airline.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+    original_validate = (
+        runner.deterministic_airline.ledger_collector.ledger
+        .validate_airline_transaction_artifact_ledger_v01
+    )
+    original_writer = runner._write_airline_transaction_artifact_ledger_once
+
+    def causal_wrapper(*args, **kwargs):
+        calls["causal"] += 1
+        return original_causal(*args, **kwargs)
+
+    def deterministic_wrapper(*args, **kwargs):
+        calls["deterministic"] += 1
+        return original_deterministic(*args, **kwargs)
+
+    def corridor_wrapper(*args, **kwargs):
+        calls["corridor"] += 1
+        return original_corridor(*args, **kwargs)
+
+    def bundle_wrapper(*args, **kwargs):
+        calls["source_bundle"] += 1
+        return original_bundle(*args, **kwargs)
+
+    def collect_wrapper(*args, **kwargs):
+        calls["ledger_collect"] += 1
+        return original_collect(*args, **kwargs)
+
+    def validate_wrapper(*args, **kwargs):
+        calls["ledger_validate"] += 1
+        return original_validate(*args, **kwargs)
+
+    def writer_wrapper(*args, **kwargs):
+        calls["writer"] += 1
+        return original_writer(*args, **kwargs)
+
+    monkeypatch.setattr(
+        runner.causal_runtime,
+        "collect_airline_semantic_to_contract_causal_run_from_precollected_payloads_v01",
+        causal_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.deterministic_airline,
+        "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
+        deterministic_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.deterministic_airline.corridor_runtime,
+        "collect_airline_ticket_purchase_corridor_execution_result_v01",
+        corridor_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.deterministic_airline,
+        "_build_airline_transaction_artifact_ledger_source_bundle_v01",
+        bundle_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.deterministic_airline.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        collect_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.deterministic_airline.ledger_collector.ledger,
+        "validate_airline_transaction_artifact_ledger_v01",
+        validate_wrapper,
+    )
+    monkeypatch.setattr(
+        runner,
+        "_write_airline_transaction_artifact_ledger_once",
+        writer_wrapper,
+    )
+
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert calls == {
+        "causal": 1,
+        "deterministic": 1,
+        "corridor": 1,
+        "source_bundle": 1,
+        "ledger_collect": 1,
+        "ledger_validate": 1,
+        "writer": 1,
+    }
+
+
+def test_slice_d_live_fail_closed_source_validation_writes_no_ledger(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    def wrong_source_bundle(*_args, **_kwargs):
+        return object()
+
+    monkeypatch.setattr(
+        runner.deterministic_airline,
+        "_build_airline_transaction_artifact_ledger_source_bundle_v01",
+        wrong_source_bundle,
+    )
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert not (tmp_path / "airline_transaction_artifact_ledger.json").exists()
+
+
+def test_slice_d_live_fail_closed_ledger_validation_writes_no_ledger(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = (
+        runner.deterministic_airline.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+
+    def bad_collect(*args, **kwargs):
+        ledger = original(*args, **kwargs)
+        return replace(ledger, entry_count=18)
+
+    monkeypatch.setattr(
+        runner.deterministic_airline.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        bad_collect,
+    )
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert not (tmp_path / "airline_transaction_artifact_ledger.json").exists()
+
+
+def test_slice_d_live_actual_geometry_corruption_writes_no_ledger(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = (
+        runner.deterministic_airline.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+
+    def bad_collect(*args, **kwargs):
+        ledger = original(*args, **kwargs)
+        return replace(ledger, entries=ledger.entries[:-1])
+
+    monkeypatch.setattr(
+        runner.deterministic_airline.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        bad_collect,
+    )
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert not (tmp_path / "airline_transaction_artifact_ledger.json").exists()
+
+
+def test_slice_d_live_duplicate_client_root_final_missing_bank_root_final_writes_no_ledger(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = (
+        runner.deterministic_airline.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+
+    def bad_collect(*args, **kwargs):
+        ledger = original(*args, **kwargs)
+        entries = list(ledger.entries)
+        bank_index = next(
+            index
+            for index, entry in enumerate(entries)
+            if entry.artifact_type == "BankRootFinalV01"
+        )
+        entries[bank_index] = replace(
+            entries[bank_index],
+            artifact_type="ClientRootFinalV01",
+        )
+        return replace(ledger, entries=tuple(entries))
+
+    monkeypatch.setattr(
+        runner.deterministic_airline.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        bad_collect,
+    )
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert not (tmp_path / "airline_transaction_artifact_ledger.json").exists()
+
+
+def test_slice_d_live_invalid_typed_ledger_status_writes_no_ledger(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = (
+        runner.deterministic_airline.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+
+    def bad_collect(*args, **kwargs):
+        ledger = original(*args, **kwargs)
+        return replace(ledger, validation_status=runner.STATUS_FAIL_CLOSED)
+
+    monkeypatch.setattr(
+        runner.deterministic_airline.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        bad_collect,
+    )
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert not (tmp_path / "airline_transaction_artifact_ledger.json").exists()
+
+
+def test_slice_d_live_typed_ledger_validation_errors_write_no_ledger(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = (
+        runner.deterministic_airline.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+
+    def bad_collect(*args, **kwargs):
+        ledger = original(*args, **kwargs)
+        return replace(ledger, validation_errors=("forced_validation_error",))
+
+    monkeypatch.setattr(
+        runner.deterministic_airline.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        bad_collect,
+    )
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert not (tmp_path / "airline_transaction_artifact_ledger.json").exists()
+
+
+def test_slice_d_live_forced_secret_scan_failure_writes_no_ledger(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(
+        runner,
+        "SECRET_MARKERS",
+        tuple(runner.SECRET_MARKERS) + ("airline_transaction_artifact_ledger",),
+    )
+
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert report["failed_stage"] == "secret_scan"
+    assert report["counter_table"][
+        "airline_transaction_artifact_ledger_artifact_written_count"
+    ] == 0
+    assert not (tmp_path / "airline_transaction_artifact_ledger.json").exists()
+
+
+def test_slice_d_live_duplicate_ledger_write_is_blocked(tmp_path: Path) -> None:
+    ledger_path = tmp_path / "airline_transaction_artifact_ledger.json"
+    ledger_path.write_text("{}")
+
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert "airline_transaction_artifact_ledger_duplicate_write_blocked" in (
+        report["validation_errors"]
+    )
+    assert ledger_path.read_text() == "{}"
+
+
+def test_slice_d_live_ledger_write_io_failure_fails_closed(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original_open = Path.open
+
+    def failing_open(self, *args, **kwargs):
+        if self.name == "airline_transaction_artifact_ledger.json":
+            raise OSError("blocked ledger write")
+        return original_open(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", failing_open)
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert "airline_transaction_artifact_ledger_write_failed" in (
+        report["validation_errors"]
+    )
+    assert not (tmp_path / "airline_transaction_artifact_ledger.json").exists()
+
+
+def test_slice_d_live_omitted_artifact_directory_writes_zero_ledgers() -> None:
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+    )
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert report["counter_table"][
+        "airline_transaction_artifact_ledger_artifact_written_count"
+    ] == 0
+
+
+def test_slice_d_live_no_silent_bsep_fallback_source_patterns() -> None:
+    source = Path(runner.__file__).read_text(encoding="utf-8")
+
+    assert 'get("projection_ref") or' not in source
+    assert "fallback_projection" not in source
+    assert "fixture_bsep_projection" not in source
+
+
+def test_slice_d_changed_production_files_preserve_source_boundaries() -> None:
+    changed_sources = "\n".join(
+        Path(path).read_text(encoding="utf-8")
+        for path in (
+            runner.deterministic_airline.corridor_runtime.__file__,
+            runner.deterministic_airline.__file__,
+            runner.__file__,
+        )
+    )
+
+    forbidden_snippets = (
+        "import config",
+        "from config",
+        "import requests",
+        "from requests",
+        "import urllib",
+        "from urllib",
+        "import openai",
+        "from openai",
+        "import subprocess",
+        "from subprocess",
+        "import socket",
+        "from socket",
+        "import hashlib",
+        "sha256",
+        "Crypto Artifact Seal",
+        "Replay Verifier",
+        "hash chain",
+        "class GenericLedger",
+        "universal ledger",
+    )
+    for snippet in forbidden_snippets:
+        assert snippet not in changed_sources
+    assert "airline_transaction_artifact_ledger.json" in changed_sources
+    assert "AirlineTransactionArtifactLedgerV01" not in Path(
+        runner.deterministic_airline.corridor_runtime.__file__,
+    ).read_text(encoding="utf-8")

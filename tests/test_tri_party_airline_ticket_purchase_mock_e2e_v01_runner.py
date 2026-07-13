@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from copy import deepcopy
 from dataclasses import replace
 from pathlib import Path
@@ -102,6 +103,27 @@ def _causal_run_for_offer(
         constraints=constraints,
         semantic_provider=_semantic_provider_for_offer(offer_id),
     )
+
+
+def _bsep_sources_for_causal_run(
+    causal_run: causal_runtime.AirlineSemanticCausalRunReportV01,
+) -> dict[str, object]:
+    return runner._build_deterministic_bsep_source_context_v01(
+        scenario_id=causal_run.scenario_id,
+    )
+
+
+def _collect_with_causal_run(
+    causal_run: causal_runtime.AirlineSemanticCausalRunReportV01,
+) -> dict[str, object]:
+    return runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=causal_run,
+        bsep_side_projections=_bsep_sources_for_causal_run(causal_run),
+    )
+
+
+def _collect_for_offer(offer_id: str) -> dict[str, object]:
+    return _collect_with_causal_run(_causal_run_for_offer(offer_id))
 
 
 def test_airline_slice_b_collects_pass_report() -> None:
@@ -1208,7 +1230,7 @@ def test_airline_corridor_slice_d_demo_does_not_reimplement_corridor_engine() ->
 
     assert "ticket_purchase_corridor_runtime_v01 as corridor_runtime" in source
     assert "ticket_purchase_corridor_v01 as corridor_contracts" in source
-    assert "collect_airline_ticket_purchase_corridor_state_machine_v01" in source
+    assert "collect_airline_ticket_purchase_corridor_execution_result_v01" in source
     assert "validate_airline_ticket_purchase_corridor_run_v01" in source
     assert "_run_airline_ticket_purchase_corridor_state_machine_v01" not in source
     assert "PHASE_VALIDATORS" not in source
@@ -1223,7 +1245,8 @@ def test_airline_corridor_slice_d_demo_does_not_reimplement_corridor_engine() ->
 def test_airline_corridor_slice_d_public_collector_called_once(monkeypatch) -> None:
     call_count = 0
     original = (
-        runner.corridor_runtime.collect_airline_ticket_purchase_corridor_state_machine_v01
+        runner.corridor_runtime
+        .collect_airline_ticket_purchase_corridor_execution_result_v01
     )
 
     def counted_collector(*args, **kwargs):
@@ -1233,7 +1256,7 @@ def test_airline_corridor_slice_d_public_collector_called_once(monkeypatch) -> N
 
     monkeypatch.setattr(
         runner.corridor_runtime,
-        "collect_airline_ticket_purchase_corridor_state_machine_v01",
+        "collect_airline_ticket_purchase_corridor_execution_result_v01",
         counted_collector,
     )
 
@@ -1250,7 +1273,7 @@ def test_airline_corridor_slice_d_source_has_one_direct_collector_call() -> None
     source = Path(runner.__file__).read_text()
     direct_call = (
         "corridor_runtime."
-        "collect_airline_ticket_purchase_corridor_state_machine_v01("
+        "collect_airline_ticket_purchase_corridor_execution_result_v01("
     )
     validate_source = source.split("def _validate_report", maxsplit=1)[1]
 
@@ -1433,6 +1456,9 @@ def test_airline_corridor_slice_d_source_offer_hold_expiry_fails_phase_one() -> 
     )
     corridor = runner.corridor_runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
         fixtures=bundle,
+        contract_context=report[
+            "airline_ticket_purchase_corridor_v0_1"
+        ].contract_context,
     )
 
     assert corridor.final_status == runner.corridor_runtime.STATUS_FAIL_CLOSED
@@ -1454,6 +1480,9 @@ def test_airline_corridor_slice_d_source_payment_expiry_fails_bank_phase() -> No
     )
     corridor = runner.corridor_runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
         fixtures=bundle,
+        contract_context=report[
+            "airline_ticket_purchase_corridor_v0_1"
+        ].contract_context,
     )
 
     assert corridor.final_status == runner.corridor_runtime.STATUS_FAIL_CLOSED
@@ -1687,9 +1716,7 @@ def test_no_argument_deterministic_runner_remains_pass() -> None:
 
 def test_valid_causal_offer_a_drives_existing_transaction_a() -> None:
     causal_run = _causal_run_for_offer(binding.OFFER_A_ID)
-    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=causal_run,
-    )
+    report = _collect_with_causal_run(causal_run)
 
     assert report["final_status"] == runner.STATUS_PASS
     assert (
@@ -1700,9 +1727,7 @@ def test_valid_causal_offer_a_drives_existing_transaction_a() -> None:
 
 def test_valid_causal_offer_b_drives_existing_transaction_b() -> None:
     causal_run = _causal_run_for_offer(binding.OFFER_B_ID)
-    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=causal_run,
-    )
+    report = _collect_with_causal_run(causal_run)
 
     assert report["final_status"] == runner.STATUS_PASS
     assert (
@@ -1728,9 +1753,7 @@ def test_deterministic_runner_has_no_direct_offer_id_argument() -> None:
 
 def test_airline_root_resolution_is_authoritative_source() -> None:
     causal_run = _causal_run_for_offer(binding.OFFER_B_ID)
-    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=causal_run,
-    )
+    report = _collect_with_causal_run(causal_run)
     offer = report["mock_protocol_fixtures"]["AirlineOfferCandidateV01"]
 
     assert causal_run.airline_root_resolution is not None
@@ -1754,6 +1777,7 @@ def test_provider_proposal_amount_is_not_used_as_authority() -> None:
     )
     report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
         semantic_causal_run=causal_run,
+        bsep_side_projections=_bsep_sources_for_causal_run(causal_run),
     )
 
     assert report["final_status"] == runner.STATUS_FAIL_CLOSED
@@ -1765,6 +1789,7 @@ def test_invalid_causal_run_fails_before_corridor() -> None:
     invalid = replace(causal_run, final_status=causal_runtime.STATUS_FAIL_CLOSED)
     report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
         semantic_causal_run=invalid,
+        bsep_side_projections=_bsep_sources_for_causal_run(causal_run),
     )
 
     assert report["final_status"] == runner.STATUS_FAIL_CLOSED
@@ -1776,6 +1801,7 @@ def test_causal_offer_mismatch_fails_closed() -> None:
     invalid = replace(causal_run, root_selected_offer_id=binding.OFFER_A_ID)
     report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
         semantic_causal_run=invalid,
+        bsep_side_projections=_bsep_sources_for_causal_run(causal_run),
     )
 
     assert report["final_status"] == runner.STATUS_FAIL_CLOSED
@@ -1784,9 +1810,7 @@ def test_causal_offer_mismatch_fails_closed() -> None:
 
 def test_one_deterministic_collection_one_corridor_execution() -> None:
     causal_run = _causal_run_for_offer(binding.OFFER_A_ID)
-    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=causal_run,
-    )
+    report = _collect_with_causal_run(causal_run)
     counters = report["counter_table"]
 
     assert counters["deterministic_airline_collection_count"] == 1
@@ -1795,9 +1819,7 @@ def test_one_deterministic_collection_one_corridor_execution() -> None:
 
 def test_no_default_or_silent_fallback() -> None:
     causal_run = _causal_run_for_offer(binding.OFFER_B_ID)
-    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=causal_run,
-    )
+    report = _collect_with_causal_run(causal_run)
     counters = report["counter_table"]
 
     assert counters["default_offer_count"] == 0
@@ -1819,15 +1841,9 @@ def test_independent_a_b_a_runs_do_not_share_mutable_contract_state() -> None:
         runner.corridor_contracts.AMOUNT,
     )
 
-    first_a = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=_causal_run_for_offer(binding.OFFER_A_ID),
-    )
-    b_report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=_causal_run_for_offer(binding.OFFER_B_ID),
-    )
-    second_a = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=_causal_run_for_offer(binding.OFFER_A_ID),
-    )
+    first_a = _collect_for_offer(binding.OFFER_A_ID)
+    b_report = _collect_for_offer(binding.OFFER_B_ID)
+    second_a = _collect_for_offer(binding.OFFER_A_ID)
 
     assert first_a["final_status"] == runner.STATUS_PASS
     assert b_report["final_status"] == runner.STATUS_PASS
@@ -1849,15 +1865,9 @@ def test_independent_a_b_a_runs_do_not_share_mutable_contract_state() -> None:
 
 
 def test_independent_b_a_b_runs_do_not_share_mutable_contract_state() -> None:
-    first_b = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=_causal_run_for_offer(binding.OFFER_B_ID),
-    )
-    a_report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=_causal_run_for_offer(binding.OFFER_A_ID),
-    )
-    second_b = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=_causal_run_for_offer(binding.OFFER_B_ID),
-    )
+    first_b = _collect_for_offer(binding.OFFER_B_ID)
+    a_report = _collect_for_offer(binding.OFFER_A_ID)
+    second_b = _collect_for_offer(binding.OFFER_B_ID)
 
     assert first_b["final_status"] == runner.STATUS_PASS
     assert a_report["final_status"] == runner.STATUS_PASS
@@ -1874,12 +1884,8 @@ def test_independent_b_a_b_runs_do_not_share_mutable_contract_state() -> None:
 
 
 def test_a_report_validates_after_b_collection_under_a_context() -> None:
-    a_report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=_causal_run_for_offer(binding.OFFER_A_ID),
-    )
-    runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=_causal_run_for_offer(binding.OFFER_B_ID),
-    )
+    a_report = _collect_for_offer(binding.OFFER_A_ID)
+    _collect_for_offer(binding.OFFER_B_ID)
     fixture_bundle = runner._build_airline_ticket_purchase_corridor_fixture_bundle_v01(
         a_report,
     )
@@ -1900,12 +1906,8 @@ def test_a_report_validates_after_b_collection_under_a_context() -> None:
 
 
 def test_b_report_validates_after_a_collection_under_b_context() -> None:
-    b_report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=_causal_run_for_offer(binding.OFFER_B_ID),
-    )
-    runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
-        semantic_causal_run=_causal_run_for_offer(binding.OFFER_A_ID),
-    )
+    b_report = _collect_for_offer(binding.OFFER_B_ID)
+    _collect_for_offer(binding.OFFER_A_ID)
     fixture_bundle = runner._build_airline_ticket_purchase_corridor_fixture_bundle_v01(
         b_report,
     )
@@ -1923,3 +1925,598 @@ def test_b_report_validates_after_a_collection_under_b_context() -> None:
     assert accepted is True
     assert errors == ()
     assert runner._validate_report(b_report) == ()
+
+
+def _ledger_entry(report: Mapping[str, Any], artifact_type: str):
+    ledger = runner._typed_airline_transaction_artifact_ledger_from_report(report)
+    return next(entry for entry in ledger.entries if entry.artifact_type == artifact_type)
+
+
+def test_slice_d_deterministic_ledger_integration_passes_with_exact_geometry() -> None:
+    report = _report()
+    integration = report["airline_transaction_artifact_ledger_integration"]
+    ledger = runner._typed_airline_transaction_artifact_ledger_from_report(report)
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert integration["integration_status"] == runner.STATUS_PASS
+    assert integration["source_bundle_validation_status"] == runner.STATUS_PASS
+    assert integration["ledger_validation_status"] == runner.STATUS_PASS
+    assert ledger.validation_status == runner.ledger_contracts.STATUS_PASS
+    assert ledger.entry_count == 19
+    assert ledger.dependency_edge_count == 29
+    assert ledger.root_final_count == 3
+    assert integration["source_bundle_collection_count"] == 1
+    assert integration["ledger_collection_count"] == 1
+    assert integration["ledger_validation_count"] == 1
+    assert integration["corridor_execution_count"] == 1
+    assert integration["source_reconstruction_count"] == 0
+    assert integration["provider_calls_added_by_ledger_count"] == 0
+    assert integration["network_calls_added_by_ledger_count"] == 0
+    assert integration["gemini_calls_added_by_ledger_count"] == 0
+    assert integration["real_world_effects_count"] == 0
+
+
+def test_slice_d_deterministic_source_bundle_direct_validation_is_recorded() -> None:
+    report = _report()
+    source_bundle = (
+        runner._typed_airline_transaction_artifact_ledger_source_bundle_from_report(
+            report,
+        )
+    )
+    direct_validation = (
+        runner._typed_airline_transaction_artifact_ledger_source_validation_from_report(
+            report,
+        )
+    )
+    ledger = runner._typed_airline_transaction_artifact_ledger_from_report(report)
+
+    assert direct_validation.validation_status == runner.ledger_collector.STATUS_PASS
+    assert direct_validation.validation_errors == ()
+    assert ledger.source_run_ref == source_bundle.expected_source_refs.source_run_ref
+    assert ledger.source_causal_report_ref == (
+        source_bundle.expected_source_refs.source_causal_report_ref
+    )
+    assert ledger.source_corridor_report_ref == (
+        source_bundle.expected_source_refs.source_corridor_report_ref
+    )
+
+
+def test_slice_d_deterministic_ledger_lineage_reaches_entries() -> None:
+    report = _report()
+    bsep_entry = _ledger_entry(report, "AirlineBSEPProjectionV01")
+    purchase_entry = _ledger_entry(report, "ClientPurchaseIntentV01")
+    hold_entry = _ledger_entry(report, "AirlineHoldCommitPacketV01")
+    ticket_entry = _ledger_entry(report, "AirlineTicketIssueIntentV01")
+    client_final = _ledger_entry(report, "ClientRootFinalV01")
+    airline_final = _ledger_entry(report, "AirlineRootFinalV01")
+    bank_final = _ledger_entry(report, "BankRootFinalV01")
+
+    assert bsep_entry.canonical_hash_input["projection_ref"] == (
+        runner._typed_airline_transaction_artifact_ledger_source_bundle_from_report(
+            report,
+        )
+        .airline_bsep_projection.projection_ref
+    )
+    assert purchase_entry.source_validation_refs == (
+        runner._typed_airline_transaction_artifact_ledger_source_bundle_from_report(
+            report,
+        )
+        .purchase_approval_evidence.approval_ref,
+    )
+    approval_snapshot = purchase_entry.canonical_hash_input["source_snapshot"][
+        "purchase_approval_evidence"
+    ]
+    assert approval_snapshot["approval_scope"] == (
+        "selected_mock_offer_purchase_intent_only"
+    )
+    assert approval_snapshot["evidence_only"] is True
+    assert hold_entry.canonical_hash_input["source_snapshot"]["passenger_ref"] == (
+        runner.corridor_contracts.PASSENGER_REF
+    )
+    assert hold_entry.canonical_hash_input["source_snapshot"][
+        "idempotency_key"
+    ].startswith("idem:")
+    assert ticket_entry.canonical_hash_input["source_snapshot"][
+        "idempotency_key"
+    ].startswith("idem:")
+    assert client_final.canonical_hash_input["source_artifact_refs"]
+    assert airline_final.canonical_hash_input["source_artifact_refs"]
+    assert bank_final.canonical_hash_input["source_artifact_refs"] == (
+        "bank_payment_authorization_ref:mock_bank_a:001",
+    )
+
+
+def test_slice_d_deterministic_uses_one_call_for_each_ledger_stage(monkeypatch) -> None:
+    calls = {
+        "causal": 0,
+        "corridor": 0,
+        "source_bundle": 0,
+        "source_validation": 0,
+        "ledger_collect": 0,
+        "ledger_validate": 0,
+    }
+    original_causal = (
+        runner.causal_runtime.collect_airline_semantic_to_contract_causal_run_v01
+    )
+    original_corridor = (
+        runner.corridor_runtime
+        .collect_airline_ticket_purchase_corridor_execution_result_v01
+    )
+    original_bundle = runner._build_airline_transaction_artifact_ledger_source_bundle_v01
+    original_source_validation = (
+        runner.ledger_collector
+        .validate_airline_transaction_artifact_ledger_source_bundle_v01
+    )
+    original_collect = (
+        runner.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+    original_ledger_validate = (
+        runner.ledger_collector.ledger.validate_airline_transaction_artifact_ledger_v01
+    )
+
+    def causal_wrapper(*args, **kwargs):
+        calls["causal"] += 1
+        return original_causal(*args, **kwargs)
+
+    def corridor_wrapper(*args, **kwargs):
+        calls["corridor"] += 1
+        return original_corridor(*args, **kwargs)
+
+    def bundle_wrapper(*args, **kwargs):
+        calls["source_bundle"] += 1
+        return original_bundle(*args, **kwargs)
+
+    def source_validation_wrapper(*args, **kwargs):
+        calls["source_validation"] += 1
+        return original_source_validation(*args, **kwargs)
+
+    def collect_wrapper(*args, **kwargs):
+        calls["ledger_collect"] += 1
+        return original_collect(*args, **kwargs)
+
+    def ledger_validate_wrapper(*args, **kwargs):
+        calls["ledger_validate"] += 1
+        return original_ledger_validate(*args, **kwargs)
+
+    monkeypatch.setattr(
+        runner.causal_runtime,
+        "collect_airline_semantic_to_contract_causal_run_v01",
+        causal_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.corridor_runtime,
+        "collect_airline_ticket_purchase_corridor_execution_result_v01",
+        corridor_wrapper,
+    )
+    monkeypatch.setattr(
+        runner,
+        "_build_airline_transaction_artifact_ledger_source_bundle_v01",
+        bundle_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.ledger_collector,
+        "validate_airline_transaction_artifact_ledger_source_bundle_v01",
+        source_validation_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        collect_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.ledger_collector.ledger,
+        "validate_airline_transaction_artifact_ledger_v01",
+        ledger_validate_wrapper,
+    )
+
+    report = _report()
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert calls == {
+        "causal": 1,
+        "corridor": 1,
+        "source_bundle": 1,
+        "source_validation": 2,
+        "ledger_collect": 1,
+        "ledger_validate": 1,
+    }
+
+
+def test_slice_d_deterministic_does_not_call_ledger_fixture_builders(
+    monkeypatch,
+) -> None:
+    def forbidden(*_args, **_kwargs):
+        raise AssertionError("ledger fixture builder called")
+
+    monkeypatch.setattr(
+        runner.ledger_contracts,
+        "build_airline_transaction_artifact_ledger_fixture_v01",
+        forbidden,
+    )
+    monkeypatch.setattr(
+        runner.ledger_contracts,
+        "build_valid_airline_transaction_artifact_ledger_offer_a_v01",
+        forbidden,
+    )
+    monkeypatch.setattr(
+        runner.ledger_contracts,
+        "build_valid_airline_transaction_artifact_ledger_offer_b_v01",
+        forbidden,
+    )
+
+    assert _report()["final_status"] == runner.STATUS_PASS
+
+
+def test_slice_d_deterministic_invalid_source_bundle_fails_closed(monkeypatch) -> None:
+    def wrong_source_bundle(*_args, **_kwargs):
+        return object()
+
+    monkeypatch.setattr(
+        runner,
+        "_build_airline_transaction_artifact_ledger_source_bundle_v01",
+        wrong_source_bundle,
+    )
+    report = _report()
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    integration = report["airline_transaction_artifact_ledger_integration"]
+    assert integration["source_bundle_validation_status"] == (
+        runner.ledger_collector.STATUS_FAIL_CLOSED
+    )
+    assert integration["ledger_collection_count"] == 0
+
+
+def test_slice_d_deterministic_invalid_collected_ledger_fails_closed(
+    monkeypatch,
+) -> None:
+    original = (
+        runner.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+
+    def bad_collect(*args, **kwargs):
+        ledger = original(*args, **kwargs)
+        return replace(ledger, entry_count=18)
+
+    monkeypatch.setattr(
+        runner.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        bad_collect,
+    )
+    report = _report()
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    integration = report["airline_transaction_artifact_ledger_integration"]
+    assert integration["ledger_collection_count"] == 1
+    assert integration["integration_status"] == runner.STATUS_FAIL_CLOSED
+
+
+def test_slice_d_deterministic_offer_a_and_b_ledgers_pass() -> None:
+    a_report = _collect_for_offer(binding.OFFER_A_ID)
+    b_report = _collect_for_offer(binding.OFFER_B_ID)
+
+    for report, offer_id in (
+        (a_report, binding.OFFER_A_ID),
+        (b_report, binding.OFFER_B_ID),
+    ):
+        integration = report["airline_transaction_artifact_ledger_integration"]
+        ledger = runner._typed_airline_transaction_artifact_ledger_from_report(report)
+        assert report["final_status"] == runner.STATUS_PASS
+        assert integration["selected_offer_id"] == offer_id
+        assert integration["integration_status"] == runner.STATUS_PASS
+        assert ledger.entry_count == 19
+        assert ledger.dependency_edge_count == 29
+        assert ledger.root_final_count == 3
+
+
+def test_slice_d_precollected_causal_without_bsep_fails_closed() -> None:
+    causal_run = _causal_run_for_offer(binding.OFFER_A_ID)
+
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=causal_run,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert runner.REASON_PRECOLLECTED_CAUSAL_BSEP_PROJECTIONS_REQUIRED in (
+        report["validation_errors"]
+    )
+    assert report["counter_table"]["ticket_purchase_corridor_execution_count"] == 0
+
+
+def test_slice_d_mismatched_supplied_bsep_fails_closed() -> None:
+    causal_run = _causal_run_for_offer(binding.OFFER_A_ID)
+    bsep_sources = _bsep_sources_for_causal_run(causal_run)
+    bsep_sources["airline_bsep_projection"] = replace(
+        bsep_sources["airline_bsep_projection"],
+        projection_ref="bsep_projection:wrong",
+    )
+
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=causal_run,
+        bsep_side_projections=bsep_sources,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    integration = report["airline_transaction_artifact_ledger_integration"]
+    assert integration["integration_status"] == runner.STATUS_FAIL_CLOSED
+    assert integration["source_bundle_collection_count"] == 1
+    assert integration["ledger_collection_count"] == 0
+
+
+def test_slice_d_bsep_sources_precede_causal_corridor_and_ledger_bundle(
+    monkeypatch,
+) -> None:
+    order: list[str] = []
+    created_sources: dict[str, object] = {}
+    created_source_holder: dict[str, dict[str, object]] = {}
+    original_bsep = runner._build_deterministic_bsep_source_context_v01
+    original_causal = (
+        runner.causal_runtime.collect_airline_semantic_to_contract_causal_run_v01
+    )
+    original_corridor = (
+        runner.corridor_runtime
+        .collect_airline_ticket_purchase_corridor_execution_result_v01
+    )
+    original_bundle = runner._build_airline_transaction_artifact_ledger_source_bundle_v01
+
+    def bsep_wrapper(*args, **kwargs):
+        order.append("bsep")
+        sources = original_bsep(*args, **kwargs)
+        created_source_holder["sources"] = sources
+        created_sources.update(sources)
+        return sources
+
+    def causal_wrapper(*args, **kwargs):
+        order.append("causal")
+        assert kwargs["bsep_projection"].projection_ref == (
+            created_sources["airline_bsep_projection"].projection_ref
+        )
+        return original_causal(*args, **kwargs)
+
+    def corridor_wrapper(*args, **kwargs):
+        order.append("corridor")
+        return original_corridor(*args, **kwargs)
+
+    def bundle_wrapper(*args, **kwargs):
+        order.append("bundle")
+        assert kwargs["bsep_side_projections"] is created_source_holder["sources"]
+        return original_bundle(*args, **kwargs)
+
+    monkeypatch.setattr(
+        runner,
+        "_build_deterministic_bsep_source_context_v01",
+        bsep_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.causal_runtime,
+        "collect_airline_semantic_to_contract_causal_run_v01",
+        causal_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.corridor_runtime,
+        "collect_airline_ticket_purchase_corridor_execution_result_v01",
+        corridor_wrapper,
+    )
+    monkeypatch.setattr(
+        runner,
+        "_build_airline_transaction_artifact_ledger_source_bundle_v01",
+        bundle_wrapper,
+    )
+
+    report = _report()
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert order == ["bsep", "causal", "corridor", "bundle"]
+    assert report["counter_table"]["deterministic_bsep_source_creation_count"] == 1
+    assert report["counter_table"]["airline_transaction_artifact_ledger_source_reconstruction_count"] == 0
+
+
+def test_slice_d_no_ledger_time_deterministic_bsep_construction(monkeypatch) -> None:
+    def forbidden(*_args, **_kwargs):
+        raise AssertionError("ledger-time BSEP reconstruction called")
+
+    monkeypatch.setattr(
+        runner,
+        "_deterministic_ledger_bsep_projection_sources",
+        forbidden,
+        raising=False,
+    )
+
+    assert "_deterministic_ledger_bsep_projection_sources" not in Path(
+        runner.__file__,
+    ).read_text(encoding="utf-8")
+    assert _report()["final_status"] == runner.STATUS_PASS
+
+
+def test_slice_d_source_bundle_receives_exact_precreated_bsep_objects() -> None:
+    causal_run = _causal_run_for_offer(binding.OFFER_A_ID)
+    bsep_sources = _bsep_sources_for_causal_run(causal_run)
+    report = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
+        semantic_causal_run=causal_run,
+        bsep_side_projections=bsep_sources,
+    )
+    source_bundle = (
+        runner._typed_airline_transaction_artifact_ledger_source_bundle_from_report(
+            report,
+        )
+    )
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert source_bundle.client_bsep_projection is bsep_sources["client_bsep_projection"]
+    assert source_bundle.airline_bsep_projection is bsep_sources["airline_bsep_projection"]
+    assert source_bundle.bank_bsep_projection is bsep_sources["bank_bsep_projection"]
+    assert source_bundle.cross_root_bsep_projection is (
+        bsep_sources["cross_root_bsep_projection"]
+    )
+
+
+def test_slice_d_actual_18_28_2_ledger_forgery_is_rejected(monkeypatch) -> None:
+    original = (
+        runner.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+
+    def forged_collect(*args, **kwargs):
+        ledger = original(*args, **kwargs)
+        return replace(ledger, entries=ledger.entries[:-1])
+
+    monkeypatch.setattr(
+        runner.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        forged_collect,
+    )
+    report = _report()
+    integration = report["airline_transaction_artifact_ledger_integration"]
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert integration["integration_status"] == runner.STATUS_FAIL_CLOSED
+    assert integration["entry_count"] == 18
+    assert integration["dependency_edge_count"] == 28
+    assert integration["root_final_count"] == 2
+    assert runner.REASON_ACTUAL_LEDGER_ENTRY_COUNT_MISMATCH in (
+        integration["ledger_validation_errors"]
+    )
+
+
+def test_slice_d_root_final_stored_counter_forgery_is_rejected(monkeypatch) -> None:
+    original = (
+        runner.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+
+    def forged_collect(*args, **kwargs):
+        ledger = original(*args, **kwargs)
+        entries = list(ledger.entries)
+        final_entry = entries[-1]
+        entries[-1] = replace(final_entry, artifact_type="NotRootFinalV01")
+        return replace(ledger, entries=tuple(entries))
+
+    monkeypatch.setattr(
+        runner.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        forged_collect,
+    )
+    report = _report()
+    integration = report["airline_transaction_artifact_ledger_integration"]
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert integration["stored_root_final_count"] == 3
+    assert integration["actual_root_final_count"] == 2
+    assert runner.REASON_ACTUAL_LEDGER_ROOT_FINAL_MISMATCH in (
+        integration["ledger_validation_errors"]
+    )
+
+
+def test_slice_d_duplicate_client_root_final_missing_bank_root_final_rejected(
+    monkeypatch,
+) -> None:
+    original = (
+        runner.ledger_collector
+        .collect_airline_transaction_artifact_ledger_from_source_v01
+    )
+
+    def forged_collect(*args, **kwargs):
+        ledger = original(*args, **kwargs)
+        entries = list(ledger.entries)
+        bank_index = next(
+            index
+            for index, entry in enumerate(entries)
+            if entry.artifact_type == "BankRootFinalV01"
+        )
+        entries[bank_index] = replace(
+            entries[bank_index],
+            artifact_type="ClientRootFinalV01",
+        )
+        return replace(ledger, entries=tuple(entries))
+
+    monkeypatch.setattr(
+        runner.ledger_collector,
+        "collect_airline_transaction_artifact_ledger_from_source_v01",
+        forged_collect,
+    )
+    report = _report()
+    integration = report["airline_transaction_artifact_ledger_integration"]
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert integration["entry_count"] == 19
+    assert integration["dependency_edge_count"] == 29
+    assert integration["root_final_count"] == 3
+    assert integration["stored_root_final_count"] == 3
+    assert runner.REASON_LEDGER_ARTIFACT_TYPE_SEQUENCE_MISMATCH in (
+        integration["ledger_validation_errors"]
+    )
+    assert runner.REASON_LEDGER_ROOT_FINAL_SET_MISMATCH in (
+        integration["ledger_validation_errors"]
+    )
+
+
+def test_slice_d_public_typed_view_coherence_rejects_public_ledger_entry_drop() -> None:
+    report = _report()
+    report["airline_transaction_artifact_ledger_v0_1"]["entries"].pop()
+
+    errors = runner._validate_report(report)
+
+    assert runner.REASON_LEDGER_PUBLIC_TYPED_VIEW_MISMATCH in errors
+
+
+def test_slice_d_public_typed_view_coherence_rejects_public_ledger_id_change() -> None:
+    report = _report()
+    report["airline_transaction_artifact_ledger_v0_1"]["ledger_id"] = (
+        "airline_transaction_artifact_ledger:forged"
+    )
+
+    errors = runner._validate_report(report)
+
+    assert runner.REASON_LEDGER_PUBLIC_TYPED_VIEW_MISMATCH in errors
+
+
+def test_slice_d_public_typed_view_coherence_rejects_public_source_validation_status_change() -> None:
+    report = _report()
+    report["airline_transaction_artifact_ledger_source_validation_v0_1"][
+        "validation_status"
+    ] = runner.STATUS_FAIL_CLOSED
+
+    errors = runner._validate_report(report)
+
+    assert runner.REASON_LEDGER_PUBLIC_TYPED_VIEW_MISMATCH in errors
+
+
+def test_slice_d_public_typed_view_coherence_rejects_public_bsep_identity_change() -> None:
+    report = _report()
+    report["airline_transaction_artifact_ledger_source_bundle_v0_1"][
+        "client_bsep_projection"
+    ]["projection_id"] = "client_bsep_projection:forged"
+
+    errors = runner._validate_report(report)
+
+    assert runner.REASON_LEDGER_PUBLIC_TYPED_VIEW_MISMATCH in errors
+
+
+def test_slice_d_json_safe_serialization_boundary_preserves_public_ledger_view() -> None:
+    report = _report()
+    public_ledger = report["airline_transaction_artifact_ledger_v0_1"]
+    typed_ledger = runner._typed_airline_transaction_artifact_ledger_from_report(
+        report,
+    )
+
+    assert public_ledger == runner._json_safe(typed_ledger)
+    json.dumps(runner._json_safe(report), sort_keys=True)
+
+
+def test_slice_d_report_dict_semantics_are_standard() -> None:
+    report = _report()
+
+    assert list(report.items()) == list(dict.items(report))
+
+
+def test_slice_d_deterministic_callback_accounting_is_honest() -> None:
+    default_report = _report()
+    precollected_report = _collect_for_offer(binding.OFFER_A_ID)
+
+    assert default_report["counter_table"]["local_injected_semantic_callback_count"] == 5
+    assert default_report["counter_table"]["provider_network_call_count"] == 0
+    assert default_report["counter_table"]["gemini_call_count"] == 0
+    assert precollected_report["counter_table"]["local_injected_semantic_callback_count"] == 0
+    assert precollected_report["counter_table"]["provider_network_call_count"] == 0
+    assert precollected_report["counter_table"]["gemini_call_count"] == 0

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 
 from hedgehog.domains.airline import ticket_purchase_corridor_runtime_v01 as runtime
@@ -107,6 +107,140 @@ def test_valid_root_centered_corridor_state_machine_passes() -> None:
     )
     assert accepted is True
     assert errors == ()
+
+
+def test_one_execution_api_returns_report_and_exact_artifacts_used() -> None:
+    fixtures = _fixtures()
+    result = runtime.collect_airline_ticket_purchase_corridor_execution_result_v01(
+        fixtures=fixtures,
+    )
+
+    assert result.report.final_status == runtime.STATUS_PASS
+    assert result.contract_context is result.report.contract_context
+    assert result.offer_packet is fixtures["offer_packet"]
+    assert result.hold_packet is fixtures["hold_packet"]
+    assert result.hold_receipt is fixtures["hold_receipt"]
+    assert result.purchase_approval_evidence is fixtures["human_approval"]
+    assert result.purchase_intent is fixtures["purchase_intent"]
+    assert result.payment_authorization_ref is fixtures["authorization_ref"]
+    assert result.ticket_issue_intent is fixtures["ticket_issue_intent"]
+    assert result.mock_ticket_receipt is fixtures["ticket_receipt"]
+    assert result.mock_purchase_receipt is fixtures["purchase_receipt"]
+
+
+def test_one_execution_api_none_uses_canonical_default_fixture() -> None:
+    result = runtime.collect_airline_ticket_purchase_corridor_execution_result_v01(
+        fixtures=None,
+    )
+
+    assert result.report.final_status == runtime.STATUS_PASS
+    assert result.offer_packet.offer_id == contracts.OFFER_ID
+    assert result.hold_packet.hold_id == contracts.HOLD_ID
+
+
+def test_one_execution_api_empty_fixture_mapping_rejects_without_default() -> None:
+    try:
+        runtime.collect_airline_ticket_purchase_corridor_execution_result_v01(
+            fixtures={},
+        )
+    except ValueError as exc:
+        assert str(exc) == runtime.REASON_FIXTURE_BUNDLE_EMPTY
+    else:
+        raise AssertionError("empty fixtures unexpectedly passed")
+
+
+def test_one_execution_api_partial_fixture_mapping_rejects_stably() -> None:
+    fixtures = {"offer_packet": contracts.build_valid_airline_offer_packet_v01()}
+
+    try:
+        runtime.collect_airline_ticket_purchase_corridor_execution_result_v01(
+            fixtures=fixtures,
+        )
+    except ValueError as exc:
+        message = str(exc)
+    else:
+        raise AssertionError("partial fixtures unexpectedly passed")
+
+    assert message.startswith(runtime.REASON_FIXTURE_BUNDLE_MISSING_KEYS)
+    assert "hold_packet" in message
+    assert "KeyError" not in message
+
+
+def test_one_execution_report_and_artifacts_share_source_facts() -> None:
+    result = runtime.collect_airline_ticket_purchase_corridor_execution_result_v01()
+    context = result.report.contract_context
+
+    assert result.report.transaction_id == context.transaction_id
+    assert result.offer_packet.transaction_id == context.transaction_id
+    assert result.hold_packet.transaction_id == context.transaction_id
+    assert result.hold_receipt.transaction_id == context.transaction_id
+    assert result.purchase_intent.transaction_id == context.transaction_id
+    assert result.payment_authorization_ref.transaction_id == context.transaction_id
+    assert result.ticket_issue_intent.transaction_id == context.transaction_id
+    assert result.mock_ticket_receipt.transaction_id == context.transaction_id
+    assert result.mock_purchase_receipt.transaction_id == context.transaction_id
+    assert result.offer_packet.offer_id == context.offer_id
+    assert result.hold_packet.offer_id == context.offer_id
+    assert result.hold_packet.hold_id == context.hold_id
+    assert result.hold_receipt.hold_id == context.hold_id
+    assert result.offer_packet.amount == context.amount
+    assert result.payment_authorization_ref.amount == context.amount
+    assert result.offer_packet.currency == context.currency
+    assert result.payment_authorization_ref.currency == context.currency
+    assert result.offer_packet.route_ref == context.route_ref
+    assert result.offer_packet.passenger_ref == context.passenger_ref
+
+
+def test_report_only_api_delegates_to_one_execution_once(monkeypatch) -> None:
+    calls = {"count": 0}
+    original = runtime.collect_airline_ticket_purchase_corridor_execution_result_v01
+
+    def wrapped(*args, **kwargs):
+        calls["count"] += 1
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(
+        runtime,
+        "collect_airline_ticket_purchase_corridor_execution_result_v01",
+        wrapped,
+    )
+    report = runtime.collect_airline_ticket_purchase_corridor_state_machine_v01()
+
+    assert report.final_status == runtime.STATUS_PASS
+    assert calls["count"] == 1
+
+
+def test_one_execution_api_does_not_build_second_bundle_when_sources_supplied(
+    monkeypatch,
+) -> None:
+    fixtures = _fixtures()
+
+    def forbidden_builder():
+        raise AssertionError("fixture bundle rebuilt")
+
+    monkeypatch.setattr(runtime, "_build_valid_fixture_bundle_v01", forbidden_builder)
+    result = runtime.collect_airline_ticket_purchase_corridor_execution_result_v01(
+        fixtures=fixtures,
+    )
+
+    assert result.report.final_status == runtime.STATUS_PASS
+    assert result.offer_packet is fixtures["offer_packet"]
+
+
+def test_one_execution_api_does_not_mutate_source_objects() -> None:
+    fixtures = _fixtures()
+    before = {key: asdict(value) for key, value in fixtures.items()}
+
+    result = runtime.collect_airline_ticket_purchase_corridor_execution_result_v01(
+        fixtures=fixtures,
+    )
+
+    assert result.report.final_status == runtime.STATUS_PASS
+    assert {key: asdict(value) for key, value in fixtures.items()} == before
+    assert result.report.counter_table["provider_called_count"] == 0
+    assert result.report.counter_table["network_used_count"] == 0
+    assert result.report.counter_table["gemini_called_count"] == 0
+    assert result.report.counter_table["real_world_effects_count"] == 0
 
 
 def test_exact_five_phase_order_preserved() -> None:

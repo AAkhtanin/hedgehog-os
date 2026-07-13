@@ -90,6 +90,25 @@ REASON_ARTIFACT_VALIDATION_SUMMARY_MISMATCH = (
     "artifact_validation_summary_mismatch"
 )
 REASON_FIXTURE_REPORT_BINDING_FAILED = "fixture_report_binding_failed"
+REASON_FIXTURE_BUNDLE_EMPTY = "fixture_bundle_empty"
+REASON_FIXTURE_BUNDLE_MISSING_KEYS = "fixture_bundle_missing_keys"
+
+REQUIRED_FIXTURE_KEYS = (
+    "airline_offer_hold_gate",
+    "offer_packet",
+    "hold_packet",
+    "hold_receipt",
+    "client_purchase_gate",
+    "human_approval",
+    "purchase_intent",
+    "bank_gate",
+    "authorization_ref",
+    "airline_ticket_gate",
+    "ticket_issue_intent",
+    "ticket_receipt",
+    "completion_gate",
+    "purchase_receipt",
+)
 
 
 @dataclass(frozen=True)
@@ -157,6 +176,21 @@ class AirlineTicketPurchaseCorridorRunReportV01:
     contract_context: contracts.AirlineTicketPurchaseContractContextV01
     validation_errors: tuple[str, ...]
     next_gate: str
+
+
+@dataclass(frozen=True)
+class AirlineTicketPurchaseCorridorExecutionResultV01:
+    report: AirlineTicketPurchaseCorridorRunReportV01
+    contract_context: contracts.AirlineTicketPurchaseContractContextV01
+    offer_packet: contracts.AirlineOfferPacketV01
+    hold_packet: contracts.AirlineHoldCommitPacketV01
+    hold_receipt: contracts.AirlineOfferHoldReceiptV01
+    purchase_approval_evidence: contracts.AirlinePurchaseApprovalEvidenceRefV01
+    purchase_intent: contracts.ClientPurchaseIntentV01
+    payment_authorization_ref: contracts.BankPaymentAuthorizationRefV01
+    ticket_issue_intent: contracts.AirlineTicketIssueIntentV01
+    mock_ticket_receipt: contracts.MockTicketReceiptV01
+    mock_purchase_receipt: contracts.MockPurchaseReceiptV01
 
 
 def _append_reason(reasons: list[str], reason: str) -> None:
@@ -332,6 +366,24 @@ def _build_valid_fixture_bundle_v01() -> dict[str, Any]:
         "completion_gate": contracts.build_valid_client_root_completion_gate_v01(),
         "purchase_receipt": contracts.build_valid_mock_purchase_receipt_v01(),
     }
+
+
+def _fixture_bundle_from_input(
+    fixtures: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    if fixtures is None:
+        return dict(_build_valid_fixture_bundle_v01())
+    if not isinstance(fixtures, Mapping):
+        raise ValueError("fixture_bundle_wrong_type")
+    fixture_bundle = dict(fixtures)
+    if not fixture_bundle:
+        raise ValueError(REASON_FIXTURE_BUNDLE_EMPTY)
+    missing = tuple(key for key in REQUIRED_FIXTURE_KEYS if key not in fixture_bundle)
+    if missing:
+        raise ValueError(
+            f"{REASON_FIXTURE_BUNDLE_MISSING_KEYS}:{','.join(missing)}",
+        )
+    return fixture_bundle
 
 
 def _core_domain_delegation_matrix() -> tuple[AirlineCoreDelegationRowV01, ...]:
@@ -1138,7 +1190,7 @@ def _run_airline_ticket_purchase_corridor_state_machine_v01(
         contracts.AirlineTicketPurchaseContractContextV01 | None
     ) = None,
 ) -> AirlineTicketPurchaseCorridorRunReportV01:
-    fixture_bundle = dict(fixtures or _build_valid_fixture_bundle_v01())
+    fixture_bundle = _fixture_bundle_from_input(fixtures)
     context = _contract_context(contract_context)
     phase_results: list[AirlineCorridorPhaseResultV01] = []
     failed_phase_id = ""
@@ -1446,10 +1498,39 @@ def collect_airline_ticket_purchase_corridor_state_machine_v01(
         contracts.AirlineTicketPurchaseContractContextV01 | None
     ) = None,
 ) -> AirlineTicketPurchaseCorridorRunReportV01:
-    return _run_airline_ticket_purchase_corridor_state_machine_v01(
-        fixtures,
+    return collect_airline_ticket_purchase_corridor_execution_result_v01(
+        fixtures=fixtures,
         core_corridor_overrides=core_corridor_overrides,
         contract_context=contract_context,
+    ).report
+
+
+def collect_airline_ticket_purchase_corridor_execution_result_v01(
+    *,
+    fixtures: Mapping[str, Any] | None = None,
+    core_corridor_overrides: Mapping[str, Mapping[str, Any]] | None = None,
+    contract_context: (
+        contracts.AirlineTicketPurchaseContractContextV01 | None
+    ) = None,
+) -> AirlineTicketPurchaseCorridorExecutionResultV01:
+    fixture_bundle = _fixture_bundle_from_input(fixtures)
+    report = _run_airline_ticket_purchase_corridor_state_machine_v01(
+        fixture_bundle,
+        core_corridor_overrides=core_corridor_overrides,
+        contract_context=contract_context,
+    )
+    return AirlineTicketPurchaseCorridorExecutionResultV01(
+        report=report,
+        contract_context=report.contract_context,
+        offer_packet=fixture_bundle["offer_packet"],
+        hold_packet=fixture_bundle["hold_packet"],
+        hold_receipt=fixture_bundle["hold_receipt"],
+        purchase_approval_evidence=fixture_bundle["human_approval"],
+        purchase_intent=fixture_bundle["purchase_intent"],
+        payment_authorization_ref=fixture_bundle["authorization_ref"],
+        ticket_issue_intent=fixture_bundle["ticket_issue_intent"],
+        mock_ticket_receipt=fixture_bundle["ticket_receipt"],
+        mock_purchase_receipt=fixture_bundle["purchase_receipt"],
     )
 
 

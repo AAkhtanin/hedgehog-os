@@ -1,11 +1,16 @@
 from __future__ import annotations
 
-from dataclasses import replace
+from collections.abc import Mapping as MappingABC
+from dataclasses import fields, is_dataclass, replace
 from typing import Any, Mapping
 
 from hedgehog.domains.airline import semantic_to_contract_causal_runtime_v01 as causal_runtime
 from hedgehog.domains.airline import ticket_purchase_corridor_runtime_v01 as corridor_runtime
 from hedgehog.domains.airline import ticket_purchase_corridor_v01 as corridor_contracts
+from hedgehog.domains.airline import (
+    transaction_artifact_ledger_collector_v01 as ledger_collector,
+)
+from hedgehog.domains.airline import transaction_artifact_ledger_v01 as ledger_contracts
 
 
 RUN_ID = "tri_party_airline_ticket_purchase_mock_e2e_v01"
@@ -15,6 +20,23 @@ TRANSACTION_ID = "tri_airline_purchase:PAR-LIM:2026-08-12:client_001"
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
+
+REASON_ACTUAL_LEDGER_ENTRY_COUNT_MISMATCH = "actual_ledger_entry_count_mismatch"
+REASON_ACTUAL_LEDGER_DEPENDENCY_EDGE_MISMATCH = (
+    "actual_ledger_dependency_edge_count_mismatch"
+)
+REASON_ACTUAL_LEDGER_ROOT_FINAL_MISMATCH = "actual_ledger_root_final_count_mismatch"
+REASON_LEDGER_STORED_ACTUAL_DERIVED_FIELD_MISMATCH = (
+    "ledger_stored_actual_derived_field_mismatch"
+)
+REASON_LEDGER_ARTIFACT_TYPE_SEQUENCE_MISMATCH = (
+    "actual_ledger_artifact_type_sequence_mismatch"
+)
+REASON_LEDGER_ROOT_FINAL_SET_MISMATCH = "actual_ledger_root_final_set_mismatch"
+REASON_LEDGER_PUBLIC_TYPED_VIEW_MISMATCH = "ledger_public_typed_view_mismatch"
+REASON_PRECOLLECTED_CAUSAL_BSEP_PROJECTIONS_REQUIRED = (
+    "precollected_causal_bsep_projections_required"
+)
 
 CLIENT_ROOT_ID = "root:client_os_001"
 AIRLINE_ROOT_ID = "root:mock_airline_al"
@@ -35,6 +57,7 @@ REQUIRED_SECTIONS = (
     "[CROSS-ROOT EVIDENCE ROUTING MATRIX]",
     "[FINAL TRI-PARTY MOCK SUMMARY]",
     "[AIRLINE TICKET/PURCHASE CORRIDOR V0.1 ROOT-CENTERED INTEGRATION]",
+    "[AIRLINE TRANSACTION ARTIFACT LEDGER V0.1]",
     "[MOCK PROTOCOL FIXTURES]",
     "[SHARED TRANSACTION LEDGER]",
     "[ROOT BOUNDARY MATRIX]",
@@ -142,6 +165,10 @@ def _semantic_causal_fail_closed_report(
         ),
         "counter_table": {
             "deterministic_airline_collection_count": 0,
+            "deterministic_bsep_source_creation_count": 0,
+            "local_injected_semantic_callback_count": 0,
+            "provider_network_call_count": 0,
+            "gemini_call_count": 0,
             "ticket_purchase_corridor_execution_count": 0,
             "default_offer_count": 0,
             "silent_fallback_count": 0,
@@ -190,16 +217,206 @@ def _semantic_causal_source_summary(
     }
 
 
+def _deterministic_semantic_proposal_payload(
+    request: Mapping[str, Any],
+    offer_id: str,
+) -> dict[str, Any]:
+    return {
+        "proposal_id": f"semantic_offer_selection_proposal:{offer_id}",
+        "transaction_id": request["transaction_id"],
+        "actor_id": request["actor_id"],
+        "source_selection_input_id": request["source_selection_input_id"],
+        "source_bsep_projection_ref": request["source_bsep_projection_ref"],
+        "source_client_constraint_set_id": request["source_client_constraint_set_id"],
+        "source_candidate_set_snapshot_id": request[
+            "source_candidate_set_snapshot_id"
+        ],
+        "source_candidate_set_digest": request["source_candidate_set_digest"],
+        "candidate_set_ref": request["source_candidate_set_ref"],
+        "recommended_offer_id": offer_id,
+        "ranked_offer_ids": (offer_id,),
+        "decision_factors": ("deterministic_airline_semantic_offer_match",),
+        "preference_matches": ("client_preferences_satisfied",),
+        "uncertainty_notes": ("requires_client_root_review",),
+        "requires_root_review": True,
+        "semantic_summary": "Deterministic local advisory semantics.",
+        "authority_created": False,
+        "action_permission_created": False,
+        "packet_created": False,
+        "receipt_created": False,
+        "payment_created": False,
+        "ticket_created": False,
+        "booking_created": False,
+        "final_output_created": False,
+        "real_world_effects_count": 0,
+    }
+
+
+def _deterministic_semantic_reviewer_payload(
+    request: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "response_id": (
+            f"canonical_actor_output:{request['actor_id']}:"
+            f"{request['proposed_offer_id']}"
+        ),
+        "transaction_id": request["transaction_id"],
+        "actor_id": request["actor_id"],
+        "source_request_id": request["request_id"],
+        "source_selection_input_id": request["source_selection_input_id"],
+        "source_candidate_set_snapshot_id": request[
+            "source_candidate_set_snapshot_id"
+        ],
+        "source_candidate_set_digest": request["source_candidate_set_digest"],
+        "reviewed_offer_id": request["proposed_offer_id"],
+        "review_role": request["actor_role"],
+        "review_status": causal_runtime.binding.STATUS_PASS,
+        "semantic_factors": ("review_supports_explicit_offer",),
+        "blocking_conflicts": (),
+        "supports_proposed_offer": True,
+        "validation_status": causal_runtime.binding.STATUS_PASS,
+        "raw_output_used": False,
+        "authority_created": False,
+        "permission_created": False,
+        "real_world_effects_count": 0,
+    }
+
+
+def _deterministic_semantic_provider_for_offer(
+    offer_id: str,
+) -> causal_runtime.AirlineInjectedSemanticProviderV01:
+    def provider(actor_id: str, request: Mapping[str, Any]) -> Mapping[str, Any]:
+        if actor_id == causal_runtime.binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER:
+            return _deterministic_semantic_proposal_payload(request, offer_id)
+        return _deterministic_semantic_reviewer_payload(request)
+
+    return provider
+
+
+def _build_deterministic_bsep_source_context_v01(
+    *,
+    scenario_id: str,
+) -> dict[str, ledger_collector.AirlineTransactionArtifactLedgerBSEPProjectionSourceV01]:
+    packet_id = f"bsep_packet:{RUN_ID}:{scenario_id}"
+
+    def projection(
+        *,
+        projection_id: str,
+        projection_ref: str,
+        side: str,
+    ) -> ledger_collector.AirlineTransactionArtifactLedgerBSEPProjectionSourceV01:
+        return ledger_collector.AirlineTransactionArtifactLedgerBSEPProjectionSourceV01(
+            projection_id=projection_id,
+            projection_ref=projection_ref,
+            bsep_packet_id=packet_id,
+            transaction_id=TRANSACTION_ID,
+            side=side,
+            validation_status=ledger_contracts.STATUS_PASS,
+            raw_secrets_included=False,
+            raw_provider_text_included=False,
+            authority_created=False,
+            permission_created=False,
+            real_world_effects_count=0,
+        )
+
+    return {
+        "client_bsep_projection": projection(
+            projection_id="client_bsep_projection:deterministic_airline:001",
+            projection_ref="client_bsep_projection:deterministic_airline:001",
+            side=ledger_collector.SIDE_CLIENT,
+        ),
+        "airline_bsep_projection": projection(
+            projection_id="airline_bsep_projection:deterministic_airline:001",
+            projection_ref=causal_runtime.binding.BSEP_PROJECTION_REF,
+            side=ledger_collector.SIDE_AIRLINE,
+        ),
+        "bank_bsep_projection": projection(
+            projection_id="bank_bsep_projection:deterministic_airline:001",
+            projection_ref="bank_bsep_projection:deterministic_airline:001",
+            side=ledger_collector.SIDE_BANK,
+        ),
+        "cross_root_bsep_projection": projection(
+            projection_id="cross_root_bsep_projection:deterministic_airline:001",
+            projection_ref="cross_root_bsep_projection:deterministic_airline:001",
+            side=ledger_collector.SIDE_CROSS_ROOT_ADVISORY,
+        ),
+    }
+
+
+def _typed_airline_bsep_projection_from_source_v01(
+    source: ledger_collector.AirlineTransactionArtifactLedgerBSEPProjectionSourceV01,
+) -> causal_runtime.binding.AirlineBSEPProjectionRefV01:
+    return causal_runtime.binding.AirlineBSEPProjectionRefV01(
+        projection_ref=source.projection_ref,
+        transaction_id=source.transaction_id,
+        projection_side="airline_offer_selection",
+        validation_status=source.validation_status,
+        raw_secret_included=source.raw_secrets_included,
+        authority_created=source.authority_created,
+        real_world_effects_count=source.real_world_effects_count,
+    )
+
+
+def _collect_default_semantic_causal_run_v01(
+    *,
+    bsep_projection: causal_runtime.binding.AirlineBSEPProjectionRefV01,
+) -> tuple[causal_runtime.AirlineSemanticCausalRunReportV01, int]:
+    constraints = causal_runtime.binding.build_client_constraints_preference_a_v01()
+    callback_count = {"value": 0}
+    provider = _deterministic_semantic_provider_for_offer(
+        causal_runtime.binding.OFFER_A_ID,
+    )
+
+    def counting_provider(
+        actor_id: str,
+        request: Mapping[str, Any],
+    ) -> Mapping[str, Any]:
+        callback_count["value"] += 1
+        return provider(actor_id, request)
+
+    return causal_runtime.collect_airline_semantic_to_contract_causal_run_v01(
+        scenario_id=f"{RUN_ID}:deterministic_semantic_causal_run",
+        constraints=constraints,
+        semantic_provider=counting_provider,
+        bsep_projection=bsep_projection,
+    ), callback_count["value"]
+
+
 def collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
     *,
     semantic_causal_run: causal_runtime.AirlineSemanticCausalRunReportV01 | None = None,
+    bsep_side_projections: Mapping[str, Any] | None = None,
+    ledger_source_bundle_id: str | None = None,
 ) -> dict[str, Any]:
+    deterministic_bsep_source_creation_count = 0
+    local_injected_semantic_callback_count = 0
+    if semantic_causal_run is None:
+        scenario_id = f"{RUN_ID}:deterministic_semantic_causal_run"
+        bsep_sources_for_ledger = _build_deterministic_bsep_source_context_v01(
+            scenario_id=scenario_id,
+        )
+        deterministic_bsep_source_creation_count = 1
+        actual_semantic_causal_run, local_injected_semantic_callback_count = (
+            _collect_default_semantic_causal_run_v01(
+                bsep_projection=_typed_airline_bsep_projection_from_source_v01(
+                    bsep_sources_for_ledger["airline_bsep_projection"],
+                ),
+            )
+        )
+    else:
+        actual_semantic_causal_run = semantic_causal_run
+        if bsep_side_projections is None:
+            return _semantic_causal_fail_closed_report(
+                actual_semantic_causal_run,
+                (REASON_PRECOLLECTED_CAUSAL_BSEP_PROJECTIONS_REQUIRED,),
+            )
+        bsep_sources_for_ledger = bsep_side_projections
     causal_validation_errors = _validate_semantic_causal_run_for_deterministic(
-        semantic_causal_run,
+        actual_semantic_causal_run,
     )
     if causal_validation_errors:
         return _semantic_causal_fail_closed_report(
-            semantic_causal_run,
+            actual_semantic_causal_run,
             causal_validation_errors,
         )
 
@@ -210,7 +427,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
     mock_protocol_fixtures = _mock_protocol_fixtures(
         travel_intent,
         sealed_refs,
-        semantic_causal_run=semantic_causal_run,
+        semantic_causal_run=actual_semantic_causal_run,
     )
     airline_offer_hold_sandbox = _airline_offer_hold_sandbox(mock_protocol_fixtures)
     bank_payment_authorization_sandbox = _bank_payment_authorization_sandbox(
@@ -252,19 +469,13 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
         "root_boundary_matrix": root_boundary_matrix,
         "final_tri_party_mock_summary": final_tri_party_mock_summary,
     }
-    if semantic_causal_run is None:
-        corridor_contract_context = (
-            corridor_contracts
-            .build_canonical_airline_ticket_purchase_contract_context_v01()
+    corridor_contract_context = (
+        corridor_contracts
+        .build_airline_ticket_purchase_contract_context_from_resolution_v01(
+            resolution=actual_semantic_causal_run.airline_root_resolution,
+            hold_packet=actual_semantic_causal_run.hold_packet,
         )
-    else:
-        corridor_contract_context = (
-            corridor_contracts
-            .build_airline_ticket_purchase_contract_context_from_resolution_v01(
-                resolution=semantic_causal_run.airline_root_resolution,
-                hold_packet=semantic_causal_run.hold_packet,
-            )
-        )
+    )
     corridor_fixture_bundle = (
         _build_airline_ticket_purchase_corridor_fixture_bundle_v01(
             source_report_for_corridor,
@@ -272,12 +483,13 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
     )
     corridor_collector_invocation_count = 0
     corridor_collector_invocation_count += 1
-    airline_ticket_purchase_corridor_v0_1 = (
-        corridor_runtime.collect_airline_ticket_purchase_corridor_state_machine_v01(
+    corridor_execution_result = (
+        corridor_runtime.collect_airline_ticket_purchase_corridor_execution_result_v01(
             fixtures=corridor_fixture_bundle,
             contract_context=corridor_contract_context,
         )
     )
+    airline_ticket_purchase_corridor_v0_1 = corridor_execution_result.report
     corridor_public_validation_accepted, corridor_public_validation_errors = (
         corridor_runtime.validate_airline_ticket_purchase_corridor_run_v01(
             airline_ticket_purchase_corridor_v0_1,
@@ -301,6 +513,22 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
             contract_context=corridor_contract_context,
         )
     )
+    source_bundle_id = (
+        ledger_source_bundle_id
+        or f"{RUN_ID}:{REPORT_ID}:{actual_semantic_causal_run.scenario_id}"
+    )
+    (
+        airline_transaction_artifact_ledger_source_bundle,
+        airline_transaction_artifact_ledger_source_validation,
+        airline_transaction_artifact_ledger_v0_1,
+        airline_transaction_artifact_ledger_integration,
+    ) = _collect_airline_transaction_artifact_ledger_integration_v01(
+        semantic_causal_run=actual_semantic_causal_run,
+        bsep_side_projections=bsep_sources_for_ledger,
+        corridor_execution_result=corridor_execution_result,
+        source_bundle_id=source_bundle_id,
+        corridor_execution_count=corridor_collector_invocation_count,
+    )
     counter_table = _counter_table(
         shared_transaction_ledger,
         future_semantic_actor_topology,
@@ -315,6 +543,9 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
         airline_ticket_purchase_corridor_v0_1,
         airline_ticket_purchase_corridor_binding_matrix,
         airline_ticket_purchase_corridor_integration,
+        airline_transaction_artifact_ledger_integration,
+        deterministic_bsep_source_creation_count,
+        local_injected_semantic_callback_count,
     )
 
     report: dict[str, Any] = {
@@ -344,6 +575,18 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
         "airline_ticket_purchase_corridor_integration": (
             airline_ticket_purchase_corridor_integration
         ),
+        "airline_transaction_artifact_ledger_source_bundle_v0_1": (
+            airline_transaction_artifact_ledger_source_bundle
+        ),
+        "airline_transaction_artifact_ledger_source_validation_v0_1": (
+            airline_transaction_artifact_ledger_source_validation
+        ),
+        "airline_transaction_artifact_ledger_v0_1": (
+            airline_transaction_artifact_ledger_v0_1
+        ),
+        "airline_transaction_artifact_ledger_integration": (
+            airline_transaction_artifact_ledger_integration
+        ),
         "mock_protocol_fixtures": mock_protocol_fixtures,
         "shared_transaction_ledger": shared_transaction_ledger,
         "root_boundary_matrix": root_boundary_matrix,
@@ -354,7 +597,7 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
         "future_vertical_fractal_map": future_vertical_fractal_map,
         "counter_table": counter_table,
         "semantic_to_contract_causal_source": _semantic_causal_source_summary(
-            semantic_causal_run,
+            actual_semantic_causal_run,
         ),
         "non_claims": _non_claims(),
         "validation_errors": (),
@@ -366,7 +609,12 @@ def collect_tri_party_airline_ticket_purchase_mock_e2e_v01(
     if errors:
         report["final_status"] = STATUS_FAIL_CLOSED
         report["validation_errors"] = errors
-    return report
+    return _publish_report_with_typed_ledger_objects(
+        report,
+        source_bundle=airline_transaction_artifact_ledger_source_bundle,
+        source_validation_report=airline_transaction_artifact_ledger_source_validation,
+        artifact_ledger=airline_transaction_artifact_ledger_v0_1,
+    )
 
 
 def render_tri_party_airline_ticket_purchase_mock_e2e_v01(
@@ -588,6 +836,51 @@ def render_tri_party_airline_ticket_purchase_mock_e2e_v01(
             ).format(**row),
         )
 
+    ledger_integration = report["airline_transaction_artifact_ledger_integration"]
+    lines.extend(
+        (
+            "",
+            "[AIRLINE TRANSACTION ARTIFACT LEDGER V0.1]",
+            f"integration_status: {ledger_integration['integration_status']}",
+            f"ledger_id: {ledger_integration['ledger_id']}",
+            f"transaction_id: {ledger_integration['transaction_id']}",
+            f"selected_offer: {ledger_integration['selected_offer_id']}",
+            f"source_run_ref: {ledger_integration['source_run_ref']}",
+            f"source_causal_report_ref: {ledger_integration['source_causal_report_ref']}",
+            f"source_corridor_report_ref: {ledger_integration['source_corridor_report_ref']}",
+            (
+                "source_bundle_validation: "
+                f"{ledger_integration['source_bundle_validation_status']}"
+            ),
+            f"ledger_validation: {ledger_integration['ledger_validation_status']}",
+            f"entries: {ledger_integration['entry_count']}",
+            f"dependency_edges: {ledger_integration['dependency_edge_count']}",
+            f"Root finals: {ledger_integration['root_final_count']}",
+            f"corridor_executions: {ledger_integration['corridor_execution_count']}",
+            f"Ledger collections: {ledger_integration['ledger_collection_count']}",
+            f"artifact_written: {ledger_integration['artifact_written_count'] == 1}",
+            (
+                "Ledger-created authority: "
+                f"{ledger_integration['ledger_created_authority_count']}"
+            ),
+            (
+                "Ledger-created permission: "
+                f"{ledger_integration['ledger_created_permission_count']}"
+            ),
+            (
+                "Ledger-created action: "
+                f"{ledger_integration['ledger_created_action_count']}"
+            ),
+            (
+                "provider/network/Gemini calls added by Ledger: "
+                f"{ledger_integration['provider_calls_added_by_ledger_count']}/"
+                f"{ledger_integration['network_calls_added_by_ledger_count']}/"
+                f"{ledger_integration['gemini_calls_added_by_ledger_count']}"
+            ),
+            f"real-world effects: {ledger_integration['real_world_effects_count']}",
+        ),
+    )
+
     lines.extend(
         (
             "",
@@ -663,7 +956,11 @@ def render_tri_party_airline_ticket_purchase_mock_e2e_v01(
         (
             "",
             "[NON-CLAIMS]",
-            "No real airline API, bank API, payment, ticket, booking, provider, network, or Gemini call occurs.",
+            (
+                "The standalone default path uses five local deterministic "
+                "semantic callbacks; no provider network call or Gemini call occurs."
+            ),
+            "Ledger integration adds no semantic/provider call.",
         ),
     )
     lines.extend(f"- {claim}" for claim in report["non_claims"])
@@ -2543,6 +2840,636 @@ def _airline_ticket_purchase_corridor_integration_summary(
     }
 
 
+def _ledger_expected_source_refs(
+    *,
+    source_bundle_id: str,
+    semantic_causal_run: causal_runtime.AirlineSemanticCausalRunReportV01,
+    corridor_report: corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01,
+) -> ledger_contracts.AirlineTransactionArtifactLedgerExpectedSourceRefsV01:
+    return ledger_contracts.AirlineTransactionArtifactLedgerExpectedSourceRefsV01(
+        source_run_ref=f"source_run:{source_bundle_id}",
+        source_causal_report_ref=(
+            f"source_causal_report:{semantic_causal_run.run_id}:"
+            f"{semantic_causal_run.scenario_id}"
+        ),
+        source_corridor_report_ref=(
+            f"source_corridor_report:{corridor_report.run_id}:"
+            f"{corridor_report.transaction_id}"
+        ),
+    )
+
+
+def _ledger_bsep_projection_source_from_mapping(
+    *,
+    projection: Mapping[str, Any],
+    expected_side: str,
+) -> ledger_collector.AirlineTransactionArtifactLedgerBSEPProjectionSourceV01:
+    required_string_fields = (
+        "projection_id",
+        "projection_ref",
+        "source_bsep_packet_id",
+        "transaction_id",
+        "side",
+        "validation_status",
+    )
+    if any(
+        type(projection.get(field_name)) is not str
+        or not projection.get(field_name)
+        for field_name in required_string_fields
+    ):
+        raise ValueError("bsep_projection_required_field_missing")
+    if projection["side"] != expected_side:
+        raise ValueError("bsep_projection_side_mismatch")
+    for flag_name in (
+        "raw_secrets_included",
+        "raw_provider_text_included",
+        "authority_created",
+        "permission_created",
+    ):
+        if projection.get(flag_name) is not False:
+            raise ValueError(f"bsep_projection_forbidden_flag:{flag_name}")
+    if projection.get("real_world_effects_count") != 0:
+        raise ValueError("bsep_projection_real_effect")
+    return ledger_collector.AirlineTransactionArtifactLedgerBSEPProjectionSourceV01(
+        projection_id=projection["projection_id"],
+        projection_ref=projection["projection_ref"],
+        bsep_packet_id=projection["source_bsep_packet_id"],
+        transaction_id=projection["transaction_id"],
+        side=projection["side"],
+        validation_status=projection["validation_status"],
+        raw_secrets_included=projection["raw_secrets_included"],
+        raw_provider_text_included=projection["raw_provider_text_included"],
+        authority_created=projection["authority_created"],
+        permission_created=projection["permission_created"],
+        real_world_effects_count=projection["real_world_effects_count"],
+    )
+
+
+def _ledger_bsep_projection_sources(
+    *,
+    semantic_causal_run: causal_runtime.AirlineSemanticCausalRunReportV01,
+    bsep_side_projections: Mapping[str, Any] | None,
+) -> dict[str, ledger_collector.AirlineTransactionArtifactLedgerBSEPProjectionSourceV01]:
+    if bsep_side_projections is None:
+        raise ValueError("bsep_projection_sources_required")
+    keys_and_sides = (
+        ("client_bsep_projection", ledger_collector.SIDE_CLIENT),
+        ("airline_bsep_projection", ledger_collector.SIDE_AIRLINE),
+        ("bank_bsep_projection", ledger_collector.SIDE_BANK),
+        ("cross_root_bsep_projection", ledger_collector.SIDE_CROSS_ROOT_ADVISORY),
+    )
+    result: dict[
+        str,
+        ledger_collector.AirlineTransactionArtifactLedgerBSEPProjectionSourceV01,
+    ] = {}
+    packet_ids: set[str] = set()
+    for key, expected_side in keys_and_sides:
+        source_projection = bsep_side_projections.get(key)
+        if isinstance(
+            source_projection,
+            ledger_collector.AirlineTransactionArtifactLedgerBSEPProjectionSourceV01,
+        ):
+            projection = source_projection
+            if projection.side != expected_side:
+                raise ValueError(f"bsep_projection_side_mismatch:{key}")
+            if projection.transaction_id != TRANSACTION_ID:
+                raise ValueError(f"bsep_projection_transaction_mismatch:{key}")
+            if projection.validation_status != ledger_contracts.STATUS_PASS:
+                raise ValueError(f"bsep_projection_not_pass:{key}")
+            if (
+                projection.raw_secrets_included
+                or projection.raw_provider_text_included
+                or projection.authority_created
+                or projection.permission_created
+                or projection.real_world_effects_count != 0
+            ):
+                raise ValueError(f"bsep_projection_forbidden_boundary:{key}")
+        elif not isinstance(source_projection, Mapping):
+            raise ValueError(f"bsep_projection_missing:{key}")
+        else:
+            projection = _ledger_bsep_projection_source_from_mapping(
+                projection=source_projection,
+                expected_side=expected_side,
+            )
+        packet_ids.add(projection.bsep_packet_id)
+        result[key] = projection
+    if len(packet_ids) != 1:
+        raise ValueError("bsep_projection_packet_mismatch")
+    airline_projection = result["airline_bsep_projection"]
+    if (
+        airline_projection.projection_ref
+        != semantic_causal_run.proposer_request.source_bsep_projection_ref
+    ):
+        raise ValueError("bsep_projection_causal_lineage_mismatch")
+    return result
+
+
+def _ledger_root_final_sources(
+    *,
+    semantic_causal_run: causal_runtime.AirlineSemanticCausalRunReportV01,
+    corridor_execution_result: corridor_runtime.AirlineTicketPurchaseCorridorExecutionResultV01,
+) -> dict[str, ledger_collector.AirlineTransactionArtifactLedgerRootFinalSourceV01]:
+    suffix = semantic_causal_run.semantic_recommendation_id.rsplit(":", 1)[-1]
+
+    def root_final(
+        *,
+        final_id: str,
+        root_owner: str,
+        refs: tuple[str, ...],
+    ) -> ledger_collector.AirlineTransactionArtifactLedgerRootFinalSourceV01:
+        return ledger_collector.AirlineTransactionArtifactLedgerRootFinalSourceV01(
+            final_id=final_id,
+            transaction_id=TRANSACTION_ID,
+            root_owner=root_owner,
+            created_by=root_owner,
+            final_status=STATUS_PASS,
+            source_artifact_refs=refs,
+            authority_created_by_ledger=False,
+            permission_created_by_ledger=False,
+            real_world_effects_count=0,
+        )
+
+    return {
+        "client_root_final": root_final(
+            final_id=f"client_root_final:{suffix}",
+            root_owner=CLIENT_ROOT_ID,
+            refs=(
+                semantic_causal_run.client_root_decision.decision_id,
+                corridor_execution_result.purchase_intent.intent_id,
+                corridor_execution_result.mock_purchase_receipt.receipt_id,
+            ),
+        ),
+        "airline_root_final": root_final(
+            final_id=f"airline_root_final:{suffix}",
+            root_owner=AIRLINE_ROOT_ID,
+            refs=(
+                semantic_causal_run.airline_root_resolution.resolution_id,
+                corridor_execution_result.offer_packet.packet_id,
+                corridor_execution_result.hold_packet.packet_id,
+                corridor_execution_result.ticket_issue_intent.intent_id,
+                corridor_execution_result.mock_ticket_receipt.receipt_id,
+            ),
+        ),
+        "bank_root_final": root_final(
+            final_id=f"bank_root_final:{suffix}",
+            root_owner=BANK_ROOT_ID,
+            refs=(
+                corridor_execution_result.payment_authorization_ref.authorization_ref_id,
+            ),
+        ),
+    }
+
+
+def _build_airline_transaction_artifact_ledger_source_bundle_v01(
+    *,
+    semantic_causal_run: causal_runtime.AirlineSemanticCausalRunReportV01,
+    bsep_side_projections: Mapping[str, Any] | None,
+    corridor_execution_result: corridor_runtime.AirlineTicketPurchaseCorridorExecutionResultV01,
+    source_bundle_id: str,
+) -> ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01:
+    expected_refs = _ledger_expected_source_refs(
+        source_bundle_id=source_bundle_id,
+        semantic_causal_run=semantic_causal_run,
+        corridor_report=corridor_execution_result.report,
+    )
+    bsep_sources = _ledger_bsep_projection_sources(
+        semantic_causal_run=semantic_causal_run,
+        bsep_side_projections=bsep_side_projections,
+    )
+    root_finals = _ledger_root_final_sources(
+        semantic_causal_run=semantic_causal_run,
+        corridor_execution_result=corridor_execution_result,
+    )
+    return ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01(
+        source_bundle_id=source_bundle_id,
+        transaction_id=TRANSACTION_ID,
+        expected_source_refs=expected_refs,
+        client_bsep_projection=bsep_sources["client_bsep_projection"],
+        airline_bsep_projection=bsep_sources["airline_bsep_projection"],
+        bank_bsep_projection=bsep_sources["bank_bsep_projection"],
+        cross_root_bsep_projection=bsep_sources["cross_root_bsep_projection"],
+        causal_report=semantic_causal_run,
+        offer_packet=corridor_execution_result.offer_packet,
+        hold_packet=corridor_execution_result.hold_packet,
+        hold_receipt=corridor_execution_result.hold_receipt,
+        purchase_approval_evidence=(
+            corridor_execution_result.purchase_approval_evidence
+        ),
+        purchase_intent=corridor_execution_result.purchase_intent,
+        payment_authorization_ref=(
+            corridor_execution_result.payment_authorization_ref
+        ),
+        ticket_issue_intent=corridor_execution_result.ticket_issue_intent,
+        mock_ticket_receipt=corridor_execution_result.mock_ticket_receipt,
+        mock_purchase_receipt=corridor_execution_result.mock_purchase_receipt,
+        corridor_report=corridor_execution_result.report,
+        client_root_final=root_finals["client_root_final"],
+        airline_root_final=root_finals["airline_root_final"],
+        bank_root_final=root_finals["bank_root_final"],
+        source_validation_refs=(
+            expected_refs.source_run_ref,
+            expected_refs.source_causal_report_ref,
+            expected_refs.source_corridor_report_ref,
+        ),
+        auxiliary_observation_refs=(
+            ledger_collector.EXPECTED_AUXILIARY_OBSERVATION_REFS
+        ),
+    )
+
+
+ROOT_FINAL_ARTIFACT_TYPES = (
+    "ClientRootFinalV01",
+    "AirlineRootFinalV01",
+    "BankRootFinalV01",
+)
+
+
+class AirlineMockE2EReportV01(dict):
+    """JSON-safe public report plus typed local source objects."""
+
+
+def _json_safe(value: Any) -> Any:
+    if is_dataclass(value):
+        return {
+            field.name: _json_safe(getattr(value, field.name))
+            for field in fields(value)
+        }
+    if isinstance(value, tuple):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, list):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, MappingABC):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    return value
+
+
+def _publish_report_with_typed_ledger_objects(
+    report: dict[str, Any],
+    *,
+    source_bundle: (
+        ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01 | None
+    ),
+    source_validation_report: (
+        ledger_collector.AirlineTransactionArtifactLedgerSourceValidationReportV01
+        | None
+    ),
+    artifact_ledger: (
+        ledger_contracts.AirlineTransactionArtifactLedgerV01 | None
+    ),
+) -> AirlineMockE2EReportV01:
+    published = AirlineMockE2EReportV01(report)
+    published._airline_transaction_artifact_ledger_source_bundle_v0_1 = source_bundle
+    published._airline_transaction_artifact_ledger_source_validation_v0_1 = (
+        source_validation_report
+    )
+    published._airline_transaction_artifact_ledger_v0_1 = artifact_ledger
+    published["airline_transaction_artifact_ledger_source_bundle_v0_1"] = _json_safe(
+        source_bundle,
+    )
+    published["airline_transaction_artifact_ledger_source_validation_v0_1"] = (
+        _json_safe(source_validation_report)
+    )
+    published["airline_transaction_artifact_ledger_v0_1"] = _json_safe(
+        artifact_ledger,
+    )
+    return published
+
+
+def _typed_airline_transaction_artifact_ledger_source_bundle_from_report(
+    report: Mapping[str, Any],
+) -> Any:
+    return getattr(
+        report,
+        "_airline_transaction_artifact_ledger_source_bundle_v0_1",
+        report.get("airline_transaction_artifact_ledger_source_bundle_v0_1"),
+    )
+
+
+def _typed_airline_transaction_artifact_ledger_source_validation_from_report(
+    report: Mapping[str, Any],
+) -> Any:
+    return getattr(
+        report,
+        "_airline_transaction_artifact_ledger_source_validation_v0_1",
+        report.get("airline_transaction_artifact_ledger_source_validation_v0_1"),
+    )
+
+
+def _typed_airline_transaction_artifact_ledger_from_report(
+    report: Mapping[str, Any],
+) -> Any:
+    return getattr(
+        report,
+        "_airline_transaction_artifact_ledger_v0_1",
+        report.get("airline_transaction_artifact_ledger_v0_1"),
+    )
+
+
+def _airline_transaction_artifact_ledger_public_typed_coherence_errors(
+    report: Mapping[str, Any],
+) -> tuple[str, ...]:
+    hidden_names = (
+        "_airline_transaction_artifact_ledger_source_bundle_v0_1",
+        "_airline_transaction_artifact_ledger_source_validation_v0_1",
+        "_airline_transaction_artifact_ledger_v0_1",
+    )
+    if not any(hasattr(report, name) for name in hidden_names):
+        return ()
+    expected_pairs = (
+        (
+            "airline_transaction_artifact_ledger_source_bundle_v0_1",
+            getattr(
+                report,
+                "_airline_transaction_artifact_ledger_source_bundle_v0_1",
+                None,
+            ),
+        ),
+        (
+            "airline_transaction_artifact_ledger_source_validation_v0_1",
+            getattr(
+                report,
+                "_airline_transaction_artifact_ledger_source_validation_v0_1",
+                None,
+            ),
+        ),
+        (
+            "airline_transaction_artifact_ledger_v0_1",
+            getattr(report, "_airline_transaction_artifact_ledger_v0_1", None),
+        ),
+    )
+    for public_key, typed_value in expected_pairs:
+        if report.get(public_key) != _json_safe(typed_value):
+            return (REASON_LEDGER_PUBLIC_TYPED_VIEW_MISMATCH,)
+    return ()
+
+
+def _actual_airline_transaction_artifact_ledger_geometry(
+    ledger: ledger_contracts.AirlineTransactionArtifactLedgerV01 | None,
+) -> dict[str, int]:
+    if not isinstance(ledger, ledger_contracts.AirlineTransactionArtifactLedgerV01):
+        return {
+            "entry_count": 0,
+            "dependency_edge_count": 0,
+            "root_final_count": 0,
+        }
+    entries = tuple(ledger.entries)
+    return {
+        "entry_count": len(entries),
+        "dependency_edge_count": sum(len(entry.depends_on) for entry in entries),
+        "root_final_count": sum(
+            1 for entry in entries if entry.artifact_type in ROOT_FINAL_ARTIFACT_TYPES
+        ),
+    }
+
+
+def _airline_transaction_artifact_ledger_geometry_errors(
+    ledger: ledger_contracts.AirlineTransactionArtifactLedgerV01 | None,
+) -> tuple[str, ...]:
+    if not isinstance(ledger, ledger_contracts.AirlineTransactionArtifactLedgerV01):
+        return ()
+    actual = _actual_airline_transaction_artifact_ledger_geometry(ledger)
+    errors: list[str] = []
+    if actual["entry_count"] != 19:
+        errors.append(REASON_ACTUAL_LEDGER_ENTRY_COUNT_MISMATCH)
+    if actual["dependency_edge_count"] != 29:
+        errors.append(REASON_ACTUAL_LEDGER_DEPENDENCY_EDGE_MISMATCH)
+    if actual["root_final_count"] != 3:
+        errors.append(REASON_ACTUAL_LEDGER_ROOT_FINAL_MISMATCH)
+    artifact_type_sequence = tuple(entry.artifact_type for entry in ledger.entries)
+    if artifact_type_sequence != ledger_contracts.EXPECTED_ARTIFACT_TYPE_SEQUENCE:
+        errors.append(REASON_LEDGER_ARTIFACT_TYPE_SEQUENCE_MISMATCH)
+    root_final_counts = {
+        artifact_type: artifact_type_sequence.count(artifact_type)
+        for artifact_type in ROOT_FINAL_ARTIFACT_TYPES
+    }
+    if any(count != 1 for count in root_final_counts.values()):
+        errors.append(REASON_LEDGER_ROOT_FINAL_SET_MISMATCH)
+    if (
+        ledger.entry_count != actual["entry_count"]
+        or ledger.dependency_edge_count != actual["dependency_edge_count"]
+        or ledger.root_final_count != actual["root_final_count"]
+    ):
+        errors.append(REASON_LEDGER_STORED_ACTUAL_DERIVED_FIELD_MISMATCH)
+    return tuple(dict.fromkeys(errors))
+
+
+def _ledger_integration_summary(
+    *,
+    source_bundle: (
+        ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01 | None
+    ),
+    source_validation_report: (
+        ledger_collector.AirlineTransactionArtifactLedgerSourceValidationReportV01
+        | None
+    ),
+    collected_ledger: (
+        ledger_contracts.AirlineTransactionArtifactLedgerV01 | None
+    ),
+    selected_offer_id: str,
+    corridor_execution_count: int,
+    source_bundle_collection_count: int,
+    ledger_collection_count: int,
+) -> dict[str, Any]:
+    source_bundle_is_valid_type = isinstance(
+        source_bundle,
+        ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01,
+    )
+    source_status = (
+        source_validation_report.validation_status
+        if source_validation_report is not None
+        else STATUS_FAIL_CLOSED
+    )
+    source_errors = (
+        source_validation_report.validation_errors
+        if source_validation_report is not None
+        else ("source_bundle_not_validated",)
+    )
+    ledger_status = (
+        collected_ledger.validation_status
+        if collected_ledger is not None
+        else STATUS_FAIL_CLOSED
+    )
+    ledger_errors = (
+        collected_ledger.validation_errors
+        if collected_ledger is not None
+        else ("ledger_not_collected",)
+    )
+    actual_geometry = _actual_airline_transaction_artifact_ledger_geometry(
+        collected_ledger,
+    )
+    geometry_errors = _airline_transaction_artifact_ledger_geometry_errors(
+        collected_ledger,
+    )
+    entry_count = actual_geometry["entry_count"]
+    dependency_edge_count = actual_geometry["dependency_edge_count"]
+    root_final_count = actual_geometry["root_final_count"]
+    geometry_valid = (
+        entry_count == 19 and dependency_edge_count == 29 and root_final_count == 3
+    )
+    duplicate_corridor_count = max(0, corridor_execution_count - 1)
+    duplicate_ledger_count = max(0, ledger_collection_count - 1)
+    duplicate_transaction_count = int(
+        source_bundle_is_valid_type
+        and source_bundle.transaction_id != TRANSACTION_ID
+    )
+    pass_status = (
+        source_status == ledger_collector.STATUS_PASS
+        and source_errors == ()
+        and ledger_status == ledger_contracts.STATUS_PASS
+        and ledger_errors == ()
+        and geometry_errors == ()
+        and geometry_valid
+        and source_bundle_collection_count == 1
+        and ledger_collection_count == 1
+        and corridor_execution_count == 1
+        and duplicate_transaction_count == 0
+        and duplicate_corridor_count == 0
+        and duplicate_ledger_count == 0
+    )
+    return {
+        "integration_status": STATUS_PASS if pass_status else STATUS_FAIL_CLOSED,
+        "source_bundle_validation_status": source_status,
+        "source_bundle_validation_errors": source_errors,
+        "ledger_validation_status": ledger_status,
+        "ledger_validation_errors": tuple(dict.fromkeys(ledger_errors + geometry_errors)),
+        "actual_entry_count": entry_count,
+        "actual_dependency_edge_count": dependency_edge_count,
+        "actual_root_final_count": root_final_count,
+        "stored_entry_count": (
+            collected_ledger.entry_count if collected_ledger is not None else 0
+        ),
+        "stored_dependency_edge_count": (
+            collected_ledger.dependency_edge_count if collected_ledger is not None else 0
+        ),
+        "stored_root_final_count": (
+            collected_ledger.root_final_count if collected_ledger is not None else 0
+        ),
+        "ledger_id": collected_ledger.ledger_id if collected_ledger is not None else "",
+        "transaction_id": (
+            source_bundle.transaction_id
+            if source_bundle_is_valid_type
+            else TRANSACTION_ID
+        ),
+        "source_run_ref": (
+            source_bundle.expected_source_refs.source_run_ref
+            if source_bundle_is_valid_type
+            else ""
+        ),
+        "source_causal_report_ref": (
+            source_bundle.expected_source_refs.source_causal_report_ref
+            if source_bundle_is_valid_type
+            else ""
+        ),
+        "source_corridor_report_ref": (
+            source_bundle.expected_source_refs.source_corridor_report_ref
+            if source_bundle_is_valid_type
+            else ""
+        ),
+        "selected_offer_id": selected_offer_id,
+        "entry_count": entry_count,
+        "dependency_edge_count": dependency_edge_count,
+        "root_final_count": root_final_count,
+        "source_bundle_collection_count": source_bundle_collection_count,
+        "ledger_collection_count": ledger_collection_count,
+        "ledger_validation_count": ledger_collection_count,
+        "corridor_execution_count": corridor_execution_count,
+        "duplicate_transaction_count": duplicate_transaction_count,
+        "duplicate_corridor_execution_count": duplicate_corridor_count,
+        "duplicate_ledger_collection_count": duplicate_ledger_count,
+        "source_reconstruction_count": 0,
+        "provider_calls_added_by_ledger_count": (
+            collected_ledger.provider_called_count if collected_ledger else 0
+        ),
+        "network_calls_added_by_ledger_count": (
+            collected_ledger.network_used_count if collected_ledger else 0
+        ),
+        "gemini_calls_added_by_ledger_count": (
+            collected_ledger.gemini_called_count if collected_ledger else 0
+        ),
+        "ledger_created_authority_count": (
+            collected_ledger.ledger_created_authority_count if collected_ledger else 0
+        ),
+        "ledger_created_permission_count": (
+            collected_ledger.ledger_created_permission_count if collected_ledger else 0
+        ),
+        "ledger_created_action_count": (
+            collected_ledger.ledger_created_action_count if collected_ledger else 0
+        ),
+        "real_world_effects_count": (
+            collected_ledger.real_world_effects_count if collected_ledger else 0
+        ),
+        "artifact_written_count": 0,
+    }
+
+
+def _collect_airline_transaction_artifact_ledger_integration_v01(
+    *,
+    semantic_causal_run: causal_runtime.AirlineSemanticCausalRunReportV01,
+    bsep_side_projections: Mapping[str, Any] | None,
+    corridor_execution_result: corridor_runtime.AirlineTicketPurchaseCorridorExecutionResultV01,
+    source_bundle_id: str,
+    corridor_execution_count: int,
+) -> tuple[
+    ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01 | None,
+    ledger_collector.AirlineTransactionArtifactLedgerSourceValidationReportV01 | None,
+    ledger_contracts.AirlineTransactionArtifactLedgerV01 | None,
+    dict[str, Any],
+]:
+    source_bundle_collection_count = 0
+    ledger_collection_count = 0
+    selected_offer_id = semantic_causal_run.semantic_recommendation_id
+    try:
+        source_bundle_collection_count += 1
+        source_bundle = _build_airline_transaction_artifact_ledger_source_bundle_v01(
+            semantic_causal_run=semantic_causal_run,
+            bsep_side_projections=bsep_side_projections,
+            corridor_execution_result=corridor_execution_result,
+            source_bundle_id=source_bundle_id,
+        )
+    except (AttributeError, KeyError, TypeError, ValueError) as exc:
+        summary = _ledger_integration_summary(
+            source_bundle=None,
+            source_validation_report=None,
+            collected_ledger=None,
+            selected_offer_id=selected_offer_id,
+            corridor_execution_count=corridor_execution_count,
+            source_bundle_collection_count=source_bundle_collection_count,
+            ledger_collection_count=ledger_collection_count,
+        )
+        summary = {
+            **summary,
+            "source_bundle_validation_errors": (f"source_bundle_assembly_failed:{exc}",),
+        }
+        return None, None, None, summary
+
+    source_validation_report = (
+        ledger_collector.validate_airline_transaction_artifact_ledger_source_bundle_v01(
+            source_bundle,
+        )
+    )
+    collected_ledger = None
+    if (
+        source_validation_report.validation_status == ledger_collector.STATUS_PASS
+        and source_validation_report.validation_errors == ()
+    ):
+        ledger_collection_count += 1
+        collected_ledger = (
+            ledger_collector.collect_airline_transaction_artifact_ledger_from_source_v01(
+                source_bundle=source_bundle,
+            )
+        )
+    summary = _ledger_integration_summary(
+        source_bundle=source_bundle,
+        source_validation_report=source_validation_report,
+        collected_ledger=collected_ledger,
+        selected_offer_id=selected_offer_id,
+        corridor_execution_count=corridor_execution_count,
+        source_bundle_collection_count=source_bundle_collection_count,
+        ledger_collection_count=ledger_collection_count,
+    )
+    return source_bundle, source_validation_report, collected_ledger, summary
+
+
 def _client_root_view(
     participants: Mapping[str, Mapping[str, Any]],
     fixtures: Mapping[str, Mapping[str, Any]],
@@ -2796,6 +3723,9 @@ def _counter_table(
     ),
     airline_ticket_purchase_corridor_binding_matrix: tuple[dict[str, Any], ...],
     airline_ticket_purchase_corridor_integration: Mapping[str, Any],
+    airline_transaction_artifact_ledger_integration: Mapping[str, Any],
+    deterministic_bsep_source_creation_count: int,
+    local_injected_semantic_callback_count: int,
 ) -> dict[str, int]:
     fractal_cells = tuple(
         cell for cells in fractal_map.values() for cell in cells
@@ -2813,6 +3743,14 @@ def _counter_table(
         "bank_root_count": 1,
         "deterministic_airline_collection_count": 1,
         "deterministic_airline_pass_count": 1,
+        "deterministic_bsep_source_creation_count": (
+            deterministic_bsep_source_creation_count
+        ),
+        "local_injected_semantic_callback_count": (
+            local_injected_semantic_callback_count
+        ),
+        "provider_network_call_count": 0,
+        "gemini_call_count": 0,
         "ticket_purchase_corridor_execution_count": 1,
         "ticket_purchase_corridor_pass_count": int(
             airline_ticket_purchase_corridor_v0_1.final_status
@@ -3326,6 +4264,104 @@ def _counter_table(
         "airline_ticket_purchase_corridor_real_world_effects_count": (
             corridor_counters["real_world_effects_count"]
         ),
+        "airline_transaction_artifact_ledger_source_bundle_collection_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "source_bundle_collection_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_source_bundle_pass_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "source_bundle_validation_status"
+            ]
+            == STATUS_PASS,
+        ),
+        "airline_transaction_artifact_ledger_collection_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "ledger_collection_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_validation_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "ledger_validation_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_pass_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "ledger_validation_status"
+            ]
+            == STATUS_PASS,
+        ),
+        "airline_transaction_artifact_ledger_entry_count": int(
+            airline_transaction_artifact_ledger_integration["entry_count"],
+        ),
+        "airline_transaction_artifact_ledger_dependency_edge_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "dependency_edge_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_root_final_count": int(
+            airline_transaction_artifact_ledger_integration["root_final_count"],
+        ),
+        "airline_transaction_artifact_ledger_duplicate_transaction_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "duplicate_transaction_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_duplicate_corridor_execution_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "duplicate_corridor_execution_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_duplicate_collection_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "duplicate_ledger_collection_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_source_reconstruction_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "source_reconstruction_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_provider_calls_added_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "provider_calls_added_by_ledger_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_network_calls_added_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "network_calls_added_by_ledger_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_gemini_calls_added_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "gemini_calls_added_by_ledger_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_created_authority_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "ledger_created_authority_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_created_permission_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "ledger_created_permission_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_created_action_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "ledger_created_action_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_artifact_written_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "artifact_written_count"
+            ],
+        ),
+        "airline_transaction_artifact_ledger_real_world_effects_count": int(
+            airline_transaction_artifact_ledger_integration[
+                "real_world_effects_count"
+            ],
+        ),
         "future_semantic_actor_roles_planned_count": len(actors),
         "future_semantic_actor_roles_executed_count": sum(
             int(actor["executed_in_slice_b"]) for actor in actors
@@ -3368,7 +4404,10 @@ def _non_claims() -> tuple[str, ...]:
         "no real airline API",
         "no real bank API",
         "no GDS, NDC, or Open Banking connector",
-        "no provider/network/Gemini call",
+        "five local deterministic semantic callbacks in the standalone default path",
+        "no provider network call",
+        "no Gemini call",
+        "Ledger added no semantic/provider call",
         "no raw passport/card/IBAN/payment token exposure",
         "no real-world effects",
     )
@@ -3405,6 +4444,22 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         "airline_ticket_purchase_corridor_integration",
         {},
     )
+    ledger_source_bundle = (
+        _typed_airline_transaction_artifact_ledger_source_bundle_from_report(report)
+    )
+    ledger_source_validation = (
+        _typed_airline_transaction_artifact_ledger_source_validation_from_report(
+            report,
+        )
+    )
+    artifact_ledger = _typed_airline_transaction_artifact_ledger_from_report(report)
+    artifact_ledger_integration = report.get(
+        "airline_transaction_artifact_ledger_integration",
+        {},
+    )
+    errors += _airline_transaction_artifact_ledger_public_typed_coherence_errors(
+        report,
+    )
 
     if report.get("transaction_id") != TRANSACTION_ID:
         errors += ("transaction_id_mismatch",)
@@ -3434,6 +4489,16 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         transaction_ids.update(
             transition.transaction_id for transition in corridor_report.transitions
         )
+    if isinstance(
+        ledger_source_bundle,
+        ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01,
+    ):
+        transaction_ids.add(ledger_source_bundle.transaction_id)
+    if isinstance(
+        artifact_ledger,
+        ledger_contracts.AirlineTransactionArtifactLedgerV01,
+    ):
+        transaction_ids.add(artifact_ledger.transaction_id)
     transaction_ids.update(row.get("transaction_id") for row in binding_matrix)
     if transaction_ids != {TRANSACTION_ID}:
         errors += ("transaction_id_set_mismatch",)
@@ -4122,6 +5187,113 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         if dict(corridor_integration) != expected_integration:
             errors += ("airline_corridor_integration_mismatch:derived_fields",)
 
+    if not isinstance(
+        ledger_source_bundle,
+        ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01,
+    ):
+        errors += ("airline_transaction_artifact_ledger_source_bundle_missing",)
+    if not isinstance(
+        ledger_source_validation,
+        ledger_collector.AirlineTransactionArtifactLedgerSourceValidationReportV01,
+    ):
+        errors += ("airline_transaction_artifact_ledger_source_validation_missing",)
+    elif (
+        ledger_source_validation.validation_status != ledger_collector.STATUS_PASS
+        or ledger_source_validation.validation_errors != ()
+    ):
+        errors += ("airline_transaction_artifact_ledger_source_validation_failed",)
+    if not isinstance(
+        artifact_ledger,
+        ledger_contracts.AirlineTransactionArtifactLedgerV01,
+    ):
+        errors += ("airline_transaction_artifact_ledger_missing",)
+    else:
+        actual_geometry = _actual_airline_transaction_artifact_ledger_geometry(
+            artifact_ledger,
+        )
+        geometry_errors = _airline_transaction_artifact_ledger_geometry_errors(
+            artifact_ledger,
+        )
+        if artifact_ledger.validation_status != ledger_contracts.STATUS_PASS:
+            errors += ("airline_transaction_artifact_ledger_not_pass",)
+        if artifact_ledger.validation_errors != ():
+            errors += ("airline_transaction_artifact_ledger_errors_not_empty",)
+        if actual_geometry["entry_count"] != 19:
+            errors += ("airline_transaction_artifact_ledger_entry_count_mismatch",)
+        if actual_geometry["dependency_edge_count"] != 29:
+            errors += ("airline_transaction_artifact_ledger_edge_count_mismatch",)
+        if actual_geometry["root_final_count"] != 3:
+            errors += ("airline_transaction_artifact_ledger_root_final_mismatch",)
+        for geometry_error in geometry_errors:
+            errors += (f"airline_transaction_artifact_ledger:{geometry_error}",)
+        for key, expected in (
+            ("provider_called_count", 0),
+            ("network_used_count", 0),
+            ("gemini_called_count", 0),
+            ("ledger_created_authority_count", 0),
+            ("ledger_created_permission_count", 0),
+            ("ledger_created_action_count", 0),
+            ("real_world_effects_count", 0),
+        ):
+            if getattr(artifact_ledger, key) != expected:
+                errors += (f"airline_transaction_artifact_ledger_counter_mismatch:{key}",)
+    if not hasattr(artifact_ledger_integration, "get"):
+        errors += ("airline_transaction_artifact_ledger_integration_missing",)
+    else:
+        for key, expected in (
+            ("integration_status", STATUS_PASS),
+            ("source_bundle_validation_status", STATUS_PASS),
+            ("ledger_validation_status", STATUS_PASS),
+            ("transaction_id", report["transaction_id"]),
+            ("entry_count", 19),
+            ("dependency_edge_count", 29),
+            ("root_final_count", 3),
+            ("actual_entry_count", 19),
+            ("actual_dependency_edge_count", 29),
+            ("actual_root_final_count", 3),
+            ("stored_entry_count", 19),
+            ("stored_dependency_edge_count", 29),
+            ("stored_root_final_count", 3),
+            ("source_bundle_collection_count", 1),
+            ("ledger_collection_count", 1),
+            ("ledger_validation_count", 1),
+            ("corridor_execution_count", 1),
+            ("duplicate_transaction_count", 0),
+            ("duplicate_corridor_execution_count", 0),
+            ("duplicate_ledger_collection_count", 0),
+            ("source_reconstruction_count", 0),
+            ("provider_calls_added_by_ledger_count", 0),
+            ("network_calls_added_by_ledger_count", 0),
+            ("gemini_calls_added_by_ledger_count", 0),
+            ("ledger_created_authority_count", 0),
+            ("ledger_created_permission_count", 0),
+            ("ledger_created_action_count", 0),
+            ("real_world_effects_count", 0),
+            ("artifact_written_count", 0),
+        ):
+            if artifact_ledger_integration.get(key) != expected:
+                errors += (f"airline_transaction_artifact_ledger_mismatch:{key}",)
+        if artifact_ledger_integration.get("source_bundle_validation_errors") != ():
+            errors += ("airline_transaction_artifact_ledger_source_errors",)
+        if artifact_ledger_integration.get("ledger_validation_errors") != ():
+            errors += ("airline_transaction_artifact_ledger_validation_errors",)
+    if isinstance(
+        ledger_source_bundle,
+        ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01,
+    ) and isinstance(
+        artifact_ledger,
+        ledger_contracts.AirlineTransactionArtifactLedgerV01,
+    ):
+        refs = ledger_source_bundle.expected_source_refs
+        if (
+            artifact_ledger.source_run_ref != refs.source_run_ref
+            or artifact_ledger.source_causal_report_ref
+            != refs.source_causal_report_ref
+            or artifact_ledger.source_corridor_report_ref
+            != refs.source_corridor_report_ref
+        ):
+            errors += ("airline_transaction_artifact_ledger_source_ref_mismatch",)
+
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["root_boundary_matrix"]):
         errors += ("root_boundary_violation",)
     if not all(row["boundary_preserved"] and row["violation_count"] == 0 for row in report["receipt_boundary_matrix"]):
@@ -4196,6 +5368,8 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
         "network_used_count",
         "gemini_called_count",
         "real_world_effects_count",
+        "provider_network_call_count",
+        "gemini_call_count",
         "bank_payment_authorization_commit_packet_created_by_client_root_count",
         "bank_payment_authorization_commit_packet_created_by_airline_root_count",
         "payment_authorization_receipt_ticket_permission_created_count",
@@ -4244,6 +5418,9 @@ def _validate_report(report: Mapping[str, Any]) -> tuple[str, ...]:
     for key in required_zero_counter_keys:
         if counters.get(key) != 0:
             errors += (f"counter_nonzero:{key}",)
+    local_callbacks = counters.get("local_injected_semantic_callback_count")
+    if local_callbacks not in (0, 5):
+        errors += ("local_injected_semantic_callback_count_mismatch",)
     for key, expected in (
         ("tri_party_airline_transaction_count", 1),
         ("client_root_count", 1),

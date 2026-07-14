@@ -1,4 +1,4 @@
-"""Airline Crypto Artifact Seal v0.1 strict primitives.
+"""Airline Crypto Artifact Seal v0.1 strict primitives and contracts.
 
 Airline Crypto Artifact Seal records cryptographic integrity and ordered
 continuity of a declared Airline artifact set.
@@ -13,8 +13,9 @@ It does not provide confidentiality or encryption.
 
 Slice B1 includes strict canonicalization, SHA-256 primitives, Ledger-entry
 projections, ordered Ledger hash chains, and in-memory source-package byte
-indexing only. Manifest Core, seal envelopes, external-anchor verification,
-collectors, writers, integration, audit, and Replay are not implemented here.
+indexing. Slice B2a adds Manifest Core and unsigned Envelope contracts.
+External-anchor verification, Verification Report, collectors, writers,
+integration, audit, and Replay are not implemented here.
 """
 
 from __future__ import annotations
@@ -33,10 +34,13 @@ from hedgehog.domains.airline import transaction_artifact_ledger_v01 as ledger_c
 
 MODULE_ID = "airline_crypto_artifact_seal_v01"
 SLICE_ID = "airline_crypto_artifact_seal_v01_slice_b1"
+SLICE_B2A_ID = "airline_crypto_artifact_seal_v01_slice_b2a"
 SEAL_VERSION = "airline_crypto_artifact_seal_v01"
 CANONICALIZATION_PROFILE_ID = "hedgehog_airline_json_c14n_v01"
 HASH_ALGORITHM = "SHA-256"
 HASH_ENCODING = "lowercase_hex"
+SIGNATURE_MODE_UNSIGNED_PLACEHOLDER = "UNSIGNED_PLACEHOLDER"
+SIGNATURE_ALGORITHM_NONE = "NONE"
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
@@ -58,6 +62,40 @@ REQUIRED_SOURCE_FILE_REFS = (
     "tri_party_airline_bsep_packet.json",
     "tri_party_airline_bsep_validation.json",
     "tri_party_airline_bsep_side_projections.json",
+)
+
+MANIFEST_CORE_FIELD_NAMES = (
+    "seal_id",
+    "seal_version",
+    "transaction_id",
+    "ledger_id",
+    "source_package_ref",
+    "canonicalization_profile_id",
+    "hash_algorithm",
+    "hash_encoding",
+    "ledger_entry_count",
+    "dependency_edge_count",
+    "root_final_count",
+    "ordered_artifact_refs",
+    "ordered_artifact_hashes",
+    "chain_genesis_hash",
+    "chain_head_hash",
+    "chain_tail_hash",
+    "source_file_count",
+    "ordered_source_file_refs",
+    "ordered_source_file_hashes",
+    "source_package_hash",
+    "ledger_document_byte_hash",
+    "previous_manifest_ref",
+    "signature_placeholder_present",
+    "signature_verified",
+    "source_audit_status",
+    "secret_scan_passed",
+    "raw_secret_included",
+    "seal_created_authority_count",
+    "seal_created_permission_count",
+    "seal_created_action_count",
+    "real_world_effects_count",
 )
 
 SIGNED_INT64_MIN = -9223372036854775808
@@ -122,6 +160,48 @@ REASON_SOURCE_PACKAGE_FILE_ORDER = "source_package_file_order_mismatch"
 REASON_SOURCE_PACKAGE_DUPLICATE_REF = "source_package_duplicate_ref"
 REASON_SOURCE_PACKAGE_REF_INVALID = "source_package_ref_invalid"
 REASON_SOURCE_PACKAGE_CONTENT_NOT_BYTES = "source_package_content_not_bytes"
+REASON_MANIFEST_CORE_WRONG_TYPE = "manifest_core_wrong_type"
+REASON_MANIFEST_SOURCE_PACKAGE_REF_MALFORMED = (
+    "manifest_source_package_ref_malformed"
+)
+REASON_MANIFEST_VERSION_PROFILE_ALGORITHM_MISMATCH = (
+    "manifest_version_profile_algorithm_mismatch"
+)
+REASON_MANIFEST_IDENTITY_MISMATCH = "manifest_identity_mismatch"
+REASON_MANIFEST_LEDGER_GEOMETRY_MISMATCH = "manifest_ledger_geometry_mismatch"
+REASON_MANIFEST_ARTIFACT_REF_HASH_GEOMETRY_MISMATCH = (
+    "manifest_artifact_ref_hash_geometry_mismatch"
+)
+REASON_MANIFEST_INVALID_ARTIFACT_REF = "manifest_invalid_artifact_ref"
+REASON_MANIFEST_DUPLICATE_ARTIFACT_REF = "manifest_duplicate_artifact_ref"
+REASON_MANIFEST_INVALID_ARTIFACT_HASH = "manifest_invalid_artifact_hash"
+REASON_MANIFEST_CHAIN_HASH_MISMATCH = "manifest_chain_hash_mismatch"
+REASON_MANIFEST_SOURCE_REF_HASH_GEOMETRY_MISMATCH = (
+    "manifest_source_ref_hash_geometry_mismatch"
+)
+REASON_MANIFEST_SOURCE_FILE_ORDER_MISMATCH = (
+    "manifest_source_file_order_mismatch"
+)
+REASON_MANIFEST_DUPLICATE_SOURCE_REF = "manifest_duplicate_source_ref"
+REASON_MANIFEST_INVALID_SOURCE_HASH = "manifest_invalid_source_hash"
+REASON_MANIFEST_LEDGER_DOCUMENT_BYTE_HASH_MISMATCH = (
+    "manifest_ledger_document_byte_hash_mismatch"
+)
+REASON_MANIFEST_PREVIOUS_REF_MISMATCH = "manifest_previous_ref_mismatch"
+REASON_MANIFEST_SIGNATURE_FLAG_MISMATCH = "manifest_signature_flag_mismatch"
+REASON_MANIFEST_SOURCE_AUDIT_STATUS_MISMATCH = (
+    "manifest_source_audit_status_mismatch"
+)
+REASON_MANIFEST_SECRET_SCAN_BOUNDARY_MISMATCH = (
+    "manifest_secret_scan_boundary_mismatch"
+)
+REASON_MANIFEST_NONZERO_COUNTER = "manifest_nonzero_counter"
+REASON_SIGNATURE_PLACEHOLDER_WRONG_TYPE = "signature_placeholder_wrong_type"
+REASON_SIGNATURE_PLACEHOLDER_FIELD_MISMATCH = (
+    "signature_placeholder_field_mismatch"
+)
+REASON_MANIFEST_CORE_HASH_MISMATCH = "manifest_core_hash_mismatch"
+REASON_ENVELOPE_MALFORMED = "envelope_malformed"
 
 
 @dataclass(frozen=True)
@@ -255,6 +335,91 @@ class AirlineCryptoSourcePackageIndexV01:
         )
 
 
+@dataclass(frozen=True)
+class AirlineCryptoArtifactSealManifestCoreV01:
+    seal_id: str
+    seal_version: str
+    transaction_id: str
+    ledger_id: str
+    source_package_ref: str
+    canonicalization_profile_id: str
+    hash_algorithm: str
+    hash_encoding: str
+    ledger_entry_count: int
+    dependency_edge_count: int
+    root_final_count: int
+    ordered_artifact_refs: tuple[str, ...]
+    ordered_artifact_hashes: tuple[str, ...]
+    chain_genesis_hash: str
+    chain_head_hash: str
+    chain_tail_hash: str
+    source_file_count: int
+    ordered_source_file_refs: tuple[str, ...]
+    ordered_source_file_hashes: tuple[str, ...]
+    source_package_hash: str
+    ledger_document_byte_hash: str
+    previous_manifest_ref: None
+    signature_placeholder_present: bool
+    signature_verified: bool
+    source_audit_status: str
+    secret_scan_passed: bool
+    raw_secret_included: bool
+    seal_created_authority_count: int
+    seal_created_permission_count: int
+    seal_created_action_count: int
+    real_world_effects_count: int
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "ordered_artifact_refs",
+            _freeze_manifest_string_sequence(
+                self.ordered_artifact_refs,
+                REASON_MANIFEST_ARTIFACT_REF_HASH_GEOMETRY_MISMATCH,
+            ),
+        )
+        object.__setattr__(
+            self,
+            "ordered_artifact_hashes",
+            _freeze_manifest_string_sequence(
+                self.ordered_artifact_hashes,
+                REASON_MANIFEST_ARTIFACT_REF_HASH_GEOMETRY_MISMATCH,
+            ),
+        )
+        object.__setattr__(
+            self,
+            "ordered_source_file_refs",
+            _freeze_manifest_string_sequence(
+                self.ordered_source_file_refs,
+                REASON_MANIFEST_SOURCE_REF_HASH_GEOMETRY_MISMATCH,
+            ),
+        )
+        object.__setattr__(
+            self,
+            "ordered_source_file_hashes",
+            _freeze_manifest_string_sequence(
+                self.ordered_source_file_hashes,
+                REASON_MANIFEST_SOURCE_REF_HASH_GEOMETRY_MISMATCH,
+            ),
+        )
+
+
+@dataclass(frozen=True)
+class AirlineCryptoArtifactSealSignaturePlaceholderV01:
+    mode: str
+    algorithm: str
+    key_id: str
+    value: str
+    verified: bool
+
+
+@dataclass(frozen=True)
+class AirlineCryptoArtifactSealEnvelopeV01:
+    manifest_core: AirlineCryptoArtifactSealManifestCoreV01
+    manifest_core_hash: str
+    signature: AirlineCryptoArtifactSealSignaturePlaceholderV01
+
+
 def validate_airline_crypto_canonical_json_value_v01(
     value: object,
 ) -> AirlineCryptoArtifactSealValidationReportV01:
@@ -319,6 +484,16 @@ def validate_sha256_hex_v01(
 ) -> AirlineCryptoArtifactSealValidationReportV01:
     if type(value) is not str or SHA256_HEX_RE.fullmatch(value) is None:
         return build_airline_crypto_validation_report_v01([REASON_INVALID_SHA256_HEX])
+    return build_airline_crypto_validation_report_v01([])
+
+
+def validate_airline_crypto_source_package_ref_v01(
+    value: object,
+) -> AirlineCryptoArtifactSealValidationReportV01:
+    if not _valid_source_package_ref(value):
+        return build_airline_crypto_validation_report_v01(
+            [REASON_MANIFEST_SOURCE_PACKAGE_REF_MALFORMED],
+        )
     return build_airline_crypto_validation_report_v01([])
 
 
@@ -605,6 +780,224 @@ def build_airline_crypto_source_package_index_v01(
     )
 
 
+def build_airline_crypto_artifact_seal_manifest_core_v01(
+    ledger_item: ledger_contracts.AirlineTransactionArtifactLedgerV01,
+    *,
+    ordered_source_files: tuple[tuple[str, bytes], ...],
+    source_package_ref: str,
+    source_audit_status: str,
+    secret_scan_passed: bool,
+    expected_identity: (
+        ledger_contracts.AirlineTransactionArtifactLedgerExpectedIdentityV01
+        | None
+    ) = None,
+) -> AirlineCryptoArtifactSealManifestCoreV01:
+    ref_report = validate_airline_crypto_source_package_ref_v01(source_package_ref)
+    if ref_report.validation_status != STATUS_PASS:
+        raise ValueError(",".join(ref_report.validation_errors))
+    if type(source_audit_status) is not str or source_audit_status != STATUS_PASS:
+        raise ValueError(REASON_MANIFEST_SOURCE_AUDIT_STATUS_MISMATCH)
+    if secret_scan_passed is not True:
+        raise ValueError(REASON_MANIFEST_SECRET_SCAN_BOUNDARY_MISMATCH)
+    chain = build_airline_crypto_ledger_hash_chain_v01(
+        ledger_item,
+        expected_identity=expected_identity,
+    )
+    source_index = build_airline_crypto_source_package_index_v01(
+        transaction_id=chain.transaction_id,
+        ordered_source_files=ordered_source_files,
+    )
+    if source_index.transaction_id != chain.transaction_id:
+        raise ValueError(REASON_MANIFEST_IDENTITY_MISMATCH)
+    actual_dependency_edges, actual_root_finals = _accepted_ledger_geometry(
+        ledger_item,
+    )
+    core = AirlineCryptoArtifactSealManifestCoreV01(
+        seal_id=f"{SEAL_VERSION}:{source_index.source_package_hash}",
+        seal_version=SEAL_VERSION,
+        transaction_id=chain.transaction_id,
+        ledger_id=chain.ledger_id,
+        source_package_ref=source_package_ref,
+        canonicalization_profile_id=CANONICALIZATION_PROFILE_ID,
+        hash_algorithm=HASH_ALGORITHM,
+        hash_encoding=HASH_ENCODING,
+        ledger_entry_count=chain.artifact_count,
+        dependency_edge_count=actual_dependency_edges,
+        root_final_count=actual_root_finals,
+        ordered_artifact_refs=chain.artifact_refs,
+        ordered_artifact_hashes=chain.artifact_hashes,
+        chain_genesis_hash=chain.chain_genesis_hash,
+        chain_head_hash=chain.chain_head_hash,
+        chain_tail_hash=chain.chain_tail_hash,
+        source_file_count=source_index.source_file_count,
+        ordered_source_file_refs=source_index.ordered_source_file_refs,
+        ordered_source_file_hashes=source_index.ordered_source_file_hashes,
+        source_package_hash=source_index.source_package_hash,
+        ledger_document_byte_hash=source_index.ledger_document_byte_hash,
+        previous_manifest_ref=None,
+        signature_placeholder_present=True,
+        signature_verified=False,
+        source_audit_status=STATUS_PASS,
+        secret_scan_passed=True,
+        raw_secret_included=False,
+        seal_created_authority_count=0,
+        seal_created_permission_count=0,
+        seal_created_action_count=0,
+        real_world_effects_count=0,
+    )
+    report = validate_airline_crypto_artifact_seal_manifest_core_v01(core)
+    if report.validation_status != STATUS_PASS:
+        raise ValueError(",".join(report.validation_errors))
+    return core
+
+
+def validate_airline_crypto_artifact_seal_manifest_core_v01(
+    core: object,
+) -> AirlineCryptoArtifactSealValidationReportV01:
+    errors: list[str] = []
+    if type(core) is not AirlineCryptoArtifactSealManifestCoreV01:
+        return build_airline_crypto_validation_report_v01(
+            [REASON_MANIFEST_CORE_WRONG_TYPE],
+        )
+    try:
+        _append_manifest_core_errors(core, errors)
+    except (TypeError, AttributeError, KeyError, IndexError, RecursionError, ValueError):
+        _append(errors, REASON_MANIFEST_CORE_WRONG_TYPE)
+    return build_airline_crypto_validation_report_v01(errors)
+
+
+def airline_crypto_artifact_seal_manifest_core_to_plain_dict_v01(
+    core: AirlineCryptoArtifactSealManifestCoreV01,
+) -> dict[str, object]:
+    report = validate_airline_crypto_artifact_seal_manifest_core_v01(core)
+    if report.validation_status != STATUS_PASS:
+        raise ValueError(",".join(report.validation_errors))
+    return _manifest_core_plain_dict(core)
+
+
+def hash_airline_crypto_artifact_seal_manifest_core_v01(
+    core: AirlineCryptoArtifactSealManifestCoreV01,
+) -> str:
+    plain_core = airline_crypto_artifact_seal_manifest_core_to_plain_dict_v01(
+        core,
+    )
+    return sha256_hex_v01(
+        canonical_airline_crypto_json_bytes_v01(
+            {
+                "domain": DOMAIN_MANIFEST_CORE,
+                "manifest_core": plain_core,
+            },
+        ),
+    )
+
+
+def build_airline_crypto_artifact_seal_signature_placeholder_v01() -> (
+    AirlineCryptoArtifactSealSignaturePlaceholderV01
+):
+    return AirlineCryptoArtifactSealSignaturePlaceholderV01(
+        mode=SIGNATURE_MODE_UNSIGNED_PLACEHOLDER,
+        algorithm=SIGNATURE_ALGORITHM_NONE,
+        key_id="",
+        value="",
+        verified=False,
+    )
+
+
+def validate_airline_crypto_artifact_seal_signature_placeholder_v01(
+    signature: object,
+) -> AirlineCryptoArtifactSealValidationReportV01:
+    errors: list[str] = []
+    if type(signature) is not AirlineCryptoArtifactSealSignaturePlaceholderV01:
+        return build_airline_crypto_validation_report_v01(
+            [REASON_SIGNATURE_PLACEHOLDER_WRONG_TYPE],
+        )
+    try:
+        if (
+            signature.mode != SIGNATURE_MODE_UNSIGNED_PLACEHOLDER
+            or signature.algorithm != SIGNATURE_ALGORITHM_NONE
+            or signature.key_id != ""
+            or signature.value != ""
+            or signature.verified is not False
+        ):
+            _append(errors, REASON_SIGNATURE_PLACEHOLDER_FIELD_MISMATCH)
+        for value in (
+            signature.mode,
+            signature.algorithm,
+            signature.key_id,
+            signature.value,
+        ):
+            if type(value) is not str or _contains_lone_surrogate(value):
+                _append(errors, REASON_SIGNATURE_PLACEHOLDER_FIELD_MISMATCH)
+        if type(signature.verified) is not bool:
+            _append(errors, REASON_SIGNATURE_PLACEHOLDER_FIELD_MISMATCH)
+    except (TypeError, AttributeError, KeyError, IndexError, RecursionError, ValueError):
+        _append(errors, REASON_SIGNATURE_PLACEHOLDER_FIELD_MISMATCH)
+    return build_airline_crypto_validation_report_v01(errors)
+
+
+def build_airline_crypto_artifact_seal_envelope_v01(
+    manifest_core: AirlineCryptoArtifactSealManifestCoreV01,
+) -> AirlineCryptoArtifactSealEnvelopeV01:
+    report = validate_airline_crypto_artifact_seal_manifest_core_v01(
+        manifest_core,
+    )
+    if report.validation_status != STATUS_PASS:
+        raise ValueError(",".join(report.validation_errors))
+    return AirlineCryptoArtifactSealEnvelopeV01(
+        manifest_core=manifest_core,
+        manifest_core_hash=hash_airline_crypto_artifact_seal_manifest_core_v01(
+            manifest_core,
+        ),
+        signature=build_airline_crypto_artifact_seal_signature_placeholder_v01(),
+    )
+
+
+def validate_airline_crypto_artifact_seal_envelope_contract_v01(
+    envelope: object,
+) -> AirlineCryptoArtifactSealValidationReportV01:
+    errors: list[str] = []
+    if type(envelope) is not AirlineCryptoArtifactSealEnvelopeV01:
+        return build_airline_crypto_validation_report_v01(
+            [REASON_ENVELOPE_MALFORMED],
+        )
+    try:
+        core_report = validate_airline_crypto_artifact_seal_manifest_core_v01(
+            envelope.manifest_core,
+        )
+        for reason in core_report.validation_errors:
+            _append(errors, reason)
+        hash_report = validate_sha256_hex_v01(envelope.manifest_core_hash)
+        if hash_report.validation_status != STATUS_PASS:
+            _append(errors, REASON_INVALID_SHA256_HEX)
+        elif (
+            hash_airline_crypto_artifact_seal_manifest_core_v01(
+                envelope.manifest_core,
+            )
+            != envelope.manifest_core_hash
+        ):
+            _append(errors, REASON_MANIFEST_CORE_HASH_MISMATCH)
+        signature_report = (
+            validate_airline_crypto_artifact_seal_signature_placeholder_v01(
+                envelope.signature,
+            )
+        )
+        for reason in signature_report.validation_errors:
+            _append(errors, reason)
+        if (
+            envelope.manifest_core.signature_placeholder_present is not True
+            or envelope.manifest_core.signature_verified is not False
+            or (
+                type(envelope.signature)
+                is AirlineCryptoArtifactSealSignaturePlaceholderV01
+                and envelope.signature.verified is not False
+            )
+        ):
+            _append(errors, REASON_MANIFEST_SIGNATURE_FLAG_MISMATCH)
+    except (TypeError, AttributeError, KeyError, IndexError, RecursionError, ValueError):
+        _append(errors, REASON_ENVELOPE_MALFORMED)
+    return build_airline_crypto_validation_report_v01(errors)
+
+
 def _unique_reasons(reasons: tuple[str, ...] | list[str]) -> tuple[str, ...]:
     output: list[str] = []
     for reason in reasons:
@@ -619,6 +1012,314 @@ def _unique_reasons(reasons: tuple[str, ...] | list[str]) -> tuple[str, ...]:
 def _append(errors: list[str], reason: str) -> None:
     if reason not in errors:
         errors.append(reason)
+
+
+def _freeze_manifest_string_sequence(value: object, reason: str) -> tuple[str, ...]:
+    if type(value) not in (tuple, list):
+        raise ValueError(reason)
+    return tuple(value)
+
+
+def _exact_zero(value: object) -> bool:
+    return type(value) is int and value == 0
+
+
+def _non_empty_string(value: object) -> bool:
+    return type(value) is str and bool(value) and not _contains_lone_surrogate(value)
+
+
+def _valid_source_package_ref(value: object) -> bool:
+    if not _non_empty_string(value):
+        return False
+    assert type(value) is str
+    if value in (".", ".."):
+        return False
+    if "/" in value or "\\" in value:
+        return False
+    if value.startswith("~"):
+        return False
+    if len(value) >= 2 and value[1] == ":":
+        return False
+    return True
+
+
+def _accepted_ledger_geometry(
+    ledger_item: ledger_contracts.AirlineTransactionArtifactLedgerV01,
+) -> tuple[int, int]:
+    entries = ledger_item.entries
+    actual_dependency_edges = sum(len(entry.depends_on) for entry in entries)
+    actual_root_finals = sum(
+        1
+        for entry in entries
+        if entry.artifact_type
+        in (
+            ledger_contracts.ARTIFACT_CLIENT_ROOT_FINAL,
+            ledger_contracts.ARTIFACT_AIRLINE_ROOT_FINAL,
+            ledger_contracts.ARTIFACT_BANK_ROOT_FINAL,
+        )
+    )
+    if actual_dependency_edges != 29 or actual_root_finals != 3:
+        raise ValueError(REASON_MANIFEST_LEDGER_GEOMETRY_MISMATCH)
+    return actual_dependency_edges, actual_root_finals
+
+
+def _append_manifest_core_errors(
+    core: AirlineCryptoArtifactSealManifestCoreV01,
+    errors: list[str],
+) -> None:
+    if (
+        core.seal_version != SEAL_VERSION
+        or core.canonicalization_profile_id != CANONICALIZATION_PROFILE_ID
+        or core.hash_algorithm != HASH_ALGORITHM
+        or core.hash_encoding != HASH_ENCODING
+    ):
+        _append(errors, REASON_MANIFEST_VERSION_PROFILE_ALGORITHM_MISMATCH)
+    for value in (core.transaction_id, core.ledger_id):
+        if not _non_empty_string(value):
+            _append(errors, REASON_MANIFEST_IDENTITY_MISMATCH)
+    source_ref_report = validate_airline_crypto_source_package_ref_v01(
+        core.source_package_ref,
+    )
+    for reason in source_ref_report.validation_errors:
+        _append(errors, reason)
+    if (
+        type(core.source_package_hash) is not str
+        or validate_sha256_hex_v01(core.source_package_hash).validation_status
+        != STATUS_PASS
+        or core.seal_id != f"{SEAL_VERSION}:{core.source_package_hash}"
+    ):
+        _append(errors, REASON_MANIFEST_IDENTITY_MISMATCH)
+    if (
+        type(core.ledger_entry_count) is not int
+        or core.ledger_entry_count != 19
+        or type(core.dependency_edge_count) is not int
+        or core.dependency_edge_count != 29
+        or type(core.root_final_count) is not int
+        or core.root_final_count != 3
+    ):
+        _append(errors, REASON_MANIFEST_LEDGER_GEOMETRY_MISMATCH)
+    if type(core.source_file_count) is not int or core.source_file_count != 9:
+        _append(errors, REASON_MANIFEST_SOURCE_REF_HASH_GEOMETRY_MISMATCH)
+    _append_artifact_binding_errors(core, errors)
+    _append_source_binding_errors(core, errors)
+    for digest in (
+        core.chain_genesis_hash,
+        core.chain_head_hash,
+        core.chain_tail_hash,
+    ):
+        if validate_sha256_hex_v01(digest).validation_status != STATUS_PASS:
+            _append(errors, REASON_MANIFEST_CHAIN_HASH_MISMATCH)
+    if core.previous_manifest_ref is not None:
+        _append(errors, REASON_MANIFEST_PREVIOUS_REF_MISMATCH)
+    if (
+        type(core.signature_placeholder_present) is not bool
+        or core.signature_placeholder_present is not True
+        or type(core.signature_verified) is not bool
+        or core.signature_verified is not False
+    ):
+        _append(errors, REASON_MANIFEST_SIGNATURE_FLAG_MISMATCH)
+    if core.source_audit_status != STATUS_PASS:
+        _append(errors, REASON_MANIFEST_SOURCE_AUDIT_STATUS_MISMATCH)
+    if (
+        type(core.secret_scan_passed) is not bool
+        or core.secret_scan_passed is not True
+        or type(core.raw_secret_included) is not bool
+        or core.raw_secret_included is not False
+    ):
+        _append(errors, REASON_MANIFEST_SECRET_SCAN_BOUNDARY_MISMATCH)
+    if (
+        not _exact_zero(core.seal_created_authority_count)
+        or not _exact_zero(core.seal_created_permission_count)
+        or not _exact_zero(core.seal_created_action_count)
+        or not _exact_zero(core.real_world_effects_count)
+    ):
+        _append(errors, REASON_MANIFEST_NONZERO_COUNTER)
+    plain = _manifest_core_plain_dict(core)
+    if tuple(plain.keys()) != MANIFEST_CORE_FIELD_NAMES:
+        _append(errors, REASON_MANIFEST_CORE_WRONG_TYPE)
+    canonical_report = validate_airline_crypto_canonical_json_value_v01(plain)
+    for reason in canonical_report.validation_errors:
+        _append(errors, reason)
+
+
+def _append_artifact_binding_errors(
+    core: AirlineCryptoArtifactSealManifestCoreV01,
+    errors: list[str],
+) -> None:
+    if (
+        type(core.ordered_artifact_refs) is not tuple
+        or type(core.ordered_artifact_hashes) is not tuple
+        or len(core.ordered_artifact_refs) != 19
+        or len(core.ordered_artifact_hashes) != 19
+    ):
+        _append(errors, REASON_MANIFEST_ARTIFACT_REF_HASH_GEOMETRY_MISMATCH)
+        return
+    if len(set(core.ordered_artifact_refs)) != len(core.ordered_artifact_refs):
+        _append(errors, REASON_MANIFEST_DUPLICATE_ARTIFACT_REF)
+    for ref in core.ordered_artifact_refs:
+        if not _non_empty_string(ref):
+            _append(errors, REASON_MANIFEST_INVALID_ARTIFACT_REF)
+            break
+    for artifact_hash in core.ordered_artifact_hashes:
+        if validate_sha256_hex_v01(artifact_hash).validation_status != STATUS_PASS:
+            _append(errors, REASON_MANIFEST_INVALID_ARTIFACT_HASH)
+            break
+    if (
+        len(core.ordered_artifact_hashes) == 19
+        and all(
+            validate_sha256_hex_v01(value).validation_status == STATUS_PASS
+            for value in core.ordered_artifact_hashes
+        )
+    ):
+        expected_genesis, expected_head, expected_tail = _expected_chain_hashes(
+            core,
+        )
+        if (
+            core.chain_genesis_hash != expected_genesis
+            or core.chain_head_hash != expected_head
+            or core.chain_tail_hash != expected_tail
+        ):
+            _append(errors, REASON_MANIFEST_CHAIN_HASH_MISMATCH)
+
+
+def _append_source_binding_errors(
+    core: AirlineCryptoArtifactSealManifestCoreV01,
+    errors: list[str],
+) -> None:
+    if (
+        type(core.ordered_source_file_refs) is not tuple
+        or type(core.ordered_source_file_hashes) is not tuple
+        or len(core.ordered_source_file_refs) != len(REQUIRED_SOURCE_FILE_REFS)
+        or len(core.ordered_source_file_hashes) != len(REQUIRED_SOURCE_FILE_REFS)
+    ):
+        _append(errors, REASON_MANIFEST_SOURCE_REF_HASH_GEOMETRY_MISMATCH)
+        return
+    if core.ordered_source_file_refs != REQUIRED_SOURCE_FILE_REFS:
+        _append(errors, REASON_MANIFEST_SOURCE_FILE_ORDER_MISMATCH)
+    if len(set(core.ordered_source_file_refs)) != len(core.ordered_source_file_refs):
+        _append(errors, REASON_MANIFEST_DUPLICATE_SOURCE_REF)
+    for source_hash in core.ordered_source_file_hashes:
+        if validate_sha256_hex_v01(source_hash).validation_status != STATUS_PASS:
+            _append(errors, REASON_MANIFEST_INVALID_SOURCE_HASH)
+            break
+    if validate_sha256_hex_v01(core.source_package_hash).validation_status != STATUS_PASS:
+        _append(errors, REASON_MANIFEST_INVALID_SOURCE_HASH)
+    if (
+        validate_sha256_hex_v01(core.ledger_document_byte_hash).validation_status
+        != STATUS_PASS
+    ):
+        _append(errors, REASON_MANIFEST_INVALID_SOURCE_HASH)
+    elif (
+        core.ordered_source_file_refs
+        and core.ordered_source_file_refs[0]
+        == "airline_transaction_artifact_ledger.json"
+        and core.ledger_document_byte_hash != core.ordered_source_file_hashes[0]
+    ):
+        _append(errors, REASON_MANIFEST_LEDGER_DOCUMENT_BYTE_HASH_MISMATCH)
+    if (
+        core.ordered_source_file_refs == REQUIRED_SOURCE_FILE_REFS
+        and len(core.ordered_source_file_hashes) == len(REQUIRED_SOURCE_FILE_REFS)
+        and all(
+            validate_sha256_hex_v01(value).validation_status == STATUS_PASS
+            for value in core.ordered_source_file_hashes
+        )
+    ):
+        expected_hash = _expected_source_package_hash_from_core(core)
+        if core.source_package_hash != expected_hash:
+            _append(errors, REASON_MANIFEST_INVALID_SOURCE_HASH)
+
+
+def _manifest_core_plain_dict(
+    core: AirlineCryptoArtifactSealManifestCoreV01,
+) -> dict[str, object]:
+    return {
+        "seal_id": core.seal_id,
+        "seal_version": core.seal_version,
+        "transaction_id": core.transaction_id,
+        "ledger_id": core.ledger_id,
+        "source_package_ref": core.source_package_ref,
+        "canonicalization_profile_id": core.canonicalization_profile_id,
+        "hash_algorithm": core.hash_algorithm,
+        "hash_encoding": core.hash_encoding,
+        "ledger_entry_count": core.ledger_entry_count,
+        "dependency_edge_count": core.dependency_edge_count,
+        "root_final_count": core.root_final_count,
+        "ordered_artifact_refs": list(core.ordered_artifact_refs),
+        "ordered_artifact_hashes": list(core.ordered_artifact_hashes),
+        "chain_genesis_hash": core.chain_genesis_hash,
+        "chain_head_hash": core.chain_head_hash,
+        "chain_tail_hash": core.chain_tail_hash,
+        "source_file_count": core.source_file_count,
+        "ordered_source_file_refs": list(core.ordered_source_file_refs),
+        "ordered_source_file_hashes": list(core.ordered_source_file_hashes),
+        "source_package_hash": core.source_package_hash,
+        "ledger_document_byte_hash": core.ledger_document_byte_hash,
+        "previous_manifest_ref": core.previous_manifest_ref,
+        "signature_placeholder_present": core.signature_placeholder_present,
+        "signature_verified": core.signature_verified,
+        "source_audit_status": core.source_audit_status,
+        "secret_scan_passed": core.secret_scan_passed,
+        "raw_secret_included": core.raw_secret_included,
+        "seal_created_authority_count": core.seal_created_authority_count,
+        "seal_created_permission_count": core.seal_created_permission_count,
+        "seal_created_action_count": core.seal_created_action_count,
+        "real_world_effects_count": core.real_world_effects_count,
+    }
+
+
+def _expected_chain_hashes(
+    core: AirlineCryptoArtifactSealManifestCoreV01,
+) -> tuple[str, str, str]:
+    genesis = sha256_hex_v01(
+        canonical_airline_crypto_json_bytes_v01(
+            {
+                "domain": DOMAIN_CHAIN_GENESIS,
+                "ledger_id": core.ledger_id,
+                "transaction_id": core.transaction_id,
+                "artifact_count": 19,
+            },
+        ),
+    )
+    prior = genesis
+    first_link = ""
+    for ledger_index, artifact_hash in enumerate(core.ordered_artifact_hashes):
+        current = sha256_hex_v01(
+            canonical_airline_crypto_json_bytes_v01(
+                {
+                    "domain": DOMAIN_CHAIN_LINK,
+                    "ledger_index": ledger_index,
+                    "previous_chain_hash": prior,
+                    "artifact_hash": artifact_hash,
+                },
+            ),
+        )
+        if ledger_index == 0:
+            first_link = current
+        prior = current
+    return genesis, first_link, prior
+
+
+def _expected_source_package_hash_from_core(
+    core: AirlineCryptoArtifactSealManifestCoreV01,
+) -> str:
+    return sha256_hex_v01(
+        canonical_airline_crypto_json_bytes_v01(
+            {
+                "domain": DOMAIN_SOURCE_PACKAGE_INDEX,
+                "transaction_id": core.transaction_id,
+                "files": [
+                    {
+                        "relative_ref": relative_ref,
+                        "sha256": source_hash,
+                    }
+                    for relative_ref, source_hash in zip(
+                        core.ordered_source_file_refs,
+                        core.ordered_source_file_hashes,
+                    )
+                ],
+            },
+        ),
+    )
 
 
 def _validate_canonical_value(

@@ -43,6 +43,54 @@ def _source_rows() -> tuple[tuple[str, bytes], ...]:
     )
 
 
+def _manifest_source_package_ref() -> str:
+    return "airline_crypto_b2a_source_package"
+
+
+def _valid_manifest_core(
+    item: ledger.AirlineTransactionArtifactLedgerV01 | None = None,
+    *,
+    ordered_source_files: tuple[tuple[str, bytes], ...] | None = None,
+    expected_identity: (
+        ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01 | None
+    ) = None,
+) -> seal.AirlineCryptoArtifactSealManifestCoreV01:
+    return seal.build_airline_crypto_artifact_seal_manifest_core_v01(
+        item or _valid_a(),
+        ordered_source_files=ordered_source_files or _source_rows(),
+        source_package_ref=_manifest_source_package_ref(),
+        source_audit_status=seal.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_identity=expected_identity,
+    )
+
+
+def _valid_envelope() -> seal.AirlineCryptoArtifactSealEnvelopeV01:
+    return seal.build_airline_crypto_artifact_seal_envelope_v01(
+        _valid_manifest_core(),
+    )
+
+
+def _assert_manifest_invalid(
+    core: object,
+    reason: str,
+) -> None:
+    report = seal.validate_airline_crypto_artifact_seal_manifest_core_v01(core)
+    assert report.validation_status == seal.STATUS_FAIL_CLOSED
+    assert reason in report.validation_errors
+
+
+def _assert_envelope_invalid(
+    envelope: object,
+    reason: str,
+) -> None:
+    report = seal.validate_airline_crypto_artifact_seal_envelope_contract_v01(
+        envelope,
+    )
+    assert report.validation_status == seal.STATUS_FAIL_CLOSED
+    assert reason in report.validation_errors
+
+
 def _assert_invalid_value(value: object, reason: str) -> None:
     report = seal.validate_airline_crypto_canonical_json_value_v01(value)
     assert report.validation_status == seal.STATUS_FAIL_CLOSED
@@ -908,6 +956,553 @@ def test_returned_source_package_index_is_deeply_immutable() -> None:
         index.source_file_hash_records += (index.source_file_hash_records[0],)  # type: ignore[misc]
 
 
+def test_source_package_ref_validator_accepts_logical_basename_only() -> None:
+    assert (
+        seal.validate_airline_crypto_source_package_ref_v01(
+            _manifest_source_package_ref(),
+        ).validation_status
+        == seal.STATUS_PASS
+    )
+
+
+@pytest.mark.parametrize(
+    "value",
+    ("", ".", "..", "/tmp/package", "dir/package", "C:\\package", "C:package", "\ud800"),
+)
+def test_source_package_ref_validator_rejects_path_like_values(value: object) -> None:
+    report = seal.validate_airline_crypto_source_package_ref_v01(value)
+    assert report.validation_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_MANIFEST_SOURCE_PACKAGE_REF_MALFORMED in report.validation_errors
+
+
+@pytest.mark.parametrize("builder", (_valid_a, _valid_b))
+def test_fixture_manifest_core_and_envelope_are_valid(builder) -> None:
+    core = _valid_manifest_core(builder())
+    envelope = seal.build_airline_crypto_artifact_seal_envelope_v01(core)
+    assert (
+        seal.validate_airline_crypto_artifact_seal_manifest_core_v01(
+            core,
+        ).validation_status
+        == seal.STATUS_PASS
+    )
+    assert (
+        seal.validate_airline_crypto_artifact_seal_envelope_contract_v01(
+            envelope,
+        ).validation_status
+        == seal.STATUS_PASS
+    )
+    assert core.ledger_entry_count == 19
+    assert core.dependency_edge_count == 29
+    assert core.root_final_count == 3
+    assert len(core.ordered_artifact_refs) == 19
+    assert len(core.ordered_source_file_refs) == 9
+
+
+def test_manifest_core_uses_exact_chain_and_source_index_bindings() -> None:
+    item = _valid_a()
+    core = _valid_manifest_core(item)
+    chain = seal.build_airline_crypto_ledger_hash_chain_v01(item)
+    source_index = seal.build_airline_crypto_source_package_index_v01(
+        transaction_id=item.transaction_id,
+        ordered_source_files=_source_rows(),
+    )
+    assert core.ordered_artifact_refs == chain.artifact_refs
+    assert core.ordered_artifact_hashes == chain.artifact_hashes
+    assert core.chain_genesis_hash == chain.chain_genesis_hash
+    assert core.chain_head_hash == chain.chain_head_hash
+    assert core.chain_tail_hash == chain.chain_tail_hash
+    assert core.ordered_source_file_refs == source_index.ordered_source_file_refs
+    assert core.ordered_source_file_hashes == source_index.ordered_source_file_hashes
+    assert core.ledger_document_byte_hash == source_index.ledger_document_byte_hash
+
+
+def test_manifest_core_has_deterministic_identity_and_hash() -> None:
+    core = _valid_manifest_core()
+    digest = seal.hash_airline_crypto_artifact_seal_manifest_core_v01(core)
+    assert core.seal_id == f"{seal.SEAL_VERSION}:{core.source_package_hash}"
+    assert seal.validate_sha256_hex_v01(digest).validation_status == seal.STATUS_PASS
+    assert digest == seal.hash_airline_crypto_artifact_seal_manifest_core_v01(core)
+
+
+def test_manifest_core_plain_dict_has_exact_fields_and_no_self_hash() -> None:
+    plain = seal.airline_crypto_artifact_seal_manifest_core_to_plain_dict_v01(
+        _valid_manifest_core(),
+    )
+    assert tuple(plain.keys()) == seal.MANIFEST_CORE_FIELD_NAMES
+    assert "manifest_core_hash" not in plain
+    assert "signature" not in plain
+
+
+def test_unsigned_signature_placeholder_is_exact_and_not_verified() -> None:
+    signature = seal.build_airline_crypto_artifact_seal_signature_placeholder_v01()
+    assert signature.mode == seal.SIGNATURE_MODE_UNSIGNED_PLACEHOLDER
+    assert signature.algorithm == seal.SIGNATURE_ALGORITHM_NONE
+    assert signature.key_id == ""
+    assert signature.value == ""
+    assert signature.verified is False
+    assert (
+        seal.validate_airline_crypto_artifact_seal_signature_placeholder_v01(
+            signature,
+        ).validation_status
+        == seal.STATUS_PASS
+    )
+
+
+def test_envelope_builder_computes_digest_and_unsigned_placeholder() -> None:
+    core = _valid_manifest_core()
+    envelope = seal.build_airline_crypto_artifact_seal_envelope_v01(core)
+    assert envelope.manifest_core == core
+    assert envelope.manifest_core_hash == (
+        seal.hash_airline_crypto_artifact_seal_manifest_core_v01(core)
+    )
+    assert envelope.signature == (
+        seal.build_airline_crypto_artifact_seal_signature_placeholder_v01()
+    )
+
+
+def test_actual_semantic_causal_source_manifest_core_and_envelope_pass_b2a() -> None:
+    source_bundle = collector_helpers._source_bundle_from_public_causal_runtime(
+        ledger.OFFER_A_ID,
+    )
+    source_identity = collector_helpers._expected_identity(source_bundle)
+    item = collector_helpers._assert_collected_pass(source_bundle)
+    hold_entry = next(
+        entry
+        for entry in item.entries
+        if entry.artifact_type == ledger.ARTIFACT_AIRLINE_HOLD_PACKET
+    )
+    assert hold_entry.artifact_id.startswith(
+        "airline_hold_commit_packet:semantic_causal:",
+    )
+    core = _valid_manifest_core(item, expected_identity=source_identity)
+    envelope = seal.build_airline_crypto_artifact_seal_envelope_v01(core)
+    assert len(core.ordered_artifact_refs) == 19
+    assert len(core.ordered_source_file_refs) == 9
+    assert hold_entry.artifact_id in core.ordered_artifact_refs
+    assert core.ledger_entry_count == 19
+    assert core.dependency_edge_count == 29
+    assert core.root_final_count == 3
+    assert (
+        seal.validate_airline_crypto_artifact_seal_manifest_core_v01(
+            core,
+        ).validation_status
+        == seal.STATUS_PASS
+    )
+    assert (
+        seal.validate_airline_crypto_artifact_seal_envelope_contract_v01(
+            envelope,
+        ).validation_status
+        == seal.STATUS_PASS
+    )
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "reason"),
+    (
+        (
+            {"source_package_ref": "dir/package"},
+            seal.REASON_MANIFEST_SOURCE_PACKAGE_REF_MALFORMED,
+        ),
+        (
+            {"source_audit_status": seal.STATUS_FAIL_CLOSED},
+            seal.REASON_MANIFEST_SOURCE_AUDIT_STATUS_MISMATCH,
+        ),
+        (
+            {"secret_scan_passed": False},
+            seal.REASON_MANIFEST_SECRET_SCAN_BOUNDARY_MISMATCH,
+        ),
+    ),
+)
+def test_manifest_builder_rejects_bad_policy_inputs(
+    kwargs: dict[str, object],
+    reason: str,
+) -> None:
+    params = {
+        "ordered_source_files": _source_rows(),
+        "source_package_ref": _manifest_source_package_ref(),
+        "source_audit_status": seal.STATUS_PASS,
+        "secret_scan_passed": True,
+    }
+    params.update(kwargs)
+    with pytest.raises(ValueError, match=reason):
+        seal.build_airline_crypto_artifact_seal_manifest_core_v01(
+            _valid_a(),
+            **params,  # type: ignore[arg-type]
+        )
+
+
+def test_manifest_builder_rejects_wrong_expected_identity() -> None:
+    wrong_identity = ledger.build_airline_transaction_artifact_ledger_fixture_expected_identity_v01(
+        offer_id=ledger.OFFER_B_ID,
+    )
+    with pytest.raises(ValueError, match=seal.REASON_LEDGER_VALIDATION_FAILED):
+        seal.build_airline_crypto_artifact_seal_manifest_core_v01(
+            _valid_a(),
+            ordered_source_files=_source_rows(),
+            source_package_ref=_manifest_source_package_ref(),
+            source_audit_status=seal.STATUS_PASS,
+            secret_scan_passed=True,
+            expected_identity=wrong_identity,
+        )
+
+
+def test_manifest_builder_rejects_reordered_source_files() -> None:
+    rows = list(_source_rows())
+    rows[0], rows[1] = rows[1], rows[0]
+    with pytest.raises(ValueError, match=seal.REASON_SOURCE_PACKAGE_FILE_ORDER):
+        seal.build_airline_crypto_artifact_seal_manifest_core_v01(
+            _valid_a(),
+            ordered_source_files=tuple(rows),
+            source_package_ref=_manifest_source_package_ref(),
+            source_audit_status=seal.STATUS_PASS,
+            secret_scan_passed=True,
+        )
+
+
+def test_manifest_builder_rejects_ledger_transaction_mismatch() -> None:
+    with pytest.raises(ValueError, match=seal.REASON_LEDGER_VALIDATION_FAILED):
+        seal.build_airline_crypto_artifact_seal_manifest_core_v01(
+            replace(_valid_a(), transaction_id="other"),
+            ordered_source_files=_source_rows(),
+            source_package_ref=_manifest_source_package_ref(),
+            source_audit_status=seal.STATUS_PASS,
+            secret_scan_passed=True,
+        )
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value", "reason"),
+    (
+        ("seal_version", "wrong", seal.REASON_MANIFEST_VERSION_PROFILE_ALGORITHM_MISMATCH),
+        (
+            "canonicalization_profile_id",
+            "wrong",
+            seal.REASON_MANIFEST_VERSION_PROFILE_ALGORITHM_MISMATCH,
+        ),
+        ("hash_algorithm", "MD5", seal.REASON_MANIFEST_VERSION_PROFILE_ALGORITHM_MISMATCH),
+        ("hash_encoding", "base64", seal.REASON_MANIFEST_VERSION_PROFILE_ALGORITHM_MISMATCH),
+        ("ledger_entry_count", 18, seal.REASON_MANIFEST_LEDGER_GEOMETRY_MISMATCH),
+        ("dependency_edge_count", 28, seal.REASON_MANIFEST_LEDGER_GEOMETRY_MISMATCH),
+        ("root_final_count", 2, seal.REASON_MANIFEST_LEDGER_GEOMETRY_MISMATCH),
+        ("ledger_entry_count", True, seal.REASON_MANIFEST_LEDGER_GEOMETRY_MISMATCH),
+        ("source_file_count", 8, seal.REASON_MANIFEST_SOURCE_REF_HASH_GEOMETRY_MISMATCH),
+        ("previous_manifest_ref", "previous", seal.REASON_MANIFEST_PREVIOUS_REF_MISMATCH),
+        ("signature_placeholder_present", False, seal.REASON_MANIFEST_SIGNATURE_FLAG_MISMATCH),
+        ("signature_verified", True, seal.REASON_MANIFEST_SIGNATURE_FLAG_MISMATCH),
+        ("source_audit_status", seal.STATUS_FAIL_CLOSED, seal.REASON_MANIFEST_SOURCE_AUDIT_STATUS_MISMATCH),
+        ("secret_scan_passed", False, seal.REASON_MANIFEST_SECRET_SCAN_BOUNDARY_MISMATCH),
+        ("raw_secret_included", True, seal.REASON_MANIFEST_SECRET_SCAN_BOUNDARY_MISMATCH),
+        ("seal_created_authority_count", 1, seal.REASON_MANIFEST_NONZERO_COUNTER),
+        ("seal_created_permission_count", 1, seal.REASON_MANIFEST_NONZERO_COUNTER),
+        ("seal_created_action_count", 1, seal.REASON_MANIFEST_NONZERO_COUNTER),
+        ("real_world_effects_count", 1, seal.REASON_MANIFEST_NONZERO_COUNTER),
+        ("ledger_id", "bad\ud800", seal.REASON_MANIFEST_IDENTITY_MISMATCH),
+    ),
+)
+def test_manifest_core_scalar_field_mutations_fail(
+    field_name: str,
+    value: object,
+    reason: str,
+) -> None:
+    _assert_manifest_invalid(replace(_valid_manifest_core(), **{field_name: value}), reason)
+
+
+def test_manifest_core_rejects_seal_id_not_derived_from_source_package_hash() -> None:
+    _assert_manifest_invalid(
+        replace(_valid_manifest_core(), seal_id="caller:selected"),
+        seal.REASON_MANIFEST_IDENTITY_MISMATCH,
+    )
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value", "reason"),
+    (
+        (
+            "ordered_artifact_refs",
+            ("x",) * 18,
+            seal.REASON_MANIFEST_ARTIFACT_REF_HASH_GEOMETRY_MISMATCH,
+        ),
+        (
+            "ordered_artifact_hashes",
+            ("0" * 64,) * 18,
+            seal.REASON_MANIFEST_ARTIFACT_REF_HASH_GEOMETRY_MISMATCH,
+        ),
+        (
+            "ordered_artifact_refs",
+            ("",) + _valid_manifest_core().ordered_artifact_refs[1:],
+            seal.REASON_MANIFEST_INVALID_ARTIFACT_REF,
+        ),
+        (
+            "ordered_artifact_hashes",
+            ("not-a-digest",) + _valid_manifest_core().ordered_artifact_hashes[1:],
+            seal.REASON_MANIFEST_INVALID_ARTIFACT_HASH,
+        ),
+        ("chain_genesis_hash", "not-a-digest", seal.REASON_MANIFEST_CHAIN_HASH_MISMATCH),
+        ("chain_head_hash", "not-a-digest", seal.REASON_MANIFEST_CHAIN_HASH_MISMATCH),
+        ("chain_tail_hash", "not-a-digest", seal.REASON_MANIFEST_CHAIN_HASH_MISMATCH),
+        (
+            "ordered_source_file_hashes",
+            ("0" * 64,) * 8,
+            seal.REASON_MANIFEST_SOURCE_REF_HASH_GEOMETRY_MISMATCH,
+        ),
+        (
+            "ordered_source_file_hashes",
+            ("not-a-digest",) + _valid_manifest_core().ordered_source_file_hashes[1:],
+            seal.REASON_MANIFEST_INVALID_SOURCE_HASH,
+        ),
+    ),
+)
+def test_manifest_core_sequence_and_digest_mutations_fail(
+    field_name: str,
+    value: object,
+    reason: str,
+) -> None:
+    _assert_manifest_invalid(replace(_valid_manifest_core(), **{field_name: value}), reason)
+
+
+def test_manifest_core_rejects_duplicate_artifact_ref() -> None:
+    core = _valid_manifest_core()
+    refs = list(core.ordered_artifact_refs)
+    refs[1] = refs[0]
+    _assert_manifest_invalid(
+        replace(core, ordered_artifact_refs=tuple(refs)),
+        seal.REASON_MANIFEST_DUPLICATE_ARTIFACT_REF,
+    )
+
+
+def test_manifest_core_rejects_reordered_source_refs() -> None:
+    core = _valid_manifest_core()
+    refs = list(core.ordered_source_file_refs)
+    refs[0], refs[1] = refs[1], refs[0]
+    _assert_manifest_invalid(
+        replace(core, ordered_source_file_refs=tuple(refs)),
+        seal.REASON_MANIFEST_SOURCE_FILE_ORDER_MISMATCH,
+    )
+
+
+def test_manifest_core_rejects_duplicate_source_ref() -> None:
+    core = _valid_manifest_core()
+    refs = list(core.ordered_source_file_refs)
+    refs[1] = refs[0]
+    _assert_manifest_invalid(
+        replace(core, ordered_source_file_refs=tuple(refs)),
+        seal.REASON_MANIFEST_DUPLICATE_SOURCE_REF,
+    )
+
+
+def test_manifest_core_rejects_source_ref_hash_length_mismatch() -> None:
+    core = _valid_manifest_core()
+    _assert_manifest_invalid(
+        replace(core, ordered_source_file_refs=core.ordered_source_file_refs[:-1]),
+        seal.REASON_MANIFEST_SOURCE_REF_HASH_GEOMETRY_MISMATCH,
+    )
+
+
+def test_manifest_core_rejects_wrong_source_package_hash_even_with_matching_seal_id() -> None:
+    changed_hash = "1" * 64
+    _assert_manifest_invalid(
+        replace(
+            _valid_manifest_core(),
+            source_package_hash=changed_hash,
+            seal_id=f"{seal.SEAL_VERSION}:{changed_hash}",
+        ),
+        seal.REASON_MANIFEST_INVALID_SOURCE_HASH,
+    )
+
+
+def test_manifest_core_rejects_wrong_ledger_document_byte_hash() -> None:
+    _assert_manifest_invalid(
+        replace(_valid_manifest_core(), ledger_document_byte_hash="1" * 64),
+        seal.REASON_MANIFEST_LEDGER_DOCUMENT_BYTE_HASH_MISMATCH,
+    )
+
+
+def test_manifest_core_rejects_chain_hashes_not_recomputed_from_artifact_hashes() -> None:
+    _assert_manifest_invalid(
+        replace(_valid_manifest_core(), chain_tail_hash="1" * 64),
+        seal.REASON_MANIFEST_CHAIN_HASH_MISMATCH,
+    )
+
+
+def test_manifest_core_hash_changes_when_any_valid_field_changes() -> None:
+    core = _valid_manifest_core()
+    changed = replace(core, source_package_ref="airline_crypto_b2a_other_package")
+    assert (
+        seal.hash_airline_crypto_artifact_seal_manifest_core_v01(changed)
+        != seal.hash_airline_crypto_artifact_seal_manifest_core_v01(core)
+    )
+
+
+def test_one_source_byte_change_updates_manifest_identity_and_hash_only_for_that_file() -> None:
+    baseline = _valid_manifest_core()
+    rows = list(_source_rows())
+    rows[4] = (rows[4][0], rows[4][1] + b"x")
+    changed = _valid_manifest_core(ordered_source_files=tuple(rows))
+    changed_positions = [
+        index
+        for index, (left, right) in enumerate(
+            zip(baseline.ordered_source_file_hashes, changed.ordered_source_file_hashes),
+        )
+        if left != right
+    ]
+    assert changed_positions == [4]
+    assert changed.source_package_hash != baseline.source_package_hash
+    assert changed.seal_id != baseline.seal_id
+    assert (
+        seal.hash_airline_crypto_artifact_seal_manifest_core_v01(changed)
+        != seal.hash_airline_crypto_artifact_seal_manifest_core_v01(baseline)
+    )
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value"),
+    (
+        ("mode", "SIGNED"),
+        ("algorithm", "SHA256-RSA"),
+        ("key_id", "key"),
+        ("value", "signature"),
+        ("verified", True),
+    ),
+)
+def test_signature_placeholder_rejects_any_non_placeholder_value(
+    field_name: str,
+    value: object,
+) -> None:
+    signature = replace(
+        seal.build_airline_crypto_artifact_seal_signature_placeholder_v01(),
+        **{field_name: value},
+    )
+    report = seal.validate_airline_crypto_artifact_seal_signature_placeholder_v01(
+        signature,
+    )
+    assert report.validation_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_SIGNATURE_PLACEHOLDER_FIELD_MISMATCH in report.validation_errors
+
+
+def test_signature_placeholder_wrong_type_fails_closed() -> None:
+    report = seal.validate_airline_crypto_artifact_seal_signature_placeholder_v01(
+        object(),
+    )
+    assert report.validation_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_SIGNATURE_PLACEHOLDER_WRONG_TYPE in report.validation_errors
+
+
+def test_envelope_wrong_type_fails_closed() -> None:
+    _assert_envelope_invalid(object(), seal.REASON_ENVELOPE_MALFORMED)
+
+
+def test_envelope_rejects_malformed_stored_manifest_core_hash() -> None:
+    _assert_envelope_invalid(
+        replace(_valid_envelope(), manifest_core_hash="not-a-digest"),
+        seal.REASON_INVALID_SHA256_HEX,
+    )
+
+
+def test_envelope_rejects_stored_manifest_core_hash_mismatch() -> None:
+    _assert_envelope_invalid(
+        replace(_valid_envelope(), manifest_core_hash="1" * 64),
+        seal.REASON_MANIFEST_CORE_HASH_MISMATCH,
+    )
+
+
+def test_envelope_rejects_invalid_manifest_core_inside_envelope() -> None:
+    envelope = _valid_envelope()
+    invalid_core = replace(envelope.manifest_core, source_audit_status="FAIL_CLOSED")
+    _assert_envelope_invalid(
+        replace(envelope, manifest_core=invalid_core),
+        seal.REASON_MANIFEST_SOURCE_AUDIT_STATUS_MISMATCH,
+    )
+
+
+def test_envelope_rejects_invalid_signature_placeholder_inside_envelope() -> None:
+    envelope = _valid_envelope()
+    invalid_signature = replace(envelope.signature, verified=True)
+    _assert_envelope_invalid(
+        replace(envelope, signature=invalid_signature),
+        seal.REASON_SIGNATURE_PLACEHOLDER_FIELD_MISMATCH,
+    )
+
+
+def test_envelope_builder_accepts_no_fake_digest_or_signature_parameters() -> None:
+    parameters = tuple(
+        inspect.signature(
+            seal.build_airline_crypto_artifact_seal_envelope_v01,
+        ).parameters
+    )
+    assert parameters == ("manifest_core",)
+
+
+def test_manifest_core_envelope_and_signature_are_deeply_immutable() -> None:
+    core = _valid_manifest_core()
+    envelope = seal.build_airline_crypto_artifact_seal_envelope_v01(core)
+    with pytest.raises(Exception):
+        core.ordered_artifact_refs += ("x",)  # type: ignore[misc]
+    with pytest.raises(Exception):
+        envelope.manifest_core = core  # type: ignore[misc]
+    with pytest.raises(Exception):
+        envelope.signature.verified = True  # type: ignore[misc]
+
+
+def test_manifest_core_freezes_caller_list_inputs() -> None:
+    core = _valid_manifest_core()
+    artifact_refs = list(core.ordered_artifact_refs)
+    custom = replace(core, ordered_artifact_refs=artifact_refs)
+    artifact_refs[0] = "mutated"
+    assert custom.ordered_artifact_refs[0] == core.ordered_artifact_refs[0]
+    assert type(custom.ordered_artifact_refs) is tuple
+
+
+def test_manifest_core_rejects_mapping_as_ordered_array_input() -> None:
+    with pytest.raises(
+        ValueError,
+        match=seal.REASON_MANIFEST_ARTIFACT_REF_HASH_GEOMETRY_MISMATCH,
+    ):
+        replace(_valid_manifest_core(), ordered_artifact_refs={"a": "b"})
+
+
+def test_source_ledger_and_source_byte_rows_are_unchanged_by_manifest_build() -> None:
+    item = _valid_a()
+    rows = _source_rows()
+    before_item = deepcopy(item)
+    before_rows = tuple((ref, bytes(payload)) for ref, payload in rows)
+    seal.build_airline_crypto_artifact_seal_manifest_core_v01(
+        item,
+        ordered_source_files=rows,
+        source_package_ref=_manifest_source_package_ref(),
+        source_audit_status=seal.STATUS_PASS,
+        secret_scan_passed=True,
+    )
+    assert item == before_item
+    assert rows == before_rows
+
+
+def test_offer_a_and_b_manifest_core_hashes_are_deterministic_and_distinct() -> None:
+    a_first = _valid_manifest_core(_valid_a())
+    a_second = _valid_manifest_core(_valid_a())
+    b_first = _valid_manifest_core(_valid_b())
+    b_second = _valid_manifest_core(_valid_b())
+    assert a_first == a_second
+    assert b_first == b_second
+    assert a_first.chain_tail_hash != b_first.chain_tail_hash
+    assert (
+        seal.hash_airline_crypto_artifact_seal_manifest_core_v01(a_first)
+        != seal.hash_airline_crypto_artifact_seal_manifest_core_v01(b_first)
+    )
+
+
+def test_manifest_core_a_b_a_and_b_a_b_isolation() -> None:
+    a_first = _valid_manifest_core(_valid_a())
+    b_middle = _valid_manifest_core(_valid_b())
+    a_last = _valid_manifest_core(_valid_a())
+    assert a_first == a_last
+    assert a_first != b_middle
+    b_first = _valid_manifest_core(_valid_b())
+    a_middle = _valid_manifest_core(_valid_a())
+    b_last = _valid_manifest_core(_valid_b())
+    assert b_first == b_last
+    assert b_first != a_middle
+
+
 def test_static_import_boundary_is_airline_domain_only() -> None:
     tree = ast.parse(open(MODULE_PATH, encoding="utf-8").read())
     imports: list[str] = []
@@ -948,22 +1543,20 @@ def test_static_no_file_io_calls_or_replay_surface() -> None:
                 assert node.func.attr not in forbidden_calls
         if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
             assert "Replay" not in node.name
-    assert "AirlineCryptoArtifactSealManifestCoreV01" not in source
-    assert "AirlineCryptoArtifactSealEnvelopeV01" not in source
     assert "AirlineCryptoArtifactSealVerificationReportV01" not in source
     assert "verify_airline_crypto_artifact_seal_v01" not in source
 
 
-def test_static_no_signature_or_mutable_module_global_registry() -> None:
+def test_static_no_signing_key_or_mutable_module_global_registry() -> None:
     source = open(MODULE_PATH, encoding="utf-8").read()
     tree = ast.parse(source)
     forbidden_definition_terms = (
-        "signature",
         "private_key",
         "public_key",
         "hmac",
         "encrypt",
         "decrypt",
+        "certificate",
     )
     for node in tree.body:
         if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -977,6 +1570,9 @@ def test_static_no_signature_or_mutable_module_global_registry() -> None:
                         "CURRENT_LEDGER",
                         "CURRENT_TRANSACTION",
                         "CURRENT_CHAIN",
+                        "CURRENT_MANIFEST",
+                        "CURRENT_ENVELOPE",
+                        "SIGNATURE_REGISTRY",
                     }
             assert not isinstance(node.value, (ast.List, ast.Dict, ast.Set))
 
@@ -1049,4 +1645,31 @@ def test_projection_envelope_comparison_keeps_bool_distinct_from_int() -> None:
         match=seal.REASON_PROJECTION_CANONICAL_HASH_INPUT_FIELD_MISMATCH,
     ):
         seal.hash_airline_crypto_ledger_entry_projection_v01(invalid)
+
+def test_manifest_builder_requires_exact_source_audit_status_string() -> None:
+    class _AlwaysPass:
+        def __eq__(self, other: object) -> bool:
+            return True
+
+        def __ne__(self, other: object) -> bool:
+            return False
+
+    pass_subclass = type(
+        "PassStringSubclass",
+        (str,),
+        {},
+    )(seal.STATUS_PASS)
+
+    for malformed in (_AlwaysPass(), pass_subclass):
+        with pytest.raises(
+            ValueError,
+            match=seal.REASON_MANIFEST_SOURCE_AUDIT_STATUS_MISMATCH,
+        ):
+            seal.build_airline_crypto_artifact_seal_manifest_core_v01(
+                _valid_a(),
+                ordered_source_files=_source_rows(),
+                source_package_ref=_manifest_source_package_ref(),
+                source_audit_status=malformed,  # type: ignore[arg-type]
+                secret_scan_passed=True,
+            )
 

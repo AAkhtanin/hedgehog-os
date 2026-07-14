@@ -1,0 +1,137 @@
+audit_id: auditor_airline_transaction_artifact_ledger_slice_e2_offline_package_v01
+audit_status: PASS
+observed_head: f244512
+source_package_name: airline_transaction_artifact_ledger_slice_e2_offline_f244512
+source_artifact_dir: .tmp/airline_transaction_artifact_ledger_slice_e2/airline_transaction_artifact_ledger_slice_e2_offline_f244512
+generation_mode: offline deterministic injected provider
+provider_network_called: false
+gemini_called: false
+crypto_artifact_seal_implemented: false
+sealed_trace_replay_verifier_implemented: false
+real_world_effects_count: 0
+production_ready_claimed: false
+
+[REPOSITORY GUARD]
+
+Repository guard passed before package generation.
+
+- observed HEAD: f244512
+- observed origin/main: f244512
+- latest commit: f244512 Add Airline Transaction Artifact Ledger Slice E1 audit
+- worktree before generation: clean
+
+[PACKAGE GENERATION]
+
+One offline Airline transaction package was generated using the committed live
+semantic lane with an injected deterministic provider and an explicit artifact
+directory.
+
+- transaction count: 1
+- semantic actor calls: 12
+- causal actor calls: 5
+- generic actor calls: 7
+- duplicate actor calls: 0
+- deterministic Airline collection count: 1
+- Ticket/Purchase Corridor execution count: 1
+- Ledger collection count: 1
+- Ledger validation count: 1
+- duplicate transaction executions: 0
+- duplicate corridor executions: 0
+- duplicate Ledger collections: 0
+- provider network calls: 0
+- Gemini calls: 0
+- provider/network/Gemini calls added by Ledger: 0
+- real-world effects: 0
+
+[PACKAGE INVENTORY]
+
+Required source files observed:
+
+- airline_transaction_artifact_ledger.json
+- summary.json
+- secret_scan.json
+- semantic_to_contract_causal_run.json
+- semantic_to_contract_bridge.json
+- integrated_deterministic_airline_summary.json
+- tri_party_airline_bsep_packet.json
+- tri_party_airline_bsep_validation.json
+- tri_party_airline_bsep_side_projections.json
+
+Slice E2 derived files created after audit PASS:
+
+- airline_transaction_artifact_ledger_audit.json
+- airline_transaction_artifact_ledger_timeline.txt
+
+This inventory is not a cryptographic manifest.
+
+[INDEPENDENT E1 AUDIT]
+
+The committed Slice E1 auditor was called once against the completed package.
+
+- audit status: PASS
+- files read: 9
+- Ledger entries: 19
+- dependency edges: 29
+- Root finals: 3
+- ClientRoot finals: 1
+- AirlineRoot finals: 1
+- BankRoot finals: 1
+- exact Root-final set: PASS
+- exact artifact-type sequence: PASS
+- dependency presence: PASS
+- dependency backward-only ordering: PASS
+- dependency acyclicity: PASS
+- selected-offer consistency: PASS
+- transaction consistency: PASS
+- BSEP consistency: PASS
+- source-reference consistency: PASS
+- secret boundary: PASS
+
+[HUMAN TIMELINE]
+
+The human timeline was rendered from the accepted in-memory audit report, not
+from a second audit.
+
+- timeline rows: 19
+- ClientRoot final separately visible: true
+- AirlineRoot final separately visible: true
+- BankRoot final separately visible: true
+- cross-root advisory rendered as not a fourth Root: true
+- receipts rendered as evidence only: true
+
+[NO-RERUN / NO-EFFECT]
+
+- audit semantic reruns: 0
+- audit corridor reruns: 0
+- audit Ledger recollections: 0
+- audit provider calls: 0
+- audit network calls: 0
+- audit Gemini calls: 0
+- Crypto operations: 0
+- Replay operations: 0
+- real-world effects: 0
+
+[SOURCE IMMUTABILITY]
+
+All required source files were read before the E1 audit and rendering step and
+were byte-for-byte unchanged after audit and timeline rendering. The final
+read-only package verification also observed stable source bytes during that
+verification command.
+
+[HONEST LIMITS]
+
+- no cryptographic seal
+- no signature
+- no key management
+- no hash chain
+- no sealed replay
+- no real payment
+- no real ticket
+- no real booking
+- no production-security claim
+
+[VERDICT]
+
+- Ledger Slice E2: PASS
+- Ledger program proof-level checkpoint ready for commit
+- next gate after commit/push: Airline Crypto Artifact Seal v0.1 preflight

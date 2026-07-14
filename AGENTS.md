@@ -57,7 +57,49 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI PASS.
+Current checkpoint: Airline Transaction Artifact Ledger v0.1 Slice E2 offline
+completed-package audit PASS.
+
+Current Airline Transaction Artifact Ledger v0.1 facts:
+
+- HEAD basis before the E2 documentation commit: `f244512`.
+- Slice E1 read-only auditor and human timeline renderer are committed and
+  pushed.
+- Slice E2 offline completed-package audit: PASS.
+- Official offline package:
+  `.tmp/airline_transaction_artifact_ledger_slice_e2/airline_transaction_artifact_ledger_slice_e2_offline_f244512`.
+- Audit log:
+  `docs/audit_reports/auditor_airline_transaction_artifact_ledger_slice_e2_offline_package_v01.log`.
+- Checkpoint document:
+  `docs/airline_transaction_artifact_ledger_checkpoint_v01.md`.
+- Ledger geometry remains 19 entries, 29 dependency edges, and 3 Root finals.
+- Exactly one ClientRoot final, one AirlineRoot final, and one BankRoot final
+  are present; cross-root advisory is not a fourth Root.
+- Slice B contracts/validators: CLOSED.
+- Slice C exact-source collector: CLOSED.
+- Slice D transaction integration: CLOSED.
+- Slice E1 read-only auditor/timeline: CLOSED.
+- Slice E2 offline completed-package audit: PASS.
+- Ledger v0.1 proof-level program is CLOSED after the E2 commit.
+- Audit semantic reruns, corridor reruns, Ledger recollections, provider calls,
+  network calls, Gemini calls, Crypto operations, Replay operations, and
+  real-world effects are all 0.
+- No real-provider run is required at this checkpoint.
+- No Crypto Artifact Seal is implemented yet.
+- Replay remains blocked.
+- The final all-real LLM run remains scheduled only after Crypto and Replay are
+  fully closed offline.
+- Not production.
+- Not a production-security claim.
+
+Current next immediate gate:
+`airline_crypto_artifact_seal_v0_1_dedicated_preflight`.
+
+Replay remains blocked until Crypto contracts, integration, and independent
+Crypto audit are closed.
+
+Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
+PASS.
 
 Current Airline Tri-Party Live Semantic facts:
 
@@ -99,22 +141,11 @@ Current Airline Tri-Party Live Semantic facts:
 - Not production.
 - Not public auditor final package.
 
-Current next immediate gate:
-`artifact_backed_human_airline_live_semantic_story_renderer`.
-
-Next engineering preflight after the story:
-`airline_ticket_purchase_corridor_artifact_ledger_crypto_replay_preflight`.
-
-Next implementation gate after that preflight:
-`airline_ticket_purchase_corridor_v01`.
-
-Engineering order is recorded only and must not be treated as implemented:
-Airline Ticket/Purchase Corridor, Airline Transaction Artifact Ledger, Airline
-Crypto Artifact Seal, and Airline Sealed Trace Replay Verifier. Do not start
-Ticket/Purchase Corridor, Transaction Artifact Ledger, Crypto Artifact Seal,
-Sealed Trace Replay Verifier, NeedleFactory, Middle Factory, Marennya, UP, Bank
-B Hedgehog-native bank-to-bank, real connectors, production package, or public
-auditor package without an explicit next prompt.
+Ledger v0.1 is proof-level closed after the E2 checkpoint commit. Do not start
+Replay, NeedleFactory, Middle Factory, Marennya, UP, Bank B Hedgehog-native
+bank-to-bank, real connectors, production package, or public auditor package
+without an explicit next prompt. The only next Airline Ledger gate recorded here
+is the dedicated Crypto Artifact Seal v0.1 preflight.
 
 Closed Full WOW v1.2 live action corridor checkpoint: PASS.
 

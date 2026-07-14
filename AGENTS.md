@@ -57,12 +57,14 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Airline Transaction Artifact Ledger v0.1 Slice E2 offline
-completed-package audit PASS.
+Current checkpoint: Airline Crypto Artifact Seal v0.1 dedicated preflight
+READY_FOR_REVIEW.
 
 Current Airline Transaction Artifact Ledger v0.1 facts:
 
 - HEAD basis before the E2 documentation commit: `f244512`.
+- Repository basis before the Crypto Artifact Seal preflight commit:
+  `533f280`.
 - Slice E1 read-only auditor and human timeline renderer are committed and
   pushed.
 - Slice E2 offline completed-package audit: PASS.
@@ -81,6 +83,9 @@ Current Airline Transaction Artifact Ledger v0.1 facts:
 - Slice E1 read-only auditor/timeline: CLOSED.
 - Slice E2 offline completed-package audit: PASS.
 - Ledger v0.1 proof-level program is CLOSED after the E2 commit.
+- Dedicated Airline Crypto Artifact Seal v0.1 preflight is created as a
+  planning-only document.
+- No hashes, manifest, seal, signature, key management, or Replay exist yet.
 - Audit semantic reruns, corridor reruns, Ledger recollections, provider calls,
   network calls, Gemini calls, Crypto operations, Replay operations, and
   real-world effects are all 0.
@@ -93,10 +98,11 @@ Current Airline Transaction Artifact Ledger v0.1 facts:
 - Not a production-security claim.
 
 Current next immediate gate:
-`airline_crypto_artifact_seal_v0_1_dedicated_preflight`.
+`airline_crypto_artifact_seal_v0_1_slice_b_contracts_canonicalization_and_validators_only`.
 
-Replay remains blocked until Crypto contracts, integration, and independent
-Crypto audit are closed.
+Replay remains blocked through Crypto Slice E and independent audit PASS.
+The final all-real LLM run remains scheduled only after Crypto and Replay close
+offline.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

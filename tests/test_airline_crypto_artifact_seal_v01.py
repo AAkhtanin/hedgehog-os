@@ -71,6 +71,73 @@ def _valid_envelope() -> seal.AirlineCryptoArtifactSealEnvelopeV01:
     )
 
 
+def _valid_verification(
+    item: ledger.AirlineTransactionArtifactLedgerV01 | None = None,
+    *,
+    envelope: seal.AirlineCryptoArtifactSealEnvelopeV01 | None = None,
+    rows_before: tuple[tuple[str, bytes], ...] | None = None,
+    rows_after: tuple[tuple[str, bytes], ...] | None = None,
+    expected_source_package_ref: object | None = None,
+    expected_manifest_core_hash: object | None = None,
+    expected_identity: (
+        ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01 | None
+    ) = None,
+) -> seal.AirlineCryptoArtifactSealVerificationReportV01:
+    ledger_item = item or _valid_a()
+    rows = rows_before or _source_rows()
+    env = envelope or seal.build_airline_crypto_artifact_seal_envelope_v01(
+        _valid_manifest_core(
+            ledger_item,
+            ordered_source_files=rows,
+            expected_identity=expected_identity,
+        ),
+    )
+    return seal.verify_airline_crypto_artifact_seal_v01(
+        env,
+        ledger_item=ledger_item,
+        ordered_source_files_before=rows,
+        ordered_source_files_after=rows_after or rows,
+        expected_source_package_ref=(
+            expected_source_package_ref
+            if expected_source_package_ref is not None
+            else _manifest_source_package_ref()
+        ),
+        source_audit_status=seal.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_manifest_core_hash=expected_manifest_core_hash,
+        expected_identity=expected_identity,
+    )
+
+
+def _valid_anchor_for(
+    item: ledger.AirlineTransactionArtifactLedgerV01 | None = None,
+    *,
+    rows: tuple[tuple[str, bytes], ...] | None = None,
+    expected_identity: (
+        ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01 | None
+    ) = None,
+) -> str:
+    core = _valid_manifest_core(
+        item or _valid_a(),
+        ordered_source_files=rows or _source_rows(),
+        expected_identity=expected_identity,
+    )
+    return seal.hash_airline_crypto_artifact_seal_manifest_core_v01(core)
+
+
+def _assert_report_status(
+    report: seal.AirlineCryptoArtifactSealVerificationReportV01,
+    status: str,
+) -> None:
+    assert report.verification_status == status
+    assert (
+        seal.validate_airline_crypto_artifact_seal_verification_report_v01(
+            report,
+        ).validation_status
+        == seal.STATUS_PASS
+    )
+
+
 def _assert_manifest_invalid(
     core: object,
     reason: str,
@@ -1503,6 +1570,514 @@ def test_manifest_core_a_b_a_and_b_a_b_isolation() -> None:
     assert b_first != a_middle
 
 
+@pytest.mark.parametrize(
+    ("builder", "status", "anchored"),
+    (
+        (_valid_a, seal.STATUS_SELF_CONSISTENT_UNANCHORED, False),
+        (_valid_b, seal.STATUS_SELF_CONSISTENT_UNANCHORED, False),
+        (_valid_a, seal.STATUS_PASS, True),
+        (_valid_b, seal.STATUS_PASS, True),
+    ),
+)
+def test_fixture_offer_verification_statuses(
+    builder,
+    status: str,
+    anchored: bool,
+) -> None:
+    item = builder()
+    anchor = _valid_anchor_for(item) if anchored else None
+    report = _valid_verification(item, expected_manifest_core_hash=anchor)
+    _assert_report_status(report, status)
+    assert report.ledger_geometry_verified is True
+    assert report.root_ownership_verified is True
+    assert report.authority_evidence_boundaries_verified is True
+    assert report.secret_boundary_verified is True
+    assert report.signature_mode == seal.SIGNATURE_MODE_UNSIGNED_PLACEHOLDER
+    assert report.signature_verified is False
+    assert report.provider_call_count == 0
+    assert report.network_call_count == 0
+    assert report.gemini_call_count == 0
+    assert report.seal_created_authority_count == 0
+    assert report.seal_created_permission_count == 0
+    assert report.seal_created_action_count == 0
+    assert report.real_world_effects_count == 0
+
+
+def test_verification_report_plain_dict_exact_field_sequence_and_json_safe() -> None:
+    report = _valid_verification(
+        _valid_a(),
+        expected_manifest_core_hash=_valid_anchor_for(_valid_a()),
+    )
+    plain = seal.airline_crypto_artifact_seal_verification_report_to_plain_dict_v01(
+        report,
+    )
+    assert tuple(plain.keys()) == seal.VERIFICATION_REPORT_FIELD_NAMES
+    assert plain["verification_errors"] == []
+    assert (
+        seal.validate_airline_crypto_canonical_json_value_v01(plain).validation_status
+        == seal.STATUS_PASS
+    )
+
+
+def test_repeated_verification_is_deterministic() -> None:
+    first = _valid_verification(_valid_a())
+    second = _valid_verification(_valid_a())
+    assert first == second
+
+
+def test_verification_a_b_a_and_b_a_b_isolated() -> None:
+    a_first = _valid_verification(_valid_a())
+    b_middle = _valid_verification(_valid_b())
+    a_last = _valid_verification(_valid_a())
+    assert a_first == a_last
+    assert a_first.manifest_core_hash != b_middle.manifest_core_hash
+    b_first = _valid_verification(_valid_b())
+    a_middle = _valid_verification(_valid_a())
+    b_last = _valid_verification(_valid_b())
+    assert b_first == b_last
+    assert b_first.manifest_core_hash != a_middle.manifest_core_hash
+
+
+def test_missing_anchor_never_returns_pass() -> None:
+    report = _valid_verification(_valid_a())
+    assert report.verification_status == seal.STATUS_SELF_CONSISTENT_UNANCHORED
+    assert report.external_anchor_supplied is False
+    assert report.external_anchor_verified is False
+
+
+def test_envelope_stored_manifest_hash_is_not_used_as_implicit_anchor() -> None:
+    envelope = _valid_envelope()
+    report = _valid_verification(_valid_a(), envelope=envelope)
+    assert envelope.manifest_core_hash == report.manifest_core_hash
+    assert report.verification_status == seal.STATUS_SELF_CONSISTENT_UNANCHORED
+    assert report.expected_manifest_core_hash is None
+
+
+@pytest.mark.parametrize("anchor", ("1" * 64, "A" * 64, "0" * 63, b"0" * 64))
+def test_wrong_or_malformed_anchor_fails_closed(anchor: object) -> None:
+    report = _valid_verification(_valid_a(), expected_manifest_core_hash=anchor)
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    if anchor == "1" * 64:
+        assert seal.REASON_VERIFICATION_EXTERNAL_ANCHOR_MISMATCH in (
+            report.verification_errors
+        )
+        assert report.external_anchor_supplied is True
+    else:
+        assert seal.REASON_VERIFICATION_EXPECTED_ANCHOR_MALFORMED in (
+            report.verification_errors
+        )
+        assert report.external_anchor_supplied is False
+
+
+def test_str_subclass_and_custom_equality_anchor_are_rejected() -> None:
+    class _AlwaysEqual:
+        def __eq__(self, other: object) -> bool:
+            return True
+
+    str_subclass = type("AnchorStringSubclass", (str,), {})("0" * 64)
+    for anchor in (str_subclass, _AlwaysEqual()):
+        report = _valid_verification(
+            _valid_a(),
+            expected_manifest_core_hash=anchor,
+        )
+        assert report.verification_status == seal.STATUS_FAIL_CLOSED
+        assert seal.REASON_VERIFICATION_EXPECTED_ANCHOR_MALFORMED in (
+            report.verification_errors
+        )
+
+
+def test_wrong_envelope_type_returns_fail_closed_report() -> None:
+    report = seal.verify_airline_crypto_artifact_seal_v01(
+        object(),
+        ledger_item=_valid_a(),
+        ordered_source_files_before=_source_rows(),
+        ordered_source_files_after=_source_rows(),
+        expected_source_package_ref=_manifest_source_package_ref(),
+        source_audit_status=seal.STATUS_PASS,
+        secret_scan_passed=True,
+    )
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_ENVELOPE_CONTRACT_FAILED in (
+        report.verification_errors
+    )
+
+
+def test_invalid_envelope_contract_returns_fail_closed_report() -> None:
+    envelope = replace(_valid_envelope(), manifest_core_hash="1" * 64)
+    report = _valid_verification(_valid_a(), envelope=envelope)
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_ENVELOPE_CONTRACT_FAILED in (
+        report.verification_errors
+    )
+
+
+def test_envelope_source_package_ref_mismatch_fails_against_independent_ref() -> None:
+    report = _valid_verification(
+        _valid_a(),
+        expected_source_package_ref="different_package_ref",
+    )
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_MANIFEST_CORE_MISMATCH in report.verification_errors
+
+
+def test_offer_b_envelope_fails_against_offer_a_ledger() -> None:
+    envelope_b = seal.build_airline_crypto_artifact_seal_envelope_v01(
+        _valid_manifest_core(_valid_b()),
+    )
+    report = _valid_verification(_valid_a(), envelope=envelope_b)
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_ARTIFACT_HASHES_MISMATCH in (
+        report.verification_errors
+    )
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value", "reason"),
+    (
+        ("ordered_artifact_hashes", ("1" * 64,) + _valid_manifest_core().ordered_artifact_hashes[1:], seal.REASON_VERIFICATION_ARTIFACT_HASHES_MISMATCH),
+        ("chain_genesis_hash", "1" * 64, seal.REASON_VERIFICATION_CHAIN_MISMATCH),
+        ("chain_head_hash", "1" * 64, seal.REASON_VERIFICATION_CHAIN_MISMATCH),
+        ("chain_tail_hash", "1" * 64, seal.REASON_VERIFICATION_CHAIN_MISMATCH),
+        ("ordered_source_file_hashes", ("1" * 64,) + _valid_manifest_core().ordered_source_file_hashes[1:], seal.REASON_VERIFICATION_SOURCE_FILE_HASHES_MISMATCH),
+        ("source_package_hash", "1" * 64, seal.REASON_VERIFICATION_SOURCE_PACKAGE_HASH_MISMATCH),
+        ("ledger_document_byte_hash", "1" * 64, seal.REASON_VERIFICATION_LEDGER_DOCUMENT_BYTE_HASH_MISMATCH),
+        ("ledger_entry_count", 18, seal.REASON_VERIFICATION_LEDGER_GEOMETRY_MISMATCH),
+    ),
+)
+def test_independent_data_mismatch_flags_fail_closed(
+    field_name: str,
+    value: object,
+    reason: str,
+) -> None:
+    core = replace(_valid_manifest_core(), **{field_name: value})
+    envelope = seal.AirlineCryptoArtifactSealEnvelopeV01(
+        manifest_core=core,
+        manifest_core_hash=(
+            seal.hash_airline_crypto_artifact_seal_manifest_core_v01(core)
+            if seal.validate_airline_crypto_artifact_seal_manifest_core_v01(
+                core,
+            ).validation_status
+            == seal.STATUS_PASS
+            else "0" * 64
+        ),
+        signature=seal.build_airline_crypto_artifact_seal_signature_placeholder_v01(),
+    )
+    report = _valid_verification(_valid_a(), envelope=envelope)
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert reason in report.verification_errors
+
+
+def test_wrong_expected_identity_fails_verification() -> None:
+    wrong_identity = ledger.build_airline_transaction_artifact_ledger_fixture_expected_identity_v01(
+        offer_id=ledger.OFFER_B_ID,
+    )
+    report = _valid_verification(
+        _valid_a(),
+        envelope=_valid_envelope(),
+        expected_identity=wrong_identity,
+    )
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_MANIFEST_REBUILD_FAILED in report.verification_errors
+
+
+@pytest.mark.parametrize(
+    ("source_audit_status", "secret_scan_passed", "reason"),
+    (
+        (seal.STATUS_FAIL_CLOSED, True, seal.REASON_VERIFICATION_SOURCE_AUDIT_STATUS_MISMATCH),
+        (object(), True, seal.REASON_VERIFICATION_SOURCE_AUDIT_STATUS_MISMATCH),
+        (seal.STATUS_PASS, False, seal.REASON_VERIFICATION_SECRET_SCAN_BOUNDARY_MISMATCH),
+        (seal.STATUS_PASS, object(), seal.REASON_VERIFICATION_SECRET_SCAN_BOUNDARY_MISMATCH),
+    ),
+)
+def test_source_audit_and_secret_scan_inputs_must_match(
+    source_audit_status: object,
+    secret_scan_passed: object,
+    reason: str,
+) -> None:
+    report = seal.verify_airline_crypto_artifact_seal_v01(
+        _valid_envelope(),
+        ledger_item=_valid_a(),
+        ordered_source_files_before=_source_rows(),
+        ordered_source_files_after=_source_rows(),
+        expected_source_package_ref=_manifest_source_package_ref(),
+        source_audit_status=source_audit_status,
+        secret_scan_passed=secret_scan_passed,
+    )
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert reason in report.verification_errors
+
+
+@pytest.mark.parametrize(
+    ("before", "after", "reason"),
+    (
+        ([], _source_rows(), seal.REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED),
+        (_source_rows(), [], seal.REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED),
+        (_source_rows()[:-1], _source_rows()[:-1], seal.REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED),
+        (_source_rows() + (("extra.json", b"x"),), _source_rows(), seal.REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED),
+    ),
+)
+def test_source_snapshot_outer_shape_failures(
+    before: object,
+    after: object,
+    reason: str,
+) -> None:
+    report = seal.verify_airline_crypto_artifact_seal_v01(
+        _valid_envelope(),
+        ledger_item=_valid_a(),
+        ordered_source_files_before=before,
+        ordered_source_files_after=after,
+        expected_source_package_ref=_manifest_source_package_ref(),
+        source_audit_status=seal.STATUS_PASS,
+        secret_scan_passed=True,
+    )
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert reason in report.verification_errors
+
+
+def test_reordered_before_or_after_source_rows_fail_closed() -> None:
+    for mutate_before in (True, False):
+        before = list(_source_rows())
+        after = list(_source_rows())
+        target = before if mutate_before else after
+        target[0], target[1] = target[1], target[0]
+        report = seal.verify_airline_crypto_artifact_seal_v01(
+            _valid_envelope(),
+            ledger_item=_valid_a(),
+            ordered_source_files_before=tuple(before),
+            ordered_source_files_after=tuple(after),
+            expected_source_package_ref=_manifest_source_package_ref(),
+            source_audit_status=seal.STATUS_PASS,
+            secret_scan_passed=True,
+        )
+        assert report.verification_status == seal.STATUS_FAIL_CLOSED
+        assert seal.REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED in (
+            report.verification_errors
+        )
+
+
+@pytest.mark.parametrize("mutate_before", (True, False))
+def test_non_bytes_source_content_fails_closed(mutate_before: bool) -> None:
+    before = list(_source_rows())
+    after = list(_source_rows())
+    target = before if mutate_before else after
+    target[0] = (target[0][0], bytearray(target[0][1]))  # type: ignore[assignment]
+    report = seal.verify_airline_crypto_artifact_seal_v01(
+        _valid_envelope(),
+        ledger_item=_valid_a(),
+        ordered_source_files_before=tuple(before),  # type: ignore[arg-type]
+        ordered_source_files_after=tuple(after),  # type: ignore[arg-type]
+        expected_source_package_ref=_manifest_source_package_ref(),
+        source_audit_status=seal.STATUS_PASS,
+        secret_scan_passed=True,
+    )
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED in (
+        report.verification_errors
+    )
+
+
+def test_changed_after_source_byte_fails_closed_as_source_bytes_changed() -> None:
+    after = list(_source_rows())
+    after[0] = (after[0][0], after[0][1] + b"x")
+    report = _valid_verification(_valid_a(), rows_after=tuple(after))
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_SOURCE_BYTES_CHANGED in report.verification_errors
+    assert report.source_bytes_unchanged is False
+
+
+def test_changed_after_source_ref_fails_as_malformed_snapshot() -> None:
+    after = list(_source_rows())
+    after[0] = ("different.json", after[0][1])
+    report = _valid_verification(_valid_a(), rows_after=tuple(after))
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED in (
+        report.verification_errors
+    )
+
+
+def test_source_inputs_ledger_and_envelope_unchanged_after_verification() -> None:
+    item = _valid_a()
+    envelope = _valid_envelope()
+    rows = _source_rows()
+    before_item = deepcopy(item)
+    before_envelope = deepcopy(envelope)
+    before_rows = tuple((ref, bytes(payload)) for ref, payload in rows)
+    _valid_verification(item, envelope=envelope, rows_before=rows)
+    assert item == before_item
+    assert envelope == before_envelope
+    assert rows == before_rows
+
+
+def test_coordinated_modified_package_fails_against_original_anchor() -> None:
+    original_anchor = _valid_anchor_for(_valid_a())
+    changed_rows = list(_source_rows())
+    changed_rows[2] = (changed_rows[2][0], changed_rows[2][1] + b"changed")
+    modified_core = _valid_manifest_core(ordered_source_files=tuple(changed_rows))
+    modified_envelope = seal.build_airline_crypto_artifact_seal_envelope_v01(
+        modified_core,
+    )
+    anchored = _valid_verification(
+        _valid_a(),
+        envelope=modified_envelope,
+        rows_before=tuple(changed_rows),
+        rows_after=tuple(changed_rows),
+        expected_manifest_core_hash=original_anchor,
+    )
+    assert anchored.verification_status == seal.STATUS_FAIL_CLOSED
+    assert anchored.external_anchor_supplied is True
+    assert anchored.external_anchor_verified is False
+    assert seal.REASON_VERIFICATION_EXTERNAL_ANCHOR_MISMATCH in (
+        anchored.verification_errors
+    )
+    unanchored = _valid_verification(
+        _valid_a(),
+        envelope=modified_envelope,
+        rows_before=tuple(changed_rows),
+        rows_after=tuple(changed_rows),
+    )
+    assert unanchored.verification_status == seal.STATUS_SELF_CONSISTENT_UNANCHORED
+
+
+def test_semantic_causal_exact_source_verification_unanchored_and_anchored() -> None:
+    source_bundle = collector_helpers._source_bundle_from_public_causal_runtime(
+        ledger.OFFER_A_ID,
+    )
+    source_identity = collector_helpers._expected_identity(source_bundle)
+    item = collector_helpers._assert_collected_pass(source_bundle)
+    hold_entry = next(
+        entry
+        for entry in item.entries
+        if entry.artifact_type == ledger.ARTIFACT_AIRLINE_HOLD_PACKET
+    )
+    assert hold_entry.artifact_id.startswith(
+        "airline_hold_commit_packet:semantic_causal:",
+    )
+    envelope = seal.build_airline_crypto_artifact_seal_envelope_v01(
+        _valid_manifest_core(item, expected_identity=source_identity),
+    )
+    unanchored = _valid_verification(
+        item,
+        envelope=envelope,
+        expected_identity=source_identity,
+    )
+    assert unanchored.verification_status == seal.STATUS_SELF_CONSISTENT_UNANCHORED
+    assert unanchored.external_anchor_supplied is False
+    anchored = _valid_verification(
+        item,
+        envelope=envelope,
+        expected_identity=source_identity,
+        expected_manifest_core_hash=envelope.manifest_core_hash,
+    )
+    assert anchored.verification_status == seal.STATUS_PASS
+    assert anchored.external_anchor_supplied is True
+    assert anchored.external_anchor_verified is True
+    assert anchored.signature_verified is False
+
+
+def test_verification_report_direct_status_derivation_and_errors() -> None:
+    valid = _valid_verification(_valid_a(), expected_manifest_core_hash=_valid_anchor_for())
+    direct = replace(
+        valid,
+        verification_status=seal.STATUS_PASS,
+        verification_errors=(seal.REASON_VERIFICATION_CHAIN_MISMATCH,),
+    )
+    assert direct.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_CHAIN_MISMATCH in direct.verification_errors
+    one_flag_false = replace(valid, chain_tail_verified=False)
+    assert one_flag_false.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_REPORT_INTERNAL_CHECK_FAILED in (
+        one_flag_false.verification_errors
+    )
+    unanchored = replace(
+        valid,
+        verification_status=seal.STATUS_PASS,
+        expected_manifest_core_hash=None,
+        external_anchor_supplied=False,
+        external_anchor_verified=False,
+    )
+    assert unanchored.verification_status == seal.STATUS_SELF_CONSISTENT_UNANCHORED
+
+
+def test_verification_report_rejects_anchor_state_inconsistency() -> None:
+    valid = _valid_verification(_valid_a(), expected_manifest_core_hash=_valid_anchor_for())
+    for invalid in (
+        replace(valid, external_anchor_supplied=False, external_anchor_verified=True),
+        replace(valid, external_anchor_supplied=False, expected_manifest_core_hash="0" * 64),
+    ):
+        assert invalid.verification_status == seal.STATUS_FAIL_CLOSED
+        assert seal.REASON_VERIFICATION_REPORT_ANCHOR_STATE_MISMATCH in (
+            invalid.verification_errors
+        )
+
+
+def test_verification_report_errors_are_frozen_and_malformed_container_fails() -> None:
+    errors = [seal.REASON_VERIFICATION_CHAIN_MISMATCH]
+    report = seal.AirlineCryptoArtifactSealVerificationReportV01(
+        **{
+            **seal.airline_crypto_artifact_seal_verification_report_to_plain_dict_v01(
+                _valid_verification(_valid_a()),
+            ),
+            "verification_errors": errors,
+        },
+    )
+    errors.append(seal.REASON_VERIFICATION_SOURCE_BYTES_CHANGED)
+    assert report.verification_errors == (seal.REASON_VERIFICATION_CHAIN_MISMATCH,)
+    malformed = seal.AirlineCryptoArtifactSealVerificationReportV01(
+        **{
+            **seal.airline_crypto_artifact_seal_verification_report_to_plain_dict_v01(
+                _valid_verification(_valid_a()),
+            ),
+            "verification_errors": "bad",
+        },
+    )
+    assert malformed.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_MALFORMED_VALIDATION_ERRORS in malformed.verification_errors
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value", "reason"),
+    (
+        ("provider_call_count", True, seal.REASON_VERIFICATION_REPORT_ZERO_COUNTER_MISMATCH),
+        ("network_call_count", 1, seal.REASON_VERIFICATION_REPORT_ZERO_COUNTER_MISMATCH),
+        ("signature_verified", True, seal.REASON_VERIFICATION_SIGNATURE_BOUNDARY_MISMATCH),
+        ("signature_mode", "SIGNED", seal.REASON_VERIFICATION_SIGNATURE_BOUNDARY_MISMATCH),
+    ),
+)
+def test_verification_report_counter_and_signature_contract(
+    field_name: str,
+    value: object,
+    reason: str,
+) -> None:
+    report = replace(_valid_verification(_valid_a()), **{field_name: value})
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert reason in report.verification_errors
+
+
+def test_report_validator_wrong_type_and_no_exception_for_malformed_report() -> None:
+    report = seal.validate_airline_crypto_artifact_seal_verification_report_v01(
+        object(),
+    )
+    assert report.validation_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_REPORT_WRONG_TYPE in report.validation_errors
+
+
+def test_report_plain_projection_is_independent_json_safe_object() -> None:
+    report = _valid_verification(_valid_a())
+    plain = seal.airline_crypto_artifact_seal_verification_report_to_plain_dict_v01(
+        report,
+    )
+    plain["verification_status"] = "mutated"
+    assert report.verification_status == seal.STATUS_SELF_CONSISTENT_UNANCHORED
+
+
+def test_verification_report_is_frozen() -> None:
+    report = _valid_verification(_valid_a())
+    with pytest.raises(Exception):
+        report.verification_status = seal.STATUS_PASS  # type: ignore[misc]
+    with pytest.raises(Exception):
+        report.verification_errors += ("x",)  # type: ignore[misc]
+
+
 def test_static_import_boundary_is_airline_domain_only() -> None:
     tree = ast.parse(open(MODULE_PATH, encoding="utf-8").read())
     imports: list[str] = []
@@ -1524,7 +2099,10 @@ def test_static_import_boundary_is_airline_domain_only() -> None:
         "Crypto",
         "config",
         "demo",
+        "tests",
         "transaction_artifact_ledger_collector_v01",
+        "semantic_to_contract_causal_runtime_v01",
+        "ticket_purchase_corridor_runtime_v01",
     )
     assert not any(any(name.startswith(item) for item in forbidden) for name in imports)
     assert "hashlib" in imports
@@ -1543,8 +2121,8 @@ def test_static_no_file_io_calls_or_replay_surface() -> None:
                 assert node.func.attr not in forbidden_calls
         if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
             assert "Replay" not in node.name
-    assert "AirlineCryptoArtifactSealVerificationReportV01" not in source
-    assert "verify_airline_crypto_artifact_seal_v01" not in source
+    assert "collector_v01" not in source
+    assert "writer_v01" not in source
 
 
 def test_static_no_signing_key_or_mutable_module_global_registry() -> None:
@@ -1572,6 +2150,10 @@ def test_static_no_signing_key_or_mutable_module_global_registry() -> None:
                         "CURRENT_CHAIN",
                         "CURRENT_MANIFEST",
                         "CURRENT_ENVELOPE",
+                        "CURRENT_VERIFICATION_REPORT",
+                        "CURRENT_EXPECTED_MANIFEST_CORE_HASH",
+                        "TRUSTED_ANCHOR_REGISTRY",
+                        "VERIFICATION_REGISTRY",
                         "SIGNATURE_REGISTRY",
                     }
             assert not isinstance(node.value, (ast.List, ast.Dict, ast.Set))
@@ -1673,3 +2255,119 @@ def test_manifest_builder_requires_exact_source_audit_status_string() -> None:
                 secret_scan_passed=True,
             )
 
+
+def test_report_anchor_verified_requires_expected_hash_to_equal_manifest_hash() -> None:
+    valid = _valid_verification(
+        _valid_a(),
+        expected_manifest_core_hash=_valid_anchor_for(),
+    )
+    invalid = replace(valid, expected_manifest_core_hash="1" * 64)
+    assert invalid.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_REPORT_ANCHOR_STATE_MISMATCH in invalid.verification_errors
+    assert (
+        seal.validate_airline_crypto_artifact_seal_verification_report_v01(invalid).validation_status
+        == seal.STATUS_PASS
+    )
+
+
+def test_report_success_status_requires_nonempty_identity_and_valid_manifest_hash() -> None:
+    valid = _valid_verification(
+        _valid_a(),
+        expected_manifest_core_hash=_valid_anchor_for(),
+    )
+    for invalid in (
+        replace(valid, transaction_id=""),
+        replace(valid, ledger_id=""),
+        replace(valid, manifest_core_hash="not-a-digest"),
+    ):
+        assert invalid.verification_status == seal.STATUS_FAIL_CLOSED
+        assert seal.REASON_VERIFICATION_REPORT_FIELD_MISMATCH in invalid.verification_errors
+        assert (
+            seal.validate_airline_crypto_artifact_seal_verification_report_v01(invalid).validation_status
+            == seal.STATUS_PASS
+        )
+
+
+def test_report_signature_mode_requires_exact_string() -> None:
+    valid = _valid_verification(_valid_a())
+    subclass = type("SignatureModeSubclass", (str,), {})(
+        seal.SIGNATURE_MODE_UNSIGNED_PLACEHOLDER,
+    )
+    invalid = replace(valid, signature_mode=subclass)
+    assert invalid.verification_status == seal.STATUS_FAIL_CLOSED
+    assert seal.REASON_VERIFICATION_SIGNATURE_BOUNDARY_MISMATCH in invalid.verification_errors
+
+
+def test_unknown_and_non_unicode_verification_errors_normalize_to_malformed() -> None:
+    valid = _valid_verification(_valid_a())
+    for reason in ("unknown reason", "bad\ud800"):
+        invalid = replace(valid, verification_errors=(reason,))
+        assert invalid.verification_status == seal.STATUS_FAIL_CLOSED
+        assert invalid.verification_errors == (
+            seal.REASON_MALFORMED_VALIDATION_ERRORS,
+        )
+        plain = seal.airline_crypto_artifact_seal_verification_report_to_plain_dict_v01(
+            invalid,
+        )
+        assert (
+            seal.validate_airline_crypto_canonical_json_value_v01(plain).validation_status
+            == seal.STATUS_PASS
+        )
+
+
+def test_source_byte_failure_report_is_contract_valid_and_json_safe() -> None:
+    after = list(_source_rows())
+    after[0] = (after[0][0], after[0][1] + b"x")
+    report = _valid_verification(_valid_a(), rows_after=tuple(after))
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert report.external_anchor_verified is False
+    assert (
+        seal.validate_airline_crypto_artifact_seal_verification_report_v01(report).validation_status
+        == seal.STATUS_PASS
+    )
+    plain = seal.airline_crypto_artifact_seal_verification_report_to_plain_dict_v01(report)
+    assert seal.validate_airline_crypto_canonical_json_value_v01(plain).validation_status == seal.STATUS_PASS
+
+
+def test_invalid_envelope_failure_report_is_contract_valid_and_json_safe() -> None:
+    report = seal.verify_airline_crypto_artifact_seal_v01(
+        object(),
+        ledger_item=_valid_a(),
+        ordered_source_files_before=_source_rows(),
+        ordered_source_files_after=_source_rows(),
+        expected_source_package_ref=_manifest_source_package_ref(),
+        source_audit_status=seal.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_manifest_core_hash=_valid_anchor_for(),
+    )
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert report.external_anchor_verified is False
+    assert (
+        seal.validate_airline_crypto_artifact_seal_verification_report_v01(report).validation_status
+        == seal.STATUS_PASS
+    )
+    plain = seal.airline_crypto_artifact_seal_verification_report_to_plain_dict_v01(report)
+    assert seal.validate_airline_crypto_canonical_json_value_v01(plain).validation_status == seal.STATUS_PASS
+
+
+def test_verifier_sanitizes_lone_surrogate_report_fields() -> None:
+    envelope = replace(_valid_envelope(), manifest_core_hash="bad\ud800")
+    report = _valid_verification(_valid_a(), envelope=envelope)
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert report.manifest_core_hash == ""
+    plain = seal.airline_crypto_artifact_seal_verification_report_to_plain_dict_v01(report)
+    assert seal.validate_airline_crypto_canonical_json_value_v01(plain).validation_status == seal.STATUS_PASS
+
+
+def test_matching_anchor_is_not_marked_verified_when_internal_check_fails() -> None:
+    anchor = _valid_anchor_for()
+    after = list(_source_rows())
+    after[0] = (after[0][0], after[0][1] + b"x")
+    report = _valid_verification(
+        _valid_a(),
+        rows_after=tuple(after),
+        expected_manifest_core_hash=anchor,
+    )
+    assert report.verification_status == seal.STATUS_FAIL_CLOSED
+    assert report.external_anchor_supplied is True
+    assert report.external_anchor_verified is False

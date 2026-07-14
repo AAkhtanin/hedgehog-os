@@ -14,8 +14,9 @@ It does not provide confidentiality or encryption.
 Slice B1 includes strict canonicalization, SHA-256 primitives, Ledger-entry
 projections, ordered Ledger hash chains, and in-memory source-package byte
 indexing. Slice B2a adds Manifest Core and unsigned Envelope contracts.
-External-anchor verification, Verification Report, collectors, writers,
-integration, audit, and Replay are not implemented here.
+Slice B2b adds the pure in-memory Verification Report and anchored/unanchored
+verifier. Collectors, writers, integration, audit, anchor publication, signing,
+key management, and Replay are not implemented here.
 """
 
 from __future__ import annotations
@@ -35,6 +36,7 @@ from hedgehog.domains.airline import transaction_artifact_ledger_v01 as ledger_c
 MODULE_ID = "airline_crypto_artifact_seal_v01"
 SLICE_ID = "airline_crypto_artifact_seal_v01_slice_b1"
 SLICE_B2A_ID = "airline_crypto_artifact_seal_v01_slice_b2a"
+SLICE_B2B_ID = "airline_crypto_artifact_seal_v01_slice_b2b"
 SEAL_VERSION = "airline_crypto_artifact_seal_v01"
 CANONICALIZATION_PROFILE_ID = "hedgehog_airline_json_c14n_v01"
 HASH_ALGORITHM = "SHA-256"
@@ -92,6 +94,42 @@ MANIFEST_CORE_FIELD_NAMES = (
     "source_audit_status",
     "secret_scan_passed",
     "raw_secret_included",
+    "seal_created_authority_count",
+    "seal_created_permission_count",
+    "seal_created_action_count",
+    "real_world_effects_count",
+)
+
+VERIFICATION_REPORT_FIELD_NAMES = (
+    "verification_status",
+    "transaction_id",
+    "ledger_id",
+    "manifest_core_hash",
+    "expected_manifest_core_hash",
+    "external_anchor_supplied",
+    "external_anchor_verified",
+    "canonicalization_profile_verified",
+    "hash_algorithm_verified",
+    "manifest_core_hash_verified",
+    "ledger_document_byte_hash_verified",
+    "artifact_hashes_verified",
+    "chain_genesis_verified",
+    "chain_order_verified",
+    "chain_head_verified",
+    "chain_tail_verified",
+    "source_file_hashes_verified",
+    "source_package_hash_verified",
+    "ledger_geometry_verified",
+    "root_ownership_verified",
+    "authority_evidence_boundaries_verified",
+    "secret_boundary_verified",
+    "source_bytes_unchanged",
+    "signature_mode",
+    "signature_verified",
+    "verification_errors",
+    "provider_call_count",
+    "network_call_count",
+    "gemini_call_count",
     "seal_created_authority_count",
     "seal_created_permission_count",
     "seal_created_action_count",
@@ -202,6 +240,97 @@ REASON_SIGNATURE_PLACEHOLDER_FIELD_MISMATCH = (
 )
 REASON_MANIFEST_CORE_HASH_MISMATCH = "manifest_core_hash_mismatch"
 REASON_ENVELOPE_MALFORMED = "envelope_malformed"
+REASON_VERIFICATION_REPORT_WRONG_TYPE = "verification_report_wrong_type"
+REASON_VERIFICATION_REPORT_FIELD_MISMATCH = "verification_report_field_mismatch"
+REASON_VERIFICATION_REPORT_INTERNAL_CHECK_FAILED = (
+    "verification_report_internal_check_failed"
+)
+REASON_VERIFICATION_REPORT_ANCHOR_STATE_MISMATCH = (
+    "verification_report_anchor_state_mismatch"
+)
+REASON_VERIFICATION_REPORT_ZERO_COUNTER_MISMATCH = (
+    "verification_report_zero_counter_mismatch"
+)
+REASON_VERIFICATION_ENVELOPE_CONTRACT_FAILED = (
+    "verification_envelope_contract_failed"
+)
+REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED = (
+    "verification_source_snapshot_malformed"
+)
+REASON_VERIFICATION_SOURCE_BYTES_CHANGED = "verification_source_bytes_changed"
+REASON_VERIFICATION_EXPECTED_SOURCE_PACKAGE_REF_INVALID = (
+    "verification_expected_source_package_ref_invalid"
+)
+REASON_VERIFICATION_SOURCE_AUDIT_STATUS_MISMATCH = (
+    "verification_source_audit_status_mismatch"
+)
+REASON_VERIFICATION_SECRET_SCAN_BOUNDARY_MISMATCH = (
+    "verification_secret_scan_boundary_mismatch"
+)
+REASON_VERIFICATION_EXPECTED_IDENTITY_INVALID = (
+    "verification_expected_identity_invalid"
+)
+REASON_VERIFICATION_MANIFEST_REBUILD_FAILED = (
+    "verification_manifest_rebuild_failed"
+)
+REASON_VERIFICATION_MANIFEST_CORE_MISMATCH = (
+    "verification_manifest_core_mismatch"
+)
+REASON_VERIFICATION_MANIFEST_CORE_HASH_MISMATCH = (
+    "verification_manifest_core_hash_mismatch"
+)
+REASON_VERIFICATION_ARTIFACT_HASHES_MISMATCH = (
+    "verification_artifact_hashes_mismatch"
+)
+REASON_VERIFICATION_CHAIN_MISMATCH = "verification_chain_mismatch"
+REASON_VERIFICATION_SOURCE_FILE_HASHES_MISMATCH = (
+    "verification_source_file_hashes_mismatch"
+)
+REASON_VERIFICATION_SOURCE_PACKAGE_HASH_MISMATCH = (
+    "verification_source_package_hash_mismatch"
+)
+REASON_VERIFICATION_LEDGER_DOCUMENT_BYTE_HASH_MISMATCH = (
+    "verification_ledger_document_byte_hash_mismatch"
+)
+REASON_VERIFICATION_LEDGER_GEOMETRY_MISMATCH = (
+    "verification_ledger_geometry_mismatch"
+)
+REASON_VERIFICATION_EXPECTED_ANCHOR_MALFORMED = (
+    "verification_expected_anchor_malformed"
+)
+REASON_VERIFICATION_EXTERNAL_ANCHOR_MISMATCH = (
+    "verification_external_anchor_mismatch"
+)
+REASON_VERIFICATION_SIGNATURE_BOUNDARY_MISMATCH = (
+    "verification_signature_boundary_mismatch"
+)
+
+VERIFICATION_ERROR_REASONS = (
+    REASON_MALFORMED_VALIDATION_ERRORS,
+    REASON_VERIFICATION_REPORT_FIELD_MISMATCH,
+    REASON_VERIFICATION_REPORT_INTERNAL_CHECK_FAILED,
+    REASON_VERIFICATION_REPORT_ANCHOR_STATE_MISMATCH,
+    REASON_VERIFICATION_REPORT_ZERO_COUNTER_MISMATCH,
+    REASON_VERIFICATION_ENVELOPE_CONTRACT_FAILED,
+    REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED,
+    REASON_VERIFICATION_SOURCE_BYTES_CHANGED,
+    REASON_VERIFICATION_EXPECTED_SOURCE_PACKAGE_REF_INVALID,
+    REASON_VERIFICATION_SOURCE_AUDIT_STATUS_MISMATCH,
+    REASON_VERIFICATION_SECRET_SCAN_BOUNDARY_MISMATCH,
+    REASON_VERIFICATION_EXPECTED_IDENTITY_INVALID,
+    REASON_VERIFICATION_MANIFEST_REBUILD_FAILED,
+    REASON_VERIFICATION_MANIFEST_CORE_MISMATCH,
+    REASON_VERIFICATION_MANIFEST_CORE_HASH_MISMATCH,
+    REASON_VERIFICATION_ARTIFACT_HASHES_MISMATCH,
+    REASON_VERIFICATION_CHAIN_MISMATCH,
+    REASON_VERIFICATION_SOURCE_FILE_HASHES_MISMATCH,
+    REASON_VERIFICATION_SOURCE_PACKAGE_HASH_MISMATCH,
+    REASON_VERIFICATION_LEDGER_DOCUMENT_BYTE_HASH_MISMATCH,
+    REASON_VERIFICATION_LEDGER_GEOMETRY_MISMATCH,
+    REASON_VERIFICATION_EXPECTED_ANCHOR_MALFORMED,
+    REASON_VERIFICATION_EXTERNAL_ANCHOR_MISMATCH,
+    REASON_VERIFICATION_SIGNATURE_BOUNDARY_MISMATCH,
+)
 
 
 @dataclass(frozen=True)
@@ -418,6 +547,55 @@ class AirlineCryptoArtifactSealEnvelopeV01:
     manifest_core: AirlineCryptoArtifactSealManifestCoreV01
     manifest_core_hash: str
     signature: AirlineCryptoArtifactSealSignaturePlaceholderV01
+
+
+@dataclass(frozen=True)
+class AirlineCryptoArtifactSealVerificationReportV01:
+    verification_status: str
+    transaction_id: str
+    ledger_id: str
+    manifest_core_hash: str
+    expected_manifest_core_hash: str | None
+    external_anchor_supplied: bool
+    external_anchor_verified: bool
+    canonicalization_profile_verified: bool
+    hash_algorithm_verified: bool
+    manifest_core_hash_verified: bool
+    ledger_document_byte_hash_verified: bool
+    artifact_hashes_verified: bool
+    chain_genesis_verified: bool
+    chain_order_verified: bool
+    chain_head_verified: bool
+    chain_tail_verified: bool
+    source_file_hashes_verified: bool
+    source_package_hash_verified: bool
+    ledger_geometry_verified: bool
+    root_ownership_verified: bool
+    authority_evidence_boundaries_verified: bool
+    secret_boundary_verified: bool
+    source_bytes_unchanged: bool
+    signature_mode: str
+    signature_verified: bool
+    verification_errors: tuple[str, ...]
+    provider_call_count: int
+    network_call_count: int
+    gemini_call_count: int
+    seal_created_authority_count: int
+    seal_created_permission_count: int
+    seal_created_action_count: int
+    real_world_effects_count: int
+
+    def __post_init__(self) -> None:
+        base_errors = list(_normalize_verification_errors(self.verification_errors))
+        for reason in _verification_report_state_errors(self, tuple(base_errors)):
+            _append(base_errors, reason)
+        errors = tuple(base_errors)
+        object.__setattr__(self, "verification_errors", errors)
+        object.__setattr__(
+            self,
+            "verification_status",
+            _verification_status_from_report_state(self, errors),
+        )
 
 
 def validate_airline_crypto_canonical_json_value_v01(
@@ -998,6 +1176,167 @@ def validate_airline_crypto_artifact_seal_envelope_contract_v01(
     return build_airline_crypto_validation_report_v01(errors)
 
 
+def validate_airline_crypto_artifact_seal_verification_report_v01(
+    report: object,
+) -> AirlineCryptoArtifactSealValidationReportV01:
+    errors: list[str] = []
+    if type(report) is not AirlineCryptoArtifactSealVerificationReportV01:
+        return build_airline_crypto_validation_report_v01(
+            [REASON_VERIFICATION_REPORT_WRONG_TYPE],
+        )
+    try:
+        if type(report.verification_errors) is not tuple:
+            _append(errors, REASON_MALFORMED_VALIDATION_ERRORS)
+            normalized_errors = (REASON_MALFORMED_VALIDATION_ERRORS,)
+        else:
+            normalized_errors = _normalize_verification_errors(
+                report.verification_errors,
+            )
+            if report.verification_errors != normalized_errors:
+                _append(errors, REASON_MALFORMED_VALIDATION_ERRORS)
+        expected_errors = _unique_reasons(
+            list(normalized_errors)
+            + list(_verification_report_state_errors(report, normalized_errors)),
+        )
+        if report.verification_errors != expected_errors:
+            _append(errors, REASON_VERIFICATION_REPORT_FIELD_MISMATCH)
+        expected_status = _verification_status_from_report_state(
+            report,
+            expected_errors,
+        )
+        if report.verification_status != expected_status:
+            _append(errors, REASON_VERIFICATION_REPORT_FIELD_MISMATCH)
+        if report.verification_status not in (
+            STATUS_PASS,
+            STATUS_FAIL_CLOSED,
+            STATUS_SELF_CONSISTENT_UNANCHORED,
+        ):
+            _append(errors, REASON_VERIFICATION_REPORT_FIELD_MISMATCH)
+        plain = _verification_report_plain_dict_unchecked(report)
+        if tuple(plain.keys()) != VERIFICATION_REPORT_FIELD_NAMES:
+            _append(errors, REASON_VERIFICATION_REPORT_FIELD_MISMATCH)
+        canonical_report = validate_airline_crypto_canonical_json_value_v01(plain)
+        if canonical_report.validation_status != STATUS_PASS:
+            _append(errors, REASON_VERIFICATION_REPORT_FIELD_MISMATCH)
+    except (TypeError, AttributeError, KeyError, IndexError, RecursionError, ValueError):
+        _append(errors, REASON_VERIFICATION_REPORT_FIELD_MISMATCH)
+    return build_airline_crypto_validation_report_v01(errors)
+
+
+def airline_crypto_artifact_seal_verification_report_to_plain_dict_v01(
+    report: AirlineCryptoArtifactSealVerificationReportV01,
+) -> dict[str, object]:
+    validation = validate_airline_crypto_artifact_seal_verification_report_v01(
+        report,
+    )
+    if validation.validation_status != STATUS_PASS:
+        raise ValueError(",".join(validation.validation_errors))
+    plain = _verification_report_plain_dict_unchecked(report)
+    canonical_report = validate_airline_crypto_canonical_json_value_v01(plain)
+    if canonical_report.validation_status != STATUS_PASS:
+        raise ValueError(REASON_VERIFICATION_REPORT_FIELD_MISMATCH)
+    return plain
+
+
+def _verification_report_plain_dict_unchecked(
+    report: AirlineCryptoArtifactSealVerificationReportV01,
+) -> dict[str, object]:
+    return {
+        "verification_status": report.verification_status,
+        "transaction_id": report.transaction_id,
+        "ledger_id": report.ledger_id,
+        "manifest_core_hash": report.manifest_core_hash,
+        "expected_manifest_core_hash": report.expected_manifest_core_hash,
+        "external_anchor_supplied": report.external_anchor_supplied,
+        "external_anchor_verified": report.external_anchor_verified,
+        "canonicalization_profile_verified": report.canonicalization_profile_verified,
+        "hash_algorithm_verified": report.hash_algorithm_verified,
+        "manifest_core_hash_verified": report.manifest_core_hash_verified,
+        "ledger_document_byte_hash_verified": (
+            report.ledger_document_byte_hash_verified
+        ),
+        "artifact_hashes_verified": report.artifact_hashes_verified,
+        "chain_genesis_verified": report.chain_genesis_verified,
+        "chain_order_verified": report.chain_order_verified,
+        "chain_head_verified": report.chain_head_verified,
+        "chain_tail_verified": report.chain_tail_verified,
+        "source_file_hashes_verified": report.source_file_hashes_verified,
+        "source_package_hash_verified": report.source_package_hash_verified,
+        "ledger_geometry_verified": report.ledger_geometry_verified,
+        "root_ownership_verified": report.root_ownership_verified,
+        "authority_evidence_boundaries_verified": (
+            report.authority_evidence_boundaries_verified
+        ),
+        "secret_boundary_verified": report.secret_boundary_verified,
+        "source_bytes_unchanged": report.source_bytes_unchanged,
+        "signature_mode": report.signature_mode,
+        "signature_verified": report.signature_verified,
+        "verification_errors": list(report.verification_errors),
+        "provider_call_count": report.provider_call_count,
+        "network_call_count": report.network_call_count,
+        "gemini_call_count": report.gemini_call_count,
+        "seal_created_authority_count": report.seal_created_authority_count,
+        "seal_created_permission_count": report.seal_created_permission_count,
+        "seal_created_action_count": report.seal_created_action_count,
+        "real_world_effects_count": report.real_world_effects_count,
+    }
+
+def verify_airline_crypto_artifact_seal_v01(
+    envelope: object,
+    *,
+    ledger_item: object,
+    ordered_source_files_before: object,
+    ordered_source_files_after: object,
+    expected_source_package_ref: object,
+    source_audit_status: object,
+    secret_scan_passed: object,
+    expected_manifest_core_hash: object | None = None,
+    expected_identity: object | None = None,
+) -> AirlineCryptoArtifactSealVerificationReportV01:
+    errors: list[str] = []
+    try:
+        return _verify_airline_crypto_artifact_seal_impl_v01(
+            envelope,
+            ledger_item=ledger_item,
+            ordered_source_files_before=ordered_source_files_before,
+            ordered_source_files_after=ordered_source_files_after,
+            expected_source_package_ref=expected_source_package_ref,
+            source_audit_status=source_audit_status,
+            secret_scan_passed=secret_scan_passed,
+            expected_manifest_core_hash=expected_manifest_core_hash,
+            expected_identity=expected_identity,
+        )
+    except (TypeError, AttributeError, ValueError, KeyError, IndexError, RecursionError):
+        _append(errors, REASON_VERIFICATION_REPORT_INTERNAL_CHECK_FAILED)
+        return _verification_report_from_parts(
+            transaction_id="",
+            ledger_id="",
+            manifest_core_hash="",
+            expected_manifest_core_hash=None,
+            external_anchor_supplied=False,
+            external_anchor_verified=False,
+            canonicalization_profile_verified=False,
+            hash_algorithm_verified=False,
+            manifest_core_hash_verified=False,
+            ledger_document_byte_hash_verified=False,
+            artifact_hashes_verified=False,
+            chain_genesis_verified=False,
+            chain_order_verified=False,
+            chain_head_verified=False,
+            chain_tail_verified=False,
+            source_file_hashes_verified=False,
+            source_package_hash_verified=False,
+            ledger_geometry_verified=False,
+            root_ownership_verified=False,
+            authority_evidence_boundaries_verified=False,
+            secret_boundary_verified=False,
+            source_bytes_unchanged=False,
+            signature_mode="",
+            signature_verified=False,
+            verification_errors=tuple(errors),
+        )
+
+
 def _unique_reasons(reasons: tuple[str, ...] | list[str]) -> tuple[str, ...]:
     output: list[str] = []
     for reason in reasons:
@@ -1320,6 +1659,639 @@ def _expected_source_package_hash_from_core(
             },
         ),
     )
+
+
+def _verification_success_flags(
+    report: AirlineCryptoArtifactSealVerificationReportV01,
+) -> tuple[bool, ...]:
+    return (
+        report.canonicalization_profile_verified,
+        report.hash_algorithm_verified,
+        report.manifest_core_hash_verified,
+        report.ledger_document_byte_hash_verified,
+        report.artifact_hashes_verified,
+        report.chain_genesis_verified,
+        report.chain_order_verified,
+        report.chain_head_verified,
+        report.chain_tail_verified,
+        report.source_file_hashes_verified,
+        report.source_package_hash_verified,
+        report.ledger_geometry_verified,
+        report.root_ownership_verified,
+        report.authority_evidence_boundaries_verified,
+        report.secret_boundary_verified,
+        report.source_bytes_unchanged,
+    )
+
+
+def _verification_zero_counters(
+    report: AirlineCryptoArtifactSealVerificationReportV01,
+) -> tuple[object, ...]:
+    return (
+        report.provider_call_count,
+        report.network_call_count,
+        report.gemini_call_count,
+        report.seal_created_authority_count,
+        report.seal_created_permission_count,
+        report.seal_created_action_count,
+        report.real_world_effects_count,
+    )
+
+
+def _normalize_verification_errors(value: object) -> tuple[str, ...]:
+    if type(value) not in (tuple, list):
+        return (REASON_MALFORMED_VALIDATION_ERRORS,)
+    output: list[str] = []
+    for reason in value:
+        if (
+            type(reason) is str
+            and reason in VERIFICATION_ERROR_REASONS
+            and not _contains_lone_surrogate(reason)
+        ):
+            _append(output, reason)
+        else:
+            _append(output, REASON_MALFORMED_VALIDATION_ERRORS)
+    return tuple(output)
+
+
+def _verification_report_string_is_safe(value: object) -> bool:
+    return type(value) is str and not _contains_lone_surrogate(value)
+
+
+def _verification_report_success_identity_is_valid(
+    report: AirlineCryptoArtifactSealVerificationReportV01,
+) -> bool:
+    return (
+        _non_empty_string(report.transaction_id)
+        and _non_empty_string(report.ledger_id)
+        and validate_sha256_hex_v01(report.manifest_core_hash).validation_status
+        == STATUS_PASS
+    )
+
+
+def _verification_report_state_errors(
+    report: AirlineCryptoArtifactSealVerificationReportV01,
+    existing_errors: tuple[str, ...],
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    success_flags = _verification_success_flags(report)
+    flags_valid = all(type(flag) is bool for flag in success_flags)
+    internal_checks_pass = flags_valid and all(flag is True for flag in success_flags)
+    counters_valid = all(
+        _exact_zero(counter) for counter in _verification_zero_counters(report)
+    )
+    signature_valid = (
+        type(report.signature_mode) is str
+        and report.signature_mode == SIGNATURE_MODE_UNSIGNED_PLACEHOLDER
+        and type(report.signature_verified) is bool
+        and report.signature_verified is False
+    )
+    for value in (
+        report.transaction_id,
+        report.ledger_id,
+        report.manifest_core_hash,
+        report.signature_mode,
+    ):
+        if not _verification_report_string_is_safe(value):
+            _append(errors, REASON_VERIFICATION_REPORT_FIELD_MISMATCH)
+    if not flags_valid:
+        _append(errors, REASON_VERIFICATION_REPORT_FIELD_MISMATCH)
+    if not internal_checks_pass:
+        _append(errors, REASON_VERIFICATION_REPORT_INTERNAL_CHECK_FAILED)
+    if not signature_valid:
+        _append(errors, REASON_VERIFICATION_SIGNATURE_BOUNDARY_MISMATCH)
+    if not counters_valid:
+        _append(errors, REASON_VERIFICATION_REPORT_ZERO_COUNTER_MISMATCH)
+    if type(report.external_anchor_supplied) is not bool or type(report.external_anchor_verified) is not bool:
+        _append(errors, REASON_VERIFICATION_REPORT_ANCHOR_STATE_MISMATCH)
+    elif report.external_anchor_supplied is True:
+        expected_valid = (
+            type(report.expected_manifest_core_hash) is str
+            and validate_sha256_hex_v01(
+                report.expected_manifest_core_hash,
+            ).validation_status
+            == STATUS_PASS
+        )
+        if not expected_valid:
+            _append(errors, REASON_VERIFICATION_REPORT_ANCHOR_STATE_MISMATCH)
+        if report.external_anchor_verified is True:
+            if (
+                existing_errors
+                or not internal_checks_pass
+                or not signature_valid
+                or not counters_valid
+                or not _verification_report_success_identity_is_valid(report)
+                or not expected_valid
+                or report.expected_manifest_core_hash != report.manifest_core_hash
+            ):
+                _append(errors, REASON_VERIFICATION_REPORT_ANCHOR_STATE_MISMATCH)
+        elif not existing_errors:
+            _append(errors, REASON_VERIFICATION_REPORT_ANCHOR_STATE_MISMATCH)
+    else:
+        if report.external_anchor_verified is not False:
+            _append(errors, REASON_VERIFICATION_REPORT_ANCHOR_STATE_MISMATCH)
+        if report.expected_manifest_core_hash is not None:
+            _append(errors, REASON_VERIFICATION_REPORT_ANCHOR_STATE_MISMATCH)
+    if (
+        not existing_errors
+        and internal_checks_pass
+        and signature_valid
+        and counters_valid
+        and not _verification_report_success_identity_is_valid(report)
+    ):
+        _append(errors, REASON_VERIFICATION_REPORT_FIELD_MISMATCH)
+    return tuple(errors)
+
+
+def _verification_status_from_report_state(
+    report: AirlineCryptoArtifactSealVerificationReportV01,
+    errors: tuple[str, ...],
+) -> str:
+    if errors:
+        return STATUS_FAIL_CLOSED
+    if not all(flag is True for flag in _verification_success_flags(report)):
+        return STATUS_FAIL_CLOSED
+    if not _verification_report_success_identity_is_valid(report):
+        return STATUS_FAIL_CLOSED
+    if type(report.signature_mode) is not str or report.signature_mode != SIGNATURE_MODE_UNSIGNED_PLACEHOLDER:
+        return STATUS_FAIL_CLOSED
+    if type(report.signature_verified) is not bool or report.signature_verified is not False:
+        return STATUS_FAIL_CLOSED
+    if any(not _exact_zero(counter) for counter in _verification_zero_counters(report)):
+        return STATUS_FAIL_CLOSED
+    if (
+        report.external_anchor_supplied is True
+        and report.external_anchor_verified is True
+        and type(report.expected_manifest_core_hash) is str
+        and validate_sha256_hex_v01(report.expected_manifest_core_hash).validation_status
+        == STATUS_PASS
+        and report.expected_manifest_core_hash == report.manifest_core_hash
+    ):
+        return STATUS_PASS
+    if (
+        report.external_anchor_supplied is False
+        and report.external_anchor_verified is False
+        and report.expected_manifest_core_hash is None
+    ):
+        return STATUS_SELF_CONSISTENT_UNANCHORED
+    return STATUS_FAIL_CLOSED
+
+def _verification_report_from_parts(
+    *,
+    transaction_id: str,
+    ledger_id: str,
+    manifest_core_hash: str,
+    expected_manifest_core_hash: str | None,
+    external_anchor_supplied: bool,
+    external_anchor_verified: bool,
+    canonicalization_profile_verified: bool,
+    hash_algorithm_verified: bool,
+    manifest_core_hash_verified: bool,
+    ledger_document_byte_hash_verified: bool,
+    artifact_hashes_verified: bool,
+    chain_genesis_verified: bool,
+    chain_order_verified: bool,
+    chain_head_verified: bool,
+    chain_tail_verified: bool,
+    source_file_hashes_verified: bool,
+    source_package_hash_verified: bool,
+    ledger_geometry_verified: bool,
+    root_ownership_verified: bool,
+    authority_evidence_boundaries_verified: bool,
+    secret_boundary_verified: bool,
+    source_bytes_unchanged: bool,
+    signature_mode: str,
+    signature_verified: bool,
+    verification_errors: tuple[str, ...],
+) -> AirlineCryptoArtifactSealVerificationReportV01:
+    return AirlineCryptoArtifactSealVerificationReportV01(
+        verification_status=STATUS_FAIL_CLOSED,
+        transaction_id=transaction_id,
+        ledger_id=ledger_id,
+        manifest_core_hash=manifest_core_hash,
+        expected_manifest_core_hash=expected_manifest_core_hash,
+        external_anchor_supplied=external_anchor_supplied,
+        external_anchor_verified=external_anchor_verified,
+        canonicalization_profile_verified=canonicalization_profile_verified,
+        hash_algorithm_verified=hash_algorithm_verified,
+        manifest_core_hash_verified=manifest_core_hash_verified,
+        ledger_document_byte_hash_verified=ledger_document_byte_hash_verified,
+        artifact_hashes_verified=artifact_hashes_verified,
+        chain_genesis_verified=chain_genesis_verified,
+        chain_order_verified=chain_order_verified,
+        chain_head_verified=chain_head_verified,
+        chain_tail_verified=chain_tail_verified,
+        source_file_hashes_verified=source_file_hashes_verified,
+        source_package_hash_verified=source_package_hash_verified,
+        ledger_geometry_verified=ledger_geometry_verified,
+        root_ownership_verified=root_ownership_verified,
+        authority_evidence_boundaries_verified=authority_evidence_boundaries_verified,
+        secret_boundary_verified=secret_boundary_verified,
+        source_bytes_unchanged=source_bytes_unchanged,
+        signature_mode=signature_mode,
+        signature_verified=signature_verified,
+        verification_errors=verification_errors,
+        provider_call_count=0,
+        network_call_count=0,
+        gemini_call_count=0,
+        seal_created_authority_count=0,
+        seal_created_permission_count=0,
+        seal_created_action_count=0,
+        real_world_effects_count=0,
+    )
+
+
+def _verify_airline_crypto_artifact_seal_impl_v01(
+    envelope: object,
+    *,
+    ledger_item: object,
+    ordered_source_files_before: object,
+    ordered_source_files_after: object,
+    expected_source_package_ref: object,
+    source_audit_status: object,
+    secret_scan_passed: object,
+    expected_manifest_core_hash: object | None,
+    expected_identity: object | None,
+) -> AirlineCryptoArtifactSealVerificationReportV01:
+    errors: list[str] = []
+    expected_anchor, anchor_supplied, anchor_malformed = _normalize_expected_anchor(
+        expected_manifest_core_hash,
+    )
+    if anchor_malformed:
+        _append(errors, REASON_VERIFICATION_EXPECTED_ANCHOR_MALFORMED)
+    envelope_contract_report = (
+        validate_airline_crypto_artifact_seal_envelope_contract_v01(envelope)
+    )
+    envelope_ok = envelope_contract_report.validation_status == STATUS_PASS
+    if not envelope_ok:
+        _append(errors, REASON_VERIFICATION_ENVELOPE_CONTRACT_FAILED)
+    envelope_core = (
+        envelope.manifest_core
+        if type(envelope) is AirlineCryptoArtifactSealEnvelopeV01
+        else None
+    )
+    signature_mode = (
+        envelope.signature.mode
+        if type(envelope) is AirlineCryptoArtifactSealEnvelopeV01
+        and type(envelope.signature) is AirlineCryptoArtifactSealSignaturePlaceholderV01
+        and type(envelope.signature.mode) is str
+        else ""
+    )
+    signature_verified = (
+        envelope.signature.verified
+        if type(envelope) is AirlineCryptoArtifactSealEnvelopeV01
+        and type(envelope.signature) is AirlineCryptoArtifactSealSignaturePlaceholderV01
+        and type(envelope.signature.verified) is bool
+        else False
+    )
+    if not (
+        signature_mode == SIGNATURE_MODE_UNSIGNED_PLACEHOLDER
+        and signature_verified is False
+    ):
+        _append(errors, REASON_VERIFICATION_SIGNATURE_BOUNDARY_MISMATCH)
+    source_before, before_errors = _source_snapshot_index_v01(
+        ordered_source_files_before,
+        ledger_item,
+    )
+    for reason in before_errors:
+        _append(errors, reason)
+    source_after, after_errors = _source_snapshot_index_v01(
+        ordered_source_files_after,
+        ledger_item,
+    )
+    for reason in after_errors:
+        _append(errors, reason)
+    source_bytes_unchanged = False
+    if source_before is not None and source_after is not None:
+        source_bytes_unchanged = ordered_source_files_before == ordered_source_files_after
+        if source_before != source_after:
+            if (
+                source_before.ordered_source_file_refs
+                != source_after.ordered_source_file_refs
+            ):
+                _append(errors, REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED)
+            else:
+                _append(errors, REASON_VERIFICATION_SOURCE_BYTES_CHANGED)
+    if validate_airline_crypto_source_package_ref_v01(
+        expected_source_package_ref,
+    ).validation_status != STATUS_PASS:
+        _append(errors, REASON_VERIFICATION_EXPECTED_SOURCE_PACKAGE_REF_INVALID)
+    if type(source_audit_status) is not str or source_audit_status != STATUS_PASS:
+        _append(errors, REASON_VERIFICATION_SOURCE_AUDIT_STATUS_MISMATCH)
+    if secret_scan_passed is not True:
+        _append(errors, REASON_VERIFICATION_SECRET_SCAN_BOUNDARY_MISMATCH)
+    if (
+        expected_identity is not None
+        and type(expected_identity)
+        is not ledger_contracts.AirlineTransactionArtifactLedgerExpectedIdentityV01
+    ):
+        _append(errors, REASON_VERIFICATION_EXPECTED_IDENTITY_INVALID)
+    rebuilt_core: AirlineCryptoArtifactSealManifestCoreV01 | None = None
+    if not errors or all(
+        reason
+        not in errors
+        for reason in (
+            REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED,
+            REASON_VERIFICATION_EXPECTED_SOURCE_PACKAGE_REF_INVALID,
+            REASON_VERIFICATION_SOURCE_AUDIT_STATUS_MISMATCH,
+            REASON_VERIFICATION_SECRET_SCAN_BOUNDARY_MISMATCH,
+            REASON_VERIFICATION_EXPECTED_IDENTITY_INVALID,
+        )
+    ):
+        try:
+            if source_before is None:
+                raise ValueError(REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED)
+            rebuilt_core = build_airline_crypto_artifact_seal_manifest_core_v01(
+                ledger_item,  # type: ignore[arg-type]
+                ordered_source_files=ordered_source_files_before,  # type: ignore[arg-type]
+                source_package_ref=expected_source_package_ref,  # type: ignore[arg-type]
+                source_audit_status=source_audit_status,  # type: ignore[arg-type]
+                secret_scan_passed=secret_scan_passed,  # type: ignore[arg-type]
+                expected_identity=expected_identity,  # type: ignore[arg-type]
+            )
+        except (TypeError, AttributeError, ValueError, KeyError, IndexError, RecursionError):
+            _append(errors, REASON_VERIFICATION_MANIFEST_REBUILD_FAILED)
+    flags = _verification_flags_from_envelope_and_rebuilt_core(
+        envelope,
+        envelope_ok=envelope_ok,
+        rebuilt_core=rebuilt_core,
+        source_bytes_unchanged=source_bytes_unchanged,
+        source_audit_status=source_audit_status,
+        secret_scan_passed=secret_scan_passed,
+    )
+    for reason in _verification_mismatch_reasons(flags):
+        _append(errors, reason)
+    recomputed_manifest_core_hash = (
+        hash_airline_crypto_artifact_seal_manifest_core_v01(rebuilt_core)
+        if rebuilt_core is not None
+        else ""
+    )
+    internal_checks_pass = all(value is True for value in flags.values())
+    external_anchor_verified = False
+    if anchor_supplied and expected_anchor is not None:
+        anchor_matches = expected_anchor == recomputed_manifest_core_hash
+        external_anchor_verified = anchor_matches and internal_checks_pass
+        if not anchor_matches:
+            _append(errors, REASON_VERIFICATION_EXTERNAL_ANCHOR_MISMATCH)
+    manifest_core_hash = _safe_verification_report_string(
+        envelope.manifest_core_hash
+        if type(envelope) is AirlineCryptoArtifactSealEnvelopeV01
+        else "",
+    )
+    transaction_id = _safe_verification_report_string(
+        envelope_core.transaction_id
+        if type(envelope_core) is AirlineCryptoArtifactSealManifestCoreV01
+        else "",
+    )
+    ledger_id = _safe_verification_report_string(
+        envelope_core.ledger_id
+        if type(envelope_core) is AirlineCryptoArtifactSealManifestCoreV01
+        else "",
+    )
+    signature_mode = _safe_verification_report_string(signature_mode)
+    return _verification_report_from_parts(
+        transaction_id=transaction_id,
+        ledger_id=ledger_id,
+        manifest_core_hash=manifest_core_hash,
+        expected_manifest_core_hash=expected_anchor,
+        external_anchor_supplied=anchor_supplied,
+        external_anchor_verified=external_anchor_verified,
+        canonicalization_profile_verified=flags["canonicalization_profile_verified"],
+        hash_algorithm_verified=flags["hash_algorithm_verified"],
+        manifest_core_hash_verified=flags["manifest_core_hash_verified"],
+        ledger_document_byte_hash_verified=flags["ledger_document_byte_hash_verified"],
+        artifact_hashes_verified=flags["artifact_hashes_verified"],
+        chain_genesis_verified=flags["chain_genesis_verified"],
+        chain_order_verified=flags["chain_order_verified"],
+        chain_head_verified=flags["chain_head_verified"],
+        chain_tail_verified=flags["chain_tail_verified"],
+        source_file_hashes_verified=flags["source_file_hashes_verified"],
+        source_package_hash_verified=flags["source_package_hash_verified"],
+        ledger_geometry_verified=flags["ledger_geometry_verified"],
+        root_ownership_verified=flags["root_ownership_verified"],
+        authority_evidence_boundaries_verified=(
+            flags["authority_evidence_boundaries_verified"]
+        ),
+        secret_boundary_verified=flags["secret_boundary_verified"],
+        source_bytes_unchanged=source_bytes_unchanged,
+        signature_mode=signature_mode,
+        signature_verified=signature_verified,
+        verification_errors=tuple(errors),
+    )
+
+
+def _safe_verification_report_string(value: object) -> str:
+    if type(value) is str and not _contains_lone_surrogate(value):
+        return value
+    return ""
+
+
+def _normalize_expected_anchor(value: object | None) -> tuple[str | None, bool, bool]:
+    if value is None:
+        return None, False, False
+    if type(value) is str and validate_sha256_hex_v01(value).validation_status == STATUS_PASS:
+        return value, True, False
+    return None, False, True
+
+
+def _source_snapshot_index_v01(
+    snapshot: object,
+    ledger_item: object,
+) -> tuple[AirlineCryptoSourcePackageIndexV01 | None, tuple[str, ...]]:
+    errors: list[str] = []
+    if type(snapshot) is not tuple or len(snapshot) != len(REQUIRED_SOURCE_FILE_REFS):
+        return None, (REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED,)
+    for index, row in enumerate(snapshot):
+        if type(row) is not tuple or len(row) != 2:
+            _append(errors, REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED)
+            break
+        relative_ref, exact_bytes = row
+        if type(relative_ref) is not str or relative_ref != REQUIRED_SOURCE_FILE_REFS[index]:
+            _append(errors, REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED)
+            break
+        if not _valid_source_ref(relative_ref):
+            _append(errors, REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED)
+            break
+        if type(exact_bytes) is not bytes:
+            _append(errors, REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED)
+            break
+    if errors:
+        return None, tuple(errors)
+    transaction_id = (
+        ledger_item.transaction_id
+        if type(ledger_item)
+        is ledger_contracts.AirlineTransactionArtifactLedgerV01
+        and type(ledger_item.transaction_id) is str
+        else ""
+    )
+    try:
+        return (
+            build_airline_crypto_source_package_index_v01(
+                transaction_id=transaction_id,
+                ordered_source_files=snapshot,  # type: ignore[arg-type]
+            ),
+            (),
+        )
+    except (TypeError, AttributeError, ValueError, KeyError, IndexError, RecursionError):
+        return None, (REASON_VERIFICATION_SOURCE_SNAPSHOT_MALFORMED,)
+
+
+def _verification_flags_from_envelope_and_rebuilt_core(
+    envelope: object,
+    *,
+    envelope_ok: bool,
+    rebuilt_core: AirlineCryptoArtifactSealManifestCoreV01 | None,
+    source_bytes_unchanged: bool,
+    source_audit_status: object,
+    secret_scan_passed: object,
+) -> dict[str, bool]:
+    core = (
+        envelope.manifest_core
+        if type(envelope) is AirlineCryptoArtifactSealEnvelopeV01
+        else None
+    )
+    hash_value = (
+        envelope.manifest_core_hash
+        if type(envelope) is AirlineCryptoArtifactSealEnvelopeV01
+        else ""
+    )
+    core_ok = type(core) is AirlineCryptoArtifactSealManifestCoreV01
+    rebuilt_ok = rebuilt_core is not None
+    return {
+        "canonicalization_profile_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and core.canonicalization_profile_id == CANONICALIZATION_PROFILE_ID
+            and rebuilt_core.canonicalization_profile_id
+            == core.canonicalization_profile_id
+        ),
+        "hash_algorithm_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and core.hash_algorithm == HASH_ALGORITHM
+            and core.hash_encoding == HASH_ENCODING
+            and rebuilt_core.hash_algorithm == core.hash_algorithm
+            and rebuilt_core.hash_encoding == core.hash_encoding
+        ),
+        "manifest_core_hash_verified": bool(
+            envelope_ok
+            and rebuilt_ok
+            and hash_airline_crypto_artifact_seal_manifest_core_v01(rebuilt_core)
+            == hash_value
+        ),
+        "ledger_document_byte_hash_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and core.ledger_document_byte_hash == rebuilt_core.ledger_document_byte_hash
+        ),
+        "artifact_hashes_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and core.ordered_artifact_refs == rebuilt_core.ordered_artifact_refs
+            and core.ordered_artifact_hashes == rebuilt_core.ordered_artifact_hashes
+        ),
+        "chain_genesis_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and core.chain_genesis_hash == rebuilt_core.chain_genesis_hash
+        ),
+        "chain_order_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and core.ordered_artifact_refs == rebuilt_core.ordered_artifact_refs
+            and core.ordered_artifact_hashes == rebuilt_core.ordered_artifact_hashes
+        ),
+        "chain_head_verified": bool(
+            core_ok and rebuilt_ok and core.chain_head_hash == rebuilt_core.chain_head_hash
+        ),
+        "chain_tail_verified": bool(
+            core_ok and rebuilt_ok and core.chain_tail_hash == rebuilt_core.chain_tail_hash
+        ),
+        "source_file_hashes_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and core.ordered_source_file_refs == rebuilt_core.ordered_source_file_refs
+            and core.ordered_source_file_hashes
+            == rebuilt_core.ordered_source_file_hashes
+        ),
+        "source_package_hash_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and core.source_package_hash == rebuilt_core.source_package_hash
+        ),
+        "ledger_geometry_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and (core.ledger_entry_count, core.dependency_edge_count, core.root_final_count)
+            == (19, 29, 3)
+            and (
+                rebuilt_core.ledger_entry_count,
+                rebuilt_core.dependency_edge_count,
+                rebuilt_core.root_final_count,
+            )
+            == (19, 29, 3)
+        ),
+        "root_ownership_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and (core.ledger_entry_count, core.root_final_count)
+            == (rebuilt_core.ledger_entry_count, rebuilt_core.root_final_count)
+            == (19, 3)
+        ),
+        "authority_evidence_boundaries_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and core.seal_created_authority_count == 0
+            and core.seal_created_permission_count == 0
+            and core.seal_created_action_count == 0
+            and rebuilt_core.seal_created_authority_count == 0
+            and rebuilt_core.seal_created_permission_count == 0
+            and rebuilt_core.seal_created_action_count == 0
+        ),
+        "secret_boundary_verified": bool(
+            core_ok
+            and rebuilt_ok
+            and source_audit_status == STATUS_PASS
+            and secret_scan_passed is True
+            and core.secret_scan_passed is True
+            and core.raw_secret_included is False
+            and core.real_world_effects_count == 0
+            and rebuilt_core.secret_scan_passed is True
+            and rebuilt_core.raw_secret_included is False
+            and rebuilt_core.real_world_effects_count == 0
+        ),
+        "source_bytes_unchanged": source_bytes_unchanged,
+    }
+
+
+def _verification_mismatch_reasons(flags: dict[str, bool]) -> tuple[str, ...]:
+    mapping = (
+        ("manifest_core_hash_verified", REASON_VERIFICATION_MANIFEST_CORE_HASH_MISMATCH),
+        ("ledger_document_byte_hash_verified", REASON_VERIFICATION_LEDGER_DOCUMENT_BYTE_HASH_MISMATCH),
+        ("artifact_hashes_verified", REASON_VERIFICATION_ARTIFACT_HASHES_MISMATCH),
+        ("chain_genesis_verified", REASON_VERIFICATION_CHAIN_MISMATCH),
+        ("chain_order_verified", REASON_VERIFICATION_CHAIN_MISMATCH),
+        ("chain_head_verified", REASON_VERIFICATION_CHAIN_MISMATCH),
+        ("chain_tail_verified", REASON_VERIFICATION_CHAIN_MISMATCH),
+        ("source_file_hashes_verified", REASON_VERIFICATION_SOURCE_FILE_HASHES_MISMATCH),
+        ("source_package_hash_verified", REASON_VERIFICATION_SOURCE_PACKAGE_HASH_MISMATCH),
+        ("ledger_geometry_verified", REASON_VERIFICATION_LEDGER_GEOMETRY_MISMATCH),
+        ("root_ownership_verified", REASON_VERIFICATION_LEDGER_GEOMETRY_MISMATCH),
+        ("authority_evidence_boundaries_verified", REASON_VERIFICATION_MANIFEST_CORE_MISMATCH),
+        ("secret_boundary_verified", REASON_VERIFICATION_SECRET_SCAN_BOUNDARY_MISMATCH),
+    )
+    errors: list[str] = []
+    for key, reason in mapping:
+        if flags.get(key) is not True:
+            _append(errors, reason)
+            if key == "manifest_core_hash_verified":
+                _append(errors, REASON_VERIFICATION_MANIFEST_CORE_MISMATCH)
+    if (
+        flags.get("canonicalization_profile_verified") is not True
+        or flags.get("hash_algorithm_verified") is not True
+    ):
+        _append(errors, REASON_VERIFICATION_MANIFEST_CORE_MISMATCH)
+    return tuple(errors)
 
 
 def _validate_canonical_value(

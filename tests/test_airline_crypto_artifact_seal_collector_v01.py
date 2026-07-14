@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import inspect
 import json
+from collections import Counter
 from copy import deepcopy
 from dataclasses import FrozenInstanceError, dataclass, replace
 from types import MappingProxyType
@@ -140,6 +141,7 @@ def _bundle(
     item: ledger.AirlineTransactionArtifactLedgerV01,
     offer_id: str,
     *,
+    source_package_ref: str = PACKAGE_REF,
     identity: ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01 | None = None,
     audit: collector.AirlineCryptoArtifactSealAcceptedLedgerAuditV01 | None = None,
     before: tuple[tuple[str, bytes], ...] | None = None,
@@ -149,7 +151,7 @@ def _bundle(
     actual_before = before or _source_rows(item, actual_identity)
     return collector.build_airline_crypto_artifact_seal_source_bundle_v01(
         source_bundle_id=f"airline_crypto_source_bundle:{offer_id}",
-        source_package_ref=PACKAGE_REF,
+        source_package_ref=source_package_ref,
         accepted_audit=audit or _accepted_audit(item, offer_id),
         ledger_item=item,
         expected_identity=actual_identity,
@@ -686,10 +688,10 @@ def test_static_no_file_io_runtime_or_network_calls() -> None:
     assert forbidden_calls.isdisjoint(call_names)
 
 
-def test_static_no_manifest_envelope_or_b2b_verifier_invocation() -> None:
+def test_static_c2_uses_each_closed_collection_or_verification_call_once() -> None:
     source = open(MODULE_PATH, encoding="utf-8").read()
     tree = ast.parse(source)
-    forbidden_attributes = {
+    allowed_c2_attributes = {
         "build_airline_crypto_artifact_seal_manifest_core_v01",
         "build_airline_crypto_artifact_seal_envelope_v01",
         "verify_airline_crypto_artifact_seal_v01",
@@ -699,8 +701,13 @@ def test_static_no_manifest_envelope_or_b2b_verifier_invocation() -> None:
         for node in ast.walk(tree)
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
     }
-    assert forbidden_attributes.isdisjoint(called_attributes)
-    assert "AirlineCryptoArtifactSealVerificationReportV01" not in source
+    assert allowed_c2_attributes <= called_attributes
+    counts = Counter(
+        node.func.attr
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+    )
+    assert all(counts[name] == 1 for name in allowed_c2_attributes)
 
 
 def test_static_no_mutable_module_global_registry() -> None:
@@ -716,13 +723,19 @@ def test_static_no_mutable_module_global_registry() -> None:
                 )
 
 
-def test_static_public_module_has_no_collector_result_or_expected_anchor_surface() -> None:
+def test_static_c2_surface_exists_without_later_slice_objects() -> None:
     source = open(MODULE_PATH, encoding="utf-8").read()
-    assert "expected_manifest_core_hash" not in source
-    assert "post_collection_snapshot" not in source
-    assert "CollectorResult" not in source
-    assert "SELF_CONSISTENT_UNANCHORED" not in source
-    assert "Replay" not in source
+    tree = ast.parse(source)
+    defined_names = {
+        node.name
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.ClassDef, ast.FunctionDef))
+    }
+    assert "AirlineCryptoArtifactSealCollectionResultV01" in defined_names
+    assert "collect_airline_crypto_artifact_seal_from_source_bundle_v01" in defined_names
+    assert "CryptoAudit" not in defined_names
+    assert "CryptoWriter" not in defined_names
+    assert "Replay" not in defined_names
 
 
 def test_contract_field_name_tuples_match_dataclass_fields() -> None:
@@ -800,3 +813,1186 @@ def test_invalid_source_snapshot_does_not_leave_mutable_backing_state() -> None:
         invalid,
         collector.REASON_SOURCE_SNAPSHOT_BEFORE_MALFORMED,
     )
+
+
+def _collect_c2(
+    bundle: collector.AirlineCryptoArtifactSealSourceBundleV01,
+    *,
+    callback: object | None = None,
+    expected_anchor: object | None = None,
+) -> collector.AirlineCryptoArtifactSealCollectionResultV01:
+    actual_callback = callback or (
+        lambda: bundle.ordered_source_files_after_audit
+    )
+    return collector.collect_airline_crypto_artifact_seal_from_source_bundle_v01(
+        source_bundle=bundle,
+        post_collection_snapshot_provider=actual_callback,
+        expected_manifest_core_hash=expected_anchor,
+    )
+
+
+def _anchored_c2(
+    bundle: collector.AirlineCryptoArtifactSealSourceBundleV01,
+) -> collector.AirlineCryptoArtifactSealCollectionResultV01:
+    unanchored = _collect_c2(bundle)
+    return _collect_c2(
+        bundle,
+        expected_anchor=unanchored.manifest_core_hash,
+    )
+
+
+def _assert_collection_contract_pass(
+    result: collector.AirlineCryptoArtifactSealCollectionResultV01,
+) -> None:
+    validation = collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+        result,
+    )
+    assert validation.validation_status == collector.STATUS_PASS
+    assert validation.validation_errors == ()
+
+
+def _semantic_causal_bundle(
+) -> collector.AirlineCryptoArtifactSealSourceBundleV01:
+    ledger_source = ledger_collector_helpers._source_bundle_from_public_causal_runtime(
+        ledger.OFFER_A_ID,
+    )
+    identity = ledger_collector_helpers._expected_identity(ledger_source)
+    item = ledger_collector_helpers._assert_collected_pass(ledger_source)
+    hold = next(
+        entry
+        for entry in item.entries
+        if entry.artifact_type == ledger.ARTIFACT_AIRLINE_HOLD_PACKET
+    )
+    assert hold.artifact_id.startswith(
+        "airline_hold_commit_packet:semantic_causal:",
+    )
+    assert hold.canonical_hash_input["hold_id"].startswith(
+        "hold:semantic_causal:",
+    )
+    return _bundle(item, ledger.OFFER_A_ID, identity=identity)
+
+
+@pytest.mark.parametrize(
+    ("item_factory", "offer_id"),
+    ((_valid_a, ledger.OFFER_A_ID), (_valid_b, ledger.OFFER_B_ID)),
+)
+def test_c2_fixture_offers_unanchored_and_anchored(
+    item_factory,
+    offer_id: str,
+) -> None:
+    bundle = _bundle(item_factory(), offer_id)
+    unanchored = _collect_c2(bundle)
+    anchored = _collect_c2(
+        bundle,
+        expected_anchor=unanchored.manifest_core_hash,
+    )
+    assert (
+        unanchored.collection_status
+        == collector.STATUS_SELF_CONSISTENT_UNANCHORED
+    )
+    assert unanchored.expected_manifest_core_hash is None
+    assert anchored.collection_status == collector.STATUS_PASS
+    assert anchored.expected_manifest_core_hash == anchored.manifest_core_hash
+    assert anchored.verification_report is not None
+    assert anchored.verification_report.external_anchor_supplied is True
+    assert anchored.verification_report.external_anchor_verified is True
+    assert anchored.verification_report.signature_verified is False
+    _assert_collection_contract_pass(unanchored)
+    _assert_collection_contract_pass(anchored)
+
+
+def test_semantic_causal_c2_unanchored_and_anchored_preserve_lineage() -> None:
+    bundle = _semantic_causal_bundle()
+    unanchored = _collect_c2(bundle)
+    anchored = _collect_c2(
+        bundle,
+        expected_anchor=unanchored.manifest_core_hash,
+    )
+    assert (
+        unanchored.collection_status
+        == collector.STATUS_SELF_CONSISTENT_UNANCHORED
+    )
+    assert anchored.collection_status == collector.STATUS_PASS
+    assert anchored.manifest_core is not None
+    assert (
+        anchored.manifest_core.ledger_entry_count,
+        anchored.manifest_core.dependency_edge_count,
+        anchored.manifest_core.root_final_count,
+    ) == (19, 29, 3)
+    assert any(
+        ref.startswith("airline_hold_commit_packet:semantic_causal:")
+        for ref in anchored.manifest_core.ordered_artifact_refs
+    )
+    assert bundle.expected_identity.expected_source_identity_fields_by_type[
+        ledger.ARTIFACT_AIRLINE_HOLD_PACKET
+    ]["hold_id"].startswith("hold:semantic_causal:")
+
+
+def test_c2_success_preserves_exact_duplicate_identity_and_hash_fields() -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    result = _collect_c2(bundle)
+    assert result.source_bundle_id == bundle.source_bundle_id
+    assert result.source_package_ref == bundle.source_package_ref
+    assert result.transaction_id == bundle.ledger_item.transaction_id
+    assert result.ledger_id == bundle.ledger_item.ledger_id
+    assert result.manifest_core is not None
+    assert result.envelope is not None
+    assert result.verification_report is not None
+    assert (
+        result.manifest_core_hash
+        == result.envelope.manifest_core_hash
+        == result.verification_report.manifest_core_hash
+    )
+    assert result.source_bytes_unchanged_after_audit is True
+    assert result.source_bytes_unchanged_after_collection is True
+
+
+def test_c2_success_has_exact_stage_and_zero_counters() -> None:
+    result = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    assert tuple(
+        getattr(result, field_name)
+        for field_name in collector.COLLECTION_STAGE_COUNT_FIELDS
+    ) == (1, 1, 1, 1, 1)
+    assert all(
+        type(getattr(result, field_name)) is int
+        and getattr(result, field_name) == 0
+        for field_name in collector.COLLECTION_ZERO_COUNTER_FIELDS
+    )
+
+
+def test_c2_stage_order_is_manifest_envelope_callback_verifier(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    order: list[str] = []
+    original_manifest = collector._collect_manifest_core_v01
+    original_envelope = collector._collect_envelope_v01
+    original_verify = collector._verify_collected_envelope_v01
+
+    def manifest_wrapper(*args, **kwargs):
+        order.append("manifest")
+        return original_manifest(*args, **kwargs)
+
+    def envelope_wrapper(*args, **kwargs):
+        order.append("envelope")
+        return original_envelope(*args, **kwargs)
+
+    def callback():
+        order.append("callback")
+        return bundle.ordered_source_files_after_audit
+
+    def verify_wrapper(*args, **kwargs):
+        order.append("verify")
+        return original_verify(*args, **kwargs)
+
+    monkeypatch.setattr(collector, "_collect_manifest_core_v01", manifest_wrapper)
+    monkeypatch.setattr(collector, "_collect_envelope_v01", envelope_wrapper)
+    monkeypatch.setattr(collector, "_verify_collected_envelope_v01", verify_wrapper)
+    result = _collect_c2(bundle, callback=callback)
+    assert result.collection_status == collector.STATUS_SELF_CONSISTENT_UNANCHORED
+    assert order == ["manifest", "envelope", "callback", "verify"]
+
+
+def _contains_forbidden_plain_value(value: object) -> bool:
+    if isinstance(
+        value,
+        (
+            bytes,
+            bytearray,
+            MappingProxyType,
+            ledger.AirlineTransactionArtifactLedgerV01,
+            ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01,
+        ),
+    ):
+        return True
+    if type(value) is dict:
+        return any(
+            _contains_forbidden_plain_value(key)
+            or _contains_forbidden_plain_value(item)
+            for key, item in value.items()
+        )
+    if type(value) is list:
+        return any(_contains_forbidden_plain_value(item) for item in value)
+    return False
+
+
+@pytest.mark.parametrize("anchored", (False, True))
+def test_collection_result_plain_projection_is_exact_and_json_safe(
+    anchored: bool,
+) -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    result = _anchored_c2(bundle) if anchored else _collect_c2(bundle)
+    plain = collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(
+        result,
+    )
+    assert tuple(plain) == collector.COLLECTION_RESULT_FIELD_NAMES
+    assert (
+        seal.validate_airline_crypto_canonical_json_value_v01(plain).validation_status
+        == seal.STATUS_PASS
+    )
+    assert not _contains_forbidden_plain_value(plain)
+    assert "ledger_item" not in plain
+    assert "expected_identity" not in plain
+    assert "post_collection_snapshot_provider" not in plain
+
+
+def test_collection_result_is_frozen_and_plain_projection_is_independent() -> None:
+    result = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    with pytest.raises(FrozenInstanceError):
+        result.collection_status = "changed"  # type: ignore[misc]
+    assert type(result.collection_errors) is tuple
+    plain = collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(
+        result,
+    )
+    plain["collection_status"] = "changed"
+    assert result.collection_status == collector.STATUS_SELF_CONSISTENT_UNANCHORED
+
+
+def test_repeated_collection_and_a_b_isolation_are_deterministic() -> None:
+    a = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    b = _bundle(_valid_b(), ledger.OFFER_B_ID)
+    a1, b1, a2, b2 = _collect_c2(a), _collect_c2(b), _collect_c2(a), _collect_c2(b)
+    assert a1 == a2
+    assert b1 == b2
+    assert a1 != b1
+    aa1, bb1, aa2, bb2 = _anchored_c2(a), _anchored_c2(b), _anchored_c2(a), _anchored_c2(b)
+    assert aa1 == aa2
+    assert bb1 == bb2
+    assert aa1 != bb1
+
+
+def test_collection_does_not_mutate_any_exact_source_object() -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    bundle_before = deepcopy(bundle)
+    ledger_before = deepcopy(bundle.ledger_item)
+    identity_before = deepcopy(bundle.expected_identity)
+    before_snapshot = bundle.ordered_source_files_before_audit
+    after_snapshot = bundle.ordered_source_files_after_audit
+    result = _collect_c2(bundle)
+    assert bundle == bundle_before
+    assert bundle.ledger_item == ledger_before
+    assert bundle.expected_identity == identity_before
+    assert bundle.ordered_source_files_before_audit == before_snapshot
+    assert bundle.ordered_source_files_after_audit == after_snapshot
+    assert result.manifest_core == result.envelope.manifest_core  # type: ignore[union-attr]
+    assert result.envelope is not None
+    assert result.verification_report is not None
+
+
+def test_invalid_source_bundle_short_circuits_every_later_stage(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls = Counter()
+
+    def forbidden(name: str):
+        def invoke(*args, **kwargs):
+            calls[name] += 1
+            raise AssertionError(name)
+
+        return invoke
+
+    monkeypatch.setattr(collector, "_collect_manifest_core_v01", forbidden("manifest"))
+    monkeypatch.setattr(collector, "_collect_envelope_v01", forbidden("envelope"))
+    monkeypatch.setattr(collector, "_verify_collected_envelope_v01", forbidden("verify"))
+
+    def callback():
+        calls["callback"] += 1
+        raise AssertionError("callback")
+
+    result = collector.collect_airline_crypto_artifact_seal_from_source_bundle_v01(
+        source_bundle=object(),
+        post_collection_snapshot_provider=callback,
+    )
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert tuple(
+        getattr(result, field_name)
+        for field_name in collector.COLLECTION_STAGE_COUNT_FIELDS
+    ) == (1, 0, 0, 0, 0)
+    assert calls == Counter()
+    _assert_collection_contract_pass(result)
+
+
+@pytest.mark.parametrize(
+    "bundle_mutation",
+    ("failed_audit", "wrong_identity", "changed_after_audit", "ledger_json"),
+)
+def test_invalid_c1_bundle_stops_before_collection_stages(
+    bundle_mutation: str,
+) -> None:
+    valid = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    if bundle_mutation == "failed_audit":
+        bundle = replace(
+            valid,
+            accepted_audit=replace(
+                valid.accepted_audit,
+                final_status=collector.STATUS_FAIL_CLOSED,
+            ),
+        )
+    elif bundle_mutation == "wrong_identity":
+        bundle = replace(valid, expected_identity=_fixture_identity(ledger.OFFER_B_ID))
+    elif bundle_mutation == "changed_after_audit":
+        changed = list(valid.ordered_source_files_after_audit)
+        changed[-1] = (changed[-1][0], changed[-1][1] + b"changed")
+        bundle = replace(
+            valid,
+            ordered_source_files_after_audit=tuple(changed),
+        )
+    else:
+        changed = list(valid.ordered_source_files_before_audit)
+        changed[0] = (changed[0][0], b"{}")
+        bundle = replace(
+            valid,
+            ordered_source_files_before_audit=tuple(changed),
+            ordered_source_files_after_audit=tuple(changed),
+        )
+    result = _collect_c2(bundle)
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert tuple(
+        getattr(result, field_name)
+        for field_name in collector.COLLECTION_STAGE_COUNT_FIELDS
+    ) == (1, 0, 0, 0, 0)
+    assert (
+        collector.REASON_COLLECTION_SOURCE_BUNDLE_VALIDATION_FAILED
+        in result.collection_errors
+    )
+
+
+def test_non_callable_callback_stops_before_manifest_collection() -> None:
+    result = _collect_c2(
+        _bundle(_valid_a(), ledger.OFFER_A_ID),
+        callback=42,
+    )
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert tuple(
+        getattr(result, field_name)
+        for field_name in collector.COLLECTION_STAGE_COUNT_FIELDS
+    ) == (1, 0, 0, 0, 0)
+    assert (
+        collector.REASON_POST_COLLECTION_SNAPSHOT_PROVIDER_INVALID
+        in result.collection_errors
+    )
+
+
+@pytest.mark.parametrize("exception_type", (ValueError, RuntimeError))
+def test_callback_exception_is_sanitized_and_stops_before_verifier(
+    exception_type,
+) -> None:
+    def callback():
+        raise exception_type("private callback text")
+
+    result = _collect_c2(
+        _bundle(_valid_a(), ledger.OFFER_A_ID),
+        callback=callback,
+    )
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert tuple(
+        getattr(result, field_name)
+        for field_name in collector.COLLECTION_STAGE_COUNT_FIELDS
+    ) == (1, 1, 1, 1, 0)
+    assert result.collection_errors == (
+        collector.REASON_POST_COLLECTION_SNAPSHOT_PROVIDER_FAILED,
+    )
+    assert "private callback text" not in repr(result)
+    assert result.verification_report is None
+    _assert_collection_contract_pass(result)
+
+
+def test_callback_requiring_argument_fails_once_without_verification() -> None:
+    calls = 0
+
+    def callback(required):
+        nonlocal calls
+        calls += 1
+        return required
+
+    result = _collect_c2(
+        _bundle(_valid_a(), ledger.OFFER_A_ID),
+        callback=callback,
+    )
+    assert calls == 0
+    assert result.post_collection_snapshot_provider_call_count == 1
+    assert result.verification_count == 0
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+
+
+def test_manifest_failure_stops_every_later_stage(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        collector,
+        "_collect_manifest_core_v01",
+        lambda *args, **kwargs: (_ for _ in ()).throw(ValueError("private")),
+    )
+    result = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    assert tuple(
+        getattr(result, field_name)
+        for field_name in collector.COLLECTION_STAGE_COUNT_FIELDS
+    ) == (1, 1, 0, 0, 0)
+    assert result.collection_errors == (
+        collector.REASON_MANIFEST_CORE_COLLECTION_FAILED,
+    )
+    _assert_collection_contract_pass(result)
+
+
+def test_envelope_failure_stops_callback_and_verifier(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        collector,
+        "_collect_envelope_v01",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("private")),
+    )
+    result = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    assert tuple(
+        getattr(result, field_name)
+        for field_name in collector.COLLECTION_STAGE_COUNT_FIELDS
+    ) == (1, 1, 1, 0, 0)
+    assert result.collection_errors == (
+        collector.REASON_ENVELOPE_COLLECTION_FAILED,
+    )
+    _assert_collection_contract_pass(result)
+
+
+def test_verifier_exception_returns_honest_fail_closed_result(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        collector,
+        "_verify_collected_envelope_v01",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("private")),
+    )
+    result = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    assert result.verification_count == 1
+    assert result.verification_report is None
+    assert result.collection_errors == (collector.REASON_VERIFICATION_CALL_FAILED,)
+    _assert_collection_contract_pass(result)
+
+
+class _TupleSubclass(tuple):
+    pass
+
+
+class _CustomEqualitySnapshot:
+    def __eq__(self, other: object) -> bool:
+        return True
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "list_outer",
+        "tuple_subclass",
+        "missing",
+        "extra",
+        "reordered",
+        "list_row",
+        "tuple_subclass_row",
+        "str_subclass",
+        "bytearray",
+        "memoryview",
+        "custom_equality",
+        "changed_ref",
+    ),
+)
+def test_malformed_post_collection_snapshot_is_not_repaired_and_is_verified_once(
+    mutation: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    rows = list(bundle.ordered_source_files_after_audit)
+    if mutation == "list_outer":
+        observed: object = rows
+    elif mutation == "tuple_subclass":
+        observed = _TupleSubclass(rows)
+    elif mutation == "missing":
+        observed = tuple(rows[:-1])
+    elif mutation == "extra":
+        observed = tuple(rows + [("extra.json", b"{}")])
+    elif mutation == "reordered":
+        rows[0], rows[1] = rows[1], rows[0]
+        observed = tuple(rows)
+    elif mutation == "list_row":
+        rows[0] = list(rows[0])  # type: ignore[assignment]
+        observed = tuple(rows)
+    elif mutation == "tuple_subclass_row":
+        rows[0] = _TupleSubclass(rows[0])
+        observed = tuple(rows)
+    elif mutation == "str_subclass":
+        rows[0] = (_StringSubclass(rows[0][0]), rows[0][1])
+        observed = tuple(rows)
+    elif mutation == "bytearray":
+        rows[0] = (rows[0][0], bytearray(rows[0][1]))  # type: ignore[arg-type]
+        observed = tuple(rows)
+    elif mutation == "memoryview":
+        rows[0] = (rows[0][0], memoryview(rows[0][1]))  # type: ignore[arg-type]
+        observed = tuple(rows)
+    elif mutation == "custom_equality":
+        observed = _CustomEqualitySnapshot()
+    else:
+        rows[-1] = ("foreign.json", rows[-1][1])
+        observed = tuple(rows)
+    verify_calls = 0
+    original_verify = collector._verify_collected_envelope_v01
+
+    def verify_wrapper(*args, **kwargs):
+        nonlocal verify_calls
+        verify_calls += 1
+        assert kwargs["ordered_source_files_after"] is observed
+        return original_verify(*args, **kwargs)
+
+    monkeypatch.setattr(collector, "_verify_collected_envelope_v01", verify_wrapper)
+    result = _collect_c2(bundle, callback=lambda: observed)
+    assert verify_calls == 1
+    assert result.verification_count == 1
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert (
+        collector.REASON_POST_COLLECTION_SNAPSHOT_MALFORMED
+        in result.collection_errors
+    )
+    assert not hasattr(result, "post_collection_snapshot")
+    _assert_collection_contract_pass(result)
+
+
+def test_changed_post_collection_byte_runs_verifier_and_fails_closed() -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    rows = list(bundle.ordered_source_files_after_audit)
+    rows[-1] = (rows[-1][0], rows[-1][1] + b"changed")
+    result = _collect_c2(bundle, callback=lambda: tuple(rows))
+    assert result.verification_count == 1
+    assert result.verification_report is not None
+    assert result.verification_report.source_bytes_unchanged is False
+    assert (
+        collector.REASON_POST_COLLECTION_SOURCE_BYTES_CHANGED
+        in result.collection_errors
+    )
+    assert collector.REASON_COLLECTION_VERIFICATION_FAILED in result.collection_errors
+    _assert_collection_contract_pass(result)
+
+
+@pytest.mark.parametrize("separate_copy", (False, True))
+def test_exact_or_separately_copied_post_collection_tuple_passes(
+    separate_copy: bool,
+) -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    observed = (
+        tuple((ref, content) for ref, content in bundle.ordered_source_files_after_audit)
+        if separate_copy
+        else bundle.ordered_source_files_after_audit
+    )
+    result = _collect_c2(bundle, callback=lambda: observed)
+    assert result.collection_status == collector.STATUS_SELF_CONSISTENT_UNANCHORED
+    assert result.source_bytes_unchanged_after_collection is True
+
+
+def test_mutable_callback_input_is_not_retained_or_exposed() -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    temporary = list(bundle.ordered_source_files_after_audit)
+    observed = tuple(temporary)
+    result = _collect_c2(bundle, callback=lambda: observed)
+    plain_before = collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(
+        result,
+    )
+    temporary[0] = ("changed.json", b"changed")
+    assert result.collection_status == collector.STATUS_SELF_CONSISTENT_UNANCHORED
+    assert (
+        collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(
+            result,
+        )
+        == plain_before
+    )
+    assert not hasattr(result, "ordered_source_files_after_collection")
+
+
+def test_missing_anchor_never_self_anchors() -> None:
+    signature = inspect.signature(
+        collector.collect_airline_crypto_artifact_seal_from_source_bundle_v01,
+    )
+    assert signature.parameters["expected_manifest_core_hash"].default is None
+    result = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    assert result.collection_status == collector.STATUS_SELF_CONSISTENT_UNANCHORED
+    assert result.collection_status != collector.STATUS_PASS
+    assert result.expected_manifest_core_hash is None
+    assert result.verification_report.external_anchor_supplied is False  # type: ignore[union-attr]
+
+
+@pytest.mark.parametrize(
+    "anchor",
+    (
+        "0" * 64,
+        "A" * 64,
+        "0" * 63,
+        b"0" * 64,
+        _StringSubclass("0" * 64),
+        _CustomEqualitySnapshot(),
+    ),
+)
+def test_wrong_or_malformed_anchor_fails_closed_without_arbitrary_retention(
+    anchor: object,
+) -> None:
+    result = _collect_c2(
+        _bundle(_valid_a(), ledger.OFFER_A_ID),
+        expected_anchor=anchor,
+    )
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert result.verification_report is not None
+    assert collector.REASON_COLLECTION_VERIFICATION_FAILED in result.collection_errors
+    if type(anchor) is str and seal.validate_sha256_hex_v01(anchor).validation_status == seal.STATUS_PASS:
+        assert result.expected_manifest_core_hash == anchor
+    else:
+        assert result.expected_manifest_core_hash is None
+        assert repr(anchor) not in repr(result)
+
+
+def test_coordinated_modified_package_fails_original_anchor_but_is_unanchored_without_it() -> None:
+    original = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    original_result = _collect_c2(original)
+    changed_rows = list(original.ordered_source_files_before_audit)
+    changed_rows[-1] = (changed_rows[-1][0], changed_rows[-1][1] + b"changed")
+    modified = _bundle(
+        original.ledger_item,
+        ledger.OFFER_A_ID,
+        identity=original.expected_identity,
+        before=tuple(changed_rows),
+        after=tuple(changed_rows),
+    )
+    anchored = _collect_c2(
+        modified,
+        expected_anchor=original_result.manifest_core_hash,
+    )
+    unanchored = _collect_c2(modified)
+    assert anchored.collection_status == collector.STATUS_FAIL_CLOSED
+    assert anchored.verification_report is not None
+    assert anchored.verification_report.external_anchor_verified is False
+    assert (
+        collector.REASON_COLLECTION_EXPECTED_ANCHOR_MISMATCH
+        in anchored.collection_errors
+    )
+    assert (
+        unanchored.collection_status
+        == collector.STATUS_SELF_CONSISTENT_UNANCHORED
+    )
+    assert unanchored.collection_status != collector.STATUS_PASS
+    assert modified.ordered_source_files_before_audit == tuple(changed_rows)
+
+
+def test_collection_result_wrong_type_fails_contract_validation() -> None:
+    report = collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+        object(),
+    )
+    assert report.validation_status == collector.STATUS_FAIL_CLOSED
+    assert report.validation_errors == (collector.REASON_COLLECTION_RESULT_WRONG_TYPE,)
+
+
+def test_direct_result_status_is_derived_from_complete_state() -> None:
+    valid = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    with_errors = replace(
+        valid,
+        collection_status=collector.STATUS_PASS,
+        collection_errors=(collector.REASON_COLLECTION_VERIFICATION_FAILED,),
+    )
+    assert with_errors.collection_status == collector.STATUS_FAIL_CLOSED
+    without_nested = replace(
+        valid,
+        collection_status=collector.STATUS_PASS,
+        manifest_core=None,
+        envelope=None,
+        verification_report=None,
+    )
+    assert without_nested.collection_status == collector.STATUS_FAIL_CLOSED
+    without_only_envelope = replace(
+        valid,
+        collection_status=collector.STATUS_PASS,
+        envelope=None,
+    )
+    assert (
+        without_only_envelope.collection_status
+        == collector.STATUS_FAIL_CLOSED
+    )
+    assert (
+        collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+            without_only_envelope,
+        ).validation_status
+        == collector.STATUS_FAIL_CLOSED
+    )
+    expected_present = replace(
+        valid,
+        expected_manifest_core_hash=valid.manifest_core_hash,
+    )
+    assert expected_present.collection_status == collector.STATUS_FAIL_CLOSED
+
+
+def test_result_contract_rejects_duplicate_view_divergence() -> None:
+    unanchored = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    anchored = _anchored_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    source_report = replace(
+        unanchored.source_bundle_validation_report,
+        source_bundle_id="foreign_bundle",
+    )
+    source_mismatch = replace(
+        unanchored,
+        source_bundle_validation_report=source_report,
+    )
+    assert (
+        collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+            source_mismatch,
+        ).validation_status
+        == collector.STATUS_FAIL_CLOSED
+    )
+    wrong_expected = replace(
+        anchored,
+        expected_manifest_core_hash="0" * 64,
+    )
+    assert wrong_expected.collection_status == collector.STATUS_FAIL_CLOSED
+    assert (
+        collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+            wrong_expected,
+        ).validation_status
+        == collector.STATUS_FAIL_CLOSED
+    )
+
+
+def test_result_contract_rejects_manifest_envelope_and_report_identity_mismatch() -> None:
+    a = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    b = _collect_c2(_bundle(_valid_b(), ledger.OFFER_B_ID))
+    envelope_mismatch = replace(a, envelope=b.envelope)
+    assert envelope_mismatch.collection_status == collector.STATUS_FAIL_CLOSED
+    assert (
+        collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+            envelope_mismatch,
+        ).validation_status
+        == collector.STATUS_FAIL_CLOSED
+    )
+    report_mismatch = replace(a, verification_report=b.verification_report)
+    assert report_mismatch.collection_status == collector.STATUS_FAIL_CLOSED
+    assert (
+        collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+            report_mismatch,
+        ).validation_status
+        == collector.STATUS_FAIL_CLOSED
+    )
+
+
+def test_result_contract_rejects_false_source_stability() -> None:
+    valid = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    changed = replace(valid, source_bytes_unchanged_after_audit=False)
+    assert changed.collection_status == collector.STATUS_FAIL_CLOSED
+    assert (
+        collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+            changed,
+        ).validation_status
+        == collector.STATUS_FAIL_CLOSED
+    )
+
+
+@pytest.mark.parametrize(
+    "changes",
+    (
+        {"source_bundle_validation_count": True},
+        {"manifest_core_collection_count": 2},
+        {"manifest_core_collection_count": 0, "envelope_collection_count": 1},
+        {"provider_call_count": False},
+        {"real_world_effects_count": 1},
+    ),
+)
+def test_result_contract_rejects_stage_or_zero_counter_malformed_state(
+    changes: dict[str, object],
+) -> None:
+    changed = replace(
+        _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID)),
+        **changes,
+    )
+    assert changed.collection_status == collector.STATUS_FAIL_CLOSED
+    assert (
+        collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+            changed,
+        ).validation_status
+        == collector.STATUS_FAIL_CLOSED
+    )
+
+
+@pytest.mark.parametrize(
+    ("errors", "expected"),
+    (
+        ({}, collector.REASON_COLLECTION_ERROR_CONTAINER_MALFORMED),
+        (("unknown",), collector.REASON_COLLECTION_ERROR_CONTAINER_MALFORMED),
+        (("\ud800",), collector.REASON_COLLECTION_ERROR_CONTAINER_MALFORMED),
+    ),
+)
+def test_collection_error_container_is_closed_and_sanitized(
+    errors: object,
+    expected: str,
+) -> None:
+    valid = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    changed = replace(valid, collection_errors=errors)
+    assert changed.collection_status == collector.STATUS_FAIL_CLOSED
+    assert changed.collection_errors == (expected,)
+    assert (
+        collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+            changed,
+        ).validation_status
+        == collector.STATUS_FAIL_CLOSED
+    )
+
+
+def test_collection_error_list_is_frozen_from_caller_mutation() -> None:
+    valid = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    errors = [collector.REASON_COLLECTION_VERIFICATION_FAILED]
+    changed = replace(valid, collection_errors=errors)
+    errors.append(collector.REASON_ENVELOPE_COLLECTION_FAILED)
+    assert changed.collection_errors == (
+        collector.REASON_COLLECTION_VERIFICATION_FAILED,
+    )
+
+
+def test_honest_fail_closed_results_are_contract_valid_and_json_safe() -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    changed_rows = list(bundle.ordered_source_files_after_audit)
+    changed_rows[-1] = (
+        changed_rows[-1][0],
+        changed_rows[-1][1] + b"changed",
+    )
+    source_changed = _collect_c2(
+        bundle,
+        callback=lambda: tuple(changed_rows),
+    )
+    wrong_anchor = _collect_c2(bundle, expected_anchor="0" * 64)
+
+    def failed_callback():
+        raise RuntimeError("private")
+
+    callback_failed = _collect_c2(bundle, callback=failed_callback)
+    for result in (source_changed, wrong_anchor, callback_failed):
+        assert result.collection_status == collector.STATUS_FAIL_CLOSED
+        _assert_collection_contract_pass(result)
+        plain = collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(
+            result,
+        )
+        assert plain["collection_status"] == collector.STATUS_FAIL_CLOSED
+        assert (
+            seal.validate_airline_crypto_canonical_json_value_v01(plain).validation_status
+            == seal.STATUS_PASS
+        )
+
+
+@pytest.mark.parametrize("malformed", (None, {}, [], "bad", 1, object()))
+def test_collection_result_validator_never_leaks_shape_exceptions(
+    malformed: object,
+) -> None:
+    report = collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+        malformed,
+    )
+    assert report.validation_status == collector.STATUS_FAIL_CLOSED
+
+
+def test_collection_result_field_names_match_exact_contract() -> None:
+    assert tuple(
+        collector.AirlineCryptoArtifactSealCollectionResultV01.__dataclass_fields__
+    ) == collector.COLLECTION_RESULT_FIELD_NAMES
+
+
+def test_static_c2_has_no_hardcoded_fixture_or_package_paths() -> None:
+    source = open(MODULE_PATH, encoding="utf-8").read()
+    assert ledger.OFFER_A_ID not in source
+    assert ledger.OFFER_B_ID not in source
+    assert ledger.TRANSACTION_ID not in source
+    assert "airline_transaction_artifact_ledger_slice_e2_offline_f244512" not in source
+    assert ".tmp/" not in source
+
+
+def test_source_bundle_report_pass_requires_closed_nonempty_identity() -> None:
+    valid = _report(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    invalid_identities = (
+        ("", valid.source_package_ref),
+        (valid.source_bundle_id, ""),
+        (valid.source_bundle_id, "a/b"),
+        (valid.source_bundle_id, "."),
+    )
+    for source_bundle_id, source_package_ref in invalid_identities:
+        changed = replace(
+            valid,
+            source_bundle_id=source_bundle_id,
+            source_package_ref=source_package_ref,
+        )
+        assert changed.validation_status == collector.STATUS_FAIL_CLOSED
+
+
+def test_result_rejects_spliced_foreign_source_package_identity() -> None:
+    original = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    foreign = _collect_c2(
+        _bundle(
+            _valid_a(),
+            ledger.OFFER_A_ID,
+            source_package_ref="foreign_airline_crypto_package",
+        ),
+    )
+    spliced = replace(
+        original,
+        transaction_id=foreign.transaction_id,
+        ledger_id=foreign.ledger_id,
+        manifest_core_hash=foreign.manifest_core_hash,
+        manifest_core=foreign.manifest_core,
+        envelope=foreign.envelope,
+        verification_report=foreign.verification_report,
+    )
+    assert spliced.collection_status == collector.STATUS_FAIL_CLOSED
+    validation = collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+        spliced,
+    )
+    assert validation.validation_status == collector.STATUS_FAIL_CLOSED
+    assert collector.REASON_COLLECTION_IDENTITY_MISMATCH in validation.validation_errors
+
+
+def test_wrong_type_nested_verification_report_is_discarded(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        collector,
+        "_verify_collected_envelope_v01",
+        lambda *args, **kwargs: object(),
+    )
+    result = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert result.verification_report is None
+    assert result.verification_count == 1
+    assert result.collection_errors == (
+        collector.REASON_VERIFICATION_REPORT_CONTRACT_INVALID,
+        collector.REASON_VERIFICATION_REPORT_MISSING,
+    )
+    _assert_collection_contract_pass(result)
+    collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(result)
+
+
+def test_foreign_contract_valid_verification_report_is_discarded(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    foreign_report = _collect_c2(
+        _bundle(_valid_b(), ledger.OFFER_B_ID),
+    ).verification_report
+    assert foreign_report is not None
+    monkeypatch.setattr(
+        collector,
+        "_verify_collected_envelope_v01",
+        lambda *args, **kwargs: foreign_report,
+    )
+    result = _collect_c2(_bundle(_valid_a(), ledger.OFFER_A_ID))
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert result.verification_report is None
+    assert collector.REASON_COLLECTION_IDENTITY_MISMATCH in result.collection_errors
+    assert collector.REASON_VERIFICATION_REPORT_MISSING in result.collection_errors
+    _assert_collection_contract_pass(result)
+    collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(result)
+
+
+def test_nested_pass_cannot_replace_wrong_caller_anchor(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    correct = _anchored_c2(bundle)
+    assert correct.verification_report is not None
+    wrong_anchor = "0" * 64
+    assert wrong_anchor != correct.manifest_core_hash
+    monkeypatch.setattr(
+        collector,
+        "_verify_collected_envelope_v01",
+        lambda *args, **kwargs: correct.verification_report,
+    )
+    result = _collect_c2(bundle, expected_anchor=wrong_anchor)
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert result.expected_manifest_core_hash == wrong_anchor
+    assert result.verification_report is None
+    assert (
+        collector.REASON_COLLECTION_EXPECTED_ANCHOR_MISMATCH
+        in result.collection_errors
+    )
+    assert collector.REASON_VERIFICATION_REPORT_MISSING in result.collection_errors
+    _assert_collection_contract_pass(result)
+    collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(result)
+
+
+def test_correct_anchor_with_changed_source_is_not_anchor_mismatch() -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    correct_anchor = _collect_c2(bundle).manifest_core_hash
+    changed = list(bundle.ordered_source_files_after_audit)
+    changed[-1] = (changed[-1][0], changed[-1][1] + b"changed")
+    result = _collect_c2(
+        bundle,
+        callback=lambda: tuple(changed),
+        expected_anchor=correct_anchor,
+    )
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert result.verification_report is not None
+    assert result.verification_report.expected_manifest_core_hash == correct_anchor
+    assert (
+        collector.REASON_POST_COLLECTION_SOURCE_BYTES_CHANGED
+        in result.collection_errors
+    )
+    assert collector.REASON_COLLECTION_VERIFICATION_FAILED in result.collection_errors
+    assert (
+        collector.REASON_COLLECTION_EXPECTED_ANCHOR_MISMATCH
+        not in result.collection_errors
+    )
+
+
+def test_successful_nested_report_cannot_hide_malformed_callback(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    successful_report = _collect_c2(bundle).verification_report
+    assert successful_report is not None
+    monkeypatch.setattr(
+        collector,
+        "_verify_collected_envelope_v01",
+        lambda *args, **kwargs: successful_report,
+    )
+    result = _collect_c2(bundle, callback=lambda: [])
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert result.verification_report is None
+    assert collector.REASON_POST_COLLECTION_SNAPSHOT_MALFORMED in result.collection_errors
+    assert collector.REASON_COLLECTION_RESULT_FIELD_MISMATCH in result.collection_errors
+    assert collector.REASON_VERIFICATION_REPORT_MISSING in result.collection_errors
+    _assert_collection_contract_pass(result)
+    collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(result)
+
+
+def test_malformed_caller_anchor_cannot_become_unanchored_success(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    unanchored_report = _collect_c2(bundle).verification_report
+    assert unanchored_report is not None
+    monkeypatch.setattr(
+        collector,
+        "_verify_collected_envelope_v01",
+        lambda *args, **kwargs: unanchored_report,
+    )
+    result = _collect_c2(bundle, expected_anchor="A" * 64)
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert result.expected_manifest_core_hash is None
+    assert result.verification_report is None
+    assert (
+        collector.REASON_COLLECTION_EXPECTED_ANCHOR_MISMATCH
+        in result.collection_errors
+    )
+    assert collector.REASON_VERIFICATION_REPORT_MISSING in result.collection_errors
+    _assert_collection_contract_pass(result)
+    collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(result)
+
+
+@pytest.mark.parametrize(
+    ("field_name", "foreign_value"),
+    (
+        ("source_bundle_id", "foreign_airline_crypto_source_bundle"),
+        ("source_package_ref", "foreign_airline_crypto_source_package"),
+    ),
+)
+def test_foreign_c1_report_identity_is_sanitized_before_manifest_collection(
+    field_name: str,
+    foreign_value: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    real_report = _report(bundle)
+    foreign_report = replace(real_report, **{field_name: foreign_value})
+    assert foreign_report.validation_status == collector.STATUS_PASS
+    monkeypatch.setattr(
+        collector,
+        "validate_airline_crypto_artifact_seal_source_bundle_v01",
+        lambda source_bundle: foreign_report,
+    )
+    result = _collect_c2(bundle)
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert result.source_bundle_id == bundle.source_bundle_id
+    assert result.source_package_ref == bundle.source_package_ref
+    assert tuple(
+        getattr(result, name)
+        for name in collector.COLLECTION_STAGE_COUNT_FIELDS
+    ) == (1, 0, 0, 0, 0)
+    assert (
+        collector.REASON_COLLECTION_SOURCE_BUNDLE_VALIDATION_REPORT_MALFORMED
+        in result.collection_errors
+    )
+    assert (
+        collector.REASON_COLLECTION_SOURCE_BUNDLE_VALIDATION_FAILED
+        in result.collection_errors
+    )
+    assert collector.REASON_COLLECTION_IDENTITY_MISMATCH in result.collection_errors
+    _assert_collection_contract_pass(result)
+    collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(result)
+
+
+@pytest.mark.parametrize("foreign_kind", ("source_package_ref", "other_ledger"))
+def test_foreign_manifest_identity_stops_before_envelope_collection(
+    foreign_kind: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundle = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    if foreign_kind == "source_package_ref":
+        foreign_manifest = _collect_c2(
+            _bundle(
+                _valid_a(),
+                ledger.OFFER_A_ID,
+                source_package_ref="foreign_airline_crypto_package",
+            ),
+        ).manifest_core
+    else:
+        foreign_manifest = _collect_c2(
+            _bundle(_valid_b(), ledger.OFFER_B_ID),
+        ).manifest_core
+    assert foreign_manifest is not None
+    callback_calls = 0
+
+    def callback():
+        nonlocal callback_calls
+        callback_calls += 1
+        return bundle.ordered_source_files_after_audit
+
+    monkeypatch.setattr(
+        collector,
+        "_collect_manifest_core_v01",
+        lambda *args, **kwargs: foreign_manifest,
+    )
+    result = _collect_c2(bundle, callback=callback)
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert result.manifest_core is None
+    assert result.envelope is None
+    assert result.verification_report is None
+    assert callback_calls == 0
+    assert tuple(
+        getattr(result, name)
+        for name in collector.COLLECTION_STAGE_COUNT_FIELDS
+    ) == (1, 1, 0, 0, 0)
+    assert result.collection_errors == (
+        collector.REASON_MANIFEST_CORE_COLLECTION_FAILED,
+    )
+    _assert_collection_contract_pass(result)
+    collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(result)
+
+
+@pytest.mark.parametrize(
+    "invalid_ref",
+    (".", "..", "a/b", "a\\b", "/absolute"),
+)
+def test_invalid_source_package_ref_is_sanitized_and_serializable(
+    invalid_ref: str,
+) -> None:
+    valid = _bundle(_valid_a(), ledger.OFFER_A_ID)
+    invalid = replace(valid, source_package_ref=invalid_ref)
+    c1_report = _report(invalid)
+    assert c1_report.validation_status == collector.STATUS_FAIL_CLOSED
+    assert c1_report.source_package_ref == ""
+    result = _collect_c2(invalid)
+    assert result.collection_status == collector.STATUS_FAIL_CLOSED
+    assert result.source_package_ref == ""
+    assert tuple(
+        getattr(result, name)
+        for name in collector.COLLECTION_STAGE_COUNT_FIELDS
+    ) == (1, 0, 0, 0, 0)
+    assert (
+        collector.REASON_COLLECTION_SOURCE_BUNDLE_VALIDATION_FAILED
+        in result.collection_errors
+    )
+    _assert_collection_contract_pass(result)
+    plain = collector.airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(
+        result,
+    )
+    assert plain["source_package_ref"] == ""

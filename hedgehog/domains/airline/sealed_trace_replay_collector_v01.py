@@ -27,9 +27,7 @@ SLICE_ID = "airline_sealed_trace_replay_v01_slice_c1"
 STATUS_PASS = replay_contracts.STATUS_PASS
 STATUS_FAIL_CLOSED = replay_contracts.STATUS_FAIL_CLOSED
 
-EXPECTED_IDENTITY_ROLE = (
-    "verifier_contract_adapter_after_independent_ledger_audit"
-)
+EXPECTED_IDENTITY_ROLE = replay_contracts.EXPECTED_IDENTITY_ROLE
 LEDGER_SOURCE_ARTIFACT_REF = "airline_transaction_artifact_ledger.json"
 MANIFEST_DOCUMENT_FIELD_NAMES = (
     "manifest_core",
@@ -709,117 +707,6 @@ def _audit_ledger_coherent(
         return False
 
 
-def _project_expected_identity_value(value: object, active_ids: set[int]) -> object:
-    if value is None or type(value) in (bool, int, str):
-        return value
-    if type(value) is tuple:
-        value_id = id(value)
-        if value_id in active_ids:
-            _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-        active_ids.add(value_id)
-        output = [_project_expected_identity_value(item, active_ids) for item in value]
-        active_ids.remove(value_id)
-        return output
-    if type(value) is ledger_contracts._FrozenDict:
-        value_id = id(value)
-        if value_id in active_ids:
-            _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-        active_ids.add(value_id)
-        output_dict: dict[str, object] = {}
-        for key, item in value.items():
-            if type(key) is not str:
-                _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-            output_dict[key] = _project_expected_identity_value(item, active_ids)
-        active_ids.remove(value_id)
-        return output_dict
-    _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-
-
-def _build_airline_sealed_trace_replay_expected_identity_adapter_impl_v01(
-    *,
-    ledger_item: object,
-    accepted_ledger_audit: object,
-) -> ledger_contracts.AirlineTransactionArtifactLedgerExpectedIdentityV01:
-    try:
-        if not (
-            type(ledger_item)
-            is ledger_contracts.AirlineTransactionArtifactLedgerV01
-            and type(accepted_ledger_audit)
-            is crypto_collector.AirlineCryptoArtifactSealAcceptedLedgerAuditV01
-            and crypto_collector.validate_airline_crypto_artifact_seal_accepted_ledger_audit_v01(
-                accepted_ledger_audit,
-            ).validation_status
-            == STATUS_PASS
-            and _audit_ledger_coherent(accepted_ledger_audit, ledger_item)
-            and type(ledger_item.entries) is tuple
-            and len(ledger_item.entries) == 19
-            and tuple(entry.artifact_type for entry in ledger_item.entries)
-            == ledger_contracts.EXPECTED_ARTIFACT_TYPE_SEQUENCE
-            and len({entry.artifact_type for entry in ledger_item.entries}) == 19
-        ):
-            _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-        artifact_ids: dict[str, str] = {}
-        source_refs: dict[str, tuple[str, ...]] = {}
-        auxiliary_refs: dict[str, tuple[str, ...]] = {}
-        source_identity: dict[str, dict[str, object]] = {}
-        for entry in ledger_item.entries:
-            if type(entry) is not ledger_contracts.AirlineTransactionArtifactLedgerEntryV01:
-                _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-            artifact_type = entry.artifact_type
-            extra_keys = ledger_contracts.CANONICAL_HASH_INPUT_EXTRA_KEYS_BY_ARTIFACT_TYPE[
-                artifact_type
-            ]
-            if not isinstance(entry.canonical_hash_input, Mapping) or any(
-                key not in entry.canonical_hash_input for key in extra_keys
-            ):
-                _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-            artifact_ids[artifact_type] = entry.artifact_id
-            source_refs[artifact_type] = tuple(entry.source_validation_refs)
-            auxiliary_refs[artifact_type] = tuple(entry.auxiliary_artifact_refs)
-            source_identity[artifact_type] = {
-                key: _project_expected_identity_value(
-                    entry.canonical_hash_input[key],
-                    set(),
-                )
-                for key in extra_keys
-            }
-        expected_types = frozenset(ledger_contracts.EXPECTED_ARTIFACT_TYPE_SEQUENCE)
-        if not all(
-            frozenset(mapping) == expected_types
-            for mapping in (
-                artifact_ids,
-                source_refs,
-                auxiliary_refs,
-                source_identity,
-            )
-        ):
-            _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-        adapter = ledger_contracts.AirlineTransactionArtifactLedgerExpectedIdentityV01(
-            expected_source_refs=(
-                ledger_contracts.AirlineTransactionArtifactLedgerExpectedSourceRefsV01(
-                    source_run_ref=ledger_item.source_run_ref,
-                    source_causal_report_ref=ledger_item.source_causal_report_ref,
-                    source_corridor_report_ref=ledger_item.source_corridor_report_ref,
-                )
-            ),
-            expected_artifact_ids=artifact_ids,
-            expected_source_validation_refs_by_type=source_refs,
-            expected_auxiliary_artifact_refs_by_type=auxiliary_refs,
-            expected_source_identity_fields_by_type=source_identity,
-        )
-        validation = ledger_contracts.validate_airline_transaction_artifact_ledger_v01(
-            ledger_item,
-            expected_identity=adapter,
-        )
-        if validation.validation_status != STATUS_PASS or validation.validation_errors:
-            _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-        return adapter
-    except ValueError:
-        _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-    except Exception:
-        _raise(REASON_EXPECTED_IDENTITY_ADAPTER_FAILED)
-
-
 def build_airline_sealed_trace_replay_expected_identity_adapter_v01(
     *,
     ledger_item: object,
@@ -827,7 +714,7 @@ def build_airline_sealed_trace_replay_expected_identity_adapter_v01(
 ) -> ledger_contracts.AirlineTransactionArtifactLedgerExpectedIdentityV01:
     failure_reason = REASON_EXPECTED_IDENTITY_ADAPTER_FAILED
     try:
-        return _build_airline_sealed_trace_replay_expected_identity_adapter_impl_v01(
+        return replay_contracts.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
             ledger_item=ledger_item,
             accepted_ledger_audit=accepted_ledger_audit,
         )

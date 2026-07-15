@@ -12,7 +12,9 @@ from hedgehog.domains.airline import crypto_artifact_seal_collector_v01 as crypt
 from hedgehog.domains.airline import crypto_artifact_seal_v01 as crypto_contracts
 from hedgehog.domains.airline import sealed_trace_replay_collector_v01 as collector
 from hedgehog.domains.airline import sealed_trace_replay_v01 as replay_contracts
+from hedgehog.domains.airline import transaction_artifact_ledger_collector_v01 as ledger_collector
 from hedgehog.domains.airline import transaction_artifact_ledger_v01 as ledger_contracts
+from tests import test_airline_transaction_artifact_ledger_collector_v01 as ledger_collector_test_helpers
 
 
 MODULE_PATH = "hedgehog/domains/airline/sealed_trace_replay_collector_v01.py"
@@ -200,6 +202,76 @@ def _fixture(
     )
 
 
+def _source_derived_fixture(offer_id: str) -> CollectorFixture:
+    source_bundle = (
+        ledger_collector_test_helpers._source_bundle_from_public_causal_runtime(
+            offer_id,
+        )
+    )
+    item = ledger_collector.collect_airline_transaction_artifact_ledger_from_source_v01(
+        source_bundle=source_bundle,
+    )
+    audit = _accepted_audit(item, offer_id)
+    identity = (
+        replay_contracts.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+            ledger_item=item,
+            accepted_ledger_audit=audit,
+        )
+    )
+    package_ref = (
+        "airline_sealed_trace_replay_c1_source_derived_a"
+        if offer_id == ledger_contracts.OFFER_A_ID
+        else "airline_sealed_trace_replay_c1_source_derived_b"
+    )
+    rows = _source_rows(item, identity)
+    core = crypto_contracts.build_airline_crypto_artifact_seal_manifest_core_v01(
+        item,
+        ordered_source_files=rows,
+        source_package_ref=package_ref,
+        source_audit_status=crypto_contracts.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_identity=identity,
+    )
+    envelope = crypto_contracts.build_airline_crypto_artifact_seal_envelope_v01(
+        core,
+    )
+    stored = crypto_contracts.verify_airline_crypto_artifact_seal_v01(
+        envelope,
+        ledger_item=item,
+        ordered_source_files_before=rows,
+        ordered_source_files_after=rows,
+        expected_source_package_ref=package_ref,
+        source_audit_status=crypto_contracts.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_manifest_core_hash=None,
+        expected_identity=identity,
+    )
+    snapshot = replay_contracts.build_airline_sealed_trace_replay_package_snapshot_v01(
+        source_package_ref=package_ref,
+        ordered_source_files=rows,
+        manifest_artifact_ref=replay_contracts.MANIFEST_ARTIFACT_REF,
+        manifest_bytes=_json_bytes(_manifest_plain(envelope)),
+        stored_verification_artifact_ref=(
+            replay_contracts.STORED_VERIFICATION_ARTIFACT_REF
+        ),
+        stored_verification_bytes=_json_bytes(
+            crypto_contracts.airline_crypto_artifact_seal_verification_report_to_plain_dict_v01(
+                stored,
+            ),
+        ),
+    )
+    return CollectorFixture(
+        offer_id=offer_id,
+        ledger=item,
+        fixture_identity=identity,
+        audit=audit,
+        source_rows=rows,
+        envelope=envelope,
+        stored=stored,
+        snapshot=snapshot,
+    )
+
+
 def _collect(
     fixture: CollectorFixture,
     *,
@@ -358,6 +430,8 @@ def test_offer_exact_package_collection_passes(offer_id: str) -> None:
     assert report.external_anchor_supplied is True
     assert report.external_anchor_verified is True
     assert report.signature_verified is False
+    assert report.source_bytes_unchanged is True
+    assert report.critical_package_bytes_unchanged is True
     assert report.root_attestation_required is False
     assert report.root_attestation_present is False
 
@@ -430,6 +504,133 @@ def test_expected_identity_adapter_exact_coverage_and_validation(offer_id: str) 
         expected_identity=adapter,
     )
     assert validation.validation_status == collector.STATUS_PASS
+
+
+@pytest.mark.parametrize(
+    "offer_id",
+    (ledger_contracts.OFFER_A_ID, ledger_contracts.OFFER_B_ID),
+)
+def test_source_derived_c1_adapter_and_collection_pass(
+    offer_id: str,
+) -> None:
+    fixture = _source_derived_fixture(offer_id)
+    reconstructed, _ = collector._reconstruct_ledger(fixture.snapshot)
+    canonical_adapter = (
+        replay_contracts.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+            ledger_item=reconstructed,
+            accepted_ledger_audit=fixture.audit,
+        )
+    )
+    compatibility_adapter = (
+        collector.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+            ledger_item=reconstructed,
+            accepted_ledger_audit=fixture.audit,
+        )
+    )
+    validation = ledger_contracts.validate_airline_transaction_artifact_ledger_v01(
+        reconstructed,
+        expected_identity=canonical_adapter,
+    )
+    report = _collect(fixture)
+
+    assert collector.EXPECTED_IDENTITY_ROLE == replay_contracts.EXPECTED_IDENTITY_ROLE
+    assert canonical_adapter == compatibility_adapter == fixture.fixture_identity
+    assert validation.validation_status == collector.STATUS_PASS
+    assert validation.validation_errors == ()
+    assert report.replay_status == collector.STATUS_PASS
+    assert len(report.reconstructed_timeline) == 19
+    assert (
+        report.ledger_entry_count,
+        report.dependency_edge_count,
+        report.root_final_count,
+    ) == (19, 29, 3)
+    assert (
+        report.source_file_count,
+        report.critical_package_file_count,
+    ) == (9, 11)
+    assert report.stored_verification_status == (
+        crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED
+    )
+    assert report.fresh_anchored_verification_status == collector.STATUS_PASS
+    assert report.external_anchor_supplied is True
+    assert report.external_anchor_verified is True
+    assert report.signature_verified is False
+    for field_name in (
+        "transaction_rerun_count",
+        "semantic_rerun_count",
+        "corridor_rerun_count",
+        "ledger_recollection_count",
+        "crypto_collection_count",
+        "provider_call_count",
+        "network_call_count",
+        "gemini_call_count",
+        "replay_created_authority_count",
+        "replay_created_permission_count",
+        "replay_created_action_count",
+        "replay_created_packet_count",
+        "replay_created_receipt_count",
+        "replay_created_final_output_count",
+        "real_world_effects_count",
+    ):
+        assert type(getattr(report, field_name)) is int
+        assert getattr(report, field_name) == 0
+
+
+@pytest.mark.parametrize(
+    "sequence",
+    (
+        (
+            ledger_contracts.OFFER_A_ID,
+            ledger_contracts.OFFER_B_ID,
+            ledger_contracts.OFFER_A_ID,
+        ),
+        (
+            ledger_contracts.OFFER_B_ID,
+            ledger_contracts.OFFER_A_ID,
+            ledger_contracts.OFFER_B_ID,
+        ),
+    ),
+)
+def test_source_derived_c1_isolation_and_repeated_equality(
+    sequence: tuple[str, ...],
+) -> None:
+    fixtures = tuple(_source_derived_fixture(offer_id) for offer_id in sequence)
+    adapters = tuple(
+        collector.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+            ledger_item=fixture.ledger,
+            accepted_ledger_audit=fixture.audit,
+        )
+        for fixture in fixtures
+    )
+    reports = tuple(_collect(fixture) for fixture in fixtures)
+    projections = tuple(
+        replay_contracts.airline_sealed_trace_replay_report_to_plain_dict_v01(
+            report,
+        )
+        for report in reports
+    )
+
+    assert adapters[0] == adapters[2]
+    assert reports[0] == reports[2]
+    assert projections[0] == projections[2]
+    assert reports[0] != reports[1]
+    assert projections[0] is not projections[2]
+
+
+def test_source_derived_c1_never_uses_fixture_default_identity(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = _source_derived_fixture(ledger_contracts.OFFER_B_ID)
+
+    def forbidden_fixture_identity(*args: object, **kwargs: object) -> object:
+        raise AssertionError("fixture_default_identity_forbidden")
+
+    monkeypatch.setattr(
+        ledger_contracts,
+        "build_airline_transaction_artifact_ledger_fixture_expected_identity_v01",
+        forbidden_fixture_identity,
+    )
+    assert _collect(fixture).replay_status == collector.STATUS_PASS
 
 
 def test_success_calls_b2b_callback_and_pure_replay_once(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1455,6 +1656,14 @@ def test_static_module_boundary_and_exact_direct_calls() -> None:
     assert calls.count("verify_airline_crypto_artifact_seal_v01") == 1
     assert calls.count("build_airline_sealed_trace_replay_timeline_v01") == 1
     assert calls.count("verify_airline_sealed_trace_replay_v01") == 1
+    assert calls.count(
+        "build_airline_sealed_trace_replay_expected_identity_adapter_v01",
+    ) == 1
+    assert "_project_expected_identity_value" not in source
+    assert (
+        "_build_airline_sealed_trace_replay_expected_identity_adapter_impl_v01"
+        not in source
+    )
     forbidden = (
         "open(",
         ".tmp/",

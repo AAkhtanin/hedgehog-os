@@ -11,7 +11,9 @@ import pytest
 from hedgehog.domains.airline import crypto_artifact_seal_collector_v01 as crypto_collector
 from hedgehog.domains.airline import crypto_artifact_seal_v01 as crypto_contracts
 from hedgehog.domains.airline import sealed_trace_replay_v01 as replay
+from hedgehog.domains.airline import transaction_artifact_ledger_collector_v01 as ledger_collector
 from hedgehog.domains.airline import transaction_artifact_ledger_v01 as ledger_contracts
+from tests import test_airline_transaction_artifact_ledger_collector_v01 as ledger_collector_test_helpers
 
 
 MODULE_PATH = "hedgehog/domains/airline/sealed_trace_replay_v01.py"
@@ -155,6 +157,104 @@ def _fixture(offer_id: str) -> ReplayFixture:
     )
 
 
+def _source_derived_fixture(offer_id: str) -> ReplayFixture:
+    source_bundle = (
+        ledger_collector_test_helpers._source_bundle_from_public_causal_runtime(
+            offer_id,
+        )
+    )
+    item = ledger_collector.collect_airline_transaction_artifact_ledger_from_source_v01(
+        source_bundle=source_bundle,
+    )
+    audit = _accepted_audit(item, offer_id)
+    identity = replay.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+        ledger_item=item,
+        accepted_ledger_audit=audit,
+    )
+    package_ref = (
+        "airline_sealed_trace_replay_source_derived_a"
+        if offer_id == ledger_contracts.OFFER_A_ID
+        else "airline_sealed_trace_replay_source_derived_b"
+    )
+    ledger_bytes = crypto_contracts.canonical_airline_crypto_json_bytes_v01(
+        crypto_collector.airline_crypto_artifact_seal_ledger_document_to_plain_dict_v01(
+            item,
+            expected_identity=identity,
+        ),
+    )
+    rows = tuple(
+        (
+            relative_ref,
+            ledger_bytes
+            if index == 0
+            else crypto_contracts.canonical_airline_crypto_json_bytes_v01(
+                {
+                    "offer_id": offer_id,
+                    "source_file_index": index,
+                    "source_file_ref": relative_ref,
+                    "transaction_id": item.transaction_id,
+                },
+            ),
+        )
+        for index, relative_ref in enumerate(
+            crypto_contracts.REQUIRED_SOURCE_FILE_REFS,
+        )
+    )
+    core = crypto_contracts.build_airline_crypto_artifact_seal_manifest_core_v01(
+        item,
+        ordered_source_files=rows,
+        source_package_ref=package_ref,
+        source_audit_status=crypto_contracts.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_identity=identity,
+    )
+    envelope = crypto_contracts.build_airline_crypto_artifact_seal_envelope_v01(
+        core,
+    )
+    stored = crypto_contracts.verify_airline_crypto_artifact_seal_v01(
+        envelope,
+        ledger_item=item,
+        ordered_source_files_before=rows,
+        ordered_source_files_after=rows,
+        expected_source_package_ref=package_ref,
+        source_audit_status=crypto_contracts.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_manifest_core_hash=None,
+        expected_identity=identity,
+    )
+    fresh = crypto_contracts.verify_airline_crypto_artifact_seal_v01(
+        envelope,
+        ledger_item=item,
+        ordered_source_files_before=rows,
+        ordered_source_files_after=rows,
+        expected_source_package_ref=package_ref,
+        source_audit_status=crypto_contracts.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_manifest_core_hash=envelope.manifest_core_hash,
+        expected_identity=identity,
+    )
+    replay_input = replay.build_airline_sealed_trace_replay_input_v01(
+        source_package_ref=package_ref,
+        accepted_ledger_audit=audit,
+        ledger_item=item,
+        envelope=envelope,
+        stored_verification_report=stored,
+        fresh_anchored_verification_report=fresh,
+        expected_manifest_core_hash=envelope.manifest_core_hash,
+        ordered_source_files=rows,
+    )
+    return ReplayFixture(
+        offer_id=offer_id,
+        ledger=item,
+        rows=rows,
+        audit=audit,
+        envelope=envelope,
+        stored=stored,
+        fresh=fresh,
+        replay_input=replay_input,
+    )
+
+
 def _run(
     replay_input: object,
     *,
@@ -259,6 +359,25 @@ def test_field_name_surfaces_match_frozen_contracts(
 ) -> None:
     assert tuple(field.name for field in fields(contract_type)) == field_names
     assert type(field_names) is tuple
+
+
+def test_replay_input_contract_remains_frozen_without_adapter_state() -> None:
+    expected = (
+        "source_package_ref",
+        "accepted_ledger_audit",
+        "ledger_item",
+        "envelope",
+        "stored_verification_report",
+        "fresh_anchored_verification_report",
+        "expected_manifest_core_hash",
+        "ordered_source_files",
+    )
+    assert replay.REPLAY_INPUT_FIELD_NAMES == expected
+    assert tuple(
+        field.name for field in fields(replay.AirlineSealedTraceReplayInputV01)
+    ) == expected
+    assert "expected_identity" not in expected
+    assert "callback" not in expected
 
 
 def test_validation_report_derives_status_and_normalizes_errors() -> None:
@@ -449,6 +568,152 @@ def test_valid_replay_input_and_pure_replay_pass(offer_id: str) -> None:
         ).validation_status
         == replay.STATUS_PASS
     )
+
+
+@pytest.mark.parametrize(
+    "offer_id",
+    (ledger_contracts.OFFER_A_ID, ledger_contracts.OFFER_B_ID),
+)
+def test_source_derived_expected_identity_continuity_passes(
+    offer_id: str,
+) -> None:
+    fixture = _source_derived_fixture(offer_id)
+    adapter = replay.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+        ledger_item=fixture.ledger,
+        accepted_ledger_audit=fixture.audit,
+    )
+    ledger_validation = (
+        ledger_contracts.validate_airline_transaction_artifact_ledger_v01(
+            fixture.ledger,
+            expected_identity=adapter,
+        )
+    )
+    input_validation = replay.validate_airline_sealed_trace_replay_input_v01(
+        fixture.replay_input,
+    )
+    timeline = replay.build_airline_sealed_trace_replay_timeline_v01(
+        fixture.replay_input,
+    )
+    report = _run(fixture.replay_input)
+
+    assert replay.EXPECTED_IDENTITY_ROLE == (
+        "verifier_contract_adapter_after_independent_ledger_audit"
+    )
+    assert ledger_validation.validation_status == replay.STATUS_PASS
+    assert ledger_validation.validation_errors == ()
+    assert input_validation.validation_status == replay.STATUS_PASS
+    assert input_validation.validation_errors == ()
+    assert len(timeline) == 19
+    assert report.replay_status == replay.STATUS_PASS
+    assert report.reconstructed_timeline == timeline
+    assert (
+        report.ledger_entry_count,
+        report.dependency_edge_count,
+        report.root_final_count,
+    ) == (19, 29, 3)
+    assert (
+        report.source_file_count,
+        report.critical_package_file_count,
+    ) == (9, 11)
+    assert report.stored_verification_status == (
+        crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED
+    )
+    assert report.fresh_anchored_verification_status == replay.STATUS_PASS
+    assert report.signature_verified is False
+    assert report.source_bytes_unchanged is True
+    assert report.critical_package_bytes_unchanged is True
+    for field_name in (
+        "transaction_rerun_count",
+        "semantic_rerun_count",
+        "corridor_rerun_count",
+        "ledger_recollection_count",
+        "crypto_collection_count",
+        "provider_call_count",
+        "network_call_count",
+        "gemini_call_count",
+        "replay_created_authority_count",
+        "replay_created_permission_count",
+        "replay_created_action_count",
+        "replay_created_packet_count",
+        "replay_created_receipt_count",
+        "replay_created_final_output_count",
+        "real_world_effects_count",
+    ):
+        assert type(getattr(report, field_name)) is int
+        assert getattr(report, field_name) == 0
+
+
+@pytest.mark.parametrize(
+    "sequence",
+    (
+        (
+            ledger_contracts.OFFER_A_ID,
+            ledger_contracts.OFFER_B_ID,
+            ledger_contracts.OFFER_A_ID,
+        ),
+        (
+            ledger_contracts.OFFER_B_ID,
+            ledger_contracts.OFFER_A_ID,
+            ledger_contracts.OFFER_B_ID,
+        ),
+    ),
+)
+def test_source_derived_offer_isolation_and_repeated_equality(
+    sequence: tuple[str, ...],
+) -> None:
+    fixtures = tuple(_source_derived_fixture(offer_id) for offer_id in sequence)
+    adapters = tuple(
+        replay.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+            ledger_item=fixture.ledger,
+            accepted_ledger_audit=fixture.audit,
+        )
+        for fixture in fixtures
+    )
+    timelines = tuple(
+        replay.build_airline_sealed_trace_replay_timeline_v01(
+            fixture.replay_input,
+        )
+        for fixture in fixtures
+    )
+    reports = tuple(_run(fixture.replay_input) for fixture in fixtures)
+    projections = tuple(
+        replay.airline_sealed_trace_replay_report_to_plain_dict_v01(report)
+        for report in reports
+    )
+
+    assert adapters[0] == adapters[2]
+    assert timelines[0] == timelines[2]
+    assert reports[0] == reports[2]
+    assert projections[0] == projections[2]
+    assert reports[0] != reports[1]
+    assert projections[0] is not projections[2]
+
+
+def test_source_derived_path_never_uses_fixture_default_identity(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = _source_derived_fixture(ledger_contracts.OFFER_A_ID)
+
+    def forbidden_fixture_identity(*args: object, **kwargs: object) -> object:
+        raise AssertionError("fixture_default_identity_forbidden")
+
+    monkeypatch.setattr(
+        ledger_contracts,
+        "build_airline_transaction_artifact_ledger_fixture_expected_identity_v01",
+        forbidden_fixture_identity,
+    )
+    assert (
+        replay.validate_airline_sealed_trace_replay_input_v01(
+            fixture.replay_input,
+        ).validation_status
+        == replay.STATUS_PASS
+    )
+    assert len(
+        replay.build_airline_sealed_trace_replay_timeline_v01(
+            fixture.replay_input,
+        ),
+    ) == 19
+    assert _run(fixture.replay_input).replay_status == replay.STATUS_PASS
 
 
 @pytest.mark.parametrize(
@@ -734,6 +999,110 @@ def _replace_entry(
     entries = list(item.entries)
     entries[index] = replace(entries[index], **changes)
     return replace(item, entries=tuple(entries))
+
+
+def _replace_entry_canonical(
+    item: ledger_contracts.AirlineTransactionArtifactLedgerV01,
+    index: int,
+    canonical: dict[str, object],
+) -> ledger_contracts.AirlineTransactionArtifactLedgerV01:
+    return _replace_entry(
+        item,
+        index,
+        canonical_hash_input=canonical,
+    )
+
+
+@pytest.mark.parametrize(
+    ("field_name", "changed_value"),
+    (
+        ("transaction_id", "different-transaction"),
+        ("ledger_id", "different-ledger"),
+        ("source_run_ref", "source_run:different"),
+        ("source_causal_report_ref", "source_causal_report:different"),
+        ("source_corridor_report_ref", "source_corridor_report:different"),
+        ("selected_offer_id", ledger_contracts.OFFER_B_ID),
+        ("actual_entry_count", 18),
+    ),
+)
+def test_source_derived_adapter_rejects_audit_ledger_disagreement(
+    field_name: str,
+    changed_value: object,
+) -> None:
+    fixture = _source_derived_fixture(ledger_contracts.OFFER_A_ID)
+    changed_audit = replace(
+        fixture.audit,
+        **{field_name: changed_value},
+    )
+    with pytest.raises(ValueError) as captured:
+        replay.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+            ledger_item=fixture.ledger,
+            accepted_ledger_audit=changed_audit,
+        )
+    assert captured.value.args[0] in replay.REPLAY_VALIDATION_REASON_ALLOWLIST
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "ledger_source_refs",
+        "artifact_type",
+        "artifact_id",
+        "source_validation_refs",
+        "auxiliary_artifact_refs",
+        "missing_extra_key",
+        "canonical_source_identity",
+    ),
+)
+def test_source_derived_adapter_rejects_mutated_ledger_identity(
+    mutation: str,
+) -> None:
+    fixture = _source_derived_fixture(ledger_contracts.OFFER_A_ID)
+    item = fixture.ledger
+    if mutation == "ledger_source_refs":
+        changed = replace(item, source_run_ref="source_run:different")
+    elif mutation == "artifact_type":
+        changed = _replace_entry(
+            item,
+            1,
+            artifact_type=item.entries[0].artifact_type,
+        )
+    elif mutation == "artifact_id":
+        changed = _replace_entry(
+            item,
+            1,
+            artifact_id=item.entries[1].artifact_id + ":changed",
+        )
+    elif mutation == "source_validation_refs":
+        changed = _replace_entry(
+            item,
+            1,
+            source_validation_refs=(
+                *item.entries[1].source_validation_refs,
+                "source_validation_ref:changed",
+            ),
+        )
+    elif mutation == "auxiliary_artifact_refs":
+        changed = _replace_entry(
+            item,
+            1,
+            auxiliary_artifact_refs=("auxiliary_artifact_ref:changed",),
+        )
+    elif mutation == "missing_extra_key":
+        canonical = dict(item.entries[5].canonical_hash_input)
+        canonical.pop("selected_offer_id")
+        changed = _replace_entry_canonical(item, 5, canonical)
+    else:
+        canonical = dict(item.entries[7].canonical_hash_input)
+        canonical["amount"] = canonical["amount"] + 1  # type: ignore[operator]
+        changed = _replace_entry_canonical(item, 7, canonical)
+
+    with pytest.raises(ValueError) as captured:
+        replay.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+            ledger_item=changed,
+            accepted_ledger_audit=fixture.audit,
+        )
+    assert captured.value.args[0] in replay.REPLAY_VALIDATION_REASON_ALLOWLIST
 
 
 @pytest.mark.parametrize(
@@ -1179,6 +1548,21 @@ def test_production_module_static_boundary() -> None:
     assert ".tmp/" not in source
     assert "29355a3b" not in source
     assert "1c04f0a" not in source
+    assert "sealed_trace_replay_collector_v01" not in source
+    assert "run_airline_sealed_trace_replay_v01" not in source
+    assert "build_airline_sealed_trace_replay_expected_identity_adapter_v01" in source
+    ledger_validation_calls = tuple(
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr == "validate_airline_transaction_artifact_ledger_v01"
+    )
+    assert len(ledger_validation_calls) == 2
+    assert all(
+        any(keyword.arg == "expected_identity" for keyword in call.keywords)
+        for call in ledger_validation_calls
+    )
     for node in tree.body:
         if isinstance(node, (ast.Assign, ast.AnnAssign)):
             value = node.value

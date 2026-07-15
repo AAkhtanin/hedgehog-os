@@ -22,6 +22,9 @@ MODULE_ID = "airline_sealed_trace_replay_v01"
 SLICE_ID = "airline_sealed_trace_replay_v01_slice_b"
 REPLAY_VERSION = "airline_sealed_trace_replay_v01"
 REPLAY_ID_PREFIX = "airline_sealed_trace_replay_v01"
+EXPECTED_IDENTITY_ROLE = (
+    "verifier_contract_adapter_after_independent_ledger_audit"
+)
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
@@ -791,14 +794,232 @@ def _accepted_audit_valid(audit: object) -> bool:
         return False
 
 
+def _project_expected_identity_value_v01(
+    value: object,
+    active_ids: set[int],
+) -> object:
+    if value is None or type(value) in (bool, int, str):
+        return value
+    if type(value) is tuple:
+        value_id = id(value)
+        if value_id in active_ids:
+            raise ValueError(REASON_LEDGER_GEOMETRY_MISMATCH)
+        active_ids.add(value_id)
+        projected = tuple(
+            _project_expected_identity_value_v01(item, active_ids)
+            for item in value
+        )
+        active_ids.remove(value_id)
+        return projected
+    if type(value) is ledger_contracts._FrozenDict:
+        value_id = id(value)
+        if value_id in active_ids:
+            raise ValueError(REASON_LEDGER_GEOMETRY_MISMATCH)
+        active_ids.add(value_id)
+        projected_mapping: dict[str, object] = {}
+        for key, item in value.items():
+            if type(key) is not str:
+                raise ValueError(REASON_LEDGER_GEOMETRY_MISMATCH)
+            projected_mapping[key] = _project_expected_identity_value_v01(
+                item,
+                active_ids,
+            )
+        active_ids.remove(value_id)
+        return projected_mapping
+    raise ValueError(REASON_LEDGER_GEOMETRY_MISMATCH)
+
+
+def _adapter_audit_ledger_coherent_v01(
+    ledger_item: ledger_contracts.AirlineTransactionArtifactLedgerV01,
+    accepted_audit: crypto_collector.AirlineCryptoArtifactSealAcceptedLedgerAuditV01,
+) -> bool:
+    try:
+        entries = ledger_item.entries
+        selected_offer_values = tuple(
+            entry.canonical_hash_input["selected_offer_id"]
+            for entry in entries
+            if type(entry.canonical_hash_input) is ledger_contracts._FrozenDict
+            and "selected_offer_id" in entry.canonical_hash_input
+        )
+        root_types = tuple(
+            entry.artifact_type
+            for entry in entries
+            if entry.artifact_type in ROOT_FINAL_ARTIFACT_TYPES
+        )
+        return (
+            accepted_audit.transaction_id == ledger_item.transaction_id
+            and accepted_audit.ledger_id == ledger_item.ledger_id
+            and accepted_audit.source_run_ref == ledger_item.source_run_ref
+            and accepted_audit.source_causal_report_ref
+            == ledger_item.source_causal_report_ref
+            and accepted_audit.source_corridor_report_ref
+            == ledger_item.source_corridor_report_ref
+            and accepted_audit.actual_entry_count == len(entries) == LEDGER_ENTRY_COUNT
+            and accepted_audit.actual_dependency_edge_count
+            == sum(len(entry.depends_on) for entry in entries)
+            == DEPENDENCY_EDGE_COUNT
+            and accepted_audit.actual_root_final_count
+            == len(root_types)
+            == ROOT_FINAL_COUNT
+            and accepted_audit.client_root_final_count
+            == root_types.count(ledger_contracts.ARTIFACT_CLIENT_ROOT_FINAL)
+            == 1
+            and accepted_audit.airline_root_final_count
+            == root_types.count(ledger_contracts.ARTIFACT_AIRLINE_ROOT_FINAL)
+            == 1
+            and accepted_audit.bank_root_final_count
+            == root_types.count(ledger_contracts.ARTIFACT_BANK_ROOT_FINAL)
+            == 1
+            and accepted_audit.required_source_files
+            == crypto_contracts.REQUIRED_SOURCE_FILE_REFS
+            and accepted_audit.files_read_count == SOURCE_FILE_COUNT
+            and accepted_audit.stored_validation_status
+            == ledger_item.validation_status
+            == STATUS_PASS
+            and accepted_audit.stored_validation_errors
+            == ledger_item.validation_errors
+            == ()
+            and selected_offer_values
+            and all(
+                type(value) is str
+                and value == accepted_audit.selected_offer_id
+                for value in selected_offer_values
+            )
+        )
+    except (TypeError, AttributeError, ValueError, KeyError, IndexError, RecursionError):
+        return False
+
+
+def _build_expected_identity_adapter_impl_v01(
+    *,
+    ledger_item: object,
+    accepted_ledger_audit: object,
+) -> ledger_contracts.AirlineTransactionArtifactLedgerExpectedIdentityV01:
+    if type(ledger_item) is not ledger_contracts.AirlineTransactionArtifactLedgerV01:
+        raise ValueError(REASON_LEDGER_WRONG_TYPE)
+    if not _accepted_audit_valid(accepted_ledger_audit):
+        raise ValueError(REASON_ACCEPTED_LEDGER_AUDIT_INVALID)
+    if not _adapter_audit_ledger_coherent_v01(
+        ledger_item,
+        accepted_ledger_audit,
+    ):
+        raise ValueError(REASON_REPLAY_INPUT_IDENTITY_MISMATCH)
+    entries = ledger_item.entries
+    if (
+        type(entries) is not tuple
+        or len(entries) != LEDGER_ENTRY_COUNT
+        or any(
+            type(entry)
+            is not ledger_contracts.AirlineTransactionArtifactLedgerEntryV01
+            for entry in entries
+        )
+        or tuple(entry.artifact_type for entry in entries)
+        != ledger_contracts.EXPECTED_ARTIFACT_TYPE_SEQUENCE
+        or len({entry.artifact_type for entry in entries}) != LEDGER_ENTRY_COUNT
+    ):
+        raise ValueError(REASON_LEDGER_GEOMETRY_MISMATCH)
+
+    artifact_ids: dict[str, str] = {}
+    source_validation_refs: dict[str, tuple[str, ...]] = {}
+    auxiliary_refs: dict[str, tuple[str, ...]] = {}
+    source_identity: dict[str, dict[str, object]] = {}
+    for entry in entries:
+        artifact_type = entry.artifact_type
+        try:
+            extra_keys = (
+                ledger_contracts.CANONICAL_HASH_INPUT_EXTRA_KEYS_BY_ARTIFACT_TYPE[
+                    artifact_type
+                ]
+            )
+        except (TypeError, KeyError):
+            raise ValueError(REASON_ARTIFACT_TYPE_SEQUENCE_MISMATCH) from None
+        if (
+            type(entry.canonical_hash_input) is not ledger_contracts._FrozenDict
+            or any(key not in entry.canonical_hash_input for key in extra_keys)
+            or entry.auxiliary_artifact_refs
+            != ledger_contracts.EXPECTED_AUXILIARY_REFS_BY_ARTIFACT_TYPE[
+                artifact_type
+            ]
+        ):
+            raise ValueError(REASON_LEDGER_GEOMETRY_MISMATCH)
+        artifact_ids[artifact_type] = entry.artifact_id
+        source_validation_refs[artifact_type] = entry.source_validation_refs
+        auxiliary_refs[artifact_type] = entry.auxiliary_artifact_refs
+        source_identity[artifact_type] = {
+            key: _project_expected_identity_value_v01(
+                entry.canonical_hash_input[key],
+                set(),
+            )
+            for key in extra_keys
+        }
+    expected_types = frozenset(ledger_contracts.EXPECTED_ARTIFACT_TYPE_SEQUENCE)
+    if any(
+        frozenset(mapping) != expected_types
+        for mapping in (
+            artifact_ids,
+            source_validation_refs,
+            auxiliary_refs,
+            source_identity,
+        )
+    ):
+        raise ValueError(REASON_LEDGER_GEOMETRY_MISMATCH)
+    adapter = ledger_contracts.AirlineTransactionArtifactLedgerExpectedIdentityV01(
+        expected_source_refs=(
+            ledger_contracts.AirlineTransactionArtifactLedgerExpectedSourceRefsV01(
+                source_run_ref=ledger_item.source_run_ref,
+                source_causal_report_ref=ledger_item.source_causal_report_ref,
+                source_corridor_report_ref=ledger_item.source_corridor_report_ref,
+            )
+        ),
+        expected_artifact_ids=artifact_ids,
+        expected_source_validation_refs_by_type=source_validation_refs,
+        expected_auxiliary_artifact_refs_by_type=auxiliary_refs,
+        expected_source_identity_fields_by_type=source_identity,
+    )
+    validation = ledger_contracts.validate_airline_transaction_artifact_ledger_v01(
+        ledger_item,
+        expected_identity=adapter,
+    )
+    if validation.validation_status != STATUS_PASS or validation.validation_errors != ():
+        raise ValueError(REASON_LEDGER_GEOMETRY_MISMATCH)
+    return adapter
+
+
+def build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+    *,
+    ledger_item: object,
+    accepted_ledger_audit: object,
+) -> ledger_contracts.AirlineTransactionArtifactLedgerExpectedIdentityV01:
+    reason = REASON_LEDGER_GEOMETRY_MISMATCH
+    try:
+        return _build_expected_identity_adapter_impl_v01(
+            ledger_item=ledger_item,
+            accepted_ledger_audit=accepted_ledger_audit,
+        )
+    except ValueError as error:
+        if (
+            len(error.args) == 1
+            and type(error.args[0]) is str
+            and error.args[0] in REPLAY_VALIDATION_REASON_ALLOWLIST
+        ):
+            reason = error.args[0]
+    except Exception:
+        pass
+    raise ValueError(reason) from None
+
+
 def _ledger_validation_report(
     ledger_item: object,
+    accepted_ledger_audit: object,
 ) -> object | None:
-    if type(ledger_item) is not ledger_contracts.AirlineTransactionArtifactLedgerV01:
-        return None
     try:
+        adapter = build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+            ledger_item=ledger_item,
+            accepted_ledger_audit=accepted_ledger_audit,
+        )
         return ledger_contracts.validate_airline_transaction_artifact_ledger_v01(
             ledger_item,
+            expected_identity=adapter,
         )
     except (TypeError, AttributeError, ValueError, KeyError, IndexError, RecursionError):
         return None
@@ -921,7 +1142,10 @@ def _input_validation_reasons(replay_input: object) -> tuple[str, ...]:
         if not audit_valid:
             _append_reason(reasons, REASON_ACCEPTED_LEDGER_AUDIT_INVALID)
 
-        ledger_report = _ledger_validation_report(replay_input.ledger_item)
+        ledger_report = _ledger_validation_report(
+            replay_input.ledger_item,
+            replay_input.accepted_ledger_audit,
+        )
         ledger_valid = False
         if type(replay_input.ledger_item) is not ledger_contracts.AirlineTransactionArtifactLedgerV01:
             _append_reason(reasons, REASON_LEDGER_WRONG_TYPE)

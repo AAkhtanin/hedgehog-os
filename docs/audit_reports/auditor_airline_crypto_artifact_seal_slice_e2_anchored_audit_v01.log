@@ -1,0 +1,194 @@
+AIRLINE CRYPTO ARTIFACT SEAL V0.1 SLICE E2 ANCHORED AUDIT
+
+[AUDIT IDENTITY]
+audit_id: auditor_airline_crypto_artifact_seal_slice_e2_anchored_audit_v01
+audit_status: PASS
+audit_slice: airline_crypto_artifact_seal_v01_slice_e2
+e2_audit_base_head: 56e3811
+anchor_publication_commit: 5345815
+package_generation_base_head: 905844c
+
+[REPOSITORY GUARD]
+head: 56e3811
+origin_main: 56e3811
+clean_worktree_before_audit: true
+staged_files_before_audit: 0
+anchor_commit_is_ancestor: true
+anchor_worktree_bytes_equal_committed_bytes: true
+
+[PRIOR CLEAN E2 ATTEMPTS]
+prior_invalid_assumption_1: integrated_deterministic_summary_missing_required_ledger_source_views
+prior_invalid_assumption_2: summary_missing_required_travel_intent_view
+prior_e2_output_files_persisted: false
+package_modified_by_prior_attempts: false
+anchor_modified_by_prior_attempts: false
+
+[COMMITTED ANCHOR]
+anchor_path: docs/airline_crypto_artifact_seal_anchor_v01.json
+anchor_git_blob_id: 5e439e399732529e00696247ab9b9da586603575
+anchor_byte_sha256: f2929a305d1b05a16a51ead28972919a3209db1234ea6d0555f7228a460963fe
+expected_manifest_core_hash: 29355a3b2f2b95bd6358d6085a801334d7fd7ca23438e6e2ce0618106edba12b
+chain_tail_hash: f41057a61eea458e8dc88cfe44bd5168806e2438fca60a29371af587bba19027
+source_package_hash: 5001bb70ca6841a2ec24c10efbb19452f444f2815887d604a12cb031e6ffd21f
+transaction_id: tri_airline_purchase:PAR-LIM:2026-08-12:client_001
+ledger_id: airline_transaction_artifact_ledger:offer:mock_airline_al:PAR-LIM:001
+source_package_ref: airline_crypto_artifact_seal_slice_e1_offline_905844c
+anchor_committed_before_e2: true
+anchor_source_is_git_object_not_package_self_hash: true
+
+[PACKAGE READ-ONLY GUARD]
+package_relative_path: .tmp/airline_crypto_artifact_seal_slice_e1/airline_crypto_artifact_seal_slice_e1_offline_905844c
+source_package_ref: airline_crypto_artifact_seal_slice_e1_offline_905844c
+surviving_official_package_count: 1
+package_rebuild_count: 0
+package_write_count: 0
+critical_file_count: 11
+critical_symlink_count: 0
+package_bytes_frozen_before_audit: true
+package_inventory_file_count: 72
+declared_sealed_source_file_count: 9
+entire_directory_claimed_sealed: false
+
+[CRITICAL FILE SHA256]
+- airline_transaction_artifact_ledger.json: 6b733d072dd8ff36ed04ba2a645a6968f3626dda935a8297307afce31899e57a
+- summary.json: 4f65c47284ac577b0f859edffd3d4ddbc9a28ebf414fad71f93a544805bcd22f
+- secret_scan.json: c2ddc66f3baa0c4f0cc56b4b23d5b771d56cd5714b49918674064c6b718bfb66
+- semantic_to_contract_causal_run.json: a4dc092e6701284b9c1e773dc67126dba4298a8f335ee195da159761574401d4
+- semantic_to_contract_bridge.json: ce8ddeb20deb3721b4a4e19f7dd6a7bd13d3ebd1c66c18156d9614108aa865f2
+- integrated_deterministic_airline_summary.json: 3bd7ea12f57b754608899fcf80975d67233024767fdc05d36701786fcbd6764c
+- tri_party_airline_bsep_packet.json: 7256f58de63b325beaf6334e1bad9f397fa707a8759c4aad8e960cae207e96a9
+- tri_party_airline_bsep_validation.json: c2dce64ae36c2857a98d7302acc1bfc7475c3c17b277100c93be9abcefc76903
+- tri_party_airline_bsep_side_projections.json: 73d75c054389a805589360e5327cd459a522e0b41f9cd2f1fea41f9a871f5521
+- airline_crypto_artifact_seal_manifest_v01.json: 7a701a9a4bb599a5e00afeec44c3d305ba28fe6915457b1d022c8c0e103b9033
+- airline_crypto_artifact_seal_verification_v01.json: 9220aeebc80bfa673b00d9b5850540a81a6ada6cb29868f46cd796abf7ed2e17
+
+[E1 CONTINUITY]
+e1_package_final_status: PASS
+e1_crypto_status: SELF_CONSISTENT_UNANCHORED
+e1_anchor_used_during_e1_verification: false
+cross_document_hashes_agree: true
+
+[ACTUAL PERSISTED CONTRACT]
+integrated_summary_reduced_contract: PASS
+runtime_source_bundle_serialized: false
+top_level_travel_intent_required: false
+prior_absence_assumptions_were_package_defects: false
+
+[SOURCE / LEDGER AUDIT]
+slice_e2_read_only_ledger_audit_count: 1
+ledger_entry_count: 19
+dependency_edge_count: 29
+root_final_count: 3
+client_root_final_count: 1
+airline_root_final_count: 1
+bank_root_final_count: 1
+exact_artifact_sequence_valid: true
+source_refs_consistent: true
+transaction_identity_consistent: true
+selected_offer_chain_consistent: true
+bsep_consistent: true
+canonical_hash_inputs_safe: true
+secret_scan_passed: true
+typed_ledger_validation_status: PASS
+semantic_causal_lineage_preserved: true
+semantic_causal_hold_packet_id: airline_hold_commit_packet:semantic_causal:001
+semantic_causal_hold_id: hold:semantic_causal:001
+
+[EXPECTED IDENTITY ADAPTER]
+expected_identity_role: verifier_contract_adapter_after_independent_ledger_audit
+runtime_source_bundle_serialized: false
+runtime_source_bundle_reconstructed: false
+source_derived_identity_claimed: false
+expected_identity_used_as_trust_anchor: false
+expected_identity_exact_artifact_type_count: 19
+expected_identity_validation_status: PASS
+
+[INDEPENDENT SOURCE HASHES]
+- airline_transaction_artifact_ledger.json: 6b733d072dd8ff36ed04ba2a645a6968f3626dda935a8297307afce31899e57a
+- summary.json: 4f65c47284ac577b0f859edffd3d4ddbc9a28ebf414fad71f93a544805bcd22f
+- secret_scan.json: c2ddc66f3baa0c4f0cc56b4b23d5b771d56cd5714b49918674064c6b718bfb66
+- semantic_to_contract_causal_run.json: a4dc092e6701284b9c1e773dc67126dba4298a8f335ee195da159761574401d4
+- semantic_to_contract_bridge.json: ce8ddeb20deb3721b4a4e19f7dd6a7bd13d3ebd1c66c18156d9614108aa865f2
+- integrated_deterministic_airline_summary.json: 3bd7ea12f57b754608899fcf80975d67233024767fdc05d36701786fcbd6764c
+- tri_party_airline_bsep_packet.json: 7256f58de63b325beaf6334e1bad9f397fa707a8759c4aad8e960cae207e96a9
+- tri_party_airline_bsep_validation.json: c2dce64ae36c2857a98d7302acc1bfc7475c3c17b277100c93be9abcefc76903
+- tri_party_airline_bsep_side_projections.json: 73d75c054389a805589360e5327cd459a522e0b41f9cd2f1fea41f9a871f5521
+ledger_document_byte_hash: 6b733d072dd8ff36ed04ba2a645a6968f3626dda935a8297307afce31899e57a
+source_package_hash: 5001bb70ca6841a2ec24c10efbb19452f444f2815887d604a12cb031e6ffd21f
+source_hash_mode: exact_bytes_without_normalization_or_reserialization
+
+[INDEPENDENT ARTIFACT AND CHAIN RECOMPUTATION]
+artifact_hash_count: 19
+chain_link_count: 19
+chain_genesis_hash: 3b6ef93b678d431ea2372e2c8440c6b34ae52696eb75d7f60c17f6e002940548
+chain_head_hash: fa0364b7e6b1087612925381eca3e0613d7291450db7c1c3c2a57d9839c05c11
+chain_tail_hash: f41057a61eea458e8dc88cfe44bd5168806e2438fca60a29371af587bba19027
+manifest_core_hash: 29355a3b2f2b95bd6358d6085a801334d7fd7ca23438e6e2ce0618106edba12b
+public_builder_and_manual_recomputation_agree: true
+manifest_envelope_stored_report_and_anchor_agree: true
+
+[STORED PACKAGE VERIFICATION]
+verification_status: SELF_CONSISTENT_UNANCHORED
+expected_manifest_core_hash: null
+external_anchor_supplied: false
+external_anchor_verified: false
+signature_verified: false
+stored_package_verification_bytes_unchanged: true
+
+[E2 ANCHORED VERIFICATION]
+anchored_b2b_verifier_invocation_count: 1
+verification_status: PASS
+expected_hash_source: committed_git_anchor_object
+expected_manifest_core_hash: 29355a3b2f2b95bd6358d6085a801334d7fd7ca23438e6e2ce0618106edba12b
+external_anchor_supplied: true
+external_anchor_verified: true
+all_internal_verification_flags_true: true
+source_bytes_unchanged: true
+verification_errors: none
+signature_mode: UNSIGNED_PLACEHOLDER
+signature_verified: false
+
+[BYTE STABILITY]
+package_bytes_unchanged_after_start_freeze: true
+package_bytes_unchanged_after_read_only_ledger_audit: true
+package_bytes_unchanged_after_ledger_reconstruction: true
+package_bytes_unchanged_after_manual_hash_recomputation: true
+package_bytes_unchanged_after_b2b_anchored_verification: true
+package_bytes_unchanged_after_tracked_evidence_creation: true
+package_bytes_unchanged_after_checkpoint_and_agents_update: true
+committed_anchor_bytes_unchanged: true
+package_inventory_unchanged: true
+
+[ZERO RERUN / EFFECT COUNTS]
+live_runner_invocation_count: 0
+source_transaction_count_created_by_e2: 0
+corridor_execution_count_created_by_e2: 0
+ledger_collection_count_created_by_e2: 0
+c2_collection_count: 0
+package_rebuild_count: 0
+provider_calls: 0
+network_calls: 0
+gemini_calls: 0
+authority_created: 0
+permission_created: 0
+action_created: 0
+real_world_effects: 0
+replay_operations: 0
+
+[NON-CLAIMS]
+not semantic truth
+not signer authentication
+not PKI
+not non-repudiation
+not trusted timestamping
+not production key management
+not production storage security
+not payment, ticket, or booking execution
+no signature verified
+no Replay
+no real-world effect
+
+[NEXT GATE]
+next_gate: airline_sealed_trace_replay_verifier_v01_preflight
+replay_preflight_may_open: true
+replay_implemented: false

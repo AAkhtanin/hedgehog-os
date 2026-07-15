@@ -57,15 +57,17 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Airline Crypto Artifact Seal v0.1 Slice E1 official
-offline package and anchor publication PASS.
+Current checkpoint: Airline Crypto Artifact Seal v0.1 Slice E2 independent
+anchored audit PASS.
 
 Current Airline Crypto Artifact Seal v0.1 facts:
 
-- Current base implementation commit: `905844c`.
-- Crypto Slice D integration is committed and pushed.
-- Slice E1 official package generation: PASS.
-- Slice E1 independent publication read-only audit: PASS.
+- Package generation commit: `905844c`.
+- Anchor publication commit: `5345815`.
+- Slice E2 audit base commit: `56e3811`.
+- Crypto Artifact Seal v0.1 proof-level program: CLOSED.
+- Slice E1 official package generation and anchor publication: CLOSED / PASS.
+- Slice E2 independent anchored audit: PASS.
 - Official offline package:
   `.tmp/airline_crypto_artifact_seal_slice_e1/airline_crypto_artifact_seal_slice_e1_offline_905844c`.
 - Tracked anchor document:
@@ -74,27 +76,34 @@ Current Airline Crypto Artifact Seal v0.1 facts:
   `docs/airline_crypto_artifact_seal_checkpoint_v01.md`.
 - Publication audit log:
   `docs/audit_reports/auditor_airline_crypto_artifact_seal_slice_e1_anchor_publication_v01.log`.
+- Final E2 anchored Verification JSON:
+  `docs/airline_crypto_artifact_seal_slice_e2_anchored_verification_v01.json`.
+- E2 anchored audit log:
+  `docs/audit_reports/auditor_airline_crypto_artifact_seal_slice_e2_anchored_audit_v01.log`.
+- E2 human explanation:
+  `docs/airline_crypto_artifact_seal_slice_e2_human_explanation_v01.md`.
 - Expected Manifest Core hash:
   `29355a3b2f2b95bd6358d6085a801334d7fd7ca23438e6e2ce0618106edba12b`.
 - Ledger geometry is exactly 19 entries, 29 dependency edges, and 3 Root
   finals across exactly 9 source files.
-- Slice A/B/C/D: CLOSED.
-- Slice E1 is an unanchored publication checkpoint, not anchored PASS.
-- Generation and publication verification remained
-  `SELF_CONSISTENT_UNANCHORED` with no external anchor supplied.
+- Slice A/B/C/D/E1/E2: CLOSED.
+- The stored package Verification remains `SELF_CONSISTENT_UNANCHORED`.
+- The independent E2 Verification is `PASS` relative to the already committed
+  expected Manifest Core hash; the external anchor was supplied and verified.
+- The runtime SourceBundle was not persisted or reconstructed. The E2
+  ExpectedIdentity was a verifier-contract compatibility projection after the
+  independent read-only Ledger audit, not the external trust anchor.
 - The unsigned signature placeholder remains unverified.
-- Real-provider calls, network calls, Gemini calls, and real-world effects are
-  all 0 for this offline publication.
-- Anchor activation boundary: this anchor is not a trusted caller input until
-  the anchor and checkpoint files are committed on main; from that commit
-  onward it is available to Slice E2 as the expected external anchor.
+- Provider calls, network calls, Gemini calls, and real-world effects created
+  by E2 are all 0.
 - Not signer authentication, PKI, non-repudiation, trusted timestamping, or a
   production-security claim.
+- Replay preflight may open. Replay itself is not implemented.
 
 Current next immediate gate:
-`airline_crypto_artifact_seal_v01_slice_e2_anchored_audit`.
+`airline_sealed_trace_replay_verifier_v01_preflight`.
 
-Replay remains blocked through Slice E2 independent anchored-audit PASS.
+Replay remains unimplemented and has not passed.
 The final all-real LLM run remains scheduled only after Crypto and Replay close
 offline.
 

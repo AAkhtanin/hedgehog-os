@@ -2,6 +2,8 @@
 
 document_status: CHECKPOINT
 package_generation_base_head: 905844c
+anchor_publication_commit: 5345815
+e2_audit_base_head: 56e3811
 
 ## Closure State
 
@@ -9,11 +11,15 @@ package_generation_base_head: 905844c
 - Slice B: CLOSED.
 - Slice C: CLOSED.
 - Slice D: CLOSED.
-- Slice E1 official package generation: PASS.
-- Slice E1 publication audit: PASS.
+- Slice E1 official package generation and anchor publication: CLOSED / PASS.
+- Slice E2 independent anchored audit: PASS.
+- Crypto Artifact Seal v0.1 proof-level program: CLOSED.
 - Tracked anchor document: docs/airline_crypto_artifact_seal_anchor_v01.json.
 - Official package relative path: .tmp/airline_crypto_artifact_seal_slice_e1/airline_crypto_artifact_seal_slice_e1_offline_905844c.
 - Official logical package ref: airline_crypto_artifact_seal_slice_e1_offline_905844c.
+- E2 anchored Verification JSON: docs/airline_crypto_artifact_seal_slice_e2_anchored_verification_v01.json.
+- E2 audit log: docs/audit_reports/auditor_airline_crypto_artifact_seal_slice_e2_anchored_audit_v01.log.
+- E2 human explanation: docs/airline_crypto_artifact_seal_slice_e2_human_explanation_v01.md.
 
 ## Validated Identity
 
@@ -39,11 +45,24 @@ The Git commit containing this checkpoint and anchor JSON is the Slice E1
 anchor-publication commit. Git is not claimed as production PKI or signer
 authentication.
 
-Slice E2 must read the already committed anchor and verify this existing
-package without rebuilding it. Replay remains blocked through Slice E2
-independent anchored-audit PASS.
+Slice E2 read the already committed anchor and verified this existing package
+without rebuilding or rewriting it. The stored package Verification remains
+SELF_CONSISTENT_UNANCHORED. The separate E2 Verification returned PASS
+relative to the committed expected Manifest Core hash.
 
-next_gate: airline_crypto_artifact_seal_v01_slice_e2_anchored_audit
+The runtime SourceBundle was not persisted or reconstructed. After the
+independent read-only Ledger audit passed, E2 used an ExpectedIdentity object
+only as a verifier-contract compatibility projection. It was not the trust
+anchor and is not an independent semantic-source claim.
+
+The unsigned signature placeholder remains unverified. Provider, network,
+Gemini, and real-world-effect counts created by E2 are all 0. Anchored PASS is
+relative to the already committed expected hash; it is not signer
+authentication or PKI.
+
+Replay remains unimplemented. Replay preflight may now open.
+
+next_gate: airline_sealed_trace_replay_verifier_v01_preflight
 
 ## Non-Claims
 

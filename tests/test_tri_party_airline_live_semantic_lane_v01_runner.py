@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import ast
 import json
 from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Any, Mapping
+
+import pytest
 
 from demo import run_tri_party_airline_live_semantic_lane_v01 as runner
 from hedgehog.domains.airline import (
@@ -31,6 +34,12 @@ def _fake_env(tmp_path: Path | None = None) -> dict[str, str]:
 def _causal_env(tmp_path: Path | None = None) -> dict[str, str]:
     env = _fake_env(tmp_path)
     env[runner.ENV_CAUSAL_BINDING] = "1"
+    return env
+
+
+def _crypto_env(tmp_path: Path) -> dict[str, str]:
+    env = _causal_env(tmp_path)
+    env[runner.ENV_CRYPTO_ARTIFACT_SEAL] = "1"
     return env
 
 
@@ -168,6 +177,17 @@ def _causal_report_for_preference(
     return runner.collect_tri_party_airline_live_semantic_lane_v01(
         env=_causal_env(tmp_path),
         provider=provider or _content_sensitive_causal_provider(),
+        causal_constraints=constraints,
+    )
+
+
+def _crypto_report_for_preference(
+    constraints: binding.ClientRootTravelConstraintSetV01,
+    tmp_path: Path,
+) -> dict[str, Any]:
+    return runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=_content_sensitive_causal_provider(),
         causal_constraints=constraints,
     )
 
@@ -1915,6 +1935,963 @@ def test_slice_d_live_typed_ledger_validation_errors_write_no_ledger(
 
     assert report["final_status"] == runner.STATUS_FAIL_CLOSED
     assert not (tmp_path / "airline_transaction_artifact_ledger.json").exists()
+
+
+@pytest.mark.parametrize(
+    "constraints_factory",
+    (
+        binding.build_client_constraints_preference_a_v01,
+        binding.build_client_constraints_preference_b_v01,
+    ),
+)
+def test_crypto_slice_d_writes_one_unanchored_manifest_and_verification(
+    constraints_factory,
+    tmp_path: Path,
+) -> None:
+    report = _crypto_report_for_preference(constraints_factory(), tmp_path)
+    crypto = report["airline_crypto_artifact_seal_integration"]
+    manifest_path = tmp_path / runner.CRYPTO_MANIFEST_FILE
+    verification_path = tmp_path / runner.CRYPTO_VERIFICATION_FILE
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    verification = json.loads(verification_path.read_text(encoding="utf-8"))
+    summary_text = (tmp_path / "summary.json").read_text(encoding="utf-8")
+    summary = json.loads(summary_text)
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert (
+        crypto["integration_status"]
+        == runner.crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED
+    )
+    assert crypto["integration_status"] != runner.STATUS_PASS
+    assert (crypto["ledger_entry_count"], crypto["dependency_edge_count"], crypto["root_final_count"]) == (19, 29, 3)
+    assert crypto["source_file_count"] == 9
+    assert crypto["e1_audit_count"] == 1
+    assert tuple(
+        crypto[name]
+        for name in (
+            "source_bundle_validation_count",
+            "manifest_core_collection_count",
+            "envelope_collection_count",
+            "post_collection_snapshot_provider_call_count",
+            "verification_count",
+            "manifest_artifact_written_count",
+            "verification_artifact_written_count",
+        )
+    ) == (1, 1, 1, 1, 1, 1, 1)
+    assert manifest_path.is_file()
+    assert verification_path.is_file()
+    assert manifest["manifest_core_hash"] == crypto["manifest_core_hash"]
+    assert manifest["manifest_core"]["source_package_ref"] == tmp_path.name
+    assert manifest["manifest_core"]["ordered_source_file_refs"] == list(
+        runner.crypto_collector.REQUIRED_SOURCE_FILE_REFS,
+    )
+    assert manifest["manifest_core"]["source_file_count"] == 9
+    assert len(manifest["manifest_core"]["ordered_artifact_refs"]) == 19
+    assert len(manifest["manifest_core"]["ordered_artifact_hashes"]) == 19
+    selected_offer_id = report["semantic_to_contract_deterministic_bridge"][
+        "semantic_recommendation_id"
+    ]
+    expected_semantic_suffix = selected_offer_id.rsplit(":", 1)[-1]
+    assert (
+        "airline_hold_commit_packet:semantic_causal:"
+        f"{expected_semantic_suffix}"
+    ) in manifest["manifest_core"]["ordered_artifact_refs"]
+    assert manifest["manifest_core"]["source_package_ref"] == tmp_path.name
+    assert "/" not in manifest["manifest_core"]["source_package_ref"]
+    assert "\\" not in manifest["manifest_core"]["source_package_ref"]
+    assert manifest["signature"] == {
+        "algorithm": "NONE",
+        "key_id": "",
+        "mode": "UNSIGNED_PLACEHOLDER",
+        "value": "",
+        "verified": False,
+    }
+    assert verification["verification_status"] == (
+        runner.crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED
+    )
+    assert verification["expected_manifest_core_hash"] is None
+    assert verification["external_anchor_supplied"] is False
+    assert verification["external_anchor_verified"] is False
+    assert summary["airline_crypto_artifact_seal_source_boundary"] == (
+        runner._crypto_source_boundary(True)
+    )
+    assert "airline_crypto_artifact_seal_integration" not in summary
+    assert crypto["manifest_core_hash"] not in summary_text
+    assert runner.CRYPTO_MANIFEST_FILE not in summary.get("artifacts", {})
+    assert runner.CRYPTO_VERIFICATION_FILE not in summary.get("artifacts", {})
+    assert "manifest_core_hash" not in summary
+    assert "verification_report" not in summary
+    assert tuple(
+        report["counter_table"][name]
+        for name in (
+            "deterministic_airline_collection_count",
+            "ticket_purchase_corridor_execution_count",
+            "airline_transaction_artifact_ledger_collection_count",
+        )
+    ) == (1, 1, 1)
+    crypto_files = tuple(
+        sorted(path.name for path in tmp_path.iterdir() if "crypto_artifact" in path.name)
+    )
+    assert crypto_files == tuple(
+        sorted((runner.CRYPTO_MANIFEST_FILE, runner.CRYPTO_VERIFICATION_FILE)),
+    )
+    assert not any("collection_result" in path.name for path in tmp_path.iterdir())
+    assert not any("replay" in path.name.lower() for path in tmp_path.iterdir())
+    assert tuple(
+        crypto[name]
+        for name in (
+            "provider_calls_added_by_crypto_count",
+            "network_calls_added_by_crypto_count",
+            "gemini_calls_added_by_crypto_count",
+            "crypto_created_authority_count",
+            "crypto_created_permission_count",
+            "crypto_created_action_count",
+            "real_world_effects_count",
+        )
+    ) == (0, 0, 0, 0, 0, 0, 0)
+    json.dumps(runner._json_safe(report), ensure_ascii=False, sort_keys=True)
+    assert all(
+        crypto[name] is True
+        for name in (
+            "source_bytes_unchanged_after_audit",
+            "source_bytes_unchanged_after_collection",
+            "source_bytes_unchanged_after_write",
+            "source_summary_frozen_before_crypto",
+        )
+    )
+    assert crypto["source_summary_rewritten_after_crypto"] is False
+    rendered = runner.render_tri_party_airline_live_semantic_lane_v01(report)
+    assert "[AIRLINE CRYPTO ARTIFACT SEAL V0.1]" in rendered
+    assert "not final Crypto PASS" in rendered
+    assert "No Replay and no real-world effect." in rendered
+
+
+def _assert_crypto_fail(report: Mapping[str, Any], reason: str) -> None:
+    crypto = report["airline_crypto_artifact_seal_integration"]
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert crypto["integration_status"] == runner.STATUS_FAIL_CLOSED
+    assert reason in crypto["validation_errors"]
+    assert crypto["anchored_pass_claimed"] is False
+
+
+def test_crypto_gate_closed_preserves_lane_and_calls_no_crypto(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(
+        runner.ledger_audit,
+        "collect_airline_transaction_artifact_ledger_audit_v01",
+        lambda **kwargs: (_ for _ in ()).throw(AssertionError("audit called")),
+    )
+    monkeypatch.setattr(
+        runner.crypto_collector,
+        "collect_airline_crypto_artifact_seal_from_source_bundle_v01",
+        lambda **kwargs: (_ for _ in ()).throw(AssertionError("crypto called")),
+    )
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    assert report["final_status"] == runner.STATUS_PASS
+    assert report["airline_crypto_artifact_seal_integration"]["integration_status"] == "NOT_RUN"
+    assert not (tmp_path / runner.CRYPTO_MANIFEST_FILE).exists()
+    assert not (tmp_path / runner.CRYPTO_VERIFICATION_FILE).exists()
+
+
+@pytest.mark.parametrize(
+    ("case", "reason"),
+    (
+        ("lane_closed", runner.REASON_CRYPTO_LIVE_GATE_REQUIRED),
+        ("causal_closed", runner.REASON_CRYPTO_CAUSAL_GATE_REQUIRED),
+        ("missing_dir", runner.REASON_CRYPTO_ARTIFACT_DIR_REQUIRED),
+        ("invalid_ref", runner.REASON_CRYPTO_SOURCE_PACKAGE_REF_INVALID),
+        ("manifest_exists", runner.REASON_CRYPTO_TARGET_EXISTS),
+        ("verification_exists", runner.REASON_CRYPTO_TARGET_EXISTS),
+    ),
+)
+def test_crypto_preconditions_fail_before_provider_or_transaction(
+    case: str,
+    reason: str,
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    env = _crypto_env(tmp_path)
+    constraints = binding.build_client_constraints_preference_a_v01()
+    if case == "lane_closed":
+        env.pop(runner.ENV_LANE)
+    elif case == "causal_closed":
+        env.pop(runner.ENV_CAUSAL_BINDING)
+    elif case == "missing_dir":
+        env.pop(runner.ENV_ARTIFACT_DIR)
+    elif case == "invalid_ref":
+        env[runner.ENV_ARTIFACT_DIR] = "."
+    else:
+        (tmp_path / (
+            runner.CRYPTO_MANIFEST_FILE
+            if case == "manifest_exists"
+            else runner.CRYPTO_VERIFICATION_FILE
+        )).write_text("user", encoding="utf-8")
+    monkeypatch.setattr(
+        runner.deterministic_airline,
+        "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("transaction executed"),
+        ),
+    )
+
+    def forbidden_provider(*args, **kwargs):
+        raise AssertionError("provider called")
+
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=env,
+        provider=forbidden_provider,
+        causal_constraints=constraints,
+    )
+    _assert_crypto_fail(report, reason)
+
+
+def test_crypto_precondition_rejects_symlink_directory(
+    tmp_path: Path,
+) -> None:
+    actual = tmp_path / "actual"
+    actual.mkdir()
+    selected = tmp_path / "selected"
+    selected.symlink_to(actual, target_is_directory=True)
+    env = _crypto_env(selected)
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=env,
+        provider=_content_sensitive_causal_provider(),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+    )
+    _assert_crypto_fail(report, runner.REASON_CRYPTO_ARTIFACT_DIR_SYMLINK)
+
+
+@pytest.mark.parametrize("mutation", ("missing", "symlink", "directory"))
+def test_crypto_source_snapshot_rejects_missing_symlink_or_nonregular_file(
+    mutation: str,
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = runner._write_summary_artifacts
+
+    def mutate_after_summary(artifact_dir, report, artifacts):
+        original(artifact_dir, report, artifacts)
+        target = artifact_dir / "secret_scan.json"
+        target.unlink()
+        if mutation == "symlink":
+            external = tmp_path.parent / f"{tmp_path.name}_external_secret.json"
+            external.write_text("{}", encoding="utf-8")
+            target.symlink_to(external)
+        elif mutation == "directory":
+            target.mkdir()
+
+    monkeypatch.setattr(runner, "_write_summary_artifacts", mutate_after_summary)
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    _assert_crypto_fail(report, runner.REASON_CRYPTO_SOURCE_SNAPSHOT_FAILED)
+    assert not (tmp_path / runner.CRYPTO_MANIFEST_FILE).exists()
+    assert not (tmp_path / runner.CRYPTO_VERIFICATION_FILE).exists()
+
+
+def test_crypto_required_source_order_mismatch_fails_closed(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    required = list(runner.ledger_audit.REQUIRED_SOURCE_FILES)
+    required[0], required[1] = required[1], required[0]
+    monkeypatch.setattr(runner.ledger_audit, "REQUIRED_SOURCE_FILES", tuple(required))
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    _assert_crypto_fail(report, runner.REASON_CRYPTO_SOURCE_SCOPE_MISMATCH)
+
+
+def test_crypto_detects_source_mutation_during_e1_audit(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = runner.ledger_audit.collect_airline_transaction_artifact_ledger_audit_v01
+
+    def mutating_audit(**kwargs):
+        audit = original(**kwargs)
+        summary_path = Path(kwargs["artifact_dir"]) / "summary.json"
+        summary_path.write_bytes(summary_path.read_bytes() + b" ")
+        return audit
+
+    monkeypatch.setattr(
+        runner.ledger_audit,
+        "collect_airline_transaction_artifact_ledger_audit_v01",
+        mutating_audit,
+    )
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    _assert_crypto_fail(
+        report,
+        runner.REASON_CRYPTO_SOURCE_BYTES_CHANGED_DURING_AUDIT,
+    )
+
+
+def test_crypto_e1_audit_exception_fails_closed_after_one_call(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    calls = 0
+
+    def failed_audit(**kwargs):
+        nonlocal calls
+        calls += 1
+        raise RuntimeError("private")
+
+    monkeypatch.setattr(
+        runner.ledger_audit,
+        "collect_airline_transaction_artifact_ledger_audit_v01",
+        failed_audit,
+    )
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    _assert_crypto_fail(report, runner.REASON_CRYPTO_E1_AUDIT_FAILED)
+    assert calls == 1
+    assert not (tmp_path / runner.CRYPTO_MANIFEST_FILE).exists()
+    assert not (tmp_path / runner.CRYPTO_VERIFICATION_FILE).exists()
+
+
+@pytest.mark.parametrize("mutation", ("failed", "foreign_dir", "wrong_geometry"))
+def test_crypto_rejects_failed_foreign_or_wrong_geometry_e1_audit(
+    mutation: str,
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = runner.ledger_audit.collect_airline_transaction_artifact_ledger_audit_v01
+
+    def changed_audit(**kwargs):
+        audit = original(**kwargs)
+        if mutation == "failed":
+            return replace(
+                audit,
+                final_status=runner.STATUS_FAIL_CLOSED,
+                validation_errors=("forced",),
+            )
+        if mutation == "foreign_dir":
+            return replace(audit, source_artifact_dir="foreign")
+        return replace(audit, actual_entry_count=18)
+
+    monkeypatch.setattr(
+        runner.ledger_audit,
+        "collect_airline_transaction_artifact_ledger_audit_v01",
+        changed_audit,
+    )
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    expected = (
+        runner.REASON_CRYPTO_E1_AUDIT_FOREIGN_DIR
+        if mutation == "foreign_dir"
+        else runner.REASON_CRYPTO_E1_AUDIT_FAILED
+    )
+    _assert_crypto_fail(report, expected)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ("missing_source", "wrong_source", "missing_ledger", "wrong_ledger"),
+)
+def test_crypto_requires_exact_hidden_typed_ledger_objects(
+    mutation: str,
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = runner._collect_crypto_artifact_seal_integration_v01
+
+    def mutate_before_crypto(**kwargs):
+        integrated = kwargs["integrated_deterministic_report"]
+        name = (
+            "_airline_transaction_artifact_ledger_source_bundle_v0_1"
+            if "source" in mutation
+            else "_airline_transaction_artifact_ledger_v0_1"
+        )
+        setattr(integrated, name, object() if mutation.startswith("wrong") else None)
+        return original(**kwargs)
+
+    monkeypatch.setattr(
+        runner,
+        "_collect_crypto_artifact_seal_integration_v01",
+        mutate_before_crypto,
+    )
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    _assert_crypto_fail(report, runner.REASON_CRYPTO_TYPED_SOURCE_MISSING)
+
+
+@pytest.mark.parametrize("stage", ("identity", "c1", "c2"))
+def test_crypto_source_identity_c1_or_c2_failure_stops_derived_writes(
+    stage: str,
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    if stage == "identity":
+        monkeypatch.setattr(
+            runner.ledger_collector,
+            "build_airline_transaction_artifact_ledger_expected_identity_from_source_v01",
+            lambda **kwargs: (_ for _ in ()).throw(ValueError("private")),
+        )
+        reason = runner.REASON_CRYPTO_EXPECTED_IDENTITY_FAILED
+    elif stage == "c1":
+        monkeypatch.setattr(
+            runner.crypto_collector,
+            "build_airline_crypto_artifact_seal_source_bundle_v01",
+            lambda **kwargs: (_ for _ in ()).throw(ValueError("private")),
+        )
+        reason = runner.REASON_CRYPTO_C1_SOURCE_BUNDLE_FAILED
+    else:
+        monkeypatch.setattr(
+            runner.crypto_collector,
+            "collect_airline_crypto_artifact_seal_from_source_bundle_v01",
+            lambda **kwargs: object(),
+        )
+        reason = runner.REASON_CRYPTO_C2_RESULT_INVALID
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    _assert_crypto_fail(report, reason)
+    assert not (tmp_path / runner.CRYPTO_MANIFEST_FILE).exists()
+    assert not (tmp_path / runner.CRYPTO_VERIFICATION_FILE).exists()
+
+
+@pytest.mark.parametrize("mutation", ("changed", "malformed"))
+def test_crypto_c2_callback_observation_failure_is_fail_closed(
+    mutation: str,
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = runner._read_crypto_source_snapshot_v01
+    calls = 0
+
+    def changed_third_snapshot(artifact_dir):
+        nonlocal calls
+        calls += 1
+        rows = original(artifact_dir)
+        if calls == 3:
+            if mutation == "malformed":
+                return []
+            changed = list(rows)
+            changed[-1] = (changed[-1][0], changed[-1][1] + b"changed")
+            return tuple(changed)
+        return rows
+
+    monkeypatch.setattr(runner, "_read_crypto_source_snapshot_v01", changed_third_snapshot)
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    _assert_crypto_fail(report, runner.REASON_CRYPTO_C2_RESULT_INVALID)
+
+
+def test_crypto_pair_writer_rolls_back_first_file_when_second_open_fails(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original_open = Path.open
+
+    def failing_open(path, *args, **kwargs):
+        if path.name == runner.CRYPTO_VERIFICATION_FILE:
+            raise OSError("private")
+        return original_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", failing_open)
+    with pytest.raises(ValueError, match=f"^{runner.REASON_CRYPTO_DERIVED_WRITE_FAILED}$"):
+        runner._write_crypto_artifact_pair_v01(
+            artifact_dir=tmp_path,
+            manifest_payload={"kind": "manifest"},
+            verification_payload={"kind": "verification"},
+        )
+    assert not (tmp_path / runner.CRYPTO_MANIFEST_FILE).exists()
+    assert not (tmp_path / runner.CRYPTO_VERIFICATION_FILE).exists()
+
+
+class _PartialWriteHandle:
+    def __init__(self, handle) -> None:
+        self._handle = handle
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback) -> bool:
+        self._handle.close()
+        return False
+
+    def write(self, text: str) -> int:
+        written = self._handle.write(text[: max(1, len(text) // 2)])
+        self._handle.flush()
+        raise OSError("private partial write")
+
+
+def test_crypto_fresh_package_rejects_existing_contents_without_changes(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    summary_path = tmp_path / "summary.json"
+    unrelated_path = tmp_path / "operator-note.txt"
+    summary_bytes = b'{"sentinel":true}'
+    unrelated_bytes = b"operator-owned"
+    summary_path.write_bytes(summary_bytes)
+    unrelated_path.write_bytes(unrelated_bytes)
+    monkeypatch.setattr(
+        runner,
+        "_run_provider_lane",
+        lambda **kwargs: (_ for _ in ()).throw(AssertionError("provider lane ran")),
+    )
+    monkeypatch.setattr(
+        runner.deterministic_airline,
+        "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("transaction ran"),
+        ),
+    )
+    monkeypatch.setattr(
+        runner.ledger_audit,
+        "collect_airline_transaction_artifact_ledger_audit_v01",
+        lambda **kwargs: (_ for _ in ()).throw(AssertionError("audit ran")),
+    )
+    monkeypatch.setattr(
+        runner.crypto_collector,
+        "collect_airline_crypto_artifact_seal_from_source_bundle_v01",
+        lambda **kwargs: (_ for _ in ()).throw(AssertionError("Crypto C ran")),
+    )
+
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("provider called"),
+        ),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+    )
+
+    _assert_crypto_fail(report, runner.REASON_CRYPTO_ARTIFACT_DIR_NOT_EMPTY)
+    assert summary_path.read_bytes() == summary_bytes
+    assert unrelated_path.read_bytes() == unrelated_bytes
+
+
+def test_crypto_partial_manifest_write_cleans_both_targets(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original_open = Path.open
+
+    def partial_manifest_open(path, *args, **kwargs):
+        handle = original_open(path, *args, **kwargs)
+        if path.name == runner.CRYPTO_MANIFEST_FILE:
+            return _PartialWriteHandle(handle)
+        return handle
+
+    monkeypatch.setattr(Path, "open", partial_manifest_open)
+    with pytest.raises(
+        ValueError,
+        match=f"^{runner.REASON_CRYPTO_DERIVED_WRITE_FAILED}$",
+    ):
+        runner._write_crypto_artifact_pair_v01(
+            artifact_dir=tmp_path,
+            manifest_payload={"kind": "manifest"},
+            verification_payload={"kind": "verification"},
+        )
+    assert not (tmp_path / runner.CRYPTO_MANIFEST_FILE).exists()
+    assert not (tmp_path / runner.CRYPTO_VERIFICATION_FILE).exists()
+
+
+def test_crypto_partial_verification_write_cleans_both_targets(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original_open = Path.open
+
+    def partial_verification_open(path, *args, **kwargs):
+        handle = original_open(path, *args, **kwargs)
+        if path.name == runner.CRYPTO_VERIFICATION_FILE:
+            return _PartialWriteHandle(handle)
+        return handle
+
+    monkeypatch.setattr(Path, "open", partial_verification_open)
+    with pytest.raises(
+        ValueError,
+        match=f"^{runner.REASON_CRYPTO_DERIVED_WRITE_FAILED}$",
+    ):
+        runner._write_crypto_artifact_pair_v01(
+            artifact_dir=tmp_path,
+            manifest_payload={"kind": "manifest"},
+            verification_payload={"kind": "verification"},
+        )
+    assert not (tmp_path / runner.CRYPTO_MANIFEST_FILE).exists()
+    assert not (tmp_path / runner.CRYPTO_VERIFICATION_FILE).exists()
+
+
+def test_crypto_post_write_text_mismatch_cleans_both_targets(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original_read_text = Path.read_text
+
+    def mismatched_read_text(path, *args, **kwargs):
+        text = original_read_text(path, *args, **kwargs)
+        if path.name == runner.CRYPTO_MANIFEST_FILE:
+            return text + " "
+        return text
+
+    monkeypatch.setattr(Path, "read_text", mismatched_read_text)
+    with pytest.raises(
+        ValueError,
+        match=f"^{runner.REASON_CRYPTO_DERIVED_REREAD_FAILED}$",
+    ):
+        runner._write_crypto_artifact_pair_v01(
+            artifact_dir=tmp_path,
+            manifest_payload={"kind": "manifest"},
+            verification_payload={"kind": "verification"},
+        )
+    assert not (tmp_path / runner.CRYPTO_MANIFEST_FILE).exists()
+    assert not (tmp_path / runner.CRYPTO_VERIFICATION_FILE).exists()
+
+
+def test_crypto_cleanup_failure_has_dedicated_reason(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original_open = Path.open
+    original_unlink = Path.unlink
+
+    def partial_verification_open(path, *args, **kwargs):
+        handle = original_open(path, *args, **kwargs)
+        if path.name == runner.CRYPTO_VERIFICATION_FILE:
+            return _PartialWriteHandle(handle)
+        return handle
+
+    def failed_cleanup(path, *args, **kwargs):
+        if path.name in {
+            runner.CRYPTO_MANIFEST_FILE,
+            runner.CRYPTO_VERIFICATION_FILE,
+        }:
+            raise OSError("private cleanup failure")
+        return original_unlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", partial_verification_open)
+    monkeypatch.setattr(Path, "unlink", failed_cleanup)
+    with pytest.raises(
+        ValueError,
+        match=f"^{runner.REASON_CRYPTO_DERIVED_CLEANUP_FAILED}$",
+    ):
+        runner._write_crypto_artifact_pair_v01(
+            artifact_dir=tmp_path,
+            manifest_payload={"kind": "manifest"},
+            verification_payload={"kind": "verification"},
+        )
+
+
+def test_crypto_final_source_change_removes_derived_pair_without_repair(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original_pair_writer = runner._write_crypto_artifact_pair_v01
+    changed_summary: list[bytes] = []
+
+    def mutating_pair_writer(**kwargs):
+        paths = original_pair_writer(**kwargs)
+        summary_path = kwargs["artifact_dir"] / "summary.json"
+        changed = summary_path.read_bytes() + b" "
+        summary_path.write_bytes(changed)
+        changed_summary.append(changed)
+        return paths
+
+    monkeypatch.setattr(
+        runner,
+        "_write_crypto_artifact_pair_v01",
+        mutating_pair_writer,
+    )
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    _assert_crypto_fail(
+        report,
+        runner.REASON_CRYPTO_SOURCE_BYTES_CHANGED_AFTER_WRITE,
+    )
+    assert not (tmp_path / runner.CRYPTO_MANIFEST_FILE).exists()
+    assert not (tmp_path / runner.CRYPTO_VERIFICATION_FILE).exists()
+    assert runner.CRYPTO_MANIFEST_FILE not in report["artifacts"]
+    assert runner.CRYPTO_VERIFICATION_FILE not in report["artifacts"]
+    assert (tmp_path / "summary.json").read_bytes() == changed_summary[0]
+
+
+def test_crypto_failure_renderer_makes_no_self_consistency_claim() -> None:
+    deterministic_context = (
+        runner.deterministic_airline
+        .build_tri_party_airline_semantic_source_context_v01()
+    )
+    report = runner._fail_closed_report(
+        reason="causal_constraints_required",
+        provider_mode=runner.PROVIDER_MODE_SKIPPED,
+        model=runner.DEFAULT_MODEL,
+        deterministic_report=deterministic_context,
+        crypto_requested=True,
+    )
+    report["airline_crypto_artifact_seal_integration"]["signature_verified"] = 1
+    rendered = runner.render_tri_party_airline_live_semantic_lane_v01(report)
+    assert "Crypto integration failed closed" in rendered
+    assert "Internally self-consistent and unanchored" not in rendered
+    assert "signature verified: invalid" in rendered
+
+
+def test_crypto_missing_causal_constraints_preserves_requested_failure(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(
+        runner,
+        "_run_provider_lane",
+        lambda **kwargs: (_ for _ in ()).throw(AssertionError("provider lane ran")),
+    )
+    monkeypatch.setattr(
+        runner.deterministic_airline,
+        "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("transaction ran"),
+        ),
+    )
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("provider called"),
+        ),
+    )
+    crypto = report["airline_crypto_artifact_seal_integration"]
+    assert report["validation_errors"] == ("causal_constraints_required",)
+    assert report["failed_stage"] == "crypto_upstream_lane"
+    assert report["airline_crypto_artifact_seal_source_boundary"][
+        "integration_requested"
+    ] is True
+    assert crypto["integration_status"] == runner.STATUS_FAIL_CLOSED
+    assert crypto["integration_status"] != "NOT_RUN"
+    assert crypto["validation_errors"] == (
+        runner.REASON_CRYPTO_UPSTREAM_LANE_FAILED,
+    )
+
+
+def test_crypto_source_transaction_failure_does_not_call_e1_audit(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    audit_calls = 0
+
+    def forbidden_audit(**kwargs):
+        nonlocal audit_calls
+        audit_calls += 1
+        raise AssertionError("audit called")
+
+    monkeypatch.setattr(
+        runner,
+        "_scan_secret_markers",
+        lambda *args, **kwargs: {
+            "passed": False,
+            "matched_markers": ("forced",),
+            "files_scanned": 0,
+        },
+    )
+    monkeypatch.setattr(
+        runner.ledger_audit,
+        "collect_airline_transaction_artifact_ledger_audit_v01",
+        forbidden_audit,
+    )
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    crypto = report["airline_crypto_artifact_seal_integration"]
+    _assert_crypto_fail(report, runner.REASON_CRYPTO_SOURCE_TRANSACTION_FAILED)
+    assert runner.REASON_CRYPTO_E1_AUDIT_FAILED not in crypto["validation_errors"]
+    assert crypto["e1_audit_count"] == 0
+    assert audit_calls == 0
+
+
+@pytest.mark.parametrize(
+    ("payload", "reason"),
+    (
+        ([], runner.REASON_CRYPTO_DERIVED_PAYLOAD_INVALID),
+        ({"marker": "GEMINI_API_KEY"}, runner.REASON_CRYPTO_DERIVED_SECRET_MARKER),
+    ),
+)
+def test_crypto_payload_serialization_and_secret_boundary(
+    payload: object,
+    reason: str,
+) -> None:
+    with pytest.raises(ValueError, match=f"^{reason}$"):
+        runner._crypto_payload_text_v01(payload)
+
+
+def test_crypto_detects_source_change_during_derived_write(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    original = runner._write_crypto_artifact_pair_v01
+
+    def mutating_pair(**kwargs):
+        paths = original(**kwargs)
+        summary = kwargs["artifact_dir"] / "summary.json"
+        summary.write_bytes(summary.read_bytes() + b" ")
+        return paths
+
+    monkeypatch.setattr(runner, "_write_crypto_artifact_pair_v01", mutating_pair)
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    _assert_crypto_fail(
+        report,
+        runner.REASON_CRYPTO_SOURCE_BYTES_CHANGED_AFTER_WRITE,
+    )
+
+
+def test_crypto_slice_d_exact_stage_order_and_single_invocations(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    order: list[str] = []
+    originals = {
+        "audit": runner.ledger_audit.collect_airline_transaction_artifact_ledger_audit_v01,
+        "c2": runner.crypto_collector.collect_airline_crypto_artifact_seal_from_source_bundle_v01,
+        "pair": runner._write_crypto_artifact_pair_v01,
+    }
+
+    def audit_wrapper(**kwargs):
+        order.append("audit")
+        return originals["audit"](**kwargs)
+
+    def c2_wrapper(**kwargs):
+        order.append("c2")
+        return originals["c2"](**kwargs)
+
+    def pair_wrapper(**kwargs):
+        order.append("pair")
+        return originals["pair"](**kwargs)
+
+    monkeypatch.setattr(
+        runner.ledger_audit,
+        "collect_airline_transaction_artifact_ledger_audit_v01",
+        audit_wrapper,
+    )
+    monkeypatch.setattr(
+        runner.crypto_collector,
+        "collect_airline_crypto_artifact_seal_from_source_bundle_v01",
+        c2_wrapper,
+    )
+    monkeypatch.setattr(runner, "_write_crypto_artifact_pair_v01", pair_wrapper)
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+    assert report["final_status"] == runner.STATUS_PASS
+    assert order == ["audit", "c2", "pair"]
+
+
+def test_crypto_slice_d_a_b_a_and_b_a_b_are_isolated(tmp_path: Path) -> None:
+    offer_a = binding.build_client_constraints_preference_a_v01
+    offer_b = binding.build_client_constraints_preference_b_v01
+    hashes: list[str] = []
+    offers: list[str] = []
+    statuses: list[str] = []
+    for index, factory in enumerate((offer_a, offer_b, offer_a, offer_b, offer_a, offer_b)):
+        package = tmp_path / f"run_{index}" / "package"
+        report = _crypto_report_for_preference(factory(), package)
+        hashes.append(report["airline_crypto_artifact_seal_integration"]["manifest_core_hash"])
+        statuses.append(
+            report["airline_crypto_artifact_seal_integration"][
+                "integration_status"
+            ],
+        )
+        offers.append(
+            report["semantic_to_contract_deterministic_bridge"][
+                "semantic_recommendation_id"
+            ],
+        )
+    assert offers == [
+        binding.OFFER_A_ID,
+        binding.OFFER_B_ID,
+        binding.OFFER_A_ID,
+        binding.OFFER_B_ID,
+        binding.OFFER_A_ID,
+        binding.OFFER_B_ID,
+    ]
+    assert statuses == [
+        runner.crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED
+    ] * 6
+    assert all(len(value) == 64 and value == value.lower() for value in hashes)
+    assert len(set(hashes)) == 6
+
+
+def test_crypto_slice_d_static_boundaries() -> None:
+    source = Path(runner.__file__).read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    imported_roots = {
+        alias.name.split(".")[0]
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    }
+    imported_roots.update(
+        node.module.split(".")[0]
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.module
+    )
+    assert imported_roots.isdisjoint(
+        {"cryptography", "Crypto", "config", "requests", "urllib"},
+    )
+    assert not any(
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr in {"glob", "rglob"}
+        for node in ast.walk(tree)
+    )
+    integration = next(
+        node
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef)
+        and node.name == "_collect_crypto_artifact_seal_integration_v01"
+    )
+    audit_calls = [
+        node
+        for node in ast.walk(integration)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr
+        == "collect_airline_transaction_artifact_ledger_audit_v01"
+    ]
+    assert len(audit_calls) == 1
+    c2_call = next(
+        node
+        for node in ast.walk(integration)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr
+        == "collect_airline_crypto_artifact_seal_from_source_bundle_v01"
+    )
+    anchor_keyword = next(
+        keyword
+        for keyword in c2_call.keywords
+        if keyword.arg == "expected_manifest_core_hash"
+    )
+    assert isinstance(anchor_keyword.value, ast.Constant)
+    assert anchor_keyword.value.value is None
+    assert "ENV_EXPECTED_MANIFEST_CORE_HASH" not in source
+    assert "rglob(" not in source
+    assert "latest directory" not in source.lower()
+    assert "airline_transaction_artifact_ledger_slice_e2_offline" not in source
+    assert ".tmp/" not in source
 
 
 def test_slice_d_live_forced_secret_scan_failure_writes_no_ledger(

@@ -2443,6 +2443,31 @@ def _expected_identity_from_source(
     )
 
 
+def build_airline_transaction_artifact_ledger_expected_identity_from_source_v01(
+    *,
+    source_bundle: object,
+) -> ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01:
+    if type(source_bundle) is not AirlineTransactionArtifactLedgerSourceBundleV01:
+        raise ValueError(REASON_SOURCE_BUNDLE_WRONG_TYPE)
+    try:
+        source_report = validate_airline_transaction_artifact_ledger_source_bundle_v01(
+            source_bundle,
+        )
+    except (TypeError, AttributeError, ValueError, KeyError, IndexError) as exc:
+        raise ValueError(REASON_SOURCE_BUNDLE_WRONG_TYPE) from exc
+    if (
+        source_report.validation_status != STATUS_PASS
+        or source_report.validation_errors != ()
+    ):
+        reason = (
+            source_report.validation_errors[0]
+            if source_report.validation_errors
+            else REASON_SOURCE_BUNDLE_WRONG_TYPE
+        )
+        raise ValueError(reason)
+    return _expected_identity_from_source(source_bundle)
+
+
 def collect_airline_transaction_artifact_ledger_from_source_v01(
     *,
     source_bundle: Any,

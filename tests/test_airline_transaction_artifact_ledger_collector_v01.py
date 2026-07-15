@@ -3148,3 +3148,97 @@ def test_direct_probe_wrong_independent_source_ref_fails_closed() -> None:
     )
     assert report.validation_status == ledger.STATUS_FAIL_CLOSED
     assert ledger.REASON_SOURCE_REF_MISMATCH in report.validation_errors
+
+
+@pytest.mark.parametrize("offer_id", (binding.OFFER_A_ID, binding.OFFER_B_ID))
+def test_public_expected_identity_builder_matches_fixture_source(
+    offer_id: str,
+) -> None:
+    source_bundle = _source_bundle(offer_id)
+    identity = (
+        collector
+        .build_airline_transaction_artifact_ledger_expected_identity_from_source_v01(
+            source_bundle=source_bundle,
+        )
+    )
+    item = _assert_collected_pass(source_bundle)
+    validation = ledger.validate_airline_transaction_artifact_ledger_v01(
+        item,
+        expected_identity=identity,
+    )
+    assert identity == _expected_identity(source_bundle)
+    assert validation.validation_status == ledger.STATUS_PASS
+    assert validation.validation_errors == ()
+
+
+def test_public_expected_identity_preserves_semantic_causal_hold_lineage() -> None:
+    source_bundle = _source_bundle_from_public_causal_runtime(binding.OFFER_A_ID)
+    identity = (
+        collector
+        .build_airline_transaction_artifact_ledger_expected_identity_from_source_v01(
+            source_bundle=source_bundle,
+        )
+    )
+    item = _assert_collected_pass(source_bundle)
+    hold = next(
+        entry
+        for entry in item.entries
+        if entry.artifact_type == ledger.ARTIFACT_AIRLINE_HOLD_PACKET
+    )
+    assert hold.artifact_id.startswith("airline_hold_commit_packet:semantic_causal:")
+    assert hold.canonical_hash_input["hold_id"].startswith("hold:semantic_causal:")
+    assert (
+        ledger.validate_airline_transaction_artifact_ledger_v01(
+            item,
+            expected_identity=identity,
+        ).validation_status
+        == ledger.STATUS_PASS
+    )
+
+
+def test_public_expected_identity_builder_rejects_wrong_or_invalid_source() -> None:
+    with pytest.raises(ValueError, match=f"^{collector.REASON_SOURCE_BUNDLE_WRONG_TYPE}$"):
+        collector.build_airline_transaction_artifact_ledger_expected_identity_from_source_v01(
+            source_bundle=object(),
+        )
+    invalid = replace(_source_bundle(binding.OFFER_A_ID), transaction_id="foreign")
+    with pytest.raises(ValueError) as exc_info:
+        collector.build_airline_transaction_artifact_ledger_expected_identity_from_source_v01(
+            source_bundle=invalid,
+        )
+    assert str(exc_info.value) == collector.REASON_SOURCE_BSEP_LINEAGE_MISMATCH
+
+
+def test_public_expected_identity_builder_is_deterministic_and_immutable() -> None:
+    source_bundle = _source_bundle(binding.OFFER_A_ID)
+    first = (
+        collector
+        .build_airline_transaction_artifact_ledger_expected_identity_from_source_v01(
+            source_bundle=source_bundle,
+        )
+    )
+    second = (
+        collector
+        .build_airline_transaction_artifact_ledger_expected_identity_from_source_v01(
+            source_bundle=source_bundle,
+        )
+    )
+    assert first == second
+    with pytest.raises(AttributeError):
+        first.expected_source_refs = replace(  # type: ignore[misc]
+            first.expected_source_refs,
+            source_run_ref="foreign",
+        )
+    artifact_type = ledger.EXPECTED_ARTIFACT_TYPE_SEQUENCE[0]
+    with pytest.raises(TypeError):
+        first.expected_artifact_ids[artifact_type] = "foreign"
+
+
+def test_public_expected_identity_builder_signature_accepts_source_not_ledger() -> None:
+    signature = inspect.signature(
+        collector
+        .build_airline_transaction_artifact_ledger_expected_identity_from_source_v01,
+    )
+    assert tuple(signature.parameters) == ("source_bundle",)
+    assert signature.parameters["source_bundle"].kind is inspect.Parameter.KEYWORD_ONLY
+    assert "ledger_item" not in signature.parameters

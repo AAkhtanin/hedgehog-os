@@ -8,6 +8,7 @@ from dataclasses import asdict, fields, is_dataclass
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
+from demo import run_airline_transaction_artifact_ledger_audit_v01 as ledger_audit
 from demo import run_live_provider_adapter_response_capture_v01 as provider_adapter
 from demo import run_tri_party_airline_ticket_purchase_mock_e2e_v01 as deterministic_airline
 from demo.run_live_unknown_request_dual_rich_context_v01 import (
@@ -15,6 +16,12 @@ from demo.run_live_unknown_request_dual_rich_context_v01 import (
 )
 from hedgehog.domains.airline import semantic_to_contract_binding_v01 as binding
 from hedgehog.domains.airline import semantic_to_contract_causal_runtime_v01 as causal_runtime
+from hedgehog.domains.airline import crypto_artifact_seal_collector_v01 as crypto_collector
+from hedgehog.domains.airline import crypto_artifact_seal_v01 as crypto_contracts
+from hedgehog.domains.airline import (
+    transaction_artifact_ledger_collector_v01 as ledger_collector,
+)
+from hedgehog.domains.airline import transaction_artifact_ledger_v01 as ledger_contracts
 
 
 RUN_ID = "tri_party_airline_live_semantic_lane_v01"
@@ -35,6 +42,12 @@ ENV_REAL_PROVIDER = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_REAL_PROVIDER"
 ENV_CALL_DELAY_SECONDS = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_CALL_DELAY_SECONDS"
 ENV_ALLOW_RAW = "HEDGEHOG_AIRLINE_LIVE_SEMANTIC_ALLOW_RAW_RESPONSE_OUTPUT"
 ENV_CAUSAL_BINDING = "HEDGEHOG_AIRLINE_SEMANTIC_TO_CONTRACT_CAUSAL_BINDING"
+ENV_CRYPTO_ARTIFACT_SEAL = "HEDGEHOG_AIRLINE_CRYPTO_ARTIFACT_SEAL"
+
+CRYPTO_MANIFEST_FILE = "airline_crypto_artifact_seal_manifest_v01.json"
+CRYPTO_VERIFICATION_FILE = "airline_crypto_artifact_seal_verification_v01.json"
+CRYPTO_SOURCE_SUMMARY_ROLE = "sealed_source_input_not_crypto_result"
+CRYPTO_NEXT_GATE = "airline_crypto_artifact_seal_v01_slice_e1_anchor_publication"
 
 PROVIDER_MODE_SKIPPED = "skipped_closed"
 PROVIDER_MODE_FAKE = "fake_provider"
@@ -57,6 +70,67 @@ REASON_LIVE_AIRLINE_BSEP_PROJECTION_MISSING = (
 )
 REASON_LIVE_BSEP_CAUSAL_PROJECTION_LINEAGE_MISMATCH = (
     "live_bsep_causal_projection_lineage_mismatch"
+)
+REASON_CRYPTO_LIVE_GATE_REQUIRED = "crypto_live_lane_gate_required"
+REASON_CRYPTO_CAUSAL_GATE_REQUIRED = "crypto_causal_binding_gate_required"
+REASON_CRYPTO_ARTIFACT_DIR_REQUIRED = "crypto_artifact_dir_required"
+REASON_CRYPTO_ARTIFACT_DIR_SYMLINK = "crypto_artifact_dir_symlink"
+REASON_CRYPTO_ARTIFACT_DIR_INVALID = "crypto_artifact_dir_invalid"
+REASON_CRYPTO_ARTIFACT_DIR_NOT_EMPTY = "crypto_artifact_dir_not_empty"
+REASON_CRYPTO_SOURCE_PACKAGE_REF_INVALID = "crypto_source_package_ref_invalid"
+REASON_CRYPTO_TARGET_EXISTS = "crypto_derived_artifact_target_exists"
+REASON_CRYPTO_UPSTREAM_LANE_FAILED = "crypto_upstream_lane_failed"
+REASON_CRYPTO_SOURCE_TRANSACTION_FAILED = "crypto_source_transaction_failed"
+REASON_CRYPTO_SOURCE_SCOPE_MISMATCH = "crypto_required_source_scope_mismatch"
+REASON_CRYPTO_SOURCE_SNAPSHOT_FAILED = "crypto_source_snapshot_failed"
+REASON_CRYPTO_SOURCE_BYTES_CHANGED_DURING_AUDIT = (
+    "crypto_source_bytes_changed_during_audit"
+)
+REASON_CRYPTO_E1_AUDIT_FAILED = "crypto_e1_audit_failed"
+REASON_CRYPTO_E1_AUDIT_FOREIGN_DIR = "crypto_e1_audit_foreign_directory"
+REASON_CRYPTO_E1_PROJECTION_FAILED = "crypto_e1_projection_failed"
+REASON_CRYPTO_TYPED_SOURCE_MISSING = "crypto_typed_ledger_source_missing"
+REASON_CRYPTO_EXPECTED_IDENTITY_FAILED = "crypto_expected_identity_failed"
+REASON_CRYPTO_C1_SOURCE_BUNDLE_FAILED = "crypto_c1_source_bundle_failed"
+REASON_CRYPTO_C2_COLLECTION_FAILED = "crypto_c2_collection_failed"
+REASON_CRYPTO_C2_RESULT_INVALID = "crypto_c2_result_invalid"
+REASON_CRYPTO_DERIVED_PAYLOAD_INVALID = "crypto_derived_payload_invalid"
+REASON_CRYPTO_DERIVED_SECRET_MARKER = "crypto_derived_secret_marker"
+REASON_CRYPTO_DERIVED_WRITE_FAILED = "crypto_derived_artifact_write_failed"
+REASON_CRYPTO_DERIVED_REREAD_FAILED = "crypto_derived_artifact_reread_failed"
+REASON_CRYPTO_DERIVED_CLEANUP_FAILED = "crypto_derived_artifact_cleanup_failed"
+REASON_CRYPTO_SOURCE_BYTES_CHANGED_AFTER_WRITE = (
+    "crypto_source_bytes_changed_after_write"
+)
+
+CRYPTO_FAILURE_REASONS = (
+    REASON_CRYPTO_LIVE_GATE_REQUIRED,
+    REASON_CRYPTO_CAUSAL_GATE_REQUIRED,
+    REASON_CRYPTO_ARTIFACT_DIR_REQUIRED,
+    REASON_CRYPTO_ARTIFACT_DIR_SYMLINK,
+    REASON_CRYPTO_ARTIFACT_DIR_INVALID,
+    REASON_CRYPTO_ARTIFACT_DIR_NOT_EMPTY,
+    REASON_CRYPTO_SOURCE_PACKAGE_REF_INVALID,
+    REASON_CRYPTO_TARGET_EXISTS,
+    REASON_CRYPTO_UPSTREAM_LANE_FAILED,
+    REASON_CRYPTO_SOURCE_TRANSACTION_FAILED,
+    REASON_CRYPTO_SOURCE_SCOPE_MISMATCH,
+    REASON_CRYPTO_SOURCE_SNAPSHOT_FAILED,
+    REASON_CRYPTO_SOURCE_BYTES_CHANGED_DURING_AUDIT,
+    REASON_CRYPTO_E1_AUDIT_FAILED,
+    REASON_CRYPTO_E1_AUDIT_FOREIGN_DIR,
+    REASON_CRYPTO_E1_PROJECTION_FAILED,
+    REASON_CRYPTO_TYPED_SOURCE_MISSING,
+    REASON_CRYPTO_EXPECTED_IDENTITY_FAILED,
+    REASON_CRYPTO_C1_SOURCE_BUNDLE_FAILED,
+    REASON_CRYPTO_C2_COLLECTION_FAILED,
+    REASON_CRYPTO_C2_RESULT_INVALID,
+    REASON_CRYPTO_DERIVED_PAYLOAD_INVALID,
+    REASON_CRYPTO_DERIVED_SECRET_MARKER,
+    REASON_CRYPTO_DERIVED_WRITE_FAILED,
+    REASON_CRYPTO_DERIVED_REREAD_FAILED,
+    REASON_CRYPTO_DERIVED_CLEANUP_FAILED,
+    REASON_CRYPTO_SOURCE_BYTES_CHANGED_AFTER_WRITE,
 )
 
 CAUSAL_PROPOSER_REQUIRED_FIELDS = tuple(
@@ -345,13 +419,39 @@ def collect_tri_party_airline_live_semantic_lane_v01(
 ) -> dict[str, Any]:
     effective_env = dict(os.environ if env is None else env)
     causal_gate_open = effective_env.get(ENV_CAUSAL_BINDING) == "1"
+    artifact_dir_value = effective_env.get(ENV_ARTIFACT_DIR, "")
+    artifact_dir = Path(artifact_dir_value) if artifact_dir_value else None
+    crypto_requested = effective_env.get(ENV_CRYPTO_ARTIFACT_SEAL) == "1"
+    if crypto_requested:
+        crypto_precondition_error = _crypto_precondition_error(
+            effective_env,
+            artifact_dir,
+        )
+        if crypto_precondition_error:
+            deterministic_context = (
+                deterministic_airline
+                .build_tri_party_airline_semantic_source_context_v01()
+            )
+            report = _fail_closed_report(
+                reason=crypto_precondition_error,
+                provider_mode=PROVIDER_MODE_SKIPPED,
+                model=effective_env.get(ENV_MODEL, DEFAULT_MODEL),
+                deterministic_report=deterministic_context,
+                crypto_requested=True,
+            )
+            report["airline_crypto_artifact_seal_source_boundary"] = (
+                _crypto_source_boundary(True)
+            )
+            report["airline_crypto_artifact_seal_integration"] = (
+                _crypto_failure_integration(crypto_precondition_error)
+            )
+            report["failed_stage"] = "crypto_precondition"
+            return report
     deterministic_report = (
         deterministic_airline.build_tri_party_airline_semantic_source_context_v01()
         if causal_gate_open
         else deterministic_airline.collect_tri_party_airline_ticket_purchase_mock_e2e_v01()
     )
-    artifact_dir_value = effective_env.get(ENV_ARTIFACT_DIR, "")
-    artifact_dir = Path(artifact_dir_value) if artifact_dir_value else None
 
     if effective_env.get(ENV_LANE) != "1":
         model = effective_env.get(ENV_MODEL, DEFAULT_MODEL)
@@ -365,6 +465,7 @@ def collect_tri_party_airline_live_semantic_lane_v01(
             provider_mode=PROVIDER_MODE_SKIPPED,
             model=effective_env.get(ENV_MODEL, DEFAULT_MODEL),
             deterministic_report=deterministic_report,
+            crypto_requested=crypto_requested,
         )
 
     if causal_gate_open and causal_constraints is None:
@@ -373,6 +474,7 @@ def collect_tri_party_airline_live_semantic_lane_v01(
             provider_mode=PROVIDER_MODE_SKIPPED,
             model=effective_env.get(ENV_MODEL, DEFAULT_MODEL),
             deterministic_report=deterministic_report,
+            crypto_requested=crypto_requested,
         )
     if not fake_selected and not real_selected:
         return _fail_closed_report(
@@ -380,6 +482,7 @@ def collect_tri_party_airline_live_semantic_lane_v01(
             provider_mode=PROVIDER_MODE_SKIPPED,
             model=effective_env.get(ENV_MODEL, DEFAULT_MODEL),
             deterministic_report=deterministic_report,
+            crypto_requested=crypto_requested,
         )
 
     if fake_selected:
@@ -395,6 +498,7 @@ def collect_tri_party_airline_live_semantic_lane_v01(
                 provider_mode=provider_mode,
                 model=model,
                 deterministic_report=deterministic_report,
+                crypto_requested=crypto_requested,
             )
         active_provider = provider or build_real_airline_semantic_provider_v01(model)
 
@@ -410,8 +514,17 @@ def collect_tri_party_airline_live_semantic_lane_v01(
         causal_gate_open=causal_gate_open,
         causal_constraints=causal_constraints,
         causal_snapshot=causal_snapshot,
+        crypto_requested=crypto_requested,
     )
     return report
+
+
+def _exact_crypto_boolean_text(value: object) -> str:
+    if value is True:
+        return "true"
+    if value is False:
+        return "false"
+    return "invalid"
 
 
 def render_tri_party_airline_live_semantic_lane_v01(report: Mapping[str, Any]) -> str:
@@ -589,6 +702,68 @@ def render_tri_party_airline_live_semantic_lane_v01(report: Mapping[str, Any]) -
                 f"{ledger_summary.get('network_calls_added_by_ledger_count', 0)}/"
                 f"{ledger_summary.get('gemini_calls_added_by_ledger_count', 0)}",
                 f"real-world effects: {ledger_summary.get('real_world_effects_count', 0)}",
+            ),
+        )
+
+    crypto_boundary = report.get("airline_crypto_artifact_seal_source_boundary", {})
+    crypto_summary = report.get("airline_crypto_artifact_seal_integration", {})
+    if (
+        isinstance(crypto_boundary, MappingABC)
+        and crypto_boundary.get("integration_requested") is True
+        and isinstance(crypto_summary, MappingABC)
+    ):
+        crypto_status = crypto_summary.get("integration_status")
+        if (
+            type(crypto_status) is str
+            and crypto_status
+            == crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED
+        ):
+            crypto_claim = (
+                "Internally self-consistent and unanchored; not final Crypto PASS."
+            )
+        elif type(crypto_status) is str and crypto_status == STATUS_FAIL_CLOSED:
+            crypto_claim = (
+                "Crypto integration failed closed; no internal self-consistency "
+                "or Crypto PASS is claimed."
+            )
+        else:
+            crypto_claim = (
+                "Crypto integration status is invalid; no internal self-consistency "
+                "or Crypto PASS is claimed."
+            )
+        lines.extend(
+            (
+                "",
+                "[AIRLINE CRYPTO ARTIFACT SEAL V0.1]",
+                f"integration status: {crypto_summary.get('integration_status', '')}",
+                f"source package ref: {crypto_summary.get('source_package_ref', '')}",
+                f"transaction ID: {crypto_summary.get('transaction_id', '')}",
+                f"Ledger ID: {crypto_summary.get('ledger_id', '')}",
+                "Ledger geometry: "
+                f"{crypto_summary.get('ledger_entry_count', 0)} / "
+                f"{crypto_summary.get('dependency_edge_count', 0)} / "
+                f"{crypto_summary.get('root_final_count', 0)}",
+                f"source files: {crypto_summary.get('source_file_count', 0)}",
+                f"Manifest Core hash: {crypto_summary.get('manifest_core_hash', '')}",
+                f"chain tail hash: {crypto_summary.get('chain_tail_hash', '')}",
+                f"source-package hash: {crypto_summary.get('source_package_hash', '')}",
+                f"signature mode: {crypto_summary.get('signature_mode', '')}",
+                "signature verified: "
+                f"{_exact_crypto_boolean_text(crypto_summary.get('signature_verified'))}",
+                "external anchor supplied: "
+                f"{_exact_crypto_boolean_text(crypto_summary.get('external_anchor_supplied'))}",
+                "external anchor verified: "
+                f"{_exact_crypto_boolean_text(crypto_summary.get('external_anchor_verified'))}",
+                "source bytes stable after audit/collection/write: "
+                f"{_exact_crypto_boolean_text(crypto_summary.get('source_bytes_unchanged_after_audit'))}/"
+                f"{_exact_crypto_boolean_text(crypto_summary.get('source_bytes_unchanged_after_collection'))}/"
+                f"{_exact_crypto_boolean_text(crypto_summary.get('source_bytes_unchanged_after_write'))}",
+                f"manifest file: {crypto_summary.get('manifest_artifact_ref', '')}",
+                f"verification file: {crypto_summary.get('verification_artifact_ref', '')}",
+                f"next gate: {crypto_summary.get('next_gate', '')}",
+                crypto_claim,
+                "Not signer authentication, PKI, non-repudiation, trusted timestamping, or a production-security claim.",
+                "No Replay and no real-world effect.",
             ),
         )
 
@@ -788,6 +963,7 @@ def _run_provider_lane(
     causal_gate_open: bool = False,
     causal_constraints: binding.ClientRootTravelConstraintSetV01 | None = None,
     causal_snapshot: binding.AirlineRootOfferCandidateSetSnapshotV01 | None = None,
+    crypto_requested: bool = False,
 ) -> dict[str, Any]:
     if artifact_dir is not None:
         artifact_dir.mkdir(parents=True, exist_ok=True)
@@ -1245,6 +1421,9 @@ def _run_provider_lane(
         "airline_transaction_artifact_ledger_integration": (
             _integrated_ledger_summary(integrated_deterministic_report)
         ),
+        "airline_crypto_artifact_seal_source_boundary": (
+            _crypto_source_boundary(crypto_requested)
+        ),
         "counter_table": {},
         "artifacts": artifacts,
         "secret_scan": {},
@@ -1329,6 +1508,33 @@ def _run_provider_lane(
     )
     _write_json_named(artifact_dir, "secret_scan.json", secret_scan, artifacts)
     _write_summary_artifacts(artifact_dir, report, artifacts)
+    if crypto_requested:
+        try:
+            crypto_integration = _collect_crypto_artifact_seal_integration_v01(
+                artifact_dir=artifact_dir,
+                report=report,
+                integrated_deterministic_report=integrated_deterministic_report,
+                artifacts=artifacts,
+            )
+        except (TypeError, AttributeError, ValueError, KeyError, IndexError, OSError):
+            crypto_integration = _crypto_failure_integration(
+                REASON_CRYPTO_C2_COLLECTION_FAILED,
+            )
+        report["airline_crypto_artifact_seal_integration"] = crypto_integration
+        if (
+            crypto_integration.get("integration_status")
+            != crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED
+        ):
+            crypto_errors = tuple(crypto_integration.get("validation_errors", ()))
+            report["final_status"] = STATUS_FAIL_CLOSED
+            report["failed_stage"] = "airline_crypto_artifact_seal_integration"
+            report["validation_errors"] = tuple(
+                dict.fromkeys(tuple(report["validation_errors"]) + crypto_errors),
+            )
+    else:
+        report["airline_crypto_artifact_seal_integration"] = (
+            _not_run_crypto_integration()
+        )
     report["artifacts"] = artifacts
     return report
 
@@ -1381,6 +1587,12 @@ def _skipped_report(
         "airline_transaction_artifact_ledger_integration": (
             _not_run_ledger_summary()
         ),
+        "airline_crypto_artifact_seal_source_boundary": (
+            _crypto_source_boundary(False)
+        ),
+        "airline_crypto_artifact_seal_integration": (
+            _not_run_crypto_integration()
+        ),
         "counter_table": _zero_counter_table(),
         "artifacts": {},
         "secret_scan": {"passed": True, "matched_markers": (), "files_scanned": 0},
@@ -1400,6 +1612,7 @@ def _fail_closed_report(
     provider_mode: str,
     model: str,
     deterministic_report: Mapping[str, Any],
+    crypto_requested: bool = False,
 ) -> dict[str, Any]:
     report = _skipped_report(model, deterministic_report)
     report.update(
@@ -1410,6 +1623,14 @@ def _fail_closed_report(
             "validation_errors": (reason,),
         },
     )
+    if crypto_requested:
+        report["airline_crypto_artifact_seal_source_boundary"] = (
+            _crypto_source_boundary(True)
+        )
+        report["airline_crypto_artifact_seal_integration"] = (
+            _crypto_failure_integration(REASON_CRYPTO_UPSTREAM_LANE_FAILED)
+        )
+        report["failed_stage"] = "crypto_upstream_lane"
     return report
 
 
@@ -2399,6 +2620,683 @@ def _not_run_ledger_summary() -> dict[str, Any]:
         "ledger_created_action_count": 0,
         "real_world_effects_count": 0,
         "artifact_written_count": 0,
+    }
+
+
+def _crypto_source_boundary(integration_requested: bool) -> dict[str, Any]:
+    return {
+        "integration_requested": integration_requested,
+        "source_summary_role": CRYPTO_SOURCE_SUMMARY_ROLE,
+        "manifest_artifact_ref": CRYPTO_MANIFEST_FILE,
+        "verification_artifact_ref": CRYPTO_VERIFICATION_FILE,
+        "expected_manifest_core_hash": None,
+        "anchored_pass_claimed": False,
+        "crypto_result_embedded_in_source_summary": False,
+    }
+
+
+def _crypto_integration_template(
+    *,
+    integration_status: str,
+    validation_errors: tuple[str, ...],
+) -> dict[str, Any]:
+    return {
+        "integration_status": integration_status,
+        "source_bundle_id": "",
+        "source_package_ref": "",
+        "ledger_id": "",
+        "transaction_id": "",
+        "manifest_core_hash": "",
+        "chain_tail_hash": "",
+        "source_package_hash": "",
+        "ledger_entry_count": 0,
+        "dependency_edge_count": 0,
+        "root_final_count": 0,
+        "source_file_count": 0,
+        "e1_audit_count": 0,
+        "source_bundle_validation_count": 0,
+        "manifest_core_collection_count": 0,
+        "envelope_collection_count": 0,
+        "post_collection_snapshot_provider_call_count": 0,
+        "verification_count": 0,
+        "manifest_artifact_written_count": 0,
+        "verification_artifact_written_count": 0,
+        "source_bytes_unchanged_after_audit": False,
+        "source_bytes_unchanged_after_collection": False,
+        "source_bytes_unchanged_after_write": False,
+        "source_summary_frozen_before_crypto": False,
+        "source_summary_rewritten_after_crypto": False,
+        "expected_manifest_core_hash": None,
+        "external_anchor_supplied": False,
+        "external_anchor_verified": False,
+        "anchored_pass_claimed": False,
+        "signature_mode": crypto_contracts.SIGNATURE_MODE_UNSIGNED_PLACEHOLDER,
+        "signature_verified": False,
+        "audit_rerun_count": 0,
+        "ledger_recollection_count": 0,
+        "semantic_rerun_count": 0,
+        "corridor_rerun_count": 0,
+        "provider_calls_added_by_crypto_count": 0,
+        "network_calls_added_by_crypto_count": 0,
+        "gemini_calls_added_by_crypto_count": 0,
+        "crypto_created_authority_count": 0,
+        "crypto_created_permission_count": 0,
+        "crypto_created_action_count": 0,
+        "real_world_effects_count": 0,
+        "manifest_artifact_ref": CRYPTO_MANIFEST_FILE,
+        "verification_artifact_ref": CRYPTO_VERIFICATION_FILE,
+        "validation_errors": validation_errors,
+        "next_gate": CRYPTO_NEXT_GATE,
+    }
+
+
+def _not_run_crypto_integration() -> dict[str, Any]:
+    return _crypto_integration_template(
+        integration_status="NOT_RUN",
+        validation_errors=(),
+    )
+
+
+def _crypto_failure_integration(
+    reason: str,
+    **observed: Any,
+) -> dict[str, Any]:
+    safe_reason = (
+        reason if reason in CRYPTO_FAILURE_REASONS else REASON_CRYPTO_C2_COLLECTION_FAILED
+    )
+    result = _crypto_integration_template(
+        integration_status=STATUS_FAIL_CLOSED,
+        validation_errors=(safe_reason,),
+    )
+    result.update(observed)
+    result["integration_status"] = STATUS_FAIL_CLOSED
+    result["validation_errors"] = (safe_reason,)
+    result["expected_manifest_core_hash"] = None
+    result["anchored_pass_claimed"] = False
+    return result
+
+
+def _crypto_exception_reason(exc: BaseException, fallback: str) -> str:
+    if (
+        len(exc.args) == 1
+        and type(exc.args[0]) is str
+        and exc.args[0] in CRYPTO_FAILURE_REASONS
+    ):
+        return exc.args[0]
+    return fallback
+
+
+def _crypto_precondition_error(
+    env: Mapping[str, str],
+    artifact_dir: Path | None,
+) -> str:
+    if env.get(ENV_LANE) != "1":
+        return REASON_CRYPTO_LIVE_GATE_REQUIRED
+    if env.get(ENV_CAUSAL_BINDING) != "1":
+        return REASON_CRYPTO_CAUSAL_GATE_REQUIRED
+    if artifact_dir is None:
+        return REASON_CRYPTO_ARTIFACT_DIR_REQUIRED
+    try:
+        if artifact_dir.is_symlink():
+            return REASON_CRYPTO_ARTIFACT_DIR_SYMLINK
+        if artifact_dir.exists() and not artifact_dir.is_dir():
+            return REASON_CRYPTO_ARTIFACT_DIR_INVALID
+    except OSError:
+        return REASON_CRYPTO_ARTIFACT_DIR_INVALID
+    package_ref_validation = (
+        crypto_contracts.validate_airline_crypto_source_package_ref_v01(
+            artifact_dir.name,
+        )
+    )
+    if package_ref_validation.validation_status != crypto_contracts.STATUS_PASS:
+        return REASON_CRYPTO_SOURCE_PACKAGE_REF_INVALID
+    try:
+        if any(
+            target.exists() or target.is_symlink()
+            for target in (
+                artifact_dir / CRYPTO_MANIFEST_FILE,
+                artifact_dir / CRYPTO_VERIFICATION_FILE,
+            )
+        ):
+            return REASON_CRYPTO_TARGET_EXISTS
+        if artifact_dir.exists():
+            for filename in crypto_collector.REQUIRED_SOURCE_FILE_REFS:
+                source_target = artifact_dir / filename
+                if source_target.is_symlink() or (
+                    source_target.exists() and not source_target.is_file()
+                ):
+                    return REASON_CRYPTO_SOURCE_SNAPSHOT_FAILED
+            if next(artifact_dir.iterdir(), None) is not None:
+                return REASON_CRYPTO_ARTIFACT_DIR_NOT_EMPTY
+    except OSError:
+        return REASON_CRYPTO_ARTIFACT_DIR_INVALID
+    return ""
+
+
+def _read_crypto_source_snapshot_v01(
+    artifact_dir: Path,
+) -> tuple[tuple[str, bytes], ...]:
+    if artifact_dir.is_symlink() or not artifact_dir.is_dir():
+        raise ValueError(REASON_CRYPTO_SOURCE_SNAPSHOT_FAILED)
+    rows: list[tuple[str, bytes]] = []
+    for filename in crypto_collector.REQUIRED_SOURCE_FILE_REFS:
+        path = artifact_dir / filename
+        if path.is_symlink() or not path.is_file():
+            raise ValueError(REASON_CRYPTO_SOURCE_SNAPSHOT_FAILED)
+        try:
+            rows.append((filename, path.read_bytes()))
+        except OSError as exc:
+            raise ValueError(REASON_CRYPTO_SOURCE_SNAPSHOT_FAILED) from exc
+    return tuple(rows)
+
+
+def _project_e1_audit_for_crypto_v01(
+    audit_report: object,
+    *,
+    artifact_dir: Path,
+) -> crypto_collector.AirlineCryptoArtifactSealAcceptedLedgerAuditV01:
+    if (
+        type(audit_report)
+        is not ledger_audit.AirlineTransactionArtifactLedgerAuditReportV01
+    ):
+        raise ValueError(REASON_CRYPTO_E1_AUDIT_FAILED)
+    if Path(audit_report.source_artifact_dir) != artifact_dir:
+        raise ValueError(REASON_CRYPTO_E1_AUDIT_FOREIGN_DIR)
+    projected = crypto_collector.AirlineCryptoArtifactSealAcceptedLedgerAuditV01(
+        audit_id=audit_report.audit_id,
+        audit_version=audit_report.audit_version,
+        final_status=audit_report.final_status,
+        required_source_files=audit_report.required_source_files,
+        files_read_count=audit_report.files_read_count,
+        ledger_id=audit_report.ledger_id,
+        transaction_id=audit_report.transaction_id,
+        selected_offer_id=audit_report.selected_offer_id,
+        source_run_ref=audit_report.source_run_ref,
+        source_causal_report_ref=audit_report.source_causal_report_ref,
+        source_corridor_report_ref=audit_report.source_corridor_report_ref,
+        actual_entry_count=audit_report.actual_entry_count,
+        actual_dependency_edge_count=audit_report.actual_dependency_edge_count,
+        actual_root_final_count=audit_report.actual_root_final_count,
+        client_root_final_count=audit_report.client_root_final_count,
+        airline_root_final_count=audit_report.airline_root_final_count,
+        bank_root_final_count=audit_report.bank_root_final_count,
+        artifact_ids_unique=audit_report.artifact_ids_unique,
+        ledger_indexes_contiguous=audit_report.ledger_indexes_contiguous,
+        artifact_type_sequence_valid=audit_report.artifact_type_sequence_valid,
+        dependencies_present=audit_report.dependencies_present,
+        dependencies_backward_only=audit_report.dependencies_backward_only,
+        dependency_graph_acyclic=audit_report.dependency_graph_acyclic,
+        root_final_set_valid=audit_report.root_final_set_valid,
+        root_ownership_valid=audit_report.root_ownership_valid,
+        authority_evidence_boundaries_valid=(
+            audit_report.authority_evidence_boundaries_valid
+        ),
+        canonical_hash_inputs_safe=audit_report.canonical_hash_inputs_safe,
+        source_refs_consistent=audit_report.source_refs_consistent,
+        transaction_identity_consistent=(
+            audit_report.transaction_identity_consistent
+        ),
+        selected_offer_chain_consistent=(
+            audit_report.selected_offer_chain_consistent
+        ),
+        secret_scan_passed=audit_report.secret_scan_passed,
+        stored_validation_status=audit_report.stored_validation_status,
+        stored_validation_errors=audit_report.stored_validation_errors,
+        audit_created_authority_count=audit_report.audit_created_authority_count,
+        audit_created_permission_count=audit_report.audit_created_permission_count,
+        audit_created_action_count=audit_report.audit_created_action_count,
+        semantic_rerun_count=audit_report.semantic_rerun_count,
+        corridor_rerun_count=audit_report.corridor_rerun_count,
+        ledger_collection_count=audit_report.ledger_collection_count,
+        provider_call_count=audit_report.provider_call_count,
+        network_call_count=audit_report.network_call_count,
+        gemini_call_count=audit_report.gemini_call_count,
+        crypto_operation_count=audit_report.crypto_operation_count,
+        replay_operation_count=audit_report.replay_operation_count,
+        real_world_effects_count=audit_report.real_world_effects_count,
+        validation_errors=audit_report.validation_errors,
+    )
+    validation = (
+        crypto_collector
+        .validate_airline_crypto_artifact_seal_accepted_ledger_audit_v01(
+            projected,
+        )
+    )
+    if validation.validation_status != crypto_contracts.STATUS_PASS:
+        raise ValueError(REASON_CRYPTO_E1_PROJECTION_FAILED)
+    return projected
+
+
+def _crypto_payload_text_v01(payload: object) -> str:
+    if type(payload) is not dict:
+        raise ValueError(REASON_CRYPTO_DERIVED_PAYLOAD_INVALID)
+    validation = crypto_contracts.validate_airline_crypto_canonical_json_value_v01(
+        payload,
+    )
+    if validation.validation_status != crypto_contracts.STATUS_PASS:
+        raise ValueError(REASON_CRYPTO_DERIVED_PAYLOAD_INVALID)
+    try:
+        text = json.dumps(
+            payload,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        ) + "\n"
+    except (TypeError, ValueError) as exc:
+        raise ValueError(REASON_CRYPTO_DERIVED_PAYLOAD_INVALID) from exc
+    if any(marker in text for marker in SECRET_MARKERS):
+        raise ValueError(REASON_CRYPTO_DERIVED_SECRET_MARKER)
+    return text
+
+
+def _cleanup_crypto_artifact_paths_v01(
+    created_paths: tuple[Path, ...],
+) -> bool:
+    cleanup_failed = False
+    for path in reversed(created_paths):
+        try:
+            path.unlink()
+        except FileNotFoundError:
+            pass
+        except OSError:
+            cleanup_failed = True
+    for path in created_paths:
+        try:
+            if path.exists() or path.is_symlink():
+                cleanup_failed = True
+        except OSError:
+            cleanup_failed = True
+    return not cleanup_failed
+
+
+def _write_crypto_artifact_pair_v01(
+    *,
+    artifact_dir: Path,
+    manifest_payload: object,
+    verification_payload: object,
+) -> tuple[Path, Path]:
+    manifest_text = _crypto_payload_text_v01(manifest_payload)
+    verification_text = _crypto_payload_text_v01(verification_payload)
+    manifest_path = artifact_dir / CRYPTO_MANIFEST_FILE
+    verification_path = artifact_dir / CRYPTO_VERIFICATION_FILE
+    try:
+        if (
+            manifest_path.exists()
+            or manifest_path.is_symlink()
+            or verification_path.exists()
+            or verification_path.is_symlink()
+        ):
+            raise ValueError(REASON_CRYPTO_TARGET_EXISTS)
+    except OSError as exc:
+        raise ValueError(REASON_CRYPTO_DERIVED_WRITE_FAILED) from exc
+
+    created_paths: list[Path] = []
+    try:
+        manifest_handle = manifest_path.open("x", encoding="utf-8")
+        created_paths.append(manifest_path)
+        with manifest_handle as handle:
+            handle.write(manifest_text)
+        verification_handle = verification_path.open("x", encoding="utf-8")
+        created_paths.append(verification_path)
+        with verification_handle as handle:
+            handle.write(verification_text)
+    except Exception as exc:
+        reason = REASON_CRYPTO_DERIVED_WRITE_FAILED
+        if not _cleanup_crypto_artifact_paths_v01(tuple(created_paths)):
+            reason = REASON_CRYPTO_DERIVED_CLEANUP_FAILED
+        raise ValueError(reason) from exc
+    try:
+        actual_manifest_text = manifest_path.read_text(encoding="utf-8")
+        actual_verification_text = verification_path.read_text(encoding="utf-8")
+        parsed_manifest = json.loads(actual_manifest_text)
+        parsed_verification = json.loads(actual_verification_text)
+    except Exception as exc:
+        reason = REASON_CRYPTO_DERIVED_REREAD_FAILED
+        if not _cleanup_crypto_artifact_paths_v01(tuple(created_paths)):
+            reason = REASON_CRYPTO_DERIVED_CLEANUP_FAILED
+        raise ValueError(reason) from exc
+    if (
+        actual_manifest_text != manifest_text
+        or actual_verification_text != verification_text
+        or parsed_manifest != manifest_payload
+        or parsed_verification != verification_payload
+    ):
+        reason = REASON_CRYPTO_DERIVED_REREAD_FAILED
+        if not _cleanup_crypto_artifact_paths_v01(tuple(created_paths)):
+            reason = REASON_CRYPTO_DERIVED_CLEANUP_FAILED
+        raise ValueError(reason)
+    return manifest_path, verification_path
+
+
+def _crypto_collection_successful(
+    result: object,
+) -> bool:
+    if type(result) is not crypto_collector.AirlineCryptoArtifactSealCollectionResultV01:
+        return False
+    contract = crypto_collector.validate_airline_crypto_artifact_seal_collection_result_v01(
+        result,
+    )
+    verification = result.verification_report
+    return bool(
+        contract.validation_status == crypto_contracts.STATUS_PASS
+        and result.collection_status
+        == crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED
+        and result.manifest_core is not None
+        and result.envelope is not None
+        and verification is not None
+        and verification.verification_status
+        == crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED
+        and result.source_bytes_unchanged_after_audit is True
+        and result.source_bytes_unchanged_after_collection is True
+        and result.expected_manifest_core_hash is None
+        and verification.expected_manifest_core_hash is None
+        and verification.external_anchor_supplied is False
+        and verification.external_anchor_verified is False
+        and verification.signature_mode
+        == crypto_contracts.SIGNATURE_MODE_UNSIGNED_PLACEHOLDER
+        and verification.signature_verified is False
+        and all(
+            type(getattr(result, field_name)) is int
+            and getattr(result, field_name) == 1
+            for field_name in crypto_collector.COLLECTION_STAGE_COUNT_FIELDS
+        )
+        and all(
+            type(getattr(result, field_name)) is int
+            and getattr(result, field_name) == 0
+            for field_name in crypto_collector.COLLECTION_ZERO_COUNTER_FIELDS
+        )
+    )
+
+
+def _collect_crypto_artifact_seal_integration_v01(
+    *,
+    artifact_dir: Path | None,
+    report: Mapping[str, Any],
+    integrated_deterministic_report: Mapping[str, Any] | None,
+    artifacts: dict[str, Any],
+) -> dict[str, Any]:
+    if artifact_dir is None:
+        return _crypto_failure_integration(REASON_CRYPTO_ARTIFACT_DIR_REQUIRED)
+    if report.get("final_status") != STATUS_PASS:
+        return _crypto_failure_integration(REASON_CRYPTO_SOURCE_TRANSACTION_FAILED)
+    if (
+        tuple(ledger_audit.REQUIRED_SOURCE_FILES)
+        != crypto_collector.REQUIRED_SOURCE_FILE_REFS
+    ):
+        return _crypto_failure_integration(REASON_CRYPTO_SOURCE_SCOPE_MISMATCH)
+    try:
+        before_audit = _read_crypto_source_snapshot_v01(artifact_dir)
+    except (TypeError, ValueError, OSError):
+        return _crypto_failure_integration(REASON_CRYPTO_SOURCE_SNAPSHOT_FAILED)
+
+    audit_count = 1
+    try:
+        audit_report = (
+            ledger_audit.collect_airline_transaction_artifact_ledger_audit_v01(
+                artifact_dir=artifact_dir,
+            )
+        )
+    except Exception:
+        return _crypto_failure_integration(
+            REASON_CRYPTO_E1_AUDIT_FAILED,
+            e1_audit_count=audit_count,
+        )
+    try:
+        after_audit = _read_crypto_source_snapshot_v01(artifact_dir)
+    except (TypeError, ValueError, OSError):
+        return _crypto_failure_integration(
+            REASON_CRYPTO_SOURCE_SNAPSHOT_FAILED,
+            e1_audit_count=audit_count,
+        )
+    if after_audit != before_audit:
+        return _crypto_failure_integration(
+            REASON_CRYPTO_SOURCE_BYTES_CHANGED_DURING_AUDIT,
+            e1_audit_count=audit_count,
+        )
+    try:
+        accepted_audit = _project_e1_audit_for_crypto_v01(
+            audit_report,
+            artifact_dir=artifact_dir,
+        )
+    except (TypeError, AttributeError, ValueError, KeyError, IndexError):
+        reason = (
+            REASON_CRYPTO_E1_AUDIT_FOREIGN_DIR
+            if type(audit_report)
+            is ledger_audit.AirlineTransactionArtifactLedgerAuditReportV01
+            and Path(audit_report.source_artifact_dir) != artifact_dir
+            else REASON_CRYPTO_E1_AUDIT_FAILED
+        )
+        return _crypto_failure_integration(reason, e1_audit_count=audit_count)
+
+    if integrated_deterministic_report is None:
+        return _crypto_failure_integration(
+            REASON_CRYPTO_TYPED_SOURCE_MISSING,
+            e1_audit_count=audit_count,
+            source_bytes_unchanged_after_audit=True,
+        )
+    typed_source_bundle = getattr(
+        integrated_deterministic_report,
+        "_airline_transaction_artifact_ledger_source_bundle_v0_1",
+        None,
+    )
+    typed_ledger = getattr(
+        integrated_deterministic_report,
+        "_airline_transaction_artifact_ledger_v0_1",
+        None,
+    )
+    if (
+        type(typed_source_bundle)
+        is not ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01
+        or type(typed_ledger)
+        is not ledger_contracts.AirlineTransactionArtifactLedgerV01
+    ):
+        return _crypto_failure_integration(
+            REASON_CRYPTO_TYPED_SOURCE_MISSING,
+            e1_audit_count=audit_count,
+            source_bytes_unchanged_after_audit=True,
+        )
+    try:
+        expected_identity = (
+            ledger_collector
+            .build_airline_transaction_artifact_ledger_expected_identity_from_source_v01(
+                source_bundle=typed_source_bundle,
+            )
+        )
+    except (TypeError, AttributeError, ValueError, KeyError, IndexError):
+        return _crypto_failure_integration(
+            REASON_CRYPTO_EXPECTED_IDENTITY_FAILED,
+            e1_audit_count=audit_count,
+            source_bytes_unchanged_after_audit=True,
+        )
+    source_package_ref = artifact_dir.name
+    source_bundle_id = (
+        "airline_crypto_artifact_seal_source_bundle:"
+        f"{typed_ledger.transaction_id}:{source_package_ref}"
+    )
+    try:
+        crypto_source_bundle = (
+            crypto_collector.build_airline_crypto_artifact_seal_source_bundle_v01(
+                source_bundle_id=source_bundle_id,
+                source_package_ref=source_package_ref,
+                accepted_audit=accepted_audit,
+                ledger_item=typed_ledger,
+                expected_identity=expected_identity,
+                ordered_source_files_before_audit=before_audit,
+                ordered_source_files_after_audit=after_audit,
+            )
+        )
+    except (TypeError, AttributeError, ValueError, KeyError, IndexError):
+        return _crypto_failure_integration(
+            REASON_CRYPTO_C1_SOURCE_BUNDLE_FAILED,
+            source_bundle_id=source_bundle_id,
+            source_package_ref=source_package_ref,
+            e1_audit_count=audit_count,
+            source_bytes_unchanged_after_audit=True,
+        )
+
+    def post_collection_snapshot_provider() -> object:
+        return _read_crypto_source_snapshot_v01(artifact_dir)
+
+    try:
+        collection_result = (
+            crypto_collector.collect_airline_crypto_artifact_seal_from_source_bundle_v01(
+                source_bundle=crypto_source_bundle,
+                post_collection_snapshot_provider=post_collection_snapshot_provider,
+                expected_manifest_core_hash=None,
+            )
+        )
+    except (TypeError, AttributeError, ValueError, KeyError, IndexError, OSError):
+        return _crypto_failure_integration(
+            REASON_CRYPTO_C2_COLLECTION_FAILED,
+            source_bundle_id=source_bundle_id,
+            source_package_ref=source_package_ref,
+            e1_audit_count=audit_count,
+            source_bytes_unchanged_after_audit=True,
+        )
+    if not _crypto_collection_successful(collection_result):
+        return _crypto_failure_integration(
+            REASON_CRYPTO_C2_RESULT_INVALID,
+            source_bundle_id=source_bundle_id,
+            source_package_ref=source_package_ref,
+            e1_audit_count=audit_count,
+            source_bytes_unchanged_after_audit=True,
+        )
+    collection_plain = (
+        crypto_collector
+        .airline_crypto_artifact_seal_collection_result_to_plain_dict_v01(
+            collection_result,
+        )
+    )
+    manifest_payload = collection_plain.get("envelope")
+    verification_payload = collection_plain.get("verification_report")
+    try:
+        manifest_path, verification_path = _write_crypto_artifact_pair_v01(
+            artifact_dir=artifact_dir,
+            manifest_payload=manifest_payload,
+            verification_payload=verification_payload,
+        )
+    except (TypeError, ValueError, OSError) as exc:
+        return _crypto_failure_integration(
+            _crypto_exception_reason(exc, REASON_CRYPTO_DERIVED_WRITE_FAILED),
+            source_bundle_id=source_bundle_id,
+            source_package_ref=source_package_ref,
+            e1_audit_count=audit_count,
+            source_bundle_validation_count=1,
+            manifest_core_collection_count=1,
+            envelope_collection_count=1,
+            post_collection_snapshot_provider_call_count=1,
+            verification_count=1,
+            source_bytes_unchanged_after_audit=True,
+            source_bytes_unchanged_after_collection=True,
+            source_summary_frozen_before_crypto=True,
+        )
+    artifacts[CRYPTO_MANIFEST_FILE] = str(manifest_path)
+    artifacts[CRYPTO_VERIFICATION_FILE] = str(verification_path)
+    try:
+        after_write = _read_crypto_source_snapshot_v01(artifact_dir)
+    except (TypeError, ValueError, OSError):
+        cleanup_succeeded = _cleanup_crypto_artifact_paths_v01(
+            (manifest_path, verification_path),
+        )
+        artifacts.pop(CRYPTO_MANIFEST_FILE, None)
+        artifacts.pop(CRYPTO_VERIFICATION_FILE, None)
+        return _crypto_failure_integration(
+            (
+                REASON_CRYPTO_SOURCE_SNAPSHOT_FAILED
+                if cleanup_succeeded
+                else REASON_CRYPTO_DERIVED_CLEANUP_FAILED
+            ),
+            e1_audit_count=audit_count,
+            source_bundle_validation_count=1,
+            manifest_core_collection_count=1,
+            envelope_collection_count=1,
+            post_collection_snapshot_provider_call_count=1,
+            verification_count=1,
+            manifest_artifact_written_count=1,
+            verification_artifact_written_count=1,
+            source_bytes_unchanged_after_audit=True,
+            source_bytes_unchanged_after_collection=True,
+            source_summary_frozen_before_crypto=True,
+        )
+    if after_write != before_audit:
+        cleanup_succeeded = _cleanup_crypto_artifact_paths_v01(
+            (manifest_path, verification_path),
+        )
+        artifacts.pop(CRYPTO_MANIFEST_FILE, None)
+        artifacts.pop(CRYPTO_VERIFICATION_FILE, None)
+        return _crypto_failure_integration(
+            (
+                REASON_CRYPTO_SOURCE_BYTES_CHANGED_AFTER_WRITE
+                if cleanup_succeeded
+                else REASON_CRYPTO_DERIVED_CLEANUP_FAILED
+            ),
+            e1_audit_count=audit_count,
+            source_bundle_validation_count=1,
+            manifest_core_collection_count=1,
+            envelope_collection_count=1,
+            post_collection_snapshot_provider_call_count=1,
+            verification_count=1,
+            manifest_artifact_written_count=1,
+            verification_artifact_written_count=1,
+            source_bytes_unchanged_after_audit=True,
+            source_bytes_unchanged_after_collection=True,
+            source_summary_frozen_before_crypto=True,
+        )
+    manifest_core = collection_result.manifest_core
+    verification_report = collection_result.verification_report
+    assert manifest_core is not None
+    assert verification_report is not None
+    return {
+        "integration_status": crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED,
+        "source_bundle_id": source_bundle_id,
+        "source_package_ref": source_package_ref,
+        "ledger_id": manifest_core.ledger_id,
+        "transaction_id": manifest_core.transaction_id,
+        "manifest_core_hash": collection_result.manifest_core_hash,
+        "chain_tail_hash": manifest_core.chain_tail_hash,
+        "source_package_hash": manifest_core.source_package_hash,
+        "ledger_entry_count": manifest_core.ledger_entry_count,
+        "dependency_edge_count": manifest_core.dependency_edge_count,
+        "root_final_count": manifest_core.root_final_count,
+        "source_file_count": manifest_core.source_file_count,
+        "e1_audit_count": audit_count,
+        "source_bundle_validation_count": collection_result.source_bundle_validation_count,
+        "manifest_core_collection_count": collection_result.manifest_core_collection_count,
+        "envelope_collection_count": collection_result.envelope_collection_count,
+        "post_collection_snapshot_provider_call_count": (
+            collection_result.post_collection_snapshot_provider_call_count
+        ),
+        "verification_count": collection_result.verification_count,
+        "manifest_artifact_written_count": 1,
+        "verification_artifact_written_count": 1,
+        "source_bytes_unchanged_after_audit": True,
+        "source_bytes_unchanged_after_collection": (
+            collection_result.source_bytes_unchanged_after_collection
+        ),
+        "source_bytes_unchanged_after_write": True,
+        "source_summary_frozen_before_crypto": True,
+        "source_summary_rewritten_after_crypto": False,
+        "expected_manifest_core_hash": None,
+        "external_anchor_supplied": verification_report.external_anchor_supplied,
+        "external_anchor_verified": verification_report.external_anchor_verified,
+        "anchored_pass_claimed": False,
+        "signature_mode": verification_report.signature_mode,
+        "signature_verified": verification_report.signature_verified,
+        "audit_rerun_count": 0,
+        "ledger_recollection_count": 0,
+        "semantic_rerun_count": 0,
+        "corridor_rerun_count": 0,
+        "provider_calls_added_by_crypto_count": 0,
+        "network_calls_added_by_crypto_count": 0,
+        "gemini_calls_added_by_crypto_count": 0,
+        "crypto_created_authority_count": 0,
+        "crypto_created_permission_count": 0,
+        "crypto_created_action_count": 0,
+        "real_world_effects_count": 0,
+        "manifest_artifact_ref": CRYPTO_MANIFEST_FILE,
+        "verification_artifact_ref": CRYPTO_VERIFICATION_FILE,
+        "validation_errors": (),
+        "next_gate": CRYPTO_NEXT_GATE,
     }
 
 

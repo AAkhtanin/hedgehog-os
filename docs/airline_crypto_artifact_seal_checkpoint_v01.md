@@ -43,6 +43,8 @@ Slice E2 must read the already committed anchor and verify this existing
 package without rebuilding it. Replay remains blocked through Slice E2
 independent anchored-audit PASS.
 
+next_gate: airline_crypto_artifact_seal_v01_slice_e2_anchored_audit
+
 ## Non-Claims
 
 - Not signer authentication.

@@ -57,38 +57,41 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Airline Crypto Artifact Seal v0.1 proof-level program
-CLOSED.
+Current checkpoint: Airline Sealed Trace Replay Verifier v0.1 dedicated
+preflight READY_FOR_REVIEW.
 
-Current Airline Crypto Artifact Seal v0.1 facts:
+Current Airline Sealed Trace Replay Verifier v0.1 facts:
 
-- Closure commit: `26ee0de`.
+- Crypto Artifact Seal v0.1 remains CLOSED at commit `26ee0de`.
+- Root Attestation remains deferred at commit `37320bc` and does not block
+  Base Replay.
+- Optional future Root Attestation profile:
+  `docs/airline_root_artifact_attestation_future_profile_v01.md`.
+- Dedicated Replay preflight:
+  `docs/airline_sealed_trace_replay_verifier_preflight_v01.md`.
 - The official package remains unchanged:
   `.tmp/airline_crypto_artifact_seal_slice_e1/airline_crypto_artifact_seal_slice_e1_offline_905844c`.
 - The committed Manifest Core anchor remains unchanged:
   `docs/airline_crypto_artifact_seal_anchor_v01.json`.
-- Independent E2 anchored Verification remains `PASS`.
-- The stored package signature remains `UNSIGNED_PLACEHOLDER` and unverified.
-- Optional future Root Attestation profile:
-  `docs/airline_root_artifact_attestation_future_profile_v01.md`.
-- Root Attestation is deferred and is not the current implementation gate.
-- No key or signature exists, and no private key was generated or accessed.
-- Root Attestation does not block Base Airline Sealed Trace Replay.
-- Replay remains unimplemented.
-- Provider, network, and Gemini call counts for this documentation correction
-  are all 0.
-- Transaction, Corridor, Ledger, Crypto, Attestation, and Replay operation
-  counts are all 0.
+- Stored package Verification remains `SELF_CONSISTENT_UNANCHORED`.
+- Independent E2 Verification remains `PASS`.
+- Replay implementation and Replay Report do not exist.
+- Provider, network, and Gemini call counts for this preflight are all 0.
+- Transaction, semantic, Corridor, Ledger, Crypto, Attestation, and Replay
+  operation counts are all 0.
 - Authority, permission, action, packet, receipt, and FinalOutput creation
   counts are all 0.
 - No real-world effect occurred.
+- Base Replay is deterministic sealed-trace reconstruction, not transaction
+  re-execution.
+- Base Replay does not require Root signatures.
+- No signer-authentication or PKI claim is made.
 
 Current next immediate gate:
-`airline_sealed_trace_replay_verifier_v01_preflight`.
+`airline_sealed_trace_replay_verifier_v01_slice_b_contracts_and_pure_verifier`.
 
 The final all-real LLM run remains scheduled only after Base Sealed Trace
 Replay closes offline.
-An optional future Attested Replay profile may be reviewed separately.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

@@ -999,6 +999,38 @@ def _contains_forbidden_ref_token(value: Any) -> bool:
     )
 
 
+def _is_raw_prompt_or_response_ref(value: Any) -> bool:
+    if type(value) is not str:
+        return False
+    lowered = value.lower()
+    if lowered in (OPAQUE_PROMPT_REF, OPAQUE_RESPONSE_REF):
+        return True
+    normalized = lowered.replace("\\", "/")
+    basename = normalized.rsplit("/", 1)[-1]
+    if basename.endswith(("_prompt.txt", "_raw_response.txt")):
+        return True
+    segments = tuple(
+        segment
+        for segment in re.split(r"[:/]+", normalized)
+        if segment
+    )
+    return any(
+        segment
+        in (
+            "raw_prompt",
+            "raw_prompt_ref",
+            "provider_prompt",
+            "provider_prompt_file",
+            "raw_response",
+            "raw_response_ref",
+            "provider_raw_response",
+            "provider_raw_response_file",
+            "provider_response_file",
+        )
+        for segment in segments
+    )
+
+
 def _offer_suffix(offer_id: str) -> str:
     if offer_id == OFFER_A_ID:
         return "001"
@@ -1971,7 +2003,7 @@ def _base_ledger_errors(
     ):
         _append_reason(reasons, REASON_HUMAN_APPROVAL_FABRICATED_CREATOR)
     if any(
-        "prompt" in ref.lower() or "response" in ref.lower()
+        _is_raw_prompt_or_response_ref(ref)
         for entry in entries
         for ref in (
             entry.source_validation_refs

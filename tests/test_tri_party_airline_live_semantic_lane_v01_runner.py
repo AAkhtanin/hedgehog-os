@@ -15,6 +15,7 @@ from hedgehog.domains.airline import (
 from hedgehog.domains.airline import (
     semantic_to_contract_causal_runtime_v01 as causal_runtime,
 )
+from hedgehog.domains.airline import transaction_artifact_ledger_v01 as ledger
 
 
 def _enabled_env(tmp_path: Path | None = None) -> dict[str, str]:
@@ -165,6 +166,24 @@ def _content_sensitive_causal_provider() -> runner.Provider:
             )
             return json.dumps(_proposal_payload(request, offer_id), sort_keys=True)
         return json.dumps(_reviewer_payload(request), sort_keys=True)
+
+    return provider
+
+
+def _real_shaped_response_causal_provider() -> runner.Provider:
+    base_provider = _content_sensitive_causal_provider()
+
+    def provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> str:
+        raw = base_provider(actor_id, prompt, metadata)
+        request = metadata.get("semantic_to_contract_request")
+        if (
+            not isinstance(request, Mapping)
+            or actor_id == binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER
+        ):
+            return raw
+        payload = json.loads(raw)
+        payload["response_id"] = f"{actor_id}_response_001"
+        return json.dumps(payload, sort_keys=True)
 
     return provider
 
@@ -2064,6 +2083,90 @@ def test_crypto_slice_d_writes_one_unanchored_manifest_and_verification(
     assert "[AIRLINE CRYPTO ARTIFACT SEAL V0.1]" in rendered
     assert "not final Crypto PASS" in rendered
     assert "No Replay and no real-world effect." in rendered
+
+
+def test_real_shaped_response_ids_complete_offline_ledger_crypto_chain(
+    tmp_path: Path,
+) -> None:
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=_real_shaped_response_causal_provider(),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+        causal_snapshot=binding.build_airline_candidate_snapshot_v01(),
+    )
+    bridge = report["semantic_to_contract_deterministic_bridge"]
+    deterministic = report["integrated_deterministic_airline_transaction"]
+    integration = report["airline_transaction_artifact_ledger_integration"]
+    ledger_item = report["airline_transaction_artifact_ledger_v0_1"]
+    crypto = report["airline_crypto_artifact_seal_integration"]
+    counters = report["counter_table"]
+    semantic_entry = next(
+        entry
+        for entry in ledger_item.entries
+        if entry.artifact_type
+        == ledger.ARTIFACT_VALIDATED_CANONICAL_SEMANTIC_EVIDENCE
+    )
+    response_ids = tuple(
+        ref
+        for ref in semantic_entry.source_validation_refs
+        if "response" in ref
+    )
+
+    assert response_ids == (
+        "airline_offer_policy_reviewer_llm_response_001",
+        "airline_fare_rules_vertical_cell_llm_response_001",
+        "airline_seat_baggage_vertical_cell_llm_response_001",
+        "tri_party_evidence_consistency_reviewer_llm_response_001",
+    )
+    assert report["final_status"] == runner.STATUS_PASS
+    assert deterministic["collection_status"] == runner.STATUS_PASS
+    assert deterministic["corridor_final_status"] == runner.STATUS_PASS
+    assert deterministic["corridor_execution_count"] == 1
+    assert bridge["bridge_status"] == runner.STATUS_PASS
+    assert bridge["corridor_execution_count"] == 1
+    assert integration["integration_status"] == runner.STATUS_PASS
+    assert integration["ledger_validation_status"] == runner.STATUS_PASS
+    assert integration["ledger_validation_errors"] == ()
+    assert ledger_item.validation_status == ledger.STATUS_PASS
+    assert ledger_item.validation_errors == ()
+    assert ledger.REASON_RAW_PROMPT_RESPONSE_NOT_AUXILIARY_ONLY not in (
+        integration["ledger_validation_errors"]
+    )
+    assert ledger.REASON_LEDGER_STORED_VALIDATION_STATUS_MISMATCH not in (
+        integration["ledger_validation_errors"]
+    )
+    assert (
+        integration["entry_count"],
+        integration["dependency_edge_count"],
+        integration["root_final_count"],
+    ) == (19, 29, 3)
+    assert counters["ticket_purchase_corridor_execution_count"] == 1
+    assert crypto["integration_status"] == (
+        runner.crypto_contracts.STATUS_SELF_CONSISTENT_UNANCHORED
+    )
+    assert crypto["source_file_count"] == 9
+    assert crypto["manifest_artifact_written_count"] == 1
+    assert crypto["verification_artifact_written_count"] == 1
+    assert all(
+        crypto[name] is True
+        for name in (
+            "source_bytes_unchanged_after_audit",
+            "source_bytes_unchanged_after_collection",
+            "source_bytes_unchanged_after_write",
+            "source_summary_frozen_before_crypto",
+        )
+    )
+    critical_refs = (
+        *runner.crypto_collector.REQUIRED_SOURCE_FILE_REFS,
+        runner.CRYPTO_MANIFEST_FILE,
+        runner.CRYPTO_VERIFICATION_FILE,
+    )
+    assert len(critical_refs) == 11
+    assert all((tmp_path / ref).is_file() for ref in critical_refs)
+    assert counters["real_provider_call_count"] == 0
+    assert counters["network_used_count"] == 0
+    assert counters["gemini_called_count"] == 0
+    assert counters["real_world_effects_count"] == 0
 
 
 def _assert_crypto_fail(report: Mapping[str, Any], reason: str) -> None:

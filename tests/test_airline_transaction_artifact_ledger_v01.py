@@ -419,12 +419,75 @@ def test_40_b_a_b_isolation_passes() -> None:
 
 def test_41_raw_prompt_response_remain_auxiliary_refs_only() -> None:
     semantic = _entry_by_type(_valid_a(), ledger.ARTIFACT_VALIDATED_CANONICAL_SEMANTIC_EVIDENCE)
-    assert ledger.OPAQUE_PROMPT_REF in semantic.auxiliary_artifact_refs
-    assert ledger.OPAQUE_RESPONSE_REF in semantic.auxiliary_artifact_refs
+    assert semantic.auxiliary_artifact_refs == (
+        ledger.OPAQUE_PROMPT_REF,
+        ledger.OPAQUE_RESPONSE_REF,
+    )
     assert all("prompt" not in ref.lower() and "response" not in ref.lower() for ref in semantic.source_validation_refs)
     _assert_fails(
         _replace_entry(_valid_a(), 5, source_validation_refs=semantic.source_validation_refs + (ledger.OPAQUE_RESPONSE_REF,)),
         ledger.REASON_RAW_PROMPT_RESPONSE_NOT_AUXILIARY_ONLY,
+    )
+
+
+@pytest.mark.parametrize(
+    "bad_ref",
+    (
+        ledger.OPAQUE_PROMPT_REF,
+        ledger.OPAQUE_RESPONSE_REF,
+        "actor_prompt.txt",
+        "actor_raw_response.txt",
+        "evidence/actors/actor_prompt.txt",
+        "evidence/actors/actor_raw_response.txt",
+        "raw_prompt:actor:001",
+        "raw_response:actor:001",
+        "provider_prompt_file:actor:001",
+        "provider_raw_response_file:actor:001",
+    ),
+)
+def test_raw_prompt_response_source_refs_remain_blocked(bad_ref: str) -> None:
+    item = _valid_a()
+    semantic = item.entries[5]
+    refs = (*semantic.source_validation_refs, bad_ref)
+    item = _replace_entry(
+        item,
+        5,
+        source_validation_refs=refs,
+        canonical_hash_input={
+            **dict(semantic.canonical_hash_input),
+            "source_validation_refs": refs,
+        },
+    )
+    _assert_fails(
+        item,
+        ledger.REASON_RAW_PROMPT_RESPONSE_NOT_AUXILIARY_ONLY,
+    )
+
+
+@pytest.mark.parametrize(
+    "auxiliary_refs",
+    (
+        (ledger.OPAQUE_PROMPT_REF,),
+        (ledger.OPAQUE_RESPONSE_REF,),
+        (ledger.OPAQUE_RESPONSE_REF, ledger.OPAQUE_PROMPT_REF),
+        (ledger.OPAQUE_PROMPT_REF, "auxiliary_artifact_ref:replacement"),
+        (
+            ledger.OPAQUE_PROMPT_REF,
+            ledger.OPAQUE_RESPONSE_REF,
+            "auxiliary_artifact_ref:third",
+        ),
+    ),
+)
+def test_canonical_semantic_auxiliary_refs_remain_exact(
+    auxiliary_refs: tuple[str, ...],
+) -> None:
+    _assert_fails(
+        _replace_entry(
+            _valid_a(),
+            5,
+            auxiliary_artifact_refs=auxiliary_refs,
+        ),
+        ledger.REASON_AUXILIARY_ARTIFACT_REFS_PROFILE_MISMATCH,
     )
 
 

@@ -261,11 +261,17 @@ def _public_runtime_proposal_payload(
 
 def _public_runtime_reviewer_payload(
     request: Mapping[str, Any],
+    *,
+    real_shaped_response_id: bool = False,
 ) -> dict[str, Any]:
     return {
         "response_id": (
-            f"canonical_actor_output:{request['actor_id']}:"
-            f"{request['proposed_offer_id']}"
+            f"{request['actor_id']}_response_001"
+            if real_shaped_response_id
+            else (
+                f"canonical_actor_output:{request['actor_id']}:"
+                f"{request['proposed_offer_id']}"
+            )
         ),
         "transaction_id": request["transaction_id"],
         "actor_id": request["actor_id"],
@@ -291,17 +297,24 @@ def _public_runtime_reviewer_payload(
 
 def _public_runtime_provider_for_offer(
     offer_id: str,
+    *,
+    real_shaped_response_ids: bool = False,
 ) -> causal_runtime.AirlineInjectedSemanticProviderV01:
     def provider(actor_id: str, request: Mapping[str, Any]) -> Mapping[str, Any]:
         if actor_id == binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER:
             return _public_runtime_proposal_payload(request, offer_id)
-        return _public_runtime_reviewer_payload(request)
+        return _public_runtime_reviewer_payload(
+            request,
+            real_shaped_response_id=real_shaped_response_ids,
+        )
 
     return provider
 
 
 def _public_runtime_causal_report_for_offer(
     offer_id: str,
+    *,
+    real_shaped_response_ids: bool = False,
 ) -> causal_runtime.AirlineSemanticCausalRunReportV01:
     constraints = (
         binding.build_client_constraints_preference_b_v01()
@@ -311,7 +324,10 @@ def _public_runtime_causal_report_for_offer(
     return causal_runtime.collect_airline_semantic_to_contract_causal_run_v01(
         scenario_id=f"public_causal_runtime_hold_lineage:{offer_id}",
         constraints=constraints,
-        semantic_provider=_public_runtime_provider_for_offer(offer_id),
+        semantic_provider=_public_runtime_provider_for_offer(
+            offer_id,
+            real_shaped_response_ids=real_shaped_response_ids,
+        ),
     )
 
 
@@ -850,8 +866,13 @@ def _typed_corridor_artifacts_from_public_causal_report(
 
 def _source_bundle_from_public_causal_runtime(
     offer_id: str,
+    *,
+    real_shaped_response_ids: bool = False,
 ) -> collector.AirlineTransactionArtifactLedgerSourceBundleV01:
-    causal_report = _public_runtime_causal_report_for_offer(offer_id)
+    causal_report = _public_runtime_causal_report_for_offer(
+        offer_id,
+        real_shaped_response_ids=real_shaped_response_ids,
+    )
     artifacts = _typed_corridor_artifacts_from_public_causal_report(causal_report)
     corridor_report = _corridor_report_for_artifacts(artifacts)
     suffix = _suffix(offer_id)
@@ -1513,6 +1534,69 @@ def test_public_causal_runtime_semantic_hold_lineage_passes_collection() -> None
     assert item.real_world_effects_count == 0
     assert causal_report.provider_network_call_count == 0
     assert causal_report.gemini_call_count == 0
+
+
+def test_real_shaped_reviewer_response_ids_preserve_ledger_continuity() -> None:
+    source_bundle = _source_bundle_from_public_causal_runtime(
+        binding.OFFER_A_ID,
+        real_shaped_response_ids=True,
+    )
+    causal_report = source_bundle.causal_report
+    expected_response_ids = tuple(
+        f"{response.actor_id}_response_001"
+        for response in causal_report.reviewer_responses
+    )
+    assert tuple(
+        response.response_id
+        for response in causal_report.reviewer_responses
+    ) == expected_response_ids
+    assert tuple(
+        review.canonical_actor_output_id
+        for review in causal_report.actor_reviews[1:]
+    ) == expected_response_ids
+    assert all("response" in value for value in expected_response_ids)
+
+    source_validation = (
+        collector.validate_airline_transaction_artifact_ledger_source_bundle_v01(
+            source_bundle,
+        )
+    )
+    assert source_validation.validation_status == collector.STATUS_PASS
+    assert source_validation.validation_errors == ()
+
+    item = _collect(source_bundle)
+    expected_identity = _expected_identity(source_bundle)
+    independent_validation = ledger.validate_airline_transaction_artifact_ledger_v01(
+        item,
+        expected_identity=expected_identity,
+    )
+    semantic_entry = _entry_by_type(
+        item,
+        ledger.ARTIFACT_VALIDATED_CANONICAL_SEMANTIC_EVIDENCE,
+    )
+    assert item.validation_status == ledger.STATUS_PASS
+    assert item.validation_errors == ()
+    assert independent_validation.validation_status == ledger.STATUS_PASS
+    assert independent_validation.validation_errors == ()
+    assert (
+        semantic_entry.source_validation_refs
+        == expected_identity.expected_source_validation_refs_by_type[
+            ledger.ARTIFACT_VALIDATED_CANONICAL_SEMANTIC_EVIDENCE
+        ]
+    )
+    assert all(
+        value in semantic_entry.source_validation_refs
+        for value in expected_response_ids
+    )
+    assert (
+        independent_validation.entry_count,
+        independent_validation.dependency_edge_count,
+        independent_validation.root_final_count,
+    ) == (19, 29, 3)
+    assert item.provider_called_count == 0
+    assert item.network_used_count == 0
+    assert item.gemini_called_count == 0
+    assert item.real_world_effects_count == 0
 
 
 def test_actual_causal_hold_lineage_rewrite_fails_expected_identity() -> None:

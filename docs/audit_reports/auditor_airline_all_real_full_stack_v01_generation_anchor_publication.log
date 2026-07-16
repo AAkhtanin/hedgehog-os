@@ -1,0 +1,293 @@
+[AUDIT IDENTITY]
+
+audit_id: auditor_airline_all_real_full_stack_v01_generation_anchor_publication
+audit_status: PASS
+audit_mode: artifact_backed_completed_run_audit_no_rerun
+publication_profile: airline_all_real_full_stack_v01
+audit_base_head: 3301ce3
+package_generation_base_head: 3301ce3
+implementation_base_head: a8d5036
+repair_commit: 38ad0b0
+recovery_authorization_commit: 3301ce3
+
+[REPOSITORY GUARD]
+
+HEAD: 3301ce3
+origin/main: 3301ce3
+HEAD/origin synchronized: true
+worktree clean before audit: true
+staged files before audit: 0
+commit 6e007a4 is an ancestor of HEAD: true
+commit 38ad0b0 is an ancestor of HEAD: true
+anchor output absent before publication: true
+audit output absent before publication: true
+
+[PRIOR FAIL-CLOSED EVIDENCE]
+
+one earlier official all-real invocation failed closed: true
+earlier package preserved: true
+earlier package repaired: false
+earlier package promoted: false
+primary failure: raw_prompt_response_not_auxiliary_only
+derivative failure: ledger_stored_validation_status_mismatch
+anchor published from earlier package: false
+Replay run from earlier package: false
+earlier real-world effects: 0
+
+The earlier package remains historical failure evidence only. No raw prompt,
+raw provider response, or semantic body from that package was copied into this
+audit.
+
+[ACCEPTED RECOVERY GENERATION]
+
+accepted package path: .tmp/airline_all_real_full_stack_v01_recovery_38ad0b0/airline_all_real_full_stack_v01_preference_a_a8d5036_recovery_38ad0b0_r1
+accepted source_package_ref: airline_all_real_full_stack_v01_preference_a_a8d5036_recovery_38ad0b0_r1
+accepted operator gate path: .tmp/airline_all_real_full_stack_v01_recovery_38ad0b0/airline_all_real_full_stack_v01_preference_a_a8d5036_recovery_38ad0b0_r1_operator_gate.json
+accepted terminal-safe log path: .tmp/airline_all_real_full_stack_v01_recovery_38ad0b0/airline_all_real_full_stack_v01_preference_a_a8d5036_recovery_38ad0b0_r1_terminal_safe.log
+execution HEAD: 3301ce3
+execution origin/main: 3301ce3
+official recovery invocation count: 1
+automatic retry: false
+final status: PASS
+provider mode: real_provider
+model: gemini-2.5-flash
+transaction_id: tri_airline_purchase:PAR-LIM:2026-08-12:client_001
+selected offer: offer:mock_airline_al:PAR-LIM:001
+real provider calls: 12
+network calls: 12
+Gemini calls: 12
+fake provider calls: 0
+actor validations PASS: 12
+actor validations FAIL: 0
+causal semantic actors: 5
+generic semantic actors: 7
+duplicate semantic actor calls: 0
+secret scan: PASS
+secret markers matched: 0
+real-world effects: 0
+operator gate all_checks_pass: true
+every operator gate check exact true: true
+operator gate SHA-256: be47127ea4803d5d71d7579c2e2f27e899f4662c90b9db759114632b87d72773
+terminal-safe log SHA-256: 773e1c7c5bb2eccdbaca1e3a45b01f632d09bb942fabc5d98b1e13ee29d82584
+
+The terminal-safe log strict-parsed as one JSON object and agreed with the
+accepted operator gate on final status, provider mode, model, transaction,
+selected offer, actor count, Crypto status, and zero real-world effects.
+
+[ROOT AND CORRIDOR]
+
+ClientRoot boundary preserved: true
+AirlineRoot boundary preserved: true
+BankRoot boundary preserved: true
+cross-root reviewer is advisory and not a fourth Root: true
+root-boundary violations: 0
+ClientRoot selected offer: offer:mock_airline_al:PAR-LIM:001
+AirlineRoot resolved offer: offer:mock_airline_al:PAR-LIM:001
+BankRoot authorization boundary preserved: true
+Corridor execution count: 1
+Corridor status: PASS
+
+exact five Corridor phases:
+1. airline_offer_hold_phase
+2. client_purchase_intent_phase
+3. bank_payment_authorization_phase
+4. airline_ticket_issue_phase
+5. client_completion_phase
+
+mock booking evidence only: true
+mock payment evidence only: true
+mock ticket evidence only: true
+real payment executed: false
+real booking created: false
+real ticket issued: false
+
+[LEDGER]
+
+stored Ledger validation: PASS
+independent Ledger validation: PASS
+stored validation errors: empty
+independent validation errors: empty
+Ledger ID: airline_transaction_artifact_ledger:offer:mock_airline_al:PAR-LIM:001
+entries: 19
+dependency edges: 29
+Root finals: 3
+ClientRoot finals: 1
+AirlineRoot finals: 1
+BankRoot finals: 1
+cross-root advisory Root finals: 0
+unique artifact IDs: 19
+exact committed artifact order: true
+dependencies present: true
+dependencies backward-only: true
+self-dependencies: 0
+missing dependencies: 0
+Root ownership valid: true
+authority classes valid: true
+evidence classes valid: true
+semantic-causal lineage preserved: true
+semantic-causal offer packet ID: airline_offer_packet:semantic_causal:001
+semantic-causal hold packet ID: airline_hold_commit_packet:semantic_causal:001
+independently recomputed artifact hashes: 19
+
+[CRYPTO GENERATION]
+
+canonicalization profile: hedgehog_airline_json_c14n_v01
+hash algorithm: SHA-256
+hash encoding: lowercase_hex
+exact source files: 9
+exact critical files: 11
+Manifest count: 1
+stored Verification count: 1
+source bytes stable after audit: true
+source bytes stable after collection: true
+source bytes stable after write: true
+stored Verification status: SELF_CONSISTENT_UNANCHORED
+external anchor supplied at generation: false
+external anchor verified at generation: false
+signature mode: UNSIGNED_PLACEHOLDER
+signature verified: false
+stored Verification errors: empty
+
+chain genesis hash: 3b6ef93b678d431ea2372e2c8440c6b34ae52696eb75d7f60c17f6e002940548
+chain head hash: fa0364b7e6b1087612925381eca3e0613d7291450db7c1c3c2a57d9839c05c11
+chain tail hash: 1f56be26e253f878e8d165d06a4da4430c1c4ec2e22daea1fc98c57b2f3b40fe
+source-package hash: 00662506fc3afe95d619a5003b572c9c1c9475e5ba26f7759b694115d092fdfa
+Ledger document byte hash: ff31c776bf0ff43cd478e4ae94ba0a7b63a6d2f6de295d7ac13915d739722e61
+Manifest Core hash: 4f6d9abe351e986abf147150a5dd4e76816430cf80bb718b50fa3536719a2472
+
+The Ledger entry projections, artifact hashes, chain links, source-file byte
+hashes, source-package index, Ledger document byte hash, and Manifest Core hash
+were recomputed through the committed pure contracts. The recomputed values
+equal the Ledger declarations, Manifest Core declarations, and accepted
+operator-gate values.
+
+[ANCHOR PUBLICATION]
+
+anchor path: docs/airline_all_real_full_stack_crypto_anchor_v01.json
+anchor field count: 27
+anchor ABI: exact current Airline Crypto Artifact Seal v0.1 anchor contract
+expected Manifest Core hash independently recomputed: 4f6d9abe351e986abf147150a5dd4e76816430cf80bb718b50fa3536719a2472
+package_generation_base_head: 3301ce3
+package_generation_base_head equals accepted execution_head: true
+anchor_active_only_when_committed: true
+anchored_pass_claimed: false
+replay_allowed at publication: false
+anchor is active trusted input before commitment: false
+anchor is signer authentication: false
+anchor is PKI: false
+anchored PASS performed in this task: false
+
+This publication document records an external expected Manifest Core hash. It
+does not silently use the Manifest's stored hash as its own external trust
+input. The anchor becomes eligible as trusted Replay input only after owner
+validation and commitment on synchronized main.
+
+[PACKAGE INVENTORY SHA256]
+
+The following is the exact sorted accepted package inventory. Prompt and raw
+response artifacts are represented only by filenames and SHA-256 digests;
+their contents were not decoded, printed, or copied.
+
+airline_crypto_artifact_seal_manifest_v01.json: c1693a2db7d59acc6bcb4c26878d7cb68dcae9cc192db79e59ecd8515199fda4
+airline_crypto_artifact_seal_verification_v01.json: ab17dcd2219a8366d1d06753384a06655b8725fdc25b1e9b50a7f86b618a9435
+airline_fare_rules_vertical_cell_llm_canonical_summary.json: d147b62a64b8556979214b5ee187b95eb855cde5c4a3e39564804beaa6d16a7b
+airline_fare_rules_vertical_cell_llm_extracted_json_candidate.json: 93a6fa00da7272678a5b08f582bea17404a92f3342f40b729c573a79ddf5908f
+airline_fare_rules_vertical_cell_llm_prompt.txt: 03a1290499df509cdac67cb84fa8e1847fdc5c0441edae8980d0d9a0d11bdb17
+airline_fare_rules_vertical_cell_llm_raw_response.txt: 5dd7398f613ebc61265b5d9728b278224c1a3ca461842b8ae2feba8bbdf83180
+airline_fare_rules_vertical_cell_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+airline_offer_policy_reviewer_llm_canonical_summary.json: 76dd6123ca41ea471842867584c09cc13dfd97c6d0b3ad9c5c912e559852d054
+airline_offer_policy_reviewer_llm_extracted_json_candidate.json: 50459d9bb2ff85b03b670449e629059dc76d35e42667e89f895cd214297f9c53
+airline_offer_policy_reviewer_llm_prompt.txt: d36351148e6afc83b928f4e94c94f98b0d73089329ff69ab2cd7449a93c880a0
+airline_offer_policy_reviewer_llm_raw_response.txt: 6deee20651e3965daee244eeb4d7637036333f0c7cdba127c6181b1697887dcc
+airline_offer_policy_reviewer_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+airline_seat_baggage_vertical_cell_llm_canonical_summary.json: 7b44b45fc3d667003d6574d3252386b03c137f1165f47860a84ff41157864905
+airline_seat_baggage_vertical_cell_llm_extracted_json_candidate.json: e62efeb1b740696c648104583077b21b048a6738f2763bfbc47a0b8290f00932
+airline_seat_baggage_vertical_cell_llm_prompt.txt: 3ea07ab8cf5cfafbbb10417d28dbf302d532c9138c5ca3ee6e827c419ee35927
+airline_seat_baggage_vertical_cell_llm_raw_response.txt: 52bc30540967a4ea8eedf8d752f9a97cdba5b6f924dd47bf0b05321379abe76a
+airline_seat_baggage_vertical_cell_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+airline_ticketing_policy_reviewer_llm_canonical_summary.json: 496240f512a90f4c9c3aecc62155d5406c298098b5a147108f6876cda0d6a738
+airline_ticketing_policy_reviewer_llm_extracted_json_candidate.json: bf93b0549e4ad5f7a6add2b5b18b3871bc288b8a984eec41e6a622afc229bc00
+airline_ticketing_policy_reviewer_llm_prompt.txt: 39f3f20990a7f16293a7748f7de734d83a23e7dbbe97e41b65f67a1faf8fdfe8
+airline_ticketing_policy_reviewer_llm_raw_response.txt: bf93b0549e4ad5f7a6add2b5b18b3871bc288b8a984eec41e6a622afc229bc00
+airline_ticketing_policy_reviewer_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+airline_transaction_artifact_ledger.json: ff31c776bf0ff43cd478e4ae94ba0a7b63a6d2f6de295d7ac13915d739722e61
+bank_idempotency_risk_vertical_cell_llm_canonical_summary.json: e9750a03b5536f6ab3019c8092a3b0aff90819a4881386491c7873918da75f2f
+bank_idempotency_risk_vertical_cell_llm_extracted_json_candidate.json: ba44de288dfced19ae508026ea604d15064daf47cd9b1e370394e308d4cc3ed1
+bank_idempotency_risk_vertical_cell_llm_prompt.txt: 9f40089b454a0986be4e5893e6fd255bb2a592e5a5a87f4c60843a2222050e05
+bank_idempotency_risk_vertical_cell_llm_raw_response.txt: ba44de288dfced19ae508026ea604d15064daf47cd9b1e370394e308d4cc3ed1
+bank_idempotency_risk_vertical_cell_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+bank_payment_policy_reviewer_llm_canonical_summary.json: 6400ada1295b37005a2ab9feebe69ab85588dcc44e178daed48f482abefad2b8
+bank_payment_policy_reviewer_llm_extracted_json_candidate.json: deb4fd1f75a3f1ff469223b5c523d8d50f49720a951353edf28670b995573ceb
+bank_payment_policy_reviewer_llm_prompt.txt: 7111fa9a10e919e11d607b85a07853fbb808f8eb313ae876698819a750fee8f8
+bank_payment_policy_reviewer_llm_raw_response.txt: deb4fd1f75a3f1ff469223b5c523d8d50f49720a951353edf28670b995573ceb
+bank_payment_policy_reviewer_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+bank_payment_status_explainer_llm_canonical_summary.json: 7fa2d207bc372b6f7a858363b0747a7a2c1cd9d82ee6a4ce34aa7d9c1d53e167
+bank_payment_status_explainer_llm_extracted_json_candidate.json: 7d0799cc073a910c1fe917336a38ef40a4a09d3b69209ce4bd38a54611fc3a8a
+bank_payment_status_explainer_llm_prompt.txt: f633632009a88f54be488c591e84f5da3640ed4ca27f68742f05ceb2933bf275
+bank_payment_status_explainer_llm_raw_response.txt: 7d0799cc073a910c1fe917336a38ef40a4a09d3b69209ce4bd38a54611fc3a8a
+bank_payment_status_explainer_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+client_profile_privacy_reviewer_llm_canonical_summary.json: 1b2b2c41ddd8bba0608eb7315b181f2b1286726d3bdb5a83aac5fbdceace7b2c
+client_profile_privacy_reviewer_llm_extracted_json_candidate.json: 87b5e9eef8575625139eeb47f9e07f6f0c6a94faebb535cba29e6f2fb4266045
+client_profile_privacy_reviewer_llm_prompt.txt: 05109a95c0dda518544f9f900fffe3768f953cddc8b32c5d91bc38d3df9e1f93
+client_profile_privacy_reviewer_llm_raw_response.txt: 87b5e9eef8575625139eeb47f9e07f6f0c6a94faebb535cba29e6f2fb4266045
+client_profile_privacy_reviewer_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+client_purchase_intent_reviewer_llm_canonical_summary.json: 8da96b97c01779c6ac8c24e48ca114b900b58bf0338492cea3753bec759c1a4d
+client_purchase_intent_reviewer_llm_extracted_json_candidate.json: 4b6210ce27e16324ded84ce25d480c73c488ea33a6ef9fe7a6edd589564c6277
+client_purchase_intent_reviewer_llm_prompt.txt: 685368294001fb561dd70b6f78b49255789b7a5dc5e1f05ea2c54f76cd701eb4
+client_purchase_intent_reviewer_llm_raw_response.txt: 7513e3e4f368b3d2497fbb7a5655fa4c62647d556bff9d567ae764f0b3734e0b
+client_purchase_intent_reviewer_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+integrated_deterministic_airline_summary.json: 3bd7ea12f57b754608899fcf80975d67233024767fdc05d36701786fcbd6764c
+secret_scan.json: c2ddc66f3baa0c4f0cc56b4b23d5b771d56cd5714b49918674064c6b718bfb66
+semantic_to_contract_bridge.json: ce8ddeb20deb3721b4a4e19f7dd6a7bd13d3ebd1c66c18156d9614108aa865f2
+semantic_to_contract_causal_run.json: e8bfa8da15190a67a6b95c23ca947f5460bfffc05070df78cb64b47c3af5916c
+summary.json: bb6d64340b4cb36f809cd426066e930eabb1f2cf0986e8065ae8f83eb553dd16
+summary.log: 2873d9d54f87062b8c811c9a09748cf8167eafccec510dd85bf64a1367daed87
+tri_party_airline_bsep_packet.json: 7256f58de63b325beaf6334e1bad9f397fa707a8759c4aad8e960cae207e96a9
+tri_party_airline_bsep_side_projections.json: 73d75c054389a805589360e5327cd459a522e0b41f9cd2f1fea41f9a871f5521
+tri_party_airline_bsep_validation.json: c2dce64ae36c2857a98d7302acc1bfc7475c3c17b277100c93be9abcefc76903
+tri_party_airline_orchestrator_llm_canonical_summary.json: 6d2aee9a61a1d210e6e1fc395fe1a0f29f5564e4114fdf90548f6dcf118b6d9b
+tri_party_airline_orchestrator_llm_extracted_json_candidate.json: fadcfc5eff45a7d9d8641c02a8e0abdc84639b66ceba738f37526b8fc1c78b5b
+tri_party_airline_orchestrator_llm_prompt.txt: d7bfc489fa33642ba2b01d325a0015f8cb973b333c2570c58acb151501b694a0
+tri_party_airline_orchestrator_llm_raw_response.txt: fadcfc5eff45a7d9d8641c02a8e0abdc84639b66ceba738f37526b8fc1c78b5b
+tri_party_airline_orchestrator_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+tri_party_airline_semantic_architect_llm_canonical_summary.json: 30721b7079dd65e472f6b47cc6d1678fb73bc312f3c1756724b8b90ca55c9093
+tri_party_airline_semantic_architect_llm_extracted_json_candidate.json: 2b9fdb79dc90c2de51af2612bff38c415fe9095e24a283c77c80ea0b37556375
+tri_party_airline_semantic_architect_llm_prompt.txt: 2e91fc33be7b3da3febfcff14ba08f06717ea8ffc16d55a3dc46a28a0a5a2950
+tri_party_airline_semantic_architect_llm_raw_response.txt: 2b9fdb79dc90c2de51af2612bff38c415fe9095e24a283c77c80ea0b37556375
+tri_party_airline_semantic_architect_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+tri_party_evidence_consistency_reviewer_llm_canonical_summary.json: fa5f89686be4afd37bad182179be9cc08dbac18ab63566da2e6b5f910cd6396b
+tri_party_evidence_consistency_reviewer_llm_extracted_json_candidate.json: a85a97f6cbfd9ce8ed0256e70dcae5cadd378d2efb3f1b31713452a6b55ac9a0
+tri_party_evidence_consistency_reviewer_llm_prompt.txt: 87142a3b2c88ec1bf889258ffb083599a6bbff83c44d3e2605e3fbc8989b502a
+tri_party_evidence_consistency_reviewer_llm_raw_response.txt: 1d15f8c59dbeac7492176a7ed1c7a1a65ebd0fb81c5bf9704a25fa18020cbd32
+tri_party_evidence_consistency_reviewer_llm_validation.json: 3cea3f2e474c478180163ad6bb569fea797f16401ecabebe06bc0992d3e5823c
+
+[BOUNDARIES]
+
+package writes during audit/publication: 0
+package regeneration during audit/publication: 0
+Ledger recollections during audit/publication: 0
+Crypto recollections during audit/publication: 0
+anchored verification calls: 0
+Gemini calls during audit: 0
+provider calls during audit: 0
+network calls during audit: 0
+Replay calls: 0
+real-world effects during audit: 0
+accepted package unchanged: true
+accepted operator gate unchanged: true
+accepted terminal-safe log unchanged: true
+historical failed package unchanged: true
+historical failed operator gate unchanged: true
+historical failed terminal-safe log unchanged: true
+Root Attestation: absent and deferred
+production status: not production
+real ticket: false
+real booking: false
+real payment: false
+
+[NEXT STEP]
+
+anchor and audit require owner-terminal read-only validation: true
+anchor and audit must be committed and pushed together: true
+only after a clean synchronized commit may anchored Replay run: true
+additional Gemini run required: false

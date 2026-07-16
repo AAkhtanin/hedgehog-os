@@ -57,47 +57,33 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Base Airline Sealed Trace Replay v0.1 CLOSED / PASS.
+Current checkpoint: Airline All-Real Full-Stack Run v0.1 dedicated preflight
+READY_FOR_REVIEW.
 
-Current Airline Sealed Trace Replay v0.1 facts:
+Current Airline all-real full-stack preflight facts:
 
-- Implementation basis: `6b28c72`.
-- D1 official audit commit: `813289d`.
-- D2 human explanation commit: `6f98d79`.
-- Official sealed package:
-  `.tmp/airline_crypto_artifact_seal_slice_e1/airline_crypto_artifact_seal_slice_e1_offline_905844c`.
-- Committed anchor:
-  `docs/airline_crypto_artifact_seal_anchor_v01.json`.
-- Official Replay Report:
-  `docs/airline_sealed_trace_replay_slice_d_official_report_v01.json`.
-- D1 independent audit:
-  `docs/audit_reports/auditor_airline_sealed_trace_replay_slice_d_official_replay_v01.log`.
-- D2 human explanation:
-  `docs/airline_sealed_trace_replay_slice_d_human_explanation_v01.md`.
-- Final checkpoint:
-  `docs/airline_sealed_trace_replay_checkpoint_v01.md`.
-- Geometry is exactly 19 Ledger entries, 29 dependency edges, and 3 Root
-  finals.
-- Package geometry is exactly 9 source files and 11 critical files.
-- The deterministic Replay timeline contains exactly 19 rows.
-- Stored Verification remains `SELF_CONSISTENT_UNANCHORED`.
-- Fresh anchored Verification is `PASS`.
-- Signature mode remains `UNSIGNED_PLACEHOLDER`; signature verification
-  remains false.
-- Root Attestation is absent and not required for Base Replay.
-- Package, anchor, official Report, and committed D1/D2 evidence remain
-  unchanged.
-- Transaction, semantic, and Corridor reruns; Ledger and Crypto recollections;
-  provider, network, and Gemini calls; Replay-created authority, permission,
-  action, packet, receipt, and FinalOutput; and real-world effects are all 0.
-- D3 performed no all-real run.
+- Base Airline Sealed Trace Replay v0.1 remains `CLOSED / PASS`.
+- Implementation base: `a8d5036`.
+- Planning document:
+  `docs/airline_all_real_full_stack_run_preflight_v01.md`.
+- No runtime or test changed.
+- No real-provider, network, or Gemini call occurred.
+- No package, anchor, Replay Report, audit, or human story was created.
+- Fixed future scenario: Preference A.
+- Future package ref:
+  `airline_all_real_full_stack_v01_preference_a_a8d5036`.
+- The official transaction execution will occur only in the repository
+  owner's visible terminal.
+- One all-real transaction invocation is planned.
+- Twelve real Gemini semantic actor calls are expected.
+- A separate later phase publishes one committed external anchor.
+- A separate later owner-terminal phase performs one anchored Replay.
+- Root Attestation remains deferred and is not required.
+- Real-world effects remain 0.
 - Not production. No real ticket, payment, or booking occurred.
 
 Current next immediate gate:
-`explicit_review_for_airline_all_real_full_stack_run_preflight`.
-
-An all-real full-stack run requires separate explicit review. Root Attestation
-remains deferred and is not promoted into the active roadmap.
+`airline_all_real_full_stack_run_v01_owner_terminal_execution`.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

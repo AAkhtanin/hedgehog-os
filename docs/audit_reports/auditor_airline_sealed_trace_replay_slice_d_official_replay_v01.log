@@ -1,0 +1,251 @@
+BASE AIRLINE SEALED TRACE REPLAY VERIFIER V0.1 SLICE D1 OFFICIAL REPLAY AUDIT
+
+[AUDIT IDENTITY]
+audit_id: auditor_airline_sealed_trace_replay_slice_d_official_replay_v01
+audit_status: PASS
+audit_slice: airline_sealed_trace_replay_v01_slice_d1
+replay_profile: BASE_SEALED_TRACE_REPLAY
+audit_base_head: 6b28c72
+base_replay_fully_closed: false
+closure_pending: human_explanation_and_full_docs_spec_manifest_sync
+
+[REPOSITORY GUARD]
+head: 6b28c72
+origin_main: 6b28c72
+clean_worktree_before_replay: true
+staged_files_before_replay: 0
+committed_lineage:
+- 6b28c72 Add Airline Sealed Trace Replay v0.1 Slice C2 runner
+- c9a2bb6 Fix Airline Sealed Trace Replay ExpectedIdentity continuity
+- 29e4fff Add Airline Sealed Trace Replay v0.1 Slice C1 collector
+- fc1b732 Add Airline Sealed Trace Replay v0.1 Slice B pure verifier
+- 1c04f0a Add Airline Sealed Trace Replay Verifier v0.1 preflight
+- 26ee0de Close Airline Crypto Artifact Seal v0.1 Slice E2 anchored audit
+- 5345815 Publish Airline Crypto Artifact Seal v0.1 Slice E1 anchor
+- 905844c Integrate Airline Crypto Artifact Seal v0.1 Slice D
+anchor_publication_commit: 5345815
+anchor_commit_is_ancestor_of_head: true
+anchor_working_bytes_equal_committed_bytes: true
+anchor_byte_sha256: f2929a305d1b05a16a51ead28972919a3209db1234ea6d0555f7228a460963fe
+
+[OFFICIAL SOURCE]
+package_path: .tmp/airline_crypto_artifact_seal_slice_e1/airline_crypto_artifact_seal_slice_e1_offline_905844c
+logical_package_ref: airline_crypto_artifact_seal_slice_e1_offline_905844c
+package_generation_base_head: 905844c
+anchor_path: docs/airline_crypto_artifact_seal_anchor_v01.json
+anchor_publication_commit: 5345815
+official_replay_report_path: docs/airline_sealed_trace_replay_slice_d_official_report_v01.json
+independent_audit_path: docs/audit_reports/auditor_airline_sealed_trace_replay_slice_d_official_replay_v01.log
+package_inventory_entry_count: 72
+package_inventory_sha256: c3eef76aaf37bb3ba861f15f3314543c89ac94066b6130f600e7738edbfc1d4f
+no_package_discovery: true
+no_package_regeneration: true
+no_package_repair: true
+no_package_write: true
+auxiliary_actor_files_outside_critical_count: true
+
+[OFFICIAL REPLAY]
+invocation_count: 1
+return_code: 0
+safe_cli_summary: {"critical_package_file_count":11,"ledger_id":"airline_transaction_artifact_ledger:offer:mock_airline_al:PAR-LIM:001","replay_id":"airline_sealed_trace_replay_v01:tri_airline_purchase:PAR-LIM:2026-08-12:client_001:29355a3b2f2b95bd6358d6085a801334d7fd7ca23438e6e2ce0618106edba12b","replay_status":"PASS","timeline_row_count":19,"transaction_id":"tri_airline_purchase:PAR-LIM:2026-08-12:client_001"}
+no_retry: true
+no_fallback: true
+no_second_invocation: true
+environment_package_selection_used: false
+live_transaction_runner_invocation_count: 0
+provider_call_count: 0
+network_call_count: 0
+gemini_call_count: 0
+real_world_effects_count: 0
+
+[VERIFICATION MOMENTS]
+stored_verification_status: SELF_CONSISTENT_UNANCHORED
+stored_expected_manifest_core_hash: null
+stored_external_anchor_supplied: false
+stored_external_anchor_verified: false
+stored_verification_contract_verified: true
+fresh_anchored_verification_status: PASS
+fresh_anchored_verification_contract_verified: true
+external_anchor_supplied: true
+external_anchor_verified: true
+signature_mode: UNSIGNED_PLACEHOLDER
+signature_verified: false
+
+[IDENTITY]
+replay_version: airline_sealed_trace_replay_v01
+replay_id: airline_sealed_trace_replay_v01:tri_airline_purchase:PAR-LIM:2026-08-12:client_001:29355a3b2f2b95bd6358d6085a801334d7fd7ca23438e6e2ce0618106edba12b
+transaction_id: tri_airline_purchase:PAR-LIM:2026-08-12:client_001
+ledger_id: airline_transaction_artifact_ledger:offer:mock_airline_al:PAR-LIM:001
+source_package_ref: airline_crypto_artifact_seal_slice_e1_offline_905844c
+source_package_hash: 5001bb70ca6841a2ec24c10efbb19452f444f2815887d604a12cb031e6ffd21f
+manifest_core_hash: 29355a3b2f2b95bd6358d6085a801334d7fd7ca23438e6e2ce0618106edba12b
+expected_manifest_core_hash: 29355a3b2f2b95bd6358d6085a801334d7fd7ca23438e6e2ce0618106edba12b
+chain_tail_hash: f41057a61eea458e8dc88cfe44bd5168806e2438fca60a29371af587bba19027
+semantic_causal_hold_packet_id: airline_hold_commit_packet:semantic_causal:001
+semantic_causal_hold_id: hold:semantic_causal:001
+
+[GEOMETRY]
+source_file_count: 9
+critical_file_count: 11
+ledger_entry_count: 19
+dependency_edge_count: 29
+root_final_count: 3
+client_root_final_count: 1
+airline_root_final_count: 1
+bank_root_final_count: 1
+timeline_row_count: 19
+cross_root_advisory_is_not_a_fourth_root: true
+unique_artifact_id_count: 19
+timeline_indexes_contiguous: true
+ledger_indexes_contiguous: true
+dependencies_backward_only: true
+dependencies_present: true
+dependency_graph_acyclic: true
+
+[STAGE COUNTS]
+ledger_audit_count: 1
+anchored_verification_count: 1
+post_snapshot_observation_count: 1
+official_replay_invocation_count: 1
+independent_audit_replay_invocation_count: 0
+
+[ZERO COUNTERS]
+transaction_rerun_count: 0
+semantic_rerun_count: 0
+corridor_rerun_count: 0
+ledger_recollection_count: 0
+crypto_collection_count: 0
+provider_call_count: 0
+network_call_count: 0
+gemini_call_count: 0
+replay_created_authority_count: 0
+replay_created_permission_count: 0
+replay_created_action_count: 0
+replay_created_packet_count: 0
+replay_created_receipt_count: 0
+replay_created_final_output_count: 0
+real_world_effects_count: 0
+
+[INTEGRITY AND CONTINUITY]
+integrity_verified: true
+continuity_verified: true
+ledger_verified: true
+manifest_binding_verified: true
+artifact_hashes_verified: true
+chain_order_verified: true
+dependency_graph_verified: true
+root_ownership_verified: true
+authority_evidence_boundaries_verified: true
+packet_lineage_verified: true
+receipt_lineage_verified: true
+transaction_identity_verified: true
+source_refs_verified: true
+secret_boundary_verified: true
+source_bytes_unchanged: true
+critical_package_bytes_unchanged: true
+timeline_complete: true
+verification_errors: []
+
+[TIMELINE AUDIT]
+timeline_root_type: JSON_LIST
+timeline_row_count: 19
+replay_index_sequence: 0_through_18
+ledger_index_sequence: 0_through_18
+artifact_type_sequence: EXACT_COMMITTED_SEQUENCE
+artifact_refs_positionally_bound_to_manifest: true
+artifact_hashes_positionally_bound_to_manifest: true
+artifact_hash_format: 64_lowercase_hex
+artifact_ids_unique: true
+dependency_edge_count: 29
+dependency_count_matches_each_row: true
+every_dependency_names_an_earlier_row: true
+forward_dependency_count: 0
+missing_dependency_count: 0
+self_dependency_count: 0
+root_final_rows: 3
+client_root_final_rows: 1
+airline_root_final_rows: 1
+bank_root_final_rows: 1
+cross_root_advisory_root_final_rows: 0
+semantic_causal_hold_packet_lineage_present: true
+semantic_causal_hold_identity_present: true
+receipt_row_count: 3
+receipts_remain_evidence_only: true
+receipts_are_not_authority: true
+receipts_are_not_action_permission: true
+receipts_are_not_final_output: true
+raw_source_snapshots_written_to_audit: false
+raw_prompts_written_to_audit: false
+raw_provider_responses_written_to_audit: false
+
+[CRITICAL FILE SHA256]
+- airline_transaction_artifact_ledger.json: 6b733d072dd8ff36ed04ba2a645a6968f3626dda935a8297307afce31899e57a
+- summary.json: 4f65c47284ac577b0f859edffd3d4ddbc9a28ebf414fad71f93a544805bcd22f
+- secret_scan.json: c2ddc66f3baa0c4f0cc56b4b23d5b771d56cd5714b49918674064c6b718bfb66
+- semantic_to_contract_causal_run.json: a4dc092e6701284b9c1e773dc67126dba4298a8f335ee195da159761574401d4
+- semantic_to_contract_bridge.json: ce8ddeb20deb3721b4a4e19f7dd6a7bd13d3ebd1c66c18156d9614108aa865f2
+- integrated_deterministic_airline_summary.json: 3bd7ea12f57b754608899fcf80975d67233024767fdc05d36701786fcbd6764c
+- tri_party_airline_bsep_packet.json: 7256f58de63b325beaf6334e1bad9f397fa707a8759c4aad8e960cae207e96a9
+- tri_party_airline_bsep_validation.json: c2dce64ae36c2857a98d7302acc1bfc7475c3c17b277100c93be9abcefc76903
+- tri_party_airline_bsep_side_projections.json: 73d75c054389a805589360e5327cd459a522e0b41f9cd2f1fea41f9a871f5521
+- airline_crypto_artifact_seal_manifest_v01.json: 7a701a9a4bb599a5e00afeec44c3d305ba28fe6915457b1d022c8c0e103b9033
+- airline_crypto_artifact_seal_verification_v01.json: 9220aeebc80bfa673b00d9b5850540a81a6ada6cb29868f46cd796abf7ed2e17
+
+[BOUNDARIES]
+Replay reconstructs; it does not execute.
+Crypto integrity does not prove semantic truth.
+Replay creates no authority.
+Replay creates no permission.
+Replay creates no action.
+Replay creates no packet.
+Replay creates no receipt.
+Replay creates no FinalOutput.
+no_signer_authentication_claim: true
+no_pki_claim: true
+no_non_repudiation_claim: true
+root_attestation_present: false
+root_attestation_required_for_base_replay: false
+not_production: true
+not_public_auditor_packaging: true
+real_ticket_issued: false
+real_payment_executed: false
+real_booking_created: false
+
+[BYTE STABILITY]
+package_inventory_unchanged: true
+package_inventory_entry_count: 72
+package_inventory_sha256: c3eef76aaf37bb3ba861f15f3314543c89ac94066b6130f600e7738edbfc1d4f
+all_11_critical_package_bytes_unchanged: true
+critical_file_added_count: 0
+critical_file_removed_count: 0
+anchor_bytes_unchanged: true
+anchor_bytes_equal_committed_publication_bytes: true
+anchor_byte_sha256: f2929a305d1b05a16a51ead28972919a3209db1234ea6d0555f7228a460963fe
+replay_report_outside_package: true
+replay_report_sha256_frozen: 4626a972e3f127b9df51e16ac429d9392a1b8338b2d730f26d9691a2288694a9
+replay_report_unchanged_after_audit: true
+package_directory_remains_non_symlink: true
+
+[VALIDATION]
+strict_json_report_parse: PASS
+exact_field_set: PASS
+public_replay_report_validator: PASS
+deterministic_serialization: PASS
+timeline_audit: PASS
+output_permissions: PASS
+output_mode: 0o600
+package_final_comparison: PASS
+anchor_final_comparison: PASS
+git_diff_check: PASS
+exact_changed_file_scope: PASS
+terminal_newline: PASS
+trailing_whitespace: PASS
+
+[NEXT GATE]
+Slice D1 official Replay and independent audit: PASS
+Base Replay full closure: PENDING
+next gate: airline_sealed_trace_replay_v01_slice_d2_artifact_backed_human_explanation
+after D2: full canonical docs/spec/manifest sync
+only the final docs sync commit closes Base Replay
+no all-real full-stack run is authorized by D1
+Root Attestation remains deferred

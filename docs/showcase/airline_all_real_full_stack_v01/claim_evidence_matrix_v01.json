@@ -1,0 +1,569 @@
+[
+  {
+    "appendix_pages": [
+      1,
+      18
+    ],
+    "claim_id": "C01",
+    "display_label": "generation_pass",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "PASS",
+    "public_link_available": true,
+    "slide_numbers": [
+      1,
+      3,
+      15
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "[ACCEPTED RECOVERY GENERATION]",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      1,
+      2,
+      3,
+      18
+    ],
+    "claim_id": "C02",
+    "display_label": "real_gemini_calls_12",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "integer",
+    "observed_value": 12,
+    "public_link_available": true,
+    "slide_numbers": [
+      2,
+      4,
+      5
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "Gemini calls",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      18
+    ],
+    "claim_id": "C03",
+    "display_label": "actor_validations_12_pass_0_fail",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "12 PASS / 0 FAIL",
+    "public_link_available": true,
+    "slide_numbers": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "actor validations",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      1,
+      4,
+      18
+    ],
+    "claim_id": "C04",
+    "display_label": "transaction_route_and_date",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "tri_airline_purchase:PAR-LIM:2026-08-12:client_001 / PAR to LIM / 2026-08-12",
+    "public_link_available": true,
+    "slide_numbers": [
+      3,
+      6
+    ],
+    "source_commit": "a562c47",
+    "source_field_or_section": "The User's Travel Task",
+    "source_path": "docs/airline_all_real_full_stack_human_story_v01.md",
+    "source_sha256": "b6d40a818b9c513a7aaafaeb5557ab3ef064b20e65a75b44c1de5f9152fa4e44"
+  },
+  {
+    "appendix_pages": [
+      4,
+      6,
+      7,
+      8,
+      13,
+      18
+    ],
+    "claim_id": "C05",
+    "display_label": "offer_a_selected",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "offer:mock_airline_al:PAR-LIM:001",
+    "public_link_available": true,
+    "slide_numbers": [
+      3,
+      6,
+      7,
+      8,
+      9,
+      11
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "selected offer",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      1,
+      2,
+      3,
+      18
+    ],
+    "claim_id": "C06",
+    "display_label": "four_bsep_projections_pass",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "4 PASS",
+    "public_link_available": true,
+    "slide_numbers": [
+      5,
+      6,
+      7,
+      9
+    ],
+    "source_commit": "a562c47",
+    "source_field_or_section": "How the System Chose Offer A",
+    "source_path": "docs/airline_all_real_full_stack_human_story_v01.md",
+    "source_sha256": "b6d40a818b9c513a7aaafaeb5557ab3ef064b20e65a75b44c1de5f9152fa4e44"
+  },
+  {
+    "appendix_pages": [
+      1,
+      13,
+      14,
+      15,
+      18
+    ],
+    "claim_id": "C07",
+    "display_label": "three_sovereign_roots",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "ClientRoot / AirlineRoot / BankRoot",
+    "public_link_available": true,
+    "slide_numbers": [
+      1,
+      2,
+      4,
+      5,
+      8,
+      10
+    ],
+    "source_commit": "a562c47",
+    "source_field_or_section": "Three Sovereign Roots",
+    "source_path": "docs/airline_all_real_full_stack_human_story_v01.md",
+    "source_sha256": "b6d40a818b9c513a7aaafaeb5557ab3ef064b20e65a75b44c1de5f9152fa4e44"
+  },
+  {
+    "appendix_pages": [
+      1,
+      18
+    ],
+    "claim_id": "C08",
+    "display_label": "corridor_pass",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "PASS",
+    "public_link_available": true,
+    "slide_numbers": [
+      4,
+      9,
+      11
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "Corridor status",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      1,
+      18
+    ],
+    "claim_id": "C09",
+    "display_label": "corridor_execution_count_1",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "integer",
+    "observed_value": 1,
+    "public_link_available": true,
+    "slide_numbers": [
+      2,
+      11
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "Corridor execution count",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      14,
+      15,
+      18
+    ],
+    "claim_id": "C10",
+    "display_label": "ledger_entries_19",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "integer",
+    "observed_value": 19,
+    "public_link_available": true,
+    "slide_numbers": [
+      2,
+      4,
+      12
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "entries",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      14,
+      15,
+      18
+    ],
+    "claim_id": "C11",
+    "display_label": "ledger_dependency_edges_29",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "integer",
+    "observed_value": 29,
+    "public_link_available": true,
+    "slide_numbers": [
+      2,
+      12
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "dependency edges",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      14,
+      15,
+      18
+    ],
+    "claim_id": "C12",
+    "display_label": "ledger_root_finals_3",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "integer",
+    "observed_value": 3,
+    "public_link_available": true,
+    "slide_numbers": [
+      2,
+      10,
+      12
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "Root finals",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      16,
+      18
+    ],
+    "claim_id": "C13",
+    "display_label": "crypto_source_files_9",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "integer",
+    "observed_value": 9,
+    "public_link_available": true,
+    "slide_numbers": [
+      2,
+      13
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "exact source files",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      16,
+      18
+    ],
+    "claim_id": "C14",
+    "display_label": "critical_package_files_11",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "integer",
+    "observed_value": 11,
+    "public_link_available": true,
+    "slide_numbers": [
+      2,
+      13
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "exact critical files",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log",
+    "source_sha256": "faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e"
+  },
+  {
+    "appendix_pages": [
+      16,
+      18
+    ],
+    "claim_id": "C15",
+    "display_label": "stored_verification_unanchored",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "SELF_CONSISTENT_UNANCHORED",
+    "public_link_available": true,
+    "slide_numbers": [
+      13,
+      14
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "verification_status_at_publication",
+    "source_path": "docs/airline_all_real_full_stack_crypto_anchor_v01.json",
+    "source_sha256": "54ee8e6dcceaa846ecc4bf8968b0ab26c9bcb849663a76c0cb9d01d564c694b0"
+  },
+  {
+    "appendix_pages": [
+      1,
+      16,
+      18
+    ],
+    "claim_id": "C16",
+    "display_label": "committed_external_anchor",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "boolean",
+    "observed_value": true,
+    "public_link_available": true,
+    "slide_numbers": [
+      1,
+      2,
+      4,
+      14
+    ],
+    "source_commit": "a701743",
+    "source_field_or_section": "anchor_active_only_when_committed",
+    "source_path": "docs/airline_all_real_full_stack_crypto_anchor_v01.json",
+    "source_sha256": "54ee8e6dcceaa846ecc4bf8968b0ab26c9bcb849663a76c0cb9d01d564c694b0"
+  },
+  {
+    "appendix_pages": [
+      1,
+      17,
+      18
+    ],
+    "claim_id": "C17",
+    "display_label": "fresh_anchored_verification_pass",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "PASS",
+    "public_link_available": true,
+    "slide_numbers": [
+      1,
+      4,
+      14,
+      15,
+      16
+    ],
+    "source_commit": "ec50c1f",
+    "source_field_or_section": "fresh_anchored_verification_status",
+    "source_path": "docs/airline_all_real_full_stack_replay_report_v01.json",
+    "source_sha256": "7ceaa5400ef6b35fb1e39f2bdc739a68cb9bb4373d82e7586feee901ef414b57"
+  },
+  {
+    "appendix_pages": [
+      14,
+      15,
+      17,
+      18
+    ],
+    "claim_id": "C18",
+    "display_label": "replay_timeline_rows_19",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "integer",
+    "observed_value": 19,
+    "public_link_available": true,
+    "slide_numbers": [
+      2,
+      4,
+      14
+    ],
+    "source_commit": "ec50c1f",
+    "source_field_or_section": "timeline_row_count",
+    "source_path": "docs/airline_all_real_full_stack_replay_report_v01.json",
+    "source_sha256": "7ceaa5400ef6b35fb1e39f2bdc739a68cb9bb4373d82e7586feee901ef414b57"
+  },
+  {
+    "appendix_pages": [
+      17,
+      18
+    ],
+    "claim_id": "C19",
+    "display_label": "replay_provider_network_gemini_zero",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "provider 0 / network 0 / Gemini 0",
+    "public_link_available": true,
+    "slide_numbers": [
+      14,
+      16
+    ],
+    "source_commit": "ec50c1f",
+    "source_field_or_section": "provider_call_count / network_call_count / gemini_call_count",
+    "source_path": "docs/airline_all_real_full_stack_replay_report_v01.json",
+    "source_sha256": "7ceaa5400ef6b35fb1e39f2bdc739a68cb9bb4373d82e7586feee901ef414b57"
+  },
+  {
+    "appendix_pages": [
+      17,
+      18,
+      19
+    ],
+    "claim_id": "C20",
+    "display_label": "real_world_effects_zero",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "integer",
+    "observed_value": 0,
+    "public_link_available": true,
+    "slide_numbers": [
+      1,
+      2,
+      3,
+      8,
+      11,
+      16
+    ],
+    "source_commit": "ec50c1f",
+    "source_field_or_section": "real_world_effects_count",
+    "source_path": "docs/airline_all_real_full_stack_replay_report_v01.json",
+    "source_sha256": "7ceaa5400ef6b35fb1e39f2bdc739a68cb9bb4373d82e7586feee901ef414b57"
+  },
+  {
+    "appendix_pages": [
+      16,
+      17,
+      18
+    ],
+    "claim_id": "C21",
+    "display_label": "package_bytes_unchanged",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "boolean",
+    "observed_value": true,
+    "public_link_available": true,
+    "slide_numbers": [
+      12,
+      14,
+      16
+    ],
+    "source_commit": "ec50c1f",
+    "source_field_or_section": "critical_package_bytes_unchanged",
+    "source_path": "docs/airline_all_real_full_stack_replay_report_v01.json",
+    "source_sha256": "7ceaa5400ef6b35fb1e39f2bdc739a68cb9bb4373d82e7586feee901ef414b57"
+  },
+  {
+    "appendix_pages": [
+      1,
+      18
+    ],
+    "claim_id": "C22",
+    "display_label": "historical_failure_evidence_preserved",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "boolean",
+    "observed_value": true,
+    "public_link_available": true,
+    "slide_numbers": [
+      15
+    ],
+    "source_commit": "ec50c1f",
+    "source_field_or_section": "[PRIOR FAIL-CLOSED HISTORY]",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_anchored_replay.log",
+    "source_sha256": "af516265c0298037a1e1f45957a78e8c89b4c8752fea44e544980dec9fb54f96"
+  },
+  {
+    "appendix_pages": [
+      1,
+      18
+    ],
+    "claim_id": "C23",
+    "display_label": "failed_package_not_promoted_and_recovery_distinct",
+    "evidence_availability": "committed_audit_of_local_package",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "string",
+    "observed_value": "failed package promoted false; recovery package distinct true",
+    "public_link_available": true,
+    "slide_numbers": [
+      15
+    ],
+    "source_commit": "ec50c1f",
+    "source_field_or_section": "[PRIOR FAIL-CLOSED HISTORY]",
+    "source_path": "docs/audit_reports/auditor_airline_all_real_full_stack_v01_anchored_replay.log",
+    "source_sha256": "af516265c0298037a1e1f45957a78e8c89b4c8752fea44e544980dec9fb54f96"
+  },
+  {
+    "appendix_pages": [
+      16,
+      17,
+      18,
+      19
+    ],
+    "claim_id": "C24",
+    "display_label": "signature_verified_false",
+    "evidence_availability": "committed_repository_evidence",
+    "notes": "Accepted committed evidence.",
+    "observed_type": "boolean",
+    "observed_value": false,
+    "public_link_available": true,
+    "slide_numbers": [
+      10,
+      13,
+      14,
+      16
+    ],
+    "source_commit": "ec50c1f",
+    "source_field_or_section": "signature_verified",
+    "source_path": "docs/airline_all_real_full_stack_replay_report_v01.json",
+    "source_sha256": "7ceaa5400ef6b35fb1e39f2bdc739a68cb9bb4373d82e7586feee901ef414b57"
+  }
+]

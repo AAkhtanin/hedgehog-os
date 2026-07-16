@@ -4811,6 +4811,53 @@ Next gates:
   Transaction Artifact Ledger, Airline Crypto Artifact Seal, Airline Sealed
   Trace Replay Verifier.
 
+## 20.4 Airline Base Sealed Trace Replay v0.1 Checkpoint
+
+Base Airline Sealed Trace Replay v0.1 is CLOSED / PASS.
+
+The canonical Replay law is:
+
+```text
+existing sealed trace
+→ explicit committed external anchor
+→ fresh anchored integrity verification
+→ deterministic Ledger-order reconstruction
+→ human-auditable Replay timeline
+```
+
+The closed proof uses one explicit package, one explicit anchor, one Ledger
+audit, one fresh anchored verification, and one post-Replay package
+observation. It requires exact package-byte equality, writes output only
+outside the sealed package, performs no effect Replay, calls no provider,
+network endpoint, or Gemini model, and preserves Root-only authority.
+
+The official geometry is 19 Ledger entries, 29 dependency edges, 3 Root
+finals, 9 source files, 11 critical files, and 19 timeline rows. Stored
+Verification remains `SELF_CONSISTENT_UNANCHORED`; fresh Replay-time
+Verification is anchored `PASS`; the unsigned signature placeholder remains
+unverified.
+
+Preserved architectural laws:
+
+- Integrity is not truth.
+- Replay is not execution.
+- Evidence is not permission.
+- Verification Replay is not effect Replay.
+- Crypto and Replay create no Root authority.
+- Cross-root advisory is not a fourth Root.
+- Receipts remain evidence only.
+
+The current proof-of-architecture intentionally implements the minimal externally anchored integrity profile; its Ledger/Manifest/Replay boundaries can support a later Root-scoped signature and attested-Replay overlay, but that stronger profile is deferred and is not claimed as implemented.
+
+The architecture can support that stronger overlay as an optional future
+strengthening. No keys, Root signatures, PKI, or Attested Replay are
+implemented, Root Attestation remains deferred, and this checkpoint is not an
+active task queue for them.
+
+The next gate is
+`explicit_review_for_airline_all_real_full_stack_run_preflight`. No all-real
+run occurs as part of Replay closure.
+
 ## 21. Legacy Code Position
 
 Legacy code is donor/reference only.

@@ -14,7 +14,7 @@ This is the main downward canonical execution vector, not the full architecture.
 
 Demo domain:
 
-text mock government certificate request 
+text mock government certificate request
 
 This repository currently targets a deterministic MVP / proof-of-architecture demo.
 
@@ -57,41 +57,47 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Airline Sealed Trace Replay Verifier v0.1 dedicated
-preflight READY_FOR_REVIEW.
+Current checkpoint: Base Airline Sealed Trace Replay v0.1 CLOSED / PASS.
 
-Current Airline Sealed Trace Replay Verifier v0.1 facts:
+Current Airline Sealed Trace Replay v0.1 facts:
 
-- Crypto Artifact Seal v0.1 remains CLOSED at commit `26ee0de`.
-- Root Attestation remains deferred at commit `37320bc` and does not block
-  Base Replay.
-- Optional future Root Attestation profile:
-  `docs/airline_root_artifact_attestation_future_profile_v01.md`.
-- Dedicated Replay preflight:
-  `docs/airline_sealed_trace_replay_verifier_preflight_v01.md`.
-- The official package remains unchanged:
+- Implementation basis: `6b28c72`.
+- D1 official audit commit: `813289d`.
+- D2 human explanation commit: `6f98d79`.
+- Official sealed package:
   `.tmp/airline_crypto_artifact_seal_slice_e1/airline_crypto_artifact_seal_slice_e1_offline_905844c`.
-- The committed Manifest Core anchor remains unchanged:
+- Committed anchor:
   `docs/airline_crypto_artifact_seal_anchor_v01.json`.
-- Stored package Verification remains `SELF_CONSISTENT_UNANCHORED`.
-- Independent E2 Verification remains `PASS`.
-- Replay implementation and Replay Report do not exist.
-- Provider, network, and Gemini call counts for this preflight are all 0.
-- Transaction, semantic, Corridor, Ledger, Crypto, Attestation, and Replay
-  operation counts are all 0.
-- Authority, permission, action, packet, receipt, and FinalOutput creation
-  counts are all 0.
-- No real-world effect occurred.
-- Base Replay is deterministic sealed-trace reconstruction, not transaction
-  re-execution.
-- Base Replay does not require Root signatures.
-- No signer-authentication or PKI claim is made.
+- Official Replay Report:
+  `docs/airline_sealed_trace_replay_slice_d_official_report_v01.json`.
+- D1 independent audit:
+  `docs/audit_reports/auditor_airline_sealed_trace_replay_slice_d_official_replay_v01.log`.
+- D2 human explanation:
+  `docs/airline_sealed_trace_replay_slice_d_human_explanation_v01.md`.
+- Final checkpoint:
+  `docs/airline_sealed_trace_replay_checkpoint_v01.md`.
+- Geometry is exactly 19 Ledger entries, 29 dependency edges, and 3 Root
+  finals.
+- Package geometry is exactly 9 source files and 11 critical files.
+- The deterministic Replay timeline contains exactly 19 rows.
+- Stored Verification remains `SELF_CONSISTENT_UNANCHORED`.
+- Fresh anchored Verification is `PASS`.
+- Signature mode remains `UNSIGNED_PLACEHOLDER`; signature verification
+  remains false.
+- Root Attestation is absent and not required for Base Replay.
+- Package, anchor, official Report, and committed D1/D2 evidence remain
+  unchanged.
+- Transaction, semantic, and Corridor reruns; Ledger and Crypto recollections;
+  provider, network, and Gemini calls; Replay-created authority, permission,
+  action, packet, receipt, and FinalOutput; and real-world effects are all 0.
+- D3 performed no all-real run.
+- Not production. No real ticket, payment, or booking occurred.
 
 Current next immediate gate:
-`airline_sealed_trace_replay_verifier_v01_slice_b_contracts_and_pure_verifier`.
+`explicit_review_for_airline_all_real_full_stack_run_preflight`.
 
-The final all-real LLM run remains scheduled only after Base Sealed Trace
-Replay closes offline.
+An all-real full-stack run requires separate explicit review. Root Attestation
+remains deferred and is not promoted into the active roadmap.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.
@@ -1031,7 +1037,7 @@ See `docs/passport_geometry_root_needles.md`.
 
 The main auditor-facing proof command is:
 
-bash python -m demo.run_canonical_pipeline_trace 
+bash python -m demo.run_canonical_pipeline_trace
 
 This trace should show:
 
@@ -1345,7 +1351,7 @@ A needle-local Orchestrator, if present, is not global Root.
 
 Needle outcomes must pass through the canonical pipeline:
 
-text NeedleRuntime / adapter → ResultProposal-compatible artifact → Post V&V → real GTValidator runtime report → Root-visible routing semantics → LocalDRS Work / Quarantine / DeadEnds persistence 
+text NeedleRuntime / adapter → ResultProposal-compatible artifact → Post V&V → real GTValidator runtime report → Root-visible routing semantics → LocalDRS Work / Quarantine / DeadEnds persistence
 
 Needle outcome routing semantics in the current MVP:
 
@@ -1394,7 +1400,7 @@ Cognitive mutations from systemic needles must follow quarantine-first behavior 
 
 Create and preserve this structure as the baseline, while allowing newer committed files to extend it:
 
-text hedgehog-os/   README.md   AGENTS.md    docs/     strategic_expansion_map.md    specs/     human_passport_v0_25.md     math_appendix_v0_3.md     machine_manifest_v0_25.json     invariants.md     demo_baseline_v0_25.md     legacy_mapping.md    schemas/     common.schema.json     intent.schema.json     time_envelope.schema.json     temporal_query.schema.json     world_state.schema.json     candidate_vector.schema.json     attractor_packet.schema.json     plan_graph.schema.json     result_proposal.schema.json     vv_report.schema.json     gt_report.schema.json     drs_record.schema.json     marenna_record.schema.json     up_record.schema.json     final_output.schema.json    hedgehog/     __init__.py     models.py     time_model.py     drs.py     world_state.py     candidate_vectors.py     avf.py     architect.py     fractal_dag_executor.py     executor.py     post_vv.py     gt_validator.py     root_orchestrator.py     marenna.py     up.py     audit.py     policies.py     local_embeddings.py     similarity.py     vector_store.py    hedgehog/external_drs/     __init__.py     index.py     record.py     resolver.py    needles/     government_services.json     fallback_exploration.json    data/     drs/       work/       thoughts/       up/       quarantine/       deadends/    demo/     run_certificate_demo.py     run_fractal_dag_executor_core.py     run_canonical_pipeline_trace.py     scenarios/       cold_start.json       reuse.json    tests/     test_schema_files_valid.py     test_needles_valid.py     test_time_model.py     test_candidate_vectors.py     test_avf_runtime.py     test_architect_runtime.py     test_fractal_dag_executor_core_runner.py     test_executor_runtime.py     test_post_vv_runtime.py     test_gt_validator_runtime.py     test_drs_runtime.py     test_root_orchestrator_runtime.py     test_canonical_pipeline_trace_runner.py 
+text hedgehog-os/   README.md   AGENTS.md    docs/     strategic_expansion_map.md    specs/     human_passport_v0_25.md     math_appendix_v0_3.md     machine_manifest_v0_25.json     invariants.md     demo_baseline_v0_25.md     legacy_mapping.md    schemas/     common.schema.json     intent.schema.json     time_envelope.schema.json     temporal_query.schema.json     world_state.schema.json     candidate_vector.schema.json     attractor_packet.schema.json     plan_graph.schema.json     result_proposal.schema.json     vv_report.schema.json     gt_report.schema.json     drs_record.schema.json     marenna_record.schema.json     up_record.schema.json     final_output.schema.json    hedgehog/     __init__.py     models.py     time_model.py     drs.py     world_state.py     candidate_vectors.py     avf.py     architect.py     fractal_dag_executor.py     executor.py     post_vv.py     gt_validator.py     root_orchestrator.py     marenna.py     up.py     audit.py     policies.py     local_embeddings.py     similarity.py     vector_store.py    hedgehog/external_drs/     __init__.py     index.py     record.py     resolver.py    needles/     government_services.json     fallback_exploration.json    data/     drs/       work/       thoughts/       up/       quarantine/       deadends/    demo/     run_certificate_demo.py     run_fractal_dag_executor_core.py     run_canonical_pipeline_trace.py     scenarios/       cold_start.json       reuse.json    tests/     test_schema_files_valid.py     test_needles_valid.py     test_time_model.py     test_candidate_vectors.py     test_avf_runtime.py     test_architect_runtime.py     test_fractal_dag_executor_core_runner.py     test_executor_runtime.py     test_post_vv_runtime.py     test_gt_validator_runtime.py     test_drs_runtime.py     test_root_orchestrator_runtime.py     test_canonical_pipeline_trace_runner.py
 
 ---
 
@@ -1542,7 +1548,7 @@ For docs-only edits, do not modify runtime code, schemas, or tests unless explic
 
 For JSON manifest edits, validate with:
 
-bash python3 -m json.tool specs/machine_manifest_v0_25.json > /tmp/manifest_check.json 
+bash python3 -m json.tool specs/machine_manifest_v0_25.json > /tmp/manifest_check.json
 
 ---
 
@@ -1580,4 +1586,4 @@ When first started, Codex must not edit files.
 
 First command should be:
 
-text Analyze this repository without changing files. Explain what files and structure exist now. Do not edit anything. 
+text Analyze this repository without changing files. Explain what files and structure exist now. Do not edit anything.

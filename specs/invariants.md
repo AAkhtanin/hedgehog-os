@@ -1155,3 +1155,45 @@ Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI PASS invariants:
   Airline Transaction Artifact Ledger, Airline Crypto Artifact Seal, Airline
   Sealed Trace Replay Verifier.
 - This checkpoint is not production and not public auditor final package.
+
+Airline Sealed Trace Replay v0.1 invariants:
+
+1. Replay reconstructs; Replay does not execute.
+2. Replay accepts one explicit package and one explicit anchor.
+3. A missing or malformed external anchor cannot produce `PASS`.
+4. A Manifest cannot silently self-anchor.
+5. Stored unanchored Verification remains stored and unanchored.
+6. Fresh anchored Verification is required for Replay `PASS`.
+7. The Replay Report binds to the current package, transaction, Ledger,
+   Manifest, and expected anchor.
+8. Ledger order and dependency edges are preserved exactly.
+9. Every dependency points to an earlier accepted row.
+10. Package critical bytes remain unchanged.
+11. Anchor bytes remain unchanged.
+12. Replay output remains outside the sealed package.
+13. Replay performs no transaction rerun.
+14. Replay performs no semantic rerun.
+15. Replay performs no Corridor rerun.
+16. Replay performs no Ledger recollection.
+17. Replay performs no Crypto collection.
+18. Replay performs no provider, network, or Gemini call.
+19. Replay creates no authority.
+20. Replay creates no permission.
+21. Replay creates no action.
+22. Replay creates no packet.
+23. Replay creates no receipt.
+24. Replay creates no FinalOutput.
+25. Replay creates no real-world effect.
+26. Crypto integrity does not prove truth.
+27. Verification Replay does not authorize effect Replay.
+28. Base Replay does not require Root Attestation.
+29. Optional Attested Replay remains a deferred profile.
+30. Real external effects require a separate explicit authorization boundary.
+
+Base Replay closure is `CLOSED / PASS` with exact geometry `19 / 29 / 3`,
+package geometry `9 / 11`, stored Verification
+`SELF_CONSISTENT_UNANCHORED`, fresh anchored Verification `PASS`, and
+signature verification false. Root Attestation remains absent and deferred.
+Provider, network, Gemini, and real-world-effect counts are all 0. D3 performs
+no all-real run. The next gate is
+`explicit_review_for_airline_all_real_full_stack_run_preflight`.

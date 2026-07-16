@@ -603,7 +603,7 @@ Direct reuse is implemented in v0.25 only as an explicit CLI/test scenario. The 
 
 The auditor-facing trace command is:
 
-bash python -m demo.run_canonical_pipeline_trace 
+bash python -m demo.run_canonical_pipeline_trace
 
 This trace is intended to show that the deterministic runtime is not a long-chain prompt loop.
 
@@ -2077,6 +2077,55 @@ Baseline interpretation:
 - Engineering order recorded only: Airline Ticket/Purchase Corridor, Airline
   Transaction Artifact Ledger, Airline Crypto Artifact Seal, Airline Sealed
   Trace Replay Verifier.
+
+## Airline Base Sealed Trace Replay v0.1 Baseline
+
+Base Airline Sealed Trace Replay v0.1 is CLOSED / PASS as the current
+proof-level Airline Replay baseline.
+
+The baseline consists of:
+
+- one existing immutable package;
+- one committed external anchor;
+- exactly 9 source files;
+- exactly 11 critical files;
+- one read-only Ledger audit;
+- one fresh anchored verification;
+- one post-Replay package observation;
+- exactly 19 deterministic timeline rows;
+- exactly 19 Ledger entries, 29 dependency edges, and 3 Root finals;
+- exactly one final for ClientRoot, AirlineRoot, and BankRoot;
+- one external Replay Report;
+- unchanged package and anchor bytes;
+- stored Verification `SELF_CONSISTENT_UNANCHORED`;
+- fresh Verification anchored `PASS`;
+- signature verification false;
+- transaction, semantic, and Corridor reruns all 0;
+- Ledger and Crypto recollections both 0;
+- provider, network, and Gemini calls all 0;
+- Replay-created authority, permission, action, packet, receipt, and
+  FinalOutput all 0;
+- real-world effects 0.
+
+Committed evidence:
+
+- Official package:
+  `.tmp/airline_crypto_artifact_seal_slice_e1/airline_crypto_artifact_seal_slice_e1_offline_905844c`
+- Anchor:
+  `docs/airline_crypto_artifact_seal_anchor_v01.json`
+- Official Report:
+  `docs/airline_sealed_trace_replay_slice_d_official_report_v01.json`
+- Independent audit:
+  `docs/audit_reports/auditor_airline_sealed_trace_replay_slice_d_official_replay_v01.log`
+- Human explanation:
+  `docs/airline_sealed_trace_replay_slice_d_human_explanation_v01.md`
+- Final checkpoint:
+  `docs/airline_sealed_trace_replay_checkpoint_v01.md`
+
+This is the current proof-level Airline Base Replay baseline, not a production
+storage or execution service. Root Attestation remains an optional deferred
+profile. No all-real run occurred in D3. The next gate is
+`explicit_review_for_airline_all_real_full_stack_run_preflight`.
 
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,

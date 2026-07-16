@@ -7,6 +7,39 @@ They document proof checkpoints, test runs, auditor-facing traces, and architect
 
 Current reports:
 
+- `auditor_airline_sealed_trace_replay_slice_d_official_replay_v01.log`
+  - Audit status: PASS.
+  - This D1 report is the authoritative Base Airline Sealed Trace Replay v0.1
+    runtime audit.
+  - Official sealed package:
+    `.tmp/airline_crypto_artifact_seal_slice_e1/airline_crypto_artifact_seal_slice_e1_offline_905844c`.
+  - Committed anchor:
+    `docs/airline_crypto_artifact_seal_anchor_v01.json`.
+  - Confirms exactly one official Replay, 19 Ledger entries, 29 dependency
+    edges, 3 Root finals, 9 source files, 11 critical files, and 19 timeline
+    rows.
+  - Confirms stored Verification remains
+    `SELF_CONSISTENT_UNANCHORED`, fresh anchored Verification is `PASS`, and
+    signature verification remains false.
+  - Confirms package and anchor bytes remained unchanged.
+  - Confirms provider, network, Gemini, and real-world-effect counts are all
+    0.
+  - Confirms Root Attestation is absent and not required for Base Replay.
+  - Confirms Root Attestation remains deferred.
+  - Official Report:
+    `docs/airline_sealed_trace_replay_slice_d_official_report_v01.json`.
+  - D2 human explanation:
+    `docs/airline_sealed_trace_replay_slice_d_human_explanation_v01.md`.
+  - Final checkpoint:
+    `docs/airline_sealed_trace_replay_checkpoint_v01.md`.
+  - D2 and D3 add explanation and canonical closure synchronization; they do
+    not create separate runtime audits.
+  - D3 performed no all-real run.
+  - Base Airline Sealed Trace Replay v0.1 is CLOSED / PASS after D3 canonical
+    synchronization.
+  - Next gate:
+    `explicit_review_for_airline_all_real_full_stack_run_preflight`.
+
 - `auditor_tri_party_airline_live_semantic_lane_real_run_v01.log`
   - Audit status: PASS.
   - Audits the Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI PASS

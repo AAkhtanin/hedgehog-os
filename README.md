@@ -35,49 +35,64 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-Airline Tri-Party Live Semantic Lane v0.1 — REAL GEMINI PASS.
+Base Airline Sealed Trace Replay v0.1 is CLOSED / PASS.
 
-Checkpoint source:
+- The official existing sealed package was read and reconstructed without
+  rerunning the transaction.
+- The stored Verification remains `SELF_CONSISTENT_UNANCHORED`.
+- A fresh verification against the explicit committed anchor returned `PASS`.
+- Exact geometry is 19 Ledger entries, 29 dependencies, 3 Root finals,
+  9 source files, 11 critical files, and 19 Replay timeline rows.
+- Signature verification remains false.
+- Replay used no provider, network, Gemini, or real-world effect.
+- Root Attestation is absent and not required for Base Replay.
+- Root Attestation remains deferred.
+- No all-real run occurred in D3.
+- Next gate:
+  `explicit_review_for_airline_all_real_full_stack_run_preflight`.
+- This is proof-level closure, not a production claim.
 
-- Audit commit: `8f1d5d6`.
-- Audit:
-  `docs/audit_reports/auditor_tri_party_airline_live_semantic_lane_real_run_v01.log`.
-- Runner:
-  `demo/run_tri_party_airline_live_semantic_lane_v01.py`.
-- Focused tests:
-  `tests/test_tri_party_airline_live_semantic_lane_v01_runner.py`.
-- `provider_mode: real_provider`, model `gemini-2.5-flash`.
-- `semantic_actor_call_count: 12`, `real_provider_call_count: 12`,
-  `fake_provider_call_count: 0`, `network_used_count: 12`, and
-  `gemini_called_count: 12`.
-- BSEP was created before Architect and BSEP validation was PASS.
-- Four side projections were PASS: client, airline, bank, and cross-root.
-- Orchestrator, Architect, client semantic actors, airline semantic actors,
-  airline vertical child actors, bank semantic actors, the bank vertical child
-  actor, and the cross-root reviewer were PASS.
-- Strict vertical parent -> child validation dependency is preserved; child
-  actors receive parent canonical summaries, not raw parent output.
-- Runtime does not ignore LLM output: it extracts, validates, canonicalizes,
-  computes `what_runtime_used` / `what_runtime_rejected`, uses accepted
-  semantics, and records rejected semantics.
-- Provider output is not truth and provider output is not authority.
-- Secret scan passed: 65 files scanned, 0 matched secret markers.
-- The completed happy path remains mock-only: mock payment authorization, mock
-  ticket evidence, and mock PNR evidence.
-- Real airline API calls, real bank API calls, real GDS API calls, real payment,
-  real ticket, real booking, and real-world effects are all 0.
-- Next immediate gate:
-  `artifact_backed_human_airline_live_semantic_story_renderer`.
-- Next engineering preflight after story:
-  `airline_ticket_purchase_corridor_artifact_ledger_crypto_replay_preflight`.
-- Recorded engineering order only: Airline Ticket/Purchase Corridor, Airline
-  Transaction Artifact Ledger, Airline Crypto Artifact Seal, Airline Sealed
-  Trace Replay Verifier.
-- Ticket/Purchase Corridor, Transaction Artifact Ledger, Crypto Artifact Seal,
-  and Sealed Trace Replay Verifier are planned gates, not completed
-  implementations.
-- This is not production.
-- This is not public auditor final package.
+## Airline Sealed Trace Replay v0.1
+
+Base Replay verifies and deterministically reconstructs one existing sealed
+Airline trace. It does not rerun the transaction, semantic actors, or effect
+corridors.
+
+- Pure verifier:
+  `hedgehog/domains/airline/sealed_trace_replay_v01.py`
+- In-memory collector:
+  `hedgehog/domains/airline/sealed_trace_replay_collector_v01.py`
+- Explicit filesystem runner:
+  `demo/run_airline_sealed_trace_replay_v01.py`
+- Official package:
+  `.tmp/airline_crypto_artifact_seal_slice_e1/airline_crypto_artifact_seal_slice_e1_offline_905844c`
+- Committed anchor:
+  `docs/airline_crypto_artifact_seal_anchor_v01.json`
+- Official Report:
+  `docs/airline_sealed_trace_replay_slice_d_official_report_v01.json`
+- Independent audit:
+  `docs/audit_reports/auditor_airline_sealed_trace_replay_slice_d_official_replay_v01.log`
+- Human explanation:
+  `docs/airline_sealed_trace_replay_slice_d_human_explanation_v01.md`
+- Final checkpoint:
+  `docs/airline_sealed_trace_replay_checkpoint_v01.md`
+
+The accepted proof has 19 entries, 29 dependency edges, 3 Root finals, 9
+source files, 11 critical files, and 19 timeline rows. The stored report is
+unanchored; the fresh Replay-time verification is anchored `PASS`; the
+unsigned placeholder remains unverified. Model, network, and effect counts
+during Replay are all zero.
+
+```bash
+PYTHONPATH=. .venv/bin/python -m \
+  demo.run_airline_sealed_trace_replay_v01 \
+  --package-dir <explicit-package> \
+  --anchor-path <explicit-anchor> \
+  --output-path <external-report-path>
+```
+
+Base Replay is CLOSED / PASS. An all-real full-stack run requires separate
+explicit review. No all-real run occurred in D3. No production claim is made.
 
 Closed basis:
 
@@ -656,7 +671,7 @@ The architecture is based on:
 
 Core authority principle:
 
-text the vassal of my vassal is not my vassal 
+text the vassal of my vassal is not my vassal
 
 A delegated subcell may manage its own bounded local authority, but that authority does not automatically propagate upward, sideways, or outward.
 
@@ -777,7 +792,7 @@ If a needle-local Orchestrator exists, it is local to that needle or fractal cel
 
 Needle outcomes pass through the canonical execution pipeline:
 
-text NeedleExecutionResult / bounded capability output -> ResultProposal-compatible artifact / QuarantineRecord -> Post V&V -> GT / Root decision -> DRS / audit / quarantine / writeback 
+text NeedleExecutionResult / bounded capability output -> ResultProposal-compatible artifact / QuarantineRecord -> Post V&V -> GT / Root decision -> DRS / audit / quarantine / writeback
 
 Executor may call a permitted needle capability, but Root owns authority.
 
@@ -804,7 +819,7 @@ Systemic/internal needles may contain bounded local fractal cycles, but they mus
 
 The current needle outcome checkpoint proves the local canonical boundary for simulated needle outcomes:
 
-text NeedleRuntime / adapter -> ResultProposal-compatible artifact -> Post V&V -> real GTValidator runtime report -> Root-visible routing semantics -> LocalDRS Work / Quarantine / DeadEnds persistence 
+text NeedleRuntime / adapter -> ResultProposal-compatible artifact -> Post V&V -> real GTValidator runtime report -> Root-visible routing semantics -> LocalDRS Work / Quarantine / DeadEnds persistence
 
 This remains MVP/demo scope. It does not yet prove full Root-level needle planning, AVF selection over live external needles, production external API execution, global DRS, NeedleFactory, marketplace, or Internet-of-Meaning behavior.
 
@@ -867,7 +882,7 @@ Current LocalDRS status:
 
 The main auditor-facing proof is:
 
-bash python -m demo.run_canonical_pipeline_trace 
+bash python -m demo.run_canonical_pipeline_trace
 
 This trace shows the canonical Root-controlled runtime boundary by boundary:
 
@@ -904,7 +919,7 @@ Current limitations: this is a demo-runtime proof, not production OS runtime. Pr
 
 Long-term vision beyond the MVP is documented separately in:
 
-text docs/strategic_expansion_map.md 
+text docs/strategic_expansion_map.md
 
 Vision documents are strategic lighthouse documents, not implementation tasks unless explicitly promoted into the current roadmap.
 
@@ -988,23 +1003,23 @@ The direct_reuse CLI scenario demonstrates that optional RootFinalFromReuse path
 
 ## Install And Run
 
-bash python3 -m venv .venv source .venv/bin/activate python -m pip install --upgrade pip python -m pip install -e . 
+bash python3 -m venv .venv source .venv/bin/activate python -m pip install --upgrade pip python -m pip install -e .
 
 Run the focused MVP test suite:
 
-bash python -m pytest tests/test_schema_files_valid.py \   tests/test_needles_valid.py \   tests/test_time_model.py \   tests/test_candidate_vectors.py \   tests/test_avf_runtime.py \   tests/test_architect_runtime.py \   tests/test_executor_runtime.py \   tests/test_post_vv_runtime.py \   tests/test_gt_validator_runtime.py \   tests/test_drs_runtime.py \   tests/test_root_orchestrator_runtime.py \   tests/test_marenna_up_runtime.py \   tests/test_demo_certificate_runner.py 
+bash python -m pytest tests/test_schema_files_valid.py \   tests/test_needles_valid.py \   tests/test_time_model.py \   tests/test_candidate_vectors.py \   tests/test_avf_runtime.py \   tests/test_architect_runtime.py \   tests/test_executor_runtime.py \   tests/test_post_vv_runtime.py \   tests/test_gt_validator_runtime.py \   tests/test_drs_runtime.py \   tests/test_root_orchestrator_runtime.py \   tests/test_marenna_up_runtime.py \   tests/test_demo_certificate_runner.py
 
 Run the CLI demo:
 
-bash python -m demo.run_certificate_demo --scenario cold_start python -m demo.run_certificate_demo --scenario reuse python -m demo.run_certificate_demo --scenario direct_reuse 
+bash python -m demo.run_certificate_demo --scenario cold_start python -m demo.run_certificate_demo --scenario reuse python -m demo.run_certificate_demo --scenario direct_reuse
 
 Run the canonical pipeline trace:
 
-bash python -m demo.run_canonical_pipeline_trace 
+bash python -m demo.run_canonical_pipeline_trace
 
 Run the Root DAG integration smoke if present in the current branch:
 
-bash python -m demo.run_root_dag_integration_smoke 
+bash python -m demo.run_root_dag_integration_smoke
 
 ---
 
@@ -1052,7 +1067,7 @@ The MVP proves core runtime invariants, not production-scale resilience.
 
 The controlled-orchestrator lineage includes:
 
-text Intent Matrix -> Shadow Orchestrator -> Route Validator -> Guard Completeness -> Integration Gate -> Controlled Runtime Prototype 
+text Intent Matrix -> Shadow Orchestrator -> Route Validator -> Guard Completeness -> Integration Gate -> Controlled Runtime Prototype
 
 This lineage proves that Orchestrator proposals may influence Root execution only after validator and gate approval.
 
@@ -1070,7 +1085,7 @@ text Observable Zero Trust Runtime proof -> Fractal DAG Executor Core -> Canonic
 
 The important current rule:
 
-text DAG runner connects to the Root-controlled pipeline after Architect. DAG runner executes Architect PlanGraph. DAG runner returns ResultProposals / boundary artifacts. DAG runner is not Root. DAG runner does not commit output. RootOrchestrator remains final authority. 
+text DAG runner connects to the Root-controlled pipeline after Architect. DAG runner executes Architect PlanGraph. DAG runner returns ResultProposals / boundary artifacts. DAG runner is not Root. DAG runner does not commit output. RootOrchestrator remains final authority.
 
 Needle outcome routing now proves the local path from simulated NeedleRuntime output through Post V&V, real GTValidator runtime, Root-visible routing semantics, and LocalDRS persistence. Completed accepted outcomes may become Work/task_outcome records. invalid_json, schema_validation_failed, and unknown_exception route to Quarantine. contract_version_mismatch and circuit_breaker_open route to DeadEnds / blocked traces. timeout is a degraded trace, not successful Work. permission_required is needs_user / blocked trace, not a completed action.
 
@@ -3567,8 +3582,7 @@ Next engineering focus:
   `auditor_supplier_payment_shipment_release_review_wow_v1_1`.
 - CLOSED: Full Semantic E2E v0.1 WOW v1.1 alignment PASS, audit
   `auditor_full_semantic_e2e_wow_v1_1_alignment_v01`.
-- NEXT: Reviewed preflight for the next runtime step.
-- NEXT: Replay/stability proof for a BSEP 004-style run.
+- NEXT: Explicit review for the Airline all-real full-stack run preflight.
 - NEXT: Multi-domain live unknown proof and adversarial live proof.
 - LATER: DRS v0.2 expansion and AVF v0.2 expansion.
 - Supplier Payment remains the integration spine and business axis for later live evidence integration.

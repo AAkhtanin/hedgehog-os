@@ -6,7 +6,7 @@ The demo is a local proof-of-architecture, not a production service, chatbot, UI
 
 This file is a short scenario overview. The more detailed baseline contract is defined in:
 
-text specs/demo_baseline_v0_25.md 
+text specs/demo_baseline_v0_25.md
 
 The demo must preserve the current downward canonical runtime projection:
 
@@ -44,7 +44,7 @@ It must prove that the system can:
 
 Expected high-level trace:
 
-text retrieved_record_count = 0 memory_context_applied = false reuse_decision = none reuse_applied = false illegal_coercion blocked = true FinalOutput.created_by = root_orchestrator 
+text retrieved_record_count = 0 memory_context_applied = false reuse_decision = none reuse_applied = false illegal_coercion blocked = true FinalOutput.created_by = root_orchestrator
 
 ### reuse / context_only
 
@@ -68,7 +68,7 @@ Expected behavior:
 
 Important distinction:
 
-text A DRS hit is not direct reuse by itself. context_only is memory-informed execution, not RootFinalFromReuse. 
+text A DRS hit is not direct reuse by itself. context_only is memory-informed execution, not RootFinalFromReuse.
 
 ### direct_reuse
 
@@ -465,11 +465,11 @@ Scenario note:
 
 The main auditor-facing trace command is:
 
-bash python -m demo.run_canonical_pipeline_trace 
+bash python -m demo.run_canonical_pipeline_trace
 
 This trace should show the runtime as a controlled contour, not as a long-chain prompt loop:
 
-text Root authority → Orchestrator-stage → AVF / Attractor formation → Architect PlanGraph → Fractal DAG Executor → Post V&V → GT → back to Root → Root FinalOutput → DRS writeback 
+text Root authority → Orchestrator-stage → AVF / Attractor formation → Architect PlanGraph → Fractal DAG Executor → Post V&V → GT → back to Root → Root FinalOutput → DRS writeback
 
 ## Needle Outcome Routing Checkpoint
 
@@ -1690,6 +1690,43 @@ Scenario status:
 - Ticket/Purchase Corridor, Transaction Artifact Ledger, Crypto Artifact Seal,
   and Sealed Trace Replay Verifier remain future gates.
 
+## Airline Sealed Trace Replay v0.1
+
+Base Airline Sealed Trace Replay v0.1 is CLOSED / PASS.
+
+Scenario flow:
+
+```text
+existing Airline sealed transaction package
+→ explicit read-only 11-file snapshot
+→ committed expected Manifest Core hash
+→ one read-only Ledger audit
+→ fresh anchored Crypto verification
+→ deterministic 19-row Replay timeline
+→ external Replay Report
+→ independent audit
+→ human explanation
+```
+
+The original semantic transaction happened earlier and is not rerun.
+Verification Replay reads the sealed package, verifies it against the
+explicit anchor, and reconstructs the accepted Ledger-order trace. It is
+allowed because it creates no effects.
+
+Effect Replay is not implemented, not performed, and not authorized by
+verification `PASS`. Replay creates no authority, permission, action, packet,
+receipt, FinalOutput, payment, ticket, or booking.
+
+The accepted geometry is 19 Ledger entries, 29 dependency edges, 3 Root
+finals, 9 source files, 11 critical files, and 19 timeline rows. Stored
+Verification remains `SELF_CONSISTENT_UNANCHORED`; fresh Verification is
+anchored `PASS`; signature verification remains false; Root Attestation
+remains deferred. Provider, network, Gemini, and real-world-effect counts are
+all 0.
+
+No all-real run occurred in D3. The next explicit review gate is
+`explicit_review_for_airline_all_real_full_stack_run_preflight`.
+
 ## Exclusions
 
 - No real external APIs.
@@ -1722,6 +1759,6 @@ It does not prove the final Hedgehog OS product.
 
 It proves that the MVP can preserve the canonical architecture:
 
-text time-aware memory → controlled candidate vectors → AVF before Architect → AttractorPacket boundary → PlanGraph → ResultProposal-only execution → Post V&V → GT → Root-only final output → DRS writeback → quarantine-first reflection/transfer hooks 
+text time-aware memory → controlled candidate vectors → AVF before Architect → AttractorPacket boundary → PlanGraph → ResultProposal-only execution → Post V&V → GT → Root-only final output → DRS writeback → quarantine-first reflection/transfer hooks
 
 Future useful business or assistant demos must be built on top of this baseline, not by bypassing it.

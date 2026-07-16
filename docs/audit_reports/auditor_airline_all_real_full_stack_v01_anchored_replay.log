@@ -1,0 +1,298 @@
+[AUDIT IDENTITY]
+
+audit_id: auditor_airline_all_real_full_stack_v01_anchored_replay
+audit_status: PASS
+audit_mode: artifact_backed_existing_replay_report_audit_no_rerun
+audit_base_head: a701743
+anchor_publication_commit: a701743
+package_generation_base_head: 3301ce3
+implementation_base_head: a8d5036
+repair_commit: 38ad0b0
+recovery_authorization_commit: 3301ce3
+
+[REPOSITORY GUARD]
+
+HEAD: a701743
+origin/main: a701743
+HEAD/origin synchronized: true
+committed anchor present in HEAD: true
+committed generation audit present in HEAD: true
+committed tracked worktree changes before this audit: none
+owner-Replay base state: clean synchronized commit a701743
+worktree scope before this audit: one untracked Replay Report only
+staged files before this audit: 0
+audit output absent before creation: true
+Replay runner invoked during this audit: false
+
+[ACCEPTED PACKAGE]
+
+package path: .tmp/airline_all_real_full_stack_v01_recovery_38ad0b0/airline_all_real_full_stack_v01_preference_a_a8d5036_recovery_38ad0b0_r1
+source_package_ref: airline_all_real_full_stack_v01_preference_a_a8d5036_recovery_38ad0b0_r1
+package root is a non-symlink directory: true
+package is a non-symlink directory: true
+flat direct-file inventory: true
+package file count: 72
+package inventory SHA-256 digest: e8b2134542417e2258a1b76a353abc993353fe06c26530cf4b889efbe13ffa13
+generation mode: real_provider
+generation model: gemini-2.5-flash
+original real-provider calls: 12
+original network calls: 12
+original Gemini calls: 12
+original fake-provider calls: 0
+operator gate all_checks_pass: true
+every operator gate check exact true: true
+secret scan: PASS
+secret scan matched markers: 0
+accepted package changed during audit: false
+
+[COMMITTED EXTERNAL ANCHOR]
+
+anchor path: docs/airline_all_real_full_stack_crypto_anchor_v01.json
+anchor publication commit: a701743
+anchor Git blob ID: e1ca076ed1c86e9abcd140a73e1030016e280100
+anchor byte SHA-256: 54ee8e6dcceaa846ecc4bf8968b0ab26c9bcb849663a76c0cb9d01d564c694b0
+working anchor bytes equal committed HEAD bytes: true
+anchor field count: 27
+anchor ABI exact: true
+anchor_active_only_when_committed: true
+package_generation_base_head: 3301ce3
+source package ref binding: true
+source package relpath binding: true
+transaction identity binding: true
+Ledger identity binding: true
+expected Manifest Core hash: 4f6d9abe351e986abf147150a5dd4e76816430cf80bb718b50fa3536719a2472
+source-package hash: 00662506fc3afe95d619a5003b572c9c1c9475e5ba26f7759b694115d092fdfa
+chain-tail hash: 1f56be26e253f878e8d165d06a4da4430c1c4ec2e22daea1fc98c57b2f3b40fe
+verification status at publication: SELF_CONSISTENT_UNANCHORED
+anchored_pass_claimed at publication: false
+signature mode: UNSIGNED_PLACEHOLDER
+signature verified: false
+replay_allowed at publication: false
+real-world effects at publication: 0
+
+The anchor field replay_allowed: false records the historical publication-time
+state. It is not a mutable runtime permission bit and did not block Replay
+after the external anchor was committed on synchronized main.
+
+[TWO CRYPTO VERIFICATION MOMENTS]
+
+1. Stored package Verification
+
+verification status: SELF_CONSISTENT_UNANCHORED
+expected external Manifest Core hash present: false
+external anchor supplied: false
+external anchor verified: false
+signature mode: UNSIGNED_PLACEHOLDER
+signature verified: false
+verification_errors: empty
+stored Verification modified by Replay: false
+
+2. Fresh committed-anchor Verification
+
+verification status: PASS
+expected external Manifest Core hash supplied: true
+external anchor supplied: true
+external anchor verified: true
+Manifest Core hash equals expected anchor hash: true
+stored Verification contract verified: true
+fresh anchored Verification contract verified: true
+signature mode: UNSIGNED_PLACEHOLDER
+signature verified: false
+verification_errors: empty
+
+The stored unanchored Verification was not rewritten or relabeled as anchored
+PASS. The fresh verification moment used the committed external anchor.
+
+[REPLAY RESULT]
+
+Replay status: PASS
+Replay version: airline_sealed_trace_replay_v01
+Replay ID: airline_sealed_trace_replay_v01:tri_airline_purchase:PAR-LIM:2026-08-12:client_001:4f6d9abe351e986abf147150a5dd4e76816430cf80bb718b50fa3536719a2472
+transaction ID: tri_airline_purchase:PAR-LIM:2026-08-12:client_001
+Ledger ID: airline_transaction_artifact_ledger:offer:mock_airline_al:PAR-LIM:001
+source package ref: airline_all_real_full_stack_v01_preference_a_a8d5036_recovery_38ad0b0_r1
+Manifest Core hash: 4f6d9abe351e986abf147150a5dd4e76816430cf80bb718b50fa3536719a2472
+expected Manifest Core hash: 4f6d9abe351e986abf147150a5dd4e76816430cf80bb718b50fa3536719a2472
+source files: 9
+critical package files: 11
+Ledger entries: 19
+dependency edges: 29
+Root finals: 3
+ClientRoot finals: 1
+AirlineRoot finals: 1
+BankRoot finals: 1
+timeline rows: 19
+Ledger audit count: 1
+anchored verification count: 1
+post-Replay snapshot provider call count: 1
+
+The post-Replay snapshot provider call count is the one local read-only
+package-snapshot observer callback. It is not an LLM, provider, or network
+call.
+
+[RECONSTRUCTED TIMELINE]
+
+Columns:
+replay_index | ledger_index | artifact_type | artifact_id | root_owner | dependency_count | root_final
+
+0 | 0 | AirlineTransactionScopeV01 | airline_transaction_scope:tri_airline_purchase:PAR-LIM:2026-08-12:client_001 | transaction_scope:non_authoritative | 0 | no
+1 | 1 | ClientBSEPProjectionV01 | client_bsep_projection | bsep_side:client | 1 | no
+2 | 2 | AirlineBSEPProjectionV01 | airline_bsep_projection | bsep_side:airline | 1 | no
+3 | 3 | BankBSEPProjectionV01 | bank_bsep_projection | bsep_side:bank | 1 | no
+4 | 4 | CrossRootAdvisoryBSEPProjectionV01 | cross_root_bsep_projection | bsep_side:cross_root_advisory | 1 | no
+5 | 5 | ValidatedAirlineSemanticSelectionEvidenceV01 | canonical_selection:offer:mock_airline_al:PAR-LIM:001 | runtime_canonicalization:advisory | 1 | no
+6 | 6 | ClientRootOfferSelectionDecisionV01 | client_root_offer_selection_decision:offer:mock_airline_al:PAR-LIM:001 | root:client_os_001 | 1 | no
+7 | 7 | AirlineRootSelectedOfferResolutionV01 | airline_root_selected_offer_resolution:offer:mock_airline_al:PAR-LIM:001 | root:mock_airline_al | 1 | no
+8 | 8 | AirlineOfferPacketV01 | airline_offer_packet:semantic_causal:001 | root:mock_airline_al | 1 | no
+9 | 9 | AirlineHoldCommitPacketV01 | airline_hold_commit_packet:semantic_causal:001 | root:mock_airline_al | 1 | no
+10 | 10 | AirlineOfferHoldReceiptV01 | offer_hold_receipt:mock_airline_al:001 | root:mock_airline_al | 1 | no
+11 | 11 | ClientPurchaseIntentV01 | client_purchase_intent:client_001:001 | root:client_os_001 | 1 | no
+12 | 12 | BankPaymentAuthorizationRefV01 | bank_payment_authorization_ref:mock_bank_a:001 | root:mock_bank_a | 1 | no
+13 | 13 | AirlineTicketIssueIntentV01 | airline_ticket_issue_commit_packet:mock_airline_al:001 | root:mock_airline_al | 3 | no
+14 | 14 | MockTicketReceiptV01 | mock_ticket_receipt:mock_airline_al:001 | root:mock_airline_al | 1 | no
+15 | 15 | MockPurchaseReceiptV01 | mock_purchase_receipt:client_001:001 | root:client_os_001 | 3 | no
+16 | 16 | ClientRootFinalV01 | client_root_final:001 | root:client_os_001 | 3 | yes: ClientRoot
+17 | 17 | AirlineRootFinalV01 | airline_root_final:001 | root:mock_airline_al | 6 | yes: AirlineRoot
+18 | 18 | BankRootFinalV01 | bank_root_final:001 | root:mock_bank_a | 1 | yes: BankRoot
+
+timeline row field surface exact: true
+replay indexes contiguous 0 through 18: true
+Ledger indexes contiguous 0 through 18: true
+artifact-type sequence exact: true
+unique artifact IDs: 19
+artifact hashes valid lowercase SHA-256: true
+dependency counts match depends_on: true
+all dependencies refer to earlier rows: true
+self-dependencies: 0
+missing dependencies: 0
+forward dependencies: 0
+total dependency count: 29
+cross-root advisory is a fourth Root: false
+selected Offer A identity coherent: true
+
+[ZERO-RERUN / ZERO-EFFECT BOUNDARY]
+
+transaction_rerun_count: 0
+semantic_rerun_count: 0
+corridor_rerun_count: 0
+ledger_recollection_count: 0
+crypto_collection_count: 0
+provider_call_count: 0
+network_call_count: 0
+gemini_call_count: 0
+replay_created_authority_count: 0
+replay_created_permission_count: 0
+replay_created_action_count: 0
+replay_created_packet_count: 0
+replay_created_receipt_count: 0
+replay_created_final_output_count: 0
+real_world_effects_count: 0
+
+Gemini called during Replay: false
+provider called during Replay: false
+network used during Replay: false
+semantics rerun: false
+Corridor rerun: false
+Ledger recollected: false
+Crypto recollected: false
+authority created by Replay: false
+permission created by Replay: false
+action created by Replay: false
+packet created by Replay: false
+receipt created by Replay: false
+FinalOutput created by Replay: false
+real-world effect created by Replay: false
+
+[INTEGRITY]
+
+stored_verification_contract_verified: true
+fresh_anchored_verification_contract_verified: true
+external_anchor_supplied: true
+external_anchor_verified: true
+integrity_verified: true
+continuity_verified: true
+ledger_verified: true
+manifest_binding_verified: true
+artifact_hashes_verified: true
+chain_order_verified: true
+dependency_graph_verified: true
+root_ownership_verified: true
+authority_evidence_boundaries_verified: true
+packet_lineage_verified: true
+receipt_lineage_verified: true
+transaction_identity_verified: true
+source_refs_verified: true
+secret_boundary_verified: true
+source_bytes_unchanged: true
+critical_package_bytes_unchanged: true
+timeline_complete: true
+root_attestation_required: false
+root_attestation_present: false
+Replay Report public validator: PASS
+Replay Report exact field surface: PASS
+Replay Report verification_errors: empty
+
+[HASHES]
+
+Replay Report SHA-256: 7ceaa5400ef6b35fb1e39f2bdc739a68cb9bb4373d82e7586feee901ef414b57
+anchor SHA-256: 54ee8e6dcceaa846ecc4bf8968b0ab26c9bcb849663a76c0cb9d01d564c694b0
+generation audit SHA-256: faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e
+operator gate SHA-256: be47127ea4803d5d71d7579c2e2f27e899f4662c90b9db759114632b87d72773
+terminal-safe generation log SHA-256: 773e1c7c5bb2eccdbaca1e3a45b01f632d09bb942fabc5d98b1e13ee29d82584
+accepted package 72-file inventory digest: e8b2134542417e2258a1b76a353abc993353fe06c26530cf4b889efbe13ffa13
+historical failed package 69-file inventory digest: e61b4bb0b1ddb88e3f01b768652807558b13b14d62c350540389830dded47bd6
+
+11 critical package file SHA-256 values:
+
+airline_transaction_artifact_ledger.json: ff31c776bf0ff43cd478e4ae94ba0a7b63a6d2f6de295d7ac13915d739722e61
+summary.json: bb6d64340b4cb36f809cd426066e930eabb1f2cf0986e8065ae8f83eb553dd16
+secret_scan.json: c2ddc66f3baa0c4f0cc56b4b23d5b771d56cd5714b49918674064c6b718bfb66
+semantic_to_contract_causal_run.json: e8bfa8da15190a67a6b95c23ca947f5460bfffc05070df78cb64b47c3af5916c
+semantic_to_contract_bridge.json: ce8ddeb20deb3721b4a4e19f7dd6a7bd13d3ebd1c66c18156d9614108aa865f2
+integrated_deterministic_airline_summary.json: 3bd7ea12f57b754608899fcf80975d67233024767fdc05d36701786fcbd6764c
+tri_party_airline_bsep_packet.json: 7256f58de63b325beaf6334e1bad9f397fa707a8759c4aad8e960cae207e96a9
+tri_party_airline_bsep_validation.json: c2dce64ae36c2857a98d7302acc1bfc7475c3c17b277100c93be9abcefc76903
+tri_party_airline_bsep_side_projections.json: 73d75c054389a805589360e5327cd459a522e0b41f9cd2f1fea41f9a871f5521
+airline_crypto_artifact_seal_manifest_v01.json: c1693a2db7d59acc6bcb4c26878d7cb68dcae9cc192db79e59ecd8515199fda4
+airline_crypto_artifact_seal_verification_v01.json: ab17dcd2219a8366d1d06753384a06655b8725fdc25b1e9b50a7f86b618a9435
+
+[PRIOR FAIL-CLOSED HISTORY]
+
+first official all-real package failed closed: true
+historical failed package remains preserved: true
+historical failed package file count: 69
+historical failed package changed during this audit: false
+historical failed package promoted: false
+anchor created from historical failed package: false
+Replay created from historical failed package: false
+accepted recovery package is distinct: true
+
+The accepted recovery package is not a repair or rewrite of the historical
+failed package.
+
+[BOUNDARIES / NON-CLAIMS]
+
+real ticket issued: false
+real booking created: false
+real payment executed: false
+signer authentication claimed: false
+PKI claimed: false
+non-repudiation claimed: false
+Root Attestation implemented: false
+Root Attestation required for Base Replay: false
+Root Attestation status: deferred
+production status: not production
+semantic truth proven: false
+business truth proven: false
+
+Replay proves deterministic integrity and continuity reconstruction over the
+accepted sealed evidence. It does not prove semantic truth and does not
+authorize or create external effects.
+
+[NEXT STEP]
+
+owner-terminal Replay already passed: true
+Replay Report and this audit should be committed and pushed together: true
+next task: artifact-backed human explanation
+presentation/showcase follows human explanation: true
+additional Gemini run required: false

@@ -1727,6 +1727,52 @@ all 0.
 No all-real run occurred in D3. The next explicit review gate is
 `explicit_review_for_airline_all_real_full_stack_run_preflight`.
 
+## Airline All-Real Evidence Showcase v0.1 Scenario Checkpoint
+
+The accepted Airline scenario is:
+
+```text
+one fixed mock travel task
+-> twelve real Gemini advisory actors
+-> three sovereign Roots
+-> Offer A
+-> five-phase mock Corridor
+-> nineteen-entry Ledger
+-> Crypto Seal
+-> committed Anchor
+-> zero-rerun Replay
+-> Evidence Showcase
+```
+
+Exact accepted identity:
+
+- route: PAR to LIM;
+- travel date: `2026-08-12`;
+- semantic profile: Preference A;
+- transaction ID:
+  `tri_airline_purchase:PAR-LIM:2026-08-12:client_001`;
+- selected offer: `offer:mock_airline_al:PAR-LIM:001`;
+- ClientRoot: `root:client_os_001`;
+- AirlineRoot: `root:mock_airline_al`;
+- BankRoot: `root:mock_bank_a`.
+
+The twelve real Gemini actors produced bounded advisory semantic evidence.
+They did not become Root or create authority. ClientRoot, AirlineRoot, and
+BankRoot remained separate; the cross-root reviewer remained advisory. The
+deterministic Corridor passed once, the Ledger recorded 19 entries / 29 edges /
+3 Root finals, Crypto sealed 9 source files and 11 critical files, and Replay
+reconstructed 19 rows without rerunning semantics or effects.
+
+The committed Showcase makes the accepted evidence reviewable through seven
+deliverables and a 24-claim evidence matrix. It creates no new runtime
+evidence. This scenario demonstrates architecture coordination, not a real
+travel transaction: no real ticket, booking, payment, airline/bank/GDS
+integration, legal completion, production claim, PKI, signer authentication,
+or Root Attestation is asserted. Real-world effects are 0.
+
+The Airline proof-level program is `CLOSED / PASS`. The next gate is
+`airline_all_real_program_v01_context_dump_before_master_roadmap_review`.
+
 ## Exclusions
 
 - No real external APIs.

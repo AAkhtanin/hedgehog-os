@@ -5,6 +5,21 @@ This folder stores milestone audit logs for Hedgehog OS.
 These reports are historical development artifacts, not runtime inputs.
 They document proof checkpoints, test runs, auditor-facing traces, and architectural validation logs.
 
+## Airline All-Real Evidence Showcase v0.1 — Closed Audit Chain
+
+All three audits are `PASS`:
+
+1. `auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log`
+   proves the accepted real-provider package and external Anchor publication.
+2. `auditor_airline_all_real_full_stack_v01_anchored_replay.log` proves fresh
+   committed-anchor Replay `PASS` with all rerun and effect counters at 0.
+3. `auditor_airline_all_real_evidence_showcase_v01.log` proves the committed
+   seven-deliverable Showcase reproduced byte-for-byte, 7 / 7.
+
+Raw prompts, raw provider responses, and credentials are not embedded. Local
+sealed evidence is verified by committed audit; no public `.tmp` link is
+claimed.
+
 Current reports:
 
 - `auditor_airline_sealed_trace_replay_slice_d_official_replay_v01.log`

@@ -4858,6 +4858,38 @@ The next gate is
 `explicit_review_for_airline_all_real_full_stack_run_preflight`. No all-real
 run occurs as part of Replay closure.
 
+## 20.5 Airline All-Real Evidence Showcase v0.1 Closure Checkpoint
+
+The Airline all-real proof-level program is `CLOSED / PASS`.
+
+Twelve real Gemini actors produced bounded advisory semantic evidence. They
+did not become Root or gain authority. ClientRoot, AirlineRoot, and BankRoot
+retained separate sovereign authority, and the cross-root reviewer remained
+advisory rather than becoming a fourth Root.
+
+One five-phase deterministic Corridor completed. One causal Ledger recorded
+19 entries, 29 dependency edges, and 3 Root finals. Crypto sealed exactly 9
+source files and 11 critical files. The generation-time stored Verification
+remained `SELF_CONSISTENT_UNANCHORED`; a separately committed external Anchor
+enabled a fresh anchored Verification `PASS` without rewriting the stored
+Verification.
+
+Base Replay reconstructed 19 rows with transaction, semantic, and Corridor
+reruns at 0; Ledger and Crypto recollections at 0; provider, network, and
+Gemini calls at 0; and real-world effects at 0. The seven-deliverable Showcase
+made this accepted evidence reviewable without creating new runtime evidence.
+Its independent audit passed and reproduced all 7 deliverables byte-for-byte.
+
+The closed implementation is an Airline-domain applied proof. Domain-specific
+Airline code is not automatically universal Hedgehog OS kernel ABI. Any
+future extraction into reusable domain-neutral contracts requires separate
+Master DeepTech Completion Roadmap review. This checkpoint neither authorizes
+that extraction nor requires every future domain to repeat the full
+Airline-specific closure program.
+
+The next gate is
+`airline_all_real_program_v01_context_dump_before_master_roadmap_review`.
+
 ## 21. Legacy Code Position
 
 Legacy code is donor/reference only.

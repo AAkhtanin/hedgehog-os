@@ -1197,3 +1197,33 @@ signature verification false. Root Attestation remains absent and deferred.
 Provider, network, Gemini, and real-world-effect counts are all 0. D3 performs
 no all-real run. The next gate is
 `explicit_review_for_airline_all_real_full_stack_run_preflight`.
+
+Airline All-Real Evidence Chain and Showcase Invariants:
+
+1. LLM evidence is advisory; it does not become Root authority.
+2. ClientRoot, AirlineRoot, and BankRoot remain sovereign.
+3. Cross-root advisory is not a fourth Root.
+4. A receipt is evidence, not permission.
+5. Ledger records trace; it does not authorize, prove truth, or execute.
+6. Crypto proves declared integrity and continuity, not semantic truth.
+7. Stored unanchored Verification must not be rewritten as anchored `PASS`.
+8. The external Anchor must be separately committed before fresh anchored
+   `PASS`.
+9. `signature_verified: false` must remain visible.
+10. Replay reconstructs; it does not rerun semantics or effects.
+11. Replay cannot create authority, permission, action, packet, receipt, or
+    FinalOutput.
+12. Historical `FAIL_CLOSED` evidence cannot be repaired or promoted in place.
+13. Showcase claims require committed source evidence, SHA-256, and commit
+    identity.
+14. Showcase creates no new runtime evidence.
+15. Direct `.tmp` evidence cannot be represented as a public repository link.
+16. Airline domain integration is not automatic universal-kernel promotion.
+17. No real ticket, booking, payment, or production readiness is claimed.
+
+The closed Airline all-real chain preserves exact geometry `12 / 3 / 19 / 29 /
+3 / 9 / 11 / 19 / 0`, generation-time stored Verification
+`SELF_CONSISTENT_UNANCHORED`, fresh anchored Verification `PASS`, and Showcase
+deterministic reproduction 7 / 7. Root Attestation remains deferred. The next
+gate is
+`airline_all_real_program_v01_context_dump_before_master_roadmap_review`.

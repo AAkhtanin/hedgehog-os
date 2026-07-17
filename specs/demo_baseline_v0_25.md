@@ -2127,6 +2127,55 @@ storage or execution service. Root Attestation remains an optional deferred
 profile. No all-real run occurred in D3. The next gate is
 `explicit_review_for_airline_all_real_full_stack_run_preflight`.
 
+## Airline All-Real Evidence Showcase v0.1 Closure Baseline
+
+The complete Airline proof-level program is `CLOSED / PASS`.
+
+Accepted scenario identity:
+
+- route: PAR to LIM;
+- date: `2026-08-12`;
+- semantic profile: Preference A;
+- transaction:
+  `tri_airline_purchase:PAR-LIM:2026-08-12:client_001`;
+- selected offer: `offer:mock_airline_al:PAR-LIM:001`;
+- Roots: `root:client_os_001`, `root:mock_airline_al`, and
+  `root:mock_bank_a`.
+
+Exact closure geometry is 12 real Gemini actors / 3 sovereign Roots / 19
+Ledger entries / 29 dependency edges / 3 Root finals / 9 Crypto source files /
+11 critical files / 19 Replay rows / 0 real-world effects.
+
+Closure commits are:
+
+- package generation: `3301ce3`;
+- Anchor publication: `a701743`;
+- anchored Replay audit: `ec50c1f`;
+- Human Story: `a562c47`;
+- Showcase: `4b64598`;
+- Showcase audit: `05d1c10`.
+
+Committed evidence paths:
+
+- `docs/airline_all_real_full_stack_human_story_v01.md`;
+- `docs/airline_all_real_full_stack_crypto_anchor_v01.json`;
+- `docs/airline_all_real_full_stack_replay_report_v01.json`;
+- `docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log`;
+- `docs/audit_reports/auditor_airline_all_real_full_stack_v01_anchored_replay.log`;
+- `docs/audit_reports/auditor_airline_all_real_evidence_showcase_v01.log`;
+- `docs/airline_all_real_evidence_showcase_checkpoint_v01.md`.
+
+The seven Showcase deliverables are the generated README, PPTX, main-deck
+PDF, executive one-pager PDF, technical appendix PDF, claim-evidence matrix,
+and SHA256SUMS under
+`docs/showcase/airline_all_real_full_stack_v01/`. Independent deterministic
+reproduction matched 7 / 7 deliverables byte-for-byte.
+
+The first failed all-real package remains preserved and was not promoted.
+This closure claims no real connector, payment, booking, ticket, legal
+transaction, or production readiness. The next gate is
+`airline_all_real_program_v01_context_dump_before_master_roadmap_review`.
+
 The current priority is the applied Root-controlled canonical path, not
 self-improvement. Marennya and UP are deferred until mature multi-domain,
 fractal-coupling, DRS-bridge, chaos/failure, and production-boundary evidence

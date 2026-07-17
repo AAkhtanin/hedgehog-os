@@ -35,22 +35,52 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-Base Airline Sealed Trace Replay v0.1 is CLOSED / PASS.
+Hedgehog OS Airline All-Real Evidence Showcase v0.1 is `CLOSED / PASS`.
 
-- The official existing sealed package was read and reconstructed without
-  rerunning the transaction.
-- The stored Verification remains `SELF_CONSISTENT_UNANCHORED`.
-- A fresh verification against the explicit committed anchor returned `PASS`.
-- Exact geometry is 19 Ledger entries, 29 dependencies, 3 Root finals,
-  9 source files, 11 critical files, and 19 Replay timeline rows.
-- Signature verification remains false.
-- Replay used no provider, network, Gemini, or real-world effect.
-- Root Attestation is absent and not required for Base Replay.
-- Root Attestation remains deferred.
-- No all-real run occurred in D3.
-- Next gate:
-  `explicit_review_for_airline_all_real_full_stack_run_preflight`.
-- This is proof-level closure, not a production claim.
+- The all-real generation, committed Anchor, anchored Replay, Human Story,
+  seven-deliverable Showcase, and independent Showcase audit are closed.
+- Exact geometry is 12 Gemini actors / 3 Roots / 19 Ledger entries / 29 edges /
+  3 Root finals / 9 Crypto sources / 11 critical files / 19 Replay rows / 0
+  effects.
+- The next gate is
+  `airline_all_real_program_v01_context_dump_before_master_roadmap_review`.
+- No further Airline implementation gate is opened by this checkpoint.
+
+## Hedgehog OS Airline All-Real Evidence Showcase v0.1 — CLOSED / PASS
+
+Hedgehog OS separates bounded LLM reasoning from Root authority, then
+preserves the accepted mock decision path as deterministic, anchored,
+replayable, and independently reviewable evidence.
+
+**12 Gemini / 3 Roots / 19 Ledger entries / 29 edges / 3 Root finals / 9
+Crypto sources / 11 critical files / 19 Replay rows / 0 effects**
+
+- Status: `CLOSED / PASS`.
+- Showcase commit: `4b64598`.
+- Showcase audit commit: `05d1c10`.
+- [Showcase directory](docs/showcase/airline_all_real_full_stack_v01/)
+- [Executive one-pager](docs/showcase/airline_all_real_full_stack_v01/executive_one_pager_v01.pdf)
+- [Main PDF](docs/showcase/airline_all_real_full_stack_v01/hedgehog_os_airline_all_real_showcase_v01.pdf)
+- [PPTX](docs/showcase/airline_all_real_full_stack_v01/hedgehog_os_airline_all_real_showcase_v01.pptx)
+- [Technical appendix](docs/showcase/airline_all_real_full_stack_v01/technical_appendix_v01.pdf)
+- [Claim-evidence matrix](docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json)
+- [Human Story](docs/airline_all_real_full_stack_human_story_v01.md)
+- [Final checkpoint](docs/airline_all_real_evidence_showcase_checkpoint_v01.md)
+
+The generation-time stored Verification remains
+`SELF_CONSISTENT_UNANCHORED`. A separately committed external Anchor enabled a
+fresh anchored Verification `PASS`; it did not rewrite the stored report.
+
+This is mock proof-level evidence: not a real ticket, booking, payment, legal
+transaction, production integration, signer-authentication proof, PKI, or
+Root Attestation. Crypto proves declared integrity and continuity, not
+semantic truth; Replay does not authorize effects.
+
+Verify the generated package from its directory with:
+
+```bash
+sha256sum -c SHA256SUMS
+```
 
 ## Airline Sealed Trace Replay v0.1
 

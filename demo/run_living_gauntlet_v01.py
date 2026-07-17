@@ -24,15 +24,29 @@ from hedgehog.kernel.integrity_replay_v01 import (
     build_canonical_artifact_ref_v01,
     build_default_seal_profile_v01,
     canonical_json_bytes_v01,
+    domain_separated_sha256_hex_v01,
     replay_verification_result_to_plain_dict_v01,
     seal_verification_result_to_plain_dict_v01,
     verify_artifact_manifest_v01,
     verify_artifact_replay_v01,
 )
+from hedgehog.kernel.root_signer_isolation_v01 import (
+    STATUS_BLOCKED_FAIL_CLOSED as SIGNER_STATUS_BLOCKED,
+    STATUS_PASS as SIGNER_STATUS_PASS,
+    build_root_owned_commitment_v01,
+    build_trusted_root_key_set_v01,
+    generate_root_signer_capability_v01,
+    root_owned_commitment_to_plain_dict_v01,
+    root_signature_to_plain_dict_v01,
+    root_signature_verification_result_to_plain_dict_v01,
+    sign_root_owned_commitment_v01,
+    trusted_root_key_set_to_plain_dict_v01,
+    verify_root_signature_v01,
+)
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v0.2"
+RUNNER_VERSION = "v0.3"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -91,11 +105,22 @@ _ACTIVE_ACT_SOURCES = {
         "demo.run_living_gauntlet_v01",
         "collect_generic_integrity_replay_gauntlet_act_v01",
     ),
+    "root_signer_isolation_conformance": (
+        "demo.run_living_gauntlet_v01",
+        "collect_root_signer_isolation_gauntlet_act_v01",
+    ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
+_EXECUTED_RUNTIME_ACT_IDS = (
+    "airline_deterministic_transaction_runtime",
+    "all_layers_invariant_super_smoke",
+    "generic_integrity_replay",
+)
+_EXECUTED_CONFORMANCE_ACT_IDS = (
+    "root_signer_isolation_conformance",
+)
 _EVIDENCE_ONLY_ACT_IDS = ("airline_all_real_frozen_reference",)
 _PLANNED_ACT_IDS = (
-    "root_signer_isolation_conformance",
     "semantic_work_contract",
     "domain_neutral_kernel_abi",
     "causal_consumption",
@@ -108,7 +133,6 @@ _PLANNED_ACT_IDS = (
 )
 _PLANNED_SEAM_IDS = (
     "generic_integrity_replay_adapter",
-    "root_signer_isolation_conformance",
     "supplier_water_filter_abi_adapter",
     "transition_registry",
     "root_decision_kernel",
@@ -163,6 +187,25 @@ _CURRENT_SEAMS = {
         "hedgehog.kernel.integrity_replay_v01",
         "verify_artifact_replay_v01",
     ),
+    "root_signer_isolation_conformance": (
+        "hedgehog.kernel.root_signer_isolation_v01",
+        "verify_root_signature_v01",
+    ),
+}
+_CURRENT_SEAM_STATUSES = {
+    "deterministic_airline_reference_collector": STATUS_ACTIVE,
+    "all_layers_invariant_super_smoke_collector": STATUS_ACTIVE,
+    "airline_transaction_artifact_ledger_reference": STATUS_REFERENCE_ONLY,
+    "airline_crypto_artifact_seal_reference": STATUS_REFERENCE_ONLY,
+    "airline_sealed_trace_replay_reference": STATUS_REFERENCE_ONLY,
+    "core_context_packets": STATUS_ACTIVE,
+    "core_structured_rationale": STATUS_ACTIVE,
+    "core_semantic_reasoning_adapter": STATUS_ACTIVE,
+    "core_action_commit_packet": STATUS_ACTIVE,
+    "core_mock_connector_sandbox": STATUS_ACTIVE,
+    "core_fractal_fulfillment": STATUS_ACTIVE,
+    "generic_integrity_replay_core": STATUS_ACTIVE,
+    "root_signer_isolation_conformance": STATUS_ACTIVE,
 }
 
 
@@ -213,6 +256,7 @@ _COUNTER_FIELD_NAMES = frozenset(
         "planned_act_count",
         "planned_executed_count",
         "real_world_effects_count",
+        "root_signer_isolation_execution_count",
     }
 )
 
@@ -282,7 +326,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("manifest_status", "ACTIVE_GATE1_G1A1"),
+        ("manifest_status", "ACTIVE_GATE1_G1A2"),
     ):
         if manifest.get(key) != expected:
             errors.append(f"completion_manifest_value_mismatch:{key}")
@@ -370,9 +414,10 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
         "statement",
     }
     class_to_ids = {
-        "EXECUTED_RUNTIME": set(active_ids),
-        STATUS_EVIDENCE_ONLY: set(evidence_ids),
-        STATUS_PLANNED_NOT_ACTIVE: set(planned_ids),
+        "EXECUTED_RUNTIME": set(_EXECUTED_RUNTIME_ACT_IDS),
+        "EXECUTED_CONFORMANCE": set(_EXECUTED_CONFORMANCE_ACT_IDS),
+        STATUS_EVIDENCE_ONLY: set(_EVIDENCE_ONLY_ACT_IDS),
+        STATUS_PLANNED_NOT_ACTIVE: set(_PLANNED_ACT_IDS),
     }
     if isinstance(claims, list):
         for claim in claims:
@@ -385,7 +430,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
             act_ids = claim.get("act_ids")
             if claim_class not in class_to_ids:
                 errors.append(f"public_claim_class_invalid:{claim_id}")
-            if not _is_string_list(act_ids):
+            if not act_ids or not _is_string_list(act_ids):
                 errors.append(f"public_claim_act_ids_invalid:{claim_id}")
             elif claim_class in class_to_ids and not set(act_ids).issubset(
                 class_to_ids[claim_class]
@@ -416,7 +461,7 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_integration_seam_index_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("index_status", "ACTIVE_GATE1_G1A1"),
+        ("index_status", "ACTIVE_GATE1_G1A2"),
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
@@ -442,8 +487,8 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
             }:
                 errors.append(f"seam_status_unknown:{seam_id}")
             if seam_id in _CURRENT_SEAMS:
-                if status == STATUS_PLANNED_NOT_ACTIVE:
-                    errors.append(f"current_seam_marked_planned:{seam_id}")
+                if status != _CURRENT_SEAM_STATUSES[seam_id]:
+                    errors.append(f"current_seam_status_mismatch:{seam_id}")
                 if (
                     seam.get("source_module"), seam.get("source_symbol")
                 ) != _CURRENT_SEAMS[seam_id]:
@@ -938,6 +983,216 @@ def collect_generic_integrity_replay_gauntlet_act_v01(
         )
 
 
+def _collect_root_signer_isolation_fixture_metrics_v01() -> dict[str, int]:
+    transaction_id = "txn:fixture:root_signer_isolation:001"
+    rows = (
+        (
+            "root:client_os_001",
+            "commitment:fixture:client:001",
+            "scope:client_owned",
+            "fixture:root_owned:client",
+        ),
+        (
+            "root:mock_airline_al",
+            "commitment:fixture:airline:001",
+            "scope:airline_owned",
+            "fixture:root_owned:airline",
+        ),
+        (
+            "root:mock_bank_a",
+            "commitment:fixture:bank:001",
+            "scope:bank_owned",
+            "fixture:root_owned:bank",
+        ),
+    )
+    capabilities = tuple(
+        generate_root_signer_capability_v01(root_id=row[0]) for row in rows
+    )
+    trusted_key_set = build_trusted_root_key_set_v01(
+        capabilities=capabilities
+    )
+    manifest_hash = domain_separated_sha256_hex_v01(
+        domain="hedgehog.kernel.root_signer_fixture_manifest.v01",
+        payload=canonical_json_bytes_v01(
+            {
+                "fixture_id": "root_signer_isolation_conformance",
+                "transaction_id": transaction_id,
+                "root_count": 3,
+                "commitment_count": 3,
+            }
+        ),
+    )
+    commitments = tuple(
+        build_root_owned_commitment_v01(
+            commitment_id=row[1],
+            transaction_id=transaction_id,
+            owner_root_id=row[0],
+            commitment_scope=row[2],
+            artifact_hash=domain_separated_sha256_hex_v01(
+                domain="hedgehog.kernel.root_signer_fixture_artifact.v01",
+                payload=canonical_json_bytes_v01(
+                    {"fixture_label": row[3]}
+                ),
+            ),
+            manifest_hash=manifest_hash,
+            key_id=capability.key_id,
+        )
+        for row, capability in zip(rows, capabilities)
+    )
+    signatures = tuple(
+        sign_root_owned_commitment_v01(
+            capability=capability,
+            trusted_key_set=trusted_key_set,
+            commitment=commitment,
+        )
+        for capability, commitment in zip(capabilities, commitments)
+    )
+    own_results = tuple(
+        verify_root_signature_v01(
+            trusted_key_set=trusted_key_set,
+            commitment=commitment,
+            signature=signature,
+        )
+        for commitment, signature in zip(commitments, signatures)
+    )
+    own_signature_pass_count = sum(
+        result.verification_status == SIGNER_STATUS_PASS
+        and result.root_isolation_verified
+        for result in own_results
+    )
+
+    cross_root_signing_blocked_count = 0
+    for capability in capabilities:
+        for commitment in commitments:
+            if capability.root_id == commitment.owner_root_id:
+                continue
+            try:
+                sign_root_owned_commitment_v01(
+                    capability=capability,
+                    trusted_key_set=trusted_key_set,
+                    commitment=commitment,
+                )
+            except ValueError as exc:
+                if (
+                    exc.args != ("signer_root_mismatch",)
+                    or exc.__cause__ is not None
+                ):
+                    raise ValueError("cross_root_signing_reason_invalid") from None
+                cross_root_signing_blocked_count += 1
+            else:
+                raise ValueError("cross_root_signing_not_blocked")
+
+    cross_root_verification_blocked_count = 0
+    for signature in signatures:
+        for commitment in commitments:
+            if signature.owner_root_id == commitment.owner_root_id:
+                continue
+            result = verify_root_signature_v01(
+                trusted_key_set=trusted_key_set,
+                commitment=commitment,
+                signature=signature,
+            )
+            expected_errors = (
+                "signature_owner_root_mismatch",
+                "signature_key_id_mismatch",
+                "signature_contract_invalid",
+                "commitment_hash_mismatch",
+                "root_isolation_failed",
+            )
+            if (
+                result.verification_status != SIGNER_STATUS_BLOCKED
+                or result.signature_verified
+                or result.root_isolation_verified
+                or result.verification_errors != expected_errors
+            ):
+                raise ValueError(
+                    "cross_root_verification_reason_invalid"
+                ) from None
+            cross_root_verification_blocked_count += 1
+
+    projection_bundle = {
+        "trusted_key_set": trusted_root_key_set_to_plain_dict_v01(
+            trusted_key_set
+        ),
+        "commitments": [
+            root_owned_commitment_to_plain_dict_v01(item)
+            for item in commitments
+        ],
+        "signatures": [
+            root_signature_to_plain_dict_v01(item) for item in signatures
+        ],
+        "verification_results": [
+            root_signature_verification_result_to_plain_dict_v01(item)
+            for item in own_results
+        ],
+    }
+    if b"private" in canonical_json_bytes_v01(projection_bundle).lower():
+        raise ValueError("private_material_exposed")
+
+    metrics = {
+        "capability_count": len(capabilities),
+        "own_signature_pass_count": own_signature_pass_count,
+        "cross_root_signing_blocked_count": cross_root_signing_blocked_count,
+        "cross_root_verification_blocked_count": (
+            cross_root_verification_blocked_count
+        ),
+        "private_key_serialization_count": 0,
+        "file_write_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+    expected = {
+        "capability_count": 3,
+        "own_signature_pass_count": 3,
+        "cross_root_signing_blocked_count": 6,
+        "cross_root_verification_blocked_count": 6,
+        "private_key_serialization_count": 0,
+        "file_write_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+    if metrics != expected:
+        raise ValueError("root_signer_fixture_metrics_invalid")
+    return metrics
+
+
+def collect_root_signer_isolation_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    act_id = "root_signer_isolation_conformance"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        _collect_root_signer_isolation_fixture_metrics_v01()
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("root_signer_isolation_conformance_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
+
+
 def _failed_act_result(*, act_id: str, reason: str) -> LivingGauntletActResultV01:
     source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
     return LivingGauntletActResultV01(
@@ -1024,6 +1279,12 @@ def _derive_report_counters_v01(
             for row in planned_rows
         ),
         "real_world_effects_count": _aggregate_real_world_effects_count(active_rows),
+        "root_signer_isolation_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[3]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
     }
 
 
@@ -1046,6 +1307,7 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     airline_calls = 0
     invariant_calls = 0
     generic_calls = 0
+    signer_calls = 0
     if not errors:
         airline_calls += 1
         try:
@@ -1083,6 +1345,18 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                 _failed_act_result(
                     act_id=_ACTIVE_ACT_IDS[2],
                     reason="generic_integrity_replay_collector_failed",
+                )
+            )
+        signer_calls += 1
+        try:
+            active_results.append(
+                collect_root_signer_isolation_gauntlet_act_v01()
+            )
+        except Exception:
+            active_results.append(
+                _failed_act_result(
+                    act_id=_ACTIVE_ACT_IDS[3],
+                    reason="root_signer_isolation_collector_failed",
                 )
             )
 
@@ -1123,6 +1397,7 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             airline_calls == 1
             and invariant_calls == 1
             and generic_calls == 1
+            and signer_calls == 1
             and len(active_results) == len(_ACTIVE_ACT_IDS),
         ),
         _invariant_result(

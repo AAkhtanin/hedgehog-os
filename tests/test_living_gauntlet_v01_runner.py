@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from dataclasses import replace
 import ast
 import importlib
 import json
@@ -10,6 +11,7 @@ from typing import Any, Callable
 import pytest
 
 from demo import run_living_gauntlet_v01 as runner
+from hedgehog.kernel import root_signer_isolation_v01 as signer
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -129,7 +131,8 @@ def test_all_three_collectors_are_called_exactly_once(monkeypatch: pytest.Monkey
     original_airline = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01
     original_smoke = runner.collect_all_layers_applied_super_smoke
     original_generic = runner.collect_generic_integrity_replay_gauntlet_act_v01
-    calls = {"airline": 0, "smoke": 0, "generic": 0}
+    original_signer = runner.collect_root_signer_isolation_gauntlet_act_v01
+    calls = {"airline": 0, "smoke": 0, "generic": 0, "signer": 0}
 
     def airline_wrapper() -> dict[str, Any]:
         calls["airline"] += 1
@@ -143,6 +146,10 @@ def test_all_three_collectors_are_called_exactly_once(monkeypatch: pytest.Monkey
         calls["generic"] += 1
         return original_generic()
 
+    def signer_wrapper() -> runner.LivingGauntletActResultV01:
+        calls["signer"] += 1
+        return original_signer()
+
     monkeypatch.setattr(
         runner,
         "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
@@ -154,12 +161,17 @@ def test_all_three_collectors_are_called_exactly_once(monkeypatch: pytest.Monkey
         "collect_generic_integrity_replay_gauntlet_act_v01",
         generic_wrapper,
     )
+    monkeypatch.setattr(
+        runner,
+        "collect_root_signer_isolation_gauntlet_act_v01",
+        signer_wrapper,
+    )
 
     exact_once_report = runner.collect_living_gauntlet_v01()
 
     assert exact_once_report["final_status"] == runner.STATUS_PASS
-    assert calls == {"airline": 1, "smoke": 1, "generic": 1}
-    assert exact_once_report["counters"]["active_collector_execution_count"] == 3
+    assert calls == {"airline": 1, "smoke": 1, "generic": 1, "signer": 1}
+    assert exact_once_report["counters"]["active_collector_execution_count"] == 4
 
 
 def test_frozen_all_real_evidence_is_not_executed(report: dict[str, Any]) -> None:
@@ -173,15 +185,16 @@ def test_frozen_all_real_evidence_is_not_executed(report: dict[str, Any]) -> Non
 
 
 def test_planned_signer_isolation_is_not_pass(report: dict[str, Any]) -> None:
-    signer = next(
-        entry
-        for entry in report["planned_entries"]
-        if entry["act_id"] == "root_signer_isolation_conformance"
+    assert "root_signer_isolation_conformance" not in {
+        entry["act_id"] for entry in report["planned_entries"]
+    }
+    indexed = next(
+        record
+        for record in _json(COMPLETION_MANIFEST_PATH)["active_runtime_acts"]
+        if record["act_id"] == "root_signer_isolation_conformance"
     )
-
-    assert signer["state"] == runner.STATUS_PLANNED_NOT_ACTIVE
-    assert signer["state"] != runner.STATUS_PASS
-    assert signer["executed"] is False
+    assert indexed["status"] == runner.STATUS_ACTIVE
+    assert indexed["status"] != runner.STATUS_PASS
 
 
 def test_planned_supplier_portability_is_not_pass(report: dict[str, Any]) -> None:
@@ -399,7 +412,7 @@ def test_unknown_status_fails_closed(
     failed = runner.collect_living_gauntlet_v01()
 
     assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
-    assert "planned_act_status_invalid:root_signer_isolation_conformance" in failed[
+    assert "planned_act_status_invalid:semantic_work_contract" in failed[
         "validation_errors"
     ]
 
@@ -554,9 +567,9 @@ def test_manifest_stores_no_synthetic_pass_for_indexed_acts() -> None:
     ]
 
     assert runner.STATUS_PASS not in statuses
-    assert statuses.count(runner.STATUS_ACTIVE) == 3
+    assert statuses.count(runner.STATUS_ACTIVE) == 4
     assert statuses.count(runner.STATUS_EVIDENCE_ONLY) == 1
-    assert statuses.count(runner.STATUS_PLANNED_NOT_ACTIVE) == 10
+    assert statuses.count(runner.STATUS_PLANNED_NOT_ACTIVE) == 9
 
 
 def test_generic_integrity_replay_act_is_active() -> None:
@@ -589,15 +602,15 @@ def test_generic_integrity_replay_act_executes_and_passes(
 
 
 def test_successful_report_has_three_active_acts(report: dict[str, Any]) -> None:
-    assert len(report["active_act_results"]) == 3
-    assert report["counters"]["active_act_count"] == 3
-    assert report["counters"]["active_act_pass_count"] == 3
+    assert len(report["active_act_results"]) == 4
+    assert report["counters"]["active_act_count"] == 4
+    assert report["counters"]["active_act_pass_count"] == 4
     assert report["counters"]["active_act_fail_closed_count"] == 0
 
 
 def test_successful_report_has_ten_planned_acts(report: dict[str, Any]) -> None:
-    assert len(report["planned_entries"]) == 10
-    assert report["counters"]["planned_act_count"] == 10
+    assert len(report["planned_entries"]) == 9
+    assert report["counters"]["planned_act_count"] == 9
     assert "generic_integrity_replay" not in {
         entry["act_id"] for entry in report["planned_entries"]
     }
@@ -649,11 +662,11 @@ def test_seam_index_has_exact_g1a1_geometry() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
 
     assert len(seams) == 20
-    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 9
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 10
     assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
     assert sum(
         item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams
-    ) == 8
+    ) == 7
     assert all(
         item["effect_access"] == "NONE"
         for item in seams
@@ -681,7 +694,7 @@ def test_planned_claim_excludes_generic_integrity_replay() -> None:
         if record["claim_id"] == "claim_gate1_planned_not_active"
     )
 
-    assert len(claim["act_ids"]) == 10
+    assert len(claim["act_ids"]) == 9
     assert "generic_integrity_replay" not in claim["act_ids"]
 
 
@@ -696,7 +709,7 @@ def test_g1a1_limitation_is_explicit() -> None:
         "Only neutral in-memory fixtures",
         "Airline and Supplier adapters are not implemented",
         "expected-hash provenance is not external trust",
-        "signer isolation is not implemented",
+        "G1-A1 itself does not exercise signer isolation",
     ):
         assert phrase in limitation
 
@@ -804,8 +817,8 @@ def test_renderer_shows_generic_active_act(report: dict[str, Any]) -> None:
 
 
 def test_runner_version_is_v02(report: dict[str, Any]) -> None:
-    assert runner.RUNNER_VERSION == "v0.2"
-    assert report["runner_version"] == "v0.2"
+    assert runner.RUNNER_VERSION == "v0.3"
+    assert report["runner_version"] == "v0.3"
 
 
 def test_runner_introduces_no_domain_adapter_import() -> None:
@@ -833,11 +846,444 @@ def test_generic_kernel_import_introduces_no_live_path() -> None:
 def test_manifest_status_and_counts_are_exact() -> None:
     manifest = _json(COMPLETION_MANIFEST_PATH)
 
-    assert manifest["manifest_status"] == "ACTIVE_GATE1_G1A1"
-    assert len(manifest["active_runtime_acts"]) == 3
+    assert manifest["manifest_status"] == "ACTIVE_GATE1_G1A2"
+    assert len(manifest["active_runtime_acts"]) == 4
     assert len(manifest["evidence_only_references"]) == 1
-    assert len(manifest["planned_gate1_acts"]) == 10
+    assert len(manifest["planned_gate1_acts"]) == 9
 
 
 def test_seam_index_status_is_exact() -> None:
-    assert _json(SEAM_INDEX_PATH)["index_status"] == "ACTIVE_GATE1_G1A1"
+    assert _json(SEAM_INDEX_PATH)["index_status"] == "ACTIVE_GATE1_G1A2"
+
+
+def test_signer_act_is_active_in_completion_manifest() -> None:
+    active = {
+        record["act_id"]: record
+        for record in _json(COMPLETION_MANIFEST_PATH)["active_runtime_acts"]
+    }
+    record = active["root_signer_isolation_conformance"]
+    assert record["status"] == runner.STATUS_ACTIVE
+    assert record["source_module"] == "demo.run_living_gauntlet_v01"
+    assert record["source_symbol"] == (
+        "collect_root_signer_isolation_gauntlet_act_v01"
+    )
+
+
+def test_signer_act_executes_and_passes(report: dict[str, Any]) -> None:
+    result = report["active_act_results"][3]
+    assert result == {
+        "act_id": "root_signer_isolation_conformance",
+        "errors": (),
+        "executed": True,
+        "no_real_connector_or_action": True,
+        "real_world_effects_count": 0,
+        "root_authority_preserved": True,
+        "runtime_status": runner.STATUS_PASS,
+        "source_module": "demo.run_living_gauntlet_v01",
+        "source_symbol": "collect_root_signer_isolation_gauntlet_act_v01",
+        "state": runner.STATUS_PASS,
+    }
+
+
+def test_all_four_active_act_ids_are_exact(report: dict[str, Any]) -> None:
+    assert tuple(row["act_id"] for row in report["active_act_results"]) == (
+        "airline_deterministic_transaction_runtime",
+        "all_layers_invariant_super_smoke",
+        "generic_integrity_replay",
+        "root_signer_isolation_conformance",
+    )
+    assert report["counters"]["active_collector_execution_count"] == 4
+
+
+def test_signer_execution_counter_is_one(report: dict[str, Any]) -> None:
+    assert report["counters"]["root_signer_isolation_execution_count"] == 1
+
+
+def test_signer_source_identity_is_canonical() -> None:
+    assert runner._ACTIVE_ACT_SOURCES["root_signer_isolation_conformance"] == (
+        "demo.run_living_gauntlet_v01",
+        "collect_root_signer_isolation_gauntlet_act_v01",
+    )
+
+
+def test_signer_seam_transitioned_in_place_and_is_unique() -> None:
+    matching = [
+        record
+        for record in _json(SEAM_INDEX_PATH)["seams"]
+        if record["seam_id"] == "root_signer_isolation_conformance"
+    ]
+    assert len(matching) == 1
+    seam = matching[0]
+    assert seam == {
+        "authority_status": "NON_ROOT_SIGNER_ISOLATION",
+        "current_mode": "IN_MEMORY_TEST_ONLY_ED25519",
+        "effect_access": "NONE",
+        "gate1_target": "root_signer_isolation_conformance",
+        "notes": (
+            "Ephemeral in-memory Root-key isolation conformance only; not "
+            "Airline Root Attestation, production identity, PKI, permission, "
+            "authority creation, or effect access."
+        ),
+        "seam_class": "KERNEL_CONFORMANCE_CORE",
+        "seam_id": "root_signer_isolation_conformance",
+        "source_module": "hedgehog.kernel.root_signer_isolation_v01",
+        "source_symbol": "verify_root_signature_v01",
+        "status": runner.STATUS_ACTIVE,
+    }
+
+
+def test_signer_claim_has_all_four_references() -> None:
+    claim = next(
+        record
+        for record in _json(COMPLETION_MANIFEST_PATH)["public_claims"]
+        if record["claim_id"]
+        == "claim_root_signer_isolation_conformance_execution"
+    )
+    assert claim["claim_class"] == "EXECUTED_CONFORMANCE"
+    assert claim["act_ids"] == ["root_signer_isolation_conformance"]
+    assert claim["runtime_ref"].endswith(
+        ":collect_root_signer_isolation_gauntlet_act_v01"
+    )
+    assert claim["focused_test_ref"] == "tests/test_root_signer_isolation_v01.py"
+    assert claim["evidence_ref"] == "hedgehog/kernel/root_signer_isolation_v01.py"
+    assert claim["limitation_ref"] == (
+        "limitation_g1a2_conformance_only_signer_isolation"
+    )
+
+
+def test_planned_claim_excludes_signer_and_has_exact_nine_ids() -> None:
+    claim = next(
+        record
+        for record in _json(COMPLETION_MANIFEST_PATH)["public_claims"]
+        if record["claim_id"] == "claim_gate1_planned_not_active"
+    )
+    assert claim["act_ids"] == [
+        "semantic_work_contract",
+        "domain_neutral_kernel_abi",
+        "causal_consumption",
+        "transition_registry",
+        "root_decision_kernel",
+        "effect_firewall",
+        "generic_multiroot",
+        "supplier_water_filter_portability",
+        "kernel_conformance_closure",
+    ]
+
+
+def test_g1a2_limitation_is_conformance_only_and_preserves_airline_boundary() -> None:
+    statement = next(
+        record["statement"]
+        for record in _json(COMPLETION_MANIFEST_PATH)["limitations"]
+        if record["limitation_id"]
+        == "limitation_g1a2_conformance_only_signer_isolation"
+    )
+    for phrase in (
+        "ephemeral and in-memory",
+        "no key persistence",
+        "production identity",
+        "PKI",
+        "certificate authority",
+        "Airline Root Attestation",
+        "UNSIGNED_PLACEHOLDER",
+        "signature_verified false",
+        "permission",
+        "effect",
+    ):
+        assert phrase in statement
+
+
+def test_non_claims_do_not_claim_airline_attestation_or_production_identity() -> None:
+    non_claims = _json(COMPLETION_MANIFEST_PATH)["non_claims"]
+    for required in (
+        "not production Root signing",
+        "not Airline Root Attestation",
+        "not PKI",
+        "not production signer identity",
+        "not certificate issuance",
+        "not Gate 1 closure",
+    ):
+        assert required in non_claims
+
+
+def test_signer_fixture_metrics_are_exact() -> None:
+    assert runner._collect_root_signer_isolation_fixture_metrics_v01() == {
+        "capability_count": 3,
+        "own_signature_pass_count": 3,
+        "cross_root_signing_blocked_count": 6,
+        "cross_root_verification_blocked_count": 6,
+        "private_key_serialization_count": 0,
+        "file_write_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+
+
+def test_signer_exception_fails_full_report_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fail_signer() -> runner.LivingGauntletActResultV01:
+        raise RuntimeError("test-only failure")
+
+    monkeypatch.setattr(
+        runner,
+        "collect_root_signer_isolation_gauntlet_act_v01",
+        fail_signer,
+    )
+    failed = runner.collect_living_gauntlet_v01()
+    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert "root_signer_isolation_collector_failed" in failed["validation_errors"]
+
+
+def test_signer_failure_preserves_unknown_aggregate_effects(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fail_fixture() -> dict[str, int]:
+        raise OSError("test-only failure")
+
+    monkeypatch.setattr(
+        runner,
+        "_collect_root_signer_isolation_fixture_metrics_v01",
+        fail_fixture,
+    )
+    failed = runner.collect_living_gauntlet_v01()
+    assert failed["active_act_results"][3]["real_world_effects_count"] == -1
+    assert failed["counters"]["real_world_effects_count"] == -1
+    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+
+
+def test_counter_tampering_cannot_hide_signer_failure(
+    report: dict[str, Any],
+) -> None:
+    mutated = deepcopy(report)
+    mutated["active_act_results"][3]["state"] = runner.STATUS_FAIL_CLOSED
+    mutated["active_act_results"][3]["runtime_status"] = runner.STATUS_FAIL_CLOSED
+    mutated["active_act_results"][3]["errors"] = ["signer_failure"]
+    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    assert accepted is False
+    assert "report_counter_mismatch:active_act_pass_count" in errors
+    assert "report_counter_mismatch:active_act_fail_closed_count" in errors
+
+
+def test_signer_source_identity_tampering_is_rejected(
+    report: dict[str, Any],
+) -> None:
+    mutated = deepcopy(report)
+    mutated["active_act_results"][3]["source_symbol"] = "tampered"
+    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    assert accepted is False
+    assert (
+        "report_active_source_identity_mismatch:root_signer_isolation_conformance"
+        in errors
+    )
+
+
+@pytest.mark.parametrize(
+    "invalid_state", (runner.STATUS_EVIDENCE_ONLY, runner.STATUS_PLANNED_NOT_ACTIVE)
+)
+def test_signer_active_row_cannot_be_non_active_state(
+    report: dict[str, Any], invalid_state: str
+) -> None:
+    mutated = deepcopy(report)
+    mutated["active_act_results"][3]["state"] = invalid_state
+    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    assert accepted is False
+    assert (
+        "report_active_act_state_unknown:root_signer_isolation_conformance"
+        in errors
+    )
+
+
+def test_renderer_shows_signer_as_active(report: dict[str, Any]) -> None:
+    active_section = runner.render_living_gauntlet_v01(report).split(
+        "[EVIDENCE-ONLY REFERENCES]", 1
+    )[0]
+    assert "act_id=root_signer_isolation_conformance" in active_section
+    assert "state=PASS" in active_section
+
+
+@pytest.mark.parametrize(
+    "forbidden",
+    (
+        "private",
+        "private_key",
+        "signature_hex",
+        "public_key_hex",
+        "key_id",
+        "commitment_hash",
+        "BEGIN PRIVATE KEY",
+        "BEGIN PUBLIC KEY",
+    ),
+)
+def test_report_and_render_expose_no_cryptographic_material(
+    report: dict[str, Any], forbidden: str
+) -> None:
+    serialized = json.dumps(report, sort_keys=True, default=list)
+    rendered = runner.render_living_gauntlet_v01(report)
+    assert forbidden.lower() not in serialized.lower()
+    assert forbidden.lower() not in rendered.lower()
+
+
+def test_two_complete_collections_are_identical_despite_ephemeral_keys() -> None:
+    first = runner.collect_living_gauntlet_v01()
+    second = runner.collect_living_gauntlet_v01()
+    assert first == second
+    assert runner.render_living_gauntlet_v01(first) == runner.render_living_gauntlet_v01(second)
+    assert json.dumps(first, sort_keys=True, separators=(",", ":"), default=list) == json.dumps(
+        second, sort_keys=True, separators=(",", ":"), default=list
+    )
+
+
+def test_signer_fixture_and_kernel_have_no_file_write_path() -> None:
+    runner_source = RUNNER_PATH.read_text(encoding="utf-8")
+    signer_source = (
+        REPOSITORY_ROOT / "hedgehog/kernel/root_signer_isolation_v01.py"
+    ).read_text(encoding="utf-8")
+    fixture_source = runner_source.split(
+        "def _collect_root_signer_isolation_fixture_metrics_v01", 1
+    )[1].split("def _failed_act_result", 1)[0]
+    for token in ("open(", ".write_text(", ".write_bytes(", "private_bytes"):
+        assert token not in fixture_source
+        assert token not in signer_source
+
+
+def test_signer_kernel_introduces_no_domain_import() -> None:
+    path = REPOSITORY_ROOT / "hedgehog/kernel/root_signer_isolation_v01.py"
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    imports = {
+        node.module or ""
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom)
+    }
+    assert not any(name.startswith("hedgehog.domains") for name in imports)
+    assert not any(name.startswith(("demo", "tests")) for name in imports)
+
+
+@pytest.mark.parametrize(
+    ("claim_id", "wrong_class"),
+    (
+        (
+            "claim_root_signer_isolation_conformance_execution",
+            "EXECUTED_RUNTIME",
+        ),
+        (
+            "claim_generic_integrity_replay_execution",
+            "EXECUTED_CONFORMANCE",
+        ),
+        ("claim_airline_runtime_execution", "EXECUTED_CONFORMANCE"),
+    ),
+)
+def test_executed_claim_classes_are_not_interchangeable(
+    claim_id: str,
+    wrong_class: str,
+) -> None:
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    claim = next(
+        item for item in manifest["public_claims"] if item["claim_id"] == claim_id
+    )
+    claim["claim_class"] = wrong_class
+    errors = runner._validate_completion_manifest_v01(manifest)
+    assert f"public_claim_classification_mismatch:{claim_id}" in errors
+
+
+def test_public_claim_empty_act_ids_fail_closed() -> None:
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    claim = next(
+        item
+        for item in manifest["public_claims"]
+        if item["claim_id"] == "claim_root_signer_isolation_conformance_execution"
+    )
+    claim["act_ids"] = []
+    errors = runner._validate_completion_manifest_v01(manifest)
+    assert (
+        "public_claim_act_ids_invalid:"
+        "claim_root_signer_isolation_conformance_execution"
+    ) in errors
+
+
+@pytest.mark.parametrize(
+    ("seam_id", "wrong_status"),
+    (
+        ("root_signer_isolation_conformance", runner.STATUS_REFERENCE_ONLY),
+        ("generic_integrity_replay_core", runner.STATUS_REFERENCE_ONLY),
+        (
+            "airline_transaction_artifact_ledger_reference",
+            runner.STATUS_ACTIVE,
+        ),
+        ("core_context_packets", runner.STATUS_PLANNED_NOT_ACTIVE),
+    ),
+)
+def test_current_seam_status_mutations_fail_closed(
+    seam_id: str,
+    wrong_status: str,
+) -> None:
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
+    seam["status"] = wrong_status
+    errors = runner._validate_integration_seam_index_v01(index)
+    assert f"current_seam_status_mismatch:{seam_id}" in errors
+
+
+def test_cross_root_unrelated_value_error_is_not_isolation_evidence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original = runner.sign_root_owned_commitment_v01
+
+    def unrelated_reason(**kwargs: object) -> signer.RootSignatureV01:
+        capability = kwargs["capability"]
+        commitment = kwargs["commitment"]
+        if capability.root_id != commitment.owner_root_id:  # type: ignore[union-attr]
+            raise ValueError("signature_generation_failed")
+        return original(**kwargs)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(
+        runner,
+        "sign_root_owned_commitment_v01",
+        unrelated_reason,
+    )
+    result = runner.collect_root_signer_isolation_gauntlet_act_v01()
+    assert result.state == runner.STATUS_FAIL_CLOSED
+    assert result.real_world_effects_count == -1
+
+
+def test_generic_blocked_verification_is_not_isolation_evidence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original = runner.verify_root_signature_v01
+
+    def incomplete_block(**kwargs: object) -> signer.RootSignatureVerificationResultV01:
+        result = original(**kwargs)
+        commitment = kwargs["commitment"]
+        signature = kwargs["signature"]
+        if signature.owner_root_id != commitment.owner_root_id:  # type: ignore[union-attr]
+            return replace(
+                result,
+                verification_errors=("root_isolation_failed",),
+                signature_verified=False,
+                root_isolation_verified=False,
+            )
+        return result
+
+    monkeypatch.setattr(runner, "verify_root_signature_v01", incomplete_block)
+    result = runner.collect_root_signer_isolation_gauntlet_act_v01()
+    assert result.state == runner.STATUS_FAIL_CLOSED
+    assert result.real_world_effects_count == -1
+
+
+def test_exact_current_seam_status_map_matches_unchanged_index() -> None:
+    seams = {
+        item["seam_id"]: item["status"]
+        for item in _json(SEAM_INDEX_PATH)["seams"]
+        if item["seam_id"] in runner._CURRENT_SEAMS
+    }
+    assert seams == runner._CURRENT_SEAM_STATUSES
+
+
+def test_unchanged_release_json_still_validates_for_g1a2() -> None:
+    assert runner._validate_completion_manifest_v01(
+        _json(COMPLETION_MANIFEST_PATH)
+    ) == ()
+    assert runner._validate_integration_seam_index_v01(
+        _json(SEAM_INDEX_PATH)
+    ) == ()

@@ -1,6 +1,6 @@
 {
   "document_id": "living_release_integration_seam_index_v01",
-  "index_status": "ACTIVE_GATE1_G1A1",
+  "index_status": "ACTIVE_GATE1_G1A2",
   "seams": [
     {
       "authority_status": "ROOT_BOUNDARIES_PRESERVED",
@@ -159,16 +159,16 @@
       "status": "PLANNED_NOT_ACTIVE"
     },
     {
-      "authority_status": "PLANNED_ROOT_CONFORMANCE_BOUNDARY",
-      "current_mode": "NOT_IMPLEMENTED",
+      "authority_status": "NON_ROOT_SIGNER_ISOLATION",
+      "current_mode": "IN_MEMORY_TEST_ONLY_ED25519",
       "effect_access": "NONE",
       "gate1_target": "root_signer_isolation_conformance",
-      "notes": "Planned conformance boundary; signer isolation and Root Attestation are not implemented.",
-      "seam_class": "PLANNED_GATE1",
+      "notes": "Ephemeral in-memory Root-key isolation conformance only; not Airline Root Attestation, production identity, PKI, permission, authority creation, or effect access.",
+      "seam_class": "KERNEL_CONFORMANCE_CORE",
       "seam_id": "root_signer_isolation_conformance",
-      "source_module": "",
-      "source_symbol": null,
-      "status": "PLANNED_NOT_ACTIVE"
+      "source_module": "hedgehog.kernel.root_signer_isolation_v01",
+      "source_symbol": "verify_root_signature_v01",
+      "status": "ACTIVE"
     },
     {
       "authority_status": "PLANNED_NON_ROOT_ADAPTER",

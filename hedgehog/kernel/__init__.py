@@ -21,6 +21,22 @@ from hedgehog.kernel.integrity_replay_v01 import (
     verify_artifact_manifest_v01,
     verify_artifact_replay_v01,
 )
+from hedgehog.kernel.root_signer_isolation_v01 import (
+    RootOwnedCommitmentV01,
+    RootSignatureV01,
+    RootSignatureVerificationResultV01,
+    RootSignerCapabilityV01,
+    TrustedRootKeySetV01,
+    build_root_owned_commitment_v01,
+    build_trusted_root_key_set_v01,
+    generate_root_signer_capability_v01,
+    root_owned_commitment_to_plain_dict_v01,
+    root_signature_to_plain_dict_v01,
+    root_signature_verification_result_to_plain_dict_v01,
+    sign_root_owned_commitment_v01,
+    trusted_root_key_set_to_plain_dict_v01,
+    verify_root_signature_v01,
+)
 
 __all__ = (
     "CanonicalArtifactRefV01",

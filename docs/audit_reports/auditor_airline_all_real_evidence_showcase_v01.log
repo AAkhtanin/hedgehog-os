@@ -1,0 +1,346 @@
+[AUDIT IDENTITY]
+
+audit_id: auditor_airline_all_real_evidence_showcase_v01
+audit_status: PASS
+audit_mode: committed_artifact_audit_with_one_temporary_deterministic_reproduction
+audit_base_head: 4b64598
+showcase_commit: 4b64598
+showcase_preflight_commit: 63b6e06
+human_story_commit: a562c47
+replay_audit_commit: ec50c1f
+anchor_publication_commit: a701743
+
+This audit independently validates the committed static Showcase and performs
+one temporary deterministic presentation reproduction. It does not rerun any
+transaction, semantic, Corridor, Ledger, Crypto, or Replay operation.
+
+[REPOSITORY GUARD]
+
+HEAD: 4b64598
+origin/main: 4b64598
+synchronized: true
+worktree clean before audit: true
+staged files before audit: 0
+audit output absent before creation: true
+showcase implementation and all seven deliverables tracked at HEAD: true
+working bytes equal committed HEAD bytes for all nine files: true
+showcase directory entry count before audit: 7
+showcase directory entries all regular non-symlink files: true
+
+[TOOLCHAIN]
+
+Python: 3.14.5
+python-pptx / pptx: 1.0.2
+ReportLab / reportlab: 5.0.0
+Pillow / PIL: 12.3.0
+pypdf: 6.14.2
+packages installed or upgraded during audit: 0
+LibreOffice, soffice, pdftoppm, and pdfinfo required: false
+
+[COMMITTED IMPLEMENTATION]
+
+renderer path: demo/run_airline_all_real_evidence_showcase_v01.py
+renderer SHA-256: 32301824cd4fd31ce00f1a94171da3055f8c3038a1f54bf1317fd1c33a5aabeb
+renderer Git blob ID: 3e96109540d48931fc9deed9f3c33eb444d133b4
+test path: tests/test_airline_all_real_evidence_showcase_v01_runner.py
+test SHA-256: c30842ec2ec63fdd62331795a165682a27198794008305460a16dbac478bf98c
+test Git blob ID: 509cfd51072df71d81effbee19ca09ef91104dc1
+renderer boundary validation: PASS
+explicit committed evidence inputs: 6
+explicit repository root required: true
+explicit output directory required: true
+package discovery present: false
+.tmp access present: false
+config.py access present: false
+credential or API-key environment access present: false
+Path.glob present: false
+Path.rglob present: false
+glob module present: false
+os.walk present: false
+requests present: false
+socket present: false
+urllib network access present: false
+Gemini or provider path present: false
+transaction invocation present: false
+Corridor invocation present: false
+Ledger collection present: false
+Crypto collection present: false
+Replay invocation present: false
+evidence mutation present: false
+writes constrained to explicit output directory: true
+atomic owned temporary-directory promotion: true
+owned partial-output cleanup: true
+one normalized Showcase model used by PPTX and PDF renderers: true
+
+The focused test covers exact deliverables, PPTX, PDFs, the claim matrix,
+README, SHA256SUMS, security wording, determinism, output isolation, failure
+cleanup, evidence stability, and temporary visual previews.
+
+[FOCUSED TEST]
+
+renderer compilation: PASS
+test compilation: PASS
+focused test command: PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_airline_all_real_evidence_showcase_v01_runner.py
+tests passed: 14
+tests failed: 0
+test errors: 0
+reported duration: 2.04s
+evidence mutations during compilation or focused tests: 0
+
+[DETERMINISTIC REPRODUCTION]
+
+temporary renderer invocation count: 1
+temporary output location: invocation-owned directory outside the repository
+renderer exit code: 0
+renderer result strict JSON parse: PASS
+showcase_status: PASS
+deliverable_count: 7
+main_deck_slides: 16
+deck_pdf_pages: 16
+one_pager_pages: 1
+appendix_pages: 19
+temporary filename inventory matched committed inventory: true
+byte-identical committed comparison: 7 / 7
+deterministic reproduction: PASS
+temporary cleanup: PASS
+temporary files left in repository: 0
+
+[DELIVERABLE GEOMETRY]
+
+deliverables: 7
+PPTX slides: 16
+main-deck PDF pages: 16
+executive one-pager pages: 1
+technical appendix pages: 19
+claim objects: 24
+fields per claim: 13
+SHA256SUMS entries: 6
+SHA256SUMS excludes itself: true
+SHA256SUMS filename order lexicographic: true
+SHA256SUMS separator exactly two ASCII spaces: true
+all declared checksums match: true
+
+[PPTX AND MAIN DECK]
+
+PPTX ZIP validity: PASS
+widescreen 16:9: true
+slides hidden: 0
+media files: 0
+external relationships: 0
+speaker-note dependencies: 0
+fixed metadata: true
+fixed ZIP timestamps: true
+current timestamp embedded: false
+hostname embedded: false
+username embedded: false
+absolute path embedded: false
+visible slide content: 16 / 16
+HEDGEHOG OS branding: 16 / 16
+slide numbers: 16 / 16
+evidence footers: 16 / 16
+slide claim IDs resolved: 16 / 16
+
+Exact slide order:
+1. Cover - central thesis
+2. Executive proof in 90 seconds
+3. The user's mock travel task and accepted result
+4. Complete architecture from user task to anchored Replay
+5. The twelve real Gemini actors and bounded topology
+6. Orchestration and Client-side actor evidence
+7. Airline-side actor evidence
+8. Bank-side and cross-root actor evidence
+9. Why the deterministic system selected Offer A
+10. Three sovereign Roots and authority separation
+11. Five-phase Ticket/Purchase Corridor and mock evidence card
+12. Transaction Artifact Ledger - 19 / 29 / 3
+13. Crypto generation - 9 / 11 and SELF_CONSISTENT_UNANCHORED
+14. Committed external Anchor and 19-row Replay PASS
+15. First honest FAIL_CLOSED run and distinct successful recovery
+16. What was proved, non-claims, and evidence entry points
+
+Slide 5 twelve human-readable actor labels: PASS
+Slide 5 broken raw actor-ID primary labels: 0
+Slide 11 six transaction artifact IDs present: 6 / 6
+Slide 11 Root-final IDs present: 3 / 3
+Slide 11 orphan 01 lines: 0
+Slide 11 lines ending in :0: 0
+Slide 14 exact SELF_CONSISTENT_UNANCHORED line: PASS
+Slide 14 Fresh Verification PASS: present
+Slide 14 19-row Replay PASS: present
+Slide 14 provider/network/Gemini 0 / 0 / 0: present
+Slide 16 exact repository-relative evidence paths: 6 / 6
+main-deck PDF page order equals PPTX order: true
+main-deck PDF blank pages: 0
+corrected Slides 5, 11, 14, and 16: PASS
+
+[EXECUTIVE ONE-PAGER]
+
+page count: 1
+page geometry: A4 landscape
+thesis present: true
+headline 12 / 3 / 19 / 29 / 9 / 11 / 19 / 0: present
+route PAR to LIM: present
+date 2026-08-12: present
+Offer A: present
+stored unanchored -> committed Anchor -> fresh PASS -> Replay PASS: present
+zero Gemini rerun statement: present
+exact repository-relative evidence paths: 6 / 6
+non-claims present: true
+blank pages: 0
+executive one-pager validation: PASS
+
+[TECHNICAL APPENDIX]
+
+page count: 19
+evidence identity page: 1
+actor pages: 12
+actor IDs in committed order: 12 / 12
+Ledger timeline pages: 2
+Ledger timeline rows represented: 19 / 19
+Crypto and committed Anchor page: present
+Replay zero-rerun page: present
+claim/evidence reference page: present
+non-claims and verification page: present
+blank pages: 0
+raw prompt content present: false
+raw provider-response content present: false
+technical appendix validation: PASS
+
+[CLAIM-EVIDENCE MATRIX]
+
+strict JSON parse: PASS
+top-level type: array
+claims: 24
+claim order: C01 through C24
+unique claim IDs: 24
+fields per claim: 13
+exact field surface: PASS
+source hashes valid: 24 / 24
+source commits valid: 24 / 24
+source paths repository-relative: 24 / 24
+source paths tracked: 24 / 24
+all slide numbers covered: 1 through 16
+all appendix pages covered: 1 through 19
+all slide footer claim IDs resolved: true
+direct .tmp sources: 0
+presentation-only evidence sources: 0
+public-link availability consistent with committed evidence: true
+
+Central claims validated:
+- generation: PASS
+- real Gemini calls: 12
+- actor validations: 12 PASS / 0 FAIL
+- selected offer: offer:mock_airline_al:PAR-LIM:001
+- sovereign Roots: ClientRoot / AirlineRoot / BankRoot
+- Corridor status and execution count: PASS / 1
+- Ledger geometry: 19 / 29 / 3
+- Crypto geometry: 9 / 11
+- stored Verification: SELF_CONSISTENT_UNANCHORED
+- committed external Anchor: true
+- fresh anchored Verification: PASS
+- Replay timeline rows: 19
+- Replay provider/network/Gemini calls: 0 / 0 / 0
+- real-world effects: 0
+- package bytes unchanged: true
+- historical failure evidence preserved: true
+- failed package promoted: false
+- accepted recovery package distinct: true
+- signature_verified: false
+
+[SHA-256]
+
+Committed implementation and Showcase files:
+- demo/run_airline_all_real_evidence_showcase_v01.py
+  SHA-256: 32301824cd4fd31ce00f1a94171da3055f8c3038a1f54bf1317fd1c33a5aabeb
+  Git blob: 3e96109540d48931fc9deed9f3c33eb444d133b4
+- tests/test_airline_all_real_evidence_showcase_v01_runner.py
+  SHA-256: c30842ec2ec63fdd62331795a165682a27198794008305460a16dbac478bf98c
+  Git blob: 509cfd51072df71d81effbee19ca09ef91104dc1
+- docs/showcase/airline_all_real_full_stack_v01/README.md
+  SHA-256: 761fe7e4f8729600a5258edf426d6fc61c9a6759d2212ae0edb072dec74b783e
+  Git blob: ddce05bdbcaf85820006da34bb8ba4055c8a1e2e
+- docs/showcase/airline_all_real_full_stack_v01/hedgehog_os_airline_all_real_showcase_v01.pptx
+  SHA-256: e4312edb75044b33dd6770925887b66cceb9898f999eebd4ed79da82a9a4ee8a
+  Git blob: 480def357b5437c851591d34b9f23973b85fefbb
+- docs/showcase/airline_all_real_full_stack_v01/hedgehog_os_airline_all_real_showcase_v01.pdf
+  SHA-256: bb61219fc9f713ba4a46a621da99becaf6bbd6ae5f6319b511e3efaf0db2388c
+  Git blob: 347e5eaf96b0e435ef369e05b5b39a87bcddfd3a
+- docs/showcase/airline_all_real_full_stack_v01/executive_one_pager_v01.pdf
+  SHA-256: 39d5e437f7956af563832db50c67e14ea2076aecb35f1ad0f0bc09cefe8c1a0c
+  Git blob: 0d37cb97227e6c854f0e0f3b03ced3d23e615748
+- docs/showcase/airline_all_real_full_stack_v01/technical_appendix_v01.pdf
+  SHA-256: 29e4ab88b4a5614adf682285877bd43e939c9f8fbbd44afea9654802a7533db8
+  Git blob: db3fa1cfcc633313b960979cc0551d21bf091347
+- docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json
+  SHA-256: 7846ce0318c283e25d0fab396887906c96543bbf73e6427b516ee5f72cbf4c9a
+  Git blob: 3511eef35fd3db822f2b2ca5d3efe4649ac486d6
+- docs/showcase/airline_all_real_full_stack_v01/SHA256SUMS
+  SHA-256: 740859f24cad5a908d989733a05e8cab214df2c8ee52c024da1dc289cf39e8c7
+  Git blob: 0700740cec6747240246a9995d609318da881512
+
+Six committed evidence sources:
+- docs/airline_all_real_evidence_showcase_preflight_v01.md
+  SHA-256: 3aa8955cc41e633ddea542f05c2e1fd9089f17a40e2779cf3f2f8a1fad193e23
+- docs/airline_all_real_full_stack_human_story_v01.md
+  SHA-256: b6d40a818b9c513a7aaafaeb5557ab3ef064b20e65a75b44c1de5f9152fa4e44
+- docs/airline_all_real_full_stack_crypto_anchor_v01.json
+  SHA-256: 54ee8e6dcceaa846ecc4bf8968b0ab26c9bcb849663a76c0cb9d01d564c694b0
+- docs/airline_all_real_full_stack_replay_report_v01.json
+  SHA-256: 7ceaa5400ef6b35fb1e39f2bdc739a68cb9bb4373d82e7586feee901ef414b57
+- docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log
+  SHA-256: faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e
+- docs/audit_reports/auditor_airline_all_real_full_stack_v01_anchored_replay.log
+  SHA-256: af516265c0298037a1e1f45957a78e8c89b4c8752fea44e544980dec9fb54f96
+
+[SECURITY AND BOUNDARIES]
+
+raw prompts embedded: false
+raw provider responses embedded: false
+credentials embedded: false
+API keys embedded: false
+private keys embedded: false
+absolute user paths embedded: false
+traceback or exception dumps embedded: false
+memory addresses embedded: false
+.tmp inspected during audit: false
+config.py read during audit: false
+Gemini calls during audit: 0
+provider calls during audit: 0
+network calls during audit: 0
+transaction operations: 0
+semantic operations: 0
+Corridor operations: 0
+Ledger operations: 0
+Crypto operations: 0
+Replay operations: 0
+real-world effects: 0
+committed Showcase files modified: 0
+committed evidence sources modified: 0
+
+Visible boundaries remain coherent: the transaction is mock/proof-level,
+Gemini evidence is advisory, Root remains authority, Crypto proves declared
+integrity and continuity rather than truth, signature verification remains
+false, and Replay reconstructs evidence rather than executing effects.
+
+[NON-CLAIMS]
+
+- Not a real ticket.
+- Not a real booking.
+- Not a real payment.
+- Not production.
+- Not PKI.
+- Not signer authentication.
+- No Root Attestation.
+- signature_verified remains false.
+- The Showcase creates no new runtime evidence.
+- Crypto does not prove semantic truth.
+- Replay does not authorize or execute effects.
+
+[NEXT STEP]
+
+Showcase implementation and artifact package audited: PASS
+owner review required: true
+audit commit and push required after owner review: true
+next_gate: airline_all_real_evidence_showcase_v01_final_docs_checkpoint_sync
+additional Gemini run required: false
+further visual correction required: false

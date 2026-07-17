@@ -1,0 +1,230 @@
+{
+  "active_runtime_acts": [
+    {
+      "act_id": "airline_deterministic_transaction_runtime",
+      "claim_ids": [
+        "claim_airline_runtime_execution"
+      ],
+      "focused_test": "tests/test_tri_party_airline_ticket_purchase_mock_e2e_v01_runner.py",
+      "source_module": "demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01",
+      "source_symbol": "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "all_layers_invariant_super_smoke",
+      "claim_ids": [
+        "claim_invariant_runtime_execution"
+      ],
+      "focused_test": "tests/test_all_layers_applied_super_smoke_runner.py",
+      "source_module": "demo.run_all_layers_applied_super_smoke",
+      "source_symbol": "collect_all_layers_applied_super_smoke",
+      "status": "ACTIVE"
+    }
+  ],
+  "document_id": "living_release_completion_manifest_v01",
+  "evidence_only_references": [
+    {
+      "act_id": "airline_all_real_frozen_reference",
+      "claim_ids": [
+        "claim_airline_all_real_frozen_evidence"
+      ],
+      "evidence_paths": [
+        "docs/airline_all_real_evidence_showcase_checkpoint_v01.md",
+        "docs/audit_reports/auditor_airline_all_real_evidence_showcase_v01.log"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Frozen committed reference evidence; never executed or replayed by the living gauntlet.",
+      "status": "EVIDENCE_ONLY"
+    }
+  ],
+  "limitations": [
+    {
+      "limitation_id": "limitation_deterministic_local_scaffold",
+      "statement": "The active acts are deterministic local collectors and permit no real external action."
+    },
+    {
+      "limitation_id": "limitation_frozen_evidence_not_runtime",
+      "statement": "Frozen Airline all-real evidence is a committed reference and cannot satisfy an executed-runtime claim."
+    },
+    {
+      "limitation_id": "limitation_gate1_not_implemented",
+      "statement": "Gate 1 integrity, signer, ABI, transition, decision, effect, MultiRoot, portability, and conformance contracts are not implemented by this scaffold."
+    },
+    {
+      "limitation_id": "limitation_not_production",
+      "statement": "This scaffold is proof-level and is not production-ready."
+    }
+  ],
+  "manifest_status": "ACTIVE_SCAFFOLD",
+  "non_claims": [
+    "not production",
+    "not a real ticket, booking, payment, shipment, or connector action",
+    "not generic integrity or replay",
+    "not Root signer-isolation conformance",
+    "not Supplier or Water Filter portability",
+    "not Root Attestation",
+    "not Gate 1 kernel conformance closure"
+  ],
+  "planned_gate1_acts": [
+    {
+      "act_id": "generic_integrity_replay",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future domain-neutral integrity and replay act.",
+      "status": "PLANNED_NOT_ACTIVE"
+    },
+    {
+      "act_id": "root_signer_isolation_conformance",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future Root signer-isolation conformance act; Root Attestation remains deferred.",
+      "status": "PLANNED_NOT_ACTIVE"
+    },
+    {
+      "act_id": "semantic_work_contract",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future bounded semantic work contract act.",
+      "status": "PLANNED_NOT_ACTIVE"
+    },
+    {
+      "act_id": "domain_neutral_kernel_abi",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future domain-neutral kernel ABI act.",
+      "status": "PLANNED_NOT_ACTIVE"
+    },
+    {
+      "act_id": "causal_consumption",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future causal-consumption act.",
+      "status": "PLANNED_NOT_ACTIVE"
+    },
+    {
+      "act_id": "transition_registry",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future Transition Registry act.",
+      "status": "PLANNED_NOT_ACTIVE"
+    },
+    {
+      "act_id": "root_decision_kernel",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future Root Decision Kernel act.",
+      "status": "PLANNED_NOT_ACTIVE"
+    },
+    {
+      "act_id": "effect_firewall",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future bounded Effect Firewall act; no effect handle exists in this scaffold.",
+      "status": "PLANNED_NOT_ACTIVE"
+    },
+    {
+      "act_id": "generic_multiroot",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future generic MultiRoot act.",
+      "status": "PLANNED_NOT_ACTIVE"
+    },
+    {
+      "act_id": "supplier_water_filter_portability",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future Supplier and Water Filter portability act.",
+      "status": "PLANNED_NOT_ACTIVE"
+    },
+    {
+      "act_id": "kernel_conformance_closure",
+      "claim_ids": [
+        "claim_gate1_planned_not_active"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Future Gate 1 kernel conformance closure act.",
+      "status": "PLANNED_NOT_ACTIVE"
+    }
+  ],
+  "public_claims": [
+    {
+      "act_ids": [
+        "airline_deterministic_transaction_runtime"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_airline_runtime_execution",
+      "evidence_ref": "demo/run_tri_party_airline_ticket_purchase_mock_e2e_v01.py",
+      "focused_test_ref": "tests/test_tri_party_airline_ticket_purchase_mock_e2e_v01_runner.py",
+      "limitation_ref": "limitation_deterministic_local_scaffold",
+      "runtime_ref": "demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01:collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
+      "statement": "The living gauntlet executes the deterministic Airline transaction collector and derives its result from the returned report."
+    },
+    {
+      "act_ids": [
+        "all_layers_invariant_super_smoke"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_invariant_runtime_execution",
+      "evidence_ref": "demo/run_all_layers_applied_super_smoke.py",
+      "focused_test_ref": "tests/test_all_layers_applied_super_smoke_runner.py",
+      "limitation_ref": "limitation_deterministic_local_scaffold",
+      "runtime_ref": "demo.run_all_layers_applied_super_smoke:collect_all_layers_applied_super_smoke",
+      "statement": "The living gauntlet executes the all-layers invariant super-smoke and validates its returned runtime structure."
+    },
+    {
+      "act_ids": [
+        "airline_all_real_frozen_reference"
+      ],
+      "claim_class": "EVIDENCE_ONLY",
+      "claim_id": "claim_airline_all_real_frozen_evidence",
+      "evidence_ref": "docs/airline_all_real_evidence_showcase_checkpoint_v01.md",
+      "focused_test_ref": "tests/test_living_gauntlet_v01_runner.py",
+      "limitation_ref": "limitation_frozen_evidence_not_runtime",
+      "runtime_ref": "not_executed:evidence_only",
+      "statement": "The frozen Airline all-real checkpoint remains visible as committed evidence only."
+    },
+    {
+      "act_ids": [
+        "generic_integrity_replay",
+        "root_signer_isolation_conformance",
+        "semantic_work_contract",
+        "domain_neutral_kernel_abi",
+        "causal_consumption",
+        "transition_registry",
+        "root_decision_kernel",
+        "effect_firewall",
+        "generic_multiroot",
+        "supplier_water_filter_portability",
+        "kernel_conformance_closure"
+      ],
+      "claim_class": "PLANNED_NOT_ACTIVE",
+      "claim_id": "claim_gate1_planned_not_active",
+      "evidence_ref": "release/integration_seam_index.json",
+      "focused_test_ref": "tests/test_living_gauntlet_v01_runner.py",
+      "limitation_ref": "limitation_gate1_not_implemented",
+      "runtime_ref": "not_executed:planned_gate1",
+      "statement": "Gate 1 acts are indexed for review and are neither active nor implemented by this scaffold."
+    }
+  ],
+  "version": "v0.1"
+}

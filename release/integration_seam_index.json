@@ -1,6 +1,6 @@
 {
   "document_id": "living_release_integration_seam_index_v01",
-  "index_status": "ACTIVE_SCAFFOLD",
+  "index_status": "ACTIVE_GATE1_G1A1",
   "seams": [
     {
       "authority_status": "ROOT_BOUNDARIES_PRESERVED",
@@ -24,6 +24,18 @@
       "seam_id": "all_layers_invariant_super_smoke_collector",
       "source_module": "demo.run_all_layers_applied_super_smoke",
       "source_symbol": "collect_all_layers_applied_super_smoke",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_INTEGRITY_RECONSTRUCTION",
+      "current_mode": "PURE_IN_MEMORY_KERNEL",
+      "effect_access": "NONE",
+      "gate1_target": "generic_integrity_replay",
+      "notes": "Pure domain-neutral integrity and Replay core; not truth, authority, permission, execution, Anchor provenance, or domain portability.",
+      "seam_class": "KERNEL_CORE",
+      "seam_id": "generic_integrity_replay_core",
+      "source_module": "hedgehog.kernel.integrity_replay_v01",
+      "source_symbol": "verify_artifact_replay_v01",
       "status": "ACTIVE"
     },
     {
@@ -139,7 +151,7 @@
       "current_mode": "NOT_IMPLEMENTED",
       "effect_access": "NONE",
       "gate1_target": "generic_integrity_replay",
-      "notes": "Planned domain-neutral adapter; no current executable symbol.",
+      "notes": "Frozen Airline adapter remains G1-D1, Supplier adapter remains G1-D2, and no adapter exists in G1-A1.",
       "seam_class": "PLANNED_GATE1",
       "seam_id": "generic_integrity_replay_adapter",
       "source_module": "",

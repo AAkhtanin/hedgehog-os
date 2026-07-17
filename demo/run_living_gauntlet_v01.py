@@ -13,10 +13,27 @@ from demo.run_all_layers_applied_super_smoke import (
 from demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01 import (
     collect_tri_party_airline_ticket_purchase_mock_e2e_v01,
 )
+from hedgehog.kernel.integrity_replay_v01 import (
+    ArtifactDependencyEdgeV01,
+    AuthorityClassBindingV01,
+    EvidenceClassBindingV01,
+    RootOwnershipBindingV01,
+    STATUS_SELF_CONSISTENT_UNANCHORED as KERNEL_STATUS_UNANCHORED,
+    artifact_manifest_to_plain_dict_v01,
+    build_artifact_manifest_v01,
+    build_canonical_artifact_ref_v01,
+    build_default_seal_profile_v01,
+    canonical_json_bytes_v01,
+    replay_verification_result_to_plain_dict_v01,
+    seal_verification_result_to_plain_dict_v01,
+    verify_artifact_manifest_v01,
+    verify_artifact_replay_v01,
+)
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v0.1"
+RUNNER_VERSION = "v0.2"
+_RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
@@ -70,11 +87,14 @@ _ACTIVE_ACT_SOURCES = {
         "demo.run_all_layers_applied_super_smoke",
         "collect_all_layers_applied_super_smoke",
     ),
+    "generic_integrity_replay": (
+        "demo.run_living_gauntlet_v01",
+        "collect_generic_integrity_replay_gauntlet_act_v01",
+    ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
 _EVIDENCE_ONLY_ACT_IDS = ("airline_all_real_frozen_reference",)
 _PLANNED_ACT_IDS = (
-    "generic_integrity_replay",
     "root_signer_isolation_conformance",
     "semantic_work_contract",
     "domain_neutral_kernel_abi",
@@ -139,6 +159,10 @@ _CURRENT_SEAMS = {
         "hedgehog.fractal_fulfillment",
         "run_fractal_order_fulfillment_dag",
     ),
+    "generic_integrity_replay_core": (
+        "hedgehog.kernel.integrity_replay_v01",
+        "verify_artifact_replay_v01",
+    ),
 }
 
 
@@ -184,6 +208,7 @@ _COUNTER_FIELD_NAMES = frozenset(
         "airline_collector_execution_count",
         "evidence_only_entry_count",
         "evidence_only_executed_count",
+        "generic_integrity_replay_execution_count",
         "invariant_collector_execution_count",
         "planned_act_count",
         "planned_executed_count",
@@ -256,8 +281,8 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
         errors.append("completion_manifest_field_surface_mismatch")
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
-        ("version", RUNNER_VERSION),
-        ("manifest_status", "ACTIVE_SCAFFOLD"),
+        ("version", _RELEASE_INDEX_VERSION),
+        ("manifest_status", "ACTIVE_GATE1_G1A1"),
     ):
         if manifest.get(key) != expected:
             errors.append(f"completion_manifest_value_mismatch:{key}")
@@ -390,8 +415,8 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
         errors.append("integration_seam_index_field_surface_mismatch")
     for key, expected in (
         ("document_id", "living_release_integration_seam_index_v01"),
-        ("version", RUNNER_VERSION),
-        ("index_status", "ACTIVE_SCAFFOLD"),
+        ("version", _RELEASE_INDEX_VERSION),
+        ("index_status", "ACTIVE_GATE1_G1A1"),
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
@@ -604,6 +629,315 @@ def _super_smoke_act_result(report: Any) -> LivingGauntletActResultV01:
     )
 
 
+_GENERIC_REPLAY_ZERO_COUNTER_FIELDS = (
+    "provider_call_count",
+    "network_call_count",
+    "semantic_rerun_count",
+    "transaction_rerun_count",
+    "corridor_rerun_count",
+    "ledger_recollection_count",
+    "crypto_recollection_count",
+    "root_decision_created_count",
+    "authority_created_count",
+    "permission_created_count",
+    "action_created_count",
+    "action_commit_packet_created_count",
+    "receipt_created_count",
+    "final_output_created_count",
+    "real_world_effects_count",
+)
+
+
+def _build_generic_integrity_replay_fixture_v01(
+    fixture_id: str,
+) -> tuple[Any, tuple[tuple[str, object], ...]]:
+    profile = build_default_seal_profile_v01(timeline_order_required=True)
+    if fixture_id == "linear":
+        transaction_id = "txn:fixture:linear:001"
+        rows = (
+            (
+                "fixture:linear:scope",
+                "scope",
+                "root:alpha",
+                "ROOT_OWNED",
+                "VALIDATED",
+                "CONTEXT_EVIDENCE",
+                {"label": "scope", "sequence": 0},
+            ),
+            (
+                "fixture:linear:evidence",
+                "evidence",
+                "root:alpha",
+                "ADVISORY",
+                "VALIDATED",
+                "ADVISORY_EVIDENCE",
+                {"label": "evidence", "sequence": 1},
+            ),
+            (
+                "fixture:linear:decision",
+                "decision",
+                "root:alpha",
+                "ROOT_OWNED",
+                "ROOT_ACCEPTED",
+                "DECISION_EVIDENCE",
+                {"label": "decision", "sequence": 2},
+            ),
+            (
+                "fixture:linear:final",
+                "final",
+                "root:beta",
+                "ROOT_OWNED",
+                "FINALIZED",
+                "FINAL_EVIDENCE",
+                {"label": "final", "sequence": 3},
+            ),
+        )
+        edges = (
+            ArtifactDependencyEdgeV01(
+                "fixture:linear:evidence",
+                "fixture:linear:scope",
+            ),
+            ArtifactDependencyEdgeV01(
+                "fixture:linear:decision",
+                "fixture:linear:evidence",
+            ),
+            ArtifactDependencyEdgeV01(
+                "fixture:linear:final",
+                "fixture:linear:decision",
+            ),
+        )
+    elif fixture_id == "fanout":
+        transaction_id = "txn:fixture:fanout:001"
+        rows = (
+            (
+                "fixture:fanout:scope",
+                "scope",
+                "root:alpha",
+                "ROOT_OWNED",
+                "VALIDATED",
+                "CONTEXT_EVIDENCE",
+                {"label": "scope", "sequence": 0},
+            ),
+            (
+                "fixture:fanout:left",
+                "branch",
+                "root:alpha",
+                "ADVISORY",
+                "VALIDATED",
+                "BRANCH_EVIDENCE",
+                {"branch": "left", "sequence": 1},
+            ),
+            (
+                "fixture:fanout:right",
+                "branch",
+                "root:beta",
+                "ADVISORY",
+                "VALIDATED",
+                "BRANCH_EVIDENCE",
+                {"branch": "right", "sequence": 2},
+            ),
+            (
+                "fixture:fanout:review",
+                "review",
+                "root:alpha",
+                "ADVISORY",
+                "ROOT_REVIEWED",
+                "REVIEW_EVIDENCE",
+                {"label": "review", "sequence": 3},
+            ),
+            (
+                "fixture:fanout:final_alpha",
+                "final",
+                "root:alpha",
+                "ROOT_OWNED",
+                "FINALIZED",
+                "FINAL_EVIDENCE",
+                {"label": "final_alpha", "sequence": 4},
+            ),
+            (
+                "fixture:fanout:final_beta",
+                "final",
+                "root:beta",
+                "ROOT_OWNED",
+                "FINALIZED",
+                "FINAL_EVIDENCE",
+                {"label": "final_beta", "sequence": 5},
+            ),
+        )
+        edges = (
+            ArtifactDependencyEdgeV01(
+                "fixture:fanout:left",
+                "fixture:fanout:scope",
+            ),
+            ArtifactDependencyEdgeV01(
+                "fixture:fanout:right",
+                "fixture:fanout:scope",
+            ),
+            ArtifactDependencyEdgeV01(
+                "fixture:fanout:review",
+                "fixture:fanout:left",
+            ),
+            ArtifactDependencyEdgeV01(
+                "fixture:fanout:review",
+                "fixture:fanout:right",
+            ),
+            ArtifactDependencyEdgeV01(
+                "fixture:fanout:final_alpha",
+                "fixture:fanout:review",
+            ),
+            ArtifactDependencyEdgeV01(
+                "fixture:fanout:final_beta",
+                "fixture:fanout:review",
+            ),
+        )
+    else:
+        raise ValueError("generic_fixture_unknown")
+
+    payload_rows = tuple((row[0], row[6]) for row in rows)
+    artifacts = tuple(
+        build_canonical_artifact_ref_v01(
+            artifact_id=row[0],
+            artifact_type=row[1],
+            schema_version="v1",
+            transaction_id=transaction_id,
+            owner_root_id=row[2],
+            authority_class=row[3],
+            lifecycle_state=row[4],
+            payload=row[6],
+            profile=profile,
+        )
+        for row in rows
+    )
+    manifest = build_artifact_manifest_v01(
+        transaction_id=transaction_id,
+        profile=profile,
+        artifacts=artifacts,
+        dependency_edges=edges,
+        root_ownership_bindings=tuple(
+            RootOwnershipBindingV01(row[0], row[2]) for row in rows
+        ),
+        evidence_class_bindings=tuple(
+            EvidenceClassBindingV01(row[0], row[5]) for row in rows
+        ),
+        authority_class_bindings=tuple(
+            AuthorityClassBindingV01(row[0], row[3]) for row in rows
+        ),
+    )
+    return manifest, payload_rows
+
+
+def _collect_generic_integrity_replay_fixture_records_v01() -> tuple[dict[str, Any], ...]:
+    records: list[dict[str, Any]] = []
+    for fixture_id in ("linear", "fanout"):
+        manifest, payload_rows = _build_generic_integrity_replay_fixture_v01(
+            fixture_id
+        )
+        payload_snapshot = tuple(
+            (artifact_id, canonical_json_bytes_v01(payload))
+            for artifact_id, payload in payload_rows
+        )
+        unanchored = verify_artifact_manifest_v01(
+            manifest=manifest,
+            payload_rows=payload_rows,
+        )
+        anchored = verify_artifact_manifest_v01(
+            manifest=manifest,
+            payload_rows=payload_rows,
+            expected_manifest_hash=manifest.manifest_hash,
+        )
+        replay = verify_artifact_replay_v01(
+            manifest=manifest,
+            payload_rows=payload_rows,
+            expected_manifest_hash=manifest.manifest_hash,
+        )
+        if unanchored.verification_status != KERNEL_STATUS_UNANCHORED:
+            raise ValueError("generic_unanchored_verification_failed")
+        if anchored.verification_status != STATUS_PASS:
+            raise ValueError("generic_expected_hash_verification_failed")
+        if replay.replay_status != STATUS_PASS:
+            raise ValueError("generic_replay_failed")
+        if any(getattr(replay, field) != 0 for field in _GENERIC_REPLAY_ZERO_COUNTER_FIELDS):
+            raise ValueError("generic_replay_counter_nonzero")
+        first_projection = (
+            artifact_manifest_to_plain_dict_v01(manifest),
+            seal_verification_result_to_plain_dict_v01(unanchored),
+            seal_verification_result_to_plain_dict_v01(anchored),
+            replay_verification_result_to_plain_dict_v01(replay),
+        )
+        second_projection = (
+            artifact_manifest_to_plain_dict_v01(manifest),
+            seal_verification_result_to_plain_dict_v01(unanchored),
+            seal_verification_result_to_plain_dict_v01(anchored),
+            replay_verification_result_to_plain_dict_v01(replay),
+        )
+        if first_projection != second_projection:
+            raise ValueError("generic_projection_nondeterministic")
+        if payload_snapshot != tuple(
+            (artifact_id, canonical_json_bytes_v01(payload))
+            for artifact_id, payload in payload_rows
+        ):
+            raise ValueError("generic_fixture_input_mutated")
+        repeated_manifest, repeated_payload_rows = (
+            _build_generic_integrity_replay_fixture_v01(fixture_id)
+        )
+        repeated_replay = verify_artifact_replay_v01(
+            manifest=repeated_manifest,
+            payload_rows=repeated_payload_rows,
+            expected_manifest_hash=repeated_manifest.manifest_hash,
+        )
+        if (
+            repeated_manifest.manifest_hash != manifest.manifest_hash
+            or repeated_replay.replay_id != replay.replay_id
+        ):
+            raise ValueError("generic_fixture_nondeterministic")
+        records.append(
+            {
+                "fixture_id": fixture_id,
+                "manifest": manifest,
+                "payload_rows": payload_rows,
+                "unanchored": unanchored,
+                "anchored": anchored,
+                "replay": replay,
+            }
+        )
+    return tuple(records)
+
+
+def collect_generic_integrity_replay_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    act_id = "generic_integrity_replay"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        records = _collect_generic_integrity_replay_fixture_records_v01()
+        if len(records) != 2:
+            raise ValueError("generic_fixture_count_invalid")
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("generic_integrity_replay_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
+
+
 def _failed_act_result(*, act_id: str, reason: str) -> LivingGauntletActResultV01:
     source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
     return LivingGauntletActResultV01(
@@ -672,6 +1006,12 @@ def _derive_report_counters_v01(
             isinstance(row, Mapping) and row.get("executed") is True
             for row in evidence_rows
         ),
+        "generic_integrity_replay_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[2]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
         "invariant_collector_execution_count": sum(
             isinstance(row, Mapping)
             and row.get("act_id") == _ACTIVE_ACT_IDS[1]
@@ -705,6 +1045,7 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     active_results: list[LivingGauntletActResultV01] = []
     airline_calls = 0
     invariant_calls = 0
+    generic_calls = 0
     if not errors:
         airline_calls += 1
         try:
@@ -730,6 +1071,18 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                 _failed_act_result(
                     act_id=_ACTIVE_ACT_IDS[1],
                     reason="super_smoke_collector_failed",
+                )
+            )
+        generic_calls += 1
+        try:
+            active_results.append(
+                collect_generic_integrity_replay_gauntlet_act_v01()
+            )
+        except Exception:
+            active_results.append(
+                _failed_act_result(
+                    act_id=_ACTIVE_ACT_IDS[2],
+                    reason="generic_integrity_replay_collector_failed",
                 )
             )
 
@@ -769,6 +1122,7 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             "all_active_acts_executed_once",
             airline_calls == 1
             and invariant_calls == 1
+            and generic_calls == 1
             and len(active_results) == len(_ACTIVE_ACT_IDS),
         ),
         _invariant_result(

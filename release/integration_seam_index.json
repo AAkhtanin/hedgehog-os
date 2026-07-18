@@ -1,6 +1,6 @@
 {
   "document_id": "living_release_integration_seam_index_v01",
-  "index_status": "ACTIVE_GATE1_G1C1",
+  "index_status": "ACTIVE_GATE1_G1C2",
   "seams": [
     {
       "authority_status": "ROOT_BOUNDARIES_PRESERVED",
@@ -255,16 +255,16 @@
       "status": "ACTIVE"
     },
     {
-      "authority_status": "PLANNED_ROOT_SCOPED_EFFECT_BOUNDARY",
-      "current_mode": "NOT_IMPLEMENTED",
-      "effect_access": "BOUNDED_EFFECT_HANDLE_OWNER_PLANNED",
+      "authority_status": "ROOT_SCOPED_EXCLUSIVE_EFFECT_BOUNDARY",
+      "current_mode": "PURE_IN_MEMORY_MOCK_ONLY_CAPABILITY_EXECUTION",
+      "effect_access": "BOUNDED_EFFECT_HANDLE_OWNER",
       "gate1_target": "effect_firewall",
-      "notes": "Only this future firewall/corridor seam may own bounded effect handles; none exists now.",
-      "seam_class": "PLANNED_GATE1_ROOT_BOUNDARY",
+      "notes": "The only active bounded effect-handle owner. The capability remains private to one Firewall invocation and is bound to one Root decision, permission, transaction, adapter, action, scope, and expiry. It executes one neutral mock effect only and returns an evidence-only receipt. No provider, DRS, AVF, GT, domain adapter, renderer, receipt, real connector, or external system receives the handle.",
+      "seam_class": "KERNEL_EFFECT_BOUNDARY",
       "seam_id": "effect_firewall",
-      "source_module": "",
-      "source_symbol": null,
-      "status": "PLANNED_NOT_ACTIVE"
+      "source_module": "hedgehog.kernel.effect_firewall_v01",
+      "source_symbol": "execute_mock_effect_v01",
+      "status": "ACTIVE"
     },
     {
       "authority_status": "PLANNED_ROOT_ENVELOPE",

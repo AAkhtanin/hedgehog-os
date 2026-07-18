@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, replace
+import copy
 import json
 from pathlib import Path
+import pickle
 from typing import Any
 
 from jsonschema import Draft202012Validator
@@ -49,6 +51,23 @@ from hedgehog.kernel.abi_v01 import (
     validate_kernel_artifact_bundle_v01,
     validate_kernel_artifact_v01,
 )
+from hedgehog.kernel.effect_firewall_v01 import (
+    EFFECT_DECISION_ALLOW_MOCK_EFFECT,
+    EFFECT_DECISION_BLOCKED_FAIL_CLOSED,
+    EffectCapabilityV01,
+    authorize_effect_request_v01,
+    build_effect_firewall_v01,
+    build_effect_request_v01,
+    effect_firewall_decision_to_plain_dict_v01,
+    effect_firewall_to_plain_dict_v01,
+    effect_request_to_plain_dict_v01,
+    execute_mock_effect_v01,
+    validate_effect_firewall_decision_v01,
+    validate_effect_firewall_v01,
+    validate_effect_receipt_v01,
+    validate_effect_request_v01,
+)
+import hedgehog.kernel.effect_firewall_v01 as effect_firewall_module
 from hedgehog.kernel.root_signer_isolation_v01 import (
     STATUS_BLOCKED_FAIL_CLOSED as SIGNER_STATUS_BLOCKED,
     STATUS_PASS as SIGNER_STATUS_PASS,
@@ -116,7 +135,7 @@ import hedgehog.kernel.transition_registry_v01 as transition_registry_module
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v0.6"
+RUNNER_VERSION = "v0.7"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -203,6 +222,10 @@ _ACTIVE_ACT_SOURCES = {
         "demo.run_living_gauntlet_v01",
         "collect_root_decision_kernel_gauntlet_act_v01",
     ),
+    "effect_firewall": (
+        "demo.run_living_gauntlet_v01",
+        "collect_effect_firewall_gauntlet_act_v01",
+    ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
 _EXECUTED_RUNTIME_ACT_IDS = (
@@ -211,6 +234,7 @@ _EXECUTED_RUNTIME_ACT_IDS = (
     "generic_integrity_replay",
     "transition_registry",
     "root_decision_kernel",
+    "effect_firewall",
 )
 _EXECUTED_CONFORMANCE_ACT_IDS = (
     "root_signer_isolation_conformance",
@@ -220,7 +244,6 @@ _EXECUTED_CONFORMANCE_ACT_IDS = (
 )
 _EVIDENCE_ONLY_ACT_IDS = ("airline_all_real_frozen_reference",)
 _PLANNED_ACT_IDS = (
-    "effect_firewall",
     "generic_multiroot",
     "supplier_water_filter_portability",
     "kernel_conformance_closure",
@@ -228,7 +251,6 @@ _PLANNED_ACT_IDS = (
 _PLANNED_SEAM_IDS = (
     "generic_integrity_replay_adapter",
     "supplier_water_filter_abi_adapter",
-    "effect_firewall",
     "multiroot_envelope",
     "kernel_conformance_report",
 )
@@ -307,6 +329,10 @@ _CURRENT_SEAMS = {
         "hedgehog.kernel.root_decision_v01",
         "decide_root_v01",
     ),
+    "effect_firewall": (
+        "hedgehog.kernel.effect_firewall_v01",
+        "execute_mock_effect_v01",
+    ),
 }
 _CURRENT_SEAM_STATUSES = {
     "deterministic_airline_reference_collector": STATUS_ACTIVE,
@@ -328,8 +354,9 @@ _CURRENT_SEAM_STATUSES = {
     "causal_consumption_core": STATUS_ACTIVE,
     "transition_registry": STATUS_ACTIVE,
     "root_decision_kernel": STATUS_ACTIVE,
+    "effect_firewall": STATUS_ACTIVE,
 }
-_G1C1_ACTIVE_RECORD_EXPECTATIONS = {
+_ACTIVE_RECORD_EXPECTATIONS = {
     "transition_registry": (
         ("claim_transition_registry_runtime_execution",),
         "tests/test_transition_registry_v01.py",
@@ -338,8 +365,12 @@ _G1C1_ACTIVE_RECORD_EXPECTATIONS = {
         ("claim_root_decision_kernel_runtime_execution",),
         "tests/test_root_decision_kernel_v01.py",
     ),
+    "effect_firewall": (
+        ("claim_effect_firewall_runtime_execution",),
+        "tests/test_effect_firewall_v01.py",
+    ),
 }
-_G1C1_SEAM_EXPECTATIONS = {
+_ACTIVE_SEAM_EXPECTATIONS = {
     "transition_registry": {
         "authority_status": "NON_ROOT_IMMUTABLE_TRANSITION_POLICY",
         "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_LOOKUP",
@@ -353,6 +384,13 @@ _G1C1_SEAM_EXPECTATIONS = {
         "effect_access": "NONE",
         "gate1_target": "root_decision_kernel",
         "seam_class": "KERNEL_ROOT_BOUNDARY",
+    },
+    "effect_firewall": {
+        "authority_status": "ROOT_SCOPED_EXCLUSIVE_EFFECT_BOUNDARY",
+        "current_mode": "PURE_IN_MEMORY_MOCK_ONLY_CAPABILITY_EXECUTION",
+        "effect_access": "BOUNDED_EFFECT_HANDLE_OWNER",
+        "gate1_target": "effect_firewall",
+        "seam_class": "KERNEL_EFFECT_BOUNDARY",
     },
 }
 
@@ -410,6 +448,7 @@ _COUNTER_FIELD_NAMES = frozenset(
         "causal_consumption_execution_count",
         "transition_registry_execution_count",
         "root_decision_kernel_execution_count",
+        "effect_firewall_execution_count",
     }
 )
 
@@ -548,6 +587,20 @@ def _active_g1c1_absence_errors(
         )
     ):
         errors.append("completion_manifest_active_root_decision_described_unimplemented")
+    if "effect_firewall" in active_ids and any(
+        phrase in text
+        for text in texts
+        for phrase in (
+            "effect firewall remains unimplemented",
+            "effect firewall is unimplemented",
+            "no effect handle exists",
+            "no effect request exists",
+            "not effect execution",
+        )
+    ):
+        errors.append(
+            "completion_manifest_active_effect_firewall_described_unimplemented"
+        )
     return tuple(errors)
 
 
@@ -560,7 +613,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("manifest_status", "ACTIVE_GATE1_G1C1"),
+        ("manifest_status", "ACTIVE_GATE1_G1C2"),
     ):
         if manifest.get(key) != expected:
             errors.append(f"completion_manifest_value_mismatch:{key}")
@@ -599,7 +652,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
                 errors.append(f"active_act_claim_ids_invalid:{record.get('act_id', '')}")
             if not isinstance(record.get("focused_test"), str):
                 errors.append(f"active_act_focused_test_invalid:{record.get('act_id', '')}")
-            expected_record = _G1C1_ACTIVE_RECORD_EXPECTATIONS.get(record.get("act_id"))
+            expected_record = _ACTIVE_RECORD_EXPECTATIONS.get(record.get("act_id"))
             if expected_record is not None and (
                 tuple(record.get("claim_ids", ())) != expected_record[0]
                 or record.get("focused_test") != expected_record[1]
@@ -704,7 +757,7 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_integration_seam_index_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("index_status", "ACTIVE_GATE1_G1C1"),
+        ("index_status", "ACTIVE_GATE1_G1C2"),
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
@@ -739,7 +792,7 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
                     seam.get("source_module"), seam.get("source_symbol")
                 ) != _CURRENT_SEAMS[seam_id]:
                     errors.append(f"current_seam_source_mismatch:{seam_id}")
-                expected_contract = _G1C1_SEAM_EXPECTATIONS.get(seam_id)
+                expected_contract = _ACTIVE_SEAM_EXPECTATIONS.get(seam_id)
                 if expected_contract is not None and any(
                     seam.get(key) != value
                     for key, value in expected_contract.items()
@@ -752,12 +805,12 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
                     errors.append(f"planned_seam_symbol_present:{seam_id}")
             if seam_id != "effect_firewall" and seam.get("effect_access") != "NONE":
                 errors.append(f"seam_effect_access_forbidden:{seam_id}")
+                errors.append("integration_seam_non_firewall_effect_access_forbidden")
             if seam_id == "effect_firewall" and (
-                status != STATUS_PLANNED_NOT_ACTIVE
-                or seam.get("effect_access")
-                != "BOUNDED_EFFECT_HANDLE_OWNER_PLANNED"
+                status != STATUS_ACTIVE
+                or seam.get("effect_access") != "BOUNDED_EFFECT_HANDLE_OWNER"
             ):
-                errors.append("effect_firewall_boundary_invalid")
+                errors.append("integration_seam_effect_owner_identity_invalid")
             authority_status = seam.get("authority_status")
             if authority_status in {
                 "PLANNED_ROOT_BOUNDARY",
@@ -808,6 +861,37 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
                 )
             ):
                 errors.append("integration_seam_active_root_decision_described_absent")
+        effect_seam = seam_by_id.get("effect_firewall")
+        if isinstance(effect_seam, dict) and effect_seam.get("status") == STATUS_ACTIVE:
+            note = _normalized_release_text(effect_seam.get("notes"))
+            if any(
+                phrase in note
+                for phrase in (
+                    "not implemented",
+                    "unimplemented",
+                    "no effect handle exists",
+                    "no effect request exists",
+                    "not effect execution",
+                )
+            ):
+                errors.append(
+                    "integration_seam_active_effect_firewall_described_absent"
+                )
+        active_effect_owners = [
+            seam
+            for seam in seams
+            if isinstance(seam, dict)
+            and seam.get("status") == STATUS_ACTIVE
+            and seam.get("effect_access") != "NONE"
+        ]
+        if len(active_effect_owners) != 1:
+            errors.append("integration_seam_effect_owner_count_invalid")
+        elif (
+            active_effect_owners[0].get("seam_id") != "effect_firewall"
+            or active_effect_owners[0].get("effect_access")
+            != "BOUNDED_EFFECT_HANDLE_OWNER"
+        ):
+            errors.append("integration_seam_effect_owner_identity_invalid")
     return tuple(dict.fromkeys(errors))
 
 
@@ -2733,6 +2817,486 @@ def collect_root_decision_kernel_gauntlet_act_v01(
         )
 
 
+_EFFECT_FIXTURE_TIME_ENVELOPE = {
+    "pt_created_at": "2026-01-01T00:00:00+00:00",
+    "kt_asof": "2026-01-01T00:00:00+00:00",
+    "et_observed_at": None,
+    "ct_session_anchor": "session:fixture:effect_firewall:001",
+    "ttl_seconds": 3600,
+    "freshness_class": "static",
+    "valid_from": "2026-01-01T00:00:00+00:00",
+    "valid_to": "2026-01-01T01:00:00+00:00",
+}
+
+
+def _build_effect_firewall_root_context_v01() -> tuple[Any, Any, Any, Any]:
+    packet = _build_semantic_work_fixture_v01()[3]
+    kernel = build_root_decision_kernel_v01()
+    states = _root_decision_base_states_v01(packet)
+    states["permission_state"] = {
+        "permission_required": True,
+        "user_permission_present": True,
+        "permission_scope_valid": True,
+        "permission_ref": "permission:fixture:effect_firewall:001",
+    }
+    decision_input = build_root_decision_input_v01(
+        transaction_id=packet.transaction_id,
+        target_root_id=packet.target_root_id,
+        root_review_packet=packet,
+        **states,
+    )
+    result = decide_root_v01(kernel=kernel, decision_input=decision_input)
+    if (
+        result.decision != ROOT_DECISION_ACCEPT
+        or validate_root_decision_result_v01(
+            kernel=kernel,
+            decision_input=decision_input,
+            result=result,
+        )
+        or result.root_commit_created is not True
+        or result.selected_candidate_id is None
+        or result.permission_created is not False
+        or result.final_output_created is not False
+        or result.effect_requested is not False
+    ):
+        raise ValueError("effect_firewall_root_context_invalid")
+    return packet, kernel, decision_input, result
+
+
+def _fresh_effect_firewall_request_v01() -> tuple[Any, ...]:
+    packet, kernel, decision_input, result = (
+        _build_effect_firewall_root_context_v01()
+    )
+    firewall = build_effect_firewall_v01(
+        root_decision_kernel=kernel,
+        decision_input=decision_input,
+        root_decision_result=result,
+        invocation_id="invocation:fixture:effect_firewall:001",
+        allowed_adapter_ids=("mock_adapter:bounded_neutral_v01",),
+        allowed_action_kinds=("mock_action:record_neutral_receipt",),
+        root_scope_refs=("scope:neutral:alpha", "scope:neutral:beta"),
+        maximum_expires_at_tick=200,
+    )
+    request = build_effect_request_v01(
+        root_decision_kernel=kernel,
+        decision_input=decision_input,
+        root_decision_result=result,
+        request_kind="ActionCommitPacket",
+        adapter_id="mock_adapter:bounded_neutral_v01",
+        action_kind="mock_action:record_neutral_receipt",
+        scope_refs=("scope:neutral:alpha",),
+        issued_at_tick=100,
+        expires_at_tick=150,
+        idempotency_key="idempotency:fixture:effect_firewall:001",
+    )
+    if validate_effect_firewall_v01(firewall) or validate_effect_request_v01(request):
+        raise ValueError("effect_firewall_fixture_construction_invalid")
+    return packet, kernel, decision_input, result, firewall, request
+
+
+def _effect_request_variant_v01(request: Any, **changes: Any) -> Any:
+    changed = replace(request, **changes)
+    return replace(
+        changed,
+        request_id=effect_firewall_module._request_id(changed),
+    )
+
+
+def _fresh_effect_authorization_v01() -> tuple[Any, ...]:
+    context = _fresh_effect_firewall_request_v01()
+    firewall, request = context[-2:]
+    decision = authorize_effect_request_v01(
+        firewall=firewall,
+        request=request,
+        current_tick=110,
+    )
+    if (
+        decision.decision != EFFECT_DECISION_ALLOW_MOCK_EFFECT
+        or decision.reason_code != "mock_effect_authorized"
+        or validate_effect_firewall_decision_v01(
+            firewall=firewall,
+            request=request,
+            decision=decision,
+        )
+    ):
+        raise ValueError("effect_firewall_authorization_invalid")
+    return (*context, decision)
+
+
+def _build_effect_firewall_fixture_v01() -> dict[str, Any]:
+    context = _fresh_effect_authorization_v01()
+    packet, kernel, decision_input, result, firewall, request, decision = context
+    input_before = root_decision_input_to_plain_dict_v01(decision_input)
+    result_before = root_decision_result_to_plain_dict_v01(result)
+    packet_before = semantic_work_to_plain_dict_v01(packet)
+    receipt = execute_mock_effect_v01(
+        firewall=firewall,
+        request=request,
+        decision=decision,
+        current_tick=120,
+        adapter_id="mock_adapter:bounded_neutral_v01",
+        action_kind="mock_action:record_neutral_receipt",
+        child_scope_refs=("scope:neutral:alpha",),
+        child_expires_at_tick=140,
+        receipt_artifact_id="receipt:fixture:effect_firewall:001",
+        time_envelope=_EFFECT_FIXTURE_TIME_ENVELOPE,
+    )
+    if (
+        validate_effect_receipt_v01(
+            firewall=firewall,
+            request=request,
+            decision=decision,
+            receipt=receipt,
+        )
+        or validate_effect_firewall_v01(firewall)
+        or root_decision_input_to_plain_dict_v01(decision_input) != input_before
+        or root_decision_result_to_plain_dict_v01(result) != result_before
+        or semantic_work_to_plain_dict_v01(packet) != packet_before
+    ):
+        raise ValueError("effect_firewall_receipt_invalid")
+    return {
+        "packet": packet,
+        "kernel": kernel,
+        "decision_input": decision_input,
+        "root_result": result,
+        "firewall": firewall,
+        "request": request,
+        "decision": decision,
+        "receipt": receipt,
+    }
+
+
+def _expect_effect_block_v01(
+    firewall: Any,
+    request: Any,
+    tick: int,
+    reason: str,
+) -> None:
+    before = effect_firewall_to_plain_dict_v01(firewall)["state_counters"].copy()
+    decision = authorize_effect_request_v01(
+        firewall=firewall,
+        request=request,
+        current_tick=tick,
+    )
+    if (
+        decision.decision != EFFECT_DECISION_BLOCKED_FAIL_CLOSED
+        or decision.reason_code != reason
+        or decision.capability_issued is not False
+        or decision.capability_id is not None
+        or decision.return_to_root is not True
+        or decision.real_world_effects_count != 0
+        or validate_effect_firewall_decision_v01(
+            firewall=firewall,
+            request=request,
+            decision=decision,
+        )
+        or effect_firewall_to_plain_dict_v01(firewall)["state_counters"]
+        != before
+    ):
+        raise ValueError("effect_firewall_negative_authorization_failed")
+
+
+def _effect_execution_must_fail_v01(reason: str, **changes: Any) -> None:
+    context = _fresh_effect_authorization_v01()
+    firewall, request, decision = context[-3:]
+    values = {
+        "firewall": firewall,
+        "request": request,
+        "decision": decision,
+        "current_tick": 120,
+        "adapter_id": request.adapter_id,
+        "action_kind": request.action_kind,
+        "child_scope_refs": ("scope:neutral:alpha",),
+        "child_expires_at_tick": 140,
+        "receipt_artifact_id": "receipt:fixture:effect_firewall:negative",
+        "time_envelope": _EFFECT_FIXTURE_TIME_ENVELOPE,
+    }
+    values.update(changes)
+    before = effect_firewall_to_plain_dict_v01(firewall)["state_counters"].copy()
+    try:
+        execute_mock_effect_v01(**values)
+    except ValueError as exc:
+        if exc.args != (reason,):
+            raise ValueError("effect_firewall_negative_execution_reason") from None
+    else:
+        raise ValueError("effect_firewall_negative_execution_allowed")
+    if effect_firewall_to_plain_dict_v01(firewall)["state_counters"] != before:
+        raise ValueError("effect_firewall_failed_execution_mutated_state")
+
+
+def _effect_receipt_variant_v01(receipt: Any, field: str, value: Any) -> Any:
+    plain = kernel_artifact_to_plain_dict_v01(receipt)
+    payload = plain["payload"]
+    payload[field] = value
+    return build_kernel_artifact_v01(
+        abi_version=plain["abi_version"],
+        artifact_id=plain["artifact_id"],
+        artifact_type=plain["artifact_type"],
+        schema_version=plain["schema_version"],
+        transaction_id=plain["transaction_id"],
+        owner_root_id=plain["owner_root_id"],
+        source_component=plain["source_component"],
+        authority_class=plain["authority_class"],
+        lifecycle_state=plain["lifecycle_state"],
+        payload=payload,
+        trace_refs=tuple(plain["trace_refs"]),
+        parent_refs=tuple(plain["parent_refs"]),
+        time_envelope=plain["time_envelope"],
+    )
+
+
+def _collect_effect_firewall_fixture_metrics_v01() -> dict[str, Any]:
+    fixture = _build_effect_firewall_fixture_v01()
+    firewall = fixture["firewall"]
+    request = fixture["request"]
+    decision = fixture["decision"]
+    receipt = fixture["receipt"]
+
+    attack_cases = []
+    for changes, tick, reason, preserve_id in (
+        ({"request_id": "0" * 64}, 110, "forged_request", True),
+        ({"root_decision_id": "decision:other"}, 110, "request_root_binding_mismatch", False),
+        ({"permission_ref": "receipt:fixture:effect_firewall:001"}, 110, "permission_binding_mismatch", False),
+        ({"adapter_id": "adapter:real"}, 110, "real_effect_forbidden", False),
+        ({"adapter_id": "mock_adapter:other"}, 110, "adapter_not_allowed", False),
+        ({"action_kind": "mock_action:other"}, 110, "action_not_allowed", False),
+        ({"scope_refs": ("scope:neutral:alpha", "scope:other")}, 110, "scope_expansion_forbidden", False),
+        ({"expires_at_tick": 201}, 110, "ttl_expansion_forbidden", False),
+        ({}, 99, "request_not_yet_valid", True),
+        ({}, 150, "request_expired", True),
+    ):
+        fresh = _fresh_effect_firewall_request_v01()
+        case_firewall, case_request = fresh[-2:]
+        if changes:
+            case_request = (
+                replace(case_request, **changes)
+                if preserve_id
+                else _effect_request_variant_v01(case_request, **changes)
+            )
+        _expect_effect_block_v01(case_firewall, case_request, tick, reason)
+        attack_cases.append(reason)
+
+    fresh = _fresh_effect_firewall_request_v01()
+    duplicate_firewall, duplicate_request = fresh[-2:]
+    authorize_effect_request_v01(
+        firewall=duplicate_firewall,
+        request=duplicate_request,
+        current_tick=110,
+    )
+    _expect_effect_block_v01(
+        duplicate_firewall, duplicate_request, 110, "duplicate_request"
+    )
+    attack_cases.append("duplicate_request")
+
+    fresh = _fresh_effect_firewall_request_v01()
+    idempotent_firewall, first_request = fresh[-2:]
+    authorize_effect_request_v01(
+        firewall=idempotent_firewall,
+        request=first_request,
+        current_tick=110,
+    )
+    second_request = _effect_request_variant_v01(
+        first_request,
+        request_kind="ExecutionRequest",
+    )
+    _expect_effect_block_v01(
+        idempotent_firewall,
+        second_request,
+        110,
+        "duplicate_idempotency_key",
+    )
+    attack_cases.append("duplicate_idempotency_key")
+
+    for reason, changes in (
+        ("effect_capability_adapter_mismatch", {"adapter_id": "mock_adapter:other"}),
+        ("effect_scope_expansion_forbidden", {"child_scope_refs": ("scope:other",)}),
+        ("effect_ttl_expansion_forbidden", {"child_expires_at_tick": 151}),
+    ):
+        _effect_execution_must_fail_v01(reason, **changes)
+        attack_cases.append(reason)
+
+    try:
+        execute_mock_effect_v01(
+            firewall=firewall,
+            request=request,
+            decision=decision,
+            current_tick=120,
+            adapter_id=request.adapter_id,
+            action_kind=request.action_kind,
+            child_scope_refs=("scope:neutral:alpha",),
+            child_expires_at_tick=140,
+            receipt_artifact_id="receipt:fixture:effect_firewall:second",
+            time_envelope=_EFFECT_FIXTURE_TIME_ENVELOPE,
+        )
+    except ValueError as exc:
+        if exc.args != ("effect_capability_consumed",):
+            raise ValueError("effect_firewall_duplicate_execution_reason") from None
+    else:
+        raise ValueError("effect_firewall_duplicate_execution_allowed")
+    attack_cases.append("effect_capability_consumed")
+
+    capability = firewall._state.issued_capabilities[decision.capability_id]
+    if isinstance(decision, EffectCapabilityV01):
+        raise ValueError("effect_firewall_public_capability_returned")
+    for operation in (
+        lambda: copy.copy(capability),
+        lambda: copy.deepcopy(capability),
+        lambda: pickle.dumps(capability),
+        lambda: json.dumps(capability),
+        lambda: canonical_json_bytes_v01(capability),
+    ):
+        try:
+            operation()
+        except (TypeError, ValueError):
+            pass
+        else:
+            raise ValueError("effect_firewall_capability_serialized")
+    firewall_projection = effect_firewall_to_plain_dict_v01(firewall)
+    decision_projection = effect_firewall_decision_to_plain_dict_v01(decision)
+    receipt_projection = kernel_artifact_to_plain_dict_v01(receipt)
+    if (
+        "EffectCapabilityV01" in repr(firewall_projection)
+        or "EffectCapabilityV01" in repr(decision_projection)
+        or "EffectCapabilityV01" in repr(receipt_projection)
+        or "capability_id" in firewall_projection
+        or any(isinstance(value, EffectCapabilityV01) for value in receipt_projection["payload"].values())
+    ):
+        raise ValueError("effect_firewall_capability_exposed")
+    other = _fresh_effect_authorization_v01()
+    other_firewall, other_request, other_decision = other[-3:]
+    other_capability = other_firewall._state.issued_capabilities[
+        other_decision.capability_id
+    ]
+    if (
+        capability is other_capability
+        or effect_firewall_module._capability_valid(
+            capability, other_firewall, other_request
+        )
+    ):
+        raise ValueError("effect_firewall_capability_transferable")
+    forged = object.__new__(EffectCapabilityV01)
+    for slot in EffectCapabilityV01.__slots__:
+        object.__setattr__(forged, slot, getattr(capability, slot))
+    object.__setattr__(forged, "_issuer_token", object())
+    if effect_firewall_module._capability_valid(forged, firewall, request):
+        raise ValueError("effect_firewall_capability_forgery_accepted")
+
+    receipt_attacks = (
+        ("future_permission_created", True),
+        ("root_decision_created", True),
+        ("final_output_created", True),
+        ("effect_handle_exposed", True),
+        ("real_world_effects_count", 1),
+        ("scope_refs", ["scope:other"]),
+    )
+    for field, value in receipt_attacks:
+        forged_receipt = _effect_receipt_variant_v01(receipt, field, value)
+        if not validate_effect_receipt_v01(
+            firewall=firewall,
+            request=request,
+            decision=decision,
+            receipt=forged_receipt,
+        ):
+            raise ValueError("effect_firewall_receipt_attack_accepted")
+
+    repeated = _build_effect_firewall_fixture_v01()
+    if (
+        effect_request_to_plain_dict_v01(request)
+        != effect_request_to_plain_dict_v01(repeated["request"])
+        or effect_firewall_decision_to_plain_dict_v01(decision)
+        != effect_firewall_decision_to_plain_dict_v01(repeated["decision"])
+        or kernel_artifact_to_plain_dict_v01(receipt)
+        != kernel_artifact_to_plain_dict_v01(repeated["receipt"])
+        or effect_firewall_to_plain_dict_v01(firewall)
+        != effect_firewall_to_plain_dict_v01(repeated["firewall"])
+    ):
+        raise ValueError("effect_firewall_fixture_nondeterministic")
+
+    counters = firewall_projection["state_counters"]
+    return {
+        "firewall_count": 1,
+        "request_count": 1,
+        "allowed_authorization_count": 1,
+        "capability_issued_count": counters["issued_capability_count"],
+        "mock_effect_execution_count": counters["mock_effect_execution_count"],
+        "evidence_receipt_count": 1,
+        "return_to_root_transition_count": 1,
+        "duplicate_execution_success_count": 0,
+        "negative_test_count": len(attack_cases) + len(receipt_attacks),
+        "capability_public_exposure_count": 0,
+        "permission_created_count": 0,
+        "root_decision_created_by_firewall_count": 0,
+        "final_output_created_count": 0,
+        "real_connector_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+        "firewall_id": firewall.firewall_id,
+        "request_id": request.request_id,
+        "decision_id": decision.decision_id,
+        "capability_id": decision.capability_id,
+    }
+
+
+def collect_effect_firewall_gauntlet_act_v01() -> LivingGauntletActResultV01:
+    act_id = "effect_firewall"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        metrics = _collect_effect_firewall_fixture_metrics_v01()
+        geometry = tuple(
+            metrics[key]
+            for key in (
+                "firewall_count",
+                "request_count",
+                "allowed_authorization_count",
+                "capability_issued_count",
+                "mock_effect_execution_count",
+                "evidence_receipt_count",
+                "return_to_root_transition_count",
+                "duplicate_execution_success_count",
+                "capability_public_exposure_count",
+                "permission_created_count",
+                "root_decision_created_by_firewall_count",
+                "final_output_created_count",
+                "real_connector_count",
+                "provider_call_count",
+                "network_call_count",
+                "gemini_call_count",
+                "real_world_effects_count",
+            )
+        )
+        if geometry != (1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0):
+            raise ValueError("effect_firewall_geometry_invalid")
+        if metrics["negative_test_count"] < 22:
+            raise ValueError("effect_firewall_negative_geometry_invalid")
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("effect_firewall_runtime_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
+
+
 def _failed_act_result(*, act_id: str, reason: str) -> LivingGauntletActResultV01:
     source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
     return LivingGauntletActResultV01(
@@ -2855,6 +3419,12 @@ def _derive_report_counters_v01(
             and row.get("executed") is True
             for row in active_rows
         ),
+        "effect_firewall_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[9]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
     }
 
 
@@ -2883,6 +3453,7 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     causal_consumption_calls = 0
     transition_registry_calls = 0
     root_decision_calls = 0
+    effect_firewall_calls = 0
     if not errors:
         airline_calls += 1
         try:
@@ -2986,6 +3557,16 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                     reason="root_decision_kernel_collector_failed",
                 )
             )
+        effect_firewall_calls += 1
+        try:
+            active_results.append(collect_effect_firewall_gauntlet_act_v01())
+        except Exception:
+            active_results.append(
+                _failed_act_result(
+                    act_id=_ACTIVE_ACT_IDS[9],
+                    reason="effect_firewall_collector_failed",
+                )
+            )
 
     for result in active_results:
         errors.extend(result.errors)
@@ -3030,6 +3611,7 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             and causal_consumption_calls == 1
             and transition_registry_calls == 1
             and root_decision_calls == 1
+            and effect_firewall_calls == 1
             and len(active_results) == len(_ACTIVE_ACT_IDS),
         ),
         _invariant_result(

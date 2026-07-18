@@ -16,6 +16,23 @@ from hedgehog.kernel.abi_v01 import (
     validate_kernel_artifact_bundle_v01,
     validate_kernel_artifact_v01,
 )
+from hedgehog.kernel.effect_firewall_v01 import (
+    EffectCapabilityV01,
+    EffectFirewallDecisionV01,
+    EffectFirewallV01,
+    EffectRequestV01,
+    authorize_effect_request_v01,
+    build_effect_firewall_v01,
+    build_effect_request_v01,
+    effect_firewall_decision_to_plain_dict_v01,
+    effect_firewall_to_plain_dict_v01,
+    effect_request_to_plain_dict_v01,
+    execute_mock_effect_v01,
+    validate_effect_firewall_decision_v01,
+    validate_effect_firewall_v01,
+    validate_effect_receipt_v01,
+    validate_effect_request_v01,
+)
 from hedgehog.kernel.integrity_replay_v01 import (
     ArtifactDependencyEdgeV01,
     ArtifactManifestV01,

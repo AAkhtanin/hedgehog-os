@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 from demo.run_all_layers_applied_super_smoke import (
     collect_all_layers_applied_super_smoke,
     validate_all_layers_applied_super_smoke_report_consistency,
@@ -43,10 +45,29 @@ from hedgehog.kernel.root_signer_isolation_v01 import (
     trusted_root_key_set_to_plain_dict_v01,
     verify_root_signature_v01,
 )
+from hedgehog.kernel.semantic_work_v01 import (
+    CONTRIBUTION_MODES,
+    EVIDENCE_STATE_MISSING,
+    EVIDENCE_STATE_PRESENT,
+    SYNTHESIS_AUTHORITY_ADVISORY,
+    build_actor_contribution_v01,
+    build_constraint_binding_v01,
+    build_evidence_binding_v01,
+    build_normalized_claim_v01,
+    build_root_review_packet_from_contributions_v01,
+    build_semantic_work_request_v01,
+    build_uncertainty_binding_v01,
+    semantic_work_to_plain_dict_v01,
+    validate_root_review_packet_v01,
+)
+from hedgehog.kernel.trust_model_v01 import (
+    build_default_component_trust_profiles_v01,
+    validate_component_trust_profiles_v01,
+)
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v0.3"
+RUNNER_VERSION = "v0.4"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -61,6 +82,7 @@ _COMPLETION_MANIFEST_PATH = _REPOSITORY_ROOT / "release/completion_manifest.json
 _INTEGRATION_SEAM_INDEX_PATH = (
     _REPOSITORY_ROOT / "release/integration_seam_index.json"
 )
+_SEMANTIC_WORK_SCHEMA_PATH = _REPOSITORY_ROOT / "schemas/semantic_work_v01.schema.json"
 
 _MANIFEST_FIELD_NAMES = frozenset(
     {
@@ -109,6 +131,10 @@ _ACTIVE_ACT_SOURCES = {
         "demo.run_living_gauntlet_v01",
         "collect_root_signer_isolation_gauntlet_act_v01",
     ),
+    "semantic_work_contract": (
+        "demo.run_living_gauntlet_v01",
+        "collect_semantic_work_contract_gauntlet_act_v01",
+    ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
 _EXECUTED_RUNTIME_ACT_IDS = (
@@ -118,10 +144,10 @@ _EXECUTED_RUNTIME_ACT_IDS = (
 )
 _EXECUTED_CONFORMANCE_ACT_IDS = (
     "root_signer_isolation_conformance",
+    "semantic_work_contract",
 )
 _EVIDENCE_ONLY_ACT_IDS = ("airline_all_real_frozen_reference",)
 _PLANNED_ACT_IDS = (
-    "semantic_work_contract",
     "domain_neutral_kernel_abi",
     "causal_consumption",
     "transition_registry",
@@ -191,6 +217,14 @@ _CURRENT_SEAMS = {
         "hedgehog.kernel.root_signer_isolation_v01",
         "verify_root_signature_v01",
     ),
+    "kernel_trust_model_core": (
+        "hedgehog.kernel.trust_model_v01",
+        "validate_component_trust_profiles_v01",
+    ),
+    "semantic_work_contract_core": (
+        "hedgehog.kernel.semantic_work_v01",
+        "build_root_review_packet_from_contributions_v01",
+    ),
 }
 _CURRENT_SEAM_STATUSES = {
     "deterministic_airline_reference_collector": STATUS_ACTIVE,
@@ -206,6 +240,8 @@ _CURRENT_SEAM_STATUSES = {
     "core_fractal_fulfillment": STATUS_ACTIVE,
     "generic_integrity_replay_core": STATUS_ACTIVE,
     "root_signer_isolation_conformance": STATUS_ACTIVE,
+    "kernel_trust_model_core": STATUS_ACTIVE,
+    "semantic_work_contract_core": STATUS_ACTIVE,
 }
 
 
@@ -257,6 +293,7 @@ _COUNTER_FIELD_NAMES = frozenset(
         "planned_executed_count",
         "real_world_effects_count",
         "root_signer_isolation_execution_count",
+        "semantic_work_contract_execution_count",
     }
 )
 
@@ -326,7 +363,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("manifest_status", "ACTIVE_GATE1_G1A2"),
+        ("manifest_status", "ACTIVE_GATE1_G1B1"),
     ):
         if manifest.get(key) != expected:
             errors.append(f"completion_manifest_value_mismatch:{key}")
@@ -461,13 +498,16 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_integration_seam_index_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("index_status", "ACTIVE_GATE1_G1A2"),
+        ("index_status", "ACTIVE_GATE1_G1B1"),
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
     seams = index.get("seams")
     seam_ids, id_errors = _record_ids(seams, "seam_id", "seam")
     errors.extend(id_errors)
+    expected_seam_ids = set(_CURRENT_SEAMS) | set(_PLANNED_SEAM_IDS)
+    if set(seam_ids) != expected_seam_ids:
+        errors.append("integration_seam_ids_mismatch")
     if set(_CURRENT_SEAMS) - set(seam_ids):
         errors.append("current_seam_missing")
     if not set(_PLANNED_SEAM_IDS).issubset(seam_ids):
@@ -1193,6 +1233,345 @@ def collect_root_signer_isolation_gauntlet_act_v01(
         )
 
 
+def _build_semantic_work_fixture_v01() -> tuple[Any, tuple[Any, ...], tuple[Any, ...], Any]:
+    request = build_semantic_work_request_v01(
+        request_id="semantic_work:fixture:001",
+        transaction_id="txn:fixture:semantic_work:001",
+        target_root_id="root:alpha",
+        runtime_topology_ref="runtime_topology:fixture:001",
+        bounded_context_refs=(
+            "context:fixture:shared:001",
+            "context:fixture:bounded:001",
+        ),
+        permitted_actor_ids=(
+            "actor:deterministic:001",
+            "actor:reuse:001",
+            "actor:cloud:001",
+            "actor:local_slm:001",
+            "actor:fractal_child:001",
+        ),
+        permitted_contribution_modes=CONTRIBUTION_MODES,
+        requested_subjects=("resource:alpha", "resource:beta"),
+        required_evidence_classes=("OBSERVATION", "REFERENCE"),
+        forbidden_claims=(
+            "root_decision",
+            "permission",
+            "final_output",
+            "authoritative_execution_topology",
+        ),
+    )
+    actor_rows = (
+        (
+            "contribution:deterministic:001",
+            "actor:deterministic:001",
+            "deterministic_runtime",
+            "DETERMINISTIC",
+        ),
+        (
+            "contribution:reuse:001",
+            "actor:reuse:001",
+            "drs",
+            "INFORMATIONAL_REUSE",
+        ),
+        (
+            "contribution:cloud:001",
+            "actor:cloud:001",
+            "provider_llm",
+            "CLOUD_LLM",
+        ),
+        (
+            "contribution:local_slm:001",
+            "actor:local_slm:001",
+            "provider_llm",
+            "LOCAL_SLM",
+        ),
+        (
+            "contribution:fractal_child:001",
+            "actor:fractal_child:001",
+            "executor_fractal_child",
+            "FRACTAL_CHILD",
+        ),
+    )
+    evidence = tuple(
+        build_evidence_binding_v01(
+            evidence_id=f"evidence:{mode.lower()}:001",
+            evidence_ref=(
+                "evidence:fixture:fractal:missing"
+                if mode == "FRACTAL_CHILD"
+                else f"evidence:fixture:{mode.lower()}:001"
+            ),
+            evidence_class=(
+                "REFERENCE" if mode == "INFORMATIONAL_REUSE" else "OBSERVATION"
+            ),
+            source_component_id=actor_id,
+            provenance_ref=f"provenance:fixture:{mode.lower()}:001",
+            evidence_state=(
+                EVIDENCE_STATE_MISSING
+                if mode == "FRACTAL_CHILD"
+                else EVIDENCE_STATE_PRESENT
+            ),
+        )
+        for _, actor_id, _, mode in actor_rows
+    )
+    deterministic_claim = build_normalized_claim_v01(
+        claim_id="claim:fixture:alpha:state:001",
+        subject="resource:alpha",
+        predicate="state",
+        object_or_value={"state": "stable", "ordinal": 1},
+        time_envelope_ref="time:fixture:001",
+        provenance_refs=("provenance:fixture:deterministic:001",),
+        evidence_refs=(evidence[0].evidence_id,),
+        confidence_micros=1_000_000,
+        source_role="deterministic_runtime",
+        source_mode="DETERMINISTIC",
+    )
+    claims = (
+        (deterministic_claim, deterministic_claim),
+        (
+            build_normalized_claim_v01(
+                claim_id="claim:fixture:alpha:history:001",
+                subject="resource:alpha",
+                predicate="history",
+                object_or_value="known",
+                time_envelope_ref="time:fixture:001",
+                provenance_refs=("provenance:fixture:informational_reuse:001",),
+                evidence_refs=(evidence[1].evidence_id,),
+                confidence_micros=600_000,
+                source_role="drs",
+                source_mode="INFORMATIONAL_REUSE",
+            ),
+        ),
+        (
+            build_normalized_claim_v01(
+                claim_id="claim:fixture:beta:readiness:cloud:001",
+                subject="resource:beta",
+                predicate="readiness",
+                object_or_value="ready",
+                time_envelope_ref="time:fixture:conflict:001",
+                provenance_refs=("provenance:fixture:cloud_llm:001",),
+                evidence_refs=(evidence[2].evidence_id,),
+                confidence_micros=700_000,
+                source_role="provider_llm",
+                source_mode="CLOUD_LLM",
+            ),
+        ),
+        (
+            build_normalized_claim_v01(
+                claim_id="claim:fixture:beta:readiness:local:001",
+                subject="resource:beta",
+                predicate="readiness",
+                object_or_value="blocked",
+                time_envelope_ref="time:fixture:conflict:001",
+                provenance_refs=("provenance:fixture:local_slm:001",),
+                evidence_refs=(evidence[3].evidence_id,),
+                confidence_micros=800_000,
+                source_role="provider_llm",
+                source_mode="LOCAL_SLM",
+            ),
+        ),
+        (
+            build_normalized_claim_v01(
+                claim_id="claim:fixture:alpha:capacity:001",
+                subject="resource:alpha",
+                predicate="capacity",
+                object_or_value=["bounded", {"units": 2}],
+                time_envelope_ref="time:fixture:001",
+                provenance_refs=("provenance:fixture:fractal_child:001",),
+                evidence_refs=(evidence[4].evidence_id,),
+                confidence_micros=500_000,
+                source_role="executor_fractal_child",
+                source_mode="FRACTAL_CHILD",
+            ),
+        ),
+    )
+    deterministic_constraint = build_constraint_binding_v01(
+        constraint_id="constraint:fixture:hard:001",
+        subject="resource:alpha",
+        predicate="within_scope",
+        object_or_value=True,
+        source_ref="policy:fixture:001",
+        constraint_class="HARD",
+        evaluation_state="SATISFIED",
+    )
+    cloud_constraint = build_constraint_binding_v01(
+        constraint_id="constraint:fixture:soft:001",
+        subject="resource:beta",
+        predicate="readiness_preference",
+        object_or_value={"preferred": "ready"},
+        source_ref="policy:fixture:002",
+        constraint_class="SOFT",
+        evaluation_state="UNKNOWN",
+    )
+    local_uncertainty = build_uncertainty_binding_v01(
+        uncertainty_id="uncertainty:fixture:local:001",
+        claim_id=claims[3][0].claim_id,
+        uncertainty_kind="source_disagreement",
+        statement="independent_contribution_requires_root_review",
+        confidence_micros=800_000,
+        source_ref="provenance:fixture:local_slm:001",
+    )
+    contributions = tuple(
+        build_actor_contribution_v01(
+            contribution_id=contribution_id,
+            request_id=request.request_id,
+            actor_id=actor_id,
+            actor_role=actor_role,
+            contribution_mode=mode,
+            bsep_projection_ref=f"bsep:fixture:{mode.lower()}:001",
+            scope="scope:fixture:semantic_review",
+            bounded_context_refs=("context:fixture:shared:001",),
+            claims=claims[index],
+            evidence_bindings=(evidence[index],),
+            constraint_bindings=(
+                (deterministic_constraint,)
+                if index == 0
+                else (cloud_constraint,)
+                if index == 2
+                else ()
+            ),
+            uncertainty_bindings=(local_uncertainty,) if index == 3 else (),
+            requested_validators=(
+                "validator:contract:001",
+                "validator:evidence:001",
+            )
+            if index == 0
+            else ("validator:evidence:001",),
+            forbidden_claims_observed=(),
+        )
+        for index, (contribution_id, actor_id, actor_role, mode) in enumerate(
+            actor_rows
+        )
+    )
+    trust_profiles = build_default_component_trust_profiles_v01()
+    packet = build_root_review_packet_from_contributions_v01(
+        request=request,
+        contributions=contributions,
+        trust_profiles=trust_profiles,
+    )
+    return request, contributions, trust_profiles, packet
+
+
+def _collect_semantic_work_fixture_metrics_v01() -> dict[str, Any]:
+    request, contributions, trust_profiles, packet = _build_semantic_work_fixture_v01()
+    before = canonical_json_bytes_v01(
+        {
+            "request": semantic_work_to_plain_dict_v01(request),
+            "contributions": [
+                semantic_work_to_plain_dict_v01(item) for item in contributions
+            ],
+        }
+    )
+    if validate_component_trust_profiles_v01(profiles=trust_profiles):
+        raise ValueError("semantic_work_trust_model_invalid")
+    packet_errors = validate_root_review_packet_v01(
+        request=request,
+        contributions=contributions,
+        packet=packet,
+        trust_profiles=trust_profiles,
+    )
+    if packet_errors:
+        raise ValueError("semantic_work_packet_invalid")
+    projection = semantic_work_to_plain_dict_v01(packet)
+    if projection != semantic_work_to_plain_dict_v01(packet):
+        raise ValueError("semantic_work_projection_nondeterministic")
+    schema = _load_strict_json_object(_SEMANTIC_WORK_SCHEMA_PATH)
+    Draft202012Validator.check_schema(schema)
+    Draft202012Validator(schema).validate(projection)
+    repeated = _build_semantic_work_fixture_v01()[3]
+    if projection != semantic_work_to_plain_dict_v01(repeated):
+        raise ValueError("semantic_work_fixture_nondeterministic")
+    after = canonical_json_bytes_v01(
+        {
+            "request": semantic_work_to_plain_dict_v01(request),
+            "contributions": [
+                semantic_work_to_plain_dict_v01(item) for item in contributions
+            ],
+        }
+    )
+    if before != after:
+        raise ValueError("semantic_work_fixture_mutated")
+    raw_claim_count = sum(len(item.claims) for item in contributions)
+    normalized_claim_count = len(packet.synthesis_proposal.normalized_claims)
+    metrics: dict[str, Any] = {
+        "trust_profile_count": len(trust_profiles),
+        "contribution_count": len(contributions),
+        "contribution_mode_count": len(packet.synthesis_proposal.contribution_modes),
+        "raw_claim_count": raw_claim_count,
+        "normalized_claim_count": normalized_claim_count,
+        "duplicate_removal_count": raw_claim_count - normalized_claim_count,
+        "conflict_set_count": len(packet.synthesis_proposal.conflict_sets),
+        "missing_evidence_count": len(packet.missing_evidence_refs),
+        "root_review_required": packet.synthesis_proposal.root_review_required,
+        "advisory_authority": (
+            packet.authority_class == SYNTHESIS_AUTHORITY_ADVISORY
+        ),
+        "root_decision_created_count": int(packet.root_decision_created),
+        "permission_created_count": int(packet.permission_created),
+        "final_output_created_count": int(packet.final_output_created),
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+        "proposal_id": packet.synthesis_proposal.proposal_id,
+        "packet_id": packet.packet_id,
+    }
+    expected = {
+        "trust_profile_count": 18,
+        "contribution_count": 5,
+        "contribution_mode_count": 5,
+        "raw_claim_count": 6,
+        "normalized_claim_count": 5,
+        "duplicate_removal_count": 1,
+        "conflict_set_count": 1,
+        "missing_evidence_count": 1,
+        "root_review_required": True,
+        "advisory_authority": True,
+        "root_decision_created_count": 0,
+        "permission_created_count": 0,
+        "final_output_created_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+    if {key: metrics[key] for key in expected} != expected:
+        raise ValueError("semantic_work_fixture_metrics_invalid")
+    return metrics
+
+
+def collect_semantic_work_contract_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    act_id = "semantic_work_contract"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        _collect_semantic_work_fixture_metrics_v01()
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("semantic_work_contract_conformance_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
+
+
 def _failed_act_result(*, act_id: str, reason: str) -> LivingGauntletActResultV01:
     source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
     return LivingGauntletActResultV01(
@@ -1285,6 +1664,12 @@ def _derive_report_counters_v01(
             and row.get("executed") is True
             for row in active_rows
         ),
+        "semantic_work_contract_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[4]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
     }
 
 
@@ -1308,6 +1693,7 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     invariant_calls = 0
     generic_calls = 0
     signer_calls = 0
+    semantic_work_calls = 0
     if not errors:
         airline_calls += 1
         try:
@@ -1359,6 +1745,16 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                     reason="root_signer_isolation_collector_failed",
                 )
             )
+        semantic_work_calls += 1
+        try:
+            active_results.append(collect_semantic_work_contract_gauntlet_act_v01())
+        except Exception:
+            active_results.append(
+                _failed_act_result(
+                    act_id=_ACTIVE_ACT_IDS[4],
+                    reason="semantic_work_contract_collector_failed",
+                )
+            )
 
     for result in active_results:
         errors.extend(result.errors)
@@ -1398,6 +1794,7 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             and invariant_calls == 1
             and generic_calls == 1
             and signer_calls == 1
+            and semantic_work_calls == 1
             and len(active_results) == len(_ACTIVE_ACT_IDS),
         ),
         _invariant_result(

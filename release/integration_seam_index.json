@@ -1,6 +1,6 @@
 {
   "document_id": "living_release_integration_seam_index_v01",
-  "index_status": "ACTIVE_GATE1_G1A2",
+  "index_status": "ACTIVE_GATE1_G1B1",
   "seams": [
     {
       "authority_status": "ROOT_BOUNDARIES_PRESERVED",
@@ -108,6 +108,30 @@
       "seam_id": "core_semantic_reasoning_adapter",
       "source_module": "hedgehog.semantic_reasoning_adapter",
       "source_symbol": "validate_orchestrator_semantic_reasoning_proposal",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "DESCRIPTIVE_NON_AUTHORITY_TRUST_PROFILE",
+      "current_mode": "PURE_IN_MEMORY_TRUST_MODEL",
+      "effect_access": "NONE",
+      "gate1_target": "semantic_work_contract",
+      "notes": "Validated descriptive trust and compromise profiles; no permission, transition, Root decision, effect handle, or runtime authority.",
+      "seam_class": "KERNEL_CONFORMANCE_CORE",
+      "seam_id": "kernel_trust_model_core",
+      "source_module": "hedgehog.kernel.trust_model_v01",
+      "source_symbol": "validate_component_trust_profiles_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_ADVISORY_SYNTHESIS",
+      "current_mode": "PURE_IN_MEMORY_SEMANTIC_NORMALIZATION",
+      "effect_access": "NONE",
+      "gate1_target": "semantic_work_contract",
+      "notes": "Normalizes five contribution provenance modes into an advisory RootReviewPacket; preserves conflicts and missing evidence; creates no Root decision, permission, FinalOutput, or effect.",
+      "seam_class": "KERNEL_CORE",
+      "seam_id": "semantic_work_contract_core",
+      "source_module": "hedgehog.kernel.semantic_work_v01",
+      "source_symbol": "build_root_review_packet_from_contributions_v01",
       "status": "ACTIVE"
     },
     {

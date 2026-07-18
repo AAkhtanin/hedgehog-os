@@ -1,0 +1,554 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog.local/schemas/semantic_work_v01.schema.json",
+  "title": "Hedgehog OS SemanticWork RootReviewPacket v0.1",
+  "$ref": "#/$defs/rootReviewPacket",
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "uniqueNonEmptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "optionalUniqueNonEmptyStrings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "contributionMode": {
+      "enum": [
+        "DETERMINISTIC",
+        "INFORMATIONAL_REUSE",
+        "CLOUD_LLM",
+        "LOCAL_SLM",
+        "FRACTAL_CHILD"
+      ]
+    },
+    "jsonValue": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "$ref": "#/$defs/jsonValue"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "semanticWorkRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "transaction_id",
+        "target_root_id",
+        "runtime_topology_ref",
+        "bounded_context_refs",
+        "permitted_actor_ids",
+        "permitted_contribution_modes",
+        "requested_subjects",
+        "required_evidence_classes",
+        "forbidden_claims"
+      ],
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "transaction_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "target_root_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "runtime_topology_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "bounded_context_refs": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "permitted_actor_ids": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "permitted_contribution_modes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/contributionMode"
+          }
+        },
+        "requested_subjects": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "required_evidence_classes": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "forbidden_claims": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        }
+      }
+    },
+    "evidenceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "evidence_ref",
+        "evidence_class",
+        "source_component_id",
+        "provenance_ref",
+        "evidence_state"
+      ],
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_class": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_component_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "provenance_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_state": {
+          "enum": [
+            "PRESENT",
+            "MISSING",
+            "REJECTED"
+          ]
+        }
+      }
+    },
+    "constraintBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "constraint_id",
+        "subject",
+        "predicate",
+        "object_or_value",
+        "source_ref",
+        "constraint_class",
+        "evaluation_state"
+      ],
+      "properties": {
+        "constraint_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "subject": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "predicate": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "object_or_value": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "source_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "constraint_class": {
+          "enum": [
+            "HARD",
+            "SOFT"
+          ]
+        },
+        "evaluation_state": {
+          "enum": [
+            "SATISFIED",
+            "VIOLATED",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "uncertaintyBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uncertainty_id",
+        "claim_id",
+        "uncertainty_kind",
+        "statement",
+        "confidence_micros",
+        "source_ref"
+      ],
+      "properties": {
+        "uncertainty_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "claim_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "uncertainty_kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "statement": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "confidence_micros": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "source_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "normalizedClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "subject",
+        "predicate",
+        "object_or_value",
+        "time_envelope_ref",
+        "provenance_refs",
+        "evidence_refs",
+        "confidence_micros",
+        "source_role",
+        "source_mode",
+        "authority_class"
+      ],
+      "properties": {
+        "claim_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "subject": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "predicate": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "object_or_value": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "time_envelope_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "provenance_refs": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "confidence_micros": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "source_role": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_mode": {
+          "$ref": "#/$defs/contributionMode"
+        },
+        "authority_class": {
+          "const": "NONE"
+        }
+      }
+    },
+    "actorContribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contribution_id",
+        "request_id",
+        "actor_id",
+        "actor_role",
+        "contribution_mode",
+        "bsep_projection_ref",
+        "scope",
+        "bounded_context_refs",
+        "claims",
+        "evidence_bindings",
+        "constraint_bindings",
+        "uncertainty_bindings",
+        "requested_validators",
+        "forbidden_claims_observed"
+      ],
+      "properties": {
+        "contribution_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "request_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "actor_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "actor_role": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "contribution_mode": {
+          "$ref": "#/$defs/contributionMode"
+        },
+        "bsep_projection_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "scope": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "bounded_context_refs": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "claims": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/normalizedClaim"
+          }
+        },
+        "evidence_bindings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/evidenceBinding"
+          }
+        },
+        "constraint_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/constraintBinding"
+          }
+        },
+        "uncertainty_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/uncertaintyBinding"
+          }
+        },
+        "requested_validators": {
+          "$ref": "#/$defs/optionalUniqueNonEmptyStrings"
+        },
+        "forbidden_claims_observed": {
+          "$ref": "#/$defs/optionalUniqueNonEmptyStrings"
+        }
+      }
+    },
+    "conflictSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conflict_set_id",
+        "subject",
+        "predicate",
+        "claim_ids",
+        "conflicting_values",
+        "source_modes",
+        "resolution_state"
+      ],
+      "properties": {
+        "conflict_set_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "subject": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "predicate": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "claim_ids": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "conflicting_values": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        },
+        "source_modes": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/contributionMode"
+          }
+        },
+        "resolution_state": {
+          "const": "UNRESOLVED_ROOT_REVIEW_REQUIRED"
+        }
+      }
+    },
+    "synthesisProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proposal_id",
+        "request_id",
+        "source_contribution_ids",
+        "normalized_claims",
+        "conflict_sets",
+        "missing_evidence_refs",
+        "contribution_modes",
+        "requested_validators",
+        "synthesis_summary",
+        "authority_class",
+        "root_review_required"
+      ],
+      "properties": {
+        "proposal_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "request_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_contribution_ids": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "normalized_claims": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/normalizedClaim"
+          }
+        },
+        "conflict_sets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/conflictSet"
+          }
+        },
+        "missing_evidence_refs": {
+          "$ref": "#/$defs/optionalUniqueNonEmptyStrings"
+        },
+        "contribution_modes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/contributionMode"
+          }
+        },
+        "requested_validators": {
+          "$ref": "#/$defs/optionalUniqueNonEmptyStrings"
+        },
+        "synthesis_summary": {
+          "enum": [
+            "advisory_claims_ready_for_root_review",
+            "advisory_claims_with_visible_conflicts",
+            "advisory_claims_with_missing_evidence",
+            "advisory_claims_with_visible_conflicts_and_missing_evidence"
+          ]
+        },
+        "authority_class": {
+          "const": "ADVISORY_ONLY"
+        },
+        "root_review_required": {
+          "const": true
+        }
+      }
+    },
+    "rootReviewPacket": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packet_id",
+        "request_id",
+        "transaction_id",
+        "target_root_id",
+        "runtime_topology_ref",
+        "synthesis_proposal",
+        "contribution_ids",
+        "conflict_set_ids",
+        "missing_evidence_refs",
+        "required_validator_ids",
+        "review_state",
+        "authority_class",
+        "root_decision_created",
+        "permission_created",
+        "final_output_created"
+      ],
+      "properties": {
+        "packet_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "request_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "transaction_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "target_root_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "runtime_topology_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "synthesis_proposal": {
+          "$ref": "#/$defs/synthesisProposal"
+        },
+        "contribution_ids": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "conflict_set_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "missing_evidence_refs": {
+          "$ref": "#/$defs/optionalUniqueNonEmptyStrings"
+        },
+        "required_validator_ids": {
+          "$ref": "#/$defs/optionalUniqueNonEmptyStrings"
+        },
+        "review_state": {
+          "const": "ROOT_REVIEW_REQUIRED"
+        },
+        "authority_class": {
+          "const": "ADVISORY_ONLY"
+        },
+        "root_decision_created": {
+          "type": "boolean"
+        },
+        "permission_created": {
+          "type": "boolean"
+        },
+        "final_output_created": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

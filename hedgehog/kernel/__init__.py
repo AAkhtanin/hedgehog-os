@@ -37,6 +37,35 @@ from hedgehog.kernel.root_signer_isolation_v01 import (
     trusted_root_key_set_to_plain_dict_v01,
     verify_root_signature_v01,
 )
+from hedgehog.kernel.semantic_work_v01 import (
+    ActorContributionV01,
+    ConflictSetV01,
+    ConstraintBindingV01,
+    EvidenceBindingV01,
+    NormalizedClaimV01,
+    RootReviewPacketV01,
+    SemanticWorkRequestV01,
+    SynthesisProposalV01,
+    UncertaintyBindingV01,
+    build_actor_contribution_v01,
+    build_constraint_binding_v01,
+    build_evidence_binding_v01,
+    build_normalized_claim_v01,
+    build_root_review_packet_from_contributions_v01,
+    build_semantic_work_request_v01,
+    build_uncertainty_binding_v01,
+    semantic_work_to_plain_dict_v01,
+    validate_actor_contribution_v01,
+    validate_root_review_packet_v01,
+    validate_semantic_work_request_v01,
+)
+from hedgehog.kernel.trust_model_v01 import (
+    ComponentTrustProfileV01,
+    build_default_component_trust_profiles_v01,
+    component_trust_profile_to_plain_dict_v01,
+    component_trust_profiles_to_plain_list_v01,
+    validate_component_trust_profiles_v01,
+)
 
 __all__ = (
     "CanonicalArtifactRefV01",

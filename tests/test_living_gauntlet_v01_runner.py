@@ -132,7 +132,8 @@ def test_all_three_collectors_are_called_exactly_once(monkeypatch: pytest.Monkey
     original_smoke = runner.collect_all_layers_applied_super_smoke
     original_generic = runner.collect_generic_integrity_replay_gauntlet_act_v01
     original_signer = runner.collect_root_signer_isolation_gauntlet_act_v01
-    calls = {"airline": 0, "smoke": 0, "generic": 0, "signer": 0}
+    original_semantic = runner.collect_semantic_work_contract_gauntlet_act_v01
+    calls = {"airline": 0, "smoke": 0, "generic": 0, "signer": 0, "semantic": 0}
 
     def airline_wrapper() -> dict[str, Any]:
         calls["airline"] += 1
@@ -150,6 +151,10 @@ def test_all_three_collectors_are_called_exactly_once(monkeypatch: pytest.Monkey
         calls["signer"] += 1
         return original_signer()
 
+    def semantic_wrapper() -> runner.LivingGauntletActResultV01:
+        calls["semantic"] += 1
+        return original_semantic()
+
     monkeypatch.setattr(
         runner,
         "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
@@ -166,12 +171,23 @@ def test_all_three_collectors_are_called_exactly_once(monkeypatch: pytest.Monkey
         "collect_root_signer_isolation_gauntlet_act_v01",
         signer_wrapper,
     )
+    monkeypatch.setattr(
+        runner,
+        "collect_semantic_work_contract_gauntlet_act_v01",
+        semantic_wrapper,
+    )
 
     exact_once_report = runner.collect_living_gauntlet_v01()
 
     assert exact_once_report["final_status"] == runner.STATUS_PASS
-    assert calls == {"airline": 1, "smoke": 1, "generic": 1, "signer": 1}
-    assert exact_once_report["counters"]["active_collector_execution_count"] == 4
+    assert calls == {
+        "airline": 1,
+        "smoke": 1,
+        "generic": 1,
+        "signer": 1,
+        "semantic": 1,
+    }
+    assert exact_once_report["counters"]["active_collector_execution_count"] == 5
 
 
 def test_frozen_all_real_evidence_is_not_executed(report: dict[str, Any]) -> None:
@@ -412,7 +428,7 @@ def test_unknown_status_fails_closed(
     failed = runner.collect_living_gauntlet_v01()
 
     assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
-    assert "planned_act_status_invalid:semantic_work_contract" in failed[
+    assert "planned_act_status_invalid:domain_neutral_kernel_abi" in failed[
         "validation_errors"
     ]
 
@@ -567,9 +583,9 @@ def test_manifest_stores_no_synthetic_pass_for_indexed_acts() -> None:
     ]
 
     assert runner.STATUS_PASS not in statuses
-    assert statuses.count(runner.STATUS_ACTIVE) == 4
+    assert statuses.count(runner.STATUS_ACTIVE) == 5
     assert statuses.count(runner.STATUS_EVIDENCE_ONLY) == 1
-    assert statuses.count(runner.STATUS_PLANNED_NOT_ACTIVE) == 9
+    assert statuses.count(runner.STATUS_PLANNED_NOT_ACTIVE) == 8
 
 
 def test_generic_integrity_replay_act_is_active() -> None:
@@ -602,15 +618,15 @@ def test_generic_integrity_replay_act_executes_and_passes(
 
 
 def test_successful_report_has_three_active_acts(report: dict[str, Any]) -> None:
-    assert len(report["active_act_results"]) == 4
-    assert report["counters"]["active_act_count"] == 4
-    assert report["counters"]["active_act_pass_count"] == 4
+    assert len(report["active_act_results"]) == 5
+    assert report["counters"]["active_act_count"] == 5
+    assert report["counters"]["active_act_pass_count"] == 5
     assert report["counters"]["active_act_fail_closed_count"] == 0
 
 
 def test_successful_report_has_ten_planned_acts(report: dict[str, Any]) -> None:
-    assert len(report["planned_entries"]) == 9
-    assert report["counters"]["planned_act_count"] == 9
+    assert len(report["planned_entries"]) == 8
+    assert report["counters"]["planned_act_count"] == 8
     assert "generic_integrity_replay" not in {
         entry["act_id"] for entry in report["planned_entries"]
     }
@@ -661,8 +677,8 @@ def test_generic_adapter_seam_remains_planned() -> None:
 def test_seam_index_has_exact_g1a1_geometry() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
 
-    assert len(seams) == 20
-    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 10
+    assert len(seams) == 22
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 12
     assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
     assert sum(
         item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams
@@ -694,7 +710,7 @@ def test_planned_claim_excludes_generic_integrity_replay() -> None:
         if record["claim_id"] == "claim_gate1_planned_not_active"
     )
 
-    assert len(claim["act_ids"]) == 9
+    assert len(claim["act_ids"]) == 8
     assert "generic_integrity_replay" not in claim["act_ids"]
 
 
@@ -817,8 +833,8 @@ def test_renderer_shows_generic_active_act(report: dict[str, Any]) -> None:
 
 
 def test_runner_version_is_v02(report: dict[str, Any]) -> None:
-    assert runner.RUNNER_VERSION == "v0.3"
-    assert report["runner_version"] == "v0.3"
+    assert runner.RUNNER_VERSION == "v0.4"
+    assert report["runner_version"] == "v0.4"
 
 
 def test_runner_introduces_no_domain_adapter_import() -> None:
@@ -846,14 +862,14 @@ def test_generic_kernel_import_introduces_no_live_path() -> None:
 def test_manifest_status_and_counts_are_exact() -> None:
     manifest = _json(COMPLETION_MANIFEST_PATH)
 
-    assert manifest["manifest_status"] == "ACTIVE_GATE1_G1A2"
-    assert len(manifest["active_runtime_acts"]) == 4
+    assert manifest["manifest_status"] == "ACTIVE_GATE1_G1B1"
+    assert len(manifest["active_runtime_acts"]) == 5
     assert len(manifest["evidence_only_references"]) == 1
-    assert len(manifest["planned_gate1_acts"]) == 9
+    assert len(manifest["planned_gate1_acts"]) == 8
 
 
 def test_seam_index_status_is_exact() -> None:
-    assert _json(SEAM_INDEX_PATH)["index_status"] == "ACTIVE_GATE1_G1A2"
+    assert _json(SEAM_INDEX_PATH)["index_status"] == "ACTIVE_GATE1_G1B1"
 
 
 def test_signer_act_is_active_in_completion_manifest() -> None:
@@ -891,8 +907,9 @@ def test_all_four_active_act_ids_are_exact(report: dict[str, Any]) -> None:
         "all_layers_invariant_super_smoke",
         "generic_integrity_replay",
         "root_signer_isolation_conformance",
+        "semantic_work_contract",
     )
-    assert report["counters"]["active_collector_execution_count"] == 4
+    assert report["counters"]["active_collector_execution_count"] == 5
 
 
 def test_signer_execution_counter_is_one(report: dict[str, Any]) -> None:
@@ -958,7 +975,6 @@ def test_planned_claim_excludes_signer_and_has_exact_nine_ids() -> None:
         if record["claim_id"] == "claim_gate1_planned_not_active"
     )
     assert claim["act_ids"] == [
-        "semantic_work_contract",
         "domain_neutral_kernel_abi",
         "causal_consumption",
         "transition_registry",
@@ -1287,3 +1303,360 @@ def test_unchanged_release_json_still_validates_for_g1a2() -> None:
     assert runner._validate_integration_seam_index_v01(
         _json(SEAM_INDEX_PATH)
     ) == ()
+
+
+def test_semantic_work_act_is_active_in_completion_manifest() -> None:
+    record = next(
+        item
+        for item in _json(COMPLETION_MANIFEST_PATH)["active_runtime_acts"]
+        if item["act_id"] == "semantic_work_contract"
+    )
+    assert record == {
+        "act_id": "semantic_work_contract",
+        "claim_ids": [
+            "claim_kernel_trust_model_conformance_execution",
+            "claim_semantic_work_contract_conformance_execution",
+        ],
+        "focused_test": "tests/test_semantic_work_v01.py",
+        "source_module": "demo.run_living_gauntlet_v01",
+        "source_symbol": "collect_semantic_work_contract_gauntlet_act_v01",
+        "status": runner.STATUS_ACTIVE,
+    }
+
+
+def test_semantic_work_act_executes_and_passes(report: dict[str, Any]) -> None:
+    assert report["active_act_results"][4] == {
+        "act_id": "semantic_work_contract",
+        "errors": (),
+        "executed": True,
+        "no_real_connector_or_action": True,
+        "real_world_effects_count": 0,
+        "root_authority_preserved": True,
+        "runtime_status": runner.STATUS_PASS,
+        "source_module": "demo.run_living_gauntlet_v01",
+        "source_symbol": "collect_semantic_work_contract_gauntlet_act_v01",
+        "state": runner.STATUS_PASS,
+    }
+    assert report["counters"]["semantic_work_contract_execution_count"] == 1
+
+
+def test_semantic_work_fixture_geometry_is_exact() -> None:
+    metrics = runner._collect_semantic_work_fixture_metrics_v01()
+    assert {
+        key: metrics[key]
+        for key in (
+            "trust_profile_count",
+            "contribution_count",
+            "contribution_mode_count",
+            "raw_claim_count",
+            "normalized_claim_count",
+            "duplicate_removal_count",
+            "conflict_set_count",
+            "missing_evidence_count",
+            "root_decision_created_count",
+            "permission_created_count",
+            "final_output_created_count",
+            "provider_call_count",
+            "network_call_count",
+            "gemini_call_count",
+            "real_world_effects_count",
+        )
+    } == {
+        "trust_profile_count": 18,
+        "contribution_count": 5,
+        "contribution_mode_count": 5,
+        "raw_claim_count": 6,
+        "normalized_claim_count": 5,
+        "duplicate_removal_count": 1,
+        "conflict_set_count": 1,
+        "missing_evidence_count": 1,
+        "root_decision_created_count": 0,
+        "permission_created_count": 0,
+        "final_output_created_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+    assert len(metrics["proposal_id"]) == 64
+    assert len(metrics["packet_id"]) == 64
+
+
+def test_semantic_work_claim_is_exact_conformance_class() -> None:
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    claim = next(
+        item
+        for item in manifest["public_claims"]
+        if item["claim_id"] == "claim_semantic_work_contract_conformance_execution"
+    )
+    assert claim["claim_class"] == "EXECUTED_CONFORMANCE"
+    assert claim["act_ids"] == ["semantic_work_contract"]
+    claim["claim_class"] = "EXECUTED_RUNTIME"
+    assert (
+        "public_claim_classification_mismatch:"
+        "claim_semantic_work_contract_conformance_execution"
+    ) in runner._validate_completion_manifest_v01(manifest)
+
+
+@pytest.mark.parametrize(
+    ("claim_id", "focused_test", "evidence_ref"),
+    (
+        (
+            "claim_kernel_trust_model_conformance_execution",
+            "tests/test_kernel_trust_model_v01.py",
+            "hedgehog/kernel/trust_model_v01.py",
+        ),
+        (
+            "claim_semantic_work_contract_conformance_execution",
+            "tests/test_semantic_work_v01.py",
+            "hedgehog/kernel/semantic_work_v01.py",
+        ),
+    ),
+)
+def test_g1b1_claims_share_the_active_semantic_act(
+    claim_id: str,
+    focused_test: str,
+    evidence_ref: str,
+) -> None:
+    claim = next(
+        item
+        for item in _json(COMPLETION_MANIFEST_PATH)["public_claims"]
+        if item["claim_id"] == claim_id
+    )
+    assert claim["claim_class"] == "EXECUTED_CONFORMANCE"
+    assert claim["act_ids"] == ["semantic_work_contract"]
+    assert claim["focused_test_ref"] == focused_test
+    assert claim["evidence_ref"] == evidence_ref
+    assert claim["runtime_ref"].endswith(
+        ":collect_semantic_work_contract_gauntlet_act_v01"
+    )
+
+
+def test_planned_claim_excludes_semantic_work_and_has_eight_acts() -> None:
+    claim = next(
+        item
+        for item in _json(COMPLETION_MANIFEST_PATH)["public_claims"]
+        if item["claim_id"] == "claim_gate1_planned_not_active"
+    )
+    assert "semantic_work_contract" not in claim["act_ids"]
+    assert claim["act_ids"] == list(runner._PLANNED_ACT_IDS)
+
+
+@pytest.mark.parametrize(
+    "required_phrase",
+    (
+        "in-memory conformance fixtures",
+        "no real cloud LLM",
+        "local SLM",
+        "fractal runtime",
+        "no permission",
+        "Root decision",
+        "FinalOutput",
+        "Trust Model metadata is descriptive",
+        "Kernel ABI",
+        "CausalConsumptionRef",
+        "Effect Firewall",
+    ),
+)
+def test_g1b1_limitation_is_explicit(required_phrase: str) -> None:
+    statement = next(
+        item["statement"]
+        for item in _json(COMPLETION_MANIFEST_PATH)["limitations"]
+        if item["limitation_id"]
+        == "limitation_g1b1_in_memory_contract_conformance_only"
+    )
+    assert required_phrase in statement
+
+
+@pytest.mark.parametrize(
+    ("seam_id", "module", "symbol"),
+    (
+        (
+            "kernel_trust_model_core",
+            "hedgehog.kernel.trust_model_v01",
+            "validate_component_trust_profiles_v01",
+        ),
+        (
+            "semantic_work_contract_core",
+            "hedgehog.kernel.semantic_work_v01",
+            "build_root_review_packet_from_contributions_v01",
+        ),
+    ),
+)
+def test_g1b1_seams_are_active_and_importable(
+    seam_id: str,
+    module: str,
+    symbol: str,
+) -> None:
+    seams = _json(SEAM_INDEX_PATH)["seams"]
+    matching = [item for item in seams if item["seam_id"] == seam_id]
+    assert len(matching) == 1
+    assert matching[0]["status"] == runner.STATUS_ACTIVE
+    assert matching[0]["effect_access"] == "NONE"
+    assert matching[0]["source_module"] == module
+    assert matching[0]["source_symbol"] == symbol
+    assert getattr(importlib.import_module(module), symbol) is not None
+
+
+@pytest.mark.parametrize(
+    "seam_id",
+    (
+        "core_context_packets",
+        "core_structured_rationale",
+        "core_semantic_reasoning_adapter",
+    ),
+)
+def test_semantic_donor_seams_remain_active(seam_id: str) -> None:
+    seam = next(
+        item for item in _json(SEAM_INDEX_PATH)["seams"] if item["seam_id"] == seam_id
+    )
+    assert seam["status"] == runner.STATUS_ACTIVE
+
+
+@pytest.mark.parametrize(
+    ("seam_id", "wrong_status"),
+    (
+        ("kernel_trust_model_core", runner.STATUS_REFERENCE_ONLY),
+        ("semantic_work_contract_core", runner.STATUS_REFERENCE_ONLY),
+        ("kernel_trust_model_core", runner.STATUS_PLANNED_NOT_ACTIVE),
+        ("semantic_work_contract_core", runner.STATUS_PLANNED_NOT_ACTIVE),
+    ),
+)
+def test_g1b1_current_seam_status_mutation_fails_closed(
+    seam_id: str,
+    wrong_status: str,
+) -> None:
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
+    seam["status"] = wrong_status
+    assert f"current_seam_status_mismatch:{seam_id}" in (
+        runner._validate_integration_seam_index_v01(index)
+    )
+
+
+@pytest.mark.parametrize(
+    "seam_id", ("kernel_trust_model_core", "semantic_work_contract_core")
+)
+def test_g1b1_active_seam_cannot_gain_effect_access(seam_id: str) -> None:
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
+    seam["effect_access"] = "BOUNDED"
+    assert f"seam_effect_access_forbidden:{seam_id}" in (
+        runner._validate_integration_seam_index_v01(index)
+    )
+
+
+def test_semantic_act_exception_fails_full_report_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        runner,
+        "collect_semantic_work_contract_gauntlet_act_v01",
+        lambda: (_ for _ in ()).throw(RuntimeError("test-only")),
+    )
+    failed = runner.collect_living_gauntlet_v01()
+    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert "semantic_work_contract_collector_failed" in failed["validation_errors"]
+    assert failed["active_act_results"][4]["real_world_effects_count"] == -1
+    assert failed["counters"]["real_world_effects_count"] == -1
+
+
+def test_semantic_fixture_failure_is_sanitized(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        runner,
+        "_collect_semantic_work_fixture_metrics_v01",
+        lambda: (_ for _ in ()).throw(OSError("sensitive test payload")),
+    )
+    result = runner.collect_semantic_work_contract_gauntlet_act_v01()
+    assert result.state == runner.STATUS_FAIL_CLOSED
+    assert result.errors == ("semantic_work_contract_conformance_failed",)
+    assert result.real_world_effects_count == -1
+
+
+def test_semantic_source_identity_tampering_is_rejected(
+    report: dict[str, Any],
+) -> None:
+    mutated = deepcopy(report)
+    mutated["active_act_results"][4]["source_symbol"] = "tampered"
+    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    assert accepted is False
+    assert "report_active_source_identity_mismatch:semantic_work_contract" in errors
+
+
+def test_counter_tampering_cannot_hide_semantic_failure(
+    report: dict[str, Any],
+) -> None:
+    mutated = deepcopy(report)
+    mutated["active_act_results"][4].update(
+        {
+            "state": runner.STATUS_FAIL_CLOSED,
+            "runtime_status": runner.STATUS_FAIL_CLOSED,
+            "errors": ["semantic_failure"],
+        }
+    )
+    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    assert accepted is False
+    assert "report_counter_mismatch:active_act_pass_count" in errors
+    assert "report_counter_mismatch:active_act_fail_closed_count" in errors
+
+
+@pytest.mark.parametrize(
+    "invalid_state", (runner.STATUS_EVIDENCE_ONLY, runner.STATUS_PLANNED_NOT_ACTIVE)
+)
+def test_semantic_active_row_cannot_be_non_active(
+    report: dict[str, Any], invalid_state: str
+) -> None:
+    mutated = deepcopy(report)
+    mutated["active_act_results"][4]["state"] = invalid_state
+    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    assert accepted is False
+    assert "report_active_act_state_unknown:semantic_work_contract" in errors
+
+
+def test_renderer_shows_semantic_work_as_active(report: dict[str, Any]) -> None:
+    active = runner.render_living_gauntlet_v01(report).split(
+        "[EVIDENCE-ONLY REFERENCES]", 1
+    )[0]
+    assert "act_id=semantic_work_contract" in active
+    assert "state=PASS" in active
+
+
+@pytest.mark.parametrize(
+    "forbidden",
+    (
+        "claim:fixture",
+        "evidence:fixture",
+        "provenance:fixture",
+        '"ready"',
+        '"blocked"',
+        '"stable"',
+        "provider response",
+    ),
+)
+def test_report_exposes_no_semantic_fixture_payload(
+    report: dict[str, Any], forbidden: str
+) -> None:
+    serialized = json.dumps(report, sort_keys=True, default=list).lower()
+    rendered = runner.render_living_gauntlet_v01(report).lower()
+    assert forbidden.lower() not in serialized
+    assert forbidden.lower() not in rendered
+
+
+def test_g1b1_report_geometry_and_prior_acts_remain_exact(
+    report: dict[str, Any],
+) -> None:
+    assert report["runner_version"] == "v0.4"
+    assert report["final_status"] == runner.STATUS_PASS
+    assert report["counters"]["active_act_count"] == 5
+    assert report["counters"]["evidence_only_entry_count"] == 1
+    assert report["counters"]["planned_act_count"] == 8
+    assert report["counters"]["real_world_effects_count"] == 0
+    assert report["active_act_results"][2]["act_id"] == "generic_integrity_replay"
+    assert report["active_act_results"][3]["act_id"] == (
+        "root_signer_isolation_conformance"
+    )
+    assert report["evidence_only_entries"][0]["act_id"] == (
+        "airline_all_real_frozen_reference"
+    )

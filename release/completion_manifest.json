@@ -39,6 +39,17 @@
       "source_module": "demo.run_living_gauntlet_v01",
       "source_symbol": "collect_root_signer_isolation_gauntlet_act_v01",
       "status": "ACTIVE"
+    },
+    {
+      "act_id": "semantic_work_contract",
+      "claim_ids": [
+        "claim_kernel_trust_model_conformance_execution",
+        "claim_semantic_work_contract_conformance_execution"
+      ],
+      "focused_test": "tests/test_semantic_work_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_semantic_work_contract_gauntlet_act_v01",
+      "status": "ACTIVE"
     }
   ],
   "document_id": "living_release_completion_manifest_v01",
@@ -68,7 +79,7 @@
     },
     {
       "limitation_id": "limitation_gate1_not_implemented",
-      "statement": "Gate 1 semantic work, ABI, causal consumption, transition, decision, effect, MultiRoot, portability, and final conformance contracts remain unimplemented."
+      "statement": "Gate 1 ABI, causal consumption, transition, decision, effect, MultiRoot, portability, and final conformance contracts remain unimplemented."
     },
     {
       "limitation_id": "limitation_g1a1_neutral_fixtures_only",
@@ -79,11 +90,15 @@
       "statement": "Keys are ephemeral and in-memory with no key persistence, production identity, PKI, certificate authority, Airline Root Attestation, permission, or effect; the frozen Airline remains UNSIGNED_PLACEHOLDER with signature_verified false."
     },
     {
+      "limitation_id": "limitation_g1b1_in_memory_contract_conformance_only",
+      "statement": "All five contribution modes are in-memory conformance fixtures: no real cloud LLM, local SLM, or fractal runtime is executed, no provider output is trusted, and no permission, no Root decision, no FinalOutput, and no effect is created; Trust Model metadata is descriptive and conformance-consumed, while Kernel ABI, CausalConsumptionRef, Transition Registry, Root Decision Kernel, and Effect Firewall remain unimplemented."
+    },
+    {
       "limitation_id": "limitation_not_production",
       "statement": "This scaffold is proof-level and is not production-ready."
     }
   ],
-  "manifest_status": "ACTIVE_GATE1_G1A2",
+  "manifest_status": "ACTIVE_GATE1_G1B1",
   "non_claims": [
     "not production",
     "not a real ticket, booking, payment, shipment, or connector action",
@@ -95,20 +110,18 @@
     "not PKI",
     "not production signer identity",
     "not certificate issuance",
+    "not real provider execution",
+    "not semantic truth",
+    "not provider authority",
+    "not Kernel ABI",
+    "not CausalConsumptionRef",
+    "not Root Decision Kernel",
+    "not effect execution",
     "not Supplier or Water Filter portability",
     "not Root Attestation",
     "not Gate 1 closure"
   ],
   "planned_gate1_acts": [
-    {
-      "act_id": "semantic_work_contract",
-      "claim_ids": [
-        "claim_gate1_planned_not_active"
-      ],
-      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
-      "notes": "Future bounded semantic work contract act.",
-      "status": "PLANNED_NOT_ACTIVE"
-    },
     {
       "act_id": "domain_neutral_kernel_abi",
       "claim_ids": [
@@ -233,6 +246,30 @@
     },
     {
       "act_ids": [
+        "semantic_work_contract"
+      ],
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_kernel_trust_model_conformance_execution",
+      "evidence_ref": "hedgehog/kernel/trust_model_v01.py",
+      "focused_test_ref": "tests/test_kernel_trust_model_v01.py",
+      "limitation_ref": "limitation_g1b1_in_memory_contract_conformance_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_semantic_work_contract_gauntlet_act_v01",
+      "statement": "The Living Gauntlet validates the eighteen-profile Kernel Trust and Compromise Model and its Root, permission, request, and bounded effect-handle boundaries."
+    },
+    {
+      "act_ids": [
+        "semantic_work_contract"
+      ],
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_semantic_work_contract_conformance_execution",
+      "evidence_ref": "hedgehog/kernel/semantic_work_v01.py",
+      "focused_test_ref": "tests/test_semantic_work_v01.py",
+      "limitation_ref": "limitation_g1b1_in_memory_contract_conformance_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_semantic_work_contract_gauntlet_act_v01",
+      "statement": "The Living Gauntlet normalizes deterministic, informational reuse, cloud LLM, local SLM, and fractal-child provenance modes into one advisory RootReviewPacket while preserving conflicts and missing evidence."
+    },
+    {
+      "act_ids": [
         "airline_all_real_frozen_reference"
       ],
       "claim_class": "EVIDENCE_ONLY",
@@ -245,7 +282,6 @@
     },
     {
       "act_ids": [
-        "semantic_work_contract",
         "domain_neutral_kernel_abi",
         "causal_consumption",
         "transition_registry",

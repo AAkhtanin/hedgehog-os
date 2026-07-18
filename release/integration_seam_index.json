@@ -1,6 +1,6 @@
 {
   "document_id": "living_release_integration_seam_index_v01",
-  "index_status": "ACTIVE_GATE1_G1B1",
+  "index_status": "ACTIVE_GATE1_G1B2",
   "seams": [
     {
       "authority_status": "ROOT_BOUNDARIES_PRESERVED",
@@ -135,6 +135,30 @@
       "status": "ACTIVE"
     },
     {
+      "authority_status": "NON_ROOT_CONTRACT_ENVELOPE",
+      "current_mode": "PURE_IN_MEMORY_VERSIONED_ABI",
+      "effect_access": "NONE",
+      "gate1_target": "domain_neutral_kernel_abi",
+      "notes": "Versioned domain-neutral artifact envelope with independent authority and lifecycle axes; no transition, permission, Root decision, effect handle, or domain adapter.",
+      "seam_class": "KERNEL_CORE",
+      "seam_id": "kernel_abi_core",
+      "source_module": "hedgehog.kernel.abi_v01",
+      "source_symbol": "validate_kernel_artifact_bundle_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_CAUSAL_EVIDENCE",
+      "current_mode": "PURE_IN_MEMORY_FIELD_LEVEL_CAUSAL_PROOF",
+      "effect_access": "NONE",
+      "gate1_target": "causal_consumption",
+      "notes": "Field-level USED, REJECTED, IGNORED_WITH_REASON, and BLOCKED_BY_GATE traceability with controlled counterfactual evidence; not semantic truth, Root authority, permission, transition, or effect access.",
+      "seam_class": "KERNEL_CONFORMANCE_CORE",
+      "seam_id": "causal_consumption_core",
+      "source_module": "hedgehog.kernel.abi_v01",
+      "source_symbol": "validate_causal_counterfactual_v01",
+      "status": "ACTIVE"
+    },
+    {
       "authority_status": "ROOT_CREATED_PACKET_CONTRACT",
       "current_mode": "CORE_MODULE",
       "effect_access": "NONE",
@@ -199,7 +223,7 @@
       "current_mode": "NOT_IMPLEMENTED",
       "effect_access": "NONE",
       "gate1_target": "supplier_water_filter_portability",
-      "notes": "Planned Supplier and Water Filter portability adapter; no ABI is implemented.",
+      "notes": "Planned Supplier and Water Filter adapter against the active Kernel ABI; the domain adapter itself remains unimplemented.",
       "seam_class": "PLANNED_GATE1",
       "seam_id": "supplier_water_filter_abi_adapter",
       "source_module": "",

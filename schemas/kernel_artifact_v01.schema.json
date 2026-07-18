@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog.local/schemas/kernel_artifact_v01.schema.json",
+  "title": "Hedgehog OS Kernel Artifact ABI v1.0",
+  "$ref": "#/$defs/kernelArtifact",
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "uniqueNonEmptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "optionalUniqueNonEmptyStrings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "jsonValue": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "$ref": "#/$defs/jsonValue"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "awareTimestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "timeEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pt_created_at",
+        "kt_asof",
+        "et_observed_at",
+        "ct_session_anchor",
+        "ttl_seconds",
+        "freshness_class",
+        "valid_from",
+        "valid_to"
+      ],
+      "properties": {
+        "pt_created_at": {
+          "$ref": "#/$defs/awareTimestamp"
+        },
+        "kt_asof": {
+          "$ref": "#/$defs/awareTimestamp"
+        },
+        "et_observed_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/awareTimestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ct_session_anchor": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "freshness_class": {
+          "enum": [
+            "static",
+            "slow_changing",
+            "normal",
+            "fast_changing",
+            "real_time"
+          ]
+        },
+        "valid_from": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/awareTimestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/awareTimestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "authorityClass": {
+      "enum": [
+        "ROOT_OWNED",
+        "ROOT_AUTHORIZED",
+        "ADVISORY",
+        "EVIDENCE_ONLY",
+        "NON_AUTHORITY"
+      ]
+    },
+    "lifecycleState": {
+      "enum": [
+        "PROPOSED",
+        "VALIDATED",
+        "ROOT_REVIEWED",
+        "ROOT_ACCEPTED",
+        "ROOT_REJECTED",
+        "BLOCKED_FAIL_CLOSED",
+        "EXECUTED_MOCK",
+        "RECEIPT_RECORDED",
+        "FINALIZED"
+      ]
+    },
+    "artifactType": {
+      "enum": [
+        "OrchestratorRouteProposal",
+        "RootAcceptedRoute",
+        "BSEPPacket",
+        "BSEPProjection",
+        "SemanticArchitectProposal",
+        "RuntimeExecutionTopology",
+        "ActorContribution",
+        "SemanticEvidence",
+        "ValidatedEvidence",
+        "ResultProposal",
+        "PostVVReport",
+        "GTAdvisoryReport",
+        "RootOwnedIntent",
+        "RootDecision",
+        "ExecutionRequest",
+        "EvidenceReceipt",
+        "RootFinal",
+        "CrossRootEvidenceRef",
+        "TransactionOutcomeEnvelope",
+        "CausalConsumptionRef"
+      ]
+    },
+    "causalDisposition": {
+      "enum": [
+        "USED",
+        "REJECTED",
+        "IGNORED_WITH_REASON",
+        "BLOCKED_BY_GATE"
+      ]
+    },
+    "kernelArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "abi_version",
+        "artifact_id",
+        "artifact_type",
+        "schema_version",
+        "transaction_id",
+        "owner_root_id",
+        "source_component",
+        "authority_class",
+        "lifecycle_state",
+        "payload",
+        "trace_refs",
+        "parent_refs",
+        "time_envelope"
+      ],
+      "properties": {
+        "abi_version": {
+          "type": "string",
+          "pattern": "^v(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$"
+        },
+        "artifact_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "artifact_type": {
+          "$ref": "#/$defs/artifactType"
+        },
+        "schema_version": {
+          "type": "string",
+          "pattern": "^v(?:0|[1-9][0-9]*)(?:\\.(?:0|[1-9][0-9]*))?$"
+        },
+        "transaction_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "owner_root_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_component": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "authority_class": {
+          "$ref": "#/$defs/authorityClass"
+        },
+        "lifecycle_state": {
+          "$ref": "#/$defs/lifecycleState"
+        },
+        "payload": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "trace_refs": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        },
+        "parent_refs": {
+          "$ref": "#/$defs/optionalUniqueNonEmptyStrings"
+        },
+        "time_envelope": {
+          "$ref": "#/$defs/timeEnvelope"
+        }
+      }
+    },
+    "causalConsumptionRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "producer_actor_id",
+        "source_artifact_id",
+        "output_field",
+        "consumer_component",
+        "downstream_artifact_id",
+        "decision_effect",
+        "disposition",
+        "reason_code",
+        "trace_refs"
+      ],
+      "properties": {
+        "producer_actor_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_artifact_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "output_field": {
+          "type": "string",
+          "pattern": "^/(?:[^~/]|~[01])*(?:/(?:[^~/]|~[01])*)*$"
+        },
+        "consumer_component": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "downstream_artifact_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "decision_effect": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "disposition": {
+          "$ref": "#/$defs/causalDisposition"
+        },
+        "reason_code": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "trace_refs": {
+          "$ref": "#/$defs/uniqueNonEmptyStrings"
+        }
+      }
+    }
+  }
+}

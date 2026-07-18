@@ -1,5 +1,21 @@
 """Domain-neutral Hedgehog OS reference-kernel contracts."""
 
+from hedgehog.kernel.abi_v01 import (
+    CausalConsumptionRefV01,
+    KernelArtifactV01,
+    build_causal_consumption_ref_v01,
+    build_kernel_artifact_v01,
+    causal_consumption_ref_to_plain_dict_v01,
+    causal_consumption_refs_to_plain_list_v01,
+    kernel_artifact_to_canonical_ref_v01,
+    kernel_artifact_to_plain_dict_v01,
+    kernel_artifacts_to_plain_list_v01,
+    validate_causal_consumption_bundle_v01,
+    validate_causal_consumption_ref_v01,
+    validate_causal_counterfactual_v01,
+    validate_kernel_artifact_bundle_v01,
+    validate_kernel_artifact_v01,
+)
 from hedgehog.kernel.integrity_replay_v01 import (
     ArtifactDependencyEdgeV01,
     ArtifactManifestV01,

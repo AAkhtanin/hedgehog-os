@@ -127,13 +127,23 @@ def test_invariant_super_smoke_executes_and_passes(report: dict[str, Any]) -> No
     assert result["no_real_connector_or_action"] is True
 
 
-def test_all_three_collectors_are_called_exactly_once(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.MonkeyPatch) -> None:
     original_airline = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01
     original_smoke = runner.collect_all_layers_applied_super_smoke
     original_generic = runner.collect_generic_integrity_replay_gauntlet_act_v01
     original_signer = runner.collect_root_signer_isolation_gauntlet_act_v01
     original_semantic = runner.collect_semantic_work_contract_gauntlet_act_v01
-    calls = {"airline": 0, "smoke": 0, "generic": 0, "signer": 0, "semantic": 0}
+    original_abi = runner.collect_domain_neutral_kernel_abi_gauntlet_act_v01
+    original_causal = runner.collect_causal_consumption_gauntlet_act_v01
+    calls = {
+        "airline": 0,
+        "smoke": 0,
+        "generic": 0,
+        "signer": 0,
+        "semantic": 0,
+        "abi": 0,
+        "causal": 0,
+    }
 
     def airline_wrapper() -> dict[str, Any]:
         calls["airline"] += 1
@@ -154,6 +164,14 @@ def test_all_three_collectors_are_called_exactly_once(monkeypatch: pytest.Monkey
     def semantic_wrapper() -> runner.LivingGauntletActResultV01:
         calls["semantic"] += 1
         return original_semantic()
+
+    def abi_wrapper() -> runner.LivingGauntletActResultV01:
+        calls["abi"] += 1
+        return original_abi()
+
+    def causal_wrapper() -> runner.LivingGauntletActResultV01:
+        calls["causal"] += 1
+        return original_causal()
 
     monkeypatch.setattr(
         runner,
@@ -176,6 +194,16 @@ def test_all_three_collectors_are_called_exactly_once(monkeypatch: pytest.Monkey
         "collect_semantic_work_contract_gauntlet_act_v01",
         semantic_wrapper,
     )
+    monkeypatch.setattr(
+        runner,
+        "collect_domain_neutral_kernel_abi_gauntlet_act_v01",
+        abi_wrapper,
+    )
+    monkeypatch.setattr(
+        runner,
+        "collect_causal_consumption_gauntlet_act_v01",
+        causal_wrapper,
+    )
 
     exact_once_report = runner.collect_living_gauntlet_v01()
 
@@ -186,8 +214,10 @@ def test_all_three_collectors_are_called_exactly_once(monkeypatch: pytest.Monkey
         "generic": 1,
         "signer": 1,
         "semantic": 1,
+        "abi": 1,
+        "causal": 1,
     }
-    assert exact_once_report["counters"]["active_collector_execution_count"] == 5
+    assert exact_once_report["counters"]["active_collector_execution_count"] == 7
 
 
 def test_frozen_all_real_evidence_is_not_executed(report: dict[str, Any]) -> None:
@@ -428,7 +458,7 @@ def test_unknown_status_fails_closed(
     failed = runner.collect_living_gauntlet_v01()
 
     assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
-    assert "planned_act_status_invalid:domain_neutral_kernel_abi" in failed[
+    assert "planned_act_status_invalid:transition_registry" in failed[
         "validation_errors"
     ]
 
@@ -583,9 +613,9 @@ def test_manifest_stores_no_synthetic_pass_for_indexed_acts() -> None:
     ]
 
     assert runner.STATUS_PASS not in statuses
-    assert statuses.count(runner.STATUS_ACTIVE) == 5
+    assert statuses.count(runner.STATUS_ACTIVE) == 7
     assert statuses.count(runner.STATUS_EVIDENCE_ONLY) == 1
-    assert statuses.count(runner.STATUS_PLANNED_NOT_ACTIVE) == 8
+    assert statuses.count(runner.STATUS_PLANNED_NOT_ACTIVE) == 6
 
 
 def test_generic_integrity_replay_act_is_active() -> None:
@@ -617,16 +647,16 @@ def test_generic_integrity_replay_act_executes_and_passes(
     }
 
 
-def test_successful_report_has_three_active_acts(report: dict[str, Any]) -> None:
-    assert len(report["active_act_results"]) == 5
-    assert report["counters"]["active_act_count"] == 5
-    assert report["counters"]["active_act_pass_count"] == 5
+def test_successful_report_has_seven_active_acts(report: dict[str, Any]) -> None:
+    assert len(report["active_act_results"]) == 7
+    assert report["counters"]["active_act_count"] == 7
+    assert report["counters"]["active_act_pass_count"] == 7
     assert report["counters"]["active_act_fail_closed_count"] == 0
 
 
-def test_successful_report_has_ten_planned_acts(report: dict[str, Any]) -> None:
-    assert len(report["planned_entries"]) == 8
-    assert report["counters"]["planned_act_count"] == 8
+def test_successful_report_has_six_planned_acts(report: dict[str, Any]) -> None:
+    assert len(report["planned_entries"]) == 6
+    assert report["counters"]["planned_act_count"] == 6
     assert "generic_integrity_replay" not in {
         entry["act_id"] for entry in report["planned_entries"]
     }
@@ -677,8 +707,8 @@ def test_generic_adapter_seam_remains_planned() -> None:
 def test_seam_index_has_exact_g1a1_geometry() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
 
-    assert len(seams) == 22
-    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 12
+    assert len(seams) == 24
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 14
     assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
     assert sum(
         item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams
@@ -710,7 +740,7 @@ def test_planned_claim_excludes_generic_integrity_replay() -> None:
         if record["claim_id"] == "claim_gate1_planned_not_active"
     )
 
-    assert len(claim["act_ids"]) == 8
+    assert len(claim["act_ids"]) == 6
     assert "generic_integrity_replay" not in claim["act_ids"]
 
 
@@ -832,9 +862,9 @@ def test_renderer_shows_generic_active_act(report: dict[str, Any]) -> None:
     assert "state=PASS" in active_section
 
 
-def test_runner_version_is_v02(report: dict[str, Any]) -> None:
-    assert runner.RUNNER_VERSION == "v0.4"
-    assert report["runner_version"] == "v0.4"
+def test_runner_version_is_v05(report: dict[str, Any]) -> None:
+    assert runner.RUNNER_VERSION == "v0.5"
+    assert report["runner_version"] == "v0.5"
 
 
 def test_runner_introduces_no_domain_adapter_import() -> None:
@@ -862,14 +892,14 @@ def test_generic_kernel_import_introduces_no_live_path() -> None:
 def test_manifest_status_and_counts_are_exact() -> None:
     manifest = _json(COMPLETION_MANIFEST_PATH)
 
-    assert manifest["manifest_status"] == "ACTIVE_GATE1_G1B1"
-    assert len(manifest["active_runtime_acts"]) == 5
+    assert manifest["manifest_status"] == "ACTIVE_GATE1_G1B2"
+    assert len(manifest["active_runtime_acts"]) == 7
     assert len(manifest["evidence_only_references"]) == 1
-    assert len(manifest["planned_gate1_acts"]) == 8
+    assert len(manifest["planned_gate1_acts"]) == 6
 
 
 def test_seam_index_status_is_exact() -> None:
-    assert _json(SEAM_INDEX_PATH)["index_status"] == "ACTIVE_GATE1_G1B1"
+    assert _json(SEAM_INDEX_PATH)["index_status"] == "ACTIVE_GATE1_G1B2"
 
 
 def test_signer_act_is_active_in_completion_manifest() -> None:
@@ -901,15 +931,17 @@ def test_signer_act_executes_and_passes(report: dict[str, Any]) -> None:
     }
 
 
-def test_all_four_active_act_ids_are_exact(report: dict[str, Any]) -> None:
+def test_all_seven_active_act_ids_are_exact(report: dict[str, Any]) -> None:
     assert tuple(row["act_id"] for row in report["active_act_results"]) == (
         "airline_deterministic_transaction_runtime",
         "all_layers_invariant_super_smoke",
         "generic_integrity_replay",
         "root_signer_isolation_conformance",
         "semantic_work_contract",
+        "domain_neutral_kernel_abi",
+        "causal_consumption",
     )
-    assert report["counters"]["active_collector_execution_count"] == 5
+    assert report["counters"]["active_collector_execution_count"] == 7
 
 
 def test_signer_execution_counter_is_one(report: dict[str, Any]) -> None:
@@ -975,8 +1007,6 @@ def test_planned_claim_excludes_signer_and_has_exact_nine_ids() -> None:
         if record["claim_id"] == "claim_gate1_planned_not_active"
     )
     assert claim["act_ids"] == [
-        "domain_neutral_kernel_abi",
-        "causal_consumption",
         "transition_registry",
         "root_decision_kernel",
         "effect_firewall",
@@ -1445,7 +1475,7 @@ def test_planned_claim_excludes_semantic_work_and_has_eight_acts() -> None:
 @pytest.mark.parametrize(
     "required_phrase",
     (
-        "in-memory conformance fixtures",
+        "in-memory SemanticWork and Trust conformance slice",
         "no real cloud LLM",
         "local SLM",
         "fractal runtime",
@@ -1647,11 +1677,11 @@ def test_report_exposes_no_semantic_fixture_payload(
 def test_g1b1_report_geometry_and_prior_acts_remain_exact(
     report: dict[str, Any],
 ) -> None:
-    assert report["runner_version"] == "v0.4"
+    assert report["runner_version"] == "v0.5"
     assert report["final_status"] == runner.STATUS_PASS
-    assert report["counters"]["active_act_count"] == 5
+    assert report["counters"]["active_act_count"] == 7
     assert report["counters"]["evidence_only_entry_count"] == 1
-    assert report["counters"]["planned_act_count"] == 8
+    assert report["counters"]["planned_act_count"] == 6
     assert report["counters"]["real_world_effects_count"] == 0
     assert report["active_act_results"][2]["act_id"] == "generic_integrity_replay"
     assert report["active_act_results"][3]["act_id"] == (
@@ -1660,3 +1690,602 @@ def test_g1b1_report_geometry_and_prior_acts_remain_exact(
     assert report["evidence_only_entries"][0]["act_id"] == (
         "airline_all_real_frozen_reference"
     )
+
+
+@pytest.mark.parametrize(
+    ("act_id", "claim_id", "source_symbol"),
+    (
+        (
+            "domain_neutral_kernel_abi",
+            "claim_domain_neutral_kernel_abi_conformance_execution",
+            "collect_domain_neutral_kernel_abi_gauntlet_act_v01",
+        ),
+        (
+            "causal_consumption",
+            "claim_causal_consumption_conformance_execution",
+            "collect_causal_consumption_gauntlet_act_v01",
+        ),
+    ),
+)
+def test_g1b2_active_records_are_exact(
+    act_id: str, claim_id: str, source_symbol: str
+) -> None:
+    record = next(
+        item
+        for item in _json(COMPLETION_MANIFEST_PATH)["active_runtime_acts"]
+        if item["act_id"] == act_id
+    )
+    assert record == {
+        "act_id": act_id,
+        "claim_ids": [claim_id],
+        "focused_test": "tests/test_kernel_abi_v01.py",
+        "source_module": "demo.run_living_gauntlet_v01",
+        "source_symbol": source_symbol,
+        "status": runner.STATUS_ACTIVE,
+    }
+
+
+@pytest.mark.parametrize(
+    ("index", "act_id", "source_symbol", "counter"),
+    (
+        (
+            5,
+            "domain_neutral_kernel_abi",
+            "collect_domain_neutral_kernel_abi_gauntlet_act_v01",
+            "domain_neutral_kernel_abi_execution_count",
+        ),
+        (
+            6,
+            "causal_consumption",
+            "collect_causal_consumption_gauntlet_act_v01",
+            "causal_consumption_execution_count",
+        ),
+    ),
+)
+def test_g1b2_acts_execute_and_pass(
+    report: dict[str, Any],
+    index: int,
+    act_id: str,
+    source_symbol: str,
+    counter: str,
+) -> None:
+    assert report["active_act_results"][index] == {
+        "act_id": act_id,
+        "errors": (),
+        "executed": True,
+        "no_real_connector_or_action": True,
+        "real_world_effects_count": 0,
+        "root_authority_preserved": True,
+        "runtime_status": runner.STATUS_PASS,
+        "source_module": "demo.run_living_gauntlet_v01",
+        "source_symbol": source_symbol,
+        "state": runner.STATUS_PASS,
+    }
+    assert report["counters"][counter] == 1
+
+
+@pytest.mark.parametrize(
+    ("act_id", "source_symbol"),
+    (
+        (
+            "domain_neutral_kernel_abi",
+            "collect_domain_neutral_kernel_abi_gauntlet_act_v01",
+        ),
+        ("causal_consumption", "collect_causal_consumption_gauntlet_act_v01"),
+    ),
+)
+def test_g1b2_source_identities_are_exact(act_id: str, source_symbol: str) -> None:
+    assert runner._ACTIVE_ACT_SOURCES[act_id] == (
+        "demo.run_living_gauntlet_v01",
+        source_symbol,
+    )
+
+
+@pytest.mark.parametrize(
+    ("claim_id", "act_id", "symbol"),
+    (
+        (
+            "claim_domain_neutral_kernel_abi_conformance_execution",
+            "domain_neutral_kernel_abi",
+            "collect_domain_neutral_kernel_abi_gauntlet_act_v01",
+        ),
+        (
+            "claim_causal_consumption_conformance_execution",
+            "causal_consumption",
+            "collect_causal_consumption_gauntlet_act_v01",
+        ),
+    ),
+)
+def test_g1b2_claims_have_exact_class_and_references(
+    claim_id: str, act_id: str, symbol: str
+) -> None:
+    claim = next(
+        item
+        for item in _json(COMPLETION_MANIFEST_PATH)["public_claims"]
+        if item["claim_id"] == claim_id
+    )
+    assert claim["claim_class"] == "EXECUTED_CONFORMANCE"
+    assert claim["act_ids"] == [act_id]
+    assert claim["runtime_ref"] == f"demo.run_living_gauntlet_v01:{symbol}"
+    assert claim["focused_test_ref"] == "tests/test_kernel_abi_v01.py"
+    assert claim["evidence_ref"] == "hedgehog/kernel/abi_v01.py"
+    assert claim["limitation_ref"] == (
+        "limitation_g1b2_in_memory_abi_and_counterfactual_only"
+    )
+
+
+@pytest.mark.parametrize(
+    "claim_id",
+    (
+        "claim_domain_neutral_kernel_abi_conformance_execution",
+        "claim_causal_consumption_conformance_execution",
+    ),
+)
+def test_g1b2_claim_reclassified_as_runtime_fails_closed(claim_id: str) -> None:
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    claim = next(
+        item for item in manifest["public_claims"] if item["claim_id"] == claim_id
+    )
+    claim["claim_class"] = "EXECUTED_RUNTIME"
+    assert f"public_claim_classification_mismatch:{claim_id}" in (
+        runner._validate_completion_manifest_v01(manifest)
+    )
+
+
+def test_g1b2_planned_set_is_exact() -> None:
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    planned = tuple(item["act_id"] for item in manifest["planned_gate1_acts"])
+    claim = next(
+        item
+        for item in manifest["public_claims"]
+        if item["claim_id"] == "claim_gate1_planned_not_active"
+    )
+    assert planned == runner._PLANNED_ACT_IDS
+    assert claim["act_ids"] == list(runner._PLANNED_ACT_IDS)
+    assert "domain_neutral_kernel_abi" not in planned
+    assert "causal_consumption" not in planned
+
+
+@pytest.mark.parametrize(
+    "phrase",
+    (
+        "neutral in-memory conformance fixtures",
+        "no Airline or Supplier adapter",
+        "no production ABI compatibility guarantee",
+        "only ABI v1.0",
+        "declared controlled influence, not semantic truth",
+        "Transition Registry",
+        "Root Decision Kernel",
+        "Effect Firewall",
+        "Generic MultiRoot",
+        "no permission",
+        "Root decision",
+        "FinalOutput",
+        "connector call",
+        "effect is created",
+    ),
+)
+def test_g1b2_limitation_is_explicit(phrase: str) -> None:
+    statement = next(
+        item["statement"]
+        for item in _json(COMPLETION_MANIFEST_PATH)["limitations"]
+        if item["limitation_id"]
+        == "limitation_g1b2_in_memory_abi_and_counterfactual_only"
+    )
+    assert phrase in statement
+
+
+@pytest.mark.parametrize(
+    ("seam_id", "symbol", "seam_class", "mode"),
+    (
+        (
+            "kernel_abi_core",
+            "validate_kernel_artifact_bundle_v01",
+            "KERNEL_CORE",
+            "PURE_IN_MEMORY_VERSIONED_ABI",
+        ),
+        (
+            "causal_consumption_core",
+            "validate_causal_counterfactual_v01",
+            "KERNEL_CONFORMANCE_CORE",
+            "PURE_IN_MEMORY_FIELD_LEVEL_CAUSAL_PROOF",
+        ),
+    ),
+)
+def test_g1b2_seams_are_unique_active_and_importable(
+    seam_id: str, symbol: str, seam_class: str, mode: str
+) -> None:
+    matching = [
+        item
+        for item in _json(SEAM_INDEX_PATH)["seams"]
+        if item["seam_id"] == seam_id
+    ]
+    assert len(matching) == 1
+    seam = matching[0]
+    assert seam["source_module"] == "hedgehog.kernel.abi_v01"
+    assert seam["source_symbol"] == symbol
+    assert seam["seam_class"] == seam_class
+    assert seam["current_mode"] == mode
+    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["effect_access"] == "NONE"
+    assert getattr(importlib.import_module(seam["source_module"]), symbol)
+
+
+@pytest.mark.parametrize(
+    ("seam_id", "wrong_status"),
+    (
+        ("kernel_abi_core", runner.STATUS_REFERENCE_ONLY),
+        ("kernel_abi_core", runner.STATUS_PLANNED_NOT_ACTIVE),
+        ("causal_consumption_core", runner.STATUS_REFERENCE_ONLY),
+        ("causal_consumption_core", runner.STATUS_PLANNED_NOT_ACTIVE),
+    ),
+)
+def test_g1b2_seam_status_mutations_fail_closed(
+    seam_id: str, wrong_status: str
+) -> None:
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
+    seam["status"] = wrong_status
+    assert f"current_seam_status_mismatch:{seam_id}" in (
+        runner._validate_integration_seam_index_v01(index)
+    )
+
+
+@pytest.mark.parametrize("seam_id", ("kernel_abi_core", "causal_consumption_core"))
+def test_g1b2_active_seams_cannot_gain_effect_access(seam_id: str) -> None:
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
+    seam["effect_access"] = "BOUNDED"
+    assert f"seam_effect_access_forbidden:{seam_id}" in (
+        runner._validate_integration_seam_index_v01(index)
+    )
+
+
+def test_g1b2_seam_geometry_is_exact() -> None:
+    seams = _json(SEAM_INDEX_PATH)["seams"]
+    assert len(seams) == 24
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 14
+    assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
+    assert sum(
+        item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams
+    ) == 7
+    assert all(
+        item["effect_access"] == "NONE"
+        for item in seams
+        if item["status"] == runner.STATUS_ACTIVE
+    )
+
+
+def test_kernel_abi_fixture_metrics_are_exact() -> None:
+    assert runner._collect_kernel_abi_fixture_metrics_v01() == {
+        "artifact_count": 6,
+        "valid_artifact_count": 6,
+        "canonical_ref_count": 6,
+        "schema_valid_projection_count": 6,
+        "unknown_major_blocked": True,
+        "authority_mutation_blocked": True,
+        "lifecycle_mutation_blocked": True,
+        "payload_authority_override_blocked": True,
+        "root_decision_created_count": 0,
+        "permission_created_count": 0,
+        "final_output_created_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+
+
+def test_causal_fixture_metrics_are_exact() -> None:
+    metrics = runner._collect_causal_consumption_fixture_metrics_v01()
+    assert metrics["causal_source_artifact_count"] == 4
+    assert metrics["causal_downstream_artifact_count"] == 4
+    assert metrics["causal_ref_count"] == 4
+    assert metrics["disposition_count"] == 4
+    for key in (
+        "used_ref_count",
+        "rejected_ref_count",
+        "ignored_ref_count",
+        "blocked_ref_count",
+        "used_counterfactual_proof_count",
+        "rejected_authority_preservation_count",
+        "ignored_downstream_preservation_count",
+        "ignored_authority_preservation_count",
+        "blocked_authority_preservation_count",
+    ):
+        assert metrics[key] == 1
+    for key in (
+        "root_decision_created_count",
+        "permission_created_count",
+        "final_output_created_count",
+        "provider_call_count",
+        "network_call_count",
+        "gemini_call_count",
+        "real_world_effects_count",
+    ):
+        assert metrics[key] == 0
+
+
+@pytest.mark.parametrize(
+    ("collector_name", "index", "reason"),
+    (
+        (
+            "collect_domain_neutral_kernel_abi_gauntlet_act_v01",
+            5,
+            "domain_neutral_kernel_abi_collector_failed",
+        ),
+        (
+            "collect_causal_consumption_gauntlet_act_v01",
+            6,
+            "causal_consumption_collector_failed",
+        ),
+    ),
+)
+def test_g1b2_collector_exception_fails_complete_report_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    collector_name: str,
+    index: int,
+    reason: str,
+) -> None:
+    monkeypatch.setattr(
+        runner,
+        collector_name,
+        lambda: (_ for _ in ()).throw(RuntimeError("caller text")),
+    )
+    failed = runner.collect_living_gauntlet_v01()
+    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert reason in failed["validation_errors"]
+    assert failed["active_act_results"][index]["real_world_effects_count"] == -1
+    assert failed["counters"]["real_world_effects_count"] == -1
+    assert "caller text" not in json.dumps(failed, default=list)
+
+
+@pytest.mark.parametrize(
+    ("metrics_name", "collector_name", "reason"),
+    (
+        (
+            "_collect_kernel_abi_fixture_metrics_v01",
+            "collect_domain_neutral_kernel_abi_gauntlet_act_v01",
+            "domain_neutral_kernel_abi_conformance_failed",
+        ),
+        (
+            "_collect_causal_consumption_fixture_metrics_v01",
+            "collect_causal_consumption_gauntlet_act_v01",
+            "causal_consumption_conformance_failed",
+        ),
+    ),
+)
+def test_g1b2_fixture_exception_is_sanitized(
+    monkeypatch: pytest.MonkeyPatch,
+    metrics_name: str,
+    collector_name: str,
+    reason: str,
+) -> None:
+    monkeypatch.setattr(
+        runner,
+        metrics_name,
+        lambda: (_ for _ in ()).throw(OSError("caller secret")),
+    )
+    result = getattr(runner, collector_name)()
+    assert result.state == runner.STATUS_FAIL_CLOSED
+    assert result.errors == (reason,)
+    assert result.real_world_effects_count == -1
+
+
+@pytest.mark.parametrize(
+    ("index", "act_id"),
+    ((5, "domain_neutral_kernel_abi"), (6, "causal_consumption")),
+)
+def test_g1b2_source_identity_tampering_fails(
+    report: dict[str, Any], index: int, act_id: str
+) -> None:
+    mutated = deepcopy(report)
+    mutated["active_act_results"][index]["source_symbol"] = "tampered"
+    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    assert accepted is False
+    assert f"report_active_source_identity_mismatch:{act_id}" in errors
+
+
+@pytest.mark.parametrize(
+    ("index", "act_id"),
+    ((5, "domain_neutral_kernel_abi"), (6, "causal_consumption")),
+)
+def test_counter_tampering_cannot_hide_g1b2_failure(
+    report: dict[str, Any], index: int, act_id: str
+) -> None:
+    mutated = deepcopy(report)
+    mutated["active_act_results"][index].update(
+        {
+            "state": runner.STATUS_FAIL_CLOSED,
+            "runtime_status": runner.STATUS_FAIL_CLOSED,
+            "errors": [f"{act_id}_failure"],
+        }
+    )
+    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    assert accepted is False
+    assert "report_counter_mismatch:active_act_pass_count" in errors
+    assert "report_counter_mismatch:active_act_fail_closed_count" in errors
+
+
+@pytest.mark.parametrize(
+    ("index", "act_id", "invalid_state"),
+    (
+        (5, "domain_neutral_kernel_abi", runner.STATUS_EVIDENCE_ONLY),
+        (5, "domain_neutral_kernel_abi", runner.STATUS_PLANNED_NOT_ACTIVE),
+        (6, "causal_consumption", runner.STATUS_EVIDENCE_ONLY),
+        (6, "causal_consumption", runner.STATUS_PLANNED_NOT_ACTIVE),
+    ),
+)
+def test_g1b2_active_acts_cannot_be_non_active(
+    report: dict[str, Any], index: int, act_id: str, invalid_state: str
+) -> None:
+    mutated = deepcopy(report)
+    mutated["active_act_results"][index]["state"] = invalid_state
+    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    assert accepted is False
+    assert f"report_active_act_state_unknown:{act_id}" in errors
+
+
+@pytest.mark.parametrize("act_id", ("domain_neutral_kernel_abi", "causal_consumption"))
+def test_renderer_shows_both_g1b2_acts_as_active(
+    report: dict[str, Any], act_id: str
+) -> None:
+    active = runner.render_living_gauntlet_v01(report).split(
+        "[EVIDENCE-ONLY REFERENCES]", 1
+    )[0]
+    assert f"act_id={act_id}" in active
+    assert "state=PASS" in active
+
+
+@pytest.mark.parametrize(
+    "forbidden",
+    (
+        "candidate:alpha",
+        "candidate:beta",
+        "create_permission",
+        "create_extended_permission",
+        "presentation_style",
+        "execute_now",
+        "execute_later",
+        "accepted_authority_state",
+        "authority_request",
+        "requested_external_action",
+    ),
+)
+def test_report_exposes_no_abi_or_causal_fixture_values(
+    report: dict[str, Any], forbidden: str
+) -> None:
+    serialized = json.dumps(report, sort_keys=True, default=list)
+    rendered = runner.render_living_gauntlet_v01(report)
+    assert forbidden not in serialized
+    assert forbidden not in rendered
+
+
+def test_g1b2_report_geometry_and_prior_acts_are_exact(
+    report: dict[str, Any],
+) -> None:
+    assert report["runner_version"] == "v0.5"
+    assert report["final_status"] == runner.STATUS_PASS
+    assert report["counters"]["active_act_count"] == 7
+    assert report["counters"]["active_act_pass_count"] == 7
+    assert report["counters"]["evidence_only_entry_count"] == 1
+    assert report["counters"]["planned_act_count"] == 6
+    assert report["counters"]["real_world_effects_count"] == 0
+    assert report["active_act_results"][2]["act_id"] == "generic_integrity_replay"
+    assert report["active_act_results"][3]["act_id"] == (
+        "root_signer_isolation_conformance"
+    )
+    assert report["active_act_results"][4]["act_id"] == "semantic_work_contract"
+    assert report["evidence_only_entries"][0]["act_id"] == (
+        "airline_all_real_frozen_reference"
+    )
+
+
+@pytest.mark.parametrize("contract", ("Kernel ABI", "CausalConsumptionRef"))
+def test_current_manifest_does_not_describe_active_contract_as_unimplemented(
+    contract: str,
+) -> None:
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    statements = " ".join(
+        item["statement"] for item in manifest["limitations"]
+    )
+    assert f"{contract} remains unimplemented" not in statements
+    assert f"{contract} is unimplemented" not in statements
+    assert runner._active_contract_described_unimplemented(
+        runner._ACTIVE_ACT_IDS, manifest["limitations"]
+    ) is False
+
+
+@pytest.mark.parametrize(
+    "stale_statement",
+    (
+        "Kernel ABI remains unimplemented.",
+        "CausalConsumptionRef remains unimplemented.",
+        (
+            "Kernel ABI, CausalConsumptionRef, Transition Registry, Root "
+            "Decision Kernel, and Effect Firewall remain unimplemented."
+        ),
+    ),
+)
+def test_stale_active_contract_limitation_fails_closed(
+    stale_statement: str,
+) -> None:
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    limitation = next(
+        item
+        for item in manifest["limitations"]
+        if item["limitation_id"]
+        == "limitation_g1b1_in_memory_contract_conformance_only"
+    )
+    limitation["statement"] = stale_statement
+    assert "completion_manifest_active_contract_described_unimplemented" in (
+        runner._validate_completion_manifest_v01(manifest)
+    )
+
+
+def test_supplier_adapter_seam_acknowledges_active_abi() -> None:
+    seam = next(
+        item
+        for item in _json(SEAM_INDEX_PATH)["seams"]
+        if item["seam_id"] == "supplier_water_filter_abi_adapter"
+    )
+    assert "against the active Kernel ABI" in seam["notes"]
+    assert "domain adapter itself remains unimplemented" in seam["notes"]
+    assert "no ABI is implemented" not in seam["notes"]
+
+
+def test_stale_supplier_adapter_seam_note_fails_closed() -> None:
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(
+        item
+        for item in index["seams"]
+        if item["seam_id"] == "supplier_water_filter_abi_adapter"
+    )
+    seam["notes"] = (
+        "Planned Supplier and Water Filter portability adapter; "
+        "no ABI is implemented."
+    )
+    assert "integration_seam_active_abi_described_absent" in (
+        runner._validate_integration_seam_index_v01(index)
+    )
+
+
+@pytest.mark.parametrize(
+    "act_id", ("domain_neutral_kernel_abi", "causal_consumption")
+)
+def test_g1b2_acts_remain_active_after_coherence_hardening(act_id: str) -> None:
+    active = {
+        item["act_id"]
+        for item in _json(COMPLETION_MANIFEST_PATH)["active_runtime_acts"]
+    }
+    assert act_id in active
+
+
+def test_release_coherence_hardening_preserves_public_geometry(
+    report: dict[str, Any],
+) -> None:
+    assert report["runner_version"] == "v0.5"
+    assert report["final_status"] == runner.STATUS_PASS
+    assert report["counters"]["active_act_count"] == 7
+    assert report["counters"]["evidence_only_entry_count"] == 1
+    assert report["counters"]["planned_act_count"] == 6
+    assert report["counters"]["real_world_effects_count"] == 0
+
+
+@pytest.mark.parametrize(
+    ("metrics_name", "counter"),
+    (
+        ("_collect_kernel_abi_fixture_metrics_v01", "provider_call_count"),
+        ("_collect_kernel_abi_fixture_metrics_v01", "network_call_count"),
+        ("_collect_kernel_abi_fixture_metrics_v01", "gemini_call_count"),
+        ("_collect_kernel_abi_fixture_metrics_v01", "real_world_effects_count"),
+        ("_collect_causal_consumption_fixture_metrics_v01", "provider_call_count"),
+        ("_collect_causal_consumption_fixture_metrics_v01", "network_call_count"),
+        ("_collect_causal_consumption_fixture_metrics_v01", "gemini_call_count"),
+        ("_collect_causal_consumption_fixture_metrics_v01", "real_world_effects_count"),
+    ),
+)
+def test_g1b2_fixture_external_and_effect_counts_remain_zero(
+    metrics_name: str, counter: str
+) -> None:
+    assert getattr(runner, metrics_name)()[counter] == 0

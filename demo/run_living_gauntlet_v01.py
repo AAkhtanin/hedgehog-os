@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 import json
 from pathlib import Path
 from typing import Any
@@ -31,6 +31,23 @@ from hedgehog.kernel.integrity_replay_v01 import (
     seal_verification_result_to_plain_dict_v01,
     verify_artifact_manifest_v01,
     verify_artifact_replay_v01,
+)
+from hedgehog.kernel.abi_v01 import (
+    CAUSAL_DISPOSITIONS,
+    CausalConsumptionRefV01,
+    KernelArtifactV01,
+    build_causal_consumption_ref_v01,
+    build_kernel_artifact_v01,
+    causal_consumption_ref_to_plain_dict_v01,
+    causal_consumption_refs_to_plain_list_v01,
+    kernel_artifact_to_canonical_ref_v01,
+    kernel_artifact_to_plain_dict_v01,
+    kernel_artifacts_to_plain_list_v01,
+    validate_causal_consumption_bundle_v01,
+    validate_causal_consumption_ref_v01,
+    validate_causal_counterfactual_v01,
+    validate_kernel_artifact_bundle_v01,
+    validate_kernel_artifact_v01,
 )
 from hedgehog.kernel.root_signer_isolation_v01 import (
     STATUS_BLOCKED_FAIL_CLOSED as SIGNER_STATUS_BLOCKED,
@@ -67,7 +84,7 @@ from hedgehog.kernel.trust_model_v01 import (
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v0.4"
+RUNNER_VERSION = "v0.5"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -83,6 +100,9 @@ _INTEGRATION_SEAM_INDEX_PATH = (
     _REPOSITORY_ROOT / "release/integration_seam_index.json"
 )
 _SEMANTIC_WORK_SCHEMA_PATH = _REPOSITORY_ROOT / "schemas/semantic_work_v01.schema.json"
+_KERNEL_ARTIFACT_SCHEMA_PATH = (
+    _REPOSITORY_ROOT / "schemas/kernel_artifact_v01.schema.json"
+)
 
 _MANIFEST_FIELD_NAMES = frozenset(
     {
@@ -135,6 +155,14 @@ _ACTIVE_ACT_SOURCES = {
         "demo.run_living_gauntlet_v01",
         "collect_semantic_work_contract_gauntlet_act_v01",
     ),
+    "domain_neutral_kernel_abi": (
+        "demo.run_living_gauntlet_v01",
+        "collect_domain_neutral_kernel_abi_gauntlet_act_v01",
+    ),
+    "causal_consumption": (
+        "demo.run_living_gauntlet_v01",
+        "collect_causal_consumption_gauntlet_act_v01",
+    ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
 _EXECUTED_RUNTIME_ACT_IDS = (
@@ -145,11 +173,11 @@ _EXECUTED_RUNTIME_ACT_IDS = (
 _EXECUTED_CONFORMANCE_ACT_IDS = (
     "root_signer_isolation_conformance",
     "semantic_work_contract",
+    "domain_neutral_kernel_abi",
+    "causal_consumption",
 )
 _EVIDENCE_ONLY_ACT_IDS = ("airline_all_real_frozen_reference",)
 _PLANNED_ACT_IDS = (
-    "domain_neutral_kernel_abi",
-    "causal_consumption",
     "transition_registry",
     "root_decision_kernel",
     "effect_firewall",
@@ -225,6 +253,14 @@ _CURRENT_SEAMS = {
         "hedgehog.kernel.semantic_work_v01",
         "build_root_review_packet_from_contributions_v01",
     ),
+    "kernel_abi_core": (
+        "hedgehog.kernel.abi_v01",
+        "validate_kernel_artifact_bundle_v01",
+    ),
+    "causal_consumption_core": (
+        "hedgehog.kernel.abi_v01",
+        "validate_causal_counterfactual_v01",
+    ),
 }
 _CURRENT_SEAM_STATUSES = {
     "deterministic_airline_reference_collector": STATUS_ACTIVE,
@@ -242,6 +278,8 @@ _CURRENT_SEAM_STATUSES = {
     "root_signer_isolation_conformance": STATUS_ACTIVE,
     "kernel_trust_model_core": STATUS_ACTIVE,
     "semantic_work_contract_core": STATUS_ACTIVE,
+    "kernel_abi_core": STATUS_ACTIVE,
+    "causal_consumption_core": STATUS_ACTIVE,
 }
 
 
@@ -294,6 +332,8 @@ _COUNTER_FIELD_NAMES = frozenset(
         "real_world_effects_count",
         "root_signer_isolation_execution_count",
         "semantic_work_contract_execution_count",
+        "domain_neutral_kernel_abi_execution_count",
+        "causal_consumption_execution_count",
     }
 )
 
@@ -354,6 +394,47 @@ def _record_ids(records: Any, key: str, prefix: str) -> tuple[tuple[str, ...], l
     return tuple(ids), errors
 
 
+def _normalized_release_text(value: object) -> str:
+    return " ".join(value.lower().split()) if isinstance(value, str) else ""
+
+
+def _active_contract_described_unimplemented(
+    active_ids: tuple[str, ...], limitations: object
+) -> bool:
+    if not isinstance(limitations, list):
+        return False
+    texts = tuple(
+        _normalized_release_text(record.get("statement"))
+        for record in limitations
+        if isinstance(record, dict)
+    )
+    stale_phrases: list[str] = []
+    if "domain_neutral_kernel_abi" in active_ids:
+        stale_phrases.extend(
+            (
+                "kernel abi remains unimplemented",
+                "kernel abi is unimplemented",
+                "kernel abi is absent",
+            )
+        )
+    if "causal_consumption" in active_ids:
+        stale_phrases.extend(
+            (
+                "causalconsumptionref remains unimplemented",
+                "causalconsumptionref is unimplemented",
+                "causalconsumptionref is absent",
+            )
+        )
+    return any(
+        any(phrase in text for phrase in stale_phrases)
+        or (
+            "kernel abi, causalconsumptionref" in text
+            and "remain unimplemented" in text
+        )
+        for text in texts
+    )
+
+
 def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     errors: list[str] = []
     if not isinstance(manifest, dict):
@@ -363,7 +444,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("manifest_status", "ACTIVE_GATE1_G1B1"),
+        ("manifest_status", "ACTIVE_GATE1_G1B2"),
     ):
         if manifest.get(key) != expected:
             errors.append(f"completion_manifest_value_mismatch:{key}")
@@ -434,6 +515,8 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
                 record.get("statement"), str
             ):
                 errors.append("completion_manifest_limitation_invalid")
+    if _active_contract_described_unimplemented(active_ids, limitations):
+        errors.append("completion_manifest_active_contract_described_unimplemented")
 
     claims = manifest.get("public_claims")
     claim_ids, id_errors = _record_ids(claims, "claim_id", "public_claim")
@@ -498,7 +581,7 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_integration_seam_index_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("index_status", "ACTIVE_GATE1_G1B1"),
+        ("index_status", "ACTIVE_GATE1_G1B2"),
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
@@ -553,6 +636,23 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
                 "PLANNED_ROOT_ENVELOPE",
             } and seam.get("seam_class") != "PLANNED_GATE1_ROOT_BOUNDARY":
                 errors.append(f"root_authority_seam_not_explicit_boundary:{seam_id}")
+        seam_by_id = {
+            seam.get("seam_id"): seam for seam in seams if isinstance(seam, dict)
+        }
+        abi_seam = seam_by_id.get("kernel_abi_core")
+        supplier_seam = seam_by_id.get("supplier_water_filter_abi_adapter")
+        supplier_note = _normalized_release_text(
+            supplier_seam.get("notes") if isinstance(supplier_seam, dict) else None
+        )
+        if (
+            isinstance(abi_seam, dict)
+            and abi_seam.get("status") == STATUS_ACTIVE
+            and (
+                "no abi is implemented" in supplier_note
+                or "abi is absent" in supplier_note
+            )
+        ):
+            errors.append("integration_seam_active_abi_described_absent")
     return tuple(dict.fromkeys(errors))
 
 
@@ -1572,6 +1672,537 @@ def collect_semantic_work_contract_gauntlet_act_v01(
         )
 
 
+def _kernel_time_envelope_v01(session_anchor: str) -> dict[str, Any]:
+    return {
+        "pt_created_at": "2026-01-01T00:00:00+00:00",
+        "kt_asof": "2026-01-01T00:00:00+00:00",
+        "et_observed_at": None,
+        "ct_session_anchor": session_anchor,
+        "ttl_seconds": 3600,
+        "freshness_class": "static",
+        "valid_from": "2026-01-01T00:00:00+00:00",
+        "valid_to": "2026-01-01T01:00:00+00:00",
+    }
+
+
+def _build_fixture_kernel_artifact_v01(
+    *,
+    artifact_id: str,
+    artifact_type: str,
+    transaction_id: str,
+    owner_root_id: str,
+    source_component: str,
+    authority_class: str,
+    lifecycle_state: str,
+    payload: object,
+    parent_refs: tuple[str, ...],
+    session_anchor: str,
+) -> KernelArtifactV01:
+    return build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id=artifact_id,
+        artifact_type=artifact_type,
+        schema_version="v1",
+        transaction_id=transaction_id,
+        owner_root_id=owner_root_id,
+        source_component=source_component,
+        authority_class=authority_class,
+        lifecycle_state=lifecycle_state,
+        payload=payload,
+        trace_refs=(f"trace:{artifact_id}",),
+        parent_refs=parent_refs,
+        time_envelope=_kernel_time_envelope_v01(session_anchor),
+    )
+
+
+def _build_kernel_abi_fixture_v01() -> tuple[KernelArtifactV01, ...]:
+    transaction_id = "txn:fixture:kernel_abi:001"
+    session_anchor = "session:fixture:kernel_abi:001"
+    semantic_contribution = _build_semantic_work_fixture_v01()[1][0]
+    rows = (
+        (
+            "artifact:fixture:abi:route_proposal",
+            "OrchestratorRouteProposal",
+            "root:alpha",
+            "orchestrator",
+            "ADVISORY",
+            "PROPOSED",
+            {"candidate_ref": "candidate:alpha"},
+            (),
+        ),
+        (
+            "artifact:fixture:abi:root_route",
+            "RootAcceptedRoute",
+            "root:alpha",
+            "root",
+            "ROOT_OWNED",
+            "ROOT_ACCEPTED",
+            {"accepted_ref": "candidate:alpha"},
+            ("artifact:fixture:abi:route_proposal",),
+        ),
+        (
+            "artifact:fixture:abi:topology",
+            "RuntimeExecutionTopology",
+            "root:alpha",
+            "deterministic_runtime",
+            "ROOT_AUTHORIZED",
+            "VALIDATED",
+            {"topology_ref": "topology:alpha"},
+            ("artifact:fixture:abi:root_route",),
+        ),
+        (
+            "artifact:fixture:abi:actor_contribution",
+            "ActorContribution",
+            "root:beta",
+            "provider_llm",
+            "ADVISORY",
+            "VALIDATED",
+            semantic_work_to_plain_dict_v01(semantic_contribution),
+            ("artifact:fixture:abi:topology",),
+        ),
+        (
+            "artifact:fixture:abi:validated_evidence",
+            "ValidatedEvidence",
+            "root:alpha",
+            "post_vv",
+            "EVIDENCE_ONLY",
+            "VALIDATED",
+            {"validation_state": "accepted"},
+            ("artifact:fixture:abi:actor_contribution",),
+        ),
+        (
+            "artifact:fixture:abi:result_proposal",
+            "ResultProposal",
+            "root:beta",
+            "executor_fractal_child",
+            "NON_AUTHORITY",
+            "VALIDATED",
+            {"result_state": "proposed"},
+            ("artifact:fixture:abi:topology",),
+        ),
+    )
+    return tuple(
+        _build_fixture_kernel_artifact_v01(
+            artifact_id=artifact_id,
+            artifact_type=artifact_type,
+            transaction_id=transaction_id,
+            owner_root_id=owner_root_id,
+            source_component=source_component,
+            authority_class=authority_class,
+            lifecycle_state=lifecycle_state,
+            payload=payload,
+            parent_refs=parent_refs,
+            session_anchor=session_anchor,
+        )
+        for (
+            artifact_id,
+            artifact_type,
+            owner_root_id,
+            source_component,
+            authority_class,
+            lifecycle_state,
+            payload,
+            parent_refs,
+        ) in rows
+    )
+
+
+def _collect_kernel_abi_fixture_metrics_v01() -> dict[str, Any]:
+    artifacts = _build_kernel_abi_fixture_v01()
+    if any(validate_kernel_artifact_v01(item) for item in artifacts):
+        raise ValueError("kernel_abi_artifact_invalid")
+    if validate_kernel_artifact_bundle_v01(artifacts=artifacts):
+        raise ValueError("kernel_abi_bundle_invalid")
+    projections = kernel_artifacts_to_plain_list_v01(artifacts)
+    schema = _load_strict_json_object(_KERNEL_ARTIFACT_SCHEMA_PATH)
+    validator = Draft202012Validator(schema)
+    for projection in projections:
+        validator.validate(projection)
+    canonical_refs = tuple(kernel_artifact_to_canonical_ref_v01(item) for item in artifacts)
+    repeated = _build_kernel_abi_fixture_v01()
+    if projections != kernel_artifacts_to_plain_list_v01(repeated):
+        raise ValueError("kernel_abi_projection_nondeterministic")
+    repeated_refs = tuple(kernel_artifact_to_canonical_ref_v01(item) for item in repeated)
+    if canonical_refs != repeated_refs:
+        raise ValueError("kernel_abi_ref_nondeterministic")
+    first = artifacts[0]
+    unknown_major_blocked = "abi_major_version_unknown" in validate_kernel_artifact_v01(
+        replace(first, abi_version="v2.0")
+    )
+    authority_blocked = "authority_class_unknown" in validate_kernel_artifact_v01(
+        replace(first, authority_class="UNKNOWN")
+    )
+    lifecycle_blocked = "lifecycle_state_unknown" in validate_kernel_artifact_v01(
+        replace(first, lifecycle_state="UNKNOWN")
+    )
+    payload_override_blocked = False
+    try:
+        build_kernel_artifact_v01(
+            abi_version="v1.0",
+            artifact_id="artifact:fixture:abi:reserved_negative",
+            artifact_type="SemanticEvidence",
+            schema_version="v1",
+            transaction_id="txn:fixture:kernel_abi:001",
+            owner_root_id="root:alpha",
+            source_component="deterministic_runtime",
+            authority_class="NON_AUTHORITY",
+            lifecycle_state="VALIDATED",
+            payload={"authority_class": "ROOT_OWNED"},
+            trace_refs=("trace:fixture:abi:reserved_negative",),
+            parent_refs=(),
+            time_envelope=_kernel_time_envelope_v01(
+                "session:fixture:kernel_abi:001"
+            ),
+        )
+    except ValueError as exc:
+        payload_override_blocked = exc.args == ("payload_reserved_field",)
+    metrics = {
+        "artifact_count": len(artifacts),
+        "valid_artifact_count": sum(
+            not validate_kernel_artifact_v01(item) for item in artifacts
+        ),
+        "canonical_ref_count": len(canonical_refs),
+        "schema_valid_projection_count": len(projections),
+        "unknown_major_blocked": unknown_major_blocked,
+        "authority_mutation_blocked": authority_blocked,
+        "lifecycle_mutation_blocked": lifecycle_blocked,
+        "payload_authority_override_blocked": payload_override_blocked,
+        "root_decision_created_count": 0,
+        "permission_created_count": 0,
+        "final_output_created_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+    expected = {
+        "artifact_count": 6,
+        "valid_artifact_count": 6,
+        "canonical_ref_count": 6,
+        "schema_valid_projection_count": 6,
+        "unknown_major_blocked": True,
+        "authority_mutation_blocked": True,
+        "lifecycle_mutation_blocked": True,
+        "payload_authority_override_blocked": True,
+        "root_decision_created_count": 0,
+        "permission_created_count": 0,
+        "final_output_created_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+    if metrics != expected:
+        raise ValueError("kernel_abi_fixture_metrics_invalid")
+    return metrics
+
+
+def collect_domain_neutral_kernel_abi_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    act_id = "domain_neutral_kernel_abi"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        _collect_kernel_abi_fixture_metrics_v01()
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("domain_neutral_kernel_abi_conformance_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
+
+
+def _build_causal_consumption_fixture_v01() -> tuple[
+    tuple[KernelArtifactV01, ...],
+    tuple[CausalConsumptionRefV01, ...],
+    tuple[tuple[Any, ...], ...],
+]:
+    transaction_id = "txn:fixture:causal_consumption:001"
+    session_anchor = "session:fixture:causal_consumption:001"
+    pair_rows = (
+        (
+            "used",
+            {"recommendation": "candidate:alpha"},
+            {"recommendation": "candidate:beta"},
+            {"accepted_candidate": "candidate:alpha"},
+            {"accepted_candidate": "candidate:beta"},
+            "/recommendation",
+            "USED",
+            "used:deterministic_candidate_projection",
+        ),
+        (
+            "rejected",
+            {"authority_request": "create_permission"},
+            {"authority_request": "create_extended_permission"},
+            {"rejected": True, "observation": "baseline"},
+            {"rejected": True, "observation": "mutated"},
+            "/authority_request",
+            "REJECTED",
+            "rejected:semantic_authority_escalation",
+        ),
+        (
+            "ignored",
+            {"presentation_style": "compact"},
+            {"presentation_style": "expanded"},
+            {"validation_state": "unchanged"},
+            {"validation_state": "unchanged"},
+            "/presentation_style",
+            "IGNORED_WITH_REASON",
+            "ignored:presentation_metadata_non_causal",
+        ),
+        (
+            "blocked",
+            {"requested_external_action": "execute_now"},
+            {"requested_external_action": "execute_later"},
+            {"blocked": True, "observation": "baseline"},
+            {"blocked": True, "observation": "mutated"},
+            "/requested_external_action",
+            "BLOCKED_BY_GATE",
+            "gate:effect_firewall_not_implemented",
+        ),
+    )
+    baseline_artifacts: list[KernelArtifactV01] = []
+    causal_refs: list[CausalConsumptionRefV01] = []
+    cases: list[tuple[Any, ...]] = []
+    authority_state = {"accepted_authority_state": "unchanged"}
+    for label, source_payload, mutated_source_payload, downstream_payload, mutated_downstream_payload, pointer, disposition, reason in pair_rows:
+        source_id = f"artifact:fixture:causal:{label}_source"
+        downstream_id = f"artifact:fixture:causal:{label}_downstream"
+        source = _build_fixture_kernel_artifact_v01(
+            artifact_id=source_id,
+            artifact_type="ActorContribution",
+            transaction_id=transaction_id,
+            owner_root_id="root:alpha",
+            source_component="provider_llm",
+            authority_class="ADVISORY",
+            lifecycle_state="VALIDATED",
+            payload=source_payload,
+            parent_refs=(),
+            session_anchor=session_anchor,
+        )
+        mutated_source = _build_fixture_kernel_artifact_v01(
+            artifact_id=source_id,
+            artifact_type="ActorContribution",
+            transaction_id=transaction_id,
+            owner_root_id="root:alpha",
+            source_component="provider_llm",
+            authority_class="ADVISORY",
+            lifecycle_state="VALIDATED",
+            payload=mutated_source_payload,
+            parent_refs=(),
+            session_anchor=session_anchor,
+        )
+        downstream = _build_fixture_kernel_artifact_v01(
+            artifact_id=downstream_id,
+            artifact_type="ValidatedEvidence",
+            transaction_id=transaction_id,
+            owner_root_id="root:beta",
+            source_component="deterministic_runtime",
+            authority_class="EVIDENCE_ONLY",
+            lifecycle_state="VALIDATED",
+            payload=downstream_payload,
+            parent_refs=(source_id,),
+            session_anchor=session_anchor,
+        )
+        mutated_downstream = _build_fixture_kernel_artifact_v01(
+            artifact_id=downstream_id,
+            artifact_type="ValidatedEvidence",
+            transaction_id=transaction_id,
+            owner_root_id="root:beta",
+            source_component="deterministic_runtime",
+            authority_class="EVIDENCE_ONLY",
+            lifecycle_state="VALIDATED",
+            payload=mutated_downstream_payload,
+            parent_refs=(source_id,),
+            session_anchor=session_anchor,
+        )
+        causal_ref = build_causal_consumption_ref_v01(
+            producer_actor_id=f"actor:fixture:causal:{label}",
+            source_artifact_id=source_id,
+            output_field=pointer,
+            consumer_component="deterministic_runtime",
+            downstream_artifact_id=downstream_id,
+            decision_effect=f"effect:fixture:causal:{label}",
+            disposition=disposition,
+            reason_code=reason,
+            trace_refs=(f"trace:fixture:causal:{label}",),
+        )
+        baseline_artifacts.extend((source, downstream))
+        causal_refs.append(causal_ref)
+        cases.append(
+            (
+                causal_ref,
+                source,
+                mutated_source,
+                downstream,
+                mutated_downstream,
+                authority_state,
+                authority_state,
+            )
+        )
+    return tuple(baseline_artifacts), tuple(causal_refs), tuple(cases)
+
+
+def _collect_causal_consumption_fixture_metrics_v01() -> dict[str, Any]:
+    artifacts, causal_refs, cases = _build_causal_consumption_fixture_v01()
+    if validate_kernel_artifact_bundle_v01(artifacts=artifacts):
+        raise ValueError("causal_fixture_artifact_bundle_invalid")
+    if any(validate_causal_consumption_ref_v01(item) for item in causal_refs):
+        raise ValueError("causal_fixture_ref_invalid")
+    if validate_causal_consumption_bundle_v01(
+        artifacts=artifacts, causal_refs=causal_refs
+    ):
+        raise ValueError("causal_fixture_bundle_invalid")
+    proof_results = tuple(
+        validate_causal_counterfactual_v01(
+            causal_ref=case[0],
+            baseline_source_artifact=case[1],
+            mutated_source_artifact=case[2],
+            baseline_downstream_artifact=case[3],
+            mutated_downstream_artifact=case[4],
+            baseline_authority_state=case[5],
+            mutated_authority_state=case[6],
+        )
+        for case in cases
+    )
+    if any(proof_results):
+        raise ValueError("causal_fixture_counterfactual_invalid")
+    artifact_projection = kernel_artifacts_to_plain_list_v01(artifacts)
+    causal_projection = causal_consumption_refs_to_plain_list_v01(causal_refs)
+    repeated_artifacts, repeated_refs, repeated_cases = (
+        _build_causal_consumption_fixture_v01()
+    )
+    if artifact_projection != kernel_artifacts_to_plain_list_v01(repeated_artifacts):
+        raise ValueError("causal_fixture_artifact_projection_nondeterministic")
+    if causal_projection != causal_consumption_refs_to_plain_list_v01(repeated_refs):
+        raise ValueError("causal_fixture_ref_projection_nondeterministic")
+    repeated_proofs = tuple(
+        validate_causal_counterfactual_v01(
+            causal_ref=case[0],
+            baseline_source_artifact=case[1],
+            mutated_source_artifact=case[2],
+            baseline_downstream_artifact=case[3],
+            mutated_downstream_artifact=case[4],
+            baseline_authority_state=case[5],
+            mutated_authority_state=case[6],
+        )
+        for case in repeated_cases
+    )
+    if proof_results != repeated_proofs:
+        raise ValueError("causal_fixture_proof_nondeterministic")
+    schema = _load_strict_json_object(_KERNEL_ARTIFACT_SCHEMA_PATH)
+    artifact_validator = Draft202012Validator(schema)
+    for projection in artifact_projection:
+        artifact_validator.validate(projection)
+    causal_schema = {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$ref": "#/$defs/causalConsumptionRef",
+        "$defs": schema["$defs"],
+    }
+    causal_validator = Draft202012Validator(causal_schema)
+    for projection in causal_projection:
+        causal_validator.validate(projection)
+    dispositions = tuple(item.disposition for item in causal_refs)
+    metrics = {
+        "causal_source_artifact_count": 4,
+        "causal_downstream_artifact_count": 4,
+        "causal_ref_count": len(causal_refs),
+        "disposition_count": len(set(dispositions)),
+        "used_ref_count": dispositions.count("USED"),
+        "rejected_ref_count": dispositions.count("REJECTED"),
+        "ignored_ref_count": dispositions.count("IGNORED_WITH_REASON"),
+        "blocked_ref_count": dispositions.count("BLOCKED_BY_GATE"),
+        "used_counterfactual_proof_count": 1,
+        "rejected_authority_preservation_count": 1,
+        "ignored_downstream_preservation_count": 1,
+        "ignored_authority_preservation_count": 1,
+        "blocked_authority_preservation_count": 1,
+        "root_decision_created_count": 0,
+        "permission_created_count": 0,
+        "final_output_created_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+    expected = {
+        "causal_source_artifact_count": 4,
+        "causal_downstream_artifact_count": 4,
+        "causal_ref_count": 4,
+        "disposition_count": 4,
+        "used_ref_count": 1,
+        "rejected_ref_count": 1,
+        "ignored_ref_count": 1,
+        "blocked_ref_count": 1,
+        "used_counterfactual_proof_count": 1,
+        "rejected_authority_preservation_count": 1,
+        "ignored_downstream_preservation_count": 1,
+        "ignored_authority_preservation_count": 1,
+        "blocked_authority_preservation_count": 1,
+        "root_decision_created_count": 0,
+        "permission_created_count": 0,
+        "final_output_created_count": 0,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+    if metrics != expected or set(dispositions) != set(CAUSAL_DISPOSITIONS):
+        raise ValueError("causal_fixture_metrics_invalid")
+    return metrics
+
+
+def collect_causal_consumption_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    act_id = "causal_consumption"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        _collect_causal_consumption_fixture_metrics_v01()
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("causal_consumption_conformance_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
+
+
 def _failed_act_result(*, act_id: str, reason: str) -> LivingGauntletActResultV01:
     source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
     return LivingGauntletActResultV01(
@@ -1670,6 +2301,18 @@ def _derive_report_counters_v01(
             and row.get("executed") is True
             for row in active_rows
         ),
+        "domain_neutral_kernel_abi_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[5]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
+        "causal_consumption_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[6]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
     }
 
 
@@ -1694,6 +2337,8 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     generic_calls = 0
     signer_calls = 0
     semantic_work_calls = 0
+    kernel_abi_calls = 0
+    causal_consumption_calls = 0
     if not errors:
         airline_calls += 1
         try:
@@ -1755,6 +2400,28 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                     reason="semantic_work_contract_collector_failed",
                 )
             )
+        kernel_abi_calls += 1
+        try:
+            active_results.append(
+                collect_domain_neutral_kernel_abi_gauntlet_act_v01()
+            )
+        except Exception:
+            active_results.append(
+                _failed_act_result(
+                    act_id=_ACTIVE_ACT_IDS[5],
+                    reason="domain_neutral_kernel_abi_collector_failed",
+                )
+            )
+        causal_consumption_calls += 1
+        try:
+            active_results.append(collect_causal_consumption_gauntlet_act_v01())
+        except Exception:
+            active_results.append(
+                _failed_act_result(
+                    act_id=_ACTIVE_ACT_IDS[6],
+                    reason="causal_consumption_collector_failed",
+                )
+            )
 
     for result in active_results:
         errors.extend(result.errors)
@@ -1795,6 +2462,8 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             and generic_calls == 1
             and signer_calls == 1
             and semantic_work_calls == 1
+            and kernel_abi_calls == 1
+            and causal_consumption_calls == 1
             and len(active_results) == len(_ACTIVE_ACT_IDS),
         ),
         _invariant_result(

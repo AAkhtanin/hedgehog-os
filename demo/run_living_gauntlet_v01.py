@@ -17,6 +17,15 @@ from demo.run_all_layers_applied_super_smoke import (
 from demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01 import (
     collect_tri_party_airline_ticket_purchase_mock_e2e_v01,
 )
+from hedgehog.domains.airline import (
+    crypto_artifact_seal_collector_v01 as airline_crypto_collector,
+)
+from hedgehog.domains.airline import crypto_artifact_seal_v01 as airline_crypto
+from hedgehog.domains.airline import kernel_adapter_v01 as airline_kernel_adapter
+from hedgehog.domains.airline import sealed_trace_replay_v01 as airline_replay
+from hedgehog.domains.airline import (
+    transaction_artifact_ledger_v01 as airline_ledger,
+)
 from hedgehog.kernel.integrity_replay_v01 import (
     ArtifactDependencyEdgeV01,
     AuthorityClassBindingV01,
@@ -135,7 +144,7 @@ import hedgehog.kernel.transition_registry_v01 as transition_registry_module
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v0.7"
+RUNNER_VERSION = "v0.8"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -249,7 +258,6 @@ _PLANNED_ACT_IDS = (
     "kernel_conformance_closure",
 )
 _PLANNED_SEAM_IDS = (
-    "generic_integrity_replay_adapter",
     "supplier_water_filter_abi_adapter",
     "multiroot_envelope",
     "kernel_conformance_report",
@@ -301,6 +309,10 @@ _CURRENT_SEAMS = {
         "hedgehog.kernel.integrity_replay_v01",
         "verify_artifact_replay_v01",
     ),
+    "generic_integrity_replay_adapter": (
+        "hedgehog.domains.airline.kernel_adapter_v01",
+        "build_airline_kernel_adapter_result_v01",
+    ),
     "root_signer_isolation_conformance": (
         "hedgehog.kernel.root_signer_isolation_v01",
         "verify_root_signature_v01",
@@ -347,6 +359,7 @@ _CURRENT_SEAM_STATUSES = {
     "core_mock_connector_sandbox": STATUS_ACTIVE,
     "core_fractal_fulfillment": STATUS_ACTIVE,
     "generic_integrity_replay_core": STATUS_ACTIVE,
+    "generic_integrity_replay_adapter": STATUS_ACTIVE,
     "root_signer_isolation_conformance": STATUS_ACTIVE,
     "kernel_trust_model_core": STATUS_ACTIVE,
     "semantic_work_contract_core": STATUS_ACTIVE,
@@ -357,6 +370,13 @@ _CURRENT_SEAM_STATUSES = {
     "effect_firewall": STATUS_ACTIVE,
 }
 _ACTIVE_RECORD_EXPECTATIONS = {
+    "generic_integrity_replay": (
+        (
+            "claim_generic_integrity_replay_execution",
+            "claim_airline_kernel_adapter_execution",
+        ),
+        "tests/test_kernel_integrity_replay_v01.py",
+    ),
     "transition_registry": (
         ("claim_transition_registry_runtime_execution",),
         "tests/test_transition_registry_v01.py",
@@ -371,6 +391,13 @@ _ACTIVE_RECORD_EXPECTATIONS = {
     ),
 }
 _ACTIVE_SEAM_EXPECTATIONS = {
+    "generic_integrity_replay_adapter": {
+        "authority_status": "NON_ROOT_FROZEN_DOMAIN_ADAPTER",
+        "current_mode": "PURE_IN_MEMORY_FROZEN_AIRLINE_PROJECTION",
+        "effect_access": "NONE",
+        "gate1_target": "generic_integrity_replay",
+        "seam_class": "DOMAIN_ADAPTER",
+    },
     "transition_registry": {
         "authority_status": "NON_ROOT_IMMUTABLE_TRANSITION_POLICY",
         "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_LOOKUP",
@@ -604,6 +631,47 @@ def _active_g1c1_absence_errors(
     return tuple(errors)
 
 
+def _active_g1d1_absence_errors(
+    active_ids: tuple[str, ...], manifest: Mapping[str, Any]
+) -> tuple[str, ...]:
+    claims = manifest.get("public_claims", [])
+    airline_adapter_active = (
+        "generic_integrity_replay" in active_ids
+        and isinstance(claims, list)
+        and any(
+            isinstance(record, dict)
+            and record.get("claim_id") == "claim_airline_kernel_adapter_execution"
+            and record.get("claim_class") == "EXECUTED_RUNTIME"
+            for record in claims
+        )
+    )
+    if not airline_adapter_active:
+        return ()
+    texts = [
+        _normalized_release_text(record.get("statement"))
+        for key in ("limitations", "public_claims")
+        for record in manifest.get(key, [])
+        if isinstance(record, dict)
+    ]
+    texts.extend(
+        _normalized_release_text(item)
+        for item in manifest.get("non_claims", [])
+        if isinstance(item, str)
+    )
+    if any(
+        phrase in text
+        for text in texts
+        for phrase in (
+            "airline adapter remains unimplemented",
+            "airline adapter is unimplemented",
+            "no airline adapter exists",
+            "not an airline integrity adapter",
+        )
+    ):
+        return ("completion_manifest_active_airline_adapter_described_unimplemented",)
+    return ()
+
+
 def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     errors: list[str] = []
     if not isinstance(manifest, dict):
@@ -613,7 +681,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("manifest_status", "ACTIVE_GATE1_G1C2"),
+        ("manifest_status", "ACTIVE_GATE1_G1D1"),
     ):
         if manifest.get(key) != expected:
             errors.append(f"completion_manifest_value_mismatch:{key}")
@@ -693,6 +761,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     if _active_contract_described_unimplemented(active_ids, limitations):
         errors.append("completion_manifest_active_contract_described_unimplemented")
     errors.extend(_active_g1c1_absence_errors(active_ids, manifest))
+    errors.extend(_active_g1d1_absence_errors(active_ids, manifest))
 
     claims = manifest.get("public_claims")
     claim_ids, id_errors = _record_ids(claims, "claim_id", "public_claim")
@@ -742,6 +811,29 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
                     errors.append(f"public_claim_reference_invalid:{claim_id}:{ref_key}")
             if claim.get("limitation_ref") not in set(limitation_ids):
                 errors.append(f"public_claim_limitation_unknown:{claim_id}")
+        airline_claims = [
+            claim
+            for claim in claims
+            if isinstance(claim, dict)
+            and claim.get("claim_id") == "claim_airline_kernel_adapter_execution"
+        ]
+        expected_airline_claim = {
+            "act_ids": ["generic_integrity_replay"],
+            "claim_class": "EXECUTED_RUNTIME",
+            "claim_id": "claim_airline_kernel_adapter_execution",
+            "evidence_ref": "hedgehog/domains/airline/kernel_adapter_v01.py",
+            "focused_test_ref": "tests/test_airline_kernel_adapter_v01.py",
+            "limitation_ref": "limitation_g1d1_frozen_airline_projection_only",
+            "runtime_ref": (
+                "demo.run_living_gauntlet_v01:"
+                "collect_generic_integrity_replay_gauntlet_act_v01"
+            ),
+        }
+        if len(airline_claims) != 1 or any(
+            airline_claims[0].get(key) != value
+            for key, value in expected_airline_claim.items()
+        ):
+            errors.append("completion_manifest_airline_adapter_claim_mismatch")
 
     if not _is_string_list(manifest.get("non_claims")):
         errors.append("completion_manifest_non_claims_invalid")
@@ -757,7 +849,7 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_integration_seam_index_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("index_status", "ACTIVE_GATE1_G1C2"),
+        ("index_status", "ACTIVE_GATE1_G1D1"),
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
@@ -792,6 +884,8 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
                     seam.get("source_module"), seam.get("source_symbol")
                 ) != _CURRENT_SEAMS[seam_id]:
                     errors.append(f"current_seam_source_mismatch:{seam_id}")
+                    if seam_id == "generic_integrity_replay_adapter":
+                        errors.append("integration_seam_airline_adapter_source_mismatch")
                 expected_contract = _ACTIVE_SEAM_EXPECTATIONS.get(seam_id)
                 if expected_contract is not None and any(
                     seam.get(key) != value
@@ -806,6 +900,10 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
             if seam_id != "effect_firewall" and seam.get("effect_access") != "NONE":
                 errors.append(f"seam_effect_access_forbidden:{seam_id}")
                 errors.append("integration_seam_non_firewall_effect_access_forbidden")
+                if seam_id == "generic_integrity_replay_adapter":
+                    errors.append(
+                        "integration_seam_domain_adapter_effect_access_forbidden"
+                    )
             if seam_id == "effect_firewall" and (
                 status != STATUS_ACTIVE
                 or seam.get("effect_access") != "BOUNDED_EFFECT_HANDLE_OWNER"
@@ -877,6 +975,22 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
                 errors.append(
                     "integration_seam_active_effect_firewall_described_absent"
                 )
+        airline_adapter_seam = seam_by_id.get("generic_integrity_replay_adapter")
+        if (
+            isinstance(airline_adapter_seam, dict)
+            and airline_adapter_seam.get("status") == STATUS_ACTIVE
+        ):
+            note = _normalized_release_text(airline_adapter_seam.get("notes"))
+            if any(
+                phrase in note
+                for phrase in (
+                    "not implemented",
+                    "unimplemented",
+                    "no airline adapter",
+                    "airline adapter is absent",
+                )
+            ):
+                errors.append("integration_seam_active_airline_adapter_described_absent")
         active_effect_owners = [
             seam
             for seam in seams
@@ -1327,6 +1441,202 @@ def _collect_generic_integrity_replay_fixture_records_v01() -> tuple[dict[str, A
     return tuple(records)
 
 
+def _build_frozen_airline_adapter_audit_v01(
+    ledger_item: airline_ledger.AirlineTransactionArtifactLedgerV01,
+) -> airline_crypto_collector.AirlineCryptoArtifactSealAcceptedLedgerAuditV01:
+    values: dict[str, object] = {
+        "audit_id": airline_crypto_collector.EXPECTED_LEDGER_AUDIT_ID,
+        "audit_version": airline_crypto_collector.EXPECTED_LEDGER_AUDIT_VERSION,
+        "final_status": airline_crypto_collector.STATUS_PASS,
+        "required_source_files": airline_crypto.REQUIRED_SOURCE_FILE_REFS,
+        "files_read_count": airline_replay.SOURCE_FILE_COUNT,
+        "ledger_id": ledger_item.ledger_id,
+        "transaction_id": ledger_item.transaction_id,
+        "selected_offer_id": airline_kernel_adapter.SELECTED_OFFER_ID,
+        "source_run_ref": ledger_item.source_run_ref,
+        "source_causal_report_ref": ledger_item.source_causal_report_ref,
+        "source_corridor_report_ref": ledger_item.source_corridor_report_ref,
+        "actual_entry_count": airline_replay.LEDGER_ENTRY_COUNT,
+        "actual_dependency_edge_count": airline_replay.DEPENDENCY_EDGE_COUNT,
+        "actual_root_final_count": airline_replay.ROOT_FINAL_COUNT,
+        "client_root_final_count": 1,
+        "airline_root_final_count": 1,
+        "bank_root_final_count": 1,
+        **{
+            field_name: True
+            for field_name in (
+                airline_crypto_collector.ACCEPTED_AUDIT_BOOLEAN_FIELDS
+            )
+        },
+        "stored_validation_status": airline_crypto_collector.STATUS_PASS,
+        "stored_validation_errors": (),
+        **{
+            field_name: 0
+            for field_name in (
+                airline_crypto_collector.ACCEPTED_AUDIT_ZERO_COUNTER_FIELDS
+            )
+        },
+        "validation_errors": (),
+    }
+    return airline_crypto_collector.AirlineCryptoArtifactSealAcceptedLedgerAuditV01(
+        **values,
+    )
+
+
+def _build_frozen_airline_kernel_adapter_fixture_v01(
+) -> tuple[
+    airline_replay.AirlineSealedTraceReplayInputV01,
+    airline_replay.AirlineSealedTraceReplayReportV01,
+    airline_kernel_adapter.AirlineKernelAdapterResultV01,
+]:
+    package_ref = "airline_kernel_adapter_living_fixture_v01"
+    ledger_item = airline_ledger.build_airline_transaction_artifact_ledger_fixture_v01(
+        offer_id=airline_kernel_adapter.SELECTED_OFFER_ID,
+    )
+    expected_identity = (
+        airline_ledger.build_airline_transaction_artifact_ledger_fixture_expected_identity_v01(
+            offer_id=airline_kernel_adapter.SELECTED_OFFER_ID,
+        )
+    )
+    source_rows = tuple(
+        (
+            source_ref,
+            (
+                "airline-kernel-adapter-living:"
+                f"{index}:{source_ref}"
+            ).encode("utf-8"),
+        )
+        for index, source_ref in enumerate(airline_crypto.REQUIRED_SOURCE_FILE_REFS)
+    )
+    manifest_core = airline_crypto.build_airline_crypto_artifact_seal_manifest_core_v01(
+        ledger_item,
+        ordered_source_files=source_rows,
+        source_package_ref=package_ref,
+        source_audit_status=airline_crypto.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_identity=expected_identity,
+    )
+    envelope = airline_crypto.build_airline_crypto_artifact_seal_envelope_v01(
+        manifest_core
+    )
+    stored = airline_crypto.verify_airline_crypto_artifact_seal_v01(
+        envelope,
+        ledger_item=ledger_item,
+        ordered_source_files_before=source_rows,
+        ordered_source_files_after=source_rows,
+        expected_source_package_ref=package_ref,
+        source_audit_status=airline_crypto.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_manifest_core_hash=None,
+        expected_identity=expected_identity,
+    )
+    fresh = airline_crypto.verify_airline_crypto_artifact_seal_v01(
+        envelope,
+        ledger_item=ledger_item,
+        ordered_source_files_before=source_rows,
+        ordered_source_files_after=source_rows,
+        expected_source_package_ref=package_ref,
+        source_audit_status=airline_crypto.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_manifest_core_hash=envelope.manifest_core_hash,
+        expected_identity=expected_identity,
+    )
+    replay_input = airline_replay.build_airline_sealed_trace_replay_input_v01(
+        source_package_ref=package_ref,
+        accepted_ledger_audit=_build_frozen_airline_adapter_audit_v01(ledger_item),
+        ledger_item=ledger_item,
+        envelope=envelope,
+        stored_verification_report=stored,
+        fresh_anchored_verification_report=fresh,
+        expected_manifest_core_hash=envelope.manifest_core_hash,
+        ordered_source_files=source_rows,
+    )
+    replay_report = airline_replay.verify_airline_sealed_trace_replay_v01(
+        replay_input,
+        critical_package_bytes_unchanged=True,
+        post_replay_snapshot_provider_call_count=1,
+    )
+    adapter_result = (
+        airline_kernel_adapter.build_airline_kernel_adapter_result_v01(
+            replay_input=replay_input,
+            replay_report=replay_report,
+        )
+    )
+    return replay_input, replay_report, adapter_result
+
+
+def _validate_frozen_airline_kernel_adapter_fixture_v01() -> None:
+    replay_input, replay_report, adapter_result = (
+        _build_frozen_airline_kernel_adapter_fixture_v01()
+    )
+    source_snapshot = (
+        replay_input.source_package_ref,
+        replay_input.expected_manifest_core_hash,
+        replay_input.ordered_source_files,
+        airline_replay.airline_sealed_trace_replay_report_to_plain_dict_v01(
+            replay_report
+        ),
+    )
+    if (
+        airline_replay.validate_airline_sealed_trace_replay_input_v01(
+            replay_input
+        ).validation_status
+        != STATUS_PASS
+        or airline_replay.validate_airline_sealed_trace_replay_report_v01(
+            replay_report
+        ).validation_status
+        != STATUS_PASS
+        or airline_kernel_adapter.validate_airline_kernel_adapter_result_v01(
+            replay_input=replay_input,
+            replay_report=replay_report,
+            result=adapter_result,
+        )
+        != ()
+    ):
+        raise ValueError("airline_kernel_adapter_validation_failed")
+    projection = airline_kernel_adapter.airline_kernel_adapter_result_to_plain_dict_v01(
+        adapter_result
+    )
+    canonical_json_bytes_v01(projection)
+    if (
+        len(adapter_result.kernel_artifacts) != 19
+        or adapter_result.kernel_manifest.artifact_count != 19
+        or adapter_result.kernel_manifest.dependency_edge_count != 29
+        or len(adapter_result.causal_consumption_refs) != 29
+        or adapter_result.kernel_unanchored_verification.verification_status
+        != KERNEL_STATUS_UNANCHORED
+        or adapter_result.kernel_anchored_verification.verification_status
+        != STATUS_PASS
+        or adapter_result.kernel_replay.replay_status != STATUS_PASS
+        or any(
+            value != 0
+            for value in (
+                adapter_result.provider_call_count,
+                adapter_result.network_call_count,
+                adapter_result.gemini_call_count,
+                adapter_result.real_world_effects_count,
+            )
+        )
+    ):
+        raise ValueError("airline_kernel_adapter_geometry_failed")
+    if (
+        projection
+        != airline_kernel_adapter.airline_kernel_adapter_result_to_plain_dict_v01(
+            adapter_result
+        )
+        or source_snapshot
+        != (
+            replay_input.source_package_ref,
+            replay_input.expected_manifest_core_hash,
+            replay_input.ordered_source_files,
+            airline_replay.airline_sealed_trace_replay_report_to_plain_dict_v01(
+                replay_report
+            ),
+        )
+    ):
+        raise ValueError("airline_kernel_adapter_nondeterministic")
+
+
 def collect_generic_integrity_replay_gauntlet_act_v01(
 ) -> LivingGauntletActResultV01:
     act_id = "generic_integrity_replay"
@@ -1335,6 +1645,7 @@ def collect_generic_integrity_replay_gauntlet_act_v01(
         records = _collect_generic_integrity_replay_fixture_records_v01()
         if len(records) != 2:
             raise ValueError("generic_fixture_count_invalid")
+        _validate_frozen_airline_kernel_adapter_fixture_v01()
         return LivingGauntletActResultV01(
             act_id=act_id,
             errors=(),

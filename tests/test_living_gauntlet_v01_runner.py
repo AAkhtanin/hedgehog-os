@@ -723,29 +723,29 @@ def test_generic_active_seam_is_importable() -> None:
     assert getattr(module, seam["source_symbol"]) is not None
 
 
-def test_generic_adapter_seam_remains_planned() -> None:
+def test_generic_adapter_seam_is_active_frozen_airline_projection() -> None:
     seam = next(
         record
         for record in _json(SEAM_INDEX_PATH)["seams"]
         if record["seam_id"] == "generic_integrity_replay_adapter"
     )
 
-    assert seam["status"] == runner.STATUS_PLANNED_NOT_ACTIVE
-    assert seam["source_symbol"] is None
-    assert "G1-D1" in seam["notes"]
-    assert "G1-D2" in seam["notes"]
-    assert "no adapter exists in G1-A1" in seam["notes"]
+    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["source_module"] == "hedgehog.domains.airline.kernel_adapter_v01"
+    assert seam["source_symbol"] == "build_airline_kernel_adapter_result_v01"
+    assert seam["effect_access"] == "NONE"
+    assert seam["seam_class"] == "DOMAIN_ADAPTER"
 
 
 def test_seam_index_has_exact_g1a1_geometry() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
 
     assert len(seams) == 24
-    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 17
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 18
     assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
     assert sum(
         item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams
-    ) == 4
+    ) == 3
     effect_owners = [
         item
         for item in seams
@@ -787,10 +787,11 @@ def test_g1a1_limitation_is_explicit() -> None:
     )["statement"]
 
     for phrase in (
-        "Only neutral in-memory fixtures",
-        "Airline and Supplier adapters are not implemented",
+        "G1-A1 itself remains limited to neutral in-memory fixtures",
+        "frozen Airline projection is separately active through G1-D1",
+        "Supplier projection remains unimplemented",
         "expected-hash provenance is not external trust",
-        "G1-A1 itself does not exercise signer isolation",
+        "G1-A1 does not exercise signer isolation",
     ):
         assert phrase in limitation
 
@@ -898,8 +899,8 @@ def test_renderer_shows_generic_active_act(report: dict[str, Any]) -> None:
 
 
 def test_runner_version_is_v05(report: dict[str, Any]) -> None:
-    assert runner.RUNNER_VERSION == "v0.7"
-    assert report["runner_version"] == "v0.7"
+    assert runner.RUNNER_VERSION == "v0.8"
+    assert report["runner_version"] == "v0.8"
 
 
 def test_runner_introduces_no_domain_adapter_import() -> None:
@@ -927,14 +928,14 @@ def test_generic_kernel_import_introduces_no_live_path() -> None:
 def test_manifest_status_and_counts_are_exact() -> None:
     manifest = _json(COMPLETION_MANIFEST_PATH)
 
-    assert manifest["manifest_status"] == "ACTIVE_GATE1_G1C2"
+    assert manifest["manifest_status"] == "ACTIVE_GATE1_G1D1"
     assert len(manifest["active_runtime_acts"]) == 10
     assert len(manifest["evidence_only_references"]) == 1
     assert len(manifest["planned_gate1_acts"]) == 3
 
 
 def test_seam_index_status_is_exact() -> None:
-    assert _json(SEAM_INDEX_PATH)["index_status"] == "ACTIVE_GATE1_G1C2"
+    assert _json(SEAM_INDEX_PATH)["index_status"] == "ACTIVE_GATE1_G1D1"
 
 
 def test_signer_act_is_active_in_completion_manifest() -> None:
@@ -1712,7 +1713,7 @@ def test_report_exposes_no_semantic_fixture_payload(
 def test_g1b1_report_geometry_and_prior_acts_remain_exact(
     report: dict[str, Any],
 ) -> None:
-    assert report["runner_version"] == "v0.7"
+    assert report["runner_version"] == "v0.8"
     assert report["final_status"] == runner.STATUS_PASS
     assert report["counters"]["active_act_count"] == 10
     assert report["counters"]["evidence_only_entry_count"] == 1
@@ -1885,7 +1886,8 @@ def test_g1b2_planned_set_is_exact() -> None:
     "phrase",
     (
         "neutral in-memory conformance fixtures",
-        "no Airline or Supplier adapter",
+        "frozen Airline adapter is separately active in G1-D1",
+        "Supplier portability",
         "no production ABI compatibility guarantee",
         "only ABI v1.0",
         "declared controlled influence, not semantic truth",
@@ -1979,11 +1981,11 @@ def test_g1b2_active_seams_cannot_gain_effect_access(seam_id: str) -> None:
 def test_g1b2_seam_geometry_is_exact() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
     assert len(seams) == 24
-    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 17
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 18
     assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
     assert sum(
         item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams
-    ) == 4
+    ) == 3
     assert sum(
         item["effect_access"] != "NONE"
         for item in seams
@@ -2199,7 +2201,7 @@ def test_report_exposes_no_abi_or_causal_fixture_values(
 def test_g1b2_report_geometry_and_prior_acts_are_exact(
     report: dict[str, Any],
 ) -> None:
-    assert report["runner_version"] == "v0.7"
+    assert report["runner_version"] == "v0.8"
     assert report["final_status"] == runner.STATUS_PASS
     assert report["counters"]["active_act_count"] == 10
     assert report["counters"]["active_act_pass_count"] == 10
@@ -2299,7 +2301,7 @@ def test_g1b2_acts_remain_active_after_coherence_hardening(act_id: str) -> None:
 def test_release_coherence_hardening_preserves_public_geometry(
     report: dict[str, Any],
 ) -> None:
-    assert report["runner_version"] == "v0.7"
+    assert report["runner_version"] == "v0.8"
     assert report["final_status"] == runner.STATUS_PASS
     assert report["counters"]["active_act_count"] == 10
     assert report["counters"]["evidence_only_entry_count"] == 1
@@ -2377,7 +2379,7 @@ def test_g1c1_planned_claim_exact_four_ids():
 
 @pytest.mark.parametrize("limitation_id,phrases", (
     ("limitation_g1c1_in_memory_transition_and_root_decision_only", ("does not mutate artifacts or execute transitions", "RootDecisionResult only", "no permission", "no effect", "separately active in G1-C2")),
-    ("limitation_gate1_not_implemented", ("Generic MultiRoot", "portability adapters", "Kernel Conformance closure")),
+    ("limitation_gate1_not_implemented", ("Generic MultiRoot", "Supplier / Water Filter portability adapter", "Kernel Conformance closure")),
     ("limitation_g1b1_in_memory_contract_conformance_only", ("separately active in G1-C1", "separately active in G1-C2")),
     ("limitation_g1b2_in_memory_abi_and_counterfactual_only", ("separately active in G1-C1", "separately active in G1-C2", "Generic MultiRoot")),
 ))
@@ -2456,9 +2458,9 @@ def test_g1c1_active_seam_stale_note_fails(seam_id, note, reason):
 def test_g1c1_seam_geometry_and_effect_firewall_boundary():
     seams = _json(SEAM_INDEX_PATH)["seams"]
     assert len(seams) == 24
-    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 17
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 18
     assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
-    assert sum(item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams) == 4
+    assert sum(item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams) == 3
     active = [item for item in seams if item["status"] == runner.STATUS_ACTIVE]
     assert sum(item["effect_access"] != "NONE" for item in active) == 1
     firewall = next(item for item in seams if item["seam_id"] == "effect_firewall")
@@ -2561,7 +2563,7 @@ def test_g1c2_effect_act_is_active_and_passes(report: dict[str, Any]) -> None:
 
 
 def test_g1c2_geometry_is_exact(report: dict[str, Any]) -> None:
-    assert report["runner_version"] == "v0.7"
+    assert report["runner_version"] == "v0.8"
     assert report["final_status"] == runner.STATUS_PASS
     assert report["validation_errors"] == ()
     assert report["counters"]["active_act_count"] == 10
@@ -2656,7 +2658,7 @@ def test_g1c2_planned_claim_has_exact_three_remaining_acts() -> None:
         ("limitation_g1c2_in_memory_mock_effect_only", "receipt is evidence only"),
         ("limitation_g1c2_in_memory_mock_effect_only", "later Root confirmation"),
         ("limitation_g1c2_in_memory_mock_effect_only", "Generic MultiRoot"),
-        ("limitation_g1c2_in_memory_mock_effect_only", "domain adapters remain unimplemented"),
+        ("limitation_g1c2_in_memory_mock_effect_only", "frozen Airline projection adapter is separately active in G1-D1"),
         ("limitation_g1c2_in_memory_mock_effect_only", "not production security certification"),
         ("limitation_g1b1_in_memory_contract_conformance_only", "active in G1-C2"),
         ("limitation_g1b2_in_memory_abi_and_counterfactual_only", "active in G1-C2"),
@@ -2754,9 +2756,9 @@ def test_g1c2_effect_seam_is_importable() -> None:
 def test_g1c2_seam_geometry_and_exclusive_owner_are_exact() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
     assert len(seams) == 24
-    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 17
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 18
     assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
-    assert sum(item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams) == 4
+    assert sum(item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams) == 3
     owners = [
         item
         for item in seams
@@ -2965,3 +2967,315 @@ def test_g1c2_two_reports_and_renders_are_identical() -> None:
     second = runner.collect_living_gauntlet_v01()
     assert first == second
     assert runner.render_living_gauntlet_v01(first) == runner.render_living_gauntlet_v01(second)
+
+
+def test_g1d1_runner_version_and_geometry_are_exact(
+    report: dict[str, Any],
+) -> None:
+    assert runner.RUNNER_VERSION == "v0.8"
+    assert report["runner_version"] == "v0.8"
+    assert report["counters"]["active_act_count"] == 10
+    assert report["counters"]["evidence_only_entry_count"] == 1
+    assert report["counters"]["planned_act_count"] == 3
+
+
+def test_g1d1_generic_active_record_has_exact_two_claims() -> None:
+    record = next(
+        item
+        for item in _json(COMPLETION_MANIFEST_PATH)["active_runtime_acts"]
+        if item["act_id"] == "generic_integrity_replay"
+    )
+    assert record["source_module"] == "demo.run_living_gauntlet_v01"
+    assert record["source_symbol"] == "collect_generic_integrity_replay_gauntlet_act_v01"
+    assert record["claim_ids"] == [
+        "claim_generic_integrity_replay_execution",
+        "claim_airline_kernel_adapter_execution",
+    ]
+
+
+@pytest.mark.parametrize(
+    "field,expected",
+    (
+        ("claim_class", "EXECUTED_RUNTIME"),
+        ("act_ids", ["generic_integrity_replay"]),
+        (
+            "runtime_ref",
+            "demo.run_living_gauntlet_v01:collect_generic_integrity_replay_gauntlet_act_v01",
+        ),
+        ("focused_test_ref", "tests/test_airline_kernel_adapter_v01.py"),
+        ("evidence_ref", "hedgehog/domains/airline/kernel_adapter_v01.py"),
+        ("limitation_ref", "limitation_g1d1_frozen_airline_projection_only"),
+    ),
+)
+def test_g1d1_airline_claim_refs_are_exact(field: str, expected: object) -> None:
+    claim = next(
+        item
+        for item in _json(COMPLETION_MANIFEST_PATH)["public_claims"]
+        if item["claim_id"] == "claim_airline_kernel_adapter_execution"
+    )
+    assert claim[field] == expected
+
+
+def _g1d1_claim_honesty_errors(manifest: dict[str, Any]) -> tuple[str, ...]:
+    texts = [
+        item.get("statement", "").lower()
+        for key in ("public_claims", "limitations")
+        for item in manifest.get(key, [])
+        if isinstance(item, dict)
+        and item.get("claim_id", item.get("limitation_id"))
+        in {
+            "claim_airline_kernel_adapter_execution",
+            "limitation_g1d1_frozen_airline_projection_only",
+        }
+    ]
+    if any("exact frozen airline proof oracle" in text for text in texts):
+        return ("completion_manifest_g1d1_committed_oracle_overclaim",)
+    return ()
+
+
+def test_g1d1_claim_describes_deterministic_in_memory_conformance_fixture() -> None:
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    claim = next(
+        item
+        for item in manifest["public_claims"]
+        if item["claim_id"] == "claim_airline_kernel_adapter_execution"
+    )
+    assert "deterministic in-memory Offer A conformance fixture" in claim["statement"]
+    assert "built from frozen Airline contracts" in claim["statement"]
+    assert "does not load or execute the committed all-real package" in claim["statement"]
+    assert _g1d1_claim_honesty_errors(manifest) == ()
+
+
+@pytest.mark.parametrize(
+    "phrase",
+    (
+        "accepted frozen Airline contract shape",
+        "Offer A",
+        "exact transaction",
+        "three Roots",
+        "type sequence",
+        "19 / 29 / 3 Ledger",
+        "9 / 11 Crypto",
+        "deterministic and synthetic in-memory",
+        "does not prove byte equality with the committed all-real package",
+        "caller-supplied expected hash is not committed external trust",
+        "No package or filesystem access occurs",
+        "no all-real lane is rerun",
+        "Human Story",
+        "derived projection identity",
+        "do not prove semantic truth",
+        "Signature verification remains false",
+        "Root Attestation remains deferred",
+        "Supplier / Water Filter portability and Generic MultiRoot remain unimplemented",
+        "not production integration",
+    ),
+)
+def test_g1d1_limitation_is_explicit(phrase: str) -> None:
+    statement = next(
+        item["statement"]
+        for item in _json(COMPLETION_MANIFEST_PATH)["limitations"]
+        if item["limitation_id"] == "limitation_g1d1_frozen_airline_projection_only"
+    )
+    assert phrase in statement
+
+
+def test_g1d1_stale_exact_committed_oracle_wording_fails_honesty_validation() -> None:
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    limitation = next(
+        item
+        for item in manifest["limitations"]
+        if item["limitation_id"] == "limitation_g1d1_frozen_airline_projection_only"
+    )
+    limitation["statement"] = "This adapter accepts the exact frozen Airline proof oracle."
+    assert _g1d1_claim_honesty_errors(manifest) == (
+        "completion_manifest_g1d1_committed_oracle_overclaim",
+    )
+
+
+def test_g1d1_non_claims_exclude_committed_package_execution_and_anchor_provenance() -> None:
+    non_claims = _json(COMPLETION_MANIFEST_PATH)["non_claims"]
+    assert "not execution of the committed all-real package" in non_claims
+    assert "not committed external Anchor provenance" in non_claims
+
+
+@pytest.mark.parametrize(
+    "phrase",
+    (
+        "Airline adapter remains unimplemented.",
+        "No Airline adapter exists.",
+        "Not an Airline integrity adapter.",
+    ),
+)
+def test_g1d1_stale_manifest_absence_wording_fails(phrase: str) -> None:
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    manifest["non_claims"].append(phrase)
+    assert "completion_manifest_active_airline_adapter_described_unimplemented" in (
+        runner._validate_completion_manifest_v01(manifest)
+    )
+
+
+@pytest.mark.parametrize(
+    "field,expected",
+    (
+        ("status", runner.STATUS_ACTIVE),
+        ("authority_status", "NON_ROOT_FROZEN_DOMAIN_ADAPTER"),
+        ("current_mode", "PURE_IN_MEMORY_FROZEN_AIRLINE_PROJECTION"),
+        ("effect_access", "NONE"),
+        ("gate1_target", "generic_integrity_replay"),
+        ("seam_class", "DOMAIN_ADAPTER"),
+        ("source_module", "hedgehog.domains.airline.kernel_adapter_v01"),
+        ("source_symbol", "build_airline_kernel_adapter_result_v01"),
+    ),
+)
+def test_g1d1_adapter_seam_contract_is_exact(field: str, expected: str) -> None:
+    seam = next(
+        item
+        for item in _json(SEAM_INDEX_PATH)["seams"]
+        if item["seam_id"] == "generic_integrity_replay_adapter"
+    )
+    assert seam[field] == expected
+
+
+def test_g1d1_seam_geometry_and_planned_ids_are_exact() -> None:
+    seams = _json(SEAM_INDEX_PATH)["seams"]
+    assert len(seams) == 24
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 18
+    assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
+    assert sum(item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams) == 3
+    assert {
+        item["seam_id"]
+        for item in seams
+        if item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE
+    } == {
+        "supplier_water_filter_abi_adapter",
+        "multiroot_envelope",
+        "kernel_conformance_report",
+    }
+
+
+def test_g1d1_airline_reference_seams_remain_reference_only() -> None:
+    seams = {
+        item["seam_id"]: item for item in _json(SEAM_INDEX_PATH)["seams"]
+    }
+    for seam_id in (
+        "airline_transaction_artifact_ledger_reference",
+        "airline_crypto_artifact_seal_reference",
+        "airline_sealed_trace_replay_reference",
+    ):
+        assert seams[seam_id]["status"] == runner.STATUS_REFERENCE_ONLY
+
+
+def test_g1d1_effect_firewall_remains_only_effect_owner() -> None:
+    owners = [
+        item
+        for item in _json(SEAM_INDEX_PATH)["seams"]
+        if item["status"] == runner.STATUS_ACTIVE and item["effect_access"] != "NONE"
+    ]
+    assert [(item["seam_id"], item["effect_access"]) for item in owners] == [
+        ("effect_firewall", "BOUNDED_EFFECT_HANDLE_OWNER")
+    ]
+
+
+def test_g1d1_adapter_cannot_gain_effect_access() -> None:
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(
+        item for item in index["seams"] if item["seam_id"] == "generic_integrity_replay_adapter"
+    )
+    seam["effect_access"] = "BOUNDED_EFFECT_HANDLE_OWNER"
+    errors = runner._validate_integration_seam_index_v01(index)
+    assert "integration_seam_domain_adapter_effect_access_forbidden" in errors
+
+
+def test_g1d1_adapter_cannot_claim_root_authority() -> None:
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(
+        item for item in index["seams"] if item["seam_id"] == "generic_integrity_replay_adapter"
+    )
+    seam["authority_status"] = "ROOT_DECISION_AUTHORITY"
+    assert "current_seam_contract_mismatch:generic_integrity_replay_adapter" in (
+        runner._validate_integration_seam_index_v01(index)
+    )
+
+
+def test_g1d1_adapter_source_mutation_has_stable_reason() -> None:
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(
+        item for item in index["seams"] if item["seam_id"] == "generic_integrity_replay_adapter"
+    )
+    seam["source_module"] = "wrong.module"
+    assert "integration_seam_airline_adapter_source_mismatch" in (
+        runner._validate_integration_seam_index_v01(index)
+    )
+
+
+def test_g1d1_stale_adapter_seam_note_fails() -> None:
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(
+        item for item in index["seams"] if item["seam_id"] == "generic_integrity_replay_adapter"
+    )
+    seam["notes"] = "Airline adapter is unimplemented."
+    assert "integration_seam_active_airline_adapter_described_absent" in (
+        runner._validate_integration_seam_index_v01(index)
+    )
+
+
+def test_g1d1_adapter_fixture_failure_fails_generic_act_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fail_fixture() -> None:
+        raise RuntimeError("test-only adapter failure")
+
+    monkeypatch.setattr(
+        runner,
+        "_validate_frozen_airline_kernel_adapter_fixture_v01",
+        fail_fixture,
+    )
+    result = runner.collect_generic_integrity_replay_gauntlet_act_v01()
+    assert result.state == runner.STATUS_FAIL_CLOSED
+    assert result.runtime_status == runner.STATUS_FAIL_CLOSED
+    assert result.real_world_effects_count == -1
+    assert result.errors == ("generic_integrity_replay_failed",)
+
+
+@pytest.mark.parametrize(
+    "needle",
+    (
+        "airline_kernel_adapter_living_fixture_v01",
+        "source_manifest_core_hash",
+        "airline_artifact_hash",
+        "/airline_artifact_hash",
+        "used:airline_ledger_dependency_hash",
+        "causal_consumption_refs",
+    ),
+)
+def test_g1d1_report_and_render_hide_adapter_details(
+    needle: str,
+    report: dict[str, Any],
+) -> None:
+    rendered = runner.render_living_gauntlet_v01(report)
+    assert needle not in repr(report)
+    assert needle not in rendered
+
+
+def test_g1d1_zero_external_and_effect_counters_remain_exact(
+    report: dict[str, Any],
+) -> None:
+    counters = report["counters"]
+    assert frozenset(counters) == runner._COUNTER_FIELD_NAMES
+    assert "provider_call_count" not in counters
+    assert "network_call_count" not in counters
+    assert "gemini_called_count" not in counters
+    assert counters["real_world_effects_count"] == 0
+
+    result = next(
+        item
+        for item in report["active_act_results"]
+        if item["act_id"] == "generic_integrity_replay"
+    )
+    assert result["state"] == runner.STATUS_PASS
+    assert result["runtime_status"] == runner.STATUS_PASS
+    assert result["executed"] is True
+    assert result["root_authority_preserved"] is True
+    assert result["no_real_connector_or_action"] is True
+    assert result["real_world_effects_count"] == 0
+    assert result["errors"] == ()

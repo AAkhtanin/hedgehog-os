@@ -1,6 +1,6 @@
 {
   "document_id": "living_release_integration_seam_index_v01",
-  "index_status": "ACTIVE_GATE1_G1C2",
+  "index_status": "ACTIVE_GATE1_G1D1",
   "seams": [
     {
       "authority_status": "ROOT_BOUNDARIES_PRESERVED",
@@ -195,16 +195,16 @@
       "status": "ACTIVE"
     },
     {
-      "authority_status": "PLANNED_NON_ROOT_ADAPTER",
-      "current_mode": "NOT_IMPLEMENTED",
+      "authority_status": "NON_ROOT_FROZEN_DOMAIN_ADAPTER",
+      "current_mode": "PURE_IN_MEMORY_FROZEN_AIRLINE_PROJECTION",
       "effect_access": "NONE",
       "gate1_target": "generic_integrity_replay",
-      "notes": "Frozen Airline adapter remains G1-D1, Supplier adapter remains G1-D2, and no adapter exists in G1-A1.",
-      "seam_class": "PLANNED_GATE1",
+      "notes": "Maps explicit frozen Airline Ledger, Crypto, and Replay objects into the active Kernel ABI, generic Manifest verification, generic Replay, and dependency-hash CausalConsumptionRef rows. It performs no package discovery, filesystem I/O, provider/network/Gemini call, authority creation, effect access, all-real rerun, or mutation of the frozen Airline oracle.",
+      "seam_class": "DOMAIN_ADAPTER",
       "seam_id": "generic_integrity_replay_adapter",
-      "source_module": "",
-      "source_symbol": null,
-      "status": "PLANNED_NOT_ACTIVE"
+      "source_module": "hedgehog.domains.airline.kernel_adapter_v01",
+      "source_symbol": "build_airline_kernel_adapter_result_v01",
+      "status": "ACTIVE"
     },
     {
       "authority_status": "NON_ROOT_SIGNER_ISOLATION",

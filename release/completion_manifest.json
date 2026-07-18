@@ -70,6 +70,26 @@
       "source_module": "demo.run_living_gauntlet_v01",
       "source_symbol": "collect_causal_consumption_gauntlet_act_v01",
       "status": "ACTIVE"
+    },
+    {
+      "act_id": "transition_registry",
+      "claim_ids": [
+        "claim_transition_registry_runtime_execution"
+      ],
+      "focused_test": "tests/test_transition_registry_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_transition_registry_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "root_decision_kernel",
+      "claim_ids": [
+        "claim_root_decision_kernel_runtime_execution"
+      ],
+      "focused_test": "tests/test_root_decision_kernel_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_root_decision_kernel_gauntlet_act_v01",
+      "status": "ACTIVE"
     }
   ],
   "document_id": "living_release_completion_manifest_v01",
@@ -99,7 +119,7 @@
     },
     {
       "limitation_id": "limitation_gate1_not_implemented",
-      "statement": "Gate 1 transition, decision, effect, MultiRoot, portability, and final conformance contracts remain unimplemented."
+      "statement": "Effect Firewall, Generic MultiRoot, portability adapters, and final Kernel Conformance closure remain unimplemented."
     },
     {
       "limitation_id": "limitation_g1a1_neutral_fixtures_only",
@@ -111,18 +131,22 @@
     },
     {
       "limitation_id": "limitation_g1b1_in_memory_contract_conformance_only",
-      "statement": "G1-B1 remains an in-memory SemanticWork and Trust conformance slice: no real cloud LLM, local SLM, or fractal runtime is executed, no provider output is trusted, and no permission, Root decision, FinalOutput, or effect is created; Trust Model metadata is descriptive and conformance-consumed; Kernel ABI and CausalConsumptionRef are separately active in G1-B2, while Transition Registry, Root Decision Kernel, and Effect Firewall remain unimplemented."
+      "statement": "G1-B1 remains an in-memory SemanticWork and Trust conformance slice: no real cloud LLM, local SLM, or fractal runtime is executed, no provider output is trusted, and no permission, Root decision, FinalOutput, or effect is created; Trust Model metadata is descriptive and conformance-consumed; Kernel ABI and CausalConsumptionRef are separately active in G1-B2, Transition Registry and Root Decision Kernel are separately active in G1-C1, and Effect Firewall remains unimplemented."
     },
     {
       "limitation_id": "limitation_g1b2_in_memory_abi_and_counterfactual_only",
-      "statement": "All artifacts are neutral in-memory conformance fixtures: no Airline or Supplier adapter exists, no production ABI compatibility guarantee exists, and only ABI v1.0 is supported; CausalConsumptionRef proves declared controlled influence, not semantic truth; Transition Registry, Root Decision Kernel, Effect Firewall, and Generic MultiRoot are not implemented, and no permission, Root decision, FinalOutput, connector call, or effect is created."
+      "statement": "All artifacts are neutral in-memory conformance fixtures: no Airline or Supplier adapter exists, no production ABI compatibility guarantee exists, and only ABI v1.0 is supported; CausalConsumptionRef proves declared controlled influence, not semantic truth; Transition Registry and Root Decision Kernel are separately active in G1-C1, while Effect Firewall and Generic MultiRoot remain unimplemented, and no permission, Root decision, FinalOutput, connector call, or effect is created by G1-B2."
+    },
+    {
+      "limitation_id": "limitation_g1c1_in_memory_transition_and_root_decision_only",
+      "statement": "The Registry and decisions are domain-neutral in-memory runtime fixtures: the Registry performs lookup and does not mutate artifacts or execute transitions, and the Root Decision Kernel creates RootDecisionResult only; no real provider or LLM is called; no permission is created; no FinalOutput, ActionCommitPacket, ExecutionRequest, or receipt is created; no DRS write occurs; no effect handle exists; no effect occurs; Effect Firewall and Generic MultiRoot remain unimplemented, and this is not production policy certification."
     },
     {
       "limitation_id": "limitation_not_production",
       "statement": "This scaffold is proof-level and is not production-ready."
     }
   ],
-  "manifest_status": "ACTIVE_GATE1_G1B2",
+  "manifest_status": "ACTIVE_GATE1_G1C1",
   "non_claims": [
     "not production",
     "not a real ticket, booking, payment, shipment, or connector action",
@@ -139,35 +163,20 @@
     "not provider authority",
     "not a production API stability certification",
     "not a domain adapter",
-    "not a transition system",
-    "not a Root decision",
-    "not permission",
+    "not transition execution or artifact-state mutation",
+    "not permission creation",
     "not causal truth proof",
-    "not Root Decision Kernel",
-    "not effect execution",
+    "not FinalOutput",
+    "not ActionCommitPacket",
+    "not ExecutionRequest",
+    "not Effect Firewall",
+    "not effect request or effect execution",
+    "not production policy certification",
     "not Supplier or Water Filter portability",
     "not Root Attestation",
     "not Gate 1 closure"
   ],
   "planned_gate1_acts": [
-    {
-      "act_id": "transition_registry",
-      "claim_ids": [
-        "claim_gate1_planned_not_active"
-      ],
-      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
-      "notes": "Future Transition Registry act.",
-      "status": "PLANNED_NOT_ACTIVE"
-    },
-    {
-      "act_id": "root_decision_kernel",
-      "claim_ids": [
-        "claim_gate1_planned_not_active"
-      ],
-      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
-      "notes": "Future Root Decision Kernel act.",
-      "status": "PLANNED_NOT_ACTIVE"
-    },
     {
       "act_id": "effect_firewall",
       "claim_ids": [
@@ -304,6 +313,30 @@
     },
     {
       "act_ids": [
+        "transition_registry"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_transition_registry_runtime_execution",
+      "evidence_ref": "hedgehog/kernel/transition_registry_v01.py",
+      "focused_test_ref": "tests/test_transition_registry_v01.py",
+      "limitation_ref": "limitation_g1c1_in_memory_transition_and_root_decision_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_transition_registry_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes the immutable domain-neutral Transition Registry, validates all eighteen canonical rules, and proves deterministic ALLOW, RETURN_TO_ROOT, NEEDS_USER, NEEDS_MORE_EVIDENCE, and fail-closed lookup outcomes without executing a transition."
+    },
+    {
+      "act_ids": [
+        "root_decision_kernel"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_root_decision_kernel_runtime_execution",
+      "evidence_ref": "hedgehog/kernel/root_decision_v01.py",
+      "focused_test_ref": "tests/test_root_decision_kernel_v01.py",
+      "limitation_ref": "limitation_g1c1_in_memory_transition_and_root_decision_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_root_decision_kernel_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes the deterministic Root Decision Kernel across ten precedence scenarios and produces in-memory RootDecisionResult objects while creating no permission, FinalOutput, effect request, connector call, or real-world effect."
+    },
+    {
+      "act_ids": [
         "airline_all_real_frozen_reference"
       ],
       "claim_class": "EVIDENCE_ONLY",
@@ -316,8 +349,6 @@
     },
     {
       "act_ids": [
-        "transition_registry",
-        "root_decision_kernel",
         "effect_firewall",
         "generic_multiroot",
         "supplier_water_filter_portability",

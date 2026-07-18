@@ -62,6 +62,23 @@ from hedgehog.kernel.root_signer_isolation_v01 import (
     trusted_root_key_set_to_plain_dict_v01,
     verify_root_signature_v01,
 )
+from hedgehog.kernel.root_decision_v01 import (
+    ROOT_DECISION_ACCEPT,
+    ROOT_DECISION_BLOCKED_FAIL_CLOSED,
+    ROOT_DECISION_DEFER,
+    ROOT_DECISION_NEEDS_MORE_EVIDENCE,
+    ROOT_DECISION_NEEDS_USER,
+    ROOT_DECISION_NO_UPDATE,
+    ROOT_DECISION_REJECT,
+    build_root_decision_input_v01,
+    build_root_decision_kernel_v01,
+    decide_root_v01,
+    root_decision_input_to_plain_dict_v01,
+    root_decision_kernel_to_plain_dict_v01,
+    root_decision_result_to_plain_dict_v01,
+    validate_root_decision_kernel_v01,
+    validate_root_decision_result_v01,
+)
 from hedgehog.kernel.semantic_work_v01 import (
     CONTRIBUTION_MODES,
     EVIDENCE_STATE_MISSING,
@@ -81,10 +98,25 @@ from hedgehog.kernel.trust_model_v01 import (
     build_default_component_trust_profiles_v01,
     validate_component_trust_profiles_v01,
 )
+from hedgehog.kernel.transition_registry_v01 import (
+    DECISION_ALLOW,
+    DECISION_BLOCKED_FAIL_CLOSED,
+    DECISION_NEEDS_MORE_EVIDENCE,
+    DECISION_NEEDS_USER,
+    DECISION_RETURN_TO_ROOT,
+    TransitionRegistryV01,
+    build_default_transition_registry_v01,
+    lookup_transition_v01,
+    transition_decision_to_plain_dict_v01,
+    transition_registry_to_plain_dict_v01,
+    validate_transition_decision_v01,
+    validate_transition_registry_v01,
+)
+import hedgehog.kernel.transition_registry_v01 as transition_registry_module
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v0.5"
+RUNNER_VERSION = "v0.6"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -163,12 +195,22 @@ _ACTIVE_ACT_SOURCES = {
         "demo.run_living_gauntlet_v01",
         "collect_causal_consumption_gauntlet_act_v01",
     ),
+    "transition_registry": (
+        "demo.run_living_gauntlet_v01",
+        "collect_transition_registry_gauntlet_act_v01",
+    ),
+    "root_decision_kernel": (
+        "demo.run_living_gauntlet_v01",
+        "collect_root_decision_kernel_gauntlet_act_v01",
+    ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
 _EXECUTED_RUNTIME_ACT_IDS = (
     "airline_deterministic_transaction_runtime",
     "all_layers_invariant_super_smoke",
     "generic_integrity_replay",
+    "transition_registry",
+    "root_decision_kernel",
 )
 _EXECUTED_CONFORMANCE_ACT_IDS = (
     "root_signer_isolation_conformance",
@@ -178,8 +220,6 @@ _EXECUTED_CONFORMANCE_ACT_IDS = (
 )
 _EVIDENCE_ONLY_ACT_IDS = ("airline_all_real_frozen_reference",)
 _PLANNED_ACT_IDS = (
-    "transition_registry",
-    "root_decision_kernel",
     "effect_firewall",
     "generic_multiroot",
     "supplier_water_filter_portability",
@@ -188,8 +228,6 @@ _PLANNED_ACT_IDS = (
 _PLANNED_SEAM_IDS = (
     "generic_integrity_replay_adapter",
     "supplier_water_filter_abi_adapter",
-    "transition_registry",
-    "root_decision_kernel",
     "effect_firewall",
     "multiroot_envelope",
     "kernel_conformance_report",
@@ -261,6 +299,14 @@ _CURRENT_SEAMS = {
         "hedgehog.kernel.abi_v01",
         "validate_causal_counterfactual_v01",
     ),
+    "transition_registry": (
+        "hedgehog.kernel.transition_registry_v01",
+        "lookup_transition_v01",
+    ),
+    "root_decision_kernel": (
+        "hedgehog.kernel.root_decision_v01",
+        "decide_root_v01",
+    ),
 }
 _CURRENT_SEAM_STATUSES = {
     "deterministic_airline_reference_collector": STATUS_ACTIVE,
@@ -280,6 +326,34 @@ _CURRENT_SEAM_STATUSES = {
     "semantic_work_contract_core": STATUS_ACTIVE,
     "kernel_abi_core": STATUS_ACTIVE,
     "causal_consumption_core": STATUS_ACTIVE,
+    "transition_registry": STATUS_ACTIVE,
+    "root_decision_kernel": STATUS_ACTIVE,
+}
+_G1C1_ACTIVE_RECORD_EXPECTATIONS = {
+    "transition_registry": (
+        ("claim_transition_registry_runtime_execution",),
+        "tests/test_transition_registry_v01.py",
+    ),
+    "root_decision_kernel": (
+        ("claim_root_decision_kernel_runtime_execution",),
+        "tests/test_root_decision_kernel_v01.py",
+    ),
+}
+_G1C1_SEAM_EXPECTATIONS = {
+    "transition_registry": {
+        "authority_status": "NON_ROOT_IMMUTABLE_TRANSITION_POLICY",
+        "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_LOOKUP",
+        "effect_access": "NONE",
+        "gate1_target": "transition_registry",
+        "seam_class": "KERNEL_CORE",
+    },
+    "root_decision_kernel": {
+        "authority_status": "ROOT_DECISION_AUTHORITY",
+        "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_ROOT_DECISION",
+        "effect_access": "NONE",
+        "gate1_target": "root_decision_kernel",
+        "seam_class": "KERNEL_ROOT_BOUNDARY",
+    },
 }
 
 
@@ -334,6 +408,8 @@ _COUNTER_FIELD_NAMES = frozenset(
         "semantic_work_contract_execution_count",
         "domain_neutral_kernel_abi_execution_count",
         "causal_consumption_execution_count",
+        "transition_registry_execution_count",
+        "root_decision_kernel_execution_count",
     }
 )
 
@@ -435,6 +511,46 @@ def _active_contract_described_unimplemented(
     )
 
 
+def _active_g1c1_absence_errors(
+    active_ids: tuple[str, ...], manifest: Mapping[str, Any]
+) -> tuple[str, ...]:
+    texts = [
+        _normalized_release_text(record.get("statement"))
+        for key in ("limitations", "public_claims")
+        for record in manifest.get(key, [])
+        if isinstance(record, dict)
+    ]
+    texts.extend(
+        _normalized_release_text(item)
+        for item in manifest.get("non_claims", [])
+        if isinstance(item, str)
+    )
+    errors: list[str] = []
+    if "transition_registry" in active_ids and any(
+        phrase in text
+        for text in texts
+        for phrase in (
+            "transition registry remains unimplemented",
+            "transition registry is unimplemented",
+            "no transition registry exists",
+            "not a transition system",
+        )
+    ):
+        errors.append("completion_manifest_active_transition_described_unimplemented")
+    if "root_decision_kernel" in active_ids and any(
+        phrase in text
+        for text in texts
+        for phrase in (
+            "root decision kernel remains unimplemented",
+            "root decision kernel is unimplemented",
+            "no root decision kernel exists",
+            "not a root decision",
+        )
+    ):
+        errors.append("completion_manifest_active_root_decision_described_unimplemented")
+    return tuple(errors)
+
+
 def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     errors: list[str] = []
     if not isinstance(manifest, dict):
@@ -444,7 +560,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("manifest_status", "ACTIVE_GATE1_G1B2"),
+        ("manifest_status", "ACTIVE_GATE1_G1C1"),
     ):
         if manifest.get(key) != expected:
             errors.append(f"completion_manifest_value_mismatch:{key}")
@@ -483,6 +599,12 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
                 errors.append(f"active_act_claim_ids_invalid:{record.get('act_id', '')}")
             if not isinstance(record.get("focused_test"), str):
                 errors.append(f"active_act_focused_test_invalid:{record.get('act_id', '')}")
+            expected_record = _G1C1_ACTIVE_RECORD_EXPECTATIONS.get(record.get("act_id"))
+            if expected_record is not None and (
+                tuple(record.get("claim_ids", ())) != expected_record[0]
+                or record.get("focused_test") != expected_record[1]
+            ):
+                errors.append(f"active_act_contract_mismatch:{record.get('act_id', '')}")
     if isinstance(evidence, list):
         for record in evidence:
             if not isinstance(record, dict):
@@ -517,6 +639,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
                 errors.append("completion_manifest_limitation_invalid")
     if _active_contract_described_unimplemented(active_ids, limitations):
         errors.append("completion_manifest_active_contract_described_unimplemented")
+    errors.extend(_active_g1c1_absence_errors(active_ids, manifest))
 
     claims = manifest.get("public_claims")
     claim_ids, id_errors = _record_ids(claims, "claim_id", "public_claim")
@@ -581,7 +704,7 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_integration_seam_index_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("index_status", "ACTIVE_GATE1_G1B2"),
+        ("index_status", "ACTIVE_GATE1_G1C1"),
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
@@ -616,6 +739,12 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
                     seam.get("source_module"), seam.get("source_symbol")
                 ) != _CURRENT_SEAMS[seam_id]:
                     errors.append(f"current_seam_source_mismatch:{seam_id}")
+                expected_contract = _G1C1_SEAM_EXPECTATIONS.get(seam_id)
+                if expected_contract is not None and any(
+                    seam.get(key) != value
+                    for key, value in expected_contract.items()
+                ):
+                    errors.append(f"current_seam_contract_mismatch:{seam_id}")
             elif seam_id in _PLANNED_SEAM_IDS:
                 if status != STATUS_PLANNED_NOT_ACTIVE:
                     errors.append(f"planned_seam_status_invalid:{seam_id}")
@@ -653,6 +782,32 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
             )
         ):
             errors.append("integration_seam_active_abi_described_absent")
+        transition_seam = seam_by_id.get("transition_registry")
+        if isinstance(transition_seam, dict) and transition_seam.get("status") == STATUS_ACTIVE:
+            note = _normalized_release_text(transition_seam.get("notes"))
+            if any(
+                phrase in note
+                for phrase in (
+                    "not implemented",
+                    "unimplemented",
+                    "no transition registry",
+                    "not a transition system",
+                )
+            ):
+                errors.append("integration_seam_active_transition_described_absent")
+        root_seam = seam_by_id.get("root_decision_kernel")
+        if isinstance(root_seam, dict) and root_seam.get("status") == STATUS_ACTIVE:
+            note = _normalized_release_text(root_seam.get("notes"))
+            if any(
+                phrase in note
+                for phrase in (
+                    "not implemented",
+                    "unimplemented",
+                    "no root decision kernel",
+                    "not a root decision",
+                )
+            ):
+                errors.append("integration_seam_active_root_decision_described_absent")
     return tuple(dict.fromkeys(errors))
 
 
@@ -2203,6 +2358,381 @@ def collect_causal_consumption_gauntlet_act_v01(
         )
 
 
+def _collect_transition_registry_fixture_metrics_v01() -> dict[str, Any]:
+    first = build_default_transition_registry_v01()
+    second = build_default_transition_registry_v01()
+    if validate_transition_registry_v01(first) or validate_transition_registry_v01(second):
+        raise ValueError("transition_registry_invalid")
+    first_projection = transition_registry_to_plain_dict_v01(first)
+    if first_projection != transition_registry_to_plain_dict_v01(second):
+        raise ValueError("transition_registry_nondeterministic")
+    if first.registry_id != second.registry_id:
+        raise ValueError("transition_registry_id_nondeterministic")
+
+    canonical_decisions = []
+    for rule in first.rules:
+        decision = lookup_transition_v01(
+            registry=first,
+            abi_major_version=rule.abi_major_version,
+            source_artifact_type=rule.source_artifact_type,
+            source_lifecycle_state=rule.source_lifecycle_state,
+            actor_role=rule.actor_role,
+            attempted_effect=rule.attempted_effect,
+            target_artifact_type=rule.target_artifact_type,
+            satisfied_guards=rule.required_guards,
+            root_commit_present=True,
+        )
+        repeated = lookup_transition_v01(
+            registry=first,
+            abi_major_version=rule.abi_major_version,
+            source_artifact_type=rule.source_artifact_type,
+            source_lifecycle_state=rule.source_lifecycle_state,
+            actor_role=rule.actor_role,
+            attempted_effect=rule.attempted_effect,
+            target_artifact_type=rule.target_artifact_type,
+            satisfied_guards=rule.required_guards,
+            root_commit_present=True,
+        )
+        if (
+            validate_transition_decision_v01(registry=first, decision=decision)
+            or transition_decision_to_plain_dict_v01(decision)
+            != transition_decision_to_plain_dict_v01(repeated)
+            or decision.decision_id != repeated.decision_id
+        ):
+            raise ValueError("transition_decision_nondeterministic")
+        canonical_decisions.append(decision)
+
+    def lookup(rule_id: str, *, remove_guard: str | None = None, commit: bool = True):
+        rule = next(item for item in first.rules if item.rule_id == rule_id)
+        guards = tuple(
+            guard for guard in rule.required_guards if guard != remove_guard
+        )
+        return lookup_transition_v01(
+            registry=first,
+            abi_major_version=rule.abi_major_version,
+            source_artifact_type=rule.source_artifact_type,
+            source_lifecycle_state=rule.source_lifecycle_state,
+            actor_role=rule.actor_role,
+            attempted_effect=rule.attempted_effect,
+            target_artifact_type=rule.target_artifact_type,
+            satisfied_guards=guards,
+            root_commit_present=commit,
+        )
+
+    missing_user = lookup(
+        "root_decision_to_execution_request",
+        remove_guard="user_permission_present",
+    )
+    missing_evidence = lookup(
+        "actor_contribution_to_validated_evidence",
+        remove_guard="required_evidence_present",
+    )
+    missing_generic = lookup(
+        "result_proposal_to_post_vv_report",
+        remove_guard="hard_predicates_evaluated",
+    )
+    missing_commit = lookup(
+        "root_accepted_route_to_runtime_topology",
+        commit=False,
+    )
+    unknown_transition = lookup_transition_v01(
+        registry=first,
+        abi_major_version=1,
+        source_artifact_type="ActorContribution",
+        source_lifecycle_state="VALIDATED",
+        actor_role="gt",
+        attempted_effect="RETURN_TO_ROOT",
+        target_artifact_type="RootDecision",
+        satisfied_guards=(),
+        root_commit_present=False,
+    )
+    unknown_major = lookup_transition_v01(
+        registry=first,
+        abi_major_version=2,
+        source_artifact_type="ActorContribution",
+        source_lifecycle_state="VALIDATED",
+        actor_role="post_vv",
+        attempted_effect="CREATE_TARGET_ARTIFACT",
+        target_artifact_type="ValidatedEvidence",
+        satisfied_guards=(),
+        root_commit_present=False,
+    )
+    extra_rule = replace(first.rules[0], rule_id="extra_rule_forbidden")
+    extra_registry = replace(first, rules=first.rules + (extra_rule,))
+    if not validate_transition_registry_v01(extra_registry):
+        raise ValueError("transition_registry_mutation_accepted")
+    if any(
+        hasattr(transition_registry_module, name)
+        for name in ("register_rule", "add_rule", "remove_rule", "update_rule")
+    ):
+        raise ValueError("transition_dynamic_registration_present")
+
+    expected_special = (
+        (missing_user, DECISION_NEEDS_USER, "explicit_user_permission_required"),
+        (missing_evidence, DECISION_NEEDS_MORE_EVIDENCE, "required_evidence_missing"),
+        (missing_generic, DECISION_BLOCKED_FAIL_CLOSED, "required_guard_missing"),
+        (missing_commit, DECISION_RETURN_TO_ROOT, "root_commit_required"),
+        (unknown_transition, DECISION_BLOCKED_FAIL_CLOSED, "unknown_transition"),
+        (unknown_major, DECISION_BLOCKED_FAIL_CLOSED, "unknown_abi_major"),
+    )
+    if any(
+        (decision.decision, decision.reason_code) != (expected, reason)
+        for decision, expected, reason in expected_special
+    ):
+        raise ValueError("transition_special_lookup_invalid")
+    if first_projection != transition_registry_to_plain_dict_v01(first):
+        raise ValueError("transition_registry_mutated")
+
+    return {
+        "registry_id": first.registry_id,
+        "rule_count": len(first.rules),
+        "allow_rule_count": sum(rule.decision == DECISION_ALLOW for rule in first.rules),
+        "return_to_root_rule_count": sum(rule.decision == DECISION_RETURN_TO_ROOT for rule in first.rules),
+        "blocked_rule_count": sum(rule.decision == DECISION_BLOCKED_FAIL_CLOSED for rule in first.rules),
+        "canonical_lookup_count": len(canonical_decisions),
+        "needs_user_proof_count": int(missing_user.decision == DECISION_NEEDS_USER),
+        "needs_more_evidence_proof_count": int(missing_evidence.decision == DECISION_NEEDS_MORE_EVIDENCE),
+        "unknown_transition_blocked_count": int(unknown_transition.decision == DECISION_BLOCKED_FAIL_CLOSED),
+        "unknown_major_blocked_count": int(unknown_major.decision == DECISION_BLOCKED_FAIL_CLOSED),
+        "registry_mutation_rejected_count": 1,
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+
+
+def collect_transition_registry_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    act_id = "transition_registry"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        metrics = _collect_transition_registry_fixture_metrics_v01()
+        if (
+            metrics["rule_count"],
+            metrics["allow_rule_count"],
+            metrics["return_to_root_rule_count"],
+            metrics["blocked_rule_count"],
+        ) != (18, 8, 4, 6):
+            raise ValueError("transition_registry_geometry_invalid")
+        return LivingGauntletActResultV01(
+            act_id=act_id, errors=(), executed=True,
+            no_real_connector_or_action=True, real_world_effects_count=0,
+            root_authority_preserved=True, runtime_status=STATUS_PASS,
+            source_module=source_module, source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id, errors=("transition_registry_runtime_failed",),
+            executed=True, no_real_connector_or_action=False,
+            real_world_effects_count=-1, root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED, source_module=source_module,
+            source_symbol=source_symbol, state=STATUS_FAIL_CLOSED,
+        )
+
+
+def _root_decision_base_states_v01(packet: Any) -> dict[str, Any]:
+    candidate_ids = [
+        claim.claim_id for claim in packet.synthesis_proposal.normalized_claims
+    ]
+    required_evidence = list(packet.missing_evidence_refs)
+    return {
+        "post_vv_bundle": {
+            "bundle_id": "post_vv:fixture:root_decision:001",
+            "post_vv_passed": True,
+            "validated_candidate_ids": candidate_ids,
+            "rejected_candidate_ids": [],
+            "required_evidence_refs": required_evidence,
+            "provided_evidence_refs": required_evidence,
+            "hard_failure_reasons": [],
+        },
+        "gt_advisory": {
+            "advisory_id": "gt:fixture:root_decision:001",
+            "candidate_ids": candidate_ids,
+            "selected_candidate_id": candidate_ids[0],
+            "score_micros_by_candidate": {
+                candidate_id: 500_000 for candidate_id in candidate_ids
+            },
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "target_artifact_type": "RootDecision",
+            "advisory_only": True,
+            "creates_final_output": False,
+            "requests_effect": False,
+        },
+        "policy_state": {
+            "policy_id": "policy:fixture:root_decision:001",
+            "identity_passed": True,
+            "scope_passed": True,
+            "hard_policy_passed": True,
+            "allow_accept": True,
+            "conflict_policy": "DEFER",
+            "no_candidate_policy": "NO_UPDATE",
+        },
+        "permission_state": {
+            "permission_required": False,
+            "user_permission_present": False,
+            "permission_scope_valid": True,
+            "permission_ref": None,
+        },
+        "temporal_state": {
+            "temporal_valid": True,
+            "expired": False,
+            "not_before_satisfied": True,
+            "time_envelope_ref": "time_envelope:fixture:root_decision:001",
+        },
+        "conflict_state": {
+            "material_unresolved_conflict": False,
+            "conflict_set_ids": list(packet.conflict_set_ids),
+        },
+        "prior_root_state": {
+            "prior_decision_id": None,
+            "prior_decision": None,
+            "prior_selected_candidate_id": None,
+        },
+    }
+
+
+def _build_root_decision_fixture_v01() -> tuple[Any, tuple[Any, ...], tuple[Any, ...]]:
+    packet = _build_semantic_work_fixture_v01()[3]
+    kernel = build_root_decision_kernel_v01()
+    if validate_root_decision_kernel_v01(kernel):
+        raise ValueError("root_decision_kernel_invalid")
+    scenarios = (
+        ("identity_violation", {"policy_state": {"identity_passed": False}}),
+        ("temporal_expired", {"temporal_state": {"expired": True}}),
+        ("maximum_score_cannot_override_scope_failure", {"policy_state": {"scope_passed": False}, "maximum_score": True}),
+        ("explicit_user_permission_missing", {"permission_state": {"permission_required": True}}),
+        ("required_evidence_missing", {"post_vv_bundle": {"provided_evidence_refs": []}}),
+        ("material_conflict_defer", {"conflict_state": {"material_unresolved_conflict": True}, "policy_state": {"conflict_policy": "DEFER"}}),
+        ("material_conflict_reject", {"conflict_state": {"material_unresolved_conflict": True}, "policy_state": {"conflict_policy": "REJECT"}}),
+        ("no_valid_candidate_no_update", {"gt_advisory": {"selected_candidate_id": None}, "policy_state": {"no_candidate_policy": "NO_UPDATE"}}),
+        ("no_valid_candidate_reject", {"gt_advisory": {"selected_candidate_id": None}, "policy_state": {"no_candidate_policy": "REJECT"}}),
+        ("validated_candidate_accept", {}),
+    )
+    expected = (
+        (ROOT_DECISION_BLOCKED_FAIL_CLOSED, "hard_identity_violation"),
+        (ROOT_DECISION_BLOCKED_FAIL_CLOSED, "hard_temporal_violation"),
+        (ROOT_DECISION_BLOCKED_FAIL_CLOSED, "hard_scope_violation"),
+        (ROOT_DECISION_NEEDS_USER, "user_permission_missing"),
+        (ROOT_DECISION_NEEDS_MORE_EVIDENCE, "required_evidence_missing"),
+        (ROOT_DECISION_DEFER, "material_conflict_deferred"),
+        (ROOT_DECISION_REJECT, "material_conflict_rejected"),
+        (ROOT_DECISION_NO_UPDATE, "no_valid_candidate"),
+        (ROOT_DECISION_REJECT, "no_valid_candidate_rejected"),
+        (ROOT_DECISION_ACCEPT, "validated_candidate_accepted"),
+    )
+    decision_inputs = []
+    results = []
+    packet_projection = semantic_work_to_plain_dict_v01(packet)
+    for (_, changes), expected_outcome in zip(scenarios, expected):
+        states = _root_decision_base_states_v01(packet)
+        if changes.get("maximum_score", False):
+            selected = states["gt_advisory"]["selected_candidate_id"]
+            states["gt_advisory"]["score_micros_by_candidate"][selected] = 1_000_000
+        for state_name, state_changes in changes.items():
+            if state_name == "maximum_score":
+                continue
+            states[state_name].update(state_changes)
+        decision_input = build_root_decision_input_v01(
+            transaction_id=packet.transaction_id,
+            target_root_id=packet.target_root_id,
+            root_review_packet=packet,
+            **states,
+        )
+        input_projection = root_decision_input_to_plain_dict_v01(decision_input)
+        result = decide_root_v01(kernel=kernel, decision_input=decision_input)
+        repeated = decide_root_v01(kernel=kernel, decision_input=decision_input)
+        if (
+            (result.decision, result.reason_code) != expected_outcome
+            or validate_root_decision_result_v01(
+                kernel=kernel,
+                decision_input=decision_input,
+                result=result,
+            )
+            or root_decision_result_to_plain_dict_v01(result)
+            != root_decision_result_to_plain_dict_v01(repeated)
+            or result.decision_id != repeated.decision_id
+            or root_decision_input_to_plain_dict_v01(decision_input) != input_projection
+            or semantic_work_to_plain_dict_v01(packet) != packet_projection
+        ):
+            raise ValueError("root_decision_fixture_invalid")
+        decision_inputs.append(decision_input)
+        results.append(result)
+    return kernel, tuple(decision_inputs), tuple(results)
+
+
+def _collect_root_decision_fixture_metrics_v01() -> dict[str, Any]:
+    kernel, decision_inputs, results = _build_root_decision_fixture_v01()
+    repeated_kernel, repeated_inputs, repeated_results = _build_root_decision_fixture_v01()
+    if (
+        root_decision_kernel_to_plain_dict_v01(kernel)
+        != root_decision_kernel_to_plain_dict_v01(repeated_kernel)
+        or tuple(root_decision_input_to_plain_dict_v01(item) for item in decision_inputs)
+        != tuple(root_decision_input_to_plain_dict_v01(item) for item in repeated_inputs)
+        or tuple(root_decision_result_to_plain_dict_v01(item) for item in results)
+        != tuple(root_decision_result_to_plain_dict_v01(item) for item in repeated_results)
+    ):
+        raise ValueError("root_decision_fixture_nondeterministic")
+    return {
+        "kernel_id": kernel.kernel_id,
+        "result_count": len(results),
+        "blocked_count": sum(item.decision == ROOT_DECISION_BLOCKED_FAIL_CLOSED for item in results),
+        "needs_user_count": sum(item.decision == ROOT_DECISION_NEEDS_USER for item in results),
+        "needs_more_evidence_count": sum(item.decision == ROOT_DECISION_NEEDS_MORE_EVIDENCE for item in results),
+        "defer_count": sum(item.decision == ROOT_DECISION_DEFER for item in results),
+        "reject_count": sum(item.decision == ROOT_DECISION_REJECT for item in results),
+        "no_update_count": sum(item.decision == ROOT_DECISION_NO_UPDATE for item in results),
+        "accept_count": sum(item.decision == ROOT_DECISION_ACCEPT for item in results),
+        "root_commit_created_count": sum(item.root_commit_created for item in results),
+        "permission_created_count": sum(item.permission_created for item in results),
+        "final_output_created_count": sum(item.final_output_created for item in results),
+        "effect_requested_count": sum(item.effect_requested for item in results),
+        "provider_call_count": 0,
+        "network_call_count": 0,
+        "gemini_call_count": 0,
+        "real_world_effects_count": 0,
+    }
+
+
+def collect_root_decision_kernel_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    act_id = "root_decision_kernel"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        metrics = _collect_root_decision_fixture_metrics_v01()
+        geometry = tuple(
+            metrics[key]
+            for key in (
+                "result_count", "blocked_count", "needs_user_count",
+                "needs_more_evidence_count", "defer_count", "reject_count",
+                "no_update_count", "accept_count", "root_commit_created_count",
+                "permission_created_count", "final_output_created_count",
+                "effect_requested_count",
+            )
+        )
+        if geometry != (10, 3, 1, 1, 1, 2, 1, 1, 10, 0, 0, 0):
+            raise ValueError("root_decision_geometry_invalid")
+        return LivingGauntletActResultV01(
+            act_id=act_id, errors=(), executed=True,
+            no_real_connector_or_action=True, real_world_effects_count=0,
+            root_authority_preserved=True, runtime_status=STATUS_PASS,
+            source_module=source_module, source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id, errors=("root_decision_kernel_runtime_failed",),
+            executed=True, no_real_connector_or_action=False,
+            real_world_effects_count=-1, root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED, source_module=source_module,
+            source_symbol=source_symbol, state=STATUS_FAIL_CLOSED,
+        )
+
+
 def _failed_act_result(*, act_id: str, reason: str) -> LivingGauntletActResultV01:
     source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
     return LivingGauntletActResultV01(
@@ -2313,6 +2843,18 @@ def _derive_report_counters_v01(
             and row.get("executed") is True
             for row in active_rows
         ),
+        "transition_registry_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[7]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
+        "root_decision_kernel_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[8]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
     }
 
 
@@ -2339,6 +2881,8 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     semantic_work_calls = 0
     kernel_abi_calls = 0
     causal_consumption_calls = 0
+    transition_registry_calls = 0
+    root_decision_calls = 0
     if not errors:
         airline_calls += 1
         try:
@@ -2422,6 +2966,26 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                     reason="causal_consumption_collector_failed",
                 )
             )
+        transition_registry_calls += 1
+        try:
+            active_results.append(collect_transition_registry_gauntlet_act_v01())
+        except Exception:
+            active_results.append(
+                _failed_act_result(
+                    act_id=_ACTIVE_ACT_IDS[7],
+                    reason="transition_registry_collector_failed",
+                )
+            )
+        root_decision_calls += 1
+        try:
+            active_results.append(collect_root_decision_kernel_gauntlet_act_v01())
+        except Exception:
+            active_results.append(
+                _failed_act_result(
+                    act_id=_ACTIVE_ACT_IDS[8],
+                    reason="root_decision_kernel_collector_failed",
+                )
+            )
 
     for result in active_results:
         errors.extend(result.errors)
@@ -2464,6 +3028,8 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             and semantic_work_calls == 1
             and kernel_abi_calls == 1
             and causal_consumption_calls == 1
+            and transition_registry_calls == 1
+            and root_decision_calls == 1
             and len(active_results) == len(_ACTIVE_ACT_IDS),
         ),
         _invariant_result(

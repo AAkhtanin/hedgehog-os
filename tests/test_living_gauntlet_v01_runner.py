@@ -135,6 +135,8 @@ def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.Monke
     original_semantic = runner.collect_semantic_work_contract_gauntlet_act_v01
     original_abi = runner.collect_domain_neutral_kernel_abi_gauntlet_act_v01
     original_causal = runner.collect_causal_consumption_gauntlet_act_v01
+    original_transition = runner.collect_transition_registry_gauntlet_act_v01
+    original_root_decision = runner.collect_root_decision_kernel_gauntlet_act_v01
     calls = {
         "airline": 0,
         "smoke": 0,
@@ -143,6 +145,8 @@ def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.Monke
         "semantic": 0,
         "abi": 0,
         "causal": 0,
+        "transition": 0,
+        "root_decision": 0,
     }
 
     def airline_wrapper() -> dict[str, Any]:
@@ -172,6 +176,14 @@ def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.Monke
     def causal_wrapper() -> runner.LivingGauntletActResultV01:
         calls["causal"] += 1
         return original_causal()
+
+    def transition_wrapper() -> runner.LivingGauntletActResultV01:
+        calls["transition"] += 1
+        return original_transition()
+
+    def root_decision_wrapper() -> runner.LivingGauntletActResultV01:
+        calls["root_decision"] += 1
+        return original_root_decision()
 
     monkeypatch.setattr(
         runner,
@@ -204,6 +216,16 @@ def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.Monke
         "collect_causal_consumption_gauntlet_act_v01",
         causal_wrapper,
     )
+    monkeypatch.setattr(
+        runner,
+        "collect_transition_registry_gauntlet_act_v01",
+        transition_wrapper,
+    )
+    monkeypatch.setattr(
+        runner,
+        "collect_root_decision_kernel_gauntlet_act_v01",
+        root_decision_wrapper,
+    )
 
     exact_once_report = runner.collect_living_gauntlet_v01()
 
@@ -216,8 +238,10 @@ def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.Monke
         "semantic": 1,
         "abi": 1,
         "causal": 1,
+        "transition": 1,
+        "root_decision": 1,
     }
-    assert exact_once_report["counters"]["active_collector_execution_count"] == 7
+    assert exact_once_report["counters"]["active_collector_execution_count"] == 9
 
 
 def test_frozen_all_real_evidence_is_not_executed(report: dict[str, Any]) -> None:
@@ -458,7 +482,7 @@ def test_unknown_status_fails_closed(
     failed = runner.collect_living_gauntlet_v01()
 
     assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
-    assert "planned_act_status_invalid:transition_registry" in failed[
+    assert "planned_act_status_invalid:effect_firewall" in failed[
         "validation_errors"
     ]
 
@@ -613,9 +637,9 @@ def test_manifest_stores_no_synthetic_pass_for_indexed_acts() -> None:
     ]
 
     assert runner.STATUS_PASS not in statuses
-    assert statuses.count(runner.STATUS_ACTIVE) == 7
+    assert statuses.count(runner.STATUS_ACTIVE) == 9
     assert statuses.count(runner.STATUS_EVIDENCE_ONLY) == 1
-    assert statuses.count(runner.STATUS_PLANNED_NOT_ACTIVE) == 6
+    assert statuses.count(runner.STATUS_PLANNED_NOT_ACTIVE) == 4
 
 
 def test_generic_integrity_replay_act_is_active() -> None:
@@ -648,15 +672,15 @@ def test_generic_integrity_replay_act_executes_and_passes(
 
 
 def test_successful_report_has_seven_active_acts(report: dict[str, Any]) -> None:
-    assert len(report["active_act_results"]) == 7
-    assert report["counters"]["active_act_count"] == 7
-    assert report["counters"]["active_act_pass_count"] == 7
+    assert len(report["active_act_results"]) == 9
+    assert report["counters"]["active_act_count"] == 9
+    assert report["counters"]["active_act_pass_count"] == 9
     assert report["counters"]["active_act_fail_closed_count"] == 0
 
 
 def test_successful_report_has_six_planned_acts(report: dict[str, Any]) -> None:
-    assert len(report["planned_entries"]) == 6
-    assert report["counters"]["planned_act_count"] == 6
+    assert len(report["planned_entries"]) == 4
+    assert report["counters"]["planned_act_count"] == 4
     assert "generic_integrity_replay" not in {
         entry["act_id"] for entry in report["planned_entries"]
     }
@@ -708,11 +732,11 @@ def test_seam_index_has_exact_g1a1_geometry() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
 
     assert len(seams) == 24
-    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 14
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 16
     assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
     assert sum(
         item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams
-    ) == 7
+    ) == 5
     assert all(
         item["effect_access"] == "NONE"
         for item in seams
@@ -740,7 +764,7 @@ def test_planned_claim_excludes_generic_integrity_replay() -> None:
         if record["claim_id"] == "claim_gate1_planned_not_active"
     )
 
-    assert len(claim["act_ids"]) == 6
+    assert len(claim["act_ids"]) == 4
     assert "generic_integrity_replay" not in claim["act_ids"]
 
 
@@ -863,8 +887,8 @@ def test_renderer_shows_generic_active_act(report: dict[str, Any]) -> None:
 
 
 def test_runner_version_is_v05(report: dict[str, Any]) -> None:
-    assert runner.RUNNER_VERSION == "v0.5"
-    assert report["runner_version"] == "v0.5"
+    assert runner.RUNNER_VERSION == "v0.6"
+    assert report["runner_version"] == "v0.6"
 
 
 def test_runner_introduces_no_domain_adapter_import() -> None:
@@ -885,21 +909,21 @@ def test_generic_kernel_import_introduces_no_live_path() -> None:
 
     assert "hedgehog.kernel.integrity_replay_v01" in source
     assert "live_gemini" not in source
-    assert "requests" not in source
+    assert "import requests" not in source
     assert "socket" not in source
 
 
 def test_manifest_status_and_counts_are_exact() -> None:
     manifest = _json(COMPLETION_MANIFEST_PATH)
 
-    assert manifest["manifest_status"] == "ACTIVE_GATE1_G1B2"
-    assert len(manifest["active_runtime_acts"]) == 7
+    assert manifest["manifest_status"] == "ACTIVE_GATE1_G1C1"
+    assert len(manifest["active_runtime_acts"]) == 9
     assert len(manifest["evidence_only_references"]) == 1
-    assert len(manifest["planned_gate1_acts"]) == 6
+    assert len(manifest["planned_gate1_acts"]) == 4
 
 
 def test_seam_index_status_is_exact() -> None:
-    assert _json(SEAM_INDEX_PATH)["index_status"] == "ACTIVE_GATE1_G1B2"
+    assert _json(SEAM_INDEX_PATH)["index_status"] == "ACTIVE_GATE1_G1C1"
 
 
 def test_signer_act_is_active_in_completion_manifest() -> None:
@@ -931,7 +955,7 @@ def test_signer_act_executes_and_passes(report: dict[str, Any]) -> None:
     }
 
 
-def test_all_seven_active_act_ids_are_exact(report: dict[str, Any]) -> None:
+def test_all_nine_active_act_ids_are_exact(report: dict[str, Any]) -> None:
     assert tuple(row["act_id"] for row in report["active_act_results"]) == (
         "airline_deterministic_transaction_runtime",
         "all_layers_invariant_super_smoke",
@@ -940,8 +964,10 @@ def test_all_seven_active_act_ids_are_exact(report: dict[str, Any]) -> None:
         "semantic_work_contract",
         "domain_neutral_kernel_abi",
         "causal_consumption",
+        "transition_registry",
+        "root_decision_kernel",
     )
-    assert report["counters"]["active_collector_execution_count"] == 7
+    assert report["counters"]["active_collector_execution_count"] == 9
 
 
 def test_signer_execution_counter_is_one(report: dict[str, Any]) -> None:
@@ -1000,15 +1026,13 @@ def test_signer_claim_has_all_four_references() -> None:
     )
 
 
-def test_planned_claim_excludes_signer_and_has_exact_nine_ids() -> None:
+def test_planned_claim_has_exact_remaining_four_ids() -> None:
     claim = next(
         record
         for record in _json(COMPLETION_MANIFEST_PATH)["public_claims"]
         if record["claim_id"] == "claim_gate1_planned_not_active"
     )
     assert claim["act_ids"] == [
-        "transition_registry",
-        "root_decision_kernel",
         "effect_firewall",
         "generic_multiroot",
         "supplier_water_filter_portability",
@@ -1677,11 +1701,11 @@ def test_report_exposes_no_semantic_fixture_payload(
 def test_g1b1_report_geometry_and_prior_acts_remain_exact(
     report: dict[str, Any],
 ) -> None:
-    assert report["runner_version"] == "v0.5"
+    assert report["runner_version"] == "v0.6"
     assert report["final_status"] == runner.STATUS_PASS
-    assert report["counters"]["active_act_count"] == 7
+    assert report["counters"]["active_act_count"] == 9
     assert report["counters"]["evidence_only_entry_count"] == 1
-    assert report["counters"]["planned_act_count"] == 6
+    assert report["counters"]["planned_act_count"] == 4
     assert report["counters"]["real_world_effects_count"] == 0
     assert report["active_act_results"][2]["act_id"] == "generic_integrity_replay"
     assert report["active_act_results"][3]["act_id"] == (
@@ -1944,11 +1968,11 @@ def test_g1b2_active_seams_cannot_gain_effect_access(seam_id: str) -> None:
 def test_g1b2_seam_geometry_is_exact() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
     assert len(seams) == 24
-    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 14
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 16
     assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
     assert sum(
         item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams
-    ) == 7
+    ) == 5
     assert all(
         item["effect_access"] == "NONE"
         for item in seams
@@ -2164,12 +2188,12 @@ def test_report_exposes_no_abi_or_causal_fixture_values(
 def test_g1b2_report_geometry_and_prior_acts_are_exact(
     report: dict[str, Any],
 ) -> None:
-    assert report["runner_version"] == "v0.5"
+    assert report["runner_version"] == "v0.6"
     assert report["final_status"] == runner.STATUS_PASS
-    assert report["counters"]["active_act_count"] == 7
-    assert report["counters"]["active_act_pass_count"] == 7
+    assert report["counters"]["active_act_count"] == 9
+    assert report["counters"]["active_act_pass_count"] == 9
     assert report["counters"]["evidence_only_entry_count"] == 1
-    assert report["counters"]["planned_act_count"] == 6
+    assert report["counters"]["planned_act_count"] == 4
     assert report["counters"]["real_world_effects_count"] == 0
     assert report["active_act_results"][2]["act_id"] == "generic_integrity_replay"
     assert report["active_act_results"][3]["act_id"] == (
@@ -2264,11 +2288,11 @@ def test_g1b2_acts_remain_active_after_coherence_hardening(act_id: str) -> None:
 def test_release_coherence_hardening_preserves_public_geometry(
     report: dict[str, Any],
 ) -> None:
-    assert report["runner_version"] == "v0.5"
+    assert report["runner_version"] == "v0.6"
     assert report["final_status"] == runner.STATUS_PASS
-    assert report["counters"]["active_act_count"] == 7
+    assert report["counters"]["active_act_count"] == 9
     assert report["counters"]["evidence_only_entry_count"] == 1
-    assert report["counters"]["planned_act_count"] == 6
+    assert report["counters"]["planned_act_count"] == 4
     assert report["counters"]["real_world_effects_count"] == 0
 
 
@@ -2289,3 +2313,209 @@ def test_g1b2_fixture_external_and_effect_counts_remain_zero(
     metrics_name: str, counter: str
 ) -> None:
     assert getattr(runner, metrics_name)()[counter] == 0
+
+
+# G1-C1 Transition Registry and deterministic Root Decision Kernel regressions.
+
+
+@pytest.mark.parametrize("act_id,symbol,counter", (
+    ("transition_registry", "collect_transition_registry_gauntlet_act_v01", "transition_registry_execution_count"),
+    ("root_decision_kernel", "collect_root_decision_kernel_gauntlet_act_v01", "root_decision_kernel_execution_count"),
+))
+def test_g1c1_active_act_identity_and_counter(act_id, symbol, counter, report):
+    row = next(item for item in report["active_act_results"] if item["act_id"] == act_id)
+    assert row["source_module"] == "demo.run_living_gauntlet_v01"
+    assert row["source_symbol"] == symbol
+    assert row["state"] == runner.STATUS_PASS
+    assert row["executed"] is True
+    assert report["counters"][counter] == 1
+
+
+@pytest.mark.parametrize("act_id", ("transition_registry", "root_decision_kernel"))
+def test_g1c1_acts_are_not_planned_or_evidence_only(act_id, report):
+    assert act_id not in {item["act_id"] for item in report["planned_entries"]}
+    assert act_id not in {item["act_id"] for item in report["evidence_only_entries"]}
+
+
+@pytest.mark.parametrize("claim_id,act_id,test_ref,evidence_ref,symbol", (
+    ("claim_transition_registry_runtime_execution", "transition_registry", "tests/test_transition_registry_v01.py", "hedgehog/kernel/transition_registry_v01.py", "collect_transition_registry_gauntlet_act_v01"),
+    ("claim_root_decision_kernel_runtime_execution", "root_decision_kernel", "tests/test_root_decision_kernel_v01.py", "hedgehog/kernel/root_decision_v01.py", "collect_root_decision_kernel_gauntlet_act_v01"),
+))
+def test_g1c1_claim_exact_references(claim_id, act_id, test_ref, evidence_ref, symbol):
+    claim = next(item for item in _json(COMPLETION_MANIFEST_PATH)["public_claims"] if item["claim_id"] == claim_id)
+    assert claim["claim_class"] == "EXECUTED_RUNTIME"
+    assert claim["act_ids"] == [act_id]
+    assert claim["focused_test_ref"] == test_ref
+    assert claim["evidence_ref"] == evidence_ref
+    assert claim["runtime_ref"] == f"demo.run_living_gauntlet_v01:{symbol}"
+    assert claim["limitation_ref"] == "limitation_g1c1_in_memory_transition_and_root_decision_only"
+
+
+@pytest.mark.parametrize("claim_id", ("claim_transition_registry_runtime_execution", "claim_root_decision_kernel_runtime_execution"))
+def test_g1c1_claim_changed_to_conformance_fails(claim_id):
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    claim = next(item for item in manifest["public_claims"] if item["claim_id"] == claim_id)
+    claim["claim_class"] = "EXECUTED_CONFORMANCE"
+    assert f"public_claim_classification_mismatch:{claim_id}" in runner._validate_completion_manifest_v01(manifest)
+
+
+def test_g1c1_planned_claim_exact_four_ids():
+    claim = next(item for item in _json(COMPLETION_MANIFEST_PATH)["public_claims"] if item["claim_id"] == "claim_gate1_planned_not_active")
+    assert claim["act_ids"] == ["effect_firewall", "generic_multiroot", "supplier_water_filter_portability", "kernel_conformance_closure"]
+
+
+@pytest.mark.parametrize("limitation_id,phrases", (
+    ("limitation_g1c1_in_memory_transition_and_root_decision_only", ("does not mutate artifacts or execute transitions", "RootDecisionResult only", "no permission", "no FinalOutput", "no effect", "not production policy certification")),
+    ("limitation_gate1_not_implemented", ("Effect Firewall", "Generic MultiRoot", "portability adapters", "Kernel Conformance closure")),
+    ("limitation_g1b1_in_memory_contract_conformance_only", ("separately active in G1-C1", "Effect Firewall remains unimplemented")),
+    ("limitation_g1b2_in_memory_abi_and_counterfactual_only", ("separately active in G1-C1", "Effect Firewall", "Generic MultiRoot")),
+))
+def test_g1c1_limitations_are_coherent(limitation_id, phrases):
+    statement = next(item["statement"] for item in _json(COMPLETION_MANIFEST_PATH)["limitations"] if item["limitation_id"] == limitation_id)
+    assert all(phrase in statement for phrase in phrases)
+
+
+@pytest.mark.parametrize("act_id,phrase,reason", (
+    ("transition_registry", "Transition Registry remains unimplemented.", "completion_manifest_active_transition_described_unimplemented"),
+    ("transition_registry", "No Transition Registry exists.", "completion_manifest_active_transition_described_unimplemented"),
+    ("transition_registry", "Not a transition system.", "completion_manifest_active_transition_described_unimplemented"),
+    ("root_decision_kernel", "Root Decision Kernel remains unimplemented.", "completion_manifest_active_root_decision_described_unimplemented"),
+    ("root_decision_kernel", "No Root Decision Kernel exists.", "completion_manifest_active_root_decision_described_unimplemented"),
+    ("root_decision_kernel", "Not a Root decision.", "completion_manifest_active_root_decision_described_unimplemented"),
+))
+def test_g1c1_stale_manifest_absence_wording_fails(act_id, phrase, reason):
+    manifest = _json(COMPLETION_MANIFEST_PATH)
+    assert act_id in {item["act_id"] for item in manifest["active_runtime_acts"]}
+    manifest["limitations"].append({"limitation_id": f"stale:{act_id}", "statement": phrase})
+    assert reason in runner._validate_completion_manifest_v01(manifest)
+
+
+@pytest.mark.parametrize("seam_id,module,symbol,seam_class,authority", (
+    ("transition_registry", "hedgehog.kernel.transition_registry_v01", "lookup_transition_v01", "KERNEL_CORE", "NON_ROOT_IMMUTABLE_TRANSITION_POLICY"),
+    ("root_decision_kernel", "hedgehog.kernel.root_decision_v01", "decide_root_v01", "KERNEL_ROOT_BOUNDARY", "ROOT_DECISION_AUTHORITY"),
+))
+def test_g1c1_seam_exact_active_contract(seam_id, module, symbol, seam_class, authority):
+    seam = next(item for item in _json(SEAM_INDEX_PATH)["seams"] if item["seam_id"] == seam_id)
+    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["source_module"] == module
+    assert seam["source_symbol"] == symbol
+    assert seam["seam_class"] == seam_class
+    assert seam["authority_status"] == authority
+    assert seam["effect_access"] == "NONE"
+
+
+@pytest.mark.parametrize("seam_id,status", (
+    ("transition_registry", runner.STATUS_REFERENCE_ONLY),
+    ("transition_registry", runner.STATUS_PLANNED_NOT_ACTIVE),
+    ("root_decision_kernel", runner.STATUS_REFERENCE_ONLY),
+    ("root_decision_kernel", runner.STATUS_PLANNED_NOT_ACTIVE),
+))
+def test_g1c1_active_seam_status_mutation_fails(seam_id, status):
+    index = _json(SEAM_INDEX_PATH)
+    next(item for item in index["seams"] if item["seam_id"] == seam_id)["status"] = status
+    assert f"current_seam_status_mismatch:{seam_id}" in runner._validate_integration_seam_index_v01(index)
+
+
+@pytest.mark.parametrize("seam_id", ("transition_registry", "root_decision_kernel"))
+def test_g1c1_active_seam_effect_access_mutation_fails(seam_id):
+    index = _json(SEAM_INDEX_PATH)
+    next(item for item in index["seams"] if item["seam_id"] == seam_id)["effect_access"] = "HANDLE"
+    assert f"seam_effect_access_forbidden:{seam_id}" in runner._validate_integration_seam_index_v01(index)
+
+
+def test_root_decision_seam_authority_status_mutation_fails():
+    index = _json(SEAM_INDEX_PATH)
+    seam = next(item for item in index["seams"] if item["seam_id"] == "root_decision_kernel")
+    seam["authority_status"] = "NON_ROOT_ADVISORY"
+    assert "current_seam_contract_mismatch:root_decision_kernel" in runner._validate_integration_seam_index_v01(index)
+
+
+@pytest.mark.parametrize("seam_id,note,reason", (
+    ("transition_registry", "Transition Registry is unimplemented.", "integration_seam_active_transition_described_absent"),
+    ("transition_registry", "Not a transition system.", "integration_seam_active_transition_described_absent"),
+    ("root_decision_kernel", "Root Decision Kernel is unimplemented.", "integration_seam_active_root_decision_described_absent"),
+    ("root_decision_kernel", "Not a Root decision.", "integration_seam_active_root_decision_described_absent"),
+))
+def test_g1c1_active_seam_stale_note_fails(seam_id, note, reason):
+    index = _json(SEAM_INDEX_PATH)
+    next(item for item in index["seams"] if item["seam_id"] == seam_id)["notes"] = note
+    assert reason in runner._validate_integration_seam_index_v01(index)
+
+
+def test_g1c1_seam_geometry_and_effect_firewall_boundary():
+    seams = _json(SEAM_INDEX_PATH)["seams"]
+    assert len(seams) == 24
+    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 16
+    assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
+    assert sum(item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams) == 5
+    active = [item for item in seams if item["status"] == runner.STATUS_ACTIVE]
+    assert all(item["effect_access"] == "NONE" for item in active)
+    firewall = next(item for item in seams if item["seam_id"] == "effect_firewall")
+    assert firewall["effect_access"] == "BOUNDED_EFFECT_HANDLE_OWNER_PLANNED"
+
+
+@pytest.mark.parametrize("key,expected", (
+    ("rule_count", 18), ("allow_rule_count", 8), ("return_to_root_rule_count", 4),
+    ("blocked_rule_count", 6), ("canonical_lookup_count", 18),
+    ("needs_user_proof_count", 1), ("needs_more_evidence_proof_count", 1),
+    ("unknown_transition_blocked_count", 1), ("unknown_major_blocked_count", 1),
+    ("registry_mutation_rejected_count", 1),
+))
+def test_transition_registry_fixture_metrics(key, expected):
+    assert runner._collect_transition_registry_fixture_metrics_v01()[key] == expected
+
+
+@pytest.mark.parametrize("key,expected", (
+    ("result_count", 10), ("blocked_count", 3), ("needs_user_count", 1),
+    ("needs_more_evidence_count", 1), ("defer_count", 1), ("reject_count", 2),
+    ("no_update_count", 1), ("accept_count", 1), ("root_commit_created_count", 10),
+    ("permission_created_count", 0), ("final_output_created_count", 0),
+    ("effect_requested_count", 0),
+))
+def test_root_decision_fixture_metrics(key, expected):
+    assert runner._collect_root_decision_fixture_metrics_v01()[key] == expected
+
+
+@pytest.mark.parametrize("needle", (
+    "claim:deterministic", "1000000", "permission:fixture", "policy_state",
+    "conflict_set_ids", "missing_evidence_refs", "prior_root_state",
+))
+def test_g1c1_report_and_render_hide_sensitive_fixture_details(needle, report):
+    serialized = json.dumps(report, sort_keys=True)
+    rendered = runner.render_living_gauntlet_v01(report)
+    assert needle not in serialized
+    assert needle not in rendered
+
+
+@pytest.mark.parametrize("act_id,reason", (
+    ("transition_registry", "transition_registry_collector_failed"),
+    ("root_decision_kernel", "root_decision_kernel_collector_failed"),
+))
+def test_g1c1_failure_counter_tampering_cannot_restore_pass(act_id, reason, report):
+    mutated = deepcopy(report)
+    row = next(item for item in mutated["active_act_results"] if item["act_id"] == act_id)
+    row.update(state=runner.STATUS_FAIL_CLOSED, runtime_status=runner.STATUS_FAIL_CLOSED, root_authority_preserved=False, no_real_connector_or_action=False, real_world_effects_count=-1, errors=(reason,))
+    mutated["counters"] = runner._derive_report_counters_v01(mutated["active_act_results"], mutated["evidence_only_entries"], mutated["planned_entries"])
+    mutated["counters"]["active_act_pass_count"] = 9
+    mutated["final_status"] = runner.STATUS_PASS
+    valid, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    assert valid is False
+    assert f"report_active_act_state_not_pass:{act_id}" in errors
+
+
+@pytest.mark.parametrize("collector,act_id,reason", (
+    ("collect_transition_registry_gauntlet_act_v01", "transition_registry", "transition_registry_collector_failed"),
+    ("collect_root_decision_kernel_gauntlet_act_v01", "root_decision_kernel", "root_decision_kernel_collector_failed"),
+))
+def test_g1c1_collector_exception_fails_complete_report_closed(collector, act_id, reason, monkeypatch):
+    def explode():
+        raise RuntimeError("CALLER_SECRET")
+
+    monkeypatch.setattr(runner, collector, explode)
+    failed = runner.collect_living_gauntlet_v01()
+    row = next(item for item in failed["active_act_results"] if item["act_id"] == act_id)
+    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert row["state"] == runner.STATUS_FAIL_CLOSED
+    assert row["real_world_effects_count"] == -1
+    assert row["errors"] == (reason,)
+    assert "CALLER_SECRET" not in json.dumps(failed)

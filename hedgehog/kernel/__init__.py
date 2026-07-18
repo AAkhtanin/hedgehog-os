@@ -53,6 +53,20 @@ from hedgehog.kernel.root_signer_isolation_v01 import (
     trusted_root_key_set_to_plain_dict_v01,
     verify_root_signature_v01,
 )
+from hedgehog.kernel.root_decision_v01 import (
+    RootDecisionInputV01,
+    RootDecisionKernelV01,
+    RootDecisionResultV01,
+    build_root_decision_input_v01,
+    build_root_decision_kernel_v01,
+    decide_root_v01,
+    root_decision_input_to_plain_dict_v01,
+    root_decision_kernel_to_plain_dict_v01,
+    root_decision_result_to_plain_dict_v01,
+    validate_root_decision_input_v01,
+    validate_root_decision_kernel_v01,
+    validate_root_decision_result_v01,
+)
 from hedgehog.kernel.semantic_work_v01 import (
     ActorContributionV01,
     ConflictSetV01,
@@ -81,6 +95,19 @@ from hedgehog.kernel.trust_model_v01 import (
     component_trust_profile_to_plain_dict_v01,
     component_trust_profiles_to_plain_list_v01,
     validate_component_trust_profiles_v01,
+)
+from hedgehog.kernel.transition_registry_v01 import (
+    TransitionDecisionV01,
+    TransitionRegistryV01,
+    TransitionRuleV01,
+    build_default_transition_registry_v01,
+    lookup_transition_v01,
+    transition_decision_to_plain_dict_v01,
+    transition_registry_to_plain_dict_v01,
+    transition_rule_to_plain_dict_v01,
+    validate_transition_decision_v01,
+    validate_transition_registry_v01,
+    validate_transition_rule_v01,
 )
 
 __all__ = (

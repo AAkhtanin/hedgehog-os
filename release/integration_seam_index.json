@@ -1,6 +1,6 @@
 {
   "document_id": "living_release_integration_seam_index_v01",
-  "index_status": "ACTIVE_GATE1_G1B2",
+  "index_status": "ACTIVE_GATE1_G1C1",
   "seams": [
     {
       "authority_status": "ROOT_BOUNDARIES_PRESERVED",
@@ -231,28 +231,28 @@
       "status": "PLANNED_NOT_ACTIVE"
     },
     {
-      "authority_status": "PLANNED_NON_ROOT_REGISTRY",
-      "current_mode": "NOT_IMPLEMENTED",
+      "authority_status": "NON_ROOT_IMMUTABLE_TRANSITION_POLICY",
+      "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_LOOKUP",
       "effect_access": "NONE",
       "gate1_target": "transition_registry",
-      "notes": "Planned Transition Registry; no registry exists in this scaffold.",
-      "seam_class": "PLANNED_GATE1",
+      "notes": "Immutable deterministic transition lookup; unknown transitions fail closed; the Registry does not mutate artifacts, create authority, create permission, create a Root decision, create FinalOutput, or execute an effect.",
+      "seam_class": "KERNEL_CORE",
       "seam_id": "transition_registry",
-      "source_module": "",
-      "source_symbol": null,
-      "status": "PLANNED_NOT_ACTIVE"
+      "source_module": "hedgehog.kernel.transition_registry_v01",
+      "source_symbol": "lookup_transition_v01",
+      "status": "ACTIVE"
     },
     {
-      "authority_status": "PLANNED_ROOT_BOUNDARY",
-      "current_mode": "NOT_IMPLEMENTED",
+      "authority_status": "ROOT_DECISION_AUTHORITY",
+      "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_ROOT_DECISION",
       "effect_access": "NONE",
       "gate1_target": "root_decision_kernel",
-      "notes": "Planned explicit Root boundary; no Root Decision Kernel is implemented.",
-      "seam_class": "PLANNED_GATE1_ROOT_BOUNDARY",
+      "notes": "Root-only deterministic decision precedence producing RootDecisionResult; creates no permission, FinalOutput, ActionCommitPacket, ExecutionRequest, receipt, DRS write, connector call, effect request, or effect.",
+      "seam_class": "KERNEL_ROOT_BOUNDARY",
       "seam_id": "root_decision_kernel",
-      "source_module": "",
-      "source_symbol": null,
-      "status": "PLANNED_NOT_ACTIVE"
+      "source_module": "hedgehog.kernel.root_decision_v01",
+      "source_symbol": "decide_root_v01",
+      "status": "ACTIVE"
     },
     {
       "authority_status": "PLANNED_ROOT_SCOPED_EFFECT_BOUNDARY",

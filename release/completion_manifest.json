@@ -101,6 +101,26 @@
       "source_module": "demo.run_living_gauntlet_v01",
       "source_symbol": "collect_effect_firewall_gauntlet_act_v01",
       "status": "ACTIVE"
+    },
+    {
+      "act_id": "generic_multiroot",
+      "claim_ids": [
+        "claim_generic_multiroot_execution"
+      ],
+      "focused_test": "tests/test_multiroot_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_generic_multiroot_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "supplier_water_filter_portability",
+      "claim_ids": [
+        "claim_supplier_water_filter_portability_execution"
+      ],
+      "focused_test": "tests/test_supplier_water_filter_kernel_adapter_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_supplier_water_filter_portability_gauntlet_act_v01",
+      "status": "ACTIVE"
     }
   ],
   "document_id": "living_release_completion_manifest_v01",
@@ -130,11 +150,11 @@
     },
     {
       "limitation_id": "limitation_gate1_not_implemented",
-      "statement": "Supplier / Water Filter portability adapter, Generic MultiRoot, and final Kernel Conformance closure remain unimplemented."
+      "statement": "Only final Kernel Conformance closure remains unimplemented."
     },
     {
       "limitation_id": "limitation_g1a1_neutral_fixtures_only",
-      "statement": "G1-A1 itself remains limited to neutral in-memory fixtures, expected-hash provenance is not external trust, and G1-A1 does not exercise signer isolation; the frozen Airline projection is separately active through G1-D1, while Supplier projection remains unimplemented."
+      "statement": "G1-A1 itself remains limited to neutral in-memory fixtures, expected-hash provenance is not external trust, and G1-A1 does not exercise signer isolation; the frozen Airline projection is separately active through G1-D1, while Supplier / Water Filter projection and Generic MultiRoot are separately active through G1-D2."
     },
     {
       "limitation_id": "limitation_g1a2_conformance_only_signer_isolation",
@@ -142,30 +162,38 @@
     },
     {
       "limitation_id": "limitation_g1b1_in_memory_contract_conformance_only",
-      "statement": "G1-B1 remains an in-memory SemanticWork and Trust conformance slice: no real cloud LLM, local SLM, or fractal runtime is executed, no provider output is trusted, and no permission, Root decision, FinalOutput, or effect is created by G1-B1; Trust Model metadata is descriptive and conformance-consumed; Kernel ABI and CausalConsumptionRef are separately active in G1-B2, Transition Registry and Root Decision Kernel are separately active in G1-C1, the mock-only Effect Firewall is separately active in G1-C2, and the frozen Airline adapter is separately active in G1-D1."
+      "statement": "G1-B1 remains an in-memory SemanticWork and Trust conformance slice: no real cloud LLM, local SLM, or fractal runtime is executed, no provider output is trusted, and no permission, Root decision, FinalOutput, or effect is created by G1-B1; Trust Model metadata is descriptive and conformance-consumed; Kernel ABI and CausalConsumptionRef are separately active in G1-B2, Transition Registry and Root Decision Kernel in G1-C1, the mock-only Effect Firewall in G1-C2, the frozen Airline adapter in G1-D1, and Supplier / Water Filter projection with Generic MultiRoot in G1-D2."
     },
     {
       "limitation_id": "limitation_g1b2_in_memory_abi_and_counterfactual_only",
-      "statement": "G1-B2 artifacts remain neutral in-memory conformance fixtures with no production ABI compatibility guarantee, and only ABI v1.0 is supported; CausalConsumptionRef proves declared controlled influence, not semantic truth; Transition Registry and Root Decision Kernel are separately active in G1-C1, the mock-only Effect Firewall is separately active in G1-C2, and the frozen Airline adapter is separately active in G1-D1; Supplier portability and Generic MultiRoot remain unimplemented, and no permission, Root decision, FinalOutput, connector call, or effect is created by G1-B2."
+      "statement": "G1-B2 artifacts remain neutral in-memory conformance fixtures with no production ABI compatibility guarantee, and only ABI v1.0 is supported; CausalConsumptionRef proves declared controlled influence, not semantic truth; Transition Registry and Root Decision Kernel are separately active in G1-C1, the mock-only Effect Firewall in G1-C2, the frozen Airline adapter in G1-D1, and Supplier / Water Filter projection with Generic MultiRoot in G1-D2; no permission, Root decision, FinalOutput, connector call, or effect is created by G1-B2."
     },
     {
       "limitation_id": "limitation_g1c1_in_memory_transition_and_root_decision_only",
-      "statement": "The G1-C1 Registry and decisions are domain-neutral in-memory runtime fixtures: the Registry performs lookup and does not mutate artifacts or execute transitions, and the Root Decision Kernel creates RootDecisionResult only; G1-C1 creates no permission, FinalOutput, ActionCommitPacket, ExecutionRequest, or receipt, and no effect occurs in G1-C1; the mock-only Effect Firewall is separately active in G1-C2 and the frozen Airline adapter is separately active in G1-D1; Generic MultiRoot remains unimplemented, and this is not production policy certification."
+      "statement": "The G1-C1 Registry and decisions are domain-neutral in-memory runtime fixtures: the Registry performs lookup and does not mutate artifacts or execute transitions, and the Root Decision Kernel creates RootDecisionResult only; G1-C1 creates no permission, FinalOutput, ActionCommitPacket, ExecutionRequest, or receipt, and no effect occurs in G1-C1; the mock-only Effect Firewall is separately active in G1-C2, the frozen Airline adapter in G1-D1, and Supplier / Water Filter projection with Generic MultiRoot in G1-D2. This is not production policy certification."
     },
     {
       "limitation_id": "limitation_g1c2_in_memory_mock_effect_only",
-      "statement": "The Firewall is domain-neutral and in-memory, and its private capability is invocation-local rather than production authorization; only logical ticks and one neutral mock execution are used. No real adapter exists. No real connector, payment, booking, ticket, shipment, or external operation exists. Scope is Root-supplied conformance scope, no production permission registry is consulted, and no revocation, supersession, production retry, or distributed idempotency is implemented. The receipt is evidence only, creates no future permission, and requires later Root confirmation. The frozen Airline projection adapter is separately active in G1-D1; Supplier portability and Generic MultiRoot remain unimplemented. This is not production security certification."
+      "statement": "The Firewall is domain-neutral and in-memory, and its private capability is invocation-local rather than production authorization; only logical ticks and one neutral mock execution are used. No real adapter exists. No real connector, payment, booking, ticket, shipment, or external operation exists. Scope is Root-supplied conformance scope, no production permission registry is consulted, and no revocation, supersession, production retry, or distributed idempotency is implemented. The receipt is evidence only, creates no future permission, and requires later Root confirmation. The frozen Airline projection adapter is separately active in G1-D1, and Supplier / Water Filter projection with Generic MultiRoot is separately active in G1-D2. This is not production security certification."
     },
     {
       "limitation_id": "limitation_g1d1_frozen_airline_projection_only",
-      "statement": "The adapter is constrained to the accepted frozen Airline contract shape, Offer A, exact transaction, three Roots, type sequence, and 19 / 29 / 3 Ledger, 9 / 11 Crypto, and 19-row timeline geometry. The Living fixture is deterministic and synthetic in-memory; it does not prove byte equality with the committed all-real package, and its caller-supplied expected hash is not committed external trust. No package or filesystem access occurs and no all-real lane is rerun. The original Ledger, Crypto, Replay, Anchor, audits, Human Story, and Showcase remain unchanged. The generic Manifest is a derived projection identity, and dependency-hash CausalConsumptionRef rows do not prove semantic truth. Signature verification remains false and Root Attestation remains deferred. Supplier / Water Filter portability and Generic MultiRoot remain unimplemented. This is not production integration."
+      "statement": "The adapter is constrained to the accepted frozen Airline contract shape, Offer A, exact transaction, three Roots, type sequence, and 19 / 29 / 3 Ledger, 9 / 11 Crypto, and 19-row timeline geometry. The Living fixture is deterministic and synthetic in-memory; it does not prove byte equality with the committed all-real package, and its caller-supplied expected hash is not committed external trust. No package or filesystem access occurs and no all-real lane is rerun. The original Ledger, Crypto, Replay, Anchor, audits, Human Story, and Showcase remain unchanged. The generic Manifest is a derived projection identity, dependency-hash CausalConsumptionRef rows do not prove semantic truth, signature verification remains false, and Root Attestation remains deferred. Supplier / Water Filter portability and Generic MultiRoot are separately active in G1-D2. This is not production integration."
+    },
+    {
+      "limitation_id": "limitation_g1d2_generic_multiroot_conformance_only",
+      "statement": "Generic MultiRoot is pure in-memory protocol geometry with independent Root outcomes, no production federation, no distributed Root registry, no signer identity, no SuperRoot, no authority transfer, no permission transfer, no real effect, and no external system."
+    },
+    {
+      "limitation_id": "limitation_g1d2_supplier_water_filter_projection_only",
+      "statement": "The Supplier / Water Filter adapter accepts only the exact deterministic Full WOW v1.2 product-trace contract, not arbitrary Supplier transactions. It uses no live provider and no real supplier, bank, warehouse API, payment, shipment release, or connector. The source collector remains unchanged, the adapter retains no complete source report, its generic Manifest is a derived local identity, and its causal rows prove declared ordered-card continuity only. The represented Supplier MultiRoot outcome remains MIXED. This is not production integration."
     },
     {
       "limitation_id": "limitation_not_production",
       "statement": "This scaffold is proof-level and is not production-ready."
     }
   ],
-  "manifest_status": "ACTIVE_GATE1_G1D1",
+  "manifest_status": "ACTIVE_GATE1_G1D2",
   "non_claims": [
     "not production",
     "not a real ticket, booking, payment, airline, bank, GDS, shipment, or connector integration",
@@ -174,7 +202,6 @@
     "not package or filesystem Replay",
     "not a new all-real run",
     "not execution of the committed all-real package",
-    "not a Supplier integrity adapter",
     "not committed external Anchor provenance",
     "not production Root signing",
     "not Airline Root Attestation",
@@ -193,32 +220,18 @@
     "not a real connector",
     "not production authorization",
     "not a transferable capability",
-    "not Generic MultiRoot",
+    "not production MultiRoot federation",
     "not production retry or distributed idempotency",
     "not production policy certification",
-    "not Supplier or Water Filter portability",
+    "not arbitrary Supplier integration",
+    "not real bank, supplier, or warehouse integration",
+    "not real payment",
+    "not shipment release",
+    "not a production connector",
     "not Root Attestation",
     "not Gate 1 closure"
   ],
   "planned_gate1_acts": [
-    {
-      "act_id": "generic_multiroot",
-      "claim_ids": [
-        "claim_gate1_planned_not_active"
-      ],
-      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
-      "notes": "Future generic MultiRoot act.",
-      "status": "PLANNED_NOT_ACTIVE"
-    },
-    {
-      "act_id": "supplier_water_filter_portability",
-      "claim_ids": [
-        "claim_gate1_planned_not_active"
-      ],
-      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
-      "notes": "Future Supplier and Water Filter portability act.",
-      "status": "PLANNED_NOT_ACTIVE"
-    },
     {
       "act_id": "kernel_conformance_closure",
       "claim_ids": [
@@ -376,6 +389,30 @@
     },
     {
       "act_ids": [
+        "generic_multiroot"
+      ],
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_generic_multiroot_execution",
+      "evidence_ref": "hedgehog/kernel/multiroot_v01.py",
+      "focused_test_ref": "tests/test_multiroot_v01.py",
+      "limitation_ref": "limitation_g1d2_generic_multiroot_conformance_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_generic_multiroot_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes pure in-memory three-Root and four-Root all-accepted fixtures, a visible MIXED fixture, an INCOMPLETE fixture, and fail-closed unknown, duplicate, and reserved Root cases without authority transfer, permission transfer, or effect."
+    },
+    {
+      "act_ids": [
+        "supplier_water_filter_portability"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_supplier_water_filter_portability_execution",
+      "evidence_ref": "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "focused_test_ref": "tests/test_supplier_water_filter_kernel_adapter_v01.py",
+      "limitation_ref": "limitation_g1d2_supplier_water_filter_projection_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_supplier_water_filter_portability_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes the Supplier / Water Filter adapter against one explicit deterministic Full WOW v1.2 product-trace report, projects twenty-three Kernel artifacts and twenty-two dependencies, verifies the derived generic Manifest and Replay, emits twenty-two ordered-card CausalConsumptionRef rows, and preserves the one-Root MIXED business outcome with zero provider, network, Gemini, and real-world effects."
+    },
+    {
+      "act_ids": [
         "airline_all_real_frozen_reference"
       ],
       "claim_class": "EVIDENCE_ONLY",
@@ -388,8 +425,6 @@
     },
     {
       "act_ids": [
-        "generic_multiroot",
-        "supplier_water_filter_portability",
         "kernel_conformance_closure"
       ],
       "claim_class": "PLANNED_NOT_ACTIVE",
@@ -398,7 +433,7 @@
       "focused_test_ref": "tests/test_living_gauntlet_v01_runner.py",
       "limitation_ref": "limitation_gate1_not_implemented",
       "runtime_ref": "not_executed:planned_gate1",
-      "statement": "The remaining Gate 1 acts are indexed for review and are not active or implemented."
+      "statement": "The remaining Gate 1 Kernel Conformance closure act is indexed for review and is not active or implemented."
     }
   ],
   "version": "v0.1"

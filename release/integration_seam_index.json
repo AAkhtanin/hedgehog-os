@@ -1,6 +1,6 @@
 {
   "document_id": "living_release_integration_seam_index_v01",
-  "index_status": "ACTIVE_GATE1_G1D1",
+  "index_status": "ACTIVE_GATE1_G1D2",
   "seams": [
     {
       "authority_status": "ROOT_BOUNDARIES_PRESERVED",
@@ -219,16 +219,16 @@
       "status": "ACTIVE"
     },
     {
-      "authority_status": "PLANNED_NON_ROOT_ADAPTER",
-      "current_mode": "NOT_IMPLEMENTED",
+      "authority_status": "NON_ROOT_DOMAIN_ADAPTER",
+      "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_PRODUCT_TRACE_PROJECTION",
       "effect_access": "NONE",
       "gate1_target": "supplier_water_filter_portability",
-      "notes": "Planned Supplier and Water Filter adapter against the active Kernel ABI; the domain adapter itself remains unimplemented.",
-      "seam_class": "PLANNED_GATE1",
+      "notes": "Consumes one explicit deterministic source report and projects 23 Kernel artifacts, 22 generic edges, a derived generic Manifest and Replay, 22 ordered-card causal refs, and a one-Root MIXED MultiRoot result. It edits no Kernel law, makes no provider, network, or Gemini call, owns no effect access, and invokes no real connector.",
+      "seam_class": "DOMAIN_ADAPTER",
       "seam_id": "supplier_water_filter_abi_adapter",
-      "source_module": "",
-      "source_symbol": null,
-      "status": "PLANNED_NOT_ACTIVE"
+      "source_module": "hedgehog.domains.supplier_water_filter.kernel_adapter_v01",
+      "source_symbol": "build_supplier_water_filter_kernel_adapter_result_v01",
+      "status": "ACTIVE"
     },
     {
       "authority_status": "NON_ROOT_IMMUTABLE_TRANSITION_POLICY",
@@ -267,16 +267,16 @@
       "status": "ACTIVE"
     },
     {
-      "authority_status": "PLANNED_ROOT_ENVELOPE",
-      "current_mode": "NOT_IMPLEMENTED",
+      "authority_status": "INDEPENDENT_ROOT_OUTCOME_PROTOCOL",
+      "current_mode": "PURE_IN_MEMORY_SOVEREIGN_ROOT_GEOMETRY",
       "effect_access": "NONE",
       "gate1_target": "generic_multiroot",
-      "notes": "Planned envelope preserving sovereign Roots; no generic MultiRoot is implemented.",
-      "seam_class": "PLANNED_GATE1_ROOT_BOUNDARY",
+      "notes": "Preserves independent Root decisions with no SuperRoot, keeps mixed and incomplete outcomes visible, fails unknown, duplicate, and reserved Roots closed, transfers no authority or permission, and performs no effect.",
+      "seam_class": "KERNEL_ROOT_BOUNDARY",
       "seam_id": "multiroot_envelope",
-      "source_module": "",
-      "source_symbol": null,
-      "status": "PLANNED_NOT_ACTIVE"
+      "source_module": "hedgehog.kernel.multiroot_v01",
+      "source_symbol": "validate_multiroot_v01",
+      "status": "ACTIVE"
     },
     {
       "authority_status": "PLANNED_NON_ROOT_EVIDENCE",

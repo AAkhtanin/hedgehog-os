@@ -17,6 +17,9 @@ from demo.run_all_layers_applied_super_smoke import (
 from demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01 import (
     collect_tri_party_airline_ticket_purchase_mock_e2e_v01,
 )
+from demo.run_full_wow_v1_2_product_trace import (
+    collect_full_wow_v1_2_product_trace,
+)
 from hedgehog.domains.airline import (
     crypto_artifact_seal_collector_v01 as airline_crypto_collector,
 )
@@ -26,6 +29,10 @@ from hedgehog.domains.airline import sealed_trace_replay_v01 as airline_replay
 from hedgehog.domains.airline import (
     transaction_artifact_ledger_v01 as airline_ledger,
 )
+from hedgehog.domains.supplier_water_filter import (
+    kernel_adapter_v01 as supplier_water_filter_adapter,
+)
+from hedgehog.kernel import multiroot_v01 as multiroot
 from hedgehog.kernel.integrity_replay_v01 import (
     ArtifactDependencyEdgeV01,
     AuthorityClassBindingV01,
@@ -144,7 +151,7 @@ import hedgehog.kernel.transition_registry_v01 as transition_registry_module
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v0.8"
+RUNNER_VERSION = "v0.9"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -235,6 +242,14 @@ _ACTIVE_ACT_SOURCES = {
         "demo.run_living_gauntlet_v01",
         "collect_effect_firewall_gauntlet_act_v01",
     ),
+    "generic_multiroot": (
+        "demo.run_living_gauntlet_v01",
+        "collect_generic_multiroot_gauntlet_act_v01",
+    ),
+    "supplier_water_filter_portability": (
+        "demo.run_living_gauntlet_v01",
+        "collect_supplier_water_filter_portability_gauntlet_act_v01",
+    ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
 _EXECUTED_RUNTIME_ACT_IDS = (
@@ -244,24 +259,18 @@ _EXECUTED_RUNTIME_ACT_IDS = (
     "transition_registry",
     "root_decision_kernel",
     "effect_firewall",
+    "supplier_water_filter_portability",
 )
 _EXECUTED_CONFORMANCE_ACT_IDS = (
     "root_signer_isolation_conformance",
     "semantic_work_contract",
     "domain_neutral_kernel_abi",
     "causal_consumption",
+    "generic_multiroot",
 )
 _EVIDENCE_ONLY_ACT_IDS = ("airline_all_real_frozen_reference",)
-_PLANNED_ACT_IDS = (
-    "generic_multiroot",
-    "supplier_water_filter_portability",
-    "kernel_conformance_closure",
-)
-_PLANNED_SEAM_IDS = (
-    "supplier_water_filter_abi_adapter",
-    "multiroot_envelope",
-    "kernel_conformance_report",
-)
+_PLANNED_ACT_IDS = ("kernel_conformance_closure",)
+_PLANNED_SEAM_IDS = ("kernel_conformance_report",)
 _CURRENT_SEAMS = {
     "deterministic_airline_reference_collector": _ACTIVE_ACT_SOURCES[
         "airline_deterministic_transaction_runtime"
@@ -345,6 +354,14 @@ _CURRENT_SEAMS = {
         "hedgehog.kernel.effect_firewall_v01",
         "execute_mock_effect_v01",
     ),
+    "supplier_water_filter_abi_adapter": (
+        "hedgehog.domains.supplier_water_filter.kernel_adapter_v01",
+        "build_supplier_water_filter_kernel_adapter_result_v01",
+    ),
+    "multiroot_envelope": (
+        "hedgehog.kernel.multiroot_v01",
+        "validate_multiroot_v01",
+    ),
 }
 _CURRENT_SEAM_STATUSES = {
     "deterministic_airline_reference_collector": STATUS_ACTIVE,
@@ -368,6 +385,8 @@ _CURRENT_SEAM_STATUSES = {
     "transition_registry": STATUS_ACTIVE,
     "root_decision_kernel": STATUS_ACTIVE,
     "effect_firewall": STATUS_ACTIVE,
+    "supplier_water_filter_abi_adapter": STATUS_ACTIVE,
+    "multiroot_envelope": STATUS_ACTIVE,
 }
 _ACTIVE_RECORD_EXPECTATIONS = {
     "generic_integrity_replay": (
@@ -388,6 +407,14 @@ _ACTIVE_RECORD_EXPECTATIONS = {
     "effect_firewall": (
         ("claim_effect_firewall_runtime_execution",),
         "tests/test_effect_firewall_v01.py",
+    ),
+    "generic_multiroot": (
+        ("claim_generic_multiroot_execution",),
+        "tests/test_multiroot_v01.py",
+    ),
+    "supplier_water_filter_portability": (
+        ("claim_supplier_water_filter_portability_execution",),
+        "tests/test_supplier_water_filter_kernel_adapter_v01.py",
     ),
 }
 _ACTIVE_SEAM_EXPECTATIONS = {
@@ -418,6 +445,20 @@ _ACTIVE_SEAM_EXPECTATIONS = {
         "effect_access": "BOUNDED_EFFECT_HANDLE_OWNER",
         "gate1_target": "effect_firewall",
         "seam_class": "KERNEL_EFFECT_BOUNDARY",
+    },
+    "supplier_water_filter_abi_adapter": {
+        "authority_status": "NON_ROOT_DOMAIN_ADAPTER",
+        "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_PRODUCT_TRACE_PROJECTION",
+        "effect_access": "NONE",
+        "gate1_target": "supplier_water_filter_portability",
+        "seam_class": "DOMAIN_ADAPTER",
+    },
+    "multiroot_envelope": {
+        "authority_status": "INDEPENDENT_ROOT_OUTCOME_PROTOCOL",
+        "current_mode": "PURE_IN_MEMORY_SOVEREIGN_ROOT_GEOMETRY",
+        "effect_access": "NONE",
+        "gate1_target": "generic_multiroot",
+        "seam_class": "KERNEL_ROOT_BOUNDARY",
     },
 }
 
@@ -476,6 +517,8 @@ _COUNTER_FIELD_NAMES = frozenset(
         "transition_registry_execution_count",
         "root_decision_kernel_execution_count",
         "effect_firewall_execution_count",
+        "generic_multiroot_execution_count",
+        "supplier_water_filter_portability_execution_count",
     }
 )
 
@@ -672,6 +715,46 @@ def _active_g1d1_absence_errors(
     return ()
 
 
+def _active_g1d2_absence_errors(
+    active_ids: tuple[str, ...], manifest: Mapping[str, Any]
+) -> tuple[str, ...]:
+    texts = [
+        _normalized_release_text(record.get("statement"))
+        for key in ("limitations", "public_claims")
+        for record in manifest.get(key, [])
+        if isinstance(record, dict)
+    ]
+    texts.extend(
+        _normalized_release_text(item)
+        for item in manifest.get("non_claims", [])
+        if isinstance(item, str)
+    )
+    errors: list[str] = []
+    if "generic_multiroot" in active_ids and any(
+        phrase in text
+        for text in texts
+        for phrase in (
+            "generic multiroot remains unimplemented",
+            "generic multiroot is unimplemented",
+            "not generic multiroot",
+            "no generic multiroot exists",
+        )
+    ):
+        errors.append("completion_manifest_active_multiroot_described_unimplemented")
+    if "supplier_water_filter_portability" in active_ids and any(
+        phrase in text
+        for text in texts
+        for phrase in (
+            "supplier portability remains unimplemented",
+            "supplier / water filter portability remains unimplemented",
+            "not supplier or water filter portability",
+            "not a supplier integrity adapter",
+        )
+    ):
+        errors.append("completion_manifest_active_supplier_adapter_described_unimplemented")
+    return tuple(errors)
+
+
 def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     errors: list[str] = []
     if not isinstance(manifest, dict):
@@ -681,7 +764,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("manifest_status", "ACTIVE_GATE1_G1D1"),
+        ("manifest_status", "ACTIVE_GATE1_G1D2"),
     ):
         if manifest.get(key) != expected:
             errors.append(f"completion_manifest_value_mismatch:{key}")
@@ -762,6 +845,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
         errors.append("completion_manifest_active_contract_described_unimplemented")
     errors.extend(_active_g1c1_absence_errors(active_ids, manifest))
     errors.extend(_active_g1d1_absence_errors(active_ids, manifest))
+    errors.extend(_active_g1d2_absence_errors(active_ids, manifest))
 
     claims = manifest.get("public_claims")
     claim_ids, id_errors = _record_ids(claims, "claim_id", "public_claim")
@@ -834,6 +918,45 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
             for key, value in expected_airline_claim.items()
         ):
             errors.append("completion_manifest_airline_adapter_claim_mismatch")
+        expected_g1d2_claims = {
+            "claim_generic_multiroot_execution": {
+                "act_ids": ["generic_multiroot"],
+                "claim_class": "EXECUTED_CONFORMANCE",
+                "evidence_ref": "hedgehog/kernel/multiroot_v01.py",
+                "focused_test_ref": "tests/test_multiroot_v01.py",
+                "limitation_ref": "limitation_g1d2_generic_multiroot_conformance_only",
+                "runtime_ref": (
+                    "demo.run_living_gauntlet_v01:"
+                    "collect_generic_multiroot_gauntlet_act_v01"
+                ),
+            },
+            "claim_supplier_water_filter_portability_execution": {
+                "act_ids": ["supplier_water_filter_portability"],
+                "claim_class": "EXECUTED_RUNTIME",
+                "evidence_ref": (
+                    "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py"
+                ),
+                "focused_test_ref": (
+                    "tests/test_supplier_water_filter_kernel_adapter_v01.py"
+                ),
+                "limitation_ref": (
+                    "limitation_g1d2_supplier_water_filter_projection_only"
+                ),
+                "runtime_ref": (
+                    "demo.run_living_gauntlet_v01:"
+                    "collect_supplier_water_filter_portability_gauntlet_act_v01"
+                ),
+            },
+        }
+        for expected_id, expected_claim in expected_g1d2_claims.items():
+            matching = [
+                claim for claim in claims if claim.get("claim_id") == expected_id
+            ]
+            if len(matching) != 1 or any(
+                matching[0].get(key) != value
+                for key, value in expected_claim.items()
+            ):
+                errors.append(f"completion_manifest_g1d2_claim_mismatch:{expected_id}")
 
     if not _is_string_list(manifest.get("non_claims")):
         errors.append("completion_manifest_non_claims_invalid")
@@ -849,7 +972,7 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_integration_seam_index_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("index_status", "ACTIVE_GATE1_G1D1"),
+        ("index_status", "ACTIVE_GATE1_G1D2"),
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
@@ -901,6 +1024,10 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
                 errors.append(f"seam_effect_access_forbidden:{seam_id}")
                 errors.append("integration_seam_non_firewall_effect_access_forbidden")
                 if seam_id == "generic_integrity_replay_adapter":
+                    errors.append(
+                        "integration_seam_domain_adapter_effect_access_forbidden"
+                    )
+                if seam_id == "supplier_water_filter_abi_adapter":
                     errors.append(
                         "integration_seam_domain_adapter_effect_access_forbidden"
                     )
@@ -991,6 +1118,19 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
                 )
             ):
                 errors.append("integration_seam_active_airline_adapter_described_absent")
+        supplier_adapter_seam = seam_by_id.get("supplier_water_filter_abi_adapter")
+        if (
+            isinstance(supplier_adapter_seam, dict)
+            and supplier_adapter_seam.get("status") == STATUS_ACTIVE
+        ):
+            note = _normalized_release_text(supplier_adapter_seam.get("notes"))
+            if any(
+                phrase in note
+                for phrase in ("not implemented", "unimplemented", "adapter is absent")
+            ):
+                errors.append("integration_seam_active_supplier_adapter_described_absent")
+            if supplier_adapter_seam.get("effect_access") != "NONE":
+                errors.append("integration_seam_domain_adapter_effect_access_forbidden")
         active_effect_owners = [
             seam
             for seam in seams
@@ -3608,6 +3748,234 @@ def collect_effect_firewall_gauntlet_act_v01() -> LivingGauntletActResultV01:
         )
 
 
+def _neutral_root_decision_v01(
+    *, transaction_id: str, root_id: str, outcome_class: str
+) -> multiroot.RootDecisionEnvelopeV01:
+    return multiroot.build_root_decision_envelope_v01(
+        transaction_id=transaction_id,
+        root_id=root_id,
+        root_decision_id=f"decision:{transaction_id}:{root_id}",
+        source_decision_ref=f"source:{transaction_id}:{root_id}",
+        outcome_class=outcome_class,
+        reason_code=f"reason:{outcome_class.lower()}",
+        selected_subject_id=(
+            f"subject:{root_id}" if outcome_class == "ACCEPTED" else None
+        ),
+        evidence_refs=(f"evidence:{root_id}",),
+        cross_root_input_refs=(),
+    )
+
+
+def _neutral_multiroot_outcome_v01(
+    *,
+    transaction_id: str,
+    root_ids: tuple[str, ...],
+    outcome_classes: tuple[str, ...],
+) -> multiroot.TransactionOutcomeEnvelopeV01:
+    return multiroot.build_transaction_outcome_envelope_v01(
+        transaction_id=transaction_id,
+        expected_root_ids=root_ids,
+        root_decisions=tuple(
+            _neutral_root_decision_v01(
+                transaction_id=transaction_id,
+                root_id=root_id,
+                outcome_class=outcome_class,
+            )
+            for root_id, outcome_class in zip(
+                root_ids, outcome_classes, strict=False
+            )
+        ),
+        cross_root_evidence_refs=(),
+    )
+
+
+def collect_generic_multiroot_gauntlet_act_v01() -> LivingGauntletActResultV01:
+    act_id = "generic_multiroot"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        three = _neutral_multiroot_outcome_v01(
+            transaction_id="transaction:multiroot:three",
+            root_ids=("root:alpha", "root:beta", "root:gamma"),
+            outcome_classes=("ACCEPTED", "ACCEPTED", "ACCEPTED"),
+        )
+        four = _neutral_multiroot_outcome_v01(
+            transaction_id="transaction:multiroot:four",
+            root_ids=("root:north", "root:east", "root:south", "root:west"),
+            outcome_classes=("ACCEPTED",) * 4,
+        )
+        mixed = _neutral_multiroot_outcome_v01(
+            transaction_id="transaction:multiroot:mixed",
+            root_ids=("root:first", "root:second"),
+            outcome_classes=("ACCEPTED", "BLOCKED"),
+        )
+        incomplete = _neutral_multiroot_outcome_v01(
+            transaction_id="transaction:multiroot:incomplete",
+            root_ids=("root:one", "root:two", "root:three"),
+            outcome_classes=("ACCEPTED", "ACCEPTED"),
+        )
+        validations = tuple(
+            multiroot.validate_multiroot_v01(outcome)
+            for outcome in (three, four, mixed, incomplete)
+        )
+        unknown_decision = _neutral_root_decision_v01(
+            transaction_id=three.transaction_id,
+            root_id="root:unknown",
+            outcome_class="ACCEPTED",
+        )
+        unknown = replace(
+            three,
+            root_decisions=(unknown_decision, *three.root_decisions[1:]),
+            observed_root_ids=("root:unknown", *three.observed_root_ids[1:]),
+        )
+        duplicate = replace(
+            three,
+            expected_root_ids=("root:alpha", "root:alpha", "root:gamma"),
+        )
+        reserved = replace(
+            three,
+            expected_root_ids=("root:superroot", "root:beta", "root:gamma"),
+        )
+        invalid_validations = tuple(
+            multiroot.validate_multiroot_v01(outcome)
+            for outcome in (unknown, duplicate, reserved)
+        )
+        passed = (
+            tuple(item.final_status for item in validations)
+            == (
+                multiroot.STATUS_PASS,
+                multiroot.STATUS_PASS,
+                multiroot.STATUS_MIXED,
+                multiroot.STATUS_INCOMPLETE,
+            )
+            and mixed.mixed_outcomes_visible is True
+            and validations[3].missing_root_ids == ("root:three",)
+            and all(
+                item.final_status == multiroot.STATUS_FAIL_CLOSED
+                for item in invalid_validations
+            )
+            and all(
+                item.authority_transfer_count == 0
+                and item.permission_creation_count == 0
+                and item.real_world_effects_count == 0
+                for item in (*validations, *invalid_validations)
+            )
+        )
+        if not passed:
+            raise ValueError("generic_multiroot_runtime_failed")
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("generic_multiroot_runtime_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
+
+
+def collect_supplier_water_filter_portability_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    act_id = "supplier_water_filter_portability"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        source_report = collect_full_wow_v1_2_product_trace()
+        result = (
+            supplier_water_filter_adapter.
+            build_supplier_water_filter_kernel_adapter_result_v01(
+                source_report=source_report
+            )
+        )
+        validation_errors = (
+            supplier_water_filter_adapter.
+            validate_supplier_water_filter_kernel_adapter_result_v01(
+                source_report=source_report,
+                result=result,
+            )
+        )
+        projection = (
+            supplier_water_filter_adapter.
+            supplier_water_filter_kernel_adapter_result_to_plain_dict_v01(result)
+        )
+        canonical_json_bytes_v01(projection)
+        passed = (
+            source_report.get("final_status") == STATUS_PASS
+            and source_report.get("validation_errors") == ()
+            and not validation_errors
+            and len(result.kernel_artifacts)
+            == supplier_water_filter_adapter.TRANSITION_CARD_COUNT
+            and result.kernel_manifest.dependency_edge_count
+            == supplier_water_filter_adapter.DEPENDENCY_EDGE_COUNT
+            and len(result.causal_consumption_refs)
+            == supplier_water_filter_adapter.DEPENDENCY_EDGE_COUNT
+            and result.kernel_unanchored_verification.verification_status
+            == KERNEL_STATUS_UNANCHORED
+            and result.kernel_anchored_verification.verification_status
+            == STATUS_PASS
+            and result.kernel_replay.replay_status == STATUS_PASS
+            and result.multiroot_outcome.outcome_status == multiroot.STATUS_MIXED
+            and result.multiroot_validation.final_status == multiroot.STATUS_MIXED
+            and result.multiroot_outcome.outcome_status != multiroot.STATUS_PASS
+            and result.supplier_b_status
+            == supplier_water_filter_adapter.SUPPLIER_B_STATUS
+            and result.shipment_status
+            == supplier_water_filter_adapter.SHIPMENT_STATUS
+            and result.receipt_status
+            == supplier_water_filter_adapter.RECEIPT_STATUS
+            and all(
+                value == 0
+                for value in (
+                    result.provider_call_count,
+                    result.network_call_count,
+                    result.gemini_call_count,
+                    result.real_world_effects_count,
+                )
+            )
+        )
+        if not passed:
+            raise ValueError("supplier_water_filter_runtime_failed")
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("supplier_water_filter_runtime_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
+
+
 def _failed_act_result(*, act_id: str, reason: str) -> LivingGauntletActResultV01:
     source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
     return LivingGauntletActResultV01(
@@ -3736,6 +4104,18 @@ def _derive_report_counters_v01(
             and row.get("executed") is True
             for row in active_rows
         ),
+        "generic_multiroot_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[10]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
+        "supplier_water_filter_portability_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[11]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
     }
 
 
@@ -3765,6 +4145,8 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     transition_registry_calls = 0
     root_decision_calls = 0
     effect_firewall_calls = 0
+    generic_multiroot_calls = 0
+    supplier_water_filter_calls = 0
     if not errors:
         airline_calls += 1
         try:
@@ -3878,6 +4260,28 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                     reason="effect_firewall_collector_failed",
                 )
             )
+        generic_multiroot_calls += 1
+        try:
+            active_results.append(collect_generic_multiroot_gauntlet_act_v01())
+        except Exception:
+            active_results.append(
+                _failed_act_result(
+                    act_id=_ACTIVE_ACT_IDS[10],
+                    reason="generic_multiroot_collector_failed",
+                )
+            )
+        supplier_water_filter_calls += 1
+        try:
+            active_results.append(
+                collect_supplier_water_filter_portability_gauntlet_act_v01()
+            )
+        except Exception:
+            active_results.append(
+                _failed_act_result(
+                    act_id=_ACTIVE_ACT_IDS[11],
+                    reason="supplier_water_filter_collector_failed",
+                )
+            )
 
     for result in active_results:
         errors.extend(result.errors)
@@ -3923,6 +4327,8 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             and transition_registry_calls == 1
             and root_decision_calls == 1
             and effect_firewall_calls == 1
+            and generic_multiroot_calls == 1
+            and supplier_water_filter_calls == 1
             and len(active_results) == len(_ACTIVE_ACT_IDS),
         ),
         _invariant_result(

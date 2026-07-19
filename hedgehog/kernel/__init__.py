@@ -54,6 +54,23 @@ from hedgehog.kernel.integrity_replay_v01 import (
     verify_artifact_manifest_v01,
     verify_artifact_replay_v01,
 )
+from hedgehog.kernel.multiroot_v01 import (
+    CrossRootEvidenceRefV01,
+    MultiRootValidationResultV01,
+    RootDecisionEnvelopeV01,
+    TransactionOutcomeEnvelopeV01,
+    build_cross_root_evidence_ref_v01,
+    build_root_decision_envelope_v01,
+    build_transaction_outcome_envelope_v01,
+    cross_root_evidence_ref_to_plain_dict_v01,
+    multiroot_validation_result_to_plain_dict_v01,
+    root_decision_envelope_to_plain_dict_v01,
+    transaction_outcome_envelope_to_plain_dict_v01,
+    validate_cross_root_evidence_ref_v01,
+    validate_multiroot_v01,
+    validate_root_decision_envelope_v01,
+    validate_transaction_outcome_envelope_v01,
+)
 from hedgehog.kernel.root_signer_isolation_v01 import (
     RootOwnedCommitmentV01,
     RootSignatureV01,

@@ -1,0 +1,191 @@
+[AUDIT IDENTITY]
+audit_id: auditor_domain_neutral_reference_kernel_gate1_v01
+audit_status: PASS
+audit_mode: independent_committed_head_runtime_and_release_index_audit
+audit_base_head: d188e2a
+implementation_commit: d188e2a
+
+[REPOSITORY GUARD]
+head_short: d188e2a
+origin_main_short: d188e2a
+branch: main
+initial_worktree: clean
+initial_staged_file_count: 0
+audit_output_absent_before_execution: true
+
+[GATE 1 COMMIT LINEAGE]
+required_ancestor: f17006a
+required_ancestor: eb61ce1
+required_ancestor: e013bdd
+required_ancestor: fd792a3
+required_ancestor: 711eeaf
+required_ancestor: 89981ed
+required_ancestor: d6516fa
+required_ancestor: 15f2b37
+required_ancestor: fb31b57
+required_ancestor: d188e2a
+all_required_commits_are_ancestors: true
+
+[COMMITTED RUNTIME SURFACE]
+frozen_file_count: 18
+surface: hedgehog/kernel/__init__.py | bytes=6471 | sha256=df12e325a9ca62305a065502dbab4f81518bb957467a3f4152c6a46552d4b0ee
+surface: hedgehog/kernel/integrity_replay_v01.py | bytes=48487 | sha256=d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be
+surface: hedgehog/kernel/root_signer_isolation_v01.py | bytes=31043 | sha256=3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8
+surface: hedgehog/kernel/trust_model_v01.py | bytes=15364 | sha256=6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d
+surface: hedgehog/kernel/semantic_work_v01.py | bytes=58880 | sha256=34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1
+surface: hedgehog/kernel/abi_v01.py | bytes=38600 | sha256=b09bcbe7d87e12670cbbe58994578995d262ad9d1dc50d0b3870543515db0b59
+surface: hedgehog/kernel/transition_registry_v01.py | bytes=30543 | sha256=a69e57d2eece102e316d37d093a50b2a3bfbcc2e8824f1f8211984ebbb77bb48
+surface: hedgehog/kernel/root_decision_v01.py | bytes=43352 | sha256=cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c
+surface: hedgehog/kernel/effect_firewall_v01.py | bytes=63944 | sha256=5be3bc2a3b99ea0d4daeadb0646438902962342eba0dbe0d6c5b07f0dea627e7
+surface: hedgehog/kernel/multiroot_v01.py | bytes=52804 | sha256=e29137031417927e98c86b808e8e3897987a32ff953bbd6adcd6b4a7367e03ff
+surface: hedgehog/kernel/conformance_v01.py | bytes=42691 | sha256=544e00558597474592b21d78a3dc24f2705b8d3915c0c3d5ea94d7d7974000d1
+surface: hedgehog/domains/airline/kernel_adapter_v01.py | bytes=40487 | sha256=34b10f07613fba74cf2ae1a03e4077bc5fbd36d710385b5c485f825eb459e28f
+surface: hedgehog/domains/supplier_water_filter/__init__.py | bytes=590 | sha256=dbca71e4fe22c58cd4b24f46f069c5e2e9fe60c30503dc7489a1f162bb818fa0
+surface: hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py | bytes=62262 | sha256=433888ec19c6632ac7abd9f9f64cd350ca95b3dc8c94035e7804e49beb816fac
+surface: demo/run_kernel_conformance_v01.py | bytes=47382 | sha256=63e79c775025061b154f32a4ffa0909c46c7eef4d442446a8c60e024f53b9ef9
+surface: demo/run_living_gauntlet_v01.py | bytes=184728 | sha256=68e197ae0685467b20984a45015152013d9cea2f0a7c7c313b445975c79ee9ca
+surface: release/completion_manifest.json | bytes=26256 | sha256=02ffac0d78df768f91df0bb06bdd15ec463dbe5ccea6ef82b7022146819f3466
+surface: release/integration_seam_index.json | bytes=15150 | sha256=c29c2ff873c8b448d8825c3288918e980eab3d65a5114762d2e3fbe5b1206231
+initial_working_blobs_match_head: true
+
+[RELEASE INDEX GEOMETRY]
+strict_json_validation: PASS
+completion_manifest_runtime_version: v1.0
+completion_manifest_status: ACTIVE_GATE1_G1E
+completion_manifest_active_count: 13
+completion_manifest_evidence_only_count: 1
+completion_manifest_planned_count: 0
+active_act_order: airline_deterministic_transaction_runtime, all_layers_invariant_super_smoke, generic_integrity_replay, root_signer_isolation_conformance, semantic_work_contract, domain_neutral_kernel_abi, causal_consumption, transition_registry, root_decision_kernel, effect_firewall, generic_multiroot, supplier_water_filter_portability, kernel_conformance_closure
+kernel_conformance_closure_release_status: ACTIVE
+airline_all_real_reference_release_status: EVIDENCE_ONLY
+stale_empty_planned_claim_present: false
+technical_gate1_act_planned: false
+integration_seam_index_status: ACTIVE_GATE1_G1E
+seam_counts_total_active_reference_planned: 24/21/3/0
+kernel_conformance_report_seam_status: ACTIVE
+bounded_effect_owner_seam: effect_firewall
+airline_adapter_effect_access: NONE
+supplier_adapter_effect_access: NONE
+kernel_conformance_effect_access: NONE
+
+[OFFICIAL KERNEL CONFORMANCE]
+execution_count: 1
+exit_code: 0
+runner_id: kernel_conformance_v01
+runner_version: v0.1
+observed_implementation_commit: d188e2a
+category_rows: DomainPackConformance=PASS, RootAdapterConformance=PASS, CorridorAdapterConformance=PASS, SemanticProviderConformance=PASS, ReplayCompatibility=PASS, CryptoCompatibility=PASS, SignerIsolationConformance=PASS, TransitionRegistryConformance=PASS, EffectFirewallConformance=PASS, MultiRootConformance=PASS
+category_pass_geometry: 10/10
+domain_pass_geometry: 2/2
+negative_pass_geometry: 10/10
+conformance_final_status_observed: PASS
+
+[OFFICIAL LIVING GAUNTLET]
+execution_count: 1
+exit_code: 0
+runner_id: living_gauntlet_v01
+runner_version: v1.0
+active_rows: airline_deterministic_transaction_runtime=PASS, all_layers_invariant_super_smoke=PASS, generic_integrity_replay=PASS, root_signer_isolation_conformance=PASS, semantic_work_contract=PASS, domain_neutral_kernel_abi=PASS, causal_consumption=PASS, transition_registry=PASS, root_decision_kernel=PASS, effect_firewall=PASS, generic_multiroot=PASS, supplier_water_filter_portability=PASS, kernel_conformance_closure=PASS
+all_active_runtime_statuses: PASS
+all_active_root_authority_observations: preserved
+all_active_real_effect_observations: zero
+evidence_only_reference: airline_all_real_frozen_reference
+evidence_only_executed: false
+planned_section_entry_count: 0
+invariants: release_indexes_valid=PASS, all_active_acts_executed_once=PASS, all_active_acts_pass=PASS, root_authority_preserved=PASS, real_world_effects_zero=PASS, no_real_connector_or_action=PASS, evidence_only_not_executed=PASS, planned_acts_not_executed=PASS
+validation_error_count: 0
+living_final_status_observed: PASS
+
+[TWO DOMAIN RESULTS]
+airline_result_status: PASS
+supplier_water_filter_result_status: PASS
+supplier_multiroot_observed_status: MIXED
+supplier_mixed_outcome_preserved_without_conversion: true
+airline_frozen_reference_is_evidence_only: true
+airline_all_real_lane_rerun: false
+airline_package_executed: false
+airline_package_regenerated: false
+committed_anchor_mutated: false
+historical_audit_promoted_to_runtime_act: false
+
+[NEGATIVE CONFORMANCE]
+negative_result: manifest_hash_mismatch | status=PASS
+negative_result: replay_hash_mismatch | status=PASS
+negative_result: cross_root_signer_misuse | status=PASS
+negative_result: unknown_transition | status=PASS
+negative_result: root_hard_failure_not_overridden | status=PASS
+negative_result: effect_firewall_scope_widening | status=PASS
+negative_result: multiroot_duplicate_root | status=PASS
+negative_result: multiroot_reserved_root | status=PASS
+negative_result: airline_adapter_effect_access_forbidden | status=PASS
+negative_result: supplier_adapter_effect_counter_rejected | status=PASS
+all_expected_negative_rows_present_in_order: true
+
+[AUTHORITY AND EFFECT BOUNDARIES]
+root_authority_boundary_observed: true
+super_root_created: false
+cross_root_signer_success: false
+authority_transfer_observed: false
+permission_transfer_observed: false
+replay_created_authority: false
+replay_created_permission: false
+exclusive_bounded_effect_boundary: effect_firewall
+domain_adapter_direct_effect_access: false
+conformance_direct_effect_access: false
+real_connector_or_action_observed: false
+real_payment_observed: false
+shipment_release_observed: false
+
+[ZERO EXTERNAL OPERATIONS]
+official_kernel_conformance_execution_count: 1
+official_living_gauntlet_execution_count: 1
+pytest_execution_count: 0
+provider_operations_observed: 0
+network_operations_observed: 0
+gemini_operations_observed: 0
+real_effect_operations_observed: 0
+repository_dot_tmp_access_count: 0
+
+[BYTE STABILITY]
+post_execution_sha256_match: true
+post_execution_byte_size_match: true
+post_execution_working_blob_match: true
+post_execution_head_tree_match: true
+post_audit_sha256_match: true
+post_audit_byte_size_match: true
+post_audit_working_blob_match: true
+post_audit_head_tree_match: true
+
+[NON-CLAIMS]
+- not production
+- not production certification
+- not arbitrary domain certification
+- not a real airline, bank, supplier, warehouse, payment, shipment, or connector integration
+- not a new all-real run
+- not execution of the frozen Airline package
+- not a Supplier external Anchor
+- not Root Attestation
+- not PKI
+- not final Gate-1 documentation closure
+- not the post-Gate-1 two-domain Evidence Book
+
+[FINAL VERDICT]
+gate1_runtime_implementation: PASS
+kernel_conformance: PASS
+living_gauntlet: PASS
+conformance_geometry: 10/2/10
+living_geometry: 13/1/0
+seam_geometry: 24/21/3/0
+airline_domain: PASS
+supplier_water_filter_domain: PASS
+supplier_multiroot: MIXED
+root_authority_preserved: true
+provider_call_count: 0
+network_call_count: 0
+gemini_call_count: 0
+created_authority_count: 0
+created_permission_count: 0
+real_world_effects_count: 0
+tracked_bytes_unchanged: true
+gate1_final_documentation_closure: PENDING
+final_audit_status: PASS

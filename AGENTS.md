@@ -57,25 +57,34 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Hedgehog OS Domain-Neutral Reference Kernel RC1 Gate 1
-consolidated preflight - `READY FOR REVIEW`.
+Current checkpoint: Hedgehog OS Domain-Neutral Reference Kernel RC1 - Gate 1
+`CLOSED / PASS`.
 
-Current Gate 1 preflight facts:
+Current Gate 1 closure facts:
 
-- R0 Living Release Spine is committed at `aa05a2f`.
-- Living Gauntlet baseline: 2 active acts, 1 evidence-only reference, and 11
-  planned Gate 1 acts.
-- Airline remains `CLOSED / FROZEN` as the reference oracle.
-- Supplier / Water Filter is selected as the second-domain portability target.
-- Root signer isolation is conformance-only.
-- Production PKI and Airline Root Attestation remain deferred.
-- The exact Gate 1 sequence G1-A1 through G1-E is frozen.
-- No Gate 1 runtime exists yet.
-- No implementation is authorized until this preflight is reviewed, committed,
-  and pushed.
+- Implementation commit: `d188e2a`.
+- Independent audit commit: `3dd9e89`.
+- Final checkpoint:
+  `docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md`.
+- Kernel Conformance geometry: `10 categories / 2 domains / 10 negative
+  checks`, all `PASS`.
+- Living Gauntlet v1.0 geometry: `13 active / 1 evidence-only / 0 planned`,
+  all active acts `PASS`.
+- Integration seam geometry: `24 total / 21 active / 3 reference-only / 0
+  planned`.
+- Airline domain conformance: `PASS`.
+- Supplier / Water Filter domain conformance: `PASS`.
+- Supplier MultiRoot remains honestly `MIXED`.
+- Root authority is preserved.
+- Provider, network, Gemini, and real-world-effect counts are all `0`.
+- This is not a production claim or production certification.
+- The runtime release indexes remain frozen `ACTIVE_GATE1_G1E` terminal
+  snapshots; the project checkpoint separately records Gate 1 as
+  `CLOSED_PASS`.
+- Next owner action: create the private continuity dump outside the repository.
 
-Current next immediate gate:
-`domain_neutral_reference_kernel_gate1_g1a1_generic_integrity_replay`.
+Current next repository gate:
+`two_domain_all_real_sealed_evidence_program_v01_preflight`.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

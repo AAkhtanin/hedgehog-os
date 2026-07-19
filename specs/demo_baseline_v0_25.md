@@ -2208,3 +2208,30 @@ exists; they are not early decorative analytics.
 - v0.47: Architect from bounded AttractorPacket v0.1.
 - v0.48: Telegram shell as interface only, not autonomous natural assistant.
 - v0.49: richer useful assistant scenario.
+
+## 21. Domain-Neutral Reference Kernel RC1 Gate-1 Checkpoint
+
+Gate 1 is `CLOSED_PASS` for Hedgehog OS Domain-Neutral Reference Kernel RC1.
+The committed lineage is `f17006a`, `eb61ce1`, `e013bdd`, `fd792a3`,
+`711eeaf`, `89981ed`, `d6516fa`, `15f2b37`, `fb31b57`, `d188e2a`, and
+`3dd9e89`.
+
+Observed closure geometry:
+
+- Kernel Conformance: `10 categories / 2 domains / 10 negative checks`, all
+  `PASS`.
+- Living Gauntlet v1.0: `13 active / 1 evidence-only / 0 planned`, all active
+  acts `PASS`.
+- Integration seams: `24 total / 21 active / 3 reference-only / 0 planned`.
+- Airline domain: `PASS`; the frozen all-real reference remains
+  `EVIDENCE_ONLY`.
+- Supplier / Water Filter domain: `PASS`; Supplier MultiRoot remains `MIXED`.
+- Root authority remained preserved and real-world effects were `0`.
+
+The closure checkpoint is
+`docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md`. Independent
+audit evidence is
+`docs/audit_reports/auditor_domain_neutral_reference_kernel_gate1_v01.log`.
+The completion manifest and integration seam index remain the frozen audited
+`ACTIVE_GATE1_G1E` runtime snapshots; project closure is recorded separately
+as `CLOSED_PASS`.

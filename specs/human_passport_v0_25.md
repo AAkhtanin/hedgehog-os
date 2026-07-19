@@ -4940,3 +4940,37 @@ must clearly separate the MVP from future layers.
 Formulas should stay readable. Invariants should stay explicit. If a future
 implementation has to choose between convenience and preserving the architecture,
 it should preserve the architecture and document the tradeoff.
+
+## 24. Non-Normative Gate-1 RC1 Implementation Checkpoint
+
+This section records an implementation checkpoint against the Human Passport;
+it does not replace or narrow the Passport's normative architecture.
+
+Hedgehog OS Domain-Neutral Reference Kernel RC1 closed Gate 1 with Root final
+authority preserved. LLM and provider outputs remain advisory. The versioned
+Kernel ABI projects domain artifacts without transferring domain authority.
+CausalConsumption references record declared evidence consumption without
+becoming semantic truth or permission. The Transition Registry fails unknown
+transitions closed, and Root Decision hard gates cannot be overridden by
+scores.
+
+The Effect Firewall remains the exclusive bounded effect-handle owner; neither
+domain adapter nor Kernel Conformance has direct effect access. Generic
+MultiRoot represents independent Root outcomes without a SuperRoot, authority
+transfer, or permission transfer. The frozen Airline adapter and deterministic
+Supplier / Water Filter adapter prove two structurally distinct domain
+projections into the same Integrity, ABI, Replay, causal, and conformance
+contracts.
+
+Kernel Conformance passed `10 / 2 / 10`, Living Gauntlet v1.0 passed `13 / 1 /
+0`, and the seam index records `24 / 21 / 3 / 0`. Airline conformance is
+`PASS`; Supplier / Water Filter conformance is `PASS`; Supplier MultiRoot
+remains visibly `MIXED`. Replay remains reconstruction rather than execution,
+and provider, network, Gemini, authority creation, permission creation, and
+real-world-effect counts were all `0`.
+
+The implementation checkpoint is
+`docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md`; the independent
+audit is
+`docs/audit_reports/auditor_domain_neutral_reference_kernel_gate1_v01.log`.
+This evidence is proof-of-architecture, not production certification.

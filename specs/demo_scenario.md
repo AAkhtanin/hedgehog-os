@@ -1808,3 +1808,33 @@ It proves that the MVP can preserve the canonical architecture:
 text time-aware memory → controlled candidate vectors → AVF before Architect → AttractorPacket boundary → PlanGraph → ResultProposal-only execution → Post V&V → GT → Root-only final output → DRS writeback → quarantine-first reflection/transfer hooks
 
 Future useful business or assistant demos must be built on top of this baseline, not by bypassing it.
+
+## Official Gate-1 RC1 Conformance Scenario
+
+The official Domain-Neutral Reference Kernel RC1 scenario is deterministic
+conformance over committed in-memory contracts and already bounded demo
+collectors. It is not a fresh LLM or all-real execution.
+
+Run, in order:
+
+```bash
+PYTHONPATH=. .venv/bin/python -m demo.run_kernel_conformance_v01
+PYTHONPATH=. .venv/bin/python -m demo.run_living_gauntlet_v01
+```
+
+Expected observations:
+
+- Kernel Conformance: `10 categories / 2 domains / 10 negative checks`, all
+  `PASS`.
+- Living Gauntlet v1.0: `13 active / 1 evidence-only / 0 planned`, all active
+  acts `PASS`.
+- Airline domain conformance: `PASS`.
+- Supplier / Water Filter domain conformance: `PASS`.
+- Supplier MultiRoot: `MIXED`, not silently converted to all-accepted `PASS`.
+- Provider, network, Gemini, and real-world-effect operations: `0 / 0 / 0 /
+  0`.
+
+The scenario performs no fresh provider call, no execution of the frozen
+Airline package, no real payment or booking, no shipment release, and no real
+connector action. It verifies the committed Gate-1 RC1 architecture boundary;
+it does not certify production or arbitrary domains.

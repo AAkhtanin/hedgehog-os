@@ -1227,3 +1227,30 @@ The closed Airline all-real chain preserves exact geometry `12 / 3 / 19 / 29 /
 deterministic reproduction 7 / 7. Root Attestation remains deferred. The next
 gate is
 `airline_all_real_program_v01_context_dump_before_master_roadmap_review`.
+
+## Gate-1 RC1 Observed Invariants
+
+The committed Domain-Neutral Reference Kernel RC1 execution and independent
+audit observed all of the following:
+
+1. Root final authority remained preserved in both domain projections.
+2. No SuperRoot was created or accepted.
+3. No cross-Root authority transfer occurred.
+4. No cross-Root permission transfer occurred.
+5. A Root Decision hard failure could not be scored away.
+6. Unknown transitions failed closed.
+7. Effect Firewall scope widening failed closed, and the Firewall remained the
+   exclusive bounded effect-handle owner.
+8. Replay created no authority, permission, action, packet, receipt,
+   FinalOutput, or real-world effect.
+9. Supplier MultiRoot `MIXED` remained visible and was not rewritten as an
+   all-accepted result.
+10. The frozen all-real Airline reference remained `EVIDENCE_ONLY` and was not
+    executed as a current runtime act.
+11. Provider, network, Gemini, and real-world-effect counts were `0 / 0 / 0 /
+    0`.
+
+These are observed Gate-1 conformance results, not changes to the mathematical
+definitions or historical invariants above. They do not claim production,
+arbitrary-domain certification, PKI, Root Attestation, or production
+federation.

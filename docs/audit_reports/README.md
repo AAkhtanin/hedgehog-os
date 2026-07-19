@@ -5,6 +5,25 @@ This folder stores milestone audit logs for Hedgehog OS.
 These reports are historical development artifacts, not runtime inputs.
 They document proof checkpoints, test runs, auditor-facing traces, and architectural validation logs.
 
+## Domain-Neutral Reference Kernel RC1 Gate-1 Audit
+
+- `auditor_domain_neutral_reference_kernel_gate1_v01.log`
+  - Audit status: `PASS`.
+  - Audit commit: `3dd9e89`; implementation commit: `d188e2a`.
+  - Kernel Conformance: `10 categories / 2 domains / 10 negative checks`, all
+    `PASS`.
+  - Living Gauntlet v1.0: `13 active / 1 evidence-only / 0 planned`, all
+    active acts `PASS`.
+  - Integration seams: `24 total / 21 active / 3 reference-only / 0 planned`.
+  - Airline domain: `PASS`; Supplier / Water Filter domain: `PASS`; Supplier
+    MultiRoot: `MIXED`.
+  - Provider, network, Gemini, and real-world-effect counts: `0 / 0 / 0 / 0`.
+  - Pytest was not run during the audit, and all tracked frozen bytes remained
+    stable.
+  - Final documentation closure was pending at audit time and is completed by
+    the separate Gate-1 checkpoint synchronization recorded in
+    `docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md`.
+
 ## Airline All-Real Evidence Showcase v0.1 — Closed Audit Chain
 
 All three audits are `PASS`:

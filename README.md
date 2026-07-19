@@ -35,16 +35,71 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ## Current Checkpoint
 
-Hedgehog OS Airline All-Real Evidence Showcase v0.1 is `CLOSED / PASS`.
+Hedgehog OS Domain-Neutral Reference Kernel RC1 is `CLOSED / PASS` for Gate 1.
 
-- The all-real generation, committed Anchor, anchored Replay, Human Story,
-  seven-deliverable Showcase, and independent Showcase audit are closed.
-- Exact geometry is 12 Gemini actors / 3 Roots / 19 Ledger entries / 29 edges /
-  3 Root finals / 9 Crypto sources / 11 critical files / 19 Replay rows / 0
-  effects.
-- The next gate is
-  `airline_all_real_program_v01_context_dump_before_master_roadmap_review`.
-- No further Airline implementation gate is opened by this checkpoint.
+- Implementation commit: `d188e2a`.
+- Independent audit commit: `3dd9e89`.
+- Final checkpoint:
+  [docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md](docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md).
+- Next owner action: create the private continuity dump outside the repository.
+- Next repository gate:
+  `two_domain_all_real_sealed_evidence_program_v01_preflight`.
+
+## Hedgehog OS Domain-Neutral Reference Kernel RC1 — Gate 1 CLOSED / PASS
+
+Gate 1 extracted and exercised a domain-neutral reference Kernel without
+rewriting the accepted domain implementations. It closed generic Integrity and
+Replay, Root signer isolation, Trust Model and SemanticWork contracts, Kernel
+ABI and causal consumption, Transition Registry and Root Decision, the
+exclusive Effect Firewall, Generic MultiRoot, two domain adapters, and the
+machine-readable Kernel Conformance closure.
+
+Primary evidence and runtime surfaces:
+
+- [Gate-1 preflight](docs/domain_neutral_reference_kernel_gate1_preflight_v01.md)
+- [Final checkpoint](docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md)
+- [Independent audit](docs/audit_reports/auditor_domain_neutral_reference_kernel_gate1_v01.log)
+- [Kernel Conformance runner](demo/run_kernel_conformance_v01.py)
+- [Living Gauntlet runner](demo/run_living_gauntlet_v01.py)
+- [Airline adapter](hedgehog/domains/airline/kernel_adapter_v01.py)
+- [Supplier / Water Filter adapter](hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py)
+
+Accepted geometry:
+
+- Kernel Conformance: `10 categories / 2 domains / 10 negative checks`, all
+  `PASS`.
+- Living Gauntlet v1.0: `13 active / 1 evidence-only / 0 planned`, with all
+  active acts `PASS`.
+- Integration seams: `24 total / 21 active / 3 reference-only / 0 planned`.
+- Airline domain conformance: `PASS`; its frozen all-real reference remains
+  `EVIDENCE_ONLY` and was not rerun.
+- Supplier / Water Filter domain conformance: `PASS`; its business MultiRoot
+  result remains honestly `MIXED`, with Supplier B `BLOCKED`, shipment `HELD`,
+  and receipt `EVIDENCE_ONLY`.
+- Root authority remained preserved. Provider, network, Gemini, created
+  authority, created permission, and real-world-effect counts were all `0`.
+
+Official deterministic commands:
+
+```bash
+PYTHONPATH=. .venv/bin/python -m demo.run_kernel_conformance_v01
+PYTHONPATH=. .venv/bin/python -m demo.run_living_gauntlet_v01
+```
+
+These commands do not run a fresh all-real lane, call Gemini, execute the
+frozen Airline package, or perform a real payment, booking, shipment, or
+connector action.
+
+The audited runtime files retain `ACTIVE_GATE1_G1E` because they identify the
+terminal executable runtime slice. The final checkpoint and Machine Manifest
+record the engineering programme status separately as `CLOSED_PASS`; the
+audited runtime snapshot is intentionally not rewritten.
+
+This is deterministic proof-of-architecture evidence, not production,
+production certification, arbitrary-domain certification, Root Attestation,
+PKI, production MultiRoot federation, or a real airline, bank, supplier,
+warehouse, payment, shipment, or connector integration. The post-Gate-1
+Two-Domain All-Real Sealed Evidence Program is future work, not completed work.
 
 ## Hedgehog OS Airline All-Real Evidence Showcase v0.1 — CLOSED / PASS
 

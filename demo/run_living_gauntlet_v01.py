@@ -20,6 +20,11 @@ from demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01 import (
 from demo.run_full_wow_v1_2_product_trace import (
     collect_full_wow_v1_2_product_trace,
 )
+from demo.run_kernel_conformance_v01 import (
+    collect_kernel_conformance_v01,
+    resolve_current_implementation_commit_v01,
+    validate_kernel_conformance_runtime_v01,
+)
 from hedgehog.domains.airline import (
     crypto_artifact_seal_collector_v01 as airline_crypto_collector,
 )
@@ -151,7 +156,7 @@ import hedgehog.kernel.transition_registry_v01 as transition_registry_module
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v0.9"
+RUNNER_VERSION = "v1.0"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -181,6 +186,7 @@ _MANIFEST_FIELD_NAMES = frozenset(
         "non_claims",
         "planned_gate1_acts",
         "public_claims",
+        "runner_version",
         "version",
     }
 )
@@ -250,6 +256,10 @@ _ACTIVE_ACT_SOURCES = {
         "demo.run_living_gauntlet_v01",
         "collect_supplier_water_filter_portability_gauntlet_act_v01",
     ),
+    "kernel_conformance_closure": (
+        "demo.run_living_gauntlet_v01",
+        "collect_kernel_conformance_closure_gauntlet_act_v01",
+    ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
 _EXECUTED_RUNTIME_ACT_IDS = (
@@ -267,10 +277,11 @@ _EXECUTED_CONFORMANCE_ACT_IDS = (
     "domain_neutral_kernel_abi",
     "causal_consumption",
     "generic_multiroot",
+    "kernel_conformance_closure",
 )
 _EVIDENCE_ONLY_ACT_IDS = ("airline_all_real_frozen_reference",)
-_PLANNED_ACT_IDS = ("kernel_conformance_closure",)
-_PLANNED_SEAM_IDS = ("kernel_conformance_report",)
+_PLANNED_ACT_IDS: tuple[str, ...] = ()
+_PLANNED_SEAM_IDS: tuple[str, ...] = ()
 _CURRENT_SEAMS = {
     "deterministic_airline_reference_collector": _ACTIVE_ACT_SOURCES[
         "airline_deterministic_transaction_runtime"
@@ -362,6 +373,10 @@ _CURRENT_SEAMS = {
         "hedgehog.kernel.multiroot_v01",
         "validate_multiroot_v01",
     ),
+    "kernel_conformance_report": (
+        "demo.run_kernel_conformance_v01",
+        "collect_kernel_conformance_v01",
+    ),
 }
 _CURRENT_SEAM_STATUSES = {
     "deterministic_airline_reference_collector": STATUS_ACTIVE,
@@ -387,6 +402,7 @@ _CURRENT_SEAM_STATUSES = {
     "effect_firewall": STATUS_ACTIVE,
     "supplier_water_filter_abi_adapter": STATUS_ACTIVE,
     "multiroot_envelope": STATUS_ACTIVE,
+    "kernel_conformance_report": STATUS_ACTIVE,
 }
 _ACTIVE_RECORD_EXPECTATIONS = {
     "generic_integrity_replay": (
@@ -415,6 +431,10 @@ _ACTIVE_RECORD_EXPECTATIONS = {
     "supplier_water_filter_portability": (
         ("claim_supplier_water_filter_portability_execution",),
         "tests/test_supplier_water_filter_kernel_adapter_v01.py",
+    ),
+    "kernel_conformance_closure": (
+        ("claim_kernel_conformance_closure_execution",),
+        "tests/test_kernel_conformance_v01_runner.py",
     ),
 }
 _ACTIVE_SEAM_EXPECTATIONS = {
@@ -459,6 +479,13 @@ _ACTIVE_SEAM_EXPECTATIONS = {
         "effect_access": "NONE",
         "gate1_target": "generic_multiroot",
         "seam_class": "KERNEL_ROOT_BOUNDARY",
+    },
+    "kernel_conformance_report": {
+        "authority_status": "NON_AUTHORITY_CONFORMANCE_EVIDENCE",
+        "current_mode": "DETERMINISTIC_MACHINE_READABLE_GATE1_CONFORMANCE",
+        "effect_access": "NONE",
+        "gate1_target": "kernel_conformance_closure",
+        "seam_class": "RELEASE_CONFORMANCE",
     },
 }
 
@@ -519,6 +546,7 @@ _COUNTER_FIELD_NAMES = frozenset(
         "effect_firewall_execution_count",
         "generic_multiroot_execution_count",
         "supplier_water_filter_portability_execution_count",
+        "kernel_conformance_closure_execution_count",
     }
 )
 
@@ -764,7 +792,8 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("manifest_status", "ACTIVE_GATE1_G1D2"),
+        ("runner_version", RUNNER_VERSION),
+        ("manifest_status", "ACTIVE_GATE1_G1E"),
     ):
         if manifest.get(key) != expected:
             errors.append(f"completion_manifest_value_mismatch:{key}")
@@ -957,6 +986,32 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
                 for key, value in expected_claim.items()
             ):
                 errors.append(f"completion_manifest_g1d2_claim_mismatch:{expected_id}")
+        expected_g1e_claim = {
+            "act_ids": ["kernel_conformance_closure"],
+            "claim_class": "EXECUTED_CONFORMANCE",
+            "evidence_ref": "hedgehog/kernel/conformance_v01.py",
+            "focused_test_ref": "tests/test_kernel_conformance_v01_runner.py",
+            "limitation_ref": "limitation_g1e_kernel_conformance_scope",
+            "runtime_ref": (
+                "demo.run_living_gauntlet_v01:"
+                "collect_kernel_conformance_closure_gauntlet_act_v01"
+            ),
+        }
+        matching_g1e = [
+            claim
+            for claim in claims
+            if claim.get("claim_id") == "claim_kernel_conformance_closure_execution"
+        ]
+        if len(matching_g1e) != 1 or any(
+            matching_g1e[0].get(key) != value
+            for key, value in expected_g1e_claim.items()
+        ):
+            errors.append("completion_manifest_g1e_claim_mismatch")
+        if any(
+            claim.get("claim_id") == "claim_gate1_planned_not_active"
+            for claim in claims
+        ):
+            errors.append("completion_manifest_stale_planned_claim")
 
     if not _is_string_list(manifest.get("non_claims")):
         errors.append("completion_manifest_non_claims_invalid")
@@ -972,7 +1027,7 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_integration_seam_index_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("index_status", "ACTIVE_GATE1_G1D2"),
+        ("index_status", "ACTIVE_GATE1_G1E"),
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
@@ -3913,6 +3968,14 @@ def collect_supplier_water_filter_portability_gauntlet_act_v01(
             supplier_water_filter_kernel_adapter_result_to_plain_dict_v01(result)
         )
         canonical_json_bytes_v01(projection)
+        forged_effect_result = replace(result, real_world_effects_count=1)
+        forged_effect_errors = (
+            supplier_water_filter_adapter.
+            validate_supplier_water_filter_kernel_adapter_result_v01(
+                source_report=source_report,
+                result=forged_effect_result,
+            )
+        )
         passed = (
             source_report.get("final_status") == STATUS_PASS
             and source_report.get("validation_errors") == ()
@@ -3937,6 +4000,9 @@ def collect_supplier_water_filter_portability_gauntlet_act_v01(
             == supplier_water_filter_adapter.SHIPMENT_STATUS
             and result.receipt_status
             == supplier_water_filter_adapter.RECEIPT_STATUS
+            and bool(forged_effect_errors)
+            and "supplier_water_filter_effect_creation_forbidden"
+            in forged_effect_errors
             and all(
                 value == 0
                 for value in (
@@ -4116,7 +4182,157 @@ def _derive_report_counters_v01(
             and row.get("executed") is True
             for row in active_rows
         ),
+        "kernel_conformance_closure_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[12]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
     }
+
+
+def collect_living_gauntlet_base_act_results_v01(
+) -> tuple[dict[str, object], ...]:
+    collectors = (
+        (
+            _ACTIVE_ACT_IDS[0],
+            lambda: _airline_act_result(
+                collect_tri_party_airline_ticket_purchase_mock_e2e_v01()
+            ),
+            "airline_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[1],
+            lambda: _super_smoke_act_result(
+                collect_all_layers_applied_super_smoke()
+            ),
+            "super_smoke_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[2],
+            collect_generic_integrity_replay_gauntlet_act_v01,
+            "generic_integrity_replay_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[3],
+            collect_root_signer_isolation_gauntlet_act_v01,
+            "root_signer_isolation_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[4],
+            collect_semantic_work_contract_gauntlet_act_v01,
+            "semantic_work_contract_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[5],
+            collect_domain_neutral_kernel_abi_gauntlet_act_v01,
+            "domain_neutral_kernel_abi_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[6],
+            collect_causal_consumption_gauntlet_act_v01,
+            "causal_consumption_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[7],
+            collect_transition_registry_gauntlet_act_v01,
+            "transition_registry_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[8],
+            collect_root_decision_kernel_gauntlet_act_v01,
+            "root_decision_kernel_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[9],
+            collect_effect_firewall_gauntlet_act_v01,
+            "effect_firewall_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[10],
+            collect_generic_multiroot_gauntlet_act_v01,
+            "generic_multiroot_collector_failed",
+        ),
+        (
+            _ACTIVE_ACT_IDS[11],
+            collect_supplier_water_filter_portability_gauntlet_act_v01,
+            "supplier_water_filter_collector_failed",
+        ),
+    )
+    results: list[dict[str, object]] = []
+    for act_id, collector, failure_reason in collectors:
+        try:
+            result = collector()
+        except Exception:
+            result = _failed_act_result(act_id=act_id, reason=failure_reason)
+        results.append(asdict(result))
+    return tuple(results)
+
+
+def collect_kernel_conformance_closure_gauntlet_act_v01(
+    active_act_results: tuple[Mapping[str, object], ...],
+) -> LivingGauntletActResultV01:
+    act_id = "kernel_conformance_closure"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        report = collect_kernel_conformance_v01(
+            active_act_results=active_act_results,
+            implementation_commit=resolve_current_implementation_commit_v01(),
+        )
+        validation_errors = validate_kernel_conformance_runtime_v01(report)
+        counters = report.counters
+        passed = (
+            not validation_errors
+            and report.final_status == STATUS_PASS
+            and len(report.category_results) == 10
+            and len(report.domain_results) == 2
+            and len(report.negative_test_results) == 10
+            and all(item.status == STATUS_PASS for item in report.category_results)
+            and all(item.status == STATUS_PASS for item in report.domain_results)
+            and all(
+                item.status == STATUS_PASS for item in report.negative_test_results
+            )
+            and "supplier_multiroot_mixed_visible"
+            in report.domain_results[1].passed_check_ids
+            and all(
+                value == 0
+                for value in (
+                    counters.provider_call_count,
+                    counters.network_call_count,
+                    counters.gemini_call_count,
+                    counters.created_authority_count,
+                    counters.created_permission_count,
+                    counters.real_world_effects_count,
+                )
+            )
+        )
+        if not passed:
+            raise ValueError("kernel_conformance_closure_failed")
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("kernel_conformance_closure_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
 
 
 def collect_living_gauntlet_v01() -> dict[str, Any]:
@@ -4134,157 +4350,24 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     except (OSError, UnicodeError, ValueError, json.JSONDecodeError) as exc:
         errors.append(f"integration_seam_index_load_failed:{type(exc).__name__}")
 
-    active_results: list[LivingGauntletActResultV01] = []
-    airline_calls = 0
-    invariant_calls = 0
-    generic_calls = 0
-    signer_calls = 0
-    semantic_work_calls = 0
-    kernel_abi_calls = 0
-    causal_consumption_calls = 0
-    transition_registry_calls = 0
-    root_decision_calls = 0
-    effect_firewall_calls = 0
-    generic_multiroot_calls = 0
-    supplier_water_filter_calls = 0
+    active_result_rows: list[dict[str, object]] = []
     if not errors:
-        airline_calls += 1
         try:
-            active_results.append(
-                _airline_act_result(
-                    collect_tri_party_airline_ticket_purchase_mock_e2e_v01()
-                )
-            )
+            base_results = collect_living_gauntlet_base_act_results_v01()
         except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[0],
-                    reason="airline_collector_failed",
-                )
+            base_results = ()
+            errors.append("living_base_collection_failed")
+        if base_results:
+            active_result_rows.extend(dict(row) for row in base_results)
+            closure = collect_kernel_conformance_closure_gauntlet_act_v01(
+                base_results
             )
-        invariant_calls += 1
-        try:
-            active_results.append(
-                _super_smoke_act_result(collect_all_layers_applied_super_smoke())
-            )
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[1],
-                    reason="super_smoke_collector_failed",
-                )
-            )
-        generic_calls += 1
-        try:
-            active_results.append(
-                collect_generic_integrity_replay_gauntlet_act_v01()
-            )
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[2],
-                    reason="generic_integrity_replay_collector_failed",
-                )
-            )
-        signer_calls += 1
-        try:
-            active_results.append(
-                collect_root_signer_isolation_gauntlet_act_v01()
-            )
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[3],
-                    reason="root_signer_isolation_collector_failed",
-                )
-            )
-        semantic_work_calls += 1
-        try:
-            active_results.append(collect_semantic_work_contract_gauntlet_act_v01())
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[4],
-                    reason="semantic_work_contract_collector_failed",
-                )
-            )
-        kernel_abi_calls += 1
-        try:
-            active_results.append(
-                collect_domain_neutral_kernel_abi_gauntlet_act_v01()
-            )
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[5],
-                    reason="domain_neutral_kernel_abi_collector_failed",
-                )
-            )
-        causal_consumption_calls += 1
-        try:
-            active_results.append(collect_causal_consumption_gauntlet_act_v01())
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[6],
-                    reason="causal_consumption_collector_failed",
-                )
-            )
-        transition_registry_calls += 1
-        try:
-            active_results.append(collect_transition_registry_gauntlet_act_v01())
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[7],
-                    reason="transition_registry_collector_failed",
-                )
-            )
-        root_decision_calls += 1
-        try:
-            active_results.append(collect_root_decision_kernel_gauntlet_act_v01())
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[8],
-                    reason="root_decision_kernel_collector_failed",
-                )
-            )
-        effect_firewall_calls += 1
-        try:
-            active_results.append(collect_effect_firewall_gauntlet_act_v01())
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[9],
-                    reason="effect_firewall_collector_failed",
-                )
-            )
-        generic_multiroot_calls += 1
-        try:
-            active_results.append(collect_generic_multiroot_gauntlet_act_v01())
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[10],
-                    reason="generic_multiroot_collector_failed",
-                )
-            )
-        supplier_water_filter_calls += 1
-        try:
-            active_results.append(
-                collect_supplier_water_filter_portability_gauntlet_act_v01()
-            )
-        except Exception:
-            active_results.append(
-                _failed_act_result(
-                    act_id=_ACTIVE_ACT_IDS[11],
-                    reason="supplier_water_filter_collector_failed",
-                )
-            )
+            active_result_rows.append(asdict(closure))
 
-    for result in active_results:
-        errors.extend(result.errors)
+    for result in active_result_rows:
+        row_errors = result.get("errors")
+        if type(row_errors) is tuple:
+            errors.extend(row_errors)
     evidence_entries = [
         {
             "act_id": record["act_id"],
@@ -4307,7 +4390,7 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
         if isinstance(record, dict) and isinstance(record.get("act_id"), str)
     ]
     active_pass_count = sum(
-        result.state == STATUS_PASS for result in active_results
+        result.get("state") == STATUS_PASS for result in active_result_rows
     )
     index_valid = not any(
         error.startswith(("completion_manifest", "integration_seam", "active_act", "evidence_", "planned_act", "public_claim", "current_seam", "planned_seam", "seam_", "effect_firewall", "root_authority_seam"))
@@ -4317,19 +4400,9 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
         _invariant_result("release_indexes_valid", index_valid),
         _invariant_result(
             "all_active_acts_executed_once",
-            airline_calls == 1
-            and invariant_calls == 1
-            and generic_calls == 1
-            and signer_calls == 1
-            and semantic_work_calls == 1
-            and kernel_abi_calls == 1
-            and causal_consumption_calls == 1
-            and transition_registry_calls == 1
-            and root_decision_calls == 1
-            and effect_firewall_calls == 1
-            and generic_multiroot_calls == 1
-            and supplier_water_filter_calls == 1
-            and len(active_results) == len(_ACTIVE_ACT_IDS),
+            tuple(result.get("act_id") for result in active_result_rows)
+            == _ACTIVE_ACT_IDS
+            and all(result.get("executed") is True for result in active_result_rows),
         ),
         _invariant_result(
             "all_active_acts_pass",
@@ -4337,18 +4410,27 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
         ),
         _invariant_result(
             "root_authority_preserved",
-            bool(active_results)
-            and all(result.root_authority_preserved for result in active_results),
+            bool(active_result_rows)
+            and all(
+                result.get("root_authority_preserved") is True
+                for result in active_result_rows
+            ),
         ),
         _invariant_result(
             "real_world_effects_zero",
-            bool(active_results)
-            and all(result.real_world_effects_count == 0 for result in active_results),
+            bool(active_result_rows)
+            and all(
+                result.get("real_world_effects_count") == 0
+                for result in active_result_rows
+            ),
         ),
         _invariant_result(
             "no_real_connector_or_action",
-            bool(active_results)
-            and all(result.no_real_connector_or_action for result in active_results),
+            bool(active_result_rows)
+            and all(
+                result.get("no_real_connector_or_action") is True
+                for result in active_result_rows
+            ),
         ),
         _invariant_result(
             "evidence_only_not_executed",
@@ -4364,7 +4446,6 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     for invariant in invariants:
         if invariant["state"] != STATUS_PASS:
             errors.append(f"invariant_failed:{invariant['invariant_id']}")
-    active_result_rows = [asdict(result) for result in active_results]
     counters = _derive_report_counters_v01(
         active_result_rows,
         evidence_entries,

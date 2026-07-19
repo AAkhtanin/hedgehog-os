@@ -16,6 +16,27 @@ from hedgehog.kernel.abi_v01 import (
     validate_kernel_artifact_bundle_v01,
     validate_kernel_artifact_v01,
 )
+from hedgehog.kernel.conformance_v01 import (
+    ConformanceCategoryResultV01,
+    ConformanceCountersV01,
+    DomainConformanceResultV01,
+    KernelConformanceReportV01,
+    NegativeConformanceResultV01,
+    build_conformance_category_result_v01,
+    build_domain_conformance_result_v01,
+    build_kernel_conformance_report_v01,
+    build_negative_conformance_result_v01,
+    conformance_category_result_to_plain_dict_v01,
+    conformance_counters_to_plain_dict_v01,
+    domain_conformance_result_to_plain_dict_v01,
+    kernel_conformance_report_to_plain_dict_v01,
+    negative_conformance_result_to_plain_dict_v01,
+    validate_conformance_category_result_v01,
+    validate_conformance_counters_v01,
+    validate_domain_conformance_result_v01,
+    validate_kernel_conformance_report_v01,
+    validate_negative_conformance_result_v01,
+)
 from hedgehog.kernel.effect_firewall_v01 import (
     EffectCapabilityV01,
     EffectFirewallDecisionV01,

@@ -121,6 +121,16 @@
       "source_module": "demo.run_living_gauntlet_v01",
       "source_symbol": "collect_supplier_water_filter_portability_gauntlet_act_v01",
       "status": "ACTIVE"
+    },
+    {
+      "act_id": "kernel_conformance_closure",
+      "claim_ids": [
+        "claim_kernel_conformance_closure_execution"
+      ],
+      "focused_test": "tests/test_kernel_conformance_v01_runner.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_kernel_conformance_closure_gauntlet_act_v01",
+      "status": "ACTIVE"
     }
   ],
   "document_id": "living_release_completion_manifest_v01",
@@ -150,7 +160,7 @@
     },
     {
       "limitation_id": "limitation_gate1_not_implemented",
-      "statement": "Only final Kernel Conformance closure remains unimplemented."
+      "statement": "Gate-1 runtime implementation is active through Kernel Conformance; independent audit, official committed-HEAD execution evidence, and consolidated documentation closure remain pending."
     },
     {
       "limitation_id": "limitation_g1a1_neutral_fixtures_only",
@@ -189,13 +199,18 @@
       "statement": "The Supplier / Water Filter adapter accepts only the exact deterministic Full WOW v1.2 product-trace contract, not arbitrary Supplier transactions. It uses no live provider and no real supplier, bank, warehouse API, payment, shipment release, or connector. The source collector remains unchanged, the adapter retains no complete source report, its generic Manifest is a derived local identity, and its causal rows prove declared ordered-card continuity only. The represented Supplier MultiRoot outcome remains MIXED. This is not production integration."
     },
     {
+      "limitation_id": "limitation_g1e_kernel_conformance_scope",
+      "statement": "This is deterministic current-repository conformance for the exact accepted Airline and Supplier adapters, not arbitrary domains. It includes no fresh all-real run, no Supplier external Anchor, no Airline package regeneration, no Root Attestation, no production PKI, no production federation, no production connector, and no full-repository certification. Independent audit and consolidated documentation closure remain pending."
+    },
+    {
       "limitation_id": "limitation_not_production",
       "statement": "This scaffold is proof-level and is not production-ready."
     }
   ],
-  "manifest_status": "ACTIVE_GATE1_G1D2",
+  "manifest_status": "ACTIVE_GATE1_G1E",
   "non_claims": [
     "not production",
+    "not production certification",
     "not a real ticket, booking, payment, airline, bank, GDS, shipment, or connector integration",
     "not an Airline runtime rewrite",
     "not an arbitrary Airline adapter",
@@ -229,19 +244,9 @@
     "not shipment release",
     "not a production connector",
     "not Root Attestation",
-    "not Gate 1 closure"
+    "not Gate 1 final closure"
   ],
-  "planned_gate1_acts": [
-    {
-      "act_id": "kernel_conformance_closure",
-      "claim_ids": [
-        "claim_gate1_planned_not_active"
-      ],
-      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
-      "notes": "Future Gate 1 kernel conformance closure act.",
-      "status": "PLANNED_NOT_ACTIVE"
-    }
-  ],
+  "planned_gate1_acts": [],
   "public_claims": [
     {
       "act_ids": [
@@ -427,14 +432,15 @@
       "act_ids": [
         "kernel_conformance_closure"
       ],
-      "claim_class": "PLANNED_NOT_ACTIVE",
-      "claim_id": "claim_gate1_planned_not_active",
-      "evidence_ref": "release/integration_seam_index.json",
-      "focused_test_ref": "tests/test_living_gauntlet_v01_runner.py",
-      "limitation_ref": "limitation_gate1_not_implemented",
-      "runtime_ref": "not_executed:planned_gate1",
-      "statement": "The remaining Gate 1 Kernel Conformance closure act is indexed for review and is not active or implemented."
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_kernel_conformance_closure_execution",
+      "evidence_ref": "hedgehog/kernel/conformance_v01.py",
+      "focused_test_ref": "tests/test_kernel_conformance_v01_runner.py",
+      "limitation_ref": "limitation_g1e_kernel_conformance_scope",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_kernel_conformance_closure_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes machine-readable Gate-1 runtime conformance derived from twelve executed source acts plus ten executed negative conformance checks, producing two domain results with no stored synthetic PASS and zero provider, network, Gemini, authority, permission, and real-world effect counts. This is not production certification, and final independent audit and consolidated documentation closure remain pending."
     }
   ],
+  "runner_version": "v1.0",
   "version": "v0.1"
 }

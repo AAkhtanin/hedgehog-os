@@ -212,9 +212,24 @@ class AirlineKernelAdapterResultV01:
     real_world_effects_count: int
 
 
+def _derive_expected_identity(
+    replay_input: object,
+) -> _ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01:
+    if type(replay_input) is not _replay.AirlineSealedTraceReplayInputV01:
+        raise ValueError("airline_kernel_adapter_source_input_invalid") from None
+    try:
+        return _replay.build_airline_sealed_trace_replay_expected_identity_adapter_v01(
+            ledger_item=replay_input.ledger_item,
+            accepted_ledger_audit=replay_input.accepted_ledger_audit,
+        )
+    except Exception:
+        raise ValueError("airline_kernel_adapter_source_input_invalid") from None
+
+
 def _source_contract_errors(
     replay_input: object,
     replay_report: object,
+    expected_identity: _ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01,
 ) -> tuple[str, ...]:
     if type(replay_input) is not _replay.AirlineSealedTraceReplayInputV01:
         return ("airline_kernel_adapter_source_input_invalid",)
@@ -241,7 +256,8 @@ def _source_contract_errors(
         if (
             type(ledger) is not _ledger.AirlineTransactionArtifactLedgerV01
             or _ledger.validate_airline_transaction_artifact_ledger_v01(
-                ledger
+                ledger,
+                expected_identity=expected_identity,
             ).validation_status
             != STATUS_PASS
         ):
@@ -389,6 +405,7 @@ def _source_contract_errors(
 def _build_kernel_projection(
     replay_input: _replay.AirlineSealedTraceReplayInputV01,
     replay_report: _replay.AirlineSealedTraceReplayReportV01,
+    expected_identity: _ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01,
 ) -> tuple[
     tuple[_abi.KernelArtifactV01, ...],
     _integrity.ArtifactManifestV01,
@@ -400,7 +417,8 @@ def _build_kernel_projection(
     ledger = replay_input.ledger_item
     timeline = _replay.build_airline_sealed_trace_replay_timeline_v01(replay_input)
     crypto_projections = _crypto.build_airline_crypto_ledger_entry_projections_v01(
-        ledger
+        ledger,
+        expected_identity=expected_identity,
     )
     artifacts: list[_abi.KernelArtifactV01] = []
     for row, crypto_projection, mapping in zip(
@@ -869,8 +887,13 @@ def _result_structure_errors(result: object) -> tuple[str, ...]:
 def _build_exact_result(
     replay_input: _replay.AirlineSealedTraceReplayInputV01,
     replay_report: _replay.AirlineSealedTraceReplayReportV01,
+    expected_identity: _ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01,
 ) -> AirlineKernelAdapterResultV01:
-    source_errors = _source_contract_errors(replay_input, replay_report)
+    source_errors = _source_contract_errors(
+        replay_input,
+        replay_report,
+        expected_identity,
+    )
     if source_errors:
         raise ValueError(source_errors[0])
     (
@@ -880,7 +903,11 @@ def _build_exact_result(
         anchored,
         generic_replay,
         causal_refs,
-    ) = _build_kernel_projection(replay_input, replay_report)
+    ) = _build_kernel_projection(
+        replay_input,
+        replay_report,
+        expected_identity,
+    )
     if (
         unanchored.verification_status
         != _integrity.STATUS_SELF_CONSISTENT_UNANCHORED
@@ -931,7 +958,12 @@ def build_airline_kernel_adapter_result_v01(
     replay_report: _replay.AirlineSealedTraceReplayReportV01,
 ) -> AirlineKernelAdapterResultV01:
     try:
-        result = _build_exact_result(replay_input, replay_report)
+        expected_identity = _derive_expected_identity(replay_input)
+        result = _build_exact_result(
+            replay_input,
+            replay_report,
+            expected_identity,
+        )
         if _result_structure_errors(result):
             raise ValueError("airline_kernel_adapter_invalid")
         return result
@@ -962,13 +994,22 @@ def validate_airline_kernel_adapter_result_v01(
     result: object,
 ) -> tuple[str, ...]:
     try:
-        source_errors = _source_contract_errors(replay_input, replay_report)
+        expected_identity = _derive_expected_identity(replay_input)
+        source_errors = _source_contract_errors(
+            replay_input,
+            replay_report,
+            expected_identity,
+        )
         if source_errors:
             return source_errors
         structure_errors = _result_structure_errors(result)
         if type(result) is not AirlineKernelAdapterResultV01:
             return structure_errors
-        expected = _build_exact_result(replay_input, replay_report)
+        expected = _build_exact_result(
+            replay_input,
+            replay_report,
+            expected_identity,
+        )
         errors = list(structure_errors)
         try:
             projections_differ = _integrity.canonical_json_bytes_v01(

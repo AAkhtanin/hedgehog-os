@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import inspect
 import json
 from dataclasses import FrozenInstanceError, dataclass, fields, replace
 from pathlib import Path
@@ -11,9 +12,11 @@ from hedgehog.domains.airline import crypto_artifact_seal_collector_v01 as colle
 from hedgehog.domains.airline import crypto_artifact_seal_v01 as crypto
 from hedgehog.domains.airline import kernel_adapter_v01 as adapter
 from hedgehog.domains.airline import sealed_trace_replay_v01 as replay
+from hedgehog.domains.airline import transaction_artifact_ledger_collector_v01 as ledger_collector
 from hedgehog.domains.airline import transaction_artifact_ledger_v01 as ledger
 from hedgehog.kernel import abi_v01 as abi
 from hedgehog.kernel import integrity_replay_v01 as integrity
+from tests import test_airline_transaction_artifact_ledger_collector_v01 as ledger_collector_test_helpers
 
 
 MODULE_PATH = Path("hedgehog/domains/airline/kernel_adapter_v01.py")
@@ -156,6 +159,176 @@ def _source_fixture(
     return _SourceFixture(replay_input, report)
 
 
+def _source_derived_ledger(
+    source_bundle: ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01,
+) -> tuple[
+    ledger.AirlineTransactionArtifactLedgerV01,
+    ledger.AirlineTransactionArtifactLedgerExpectedIdentityV01,
+]:
+    expected_identity = (
+        ledger_collector.build_airline_transaction_artifact_ledger_expected_identity_from_source_v01(
+            source_bundle=source_bundle
+        )
+    )
+    offer_id = source_bundle.causal_report.semantic_recommendation_id
+    resolution = source_bundle.causal_report.airline_root_resolution
+    expected_ids = expected_identity.expected_artifact_ids
+    fixture = ledger.build_airline_transaction_artifact_ledger_fixture_v01(
+        offer_id=offer_id
+    )
+    fixture_types_by_id = {
+        entry.artifact_id: entry.artifact_type for entry in fixture.entries
+    }
+    dependencies_by_type = {
+        entry.artifact_type: tuple(
+            expected_ids[fixture_types_by_id[dependency_id]]
+            for dependency_id in entry.depends_on
+        )
+        for entry in fixture.entries
+    }
+    entries = tuple(
+        ledger.build_airline_transaction_artifact_ledger_entry_from_source_v01(
+            index=index,
+            artifact_type=artifact_type,
+            artifact_id=expected_ids[artifact_type],
+            depends_on=dependencies_by_type[artifact_type],
+            offer_id=offer_id,
+            hold_id=source_bundle.hold_packet.hold_id,
+            amount=resolution.resolved_amount,
+            currency=resolution.resolved_currency,
+            route_ref=resolution.resolved_route_ref,
+            source_validation_refs=(
+                expected_identity.expected_source_validation_refs_by_type[
+                    artifact_type
+                ]
+            ),
+            auxiliary_artifact_refs=(
+                expected_identity.expected_auxiliary_artifact_refs_by_type[
+                    artifact_type
+                ]
+            ),
+            source_identity_fields=(
+                expected_identity.expected_source_identity_fields_by_type[
+                    artifact_type
+                ]
+            ),
+        )
+        for index, artifact_type in enumerate(
+            ledger.EXPECTED_ARTIFACT_TYPE_SEQUENCE
+        )
+    )
+    event_type_counts: dict[str, int] = {}
+    for entry in entries:
+        event_type_counts[entry.event_type] = (
+            event_type_counts.get(entry.event_type, 0) + 1
+        )
+    refs = expected_identity.expected_source_refs
+    item = ledger.AirlineTransactionArtifactLedgerV01(
+        ledger_id=f"airline_transaction_artifact_ledger:{offer_id}",
+        ledger_version=ledger.LEDGER_VERSION,
+        transaction_id=source_bundle.transaction_id,
+        source_run_ref=refs.source_run_ref,
+        source_causal_report_ref=refs.source_causal_report_ref,
+        source_corridor_report_ref=refs.source_corridor_report_ref,
+        entries=entries,
+        entry_count=len(entries),
+        dependency_edge_count=sum(len(entry.depends_on) for entry in entries),
+        event_type_counts=event_type_counts,
+        root_final_count=sum(
+            entry.event_type == ledger.EVENT_ROOT_FINAL_CREATED
+            for entry in entries
+        ),
+        validation_status=ledger.STATUS_PASS,
+        validation_errors=(),
+        ledger_created_authority_count=0,
+        ledger_created_permission_count=0,
+        ledger_created_action_count=0,
+        provider_called_count=0,
+        network_used_count=0,
+        gemini_called_count=0,
+        real_world_effects_count=0,
+    )
+    assert ledger.validate_airline_transaction_artifact_ledger_v01(
+        item,
+        expected_identity=expected_identity,
+    ).validation_status == ledger.STATUS_PASS
+    return item, expected_identity
+
+
+def _source_derived_fixture() -> _SourceFixture:
+    source_bundle = ledger_collector_test_helpers._source_bundle(
+        adapter.SELECTED_OFFER_ID
+    )
+    assert (
+        ledger_collector.validate_airline_transaction_artifact_ledger_source_bundle_v01(
+            source_bundle
+        ).validation_status
+        == ledger.STATUS_PASS
+    )
+    item, expected_identity = _source_derived_ledger(source_bundle)
+    rows = tuple(
+        (
+            ref,
+            f"airline-kernel-source-derived:{index}:{ref}".encode("utf-8"),
+        )
+        for index, ref in enumerate(crypto.REQUIRED_SOURCE_FILE_REFS)
+    )
+    package_ref = "airline_kernel_adapter_source_derived_v01"
+    core = crypto.build_airline_crypto_artifact_seal_manifest_core_v01(
+        item,
+        ordered_source_files=rows,
+        source_package_ref=package_ref,
+        source_audit_status=crypto.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_identity=expected_identity,
+    )
+    envelope = crypto.build_airline_crypto_artifact_seal_envelope_v01(core)
+    stored = crypto.verify_airline_crypto_artifact_seal_v01(
+        envelope,
+        ledger_item=item,
+        ordered_source_files_before=rows,
+        ordered_source_files_after=rows,
+        expected_source_package_ref=package_ref,
+        source_audit_status=crypto.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_manifest_core_hash=None,
+        expected_identity=expected_identity,
+    )
+    fresh = crypto.verify_airline_crypto_artifact_seal_v01(
+        envelope,
+        ledger_item=item,
+        ordered_source_files_before=rows,
+        ordered_source_files_after=rows,
+        expected_source_package_ref=package_ref,
+        source_audit_status=crypto.STATUS_PASS,
+        secret_scan_passed=True,
+        expected_manifest_core_hash=envelope.manifest_core_hash,
+        expected_identity=expected_identity,
+    )
+    replay_input = replay.build_airline_sealed_trace_replay_input_v01(
+        source_package_ref=package_ref,
+        accepted_ledger_audit=_accepted_audit(item, adapter.SELECTED_OFFER_ID),
+        ledger_item=item,
+        envelope=envelope,
+        stored_verification_report=stored,
+        fresh_anchored_verification_report=fresh,
+        expected_manifest_core_hash=envelope.manifest_core_hash,
+        ordered_source_files=rows,
+    )
+    report = replay.verify_airline_sealed_trace_replay_v01(
+        replay_input,
+        critical_package_bytes_unchanged=True,
+        post_replay_snapshot_provider_call_count=1,
+    )
+    assert replay.validate_airline_sealed_trace_replay_input_v01(
+        replay_input
+    ).validation_status == replay.STATUS_PASS
+    assert replay.validate_airline_sealed_trace_replay_report_v01(
+        report
+    ).validation_status == replay.STATUS_PASS
+    return _SourceFixture(replay_input, report)
+
+
 @pytest.fixture(scope="module")
 def source_fixture() -> _SourceFixture:
     return _source_fixture()
@@ -245,6 +418,132 @@ EXPECTED_MAPPING = (
 
 def test_public_surface_is_exact() -> None:
     assert {name for name in vars(adapter) if not name.startswith("_")} == EXPECTED_PUBLIC
+
+
+def test_public_build_signature_does_not_accept_expected_identity() -> None:
+    assert tuple(
+        inspect.signature(
+            adapter.build_airline_kernel_adapter_result_v01
+        ).parameters
+    ) == ("replay_input", "replay_report")
+    with pytest.raises(TypeError):
+        adapter.build_airline_kernel_adapter_result_v01(
+            replay_input=object(),
+            replay_report=object(),
+            expected_identity=object(),  # type: ignore[call-arg]
+        )
+
+
+def test_source_derived_ledger_path_passes() -> None:
+    fixture = _source_derived_fixture()
+    result = adapter.build_airline_kernel_adapter_result_v01(
+        replay_input=fixture.replay_input,
+        replay_report=fixture.replay_report,
+    )
+    assert adapter.validate_airline_kernel_adapter_result_v01(
+        replay_input=fixture.replay_input,
+        replay_report=fixture.replay_report,
+        result=result,
+    ) == ()
+    assert len(result.kernel_artifacts) == 19
+    assert len(result.causal_consumption_refs) == 29
+    assert result.root_final_count == 3
+    assert result.source_file_count == 9
+    assert result.critical_file_count == 11
+    assert result.timeline_row_count == 19
+
+
+def test_same_derived_identity_reaches_validation_and_projection(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = _source_derived_fixture()
+    ledger_identities: list[object] = []
+    projection_identities: list[object] = []
+    original_ledger_validator = (
+        ledger.validate_airline_transaction_artifact_ledger_v01
+    )
+    original_projection_builder = (
+        crypto.build_airline_crypto_ledger_entry_projections_v01
+    )
+
+    def validating_wrapper(*args: object, **kwargs: object) -> object:
+        identity = kwargs.get("expected_identity")
+        if identity is not None:
+            ledger_identities.append(identity)
+        return original_ledger_validator(*args, **kwargs)  # type: ignore[arg-type]
+
+    def projection_wrapper(*args: object, **kwargs: object) -> object:
+        projection_identities.append(kwargs.get("expected_identity"))
+        return original_projection_builder(*args, **kwargs)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(
+        ledger,
+        "validate_airline_transaction_artifact_ledger_v01",
+        validating_wrapper,
+    )
+    monkeypatch.setattr(
+        crypto,
+        "build_airline_crypto_ledger_entry_projections_v01",
+        projection_wrapper,
+    )
+    adapter.build_airline_kernel_adapter_result_v01(
+        replay_input=fixture.replay_input,
+        replay_report=fixture.replay_report,
+    )
+    assert len(projection_identities) == 1
+    assert projection_identities[0] is not None
+    assert any(
+        identity is projection_identities[0] for identity in ledger_identities
+    )
+
+
+@pytest.mark.parametrize(
+    "field",
+    (
+        "source_run_ref",
+        "source_causal_report_ref",
+        "source_corridor_report_ref",
+    ),
+)
+def test_malformed_expected_identity_derivation_fails_closed(field: str) -> None:
+    fixture = _source_derived_fixture()
+    audit = replace(
+        fixture.replay_input.accepted_ledger_audit,
+        **{field: f"changed:{field}"},
+    )
+    changed_input = replace(
+        fixture.replay_input,
+        accepted_ledger_audit=audit,
+    )
+    with pytest.raises(
+        ValueError,
+        match="^airline_kernel_adapter_source_input_invalid$",
+    ):
+        adapter.build_airline_kernel_adapter_result_v01(
+            replay_input=changed_input,
+            replay_report=fixture.replay_report,
+        )
+
+
+def test_both_source_aware_calls_include_expected_identity() -> None:
+    tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
+    required = {
+        "validate_airline_transaction_artifact_ledger_v01",
+        "build_airline_crypto_ledger_entry_projections_v01",
+    }
+    observed: dict[str, list[ast.Call]] = {name: [] for name in required}
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr in required
+        ):
+            observed[node.func.attr].append(node)
+    assert all(len(calls) == 1 for calls in observed.values())
+    assert all(
+        any(keyword.arg == "expected_identity" for keyword in calls[0].keywords)
+        for calls in observed.values()
+    )
 
 
 def test_future_annotations_name_is_not_public() -> None:

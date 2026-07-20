@@ -58,32 +58,31 @@ The current MVP focus is:
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
 Current checkpoint: Hedgehog OS Two-Domain All-Real Sealed Evidence Program
-v0.1 consolidated preflight - `READY FOR REVIEW`.
+v0.1 R1-I2A Airline Gate-1 source-lineage compatibility replacement preflight
+- `READY FOR REVIEW`.
 
-Current programme preflight facts:
+Current compatibility preflight facts:
 
-- Base commit: `339c4ad`.
-- Gate 1 remains `CLOSED_PASS`.
-- Preflight:
-  `docs/two_domain_all_real_sealed_evidence_program_v01_preflight.md`.
-- Provider strategy:
-  `OPTION_A_ONE_FRESH_COLLECTION_PER_DOMAIN`.
-- Sealed architecture:
-  `OPTION_B_THIN_SHARED_PROFILE_WITH_DOMAIN_ADAPTERS`.
-- Airline live provider-call budget: `12`.
-- Supplier / Water Filter live provider-call budget: `6`.
-- Total programme provider-call budget: `18`.
-- Automatic retries: none.
-- Supplier variations: nine exact scenarios, `S-N1`, `S-N2`, `S-C1`, `S-P1`,
-  `S-P2`, `S-F1`, `S-F2`, `S-F3`, and `S-M1`.
-- Gate-1 Kernel modifications planned: none.
-- Gate-1 Airline adapter modifications planned: none.
-- Gate-1 Supplier adapter modifications planned: none.
-- This preflight performs no runtime, provider, package, Anchor, Replay,
-  audit, or presentation execution.
+- Base commit: `b1096c2`.
+- Original Gate 1 remains `CLOSED_PASS` for its frozen fixture contract.
+- Replacement preflight:
+  `docs/two_domain_all_real_sealed_evidence_program_v01_r1_i2a_airline_kernel_source_lineage_compatibility_preflight.md`.
+- Shared focused suite: `910 PASS`.
+- Airline focused suite: `329 PASS / 1 FAIL`.
+- The sole failure is the real committed source-lineage compatibility path.
+- Package Manifest seam, six-source coverage, Kernel Manifest grounding,
+  source-lineage binding, and BSEP binding are accepted.
+- The frozen G1-D1 Airline Kernel adapter omits contextual `expected_identity`
+  from both Ledger validation and Crypto Ledger-entry projection.
+- A later repair may modify only
+  `hedgehog/domains/airline/kernel_adapter_v01.py` and
+  `tests/test_airline_kernel_adapter_v01.py`.
+- No implementation, pytest, collector, runner, package, Anchor, filesystem
+  Replay, provider, network, Gemini, authority, permission, action, receipt,
+  FinalOutput, or effect occurs in this planning gate.
 
-Current next repository gate:
-`two_domain_all_real_sealed_evidence_program_v01_r1_shared_profile`.
+Current next owner-reviewed repository gate:
+`two_domain_all_real_sealed_evidence_program_v01_r1_i2a_airline_kernel_source_lineage_compatibility_repair`.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

@@ -114,6 +114,16 @@ _CANONICAL_SOURCE_CONTEXT: dict[str, object] = {}
 
 
 @pytest.fixture(autouse=True)
+def _isolate_canonical_safe_report_path(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    isolated_report = tmp_path / "airline_safe_execution_report_v01.json"
+    assert not isolated_report.exists()
+    monkeypatch.setattr(runner, "_CANONICAL_SAFE_REPORT_PATH", isolated_report)
+
+
+@pytest.fixture(autouse=True)
 def _zero_network_and_real_provider_sentinel(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

@@ -1,0 +1,286 @@
+audit_id: auditor_two_domain_airline_all_real_generation_v01
+document_status: AUDIT
+audit_status: CLOSED_PASS
+audit_disposition: ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE
+audited_gate: two_domain_all_real_sealed_evidence_program_v01_a1_attempt_03_root_review_acknowledgement_recovery
+next_gate: two_domain_all_real_sealed_evidence_program_v01_a2_airline_seal
+audit_date: 2026-07-21
+repository_head: 9eefa24f3f8bb0d3a6dbb1630c2ea5110aaed914
+origin_main: 9eefa24f3f8bb0d3a6dbb1630c2ea5110aaed914
+provider_calls_during_audit: 0
+network_calls_during_audit: 0
+gemini_calls_during_audit: 0
+real_world_effects_during_audit: 0
+full_repository_pytest: NOT_RUN
+
+header:
+  This independent bounded generation audit observes the accepted Airline A1
+  Attempt 03 evidence. It does not rerun the live collector and does not open,
+  print, copy, normalize, or reuse private prompt, response, or extracted
+  candidate bodies. Private raw members were handled only by bounded,
+  descriptor-bound hashing and exact inventory verification.
+
+governing evidence:
+  programme_preflight:
+    docs/two_domain_all_real_sealed_evidence_program_v01_preflight.md
+  r1_checkpoint:
+    docs/two_domain_all_real_sealed_evidence_program_v01_r1_checkpoint.md
+  attempt_02_preflight:
+    docs/two_domain_all_real_sealed_evidence_program_v01_a1_attempt_02_recovery_preflight.md
+  attempt_03_preflight:
+    docs/two_domain_all_real_sealed_evidence_program_v01_a1_attempt_03_root_review_acknowledgement_recovery_preflight.md
+  implementation_commit: 9eefa24f3f8bb0d3a6dbb1630c2ea5110aaed914
+  live_lane_runner_sha256: d957a79abec3c811b6f0a2bca426541d56531e04a10a3d39cceb4b0cfc2ba85a
+  a1_program_runner_sha256: e77b64287162635afd85f2828df9224587ec9d501c697d557137f02bbf5329b3
+  semantic_canonicalizer_sha256: 06ea5c77608860e017e754cced1f5599cfc1701b5fdfc20074bfe595da426c20
+  airline_safe_adapter_sha256: 420c6ba24d1a9417eb67295e402e395b05c88fbf55703d63948507c41a6f031e
+
+repository guard:
+  repository_root: .
+  branch: main
+  head_matches_origin_main: true
+  tracked_worktree_clean_before_audit: true
+  staging_empty_before_audit: true
+  only_initial_untracked_path:
+    docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_v01.json
+  safe_report_regular_non_symlink: true
+  additional_public_airline_evidence_paths_present: false
+
+preserved Attempt 01 proof:
+  attempt_ref: airline/attempt_01_8294962
+  attempt_number: 1
+  attempt_id: fcce2c0224517487b59c40e79a75ea00078df393a2552f5b553780f8b7adc64a
+  execution_head: 829496261a90249b500e7583bb407839e94cd874
+  attempt_identity_sha256: c3af7707023402b287222615e4e1877e248e1f23ad6b238254f96d7ce19f5bd2
+  private_inventory_sha256: 33818a0230a245392b78194aad2c35966e59f91992170bef7461d5539e56693a
+  private_inventory_digest: 567b567ba4b37a04665cdcc085f1feb1be0fd2facad3921f5fbd5b276c5a2163
+  generation_gate_sha256: 8fcdf7ef795d09178c3352999bdd3087c5e8e1b78184b6d055e29d0311991653
+  raw_file_count: 23
+  complete_committed_verifier_result: PASS
+  final_status: FAIL_CLOSED
+  relabelled_as_pass: false
+
+preserved Attempt 02 proof:
+  attempt_ref: airline/attempt_02_b0349bb
+  attempt_number: 2
+  attempt_id: 0191a1820c22ccd2031e2f4f8816feebf42682eac8ba17a2b25644b27f34bf3e
+  execution_head: b0349bb4b90beb492a585aa998a6f167cb439279
+  attempt_identity_sha256: 46cd8175bd4e3ce898c426cc85b760f096857ed68bd33359ffb754d93f2dc80b
+  private_inventory_sha256: 917d034f3440605ef9a4a4f2e32a5b4a3c28ec1a715084803b9b05674e8b1029
+  private_inventory_digest: 3313317b028843d9307e350b7ded9b8ae084048b998a8eaf0819605629ceb34b
+  generation_gate_sha256: d49636630011553c4f9e5fc044699c2c493a6712c34aafeef22f2776d3ab186c
+  summary_sha256: f7f1d78708ba5a9bcc71edbb548eb5edd9815fc604f654a236493b38279d90b8
+  actor_validation_sha256: 90ca3e2bd1d51ff74cfbc5136e55ad601f323c5a46dfbb730bea03c8d9696e01
+  raw_file_count: 23
+  complete_committed_verifier_result: PASS
+  transitive_attempt_01_binding: PASS
+  final_status: FAIL_CLOSED
+  relabelled_as_pass: false
+
+accepted Attempt 03 proof:
+  attempt_ref: airline/attempt_03_9eefa24
+  attempt_number: 3
+  attempt_id: 94cb3ee73a9b5d87aca4410ce94bd5baf9a3cd720c1b08efc9b449a3816a1d43
+  execution_head: 9eefa24f3f8bb0d3a6dbb1630c2ea5110aaed914
+  gate_id: two_domain_all_real_sealed_evidence_program_v01_a1_attempt_03_root_review_acknowledgement_recovery
+  final_status: PASS
+  failed_stage: ""
+  reason_code: ""
+  root_entry_count: 4
+  raw_file_count: 72
+  root_mode: "0700"
+  raw_directory_mode: "0755"
+  private_metadata_mode: "0600"
+  raw_file_mode: "0644"
+  attempt_identity_sha256: af264f2a0d7b8a7a127b0f9799b913b6b11ed326075f73ac32ecd693e0e3f895
+  private_inventory_sha256: b0a47a06550e75c5740343c343ed5b4cc6cf6cc95a6e904c3e9afe26348b5964
+  private_inventory_digest: db0acacc10967f6ed1bcc3dcd7b9de9bae8062453db028d3f5f0d76950b99f4b
+  generation_gate_sha256: ac9f64fc5d32319869a019b403a33ac95c5ea36d00a254b0152f6aa7fa2d5552
+  exact_root_inventory: PASS
+  exact_raw_inventory_order: PASS
+  regular_non_symlink_inventory: PASS
+  descriptor_path_identity_agreement: PASS
+  pre_and_post_identity_continuity: PASS
+  canonical_attempt_identity: PASS
+  canonical_private_inventory: PASS
+  canonical_generation_gate: PASS
+  predecessor_attempt_02_binding: PASS
+  transitive_attempt_01_binding: PASS
+  private_attempt_preservation_state: PRESERVED
+
+call and budget geometry:
+  provider_application_mode: json_mime_no_response_schema_single_application_call
+  wrapper_callback_observed_count: 12
+  provider_callback_started_count: 12
+  provider_callback_completed_count: 12
+  source_provider_call_count: 12
+  source_network_call_count: 12
+  source_gemini_call_count: 12
+  actual_provider_call_count: 12
+  actual_network_call_count: 12
+  actual_gemini_call_count: 12
+  collector_invocation_count: 1
+  duplicate_actor_call_count: 0
+  retry_count: 0
+  preserved_attempt_01_consumption: 3
+  preserved_attempt_02_consumption: 3
+  accepted_attempt_03_consumption: 12
+  cumulative_airline_ceiling: 18
+  supplier_accepted_budget: 6
+  cumulative_programme_ceiling: 24
+
+public safe report:
+  path:
+    docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_v01.json
+  byte_count: 16686
+  mode: "0400"
+  sha256: e3161701e0f691c7ded8befbb3e0e65951d1ece93438192145e1b54c061ef9fb
+  canonical_compact_sorted_json: PASS
+  exactly_one_terminal_lf: PASS
+  strict_utf8: PASS
+  descriptor_path_identity_agreement: PASS
+  reread_byte_continuity: PASS
+  public_safe_report_state: PRESENT
+  official_evidence_eligible: true
+  safe_execution_id: 87a8da9a866b13b30e1bd180968a85303aa2f71b10204b520206badaf3d0fcd0
+  committed_airline_adapter_build: PASS
+  committed_airline_adapter_validation: PASS
+  adapter_status: PASS
+  canonical_json_array_to_typed_validation_error_tuple: EMPTY_AND_EXACT
+
+public geometry:
+  frozen_actor_order: PASS
+  actor_count: 12
+  causal_actor_count: 5
+  generic_actor_count: 7
+  actor_validation_pass_count: 12
+  actor_accepted_count: 12
+  bsep_projection_count: 4
+  bsep_projection_pass_count: 4
+  root_final_order: ClientRoot_AirlineRoot_BankRoot
+  root_final_pass_count: 3
+  corridor_execution_count: 1
+  corridor_status: PASS
+  corridor_mock_only: true
+  evidence_only_receipt_projection_count: 3
+  preference_a_selected_offer_consistency: PASS
+  provider_call_count: 12
+  network_call_count: 12
+  gemini_call_count: 12
+  raw_prompt_included: false
+  raw_provider_response_included: false
+  secret_scan_passed: true
+  validation_errors: []
+
+zero-effect and non-authority findings:
+  provider_created_authority_count: 0
+  provider_created_permission_count: 0
+  provider_created_action_count: 0
+  provider_created_packet_count: 0
+  provider_created_receipt_count: 0
+  provider_created_final_output_count: 0
+  package_created_count: 0
+  anchor_created_count: 0
+  replay_created_count: 0
+  external_publication_authority_created_count: 0
+  real_world_effects_count: 0
+  real_airline_effects: 0
+  real_bank_effects: 0
+  real_payment_effects: 0
+  real_ticket_issuance_effects: 0
+  real_booking_effects: 0
+
+safe-surface scan:
+  scanned_surfaces:
+    - canonical public safe report
+    - canonical Attempt 03 private inventory metadata
+    - canonical Attempt 03 generation gate metadata
+  strict_utf8: PASS
+  nul_absent: PASS
+  carriage_return_absent: PASS
+  malformed_json_absent: PASS
+  duplicate_json_keys_absent: PASS
+  nonfinite_json_numbers_absent: PASS
+  credential_material_absent: PASS
+  private_key_material_absent: PASS
+  raw_prompt_body_absent: PASS
+  raw_response_body_absent: PASS
+  traceback_text_absent: PASS
+  object_representation_absent: PASS
+  memory_address_absent: PASS
+  absolute_owner_path_absent_from_public_and_gate: PASS
+  private_output_binding_confined_to_private_attempt_identity: PASS
+
+focused compatibility validation:
+  a1_program_test_harness_sha256: 0e511b6f097e44c61d712255aec8e4b0acaee1fd4dc61a6f22b767fdfcbd72c3
+  live_lane_runner_tests_collected: 148
+  a1_program_runner_tests_collected: 397
+  semantic_provider_canonicalization_tests_collected: 79
+  semantic_to_contract_binding_tests_collected: 177
+  semantic_to_contract_causal_runtime_tests_collected: 88
+  combined_tests_collected: 889
+  initial_direct_post_publication_result: 881 PASS / 8 FAIL
+  final_direct_post_correction_result: 889 PASS / 0 FAIL
+  final_direct_command_used_external_path_override: false
+  final_direct_command_used_plugin: false
+  final_direct_command_used_environment_override: false
+  skipped: 0
+  xfailed: 0
+  full_repository_pytest: NOT_RUN
+
+post-publication test-harness correction:
+  The initial direct five-suite execution against the accepted repository
+  state produced 881 PASS and 8 failures. The failures were limited to the
+  pre-publication test lifecycle: one test directly asserted that the real
+  canonical report path was absent, one synthetic predecessor positive proof
+  observed the accepted report, and the six parameterized predecessor attack
+  cases could not establish their synthetic positive baseline for the same
+  reason. Production behavior and accepted evidence were not defective.
+
+  The committed A1 pytest harness now uses a function-scoped autouse fixture
+  to bind the runner module's canonical safe-report path to a fresh absent
+  tmp_path file for each test. Tests that exercise canonical-path attacks may
+  still replace that isolated path with their own controlled temporary path.
+  The fixture does not alter production constants, runtime behavior, the
+  accepted report, or the existing zero-network/provider sentinel.
+
+  After the correction, the exact five-suite command was executed directly,
+  without an audit-time plugin, in-memory command wrapper, path environment
+  override, or temporary conftest. It produced 889 PASS, zero failures, zero
+  skips, and zero xfails. The accepted report remained present, mode 0400,
+  byte-identical, and descriptor-verifiable before and after both runs.
+
+audit operation boundary:
+  live_runner_called_during_audit: false
+  collector_called_during_audit: false
+  provider_called_during_audit: false
+  network_called_during_audit: false
+  gemini_called_during_audit: false
+  package_runner_called_during_audit: false
+  anchor_runner_called_during_audit: false
+  replay_runner_called_during_audit: false
+  publication_operation_called_during_audit: false
+  real_world_effect_called_during_audit: false
+  read_only_predecessor_verifiers_called_during_audit: true
+  private_raw_members_parsed_or_printed_during_audit: false
+
+accepted limitations and non-claims:
+  - Attempt 03 is accepted A1 source evidence for the next A2 Airline Seal
+    gate. It is not an official shared Package, an external Anchor, or Replay.
+  - The twelve historical provider, network, and Gemini calls are accepted
+    Attempt 03 evidence. They are not calls performed by this audit.
+  - The corridor and three receipt projections are mock-only or evidence-only.
+    They do not prove real airline, bank, payment, booking, or ticket execution.
+  - Provider output remains advisory and does not create truth, authority,
+    permission, action, receipt, payment, ticket, booking, or FinalOutput.
+  - Root remains the final authority. This checkpoint is not a production,
+    signer-authentication, Root-Attestation, or production-security claim.
+  - Attempt 01 and Attempt 02 remain immutable distinct FAIL_CLOSED evidence.
+    Their calls are preserved consumption, not accepted source geometry.
+  - Package, Anchor, and Replay remain absent and are reserved for later gates.
+
+closure:
+  audit_status: CLOSED_PASS
+  audit_disposition: ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE
+  a2_started_during_audit: false
+  next_gate: two_domain_all_real_sealed_evidence_program_v01_a2_airline_seal

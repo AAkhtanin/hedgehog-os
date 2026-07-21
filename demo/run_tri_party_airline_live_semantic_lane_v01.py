@@ -1638,7 +1638,10 @@ def _build_prompt(
                 "decision_factors: non-empty JSON array of non-empty semantic-factor strings.",
                 "preference_matches: non-empty JSON array of non-empty declared-preference match strings.",
                 "uncertainty_notes: non-empty JSON array of non-empty uncertainty strings.",
-                "requires_root_review: JSON boolean asserting mandatory Root review.",
+                "All provider recommendations are advisory and require ClientRoot review.",
+                "requires_root_review must be the exact JSON boolean true.",
+                "False makes the semantic envelope invalid.",
+                "This field acknowledges mandatory Root review and does not create Root authority.",
                 "semantic_summary: non-empty advisory JSON string.",
             )
         else:

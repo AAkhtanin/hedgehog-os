@@ -353,6 +353,164 @@ def _legacy_source_json_bytes(value: object) -> bytes:
     ).encode("utf-8")
 
 
+def _synthetic_failed_attempt_02(
+    tmp_path: Path,
+    prior_path: Path,
+    prior_anchors: runner._PriorAttemptAnchors,
+) -> tuple[Path, runner._Attempt02Anchors]:
+    prior_proof = runner._verify_prior_attempt_v01(
+        prior_path,
+        prior_anchors.attempt_id,
+        current_execution_head="f" * 40,
+    )
+    root = tmp_path / "synthetic-preserved-attempt-02"
+    root.mkdir(mode=0o700)
+    root_stat = root.stat()
+    root_identity = (root_stat.st_dev, root_stat.st_ino)
+    attempt_plain = runner._build_attempt_identity(
+        execution_mode=runner.MODE_REAL,
+        execution_head=runner._ATTEMPT_02_EXECUTION_HEAD,
+        attempt_number=2,
+        private_output_directory=root,
+        prior_proof=prior_proof,
+    )
+    attempt_proof = runner._write_private_document(
+        root,
+        root_identity,
+        runner.ATTEMPT_IDENTITY_FILE,
+        attempt_plain,
+    )
+    raw = root / runner.RAW_ATTEMPT_DIRECTORY
+    raw.mkdir(mode=0o700)
+    summary = {
+        "final_status": runner.STATUS_FAIL_CLOSED,
+        "failed_actor_id": "client_purchase_intent_reviewer_llm",
+        "failed_stage": "actor_validation",
+        "validation_errors": [runner._ATTEMPT_02_SEMANTIC_REASON],
+        "semantic_actor_call_order": list(runner._ATTEMPT_02_CALLBACK_PREFIX),
+        "counter_table": {
+            "semantic_actor_call_count": 3,
+            "provider_call_count": 3,
+            "network_used_count": 3,
+            "gemini_called_count": 3,
+            "real_world_effects_count": 0,
+            "real_provider_call_delay_seconds": 0.0,
+        },
+    }
+    validation = {
+        "accepted": False,
+        "validation_status": runner.STATUS_FAIL_CLOSED,
+        "errors": [runner._ATTEMPT_02_SEMANTIC_REASON],
+    }
+    payloads = {
+        "summary.json": _legacy_source_json_bytes(summary),
+        "client_purchase_intent_reviewer_llm_validation.json": (
+            _legacy_source_json_bytes(validation)
+        ),
+    }
+    for index in range(21):
+        payloads[f"bounded_attempt_02_evidence_{index:02d}.json"] = (
+            runner._canonical_json_line({"index": index, "safe": True})
+        )
+    for name, content in payloads.items():
+        path = raw / name
+        path.write_bytes(content)
+        path.chmod(0o600)
+    snapshot = runner._failure_inventory_snapshot(
+        root,
+        root_identity,
+        allow_generation_gate=False,
+    )
+    inventory_plain = runner._inventory_plain(
+        snapshot,
+        runner.STATUS_FAIL_CLOSED,
+        attempt_number=2,
+        attempt_id=str(attempt_plain["attempt_id"]),
+    )
+    inventory_proof = runner._write_private_document(
+        root,
+        root_identity,
+        runner.PRIVATE_INVENTORY_FILE,
+        inventory_plain,
+    )
+    prefix = runner._ATTEMPT_02_CALLBACK_PREFIX
+    gate_plain = runner._generation_gate_plain(
+        attempt_plain=attempt_plain,
+        attempt_identity_sha256=attempt_proof.sha256,
+        final_status=runner.STATUS_FAIL_CLOSED,
+        reason_code=runner.REASON_COLLECTOR_FAILED,
+        failed_stage="collector_result",
+        safe_execution_id="",
+        safe_report_sha256="",
+        inventory_digest=snapshot.digest,
+        private_inventory_sha256=inventory_proof.sha256,
+        execution_mode=runner.MODE_REAL,
+        attempt_number=2,
+        callback_observed=prefix,
+        base_calls_started=prefix,
+        base_calls_completed=prefix,
+        publication_state=runner._PUBLICATION_ABSENT,
+    )
+    gate_proof = runner._write_private_document(
+        root,
+        root_identity,
+        runner.GENERATION_GATE_FILE,
+        gate_plain,
+        expected_root_entries=(
+            runner.ATTEMPT_IDENTITY_FILE,
+            runner.RAW_ATTEMPT_DIRECTORY,
+            runner.PRIVATE_INVENTORY_FILE,
+            runner.GENERATION_GATE_FILE,
+        ),
+    )
+    anchors = runner._Attempt02Anchors(
+        attempt_id=str(attempt_plain["attempt_id"]),
+        execution_head=runner._ATTEMPT_02_EXECUTION_HEAD,
+        attempt_identity_sha256=attempt_proof.sha256,
+        private_inventory_sha256=inventory_proof.sha256,
+        private_inventory_digest=snapshot.digest,
+        generation_gate_sha256=gate_proof.sha256,
+        summary_sha256=hashlib.sha256(payloads["summary.json"]).hexdigest(),
+        validation_sha256=hashlib.sha256(
+            payloads["client_purchase_intent_reviewer_llm_validation.json"]
+        ).hexdigest(),
+        root_entry_count=4,
+        raw_file_count=23,
+        metadata_mode=0o600,
+        callback_prefix=prefix,
+    )
+    return root, anchors
+
+
+def _patch_simulated_real_attempt_03(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    *,
+    provider_builder=None,
+) -> tuple[Path, list[str], dict[str, object], Path, Path]:
+    safe_path, guards, attempt_02_recovery = _patch_simulated_real(
+        monkeypatch,
+        tmp_path,
+        provider_builder=provider_builder,
+    )
+    attempt_01_path = Path(attempt_02_recovery["prior_failed_attempt_directory"])
+    attempt_02_path, attempt_02_anchors = _synthetic_failed_attempt_02(
+        tmp_path,
+        attempt_01_path,
+        runner._PRIOR_ANCHORS,
+    )
+    monkeypatch.setattr(runner, "_ATTEMPT_02_ANCHORS", attempt_02_anchors)
+    recovery = {
+        "attempt_number": 3,
+        "prior_failed_attempt_directory": attempt_02_path,
+        "prior_attempt_id": attempt_02_anchors.attempt_id,
+        "transitive_failed_attempt_directory": attempt_01_path,
+        "transitive_attempt_id": runner._PRIOR_ANCHORS.attempt_id,
+        "owner_reviewed_attempt_03": True,
+    }
+    return safe_path, guards, recovery, attempt_01_path, attempt_02_path
+
+
 def _git_ready_values() -> dict[tuple[str, ...], str]:
     head = "8e27d62cafa4e3096fb03ba22361391c46759327"
     return {
@@ -948,7 +1106,7 @@ def test_canonical_public_parent_drift_is_absence_unproved_and_preserves_foreign
     assert gate["final_source_status"] == runner.STATUS_FAIL_CLOSED
 
 
-@pytest.mark.parametrize("attempt_number", (0, 2, -1, True, 1.0, "1"))
+@pytest.mark.parametrize("attempt_number", (0, 2, 3, 4, -1, True, 1.0, "1"))
 def test_non_exact_attempt_one_rejected_before_provider(tmp_path: Path, attempt_number) -> None:
     calls: list[str] = []
 
@@ -3005,6 +3163,11 @@ def test_real_attempt_02_requires_complete_owner_recovery_geometry_before_creati
         "_require_real_local_preconditions",
         lambda environment: calls.append("precondition"),
     )
+    monkeypatch.setattr(
+        runner,
+        "_REAL_PROVIDER_BUILDER",
+        lambda model: pytest.fail("provider construction forbidden"),
+    )
     root = tmp_path / "new-attempt-02"
     kwargs = {
         "execution_mode": runner.MODE_REAL,
@@ -3181,6 +3344,806 @@ def test_attempt_02_new_path_cannot_equal_or_nest_under_predecessor(
     assert not (prior / "nested-attempt-02").exists()
 
 
+def test_fixed_attempt_02_acceptance_anchors_are_exact() -> None:
+    assert runner._ATTEMPT_02_ID == "0191a1820c22ccd2031e2f4f8816feebf42682eac8ba17a2b25644b27f34bf3e"
+    assert runner._ATTEMPT_02_EXECUTION_HEAD == "b0349bb4b90beb492a585aa998a6f167cb439279"
+    assert runner._ATTEMPT_02_IDENTITY_SHA256 == "46cd8175bd4e3ce898c426cc85b760f096857ed68bd33359ffb754d93f2dc80b"
+    assert runner._ATTEMPT_02_INVENTORY_SHA256 == "917d034f3440605ef9a4a4f2e32a5b4a3c28ec1a715084803b9b05674e8b1029"
+    assert runner._ATTEMPT_02_INVENTORY_DIGEST == "3313317b028843d9307e350b7ded9b8ae084048b998a8eaf0819605629ceb34b"
+    assert runner._ATTEMPT_02_GATE_SHA256 == "d49636630011553c4f9e5fc044699c2c493a6712c34aafeef22f2776d3ab186c"
+    assert runner._ATTEMPT_02_SUMMARY_SHA256 == "f7f1d78708ba5a9bcc71edbb548eb5edd9815fc604f654a236493b38279d90b8"
+    assert runner._ATTEMPT_02_VALIDATION_SHA256 == "90ca3e2bd1d51ff74cfbc5136e55ad601f323c5a46dfbb730bea03c8d9696e01"
+    assert runner._ATTEMPT_02_ROOT_ENTRY_COUNT == 4
+    assert runner._ATTEMPT_02_RAW_FILE_COUNT == 23
+    assert runner._ATTEMPT_02_METADATA_MODE == 0o600
+    assert runner._ATTEMPT_02_CALLBACK_PREFIX == EXPECTED_ACTOR_IDS[:3]
+
+
+def test_synthetic_attempt_02_passes_independent_transitive_proof(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    _, _, recovery, attempt_01_path, attempt_02_path = (
+        _patch_simulated_real_attempt_03(monkeypatch, tmp_path)
+    )
+    attempt_01_proof = runner._verify_prior_attempt_v01(
+        attempt_01_path,
+        str(recovery["transitive_attempt_id"]),
+        current_execution_head="f" * 40,
+    )
+    proof = runner._verify_attempt_02_v01(
+        attempt_02_path,
+        str(recovery["prior_attempt_id"]),
+        prior_proof=attempt_01_proof,
+        current_execution_head="f" * 40,
+    )
+    assert proof.attempt_identity.sha256 == runner._ATTEMPT_02_ANCHORS.attempt_identity_sha256
+    assert proof.private_inventory.sha256 == runner._ATTEMPT_02_ANCHORS.private_inventory_sha256
+    assert proof.generation_gate.sha256 == runner._ATTEMPT_02_ANCHORS.generation_gate_sha256
+    assert proof.summary_sha256 == runner._ATTEMPT_02_ANCHORS.summary_sha256
+    assert proof.validation_sha256 == runner._ATTEMPT_02_ANCHORS.validation_sha256
+    assert proof.embedded_attempt_01_projection == runner._attempt_01_proof_projection(
+        attempt_01_proof
+    )
+
+
+@pytest.mark.parametrize(
+    "field,replacement",
+    (
+        ("attempt_id", "0" * 64),
+        ("execution_head", "1" * 40),
+        ("attempt_identity_sha256", "2" * 64),
+        ("private_inventory_sha256", "3" * 64),
+        ("private_inventory_digest", "4" * 64),
+        ("generation_gate_sha256", "5" * 64),
+        ("summary_sha256", "6" * 64),
+        ("validation_sha256", "7" * 64),
+        ("root_entry_count", 5),
+        ("raw_file_count", 24),
+        ("metadata_mode", 0o400),
+        ("callback_prefix", EXPECTED_ACTOR_IDS[:2]),
+    ),
+)
+def test_any_changed_fixed_attempt_02_anchor_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    field: str,
+    replacement: object,
+) -> None:
+    _, _, recovery, attempt_01_path, attempt_02_path = (
+        _patch_simulated_real_attempt_03(monkeypatch, tmp_path)
+    )
+    expected = runner._ATTEMPT_02_ANCHORS
+    monkeypatch.setattr(
+        runner,
+        "_ATTEMPT_02_ANCHORS",
+        replace(expected, **{field: replacement}),
+    )
+    attempt_01_proof = runner._verify_prior_attempt_v01(
+        attempt_01_path,
+        str(recovery["transitive_attempt_id"]),
+        current_execution_head="f" * 40,
+    )
+    with pytest.raises(runner._RunnerFailure) as captured:
+        runner._verify_attempt_02_v01(
+            attempt_02_path,
+            str(recovery["prior_attempt_id"]),
+            prior_proof=attempt_01_proof,
+            current_execution_head="f" * 40,
+        )
+    assert captured.value.reason == runner.REASON_ATTEMPT_02_INVALID
+
+
+def test_attempt_02_embedded_attempt_01_projection_must_match_fresh_proof(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    _, _, recovery, attempt_01_path, attempt_02_path = (
+        _patch_simulated_real_attempt_03(monkeypatch, tmp_path)
+    )
+    attempt_01_proof = runner._verify_prior_attempt_v01(
+        attempt_01_path,
+        str(recovery["transitive_attempt_id"]),
+        current_execution_head="f" * 40,
+    )
+    forged_fresh_proof = replace(attempt_01_proof, inventory_digest="0" * 64)
+    with pytest.raises(runner._RunnerFailure):
+        runner._verify_attempt_02_v01(
+            attempt_02_path,
+            str(recovery["prior_attempt_id"]),
+            prior_proof=forged_fresh_proof,
+            current_execution_head="f" * 40,
+        )
+
+
+def test_attempt_02_verifier_parses_only_hash_approved_safe_documents(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    _, _, recovery, attempt_01_path, attempt_02_path = (
+        _patch_simulated_real_attempt_03(monkeypatch, tmp_path)
+    )
+    attempt_01_proof = runner._verify_prior_attempt_v01(
+        attempt_01_path,
+        str(recovery["transitive_attempt_id"]),
+        current_execution_head="f" * 40,
+    )
+    original = runner._parse_prior_legacy_source_json
+    parsed_hashes: list[str] = []
+
+    def observed(content: bytes):
+        parsed_hashes.append(hashlib.sha256(content).hexdigest())
+        return original(content)
+
+    monkeypatch.setattr(runner, "_parse_prior_legacy_source_json", observed)
+    runner._verify_attempt_02_v01(
+        attempt_02_path,
+        str(recovery["prior_attempt_id"]),
+        prior_proof=attempt_01_proof,
+        current_execution_head="f" * 40,
+    )
+    assert parsed_hashes == [
+        runner._ATTEMPT_02_ANCHORS.summary_sha256,
+        runner._ATTEMPT_02_ANCHORS.validation_sha256,
+    ]
+
+
+def test_attempt_03_success_binds_dual_proofs_identities_and_budgets(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    safe_path, _, recovery, attempt_01_path, attempt_02_path = _patch_simulated_real_attempt_03(
+        monkeypatch,
+        tmp_path,
+    )
+    prior_checkpoints: list[bool] = []
+    attempt_02_checkpoints: list[bool] = []
+    original_prior = runner._verify_prior_attempt_v01
+    original_attempt_02 = runner._verify_attempt_02_v01
+    attempt_01_proof = original_prior(
+        attempt_01_path,
+        str(recovery["transitive_attempt_id"]),
+        current_execution_head="f" * 40,
+    )
+    attempt_02_proof = original_attempt_02(
+        attempt_02_path,
+        str(recovery["prior_attempt_id"]),
+        prior_proof=attempt_01_proof,
+        current_execution_head="f" * 40,
+    )
+
+    def observed_prior(*args, **kwargs):
+        prior_checkpoints.append(kwargs.get("owned_public_report") is not None)
+        return original_prior(*args, **kwargs)
+
+    def observed_attempt_02(*args, **kwargs):
+        attempt_02_checkpoints.append(kwargs.get("owned_public_report") is not None)
+        return original_attempt_02(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "_verify_prior_attempt_v01", observed_prior)
+    monkeypatch.setattr(runner, "_verify_attempt_02_v01", observed_attempt_02)
+    root = tmp_path / "accepted-attempt-03"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=root,
+        **recovery,
+    )
+    assert result.final_status == runner.STATUS_PASS
+    assert result.gate_id == runner.ATTEMPT_03_GATE_ID
+    assert result.attempt_number == 3
+    assert prior_checkpoints == [False, False, False, True]
+    assert attempt_02_checkpoints == [False, False, False, True]
+    identity = json.loads((root / runner.ATTEMPT_IDENTITY_FILE).read_text())
+    inventory = json.loads((root / runner.PRIVATE_INVENTORY_FILE).read_text())
+    gate = json.loads((root / runner.GENERATION_GATE_FILE).read_text())
+    safe = json.loads(safe_path.read_text())
+    assert identity["attempt_id"] == inventory["attempt_id"] == gate["attempt_id"] == result.attempt_id
+    assert identity["attempt_number"] == inventory["attempt_number"] == gate["attempt_number"] == 3
+    assert identity["gate_id"] == result.gate_id
+    assert identity["run_id"].endswith(":attempt_03")
+    assert identity["report_id"].endswith(":attempt_03")
+    assert identity["source_task_id"].endswith(":attempt_03")
+    assert identity["package_id"].endswith(":attempt_03")
+    assert identity["logical_package_ref"].endswith(":attempt_03")
+    assert "/attempt_03/" in identity["output_directory_ref"]
+    assert safe["run_id"] == identity["run_id"]
+    assert safe["report_id"] == identity["report_id"]
+    assert safe["source_task_id"] == identity["source_task_id"]
+    assert identity["prior_attempt_id"] == recovery["prior_attempt_id"]
+    assert identity["transitive_attempt_id"] == recovery["transitive_attempt_id"]
+    assert identity["transitive_equality_verified"] is True
+    assert identity["transitive_complete_proof_sha256"] == runner._predecessor_proof_sha256(
+        attempt_01_proof
+    )
+    assert identity["prior_complete_proof_sha256"] == runner._predecessor_proof_sha256(
+        attempt_02_proof
+    )
+    assert identity["new_provider_call_ceiling"] == 12
+    assert identity["prior_conservative_callback_consumption"] == 3
+    assert identity["transitive_conservative_callback_consumption"] == 3
+    assert identity["cumulative_airline_call_ceiling"] == 18
+    assert identity["supplier_accepted_budget"] == 6
+    assert identity["cumulative_programme_call_ceiling"] == 24
+    assert gate["provider_callback_started_count"] == 12
+    assert gate["provider_callback_completed_count"] == 12
+    assert gate["retry_count"] == 0
+    assert gate["package_created_count"] == gate["anchor_created_count"] == gate["replay_created_count"] == 0
+    assert result.collector_invocation_count == 1
+    assert result.actual_real_world_effects_count == 0
+    assert str(tmp_path) not in safe_path.read_text()
+    assert str(tmp_path) not in (root / runner.GENERATION_GATE_FILE).read_text()
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "missing_prior",
+        "wrong_prior_id",
+        "missing_transitive",
+        "wrong_transitive_id",
+        "both_owner_flags",
+        "missing_owner_03",
+        "attempt_04",
+        "attempt_02_with_transitive",
+    ),
+)
+def test_attempt_branch_table_rejects_cross_attempt_geometry_before_provider_or_root(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    mutation: str,
+) -> None:
+    calls: list[str] = []
+    monkeypatch.setattr(
+        runner,
+        "_require_real_local_preconditions",
+        lambda environment: calls.append("precondition"),
+    )
+    monkeypatch.setattr(
+        runner,
+        "_REAL_PROVIDER_BUILDER",
+        lambda model: pytest.fail("provider construction forbidden"),
+    )
+    root = tmp_path / "must-not-exist"
+    kwargs: dict[str, object] = {
+        "execution_mode": runner.MODE_REAL,
+        "attempt_number": 3,
+        "private_output_directory": root,
+        "prior_failed_attempt_directory": tmp_path / "attempt-02",
+        "prior_attempt_id": runner._ATTEMPT_02_ID,
+        "transitive_failed_attempt_directory": tmp_path / "attempt-01",
+        "transitive_attempt_id": runner._PRIOR_ATTEMPT_ID,
+        "owner_reviewed_attempt_03": True,
+    }
+    if mutation == "missing_prior":
+        kwargs["prior_failed_attempt_directory"] = None
+    elif mutation == "wrong_prior_id":
+        kwargs["prior_attempt_id"] = "0" * 64
+    elif mutation == "missing_transitive":
+        kwargs["transitive_failed_attempt_directory"] = None
+    elif mutation == "wrong_transitive_id":
+        kwargs["transitive_attempt_id"] = "0" * 64
+    elif mutation == "both_owner_flags":
+        kwargs["owner_reviewed_attempt_02"] = True
+    elif mutation == "missing_owner_03":
+        kwargs["owner_reviewed_attempt_03"] = False
+    elif mutation == "attempt_04":
+        kwargs["attempt_number"] = 4
+    else:
+        kwargs.update(
+            attempt_number=2,
+            prior_attempt_id=runner._PRIOR_ATTEMPT_ID,
+            owner_reviewed_attempt_02=True,
+            owner_reviewed_attempt_03=False,
+        )
+    result = runner.run_two_domain_airline_all_real_program_v01(**kwargs)
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.private_attempt_preservation_state == runner._PRESERVATION_NOT_CREATED
+    assert calls == []
+    assert not root.exists()
+
+
+def test_real_attempt_one_is_not_an_authorized_owner_branch(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    calls: list[str] = []
+    monkeypatch.setattr(
+        runner,
+        "_require_real_local_preconditions",
+        lambda environment: calls.append("precondition"),
+    )
+    monkeypatch.setattr(
+        runner,
+        "_REAL_PROVIDER_BUILDER",
+        lambda model: pytest.fail("provider construction forbidden"),
+    )
+    root = tmp_path / "must-not-exist"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        attempt_number=1,
+        private_output_directory=root,
+    )
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.private_attempt_preservation_state == runner._PRESERVATION_NOT_CREATED
+    assert calls == []
+    assert not root.exists()
+
+
+@pytest.mark.parametrize("predecessor", ("attempt_01", "attempt_02"))
+@pytest.mark.parametrize("checkpoint", (1, 2, 3, 4))
+def test_attempt_03_predecessor_drift_at_every_checkpoint_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    predecessor: str,
+    checkpoint: int,
+) -> None:
+    safe_path, _, recovery, attempt_01_path, attempt_02_path = (
+        _patch_simulated_real_attempt_03(monkeypatch, tmp_path)
+    )
+    target_root = attempt_01_path if predecessor == "attempt_01" else attempt_02_path
+    target = target_root / runner.RAW_ATTEMPT_DIRECTORY / next(
+        name
+        for name in os.listdir(target_root / runner.RAW_ATTEMPT_DIRECTORY)
+        if name.startswith("bounded_")
+    )
+    function_name = (
+        "_verify_prior_attempt_v01"
+        if predecessor == "attempt_01"
+        else "_verify_attempt_02_v01"
+    )
+    original = getattr(runner, function_name)
+    count = 0
+
+    def mutating(*args, **kwargs):
+        nonlocal count
+        count += 1
+        if count == checkpoint:
+            target.write_bytes(target.read_bytes() + b"drift")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(runner, function_name, mutating)
+    root = tmp_path / f"attempt-03-{predecessor}-{checkpoint}"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=root,
+        **recovery,
+    )
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.official_evidence_eligible is False
+    assert not safe_path.exists()
+    if checkpoint == 1:
+        assert result.private_attempt_preservation_state == runner._PRESERVATION_NOT_CREATED
+        assert not root.exists()
+    else:
+        assert root.exists()
+        gate_path = root / runner.GENERATION_GATE_FILE
+        if gate_path.exists():
+            assert json.loads(gate_path.read_text())["final_source_status"] == runner.STATUS_FAIL_CLOSED
+
+
+def test_attempt_03_checkpoint_two_precedes_all_callback_activity(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    base_calls: list[str] = []
+
+    def provider_builder(model):
+        def base(actor_id, prompt, metadata):
+            base_calls.append(actor_id)
+            return runner._build_injected_provider_v01()(actor_id, prompt, metadata)
+
+        return base
+
+    safe_path, _, recovery, _, attempt_02_path = _patch_simulated_real_attempt_03(
+        monkeypatch,
+        tmp_path,
+        provider_builder=provider_builder,
+    )
+    original = runner._verify_attempt_02_v01
+    count = 0
+
+    def failing_second(*args, **kwargs):
+        nonlocal count
+        count += 1
+        if count == 2:
+            raise runner._RunnerFailure(
+                runner.REASON_ATTEMPT_02_CHANGED,
+                "attempt_02_predecessor_revalidation",
+            )
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "_verify_attempt_02_v01", failing_second)
+    progress: list[dict[str, object]] = []
+    root = tmp_path / "attempt-03-checkpoint-two"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=root,
+        progress_sink=progress.append,
+        **recovery,
+    )
+    assert attempt_02_path.exists()
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.wrapper_callback_observed_count == 0
+    assert result.provider_callback_started_count == 0
+    assert result.provider_callback_completed_count == 0
+    assert result.live_collection_performed is False
+    assert result.actual_external_operation_status == runner._EXTERNAL_NOT_PERFORMED
+    assert base_calls == []
+    assert progress == []
+    assert not safe_path.exists()
+
+
+@pytest.mark.parametrize(
+    "attack",
+    (
+        "same_predecessor",
+        "nested_predecessors",
+        "new_under_attempt_01",
+        "new_under_attempt_02",
+        "relative_attempt_01",
+        "dotted_attempt_02",
+        "repeated_separator",
+        "symlink_attempt_01",
+        "regular_file_attempt_02",
+        "fifo_attempt_01",
+        "repository_predecessor",
+    ),
+)
+def test_attempt_03_three_path_geometry_fails_closed(
+    tmp_path: Path,
+    attack: str,
+) -> None:
+    attempt_01 = tmp_path / "attempt-01"
+    attempt_02 = tmp_path / "attempt-02"
+    attempt_01.mkdir()
+    attempt_02.mkdir()
+    new_root = tmp_path / "attempt-03"
+    attempt_01_value: str | Path = attempt_01
+    attempt_02_value: str | Path = attempt_02
+    if attack == "same_predecessor":
+        attempt_02_value = attempt_01
+    elif attack == "nested_predecessors":
+        attempt_02.rmdir()
+        attempt_02 = attempt_01 / "nested-attempt-02"
+        attempt_02.mkdir()
+        attempt_02_value = attempt_02
+    elif attack == "new_under_attempt_01":
+        new_root = attempt_01 / "attempt-03"
+    elif attack == "new_under_attempt_02":
+        new_root = attempt_02 / "attempt-03"
+    elif attack == "relative_attempt_01":
+        attempt_01_value = "relative-attempt-01"
+    elif attack == "dotted_attempt_02":
+        attempt_02_value = f"{tmp_path}/./attempt-02"
+    elif attack == "repeated_separator":
+        attempt_01_value = f"{tmp_path}//attempt-01"
+    elif attack == "symlink_attempt_01":
+        real = tmp_path / "real-attempt-01"
+        real.mkdir()
+        attempt_01.rmdir()
+        attempt_01.symlink_to(real, target_is_directory=True)
+    elif attack == "regular_file_attempt_02":
+        attempt_02.rmdir()
+        attempt_02.write_text("not a directory")
+    elif attack == "fifo_attempt_01":
+        attempt_01.rmdir()
+        os.mkfifo(attempt_01)
+    elif attack == "repository_predecessor":
+        attempt_01_value = runner._REPOSITORY_ROOT
+    with pytest.raises(runner._RunnerFailure) as captured:
+        runner._validate_attempt_03_predecessor_paths(
+            attempt_02_value,
+            attempt_01_value,
+            new_root,
+        )
+    assert captured.value.reason == runner.REASON_ATTEMPT_03_RECOVERY_INPUT_INVALID
+    assert not new_root.exists()
+
+
+@pytest.mark.parametrize(
+    "field,replacement",
+    (
+        ("final_source_status", runner.STATUS_PASS),
+        ("failed_stage", "wrong_stage"),
+        ("reason_code", "wrong_reason"),
+        ("retry_count", 1),
+        ("provider_callback_started_count", 2),
+        ("provider_callback_completed_count", 2),
+        ("package_created_count", 1),
+        ("anchor_created_count", 1),
+        ("replay_created_count", 1),
+        ("actual_real_world_effects_count", 1),
+    ),
+)
+def test_attempt_02_gate_semantics_cannot_hide_behind_a_rehashed_gate(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    field: str,
+    replacement: object,
+) -> None:
+    _, _, recovery, attempt_01_path, attempt_02_path = (
+        _patch_simulated_real_attempt_03(monkeypatch, tmp_path)
+    )
+    gate_path = attempt_02_path / runner.GENERATION_GATE_FILE
+    gate = json.loads(gate_path.read_text())
+    gate[field] = replacement
+    gate_path.write_bytes(runner._canonical_json_line(gate))
+    gate_path.chmod(0o600)
+    monkeypatch.setattr(
+        runner,
+        "_ATTEMPT_02_ANCHORS",
+        replace(
+            runner._ATTEMPT_02_ANCHORS,
+            generation_gate_sha256=hashlib.sha256(gate_path.read_bytes()).hexdigest(),
+        ),
+    )
+    attempt_01_proof = runner._verify_prior_attempt_v01(
+        attempt_01_path,
+        str(recovery["transitive_attempt_id"]),
+        current_execution_head="f" * 40,
+    )
+    with pytest.raises(runner._RunnerFailure):
+        runner._verify_attempt_02_v01(
+            attempt_02_path,
+            str(recovery["prior_attempt_id"]),
+            prior_proof=attempt_01_proof,
+            current_execution_head="f" * 40,
+        )
+
+
+@pytest.mark.parametrize(
+    "attack",
+    (
+        "missing",
+        "extra",
+        "symlink",
+        "fifo",
+        "directory",
+        "mode",
+        "inode",
+        "stat_open_swap",
+        "short_read",
+        "read_stat_swap",
+        "root_symlink",
+    ),
+)
+def test_attempt_02_inventory_identity_and_read_attacks_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    attack: str,
+) -> None:
+    _, _, recovery, attempt_01_path, attempt_02_path = (
+        _patch_simulated_real_attempt_03(monkeypatch, tmp_path)
+    )
+    attempt_01_proof = runner._verify_prior_attempt_v01(
+        attempt_01_path,
+        str(recovery["transitive_attempt_id"]),
+        current_execution_head="f" * 40,
+    )
+    attempt_02_proof = runner._verify_attempt_02_v01(
+        attempt_02_path,
+        str(recovery["prior_attempt_id"]),
+        prior_proof=attempt_01_proof,
+        current_execution_head="f" * 40,
+    )
+    raw = attempt_02_path / runner.RAW_ATTEMPT_DIRECTORY
+    target = raw / "bounded_attempt_02_evidence_00.json"
+    content = target.read_bytes()
+    if attack == "missing":
+        target.unlink()
+    elif attack == "extra":
+        (raw / "unexpected.json").write_bytes(b"{}\n")
+    elif attack == "symlink":
+        target.unlink()
+        target.symlink_to(attempt_02_path / runner.ATTEMPT_IDENTITY_FILE)
+    elif attack == "fifo":
+        target.unlink()
+        os.mkfifo(target)
+    elif attack == "directory":
+        target.unlink()
+        target.mkdir()
+    elif attack == "mode":
+        target.chmod(0o400)
+    elif attack == "inode":
+        target.unlink()
+        target.write_bytes(content)
+        target.chmod(0o600)
+    elif attack == "stat_open_swap":
+        original_open = runner._OPEN
+        swapped = False
+
+        def swapping_open(path, flags, *args, **kwargs):
+            nonlocal swapped
+            if path == target.name and not swapped:
+                swapped = True
+                target.unlink()
+                target.write_bytes(content)
+                target.chmod(0o600)
+            return original_open(path, flags, *args, **kwargs)
+
+        monkeypatch.setattr(runner, "_OPEN", swapping_open)
+    elif attack == "short_read":
+        original_read = runner._read_bounded
+        shortened = False
+
+        def short_read(fd, exact_size):
+            nonlocal shortened
+            result = original_read(fd, exact_size)
+            if exact_size == len(content) and not shortened:
+                shortened = True
+                return result[:-1]
+            return result
+
+        monkeypatch.setattr(runner, "_read_bounded", short_read)
+    elif attack == "read_stat_swap":
+        original_read = runner._read_bounded
+        swapped = False
+
+        def read_then_swap(fd, exact_size):
+            nonlocal swapped
+            result = original_read(fd, exact_size)
+            if exact_size == len(content) and not swapped:
+                swapped = True
+                target.unlink()
+                target.write_bytes(content)
+                target.chmod(0o600)
+            return result
+
+        monkeypatch.setattr(runner, "_read_bounded", read_then_swap)
+    else:
+        moved = attempt_02_path.with_name("moved-attempt-02")
+        attempt_02_path.rename(moved)
+        attempt_02_path.symlink_to(moved, target_is_directory=True)
+    with pytest.raises(runner._RunnerFailure):
+        runner._require_dual_predecessors_unchanged(
+            attempt_01_proof,
+            attempt_01_path,
+            str(recovery["transitive_attempt_id"]),
+            attempt_02_proof,
+            attempt_02_path,
+            str(recovery["prior_attempt_id"]),
+            current_execution_head="f" * 40,
+        )
+
+
+@pytest.mark.parametrize("file_type", (stat.S_IFSOCK, stat.S_IFCHR))
+def test_predecessor_reader_rejects_socket_and_device_modes(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    file_type: int,
+) -> None:
+    root = tmp_path / "reader"
+    root.mkdir()
+    (root / "item").write_bytes(b"safe")
+    fd = os.open(root, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+    original_stat = runner._os.stat
+
+    def nonregular_stat(path, *args, **kwargs):
+        result = original_stat(path, *args, **kwargs)
+        if path == "item" and kwargs.get("dir_fd") == fd:
+            return SimpleNamespace(
+                st_mode=file_type | 0o600,
+                st_size=result.st_size,
+                st_dev=result.st_dev,
+                st_ino=result.st_ino,
+            )
+        return result
+
+    monkeypatch.setattr(runner._os, "stat", nonregular_stat)
+    try:
+        with pytest.raises(ValueError):
+            runner._read_prior_file(fd, "item", 100)
+    finally:
+        os.close(fd)
+
+
+def test_attempt_03_collection_failure_uses_fourth_dual_proof_for_failure_gate(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    base = runner._build_injected_provider_v01()
+    calls: list[str] = []
+
+    def provider_builder(model):
+        def provider(actor_id, prompt, metadata):
+            calls.append(actor_id)
+            if len(calls) == 3:
+                raise ValueError("sanitized provider failure")
+            return base(actor_id, prompt, metadata)
+
+        return provider
+
+    safe_path, _, recovery, _, _ = _patch_simulated_real_attempt_03(
+        monkeypatch,
+        tmp_path,
+        provider_builder=provider_builder,
+    )
+    original_prior = runner._verify_prior_attempt_v01
+    original_attempt_02 = runner._verify_attempt_02_v01
+    prior_calls: list[bool] = []
+    attempt_02_calls: list[bool] = []
+
+    def observed_prior(*args, **kwargs):
+        prior_calls.append(kwargs.get("owned_public_report") is not None)
+        return original_prior(*args, **kwargs)
+
+    def observed_attempt_02(*args, **kwargs):
+        attempt_02_calls.append(kwargs.get("owned_public_report") is not None)
+        return original_attempt_02(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "_verify_prior_attempt_v01", observed_prior)
+    monkeypatch.setattr(runner, "_verify_attempt_02_v01", observed_attempt_02)
+    root = tmp_path / "failed-attempt-03"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=root,
+        **recovery,
+    )
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.private_attempt_preservation_state == runner._PRESERVATION_PRESERVED
+    assert prior_calls == [False, False, False, False]
+    assert attempt_02_calls == [False, False, False, False]
+    assert result.provider_callback_started_count == 3
+    assert result.provider_callback_completed_count == 2
+    assert result.retry_count == 0
+    assert not safe_path.exists()
+    gate = json.loads((root / runner.GENERATION_GATE_FILE).read_text())
+    assert gate["final_source_status"] == runner.STATUS_FAIL_CLOSED
+    assert gate["attempt_number"] == 3
+    assert gate["attempt_id"] == result.attempt_id
+
+
+def test_attempt_03_failure_gate_predecessor_drift_is_recorded_not_swallowed(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    def provider_builder(model):
+        return lambda actor_id, prompt, metadata: (_ for _ in ()).throw(
+            ValueError("sanitized provider failure")
+        )
+
+    safe_path, _, recovery, _, attempt_02_path = _patch_simulated_real_attempt_03(
+        monkeypatch,
+        tmp_path,
+        provider_builder=provider_builder,
+    )
+    target = attempt_02_path / runner.RAW_ATTEMPT_DIRECTORY / next(
+        name
+        for name in os.listdir(attempt_02_path / runner.RAW_ATTEMPT_DIRECTORY)
+        if name.startswith("bounded_")
+    )
+    original = runner._verify_attempt_02_v01
+    count = 0
+
+    def mutate_before_failure_gate(*args, **kwargs):
+        nonlocal count
+        count += 1
+        if count == 4:
+            target.write_bytes(target.read_bytes() + b"failure-gate-drift")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(
+        runner,
+        "_verify_attempt_02_v01",
+        mutate_before_failure_gate,
+    )
+    root = tmp_path / "failed-attempt-03-with-predecessor-drift"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=root,
+        **recovery,
+    )
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.reason_code == runner.REASON_ATTEMPT_02_CHANGED
+    assert result.official_evidence_eligible is False
+    assert result.retry_count == 0
+    assert not safe_path.exists()
+    gate = json.loads((root / runner.GENERATION_GATE_FILE).read_text())
+    assert gate["final_source_status"] == runner.STATUS_FAIL_CLOSED
+    assert gate["reason_code"] == runner.REASON_ATTEMPT_02_CHANGED
+    assert gate["public_safe_report_state"] == runner._PUBLICATION_ABSENT
+
+
 def test_real_repository_readiness_requires_synchronized_clean_tracked_state(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -3250,6 +4213,9 @@ def test_cli_parser_failures_are_one_sanitized_json_line(
         ("--prior-failed-attempt-directory", "/private/tmp/duplicate-prior"),
         ("--prior-attempt-id", "0" * 64),
         ("--owner-reviewed-attempt-02", None),
+        ("--transitive-failed-attempt-directory", "/private/tmp/duplicate-transitive"),
+        ("--transitive-attempt-id", "1" * 64),
+        ("--owner-reviewed-attempt-03", None),
     ),
 )
 def test_every_duplicate_cli_option_fails_before_output_or_provider(
@@ -3283,7 +4249,25 @@ def test_every_duplicate_cli_option_fails_before_output_or_provider(
     assert not safe.exists()
 
 
-@pytest.mark.parametrize("token", ("02", "+2", "٢", "２", "²"))
+@pytest.mark.parametrize(
+    "token",
+    (
+        "0",
+        "02",
+        "+2",
+        "٢",
+        "２",
+        "²",
+        "03",
+        "4",
+        "+3",
+        "٣",
+        "３",
+        "³",
+        "2.0",
+        " 3",
+    ),
+)
 def test_attempt_number_cli_token_must_be_exact_ascii_canonical(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
@@ -3298,6 +4282,48 @@ def test_attempt_number_cli_token_must_be_exact_ascii_canonical(
         str(output),
         "--safe-report-output",
         str(tmp_path / "safe.json"),
+    ]
+    assert runner.main(argv) == 2
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert len(captured.out.splitlines()) == 1
+    assert json.loads(captured.out)["reason_code"] == runner.REASON_INVALID
+    assert not output.exists()
+
+
+@pytest.mark.parametrize(
+    "option",
+    (
+        "--attempt-number",
+        "--prior-failed-attempt-directory",
+        "--prior-attempt-id",
+        "--transitive-failed-attempt-directory",
+        "--transitive-attempt-id",
+    ),
+)
+def test_attempt_03_equals_form_duplicate_cli_options_are_rejected(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    option: str,
+) -> None:
+    values = {
+        "--attempt-number": "3",
+        "--prior-failed-attempt-directory": str(tmp_path / "attempt-02"),
+        "--prior-attempt-id": runner._ATTEMPT_02_ID,
+        "--transitive-failed-attempt-directory": str(tmp_path / "attempt-01"),
+        "--transitive-attempt-id": runner._PRIOR_ATTEMPT_ID,
+    }
+    output = tmp_path / "must-remain-absent"
+    argv = [
+        "--real-provider",
+        "--attempt-number=3",
+        f"--private-output-directory={output}",
+        f"--prior-failed-attempt-directory={values['--prior-failed-attempt-directory']}",
+        f"--prior-attempt-id={values['--prior-attempt-id']}",
+        f"--transitive-failed-attempt-directory={values['--transitive-failed-attempt-directory']}",
+        f"--transitive-attempt-id={values['--transitive-attempt-id']}",
+        "--owner-reviewed-attempt-03",
+        f"{option}={values[option]}",
     ]
     assert runner.main(argv) == 2
     captured = capsys.readouterr()

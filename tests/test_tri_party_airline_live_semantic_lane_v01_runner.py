@@ -978,7 +978,16 @@ def test_causal_proposer_prompt_contract_has_valid_shape_and_no_default() -> Non
     )
 
     assert "decision_factors: non-empty JSON array" in prompt
-    assert "requires_root_review: JSON boolean" in prompt
+    acknowledgement = (
+        "All provider recommendations are advisory and require ClientRoot review.",
+        "requires_root_review must be the exact JSON boolean true.",
+        "False makes the semantic envelope invalid.",
+        "This field acknowledges mandatory Root review and does not create Root authority.",
+    )
+    positions = tuple(prompt.index(sentence) for sentence in acknowledgement)
+    assert positions == tuple(sorted(positions))
+    assert all(prompt.count(sentence) == 1 for sentence in acknowledgement)
+    assert "requires_root_review: JSON boolean asserting mandatory Root review." not in prompt
     assert binding.OFFER_A_ID in prompt
     assert binding.OFFER_B_ID in prompt
     assert "Explicit JSON skeleton:" not in prompt
@@ -1008,12 +1017,59 @@ def test_causal_prompts_have_field_type_contracts_without_copyable_answers(actor
         if actor_id == causal_runtime.ACTOR_ORDER[0]
         else semantic_canonicalization.REVIEWER_SEMANTIC_FIELDS
     )
-    assert all(f"{field}:" in prompt for field in expected_fields)
+    assert all(
+        field == "requires_root_review"
+        or f"{field}:" in prompt
+        for field in expected_fields
+    )
+    if actor_id == causal_runtime.ACTOR_ORDER[0]:
+        assert "requires_root_review must be the exact JSON boolean true." in prompt
     assert "Explicit JSON skeleton:" not in prompt
     assert "derive_from_actual_review" not in prompt
     assert '"supports_proposed_offer":' not in prompt
     assert '"recommended_offer_id":' not in prompt
     assert '"ranked_offer_ids":' not in prompt
+
+
+def test_root_review_acknowledgement_contract_is_proposer_only() -> None:
+    sentences = (
+        "All provider recommendations are advisory and require ClientRoot review.",
+        "requires_root_review must be the exact JSON boolean true.",
+        "False makes the semantic envelope invalid.",
+        "This field acknowledges mandatory Root review and does not create Root authority.",
+    )
+    prompts: dict[str, str] = {}
+    for actor_id in causal_runtime.ACTOR_ORDER:
+        proposed = "" if actor_id == causal_runtime.ACTOR_ORDER[0] else binding.OFFER_A_ID
+        selection_input, request = _schema_fixture(
+            actor_id=actor_id,
+            proposed_offer_id=proposed,
+        )
+        prompts[actor_id] = runner._build_prompt(
+            actor=runner._actor_spec(actor_id),
+            actor_index=3,
+            deterministic_report={"final_status": runner.STATUS_PASS},
+            bsep_side_projections={},
+            parent_report=None,
+            causal_request=request,
+            causal_selection_input=selection_input,
+        )
+    generic_actor = runner._actor_spec("tri_party_airline_orchestrator_llm")
+    prompts[generic_actor["actor_id"]] = runner._build_prompt(
+        actor=generic_actor,
+        actor_index=1,
+        deterministic_report={"final_status": runner.STATUS_PASS},
+        bsep_side_projections={},
+        parent_report=None,
+        causal_request=None,
+        causal_selection_input=None,
+    )
+
+    proposer = prompts[causal_runtime.ACTOR_ORDER[0]]
+    assert all(proposer.count(sentence) == 1 for sentence in sentences)
+    for actor_id, prompt in prompts.items():
+        if actor_id != causal_runtime.ACTOR_ORDER[0]:
+            assert all(sentence not in prompt for sentence in sentences)
 
 
 def test_real_provider_uses_json_mime_without_schema_for_every_actor(

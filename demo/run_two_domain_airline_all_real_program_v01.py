@@ -47,6 +47,10 @@ GATE_ID = (
     "two_domain_all_real_sealed_evidence_program_v01_"
     "a1_attempt_02_semantic_runtime_recovery"
 )
+ATTEMPT_03_GATE_ID = (
+    "two_domain_all_real_sealed_evidence_program_v01_"
+    "a1_attempt_03_root_review_acknowledgement_recovery"
+)
 DOMAIN_ID = "airline"
 MODEL_ID = "gemini-2.5-flash"
 
@@ -74,8 +78,13 @@ REASON_PRIVATE_METADATA_FAILED = "a1_airline_private_metadata_write_failed"
 REASON_PRIVATE_PRESERVATION_UNPROVED = "a1_airline_private_preservation_unproved"
 REASON_UNEXPECTED = "a1_airline_unexpected_exception"
 REASON_RECOVERY_INPUT_INVALID = "a1_airline_attempt_02_recovery_input_invalid"
+REASON_ATTEMPT_03_RECOVERY_INPUT_INVALID = (
+    "a1_airline_attempt_03_recovery_input_invalid"
+)
 REASON_PRIOR_ATTEMPT_INVALID = "a1_airline_prior_failed_attempt_invalid"
 REASON_PRIOR_ATTEMPT_CHANGED = "a1_airline_prior_failed_attempt_changed"
+REASON_ATTEMPT_02_INVALID = "a1_airline_attempt_02_predecessor_invalid"
+REASON_ATTEMPT_02_CHANGED = "a1_airline_attempt_02_predecessor_changed"
 
 ACTOR_IDS = tuple(item["actor_id"] for item in _lane.ACTOR_SPECS)
 CAUSAL_ACTOR_IDS = tuple(_lane.CAUSAL_ACTOR_IDS)
@@ -134,6 +143,19 @@ _PRIOR_CALLBACK_PREFIX = (
 _PRIOR_ROOT_ENTRY_COUNT = 4
 _PRIOR_RAW_FILE_COUNT = 23
 _PRIOR_METADATA_MODE = 0o600
+_ATTEMPT_02_ID = "0191a1820c22ccd2031e2f4f8816feebf42682eac8ba17a2b25644b27f34bf3e"
+_ATTEMPT_02_EXECUTION_HEAD = "b0349bb4b90beb492a585aa998a6f167cb439279"
+_ATTEMPT_02_IDENTITY_SHA256 = "46cd8175bd4e3ce898c426cc85b760f096857ed68bd33359ffb754d93f2dc80b"
+_ATTEMPT_02_INVENTORY_SHA256 = "917d034f3440605ef9a4a4f2e32a5b4a3c28ec1a715084803b9b05674e8b1029"
+_ATTEMPT_02_INVENTORY_DIGEST = "3313317b028843d9307e350b7ded9b8ae084048b998a8eaf0819605629ceb34b"
+_ATTEMPT_02_GATE_SHA256 = "d49636630011553c4f9e5fc044699c2c493a6712c34aafeef22f2776d3ab186c"
+_ATTEMPT_02_SUMMARY_SHA256 = "f7f1d78708ba5a9bcc71edbb548eb5edd9815fc604f654a236493b38279d90b8"
+_ATTEMPT_02_VALIDATION_SHA256 = "90ca3e2bd1d51ff74cfbc5136e55ad601f323c5a46dfbb730bea03c8d9696e01"
+_ATTEMPT_02_ROOT_ENTRY_COUNT = 4
+_ATTEMPT_02_RAW_FILE_COUNT = 23
+_ATTEMPT_02_METADATA_MODE = 0o600
+_ATTEMPT_02_CALLBACK_PREFIX = ACTOR_IDS[:3]
+_ATTEMPT_02_SEMANTIC_REASON = "airline_semantic_provider_value_invalid"
 _PUBLICATION_ABSENT = "ABSENT"
 _PUBLICATION_PRESENT = "PRESENT"
 _PUBLICATION_ABSENCE_UNPROVEN = "ABSENCE_UNPROVEN"
@@ -445,6 +467,42 @@ _PRIOR_ANCHORS = _PriorAttemptAnchors()
 
 
 @_dataclass(frozen=True, slots=True)
+class _Attempt02Anchors:
+    attempt_id: str = _ATTEMPT_02_ID
+    execution_head: str = _ATTEMPT_02_EXECUTION_HEAD
+    attempt_identity_sha256: str = _ATTEMPT_02_IDENTITY_SHA256
+    private_inventory_sha256: str = _ATTEMPT_02_INVENTORY_SHA256
+    private_inventory_digest: str = _ATTEMPT_02_INVENTORY_DIGEST
+    generation_gate_sha256: str = _ATTEMPT_02_GATE_SHA256
+    summary_sha256: str = _ATTEMPT_02_SUMMARY_SHA256
+    validation_sha256: str = _ATTEMPT_02_VALIDATION_SHA256
+    root_entry_count: int = _ATTEMPT_02_ROOT_ENTRY_COUNT
+    raw_file_count: int = _ATTEMPT_02_RAW_FILE_COUNT
+    metadata_mode: int = _ATTEMPT_02_METADATA_MODE
+    callback_prefix: tuple[str, ...] = _ATTEMPT_02_CALLBACK_PREFIX
+
+
+@_dataclass(frozen=True, slots=True)
+class _Attempt02Proof:
+    root_identity: tuple[int, int]
+    root_mode: int
+    raw_directory_identity: tuple[int, int]
+    raw_directory_mode: int
+    attempt_identity: _PrivateDocumentProof
+    private_inventory: _PrivateDocumentProof
+    generation_gate: _PrivateDocumentProof
+    raw_rows: tuple[_InventoryRow, ...]
+    raw_modes: tuple[tuple[str, int], ...]
+    inventory_digest: str
+    summary_sha256: str
+    validation_sha256: str
+    embedded_attempt_01_projection: tuple[object, ...]
+
+
+_ATTEMPT_02_ANCHORS = _Attempt02Anchors()
+
+
+@_dataclass(frozen=True, slots=True)
 class _RealPreconditionResult:
     timeout_seconds: int
     credential_source_count: int
@@ -472,6 +530,9 @@ def run_two_domain_airline_all_real_program_v01(
     prior_failed_attempt_directory: str | _Path | None = None,
     prior_attempt_id: str | None = None,
     owner_reviewed_attempt_02: bool = False,
+    transitive_failed_attempt_directory: str | _Path | None = None,
+    transitive_attempt_id: str | None = None,
+    owner_reviewed_attempt_03: bool = False,
 ) -> AirlineA1ProgramResultV01:
     """Run one A1 attempt in injected validation or owner-terminal real mode."""
     root: _Path | None = None
@@ -494,9 +555,12 @@ def run_two_domain_airline_all_real_program_v01(
     publication_state = _PUBLICATION_ABSENT
     prior_path: _Path | None = None
     prior_proof: _PriorAttemptProof | None = None
+    attempt_02_path: _Path | None = None
+    attempt_02_proof: _Attempt02Proof | None = None
+    attempt_03 = attempt_number == 3
     try:
         _require_mode(execution_mode, injected_provider, injected_safe_report_output)
-        if type(attempt_number) is not int or attempt_number not in (1, 2):
+        if type(attempt_number) is not int or attempt_number not in (1, 2, 3):
             raise _RunnerFailure(REASON_ATTEMPT_INVALID, "input_validation")
         if execution_mode == MODE_INJECTED:
             if attempt_number != 1:
@@ -505,14 +569,35 @@ def run_two_domain_airline_all_real_program_v01(
                 prior_failed_attempt_directory is not None
                 or prior_attempt_id is not None
                 or owner_reviewed_attempt_02 is not False
+                or transitive_failed_attempt_directory is not None
+                or transitive_attempt_id is not None
+                or owner_reviewed_attempt_03 is not False
             ):
                 raise _RunnerFailure(REASON_RECOVERY_INPUT_INVALID, "input_validation")
-        elif (
-            attempt_number != 2
-            or prior_failed_attempt_directory is None
-            or prior_attempt_id != _PRIOR_ANCHORS.attempt_id
-            or owner_reviewed_attempt_02 is not True
-        ):
+        elif attempt_number == 2:
+            if (
+                prior_failed_attempt_directory is None
+                or prior_attempt_id != _PRIOR_ANCHORS.attempt_id
+                or owner_reviewed_attempt_02 is not True
+                or transitive_failed_attempt_directory is not None
+                or transitive_attempt_id is not None
+                or owner_reviewed_attempt_03 is not False
+            ):
+                raise _RunnerFailure(REASON_RECOVERY_INPUT_INVALID, "input_validation")
+        elif attempt_number == 3:
+            if (
+                prior_failed_attempt_directory is None
+                or prior_attempt_id != _ATTEMPT_02_ANCHORS.attempt_id
+                or owner_reviewed_attempt_02 is not False
+                or transitive_failed_attempt_directory is None
+                or transitive_attempt_id != _PRIOR_ANCHORS.attempt_id
+                or owner_reviewed_attempt_03 is not True
+            ):
+                raise _RunnerFailure(
+                    REASON_ATTEMPT_03_RECOVERY_INPUT_INVALID,
+                    "input_validation",
+                )
+        else:
             raise _RunnerFailure(REASON_RECOVERY_INPUT_INVALID, "input_validation")
         if execution_mode == MODE_REAL:
             _require_real_local_preconditions(_os.environ)
@@ -522,7 +607,7 @@ def run_two_domain_airline_all_real_program_v01(
             if _LOWER_HEAD.fullmatch(execution_head) is None or len(execution_head) != 40:
                 raise _RunnerFailure(REASON_REPOSITORY_NOT_READY, "repository_guard")
         root = _validate_private_root(private_output_directory)
-        if execution_mode == MODE_REAL:
+        if execution_mode == MODE_REAL and attempt_number == 2:
             prior_path = _validate_prior_failed_root(
                 prior_failed_attempt_directory,
                 root,
@@ -530,6 +615,23 @@ def run_two_domain_airline_all_real_program_v01(
             prior_proof = _verify_prior_attempt_v01(
                 prior_path,
                 str(prior_attempt_id),
+                current_execution_head=execution_head,
+            )
+        elif execution_mode == MODE_REAL and attempt_number == 3:
+            attempt_02_path, prior_path = _validate_attempt_03_predecessor_paths(
+                prior_failed_attempt_directory,
+                transitive_failed_attempt_directory,
+                root,
+            )
+            prior_proof = _verify_prior_attempt_v01(
+                prior_path,
+                str(transitive_attempt_id),
+                current_execution_head=execution_head,
+            )
+            attempt_02_proof = _verify_attempt_02_v01(
+                attempt_02_path,
+                str(prior_attempt_id),
+                prior_proof=prior_proof,
                 current_execution_head=execution_head,
             )
         output_path = _select_safe_report_path(
@@ -545,6 +647,7 @@ def run_two_domain_airline_all_real_program_v01(
             attempt_number=attempt_number,
             private_output_directory=root,
             prior_proof=prior_proof,
+            attempt_02_proof=attempt_02_proof,
         )
         attempt_proof = _write_private_document(
             root,
@@ -561,6 +664,17 @@ def run_two_domain_airline_all_real_program_v01(
         )
         _revalidate_private_document(root, root_identity, attempt_proof, attempt_plain)
 
+        before_first_callback: _Callable[[], None] | None = None
+        if attempt_03:
+            before_first_callback = lambda: _require_dual_predecessors_unchanged(
+                prior_proof,
+                prior_path,
+                str(transitive_attempt_id),
+                attempt_02_proof,
+                attempt_02_path,
+                str(prior_attempt_id),
+                current_execution_head=execution_head,
+            )
         provider = _provider_for_mode(
             execution_mode,
             injected_provider,
@@ -568,6 +682,7 @@ def run_two_domain_airline_all_real_program_v01(
             base_calls_started,
             base_calls_completed,
             progress_sink,
+            before_first_callback=before_first_callback,
         )
         env = _collector_environment(execution_mode, root / RAW_ATTEMPT_DIRECTORY)
         constraints = _binding.build_client_constraints_preference_a_v01()
@@ -575,12 +690,13 @@ def run_two_domain_airline_all_real_program_v01(
         _revalidate_private_document(root, root_identity, attempt_proof, attempt_plain)
         if execution_mode == MODE_REAL:
             _require_real_repository_ready(expected_head=execution_head)
-            _require_prior_attempt_unchanged(
-                prior_proof,
-                prior_path,
-                str(prior_attempt_id),
-                current_execution_head=execution_head,
-            )
+            if attempt_number == 2:
+                _require_prior_attempt_unchanged(
+                    prior_proof,
+                    prior_path,
+                    str(prior_attempt_id),
+                    current_execution_head=execution_head,
+                )
         collector_count += 1
         try:
             capture = _collect_canonical_with_capture(
@@ -591,21 +707,43 @@ def run_two_domain_airline_all_real_program_v01(
             )
         except Exception:
             if execution_mode == MODE_REAL:
+                if attempt_number == 2:
+                    _require_prior_attempt_unchanged(
+                        prior_proof,
+                        prior_path,
+                        str(prior_attempt_id),
+                        current_execution_head=execution_head,
+                    )
+                else:
+                    _require_dual_predecessors_unchanged(
+                        prior_proof,
+                        prior_path,
+                        str(transitive_attempt_id),
+                        attempt_02_proof,
+                        attempt_02_path,
+                        str(prior_attempt_id),
+                        current_execution_head=execution_head,
+                    )
+            raise
+        report = capture.report
+        if execution_mode == MODE_REAL:
+            if attempt_number == 2:
                 _require_prior_attempt_unchanged(
                     prior_proof,
                     prior_path,
                     str(prior_attempt_id),
                     current_execution_head=execution_head,
                 )
-            raise
-        report = capture.report
-        if execution_mode == MODE_REAL:
-            _require_prior_attempt_unchanged(
-                prior_proof,
-                prior_path,
-                str(prior_attempt_id),
-                current_execution_head=execution_head,
-            )
+            else:
+                _require_dual_predecessors_unchanged(
+                    prior_proof,
+                    prior_path,
+                    str(transitive_attempt_id),
+                    attempt_02_proof,
+                    attempt_02_path,
+                    str(prior_attempt_id),
+                    current_execution_head=execution_head,
+                )
         if _POST_COLLECTOR_HOOK is not None:
             _POST_COLLECTOR_HOOK(root, report, capture)
         if not isinstance(report, _Mapping) or report.get("final_status") != STATUS_PASS:
@@ -766,13 +904,25 @@ def run_two_domain_airline_all_real_program_v01(
             raise _RunnerFailure(REASON_INVENTORY_INVALID, "final_freeze")
         _revalidate_owned_output(output_owner, normalization)
         if execution_mode == MODE_REAL:
-            _require_prior_attempt_unchanged(
-                prior_proof,
-                prior_path,
-                str(prior_attempt_id),
-                current_execution_head=execution_head,
-                owned_public_report=output_owner,
-            )
+            if attempt_number == 2:
+                _require_prior_attempt_unchanged(
+                    prior_proof,
+                    prior_path,
+                    str(prior_attempt_id),
+                    current_execution_head=execution_head,
+                    owned_public_report=output_owner,
+                )
+            else:
+                _require_dual_predecessors_unchanged(
+                    prior_proof,
+                    prior_path,
+                    str(transitive_attempt_id),
+                    attempt_02_proof,
+                    attempt_02_path,
+                    str(prior_attempt_id),
+                    current_execution_head=execution_head,
+                    owned_public_report=output_owner,
+                )
         gate_plain = _generation_gate_plain(
             attempt_plain=attempt_plain,
             attempt_identity_sha256=attempt_proof.sha256,
@@ -886,6 +1036,26 @@ def run_two_domain_airline_all_real_program_v01(
         and attempt_plain is not None
         and attempt_proof is not None
     ):
+        failure_checkpoint_override: list[tuple[str, str]] = []
+        before_failure_gate: _Callable[[], tuple[str, str] | None] | None = None
+        if attempt_03 and prior_proof is not None and attempt_02_proof is not None:
+            def before_failure_gate() -> tuple[str, str] | None:
+                try:
+                    _require_dual_predecessors_unchanged(
+                        prior_proof,
+                        prior_path,
+                        str(transitive_attempt_id),
+                        attempt_02_proof,
+                        attempt_02_path,
+                        str(prior_attempt_id),
+                        current_execution_head=execution_head,
+                    )
+                    return None
+                except _RunnerFailure as error:
+                    override = (error.reason, error.stage)
+                    failure_checkpoint_override.append(override)
+                    return override
+
         inventory_digest, preservation_state = _preserve_failed_private_attempt(
             root=root,
             root_identity=root_identity,
@@ -900,7 +1070,10 @@ def run_two_domain_airline_all_real_program_v01(
             safe_execution_id=safe_execution_id,
             safe_report_sha256=safe_hash,
             publication_state=publication_state,
+            before_generation_gate=before_failure_gate,
         )
+        if failure_checkpoint_override:
+            reason, stage = failure_checkpoint_override[-1]
     return _result(
         execution_mode=(
             execution_mode if execution_mode in (MODE_INJECTED, MODE_REAL) else ""
@@ -1033,7 +1206,10 @@ def build_airline_safe_normalization_v01(
         run_id = source_report["run_id"]
         report_id = source_report["report_id"]
         source_task_id = _SOURCE_TASK_ID
-        if attempt_identity is not None and attempt_identity.get("attempt_number") == 2:
+        if (
+            attempt_identity is not None
+            and attempt_identity.get("attempt_number") in (2, 3)
+        ):
             run_id = attempt_identity["run_id"]
             report_id = attempt_identity["report_id"]
             source_task_id = attempt_identity["source_task_id"]
@@ -1235,13 +1411,17 @@ def _provider_for_mode(
     base_calls_started: list[str],
     base_calls_completed: list[str],
     progress_sink: _Callable[[dict[str, object]], None] | None,
+    *,
+    before_first_callback: _Callable[[], None] | None = None,
 ) -> _lane.Provider:
     if execution_mode == MODE_INJECTED:
         base = injected_provider or _build_injected_provider_v01()
     else:
         base = _REAL_PROVIDER_BUILDER(MODEL_ID)
+    first_callback_checkpoint_attempted = False
 
     def observed(actor_id: str, prompt: str, metadata: _Mapping[str, object]) -> str:
+        nonlocal first_callback_checkpoint_attempted
         index = len(callback_observed) + 1
         if (
             type(actor_id) is not str
@@ -1250,6 +1430,11 @@ def _provider_for_mode(
             or actor_id in callback_observed
         ):
             raise ValueError("provider_call_geometry_invalid")
+        if index == 1 and before_first_callback is not None:
+            if first_callback_checkpoint_attempted:
+                raise ValueError("provider_call_geometry_invalid")
+            first_callback_checkpoint_attempted = True
+            before_first_callback()
         callback_observed.append(actor_id)
         _emit_progress(progress_sink, index, actor_id, "call_started", "")
         try:
@@ -2511,10 +2696,55 @@ def _inventory_plain(
         "aggregate_inventory_digest": snapshot.digest,
         "raw_bodies_copied_to_public_evidence": False,
     }
-    if attempt_number == 2:
-        plain["attempt_number"] = 2
+    if attempt_number in (2, 3):
+        plain["attempt_number"] = attempt_number
         plain["attempt_id"] = attempt_id
     return plain
+
+
+def _gate_id_for_attempt(attempt_number: int) -> str:
+    return ATTEMPT_03_GATE_ID if attempt_number == 3 else GATE_ID
+
+
+def _predecessor_proof_sha256(
+    proof: _PriorAttemptProof | _Attempt02Proof,
+) -> str:
+    def document(item: _PrivateDocumentProof) -> dict[str, object]:
+        return {
+            "leaf": item.leaf,
+            "identity": list(item.identity),
+            "sha256": item.sha256,
+            "byte_count": item.byte_count,
+        }
+
+    plain: dict[str, object] = {
+        "root_identity": list(proof.root_identity),
+        "root_mode": proof.root_mode,
+        "raw_directory_identity": list(proof.raw_directory_identity),
+        "raw_directory_mode": proof.raw_directory_mode,
+        "attempt_identity": document(proof.attempt_identity),
+        "private_inventory": document(proof.private_inventory),
+        "generation_gate": document(proof.generation_gate),
+        "raw_rows": [
+            {
+                "logical_ref": row.logical_ref,
+                "sha256": row.sha256,
+                "byte_count": row.byte_count,
+                "device": row.device,
+                "inode": row.inode,
+            }
+            for row in proof.raw_rows
+        ],
+        "raw_modes": [list(item) for item in proof.raw_modes],
+        "inventory_digest": proof.inventory_digest,
+        "summary_sha256": proof.summary_sha256,
+        "validation_sha256": proof.validation_sha256,
+    }
+    if isinstance(proof, _Attempt02Proof):
+        plain["embedded_attempt_01_projection"] = list(
+            proof.embedded_attempt_01_projection
+        )
+    return _sha256(_canonical_json_bytes_v01(plain))
 
 
 def _build_attempt_identity(
@@ -2524,30 +2754,31 @@ def _build_attempt_identity(
     attempt_number: int,
     private_output_directory: _Path,
     prior_proof: _PriorAttemptProof | None = None,
+    attempt_02_proof: _Attempt02Proof | None = None,
 ) -> dict[str, object]:
     output_directory_text = str(private_output_directory)
     attempt_02 = attempt_number == 2
-    run_id = f"{_lane.RUN_ID}:attempt_02" if attempt_02 else _lane.RUN_ID
-    report_id = f"{_lane.REPORT_ID}:attempt_02" if attempt_02 else _lane.REPORT_ID
+    attempt_03 = attempt_number == 3
+    suffix = ":attempt_03" if attempt_03 else ":attempt_02" if attempt_02 else ""
+    run_id = f"{_lane.RUN_ID}{suffix}"
+    report_id = f"{_lane.REPORT_ID}{suffix}"
     source_task_id = (
-        f"{_SOURCE_TASK_ID}:attempt_02" if attempt_02 else _SOURCE_TASK_ID
+        f"{_SOURCE_TASK_ID}{suffix}" if suffix else _SOURCE_TASK_ID
     )
-    package_id = f"{_PACKAGE_ID}:attempt_02" if attempt_02 else _PACKAGE_ID
+    package_id = f"{_PACKAGE_ID}{suffix}" if suffix else _PACKAGE_ID
     logical_package_ref = (
-        f"{_LOGICAL_PACKAGE_REF}:attempt_02"
-        if attempt_02
-        else _LOGICAL_PACKAGE_REF
+        f"{_LOGICAL_PACKAGE_REF}{suffix}" if suffix else _LOGICAL_PACKAGE_REF
     )
     output_directory_ref = (
-        f"airline/{_lane.RUN_ID}/attempt_02/sealed_evidence"
-        if attempt_02
+        f"airline/{_lane.RUN_ID}/attempt_{attempt_number:02d}/sealed_evidence"
+        if suffix
         else _LOGICAL_OUTPUT_DIRECTORY_REF
     )
     plain: dict[str, object] = {
         "attempt_version": "v0.1",
         "programme_id": PROGRAMME_ID,
         "programme_version": PROGRAMME_VERSION,
-        "gate_id": GATE_ID,
+        "gate_id": _gate_id_for_attempt(attempt_number),
         "domain_id": DOMAIN_ID,
         "execution_head": execution_head,
         "attempt_number": attempt_number,
@@ -2601,9 +2832,58 @@ def _build_attempt_identity(
                 "frozen_source_report_id": _lane.REPORT_ID,
             }
         )
+    elif attempt_03:
+        if prior_proof is None or attempt_02_proof is None:
+            raise ValueError
+        plain.update(
+            {
+                "prior_attempt_id": _ATTEMPT_02_ANCHORS.attempt_id,
+                "prior_execution_head": _ATTEMPT_02_ANCHORS.execution_head,
+                "prior_attempt_identity_sha256": attempt_02_proof.attempt_identity.sha256,
+                "prior_private_inventory_sha256": attempt_02_proof.private_inventory.sha256,
+                "prior_private_inventory_digest": attempt_02_proof.inventory_digest,
+                "prior_generation_gate_sha256": attempt_02_proof.generation_gate.sha256,
+                "prior_summary_sha256": attempt_02_proof.summary_sha256,
+                "prior_validation_sha256": attempt_02_proof.validation_sha256,
+                "prior_complete_proof_sha256": _predecessor_proof_sha256(
+                    attempt_02_proof
+                ),
+                "prior_failure_reason": REASON_COLLECTOR_FAILED,
+                "prior_failed_stage": "collector_result",
+                "prior_semantic_reason": _ATTEMPT_02_SEMANTIC_REASON,
+                "prior_conservative_callback_consumption": 3,
+                "transitive_attempt_id": _PRIOR_ANCHORS.attempt_id,
+                "transitive_execution_head": _PRIOR_ANCHORS.execution_head,
+                "transitive_attempt_identity_sha256": prior_proof.attempt_identity.sha256,
+                "transitive_private_inventory_sha256": prior_proof.private_inventory.sha256,
+                "transitive_private_inventory_digest": prior_proof.inventory_digest,
+                "transitive_generation_gate_sha256": prior_proof.generation_gate.sha256,
+                "transitive_complete_proof_sha256": _predecessor_proof_sha256(
+                    prior_proof
+                ),
+                "transitive_failure_reason": REASON_COLLECTOR_FAILED,
+                "transitive_failed_stage": "collector_result",
+                "transitive_conservative_callback_consumption": 3,
+                "transitive_equality_verified": True,
+                "prior_embedded_transitive_projection_sha256": _sha256(
+                    _canonical_json_bytes_v01(
+                        list(attempt_02_proof.embedded_attempt_01_projection)
+                    )
+                ),
+                "new_provider_call_ceiling": 12,
+                "cumulative_airline_call_ceiling": 18,
+                "supplier_accepted_budget": 6,
+                "cumulative_programme_call_ceiling": 24,
+                "owner_reviewed_attempt_03": True,
+                "frozen_source_run_id": _lane.RUN_ID,
+                "frozen_source_report_id": _lane.REPORT_ID,
+            }
+        )
     plain["attempt_id"] = _sha256(
         (
-            b"hedgehog.a1.airline.attempt.v02\0"
+            b"hedgehog.a1.airline.attempt.v03\0"
+            if attempt_03
+            else b"hedgehog.a1.airline.attempt.v02\0"
             if attempt_02
             else b"hedgehog.a1.airline.attempt.v01\0"
         )
@@ -2693,8 +2973,10 @@ def _generation_gate_plain(
         "anchor_created_count": 0,
         "replay_created_count": 0,
     }
-    if attempt_number == 2:
-        for key in (
+    if attempt_number == 3:
+        plain["gate_id"] = attempt_plain["gate_id"]
+    if attempt_number in (2, 3):
+        keys = (
             "prior_attempt_id",
             "prior_execution_head",
             "prior_attempt_identity_sha256",
@@ -2703,12 +2985,38 @@ def _generation_gate_plain(
             "prior_generation_gate_sha256",
             "prior_failure_reason",
             "prior_failed_stage",
-            "prior_actual_external_operation_status",
             "prior_conservative_callback_consumption",
             "new_provider_call_ceiling",
             "cumulative_airline_call_ceiling",
-            "owner_reviewed_attempt_02",
-        ):
+        )
+        if attempt_number == 2:
+            keys += (
+                "prior_actual_external_operation_status",
+                "owner_reviewed_attempt_02",
+            )
+        else:
+            keys += (
+                "prior_summary_sha256",
+                "prior_validation_sha256",
+                "prior_complete_proof_sha256",
+                "prior_semantic_reason",
+                "transitive_attempt_id",
+                "transitive_execution_head",
+                "transitive_attempt_identity_sha256",
+                "transitive_private_inventory_sha256",
+                "transitive_private_inventory_digest",
+                "transitive_generation_gate_sha256",
+                "transitive_complete_proof_sha256",
+                "transitive_failure_reason",
+                "transitive_failed_stage",
+                "transitive_conservative_callback_consumption",
+                "transitive_equality_verified",
+                "prior_embedded_transitive_projection_sha256",
+                "supplier_accepted_budget",
+                "cumulative_programme_call_ceiling",
+                "owner_reviewed_attempt_03",
+            )
+        for key in keys:
             plain[key] = attempt_plain[key]
     return plain
 
@@ -2728,6 +3036,7 @@ def _preserve_failed_private_attempt(
     safe_execution_id: str,
     safe_report_sha256: str,
     publication_state: str,
+    before_generation_gate: _Callable[[], tuple[str, str] | None] | None = None,
 ) -> tuple[str, str]:
     try:
         _revalidate_private_document(
@@ -2802,6 +3111,10 @@ def _preserve_failed_private_attempt(
             inventory_proof,
             inventory_plain,
         )
+        if before_generation_gate is not None:
+            override = before_generation_gate()
+            if override is not None:
+                reason_code, failed_stage = override
         gate_plain = _generation_gate_plain(
             attempt_plain=attempt_plain,
             attempt_identity_sha256=attempt_proof.sha256,
@@ -3058,6 +3371,256 @@ def _require_prior_attempt_unchanged(
             REASON_PRIOR_ATTEMPT_CHANGED,
             "prior_attempt_revalidation",
         )
+
+
+def _verify_attempt_02_v01(
+    attempt_02_path: _Path,
+    supplied_attempt_id: str,
+    *,
+    prior_proof: _PriorAttemptProof,
+    current_execution_head: str,
+    owned_public_report: _OwnedOutput | None = None,
+) -> _Attempt02Proof:
+    """Prove fixed failed Attempt 02 and its exact Attempt 01 binding."""
+    root_fd = -1
+    raw_fd = -1
+    try:
+        anchors = _ATTEMPT_02_ANCHORS
+        if supplied_attempt_id != anchors.attempt_id:
+            raise ValueError
+        root_fd, root_identity = _open_absolute_directory_nofollow(attempt_02_path)
+        root_entries = _scandir_names(root_fd)
+        expected_root_entries = tuple(
+            sorted(
+                (
+                    ATTEMPT_IDENTITY_FILE,
+                    RAW_ATTEMPT_DIRECTORY,
+                    PRIVATE_INVENTORY_FILE,
+                    GENERATION_GATE_FILE,
+                )
+            )
+        )
+        if (
+            len(root_entries) != anchors.root_entry_count
+            or root_entries != expected_root_entries
+        ):
+            raise ValueError
+
+        attempt_plain, attempt_proof = _read_prior_json(
+            root_fd,
+            ATTEMPT_IDENTITY_FILE,
+            anchors.metadata_mode,
+        )
+        inventory_plain, inventory_proof = _read_prior_json(
+            root_fd,
+            PRIVATE_INVENTORY_FILE,
+            anchors.metadata_mode,
+        )
+        gate_plain, gate_proof = _read_prior_json(
+            root_fd,
+            GENERATION_GATE_FILE,
+            anchors.metadata_mode,
+        )
+        if (
+            attempt_proof.sha256 != anchors.attempt_identity_sha256
+            or inventory_proof.sha256 != anchors.private_inventory_sha256
+            or gate_proof.sha256 != anchors.generation_gate_sha256
+        ):
+            raise ValueError
+        _validate_attempt_02_identity(
+            attempt_plain,
+            attempt_02_path,
+            anchors,
+            prior_proof,
+        )
+
+        raw_before = _os.stat(
+            RAW_ATTEMPT_DIRECTORY,
+            dir_fd=root_fd,
+            follow_symlinks=False,
+        )
+        if not _stat.S_ISDIR(raw_before.st_mode):
+            raise ValueError
+        flags = (
+            _os.O_RDONLY
+            | getattr(_os, "O_DIRECTORY", 0)
+            | getattr(_os, "O_NOFOLLOW", 0)
+        )
+        raw_fd = _OPEN(RAW_ATTEMPT_DIRECTORY, flags, dir_fd=root_fd)
+        raw_identity = _descriptor_identity(raw_fd, directory=True)
+        raw_opened = _FSTAT(raw_fd)
+        if raw_identity != (raw_before.st_dev, raw_before.st_ino):
+            raise ValueError
+        raw_names = _scandir_names(raw_fd)
+        if len(raw_names) != anchors.raw_file_count:
+            raise ValueError
+        raw_rows: list[_InventoryRow] = []
+        raw_modes: list[tuple[str, int]] = []
+        selected: dict[str, bytes] = {}
+        selected_names = {
+            "summary.json",
+            "client_purchase_intent_reviewer_llm_validation.json",
+        }
+        for name in raw_names:
+            row, content, mode = _read_prior_raw_file(raw_fd, name)
+            raw_rows.append(row)
+            raw_modes.append((name, mode))
+            if name in selected_names:
+                selected[name] = content
+        if set(selected) != selected_names:
+            raise ValueError
+        raw_after = _os.stat(
+            RAW_ATTEMPT_DIRECTORY,
+            dir_fd=root_fd,
+            follow_symlinks=False,
+        )
+        if (
+            raw_identity != (raw_after.st_dev, raw_after.st_ino)
+            or _stat.S_IMODE(raw_after.st_mode) != _stat.S_IMODE(raw_opened.st_mode)
+        ):
+            raise ValueError
+        rows = tuple(raw_rows)
+        digest = _inventory_digest(rows)
+        if (
+            digest != anchors.private_inventory_digest
+            or _sha256(selected["summary.json"]) != anchors.summary_sha256
+            or _sha256(
+                selected["client_purchase_intent_reviewer_llm_validation.json"]
+            )
+            != anchors.validation_sha256
+        ):
+            raise ValueError
+        _validate_attempt_02_inventory(inventory_plain, rows, anchors)
+        _validate_attempt_02_gate(gate_plain, anchors, prior_proof)
+        _validate_attempt_02_summary(
+            _parse_prior_legacy_source_json(selected["summary.json"]),
+            anchors,
+        )
+        _validate_attempt_02_actor_validation(
+            _parse_prior_legacy_source_json(
+                selected["client_purchase_intent_reviewer_llm_validation.json"]
+            )
+        )
+        _verify_prior_head_ancestry(anchors.execution_head, current_execution_head)
+        _verify_predecessor_public_state(owned_public_report)
+        root_after = _FSTAT(root_fd)
+        if (root_after.st_dev, root_after.st_ino) != root_identity:
+            raise ValueError
+        return _Attempt02Proof(
+            root_identity=root_identity,
+            root_mode=_stat.S_IMODE(root_after.st_mode),
+            raw_directory_identity=raw_identity,
+            raw_directory_mode=_stat.S_IMODE(raw_opened.st_mode),
+            attempt_identity=attempt_proof,
+            private_inventory=inventory_proof,
+            generation_gate=gate_proof,
+            raw_rows=rows,
+            raw_modes=tuple(raw_modes),
+            inventory_digest=digest,
+            summary_sha256=_sha256(selected["summary.json"]),
+            validation_sha256=_sha256(
+                selected["client_purchase_intent_reviewer_llm_validation.json"]
+            ),
+            embedded_attempt_01_projection=_attempt_01_proof_projection(prior_proof),
+        )
+    except Exception:
+        raise _RunnerFailure(
+            REASON_ATTEMPT_02_INVALID,
+            "attempt_02_predecessor_verification",
+        ) from None
+    finally:
+        close_failed = False
+        if raw_fd >= 0:
+            try:
+                _close_proven(raw_fd)
+            except Exception:
+                close_failed = True
+        if root_fd >= 0:
+            try:
+                _close_proven(root_fd)
+            except Exception:
+                close_failed = True
+        if close_failed:
+            raise _RunnerFailure(
+                REASON_ATTEMPT_02_INVALID,
+                "attempt_02_predecessor_verification",
+            ) from None
+
+
+def _require_dual_predecessors_unchanged(
+    expected_attempt_01: _PriorAttemptProof | None,
+    attempt_01_path: _Path | None,
+    attempt_01_id: str,
+    expected_attempt_02: _Attempt02Proof | None,
+    attempt_02_path: _Path | None,
+    attempt_02_id: str,
+    *,
+    current_execution_head: str,
+    owned_public_report: _OwnedOutput | None = None,
+) -> None:
+    if (
+        expected_attempt_01 is None
+        or attempt_01_path is None
+        or expected_attempt_02 is None
+        or attempt_02_path is None
+    ):
+        raise _RunnerFailure(REASON_ATTEMPT_02_CHANGED, "dual_predecessor_revalidation")
+    try:
+        observed_attempt_01 = _verify_prior_attempt_v01(
+            attempt_01_path,
+            attempt_01_id,
+            current_execution_head=current_execution_head,
+            owned_public_report=owned_public_report,
+        )
+    except _RunnerFailure:
+        raise _RunnerFailure(
+            REASON_PRIOR_ATTEMPT_CHANGED,
+            "prior_attempt_revalidation",
+        ) from None
+    if observed_attempt_01 != expected_attempt_01:
+        raise _RunnerFailure(
+            REASON_PRIOR_ATTEMPT_CHANGED,
+            "prior_attempt_revalidation",
+        )
+    try:
+        observed_attempt_02 = _verify_attempt_02_v01(
+            attempt_02_path,
+            attempt_02_id,
+            prior_proof=observed_attempt_01,
+            current_execution_head=current_execution_head,
+            owned_public_report=owned_public_report,
+        )
+    except _RunnerFailure:
+        raise _RunnerFailure(
+            REASON_ATTEMPT_02_CHANGED,
+            "attempt_02_predecessor_revalidation",
+        ) from None
+    if observed_attempt_02 != expected_attempt_02:
+        raise _RunnerFailure(
+            REASON_ATTEMPT_02_CHANGED,
+            "attempt_02_predecessor_revalidation",
+        )
+
+
+def _verify_predecessor_public_state(
+    owned_public_report: _OwnedOutput | None,
+) -> None:
+    if owned_public_report is None:
+        if (
+            _CANONICAL_SAFE_REPORT_PATH.exists()
+            or _CANONICAL_SAFE_REPORT_PATH.is_symlink()
+        ):
+            raise ValueError
+        return
+    if (
+        owned_public_report.parent_path / owned_public_report.leaf
+        != _CANONICAL_SAFE_REPORT_PATH
+    ):
+        raise ValueError
+    _revalidate_owned_output(
+        owned_public_report,
+        _strict_json(owned_public_report.expected_bytes),
+    )
 
 
 def _open_absolute_directory_nofollow(path: _Path) -> tuple[int, tuple[int, int]]:
@@ -3329,8 +3892,182 @@ def _validate_prior_actor_validation(plain: object) -> None:
         raise ValueError
 
 
+def _attempt_01_proof_projection(
+    proof: _PriorAttemptProof,
+) -> tuple[object, ...]:
+    return (
+        _PRIOR_ANCHORS.attempt_id,
+        _PRIOR_ANCHORS.execution_head,
+        proof.attempt_identity.sha256,
+        proof.private_inventory.sha256,
+        proof.inventory_digest,
+        proof.generation_gate.sha256,
+        REASON_COLLECTOR_FAILED,
+        "collector_result",
+        len(_PRIOR_ANCHORS.callback_prefix),
+    )
+
+
+def _validate_attempt_02_identity(
+    plain: dict[str, object],
+    attempt_02_path: _Path,
+    anchors: _Attempt02Anchors,
+    prior_proof: _PriorAttemptProof,
+) -> None:
+    expected = _build_attempt_identity(
+        execution_mode=MODE_REAL,
+        execution_head=anchors.execution_head,
+        attempt_number=2,
+        private_output_directory=attempt_02_path,
+        prior_proof=prior_proof,
+    )
+    if plain != expected or plain.get("attempt_id") != anchors.attempt_id:
+        raise ValueError
+    embedded = (
+        plain.get("prior_attempt_id"),
+        plain.get("prior_execution_head"),
+        plain.get("prior_attempt_identity_sha256"),
+        plain.get("prior_private_inventory_sha256"),
+        plain.get("prior_private_inventory_digest"),
+        plain.get("prior_generation_gate_sha256"),
+        plain.get("prior_failure_reason"),
+        plain.get("prior_failed_stage"),
+        plain.get("prior_conservative_callback_consumption"),
+    )
+    if embedded != _attempt_01_proof_projection(prior_proof):
+        raise ValueError
+
+
+def _validate_attempt_02_inventory(
+    plain: dict[str, object],
+    rows: tuple[_InventoryRow, ...],
+    anchors: _Attempt02Anchors,
+) -> None:
+    expected_rows = [
+        {
+            "logical_ref": row.logical_ref,
+            "sha256": row.sha256,
+            "byte_count": row.byte_count,
+        }
+        for row in rows
+    ]
+    if (
+        plain.get("validation_status") != STATUS_FAIL_CLOSED
+        or plain.get("attempt_number") != 2
+        or plain.get("attempt_id") != anchors.attempt_id
+        or plain.get("raw_attempt_file_count") != anchors.raw_file_count
+        or plain.get("aggregate_inventory_digest") != anchors.private_inventory_digest
+        or plain.get("ordered_files") != expected_rows
+        or plain.get("raw_bodies_copied_to_public_evidence") is not False
+    ):
+        raise ValueError
+
+
+def _validate_attempt_02_gate(
+    plain: dict[str, object],
+    anchors: _Attempt02Anchors,
+    prior_proof: _PriorAttemptProof,
+) -> None:
+    expected = {
+        "attempt_id": anchors.attempt_id,
+        "attempt_identity_sha256": anchors.attempt_identity_sha256,
+        "attempt_number": 2,
+        "execution_head": anchors.execution_head,
+        "final_source_status": STATUS_FAIL_CLOSED,
+        "failed_stage": "collector_result",
+        "reason_code": REASON_COLLECTOR_FAILED,
+        "private_inventory_digest": anchors.private_inventory_digest,
+        "private_inventory_document_sha256": anchors.private_inventory_sha256,
+        "live_collection_performed": True,
+        "official_evidence_eligible": False,
+        "public_safe_report_state": _PUBLICATION_ABSENT,
+        "provider_mode": _lane.PROVIDER_MODE_REAL,
+        "wrapper_callback_observed_count": 3,
+        "provider_callback_started_count": 3,
+        "provider_callback_completed_count": 3,
+        "actual_provider_call_count": 3,
+        "actual_network_call_count": 0,
+        "actual_gemini_call_count": 0,
+        "actual_external_operation_status": _EXTERNAL_UNVERIFIED_PARTIAL,
+        "actual_real_world_effects_count": 0,
+        "retry_count": 0,
+        "package_created_count": 0,
+        "anchor_created_count": 0,
+        "replay_created_count": 0,
+        "prior_attempt_id": _PRIOR_ANCHORS.attempt_id,
+        "prior_execution_head": _PRIOR_ANCHORS.execution_head,
+        "prior_attempt_identity_sha256": prior_proof.attempt_identity.sha256,
+        "prior_private_inventory_sha256": prior_proof.private_inventory.sha256,
+        "prior_private_inventory_digest": prior_proof.inventory_digest,
+        "prior_generation_gate_sha256": prior_proof.generation_gate.sha256,
+        "prior_failure_reason": REASON_COLLECTOR_FAILED,
+        "prior_failed_stage": "collector_result",
+        "prior_conservative_callback_consumption": 3,
+        "new_provider_call_ceiling": 12,
+        "cumulative_airline_call_ceiling": 15,
+        "owner_reviewed_attempt_02": True,
+    }
+    if any(plain.get(key) != value for key, value in expected.items()):
+        raise ValueError
+    for key in (
+        "observed_actor_prefix",
+        "wrapper_callback_observed_prefix",
+        "base_provider_started_prefix",
+        "base_provider_completed_prefix",
+    ):
+        if tuple(plain.get(key, ())) != anchors.callback_prefix:
+            raise ValueError
+
+
+def _validate_attempt_02_summary(
+    plain: object,
+    anchors: _Attempt02Anchors,
+) -> None:
+    if type(plain) is not dict:
+        raise ValueError
+    counters = plain.get("counter_table")
+    if type(counters) is not dict:
+        raise ValueError
+    delay = counters.get("real_provider_call_delay_seconds")
+    if type(delay) is not float or not _math.isfinite(delay) or delay < 0.0:
+        raise ValueError
+    if any(
+        key != "real_provider_call_delay_seconds" and type(value) is not int
+        for key, value in counters.items()
+    ):
+        raise ValueError
+    errors = tuple(plain.get("validation_errors") or ())
+    if (
+        plain.get("final_status") != STATUS_FAIL_CLOSED
+        or plain.get("failed_actor_id") != "client_purchase_intent_reviewer_llm"
+        or plain.get("failed_stage") != "actor_validation"
+        or tuple(plain.get("semantic_actor_call_order") or ())
+        != anchors.callback_prefix
+        or _ATTEMPT_02_SEMANTIC_REASON not in errors
+    ):
+        raise ValueError
+
+
+def _validate_attempt_02_actor_validation(plain: object) -> None:
+    if type(plain) is not dict:
+        raise ValueError
+    if (
+        plain.get("accepted") is not False
+        or plain.get("validation_status") != STATUS_FAIL_CLOSED
+        or _ATTEMPT_02_SEMANTIC_REASON not in tuple(plain.get("errors") or ())
+    ):
+        raise ValueError
+
+
 def _verify_prior_head_ancestry(prior_head: str, current_head: str) -> None:
-    if prior_head != _PRIOR_ANCHORS.execution_head:
+    if (
+        type(prior_head) is not str
+        or type(current_head) is not str
+        or len(prior_head) != 40
+        or len(current_head) != 40
+        or _LOWER_HEAD.fullmatch(prior_head) is None
+        or _LOWER_HEAD.fullmatch(current_head) is None
+    ):
         raise ValueError
     _git_text("merge-base", "--is-ancestor", prior_head, current_head)
 
@@ -3346,7 +4083,7 @@ def _validate_prior_failed_root(
         _validate_raw_absolute_path_text(str(new_root))
         if prior == new_root or _is_within(new_root, prior):
             raise ValueError
-        if _is_within(prior, _REPOSITORY_ROOT.resolve(strict=True)):
+        if _is_within(prior, _REPOSITORY_ROOT):
             raise ValueError
         fd, _ = _open_absolute_directory_nofollow(prior)
         _close_proven(fd)
@@ -3355,6 +4092,40 @@ def _validate_prior_failed_root(
         raise _RunnerFailure(
             REASON_RECOVERY_INPUT_INVALID,
             "prior_attempt_path_validation",
+        ) from None
+
+
+def _validate_attempt_03_predecessor_paths(
+    attempt_02_value: str | _Path | None,
+    attempt_01_value: str | _Path | None,
+    new_root: _Path,
+) -> tuple[_Path, _Path]:
+    try:
+        values = (_os.fspath(attempt_02_value), _os.fspath(attempt_01_value))
+        for value in values:
+            _validate_raw_absolute_path_text(value)
+        _validate_raw_absolute_path_text(str(new_root))
+        attempt_02_path, attempt_01_path = map(_Path, values)
+        paths = (attempt_02_path, attempt_01_path, new_root)
+        if len(set(paths)) != len(paths):
+            raise ValueError
+        if (
+            _is_within(attempt_02_path, attempt_01_path)
+            or _is_within(attempt_01_path, attempt_02_path)
+            or _is_within(new_root, attempt_02_path)
+            or _is_within(new_root, attempt_01_path)
+        ):
+            raise ValueError
+        for predecessor in (attempt_02_path, attempt_01_path):
+            if _is_within(predecessor, _REPOSITORY_ROOT):
+                raise ValueError
+            fd, _ = _open_absolute_directory_nofollow(predecessor)
+            _close_proven(fd)
+        return attempt_02_path, attempt_01_path
+    except Exception:
+        raise _RunnerFailure(
+            REASON_ATTEMPT_03_RECOVERY_INPUT_INVALID,
+            "predecessor_path_validation",
         ) from None
 
 
@@ -4228,7 +4999,7 @@ def _require_no_symlink_components(path: _Path) -> None:
 
 def _is_within(path: _Path, parent: _Path) -> bool:
     try:
-        path.resolve(strict=False).relative_to(parent.resolve(strict=False))
+        path.relative_to(parent)
         return True
     except ValueError:
         return False
@@ -4313,7 +5084,7 @@ def _result(
     return AirlineA1ProgramResultV01(
         programme_id=PROGRAMME_ID,
         programme_version=PROGRAMME_VERSION,
-        gate_id=GATE_ID,
+        gate_id=_gate_id_for_attempt(attempt_number),
         domain_id=DOMAIN_ID,
         execution_mode=execution_mode,
         execution_head=execution_head,
@@ -4375,6 +5146,9 @@ def _parser() -> _SanitizedArgumentParser:
     parser.add_argument("--prior-failed-attempt-directory")
     parser.add_argument("--prior-attempt-id")
     parser.add_argument("--owner-reviewed-attempt-02", action="store_true")
+    parser.add_argument("--transitive-failed-attempt-directory")
+    parser.add_argument("--transitive-attempt-id")
+    parser.add_argument("--owner-reviewed-attempt-03", action="store_true")
     return parser
 
 
@@ -4394,7 +5168,7 @@ def main(argv: list[str] | None = None) -> int:
         raw_argv = tuple(_sys.argv[1:] if argv is None else argv)
         _reject_duplicate_cli_options(raw_argv)
         args = _parser().parse_args(raw_argv)
-        if args.attempt_number not in ("1", "2"):
+        if args.attempt_number not in ("1", "2", "3"):
             raise _CliError
         mode = MODE_REAL if args.real_provider else MODE_INJECTED
         progress = lambda item: print(
@@ -4409,6 +5183,11 @@ def main(argv: list[str] | None = None) -> int:
             prior_failed_attempt_directory=args.prior_failed_attempt_directory,
             prior_attempt_id=args.prior_attempt_id,
             owner_reviewed_attempt_02=args.owner_reviewed_attempt_02,
+            transitive_failed_attempt_directory=(
+                args.transitive_failed_attempt_directory
+            ),
+            transitive_attempt_id=args.transitive_attempt_id,
+            owner_reviewed_attempt_03=args.owner_reviewed_attempt_03,
         )
         print(
             _canonical_json_line(

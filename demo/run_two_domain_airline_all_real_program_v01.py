@@ -2969,9 +2969,12 @@ def _verify_prior_attempt_v01(
             raise ValueError
         _validate_prior_inventory(inventory_plain, rows, anchors)
         _validate_prior_gate(gate_plain, anchors)
-        _validate_prior_summary(_strict_json(selected["summary.json"]), anchors)
+        _validate_prior_summary(
+            _parse_prior_legacy_source_json(selected["summary.json"]),
+            anchors,
+        )
         _validate_prior_actor_validation(
-            _strict_json(
+            _parse_prior_legacy_source_json(
                 selected["client_purchase_intent_reviewer_llm_validation.json"]
             )
         )
@@ -3293,7 +3296,15 @@ def _validate_prior_summary(
     }
     selected = {key: plain.get(key) for key in permitted}
     counters = selected["counter_table"]
-    if type(counters) is not dict or any(type(value) is not int for value in counters.values()):
+    if type(counters) is not dict:
+        raise ValueError
+    delay = counters.get("real_provider_call_delay_seconds")
+    if type(delay) is not float or not _math.isfinite(delay) or delay < 0.0:
+        raise ValueError
+    if any(
+        key != "real_provider_call_delay_seconds" and type(value) is not int
+        for key, value in counters.items()
+    ):
         raise ValueError
     reasons = tuple(selected["validation_errors"] or ())
     if (
@@ -4132,6 +4143,44 @@ def _strict_json(content: bytes) -> object:
         object_pairs_hook=pairs,
         parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)),
     )
+
+
+def _parse_prior_legacy_source_json(content: bytes) -> dict[str, object]:
+    if (
+        type(content) is not bytes
+        or not 0 < len(content) <= 16_000_000
+        or content.endswith(b"\n")
+        or b"\r" in content
+        or b"\x00" in content
+        or content.startswith(b"\xef\xbb\xbf")
+    ):
+        raise ValueError
+    text = content.decode("utf-8", errors="strict")
+
+    def pairs(rows: list[tuple[str, object]]) -> dict[str, object]:
+        result: dict[str, object] = {}
+        for key, value in rows:
+            if key in result:
+                raise ValueError
+            result[key] = value
+        return result
+
+    parsed = _json.loads(
+        text,
+        object_pairs_hook=pairs,
+        parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)),
+    )
+    if type(parsed) is not dict:
+        raise ValueError
+    canonical = _json.dumps(
+        parsed,
+        indent=2,
+        sort_keys=True,
+        allow_nan=False,
+    ).encode("utf-8")
+    if canonical != content:
+        raise ValueError
+    return parsed
 
 
 def _canonical_json_line(value: object) -> bytes:

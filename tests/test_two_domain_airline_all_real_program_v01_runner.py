@@ -265,6 +265,7 @@ def _synthetic_failed_predecessor(
             "network_used_count": 3,
             "gemini_called_count": 3,
             "real_world_effects_count": 0,
+            "real_provider_call_delay_seconds": 0.0,
         },
     }
     validation = {
@@ -273,9 +274,9 @@ def _synthetic_failed_predecessor(
         "errors": ["selection_input_snapshot_mismatch"],
     }
     payloads = {
-        "summary.json": runner._canonical_json_line(summary),
+        "summary.json": _legacy_source_json_bytes(summary),
         "client_purchase_intent_reviewer_llm_validation.json": (
-            runner._canonical_json_line(validation)
+            _legacy_source_json_bytes(validation)
         ),
     }
     for index in range(21):
@@ -341,6 +342,15 @@ def _synthetic_failed_predecessor(
         callback_prefix=prefix,
     )
     return root, anchors
+
+
+def _legacy_source_json_bytes(value: object) -> bytes:
+    return json.dumps(
+        value,
+        indent=2,
+        sort_keys=True,
+        allow_nan=False,
+    ).encode("utf-8")
 
 
 def _git_ready_values() -> dict[tuple[str, ...], str]:
@@ -2792,6 +2802,115 @@ def test_synthetic_predecessor_passes_complete_descriptor_bound_proof(
     assert tuple(row.logical_ref for row in proof.raw_rows) == tuple(
         sorted(row.logical_ref for row in proof.raw_rows)
     )
+
+
+def test_prior_summary_accepts_real_shaped_float_call_delay() -> None:
+    summary = {
+        "final_status": runner.STATUS_FAIL_CLOSED,
+        "failed_actor_id": "client_purchase_intent_reviewer_llm",
+        "failed_stage": "actor_validation",
+        "validation_errors": [
+            "selection_input_snapshot_mismatch",
+            "semantic_to_contract_bridge_guard_failed",
+        ],
+        "semantic_actor_call_order": list(runner._PRIOR_CALLBACK_PREFIX),
+        "counter_table": {
+            "provider_call_count": 3,
+            "real_world_effects_count": 0,
+            "real_provider_call_delay_seconds": 0.0,
+        },
+    }
+    runner._validate_prior_summary(summary, runner._PRIOR_ANCHORS)
+
+
+def test_legacy_prior_source_json_is_exact_and_parser_inputs_are_immutable() -> None:
+    value = {"accepted": False, "errors": ["safe_reason"]}
+    legacy = _legacy_source_json_bytes(value)
+    legacy_before = bytes(legacy)
+    assert runner._parse_prior_legacy_source_json(legacy) == value
+    assert legacy == legacy_before
+    with pytest.raises(ValueError):
+        runner._strict_json(legacy)
+
+    canonical = runner._canonical_json_line(value)
+    canonical_before = bytes(canonical)
+    assert runner._strict_json(canonical) == value
+    assert canonical == canonical_before
+
+
+@pytest.mark.parametrize(
+    "attack",
+    (
+        "terminal_lf",
+        "cr",
+        "nul",
+        "bom",
+        "duplicate_key",
+        "nan",
+        "positive_infinity",
+        "negative_infinity",
+        "invalid_utf8",
+        "non_dict",
+        "trailing_json",
+        "noncanonical",
+    ),
+)
+def test_legacy_prior_source_json_rejects_noncanonical_inputs(attack: str) -> None:
+    valid = _legacy_source_json_bytes({"key": "value"})
+    attacked = {
+        "terminal_lf": valid + b"\n",
+        "cr": valid.replace(b"\n", b"\r\n", 1),
+        "nul": valid + b"\x00",
+        "bom": b"\xef\xbb\xbf" + valid,
+        "duplicate_key": b'{\n  "key": 1,\n  "key": 2\n}',
+        "nan": b'{\n  "key": NaN\n}',
+        "positive_infinity": b'{\n  "key": Infinity\n}',
+        "negative_infinity": b'{\n  "key": -Infinity\n}',
+        "invalid_utf8": b'{\n  "key": "\xff"\n}',
+        "non_dict": b"[]",
+        "trailing_json": valid + b"{}",
+        "noncanonical": b'{"key": "value"}',
+    }[attack]
+    before = bytes(attacked)
+    with pytest.raises((UnicodeError, ValueError)):
+        runner._parse_prior_legacy_source_json(attacked)
+    assert attacked == before
+
+
+@pytest.mark.parametrize(
+    "counter_name,replacement",
+    (
+        ("provider_call_count", 3.0),
+        ("provider_call_count", True),
+        ("real_provider_call_delay_seconds", 0),
+        ("real_provider_call_delay_seconds", -0.1),
+        ("real_provider_call_delay_seconds", float("nan")),
+        ("real_provider_call_delay_seconds", float("inf")),
+        ("real_provider_call_delay_seconds", float("-inf")),
+    ),
+)
+def test_prior_summary_rejects_noncanonical_counter_types(
+    counter_name: str,
+    replacement: object,
+) -> None:
+    summary = {
+        "final_status": runner.STATUS_FAIL_CLOSED,
+        "failed_actor_id": "client_purchase_intent_reviewer_llm",
+        "failed_stage": "actor_validation",
+        "validation_errors": [
+            "selection_input_snapshot_mismatch",
+            "semantic_to_contract_bridge_guard_failed",
+        ],
+        "semantic_actor_call_order": list(runner._PRIOR_CALLBACK_PREFIX),
+        "counter_table": {
+            "provider_call_count": 3,
+            "real_world_effects_count": 0,
+            "real_provider_call_delay_seconds": 0.0,
+        },
+    }
+    summary["counter_table"][counter_name] = replacement
+    with pytest.raises(ValueError):
+        runner._validate_prior_summary(summary, runner._PRIOR_ANCHORS)
 
 
 @pytest.mark.parametrize(

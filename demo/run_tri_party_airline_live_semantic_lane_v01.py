@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import time
 from collections.abc import Mapping as MappingABC
@@ -16,6 +17,7 @@ from demo.run_live_unknown_request_dual_rich_context_v01 import (
 )
 from hedgehog.domains.airline import semantic_to_contract_binding_v01 as binding
 from hedgehog.domains.airline import semantic_to_contract_causal_runtime_v01 as causal_runtime
+from hedgehog.domains.airline import semantic_provider_canonicalization_v01 as semantic_canonicalization
 from hedgehog.domains.airline import crypto_artifact_seal_collector_v01 as crypto_collector
 from hedgehog.domains.airline import crypto_artifact_seal_v01 as crypto_contracts
 from hedgehog.domains.airline import (
@@ -73,6 +75,11 @@ REASON_LIVE_BSEP_CAUSAL_PROJECTION_LINEAGE_MISMATCH = (
 )
 REASON_CRYPTO_LIVE_GATE_REQUIRED = "crypto_live_lane_gate_required"
 REASON_CRYPTO_CAUSAL_GATE_REQUIRED = "crypto_causal_binding_gate_required"
+PROVIDER_RESULT_MAX_UTF8_BYTES = 16384
+PROVIDER_JSON_MAX_DEPTH = 32
+PROVIDER_JSON_MAX_NODES = 1024
+PROVIDER_JSON_MAX_COLLECTION_WIDTH = 128
+PROVIDER_RESULT_INVALID = "provider_result_invalid"
 REASON_CRYPTO_ARTIFACT_DIR_REQUIRED = "crypto_artifact_dir_required"
 REASON_CRYPTO_ARTIFACT_DIR_SYMLINK = "crypto_artifact_dir_symlink"
 REASON_CRYPTO_ARTIFACT_DIR_INVALID = "crypto_artifact_dir_invalid"
@@ -132,165 +139,6 @@ CRYPTO_FAILURE_REASONS = (
     REASON_CRYPTO_DERIVED_CLEANUP_FAILED,
     REASON_CRYPTO_SOURCE_BYTES_CHANGED_AFTER_WRITE,
 )
-
-CAUSAL_PROPOSER_REQUIRED_FIELDS = tuple(
-    binding.AirlineSemanticOfferSelectionProposalV01.__dataclass_fields__,
-)
-CAUSAL_REVIEWER_REQUIRED_FIELDS = tuple(
-    causal_runtime.AirlineInjectedReviewerResponseV01.__dataclass_fields__,
-)
-
-
-def _non_empty_string_schema() -> dict[str, Any]:
-    return {"type": "string", "minLength": 1}
-
-
-def _single_value_schema(value: Any) -> dict[str, Any]:
-    return {"type": "string", "enum": [value]}
-
-
-def _false_boolean_schema() -> dict[str, Any]:
-    return {"type": "boolean", "enum": [False]}
-
-
-def _zero_integer_schema() -> dict[str, Any]:
-    return {"type": "integer", "enum": [0]}
-
-
-def _non_empty_string_array_schema(
-    *,
-    enum_values: tuple[str, ...] | None = None,
-    unique_items: bool = False,
-) -> dict[str, Any]:
-    item_schema: dict[str, Any] = _non_empty_string_schema()
-    if enum_values is not None:
-        item_schema = {"type": "string", "enum": list(enum_values)}
-    schema: dict[str, Any] = {
-        "type": "array",
-        "minItems": 1,
-        "items": item_schema,
-    }
-    if unique_items:
-        schema["uniqueItems"] = True
-    return schema
-
-
-def _build_causal_proposer_response_schema_v01(
-    causal_request: causal_runtime.AirlineInjectedSemanticActorRequestV01,
-    selection_input: binding.AirlineSemanticSelectionInputV01,
-) -> dict[str, Any]:
-    allowed_offer_ids = tuple(selection_input.client_hard_compatible_candidate_ids)
-    return {
-        "type": "object",
-        "additionalProperties": False,
-        "required": list(CAUSAL_PROPOSER_REQUIRED_FIELDS),
-        "properties": {
-            "proposal_id": _non_empty_string_schema(),
-            "transaction_id": _single_value_schema(causal_request.transaction_id),
-            "actor_id": _single_value_schema(causal_request.actor_id),
-            "source_selection_input_id": _single_value_schema(
-                causal_request.source_selection_input_id,
-            ),
-            "source_bsep_projection_ref": _single_value_schema(
-                causal_request.source_bsep_projection_ref,
-            ),
-            "source_client_constraint_set_id": _single_value_schema(
-                causal_request.source_client_constraint_set_id,
-            ),
-            "source_candidate_set_snapshot_id": _single_value_schema(
-                causal_request.source_candidate_set_snapshot_id,
-            ),
-            "source_candidate_set_digest": _single_value_schema(
-                causal_request.source_candidate_set_digest,
-            ),
-            "candidate_set_ref": _single_value_schema(
-                causal_request.source_candidate_set_ref,
-            ),
-            "recommended_offer_id": {
-                "type": "string",
-                "enum": list(allowed_offer_ids),
-            },
-            "ranked_offer_ids": _non_empty_string_array_schema(
-                enum_values=allowed_offer_ids,
-                unique_items=True,
-            ),
-            "decision_factors": _non_empty_string_array_schema(),
-            "preference_matches": _non_empty_string_array_schema(),
-            "uncertainty_notes": _non_empty_string_array_schema(),
-            "requires_root_review": {"type": "boolean", "enum": [True]},
-            "semantic_summary": _non_empty_string_schema(),
-            "authority_created": _false_boolean_schema(),
-            "action_permission_created": _false_boolean_schema(),
-            "packet_created": _false_boolean_schema(),
-            "receipt_created": _false_boolean_schema(),
-            "payment_created": _false_boolean_schema(),
-            "ticket_created": _false_boolean_schema(),
-            "booking_created": _false_boolean_schema(),
-            "final_output_created": _false_boolean_schema(),
-            "real_world_effects_count": _zero_integer_schema(),
-        },
-    }
-
-
-def _build_causal_reviewer_response_schema_v01(
-    causal_request: causal_runtime.AirlineInjectedSemanticActorRequestV01,
-) -> dict[str, Any]:
-    known_statuses = (
-        binding.STATUS_PASS,
-        binding.STATUS_FAIL_CLOSED,
-        binding.STATUS_REQUIRES_ROOT_REVIEW,
-    )
-    return {
-        "type": "object",
-        "additionalProperties": False,
-        "required": list(CAUSAL_REVIEWER_REQUIRED_FIELDS),
-        "properties": {
-            "response_id": _non_empty_string_schema(),
-            "transaction_id": _single_value_schema(causal_request.transaction_id),
-            "actor_id": _single_value_schema(causal_request.actor_id),
-            "source_request_id": _single_value_schema(causal_request.request_id),
-            "source_selection_input_id": _single_value_schema(
-                causal_request.source_selection_input_id,
-            ),
-            "source_candidate_set_snapshot_id": _single_value_schema(
-                causal_request.source_candidate_set_snapshot_id,
-            ),
-            "source_candidate_set_digest": _single_value_schema(
-                causal_request.source_candidate_set_digest,
-            ),
-            "reviewed_offer_id": _single_value_schema(
-                causal_request.proposed_offer_id,
-            ),
-            "review_role": _single_value_schema(causal_request.actor_role),
-            "review_status": {"type": "string", "enum": list(known_statuses)},
-            "semantic_factors": _non_empty_string_array_schema(),
-            "blocking_conflicts": {
-                "type": "array",
-                "items": _non_empty_string_schema(),
-            },
-            "supports_proposed_offer": {"type": "boolean"},
-            "validation_status": {
-                "type": "string",
-                "enum": list(known_statuses),
-            },
-            "raw_output_used": _false_boolean_schema(),
-            "authority_created": _false_boolean_schema(),
-            "permission_created": _false_boolean_schema(),
-            "real_world_effects_count": _zero_integer_schema(),
-        },
-    }
-
-
-def _causal_provider_response_schema_v01(
-    causal_request: causal_runtime.AirlineInjectedSemanticActorRequestV01,
-    selection_input: binding.AirlineSemanticSelectionInputV01,
-) -> dict[str, Any]:
-    if causal_request.actor_id == causal_runtime.ACTOR_ORDER[0]:
-        return _build_causal_proposer_response_schema_v01(
-            causal_request,
-            selection_input,
-        )
-    return _build_causal_reviewer_response_schema_v01(causal_request)
 
 SECRET_MARKERS = (
     "AIza",
@@ -880,6 +728,31 @@ def build_fake_airline_semantic_provider_v01() -> Provider:
             ),
         }
         actor = _actor_spec(actor_id)
+        causal_request = metadata.get("semantic_to_contract_request")
+        if isinstance(causal_request, Mapping):
+            if actor_id == causal_runtime.ACTOR_ORDER[0]:
+                return json.dumps(
+                    {
+                        "recommended_offer_id": binding.OFFER_A_ID,
+                        "ranked_offer_ids": [binding.OFFER_A_ID],
+                        "decision_factors": ["preference_a_exact_fit"],
+                        "preference_matches": ["lower_price", "window_seat"],
+                        "uncertainty_notes": ["requires_client_root_review"],
+                        "requires_root_review": True,
+                        "semantic_summary": (
+                            "Offer A best matches the declared preferences."
+                        ),
+                    },
+                    sort_keys=True,
+                )
+            return json.dumps(
+                {
+                    "supports_proposed_offer": True,
+                    "semantic_factors": ["offer_a_is_hard_compatible"],
+                    "blocking_conflicts": [],
+                },
+                sort_keys=True,
+            )
         response: dict[str, Any] = {
             "actor_id": actor_id,
             "transaction_id": TRANSACTION_ID,
@@ -935,15 +808,13 @@ def build_real_airline_semantic_provider_v01(model: str) -> Provider:
     def real_provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> str:
         env_value = metadata.get("provider_env", {})
         provider_env = dict(env_value) if isinstance(env_value, Mapping) else dict(os.environ)
-        schema_value = metadata.get("provider_response_schema")
-        response_schema = dict(schema_value) if isinstance(schema_value, Mapping) else None
         return _shared_live_gemini_provider(
             prompt=prompt,
             model_name=model,
             timeout_seconds=provider_adapter._timeout_seconds(provider_env),
             explicit_http_timeout=True,
             env=provider_env,
-            response_schema=response_schema,
+            response_schema=None,
             role=actor_id,
         )
 
@@ -1021,7 +892,6 @@ def _run_provider_lane(
                 break
 
         causal_request = None
-        provider_response_schema = None
         if causal_gate_open and actor_id in CAUSAL_ACTOR_IDS:
             if causal_constraints is None:
                 validation_errors.append("causal_constraints_required")
@@ -1069,10 +939,6 @@ def _run_provider_lane(
                 snapshot=actual_causal_snapshot,
                 proposed_offer_id=proposed_offer_id,
             )
-            provider_response_schema = _causal_provider_response_schema_v01(
-                causal_request,
-                causal_selection_input,
-            )
 
         prompt = _build_prompt(
             actor=actor,
@@ -1101,7 +967,6 @@ def _run_provider_lane(
         }
         if causal_request is not None:
             metadata["semantic_to_contract_request"] = asdict(causal_request)
-            metadata["provider_response_schema"] = provider_response_schema
         if provider_mode == PROVIDER_MODE_REAL and call_delay_seconds > 0:
             time.sleep(call_delay_seconds)
             delay_applied_count += 1
@@ -1124,6 +989,23 @@ def _run_provider_lane(
                 artifacts,
             )
             break
+        candidate, parse_errors = _preprocess_provider_result(raw_response)
+        if parse_errors:
+            failed_actor_id = actor_id
+            failed_stage = "provider_result_validation"
+            provider_error_sanitized = PROVIDER_RESULT_INVALID
+            validation_errors.append(f"{PROVIDER_RESULT_INVALID}:{actor_id}")
+            _write_json_named(
+                artifact_dir,
+                f"{actor_id}_provider_error.json",
+                {
+                    "actor_id": actor_id,
+                    "failed_stage": failed_stage,
+                    "provider_error_sanitized": provider_error_sanitized,
+                },
+                artifacts,
+            )
+            break
         raw_response_artifact = _write_text_artifact(
             artifact_dir,
             f"{actor_id}_raw_response.txt",
@@ -1132,8 +1014,6 @@ def _run_provider_lane(
             artifact_counts,
             "raw_responses_written_count",
         )
-
-        candidate, parse_errors = _extract_json_candidate(raw_response)
         extracted_json_artifact = _write_json_artifact(
             artifact_dir,
             f"{actor_id}_extracted_json_candidate.json",
@@ -1143,13 +1023,57 @@ def _run_provider_lane(
             "extracted_json_candidates_written_count",
         )
         if causal_request is not None and causal_selection_input is not None:
-            validation = _validate_causal_actor_candidate(
-                candidate=candidate,
-                actor=actor,
-                causal_request=causal_request,
-                selection_input=causal_selection_input,
-                parse_errors=parse_errors,
+            canonicalization = (
+                semantic_canonicalization
+                .canonicalize_airline_causal_provider_response_v01(
+                    raw_provider_response=raw_response,
+                    request=causal_request,
+                    bsep_projection=causal_bsep_projection,
+                    constraints=causal_constraints,
+                    selection_input=causal_selection_input,
+                    snapshot=actual_causal_snapshot,
+                )
             )
+            semantic_plain = (
+                asdict(canonicalization.extracted_semantic_object)
+                if canonicalization.extracted_semantic_object is not None
+                else None
+            )
+            canonical_plain = (
+                asdict(canonicalization.runtime_canonical_artifact)
+                if canonicalization.runtime_canonical_artifact is not None
+                else None
+            )
+            errors = tuple(
+                dict.fromkeys(
+                    (*parse_errors,
+                     *canonicalization.semantic_validation.reason_codes,
+                     *canonicalization.canonical_validation.reason_codes)
+                )
+            )
+            validation = {
+                "accepted": canonicalization.final_status == STATUS_PASS,
+                "validation_status": canonicalization.final_status,
+                "errors": errors,
+                "evidence_categories": {
+                    "raw_provider_response": {
+                        "artifact_ref": raw_response_artifact,
+                        "unchanged": canonicalization.raw_provider_response
+                        == raw_response,
+                    },
+                    "extracted_semantic_object": semantic_plain,
+                    "semantic_envelope_validation": asdict(
+                        canonicalization.semantic_validation
+                    ),
+                    "runtime_canonical_artifact": canonical_plain,
+                    "canonical_validation": asdict(
+                        canonicalization.canonical_validation
+                    ),
+                    "field_ownership_provenance": asdict(
+                        canonicalization.field_ownership
+                    ),
+                },
+            }
             causal_actor_payload_validation_errors.extend(validation["errors"])
             causal_call_index = len(causal_provider_call_records) + 1
             causal_provider_call_records.append(
@@ -1166,17 +1090,10 @@ def _run_provider_lane(
             )
             if validation["validation_status"] == STATUS_PASS:
                 if actor_id == causal_runtime.ACTOR_ORDER[0]:
-                    causal_proposer_payload = candidate
-                    proposal, _ = (
-                        binding
-                        .build_airline_semantic_offer_selection_proposal_from_payload_v01(
-                            causal_selection_input,
-                            candidate,
-                        )
-                    )
-                    causal_proposal = proposal
+                    causal_proposer_payload = canonical_plain or {}
+                    causal_proposal = canonicalization.runtime_canonical_artifact
                 else:
-                    causal_reviewer_payloads[actor_id] = candidate
+                    causal_reviewer_payloads[actor_id] = canonical_plain or {}
         else:
             validation = _validate_actor_candidate(
                 candidate=candidate,
@@ -1196,7 +1113,7 @@ def _run_provider_lane(
         canonical_summary = _canonical_summary(candidate, actor, validation)
         if causal_request is not None:
             canonical_summary = _causal_canonical_summary(
-                candidate,
+                canonical_plain or candidate,
                 actor,
                 validation,
             )
@@ -1697,120 +1614,46 @@ def _build_prompt(
         "real_booking_created": False,
         "real_world_effects_count": 0,
     }
-    if causal_request is not None:
-        if causal_request.actor_id == causal_runtime.ACTOR_ORDER[0]:
-            json_skeleton = {
-                "proposal_id": "non_empty_proposal_id_not_offer_default",
-                "transaction_id": causal_request.transaction_id,
-                "actor_id": causal_request.actor_id,
-                "source_selection_input_id": (
-                    causal_request.source_selection_input_id
-                ),
-                "source_bsep_projection_ref": (
-                    causal_request.source_bsep_projection_ref
-                ),
-                "source_client_constraint_set_id": (
-                    causal_request.source_client_constraint_set_id
-                ),
-                "source_candidate_set_snapshot_id": (
-                    causal_request.source_candidate_set_snapshot_id
-                ),
-                "source_candidate_set_digest": (
-                    causal_request.source_candidate_set_digest
-                ),
-                "candidate_set_ref": causal_request.source_candidate_set_ref,
-                "recommended_offer_id": (
-                    "choose_one_allowed_hard_compatible_offer_id"
-                ),
-                "ranked_offer_ids": (
-                    "rank_allowed_offer_ids_without_defaulting",
-                ),
-                "decision_factors": (
-                    "Compare price, seat, baggage, changeability, and layover semantics as strings.",
-                ),
-                "preference_matches": (
-                    "Describe which declared soft preferences the recommendation matches as strings.",
-                ),
-                "uncertainty_notes": (
-                    "Recommendation remains advisory and requires ClientRoot review.",
-                ),
-                "requires_root_review": True,
-                "semantic_summary": (
-                    "Non-empty advisory semantic summary; not Root authority."
-                ),
-                "authority_created": False,
-                "action_permission_created": False,
-                "packet_created": False,
-                "receipt_created": False,
-                "payment_created": False,
-                "ticket_created": False,
-                "booking_created": False,
-                "final_output_created": False,
-                "real_world_effects_count": 0,
-            }
-        else:
-            json_skeleton = {
-                "response_id": "non_empty_reviewer_response_id",
-                "transaction_id": causal_request.transaction_id,
-                "actor_id": causal_request.actor_id,
-                "source_request_id": causal_request.request_id,
-                "source_selection_input_id": (
-                    causal_request.source_selection_input_id
-                ),
-                "source_candidate_set_snapshot_id": (
-                    causal_request.source_candidate_set_snapshot_id
-                ),
-                "source_candidate_set_digest": (
-                    causal_request.source_candidate_set_digest
-                ),
-                "reviewed_offer_id": causal_request.proposed_offer_id,
-                "review_role": causal_request.actor_role,
-                "review_status": "derive_from_actual_review",
-                "semantic_factors": (
-                    "Review the proposed offer with non-empty string factors.",
-                ),
-                "blocking_conflicts": ("derive_from_actual_review",),
-                "supports_proposed_offer": "derive_boolean_from_actual_review",
-                "validation_status": "derive_from_actual_review",
-                "raw_output_used": False,
-                "authority_created": False,
-                "permission_created": False,
-                "real_world_effects_count": 0,
-            }
     causal_prompt_lines: tuple[str, ...] = ()
     if causal_request is not None:
         allowed_ids = tuple(causal_request.client_hard_compatible_candidate_ids)
         causal_prompt_lines = (
-            "Causal response contract is strict: local typed validator receives the extracted JSON unchanged.",
+            "Return exactly the named semantic JSON fields and no mechanical fields.",
             (
                 "Allowed hard-compatible offer ids: "
                 + ", ".join(allowed_ids)
             ),
-            (
-                "decision_factors, preference_matches, and uncertainty_notes "
-                "must each be JSON arrays of non-empty strings. Never return "
-                "objects in these arrays."
-            ),
-            (
-                "Choose recommended_offer_id from the allowed hard-compatible "
-                "ids using semantic comparison only. Do not choose by list "
-                "order and do not use a default offer."
-            ),
-            "requires_root_review must be true for proposer output.",
-            "The placeholder skeleton is not a valid provider result.",
-            "Provider response schema and local typed validator remain mandatory.",
+            "Candidate semantic records: "
+            + json.dumps(_json_safe(causal_request.authoritative_candidate_projection), sort_keys=True),
+            "Client hard constraints: "
+            + json.dumps(_json_safe(causal_request.client_hard_constraints), sort_keys=True),
+            "Client soft preferences: "
+            + json.dumps(_json_safe(causal_request.client_soft_preferences), sort_keys=True),
+            "JSON MIME shape and the local semantic and canonical validators are mandatory.",
         )
-        if causal_request.actor_id != causal_runtime.ACTOR_ORDER[0]:
+        if causal_request.actor_id == causal_runtime.ACTOR_ORDER[0]:
             causal_prompt_lines += (
-                "Reviewer semantic_factors must be a non-empty JSON array of non-empty strings.",
-                "Reviewer blocking_conflicts must report every actual blocking conflict; do not copy an empty conflict list by default.",
-                "Reviewer unsupported/conflicting outcomes are allowed; do not assume PASS.",
-                "Derive supports_proposed_offer from actual semantic review.",
-                "Return false when the proposed offer is not supported.",
-                "The placeholder skeleton is not valid output.",
-                "Actual provider response must still use schema-valid types: boolean supports_proposed_offer and string-array blocking_conflicts.",
-                "Response schema and local validator remain authoritative for shape/safety.",
+                "recommended_offer_id: non-empty JSON string selected by semantic comparison from the allowed hard-compatible offer ids; no default.",
+                "ranked_offer_ids: non-empty JSON array of unique allowed hard-compatible offer-id strings in genuine semantic rank order.",
+                "decision_factors: non-empty JSON array of non-empty semantic-factor strings.",
+                "preference_matches: non-empty JSON array of non-empty declared-preference match strings.",
+                "uncertainty_notes: non-empty JSON array of non-empty uncertainty strings.",
+                "requires_root_review: JSON boolean asserting mandatory Root review.",
+                "semantic_summary: non-empty advisory JSON string.",
             )
+        else:
+            causal_prompt_lines += (
+                "supports_proposed_offer: JSON boolean derived neutrally from actual semantic review; support and rejection are both allowed.",
+                "semantic_factors: non-empty JSON array of non-empty review-factor strings.",
+                "blocking_conflicts: JSON array containing every actual blocking-conflict string and no invented conflict.",
+                "The proposed offer to review is: " + causal_request.proposed_offer_id,
+                "Local semantic and canonical validators remain authoritative for shape and safety.",
+            )
+    return_rule = (
+        "Return only the exact fields in the named causal semantic contract."
+        if causal_request is not None
+        else "Return only semantic fields and safety flags."
+    )
     return "\n".join(
         (
             f"Role name: {actor['actor_id']}",
@@ -1828,30 +1671,102 @@ def _build_prompt(
             "Do not describe runtime internals.",
             "Runtime will compute what_runtime_used and what_runtime_rejected after validation.",
             "runtime computes what_runtime_used and runtime computes what_runtime_rejected after validation.",
-            "Return only semantic fields and safety flags.",
+            return_rule,
             "Do not create payment, ticket, booking, packet, receipt, authority, or FinalOutput.",
             "No raw passport, raw card, raw IBAN, raw payment token, raw private profile, API key, connector credential, raw provider text from other actors, or peer raw content is allowed.",
-            (
-                "Causal selection request: "
-                + json.dumps(_json_safe(causal_request), sort_keys=True)
-                if causal_request is not None
-                else "Causal selection request: not applicable"
-            ),
             *causal_prompt_lines,
-            "Explicit JSON skeleton:",
-            json.dumps(json_skeleton, sort_keys=True),
+            *(("Explicit JSON skeleton:", json.dumps(json_skeleton, sort_keys=True)) if causal_request is None else ()),
         ),
     )
 
 
-def _extract_json_candidate(raw_response: str) -> tuple[dict[str, Any], tuple[str, ...]]:
+def _preprocess_provider_result(
+    value: object,
+) -> tuple[dict[str, Any], tuple[str, ...]]:
+    if type(value) is not str:
+        return {}, (PROVIDER_RESULT_INVALID,)
     try:
-        parsed = json.loads(raw_response)
-    except json.JSONDecodeError as exc:
-        return {"raw_response_parse_error": str(exc)}, ("malformed_json",)
-    if not isinstance(parsed, dict):
-        return {"raw_response_parse_error": "json root is not object"}, ("json_root_not_object",)
+        encoded = value.encode("utf-8", errors="strict")
+    except UnicodeError:
+        return {}, (PROVIDER_RESULT_INVALID,)
+    if (
+        not encoded
+        or len(encoded) > PROVIDER_RESULT_MAX_UTF8_BYTES
+        or "\x00" in value
+        or "\r" in value
+        or "\ufeff" in value
+    ):
+        return {}, (PROVIDER_RESULT_INVALID,)
+
+    def pairs(items: list[tuple[str, object]]) -> dict[str, object]:
+        result: dict[str, object] = {}
+        for key, item in items:
+            if key in result:
+                raise ValueError
+            result[key] = item
+        return result
+
+    try:
+        parsed = json.loads(
+            value,
+            object_pairs_hook=pairs,
+            parse_constant=lambda constant: (_ for _ in ()).throw(
+                ValueError(constant)
+            ),
+        )
+    except (
+        json.JSONDecodeError,
+        ValueError,
+        TypeError,
+        OverflowError,
+        RecursionError,
+    ):
+        return {}, (PROVIDER_RESULT_INVALID,)
+    if type(parsed) is not dict:
+        return {}, (PROVIDER_RESULT_INVALID,)
+    if not _provider_json_tree_is_bounded(parsed):
+        return {}, (PROVIDER_RESULT_INVALID,)
     return parsed, ()
+
+
+def _provider_json_tree_is_bounded(root: dict[str, object]) -> bool:
+    stack: list[tuple[object, int]] = [(root, 0)]
+    node_count = 0
+    while stack:
+        value, depth = stack.pop()
+        node_count += 1
+        if node_count > PROVIDER_JSON_MAX_NODES or depth > PROVIDER_JSON_MAX_DEPTH:
+            return False
+        if type(value) is dict:
+            if len(value) > PROVIDER_JSON_MAX_COLLECTION_WIDTH:
+                return False
+            for key, item in value.items():
+                if not _provider_json_string_is_safe(key):
+                    return False
+                stack.append((item, depth + 1))
+        elif type(value) is list:
+            if len(value) > PROVIDER_JSON_MAX_COLLECTION_WIDTH:
+                return False
+            stack.extend((item, depth + 1) for item in value)
+        elif type(value) is str:
+            if not _provider_json_string_is_safe(value):
+                return False
+        elif type(value) is float:
+            if not math.isfinite(value):
+                return False
+        elif value is not None and type(value) not in (bool, int):
+            return False
+    return True
+
+
+def _provider_json_string_is_safe(value: object) -> bool:
+    if type(value) is not str:
+        return False
+    try:
+        value.encode("utf-8", errors="strict")
+    except UnicodeError:
+        return False
+    return "\x00" not in value and "\r" not in value and "\ufeff" not in value
 
 
 def _validate_actor_candidate(
@@ -1942,42 +1857,6 @@ def _validate_actor_candidate(
         "accepted": not errors,
         "validation_status": STATUS_PASS if not errors else STATUS_FAIL_CLOSED,
         "errors": tuple(errors),
-    }
-
-
-def _validate_causal_actor_candidate(
-    *,
-    candidate: Mapping[str, Any],
-    actor: Mapping[str, Any],
-    causal_request: causal_runtime.AirlineInjectedSemanticActorRequestV01,
-    selection_input: binding.AirlineSemanticSelectionInputV01,
-    parse_errors: tuple[str, ...],
-) -> dict[str, Any]:
-    errors = list(parse_errors)
-    if actor["actor_id"] == causal_runtime.ACTOR_ORDER[0]:
-        proposal, report = (
-            binding.build_airline_semantic_offer_selection_proposal_from_payload_v01(
-                selection_input,
-                candidate,
-            )
-        )
-        errors.extend(report.reason_codes)
-        if proposal is not None and proposal.actor_id != actor["actor_id"]:
-            errors.append("actor_id_mismatch")
-    else:
-        response, response_errors = causal_runtime.parse_injected_reviewer_response_v01(
-            request=causal_request,
-            selection_input=selection_input,
-            proposed_offer_id=causal_request.proposed_offer_id,
-            payload=candidate,
-        )
-        errors.extend(response_errors)
-        if response is not None and response.actor_id != actor["actor_id"]:
-            errors.append("actor_id_mismatch")
-    return {
-        "accepted": not errors,
-        "validation_status": STATUS_PASS if not errors else STATUS_FAIL_CLOSED,
-        "errors": tuple(dict.fromkeys(errors)),
     }
 
 

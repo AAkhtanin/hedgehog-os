@@ -15,6 +15,9 @@ from hedgehog.domains.airline import (
 from hedgehog.domains.airline import (
     semantic_to_contract_causal_runtime_v01 as causal_runtime,
 )
+from hedgehog.domains.airline import (
+    semantic_provider_canonicalization_v01 as semantic_canonicalization,
+)
 from hedgehog.domains.airline import transaction_artifact_ledger_v01 as ledger
 
 
@@ -148,6 +151,32 @@ def _reviewer_payload(
     return payload
 
 
+def _semantic_proposal_payload(offer_id: str) -> dict[str, Any]:
+    return {
+        "recommended_offer_id": offer_id,
+        "ranked_offer_ids": [offer_id],
+        "decision_factors": ["test_live_lane_semantic_tradeoff"],
+        "preference_matches": ["test_soft_preference_match"],
+        "uncertainty_notes": ["requires_client_root_review"],
+        "requires_root_review": True,
+        "semantic_summary": "Test-only causal proposal.",
+    }
+
+
+def _semantic_reviewer_payload(
+    *,
+    overrides: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "supports_proposed_offer": True,
+        "semantic_factors": ["test_reviewer_supports_offer"],
+        "blocking_conflicts": [],
+    }
+    if overrides:
+        payload.update(overrides)
+    return payload
+
+
 def _content_sensitive_causal_provider() -> runner.Provider:
     generic = runner.build_fake_airline_semantic_provider_v01()
 
@@ -164,28 +193,14 @@ def _content_sensitive_causal_provider() -> runner.Provider:
                 if "extra_legroom_aisle" in priority or "extra_legroom" in seat
                 else binding.OFFER_A_ID
             )
-            return json.dumps(_proposal_payload(request, offer_id), sort_keys=True)
-        return json.dumps(_reviewer_payload(request), sort_keys=True)
+            return json.dumps(_semantic_proposal_payload(offer_id), sort_keys=True)
+        return json.dumps(_semantic_reviewer_payload(), sort_keys=True)
 
     return provider
 
 
 def _real_shaped_response_causal_provider() -> runner.Provider:
-    base_provider = _content_sensitive_causal_provider()
-
-    def provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> str:
-        raw = base_provider(actor_id, prompt, metadata)
-        request = metadata.get("semantic_to_contract_request")
-        if (
-            not isinstance(request, Mapping)
-            or actor_id == binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER
-        ):
-            return raw
-        payload = json.loads(raw)
-        payload["response_id"] = f"{actor_id}_response_001"
-        return json.dumps(payload, sort_keys=True)
-
-    return provider
+    return _content_sensitive_causal_provider()
 
 
 def _causal_report_for_preference(
@@ -474,7 +489,7 @@ def test_airline_live_semantic_real_provider_bad_output_fails_closed(
 
     assert report["final_status"] == runner.STATUS_FAIL_CLOSED
     assert report["provider_mode"] == runner.PROVIDER_MODE_REAL
-    assert report["failed_stage"] == "actor_validation"
+    assert report["failed_stage"] == "provider_result_validation"
 
 
 def test_airline_live_semantic_real_provider_bsep_and_vertical_dependencies(
@@ -848,95 +863,27 @@ def test_corrected_equivalent_causal_proposer_shape_passes() -> None:
     assert proposal.recommended_offer_id == binding.OFFER_A_ID
 
 
-def test_causal_proposer_schema_allows_a_and_b_without_default_or_bias() -> None:
-    selection_input, request = _schema_fixture()
-    schema = runner._build_causal_proposer_response_schema_v01(
-        request,
-        selection_input,
+def test_causal_provider_schema_surface_is_removed() -> None:
+    source = Path(runner.__file__).read_text()
+
+    assert "_build_causal_proposer_response_schema_v01" not in source
+    assert "_build_causal_reviewer_response_schema_v01" not in source
+    assert "_causal_provider_response_schema_v01" not in source
+    assert "provider_response_schema" not in source
+    assert semantic_canonicalization.PROPOSER_SEMANTIC_FIELDS == (
+        "recommended_offer_id",
+        "ranked_offer_ids",
+        "decision_factors",
+        "preference_matches",
+        "uncertainty_notes",
+        "requires_root_review",
+        "semantic_summary",
     )
-    recommended = schema["properties"]["recommended_offer_id"]
-    ranking_items = schema["properties"]["ranked_offer_ids"]["items"]
-
-    assert set(recommended["enum"]) == {binding.OFFER_A_ID, binding.OFFER_B_ID}
-    assert set(ranking_items["enum"]) == {binding.OFFER_A_ID, binding.OFFER_B_ID}
-    assert recommended["enum"] == list(
-        selection_input.client_hard_compatible_candidate_ids
+    assert semantic_canonicalization.REVIEWER_SEMANTIC_FIELDS == (
+        "supports_proposed_offer",
+        "semantic_factors",
+        "blocking_conflicts",
     )
-    assert "default" not in recommended
-    assert "const" not in recommended
-    assert schema["properties"]["proposal_id"] == {"type": "string", "minLength": 1}
-    assert schema["properties"]["requires_root_review"]["enum"] == [True]
-    assert schema["required"] == list(runner.CAUSAL_PROPOSER_REQUIRED_FIELDS)
-    assert set(schema["required"]) == set(
-        binding.AirlineSemanticOfferSelectionProposalV01.__dataclass_fields__,
-    )
-
-
-def test_causal_reviewer_schema_lineage_and_conflict_surface() -> None:
-    selection_input, proposer_request = _schema_fixture()
-    reviewer_actor = binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER
-    _, reviewer_request = _schema_fixture(
-        actor_id=reviewer_actor,
-        proposed_offer_id=binding.OFFER_A_ID,
-    )
-    schema = runner._build_causal_reviewer_response_schema_v01(reviewer_request)
-    properties = schema["properties"]
-
-    assert schema["required"] == list(runner.CAUSAL_REVIEWER_REQUIRED_FIELDS)
-    assert set(schema["required"]) == set(
-        causal_runtime.AirlineInjectedReviewerResponseV01.__dataclass_fields__,
-    )
-    assert properties["transaction_id"]["enum"] == [reviewer_request.transaction_id]
-    assert properties["actor_id"]["enum"] == [reviewer_actor]
-    assert properties["source_request_id"]["enum"] == [reviewer_request.request_id]
-    assert properties["source_selection_input_id"]["enum"] == [
-        selection_input.selection_input_id,
-    ]
-    assert properties["source_candidate_set_snapshot_id"]["enum"] == [
-        selection_input.source_candidate_set_snapshot_id,
-    ]
-    assert properties["source_candidate_set_digest"]["enum"] == [
-        selection_input.source_candidate_set_digest,
-    ]
-    assert properties["reviewed_offer_id"]["enum"] == [binding.OFFER_A_ID]
-    assert properties["review_role"]["enum"] == [reviewer_request.actor_role]
-    assert properties["semantic_factors"]["minItems"] == 1
-    assert properties["semantic_factors"]["items"] == {
-        "type": "string",
-        "minLength": 1,
-    }
-    assert "minItems" not in properties["blocking_conflicts"]
-    assert properties["supports_proposed_offer"] == {"type": "boolean"}
-    assert "enum" not in properties["supports_proposed_offer"]
-    assert properties["supports_proposed_offer"].get("enum") is None
-    assert properties["blocking_conflicts"]["items"] == {
-        "type": "string",
-        "minLength": 1,
-    }
-    assert properties["authority_created"]["enum"] == [False]
-    assert properties["permission_created"]["enum"] == [False]
-    assert properties["raw_output_used"]["enum"] == [False]
-    assert properties["real_world_effects_count"]["enum"] == [0]
-    assert schema["additionalProperties"] is False
-    assert proposer_request.actor_id == binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER
-
-
-def test_causal_reviewer_schema_permits_support_reject_and_conflicts() -> None:
-    _, reviewer_request = _schema_fixture(
-        actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
-        proposed_offer_id=binding.OFFER_A_ID,
-    )
-    schema = runner._build_causal_reviewer_response_schema_v01(reviewer_request)
-    properties = schema["properties"]
-
-    assert properties["supports_proposed_offer"] == {"type": "boolean"}
-    assert "enum" not in properties["supports_proposed_offer"]
-    assert properties["blocking_conflicts"]["type"] == "array"
-    assert properties["blocking_conflicts"]["items"] == {
-        "type": "string",
-        "minLength": 1,
-    }
-    assert "minItems" not in properties["blocking_conflicts"]
 
 
 def test_causal_reviewer_prompt_has_no_approval_biased_skeleton() -> None:
@@ -954,16 +901,21 @@ def test_causal_reviewer_prompt_has_no_approval_biased_skeleton() -> None:
         causal_selection_input=selection_input,
     )
 
-    assert '"supports_proposed_offer": true' not in prompt
-    assert '"blocking_conflicts": []' not in prompt
-    assert '"blocking_conflicts": []' not in prompt.replace(" ", "")
-    assert "unsupported/conflicting outcomes are allowed" in prompt
-    assert "do not copy an empty conflict list by default" in prompt
-    assert "Derive supports_proposed_offer from actual semantic review" in prompt
-    assert "Return false when the proposed offer is not supported" in prompt
-    assert "do not assume PASS" in prompt
-    assert "The placeholder skeleton is not valid output" in prompt
-    assert "Response schema and local validator remain authoritative" in prompt
+    assert "Explicit JSON skeleton:" not in prompt
+    assert '"supports_proposed_offer"' not in prompt
+    assert '"blocking_conflicts"' not in prompt
+    assert "support and rejection are both allowed" in prompt
+    assert "derived neutrally from actual semantic review" in prompt
+    assert "Local semantic and canonical validators remain authoritative" in prompt
+    for mechanical in (
+        "transaction_id",
+        "actor_id",
+        "source_request_id",
+        "source_candidate_set_digest",
+        "authority_created",
+        "real_world_effects_count",
+    ):
+        assert f'"{mechanical}"' not in prompt
 
 
 def test_conflicting_reviewer_payload_is_not_repaired_to_pass() -> None:
@@ -971,27 +923,27 @@ def test_conflicting_reviewer_payload_is_not_repaired_to_pass() -> None:
         actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
         proposed_offer_id=binding.OFFER_A_ID,
     )
-    payload = _reviewer_payload(
-        asdict(reviewer_request),
+    payload = _semantic_reviewer_payload(
         overrides={
             "supports_proposed_offer": False,
-            "blocking_conflicts": ("fare_rule_conflict",),
-        },
+            "blocking_conflicts": ["fare_rule_conflict"],
+        }
     )
-
-    validation = runner._validate_causal_actor_candidate(
-        candidate=payload,
-        actor=runner._actor_spec(binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER),
-        causal_request=reviewer_request,
+    result = semantic_canonicalization.canonicalize_airline_causal_provider_response_v01(
+        raw_provider_response=json.dumps(payload),
+        request=reviewer_request,
+        bsep_projection=binding.build_valid_airline_bsep_projection_ref_v01(),
+        constraints=binding.build_client_constraints_preference_a_v01(),
         selection_input=selection_input,
-        parse_errors=(),
+        snapshot=binding.build_airline_candidate_snapshot_v01(),
     )
 
-    assert validation["validation_status"] == runner.STATUS_FAIL_CLOSED
-    assert binding.REASON_MULTI_ACTOR_CONFLICT in validation["errors"]
-    assert binding.REASON_ACTOR_OUTPUT_NOT_VALIDATED in validation["errors"]
+    assert result.semantic_validation.validation_status == runner.STATUS_PASS
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.runtime_canonical_artifact.supports_proposed_offer is False
+    assert result.runtime_canonical_artifact.validation_status == runner.STATUS_FAIL_CLOSED
     assert payload["supports_proposed_offer"] is False
-    assert payload["blocking_conflicts"] == ("fare_rule_conflict",)
+    assert payload["blocking_conflicts"] == ["fare_rule_conflict"]
 
 
 def test_clean_supporting_reviewer_payload_still_passes() -> None:
@@ -999,18 +951,18 @@ def test_clean_supporting_reviewer_payload_still_passes() -> None:
         actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
         proposed_offer_id=binding.OFFER_A_ID,
     )
-    payload = _reviewer_payload(asdict(reviewer_request))
-
-    validation = runner._validate_causal_actor_candidate(
-        candidate=payload,
-        actor=runner._actor_spec(binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER),
-        causal_request=reviewer_request,
+    payload = _semantic_reviewer_payload()
+    result = semantic_canonicalization.canonicalize_airline_causal_provider_response_v01(
+        raw_provider_response=json.dumps(payload),
+        request=reviewer_request,
+        bsep_projection=binding.build_valid_airline_bsep_projection_ref_v01(),
+        constraints=binding.build_client_constraints_preference_a_v01(),
         selection_input=selection_input,
-        parse_errors=(),
+        snapshot=binding.build_airline_candidate_snapshot_v01(),
     )
 
-    assert validation["validation_status"] == runner.STATUS_PASS
-    assert validation["errors"] == ()
+    assert result.final_status == runner.STATUS_PASS
+    assert result.canonical_validation.reason_codes == ()
 
 
 def test_causal_proposer_prompt_contract_has_valid_shape_and_no_default() -> None:
@@ -1025,44 +977,46 @@ def test_causal_proposer_prompt_contract_has_valid_shape_and_no_default() -> Non
         causal_selection_input=selection_input,
     )
 
-    assert "JSON arrays of non-empty strings" in prompt
-    assert "Never return objects in these arrays" in prompt
-    assert "requires_root_review must be true" in prompt
+    assert "decision_factors: non-empty JSON array" in prompt
+    assert "requires_root_review: JSON boolean" in prompt
     assert binding.OFFER_A_ID in prompt
     assert binding.OFFER_B_ID in prompt
-    assert '"decision_factors": []' not in prompt
-    assert '"preference_matches": []' not in prompt
-    assert '"uncertainty_notes": []' not in prompt
-    assert '"requires_root_review": false' not in prompt
+    assert "Explicit JSON skeleton:" not in prompt
     assert f'"recommended_offer_id": "{binding.OFFER_A_ID}"' not in prompt
     assert f'"recommended_offer_id": "{binding.OFFER_B_ID}"' not in prompt
-    assert "do not use a default offer" in prompt
+    assert "no default" in prompt
 
 
-def test_causal_response_schema_required_keys_match_contract_fields() -> None:
-    selection_input, proposer_request = _schema_fixture()
-    proposer_schema = runner._causal_provider_response_schema_v01(
-        proposer_request,
-        selection_input,
+@pytest.mark.parametrize("actor_id", causal_runtime.ACTOR_ORDER)
+def test_causal_prompts_have_field_type_contracts_without_copyable_answers(actor_id) -> None:
+    proposed = "" if actor_id == causal_runtime.ACTOR_ORDER[0] else binding.OFFER_A_ID
+    selection_input, request = _schema_fixture(
+        actor_id=actor_id,
+        proposed_offer_id=proposed,
     )
-    _, reviewer_request = _schema_fixture(
-        actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
-        proposed_offer_id=binding.OFFER_A_ID,
+    prompt = runner._build_prompt(
+        actor=runner._actor_spec(actor_id),
+        actor_index=3,
+        deterministic_report={"final_status": runner.STATUS_PASS},
+        bsep_side_projections={},
+        parent_report=None,
+        causal_request=request,
+        causal_selection_input=selection_input,
     )
-    reviewer_schema = runner._causal_provider_response_schema_v01(
-        reviewer_request,
-        selection_input,
+    expected_fields = (
+        semantic_canonicalization.PROPOSER_SEMANTIC_FIELDS
+        if actor_id == causal_runtime.ACTOR_ORDER[0]
+        else semantic_canonicalization.REVIEWER_SEMANTIC_FIELDS
     )
+    assert all(f"{field}:" in prompt for field in expected_fields)
+    assert "Explicit JSON skeleton:" not in prompt
+    assert "derive_from_actual_review" not in prompt
+    assert '"supports_proposed_offer":' not in prompt
+    assert '"recommended_offer_id":' not in prompt
+    assert '"ranked_offer_ids":' not in prompt
 
-    assert proposer_schema["required"] == list(
-        binding.AirlineSemanticOfferSelectionProposalV01.__dataclass_fields__,
-    )
-    assert reviewer_schema["required"] == list(
-        causal_runtime.AirlineInjectedReviewerResponseV01.__dataclass_fields__,
-    )
 
-
-def test_real_provider_forwards_causal_schema_and_keeps_generic_schema_none(
+def test_real_provider_uses_json_mime_without_schema_for_every_actor(
     monkeypatch,
 ) -> None:
     calls: list[dict[str, Any]] = []
@@ -1073,47 +1027,16 @@ def test_real_provider_forwards_causal_schema_and_keeps_generic_schema_none(
 
     monkeypatch.setattr(runner, "_shared_live_gemini_provider", fake_shared_provider)
     real_provider = runner.build_real_airline_semantic_provider_v01("gemini-test")
-    selection_input, proposer_request = _schema_fixture()
-    proposer_schema = runner._causal_provider_response_schema_v01(
-        proposer_request,
-        selection_input,
-    )
-    _, reviewer_request = _schema_fixture(
-        actor_id=binding.ACTOR_AIRLINE_OFFER_POLICY_REVIEWER,
-        proposed_offer_id=binding.OFFER_A_ID,
-    )
-    reviewer_schema = runner._causal_provider_response_schema_v01(
-        reviewer_request,
-        selection_input,
-    )
     env = {"HEDGEHOG_TEST_TIMEOUT_SECONDS": "7"}
 
-    real_provider(
-        proposer_request.actor_id,
-        "proposer prompt",
-        {"provider_env": env, "provider_response_schema": proposer_schema},
-    )
-    real_provider(
-        reviewer_request.actor_id,
-        "reviewer prompt",
-        {"provider_env": env, "provider_response_schema": reviewer_schema},
-    )
-    real_provider(
-        "tri_party_airline_orchestrator_llm",
-        "generic prompt",
-        {"provider_env": env},
-    )
+    for actor_id in (item["actor_id"] for item in runner.ACTOR_SPECS):
+        real_provider(actor_id, "bounded prompt", {"provider_env": env})
 
-    assert calls[0]["response_schema"] == proposer_schema
-    assert calls[0]["response_schema"] is not proposer_schema
-    assert calls[1]["response_schema"] == reviewer_schema
-    assert calls[1]["response_schema"] is not reviewer_schema
-    assert calls[2]["response_schema"] is None
-    assert [call["model_name"] for call in calls] == ["gemini-test"] * 3
+    assert len(calls) == 12
+    assert [call["response_schema"] for call in calls] == [None] * 12
+    assert [call["model_name"] for call in calls] == ["gemini-test"] * 12
     assert [call["role"] for call in calls] == [
-        proposer_request.actor_id,
-        reviewer_request.actor_id,
-        "tri_party_airline_orchestrator_llm",
+        item["actor_id"] for item in runner.ACTOR_SPECS
     ]
     assert all(
         call["timeout_seconds"] == runner.provider_adapter._timeout_seconds(env)
@@ -1154,6 +1077,200 @@ def test_causal_integrated_preference_a_passes() -> None:
     assert bridge["deterministic_transaction_offer_id"] == binding.OFFER_A_ID
     assert bridge["deterministic_corridor_offer_id"] == binding.OFFER_A_ID
     assert bridge["all_offer_ids_match"] is True
+
+
+def test_all_causal_evidence_categories_remain_separate_in_existing_artifacts(
+    tmp_path: Path,
+) -> None:
+    report = _crypto_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path,
+    )
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert len(tuple(path for path in tmp_path.iterdir() if path.is_file())) == 72
+    for actor_id in causal_runtime.ACTOR_ORDER:
+        validation = json.loads(
+            (tmp_path / f"{actor_id}_validation.json").read_text(encoding="utf-8")
+        )
+        categories = validation["evidence_categories"]
+        assert tuple(categories) == (
+            "canonical_validation",
+            "extracted_semantic_object",
+            "field_ownership_provenance",
+            "raw_provider_response",
+            "runtime_canonical_artifact",
+            "semantic_envelope_validation",
+        )
+        assert categories["raw_provider_response"]["unchanged"] is True
+        assert categories["raw_provider_response"]["artifact_ref"].endswith(
+            "_raw_response.txt"
+        )
+        assert categories["field_ownership_provenance"]["complete"] is True
+        assert categories["field_ownership_provenance"]["disjoint"] is True
+        extracted = json.loads(
+            (tmp_path / f"{actor_id}_extracted_json_candidate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        expected = (
+            set(semantic_canonicalization.PROPOSER_SEMANTIC_FIELDS)
+            if actor_id == causal_runtime.ACTOR_ORDER[0]
+            else set(semantic_canonicalization.REVIEWER_SEMANTIC_FIELDS)
+        )
+        assert set(extracted) == expected
+
+
+def test_collector_metadata_is_schema_free_for_all_twelve_single_calls() -> None:
+    base = _content_sensitive_causal_provider()
+    calls: list[tuple[str, dict[str, Any]]] = []
+
+    def provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> str:
+        calls.append((actor_id, dict(metadata)))
+        return base(actor_id, prompt, metadata)
+
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        provider=provider,
+    )
+
+    assert report["final_status"] == runner.STATUS_PASS
+    assert tuple(actor_id for actor_id, _ in calls) == tuple(
+        item["actor_id"] for item in runner.ACTOR_SPECS
+    )
+    assert len(calls) == 12
+    assert all("provider_response_schema" not in metadata for _, metadata in calls)
+
+
+def test_causal_parse_failure_makes_no_fallback_or_second_application_call() -> None:
+    base = _content_sensitive_causal_provider()
+    calls: list[str] = []
+
+    def provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> str:
+        calls.append(actor_id)
+        if actor_id == causal_runtime.ACTOR_ORDER[0]:
+            return "not-json"
+        return base(actor_id, prompt, metadata)
+
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        provider=provider,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert tuple(calls) == (
+        "tri_party_airline_orchestrator_llm",
+        "tri_party_airline_semantic_architect_llm",
+        causal_runtime.ACTOR_ORDER[0],
+    )
+    assert report["counter_table"]["semantic_actor_call_count"] == 2
+    assert report["counter_table"]["fake_provider_call_count"] == 3
+    assert report["counter_table"]["ticket_purchase_corridor_execution_count"] == 0
+
+
+@pytest.mark.parametrize(
+    "provider_result",
+    (None, object(), "\ud800", "not-json"),
+    ids=("none", "object", "literal-surrogate", "malformed-json"),
+)
+def test_invalid_provider_result_fails_once_without_raw_disclosure_or_fallback(
+    tmp_path: Path,
+    provider_result: object,
+) -> None:
+    calls: list[str] = []
+
+    def provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> Any:
+        calls.append(actor_id)
+        return provider_result
+
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path=tmp_path,
+        provider=provider,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert calls == ["tri_party_airline_orchestrator_llm"]
+    assert report["failed_actor_id"] == calls[0]
+    assert report["counter_table"]["fake_provider_call_count"] == 1
+    serialized = json.dumps(report, default=str, sort_keys=True)
+    assert "Traceback" not in serialized
+    assert "object at 0x" not in serialized
+    assert "\ud800" not in serialized
+    assert "not-json" not in serialized
+    if type(provider_result) is not str or provider_result == "\ud800":
+        assert not tuple(tmp_path.glob("*_raw_response.txt"))
+
+
+@pytest.mark.parametrize(
+    "raw,marker",
+    (
+        (
+            '{"nested":' * 1100 + '"DEEP_ATTACK_MARKER"' + "}" * 1100,
+            "DEEP_ATTACK_MARKER",
+        ),
+        (
+            '{"semantic_summary":"BYTE_ATTACK_MARKER' + "x" * 16400 + '"}',
+            "BYTE_ATTACK_MARKER",
+        ),
+        ('{"value":"DUPLICATE_ATTACK_MARKER","value":1}', "DUPLICATE_ATTACK_MARKER"),
+        ('{"value":NaN,"marker":"NAN_ATTACK_MARKER"}', "NAN_ATTACK_MARKER"),
+        ('{"value":Infinity,"marker":"INFINITY_ATTACK_MARKER"}', "INFINITY_ATTACK_MARKER"),
+        ('{"value":-Infinity,"marker":"NEG_INFINITY_ATTACK_MARKER"}', "NEG_INFINITY_ATTACK_MARKER"),
+        ('{"value":"\\ud800","marker":"SURROGATE_ATTACK_MARKER"}', "SURROGATE_ATTACK_MARKER"),
+    ),
+    ids=(
+        "deep-recursion",
+        "byte-ceiling",
+        "duplicate-key",
+        "nan",
+        "infinity",
+        "negative-infinity",
+        "escaped-surrogate",
+    ),
+)
+def test_untrusted_json_structure_attacks_fail_once_before_artifact_normalization(
+    tmp_path: Path,
+    raw: str,
+    marker: str,
+) -> None:
+    calls: list[str] = []
+
+    def provider(actor_id: str, prompt: str, metadata: Mapping[str, Any]) -> str:
+        calls.append(actor_id)
+        return raw
+
+    report = _causal_report_for_preference(
+        binding.build_client_constraints_preference_a_v01(),
+        tmp_path=tmp_path,
+        provider=provider,
+    )
+
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert calls == ["tri_party_airline_orchestrator_llm"]
+    assert report["counter_table"]["fake_provider_call_count"] == 1
+    assert report["counter_table"]["semantic_actor_call_count"] == 0
+    assert not tuple(tmp_path.glob("*_raw_response.txt"))
+    assert not tuple(tmp_path.glob("*_extracted_json_candidate.json"))
+    assert not tuple(tmp_path.glob("*_validation.json"))
+    rendered = json.dumps(report, default=str, sort_keys=True)
+    assert marker not in rendered
+    assert "Traceback" not in rendered
+    assert "object at 0x" not in rendered
+
+
+def test_bounded_normal_provider_json_passes_iterative_structure_guard() -> None:
+    raw = json.dumps(
+        {
+            "semantic_summary": "bounded normal response",
+            "factors": ["one", "two"],
+            "nested": {"accepted": True},
+        },
+        sort_keys=True,
+    )
+    parsed, reasons = runner._preprocess_provider_result(raw)
+    assert reasons == ()
+    assert parsed["nested"] == {"accepted": True}
 
 
 def test_preference_a_bridge_reads_actual_corridor_contract_offer() -> None:
@@ -1435,9 +1552,9 @@ def test_unknown_offer_stops_before_deterministic_corridor() -> None:
         if isinstance(request, Mapping) and actor_id == (
             binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER
         ):
-            return json.dumps(_proposal_payload(request, "offer:unknown"), sort_keys=True)
+            return json.dumps(_semantic_proposal_payload("offer:unknown"), sort_keys=True)
         if isinstance(request, Mapping):
-            return json.dumps(_reviewer_payload(request), sort_keys=True)
+            return json.dumps(_semantic_reviewer_payload(), sort_keys=True)
         return generic(actor_id, prompt, metadata)
 
     report = _causal_report_for_preference(
@@ -1457,9 +1574,9 @@ def test_offer_c_stops_before_deterministic_corridor() -> None:
         if isinstance(request, Mapping) and actor_id == (
             binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER
         ):
-            return json.dumps(_proposal_payload(request, binding.OFFER_C_ID), sort_keys=True)
+            return json.dumps(_semantic_proposal_payload(binding.OFFER_C_ID), sort_keys=True)
         if isinstance(request, Mapping):
-            return json.dumps(_reviewer_payload(request), sort_keys=True)
+            return json.dumps(_semantic_reviewer_payload(), sort_keys=True)
         return generic(actor_id, prompt, metadata)
 
     report = _causal_report_for_preference(
@@ -1479,13 +1596,12 @@ def test_reviewer_conflict_stops_before_deterministic_corridor() -> None:
         if isinstance(request, Mapping) and actor_id == (
             binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER
         ):
-            return json.dumps(_proposal_payload(request, binding.OFFER_A_ID), sort_keys=True)
+            return json.dumps(_semantic_proposal_payload(binding.OFFER_A_ID), sort_keys=True)
         if isinstance(request, Mapping):
             return json.dumps(
-                _reviewer_payload(
-                    request,
+                _semantic_reviewer_payload(
                     overrides={
-                        "blocking_conflicts": ("conflict",),
+                        "blocking_conflicts": ["conflict"],
                         "supports_proposed_offer": False,
                     },
                 ),

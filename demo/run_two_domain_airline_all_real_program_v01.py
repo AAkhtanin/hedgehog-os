@@ -43,7 +43,10 @@ from hedgehog.kernel.integrity_replay_v01 import canonical_json_bytes_v01 as _ca
 MODULE_ID = "two_domain_airline_all_real_program_v01"
 PROGRAMME_ID = "two_domain_all_real_sealed_evidence_program_v01"
 PROGRAMME_VERSION = "v0.1"
-GATE_ID = "two_domain_all_real_sealed_evidence_program_v01_a1_airline_live"
+GATE_ID = (
+    "two_domain_all_real_sealed_evidence_program_v01_"
+    "a1_attempt_02_semantic_runtime_recovery"
+)
 DOMAIN_ID = "airline"
 MODEL_ID = "gemini-2.5-flash"
 
@@ -70,6 +73,9 @@ REASON_PUBLIC_CLEANUP_FAILED = "a1_airline_public_safe_report_cleanup_failed"
 REASON_PRIVATE_METADATA_FAILED = "a1_airline_private_metadata_write_failed"
 REASON_PRIVATE_PRESERVATION_UNPROVED = "a1_airline_private_preservation_unproved"
 REASON_UNEXPECTED = "a1_airline_unexpected_exception"
+REASON_RECOVERY_INPUT_INVALID = "a1_airline_attempt_02_recovery_input_invalid"
+REASON_PRIOR_ATTEMPT_INVALID = "a1_airline_prior_failed_attempt_invalid"
+REASON_PRIOR_ATTEMPT_CHANGED = "a1_airline_prior_failed_attempt_changed"
 
 ACTOR_IDS = tuple(item["actor_id"] for item in _lane.ACTOR_SPECS)
 CAUSAL_ACTOR_IDS = tuple(_lane.CAUSAL_ACTOR_IDS)
@@ -113,7 +119,21 @@ _SOURCE_TASK_ID = "airline_preference_a_par_lim_live_attempt_v01"
 _PACKAGE_ID = f"airline_sealed_evidence:{_lane.TRANSACTION_ID}"
 _LOGICAL_PACKAGE_REF = "raw_attempt"
 _LOGICAL_OUTPUT_DIRECTORY_REF = f"airline/{_lane.RUN_ID}/sealed_evidence"
-_PROVIDER_APPLICATION_CALL_MODE = "json_mime_single_application_call_no_schema_fallback"
+_PROVIDER_APPLICATION_CALL_MODE = "json_mime_no_response_schema_single_application_call"
+_PRIOR_ATTEMPT_ID = "fcce2c0224517487b59c40e79a75ea00078df393a2552f5b553780f8b7adc64a"
+_PRIOR_EXECUTION_HEAD = "829496261a90249b500e7583bb407839e94cd874"
+_PRIOR_ATTEMPT_IDENTITY_SHA256 = "c3af7707023402b287222615e4e1877e248e1f23ad6b238254f96d7ce19f5bd2"
+_PRIOR_PRIVATE_INVENTORY_SHA256 = "33818a0230a245392b78194aad2c35966e59f91992170bef7461d5539e56693a"
+_PRIOR_PRIVATE_INVENTORY_DIGEST = "567b567ba4b37a04665cdcc085f1feb1be0fd2facad3921f5fbd5b276c5a2163"
+_PRIOR_GENERATION_GATE_SHA256 = "8fcdf7ef795d09178c3352999bdd3087c5e8e1b78184b6d055e29d0311991653"
+_PRIOR_CALLBACK_PREFIX = (
+    "tri_party_airline_orchestrator_llm",
+    "tri_party_airline_semantic_architect_llm",
+    "client_purchase_intent_reviewer_llm",
+)
+_PRIOR_ROOT_ENTRY_COUNT = 4
+_PRIOR_RAW_FILE_COUNT = 23
+_PRIOR_METADATA_MODE = 0o600
 _PUBLICATION_ABSENT = "ABSENT"
 _PUBLICATION_PRESENT = "PRESENT"
 _PUBLICATION_ABSENCE_UNPROVEN = "ABSENCE_UNPROVEN"
@@ -280,6 +300,7 @@ _POST_ATTEMPT_IDENTITY_WRITE_HOOK: _Callable[[_Path], None] | None = None
 _POST_COLLECTOR_HOOK: _Callable[[_Path, object, object], None] | None = None
 _POST_PUBLIC_WRITE_HOOK: _Callable[[_Path], None] | None = None
 _PRE_GENERATION_GATE_HOOK: _Callable[[_Path], None] | None = None
+_POST_PASS_GATE_WRITE_HOOK: _Callable[[_Path, _Path], None] | None = None
 _FAILURE_PRESERVATION_HOOK: _Callable[[_Path], None] | None = None
 
 
@@ -391,6 +412,39 @@ class _PrivateDocumentProof:
 
 
 @_dataclass(frozen=True, slots=True)
+class _PriorAttemptAnchors:
+    attempt_id: str = _PRIOR_ATTEMPT_ID
+    execution_head: str = _PRIOR_EXECUTION_HEAD
+    attempt_identity_sha256: str = _PRIOR_ATTEMPT_IDENTITY_SHA256
+    private_inventory_sha256: str = _PRIOR_PRIVATE_INVENTORY_SHA256
+    private_inventory_digest: str = _PRIOR_PRIVATE_INVENTORY_DIGEST
+    generation_gate_sha256: str = _PRIOR_GENERATION_GATE_SHA256
+    root_entry_count: int = _PRIOR_ROOT_ENTRY_COUNT
+    raw_file_count: int = _PRIOR_RAW_FILE_COUNT
+    metadata_mode: int = _PRIOR_METADATA_MODE
+    callback_prefix: tuple[str, ...] = _PRIOR_CALLBACK_PREFIX
+
+
+@_dataclass(frozen=True, slots=True)
+class _PriorAttemptProof:
+    root_identity: tuple[int, int]
+    root_mode: int
+    raw_directory_identity: tuple[int, int]
+    raw_directory_mode: int
+    attempt_identity: _PrivateDocumentProof
+    private_inventory: _PrivateDocumentProof
+    generation_gate: _PrivateDocumentProof
+    raw_rows: tuple[_InventoryRow, ...]
+    raw_modes: tuple[tuple[str, int], ...]
+    inventory_digest: str
+    summary_sha256: str
+    validation_sha256: str
+
+
+_PRIOR_ANCHORS = _PriorAttemptAnchors()
+
+
+@_dataclass(frozen=True, slots=True)
 class _RealPreconditionResult:
     timeout_seconds: int
     credential_source_count: int
@@ -415,6 +469,9 @@ def run_two_domain_airline_all_real_program_v01(
     injected_provider: _lane.Provider | None = None,
     injected_safe_report_output: str | _Path | None = None,
     progress_sink: _Callable[[dict[str, object]], None] | None = None,
+    prior_failed_attempt_directory: str | _Path | None = None,
+    prior_attempt_id: str | None = None,
+    owner_reviewed_attempt_02: bool = False,
 ) -> AirlineA1ProgramResultV01:
     """Run one A1 attempt in injected validation or owner-terminal real mode."""
     root: _Path | None = None
@@ -427,16 +484,36 @@ def run_two_domain_airline_all_real_program_v01(
     collector_count = 0
     output_owner: _OwnedOutput | None = None
     released_output: _ReleasedOutput | None = None
+    success_gate_plain: dict[str, object] | None = None
+    success_gate_proof: _PrivateDocumentProof | None = None
     safe_execution_id = ""
     safe_hash = ""
     inventory_digest = ""
     execution_head = ""
     preservation_state = _PRESERVATION_NOT_CREATED
     publication_state = _PUBLICATION_ABSENT
+    prior_path: _Path | None = None
+    prior_proof: _PriorAttemptProof | None = None
     try:
         _require_mode(execution_mode, injected_provider, injected_safe_report_output)
-        if type(attempt_number) is not int or attempt_number != 1:
+        if type(attempt_number) is not int or attempt_number not in (1, 2):
             raise _RunnerFailure(REASON_ATTEMPT_INVALID, "input_validation")
+        if execution_mode == MODE_INJECTED:
+            if attempt_number != 1:
+                raise _RunnerFailure(REASON_ATTEMPT_INVALID, "input_validation")
+            if (
+                prior_failed_attempt_directory is not None
+                or prior_attempt_id is not None
+                or owner_reviewed_attempt_02 is not False
+            ):
+                raise _RunnerFailure(REASON_RECOVERY_INPUT_INVALID, "input_validation")
+        elif (
+            attempt_number != 2
+            or prior_failed_attempt_directory is None
+            or prior_attempt_id != _PRIOR_ANCHORS.attempt_id
+            or owner_reviewed_attempt_02 is not True
+        ):
+            raise _RunnerFailure(REASON_RECOVERY_INPUT_INVALID, "input_validation")
         if execution_mode == MODE_REAL:
             _require_real_local_preconditions(_os.environ)
             execution_head = _require_real_repository_ready()
@@ -445,6 +522,16 @@ def run_two_domain_airline_all_real_program_v01(
             if _LOWER_HEAD.fullmatch(execution_head) is None or len(execution_head) != 40:
                 raise _RunnerFailure(REASON_REPOSITORY_NOT_READY, "repository_guard")
         root = _validate_private_root(private_output_directory)
+        if execution_mode == MODE_REAL:
+            prior_path = _validate_prior_failed_root(
+                prior_failed_attempt_directory,
+                root,
+            )
+            prior_proof = _verify_prior_attempt_v01(
+                prior_path,
+                str(prior_attempt_id),
+                current_execution_head=execution_head,
+            )
         output_path = _select_safe_report_path(
             execution_mode,
             injected_safe_report_output,
@@ -457,6 +544,7 @@ def run_two_domain_airline_all_real_program_v01(
             execution_head=execution_head,
             attempt_number=attempt_number,
             private_output_directory=root,
+            prior_proof=prior_proof,
         )
         attempt_proof = _write_private_document(
             root,
@@ -487,14 +575,37 @@ def run_two_domain_airline_all_real_program_v01(
         _revalidate_private_document(root, root_identity, attempt_proof, attempt_plain)
         if execution_mode == MODE_REAL:
             _require_real_repository_ready(expected_head=execution_head)
+            _require_prior_attempt_unchanged(
+                prior_proof,
+                prior_path,
+                str(prior_attempt_id),
+                current_execution_head=execution_head,
+            )
         collector_count += 1
-        capture = _collect_canonical_with_capture(
-            env=env,
-            provider=provider,
-            causal_constraints=constraints,
-            causal_snapshot=snapshot,
-        )
+        try:
+            capture = _collect_canonical_with_capture(
+                env=env,
+                provider=provider,
+                causal_constraints=constraints,
+                causal_snapshot=snapshot,
+            )
+        except Exception:
+            if execution_mode == MODE_REAL:
+                _require_prior_attempt_unchanged(
+                    prior_proof,
+                    prior_path,
+                    str(prior_attempt_id),
+                    current_execution_head=execution_head,
+                )
+            raise
         report = capture.report
+        if execution_mode == MODE_REAL:
+            _require_prior_attempt_unchanged(
+                prior_proof,
+                prior_path,
+                str(prior_attempt_id),
+                current_execution_head=execution_head,
+            )
         if _POST_COLLECTOR_HOOK is not None:
             _POST_COLLECTOR_HOOK(root, report, capture)
         if not isinstance(report, _Mapping) or report.get("final_status") != STATUS_PASS:
@@ -535,6 +646,7 @@ def run_two_domain_airline_all_real_program_v01(
             ledger_source_bundle=capture.ledger_source_bundle,
             ledger_source_validation=capture.ledger_source_validation,
             crypto_collection_result=capture.crypto_collection_result,
+            attempt_identity=attempt_plain,
         )
         safe_execution = build_airline_safe_execution_projection_v01(normalization)
         expected_safe_status = (
@@ -577,7 +689,12 @@ def run_two_domain_airline_all_real_program_v01(
             raise _RunnerFailure(REASON_INVENTORY_INVALID, "post_write_inventory")
         _revalidate_private_document(root, root_identity, attempt_proof, attempt_plain)
         _revalidate_owned_output(output_owner, normalization)
-        inventory_plain = _inventory_plain(first_inventory, STATUS_PASS)
+        inventory_plain = _inventory_plain(
+            first_inventory,
+            STATUS_PASS,
+            attempt_number=attempt_number,
+            attempt_id=str(attempt_plain["attempt_id"]),
+        )
         inventory_proof = _write_private_document(
             root,
             root_identity,
@@ -648,6 +765,14 @@ def run_two_domain_airline_all_real_program_v01(
         ):
             raise _RunnerFailure(REASON_INVENTORY_INVALID, "final_freeze")
         _revalidate_owned_output(output_owner, normalization)
+        if execution_mode == MODE_REAL:
+            _require_prior_attempt_unchanged(
+                prior_proof,
+                prior_path,
+                str(prior_attempt_id),
+                current_execution_head=execution_head,
+                owned_public_report=output_owner,
+            )
         gate_plain = _generation_gate_plain(
             attempt_plain=attempt_plain,
             attempt_identity_sha256=attempt_proof.sha256,
@@ -659,6 +784,7 @@ def run_two_domain_airline_all_real_program_v01(
             inventory_digest=inventory_digest,
             private_inventory_sha256=final_inventory_proof.sha256,
             execution_mode=execution_mode,
+            attempt_number=attempt_number,
             callback_observed=tuple(callback_observed),
             base_calls_started=tuple(base_calls_started),
             base_calls_completed=tuple(base_calls_completed),
@@ -667,6 +793,7 @@ def run_two_domain_airline_all_real_program_v01(
         success_result = _result(
             execution_mode=execution_mode,
             execution_head=execution_head,
+            attempt_number=attempt_number,
             attempt_id=str(attempt_plain["attempt_id"]),
             final_status=STATUS_PASS,
             reason_code="",
@@ -681,9 +808,8 @@ def run_two_domain_airline_all_real_program_v01(
             safe_hash=safe_hash,
             inventory_digest=inventory_digest,
         )
-        released_output = _release_owned_output(output_owner)
-        output_owner = None
-        _write_private_document(
+        success_gate_plain = gate_plain
+        success_gate_proof = _write_private_document(
             root,
             root_identity,
             GENERATION_GATE_FILE,
@@ -695,10 +821,25 @@ def run_two_domain_airline_all_real_program_v01(
                 GENERATION_GATE_FILE,
             ),
         )
+        if _POST_PASS_GATE_WRITE_HOOK is not None:
+            _POST_PASS_GATE_WRITE_HOOK(
+                output_path,
+                root / GENERATION_GATE_FILE,
+            )
+        _revalidate_private_document(
+            root,
+            root_identity,
+            success_gate_proof,
+            success_gate_plain,
+        )
+        _revalidate_owned_output(output_owner, normalization)
+        released_output = _release_owned_output(output_owner)
+        output_owner = None
         return success_result
     except _PublicCleanupFailure:
         reason = REASON_PUBLIC_CLEANUP_FAILED
         stage = "public_safe_report_cleanup"
+        publication_state = _PUBLICATION_ABSENCE_UNPROVEN
     except _RunnerFailure as error:
         reason = error.reason
         stage = error.stage
@@ -706,6 +847,23 @@ def run_two_domain_airline_all_real_program_v01(
         reason = REASON_UNEXPECTED
         stage = "unexpected_exception"
 
+    if (
+        success_gate_proof is not None
+        and success_gate_plain is not None
+        and root is not None
+        and root_identity is not None
+    ):
+        try:
+            _cleanup_owned_private_document(
+                root,
+                root_identity,
+                success_gate_proof,
+                success_gate_plain,
+            )
+            success_gate_proof = None
+        except Exception:
+            reason = REASON_PRIVATE_METADATA_FAILED
+            stage = "generation_gate_cleanup"
     if output_owner is not None:
         try:
             _cleanup_owned_output(output_owner)
@@ -748,6 +906,7 @@ def run_two_domain_airline_all_real_program_v01(
             execution_mode if execution_mode in (MODE_INJECTED, MODE_REAL) else ""
         ),
         execution_head=execution_head,
+        attempt_number=(attempt_number if type(attempt_number) is int else 0),
         attempt_id=(str(attempt_plain["attempt_id"]) if attempt_plain else ""),
         final_status=STATUS_FAIL_CLOSED,
         reason_code=reason,
@@ -773,6 +932,7 @@ def build_airline_safe_normalization_v01(
     ledger_source_bundle: object = None,
     ledger_source_validation: object = None,
     crypto_collection_result: object = None,
+    attempt_identity: _Mapping[str, object] | None = None,
 ) -> dict[str, object]:
     """Whitelist-normalize one already validated canonical collector result."""
     try:
@@ -870,11 +1030,18 @@ def build_airline_safe_normalization_v01(
             )
         bridge = source_report["semantic_to_contract_deterministic_bridge"]
         deterministic = source_report["integrated_deterministic_airline_transaction"]
+        run_id = source_report["run_id"]
+        report_id = source_report["report_id"]
+        source_task_id = _SOURCE_TASK_ID
+        if attempt_identity is not None and attempt_identity.get("attempt_number") == 2:
+            run_id = attempt_identity["run_id"]
+            report_id = attempt_identity["report_id"]
+            source_task_id = attempt_identity["source_task_id"]
         normalization: dict[str, object] = {
             "execution_head": _required_head(execution_head),
-            "run_id": source_report["run_id"],
-            "report_id": source_report["report_id"],
-            "source_task_id": _SOURCE_TASK_ID,
+            "run_id": run_id,
+            "report_id": report_id,
+            "source_task_id": source_task_id,
             "transaction_id": source_report["transaction_id"],
             "selected_offer_id": bridge["semantic_recommendation_id"],
             "provider_mode": source_report["provider_mode"],
@@ -1087,8 +1254,6 @@ def _provider_for_mode(
         _emit_progress(progress_sink, index, actor_id, "call_started", "")
         try:
             supplied_metadata = dict(metadata)
-            if execution_mode == MODE_REAL:
-                supplied_metadata.pop("provider_response_schema", None)
             base_calls_started.append(actor_id)
             response = base(actor_id, prompt, supplied_metadata)
         except Exception:
@@ -1110,66 +1275,21 @@ def _build_injected_provider_v01() -> _lane.Provider:
             return generic(actor_id, prompt, metadata)
         if actor_id == _binding.ACTOR_CLIENT_PURCHASE_INTENT_REVIEWER:
             payload = {
-                "proposal_id": f"semantic_offer_selection_proposal:{_binding.OFFER_A_ID}",
-                "transaction_id": request["transaction_id"],
-                "actor_id": request["actor_id"],
-                "source_selection_input_id": request["source_selection_input_id"],
-                "source_bsep_projection_ref": request[
-                    "source_bsep_projection_ref"
-                ],
-                "source_client_constraint_set_id": request[
-                    "source_client_constraint_set_id"
-                ],
-                "source_candidate_set_snapshot_id": request[
-                    "source_candidate_set_snapshot_id"
-                ],
-                "source_candidate_set_digest": request[
-                    "source_candidate_set_digest"
-                ],
-                "candidate_set_ref": request["source_candidate_set_ref"],
                 "recommended_offer_id": _binding.OFFER_A_ID,
-                "ranked_offer_ids": (_binding.OFFER_A_ID,),
-                "decision_factors": ("preference_a_exact_fit",),
-                "preference_matches": ("lower_price", "window_seat"),
-                "uncertainty_notes": ("requires_client_root_review",),
+                "ranked_offer_ids": [_binding.OFFER_A_ID],
+                "decision_factors": ["preference_a_exact_fit"],
+                "preference_matches": ["lower_price", "window_seat"],
+                "uncertainty_notes": ["requires_client_root_review"],
                 "requires_root_review": True,
                 "semantic_summary": (
                     "Preference A recommends bounded Offer A for Root review."
                 ),
-                "authority_created": False,
-                "action_permission_created": False,
-                "packet_created": False,
-                "receipt_created": False,
-                "payment_created": False,
-                "ticket_created": False,
-                "booking_created": False,
-                "final_output_created": False,
-                "real_world_effects_count": 0,
             }
         else:
             payload = {
-                "response_id": f"{actor_id}_response_001",
-                "transaction_id": request["transaction_id"],
-                "actor_id": request["actor_id"],
-                "source_request_id": request["request_id"],
-                "source_selection_input_id": request["source_selection_input_id"],
-                "source_candidate_set_snapshot_id": request[
-                    "source_candidate_set_snapshot_id"
-                ],
-                "source_candidate_set_digest": request[
-                    "source_candidate_set_digest"
-                ],
-                "reviewed_offer_id": request["proposed_offer_id"],
-                "review_role": request["actor_role"],
-                "review_status": _binding.STATUS_PASS,
-                "semantic_factors": ("supports_preference_a",),
-                "blocking_conflicts": (),
                 "supports_proposed_offer": True,
-                "validation_status": _binding.STATUS_PASS,
-                "raw_output_used": False,
-                "authority_created": False,
-                "permission_created": False,
-                "real_world_effects_count": 0,
+                "semantic_factors": ["supports_preference_a"],
+                "blocking_conflicts": [],
             }
         return _json.dumps(payload, ensure_ascii=False, sort_keys=True)
 
@@ -2369,8 +2489,14 @@ def _inventory_digest(rows: tuple[_InventoryRow, ...]) -> str:
     return _sha256(_canonical_json_bytes_v01(plain))
 
 
-def _inventory_plain(snapshot: _InventorySnapshot, status: str) -> dict[str, object]:
-    return {
+def _inventory_plain(
+    snapshot: _InventorySnapshot,
+    status: str,
+    *,
+    attempt_number: int = 1,
+    attempt_id: str = "",
+) -> dict[str, object]:
+    plain: dict[str, object] = {
         "inventory_version": "v0.1",
         "validation_status": status,
         "raw_attempt_file_count": len(snapshot.rows),
@@ -2385,6 +2511,10 @@ def _inventory_plain(snapshot: _InventorySnapshot, status: str) -> dict[str, obj
         "aggregate_inventory_digest": snapshot.digest,
         "raw_bodies_copied_to_public_evidence": False,
     }
+    if attempt_number == 2:
+        plain["attempt_number"] = 2
+        plain["attempt_id"] = attempt_id
+    return plain
 
 
 def _build_attempt_identity(
@@ -2393,8 +2523,26 @@ def _build_attempt_identity(
     execution_head: str,
     attempt_number: int,
     private_output_directory: _Path,
+    prior_proof: _PriorAttemptProof | None = None,
 ) -> dict[str, object]:
     output_directory_text = str(private_output_directory)
+    attempt_02 = attempt_number == 2
+    run_id = f"{_lane.RUN_ID}:attempt_02" if attempt_02 else _lane.RUN_ID
+    report_id = f"{_lane.REPORT_ID}:attempt_02" if attempt_02 else _lane.REPORT_ID
+    source_task_id = (
+        f"{_SOURCE_TASK_ID}:attempt_02" if attempt_02 else _SOURCE_TASK_ID
+    )
+    package_id = f"{_PACKAGE_ID}:attempt_02" if attempt_02 else _PACKAGE_ID
+    logical_package_ref = (
+        f"{_LOGICAL_PACKAGE_REF}:attempt_02"
+        if attempt_02
+        else _LOGICAL_PACKAGE_REF
+    )
+    output_directory_ref = (
+        f"airline/{_lane.RUN_ID}/attempt_02/sealed_evidence"
+        if attempt_02
+        else _LOGICAL_OUTPUT_DIRECTORY_REF
+    )
     plain: dict[str, object] = {
         "attempt_version": "v0.1",
         "programme_id": PROGRAMME_ID,
@@ -2403,14 +2551,14 @@ def _build_attempt_identity(
         "domain_id": DOMAIN_ID,
         "execution_head": execution_head,
         "attempt_number": attempt_number,
-        "run_id": _lane.RUN_ID,
-        "report_id": _lane.REPORT_ID,
-        "source_task_id": _SOURCE_TASK_ID,
-        "package_id": _PACKAGE_ID,
-        "logical_package_ref": _LOGICAL_PACKAGE_REF,
+        "run_id": run_id,
+        "report_id": report_id,
+        "source_task_id": source_task_id,
+        "package_id": package_id,
+        "logical_package_ref": logical_package_ref,
         "output_directory": output_directory_text,
         "output_directory_sha256": _sha256(output_directory_text.encode("utf-8")),
-        "output_directory_ref": _LOGICAL_OUTPUT_DIRECTORY_REF,
+        "output_directory_ref": output_directory_ref,
         "provider_mode": execution_mode,
         "model_id": MODEL_ID,
         "expected_actor_count": 12,
@@ -2431,8 +2579,35 @@ def _build_attempt_identity(
         "retry_count": 0,
         "provider_application_call_mode": _PROVIDER_APPLICATION_CALL_MODE,
     }
+    if attempt_02:
+        if prior_proof is None:
+            raise ValueError
+        plain.update(
+            {
+                "prior_attempt_id": _PRIOR_ANCHORS.attempt_id,
+                "prior_execution_head": _PRIOR_ANCHORS.execution_head,
+                "prior_attempt_identity_sha256": prior_proof.attempt_identity.sha256,
+                "prior_private_inventory_sha256": prior_proof.private_inventory.sha256,
+                "prior_private_inventory_digest": prior_proof.inventory_digest,
+                "prior_generation_gate_sha256": prior_proof.generation_gate.sha256,
+                "prior_failure_reason": REASON_COLLECTOR_FAILED,
+                "prior_failed_stage": "collector_result",
+                "prior_actual_external_operation_status": _EXTERNAL_UNVERIFIED_PARTIAL,
+                "prior_conservative_callback_consumption": 3,
+                "new_provider_call_ceiling": 12,
+                "cumulative_airline_call_ceiling": 15,
+                "owner_reviewed_attempt_02": True,
+                "frozen_source_run_id": _lane.RUN_ID,
+                "frozen_source_report_id": _lane.REPORT_ID,
+            }
+        )
     plain["attempt_id"] = _sha256(
-        b"hedgehog.a1.airline.attempt.v01\0" + _canonical_json_bytes_v01(plain)
+        (
+            b"hedgehog.a1.airline.attempt.v02\0"
+            if attempt_02
+            else b"hedgehog.a1.airline.attempt.v01\0"
+        )
+        + _canonical_json_bytes_v01(plain)
     )
     return plain
 
@@ -2449,6 +2624,7 @@ def _generation_gate_plain(
     inventory_digest: str,
     private_inventory_sha256: str,
     execution_mode: str,
+    attempt_number: int,
     callback_observed: tuple[str, ...],
     base_calls_started: tuple[str, ...],
     base_calls_completed: tuple[str, ...],
@@ -2456,12 +2632,15 @@ def _generation_gate_plain(
 ) -> dict[str, object]:
     accepted = final_status == STATUS_PASS
     real = execution_mode == MODE_REAL
-    return {
+    plain = {
         "generation_gate_version": "v0.1",
         "attempt_id": attempt_plain["attempt_id"],
         "attempt_identity_sha256": attempt_identity_sha256,
         "attempt_number": attempt_plain["attempt_number"],
         "execution_head": attempt_plain["execution_head"],
+        "run_id": attempt_plain["run_id"],
+        "report_id": attempt_plain["report_id"],
+        "source_task_id": attempt_plain["source_task_id"],
         "private_output_directory_sha256": attempt_plain[
             "output_directory_sha256"
         ],
@@ -2514,6 +2693,24 @@ def _generation_gate_plain(
         "anchor_created_count": 0,
         "replay_created_count": 0,
     }
+    if attempt_number == 2:
+        for key in (
+            "prior_attempt_id",
+            "prior_execution_head",
+            "prior_attempt_identity_sha256",
+            "prior_private_inventory_sha256",
+            "prior_private_inventory_digest",
+            "prior_generation_gate_sha256",
+            "prior_failure_reason",
+            "prior_failed_stage",
+            "prior_actual_external_operation_status",
+            "prior_conservative_callback_consumption",
+            "new_provider_call_ceiling",
+            "cumulative_airline_call_ceiling",
+            "owner_reviewed_attempt_02",
+        ):
+            plain[key] = attempt_plain[key]
+    return plain
 
 
 def _preserve_failed_private_attempt(
@@ -2554,8 +2751,18 @@ def _preserve_failed_private_attempt(
         if repeated != snapshot:
             raise ValueError
         digest = snapshot.digest
-        failed_inventory_plain = _inventory_plain(snapshot, STATUS_FAIL_CLOSED)
-        passed_inventory_plain = _inventory_plain(snapshot, STATUS_PASS)
+        failed_inventory_plain = _inventory_plain(
+            snapshot,
+            STATUS_FAIL_CLOSED,
+            attempt_number=int(attempt_plain["attempt_number"]),
+            attempt_id=str(attempt_plain["attempt_id"]),
+        )
+        passed_inventory_plain = _inventory_plain(
+            snapshot,
+            STATUS_PASS,
+            attempt_number=int(attempt_plain["attempt_number"]),
+            attempt_id=str(attempt_plain["attempt_id"]),
+        )
         if _private_leaf_exists(root, root_identity, PRIVATE_INVENTORY_FILE):
             existing_inventory, inventory_proof = _prove_existing_private_document(
                 root,
@@ -2606,6 +2813,7 @@ def _preserve_failed_private_attempt(
             inventory_digest=digest,
             private_inventory_sha256=inventory_proof.sha256,
             execution_mode=execution_mode,
+            attempt_number=int(attempt_plain["attempt_number"]),
             callback_observed=callback_observed,
             base_calls_started=base_calls_started,
             base_calls_completed=base_calls_completed,
@@ -2653,6 +2861,490 @@ def _preserve_failed_private_attempt(
         return digest, _PRESERVATION_PRESERVED
     except Exception:
         return "", _PRESERVATION_RETAINED_UNPROVED
+
+
+def _verify_prior_attempt_v01(
+    prior_path: _Path,
+    supplied_attempt_id: str,
+    *,
+    current_execution_head: str,
+    owned_public_report: _OwnedOutput | None = None,
+) -> _PriorAttemptProof:
+    """Prove the fixed failed Attempt 01 without reading raw private bodies."""
+    root_fd = -1
+    raw_fd = -1
+    try:
+        anchors = _PRIOR_ANCHORS
+        if supplied_attempt_id != anchors.attempt_id:
+            raise ValueError
+        root_fd, root_identity = _open_absolute_directory_nofollow(prior_path)
+        root_entries = _scandir_names(root_fd)
+        if (
+            len(root_entries) != anchors.root_entry_count
+            or root_entries
+            != tuple(
+                sorted(
+                    (
+                        ATTEMPT_IDENTITY_FILE,
+                        RAW_ATTEMPT_DIRECTORY,
+                        PRIVATE_INVENTORY_FILE,
+                        GENERATION_GATE_FILE,
+                    )
+                )
+            )
+        ):
+            raise ValueError
+
+        attempt_plain, attempt_proof = _read_prior_json(
+            root_fd,
+            ATTEMPT_IDENTITY_FILE,
+            anchors.metadata_mode,
+        )
+        inventory_plain, inventory_proof = _read_prior_json(
+            root_fd,
+            PRIVATE_INVENTORY_FILE,
+            anchors.metadata_mode,
+        )
+        gate_plain, gate_proof = _read_prior_json(
+            root_fd,
+            GENERATION_GATE_FILE,
+            anchors.metadata_mode,
+        )
+        if (
+            attempt_proof.sha256 != anchors.attempt_identity_sha256
+            or inventory_proof.sha256 != anchors.private_inventory_sha256
+            or gate_proof.sha256 != anchors.generation_gate_sha256
+        ):
+            raise ValueError
+        _validate_prior_attempt_identity(attempt_plain, prior_path, anchors)
+
+        raw_before = _os.stat(
+            RAW_ATTEMPT_DIRECTORY,
+            dir_fd=root_fd,
+            follow_symlinks=False,
+        )
+        if not _stat.S_ISDIR(raw_before.st_mode):
+            raise ValueError
+        flags = (
+            _os.O_RDONLY
+            | getattr(_os, "O_DIRECTORY", 0)
+            | getattr(_os, "O_NOFOLLOW", 0)
+        )
+        raw_fd = _OPEN(RAW_ATTEMPT_DIRECTORY, flags, dir_fd=root_fd)
+        raw_identity = _descriptor_identity(raw_fd, directory=True)
+        raw_opened = _FSTAT(raw_fd)
+        if raw_identity != (raw_before.st_dev, raw_before.st_ino):
+            raise ValueError
+        raw_names = _scandir_names(raw_fd)
+        if len(raw_names) != anchors.raw_file_count:
+            raise ValueError
+        raw_rows: list[_InventoryRow] = []
+        raw_modes: list[tuple[str, int]] = []
+        selected: dict[str, bytes] = {}
+        selected_names = {
+            "summary.json",
+            "client_purchase_intent_reviewer_llm_validation.json",
+        }
+        for name in raw_names:
+            row, content, mode = _read_prior_raw_file(raw_fd, name)
+            raw_rows.append(row)
+            raw_modes.append((name, mode))
+            if name in selected_names:
+                selected[name] = content
+        if set(selected) != selected_names:
+            raise ValueError
+        raw_after = _os.stat(
+            RAW_ATTEMPT_DIRECTORY,
+            dir_fd=root_fd,
+            follow_symlinks=False,
+        )
+        if (
+            raw_identity != (raw_after.st_dev, raw_after.st_ino)
+            or _stat.S_IMODE(raw_after.st_mode) != _stat.S_IMODE(raw_opened.st_mode)
+        ):
+            raise ValueError
+        rows = tuple(raw_rows)
+        digest = _inventory_digest(rows)
+        if digest != anchors.private_inventory_digest:
+            raise ValueError
+        _validate_prior_inventory(inventory_plain, rows, anchors)
+        _validate_prior_gate(gate_plain, anchors)
+        _validate_prior_summary(_strict_json(selected["summary.json"]), anchors)
+        _validate_prior_actor_validation(
+            _strict_json(
+                selected["client_purchase_intent_reviewer_llm_validation.json"]
+            )
+        )
+        _verify_prior_head_ancestry(anchors.execution_head, current_execution_head)
+        if owned_public_report is None:
+            if (
+                _CANONICAL_SAFE_REPORT_PATH.exists()
+                or _CANONICAL_SAFE_REPORT_PATH.is_symlink()
+            ):
+                raise ValueError
+        else:
+            if (
+                owned_public_report.parent_path / owned_public_report.leaf
+                != _CANONICAL_SAFE_REPORT_PATH
+            ):
+                raise ValueError
+            _revalidate_owned_output(
+                owned_public_report,
+                _strict_json(owned_public_report.expected_bytes),
+            )
+
+        root_after = _FSTAT(root_fd)
+        if (root_after.st_dev, root_after.st_ino) != root_identity:
+            raise ValueError
+        return _PriorAttemptProof(
+            root_identity=root_identity,
+            root_mode=_stat.S_IMODE(root_after.st_mode),
+            raw_directory_identity=raw_identity,
+            raw_directory_mode=_stat.S_IMODE(raw_opened.st_mode),
+            attempt_identity=attempt_proof,
+            private_inventory=inventory_proof,
+            generation_gate=gate_proof,
+            raw_rows=rows,
+            raw_modes=tuple(raw_modes),
+            inventory_digest=digest,
+            summary_sha256=_sha256(selected["summary.json"]),
+            validation_sha256=_sha256(
+                selected["client_purchase_intent_reviewer_llm_validation.json"]
+            ),
+        )
+    except Exception:
+        raise _RunnerFailure(
+            REASON_PRIOR_ATTEMPT_INVALID,
+            "prior_attempt_verification",
+        ) from None
+    finally:
+        close_failed = False
+        if raw_fd >= 0:
+            try:
+                _close_proven(raw_fd)
+            except Exception:
+                close_failed = True
+        if root_fd >= 0:
+            try:
+                _close_proven(root_fd)
+            except Exception:
+                close_failed = True
+        if close_failed:
+            raise _RunnerFailure(
+                REASON_PRIOR_ATTEMPT_INVALID,
+                "prior_attempt_verification",
+            ) from None
+
+
+def _require_prior_attempt_unchanged(
+    expected: _PriorAttemptProof,
+    prior_path: _Path,
+    supplied_attempt_id: str,
+    *,
+    current_execution_head: str,
+    owned_public_report: _OwnedOutput | None = None,
+) -> None:
+    observed = _verify_prior_attempt_v01(
+        prior_path,
+        supplied_attempt_id,
+        current_execution_head=current_execution_head,
+        owned_public_report=owned_public_report,
+    )
+    if observed != expected:
+        raise _RunnerFailure(
+            REASON_PRIOR_ATTEMPT_CHANGED,
+            "prior_attempt_revalidation",
+        )
+
+
+def _open_absolute_directory_nofollow(path: _Path) -> tuple[int, tuple[int, int]]:
+    _validate_raw_absolute_path_text(str(path))
+    current_fd = _OPEN(
+        "/",
+        _os.O_RDONLY | getattr(_os, "O_DIRECTORY", 0),
+    )
+    try:
+        for component in path.parts[1:]:
+            flags = (
+                _os.O_RDONLY
+                | getattr(_os, "O_DIRECTORY", 0)
+                | getattr(_os, "O_NOFOLLOW", 0)
+            )
+            next_fd = _OPEN(component, flags, dir_fd=current_fd)
+            try:
+                opened = _FSTAT(next_fd)
+                entry = _os.stat(
+                    component,
+                    dir_fd=current_fd,
+                    follow_symlinks=False,
+                )
+                if (
+                    not _stat.S_ISDIR(opened.st_mode)
+                    or (opened.st_dev, opened.st_ino)
+                    != (entry.st_dev, entry.st_ino)
+                ):
+                    raise ValueError
+            except Exception:
+                _close_proven(next_fd)
+                raise
+            _close_proven(current_fd)
+            current_fd = next_fd
+        return current_fd, _descriptor_identity(current_fd, directory=True)
+    except Exception:
+        if current_fd >= 0:
+            _close_proven(current_fd)
+        raise
+
+
+def _scandir_names(directory_fd: int) -> tuple[str, ...]:
+    names: list[str] = []
+    with _os.scandir(directory_fd) as entries:
+        for entry in entries:
+            if entry.name in ("", ".", "..") or "/" in entry.name or "\\" in entry.name:
+                raise ValueError
+            names.append(entry.name)
+    return tuple(sorted(names))
+
+
+def _read_prior_json(
+    directory_fd: int,
+    leaf: str,
+    expected_mode: int,
+) -> tuple[dict[str, object], _PrivateDocumentProof]:
+    content, identity, mode = _read_prior_file(directory_fd, leaf, 2_000_000)
+    if mode != expected_mode:
+        raise ValueError
+    parsed = _strict_json(content)
+    if type(parsed) is not dict or _canonical_json_line(parsed) != content:
+        raise ValueError
+    return parsed, _PrivateDocumentProof(
+        leaf=leaf,
+        identity=identity,
+        expected_bytes=content,
+        sha256=_sha256(content),
+        byte_count=len(content),
+    )
+
+
+def _read_prior_raw_file(
+    directory_fd: int,
+    leaf: str,
+) -> tuple[_InventoryRow, bytes, int]:
+    content, identity, mode = _read_prior_file(directory_fd, leaf, 16_000_000)
+    return (
+        _InventoryRow(leaf, _sha256(content), len(content), *identity),
+        content,
+        mode,
+    )
+
+
+def _read_prior_file(
+    directory_fd: int,
+    leaf: str,
+    maximum_bytes: int,
+) -> tuple[bytes, tuple[int, int], int]:
+    if (
+        type(leaf) is not str
+        or leaf in ("", ".", "..")
+        or "/" in leaf
+        or "\\" in leaf
+    ):
+        raise ValueError
+    before = _os.stat(leaf, dir_fd=directory_fd, follow_symlinks=False)
+    if not _stat.S_ISREG(before.st_mode) or not 0 <= before.st_size <= maximum_bytes:
+        raise ValueError
+    flags = _os.O_RDONLY | getattr(_os, "O_NOFOLLOW", 0)
+    fd = _OPEN(leaf, flags, dir_fd=directory_fd)
+    try:
+        opened = _FSTAT(fd)
+        identity = _descriptor_identity(fd, directory=False)
+        if (
+            identity != (before.st_dev, before.st_ino)
+            or opened.st_size != before.st_size
+        ):
+            raise ValueError
+        content = _read_bounded(fd, opened.st_size)
+        after = _os.stat(leaf, dir_fd=directory_fd, follow_symlinks=False)
+        if (
+            identity != (after.st_dev, after.st_ino)
+            or after.st_size != len(content)
+            or _stat.S_IMODE(after.st_mode) != _stat.S_IMODE(opened.st_mode)
+        ):
+            raise ValueError
+        return content, identity, _stat.S_IMODE(opened.st_mode)
+    finally:
+        _close_proven(fd)
+
+
+def _validate_prior_attempt_identity(
+    plain: dict[str, object],
+    prior_path: _Path,
+    anchors: _PriorAttemptAnchors,
+) -> None:
+    expected = {
+        "programme_id": PROGRAMME_ID,
+        "domain_id": DOMAIN_ID,
+        "execution_head": anchors.execution_head,
+        "attempt_number": 1,
+        "attempt_id": anchors.attempt_id,
+        "run_id": _lane.RUN_ID,
+        "report_id": _lane.REPORT_ID,
+        "source_task_id": _SOURCE_TASK_ID,
+        "package_id": _PACKAGE_ID,
+        "logical_package_ref": _LOGICAL_PACKAGE_REF,
+        "output_directory": str(prior_path),
+        "provider_mode": MODE_REAL,
+        "model_id": MODEL_ID,
+        "expected_actor_count": 12,
+        "provider_call_budget": 12,
+        "retry_count": 0,
+    }
+    if any(plain.get(key) != value for key, value in expected.items()):
+        raise ValueError
+    identity_payload = dict(plain)
+    identity_payload.pop("attempt_id", None)
+    computed = _sha256(
+        b"hedgehog.a1.airline.attempt.v01\0"
+        + _canonical_json_bytes_v01(identity_payload)
+    )
+    if computed != anchors.attempt_id:
+        raise ValueError
+
+
+def _validate_prior_inventory(
+    plain: dict[str, object],
+    rows: tuple[_InventoryRow, ...],
+    anchors: _PriorAttemptAnchors,
+) -> None:
+    expected_rows = [
+        {
+            "logical_ref": row.logical_ref,
+            "sha256": row.sha256,
+            "byte_count": row.byte_count,
+        }
+        for row in rows
+    ]
+    if (
+        plain.get("validation_status") != STATUS_FAIL_CLOSED
+        or plain.get("raw_attempt_file_count") != anchors.raw_file_count
+        or plain.get("aggregate_inventory_digest") != anchors.private_inventory_digest
+        or plain.get("ordered_files") != expected_rows
+        or plain.get("raw_bodies_copied_to_public_evidence") is not False
+    ):
+        raise ValueError
+
+
+def _validate_prior_gate(
+    plain: dict[str, object],
+    anchors: _PriorAttemptAnchors,
+) -> None:
+    expected = {
+        "attempt_id": anchors.attempt_id,
+        "attempt_identity_sha256": anchors.attempt_identity_sha256,
+        "attempt_number": 1,
+        "execution_head": anchors.execution_head,
+        "final_source_status": STATUS_FAIL_CLOSED,
+        "failed_stage": "collector_result",
+        "reason_code": REASON_COLLECTOR_FAILED,
+        "private_inventory_digest": anchors.private_inventory_digest,
+        "private_inventory_document_sha256": anchors.private_inventory_sha256,
+        "live_collection_performed": True,
+        "official_evidence_eligible": False,
+        "public_safe_report_state": _PUBLICATION_ABSENT,
+        "provider_mode": _lane.PROVIDER_MODE_REAL,
+        "wrapper_callback_observed_count": 3,
+        "provider_callback_started_count": 3,
+        "provider_callback_completed_count": 3,
+        "actual_provider_call_count": 3,
+        "actual_network_call_count": 0,
+        "actual_gemini_call_count": 0,
+        "actual_external_operation_status": _EXTERNAL_UNVERIFIED_PARTIAL,
+        "actual_real_world_effects_count": 0,
+        "retry_count": 0,
+        "package_created_count": 0,
+        "anchor_created_count": 0,
+        "replay_created_count": 0,
+    }
+    if any(plain.get(key) != value for key, value in expected.items()):
+        raise ValueError
+    for key in (
+        "observed_actor_prefix",
+        "wrapper_callback_observed_prefix",
+        "base_provider_started_prefix",
+        "base_provider_completed_prefix",
+    ):
+        if tuple(plain.get(key, ())) != anchors.callback_prefix:
+            raise ValueError
+
+
+def _validate_prior_summary(
+    plain: object,
+    anchors: _PriorAttemptAnchors,
+) -> None:
+    if type(plain) is not dict:
+        raise ValueError
+    permitted = {
+        "final_status",
+        "failed_actor_id",
+        "failed_stage",
+        "validation_errors",
+        "semantic_actor_call_order",
+        "counter_table",
+    }
+    selected = {key: plain.get(key) for key in permitted}
+    counters = selected["counter_table"]
+    if type(counters) is not dict or any(type(value) is not int for value in counters.values()):
+        raise ValueError
+    reasons = tuple(selected["validation_errors"] or ())
+    if (
+        selected["final_status"] != STATUS_FAIL_CLOSED
+        or selected["failed_actor_id"] != "client_purchase_intent_reviewer_llm"
+        or selected["failed_stage"] != "actor_validation"
+        or tuple(selected["semantic_actor_call_order"] or ()) != anchors.callback_prefix
+        or "selection_input_snapshot_mismatch" not in reasons
+        or "semantic_to_contract_bridge_guard_failed" not in reasons
+    ):
+        raise ValueError
+
+
+def _validate_prior_actor_validation(plain: object) -> None:
+    if type(plain) is not dict:
+        raise ValueError
+    if (
+        plain.get("accepted") is not False
+        or plain.get("validation_status") != STATUS_FAIL_CLOSED
+        or "selection_input_snapshot_mismatch" not in tuple(plain.get("errors") or ())
+    ):
+        raise ValueError
+
+
+def _verify_prior_head_ancestry(prior_head: str, current_head: str) -> None:
+    if prior_head != _PRIOR_ANCHORS.execution_head:
+        raise ValueError
+    _git_text("merge-base", "--is-ancestor", prior_head, current_head)
+
+
+def _validate_prior_failed_root(
+    value: str | _Path | None,
+    new_root: _Path,
+) -> _Path:
+    try:
+        raw = _os.fspath(value)
+        _validate_raw_absolute_path_text(raw)
+        prior = _Path(raw)
+        _validate_raw_absolute_path_text(str(new_root))
+        if prior == new_root or _is_within(new_root, prior):
+            raise ValueError
+        if _is_within(prior, _REPOSITORY_ROOT.resolve(strict=True)):
+            raise ValueError
+        fd, _ = _open_absolute_directory_nofollow(prior)
+        _close_proven(fd)
+        return prior
+    except Exception:
+        raise _RunnerFailure(
+            REASON_RECOVERY_INPUT_INVALID,
+            "prior_attempt_path_validation",
+        ) from None
 
 
 def _validate_private_root(value: str | _Path) -> _Path:
@@ -3010,6 +3702,45 @@ def _revalidate_private_document_fd(
         _close_proven(fd)
 
 
+def _cleanup_owned_private_document(
+    root: _Path,
+    root_identity: tuple[int, int],
+    proof: _PrivateDocumentProof,
+    plain: object,
+) -> None:
+    root_fd = -1
+    try:
+        root_fd = _open_verified_directory(root, root_identity)
+        _revalidate_private_document_fd(root_fd, proof, plain)
+        entry = _os.stat(proof.leaf, dir_fd=root_fd, follow_symlinks=False)
+        if (
+            (entry.st_dev, entry.st_ino) != proof.identity
+            or not _stat.S_ISREG(entry.st_mode)
+            or _stat.S_IMODE(entry.st_mode) != 0o600
+            or entry.st_size != proof.byte_count
+        ):
+            raise ValueError
+        _UNLINK(proof.leaf, dir_fd=root_fd)
+        try:
+            _os.stat(proof.leaf, dir_fd=root_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            pass
+        else:
+            raise ValueError
+        _close_proven(root_fd)
+        root_fd = -1
+    except Exception:
+        if root_fd >= 0:
+            try:
+                _close_proven(root_fd)
+            except Exception:
+                pass
+        raise _RunnerFailure(
+            REASON_PRIVATE_METADATA_FAILED,
+            "generation_gate_cleanup",
+        ) from None
+
+
 def _private_leaf_exists(
     root: _Path,
     root_identity: tuple[int, int],
@@ -3090,7 +3821,10 @@ def _assert_private_root_entries(
 
 def _write_public_safe_report(path: _Path, plain: object) -> _OwnedOutput:
     expected = _canonical_json_line(plain)
-    parent_fd = _open_parent_directory(path.parent)
+    try:
+        parent_fd = _open_parent_directory(path.parent)
+    except Exception:
+        raise _PublicCleanupFailure from None
     parent_identity = _descriptor_identity(parent_fd, directory=True)
     fd = -1
     identity: tuple[int, int] | None = None
@@ -3148,6 +3882,7 @@ def _write_public_safe_report(path: _Path, plain: object) -> _OwnedOutput:
 
 
 def _revalidate_owned_output(owner: _OwnedOutput, plain: object) -> None:
+    _verify_directory_path_identity(owner.parent_path, owner.parent_identity)
     flags = _os.O_RDONLY | getattr(_os, "O_NOFOLLOW", 0)
     fd = _OPEN(owner.leaf, flags, dir_fd=owner.parent_fd)
     try:
@@ -3173,6 +3908,7 @@ def _revalidate_owned_output(owner: _OwnedOutput, plain: object) -> None:
         parsed = _strict_json(content)
         if parsed != _jsonable(plain) or _canonical_json_line(parsed) != content:
             raise _RunnerFailure(REASON_PUBLIC_WRITE_FAILED, "public_safe_report_reread")
+        _verify_directory_path_identity(owner.parent_path, owner.parent_identity)
     finally:
         _close_proven(fd)
 
@@ -3180,6 +3916,7 @@ def _revalidate_owned_output(owner: _OwnedOutput, plain: object) -> None:
 def _release_owned_output(owner: _OwnedOutput) -> _ReleasedOutput:
     try:
         _revalidate_owned_output(owner, _strict_json(owner.expected_bytes))
+        _verify_directory_path_identity(owner.parent_path, owner.parent_identity)
         entry = _os.stat(owner.leaf, dir_fd=owner.parent_fd, follow_symlinks=False)
         if (
             (entry.st_dev, entry.st_ino) != owner.identity
@@ -3201,7 +3938,12 @@ def _release_owned_output(owner: _OwnedOutput) -> _ReleasedOutput:
 
 
 def _cleanup_owned_output(owner: _OwnedOutput) -> None:
+    path_identity_proven = True
     try:
+        try:
+            _verify_directory_path_identity(owner.parent_path, owner.parent_identity)
+        except Exception:
+            path_identity_proven = False
         entry = _os.stat(owner.leaf, dir_fd=owner.parent_fd, follow_symlinks=False)
         if (entry.st_dev, entry.st_ino) != owner.identity:
             raise _PublicCleanupFailure
@@ -3213,6 +3955,8 @@ def _cleanup_owned_output(owner: _OwnedOutput) -> None:
         else:
             raise _PublicCleanupFailure
         _close_proven(owner.parent_fd)
+        if not path_identity_proven:
+            raise _PublicCleanupFailure
     except Exception:
         try:
             _close_proven(owner.parent_fd)
@@ -3259,23 +4003,41 @@ def _cleanup_released_output(owner: _ReleasedOutput) -> None:
 
 
 def _open_parent_directory(path: _Path) -> int:
-    _require_no_symlink_components(path)
-    flags = _os.O_RDONLY | getattr(_os, "O_DIRECTORY", 0) | getattr(_os, "O_NOFOLLOW", 0)
-    fd = _OPEN(path, flags)
-    _descriptor_identity(fd, directory=True)
+    fd, _ = _open_absolute_directory_nofollow(path)
     return fd
 
 
 def _open_verified_directory(path: _Path, identity: tuple[int, int]) -> int:
-    flags = _os.O_RDONLY | getattr(_os, "O_DIRECTORY", 0) | getattr(_os, "O_NOFOLLOW", 0)
-    fd = _OPEN(path, flags)
+    fd = -1
     try:
-        if _descriptor_identity(fd, directory=True) != identity:
+        fd, observed = _open_absolute_directory_nofollow(path)
+        if observed != identity:
             raise ValueError
         return fd
     except Exception:
-        _close_proven(fd)
+        if fd >= 0:
+            _close_proven(fd)
         raise _RunnerFailure(REASON_INVENTORY_INVALID, "private_root_identity") from None
+
+
+def _verify_directory_path_identity(
+    path: _Path,
+    identity: tuple[int, int],
+) -> None:
+    fd = -1
+    try:
+        fd, observed = _open_absolute_directory_nofollow(path)
+        if observed != identity:
+            raise ValueError
+        _close_proven(fd)
+        fd = -1
+    except Exception:
+        if fd >= 0:
+            try:
+                _close_proven(fd)
+            except Exception:
+                pass
+        raise _PublicCleanupFailure from None
 
 
 def _descriptor_identity(fd: int, *, directory: bool) -> tuple[int, int]:
@@ -3471,6 +4233,7 @@ def _result(
     *,
     execution_mode: str,
     execution_head: str,
+    attempt_number: int,
     attempt_id: str,
     final_status: str,
     reason_code: str,
@@ -3505,7 +4268,7 @@ def _result(
         domain_id=DOMAIN_ID,
         execution_mode=execution_mode,
         execution_head=execution_head,
-        attempt_number=1,
+        attempt_number=attempt_number,
         attempt_id=attempt_id,
         final_status=final_status,
         reason_code=reason_code,
@@ -3560,13 +4323,29 @@ def _parser() -> _SanitizedArgumentParser:
     parser.add_argument("--attempt-number", required=True)
     parser.add_argument("--private-output-directory", required=True)
     parser.add_argument("--safe-report-output")
+    parser.add_argument("--prior-failed-attempt-directory")
+    parser.add_argument("--prior-attempt-id")
+    parser.add_argument("--owner-reviewed-attempt-02", action="store_true")
     return parser
+
+
+def _reject_duplicate_cli_options(argv: tuple[str, ...]) -> None:
+    seen: set[str] = set()
+    for token in argv:
+        if type(token) is not str or not token.startswith("--"):
+            continue
+        option = token.split("=", 1)[0]
+        if option in seen:
+            raise _CliError
+        seen.add(option)
 
 
 def main(argv: list[str] | None = None) -> int:
     try:
-        args = _parser().parse_args(argv)
-        if not str(args.attempt_number).isdigit():
+        raw_argv = tuple(_sys.argv[1:] if argv is None else argv)
+        _reject_duplicate_cli_options(raw_argv)
+        args = _parser().parse_args(raw_argv)
+        if args.attempt_number not in ("1", "2"):
             raise _CliError
         mode = MODE_REAL if args.real_provider else MODE_INJECTED
         progress = lambda item: print(
@@ -3578,6 +4357,9 @@ def main(argv: list[str] | None = None) -> int:
             private_output_directory=args.private_output_directory,
             injected_safe_report_output=args.safe_report_output,
             progress_sink=progress,
+            prior_failed_attempt_directory=args.prior_failed_attempt_directory,
+            prior_attempt_id=args.prior_attempt_id,
+            owner_reviewed_attempt_02=args.owner_reviewed_attempt_02,
         )
         print(
             _canonical_json_line(

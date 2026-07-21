@@ -58,31 +58,41 @@ The current MVP focus is:
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
 Current checkpoint: Hedgehog OS Two-Domain All-Real Sealed Evidence Program
-v0.1 R1-I2A Airline Gate-1 source-lineage compatibility replacement preflight
-- `READY FOR REVIEW`.
+v0.1 R1 Shared Sealed-Evidence Profile - `CLOSED_PASS`.
 
-Current compatibility preflight facts:
+Current R1 closure facts:
 
-- Base commit: `b1096c2`.
+- Implementation commit: `4274a0a`.
+- Checkpoint:
+  `docs/two_domain_all_real_sealed_evidence_program_v01_r1_checkpoint.md`.
+- Audit disposition: `ACCEPT_WITH_EXPLICIT_SCOPE_RECONCILIATION`.
+- Fresh focused results: shared profile `910 PASS`; Airline adapter `330 PASS`;
+  Supplier live adapter `399 PASS`; Supplier package adapter `209 PASS`;
+  common runners `317 PASS`.
+- Exact seven-file collection: `2165`; Kernel Integrity/ABI compatibility:
+  `668 PASS`; skips/xfails: `0 / 0`.
+- Package status is `SELF_CONSISTENT_UNANCHORED`.
+- Anchor publication evidence is `EVIDENCE_ONLY` and does not claim anchored
+  PASS.
+- Matching explicit Anchor verification derives `ANCHORED_PASS`; matching
+  sealed Replay derives `PASS`; a valid mismatched Anchor derives coherent
+  `FAIL_CLOSED` evidence.
+- Direct Airline and Supplier disposable Package fixtures both passed with
+  exact inventories and no residue.
+- Provider, network, Gemini, and effect operations during R1 audit:
+  `0 / 0 / 0 / 0`.
+- Full repository pytest was intentionally not run.
 - Original Gate 1 remains `CLOSED_PASS` for its frozen fixture contract.
-- Replacement preflight:
-  `docs/two_domain_all_real_sealed_evidence_program_v01_r1_i2a_airline_kernel_source_lineage_compatibility_preflight.md`.
-- Shared focused suite: `910 PASS`.
-- Airline focused suite: `329 PASS / 1 FAIL`.
-- The sole failure is the real committed source-lineage compatibility path.
-- Package Manifest seam, six-source coverage, Kernel Manifest grounding,
-  source-lineage binding, and BSEP binding are accepted.
-- The frozen G1-D1 Airline Kernel adapter omits contextual `expected_identity`
-  from both Ledger validation and Crypto Ledger-entry projection.
-- A later repair may modify only
-  `hedgehog/domains/airline/kernel_adapter_v01.py` and
-  `tests/test_airline_kernel_adapter_v01.py`.
-- No implementation, pytest, collector, runner, package, Anchor, filesystem
-  Replay, provider, network, Gemini, authority, permission, action, receipt,
-  FinalOutput, or effect occurs in this planning gate.
+- Portable R1 fixture runners fail closed at all agreed test-injectable
+  boundaries but do not claim an atomic guarantee against hostile same-UID
+  replacement strictly between final identity check and unlink/rmdir. They are
+  not a transactional or multi-tenant production filesystem.
+- No official Package, external Anchor publication, official Replay, live
+  collection, production certification, authority, permission, action,
+  receipt, FinalOutput, or real-world effect was created.
 
 Current next owner-reviewed repository gate:
-`two_domain_all_real_sealed_evidence_program_v01_r1_i2a_airline_kernel_source_lineage_compatibility_repair`.
+`two_domain_all_real_sealed_evidence_program_v01_a1_airline_live`.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

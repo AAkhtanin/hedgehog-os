@@ -58,51 +58,60 @@ The current MVP focus is:
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
 Current checkpoint: Hedgehog OS Two-Domain All-Real Sealed Evidence Program
-v0.1 A1 Attempt 01 preserved `FAIL_CLOSED`; semantic/runtime recovery
-preflight is `READY_FOR_REVIEW`.
+v0.1 A1 Attempt 01 and Attempt 02 preserved `FAIL_CLOSED`; Attempt 03
+root-review acknowledgement recovery preflight is `READY_FOR_REVIEW`.
 
-Current A1 semantic/runtime recovery facts:
+Current A1 Attempt 03 recovery facts:
 
-- A1 runner implementation commit: `8294962`.
+- Governance base and preserved Attempt 02 execution head: `b0349bb`.
 - Recovery preflight:
-  `docs/two_domain_all_real_sealed_evidence_program_v01_a1_attempt_02_recovery_preflight.md`.
-- Audit disposition: `ACCEPT_WITH_EXPLICIT_SCOPE_RECONCILIATION`.
-- A full-causal-schema draft was rejected before implementation and has no
-  canonical or implementation authority.
-- Preserved Attempt 01 ID:
-  `fcce2c0224517487b59c40e79a75ea00078df393a2552f5b553780f8b7adc64a`.
-- Attempt 01 remains immutable private negative evidence and can never become
-  PASS, be repaired in place, be resumed, or be reused as raw input.
-- Final source status: `FAIL_CLOSED`; failed actor:
-  `client_purchase_intent_reviewer_llm`; primary reason:
-  `selection_input_snapshot_mismatch`; outer reason:
+  `docs/two_domain_all_real_sealed_evidence_program_v01_a1_attempt_03_root_review_acknowledgement_recovery_preflight.md`.
+- Attempt 01 ID remains
+  `fcce2c0224517487b59c40e79a75ea00078df393a2552f5b553780f8b7adc64a`;
+  Attempt 02 ID is
+  `0191a1820c22ccd2031e2f4f8816feebf42682eac8ba17a2b25644b27f34bf3e`.
+- Both attempts are immutable distinct private `FAIL_CLOSED` evidence. Neither
+  may be resumed, overwritten, repaired in place, reused, or relabelled.
+- Attempt 02 failed at `client_purchase_intent_reviewer_llm` actor validation
+  with `airline_semantic_provider_value_invalid`; outer reason remains
   `a1_airline_collector_failed`.
-- Provider callback starts/completions: `3 / 3`; actual external state:
-  `UNVERIFIED_PARTIAL`; retry count: `0`.
-- Canonical Airline public safe report remains absent; Package, Anchor,
-  Replay, and effect counts remain zero.
-- Attempt 01 proved that Gemini must not reproduce runtime-owned mechanical
-  lineage; it did not prove that Gemini requires a full canonical schema.
-- Recovery keeps all twelve actors on JSON MIME with no response schema and
-  one application-level call per actor. Five causal actors pass through a new
-  domain-local semantic-to-canonical boundary before unchanged validators.
-- Provider proposes semantics. Runtime canonicalizes. Validators verify. Root
-  decides.
-- No duplicated A1-local Google transport, retry, fallback, second collector,
-  raw repair, or automatic Attempt 03 is authorized.
-- Future implementation scope is exactly one new Airline canonicalization
-  module and test plus the canonical Airline runner/test and A1 runner/test.
-- Reconciled ceilings: accepted Airline geometry `12`; preserved Attempt 01
-  consumption `3`; Attempt 02 maximum `12`; cumulative Airline ceiling `15`;
-  Supplier budget `6`; cumulative programme ceiling `21`.
-- Supplier S1 remains forbidden until accepted Attempt 02, its generation
-  audit, and complete A2 Airline closure.
+- The bounded structural diagnostic locally opened and parsed the extracted
+  candidate only to calculate structural predicates. It did not open the
+  prompt or raw response and did not print the candidate body, offer IDs,
+  semantic text, free-text fields, or raw JSON.
+- The exact boolean failed the mandatory positive Root-review acknowledgement
+  requirement. The existing canonicalizer rejected it without mutation or
+  repair. Mechanical lineage, JSON parsing, and provider transport were not
+  the failure.
+- `requires_root_review` is provider-owned advisory acknowledgement only. Root
+  remains the sole authority, and `false` remains contract-invalid.
+- The authorized proposer prompt must state that every recommendation requires
+  ClientRoot review, the exact JSON boolean must be `true`, `false` is invalid,
+  and the acknowledgement does not create Root authority.
+- No response skeleton, schema, singleton enum, default offer, retry, fallback,
+  mutation, second collector, or automatic Attempt 04 is authorized.
+- Future implementation scope is exactly the canonical Airline live-lane
+  runner/test and A1 runner/test. The semantic canonicalizer and all frozen
+  contracts remain unchanged.
+- Attempt 03 requires one explicit owner-reviewed gate, a new absent path and
+  identities, and explicit paths and IDs for both predecessors. Attempt 01 and
+  Attempt 02 must be independently verified at four checkpoints, and Attempt
+  02's embedded Attempt 01 anchors must equal the fresh Attempt 01 proof.
+- Attempt 03 permits one collector invocation and at most twelve ordered new
+  provider calls. Retry count remains zero.
+- Reconciled consumption is Attempt 01 `3`, Attempt 02 `3`, Attempt 03 maximum
+  `12`, cumulative Airline ceiling `18`, Supplier budget `6`, and cumulative
+  programme ceiling `24`.
+- Canonical Airline public safe report remains absent. Package, Anchor, Replay,
+  publication, and effect counts remain zero.
 - Provider, network, Gemini, and effect operations during this preflight:
   `0 / 0 / 0 / 0`.
+- The existing read-only Attempt 01 predecessor verifier was called during
+  this documentation pass. No live runner or collector was called.
 - Original Gate 1 and R1 remain `CLOSED_PASS` for their frozen contracts.
 
 Current next owner-reviewed repository gate:
-`two_domain_all_real_sealed_evidence_program_v01_a1_attempt_02_semantic_runtime_recovery`.
+`two_domain_all_real_sealed_evidence_program_v01_a1_attempt_03_root_review_acknowledgement_recovery`.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

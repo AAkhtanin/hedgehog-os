@@ -58,55 +58,61 @@ The current MVP focus is:
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
 Current checkpoint: Hedgehog OS Two-Domain All-Real Sealed Evidence Program
-v0.1 Airline A1 Attempt 03 generation audit `CLOSED_PASS`.
+v0.1 Airline A1 Attempt 04 Complete Corridor Capture Preflight
+`READY_FOR_REVIEW`.
 
-Current accepted Airline A1 facts:
+Current Airline A1/A2 governance facts:
 
-- Accepted implementation and execution head: `9eefa24`.
-- Independent generation audit:
-  `docs/audit_reports/auditor_two_domain_airline_all_real_generation_v01.log`.
-- Audit disposition:
-  `ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE`.
-- Attempt 01 and Attempt 02 remain immutable distinct private `FAIL_CLOSED`
-  evidence. Both complete committed predecessor verifiers PASS, and Attempt
-  02's transitive Attempt 01 binding remains exact.
-- Accepted Attempt 03 ID:
-  `94cb3ee73a9b5d87aca4410ce94bd5baf9a3cd720c1b08efc9b449a3816a1d43`.
-- Accepted Attempt 03 final status: `PASS`; failed stage and reason are empty.
-- Canonical safe report:
-  `docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_v01.json`.
-- Canonical safe-report SHA-256:
-  `e3161701e0f691c7ded8befbb3e0e65951d1ece93438192145e1b54c061ef9fb`.
-- Safe execution ID:
-  `87a8da9a866b13b30e1bd180968a85303aa2f71b10204b520206badaf3d0fcd0`.
-- Exact private inventory is 72 regular files with aggregate digest
-  `db0acacc10967f6ed1bcc3dcd7b9de9bae8062453db028d3f5f0d76950b99f4b`.
-- Public geometry is twelve PASS actors in frozen order: five causal and seven
-  generic; four PASS BSEP projections; ClientRoot, AirlineRoot, and BankRoot
-  finals; one mock-only Corridor PASS; and three evidence-only receipts.
-- Preference A and the selected offer are consistent across the safe source
-  geometry.
-- Attempt 03 wrapper callbacks, provider starts, and provider completions are
-  `12 / 12 / 12`; source and actual provider/network/Gemini evidence is
-  `12 / 12 / 12`; collector invocations are `1`; duplicate actors and retries
-  are `0 / 0`.
-- Reconciled consumption is Attempt 01 `3`, Attempt 02 `3`, and accepted
-  Attempt 03 `12`; cumulative Airline ceiling is `18`, Supplier accepted
-  budget is `6`, and cumulative programme ceiling is `24`.
-- Focused compatibility validation is `889 PASS`, with per-suite collection
-  `148 / 397 / 79 / 177 / 88`, and zero skips or xfails. Full repository
-  pytest was not run.
-- Provider, network, Gemini, and real-world-effect operations during the audit:
-  `0 / 0 / 0 / 0`.
-- Package, Anchor, and Replay remain absent. No payment, ticket issuance,
-  booking, publication authority, or other real-world effect was created.
-- This is accepted A1 safe source evidence for A2 Airline Seal. It is not an
-  official Package, external Anchor, Replay, production, or production-security
-  claim. Root remains final authority.
-- Original Gate 1 and R1 remain `CLOSED_PASS` for their frozen contracts.
+- Governing Attempt 04 preflight:
+  `docs/two_domain_all_real_sealed_evidence_program_v01_a1_attempt_04_complete_corridor_capture_preflight.md`.
+- Source-agnostic A2 contract:
+  `docs/two_domain_all_real_sealed_evidence_program_v01_a2_airline_seal_preflight.md`.
+- Accepted Attempt 03 remains immutable `CLOSED_PASS` with its safe report and
+  independent generation audit unchanged.
+- Attempt 03 is `A2_SOURCE_INCOMPLETE` only for packaging-source sufficiency:
+  its accepted 72-file inventory did not persist the complete typed Corridor
+  report required by the frozen Airline adapter.
+- The forensic result is `ABSENT_COMPLETE_ACCEPTED_CORRIDOR_REPORT`; no
+  Attempt 03 value may be inferred, repaired, synthesized, or reconstructed.
+- Official A2 is `BLOCKED_PENDING_ACCEPTED_ATTEMPT_04`.
+- Attempt 04 is a separate evidence-completeness successor, not a retry and
+  not a repaired Attempt 03.
+- The only new production behavior is archival persistence of the complete
+  already-created Corridor report consumed by the Ledger source bundle.
+- Local A2 packageability implementation and proof are mandatory parts of the
+  Attempt 04 gate. A fresh process must hydrate the persisted attempt, validate
+  the production adapter and `DomainEvidenceProjectionV01`, and build one
+  temporary `LOCAL_NONPUBLICATION` Package with `fixture_disposable=False`.
+- No new Gemini call is authorized until that local packageability gate passes
+  on a clean committed implementation HEAD with zero canonical outputs.
+- The combined implementation scope is exactly ten paths: four A1 archival
+  runner/test paths and six A2 binding/adapter/orchestration test paths named in
+  the Attempt 04 preflight. No eleventh path is authorized.
+- The ten paths are exactly:
+  `demo/run_tri_party_airline_live_semantic_lane_v01.py`,
+  `tests/test_tri_party_airline_live_semantic_lane_v01_runner.py`,
+  `demo/run_two_domain_airline_all_real_program_v01.py`,
+  `tests/test_two_domain_airline_all_real_program_v01_runner.py`,
+  `hedgehog/domains/airline/sealed_evidence_a2_binding_v01.py`,
+  `tests/test_airline_sealed_evidence_a2_binding_v01.py`,
+  `demo/run_two_domain_airline_a2_seal_v01.py`,
+  `tests/test_two_domain_airline_a2_seal_v01_runner.py`,
+  `hedgehog/domains/airline/sealed_evidence_package_adapter_v01.py`, and
+  `tests/test_airline_sealed_evidence_package_adapter_v01.py`.
+- Attempt 04, if later authorized, reruns the same 12 actors and the complete
+  frozen Airline chain exactly once under a new immutable attempt identity.
+- Historical Airline consumption is Attempt 01 `3`, Attempt 02 `3`, Attempt 03
+  `12`; Attempt 04 may add at most `12`. The cumulative Airline ceiling is
+  `30`, Supplier remains `6`, and the programme ceiling is `36`.
+- Retry count remains zero. No automatic Attempt 05 is authorized.
+- Provider, network, Gemini, and effect operations during this documentation
+  pass are `0 / 0 / 0 / 0`.
+- Package, Anchor, Replay, payment, booking, ticket issuance, publication
+  authority, and real-world effects remain absent. Gate 1 and R1 remain
+  `CLOSED_PASS` for their frozen contracts.
 
 Current next owner-reviewed repository gate:
-`two_domain_all_real_sealed_evidence_program_v01_a2_airline_seal`.
+`two_domain_all_real_sealed_evidence_program_v01_a1_attempt_04_complete_corridor_capture_implementation`.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

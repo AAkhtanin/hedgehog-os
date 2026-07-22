@@ -58,7 +58,7 @@ The current MVP focus is:
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
 Current checkpoint: Hedgehog OS Two-Domain All-Real Sealed Evidence Program
-v0.1 Airline A1 Attempt 04 independent generation audit `CLOSED_PASS`.
+v0.1 Airline A2 G2 accepted-source freeze `READY_FOR_OWNER_COMMIT`.
 
 Current Airline A1/A2 governance facts:
 
@@ -70,6 +70,8 @@ Current Airline A1/A2 governance facts:
   `CLOSED_PASS`.
 - Independent audit disposition is
   `ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE`.
+- G2 accepted-source freeze is `READY_FOR_OWNER_COMMIT` and changes no accepted
+  source evidence, implementation, validator, adapter, runner, or test.
 - Attempt 04 attempt ID is
   `b8fd88780d581c985006c2df1b4cc4eaa90d99579d22f5545345ea8a35397068`.
 - Attempt 04 safe execution ID is
@@ -84,6 +86,10 @@ Current Airline A1/A2 governance facts:
   `2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7`.
 - The independent audit is
   `docs/audit_reports/auditor_two_domain_airline_all_real_generation_attempt_04_v01.log`.
+- The committed source-evidence closure head is
+  `18f7e66c5840a5f93b09af27bd061898921ee32d`; it is distinct from the source
+  execution head. The future Package publication-base head is the clean commit
+  containing the G2 freeze and is distinct from both.
 - Attempts 01 and 02 remain immutable `FAIL_CLOSED` evidence. Attempt 03
   remains immutable genuine `CLOSED_PASS` evidence and remains
   `A2_SOURCE_INCOMPLETE` only for packaging-source sufficiency.
@@ -105,11 +111,10 @@ Current Airline A1/A2 governance facts:
 - Gate 1 and R1 remain `CLOSED_PASS` for their frozen contracts. Supplier
   remains prohibited until Airline A2 publication closure.
 
-Current next owner-reviewed repository gate:
-`two_domain_all_real_sealed_evidence_program_v01_a2_airline_seal_g2_accepted_source_freeze`.
-
-G2 must freeze the exact accepted Attempt 04 identities and hashes in the
-existing A2 preflight before any official Package construction.
+Current next owner operation after the clean G2 commit:
+one official Airline A2 Package construction, followed by Anchor under the
+frozen P1 publication boundary. Package, Anchor, and Replay remain unexecuted
+and absent until their respective owner gates.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

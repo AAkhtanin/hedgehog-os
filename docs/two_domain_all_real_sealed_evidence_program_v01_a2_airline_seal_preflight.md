@@ -2,11 +2,12 @@
 ## A2 Airline Seal Source-Agnostic Preflight
 
 document_id: two_domain_all_real_sealed_evidence_program_v01_a2_airline_seal_preflight
-document_version: v0.4
-document_status: BLOCKED_PENDING_ACCEPTED_ATTEMPT_04
-local_packageability_implementation_gate: READY_FOR_REVIEW
-official_publication_gate: BLOCKED_PENDING_ACCEPTED_ATTEMPT_04
-governing_repository_head: 3d82573a6f0f8891a81a7bad6d1c9b667448c0ae
+document_version: v0.5
+document_status: READY_FOR_OWNER_COMMIT
+local_packageability_implementation_gate: CLOSED_PASS
+g2_accepted_source_freeze: READY_FOR_OWNER_COMMIT
+official_publication_gate: READY_AFTER_CLEAN_COMMITTED_G2_HEAD
+governing_repository_head: 18f7e66c5840a5f93b09af27bd061898921ee32d
 package_provider_network_gemini_effect_counts: 0 / 0 / 0 / 0
 anchor_provider_network_gemini_effect_counts: 0 / 0 / 0 / 0
 replay_provider_network_gemini_effect_counts: 0 / 0 / 0 / 0
@@ -14,10 +15,12 @@ full_repository_pytest: NOT_RUN
 
 ## 1. Decision
 
-Official Airline A2 Package, Anchor, and Replay publication is blocked until a
-separately accepted Airline Attempt 04 contains the complete persisted
+Accepted Airline Attempt 04 contains the complete persisted
 `AirlineTicketPurchaseCorridorRunReportV01` and every other typed source
-required by the frozen Airline adapter.
+required by the frozen Airline adapter. The accepted source is frozen in this
+G2 document. One official Package construction becomes eligible only after
+this G2 change has a clean committed head; Anchor and Replay remain separated
+by the frozen P1 and P2 publication boundaries.
 
 The A2 architecture has two strictly discriminated modes:
 
@@ -48,6 +51,40 @@ Attempt 03 is immutable historical predecessor evidence explaining why a new
 complete source attempt is required. It is not an official A2 content source.
 No Attempt 03 field may be repaired, inferred, combined, synthesized, or
 reconstructed for A2.
+
+### 2.1 G2 Accepted Attempt 04 Source Freeze
+
+The official accepted source is frozen to these exact already committed facts:
+
+| Fact | Exact accepted value |
+| --- | --- |
+| attempt number | `4` |
+| attempt ID | `b8fd88780d581c985006c2df1b4cc4eaa90d99579d22f5545345ea8a35397068` |
+| source execution head | `71764c8b41f26e94b9cfdc1e821f7d8e15df4149` |
+| implementation-content SHA-256 | `c9a21d306d65761e535f2e617d8e723e61a1f23a9f0a27055fdd4813ffcf98a6` |
+| attempt-identity SHA-256 / bytes | `a57975d270575c8349b216dfd9b47067396a837fe1b1469f3f8d68cab8cb95cd` / `4311` |
+| private-inventory SHA-256 / bytes | `330d9a3e07773865daed328c7235171a4894c55ff7cbf90fd669fcb66b625d70` / `12349` |
+| private-inventory aggregate digest / rows | `0bf5490ad2896ecda1568fccf0c6a7137d5082bc26af09e679489d6992b4a133` / `73` |
+| generation-gate SHA-256 / bytes | `c311cbe5a598677f1e778674893077a06ff0743fd83ad2a977e3341f84045020` / `6702` |
+| Corridor archive logical name | `raw_attempt/airline_ticket_purchase_corridor_run_report_v01.json` |
+| Corridor archive SHA-256 / bytes / mode | `d6f94e7843f920a023ec43a6d07b5ee648ad76e2a09316a6b144fdaa8a557c34` / `11763` / `0600` |
+| Corridor audited geometry | `16` report fields / `5` phases / `4` transitions / `8` delegation rows / `2` core-direct rows |
+| public safe-report path | `docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json` |
+| public safe-report SHA-256 / bytes / mode | `2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7` / `16389` / `0400` |
+| safe execution ID | `2343b0f619620a85b5857e653f251034dbedcae418a7e4280a18d8e383e7bac6` |
+| independent audit path | `docs/audit_reports/auditor_two_domain_airline_all_real_generation_attempt_04_v01.log` |
+| independent audit SHA-256 / bytes | `9b2c4243512f6405eebdcf6cb606374d0d8d2b8593c440cb6e39556d4dd08760` / `8308` |
+| independent audit status | `CLOSED_PASS` |
+| independent audit disposition | `ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE` |
+| source-evidence closure head | `18f7e66c5840a5f93b09af27bd061898921ee32d` |
+
+The source execution head, source-evidence closure head, and future clean G2
+Package publication-base head are three different identities. The source
+execution head remains
+`71764c8b41f26e94b9cfdc1e821f7d8e15df4149`; the committed source-evidence
+closure head remains `18f7e66c5840a5f93b09af27bd061898921ee32d`;
+`--publication-base-head` remains the not-yet-created clean commit containing
+this G2 freeze. No field may substitute one meaning for another.
 
 ## 3. Closed Source Variants
 
@@ -152,7 +189,7 @@ passed as an `evidence_class` value.
 
 ### 3.2 OFFICIAL_ACCEPTED_SOURCE
 
-The future immutable type is `AirlineA2OfficialAcceptedSourceV01`. Its exact
+The committed immutable type is `AirlineA2OfficialAcceptedSourceV01`. Its exact
 fields and types are:
 
 | Field | Exact type and law |
@@ -1140,7 +1177,7 @@ attempt number from a run ID or path.
 
 ### 6.8 Pure Builders and Descriptor-Bound Loaders
 
-Every source, invocation, typed-context, and member builder in the future A2
+Every source, invocation, typed-context, and member builder in the committed A2
 binding module is pure. A builder accepts already verified values, constructs
 immutable typed objects, derives identities, and runs validators. It does not
 open a path, inspect Git, import a runner, use `Path.cwd()`, read an environment
@@ -1215,8 +1252,8 @@ Attempt number `4`, model `gemini-2.5-flash`, application-call mode
 `json_mime_no_response_schema_single_application_call`, audit status
 `CLOSED_PASS`, and audit disposition
 `ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE` are frozen validator
-constants, not caller flags. Every future value in the official loader
-signature is supplied explicitly by the owner CLI.
+constants, not caller flags. Every accepted-source value in the official
+loader signature is supplied explicitly by the owner CLI.
 
 Neither loader uses implicit CWD, module-relative discovery, `latest` lookup,
 environment fallback, repository scanning, or inferred paths. The official
@@ -1616,30 +1653,30 @@ present and validated. It is never described as executed live evidence.
 
 ## 10. Official Package Owner Mode
 
-The future owner command is:
+The frozen owner command after this G2 change has a clean committed head is:
 
 ```text
 PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
   --package \
   --repository-root <explicit-absolute-repository-root> \
-  --publication-base-head <exact-clean-publication-base-head> \
+  --publication-base-head <exact-clean-committed-G2-head> \
   --accepted-attempt-directory <explicit-accepted-attempt-04-directory> \
-  --accepted-attempt-id <exact-accepted-attempt-04-id> \
-  --execution-head <exact-accepted-attempt-04-head> \
-  --expected-attempt-identity-sha256 <exact-attempt-identity-sha256> \
-  --expected-private-inventory-sha256 <exact-private-inventory-sha256> \
-  --expected-private-inventory-digest <exact-private-inventory-digest> \
-  --expected-generation-gate-sha256 <exact-generation-gate-sha256> \
-  --expected-corridor-archive-sha256 <exact-corridor-archive-sha256> \
-  --expected-corridor-archive-byte-count <exact-corridor-archive-byte-count> \
-  --safe-report <committed-attempt-04-safe-report> \
-  --expected-safe-report-sha256 <exact-safe-report-sha256> \
-  --expected-safe-report-byte-count <exact-safe-report-byte-count> \
-  --expected-safe-execution-id <exact-safe-execution-id> \
-  --generation-audit <committed-attempt-04-generation-audit> \
-  --expected-generation-audit-sha256 <exact-generation-audit-sha256> \
-  --package-root <new-absent-official-package-root> \
-  --package-index-output <new-absent-official-package-index>
+  --accepted-attempt-id b8fd88780d581c985006c2df1b4cc4eaa90d99579d22f5545345ea8a35397068 \
+  --execution-head 71764c8b41f26e94b9cfdc1e821f7d8e15df4149 \
+  --expected-attempt-identity-sha256 a57975d270575c8349b216dfd9b47067396a837fe1b1469f3f8d68cab8cb95cd \
+  --expected-private-inventory-sha256 330d9a3e07773865daed328c7235171a4894c55ff7cbf90fd669fcb66b625d70 \
+  --expected-private-inventory-digest 0bf5490ad2896ecda1568fccf0c6a7137d5082bc26af09e679489d6992b4a133 \
+  --expected-generation-gate-sha256 c311cbe5a598677f1e778674893077a06ff0743fd83ad2a977e3341f84045020 \
+  --expected-corridor-archive-sha256 d6f94e7843f920a023ec43a6d07b5ee648ad76e2a09316a6b144fdaa8a557c34 \
+  --expected-corridor-archive-byte-count 11763 \
+  --safe-report <explicit-absolute-repository-root>/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json \
+  --expected-safe-report-sha256 2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7 \
+  --expected-safe-report-byte-count 16389 \
+  --expected-safe-execution-id 2343b0f619620a85b5857e653f251034dbedcae418a7e4280a18d8e383e7bac6 \
+  --generation-audit <explicit-absolute-repository-root>/docs/audit_reports/auditor_two_domain_airline_all_real_generation_attempt_04_v01.log \
+  --expected-generation-audit-sha256 9b2c4243512f6405eebdcf6cb606374d0d8d2b8593c440cb6e39556d4dd08760 \
+  --package-root <explicit-absolute-repository-root>/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01 \
+  --package-index-output <explicit-absolute-repository-root>/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_package_index_v01.json
 ```
 
 Every option is mandatory and duplicate-rejected. The source must be Attempt
@@ -1653,12 +1690,13 @@ discovery, repository scanning, environment fallback, implicit path, Attempt
 03 substitution, temporary path, local-source promotion, or uncommitted
 report/audit bytes are forbidden.
 
-G2 freezes the ten `--expected-*` future values after accepted Attempt 04.
-I1 remains generic and requires those values as explicit owner inputs; no I1
-code change after G2 may embed an Attempt-04 hash. The CLI maps every option
-one-to-one into `load_airline_a2_official_accepted_source_v01`; it performs no
-Markdown parsing, implicit CWD lookup, environment fallback, or repository
-discovery.
+The ten `--expected-*` values above are the exact G2 freeze. I1 remains generic
+and requires those values as explicit owner inputs; no code change after G2
+may embed an Attempt-04 hash. The CLI maps every option one-to-one into
+`load_airline_a2_official_accepted_source_v01`; it performs no Markdown
+parsing, implicit CWD lookup, environment fallback, or repository discovery.
+The accepted private attempt directory remains an explicit owner-terminal
+input and is intentionally not published in this document.
 
 The supplied `--package-root` and `--package-index-output` are explicit safety
 inputs, not caller-selected identities. After strict lexical and descriptor
@@ -1719,7 +1757,8 @@ and noncanonical. Canonical Package and index writes are both zero; Anchor and
 Replay owner operations are both zero. Local output cannot be accepted by the
 official Package, Anchor, or Replay commands.
 
-After accepted Attempt 04 and G2, the official Package root is:
+After this accepted-source freeze has a clean committed G2 head, the official
+Package root is:
 
 `docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01`
 
@@ -1899,8 +1938,8 @@ It does not duplicate shared cryptographic or filesystem law.
 
 ## 14. Frozen Surfaces and Scope
 
-Frozen surfaces are Attempts 01, 02, and 03; future accepted Attempt 04 after
-audit freeze; actor order and prompts; semantic contracts; provider adapter,
+Frozen surfaces are Attempts 01, 02, and 03; accepted Attempt 04 and its
+independent audit; actor order and prompts; semantic contracts; provider adapter,
 model, timeout, and one-call mode; BSEP; all three Roots; Corridor contracts,
 builders, validators, and execution; Ledger contracts and collector; Crypto
 contracts and collector; historical replay; Kernel and Airline Kernel adapter;
@@ -1944,8 +1983,8 @@ production or a production-security claim.
 
 ## 17. Immediate Next Gate
 
-The only next owner-reviewed gate is:
-
-`two_domain_all_real_sealed_evidence_program_v01_a1_attempt_04_complete_corridor_capture_implementation`
-
-No provider call or official A2 output is authorized by this document.
+The current G2 accepted-source freeze is `READY_FOR_OWNER_COMMIT`. After this
+document and AGENTS have a clean committed G2 head, the next owner operation is
+exactly one official Package construction followed by Anchor under the frozen
+P1 publication boundary. No Package, Anchor, Replay, provider call, or official
+A2 output is authorized before that clean G2 commit exists.

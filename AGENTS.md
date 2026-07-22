@@ -58,67 +58,58 @@ The current MVP focus is:
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
 Current checkpoint: Hedgehog OS Two-Domain All-Real Sealed Evidence Program
-v0.1 Airline A1 Attempt 04 Complete Corridor Capture Preflight
-`READY_FOR_REVIEW`.
+v0.1 Airline A1 Attempt 04 independent generation audit `CLOSED_PASS`.
 
 Current Airline A1/A2 governance facts:
 
-- Governing Attempt 04 preflight:
-  `docs/two_domain_all_real_sealed_evidence_program_v01_a1_attempt_04_complete_corridor_capture_preflight.md`.
-- Source-agnostic A2 contract:
-  `docs/two_domain_all_real_sealed_evidence_program_v01_a2_airline_seal_preflight.md`.
-- Accepted Attempt 03 remains immutable `CLOSED_PASS` with its safe report and
-  independent generation audit unchanged.
-- Attempt 03 is `A2_SOURCE_INCOMPLETE` only for packaging-source sufficiency:
-  its accepted 72-file inventory did not persist the complete typed Corridor
-  report required by the frozen Airline adapter.
-- The forensic result is `ABSENT_COMPLETE_ACCEPTED_CORRIDOR_REPORT`; no
-  Attempt 03 value may be inferred, repaired, synthesized, or reconstructed.
-- Official A2 is `BLOCKED_PENDING_ACCEPTED_ATTEMPT_04`.
-- Attempt 04 is a separate evidence-completeness successor, not a retry and
-  not a repaired Attempt 03.
-- The only new production behavior is archival persistence of the complete
-  already-created Corridor report consumed by the Ledger source bundle.
-- Local A2 packageability implementation and proof are mandatory parts of the
-  Attempt 04 gate. A fresh process must hydrate the persisted attempt, validate
-  the production adapter and `DomainEvidenceProjectionV01`, and build one
-  temporary `LOCAL_NONPUBLICATION` Package with `fixture_disposable=False`.
-- No new Gemini call is authorized until that local packageability gate passes
-  on a clean committed implementation HEAD with zero canonical outputs.
-- The combined implementation scope is exactly twelve paths: four A1 archival
-  paths, the closed shared Package scanner compatibility pair, and six A2
-  binding/adapter/orchestration paths named in the Attempt 04 preflight. No
-  thirteenth path is authorized.
-- The twelve paths, in frozen implementation-content order, are exactly:
-  `demo/run_tri_party_airline_live_semantic_lane_v01.py`,
-  `tests/test_tri_party_airline_live_semantic_lane_v01_runner.py`,
-  `demo/run_two_domain_airline_all_real_program_v01.py`,
-  `tests/test_two_domain_airline_all_real_program_v01_runner.py`,
-  `demo/run_sealed_evidence_package_v01.py`,
-  `tests/test_sealed_evidence_package_v01_runner.py`,
-  `hedgehog/domains/airline/sealed_evidence_a2_binding_v01.py`,
-  `tests/test_airline_sealed_evidence_a2_binding_v01.py`,
-  `demo/run_two_domain_airline_a2_seal_v01.py`,
-  `tests/test_two_domain_airline_a2_seal_v01_runner.py`,
-  `hedgehog/domains/airline/sealed_evidence_package_adapter_v01.py`, and
-  `tests/test_airline_sealed_evidence_package_adapter_v01.py`.
-- The shared Package implementation remains frozen except for the closed
-  contextual safe-reference compatibility repair specified by the governing
-  preflights. No general scanner relaxation is authorized.
-- Attempt 04, if later authorized, reruns the same 12 actors and the complete
-  frozen Airline chain exactly once under a new immutable attempt identity.
-- Historical Airline consumption is Attempt 01 `3`, Attempt 02 `3`, Attempt 03
-  `12`; Attempt 04 may add at most `12`. The cumulative Airline ceiling is
-  `30`, Supplier remains `6`, and the programme ceiling is `36`.
-- Retry count remains zero. No automatic Attempt 05 is authorized.
-- Provider, network, Gemini, and effect operations during this documentation
-  pass are `0 / 0 / 0 / 0`.
-- Package, Anchor, Replay, payment, booking, ticket issuance, publication
-  authority, and real-world effects remain absent. Gate 1 and R1 remain
-  `CLOSED_PASS` for their frozen contracts.
+- Accepted Attempt 04 execution head:
+  `71764c8b41f26e94b9cfdc1e821f7d8e15df4149`.
+- Attempt 04 execution remains `final_status=PASS` with empty failed stage and
+  reason code. The audit did not rewrite execution evidence.
+- The governance transition is `PASS_PENDING_INDEPENDENT_AUDIT` to
+  `CLOSED_PASS`.
+- Independent audit disposition is
+  `ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE`.
+- Attempt 04 attempt ID is
+  `b8fd88780d581c985006c2df1b4cc4eaa90d99579d22f5545345ea8a35397068`.
+- Attempt 04 safe execution ID is
+  `2343b0f619620a85b5857e653f251034dbedcae418a7e4280a18d8e383e7bac6`.
+- Attempt 04 private inventory contains exactly 73 verified rows with digest
+  `0bf5490ad2896ecda1568fccf0c6a7137d5082bc26af09e679489d6992b4a133`.
+- The complete archived Corridor report passed the committed production
+  validator and exact canonical-byte, typed, Ledger, Crypto, gate, and public
+  projection checks.
+- The distinct Attempt 04 safe report is immutable accepted public source
+  evidence with SHA-256
+  `2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7`.
+- The independent audit is
+  `docs/audit_reports/auditor_two_domain_airline_all_real_generation_attempt_04_v01.log`.
+- Attempts 01 and 02 remain immutable `FAIL_CLOSED` evidence. Attempt 03
+  remains immutable genuine `CLOSED_PASS` evidence and remains
+  `A2_SOURCE_INCOMPLETE` only for packaging-source sufficiency.
+- Attempt 04 is the sole accepted content source for official Airline A2;
+  Attempt 03 is predecessor lineage only.
+- Source call geometry is 12 ordered callbacks, 12 starts, 12 completions,
+  and `12 / 12 / 12` provider/network/Gemini calls with one collector, one
+  Corridor execution, one Ledger collection, one Crypto collection, zero
+  duplicates, zero retries, zero fallbacks, and zero real-world effects.
+- Audit-time provider, network, Gemini, live runner, Package, Anchor, Replay,
+  publication, and effect operations were all zero.
+- Focused evidence is `612` affected tests, `1356` expanded
+  Package/Anchor/Replay/A1/A2 tests, and `1211` frozen
+  Corridor/Ledger/Crypto/Replay/Kernel compatibility tests, all passing with
+  zero skips and zero xfails.
+- Package, package index, Anchor, Replay, payment, booking, ticket issuance,
+  publication authority, and real-world effects remain absent. Official A2
+  Package construction has not started.
+- Gate 1 and R1 remain `CLOSED_PASS` for their frozen contracts. Supplier
+  remains prohibited until Airline A2 publication closure.
 
 Current next owner-reviewed repository gate:
-`two_domain_all_real_sealed_evidence_program_v01_a1_attempt_04_complete_corridor_capture_implementation`.
+`two_domain_all_real_sealed_evidence_program_v01_a2_airline_seal_g2_accepted_source_freeze`.
+
+G2 must freeze the exact accepted Attempt 04 identities and hashes in the
+existing A2 preflight before any official Package construction.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

@@ -1,0 +1,195 @@
+audit_id: auditor_two_domain_airline_all_real_generation_attempt_04_v01
+audit_version: v0.1
+audit_status: CLOSED_PASS
+audit_disposition: ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE
+audit_type: independent_read_only_generation_audit
+programme_id: two_domain_all_real_sealed_evidence_program_v01
+domain: airline
+execution_head: 71764c8b41f26e94b9cfdc1e821f7d8e15df4149
+
+[GOVERNANCE TRANSITION]
+source_execution_final_status: PASS
+source_execution_failed_stage: empty
+source_execution_reason_code: empty
+prior_governance_disposition: PASS_PENDING_INDEPENDENT_AUDIT
+closed_governance_disposition: CLOSED_PASS
+execution_status_mutated_by_audit: false
+accepted_for_a2_airline_seal: true
+accepted_scope: bounded_non_effect_evidence_only
+
+[ATTEMPT 04 IDENTITY]
+attempt_number: 4
+attempt_id: b8fd88780d581c985006c2df1b4cc4eaa90d99579d22f5545345ea8a35397068
+attempt_identity_sha256: a57975d270575c8349b216dfd9b47067396a837fe1b1469f3f8d68cab8cb95cd
+attempt_identity_byte_count: 4311
+private_inventory_sha256: 330d9a3e07773865daed328c7235171a4894c55ff7cbf90fd669fcb66b625d70
+private_inventory_byte_count: 12349
+private_inventory_digest: 0bf5490ad2896ecda1568fccf0c6a7137d5082bc26af09e679489d6992b4a133
+generation_gate_sha256: c311cbe5a598677f1e778674893077a06ff0743fd83ad2a977e3341f84045020
+generation_gate_byte_count: 6702
+safe_execution_id: 2343b0f619620a85b5857e653f251034dbedcae418a7e4280a18d8e383e7bac6
+safe_report_logical_ref: docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json
+safe_report_sha256: 2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7
+safe_report_byte_count: 16389
+safe_report_mode: 0400
+safe_report_state: PRESENT
+private_attempt_preservation_state: PRESERVED
+
+[PREDECESSOR CHAIN]
+attempt_01_id: fcce2c0224517487b59c40e79a75ea00078df393a2552f5b553780f8b7adc64a
+attempt_01_status: FAIL_CLOSED
+attempt_01_identity_sha256: c3af7707023402b287222615e4e1877e248e1f23ad6b238254f96d7ce19f5bd2
+attempt_01_inventory_sha256: 33818a0230a245392b78194aad2c35966e59f91992170bef7461d5539e56693a
+attempt_01_inventory_digest: 567b567ba4b37a04665cdcc085f1feb1be0fd2facad3921f5fbd5b276c5a2163
+attempt_01_gate_sha256: 8fcdf7ef795d09178c3352999bdd3087c5e8e1b78184b6d055e29d0311991653
+attempt_02_id: 0191a1820c22ccd2031e2f4f8816feebf42682eac8ba17a2b25644b27f34bf3e
+attempt_02_status: FAIL_CLOSED
+attempt_02_identity_sha256: 46cd8175bd4e3ce898c426cc85b760f096857ed68bd33359ffb754d93f2dc80b
+attempt_02_inventory_sha256: 917d034f3440605ef9a4a4f2e32a5b4a3c28ec1a715084803b9b05674e8b1029
+attempt_02_inventory_digest: 3313317b028843d9307e350b7ded9b8ae084048b998a8eaf0819605629ceb34b
+attempt_02_gate_sha256: d49636630011553c4f9e5fc044699c2c493a6712c34aafeef22f2776d3ab186c
+attempt_03_id: 94cb3ee73a9b5d87aca4410ce94bd5baf9a3cd720c1b08efc9b449a3816a1d43
+attempt_03_status: PASS
+attempt_03_governance_status: CLOSED_PASS
+attempt_03_a2_source_status: A2_SOURCE_INCOMPLETE
+attempt_03_identity_sha256: af264f2a0d7b8a7a127b0f9799b913b6b11ed326075f73ac32ecd693e0e3f895
+attempt_03_inventory_sha256: b0a47a06550e75c5740343c343ed5b4cc6cf6cc95a6e904c3e9afe26348b5964
+attempt_03_inventory_digest: db0acacc10967f6ed1bcc3dcd7b9de9bae8062453db028d3f5f0d76950b99f4b
+attempt_03_gate_sha256: ac9f64fc5d32319869a019b403a33ac95c5ea36d00a254b0152f6aa7fa2d5552
+attempt_03_public_report_sha256: e3161701e0f691c7ded8befbb3e0e65951d1ece93438192145e1b54c061ef9fb
+attempt_03_generation_audit_sha256: 3ce11fa97c4b2f0424781f8393d58e176df877ef08de320ba1f419208be3cd7e
+attempt_04_embedded_attempt_03_binding_verified: true
+attempt_04_embedded_attempt_02_binding_verified: true
+attempt_04_embedded_attempt_01_binding_verified: true
+independent_transitive_predecessor_proof: PASS
+predecessor_evidence_relabelled: false
+
+[PRIVATE INVENTORY AND CORRIDOR]
+root_entry_count: 4
+raw_inventory_file_count: 73
+raw_inventory_rows_verified: 73
+raw_inventory_aggregate_digest_verified: true
+raw_inventory_missing_count: 0
+raw_inventory_extra_count: 0
+raw_inventory_nonregular_count: 0
+forbidden_raw_bodies_hashed_not_parsed: 36
+selected_structured_json_documents_strictly_parsed: 12
+corridor_archive_logical_name: airline_ticket_purchase_corridor_run_report_v01.json
+corridor_archive_sha256: d6f94e7843f920a023ec43a6d07b5ee648ad76e2a09316a6b144fdaa8a557c34
+corridor_archive_byte_count: 11763
+corridor_archive_mode: 0600
+corridor_report_field_count: 16
+corridor_phase_count: 5
+corridor_transition_count: 4
+corridor_delegation_row_count: 8
+corridor_core_direct_row_count: 2
+corridor_production_validator_status: PASS
+corridor_validation_errors: empty
+corridor_canonical_byte_equality: true
+corridor_hydrated_typed_equality: true
+corridor_ledger_source_projection_binding: PASS
+corridor_crypto_source_projection_binding: PASS
+corridor_generation_gate_binding: PASS
+corridor_safe_public_projection_binding: PASS
+lane_crypto_manifest_source_file_count: 9
+corridor_archive_independently_bound_by_lane_crypto_manifest: false
+corridor_archive_attempt_04_inventory_and_gate_binding: true
+
+[EXECUTION GEOMETRY]
+provider_mode: real_provider
+model_id: gemini-2.5-flash
+provider_application_mode: json_mime_no_response_schema_single_application_call
+actor_count: 12
+causal_actor_count: 5
+generic_actor_count: 7
+actor_order_status: PASS
+actor_validation_pass_count: 12
+wrapper_callback_observed_count: 12
+provider_callback_started_count: 12
+provider_callback_completed_count: 12
+source_provider_call_count: 12
+source_network_call_count: 12
+source_gemini_call_count: 12
+collector_invocation_count: 1
+deterministic_airline_collection_count: 1
+ticket_purchase_corridor_execution_count: 1
+airline_transaction_artifact_ledger_collection_count: 1
+airline_crypto_artifact_seal_collection_count: 1
+duplicate_actor_call_count: 0
+retry_count: 0
+fallback_call_count: 0
+real_world_effects_count: 0
+package_created_count: 0
+anchor_created_count: 0
+replay_created_count: 0
+
+[VALIDATED BOUNDARIES]
+bsep_projection_count: 4
+bsep_validation_status: PASS
+client_root_final_status: PASS
+airline_root_final_status: PASS
+bank_root_final_status: PASS
+ledger_entry_count: 19
+ledger_dependency_edge_count: 29
+ledger_root_final_count: 3
+ledger_validation_status: PASS
+crypto_envelope_validation_status: PASS
+crypto_stored_verification_status: PASS
+secret_scan_status: PASS
+secret_scan_file_count_at_scan_boundary: 68
+secret_scan_match_count: 0
+safe_receipt_count: 3
+raw_prompt_in_public_report: false
+raw_provider_response_in_public_report: false
+authority_created_count: 0
+permission_created_count: 0
+action_created_count: 0
+payment_executed_count: 0
+ticket_issued_count: 0
+booking_created_count: 0
+publication_effect_count: 0
+
+[COMMITTED VALIDATION]
+affected_live_lane_suite: 161 passed
+affected_a1_runner_suite: 451 passed
+affected_combined_total: 612 passed
+expanded_package_anchor_replay_a1_a2_selection: 1356 passed
+expanded_collect_only_count: 1356
+frozen_corridor_ledger_crypto_replay_kernel_selection: 1211 passed
+compatibility_collect_only_count: 1211
+skipped_count: 0
+xfailed_count: 0
+failed_count: 0
+python_compile_file_count: 12
+python_compile_status: PASS
+git_diff_check: PASS
+full_repository_pytest: NOT_RUN
+
+[AUDIT OPERATION COUNTS]
+audit_provider_call_count: 0
+audit_network_call_count: 0
+audit_gemini_call_count: 0
+audit_live_runner_call_count: 0
+audit_package_operation_count: 0
+audit_anchor_operation_count: 0
+audit_replay_operation_count: 0
+audit_publication_operation_count: 0
+audit_real_world_effects_count: 0
+
+[LIMITATIONS AND NONCLAIMS]
+This audit validates the immutable accepted source, its safe projection, and
+the bounded non-effect evidence chain. It does not claim a real airline API
+action, bank settlement, payment execution, booking, ticket issuance, Package
+publication, external anchoring, Replay publication, production readiness, or
+production-security assurance. Provider output remains advisory, validators
+remain authoritative for contract acceptance, and Root remains final
+authority.
+
+[NEXT GATE]
+next_gate: two_domain_all_real_sealed_evidence_program_v01_a2_airline_seal_g2_accepted_source_freeze
+next_gate_scope: freeze exact accepted Attempt 04 identities and hashes in the existing A2 preflight before official Package construction
+a2_package_started: false
+
+[FINAL]
+audit_status: CLOSED_PASS
+audit_disposition: ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE

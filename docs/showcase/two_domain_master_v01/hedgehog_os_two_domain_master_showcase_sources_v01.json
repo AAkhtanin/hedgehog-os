@@ -1,0 +1,672 @@
+{
+  "schema": "hedgehog_os_two_domain_master_showcase_sources_v01",
+  "language": "en",
+  "title": "Hedgehog OS — Two-domain master showcase",
+  "evidence_head": "5d20037c58414a48811464ce3a581d70d895de13",
+  "slide_count": 66,
+  "narrative_ranges": {
+    "main_story": "1-26",
+    "evidence_appendix": "27-65",
+    "repository_access": "66"
+  },
+  "public_source_policy": {
+    "included": "Public-safe summaries, identities, hashes, audit conclusions, and reproducibility evidence",
+    "excluded": "Raw prompts, raw provider responses, credentials, and private attempt files"
+  },
+  "sources": {
+    "airline_attempt_03_safe_report": {
+      "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_v01.json",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_v01.json",
+      "sha256": "e3161701e0f691c7ded8befbb3e0e65951d1ece93438192145e1b54c061ef9fb",
+      "bytes": 16686
+    },
+    "airline_attempt_04_generation_audit": {
+      "repository_path": "docs/audit_reports/auditor_two_domain_airline_all_real_generation_attempt_04_v01.log",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/audit_reports/auditor_two_domain_airline_all_real_generation_attempt_04_v01.log",
+      "sha256": "9b2c4243512f6405eebdcf6cb606374d0d8d2b8593c440cb6e39556d4dd08760",
+      "bytes": 8308
+    },
+    "airline_attempt_04_safe_report": {
+      "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+      "sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+      "bytes": 16389
+    },
+    "supplier_anchor": {
+      "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_crypto_anchor_v01.json",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_crypto_anchor_v01.json",
+      "sha256": "54cf0f57b3af138cb30311f11537980e9b2b6983cd428af17b326b96d1e23f8b",
+      "bytes": 1387
+    },
+    "supplier_package_index": {
+      "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_package_index_v01.json",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_package_index_v01.json",
+      "sha256": "3a9502777cdb1c0d96cf7800d888ba5da0b19033ba0173049bf3a80e197ab200",
+      "bytes": 2472
+    },
+    "supplier_s1_safe_report": {
+      "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+      "sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666",
+      "bytes": 14749
+    },
+    "supplier_safe_evidence_index": {
+      "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+      "sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+      "bytes": 7899
+    },
+    "x1_audit": {
+      "repository_path": "docs/audit_reports/auditor_two_domain_all_real_sealed_evidence_program_v01.log",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/audit_reports/auditor_two_domain_all_real_sealed_evidence_program_v01.log",
+      "sha256": "ad54955da438b938c6fc376380f7bf7116034560cf82baf1fcbb75fe528eb8aa",
+      "bytes": 11555
+    },
+    "x1_index": {
+      "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/cross_domain_evidence_index_v01.json",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/cross_domain_evidence_index_v01.json",
+      "sha256": "053f45ada6445da7508a7e53bfc130a7aa6602c87c24416d71aa19ecd00ad4b1",
+      "bytes": 25745
+    }
+  },
+  "additional_supporting_sources": {
+    "supplier_package_manifest": {
+      "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_sealed_package_v01/sealed_package_manifest_v01.json",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_sealed_package_v01/sealed_package_manifest_v01.json",
+      "sha256": "0f87bfc7234a5c0cf3cdca6530c77dcc9a5b1d84337a8809ee9c0794afd12c92",
+      "bytes": 3622
+    }
+  },
+  "slides": [
+    {
+      "slide": 1,
+      "title": "AI can participate without taking control",
+      "role": "opening thesis",
+      "source_refs": [
+        "x1_index",
+        "x1_audit"
+      ]
+    },
+    {
+      "slide": 2,
+      "title": "The problem is not intelligence. It is authority.",
+      "role": "opening tension comparison",
+      "source_refs": [
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 3,
+      "title": "The transaction begins with a person, not a module",
+      "role": "Airline human task",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 4,
+      "title": "Meaning moves forward; authority stays separated",
+      "role": "Airline architecture flow",
+      "source_refs": [
+        "airline_attempt_04_safe_report",
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 5,
+      "title": "Twelve live models examine one bounded transaction",
+      "role": "Airline actor topology",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 6,
+      "title": "The model changed the selection path with an intelligible reason",
+      "role": "Airline client choice",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 7,
+      "title": "Useful reasoning did not require raw passenger or payment data",
+      "role": "Airline privacy boundary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 8,
+      "title": "Airline policy stayed conditional until the required parties agreed",
+      "role": "Airline policy scene",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 9,
+      "title": "The bank-side models explained risk without moving money",
+      "role": "Airline bank scene",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 10,
+      "title": "The LLM influenced the route — never the authority",
+      "role": "Airline semantic influence versus authority comparison",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 11,
+      "title": "Three Roots kept three interests sovereign",
+      "role": "Airline three Root architecture",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 12,
+      "title": "Only a Root-created path could enter the mock Corridor",
+      "role": "Airline bounded Corridor",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 13,
+      "title": "Three receipts preserved the trace without becoming permission",
+      "role": "Airline evidence-only receipts",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 14,
+      "title": "One transaction reduced to a geometry that can be checked",
+      "role": "Airline headline geometry proof",
+      "source_refs": [
+        "airline_attempt_04_safe_report",
+        "x1_audit"
+      ]
+    },
+    {
+      "slide": 15,
+      "title": "Causal Ledger · 19 / 29 / 3",
+      "role": "Airline causal ledger evidence",
+      "source_refs": [
+        "airline_attempt_04_generation_audit",
+        "x1_audit"
+      ]
+    },
+    {
+      "slide": 16,
+      "title": "The evidence was frozen, anchored, and replayed without another model call",
+      "role": "Airline Package Anchor Replay sequence",
+      "source_refs": [
+        "x1_index",
+        "x1_audit"
+      ]
+    },
+    {
+      "slide": 17,
+      "title": "The wording changed; the authority geometry did not",
+      "role": "Airline semantic variance versus stable geometry",
+      "source_refs": [
+        "airline_attempt_03_safe_report",
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 18,
+      "title": "A second domain asks a harder question: who must remain blocked?",
+      "role": "Supplier human problem",
+      "source_refs": [
+        "supplier_s1_safe_report",
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 19,
+      "title": "Six live models proposed meaning; six deterministic boundaries controlled it",
+      "role": "Supplier actor and guard topology",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 20,
+      "title": "Corrected evidence triggered a new review",
+      "role": "Supplier decision flow",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 21,
+      "title": "A mixed result is stronger evidence than a universal PASS",
+      "role": "Supplier mixed outcome comparison",
+      "source_refs": [
+        "supplier_s1_safe_report",
+        "supplier_safe_evidence_index",
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 22,
+      "title": "Nine scenarios tested both the allowed path and the boundaries around it",
+      "role": "Supplier negative matrix",
+      "source_refs": [
+        "supplier_safe_evidence_index",
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 23,
+      "title": "The second domain closed through the same evidence law",
+      "role": "Supplier Package Anchor Replay sequence",
+      "source_refs": [
+        "supplier_package_index",
+        "supplier_anchor",
+        "x1_audit"
+      ]
+    },
+    {
+      "slide": 24,
+      "title": "The domain changed. The authority law did not.",
+      "role": "cross-domain comparison",
+      "source_refs": [
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 25,
+      "title": "X1 reconstructed the shared claim from committed evidence",
+      "role": "X1 independent proof summary",
+      "source_refs": [
+        "x1_index",
+        "x1_audit"
+      ]
+    },
+    {
+      "slide": 26,
+      "title": "AI participation without AI sovereignty",
+      "role": "closing synthesis",
+      "source_refs": [
+        "x1_index",
+        "x1_audit"
+      ]
+    },
+    {
+      "slide": 27,
+      "title": "Appendix · Airline actor 1 complete public-safe summary",
+      "role": "appendix complete Airline actor 1 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 28,
+      "title": "Appendix · Airline actor 2 complete public-safe summary",
+      "role": "appendix complete Airline actor 2 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 29,
+      "title": "Appendix · Airline actor 3 complete public-safe summary",
+      "role": "appendix complete Airline actor 3 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 30,
+      "title": "Appendix · Airline actor 4 complete public-safe summary",
+      "role": "appendix complete Airline actor 4 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 31,
+      "title": "Appendix · Airline actor 5 complete public-safe summary",
+      "role": "appendix complete Airline actor 5 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 32,
+      "title": "Appendix · Airline actor 6 complete public-safe summary",
+      "role": "appendix complete Airline actor 6 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 33,
+      "title": "Appendix · Airline actor 7 complete public-safe summary",
+      "role": "appendix complete Airline actor 7 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 34,
+      "title": "Appendix · Airline actor 8 complete public-safe summary",
+      "role": "appendix complete Airline actor 8 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 35,
+      "title": "Appendix · Airline actor 9 complete public-safe summary",
+      "role": "appendix complete Airline actor 9 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 36,
+      "title": "Appendix · Airline actor 10 complete public-safe summary",
+      "role": "appendix complete Airline actor 10 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 37,
+      "title": "Appendix · Airline actor 11 complete public-safe summary",
+      "role": "appendix complete Airline actor 11 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 38,
+      "title": "Appendix · Airline actor 12 complete public-safe summary",
+      "role": "appendix complete Airline actor 12 public-safe summary",
+      "source_refs": [
+        "airline_attempt_04_safe_report"
+      ]
+    },
+    {
+      "slide": 39,
+      "title": "Appendix · Supplier actor 1 complete safe projection · 1/3",
+      "role": "appendix complete Supplier actor 1 safe projection part 1",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 40,
+      "title": "Appendix · Supplier actor 1 complete safe projection · 2/3",
+      "role": "appendix complete Supplier actor 1 safe projection part 2",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 41,
+      "title": "Appendix · Supplier actor 1 complete safe projection · 3/3",
+      "role": "appendix complete Supplier actor 1 safe projection part 3",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 42,
+      "title": "Appendix · Supplier actor 2 complete safe projection · 1/4",
+      "role": "appendix complete Supplier actor 2 safe projection part 1",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 43,
+      "title": "Appendix · Supplier actor 2 complete safe projection · 2/4",
+      "role": "appendix complete Supplier actor 2 safe projection part 2",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 44,
+      "title": "Appendix · Supplier actor 2 complete safe projection · 3/4",
+      "role": "appendix complete Supplier actor 2 safe projection part 3",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 45,
+      "title": "Appendix · Supplier actor 2 complete safe projection · 4/4",
+      "role": "appendix complete Supplier actor 2 safe projection part 4",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 46,
+      "title": "Appendix · Supplier actor 3 complete safe projection · 1/3",
+      "role": "appendix complete Supplier actor 3 safe projection part 1",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 47,
+      "title": "Appendix · Supplier actor 3 complete safe projection · 2/3",
+      "role": "appendix complete Supplier actor 3 safe projection part 2",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 48,
+      "title": "Appendix · Supplier actor 3 complete safe projection · 3/3",
+      "role": "appendix complete Supplier actor 3 safe projection part 3",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 49,
+      "title": "Appendix · Supplier actor 4 complete safe projection · 1/3",
+      "role": "appendix complete Supplier actor 4 safe projection part 1",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 50,
+      "title": "Appendix · Supplier actor 4 complete safe projection · 2/3",
+      "role": "appendix complete Supplier actor 4 safe projection part 2",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 51,
+      "title": "Appendix · Supplier actor 4 complete safe projection · 3/3",
+      "role": "appendix complete Supplier actor 4 safe projection part 3",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 52,
+      "title": "Appendix · Supplier actor 5 complete safe projection · 1/3",
+      "role": "appendix complete Supplier actor 5 safe projection part 1",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 53,
+      "title": "Appendix · Supplier actor 5 complete safe projection · 2/3",
+      "role": "appendix complete Supplier actor 5 safe projection part 2",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 54,
+      "title": "Appendix · Supplier actor 5 complete safe projection · 3/3",
+      "role": "appendix complete Supplier actor 5 safe projection part 3",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 55,
+      "title": "Appendix · Supplier actor 6 complete safe projection · 1/3",
+      "role": "appendix complete Supplier actor 6 safe projection part 1",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 56,
+      "title": "Appendix · Supplier actor 6 complete safe projection · 2/3",
+      "role": "appendix complete Supplier actor 6 safe projection part 2",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 57,
+      "title": "Appendix · Supplier actor 6 complete safe projection · 3/3",
+      "role": "appendix complete Supplier actor 6 safe projection part 3",
+      "source_refs": [
+        "supplier_s1_safe_report"
+      ]
+    },
+    {
+      "slide": 58,
+      "title": "Appendix · Airline evidence identity ledger",
+      "role": "appendix Airline evidence identities",
+      "source_refs": [
+        "x1_index",
+        "x1_audit"
+      ]
+    },
+    {
+      "slide": 59,
+      "title": "Appendix · Airline replay and execution identities",
+      "role": "appendix Airline replay and execution identities",
+      "source_refs": [
+        "airline_attempt_04_safe_report",
+        "x1_index",
+        "x1_audit"
+      ]
+    },
+    {
+      "slide": 60,
+      "title": "Appendix · Supplier nine-scenario matrix",
+      "role": "appendix Supplier scenario matrix",
+      "source_refs": [
+        "supplier_safe_evidence_index",
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 61,
+      "title": "Appendix · X1 claim/evidence matrix · 1–4 of 13",
+      "role": "appendix X1 claim evidence matrix claims 1 to 4",
+      "source_refs": [
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 62,
+      "title": "Appendix · X1 claim/evidence matrix · 5–8 of 13",
+      "role": "appendix X1 claim evidence matrix claims 5 to 8",
+      "source_refs": [
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 63,
+      "title": "Appendix · X1 claim/evidence matrix · 9–12 of 13",
+      "role": "appendix X1 claim evidence matrix claims 9 to 12",
+      "source_refs": [
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 64,
+      "title": "Appendix · X1 claim/evidence matrix · 13–13 of 13",
+      "role": "appendix X1 claim evidence matrix claims 13 to 13",
+      "source_refs": [
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 65,
+      "title": "Appendix · What public-safe evidence proves — and what it does not",
+      "role": "appendix public evidence and non-claims boundary",
+      "source_refs": [
+        "airline_attempt_04_safe_report",
+        "supplier_s1_safe_report",
+        "x1_index"
+      ]
+    },
+    {
+      "slide": 66,
+      "title": "Repository access · Open the public evidence",
+      "role": "repository access link hub",
+      "source_refs": [
+        "x1_index",
+        "x1_audit"
+      ]
+    }
+  ],
+  "deliverables": {
+    "pptx": {
+      "repository_path": "docs/showcase/two_domain_master_v01/hedgehog_os_two_domain_master_showcase_v01.pptx",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/two_domain_master_v01/hedgehog_os_two_domain_master_showcase_v01.pptx",
+      "sha256": "068c7e61e0edd019a6a5acbffcf0072af53eaf21c033fff62f3112e79556b00e",
+      "bytes": 254065
+    },
+    "pdf": {
+      "repository_path": "docs/showcase/two_domain_master_v01/hedgehog_os_two_domain_master_showcase_v01.pdf",
+      "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/two_domain_master_v01/hedgehog_os_two_domain_master_showcase_v01.pdf",
+      "sha256": "543473117a6155b0f949b815e12b20ecd42483002823619f34f518aa739d25e7",
+      "bytes": 1086681
+    }
+  },
+  "repository_access": {
+    "repository": "https://github.com/AAkhtanin/hedgehog-os",
+    "showcase_folder": "https://github.com/AAkhtanin/hedgehog-os/tree/main/docs/showcase/two_domain_master_v01",
+    "airline_evidence": "https://github.com/AAkhtanin/hedgehog-os/tree/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline",
+    "supplier_evidence": "https://github.com/AAkhtanin/hedgehog-os/tree/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter",
+    "cross_domain_index": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/cross_domain_evidence_index_v01.json"
+  },
+  "repository_materialization": {
+    "target_directory": "docs/showcase/two_domain_master_v01",
+    "files": [
+      "README.md",
+      "SHA256SUMS",
+      "hedgehog_os_two_domain_master_showcase_v01.pptx",
+      "hedgehog_os_two_domain_master_showcase_v01.pdf",
+      "hedgehog_os_two_domain_master_showcase_sources_v01.json"
+    ]
+  },
+  "validation": {
+    "template_plan": "PASS",
+    "template_fidelity": "PASS",
+    "overflow_and_bounds": "PASS",
+    "visual_qa": "PASS",
+    "pdf_pages": 66,
+    "english_only": "PASS",
+    "cyrillic_absent": "PASS",
+    "source_repository_modified_during_authoring": false
+  }
+}

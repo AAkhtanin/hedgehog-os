@@ -28,6 +28,43 @@ REPOSITORY_ROOT = Path(__file__).absolute().parent.parent
 ACCEPTED_REPORT = REPOSITORY_ROOT / runner.ACCEPTED_S1_REPORT_REF
 CANONICAL_S2_OUTPUT = REPOSITORY_ROOT / runner.CANONICAL_S2_OUTPUT_REF
 
+
+def _canonical_output_state(path: Path) -> tuple[object, ...]:
+    try:
+        entry = path.lstat()
+    except FileNotFoundError:
+        return ("ABSENT",)
+    if (
+        path.is_symlink()
+        or not stat.S_ISREG(entry.st_mode)
+        or stat.S_IMODE(entry.st_mode) != 0o400
+    ):
+        raise AssertionError("unsafe canonical output state")
+    try:
+        content = path.read_bytes()
+        runner._strict_json(content)
+    except (OSError, ValueError):
+        raise AssertionError("malformed canonical output state") from None
+    final = path.lstat()
+    if (final.st_dev, final.st_ino, final.st_mode, final.st_size) != (
+        entry.st_dev,
+        entry.st_ino,
+        entry.st_mode,
+        entry.st_size,
+    ):
+        raise AssertionError("unstable canonical output state")
+    return (
+        "PRESENT",
+        hashlib.sha256(content).hexdigest(),
+        len(content),
+        stat.S_IMODE(entry.st_mode),
+        content,
+        (content.endswith(b"\n"), content.endswith(b"\n\n")),
+    )
+
+
+CANONICAL_S2_OUTPUT_BASELINE = _canonical_output_state(CANONICAL_S2_OUTPUT)
+
 EXPECTED_PACKAGE_ROW_SPECS = (
     ("S-N1", "initial_business_blockers_root_not_ready", "deterministic_initial_business_evidence", "PASS", "NOT_READY", "NOT_READY", "BLOCKED_PENDING_CORRECTION", "ABSENT", "NOT_ENTERED", "ABSENT"),
     ("S-N2", "unsafe_live_evidence_fail_closed", "live_bound_negative_safe_projection", "FAIL_CLOSED", "NOT_READY", "NO_ACCEPTED_NEW_ROOT_FINAL", "BLOCKED_PENDING_CORRECTION", "ABSENT", "NOT_ENTERED", "ABSENT"),
@@ -1322,9 +1359,8 @@ def test_serializer_rejects_invalid_result(source, result):
         )
 
 
-def test_no_canonical_output_created_by_tests():
-    assert not CANONICAL_S2_OUTPUT.exists()
-    assert not CANONICAL_S2_OUTPUT.is_symlink()
+def test_canonical_output_state_is_unchanged_by_tests():
+    assert _canonical_output_state(CANONICAL_S2_OUTPUT) == CANONICAL_S2_OUTPUT_BASELINE
 
 
 def test_static_forbidden_operation_boundaries():

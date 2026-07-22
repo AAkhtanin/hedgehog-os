@@ -12,7 +12,7 @@ derived, never caller supplied.
 """
 
 from collections.abc import Mapping as _Mapping
-from dataclasses import dataclass as _dataclass
+from dataclasses import dataclass as _dataclass, fields as _fields
 import re as _re
 import unicodedata as _unicodedata
 
@@ -164,6 +164,25 @@ _LIMITATIONS = (
     "limitation:no_production_certification",
     "limitation:owner_built_safe_normalization_not_raw_provider_report",
 )
+_LOCAL_LIMITATIONS = (
+    "limitation:par_lim_only_airline_geometry",
+    "limitation:mock_corridor",
+    "limitation:no_real_ticket_booking_payment_bank_gds_connector_action",
+    "limitation:no_arbitrary_airline_integration",
+    "limitation:no_production_signer",
+    "limitation:no_signer_identity_verification",
+    "limitation:no_root_attestation",
+    "limitation:no_pki",
+    "limitation:no_production_certification",
+    "limitation:owner_built_safe_normalization_not_raw_provider_report",
+    "limitation:local_simulated_real_compatibility_geometry_permanently_nonpublication",
+)
+INVOCATION_MODE_LOCAL_NONPUBLICATION = "LOCAL_NONPUBLICATION"
+INVOCATION_MODE_OFFICIAL_ACCEPTED = "OFFICIAL_ACCEPTED"
+INVOCATION_MODES = (
+    INVOCATION_MODE_LOCAL_NONPUBLICATION,
+    INVOCATION_MODE_OFFICIAL_ACCEPTED,
+)
 
 
 @_dataclass(frozen=True, slots=True)
@@ -259,6 +278,159 @@ class AirlineSealedEvidencePackageAdapterResultV01:
     def __post_init__(self) -> None:
         if type(self.validation_errors) is not tuple:
             raise ValueError("airline_sealed_evidence_adapter_invalid")
+
+
+@_dataclass(frozen=True, slots=True)
+class AirlineSealedEvidencePackageAdapterInvocationV01:
+    invocation_mode: str
+    attempt_number: int
+    package_id: str
+    logical_package_ref: str
+    output_directory_ref: str
+    provider_mode: str
+    model_id: str
+    expected_actor_count: int
+    provider_call_budget: int
+    s1_evidence_class: str
+    s2_evidence_class: str
+    s1_observed_provider_call_count: int
+    s1_observed_network_call_count: int
+    s1_observed_gemini_call_count: int
+    s2_observed_provider_call_count: int
+    s2_observed_network_call_count: int
+    s2_observed_gemini_call_count: int
+    limitation_refs: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        if type(self.limitation_refs) is not tuple:
+            raise ValueError("airline_sealed_evidence_adapter_invocation_invalid")
+
+
+def build_airline_sealed_evidence_package_adapter_invocation_v01(
+    *,
+    invocation_mode: str,
+    package_id: str,
+    logical_package_ref: str,
+    output_directory_ref: str,
+) -> AirlineSealedEvidencePackageAdapterInvocationV01:
+    if invocation_mode not in INVOCATION_MODES:
+        raise ValueError("airline_sealed_evidence_adapter_invocation_invalid")
+    local = invocation_mode == INVOCATION_MODE_LOCAL_NONPUBLICATION
+    result = AirlineSealedEvidencePackageAdapterInvocationV01(
+        invocation_mode=invocation_mode,
+        attempt_number=4,
+        package_id=_required_text(package_id),
+        logical_package_ref=_required_text(logical_package_ref),
+        output_directory_ref=_required_text(output_directory_ref),
+        provider_mode="deterministic_fixture" if local else "real_provider",
+        model_id="gemini-2.5-flash",
+        expected_actor_count=12,
+        provider_call_budget=0 if local else 12,
+        s1_evidence_class=(
+            "EXECUTED_DETERMINISTIC_RUNTIME"
+            if local
+            else "EXECUTED_LIVE_RUNTIME"
+        ),
+        s2_evidence_class=(
+            "EXECUTED_DETERMINISTIC_RUNTIME"
+            if local
+            else "LIVE_PROVIDER_SAFE_PROJECTION"
+        ),
+        s1_observed_provider_call_count=0 if local else 12,
+        s1_observed_network_call_count=0 if local else 12,
+        s1_observed_gemini_call_count=0 if local else 12,
+        s2_observed_provider_call_count=0,
+        s2_observed_network_call_count=0,
+        s2_observed_gemini_call_count=0,
+        limitation_refs=_LOCAL_LIMITATIONS if local else _LIMITATIONS,
+    )
+    if validate_airline_sealed_evidence_package_adapter_invocation_v01(result):
+        raise ValueError("airline_sealed_evidence_adapter_invocation_invalid")
+    return result
+
+
+def validate_airline_sealed_evidence_package_adapter_invocation_v01(
+    invocation: object,
+) -> tuple[str, ...]:
+    if type(invocation) is not AirlineSealedEvidencePackageAdapterInvocationV01:
+        return ("airline_sealed_evidence_adapter_invocation_invalid",)
+    local = invocation.invocation_mode == INVOCATION_MODE_LOCAL_NONPUBLICATION
+    official = invocation.invocation_mode == INVOCATION_MODE_OFFICIAL_ACCEPTED
+    expected = (
+        invocation.attempt_number == 4
+        and type(invocation.package_id) is str
+        and bool(invocation.package_id.strip())
+        and type(invocation.logical_package_ref) is str
+        and bool(invocation.logical_package_ref.strip())
+        and type(invocation.output_directory_ref) is str
+        and bool(invocation.output_directory_ref.strip())
+        and invocation.model_id == "gemini-2.5-flash"
+        and invocation.expected_actor_count == 12
+        and type(invocation.expected_actor_count) is int
+        and all(
+            type(value) is int and value >= 0
+            for value in (
+                invocation.provider_call_budget,
+                invocation.s1_observed_provider_call_count,
+                invocation.s1_observed_network_call_count,
+                invocation.s1_observed_gemini_call_count,
+                invocation.s2_observed_provider_call_count,
+                invocation.s2_observed_network_call_count,
+                invocation.s2_observed_gemini_call_count,
+            )
+        )
+    )
+    local_expected = (
+        invocation.provider_mode == "deterministic_fixture"
+        and invocation.provider_call_budget == 0
+        and invocation.s1_evidence_class == "EXECUTED_DETERMINISTIC_RUNTIME"
+        and invocation.s2_evidence_class == "EXECUTED_DETERMINISTIC_RUNTIME"
+        and (
+            invocation.s1_observed_provider_call_count,
+            invocation.s1_observed_network_call_count,
+            invocation.s1_observed_gemini_call_count,
+            invocation.s2_observed_provider_call_count,
+            invocation.s2_observed_network_call_count,
+            invocation.s2_observed_gemini_call_count,
+        )
+        == (0, 0, 0, 0, 0, 0)
+        and invocation.limitation_refs == _LOCAL_LIMITATIONS
+    )
+    official_expected = (
+        invocation.provider_mode == "real_provider"
+        and invocation.provider_call_budget == 12
+        and invocation.s1_evidence_class == "EXECUTED_LIVE_RUNTIME"
+        and invocation.s2_evidence_class == "LIVE_PROVIDER_SAFE_PROJECTION"
+        and (
+            invocation.s1_observed_provider_call_count,
+            invocation.s1_observed_network_call_count,
+            invocation.s1_observed_gemini_call_count,
+            invocation.s2_observed_provider_call_count,
+            invocation.s2_observed_network_call_count,
+            invocation.s2_observed_gemini_call_count,
+        )
+        == (12, 12, 12, 0, 0, 0)
+        and invocation.limitation_refs == _LIMITATIONS
+    )
+    if not expected or not ((local and local_expected) or (official and official_expected)):
+        return ("airline_sealed_evidence_adapter_invocation_invalid",)
+    return ()
+
+
+def airline_sealed_evidence_package_adapter_invocation_to_plain_dict_v01(
+    invocation: AirlineSealedEvidencePackageAdapterInvocationV01,
+) -> dict[str, object]:
+    if validate_airline_sealed_evidence_package_adapter_invocation_v01(invocation):
+        raise ValueError("airline_sealed_evidence_adapter_invocation_invalid")
+    return {
+        field_name: (
+            list(value) if type(value) is tuple else value
+        )
+        for field_name, value in (
+            (field.name, getattr(invocation, field.name))
+            for field in _fields(invocation)
+        )
+    }
 
 
 def build_airline_safe_execution_projection_v01(
@@ -481,6 +653,7 @@ def build_airline_sealed_evidence_package_adapter_result_v01(
             replay_input=replay_input,
             replay_report=replay_report,
             kernel_adapter_result=kernel_adapter_result,
+            invocation=None,
         )
     except ValueError as error:
         raise ValueError(_stable_adapter_reason(error)) from None
@@ -509,6 +682,7 @@ def validate_airline_sealed_evidence_package_adapter_result_v01(
             replay_input=replay_input,
             replay_report=replay_report,
             kernel_adapter_result=kernel_adapter_result,
+            invocation=None,
         )
         if _canonical_json_bytes_v01(_adapter_result_plain(result)) != (
             _canonical_json_bytes_v01(_adapter_result_plain(expected))
@@ -551,6 +725,103 @@ def airline_sealed_evidence_package_adapter_result_to_plain_dict_v01(
         raise ValueError("airline_sealed_evidence_adapter_invalid") from None
 
 
+def build_airline_sealed_evidence_package_adapter_result_for_invocation_v01(
+    *,
+    invocation: AirlineSealedEvidencePackageAdapterInvocationV01,
+    safe_execution: AirlineSafeExecutionProjectionV01,
+    ledger_source_bundle: _AirlineTransactionArtifactLedgerSourceBundleV01,
+    crypto_collection_result: _AirlineCryptoArtifactSealCollectionResultV01,
+    replay_input: _AirlineSealedTraceReplayInputV01,
+    replay_report: _AirlineSealedTraceReplayReportV01,
+    kernel_adapter_result: _AirlineKernelAdapterResultV01,
+) -> AirlineSealedEvidencePackageAdapterResultV01:
+    try:
+        if validate_airline_sealed_evidence_package_adapter_invocation_v01(invocation):
+            raise ValueError("airline_sealed_evidence_adapter_invocation_invalid")
+        return _build_adapter_result(
+            safe_execution=safe_execution,
+            ledger_source_bundle=ledger_source_bundle,
+            crypto_collection_result=crypto_collection_result,
+            replay_input=replay_input,
+            replay_report=replay_report,
+            kernel_adapter_result=kernel_adapter_result,
+            invocation=invocation,
+        )
+    except ValueError as error:
+        raise ValueError(_stable_adapter_reason(error)) from None
+    except Exception:
+        raise ValueError("airline_sealed_evidence_adapter_unexpected_exception") from None
+
+
+def validate_airline_sealed_evidence_package_adapter_result_for_invocation_v01(
+    result: object,
+    *,
+    invocation: AirlineSealedEvidencePackageAdapterInvocationV01,
+    safe_execution: AirlineSafeExecutionProjectionV01,
+    ledger_source_bundle: _AirlineTransactionArtifactLedgerSourceBundleV01,
+    crypto_collection_result: _AirlineCryptoArtifactSealCollectionResultV01,
+    replay_input: _AirlineSealedTraceReplayInputV01,
+    replay_report: _AirlineSealedTraceReplayReportV01,
+    kernel_adapter_result: _AirlineKernelAdapterResultV01,
+) -> tuple[str, ...]:
+    try:
+        invocation_errors = (
+            validate_airline_sealed_evidence_package_adapter_invocation_v01(
+                invocation
+            )
+        )
+        if invocation_errors:
+            return invocation_errors
+        structure = list(_adapter_result_structure_errors(result))
+        if type(result) is not AirlineSealedEvidencePackageAdapterResultV01:
+            return tuple(structure)
+        expected = _build_adapter_result(
+            safe_execution=safe_execution,
+            ledger_source_bundle=ledger_source_bundle,
+            crypto_collection_result=crypto_collection_result,
+            replay_input=replay_input,
+            replay_report=replay_report,
+            kernel_adapter_result=kernel_adapter_result,
+            invocation=invocation,
+        )
+        if _canonical_json_bytes_v01(_adapter_result_plain(result)) != (
+            _canonical_json_bytes_v01(_adapter_result_plain(expected))
+        ):
+            structure.append("airline_sealed_evidence_adapter_context_mismatch")
+            if result.adapter_result_id != expected.adapter_result_id:
+                structure.append("airline_sealed_evidence_adapter_id_mismatch")
+        return _dedupe(structure)
+    except ValueError as error:
+        return (_stable_adapter_reason(error),)
+    except Exception:
+        return ("airline_sealed_evidence_adapter_unexpected_exception",)
+
+
+def airline_sealed_evidence_package_adapter_result_for_invocation_to_plain_dict_v01(
+    result: AirlineSealedEvidencePackageAdapterResultV01,
+    *,
+    invocation: AirlineSealedEvidencePackageAdapterInvocationV01,
+    safe_execution: AirlineSafeExecutionProjectionV01,
+    ledger_source_bundle: _AirlineTransactionArtifactLedgerSourceBundleV01,
+    crypto_collection_result: _AirlineCryptoArtifactSealCollectionResultV01,
+    replay_input: _AirlineSealedTraceReplayInputV01,
+    replay_report: _AirlineSealedTraceReplayReportV01,
+    kernel_adapter_result: _AirlineKernelAdapterResultV01,
+) -> dict[str, object]:
+    if validate_airline_sealed_evidence_package_adapter_result_for_invocation_v01(
+        result,
+        invocation=invocation,
+        safe_execution=safe_execution,
+        ledger_source_bundle=ledger_source_bundle,
+        crypto_collection_result=crypto_collection_result,
+        replay_input=replay_input,
+        replay_report=replay_report,
+        kernel_adapter_result=kernel_adapter_result,
+    ):
+        raise ValueError("airline_sealed_evidence_adapter_invalid")
+    return _adapter_result_plain(result)
+
+
 def _build_adapter_result(
     *,
     safe_execution: object,
@@ -559,6 +830,7 @@ def _build_adapter_result(
     replay_input: object,
     replay_report: object,
     kernel_adapter_result: object,
+    invocation: AirlineSealedEvidencePackageAdapterInvocationV01 | None,
 ) -> AirlineSealedEvidencePackageAdapterResultV01:
     _require_context_shape(
         safe_execution=safe_execution,
@@ -577,6 +849,7 @@ def _build_adapter_result(
         replay_input=replay_input,
         replay_report=replay_report,
         kernel_adapter_result=kernel_adapter_result,
+        invocation=invocation,
     )
     domain_projection = _build_shared_projection(
         safe_execution=safe_execution,
@@ -585,6 +858,7 @@ def _build_adapter_result(
         replay_input=replay_input,
         replay_report=replay_report,
         kernel_adapter_result=kernel_adapter_result,
+        invocation=invocation,
     )
     if _validate_domain_projection(domain_projection):
         cross_errors = _dedupe(
@@ -708,6 +982,7 @@ def _cross_contract_errors(
     replay_input: _AirlineSealedTraceReplayInputV01,
     replay_report: _AirlineSealedTraceReplayReportV01,
     kernel_adapter_result: _AirlineKernelAdapterResultV01,
+    invocation: AirlineSealedEvidencePackageAdapterInvocationV01 | None = None,
 ) -> tuple[str, ...]:
     errors: list[str] = []
     ledger = replay_input.ledger_item
@@ -849,9 +1124,14 @@ def _cross_contract_errors(
         ledger_source_bundle.bank_bsep_projection.bsep_packet_id,
         ledger_source_bundle.cross_root_bsep_projection.bsep_packet_id,
     }
+    bsep_refs_valid = (
+        safe_execution.bsep_projection_refs == source_bsep_refs
+        if invocation is None
+        else safe_execution.bsep_projection_refs == _EXPECTED_BSEP_REFS
+    )
     if (
         source_bsep_ids != _EXPECTED_BSEP_IDS
-        or safe_execution.bsep_projection_refs != source_bsep_refs
+        or not bsep_refs_valid
         or source_bsep_packet_ids != {safe_execution.bsep_packet_id}
     ):
         errors.append("airline_sealed_evidence_bsep_mismatch")
@@ -862,7 +1142,12 @@ def _cross_contract_errors(
     )
     if safe_execution.receipt_ids != source_receipts:
         errors.append("airline_sealed_evidence_receipt_mismatch")
-    if safe_execution.corridor_report_id != ledger_source_bundle.corridor_report.run_id:
+    expected_corridor_ref = (
+        ledger_source_bundle.corridor_report.run_id
+        if invocation is None
+        else ledger_source_bundle.expected_source_refs.source_corridor_report_ref
+    )
+    if safe_execution.corridor_report_id != expected_corridor_ref:
         errors.append("airline_sealed_evidence_corridor_mismatch")
 
     geometry = (
@@ -921,6 +1206,7 @@ def _build_shared_projection(
     replay_input: _AirlineSealedTraceReplayInputV01,
     replay_report: _AirlineSealedTraceReplayReportV01,
     kernel_adapter_result: _AirlineKernelAdapterResultV01,
+    invocation: AirlineSealedEvidencePackageAdapterInvocationV01 | None,
 ) -> _DomainEvidenceProjectionV01:
     ledger = replay_input.ledger_item
     programme = _build_programme_evidence_identity_v01(
@@ -938,14 +1224,30 @@ def _build_shared_projection(
     attempt = _build_live_attempt_identity_v01(
         programme_identity=programme,
         domain_execution_identity=domain_identity,
-        attempt_number=1,
-        package_id=f"airline_sealed_evidence:{safe_execution.transaction_id}",
-        logical_package_ref=replay_input.source_package_ref,
-        output_directory_ref=f"airline/{safe_execution.run_id}/sealed_evidence",
-        provider_mode=_PROVIDER_MODE,
-        model_id=safe_execution.model_id,
-        expected_actor_count=12,
-        provider_call_budget=12,
+        attempt_number=invocation.attempt_number if invocation else 1,
+        package_id=(
+            invocation.package_id
+            if invocation
+            else f"airline_sealed_evidence:{safe_execution.transaction_id}"
+        ),
+        logical_package_ref=(
+            invocation.logical_package_ref
+            if invocation
+            else replay_input.source_package_ref
+        ),
+        output_directory_ref=(
+            invocation.output_directory_ref
+            if invocation
+            else f"airline/{safe_execution.run_id}/sealed_evidence"
+        ),
+        provider_mode=invocation.provider_mode if invocation else _PROVIDER_MODE,
+        model_id=invocation.model_id if invocation else safe_execution.model_id,
+        expected_actor_count=(
+            invocation.expected_actor_count if invocation else 12
+        ),
+        provider_call_budget=(
+            invocation.provider_call_budget if invocation else 12
+        ),
     )
     source_records = _build_source_records(
         safe_execution=safe_execution,
@@ -954,9 +1256,18 @@ def _build_shared_projection(
         replay_input=replay_input,
         replay_report=replay_report,
         kernel_adapter_result=kernel_adapter_result,
+        invocation=invocation,
     )
     artifact_records = tuple(
-        _build_shared_artifact(entry, source_records)
+        _build_shared_artifact(
+            entry,
+            source_records,
+            local=(
+                invocation is not None
+                and invocation.invocation_mode
+                == INVOCATION_MODE_LOCAL_NONPUBLICATION
+            ),
+        )
         for entry in ledger.entries
     )
     return _build_domain_evidence_projection_v01(
@@ -979,7 +1290,7 @@ def _build_shared_projection(
             replay_report.replay_id,
             kernel_adapter_result.adapter_id,
         ),
-        limitation_refs=_LIMITATIONS,
+        limitation_refs=invocation.limitation_refs if invocation else _LIMITATIONS,
     )
 
 
@@ -991,6 +1302,7 @@ def _build_source_records(
     replay_input: _AirlineSealedTraceReplayInputV01,
     replay_report: _AirlineSealedTraceReplayReportV01,
     kernel_adapter_result: _AirlineKernelAdapterResultV01,
+    invocation: AirlineSealedEvidencePackageAdapterInvocationV01 | None,
 ) -> tuple[object, ...]:
     common = {
         "media_type": "application/json",
@@ -1003,18 +1315,36 @@ def _build_source_records(
         _build_safe_source_record_v01(
             source_id=f"airline:live:{safe_execution.run_id}",
             source_type="airline_live_execution_safe_projection",
-            evidence_class="EXECUTED_LIVE_RUNTIME",
+            evidence_class=(
+                invocation.s1_evidence_class
+                if invocation
+                else "EXECUTED_LIVE_RUNTIME"
+            ),
             canonical_projection=_safe_execution_plain(safe_execution),
-            trace_refs=(safe_execution.run_id, safe_execution.report_id),
-            observed_provider_call_count=12,
-            observed_network_call_count=12,
-            observed_gemini_call_count=12,
+            trace_refs=(
+                _dedupe((safe_execution.run_id, safe_execution.report_id))
+                if invocation is not None
+                else (safe_execution.run_id, safe_execution.report_id)
+            ),
+            observed_provider_call_count=(
+                invocation.s1_observed_provider_call_count if invocation else 12
+            ),
+            observed_network_call_count=(
+                invocation.s1_observed_network_call_count if invocation else 12
+            ),
+            observed_gemini_call_count=(
+                invocation.s1_observed_gemini_call_count if invocation else 12
+            ),
             **common,
         ),
         _build_safe_source_record_v01(
             source_id=f"airline:bsep:{safe_execution.bsep_packet_id}",
             source_type="airline_bsep_safe_projection",
-            evidence_class="LIVE_PROVIDER_SAFE_PROJECTION",
+            evidence_class=(
+                invocation.s2_evidence_class
+                if invocation
+                else "LIVE_PROVIDER_SAFE_PROJECTION"
+            ),
             canonical_projection={
                 "packet_id": safe_execution.bsep_packet_id,
                 "packet_hash": safe_execution.bsep_safe_hash,
@@ -1028,9 +1358,15 @@ def _build_source_records(
                 "projection_hashes": list(safe_execution.bsep_projection_hashes),
             },
             trace_refs=(safe_execution.bsep_packet_id,),
-            observed_provider_call_count=0,
-            observed_network_call_count=0,
-            observed_gemini_call_count=0,
+            observed_provider_call_count=(
+                invocation.s2_observed_provider_call_count if invocation else 0
+            ),
+            observed_network_call_count=(
+                invocation.s2_observed_network_call_count if invocation else 0
+            ),
+            observed_gemini_call_count=(
+                invocation.s2_observed_gemini_call_count if invocation else 0
+            ),
             **common,
         ),
         _build_safe_source_record_v01(
@@ -1123,8 +1459,15 @@ def _build_source_records(
     return records
 
 
-def _build_shared_artifact(entry: object, source_records: tuple[object, ...]) -> object:
+def _build_shared_artifact(
+    entry: object,
+    source_records: tuple[object, ...],
+    *,
+    local: bool = False,
+) -> object:
     source_index, evidence_class = _artifact_source_and_class(entry.artifact_type)
+    if local and evidence_class == "LIVE_PROVIDER_SAFE_PROJECTION":
+        evidence_class = "EXECUTED_DETERMINISTIC_RUNTIME"
     source_record = source_records[source_index]
     return _build_evidence_artifact_record_v01(
         artifact_id=entry.artifact_id,

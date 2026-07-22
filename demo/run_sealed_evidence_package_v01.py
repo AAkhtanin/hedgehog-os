@@ -303,6 +303,8 @@ def run_sealed_evidence_package_v01(
         for member in safe_members:
             _scan_safe_content(
                 member.content_bytes,
+                domain=domain,
+                logical_path=member.logical_path,
                 media_type=member.media_type,
                 terminal_newline_required=member.terminal_newline_required,
             )
@@ -458,6 +460,8 @@ def _validate_logical_path(value: object) -> None:
 def _scan_safe_content(
     value: object,
     *,
+    domain: str,
+    logical_path: str,
     media_type: str,
     terminal_newline_required: bool,
 ) -> None:
@@ -465,6 +469,8 @@ def _scan_safe_content(
         type(value) is not bytes
         or not value
         or len(value) > _MAX_SAFE_CONTENT_BYTES
+        or domain not in FIXTURE_DOMAINS
+        or type(logical_path) is not str
         or type(media_type) is not str
     ):
         raise ValueError
@@ -482,25 +488,57 @@ def _scan_safe_content(
         if not value.endswith(b"\n") or text is None:
             raise ValueError
         parsed = _strict_json_loads(text[:-1])
-        _inspect_safe_json(parsed)
+        _inspect_safe_json(
+            parsed,
+            domain=domain,
+            logical_path=logical_path,
+            ancestry=(),
+            list_item=False,
+        )
         if canonical_json_bytes_v01(parsed) + b"\n" != value:
             raise ValueError
     elif text is not None:
         _inspect_public_text(text, allow_lf=True)
 
 
-def _inspect_safe_json(value: object) -> None:
+def _inspect_safe_json(
+    value: object,
+    *,
+    domain: str,
+    logical_path: str,
+    ancestry: tuple[str, ...],
+    list_item: bool,
+) -> None:
     if type(value) is dict:
         for key, item in value.items():
             _inspect_json_key(key, item)
-            _inspect_safe_json(item)
+            _inspect_safe_json(
+                item,
+                domain=domain,
+                logical_path=logical_path,
+                ancestry=(*ancestry, key),
+                list_item=False,
+            )
         return
     if type(value) is list:
         for item in value:
-            _inspect_safe_json(item)
+            _inspect_safe_json(
+                item,
+                domain=domain,
+                logical_path=logical_path,
+                ancestry=ancestry,
+                list_item=True,
+            )
         return
     if type(value) is str:
-        _inspect_public_text(value)
+        if not _contextual_safe_reference(
+            domain=domain,
+            logical_path=logical_path,
+            ancestry=ancestry,
+            list_item=list_item,
+            value=value,
+        ):
+            _inspect_public_text(value)
         return
     if type(value) is float:
         if not _math.isfinite(value):
@@ -509,6 +547,43 @@ def _inspect_safe_json(value: object) -> None:
     if type(value) in (int, bool) or value is None:
         return
     raise ValueError
+
+
+def _contextual_safe_reference(
+    *,
+    domain: str,
+    logical_path: str,
+    ancestry: tuple[str, ...],
+    list_item: bool,
+    value: str,
+) -> bool:
+    key = ancestry[-1] if ancestry else ""
+    if (
+        domain == "airline"
+        and logical_path == "evidence/03-airline-a2-typed-context-v01.json"
+        and list_item
+        and key in ("auxiliary_artifact_refs", "auxiliary_observation_refs")
+        and value == "auxiliary_artifact_ref:provider_response:opaque"
+    ):
+        return True
+    if (
+        domain == "airline"
+        and logical_path
+        in (
+            "evidence/03-airline-a2-typed-context-v01.json",
+            "evidence/04-airline-sealed-evidence-adapter-result-v01.json",
+        )
+        and not list_item
+        and key == "output_field"
+        and value == "/airline_artifact_hash"
+    ):
+        return True
+    return (
+        domain == "supplier_water_filter"
+        and not list_item
+        and key == "output_field"
+        and value == "/source_card_hash"
+    )
 
 
 def _inspect_json_key(key: object, value: object) -> None:
@@ -1263,6 +1338,8 @@ def _validate_package_directory(
                 raise ValueError
             _scan_safe_content(
                 content,
+                domain=domain_projection.domain_execution_identity.domain_id,
+                logical_path=record.logical_path,
                 media_type=record.media_type,
                 terminal_newline_required=record.terminal_newline_required,
             )

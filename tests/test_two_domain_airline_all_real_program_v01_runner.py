@@ -521,6 +521,125 @@ def _patch_simulated_real_attempt_03(
     return safe_path, guards, recovery, attempt_01_path, attempt_02_path
 
 
+def _filesystem_backed_attempt_04_context(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> tuple[dict[str, object], Path, Path, Path, Path, Path]:
+    safe_path, _, recovery_03, attempt_01_path, attempt_02_path = (
+        _patch_simulated_real_attempt_03(monkeypatch, tmp_path)
+    )
+    attempt_03_path = tmp_path / "synthetic-accepted-attempt-03"
+    result_03 = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=attempt_03_path,
+        **recovery_03,
+    )
+    assert result_03.final_status == runner.STATUS_PASS
+
+    accepted_report = (
+        Path(runner._REPOSITORY_ROOT) / runner.CANONICAL_SAFE_REPORT_REF
+    ).read_bytes()
+    accepted_audit = (
+        Path(runner._REPOSITORY_ROOT)
+        / "docs/audit_reports/"
+        "auditor_two_domain_airline_all_real_generation_v01.log"
+    ).read_bytes()
+    assert hashlib.sha256(accepted_report).hexdigest() == runner._ATTEMPT_03_SAFE_REPORT_SHA256
+    assert hashlib.sha256(accepted_audit).hexdigest() == runner._ATTEMPT_03_AUDIT_SHA256
+    accepted_report_parent = tmp_path / "accepted-attempt-03-report"
+    accepted_report_parent.mkdir()
+    safe_path = accepted_report_parent / "airline-safe-execution-report.json"
+    safe_path.write_bytes(accepted_report)
+    safe_path.chmod(0o400)
+    audit_parent = tmp_path / "accepted-attempt-03-audit"
+    audit_parent.mkdir()
+    audit_path = audit_parent / "accepted-attempt-03-generation-audit.log"
+    audit_path.write_bytes(accepted_audit)
+    audit_path.chmod(0o400)
+    monkeypatch.setattr(runner, "_CANONICAL_SAFE_REPORT_PATH", safe_path)
+    monkeypatch.setattr(runner, "_ATTEMPT_03_AUDIT_PATH", audit_path)
+
+    identity_path = attempt_03_path / runner.ATTEMPT_IDENTITY_FILE
+    inventory_path = attempt_03_path / runner.PRIVATE_INVENTORY_FILE
+    gate_path = attempt_03_path / runner.GENERATION_GATE_FILE
+    identity = json.loads(identity_path.read_bytes())
+    inventory = json.loads(inventory_path.read_bytes())
+    anchors_03 = runner._Attempt03Anchors(
+        attempt_id=str(identity["attempt_id"]),
+        execution_head=str(identity["execution_head"]),
+        attempt_identity_sha256=hashlib.sha256(identity_path.read_bytes()).hexdigest(),
+        private_inventory_sha256=hashlib.sha256(inventory_path.read_bytes()).hexdigest(),
+        private_inventory_digest=str(inventory["aggregate_inventory_digest"]),
+        generation_gate_sha256=hashlib.sha256(gate_path.read_bytes()).hexdigest(),
+        safe_report_sha256=runner._ATTEMPT_03_SAFE_REPORT_SHA256,
+        audit_sha256=runner._ATTEMPT_03_AUDIT_SHA256,
+        root_entry_count=4,
+        raw_file_count=72,
+        metadata_mode=0o600,
+    )
+    monkeypatch.setattr(runner, "_ATTEMPT_03_ANCHORS", anchors_03)
+    attempt_04_safe = tmp_path / "airline-safe-execution-report-attempt-04.json"
+    monkeypatch.setattr(runner, "_ATTEMPT_04_SAFE_REPORT_PATH", attempt_04_safe)
+    recovery_04: dict[str, object] = {
+        "attempt_number": 4,
+        "prior_accepted_attempt_03_directory": attempt_03_path,
+        "prior_accepted_attempt_03_id": anchors_03.attempt_id,
+        "transitive_failed_attempt_02_directory": attempt_02_path,
+        "transitive_failed_attempt_02_id": runner._ATTEMPT_02_ANCHORS.attempt_id,
+        "transitive_failed_attempt_01_directory": attempt_01_path,
+        "transitive_failed_attempt_01_id": runner._PRIOR_ANCHORS.attempt_id,
+        "owner_reviewed_attempt_04": True,
+    }
+    return (
+        recovery_04,
+        attempt_01_path,
+        attempt_02_path,
+        attempt_03_path,
+        safe_path,
+        audit_path,
+    )
+
+
+def _tree_bytes(root: Path) -> dict[str, bytes]:
+    result: dict[str, bytes] = {}
+    for entry in root.iterdir():
+        if entry.is_file():
+            result[entry.name] = entry.read_bytes()
+        elif entry.is_dir():
+            for child in entry.iterdir():
+                if child.is_file():
+                    result[f"{entry.name}/{child.name}"] = child.read_bytes()
+    return result
+
+
+def _mutate_fixed_public_artifact(
+    target: Path,
+    target_bytes: bytes,
+    target_mode: int,
+    attack: str,
+) -> None:
+    if attack == "same_byte_replacement":
+        replacement = target.parent / f"{target.name}.replacement"
+        replacement.write_bytes(target_bytes)
+        replacement.chmod(target_mode)
+        os.replace(replacement, target)
+    elif attack == "mode_drift":
+        target.chmod(0o600)
+    else:
+        original_parent = target.parent
+        replacement_parent = original_parent.with_name(
+            f"{original_parent.name}-replacement"
+        )
+        replacement_parent.mkdir()
+        replacement = replacement_parent / target.name
+        replacement.write_bytes(target_bytes)
+        replacement.chmod(target_mode)
+        original_parent.rename(
+            original_parent.with_name(f"{original_parent.name}-original")
+        )
+        replacement_parent.rename(original_parent)
+
+
 def _git_ready_values() -> dict[tuple[str, ...], str]:
     head = "8e27d62cafa4e3096fb03ba22361391c46759327"
     return {
@@ -3208,10 +3327,15 @@ def test_attempt_02_repeats_prior_proof_at_all_four_checkpoints_and_binds_gate(
 ) -> None:
     safe_path, _, recovery = _patch_simulated_real(monkeypatch, tmp_path)
     original = runner._verify_prior_attempt_v01
-    checkpoints: list[bool] = []
+    checkpoints: list[str] = []
 
     def observed(*args, **kwargs):
-        checkpoints.append(kwargs.get("owned_public_report") is None)
+        checkpoints.append(
+            kwargs.get(
+                "public_state",
+                runner._ABSENT_PREDECESSOR_PUBLIC_STATE,
+            ).mode
+        )
         return original(*args, **kwargs)
 
     monkeypatch.setattr(runner, "_verify_prior_attempt_v01", observed)
@@ -3229,7 +3353,12 @@ def test_attempt_02_repeats_prior_proof_at_all_four_checkpoints_and_binds_gate(
     )
     assert result.final_status == runner.STATUS_PASS
     assert result.attempt_number == 2
-    assert checkpoints == [True, True, True, False]
+    assert checkpoints == [
+        runner._PUBLIC_STATE_ABSENT,
+        runner._PUBLIC_STATE_ABSENT,
+        runner._PUBLIC_STATE_ABSENT,
+        runner._PUBLIC_STATE_CURRENT_INVOCATION_CANONICAL_OWNER,
+    ]
     identity = json.loads((root / runner.ATTEMPT_IDENTITY_FILE).read_text())
     inventory = json.loads((root / runner.PRIVATE_INVENTORY_FILE).read_text())
     gate = json.loads((root / runner.GENERATION_GATE_FILE).read_text())
@@ -3280,8 +3409,11 @@ def test_attempt_02_repeats_prior_proof_at_all_four_checkpoints_and_binds_gate(
 def test_fourth_predecessor_proof_uses_exact_owned_report_not_boolean_bypass() -> None:
     source = Path(runner.__file__).read_text(encoding="utf-8")
     assert "require_public_absent=False" not in source
-    assert "owned_public_report=output_owner" in source
-    assert "_revalidate_owned_output(\n                owned_public_report" in source
+    assert "owned_public_report" not in source
+    assert "_PUBLIC_STATE_CURRENT_INVOCATION_CANONICAL_OWNER" in source
+    assert "_PUBLIC_STATE_ACCEPTED_ATTEMPT_03" in source
+    assert "_current_invocation_public_state(output_owner)" in source
+    assert "_revalidate_owned_output(owner" in source
 
 
 @pytest.mark.parametrize("checkpoint", (1, 2, 3, 4))
@@ -3506,8 +3638,8 @@ def test_attempt_03_success_binds_dual_proofs_identities_and_budgets(
         monkeypatch,
         tmp_path,
     )
-    prior_checkpoints: list[bool] = []
-    attempt_02_checkpoints: list[bool] = []
+    prior_checkpoints: list[str] = []
+    attempt_02_checkpoints: list[str] = []
     original_prior = runner._verify_prior_attempt_v01
     original_attempt_02 = runner._verify_attempt_02_v01
     attempt_01_proof = original_prior(
@@ -3523,11 +3655,21 @@ def test_attempt_03_success_binds_dual_proofs_identities_and_budgets(
     )
 
     def observed_prior(*args, **kwargs):
-        prior_checkpoints.append(kwargs.get("owned_public_report") is not None)
+        prior_checkpoints.append(
+            kwargs.get(
+                "public_state",
+                runner._ABSENT_PREDECESSOR_PUBLIC_STATE,
+            ).mode
+        )
         return original_prior(*args, **kwargs)
 
     def observed_attempt_02(*args, **kwargs):
-        attempt_02_checkpoints.append(kwargs.get("owned_public_report") is not None)
+        attempt_02_checkpoints.append(
+            kwargs.get(
+                "public_state",
+                runner._ABSENT_PREDECESSOR_PUBLIC_STATE,
+            ).mode
+        )
         return original_attempt_02(*args, **kwargs)
 
     monkeypatch.setattr(runner, "_verify_prior_attempt_v01", observed_prior)
@@ -3541,8 +3683,14 @@ def test_attempt_03_success_binds_dual_proofs_identities_and_budgets(
     assert result.final_status == runner.STATUS_PASS
     assert result.gate_id == runner.ATTEMPT_03_GATE_ID
     assert result.attempt_number == 3
-    assert prior_checkpoints == [False, False, False, True]
-    assert attempt_02_checkpoints == [False, False, False, True]
+    expected_public_states = [
+        runner._PUBLIC_STATE_ABSENT,
+        runner._PUBLIC_STATE_ABSENT,
+        runner._PUBLIC_STATE_ABSENT,
+        runner._PUBLIC_STATE_CURRENT_INVOCATION_CANONICAL_OWNER,
+    ]
+    assert prior_checkpoints == expected_public_states
+    assert attempt_02_checkpoints == expected_public_states
     identity = json.loads((root / runner.ATTEMPT_IDENTITY_FILE).read_text())
     inventory = json.loads((root / runner.PRIVATE_INVENTORY_FILE).read_text())
     gate = json.loads((root / runner.GENERATION_GATE_FILE).read_text())
@@ -4070,15 +4218,25 @@ def test_attempt_03_collection_failure_uses_fourth_dual_proof_for_failure_gate(
     )
     original_prior = runner._verify_prior_attempt_v01
     original_attempt_02 = runner._verify_attempt_02_v01
-    prior_calls: list[bool] = []
-    attempt_02_calls: list[bool] = []
+    prior_calls: list[str] = []
+    attempt_02_calls: list[str] = []
 
     def observed_prior(*args, **kwargs):
-        prior_calls.append(kwargs.get("owned_public_report") is not None)
+        prior_calls.append(
+            kwargs.get(
+                "public_state",
+                runner._ABSENT_PREDECESSOR_PUBLIC_STATE,
+            ).mode
+        )
         return original_prior(*args, **kwargs)
 
     def observed_attempt_02(*args, **kwargs):
-        attempt_02_calls.append(kwargs.get("owned_public_report") is not None)
+        attempt_02_calls.append(
+            kwargs.get(
+                "public_state",
+                runner._ABSENT_PREDECESSOR_PUBLIC_STATE,
+            ).mode
+        )
         return original_attempt_02(*args, **kwargs)
 
     monkeypatch.setattr(runner, "_verify_prior_attempt_v01", observed_prior)
@@ -4091,8 +4249,8 @@ def test_attempt_03_collection_failure_uses_fourth_dual_proof_for_failure_gate(
     )
     assert result.final_status == runner.STATUS_FAIL_CLOSED
     assert result.private_attempt_preservation_state == runner._PRESERVATION_PRESERVED
-    assert prior_calls == [False, False, False, False]
-    assert attempt_02_calls == [False, False, False, False]
+    assert prior_calls == [runner._PUBLIC_STATE_ABSENT] * 4
+    assert attempt_02_calls == [runner._PUBLIC_STATE_ABSENT] * 4
     assert result.provider_callback_started_count == 3
     assert result.provider_callback_completed_count == 2
     assert result.retry_count == 0
@@ -4256,6 +4414,7 @@ def test_every_duplicate_cli_option_fails_before_output_or_provider(
     assert len(captured.out.splitlines()) == 1
     assert json.loads(captured.out)["reason_code"] == runner.REASON_INVALID
     assert not output.exists()
+    assert not output.exists()
     assert not safe.exists()
 
 
@@ -4269,7 +4428,6 @@ def test_every_duplicate_cli_option_fails_before_output_or_provider(
         "２",
         "²",
         "03",
-        "4",
         "+3",
         "٣",
         "３",
@@ -4298,7 +4456,395 @@ def test_attempt_number_cli_token_must_be_exact_ascii_canonical(
     assert captured.err == ""
     assert len(captured.out.splitlines()) == 1
     assert json.loads(captured.out)["reason_code"] == runner.REASON_INVALID
-    assert not output.exists()
+
+
+def test_attempt_04_real_branch_uses_seven_fresh_filesystem_proofs_and_distinct_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    recovery, _, _, attempt_03, accepted_report, audit = (
+        _filesystem_backed_attempt_04_context(monkeypatch, tmp_path)
+    )
+    attempt_03_before = _tree_bytes(attempt_03)
+    accepted_report_before = accepted_report.read_bytes()
+    audit_before = audit.read_bytes()
+    proof_calls: list[runner._Attempt03Proof] = []
+    public_modes: list[str] = []
+    provider_builds: list[str] = []
+    base_calls: list[str] = []
+    original_verify_03 = runner._verify_attempt_03_v01
+    original_public_state = runner._verify_predecessor_public_state
+    base = runner._build_injected_provider_v01()
+
+    def observed_verify_03(*args, **kwargs):
+        proof = original_verify_03(*args, **kwargs)
+        proof_calls.append(proof)
+        return proof
+
+    def observed_public_state(state):
+        public_modes.append(state.mode)
+        return original_public_state(state)
+
+    def provider_builder(model: str):
+        provider_builds.append(model)
+
+        def provider(actor_id, prompt, metadata):
+            base_calls.append(actor_id)
+            return base(actor_id, prompt, metadata)
+
+        return provider
+
+    monkeypatch.setattr(runner, "_verify_attempt_03_v01", observed_verify_03)
+    monkeypatch.setattr(
+        runner,
+        "_verify_predecessor_public_state",
+        observed_public_state,
+    )
+    monkeypatch.setattr(runner, "_REAL_PROVIDER_BUILDER", provider_builder)
+    attempt_04 = tmp_path / "accepted-attempt-04"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=attempt_04,
+        **recovery,
+    )
+
+    assert result.final_status == runner.STATUS_PASS
+    assert result.attempt_number == 4
+    assert len(proof_calls) == 7
+    assert all(proof == proof_calls[0] for proof in proof_calls)
+    assert proof_calls[0].public_report.parent_path == accepted_report.parent
+    assert proof_calls[0].public_report.leaf == accepted_report.name
+    assert proof_calls[0].public_report.expected_bytes == accepted_report_before
+    assert proof_calls[0].public_report.byte_count == len(accepted_report_before)
+    assert proof_calls[0].generation_audit.parent_path == audit.parent
+    assert proof_calls[0].generation_audit.leaf == audit.name
+    assert proof_calls[0].generation_audit.expected_bytes == audit_before
+    assert proof_calls[0].generation_audit.byte_count == len(audit_before)
+    assert public_modes == [runner._PUBLIC_STATE_ACCEPTED_ATTEMPT_03] * 14
+    assert provider_builds == [runner.MODEL_ID]
+    assert base_calls == list(runner.ACTOR_IDS)
+    assert result.wrapper_callback_observed_count == 12
+    assert result.provider_callback_started_count == 12
+    assert result.provider_callback_completed_count == 12
+    assert result.actual_provider_call_count == 12
+    assert result.actual_network_call_count == 12
+    assert result.actual_gemini_call_count == 12
+    assert attempt_04.is_dir()
+    assert runner._ATTEMPT_04_SAFE_REPORT_PATH.is_file()
+    assert runner._ATTEMPT_04_SAFE_REPORT_PATH != accepted_report
+    assert hashlib.sha256(runner._ATTEMPT_04_SAFE_REPORT_PATH.read_bytes()).hexdigest() == result.safe_report_sha256
+    assert _tree_bytes(attempt_03) == attempt_03_before
+    assert accepted_report.read_bytes() == accepted_report_before
+    assert audit.read_bytes() == audit_before
+
+
+@pytest.mark.parametrize("artifact", ("report", "audit"))
+@pytest.mark.parametrize("attack", ("absent", "wrong"))
+def test_attempt_04_requires_exact_attempt_03_public_report_and_audit_before_creation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    artifact: str,
+    attack: str,
+) -> None:
+    recovery, _, _, _, accepted_report, audit = (
+        _filesystem_backed_attempt_04_context(monkeypatch, tmp_path)
+    )
+    target = accepted_report if artifact == "report" else audit
+    target.chmod(0o600)
+    if attack == "absent":
+        target.unlink()
+    else:
+        target.write_bytes(b"invalid\n")
+        target.chmod(0o400)
+    provider_builds: list[str] = []
+    monkeypatch.setattr(
+        runner,
+        "_REAL_PROVIDER_BUILDER",
+        lambda model: provider_builds.append(model),
+    )
+    attempt_04 = tmp_path / "must-not-create-attempt-04"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=attempt_04,
+        **recovery,
+    )
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.private_attempt_preservation_state == runner._PRESERVATION_NOT_CREATED
+    assert provider_builds == []
+    assert not attempt_04.exists()
+    assert not runner._ATTEMPT_04_SAFE_REPORT_PATH.exists()
+
+
+@pytest.mark.parametrize(
+    ("checkpoint", "predecessor"),
+    (
+        (1, "attempt_01"),
+        (2, "attempt_02"),
+        (3, "attempt_03"),
+        (4, "attempt_01"),
+        (5, "attempt_02"),
+        (6, "attempt_03"),
+        (7, "attempt_01"),
+    ),
+)
+def test_attempt_04_predecessor_mutation_fails_at_each_of_seven_checkpoints(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    checkpoint: int,
+    predecessor: str,
+) -> None:
+    recovery, attempt_01, attempt_02, attempt_03, accepted_report, audit = (
+        _filesystem_backed_attempt_04_context(monkeypatch, tmp_path)
+    )
+    roots = {
+        "attempt_01": attempt_01,
+        "attempt_02": attempt_02,
+        "attempt_03": attempt_03,
+    }
+    functions = {
+        "attempt_01": "_verify_prior_attempt_v01",
+        "attempt_02": "_verify_attempt_02_v01",
+        "attempt_03": "_verify_attempt_03_v01",
+    }
+    target = roots[predecessor] / runner.RAW_ATTEMPT_DIRECTORY / "summary.json"
+    function_name = functions[predecessor]
+    original = getattr(runner, function_name)
+    calls = 0
+    provider_builds: list[str] = []
+    base_calls: list[str] = []
+    base = runner._build_injected_provider_v01()
+    accepted_report_before = accepted_report.read_bytes()
+    audit_before = audit.read_bytes()
+
+    def mutating(*args, **kwargs):
+        nonlocal calls
+        calls += 1
+        if calls == checkpoint:
+            target.write_bytes(target.read_bytes() + b"drift")
+        return original(*args, **kwargs)
+
+    def provider_builder(model: str):
+        provider_builds.append(model)
+
+        def provider(actor_id, prompt, metadata):
+            base_calls.append(actor_id)
+            return base(actor_id, prompt, metadata)
+
+        return provider
+
+    monkeypatch.setattr(runner, function_name, mutating)
+    monkeypatch.setattr(runner, "_REAL_PROVIDER_BUILDER", provider_builder)
+    attempt_04 = tmp_path / f"attempt-04-checkpoint-{checkpoint}"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=attempt_04,
+        **recovery,
+    )
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.official_evidence_eligible is False
+    assert not runner._ATTEMPT_04_SAFE_REPORT_PATH.exists()
+    assert accepted_report.read_bytes() == accepted_report_before
+    assert audit.read_bytes() == audit_before
+    if checkpoint == 1:
+        assert not attempt_04.exists()
+    else:
+        assert attempt_04.is_dir()
+    if checkpoint in (1, 2):
+        assert provider_builds == []
+        assert base_calls == []
+    if checkpoint == 3:
+        assert provider_builds == [runner.MODEL_ID]
+        assert base_calls == []
+
+
+@pytest.mark.parametrize("checkpoint", range(2, 8))
+@pytest.mark.parametrize("artifact", ("report", "audit"))
+@pytest.mark.parametrize(
+    "attack",
+    ("same_byte_replacement", "mode_drift", "directory_replacement"),
+)
+def test_attempt_04_fixed_attempt_03_public_evidence_is_immutable_at_every_later_checkpoint(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    checkpoint: int,
+    artifact: str,
+    attack: str,
+) -> None:
+    recovery, _, _, attempt_03, accepted_report, audit = (
+        _filesystem_backed_attempt_04_context(monkeypatch, tmp_path)
+    )
+    target = accepted_report if artifact == "report" else audit
+    target_bytes = target.read_bytes()
+    target_mode = target.stat().st_mode & 0o777
+    attempt_03_before = _tree_bytes(attempt_03)
+    other = audit if artifact == "report" else accepted_report
+    other_before = other.read_bytes()
+    original_verify = runner._verify_attempt_03_v01
+    calls = 0
+
+    def mutating_verify(*args, **kwargs):
+        nonlocal calls
+        calls += 1
+        if calls == checkpoint:
+            _mutate_fixed_public_artifact(
+                target,
+                target_bytes,
+                target_mode,
+                attack,
+            )
+        return original_verify(*args, **kwargs)
+
+    base = runner._build_injected_provider_v01()
+    monkeypatch.setattr(runner, "_verify_attempt_03_v01", mutating_verify)
+    monkeypatch.setattr(runner, "_REAL_PROVIDER_BUILDER", lambda _model: base)
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=tmp_path / "attempt-04-public-drift",
+        **recovery,
+    )
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.official_evidence_eligible is False
+    assert not runner._ATTEMPT_04_SAFE_REPORT_PATH.exists()
+    assert target.read_bytes() == target_bytes
+    assert other.read_bytes() == other_before
+    assert _tree_bytes(attempt_03) == attempt_03_before
+
+
+@pytest.mark.parametrize("artifact", ("report", "audit"))
+@pytest.mark.parametrize(
+    "attack",
+    ("same_byte_replacement", "mode_drift", "directory_replacement"),
+)
+def test_attempt_04_checkpoint_one_closes_attempt_03_public_proof_race(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    artifact: str,
+    attack: str,
+) -> None:
+    recovery, _, _, attempt_03, accepted_report, audit = (
+        _filesystem_backed_attempt_04_context(monkeypatch, tmp_path)
+    )
+    target = accepted_report if artifact == "report" else audit
+    target_bytes = target.read_bytes()
+    target_mode = target.stat().st_mode & 0o777
+    attempt_03_before = _tree_bytes(attempt_03)
+    other = audit if artifact == "report" else accepted_report
+    other_before = other.read_bytes()
+    original_ancestry = runner._verify_prior_head_ancestry
+    attacked = False
+    provider_builds: list[str] = []
+
+    def mutate_inside_checkpoint(source_head: str, current_head: str) -> None:
+        nonlocal attacked
+        original_ancestry(source_head, current_head)
+        if source_head == runner._ATTEMPT_03_ANCHORS.execution_head and not attacked:
+            attacked = True
+            _mutate_fixed_public_artifact(
+                target,
+                target_bytes,
+                target_mode,
+                attack,
+            )
+
+    monkeypatch.setattr(runner, "_verify_prior_head_ancestry", mutate_inside_checkpoint)
+    monkeypatch.setattr(
+        runner,
+        "_REAL_PROVIDER_BUILDER",
+        lambda model: provider_builds.append(model),
+    )
+    attempt_04 = tmp_path / "attempt-04-checkpoint-one-public-race"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=attempt_04,
+        **recovery,
+    )
+    assert attacked is True
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.private_attempt_preservation_state == runner._PRESERVATION_NOT_CREATED
+    assert provider_builds == []
+    assert not attempt_04.exists()
+    assert not runner._ATTEMPT_04_SAFE_REPORT_PATH.exists()
+    assert target.read_bytes() == target_bytes
+    assert other.read_bytes() == other_before
+    assert _tree_bytes(attempt_03) == attempt_03_before
+
+
+def test_attempt_04_post_write_mutation_cleans_only_attempt_04_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    recovery, _, _, attempt_03, accepted_report, audit = (
+        _filesystem_backed_attempt_04_context(monkeypatch, tmp_path)
+    )
+    attempt_03_before = _tree_bytes(attempt_03)
+    accepted_report_before = accepted_report.read_bytes()
+    audit_before = audit.read_bytes()
+    monkeypatch.setattr(
+        runner,
+        "_REAL_PROVIDER_BUILDER",
+        lambda model: runner._build_injected_provider_v01(),
+    )
+
+    def mutate_attempt_04(path: Path) -> None:
+        assert path == runner._ATTEMPT_04_SAFE_REPORT_PATH
+        path.chmod(0o600)
+        path.write_bytes(path.read_bytes() + b"mutation")
+
+    monkeypatch.setattr(runner, "_POST_PUBLIC_WRITE_HOOK", mutate_attempt_04)
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        private_output_directory=tmp_path / "failed-attempt-04-post-write",
+        **recovery,
+    )
+    assert result.final_status == runner.STATUS_FAIL_CLOSED
+    assert result.official_evidence_eligible is False
+    assert not runner._ATTEMPT_04_SAFE_REPORT_PATH.exists()
+    assert _tree_bytes(attempt_03) == attempt_03_before
+    assert accepted_report.read_bytes() == accepted_report_before
+    assert audit.read_bytes() == audit_before
+
+
+def test_attempt_04_simulated_real_persists_73_file_inventory_and_zero_external(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(lane.time, "sleep", lambda _: None)
+    attempt = tmp_path / "attempt-04"
+    safe = tmp_path / "safe-report-v01.json"
+    result = runner.run_two_domain_airline_all_real_program_v01(
+        execution_mode=runner.MODE_REAL,
+        attempt_number=4,
+        private_output_directory=attempt,
+        injected_provider=runner._build_injected_provider_v01(),
+        injected_safe_report_output=safe,
+        prior_accepted_attempt_03_id=runner._ATTEMPT_03_ID,
+        transitive_failed_attempt_02_id=runner._ATTEMPT_02_ID,
+        transitive_failed_attempt_01_id=runner._PRIOR_ATTEMPT_ID,
+        owner_reviewed_attempt_04=True,
+        _local_packageability_injection=True,
+        _local_verified_head=runner._git_text("rev-parse", "HEAD"),
+    )
+    assert result.final_status == runner.STATUS_PASS
+    assert result.attempt_number == 4
+    assert result.wrapper_callback_observed_count == 12
+    assert result.provider_callback_started_count == 12
+    assert result.provider_callback_completed_count == 12
+    assert result.actual_provider_call_count == 0
+    assert result.actual_network_call_count == 0
+    assert result.actual_gemini_call_count == 0
+    assert result.live_collection_performed is False
+    assert result.official_evidence_eligible is False
+    inventory = json.loads((attempt / runner.PRIVATE_INVENTORY_FILE).read_bytes())
+    assert inventory["attempt_number"] == 4
+    assert inventory["attempt_id"] == result.attempt_id
+    assert inventory["raw_attempt_file_count"] == 73
+    assert runner._lane.CORRIDOR_REPORT_FILE in {
+        item["logical_ref"] for item in inventory["ordered_files"]
+    }
+    gate = json.loads((attempt / runner.GENERATION_GATE_FILE).read_bytes())
+    assert gate["gate_id"] == runner.ATTEMPT_04_GATE_ID
+    assert gate["cumulative_airline_call_ceiling"] == 30
+    assert gate["cumulative_programme_call_ceiling"] == 36
 
 
 @pytest.mark.parametrize(
@@ -4455,6 +5001,34 @@ def test_static_tests_never_form_a_valid_real_provider_invocation() -> None:
             assert "_require_real_local_preconditions" in rendered
             assert "_REAL_PROVIDER_BUILDER" in rendered
             continue
+        if name == "test_attempt_04_simulated_real_persists_73_file_inventory_and_zero_external":
+            assert "_local_packageability_injection=True" in rendered
+            assert "_build_injected_provider_v01" in rendered
+            assert "actual_provider_call_count == 0" in rendered
+            continue
+        if name in {
+            "test_attempt_04_real_branch_uses_seven_fresh_filesystem_proofs_and_distinct_output",
+            "test_attempt_04_predecessor_mutation_fails_at_each_of_seven_checkpoints",
+            "test_attempt_04_fixed_attempt_03_public_evidence_is_immutable_at_every_later_checkpoint",
+            "test_attempt_04_post_write_mutation_cleans_only_attempt_04_output",
+        }:
+            assert "_filesystem_backed_attempt_04_context" in rendered
+            assert "_REAL_PROVIDER_BUILDER" in rendered
+            assert "_build_injected_provider_v01" in rendered
+            assert "injected_provider=" not in rendered
+            continue
+        if name == "test_attempt_04_checkpoint_one_closes_attempt_03_public_proof_race":
+            assert "_filesystem_backed_attempt_04_context" in rendered
+            assert "_REAL_PROVIDER_BUILDER" in rendered
+            assert "provider_builds == []" in rendered
+            assert "injected_provider=" not in rendered
+            continue
+        if name == "test_attempt_04_requires_exact_attempt_03_public_report_and_audit_before_creation":
+            assert "_filesystem_backed_attempt_04_context" in rendered
+            assert "_REAL_PROVIDER_BUILDER" in rendered
+            assert "provider_builds == []" in rendered
+            assert "injected_provider=" not in rendered
+            continue
         if "provider construction forbidden" in rendered:
             assert "_PRESERVATION_NOT_CREATED" in rendered
             continue
@@ -4478,10 +5052,6 @@ def test_static_tests_never_form_a_valid_real_provider_invocation() -> None:
                 "hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
                 "3693ae3d5b15d16bfa23f7d3ebf40bb64a0aa9f245847a1d0d09eae431458e98",
             ),
-        (
-            "hedgehog/domains/airline/sealed_evidence_package_adapter_v01.py",
-            "420c6ba24d1a9417eb67295e402e395b05c88fbf55703d63948507c41a6f031e",
-        ),
         (
             "hedgehog/domains/airline/kernel_adapter_v01.py",
             "deebc60e3c0b7840ac58eab7e448ebae328e749239fde6e5503c571bae187dd5",

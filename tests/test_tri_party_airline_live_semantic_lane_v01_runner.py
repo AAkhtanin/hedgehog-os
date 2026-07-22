@@ -19,6 +19,7 @@ from hedgehog.domains.airline import (
     semantic_provider_canonicalization_v01 as semantic_canonicalization,
 )
 from hedgehog.domains.airline import transaction_artifact_ledger_v01 as ledger
+from hedgehog.domains.airline import ticket_purchase_corridor_runtime_v01 as corridor_runtime
 
 
 def _enabled_env(tmp_path: Path | None = None) -> dict[str, str]:
@@ -61,6 +62,293 @@ def _report(tmp_path: Path | None = None) -> dict[str, Any]:
     return runner.collect_tri_party_airline_live_semantic_lane_v01(
         env=_enabled_env(tmp_path),
     )
+
+
+def test_attempt_04_persists_exact_complete_corridor_report(tmp_path: Path) -> None:
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=_real_shaped_response_causal_provider(),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+        causal_snapshot=binding.build_airline_candidate_snapshot_v01(),
+        persist_complete_corridor_report=True,
+    )
+    assert report["final_status"] == runner.STATUS_PASS
+    archive = tmp_path / runner.CORRIDOR_REPORT_FILE
+    with archive.open("rb") as stream:
+        content = stream.read()
+    assert content.endswith(b"\n") and not content.endswith(b"\n\n")
+    assert archive.stat().st_mode & 0o777 == 0o600
+    plain = json.loads(content)
+    assert tuple(plain) == tuple(sorted(plain))
+    assert set(plain) == {
+        field.name for field in __import__("dataclasses").fields(
+            corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01
+        )
+    }
+    assert len(plain["phase_results"]) == 5
+    assert len(plain["transitions"]) == 4
+    assert len(plain["core_domain_delegation_matrix"]) == 8
+    assert plain["final_status"] == runner.STATUS_PASS
+    assert plain["validation_errors"] == []
+
+
+@pytest.mark.parametrize(
+    "failure",
+    ("zero_write", "file_fsync", "parent_fsync", "proven_close"),
+)
+def test_attempt_04_corridor_archive_write_failure_is_clean_and_fail_closed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failure: str,
+) -> None:
+    original_fsync = runner.os.fsync
+    parent_fsync_calls = 0
+    if failure == "zero_write":
+        monkeypatch.setattr(runner.os, "write", lambda *_args: 0)
+    elif failure in ("file_fsync", "parent_fsync"):
+        def failing_fsync(fd: int) -> None:
+            nonlocal parent_fsync_calls
+            is_directory = __import__("stat").S_ISDIR(runner.os.fstat(fd).st_mode)
+            if is_directory:
+                parent_fsync_calls += 1
+            if failure == "file_fsync" and not is_directory:
+                raise OSError()
+            if failure == "parent_fsync" and is_directory and parent_fsync_calls == 1:
+                raise OSError()
+            original_fsync(fd)
+
+        monkeypatch.setattr(runner.os, "fsync", failing_fsync)
+    else:
+        original_close_proven = runner._close_proven_v01
+        failed = False
+
+        def failing_close(fd: int) -> None:
+            nonlocal failed
+            try:
+                is_regular = __import__("stat").S_ISREG(
+                    runner.os.fstat(fd).st_mode
+                )
+            except OSError:
+                return original_close_proven(fd)
+            if is_regular and not failed:
+                failed = True
+                runner._RAW_CLOSE(fd)
+                raise OSError()
+            original_close_proven(fd)
+
+        monkeypatch.setattr(runner, "_close_proven_v01", failing_close)
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=_real_shaped_response_causal_provider(),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+        causal_snapshot=binding.build_airline_candidate_snapshot_v01(),
+        persist_complete_corridor_report=True,
+    )
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert report["failed_stage"] == "corridor_report_archive_write"
+    assert not (tmp_path / runner.CORRIDOR_REPORT_FILE).exists()
+    if failure == "parent_fsync":
+        assert parent_fsync_calls == 2
+
+
+def test_attempt_04_corridor_archive_fsyncs_file_and_parent_and_uses_raw_close_fallback(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original_fsync = runner.os.fsync
+    fsync_kinds: list[str] = []
+
+    def observed_fsync(fd: int) -> None:
+        mode = runner.os.fstat(fd).st_mode
+        fsync_kinds.append(
+            "directory" if __import__("stat").S_ISDIR(mode) else "file"
+        )
+        original_fsync(fd)
+
+    monkeypatch.setattr(runner.os, "fsync", observed_fsync)
+    monkeypatch.setattr(
+        runner,
+        "_CLOSE",
+        lambda _fd: (_ for _ in ()).throw(OSError()),
+    )
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=_real_shaped_response_causal_provider(),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+        causal_snapshot=binding.build_airline_candidate_snapshot_v01(),
+        persist_complete_corridor_report=True,
+    )
+    assert report["final_status"] == runner.STATUS_PASS
+    assert fsync_kinds.count("file") >= 1
+    assert fsync_kinds.count("directory") == 1
+
+
+def test_attempt_04_corridor_archive_completes_partial_short_writes(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original_write = runner.os.write
+    write_sizes: list[int] = []
+
+    def short_write(fd: int, data: bytes) -> int:
+        portion = data[: max(1, min(37, len(data)))]
+        written = original_write(fd, portion)
+        write_sizes.append(written)
+        return written
+
+    monkeypatch.setattr(runner.os, "write", short_write)
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=_real_shaped_response_causal_provider(),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+        causal_snapshot=binding.build_airline_candidate_snapshot_v01(),
+        persist_complete_corridor_report=True,
+    )
+    archive = tmp_path / runner.CORRIDOR_REPORT_FILE
+    assert report["final_status"] == runner.STATUS_PASS
+    assert len(write_sizes) > 1
+    assert sum(write_sizes) == len(archive.read_bytes())
+
+
+@pytest.mark.parametrize(
+    "attack",
+    ("same_inode_content", "mode_drift", "foreign_replacement"),
+)
+def test_attempt_04_corridor_archive_final_descriptor_proof_rejects_late_drift(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    attack: str,
+) -> None:
+    archive = tmp_path / runner.CORRIDOR_REPORT_FILE
+    original_validate = (
+        corridor_runtime.validate_airline_ticket_purchase_corridor_run_v01
+    )
+    attacked = False
+    foreign_bytes = b""
+
+    def mutate_after_validation(value):
+        nonlocal attacked, foreign_bytes
+        result = original_validate(value)
+        if archive.exists() and not attacked:
+            attacked = True
+            if attack == "same_inode_content":
+                with archive.open("r+b") as stream:
+                    first = stream.read(1)
+                    stream.seek(0)
+                    stream.write(b"[" if first != b"[" else b"{")
+                    stream.flush()
+                    runner.os.fsync(stream.fileno())
+            elif attack == "mode_drift":
+                archive.chmod(0o640)
+            else:
+                foreign_bytes = archive.read_bytes()
+                replacement = archive.with_name("foreign-corridor-report.json")
+                replacement.write_bytes(foreign_bytes)
+                replacement.chmod(0o600)
+                runner.os.replace(replacement, archive)
+        return result
+
+    monkeypatch.setattr(
+        corridor_runtime,
+        "validate_airline_ticket_purchase_corridor_run_v01",
+        mutate_after_validation,
+    )
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=_real_shaped_response_causal_provider(),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+        causal_snapshot=binding.build_airline_candidate_snapshot_v01(),
+        persist_complete_corridor_report=True,
+    )
+    assert attacked is True
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert report["failed_stage"] == "corridor_report_archive_write"
+    if attack == "foreign_replacement":
+        assert archive.is_file()
+        assert archive.read_bytes() == foreign_bytes
+    else:
+        assert not archive.exists()
+
+
+def test_attempt_04_corridor_archive_parent_close_failure_cleans_owned_inode(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original_close = runner._close_proven_v01
+    parent_identity = (tmp_path.stat().st_dev, tmp_path.stat().st_ino)
+    matching_close_count = 0
+
+    def fail_original_parent_close(fd: int) -> None:
+        nonlocal matching_close_count
+        opened = runner.os.fstat(fd)
+        if (opened.st_dev, opened.st_ino) == parent_identity:
+            matching_close_count += 1
+            if matching_close_count == 2:
+                runner._RAW_CLOSE(fd)
+                raise OSError("controlled_parent_close_failure")
+        original_close(fd)
+
+    monkeypatch.setattr(runner, "_close_proven_v01", fail_original_parent_close)
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=_real_shaped_response_causal_provider(),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+        causal_snapshot=binding.build_airline_candidate_snapshot_v01(),
+        persist_complete_corridor_report=True,
+    )
+    assert matching_close_count >= 3
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert report["failed_stage"] == "corridor_report_archive_write"
+    assert not (tmp_path / runner.CORRIDOR_REPORT_FILE).exists()
+
+
+def test_attempt_04_corridor_archive_cleanup_never_removes_foreign_replacement(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    archive = tmp_path / runner.CORRIDOR_REPORT_FILE
+    replaced = False
+    original_fsync = runner.os.fsync
+
+    def controlled_fsync(fd: int) -> None:
+        nonlocal replaced
+        if not replaced and __import__("stat").S_ISREG(runner.os.fstat(fd).st_mode):
+            replaced = True
+            archive.unlink()
+            archive.write_bytes(b"foreign replacement\n")
+            archive.chmod(0o600)
+            raise OSError()
+        original_fsync(fd)
+
+    monkeypatch.setattr(runner.os, "fsync", controlled_fsync)
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=_real_shaped_response_causal_provider(),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+        causal_snapshot=binding.build_airline_candidate_snapshot_v01(),
+        persist_complete_corridor_report=True,
+    )
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert archive.read_bytes() == b"foreign replacement\n"
+
+
+def test_attempt_04_corridor_archive_foreign_symlink_is_preserved(
+    tmp_path: Path,
+) -> None:
+    attacker = tmp_path / "attacker.json"
+    attacker.write_text("foreign\n", encoding="utf-8")
+    archive = tmp_path / runner.CORRIDOR_REPORT_FILE
+    archive.symlink_to(attacker)
+    report = runner.collect_tri_party_airline_live_semantic_lane_v01(
+        env=_crypto_env(tmp_path),
+        provider=_real_shaped_response_causal_provider(),
+        causal_constraints=binding.build_client_constraints_preference_a_v01(),
+        causal_snapshot=binding.build_airline_candidate_snapshot_v01(),
+        persist_complete_corridor_report=True,
+    )
+    assert report["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert archive.is_symlink()
+    assert attacker.read_text(encoding="utf-8") == "foreign\n"
 
 
 def _mutating_provider(

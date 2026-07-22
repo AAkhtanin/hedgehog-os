@@ -85,20 +85,26 @@ Current Airline A1/A2 governance facts:
   temporary `LOCAL_NONPUBLICATION` Package with `fixture_disposable=False`.
 - No new Gemini call is authorized until that local packageability gate passes
   on a clean committed implementation HEAD with zero canonical outputs.
-- The combined implementation scope is exactly ten paths: four A1 archival
-  runner/test paths and six A2 binding/adapter/orchestration test paths named in
-  the Attempt 04 preflight. No eleventh path is authorized.
-- The ten paths are exactly:
+- The combined implementation scope is exactly twelve paths: four A1 archival
+  paths, the closed shared Package scanner compatibility pair, and six A2
+  binding/adapter/orchestration paths named in the Attempt 04 preflight. No
+  thirteenth path is authorized.
+- The twelve paths, in frozen implementation-content order, are exactly:
   `demo/run_tri_party_airline_live_semantic_lane_v01.py`,
   `tests/test_tri_party_airline_live_semantic_lane_v01_runner.py`,
   `demo/run_two_domain_airline_all_real_program_v01.py`,
   `tests/test_two_domain_airline_all_real_program_v01_runner.py`,
+  `demo/run_sealed_evidence_package_v01.py`,
+  `tests/test_sealed_evidence_package_v01_runner.py`,
   `hedgehog/domains/airline/sealed_evidence_a2_binding_v01.py`,
   `tests/test_airline_sealed_evidence_a2_binding_v01.py`,
   `demo/run_two_domain_airline_a2_seal_v01.py`,
   `tests/test_two_domain_airline_a2_seal_v01_runner.py`,
   `hedgehog/domains/airline/sealed_evidence_package_adapter_v01.py`, and
   `tests/test_airline_sealed_evidence_package_adapter_v01.py`.
+- The shared Package implementation remains frozen except for the closed
+  contextual safe-reference compatibility repair specified by the governing
+  preflights. No general scanner relaxation is authorized.
 - Attempt 04, if later authorized, reruns the same 12 actors and the complete
   frozen Airline chain exactly once under a new immutable attempt identity.
 - Historical Airline consumption is Attempt 01 `3`, Attempt 02 `3`, Attempt 03

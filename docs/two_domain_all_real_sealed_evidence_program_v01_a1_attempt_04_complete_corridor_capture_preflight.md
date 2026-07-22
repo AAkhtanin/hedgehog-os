@@ -87,21 +87,28 @@ report and focused proof of that persistence. The outer runner changes are
 limited to Attempt 04 branch, predecessor, output, identity, inventory, gate,
 and local-packageability orchestration.
 
-### 3.2 A2 Consumer and Packageability Paths
+### 3.2 Shared Package Compatibility and A2 Paths
 
-Exactly these six paths are authorized:
+The full implementation-content order is frozen as exactly these twelve paths:
 
-| Action | Path |
-| --- | --- |
-| CREATE | `hedgehog/domains/airline/sealed_evidence_a2_binding_v01.py` |
-| CREATE | `tests/test_airline_sealed_evidence_a2_binding_v01.py` |
-| CREATE | `demo/run_two_domain_airline_a2_seal_v01.py` |
-| CREATE | `tests/test_two_domain_airline_a2_seal_v01_runner.py` |
-| MODIFY | `hedgehog/domains/airline/sealed_evidence_package_adapter_v01.py` |
-| MODIFY | `tests/test_airline_sealed_evidence_package_adapter_v01.py` |
+1. `demo/run_tri_party_airline_live_semantic_lane_v01.py`
+2. `tests/test_tri_party_airline_live_semantic_lane_v01_runner.py`
+3. `demo/run_two_domain_airline_all_real_program_v01.py`
+4. `tests/test_two_domain_airline_all_real_program_v01_runner.py`
+5. `demo/run_sealed_evidence_package_v01.py`
+6. `tests/test_sealed_evidence_package_v01_runner.py`
+7. `hedgehog/domains/airline/sealed_evidence_a2_binding_v01.py`
+8. `tests/test_airline_sealed_evidence_a2_binding_v01.py`
+9. `demo/run_two_domain_airline_a2_seal_v01.py`
+10. `tests/test_two_domain_airline_a2_seal_v01_runner.py`
+11. `hedgehog/domains/airline/sealed_evidence_package_adapter_v01.py`
+12. `tests/test_airline_sealed_evidence_package_adapter_v01.py`
 
-The combined pre-live implementation scope is exactly ten code/test paths.
-No eleventh code or test path is authorized.
+The combined pre-live implementation scope is exactly twelve code/test paths.
+No thirteenth code or test path is authorized. The shared Package
+implementation remains frozen except for the closed contextual safe-reference
+compatibility repair in the A2 preflight. No general scanner relaxation is
+authorized.
 
 ## 4. Exact Corridor Persistence Law
 
@@ -523,14 +530,14 @@ exception text, object representation, or memory address.
 
 ### 8.5 Committed-Head Gate
 
-The ten-path implementation may be committed only after focused suites and the
+The twelve-path implementation may be committed only after focused suites and the
 first local packageability gate pass.
 
 After that commit, the same gate runs again against a clean committed HEAD and
 binds its PASS to:
 
 - full committed HEAD;
-- exact SHA-256 of all ten implementation/test paths;
+- exact SHA-256 of all twelve implementation/test paths;
 - clean tracked and untracked worktree;
 - empty staging;
 - exact repository root;
@@ -550,7 +557,7 @@ The owner-visible gate belongs to
 run_airline_a2_local_packageability_v01(
     *, gate_phase: Literal["precommit", "committed-head"],
     temporary_root: Path, implementation_content_sha256: str,
-    verified_head: str,
+    verified_head: str, repository_root: Path,
 ) -> AirlineA2LocalPackageabilityResultV01
 ```
 
@@ -565,8 +572,9 @@ The exact precommit owner command is:
 PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
   --local-packageability \
   --gate-phase precommit \
+  --repository-root <explicit-absolute-repository-root> \
   --temporary-root <new-absent-absolute-temporary-root> \
-  --implementation-content-sha256 <canonical-ten-file-digest> \
+  --implementation-content-sha256 <canonical-twelve-file-digest> \
   --base-head <exact-base-head>
 ```
 
@@ -576,8 +584,9 @@ The exact committed-head owner command is:
 PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
   --local-packageability \
   --gate-phase committed-head \
+  --repository-root <explicit-absolute-repository-root> \
   --temporary-root <new-absent-absolute-temporary-root> \
-  --implementation-content-sha256 <same-canonical-ten-file-digest> \
+  --implementation-content-sha256 <same-canonical-twelve-file-digest> \
   --committed-head <exact-clean-implementation-head>
 ```
 
@@ -588,19 +597,31 @@ independently verified against the required repository state. Both phases
 require the same implementation-content SHA-256. `--local-packageability` is
 mutually exclusive with `--package`, `--anchor`, and `--replay`. Duplicate
 options, abbreviations, environment fallbacks, implicit paths, or unknown
-options fail before output.
+options fail before output. The public API and owner CLI require the explicit
+absolute `repository_root`; neither may infer it from CWD or module location.
 
 The canonical implementation-content digest is SHA-256 over the domain
 separator
 
 ```text
-hedgehog-os:airline-attempt-04-a2-ten-path-content:v0.1
+hedgehog-os:airline-attempt-04-a2-twelve-path-content:v0.1
 ```
 
-followed by the ordered ten authorized logical path names, a NUL separator,
-the exact byte count as canonical ASCII decimal, another NUL separator, and
-the exact file bytes for each path. The exact order is the four A1 paths
-followed by the six A2 paths in the frozen ten-path scope.
+followed by one NUL byte and, for each path in the exact twelve-path order in
+Section 3.2, the ASCII logical path, one NUL byte, the canonical ASCII decimal
+byte count, one NUL byte, and the exact file bytes. Normatively:
+
+```text
+SHA256(
+  b"hedgehog-os:airline-attempt-04-a2-twelve-path-content:v0.1\0"
+  + for each ordered path:
+      path_ascii
+      + b"\0"
+      + canonical_ascii_decimal_byte_count
+      + b"\0"
+      + exact_file_bytes
+)
+```
 
 The precommit gate binds this digest without claiming a clean committed head.
 The repeated postcommit gate requires the identical digest, the supplied exact
@@ -927,7 +948,7 @@ preflight.
 
 ### I1: Implementation
 
-Implement and test exactly the ten authorized paths. Run focused suites and the
+Implement and test exactly the twelve authorized paths. Run focused suites and the
 local packageability gate. Perform no real provider/network/Gemini operation
 and create no repository evidence. Commit implementation only after PASS.
 

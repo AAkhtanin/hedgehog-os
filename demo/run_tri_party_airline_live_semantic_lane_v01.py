@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import errno
 import math
 import os
+import stat
 import time
 from collections.abc import Mapping as MappingABC
 from dataclasses import asdict, fields, is_dataclass
@@ -18,6 +20,7 @@ from demo.run_live_unknown_request_dual_rich_context_v01 import (
 from hedgehog.domains.airline import semantic_to_contract_binding_v01 as binding
 from hedgehog.domains.airline import semantic_to_contract_causal_runtime_v01 as causal_runtime
 from hedgehog.domains.airline import semantic_provider_canonicalization_v01 as semantic_canonicalization
+from hedgehog.domains.airline import ticket_purchase_corridor_runtime_v01 as corridor_runtime
 from hedgehog.domains.airline import crypto_artifact_seal_collector_v01 as crypto_collector
 from hedgehog.domains.airline import crypto_artifact_seal_v01 as crypto_contracts
 from hedgehog.domains.airline import (
@@ -48,6 +51,7 @@ ENV_CRYPTO_ARTIFACT_SEAL = "HEDGEHOG_AIRLINE_CRYPTO_ARTIFACT_SEAL"
 
 CRYPTO_MANIFEST_FILE = "airline_crypto_artifact_seal_manifest_v01.json"
 CRYPTO_VERIFICATION_FILE = "airline_crypto_artifact_seal_verification_v01.json"
+CORRIDOR_REPORT_FILE = "airline_ticket_purchase_corridor_run_report_v01.json"
 CRYPTO_SOURCE_SUMMARY_ROLE = "sealed_source_input_not_crypto_result"
 CRYPTO_NEXT_GATE = "airline_crypto_artifact_seal_v01_slice_e1_anchor_publication"
 
@@ -61,6 +65,9 @@ AIRLINE_ROOT_ID = deterministic_airline.AIRLINE_ROOT_ID
 BANK_ROOT_ID = deterministic_airline.BANK_ROOT_ID
 
 Provider = Callable[[str, str, Mapping[str, Any]], str]
+
+_CLOSE = os.close
+_RAW_CLOSE = os.close
 
 CAUSAL_ACTOR_IDS = causal_runtime.ACTOR_ORDER
 
@@ -264,7 +271,10 @@ def collect_tri_party_airline_live_semantic_lane_v01(
     provider: Provider | None = None,
     causal_constraints: binding.ClientRootTravelConstraintSetV01 | None = None,
     causal_snapshot: binding.AirlineRootOfferCandidateSetSnapshotV01 | None = None,
+    persist_complete_corridor_report: bool = False,
 ) -> dict[str, Any]:
+    if type(persist_complete_corridor_report) is not bool:
+        raise TypeError("persist_complete_corridor_report_must_be_bool")
     effective_env = dict(os.environ if env is None else env)
     causal_gate_open = effective_env.get(ENV_CAUSAL_BINDING) == "1"
     artifact_dir_value = effective_env.get(ENV_ARTIFACT_DIR, "")
@@ -363,6 +373,7 @@ def collect_tri_party_airline_live_semantic_lane_v01(
         causal_constraints=causal_constraints,
         causal_snapshot=causal_snapshot,
         crypto_requested=crypto_requested,
+        persist_complete_corridor_report=persist_complete_corridor_report,
     )
     return report
 
@@ -835,6 +846,7 @@ def _run_provider_lane(
     causal_constraints: binding.ClientRootTravelConstraintSetV01 | None = None,
     causal_snapshot: binding.AirlineRootOfferCandidateSetSnapshotV01 | None = None,
     crypto_requested: bool = False,
+    persist_complete_corridor_report: bool = False,
 ) -> dict[str, Any]:
     if artifact_dir is not None:
         artifact_dir.mkdir(parents=True, exist_ok=True)
@@ -1390,6 +1402,35 @@ def _run_provider_lane(
         report["final_status"] = STATUS_FAIL_CLOSED
         report["failed_stage"] = "airline_transaction_artifact_ledger_write"
         ledger_json = ""
+    corridor_json, corridor_source, corridor_prepare_error = (
+        _prepare_corridor_report_archive_v01(integrated_deterministic_report)
+        if persist_complete_corridor_report
+        else ("", None, "")
+    )
+    if corridor_prepare_error:
+        validation_errors.append(corridor_prepare_error)
+        report["validation_errors"] = tuple(validation_errors)
+        report["final_status"] = STATUS_FAIL_CLOSED
+        report["failed_stage"] = "corridor_report_archive_write"
+        corridor_json = ""
+        corridor_source = None
+    corridor_write_error = (
+        _write_corridor_report_archive_once(
+            artifact_dir,
+            report,
+            artifacts,
+            corridor_json=corridor_json,
+            corridor_source=corridor_source,
+        )
+        if persist_complete_corridor_report
+        else ""
+    )
+    if corridor_write_error:
+        report["validation_errors"] = tuple(
+            list(report["validation_errors"]) + [corridor_write_error],
+        )
+        report["final_status"] = STATUS_FAIL_CLOSED
+        report["failed_stage"] = "corridor_report_archive_write"
     secret_scan = _scan_secret_markers(
         report,
         artifact_dir,
@@ -1425,6 +1466,7 @@ def _run_provider_lane(
     )
     _write_json_named(artifact_dir, "secret_scan.json", secret_scan, artifacts)
     _write_summary_artifacts(artifact_dir, report, artifacts)
+    crypto_upstream_failed = report["final_status"] != STATUS_PASS
     if crypto_requested:
         try:
             crypto_integration = _collect_crypto_artifact_seal_integration_v01(
@@ -1444,7 +1486,8 @@ def _run_provider_lane(
         ):
             crypto_errors = tuple(crypto_integration.get("validation_errors", ()))
             report["final_status"] = STATUS_FAIL_CLOSED
-            report["failed_stage"] = "airline_crypto_artifact_seal_integration"
+            if not crypto_upstream_failed:
+                report["failed_stage"] = "airline_crypto_artifact_seal_integration"
             report["validation_errors"] = tuple(
                 dict.fromkeys(tuple(report["validation_errors"]) + crypto_errors),
             )
@@ -3550,6 +3593,453 @@ def _write_json_named(
     path.write_text(json.dumps(_json_safe(payload), indent=2, sort_keys=True))
     artifacts[filename] = str(path)
     return str(path)
+
+
+def _prepare_corridor_report_archive_v01(
+    integrated_deterministic_report: Mapping[str, Any] | None,
+) -> tuple[
+    str,
+    corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01 | None,
+    str,
+]:
+    if integrated_deterministic_report is None:
+        return "", None, "corridor_report_archive_typed_source_missing"
+    source_bundle = getattr(
+        integrated_deterministic_report,
+        "_airline_transaction_artifact_ledger_source_bundle_v0_1",
+        None,
+    )
+    if type(source_bundle) is not (
+        ledger_collector.AirlineTransactionArtifactLedgerSourceBundleV01
+    ):
+        return "", None, "corridor_report_archive_typed_source_missing"
+    corridor_report = source_bundle.corridor_report
+    if type(corridor_report) is not (
+        corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01
+    ):
+        return "", None, "corridor_report_archive_typed_source_missing"
+    try:
+        accepted, errors = (
+            corridor_runtime.validate_airline_ticket_purchase_corridor_run_v01(
+                corridor_report,
+            )
+        )
+        if accepted is not True or errors != ():
+            return "", None, "corridor_report_archive_validation_failed"
+        source_validation = (
+            ledger_collector.validate_airline_transaction_artifact_ledger_source_bundle_v01(
+                source_bundle,
+            )
+        )
+        if (
+            source_validation.validation_status != STATUS_PASS
+            or source_validation.validation_errors != ()
+            or source_bundle.corridor_report != corridor_report
+        ):
+            return "", None, "corridor_report_archive_source_bundle_invalid"
+        plain = _json_safe(corridor_report)
+        if type(plain) is not dict or tuple(plain) != tuple(
+            field.name for field in fields(corridor_report)
+        ):
+            return "", None, "corridor_report_archive_geometry_invalid"
+        if (
+            len(corridor_report.phase_results) != 5
+            or tuple(item.phase_id for item in corridor_report.phase_results)
+            != corridor_runtime.PHASE_ORDER
+            or len(corridor_report.transitions) != 4
+            or len(corridor_report.core_domain_delegation_matrix) != 8
+            or sum(
+                item.directly_delegated_to_core
+                for item in corridor_report.core_domain_delegation_matrix
+            )
+            != 2
+            or corridor_report.final_status != STATUS_PASS
+            or corridor_report.failed_phase_id != ""
+            or corridor_report.return_to_root_id != ""
+            or corridor_report.validation_errors != ()
+        ):
+            return "", None, "corridor_report_archive_geometry_invalid"
+        return (
+            json.dumps(
+                plain,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            )
+            + "\n",
+            corridor_report,
+            "",
+        )
+    except (AttributeError, TypeError, ValueError, UnicodeError, RecursionError):
+        return "", None, "corridor_report_archive_validation_failed"
+
+
+def _prove_corridor_archive_final_v01(
+    artifact_dir: Path,
+    parent_fd: int,
+    parent_identity: tuple[int, int],
+    parent_mode: int,
+    fd: int,
+    created_identity: tuple[int, int],
+    expected: bytes,
+) -> None:
+    opened = os.fstat(fd)
+    entry = os.stat(
+        CORRIDOR_REPORT_FILE,
+        dir_fd=parent_fd,
+        follow_symlinks=False,
+    )
+    parent = os.fstat(parent_fd)
+    if (
+        not stat.S_ISREG(opened.st_mode)
+        or not stat.S_ISREG(entry.st_mode)
+        or (opened.st_dev, opened.st_ino) != created_identity
+        or (entry.st_dev, entry.st_ino) != created_identity
+        or stat.S_IMODE(opened.st_mode) != 0o600
+        or stat.S_IMODE(entry.st_mode) != 0o600
+        or opened.st_size != len(expected)
+        or entry.st_size != len(expected)
+        or (parent.st_dev, parent.st_ino) != parent_identity
+        or stat.S_IMODE(parent.st_mode) != parent_mode
+    ):
+        raise OSError
+    os.lseek(fd, 0, os.SEEK_SET)
+    chunks: list[bytes] = []
+    remaining = len(expected)
+    while remaining:
+        chunk = os.read(fd, min(65536, remaining))
+        if not chunk:
+            raise OSError
+        chunks.append(chunk)
+        remaining -= len(chunk)
+    if b"".join(chunks) != expected or os.read(fd, 1):
+        raise OSError
+    descriptor_after = os.fstat(fd)
+    entry_after = os.stat(
+        CORRIDOR_REPORT_FILE,
+        dir_fd=parent_fd,
+        follow_symlinks=False,
+    )
+    if (
+        not stat.S_ISREG(descriptor_after.st_mode)
+        or not stat.S_ISREG(entry_after.st_mode)
+        or (descriptor_after.st_dev, descriptor_after.st_ino) != created_identity
+        or (entry_after.st_dev, entry_after.st_ino) != created_identity
+        or stat.S_IMODE(descriptor_after.st_mode) != 0o600
+        or stat.S_IMODE(entry_after.st_mode) != 0o600
+        or descriptor_after.st_size != len(expected)
+        or entry_after.st_size != len(expected)
+    ):
+        raise OSError
+    fresh_parent_fd = -1
+    try:
+        fresh_parent_fd = _open_absolute_directory_nofollow_v01(artifact_dir)
+        fresh_parent = os.fstat(fresh_parent_fd)
+        fresh_entry = os.stat(
+            CORRIDOR_REPORT_FILE,
+            dir_fd=fresh_parent_fd,
+            follow_symlinks=False,
+        )
+        if (
+            (fresh_parent.st_dev, fresh_parent.st_ino) != parent_identity
+            or stat.S_IMODE(fresh_parent.st_mode) != parent_mode
+            or not stat.S_ISREG(fresh_entry.st_mode)
+            or (fresh_entry.st_dev, fresh_entry.st_ino) != created_identity
+            or stat.S_IMODE(fresh_entry.st_mode) != 0o600
+            or fresh_entry.st_size != len(expected)
+        ):
+            raise OSError
+    finally:
+        if fresh_parent_fd >= 0:
+            _close_proven_v01(fresh_parent_fd)
+
+
+def _close_archive_descriptor_v01(fd: int) -> bool:
+    try:
+        _close_proven_v01(fd)
+        return True
+    except OSError:
+        try:
+            _RAW_CLOSE(fd)
+        except OSError as error:
+            if error.errno != errno.EBADF:
+                return False
+        return False
+
+
+def _cleanup_owned_corridor_archive_v01(
+    artifact_dir: Path,
+    parent_identity: tuple[int, int],
+    parent_mode: int,
+    created_identity: tuple[int, int],
+) -> bool:
+    parent_fd = -1
+    removed = False
+    close_ok = True
+    try:
+        parent_fd = _open_absolute_directory_nofollow_v01(artifact_dir)
+        parent = os.fstat(parent_fd)
+        if (
+            (parent.st_dev, parent.st_ino) != parent_identity
+            or stat.S_IMODE(parent.st_mode) != parent_mode
+        ):
+            return False
+        current = os.stat(
+            CORRIDOR_REPORT_FILE,
+            dir_fd=parent_fd,
+            follow_symlinks=False,
+        )
+        if (
+            not stat.S_ISREG(current.st_mode)
+            or (current.st_dev, current.st_ino) != created_identity
+        ):
+            return False
+        os.unlink(CORRIDOR_REPORT_FILE, dir_fd=parent_fd)
+        os.fsync(parent_fd)
+        try:
+            os.stat(
+                CORRIDOR_REPORT_FILE,
+                dir_fd=parent_fd,
+                follow_symlinks=False,
+            )
+        except FileNotFoundError:
+            pass
+        else:
+            return False
+        parent_after = os.fstat(parent_fd)
+        if (
+            (parent_after.st_dev, parent_after.st_ino) != parent_identity
+            or stat.S_IMODE(parent_after.st_mode) != parent_mode
+        ):
+            return False
+        removed = True
+    except OSError:
+        removed = False
+    finally:
+        if parent_fd >= 0:
+            close_ok = _close_archive_descriptor_v01(parent_fd)
+    return removed and close_ok
+
+
+def _write_corridor_report_archive_once(
+    artifact_dir: Path | None,
+    report: Mapping[str, Any],
+    artifacts: dict[str, Any],
+    *,
+    corridor_json: str,
+    corridor_source: corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01
+    | None,
+) -> str:
+    if report.get("final_status") != STATUS_PASS:
+        return ""
+    if (
+        artifact_dir is None
+        or not corridor_json
+        or type(corridor_source)
+        is not corridor_runtime.AirlineTicketPurchaseCorridorRunReportV01
+    ):
+        return "corridor_report_archive_write_failed"
+    data = corridor_json.encode("utf-8", errors="strict")
+    parent_fd = -1
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    fd = -1
+    parent_identity: tuple[int, int] | None = None
+    parent_mode = -1
+    created_identity: tuple[int, int] | None = None
+    completed = False
+    close_failed = False
+    try:
+        parent_fd = _open_absolute_directory_nofollow_v01(artifact_dir)
+        parent_opened = os.fstat(parent_fd)
+        parent_identity = (parent_opened.st_dev, parent_opened.st_ino)
+        parent_mode = stat.S_IMODE(parent_opened.st_mode)
+        try:
+            os.stat(CORRIDOR_REPORT_FILE, dir_fd=parent_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            pass
+        else:
+            raise OSError
+        fd = os.open(CORRIDOR_REPORT_FILE, flags, 0o600, dir_fd=parent_fd)
+        opened = os.fstat(fd)
+        created_identity = (opened.st_dev, opened.st_ino)
+        entry = os.stat(
+            CORRIDOR_REPORT_FILE,
+            dir_fd=parent_fd,
+            follow_symlinks=False,
+        )
+        if (
+            not stat.S_ISREG(opened.st_mode)
+            or not stat.S_ISREG(entry.st_mode)
+            or created_identity != (entry.st_dev, entry.st_ino)
+            or stat.S_IMODE(opened.st_mode) != 0o600
+        ):
+            raise OSError
+        offset = 0
+        while offset < len(data):
+            written = os.write(fd, data[offset:])
+            if written <= 0:
+                raise OSError
+            offset += written
+        os.fsync(fd)
+        written_stat = os.fstat(fd)
+        if (
+            (written_stat.st_dev, written_stat.st_ino) != created_identity
+            or not stat.S_ISREG(written_stat.st_mode)
+            or written_stat.st_size != len(data)
+        ):
+            raise OSError
+        _close_proven_v01(fd)
+        fd = -1
+        os.fsync(parent_fd)
+        read_flags = os.O_RDONLY
+        if hasattr(os, "O_NOFOLLOW"):
+            read_flags |= os.O_NOFOLLOW
+        fd = os.open(CORRIDOR_REPORT_FILE, read_flags, dir_fd=parent_fd)
+        opened_stat = os.fstat(fd)
+        current_stat = os.stat(
+            CORRIDOR_REPORT_FILE,
+            dir_fd=parent_fd,
+            follow_symlinks=False,
+        )
+        if (
+            (opened_stat.st_dev, opened_stat.st_ino)
+            != (current_stat.st_dev, current_stat.st_ino)
+            or (opened_stat.st_dev, opened_stat.st_ino) != created_identity
+            or not stat.S_ISREG(opened_stat.st_mode)
+            or stat.S_IMODE(opened_stat.st_mode) != 0o600
+            or opened_stat.st_size != len(data)
+        ):
+            raise OSError
+
+        def pairs(items: list[tuple[str, object]]) -> dict[str, object]:
+            result: dict[str, object] = {}
+            for key, value in items:
+                if key in result:
+                    raise ValueError
+                result[key] = value
+            return result
+
+        parsed = json.loads(
+            data.decode("utf-8", errors="strict"),
+            object_pairs_hook=pairs,
+            parse_constant=lambda _value: (_ for _ in ()).throw(ValueError()),
+        )
+        accepted, errors = (
+            corridor_runtime.validate_airline_ticket_purchase_corridor_run_v01(
+                corridor_source,
+            )
+        )
+        if (
+            type(parsed) is not dict
+            or parsed != _json_safe(corridor_source)
+            or accepted is not True
+            or errors != ()
+            or json.dumps(
+                parsed,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ).encode("utf-8")
+            + b"\n"
+            != data
+        ):
+            raise ValueError
+        _prove_corridor_archive_final_v01(
+            artifact_dir,
+            parent_fd,
+            parent_identity,
+            parent_mode,
+            fd,
+            created_identity,
+            data,
+        )
+        _close_proven_v01(fd)
+        fd = -1
+        completed = True
+    except (OSError, TypeError, ValueError, UnicodeError):
+        completed = False
+    finally:
+        if fd >= 0:
+            if not _close_archive_descriptor_v01(fd):
+                close_failed = True
+        if parent_fd >= 0:
+            if not _close_archive_descriptor_v01(parent_fd):
+                close_failed = True
+        if close_failed:
+            completed = False
+        if (
+            not completed
+            and created_identity is not None
+            and parent_identity is not None
+        ):
+            if not _cleanup_owned_corridor_archive_v01(
+                artifact_dir,
+                parent_identity,
+                parent_mode,
+                created_identity,
+            ):
+                close_failed = True
+    if not completed or close_failed:
+        return "corridor_report_archive_write_failed"
+    artifacts[CORRIDOR_REPORT_FILE] = str(artifact_dir / CORRIDOR_REPORT_FILE)
+    return ""
+
+
+def _close_proven_v01(fd: int) -> None:
+    try:
+        _CLOSE(fd)
+    except OSError:
+        pass
+    try:
+        os.fstat(fd)
+    except OSError as error:
+        if error.errno == errno.EBADF:
+            return
+        raise
+    _RAW_CLOSE(fd)
+    try:
+        os.fstat(fd)
+    except OSError as error:
+        if error.errno == errno.EBADF:
+            return
+        raise
+    raise OSError("descriptor_close_unproved")
+
+
+def _open_absolute_directory_nofollow_v01(path: Path) -> int:
+    if (
+        not isinstance(path, Path)
+        or not path.is_absolute()
+        or str(path) != os.path.normpath(str(path))
+    ):
+        raise OSError
+    current = os.open("/", os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+    try:
+        for component in path.parts[1:]:
+            entry = os.stat(component, dir_fd=current, follow_symlinks=False)
+            if not stat.S_ISDIR(entry.st_mode):
+                raise OSError
+            next_fd = os.open(
+                component,
+                os.O_RDONLY
+                | getattr(os, "O_DIRECTORY", 0)
+                | getattr(os, "O_NOFOLLOW", 0),
+                dir_fd=current,
+            )
+            opened = os.fstat(next_fd)
+            if (opened.st_dev, opened.st_ino) != (entry.st_dev, entry.st_ino):
+                _close_proven_v01(next_fd)
+                raise OSError
+            _close_proven_v01(current)
+            current = next_fd
+        return current
+    except Exception:
+        _close_proven_v01(current)
+        raise
 
 
 ROOT_FINAL_ARTIFACT_TYPES = (

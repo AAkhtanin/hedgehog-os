@@ -415,6 +415,197 @@ def test_airline_authorization_references_and_token_metrics_are_safe(tmp_path):
 
 
 @pytest.mark.parametrize(
+    ("domain", "logical_path", "payload"),
+    (
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {
+                "auxiliary_artifact_refs": [
+                    "auxiliary_artifact_ref:provider_response:opaque"
+                ]
+            },
+        ),
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {"output_field": "/airline_artifact_hash"},
+        ),
+        (
+            "airline",
+            "evidence/04-airline-sealed-evidence-adapter-result-v01.json",
+            {"output_field": "/airline_artifact_hash"},
+        ),
+        (
+            "supplier_water_filter",
+            "evidence/01-source.json",
+            {"output_field": "/source_card_hash"},
+        ),
+    ),
+)
+def test_closed_contextual_safe_references_pass_initial_and_reread_scans(
+    tmp_path,
+    monkeypatch,
+    domain,
+    logical_path,
+    payload,
+):
+    context = _context(domain)
+    content = runner.canonical_json_bytes_v01(payload) + b"\n"
+    member = replace(
+        context.safe_members[0],
+        logical_path=logical_path,
+        content_bytes=content,
+    )
+    calls = []
+    original = runner._scan_safe_content
+
+    def recording(value, **kwargs):
+        calls.append((kwargs["domain"], kwargs["logical_path"]))
+        return original(value, **kwargs)
+
+    monkeypatch.setattr(runner, "_scan_safe_content", recording)
+    result = runner.run_sealed_evidence_package_v01(
+        domain=domain,
+        domain_projection=context.domain_projection,
+        kernel_manifest_hash=context.kernel_manifest_hash,
+        safe_members=(member,),
+        output_directory=tmp_path / "package",
+        fixture_disposable=True,
+    )
+    assert result.safe_file_contents == (content,)
+    assert calls == [(domain, logical_path)] * 3
+
+
+@pytest.mark.parametrize(
+    ("domain", "logical_path", "payload"),
+    (
+        (
+            "supplier_water_filter",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {"output_field": "/airline_artifact_hash"},
+        ),
+        (
+            "airline",
+            "evidence/02-airline-source-lineage-v01.json",
+            {"output_field": "/airline_artifact_hash"},
+        ),
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {"other_field": "/airline_artifact_hash"},
+        ),
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {
+                "auxiliary_artifact_refs":
+                    "auxiliary_artifact_ref:provider_response:opaque"
+            },
+        ),
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {
+                "auxiliary_artifact_refs": [
+                    "AUXILIARY_ARTIFACT_REF:PROVIDER_RESPONSE:OPAQUE"
+                ]
+            },
+        ),
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {
+                "auxiliary_artifact_refs": [
+                    "prefix:auxiliary_artifact_ref:provider_response:opaque"
+                ]
+            },
+        ),
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {
+                "auxiliary_observation_refs": [
+                    "auxiliary_artifact_ref:provider_response:opaque:suffix"
+                ]
+            },
+        ),
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {
+                "auxiliary_observation_refs": [
+                    "auxiliary_artifact_ref:provider_respons\uff45:opaque"
+                ]
+            },
+        ),
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {"output_field": "/source_card_hash"},
+        ),
+        (
+            "supplier_water_filter",
+            "evidence/01-source.json",
+            {"output_field": "/airline_artifact_hash"},
+        ),
+        (
+            "airline",
+            "evidence/04-airline-sealed-evidence-adapter-result-v01.json",
+            {"output_field": "/safe_projection_hash"},
+        ),
+        (
+            "airline",
+            "evidence/04-airline-sealed-evidence-adapter-result-v01.json",
+            {"output_field": "/etc/passwd"},
+        ),
+        (
+            "airline",
+            "evidence/04-airline-sealed-evidence-adapter-result-v01.json",
+            {"output_field": "/Users/private/file"},
+        ),
+        (
+            "airline",
+            "evidence/04-airline-sealed-evidence-adapter-result-v01.json",
+            {"output_field": "/airline/artifact/hash"},
+        ),
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {"auxiliary_artifact_refs": ["provider_response:arbitrary"]},
+        ),
+        (
+            "airline",
+            "evidence/03-airline-a2-typed-context-v01.json",
+            {"value": "raw provider response body"},
+        ),
+    ),
+)
+def test_contextual_safe_reference_near_misses_remain_rejected(
+    tmp_path,
+    domain,
+    logical_path,
+    payload,
+):
+    context = _context(domain)
+    member = replace(
+        context.safe_members[0],
+        logical_path=logical_path,
+        content_bytes=runner.canonical_json_bytes_v01(payload) + b"\n",
+    )
+    with pytest.raises(ValueError, match="sealed_evidence_package_runner_invalid"):
+        runner.run_sealed_evidence_package_v01(
+            domain=domain,
+            domain_projection=context.domain_projection,
+            kernel_manifest_hash=context.kernel_manifest_hash,
+            safe_members=(member,),
+            output_directory=tmp_path / "package",
+            fixture_disposable=True,
+        )
+    assert not (tmp_path / "package").exists()
+
+
+@pytest.mark.parametrize(
     "key,value",
     (
         ("contains_raw_prompt", True),

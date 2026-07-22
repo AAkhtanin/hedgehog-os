@@ -112,12 +112,18 @@ RESULT_FIELDS = (
     "status",
 )
 PUBLIC_FUNCTIONS = (
+    "build_airline_sealed_evidence_package_adapter_invocation_v01",
+    "validate_airline_sealed_evidence_package_adapter_invocation_v01",
+    "airline_sealed_evidence_package_adapter_invocation_to_plain_dict_v01",
     "build_airline_safe_execution_projection_v01",
     "validate_airline_safe_execution_projection_v01",
     "airline_safe_execution_projection_to_plain_dict_v01",
     "build_airline_sealed_evidence_package_adapter_result_v01",
     "validate_airline_sealed_evidence_package_adapter_result_v01",
     "airline_sealed_evidence_package_adapter_result_to_plain_dict_v01",
+    "build_airline_sealed_evidence_package_adapter_result_for_invocation_v01",
+    "validate_airline_sealed_evidence_package_adapter_result_for_invocation_v01",
+    "airline_sealed_evidence_package_adapter_result_for_invocation_to_plain_dict_v01",
 )
 
 
@@ -975,9 +981,95 @@ def test_public_surface_is_exact() -> None:
     assert public_classes == (
         "AirlineSafeExecutionProjectionV01",
         "AirlineSealedEvidencePackageAdapterResultV01",
+        "AirlineSealedEvidencePackageAdapterInvocationV01",
     )
     assert public_functions == PUBLIC_FUNCTIONS
     assert "annotations" not in vars(adapter)
+
+
+@pytest.mark.parametrize(
+    ("mode", "provider_mode", "budget", "s1_class", "s2_class", "counts"),
+    (
+        (
+            adapter.INVOCATION_MODE_LOCAL_NONPUBLICATION,
+            "deterministic_fixture",
+            0,
+            "EXECUTED_DETERMINISTIC_RUNTIME",
+            "EXECUTED_DETERMINISTIC_RUNTIME",
+            (0, 0, 0),
+        ),
+        (
+            adapter.INVOCATION_MODE_OFFICIAL_ACCEPTED,
+            "real_provider",
+            12,
+            "EXECUTED_LIVE_RUNTIME",
+            "LIVE_PROVIDER_SAFE_PROJECTION",
+            (12, 12, 12),
+        ),
+    ),
+)
+def test_attempt_04_invocation_modes_are_closed(
+    mode: str,
+    provider_mode: str,
+    budget: int,
+    s1_class: str,
+    s2_class: str,
+    counts: tuple[int, int, int],
+) -> None:
+    invocation = adapter.build_airline_sealed_evidence_package_adapter_invocation_v01(
+        invocation_mode=mode,
+        package_id="package:attempt-04",
+        logical_package_ref="airline/a2/attempt-04",
+        output_directory_ref="airline/a2/attempt-04/package",
+    )
+    assert invocation.attempt_number == 4
+    assert invocation.provider_mode == provider_mode
+    assert invocation.provider_call_budget == budget
+    assert invocation.s1_evidence_class == s1_class
+    assert invocation.s2_evidence_class == s2_class
+    assert (
+        invocation.s1_observed_provider_call_count,
+        invocation.s1_observed_network_call_count,
+        invocation.s1_observed_gemini_call_count,
+    ) == counts
+    assert adapter.validate_airline_sealed_evidence_package_adapter_invocation_v01(
+        invocation
+    ) == ()
+
+
+def test_attempt_04_local_projection_has_no_live_evidence() -> None:
+    context = _context()
+    invocation = adapter.build_airline_sealed_evidence_package_adapter_invocation_v01(
+        invocation_mode=adapter.INVOCATION_MODE_LOCAL_NONPUBLICATION,
+        package_id="package:attempt-04",
+        logical_package_ref="airline/a2/local",
+        output_directory_ref="airline/a2/local/package",
+    )
+    result = adapter.build_airline_sealed_evidence_package_adapter_result_for_invocation_v01(
+        invocation=invocation,
+        **context,
+    )
+    projection = result.domain_projection
+    assert projection.attempt_identity.attempt_number == 4
+    assert projection.attempt_identity.provider_mode == "deterministic_fixture"
+    assert projection.attempt_identity.provider_call_budget == 0
+    assert (
+        projection.source_provider_call_count,
+        projection.source_network_call_count,
+        projection.source_gemini_call_count,
+    ) == (0, 0, 0)
+    assert not any(
+        item.evidence_class in {
+            "EXECUTED_LIVE_RUNTIME",
+            "LIVE_PROVIDER_SAFE_PROJECTION",
+        }
+        for item in (*projection.source_records, *projection.artifact_records)
+    )
+    assert adapter.validate_airline_sealed_evidence_package_adapter_result_for_invocation_v01(
+        result,
+        invocation=invocation,
+        **context,
+    ) == ()
 
 
 @pytest.mark.parametrize("name", PUBLIC_FUNCTIONS)

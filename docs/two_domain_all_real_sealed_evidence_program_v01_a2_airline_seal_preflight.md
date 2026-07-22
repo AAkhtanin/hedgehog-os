@@ -116,10 +116,10 @@ The builder derives `source_variant`, `source_identity_id`, `attempt_number`,
 `official_evidence_eligible`, and empty validation errors. In particular,
 `safe_report_logical_name` is never an argument.
 
-Only `run_airline_a2_local_packageability_v01` accepts this type. The official
-Package/member builder rejects it by exact type before constructing any
-SafeMember. There is no conversion function from this type to the official
-type.
+Only the local packageability Process B path uses this type. The public parent
+API accepts no source object, and the official Package/member builder rejects
+this type by exact type before constructing any SafeMember. There is no
+conversion function from this type to the official type.
 
 The local adapter entry point constructs a valid shared
 `DomainEvidenceProjectionV01` with this exact law:
@@ -268,7 +268,7 @@ The immutable type is `AirlineA2LocalPrecommitPackageInvocationV01`:
 | `invocation_variant` | `Literal["LOCAL_PRECOMMIT_PACKAGE_INVOCATION"]` |
 | `package_invocation_id` | derived 64-character lowercase SHA-256 |
 | `base_head` | strict lowercase 40-character Git hash verified as the current base HEAD |
-| `implementation_content_sha256` | exact ten-path content SHA-256 from Section 9.2 |
+| `implementation_content_sha256` | exact twelve-path content SHA-256 from Section 9.2 |
 | `local_source_identity_id` | exact validated `LOCAL_NONPUBLICATION_SOURCE` identity |
 | `package_id` | deterministically derived exact string |
 | `logical_package_ref` | deterministically derived exact string |
@@ -301,7 +301,7 @@ The immutable type is `AirlineA2LocalCommittedPackageInvocationV01`:
 | `package_invocation_id` | derived 64-character lowercase SHA-256 |
 | `committed_head` | strict lowercase 40-character clean I1 HEAD |
 | `origin_main_head` | strict lowercase 40-character hash exactly equal to `committed_head` |
-| `implementation_content_sha256` | same exact ten-path digest used by the precommit gate |
+| `implementation_content_sha256` | same exact twelve-path digest used by the precommit gate |
 | `local_source_identity_id` | exact validated `LOCAL_NONPUBLICATION_SOURCE` identity |
 | `package_id` | deterministically derived exact string |
 | `logical_package_ref` | deterministically derived exact string |
@@ -1277,20 +1277,35 @@ The Attempt 04 archival slice modifies exactly:
 3. `demo/run_two_domain_airline_all_real_program_v01.py`; and
 4. `tests/test_two_domain_airline_all_real_program_v01_runner.py`.
 
-Only these six paths are authorized for the later A2 implementation pass:
+The exact frozen implementation-content order is:
 
-| Action | Path |
-| --- | --- |
-| CREATE | `hedgehog/domains/airline/sealed_evidence_a2_binding_v01.py` |
-| CREATE | `tests/test_airline_sealed_evidence_a2_binding_v01.py` |
-| CREATE | `demo/run_two_domain_airline_a2_seal_v01.py` |
-| CREATE | `tests/test_two_domain_airline_a2_seal_v01_runner.py` |
-| MODIFY | `hedgehog/domains/airline/sealed_evidence_package_adapter_v01.py` |
-| MODIFY | `tests/test_airline_sealed_evidence_package_adapter_v01.py` |
+1. `demo/run_tri_party_airline_live_semantic_lane_v01.py`
+2. `tests/test_tri_party_airline_live_semantic_lane_v01_runner.py`
+3. `demo/run_two_domain_airline_all_real_program_v01.py`
+4. `tests/test_two_domain_airline_all_real_program_v01_runner.py`
+5. `demo/run_sealed_evidence_package_v01.py`
+6. `tests/test_sealed_evidence_package_v01_runner.py`
+7. `hedgehog/domains/airline/sealed_evidence_a2_binding_v01.py`
+8. `tests/test_airline_sealed_evidence_a2_binding_v01.py`
+9. `demo/run_two_domain_airline_a2_seal_v01.py`
+10. `tests/test_two_domain_airline_a2_seal_v01_runner.py`
+11. `hedgehog/domains/airline/sealed_evidence_package_adapter_v01.py`
+12. `tests/test_airline_sealed_evidence_package_adapter_v01.py`
 
-Together with the four Attempt 04 archival runner/test paths, the pre-live
-implementation scope is exactly ten paths. No eleventh code or test path is
-authorized.
+The pre-live implementation scope is exactly twelve paths. No thirteenth code
+or test path is authorized. The shared Package implementation remains frozen
+except for the closed contextual safe-reference compatibility repair in
+Section 8.1. No general scanner relaxation is authorized.
+
+### 8.1 Closed Shared Package Scanner Compatibility
+
+The shared Package scanner may add only the exact domain/member/key/value
+context exceptions specified by this preflight for the frozen Airline opaque
+response reference, the frozen Airline artifact-hash JSON pointer, and the
+existing Supplier source-card JSON pointer. Absolute filesystem paths,
+arbitrary provider-response values, raw bodies, credentials, secrets, and all
+other JSON pointers remain rejected during both the initial and descriptor-
+reread scans.
 
 ## 9. Local Packageability Owner Mode
 
@@ -1303,7 +1318,7 @@ main(argv: list[str] | None = None) -> int
 run_airline_a2_local_packageability_v01(
     *, gate_phase: Literal["precommit", "committed-head"],
     temporary_root: Path, implementation_content_sha256: str,
-    verified_head: str,
+    verified_head: str, repository_root: Path,
 ) -> AirlineA2LocalPackageabilityResultV01
 ```
 
@@ -1319,8 +1334,9 @@ The exact precommit owner command is:
 PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
   --local-packageability \
   --gate-phase precommit \
+  --repository-root <explicit-absolute-repository-root> \
   --temporary-root <new-absent-absolute-temporary-root> \
-  --implementation-content-sha256 <canonical-ten-file-digest> \
+  --implementation-content-sha256 <canonical-twelve-file-digest> \
   --base-head <exact-base-head>
 ```
 
@@ -1330,8 +1346,9 @@ The exact committed-head owner command is:
 PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
   --local-packageability \
   --gate-phase committed-head \
+  --repository-root <explicit-absolute-repository-root> \
   --temporary-root <new-absent-absolute-temporary-root> \
-  --implementation-content-sha256 <same-canonical-ten-file-digest> \
+  --implementation-content-sha256 <same-canonical-twelve-file-digest> \
   --committed-head <exact-clean-implementation-head>
 ```
 
@@ -1342,7 +1359,9 @@ independently verified against the required repository state. Both phases
 require the same implementation-content SHA-256. `--local-packageability` is
 mutually exclusive with `--package`, `--anchor`, and `--replay`. Duplicate
 options, abbreviations, environment fallbacks, implicit paths, or unknown
-options fail before output.
+options fail before output. The public API and owner CLI require the explicit
+absolute `repository_root`; CWD, module location, and environment cannot supply
+it implicitly.
 
 The parent creates one invocation-owned absent root. In precommit mode it
 launches these exact fresh subprocesses with non-owner internal modes:
@@ -1351,6 +1370,7 @@ launches these exact fresh subprocesses with non-owner internal modes:
 PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
   --_local-process-a \
   --gate-phase precommit \
+  --repository-root <explicit-absolute-repository-root> \
   --temporary-root <owned-root> \
   --synthetic-predecessor-root <owned-root/synthetic-predecessors> \
   --attempt-output <owned-root/attempt-04> \
@@ -1362,6 +1382,7 @@ PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
 PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
   --_local-process-b \
   --gate-phase precommit \
+  --repository-root <same-explicit-absolute-repository-root> \
   --temporary-root <owned-root> \
   --attempt-directory <owned-root/attempt-04> \
   --safe-report <owned-root/safe-report-v01.json> \
@@ -1377,6 +1398,7 @@ In committed-head mode it launches:
 PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
   --_local-process-a \
   --gate-phase committed-head \
+  --repository-root <explicit-absolute-repository-root> \
   --temporary-root <owned-root> \
   --synthetic-predecessor-root <owned-root/synthetic-predecessors> \
   --attempt-output <owned-root/attempt-04> \
@@ -1388,6 +1410,7 @@ PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
 PYTHONPATH=. .venv/bin/python -m demo.run_two_domain_airline_a2_seal_v01 \
   --_local-process-b \
   --gate-phase committed-head \
+  --repository-root <same-explicit-absolute-repository-root> \
   --temporary-root <owned-root> \
   --attempt-directory <owned-root/attempt-04> \
   --safe-report <owned-root/safe-report-v01.json> \
@@ -1523,13 +1546,24 @@ The canonical implementation-content digest is SHA-256 over the domain
 separator
 
 ```text
-hedgehog-os:airline-attempt-04-a2-ten-path-content:v0.1
+hedgehog-os:airline-attempt-04-a2-twelve-path-content:v0.1
 ```
 
-followed by the ordered ten authorized logical path names, a NUL separator,
-the exact byte count as canonical ASCII decimal, another NUL separator, and
-the exact file bytes for each path. The exact order is the four A1 paths
-followed by the six A2 paths in the frozen ten-path scope.
+followed by one NUL byte and, for each path in the exact twelve-path order in
+Section 8, the ASCII logical path, one NUL byte, the canonical ASCII decimal
+byte count, one NUL byte, and the exact file bytes. Normatively:
+
+```text
+SHA256(
+  b"hedgehog-os:airline-attempt-04-a2-twelve-path-content:v0.1\0"
+  + for each ordered path:
+      path_ascii
+      + b"\0"
+      + canonical_ascii_decimal_byte_count
+      + b"\0"
+      + exact_file_bytes
+)
+```
 
 The precommit gate binds this digest without claiming a clean committed head.
 The repeated postcommit gate requires the identical digest, the supplied exact
@@ -1880,7 +1914,7 @@ Airline A2 publication closes.
 ## 15. Commit Boundaries
 
 - `G1`: AGENTS, this corrected A2 preflight, and the Attempt 04 preflight only.
-- `I1`: exactly ten authorized implementation/test paths; focused tests and
+- `I1`: exactly twelve authorized implementation/test paths; focused tests and
   precommit local packageability PASS; no live call or publication.
 - `L1`: repeat local packageability on the clean committed I1 HEAD with the
   identical implementation-content digest and zero repository output.

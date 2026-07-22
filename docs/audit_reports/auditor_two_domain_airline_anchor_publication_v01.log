@@ -1,0 +1,156 @@
+Hedgehog OS Two-Domain All-Real Sealed Evidence Program v0.1
+Independent Airline A2 P1 Package and Anchor Publication Audit
+
+audit_purpose: independently verify the already-created official Airline A2
+Package, adjacent Package index, and EVIDENCE_ONLY Anchor before the indivisible
+P1 owner commit.
+immutable_g2_head: 0ab4cb960459ecda7a020243a9074035d2f6ef1a
+procedural_audit_result: PASS
+owner_flow_result: READY_FOR_P1_OWNER_COMMIT
+
+P1 boundary
+
+The P1 boundary contains exactly eight artifacts: four Package evidence
+members, the Package Manifest, the adjacent Package index, the EVIDENCE_ONLY
+Anchor, and this independent audit record. There is no Package-only commit.
+This audit record is the eighth artifact and is not included in the seven-file
+input inventory that it audits; its final hash and byte count are reported by
+the owner-flow verification after this file is closed.
+
+Audited publication inputs
+
+1. path: docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/01-airline-safe-execution-report-v01.json
+   sha256: 2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7
+   byte_count: 16389
+   mode: 0600
+2. path: docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/02-airline-source-lineage-v01.json
+   sha256: c1562090af6212c66d7a7e23cfe82f31d84fa0e6bc0fc734f9c68d1e287b3555
+   byte_count: 4529
+   mode: 0600
+3. path: docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/03-airline-a2-typed-context-v01.json
+   sha256: b8418e89e2d2b67a40ac83d255c976fdfbffefa3afabe6be774456bc0ff8a4aa
+   byte_count: 1126349
+   mode: 0600
+4. path: docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/04-airline-sealed-evidence-adapter-result-v01.json
+   sha256: 26c0688c1ba46266604dd91b58991c1211de1642fca36128b6c42bcf1b293a70
+   byte_count: 97393
+   mode: 0600
+5. path: docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/sealed_package_manifest_v01.json
+   sha256: 691d39788df1738d0cd8698b5174ccdee36bf42c173582e089a6dbcf3bb074fe
+   byte_count: 5305
+   mode: 0600
+6. path: docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_package_index_v01.json
+   sha256: 333ee37ee3c5d85fb1158b4ad663f6464138fa2252007630f1bf2a4eae44cb25
+   byte_count: 7907
+   mode: 0600
+7. path: docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_crypto_anchor_v01.json
+   sha256: c551963a060f33d0407c4590db97ff4482277de7ac33b0c4fdd9ad1ed2d3d13c
+   byte_count: 1494
+   mode: 0600
+8. path: docs/audit_reports/auditor_two_domain_airline_anchor_publication_v01.log
+   role: independent P1 Package and Anchor publication audit record
+
+Package geometry and identities
+
+source_variant: OFFICIAL_ACCEPTED_SOURCE
+package_invocation_variant: OFFICIAL_PACKAGE_INVOCATION
+fixture_disposable: false
+safe_file_count: 4
+safe_file_order:
+  1. evidence/01-airline-safe-execution-report-v01.json
+  2. evidence/02-airline-source-lineage-v01.json
+  3. evidence/03-airline-a2-typed-context-v01.json
+  4. evidence/04-airline-sealed-evidence-adapter-result-v01.json
+manifest_written_after_members: true
+manifest_excluded_from_four_row_safe_file_inventory: true
+source_identity_id: 55bf90dbb159e46fd4ebaa575cd20f0c7d571d38d51282f7f7c985050b998390
+package_invocation_id: b38f7653d03328cb0efde071357da81de1326b9677982f05af133ce7978565c6
+package_id: airline_a2_official_package:55bf90dbb159e46fd4ebaa575cd20f0c7d571d38d51282f7f7c985050b998390:0ab4cb960459ecda7a020243a9074035d2f6ef1a
+logical_package_ref: airline/a2/official/attempt-04/55bf90dbb159e46fd4ebaa575cd20f0c7d571d38d51282f7f7c985050b998390/0ab4cb960459ecda7a020243a9074035d2f6ef1a
+typed_context_id: 80bd6e8485954e7e7b7fd5640f0b688e1f59ac65a528e57d4a81166d79a1844d
+adapter_projection_id: 1f6152200aeb9eebe3fe57e98c90a644003e8caac954e6d011c4414d903c2d77
+adapter_result_id: cc2449f0138940fc0a60f6f6281fc5319673fc0779faf282e3ee664f279a0379
+domain_projection_id: 1de80360cc04afe627c3387f111315bf78f122aac0379b6860902d184a21627c
+index_id: 6314b619a99d03b9a32e5a3cd581f1f28e487e2677b42a3b7e2d88d2ba12375d
+manifest_id: 7b98bcbc23a0148a83c9b2d459f9d0ae35d9161c90a2938620c529e84049b8ee
+package_content_hash: 3d8aa5aab285ead0320acf29cd3bd0e791faf6e4ba7b4c7e5b67c268d0e0a248
+package_status: SELF_CONSISTENT_UNANCHORED
+index_status: SELF_CONSISTENT_UNANCHORED
+validation_errors: []
+
+SafeFile record identities
+
+1. c0595fd1c80c8ae3373911ea0137579f65c32ed4c32213754d5477b04f441b4a
+2. b7005359c286b771d9bba4b1b8cdc81e6da55042897fddc474d649f33a9eac86
+3. c185ab38e235477ee47c18c61c65c1f13e9807198ba17443bde9bed5672f30c3
+4. a3674e547e7ce3436bbf6c097dcfd0c72042afebddaa3673041d22517beb6f1b
+
+Anchor validation
+
+publication_base_head: 0ab4cb960459ecda7a020243a9074035d2f6ef1a
+anchor_publication_id: 5c198968c12f30ffa3e4e06739d889d69665017c56020686f200bbe2e89dec99
+anchor_status: EVIDENCE_ONLY
+anchor_validation_errors: []
+manifest_binding_verified: true
+package_binding_verified: true
+index_binding_verified: true
+ANCHORED_PASS_claimed_at_P1: false
+
+Fresh matching ANCHORED_PASS verification is intentionally not performed or
+claimed at P1. That verification belongs to P2 immediately before Replay.
+
+Read-only validation evidence
+
+- Every input was descriptor-read with no-follow regular-file checks and
+  stable entry identity checks.
+- Every JSON document passed strict UTF-8 decoding, duplicate-key rejection,
+  non-finite-number rejection, canonical serialization, and the one-terminal-LF
+  rule. No NUL or CR was present.
+- Every SafeFile content hash, byte count, logical path, terminal-newline flag,
+  and secret-scan flag matched the Manifest and index.
+- The committed production Package loader validated the Package, Manifest,
+  index, adapter result, and DomainEvidenceProjection against descriptor-reread
+  bytes.
+- Direct validate_airline_a2_typed_context_v01 validation returned no reason
+  codes. Its typed-context ID and member hash matched the index and Manifest.
+- The previous failed audit attempt used an invalid audit-side nested hydrator.
+  No publication artifact failed that check. The production loader and direct
+  typed-context API confirm the publication artifacts are unchanged and valid.
+- The committed production Anchor validator accepted the stored Anchor against
+  the exact descriptor-reread Package, Manifest, index, domain projection, and
+  four member contents.
+- Package, Anchor, Replay, provider, network, Gemini, publication, and effect
+  owner operations invoked during this audit: 0 / 0 / 0 / 0 / 0 / 0 / 0 / 0.
+
+Focused zero-network validation
+
+Environment:
+  PYTHONBREAKPOINT=0
+  PYTHONDONTWRITEBYTECODE=1
+  PYTHONPATH=.
+
+Command:
+  .venv/bin/python -m pytest -q
+  tests/test_sealed_evidence_package_v01_runner.py
+  tests/test_sealed_evidence_anchor_v01_runner.py
+  tests/test_sealed_evidence_replay_v01_runner.py
+  tests/test_airline_sealed_evidence_a2_binding_v01.py
+  tests/test_two_domain_airline_a2_seal_v01_runner.py
+  tests/test_airline_crypto_artifact_seal_v01.py
+  tests/test_airline_sealed_trace_replay_v01.py
+
+Result: 837 passed in 24.82s; 0 failed; 0 skipped; 0 xfailed.
+
+Boundary conclusions
+
+- Package and index remain SELF_CONSISTENT_UNANCHORED.
+- Anchor remains EVIDENCE_ONLY.
+- Replay output is absent and Replay was not invoked.
+- Replay audit, Human Story, and checkpoint closure remain P2 work.
+- No private Attempt directory or private body was inspected.
+- No credential, raw prompt, raw provider response, or private material is
+  included in this record.
+- No tracked repository file changed during the audit.
+- The procedural audit result is PASS and the owner-flow result is
+  READY_FOR_P1_OWNER_COMMIT. These are audit workflow results, not new frozen
+  schema fields or a claim of ANCHORED_PASS.

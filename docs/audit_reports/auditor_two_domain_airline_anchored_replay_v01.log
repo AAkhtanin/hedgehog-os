@@ -1,0 +1,107 @@
+Hedgehog OS Two-Domain All-Real Sealed Evidence Program v0.1
+Independent Airline A2 P2 Anchored Replay Audit
+
+audit_purpose: independently validate the already-created official Replay
+against the exact committed P1 Package, index, Manifest, Anchor, and P1 audit.
+procedural_audit_result: PASS
+owner_flow_result: READY_FOR_P2_OWNER_COMMIT
+
+Committed P1 boundary
+
+p1_head: 6bf4b837e21be34a8828b5a8a1eb987cf945f839
+index_id: 6314b619a99d03b9a32e5a3cd581f1f28e487e2677b42a3b7e2d88d2ba12375d
+manifest_id: 7b98bcbc23a0148a83c9b2d459f9d0ae35d9161c90a2938620c529e84049b8ee
+package_content_hash: 3d8aa5aab285ead0320acf29cd3bd0e791faf6e4ba7b4c7e5b67c268d0e0a248
+anchor_publication_id: 5c198968c12f30ffa3e4e06739d889d69665017c56020686f200bbe2e89dec99
+package_status: SELF_CONSISTENT_UNANCHORED
+index_status: SELF_CONSISTENT_UNANCHORED
+stored_anchor_status: EVIDENCE_ONLY
+
+The production read-only Package loader revalidated the exact four Package
+members, Manifest, adjacent index, source identity, invocation identity,
+typed-context identity, adapter result and projection, DomainEvidenceProjection,
+SafeFile rows, and package-content hash from committed P1 bytes.
+
+P1 byte continuity
+
+- docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_crypto_anchor_v01.json
+  sha256: c551963a060f33d0407c4590db97ff4482277de7ac33b0c4fdd9ad1ed2d3d13c
+- docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_package_index_v01.json
+  sha256: 333ee37ee3c5d85fb1158b4ad663f6464138fa2252007630f1bf2a4eae44cb25
+- docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/01-airline-safe-execution-report-v01.json
+  sha256: 2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7
+- docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/02-airline-source-lineage-v01.json
+  sha256: c1562090af6212c66d7a7e23cfe82f31d84fa0e6bc0fc734f9c68d1e287b3555
+- docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/03-airline-a2-typed-context-v01.json
+  sha256: b8418e89e2d2b67a40ac83d255c976fdfbffefa3afabe6be774456bc0ff8a4aa
+- docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/04-airline-sealed-evidence-adapter-result-v01.json
+  sha256: 26c0688c1ba46266604dd91b58991c1211de1642fca36128b6c42bcf1b293a70
+- docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/sealed_package_manifest_v01.json
+  sha256: 691d39788df1738d0cd8698b5174ccdee36bf42c173582e089a6dbcf3bb074fe
+- docs/audit_reports/auditor_two_domain_airline_anchor_publication_v01.log
+  sha256: 1cfea24a111d226371a53be0d8c3eaa1d83d7ee53677b5c661b44512b21ca2cd
+
+All listed P1 bytes matched their committed identities before and after the
+Replay audit. No P1 artifact was rewritten.
+
+Replay evidence
+
+path: docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_replay_report_v01.json
+sha256: 9caa9361746660c08b8e20f75bba5e5f07336e8dfbf0ab744ec98e1d346dac39
+byte_count: 4148
+mode: 0600
+replay_id: 4b04d59c237d82ef1d87a3dc9b21170db1da5e91da2d862fd1ec5ad96f56f0b2
+owner_result_final_status: PASS
+replay_status: PASS
+supplied_anchor_publication_id: 5c198968c12f30ffa3e4e06739d889d69665017c56020686f200bbe2e89dec99
+fresh_verification_status: ANCHORED_PASS
+stored_anchor_status: EVIDENCE_ONLY
+replay_validation_errors: []
+
+The Replay document passed strict UTF-8 decoding, duplicate-key rejection,
+non-finite-number rejection, exact canonical JSON serialization, the single
+terminal-LF law, NUL and CR rejection, and descriptor-bound regular-file
+identity checks. The committed production validators accepted its stored
+anchored verification and Replay evidence against the exact descriptor-reread
+P1 bytes. Source and reconstructed Package, Manifest, domain projection,
+SafeFile, file-order, artifact-order, and package-content bindings matched.
+
+The Replay report was snapshotted before audit work and remained byte-identical
+through final validation. The owner-reported second Replay wrapper returned
+code 95 at its existing-output guard. It did not invoke Replay and made no
+write; unchanged descriptor identity and bytes corroborate that guarded no-op.
+
+Focused zero-network validation
+
+Environment:
+  PYTHONBREAKPOINT=0
+  PYTHONDONTWRITEBYTECODE=1
+  PYTHONPATH=.
+
+Command:
+  .venv/bin/python -m pytest -q
+  tests/test_sealed_evidence_package_v01_runner.py
+  tests/test_sealed_evidence_anchor_v01_runner.py
+  tests/test_sealed_evidence_replay_v01_runner.py
+  tests/test_airline_sealed_evidence_a2_binding_v01.py
+  tests/test_two_domain_airline_a2_seal_v01_runner.py
+  tests/test_airline_crypto_artifact_seal_v01.py
+  tests/test_airline_sealed_trace_replay_v01.py
+
+Result: 837 passed in 24.68s; 0 failed; 0 skipped; 0 xfailed.
+
+Operation boundaries
+
+Package owner operations during audit: 0
+Anchor owner operations during audit: 0
+Replay owner operations during audit: 0
+provider calls during audit: 0
+network calls during audit: 0
+Gemini calls during audit: 0
+real-world effects during audit: 0
+
+No raw prompt, raw provider response, credential, private path, or private
+Attempt material was read into or included in this record. Fresh verification
+is an integrity match, not authority, payment, booking, ticket issuance, or a
+real-world effect. This procedural audit PASS is an owner-flow result, not a
+new audit schema status or disposition.

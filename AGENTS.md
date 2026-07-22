@@ -58,63 +58,54 @@ The current MVP focus is:
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
 Current checkpoint: Hedgehog OS Two-Domain All-Real Sealed Evidence Program
-v0.1 Airline A2 G2 accepted-source freeze `READY_FOR_OWNER_COMMIT`.
+v0.1 Airline A2 Package -> Anchor -> Replay publication `CLOSED_PASS`; P2
+checkpoint closure is `READY_FOR_OWNER_COMMIT`.
 
-Current Airline A1/A2 governance facts:
+Current Airline A1/A2 closure facts:
 
-- Accepted Attempt 04 execution head:
-  `71764c8b41f26e94b9cfdc1e821f7d8e15df4149`.
-- Attempt 04 execution remains `final_status=PASS` with empty failed stage and
-  reason code. The audit did not rewrite execution evidence.
-- The governance transition is `PASS_PENDING_INDEPENDENT_AUDIT` to
-  `CLOSED_PASS`.
-- Independent audit disposition is
-  `ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE`.
-- G2 accepted-source freeze is `READY_FOR_OWNER_COMMIT` and changes no accepted
-  source evidence, implementation, validator, adapter, runner, or test.
+- Accepted Attempt 04 execution head is
+  `71764c8b41f26e94b9cfdc1e821f7d8e15df4149`; its execution status remains
+  `PASS` and its independent audit remains `CLOSED_PASS`.
 - Attempt 04 attempt ID is
   `b8fd88780d581c985006c2df1b4cc4eaa90d99579d22f5545345ea8a35397068`.
 - Attempt 04 safe execution ID is
   `2343b0f619620a85b5857e653f251034dbedcae418a7e4280a18d8e383e7bac6`.
-- Attempt 04 private inventory contains exactly 73 verified rows with digest
-  `0bf5490ad2896ecda1568fccf0c6a7137d5082bc26af09e679489d6992b4a133`.
-- The complete archived Corridor report passed the committed production
-  validator and exact canonical-byte, typed, Ledger, Crypto, gate, and public
-  projection checks.
-- The distinct Attempt 04 safe report is immutable accepted public source
-  evidence with SHA-256
-  `2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7`.
-- The independent audit is
-  `docs/audit_reports/auditor_two_domain_airline_all_real_generation_attempt_04_v01.log`.
-- The committed source-evidence closure head is
-  `18f7e66c5840a5f93b09af27bd061898921ee32d`; it is distinct from the source
-  execution head. The future Package publication-base head is the clean commit
-  containing the G2 freeze and is distinct from both.
+- Attempt 04 is accepted for A2 with disposition
+  `ACCEPT_FOR_A2_AIRLINE_SEAL_WITH_BOUNDED_NON_EFFECT_SCOPE`.
+- The P1 committed head is
+  `6bf4b837e21be34a8828b5a8a1eb987cf945f839`.
+- Package index ID is
+  `6314b619a99d03b9a32e5a3cd581f1f28e487e2677b42a3b7e2d88d2ba12375d`.
+- Manifest ID is
+  `7b98bcbc23a0148a83c9b2d459f9d0ae35d9161c90a2938620c529e84049b8ee`.
+- Package content hash is
+  `3d8aa5aab285ead0320acf29cd3bd0e791faf6e4ba7b4c7e5b67c268d0e0a248`.
+- Package and index remain `SELF_CONSISTENT_UNANCHORED`.
+- Stored Anchor publication ID is
+  `5c198968c12f30ffa3e4e06739d889d69665017c56020686f200bbe2e89dec99`;
+  its stored status remains `EVIDENCE_ONLY`.
+- Fresh matching verification is `ANCHORED_PASS` without rewriting the stored
+  Anchor.
+- Replay ID is
+  `4b04d59c237d82ef1d87a3dc9b21170db1da5e91da2d862fd1ec5ad96f56f0b2`;
+  Replay status is `PASS`.
+- The independent Replay audit is
+  `docs/audit_reports/auditor_two_domain_airline_anchored_replay_v01.log`.
+- The public-safe Human Story is
+  `docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_human_story_v01.md`.
+- Package, Anchor, Replay, and both P1/P2 audits made zero provider, network,
+  Gemini, or real-world-effect calls.
+- The second owner Replay block was a guarded no-op because the Replay output
+  already existed. It did not invoke Replay or change the accepted output.
 - Attempts 01 and 02 remain immutable `FAIL_CLOSED` evidence. Attempt 03
-  remains immutable genuine `CLOSED_PASS` evidence and remains
-  `A2_SOURCE_INCOMPLETE` only for packaging-source sufficiency.
-- Attempt 04 is the sole accepted content source for official Airline A2;
-  Attempt 03 is predecessor lineage only.
-- Source call geometry is 12 ordered callbacks, 12 starts, 12 completions,
-  and `12 / 12 / 12` provider/network/Gemini calls with one collector, one
-  Corridor execution, one Ledger collection, one Crypto collection, zero
-  duplicates, zero retries, zero fallbacks, and zero real-world effects.
-- Audit-time provider, network, Gemini, live runner, Package, Anchor, Replay,
-  publication, and effect operations were all zero.
-- Focused evidence is `612` affected tests, `1356` expanded
-  Package/Anchor/Replay/A1/A2 tests, and `1211` frozen
-  Corridor/Ledger/Crypto/Replay/Kernel compatibility tests, all passing with
-  zero skips and zero xfails.
-- Package, package index, Anchor, Replay, payment, booking, ticket issuance,
-  publication authority, and real-world effects remain absent. Official A2
-  Package construction has not started.
-- Gate 1 and R1 remain `CLOSED_PASS` for their frozen contracts. Supplier
-  remains prohibited until Airline A2 publication closure.
+  remains immutable genuine `CLOSED_PASS` evidence and `A2_SOURCE_INCOMPLETE`
+  only for packaging-source sufficiency.
+- Gate 1, R1, accepted Attempt 04, and Airline A2 publication are closed under
+  their bounded non-effect contracts. This is not a production claim.
 
-Current next owner operation after the clean G2 commit:
-one official Airline A2 Package construction, followed by Anchor under the
-frozen P1 publication boundary. Package, Anchor, and Replay remain unexecuted
-and absent until their respective owner gates.
+Current next owner-reviewed programme gate:
+`two_domain_all_real_sealed_evidence_program_v01_s1_supplier_live`.
+Supplier execution has not started.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

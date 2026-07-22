@@ -58,44 +58,51 @@ The current MVP focus is:
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
 Current checkpoint: Hedgehog OS Two-Domain All-Real Sealed Evidence Program
-v0.1 Supplier Water Filter S1 generation `CLOSED_PASS`.
+v0.1 Supplier Water Filter S2 Negative Matrix `CLOSED_PASS`.
 
-Current Supplier Water Filter S1 facts:
+Current Supplier Water Filter S1/S2 facts:
 
-- Accepted execution head is
-  `e1fe7bfc44fe482814b1957840b6d8c434cad5c6` and execution status is `PASS`.
-- Independent audit status is `CLOSED_PASS` with disposition
-  `ACCEPT_FOR_S2_SUPPLIER_NEGATIVE_MATRIX_WITH_BOUNDED_NON_EFFECT_SCOPE`.
-- Accepted public safe report is
-  `docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json`.
-- Accepted public safe report SHA-256 is
-  `293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666`.
-- Independent generation audit is
-  `docs/audit_reports/auditor_two_domain_supplier_water_filter_generation_v01.log`.
-- The accepted live geometry is six callbacks, six starts, six completions,
-  six provider calls, six network calls, six Gemini calls, and zero
-  real-world effects.
-- The accepted actor order contains the frozen six Supplier semantic actors;
-  all six actor validations passed.
-- S-N1 accepted `NOT_READY`, Supplier B `BLOCKED`, and shipment `HELD`.
-- S-C1 accepted fresh corrected validation and
-  `SUPPLIER_A_SCOPED_REVIEW_READY` without another provider call.
-- S-P1 accepted scoped human approval as evidence only and one Root-created
-  Supplier A packet; Supplier B and shipment release remained excluded.
-- S-P2 accepted only the scoped Supplier A mock-payment path, with an
-  `EVIDENCE_ONLY` receipt and no real payment or shipment release.
-- S-M1 accepted technical conformance `PASS`, Supplier A bounded mock-path
-  `PASS`, Supplier B `BLOCKED`, shipment `HELD`, and business outcome `MIXED`.
-- Retry, fallback, duplicate-call, payment, shipment-release, and real-world
-  effect counts remain zero.
-- Airline A1/A2 publication remains closed under its bounded non-effect
-  contract. This Supplier checkpoint is also not a production claim.
-- Supplier Package, Anchor, and Replay remain future S3 operations and were
-  not executed by S1 or this audit.
+- Supplier S1 remains `CLOSED_PASS`. Its accepted execution head is
+  `e1fe7bfc44fe482814b1957840b6d8c434cad5c6`, its accepted public report
+  SHA-256 is
+  `293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666`,
+  and its independent generation audit remains accepted.
+- The S2 gate is
+  `two_domain_all_real_sealed_evidence_program_v01_s2_supplier_negative_matrix`.
+- The S2 execution and independent focused review status are `CLOSED_PASS`.
+- The S2 review disposition follows the committed preflight: all negative
+  evidence is frozen after every row validated and before S3 Package
+  collection; it is accepted for the next owner-reviewed gate.
+- Official S2 evidence is
+  `docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_water_filter_negative_matrix_v01.json`.
+- Official S2 SHA-256 is
+  `8d59848127872cc813d5941f4cce587155eadc5c50ea916c07487687d4ce9969`.
+- S2 result ID is
+  `9dcf7b78e99a391a64f39a961fbfa0f2e50482fdd9a9e970e68114f369fbcce9`.
+- Frozen Supplier adapter result ID is
+  `d3a235c3614d122b17dd785c019e6bf7b93c4029d5d0058b429a353366030499`.
+- Frozen Supplier scenario index ID is
+  `b6ec902f266043bdef7f08ef73371fb1e5752aa84b5e87056be03b62953af20c`.
+- Exact row order is `S-N1`, `S-N2`, `S-C1`, `S-P1`, `S-P2`, `S-F1`,
+  `S-F2`, `S-F3`, `S-M1`: nine rows, five preserved S1 rows, four negative
+  rows, and fifteen unique validator probes.
+- S-N2, S-F1, S-F2, and S-F3 were executed through committed public
+  production validators. Every attacked object failed closed and every
+  rejection proof passed with the required stable reasons.
+- Inherited S1 provider/network/Gemini counts are `6 / 6 / 6`. S2-local
+  provider/network/Gemini/effect counts are `0 / 0 / 0 / 0`; S2 collector,
+  duplicate-live-source, and retry counts are also zero.
+- Supplier B remains `BLOCKED`, shipment remains `HELD`, and receipt status
+  remains `EVIDENCE_ONLY`. No authority, permission, real payment, shipment
+  release, or real-world effect was created.
+- Focused S2 validation passed `136` tests and the frozen Supplier sealed
+  adapter validation passed `209` tests, with zero skipped and zero xfailed.
+- Supplier Package, Anchor, Replay, S3 audits, and Human Story have not
+  started. This checkpoint remains bounded non-effect evidence, not a
+  production claim.
 
 Current next owner-reviewed programme gate:
-`two_domain_all_real_sealed_evidence_program_v01_s2_supplier_negative_matrix`.
-S2 implementation has not started.
+`two_domain_all_real_sealed_evidence_program_v01_s3_supplier_seal`.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

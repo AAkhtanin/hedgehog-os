@@ -1,6 +1,27 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
+from datetime import date
+from decimal import Decimal, InvalidOperation
+import re
+from types import MappingProxyType
+import unicodedata
+
+from hedgehog.kernel.integrity_replay_v01 import (
+    canonical_json_bytes_v01,
+    domain_separated_sha256_hex_v01,
+)
+from hedgehog.kernel.root_decision_v01 import (
+    RootDecisionInputV01,
+    RootDecisionKernelV01,
+    RootDecisionResultV01,
+    root_decision_input_to_plain_dict_v01,
+    root_decision_result_to_plain_dict_v01,
+    validate_root_decision_input_v01,
+    validate_root_decision_kernel_v01,
+    validate_root_decision_result_v01,
+)
 
 
 SUBJECT_SUPPLIER_A = "supplier_a_adriatic_filters"
@@ -169,6 +190,7 @@ class AdapterBindingV02:
     adapter_id: str
     adapter_kind: str = "mock_bank"
     real_adapter: bool = False
+    adapter_version: str | None = None
 
 
 @dataclass(frozen=True)
@@ -956,3 +978,4977 @@ def build_supplier_a_packet_corridor_validation_fixture_v02() -> tuple[
     step = build_supplier_a_corridor_step_fixture_v01(packet)
     registry = build_empty_action_commit_packet_registry_v02()
     return packet, corridor, step, registry
+
+
+# G2-A1A pure canonical-profile foundations. These contracts are additive and
+# do not change the legacy V02 packet, validators, or proof-only Registry.
+
+CanonicalMaterialV01 = tuple[tuple[str, object], ...]
+
+INT64_MIN_V01 = -(2**63)
+INT64_MAX_V01 = 2**63 - 1
+CANONICAL_DECIMAL_REGEX_V01 = (
+    r"(?:0|-?(?:0\.[0-9]*[1-9]|[1-9][0-9]*(?:\.[0-9]*[1-9])?))"
+)
+LEGACY_PLAIN_DECIMAL_INPUT_REGEX_V01 = (
+    r"-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?"
+)
+UTC_TIMESTAMP_COMPATIBILITY_REGEX_V01 = (
+    r"[0-9]{4}-[0-9]{2}-[0-9]{2}T"
+    r"[0-9]{2}:[0-9]{2}:[0-9]{2}(?:Z|\+00:00)"
+)
+LOWERCASE_SHA256_REGEX_V01 = r"[0-9a-f]{64}"
+CANONICAL_TOKEN_REGEX_V01 = r"[a-z][a-z0-9_]*"
+
+ABSENT_V01 = MappingProxyType({"$hedgehog_absent": "ABSENT_V01"})
+
+ACTION_SUBJECT_SCOPE_PROFILE_ID_V01 = "action_subject_scope_profile_v01"
+ACTION_TARGET_SCOPE_PROFILE_ID_V01 = "action_target_scope_profile_v01"
+ACTION_PERMISSION_SCOPE_PROFILE_ID_V01 = "action_permission_scope_profile_v01"
+ACTION_EFFECT_PARAMETERS_PROFILE_ID_V01 = "action_effect_parameters_profile_v01"
+ACTION_ADAPTER_BINDING_PROFILE_ID_V01 = "action_adapter_binding_profile_v01"
+ACTION_DEPENDENCY_SET_CANDIDATE_PROFILE_ID_V01 = (
+    "action_dependency_set_candidate_v01"
+)
+ACTION_TEMPORAL_AUTHORITY_PROFILE_ID_V01 = (
+    "action_temporal_authority_profile_v01"
+)
+ACTION_AUTHORITY_POLICY_PROFILE_ID_V01 = "action_authority_policy_profile_v01"
+ACTION_BUSINESS_OBJECT_IDENTITY_PROFILE_ID_V01 = (
+    "action_business_object_identity_profile_v01"
+)
+ACTION_CONSEQUENTIAL_EFFECT_PARAMETERS_PROFILE_ID_V01 = (
+    "action_consequential_effect_parameters_profile_v01"
+)
+
+ACTION_EFFECT_PARAMETERS_DOMAIN_V01 = "HEDGEHOG_ACTION_EFFECT_PARAMETERS_V01"
+ACTION_DEPENDENCY_SET_CANDIDATE_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_DEPENDENCY_SET_CANDIDATE_V01"
+)
+PACKET_DEPENDENCY_ACCEPTANCE_BINDING_DOMAIN_V01 = (
+    "HEDGEHOG_PACKET_DEPENDENCY_ACCEPTANCE_BINDING_V01"
+)
+ACTION_TEMPORAL_AUTHORITY_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_TEMPORAL_AUTHORITY_V01"
+)
+ACTION_AUTHORITY_POLICY_DOMAIN_V01 = "HEDGEHOG_ACTION_AUTHORITY_POLICY_V01"
+ROOT_LOGICAL_EFFECT_INTENT_DOMAIN_V01 = (
+    "HEDGEHOG_ROOT_OWNED_LOGICAL_EFFECT_INTENT_V01"
+)
+ACTION_IDEMPOTENCY_DOMAIN_V01 = "HEDGEHOG_ACTION_IDEMPOTENCY_KEY_V01"
+ROOT_PACKET_AUTHORIZATION_CANDIDATE_DOMAIN_V01 = (
+    "HEDGEHOG_ROOT_BOUND_PACKET_AUTHORIZATION_CANDIDATE_V01"
+)
+ACTION_COMMIT_PACKET_ID_DOMAIN_V01 = "HEDGEHOG_ACTION_COMMIT_PACKET_ID_V01"
+ACTION_SOURCE_ROOT_DECISION_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_SOURCE_ROOT_DECISION_V01"
+)
+ACTION_LOGICAL_TIME_BRIDGE_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_LOGICAL_TIME_BRIDGE_V01"
+)
+
+ROOT_LOGICAL_INTENT_PREFIX_V01 = "root_logical_intent_v01:"
+ACTION_IDEMPOTENCY_PREFIX_V01 = "idem:action_v01:"
+ROOT_PACKET_AUTHORIZATION_PREFIX_V01 = "root_packet_authorization_v01:"
+ACTION_COMMIT_PACKET_ID_PREFIX_V01 = "acp_v02:"
+PACKET_DEPENDENCY_ACCEPTANCE_PREFIX_V01 = (
+    "packet_dependency_acceptance_v01:"
+)
+PRE_G2A_ADAPTER_VERSION_V01 = "pre_g2a_adapter_contract_v01"
+EFFECT_FIREWALL_VOCABULARY_PROJECTION_PROFILE_ID_V01 = (
+    "effect_firewall_vocabulary_projection_v01"
+)
+ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01 = (
+    "PACKET_AUTHORIZATION"
+)
+
+TEMPORAL_OUTCOME_NOT_YET_VALID_V01 = "NOT_YET_VALID"
+TEMPORAL_OUTCOME_VALID_V01 = "TEMPORALLY_VALID"
+TEMPORAL_OUTCOME_EXPIRED_V01 = "EXPIRED"
+
+EFFECT_PARAMETER_VALUE_TYPES_V01 = (
+    "TEXT",
+    "DECIMAL",
+    "INTEGER",
+    "BOOLEAN",
+    "REFERENCE",
+)
+DEPENDENCY_REQUIREMENT_CLASSES_V01 = ("MANDATORY", "OPTIONAL")
+AUTHORITY_RETRY_POLICIES_V01 = ("NO_RETRY", "NON_CONSUMING_RETRY")
+AUTHORITY_SUPERSESSION_POLICIES_V01 = ("ROOT_DECISION_ONLY",)
+RESERVED_CONSEQUENTIAL_PARAMETER_NAMES_V01 = (
+    "amount_decimal",
+    "currency_code",
+    "quantity_decimal",
+)
+
+_LEGACY_FIREWALL_VOCABULARY_V01 = MappingProxyType(
+    {
+        ("adapter", ADAPTER_MOCK_BANK_SANDBOX): (
+            "mock_adapter:mock_bank_sandbox"
+        ),
+        ("adapter", ADAPTER_BANK_A_MOCK): "mock_adapter:bank_a_mock",
+        ("action", ACTION_MOCK_SUPPLIER_A_PAYMENT_INTENT): (
+            "mock_action:mock_supplier_a_payment_intent"
+        ),
+        ("action", ACTION_MOCK_SUPPLIER_A_PAYMENT_ORDER): (
+            "mock_action:mock_supplier_a_payment_order"
+        ),
+    }
+)
+_NEVER_MAP_LEGACY_IDENTIFIERS_V01 = (
+    ADAPTER_REAL_BANK,
+    ADAPTER_REAL_SUPPLIER_API,
+    ADAPTER_REAL_WAREHOUSE_API,
+    ACTION_REAL_PAYMENT,
+    ACTION_REAL_BANK_TRANSFER,
+    ACTION_SHIPMENT_RELEASE,
+    ACTION_SUPPLIER_B_PAYMENT,
+)
+
+
+@dataclass(frozen=True)
+class CanonicalExecutionTimeV01:
+    value: int
+
+
+@dataclass(frozen=True)
+class ActionSubjectScopeProfileV01:
+    included_subject_refs: tuple[str, ...]
+    excluded_subject_refs: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class ActionTargetScopeProfileV01:
+    included_target_refs: tuple[str, ...]
+    excluded_target_refs: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class ActionPermissionScopeProfileV01:
+    allowed_action_classes: tuple[str, ...]
+    forbidden_action_classes: tuple[str, ...]
+    allowed_adapter_ids: tuple[str, ...]
+    forbidden_adapter_ids: tuple[str, ...]
+    required_approval_refs: tuple[str, ...]
+    prohibited_effect_classes: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class ActionEffectParameterRecordV01:
+    parameter_name: str
+    value_type: str
+    value: str | int | bool
+
+
+@dataclass(frozen=True)
+class ActionEffectParametersProfileV01:
+    effect_class: str
+    parameter_records: tuple[ActionEffectParameterRecordV01, ...]
+
+
+@dataclass(frozen=True)
+class ActionAdapterBindingProfileV01:
+    corridor_class: str
+    adapter_id: str
+    adapter_kind: str
+    adapter_version: str
+    mock_only: bool = True
+
+
+@dataclass(frozen=True)
+class DependencySetCandidateRecordV01:
+    dependency_id: str
+    dependency_class: str
+    evidence_ref: str
+    content_sha256: str
+    requirement_class: str
+    time_envelope_id: str | None
+    freshness_policy_id: str | None
+    source_provenance_refs: tuple[str, ...]
+    expected_accepting_local_root_id: str
+
+
+@dataclass(frozen=True)
+class DependencySetCandidateV01:
+    dependency_records: tuple[DependencySetCandidateRecordV01, ...]
+
+
+@dataclass(frozen=True)
+class PacketDependencyAcceptanceBindingV01:
+    dependency_set_candidate_fingerprint: str
+    root_packet_authorization_candidate_id: str
+    source_root_decision_id: str
+    source_root_decision_hash: str
+    owning_local_root_id: str
+    packet_id: str
+    accepted_status: str
+    packet_dependency_acceptance_binding_id: str
+
+
+@dataclass(frozen=True)
+class ActionTemporalAuthorityProfileV01:
+    issued_at_utc: int
+    expires_at_utc: int
+    ttl_seconds: int
+    temporal_policy_version: str
+
+
+@dataclass(frozen=True)
+class TemporalEvaluationV01:
+    outcome: str
+    executable: bool
+
+
+@dataclass(frozen=True)
+class PacketTTLCompatibilityProjectionV01:
+    temporal_authority: ActionTemporalAuthorityProfileV01
+    evaluation: TemporalEvaluationV01
+
+
+@dataclass(frozen=True)
+class LogicalTimeBridgeV01:
+    bridge_id: str
+    origin_utc_epoch_seconds: int
+    seconds_per_tick: int
+    bridge_policy_version: str
+
+
+@dataclass(frozen=True)
+class ActionAuthorityPolicyProfileV01:
+    policy_version: str
+    owning_local_root_id: str
+    authority_rule_refs: tuple[str, ...]
+    kill_switch_condition_refs: tuple[str, ...]
+    retry_policy: str
+    supersession_policy: str
+    logical_effect_namespace: str
+    allowed_logical_effect_classes: tuple[str, ...]
+    allowed_business_object_namespaces: tuple[str, ...]
+    allowed_corridor_classes: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class ActionBusinessObjectIdentityProfileV01:
+    business_object_class: str
+    business_object_namespace: str
+    business_object_ref: str
+    owning_effect_root_id: str
+
+
+@dataclass(frozen=True)
+class ActionConsequentialEffectParametersProfileV01:
+    amount_decimal: str | None
+    currency_code: str | None
+    quantity_decimal: str | None
+    parameter_records: tuple[ActionEffectParameterRecordV01, ...]
+
+
+@dataclass(frozen=True)
+class RootOwnedLogicalEffectIntentV01:
+    owning_effect_root_id: str
+    transaction_id: str | None
+    logical_effect_class: str
+    normalized_subject_scope: ActionSubjectScopeProfileV01
+    normalized_target_scope: ActionTargetScopeProfileV01
+    normalized_business_object_identity: ActionBusinessObjectIdentityProfileV01
+    normalized_consequential_effect_parameters: (
+        ActionConsequentialEffectParametersProfileV01
+    )
+    logical_effect_namespace: str
+    root_owned_intent_id: str
+
+
+@dataclass(frozen=True)
+class ActionIdempotencyIdentityV01:
+    owning_effect_root_id: str
+    transaction_id: str | None
+    root_owned_intent_id: str | None
+    logical_effect_class: str
+    normalized_subject_scope: ActionSubjectScopeProfileV01
+    normalized_target_scope: ActionTargetScopeProfileV01
+    normalized_business_object_identity: ActionBusinessObjectIdentityProfileV01
+    normalized_consequential_effect_parameters: (
+        ActionConsequentialEffectParametersProfileV01
+    )
+    logical_effect_namespace: str
+    idempotency_key: str
+
+
+@dataclass(frozen=True)
+class RootBoundPacketAuthorizationCandidateV01:
+    owning_local_root_id: str
+    transaction_id: str | None
+    root_owned_intent_id: str
+    effect_class: str
+    normalized_subject_scope: ActionSubjectScopeProfileV01
+    normalized_target_scope: ActionTargetScopeProfileV01
+    normalized_permission_scope: ActionPermissionScopeProfileV01
+    normalized_effect_parameters_fingerprint: str
+    corridor_class: str
+    adapter_binding: ActionAdapterBindingProfileV01
+    dependency_set_candidate_fingerprint: str
+    temporal_authority_fingerprint: str
+    policy_version: str | None
+    authority_policy_fingerprint: str
+    predecessor_packet_id: str | None
+    supersession_reason_class: str | None
+    root_packet_authorization_candidate_id: str
+
+
+@dataclass(frozen=True)
+class ActionCommitPacketIdentityResultV01:
+    packet_id: str
+    material: CanonicalMaterialV01
+
+
+@dataclass(frozen=True)
+class EffectFirewallVocabularyProjectionV01:
+    identifier_kind: str
+    raw_identifier: str
+    canonical_identifier: str
+    compatibility_mode: bool
+
+
+@dataclass(frozen=True)
+class SupplierActionCommitPacketCanonicalProjectionV01:
+    transaction_id: str
+    owning_local_root_id: str
+    canonical_permission_ref: str
+    selected_legacy_action: str
+    selected_canonical_action: str
+    source_packet: ActionCommitPacketV02
+    normalized_subject_scope: ActionSubjectScopeProfileV01
+    normalized_target_scope: ActionTargetScopeProfileV01
+    normalized_permission_scope: ActionPermissionScopeProfileV01
+    normalized_effect_parameters: ActionEffectParametersProfileV01
+    normalized_effect_parameters_fingerprint: str
+    adapter_binding: ActionAdapterBindingProfileV01
+    dependency_candidate: DependencySetCandidateV01
+    dependency_set_candidate_fingerprint: str
+    temporal_authority: ActionTemporalAuthorityProfileV01
+    temporal_authority_fingerprint: str
+    evaluation_time: int
+    evaluation_time_source: str
+    evaluation_context_id: str
+    temporal_evaluation: TemporalEvaluationV01
+    authority_policy: ActionAuthorityPolicyProfileV01
+    authority_policy_fingerprint: str
+    business_object_identity: ActionBusinessObjectIdentityProfileV01
+    consequential_effect_parameters: (
+        ActionConsequentialEffectParametersProfileV01
+    )
+    logical_intent: RootOwnedLogicalEffectIntentV01
+    idempotency_identity: ActionIdempotencyIdentityV01
+    authorization_candidate: RootBoundPacketAuthorizationCandidateV01
+    raw_allowed_actions: tuple[str, ...]
+    raw_forbidden_actions: tuple[str, ...]
+    raw_allowed_adapters: tuple[str, ...]
+    raw_forbidden_adapters: tuple[str, ...]
+    human_approval_evidence_ref: str
+    advisory_drs_refs: tuple[str, ...]
+    advisory_avf_refs: tuple[str, ...]
+    advisory_bsep_ref: str
+
+
+@dataclass(frozen=True)
+class RootDecisionCandidateProjectionV01:
+    candidate_kind: str
+    projected_candidate_id: str
+    root_decision_kernel: RootDecisionKernelV01
+    root_decision_input: RootDecisionInputV01
+    root_decision_result: RootDecisionResultV01
+    source_root_decision_hash: str
+
+
+@dataclass(frozen=True)
+class SupplierRootBoundActionCommitPacketV02ProjectionV01:
+    canonical_projection: SupplierActionCommitPacketCanonicalProjectionV01
+    root_decision_projection: RootDecisionCandidateProjectionV01
+    packet_identity: ActionCommitPacketIdentityResultV01
+    dependency_acceptance_binding: PacketDependencyAcceptanceBindingV01
+    packet: ActionCommitPacketV02
+
+
+def _canonical_absent_v01() -> Mapping[str, str]:
+    return ABSENT_V01
+
+
+def is_absent_v01(value: object) -> bool:
+    return value is ABSENT_V01
+
+
+def _result_v01(reasons: list[str]) -> tuple[bool, tuple[str, ...]]:
+    return not reasons, tuple(dict.fromkeys(reasons))
+
+
+def _reason_v01(reasons: list[str], reason: str) -> None:
+    if reason not in reasons:
+        reasons.append(reason)
+
+
+def _stable_exception_reason_v01(
+    exc: ValueError,
+    *,
+    fallback: str,
+) -> str:
+    if (
+        len(exc.args) == 1
+        and type(exc.args[0]) is str
+        and re.fullmatch(r"[a-z][a-z0-9_]*", exc.args[0]) is not None
+    ):
+        return exc.args[0]
+    return fallback
+
+
+def validate_identity_text_v01(
+    value: object,
+    *,
+    allow_empty: bool = False,
+) -> tuple[bool, tuple[str, ...]]:
+    reasons: list[str] = []
+    if type(allow_empty) is not bool:
+        return False, ("identity_text_allow_empty_type_invalid",)
+    if type(value) is not str:
+        return False, ("identity_text_type_invalid",)
+    try:
+        value.encode("utf-8", errors="strict")
+    except UnicodeError:
+        return False, ("identity_text_surrogate_invalid",)
+    if "\x00" in value:
+        _reason_v01(reasons, "identity_text_nul_invalid")
+    if not allow_empty and not value:
+        _reason_v01(reasons, "identity_text_empty")
+    try:
+        if unicodedata.normalize("NFC", value) != value:
+            _reason_v01(reasons, "identity_text_not_nfc")
+    except Exception:
+        _reason_v01(reasons, "identity_text_normalization_invalid")
+    return _result_v01(reasons)
+
+
+def normalize_identity_text_v01(
+    value: object,
+    *,
+    allow_empty: bool = False,
+) -> str:
+    if type(allow_empty) is not bool:
+        raise ValueError("identity_text_allow_empty_type_invalid")
+    if type(value) is not str:
+        raise ValueError("identity_text_type_invalid")
+    try:
+        normalized = unicodedata.normalize("NFC", value)
+        normalized.encode("utf-8", errors="strict")
+    except Exception:
+        raise ValueError("identity_text_normalization_invalid") from None
+    valid, reasons = validate_identity_text_v01(
+        normalized,
+        allow_empty=allow_empty,
+    )
+    if not valid:
+        raise ValueError(reasons[0])
+    return normalized
+
+
+def validate_lowercase_sha256_hex_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not str:
+        return False, ("sha256_type_invalid",)
+    try:
+        valid = re.fullmatch(LOWERCASE_SHA256_REGEX_V01, value) is not None
+    except Exception:
+        valid = False
+    return (True, ()) if valid else (False, ("sha256_format_invalid",))
+
+
+def validate_signed_int64_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not int:
+        return False, ("int64_type_invalid",)
+    if value < INT64_MIN_V01 or value > INT64_MAX_V01:
+        return False, ("int64_range_invalid",)
+    return True, ()
+
+
+def validate_positive_int_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    valid, reasons = validate_signed_int64_v01(value)
+    if not valid:
+        return valid, reasons
+    if value <= 0:
+        return False, ("positive_int_invalid",)
+    return True, ()
+
+
+def canonicalize_set_like_string_tuple_v01(value: object) -> tuple[str, ...]:
+    if type(value) is not tuple:
+        raise ValueError("set_like_tuple_type_invalid")
+    normalized: list[str] = []
+    for item in value:
+        normalized.append(normalize_identity_text_v01(item))
+    if len(normalized) != len(set(normalized)):
+        raise ValueError("set_like_tuple_duplicate")
+    return tuple(sorted(normalized, key=lambda item: item.encode("utf-8")))
+
+
+def validate_set_like_string_tuple_v01(
+    value: object,
+    *,
+    require_non_empty: bool = False,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(require_non_empty) is not bool:
+        return False, ("set_like_tuple_require_non_empty_type_invalid",)
+    try:
+        canonical = canonicalize_set_like_string_tuple_v01(value)
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="set_like_tuple_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("set_like_tuple_invalid",)
+    if require_non_empty and not canonical:
+        return False, ("set_like_tuple_empty",)
+    if canonical != value:
+        return False, ("set_like_tuple_not_canonical",)
+    return True, ()
+
+
+def preserve_ordered_string_tuple_v01(value: object) -> tuple[str, ...]:
+    if type(value) is not tuple:
+        raise ValueError("ordered_tuple_type_invalid")
+    return tuple(normalize_identity_text_v01(item) for item in value)
+
+
+def _validate_ordered_string_tuple_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        canonical = preserve_ordered_string_tuple_v01(value)
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="ordered_tuple_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("ordered_tuple_invalid",)
+    if canonical != value:
+        return False, ("ordered_tuple_not_canonical",)
+    return True, ()
+
+
+def _validate_canonical_material_structure_v01(
+    material: object,
+) -> tuple[bool, tuple[str, ...], tuple[str, ...]]:
+    reasons: list[str] = []
+    if type(material) is not tuple:
+        return False, ("canonical_material_type_invalid",), ()
+    if not material:
+        return False, ("canonical_material_empty",), ()
+    fields: list[str] = []
+    for pair in material:
+        if type(pair) is not tuple or len(pair) != 2:
+            _reason_v01(reasons, "canonical_material_pair_invalid")
+            continue
+        name = pair[0]
+        valid_name, _ = validate_identity_text_v01(name)
+        if not valid_name:
+            _reason_v01(reasons, "canonical_material_field_name_invalid")
+            continue
+        fields.append(name)
+        if not _canonical_identity_value_is_valid_v01(pair[1]):
+            _reason_v01(reasons, "canonical_material_value_invalid")
+    if len(fields) != len(set(fields)):
+        _reason_v01(reasons, "canonical_material_field_duplicate")
+    valid, reason_tuple = _result_v01(reasons)
+    return valid, reason_tuple, tuple(fields)
+
+
+def validate_canonical_profile_material_v01(
+    material: object,
+    *,
+    expected_field_names: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    reasons: list[str] = []
+    if type(expected_field_names) is not tuple:
+        return False, ("canonical_material_expected_fields_type_invalid",)
+    if not expected_field_names:
+        return False, ("canonical_material_expected_fields_empty",)
+    expected_names: list[str] = []
+    for name in expected_field_names:
+        valid_name, _ = validate_identity_text_v01(name)
+        if not valid_name:
+            return False, ("canonical_material_expected_field_name_invalid",)
+        expected_names.append(name)
+    if len(expected_names) != len(set(expected_names)):
+        return False, ("canonical_material_expected_field_duplicate",)
+    structure_valid, structure_reasons, fields = (
+        _validate_canonical_material_structure_v01(material)
+    )
+    if not structure_valid:
+        reasons.extend(structure_reasons)
+    if tuple(fields) != tuple(expected_names):
+        if len(fields) < len(expected_names):
+            _reason_v01(reasons, "canonical_material_field_missing")
+        if len(fields) > len(expected_names):
+            _reason_v01(reasons, "canonical_material_field_unknown")
+        _reason_v01(reasons, "canonical_material_field_order_invalid")
+    return _result_v01(reasons)
+
+
+def _canonical_identity_value_is_valid_v01(value: object) -> bool:
+    if value is ABSENT_V01:
+        return True
+    if type(value) is str:
+        return validate_identity_text_v01(value, allow_empty=True)[0]
+    if type(value) is bool:
+        return True
+    if type(value) is int:
+        return validate_signed_int64_v01(value)[0]
+    if type(value) is tuple:
+        return all(_canonical_identity_value_is_valid_v01(item) for item in value)
+    return False
+
+
+def canonical_material_bytes_v01(material: object) -> bytes:
+    structurally_valid, structural_reasons, field_names = (
+        _validate_canonical_material_structure_v01(material)
+    )
+    if not structurally_valid:
+        raise ValueError(structural_reasons[0])
+    valid, reasons = validate_canonical_profile_material_v01(
+        material,
+        expected_field_names=field_names,
+    )
+    if not valid:
+        raise ValueError(reasons[0])
+    try:
+        return canonical_json_bytes_v01(material)
+    except Exception:
+        raise ValueError("canonical_material_encoding_invalid") from None
+
+
+def build_domain_separated_identity_v01(
+    *,
+    domain: str,
+    prefix: str,
+    material: CanonicalMaterialV01,
+) -> str:
+    valid_domain, domain_reasons = validate_identity_text_v01(domain)
+    valid_prefix, prefix_reasons = validate_identity_text_v01(prefix)
+    if not valid_domain:
+        raise ValueError(domain_reasons[0])
+    if not valid_prefix:
+        raise ValueError(prefix_reasons[0])
+    payload = canonical_material_bytes_v01(material)
+    digest = domain_separated_sha256_hex_v01(
+        domain=domain,
+        payload=payload,
+    )
+    return prefix + digest
+
+
+def validate_prefixed_sha256_identity_v01(
+    value: object,
+    *,
+    prefix: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    valid_prefix, _ = validate_identity_text_v01(prefix)
+    if not valid_prefix:
+        return False, ("prefixed_identity_prefix_type_invalid",)
+    if type(value) is not str:
+        return False, ("prefixed_identity_type_invalid",)
+    if not value.startswith(prefix):
+        return False, ("prefixed_identity_prefix_invalid",)
+    valid, _ = validate_lowercase_sha256_hex_v01(value[len(prefix) :])
+    return (True, ()) if valid else (False, ("prefixed_identity_digest_invalid",))
+
+
+def validate_canonical_decimal_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not str:
+        return False, ("canonical_decimal_type_invalid",)
+    try:
+        valid = re.fullmatch(CANONICAL_DECIMAL_REGEX_V01, value) is not None
+    except Exception:
+        valid = False
+    if not valid:
+        return False, ("canonical_decimal_format_invalid",)
+    return True, ()
+
+
+def normalize_legacy_decimal_v01(value: object) -> str:
+    if type(value) is not str:
+        raise ValueError("legacy_decimal_type_invalid")
+    try:
+        if re.fullmatch(LEGACY_PLAIN_DECIMAL_INPUT_REGEX_V01, value) is None:
+            raise ValueError("legacy_decimal_format_invalid")
+        decimal_value = Decimal(value)
+    except ValueError:
+        raise
+    except (InvalidOperation, ArithmeticError):
+        raise ValueError("legacy_decimal_format_invalid") from None
+    if not decimal_value.is_finite():
+        raise ValueError("legacy_decimal_non_finite")
+    if decimal_value.is_zero() and value.startswith("-"):
+        raise ValueError("legacy_decimal_negative_zero")
+    if "." in value:
+        normalized = value.rstrip("0").rstrip(".")
+    else:
+        normalized = value
+    valid, reasons = validate_canonical_decimal_v01(normalized)
+    if not valid:
+        raise ValueError(reasons[0])
+    return normalized
+
+
+def validate_legacy_decimal_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        normalize_legacy_decimal_v01(value)
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="legacy_decimal_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("legacy_decimal_invalid",)
+    return True, ()
+
+
+def validate_canonical_execution_time_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is CanonicalExecutionTimeV01:
+        return validate_signed_int64_v01(value.value)
+    return validate_signed_int64_v01(value)
+
+
+def build_canonical_execution_time_v01(
+    value: object,
+) -> CanonicalExecutionTimeV01:
+    valid, reasons = validate_signed_int64_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return CanonicalExecutionTimeV01(value=value)
+
+
+def parse_utc_timestamp_v01(value: object) -> int:
+    if type(value) is not str:
+        raise ValueError("timestamp_type_invalid")
+    try:
+        if re.fullmatch(UTC_TIMESTAMP_COMPATIBILITY_REGEX_V01, value) is None:
+            raise ValueError("timestamp_format_invalid")
+        year = int(value[0:4])
+        month = int(value[5:7])
+        day_value = int(value[8:10])
+        hour = int(value[11:13])
+        minute = int(value[14:16])
+        second = int(value[17:19])
+        if year < 1 or hour > 23 or minute > 59 or second > 59:
+            raise ValueError("timestamp_component_invalid")
+        parsed_date = date(year, month, day_value)
+        epoch_date = date(1970, 1, 1)
+        epoch_seconds = (
+            (parsed_date - epoch_date).days * 86400
+            + hour * 3600
+            + minute * 60
+            + second
+        )
+    except ValueError as exc:
+        reason = _stable_exception_reason_v01(
+            exc,
+            fallback="timestamp_calendar_invalid",
+        )
+        if reason in ("timestamp_format_invalid", "timestamp_component_invalid"):
+            raise
+        raise ValueError("timestamp_calendar_invalid") from None
+    except Exception:
+        raise ValueError("timestamp_invalid") from None
+    valid, reasons = validate_signed_int64_v01(epoch_seconds)
+    if not valid:
+        raise ValueError(reasons[0])
+    return epoch_seconds
+
+
+def validate_utc_timestamp_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        parse_utc_timestamp_v01(value)
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="timestamp_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("timestamp_invalid",)
+    return True, ()
+
+
+def format_utc_timestamp_v01(epoch_seconds: object) -> str:
+    valid, reasons = validate_signed_int64_v01(epoch_seconds)
+    if not valid:
+        raise ValueError(reasons[0])
+    try:
+        day_offset, second_of_day = divmod(epoch_seconds, 86400)
+        epoch_date = date(1970, 1, 1)
+        calendar_date = date.fromordinal(epoch_date.toordinal() + day_offset)
+        hour, remainder = divmod(second_of_day, 3600)
+        minute, second = divmod(remainder, 60)
+        formatted = (
+            f"{calendar_date.year:04d}-{calendar_date.month:02d}-"
+            f"{calendar_date.day:02d}T{hour:02d}:{minute:02d}:{second:02d}Z"
+        )
+    except Exception:
+        raise ValueError("timestamp_output_range_invalid") from None
+    try:
+        if parse_utc_timestamp_v01(formatted) != epoch_seconds:
+            raise ValueError("timestamp_round_trip_invalid")
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="timestamp_round_trip_invalid",
+            )
+        ) from None
+    return formatted
+
+
+def build_action_temporal_authority_profile_v01(
+    *,
+    issued_at_utc: object,
+    expires_at_utc: object,
+    ttl_seconds: object,
+    temporal_policy_version: object,
+) -> ActionTemporalAuthorityProfileV01:
+    valid_issued, issued_reasons = validate_signed_int64_v01(issued_at_utc)
+    valid_expires, expires_reasons = validate_signed_int64_v01(expires_at_utc)
+    valid_ttl, ttl_reasons = validate_positive_int_v01(ttl_seconds)
+    try:
+        policy = normalize_identity_text_v01(temporal_policy_version)
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="temporal_policy_version_invalid",
+            )
+        ) from None
+    if not valid_issued:
+        raise ValueError(issued_reasons[0])
+    if not valid_expires:
+        raise ValueError(expires_reasons[0])
+    if not valid_ttl:
+        raise ValueError(ttl_reasons[0])
+    try:
+        expected_expires = issued_at_utc + ttl_seconds
+    except Exception:
+        raise ValueError("temporal_authority_arithmetic_invalid") from None
+    valid_sum, _ = validate_signed_int64_v01(expected_expires)
+    if not valid_sum:
+        raise ValueError("temporal_authority_overflow")
+    if expires_at_utc != expected_expires:
+        raise ValueError("temporal_authority_inconsistent")
+    return ActionTemporalAuthorityProfileV01(
+        issued_at_utc=issued_at_utc,
+        expires_at_utc=expires_at_utc,
+        ttl_seconds=ttl_seconds,
+        temporal_policy_version=policy,
+    )
+
+
+def validate_action_temporal_authority_profile_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionTemporalAuthorityProfileV01:
+        return False, ("temporal_authority_type_invalid",)
+    try:
+        rebuilt = build_action_temporal_authority_profile_v01(
+            issued_at_utc=value.issued_at_utc,
+            expires_at_utc=value.expires_at_utc,
+            ttl_seconds=value.ttl_seconds,
+            temporal_policy_version=value.temporal_policy_version,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="temporal_authority_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("temporal_authority_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("temporal_authority_not_canonical",),
+    )
+
+
+def action_temporal_authority_material_v01(
+    value: ActionTemporalAuthorityProfileV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_action_temporal_authority_profile_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("issued_at_utc", value.issued_at_utc),
+        ("expires_at_utc", value.expires_at_utc),
+        ("ttl_seconds", value.ttl_seconds),
+        ("temporal_policy_version", value.temporal_policy_version),
+    )
+
+
+def build_temporal_authority_fingerprint_v01(
+    value: ActionTemporalAuthorityProfileV01,
+) -> str:
+    material = action_temporal_authority_material_v01(value)
+    return domain_separated_sha256_hex_v01(
+        domain=ACTION_TEMPORAL_AUTHORITY_DOMAIN_V01,
+        payload=canonical_json_bytes_v01(material),
+    )
+
+
+def evaluate_temporal_authority_v01(
+    value: object,
+    *,
+    evaluation_time: object,
+) -> TemporalEvaluationV01:
+    valid, reasons = validate_action_temporal_authority_profile_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    valid_time, time_reasons = validate_signed_int64_v01(evaluation_time)
+    if not valid_time:
+        raise ValueError(time_reasons[0])
+    if evaluation_time < value.issued_at_utc:
+        return TemporalEvaluationV01(
+            outcome=TEMPORAL_OUTCOME_NOT_YET_VALID_V01,
+            executable=False,
+        )
+    if evaluation_time >= value.expires_at_utc:
+        return TemporalEvaluationV01(
+            outcome=TEMPORAL_OUTCOME_EXPIRED_V01,
+            executable=False,
+        )
+    return TemporalEvaluationV01(
+        outcome=TEMPORAL_OUTCOME_VALID_V01,
+        executable=True,
+    )
+
+
+def project_packet_ttl_compatibility_v01(
+    ttl: object,
+    *,
+    evaluation_time: object,
+    temporal_policy_version: object,
+) -> PacketTTLCompatibilityProjectionV01:
+    if type(ttl) is not PacketTTL:
+        raise ValueError("packet_ttl_type_invalid")
+    if type(ttl.ttl_valid) is not bool or type(ttl.expired) is not bool:
+        raise ValueError("packet_ttl_assertion_type_invalid")
+    issued = parse_utc_timestamp_v01(ttl.created_at)
+    expires = parse_utc_timestamp_v01(ttl.expires_at)
+    temporal = build_action_temporal_authority_profile_v01(
+        issued_at_utc=issued,
+        expires_at_utc=expires,
+        ttl_seconds=ttl.ttl_seconds,
+        temporal_policy_version=temporal_policy_version,
+    )
+    evaluation = evaluate_temporal_authority_v01(
+        temporal,
+        evaluation_time=evaluation_time,
+    )
+    if ttl.ttl_valid is not True:
+        raise ValueError("packet_ttl_valid_assertion_mismatch")
+    derived_expired = evaluation_time >= expires
+    if ttl.expired != derived_expired:
+        raise ValueError("packet_ttl_expired_assertion_mismatch")
+    return PacketTTLCompatibilityProjectionV01(
+        temporal_authority=temporal,
+        evaluation=evaluation,
+    )
+
+
+def logical_time_bridge_material_v01(
+    value: LogicalTimeBridgeV01,
+) -> CanonicalMaterialV01:
+    return (
+        ("bridge_policy_version", value.bridge_policy_version),
+        ("origin_utc_epoch_seconds", value.origin_utc_epoch_seconds),
+        ("seconds_per_tick", value.seconds_per_tick),
+    )
+
+
+def build_logical_time_bridge_v01(
+    *,
+    origin_utc_epoch_seconds: object,
+    seconds_per_tick: object,
+    bridge_policy_version: object,
+) -> LogicalTimeBridgeV01:
+    valid_origin, origin_reasons = validate_signed_int64_v01(
+        origin_utc_epoch_seconds
+    )
+    valid_scale, scale_reasons = validate_positive_int_v01(seconds_per_tick)
+    if not valid_origin:
+        raise ValueError(origin_reasons[0])
+    if not valid_scale:
+        raise ValueError(scale_reasons[0])
+    policy = normalize_identity_text_v01(bridge_policy_version)
+    provisional = LogicalTimeBridgeV01(
+        bridge_id="",
+        origin_utc_epoch_seconds=origin_utc_epoch_seconds,
+        seconds_per_tick=seconds_per_tick,
+        bridge_policy_version=policy,
+    )
+    digest = domain_separated_sha256_hex_v01(
+        domain=ACTION_LOGICAL_TIME_BRIDGE_DOMAIN_V01,
+        payload=canonical_json_bytes_v01(
+            logical_time_bridge_material_v01(provisional)
+        ),
+    )
+    return LogicalTimeBridgeV01(
+        bridge_id=digest,
+        origin_utc_epoch_seconds=origin_utc_epoch_seconds,
+        seconds_per_tick=seconds_per_tick,
+        bridge_policy_version=policy,
+    )
+
+
+def validate_logical_time_bridge_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not LogicalTimeBridgeV01:
+        return False, ("logical_time_bridge_type_invalid",)
+    try:
+        rebuilt = build_logical_time_bridge_v01(
+            origin_utc_epoch_seconds=value.origin_utc_epoch_seconds,
+            seconds_per_tick=value.seconds_per_tick,
+            bridge_policy_version=value.bridge_policy_version,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="logical_time_bridge_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("logical_time_bridge_invalid",)
+    if rebuilt != value:
+        return False, ("logical_time_bridge_identity_mismatch",)
+    return True, ()
+
+
+def logical_tick_to_epoch_seconds_v01(
+    bridge: object,
+    logical_tick: object,
+) -> int:
+    valid, reasons = validate_logical_time_bridge_v01(bridge)
+    if not valid:
+        raise ValueError(reasons[0])
+    valid_tick, tick_reasons = validate_signed_int64_v01(logical_tick)
+    if not valid_tick or logical_tick < 0:
+        raise ValueError(
+            tick_reasons[0] if not valid_tick else "logical_tick_negative"
+        )
+    result = (
+        bridge.origin_utc_epoch_seconds + logical_tick * bridge.seconds_per_tick
+    )
+    valid_result, _ = validate_signed_int64_v01(result)
+    if not valid_result:
+        raise ValueError("logical_time_bridge_overflow")
+    return result
+
+
+def epoch_seconds_to_logical_tick_v01(
+    bridge: object,
+    epoch_seconds: object,
+) -> int:
+    valid, reasons = validate_logical_time_bridge_v01(bridge)
+    if not valid:
+        raise ValueError(reasons[0])
+    valid_epoch, epoch_reasons = validate_signed_int64_v01(epoch_seconds)
+    if not valid_epoch:
+        raise ValueError(epoch_reasons[0])
+    delta = epoch_seconds - bridge.origin_utc_epoch_seconds
+    if delta < 0 or delta % bridge.seconds_per_tick != 0:
+        raise ValueError("logical_time_bridge_unrepresentable")
+    tick = delta // bridge.seconds_per_tick
+    valid_tick, _ = validate_signed_int64_v01(tick)
+    if not valid_tick:
+        raise ValueError("logical_time_bridge_overflow")
+    if logical_tick_to_epoch_seconds_v01(bridge, tick) != epoch_seconds:
+        raise ValueError("logical_time_bridge_round_trip_mismatch")
+    return tick
+
+
+def build_action_subject_scope_profile_v01(
+    *,
+    included_subject_refs: object,
+    excluded_subject_refs: object,
+) -> ActionSubjectScopeProfileV01:
+    included = canonicalize_set_like_string_tuple_v01(included_subject_refs)
+    excluded = canonicalize_set_like_string_tuple_v01(excluded_subject_refs)
+    if not included:
+        raise ValueError("subject_scope_included_empty")
+    if set(included).intersection(excluded):
+        raise ValueError("subject_scope_overlap")
+    return ActionSubjectScopeProfileV01(included, excluded)
+
+
+def validate_action_subject_scope_profile_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionSubjectScopeProfileV01:
+        return False, ("subject_scope_type_invalid",)
+    try:
+        rebuilt = build_action_subject_scope_profile_v01(
+            included_subject_refs=value.included_subject_refs,
+            excluded_subject_refs=value.excluded_subject_refs,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="subject_scope_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("subject_scope_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("subject_scope_not_canonical",),
+    )
+
+
+def action_subject_scope_material_v01(
+    value: ActionSubjectScopeProfileV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_action_subject_scope_profile_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("profile_id", ACTION_SUBJECT_SCOPE_PROFILE_ID_V01),
+        ("included_subject_refs", value.included_subject_refs),
+        ("excluded_subject_refs", value.excluded_subject_refs),
+    )
+
+
+def build_action_target_scope_profile_v01(
+    *,
+    included_target_refs: object,
+    excluded_target_refs: object,
+) -> ActionTargetScopeProfileV01:
+    included = canonicalize_set_like_string_tuple_v01(included_target_refs)
+    excluded = canonicalize_set_like_string_tuple_v01(excluded_target_refs)
+    if not included:
+        raise ValueError("target_scope_included_empty")
+    if set(included).intersection(excluded):
+        raise ValueError("target_scope_overlap")
+    return ActionTargetScopeProfileV01(included, excluded)
+
+
+def validate_action_target_scope_profile_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionTargetScopeProfileV01:
+        return False, ("target_scope_type_invalid",)
+    try:
+        rebuilt = build_action_target_scope_profile_v01(
+            included_target_refs=value.included_target_refs,
+            excluded_target_refs=value.excluded_target_refs,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="target_scope_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("target_scope_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("target_scope_not_canonical",),
+    )
+
+
+def action_target_scope_material_v01(
+    value: ActionTargetScopeProfileV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_action_target_scope_profile_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("profile_id", ACTION_TARGET_SCOPE_PROFILE_ID_V01),
+        ("included_target_refs", value.included_target_refs),
+        ("excluded_target_refs", value.excluded_target_refs),
+    )
+
+
+def build_action_permission_scope_profile_v01(
+    *,
+    allowed_action_classes: object,
+    forbidden_action_classes: object,
+    allowed_adapter_ids: object,
+    forbidden_adapter_ids: object,
+    required_approval_refs: object,
+    prohibited_effect_classes: object,
+) -> ActionPermissionScopeProfileV01:
+    allowed_actions = canonicalize_set_like_string_tuple_v01(
+        allowed_action_classes
+    )
+    forbidden_actions = canonicalize_set_like_string_tuple_v01(
+        forbidden_action_classes
+    )
+    allowed_adapters = canonicalize_set_like_string_tuple_v01(
+        allowed_adapter_ids
+    )
+    forbidden_adapters = canonicalize_set_like_string_tuple_v01(
+        forbidden_adapter_ids
+    )
+    approvals = canonicalize_set_like_string_tuple_v01(required_approval_refs)
+    prohibited_effects = canonicalize_set_like_string_tuple_v01(
+        prohibited_effect_classes
+    )
+    if not allowed_actions:
+        raise ValueError("permission_allowed_actions_empty")
+    if not allowed_adapters:
+        raise ValueError("permission_allowed_adapters_empty")
+    if not approvals:
+        raise ValueError("permission_required_approvals_empty")
+    if set(allowed_actions).intersection(forbidden_actions):
+        raise ValueError("permission_action_overlap")
+    if set(allowed_adapters).intersection(forbidden_adapters):
+        raise ValueError("permission_adapter_overlap")
+    for action in (*allowed_actions, *forbidden_actions):
+        valid_action, action_reasons = (
+            validate_native_effect_firewall_identifier_v01(
+                action,
+                identifier_kind="action",
+            )
+        )
+        if not valid_action:
+            raise ValueError(action_reasons[0])
+    for adapter in (*allowed_adapters, *forbidden_adapters):
+        valid_adapter, adapter_reasons = (
+            validate_native_effect_firewall_identifier_v01(
+                adapter,
+                identifier_kind="adapter",
+            )
+        )
+        if not valid_adapter:
+            raise ValueError(adapter_reasons[0])
+    return ActionPermissionScopeProfileV01(
+        allowed_action_classes=allowed_actions,
+        forbidden_action_classes=forbidden_actions,
+        allowed_adapter_ids=allowed_adapters,
+        forbidden_adapter_ids=forbidden_adapters,
+        required_approval_refs=approvals,
+        prohibited_effect_classes=prohibited_effects,
+    )
+
+
+def validate_action_permission_scope_profile_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionPermissionScopeProfileV01:
+        return False, ("permission_scope_type_invalid",)
+    try:
+        rebuilt = build_action_permission_scope_profile_v01(
+            allowed_action_classes=value.allowed_action_classes,
+            forbidden_action_classes=value.forbidden_action_classes,
+            allowed_adapter_ids=value.allowed_adapter_ids,
+            forbidden_adapter_ids=value.forbidden_adapter_ids,
+            required_approval_refs=value.required_approval_refs,
+            prohibited_effect_classes=value.prohibited_effect_classes,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="permission_scope_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("permission_scope_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("permission_scope_not_canonical",),
+    )
+
+
+def action_permission_scope_material_v01(
+    value: ActionPermissionScopeProfileV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_action_permission_scope_profile_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("profile_id", ACTION_PERMISSION_SCOPE_PROFILE_ID_V01),
+        ("allowed_action_classes", value.allowed_action_classes),
+        ("forbidden_action_classes", value.forbidden_action_classes),
+        ("allowed_adapter_ids", value.allowed_adapter_ids),
+        ("forbidden_adapter_ids", value.forbidden_adapter_ids),
+        ("required_approval_refs", value.required_approval_refs),
+        ("prohibited_effect_classes", value.prohibited_effect_classes),
+    )
+
+
+def build_action_effect_parameter_record_v01(
+    *,
+    parameter_name: object,
+    value_type: object,
+    value: object,
+) -> ActionEffectParameterRecordV01:
+    name = normalize_identity_text_v01(parameter_name)
+    declared_type = normalize_identity_text_v01(value_type)
+    if declared_type not in EFFECT_PARAMETER_VALUE_TYPES_V01:
+        raise ValueError("effect_parameter_value_type_unknown")
+    canonical_value: str | int | bool
+    if declared_type in ("TEXT", "REFERENCE"):
+        canonical_value = normalize_identity_text_v01(value)
+    elif declared_type == "DECIMAL":
+        valid, reasons = validate_canonical_decimal_v01(value)
+        if not valid:
+            raise ValueError(reasons[0])
+        canonical_value = value
+    elif declared_type == "INTEGER":
+        valid, reasons = validate_signed_int64_v01(value)
+        if not valid:
+            raise ValueError(reasons[0])
+        canonical_value = value
+    else:
+        if type(value) is not bool:
+            raise ValueError("effect_parameter_boolean_type_invalid")
+        canonical_value = value
+    return ActionEffectParameterRecordV01(
+        parameter_name=name,
+        value_type=declared_type,
+        value=canonical_value,
+    )
+
+
+def validate_action_effect_parameter_record_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionEffectParameterRecordV01:
+        return False, ("effect_parameter_record_type_invalid",)
+    try:
+        rebuilt = build_action_effect_parameter_record_v01(
+            parameter_name=value.parameter_name,
+            value_type=value.value_type,
+            value=value.value,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="effect_parameter_record_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("effect_parameter_record_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("effect_parameter_record_not_canonical",),
+    )
+
+
+def action_effect_parameter_record_material_v01(
+    value: ActionEffectParameterRecordV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_action_effect_parameter_record_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("parameter_name", value.parameter_name),
+        ("value_type", value.value_type),
+        ("value", value.value),
+    )
+
+
+def _canonical_effect_parameter_records_v01(
+    records: object,
+) -> tuple[ActionEffectParameterRecordV01, ...]:
+    if type(records) is not tuple:
+        raise ValueError("effect_parameter_records_type_invalid")
+    built: list[ActionEffectParameterRecordV01] = []
+    for record in records:
+        if type(record) is not ActionEffectParameterRecordV01:
+            raise ValueError("effect_parameter_record_type_invalid")
+        built.append(
+            build_action_effect_parameter_record_v01(
+                parameter_name=record.parameter_name,
+                value_type=record.value_type,
+                value=record.value,
+            )
+        )
+    names = tuple(record.parameter_name for record in built)
+    if len(names) != len(set(names)):
+        raise ValueError("effect_parameter_name_duplicate")
+    return tuple(
+        sorted(built, key=lambda record: record.parameter_name.encode("utf-8"))
+    )
+
+
+def build_action_effect_parameters_profile_v01(
+    *,
+    effect_class: object,
+    parameter_records: object,
+) -> ActionEffectParametersProfileV01:
+    return ActionEffectParametersProfileV01(
+        effect_class=normalize_identity_text_v01(effect_class),
+        parameter_records=_canonical_effect_parameter_records_v01(
+            parameter_records
+        ),
+    )
+
+
+def validate_action_effect_parameters_profile_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionEffectParametersProfileV01:
+        return False, ("effect_parameters_profile_type_invalid",)
+    try:
+        rebuilt = build_action_effect_parameters_profile_v01(
+            effect_class=value.effect_class,
+            parameter_records=value.parameter_records,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="effect_parameters_profile_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("effect_parameters_profile_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("effect_parameters_profile_not_canonical",),
+    )
+
+
+def action_effect_parameters_material_v01(
+    value: ActionEffectParametersProfileV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_action_effect_parameters_profile_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("profile_id", ACTION_EFFECT_PARAMETERS_PROFILE_ID_V01),
+        ("effect_class", value.effect_class),
+        (
+            "parameter_records",
+            tuple(
+                action_effect_parameter_record_material_v01(record)
+                for record in value.parameter_records
+            ),
+        ),
+    )
+
+
+def build_action_effect_parameters_fingerprint_v01(
+    value: ActionEffectParametersProfileV01,
+) -> str:
+    return domain_separated_sha256_hex_v01(
+        domain=ACTION_EFFECT_PARAMETERS_DOMAIN_V01,
+        payload=canonical_json_bytes_v01(
+            action_effect_parameters_material_v01(value)
+        ),
+    )
+
+
+def build_action_adapter_binding_profile_v01(
+    *,
+    corridor_class: object,
+    adapter_id: object,
+    adapter_kind: object,
+    adapter_version: object,
+    mock_only: object = True,
+) -> ActionAdapterBindingProfileV01:
+    if type(mock_only) is not bool or mock_only is not True:
+        raise ValueError("adapter_binding_mock_only_required")
+    valid_adapter, adapter_reasons = (
+        validate_native_effect_firewall_identifier_v01(
+            adapter_id,
+            identifier_kind="adapter",
+        )
+    )
+    if not valid_adapter:
+        raise ValueError(adapter_reasons[0])
+    return ActionAdapterBindingProfileV01(
+        corridor_class=normalize_identity_text_v01(corridor_class),
+        adapter_id=normalize_identity_text_v01(adapter_id),
+        adapter_kind=normalize_identity_text_v01(adapter_kind),
+        adapter_version=normalize_identity_text_v01(adapter_version),
+        mock_only=True,
+    )
+
+
+def validate_action_adapter_binding_profile_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionAdapterBindingProfileV01:
+        return False, ("adapter_binding_type_invalid",)
+    try:
+        rebuilt = build_action_adapter_binding_profile_v01(
+            corridor_class=value.corridor_class,
+            adapter_id=value.adapter_id,
+            adapter_kind=value.adapter_kind,
+            adapter_version=value.adapter_version,
+            mock_only=value.mock_only,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="adapter_binding_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("adapter_binding_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("adapter_binding_not_canonical",),
+    )
+
+
+def action_adapter_binding_material_v01(
+    value: ActionAdapterBindingProfileV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_action_adapter_binding_profile_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("profile_id", ACTION_ADAPTER_BINDING_PROFILE_ID_V01),
+        ("corridor_class", value.corridor_class),
+        ("adapter_id", value.adapter_id),
+        ("adapter_kind", value.adapter_kind),
+        ("adapter_version", value.adapter_version),
+        ("mock_only", True),
+    )
+
+
+def build_dependency_set_candidate_record_v01(
+    *,
+    dependency_id: object,
+    dependency_class: object,
+    evidence_ref: object,
+    content_sha256: object,
+    requirement_class: object,
+    time_envelope_id: object,
+    freshness_policy_id: object,
+    source_provenance_refs: object,
+    expected_accepting_local_root_id: object,
+) -> DependencySetCandidateRecordV01:
+    identifier = normalize_identity_text_v01(dependency_id)
+    dependency_kind = normalize_identity_text_v01(dependency_class)
+    evidence = normalize_identity_text_v01(evidence_ref)
+    valid_hash, hash_reasons = validate_lowercase_sha256_hex_v01(content_sha256)
+    if not valid_hash:
+        raise ValueError(hash_reasons[0])
+    requirement = normalize_identity_text_v01(requirement_class)
+    if requirement not in DEPENDENCY_REQUIREMENT_CLASSES_V01:
+        raise ValueError("dependency_requirement_class_unknown")
+    if time_envelope_id is None:
+        time_envelope = None
+    else:
+        time_envelope = normalize_identity_text_v01(time_envelope_id)
+    if freshness_policy_id is None:
+        freshness_policy = None
+    else:
+        freshness_policy = normalize_identity_text_v01(freshness_policy_id)
+    if (time_envelope is None) != (freshness_policy is None):
+        raise ValueError("dependency_temporal_pair_partial")
+    if requirement == "MANDATORY" and time_envelope is None:
+        raise ValueError("dependency_mandatory_temporal_binding_missing")
+    provenance = canonicalize_set_like_string_tuple_v01(source_provenance_refs)
+    if not provenance:
+        raise ValueError("dependency_source_provenance_empty")
+    expected_root = normalize_identity_text_v01(
+        expected_accepting_local_root_id
+    )
+    forbidden_values = (
+        "ROOT_ACCEPTED_FOR_PACKET",
+        "source_root_decision_id",
+        "source_root_decision_hash",
+        "packet_id",
+    )
+    all_text = (
+        identifier,
+        dependency_kind,
+        evidence,
+        expected_root,
+        *provenance,
+    )
+    if any(item in forbidden_values for item in all_text):
+        raise ValueError("dependency_candidate_post_root_data_forbidden")
+    return DependencySetCandidateRecordV01(
+        dependency_id=identifier,
+        dependency_class=dependency_kind,
+        evidence_ref=evidence,
+        content_sha256=content_sha256,
+        requirement_class=requirement,
+        time_envelope_id=time_envelope,
+        freshness_policy_id=freshness_policy,
+        source_provenance_refs=provenance,
+        expected_accepting_local_root_id=expected_root,
+    )
+
+
+def validate_dependency_set_candidate_record_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not DependencySetCandidateRecordV01:
+        return False, ("dependency_record_type_invalid",)
+    try:
+        rebuilt = build_dependency_set_candidate_record_v01(
+            dependency_id=value.dependency_id,
+            dependency_class=value.dependency_class,
+            evidence_ref=value.evidence_ref,
+            content_sha256=value.content_sha256,
+            requirement_class=value.requirement_class,
+            time_envelope_id=value.time_envelope_id,
+            freshness_policy_id=value.freshness_policy_id,
+            source_provenance_refs=value.source_provenance_refs,
+            expected_accepting_local_root_id=(
+                value.expected_accepting_local_root_id
+            ),
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="dependency_record_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("dependency_record_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("dependency_record_not_canonical",),
+    )
+
+
+def dependency_set_candidate_record_material_v01(
+    value: DependencySetCandidateRecordV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_dependency_set_candidate_record_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("dependency_id", value.dependency_id),
+        ("dependency_class", value.dependency_class),
+        ("evidence_ref", value.evidence_ref),
+        ("content_sha256", value.content_sha256),
+        ("requirement_class", value.requirement_class),
+        (
+            "time_envelope_id",
+            value.time_envelope_id
+            if value.time_envelope_id is not None
+            else _canonical_absent_v01(),
+        ),
+        (
+            "freshness_policy_id",
+            value.freshness_policy_id
+            if value.freshness_policy_id is not None
+            else _canonical_absent_v01(),
+        ),
+        ("source_provenance_refs", value.source_provenance_refs),
+        (
+            "expected_accepting_local_root_id",
+            value.expected_accepting_local_root_id,
+        ),
+    )
+
+
+def build_dependency_set_candidate_v01(
+    *,
+    dependency_records: object,
+) -> DependencySetCandidateV01:
+    if type(dependency_records) is not tuple:
+        raise ValueError("dependency_records_type_invalid")
+    records: list[DependencySetCandidateRecordV01] = []
+    for record in dependency_records:
+        if type(record) is not DependencySetCandidateRecordV01:
+            raise ValueError("dependency_record_type_invalid")
+        valid, reasons = validate_dependency_set_candidate_record_v01(record)
+        if not valid:
+            raise ValueError(reasons[0])
+        records.append(record)
+    dependency_ids = tuple(record.dependency_id for record in records)
+    if len(dependency_ids) != len(set(dependency_ids)):
+        raise ValueError("dependency_id_duplicate")
+    records.sort(key=lambda record: record.dependency_id.encode("utf-8"))
+    return DependencySetCandidateV01(tuple(records))
+
+
+def validate_dependency_set_candidate_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not DependencySetCandidateV01:
+        return False, ("dependency_candidate_type_invalid",)
+    try:
+        rebuilt = build_dependency_set_candidate_v01(
+            dependency_records=value.dependency_records
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="dependency_candidate_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("dependency_candidate_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("dependency_candidate_not_canonical",),
+    )
+
+
+def dependency_set_candidate_material_v01(
+    value: DependencySetCandidateV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_dependency_set_candidate_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("profile_id", ACTION_DEPENDENCY_SET_CANDIDATE_PROFILE_ID_V01),
+        (
+            "dependency_records",
+            tuple(
+                dependency_set_candidate_record_material_v01(record)
+                for record in value.dependency_records
+            ),
+        ),
+    )
+
+
+def build_dependency_set_candidate_fingerprint_v01(
+    value: DependencySetCandidateV01,
+) -> str:
+    return domain_separated_sha256_hex_v01(
+        domain=ACTION_DEPENDENCY_SET_CANDIDATE_DOMAIN_V01,
+        payload=canonical_json_bytes_v01(
+            dependency_set_candidate_material_v01(value)
+        ),
+    )
+
+
+def packet_dependency_acceptance_binding_material_v01(
+    value: PacketDependencyAcceptanceBindingV01,
+) -> CanonicalMaterialV01:
+    return (
+        (
+            "dependency_set_candidate_fingerprint",
+            value.dependency_set_candidate_fingerprint,
+        ),
+        (
+            "root_packet_authorization_candidate_id",
+            value.root_packet_authorization_candidate_id,
+        ),
+        ("source_root_decision_id", value.source_root_decision_id),
+        ("source_root_decision_hash", value.source_root_decision_hash),
+        ("owning_local_root_id", value.owning_local_root_id),
+        ("packet_id", value.packet_id),
+        ("accepted_status", value.accepted_status),
+    )
+
+
+def build_packet_dependency_acceptance_binding_v01(
+    *,
+    dependency_set_candidate_fingerprint: object,
+    root_packet_authorization_candidate_id: object,
+    source_root_decision_id: object,
+    source_root_decision_hash: object,
+    owning_local_root_id: object,
+    packet_id: object,
+    accepted_status: object = "ROOT_ACCEPTED_FOR_PACKET",
+) -> PacketDependencyAcceptanceBindingV01:
+    for digest in (
+        dependency_set_candidate_fingerprint,
+        source_root_decision_id,
+        source_root_decision_hash,
+    ):
+        valid, reasons = validate_lowercase_sha256_hex_v01(digest)
+        if not valid:
+            raise ValueError(reasons[0])
+    valid_candidate, candidate_reasons = validate_prefixed_sha256_identity_v01(
+        root_packet_authorization_candidate_id,
+        prefix=ROOT_PACKET_AUTHORIZATION_PREFIX_V01,
+    )
+    if not valid_candidate:
+        raise ValueError(candidate_reasons[0])
+    valid_packet, packet_reasons = validate_prefixed_sha256_identity_v01(
+        packet_id,
+        prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+    )
+    if not valid_packet:
+        raise ValueError(packet_reasons[0])
+    root_id = normalize_identity_text_v01(owning_local_root_id)
+    if accepted_status != "ROOT_ACCEPTED_FOR_PACKET":
+        raise ValueError("dependency_acceptance_status_invalid")
+    provisional = PacketDependencyAcceptanceBindingV01(
+        dependency_set_candidate_fingerprint=(
+            dependency_set_candidate_fingerprint
+        ),
+        root_packet_authorization_candidate_id=(
+            root_packet_authorization_candidate_id
+        ),
+        source_root_decision_id=source_root_decision_id,
+        source_root_decision_hash=source_root_decision_hash,
+        owning_local_root_id=root_id,
+        packet_id=packet_id,
+        accepted_status=accepted_status,
+        packet_dependency_acceptance_binding_id="",
+    )
+    identity = build_domain_separated_identity_v01(
+        domain=PACKET_DEPENDENCY_ACCEPTANCE_BINDING_DOMAIN_V01,
+        prefix=PACKET_DEPENDENCY_ACCEPTANCE_PREFIX_V01,
+        material=packet_dependency_acceptance_binding_material_v01(
+            provisional
+        ),
+    )
+    return PacketDependencyAcceptanceBindingV01(
+        dependency_set_candidate_fingerprint=(
+            dependency_set_candidate_fingerprint
+        ),
+        root_packet_authorization_candidate_id=(
+            root_packet_authorization_candidate_id
+        ),
+        source_root_decision_id=source_root_decision_id,
+        source_root_decision_hash=source_root_decision_hash,
+        owning_local_root_id=root_id,
+        packet_id=packet_id,
+        accepted_status=accepted_status,
+        packet_dependency_acceptance_binding_id=identity,
+    )
+
+
+def validate_packet_dependency_acceptance_binding_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not PacketDependencyAcceptanceBindingV01:
+        return False, ("dependency_acceptance_binding_type_invalid",)
+    identity_valid, _ = validate_prefixed_sha256_identity_v01(
+        value.packet_dependency_acceptance_binding_id,
+        prefix=PACKET_DEPENDENCY_ACCEPTANCE_PREFIX_V01,
+    )
+    if not identity_valid:
+        return False, ("dependency_acceptance_binding_identity_invalid",)
+    if type(value.accepted_status) is not str:
+        return False, ("dependency_acceptance_status_type_invalid",)
+    try:
+        rebuilt = build_packet_dependency_acceptance_binding_v01(
+            dependency_set_candidate_fingerprint=(
+                value.dependency_set_candidate_fingerprint
+            ),
+            root_packet_authorization_candidate_id=(
+                value.root_packet_authorization_candidate_id
+            ),
+            source_root_decision_id=value.source_root_decision_id,
+            source_root_decision_hash=value.source_root_decision_hash,
+            owning_local_root_id=value.owning_local_root_id,
+            packet_id=value.packet_id,
+            accepted_status=value.accepted_status,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="dependency_acceptance_binding_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("dependency_acceptance_binding_invalid",)
+    if rebuilt != value:
+        return False, ("dependency_acceptance_binding_identity_mismatch",)
+    return True, ()
+
+
+def build_action_authority_policy_profile_v01(
+    *,
+    policy_version: object,
+    owning_local_root_id: object,
+    authority_rule_refs: object,
+    kill_switch_condition_refs: object,
+    retry_policy: object,
+    supersession_policy: object,
+    logical_effect_namespace: object,
+    allowed_logical_effect_classes: object,
+    allowed_business_object_namespaces: object,
+    allowed_corridor_classes: object,
+) -> ActionAuthorityPolicyProfileV01:
+    rules = canonicalize_set_like_string_tuple_v01(authority_rule_refs)
+    switches = canonicalize_set_like_string_tuple_v01(
+        kill_switch_condition_refs
+    )
+    effects = canonicalize_set_like_string_tuple_v01(
+        allowed_logical_effect_classes
+    )
+    namespaces = canonicalize_set_like_string_tuple_v01(
+        allowed_business_object_namespaces
+    )
+    corridors = canonicalize_set_like_string_tuple_v01(
+        allowed_corridor_classes
+    )
+    retry = normalize_identity_text_v01(retry_policy)
+    supersession = normalize_identity_text_v01(supersession_policy)
+    if retry not in AUTHORITY_RETRY_POLICIES_V01:
+        raise ValueError("authority_retry_policy_unknown")
+    if supersession not in AUTHORITY_SUPERSESSION_POLICIES_V01:
+        raise ValueError("authority_supersession_policy_unknown")
+    if not rules:
+        raise ValueError("authority_rule_refs_empty")
+    if not effects:
+        raise ValueError("authority_allowed_effect_classes_empty")
+    if not namespaces:
+        raise ValueError("authority_allowed_business_namespaces_empty")
+    if not corridors:
+        raise ValueError("authority_allowed_corridors_empty")
+    return ActionAuthorityPolicyProfileV01(
+        policy_version=normalize_identity_text_v01(policy_version),
+        owning_local_root_id=normalize_identity_text_v01(
+            owning_local_root_id
+        ),
+        authority_rule_refs=rules,
+        kill_switch_condition_refs=switches,
+        retry_policy=retry,
+        supersession_policy=supersession,
+        logical_effect_namespace=normalize_identity_text_v01(
+            logical_effect_namespace
+        ),
+        allowed_logical_effect_classes=effects,
+        allowed_business_object_namespaces=namespaces,
+        allowed_corridor_classes=corridors,
+    )
+
+
+def validate_action_authority_policy_profile_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionAuthorityPolicyProfileV01:
+        return False, ("authority_policy_type_invalid",)
+    try:
+        rebuilt = build_action_authority_policy_profile_v01(
+            policy_version=value.policy_version,
+            owning_local_root_id=value.owning_local_root_id,
+            authority_rule_refs=value.authority_rule_refs,
+            kill_switch_condition_refs=value.kill_switch_condition_refs,
+            retry_policy=value.retry_policy,
+            supersession_policy=value.supersession_policy,
+            logical_effect_namespace=value.logical_effect_namespace,
+            allowed_logical_effect_classes=(
+                value.allowed_logical_effect_classes
+            ),
+            allowed_business_object_namespaces=(
+                value.allowed_business_object_namespaces
+            ),
+            allowed_corridor_classes=value.allowed_corridor_classes,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="authority_policy_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("authority_policy_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("authority_policy_not_canonical",),
+    )
+
+
+def action_authority_policy_material_v01(
+    value: ActionAuthorityPolicyProfileV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_action_authority_policy_profile_v01(value)
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("profile_id", ACTION_AUTHORITY_POLICY_PROFILE_ID_V01),
+        ("policy_version", value.policy_version),
+        ("owning_local_root_id", value.owning_local_root_id),
+        ("authority_rule_refs", value.authority_rule_refs),
+        ("kill_switch_condition_refs", value.kill_switch_condition_refs),
+        ("retry_policy", value.retry_policy),
+        ("supersession_policy", value.supersession_policy),
+        ("logical_effect_namespace", value.logical_effect_namespace),
+        (
+            "allowed_logical_effect_classes",
+            value.allowed_logical_effect_classes,
+        ),
+        (
+            "allowed_business_object_namespaces",
+            value.allowed_business_object_namespaces,
+        ),
+        ("allowed_corridor_classes", value.allowed_corridor_classes),
+    )
+
+
+def build_action_authority_policy_fingerprint_v01(
+    value: ActionAuthorityPolicyProfileV01,
+) -> str:
+    return domain_separated_sha256_hex_v01(
+        domain=ACTION_AUTHORITY_POLICY_DOMAIN_V01,
+        payload=canonical_json_bytes_v01(
+            action_authority_policy_material_v01(value)
+        ),
+    )
+
+
+def build_action_business_object_identity_profile_v01(
+    *,
+    business_object_class: object,
+    business_object_namespace: object,
+    business_object_ref: object,
+    owning_effect_root_id: object,
+) -> ActionBusinessObjectIdentityProfileV01:
+    return ActionBusinessObjectIdentityProfileV01(
+        business_object_class=normalize_identity_text_v01(
+            business_object_class
+        ),
+        business_object_namespace=normalize_identity_text_v01(
+            business_object_namespace
+        ),
+        business_object_ref=normalize_identity_text_v01(business_object_ref),
+        owning_effect_root_id=normalize_identity_text_v01(
+            owning_effect_root_id
+        ),
+    )
+
+
+def validate_action_business_object_identity_profile_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionBusinessObjectIdentityProfileV01:
+        return False, ("business_object_identity_type_invalid",)
+    try:
+        rebuilt = build_action_business_object_identity_profile_v01(
+            business_object_class=value.business_object_class,
+            business_object_namespace=value.business_object_namespace,
+            business_object_ref=value.business_object_ref,
+            owning_effect_root_id=value.owning_effect_root_id,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="business_object_identity_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("business_object_identity_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("business_object_identity_not_canonical",),
+    )
+
+
+def action_business_object_identity_material_v01(
+    value: ActionBusinessObjectIdentityProfileV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_action_business_object_identity_profile_v01(
+        value
+    )
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("profile_id", ACTION_BUSINESS_OBJECT_IDENTITY_PROFILE_ID_V01),
+        ("business_object_class", value.business_object_class),
+        ("business_object_namespace", value.business_object_namespace),
+        ("business_object_ref", value.business_object_ref),
+        ("owning_effect_root_id", value.owning_effect_root_id),
+    )
+
+
+def build_action_consequential_effect_parameters_profile_v01(
+    *,
+    amount_decimal: object,
+    currency_code: object,
+    quantity_decimal: object,
+    parameter_records: object,
+) -> ActionConsequentialEffectParametersProfileV01:
+    amount: str | None
+    currency: str | None
+    quantity: str | None
+    if amount_decimal is None:
+        amount = None
+    else:
+        valid_amount, amount_reasons = validate_canonical_decimal_v01(
+            amount_decimal
+        )
+        if not valid_amount:
+            raise ValueError(amount_reasons[0])
+        amount = amount_decimal
+    if currency_code is None:
+        currency = None
+    else:
+        currency = normalize_identity_text_v01(currency_code)
+        if re.fullmatch(r"[A-Z]{3}", currency) is None:
+            raise ValueError("currency_code_format_invalid")
+    if quantity_decimal is None:
+        quantity = None
+    else:
+        valid_quantity, quantity_reasons = validate_canonical_decimal_v01(
+            quantity_decimal
+        )
+        if not valid_quantity:
+            raise ValueError(quantity_reasons[0])
+        quantity = quantity_decimal
+    if amount is not None and currency is None:
+        raise ValueError("currency_required_for_amount")
+    if currency is not None and amount is None:
+        raise ValueError("currency_without_amount")
+    records = _canonical_effect_parameter_records_v01(parameter_records)
+    if any(
+        record.parameter_name in RESERVED_CONSEQUENTIAL_PARAMETER_NAMES_V01
+        for record in records
+    ):
+        raise ValueError("consequential_parameter_name_reserved")
+    return ActionConsequentialEffectParametersProfileV01(
+        amount_decimal=amount,
+        currency_code=currency,
+        quantity_decimal=quantity,
+        parameter_records=records,
+    )
+
+
+def validate_action_consequential_effect_parameters_profile_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionConsequentialEffectParametersProfileV01:
+        return False, ("consequential_parameters_type_invalid",)
+    try:
+        rebuilt = build_action_consequential_effect_parameters_profile_v01(
+            amount_decimal=value.amount_decimal,
+            currency_code=value.currency_code,
+            quantity_decimal=value.quantity_decimal,
+            parameter_records=value.parameter_records,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="consequential_parameters_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("consequential_parameters_invalid",)
+    return (True, ()) if rebuilt == value else (
+        False,
+        ("consequential_parameters_not_canonical",),
+    )
+
+
+def action_consequential_effect_parameters_material_v01(
+    value: ActionConsequentialEffectParametersProfileV01,
+) -> CanonicalMaterialV01:
+    valid, reasons = (
+        validate_action_consequential_effect_parameters_profile_v01(value)
+    )
+    if not valid:
+        raise ValueError(reasons[0])
+    return (
+        ("profile_id", ACTION_CONSEQUENTIAL_EFFECT_PARAMETERS_PROFILE_ID_V01),
+        (
+            "amount_decimal",
+            value.amount_decimal
+            if value.amount_decimal is not None
+            else _canonical_absent_v01(),
+        ),
+        (
+            "currency_code",
+            value.currency_code
+            if value.currency_code is not None
+            else _canonical_absent_v01(),
+        ),
+        (
+            "quantity_decimal",
+            value.quantity_decimal
+            if value.quantity_decimal is not None
+            else _canonical_absent_v01(),
+        ),
+        (
+            "parameter_records",
+            tuple(
+                action_effect_parameter_record_material_v01(record)
+                for record in value.parameter_records
+            ),
+        ),
+    )
+
+
+def project_consequential_effect_parameters_v01(
+    *,
+    effect_class: object,
+    consequential_parameters: object,
+) -> ActionEffectParametersProfileV01:
+    valid, reasons = (
+        validate_action_consequential_effect_parameters_profile_v01(
+            consequential_parameters
+        )
+    )
+    if not valid:
+        raise ValueError(reasons[0])
+    records = list(consequential_parameters.parameter_records)
+    if consequential_parameters.amount_decimal is not None:
+        records.append(
+            build_action_effect_parameter_record_v01(
+                parameter_name="amount_decimal",
+                value_type="DECIMAL",
+                value=consequential_parameters.amount_decimal,
+            )
+        )
+    if consequential_parameters.currency_code is not None:
+        records.append(
+            build_action_effect_parameter_record_v01(
+                parameter_name="currency_code",
+                value_type="TEXT",
+                value=consequential_parameters.currency_code,
+            )
+        )
+    if consequential_parameters.quantity_decimal is not None:
+        records.append(
+            build_action_effect_parameter_record_v01(
+                parameter_name="quantity_decimal",
+                value_type="DECIMAL",
+                value=consequential_parameters.quantity_decimal,
+            )
+        )
+    return build_action_effect_parameters_profile_v01(
+        effect_class=effect_class,
+        parameter_records=tuple(records),
+    )
+
+
+def validate_canonical_permission_ref_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    valid, reasons = validate_identity_text_v01(value)
+    if not valid:
+        return valid, reasons
+    if not value.startswith("permission:"):
+        return False, ("canonical_permission_ref_prefix_invalid",)
+    return True, ()
+
+
+def validate_executable_transaction_id_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if value is None or is_absent_v01(value):
+        return False, ("executable_transaction_absent",)
+    valid, reasons = validate_identity_text_v01(value)
+    if not valid:
+        return False, reasons
+    return True, ()
+
+
+def _optional_identity_material_v01(value: str | None) -> object:
+    return value if value is not None else _canonical_absent_v01()
+
+
+def root_owned_logical_effect_intent_material_v01(
+    value: RootOwnedLogicalEffectIntentV01,
+) -> CanonicalMaterialV01:
+    return (
+        ("logical_intent_profile_version", "v0.1"),
+        ("owning_effect_root_id", value.owning_effect_root_id),
+        ("transaction_id", _optional_identity_material_v01(value.transaction_id)),
+        ("logical_effect_class", value.logical_effect_class),
+        (
+            "normalized_subject_scope",
+            action_subject_scope_material_v01(value.normalized_subject_scope),
+        ),
+        (
+            "normalized_target_scope",
+            action_target_scope_material_v01(value.normalized_target_scope),
+        ),
+        (
+            "normalized_business_object_identity",
+            action_business_object_identity_material_v01(
+                value.normalized_business_object_identity
+            ),
+        ),
+        (
+            "normalized_consequential_effect_parameters",
+            action_consequential_effect_parameters_material_v01(
+                value.normalized_consequential_effect_parameters
+            ),
+        ),
+        ("logical_effect_namespace", value.logical_effect_namespace),
+    )
+
+
+def build_root_owned_logical_effect_intent_v01(
+    *,
+    owning_effect_root_id: object,
+    transaction_id: object,
+    logical_effect_class: object,
+    normalized_subject_scope: object,
+    normalized_target_scope: object,
+    normalized_business_object_identity: object,
+    normalized_consequential_effect_parameters: object,
+    logical_effect_namespace: object,
+) -> RootOwnedLogicalEffectIntentV01:
+    root_id = normalize_identity_text_v01(owning_effect_root_id)
+    transaction: str | None
+    if transaction_id is None or is_absent_v01(transaction_id):
+        transaction = None
+    else:
+        transaction = normalize_identity_text_v01(transaction_id)
+    for profile, validator in (
+        (normalized_subject_scope, validate_action_subject_scope_profile_v01),
+        (normalized_target_scope, validate_action_target_scope_profile_v01),
+        (
+            normalized_business_object_identity,
+            validate_action_business_object_identity_profile_v01,
+        ),
+        (
+            normalized_consequential_effect_parameters,
+            validate_action_consequential_effect_parameters_profile_v01,
+        ),
+    ):
+        valid, reasons = validator(profile)
+        if not valid:
+            raise ValueError(reasons[0])
+    effect_class = normalize_identity_text_v01(logical_effect_class)
+    namespace = normalize_identity_text_v01(logical_effect_namespace)
+    provisional = RootOwnedLogicalEffectIntentV01(
+        owning_effect_root_id=root_id,
+        transaction_id=transaction,
+        logical_effect_class=effect_class,
+        normalized_subject_scope=normalized_subject_scope,
+        normalized_target_scope=normalized_target_scope,
+        normalized_business_object_identity=normalized_business_object_identity,
+        normalized_consequential_effect_parameters=(
+            normalized_consequential_effect_parameters
+        ),
+        logical_effect_namespace=namespace,
+        root_owned_intent_id="",
+    )
+    identity = build_domain_separated_identity_v01(
+        domain=ROOT_LOGICAL_EFFECT_INTENT_DOMAIN_V01,
+        prefix=ROOT_LOGICAL_INTENT_PREFIX_V01,
+        material=root_owned_logical_effect_intent_material_v01(provisional),
+    )
+    return RootOwnedLogicalEffectIntentV01(
+        owning_effect_root_id=root_id,
+        transaction_id=transaction,
+        logical_effect_class=effect_class,
+        normalized_subject_scope=normalized_subject_scope,
+        normalized_target_scope=normalized_target_scope,
+        normalized_business_object_identity=normalized_business_object_identity,
+        normalized_consequential_effect_parameters=(
+            normalized_consequential_effect_parameters
+        ),
+        logical_effect_namespace=namespace,
+        root_owned_intent_id=identity,
+    )
+
+
+def validate_root_owned_logical_effect_intent_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not RootOwnedLogicalEffectIntentV01:
+        return False, ("logical_intent_type_invalid",)
+    try:
+        rebuilt = build_root_owned_logical_effect_intent_v01(
+            owning_effect_root_id=value.owning_effect_root_id,
+            transaction_id=value.transaction_id,
+            logical_effect_class=value.logical_effect_class,
+            normalized_subject_scope=value.normalized_subject_scope,
+            normalized_target_scope=value.normalized_target_scope,
+            normalized_business_object_identity=(
+                value.normalized_business_object_identity
+            ),
+            normalized_consequential_effect_parameters=(
+                value.normalized_consequential_effect_parameters
+            ),
+            logical_effect_namespace=value.logical_effect_namespace,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="logical_intent_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("logical_intent_invalid",)
+    if rebuilt != value:
+        return False, ("logical_intent_identity_mismatch",)
+    return True, ()
+
+
+def action_idempotency_identity_material_v01(
+    value: ActionIdempotencyIdentityV01,
+) -> CanonicalMaterialV01:
+    return (
+        ("idempotency_contract_version", "v0.1"),
+        ("owning_effect_root_id", value.owning_effect_root_id),
+        ("transaction_id", _optional_identity_material_v01(value.transaction_id)),
+        (
+            "root_owned_intent_id",
+            _optional_identity_material_v01(value.root_owned_intent_id),
+        ),
+        ("logical_effect_class", value.logical_effect_class),
+        (
+            "normalized_subject_scope",
+            action_subject_scope_material_v01(value.normalized_subject_scope),
+        ),
+        (
+            "normalized_target_scope",
+            action_target_scope_material_v01(value.normalized_target_scope),
+        ),
+        (
+            "normalized_business_object_identity",
+            action_business_object_identity_material_v01(
+                value.normalized_business_object_identity
+            ),
+        ),
+        (
+            "normalized_consequential_effect_parameters",
+            action_consequential_effect_parameters_material_v01(
+                value.normalized_consequential_effect_parameters
+            ),
+        ),
+        ("logical_effect_namespace", value.logical_effect_namespace),
+    )
+
+
+def build_action_idempotency_identity_v01(
+    *,
+    owning_effect_root_id: object,
+    transaction_id: object,
+    root_owned_intent_id: object,
+    logical_effect_class: object,
+    normalized_subject_scope: object,
+    normalized_target_scope: object,
+    normalized_business_object_identity: object,
+    normalized_consequential_effect_parameters: object,
+    logical_effect_namespace: object,
+) -> ActionIdempotencyIdentityV01:
+    root_id = normalize_identity_text_v01(owning_effect_root_id)
+    transaction = (
+        None
+        if transaction_id is None or is_absent_v01(transaction_id)
+        else normalize_identity_text_v01(transaction_id)
+    )
+    intent_id = (
+        None
+        if root_owned_intent_id is None or is_absent_v01(root_owned_intent_id)
+        else normalize_identity_text_v01(root_owned_intent_id)
+    )
+    if transaction is None and intent_id is None:
+        raise ValueError("idempotency_identifiers_both_absent")
+    if intent_id is not None:
+        valid_intent, intent_reasons = validate_prefixed_sha256_identity_v01(
+            intent_id,
+            prefix=ROOT_LOGICAL_INTENT_PREFIX_V01,
+        )
+        if not valid_intent:
+            raise ValueError(intent_reasons[0])
+    for profile, validator in (
+        (normalized_subject_scope, validate_action_subject_scope_profile_v01),
+        (normalized_target_scope, validate_action_target_scope_profile_v01),
+        (
+            normalized_business_object_identity,
+            validate_action_business_object_identity_profile_v01,
+        ),
+        (
+            normalized_consequential_effect_parameters,
+            validate_action_consequential_effect_parameters_profile_v01,
+        ),
+    ):
+        valid, reasons = validator(profile)
+        if not valid:
+            raise ValueError(reasons[0])
+    provisional = ActionIdempotencyIdentityV01(
+        owning_effect_root_id=root_id,
+        transaction_id=transaction,
+        root_owned_intent_id=intent_id,
+        logical_effect_class=normalize_identity_text_v01(logical_effect_class),
+        normalized_subject_scope=normalized_subject_scope,
+        normalized_target_scope=normalized_target_scope,
+        normalized_business_object_identity=normalized_business_object_identity,
+        normalized_consequential_effect_parameters=(
+            normalized_consequential_effect_parameters
+        ),
+        logical_effect_namespace=normalize_identity_text_v01(
+            logical_effect_namespace
+        ),
+        idempotency_key="",
+    )
+    key = build_domain_separated_identity_v01(
+        domain=ACTION_IDEMPOTENCY_DOMAIN_V01,
+        prefix=ACTION_IDEMPOTENCY_PREFIX_V01,
+        material=action_idempotency_identity_material_v01(provisional),
+    )
+    return ActionIdempotencyIdentityV01(
+        owning_effect_root_id=provisional.owning_effect_root_id,
+        transaction_id=provisional.transaction_id,
+        root_owned_intent_id=provisional.root_owned_intent_id,
+        logical_effect_class=provisional.logical_effect_class,
+        normalized_subject_scope=provisional.normalized_subject_scope,
+        normalized_target_scope=provisional.normalized_target_scope,
+        normalized_business_object_identity=(
+            provisional.normalized_business_object_identity
+        ),
+        normalized_consequential_effect_parameters=(
+            provisional.normalized_consequential_effect_parameters
+        ),
+        logical_effect_namespace=provisional.logical_effect_namespace,
+        idempotency_key=key,
+    )
+
+
+def validate_action_idempotency_identity_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionIdempotencyIdentityV01:
+        return False, ("idempotency_identity_type_invalid",)
+    try:
+        rebuilt = build_action_idempotency_identity_v01(
+            owning_effect_root_id=value.owning_effect_root_id,
+            transaction_id=value.transaction_id,
+            root_owned_intent_id=value.root_owned_intent_id,
+            logical_effect_class=value.logical_effect_class,
+            normalized_subject_scope=value.normalized_subject_scope,
+            normalized_target_scope=value.normalized_target_scope,
+            normalized_business_object_identity=(
+                value.normalized_business_object_identity
+            ),
+            normalized_consequential_effect_parameters=(
+                value.normalized_consequential_effect_parameters
+            ),
+            logical_effect_namespace=value.logical_effect_namespace,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="idempotency_identity_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("idempotency_identity_invalid",)
+    if rebuilt != value:
+        return False, ("idempotency_identity_mismatch",)
+    return True, ()
+
+
+def root_bound_packet_authorization_candidate_material_v01(
+    value: RootBoundPacketAuthorizationCandidateV01,
+) -> CanonicalMaterialV01:
+    return (
+        ("packet_contract_family", "ActionCommitPacketV02"),
+        ("packet_contract_version", "v0.2"),
+        ("owning_local_root_id", value.owning_local_root_id),
+        ("transaction_id", _optional_identity_material_v01(value.transaction_id)),
+        ("root_owned_intent_id", value.root_owned_intent_id),
+        ("effect_class", value.effect_class),
+        (
+            "normalized_subject_scope",
+            action_subject_scope_material_v01(value.normalized_subject_scope),
+        ),
+        (
+            "normalized_target_scope",
+            action_target_scope_material_v01(value.normalized_target_scope),
+        ),
+        (
+            "normalized_permission_scope",
+            action_permission_scope_material_v01(
+                value.normalized_permission_scope
+            ),
+        ),
+        (
+            "normalized_effect_parameters_fingerprint",
+            value.normalized_effect_parameters_fingerprint,
+        ),
+        ("corridor_class", value.corridor_class),
+        (
+            "adapter_binding",
+            action_adapter_binding_material_v01(value.adapter_binding),
+        ),
+        (
+            "dependency_set_candidate_fingerprint",
+            value.dependency_set_candidate_fingerprint,
+        ),
+        (
+            "temporal_authority_fingerprint",
+            value.temporal_authority_fingerprint,
+        ),
+        ("policy_version", _optional_identity_material_v01(value.policy_version)),
+        (
+            "authority_policy_fingerprint",
+            value.authority_policy_fingerprint,
+        ),
+        (
+            "predecessor_packet_id",
+            _optional_identity_material_v01(value.predecessor_packet_id),
+        ),
+        (
+            "supersession_reason_class",
+            _optional_identity_material_v01(value.supersession_reason_class),
+        ),
+    )
+
+
+def build_root_bound_packet_authorization_candidate_v01(
+    *,
+    owning_local_root_id: object,
+    transaction_id: object,
+    root_owned_intent_id: object,
+    effect_class: object,
+    normalized_subject_scope: object,
+    normalized_target_scope: object,
+    normalized_permission_scope: object,
+    normalized_effect_parameters_fingerprint: object,
+    corridor_class: object,
+    adapter_binding: object,
+    dependency_set_candidate_fingerprint: object,
+    temporal_authority_fingerprint: object,
+    policy_version: object,
+    authority_policy_fingerprint: object,
+    predecessor_packet_id: object = None,
+    supersession_reason_class: object = None,
+) -> RootBoundPacketAuthorizationCandidateV01:
+    root_id = normalize_identity_text_v01(owning_local_root_id)
+    transaction = (
+        None
+        if transaction_id is None or is_absent_v01(transaction_id)
+        else normalize_identity_text_v01(transaction_id)
+    )
+    intent_id = normalize_identity_text_v01(root_owned_intent_id)
+    valid_intent, intent_reasons = validate_prefixed_sha256_identity_v01(
+        intent_id,
+        prefix=ROOT_LOGICAL_INTENT_PREFIX_V01,
+    )
+    if not valid_intent:
+        raise ValueError(intent_reasons[0])
+    for profile, validator in (
+        (normalized_subject_scope, validate_action_subject_scope_profile_v01),
+        (normalized_target_scope, validate_action_target_scope_profile_v01),
+        (
+            normalized_permission_scope,
+            validate_action_permission_scope_profile_v01,
+        ),
+        (adapter_binding, validate_action_adapter_binding_profile_v01),
+    ):
+        valid, reasons = validator(profile)
+        if not valid:
+            raise ValueError(reasons[0])
+    for fingerprint in (
+        normalized_effect_parameters_fingerprint,
+        dependency_set_candidate_fingerprint,
+        temporal_authority_fingerprint,
+        authority_policy_fingerprint,
+    ):
+        valid, reasons = validate_lowercase_sha256_hex_v01(fingerprint)
+        if not valid:
+            raise ValueError(reasons[0])
+    policy = (
+        None
+        if policy_version is None or is_absent_v01(policy_version)
+        else normalize_identity_text_v01(policy_version)
+    )
+    predecessor = (
+        None
+        if predecessor_packet_id is None or is_absent_v01(predecessor_packet_id)
+        else normalize_identity_text_v01(predecessor_packet_id)
+    )
+    reason_class = (
+        None
+        if supersession_reason_class is None
+        or is_absent_v01(supersession_reason_class)
+        else normalize_identity_text_v01(supersession_reason_class)
+    )
+    if predecessor is None and reason_class is not None:
+        raise ValueError("supersession_reason_without_predecessor")
+    if predecessor is not None and reason_class is None:
+        raise ValueError("predecessor_without_supersession_reason")
+    if predecessor is not None:
+        valid_predecessor, predecessor_reasons = (
+            validate_prefixed_sha256_identity_v01(
+                predecessor,
+                prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+            )
+        )
+        if not valid_predecessor:
+            raise ValueError(predecessor_reasons[0])
+    provisional = RootBoundPacketAuthorizationCandidateV01(
+        owning_local_root_id=root_id,
+        transaction_id=transaction,
+        root_owned_intent_id=intent_id,
+        effect_class=normalize_identity_text_v01(effect_class),
+        normalized_subject_scope=normalized_subject_scope,
+        normalized_target_scope=normalized_target_scope,
+        normalized_permission_scope=normalized_permission_scope,
+        normalized_effect_parameters_fingerprint=(
+            normalized_effect_parameters_fingerprint
+        ),
+        corridor_class=normalize_identity_text_v01(corridor_class),
+        adapter_binding=adapter_binding,
+        dependency_set_candidate_fingerprint=(
+            dependency_set_candidate_fingerprint
+        ),
+        temporal_authority_fingerprint=temporal_authority_fingerprint,
+        policy_version=policy,
+        authority_policy_fingerprint=authority_policy_fingerprint,
+        predecessor_packet_id=predecessor,
+        supersession_reason_class=reason_class,
+        root_packet_authorization_candidate_id="",
+    )
+    identity = build_domain_separated_identity_v01(
+        domain=ROOT_PACKET_AUTHORIZATION_CANDIDATE_DOMAIN_V01,
+        prefix=ROOT_PACKET_AUTHORIZATION_PREFIX_V01,
+        material=root_bound_packet_authorization_candidate_material_v01(
+            provisional
+        ),
+    )
+    return RootBoundPacketAuthorizationCandidateV01(
+        owning_local_root_id=provisional.owning_local_root_id,
+        transaction_id=provisional.transaction_id,
+        root_owned_intent_id=provisional.root_owned_intent_id,
+        effect_class=provisional.effect_class,
+        normalized_subject_scope=provisional.normalized_subject_scope,
+        normalized_target_scope=provisional.normalized_target_scope,
+        normalized_permission_scope=provisional.normalized_permission_scope,
+        normalized_effect_parameters_fingerprint=(
+            provisional.normalized_effect_parameters_fingerprint
+        ),
+        corridor_class=provisional.corridor_class,
+        adapter_binding=provisional.adapter_binding,
+        dependency_set_candidate_fingerprint=(
+            provisional.dependency_set_candidate_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            provisional.temporal_authority_fingerprint
+        ),
+        policy_version=provisional.policy_version,
+        authority_policy_fingerprint=(
+            provisional.authority_policy_fingerprint
+        ),
+        predecessor_packet_id=provisional.predecessor_packet_id,
+        supersession_reason_class=provisional.supersession_reason_class,
+        root_packet_authorization_candidate_id=identity,
+    )
+
+
+def validate_root_bound_packet_authorization_candidate_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not RootBoundPacketAuthorizationCandidateV01:
+        return False, ("packet_authorization_candidate_type_invalid",)
+    try:
+        rebuilt = build_root_bound_packet_authorization_candidate_v01(
+            owning_local_root_id=value.owning_local_root_id,
+            transaction_id=value.transaction_id,
+            root_owned_intent_id=value.root_owned_intent_id,
+            effect_class=value.effect_class,
+            normalized_subject_scope=value.normalized_subject_scope,
+            normalized_target_scope=value.normalized_target_scope,
+            normalized_permission_scope=value.normalized_permission_scope,
+            normalized_effect_parameters_fingerprint=(
+                value.normalized_effect_parameters_fingerprint
+            ),
+            corridor_class=value.corridor_class,
+            adapter_binding=value.adapter_binding,
+            dependency_set_candidate_fingerprint=(
+                value.dependency_set_candidate_fingerprint
+            ),
+            temporal_authority_fingerprint=(
+                value.temporal_authority_fingerprint
+            ),
+            policy_version=value.policy_version,
+            authority_policy_fingerprint=value.authority_policy_fingerprint,
+            predecessor_packet_id=value.predecessor_packet_id,
+            supersession_reason_class=value.supersession_reason_class,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="packet_authorization_candidate_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("packet_authorization_candidate_invalid",)
+    if rebuilt != value:
+        return False, ("packet_authorization_candidate_identity_mismatch",)
+    return True, ()
+
+
+def action_commit_packet_identity_material_v01(
+    *,
+    candidate: RootBoundPacketAuthorizationCandidateV01,
+    source_root_decision_id: str,
+    source_root_decision_hash: str,
+) -> CanonicalMaterialV01:
+    valid, reasons = validate_root_bound_packet_authorization_candidate_v01(
+        candidate
+    )
+    if not valid:
+        raise ValueError(reasons[0])
+    for value in (source_root_decision_id, source_root_decision_hash):
+        valid_digest, digest_reasons = validate_lowercase_sha256_hex_v01(value)
+        if not valid_digest:
+            raise ValueError(digest_reasons[0])
+    return (
+        ("packet_contract_family", "ActionCommitPacketV02"),
+        ("packet_contract_version", "v0.2"),
+        ("owning_local_root_id", candidate.owning_local_root_id),
+        ("source_root_decision_id", source_root_decision_id),
+        ("source_root_decision_hash", source_root_decision_hash),
+        (
+            "transaction_id",
+            _optional_identity_material_v01(candidate.transaction_id),
+        ),
+        ("root_owned_intent_id", candidate.root_owned_intent_id),
+        ("effect_class", candidate.effect_class),
+        (
+            "normalized_subject_scope",
+            action_subject_scope_material_v01(
+                candidate.normalized_subject_scope
+            ),
+        ),
+        (
+            "normalized_target_scope",
+            action_target_scope_material_v01(candidate.normalized_target_scope),
+        ),
+        (
+            "normalized_permission_scope",
+            action_permission_scope_material_v01(
+                candidate.normalized_permission_scope
+            ),
+        ),
+        (
+            "normalized_effect_parameters_fingerprint",
+            candidate.normalized_effect_parameters_fingerprint,
+        ),
+        ("corridor_class", candidate.corridor_class),
+        (
+            "adapter_binding",
+            action_adapter_binding_material_v01(candidate.adapter_binding),
+        ),
+        (
+            "dependency_set_candidate_fingerprint",
+            candidate.dependency_set_candidate_fingerprint,
+        ),
+        (
+            "temporal_authority_fingerprint",
+            candidate.temporal_authority_fingerprint,
+        ),
+        (
+            "policy_version",
+            _optional_identity_material_v01(candidate.policy_version),
+        ),
+        (
+            "authority_policy_fingerprint",
+            candidate.authority_policy_fingerprint,
+        ),
+        (
+            "predecessor_packet_id",
+            _optional_identity_material_v01(candidate.predecessor_packet_id),
+        ),
+        (
+            "supersession_reason_class",
+            _optional_identity_material_v01(
+                candidate.supersession_reason_class
+            ),
+        ),
+    )
+
+
+def build_action_commit_packet_identity_v01(
+    *,
+    candidate: RootBoundPacketAuthorizationCandidateV01,
+    source_root_decision_id: object,
+    source_root_decision_hash: object,
+) -> ActionCommitPacketIdentityResultV01:
+    material = action_commit_packet_identity_material_v01(
+        candidate=candidate,
+        source_root_decision_id=source_root_decision_id,
+        source_root_decision_hash=source_root_decision_hash,
+    )
+    packet_id = build_domain_separated_identity_v01(
+        domain=ACTION_COMMIT_PACKET_ID_DOMAIN_V01,
+        prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+        material=material,
+    )
+    return ActionCommitPacketIdentityResultV01(
+        packet_id=packet_id,
+        material=material,
+    )
+
+
+def validate_action_commit_packet_identity_v01(
+    value: object,
+    *,
+    candidate: object = None,
+    source_root_decision_id: object = None,
+    source_root_decision_hash: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionCommitPacketIdentityResultV01:
+        return False, ("packet_identity_result_type_invalid",)
+    if type(candidate) is not RootBoundPacketAuthorizationCandidateV01:
+        return False, ("packet_authorization_candidate_type_invalid",)
+    packet_id_valid, _ = validate_prefixed_sha256_identity_v01(
+        value.packet_id,
+        prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+    )
+    if not packet_id_valid:
+        return False, ("packet_identity_id_invalid",)
+    try:
+        rebuilt = build_action_commit_packet_identity_v01(
+            candidate=candidate,
+            source_root_decision_id=source_root_decision_id,
+            source_root_decision_hash=source_root_decision_hash,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="packet_identity_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("packet_identity_invalid",)
+    expected_field_names = tuple(name for name, _ in rebuilt.material)
+    supplied_material_valid, _ = validate_canonical_profile_material_v01(
+        value.material,
+        expected_field_names=expected_field_names,
+    )
+    if not supplied_material_valid:
+        return False, ("packet_identity_material_invalid",)
+    try:
+        supplied_bytes = canonical_material_bytes_v01(value.material)
+        rebuilt_bytes = canonical_material_bytes_v01(rebuilt.material)
+    except ValueError:
+        return False, ("packet_identity_material_invalid",)
+    if supplied_bytes != rebuilt_bytes or value.packet_id != rebuilt.packet_id:
+        return False, ("packet_identity_mismatch",)
+    return True, ()
+
+
+def validate_native_effect_firewall_identifier_v01(
+    value: object,
+    *,
+    identifier_kind: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(identifier_kind) is not str or identifier_kind not in (
+        "adapter",
+        "action",
+    ):
+        return False, ("firewall_identifier_kind_invalid",)
+    valid, reasons = validate_identity_text_v01(value)
+    if not valid:
+        return valid, reasons
+    prefix = "mock_adapter:" if identifier_kind == "adapter" else "mock_action:"
+    if not value.startswith(prefix):
+        return False, ("firewall_identifier_prefix_invalid",)
+    token = value[len(prefix) :]
+    try:
+        matched = re.fullmatch(CANONICAL_TOKEN_REGEX_V01, token) is not None
+    except Exception:
+        matched = False
+    if not matched:
+        return False, ("firewall_identifier_token_invalid",)
+    return True, ()
+
+
+def build_native_effect_firewall_vocabulary_projection_v01(
+    *,
+    canonical_identifier: object,
+    identifier_kind: object,
+) -> EffectFirewallVocabularyProjectionV01:
+    valid, reasons = validate_native_effect_firewall_identifier_v01(
+        canonical_identifier,
+        identifier_kind=identifier_kind,
+    )
+    if not valid:
+        raise ValueError(reasons[0])
+    return EffectFirewallVocabularyProjectionV01(
+        identifier_kind=identifier_kind,
+        raw_identifier=canonical_identifier,
+        canonical_identifier=canonical_identifier,
+        compatibility_mode=False,
+    )
+
+
+def build_legacy_effect_firewall_vocabulary_projection_v01(
+    *,
+    raw_identifier: object,
+    identifier_kind: object,
+    raw_allowed_identifiers: object,
+    raw_forbidden_identifiers: object,
+) -> EffectFirewallVocabularyProjectionV01:
+    if type(identifier_kind) is not str or identifier_kind not in (
+        "adapter",
+        "action",
+    ):
+        raise ValueError("firewall_identifier_kind_invalid")
+    raw = normalize_identity_text_v01(raw_identifier)
+    allowed = preserve_ordered_string_tuple_v01(raw_allowed_identifiers)
+    forbidden = preserve_ordered_string_tuple_v01(raw_forbidden_identifiers)
+    if raw.startswith("mock_adapter:") or raw.startswith("mock_action:"):
+        raise ValueError("legacy_firewall_identifier_prefixed")
+    if raw in _NEVER_MAP_LEGACY_IDENTIFIERS_V01:
+        raise ValueError("legacy_firewall_real_identifier_forbidden")
+    if raw not in allowed:
+        raise ValueError("legacy_firewall_identifier_not_allowed")
+    if raw in forbidden:
+        raise ValueError("legacy_firewall_identifier_forbidden")
+    canonical = _LEGACY_FIREWALL_VOCABULARY_V01.get(
+        (identifier_kind, raw)
+    )
+    if canonical is None:
+        raise ValueError("legacy_firewall_mapping_unknown")
+    return EffectFirewallVocabularyProjectionV01(
+        identifier_kind=identifier_kind,
+        raw_identifier=raw,
+        canonical_identifier=canonical,
+        compatibility_mode=True,
+    )
+
+
+def validate_effect_firewall_vocabulary_projection_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not EffectFirewallVocabularyProjectionV01:
+        return False, ("firewall_vocabulary_projection_type_invalid",)
+    if type(value.compatibility_mode) is not bool:
+        return False, ("firewall_vocabulary_compatibility_mode_type_invalid",)
+    if type(value.identifier_kind) is not str or value.identifier_kind not in (
+        "adapter",
+        "action",
+    ):
+        return False, ("firewall_identifier_kind_invalid",)
+    for identifier in (value.raw_identifier, value.canonical_identifier):
+        valid_identifier_text, _ = validate_identity_text_v01(identifier)
+        if not valid_identifier_text:
+            return False, ("firewall_vocabulary_identifier_invalid",)
+    try:
+        if value.compatibility_mode is True:
+            expected = _LEGACY_FIREWALL_VOCABULARY_V01.get(
+                (value.identifier_kind, value.raw_identifier)
+            )
+            if expected is None:
+                raise ValueError("legacy_firewall_mapping_unknown")
+            rebuilt = EffectFirewallVocabularyProjectionV01(
+                identifier_kind=value.identifier_kind,
+                raw_identifier=value.raw_identifier,
+                canonical_identifier=expected,
+                compatibility_mode=True,
+            )
+        else:
+            rebuilt = build_native_effect_firewall_vocabulary_projection_v01(
+                canonical_identifier=value.canonical_identifier,
+                identifier_kind=value.identifier_kind,
+            )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="firewall_vocabulary_projection_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("firewall_vocabulary_projection_invalid",)
+    if rebuilt != value:
+        return False, ("firewall_vocabulary_projection_mismatch",)
+    return True, ()
+
+
+def _map_all_legacy_allowed_vocabulary_v01(
+    *,
+    raw_values: tuple[str, ...],
+    raw_forbidden_values: tuple[str, ...],
+    identifier_kind: str,
+) -> tuple[str, ...]:
+    mapped = tuple(
+        build_legacy_effect_firewall_vocabulary_projection_v01(
+            raw_identifier=raw,
+            identifier_kind=identifier_kind,
+            raw_allowed_identifiers=raw_values,
+            raw_forbidden_identifiers=raw_forbidden_values,
+        ).canonical_identifier
+        for raw in raw_values
+    )
+    return canonicalize_set_like_string_tuple_v01(mapped)
+
+
+def _validate_action_commit_packet_exact_types_v01(
+    packet: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(packet) is not ActionCommitPacketV02:
+        return False, ("action_commit_packet_exact_type_invalid",)
+    reasons: list[str] = []
+    for value in (
+        packet.packet_id,
+        packet.source_root_decision_ref,
+        packet.human_approval_ref,
+        packet.packet_type,
+        packet.created_by,
+        packet.bsep_ref,
+        packet.root_boundary_ref,
+    ):
+        if type(value) is not str:
+            _reason_v01(reasons, "action_commit_packet_string_type_invalid")
+    for value in (
+        packet.root_created,
+        packet.receipt_evidence_only,
+        packet.real_world_effects_allowed,
+        packet.production_ready_claimed,
+        packet.public_auditor_ready_claimed,
+    ):
+        if type(value) is not bool:
+            _reason_v01(reasons, "action_commit_packet_bool_type_invalid")
+
+    scope = packet.scope
+    if type(scope) is not PermissionScopeV02:
+        _reason_v01(reasons, "action_commit_packet_scope_type_invalid")
+    else:
+        for value in (
+            scope.allowed_subjects,
+            scope.forbidden_subjects,
+            scope.allowed_actions,
+            scope.forbidden_actions,
+            scope.allowed_adapters,
+            scope.forbidden_adapters,
+        ):
+            if (
+                type(value) is not tuple
+                or any(type(item) is not str for item in value)
+            ):
+                _reason_v01(reasons, "action_commit_packet_tuple_type_invalid")
+        for value in (
+            scope.payment_slot_ref,
+            scope.creditor_ref,
+            scope.amount,
+            scope.currency,
+        ):
+            if type(value) is not str:
+                _reason_v01(reasons, "action_commit_packet_string_type_invalid")
+
+    ttl = packet.ttl
+    if type(ttl) is not PacketTTL:
+        _reason_v01(reasons, "action_commit_packet_ttl_type_invalid")
+    else:
+        if type(ttl.created_at) is not str or type(ttl.expires_at) is not str:
+            _reason_v01(reasons, "action_commit_packet_string_type_invalid")
+        if type(ttl.ttl_seconds) is not int:
+            _reason_v01(reasons, "action_commit_packet_integer_type_invalid")
+        if type(ttl.ttl_valid) is not bool or type(ttl.expired) is not bool:
+            _reason_v01(reasons, "action_commit_packet_bool_type_invalid")
+
+    idempotency = packet.idempotency
+    if type(idempotency) is not IdempotencyKeyV02:
+        _reason_v01(reasons, "action_commit_packet_idempotency_type_invalid")
+    else:
+        if type(idempotency.key) is not str:
+            _reason_v01(reasons, "action_commit_packet_string_type_invalid")
+        for value in (
+            idempotency.duplicate_packet_id,
+            idempotency.duplicate_idempotency_key,
+            idempotency.terminal_receipt_already_exists,
+        ):
+            if type(value) is not bool:
+                _reason_v01(reasons, "action_commit_packet_bool_type_invalid")
+
+    adapter = packet.adapter_binding
+    if type(adapter) is not AdapterBindingV02:
+        _reason_v01(reasons, "action_commit_packet_adapter_type_invalid")
+    else:
+        if (
+            type(adapter.adapter_id) is not str
+            or type(adapter.adapter_kind) is not str
+            or (
+                adapter.adapter_version is not None
+                and type(adapter.adapter_version) is not str
+            )
+        ):
+            _reason_v01(reasons, "action_commit_packet_string_type_invalid")
+        if type(adapter.real_adapter) is not bool:
+            _reason_v01(reasons, "action_commit_packet_bool_type_invalid")
+
+    if (
+        type(packet.evidence_refs) is not tuple
+        or any(type(item) is not PacketEvidenceRefV02 for item in packet.evidence_refs)
+    ):
+        _reason_v01(reasons, "action_commit_packet_evidence_tuple_type_invalid")
+    else:
+        for evidence in packet.evidence_refs:
+            if any(
+                type(value) is not str
+                for value in (
+                    evidence.evidence_id,
+                    evidence.evidence_kind,
+                    evidence.source_ref,
+                )
+            ):
+                _reason_v01(reasons, "action_commit_packet_string_type_invalid")
+    for value in (packet.drs_refs, packet.avf_refs):
+        if (
+            type(value) is not tuple
+            or any(type(item) is not str for item in value)
+        ):
+            _reason_v01(reasons, "action_commit_packet_tuple_type_invalid")
+    return _result_v01(reasons)
+
+
+def _build_supplier_action_commit_packet_canonical_projection_unchecked_v01(
+    packet: object,
+    *,
+    transaction_id: object,
+    owning_local_root_id: object,
+    canonical_permission_ref: object,
+    selected_legacy_action: object,
+    logical_effect_namespace: object,
+    business_object_namespace: object,
+    corridor_class: object,
+    adapter_version: object,
+    temporal_policy_version: object,
+    authority_policy: object,
+    dependency_candidate: object,
+    evaluation_time: object,
+    evaluation_time_source: object,
+    evaluation_context_id: object,
+) -> SupplierActionCommitPacketCanonicalProjectionV01:
+    if (
+        type(packet) is ActionCommitPacketV02
+        and type(packet.adapter_binding) is AdapterBindingV02
+        and packet.adapter_binding.adapter_version is not None
+    ):
+        raise ValueError(
+            "supplier_projection_source_adapter_version_must_be_absent"
+        )
+    exact_packet_valid, _ = _validate_action_commit_packet_exact_types_v01(
+        packet
+    )
+    if not exact_packet_valid:
+        raise ValueError("supplier_projection_packet_type_invalid")
+    try:
+        historical_valid, _ = validate_action_commit_packet_v02(packet)
+    except Exception:
+        raise ValueError("supplier_projection_historical_packet_invalid") from None
+    if not historical_valid:
+        raise ValueError("supplier_projection_historical_packet_invalid")
+    valid_transaction, transaction_reasons = (
+        validate_executable_transaction_id_v01(transaction_id)
+    )
+    if not valid_transaction:
+        raise ValueError(transaction_reasons[0])
+    valid_permission, permission_reasons = (
+        validate_canonical_permission_ref_v01(canonical_permission_ref)
+    )
+    if not valid_permission:
+        raise ValueError(permission_reasons[0])
+    root_id = normalize_identity_text_v01(owning_local_root_id)
+    corridor = normalize_identity_text_v01(corridor_class)
+    namespace = normalize_identity_text_v01(logical_effect_namespace)
+    business_namespace = normalize_identity_text_v01(
+        business_object_namespace
+    )
+    version = normalize_identity_text_v01(adapter_version)
+    valid_evaluation_time, evaluation_time_reasons = (
+        validate_signed_int64_v01(evaluation_time)
+    )
+    if not valid_evaluation_time:
+        raise ValueError(evaluation_time_reasons[0])
+    evaluation_source = normalize_identity_text_v01(evaluation_time_source)
+    evaluation_context = normalize_identity_text_v01(evaluation_context_id)
+    if version != PRE_G2A_ADAPTER_VERSION_V01:
+        raise ValueError("supplier_projection_adapter_version_invalid")
+    valid_policy, policy_reasons = validate_action_authority_policy_profile_v01(
+        authority_policy
+    )
+    if not valid_policy:
+        raise ValueError(policy_reasons[0])
+    valid_dependency, dependency_reasons = validate_dependency_set_candidate_v01(
+        dependency_candidate
+    )
+    if not valid_dependency:
+        raise ValueError(dependency_reasons[0])
+    if packet.adapter_binding.real_adapter:
+        raise ValueError("supplier_projection_real_adapter_forbidden")
+    adapter_projection = (
+        build_legacy_effect_firewall_vocabulary_projection_v01(
+            raw_identifier=packet.adapter_binding.adapter_id,
+            identifier_kind="adapter",
+            raw_allowed_identifiers=packet.scope.allowed_adapters,
+            raw_forbidden_identifiers=packet.scope.forbidden_adapters,
+        )
+    )
+    action_projection = (
+        build_legacy_effect_firewall_vocabulary_projection_v01(
+            raw_identifier=selected_legacy_action,
+            identifier_kind="action",
+            raw_allowed_identifiers=packet.scope.allowed_actions,
+            raw_forbidden_identifiers=packet.scope.forbidden_actions,
+        )
+    )
+    if packet.adapter_binding.adapter_id != ADAPTER_MOCK_BANK_SANDBOX:
+        raise ValueError("supplier_projection_selected_adapter_mismatch")
+    if selected_legacy_action != ACTION_MOCK_SUPPLIER_A_PAYMENT_ORDER:
+        raise ValueError("supplier_projection_selected_action_mismatch")
+    allowed_actions = _map_all_legacy_allowed_vocabulary_v01(
+        raw_values=packet.scope.allowed_actions,
+        raw_forbidden_values=packet.scope.forbidden_actions,
+        identifier_kind="action",
+    )
+    allowed_adapters = _map_all_legacy_allowed_vocabulary_v01(
+        raw_values=packet.scope.allowed_adapters,
+        raw_forbidden_values=packet.scope.forbidden_adapters,
+        identifier_kind="adapter",
+    )
+    subject_scope = build_action_subject_scope_profile_v01(
+        included_subject_refs=packet.scope.allowed_subjects,
+        excluded_subject_refs=packet.scope.forbidden_subjects,
+    )
+    target_scope = build_action_target_scope_profile_v01(
+        included_target_refs=(
+            packet.scope.creditor_ref,
+            packet.scope.payment_slot_ref,
+        ),
+        excluded_target_refs=(),
+    )
+    permission_scope = build_action_permission_scope_profile_v01(
+        allowed_action_classes=allowed_actions,
+        forbidden_action_classes=(),
+        allowed_adapter_ids=allowed_adapters,
+        forbidden_adapter_ids=(),
+        required_approval_refs=(canonical_permission_ref,),
+        prohibited_effect_classes=(),
+    )
+    adapter_binding = build_action_adapter_binding_profile_v01(
+        corridor_class=corridor,
+        adapter_id=adapter_projection.canonical_identifier,
+        adapter_kind=packet.adapter_binding.adapter_kind,
+        adapter_version=version,
+        mock_only=True,
+    )
+    ttl_projection = project_packet_ttl_compatibility_v01(
+        packet.ttl,
+        evaluation_time=evaluation_time,
+        temporal_policy_version=temporal_policy_version,
+    )
+    temporal_authority = ttl_projection.temporal_authority
+    temporal_evaluation = ttl_projection.evaluation
+    business_object = build_action_business_object_identity_profile_v01(
+        business_object_class="PAYMENT_SLOT",
+        business_object_namespace=business_namespace,
+        business_object_ref=packet.scope.payment_slot_ref,
+        owning_effect_root_id=root_id,
+    )
+    consequential = (
+        build_action_consequential_effect_parameters_profile_v01(
+            amount_decimal=normalize_legacy_decimal_v01(packet.scope.amount),
+            currency_code=packet.scope.currency,
+            quantity_decimal=None,
+            parameter_records=(),
+        )
+    )
+    effect_parameters = project_consequential_effect_parameters_v01(
+        effect_class="PAYMENT",
+        consequential_parameters=consequential,
+    )
+    effect_fingerprint = build_action_effect_parameters_fingerprint_v01(
+        effect_parameters
+    )
+    dependency_fingerprint = (
+        build_dependency_set_candidate_fingerprint_v01(dependency_candidate)
+    )
+    temporal_fingerprint = build_temporal_authority_fingerprint_v01(
+        temporal_authority
+    )
+    policy_fingerprint = build_action_authority_policy_fingerprint_v01(
+        authority_policy
+    )
+    logical_intent = build_root_owned_logical_effect_intent_v01(
+        owning_effect_root_id=root_id,
+        transaction_id=transaction_id,
+        logical_effect_class="PAYMENT",
+        normalized_subject_scope=subject_scope,
+        normalized_target_scope=target_scope,
+        normalized_business_object_identity=business_object,
+        normalized_consequential_effect_parameters=consequential,
+        logical_effect_namespace=namespace,
+    )
+    idempotency = build_action_idempotency_identity_v01(
+        owning_effect_root_id=root_id,
+        transaction_id=transaction_id,
+        root_owned_intent_id=logical_intent.root_owned_intent_id,
+        logical_effect_class="PAYMENT",
+        normalized_subject_scope=subject_scope,
+        normalized_target_scope=target_scope,
+        normalized_business_object_identity=business_object,
+        normalized_consequential_effect_parameters=consequential,
+        logical_effect_namespace=namespace,
+    )
+    authorization_candidate = (
+        build_root_bound_packet_authorization_candidate_v01(
+            owning_local_root_id=root_id,
+            transaction_id=transaction_id,
+            root_owned_intent_id=logical_intent.root_owned_intent_id,
+            effect_class="PAYMENT",
+            normalized_subject_scope=subject_scope,
+            normalized_target_scope=target_scope,
+            normalized_permission_scope=permission_scope,
+            normalized_effect_parameters_fingerprint=effect_fingerprint,
+            corridor_class=corridor,
+            adapter_binding=adapter_binding,
+            dependency_set_candidate_fingerprint=dependency_fingerprint,
+            temporal_authority_fingerprint=temporal_fingerprint,
+            policy_version=authority_policy.policy_version,
+            authority_policy_fingerprint=policy_fingerprint,
+        )
+    )
+    projection = SupplierActionCommitPacketCanonicalProjectionV01(
+        transaction_id=transaction_id,
+        owning_local_root_id=root_id,
+        canonical_permission_ref=canonical_permission_ref,
+        selected_legacy_action=selected_legacy_action,
+        selected_canonical_action=action_projection.canonical_identifier,
+        source_packet=packet,
+        normalized_subject_scope=subject_scope,
+        normalized_target_scope=target_scope,
+        normalized_permission_scope=permission_scope,
+        normalized_effect_parameters=effect_parameters,
+        normalized_effect_parameters_fingerprint=effect_fingerprint,
+        adapter_binding=adapter_binding,
+        dependency_candidate=dependency_candidate,
+        dependency_set_candidate_fingerprint=dependency_fingerprint,
+        temporal_authority=temporal_authority,
+        temporal_authority_fingerprint=temporal_fingerprint,
+        evaluation_time=evaluation_time,
+        evaluation_time_source=evaluation_source,
+        evaluation_context_id=evaluation_context,
+        temporal_evaluation=temporal_evaluation,
+        authority_policy=authority_policy,
+        authority_policy_fingerprint=policy_fingerprint,
+        business_object_identity=business_object,
+        consequential_effect_parameters=consequential,
+        logical_intent=logical_intent,
+        idempotency_identity=idempotency,
+        authorization_candidate=authorization_candidate,
+        raw_allowed_actions=tuple(packet.scope.allowed_actions),
+        raw_forbidden_actions=tuple(packet.scope.forbidden_actions),
+        raw_allowed_adapters=tuple(packet.scope.allowed_adapters),
+        raw_forbidden_adapters=tuple(packet.scope.forbidden_adapters),
+        human_approval_evidence_ref=packet.human_approval_ref,
+        advisory_drs_refs=tuple(packet.drs_refs),
+        advisory_avf_refs=tuple(packet.avf_refs),
+        advisory_bsep_ref=packet.bsep_ref,
+    )
+    return projection
+
+
+def build_supplier_action_commit_packet_canonical_projection_v01(
+    packet: object,
+    *,
+    transaction_id: object,
+    owning_local_root_id: object,
+    canonical_permission_ref: object,
+    selected_legacy_action: object,
+    logical_effect_namespace: object,
+    business_object_namespace: object,
+    corridor_class: object,
+    adapter_version: object,
+    temporal_policy_version: object,
+    authority_policy: object,
+    dependency_candidate: object,
+    evaluation_time: object,
+    evaluation_time_source: object,
+    evaluation_context_id: object,
+) -> SupplierActionCommitPacketCanonicalProjectionV01:
+    """Project one retained legacy Supplier packet without authorizing it."""
+
+    try:
+        projection = (
+            _build_supplier_action_commit_packet_canonical_projection_unchecked_v01(
+                packet,
+                transaction_id=transaction_id,
+                owning_local_root_id=owning_local_root_id,
+                canonical_permission_ref=canonical_permission_ref,
+                selected_legacy_action=selected_legacy_action,
+                logical_effect_namespace=logical_effect_namespace,
+                business_object_namespace=business_object_namespace,
+                corridor_class=corridor_class,
+                adapter_version=adapter_version,
+                temporal_policy_version=temporal_policy_version,
+                authority_policy=authority_policy,
+                dependency_candidate=dependency_candidate,
+                evaluation_time=evaluation_time,
+                evaluation_time_source=evaluation_time_source,
+                evaluation_context_id=evaluation_context_id,
+            )
+        )
+        projection_valid, projection_reasons = (
+            validate_supplier_action_commit_packet_canonical_projection_v01(
+                projection
+            )
+        )
+        if not projection_valid:
+            raise ValueError(projection_reasons[0])
+        return projection
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="supplier_projection_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("supplier_projection_invalid") from None
+
+
+def _validate_g2a1a_cross_profile_coherence_impl_v01(
+    value: object,
+    *,
+    selected_canonical_action: object = None,
+    selected_canonical_adapter: object = None,
+    packet_identity: object = None,
+    source_root_decision_id: object = None,
+    source_root_decision_hash: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    """Rebuild every G2-A1A identity and enforce cross-profile equality."""
+
+    if type(value) is not SupplierActionCommitPacketCanonicalProjectionV01:
+        return False, ("cross_profile_bundle_type_invalid",)
+    reasons: list[str] = []
+    try:
+        action = normalize_identity_text_v01(selected_canonical_action)
+        adapter = normalize_identity_text_v01(selected_canonical_adapter)
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="cross_profile_selected_identifier_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("cross_profile_selected_identifier_invalid",)
+    for identifier, kind in ((action, "action"), (adapter, "adapter")):
+        valid_identifier, identifier_reasons = (
+            validate_native_effect_firewall_identifier_v01(
+                identifier,
+                identifier_kind=kind,
+            )
+        )
+        if not valid_identifier:
+            return False, identifier_reasons
+
+    validators = (
+        (
+            value.normalized_subject_scope,
+            validate_action_subject_scope_profile_v01,
+            "subject_scope_invalid",
+        ),
+        (
+            value.normalized_target_scope,
+            validate_action_target_scope_profile_v01,
+            "target_scope_invalid",
+        ),
+        (
+            value.normalized_permission_scope,
+            validate_action_permission_scope_profile_v01,
+            "permission_scope_invalid",
+        ),
+        (
+            value.normalized_effect_parameters,
+            validate_action_effect_parameters_profile_v01,
+            "effect_parameters_invalid",
+        ),
+        (
+            value.adapter_binding,
+            validate_action_adapter_binding_profile_v01,
+            "adapter_binding_invalid",
+        ),
+        (
+            value.dependency_candidate,
+            validate_dependency_set_candidate_v01,
+            "dependency_candidate_invalid",
+        ),
+        (
+            value.temporal_authority,
+            validate_action_temporal_authority_profile_v01,
+            "temporal_authority_invalid",
+        ),
+        (
+            value.authority_policy,
+            validate_action_authority_policy_profile_v01,
+            "authority_policy_invalid",
+        ),
+        (
+            value.business_object_identity,
+            validate_action_business_object_identity_profile_v01,
+            "business_object_identity_invalid",
+        ),
+        (
+            value.consequential_effect_parameters,
+            validate_action_consequential_effect_parameters_profile_v01,
+            "consequential_parameters_invalid",
+        ),
+        (
+            value.logical_intent,
+            validate_root_owned_logical_effect_intent_v01,
+            "logical_intent_invalid",
+        ),
+        (
+            value.idempotency_identity,
+            validate_action_idempotency_identity_v01,
+            "idempotency_identity_invalid",
+        ),
+        (
+            value.authorization_candidate,
+            validate_root_bound_packet_authorization_candidate_v01,
+            "authorization_candidate_invalid",
+        ),
+    )
+    for profile, validator, reason in validators:
+        valid, _ = validator(profile)
+        if not valid:
+            _reason_v01(reasons, reason)
+    if reasons:
+        return _result_v01(reasons)
+
+    logical = value.logical_intent
+    idempotency = value.idempotency_identity
+    candidate = value.authorization_candidate
+    policy = value.authority_policy
+    permission = value.normalized_permission_scope
+    business = value.business_object_identity
+
+    if not (
+        value.transaction_id
+        == logical.transaction_id
+        == idempotency.transaction_id
+        == candidate.transaction_id
+    ):
+        _reason_v01(reasons, "cross_profile_transaction_mismatch")
+    if not (
+        logical.root_owned_intent_id
+        == idempotency.root_owned_intent_id
+        == candidate.root_owned_intent_id
+    ):
+        _reason_v01(reasons, "cross_profile_logical_intent_mismatch")
+    if not (
+        value.owning_local_root_id
+        == logical.owning_effect_root_id
+        == idempotency.owning_effect_root_id
+        == candidate.owning_local_root_id
+        == policy.owning_local_root_id
+        == business.owning_effect_root_id
+    ):
+        _reason_v01(reasons, "cross_profile_root_mismatch")
+    if not (
+        value.normalized_subject_scope
+        == logical.normalized_subject_scope
+        == idempotency.normalized_subject_scope
+        == candidate.normalized_subject_scope
+    ):
+        _reason_v01(reasons, "cross_profile_subject_scope_mismatch")
+    if not (
+        value.normalized_target_scope
+        == logical.normalized_target_scope
+        == idempotency.normalized_target_scope
+        == candidate.normalized_target_scope
+    ):
+        _reason_v01(reasons, "cross_profile_target_scope_mismatch")
+    if candidate.normalized_permission_scope != permission:
+        _reason_v01(reasons, "cross_profile_permission_scope_mismatch")
+    if not (
+        candidate.corridor_class
+        == value.adapter_binding.corridor_class
+        == candidate.adapter_binding.corridor_class
+    ):
+        _reason_v01(reasons, "cross_profile_corridor_mismatch")
+    if (
+        candidate.policy_version is not None
+        and candidate.policy_version != policy.policy_version
+    ):
+        _reason_v01(reasons, "cross_profile_policy_version_mismatch")
+    if not (
+        logical.logical_effect_namespace
+        == idempotency.logical_effect_namespace
+        == policy.logical_effect_namespace
+    ):
+        _reason_v01(reasons, "cross_profile_namespace_mismatch")
+    if not (
+        candidate.effect_class
+        == logical.logical_effect_class
+        == idempotency.logical_effect_class
+        == value.normalized_effect_parameters.effect_class
+    ):
+        _reason_v01(reasons, "cross_profile_effect_class_mismatch")
+    if candidate.effect_class not in policy.allowed_logical_effect_classes:
+        _reason_v01(reasons, "cross_profile_effect_class_not_allowed")
+    if (
+        business.business_object_namespace
+        not in policy.allowed_business_object_namespaces
+    ):
+        _reason_v01(reasons, "cross_profile_business_namespace_not_allowed")
+    if candidate.corridor_class not in policy.allowed_corridor_classes:
+        _reason_v01(reasons, "cross_profile_corridor_not_allowed")
+    if adapter != value.adapter_binding.adapter_id:
+        _reason_v01(reasons, "cross_profile_selected_adapter_mismatch")
+    if adapter not in permission.allowed_adapter_ids:
+        _reason_v01(reasons, "cross_profile_adapter_not_allowed")
+    if adapter in permission.forbidden_adapter_ids:
+        _reason_v01(reasons, "cross_profile_adapter_forbidden")
+    if action not in permission.allowed_action_classes:
+        _reason_v01(reasons, "cross_profile_action_not_allowed")
+    if action in permission.forbidden_action_classes:
+        _reason_v01(reasons, "cross_profile_action_forbidden")
+    if candidate.effect_class in permission.prohibited_effect_classes:
+        _reason_v01(reasons, "cross_profile_effect_prohibited")
+    if value.canonical_permission_ref not in permission.required_approval_refs:
+        _reason_v01(reasons, "cross_profile_permission_ref_mismatch")
+    if not permission.allowed_adapter_ids:
+        _reason_v01(reasons, "cross_profile_allowed_adapters_empty")
+    if not permission.allowed_action_classes:
+        _reason_v01(reasons, "cross_profile_allowed_actions_empty")
+    if not permission.required_approval_refs:
+        _reason_v01(reasons, "cross_profile_required_approvals_empty")
+    if any(
+        record.expected_accepting_local_root_id
+        != value.owning_local_root_id
+        for record in value.dependency_candidate.dependency_records
+    ):
+        _reason_v01(reasons, "cross_profile_dependency_root_mismatch")
+
+    try:
+        rebuilt_effect_profile = project_consequential_effect_parameters_v01(
+            effect_class=candidate.effect_class,
+            consequential_parameters=value.consequential_effect_parameters,
+        )
+        rebuilt_effect_fingerprint = (
+            build_action_effect_parameters_fingerprint_v01(
+                rebuilt_effect_profile
+            )
+        )
+        rebuilt_dependency_fingerprint = (
+            build_dependency_set_candidate_fingerprint_v01(
+                value.dependency_candidate
+            )
+        )
+        rebuilt_temporal_fingerprint = (
+            build_temporal_authority_fingerprint_v01(value.temporal_authority)
+        )
+        rebuilt_policy_fingerprint = (
+            build_action_authority_policy_fingerprint_v01(policy)
+        )
+        rebuilt_logical = build_root_owned_logical_effect_intent_v01(
+            owning_effect_root_id=value.owning_local_root_id,
+            transaction_id=value.transaction_id,
+            logical_effect_class=candidate.effect_class,
+            normalized_subject_scope=value.normalized_subject_scope,
+            normalized_target_scope=value.normalized_target_scope,
+            normalized_business_object_identity=business,
+            normalized_consequential_effect_parameters=(
+                value.consequential_effect_parameters
+            ),
+            logical_effect_namespace=policy.logical_effect_namespace,
+        )
+        rebuilt_idempotency = build_action_idempotency_identity_v01(
+            owning_effect_root_id=value.owning_local_root_id,
+            transaction_id=value.transaction_id,
+            root_owned_intent_id=rebuilt_logical.root_owned_intent_id,
+            logical_effect_class=candidate.effect_class,
+            normalized_subject_scope=value.normalized_subject_scope,
+            normalized_target_scope=value.normalized_target_scope,
+            normalized_business_object_identity=business,
+            normalized_consequential_effect_parameters=(
+                value.consequential_effect_parameters
+            ),
+            logical_effect_namespace=policy.logical_effect_namespace,
+        )
+        rebuilt_candidate = (
+            build_root_bound_packet_authorization_candidate_v01(
+                owning_local_root_id=value.owning_local_root_id,
+                transaction_id=value.transaction_id,
+                root_owned_intent_id=rebuilt_logical.root_owned_intent_id,
+                effect_class=candidate.effect_class,
+                normalized_subject_scope=value.normalized_subject_scope,
+                normalized_target_scope=value.normalized_target_scope,
+                normalized_permission_scope=permission,
+                normalized_effect_parameters_fingerprint=(
+                    rebuilt_effect_fingerprint
+                ),
+                corridor_class=candidate.corridor_class,
+                adapter_binding=value.adapter_binding,
+                dependency_set_candidate_fingerprint=(
+                    rebuilt_dependency_fingerprint
+                ),
+                temporal_authority_fingerprint=rebuilt_temporal_fingerprint,
+                policy_version=policy.policy_version,
+                authority_policy_fingerprint=rebuilt_policy_fingerprint,
+                predecessor_packet_id=candidate.predecessor_packet_id,
+                supersession_reason_class=(
+                    candidate.supersession_reason_class
+                ),
+            )
+        )
+    except ValueError:
+        _reason_v01(reasons, "cross_profile_rebuild_failed")
+    else:
+        if rebuilt_effect_profile != value.normalized_effect_parameters:
+            _reason_v01(reasons, "cross_profile_parameter_projection_mismatch")
+        if (
+            rebuilt_effect_fingerprint
+            != value.normalized_effect_parameters_fingerprint
+            or rebuilt_effect_fingerprint
+            != candidate.normalized_effect_parameters_fingerprint
+        ):
+            _reason_v01(reasons, "cross_profile_effect_fingerprint_mismatch")
+        if (
+            rebuilt_dependency_fingerprint
+            != value.dependency_set_candidate_fingerprint
+            or rebuilt_dependency_fingerprint
+            != candidate.dependency_set_candidate_fingerprint
+        ):
+            _reason_v01(reasons, "cross_profile_dependency_fingerprint_mismatch")
+        if (
+            rebuilt_temporal_fingerprint
+            != value.temporal_authority_fingerprint
+            or rebuilt_temporal_fingerprint
+            != candidate.temporal_authority_fingerprint
+        ):
+            _reason_v01(reasons, "cross_profile_temporal_fingerprint_mismatch")
+        if (
+            rebuilt_policy_fingerprint != value.authority_policy_fingerprint
+            or rebuilt_policy_fingerprint
+            != candidate.authority_policy_fingerprint
+        ):
+            _reason_v01(reasons, "cross_profile_policy_fingerprint_mismatch")
+        if rebuilt_logical != logical:
+            _reason_v01(reasons, "cross_profile_logical_intent_rebuild_mismatch")
+        if rebuilt_idempotency != idempotency:
+            _reason_v01(reasons, "cross_profile_idempotency_rebuild_mismatch")
+        if rebuilt_candidate != candidate:
+            _reason_v01(reasons, "cross_profile_candidate_rebuild_mismatch")
+
+    supplied_packet_values = (
+        packet_identity,
+        source_root_decision_id,
+        source_root_decision_hash,
+    )
+    if any(item is not None for item in supplied_packet_values):
+        if any(item is None for item in supplied_packet_values):
+            _reason_v01(reasons, "cross_profile_packet_identity_input_partial")
+        else:
+            packet_valid, _ = validate_action_commit_packet_identity_v01(
+                packet_identity,
+                candidate=candidate,
+                source_root_decision_id=source_root_decision_id,
+                source_root_decision_hash=source_root_decision_hash,
+            )
+            if not packet_valid:
+                _reason_v01(reasons, "cross_profile_packet_identity_mismatch")
+    return _result_v01(reasons)
+
+
+def validate_g2a1a_cross_profile_coherence_v01(
+    value: object,
+    *,
+    selected_canonical_action: object = None,
+    selected_canonical_adapter: object = None,
+    packet_identity: object = None,
+    source_root_decision_id: object = None,
+    source_root_decision_hash: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        return _validate_g2a1a_cross_profile_coherence_impl_v01(
+            value,
+            selected_canonical_action=selected_canonical_action,
+            selected_canonical_adapter=selected_canonical_adapter,
+            packet_identity=packet_identity,
+            source_root_decision_id=source_root_decision_id,
+            source_root_decision_hash=source_root_decision_hash,
+        )
+    except Exception:
+        return False, ("cross_profile_validation_invalid",)
+
+
+def _validate_supplier_action_commit_packet_canonical_projection_impl_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not SupplierActionCommitPacketCanonicalProjectionV01:
+        return False, ("supplier_projection_type_invalid",)
+    reasons: list[str] = []
+    exact_source_valid, exact_source_reasons = (
+        _validate_action_commit_packet_exact_types_v01(value.source_packet)
+    )
+    if not exact_source_valid:
+        return False, (
+            "supplier_projection_source_packet_type_invalid",
+            *exact_source_reasons,
+        )
+    try:
+        historical_valid, _ = validate_action_commit_packet_v02(
+            value.source_packet
+        )
+    except Exception:
+        historical_valid = False
+    if not historical_valid:
+        return False, ("supplier_projection_historical_packet_invalid",)
+
+    transaction_valid, _ = validate_executable_transaction_id_v01(
+        value.transaction_id
+    )
+    if not transaction_valid:
+        _reason_v01(reasons, "supplier_projection_transaction_invalid")
+    root_valid, _ = validate_identity_text_v01(value.owning_local_root_id)
+    if not root_valid:
+        _reason_v01(reasons, "supplier_projection_root_invalid")
+    permission_valid, _ = validate_canonical_permission_ref_v01(
+        value.canonical_permission_ref
+    )
+    if not permission_valid:
+        _reason_v01(reasons, "supplier_projection_permission_invalid")
+    evaluation_time_valid, _ = validate_signed_int64_v01(
+        value.evaluation_time
+    )
+    if not evaluation_time_valid:
+        _reason_v01(reasons, "supplier_projection_evaluation_time_invalid")
+    if not validate_identity_text_v01(value.evaluation_time_source)[0]:
+        _reason_v01(reasons, "supplier_projection_evaluation_source_invalid")
+    if not validate_identity_text_v01(value.evaluation_context_id)[0]:
+        _reason_v01(reasons, "supplier_projection_evaluation_context_invalid")
+    if type(value.temporal_evaluation) is not TemporalEvaluationV01:
+        _reason_v01(reasons, "supplier_projection_temporal_evaluation_invalid")
+    elif (
+        type(value.temporal_evaluation.outcome) is not str
+        or type(value.temporal_evaluation.executable) is not bool
+    ):
+        _reason_v01(reasons, "supplier_projection_temporal_evaluation_invalid")
+    else:
+        try:
+            derived_evaluation = evaluate_temporal_authority_v01(
+                value.temporal_authority,
+                evaluation_time=value.evaluation_time,
+            )
+        except ValueError:
+            _reason_v01(
+                reasons,
+                "supplier_projection_temporal_evaluation_invalid",
+            )
+        else:
+            if value.temporal_evaluation != derived_evaluation:
+                _reason_v01(
+                    reasons,
+                    "supplier_projection_temporal_evaluation_mismatch",
+                )
+
+    direct_text_fields = (
+        value.selected_legacy_action,
+        value.selected_canonical_action,
+        value.evaluation_time_source,
+        value.evaluation_context_id,
+        value.human_approval_evidence_ref,
+        value.advisory_bsep_ref,
+    )
+    if any(not validate_identity_text_v01(item)[0] for item in direct_text_fields):
+        _reason_v01(reasons, "supplier_projection_text_field_invalid")
+    direct_tuple_fields = (
+        value.raw_allowed_actions,
+        value.raw_forbidden_actions,
+        value.raw_allowed_adapters,
+        value.raw_forbidden_adapters,
+        value.advisory_drs_refs,
+        value.advisory_avf_refs,
+    )
+    if any(
+        not _validate_ordered_string_tuple_v01(item)[0]
+        for item in direct_tuple_fields
+    ):
+        _reason_v01(reasons, "supplier_projection_tuple_field_invalid")
+
+    historical_packet = value.source_packet
+
+    exact_fields = (
+        (
+            value.selected_legacy_action,
+            ACTION_MOCK_SUPPLIER_A_PAYMENT_ORDER,
+            "supplier_projection_selected_legacy_action_mismatch",
+        ),
+        (
+            value.selected_canonical_action,
+            "mock_action:mock_supplier_a_payment_order",
+            "supplier_projection_selected_canonical_action_mismatch",
+        ),
+        (
+            value.raw_allowed_actions,
+            historical_packet.scope.allowed_actions,
+            "supplier_projection_raw_allowed_actions_mismatch",
+        ),
+        (
+            value.raw_forbidden_actions,
+            historical_packet.scope.forbidden_actions,
+            "supplier_projection_raw_forbidden_actions_mismatch",
+        ),
+        (
+            value.raw_allowed_adapters,
+            historical_packet.scope.allowed_adapters,
+            "supplier_projection_raw_allowed_adapters_mismatch",
+        ),
+        (
+            value.raw_forbidden_adapters,
+            historical_packet.scope.forbidden_adapters,
+            "supplier_projection_raw_forbidden_adapters_mismatch",
+        ),
+        (
+            value.human_approval_evidence_ref,
+            historical_packet.human_approval_ref,
+            "supplier_projection_human_approval_evidence_mismatch",
+        ),
+        (
+            value.advisory_drs_refs,
+            historical_packet.drs_refs,
+            "supplier_projection_advisory_drs_mismatch",
+        ),
+        (
+            value.advisory_avf_refs,
+            historical_packet.avf_refs,
+            "supplier_projection_advisory_avf_mismatch",
+        ),
+        (
+            value.advisory_bsep_ref,
+            historical_packet.bsep_ref,
+            "supplier_projection_advisory_bsep_mismatch",
+        ),
+    )
+    for actual, expected, reason in exact_fields:
+        if actual != expected:
+            _reason_v01(reasons, reason)
+
+    if type(value.adapter_binding) is not ActionAdapterBindingProfileV01:
+        _reason_v01(reasons, "adapter_binding_invalid")
+        selected_adapter: object = None
+    else:
+        selected_adapter = value.adapter_binding.adapter_id
+        if selected_adapter != "mock_adapter:mock_bank_sandbox":
+            _reason_v01(
+                reasons,
+                "supplier_projection_selected_adapter_mismatch",
+            )
+
+    permission_scope = value.normalized_permission_scope
+    if type(permission_scope) is not ActionPermissionScopeProfileV01:
+        _reason_v01(reasons, "permission_scope_invalid")
+    elif permission_scope.required_approval_refs != (
+        value.canonical_permission_ref,
+    ):
+        _reason_v01(
+            reasons,
+            "supplier_projection_permission_singleton_mismatch",
+        )
+
+    raw_allowed_actions = (
+        value.raw_allowed_actions
+        if type(value.raw_allowed_actions) is tuple
+        else ()
+    )
+    raw_forbidden_actions = (
+        value.raw_forbidden_actions
+        if type(value.raw_forbidden_actions) is tuple
+        else ()
+    )
+    raw_allowed_adapters = (
+        value.raw_allowed_adapters
+        if type(value.raw_allowed_adapters) is tuple
+        else ()
+    )
+    raw_forbidden_adapters = (
+        value.raw_forbidden_adapters
+        if type(value.raw_forbidden_adapters) is tuple
+        else ()
+    )
+    raw_selected_action = value.selected_legacy_action
+    raw_selected_adapter = historical_packet.adapter_binding.adapter_id
+    if raw_selected_action not in raw_allowed_actions:
+        _reason_v01(reasons, "supplier_projection_raw_action_not_allowed")
+    if raw_selected_action in raw_forbidden_actions:
+        _reason_v01(reasons, "supplier_projection_raw_action_forbidden")
+    if raw_selected_adapter not in raw_allowed_adapters:
+        _reason_v01(reasons, "supplier_projection_raw_adapter_not_allowed")
+    if raw_selected_adapter in raw_forbidden_adapters:
+        _reason_v01(reasons, "supplier_projection_raw_adapter_forbidden")
+
+    try:
+        action_projection = (
+            build_legacy_effect_firewall_vocabulary_projection_v01(
+                raw_identifier=raw_selected_action,
+                identifier_kind="action",
+                raw_allowed_identifiers=raw_allowed_actions,
+                raw_forbidden_identifiers=raw_forbidden_actions,
+            )
+        )
+        adapter_projection = (
+            build_legacy_effect_firewall_vocabulary_projection_v01(
+                raw_identifier=raw_selected_adapter,
+                identifier_kind="adapter",
+                raw_allowed_identifiers=raw_allowed_adapters,
+                raw_forbidden_identifiers=raw_forbidden_adapters,
+            )
+        )
+    except ValueError:
+        _reason_v01(reasons, "supplier_projection_closed_mapping_invalid")
+    except Exception:
+        _reason_v01(reasons, "supplier_projection_closed_mapping_invalid")
+    else:
+        if action_projection.canonical_identifier != value.selected_canonical_action:
+            _reason_v01(
+                reasons,
+                "supplier_projection_selected_action_mapping_mismatch",
+            )
+        if adapter_projection.canonical_identifier != selected_adapter:
+            _reason_v01(
+                reasons,
+                "supplier_projection_selected_adapter_mapping_mismatch",
+            )
+
+    raw_identifiers = (
+        raw_allowed_actions
+        + raw_forbidden_actions
+        + raw_allowed_adapters
+        + raw_forbidden_adapters
+    )
+    if value.selected_canonical_action in raw_identifiers:
+        _reason_v01(reasons, "supplier_projection_raw_action_in_canonical_slot")
+    if selected_adapter in raw_identifiers:
+        _reason_v01(reasons, "supplier_projection_raw_adapter_in_canonical_slot")
+
+    if type(value.adapter_binding) is ActionAdapterBindingProfileV01:
+        coherence_valid, coherence_reasons = (
+            validate_g2a1a_cross_profile_coherence_v01(
+                value,
+                selected_canonical_action=value.selected_canonical_action,
+                selected_canonical_adapter=value.adapter_binding.adapter_id,
+            )
+        )
+        if not coherence_valid:
+            for reason in coherence_reasons:
+                _reason_v01(reasons, reason)
+    if reasons:
+        return _result_v01(reasons)
+
+    try:
+        expected = (
+            _build_supplier_action_commit_packet_canonical_projection_unchecked_v01(
+                value.source_packet,
+                transaction_id=value.transaction_id,
+                owning_local_root_id=value.owning_local_root_id,
+                canonical_permission_ref=value.canonical_permission_ref,
+                selected_legacy_action=value.selected_legacy_action,
+                logical_effect_namespace=(
+                    value.logical_intent.logical_effect_namespace
+                ),
+                business_object_namespace=(
+                    value.business_object_identity.business_object_namespace
+                ),
+                corridor_class=value.authorization_candidate.corridor_class,
+                adapter_version=value.adapter_binding.adapter_version,
+                temporal_policy_version=(
+                    value.temporal_authority.temporal_policy_version
+                ),
+                authority_policy=value.authority_policy,
+                dependency_candidate=value.dependency_candidate,
+                evaluation_time=value.evaluation_time,
+                evaluation_time_source=value.evaluation_time_source,
+                evaluation_context_id=value.evaluation_context_id,
+            )
+        )
+    except ValueError:
+        return False, ("supplier_projection_source_rebuild_invalid",)
+    except Exception:
+        return False, ("supplier_projection_source_rebuild_invalid",)
+    for field_name in SupplierActionCommitPacketCanonicalProjectionV01.__dataclass_fields__:
+        actual = getattr(value, field_name)
+        rebuilt = getattr(expected, field_name)
+        if type(actual) is not type(rebuilt) or actual != rebuilt:
+            _reason_v01(reasons, "supplier_projection_source_rebuild_mismatch")
+    return _result_v01(reasons)
+
+
+def validate_supplier_action_commit_packet_canonical_projection_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        return (
+            _validate_supplier_action_commit_packet_canonical_projection_impl_v01(
+                value
+            )
+        )
+    except Exception:
+        return False, ("supplier_projection_validation_invalid",)
+
+
+def build_action_source_root_decision_hash_v01(result: object) -> str:
+    if type(result) is not RootDecisionResultV01:
+        raise ValueError("source_root_decision_result_type_invalid")
+    try:
+        projection = root_decision_result_to_plain_dict_v01(result)
+        projection_bytes = canonical_json_bytes_v01(projection)
+        return domain_separated_sha256_hex_v01(
+            domain=ACTION_SOURCE_ROOT_DECISION_DOMAIN_V01,
+            payload=projection_bytes,
+        )
+    except Exception:
+        raise ValueError("source_root_decision_hash_invalid") from None
+
+
+def _validate_root_decision_candidate_projection_impl_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not RootDecisionCandidateProjectionV01:
+        return False, ("root_candidate_projection_type_invalid",)
+    reasons: list[str] = []
+    if (
+        type(value.candidate_kind) is not str
+        or value.candidate_kind
+        != ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01
+    ):
+        _reason_v01(reasons, "root_candidate_kind_invalid")
+    candidate_valid, _ = validate_prefixed_sha256_identity_v01(
+        value.projected_candidate_id,
+        prefix=ROOT_PACKET_AUTHORIZATION_PREFIX_V01,
+    )
+    if not candidate_valid:
+        _reason_v01(reasons, "root_candidate_id_invalid")
+    source_hash_valid, _ = validate_lowercase_sha256_hex_v01(
+        value.source_root_decision_hash
+    )
+    if not source_hash_valid:
+        _reason_v01(reasons, "source_root_decision_hash_invalid")
+    if type(value.root_decision_kernel) is not RootDecisionKernelV01:
+        _reason_v01(reasons, "root_candidate_kernel_type_invalid")
+    if type(value.root_decision_input) is not RootDecisionInputV01:
+        _reason_v01(reasons, "root_candidate_input_type_invalid")
+    if type(value.root_decision_result) is not RootDecisionResultV01:
+        _reason_v01(reasons, "root_candidate_result_type_invalid")
+    if reasons:
+        return _result_v01(reasons)
+
+    if validate_root_decision_kernel_v01(value.root_decision_kernel) != ():
+        _reason_v01(reasons, "root_candidate_kernel_invalid")
+    if (
+        validate_root_decision_input_v01(
+            kernel=value.root_decision_kernel,
+            decision_input=value.root_decision_input,
+        )
+        != ()
+    ):
+        _reason_v01(reasons, "root_candidate_input_invalid")
+    if (
+        validate_root_decision_result_v01(
+            kernel=value.root_decision_kernel,
+            decision_input=value.root_decision_input,
+            result=value.root_decision_result,
+        )
+        != ()
+    ):
+        _reason_v01(reasons, "root_candidate_result_invalid")
+    if reasons:
+        return _result_v01(reasons)
+
+    decision_input = value.root_decision_input
+    result = value.root_decision_result
+    if result.decision_input_id != decision_input.decision_input_id:
+        _reason_v01(reasons, "root_candidate_decision_input_mismatch")
+    if result.transaction_id != decision_input.transaction_id:
+        _reason_v01(reasons, "root_candidate_transaction_mismatch")
+    if result.target_root_id != decision_input.target_root_id:
+        _reason_v01(reasons, "root_candidate_target_root_mismatch")
+    if result.decision != "ACCEPT":
+        _reason_v01(reasons, "root_candidate_accept_required")
+    if result.reason_code != "validated_candidate_accepted":
+        _reason_v01(reasons, "root_candidate_accept_reason_invalid")
+    if result.root_commit_created is not True:
+        _reason_v01(reasons, "root_candidate_commit_missing")
+    if result.permission_created is not False:
+        _reason_v01(reasons, "root_candidate_permission_creation_forbidden")
+    if result.final_output_created is not False:
+        _reason_v01(reasons, "root_candidate_final_output_forbidden")
+    if result.effect_requested is not False:
+        _reason_v01(reasons, "root_candidate_effect_request_forbidden")
+    if result.selected_candidate_id != value.projected_candidate_id:
+        _reason_v01(reasons, "root_candidate_result_selection_mismatch")
+
+    try:
+        input_plain = root_decision_input_to_plain_dict_v01(decision_input)
+    except Exception:
+        return False, ("root_candidate_input_projection_invalid",)
+    review = input_plain.get("root_review_packet")
+    post_vv = input_plain.get("post_vv_bundle")
+    gt = input_plain.get("gt_advisory")
+    policy = input_plain.get("policy_state")
+    permission = input_plain.get("permission_state")
+    temporal = input_plain.get("temporal_state")
+    conflict = input_plain.get("conflict_state")
+    if not all(
+        type(item) is dict
+        for item in (review, post_vv, gt, policy, permission, temporal, conflict)
+    ):
+        return False, ("root_candidate_input_projection_invalid",)
+
+    synthesis = review.get("synthesis_proposal")
+    claims = synthesis.get("normalized_claims") if type(synthesis) is dict else None
+    if type(claims) is not list:
+        _reason_v01(reasons, "root_candidate_review_claims_invalid")
+    else:
+        matching_claims = [
+            claim
+            for claim in claims
+            if type(claim) is dict
+            and claim.get("claim_id") == value.projected_candidate_id
+        ]
+        if len(matching_claims) != 1:
+            _reason_v01(reasons, "root_candidate_review_claim_missing")
+        else:
+            claim = matching_claims[0]
+            expected_object = {
+                "candidate_id": value.projected_candidate_id,
+                "candidate_kind": (
+                    ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01
+                ),
+            }
+            if (
+                claim.get("predicate")
+                != "root_packet_authorization_candidate"
+                or claim.get("object_or_value") != expected_object
+            ):
+                _reason_v01(reasons, "root_candidate_review_claim_invalid")
+        for claim in claims:
+            if type(claim) is not dict:
+                _reason_v01(reasons, "root_candidate_review_claims_invalid")
+                continue
+            claim_object = claim.get("object_or_value")
+            if (
+                claim.get("claim_id") != value.projected_candidate_id
+                and type(claim_object) is dict
+                and claim_object.get("candidate_id")
+                == value.projected_candidate_id
+            ):
+                _reason_v01(reasons, "root_candidate_identity_position_duplicate")
+    if (
+        review.get("root_decision_created") is not False
+        or review.get("permission_created") is not False
+        or review.get("final_output_created") is not False
+    ):
+        _reason_v01(reasons, "root_candidate_review_authority_invalid")
+
+    validated_ids = post_vv.get("validated_candidate_ids")
+    rejected_ids = post_vv.get("rejected_candidate_ids")
+    if (
+        type(validated_ids) is not list
+        or validated_ids.count(value.projected_candidate_id) != 1
+    ):
+        _reason_v01(reasons, "root_candidate_post_vv_validated_missing")
+    if (
+        type(rejected_ids) is not list
+        or value.projected_candidate_id in rejected_ids
+    ):
+        _reason_v01(reasons, "root_candidate_post_vv_rejected")
+
+    candidate_ids = gt.get("candidate_ids")
+    scores = gt.get("score_micros_by_candidate")
+    if (
+        type(candidate_ids) is not list
+        or candidate_ids.count(value.projected_candidate_id) != 1
+    ):
+        _reason_v01(reasons, "root_candidate_gt_candidate_missing")
+    if gt.get("selected_candidate_id") != value.projected_candidate_id:
+        _reason_v01(reasons, "root_candidate_gt_selection_mismatch")
+    if type(scores) is not dict or value.projected_candidate_id not in scores:
+        _reason_v01(reasons, "root_candidate_gt_score_missing")
+    if "rejected_candidate_ids" in gt or "blocked_candidate_ids" in gt:
+        _reason_v01(reasons, "root_candidate_gt_prohibited_set_present")
+
+    if (
+        permission.get("permission_required") is not True
+        or permission.get("user_permission_present") is not True
+        or permission.get("permission_scope_valid") is not True
+    ):
+        _reason_v01(reasons, "root_candidate_permission_state_invalid")
+    if not validate_canonical_permission_ref_v01(
+        permission.get("permission_ref")
+    )[0]:
+        _reason_v01(reasons, "root_candidate_permission_ref_invalid")
+    for key in (
+        "identity_passed",
+        "scope_passed",
+        "hard_policy_passed",
+        "allow_accept",
+    ):
+        if policy.get(key) is not True:
+            _reason_v01(reasons, "root_candidate_policy_hard_predicate_failed")
+    if (
+        temporal.get("temporal_valid") is not True
+        or temporal.get("expired") is not False
+        or temporal.get("not_before_satisfied") is not True
+    ):
+        _reason_v01(reasons, "root_candidate_temporal_state_invalid")
+    if conflict.get("material_unresolved_conflict") is not False:
+        _reason_v01(reasons, "root_candidate_material_conflict")
+
+    try:
+        rebuilt_hash = build_action_source_root_decision_hash_v01(result)
+    except ValueError:
+        _reason_v01(reasons, "source_root_decision_hash_invalid")
+    else:
+        if value.source_root_decision_hash != rebuilt_hash:
+            _reason_v01(reasons, "source_root_decision_hash_mismatch")
+    return _result_v01(reasons)
+
+
+def validate_root_decision_candidate_projection_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        return _validate_root_decision_candidate_projection_impl_v01(value)
+    except Exception:
+        return False, ("root_candidate_projection_invalid",)
+
+
+def build_root_decision_candidate_projection_v01(
+    *,
+    candidate_kind: object,
+    projected_candidate_id: object,
+    root_decision_kernel: object,
+    root_decision_input: object,
+    root_decision_result: object,
+) -> RootDecisionCandidateProjectionV01:
+    try:
+        source_hash = build_action_source_root_decision_hash_v01(
+            root_decision_result
+        )
+        projection = RootDecisionCandidateProjectionV01(
+            candidate_kind=candidate_kind,
+            projected_candidate_id=projected_candidate_id,
+            root_decision_kernel=root_decision_kernel,
+            root_decision_input=root_decision_input,
+            root_decision_result=root_decision_result,
+            source_root_decision_hash=source_hash,
+        )
+        valid, reasons = validate_root_decision_candidate_projection_v01(
+            projection
+        )
+        if not valid:
+            raise ValueError(reasons[0])
+        return projection
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="root_candidate_projection_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("root_candidate_projection_invalid") from None
+
+
+def _validate_supplier_root_context_coherence_impl_v01(
+    canonical_projection: object,
+    root_projection: object,
+) -> tuple[bool, tuple[str, ...]]:
+    reasons: list[str] = []
+    canonical_valid, canonical_reasons = (
+        validate_supplier_action_commit_packet_canonical_projection_v01(
+            canonical_projection
+        )
+    )
+    if not canonical_valid:
+        return False, (
+            "supplier_root_context_canonical_projection_invalid",
+            *canonical_reasons,
+        )
+    root_valid, root_reasons = validate_root_decision_candidate_projection_v01(
+        root_projection
+    )
+    if not root_valid:
+        return False, (
+            "supplier_root_context_root_projection_invalid",
+            *root_reasons,
+        )
+    candidate = canonical_projection.authorization_candidate
+    decision_input = root_projection.root_decision_input
+    result = root_projection.root_decision_result
+    if (
+        root_projection.projected_candidate_id
+        != candidate.root_packet_authorization_candidate_id
+    ):
+        _reason_v01(reasons, "supplier_root_context_candidate_mismatch")
+    if (
+        decision_input.transaction_id != canonical_projection.transaction_id
+        or result.transaction_id != canonical_projection.transaction_id
+    ):
+        _reason_v01(reasons, "supplier_root_context_transaction_mismatch")
+    if (
+        decision_input.target_root_id
+        != canonical_projection.owning_local_root_id
+        or result.target_root_id != canonical_projection.owning_local_root_id
+    ):
+        _reason_v01(reasons, "supplier_root_context_root_mismatch")
+    try:
+        plain = root_decision_input_to_plain_dict_v01(decision_input)
+    except Exception:
+        return False, ("supplier_root_context_input_projection_invalid",)
+    permission = plain.get("permission_state")
+    policy = plain.get("policy_state")
+    temporal = plain.get("temporal_state")
+    post_vv = plain.get("post_vv_bundle")
+    prior = plain.get("prior_root_state")
+    if not all(
+        type(item) is dict
+        for item in (permission, policy, temporal, post_vv, prior)
+    ):
+        return False, ("supplier_root_context_input_projection_invalid",)
+    if (
+        permission.get("permission_ref")
+        != canonical_projection.canonical_permission_ref
+    ):
+        _reason_v01(reasons, "supplier_root_context_permission_mismatch")
+    if (
+        policy.get("policy_id")
+        != canonical_projection.authority_policy_fingerprint
+    ):
+        _reason_v01(reasons, "supplier_root_context_policy_mismatch")
+    if (
+        temporal.get("time_envelope_ref")
+        != canonical_projection.temporal_authority_fingerprint
+    ):
+        _reason_v01(reasons, "supplier_root_context_temporal_mismatch")
+    if any(
+        policy.get(key) is not True
+        for key in (
+            "identity_passed",
+            "scope_passed",
+            "hard_policy_passed",
+            "allow_accept",
+        )
+    ):
+        _reason_v01(reasons, "supplier_root_context_policy_hard_failure")
+    try:
+        derived_temporal_evaluation = evaluate_temporal_authority_v01(
+            canonical_projection.temporal_authority,
+            evaluation_time=canonical_projection.evaluation_time,
+        )
+    except ValueError:
+        _reason_v01(reasons, "supplier_root_context_temporal_evidence_invalid")
+    else:
+        if (
+            canonical_projection.temporal_evaluation
+            != derived_temporal_evaluation
+        ):
+            _reason_v01(
+                reasons,
+                "supplier_root_context_temporal_evaluation_mismatch",
+            )
+        if (
+            derived_temporal_evaluation.outcome
+            != TEMPORAL_OUTCOME_VALID_V01
+            or derived_temporal_evaluation.executable is not True
+        ):
+            _reason_v01(reasons, "supplier_root_context_temporal_invalid")
+        expected_expired = (
+            derived_temporal_evaluation.outcome
+            == TEMPORAL_OUTCOME_EXPIRED_V01
+        )
+        expected_not_before = (
+            canonical_projection.evaluation_time
+            >= canonical_projection.temporal_authority.issued_at_utc
+        )
+        if (
+            temporal.get("temporal_valid")
+            is not derived_temporal_evaluation.executable
+            or temporal.get("expired") is not expected_expired
+            or temporal.get("not_before_satisfied")
+            is not expected_not_before
+        ):
+            _reason_v01(reasons, "supplier_root_context_temporal_truth_mismatch")
+
+    required_refs = post_vv.get("required_evidence_refs")
+    provided_refs = post_vv.get("provided_evidence_refs")
+    if type(required_refs) is not list or type(provided_refs) is not list:
+        _reason_v01(reasons, "supplier_root_context_evidence_sets_invalid")
+    else:
+        mandatory_refs = tuple(
+            record.evidence_ref
+            for record in canonical_projection.dependency_candidate.dependency_records
+            if record.requirement_class == "MANDATORY"
+        )
+        if any(ref not in required_refs for ref in mandatory_refs):
+            _reason_v01(
+                reasons,
+                "supplier_root_context_required_dependency_missing",
+            )
+        if any(ref not in provided_refs for ref in mandatory_refs):
+            _reason_v01(
+                reasons,
+                "supplier_root_context_provided_dependency_missing",
+            )
+    if (
+        candidate.predecessor_packet_id is not None
+        or candidate.supersession_reason_class is not None
+    ):
+        _reason_v01(reasons, "supplier_root_context_predecessor_forbidden")
+    if (
+        prior.get("prior_decision_id") is not None
+        or prior.get("prior_decision") is not None
+        or prior.get("prior_selected_candidate_id") is not None
+        or result.prior_decision_id is not None
+    ):
+        _reason_v01(reasons, "supplier_root_context_prior_state_forbidden")
+    return _result_v01(reasons)
+
+
+def validate_supplier_root_context_coherence_v01(
+    canonical_projection: object,
+    root_projection: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        return _validate_supplier_root_context_coherence_impl_v01(
+            canonical_projection,
+            root_projection,
+        )
+    except Exception:
+        return False, ("supplier_root_context_validation_invalid",)
+
+
+def _build_supplier_root_bound_packet_v01(
+    canonical_projection: SupplierActionCommitPacketCanonicalProjectionV01,
+    root_projection: RootDecisionCandidateProjectionV01,
+    packet_identity: ActionCommitPacketIdentityResultV01,
+    dependency_binding: PacketDependencyAcceptanceBindingV01,
+) -> ActionCommitPacketV02:
+    source_packet = canonical_projection.source_packet
+    consequential = canonical_projection.consequential_effect_parameters
+    if consequential.amount_decimal is None or consequential.currency_code is None:
+        raise ValueError("supplier_root_bound_amount_currency_required")
+    temporal = canonical_projection.temporal_authority
+    evaluation = evaluate_temporal_authority_v01(
+        temporal,
+        evaluation_time=canonical_projection.evaluation_time,
+    )
+    expected_targets = canonicalize_set_like_string_tuple_v01(
+        (
+            source_packet.scope.creditor_ref,
+            source_packet.scope.payment_slot_ref,
+        )
+    )
+    if (
+        canonical_projection.normalized_target_scope.included_target_refs
+        != expected_targets
+        or canonical_projection.business_object_identity.business_object_ref
+        != source_packet.scope.payment_slot_ref
+    ):
+        raise ValueError("supplier_root_bound_target_continuity_invalid")
+    packet = ActionCommitPacketV02(
+        packet_id=packet_identity.packet_id,
+        source_root_decision_ref=(
+            root_projection.root_decision_result.decision_id
+        ),
+        human_approval_ref=source_packet.human_approval_ref,
+        scope=PermissionScopeV02(
+            allowed_subjects=(
+                canonical_projection.normalized_subject_scope.included_subject_refs
+            ),
+            forbidden_subjects=(
+                canonical_projection.normalized_subject_scope.excluded_subject_refs
+            ),
+            allowed_actions=(
+                canonical_projection.normalized_permission_scope.allowed_action_classes
+            ),
+            forbidden_actions=source_packet.scope.forbidden_actions,
+            allowed_adapters=(
+                canonical_projection.normalized_permission_scope.allowed_adapter_ids
+            ),
+            forbidden_adapters=source_packet.scope.forbidden_adapters,
+            payment_slot_ref=(
+                canonical_projection.business_object_identity.business_object_ref
+            ),
+            creditor_ref=source_packet.scope.creditor_ref,
+            amount=consequential.amount_decimal,
+            currency=consequential.currency_code,
+        ),
+        ttl=PacketTTL(
+            created_at=format_utc_timestamp_v01(temporal.issued_at_utc),
+            expires_at=format_utc_timestamp_v01(temporal.expires_at_utc),
+            ttl_seconds=temporal.ttl_seconds,
+            ttl_valid=(
+                validate_action_temporal_authority_profile_v01(temporal)
+                == (True, ())
+            ),
+            expired=evaluation.outcome == TEMPORAL_OUTCOME_EXPIRED_V01,
+        ),
+        idempotency=IdempotencyKeyV02(
+            key=canonical_projection.idempotency_identity.idempotency_key,
+            duplicate_packet_id=False,
+            duplicate_idempotency_key=False,
+            terminal_receipt_already_exists=False,
+        ),
+        adapter_binding=AdapterBindingV02(
+            adapter_id=canonical_projection.adapter_binding.adapter_id,
+            adapter_kind=canonical_projection.adapter_binding.adapter_kind,
+            real_adapter=False,
+            adapter_version=canonical_projection.adapter_binding.adapter_version,
+        ),
+        packet_type=source_packet.packet_type,
+        created_by="root",
+        root_created=True,
+        evidence_refs=(
+            *source_packet.evidence_refs,
+            PacketEvidenceRefV02(
+                evidence_id=root_projection.root_decision_result.decision_id,
+                evidence_kind="root_decision_result_v01",
+                source_ref=(
+                    root_projection.root_decision_input.decision_input_id
+                ),
+            ),
+            PacketEvidenceRefV02(
+                evidence_id=(
+                    dependency_binding.packet_dependency_acceptance_binding_id
+                ),
+                evidence_kind=(
+                    "packet_dependency_acceptance_binding_v01"
+                ),
+                source_ref=(
+                    canonical_projection.dependency_set_candidate_fingerprint
+                ),
+            ),
+        ),
+        drs_refs=source_packet.drs_refs,
+        avf_refs=source_packet.avf_refs,
+        bsep_ref=source_packet.bsep_ref,
+        root_boundary_ref=(
+            root_projection.root_decision_input.decision_input_id
+        ),
+        receipt_evidence_only=True,
+        real_world_effects_allowed=False,
+        production_ready_claimed=False,
+        public_auditor_ready_claimed=False,
+    )
+    historical_valid, _ = validate_action_commit_packet_v02(packet)
+    if not historical_valid:
+        raise ValueError("supplier_root_bound_historical_validation_failed")
+    return packet
+
+
+def _validate_supplier_root_bound_projection_impl_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not SupplierRootBoundActionCommitPacketV02ProjectionV01:
+        return False, ("supplier_root_bound_projection_type_invalid",)
+    reasons: list[str] = []
+    context_valid, context_reasons = validate_supplier_root_context_coherence_v01(
+        value.canonical_projection,
+        value.root_decision_projection,
+    )
+    if not context_valid:
+        return False, (
+            "supplier_root_bound_context_invalid",
+            *context_reasons,
+        )
+    if type(value.packet_identity) is not ActionCommitPacketIdentityResultV01:
+        _reason_v01(reasons, "supplier_root_bound_packet_identity_type_invalid")
+    if (
+        type(value.dependency_acceptance_binding)
+        is not PacketDependencyAcceptanceBindingV01
+    ):
+        _reason_v01(reasons, "supplier_root_bound_dependency_binding_type_invalid")
+    if type(value.packet) is not ActionCommitPacketV02:
+        _reason_v01(reasons, "supplier_root_bound_packet_type_invalid")
+    if reasons:
+        return _result_v01(reasons)
+
+    canonical = value.canonical_projection
+    root_projection = value.root_decision_projection
+    source_id = root_projection.root_decision_result.decision_id
+    source_hash = root_projection.source_root_decision_hash
+    try:
+        rebuilt_hash = build_action_source_root_decision_hash_v01(
+            root_projection.root_decision_result
+        )
+        rebuilt_identity = build_action_commit_packet_identity_v01(
+            candidate=canonical.authorization_candidate,
+            source_root_decision_id=source_id,
+            source_root_decision_hash=source_hash,
+        )
+        rebuilt_binding = build_packet_dependency_acceptance_binding_v01(
+            dependency_set_candidate_fingerprint=(
+                canonical.dependency_set_candidate_fingerprint
+            ),
+            root_packet_authorization_candidate_id=(
+                canonical.authorization_candidate
+                .root_packet_authorization_candidate_id
+            ),
+            source_root_decision_id=source_id,
+            source_root_decision_hash=source_hash,
+            owning_local_root_id=canonical.owning_local_root_id,
+            packet_id=rebuilt_identity.packet_id,
+            accepted_status="ROOT_ACCEPTED_FOR_PACKET",
+        )
+        expected_packet = _build_supplier_root_bound_packet_v01(
+            canonical,
+            root_projection,
+            rebuilt_identity,
+            rebuilt_binding,
+        )
+    except ValueError:
+        return False, ("supplier_root_bound_rebuild_invalid",)
+    except Exception:
+        return False, ("supplier_root_bound_rebuild_invalid",)
+    if rebuilt_hash != source_hash:
+        _reason_v01(reasons, "supplier_root_bound_source_hash_mismatch")
+    packet_identity_valid, _ = validate_action_commit_packet_identity_v01(
+        value.packet_identity,
+        candidate=canonical.authorization_candidate,
+        source_root_decision_id=source_id,
+        source_root_decision_hash=source_hash,
+    )
+    if not packet_identity_valid:
+        _reason_v01(reasons, "supplier_root_bound_packet_identity_invalid")
+    if (
+        type(value.packet_identity.packet_id) is not str
+        or value.packet_identity.packet_id != rebuilt_identity.packet_id
+        or canonical_material_bytes_v01(value.packet_identity.material)
+        != canonical_material_bytes_v01(rebuilt_identity.material)
+    ):
+        _reason_v01(reasons, "supplier_root_bound_packet_identity_mismatch")
+    binding_valid, _ = validate_packet_dependency_acceptance_binding_v01(
+        value.dependency_acceptance_binding
+    )
+    if not binding_valid:
+        _reason_v01(reasons, "supplier_root_bound_dependency_binding_invalid")
+    if value.dependency_acceptance_binding != rebuilt_binding:
+        _reason_v01(reasons, "supplier_root_bound_dependency_binding_mismatch")
+    packet_types_valid, _ = _validate_action_commit_packet_exact_types_v01(
+        value.packet
+    )
+    if not packet_types_valid:
+        _reason_v01(reasons, "supplier_root_bound_packet_exact_types_invalid")
+    packet_identity_scalar_valid = (
+        validate_prefixed_sha256_identity_v01(
+            value.packet.packet_id,
+            prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+        )[0]
+        and validate_lowercase_sha256_hex_v01(
+            value.packet.source_root_decision_ref
+        )[0]
+        and validate_lowercase_sha256_hex_v01(
+            value.packet.root_boundary_ref
+        )[0]
+        and validate_prefixed_sha256_identity_v01(
+            value.packet.idempotency.key,
+            prefix=ACTION_IDEMPOTENCY_PREFIX_V01,
+        )[0]
+    )
+    if not packet_identity_scalar_valid:
+        _reason_v01(reasons, "supplier_root_bound_identity_scalar_invalid")
+    if value.packet != expected_packet:
+        _reason_v01(reasons, "supplier_root_bound_packet_mismatch")
+    try:
+        historical_valid, _ = validate_action_commit_packet_v02(value.packet)
+    except Exception:
+        historical_valid = False
+    if not historical_valid:
+        _reason_v01(reasons, "supplier_root_bound_historical_validation_failed")
+    return _result_v01(reasons)
+
+
+def validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        return _validate_supplier_root_bound_projection_impl_v01(value)
+    except Exception:
+        return False, ("supplier_root_bound_projection_invalid",)
+
+
+def build_supplier_root_bound_action_commit_packet_v02_projection_v01(
+    *,
+    canonical_projection: object,
+    root_decision_projection: object,
+) -> SupplierRootBoundActionCommitPacketV02ProjectionV01:
+    try:
+        context_valid, context_reasons = (
+            validate_supplier_root_context_coherence_v01(
+                canonical_projection,
+                root_decision_projection,
+            )
+        )
+        if not context_valid:
+            raise ValueError(context_reasons[0])
+        source_id = root_decision_projection.root_decision_result.decision_id
+        source_hash = root_decision_projection.source_root_decision_hash
+        packet_identity = build_action_commit_packet_identity_v01(
+            candidate=canonical_projection.authorization_candidate,
+            source_root_decision_id=source_id,
+            source_root_decision_hash=source_hash,
+        )
+        dependency_binding = (
+            build_packet_dependency_acceptance_binding_v01(
+                dependency_set_candidate_fingerprint=(
+                    canonical_projection.dependency_set_candidate_fingerprint
+                ),
+                root_packet_authorization_candidate_id=(
+                    canonical_projection.authorization_candidate
+                    .root_packet_authorization_candidate_id
+                ),
+                source_root_decision_id=source_id,
+                source_root_decision_hash=source_hash,
+                owning_local_root_id=canonical_projection.owning_local_root_id,
+                packet_id=packet_identity.packet_id,
+                accepted_status="ROOT_ACCEPTED_FOR_PACKET",
+            )
+        )
+        packet = _build_supplier_root_bound_packet_v01(
+            canonical_projection,
+            root_decision_projection,
+            packet_identity,
+            dependency_binding,
+        )
+        projection = SupplierRootBoundActionCommitPacketV02ProjectionV01(
+            canonical_projection=canonical_projection,
+            root_decision_projection=root_decision_projection,
+            packet_identity=packet_identity,
+            dependency_acceptance_binding=dependency_binding,
+            packet=packet,
+        )
+        valid, reasons = (
+            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                projection
+            )
+        )
+        if not valid:
+            raise ValueError(reasons[0])
+        return projection
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="supplier_root_bound_projection_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("supplier_root_bound_projection_invalid") from None

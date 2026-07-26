@@ -58,44 +58,46 @@ The current MVP focus is:
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
 Current checkpoint: Hedgehog OS Two-Domain All-Real Sealed Evidence Program
-v0.1 X1 Cross-Domain Comparison and Audit `CLOSED_PASS`.
+v0.1 `CLOSED_PASS` through X2 Showcase audit and final checkpoint.
 
-Current X1 cross-domain facts:
+Current programme closure facts:
 
-- The accepted Airline and Supplier Package, Anchor, Replay, audit, and Human
-  Story artifacts were descriptor-read and compared without rerunning or
-  mutating either domain.
-- The cross-domain evidence index is
-  `docs/evidence/two_domain_all_real_sealed_evidence_program_v01/cross_domain_evidence_index_v01.json`.
-- X1 index ID is
-  `b77a68764bd50954afd6e15dc293466c0f44102e32401ed3e588659703fa28ec`;
-  index SHA-256 is
-  `053f45ada6445da7508a7e53bfc130a7aa6602c87c24416d71aa19ecd00ad4b1`.
-- The independent X1 audit is
-  `docs/audit_reports/auditor_two_domain_all_real_sealed_evidence_program_v01.log`,
+- Domain-Neutral Reference Kernel Gate 1 remains `CLOSED_PASS`.
+- Two-Domain All-Real Sealed Evidence Program v0.1 is `CLOSED_PASS`.
+- Airline is `CLOSED_PASS`: accepted Attempt 04 used 12 live LLM calls,
+  preserved 3 independent Root decisions, 1 Corridor, 3 evidence-only
+  receipts, offline Replay `PASS`, and 0 real-world effects.
+- Supplier Water Filter is `CLOSED_PASS`: accepted S1 used 6 live LLM calls;
+  all 9 scenarios are closed; Supplier B remains `BLOCKED`, shipment remains
+  `HELD`, receipt remains `EVIDENCE_ONLY`, business outcome remains `MIXED`,
+  offline Replay remains `PASS`, and real-world effects remain 0.
+- X1 cross-domain audit is `CLOSED_PASS`: index ID
+  `b77a68764bd50954afd6e15dc293466c0f44102e32401ed3e588659703fa28ec`,
   SHA-256
-  `ad54955da438b938c6fc376380f7bf7116034560cf82baf1fcbb75fe528eb8aa`.
-- Airline geometry remains 12 live LLM calls, 12 local validation PASS
-  results, 3 independent Root decisions, 1 Corridor, 3 evidence-only
-  receipts, and 0 real-world effects. Airline offline Replay remains `PASS`.
-- Supplier geometry remains 6 live LLM calls, 6 accepted local semantic
-  validations, and 9 scenarios in order `S-N1`, `S-N2`, `S-C1`, `S-P1`,
-  `S-P2`, `S-F1`, `S-F2`, `S-F3`, `S-M1`. Supplier B remains `BLOCKED`,
-  shipment remains `HELD`, receipt remains `EVIDENCE_ONLY`, the business
-  outcome remains `MIXED`, and Supplier offline Replay remains `PASS`.
-- In both domains, LLM semantics remain advisory evidence, local validation
-  precedes Root acceptance, Root retains authority, Corridors remain bounded
-  by Root-created scope, and receipts remain evidence rather than authority.
-- Both chains preserve Package bytes before Anchor, Anchor bytes before
-  offline Replay, distinct domain identities, and zero Package/Anchor/Replay
-  provider, network, Gemini, or real-world-effect operations.
-- X1 is not production, production certification, arbitrary-domain
-  certification, production PKI or Root Attestation, proof of semantic truth,
-  or proof that the external world changed. It is not a real airline, bank,
-  supplier, warehouse, GDS, booking, ticket, payment, or shipment integration.
+  `053f45ada6445da7508a7e53bfc130a7aa6602c87c24416d71aa19ecd00ad4b1`,
+  source continuity `25/25`, and claim/evidence validation `13/13`.
+- X2 Showcase audit is `CLOSED_PASS` under the owner-approved five-file
+  `docs/showcase/two_domain_master_v01` materialization committed at
+  `99e24e43ec749fd9db16a4728e30a3ba51920e60`.
+- The owner-approved X2 profile contains README, SHA256SUMS, source ledger,
+  66-page PDF, and 66-slide PPTX. It is a presentation-packaging variance
+  only and does not supersede runtime evidence or X1 claims.
+- The X2 audit is
+  `docs/audit_reports/auditor_two_domain_all_real_evidence_showcase_v01.log`.
+- The final programme checkpoint is
+  `docs/two_domain_all_real_sealed_evidence_program_v01_checkpoint.md`.
+- This closure pass created no provider, network, Gemini, Package, Anchor,
+  Replay, publication, or real-world-effect operation.
+- Public release is not claimed. Public-release remediation and the private
+  continuity dump remain outside this gate.
+- Not production, production certification, arbitrary-domain certification,
+  production PKI, Root Attestation, real booking, real payment, real ticket
+  issuance, real shipment release, semantic truth, or external-world change.
 
-Current next owner-reviewed programme gate:
-`two_domain_all_real_sealed_evidence_program_v01_x2_showcase`.
+Current next owner-reviewed repository gate:
+`G2-A - ActionPacket lifecycle and kill-switch`.
+
+G2-A is not implemented or started by this checkpoint.
 
 Closed prior checkpoint: Airline Tri-Party Live Semantic Lane v0.1 REAL GEMINI
 PASS.

@@ -42,6 +42,164 @@ G2A2A_ATTEMPT_RULE_IDS = {
     "g2a_t24_nonconsuming_failure",
     "g2a_t26_uncertain_adapter_outcome",
 }
+G2A3A_REVOCATION_CANDIDATE_ID = (
+    "revocation_candidate_v01:"
+    "fb56318c926658ca635e62f247ec014eea25e7967f0cd10a94fb0f3c7e38f259"
+)
+G2A3A_SUPERSESSION_CANDIDATE_ID = (
+    "supersession_candidate_v01:"
+    "4700c804f164e0a1cdec58754a2b481e36d6fa78a9a252b7df731a3045ce8cd8"
+)
+G2A3A_REVOCATION_DECISION_INPUT_ID = (
+    "17f52b82929629beb5feacff9497c1f91808c5400f7ff4bb21c07a03f1c98e9d"
+)
+G2A3A_REVOCATION_DECISION_ID = (
+    "07a2b27c6f1359ebabf3ca60949af713d13633e09aaaed3701e1e8c0c8ce72d2"
+)
+G2A3A_REVOCATION_DECISION_HASH = (
+    "34b85f5db52ec2956f931535119b09ec9095ec1ebd2c72abe324e2f01a632c52"
+)
+G2A3A_ACCEPTED_REVOCATION_BINDING_ID = (
+    "accepted_revocation_v01:"
+    "4b36644dbd15910bb594b887182c9f978e9ae1f1cfcb65c6f9787b77810dddec"
+)
+G2A3A_SUPERSESSION_DECISION_INPUT_ID = (
+    "e0d29be44df4855bb2f056cde680a446a832dc3c59a0bea55539c278255c9014"
+)
+G2A3A_SUPERSESSION_DECISION_ID = (
+    "a425c949e2308d538af04c4cc76838477a63e512214589f6f100b72679785269"
+)
+G2A3A_SUPERSESSION_DECISION_HASH = (
+    "df9869ef0897246616aec0d0ad89c5a4abb9133d820906242b361b9c340d445b"
+)
+G2A3A_ACCEPTED_SUPERSESSION_BINDING_ID = (
+    "accepted_supersession_v01:"
+    "b50cf2ad2d77cbc07e38d24c616a496f11c13246a36a976d6737cabedf5afb0c"
+)
+G2A3A_INVALIDATION_IDS = {
+    "DEPENDENCY_CHANGED": (
+        "5884d3bb8028d07b05e26cecd92932a5504012d80f12616c259dadf273a32e59"
+    ),
+    "DEPENDENCY_STALE": (
+        "9c808ce27d3e07c7fa20e046ba1322be9c2e61fc0263b181944d2689da13f103"
+    ),
+    "ROOT_BOUND_KILL_SWITCH": (
+        "846449494c3a6d35a8963ef44dd315752e9a29586f99314acdf3f9bebdd2dc4e"
+    ),
+    "MANUAL_CANCEL_EVIDENCE": (
+        "ca0910dfd1e92237e4738dc84b039edefa66083f94064ac1dfb85a7694de48dd"
+    ),
+    "ROOT_REVOCATION": (
+        "b4ece25573cbd03472f1b2eb3962c208f1febd597bdd984a736599e76e3979eb"
+    ),
+    "ROOT_SUPERSESSION": (
+        "48af8605f4b7465a136b93932eebb6311c47f3bcc0695d0be0e8ae40f392d92b"
+    ),
+}
+G2A3A_SAME_EFFECT_NONRENEWAL_VECTOR = {
+    "successor_authorization_candidate_id": (
+        "root_packet_authorization_v01:"
+        "0d6832f1a0cc27c8f94347c077ebdfeb8419b3193674418e68db8635202e8e8c"
+    ),
+    "successor_packet_id": (
+        "acp_v02:"
+        "330fb12be53d2cddfb9aa9485498525ce44223f0bbc5f40ab411957fced30c1e"
+    ),
+    "successor_source_decision_id": (
+        "ff2a60d3c7190a42dc3bee46deaec39c77f51b8f5ed766132c0a8e68eaf1efd6"
+    ),
+    "supersession_candidate_id": (
+        "supersession_candidate_v01:"
+        "e91cc209a388ac2154191d8b8a87ad7914b47590c302a1b48cbf52c157674b34"
+    ),
+    "supersession_root_decision_id": (
+        "2c5384093f2153b54911dbcf16851a9dac8868a92067b34967c0edac226ddbfe"
+    ),
+    "supersession_root_decision_hash": (
+        "b64757ca11a26381b6507e90ce27c8719c860b1803c75e957245d6e081755885"
+    ),
+    "accepted_supersession_binding_id": (
+        "accepted_supersession_v01:"
+        "655186dc5b5be2c41f71e13c2b31fc4f466e45900b243319a4be08f2800edfa7"
+    ),
+}
+G2A3A_MATERIAL_EFFECT_SUPERSESSION_VECTOR = {
+    "successor_stable_intent_id": (
+        "root_logical_intent_v01:"
+        "8fa35e0fd9067fed90fb3daf9ce570228c74ca0011b285f489515f24193710ff"
+    ),
+    "successor_idempotency_key": (
+        "idem:action_v01:"
+        "3baa1b7bb7bbe73274460782876c83abc6481fd41f2fb8067f1f8618715dd8f8"
+    ),
+    "successor_authorization_candidate_id": (
+        "root_packet_authorization_v01:"
+        "a265f1516b4d659c49f8310d37d2f49df6995234fe4e0284011fc88fb1303b6f"
+    ),
+    "successor_packet_id": (
+        "acp_v02:"
+        "7e4a2e853869688eb4b8c05d390bbed1e73710fdf1895ec0f12cea81169222d6"
+    ),
+    "successor_source_decision_id": (
+        "3502d36fa799d9261da4b2f3b39e955479a12e0eca0bc5edd7e9013fc1156b12"
+    ),
+    "supersession_candidate_id": (
+        "supersession_candidate_v01:"
+        "b44deaaac68669a9ae787d315e58a5c6328788d106f8bfbe16c65da935c235cf"
+    ),
+    "supersession_root_decision_id": (
+        "81e096b73376e89d4cdaa7d846baf9bc19ae23a820613234890377d319671e8a"
+    ),
+    "supersession_root_decision_hash": (
+        "3451f9bba7dc260cda150ac3c9f4f1e24c2918672834ce3db03edfe9899a88f2"
+    ),
+    "accepted_supersession_binding_id": (
+        "accepted_supersession_v01:"
+        "52b85248c7fbb17cd5ce6ff79cc0b52ab61ca258023ef05eba7051a06b7a766f"
+    ),
+}
+G2A3B2_VECTOR = {
+    "t20_transition_event_id": (
+        "acpt_v01:"
+        "9a7d460488262edd55d1cf0598905c60bccaa108d0fc4a2465743bdae71afd60"
+    ),
+    "t22_transition_event_id": (
+        "acpt_v01:"
+        "e8c3175ae9e156aba98947a0783d81f1722cec9486f6354d297c33edbe5d6f1b"
+    ),
+    "branch_a_successor_t01_id": (
+        "acpt_v01:"
+        "304c2e1b422fb05ab2b0dd01d5213328adf772b15f47716a4c8c58a950b683e0"
+    ),
+    "branch_a_reserve_id": (
+        "idem_event_v01:"
+        "1ee5fd74111dfdecc9ea61fbf380c6379839bb0fe52dc2d8564e74c724a498b3"
+    ),
+    "active_transfer_renewal_id": (
+        "idem_event_v01:"
+        "fc08b71782a7b3b8cbbef9e4c9bea6f7eb21c3f335f8b5fed5c4c20562a0b926"
+    ),
+    "active_transfer_supersession_id": (
+        "idem_event_v01:"
+        "8da3c2c7ed1b6c312df36456adc890280c1161f9e24111c9f13dbcc3b89cc64c"
+    ),
+    "terminal_transfer_renewal_id": (
+        "idem_event_v01:"
+        "a72e07795af98c7872973fe9d9a15c1d47f2b66137571000759e2593e00a5e18"
+    ),
+    "terminal_transfer_supersession_id": (
+        "idem_event_v01:"
+        "60ad70b478971eab5546ab59b602cb4c9c335ced7dce4891c26057238281cb22"
+    ),
+    "material_successor_t01_id": (
+        "acpt_v01:"
+        "ff9c3ba48ec578a5dd8746d7d8360c751b684c3cddd145d6db1dc15e84bd305b"
+    ),
+    "material_distinct_key_reserve_id": (
+        "idem_event_v01:"
+        "07b9673546df21f33c4771ea0fc21783df12721dc613fccd6728ae4d504fa892"
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -56,6 +214,18 @@ class _RootBoundFixtureV01:
     root_bound_projection: (
         acp.SupplierRootBoundActionCommitPacketV02ProjectionV01
     )
+
+
+@dataclass(frozen=True)
+class _G2A3AFixtureV01:
+    predecessor: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01
+    successor: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01
+    revocation_candidate: acp.RevocationCandidateV01
+    revocation_root_projection: acp.RootDecisionCandidateProjectionV01
+    accepted_revocation_binding: acp.AcceptedRevocationBindingV01
+    supersession_candidate: acp.SupersessionCandidateV01
+    supersession_root_projection: acp.RootDecisionCandidateProjectionV01
+    accepted_supersession_binding: acp.AcceptedSupersessionBindingV01
 
 
 def _dependency(
@@ -120,6 +290,8 @@ def _projection(
     evaluation_time: int = EVALUATION_TIME,
     evaluation_time_source: str = EVALUATION_TIME_SOURCE,
     evaluation_context_id: str = EVALUATION_CONTEXT_ID,
+    predecessor_packet_id: str | None = None,
+    supersession_reason_class: str | None = None,
 ) -> acp.SupplierActionCommitPacketCanonicalProjectionV01:
     return acp.build_supplier_action_commit_packet_canonical_projection_v01(
         packet or acp.build_supplier_a_mock_action_commit_packet_fixture_v02(),
@@ -137,6 +309,8 @@ def _projection(
         evaluation_time=evaluation_time,
         evaluation_time_source=evaluation_time_source,
         evaluation_context_id=evaluation_context_id,
+        predecessor_packet_id=predecessor_packet_id,
+        supersession_reason_class=supersession_reason_class,
     )
 
 
@@ -538,8 +712,11 @@ def _build_frozen_root_evidence(
     canonical: acp.SupplierActionCommitPacketCanonicalProjectionV01,
     *,
     candidate_id: str | None = None,
+    candidate_kind: str = "PACKET_AUTHORIZATION",
     transaction_id: str | None = None,
     target_root_id: str | None = None,
+    claim_predicate: str | None = None,
+    claim_candidate_kind: str | None = None,
     state_updates: dict[str, dict[str, object]] | None = None,
 ) -> tuple[
     semantic_work.SemanticWorkRequestV01,
@@ -548,9 +725,21 @@ def _build_frozen_root_evidence(
     root_decision.RootDecisionInputV01,
     root_decision.RootDecisionResultV01,
 ]:
-    selected_candidate = candidate_id or (
-        canonical.authorization_candidate.root_packet_authorization_candidate_id
-    )
+    if candidate_id is None:
+        if candidate_kind != "PACKET_AUTHORIZATION":
+            raise ValueError("candidate_id_required")
+        selected_candidate = (
+            canonical.authorization_candidate
+            .root_packet_authorization_candidate_id
+        )
+    else:
+        selected_candidate = candidate_id
+    predicate_by_kind = {
+        "PACKET_AUTHORIZATION": "root_packet_authorization_candidate",
+        "REVOCATION": "action_revocation_candidate_v01",
+        "SUPERSESSION": "action_supersession_candidate_v01",
+    }
+    predicate = predicate_by_kind[candidate_kind]
     transaction = transaction_id or canonical.transaction_id
     target_root = target_root_id or canonical.owning_local_root_id
     subject = "action_commit_packet:supplier_a"
@@ -580,10 +769,10 @@ def _build_frozen_root_evidence(
     claim = semantic_work.build_normalized_claim_v01(
         claim_id=selected_candidate,
         subject=subject,
-        predicate="root_packet_authorization_candidate",
+        predicate=claim_predicate or predicate,
         object_or_value={
             "candidate_id": selected_candidate,
-            "candidate_kind": "PACKET_AUTHORIZATION",
+            "candidate_kind": claim_candidate_kind or candidate_kind,
         },
         time_envelope_ref=canonical.temporal_authority_fingerprint,
         provenance_refs=("provenance:g2a1b_packet_authorization",),
@@ -655,10 +844,14 @@ def _build_frozen_root_evidence(
             "no_candidate_policy": "NO_UPDATE",
         },
         "permission_state": {
-            "permission_required": True,
-            "user_permission_present": True,
+            "permission_required": candidate_kind == "PACKET_AUTHORIZATION",
+            "user_permission_present": candidate_kind == "PACKET_AUTHORIZATION",
             "permission_scope_valid": True,
-            "permission_ref": canonical.canonical_permission_ref,
+            "permission_ref": (
+                canonical.canonical_permission_ref
+                if candidate_kind == "PACKET_AUTHORIZATION"
+                else None
+            ),
         },
         "temporal_state": {
             "temporal_valid": True,
@@ -5166,7 +5359,13 @@ def test_g2a2b_branch_a_shape_is_valid_but_live_activation_requires_g2a3(
             expires_at="2026-07-08T01:10:00Z",
         ),
     )
-    successor = _root_bound_from_canonical(_projection(packet=renewed_source))
+    successor = _root_bound_from_canonical(
+        _projection(
+            packet=renewed_source,
+            predecessor_packet_id=predecessor_id,
+            supersession_reason_class="RENEWAL",
+        )
+    )
     successor_id = successor.packet_identity.packet_id
     assert successor_id != predecessor_id
     assert (
@@ -5358,9 +5557,10 @@ def test_g2a2b_exact_new_dataclass_field_orders() -> None:
     registry_fields = tuple(
         field.name for field in fields(acp.ActionCommitPacketRegistryV02)
     )
-    assert registry_fields[-2:] == (
+    assert registry_fields[-3:] == (
         "action_packet_lifecycle_entries",
         "idempotency_disposition_events",
+        "action_packet_invalidation_contexts",
     )
     assert acp.IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01 == (
         "action_idempotency_disposition_event_v01"
@@ -6398,55 +6598,36 @@ def test_g2a2_final_unlinked_same_key_activation_is_symmetric_and_closed(
     first = root_bound_fixture.root_bound_projection
     second = _g2a2_final_same_key_successor(first)
     registry = _g2a2b_recorded_genesis(first)
-    registry = acp.record_action_packet_genesis_v01(
-        registry,
-        root_bound_genesis=second,
-        action_packet_transition_registry_profile=_g2a2a_registry(),
-    )
     before = repr(registry).encode("utf-8")
-    for packet_id in (
-        first.packet_identity.packet_id,
-        second.packet_identity.packet_id,
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
     ):
-        event, reserve = _g2a2b_activation_pair(registry, packet_id)
-        with pytest.raises(
-            ValueError,
-            match="^authority_transition_requires_g2a3_binding$",
-        ):
-            acp.activate_action_packet_lifecycle_v01(
-                registry,
-                packet_id=packet_id,
-                transition_event=event,
-                disposition_event=reserve,
-                action_packet_transition_registry_profile=_g2a2a_registry(),
-            )
-        forged = _g2a2_final_registry_with_event(
+        acp.record_action_packet_genesis_v01(
             registry,
-            packet_id,
-            event,
-            disposition_event=reserve,
-        )
-        valid, reasons = acp.validate_action_commit_packet_registry_v02(
-            forged
-        )
-        assert valid is False
-        assert (
-            "authority_transition_requires_g2a3_binding" in reasons
-            or "action_packet_registry_lifecycle_entry_invalid" in reasons
+            root_bound_genesis=second,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
         )
     assert repr(registry).encode("utf-8") == before
     assert registry.idempotency_disposition_events == ()
-    for packet_id in (
-        first.packet_identity.packet_id,
-        second.packet_identity.packet_id,
-    ):
-        state = acp.derive_action_packet_lifecycle_state_v01(
-            registry,
-            packet_id=packet_id,
-        )
-        assert state.lifecycle_state == "CREATED"
-        assert state.idempotency_disposition == "UNCLAIMED"
-        assert state.reservation_owner_packet_id is None
+    forged = replace(
+        registry,
+        action_packet_lifecycle_entries=(
+            registry.action_packet_lifecycle_entries
+            + (
+                acp.ActionPacketLifecycleEntryV01(
+                    root_bound_genesis=second,
+                    transition_registry_id=(
+                        _g2a2a_registry().transition_registry_id
+                    ),
+                    transition_events=(),
+                ),
+            )
+        ),
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(forged)
+    assert valid is False
+    assert "authority_transition_requires_g2a3_binding" in reasons
 
 
 def test_g2a2_retry_policy_no_retry_blocks_manual_history_bypass() -> None:
@@ -6545,3 +6726,6238 @@ def test_g2a2_retry_policy_nonconsuming_positive_control(
     )
     assert state.lifecycle_state == "QUEUED"
     assert state.idempotency_disposition == "RESERVED"
+
+
+def _g2a3a_successor(
+    predecessor: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    *,
+    variation: str = "TTL",
+    supersession_reason_class: str = "RENEWAL",
+) -> acp.SupplierRootBoundActionCommitPacketV02ProjectionV01:
+    source = predecessor.canonical_projection.source_packet
+    packet = replace(
+        source,
+        packet_id=f"legacy:g2a3a_successor:{variation.lower()}",
+        source_root_decision_ref=(
+            f"legacy:g2a3a_successor_root:{variation.lower()}"
+        ),
+    )
+    policy = predecessor.canonical_projection.authority_policy
+    dependency = predecessor.canonical_projection.dependency_candidate
+    if variation == "TTL":
+        packet = replace(
+            packet,
+            ttl=replace(
+                packet.ttl,
+                created_at="2026-07-08T00:10:00Z",
+                expires_at="2026-07-08T01:10:00Z",
+            ),
+        )
+    elif variation == "ADAPTER":
+        packet = replace(
+            packet,
+            adapter_binding=replace(
+                packet.adapter_binding,
+                adapter_kind="mock_bank_sandbox_renewed",
+            ),
+        )
+    elif variation == "DEPENDENCY":
+        dependency = _dependency(content_sha256="9" * 64)
+    elif variation == "POLICY":
+        policy = _policy(policy_version="supplier_policy_v02")
+    elif variation == "MATERIAL":
+        packet = replace(
+            packet,
+            scope=replace(packet.scope, amount="1300.00"),
+        )
+    else:
+        raise AssertionError(f"unknown renewal variation: {variation}")
+    canonical = _projection(
+        packet=packet,
+        policy=policy,
+        dependency=dependency,
+        predecessor_packet_id=predecessor.packet_identity.packet_id,
+        supersession_reason_class=supersession_reason_class,
+    )
+    return _root_bound_from_canonical(canonical)
+
+
+def _g2a3a_candidate_root_projection(
+    canonical: acp.SupplierActionCommitPacketCanonicalProjectionV01,
+    *,
+    candidate_kind: str,
+    candidate_id: str,
+    predecessor: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+) -> acp.RootDecisionCandidateProjectionV01:
+    predecessor_decision = (
+        predecessor.root_decision_projection.root_decision_result
+    )
+    _, _, kernel, decision_input, result = _build_frozen_root_evidence(
+        canonical,
+        candidate_id=candidate_id,
+        candidate_kind=candidate_kind,
+        state_updates={
+            "policy_state": {
+                "policy_id": (
+                    predecessor.canonical_projection
+                    .authority_policy_fingerprint
+                ),
+            },
+            "prior_root_state": {
+                "prior_decision_id": predecessor_decision.decision_id,
+                "prior_decision": "ACCEPT",
+                "prior_selected_candidate_id": (
+                    predecessor.canonical_projection.authorization_candidate
+                    .root_packet_authorization_candidate_id
+                ),
+            },
+        },
+    )
+    return acp.build_root_decision_candidate_projection_v01(
+        candidate_kind=candidate_kind,
+        projected_candidate_id=candidate_id,
+        root_decision_kernel=kernel,
+        root_decision_input=decision_input,
+        root_decision_result=result,
+    )
+
+
+def _g2a3a_supersession_bundle(
+    predecessor: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    successor: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+) -> tuple[
+    acp.SupersessionCandidateV01,
+    acp.RootDecisionCandidateProjectionV01,
+    acp.AcceptedSupersessionBindingV01,
+]:
+    canonical = predecessor.canonical_projection
+    supersession_reason_class = (
+        successor.canonical_projection.authorization_candidate
+        .supersession_reason_class
+    )
+    assert supersession_reason_class is not None
+    candidate = acp.build_supersession_candidate_v01(
+        owning_local_root_id=canonical.owning_local_root_id,
+        predecessor_packet_id=predecessor.packet_identity.packet_id,
+        successor_packet_authorization_candidate_id=(
+            successor.canonical_projection.authorization_candidate
+            .root_packet_authorization_candidate_id
+        ),
+        stable_logical_intent_id=(
+            successor.canonical_projection.logical_intent.root_owned_intent_id
+        ),
+        idempotency_key=(
+            successor.canonical_projection.idempotency_identity.idempotency_key
+        ),
+        supersession_reason_class=supersession_reason_class,
+        policy_fingerprint=canonical.authority_policy_fingerprint,
+    )
+    root_projection = _g2a3a_candidate_root_projection(
+        successor.canonical_projection,
+        candidate_kind="SUPERSESSION",
+        candidate_id=candidate.supersession_candidate_id,
+        predecessor=predecessor,
+    )
+    binding = acp.build_accepted_supersession_binding_v01(
+        candidate=candidate,
+        root_projection=root_projection,
+        predecessor=predecessor,
+        successor=successor,
+    )
+    return candidate, root_projection, binding
+
+
+@pytest.fixture(scope="module")
+def g2a3a_fixture(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> _G2A3AFixtureV01:
+    predecessor = root_bound_fixture.root_bound_projection
+    successor = _g2a3a_successor(predecessor)
+    canonical = predecessor.canonical_projection
+    source_decision = (
+        predecessor.root_decision_projection.root_decision_result.decision_id
+    )
+    revocation_candidate = acp.build_revocation_candidate_v01(
+        owning_local_root_id=canonical.owning_local_root_id,
+        packet_id=predecessor.packet_identity.packet_id,
+        source_authorization_decision_id=source_decision,
+        idempotency_key=canonical.idempotency_identity.idempotency_key,
+        revocation_reason_class="MANUAL_REVOCATION",
+        evidence_refs=(
+            "evidence:revocation_policy",
+            "evidence:revocation_operator",
+        ),
+        evidence_hashes=("2" * 64, "1" * 64),
+        evaluation_time=EVALUATION_TIME,
+        policy_fingerprint=canonical.authority_policy_fingerprint,
+    )
+    revocation_root_projection = _g2a3a_candidate_root_projection(
+        canonical,
+        candidate_kind="REVOCATION",
+        candidate_id=revocation_candidate.revocation_candidate_id,
+        predecessor=predecessor,
+    )
+    accepted_revocation_binding = acp.build_accepted_revocation_binding_v01(
+        candidate=revocation_candidate,
+        root_projection=revocation_root_projection,
+        packet=predecessor,
+    )
+    (
+        supersession_candidate,
+        supersession_root_projection,
+        accepted_supersession_binding,
+    ) = _g2a3a_supersession_bundle(predecessor, successor)
+    return _G2A3AFixtureV01(
+        predecessor=predecessor,
+        successor=successor,
+        revocation_candidate=revocation_candidate,
+        revocation_root_projection=revocation_root_projection,
+        accepted_revocation_binding=accepted_revocation_binding,
+        supersession_candidate=supersession_candidate,
+        supersession_root_projection=supersession_root_projection,
+        accepted_supersession_binding=accepted_supersession_binding,
+    )
+
+
+def _g2a3a_invalidation(
+    fixture: _G2A3AFixtureV01,
+    invalidation_class: str,
+) -> acp.ActionInvalidationEvidenceV01:
+    predecessor = fixture.predecessor
+    canonical = predecessor.canonical_projection
+    record = canonical.dependency_candidate.dependency_records[0]
+    dependency_id = record.dependency_id
+    evidence_ref = record.evidence_ref
+    evidence_sha256 = record.content_sha256
+    time_envelope_id = record.time_envelope_id
+    freshness_policy_id = record.freshness_policy_id
+    authority_effect = "DETERMINISTIC_BLOCK"
+    decision_id = None
+    decision_hash = None
+    if invalidation_class in {
+        "ROOT_BOUND_KILL_SWITCH",
+        "MANUAL_CANCEL_EVIDENCE",
+    }:
+        dependency_id = canonical.authority_policy.kill_switch_condition_refs[0]
+        evidence_ref = f"evidence:{invalidation_class.lower()}"
+        evidence_sha256 = "3" * 64
+    elif invalidation_class == "ROOT_REVOCATION":
+        binding = fixture.accepted_revocation_binding
+        dependency_id = "dependency:root_revocation"
+        evidence_ref = binding.accepted_revocation_binding_id
+        evidence_sha256 = evidence_ref.split(":", 1)[1]
+        authority_effect = "ROOT_REVOCATION"
+        decision_id = binding.revocation_root_decision_id
+        decision_hash = binding.revocation_root_decision_hash
+    elif invalidation_class == "ROOT_SUPERSESSION":
+        binding = fixture.accepted_supersession_binding
+        dependency_id = "dependency:root_supersession"
+        evidence_ref = binding.accepted_supersession_binding_id
+        evidence_sha256 = evidence_ref.split(":", 1)[1]
+        authority_effect = "ROOT_SUPERSESSION"
+        decision_id = binding.supersession_root_decision_id
+        decision_hash = binding.supersession_root_decision_hash
+    return acp.build_action_invalidation_evidence_v01(
+        source_invalidation_event_ref=(
+            f"source_invalidation:{invalidation_class.lower()}"
+        ),
+        packet_id=predecessor.packet_identity.packet_id,
+        dependency_id=dependency_id,
+        invalidation_class=invalidation_class,
+        evidence_ref=evidence_ref,
+        evidence_sha256=evidence_sha256,
+        observed_status=f"OBSERVED_{invalidation_class}",
+        time_envelope_id=time_envelope_id,
+        freshness_policy_id=freshness_policy_id,
+        owning_local_root_id=canonical.owning_local_root_id,
+        accepted_by_local_root_id=canonical.owning_local_root_id,
+        acceptance_root_decision_id=decision_id,
+        acceptance_root_decision_hash=decision_hash,
+        authority_effect=authority_effect,
+        root_decision_ref=decision_id,
+        evaluation_time=EVALUATION_TIME,
+        evaluation_time_source=EVALUATION_TIME_SOURCE,
+        evaluation_context_id="evaluation_context:g2a3a_invalidation",
+    )
+
+
+def test_g2a3a_fixture_contracts_validate(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    assert acp.validate_revocation_candidate_against_packet_v01(
+        fixture.revocation_candidate,
+        fixture.predecessor,
+    ) == (True, ())
+    assert acp.validate_supersession_candidate_against_packets_v01(
+        fixture.supersession_candidate,
+        fixture.predecessor,
+        fixture.successor,
+    ) == (True, ())
+    assert acp.validate_revocation_root_context_coherence_v01(
+        fixture.revocation_candidate,
+        fixture.revocation_root_projection,
+        fixture.predecessor,
+    ) == (True, ())
+    assert acp.validate_supersession_root_context_coherence_v01(
+        fixture.supersession_candidate,
+        fixture.supersession_root_projection,
+        fixture.predecessor,
+        fixture.successor,
+    ) == (True, ())
+    assert acp.validate_action_packet_renewal_relationship_v01(
+        fixture.predecessor,
+        fixture.successor,
+        fixture.supersession_candidate,
+        fixture.accepted_supersession_binding,
+        root_projection=fixture.supersession_root_projection,
+    ) == (True, ())
+
+
+def _reidentify_revocation_candidate(
+    value: acp.RevocationCandidateV01,
+    **changes: object,
+) -> acp.RevocationCandidateV01:
+    provisional = replace(value, revocation_candidate_id="", **changes)
+    return replace(
+        provisional,
+        revocation_candidate_id=acp.build_domain_separated_identity_v01(
+            domain=acp.REVOCATION_CANDIDATE_DOMAIN_V01,
+            prefix=acp.REVOCATION_CANDIDATE_PREFIX_V01,
+            material=acp.revocation_candidate_material_v01(provisional),
+        ),
+    )
+
+
+def _reidentify_supersession_candidate(
+    value: acp.SupersessionCandidateV01,
+    **changes: object,
+) -> acp.SupersessionCandidateV01:
+    provisional = replace(value, supersession_candidate_id="", **changes)
+    return replace(
+        provisional,
+        supersession_candidate_id=acp.build_domain_separated_identity_v01(
+            domain=acp.SUPERSESSION_CANDIDATE_DOMAIN_V01,
+            prefix=acp.SUPERSESSION_CANDIDATE_PREFIX_V01,
+            material=acp.supersession_candidate_material_v01(provisional),
+        ),
+    )
+
+
+def _reidentify_invalidation(
+    value: acp.ActionInvalidationEvidenceV01,
+    **changes: object,
+) -> acp.ActionInvalidationEvidenceV01:
+    provisional = replace(value, invalidation_evidence_id="", **changes)
+    return replace(
+        provisional,
+        invalidation_evidence_id=domain_separated_sha256_hex_v01(
+            domain=acp.ACTION_INVALIDATION_EVIDENCE_DOMAIN_V01,
+            payload=acp.canonical_material_bytes_v01(
+                acp.action_invalidation_evidence_material_v01(provisional)
+            ),
+        ),
+    )
+
+
+def _reidentify_accepted_revocation(
+    value: acp.AcceptedRevocationBindingV01,
+    **changes: object,
+) -> acp.AcceptedRevocationBindingV01:
+    provisional = replace(
+        value,
+        accepted_revocation_binding_id="",
+        **changes,
+    )
+    return replace(
+        provisional,
+        accepted_revocation_binding_id=(
+            acp.build_domain_separated_identity_v01(
+                domain=acp.ACCEPTED_REVOCATION_BINDING_DOMAIN_V01,
+                prefix=acp.ACCEPTED_REVOCATION_BINDING_PREFIX_V01,
+                material=acp.accepted_revocation_binding_material_v01(
+                    provisional
+                ),
+            )
+        ),
+    )
+
+
+def _reidentify_accepted_supersession(
+    value: acp.AcceptedSupersessionBindingV01,
+    **changes: object,
+) -> acp.AcceptedSupersessionBindingV01:
+    provisional = replace(
+        value,
+        accepted_supersession_binding_id="",
+        **changes,
+    )
+    return replace(
+        provisional,
+        accepted_supersession_binding_id=(
+            acp.build_domain_separated_identity_v01(
+                domain=acp.ACCEPTED_SUPERSESSION_BINDING_DOMAIN_V01,
+                prefix=acp.ACCEPTED_SUPERSESSION_BINDING_PREFIX_V01,
+                material=acp.accepted_supersession_binding_material_v01(
+                    provisional
+                ),
+            )
+        ),
+    )
+
+
+def _g2a3a_prior_state(
+    fixture: _G2A3AFixtureV01,
+) -> dict[str, dict[str, object]]:
+    predecessor = fixture.predecessor
+    return {
+        "prior_root_state": {
+            "prior_decision_id": (
+                predecessor.root_decision_projection.root_decision_result
+                .decision_id
+            ),
+            "prior_decision": "ACCEPT",
+            "prior_selected_candidate_id": (
+                predecessor.canonical_projection.authorization_candidate
+                .root_packet_authorization_candidate_id
+            ),
+        },
+    }
+
+
+def test_g2a3a_exact_shapes_materials_and_vector(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    revocation = fixture.revocation_candidate
+    supersession = fixture.supersession_candidate
+    assert acp.ROOT_DECISION_CANDIDATE_KINDS_V01 == (
+        "PACKET_AUTHORIZATION",
+        "REVOCATION",
+        "SUPERSESSION",
+    )
+    assert acp.REVOCATION_CANDIDATE_PROFILE_ID_V01 == (
+        "action_revocation_candidate_v01"
+    )
+    assert acp.REVOCATION_CANDIDATE_DOMAIN_V01 == (
+        "HEDGEHOG_ACTION_REVOCATION_CANDIDATE_V01"
+    )
+    assert acp.REVOCATION_CANDIDATE_PREFIX_V01 == (
+        "revocation_candidate_v01:"
+    )
+    assert acp.SUPERSESSION_CANDIDATE_DOMAIN_V01 == (
+        "HEDGEHOG_ACTION_SUPERSESSION_CANDIDATE_V01"
+    )
+    assert acp.SUPERSESSION_CANDIDATE_PREFIX_V01 == (
+        "supersession_candidate_v01:"
+    )
+    assert acp.ACTION_INVALIDATION_CLASSES_V01 == (
+        "DEPENDENCY_CHANGED",
+        "DEPENDENCY_STALE",
+        "ROOT_BOUND_KILL_SWITCH",
+        "MANUAL_CANCEL_EVIDENCE",
+        "ROOT_REVOCATION",
+        "ROOT_SUPERSESSION",
+    )
+    assert acp.ACTION_INVALIDATION_AUTHORITY_EFFECTS_V01 == (
+        "DETERMINISTIC_BLOCK",
+        "ROOT_REVOCATION",
+        "ROOT_SUPERSESSION",
+    )
+    assert [field.name for field in fields(acp.RevocationCandidateV01)] == [
+        "candidate_profile_id",
+        "owning_local_root_id",
+        "packet_id",
+        "source_authorization_decision_id",
+        "idempotency_key",
+        "revocation_reason_class",
+        "evidence_refs",
+        "evidence_hashes",
+        "evaluation_time",
+        "policy_fingerprint",
+        "revocation_candidate_id",
+    ]
+    assert tuple(
+        key for key, _ in acp.revocation_candidate_material_v01(revocation)
+    ) == (
+        "candidate_profile_id",
+        "owning_local_root_id",
+        "packet_id",
+        "source_authorization_decision_id",
+        "idempotency_key",
+        "revocation_reason_class",
+        "evidence_refs",
+        "evidence_hashes",
+        "evaluation_time",
+        "policy_fingerprint",
+    )
+    assert [field.name for field in fields(acp.SupersessionCandidateV01)] == [
+        "owning_local_root_id",
+        "predecessor_packet_id",
+        "successor_packet_authorization_candidate_id",
+        "stable_logical_intent_id",
+        "idempotency_key",
+        "supersession_reason_class",
+        "policy_fingerprint",
+        "supersession_candidate_id",
+    ]
+    assert tuple(
+        key
+        for key, _ in acp.supersession_candidate_material_v01(supersession)
+    ) == (
+        "owning_local_root_id",
+        "predecessor_packet_id",
+        "successor_packet_authorization_candidate_id",
+        "stable_logical_intent_id",
+        "idempotency_key",
+        "supersession_reason_class",
+        "policy_fingerprint",
+    )
+    assert [field.name for field in fields(
+        acp.RootDecisionCandidateProjectionV01
+    )] == [
+        "candidate_kind",
+        "projected_candidate_id",
+        "root_decision_kernel",
+        "root_decision_input",
+        "root_decision_result",
+        "source_root_decision_hash",
+    ]
+    assert [field.name for field in fields(
+        acp.AcceptedRevocationBindingV01
+    )] == [
+        "revocation_candidate_id",
+        "revocation_root_decision_id",
+        "revocation_root_decision_hash",
+        "owning_local_root_id",
+        "packet_id",
+        "prior_authorization_decision_id",
+        "accepted_revocation_binding_id",
+    ]
+    assert [field.name for field in fields(
+        acp.AcceptedSupersessionBindingV01
+    )] == [
+        "supersession_candidate_id",
+        "supersession_root_decision_id",
+        "supersession_root_decision_hash",
+        "owning_local_root_id",
+        "predecessor_packet_id",
+        "prior_authorization_decision_id",
+        "accepted_supersession_binding_id",
+    ]
+    assert revocation.revocation_candidate_id == G2A3A_REVOCATION_CANDIDATE_ID
+    assert (
+        supersession.supersession_candidate_id
+        == G2A3A_SUPERSESSION_CANDIDATE_ID
+    )
+    assert (
+        fixture.revocation_root_projection.root_decision_input.decision_input_id
+        == G2A3A_REVOCATION_DECISION_INPUT_ID
+    )
+    assert (
+        fixture.revocation_root_projection.root_decision_result.decision_id
+        == G2A3A_REVOCATION_DECISION_ID
+    )
+    assert (
+        fixture.revocation_root_projection.source_root_decision_hash
+        == G2A3A_REVOCATION_DECISION_HASH
+    )
+    assert (
+        fixture.accepted_revocation_binding
+        .accepted_revocation_binding_id
+        == G2A3A_ACCEPTED_REVOCATION_BINDING_ID
+    )
+    assert (
+        fixture.supersession_root_projection.root_decision_input
+        .decision_input_id
+        == G2A3A_SUPERSESSION_DECISION_INPUT_ID
+    )
+    assert (
+        fixture.supersession_root_projection.root_decision_result.decision_id
+        == G2A3A_SUPERSESSION_DECISION_ID
+    )
+    assert (
+        fixture.supersession_root_projection.source_root_decision_hash
+        == G2A3A_SUPERSESSION_DECISION_HASH
+    )
+    assert (
+        fixture.accepted_supersession_binding
+        .accepted_supersession_binding_id
+        == G2A3A_ACCEPTED_SUPERSESSION_BINDING_ID
+    )
+    forbidden_material_fields = {
+        "new_root_decision_id",
+        "new_root_decision_hash",
+        "accepted_binding_id",
+        "transition_event_id",
+        "invalidation_evidence_id",
+    }
+    assert forbidden_material_fields.isdisjoint(
+        key for key, _ in acp.revocation_candidate_material_v01(revocation)
+    )
+    assert forbidden_material_fields.isdisjoint(
+        key
+        for key, _ in acp.supersession_candidate_material_v01(supersession)
+    )
+
+
+def test_g2a3a_revocation_candidate_sorting_identity_and_context(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    candidate = fixture.revocation_candidate
+    assert candidate.candidate_profile_id == acp.REVOCATION_CANDIDATE_PROFILE_ID_V01
+    assert candidate.evidence_refs == (
+        "evidence:revocation_operator",
+        "evidence:revocation_policy",
+    )
+    assert candidate.evidence_hashes == ("1" * 64, "2" * 64)
+    assert acp.validate_revocation_candidate_v01(candidate) == (True, ())
+    rebuilt = acp.build_revocation_candidate_v01(
+        owning_local_root_id=candidate.owning_local_root_id,
+        packet_id=candidate.packet_id,
+        source_authorization_decision_id=(
+            candidate.source_authorization_decision_id
+        ),
+        idempotency_key=candidate.idempotency_key,
+        revocation_reason_class=candidate.revocation_reason_class,
+        evidence_refs=tuple(reversed(candidate.evidence_refs)),
+        evidence_hashes=tuple(reversed(candidate.evidence_hashes)),
+        evaluation_time=candidate.evaluation_time,
+        policy_fingerprint=candidate.policy_fingerprint,
+    )
+    assert rebuilt == candidate
+    for refs, hashes in (
+        (("evidence:a",), ()),
+        (("evidence:a", "evidence:a"), ("1" * 64, "2" * 64)),
+        (("evidence:a",), ("not-a-hash",)),
+    ):
+        with pytest.raises(ValueError):
+            acp.build_revocation_candidate_v01(
+                owning_local_root_id=candidate.owning_local_root_id,
+                packet_id=candidate.packet_id,
+                source_authorization_decision_id=(
+                    candidate.source_authorization_decision_id
+                ),
+                idempotency_key=candidate.idempotency_key,
+                revocation_reason_class=candidate.revocation_reason_class,
+                evidence_refs=refs,
+                evidence_hashes=hashes,
+                evaluation_time=candidate.evaluation_time,
+                policy_fingerprint=candidate.policy_fingerprint,
+            )
+    for forged in (
+        _reidentify_revocation_candidate(
+            candidate,
+            owning_local_root_id="root:foreign",
+        ),
+        _reidentify_revocation_candidate(
+            candidate,
+            packet_id="acp_v02:" + "0" * 64,
+        ),
+        _reidentify_revocation_candidate(
+            candidate,
+            source_authorization_decision_id="0" * 64,
+        ),
+        _reidentify_revocation_candidate(
+            candidate,
+            idempotency_key="idem:action_v01:" + "0" * 64,
+        ),
+        _reidentify_revocation_candidate(
+            candidate,
+            policy_fingerprint="0" * 64,
+        ),
+    ):
+        assert acp.validate_revocation_candidate_v01(forged) == (True, ())
+        assert acp.validate_revocation_candidate_against_packet_v01(
+            forged,
+            fixture.predecessor,
+        )[0] is False
+    assert acp.validate_revocation_candidate_v01(
+        replace(
+            candidate,
+            revocation_candidate_id=_AlwaysEqualStr(
+                candidate.revocation_candidate_id
+            ),
+        )
+    )[0] is False
+
+
+def test_g2a3a_supersession_candidate_context_and_foreign_root(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    candidate = fixture.supersession_candidate
+    assert acp.validate_supersession_candidate_v01(candidate) == (True, ())
+    assert candidate.predecessor_packet_id == (
+        fixture.predecessor.packet_identity.packet_id
+    )
+    assert candidate.successor_packet_authorization_candidate_id == (
+        fixture.successor.canonical_projection.authorization_candidate
+        .root_packet_authorization_candidate_id
+    )
+    for forged in (
+        _reidentify_supersession_candidate(
+            candidate,
+            owning_local_root_id="root:foreign",
+        ),
+        _reidentify_supersession_candidate(
+            candidate,
+            predecessor_packet_id="acp_v02:" + "0" * 64,
+        ),
+        _reidentify_supersession_candidate(
+            candidate,
+            successor_packet_authorization_candidate_id=(
+                "root_packet_authorization_v01:" + "0" * 64
+            ),
+        ),
+        _reidentify_supersession_candidate(
+            candidate,
+            stable_logical_intent_id="root_logical_intent_v01:" + "0" * 64,
+        ),
+        _reidentify_supersession_candidate(
+            candidate,
+            idempotency_key="idem:action_v01:" + "0" * 64,
+        ),
+    ):
+        assert acp.validate_supersession_candidate_v01(forged) == (True, ())
+        assert acp.validate_supersession_candidate_against_packets_v01(
+            forged,
+            fixture.predecessor,
+            fixture.successor,
+        )[0] is False
+    assert acp.validate_supersession_candidate_v01(
+        replace(
+            candidate,
+            supersession_candidate_id=_AlwaysEqualStr(
+                candidate.supersession_candidate_id
+            ),
+        )
+    )[0] is False
+
+
+@pytest.mark.parametrize(
+    "projection_name",
+    ("revocation_root_projection", "supersession_root_projection"),
+)
+def test_g2a3a_root_projection_surfaces_are_exact(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    projection_name: str,
+) -> None:
+    fixture = g2a3a_fixture
+    projection = getattr(fixture, projection_name)
+    assert acp.validate_root_decision_candidate_projection_v01(
+        projection
+    ) == (True, ())
+    plain = root_decision.root_decision_input_to_plain_dict_v01(
+        projection.root_decision_input
+    )
+    claims = plain["root_review_packet"]["synthesis_proposal"][
+        "normalized_claims"
+    ]
+    assert [
+        claim["claim_id"]
+        for claim in claims
+        if claim["claim_id"] == projection.projected_candidate_id
+    ] == [projection.projected_candidate_id]
+    claim = next(
+        item
+        for item in claims
+        if item["claim_id"] == projection.projected_candidate_id
+    )
+    assert claim["object_or_value"] == {
+        "candidate_id": projection.projected_candidate_id,
+        "candidate_kind": projection.candidate_kind,
+    }
+    assert plain["post_vv_bundle"]["validated_candidate_ids"].count(
+        projection.projected_candidate_id
+    ) == 1
+    assert projection.projected_candidate_id not in (
+        plain["post_vv_bundle"]["rejected_candidate_ids"]
+    )
+    assert plain["gt_advisory"]["selected_candidate_id"] == (
+        projection.projected_candidate_id
+    )
+    assert plain["permission_state"] == {
+        "permission_required": False,
+        "user_permission_present": False,
+        "permission_scope_valid": True,
+        "permission_ref": None,
+    }
+    result = projection.root_decision_result
+    assert (
+        result.decision,
+        result.reason_code,
+        result.root_commit_created,
+        result.permission_created,
+        result.final_output_created,
+        result.effect_requested,
+    ) == (
+        "ACCEPT",
+        "validated_candidate_accepted",
+        True,
+        False,
+        False,
+        False,
+    )
+
+
+def test_g2a3a_root_projection_rejects_kind_predicate_and_permission_drift(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    projection = fixture.revocation_root_projection
+    assert acp.validate_root_decision_candidate_projection_v01(
+        replace(projection, candidate_kind="SUPERSESSION")
+    )[0] is False
+    assert acp.validate_root_decision_candidate_projection_v01(
+        replace(
+            projection,
+            source_root_decision_hash=_AlwaysEqualStr(
+                projection.source_root_decision_hash
+            ),
+        )
+    )[0] is False
+    variants = (
+        {
+            "claim_predicate": "root_packet_authorization_candidate",
+        },
+        {
+            "claim_candidate_kind": "PACKET_AUTHORIZATION",
+        },
+        {
+            "state_updates": {
+                **_g2a3a_prior_state(fixture),
+                "permission_state": {
+                    "permission_required": True,
+                    "user_permission_present": True,
+                    "permission_scope_valid": True,
+                    "permission_ref": PERMISSION_REF,
+                },
+            },
+        },
+    )
+    for options in variants:
+        state_updates = options.get(
+            "state_updates",
+            _g2a3a_prior_state(fixture),
+        )
+        _, _, kernel, decision_input, result = _build_frozen_root_evidence(
+            fixture.predecessor.canonical_projection,
+            candidate_id=fixture.revocation_candidate.revocation_candidate_id,
+            candidate_kind="REVOCATION",
+            claim_predicate=options.get("claim_predicate"),  # type: ignore[arg-type]
+            claim_candidate_kind=options.get(  # type: ignore[arg-type]
+                "claim_candidate_kind"
+            ),
+            state_updates=state_updates,  # type: ignore[arg-type]
+        )
+        forged = acp.RootDecisionCandidateProjectionV01(
+            candidate_kind="REVOCATION",
+            projected_candidate_id=(
+                fixture.revocation_candidate.revocation_candidate_id
+            ),
+            root_decision_kernel=kernel,
+            root_decision_input=decision_input,
+            root_decision_result=result,
+            source_root_decision_hash=(
+                acp.build_action_source_root_decision_hash_v01(result)
+            ),
+        )
+        assert acp.validate_root_decision_candidate_projection_v01(
+            forged
+        )[0] is False
+
+
+def test_g2a3a_accepted_bindings_are_post_root_and_exact(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    revocation = fixture.accepted_revocation_binding
+    supersession = fixture.accepted_supersession_binding
+    assert tuple(
+        key
+        for key, _ in acp.accepted_revocation_binding_material_v01(
+            revocation
+        )
+    ) == (
+        "revocation_candidate_id",
+        "revocation_root_decision_id",
+        "revocation_root_decision_hash",
+        "owning_local_root_id",
+        "packet_id",
+        "prior_authorization_decision_id",
+    )
+    assert tuple(
+        key
+        for key, _ in acp.accepted_supersession_binding_material_v01(
+            supersession
+        )
+    ) == (
+        "supersession_candidate_id",
+        "supersession_root_decision_id",
+        "supersession_root_decision_hash",
+        "owning_local_root_id",
+        "predecessor_packet_id",
+        "prior_authorization_decision_id",
+    )
+    assert acp.validate_accepted_revocation_binding_v01(revocation) == (
+        True,
+        (),
+    )
+    assert acp.validate_accepted_supersession_binding_v01(supersession) == (
+        True,
+        (),
+    )
+    assert acp.validate_accepted_revocation_binding_v01(
+        replace(
+            revocation,
+            accepted_revocation_binding_id=_AlwaysEqualStr(
+                revocation.accepted_revocation_binding_id
+            ),
+        )
+    )[0] is False
+    assert acp.validate_accepted_supersession_binding_v01(
+        replace(
+            supersession,
+            accepted_supersession_binding_id=_AlwaysEqualStr(
+                supersession.accepted_supersession_binding_id
+            ),
+        )
+    )[0] is False
+    revocation_mutations = (
+        ("revocation_candidate_id", "revocation_candidate_v01:" + "0" * 64),
+        ("revocation_root_decision_id", "0" * 64),
+        ("revocation_root_decision_hash", "0" * 64),
+        ("owning_local_root_id", "root:foreign"),
+        ("packet_id", "acp_v02:" + "0" * 64),
+        ("prior_authorization_decision_id", "0" * 64),
+    )
+    for field_name, field_value in revocation_mutations:
+        assert acp.validate_accepted_revocation_binding_v01(
+            replace(revocation, **{field_name: field_value})
+        )[0] is False
+    supersession_mutations = (
+        (
+            "supersession_candidate_id",
+            "supersession_candidate_v01:" + "0" * 64,
+        ),
+        ("supersession_root_decision_id", "0" * 64),
+        ("supersession_root_decision_hash", "0" * 64),
+        ("owning_local_root_id", "root:foreign"),
+        ("predecessor_packet_id", "acp_v02:" + "0" * 64),
+        ("prior_authorization_decision_id", "0" * 64),
+    )
+    for field_name, field_value in supersession_mutations:
+        assert acp.validate_accepted_supersession_binding_v01(
+            replace(supersession, **{field_name: field_value})
+        )[0] is False
+    assert acp.validate_accepted_revocation_binding_v01(
+        fixture.revocation_candidate
+    )[0] is False
+    assert acp.validate_accepted_supersession_binding_v01(
+        fixture.supersession_candidate
+    )[0] is False
+    forged_candidate = _reidentify_revocation_candidate(
+        fixture.revocation_candidate,
+        revocation_reason_class="OTHER_REASON",
+    )
+    with pytest.raises(ValueError):
+        acp.build_accepted_revocation_binding_v01(
+            candidate=forged_candidate,
+            root_projection=fixture.revocation_root_projection,
+            packet=fixture.predecessor,
+        )
+    assert revocation.accepted_revocation_binding_id not in tuple(
+        item
+        for _, item in acp.revocation_candidate_material_v01(
+            fixture.revocation_candidate
+        )
+    )
+    assert supersession.accepted_supersession_binding_id not in tuple(
+        item
+        for _, item in acp.supersession_candidate_material_v01(
+            fixture.supersession_candidate
+        )
+    )
+
+
+def test_g2a3a_mandatory_dependency_acceptance_is_exact(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    predecessor = fixture.predecessor
+    assert acp.validate_mandatory_dependency_local_root_acceptance_v01(
+        predecessor
+    ) == (True, ())
+    binding = predecessor.dependency_acceptance_binding
+    canonical = predecessor.canonical_projection
+    assert (
+        binding.dependency_set_candidate_fingerprint,
+        binding.root_packet_authorization_candidate_id,
+        binding.source_root_decision_id,
+        binding.source_root_decision_hash,
+        binding.owning_local_root_id,
+        binding.packet_id,
+        binding.accepted_status,
+    ) == (
+        canonical.dependency_set_candidate_fingerprint,
+        canonical.authorization_candidate
+        .root_packet_authorization_candidate_id,
+        predecessor.root_decision_projection.root_decision_result.decision_id,
+        predecessor.root_decision_projection.source_root_decision_hash,
+        canonical.owning_local_root_id,
+        predecessor.packet_identity.packet_id,
+        "ROOT_ACCEPTED_FOR_PACKET",
+    )
+    optional = _root_bound_from_canonical(
+        _projection(
+            dependency=_dependency(requirement_class="OPTIONAL"),
+        )
+    )
+    valid, reasons = (
+        acp.validate_mandatory_dependency_local_root_acceptance_v01(optional)
+    )
+    assert valid is False
+    assert "mandatory_dependency_missing" in reasons
+    with pytest.raises(ValueError, match="cross_profile_dependency_root_mismatch"):
+        _projection(dependency=_dependency(root_id="root:foreign"))
+    recursive_record = acp.build_dependency_set_candidate_record_v01(
+        dependency_id="dependency:recursive",
+        dependency_class="INVOICE_EVIDENCE",
+        evidence_ref=(
+            acp.PACKET_DEPENDENCY_ACCEPTANCE_PREFIX_V01 + "0" * 64
+        ),
+        content_sha256="8" * 64,
+        requirement_class="MANDATORY",
+        time_envelope_id="time_envelope:recursive",
+        freshness_policy_id="freshness_policy:recursive",
+        source_provenance_refs=("source:recursive",),
+        expected_accepting_local_root_id=ROOT_ID,
+    )
+    recursive = _root_bound_from_canonical(
+        _projection(
+            dependency=acp.build_dependency_set_candidate_v01(
+                dependency_records=(recursive_record,),
+            )
+        )
+    )
+    valid, reasons = (
+        acp.validate_mandatory_dependency_local_root_acceptance_v01(
+            recursive
+        )
+    )
+    assert valid is False
+    assert "mandatory_dependency_recursive_acceptance_binding" in reasons
+
+
+@pytest.mark.parametrize(
+    "invalidation_class",
+    acp.ACTION_INVALIDATION_CLASSES_V01,
+)
+def test_g2a3a_invalidation_classes_validate_exact_context(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    invalidation_class: str,
+) -> None:
+    fixture = g2a3a_fixture
+    evidence = _g2a3a_invalidation(fixture, invalidation_class)
+    assert [field.name for field in fields(
+        acp.ActionInvalidationEvidenceV01
+    )][-1] == "invalidation_evidence_id"
+    assert len(acp.action_invalidation_evidence_material_v01(evidence)) == 20
+    assert tuple(
+        key
+        for key, _ in acp.action_invalidation_evidence_material_v01(
+            evidence
+        )
+    ) == (
+        "profile_id",
+        "source_invalidation_event_ref",
+        "packet_id",
+        "dependency_id",
+        "invalidation_class",
+        "evidence_ref",
+        "evidence_sha256",
+        "observed_status",
+        "time_envelope_id",
+        "freshness_policy_id",
+        "owning_local_root_id",
+        "accepted_by_local_root_id",
+        "acceptance_root_decision_id",
+        "acceptance_root_decision_hash",
+        "validation_status",
+        "authority_effect",
+        "root_decision_ref",
+        "evaluation_time",
+        "evaluation_time_source",
+        "evaluation_context_id",
+    )
+    assert evidence.invalidation_evidence_id == (
+        G2A3A_INVALIDATION_IDS[invalidation_class]
+    )
+    assert ":" not in evidence.invalidation_evidence_id
+    assert acp.validate_action_invalidation_evidence_v01(evidence) == (
+        True,
+        (),
+    )
+    kwargs: dict[str, object] = {}
+    if invalidation_class == "ROOT_REVOCATION":
+        kwargs["revocation_candidate"] = fixture.revocation_candidate
+        kwargs["revocation_root_projection"] = (
+            fixture.revocation_root_projection
+        )
+        kwargs["accepted_revocation_binding"] = (
+            fixture.accepted_revocation_binding
+        )
+    if invalidation_class == "ROOT_SUPERSESSION":
+        kwargs["supersession_candidate"] = fixture.supersession_candidate
+        kwargs["supersession_root_projection"] = (
+            fixture.supersession_root_projection
+        )
+        kwargs["supersession_successor"] = fixture.successor
+        kwargs["accepted_supersession_binding"] = (
+            fixture.accepted_supersession_binding
+        )
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        evidence,
+        fixture.predecessor,
+        **kwargs,
+    ) == (True, ())
+
+
+def test_g2a3a_invalidation_adversarial_bindings_fail_closed(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    dependency = _g2a3a_invalidation(fixture, "DEPENDENCY_STALE")
+    kill_switch = _g2a3a_invalidation(
+        fixture,
+        "ROOT_BOUND_KILL_SWITCH",
+    )
+    revocation = _g2a3a_invalidation(fixture, "ROOT_REVOCATION")
+    supersession = _g2a3a_invalidation(fixture, "ROOT_SUPERSESSION")
+    for forged in (
+        _reidentify_invalidation(
+            dependency,
+            packet_id="acp_v02:" + "0" * 64,
+        ),
+        _reidentify_invalidation(
+            dependency,
+            accepted_by_local_root_id="root:foreign",
+        ),
+        _reidentify_invalidation(
+            dependency,
+            time_envelope_id="time_envelope:foreign",
+        ),
+        _reidentify_invalidation(
+            dependency,
+            freshness_policy_id="freshness_policy:foreign",
+        ),
+        _reidentify_invalidation(
+            kill_switch,
+            dependency_id="kill_switch:foreign",
+        ),
+    ):
+        assert acp.validate_action_invalidation_evidence_v01(forged) == (
+            True,
+            (),
+        )
+        assert acp.validate_action_invalidation_evidence_against_packet_v01(
+            forged,
+            fixture.predecessor,
+        )[0] is False
+    manual = _reidentify_invalidation(
+        _g2a3a_invalidation(fixture, "MANUAL_CANCEL_EVIDENCE"),
+        dependency_id="manual_cancel:not_policy_bound",
+    )
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        manual,
+        fixture.predecessor,
+    )[0] is False
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        revocation,
+        fixture.predecessor,
+    )[0] is False
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        supersession,
+        fixture.predecessor,
+    )[0] is False
+    forged_digest = _reidentify_invalidation(
+        revocation,
+        evidence_sha256="0" * 64,
+    )
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        forged_digest,
+        fixture.predecessor,
+        revocation_candidate=fixture.revocation_candidate,
+        revocation_root_projection=fixture.revocation_root_projection,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+    )[0] is False
+    foreign_revocation_binding = _reidentify_accepted_revocation(
+        fixture.accepted_revocation_binding,
+        owning_local_root_id="root:foreign",
+    )
+    assert acp.validate_accepted_revocation_binding_v01(
+        foreign_revocation_binding
+    ) == (True, ())
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        revocation,
+        fixture.predecessor,
+        revocation_candidate=fixture.revocation_candidate,
+        revocation_root_projection=fixture.revocation_root_projection,
+        accepted_revocation_binding=foreign_revocation_binding,
+    )[0] is False
+    foreign_supersession_binding = _reidentify_accepted_supersession(
+        fixture.accepted_supersession_binding,
+        owning_local_root_id="root:foreign",
+    )
+    assert acp.validate_accepted_supersession_binding_v01(
+        foreign_supersession_binding
+    ) == (True, ())
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        supersession,
+        fixture.predecessor,
+        supersession_candidate=fixture.supersession_candidate,
+        supersession_root_projection=fixture.supersession_root_projection,
+        supersession_successor=fixture.successor,
+        accepted_supersession_binding=foreign_supersession_binding,
+    )[0] is False
+    assert acp.validate_action_invalidation_evidence_v01(
+        replace(
+            dependency,
+            invalidation_evidence_id=_AlwaysEqualStr(
+                dependency.invalidation_evidence_id
+            ),
+        )
+    )[0] is False
+    assert acp.validate_action_invalidation_evidence_v01(
+        replace(dependency, invalidation_evidence_id="0" * 64)
+    )[0] is False
+    assert acp.validate_action_invalidation_evidence_v01(
+        replace(dependency, authority_effect="ROOT_REVOCATION")
+    )[0] is False
+    assert acp.validate_action_invalidation_evidence_v01(
+        replace(
+            dependency,
+            source_invalidation_event_ref=(
+                dependency.invalidation_evidence_id
+            ),
+        )
+    )[0] is False
+    with pytest.raises(ValueError):
+        acp.build_action_invalidation_evidence_v01(
+            source_invalidation_event_ref="source_invalidation:partial_root",
+            packet_id=fixture.predecessor.packet_identity.packet_id,
+            dependency_id="dependency:partial_root",
+            invalidation_class="ROOT_REVOCATION",
+            evidence_ref="evidence:partial_root",
+            evidence_sha256="0" * 64,
+            observed_status="OBSERVED_ROOT_REVOCATION",
+            time_envelope_id="time_envelope:partial_root",
+            freshness_policy_id="freshness_policy:partial_root",
+            owning_local_root_id=ROOT_ID,
+            accepted_by_local_root_id=ROOT_ID,
+            acceptance_root_decision_id=G2A3A_REVOCATION_DECISION_ID,
+            acceptance_root_decision_hash=None,
+            authority_effect="ROOT_REVOCATION",
+            root_decision_ref=G2A3A_REVOCATION_DECISION_ID,
+            evaluation_time=EVALUATION_TIME,
+            evaluation_time_source=EVALUATION_TIME_SOURCE,
+            evaluation_context_id="evaluation_context:partial_root",
+        )
+
+
+@pytest.mark.parametrize(
+    "variation",
+    ("TTL", "ADAPTER", "DEPENDENCY", "POLICY"),
+)
+def test_g2a3a_pure_renewal_variants_preserve_logical_effect(
+    root_bound_fixture: _RootBoundFixtureV01,
+    variation: str,
+) -> None:
+    predecessor = root_bound_fixture.root_bound_projection
+    successor = _g2a3a_successor(predecessor, variation=variation)
+    candidate, root_projection, binding = _g2a3a_supersession_bundle(
+        predecessor,
+        successor,
+    )
+    assert acp.validate_action_packet_renewal_relationship_v01(
+        predecessor,
+        successor,
+        candidate,
+        binding,
+        root_projection=root_projection,
+    ) == (True, ())
+    assert predecessor.packet_identity.packet_id != (
+        successor.packet_identity.packet_id
+    )
+    assert (
+        predecessor.canonical_projection.logical_intent.root_owned_intent_id
+        == successor.canonical_projection.logical_intent.root_owned_intent_id
+    )
+    assert (
+        predecessor.canonical_projection.idempotency_identity.idempotency_key
+        == successor.canonical_projection.idempotency_identity.idempotency_key
+    )
+
+
+def test_g2a3a_renewal_rejects_wrong_reason_binding_and_foreign_root(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    wrong_reason = _reidentify_supersession_candidate(
+        fixture.supersession_candidate,
+        supersession_reason_class="REPLACEMENT",
+    )
+    assert acp.validate_action_packet_renewal_relationship_v01(
+        fixture.predecessor,
+        fixture.successor,
+        wrong_reason,
+        fixture.accepted_supersession_binding,
+    )[0] is False
+    other_successor = _g2a3a_successor(
+        fixture.predecessor,
+        variation="DEPENDENCY",
+    )
+    assert acp.validate_action_packet_renewal_relationship_v01(
+        fixture.predecessor,
+        other_successor,
+        fixture.supersession_candidate,
+        fixture.accepted_supersession_binding,
+    )[0] is False
+    foreign_candidate = _reidentify_supersession_candidate(
+        fixture.supersession_candidate,
+        owning_local_root_id="root:foreign",
+    )
+    assert acp.validate_action_packet_renewal_relationship_v01(
+        fixture.predecessor,
+        fixture.successor,
+        foreign_candidate,
+        fixture.accepted_supersession_binding,
+    )[0] is False
+
+
+def test_g2a3a_root_context_rejects_prior_transaction_and_root_drift(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    candidate = fixture.revocation_candidate
+    variants = (
+        {
+            "transaction_id": "transaction:foreign",
+            "target_root_id": None,
+            "state_updates": _g2a3a_prior_state(fixture),
+        },
+        {
+            "transaction_id": None,
+            "target_root_id": "root:foreign",
+            "state_updates": _g2a3a_prior_state(fixture),
+        },
+        {
+            "transaction_id": None,
+            "target_root_id": None,
+            "state_updates": {
+                "prior_root_state": {
+                    "prior_decision_id": "0" * 64,
+                    "prior_decision": "ACCEPT",
+                    "prior_selected_candidate_id": (
+                        fixture.predecessor.canonical_projection
+                        .authorization_candidate
+                        .root_packet_authorization_candidate_id
+                    ),
+                },
+            },
+        },
+    )
+    for variant in variants:
+        _, _, kernel, decision_input, result = _build_frozen_root_evidence(
+            fixture.predecessor.canonical_projection,
+            candidate_id=candidate.revocation_candidate_id,
+            candidate_kind="REVOCATION",
+            transaction_id=variant["transaction_id"],  # type: ignore[arg-type]
+            target_root_id=variant["target_root_id"],  # type: ignore[arg-type]
+            state_updates=variant["state_updates"],  # type: ignore[arg-type]
+        )
+        projection = acp.build_root_decision_candidate_projection_v01(
+            candidate_kind="REVOCATION",
+            projected_candidate_id=candidate.revocation_candidate_id,
+            root_decision_kernel=kernel,
+            root_decision_input=decision_input,
+            root_decision_result=result,
+        )
+        assert acp.validate_revocation_root_context_coherence_v01(
+            candidate,
+            projection,
+            fixture.predecessor,
+        )[0] is False
+
+
+def test_g2a3a_objects_do_not_enable_live_authority_mutation(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    predecessor = fixture.predecessor
+    packet_id = predecessor.packet_identity.packet_id
+    registry = _g2a2b_recorded_genesis(predecessor)
+    registry, _, _ = _g2a2b_activate(registry, packet_id)
+    entry = _g2a2_final_entry(registry, packet_id)
+    rule_id = "g2a_t16_authorized_revoke"
+    event = acp.build_action_packet_transition_event_v01(
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+        transition_rule_id=rule_id,
+        packet_id=packet_id,
+        idempotency_key=(
+            predecessor.canonical_projection.idempotency_identity
+            .idempotency_key
+        ),
+        previous_transition_event_id=(
+            entry.transition_events[-1].transition_event_id
+        ),
+        owning_local_root_id=ROOT_ID,
+        root_decision_ref=(
+            fixture.accepted_revocation_binding.revocation_root_decision_id
+        ),
+        transition_evidence_bindings=_g2a2a_bindings(rule_id),
+        dependency_set_candidate_fingerprint=(
+            predecessor.canonical_projection
+            .dependency_set_candidate_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            predecessor.canonical_projection.temporal_authority_fingerprint
+        ),
+        evaluation_time=EVALUATION_TIME,
+        evaluation_time_source=EVALUATION_TIME_SOURCE,
+        evaluation_context_id="evaluation_context:g2a3a:live_boundary",
+        execution_attempt_identity=None,
+        receipt_ref=None,
+    )
+    before = repr(registry).encode("utf-8")
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.append_action_packet_lifecycle_transition_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=event,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry).encode("utf-8") == before
+
+
+def _g2a3a_invalidation_for_revocation_binding(
+    fixture: _G2A3AFixtureV01,
+    binding: acp.AcceptedRevocationBindingV01,
+) -> acp.ActionInvalidationEvidenceV01:
+    return _reidentify_invalidation(
+        _g2a3a_invalidation(fixture, "ROOT_REVOCATION"),
+        evidence_ref=binding.accepted_revocation_binding_id,
+        evidence_sha256=(
+            binding.accepted_revocation_binding_id.split(":", 1)[1]
+        ),
+        acceptance_root_decision_id=binding.revocation_root_decision_id,
+        acceptance_root_decision_hash=binding.revocation_root_decision_hash,
+        root_decision_ref=binding.revocation_root_decision_id,
+    )
+
+
+def _g2a3a_invalidation_for_supersession_binding(
+    fixture: _G2A3AFixtureV01,
+    binding: acp.AcceptedSupersessionBindingV01,
+) -> acp.ActionInvalidationEvidenceV01:
+    return _reidentify_invalidation(
+        _g2a3a_invalidation(fixture, "ROOT_SUPERSESSION"),
+        evidence_ref=binding.accepted_supersession_binding_id,
+        evidence_sha256=(
+            binding.accepted_supersession_binding_id.split(":", 1)[1]
+        ),
+        acceptance_root_decision_id=binding.supersession_root_decision_id,
+        acceptance_root_decision_hash=(
+            binding.supersession_root_decision_hash
+        ),
+        root_decision_ref=binding.supersession_root_decision_id,
+    )
+
+
+def test_g2a3a_same_root_reidentified_revocation_binding_is_non_authority(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    source_snapshot = repr(fixture).encode("utf-8")
+    forged_bindings = (
+        _reidentify_accepted_revocation(
+            fixture.accepted_revocation_binding,
+            revocation_candidate_id=(
+                acp.REVOCATION_CANDIDATE_PREFIX_V01 + "0" * 64
+            ),
+            revocation_root_decision_id="1" * 64,
+            revocation_root_decision_hash="2" * 64,
+        ),
+        _reidentify_accepted_revocation(
+            fixture.accepted_revocation_binding,
+            revocation_root_decision_id="3" * 64,
+            revocation_root_decision_hash="4" * 64,
+        ),
+    )
+    for binding in forged_bindings:
+        assert acp.validate_accepted_revocation_binding_v01(binding) == (
+            True,
+            (),
+        )
+        assert acp._validate_accepted_revocation_binding_against_context_v01(
+            binding,
+            fixture.revocation_candidate,
+            fixture.revocation_root_projection,
+            fixture.predecessor,
+        ) == (False, ("accepted_revocation_binding_context_invalid",))
+        evidence = _g2a3a_invalidation_for_revocation_binding(
+            fixture,
+            binding,
+        )
+        assert acp.validate_action_invalidation_evidence_v01(evidence) == (
+            True,
+            (),
+        )
+        assert acp.validate_action_invalidation_evidence_against_packet_v01(
+            evidence,
+            fixture.predecessor,
+            revocation_candidate=fixture.revocation_candidate,
+            revocation_root_projection=(
+                fixture.revocation_root_projection
+            ),
+            accepted_revocation_binding=binding,
+        )[0] is False
+    assert acp._validate_accepted_revocation_binding_against_context_v01(
+        fixture.accepted_revocation_binding,
+        fixture.revocation_candidate,
+        fixture.revocation_root_projection,
+        fixture.predecessor,
+    ) == (True, ())
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        _g2a3a_invalidation(fixture, "ROOT_REVOCATION"),
+        fixture.predecessor,
+        revocation_candidate=fixture.revocation_candidate,
+        revocation_root_projection=fixture.revocation_root_projection,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+    ) == (True, ())
+    assert repr(fixture).encode("utf-8") == source_snapshot
+
+
+def test_g2a3a_same_root_reidentified_supersession_binding_is_non_authority(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    source_snapshot = repr(fixture).encode("utf-8")
+    forged_bindings = (
+        _reidentify_accepted_supersession(
+            fixture.accepted_supersession_binding,
+            supersession_candidate_id=(
+                acp.SUPERSESSION_CANDIDATE_PREFIX_V01 + "0" * 64
+            ),
+            supersession_root_decision_id="5" * 64,
+            supersession_root_decision_hash="6" * 64,
+        ),
+        _reidentify_accepted_supersession(
+            fixture.accepted_supersession_binding,
+            supersession_root_decision_id="7" * 64,
+            supersession_root_decision_hash="8" * 64,
+        ),
+    )
+    for binding in forged_bindings:
+        assert acp.validate_accepted_supersession_binding_v01(binding) == (
+            True,
+            (),
+        )
+        assert (
+            acp._validate_accepted_supersession_binding_against_context_v01(
+                binding,
+                fixture.supersession_candidate,
+                fixture.supersession_root_projection,
+                fixture.predecessor,
+                fixture.successor,
+            )
+            == (
+                False,
+                ("accepted_supersession_binding_context_invalid",),
+            )
+        )
+        assert acp.validate_action_packet_renewal_relationship_v01(
+            fixture.predecessor,
+            fixture.successor,
+            fixture.supersession_candidate,
+            binding,
+            root_projection=fixture.supersession_root_projection,
+        )[0] is False
+        evidence = _g2a3a_invalidation_for_supersession_binding(
+            fixture,
+            binding,
+        )
+        assert acp.validate_action_invalidation_evidence_v01(evidence) == (
+            True,
+            (),
+        )
+        assert acp.validate_action_invalidation_evidence_against_packet_v01(
+            evidence,
+            fixture.predecessor,
+            supersession_candidate=fixture.supersession_candidate,
+            supersession_root_projection=(
+                fixture.supersession_root_projection
+            ),
+            supersession_successor=fixture.successor,
+            accepted_supersession_binding=binding,
+        )[0] is False
+    assert (
+        acp._validate_accepted_supersession_binding_against_context_v01(
+            fixture.accepted_supersession_binding,
+            fixture.supersession_candidate,
+            fixture.supersession_root_projection,
+            fixture.predecessor,
+            fixture.successor,
+        )
+        == (True, ())
+    )
+    assert repr(fixture).encode("utf-8") == source_snapshot
+
+
+def test_g2a3a_root_invalidation_requires_every_provenance_component(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    revocation = _g2a3a_invalidation(fixture, "ROOT_REVOCATION")
+    revocation_context = {
+        "revocation_candidate": fixture.revocation_candidate,
+        "revocation_root_projection": fixture.revocation_root_projection,
+        "accepted_revocation_binding": fixture.accepted_revocation_binding,
+    }
+    for missing in tuple(revocation_context):
+        context = dict(revocation_context)
+        context[missing] = None
+        assert acp.validate_action_invalidation_evidence_against_packet_v01(
+            revocation,
+            fixture.predecessor,
+            **context,
+        )[0] is False
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        revocation,
+        fixture.predecessor,
+        revocation_candidate=fixture.revocation_candidate,
+        revocation_root_projection=fixture.supersession_root_projection,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+    )[0] is False
+    candidate_from_another_packet = _reidentify_revocation_candidate(
+        fixture.revocation_candidate,
+        packet_id=acp.ACTION_COMMIT_PACKET_ID_PREFIX_V01 + "9" * 64,
+    )
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        revocation,
+        fixture.predecessor,
+        revocation_candidate=candidate_from_another_packet,
+        revocation_root_projection=fixture.revocation_root_projection,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+    )[0] is False
+
+    supersession = _g2a3a_invalidation(fixture, "ROOT_SUPERSESSION")
+    supersession_context = {
+        "supersession_candidate": fixture.supersession_candidate,
+        "supersession_root_projection": (
+            fixture.supersession_root_projection
+        ),
+        "supersession_successor": fixture.successor,
+        "accepted_supersession_binding": (
+            fixture.accepted_supersession_binding
+        ),
+    }
+    for missing in tuple(supersession_context):
+        context = dict(supersession_context)
+        context[missing] = None
+        assert acp.validate_action_invalidation_evidence_against_packet_v01(
+            supersession,
+            fixture.predecessor,
+            **context,
+        )[0] is False
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        supersession,
+        fixture.predecessor,
+        supersession_candidate=fixture.supersession_candidate,
+        supersession_root_projection=fixture.revocation_root_projection,
+        supersession_successor=fixture.successor,
+        accepted_supersession_binding=fixture.accepted_supersession_binding,
+    )[0] is False
+    successor_from_another_candidate = _g2a3a_successor(
+        fixture.predecessor,
+        variation="DEPENDENCY",
+    )
+    assert acp.validate_action_invalidation_evidence_against_packet_v01(
+        supersession,
+        fixture.predecessor,
+        supersession_candidate=fixture.supersession_candidate,
+        supersession_root_projection=fixture.supersession_root_projection,
+        supersession_successor=successor_from_another_candidate,
+        accepted_supersession_binding=fixture.accepted_supersession_binding,
+    )[0] is False
+    assert acp.validate_action_packet_renewal_relationship_v01(
+        fixture.predecessor,
+        fixture.successor,
+        fixture.supersession_candidate,
+        fixture.accepted_supersession_binding,
+    ) == (False, ("renewal_root_projection_required",))
+
+
+def test_g2a3a_same_effect_nonrenewal_supersession_geometry(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    predecessor = fixture.predecessor
+    predecessor_snapshot = repr(predecessor).encode("utf-8")
+    successor = _g2a3a_successor(
+        predecessor,
+        variation="TTL",
+        supersession_reason_class="SAME_EFFECT_REPLACEMENT",
+    )
+    successor_snapshot = repr(successor).encode("utf-8")
+    candidate, root_projection, binding = _g2a3a_supersession_bundle(
+        predecessor,
+        successor,
+    )
+    assert (
+        acp.validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            successor
+        )
+        == (True, ())
+    )
+    assert acp.validate_supersession_candidate_against_packets_v01(
+        candidate,
+        predecessor,
+        successor,
+    ) == (True, ())
+    assert acp.validate_supersession_root_context_coherence_v01(
+        candidate,
+        root_projection,
+        predecessor,
+        successor,
+    ) == (True, ())
+    assert (
+        acp._validate_accepted_supersession_binding_against_context_v01(
+            binding,
+            candidate,
+            root_projection,
+            predecessor,
+            successor,
+        )
+        == (True, ())
+    )
+    assert acp.validate_action_packet_renewal_relationship_v01(
+        predecessor,
+        successor,
+        candidate,
+        binding,
+        root_projection=root_projection,
+    )[0] is False
+    assert (
+        predecessor.canonical_projection.logical_intent.root_owned_intent_id
+        == successor.canonical_projection.logical_intent.root_owned_intent_id
+    )
+    assert (
+        predecessor.canonical_projection.idempotency_identity.idempotency_key
+        == successor.canonical_projection.idempotency_identity.idempotency_key
+    )
+    assert {
+        "successor_authorization_candidate_id": (
+            successor.canonical_projection.authorization_candidate
+            .root_packet_authorization_candidate_id
+        ),
+        "successor_packet_id": successor.packet_identity.packet_id,
+        "successor_source_decision_id": (
+            successor.root_decision_projection.root_decision_result.decision_id
+        ),
+        "supersession_candidate_id": candidate.supersession_candidate_id,
+        "supersession_root_decision_id": (
+            root_projection.root_decision_result.decision_id
+        ),
+        "supersession_root_decision_hash": (
+            root_projection.source_root_decision_hash
+        ),
+        "accepted_supersession_binding_id": (
+            binding.accepted_supersession_binding_id
+        ),
+    } == G2A3A_SAME_EFFECT_NONRENEWAL_VECTOR
+    assert repr(predecessor).encode("utf-8") == predecessor_snapshot
+    assert repr(successor).encode("utf-8") == successor_snapshot
+
+
+def test_g2a3a_material_effect_supersession_geometry(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    predecessor = fixture.predecessor
+    predecessor_snapshot = repr(predecessor).encode("utf-8")
+    successor = _g2a3a_successor(
+        predecessor,
+        variation="MATERIAL",
+        supersession_reason_class="MATERIAL_EFFECT_REPLACEMENT",
+    )
+    successor_snapshot = repr(successor).encode("utf-8")
+    candidate, root_projection, binding = _g2a3a_supersession_bundle(
+        predecessor,
+        successor,
+    )
+    assert acp.validate_supersession_candidate_against_packets_v01(
+        candidate,
+        predecessor,
+        successor,
+    ) == (True, ())
+    assert acp.validate_supersession_root_context_coherence_v01(
+        candidate,
+        root_projection,
+        predecessor,
+        successor,
+    ) == (True, ())
+    assert (
+        acp._validate_accepted_supersession_binding_against_context_v01(
+            binding,
+            candidate,
+            root_projection,
+            predecessor,
+            successor,
+        )
+        == (True, ())
+    )
+    assert acp.validate_action_packet_renewal_relationship_v01(
+        predecessor,
+        successor,
+        candidate,
+        binding,
+        root_projection=root_projection,
+    )[0] is False
+    assert (
+        predecessor.canonical_projection.logical_intent.root_owned_intent_id
+        != successor.canonical_projection.logical_intent.root_owned_intent_id
+    )
+    assert (
+        predecessor.canonical_projection.idempotency_identity.idempotency_key
+        != successor.canonical_projection.idempotency_identity.idempotency_key
+    )
+    assert {
+        "successor_stable_intent_id": (
+            successor.canonical_projection.logical_intent.root_owned_intent_id
+        ),
+        "successor_idempotency_key": (
+            successor.canonical_projection.idempotency_identity.idempotency_key
+        ),
+        "successor_authorization_candidate_id": (
+            successor.canonical_projection.authorization_candidate
+            .root_packet_authorization_candidate_id
+        ),
+        "successor_packet_id": successor.packet_identity.packet_id,
+        "successor_source_decision_id": (
+            successor.root_decision_projection.root_decision_result.decision_id
+        ),
+        "supersession_candidate_id": candidate.supersession_candidate_id,
+        "supersession_root_decision_id": (
+            root_projection.root_decision_result.decision_id
+        ),
+        "supersession_root_decision_hash": (
+            root_projection.source_root_decision_hash
+        ),
+        "accepted_supersession_binding_id": (
+            binding.accepted_supersession_binding_id
+        ),
+    } == G2A3A_MATERIAL_EFFECT_SUPERSESSION_VECTOR
+    assert repr(predecessor).encode("utf-8") == predecessor_snapshot
+    assert repr(successor).encode("utf-8") == successor_snapshot
+
+
+def test_g2a3a_material_successor_only_genesis_cannot_activate_initial_path(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    predecessor = g2a3a_fixture.predecessor
+    successor = _g2a3a_successor(
+        predecessor,
+        variation="MATERIAL",
+        supersession_reason_class="MATERIAL_EFFECT_REPLACEMENT",
+    )
+    packet_id = successor.packet_identity.packet_id
+    registry = _g2a2b_recorded_genesis(successor)
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert (
+        state.lifecycle_state,
+        state.idempotency_disposition,
+        state.reservation_owner_packet_id,
+        state.executable,
+    ) == ("CREATED", "UNCLAIMED", None, False)
+    before = repr(registry).encode("utf-8")
+    event, reserve = _g2a2b_activation_pair(registry, packet_id)
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.activate_action_packet_lifecycle_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=event,
+            disposition_event=reserve,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry).encode("utf-8") == before
+    assert registry.action_packet_lifecycle_entries[0].transition_events == ()
+    assert registry.idempotency_disposition_events == ()
+    assert registry.real_world_effects_count == 0
+
+
+def test_g2a3a_material_successor_with_predecessor_cannot_activate_initial_path(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    predecessor = g2a3a_fixture.predecessor
+    successor = _g2a3a_successor(
+        predecessor,
+        variation="MATERIAL",
+        supersession_reason_class="MATERIAL_EFFECT_REPLACEMENT",
+    )
+    registry = acp.build_empty_action_commit_packet_registry_v02()
+    for root_bound in (predecessor, successor):
+        registry = acp.record_action_packet_genesis_v01(
+            registry,
+            root_bound_genesis=root_bound,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert (
+        predecessor.canonical_projection.idempotency_identity.idempotency_key
+        != successor.canonical_projection.idempotency_identity.idempotency_key
+    )
+    before = repr(registry).encode("utf-8")
+    event, reserve = _g2a2b_activation_pair(
+        registry,
+        successor.packet_identity.packet_id,
+    )
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.activate_action_packet_lifecycle_v01(
+            registry,
+            packet_id=successor.packet_identity.packet_id,
+            transition_event=event,
+            disposition_event=reserve,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry).encode("utf-8") == before
+    assert registry.idempotency_disposition_events == ()
+    for root_bound in (predecessor, successor):
+        state = acp.derive_action_packet_lifecycle_state_v01(
+            registry,
+            packet_id=root_bound.packet_identity.packet_id,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+        assert (
+            state.lifecycle_state,
+            state.idempotency_disposition,
+            state.reservation_owner_packet_id,
+        ) == ("CREATED", "UNCLAIMED", None)
+    assert registry.real_world_effects_count == 0
+
+
+def test_g2a3a_same_effect_successor_only_cannot_activate_initial_path(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    predecessor = g2a3a_fixture.predecessor
+    successor = _g2a3a_successor(
+        predecessor,
+        variation="TTL",
+        supersession_reason_class="SAME_EFFECT_REPLACEMENT",
+    )
+    assert (
+        predecessor.canonical_projection.idempotency_identity.idempotency_key
+        == successor.canonical_projection.idempotency_identity.idempotency_key
+    )
+    registry = _g2a2b_recorded_genesis(successor)
+    before = repr(registry).encode("utf-8")
+    event, reserve = _g2a2b_activation_pair(
+        registry,
+        successor.packet_identity.packet_id,
+    )
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.activate_action_packet_lifecycle_v01(
+            registry,
+            packet_id=successor.packet_identity.packet_id,
+            transition_event=event,
+            disposition_event=reserve,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry).encode("utf-8") == before
+    assert registry.action_packet_lifecycle_entries[0].transition_events == ()
+    assert registry.idempotency_disposition_events == ()
+
+
+def test_g2a3a_predecessor_bound_manual_registry_bypass_fails_closed(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    successor = _g2a3a_successor(
+        g2a3a_fixture.predecessor,
+        variation="MATERIAL",
+        supersession_reason_class="MATERIAL_EFFECT_REPLACEMENT",
+    )
+    registry = _g2a2b_recorded_genesis(successor)
+    event, reserve = _g2a2b_activation_pair(
+        registry,
+        successor.packet_identity.packet_id,
+    )
+    assert acp.validate_action_packet_transition_event_v01(
+        event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    ) == (True, ())
+    assert acp.validate_idempotency_disposition_event_v01(reserve) == (
+        True,
+        (),
+    )
+    entry = registry.action_packet_lifecycle_entries[0]
+    forged = replace(
+        registry,
+        action_packet_lifecycle_entries=(
+            replace(entry, transition_events=(event,)),
+        ),
+        idempotency_disposition_events=(reserve,),
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(forged)
+    assert valid is False
+    assert "authority_transition_requires_g2a3_binding" in reasons
+
+
+def test_g2a3a_initial_packet_ordinary_activation_positive_control(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    initial = g2a3a_fixture.predecessor
+    candidate = initial.canonical_projection.authorization_candidate
+    assert candidate.predecessor_packet_id is None
+    assert candidate.supersession_reason_class is None
+    registry = _g2a2b_recorded_genesis(initial)
+    activated, _, _ = _g2a2b_activate(
+        registry,
+        initial.packet_identity.packet_id,
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        activated,
+        packet_id=initial.packet_identity.packet_id,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert (
+        state.lifecycle_state,
+        state.idempotency_disposition,
+        state.reservation_owner_packet_id,
+        state.executable,
+    ) == (
+        "ROOT_AUTHORIZED",
+        "RESERVED",
+        initial.packet_identity.packet_id,
+        False,
+    )
+
+
+G2A3B1_DETERMINISTIC_RULES = (
+    "g2a_t06_created_block",
+    "g2a_t07_authorized_block",
+    "g2a_t08_queued_block",
+    "g2a_t09_pending_block",
+    "g2a_t10_failed_block",
+)
+G2A3B1_REVOCATION_RULES = (
+    "g2a_t16_authorized_revoke",
+    "g2a_t17_queued_revoke",
+    "g2a_t18_pending_revoke",
+    "g2a_t19_failed_revoke",
+)
+
+
+def _g2a3b1_registry_for_rule(
+    root_bound: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    rule_id: str,
+) -> acp.ActionCommitPacketRegistryV02:
+    packet_id = root_bound.packet_identity.packet_id
+    registry = _g2a2b_recorded_genesis(root_bound)
+    if rule_id == "g2a_t06_created_block":
+        return registry
+    registry, _, _ = _g2a2b_activate(registry, packet_id)
+    if rule_id in {
+        "g2a_t07_authorized_block",
+        "g2a_t16_authorized_revoke",
+    }:
+        return registry
+    registry, _ = _g2a2b_append(registry, packet_id, "g2a_t02_queue")
+    if rule_id in {
+        "g2a_t08_queued_block",
+        "g2a_t17_queued_revoke",
+    }:
+        return registry
+    registry, _ = _g2a2b_append(
+        registry,
+        packet_id,
+        "g2a_t03_pending",
+        evaluation_context_id="evaluation_context:g2a3b1:attempt:1",
+    )
+    if rule_id in {
+        "g2a_t09_pending_block",
+        "g2a_t18_pending_revoke",
+    }:
+        return registry
+    entry = next(
+        item
+        for item in registry.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == packet_id
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    failure = _g2a2b_event(
+        entry,
+        "g2a_t24_nonconsuming_failure",
+        latest_disposition_event_id=state.latest_disposition_event_id,
+    )
+    return acp.record_action_packet_nonconsuming_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=failure,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+
+
+def _g2a3b1_transition_event(
+    registry: acp.ActionCommitPacketRegistryV02,
+    packet_id: str,
+    rule_id: str,
+    invalidation: acp.ActionInvalidationEvidenceV01,
+    *,
+    accepted_revocation_binding: (
+        acp.AcceptedRevocationBindingV01 | None
+    ) = None,
+) -> acp.ActionPacketTransitionEventV01:
+    transition_registry_profile = _g2a2a_registry()
+    rule = (
+        transition_registry.lookup_action_packet_transition_rule_v01(
+            registry=transition_registry_profile,
+            transition_rule_id=rule_id,
+        )
+    )
+    entry = next(
+        item
+        for item in registry.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == packet_id
+    )
+    genesis = entry.root_bound_genesis
+    canonical = genesis.canonical_projection
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+        action_packet_transition_registry_profile=(
+            transition_registry_profile
+        ),
+    )
+    latest = entry.transition_events[-1] if entry.transition_events else None
+
+    def material(evidence_code: str) -> tuple[str, str, str]:
+        if evidence_code in {
+            "blocking_evidence_valid",
+            "immediate_eligibility_failure_valid",
+            "retry_ineligibility_evidence_valid",
+        }:
+            return (
+                invalidation.invalidation_evidence_id,
+                invalidation.invalidation_evidence_id,
+                acp.ACTION_INVALIDATION_EVIDENCE_PROFILE_ID_V01,
+            )
+        if evidence_code == "packet_genesis_valid":
+            return (
+                packet_id,
+                packet_id[len(acp.ACTION_COMMIT_PACKET_ID_PREFIX_V01) :],
+                acp._ACTION_COMMIT_PACKET_IDENTITY_PROFILE_ID_V01,
+            )
+        if evidence_code == "authority_policy_valid":
+            fingerprint = canonical.authority_policy_fingerprint
+            return (
+                fingerprint,
+                fingerprint,
+                acp.ACTION_AUTHORITY_POLICY_PROFILE_ID_V01,
+            )
+        if evidence_code == "idempotency_reservation_owned":
+            latest_disposition_id = state.latest_disposition_event_id
+            assert latest_disposition_id is not None
+            return (
+                latest_disposition_id,
+                latest_disposition_id[
+                    len(acp.IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01) :
+                ],
+                acp.IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01,
+            )
+        if evidence_code == "adapter_not_called":
+            assert latest is not None
+            assert latest.execution_attempt_id is not None
+            return (
+                latest.execution_attempt_id,
+                latest.execution_attempt_id[
+                    len(acp.EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01) :
+                ],
+                acp.EXECUTION_ATTEMPT_IDENTITY_PROFILE_ID_V01,
+            )
+        if evidence_code == "failed_non_consuming_provenance_valid":
+            assert latest is not None
+            return (
+                latest.transition_event_id,
+                latest.transition_event_id[
+                    len(acp.ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01) :
+                ],
+                acp.ACTION_PACKET_TRANSITION_EVENT_PROFILE_ID_V01,
+            )
+        if evidence_code == "accepted_revocation_binding_valid":
+            assert accepted_revocation_binding is not None
+            binding_id = (
+                accepted_revocation_binding.accepted_revocation_binding_id
+            )
+            return (
+                binding_id,
+                binding_id[
+                    len(acp.ACCEPTED_REVOCATION_BINDING_PREFIX_V01) :
+                ],
+                acp._ACCEPTED_REVOCATION_BINDING_VALIDATOR_PROFILE_ID_V01,
+            )
+        if evidence_code == "source_authorization_binding_valid":
+            source_result = (
+                genesis.root_decision_projection.root_decision_result
+            )
+            return (
+                source_result.decision_id,
+                genesis.root_decision_projection.source_root_decision_hash,
+                acp._ROOT_DECISION_RESULT_VALIDATOR_PROFILE_ID_V01,
+            )
+        raise AssertionError(f"unsupported G2-A3B1 evidence: {evidence_code}")
+
+    bindings = tuple(
+        acp.build_transition_evidence_binding_v01(
+            action_packet_transition_registry_profile=(
+                transition_registry_profile
+            ),
+            transition_rule_id=rule_id,
+            evidence_code=evidence_code,
+            evidence_ref=material(evidence_code)[0],
+            evidence_sha256=material(evidence_code)[1],
+            validator_profile_id=material(evidence_code)[2],
+        )
+        for evidence_code in rule.required_evidence_codes
+    )
+    return acp.build_action_packet_transition_event_v01(
+        action_packet_transition_registry_profile=transition_registry_profile,
+        transition_rule_id=rule_id,
+        packet_id=packet_id,
+        idempotency_key=canonical.idempotency_identity.idempotency_key,
+        previous_transition_event_id=(
+            latest.transition_event_id if latest is not None else None
+        ),
+        owning_local_root_id=canonical.owning_local_root_id,
+        root_decision_ref=(
+            accepted_revocation_binding.revocation_root_decision_id
+            if accepted_revocation_binding is not None
+            else None
+        ),
+        transition_evidence_bindings=bindings,
+        dependency_set_candidate_fingerprint=(
+            canonical.dependency_set_candidate_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            canonical.temporal_authority_fingerprint
+        ),
+        evaluation_time=invalidation.evaluation_time,
+        evaluation_time_source=invalidation.evaluation_time_source,
+        evaluation_context_id=invalidation.evaluation_context_id,
+        execution_attempt_identity=None,
+        receipt_ref=None,
+    )
+
+
+def _g2a3b1_rebind_transition(
+    event: acp.ActionPacketTransitionEventV01,
+    evidence_code: str,
+    *,
+    evidence_ref: str | None = None,
+    evidence_sha256: str | None = None,
+    validator_profile_id: str | None = None,
+) -> acp.ActionPacketTransitionEventV01:
+    bindings = tuple(
+        (
+            acp.build_transition_evidence_binding_v01(
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+                transition_rule_id=event.transition_rule_id,
+                evidence_code=binding.evidence_code,
+                evidence_ref=(
+                    binding.evidence_ref
+                    if evidence_ref is None
+                    else evidence_ref
+                ),
+                evidence_sha256=(
+                    binding.evidence_sha256
+                    if evidence_sha256 is None
+                    else evidence_sha256
+                ),
+                validator_profile_id=(
+                    binding.validator_profile_id
+                    if validator_profile_id is None
+                    else validator_profile_id
+                ),
+            )
+            if binding.evidence_code == evidence_code
+            else binding
+        )
+        for binding in event.transition_evidence_bindings
+    )
+    return _rebuild_transition_event(
+        event,
+        transition_evidence_bindings=bindings,
+    )
+
+
+@pytest.mark.parametrize(
+    "rule_id",
+    G2A3B1_DETERMINISTIC_RULES,
+)
+def test_g2a3b1_live_deterministic_block_is_atomic(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    rule_id: str,
+) -> None:
+    root_bound = g2a3a_fixture.predecessor
+    packet_id = root_bound.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(root_bound, rule_id)
+    invalidation = _g2a3a_invalidation(
+        g2a3a_fixture,
+        "ROOT_BOUND_KILL_SWITCH",
+    )
+    event = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        rule_id,
+        invalidation,
+    )
+    before = repr(registry).encode("utf-8")
+    disposition_before = registry.idempotency_disposition_events
+    state_before = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    updated = acp.record_action_packet_deterministic_invalidation_v01(
+        registry,
+        packet_id=packet_id,
+        invalidation_evidence=invalidation,
+        transition_event=event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=packet_id,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert state.lifecycle_state == "BLOCKED"
+    assert state.executable is False
+    assert (
+        state.idempotency_disposition,
+        state.reservation_owner_packet_id,
+    ) == (
+        state_before.idempotency_disposition,
+        state_before.reservation_owner_packet_id,
+    )
+    assert updated.idempotency_disposition_events is disposition_before
+    assert len(updated.action_packet_invalidation_contexts) == 1
+    context = updated.action_packet_invalidation_contexts[0]
+    assert type(context) is acp._ActionPacketInvalidationContextV01
+    assert context.invalidation_evidence is invalidation
+    assert context.revocation_candidate is None
+    assert context.supersession_candidate is None
+    assert acp.validate_action_commit_packet_registry_v02(updated) == (
+        True,
+        (),
+    )
+    assert repr(registry).encode("utf-8") == before
+    assert updated.real_world_effects_count == 0
+
+
+@pytest.mark.parametrize(
+    "rule_id",
+    G2A3B1_REVOCATION_RULES,
+)
+def test_g2a3b1_live_root_revocation_is_atomic(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    rule_id: str,
+) -> None:
+    fixture = g2a3a_fixture
+    root_bound = fixture.predecessor
+    packet_id = root_bound.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(root_bound, rule_id)
+    invalidation = _g2a3a_invalidation(fixture, "ROOT_REVOCATION")
+    event = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        rule_id,
+        invalidation,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+    )
+    before = repr(registry).encode("utf-8")
+    disposition_before = registry.idempotency_disposition_events
+    source_decision_id = (
+        root_bound.root_decision_projection.root_decision_result.decision_id
+    )
+    updated = acp.record_action_packet_revocation_v01(
+        registry,
+        packet_id=packet_id,
+        revocation_candidate=fixture.revocation_candidate,
+        revocation_root_projection=fixture.revocation_root_projection,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+        invalidation_evidence=invalidation,
+        transition_event=event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=packet_id,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert (
+        state.lifecycle_state,
+        state.idempotency_disposition,
+        state.reservation_owner_packet_id,
+        state.executable,
+    ) == ("REVOKED", "RESERVED", packet_id, False)
+    assert updated.idempotency_disposition_events is disposition_before
+    assert len(updated.action_packet_invalidation_contexts) == 1
+    context = updated.action_packet_invalidation_contexts[0]
+    assert context.revocation_candidate is fixture.revocation_candidate
+    assert (
+        context.revocation_root_projection
+        is fixture.revocation_root_projection
+    )
+    assert (
+        context.accepted_revocation_binding
+        is fixture.accepted_revocation_binding
+    )
+    assert (
+        updated.action_packet_lifecycle_entries[0].root_bound_genesis
+        .root_decision_projection.root_decision_result.decision_id
+        == source_decision_id
+    )
+    assert acp.validate_action_commit_packet_registry_v02(updated) == (
+        True,
+        (),
+    )
+    assert repr(registry).encode("utf-8") == before
+    assert updated.creates_permission is False
+    assert updated.real_world_effects_count == 0
+
+
+def test_g2a3b1_context_history_rejects_orphan_duplicate_partial_and_missing(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    packet_id = fixture.predecessor.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(
+        fixture.predecessor,
+        "g2a_t07_authorized_block",
+    )
+    invalidation = _g2a3a_invalidation(
+        fixture,
+        "ROOT_BOUND_KILL_SWITCH",
+    )
+    event = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        "g2a_t07_authorized_block",
+        invalidation,
+    )
+    updated = acp.record_action_packet_deterministic_invalidation_v01(
+        registry,
+        packet_id=packet_id,
+        invalidation_evidence=invalidation,
+        transition_event=event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    context = updated.action_packet_invalidation_contexts[0]
+    orphan = replace(
+        registry,
+        action_packet_invalidation_contexts=(context,),
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(orphan)
+    assert valid is False
+    assert "action_packet_registry_invalidation_context_orphan" in reasons
+    missing = replace(updated, action_packet_invalidation_contexts=())
+    assert acp.validate_action_commit_packet_registry_v02(missing)[0] is False
+    duplicate = replace(
+        updated,
+        action_packet_invalidation_contexts=(context, context),
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(duplicate)
+    assert valid is False
+    assert "action_packet_registry_invalidation_context_duplicate" in reasons
+    partial_context = replace(
+        context,
+        revocation_candidate=fixture.revocation_candidate,
+    )
+    partial = replace(
+        orphan,
+        action_packet_invalidation_contexts=(partial_context,),
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(partial)
+    assert valid is False
+    assert "action_packet_registry_invalidation_context_invalid" in reasons
+    assert acp.validate_action_commit_packet_registry_v02(
+        replace(updated, action_packet_invalidation_contexts=[context])
+    )[0] is False
+
+
+@pytest.mark.parametrize(
+    ("evidence_code", "change"),
+    (
+        ("blocking_evidence_valid", "ref"),
+        ("authority_policy_valid", "profile"),
+        ("idempotency_reservation_owned", "hash"),
+    ),
+)
+def test_g2a3b1_deterministic_typed_binding_drift_fails_closed(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    evidence_code: str,
+    change: str,
+) -> None:
+    fixture = g2a3a_fixture
+    packet_id = fixture.predecessor.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(
+        fixture.predecessor,
+        "g2a_t07_authorized_block",
+    )
+    invalidation = _g2a3a_invalidation(
+        fixture,
+        "ROOT_BOUND_KILL_SWITCH",
+    )
+    event = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        "g2a_t07_authorized_block",
+        invalidation,
+    )
+    changes = {
+        "evidence_ref": "f" * 64 if change == "ref" else None,
+        "evidence_sha256": "e" * 64 if change == "hash" else None,
+        "validator_profile_id": (
+            "validator:foreign" if change == "profile" else None
+        ),
+    }
+    forged = _g2a3b1_rebind_transition(
+        event,
+        evidence_code,
+        **changes,
+    )
+    before = repr(registry).encode("utf-8")
+    with pytest.raises(ValueError):
+        acp.record_action_packet_deterministic_invalidation_v01(
+            registry,
+            packet_id=packet_id,
+            invalidation_evidence=invalidation,
+            transition_event=forged,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry).encode("utf-8") == before
+    assert registry.action_packet_invalidation_contexts == ()
+
+
+@pytest.mark.parametrize(
+    "rule_id",
+    ("g2a_t09_pending_block", "g2a_t10_failed_block"),
+)
+def test_g2a3b1_attempt_and_failed_provenance_bindings_are_exact(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    rule_id: str,
+) -> None:
+    fixture = g2a3a_fixture
+    packet_id = fixture.predecessor.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(fixture.predecessor, rule_id)
+    invalidation = _g2a3a_invalidation(
+        fixture,
+        "ROOT_BOUND_KILL_SWITCH",
+    )
+    event = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        rule_id,
+        invalidation,
+    )
+    code = (
+        "adapter_not_called"
+        if rule_id == "g2a_t09_pending_block"
+        else "failed_non_consuming_provenance_valid"
+    )
+    forged = _g2a3b1_rebind_transition(
+        event,
+        code,
+        evidence_ref="f" * 64,
+    )
+    with pytest.raises(ValueError):
+        acp.record_action_packet_deterministic_invalidation_v01(
+            registry,
+            packet_id=packet_id,
+            invalidation_evidence=invalidation,
+            transition_event=forged,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def test_g2a3b1_deterministic_context_must_be_policy_bound(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    packet_id = fixture.predecessor.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(
+        fixture.predecessor,
+        "g2a_t07_authorized_block",
+    )
+    invalidation = _reidentify_invalidation(
+        _g2a3a_invalidation(fixture, "ROOT_BOUND_KILL_SWITCH"),
+        dependency_id="kill_switch:not_in_policy",
+    )
+    event = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        "g2a_t07_authorized_block",
+        invalidation,
+    )
+    with pytest.raises(ValueError):
+        acp.record_action_packet_deterministic_invalidation_v01(
+            registry,
+            packet_id=packet_id,
+            invalidation_evidence=invalidation,
+            transition_event=event,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def test_g2a3b1_revocation_requires_exact_root_provenance_and_binding(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    packet_id = fixture.predecessor.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(
+        fixture.predecessor,
+        "g2a_t16_authorized_revoke",
+    )
+    forged_binding = _reidentify_accepted_revocation(
+        fixture.accepted_revocation_binding,
+        revocation_root_decision_id="7" * 64,
+        revocation_root_decision_hash="8" * 64,
+    )
+    forged_invalidation = _g2a3a_invalidation_for_revocation_binding(
+        fixture,
+        forged_binding,
+    )
+    forged_event = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        "g2a_t16_authorized_revoke",
+        forged_invalidation,
+        accepted_revocation_binding=forged_binding,
+    )
+    before = repr(registry).encode("utf-8")
+    for candidate, projection, binding in (
+        (None, fixture.revocation_root_projection,
+         fixture.accepted_revocation_binding),
+        (fixture.revocation_candidate, None,
+         fixture.accepted_revocation_binding),
+        (fixture.revocation_candidate, fixture.revocation_root_projection,
+         None),
+        (fixture.revocation_candidate, fixture.revocation_root_projection,
+         forged_binding),
+    ):
+        with pytest.raises(ValueError):
+            acp.record_action_packet_revocation_v01(
+                registry,
+                packet_id=packet_id,
+                revocation_candidate=candidate,
+                revocation_root_projection=projection,
+                accepted_revocation_binding=binding,
+                invalidation_evidence=(
+                    forged_invalidation
+                    if binding is forged_binding
+                    else _g2a3a_invalidation(fixture, "ROOT_REVOCATION")
+                ),
+                transition_event=(
+                    forged_event
+                    if binding is forged_binding
+                    else _g2a3b1_transition_event(
+                        registry,
+                        packet_id,
+                        "g2a_t16_authorized_revoke",
+                        _g2a3a_invalidation(
+                            fixture,
+                            "ROOT_REVOCATION",
+                        ),
+                        accepted_revocation_binding=(
+                            fixture.accepted_revocation_binding
+                        ),
+                    )
+                ),
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+            )
+    assert repr(registry).encode("utf-8") == before
+    assert registry.action_packet_invalidation_contexts == ()
+
+
+@pytest.mark.parametrize(
+    ("rule_id", "evidence_code"),
+    (
+        ("g2a_t16_authorized_revoke", "accepted_revocation_binding_valid"),
+        ("g2a_t16_authorized_revoke", "source_authorization_binding_valid"),
+        ("g2a_t16_authorized_revoke", "idempotency_reservation_owned"),
+        ("g2a_t18_pending_revoke", "adapter_not_called"),
+        ("g2a_t19_failed_revoke", "failed_non_consuming_provenance_valid"),
+    ),
+)
+def test_g2a3b1_revocation_typed_binding_drift_fails_closed(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    rule_id: str,
+    evidence_code: str,
+) -> None:
+    fixture = g2a3a_fixture
+    packet_id = fixture.predecessor.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(fixture.predecessor, rule_id)
+    invalidation = _g2a3a_invalidation(fixture, "ROOT_REVOCATION")
+    event = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        rule_id,
+        invalidation,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+    )
+    forged = _g2a3b1_rebind_transition(
+        event,
+        evidence_code,
+        evidence_sha256="d" * 64,
+    )
+    before = repr(registry).encode("utf-8")
+    with pytest.raises(ValueError):
+        acp.record_action_packet_revocation_v01(
+            registry,
+            packet_id=packet_id,
+            revocation_candidate=fixture.revocation_candidate,
+            revocation_root_projection=fixture.revocation_root_projection,
+            accepted_revocation_binding=fixture.accepted_revocation_binding,
+            invalidation_evidence=invalidation,
+            transition_event=forged,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry).encode("utf-8") == before
+
+
+def test_g2a3b1_wrong_revocation_root_ref_and_transition_rule_fail_closed(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    packet_id = fixture.predecessor.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(
+        fixture.predecessor,
+        "g2a_t16_authorized_revoke",
+    )
+    invalidation = _g2a3a_invalidation(fixture, "ROOT_REVOCATION")
+    event = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        "g2a_t16_authorized_revoke",
+        invalidation,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+    )
+    wrong_root = _rebuild_transition_event(
+        event,
+        root_decision_ref="9" * 64,
+    )
+    wrong_rule = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        "g2a_t17_queued_revoke",
+        invalidation,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+    )
+    for forged in (wrong_root, wrong_rule):
+        with pytest.raises(ValueError):
+            acp.record_action_packet_revocation_v01(
+                registry,
+                packet_id=packet_id,
+                revocation_candidate=fixture.revocation_candidate,
+                revocation_root_projection=fixture.revocation_root_projection,
+                accepted_revocation_binding=(
+                    fixture.accepted_revocation_binding
+                ),
+                invalidation_evidence=invalidation,
+                transition_event=forged,
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+            )
+
+
+def test_g2a3b1_revocation_manual_bypass_and_duplicate_fail_closed(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    packet_id = fixture.predecessor.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(
+        fixture.predecessor,
+        "g2a_t16_authorized_revoke",
+    )
+    invalidation = _g2a3a_invalidation(fixture, "ROOT_REVOCATION")
+    event = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        "g2a_t16_authorized_revoke",
+        invalidation,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+    )
+    updated = acp.record_action_packet_revocation_v01(
+        registry,
+        packet_id=packet_id,
+        revocation_candidate=fixture.revocation_candidate,
+        revocation_root_projection=fixture.revocation_root_projection,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+        invalidation_evidence=invalidation,
+        transition_event=event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    manual = replace(updated, action_packet_invalidation_contexts=())
+    assert acp.validate_action_commit_packet_registry_v02(manual)[0] is False
+    with pytest.raises(ValueError):
+        acp.record_action_packet_revocation_v01(
+            updated,
+            packet_id=packet_id,
+            revocation_candidate=fixture.revocation_candidate,
+            revocation_root_projection=fixture.revocation_root_projection,
+            accepted_revocation_binding=fixture.accepted_revocation_binding,
+            invalidation_evidence=invalidation,
+            transition_event=event,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def test_g2a3b1_supersession_context_remains_orphan_until_g2a3b2(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    fixture = g2a3a_fixture
+    registry = acp.build_empty_action_commit_packet_registry_v02()
+    for root_bound in (fixture.predecessor, fixture.successor):
+        registry = acp.record_action_packet_genesis_v01(
+            registry,
+            root_bound_genesis=root_bound,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    context = acp._ActionPacketInvalidationContextV01(
+        invalidation_evidence=_g2a3a_invalidation(
+            fixture,
+            "ROOT_SUPERSESSION",
+        ),
+        revocation_candidate=None,
+        revocation_root_projection=None,
+        accepted_revocation_binding=None,
+        supersession_candidate=fixture.supersession_candidate,
+        supersession_root_projection=fixture.supersession_root_projection,
+        supersession_successor_packet_id=(
+            fixture.successor.packet_identity.packet_id
+        ),
+        accepted_supersession_binding=(
+            fixture.accepted_supersession_binding
+        ),
+    )
+    assert acp._validate_action_packet_invalidation_context_v01(
+        context,
+        fixture.predecessor,
+        supersession_successor=fixture.successor,
+    ) == (True, ())
+    forged = replace(
+        registry,
+        action_packet_invalidation_contexts=(context,),
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(forged)
+    assert valid is False
+    assert "action_packet_registry_invalidation_context_orphan" in reasons
+
+
+G2A3B2_ACTIVE_RULES = (
+    ("ROOT_AUTHORIZED", "g2a_t20_authorized_supersede"),
+    ("QUEUED", "g2a_t21_queued_supersede"),
+    ("PENDING_FULFILLMENT", "g2a_t22_pending_supersede"),
+    ("FAILED_NON_CONSUMING", "g2a_t23_failed_supersede"),
+)
+G2A3B2_TERMINAL_STATES = ("EXPIRED", "BLOCKED", "REVOKED")
+G2A3B2_MATERIAL_STATES = (
+    "CREATED",
+    "ROOT_AUTHORIZED",
+    "QUEUED",
+    "PENDING_FULFILLMENT",
+    "FAILED_NON_CONSUMING",
+    "EXPIRED",
+    "BLOCKED",
+    "REVOKED",
+)
+
+
+def _g2a3b2_fixture_variant(
+    fixture: _G2A3AFixtureV01,
+    *,
+    variation: str,
+    reason: str,
+) -> _G2A3AFixtureV01:
+    successor = _g2a3a_successor(
+        fixture.predecessor,
+        variation=variation,
+        supersession_reason_class=reason,
+    )
+    candidate, root_projection, binding = _g2a3a_supersession_bundle(
+        fixture.predecessor,
+        successor,
+    )
+    return replace(
+        fixture,
+        successor=successor,
+        supersession_candidate=candidate,
+        supersession_root_projection=root_projection,
+        accepted_supersession_binding=binding,
+    )
+
+
+def _g2a3b2_record_genesis_pair(
+    fixture: _G2A3AFixtureV01,
+) -> acp.ActionCommitPacketRegistryV02:
+    registry = acp.build_empty_action_commit_packet_registry_v02()
+    for root_bound in (fixture.predecessor, fixture.successor):
+        registry = acp.record_action_packet_genesis_v01(
+            registry,
+            root_bound_genesis=root_bound,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    return registry
+
+
+def _g2a3b2_append_expiry(
+    registry: acp.ActionCommitPacketRegistryV02,
+    packet_id: str,
+    rule_id: str,
+) -> acp.ActionCommitPacketRegistryV02:
+    entry = next(
+        item
+        for item in registry.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == packet_id
+    )
+    expiry = (
+        entry.root_bound_genesis.canonical_projection.temporal_authority
+        .expires_at_utc
+    )
+    event = _g2a2b_event(entry, rule_id, evaluation_time=expiry)
+    return acp.append_action_packet_lifecycle_transition_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+
+
+def _g2a3b2_registry_for_state(
+    fixture: _G2A3AFixtureV01,
+    state: str,
+    *,
+    branch_a: bool = False,
+) -> acp.ActionCommitPacketRegistryV02:
+    registry = acp.record_action_packet_genesis_v01(
+        acp.build_empty_action_commit_packet_registry_v02(),
+        root_bound_genesis=fixture.predecessor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    packet_id = fixture.predecessor.packet_identity.packet_id
+
+    def with_successor(
+        value: acp.ActionCommitPacketRegistryV02,
+    ) -> acp.ActionCommitPacketRegistryV02:
+        return acp.record_action_packet_genesis_v01(
+            value,
+            root_bound_genesis=fixture.successor,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+    if state == "CREATED":
+        return with_successor(registry)
+    if branch_a:
+        return with_successor(
+            _g2a3b2_append_expiry(
+                registry,
+                packet_id,
+                "g2a_t11_created_expire",
+            )
+        )
+    registry, _, _ = _g2a2b_activate(registry, packet_id)
+    if state == "ROOT_AUTHORIZED":
+        return with_successor(registry)
+    if state == "EXPIRED":
+        return with_successor(
+            _g2a3b2_append_expiry(
+                registry,
+                packet_id,
+                "g2a_t12_authorized_expire",
+            )
+        )
+    if state == "BLOCKED":
+        invalidation = _g2a3a_invalidation(
+            fixture,
+            "ROOT_BOUND_KILL_SWITCH",
+        )
+        event = _g2a3b1_transition_event(
+            registry,
+            packet_id,
+            "g2a_t07_authorized_block",
+            invalidation,
+        )
+        return with_successor(
+            acp.record_action_packet_deterministic_invalidation_v01(
+                registry,
+                packet_id=packet_id,
+                invalidation_evidence=invalidation,
+                transition_event=event,
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+            )
+        )
+    if state == "REVOKED":
+        invalidation = _g2a3a_invalidation(fixture, "ROOT_REVOCATION")
+        event = _g2a3b1_transition_event(
+            registry,
+            packet_id,
+            "g2a_t16_authorized_revoke",
+            invalidation,
+            accepted_revocation_binding=fixture.accepted_revocation_binding,
+        )
+        return with_successor(
+            acp.record_action_packet_revocation_v01(
+                registry,
+                packet_id=packet_id,
+                revocation_candidate=fixture.revocation_candidate,
+                revocation_root_projection=fixture.revocation_root_projection,
+                accepted_revocation_binding=fixture.accepted_revocation_binding,
+                invalidation_evidence=invalidation,
+                transition_event=event,
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+            )
+        )
+    registry, _ = _g2a2b_append(
+        registry,
+        packet_id,
+        "g2a_t02_queue",
+    )
+    if state == "QUEUED":
+        return with_successor(registry)
+    registry, _ = _g2a2b_append(
+        registry,
+        packet_id,
+        "g2a_t03_pending",
+        evaluation_context_id="evaluation_context:g2a3b2:attempt:1",
+    )
+    if state == "PENDING_FULFILLMENT":
+        return with_successor(registry)
+    if state != "FAILED_NON_CONSUMING":
+        raise AssertionError(f"unknown G2-A3B2 state: {state}")
+    entry = next(
+        item
+        for item in registry.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == packet_id
+    )
+    state_report = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    failure = _g2a2b_event(
+        entry,
+        "g2a_t24_nonconsuming_failure",
+        latest_disposition_event_id=(
+            state_report.latest_disposition_event_id
+        ),
+    )
+    return with_successor(
+        acp.record_action_packet_nonconsuming_outcome_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=failure,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    )
+
+
+def _g2a3b2_invalidation(
+    fixture: _G2A3AFixtureV01,
+    *,
+    evaluation_time: int = EVALUATION_TIME,
+    evaluation_context_id: str = "evaluation_context:g2a3b2",
+) -> acp.ActionInvalidationEvidenceV01:
+    return _reidentify_invalidation(
+        _g2a3a_invalidation(fixture, "ROOT_SUPERSESSION"),
+        evaluation_time=evaluation_time,
+        evaluation_context_id=evaluation_context_id,
+    )
+
+
+def _g2a3b2_supersession_transition(
+    registry: acp.ActionCommitPacketRegistryV02,
+    fixture: _G2A3AFixtureV01,
+    rule_id: str,
+    invalidation: acp.ActionInvalidationEvidenceV01,
+) -> acp.ActionPacketTransitionEventV01:
+    predecessor_id = fixture.predecessor.packet_identity.packet_id
+    successor_id = fixture.successor.packet_identity.packet_id
+    entry = next(
+        item
+        for item in registry.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == predecessor_id
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=predecessor_id,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    latest = entry.transition_events[-1]
+    rule = transition_registry.lookup_action_packet_transition_rule_v01(
+        registry=_g2a2a_registry(),
+        transition_rule_id=rule_id,
+    )
+
+    def material(evidence_code: str) -> tuple[str, str, str]:
+        if evidence_code == "successor_packet_valid":
+            return (
+                successor_id,
+                successor_id[len(acp.ACTION_COMMIT_PACKET_ID_PREFIX_V01) :],
+                acp._ACTION_COMMIT_PACKET_IDENTITY_PROFILE_ID_V01,
+            )
+        if evidence_code == "accepted_supersession_binding_valid":
+            binding_id = (
+                fixture.accepted_supersession_binding
+                .accepted_supersession_binding_id
+            )
+            return (
+                binding_id,
+                binding_id[
+                    len(acp.ACCEPTED_SUPERSESSION_BINDING_PREFIX_V01) :
+                ],
+                acp._ACCEPTED_SUPERSESSION_BINDING_VALIDATOR_PROFILE_ID_V01,
+            )
+        if evidence_code == "predecessor_binding_valid":
+            return (
+                predecessor_id,
+                predecessor_id[
+                    len(acp.ACTION_COMMIT_PACKET_ID_PREFIX_V01) :
+                ],
+                acp._ACTION_COMMIT_PACKET_IDENTITY_PROFILE_ID_V01,
+            )
+        if evidence_code == "idempotency_transfer_valid":
+            disposition_id = state.latest_disposition_event_id
+            assert disposition_id is not None
+            return (
+                disposition_id,
+                disposition_id[
+                    len(acp.IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01) :
+                ],
+                acp.IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01,
+            )
+        if evidence_code == "adapter_not_called":
+            assert latest.execution_attempt_id is not None
+            return (
+                latest.execution_attempt_id,
+                latest.execution_attempt_id[
+                    len(acp.EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01) :
+                ],
+                acp.EXECUTION_ATTEMPT_IDENTITY_PROFILE_ID_V01,
+            )
+        if evidence_code == "failed_non_consuming_provenance_valid":
+            return (
+                latest.transition_event_id,
+                latest.transition_event_id[
+                    len(acp.ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01) :
+                ],
+                acp.ACTION_PACKET_TRANSITION_EVENT_PROFILE_ID_V01,
+            )
+        raise AssertionError(f"unsupported G2-A3B2 evidence: {evidence_code}")
+
+    bindings = tuple(
+        acp.build_transition_evidence_binding_v01(
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+            transition_rule_id=rule_id,
+            evidence_code=code,
+            evidence_ref=material(code)[0],
+            evidence_sha256=material(code)[1],
+            validator_profile_id=material(code)[2],
+        )
+        for code in rule.required_evidence_codes
+    )
+    predecessor_canonical = fixture.predecessor.canonical_projection
+    return acp.build_action_packet_transition_event_v01(
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+        transition_rule_id=rule_id,
+        packet_id=predecessor_id,
+        idempotency_key=(
+            predecessor_canonical.idempotency_identity.idempotency_key
+        ),
+        previous_transition_event_id=latest.transition_event_id,
+        owning_local_root_id=predecessor_canonical.owning_local_root_id,
+        root_decision_ref=(
+            fixture.accepted_supersession_binding
+            .supersession_root_decision_id
+        ),
+        transition_evidence_bindings=bindings,
+        dependency_set_candidate_fingerprint=(
+            predecessor_canonical.dependency_set_candidate_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            predecessor_canonical.temporal_authority_fingerprint
+        ),
+        evaluation_time=invalidation.evaluation_time,
+        evaluation_time_source=invalidation.evaluation_time_source,
+        evaluation_context_id=invalidation.evaluation_context_id,
+        execution_attempt_identity=None,
+        receipt_ref=None,
+    )
+
+
+def _g2a3b2_successor_activation(
+    registry: acp.ActionCommitPacketRegistryV02,
+    fixture: _G2A3AFixtureV01,
+    invalidation: acp.ActionInvalidationEvidenceV01,
+) -> acp.ActionPacketTransitionEventV01:
+    successor_id = fixture.successor.packet_identity.packet_id
+    entry = next(
+        item
+        for item in registry.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == successor_id
+    )
+    return _g2a2b_event(
+        entry,
+        "g2a_t01_activate_root_authorization",
+        evaluation_context_id=invalidation.evaluation_context_id,
+        evaluation_time=invalidation.evaluation_time,
+    )
+
+
+def _g2a3b2_disposition(
+    registry: acp.ActionCommitPacketRegistryV02,
+    fixture: _G2A3AFixtureV01,
+    invalidation: acp.ActionInvalidationEvidenceV01,
+    successor_activation: acp.ActionPacketTransitionEventV01,
+    *,
+    branch: str,
+    predecessor_event: acp.ActionPacketTransitionEventV01 | None = None,
+) -> acp.IdempotencyDispositionEventV01:
+    predecessor_id = fixture.predecessor.packet_identity.packet_id
+    successor_id = fixture.successor.packet_identity.packet_id
+    predecessor_entry = next(
+        item
+        for item in registry.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == predecessor_id
+    )
+    predecessor_latest = (
+        predecessor_entry.transition_events[-1]
+        if predecessor_entry.transition_events
+        else None
+    )
+    predecessor_state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=predecessor_id,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    successor_canonical = fixture.successor.canonical_projection
+    successor_root = (
+        fixture.successor.root_decision_projection.root_decision_result
+        .decision_id
+    )
+    binding_id = (
+        fixture.accepted_supersession_binding
+        .accepted_supersession_binding_id
+    )
+    if branch == "BRANCH_A":
+        assert predecessor_latest is not None
+        event_class = "RESERVE"
+        causes = (
+            predecessor_latest.transition_event_id,
+            successor_activation.transition_event_id,
+        )
+        predecessor_ref = predecessor_id
+        successor_ref = successor_id
+        from_owner = None
+        previous = None
+        evidence_refs = (
+            binding_id,
+            predecessor_latest.transition_event_id,
+            successor_root,
+        )
+    elif branch in {"ACTIVE", "TERMINAL"}:
+        cause = predecessor_event or predecessor_latest
+        assert cause is not None
+        event_class = (
+            "TRANSFER_RENEWAL"
+            if fixture.supersession_candidate.supersession_reason_class
+            == "RENEWAL"
+            else "TRANSFER_SUPERSESSION"
+        )
+        causes = (
+            cause.transition_event_id,
+            successor_activation.transition_event_id,
+        )
+        predecessor_ref = predecessor_id
+        successor_ref = successor_id
+        from_owner = predecessor_id
+        previous = predecessor_state.latest_disposition_event_id
+        evidence_refs = (
+            (
+                predecessor_latest.transition_event_id
+                if branch == "TERMINAL"
+                else binding_id
+            ),
+            (
+                binding_id
+                if branch == "TERMINAL"
+                else fixture.predecessor.canonical_projection.logical_intent
+                .root_owned_intent_id
+            ),
+            successor_root,
+        )
+    elif branch == "MATERIAL":
+        event_class = "RESERVE"
+        causes = (successor_activation.transition_event_id,)
+        predecessor_ref = None
+        successor_ref = None
+        from_owner = None
+        previous = None
+        evidence_refs = _g2a2b_evidence_ids(
+            successor_activation,
+            (
+                "packet_genesis_valid",
+                "source_root_authorization_valid",
+                "idempotency_acquisition_valid",
+            ),
+        )
+    else:
+        raise AssertionError(f"unknown G2-A3B2 branch: {branch}")
+    return acp.build_idempotency_disposition_event_v01(
+        idempotency_key=(
+            successor_canonical.idempotency_identity.idempotency_key
+        ),
+        event_class=event_class,
+        from_disposition=(
+            "UNCLAIMED" if event_class == "RESERVE" else "RESERVED"
+        ),
+        to_disposition="RESERVED",
+        from_owner_packet_id=from_owner,
+        to_owner_packet_id=successor_id,
+        previous_disposition_event_id=previous,
+        cause_transition_event_ids=causes,
+        root_decision_ref=successor_root,
+        predecessor_packet_id=predecessor_ref,
+        successor_packet_id=successor_ref,
+        evidence_refs=tuple(
+            sorted(evidence_refs, key=lambda item: item.encode("utf-8"))
+        ),
+        evaluation_time=invalidation.evaluation_time,
+        evaluation_time_source=invalidation.evaluation_time_source,
+        evaluation_context_id=invalidation.evaluation_context_id,
+    )
+
+
+def _g2a3b2_apply(
+    registry: acp.ActionCommitPacketRegistryV02,
+    fixture: _G2A3AFixtureV01,
+    *,
+    branch: str,
+    predecessor_rule: str | None = None,
+    evaluation_time: int = EVALUATION_TIME,
+) -> tuple[
+    acp.ActionCommitPacketRegistryV02,
+    acp.ActionPacketTransitionEventV01 | None,
+    acp.ActionPacketTransitionEventV01,
+    acp.IdempotencyDispositionEventV01,
+]:
+    invalidation = _g2a3b2_invalidation(
+        fixture,
+        evaluation_time=evaluation_time,
+    )
+    successor_activation = _g2a3b2_successor_activation(
+        registry,
+        fixture,
+        invalidation,
+    )
+    predecessor_event = (
+        _g2a3b2_supersession_transition(
+            registry,
+            fixture,
+            predecessor_rule,
+            invalidation,
+        )
+        if predecessor_rule is not None
+        else None
+    )
+    disposition = _g2a3b2_disposition(
+        registry,
+        fixture,
+        invalidation,
+        successor_activation,
+        branch=branch,
+        predecessor_event=predecessor_event,
+    )
+    updated = acp.record_action_packet_supersession_v01(
+        registry,
+        predecessor_packet_id=fixture.predecessor.packet_identity.packet_id,
+        successor_packet_id=fixture.successor.packet_identity.packet_id,
+        supersession_candidate=fixture.supersession_candidate,
+        supersession_root_projection=fixture.supersession_root_projection,
+        accepted_supersession_binding=(
+            fixture.accepted_supersession_binding
+        ),
+        invalidation_evidence=invalidation,
+        successor_activation_event=successor_activation,
+        disposition_event=disposition,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+        predecessor_supersession_event=predecessor_event,
+    )
+    return updated, predecessor_event, successor_activation, disposition
+
+
+def _g2a3b2_rebuild_disposition(
+    event: acp.IdempotencyDispositionEventV01,
+    **changes: object,
+) -> acp.IdempotencyDispositionEventV01:
+    provisional = replace(
+        event,
+        idempotency_disposition_event_id="",
+        **changes,
+    )
+    return replace(
+        provisional,
+        idempotency_disposition_event_id=(
+            acp.build_domain_separated_identity_v01(
+                domain=acp.IDEMPOTENCY_DISPOSITION_EVENT_DOMAIN_V01,
+                prefix=acp.IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01,
+                material=acp.idempotency_disposition_event_material_v01(
+                    provisional
+                ),
+            )
+        ),
+    )
+
+
+def _g2a3b2_manual_registry(
+    registry: acp.ActionCommitPacketRegistryV02,
+    fixture: _G2A3AFixtureV01,
+    invalidation: acp.ActionInvalidationEvidenceV01,
+    successor_activation: acp.ActionPacketTransitionEventV01,
+    disposition: acp.IdempotencyDispositionEventV01,
+    predecessor_event: acp.ActionPacketTransitionEventV01 | None,
+) -> acp.ActionCommitPacketRegistryV02:
+    predecessor_id = fixture.predecessor.packet_identity.packet_id
+    successor_id = fixture.successor.packet_identity.packet_id
+    entries = []
+    for entry in registry.action_packet_lifecycle_entries:
+        packet_id = entry.root_bound_genesis.packet_identity.packet_id
+        if packet_id == predecessor_id and predecessor_event is not None:
+            entry = replace(
+                entry,
+                transition_events=(
+                    entry.transition_events + (predecessor_event,)
+                ),
+            )
+        elif packet_id == successor_id:
+            entry = replace(
+                entry,
+                transition_events=(successor_activation,),
+            )
+        entries.append(entry)
+    context = acp._ActionPacketInvalidationContextV01(
+        invalidation_evidence=invalidation,
+        revocation_candidate=None,
+        revocation_root_projection=None,
+        accepted_revocation_binding=None,
+        supersession_candidate=fixture.supersession_candidate,
+        supersession_root_projection=fixture.supersession_root_projection,
+        supersession_successor_packet_id=successor_id,
+        accepted_supersession_binding=(
+            fixture.accepted_supersession_binding
+        ),
+    )
+    return replace(
+        registry,
+        action_packet_lifecycle_entries=tuple(entries),
+        idempotency_disposition_events=(
+            registry.idempotency_disposition_events + (disposition,)
+        ),
+        action_packet_invalidation_contexts=(
+            registry.action_packet_invalidation_contexts + (context,)
+        ),
+    )
+
+
+@pytest.mark.parametrize(
+    ("reason", "event_class"),
+    (
+        ("RENEWAL", "RESERVE"),
+        ("POLICY_REPLACEMENT", "RESERVE"),
+    ),
+)
+def test_g2a3b2_branch_a_successor_reserve(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    reason: str,
+    event_class: str,
+) -> None:
+    fixture = (
+        g2a3a_fixture
+        if reason == "RENEWAL"
+        else _g2a3b2_fixture_variant(
+            g2a3a_fixture,
+            variation="TTL",
+            reason=reason,
+        )
+    )
+    registry = _g2a3b2_registry_for_state(
+        fixture,
+        "EXPIRED",
+        branch_a=True,
+    )
+    expiry = (
+        fixture.predecessor.canonical_projection.temporal_authority
+        .expires_at_utc
+    )
+    before = repr(registry).encode("utf-8")
+    updated, predecessor_event, _, disposition = _g2a3b2_apply(
+        registry,
+        fixture,
+        branch="BRANCH_A",
+        evaluation_time=expiry,
+    )
+    predecessor_state = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=fixture.predecessor.packet_identity.packet_id,
+    )
+    successor_state = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=fixture.successor.packet_identity.packet_id,
+    )
+    assert predecessor_event is None
+    assert disposition.event_class == event_class
+    assert predecessor_state.lifecycle_state == "EXPIRED"
+    assert (
+        successor_state.lifecycle_state,
+        successor_state.idempotency_disposition,
+        successor_state.reservation_owner_packet_id,
+    ) == (
+        "ROOT_AUTHORIZED",
+        "RESERVED",
+        fixture.successor.packet_identity.packet_id,
+    )
+    assert len(updated.action_packet_invalidation_contexts) == 1
+    assert repr(registry).encode("utf-8") == before
+    assert updated.real_world_effects_count == 0
+
+
+@pytest.mark.parametrize(
+    ("state", "rule_id"),
+    G2A3B2_ACTIVE_RULES,
+)
+@pytest.mark.parametrize(
+    ("reason", "event_class"),
+    (
+        ("RENEWAL", "TRANSFER_RENEWAL"),
+        ("POLICY_REPLACEMENT", "TRANSFER_SUPERSESSION"),
+    ),
+)
+def test_g2a3b2_active_same_effect_transfer(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    state: str,
+    rule_id: str,
+    reason: str,
+    event_class: str,
+) -> None:
+    fixture = (
+        g2a3a_fixture
+        if reason == "RENEWAL"
+        else _g2a3b2_fixture_variant(
+            g2a3a_fixture,
+            variation="TTL",
+            reason=reason,
+        )
+    )
+    registry = _g2a3b2_registry_for_state(fixture, state)
+    updated, predecessor_event, _, disposition = _g2a3b2_apply(
+        registry,
+        fixture,
+        branch="ACTIVE",
+        predecessor_rule=rule_id,
+    )
+    predecessor_state = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=fixture.predecessor.packet_identity.packet_id,
+    )
+    successor_state = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=fixture.successor.packet_identity.packet_id,
+    )
+    assert predecessor_event is not None
+    assert predecessor_state.lifecycle_state == "SUPERSEDED"
+    assert disposition.event_class == event_class
+    assert (
+        successor_state.lifecycle_state,
+        successor_state.idempotency_disposition,
+        successor_state.reservation_owner_packet_id,
+    ) == (
+        "ROOT_AUTHORIZED",
+        "RESERVED",
+        fixture.successor.packet_identity.packet_id,
+    )
+    assert updated.real_world_effects_count == 0
+
+
+@pytest.mark.parametrize("state", G2A3B2_TERMINAL_STATES)
+@pytest.mark.parametrize(
+    ("reason", "event_class"),
+    (
+        ("RENEWAL", "TRANSFER_RENEWAL"),
+        ("POLICY_REPLACEMENT", "TRANSFER_SUPERSESSION"),
+    ),
+)
+def test_g2a3b2_terminal_same_effect_transfer(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    state: str,
+    reason: str,
+    event_class: str,
+) -> None:
+    fixture = (
+        g2a3a_fixture
+        if reason == "RENEWAL"
+        else _g2a3b2_fixture_variant(
+            g2a3a_fixture,
+            variation="TTL",
+            reason=reason,
+        )
+    )
+    registry = _g2a3b2_registry_for_state(fixture, state)
+    updated, predecessor_event, _, disposition = _g2a3b2_apply(
+        registry,
+        fixture,
+        branch="TERMINAL",
+        evaluation_time=(
+            fixture.predecessor.canonical_projection.temporal_authority
+            .expires_at_utc
+            if state == "EXPIRED"
+            else EVALUATION_TIME
+        ),
+    )
+    predecessor_state = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=fixture.predecessor.packet_identity.packet_id,
+    )
+    successor_state = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=fixture.successor.packet_identity.packet_id,
+    )
+    assert predecessor_event is None
+    assert predecessor_state.lifecycle_state == state
+    assert disposition.event_class == event_class
+    assert successor_state.reservation_owner_packet_id == (
+        fixture.successor.packet_identity.packet_id
+    )
+    assert successor_state.lifecycle_state == "ROOT_AUTHORIZED"
+
+
+@pytest.mark.parametrize(
+    ("terminal_rule", "terminal_state"),
+    (
+        ("g2a_t09_pending_block", "BLOCKED"),
+        ("g2a_t18_pending_revoke", "REVOKED"),
+    ),
+)
+def test_g2a3b2_terminal_transfer_after_late_b1_context(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    terminal_rule: str,
+    terminal_state: str,
+) -> None:
+    predecessor_id = g2a3a_fixture.predecessor.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(
+        g2a3a_fixture.predecessor,
+        terminal_rule,
+    )
+    if terminal_rule == "g2a_t09_pending_block":
+        invalidation = _g2a3a_invalidation(
+            g2a3a_fixture,
+            "ROOT_BOUND_KILL_SWITCH",
+        )
+        event = _g2a3b1_transition_event(
+            registry,
+            predecessor_id,
+            terminal_rule,
+            invalidation,
+        )
+        registry = acp.record_action_packet_deterministic_invalidation_v01(
+            registry,
+            packet_id=predecessor_id,
+            invalidation_evidence=invalidation,
+            transition_event=event,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    else:
+        invalidation = _g2a3a_invalidation(
+            g2a3a_fixture,
+            "ROOT_REVOCATION",
+        )
+        event = _g2a3b1_transition_event(
+            registry,
+            predecessor_id,
+            terminal_rule,
+            invalidation,
+            accepted_revocation_binding=(
+                g2a3a_fixture.accepted_revocation_binding
+            ),
+        )
+        registry = acp.record_action_packet_revocation_v01(
+            registry,
+            packet_id=predecessor_id,
+            revocation_candidate=g2a3a_fixture.revocation_candidate,
+            revocation_root_projection=(
+                g2a3a_fixture.revocation_root_projection
+            ),
+            accepted_revocation_binding=(
+                g2a3a_fixture.accepted_revocation_binding
+            ),
+            invalidation_evidence=invalidation,
+            transition_event=event,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    registry = acp.record_action_packet_genesis_v01(
+        registry,
+        root_bound_genesis=g2a3a_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    updated, predecessor_event, _, _ = _g2a3b2_apply(
+        registry,
+        g2a3a_fixture,
+        branch="TERMINAL",
+    )
+    assert predecessor_event is None
+    assert acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=predecessor_id,
+    ).lifecycle_state == terminal_state
+    assert len(updated.action_packet_invalidation_contexts) == 2
+
+
+@pytest.mark.parametrize("state", G2A3B2_MATERIAL_STATES)
+def test_g2a3b2_material_effect_distinct_key_successor(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    state: str,
+) -> None:
+    fixture = _g2a3b2_fixture_variant(
+        g2a3a_fixture,
+        variation="MATERIAL",
+        reason="MATERIAL_EFFECT_REPLACEMENT",
+    )
+    registry = _g2a3b2_registry_for_state(fixture, state)
+    predecessor_before = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=fixture.predecessor.packet_identity.packet_id,
+    )
+    updated, predecessor_event, _, disposition = _g2a3b2_apply(
+        registry,
+        fixture,
+        branch="MATERIAL",
+    )
+    predecessor_after = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=fixture.predecessor.packet_identity.packet_id,
+    )
+    successor_after = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=fixture.successor.packet_identity.packet_id,
+    )
+    assert predecessor_event is None
+    assert disposition.event_class == "RESERVE"
+    assert (
+        predecessor_after.lifecycle_state,
+        predecessor_after.idempotency_disposition,
+        predecessor_after.reservation_owner_packet_id,
+    ) == (
+        predecessor_before.lifecycle_state,
+        predecessor_before.idempotency_disposition,
+        predecessor_before.reservation_owner_packet_id,
+    )
+    assert (
+        successor_after.lifecycle_state,
+        successor_after.idempotency_disposition,
+        successor_after.reservation_owner_packet_id,
+    ) == (
+        "ROOT_AUTHORIZED",
+        "RESERVED",
+        fixture.successor.packet_identity.packet_id,
+    )
+    assert predecessor_after.idempotency_key != successor_after.idempotency_key
+    assert updated.real_world_effects_count == 0
+
+
+def test_g2a3b2_deterministic_vector_is_independently_rebuilt(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    def inputs(
+        fixture: _G2A3AFixtureV01,
+        state: str,
+        branch: str,
+        *,
+        rule_id: str | None = None,
+        branch_a: bool = False,
+        evaluation_time: int = EVALUATION_TIME,
+    ) -> tuple[
+        acp.ActionPacketTransitionEventV01 | None,
+        acp.ActionPacketTransitionEventV01,
+        acp.IdempotencyDispositionEventV01,
+    ]:
+        registry = _g2a3b2_registry_for_state(
+            fixture,
+            state,
+            branch_a=branch_a,
+        )
+        invalidation = _g2a3b2_invalidation(
+            fixture,
+            evaluation_time=evaluation_time,
+        )
+        successor = _g2a3b2_successor_activation(
+            registry,
+            fixture,
+            invalidation,
+        )
+        predecessor = (
+            _g2a3b2_supersession_transition(
+                registry,
+                fixture,
+                rule_id,
+                invalidation,
+            )
+            if rule_id is not None
+            else None
+        )
+        disposition = _g2a3b2_disposition(
+            registry,
+            fixture,
+            invalidation,
+            successor,
+            branch=branch,
+            predecessor_event=predecessor,
+        )
+        return predecessor, successor, disposition
+
+    t20, _, active_renewal = inputs(
+        g2a3a_fixture,
+        "ROOT_AUTHORIZED",
+        "ACTIVE",
+        rule_id="g2a_t20_authorized_supersede",
+    )
+    t22, _, _ = inputs(
+        g2a3a_fixture,
+        "PENDING_FULFILLMENT",
+        "ACTIVE",
+        rule_id="g2a_t22_pending_supersede",
+    )
+    expiry = (
+        g2a3a_fixture.predecessor.canonical_projection.temporal_authority
+        .expires_at_utc
+    )
+    _, branch_t01, branch_reserve = inputs(
+        g2a3a_fixture,
+        "EXPIRED",
+        "BRANCH_A",
+        branch_a=True,
+        evaluation_time=expiry,
+    )
+    nonrenewal = _g2a3b2_fixture_variant(
+        g2a3a_fixture,
+        variation="TTL",
+        reason="POLICY_REPLACEMENT",
+    )
+    _, _, active_supersession = inputs(
+        nonrenewal,
+        "ROOT_AUTHORIZED",
+        "ACTIVE",
+        rule_id="g2a_t20_authorized_supersede",
+    )
+    _, _, terminal_renewal = inputs(
+        g2a3a_fixture,
+        "EXPIRED",
+        "TERMINAL",
+        evaluation_time=expiry,
+    )
+    _, _, terminal_supersession = inputs(
+        nonrenewal,
+        "EXPIRED",
+        "TERMINAL",
+        evaluation_time=expiry,
+    )
+    material = _g2a3b2_fixture_variant(
+        g2a3a_fixture,
+        variation="MATERIAL",
+        reason="MATERIAL_EFFECT_REPLACEMENT",
+    )
+    _, material_t01, material_reserve = inputs(
+        material,
+        "ROOT_AUTHORIZED",
+        "MATERIAL",
+    )
+    assert t20 is not None
+    assert t22 is not None
+    observed = {
+        "t20_transition_event_id": t20.transition_event_id,
+        "t22_transition_event_id": t22.transition_event_id,
+        "branch_a_successor_t01_id": branch_t01.transition_event_id,
+        "branch_a_reserve_id": (
+            branch_reserve.idempotency_disposition_event_id
+        ),
+        "active_transfer_renewal_id": (
+            active_renewal.idempotency_disposition_event_id
+        ),
+        "active_transfer_supersession_id": (
+            active_supersession.idempotency_disposition_event_id
+        ),
+        "terminal_transfer_renewal_id": (
+            terminal_renewal.idempotency_disposition_event_id
+        ),
+        "terminal_transfer_supersession_id": (
+            terminal_supersession.idempotency_disposition_event_id
+        ),
+        "material_successor_t01_id": material_t01.transition_event_id,
+        "material_distinct_key_reserve_id": (
+            material_reserve.idempotency_disposition_event_id
+        ),
+    }
+    assert observed == G2A3B2_VECTOR
+    for event in (t20, t22, branch_t01, material_t01):
+        assert event.transition_event_id == (
+            acp.build_domain_separated_identity_v01(
+                domain=acp.ACTION_PACKET_TRANSITION_EVENT_DOMAIN_V01,
+                prefix=acp.ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01,
+                material=acp.action_packet_transition_event_material_v01(
+                    event
+                ),
+            )
+        )
+    for event in (
+        branch_reserve,
+        active_renewal,
+        active_supersession,
+        terminal_renewal,
+        terminal_supersession,
+        material_reserve,
+    ):
+        assert event.idempotency_disposition_event_id == (
+            acp.build_domain_separated_identity_v01(
+                domain=acp.IDEMPOTENCY_DISPOSITION_EVENT_DOMAIN_V01,
+                prefix=acp.IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01,
+                material=acp.idempotency_disposition_event_material_v01(
+                    event
+                ),
+            )
+        )
+
+
+G2A3B2_TYPED_EVIDENCE_MUTATIONS = (
+    ("g2a_t20_authorized_supersede", "successor_packet_valid", "ref"),
+    ("g2a_t20_authorized_supersede", "successor_packet_valid", "hash"),
+    ("g2a_t20_authorized_supersede", "successor_packet_valid", "profile"),
+    (
+        "g2a_t20_authorized_supersede",
+        "accepted_supersession_binding_valid",
+        "ref",
+    ),
+    (
+        "g2a_t20_authorized_supersede",
+        "accepted_supersession_binding_valid",
+        "hash",
+    ),
+    (
+        "g2a_t20_authorized_supersede",
+        "accepted_supersession_binding_valid",
+        "profile",
+    ),
+    ("g2a_t20_authorized_supersede", "predecessor_binding_valid", "ref"),
+    ("g2a_t20_authorized_supersede", "predecessor_binding_valid", "hash"),
+    (
+        "g2a_t20_authorized_supersede",
+        "predecessor_binding_valid",
+        "profile",
+    ),
+    ("g2a_t20_authorized_supersede", "idempotency_transfer_valid", "ref"),
+    ("g2a_t20_authorized_supersede", "idempotency_transfer_valid", "hash"),
+    (
+        "g2a_t20_authorized_supersede",
+        "idempotency_transfer_valid",
+        "profile",
+    ),
+    ("g2a_t22_pending_supersede", "adapter_not_called", "ref"),
+    ("g2a_t22_pending_supersede", "adapter_not_called", "hash"),
+    ("g2a_t22_pending_supersede", "adapter_not_called", "profile"),
+    (
+        "g2a_t23_failed_supersede",
+        "failed_non_consuming_provenance_valid",
+        "ref",
+    ),
+    (
+        "g2a_t23_failed_supersede",
+        "failed_non_consuming_provenance_valid",
+        "hash",
+    ),
+    (
+        "g2a_t23_failed_supersede",
+        "failed_non_consuming_provenance_valid",
+        "profile",
+    ),
+)
+
+
+@pytest.mark.parametrize(
+    ("rule_id", "evidence_code", "field"),
+    G2A3B2_TYPED_EVIDENCE_MUTATIONS,
+)
+def test_g2a3b2_typed_supersession_evidence_is_exact(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    rule_id: str,
+    evidence_code: str,
+    field: str,
+) -> None:
+    state = {
+        "g2a_t20_authorized_supersede": "ROOT_AUTHORIZED",
+        "g2a_t22_pending_supersede": "PENDING_FULFILLMENT",
+        "g2a_t23_failed_supersede": "FAILED_NON_CONSUMING",
+    }[rule_id]
+    registry = _g2a3b2_registry_for_state(g2a3a_fixture, state)
+    invalidation = _g2a3b2_invalidation(g2a3a_fixture)
+    successor = _g2a3b2_successor_activation(
+        registry,
+        g2a3a_fixture,
+        invalidation,
+    )
+    predecessor = _g2a3b2_supersession_transition(
+        registry,
+        g2a3a_fixture,
+        rule_id,
+        invalidation,
+    )
+    predecessor = _g2a3b1_rebind_transition(
+        predecessor,
+        evidence_code,
+        evidence_ref="forged:evidence" if field == "ref" else None,
+        evidence_sha256="f" * 64 if field == "hash" else None,
+        validator_profile_id=(
+            "forged_validator_profile_v01"
+            if field == "profile"
+            else None
+        ),
+    )
+    disposition = _g2a3b2_disposition(
+        registry,
+        g2a3a_fixture,
+        invalidation,
+        successor,
+        branch="ACTIVE",
+        predecessor_event=predecessor,
+    )
+    before = repr(registry).encode("utf-8")
+    with pytest.raises(ValueError):
+        acp.record_action_packet_supersession_v01(
+            registry,
+            predecessor_packet_id=(
+                g2a3a_fixture.predecessor.packet_identity.packet_id
+            ),
+            successor_packet_id=(
+                g2a3a_fixture.successor.packet_identity.packet_id
+            ),
+            supersession_candidate=g2a3a_fixture.supersession_candidate,
+            supersession_root_projection=(
+                g2a3a_fixture.supersession_root_projection
+            ),
+            accepted_supersession_binding=(
+                g2a3a_fixture.accepted_supersession_binding
+            ),
+            invalidation_evidence=invalidation,
+            successor_activation_event=successor,
+            disposition_event=disposition,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+            predecessor_supersession_event=predecessor,
+        )
+    forged = _g2a3b2_manual_registry(
+        registry,
+        g2a3a_fixture,
+        invalidation,
+        successor,
+        disposition,
+        predecessor,
+    )
+    assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+    assert repr(registry).encode("utf-8") == before
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (
+        ("root_decision_ref", "f" * 64),
+        ("evaluation_time", EVALUATION_TIME + 1),
+        ("evaluation_time_source", "forged_evaluation_time_source"),
+        ("evaluation_context_id", "evaluation_context:forged"),
+    ),
+)
+def test_g2a3b2_supersession_root_and_evaluation_context_are_exact(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    field: str,
+    value: object,
+) -> None:
+    registry = _g2a3b2_registry_for_state(
+        g2a3a_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    invalidation = _g2a3b2_invalidation(g2a3a_fixture)
+    successor = _g2a3b2_successor_activation(
+        registry,
+        g2a3a_fixture,
+        invalidation,
+    )
+    predecessor = _g2a3b2_supersession_transition(
+        registry,
+        g2a3a_fixture,
+        "g2a_t20_authorized_supersede",
+        invalidation,
+    )
+    predecessor = _rebuild_transition_event(
+        predecessor,
+        **{field: value},
+    )
+    disposition = _g2a3b2_disposition(
+        registry,
+        g2a3a_fixture,
+        invalidation,
+        successor,
+        branch="ACTIVE",
+        predecessor_event=predecessor,
+    )
+    with pytest.raises(ValueError):
+        acp.record_action_packet_supersession_v01(
+            registry,
+            predecessor_packet_id=(
+                g2a3a_fixture.predecessor.packet_identity.packet_id
+            ),
+            successor_packet_id=(
+                g2a3a_fixture.successor.packet_identity.packet_id
+            ),
+            supersession_candidate=g2a3a_fixture.supersession_candidate,
+            supersession_root_projection=(
+                g2a3a_fixture.supersession_root_projection
+            ),
+            accepted_supersession_binding=(
+                g2a3a_fixture.accepted_supersession_binding
+            ),
+            invalidation_evidence=invalidation,
+            successor_activation_event=successor,
+            disposition_event=disposition,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+            predecessor_supersession_event=predecessor,
+        )
+    forged = _g2a3b2_manual_registry(
+        registry,
+        g2a3a_fixture,
+        invalidation,
+        successor,
+        disposition,
+        predecessor,
+    )
+    assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+
+
+def test_g2a3b2_manual_bundle_context_and_disposition_drift_fail_closed(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    registry = _g2a3b2_registry_for_state(
+        g2a3a_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    updated, predecessor, successor, disposition = _g2a3b2_apply(
+        registry,
+        g2a3a_fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t20_authorized_supersede",
+    )
+    assert predecessor is not None
+    assert acp.validate_action_commit_packet_registry_v02(updated) == (
+        True,
+        (),
+    )
+    for forged in (
+        replace(updated, action_packet_invalidation_contexts=()),
+        replace(
+            updated,
+            action_packet_invalidation_contexts=(
+                updated.action_packet_invalidation_contexts
+                + updated.action_packet_invalidation_contexts
+            ),
+        ),
+        replace(
+            updated,
+            idempotency_disposition_events=(
+                updated.idempotency_disposition_events[:-1]
+            ),
+        ),
+        replace(
+            updated,
+            idempotency_disposition_events=(
+                updated.idempotency_disposition_events[:-1]
+                + (
+                    _g2a3b2_rebuild_disposition(
+                        disposition,
+                        cause_transition_event_ids=(
+                            successor.transition_event_id,
+                            predecessor.transition_event_id,
+                        ),
+                    ),
+                )
+            ),
+        ),
+    ):
+        assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+
+
+def test_g2a3b2_transfer_class_previous_owner_and_evidence_are_exact(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    registry = _g2a3b2_registry_for_state(
+        g2a3a_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    invalidation = _g2a3b2_invalidation(g2a3a_fixture)
+    successor = _g2a3b2_successor_activation(
+        registry,
+        g2a3a_fixture,
+        invalidation,
+    )
+    predecessor = _g2a3b2_supersession_transition(
+        registry,
+        g2a3a_fixture,
+        "g2a_t20_authorized_supersede",
+        invalidation,
+    )
+    valid_disposition = _g2a3b2_disposition(
+        registry,
+        g2a3a_fixture,
+        invalidation,
+        successor,
+        branch="ACTIVE",
+        predecessor_event=predecessor,
+    )
+    forged_dispositions = (
+        _g2a3b2_rebuild_disposition(
+            valid_disposition,
+            event_class="TRANSFER_SUPERSESSION",
+        ),
+        _g2a3b2_rebuild_disposition(
+            valid_disposition,
+            previous_disposition_event_id=(
+                acp.IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01 + "f" * 64
+            ),
+        ),
+        _g2a3b2_rebuild_disposition(
+            valid_disposition,
+            from_owner_packet_id=acp.ACTION_COMMIT_PACKET_ID_PREFIX_V01
+            + "f" * 64,
+        ),
+        _g2a3b2_rebuild_disposition(
+            valid_disposition,
+            evidence_refs=(
+                "evidence:forged",
+                *valid_disposition.evidence_refs[1:],
+            ),
+        ),
+    )
+    before = repr(registry).encode("utf-8")
+    for forged in forged_dispositions:
+        with pytest.raises(ValueError):
+            acp.record_action_packet_supersession_v01(
+                registry,
+                predecessor_packet_id=(
+                    g2a3a_fixture.predecessor.packet_identity.packet_id
+                ),
+                successor_packet_id=(
+                    g2a3a_fixture.successor.packet_identity.packet_id
+                ),
+                supersession_candidate=(
+                    g2a3a_fixture.supersession_candidate
+                ),
+                supersession_root_projection=(
+                    g2a3a_fixture.supersession_root_projection
+                ),
+                accepted_supersession_binding=(
+                    g2a3a_fixture.accepted_supersession_binding
+                ),
+                invalidation_evidence=invalidation,
+                successor_activation_event=successor,
+                disposition_event=forged,
+                action_packet_transition_registry_profile=(
+                    _g2a2a_registry()
+                ),
+                predecessor_supersession_event=predecessor,
+            )
+    assert repr(registry).encode("utf-8") == before
+
+
+@pytest.mark.parametrize(
+    ("outcome_rule", "disposition_class", "recorder"),
+    (
+        (
+            "g2a_t04_fulfill_mock",
+            "CONSUME",
+            acp.record_action_packet_consumed_outcome_v01,
+        ),
+        (
+            "g2a_t26_uncertain_adapter_outcome",
+            "UNCERTAIN_CLOSE",
+            acp.record_action_packet_uncertain_outcome_v01,
+        ),
+    ),
+)
+def test_g2a3b2_consumed_and_uncertain_keys_are_permanently_closed(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    outcome_rule: str,
+    disposition_class: str,
+    recorder: object,
+) -> None:
+    registry = _g2a3b2_registry_for_state(
+        g2a3a_fixture,
+        "PENDING_FULFILLMENT",
+    )
+    predecessor_id = g2a3a_fixture.predecessor.packet_identity.packet_id
+    entry = next(
+        item
+        for item in registry.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == predecessor_id
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=predecessor_id,
+    )
+    outcome = _g2a2b_event(entry, outcome_rule)
+    close = _g2a2b_outcome_disposition(
+        state,
+        outcome,
+        disposition_class,
+    )
+    registry = recorder(
+        registry,
+        packet_id=predecessor_id,
+        transition_event=outcome,
+        disposition_event=close,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    invalidation = _g2a3b2_invalidation(g2a3a_fixture)
+    successor = _g2a3b2_successor_activation(
+        registry,
+        g2a3a_fixture,
+        invalidation,
+    )
+    predecessor = _g2a3b2_supersession_transition(
+        registry,
+        g2a3a_fixture,
+        "g2a_t20_authorized_supersede",
+        invalidation,
+    )
+    disposition = _g2a3b2_disposition(
+        registry,
+        g2a3a_fixture,
+        invalidation,
+        successor,
+        branch="ACTIVE",
+        predecessor_event=predecessor,
+    )
+    before = repr(registry).encode("utf-8")
+    with pytest.raises(
+        ValueError,
+        match=(
+            "^consumed_key_permanently_closed$"
+            if disposition_class == "CONSUME"
+            else "^uncertain_key_permanently_closed$"
+        ),
+    ):
+        acp.record_action_packet_supersession_v01(
+            registry,
+            predecessor_packet_id=predecessor_id,
+            successor_packet_id=(
+                g2a3a_fixture.successor.packet_identity.packet_id
+            ),
+            supersession_candidate=g2a3a_fixture.supersession_candidate,
+            supersession_root_projection=(
+                g2a3a_fixture.supersession_root_projection
+            ),
+            accepted_supersession_binding=(
+                g2a3a_fixture.accepted_supersession_binding
+            ),
+            invalidation_evidence=invalidation,
+            successor_activation_event=successor,
+            disposition_event=disposition,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+            predecessor_supersession_event=predecessor,
+        )
+    assert repr(registry).encode("utf-8") == before
+
+
+def test_g2a3b2_pre_activation_terminal_sources_cannot_transfer(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    branch_a_registry = _g2a3b2_registry_for_state(
+        g2a3a_fixture,
+        "EXPIRED",
+        branch_a=True,
+    )
+    active_registry = _g2a3b2_registry_for_state(
+        g2a3a_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    active_invalidation = _g2a3b2_invalidation(g2a3a_fixture)
+    active_successor = _g2a3b2_successor_activation(
+        active_registry,
+        g2a3a_fixture,
+        active_invalidation,
+    )
+    active_predecessor = _g2a3b2_supersession_transition(
+        active_registry,
+        g2a3a_fixture,
+        "g2a_t20_authorized_supersede",
+        active_invalidation,
+    )
+    transfer = _g2a3b2_disposition(
+        active_registry,
+        g2a3a_fixture,
+        active_invalidation,
+        active_successor,
+        branch="ACTIVE",
+        predecessor_event=active_predecessor,
+    )
+    branch_invalidation = _g2a3b2_invalidation(
+        g2a3a_fixture,
+        evaluation_time=(
+            g2a3a_fixture.predecessor.canonical_projection
+            .temporal_authority.expires_at_utc
+        ),
+    )
+    branch_successor = _g2a3b2_successor_activation(
+        branch_a_registry,
+        g2a3a_fixture,
+        branch_invalidation,
+    )
+    transfer = _g2a3b2_rebuild_disposition(
+        transfer,
+        cause_transition_event_ids=(
+            branch_a_registry.action_packet_lifecycle_entries[0]
+            .transition_events[-1].transition_event_id,
+            branch_successor.transition_event_id,
+        ),
+        evaluation_time=branch_invalidation.evaluation_time,
+        evaluation_context_id=branch_invalidation.evaluation_context_id,
+    )
+    with pytest.raises(ValueError):
+        acp.record_action_packet_supersession_v01(
+            branch_a_registry,
+            predecessor_packet_id=(
+                g2a3a_fixture.predecessor.packet_identity.packet_id
+            ),
+            successor_packet_id=(
+                g2a3a_fixture.successor.packet_identity.packet_id
+            ),
+            supersession_candidate=g2a3a_fixture.supersession_candidate,
+            supersession_root_projection=(
+                g2a3a_fixture.supersession_root_projection
+            ),
+            accepted_supersession_binding=(
+                g2a3a_fixture.accepted_supersession_binding
+            ),
+            invalidation_evidence=branch_invalidation,
+            successor_activation_event=branch_successor,
+            disposition_event=transfer,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+    registry = acp.record_action_packet_genesis_v01(
+        acp.build_empty_action_commit_packet_registry_v02(),
+        root_bound_genesis=g2a3a_fixture.predecessor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    invalidation = _g2a3a_invalidation(
+        g2a3a_fixture,
+        "ROOT_BOUND_KILL_SWITCH",
+    )
+    block = _g2a3b1_transition_event(
+        registry,
+        g2a3a_fixture.predecessor.packet_identity.packet_id,
+        "g2a_t06_created_block",
+        invalidation,
+    )
+    registry = acp.record_action_packet_deterministic_invalidation_v01(
+        registry,
+        packet_id=g2a3a_fixture.predecessor.packet_identity.packet_id,
+        invalidation_evidence=invalidation,
+        transition_event=block,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    registry = acp.record_action_packet_genesis_v01(
+        registry,
+        root_bound_genesis=g2a3a_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    supersession_invalidation = _g2a3b2_invalidation(g2a3a_fixture)
+    successor = _g2a3b2_successor_activation(
+        registry,
+        g2a3a_fixture,
+        supersession_invalidation,
+    )
+    reserve = _g2a3b2_disposition(
+        registry,
+        g2a3a_fixture,
+        supersession_invalidation,
+        successor,
+        branch="BRANCH_A",
+    )
+    with pytest.raises(ValueError):
+        acp.record_action_packet_supersession_v01(
+            registry,
+            predecessor_packet_id=(
+                g2a3a_fixture.predecessor.packet_identity.packet_id
+            ),
+            successor_packet_id=(
+                g2a3a_fixture.successor.packet_identity.packet_id
+            ),
+            supersession_candidate=g2a3a_fixture.supersession_candidate,
+            supersession_root_projection=(
+                g2a3a_fixture.supersession_root_projection
+            ),
+            accepted_supersession_binding=(
+                g2a3a_fixture.accepted_supersession_binding
+            ),
+            invalidation_evidence=supersession_invalidation,
+            successor_activation_event=successor,
+            disposition_event=reserve,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def test_g2a3b2_second_transfer_and_reidentified_binding_fail_closed(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    registry = _g2a3b2_registry_for_state(
+        g2a3a_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    updated, predecessor, successor, disposition = _g2a3b2_apply(
+        registry,
+        g2a3a_fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t20_authorized_supersede",
+    )
+    assert predecessor is not None
+    with pytest.raises(ValueError):
+        acp.record_action_packet_supersession_v01(
+            updated,
+            predecessor_packet_id=(
+                g2a3a_fixture.predecessor.packet_identity.packet_id
+            ),
+            successor_packet_id=(
+                g2a3a_fixture.successor.packet_identity.packet_id
+            ),
+            supersession_candidate=g2a3a_fixture.supersession_candidate,
+            supersession_root_projection=(
+                g2a3a_fixture.supersession_root_projection
+            ),
+            accepted_supersession_binding=(
+                g2a3a_fixture.accepted_supersession_binding
+            ),
+            invalidation_evidence=_g2a3b2_invalidation(g2a3a_fixture),
+            successor_activation_event=successor,
+            disposition_event=disposition,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+            predecessor_supersession_event=predecessor,
+        )
+    forged_binding = _reidentify_accepted_supersession(
+        g2a3a_fixture.accepted_supersession_binding,
+        supersession_root_decision_id="f" * 64,
+        supersession_root_decision_hash="e" * 64,
+    )
+    forged_invalidation = _g2a3a_invalidation_for_supersession_binding(
+        g2a3a_fixture,
+        forged_binding,
+    )
+    source = _g2a3b2_registry_for_state(
+        g2a3a_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    forged_successor = _g2a3b2_successor_activation(
+        source,
+        g2a3a_fixture,
+        forged_invalidation,
+    )
+    forged_predecessor = _g2a3b2_supersession_transition(
+        source,
+        replace(
+            g2a3a_fixture,
+            accepted_supersession_binding=forged_binding,
+        ),
+        "g2a_t20_authorized_supersede",
+        forged_invalidation,
+    )
+    forged_disposition = _g2a3b2_disposition(
+        source,
+        replace(
+            g2a3a_fixture,
+            accepted_supersession_binding=forged_binding,
+        ),
+        forged_invalidation,
+        forged_successor,
+        branch="ACTIVE",
+        predecessor_event=forged_predecessor,
+    )
+    with pytest.raises(ValueError):
+        acp.record_action_packet_supersession_v01(
+            source,
+            predecessor_packet_id=(
+                g2a3a_fixture.predecessor.packet_identity.packet_id
+            ),
+            successor_packet_id=(
+                g2a3a_fixture.successor.packet_identity.packet_id
+            ),
+            supersession_candidate=g2a3a_fixture.supersession_candidate,
+            supersession_root_projection=(
+                g2a3a_fixture.supersession_root_projection
+            ),
+            accepted_supersession_binding=forged_binding,
+            invalidation_evidence=forged_invalidation,
+            successor_activation_event=forged_successor,
+            disposition_event=forged_disposition,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+            predecessor_supersession_event=forged_predecessor,
+        )
+
+
+def _g2a3b2_next_same_key_generation(
+    fixture: _G2A3AFixtureV01,
+    *,
+    supersession_reason_class: str,
+    variation: str = "ADAPTER",
+) -> _G2A3AFixtureV01:
+    successor = _g2a3a_successor(
+        fixture.successor,
+        variation=variation,
+        supersession_reason_class=supersession_reason_class,
+    )
+    candidate, root_projection, binding = _g2a3a_supersession_bundle(
+        fixture.successor,
+        successor,
+    )
+    return replace(
+        fixture,
+        predecessor=fixture.successor,
+        successor=successor,
+        supersession_candidate=candidate,
+        supersession_root_projection=root_projection,
+        accepted_supersession_binding=binding,
+    )
+
+
+def _g2a3b2_first_transfer_then_record_third_generation(
+    fixture: _G2A3AFixtureV01,
+    *,
+    supersession_reason_class: str,
+) -> tuple[
+    acp.ActionCommitPacketRegistryV02,
+    acp.ActionCommitPacketRegistryV02,
+    _G2A3AFixtureV01,
+]:
+    registry = _g2a3b2_registry_for_state(fixture, "ROOT_AUTHORIZED")
+    after_first, _, _, _ = _g2a3b2_apply(
+        registry,
+        fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t20_authorized_supersede",
+    )
+    third_fixture = _g2a3b2_next_same_key_generation(
+        fixture,
+        supersession_reason_class=supersession_reason_class,
+    )
+    before = repr(after_first).encode("utf-8")
+    with_third = acp.record_action_packet_genesis_v01(
+        after_first,
+        root_bound_genesis=third_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert repr(after_first).encode("utf-8") == before
+    assert acp.validate_action_commit_packet_registry_v02(with_third) == (
+        True,
+        (),
+    )
+    return after_first, with_third, third_fixture
+
+
+def _g2a3b2_assert_three_generation_chain(
+    registry: acp.ActionCommitPacketRegistryV02,
+    fixture: _G2A3AFixtureV01,
+    third_fixture: _G2A3AFixtureV01,
+    *,
+    final_transfer_class: str,
+) -> None:
+    packets = (
+        fixture.predecessor,
+        fixture.successor,
+        third_fixture.successor,
+    )
+    states = tuple(
+        acp.derive_action_packet_lifecycle_state_v01(
+            registry,
+            packet_id=packet.packet_identity.packet_id,
+        )
+        for packet in packets
+    )
+    assert tuple(state.lifecycle_state for state in states) == (
+        "SUPERSEDED",
+        "SUPERSEDED",
+        "ROOT_AUTHORIZED",
+    )
+    assert len({state.idempotency_key for state in states}) == 1
+    assert len(
+        {
+            packet.canonical_projection.logical_intent.root_owned_intent_id
+            for packet in packets
+        }
+    ) == 1
+    key_events = tuple(
+        event
+        for event in registry.idempotency_disposition_events
+        if event.idempotency_key == states[0].idempotency_key
+    )
+    assert tuple(event.event_class for event in key_events) == (
+        "RESERVE",
+        "TRANSFER_RENEWAL",
+        final_transfer_class,
+    )
+    assert tuple(
+        (event.from_owner_packet_id, event.to_owner_packet_id)
+        for event in key_events
+    ) == (
+        (None, fixture.predecessor.packet_identity.packet_id),
+        (
+            fixture.predecessor.packet_identity.packet_id,
+            fixture.successor.packet_identity.packet_id,
+        ),
+        (
+            fixture.successor.packet_identity.packet_id,
+            third_fixture.successor.packet_identity.packet_id,
+        ),
+    )
+    assert states[-1].reservation_owner_packet_id == (
+        third_fixture.successor.packet_identity.packet_id
+    )
+    assert len(registry.action_packet_invalidation_contexts) == 2
+    binding_ids = tuple(
+        context.accepted_supersession_binding
+        .accepted_supersession_binding_id
+        for context in registry.action_packet_invalidation_contexts
+    )
+    assert len(set(binding_ids)) == 2
+    assert all(event.event_class != "RELEASE" for event in key_events)
+    assert registry.real_world_effects_count == 0
+    assert acp.validate_action_commit_packet_registry_v02(registry) == (
+        True,
+        (),
+    )
+
+
+def test_g2a3b2_three_generation_same_key_renewal_lineage(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    _, registry, third_fixture = (
+        _g2a3b2_first_transfer_then_record_third_generation(
+            g2a3a_fixture,
+            supersession_reason_class="RENEWAL",
+        )
+    )
+    final, predecessor_event, _, disposition = _g2a3b2_apply(
+        registry,
+        third_fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t20_authorized_supersede",
+    )
+    assert predecessor_event is not None
+    assert disposition.event_class == "TRANSFER_RENEWAL"
+    _g2a3b2_assert_three_generation_chain(
+        final,
+        g2a3a_fixture,
+        third_fixture,
+        final_transfer_class="TRANSFER_RENEWAL",
+    )
+
+
+def test_g2a3b2_three_generation_mixed_same_key_lineage(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    _, registry, third_fixture = (
+        _g2a3b2_first_transfer_then_record_third_generation(
+            g2a3a_fixture,
+            supersession_reason_class="POLICY_REPLACEMENT",
+        )
+    )
+    final, predecessor_event, _, disposition = _g2a3b2_apply(
+        registry,
+        third_fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t20_authorized_supersede",
+    )
+    assert predecessor_event is not None
+    assert disposition.event_class == "TRANSFER_SUPERSESSION"
+    _g2a3b2_assert_three_generation_chain(
+        final,
+        g2a3a_fixture,
+        third_fixture,
+        final_transfer_class="TRANSFER_SUPERSESSION",
+    )
+
+
+def test_g2a3b2_same_key_lineage_requires_current_owner_and_exact_provenance(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    after_first, registry, third_fixture = (
+        _g2a3b2_first_transfer_then_record_third_generation(
+            g2a3a_fixture,
+            supersession_reason_class="RENEWAL",
+        )
+    )
+    invalidation = _g2a3b2_invalidation(third_fixture)
+    successor = _g2a3b2_successor_activation(
+        registry,
+        third_fixture,
+        invalidation,
+    )
+    predecessor = _g2a3b2_supersession_transition(
+        registry,
+        third_fixture,
+        "g2a_t20_authorized_supersede",
+        invalidation,
+    )
+    disposition = _g2a3b2_disposition(
+        registry,
+        third_fixture,
+        invalidation,
+        successor,
+        branch="ACTIVE",
+        predecessor_event=predecessor,
+    )
+    before = repr(registry).encode("utf-8")
+    for wrong_root, wrong_binding in (
+        (
+            g2a3a_fixture.supersession_root_projection,
+            third_fixture.accepted_supersession_binding,
+        ),
+        (
+            third_fixture.supersession_root_projection,
+            g2a3a_fixture.accepted_supersession_binding,
+        ),
+    ):
+        with pytest.raises(ValueError):
+            acp.record_action_packet_supersession_v01(
+                registry,
+                predecessor_packet_id=(
+                    third_fixture.predecessor.packet_identity.packet_id
+                ),
+                successor_packet_id=(
+                    third_fixture.successor.packet_identity.packet_id
+                ),
+                supersession_candidate=third_fixture.supersession_candidate,
+                supersession_root_projection=wrong_root,
+                accepted_supersession_binding=wrong_binding,
+                invalidation_evidence=invalidation,
+                successor_activation_event=successor,
+                disposition_event=disposition,
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+                predecessor_supersession_event=predecessor,
+            )
+    assert repr(registry).encode("utf-8") == before
+
+    historical_successor = _g2a3a_successor(
+        g2a3a_fixture.predecessor,
+        variation="ADAPTER",
+        supersession_reason_class="RENEWAL",
+    )
+    historical_candidate, historical_root, historical_binding = (
+        _g2a3a_supersession_bundle(
+            g2a3a_fixture.predecessor,
+            historical_successor,
+        )
+    )
+    historical_fixture = replace(
+        g2a3a_fixture,
+        successor=historical_successor,
+        supersession_candidate=historical_candidate,
+        supersession_root_projection=historical_root,
+        accepted_supersession_binding=historical_binding,
+    )
+    with_historical_successor = acp.record_action_packet_genesis_v01(
+        after_first,
+        root_bound_genesis=historical_successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    active_source = _g2a3b2_registry_for_state(
+        historical_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    historical_invalidation = _g2a3b2_invalidation(historical_fixture)
+    historical_activation = _g2a3b2_successor_activation(
+        active_source,
+        historical_fixture,
+        historical_invalidation,
+    )
+    historical_predecessor = _g2a3b2_supersession_transition(
+        active_source,
+        historical_fixture,
+        "g2a_t20_authorized_supersede",
+        historical_invalidation,
+    )
+    historical_disposition = _g2a3b2_disposition(
+        active_source,
+        historical_fixture,
+        historical_invalidation,
+        historical_activation,
+        branch="ACTIVE",
+        predecessor_event=historical_predecessor,
+    )
+    historical_before = repr(with_historical_successor).encode("utf-8")
+    with pytest.raises(ValueError):
+        acp.record_action_packet_supersession_v01(
+            with_historical_successor,
+            predecessor_packet_id=(
+                g2a3a_fixture.predecessor.packet_identity.packet_id
+            ),
+            successor_packet_id=historical_successor.packet_identity.packet_id,
+            supersession_candidate=historical_candidate,
+            supersession_root_projection=historical_root,
+            accepted_supersession_binding=historical_binding,
+            invalidation_evidence=historical_invalidation,
+            successor_activation_event=historical_activation,
+            disposition_event=historical_disposition,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+            predecessor_supersession_event=historical_predecessor,
+        )
+    assert (
+        repr(with_historical_successor).encode("utf-8")
+        == historical_before
+    )
+
+
+def test_g2a3b2_same_key_lineage_orphan_cycle_and_incomplete_bundle_fail(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    after_first, registry, third_fixture = (
+        _g2a3b2_first_transfer_then_record_third_generation(
+            g2a3a_fixture,
+            supersession_reason_class="RENEWAL",
+        )
+    )
+    initial_only = acp.record_action_packet_genesis_v01(
+        acp.build_empty_action_commit_packet_registry_v02(),
+        root_bound_genesis=g2a3a_fixture.predecessor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    initial_only, _, _ = _g2a2b_activate(
+        initial_only,
+        g2a3a_fixture.predecessor.packet_identity.packet_id,
+    )
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.record_action_packet_genesis_v01(
+            initial_only,
+            root_bound_genesis=third_fixture.successor,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+    material_fixture = _g2a3b2_material_fixture_for_amount(
+        g2a3a_fixture,
+        amount="1500.00",
+        reason="MATERIAL_EFFECT_REPLACEMENT_FOREIGN_KEY",
+    )
+    with_foreign_key_predecessor = acp.record_action_packet_genesis_v01(
+        initial_only,
+        root_bound_genesis=material_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    source = g2a3a_fixture.predecessor.canonical_projection.source_packet
+    foreign_key_packet = replace(
+        source,
+        packet_id="legacy:g2a3b2_foreign_key_predecessor",
+        source_root_decision_ref=(
+            "legacy:g2a3b2_foreign_key_predecessor_root"
+        ),
+        ttl=replace(
+            source.ttl,
+            created_at="2026-07-08T00:10:00Z",
+            expires_at="2026-07-08T01:10:00Z",
+        ),
+    )
+    foreign_key_canonical = _projection(
+        packet=foreign_key_packet,
+        policy=g2a3a_fixture.predecessor.canonical_projection.authority_policy,
+        dependency=(
+            g2a3a_fixture.predecessor.canonical_projection
+            .dependency_candidate
+        ),
+        predecessor_packet_id=(
+            material_fixture.successor.packet_identity.packet_id
+        ),
+        supersession_reason_class="RENEWAL",
+    )
+    foreign_key_successor = _root_bound_from_canonical(
+        foreign_key_canonical
+    )
+    assert (
+        acp.validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            foreign_key_successor
+        )
+        == (True, ())
+    )
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.record_action_packet_genesis_v01(
+            with_foreign_key_predecessor,
+            root_bound_genesis=foreign_key_successor,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+    original_key = (
+        g2a3a_fixture.predecessor.canonical_projection.idempotency_identity
+        .idempotency_key
+    )
+    material_root_bound = material_fixture.successor
+    material_canonical = material_root_bound.canonical_projection
+    changed_intent_same_key = replace(
+        material_root_bound,
+        canonical_projection=replace(
+            material_canonical,
+            idempotency_identity=replace(
+                material_canonical.idempotency_identity,
+                idempotency_key=original_key,
+            ),
+        ),
+    )
+    changed_intent_entry = acp.ActionPacketLifecycleEntryV01(
+        root_bound_genesis=changed_intent_same_key,
+        transition_registry_id=_g2a2a_registry().transition_registry_id,
+        transition_events=(),
+    )
+    changed_intent_registry = replace(
+        initial_only,
+        action_packet_lifecycle_entries=(
+            initial_only.action_packet_lifecycle_entries
+            + (changed_intent_entry,)
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        changed_intent_registry
+    )[0] is False
+
+    third_id = third_fixture.successor.packet_identity.packet_id
+    second_id = g2a3a_fixture.successor.packet_identity.packet_id
+
+    def replace_predecessor(
+        entry: acp.ActionPacketLifecycleEntryV01,
+        predecessor_id: str,
+    ) -> acp.ActionPacketLifecycleEntryV01:
+        root_bound = entry.root_bound_genesis
+        canonical = root_bound.canonical_projection
+        authorization = replace(
+            canonical.authorization_candidate,
+            predecessor_packet_id=predecessor_id,
+        )
+        return replace(
+            entry,
+            root_bound_genesis=replace(
+                root_bound,
+                canonical_projection=replace(
+                    canonical,
+                    authorization_candidate=authorization,
+                ),
+            ),
+        )
+
+    entries = registry.action_packet_lifecycle_entries
+    third_entry = next(
+        entry
+        for entry in entries
+        if entry.root_bound_genesis.packet_identity.packet_id == third_id
+    )
+    self_referential = replace(
+        registry,
+        action_packet_lifecycle_entries=tuple(
+            replace_predecessor(entry, third_id)
+            if entry is third_entry
+            else entry
+            for entry in entries
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        self_referential
+    )[0] is False
+
+    cyclic = replace(
+        registry,
+        action_packet_lifecycle_entries=tuple(
+            replace_predecessor(entry, third_id)
+            if entry.root_bound_genesis.packet_identity.packet_id == second_id
+            else replace_predecessor(entry, second_id)
+            if entry is third_entry
+            else entry
+            for entry in entries
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(cyclic)[0] is False
+    orphan = replace(
+        registry,
+        action_packet_lifecycle_entries=tuple(
+            entry
+            for entry in entries
+            if entry.root_bound_genesis.packet_identity.packet_id != second_id
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(orphan)[0] is False
+
+    final, _, _, _ = _g2a3b2_apply(
+        registry,
+        third_fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t20_authorized_supersede",
+    )
+    without_second_context = replace(
+        final,
+        action_packet_invalidation_contexts=(
+            final.action_packet_invalidation_contexts[:-1]
+        ),
+    )
+    without_second_transfer = replace(
+        final,
+        idempotency_disposition_events=(
+            final.idempotency_disposition_events[:-1]
+        ),
+    )
+    wrong_transfer_order = replace(
+        final,
+        idempotency_disposition_events=(
+            final.idempotency_disposition_events[0],
+            final.idempotency_disposition_events[2],
+            final.idempotency_disposition_events[1],
+        ),
+    )
+    for forged in (
+        without_second_context,
+        without_second_transfer,
+        wrong_transfer_order,
+    ):
+        assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+    assert acp.validate_action_commit_packet_registry_v02(after_first) == (
+        True,
+        (),
+    )
+
+
+def _g2a3b2_material_fixture_for_amount(
+    fixture: _G2A3AFixtureV01,
+    *,
+    amount: str,
+    reason: str,
+) -> _G2A3AFixtureV01:
+    predecessor = fixture.predecessor
+    source = predecessor.canonical_projection.source_packet
+    packet = replace(
+        source,
+        packet_id=f"legacy:g2a3b2_material:{amount}",
+        source_root_decision_ref=f"legacy:g2a3b2_material_root:{amount}",
+        scope=replace(source.scope, amount=amount),
+    )
+    canonical = _projection(
+        packet=packet,
+        policy=predecessor.canonical_projection.authority_policy,
+        dependency=predecessor.canonical_projection.dependency_candidate,
+        predecessor_packet_id=predecessor.packet_identity.packet_id,
+        supersession_reason_class=reason,
+    )
+    successor = _root_bound_from_canonical(canonical)
+    candidate, root_projection, binding = _g2a3a_supersession_bundle(
+        predecessor,
+        successor,
+    )
+    return replace(
+        fixture,
+        successor=successor,
+        supersession_candidate=candidate,
+        supersession_root_projection=root_projection,
+        accepted_supersession_binding=binding,
+    )
+
+
+def test_g2a3b2_supersession_context_and_disposition_append_order_cross_bound(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    first_fixture = _g2a3b2_material_fixture_for_amount(
+        g2a3a_fixture,
+        amount="1300.00",
+        reason="MATERIAL_EFFECT_REPLACEMENT_1",
+    )
+    second_fixture = _g2a3b2_material_fixture_for_amount(
+        g2a3a_fixture,
+        amount="1400.00",
+        reason="MATERIAL_EFFECT_REPLACEMENT_2",
+    )
+    registry = _g2a3b2_registry_for_state(
+        first_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    registry, _, _, _ = _g2a3b2_apply(
+        registry,
+        first_fixture,
+        branch="MATERIAL",
+    )
+    assert acp.validate_action_commit_packet_registry_v02(registry) == (
+        True,
+        (),
+    )
+    registry = acp.record_action_packet_genesis_v01(
+        registry,
+        root_bound_genesis=second_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    registry, _, _, _ = _g2a3b2_apply(
+        registry,
+        second_fixture,
+        branch="MATERIAL",
+    )
+    assert acp.validate_action_commit_packet_registry_v02(registry) == (
+        True,
+        (),
+    )
+    contexts = registry.action_packet_invalidation_contexts
+    dispositions = registry.idempotency_disposition_events
+    assert len(contexts) == 2
+    assert len(dispositions) == 3
+
+    reversed_contexts = replace(
+        registry,
+        action_packet_invalidation_contexts=(contexts[1], contexts[0]),
+    )
+    reversed_dispositions = replace(
+        registry,
+        idempotency_disposition_events=(
+            dispositions[0],
+            dispositions[2],
+            dispositions[1],
+        ),
+    )
+    for forged in (reversed_contexts, reversed_dispositions):
+        valid, reasons = acp.validate_action_commit_packet_registry_v02(
+            forged
+        )
+        assert valid is False
+        assert (
+            "action_packet_registry_invalidation_context_reordered"
+            in reasons
+        )
+
+    cross_paired_context = replace(
+        contexts[0],
+        supersession_successor_packet_id=(
+            contexts[1].supersession_successor_packet_id
+        ),
+    )
+    mutations = (
+        replace(
+            registry,
+            action_packet_invalidation_contexts=(
+                cross_paired_context,
+                contexts[1],
+            ),
+        ),
+        replace(
+            registry,
+            action_packet_invalidation_contexts=(contexts[0], contexts[0]),
+        ),
+        replace(
+            registry,
+            idempotency_disposition_events=(
+                dispositions + (dispositions[1],)
+            ),
+        ),
+        replace(
+            registry,
+            action_packet_invalidation_contexts=(contexts[0],),
+        ),
+        replace(
+            registry,
+            idempotency_disposition_events=dispositions[:-1],
+        ),
+    )
+    for forged in mutations:
+        assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+
+
+def _g2a3b2_revocation_fixture_for_packet(
+    fixture: _G2A3AFixtureV01,
+    packet: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+) -> _G2A3AFixtureV01:
+    canonical = packet.canonical_projection
+    source_decision_id = (
+        packet.root_decision_projection.root_decision_result.decision_id
+    )
+    candidate = acp.build_revocation_candidate_v01(
+        owning_local_root_id=canonical.owning_local_root_id,
+        packet_id=packet.packet_identity.packet_id,
+        source_authorization_decision_id=source_decision_id,
+        idempotency_key=canonical.idempotency_identity.idempotency_key,
+        revocation_reason_class="SUCCESSOR_MANUAL_REVOCATION",
+        evidence_refs=(
+            "evidence:successor_revocation_policy",
+            "evidence:successor_revocation_operator",
+        ),
+        evidence_hashes=("4" * 64, "5" * 64),
+        evaluation_time=EVALUATION_TIME,
+        policy_fingerprint=canonical.authority_policy_fingerprint,
+    )
+    root_projection = _g2a3a_candidate_root_projection(
+        canonical,
+        candidate_kind="REVOCATION",
+        candidate_id=candidate.revocation_candidate_id,
+        predecessor=packet,
+    )
+    binding = acp.build_accepted_revocation_binding_v01(
+        candidate=candidate,
+        root_projection=root_projection,
+        packet=packet,
+    )
+    return replace(
+        fixture,
+        predecessor=packet,
+        revocation_candidate=candidate,
+        revocation_root_projection=root_projection,
+        accepted_revocation_binding=binding,
+    )
+
+
+def _g2a3b2_active_transfer_to_successor(
+    fixture: _G2A3AFixtureV01,
+) -> tuple[
+    acp.ActionCommitPacketRegistryV02,
+    acp.IdempotencyDispositionEventV01,
+]:
+    registry = _g2a3b2_registry_for_state(fixture, "ROOT_AUTHORIZED")
+    updated, _, _, acquisition = _g2a3b2_apply(
+        registry,
+        fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t20_authorized_supersede",
+    )
+    return updated, acquisition
+
+
+def test_g2a3b2_lifecycle_continuity_transfer_successor_block_and_terminal(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    transferred, acquisition = _g2a3b2_active_transfer_to_successor(
+        g2a3a_fixture
+    )
+    successor = g2a3a_fixture.successor
+    successor_id = successor.packet_identity.packet_id
+    successor_fixture = replace(g2a3a_fixture, predecessor=successor)
+    invalidation = _g2a3a_invalidation(
+        successor_fixture,
+        "ROOT_BOUND_KILL_SWITCH",
+    )
+    block = _g2a3b1_transition_event(
+        transferred,
+        successor_id,
+        "g2a_t07_authorized_block",
+        invalidation,
+    )
+    disposition_history = transferred.idempotency_disposition_events
+    blocked = acp.record_action_packet_deterministic_invalidation_v01(
+        transferred,
+        packet_id=successor_id,
+        invalidation_evidence=invalidation,
+        transition_event=block,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    blocked_state = acp.derive_action_packet_lifecycle_state_v01(
+        blocked,
+        packet_id=successor_id,
+    )
+    assert (
+        blocked_state.lifecycle_state,
+        blocked_state.idempotency_disposition,
+        blocked_state.reservation_owner_packet_id,
+        blocked_state.latest_disposition_event_id,
+    ) == (
+        "BLOCKED",
+        "RESERVED",
+        successor_id,
+        acquisition.idempotency_disposition_event_id,
+    )
+    assert blocked.idempotency_disposition_events is disposition_history
+
+    third_fixture = _g2a3b2_next_same_key_generation(
+        g2a3a_fixture,
+        supersession_reason_class="RENEWAL",
+    )
+    with_third = acp.record_action_packet_genesis_v01(
+        blocked,
+        root_bound_genesis=third_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    final, predecessor_event, _, _ = _g2a3b2_apply(
+        with_third,
+        third_fixture,
+        branch="TERMINAL",
+        evaluation_time=EVALUATION_TIME + 20,
+    )
+    assert predecessor_event is None
+    assert acp.derive_action_packet_lifecycle_state_v01(
+        final,
+        packet_id=successor_id,
+    ).lifecycle_state == "BLOCKED"
+    assert acp.derive_action_packet_lifecycle_state_v01(
+        final,
+        packet_id=third_fixture.successor.packet_identity.packet_id,
+    ).reservation_owner_packet_id == (
+        third_fixture.successor.packet_identity.packet_id
+    )
+    assert acp.validate_action_commit_packet_registry_v02(final) == (
+        True,
+        (),
+    )
+
+
+def test_g2a3b2_lifecycle_continuity_transfer_successor_revocation(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    transferred, acquisition = _g2a3b2_active_transfer_to_successor(
+        g2a3a_fixture
+    )
+    successor = g2a3a_fixture.successor
+    successor_id = successor.packet_identity.packet_id
+    fixture = _g2a3b2_revocation_fixture_for_packet(
+        g2a3a_fixture,
+        successor,
+    )
+    invalidation = _g2a3a_invalidation(fixture, "ROOT_REVOCATION")
+    event = _g2a3b1_transition_event(
+        transferred,
+        successor_id,
+        "g2a_t16_authorized_revoke",
+        invalidation,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+    )
+    disposition_history = transferred.idempotency_disposition_events
+    revoked = acp.record_action_packet_revocation_v01(
+        transferred,
+        packet_id=successor_id,
+        revocation_candidate=fixture.revocation_candidate,
+        revocation_root_projection=fixture.revocation_root_projection,
+        accepted_revocation_binding=fixture.accepted_revocation_binding,
+        invalidation_evidence=invalidation,
+        transition_event=event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        revoked,
+        packet_id=successor_id,
+    )
+    assert (
+        state.lifecycle_state,
+        state.idempotency_disposition,
+        state.reservation_owner_packet_id,
+        state.latest_disposition_event_id,
+    ) == (
+        "REVOKED",
+        "RESERVED",
+        successor_id,
+        acquisition.idempotency_disposition_event_id,
+    )
+    assert revoked.idempotency_disposition_events is disposition_history
+    assert acp.validate_action_commit_packet_registry_v02(revoked) == (
+        True,
+        (),
+    )
+
+
+def test_g2a3b2_lifecycle_continuity_transfer_successor_t24_retry_and_t23(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    transferred, acquisition = _g2a3b2_active_transfer_to_successor(
+        g2a3a_fixture
+    )
+    successor_id = g2a3a_fixture.successor.packet_identity.packet_id
+    pending, _ = _g2a2b_append(
+        transferred,
+        successor_id,
+        "g2a_t02_queue",
+    )
+    pending, _ = _g2a2b_append(
+        pending,
+        successor_id,
+        "g2a_t03_pending",
+        evaluation_context_id="evaluation_context:g2a3b2:successor:t24",
+    )
+    entry = next(
+        item
+        for item in pending.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == successor_id
+    )
+    failure = _g2a2b_event(
+        entry,
+        "g2a_t24_nonconsuming_failure",
+        latest_disposition_event_id=(
+            acquisition.idempotency_disposition_event_id
+        ),
+    )
+    disposition_history = pending.idempotency_disposition_events
+    failed = acp.record_action_packet_nonconsuming_outcome_v01(
+        pending,
+        packet_id=successor_id,
+        transition_event=failure,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        failed,
+        packet_id=successor_id,
+    )
+    assert (
+        state.lifecycle_state,
+        state.idempotency_disposition,
+        state.reservation_owner_packet_id,
+        state.latest_disposition_event_id,
+    ) == (
+        "FAILED",
+        "RESERVED",
+        successor_id,
+        acquisition.idempotency_disposition_event_id,
+    )
+    assert state.failed_provenance == "FAILED_NON_CONSUMING"
+    assert failed.idempotency_disposition_events is disposition_history
+    retried, _ = _g2a2b_append(failed, successor_id, "g2a_t25_retry")
+    assert acp.derive_action_packet_lifecycle_state_v01(
+        retried,
+        packet_id=successor_id,
+    ).lifecycle_state == "QUEUED"
+
+    third_fixture = _g2a3b2_next_same_key_generation(
+        g2a3a_fixture,
+        supersession_reason_class="RENEWAL",
+    )
+    with_third = acp.record_action_packet_genesis_v01(
+        failed,
+        root_bound_genesis=third_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    superseded, predecessor_event, _, _ = _g2a3b2_apply(
+        with_third,
+        third_fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t23_failed_supersede",
+        evaluation_time=EVALUATION_TIME + 20,
+    )
+    assert predecessor_event is not None
+    assert acp.derive_action_packet_lifecycle_state_v01(
+        superseded,
+        packet_id=successor_id,
+    ).lifecycle_state == "SUPERSEDED"
+    assert acp.validate_action_commit_packet_registry_v02(superseded) == (
+        True,
+        (),
+    )
+
+    wrong_failure = _g2a2b_event(
+        entry,
+        "g2a_t24_nonconsuming_failure",
+        latest_disposition_event_id=(
+            transferred.idempotency_disposition_events[0]
+            .idempotency_disposition_event_id
+        ),
+    )
+    source_bytes = repr(pending).encode("utf-8")
+    with pytest.raises(
+        ValueError,
+        match="^latest_disposition_event_binding_invalid$",
+    ):
+        acp.record_action_packet_nonconsuming_outcome_v01(
+            pending,
+            packet_id=successor_id,
+            transition_event=wrong_failure,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(pending).encode("utf-8") == source_bytes
+
+
+def test_g2a3b2_lifecycle_continuity_branch_a_successor_block(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    source = _g2a3b2_registry_for_state(
+        g2a3a_fixture,
+        "EXPIRED",
+        branch_a=True,
+    )
+    expiry = (
+        g2a3a_fixture.predecessor.canonical_projection.temporal_authority
+        .expires_at_utc
+    )
+    acquired, _, _, acquisition = _g2a3b2_apply(
+        source,
+        g2a3a_fixture,
+        branch="BRANCH_A",
+        evaluation_time=expiry,
+    )
+    successor_id = g2a3a_fixture.successor.packet_identity.packet_id
+    successor_fixture = replace(
+        g2a3a_fixture,
+        predecessor=g2a3a_fixture.successor,
+    )
+    invalidation = _reidentify_invalidation(
+        _g2a3a_invalidation(
+            successor_fixture,
+            "ROOT_BOUND_KILL_SWITCH",
+        ),
+        evaluation_time=expiry + 1,
+        evaluation_context_id=(
+            "evaluation_context:g2a3b2:branch_a_successor:block"
+        ),
+    )
+    block = _g2a3b1_transition_event(
+        acquired,
+        successor_id,
+        "g2a_t07_authorized_block",
+        invalidation,
+    )
+    blocked = acp.record_action_packet_deterministic_invalidation_v01(
+        acquired,
+        packet_id=successor_id,
+        invalidation_evidence=invalidation,
+        transition_event=block,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        blocked,
+        packet_id=successor_id,
+    )
+    assert (
+        state.lifecycle_state,
+        state.idempotency_disposition,
+        state.reservation_owner_packet_id,
+        state.latest_disposition_event_id,
+    ) == (
+        "BLOCKED",
+        "RESERVED",
+        successor_id,
+        acquisition.idempotency_disposition_event_id,
+    )
+    assert blocked.idempotency_disposition_events is (
+        acquired.idempotency_disposition_events
+    )
+    assert acp.validate_action_commit_packet_registry_v02(blocked) == (
+        True,
+        (),
+    )
+
+
+def test_g2a3b2_lifecycle_continuity_unclaimed_lineage_is_global(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    registry = acp.record_action_packet_genesis_v01(
+        acp.build_empty_action_commit_packet_registry_v02(),
+        root_bound_genesis=g2a3a_fixture.predecessor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    valid_lineage = acp.record_action_packet_genesis_v01(
+        registry,
+        root_bound_genesis=g2a3a_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert valid_lineage.idempotency_disposition_events == ()
+    assert acp.validate_action_commit_packet_registry_v02(valid_lineage) == (
+        True,
+        (),
+    )
+
+    successor_only = acp.record_action_packet_genesis_v01(
+        acp.build_empty_action_commit_packet_registry_v02(),
+        root_bound_genesis=g2a3a_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(successor_only) == (
+        True,
+        (),
+    )
+
+    preactivation_expired = _g2a3b2_append_expiry(
+        valid_lineage,
+        g2a3a_fixture.successor.packet_identity.packet_id,
+        "g2a_t11_created_expire",
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        preactivation_expired
+    ) == (True, ())
+
+    orphan_fixture = _g2a3b2_next_same_key_generation(
+        g2a3a_fixture,
+        supersession_reason_class="RENEWAL",
+    )
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.record_action_packet_genesis_v01(
+            registry,
+            root_bound_genesis=orphan_fixture.successor,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    orphan_entry = acp.ActionPacketLifecycleEntryV01(
+        root_bound_genesis=orphan_fixture.successor,
+        transition_registry_id=_g2a2a_registry().transition_registry_id,
+        transition_events=(),
+    )
+    orphan_registry = replace(
+        registry,
+        action_packet_lifecycle_entries=(
+            registry.action_packet_lifecycle_entries + (orphan_entry,)
+        ),
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(
+        orphan_registry
+    )
+    assert valid is False
+    assert "authority_transition_requires_g2a3_binding" in reasons
+
+    second_root = _g2a2_final_same_key_successor(
+        g2a3a_fixture.predecessor
+    )
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.record_action_packet_genesis_v01(
+            registry,
+            root_bound_genesis=second_root,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def test_g2a3b2_lifecycle_continuity_acquisition_bundle_is_complete(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    transferred, acquisition = _g2a3b2_active_transfer_to_successor(
+        g2a3a_fixture
+    )
+    causes = acquisition.cause_transition_event_ids
+    assert len(causes) == 2
+    malformed_acquisitions = (
+        _g2a3b2_rebuild_disposition(
+            acquisition,
+            cause_transition_event_ids=(causes[0],),
+        ),
+        _g2a3b2_rebuild_disposition(
+            acquisition,
+            cause_transition_event_ids=(causes[1],),
+        ),
+        _g2a3b2_rebuild_disposition(
+            acquisition,
+            to_owner_packet_id=(
+                g2a3a_fixture.predecessor.packet_identity.packet_id
+            ),
+        ),
+    )
+    for malformed in malformed_acquisitions:
+        forged = replace(
+            transferred,
+            idempotency_disposition_events=(
+                transferred.idempotency_disposition_events[:-1]
+                + (malformed,)
+            ),
+        )
+        assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+    duplicate = replace(
+        transferred,
+        idempotency_disposition_events=(
+            transferred.idempotency_disposition_events + (acquisition,)
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(duplicate)[0] is False
+
+
+def test_g2a3b2_material_lineage_root_supports_renewal_then_supersession(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    material_fixture = _g2a3b2_material_fixture_for_amount(
+        g2a3a_fixture,
+        amount="1700.00",
+        reason="MATERIAL_EFFECT_LINEAGE_ROOT",
+    )
+    registry = _g2a3b2_registry_for_state(
+        material_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    registry, _, _, _ = _g2a3b2_apply(
+        registry,
+        material_fixture,
+        branch="MATERIAL",
+    )
+    renewal_fixture = _g2a3b2_next_same_key_generation(
+        material_fixture,
+        supersession_reason_class="RENEWAL",
+        variation="TTL",
+    )
+    registry = acp.record_action_packet_genesis_v01(
+        registry,
+        root_bound_genesis=renewal_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    registry, _, _, renewal_disposition = _g2a3b2_apply(
+        registry,
+        renewal_fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t20_authorized_supersede",
+    )
+    supersession_fixture = _g2a3b2_next_same_key_generation(
+        renewal_fixture,
+        supersession_reason_class="POLICY_REPLACEMENT",
+        variation="ADAPTER",
+    )
+    registry = acp.record_action_packet_genesis_v01(
+        registry,
+        root_bound_genesis=supersession_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    registry, _, _, supersession_disposition = _g2a3b2_apply(
+        registry,
+        supersession_fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t20_authorized_supersede",
+    )
+
+    packets = (
+        material_fixture.predecessor,
+        material_fixture.successor,
+        renewal_fixture.successor,
+        supersession_fixture.successor,
+    )
+    states = tuple(
+        acp.derive_action_packet_lifecycle_state_v01(
+            registry,
+            packet_id=packet.packet_identity.packet_id,
+        )
+        for packet in packets
+    )
+    assert tuple(state.lifecycle_state for state in states) == (
+        "ROOT_AUTHORIZED",
+        "SUPERSEDED",
+        "SUPERSEDED",
+        "ROOT_AUTHORIZED",
+    )
+    first_key = (
+        packets[0].canonical_projection.idempotency_identity.idempotency_key
+    )
+    material_key = (
+        packets[1].canonical_projection.idempotency_identity.idempotency_key
+    )
+    first_intent = (
+        packets[0].canonical_projection.logical_intent.root_owned_intent_id
+    )
+    material_intent = (
+        packets[1].canonical_projection.logical_intent.root_owned_intent_id
+    )
+    assert first_key != material_key
+    assert first_intent != material_intent
+    assert {
+        packet.canonical_projection.idempotency_identity.idempotency_key
+        for packet in packets[1:]
+    } == {material_key}
+    assert {
+        packet.canonical_projection.logical_intent.root_owned_intent_id
+        for packet in packets[1:]
+    } == {material_intent}
+    assert states[0].reservation_owner_packet_id == (
+        packets[0].packet_identity.packet_id
+    )
+    assert states[-1].reservation_owner_packet_id == (
+        packets[-1].packet_identity.packet_id
+    )
+    assert renewal_disposition.event_class == "TRANSFER_RENEWAL"
+    assert (
+        supersession_disposition.event_class
+        == "TRANSFER_SUPERSESSION"
+    )
+    assert len(registry.action_packet_invalidation_contexts) == 3
+    assert all(
+        event.event_class != "RELEASE"
+        for event in registry.idempotency_disposition_events
+    )
+    assert registry.real_world_effects_count == 0
+    assert acp.validate_action_commit_packet_registry_v02(registry) == (
+        True,
+        (),
+    )
+
+
+def test_g2a3b2_material_lineage_root_requires_exact_external_ancestry(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    material_fixture = _g2a3b2_material_fixture_for_amount(
+        g2a3a_fixture,
+        amount="1800.00",
+        reason="MATERIAL_EFFECT_ANCESTRY",
+    )
+    registry = _g2a3b2_registry_for_state(
+        material_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    registry, _, _, _ = _g2a3b2_apply(
+        registry,
+        material_fixture,
+        branch="MATERIAL",
+    )
+    renewal_fixture = _g2a3b2_next_same_key_generation(
+        material_fixture,
+        supersession_reason_class="RENEWAL",
+        variation="TTL",
+    )
+    registry = acp.record_action_packet_genesis_v01(
+        registry,
+        root_bound_genesis=renewal_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(registry) == (
+        True,
+        (),
+    )
+
+    predecessor_id = material_fixture.predecessor.packet_identity.packet_id
+    material_id = material_fixture.successor.packet_identity.packet_id
+    renewal_id = renewal_fixture.successor.packet_identity.packet_id
+    entry_by_id = {
+        entry.root_bound_genesis.packet_identity.packet_id: entry
+        for entry in registry.action_packet_lifecycle_entries
+    }
+    predecessor_entry = entry_by_id[predecessor_id]
+    material_entry = entry_by_id[material_id]
+    renewal_entry = entry_by_id[renewal_id]
+
+    def with_entry(
+        source: acp.ActionCommitPacketRegistryV02,
+        packet_id: str,
+        replacement: acp.ActionPacketLifecycleEntryV01,
+    ) -> acp.ActionCommitPacketRegistryV02:
+        return replace(
+            source,
+            action_packet_lifecycle_entries=tuple(
+                replacement
+                if (
+                    entry.root_bound_genesis.packet_identity.packet_id
+                    == packet_id
+                )
+                else entry
+                for entry in source.action_packet_lifecycle_entries
+            ),
+        )
+
+    missing_external = replace(
+        registry,
+        action_packet_lifecycle_entries=tuple(
+            entry
+            for entry in registry.action_packet_lifecycle_entries
+            if entry.root_bound_genesis.packet_identity.packet_id
+            != predecessor_id
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        missing_external
+    )[0] is False
+
+    material_root_bound = material_entry.root_bound_genesis
+    material_canonical = material_root_bound.canonical_projection
+    absent_authorization = replace(
+        material_canonical.authorization_candidate,
+        predecessor_packet_id=(
+            acp.ACTION_COMMIT_PACKET_ID_PREFIX_V01 + "9" * 64
+        ),
+    )
+    absent_predecessor = with_entry(
+        registry,
+        material_id,
+        replace(
+            material_entry,
+            root_bound_genesis=replace(
+                material_root_bound,
+                canonical_projection=replace(
+                    material_canonical,
+                    authorization_candidate=absent_authorization,
+                ),
+            ),
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        absent_predecessor
+    )[0] is False
+
+    predecessor_root_bound = predecessor_entry.root_bound_genesis
+    predecessor_canonical = predecessor_root_bound.canonical_projection
+    predecessor_intent_alias = with_entry(
+        registry,
+        predecessor_id,
+        replace(
+            predecessor_entry,
+            root_bound_genesis=replace(
+                predecessor_root_bound,
+                canonical_projection=replace(
+                    predecessor_canonical,
+                    logical_intent=material_canonical.logical_intent,
+                ),
+            ),
+        ),
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(
+        predecessor_intent_alias
+    )
+    assert valid is False
+    assert "logical_effect_identity_alias_forbidden" in reasons
+
+    predecessor_key_alias = with_entry(
+        registry,
+        predecessor_id,
+        replace(
+            predecessor_entry,
+            root_bound_genesis=replace(
+                predecessor_root_bound,
+                canonical_projection=replace(
+                    predecessor_canonical,
+                    idempotency_identity=(
+                        material_canonical.idempotency_identity
+                    ),
+                ),
+            ),
+        ),
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(
+        predecessor_key_alias
+    )
+    assert valid is False
+    assert "logical_effect_identity_alias_forbidden" in reasons
+
+    competing_source = replace(
+        material_canonical.source_packet,
+        packet_id="legacy:g2a3b2_material_competing_root",
+        source_root_decision_ref=(
+            "legacy:g2a3b2_material_competing_root_decision"
+        ),
+        ttl=replace(
+            material_canonical.source_packet.ttl,
+            created_at="2026-07-08T00:20:00Z",
+            expires_at="2026-07-08T01:20:00Z",
+        ),
+    )
+    competing_canonical = _projection(
+        packet=competing_source,
+        policy=material_canonical.authority_policy,
+        dependency=material_canonical.dependency_candidate,
+        predecessor_packet_id=predecessor_id,
+        supersession_reason_class="MATERIAL_EFFECT_COMPETING_ROOT",
+    )
+    competing_root = _root_bound_from_canonical(competing_canonical)
+    assert (
+        competing_canonical.idempotency_identity.idempotency_key
+        == material_canonical.idempotency_identity.idempotency_key
+    )
+    assert (
+        competing_canonical.logical_intent.root_owned_intent_id
+        == material_canonical.logical_intent.root_owned_intent_id
+    )
+    source_bytes = repr(registry).encode("utf-8")
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.record_action_packet_genesis_v01(
+            registry,
+            root_bound_genesis=competing_root,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry).encode("utf-8") == source_bytes
+    competing_entry = acp.ActionPacketLifecycleEntryV01(
+        root_bound_genesis=competing_root,
+        transition_registry_id=_g2a2a_registry().transition_registry_id,
+        transition_events=(),
+    )
+    competing_registry = replace(
+        registry,
+        action_packet_lifecycle_entries=(
+            registry.action_packet_lifecycle_entries + (competing_entry,)
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        competing_registry
+    )[0] is False
+
+    renewal_root_bound = renewal_entry.root_bound_genesis
+    renewal_canonical = renewal_root_bound.canonical_projection
+    self_authorization = replace(
+        renewal_canonical.authorization_candidate,
+        predecessor_packet_id=renewal_id,
+    )
+    self_referential = with_entry(
+        registry,
+        renewal_id,
+        replace(
+            renewal_entry,
+            root_bound_genesis=replace(
+                renewal_root_bound,
+                canonical_projection=replace(
+                    renewal_canonical,
+                    authorization_candidate=self_authorization,
+                ),
+            ),
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        self_referential
+    )[0] is False
+
+    without_material_context = replace(
+        registry,
+        action_packet_invalidation_contexts=(),
+    )
+    without_material_reserve = replace(
+        registry,
+        idempotency_disposition_events=tuple(
+            event
+            for event in registry.idempotency_disposition_events
+            if event.to_owner_packet_id != material_id
+        ),
+    )
+    forged_context = replace(
+        registry.action_packet_invalidation_contexts[0],
+        accepted_supersession_binding=(
+            g2a3a_fixture.accepted_supersession_binding
+        ),
+    )
+    wrong_material_binding = replace(
+        registry,
+        action_packet_invalidation_contexts=(forged_context,),
+    )
+    for forged in (
+        without_material_context,
+        without_material_reserve,
+        wrong_material_binding,
+    ):
+        assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+
+
+def test_g2a3b2_material_lineage_root_does_not_relax_initial_activation(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    ordinary = _g2a2b_recorded_genesis(g2a3a_fixture.predecessor)
+    ordinary, _, _ = _g2a2b_activate(
+        ordinary,
+        g2a3a_fixture.predecessor.packet_identity.packet_id,
+    )
+    assert acp.derive_action_packet_lifecycle_state_v01(
+        ordinary,
+        packet_id=g2a3a_fixture.predecessor.packet_identity.packet_id,
+    ).lifecycle_state == "ROOT_AUTHORIZED"
+
+    material_fixture = _g2a3b2_material_fixture_for_amount(
+        g2a3a_fixture,
+        amount="1900.00",
+        reason="MATERIAL_EFFECT_ACTIVATION_BOUNDARY",
+    )
+    material_id = material_fixture.successor.packet_identity.packet_id
+    successor_only = acp.record_action_packet_genesis_v01(
+        acp.build_empty_action_commit_packet_registry_v02(),
+        root_bound_genesis=material_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    inert_state = acp.derive_action_packet_lifecycle_state_v01(
+        successor_only,
+        packet_id=material_id,
+    )
+    assert (
+        inert_state.lifecycle_state,
+        inert_state.idempotency_disposition,
+        inert_state.reservation_owner_packet_id,
+    ) == ("CREATED", "UNCLAIMED", None)
+    activation, reserve = _g2a2b_activation_pair(
+        successor_only,
+        material_id,
+    )
+    source_bytes = repr(successor_only).encode("utf-8")
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.activate_action_packet_lifecycle_v01(
+            successor_only,
+            packet_id=material_id,
+            transition_event=activation,
+            disposition_event=reserve,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(successor_only).encode("utf-8") == source_bytes
+    forged = _g2a2_final_registry_with_event(
+        successor_only,
+        material_id,
+        activation,
+        disposition_event=reserve,
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(forged)
+    assert valid is False
+    assert "authority_transition_requires_g2a3_binding" in reasons
+
+    material_source = _g2a3b2_registry_for_state(
+        material_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    applied, _, _, _ = _g2a3b2_apply(
+        material_source,
+        material_fixture,
+        branch="MATERIAL",
+    )
+    material_state = acp.derive_action_packet_lifecycle_state_v01(
+        applied,
+        packet_id=material_id,
+    )
+    assert (
+        material_state.lifecycle_state,
+        material_state.idempotency_disposition,
+        material_state.reservation_owner_packet_id,
+    ) == ("ROOT_AUTHORIZED", "RESERVED", material_id)
+    assert acp.validate_action_commit_packet_registry_v02(applied) == (
+        True,
+        (),
+    )
+
+
+@pytest.mark.parametrize("malformed", (None, [], {}, "x", object()))
+def test_g2a3a_public_validators_are_total(malformed: object) -> None:
+    validators = (
+        acp.validate_revocation_candidate_v01,
+        acp.validate_supersession_candidate_v01,
+        acp.validate_accepted_revocation_binding_v01,
+        acp.validate_accepted_supersession_binding_v01,
+        acp.validate_mandatory_dependency_local_root_acceptance_v01,
+        acp.validate_action_invalidation_evidence_v01,
+    )
+    for validator in validators:
+        assert validator(malformed)[0] is False

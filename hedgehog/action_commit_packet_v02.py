@@ -316,6 +316,10 @@ class ActionCommitPacketRegistryV02:
     real_world_effects_count: int = 0
     action_packet_lifecycle_entries: tuple[ActionPacketLifecycleEntryV01, ...] = ()
     idempotency_disposition_events: tuple[IdempotencyDispositionEventV01, ...] = ()
+    action_packet_invalidation_contexts: tuple[
+        _ActionPacketInvalidationContextV01,
+        ...,
+    ] = ()
 
 
 @dataclass(frozen=True)
@@ -956,6 +960,9 @@ def record_packet_seen_v02(
         real_world_effects_count=registry.real_world_effects_count,
         action_packet_lifecycle_entries=registry.action_packet_lifecycle_entries,
         idempotency_disposition_events=registry.idempotency_disposition_events,
+        action_packet_invalidation_contexts=(
+            registry.action_packet_invalidation_contexts
+        ),
     )
 
 
@@ -997,6 +1004,9 @@ def record_terminal_receipt_observation_v02(
         ),
         idempotency_disposition_events=(
             seen_registry.idempotency_disposition_events
+        ),
+        action_packet_invalidation_contexts=(
+            seen_registry.action_packet_invalidation_contexts
         ),
     )
     return terminal_registry, ()
@@ -1141,6 +1151,69 @@ EFFECT_FIREWALL_VOCABULARY_PROJECTION_PROFILE_ID_V01 = (
 ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01 = (
     "PACKET_AUTHORIZATION"
 )
+ROOT_DECISION_CANDIDATE_KIND_REVOCATION_V01 = "REVOCATION"
+ROOT_DECISION_CANDIDATE_KIND_SUPERSESSION_V01 = "SUPERSESSION"
+ROOT_DECISION_CANDIDATE_KINDS_V01 = (
+    ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01,
+    ROOT_DECISION_CANDIDATE_KIND_REVOCATION_V01,
+    ROOT_DECISION_CANDIDATE_KIND_SUPERSESSION_V01,
+)
+ROOT_DECISION_CLAIM_PREDICATE_REVOCATION_V01 = (
+    "action_revocation_candidate_v01"
+)
+ROOT_DECISION_CLAIM_PREDICATE_SUPERSESSION_V01 = (
+    "action_supersession_candidate_v01"
+)
+REVOCATION_CANDIDATE_PROFILE_ID_V01 = "action_revocation_candidate_v01"
+REVOCATION_CANDIDATE_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_REVOCATION_CANDIDATE_V01"
+)
+REVOCATION_CANDIDATE_PREFIX_V01 = "revocation_candidate_v01:"
+SUPERSESSION_CANDIDATE_PROFILE_ID_V01 = (
+    "action_supersession_candidate_v01"
+)
+SUPERSESSION_CANDIDATE_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_SUPERSESSION_CANDIDATE_V01"
+)
+SUPERSESSION_CANDIDATE_PREFIX_V01 = "supersession_candidate_v01:"
+ACCEPTED_REVOCATION_BINDING_DOMAIN_V01 = (
+    "HEDGEHOG_ACCEPTED_REVOCATION_BINDING_V01"
+)
+ACCEPTED_REVOCATION_BINDING_PREFIX_V01 = "accepted_revocation_v01:"
+ACCEPTED_SUPERSESSION_BINDING_DOMAIN_V01 = (
+    "HEDGEHOG_ACCEPTED_SUPERSESSION_BINDING_V01"
+)
+ACCEPTED_SUPERSESSION_BINDING_PREFIX_V01 = "accepted_supersession_v01:"
+ACTION_INVALIDATION_EVIDENCE_PROFILE_ID_V01 = (
+    "action_invalidation_evidence_profile_v01"
+)
+ACTION_INVALIDATION_EVIDENCE_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_INVALIDATION_EVIDENCE_V01"
+)
+ACTION_INVALIDATION_VALIDATION_STATUS_V01 = "LOCAL_VALIDATION_PASS"
+ACTION_INVALIDATION_CLASSES_V01 = (
+    "DEPENDENCY_CHANGED",
+    "DEPENDENCY_STALE",
+    "ROOT_BOUND_KILL_SWITCH",
+    "MANUAL_CANCEL_EVIDENCE",
+    "ROOT_REVOCATION",
+    "ROOT_SUPERSESSION",
+)
+ACTION_INVALIDATION_AUTHORITY_EFFECTS_V01 = (
+    "DETERMINISTIC_BLOCK",
+    "ROOT_REVOCATION",
+    "ROOT_SUPERSESSION",
+)
+_ACTION_COMMIT_PACKET_IDENTITY_PROFILE_ID_V01 = (
+    "action_commit_packet_identity_profile_v01"
+)
+_ACCEPTED_REVOCATION_BINDING_VALIDATOR_PROFILE_ID_V01 = (
+    "accepted_revocation_binding_v01"
+)
+_ACCEPTED_SUPERSESSION_BINDING_VALIDATOR_PROFILE_ID_V01 = (
+    "accepted_supersession_binding_v01"
+)
+_ROOT_DECISION_RESULT_VALIDATOR_PROFILE_ID_V01 = "root_decision_result_v01"
 
 TEMPORAL_OUTCOME_NOT_YET_VALID_V01 = "NOT_YET_VALID"
 TEMPORAL_OUTCOME_VALID_V01 = "TEMPORALLY_VALID"
@@ -1479,6 +1552,33 @@ class SupplierActionCommitPacketCanonicalProjectionV01:
 
 
 @dataclass(frozen=True)
+class RevocationCandidateV01:
+    candidate_profile_id: str
+    owning_local_root_id: str
+    packet_id: str
+    source_authorization_decision_id: str
+    idempotency_key: str
+    revocation_reason_class: str
+    evidence_refs: tuple[str, ...]
+    evidence_hashes: tuple[str, ...]
+    evaluation_time: int
+    policy_fingerprint: str
+    revocation_candidate_id: str
+
+
+@dataclass(frozen=True)
+class SupersessionCandidateV01:
+    owning_local_root_id: str
+    predecessor_packet_id: str
+    successor_packet_authorization_candidate_id: str
+    stable_logical_intent_id: str
+    idempotency_key: str
+    supersession_reason_class: str
+    policy_fingerprint: str
+    supersession_candidate_id: str
+
+
+@dataclass(frozen=True)
 class RootDecisionCandidateProjectionV01:
     candidate_kind: str
     projected_candidate_id: str
@@ -1486,6 +1586,65 @@ class RootDecisionCandidateProjectionV01:
     root_decision_input: RootDecisionInputV01
     root_decision_result: RootDecisionResultV01
     source_root_decision_hash: str
+
+
+@dataclass(frozen=True)
+class AcceptedRevocationBindingV01:
+    revocation_candidate_id: str
+    revocation_root_decision_id: str
+    revocation_root_decision_hash: str
+    owning_local_root_id: str
+    packet_id: str
+    prior_authorization_decision_id: str
+    accepted_revocation_binding_id: str
+
+
+@dataclass(frozen=True)
+class AcceptedSupersessionBindingV01:
+    supersession_candidate_id: str
+    supersession_root_decision_id: str
+    supersession_root_decision_hash: str
+    owning_local_root_id: str
+    predecessor_packet_id: str
+    prior_authorization_decision_id: str
+    accepted_supersession_binding_id: str
+
+
+@dataclass(frozen=True)
+class ActionInvalidationEvidenceV01:
+    profile_id: str
+    source_invalidation_event_ref: str
+    packet_id: str
+    dependency_id: str
+    invalidation_class: str
+    evidence_ref: str
+    evidence_sha256: str
+    observed_status: str
+    time_envelope_id: str
+    freshness_policy_id: str
+    owning_local_root_id: str
+    accepted_by_local_root_id: str
+    acceptance_root_decision_id: str | None
+    acceptance_root_decision_hash: str | None
+    validation_status: str
+    authority_effect: str
+    root_decision_ref: str | None
+    evaluation_time: int
+    evaluation_time_source: str
+    evaluation_context_id: str
+    invalidation_evidence_id: str
+
+
+@dataclass(frozen=True)
+class _ActionPacketInvalidationContextV01:
+    invalidation_evidence: ActionInvalidationEvidenceV01
+    revocation_candidate: RevocationCandidateV01 | None
+    revocation_root_projection: RootDecisionCandidateProjectionV01 | None
+    accepted_revocation_binding: AcceptedRevocationBindingV01 | None
+    supersession_candidate: SupersessionCandidateV01 | None
+    supersession_root_projection: RootDecisionCandidateProjectionV01 | None
+    supersession_successor_packet_id: str | None
+    accepted_supersession_binding: AcceptedSupersessionBindingV01 | None
 
 
 @dataclass(frozen=True)
@@ -4418,6 +4577,8 @@ def _build_supplier_action_commit_packet_canonical_projection_unchecked_v01(
     evaluation_time: object,
     evaluation_time_source: object,
     evaluation_context_id: object,
+    predecessor_packet_id: object = None,
+    supersession_reason_class: object = None,
 ) -> SupplierActionCommitPacketCanonicalProjectionV01:
     if (
         type(packet) is ActionCommitPacketV02
@@ -4606,6 +4767,8 @@ def _build_supplier_action_commit_packet_canonical_projection_unchecked_v01(
             temporal_authority_fingerprint=temporal_fingerprint,
             policy_version=authority_policy.policy_version,
             authority_policy_fingerprint=policy_fingerprint,
+            predecessor_packet_id=predecessor_packet_id,
+            supersession_reason_class=supersession_reason_class,
         )
     )
     projection = SupplierActionCommitPacketCanonicalProjectionV01(
@@ -4665,6 +4828,8 @@ def build_supplier_action_commit_packet_canonical_projection_v01(
     evaluation_time: object,
     evaluation_time_source: object,
     evaluation_context_id: object,
+    predecessor_packet_id: object = None,
+    supersession_reason_class: object = None,
 ) -> SupplierActionCommitPacketCanonicalProjectionV01:
     """Project one retained legacy Supplier packet without authorizing it."""
 
@@ -4686,6 +4851,8 @@ def build_supplier_action_commit_packet_canonical_projection_v01(
                 evaluation_time=evaluation_time,
                 evaluation_time_source=evaluation_time_source,
                 evaluation_context_id=evaluation_context_id,
+                predecessor_packet_id=predecessor_packet_id,
+                supersession_reason_class=supersession_reason_class,
             )
         )
         projection_valid, projection_reasons = (
@@ -5362,6 +5529,12 @@ def _validate_supplier_action_commit_packet_canonical_projection_impl_v01(
                 evaluation_time=value.evaluation_time,
                 evaluation_time_source=value.evaluation_time_source,
                 evaluation_context_id=value.evaluation_context_id,
+                predecessor_packet_id=(
+                    value.authorization_candidate.predecessor_packet_id
+                ),
+                supersession_reason_class=(
+                    value.authorization_candidate.supersession_reason_class
+                ),
             )
         )
     except ValueError:
@@ -5389,6 +5562,530 @@ def validate_supplier_action_commit_packet_canonical_projection_v01(
         return False, ("supplier_projection_validation_invalid",)
 
 
+def _canonical_revocation_evidence_v01(
+    evidence_refs: object,
+    evidence_hashes: object,
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    if type(evidence_refs) is not tuple or type(evidence_hashes) is not tuple:
+        raise ValueError("revocation_candidate_evidence_tuple_invalid")
+    if not evidence_refs:
+        raise ValueError("revocation_candidate_evidence_empty")
+    if len(evidence_refs) != len(evidence_hashes):
+        raise ValueError("revocation_candidate_evidence_cardinality_invalid")
+    pairs: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for evidence_ref, evidence_hash in zip(
+        evidence_refs,
+        evidence_hashes,
+        strict=True,
+    ):
+        if type(evidence_ref) is not str or type(evidence_hash) is not str:
+            raise ValueError("revocation_candidate_evidence_type_invalid")
+        normalized_ref = normalize_identity_text_v01(evidence_ref)
+        hash_valid, hash_reasons = validate_lowercase_sha256_hex_v01(
+            evidence_hash
+        )
+        if not hash_valid:
+            raise ValueError(hash_reasons[0])
+        if normalized_ref in seen:
+            raise ValueError("revocation_candidate_evidence_duplicate")
+        seen.add(normalized_ref)
+        pairs.append((normalized_ref, evidence_hash))
+    pairs.sort(key=lambda item: item[0].encode("utf-8"))
+    return (
+        tuple(item[0] for item in pairs),
+        tuple(item[1] for item in pairs),
+    )
+
+
+def revocation_candidate_material_v01(
+    value: RevocationCandidateV01,
+) -> CanonicalMaterialV01:
+    if type(value) is not RevocationCandidateV01:
+        raise ValueError("revocation_candidate_type_invalid")
+    return (
+        ("candidate_profile_id", value.candidate_profile_id),
+        ("owning_local_root_id", value.owning_local_root_id),
+        ("packet_id", value.packet_id),
+        (
+            "source_authorization_decision_id",
+            value.source_authorization_decision_id,
+        ),
+        ("idempotency_key", value.idempotency_key),
+        ("revocation_reason_class", value.revocation_reason_class),
+        ("evidence_refs", value.evidence_refs),
+        ("evidence_hashes", value.evidence_hashes),
+        ("evaluation_time", value.evaluation_time),
+        ("policy_fingerprint", value.policy_fingerprint),
+    )
+
+
+def build_revocation_candidate_v01(
+    *,
+    owning_local_root_id: object,
+    packet_id: object,
+    source_authorization_decision_id: object,
+    idempotency_key: object,
+    revocation_reason_class: object,
+    evidence_refs: object,
+    evidence_hashes: object,
+    evaluation_time: object,
+    policy_fingerprint: object,
+) -> RevocationCandidateV01:
+    try:
+        root_id = normalize_identity_text_v01(owning_local_root_id)
+        reason_class = normalize_identity_text_v01(revocation_reason_class)
+        valid_packet, packet_reasons = validate_prefixed_sha256_identity_v01(
+            packet_id,
+            prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+        )
+        if not valid_packet:
+            raise ValueError(packet_reasons[0])
+        valid_decision, decision_reasons = validate_lowercase_sha256_hex_v01(
+            source_authorization_decision_id
+        )
+        if not valid_decision:
+            raise ValueError(decision_reasons[0])
+        valid_key, key_reasons = validate_prefixed_sha256_identity_v01(
+            idempotency_key,
+            prefix=ACTION_IDEMPOTENCY_PREFIX_V01,
+        )
+        if not valid_key:
+            raise ValueError(key_reasons[0])
+        valid_time, time_reasons = validate_signed_int64_v01(evaluation_time)
+        if not valid_time:
+            raise ValueError(time_reasons[0])
+        valid_policy, policy_reasons = validate_lowercase_sha256_hex_v01(
+            policy_fingerprint
+        )
+        if not valid_policy:
+            raise ValueError(policy_reasons[0])
+        refs, hashes = _canonical_revocation_evidence_v01(
+            evidence_refs,
+            evidence_hashes,
+        )
+        provisional = RevocationCandidateV01(
+            candidate_profile_id=REVOCATION_CANDIDATE_PROFILE_ID_V01,
+            owning_local_root_id=root_id,
+            packet_id=packet_id,
+            source_authorization_decision_id=(
+                source_authorization_decision_id
+            ),
+            idempotency_key=idempotency_key,
+            revocation_reason_class=reason_class,
+            evidence_refs=refs,
+            evidence_hashes=hashes,
+            evaluation_time=evaluation_time,
+            policy_fingerprint=policy_fingerprint,
+            revocation_candidate_id="",
+        )
+        candidate = RevocationCandidateV01(
+            candidate_profile_id=provisional.candidate_profile_id,
+            owning_local_root_id=provisional.owning_local_root_id,
+            packet_id=provisional.packet_id,
+            source_authorization_decision_id=(
+                provisional.source_authorization_decision_id
+            ),
+            idempotency_key=provisional.idempotency_key,
+            revocation_reason_class=provisional.revocation_reason_class,
+            evidence_refs=provisional.evidence_refs,
+            evidence_hashes=provisional.evidence_hashes,
+            evaluation_time=provisional.evaluation_time,
+            policy_fingerprint=provisional.policy_fingerprint,
+            revocation_candidate_id=build_domain_separated_identity_v01(
+                domain=REVOCATION_CANDIDATE_DOMAIN_V01,
+                prefix=REVOCATION_CANDIDATE_PREFIX_V01,
+                material=revocation_candidate_material_v01(provisional),
+            ),
+        )
+        valid, reasons = validate_revocation_candidate_v01(candidate)
+        if not valid:
+            raise ValueError(reasons[0])
+        return candidate
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="revocation_candidate_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("revocation_candidate_invalid") from None
+
+
+def validate_revocation_candidate_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not RevocationCandidateV01:
+            return False, ("revocation_candidate_type_invalid",)
+        if (
+            type(value.candidate_profile_id) is not str
+            or value.candidate_profile_id
+            != REVOCATION_CANDIDATE_PROFILE_ID_V01
+            or type(value.owning_local_root_id) is not str
+            or normalize_identity_text_v01(value.owning_local_root_id)
+            != value.owning_local_root_id
+            or type(value.revocation_reason_class) is not str
+            or normalize_identity_text_v01(value.revocation_reason_class)
+            != value.revocation_reason_class
+        ):
+            return False, ("revocation_candidate_field_invalid",)
+        for identifier, prefix in (
+            (value.packet_id, ACTION_COMMIT_PACKET_ID_PREFIX_V01),
+            (value.idempotency_key, ACTION_IDEMPOTENCY_PREFIX_V01),
+        ):
+            valid, reasons = validate_prefixed_sha256_identity_v01(
+                identifier,
+                prefix=prefix,
+            )
+            if not valid:
+                return False, reasons
+        for digest in (
+            value.source_authorization_decision_id,
+            value.policy_fingerprint,
+        ):
+            valid, reasons = validate_lowercase_sha256_hex_v01(digest)
+            if not valid:
+                return False, reasons
+        valid_time, time_reasons = validate_signed_int64_v01(
+            value.evaluation_time
+        )
+        if not valid_time:
+            return False, time_reasons
+        refs, hashes = _canonical_revocation_evidence_v01(
+            value.evidence_refs,
+            value.evidence_hashes,
+        )
+        if (
+            refs != value.evidence_refs
+            or hashes != value.evidence_hashes
+            or type(value.revocation_candidate_id) is not str
+            or value.revocation_candidate_id
+            != build_domain_separated_identity_v01(
+                domain=REVOCATION_CANDIDATE_DOMAIN_V01,
+                prefix=REVOCATION_CANDIDATE_PREFIX_V01,
+                material=revocation_candidate_material_v01(value),
+            )
+        ):
+            return False, ("revocation_candidate_identity_mismatch",)
+        return True, ()
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="revocation_candidate_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("revocation_candidate_invalid",)
+
+
+def supersession_candidate_material_v01(
+    value: SupersessionCandidateV01,
+) -> CanonicalMaterialV01:
+    if type(value) is not SupersessionCandidateV01:
+        raise ValueError("supersession_candidate_type_invalid")
+    return (
+        ("owning_local_root_id", value.owning_local_root_id),
+        ("predecessor_packet_id", value.predecessor_packet_id),
+        (
+            "successor_packet_authorization_candidate_id",
+            value.successor_packet_authorization_candidate_id,
+        ),
+        ("stable_logical_intent_id", value.stable_logical_intent_id),
+        ("idempotency_key", value.idempotency_key),
+        ("supersession_reason_class", value.supersession_reason_class),
+        ("policy_fingerprint", value.policy_fingerprint),
+    )
+
+
+def build_supersession_candidate_v01(
+    *,
+    owning_local_root_id: object,
+    predecessor_packet_id: object,
+    successor_packet_authorization_candidate_id: object,
+    stable_logical_intent_id: object,
+    idempotency_key: object,
+    supersession_reason_class: object,
+    policy_fingerprint: object,
+) -> SupersessionCandidateV01:
+    try:
+        root_id = normalize_identity_text_v01(owning_local_root_id)
+        reason_class = normalize_identity_text_v01(
+            supersession_reason_class
+        )
+        checks = (
+            (
+                predecessor_packet_id,
+                ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+            ),
+            (
+                successor_packet_authorization_candidate_id,
+                ROOT_PACKET_AUTHORIZATION_PREFIX_V01,
+            ),
+            (stable_logical_intent_id, ROOT_LOGICAL_INTENT_PREFIX_V01),
+            (idempotency_key, ACTION_IDEMPOTENCY_PREFIX_V01),
+        )
+        for identifier, prefix in checks:
+            valid, reasons = validate_prefixed_sha256_identity_v01(
+                identifier,
+                prefix=prefix,
+            )
+            if not valid:
+                raise ValueError(reasons[0])
+        valid_policy, policy_reasons = validate_lowercase_sha256_hex_v01(
+            policy_fingerprint
+        )
+        if not valid_policy:
+            raise ValueError(policy_reasons[0])
+        provisional = SupersessionCandidateV01(
+            owning_local_root_id=root_id,
+            predecessor_packet_id=predecessor_packet_id,
+            successor_packet_authorization_candidate_id=(
+                successor_packet_authorization_candidate_id
+            ),
+            stable_logical_intent_id=stable_logical_intent_id,
+            idempotency_key=idempotency_key,
+            supersession_reason_class=reason_class,
+            policy_fingerprint=policy_fingerprint,
+            supersession_candidate_id="",
+        )
+        candidate = SupersessionCandidateV01(
+            owning_local_root_id=provisional.owning_local_root_id,
+            predecessor_packet_id=provisional.predecessor_packet_id,
+            successor_packet_authorization_candidate_id=(
+                provisional.successor_packet_authorization_candidate_id
+            ),
+            stable_logical_intent_id=provisional.stable_logical_intent_id,
+            idempotency_key=provisional.idempotency_key,
+            supersession_reason_class=(
+                provisional.supersession_reason_class
+            ),
+            policy_fingerprint=provisional.policy_fingerprint,
+            supersession_candidate_id=build_domain_separated_identity_v01(
+                domain=SUPERSESSION_CANDIDATE_DOMAIN_V01,
+                prefix=SUPERSESSION_CANDIDATE_PREFIX_V01,
+                material=supersession_candidate_material_v01(provisional),
+            ),
+        )
+        valid, reasons = validate_supersession_candidate_v01(candidate)
+        if not valid:
+            raise ValueError(reasons[0])
+        return candidate
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="supersession_candidate_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("supersession_candidate_invalid") from None
+
+
+def validate_supersession_candidate_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not SupersessionCandidateV01:
+            return False, ("supersession_candidate_type_invalid",)
+        if (
+            type(value.owning_local_root_id) is not str
+            or normalize_identity_text_v01(value.owning_local_root_id)
+            != value.owning_local_root_id
+            or type(value.supersession_reason_class) is not str
+            or normalize_identity_text_v01(value.supersession_reason_class)
+            != value.supersession_reason_class
+        ):
+            return False, ("supersession_candidate_field_invalid",)
+        for identifier, prefix in (
+            (
+                value.predecessor_packet_id,
+                ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+            ),
+            (
+                value.successor_packet_authorization_candidate_id,
+                ROOT_PACKET_AUTHORIZATION_PREFIX_V01,
+            ),
+            (value.stable_logical_intent_id, ROOT_LOGICAL_INTENT_PREFIX_V01),
+            (value.idempotency_key, ACTION_IDEMPOTENCY_PREFIX_V01),
+        ):
+            valid, reasons = validate_prefixed_sha256_identity_v01(
+                identifier,
+                prefix=prefix,
+            )
+            if not valid:
+                return False, reasons
+        policy_valid, policy_reasons = validate_lowercase_sha256_hex_v01(
+            value.policy_fingerprint
+        )
+        if not policy_valid:
+            return False, policy_reasons
+        if (
+            type(value.supersession_candidate_id) is not str
+            or value.supersession_candidate_id
+            != build_domain_separated_identity_v01(
+                domain=SUPERSESSION_CANDIDATE_DOMAIN_V01,
+                prefix=SUPERSESSION_CANDIDATE_PREFIX_V01,
+                material=supersession_candidate_material_v01(value),
+            )
+        ):
+            return False, ("supersession_candidate_identity_mismatch",)
+        return True, ()
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="supersession_candidate_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("supersession_candidate_invalid",)
+
+
+def validate_revocation_candidate_against_packet_v01(
+    candidate: object,
+    packet: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        candidate_valid, candidate_reasons = validate_revocation_candidate_v01(
+            candidate
+        )
+        if not candidate_valid:
+            return False, candidate_reasons
+        packet_valid, packet_reasons = (
+            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                packet
+            )
+        )
+        if not packet_valid:
+            return False, packet_reasons
+        reasons: list[str] = []
+        canonical = packet.canonical_projection
+        source_decision_id = (
+            packet.root_decision_projection.root_decision_result.decision_id
+        )
+        if candidate.owning_local_root_id != canonical.owning_local_root_id:
+            _reason_v01(reasons, "revocation_candidate_root_mismatch")
+        if candidate.packet_id != packet.packet_identity.packet_id:
+            _reason_v01(reasons, "revocation_candidate_packet_mismatch")
+        if candidate.source_authorization_decision_id != source_decision_id:
+            _reason_v01(
+                reasons,
+                "revocation_candidate_source_authorization_mismatch",
+            )
+        if (
+            candidate.idempotency_key
+            != canonical.idempotency_identity.idempotency_key
+        ):
+            _reason_v01(reasons, "revocation_candidate_key_mismatch")
+        if candidate.policy_fingerprint != canonical.authority_policy_fingerprint:
+            _reason_v01(reasons, "revocation_candidate_policy_mismatch")
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("revocation_candidate_context_invalid",)
+
+
+def validate_supersession_candidate_against_packets_v01(
+    candidate: object,
+    predecessor: object,
+    successor: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        candidate_valid, candidate_reasons = (
+            validate_supersession_candidate_v01(candidate)
+        )
+        if not candidate_valid:
+            return False, candidate_reasons
+        for packet in (predecessor, successor):
+            packet_valid, packet_reasons = (
+                validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                    packet
+                )
+            )
+            if not packet_valid:
+                return False, packet_reasons
+        reasons: list[str] = []
+        predecessor_canonical = predecessor.canonical_projection
+        successor_canonical = successor.canonical_projection
+        predecessor_candidate = predecessor_canonical.authorization_candidate
+        successor_candidate = successor_canonical.authorization_candidate
+        predecessor_decision = (
+            predecessor.root_decision_projection.root_decision_result
+            .decision_id
+        )
+        successor_decision = (
+            successor.root_decision_projection.root_decision_result.decision_id
+        )
+        if predecessor.packet_identity.packet_id == successor.packet_identity.packet_id:
+            _reason_v01(reasons, "supersession_packet_identity_not_distinct")
+        if predecessor_decision == successor_decision:
+            _reason_v01(reasons, "supersession_source_decision_not_distinct")
+        if (
+            predecessor_candidate.root_packet_authorization_candidate_id
+            == successor_candidate.root_packet_authorization_candidate_id
+        ):
+            _reason_v01(
+                reasons,
+                "supersession_authorization_candidate_not_distinct",
+            )
+        roots = (
+            candidate.owning_local_root_id,
+            predecessor_canonical.owning_local_root_id,
+            successor_canonical.owning_local_root_id,
+        )
+        if len(set(roots)) != 1:
+            _reason_v01(reasons, "supersession_candidate_root_mismatch")
+        if candidate.predecessor_packet_id != predecessor.packet_identity.packet_id:
+            _reason_v01(reasons, "supersession_predecessor_mismatch")
+        if (
+            candidate.successor_packet_authorization_candidate_id
+            != successor_candidate.root_packet_authorization_candidate_id
+        ):
+            _reason_v01(reasons, "supersession_successor_candidate_mismatch")
+        if (
+            candidate.stable_logical_intent_id
+            != successor_canonical.logical_intent.root_owned_intent_id
+        ):
+            _reason_v01(reasons, "supersession_logical_intent_mismatch")
+        if (
+            candidate.idempotency_key
+            != successor_canonical.idempotency_identity.idempotency_key
+        ):
+            _reason_v01(reasons, "supersession_idempotency_key_mismatch")
+        if (
+            predecessor_canonical.transaction_id
+            != successor_canonical.transaction_id
+        ):
+            _reason_v01(reasons, "supersession_transaction_mismatch")
+        if (
+            candidate.policy_fingerprint
+            != predecessor_canonical.authority_policy_fingerprint
+        ):
+            _reason_v01(reasons, "supersession_policy_mismatch")
+        if (
+            successor_candidate.predecessor_packet_id
+            != predecessor.packet_identity.packet_id
+            or successor_candidate.supersession_reason_class
+            != candidate.supersession_reason_class
+        ):
+            _reason_v01(
+                reasons,
+                "supersession_authorization_predecessor_mismatch",
+            )
+        if candidate.supersession_reason_class == "RENEWAL" and (
+            predecessor_canonical.logical_intent.root_owned_intent_id
+            != successor_canonical.logical_intent.root_owned_intent_id
+            or predecessor_canonical.idempotency_identity.idempotency_key
+            != successor_canonical.idempotency_identity.idempotency_key
+        ):
+            _reason_v01(reasons, "supersession_renewal_identity_mismatch")
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("supersession_candidate_context_invalid",)
+
+
 def build_action_source_root_decision_hash_v01(result: object) -> str:
     if type(result) is not RootDecisionResultV01:
         raise ValueError("source_root_decision_result_type_invalid")
@@ -5409,18 +6106,32 @@ def _validate_root_decision_candidate_projection_impl_v01(
     if type(value) is not RootDecisionCandidateProjectionV01:
         return False, ("root_candidate_projection_type_invalid",)
     reasons: list[str] = []
+    candidate_profiles = {
+        ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01: (
+            ROOT_PACKET_AUTHORIZATION_PREFIX_V01,
+            "root_packet_authorization_candidate",
+        ),
+        ROOT_DECISION_CANDIDATE_KIND_REVOCATION_V01: (
+            REVOCATION_CANDIDATE_PREFIX_V01,
+            ROOT_DECISION_CLAIM_PREDICATE_REVOCATION_V01,
+        ),
+        ROOT_DECISION_CANDIDATE_KIND_SUPERSESSION_V01: (
+            SUPERSESSION_CANDIDATE_PREFIX_V01,
+            ROOT_DECISION_CLAIM_PREDICATE_SUPERSESSION_V01,
+        ),
+    }
     if (
         type(value.candidate_kind) is not str
-        or value.candidate_kind
-        != ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01
+        or value.candidate_kind not in ROOT_DECISION_CANDIDATE_KINDS_V01
     ):
         _reason_v01(reasons, "root_candidate_kind_invalid")
-    candidate_valid, _ = validate_prefixed_sha256_identity_v01(
-        value.projected_candidate_id,
-        prefix=ROOT_PACKET_AUTHORIZATION_PREFIX_V01,
-    )
-    if not candidate_valid:
-        _reason_v01(reasons, "root_candidate_id_invalid")
+    else:
+        candidate_valid, _ = validate_prefixed_sha256_identity_v01(
+            value.projected_candidate_id,
+            prefix=candidate_profiles[value.candidate_kind][0],
+        )
+        if not candidate_valid:
+            _reason_v01(reasons, "root_candidate_id_invalid")
     source_hash_valid, _ = validate_lowercase_sha256_hex_v01(
         value.source_root_decision_hash
     )
@@ -5514,13 +6225,11 @@ def _validate_root_decision_candidate_projection_impl_v01(
             claim = matching_claims[0]
             expected_object = {
                 "candidate_id": value.projected_candidate_id,
-                "candidate_kind": (
-                    ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01
-                ),
+                "candidate_kind": value.candidate_kind,
             }
             if (
                 claim.get("predicate")
-                != "root_packet_authorization_candidate"
+                != candidate_profiles[value.candidate_kind][1]
                 or claim.get("object_or_value") != expected_object
             ):
                 _reason_v01(reasons, "root_candidate_review_claim_invalid")
@@ -5571,15 +6280,26 @@ def _validate_root_decision_candidate_projection_impl_v01(
         _reason_v01(reasons, "root_candidate_gt_prohibited_set_present")
 
     if (
-        permission.get("permission_required") is not True
-        or permission.get("user_permission_present") is not True
+        value.candidate_kind
+        == ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01
+    ):
+        if (
+            permission.get("permission_required") is not True
+            or permission.get("user_permission_present") is not True
+            or permission.get("permission_scope_valid") is not True
+        ):
+            _reason_v01(reasons, "root_candidate_permission_state_invalid")
+        if not validate_canonical_permission_ref_v01(
+            permission.get("permission_ref")
+        )[0]:
+            _reason_v01(reasons, "root_candidate_permission_ref_invalid")
+    elif (
+        permission.get("permission_required") is not False
+        or permission.get("user_permission_present") is not False
         or permission.get("permission_scope_valid") is not True
+        or permission.get("permission_ref") is not None
     ):
         _reason_v01(reasons, "root_candidate_permission_state_invalid")
-    if not validate_canonical_permission_ref_v01(
-        permission.get("permission_ref")
-    )[0]:
-        _reason_v01(reasons, "root_candidate_permission_ref_invalid")
     for key in (
         "identity_passed",
         "scope_passed",
@@ -5653,6 +6373,1454 @@ def build_root_decision_candidate_projection_v01(
         raise ValueError("root_candidate_projection_invalid") from None
 
 
+def validate_revocation_root_context_coherence_v01(
+    candidate: object,
+    root_projection: object,
+    packet: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        context_valid, context_reasons = (
+            validate_revocation_candidate_against_packet_v01(
+                candidate,
+                packet,
+            )
+        )
+        if not context_valid:
+            return False, context_reasons
+        root_valid, root_reasons = (
+            validate_root_decision_candidate_projection_v01(root_projection)
+        )
+        if not root_valid:
+            return False, root_reasons
+        reasons: list[str] = []
+        canonical = packet.canonical_projection
+        source_result = packet.root_decision_projection.root_decision_result
+        decision_input = root_projection.root_decision_input
+        result = root_projection.root_decision_result
+        if (
+            root_projection.candidate_kind
+            != ROOT_DECISION_CANDIDATE_KIND_REVOCATION_V01
+            or root_projection.projected_candidate_id
+            != candidate.revocation_candidate_id
+        ):
+            _reason_v01(reasons, "revocation_root_candidate_mismatch")
+        if (
+            decision_input.transaction_id != canonical.transaction_id
+            or result.transaction_id != canonical.transaction_id
+        ):
+            _reason_v01(reasons, "revocation_root_transaction_mismatch")
+        if (
+            decision_input.target_root_id != canonical.owning_local_root_id
+            or result.target_root_id != canonical.owning_local_root_id
+        ):
+            _reason_v01(reasons, "revocation_root_target_mismatch")
+        plain = root_decision_input_to_plain_dict_v01(decision_input)
+        policy = plain.get("policy_state")
+        prior = plain.get("prior_root_state")
+        if type(policy) is not dict or type(prior) is not dict:
+            return False, ("revocation_root_input_projection_invalid",)
+        if (
+            policy.get("policy_id") != candidate.policy_fingerprint
+            or candidate.policy_fingerprint
+            != canonical.authority_policy_fingerprint
+        ):
+            _reason_v01(reasons, "revocation_root_policy_mismatch")
+        source_decision_id = source_result.decision_id
+        source_candidate_id = (
+            canonical.authorization_candidate
+            .root_packet_authorization_candidate_id
+        )
+        if (
+            result.prior_decision_id != source_decision_id
+            or prior.get("prior_decision_id") != source_decision_id
+            or prior.get("prior_decision") != "ACCEPT"
+            or prior.get("prior_selected_candidate_id")
+            != source_candidate_id
+        ):
+            _reason_v01(reasons, "revocation_root_prior_state_mismatch")
+        if result.decision_id == source_decision_id:
+            _reason_v01(reasons, "revocation_root_decision_not_distinct")
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("revocation_root_context_invalid",)
+
+
+def validate_supersession_root_context_coherence_v01(
+    candidate: object,
+    root_projection: object,
+    predecessor: object,
+    successor: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        context_valid, context_reasons = (
+            validate_supersession_candidate_against_packets_v01(
+                candidate,
+                predecessor,
+                successor,
+            )
+        )
+        if not context_valid:
+            return False, context_reasons
+        root_valid, root_reasons = (
+            validate_root_decision_candidate_projection_v01(root_projection)
+        )
+        if not root_valid:
+            return False, root_reasons
+        reasons: list[str] = []
+        predecessor_canonical = predecessor.canonical_projection
+        successor_canonical = successor.canonical_projection
+        predecessor_result = (
+            predecessor.root_decision_projection.root_decision_result
+        )
+        successor_result = (
+            successor.root_decision_projection.root_decision_result
+        )
+        decision_input = root_projection.root_decision_input
+        result = root_projection.root_decision_result
+        if (
+            root_projection.candidate_kind
+            != ROOT_DECISION_CANDIDATE_KIND_SUPERSESSION_V01
+            or root_projection.projected_candidate_id
+            != candidate.supersession_candidate_id
+        ):
+            _reason_v01(reasons, "supersession_root_candidate_mismatch")
+        transactions = (
+            decision_input.transaction_id,
+            result.transaction_id,
+            predecessor_canonical.transaction_id,
+            successor_canonical.transaction_id,
+        )
+        if len(set(transactions)) != 1:
+            _reason_v01(reasons, "supersession_root_transaction_mismatch")
+        roots = (
+            decision_input.target_root_id,
+            result.target_root_id,
+            predecessor_canonical.owning_local_root_id,
+            successor_canonical.owning_local_root_id,
+        )
+        if len(set(roots)) != 1:
+            _reason_v01(reasons, "supersession_root_target_mismatch")
+        plain = root_decision_input_to_plain_dict_v01(decision_input)
+        policy = plain.get("policy_state")
+        prior = plain.get("prior_root_state")
+        if type(policy) is not dict or type(prior) is not dict:
+            return False, ("supersession_root_input_projection_invalid",)
+        if (
+            policy.get("policy_id") != candidate.policy_fingerprint
+            or candidate.policy_fingerprint
+            != predecessor_canonical.authority_policy_fingerprint
+        ):
+            _reason_v01(reasons, "supersession_root_policy_mismatch")
+        predecessor_decision_id = predecessor_result.decision_id
+        predecessor_candidate_id = (
+            predecessor_canonical.authorization_candidate
+            .root_packet_authorization_candidate_id
+        )
+        if (
+            result.prior_decision_id != predecessor_decision_id
+            or prior.get("prior_decision_id") != predecessor_decision_id
+            or prior.get("prior_decision") != "ACCEPT"
+            or prior.get("prior_selected_candidate_id")
+            != predecessor_candidate_id
+        ):
+            _reason_v01(reasons, "supersession_root_prior_state_mismatch")
+        if result.decision_id in {
+            predecessor_decision_id,
+            successor_result.decision_id,
+        }:
+            _reason_v01(reasons, "supersession_root_decision_not_distinct")
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("supersession_root_context_invalid",)
+
+
+def accepted_revocation_binding_material_v01(
+    value: AcceptedRevocationBindingV01,
+) -> CanonicalMaterialV01:
+    if type(value) is not AcceptedRevocationBindingV01:
+        raise ValueError("accepted_revocation_binding_type_invalid")
+    return (
+        ("revocation_candidate_id", value.revocation_candidate_id),
+        ("revocation_root_decision_id", value.revocation_root_decision_id),
+        (
+            "revocation_root_decision_hash",
+            value.revocation_root_decision_hash,
+        ),
+        ("owning_local_root_id", value.owning_local_root_id),
+        ("packet_id", value.packet_id),
+        (
+            "prior_authorization_decision_id",
+            value.prior_authorization_decision_id,
+        ),
+    )
+
+
+def validate_accepted_revocation_binding_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not AcceptedRevocationBindingV01:
+            return False, ("accepted_revocation_binding_type_invalid",)
+        for identifier, prefix in (
+            (
+                value.revocation_candidate_id,
+                REVOCATION_CANDIDATE_PREFIX_V01,
+            ),
+            (value.packet_id, ACTION_COMMIT_PACKET_ID_PREFIX_V01),
+        ):
+            valid, reasons = validate_prefixed_sha256_identity_v01(
+                identifier,
+                prefix=prefix,
+            )
+            if not valid:
+                return False, reasons
+        for digest in (
+            value.revocation_root_decision_id,
+            value.revocation_root_decision_hash,
+            value.prior_authorization_decision_id,
+        ):
+            valid, reasons = validate_lowercase_sha256_hex_v01(digest)
+            if not valid:
+                return False, reasons
+        if (
+            value.revocation_root_decision_id
+            == value.prior_authorization_decision_id
+        ):
+            return False, ("accepted_revocation_decision_not_distinct",)
+        if (
+            type(value.owning_local_root_id) is not str
+            or normalize_identity_text_v01(value.owning_local_root_id)
+            != value.owning_local_root_id
+            or type(value.accepted_revocation_binding_id) is not str
+            or value.accepted_revocation_binding_id
+            != build_domain_separated_identity_v01(
+                domain=ACCEPTED_REVOCATION_BINDING_DOMAIN_V01,
+                prefix=ACCEPTED_REVOCATION_BINDING_PREFIX_V01,
+                material=accepted_revocation_binding_material_v01(value),
+            )
+        ):
+            return False, ("accepted_revocation_binding_identity_mismatch",)
+        return True, ()
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="accepted_revocation_binding_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("accepted_revocation_binding_invalid",)
+
+
+def _build_expected_accepted_revocation_binding_v01(
+    candidate: RevocationCandidateV01,
+    root_projection: RootDecisionCandidateProjectionV01,
+    packet: SupplierRootBoundActionCommitPacketV02ProjectionV01,
+) -> AcceptedRevocationBindingV01:
+    result = root_projection.root_decision_result
+    provisional = AcceptedRevocationBindingV01(
+        revocation_candidate_id=candidate.revocation_candidate_id,
+        revocation_root_decision_id=result.decision_id,
+        revocation_root_decision_hash=(
+            root_projection.source_root_decision_hash
+        ),
+        owning_local_root_id=(
+            packet.canonical_projection.owning_local_root_id
+        ),
+        packet_id=packet.packet_identity.packet_id,
+        prior_authorization_decision_id=(
+            packet.root_decision_projection.root_decision_result.decision_id
+        ),
+        accepted_revocation_binding_id="",
+    )
+    return AcceptedRevocationBindingV01(
+        revocation_candidate_id=provisional.revocation_candidate_id,
+        revocation_root_decision_id=provisional.revocation_root_decision_id,
+        revocation_root_decision_hash=(
+            provisional.revocation_root_decision_hash
+        ),
+        owning_local_root_id=provisional.owning_local_root_id,
+        packet_id=provisional.packet_id,
+        prior_authorization_decision_id=(
+            provisional.prior_authorization_decision_id
+        ),
+        accepted_revocation_binding_id=build_domain_separated_identity_v01(
+            domain=ACCEPTED_REVOCATION_BINDING_DOMAIN_V01,
+            prefix=ACCEPTED_REVOCATION_BINDING_PREFIX_V01,
+            material=accepted_revocation_binding_material_v01(provisional),
+        ),
+    )
+
+
+def _validate_accepted_revocation_binding_against_context_v01(
+    value: object,
+    candidate: object,
+    root_projection: object,
+    packet: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if not validate_accepted_revocation_binding_v01(value)[0]:
+            return False, ("accepted_revocation_binding_context_invalid",)
+        if not validate_revocation_candidate_against_packet_v01(
+            candidate,
+            packet,
+        )[0]:
+            return False, ("accepted_revocation_binding_context_invalid",)
+        if not validate_revocation_root_context_coherence_v01(
+            candidate,
+            root_projection,
+            packet,
+        )[0]:
+            return False, ("accepted_revocation_binding_context_invalid",)
+        expected = _build_expected_accepted_revocation_binding_v01(
+            candidate,
+            root_projection,
+            packet,
+        )
+        if (
+            accepted_revocation_binding_material_v01(value)
+            != accepted_revocation_binding_material_v01(expected)
+            or value.accepted_revocation_binding_id
+            != expected.accepted_revocation_binding_id
+        ):
+            return False, ("accepted_revocation_binding_context_invalid",)
+        return True, ()
+    except Exception:
+        return False, ("accepted_revocation_binding_context_invalid",)
+
+
+def build_accepted_revocation_binding_v01(
+    *,
+    candidate: object,
+    root_projection: object,
+    packet: object,
+) -> AcceptedRevocationBindingV01:
+    try:
+        context_valid, context_reasons = (
+            validate_revocation_root_context_coherence_v01(
+                candidate,
+                root_projection,
+                packet,
+            )
+        )
+        if not context_valid:
+            raise ValueError(context_reasons[0])
+        binding = _build_expected_accepted_revocation_binding_v01(
+            candidate,
+            root_projection,
+            packet,
+        )
+        valid, reasons = validate_accepted_revocation_binding_v01(binding)
+        if not valid:
+            raise ValueError(reasons[0])
+        return binding
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="accepted_revocation_binding_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("accepted_revocation_binding_invalid") from None
+
+
+def accepted_supersession_binding_material_v01(
+    value: AcceptedSupersessionBindingV01,
+) -> CanonicalMaterialV01:
+    if type(value) is not AcceptedSupersessionBindingV01:
+        raise ValueError("accepted_supersession_binding_type_invalid")
+    return (
+        ("supersession_candidate_id", value.supersession_candidate_id),
+        (
+            "supersession_root_decision_id",
+            value.supersession_root_decision_id,
+        ),
+        (
+            "supersession_root_decision_hash",
+            value.supersession_root_decision_hash,
+        ),
+        ("owning_local_root_id", value.owning_local_root_id),
+        ("predecessor_packet_id", value.predecessor_packet_id),
+        (
+            "prior_authorization_decision_id",
+            value.prior_authorization_decision_id,
+        ),
+    )
+
+
+def validate_accepted_supersession_binding_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not AcceptedSupersessionBindingV01:
+            return False, ("accepted_supersession_binding_type_invalid",)
+        for identifier, prefix in (
+            (
+                value.supersession_candidate_id,
+                SUPERSESSION_CANDIDATE_PREFIX_V01,
+            ),
+            (
+                value.predecessor_packet_id,
+                ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+            ),
+        ):
+            valid, reasons = validate_prefixed_sha256_identity_v01(
+                identifier,
+                prefix=prefix,
+            )
+            if not valid:
+                return False, reasons
+        for digest in (
+            value.supersession_root_decision_id,
+            value.supersession_root_decision_hash,
+            value.prior_authorization_decision_id,
+        ):
+            valid, reasons = validate_lowercase_sha256_hex_v01(digest)
+            if not valid:
+                return False, reasons
+        if (
+            value.supersession_root_decision_id
+            == value.prior_authorization_decision_id
+        ):
+            return False, ("accepted_supersession_decision_not_distinct",)
+        if (
+            type(value.owning_local_root_id) is not str
+            or normalize_identity_text_v01(value.owning_local_root_id)
+            != value.owning_local_root_id
+            or type(value.accepted_supersession_binding_id) is not str
+            or value.accepted_supersession_binding_id
+            != build_domain_separated_identity_v01(
+                domain=ACCEPTED_SUPERSESSION_BINDING_DOMAIN_V01,
+                prefix=ACCEPTED_SUPERSESSION_BINDING_PREFIX_V01,
+                material=accepted_supersession_binding_material_v01(value),
+            )
+        ):
+            return False, ("accepted_supersession_binding_identity_mismatch",)
+        return True, ()
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="accepted_supersession_binding_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("accepted_supersession_binding_invalid",)
+
+
+def _build_expected_accepted_supersession_binding_v01(
+    candidate: SupersessionCandidateV01,
+    root_projection: RootDecisionCandidateProjectionV01,
+    predecessor: SupplierRootBoundActionCommitPacketV02ProjectionV01,
+) -> AcceptedSupersessionBindingV01:
+    result = root_projection.root_decision_result
+    predecessor_result = (
+        predecessor.root_decision_projection.root_decision_result
+    )
+    provisional = AcceptedSupersessionBindingV01(
+        supersession_candidate_id=candidate.supersession_candidate_id,
+        supersession_root_decision_id=result.decision_id,
+        supersession_root_decision_hash=(
+            root_projection.source_root_decision_hash
+        ),
+        owning_local_root_id=(
+            predecessor.canonical_projection.owning_local_root_id
+        ),
+        predecessor_packet_id=predecessor.packet_identity.packet_id,
+        prior_authorization_decision_id=predecessor_result.decision_id,
+        accepted_supersession_binding_id="",
+    )
+    return AcceptedSupersessionBindingV01(
+        supersession_candidate_id=provisional.supersession_candidate_id,
+        supersession_root_decision_id=(
+            provisional.supersession_root_decision_id
+        ),
+        supersession_root_decision_hash=(
+            provisional.supersession_root_decision_hash
+        ),
+        owning_local_root_id=provisional.owning_local_root_id,
+        predecessor_packet_id=provisional.predecessor_packet_id,
+        prior_authorization_decision_id=(
+            provisional.prior_authorization_decision_id
+        ),
+        accepted_supersession_binding_id=build_domain_separated_identity_v01(
+            domain=ACCEPTED_SUPERSESSION_BINDING_DOMAIN_V01,
+            prefix=ACCEPTED_SUPERSESSION_BINDING_PREFIX_V01,
+            material=accepted_supersession_binding_material_v01(provisional),
+        ),
+    )
+
+
+def _validate_accepted_supersession_binding_against_context_v01(
+    value: object,
+    candidate: object,
+    root_projection: object,
+    predecessor: object,
+    successor: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if not validate_accepted_supersession_binding_v01(value)[0]:
+            return False, ("accepted_supersession_binding_context_invalid",)
+        if not validate_supersession_candidate_against_packets_v01(
+            candidate,
+            predecessor,
+            successor,
+        )[0]:
+            return False, ("accepted_supersession_binding_context_invalid",)
+        if not validate_supersession_root_context_coherence_v01(
+            candidate,
+            root_projection,
+            predecessor,
+            successor,
+        )[0]:
+            return False, ("accepted_supersession_binding_context_invalid",)
+        expected = _build_expected_accepted_supersession_binding_v01(
+            candidate,
+            root_projection,
+            predecessor,
+        )
+        if (
+            accepted_supersession_binding_material_v01(value)
+            != accepted_supersession_binding_material_v01(expected)
+            or value.accepted_supersession_binding_id
+            != expected.accepted_supersession_binding_id
+        ):
+            return False, ("accepted_supersession_binding_context_invalid",)
+        return True, ()
+    except Exception:
+        return False, ("accepted_supersession_binding_context_invalid",)
+
+
+def build_accepted_supersession_binding_v01(
+    *,
+    candidate: object,
+    root_projection: object,
+    predecessor: object,
+    successor: object,
+) -> AcceptedSupersessionBindingV01:
+    try:
+        context_valid, context_reasons = (
+            validate_supersession_root_context_coherence_v01(
+                candidate,
+                root_projection,
+                predecessor,
+                successor,
+            )
+        )
+        if not context_valid:
+            raise ValueError(context_reasons[0])
+        binding = _build_expected_accepted_supersession_binding_v01(
+            candidate,
+            root_projection,
+            predecessor,
+        )
+        valid, reasons = validate_accepted_supersession_binding_v01(binding)
+        if not valid:
+            raise ValueError(reasons[0])
+        return binding
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="accepted_supersession_binding_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("accepted_supersession_binding_invalid") from None
+
+
+def validate_mandatory_dependency_local_root_acceptance_v01(
+    packet: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        packet_valid, packet_reasons = (
+            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                packet
+            )
+        )
+        if not packet_valid:
+            return False, packet_reasons
+        reasons: list[str] = []
+        canonical = packet.canonical_projection
+        records = canonical.dependency_candidate.dependency_records
+        mandatory = tuple(
+            record
+            for record in records
+            if record.requirement_class == "MANDATORY"
+        )
+        if not mandatory:
+            _reason_v01(reasons, "mandatory_dependency_missing")
+        dependency_ids: set[str] = set()
+        for record in mandatory:
+            if record.dependency_id in dependency_ids:
+                _reason_v01(reasons, "mandatory_dependency_duplicate")
+            dependency_ids.add(record.dependency_id)
+            if (
+                record.expected_accepting_local_root_id
+                != canonical.owning_local_root_id
+            ):
+                _reason_v01(reasons, "mandatory_dependency_root_mismatch")
+            if (
+                type(record.dependency_id) is not str
+                or type(record.evidence_ref) is not str
+                or type(record.content_sha256) is not str
+                or type(record.time_envelope_id) is not str
+                or type(record.freshness_policy_id) is not str
+            ):
+                _reason_v01(reasons, "mandatory_dependency_field_invalid")
+            recursive_values = (
+                record.dependency_id,
+                record.evidence_ref,
+                record.time_envelope_id,
+                record.freshness_policy_id,
+                *record.source_provenance_refs,
+            )
+            if any(
+                type(item) is str
+                and item.startswith(
+                    PACKET_DEPENDENCY_ACCEPTANCE_PREFIX_V01
+                )
+                for item in recursive_values
+            ):
+                _reason_v01(
+                    reasons,
+                    "mandatory_dependency_recursive_acceptance_binding",
+                )
+        binding = packet.dependency_acceptance_binding
+        binding_valid, binding_reasons = (
+            validate_packet_dependency_acceptance_binding_v01(binding)
+        )
+        if not binding_valid:
+            return False, binding_reasons
+        source_result = packet.root_decision_projection.root_decision_result
+        expected = (
+            canonical.dependency_set_candidate_fingerprint,
+            canonical.authorization_candidate
+            .root_packet_authorization_candidate_id,
+            source_result.decision_id,
+            packet.root_decision_projection.source_root_decision_hash,
+            canonical.owning_local_root_id,
+            packet.packet_identity.packet_id,
+            "ROOT_ACCEPTED_FOR_PACKET",
+        )
+        actual = (
+            binding.dependency_set_candidate_fingerprint,
+            binding.root_packet_authorization_candidate_id,
+            binding.source_root_decision_id,
+            binding.source_root_decision_hash,
+            binding.owning_local_root_id,
+            binding.packet_id,
+            binding.accepted_status,
+        )
+        if actual != expected or any(
+            type(item) is not str for item in actual
+        ):
+            _reason_v01(reasons, "mandatory_dependency_acceptance_mismatch")
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("mandatory_dependency_acceptance_invalid",)
+
+
+def action_invalidation_evidence_material_v01(
+    value: ActionInvalidationEvidenceV01,
+) -> CanonicalMaterialV01:
+    if type(value) is not ActionInvalidationEvidenceV01:
+        raise ValueError("action_invalidation_evidence_type_invalid")
+    return (
+        ("profile_id", value.profile_id),
+        (
+            "source_invalidation_event_ref",
+            value.source_invalidation_event_ref,
+        ),
+        ("packet_id", value.packet_id),
+        ("dependency_id", value.dependency_id),
+        ("invalidation_class", value.invalidation_class),
+        ("evidence_ref", value.evidence_ref),
+        ("evidence_sha256", value.evidence_sha256),
+        ("observed_status", value.observed_status),
+        ("time_envelope_id", value.time_envelope_id),
+        ("freshness_policy_id", value.freshness_policy_id),
+        ("owning_local_root_id", value.owning_local_root_id),
+        ("accepted_by_local_root_id", value.accepted_by_local_root_id),
+        (
+            "acceptance_root_decision_id",
+            _optional_identity_material_v01(
+                value.acceptance_root_decision_id
+            ),
+        ),
+        (
+            "acceptance_root_decision_hash",
+            _optional_identity_material_v01(
+                value.acceptance_root_decision_hash
+            ),
+        ),
+        ("validation_status", value.validation_status),
+        ("authority_effect", value.authority_effect),
+        (
+            "root_decision_ref",
+            _optional_identity_material_v01(value.root_decision_ref),
+        ),
+        ("evaluation_time", value.evaluation_time),
+        ("evaluation_time_source", value.evaluation_time_source),
+        ("evaluation_context_id", value.evaluation_context_id),
+    )
+
+
+def _validate_action_invalidation_root_positions_v01(
+    *,
+    authority_effect: str,
+    acceptance_root_decision_id: object,
+    acceptance_root_decision_hash: object,
+    root_decision_ref: object,
+) -> tuple[str | None, str | None, str | None]:
+    values = (
+        acceptance_root_decision_id,
+        acceptance_root_decision_hash,
+        root_decision_ref,
+    )
+    if authority_effect == "DETERMINISTIC_BLOCK":
+        if any(value is not None for value in values):
+            raise ValueError("action_invalidation_root_position_invalid")
+        return None, None, None
+    if any(type(value) is not str for value in values):
+        raise ValueError("action_invalidation_root_position_invalid")
+    decision_valid, decision_reasons = validate_lowercase_sha256_hex_v01(
+        acceptance_root_decision_id
+    )
+    hash_valid, hash_reasons = validate_lowercase_sha256_hex_v01(
+        acceptance_root_decision_hash
+    )
+    ref_valid, ref_reasons = validate_lowercase_sha256_hex_v01(
+        root_decision_ref
+    )
+    if not decision_valid:
+        raise ValueError(decision_reasons[0])
+    if not hash_valid:
+        raise ValueError(hash_reasons[0])
+    if not ref_valid:
+        raise ValueError(ref_reasons[0])
+    if acceptance_root_decision_id != root_decision_ref:
+        raise ValueError("action_invalidation_root_decision_mismatch")
+    return (
+        acceptance_root_decision_id,
+        acceptance_root_decision_hash,
+        root_decision_ref,
+    )
+
+
+def build_action_invalidation_evidence_v01(
+    *,
+    source_invalidation_event_ref: object,
+    packet_id: object,
+    dependency_id: object,
+    invalidation_class: object,
+    evidence_ref: object,
+    evidence_sha256: object,
+    observed_status: object,
+    time_envelope_id: object,
+    freshness_policy_id: object,
+    owning_local_root_id: object,
+    accepted_by_local_root_id: object,
+    acceptance_root_decision_id: object = None,
+    acceptance_root_decision_hash: object = None,
+    authority_effect: object,
+    root_decision_ref: object = None,
+    evaluation_time: object,
+    evaluation_time_source: object,
+    evaluation_context_id: object,
+) -> ActionInvalidationEvidenceV01:
+    try:
+        text_values = tuple(
+            normalize_identity_text_v01(value)
+            for value in (
+                source_invalidation_event_ref,
+                dependency_id,
+                evidence_ref,
+                observed_status,
+                time_envelope_id,
+                freshness_policy_id,
+                owning_local_root_id,
+                accepted_by_local_root_id,
+                evaluation_time_source,
+                evaluation_context_id,
+            )
+        )
+        (
+            source_ref,
+            dependency,
+            normalized_evidence_ref,
+            status,
+            time_envelope,
+            freshness_policy,
+            owning_root,
+            accepting_root,
+            evaluation_source,
+            evaluation_context,
+        ) = text_values
+        if type(invalidation_class) is not str or (
+            invalidation_class not in ACTION_INVALIDATION_CLASSES_V01
+        ):
+            raise ValueError("action_invalidation_class_invalid")
+        if type(authority_effect) is not str or (
+            authority_effect not in ACTION_INVALIDATION_AUTHORITY_EFFECTS_V01
+        ):
+            raise ValueError("action_invalidation_authority_effect_invalid")
+        expected_effect = {
+            "DEPENDENCY_CHANGED": "DETERMINISTIC_BLOCK",
+            "DEPENDENCY_STALE": "DETERMINISTIC_BLOCK",
+            "ROOT_BOUND_KILL_SWITCH": "DETERMINISTIC_BLOCK",
+            "MANUAL_CANCEL_EVIDENCE": "DETERMINISTIC_BLOCK",
+            "ROOT_REVOCATION": "ROOT_REVOCATION",
+            "ROOT_SUPERSESSION": "ROOT_SUPERSESSION",
+        }[invalidation_class]
+        if authority_effect != expected_effect:
+            raise ValueError("action_invalidation_class_effect_mismatch")
+        packet_valid, packet_reasons = validate_prefixed_sha256_identity_v01(
+            packet_id,
+            prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+        )
+        if not packet_valid:
+            raise ValueError(packet_reasons[0])
+        evidence_hash_valid, evidence_hash_reasons = (
+            validate_lowercase_sha256_hex_v01(evidence_sha256)
+        )
+        if not evidence_hash_valid:
+            raise ValueError(evidence_hash_reasons[0])
+        time_valid, time_reasons = validate_signed_int64_v01(evaluation_time)
+        if not time_valid:
+            raise ValueError(time_reasons[0])
+        decision_id, decision_hash, decision_ref = (
+            _validate_action_invalidation_root_positions_v01(
+                authority_effect=authority_effect,
+                acceptance_root_decision_id=acceptance_root_decision_id,
+                acceptance_root_decision_hash=(
+                    acceptance_root_decision_hash
+                ),
+                root_decision_ref=root_decision_ref,
+            )
+        )
+        provisional = ActionInvalidationEvidenceV01(
+            profile_id=ACTION_INVALIDATION_EVIDENCE_PROFILE_ID_V01,
+            source_invalidation_event_ref=source_ref,
+            packet_id=packet_id,
+            dependency_id=dependency,
+            invalidation_class=invalidation_class,
+            evidence_ref=normalized_evidence_ref,
+            evidence_sha256=evidence_sha256,
+            observed_status=status,
+            time_envelope_id=time_envelope,
+            freshness_policy_id=freshness_policy,
+            owning_local_root_id=owning_root,
+            accepted_by_local_root_id=accepting_root,
+            acceptance_root_decision_id=decision_id,
+            acceptance_root_decision_hash=decision_hash,
+            validation_status=ACTION_INVALIDATION_VALIDATION_STATUS_V01,
+            authority_effect=authority_effect,
+            root_decision_ref=decision_ref,
+            evaluation_time=evaluation_time,
+            evaluation_time_source=evaluation_source,
+            evaluation_context_id=evaluation_context,
+            invalidation_evidence_id="",
+        )
+        identity = domain_separated_sha256_hex_v01(
+            domain=ACTION_INVALIDATION_EVIDENCE_DOMAIN_V01,
+            payload=canonical_material_bytes_v01(
+                action_invalidation_evidence_material_v01(provisional)
+            ),
+        )
+        if source_ref == identity:
+            raise ValueError("action_invalidation_self_reference_forbidden")
+        evidence = ActionInvalidationEvidenceV01(
+            profile_id=provisional.profile_id,
+            source_invalidation_event_ref=(
+                provisional.source_invalidation_event_ref
+            ),
+            packet_id=provisional.packet_id,
+            dependency_id=provisional.dependency_id,
+            invalidation_class=provisional.invalidation_class,
+            evidence_ref=provisional.evidence_ref,
+            evidence_sha256=provisional.evidence_sha256,
+            observed_status=provisional.observed_status,
+            time_envelope_id=provisional.time_envelope_id,
+            freshness_policy_id=provisional.freshness_policy_id,
+            owning_local_root_id=provisional.owning_local_root_id,
+            accepted_by_local_root_id=(
+                provisional.accepted_by_local_root_id
+            ),
+            acceptance_root_decision_id=(
+                provisional.acceptance_root_decision_id
+            ),
+            acceptance_root_decision_hash=(
+                provisional.acceptance_root_decision_hash
+            ),
+            validation_status=provisional.validation_status,
+            authority_effect=provisional.authority_effect,
+            root_decision_ref=provisional.root_decision_ref,
+            evaluation_time=provisional.evaluation_time,
+            evaluation_time_source=provisional.evaluation_time_source,
+            evaluation_context_id=provisional.evaluation_context_id,
+            invalidation_evidence_id=identity,
+        )
+        valid, reasons = validate_action_invalidation_evidence_v01(evidence)
+        if not valid:
+            raise ValueError(reasons[0])
+        return evidence
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_invalidation_evidence_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_invalidation_evidence_invalid") from None
+
+
+def validate_action_invalidation_evidence_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not ActionInvalidationEvidenceV01:
+            return False, ("action_invalidation_evidence_type_invalid",)
+        if (
+            type(value.profile_id) is not str
+            or value.profile_id
+            != ACTION_INVALIDATION_EVIDENCE_PROFILE_ID_V01
+            or type(value.validation_status) is not str
+            or value.validation_status
+            != ACTION_INVALIDATION_VALIDATION_STATUS_V01
+            or type(value.invalidation_class) is not str
+            or value.invalidation_class not in ACTION_INVALIDATION_CLASSES_V01
+            or type(value.authority_effect) is not str
+            or value.authority_effect
+            not in ACTION_INVALIDATION_AUTHORITY_EFFECTS_V01
+        ):
+            return False, ("action_invalidation_evidence_field_invalid",)
+        expected_effect = {
+            "DEPENDENCY_CHANGED": "DETERMINISTIC_BLOCK",
+            "DEPENDENCY_STALE": "DETERMINISTIC_BLOCK",
+            "ROOT_BOUND_KILL_SWITCH": "DETERMINISTIC_BLOCK",
+            "MANUAL_CANCEL_EVIDENCE": "DETERMINISTIC_BLOCK",
+            "ROOT_REVOCATION": "ROOT_REVOCATION",
+            "ROOT_SUPERSESSION": "ROOT_SUPERSESSION",
+        }[value.invalidation_class]
+        if value.authority_effect != expected_effect:
+            return False, ("action_invalidation_class_effect_mismatch",)
+        for text_value in (
+            value.source_invalidation_event_ref,
+            value.dependency_id,
+            value.evidence_ref,
+            value.observed_status,
+            value.time_envelope_id,
+            value.freshness_policy_id,
+            value.owning_local_root_id,
+            value.accepted_by_local_root_id,
+            value.evaluation_time_source,
+            value.evaluation_context_id,
+        ):
+            if (
+                type(text_value) is not str
+                or normalize_identity_text_v01(text_value) != text_value
+            ):
+                return False, ("action_invalidation_evidence_text_invalid",)
+        packet_valid, packet_reasons = validate_prefixed_sha256_identity_v01(
+            value.packet_id,
+            prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+        )
+        if not packet_valid:
+            return False, packet_reasons
+        hash_valid, hash_reasons = validate_lowercase_sha256_hex_v01(
+            value.evidence_sha256
+        )
+        if not hash_valid:
+            return False, hash_reasons
+        time_valid, time_reasons = validate_signed_int64_v01(
+            value.evaluation_time
+        )
+        if not time_valid:
+            return False, time_reasons
+        _validate_action_invalidation_root_positions_v01(
+            authority_effect=value.authority_effect,
+            acceptance_root_decision_id=value.acceptance_root_decision_id,
+            acceptance_root_decision_hash=(
+                value.acceptance_root_decision_hash
+            ),
+            root_decision_ref=value.root_decision_ref,
+        )
+        expected_id = domain_separated_sha256_hex_v01(
+            domain=ACTION_INVALIDATION_EVIDENCE_DOMAIN_V01,
+            payload=canonical_material_bytes_v01(
+                action_invalidation_evidence_material_v01(value)
+            ),
+        )
+        if (
+            type(value.invalidation_evidence_id) is not str
+            or value.invalidation_evidence_id != expected_id
+            or value.source_invalidation_event_ref == expected_id
+        ):
+            return False, ("action_invalidation_evidence_identity_mismatch",)
+        return True, ()
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_invalidation_evidence_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("action_invalidation_evidence_invalid",)
+
+
+def validate_action_invalidation_evidence_against_packet_v01(
+    evidence: object,
+    packet: object,
+    *,
+    revocation_candidate: object = None,
+    revocation_root_projection: object = None,
+    accepted_revocation_binding: object = None,
+    supersession_candidate: object = None,
+    supersession_root_projection: object = None,
+    supersession_successor: object = None,
+    accepted_supersession_binding: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        evidence_valid, evidence_reasons = (
+            validate_action_invalidation_evidence_v01(evidence)
+        )
+        if not evidence_valid:
+            return False, evidence_reasons
+        dependency_valid, dependency_reasons = (
+            validate_mandatory_dependency_local_root_acceptance_v01(packet)
+        )
+        if not dependency_valid:
+            return False, dependency_reasons
+        reasons: list[str] = []
+        canonical = packet.canonical_projection
+        if evidence.packet_id != packet.packet_identity.packet_id:
+            _reason_v01(reasons, "action_invalidation_packet_mismatch")
+        if (
+            evidence.owning_local_root_id != canonical.owning_local_root_id
+            or evidence.accepted_by_local_root_id
+            != canonical.owning_local_root_id
+        ):
+            _reason_v01(reasons, "action_invalidation_root_mismatch")
+        if evidence.invalidation_class in {
+            "DEPENDENCY_CHANGED",
+            "DEPENDENCY_STALE",
+        }:
+            matching = tuple(
+                record
+                for record in canonical.dependency_candidate.dependency_records
+                if record.requirement_class == "MANDATORY"
+                and record.dependency_id == evidence.dependency_id
+            )
+            if len(matching) != 1:
+                _reason_v01(
+                    reasons,
+                    "action_invalidation_mandatory_dependency_mismatch",
+                )
+            else:
+                record = matching[0]
+                if (
+                    evidence.evidence_ref != record.evidence_ref
+                    or evidence.time_envelope_id != record.time_envelope_id
+                    or evidence.freshness_policy_id
+                    != record.freshness_policy_id
+                ):
+                    _reason_v01(
+                        reasons,
+                        "action_invalidation_dependency_binding_mismatch",
+                    )
+        elif evidence.invalidation_class in {
+            "ROOT_BOUND_KILL_SWITCH",
+            "MANUAL_CANCEL_EVIDENCE",
+        }:
+            if (
+                evidence.dependency_id
+                not in canonical.authority_policy.kill_switch_condition_refs
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_invalidation_policy_condition_mismatch",
+                )
+        elif evidence.invalidation_class == "ROOT_REVOCATION":
+            binding_context_valid, _ = (
+                _validate_accepted_revocation_binding_against_context_v01(
+                    accepted_revocation_binding,
+                    revocation_candidate,
+                    revocation_root_projection,
+                    packet,
+                )
+            )
+            if not binding_context_valid:
+                _reason_v01(
+                    reasons,
+                    "action_invalidation_revocation_binding_invalid",
+                )
+            else:
+                binding = accepted_revocation_binding
+                digest = binding.accepted_revocation_binding_id[
+                    len(ACCEPTED_REVOCATION_BINDING_PREFIX_V01) :
+                ]
+                if (
+                    evidence.evidence_ref
+                    != binding.accepted_revocation_binding_id
+                    or evidence.evidence_sha256 != digest
+                    or evidence.acceptance_root_decision_id
+                    != binding.revocation_root_decision_id
+                    or evidence.root_decision_ref
+                    != binding.revocation_root_decision_id
+                    or evidence.acceptance_root_decision_hash
+                    != binding.revocation_root_decision_hash
+                    or binding.packet_id != packet.packet_identity.packet_id
+                    or binding.owning_local_root_id
+                    != canonical.owning_local_root_id
+                    or binding.prior_authorization_decision_id
+                    != packet.root_decision_projection.root_decision_result
+                    .decision_id
+                ):
+                    _reason_v01(
+                        reasons,
+                        "action_invalidation_revocation_binding_mismatch",
+                    )
+        elif evidence.invalidation_class == "ROOT_SUPERSESSION":
+            binding_context_valid, _ = (
+                _validate_accepted_supersession_binding_against_context_v01(
+                    accepted_supersession_binding,
+                    supersession_candidate,
+                    supersession_root_projection,
+                    packet,
+                    supersession_successor,
+                )
+            )
+            if not binding_context_valid:
+                _reason_v01(
+                    reasons,
+                    "action_invalidation_supersession_binding_invalid",
+                )
+            else:
+                binding = accepted_supersession_binding
+                digest = binding.accepted_supersession_binding_id[
+                    len(ACCEPTED_SUPERSESSION_BINDING_PREFIX_V01) :
+                ]
+                if (
+                    evidence.evidence_ref
+                    != binding.accepted_supersession_binding_id
+                    or evidence.evidence_sha256 != digest
+                    or evidence.acceptance_root_decision_id
+                    != binding.supersession_root_decision_id
+                    or evidence.root_decision_ref
+                    != binding.supersession_root_decision_id
+                    or evidence.acceptance_root_decision_hash
+                    != binding.supersession_root_decision_hash
+                    or binding.predecessor_packet_id
+                    != packet.packet_identity.packet_id
+                    or binding.owning_local_root_id
+                    != canonical.owning_local_root_id
+                    or binding.prior_authorization_decision_id
+                    != packet.root_decision_projection.root_decision_result
+                    .decision_id
+                ):
+                    _reason_v01(
+                        reasons,
+                        "action_invalidation_supersession_binding_mismatch",
+                    )
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("action_invalidation_context_invalid",)
+
+
+def _validate_action_packet_invalidation_context_v01(
+    value: object,
+    packet: object,
+    *,
+    supersession_successor: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not _ActionPacketInvalidationContextV01:
+            return False, ("action_packet_invalidation_context_type_invalid",)
+        evidence = value.invalidation_evidence
+        if type(evidence) is not ActionInvalidationEvidenceV01:
+            return False, ("action_packet_invalidation_evidence_invalid",)
+        deterministic = evidence.invalidation_class in {
+            "DEPENDENCY_CHANGED",
+            "DEPENDENCY_STALE",
+            "ROOT_BOUND_KILL_SWITCH",
+            "MANUAL_CANCEL_EVIDENCE",
+        }
+        revocation = evidence.invalidation_class == "ROOT_REVOCATION"
+        supersession = evidence.invalidation_class == "ROOT_SUPERSESSION"
+        revocation_values = (
+            value.revocation_candidate,
+            value.revocation_root_projection,
+            value.accepted_revocation_binding,
+        )
+        supersession_values = (
+            value.supersession_candidate,
+            value.supersession_root_projection,
+            value.supersession_successor_packet_id,
+            value.accepted_supersession_binding,
+        )
+        if deterministic:
+            if (
+                evidence.authority_effect != "DETERMINISTIC_BLOCK"
+                or any(item is not None for item in revocation_values)
+                or any(item is not None for item in supersession_values)
+            ):
+                return False, (
+                    "action_packet_invalidation_context_shape_invalid",
+                )
+            return validate_action_invalidation_evidence_against_packet_v01(
+                evidence,
+                packet,
+            )
+        if revocation:
+            if (
+                evidence.authority_effect != "ROOT_REVOCATION"
+                or type(value.revocation_candidate)
+                is not RevocationCandidateV01
+                or type(value.revocation_root_projection)
+                is not RootDecisionCandidateProjectionV01
+                or type(value.accepted_revocation_binding)
+                is not AcceptedRevocationBindingV01
+                or any(item is not None for item in supersession_values)
+            ):
+                return False, (
+                    "action_packet_invalidation_context_shape_invalid",
+                )
+            return validate_action_invalidation_evidence_against_packet_v01(
+                evidence,
+                packet,
+                revocation_candidate=value.revocation_candidate,
+                revocation_root_projection=value.revocation_root_projection,
+                accepted_revocation_binding=(
+                    value.accepted_revocation_binding
+                ),
+            )
+        if supersession:
+            if (
+                evidence.authority_effect != "ROOT_SUPERSESSION"
+                or any(item is not None for item in revocation_values)
+                or type(value.supersession_candidate)
+                is not SupersessionCandidateV01
+                or type(value.supersession_root_projection)
+                is not RootDecisionCandidateProjectionV01
+                or type(value.supersession_successor_packet_id) is not str
+                or type(value.accepted_supersession_binding)
+                is not AcceptedSupersessionBindingV01
+                or type(supersession_successor)
+                is not SupplierRootBoundActionCommitPacketV02ProjectionV01
+                or supersession_successor.packet_identity.packet_id
+                != value.supersession_successor_packet_id
+            ):
+                return False, (
+                    "action_packet_invalidation_context_shape_invalid",
+                )
+            return validate_action_invalidation_evidence_against_packet_v01(
+                evidence,
+                packet,
+                supersession_candidate=value.supersession_candidate,
+                supersession_root_projection=(
+                    value.supersession_root_projection
+                ),
+                supersession_successor=supersession_successor,
+                accepted_supersession_binding=(
+                    value.accepted_supersession_binding
+                ),
+            )
+        return False, ("action_packet_invalidation_context_class_invalid",)
+    except Exception:
+        return False, ("action_packet_invalidation_context_invalid",)
+
+
+def _transition_evidence_binding_for_code_v01(
+    event: ActionPacketTransitionEventV01,
+    evidence_code: str,
+) -> TransitionEvidenceBindingV01 | None:
+    matching = tuple(
+        binding
+        for binding in event.transition_evidence_bindings
+        if binding.evidence_code == evidence_code
+    )
+    return matching[0] if len(matching) == 1 else None
+
+
+def _transition_evidence_binding_matches_v01(
+    event: ActionPacketTransitionEventV01,
+    *,
+    evidence_code: str,
+    evidence_ref: str,
+    evidence_sha256: str,
+    validator_profile_id: str,
+) -> bool:
+    binding = _transition_evidence_binding_for_code_v01(
+        event,
+        evidence_code,
+    )
+    return (
+        type(binding) is TransitionEvidenceBindingV01
+        and type(binding.evidence_ref) is str
+        and binding.evidence_ref == evidence_ref
+        and type(binding.evidence_sha256) is str
+        and binding.evidence_sha256 == evidence_sha256
+        and type(binding.validator_profile_id) is str
+        and binding.validator_profile_id == validator_profile_id
+        and type(binding.validation_status) is str
+        and binding.validation_status == "PASS"
+    )
+
+
+def _invalidation_context_matches_transition_reference_v01(
+    context: _ActionPacketInvalidationContextV01,
+    event: ActionPacketTransitionEventV01,
+) -> bool:
+    deterministic_codes = {
+        "g2a_t06_created_block": "blocking_evidence_valid",
+        "g2a_t07_authorized_block": "blocking_evidence_valid",
+        "g2a_t08_queued_block": "blocking_evidence_valid",
+        "g2a_t09_pending_block": "immediate_eligibility_failure_valid",
+        "g2a_t10_failed_block": "retry_ineligibility_evidence_valid",
+    }
+    if event.transition_rule_id in deterministic_codes:
+        binding = _transition_evidence_binding_for_code_v01(
+            event,
+            deterministic_codes[event.transition_rule_id],
+        )
+        return (
+            type(binding) is TransitionEvidenceBindingV01
+            and binding.evidence_ref
+            == context.invalidation_evidence.invalidation_evidence_id
+        )
+    if event.transition_rule_id in {
+        "g2a_t16_authorized_revoke",
+        "g2a_t17_queued_revoke",
+        "g2a_t18_pending_revoke",
+        "g2a_t19_failed_revoke",
+    }:
+        binding = _transition_evidence_binding_for_code_v01(
+            event,
+            "accepted_revocation_binding_valid",
+        )
+        return (
+            type(binding) is TransitionEvidenceBindingV01
+            and type(context.accepted_revocation_binding)
+            is AcceptedRevocationBindingV01
+            and binding.evidence_ref
+            == context.accepted_revocation_binding
+            .accepted_revocation_binding_id
+        )
+    if event.transition_rule_id in {
+        "g2a_t20_authorized_supersede",
+        "g2a_t21_queued_supersede",
+        "g2a_t22_pending_supersede",
+        "g2a_t23_failed_supersede",
+    }:
+        binding = _transition_evidence_binding_for_code_v01(
+            event,
+            "accepted_supersession_binding_valid",
+        )
+        return (
+            type(binding) is TransitionEvidenceBindingV01
+            and type(context.accepted_supersession_binding)
+            is AcceptedSupersessionBindingV01
+            and binding.evidence_ref
+            == context.accepted_supersession_binding
+            .accepted_supersession_binding_id
+        )
+    return False
+
+
+def validate_action_packet_renewal_relationship_v01(
+    predecessor: object,
+    successor: object,
+    candidate: object,
+    accepted_binding: object,
+    *,
+    root_projection: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        context_valid, context_reasons = (
+            validate_supersession_candidate_against_packets_v01(
+                candidate,
+                predecessor,
+                successor,
+            )
+        )
+        if not context_valid:
+            return False, context_reasons
+        if root_projection is None:
+            return False, ("renewal_root_projection_required",)
+        binding_context_valid, binding_context_reasons = (
+            _validate_accepted_supersession_binding_against_context_v01(
+                accepted_binding,
+                candidate,
+                root_projection,
+                predecessor,
+                successor,
+            )
+        )
+        if not binding_context_valid:
+            return False, binding_context_reasons
+        reasons: list[str] = []
+        predecessor_canonical = predecessor.canonical_projection
+        successor_canonical = successor.canonical_projection
+        predecessor_auth = predecessor_canonical.authorization_candidate
+        successor_auth = successor_canonical.authorization_candidate
+        predecessor_decision = (
+            predecessor.root_decision_projection.root_decision_result
+            .decision_id
+        )
+        successor_decision = (
+            successor.root_decision_projection.root_decision_result.decision_id
+        )
+        if candidate.supersession_reason_class != "RENEWAL":
+            _reason_v01(reasons, "renewal_reason_invalid")
+        if (
+            predecessor_canonical.owning_local_root_id
+            != successor_canonical.owning_local_root_id
+            or predecessor_canonical.transaction_id
+            != successor_canonical.transaction_id
+            or predecessor_canonical.logical_intent.root_owned_intent_id
+            != successor_canonical.logical_intent.root_owned_intent_id
+            or predecessor_canonical.idempotency_identity.idempotency_key
+            != successor_canonical.idempotency_identity.idempotency_key
+        ):
+            _reason_v01(reasons, "renewal_logical_context_mismatch")
+        if (
+            predecessor.packet_identity.packet_id
+            == successor.packet_identity.packet_id
+            or predecessor_auth.root_packet_authorization_candidate_id
+            == successor_auth.root_packet_authorization_candidate_id
+            or predecessor_decision == successor_decision
+        ):
+            _reason_v01(reasons, "renewal_identity_not_distinct")
+        if (
+            successor_auth.predecessor_packet_id
+            != predecessor.packet_identity.packet_id
+            or successor_auth.supersession_reason_class != "RENEWAL"
+            or candidate.predecessor_packet_id
+            != predecessor.packet_identity.packet_id
+            or candidate.successor_packet_authorization_candidate_id
+            != successor_auth.root_packet_authorization_candidate_id
+        ):
+            _reason_v01(reasons, "renewal_predecessor_binding_mismatch")
+        if (
+            accepted_binding.supersession_candidate_id
+            != candidate.supersession_candidate_id
+            or accepted_binding.predecessor_packet_id
+            != predecessor.packet_identity.packet_id
+            or accepted_binding.prior_authorization_decision_id
+            != predecessor_decision
+            or accepted_binding.owning_local_root_id
+            != predecessor_canonical.owning_local_root_id
+        ):
+            _reason_v01(reasons, "renewal_accepted_binding_mismatch")
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("renewal_relationship_invalid",)
+
+
 def _validate_supplier_root_context_coherence_impl_v01(
     canonical_projection: object,
     root_projection: object,
@@ -5679,6 +7847,11 @@ def _validate_supplier_root_context_coherence_impl_v01(
     candidate = canonical_projection.authorization_candidate
     decision_input = root_projection.root_decision_input
     result = root_projection.root_decision_result
+    if (
+        root_projection.candidate_kind
+        != ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01
+    ):
+        _reason_v01(reasons, "supplier_root_context_candidate_kind_mismatch")
     if (
         root_projection.projected_candidate_id
         != candidate.root_packet_authorization_candidate_id
@@ -5793,11 +7966,6 @@ def _validate_supplier_root_context_coherence_impl_v01(
                 reasons,
                 "supplier_root_context_provided_dependency_missing",
             )
-    if (
-        candidate.predecessor_packet_id is not None
-        or candidate.supersession_reason_class is not None
-    ):
-        _reason_v01(reasons, "supplier_root_context_predecessor_forbidden")
     if (
         prior.get("prior_decision_id") is not None
         or prior.get("prior_decision") is not None
@@ -7354,6 +9522,9 @@ def validate_action_packet_lifecycle_entry_v01(
     value: object,
     *,
     action_packet_transition_registry_profile: object = None,
+    invalidation_contexts: object = None,
+    idempotency_disposition_events: object = None,
+    lifecycle_entries: object = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         if type(value) is not ActionPacketLifecycleEntryV01:
@@ -7379,6 +9550,11 @@ def validate_action_packet_lifecycle_entry_v01(
                 value.transition_events,
                 root_bound_genesis=value.root_bound_genesis,
                 action_packet_transition_registry_profile=registry,
+                invalidation_contexts=invalidation_contexts,
+                idempotency_disposition_events=(
+                    idempotency_disposition_events
+                ),
+                lifecycle_entries=lifecycle_entries,
             )
         )
         if not history_valid:
@@ -7393,6 +9569,9 @@ def validate_action_packet_transition_history_v01(
     *,
     root_bound_genesis: object,
     action_packet_transition_registry_profile: object,
+    invalidation_contexts: object = None,
+    idempotency_disposition_events: object = None,
+    lifecycle_entries: object = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         if type(transition_events) is not tuple:
@@ -7419,6 +9598,31 @@ def validate_action_packet_transition_history_v01(
             root_bound_genesis.root_decision_projection.root_decision_result
             .decision_id
         )
+        contexts = () if invalidation_contexts is None else invalidation_contexts
+        dispositions = (
+            ()
+            if idempotency_disposition_events is None
+            else idempotency_disposition_events
+        )
+        entries = () if lifecycle_entries is None else lifecycle_entries
+        if (
+            type(contexts) is not tuple
+            or any(
+                type(context) is not _ActionPacketInvalidationContextV01
+                for context in contexts
+            )
+            or type(dispositions) is not tuple
+            or any(
+                type(disposition) is not IdempotencyDispositionEventV01
+                for disposition in dispositions
+            )
+            or type(entries) is not tuple
+            or any(
+                type(entry) is not ActionPacketLifecycleEntryV01
+                for entry in entries
+            )
+        ):
+            return False, ("action_packet_transition_context_invalid",)
         reasons: list[str] = []
         seen_ids: set[str] = set()
         current_state = "CREATED"
@@ -7489,24 +9693,112 @@ def validate_action_packet_transition_history_v01(
                 "g2a_t09_pending_block",
                 "g2a_t10_failed_block",
             }:
-                _reason_v01(
-                    reasons,
-                    "invalidation_transition_requires_g2a3_binding",
+                matching_contexts = tuple(
+                    context
+                    for context in contexts
+                    if context.invalidation_evidence.packet_id == packet_id
+                    and _invalidation_context_matches_transition_reference_v01(
+                        context,
+                        event,
+                    )
                 )
+                if len(matching_contexts) != 1:
+                    _reason_v01(
+                        reasons,
+                        "invalidation_transition_requires_g2a3_binding",
+                    )
+                else:
+                    context_valid, context_reasons = (
+                        _validate_contextual_invalidation_transition_v01(
+                            matching_contexts[0],
+                            event,
+                            root_bound_genesis=root_bound_genesis,
+                            preceding_events=transition_events[:index],
+                            disposition_events=dispositions,
+                        )
+                    )
+                    if not context_valid:
+                        reasons.extend(context_reasons)
             if event.transition_rule_id in {
                 "g2a_t16_authorized_revoke",
                 "g2a_t17_queued_revoke",
                 "g2a_t18_pending_revoke",
                 "g2a_t19_failed_revoke",
+            }:
+                matching_contexts = tuple(
+                    context
+                    for context in contexts
+                    if context.invalidation_evidence.packet_id == packet_id
+                    and _invalidation_context_matches_transition_reference_v01(
+                        context,
+                        event,
+                    )
+                )
+                if len(matching_contexts) != 1:
+                    _reason_v01(
+                        reasons,
+                        "authority_transition_requires_g2a3_binding",
+                    )
+                else:
+                    context_valid, context_reasons = (
+                        _validate_contextual_invalidation_transition_v01(
+                            matching_contexts[0],
+                            event,
+                            root_bound_genesis=root_bound_genesis,
+                            preceding_events=transition_events[:index],
+                            disposition_events=dispositions,
+                        )
+                    )
+                    if not context_valid:
+                        reasons.extend(context_reasons)
+            if event.transition_rule_id in {
                 "g2a_t20_authorized_supersede",
                 "g2a_t21_queued_supersede",
                 "g2a_t22_pending_supersede",
                 "g2a_t23_failed_supersede",
             }:
-                _reason_v01(
-                    reasons,
-                    "authority_transition_requires_g2a3_binding",
+                matching_contexts = tuple(
+                    context
+                    for context in contexts
+                    if context.invalidation_evidence.packet_id == packet_id
+                    and _invalidation_context_matches_transition_reference_v01(
+                        context,
+                        event,
+                    )
                 )
+                if len(matching_contexts) != 1:
+                    _reason_v01(
+                        reasons,
+                        "authority_transition_requires_g2a3_binding",
+                    )
+                else:
+                    context = matching_contexts[0]
+                    successor_entries = tuple(
+                        entry
+                        for entry in entries
+                        if entry.root_bound_genesis.packet_identity.packet_id
+                        == context.supersession_successor_packet_id
+                    )
+                    if len(successor_entries) != 1:
+                        _reason_v01(
+                            reasons,
+                            "action_packet_supersession_successor_invalid",
+                        )
+                    else:
+                        context_valid, context_reasons = (
+                            _validate_contextual_invalidation_transition_v01(
+                                context,
+                                event,
+                                root_bound_genesis=root_bound_genesis,
+                                preceding_events=transition_events[:index],
+                                disposition_events=dispositions,
+                                supersession_successor=(
+                                    successor_entries[0].root_bound_genesis
+                                ),
+                            )
+                        )
+                        if not context_valid:
+                            reasons.extend(context_reasons)
             if current_state == "FAILED" and (
                 failed_provenance != "FAILED_NON_CONSUMING"
                 or event.transition_rule_id
@@ -7594,6 +9886,506 @@ def validate_action_packet_transition_history_v01(
         return _result_v01(reasons)
     except Exception:
         return False, ("action_packet_transition_history_invalid",)
+
+
+def _packet_local_disposition_history_v01(
+    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    preceding_events: tuple[ActionPacketTransitionEventV01, ...],
+    disposition_events: tuple[IdempotencyDispositionEventV01, ...],
+) -> tuple[IdempotencyDispositionEventV01, ...]:
+    key = (
+        root_bound_genesis.canonical_projection.idempotency_identity
+        .idempotency_key
+    )
+    packet_id = root_bound_genesis.packet_identity.packet_id
+    preceding_ids = {
+        event.transition_event_id for event in preceding_events
+    }
+    activation_ids = {
+        event.transition_event_id
+        for event in preceding_events
+        if (
+            event.packet_id == packet_id
+            and event.transition_rule_id
+            == "g2a_t01_activate_root_authorization"
+        )
+    }
+    return tuple(
+        event
+        for event in disposition_events
+        if event.idempotency_key == key
+        and (
+            all(
+                cause_id in preceding_ids
+                for cause_id in event.cause_transition_event_ids
+            )
+            or (
+                event.event_class
+                in {
+                    "RESERVE",
+                    "TRANSFER_RENEWAL",
+                    "TRANSFER_SUPERSESSION",
+                }
+                and event.to_owner_packet_id == packet_id
+                and any(
+                    cause_id in activation_ids
+                    for cause_id in event.cause_transition_event_ids
+                )
+            )
+        )
+    )
+
+
+def _disposition_before_transition_events_v01(
+    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    preceding_events: tuple[ActionPacketTransitionEventV01, ...],
+    disposition_events: tuple[IdempotencyDispositionEventV01, ...],
+) -> IdempotencyDispositionStateV01:
+    key = (
+        root_bound_genesis.canonical_projection.idempotency_identity
+        .idempotency_key
+    )
+    return _derive_idempotency_disposition_unchecked_v01(
+        _packet_local_disposition_history_v01(
+            root_bound_genesis,
+            preceding_events,
+            disposition_events,
+        ),
+        key,
+    )
+
+
+def _validate_contextual_invalidation_transition_v01(
+    context: object,
+    event: object,
+    *,
+    root_bound_genesis: object,
+    preceding_events: object,
+    disposition_events: object,
+    supersession_successor: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if (
+            type(context) is not _ActionPacketInvalidationContextV01
+            or type(event) is not ActionPacketTransitionEventV01
+            or type(root_bound_genesis)
+            is not SupplierRootBoundActionCommitPacketV02ProjectionV01
+            or type(preceding_events) is not tuple
+            or any(
+                type(item) is not ActionPacketTransitionEventV01
+                for item in preceding_events
+            )
+            or type(disposition_events) is not tuple
+            or any(
+                type(item) is not IdempotencyDispositionEventV01
+                for item in disposition_events
+            )
+        ):
+            return False, (
+                "action_packet_invalidation_transition_context_invalid",
+            )
+        context_valid, _ = _validate_action_packet_invalidation_context_v01(
+            context,
+            root_bound_genesis,
+            supersession_successor=supersession_successor,
+        )
+        if not context_valid:
+            return False, (
+                "action_packet_invalidation_transition_context_invalid",
+            )
+        evidence = context.invalidation_evidence
+        canonical = root_bound_genesis.canonical_projection
+        packet_id = root_bound_genesis.packet_identity.packet_id
+        reasons: list[str] = []
+        if (
+            event.packet_id != packet_id
+            or event.evaluation_time != evidence.evaluation_time
+            or event.evaluation_time_source
+            != evidence.evaluation_time_source
+            or event.evaluation_context_id != evidence.evaluation_context_id
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_invalidation_transition_context_mismatch",
+            )
+        deterministic_codes = {
+            "g2a_t06_created_block": "blocking_evidence_valid",
+            "g2a_t07_authorized_block": "blocking_evidence_valid",
+            "g2a_t08_queued_block": "blocking_evidence_valid",
+            "g2a_t09_pending_block": (
+                "immediate_eligibility_failure_valid"
+            ),
+            "g2a_t10_failed_block": (
+                "retry_ineligibility_evidence_valid"
+            ),
+        }
+        if event.transition_rule_id in deterministic_codes:
+            invalidation_id = evidence.invalidation_evidence_id
+            if not _transition_evidence_binding_matches_v01(
+                event,
+                evidence_code=deterministic_codes[
+                    event.transition_rule_id
+                ],
+                evidence_ref=invalidation_id,
+                evidence_sha256=invalidation_id,
+                validator_profile_id=(
+                    ACTION_INVALIDATION_EVIDENCE_PROFILE_ID_V01
+                ),
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_invalidation_evidence_binding_invalid",
+                )
+            if event.root_decision_ref is not None:
+                _reason_v01(
+                    reasons,
+                    "action_packet_deterministic_block_root_ref_forbidden",
+                )
+        elif event.transition_rule_id in {
+            "g2a_t16_authorized_revoke",
+            "g2a_t17_queued_revoke",
+            "g2a_t18_pending_revoke",
+            "g2a_t19_failed_revoke",
+        }:
+            binding = context.accepted_revocation_binding
+            if type(binding) is not AcceptedRevocationBindingV01:
+                _reason_v01(
+                    reasons,
+                    "action_packet_revocation_binding_invalid",
+                )
+            else:
+                binding_id = binding.accepted_revocation_binding_id
+                if not _transition_evidence_binding_matches_v01(
+                    event,
+                    evidence_code="accepted_revocation_binding_valid",
+                    evidence_ref=binding_id,
+                    evidence_sha256=binding_id[
+                        len(ACCEPTED_REVOCATION_BINDING_PREFIX_V01) :
+                    ],
+                    validator_profile_id=(
+                        _ACCEPTED_REVOCATION_BINDING_VALIDATOR_PROFILE_ID_V01
+                    ),
+                ):
+                    _reason_v01(
+                        reasons,
+                        "action_packet_revocation_binding_invalid",
+                    )
+                if event.root_decision_ref != (
+                    binding.revocation_root_decision_id
+                ):
+                    _reason_v01(
+                        reasons,
+                        "action_packet_revocation_root_ref_invalid",
+                    )
+            source_result = (
+                root_bound_genesis.root_decision_projection
+                .root_decision_result
+            )
+            if not _transition_evidence_binding_matches_v01(
+                event,
+                evidence_code="source_authorization_binding_valid",
+                evidence_ref=source_result.decision_id,
+                evidence_sha256=(
+                    root_bound_genesis.root_decision_projection
+                    .source_root_decision_hash
+                ),
+                validator_profile_id=(
+                    _ROOT_DECISION_RESULT_VALIDATOR_PROFILE_ID_V01
+                ),
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_source_authorization_binding_invalid",
+                )
+        elif event.transition_rule_id in {
+            "g2a_t20_authorized_supersede",
+            "g2a_t21_queued_supersede",
+            "g2a_t22_pending_supersede",
+            "g2a_t23_failed_supersede",
+        }:
+            successor = supersession_successor
+            binding = context.accepted_supersession_binding
+            if (
+                type(successor)
+                is not SupplierRootBoundActionCommitPacketV02ProjectionV01
+                or type(binding) is not AcceptedSupersessionBindingV01
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_supersession_context_invalid",
+                )
+            else:
+                successor_packet_id = successor.packet_identity.packet_id
+                binding_id = binding.accepted_supersession_binding_id
+                for evidence_code, evidence_ref, evidence_hash, profile in (
+                    (
+                        "successor_packet_valid",
+                        successor_packet_id,
+                        successor_packet_id[
+                            len(ACTION_COMMIT_PACKET_ID_PREFIX_V01) :
+                        ],
+                        _ACTION_COMMIT_PACKET_IDENTITY_PROFILE_ID_V01,
+                    ),
+                    (
+                        "accepted_supersession_binding_valid",
+                        binding_id,
+                        binding_id[
+                            len(
+                                ACCEPTED_SUPERSESSION_BINDING_PREFIX_V01
+                            ) :
+                        ],
+                        (
+                            _ACCEPTED_SUPERSESSION_BINDING_VALIDATOR_PROFILE_ID_V01
+                        ),
+                    ),
+                    (
+                        "predecessor_binding_valid",
+                        packet_id,
+                        packet_id[
+                            len(ACTION_COMMIT_PACKET_ID_PREFIX_V01) :
+                        ],
+                        _ACTION_COMMIT_PACKET_IDENTITY_PROFILE_ID_V01,
+                    ),
+                ):
+                    if not _transition_evidence_binding_matches_v01(
+                        event,
+                        evidence_code=evidence_code,
+                        evidence_ref=evidence_ref,
+                        evidence_sha256=evidence_hash,
+                        validator_profile_id=profile,
+                    ):
+                        _reason_v01(
+                            reasons,
+                            "action_packet_supersession_binding_invalid",
+                        )
+                if event.root_decision_ref != (
+                    binding.supersession_root_decision_id
+                ):
+                    _reason_v01(
+                        reasons,
+                        "action_packet_supersession_root_ref_invalid",
+                    )
+        else:
+            return False, (
+                "action_packet_invalidation_transition_rule_invalid",
+            )
+        if event.transition_rule_id == "g2a_t06_created_block":
+            packet_identity = root_bound_genesis.packet_identity.packet_id
+            if not _transition_evidence_binding_matches_v01(
+                event,
+                evidence_code="packet_genesis_valid",
+                evidence_ref=packet_identity,
+                evidence_sha256=packet_identity[
+                    len(ACTION_COMMIT_PACKET_ID_PREFIX_V01) :
+                ],
+                validator_profile_id=(
+                    _ACTION_COMMIT_PACKET_IDENTITY_PROFILE_ID_V01
+                ),
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_genesis_binding_invalid",
+                )
+        if event.transition_rule_id in {
+            "g2a_t07_authorized_block",
+            "g2a_t08_queued_block",
+        }:
+            fingerprint = canonical.authority_policy_fingerprint
+            if not _transition_evidence_binding_matches_v01(
+                event,
+                evidence_code="authority_policy_valid",
+                evidence_ref=fingerprint,
+                evidence_sha256=fingerprint,
+                validator_profile_id=ACTION_AUTHORITY_POLICY_PROFILE_ID_V01,
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_authority_policy_binding_invalid",
+                )
+        disposition = _disposition_before_transition_events_v01(
+            root_bound_genesis,
+            preceding_events,
+            disposition_events,
+        )
+        if event.transition_rule_id in {
+            "g2a_t20_authorized_supersede",
+            "g2a_t21_queued_supersede",
+            "g2a_t22_pending_supersede",
+            "g2a_t23_failed_supersede",
+        }:
+            successor_packet_id = (
+                supersession_successor.packet_identity.packet_id
+                if type(supersession_successor)
+                is SupplierRootBoundActionCommitPacketV02ProjectionV01
+                else None
+            )
+            consuming_dispositions = tuple(
+                item
+                for item in disposition_events
+                if event.transition_event_id
+                in item.cause_transition_event_ids
+                and item.from_owner_packet_id == packet_id
+                and item.to_owner_packet_id == successor_packet_id
+                and item.event_class
+                in {
+                    "TRANSFER_RENEWAL",
+                    "TRANSFER_SUPERSESSION",
+                }
+            )
+            if len(consuming_dispositions) == 1:
+                disposition_index = disposition_events.index(
+                    consuming_dispositions[0]
+                )
+                disposition = _derive_idempotency_disposition_unchecked_v01(
+                    disposition_events[:disposition_index],
+                    canonical.idempotency_identity.idempotency_key,
+                )
+        reservation_rules = {
+            "g2a_t07_authorized_block",
+            "g2a_t08_queued_block",
+            "g2a_t09_pending_block",
+            "g2a_t10_failed_block",
+            "g2a_t16_authorized_revoke",
+            "g2a_t17_queued_revoke",
+            "g2a_t18_pending_revoke",
+            "g2a_t19_failed_revoke",
+        }
+        if event.transition_rule_id in reservation_rules:
+            latest_id = disposition.latest_disposition_event_id
+            if (
+                disposition.disposition != "RESERVED"
+                or disposition.reservation_owner_packet_id != packet_id
+                or type(latest_id) is not str
+                or not _transition_evidence_binding_matches_v01(
+                    event,
+                    evidence_code="idempotency_reservation_owned",
+                    evidence_ref=latest_id if type(latest_id) is str else "",
+                    evidence_sha256=(
+                        latest_id[
+                            len(
+                                IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01
+                            ) :
+                        ]
+                        if type(latest_id) is str
+                        else ""
+                    ),
+                    validator_profile_id=(
+                        IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01
+                    ),
+                )
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_invalidation_reservation_invalid",
+                )
+        if event.transition_rule_id in {
+            "g2a_t20_authorized_supersede",
+            "g2a_t21_queued_supersede",
+            "g2a_t22_pending_supersede",
+            "g2a_t23_failed_supersede",
+        }:
+            latest_id = disposition.latest_disposition_event_id
+            if (
+                disposition.disposition != "RESERVED"
+                or disposition.reservation_owner_packet_id != packet_id
+                or type(latest_id) is not str
+                or not _transition_evidence_binding_matches_v01(
+                    event,
+                    evidence_code="idempotency_transfer_valid",
+                    evidence_ref=latest_id if type(latest_id) is str else "",
+                    evidence_sha256=(
+                        latest_id[
+                            len(
+                                IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01
+                            ) :
+                        ]
+                        if type(latest_id) is str
+                        else ""
+                    ),
+                    validator_profile_id=(
+                        IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01
+                    ),
+                )
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_supersession_transfer_binding_invalid",
+                )
+        if event.transition_rule_id in {
+            "g2a_t09_pending_block",
+            "g2a_t18_pending_revoke",
+            "g2a_t22_pending_supersede",
+        }:
+            latest = preceding_events[-1] if preceding_events else None
+            if (
+                type(latest) is not ActionPacketTransitionEventV01
+                or latest.transition_rule_id != "g2a_t03_pending"
+                or type(latest.execution_attempt_id) is not str
+                or not _transition_evidence_binding_matches_v01(
+                    event,
+                    evidence_code="adapter_not_called",
+                    evidence_ref=(
+                        latest.execution_attempt_id
+                        if type(latest) is ActionPacketTransitionEventV01
+                        and type(latest.execution_attempt_id) is str
+                        else ""
+                    ),
+                    evidence_sha256=(
+                        latest.execution_attempt_id[
+                            len(EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01) :
+                        ]
+                        if type(latest) is ActionPacketTransitionEventV01
+                        and type(latest.execution_attempt_id) is str
+                        else ""
+                    ),
+                    validator_profile_id=(
+                        EXECUTION_ATTEMPT_IDENTITY_PROFILE_ID_V01
+                    ),
+                )
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_invalidation_adapter_state_invalid",
+                )
+        if event.transition_rule_id in {
+            "g2a_t10_failed_block",
+            "g2a_t19_failed_revoke",
+            "g2a_t23_failed_supersede",
+        }:
+            latest = preceding_events[-1] if preceding_events else None
+            if (
+                type(latest) is not ActionPacketTransitionEventV01
+                or latest.transition_rule_id
+                != "g2a_t24_nonconsuming_failure"
+                or not _transition_evidence_binding_matches_v01(
+                    event,
+                    evidence_code="failed_non_consuming_provenance_valid",
+                    evidence_ref=(
+                        latest.transition_event_id
+                        if type(latest) is ActionPacketTransitionEventV01
+                        else ""
+                    ),
+                    evidence_sha256=(
+                        latest.transition_event_id[
+                            len(ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01) :
+                        ]
+                        if type(latest) is ActionPacketTransitionEventV01
+                        else ""
+                    ),
+                    validator_profile_id=(
+                        ACTION_PACKET_TRANSITION_EVENT_PROFILE_ID_V01
+                    ),
+                )
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_failed_provenance_binding_invalid",
+                )
+        return _result_v01(reasons)
+    except Exception:
+        return False, (
+            "action_packet_invalidation_transition_context_invalid",
+        )
 
 
 def _action_packet_transition_temporal_reason_v01(
@@ -7813,6 +10605,7 @@ def _validate_registry_lifecycle_histories_v01(
     reasons: list[str] = []
     entries = registry.action_packet_lifecycle_entries
     dispositions = registry.idempotency_disposition_events
+    contexts = registry.action_packet_invalidation_contexts
     if type(entries) is not tuple or any(
         type(entry) is not ActionPacketLifecycleEntryV01 for entry in entries
     ):
@@ -7822,23 +10615,76 @@ def _validate_registry_lifecycle_histories_v01(
         for event in dispositions
     ):
         return False, ("action_packet_registry_disposition_events_invalid",)
+    if type(contexts) is not tuple or any(
+        type(context) is not _ActionPacketInvalidationContextV01
+        for context in contexts
+    ):
+        return False, ("action_packet_registry_invalidation_contexts_invalid",)
     transition_registry = build_action_packet_transition_registry_profile_v01()
     packet_ids: list[str] = []
     transition_by_id: dict[str, ActionPacketTransitionEventV01] = {}
     entry_by_packet: dict[str, ActionPacketLifecycleEntryV01] = {}
     for entry in entries:
-        valid, _ = validate_action_packet_lifecycle_entry_v01(
-            entry,
-            action_packet_transition_registry_profile=transition_registry,
-        )
-        if not valid:
-            _reason_v01(reasons, "action_packet_registry_lifecycle_entry_invalid")
-            continue
         packet_id = entry.root_bound_genesis.packet_identity.packet_id
         if packet_id in packet_ids:
             _reason_v01(reasons, "action_packet_registry_duplicate_genesis")
         packet_ids.append(packet_id)
         entry_by_packet[packet_id] = entry
+    entries_by_key: dict[str, list[ActionPacketLifecycleEntryV01]] = {}
+    for entry in entries:
+        key = (
+            entry.root_bound_genesis.canonical_projection
+            .idempotency_identity.idempotency_key
+        )
+        entries_by_key.setdefault(key, []).append(entry)
+    for same_key_entries in entries_by_key.values():
+        if len(same_key_entries) < 2:
+            continue
+        root_kinds = tuple(
+            (
+                entry,
+                _same_key_lineage_root_kind_v01(
+                    registry,
+                    entry,
+                    entry_by_packet,
+                ),
+            )
+            for entry in same_key_entries
+        )
+        roots = tuple(
+            entry
+            for entry, kind in root_kinds
+            if kind in {"ORDINARY", "MATERIAL"}
+        )
+        if any(kind == "INVALID_ALIAS" for _, kind in root_kinds):
+            _reason_v01(
+                reasons,
+                "logical_effect_identity_alias_forbidden",
+            )
+        if (
+            len(roots) != 1
+            or not _same_key_entries_are_bound_successors_v01(
+                registry,
+                roots[0],
+                entry_by_packet,
+            )
+        ):
+            _reason_v01(
+                reasons,
+                "authority_transition_requires_g2a3_binding",
+            )
+    for entry in entries:
+        valid, _ = validate_action_packet_lifecycle_entry_v01(
+            entry,
+            action_packet_transition_registry_profile=transition_registry,
+            invalidation_contexts=contexts,
+            idempotency_disposition_events=dispositions,
+            lifecycle_entries=entries,
+        )
+        if not valid:
+            _reason_v01(reasons, "action_packet_registry_lifecycle_entry_invalid")
+            continue
+        packet_id = entry.root_bound_genesis.packet_identity.packet_id
         for event in entry.transition_events:
             if event.transition_event_id in transition_by_id:
                 _reason_v01(
@@ -7846,6 +10692,174 @@ def _validate_registry_lifecycle_histories_v01(
                     "action_packet_registry_duplicate_transition_event",
                 )
             transition_by_id[event.transition_event_id] = event
+    invalidation_ids: set[str] = set()
+    accepted_binding_ids: set[str] = set()
+    context_consumption_counts: dict[str, int] = {}
+    context_positions_by_packet: dict[str, list[int]] = {}
+    supersession_disposition_ids_in_context_order: list[str] = []
+    for context in contexts:
+        evidence = context.invalidation_evidence
+        if type(evidence) is not ActionInvalidationEvidenceV01:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_invalidation_context_invalid",
+            )
+            continue
+        invalidation_id = evidence.invalidation_evidence_id
+        if invalidation_id in invalidation_ids:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_invalidation_context_duplicate",
+            )
+        invalidation_ids.add(invalidation_id)
+        packet_entry = entry_by_packet.get(evidence.packet_id)
+        if packet_entry is None:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_invalidation_packet_missing",
+            )
+            continue
+        successor_entry = (
+            entry_by_packet.get(context.supersession_successor_packet_id)
+            if context.supersession_successor_packet_id is not None
+            else None
+        )
+        context_valid, _ = _validate_action_packet_invalidation_context_v01(
+            context,
+            packet_entry.root_bound_genesis,
+            supersession_successor=(
+                successor_entry.root_bound_genesis
+                if type(successor_entry) is ActionPacketLifecycleEntryV01
+                else None
+            ),
+        )
+        if not context_valid:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_invalidation_context_invalid",
+            )
+        accepted_id = None
+        if (
+            type(context.accepted_revocation_binding)
+            is AcceptedRevocationBindingV01
+        ):
+            accepted_id = (
+                context.accepted_revocation_binding
+                .accepted_revocation_binding_id
+            )
+        elif (
+            type(context.accepted_supersession_binding)
+            is AcceptedSupersessionBindingV01
+        ):
+            accepted_id = (
+                context.accepted_supersession_binding
+                .accepted_supersession_binding_id
+            )
+        if accepted_id is not None:
+            if accepted_id in accepted_binding_ids:
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_accepted_binding_reused",
+                )
+            accepted_binding_ids.add(accepted_id)
+        if evidence.invalidation_class == "ROOT_SUPERSESSION":
+            bundle_valid, bundle_reasons, disposition = (
+                _validate_registry_supersession_bundle_v01(
+                    registry,
+                    context,
+                )
+            )
+            if not bundle_valid or disposition is None:
+                reasons.extend(bundle_reasons)
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_invalidation_context_orphan",
+                )
+            else:
+                consumption_id = disposition.idempotency_disposition_event_id
+                supersession_disposition_ids_in_context_order.append(
+                    consumption_id
+                )
+                context_consumption_counts[consumption_id] = (
+                    context_consumption_counts.get(consumption_id, 0) + 1
+                )
+                supersession_transition_positions = tuple(
+                    index
+                    for index, transition in enumerate(
+                        packet_entry.transition_events
+                    )
+                    if _invalidation_context_matches_transition_reference_v01(
+                        context,
+                        transition,
+                    )
+                )
+                context_positions_by_packet.setdefault(
+                    evidence.packet_id,
+                    [],
+                ).append(
+                    supersession_transition_positions[0]
+                    if len(supersession_transition_positions) == 1
+                    else len(packet_entry.transition_events)
+                )
+        else:
+            matching_transitions = tuple(
+                (index, transition)
+                for index, transition in enumerate(
+                    packet_entry.transition_events
+                )
+                if _invalidation_context_matches_transition_reference_v01(
+                    context,
+                    transition,
+                )
+            )
+            if len(matching_transitions) != 1:
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_invalidation_context_orphan",
+                )
+            else:
+                transition_index, transition = matching_transitions[0]
+                context_consumption_counts[transition.transition_event_id] = (
+                    context_consumption_counts.get(
+                        transition.transition_event_id,
+                        0,
+                    )
+                    + 1
+                )
+                context_positions_by_packet.setdefault(
+                    evidence.packet_id,
+                    [],
+                ).append(transition_index)
+    if any(count != 1 for count in context_consumption_counts.values()):
+        _reason_v01(
+            reasons,
+            "action_packet_registry_invalidation_context_reused",
+        )
+    if any(
+        positions != sorted(positions)
+        for positions in context_positions_by_packet.values()
+    ):
+        _reason_v01(
+            reasons,
+            "action_packet_registry_invalidation_context_reordered",
+        )
+    supersession_disposition_ids = set(
+        supersession_disposition_ids_in_context_order
+    )
+    supersession_disposition_ids_in_history_order = tuple(
+        event.idempotency_disposition_event_id
+        for event in dispositions
+        if event.idempotency_disposition_event_id
+        in supersession_disposition_ids
+    )
+    if (
+        tuple(supersession_disposition_ids_in_context_order)
+        != supersession_disposition_ids_in_history_order
+    ):
+        _reason_v01(
+            reasons,
+            "action_packet_registry_invalidation_context_reordered",
+        )
     disposition_valid, _ = validate_idempotency_disposition_history_v01(
         dispositions
     )
@@ -7878,6 +10892,7 @@ def _validate_registry_lifecycle_histories_v01(
         ):
             _reason_v01(reasons, "action_packet_registry_cause_key_mismatch")
         _validate_registry_disposition_cause_bundle_v01(
+            registry,
             disposition_event,
             typed_causes,
             entry_by_packet,
@@ -7899,7 +10914,223 @@ def _validate_registry_lifecycle_histories_v01(
     return _result_v01(reasons)
 
 
+def _is_initial_authorization_lifecycle_entry_v01(value: object) -> bool:
+    if type(value) is not ActionPacketLifecycleEntryV01:
+        return False
+    candidate = (
+        value.root_bound_genesis.canonical_projection.authorization_candidate
+    )
+    return (
+        type(candidate) is RootBoundPacketAuthorizationCandidateV01
+        and candidate.predecessor_packet_id is None
+        and candidate.supersession_reason_class is None
+    )
+
+
+def _same_key_lineage_root_kind_v01(
+    registry: ActionCommitPacketRegistryV02,
+    value: ActionPacketLifecycleEntryV01,
+    entries: dict[str, ActionPacketLifecycleEntryV01],
+) -> str | None:
+    if _is_initial_authorization_lifecycle_entry_v01(value):
+        return "ORDINARY"
+    projection = value.root_bound_genesis.canonical_projection
+    authorization = projection.authorization_candidate
+    predecessor_id = authorization.predecessor_packet_id
+    predecessor = entries.get(predecessor_id)
+    if not (
+        type(predecessor_id) is str
+        and predecessor_id
+        and type(authorization.supersession_reason_class) is str
+        and authorization.supersession_reason_class
+        and authorization.supersession_reason_class != "RENEWAL"
+        and type(predecessor) is ActionPacketLifecycleEntryV01
+    ):
+        return None
+    predecessor_projection = (
+        predecessor.root_bound_genesis.canonical_projection
+    )
+    same_key = (
+        predecessor_projection.idempotency_identity.idempotency_key
+        == projection.idempotency_identity.idempotency_key
+    )
+    same_intent = (
+        predecessor_projection.logical_intent.root_owned_intent_id
+        == projection.logical_intent.root_owned_intent_id
+    )
+    if same_key != same_intent:
+        return "INVALID_ALIAS"
+    if (
+        same_key
+        or predecessor_projection.owning_local_root_id
+        != projection.owning_local_root_id
+        or predecessor_projection.transaction_id != projection.transaction_id
+    ):
+        return None
+    if (
+        value.transition_events
+        and value.transition_events[0].transition_rule_id
+        == "g2a_t01_activate_root_authorization"
+    ):
+        matching_contexts = tuple(
+            context
+            for context in registry.action_packet_invalidation_contexts
+            if (
+                context.invalidation_evidence.invalidation_class
+                == "ROOT_SUPERSESSION"
+                and context.invalidation_evidence.packet_id == predecessor_id
+                and context.supersession_successor_packet_id
+                == value.root_bound_genesis.packet_identity.packet_id
+                and _validate_registry_supersession_bundle_v01(
+                    registry,
+                    context,
+                )[0]
+            )
+        )
+        if len(matching_contexts) != 1:
+            return None
+    return "MATERIAL"
+
+
+def _same_key_entries_are_bound_successors_v01(
+    registry: ActionCommitPacketRegistryV02,
+    owner_entry: ActionPacketLifecycleEntryV01,
+    entries: dict[str, ActionPacketLifecycleEntryV01],
+) -> bool:
+    owner_key = (
+        owner_entry.root_bound_genesis.canonical_projection
+        .idempotency_identity.idempotency_key
+    )
+    same_key_entries = tuple(
+        entry
+        for entry in entries.values()
+        if (
+            entry.root_bound_genesis.canonical_projection
+            .idempotency_identity.idempotency_key
+            == owner_key
+        )
+    )
+    if owner_entry not in same_key_entries:
+        return False
+    entry_by_id: dict[str, ActionPacketLifecycleEntryV01] = {}
+    for entry in same_key_entries:
+        genesis_valid, _ = (
+            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                entry.root_bound_genesis
+            )
+        )
+        packet_id = entry.root_bound_genesis.packet_identity.packet_id
+        if (
+            not genesis_valid
+            or type(packet_id) is not str
+            or packet_id in entry_by_id
+        ):
+            return False
+        entry_by_id[packet_id] = entry
+    roots = tuple(
+        entry
+        for entry in same_key_entries
+        if _same_key_lineage_root_kind_v01(
+            registry,
+            entry,
+            entries,
+        )
+        in {"ORDINARY", "MATERIAL"}
+    )
+    if len(roots) != 1 or roots[0] is not owner_entry:
+        return False
+    root_projection = owner_entry.root_bound_genesis.canonical_projection
+    root_intent_id = root_projection.logical_intent.root_owned_intent_id
+    for entry in same_key_entries:
+        projection = entry.root_bound_genesis.canonical_projection
+        if (
+            projection.idempotency_identity.idempotency_key != owner_key
+            or projection.logical_intent.root_owned_intent_id != root_intent_id
+        ):
+            return False
+        if entry is owner_entry:
+            continue
+        authorization = (
+            projection.authorization_candidate
+        )
+        predecessor_id = authorization.predecessor_packet_id
+        predecessor = entry_by_id.get(predecessor_id)
+        if not (
+            type(predecessor_id) is str
+            and predecessor_id
+            and predecessor_id
+            != entry.root_bound_genesis.packet_identity.packet_id
+            and type(predecessor) is ActionPacketLifecycleEntryV01
+            and type(authorization.supersession_reason_class) is str
+            and authorization.supersession_reason_class
+        ):
+            return False
+        predecessor_projection = (
+            predecessor.root_bound_genesis.canonical_projection
+        )
+        if not (
+            predecessor_projection.idempotency_identity.idempotency_key
+            == owner_key
+            and predecessor_projection.logical_intent.root_owned_intent_id
+            == root_intent_id
+            and predecessor_projection.owning_local_root_id
+            == projection.owning_local_root_id
+            and predecessor_projection.transaction_id
+            == projection.transaction_id
+        ):
+            return False
+        visited = {
+            entry.root_bound_genesis.packet_identity.packet_id,
+        }
+        current = predecessor
+        while current is not owner_entry:
+            current_id = current.root_bound_genesis.packet_identity.packet_id
+            if current_id in visited:
+                return False
+            visited.add(current_id)
+            current_authorization = (
+                current.root_bound_genesis.canonical_projection
+                .authorization_candidate
+            )
+            current_predecessor_id = (
+                current_authorization.predecessor_packet_id
+            )
+            if (
+                type(current_predecessor_id) is not str
+                or not current_predecessor_id
+                or type(entry_by_id.get(current_predecessor_id))
+                is not ActionPacketLifecycleEntryV01
+            ):
+                return False
+            current = entry_by_id[current_predecessor_id]
+        if (
+            entry.transition_events
+            and entry.transition_events[0].transition_rule_id
+            == "g2a_t01_activate_root_authorization"
+        ):
+            matching_contexts = tuple(
+                context
+                for context in registry.action_packet_invalidation_contexts
+                if (
+                    context.invalidation_evidence.invalidation_class
+                    == "ROOT_SUPERSESSION"
+                    and context.invalidation_evidence.packet_id
+                    == predecessor_id
+                    and context.supersession_successor_packet_id
+                    == entry.root_bound_genesis.packet_identity.packet_id
+                    and _validate_registry_supersession_bundle_v01(
+                        registry,
+                        context,
+                    )[0]
+                )
+            )
+            if len(matching_contexts) != 1:
+                return False
+    return True
+
+
 def _validate_registry_disposition_cause_bundle_v01(
+    registry: ActionCommitPacketRegistryV02,
     event: IdempotencyDispositionEventV01,
     causes: tuple[ActionPacketTransitionEventV01, ...],
     entries: dict[str, ActionPacketLifecycleEntryV01],
@@ -7907,7 +11138,25 @@ def _validate_registry_disposition_cause_bundle_v01(
 ) -> None:
     rule_ids = tuple(cause.transition_rule_id for cause in causes)
     if event.event_class == "RESERVE":
+        supersession_bundle = (
+            _disposition_has_valid_supersession_context_v01(
+                registry,
+                event,
+            )
+        )
         if event.predecessor_packet_id is None:
+            owner_entry = entries.get(event.to_owner_packet_id)
+            if (
+                type(owner_entry) is ActionPacketLifecycleEntryV01
+                and not _is_initial_authorization_lifecycle_entry_v01(
+                    owner_entry
+                )
+                and not supersession_bundle
+            ):
+                _reason_v01(
+                    reasons,
+                    "authority_transition_requires_g2a3_binding",
+                )
             same_key_entry_count = sum(
                 (
                     entry.root_bound_genesis.canonical_projection
@@ -7916,7 +11165,21 @@ def _validate_registry_disposition_cause_bundle_v01(
                 )
                 for entry in entries.values()
             )
-            if same_key_entry_count != 1:
+            if (
+                same_key_entry_count != 1
+                and not supersession_bundle
+                and not (
+                    type(owner_entry) is ActionPacketLifecycleEntryV01
+                    and _is_initial_authorization_lifecycle_entry_v01(
+                        owner_entry
+                    )
+                    and _same_key_entries_are_bound_successors_v01(
+                        registry,
+                        owner_entry,
+                        entries,
+                    )
+                )
+            ):
                 _reason_v01(
                     reasons,
                     "authority_transition_requires_g2a3_binding",
@@ -7961,16 +11224,24 @@ def _validate_registry_disposition_cause_bundle_v01(
             )
         ):
             _reason_v01(reasons, "unclaimed_predecessor_transfer_forbidden")
-        _reason_v01(
-            reasons,
-            "authority_transition_requires_g2a3_binding",
-        )
+        if not supersession_bundle:
+            _reason_v01(
+                reasons,
+                "authority_transition_requires_g2a3_binding",
+            )
         return
     if event.event_class in {
         "TRANSFER_RENEWAL",
         "TRANSFER_SUPERSESSION",
     }:
-        _reason_v01(reasons, "authority_transition_requires_g2a3_binding")
+        if not _disposition_has_valid_supersession_context_v01(
+            registry,
+            event,
+        ):
+            _reason_v01(
+                reasons,
+                "authority_transition_requires_g2a3_binding",
+            )
         return
     if event.event_class == "CONSUME":
         expected_codes = (
@@ -8046,6 +11317,368 @@ def _same_logical_effect_entries_v01(
     )
 
 
+def _logical_effect_relation_v01(
+    predecessor: ActionPacketLifecycleEntryV01,
+    successor: ActionPacketLifecycleEntryV01,
+) -> str | None:
+    predecessor_projection = predecessor.root_bound_genesis.canonical_projection
+    successor_projection = successor.root_bound_genesis.canonical_projection
+    intent_equal = (
+        predecessor_projection.logical_intent.root_owned_intent_id
+        == successor_projection.logical_intent.root_owned_intent_id
+    )
+    key_equal = (
+        predecessor_projection.idempotency_identity.idempotency_key
+        == successor_projection.idempotency_identity.idempotency_key
+    )
+    if intent_equal and key_equal:
+        return "SAME"
+    if not intent_equal and not key_equal:
+        return "DIFFERENT"
+    return None
+
+
+def _validate_registry_supersession_bundle_v01(
+    registry: ActionCommitPacketRegistryV02,
+    context: _ActionPacketInvalidationContextV01,
+) -> tuple[
+    bool,
+    tuple[str, ...],
+    IdempotencyDispositionEventV01 | None,
+]:
+    try:
+        evidence = context.invalidation_evidence
+        if (
+            type(evidence) is not ActionInvalidationEvidenceV01
+            or evidence.invalidation_class != "ROOT_SUPERSESSION"
+            or evidence.authority_effect != "ROOT_SUPERSESSION"
+        ):
+            return False, ("action_packet_supersession_context_invalid",), None
+        predecessor = _find_lifecycle_entry_v01(
+            registry,
+            evidence.packet_id,
+        )
+        successor = _find_lifecycle_entry_v01(
+            registry,
+            context.supersession_successor_packet_id,
+        )
+        context_valid, _ = _validate_action_packet_invalidation_context_v01(
+            context,
+            predecessor.root_bound_genesis,
+            supersession_successor=successor.root_bound_genesis,
+        )
+        if not context_valid:
+            return False, ("action_packet_supersession_context_invalid",), None
+        reasons: list[str] = []
+        predecessor_id = predecessor.root_bound_genesis.packet_identity.packet_id
+        successor_id = successor.root_bound_genesis.packet_identity.packet_id
+        predecessor_projection = (
+            predecessor.root_bound_genesis.canonical_projection
+        )
+        successor_projection = successor.root_bound_genesis.canonical_projection
+        successor_authorization = successor_projection.authorization_candidate
+        candidate = context.supersession_candidate
+        binding = context.accepted_supersession_binding
+        if (
+            predecessor_id == successor_id
+            or type(candidate) is not SupersessionCandidateV01
+            or type(binding) is not AcceptedSupersessionBindingV01
+            or successor_authorization.predecessor_packet_id != predecessor_id
+            or successor_authorization.supersession_reason_class
+            != candidate.supersession_reason_class
+        ):
+            _reason_v01(reasons, "action_packet_supersession_relationship_invalid")
+        relation = _logical_effect_relation_v01(predecessor, successor)
+        if relation is None:
+            _reason_v01(reasons, "logical_effect_identity_alias_forbidden")
+        successor_activation = (
+            successor.transition_events[0]
+            if successor.transition_events
+            else None
+        )
+        successor_source_decision = (
+            successor.root_bound_genesis.root_decision_projection
+            .root_decision_result.decision_id
+        )
+        if (
+            type(successor_activation) is not ActionPacketTransitionEventV01
+            or successor_activation.transition_rule_id
+            != "g2a_t01_activate_root_authorization"
+            or successor_activation.previous_transition_event_id is not None
+            or successor_activation.packet_id != successor_id
+            or successor_activation.root_decision_ref
+            != successor_source_decision
+            or successor_activation.evaluation_time != evidence.evaluation_time
+            or successor_activation.evaluation_time_source
+            != evidence.evaluation_time_source
+            or successor_activation.evaluation_context_id
+            != evidence.evaluation_context_id
+        ):
+            _reason_v01(reasons, "action_packet_successor_activation_invalid")
+            return _result_v01(reasons)[0], tuple(reasons), None
+        matching_dispositions = tuple(
+            disposition
+            for disposition in registry.idempotency_disposition_events
+            if disposition.to_owner_packet_id == successor_id
+            and successor_activation.transition_event_id
+            in disposition.cause_transition_event_ids
+        )
+        if len(matching_dispositions) != 1:
+            _reason_v01(reasons, "action_packet_supersession_disposition_invalid")
+            return _result_v01(reasons)[0], tuple(reasons), None
+        disposition = matching_dispositions[0]
+        disposition_index = registry.idempotency_disposition_events.index(
+            disposition
+        )
+        preceding_dispositions = registry.idempotency_disposition_events[
+            :disposition_index
+        ]
+        predecessor_before = _derive_idempotency_disposition_unchecked_v01(
+            preceding_dispositions,
+            predecessor_projection.idempotency_identity.idempotency_key,
+        )
+        successor_before = _derive_idempotency_disposition_unchecked_v01(
+            preceding_dispositions,
+            successor_projection.idempotency_identity.idempotency_key,
+        )
+        if not (
+            disposition.root_decision_ref == successor_source_decision
+            and disposition.evaluation_time == evidence.evaluation_time
+            and disposition.evaluation_time_source
+            == evidence.evaluation_time_source
+            and disposition.evaluation_context_id
+            == evidence.evaluation_context_id
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_supersession_disposition_context_invalid",
+            )
+        predecessor_latest = (
+            predecessor.transition_events[-1]
+            if predecessor.transition_events
+            else None
+        )
+        reason_class = candidate.supersession_reason_class
+        expected_transfer_class = (
+            "TRANSFER_RENEWAL"
+            if reason_class == "RENEWAL"
+            else "TRANSFER_SUPERSESSION"
+        )
+        expected_causes: tuple[str, ...]
+        expected_evidence_refs: tuple[str, ...]
+        if relation == "SAME" and (
+            type(predecessor_latest) is ActionPacketTransitionEventV01
+            and predecessor_latest.transition_rule_id
+            == "g2a_t11_created_expire"
+        ):
+            expected_causes = (
+                predecessor_latest.transition_event_id,
+                successor_activation.transition_event_id,
+            )
+            expected_evidence_refs = (
+                binding.accepted_supersession_binding_id,
+                predecessor_latest.transition_event_id,
+                successor_source_decision,
+            )
+            if not (
+                predecessor_latest.target_state == "EXPIRED"
+                and predecessor_before.disposition == "UNCLAIMED"
+                and predecessor_before.reservation_owner_packet_id is None
+                and disposition.event_class == "RESERVE"
+                and disposition.idempotency_key
+                == successor_projection.idempotency_identity.idempotency_key
+                and disposition.from_disposition == "UNCLAIMED"
+                and disposition.to_disposition == "RESERVED"
+                and disposition.from_owner_packet_id is None
+                and disposition.to_owner_packet_id == successor_id
+                and disposition.previous_disposition_event_id is None
+                and disposition.predecessor_packet_id == predecessor_id
+                and disposition.successor_packet_id == successor_id
+            ):
+                _reason_v01(
+                    reasons,
+                    "unclaimed_predecessor_transfer_forbidden",
+                )
+        elif relation == "SAME" and (
+            type(predecessor_latest) is ActionPacketTransitionEventV01
+            and predecessor_latest.transition_rule_id
+            in {
+                "g2a_t20_authorized_supersede",
+                "g2a_t21_queued_supersede",
+                "g2a_t22_pending_supersede",
+                "g2a_t23_failed_supersede",
+            }
+        ):
+            expected_causes = (
+                predecessor_latest.transition_event_id,
+                successor_activation.transition_event_id,
+            )
+            expected_evidence_refs = (
+                binding.accepted_supersession_binding_id,
+                predecessor_projection.logical_intent.root_owned_intent_id,
+                successor_source_decision,
+            )
+            if not (
+                predecessor_before.disposition == "RESERVED"
+                and predecessor_before.reservation_owner_packet_id
+                == predecessor_id
+                and disposition.event_class == expected_transfer_class
+                and disposition.idempotency_key
+                == successor_projection.idempotency_identity.idempotency_key
+                and disposition.from_disposition == "RESERVED"
+                and disposition.to_disposition == "RESERVED"
+                and disposition.from_owner_packet_id == predecessor_id
+                and disposition.to_owner_packet_id == successor_id
+                and disposition.previous_disposition_event_id
+                == predecessor_before.latest_disposition_event_id
+                and disposition.predecessor_packet_id == predecessor_id
+                and disposition.successor_packet_id == successor_id
+            ):
+                _reason_v01(reasons, "atomic_reserved_transfer_invalid")
+        elif relation == "SAME" and (
+            type(predecessor_latest) is ActionPacketTransitionEventV01
+            and predecessor_latest.transition_rule_id
+            in {
+                "g2a_t12_authorized_expire",
+                "g2a_t13_queued_expire",
+                "g2a_t14_pending_expire",
+                "g2a_t15_failed_expire",
+                "g2a_t07_authorized_block",
+                "g2a_t08_queued_block",
+                "g2a_t09_pending_block",
+                "g2a_t10_failed_block",
+                "g2a_t16_authorized_revoke",
+                "g2a_t17_queued_revoke",
+                "g2a_t18_pending_revoke",
+                "g2a_t19_failed_revoke",
+            }
+        ):
+            expected_causes = (
+                predecessor_latest.transition_event_id,
+                successor_activation.transition_event_id,
+            )
+            expected_evidence_refs = (
+                predecessor_latest.transition_event_id,
+                binding.accepted_supersession_binding_id,
+                successor_source_decision,
+            )
+            if not (
+                predecessor_before.disposition == "RESERVED"
+                and predecessor_before.reservation_owner_packet_id
+                == predecessor_id
+                and disposition.event_class == expected_transfer_class
+                and disposition.idempotency_key
+                == successor_projection.idempotency_identity.idempotency_key
+                and disposition.from_disposition == "RESERVED"
+                and disposition.to_disposition == "RESERVED"
+                and disposition.from_owner_packet_id == predecessor_id
+                and disposition.to_owner_packet_id == successor_id
+                and disposition.previous_disposition_event_id
+                == predecessor_before.latest_disposition_event_id
+                and disposition.predecessor_packet_id == predecessor_id
+                and disposition.successor_packet_id == successor_id
+            ):
+                _reason_v01(
+                    reasons,
+                    "terminal_predecessor_transfer_invalid",
+                )
+        elif relation == "DIFFERENT":
+            allowed_states = {
+                "CREATED",
+                "ROOT_AUTHORIZED",
+                "QUEUED",
+                "PENDING_FULFILLMENT",
+                "EXPIRED",
+                "BLOCKED",
+                "REVOKED",
+            }
+            predecessor_state = (
+                predecessor_latest.target_state
+                if type(predecessor_latest) is ActionPacketTransitionEventV01
+                else "CREATED"
+            )
+            if (
+                predecessor_state == "FAILED"
+                and type(predecessor_latest) is ActionPacketTransitionEventV01
+                and predecessor_latest.transition_rule_id
+                == "g2a_t24_nonconsuming_failure"
+            ):
+                predecessor_state = "FAILED_NON_CONSUMING"
+            allowed_states.add("FAILED_NON_CONSUMING")
+            expected_causes = (successor_activation.transition_event_id,)
+            expected_evidence_refs = _binding_ids_for_codes_v01(
+                successor_activation,
+                (
+                    "packet_genesis_valid",
+                    "source_root_authorization_valid",
+                    "idempotency_acquisition_valid",
+                ),
+            )
+            if not (
+                reason_class != "RENEWAL"
+                and predecessor_state in allowed_states
+                and successor_before.disposition == "UNCLAIMED"
+                and successor_before.reservation_owner_packet_id is None
+                and disposition.event_class == "RESERVE"
+                and disposition.idempotency_key
+                == successor_projection.idempotency_identity.idempotency_key
+                and disposition.from_disposition == "UNCLAIMED"
+                and disposition.to_disposition == "RESERVED"
+                and disposition.from_owner_packet_id is None
+                and disposition.to_owner_packet_id == successor_id
+                and disposition.previous_disposition_event_id is None
+                and disposition.predecessor_packet_id is None
+                and disposition.successor_packet_id is None
+            ):
+                _reason_v01(
+                    reasons,
+                    "material_effect_successor_application_invalid",
+                )
+        else:
+            _reason_v01(reasons, "action_packet_supersession_branch_invalid")
+            return _result_v01(reasons)[0], tuple(reasons), disposition
+        expected_evidence_refs = tuple(
+            sorted(expected_evidence_refs, key=lambda item: item.encode("utf-8"))
+        )
+        if (
+            disposition.cause_transition_event_ids != expected_causes
+            or disposition.evidence_refs != expected_evidence_refs
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_supersession_disposition_evidence_invalid",
+            )
+        valid, result_reasons = _result_v01(reasons)
+        return valid, result_reasons, disposition
+    except Exception:
+        return False, ("action_packet_supersession_bundle_invalid",), None
+
+
+def _disposition_has_valid_supersession_context_v01(
+    registry: ActionCommitPacketRegistryV02,
+    disposition: IdempotencyDispositionEventV01,
+) -> bool:
+    matching = 0
+    for context in registry.action_packet_invalidation_contexts:
+        if (
+            type(context) is not _ActionPacketInvalidationContextV01
+            or context.invalidation_evidence.invalidation_class
+            != "ROOT_SUPERSESSION"
+        ):
+            continue
+        valid, _, matched_disposition = (
+            _validate_registry_supersession_bundle_v01(registry, context)
+        )
+        if (
+            valid
+            and type(matched_disposition) is IdempotencyDispositionEventV01
+            and matched_disposition.idempotency_disposition_event_id
+            == disposition.idempotency_disposition_event_id
+        ):
+            matching += 1
+    return matching == 1
+
+
 def _validate_registry_state_disposition_coherence_v01(
     entry: ActionPacketLifecycleEntryV01,
     state: ActionPacketLifecycleStateV01,
@@ -8055,12 +11688,29 @@ def _validate_registry_state_disposition_coherence_v01(
     events = entry.transition_events
     packet_id = state.packet_id
     latest_rule = events[-1].transition_rule_id if events else None
-    reserve_events = tuple(
+    acquisition_events = tuple(
         event
         for event in dispositions
         if event.idempotency_key == state.idempotency_key
-        and event.event_class == "RESERVE"
         and event.to_owner_packet_id == packet_id
+        and event.event_class
+        in {
+            "RESERVE",
+            "TRANSFER_RENEWAL",
+            "TRANSFER_SUPERSESSION",
+        }
+    )
+    outgoing_transfers = tuple(
+        event
+        for event in dispositions
+        if event.idempotency_key == state.idempotency_key
+        and event.from_owner_packet_id == packet_id
+        and event.to_owner_packet_id != packet_id
+        and event.event_class
+        in {
+            "TRANSFER_RENEWAL",
+            "TRANSFER_SUPERSESSION",
+        }
     )
     expected_reserved_rules = {
         "g2a_t01_activate_root_authorization",
@@ -8074,15 +11724,46 @@ def _validate_registry_state_disposition_coherence_v01(
         "g2a_t13_queued_expire",
         "g2a_t14_pending_expire",
         "g2a_t15_failed_expire",
+        "g2a_t16_authorized_revoke",
+        "g2a_t17_queued_revoke",
+        "g2a_t18_pending_revoke",
+        "g2a_t19_failed_revoke",
         "g2a_t24_nonconsuming_failure",
         "g2a_t25_retry",
     }
     if latest_rule in expected_reserved_rules and not (
         state.idempotency_disposition == "RESERVED"
-        and state.reservation_owner_packet_id == packet_id
-        and len(reserve_events) == 1
+        and (
+            (
+                state.reservation_owner_packet_id == packet_id
+                and len(acquisition_events) == 1
+            )
+            or (
+                state.reservation_owner_packet_id != packet_id
+                and len(outgoing_transfers) == 1
+            )
+        )
     ):
         _reason_v01(reasons, "action_packet_registry_reservation_mismatch")
+    if latest_rule in {
+        "g2a_t20_authorized_supersede",
+        "g2a_t21_queued_supersede",
+        "g2a_t22_pending_supersede",
+        "g2a_t23_failed_supersede",
+    } and not (
+        state.lifecycle_state == "SUPERSEDED"
+        and state.idempotency_disposition == "RESERVED"
+        and state.reservation_owner_packet_id != packet_id
+        and len(outgoing_transfers) == 1
+        and latest_rule
+        in {
+            transition.transition_rule_id
+            for transition in events
+            if transition.transition_event_id
+            in outgoing_transfers[0].cause_transition_event_ids
+        }
+    ):
+        _reason_v01(reasons, "action_packet_registry_supersession_mismatch")
     if latest_rule in {
         "g2a_t04_fulfill_mock",
         "g2a_t05_receipt",
@@ -8111,6 +11792,22 @@ def _validate_registry_state_disposition_coherence_v01(
             in event.cause_transition_event_ids
             and event.event_class == expected_class
         )
+        if (
+            transition.transition_rule_id
+            == "g2a_t01_activate_root_authorization"
+        ):
+            matching = tuple(
+                event
+                for event in dispositions
+                if transition.transition_event_id
+                in event.cause_transition_event_ids
+                and event.event_class
+                in {
+                    "RESERVE",
+                    "TRANSFER_RENEWAL",
+                    "TRANSFER_SUPERSESSION",
+                }
+            )
         if expected_class is not None and len(matching) != 1:
             _reason_v01(reasons, "action_packet_registry_atomic_pair_missing")
         if (
@@ -8152,25 +11849,16 @@ def _derive_disposition_before_transition_v01(
     *,
     transition_index: int,
 ) -> IdempotencyDispositionStateV01:
-    prefix_transition_ids = {
-        event.transition_event_id
-        for event in entry.transition_events[:transition_index]
-    }
     key = (
         entry.root_bound_genesis.canonical_projection.idempotency_identity
         .idempotency_key
     )
-    historical_events = tuple(
-        event
-        for event in dispositions
-        if event.idempotency_key == key
-        and all(
-            cause_id in prefix_transition_ids
-            for cause_id in event.cause_transition_event_ids
-        )
-    )
     return _derive_idempotency_disposition_unchecked_v01(
-        historical_events,
+        _packet_local_disposition_history_v01(
+            entry.root_bound_genesis,
+            entry.transition_events[:transition_index],
+            dispositions,
+        ),
         key,
     )
 
@@ -8345,6 +12033,8 @@ def activate_action_packet_lifecycle_v01(
             raise ValueError("authority_transition_requires_g2a3_binding")
         if disposition_event.successor_packet_id is not None:
             raise ValueError("action_packet_lifecycle_activation_pair_invalid")
+        if not _is_initial_authorization_lifecycle_entry_v01(entry):
+            raise ValueError("authority_transition_requires_g2a3_binding")
         canonical_key = (
             entry.root_bound_genesis.canonical_projection.idempotency_identity
             .idempotency_key
@@ -8634,6 +12324,539 @@ def record_action_packet_receipt_confirmation_v01(
     )
 
 
+def record_action_packet_deterministic_invalidation_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    invalidation_evidence: object,
+    transition_event: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    try:
+        _require_valid_action_packet_registry_v01(registry)
+        _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        entry = _find_lifecycle_entry_v01(registry, packet_id)
+        state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            entry,
+            registry.idempotency_disposition_events,
+        )
+        context = _ActionPacketInvalidationContextV01(
+            invalidation_evidence=invalidation_evidence,
+            revocation_candidate=None,
+            revocation_root_projection=None,
+            accepted_revocation_binding=None,
+            supersession_candidate=None,
+            supersession_root_projection=None,
+            supersession_successor_packet_id=None,
+            accepted_supersession_binding=None,
+        )
+        context_valid, context_reasons = (
+            _validate_action_packet_invalidation_context_v01(
+                context,
+                entry.root_bound_genesis,
+            )
+        )
+        if not context_valid:
+            raise ValueError(context_reasons[0])
+        expected_rule = {
+            "CREATED": "g2a_t06_created_block",
+            "ROOT_AUTHORIZED": "g2a_t07_authorized_block",
+            "QUEUED": "g2a_t08_queued_block",
+            "PENDING_FULFILLMENT": "g2a_t09_pending_block",
+            "FAILED": "g2a_t10_failed_block",
+        }.get(state.lifecycle_state)
+        if (
+            expected_rule is None
+            or type(transition_event) is not ActionPacketTransitionEventV01
+            or transition_event.transition_rule_id != expected_rule
+            or (
+                expected_rule == "g2a_t10_failed_block"
+                and state.failed_provenance != "FAILED_NON_CONSUMING"
+            )
+        ):
+            raise ValueError("action_packet_deterministic_invalidation_invalid")
+        if expected_rule == "g2a_t06_created_block":
+            if not (
+                state.idempotency_disposition == "UNCLAIMED"
+                and state.reservation_owner_packet_id is None
+            ):
+                raise ValueError("idempotency_reservation_invalid")
+        elif not (
+            state.idempotency_disposition == "RESERVED"
+            and state.reservation_owner_packet_id == packet_id
+        ):
+            raise ValueError("idempotency_reservation_invalid")
+        transition_valid, transition_reasons = (
+            _validate_contextual_invalidation_transition_v01(
+                context,
+                transition_event,
+                root_bound_genesis=entry.root_bound_genesis,
+                preceding_events=entry.transition_events,
+                disposition_events=registry.idempotency_disposition_events,
+            )
+        )
+        if not transition_valid:
+            raise ValueError(transition_reasons[0])
+        proposed = _append_invalidation_context_and_transition_v01(
+            registry,
+            entry=entry,
+            context=context,
+            transition_event=transition_event,
+        )
+        after_state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            _find_lifecycle_entry_v01(proposed, packet_id),
+            proposed.idempotency_disposition_events,
+        )
+        if (
+            after_state.lifecycle_state != "BLOCKED"
+            or proposed.idempotency_disposition_events
+            is not registry.idempotency_disposition_events
+            or after_state.idempotency_disposition
+            != state.idempotency_disposition
+            or after_state.reservation_owner_packet_id
+            != state.reservation_owner_packet_id
+        ):
+            raise ValueError("action_packet_deterministic_invalidation_invalid")
+        return proposed
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_deterministic_invalidation_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError(
+            "action_packet_deterministic_invalidation_invalid"
+        ) from None
+
+
+def record_action_packet_revocation_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    revocation_candidate: object,
+    revocation_root_projection: object,
+    accepted_revocation_binding: object,
+    invalidation_evidence: object,
+    transition_event: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    try:
+        _require_valid_action_packet_registry_v01(registry)
+        _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        entry = _find_lifecycle_entry_v01(registry, packet_id)
+        state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            entry,
+            registry.idempotency_disposition_events,
+        )
+        context = _ActionPacketInvalidationContextV01(
+            invalidation_evidence=invalidation_evidence,
+            revocation_candidate=revocation_candidate,
+            revocation_root_projection=revocation_root_projection,
+            accepted_revocation_binding=accepted_revocation_binding,
+            supersession_candidate=None,
+            supersession_root_projection=None,
+            supersession_successor_packet_id=None,
+            accepted_supersession_binding=None,
+        )
+        context_valid, context_reasons = (
+            _validate_action_packet_invalidation_context_v01(
+                context,
+                entry.root_bound_genesis,
+            )
+        )
+        if not context_valid:
+            raise ValueError(context_reasons[0])
+        expected_rule = {
+            "ROOT_AUTHORIZED": "g2a_t16_authorized_revoke",
+            "QUEUED": "g2a_t17_queued_revoke",
+            "PENDING_FULFILLMENT": "g2a_t18_pending_revoke",
+            "FAILED": "g2a_t19_failed_revoke",
+        }.get(state.lifecycle_state)
+        if (
+            expected_rule is None
+            or type(transition_event) is not ActionPacketTransitionEventV01
+            or transition_event.transition_rule_id != expected_rule
+            or (
+                expected_rule == "g2a_t19_failed_revoke"
+                and state.failed_provenance != "FAILED_NON_CONSUMING"
+            )
+        ):
+            raise ValueError("action_packet_revocation_invalid")
+        if not (
+            state.idempotency_disposition == "RESERVED"
+            and state.reservation_owner_packet_id == packet_id
+            and state.terminal_receipt_ref is None
+        ):
+            raise ValueError("idempotency_reservation_invalid")
+        transition_valid, transition_reasons = (
+            _validate_contextual_invalidation_transition_v01(
+                context,
+                transition_event,
+                root_bound_genesis=entry.root_bound_genesis,
+                preceding_events=entry.transition_events,
+                disposition_events=registry.idempotency_disposition_events,
+            )
+        )
+        if not transition_valid:
+            raise ValueError(transition_reasons[0])
+        proposed = _append_invalidation_context_and_transition_v01(
+            registry,
+            entry=entry,
+            context=context,
+            transition_event=transition_event,
+        )
+        after_state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            _find_lifecycle_entry_v01(proposed, packet_id),
+            proposed.idempotency_disposition_events,
+        )
+        if (
+            after_state.lifecycle_state != "REVOKED"
+            or proposed.idempotency_disposition_events
+            is not registry.idempotency_disposition_events
+            or after_state.idempotency_disposition != "RESERVED"
+            or after_state.reservation_owner_packet_id != packet_id
+        ):
+            raise ValueError("action_packet_revocation_invalid")
+        return proposed
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_revocation_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_revocation_invalid") from None
+
+
+def record_action_packet_supersession_v01(
+    registry: object,
+    *,
+    predecessor_packet_id: object,
+    successor_packet_id: object,
+    supersession_candidate: object,
+    supersession_root_projection: object,
+    accepted_supersession_binding: object,
+    invalidation_evidence: object,
+    successor_activation_event: object,
+    disposition_event: object,
+    action_packet_transition_registry_profile: object,
+    predecessor_supersession_event: object = None,
+) -> ActionCommitPacketRegistryV02:
+    try:
+        _require_valid_action_packet_registry_v01(registry)
+        _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        predecessor = _find_lifecycle_entry_v01(
+            registry,
+            predecessor_packet_id,
+        )
+        successor = _find_lifecycle_entry_v01(
+            registry,
+            successor_packet_id,
+        )
+        if predecessor is successor:
+            raise ValueError("action_packet_supersession_identity_invalid")
+        context = _ActionPacketInvalidationContextV01(
+            invalidation_evidence=invalidation_evidence,
+            revocation_candidate=None,
+            revocation_root_projection=None,
+            accepted_revocation_binding=None,
+            supersession_candidate=supersession_candidate,
+            supersession_root_projection=supersession_root_projection,
+            supersession_successor_packet_id=successor_packet_id,
+            accepted_supersession_binding=accepted_supersession_binding,
+        )
+        context_valid, context_reasons = (
+            _validate_action_packet_invalidation_context_v01(
+                context,
+                predecessor.root_bound_genesis,
+                supersession_successor=successor.root_bound_genesis,
+            )
+        )
+        if not context_valid:
+            raise ValueError(context_reasons[0])
+        relation = _logical_effect_relation_v01(predecessor, successor)
+        if relation is None:
+            raise ValueError("logical_effect_identity_alias_forbidden")
+        predecessor_state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            predecessor,
+            registry.idempotency_disposition_events,
+        )
+        successor_state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            successor,
+            registry.idempotency_disposition_events,
+        )
+        if not (
+            successor_state.lifecycle_state == "CREATED"
+            and successor.transition_events == ()
+            and successor_state.reservation_owner_packet_id
+            != successor_packet_id
+            and type(successor_activation_event)
+            is ActionPacketTransitionEventV01
+            and successor_activation_event.transition_rule_id
+            == "g2a_t01_activate_root_authorization"
+            and type(disposition_event) is IdempotencyDispositionEventV01
+        ):
+            raise ValueError("action_packet_successor_activation_invalid")
+        successor_authorization = (
+            successor.root_bound_genesis.canonical_projection
+            .authorization_candidate
+        )
+        if not (
+            successor_authorization.predecessor_packet_id
+            == predecessor_packet_id
+            and type(supersession_candidate) is SupersessionCandidateV01
+            and successor_authorization.supersession_reason_class
+            == supersession_candidate.supersession_reason_class
+        ):
+            raise ValueError("action_packet_supersession_relationship_invalid")
+        temporal_reason = _action_packet_transition_temporal_reason_v01(
+            successor.root_bound_genesis,
+            successor_activation_event,
+        )
+        if temporal_reason is not None:
+            raise ValueError(temporal_reason)
+        predecessor_latest = (
+            predecessor.transition_events[-1]
+            if predecessor.transition_events
+            else None
+        )
+        reason_class = supersession_candidate.supersession_reason_class
+        expected_transfer_class = (
+            "TRANSFER_RENEWAL"
+            if reason_class == "RENEWAL"
+            else "TRANSFER_SUPERSESSION"
+        )
+        predecessor_event = predecessor_supersession_event
+        if relation == "SAME":
+            if predecessor_state.idempotency_disposition == "CONSUMED":
+                raise ValueError("consumed_key_permanently_closed")
+            if (
+                predecessor_state.idempotency_disposition
+                == "UNCERTAIN_CLOSED"
+            ):
+                raise ValueError("uncertain_key_permanently_closed")
+            if (
+                predecessor_state.lifecycle_state == "EXPIRED"
+                and type(predecessor_latest)
+                is ActionPacketTransitionEventV01
+                and predecessor_latest.transition_rule_id
+                == "g2a_t11_created_expire"
+                and predecessor_state.reservation_owner_packet_id is None
+            ):
+                if (
+                    predecessor_event is not None
+                    or disposition_event.event_class != "RESERVE"
+                ):
+                    raise ValueError(
+                        "unclaimed_predecessor_transfer_forbidden"
+                    )
+            elif predecessor_state.lifecycle_state in {
+                "ROOT_AUTHORIZED",
+                "QUEUED",
+                "PENDING_FULFILLMENT",
+                "FAILED",
+            }:
+                expected_rule = {
+                    "ROOT_AUTHORIZED": "g2a_t20_authorized_supersede",
+                    "QUEUED": "g2a_t21_queued_supersede",
+                    "PENDING_FULFILLMENT": "g2a_t22_pending_supersede",
+                    "FAILED": "g2a_t23_failed_supersede",
+                }[predecessor_state.lifecycle_state]
+                if (
+                    predecessor_state.lifecycle_state == "FAILED"
+                    and predecessor_state.failed_provenance
+                    != "FAILED_NON_CONSUMING"
+                ):
+                    raise ValueError("failed_provenance_invalid")
+                if not (
+                    type(predecessor_event)
+                    is ActionPacketTransitionEventV01
+                    and predecessor_event.transition_rule_id == expected_rule
+                    and disposition_event.event_class
+                    == expected_transfer_class
+                ):
+                    raise ValueError("atomic_reserved_transfer_invalid")
+            elif (
+                predecessor_state.lifecycle_state
+                in {"EXPIRED", "BLOCKED", "REVOKED"}
+                and type(predecessor_latest)
+                is ActionPacketTransitionEventV01
+                and predecessor_latest.transition_rule_id
+                in {
+                    "g2a_t12_authorized_expire",
+                    "g2a_t13_queued_expire",
+                    "g2a_t14_pending_expire",
+                    "g2a_t15_failed_expire",
+                    "g2a_t07_authorized_block",
+                    "g2a_t08_queued_block",
+                    "g2a_t09_pending_block",
+                    "g2a_t10_failed_block",
+                    "g2a_t16_authorized_revoke",
+                    "g2a_t17_queued_revoke",
+                    "g2a_t18_pending_revoke",
+                    "g2a_t19_failed_revoke",
+                }
+            ):
+                if (
+                    predecessor_event is not None
+                    or disposition_event.event_class
+                    != expected_transfer_class
+                ):
+                    raise ValueError("terminal_predecessor_transfer_invalid")
+            else:
+                raise ValueError("action_packet_supersession_branch_invalid")
+            if (
+                predecessor_state.lifecycle_state != "EXPIRED"
+                or predecessor_latest is None
+                or predecessor_latest.transition_rule_id
+                != "g2a_t11_created_expire"
+            ) and not (
+                predecessor_state.idempotency_disposition == "RESERVED"
+                and predecessor_state.reservation_owner_packet_id
+                == predecessor_packet_id
+                and predecessor_state.terminal_receipt_ref is None
+            ):
+                raise ValueError("atomic_reserved_transfer_invalid")
+        else:
+            allowed_material_states = {
+                "CREATED",
+                "ROOT_AUTHORIZED",
+                "QUEUED",
+                "PENDING_FULFILLMENT",
+                "EXPIRED",
+                "BLOCKED",
+                "REVOKED",
+            }
+            if (
+                predecessor_state.lifecycle_state == "FAILED"
+                and predecessor_state.failed_provenance
+                == "FAILED_NON_CONSUMING"
+            ):
+                allowed_material_states.add("FAILED")
+            if not (
+                reason_class != "RENEWAL"
+                and predecessor_state.lifecycle_state
+                in allowed_material_states
+                and predecessor_event is None
+                and disposition_event.event_class == "RESERVE"
+            ):
+                raise ValueError(
+                    "material_effect_successor_application_invalid"
+                )
+        updated_predecessor = predecessor
+        if predecessor_event is not None:
+            updated_predecessor = ActionPacketLifecycleEntryV01(
+                root_bound_genesis=predecessor.root_bound_genesis,
+                transition_registry_id=predecessor.transition_registry_id,
+                transition_events=(
+                    predecessor.transition_events + (predecessor_event,)
+                ),
+            )
+        updated_successor = ActionPacketLifecycleEntryV01(
+            root_bound_genesis=successor.root_bound_genesis,
+            transition_registry_id=successor.transition_registry_id,
+            transition_events=(successor_activation_event,),
+        )
+        updated_entries = tuple(
+            (
+                updated_predecessor
+                if entry is predecessor
+                else updated_successor
+                if entry is successor
+                else entry
+            )
+            for entry in registry.action_packet_lifecycle_entries
+        )
+        proposed = _registry_with_g2a_histories_v01(
+            registry,
+            lifecycle_entries=updated_entries,
+            disposition_events=(
+                registry.idempotency_disposition_events
+                + (disposition_event,)
+            ),
+            invalidation_contexts=(
+                registry.action_packet_invalidation_contexts + (context,)
+            ),
+        )
+        _require_valid_action_packet_registry_v01(proposed)
+        bundle_valid, bundle_reasons, matched_disposition = (
+            _validate_registry_supersession_bundle_v01(proposed, context)
+        )
+        if (
+            not bundle_valid
+            or matched_disposition is not disposition_event
+        ):
+            raise ValueError(
+                bundle_reasons[0]
+                if bundle_reasons
+                else "action_packet_supersession_bundle_invalid"
+            )
+        successor_after = _derive_action_packet_lifecycle_state_unchecked_v01(
+            _find_lifecycle_entry_v01(proposed, successor_packet_id),
+            proposed.idempotency_disposition_events,
+        )
+        if not (
+            successor_after.lifecycle_state == "ROOT_AUTHORIZED"
+            and successor_after.idempotency_disposition == "RESERVED"
+            and successor_after.reservation_owner_packet_id
+            == successor_packet_id
+            and successor_after.executable is False
+        ):
+            raise ValueError("action_packet_successor_activation_invalid")
+        return proposed
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_supersession_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_supersession_invalid") from None
+
+
+def _append_invalidation_context_and_transition_v01(
+    registry: ActionCommitPacketRegistryV02,
+    *,
+    entry: ActionPacketLifecycleEntryV01,
+    context: _ActionPacketInvalidationContextV01,
+    transition_event: ActionPacketTransitionEventV01,
+) -> ActionCommitPacketRegistryV02:
+    updated_entry = ActionPacketLifecycleEntryV01(
+        root_bound_genesis=entry.root_bound_genesis,
+        transition_registry_id=entry.transition_registry_id,
+        transition_events=entry.transition_events + (transition_event,),
+    )
+    entries = tuple(
+        updated_entry if candidate is entry else candidate
+        for candidate in registry.action_packet_lifecycle_entries
+    )
+    if sum(
+        candidate is entry
+        for candidate in registry.action_packet_lifecycle_entries
+    ) != 1:
+        raise ValueError("action_packet_lifecycle_entry_not_found")
+    proposed = _registry_with_g2a_histories_v01(
+        registry,
+        lifecycle_entries=entries,
+        disposition_events=registry.idempotency_disposition_events,
+        invalidation_contexts=(
+            registry.action_packet_invalidation_contexts + (context,)
+        ),
+    )
+    _require_valid_action_packet_registry_v01(proposed)
+    return proposed
+
+
 def _record_atomic_outcome_v01(
     registry: object,
     *,
@@ -8852,6 +13075,11 @@ def _registry_with_g2a_histories_v01(
     *,
     lifecycle_entries: tuple[ActionPacketLifecycleEntryV01, ...] | None = None,
     disposition_events: tuple[IdempotencyDispositionEventV01, ...] | None = None,
+    invalidation_contexts: tuple[
+        _ActionPacketInvalidationContextV01,
+        ...,
+    ]
+    | None = None,
 ) -> ActionCommitPacketRegistryV02:
     return ActionCommitPacketRegistryV02(
         registry_id=registry.registry_id,
@@ -8881,6 +13109,11 @@ def _registry_with_g2a_histories_v01(
             registry.idempotency_disposition_events
             if disposition_events is None
             else disposition_events
+        ),
+        action_packet_invalidation_contexts=(
+            registry.action_packet_invalidation_contexts
+            if invalidation_contexts is None
+            else invalidation_contexts
         ),
     )
 

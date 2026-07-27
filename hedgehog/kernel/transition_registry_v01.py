@@ -10,10 +10,16 @@ execute an effect. Unknown transitions fail closed.
 from __future__ import annotations
 
 from dataclasses import dataclass as _dataclass
+import re as _re
+import unicodedata as _unicodedata
 
 from hedgehog.kernel.abi_v01 import (
+    ACTION_PACKET_LIFECYCLE_PROFILE_ID_V01,
+    ACTION_PACKET_LIFECYCLE_STATES_V01,
     ARTIFACT_TYPES as _ARTIFACT_TYPES,
     LIFECYCLE_STATES as _LIFECYCLE_STATES,
+    build_action_packet_lifecycle_profile_v01 as _build_action_packet_lifecycle_profile_v01,
+    validate_action_packet_lifecycle_profile_v01 as _validate_action_packet_lifecycle_profile_v01,
 )
 from hedgehog.kernel.integrity_replay_v01 import (
     canonical_json_bytes_v01 as _canonical_json_bytes_v01,
@@ -66,6 +72,171 @@ TRANSITION_GUARD_IDS = (
     "outcome_complete",
     "source_root_isolated",
     "finalization_policy_passed",
+)
+
+ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_ID_V01 = (
+    "action_packet_lifecycle_registry_profile_v01"
+)
+ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01 = "v0.1"
+ACTION_PACKET_TRANSITION_REGISTRY_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_PACKET_TRANSITION_REGISTRY_V01"
+)
+ACTION_PACKET_TRANSITION_REGISTRY_PREFIX_V01 = "acptr_v01:"
+
+ACTION_PACKET_TRANSITION_CLASS_CODES_V01 = (
+    "LIFECYCLE_ACTIVATION",
+    "DETERMINISTIC",
+    "DETERMINISTIC_CONSUMING",
+    "AUTHORITY_CHANGE",
+    "DETERMINISTIC_UNCERTAIN",
+)
+ACTION_PACKET_PERMITTED_COMPONENT_CODES_V01 = (
+    "lifecycle_runtime",
+    "exclusive_corridor",
+    "receipt_observer",
+    "temporal_validator",
+    "owning_local_root",
+)
+ACTION_PACKET_ROOT_DECISION_REQUIREMENT_CODES_V01 = (
+    "NONE",
+    "EXISTING_SOURCE_AUTHORIZATION",
+    "NEW_ROOT_REVOCATION_DECISION",
+    "NEW_ROOT_SUPERSESSION_DECISION",
+)
+ACTION_PACKET_EFFECT_CONSUMPTION_CLASSES_V01 = (
+    "NOT_CONSUMED",
+    "CONSUMED",
+    "UNCERTAIN",
+)
+ACTION_PACKET_ADAPTER_INVOCATION_RELATION_CODES_V01 = (
+    "NO_ADAPTER_INVOCATION",
+    "CORRIDOR_INVOCATION_CONSUMED",
+    "CORRIDOR_INVOCATION_NONCONSUMING",
+    "CORRIDOR_INVOCATION_UNCERTAIN",
+    "POST_INVOCATION_RECEIPT_OBSERVATION",
+)
+ACTION_PACKET_TRANSITION_RULE_IDS_V01 = (
+    "g2a_t01_activate_root_authorization",
+    "g2a_t02_queue",
+    "g2a_t03_pending",
+    "g2a_t04_fulfill_mock",
+    "g2a_t05_receipt",
+    "g2a_t06_created_block",
+    "g2a_t07_authorized_block",
+    "g2a_t08_queued_block",
+    "g2a_t09_pending_block",
+    "g2a_t10_failed_block",
+    "g2a_t11_created_expire",
+    "g2a_t12_authorized_expire",
+    "g2a_t13_queued_expire",
+    "g2a_t14_pending_expire",
+    "g2a_t15_failed_expire",
+    "g2a_t16_authorized_revoke",
+    "g2a_t17_queued_revoke",
+    "g2a_t18_pending_revoke",
+    "g2a_t19_failed_revoke",
+    "g2a_t20_authorized_supersede",
+    "g2a_t21_queued_supersede",
+    "g2a_t22_pending_supersede",
+    "g2a_t23_failed_supersede",
+    "g2a_t24_nonconsuming_failure",
+    "g2a_t25_retry",
+    "g2a_t26_uncertain_adapter_outcome",
+)
+ACTION_PACKET_REQUIRED_EVIDENCE_CODES_V01 = (
+    "packet_genesis_valid",
+    "source_root_authorization_valid",
+    "idempotency_acquisition_valid",
+    "transition_history_valid",
+    "temporal_authority_valid",
+    "mandatory_dependencies_current",
+    "idempotency_reservation_owned",
+    "immediate_prefulfillment_validation_pass",
+    "mock_adapter_result_valid",
+    "effect_consumption_evidence_valid",
+    "terminal_receipt_valid",
+    "fulfillment_consumption_evidence_valid",
+    "blocking_evidence_valid",
+    "authority_policy_valid",
+    "immediate_eligibility_failure_valid",
+    "adapter_not_called",
+    "failed_non_consuming_provenance_valid",
+    "retry_ineligibility_evidence_valid",
+    "evaluation_time_valid",
+    "immediate_temporal_validation_pass",
+    "accepted_revocation_binding_valid",
+    "source_authorization_binding_valid",
+    "successor_packet_valid",
+    "accepted_supersession_binding_valid",
+    "predecessor_binding_valid",
+    "idempotency_transfer_valid",
+    "adapter_invocation_evidence_valid",
+    "effect_nonconsumption_evidence_valid",
+    "latest_disposition_event_binding_valid",
+    "retry_policy_valid",
+    "current_eligibility_valid",
+    "effect_outcome_unresolved",
+)
+ACTION_PACKET_TRANSITION_REASON_CODES_V01 = (
+    "root_authorization_activated",
+    "packet_queued",
+    "pending_fulfillment",
+    "fulfilled_mock",
+    "receipt_received",
+    "packet_blocked",
+    "packet_expired",
+    "packet_revoked",
+    "packet_superseded",
+    "fulfillment_failed_nonconsuming",
+    "nonconsuming_retry_queued",
+    "fulfillment_failed_consumption_uncertain",
+)
+ACTION_PACKET_FAIL_CLOSED_REASON_CODES_V01 = (
+    "packet_genesis_invalid",
+    "source_root_authorization_invalid",
+    "wrong_owning_root",
+    "idempotency_acquisition_invalid",
+    "packet_non_executable",
+    "transition_history_invalid",
+    "temporal_authority_invalid",
+    "mandatory_dependency_invalid",
+    "idempotency_reservation_invalid",
+    "current_eligibility_invalid",
+    "adapter_call_failed",
+    "effect_consumption_evidence_missing",
+    "current_eligibility_changed",
+    "receipt_invalid",
+    "packet_binding_mismatch",
+    "idempotency_binding_mismatch",
+    "receipt_authority_claimed",
+    "consumption_evidence_missing",
+    "blocking_evidence_missing",
+    "authority_expansion_detected",
+    "authority_policy_invalid",
+    "adapter_already_called",
+    "failed_provenance_invalid",
+    "retry_ineligibility_evidence_missing",
+    "evaluation_time_invalid",
+    "prior_terminal_state",
+    "foreign_root",
+    "accepted_revocation_binding_invalid",
+    "source_authorization_mismatch",
+    "successor_packet_missing",
+    "accepted_supersession_binding_invalid",
+    "predecessor_binding_mismatch",
+    "idempotency_transfer_invalid",
+    "adapter_not_called",
+    "effect_consumed",
+    "effect_outcome_uncertain",
+    "failure_evidence_missing",
+    "latest_disposition_event_binding_invalid",
+    "disposition_history_changed",
+    "terminal_evidence_present",
+    "retry_policy_invalid",
+    "effect_non_consumption_proven",
+    "execution_attempt_evidence_missing",
+    "idempotency_binding_missing",
+    "transition_event_identity_invalid",
 )
 
 _REGISTRY_DOMAIN = "hedgehog.kernel.transition_registry.v01"
@@ -162,6 +333,30 @@ class TransitionRegistryV01:
     registry_version: str
     abi_major_version: int
     rules: tuple[TransitionRuleV01, ...]
+
+
+@_dataclass(frozen=True)
+class ActionPacketTransitionRuleV01:
+    transition_rule_id: str
+    source_state: str
+    target_state: str
+    transition_class_code: str
+    permitted_component_code: str
+    root_decision_requirement_code: str
+    required_evidence_codes: tuple[str, ...]
+    effect_consumption_class: str
+    adapter_invocation_relation_code: str
+    terminal_target: bool
+    reason_code: str
+    fail_closed_reason_codes: tuple[str, ...]
+
+
+@_dataclass(frozen=True)
+class ActionPacketTransitionRegistryProfileV01:
+    transition_registry_id: str
+    registry_profile_version: str
+    lifecycle_profile_id: str
+    ordered_transition_rules: tuple[ActionPacketTransitionRuleV01, ...]
 
 
 def build_default_transition_registry_v01() -> TransitionRegistryV01:
@@ -750,3 +945,1022 @@ def _stable_value_error(error: ValueError, allowed: tuple[str, ...]) -> bool:
 
 def _dedupe(values: list[str]) -> tuple[str, ...]:
     return tuple(dict.fromkeys(values))
+
+
+_ACTION_PACKET_TRANSITION_RULE_ROWS_V01 = (
+    (
+        "g2a_t01_activate_root_authorization",
+        "CREATED",
+        "ROOT_AUTHORIZED",
+        "LIFECYCLE_ACTIVATION",
+        "lifecycle_runtime",
+        "EXISTING_SOURCE_AUTHORIZATION",
+        (
+            "packet_genesis_valid",
+            "source_root_authorization_valid",
+            "idempotency_acquisition_valid",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        False,
+        "root_authorization_activated",
+        (
+            "packet_genesis_invalid",
+            "source_root_authorization_invalid",
+            "wrong_owning_root",
+            "idempotency_acquisition_invalid",
+        ),
+    ),
+    (
+        "g2a_t02_queue",
+        "ROOT_AUTHORIZED",
+        "QUEUED",
+        "DETERMINISTIC",
+        "lifecycle_runtime",
+        "NONE",
+        (
+            "transition_history_valid",
+            "temporal_authority_valid",
+            "mandatory_dependencies_current",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        False,
+        "packet_queued",
+        (
+            "packet_non_executable",
+            "transition_history_invalid",
+            "temporal_authority_invalid",
+            "mandatory_dependency_invalid",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t03_pending",
+        "QUEUED",
+        "PENDING_FULFILLMENT",
+        "DETERMINISTIC",
+        "exclusive_corridor",
+        "NONE",
+        (
+            "immediate_prefulfillment_validation_pass",
+            "transition_history_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        False,
+        "pending_fulfillment",
+        (
+            "current_eligibility_invalid",
+            "transition_history_invalid",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t04_fulfill_mock",
+        "PENDING_FULFILLMENT",
+        "FULFILLED_MOCK",
+        "DETERMINISTIC_CONSUMING",
+        "exclusive_corridor",
+        "NONE",
+        (
+            "mock_adapter_result_valid",
+            "effect_consumption_evidence_valid",
+            "idempotency_reservation_owned",
+        ),
+        "CONSUMED",
+        "CORRIDOR_INVOCATION_CONSUMED",
+        False,
+        "fulfilled_mock",
+        (
+            "adapter_call_failed",
+            "effect_consumption_evidence_missing",
+            "current_eligibility_changed",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t05_receipt",
+        "FULFILLED_MOCK",
+        "RECEIPT_RECEIVED",
+        "DETERMINISTIC_CONSUMING",
+        "receipt_observer",
+        "NONE",
+        (
+            "terminal_receipt_valid",
+            "fulfillment_consumption_evidence_valid",
+        ),
+        "CONSUMED",
+        "POST_INVOCATION_RECEIPT_OBSERVATION",
+        True,
+        "receipt_received",
+        (
+            "receipt_invalid",
+            "packet_binding_mismatch",
+            "idempotency_binding_mismatch",
+            "receipt_authority_claimed",
+            "consumption_evidence_missing",
+        ),
+    ),
+    (
+        "g2a_t06_created_block",
+        "CREATED",
+        "BLOCKED",
+        "DETERMINISTIC",
+        "lifecycle_runtime",
+        "NONE",
+        ("packet_genesis_valid", "blocking_evidence_valid"),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_blocked",
+        (
+            "packet_genesis_invalid",
+            "blocking_evidence_missing",
+            "authority_expansion_detected",
+        ),
+    ),
+    (
+        "g2a_t07_authorized_block",
+        "ROOT_AUTHORIZED",
+        "BLOCKED",
+        "DETERMINISTIC",
+        "lifecycle_runtime",
+        "NONE",
+        (
+            "blocking_evidence_valid",
+            "authority_policy_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_blocked",
+        (
+            "blocking_evidence_missing",
+            "authority_expansion_detected",
+            "authority_policy_invalid",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t08_queued_block",
+        "QUEUED",
+        "BLOCKED",
+        "DETERMINISTIC",
+        "lifecycle_runtime",
+        "NONE",
+        (
+            "blocking_evidence_valid",
+            "authority_policy_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_blocked",
+        (
+            "blocking_evidence_missing",
+            "authority_expansion_detected",
+            "authority_policy_invalid",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t09_pending_block",
+        "PENDING_FULFILLMENT",
+        "BLOCKED",
+        "DETERMINISTIC",
+        "exclusive_corridor",
+        "NONE",
+        (
+            "immediate_eligibility_failure_valid",
+            "adapter_not_called",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_blocked",
+        (
+            "adapter_already_called",
+            "blocking_evidence_missing",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t10_failed_block",
+        "FAILED",
+        "BLOCKED",
+        "DETERMINISTIC",
+        "lifecycle_runtime",
+        "NONE",
+        (
+            "failed_non_consuming_provenance_valid",
+            "retry_ineligibility_evidence_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_blocked",
+        (
+            "failed_provenance_invalid",
+            "retry_ineligibility_evidence_missing",
+            "authority_expansion_detected",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t11_created_expire",
+        "CREATED",
+        "EXPIRED",
+        "DETERMINISTIC",
+        "temporal_validator",
+        "NONE",
+        (
+            "packet_genesis_valid",
+            "temporal_authority_valid",
+            "evaluation_time_valid",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_expired",
+        (
+            "packet_genesis_invalid",
+            "temporal_authority_invalid",
+            "evaluation_time_invalid",
+            "prior_terminal_state",
+        ),
+    ),
+    (
+        "g2a_t12_authorized_expire",
+        "ROOT_AUTHORIZED",
+        "EXPIRED",
+        "DETERMINISTIC",
+        "temporal_validator",
+        "NONE",
+        (
+            "temporal_authority_valid",
+            "evaluation_time_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_expired",
+        (
+            "temporal_authority_invalid",
+            "evaluation_time_invalid",
+            "prior_terminal_state",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t13_queued_expire",
+        "QUEUED",
+        "EXPIRED",
+        "DETERMINISTIC",
+        "temporal_validator",
+        "NONE",
+        (
+            "temporal_authority_valid",
+            "evaluation_time_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_expired",
+        (
+            "temporal_authority_invalid",
+            "evaluation_time_invalid",
+            "prior_terminal_state",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t14_pending_expire",
+        "PENDING_FULFILLMENT",
+        "EXPIRED",
+        "DETERMINISTIC",
+        "exclusive_corridor",
+        "NONE",
+        (
+            "immediate_temporal_validation_pass",
+            "evaluation_time_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_expired",
+        (
+            "adapter_already_called",
+            "temporal_authority_invalid",
+            "evaluation_time_invalid",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t15_failed_expire",
+        "FAILED",
+        "EXPIRED",
+        "DETERMINISTIC",
+        "temporal_validator",
+        "NONE",
+        (
+            "failed_non_consuming_provenance_valid",
+            "temporal_authority_valid",
+            "evaluation_time_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_expired",
+        (
+            "failed_provenance_invalid",
+            "temporal_authority_invalid",
+            "evaluation_time_invalid",
+            "prior_terminal_state",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t16_authorized_revoke",
+        "ROOT_AUTHORIZED",
+        "REVOKED",
+        "AUTHORITY_CHANGE",
+        "owning_local_root",
+        "NEW_ROOT_REVOCATION_DECISION",
+        (
+            "accepted_revocation_binding_valid",
+            "source_authorization_binding_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_revoked",
+        (
+            "foreign_root",
+            "accepted_revocation_binding_invalid",
+            "source_authorization_mismatch",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t17_queued_revoke",
+        "QUEUED",
+        "REVOKED",
+        "AUTHORITY_CHANGE",
+        "owning_local_root",
+        "NEW_ROOT_REVOCATION_DECISION",
+        (
+            "accepted_revocation_binding_valid",
+            "source_authorization_binding_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_revoked",
+        (
+            "foreign_root",
+            "accepted_revocation_binding_invalid",
+            "source_authorization_mismatch",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t18_pending_revoke",
+        "PENDING_FULFILLMENT",
+        "REVOKED",
+        "AUTHORITY_CHANGE",
+        "owning_local_root",
+        "NEW_ROOT_REVOCATION_DECISION",
+        (
+            "accepted_revocation_binding_valid",
+            "source_authorization_binding_valid",
+            "adapter_not_called",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_revoked",
+        (
+            "adapter_already_called",
+            "foreign_root",
+            "accepted_revocation_binding_invalid",
+            "source_authorization_mismatch",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t19_failed_revoke",
+        "FAILED",
+        "REVOKED",
+        "AUTHORITY_CHANGE",
+        "owning_local_root",
+        "NEW_ROOT_REVOCATION_DECISION",
+        (
+            "failed_non_consuming_provenance_valid",
+            "accepted_revocation_binding_valid",
+            "source_authorization_binding_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_revoked",
+        (
+            "failed_provenance_invalid",
+            "foreign_root",
+            "accepted_revocation_binding_invalid",
+            "source_authorization_mismatch",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t20_authorized_supersede",
+        "ROOT_AUTHORIZED",
+        "SUPERSEDED",
+        "AUTHORITY_CHANGE",
+        "owning_local_root",
+        "NEW_ROOT_SUPERSESSION_DECISION",
+        (
+            "successor_packet_valid",
+            "accepted_supersession_binding_valid",
+            "predecessor_binding_valid",
+            "idempotency_transfer_valid",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_superseded",
+        (
+            "successor_packet_missing",
+            "accepted_supersession_binding_invalid",
+            "predecessor_binding_mismatch",
+            "foreign_root",
+            "idempotency_transfer_invalid",
+        ),
+    ),
+    (
+        "g2a_t21_queued_supersede",
+        "QUEUED",
+        "SUPERSEDED",
+        "AUTHORITY_CHANGE",
+        "owning_local_root",
+        "NEW_ROOT_SUPERSESSION_DECISION",
+        (
+            "successor_packet_valid",
+            "accepted_supersession_binding_valid",
+            "predecessor_binding_valid",
+            "idempotency_transfer_valid",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_superseded",
+        (
+            "successor_packet_missing",
+            "accepted_supersession_binding_invalid",
+            "predecessor_binding_mismatch",
+            "foreign_root",
+            "idempotency_transfer_invalid",
+        ),
+    ),
+    (
+        "g2a_t22_pending_supersede",
+        "PENDING_FULFILLMENT",
+        "SUPERSEDED",
+        "AUTHORITY_CHANGE",
+        "owning_local_root",
+        "NEW_ROOT_SUPERSESSION_DECISION",
+        (
+            "successor_packet_valid",
+            "accepted_supersession_binding_valid",
+            "predecessor_binding_valid",
+            "adapter_not_called",
+            "idempotency_transfer_valid",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_superseded",
+        (
+            "adapter_already_called",
+            "successor_packet_missing",
+            "accepted_supersession_binding_invalid",
+            "predecessor_binding_mismatch",
+            "foreign_root",
+            "idempotency_transfer_invalid",
+        ),
+    ),
+    (
+        "g2a_t23_failed_supersede",
+        "FAILED",
+        "SUPERSEDED",
+        "AUTHORITY_CHANGE",
+        "owning_local_root",
+        "NEW_ROOT_SUPERSESSION_DECISION",
+        (
+            "failed_non_consuming_provenance_valid",
+            "successor_packet_valid",
+            "accepted_supersession_binding_valid",
+            "predecessor_binding_valid",
+            "idempotency_transfer_valid",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        True,
+        "packet_superseded",
+        (
+            "failed_provenance_invalid",
+            "successor_packet_missing",
+            "accepted_supersession_binding_invalid",
+            "predecessor_binding_mismatch",
+            "foreign_root",
+            "idempotency_transfer_invalid",
+        ),
+    ),
+    (
+        "g2a_t24_nonconsuming_failure",
+        "PENDING_FULFILLMENT",
+        "FAILED",
+        "DETERMINISTIC",
+        "exclusive_corridor",
+        "NONE",
+        (
+            "adapter_invocation_evidence_valid",
+            "effect_nonconsumption_evidence_valid",
+            "idempotency_reservation_owned",
+            "latest_disposition_event_binding_valid",
+        ),
+        "NOT_CONSUMED",
+        "CORRIDOR_INVOCATION_NONCONSUMING",
+        False,
+        "fulfillment_failed_nonconsuming",
+        (
+            "adapter_not_called",
+            "effect_consumed",
+            "effect_outcome_uncertain",
+            "failure_evidence_missing",
+            "idempotency_reservation_invalid",
+            "latest_disposition_event_binding_invalid",
+            "disposition_history_changed",
+        ),
+    ),
+    (
+        "g2a_t25_retry",
+        "FAILED",
+        "QUEUED",
+        "DETERMINISTIC",
+        "lifecycle_runtime",
+        "NONE",
+        (
+            "failed_non_consuming_provenance_valid",
+            "retry_policy_valid",
+            "current_eligibility_valid",
+            "idempotency_reservation_owned",
+        ),
+        "NOT_CONSUMED",
+        "NO_ADAPTER_INVOCATION",
+        False,
+        "nonconsuming_retry_queued",
+        (
+            "failed_provenance_invalid",
+            "packet_binding_mismatch",
+            "idempotency_binding_mismatch",
+            "terminal_evidence_present",
+            "mandatory_dependency_invalid",
+            "retry_policy_invalid",
+            "idempotency_reservation_invalid",
+        ),
+    ),
+    (
+        "g2a_t26_uncertain_adapter_outcome",
+        "PENDING_FULFILLMENT",
+        "FAILED",
+        "DETERMINISTIC_UNCERTAIN",
+        "exclusive_corridor",
+        "NONE",
+        (
+            "adapter_invocation_evidence_valid",
+            "effect_outcome_unresolved",
+            "idempotency_reservation_owned",
+        ),
+        "UNCERTAIN",
+        "CORRIDOR_INVOCATION_UNCERTAIN",
+        True,
+        "fulfillment_failed_consumption_uncertain",
+        (
+            "adapter_not_called",
+            "effect_consumed",
+            "effect_non_consumption_proven",
+            "execution_attempt_evidence_missing",
+            "idempotency_binding_missing",
+            "transition_event_identity_invalid",
+        ),
+    ),
+)
+
+
+def action_packet_transition_rule_material_v01(
+    rule: ActionPacketTransitionRuleV01,
+) -> tuple[tuple[str, object], ...]:
+    errors = validate_action_packet_transition_rule_v01(rule)
+    if errors:
+        raise ValueError(errors[0])
+    return _action_packet_transition_rule_material_unchecked_v01(rule)
+
+
+def validate_action_packet_transition_rule_v01(
+    rule: object,
+) -> tuple[str, ...]:
+    try:
+        if type(rule) is not ActionPacketTransitionRuleV01:
+            return ("action_packet_transition_rule_invalid",)
+        errors: list[str] = []
+        lower_codes = (
+            rule.transition_rule_id,
+            rule.permitted_component_code,
+            rule.reason_code,
+        )
+        if any(not _action_packet_machine_code_valid_v01(code) for code in lower_codes):
+            errors.append("action_packet_transition_machine_code_invalid")
+        if (
+            type(rule.required_evidence_codes) is not tuple
+            or not rule.required_evidence_codes
+            or any(
+                not _action_packet_machine_code_valid_v01(code)
+                for code in rule.required_evidence_codes
+            )
+        ):
+            errors.append("action_packet_transition_evidence_codes_invalid")
+        elif len(rule.required_evidence_codes) != len(
+            set(rule.required_evidence_codes)
+        ):
+            errors.append("action_packet_transition_evidence_code_duplicate")
+        elif any(
+            code not in ACTION_PACKET_REQUIRED_EVIDENCE_CODES_V01
+            for code in rule.required_evidence_codes
+        ):
+            errors.append("action_packet_transition_evidence_code_unknown")
+        if (
+            type(rule.fail_closed_reason_codes) is not tuple
+            or not rule.fail_closed_reason_codes
+            or any(
+                not _action_packet_machine_code_valid_v01(code)
+                for code in rule.fail_closed_reason_codes
+            )
+        ):
+            errors.append("action_packet_transition_fail_codes_invalid")
+        elif len(rule.fail_closed_reason_codes) != len(
+            set(rule.fail_closed_reason_codes)
+        ):
+            errors.append("action_packet_transition_fail_code_duplicate")
+        elif any(
+            code not in ACTION_PACKET_FAIL_CLOSED_REASON_CODES_V01
+            for code in rule.fail_closed_reason_codes
+        ):
+            errors.append("action_packet_transition_fail_code_unknown")
+        exact_memberships = (
+            (
+                rule.transition_rule_id,
+                ACTION_PACKET_TRANSITION_RULE_IDS_V01,
+                "action_packet_transition_rule_id_unknown",
+            ),
+            (
+                rule.source_state,
+                ACTION_PACKET_LIFECYCLE_STATES_V01,
+                "action_packet_transition_state_unknown",
+            ),
+            (
+                rule.target_state,
+                ACTION_PACKET_LIFECYCLE_STATES_V01,
+                "action_packet_transition_state_unknown",
+            ),
+            (
+                rule.transition_class_code,
+                ACTION_PACKET_TRANSITION_CLASS_CODES_V01,
+                "action_packet_transition_class_unknown",
+            ),
+            (
+                rule.permitted_component_code,
+                ACTION_PACKET_PERMITTED_COMPONENT_CODES_V01,
+                "action_packet_transition_component_unknown",
+            ),
+            (
+                rule.root_decision_requirement_code,
+                ACTION_PACKET_ROOT_DECISION_REQUIREMENT_CODES_V01,
+                "action_packet_transition_root_requirement_unknown",
+            ),
+            (
+                rule.effect_consumption_class,
+                ACTION_PACKET_EFFECT_CONSUMPTION_CLASSES_V01,
+                "action_packet_transition_consumption_unknown",
+            ),
+            (
+                rule.adapter_invocation_relation_code,
+                ACTION_PACKET_ADAPTER_INVOCATION_RELATION_CODES_V01,
+                "action_packet_transition_invocation_relation_unknown",
+            ),
+            (
+                rule.reason_code,
+                ACTION_PACKET_TRANSITION_REASON_CODES_V01,
+                "action_packet_transition_reason_unknown",
+            ),
+        )
+        for value, vocabulary, reason in exact_memberships:
+            if type(value) is not str or value not in vocabulary:
+                errors.append(reason)
+        if type(rule.terminal_target) is not bool:
+            errors.append("action_packet_transition_terminal_type_invalid")
+        if not errors:
+            expected = _canonical_action_packet_transition_rules_v01()
+            index = ACTION_PACKET_TRANSITION_RULE_IDS_V01.index(
+                rule.transition_rule_id
+            )
+            if (
+                _action_packet_transition_rule_material_unchecked_v01(rule)
+                != _action_packet_transition_rule_material_unchecked_v01(
+                    expected[index]
+                )
+            ):
+                errors.append("action_packet_transition_rule_mismatch")
+        return _dedupe(errors)
+    except Exception:
+        return ("action_packet_transition_rule_invalid",)
+
+
+def action_packet_transition_rule_to_plain_dict_v01(
+    rule: ActionPacketTransitionRuleV01,
+) -> dict[str, object]:
+    try:
+        material = action_packet_transition_rule_material_v01(rule)
+        result = {
+            name: list(value) if type(value) is tuple else value
+            for name, value in material
+        }
+        _canonical_json_bytes_v01(result)
+        return result
+    except Exception:
+        raise ValueError("action_packet_transition_rule_invalid") from None
+
+
+def build_action_packet_transition_registry_profile_v01(
+) -> ActionPacketTransitionRegistryProfileV01:
+    lifecycle_profile = _build_action_packet_lifecycle_profile_v01()
+    if _validate_action_packet_lifecycle_profile_v01(lifecycle_profile):
+        raise ValueError("action_packet_lifecycle_profile_invalid")
+    rules = _canonical_action_packet_transition_rules_v01()
+    material = _action_packet_transition_registry_material_unchecked_v01(
+        registry_profile_version=(
+            ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01
+        ),
+        lifecycle_profile_id=lifecycle_profile.profile_id,
+        rules=rules,
+    )
+    digest = _domain_separated_sha256_hex_v01(
+        domain=ACTION_PACKET_TRANSITION_REGISTRY_DOMAIN_V01,
+        payload=_canonical_json_bytes_v01(material),
+    )
+    return ActionPacketTransitionRegistryProfileV01(
+        transition_registry_id=(
+            ACTION_PACKET_TRANSITION_REGISTRY_PREFIX_V01 + digest
+        ),
+        registry_profile_version=(
+            ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01
+        ),
+        lifecycle_profile_id=lifecycle_profile.profile_id,
+        ordered_transition_rules=rules,
+    )
+
+
+def validate_action_packet_transition_registry_profile_v01(
+    registry: object,
+) -> tuple[str, ...]:
+    try:
+        if type(registry) is not ActionPacketTransitionRegistryProfileV01:
+            return ("action_packet_transition_registry_invalid",)
+        errors: list[str] = []
+        if (
+            type(registry.transition_registry_id) is not str
+            or not registry.transition_registry_id.startswith(
+                ACTION_PACKET_TRANSITION_REGISTRY_PREFIX_V01
+            )
+            or not _lowercase_sha256_valid_v01(
+                registry.transition_registry_id[
+                    len(ACTION_PACKET_TRANSITION_REGISTRY_PREFIX_V01) :
+                ]
+            )
+        ):
+            errors.append("action_packet_transition_registry_id_invalid")
+        if (
+            type(registry.registry_profile_version) is not str
+            or registry.registry_profile_version
+            != ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01
+        ):
+            errors.append("action_packet_transition_registry_version_mismatch")
+        lifecycle_profile = _build_action_packet_lifecycle_profile_v01()
+        if (
+            _validate_action_packet_lifecycle_profile_v01(lifecycle_profile)
+            or type(registry.lifecycle_profile_id) is not str
+            or registry.lifecycle_profile_id
+            != ACTION_PACKET_LIFECYCLE_PROFILE_ID_V01
+        ):
+            errors.append("action_packet_transition_lifecycle_profile_mismatch")
+        if type(registry.ordered_transition_rules) is not tuple:
+            errors.append("action_packet_transition_rules_type_invalid")
+            return _dedupe(errors)
+        if len(registry.ordered_transition_rules) != 26:
+            errors.append("action_packet_transition_rule_count_mismatch")
+        for rule in registry.ordered_transition_rules:
+            errors.extend(validate_action_packet_transition_rule_v01(rule))
+        ids = tuple(
+            rule.transition_rule_id
+            for rule in registry.ordered_transition_rules
+            if type(rule) is ActionPacketTransitionRuleV01
+            and type(rule.transition_rule_id) is str
+        )
+        if len(ids) != len(set(ids)):
+            errors.append("action_packet_transition_rule_id_duplicate")
+        if ids != ACTION_PACKET_TRANSITION_RULE_IDS_V01:
+            errors.append("action_packet_transition_rule_order_mismatch")
+        if errors:
+            return _dedupe(errors)
+        expected = build_action_packet_transition_registry_profile_v01()
+        supplied_material = (
+            _action_packet_transition_registry_material_unchecked_v01(
+                registry_profile_version=registry.registry_profile_version,
+                lifecycle_profile_id=registry.lifecycle_profile_id,
+                rules=registry.ordered_transition_rules,
+            )
+        )
+        expected_material = (
+            _action_packet_transition_registry_material_unchecked_v01(
+                registry_profile_version=expected.registry_profile_version,
+                lifecycle_profile_id=expected.lifecycle_profile_id,
+                rules=expected.ordered_transition_rules,
+            )
+        )
+        if _canonical_json_bytes_v01(supplied_material) != (
+            _canonical_json_bytes_v01(expected_material)
+        ):
+            errors.append("action_packet_transition_registry_material_mismatch")
+        if (
+            type(registry.transition_registry_id) is not str
+            or registry.transition_registry_id
+            != expected.transition_registry_id
+        ):
+            errors.append("action_packet_transition_registry_id_mismatch")
+        return _dedupe(errors)
+    except Exception:
+        return ("action_packet_transition_registry_invalid",)
+
+
+def action_packet_transition_registry_material_v01(
+    registry: ActionPacketTransitionRegistryProfileV01,
+) -> tuple[tuple[str, object], ...]:
+    errors = validate_action_packet_transition_registry_profile_v01(registry)
+    if errors:
+        raise ValueError(errors[0])
+    return _action_packet_transition_registry_material_unchecked_v01(
+        registry_profile_version=registry.registry_profile_version,
+        lifecycle_profile_id=registry.lifecycle_profile_id,
+        rules=registry.ordered_transition_rules,
+    )
+
+
+def action_packet_transition_registry_to_plain_dict_v01(
+    registry: ActionPacketTransitionRegistryProfileV01,
+) -> dict[str, object]:
+    try:
+        if validate_action_packet_transition_registry_profile_v01(registry):
+            raise ValueError("action_packet_transition_registry_invalid")
+        result = {
+            "transition_registry_id": registry.transition_registry_id,
+            "registry_profile_version": registry.registry_profile_version,
+            "lifecycle_profile_id": registry.lifecycle_profile_id,
+            "ordered_transition_rules": [
+                action_packet_transition_rule_to_plain_dict_v01(rule)
+                for rule in registry.ordered_transition_rules
+            ],
+        }
+        _canonical_json_bytes_v01(result)
+        return result
+    except Exception:
+        raise ValueError("action_packet_transition_registry_invalid") from None
+
+
+def lookup_action_packet_transition_rule_v01(
+    *,
+    registry: object,
+    transition_rule_id: object,
+) -> ActionPacketTransitionRuleV01:
+    try:
+        if validate_action_packet_transition_registry_profile_v01(registry):
+            raise ValueError("unknown_transition")
+        if (
+            type(transition_rule_id) is not str
+            or transition_rule_id not in ACTION_PACKET_TRANSITION_RULE_IDS_V01
+        ):
+            raise ValueError("unknown_transition")
+        for rule in registry.ordered_transition_rules:
+            if rule.transition_rule_id == transition_rule_id:
+                return rule
+        raise ValueError("unknown_transition")
+    except Exception:
+        raise ValueError("unknown_transition") from None
+
+
+def _canonical_action_packet_transition_rules_v01(
+) -> tuple[ActionPacketTransitionRuleV01, ...]:
+    return tuple(
+        ActionPacketTransitionRuleV01(
+            transition_rule_id=row[0],
+            source_state=row[1],
+            target_state=row[2],
+            transition_class_code=row[3],
+            permitted_component_code=row[4],
+            root_decision_requirement_code=row[5],
+            required_evidence_codes=row[6],
+            effect_consumption_class=row[7],
+            adapter_invocation_relation_code=row[8],
+            terminal_target=row[9],
+            reason_code=row[10],
+            fail_closed_reason_codes=row[11],
+        )
+        for row in _ACTION_PACKET_TRANSITION_RULE_ROWS_V01
+    )
+
+
+def _action_packet_transition_rule_material_unchecked_v01(
+    rule: ActionPacketTransitionRuleV01,
+) -> tuple[tuple[str, object], ...]:
+    return (
+        ("transition_rule_id", rule.transition_rule_id),
+        ("source_state", rule.source_state),
+        ("target_state", rule.target_state),
+        ("transition_class_code", rule.transition_class_code),
+        ("permitted_component_code", rule.permitted_component_code),
+        (
+            "root_decision_requirement_code",
+            rule.root_decision_requirement_code,
+        ),
+        ("required_evidence_codes", rule.required_evidence_codes),
+        ("effect_consumption_class", rule.effect_consumption_class),
+        (
+            "adapter_invocation_relation_code",
+            rule.adapter_invocation_relation_code,
+        ),
+        ("terminal_target", rule.terminal_target),
+        ("reason_code", rule.reason_code),
+        ("fail_closed_reason_codes", rule.fail_closed_reason_codes),
+    )
+
+
+def _action_packet_transition_registry_material_unchecked_v01(
+    *,
+    registry_profile_version: str,
+    lifecycle_profile_id: str,
+    rules: tuple[ActionPacketTransitionRuleV01, ...],
+) -> tuple[tuple[str, object], ...]:
+    return (
+        ("registry_profile_version", registry_profile_version),
+        ("lifecycle_profile_id", lifecycle_profile_id),
+        (
+            "ordered_transition_rules",
+            tuple(
+                _action_packet_transition_rule_material_unchecked_v01(rule)
+                for rule in rules
+            ),
+        ),
+    )
+
+
+def _action_packet_machine_code_valid_v01(value: object) -> bool:
+    if type(value) is not str or not value or "\x00" in value:
+        return False
+    try:
+        value.encode("utf-8", errors="strict")
+        return (
+            _unicodedata.normalize("NFC", value) == value
+            and _re.fullmatch(r"[a-z][a-z0-9_]*", value) is not None
+        )
+    except Exception:
+        return False
+
+
+def _lowercase_sha256_valid_v01(value: object) -> bool:
+    return bool(
+        type(value) is str
+        and _re.fullmatch(r"[0-9a-f]{64}", value) is not None
+    )

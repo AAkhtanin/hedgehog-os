@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 from dataclasses import FrozenInstanceError, fields, replace
+import hashlib
 import inspect
 import json
 from pathlib import Path
@@ -10,6 +11,10 @@ import pytest
 
 import hedgehog.kernel as kernel_package
 from hedgehog.kernel.abi_v01 import ARTIFACT_TYPES, LIFECYCLE_STATES
+from hedgehog.kernel.integrity_replay_v01 import (
+    canonical_json_bytes_v01,
+    domain_separated_sha256_hex_v01,
+)
 import hedgehog.kernel.transition_registry_v01 as transition
 
 
@@ -32,6 +37,16 @@ PUBLIC_FUNCTIONS = (
     "validate_transition_decision_v01", "transition_rule_to_plain_dict_v01",
     "transition_decision_to_plain_dict_v01", "transition_registry_to_plain_dict_v01",
 )
+ACTION_PACKET_PUBLIC_FUNCTIONS = (
+    "action_packet_transition_rule_material_v01",
+    "validate_action_packet_transition_rule_v01",
+    "action_packet_transition_rule_to_plain_dict_v01",
+    "build_action_packet_transition_registry_profile_v01",
+    "validate_action_packet_transition_registry_profile_v01",
+    "action_packet_transition_registry_material_v01",
+    "action_packet_transition_registry_to_plain_dict_v01",
+    "lookup_action_packet_transition_rule_v01",
+)
 RULE_FIELDS = (
     "rule_id", "abi_major_version", "source_artifact_type",
     "source_lifecycle_state", "actor_role", "attempted_effect",
@@ -46,6 +61,333 @@ DECISION_FIELDS = (
     "root_commit_required", "root_commit_present", "matched",
 )
 REGISTRY_FIELDS = ("registry_id", "registry_version", "abi_major_version", "rules")
+ACTION_PACKET_RULE_FIELDS = (
+    "transition_rule_id",
+    "source_state",
+    "target_state",
+    "transition_class_code",
+    "permitted_component_code",
+    "root_decision_requirement_code",
+    "required_evidence_codes",
+    "effect_consumption_class",
+    "adapter_invocation_relation_code",
+    "terminal_target",
+    "reason_code",
+    "fail_closed_reason_codes",
+)
+ACTION_PACKET_REGISTRY_FIELDS = (
+    "transition_registry_id",
+    "registry_profile_version",
+    "lifecycle_profile_id",
+    "ordered_transition_rules",
+)
+LEGACY_REGISTRY_ID = (
+    "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be"
+)
+LEGACY_RULE_IDS = (
+    "route_proposal_to_root_accepted_route",
+    "root_accepted_route_to_runtime_topology",
+    "actor_contribution_to_validated_evidence",
+    "result_proposal_to_post_vv_report",
+    "post_vv_report_to_gt_advisory",
+    "gt_advisory_to_root_decision",
+    "root_decision_to_root_owned_intent",
+    "root_decision_to_execution_request",
+    "evidence_receipt_to_root_review",
+    "root_decision_to_root_final",
+    "root_final_to_transaction_outcome",
+    "cross_root_evidence_to_root_review",
+    "provider_contribution_to_root_decision_forbidden",
+    "drs_evidence_to_permission_forbidden",
+    "gt_advisory_to_root_final_forbidden",
+    "receipt_to_permission_forbidden",
+    "causal_evidence_to_root_decision_forbidden",
+    "domain_adapter_effect_request_forbidden",
+)
+ACTION_PACKET_REGISTRY_ID = (
+    "acptr_v01:3a0fb8ffbabca39ff96c0624f8da89eb82222c277c54d932112ebaa0eef97eab"
+)
+ACTION_PACKET_EXPECTED_ROWS = (
+    (
+        "g2a_t01_activate_root_authorization", "CREATED", "ROOT_AUTHORIZED",
+        "LIFECYCLE_ACTIVATION", "lifecycle_runtime",
+        "EXISTING_SOURCE_AUTHORIZATION",
+        ("packet_genesis_valid", "source_root_authorization_valid",
+         "idempotency_acquisition_valid"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", False,
+        "root_authorization_activated",
+        ("packet_genesis_invalid", "source_root_authorization_invalid",
+         "wrong_owning_root", "idempotency_acquisition_invalid"),
+    ),
+    (
+        "g2a_t02_queue", "ROOT_AUTHORIZED", "QUEUED", "DETERMINISTIC",
+        "lifecycle_runtime", "NONE",
+        ("transition_history_valid", "temporal_authority_valid",
+         "mandatory_dependencies_current", "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", False, "packet_queued",
+        ("packet_non_executable", "transition_history_invalid",
+         "temporal_authority_invalid", "mandatory_dependency_invalid",
+         "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t03_pending", "QUEUED", "PENDING_FULFILLMENT",
+        "DETERMINISTIC", "exclusive_corridor", "NONE",
+        ("immediate_prefulfillment_validation_pass",
+         "transition_history_valid", "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", False,
+        "pending_fulfillment",
+        ("current_eligibility_invalid", "transition_history_invalid",
+         "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t04_fulfill_mock", "PENDING_FULFILLMENT", "FULFILLED_MOCK",
+        "DETERMINISTIC_CONSUMING", "exclusive_corridor", "NONE",
+        ("mock_adapter_result_valid", "effect_consumption_evidence_valid",
+         "idempotency_reservation_owned"),
+        "CONSUMED", "CORRIDOR_INVOCATION_CONSUMED", False,
+        "fulfilled_mock",
+        ("adapter_call_failed", "effect_consumption_evidence_missing",
+         "current_eligibility_changed", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t05_receipt", "FULFILLED_MOCK", "RECEIPT_RECEIVED",
+        "DETERMINISTIC_CONSUMING", "receipt_observer", "NONE",
+        ("terminal_receipt_valid", "fulfillment_consumption_evidence_valid"),
+        "CONSUMED", "POST_INVOCATION_RECEIPT_OBSERVATION", True,
+        "receipt_received",
+        ("receipt_invalid", "packet_binding_mismatch",
+         "idempotency_binding_mismatch", "receipt_authority_claimed",
+         "consumption_evidence_missing"),
+    ),
+    (
+        "g2a_t06_created_block", "CREATED", "BLOCKED", "DETERMINISTIC",
+        "lifecycle_runtime", "NONE",
+        ("packet_genesis_valid", "blocking_evidence_valid"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_blocked",
+        ("packet_genesis_invalid", "blocking_evidence_missing",
+         "authority_expansion_detected"),
+    ),
+    (
+        "g2a_t07_authorized_block", "ROOT_AUTHORIZED", "BLOCKED",
+        "DETERMINISTIC", "lifecycle_runtime", "NONE",
+        ("blocking_evidence_valid", "authority_policy_valid",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_blocked",
+        ("blocking_evidence_missing", "authority_expansion_detected",
+         "authority_policy_invalid", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t08_queued_block", "QUEUED", "BLOCKED", "DETERMINISTIC",
+        "lifecycle_runtime", "NONE",
+        ("blocking_evidence_valid", "authority_policy_valid",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_blocked",
+        ("blocking_evidence_missing", "authority_expansion_detected",
+         "authority_policy_invalid", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t09_pending_block", "PENDING_FULFILLMENT", "BLOCKED",
+        "DETERMINISTIC", "exclusive_corridor", "NONE",
+        ("immediate_eligibility_failure_valid", "adapter_not_called",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_blocked",
+        ("adapter_already_called", "blocking_evidence_missing",
+         "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t10_failed_block", "FAILED", "BLOCKED", "DETERMINISTIC",
+        "lifecycle_runtime", "NONE",
+        ("failed_non_consuming_provenance_valid",
+         "retry_ineligibility_evidence_valid",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_blocked",
+        ("failed_provenance_invalid", "retry_ineligibility_evidence_missing",
+         "authority_expansion_detected", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t11_created_expire", "CREATED", "EXPIRED", "DETERMINISTIC",
+        "temporal_validator", "NONE",
+        ("packet_genesis_valid", "temporal_authority_valid",
+         "evaluation_time_valid"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_expired",
+        ("packet_genesis_invalid", "temporal_authority_invalid",
+         "evaluation_time_invalid", "prior_terminal_state"),
+    ),
+    (
+        "g2a_t12_authorized_expire", "ROOT_AUTHORIZED", "EXPIRED",
+        "DETERMINISTIC", "temporal_validator", "NONE",
+        ("temporal_authority_valid", "evaluation_time_valid",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_expired",
+        ("temporal_authority_invalid", "evaluation_time_invalid",
+         "prior_terminal_state", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t13_queued_expire", "QUEUED", "EXPIRED", "DETERMINISTIC",
+        "temporal_validator", "NONE",
+        ("temporal_authority_valid", "evaluation_time_valid",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_expired",
+        ("temporal_authority_invalid", "evaluation_time_invalid",
+         "prior_terminal_state", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t14_pending_expire", "PENDING_FULFILLMENT", "EXPIRED",
+        "DETERMINISTIC", "exclusive_corridor", "NONE",
+        ("immediate_temporal_validation_pass", "evaluation_time_valid",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_expired",
+        ("adapter_already_called", "temporal_authority_invalid",
+         "evaluation_time_invalid", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t15_failed_expire", "FAILED", "EXPIRED", "DETERMINISTIC",
+        "temporal_validator", "NONE",
+        ("failed_non_consuming_provenance_valid", "temporal_authority_valid",
+         "evaluation_time_valid", "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_expired",
+        ("failed_provenance_invalid", "temporal_authority_invalid",
+         "evaluation_time_invalid", "prior_terminal_state",
+         "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t16_authorized_revoke", "ROOT_AUTHORIZED", "REVOKED",
+        "AUTHORITY_CHANGE", "owning_local_root",
+        "NEW_ROOT_REVOCATION_DECISION",
+        ("accepted_revocation_binding_valid",
+         "source_authorization_binding_valid",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_revoked",
+        ("foreign_root", "accepted_revocation_binding_invalid",
+         "source_authorization_mismatch", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t17_queued_revoke", "QUEUED", "REVOKED",
+        "AUTHORITY_CHANGE", "owning_local_root",
+        "NEW_ROOT_REVOCATION_DECISION",
+        ("accepted_revocation_binding_valid",
+         "source_authorization_binding_valid",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_revoked",
+        ("foreign_root", "accepted_revocation_binding_invalid",
+         "source_authorization_mismatch", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t18_pending_revoke", "PENDING_FULFILLMENT", "REVOKED",
+        "AUTHORITY_CHANGE", "owning_local_root",
+        "NEW_ROOT_REVOCATION_DECISION",
+        ("accepted_revocation_binding_valid",
+         "source_authorization_binding_valid", "adapter_not_called",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_revoked",
+        ("adapter_already_called", "foreign_root",
+         "accepted_revocation_binding_invalid",
+         "source_authorization_mismatch", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t19_failed_revoke", "FAILED", "REVOKED",
+        "AUTHORITY_CHANGE", "owning_local_root",
+        "NEW_ROOT_REVOCATION_DECISION",
+        ("failed_non_consuming_provenance_valid",
+         "accepted_revocation_binding_valid",
+         "source_authorization_binding_valid",
+         "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True, "packet_revoked",
+        ("failed_provenance_invalid", "foreign_root",
+         "accepted_revocation_binding_invalid",
+         "source_authorization_mismatch", "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t20_authorized_supersede", "ROOT_AUTHORIZED", "SUPERSEDED",
+        "AUTHORITY_CHANGE", "owning_local_root",
+        "NEW_ROOT_SUPERSESSION_DECISION",
+        ("successor_packet_valid", "accepted_supersession_binding_valid",
+         "predecessor_binding_valid", "idempotency_transfer_valid"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True,
+        "packet_superseded",
+        ("successor_packet_missing", "accepted_supersession_binding_invalid",
+         "predecessor_binding_mismatch", "foreign_root",
+         "idempotency_transfer_invalid"),
+    ),
+    (
+        "g2a_t21_queued_supersede", "QUEUED", "SUPERSEDED",
+        "AUTHORITY_CHANGE", "owning_local_root",
+        "NEW_ROOT_SUPERSESSION_DECISION",
+        ("successor_packet_valid", "accepted_supersession_binding_valid",
+         "predecessor_binding_valid", "idempotency_transfer_valid"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True,
+        "packet_superseded",
+        ("successor_packet_missing", "accepted_supersession_binding_invalid",
+         "predecessor_binding_mismatch", "foreign_root",
+         "idempotency_transfer_invalid"),
+    ),
+    (
+        "g2a_t22_pending_supersede", "PENDING_FULFILLMENT", "SUPERSEDED",
+        "AUTHORITY_CHANGE", "owning_local_root",
+        "NEW_ROOT_SUPERSESSION_DECISION",
+        ("successor_packet_valid", "accepted_supersession_binding_valid",
+         "predecessor_binding_valid", "adapter_not_called",
+         "idempotency_transfer_valid"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True,
+        "packet_superseded",
+        ("adapter_already_called", "successor_packet_missing",
+         "accepted_supersession_binding_invalid",
+         "predecessor_binding_mismatch", "foreign_root",
+         "idempotency_transfer_invalid"),
+    ),
+    (
+        "g2a_t23_failed_supersede", "FAILED", "SUPERSEDED",
+        "AUTHORITY_CHANGE", "owning_local_root",
+        "NEW_ROOT_SUPERSESSION_DECISION",
+        ("failed_non_consuming_provenance_valid", "successor_packet_valid",
+         "accepted_supersession_binding_valid", "predecessor_binding_valid",
+         "idempotency_transfer_valid"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", True,
+        "packet_superseded",
+        ("failed_provenance_invalid", "successor_packet_missing",
+         "accepted_supersession_binding_invalid",
+         "predecessor_binding_mismatch", "foreign_root",
+         "idempotency_transfer_invalid"),
+    ),
+    (
+        "g2a_t24_nonconsuming_failure", "PENDING_FULFILLMENT", "FAILED",
+        "DETERMINISTIC", "exclusive_corridor", "NONE",
+        ("adapter_invocation_evidence_valid",
+         "effect_nonconsumption_evidence_valid",
+         "idempotency_reservation_owned",
+         "latest_disposition_event_binding_valid"),
+        "NOT_CONSUMED", "CORRIDOR_INVOCATION_NONCONSUMING", False,
+        "fulfillment_failed_nonconsuming",
+        ("adapter_not_called", "effect_consumed", "effect_outcome_uncertain",
+         "failure_evidence_missing", "idempotency_reservation_invalid",
+         "latest_disposition_event_binding_invalid",
+         "disposition_history_changed"),
+    ),
+    (
+        "g2a_t25_retry", "FAILED", "QUEUED", "DETERMINISTIC",
+        "lifecycle_runtime", "NONE",
+        ("failed_non_consuming_provenance_valid", "retry_policy_valid",
+         "current_eligibility_valid", "idempotency_reservation_owned"),
+        "NOT_CONSUMED", "NO_ADAPTER_INVOCATION", False,
+        "nonconsuming_retry_queued",
+        ("failed_provenance_invalid", "packet_binding_mismatch",
+         "idempotency_binding_mismatch", "terminal_evidence_present",
+         "mandatory_dependency_invalid", "retry_policy_invalid",
+         "idempotency_reservation_invalid"),
+    ),
+    (
+        "g2a_t26_uncertain_adapter_outcome", "PENDING_FULFILLMENT",
+        "FAILED", "DETERMINISTIC_UNCERTAIN", "exclusive_corridor", "NONE",
+        ("adapter_invocation_evidence_valid", "effect_outcome_unresolved",
+         "idempotency_reservation_owned"),
+        "UNCERTAIN", "CORRIDOR_INVOCATION_UNCERTAIN", True,
+        "fulfillment_failed_consumption_uncertain",
+        ("adapter_not_called", "effect_consumed",
+         "effect_non_consumption_proven",
+         "execution_attempt_evidence_missing", "idempotency_binding_missing",
+         "transition_event_identity_invalid"),
+    ),
+)
 
 
 @pytest.fixture
@@ -91,7 +433,7 @@ def test_public_dataclasses_are_frozen(cls, registry):
 
 def test_exact_public_function_surface():
     observed = tuple(name for name, value in vars(transition).items() if inspect.isfunction(value) and not name.startswith("_"))
-    assert observed == PUBLIC_FUNCTIONS
+    assert observed == (*PUBLIC_FUNCTIONS, *ACTION_PACKET_PUBLIC_FUNCTIONS)
 
 
 @pytest.mark.parametrize("name", (
@@ -367,3 +709,300 @@ def test_static_import_boundary():
     tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
     imports = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom)}
     assert imports <= {"__future__", "dataclasses", "hedgehog.kernel.abi_v01", "hedgehog.kernel.integrity_replay_v01"}
+
+
+def test_legacy_transition_registry_vector_is_byte_stable() -> None:
+    legacy = transition.build_default_transition_registry_v01()
+    assert legacy.registry_id == LEGACY_REGISTRY_ID
+    assert legacy.registry_version == "v0.1"
+    assert legacy.abi_major_version == 1
+    assert len(legacy.rules) == 18
+    assert tuple(rule.rule_id for rule in legacy.rules) == LEGACY_RULE_IDS
+    assert tuple(field.name for field in fields(transition.TransitionRuleV01)) == (
+        "rule_id", "abi_major_version", "source_artifact_type",
+        "source_lifecycle_state", "actor_role", "attempted_effect",
+        "target_artifact_type", "required_guards", "decision",
+        "reason_code", "root_commit_required",
+    )
+    assert tuple(
+        field.name for field in fields(transition.TransitionDecisionV01)
+    ) == DECISION_FIELDS
+    assert tuple(
+        field.name for field in fields(transition.TransitionRegistryV01)
+    ) == REGISTRY_FIELDS
+    plain_bytes = canonical_json_bytes_v01(
+        transition.transition_registry_to_plain_dict_v01(legacy)
+    )
+    assert len(plain_bytes) == 7613
+    assert hashlib.sha256(plain_bytes).hexdigest() == (
+        "baa8a3d1e1bac9b16b316d57bfbdbb0d79333a30dd662cc3e03d1558afd08c3c"
+    )
+
+
+def test_action_packet_registry_exact_26_rule_profile() -> None:
+    profile = transition.build_action_packet_transition_registry_profile_v01()
+    assert tuple(
+        field.name
+        for field in fields(transition.ActionPacketTransitionRuleV01)
+    ) == ACTION_PACKET_RULE_FIELDS
+    assert tuple(
+        field.name
+        for field in fields(
+            transition.ActionPacketTransitionRegistryProfileV01
+        )
+    ) == ACTION_PACKET_REGISTRY_FIELDS
+    assert profile.transition_registry_id == ACTION_PACKET_REGISTRY_ID
+    assert profile.registry_profile_version == "v0.1"
+    assert (
+        profile.lifecycle_profile_id
+        == "action_packet_lifecycle_profile_v01"
+    )
+    assert len(profile.ordered_transition_rules) == 26
+    assert transition.validate_action_packet_transition_registry_profile_v01(
+        profile
+    ) == ()
+    observed = tuple(
+        tuple(getattr(rule, name) for name in ACTION_PACKET_RULE_FIELDS)
+        for rule in profile.ordered_transition_rules
+    )
+    assert observed == ACTION_PACKET_EXPECTED_ROWS
+    assert tuple(
+        name
+        for name, _ in transition.action_packet_transition_rule_material_v01(
+            profile.ordered_transition_rules[0]
+        )
+    ) == ACTION_PACKET_RULE_FIELDS
+    material = transition.action_packet_transition_registry_material_v01(
+        profile
+    )
+    assert tuple(name for name, _ in material) == (
+        "registry_profile_version",
+        "lifecycle_profile_id",
+        "ordered_transition_rules",
+    )
+    expected_digest = domain_separated_sha256_hex_v01(
+        domain="HEDGEHOG_ACTION_PACKET_TRANSITION_REGISTRY_V01",
+        payload=canonical_json_bytes_v01(material),
+    )
+    assert profile.transition_registry_id == "acptr_v01:" + expected_digest
+
+
+def test_action_packet_registry_exact_closed_vocabularies() -> None:
+    assert transition.ACTION_PACKET_TRANSITION_CLASS_CODES_V01 == (
+        "LIFECYCLE_ACTIVATION",
+        "DETERMINISTIC",
+        "DETERMINISTIC_CONSUMING",
+        "AUTHORITY_CHANGE",
+        "DETERMINISTIC_UNCERTAIN",
+    )
+    assert transition.ACTION_PACKET_ADAPTER_INVOCATION_RELATION_CODES_V01 == (
+        "NO_ADAPTER_INVOCATION",
+        "CORRIDOR_INVOCATION_CONSUMED",
+        "CORRIDOR_INVOCATION_NONCONSUMING",
+        "CORRIDOR_INVOCATION_UNCERTAIN",
+        "POST_INVOCATION_RECEIPT_OBSERVATION",
+    )
+    profile = transition.build_action_packet_transition_registry_profile_v01()
+    relations = {
+        rule.transition_rule_id: rule.adapter_invocation_relation_code
+        for rule in profile.ordered_transition_rules
+    }
+    assert relations["g2a_t04_fulfill_mock"] == (
+        "CORRIDOR_INVOCATION_CONSUMED"
+    )
+    assert relations["g2a_t24_nonconsuming_failure"] == (
+        "CORRIDOR_INVOCATION_NONCONSUMING"
+    )
+    assert relations["g2a_t26_uncertain_adapter_outcome"] == (
+        "CORRIDOR_INVOCATION_UNCERTAIN"
+    )
+    assert relations["g2a_t05_receipt"] == (
+        "POST_INVOCATION_RECEIPT_OBSERVATION"
+    )
+    assert all(
+        relation == "NO_ADAPTER_INVOCATION"
+        for rule_id, relation in relations.items()
+        if rule_id not in {
+            "g2a_t04_fulfill_mock",
+            "g2a_t24_nonconsuming_failure",
+            "g2a_t26_uncertain_adapter_outcome",
+            "g2a_t05_receipt",
+        }
+    )
+    assert "adapter_call_allowed" not in ACTION_PACKET_RULE_FIELDS
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value"),
+    (
+        ("transition_rule_id", "unknown_rule"),
+        (
+            "transition_rule_id",
+            _ExplosiveStr("g2a_t01_activate_root_authorization"),
+        ),
+        ("source_state", "PROPOSED"),
+        ("target_state", "UNKNOWN"),
+        ("transition_class_code", "UNKNOWN"),
+        ("permitted_component_code", "unknown_component"),
+        ("root_decision_requirement_code", "UNKNOWN"),
+        ("required_evidence_codes", ["packet_genesis_valid"]),
+        (
+            "required_evidence_codes",
+            ("packet_genesis_valid", "packet_genesis_valid"),
+        ),
+        ("required_evidence_codes", ("unknown_evidence",)),
+        ("effect_consumption_class", "UNKNOWN"),
+        ("adapter_invocation_relation_code", "UNKNOWN"),
+        ("terminal_target", 1),
+        ("reason_code", "unknown_reason"),
+        ("reason_code", "free prose."),
+        ("fail_closed_reason_codes", ["packet_genesis_invalid"]),
+        (
+            "fail_closed_reason_codes",
+            ("packet_genesis_invalid", "packet_genesis_invalid"),
+        ),
+        ("fail_closed_reason_codes", ("unknown_fail",)),
+    ),
+)
+def test_action_packet_rule_mutations_fail_closed(
+    field_name: str,
+    value: object,
+) -> None:
+    profile = transition.build_action_packet_transition_registry_profile_v01()
+    rule = replace(
+        profile.ordered_transition_rules[0],
+        **{field_name: value},
+    )
+    assert transition.validate_action_packet_transition_rule_v01(rule)
+
+
+def test_action_packet_registry_rule_table_mutations_fail_closed() -> None:
+    profile = transition.build_action_packet_transition_registry_profile_v01()
+    rules = profile.ordered_transition_rules
+    mutations = (
+        replace(profile, ordered_transition_rules=rules[:-1]),
+        replace(profile, ordered_transition_rules=(*rules, rules[0])),
+        replace(
+            profile,
+            ordered_transition_rules=(rules[0], rules[0], *rules[2:]),
+        ),
+        replace(
+            profile,
+            ordered_transition_rules=(rules[1], rules[0], *rules[2:]),
+        ),
+        replace(
+            profile,
+            transition_registry_id="acptr_v01:" + "0" * 64,
+        ),
+        replace(profile, lifecycle_profile_id="changed"),
+        replace(profile, ordered_transition_rules=list(rules)),
+    )
+    for mutation in mutations:
+        assert (
+            transition.validate_action_packet_transition_registry_profile_v01(
+                mutation
+            )
+        )
+
+
+def test_action_packet_registry_mutation_changes_independent_identity() -> None:
+    profile = transition.build_action_packet_transition_registry_profile_v01()
+    material = transition.action_packet_transition_registry_material_v01(
+        profile
+    )
+    rules = list(material[2][1])
+    first = list(rules[0])
+    evidence = list(first[6][1])
+    evidence[0] = "blocking_evidence_valid"
+    first[6] = ("required_evidence_codes", tuple(evidence))
+    rules[0] = tuple(first)
+    evidence_changed = (
+        material[0],
+        material[1],
+        ("ordered_transition_rules", tuple(rules)),
+    )
+
+    fail_rules = list(material[2][1])
+    fail_first = list(fail_rules[0])
+    fail_codes = list(fail_first[11][1])
+    fail_codes[0] = "packet_non_executable"
+    fail_first[11] = ("fail_closed_reason_codes", tuple(fail_codes))
+    fail_rules[0] = tuple(fail_first)
+    fail_changed = (
+        material[0],
+        material[1],
+        ("ordered_transition_rules", tuple(fail_rules)),
+    )
+
+    reordered_rules = list(material[2][1])
+    reordered_rules[0], reordered_rules[1] = (
+        reordered_rules[1],
+        reordered_rules[0],
+    )
+    order_changed = (
+        material[0],
+        material[1],
+        ("ordered_transition_rules", tuple(reordered_rules)),
+    )
+    for changed_material in (
+        evidence_changed,
+        fail_changed,
+        order_changed,
+    ):
+        changed_id = "acptr_v01:" + domain_separated_sha256_hex_v01(
+            domain="HEDGEHOG_ACTION_PACKET_TRANSITION_REGISTRY_V01",
+            payload=canonical_json_bytes_v01(changed_material),
+        )
+        assert changed_id != profile.transition_registry_id
+
+
+def test_action_packet_registry_lookup_is_exact_and_fail_closed() -> None:
+    profile = transition.build_action_packet_transition_registry_profile_v01()
+    for expected in profile.ordered_transition_rules:
+        assert transition.lookup_action_packet_transition_rule_v01(
+            registry=profile,
+            transition_rule_id=expected.transition_rule_id,
+        ) is expected
+    for value in ("unknown", None, _ExplosiveStr("g2a_t02_queue")):
+        with pytest.raises(ValueError, match="^unknown_transition$"):
+            transition.lookup_action_packet_transition_rule_v01(
+                registry=profile,
+                transition_rule_id=value,
+            )
+
+
+def test_external_explanation_prose_does_not_change_registry_identity() -> None:
+    profile = transition.build_action_packet_transition_registry_profile_v01()
+    explanations = {
+        "g2a_t01_activate_root_authorization": "Activate: reviewed, only.",
+    }
+    explanations["g2a_t01_activate_root_authorization"] = (
+        "Different punctuation and prose!"
+    )
+    assert (
+        transition.build_action_packet_transition_registry_profile_v01()
+        .transition_registry_id
+        == profile.transition_registry_id
+    )
+
+
+def test_action_packet_registry_validators_are_total() -> None:
+    profile = transition.build_action_packet_transition_registry_profile_v01()
+    values = (
+        None,
+        object(),
+        replace(
+            profile,
+            transition_registry_id=_ExplosiveStr(
+                profile.transition_registry_id
+            ),
+        ),
+    )
+    for value in values:
+        assert (
+            transition.validate_action_packet_transition_registry_profile_v01(
+                value
+            )
+        )
+    for value in (None, object(), _ExplosiveStr("g2a_t01_activate_root_authorization")):
+        assert transition.validate_action_packet_transition_rule_v01(value)

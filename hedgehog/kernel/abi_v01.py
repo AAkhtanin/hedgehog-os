@@ -15,6 +15,7 @@ from collections.abc import Mapping as _Mapping
 from dataclasses import dataclass as _dataclass
 from datetime import datetime as _datetime
 import re as _re
+import unicodedata as _unicodedata
 
 from hedgehog.kernel.integrity_replay_v01 import (
     CanonicalArtifactRefV01,
@@ -52,6 +53,25 @@ LIFECYCLE_STATES = (
     "EXECUTED_MOCK",
     "RECEIPT_RECORDED",
     "FINALIZED",
+)
+
+ACTION_PACKET_LIFECYCLE_PROFILE_ID_V01 = (
+    "action_packet_lifecycle_profile_v01"
+)
+ACTION_PACKET_LIFECYCLE_ABI_FAMILY_V01 = "hedgehog_kernel_abi"
+ACTION_PACKET_TRANSITION_REGISTRY_FAMILY_V01 = "TransitionRegistryV01"
+ACTION_PACKET_LIFECYCLE_STATES_V01 = (
+    "CREATED",
+    "ROOT_AUTHORIZED",
+    "QUEUED",
+    "PENDING_FULFILLMENT",
+    "FULFILLED_MOCK",
+    "RECEIPT_RECEIVED",
+    "FAILED",
+    "BLOCKED",
+    "EXPIRED",
+    "REVOKED",
+    "SUPERSEDED",
 )
 
 ARTIFACT_TYPES = (
@@ -194,6 +214,100 @@ class CausalConsumptionRefV01:
     disposition: str
     reason_code: str
     trace_refs: tuple[str, ...]
+
+
+@_dataclass(frozen=True)
+class ActionPacketLifecycleProfileV01:
+    profile_id: str
+    abi_family: str
+    transition_registry_family: str
+    lifecycle_states: tuple[str, ...]
+
+
+def build_action_packet_lifecycle_profile_v01(
+) -> ActionPacketLifecycleProfileV01:
+    """Build the explicitly selected G2-A lifecycle ABI profile."""
+
+    return ActionPacketLifecycleProfileV01(
+        profile_id=ACTION_PACKET_LIFECYCLE_PROFILE_ID_V01,
+        abi_family=ACTION_PACKET_LIFECYCLE_ABI_FAMILY_V01,
+        transition_registry_family=(
+            ACTION_PACKET_TRANSITION_REGISTRY_FAMILY_V01
+        ),
+        lifecycle_states=tuple(ACTION_PACKET_LIFECYCLE_STATES_V01),
+    )
+
+
+def validate_action_packet_lifecycle_profile_v01(
+    profile: object,
+) -> tuple[str, ...]:
+    try:
+        if type(profile) is not ActionPacketLifecycleProfileV01:
+            return ("action_packet_lifecycle_profile_invalid",)
+        values = (
+            profile.profile_id,
+            profile.abi_family,
+            profile.transition_registry_family,
+        )
+        if any(not _action_packet_profile_text_valid(value) for value in values):
+            return ("action_packet_lifecycle_profile_invalid",)
+        if type(profile.lifecycle_states) is not tuple:
+            return ("action_packet_lifecycle_states_invalid",)
+        if any(
+            not _action_packet_profile_text_valid(state)
+            for state in profile.lifecycle_states
+        ):
+            return ("action_packet_lifecycle_states_invalid",)
+        if len(profile.lifecycle_states) != len(set(profile.lifecycle_states)):
+            return ("action_packet_lifecycle_states_duplicate",)
+        expected = build_action_packet_lifecycle_profile_v01()
+        errors: list[str] = []
+        if profile.profile_id != expected.profile_id:
+            errors.append("action_packet_lifecycle_profile_id_mismatch")
+        if profile.abi_family != expected.abi_family:
+            errors.append("action_packet_lifecycle_abi_family_mismatch")
+        if (
+            profile.transition_registry_family
+            != expected.transition_registry_family
+        ):
+            errors.append(
+                "action_packet_lifecycle_registry_family_mismatch"
+            )
+        if profile.lifecycle_states != expected.lifecycle_states:
+            errors.append("action_packet_lifecycle_states_mismatch")
+        return _dedupe(errors)
+    except Exception:
+        return ("action_packet_lifecycle_profile_invalid",)
+
+
+def action_packet_lifecycle_profile_to_plain_dict_v01(
+    profile: ActionPacketLifecycleProfileV01,
+) -> dict[str, object]:
+    try:
+        if validate_action_packet_lifecycle_profile_v01(profile):
+            raise ValueError("action_packet_lifecycle_profile_invalid")
+        result = {
+            "profile_id": profile.profile_id,
+            "abi_family": profile.abi_family,
+            "transition_registry_family": (
+                profile.transition_registry_family
+            ),
+            "lifecycle_states": list(profile.lifecycle_states),
+        }
+        _canonical_json_bytes_v01(result)
+        return result
+    except Exception:
+        raise ValueError("action_packet_lifecycle_profile_invalid") from None
+
+
+def _action_packet_profile_text_valid(value: object) -> bool:
+    if type(value) is not str or not value or "\x00" in value:
+        return False
+    try:
+        value.encode("utf-8", errors="strict")
+        return _unicodedata.normalize("NFC", value) == value
+    except Exception:
+        return False
 
 
 def build_kernel_artifact_v01(

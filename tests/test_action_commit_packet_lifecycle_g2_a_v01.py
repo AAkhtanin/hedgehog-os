@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, fields, replace
 from decimal import Decimal
 from pathlib import Path
 
@@ -13,6 +13,7 @@ from hedgehog.kernel.integrity_replay_v01 import (
 )
 import hedgehog.kernel.root_decision_v01 as root_decision
 import hedgehog.kernel.semantic_work_v01 as semantic_work
+import hedgehog.kernel.transition_registry_v01 as transition_registry
 import hedgehog.kernel.trust_model_v01 as trust_model
 
 
@@ -26,6 +27,21 @@ TEMPORAL_POLICY = "packet_ttl_v01"
 EVALUATION_TIME = 1783470600
 EVALUATION_TIME_SOURCE = "explicit_test_evaluation_time"
 EVALUATION_CONTEXT_ID = "evaluation_context:g2a1_supplier_projection"
+G2A2A_PACKET_ID = "acp_v02:" + "a" * 64
+G2A2A_IDEMPOTENCY_KEY = "idem:action_v01:" + "b" * 64
+G2A2A_PREVIOUS_EVENT_ID = "acpt_v01:" + "c" * 64
+G2A2A_EVIDENCE_SHA256 = "d" * 64
+G2A2A_ROOT_DECISION_REF = "e" * 64
+G2A2A_DEPENDENCY_FINGERPRINT = "f" * 64
+G2A2A_TEMPORAL_FINGERPRINT = "0" * 64
+G2A2A_EVALUATION_CONTEXT_ID = "evaluation_context:g2a2a"
+G2A2A_ATTEMPT_RULE_IDS = {
+    "g2a_t03_pending",
+    "g2a_t04_fulfill_mock",
+    "g2a_t05_receipt",
+    "g2a_t24_nonconsuming_failure",
+    "g2a_t26_uncertain_adapter_outcome",
+}
 
 
 @dataclass(frozen=True)
@@ -69,6 +85,7 @@ def _policy(
     *,
     policy_version: str = "supplier_policy_v01",
     root_id: str = ROOT_ID,
+    retry_policy: str = "NON_CONSUMING_RETRY",
     logical_namespace: str = LOGICAL_NAMESPACE,
     effect_classes: tuple[str, ...] = ("PAYMENT",),
     business_namespaces: tuple[str, ...] = (BUSINESS_NAMESPACE,),
@@ -79,7 +96,7 @@ def _policy(
         owning_local_root_id=root_id,
         authority_rule_refs=("authority_rule:supplier_a_payment",),
         kill_switch_condition_refs=("kill_switch:manual_cancel",),
-        retry_policy="NON_CONSUMING_RETRY",
+        retry_policy=retry_policy,
         supersession_policy="ROOT_DECISION_ONLY",
         logical_effect_namespace=logical_namespace,
         allowed_logical_effect_classes=effect_classes,
@@ -120,6 +137,84 @@ def _projection(
         evaluation_time=evaluation_time,
         evaluation_time_source=evaluation_time_source,
         evaluation_context_id=evaluation_context_id,
+    )
+
+
+def _g2a2a_registry(
+) -> transition_registry.ActionPacketTransitionRegistryProfileV01:
+    return (
+        transition_registry.build_action_packet_transition_registry_profile_v01()
+    )
+
+
+def _g2a2a_attempt() -> acp.ActionExecutionAttemptIdentityV01:
+    return acp.build_action_execution_attempt_identity_v01(
+        packet_id=G2A2A_PACKET_ID,
+        idempotency_key=G2A2A_IDEMPOTENCY_KEY,
+        attempt_ordinal=1,
+        evaluation_context_id=G2A2A_EVALUATION_CONTEXT_ID,
+    )
+
+
+def _g2a2a_bindings(
+    rule_id: str,
+) -> tuple[acp.TransitionEvidenceBindingV01, ...]:
+    registry = _g2a2a_registry()
+    rule = transition_registry.lookup_action_packet_transition_rule_v01(
+        registry=registry,
+        transition_rule_id=rule_id,
+    )
+    return tuple(
+        acp.build_transition_evidence_binding_v01(
+            action_packet_transition_registry_profile=registry,
+            transition_rule_id=rule_id,
+            evidence_code=evidence_code,
+            evidence_ref=f"evidence:{evidence_code}",
+            evidence_sha256=G2A2A_EVIDENCE_SHA256,
+            validator_profile_id="validator:g2a2a",
+        )
+        for evidence_code in rule.required_evidence_codes
+    )
+
+
+def _g2a2a_event(
+    rule_id: str,
+) -> acp.ActionPacketTransitionEventV01:
+    registry = _g2a2a_registry()
+    rule = transition_registry.lookup_action_packet_transition_rule_v01(
+        registry=registry,
+        transition_rule_id=rule_id,
+    )
+    return acp.build_action_packet_transition_event_v01(
+        action_packet_transition_registry_profile=registry,
+        transition_rule_id=rule_id,
+        packet_id=G2A2A_PACKET_ID,
+        idempotency_key=G2A2A_IDEMPOTENCY_KEY,
+        previous_transition_event_id=(
+            None
+            if rule_id == "g2a_t01_activate_root_authorization"
+            else G2A2A_PREVIOUS_EVENT_ID
+        ),
+        owning_local_root_id=ROOT_ID,
+        root_decision_ref=(
+            None
+            if rule.root_decision_requirement_code == "NONE"
+            else G2A2A_ROOT_DECISION_REF
+        ),
+        transition_evidence_bindings=_g2a2a_bindings(rule_id),
+        dependency_set_candidate_fingerprint=(
+            G2A2A_DEPENDENCY_FINGERPRINT
+        ),
+        temporal_authority_fingerprint=G2A2A_TEMPORAL_FINGERPRINT,
+        evaluation_time=EVALUATION_TIME,
+        evaluation_time_source=EVALUATION_TIME_SOURCE,
+        evaluation_context_id=G2A2A_EVALUATION_CONTEXT_ID,
+        execution_attempt_identity=(
+            _g2a2a_attempt()
+            if rule_id in G2A2A_ATTEMPT_RULE_IDS
+            else None
+        ),
+        receipt_ref="receipt:g2a2a" if rule_id == "g2a_t05_receipt" else None,
     )
 
 
@@ -3501,6 +3596,464 @@ def test_supplier_projection_rejects_source_adapter_version_subclass() -> None:
         _projection(packet=versioned_source)
 
 
+def test_g2a2a_public_contract_shapes_and_constants() -> None:
+    assert acp.TRANSITION_EVIDENCE_BINDING_PROFILE_ID_V01 == (
+        "action_transition_evidence_binding_v01"
+    )
+    assert acp.EXECUTION_ATTEMPT_IDENTITY_PROFILE_ID_V01 == (
+        "action_execution_attempt_identity_v01"
+    )
+    assert acp.ACTION_PACKET_TRANSITION_EVENT_PROFILE_ID_V01 == (
+        "action_packet_transition_identity_profile_v01"
+    )
+    assert tuple(
+        field.name for field in fields(acp.TransitionEvidenceBindingV01)
+    ) == (
+        "transition_evidence_binding_id",
+        "evidence_code",
+        "evidence_ref",
+        "evidence_sha256",
+        "validator_profile_id",
+        "validation_status",
+    )
+    assert tuple(
+        field.name for field in fields(acp.ActionExecutionAttemptIdentityV01)
+    ) == (
+        "execution_attempt_id",
+        "packet_id",
+        "idempotency_key",
+        "attempt_ordinal",
+        "evaluation_context_id",
+        "material",
+    )
+    assert tuple(
+        field.name for field in fields(acp.ActionPacketTransitionEventV01)
+    ) == (
+        "transition_event_id",
+        "transition_profile_version",
+        "transition_registry_id",
+        "transition_rule_id",
+        "packet_id",
+        "idempotency_key",
+        "previous_transition_event_id",
+        "source_state",
+        "target_state",
+        "transition_class_code",
+        "performed_by_component",
+        "owning_local_root_id",
+        "root_decision_ref",
+        "transition_evidence_bindings",
+        "reason_code",
+        "dependency_set_candidate_fingerprint",
+        "temporal_authority_fingerprint",
+        "evaluation_time",
+        "evaluation_time_source",
+        "evaluation_context_id",
+        "execution_attempt_id",
+        "effect_consumption_class",
+        "receipt_ref",
+    )
+
+
+def test_transition_evidence_binding_exact_identity() -> None:
+    registry = _g2a2a_registry()
+    binding = _g2a2a_bindings(
+        "g2a_t01_activate_root_authorization"
+    )[0]
+    material = acp.transition_evidence_binding_material_v01(binding)
+    assert tuple(name for name, _ in material) == (
+        "evidence_code",
+        "evidence_ref",
+        "evidence_sha256",
+        "validator_profile_id",
+        "validation_status",
+    )
+    assert binding.validation_status == "PASS"
+    assert binding.transition_evidence_binding_id == (
+        "acpte_v01:"
+        "a442dab1f8cbd975b96aed1b42af2ae573d3a2d38f03f87ab589ef5ad01e5d97"
+    )
+    assert acp.validate_transition_evidence_binding_v01(
+        binding,
+        action_packet_transition_registry_profile=registry,
+        transition_rule_id="g2a_t01_activate_root_authorization",
+    ) == (True, ())
+    assert _g2a2a_bindings(
+        "g2a_t01_activate_root_authorization"
+    )[0] == binding
+
+
+def test_transition_evidence_binding_adversarial_rejections() -> None:
+    registry = _g2a2a_registry()
+    rule_id = "g2a_t01_activate_root_authorization"
+    binding = _g2a2a_bindings(rule_id)[0]
+    for forged in (
+        replace(binding, transition_evidence_binding_id="acpte_v01:" + "0" * 64),
+        replace(binding, evidence_sha256="0" * 63),
+        replace(binding, validator_profile_id=""),
+        replace(binding, validation_status="FAIL"),
+        replace(binding, evidence_ref=""),
+        replace(binding, evidence_ref=_AlwaysEqualStr(binding.evidence_ref)),
+        replace(binding, evidence_code="transition_history_valid"),
+        replace(
+            binding,
+            transition_evidence_binding_id=_AlwaysEqualStr(
+                binding.transition_evidence_binding_id
+            ),
+        ),
+    ):
+        valid, reasons = acp.validate_transition_evidence_binding_v01(
+            forged,
+            action_packet_transition_registry_profile=registry,
+            transition_rule_id=rule_id,
+        )
+        assert valid is False
+        assert reasons
+    with pytest.raises(ValueError):
+        acp.build_transition_evidence_binding_v01(
+            action_packet_transition_registry_profile=registry,
+            transition_rule_id=rule_id,
+            evidence_code="transition_history_valid",
+            evidence_ref="evidence:wrong_rule",
+            evidence_sha256=G2A2A_EVIDENCE_SHA256,
+            validator_profile_id="validator:g2a2a",
+        )
+    assert acp.validate_transition_evidence_binding_v01(
+        object(),
+        action_packet_transition_registry_profile=registry,
+        transition_rule_id=rule_id,
+    )[0] is False
+
+
+def test_execution_attempt_identity_exact_and_deterministic() -> None:
+    attempt = _g2a2a_attempt()
+    assert tuple(name for name, _ in attempt.material) == (
+        "packet_id",
+        "idempotency_key",
+        "attempt_ordinal",
+        "evaluation_context_id",
+    )
+    assert attempt.execution_attempt_id == (
+        "execution_attempt_v01:"
+        "03e9cacf21db74bd69c9d9e6184d8cdc0165351e16fccf2a7b22c93d84a6a82b"
+    )
+    assert acp.validate_action_execution_attempt_identity_v01(attempt) == (
+        True,
+        (),
+    )
+    assert _g2a2a_attempt() == attempt
+    changed_ordinal = acp.build_action_execution_attempt_identity_v01(
+        packet_id=G2A2A_PACKET_ID,
+        idempotency_key=G2A2A_IDEMPOTENCY_KEY,
+        attempt_ordinal=2,
+        evaluation_context_id=G2A2A_EVALUATION_CONTEXT_ID,
+    )
+    changed_context = acp.build_action_execution_attempt_identity_v01(
+        packet_id=G2A2A_PACKET_ID,
+        idempotency_key=G2A2A_IDEMPOTENCY_KEY,
+        attempt_ordinal=1,
+        evaluation_context_id="evaluation_context:g2a2a_changed",
+    )
+    assert changed_ordinal.execution_attempt_id != attempt.execution_attempt_id
+    assert changed_context.execution_attempt_id != attempt.execution_attempt_id
+
+
+@pytest.mark.parametrize("ordinal", (0, -1, True, 1.0))
+def test_execution_attempt_rejects_nonpositive_or_nonexact_ordinal(
+    ordinal: object,
+) -> None:
+    with pytest.raises(ValueError):
+        acp.build_action_execution_attempt_identity_v01(
+            packet_id=G2A2A_PACKET_ID,
+            idempotency_key=G2A2A_IDEMPOTENCY_KEY,
+            attempt_ordinal=ordinal,
+            evaluation_context_id=G2A2A_EVALUATION_CONTEXT_ID,
+        )
+
+
+def test_execution_attempt_identity_rejects_forgery() -> None:
+    attempt = _g2a2a_attempt()
+    forged_values = (
+        replace(
+            attempt,
+            execution_attempt_id="execution_attempt_v01:" + "0" * 64,
+        ),
+        replace(
+            attempt,
+            execution_attempt_id=_AlwaysEqualStr(
+                attempt.execution_attempt_id
+            ),
+        ),
+        replace(attempt, packet_id="acp_v02:" + "0" * 63),
+        replace(attempt, idempotency_key="idem:action_v01:" + "0" * 63),
+        replace(attempt, material=tuple(reversed(attempt.material))),
+    )
+    for forged in forged_values:
+        assert acp.validate_action_execution_attempt_identity_v01(
+            forged
+        )[0] is False
+    assert acp.validate_action_execution_attempt_identity_v01(object())[0] is False
+
+
+@pytest.mark.parametrize(
+    "rule_id",
+    transition_registry.ACTION_PACKET_TRANSITION_RULE_IDS_V01,
+)
+def test_every_action_packet_transition_event_builds_and_validates(
+    rule_id: str,
+) -> None:
+    registry = _g2a2a_registry()
+    rule = transition_registry.lookup_action_packet_transition_rule_v01(
+        registry=registry,
+        transition_rule_id=rule_id,
+    )
+    event = _g2a2a_event(rule_id)
+    assert acp.validate_action_packet_transition_event_v01(
+        event,
+        action_packet_transition_registry_profile=registry,
+    ) == (True, ())
+    assert event.transition_registry_id == registry.transition_registry_id
+    assert event.transition_rule_id == rule.transition_rule_id
+    assert event.source_state == rule.source_state
+    assert event.target_state == rule.target_state
+    assert event.transition_class_code == rule.transition_class_code
+    assert event.performed_by_component == rule.permitted_component_code
+    assert event.reason_code == rule.reason_code
+    assert event.effect_consumption_class == rule.effect_consumption_class
+    assert tuple(
+        binding.evidence_code
+        for binding in event.transition_evidence_bindings
+    ) == rule.required_evidence_codes
+    material = acp.action_packet_transition_event_material_v01(event)
+    assert len(material) == 22
+    assert event.transition_event_id.startswith("acpt_v01:")
+    assert len(event.transition_event_id.removeprefix("acpt_v01:")) == 64
+
+
+def test_transition_event_deterministic_literal_ids() -> None:
+    expected = {
+        "g2a_t01_activate_root_authorization": (
+            "acpt_v01:"
+            "ab48ee053eadb4fd72f2e998bb807ed8b2a58cbca42461448e36cf5744f454be"
+        ),
+        "g2a_t02_queue": (
+            "acpt_v01:"
+            "34a8972108e7c2eca9b9c5587e73bb2e4382bd36006877c5c1eb9ece840e6b88"
+        ),
+        "g2a_t03_pending": (
+            "acpt_v01:"
+            "dcac921c908dbb6bb91cecf023e6fc802edcd150558557b9d1e40679d5bf0382"
+        ),
+        "g2a_t24_nonconsuming_failure": (
+            "acpt_v01:"
+            "fd2ff18b675ecc84df382311cc7c314aa1a03f36e34d43af4dc75e46fbb2a694"
+        ),
+        "g2a_t26_uncertain_adapter_outcome": (
+            "acpt_v01:"
+            "27753e6a066dc42a372aa126299243ffb095f7af01cbf1cfdeb7b6337f714d49"
+        ),
+    }
+    for rule_id, event_id in expected.items():
+        assert _g2a2a_event(rule_id).transition_event_id == event_id
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value"),
+    (
+        ("transition_registry_id", "acptr_v01:" + "0" * 64),
+        ("source_state", "FAILED"),
+        ("target_state", "FAILED"),
+        ("transition_class_code", "AUTHORITY_CHANGE"),
+        ("performed_by_component", "owning_local_root"),
+        ("reason_code", "packet_blocked"),
+        ("effect_consumption_class", "CONSUMED"),
+        ("packet_id", "acp_v02:" + "0" * 63),
+        ("idempotency_key", "idem:action_v01:" + "0" * 63),
+        ("previous_transition_event_id", "acpt_v01:" + "0" * 63),
+        ("evaluation_time", True),
+    ),
+)
+def test_transition_event_rule_and_identity_drift_fails_closed(
+    field_name: str,
+    value: object,
+) -> None:
+    registry = _g2a2a_registry()
+    event = _g2a2a_event("g2a_t02_queue")
+    forged = replace(event, **{field_name: value})
+    assert acp.validate_action_packet_transition_event_v01(
+        forged,
+        action_packet_transition_registry_profile=registry,
+    )[0] is False
+
+
+def test_transition_event_evidence_set_order_and_binding_are_exact() -> None:
+    registry = _g2a2a_registry()
+    event = _g2a2a_event("g2a_t02_queue")
+    bindings = event.transition_evidence_bindings
+    wrong_hash = replace(bindings[0], evidence_sha256="0" * 64)
+    wrong_validator = replace(bindings[0], validator_profile_id="validator:other")
+    non_pass = replace(bindings[0], validation_status="FAIL")
+    another_rule_binding = _g2a2a_bindings("g2a_t01_activate_root_authorization")[0]
+    forged_collections = (
+        bindings[:-1],
+        (*bindings, bindings[0]),
+        tuple(reversed(bindings)),
+        (another_rule_binding, *bindings[1:]),
+        (wrong_hash, *bindings[1:]),
+        (wrong_validator, *bindings[1:]),
+        (non_pass, *bindings[1:]),
+        ("evidence:free_form",),
+    )
+    for forged_bindings in forged_collections:
+        forged = replace(
+            event,
+            transition_evidence_bindings=forged_bindings,
+        )
+        assert acp.validate_action_packet_transition_event_v01(
+            forged,
+            action_packet_transition_registry_profile=registry,
+        )[0] is False
+
+
+def test_transition_event_root_reference_matrix() -> None:
+    registry = _g2a2a_registry()
+    none_rule = _g2a2a_event("g2a_t02_queue")
+    required_rule = _g2a2a_event(
+        "g2a_t01_activate_root_authorization"
+    )
+    for forged in (
+        replace(none_rule, root_decision_ref=G2A2A_ROOT_DECISION_REF),
+        replace(required_rule, root_decision_ref=None),
+        replace(required_rule, root_decision_ref="not_a_digest"),
+    ):
+        assert acp.validate_action_packet_transition_event_v01(
+            forged,
+            action_packet_transition_registry_profile=registry,
+        )[0] is False
+
+
+def test_transition_event_unknown_rule_fails_closed() -> None:
+    registry = _g2a2a_registry()
+    with pytest.raises(ValueError, match="^unknown_transition$"):
+        acp.build_action_packet_transition_event_v01(
+            action_packet_transition_registry_profile=registry,
+            transition_rule_id="g2a_unknown",
+            packet_id=G2A2A_PACKET_ID,
+            idempotency_key=G2A2A_IDEMPOTENCY_KEY,
+            previous_transition_event_id=G2A2A_PREVIOUS_EVENT_ID,
+            owning_local_root_id=ROOT_ID,
+            root_decision_ref=None,
+            transition_evidence_bindings=(),
+            dependency_set_candidate_fingerprint=(
+                G2A2A_DEPENDENCY_FINGERPRINT
+            ),
+            temporal_authority_fingerprint=(
+                G2A2A_TEMPORAL_FINGERPRINT
+            ),
+            evaluation_time=EVALUATION_TIME,
+            evaluation_time_source=EVALUATION_TIME_SOURCE,
+            evaluation_context_id=G2A2A_EVALUATION_CONTEXT_ID,
+            execution_attempt_identity=None,
+            receipt_ref=None,
+        )
+
+
+@pytest.mark.parametrize(
+    "rule_id",
+    transition_registry.ACTION_PACKET_TRANSITION_RULE_IDS_V01,
+)
+def test_transition_event_attempt_and_receipt_presence_matrix(
+    rule_id: str,
+) -> None:
+    event = _g2a2a_event(rule_id)
+    if rule_id in G2A2A_ATTEMPT_RULE_IDS:
+        assert event.execution_attempt_id == (
+            _g2a2a_attempt().execution_attempt_id
+        )
+    else:
+        assert event.execution_attempt_id is None
+    if rule_id == "g2a_t05_receipt":
+        assert event.receipt_ref == "receipt:g2a2a"
+    else:
+        assert event.receipt_ref is None
+
+
+def test_transition_event_attempt_and_receipt_matrix_rejections() -> None:
+    registry = _g2a2a_registry()
+    mutations = (
+        replace(_g2a2a_event("g2a_t03_pending"), execution_attempt_id=None),
+        replace(
+            _g2a2a_event("g2a_t02_queue"),
+            execution_attempt_id=_g2a2a_attempt().execution_attempt_id,
+        ),
+        replace(_g2a2a_event("g2a_t03_pending"), receipt_ref="receipt:x"),
+        replace(_g2a2a_event("g2a_t04_fulfill_mock"), receipt_ref="receipt:x"),
+        replace(
+            _g2a2a_event("g2a_t24_nonconsuming_failure"),
+            receipt_ref="receipt:x",
+        ),
+        replace(
+            _g2a2a_event("g2a_t26_uncertain_adapter_outcome"),
+            receipt_ref="receipt:x",
+        ),
+        replace(_g2a2a_event("g2a_t05_receipt"), receipt_ref=None),
+        replace(_g2a2a_event("g2a_t05_receipt"), receipt_ref=""),
+        replace(
+            _g2a2a_event("g2a_t03_pending"),
+            execution_attempt_id="execution_attempt_v01:" + "0" * 63,
+        ),
+        replace(_g2a2a_event("g2a_t02_queue"), receipt_ref=""),
+    )
+    for mutation in mutations:
+        assert acp.validate_action_packet_transition_event_v01(
+            mutation,
+            action_packet_transition_registry_profile=registry,
+        )[0] is False
+
+
+def test_transition_event_id_and_material_forgery_fail_closed() -> None:
+    registry = _g2a2a_registry()
+    event = _g2a2a_event("g2a_t02_queue")
+    for forged_id in (
+        "acpt_v01:" + "0" * 64,
+        _AlwaysEqualStr(event.transition_event_id),
+    ):
+        assert acp.validate_action_packet_transition_event_v01(
+            replace(event, transition_event_id=forged_id),
+            action_packet_transition_registry_profile=registry,
+        )[0] is False
+    material = acp.action_packet_transition_event_material_v01(event)
+    names = tuple(name for name, _ in material)
+    assert acp.validate_canonical_profile_material_v01(
+        material,
+        expected_field_names=names,
+    ) == (True, ())
+    for forged_material in (
+        tuple(reversed(material)),
+        material[:-1],
+        (*material, ("unknown_field", "value")),
+    ):
+        assert acp.validate_canonical_profile_material_v01(
+            forged_material,
+            expected_field_names=names,
+        )[0] is False
+
+
+def test_transition_event_validators_are_total_and_non_mutating() -> None:
+    registry = _g2a2a_registry()
+    assert acp.validate_action_packet_transition_event_v01(
+        object(),
+        action_packet_transition_registry_profile=registry,
+    )[0] is False
+    assert acp.validate_action_packet_transition_event_v01(
+        _g2a2a_event("g2a_t02_queue"),
+        action_packet_transition_registry_profile=object(),
+    )[0] is False
+    assert not hasattr(acp.ActionPacketTransitionEventV01, "append")
+    assert not hasattr(acp.ActionPacketTransitionEventV01, "current_state")
+    assert not hasattr(acp.ActionPacketTransitionEventV01, "disposition")
+
+
 def test_temporal_evaluation_forgery_and_malformed_context_fail_closed() -> None:
     projection = _projection()
     stale_evaluation = replace(
@@ -3668,3 +4221,2327 @@ def test_custom_equality_cannot_bypass_identity_validation(
             )[0]
             is False
         )
+
+
+def _g2a2b_evidence_ids(
+    event: acp.ActionPacketTransitionEventV01,
+    codes: tuple[str, ...],
+) -> tuple[str, ...]:
+    return tuple(
+        sorted(
+            (
+                binding.transition_evidence_binding_id
+                for binding in event.transition_evidence_bindings
+                if binding.evidence_code in codes
+            ),
+            key=lambda item: item.encode("utf-8"),
+        )
+    )
+
+
+def _g2a2b_event(
+    entry: acp.ActionPacketLifecycleEntryV01,
+    rule_id: str,
+    *,
+    evaluation_context_id: str | None = None,
+    evaluation_time: int | None = None,
+    latest_disposition_event_id: str | None = None,
+    receipt_ref: str | None = None,
+) -> acp.ActionPacketTransitionEventV01:
+    genesis = entry.root_bound_genesis
+    events = entry.transition_events
+    packet_id = genesis.packet_identity.packet_id
+    key = genesis.canonical_projection.idempotency_identity.idempotency_key
+    context_id = (
+        evaluation_context_id
+        or f"evaluation_context:g2a2b:{rule_id}:{len(events) + 1}"
+    )
+    attempt = None
+    if rule_id == "g2a_t03_pending":
+        ordinal = 1 + sum(
+            event.transition_rule_id == "g2a_t03_pending"
+            for event in events
+        )
+        attempt = acp.build_action_execution_attempt_identity_v01(
+            packet_id=packet_id,
+            idempotency_key=key,
+            attempt_ordinal=ordinal,
+            evaluation_context_id=context_id,
+        )
+    elif rule_id in {
+        "g2a_t04_fulfill_mock",
+        "g2a_t24_nonconsuming_failure",
+        "g2a_t26_uncertain_adapter_outcome",
+    }:
+        pending = events[-1]
+        ordinal = sum(
+            event.transition_rule_id == "g2a_t03_pending"
+            for event in events
+        )
+        context_id = pending.evaluation_context_id
+        attempt = acp.build_action_execution_attempt_identity_v01(
+            packet_id=packet_id,
+            idempotency_key=key,
+            attempt_ordinal=ordinal,
+            evaluation_context_id=context_id,
+        )
+    elif rule_id == "g2a_t05_receipt":
+        consumed = events[-1]
+        ordinal = sum(
+            event.transition_rule_id == "g2a_t03_pending"
+            for event in events
+        )
+        context_id = consumed.evaluation_context_id
+        attempt = acp.build_action_execution_attempt_identity_v01(
+            packet_id=packet_id,
+            idempotency_key=key,
+            attempt_ordinal=ordinal,
+            evaluation_context_id=context_id,
+        )
+    bindings = _g2a2a_bindings(rule_id)
+    if (
+        rule_id == "g2a_t24_nonconsuming_failure"
+        and latest_disposition_event_id is not None
+    ):
+        bindings = tuple(
+            acp.build_transition_evidence_binding_v01(
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+                transition_rule_id=rule_id,
+                evidence_code=binding.evidence_code,
+                evidence_ref=(
+                    latest_disposition_event_id
+                    if binding.evidence_code
+                    == "latest_disposition_event_binding_valid"
+                    else binding.evidence_ref
+                ),
+                evidence_sha256=(
+                    latest_disposition_event_id[
+                        len(acp.IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01) :
+                    ]
+                    if binding.evidence_code
+                    == "latest_disposition_event_binding_valid"
+                    else binding.evidence_sha256
+                ),
+                validator_profile_id=(
+                    acp.IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01
+                    if binding.evidence_code
+                    == "latest_disposition_event_binding_valid"
+                    else binding.validator_profile_id
+                ),
+            )
+            for binding in bindings
+        )
+    return acp.build_action_packet_transition_event_v01(
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+        transition_rule_id=rule_id,
+        packet_id=packet_id,
+        idempotency_key=key,
+        previous_transition_event_id=(
+            events[-1].transition_event_id if events else None
+        ),
+        owning_local_root_id=genesis.canonical_projection.owning_local_root_id,
+        root_decision_ref=(
+            genesis.root_decision_projection.root_decision_result.decision_id
+            if rule_id == "g2a_t01_activate_root_authorization"
+            else None
+        ),
+        transition_evidence_bindings=bindings,
+        dependency_set_candidate_fingerprint=(
+            genesis.canonical_projection.dependency_set_candidate_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            genesis.canonical_projection.temporal_authority_fingerprint
+        ),
+        evaluation_time=(
+            EVALUATION_TIME + len(events)
+            if evaluation_time is None
+            else evaluation_time
+        ),
+        evaluation_time_source=EVALUATION_TIME_SOURCE,
+        evaluation_context_id=context_id,
+        execution_attempt_identity=attempt,
+        receipt_ref=receipt_ref,
+    )
+
+
+def _rebuild_transition_event(
+    event: acp.ActionPacketTransitionEventV01,
+    **changes: object,
+) -> acp.ActionPacketTransitionEventV01:
+    provisional = replace(event, transition_event_id="", **changes)
+    return replace(
+        provisional,
+        transition_event_id=acp.build_domain_separated_identity_v01(
+            domain=acp.ACTION_PACKET_TRANSITION_EVENT_DOMAIN_V01,
+            prefix=acp.ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01,
+            material=acp.action_packet_transition_event_material_v01(
+                provisional
+            ),
+        ),
+    )
+
+
+def _g2a2b_recorded_genesis(
+    root_bound: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+) -> acp.ActionCommitPacketRegistryV02:
+    return acp.record_action_packet_genesis_v01(
+        acp.build_empty_action_commit_packet_registry_v02(),
+        root_bound_genesis=root_bound,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+
+
+def _g2a2b_activate(
+    registry: acp.ActionCommitPacketRegistryV02,
+    packet_id: str,
+    *,
+    evaluation_time: int | None = None,
+) -> tuple[
+    acp.ActionCommitPacketRegistryV02,
+    acp.ActionPacketTransitionEventV01,
+    acp.IdempotencyDispositionEventV01,
+]:
+    event, reserve = _g2a2b_activation_pair(
+        registry,
+        packet_id,
+        evaluation_time=evaluation_time,
+    )
+    activated = acp.activate_action_packet_lifecycle_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=event,
+        disposition_event=reserve,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    return activated, event, reserve
+
+
+def _g2a2b_activation_pair(
+    registry: acp.ActionCommitPacketRegistryV02,
+    packet_id: str,
+    *,
+    evaluation_time: int | None = None,
+) -> tuple[
+    acp.ActionPacketTransitionEventV01,
+    acp.IdempotencyDispositionEventV01,
+]:
+    entry = next(
+        item
+        for item in registry.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == packet_id
+    )
+    event = _g2a2b_event(
+        entry,
+        "g2a_t01_activate_root_authorization",
+        evaluation_time=evaluation_time,
+    )
+    genesis = entry.root_bound_genesis
+    reserve = acp.build_idempotency_disposition_event_v01(
+        idempotency_key=(
+            genesis.canonical_projection.idempotency_identity.idempotency_key
+        ),
+        event_class="RESERVE",
+        from_disposition="UNCLAIMED",
+        to_disposition="RESERVED",
+        from_owner_packet_id=None,
+        to_owner_packet_id=packet_id,
+        previous_disposition_event_id=None,
+        cause_transition_event_ids=(event.transition_event_id,),
+        root_decision_ref=(
+            genesis.root_decision_projection.root_decision_result.decision_id
+        ),
+        predecessor_packet_id=None,
+        successor_packet_id=None,
+        evidence_refs=_g2a2b_evidence_ids(
+            event,
+            (
+                "packet_genesis_valid",
+                "source_root_authorization_valid",
+                "idempotency_acquisition_valid",
+            ),
+        ),
+        evaluation_time=event.evaluation_time,
+        evaluation_time_source=event.evaluation_time_source,
+        evaluation_context_id=event.evaluation_context_id,
+    )
+    return event, reserve
+
+
+def _g2a2b_append(
+    registry: acp.ActionCommitPacketRegistryV02,
+    packet_id: str,
+    rule_id: str,
+    *,
+    evaluation_context_id: str | None = None,
+) -> tuple[
+    acp.ActionCommitPacketRegistryV02,
+    acp.ActionPacketTransitionEventV01,
+]:
+    entry = next(
+        item
+        for item in registry.action_packet_lifecycle_entries
+        if item.root_bound_genesis.packet_identity.packet_id == packet_id
+    )
+    event = _g2a2b_event(
+        entry,
+        rule_id,
+        evaluation_context_id=evaluation_context_id,
+    )
+    updated = acp.append_action_packet_lifecycle_transition_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    return updated, event
+
+
+def _g2a2b_pending_registry(
+    root_bound: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+) -> tuple[
+    acp.ActionCommitPacketRegistryV02,
+    acp.ActionPacketTransitionEventV01,
+]:
+    packet_id = root_bound.packet_identity.packet_id
+    registry = _g2a2b_recorded_genesis(root_bound)
+    registry, _, _ = _g2a2b_activate(registry, packet_id)
+    registry, _ = _g2a2b_append(registry, packet_id, "g2a_t02_queue")
+    registry, pending = _g2a2b_append(
+        registry,
+        packet_id,
+        "g2a_t03_pending",
+        evaluation_context_id="evaluation_context:g2a2b:attempt:1",
+    )
+    return registry, pending
+
+
+def _g2a2b_outcome_disposition(
+    state: acp.ActionPacketLifecycleStateV01,
+    transition: acp.ActionPacketTransitionEventV01,
+    event_class: str,
+) -> acp.IdempotencyDispositionEventV01:
+    if event_class == "CONSUME":
+        before, after = "RESERVED", "CONSUMED"
+        codes = (
+            "effect_consumption_evidence_valid",
+            "mock_adapter_result_valid",
+        )
+    elif event_class == "UNCERTAIN_CLOSE":
+        before, after = "RESERVED", "UNCERTAIN_CLOSED"
+        codes = (
+            "adapter_invocation_evidence_valid",
+            "effect_outcome_unresolved",
+        )
+    else:
+        before = after = "CONSUMED"
+        codes = (
+            "fulfillment_consumption_evidence_valid",
+            "terminal_receipt_valid",
+        )
+    return acp.build_idempotency_disposition_event_v01(
+        idempotency_key=state.idempotency_key,
+        event_class=event_class,
+        from_disposition=before,
+        to_disposition=after,
+        from_owner_packet_id=state.packet_id,
+        to_owner_packet_id=state.packet_id,
+        previous_disposition_event_id=state.latest_disposition_event_id,
+        cause_transition_event_ids=(transition.transition_event_id,),
+        root_decision_ref=None,
+        predecessor_packet_id=None,
+        successor_packet_id=None,
+        evidence_refs=_g2a2b_evidence_ids(transition, codes),
+        evaluation_time=transition.evaluation_time,
+        evaluation_time_source=transition.evaluation_time_source,
+        evaluation_context_id=transition.evaluation_context_id,
+    )
+
+
+def test_g2a2b_genesis_is_immutable_unclaimed_and_non_authoritative(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    source = acp.build_empty_action_commit_packet_registry_v02()
+    source_before = repr(source)
+    registry = acp.record_action_packet_genesis_v01(
+        source,
+        root_bound_genesis=root_bound_fixture.root_bound_projection,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    packet_id = root_bound_fixture.root_bound_projection.packet_identity.packet_id
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert repr(source) == source_before
+    assert len(registry.action_packet_lifecycle_entries) == 1
+    assert registry.idempotency_disposition_events == ()
+    assert state.lifecycle_state == "CREATED"
+    assert state.idempotency_disposition == "UNCLAIMED"
+    assert state.reservation_owner_packet_id is None
+    assert state.executable is False
+    assert state.registry_is_authority is False
+    assert state.registry_grants_permission is False
+    assert state.real_world_effects_count == 0
+    assert acp.validate_action_commit_packet_registry_v02(registry) == (
+        True,
+        (),
+    )
+    with pytest.raises(ValueError, match="action_packet_registry_duplicate_genesis"):
+        acp.record_action_packet_genesis_v01(
+            registry,
+            root_bound_genesis=root_bound_fixture.root_bound_projection,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def test_g2a2b_activation_is_atomic_and_reserves_exact_owner(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    registry = _g2a2b_recorded_genesis(root_bound)
+    before = repr(registry)
+    activated, transition, reserve = _g2a2b_activate(
+        registry,
+        root_bound.packet_identity.packet_id,
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        activated,
+        packet_id=root_bound.packet_identity.packet_id,
+    )
+    assert repr(registry) == before
+    assert state.lifecycle_state == "ROOT_AUTHORIZED"
+    assert state.idempotency_disposition == "RESERVED"
+    assert state.reservation_owner_packet_id == state.packet_id
+    assert state.executable is False
+    assert reserve.cause_transition_event_ids == (transition.transition_event_id,)
+    assert reserve.root_decision_ref == transition.root_decision_ref
+    assert len(activated.idempotency_disposition_events) == 1
+    with pytest.raises(ValueError):
+        acp.activate_action_packet_lifecycle_v01(
+            registry,
+            packet_id=state.packet_id,
+            transition_event=transition,
+            disposition_event=replace(
+                reserve,
+                cause_transition_event_ids=(G2A2A_PREVIOUS_EVENT_ID,),
+            ),
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry) == before
+
+
+def test_g2a2b_attempt_history_nonconsuming_retry_and_new_ordinal(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, first_pending = _g2a2b_pending_registry(root_bound)
+    entry = registry.action_packet_lifecycle_entries[0]
+    current = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    failure = _g2a2b_event(
+        entry,
+        "g2a_t24_nonconsuming_failure",
+        latest_disposition_event_id=current.latest_disposition_event_id,
+    )
+    before_events = registry.idempotency_disposition_events
+    before_bytes = canonical_json_bytes_v01(
+        tuple(
+            acp.idempotency_disposition_event_material_v01(event)
+            for event in before_events
+        )
+    )
+    registry = acp.record_action_packet_nonconsuming_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=failure,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    failed_state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    assert failed_state.lifecycle_state == "FAILED"
+    assert failed_state.failed_provenance == "FAILED_NON_CONSUMING"
+    assert registry.idempotency_disposition_events is before_events
+    assert canonical_json_bytes_v01(
+        tuple(
+            acp.idempotency_disposition_event_material_v01(event)
+            for event in registry.idempotency_disposition_events
+        )
+    ) == before_bytes
+    assert failed_state.idempotency_disposition == "RESERVED"
+    registry, _ = _g2a2b_append(registry, packet_id, "g2a_t25_retry")
+    registry, second_pending = _g2a2b_append(
+        registry,
+        packet_id,
+        "g2a_t03_pending",
+        evaluation_context_id="evaluation_context:g2a2b:attempt:2",
+    )
+    assert first_pending.execution_attempt_id != second_pending.execution_attempt_id
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    assert state.execution_attempt_count == 2
+    assert state.lifecycle_state == "PENDING_FULFILLMENT"
+    assert state.eligible_for_corridor_revalidation is True
+    assert state.executable is False
+
+
+def test_g2a2b_consumption_and_receipt_are_atomic(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, pending = _g2a2b_pending_registry(root_bound)
+    entry = registry.action_packet_lifecycle_entries[0]
+    fulfilled = _g2a2b_event(entry, "g2a_t04_fulfill_mock")
+    before_state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    consume = _g2a2b_outcome_disposition(
+        before_state,
+        fulfilled,
+        "CONSUME",
+    )
+    registry = acp.record_action_packet_consumed_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=fulfilled,
+        disposition_event=consume,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    consumed = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    assert fulfilled.execution_attempt_id == pending.execution_attempt_id
+    assert consumed.lifecycle_state == "FULFILLED_MOCK"
+    assert consumed.idempotency_disposition == "CONSUMED"
+    entry = registry.action_packet_lifecycle_entries[0]
+    receipt = _g2a2b_event(
+        entry,
+        "g2a_t05_receipt",
+        receipt_ref="receipt:g2a2b:terminal",
+    )
+    confirmation = _g2a2b_outcome_disposition(
+        consumed,
+        receipt,
+        "RECEIPT_CONFIRM",
+    )
+    registry = acp.record_action_packet_receipt_confirmation_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=receipt,
+        disposition_event=confirmation,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    assert receipt.execution_attempt_id == pending.execution_attempt_id
+    assert state.lifecycle_state == "RECEIPT_RECEIVED"
+    assert state.idempotency_disposition == "CONSUMED"
+    assert state.terminal_receipt_ref == "receipt:g2a2b:terminal"
+    assert state.lifecycle_terminal is True
+    assert state.executable is False
+
+
+def test_g2a2b_uncertain_outcome_is_permanently_closed(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, pending = _g2a2b_pending_registry(root_bound)
+    entry = registry.action_packet_lifecycle_entries[0]
+    uncertain = _g2a2b_event(entry, "g2a_t26_uncertain_adapter_outcome")
+    before_state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    close = _g2a2b_outcome_disposition(
+        before_state,
+        uncertain,
+        "UNCERTAIN_CLOSE",
+    )
+    registry = acp.record_action_packet_uncertain_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=uncertain,
+        disposition_event=close,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    assert uncertain.execution_attempt_id == pending.execution_attempt_id
+    assert state.lifecycle_state == "FAILED"
+    assert state.failed_provenance == "FAILED_UNCERTAIN_TERMINAL"
+    assert state.idempotency_disposition == "UNCERTAIN_CLOSED"
+    assert state.lifecycle_terminal is True
+    entry = registry.action_packet_lifecycle_entries[0]
+    forged_retry = _g2a2b_event(entry, "g2a_t25_retry")
+    with pytest.raises(ValueError):
+        acp.append_action_packet_lifecycle_transition_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=forged_retry,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def _standalone_disposition_fixtures(
+) -> tuple[acp.IdempotencyDispositionEventV01, ...]:
+    predecessor = "acp_v02:" + "8" * 64
+    successor = "acp_v02:" + "9" * 64
+    first_transition = "acpt_v01:" + "1" * 64
+    second_transition = "acpt_v01:" + "2" * 64
+    previous = "idem_event_v01:" + "3" * 64
+    common = {
+        "idempotency_key": G2A2A_IDEMPOTENCY_KEY,
+        "evaluation_time": EVALUATION_TIME,
+        "evaluation_time_source": EVALUATION_TIME_SOURCE,
+        "evaluation_context_id": G2A2A_EVALUATION_CONTEXT_ID,
+    }
+    initial = acp.build_idempotency_disposition_event_v01(
+        **common,
+        event_class="RESERVE",
+        from_disposition="UNCLAIMED",
+        to_disposition="RESERVED",
+        from_owner_packet_id=None,
+        to_owner_packet_id=G2A2A_PACKET_ID,
+        previous_disposition_event_id=None,
+        cause_transition_event_ids=(first_transition,),
+        root_decision_ref=G2A2A_ROOT_DECISION_REF,
+        predecessor_packet_id=None,
+        successor_packet_id=None,
+        evidence_refs=("evidence:a", "evidence:b", "evidence:c"),
+    )
+    branch_a = acp.build_idempotency_disposition_event_v01(
+        **common,
+        event_class="RESERVE",
+        from_disposition="UNCLAIMED",
+        to_disposition="RESERVED",
+        from_owner_packet_id=None,
+        to_owner_packet_id=successor,
+        previous_disposition_event_id=None,
+        cause_transition_event_ids=(first_transition, second_transition),
+        root_decision_ref=G2A2A_ROOT_DECISION_REF,
+        predecessor_packet_id=predecessor,
+        successor_packet_id=successor,
+        evidence_refs=("evidence:a", "evidence:b", "evidence:c"),
+    )
+    transfer_kwargs = {
+        **common,
+        "from_disposition": "RESERVED",
+        "to_disposition": "RESERVED",
+        "from_owner_packet_id": predecessor,
+        "to_owner_packet_id": successor,
+        "previous_disposition_event_id": previous,
+        "cause_transition_event_ids": (
+            first_transition,
+            second_transition,
+        ),
+        "root_decision_ref": G2A2A_ROOT_DECISION_REF,
+        "predecessor_packet_id": predecessor,
+        "successor_packet_id": successor,
+        "evidence_refs": ("evidence:a", "evidence:b", "evidence:c"),
+    }
+    renewal = acp.build_idempotency_disposition_event_v01(
+        **transfer_kwargs,
+        event_class="TRANSFER_RENEWAL",
+    )
+    supersession = acp.build_idempotency_disposition_event_v01(
+        **transfer_kwargs,
+        event_class="TRANSFER_SUPERSESSION",
+    )
+    outcome_kwargs = {
+        **common,
+        "from_owner_packet_id": G2A2A_PACKET_ID,
+        "to_owner_packet_id": G2A2A_PACKET_ID,
+        "previous_disposition_event_id": previous,
+        "cause_transition_event_ids": (first_transition,),
+        "root_decision_ref": None,
+        "predecessor_packet_id": None,
+        "successor_packet_id": None,
+        "evidence_refs": ("evidence:a", "evidence:b"),
+    }
+    consume = acp.build_idempotency_disposition_event_v01(
+        **outcome_kwargs,
+        event_class="CONSUME",
+        from_disposition="RESERVED",
+        to_disposition="CONSUMED",
+    )
+    uncertain = acp.build_idempotency_disposition_event_v01(
+        **outcome_kwargs,
+        event_class="UNCERTAIN_CLOSE",
+        from_disposition="RESERVED",
+        to_disposition="UNCERTAIN_CLOSED",
+    )
+    receipt = acp.build_idempotency_disposition_event_v01(
+        **outcome_kwargs,
+        event_class="RECEIPT_CONFIRM",
+        from_disposition="CONSUMED",
+        to_disposition="CONSUMED",
+    )
+    return (
+        initial,
+        branch_a,
+        renewal,
+        supersession,
+        consume,
+        uncertain,
+        receipt,
+    )
+
+
+def test_g2a2b_disposition_profile_matrix_and_literal_ids() -> None:
+    fixtures = _standalone_disposition_fixtures()
+    assert acp.IDEMPOTENCY_DISPOSITIONS_V01 == (
+        "UNCLAIMED",
+        "RESERVED",
+        "CONSUMED",
+        "UNCERTAIN_CLOSED",
+    )
+    assert acp.IDEMPOTENCY_DISPOSITION_EVENT_CLASSES_V01 == (
+        "RESERVE",
+        "TRANSFER_RENEWAL",
+        "TRANSFER_SUPERSESSION",
+        "CONSUME",
+        "UNCERTAIN_CLOSE",
+        "RECEIPT_CONFIRM",
+    )
+    assert all(
+        acp.validate_idempotency_disposition_event_v01(event) == (True, ())
+        for event in fixtures
+    )
+    assert all(
+        len(acp.idempotency_disposition_event_material_v01(event)) == 16
+        for event in fixtures
+    )
+    assert tuple(
+        event.idempotency_disposition_event_id for event in fixtures
+    ) == (
+        "idem_event_v01:80a87710931fa774be37719d506d0d91"
+        "d29a5ae2c59af08d10aaf573c80cbc61",
+        "idem_event_v01:5bb54bd1ee2ac8ca686faf8415402ceb"
+        "a1117f7e2e40ee153d5024b5c3158586",
+        "idem_event_v01:b457d9cdf3ad7ceb77d37e536b04cb1e"
+        "138fbb7fbf74f174bcae025f0eccd9c8",
+        "idem_event_v01:46923ae48beb7b07f4e49188958f6b1a"
+        "bee360cd62734cd991c7aecec7f44a7d",
+        "idem_event_v01:e71a12cc59c1687ebb336a259ffce159"
+        "8dba143ca189f33fe1776d55a2dcf2f4",
+        "idem_event_v01:b2e686be41a108449b3466579b5fc5be"
+        "cbfd7a921652c5caf533363233692304",
+        "idem_event_v01:68399ef3633d4b7be47352c64c74a8d7"
+        "efd414c0ecb2433a6f48f35b4c42e072",
+    )
+
+
+def test_g2a2b_disposition_history_reconstructs_and_closes() -> None:
+    initial, _, _, _, consume, uncertain, receipt = (
+        _standalone_disposition_fixtures()
+    )
+    assert acp.derive_idempotency_disposition_v01(
+        (),
+        idempotency_key=G2A2A_IDEMPOTENCY_KEY,
+    ).disposition == "UNCLAIMED"
+    reserved = acp.derive_idempotency_disposition_v01(
+        (initial,),
+        idempotency_key=G2A2A_IDEMPOTENCY_KEY,
+    )
+    assert reserved.disposition == "RESERVED"
+    assert reserved.reservation_owner_packet_id == G2A2A_PACKET_ID
+    chained_consume = acp.build_idempotency_disposition_event_v01(
+        idempotency_key=consume.idempotency_key,
+        event_class=consume.event_class,
+        from_disposition=consume.from_disposition,
+        to_disposition=consume.to_disposition,
+        from_owner_packet_id=consume.from_owner_packet_id,
+        to_owner_packet_id=consume.to_owner_packet_id,
+        previous_disposition_event_id=(
+            initial.idempotency_disposition_event_id
+        ),
+        cause_transition_event_ids=consume.cause_transition_event_ids,
+        root_decision_ref=None,
+        predecessor_packet_id=None,
+        successor_packet_id=None,
+        evidence_refs=consume.evidence_refs,
+        evaluation_time=consume.evaluation_time,
+        evaluation_time_source=consume.evaluation_time_source,
+        evaluation_context_id=consume.evaluation_context_id,
+    )
+    assert acp.validate_idempotency_disposition_history_v01(
+        (initial, chained_consume)
+    ) == (True, ())
+    assert acp.validate_idempotency_disposition_history_v01(
+        (initial, chained_consume, uncertain)
+    )[0] is False
+    chained_receipt = acp.build_idempotency_disposition_event_v01(
+        idempotency_key=receipt.idempotency_key,
+        event_class="RECEIPT_CONFIRM",
+        from_disposition="CONSUMED",
+        to_disposition="CONSUMED",
+        from_owner_packet_id=receipt.from_owner_packet_id,
+        to_owner_packet_id=receipt.to_owner_packet_id,
+        previous_disposition_event_id=(
+            chained_consume.idempotency_disposition_event_id
+        ),
+        cause_transition_event_ids=receipt.cause_transition_event_ids,
+        root_decision_ref=None,
+        predecessor_packet_id=None,
+        successor_packet_id=None,
+        evidence_refs=receipt.evidence_refs,
+        evaluation_time=receipt.evaluation_time,
+        evaluation_time_source=receipt.evaluation_time_source,
+        evaluation_context_id=receipt.evaluation_context_id,
+    )
+    assert acp.validate_idempotency_disposition_history_v01(
+        (initial, chained_consume, chained_receipt)
+    ) == (True, ())
+    assert acp.validate_idempotency_disposition_history_v01(
+        (initial, chained_consume, chained_receipt, chained_receipt)
+    )[0] is False
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    (
+        ("idempotency_disposition_event_id", "idem_event_v01:" + "f" * 64),
+        ("event_class", "RELEASE"),
+        ("cause_transition_event_ids", ()),
+        ("evidence_refs", ("evidence:b", "evidence:a")),
+        ("evaluation_time", True),
+    ),
+)
+def test_g2a2b_disposition_adversarial_mutations_fail_closed(
+    field: str,
+    value: object,
+) -> None:
+    event = _standalone_disposition_fixtures()[0]
+    assert acp.validate_idempotency_disposition_event_v01(
+        replace(event, **{field: value})
+    )[0] is False
+
+
+def test_g2a2b_authority_transitions_remain_blocked_until_g2a3(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry = _g2a2b_recorded_genesis(root_bound)
+    registry, _, _ = _g2a2b_activate(registry, packet_id)
+    entry = registry.action_packet_lifecycle_entries[0]
+    rule_id = "g2a_t16_authorized_revoke"
+    event = acp.build_action_packet_transition_event_v01(
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+        transition_rule_id=rule_id,
+        packet_id=packet_id,
+        idempotency_key=(
+            root_bound.canonical_projection.idempotency_identity.idempotency_key
+        ),
+        previous_transition_event_id=(
+            entry.transition_events[-1].transition_event_id
+        ),
+        owning_local_root_id=ROOT_ID,
+        root_decision_ref="7" * 64,
+        transition_evidence_bindings=_g2a2a_bindings(rule_id),
+        dependency_set_candidate_fingerprint=(
+            root_bound.canonical_projection.dependency_set_candidate_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            root_bound.canonical_projection.temporal_authority_fingerprint
+        ),
+        evaluation_time=EVALUATION_TIME,
+        evaluation_time_source=EVALUATION_TIME_SOURCE,
+        evaluation_context_id="evaluation_context:g2a2b:g2a3_boundary",
+        execution_attempt_identity=None,
+        receipt_ref=None,
+    )
+    with pytest.raises(
+        ValueError,
+        match="authority_transition_requires_g2a3_binding",
+    ):
+        acp.append_action_packet_lifecycle_transition_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=event,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def test_g2a2b_legacy_registry_helpers_preserve_new_histories(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    registry = _g2a2b_recorded_genesis(root_bound)
+    seen = acp.record_packet_seen_v02(registry, root_bound.packet)
+    assert (
+        seen.action_packet_lifecycle_entries
+        == registry.action_packet_lifecycle_entries
+    )
+    assert (
+        seen.idempotency_disposition_events
+        == registry.idempotency_disposition_events
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        acp.build_empty_action_commit_packet_registry_v02()
+    ) == (True, ())
+
+
+@pytest.mark.parametrize("malformed", (None, [], {}, "x", object()))
+def test_g2a2b_public_validators_are_total(malformed: object) -> None:
+    assert acp.validate_action_packet_lifecycle_entry_v01(malformed)[0] is False
+    assert acp.validate_idempotency_disposition_event_v01(malformed)[0] is False
+    assert acp.validate_idempotency_disposition_history_v01(malformed)[0] is False
+
+
+def test_g2a2b_empty_disposition_history_is_valid() -> None:
+    assert acp.validate_idempotency_disposition_history_v01(()) == (True, ())
+
+
+def _root_bound_from_canonical(
+    canonical: acp.SupplierActionCommitPacketCanonicalProjectionV01,
+) -> acp.SupplierRootBoundActionCommitPacketV02ProjectionV01:
+    _, _, kernel, decision_input, result = _build_frozen_root_evidence(canonical)
+    root_projection = acp.build_root_decision_candidate_projection_v01(
+        candidate_kind="PACKET_AUTHORIZATION",
+        projected_candidate_id=(
+            canonical.authorization_candidate
+            .root_packet_authorization_candidate_id
+        ),
+        root_decision_kernel=kernel,
+        root_decision_input=decision_input,
+        root_decision_result=result,
+    )
+    return acp.build_supplier_root_bound_action_commit_packet_v02_projection_v01(
+        canonical_projection=canonical,
+        root_decision_projection=root_projection,
+    )
+
+
+def test_g2a2b_branch_a_shape_is_valid_but_live_activation_requires_g2a3(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    predecessor = root_bound_fixture.root_bound_projection
+    predecessor_id = predecessor.packet_identity.packet_id
+    registry = _g2a2b_recorded_genesis(predecessor)
+    predecessor_entry = registry.action_packet_lifecycle_entries[0]
+    expiry = _g2a2b_event(
+        predecessor_entry,
+        "g2a_t11_created_expire",
+        evaluation_time=(
+            predecessor.canonical_projection.temporal_authority.expires_at_utc
+        ),
+    )
+    registry = acp.append_action_packet_lifecycle_transition_v01(
+        registry,
+        packet_id=predecessor_id,
+        transition_event=expiry,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    predecessor_state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=predecessor_id,
+    )
+    assert predecessor_state.lifecycle_state == "EXPIRED"
+    assert predecessor_state.idempotency_disposition == "UNCLAIMED"
+
+    source = acp.build_supplier_a_mock_action_commit_packet_fixture_v02()
+    renewed_source = replace(
+        source,
+        packet_id="legacy:renewed_supplier_packet",
+        source_root_decision_ref="legacy:renewed_root_ref",
+        ttl=replace(
+            source.ttl,
+            created_at="2026-07-08T00:10:00Z",
+            expires_at="2026-07-08T01:10:00Z",
+        ),
+    )
+    successor = _root_bound_from_canonical(_projection(packet=renewed_source))
+    successor_id = successor.packet_identity.packet_id
+    assert successor_id != predecessor_id
+    assert (
+        successor.canonical_projection.logical_intent.root_owned_intent_id
+        == predecessor.canonical_projection.logical_intent.root_owned_intent_id
+    )
+    assert (
+        successor.canonical_projection.idempotency_identity.idempotency_key
+        == predecessor.canonical_projection.idempotency_identity.idempotency_key
+    )
+    registry = acp.record_action_packet_genesis_v01(
+        registry,
+        root_bound_genesis=successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    successor_entry = next(
+        entry
+        for entry in registry.action_packet_lifecycle_entries
+        if entry.root_bound_genesis.packet_identity.packet_id == successor_id
+    )
+    activation = _g2a2b_event(
+        successor_entry,
+        "g2a_t01_activate_root_authorization",
+    )
+    branch_reserve = acp.build_idempotency_disposition_event_v01(
+        idempotency_key=(
+            successor.canonical_projection.idempotency_identity.idempotency_key
+        ),
+        event_class="RESERVE",
+        from_disposition="UNCLAIMED",
+        to_disposition="RESERVED",
+        from_owner_packet_id=None,
+        to_owner_packet_id=successor_id,
+        previous_disposition_event_id=None,
+        cause_transition_event_ids=(
+            expiry.transition_event_id,
+            activation.transition_event_id,
+        ),
+        root_decision_ref=(
+            successor.root_decision_projection.root_decision_result.decision_id
+        ),
+        predecessor_packet_id=predecessor_id,
+        successor_packet_id=successor_id,
+        evidence_refs=(
+            "evidence:predecessor_expiry",
+            "evidence:predecessor_relationship",
+            "evidence:successor_authorization",
+        ),
+        evaluation_time=activation.evaluation_time,
+        evaluation_time_source=activation.evaluation_time_source,
+        evaluation_context_id=activation.evaluation_context_id,
+    )
+    assert acp.validate_idempotency_disposition_event_v01(
+        branch_reserve
+    ) == (True, ())
+    forged_entry = replace(
+        successor_entry,
+        transition_events=(activation,),
+    )
+    forged_registry = replace(
+        registry,
+        action_packet_lifecycle_entries=tuple(
+            forged_entry if entry is successor_entry else entry
+            for entry in registry.action_packet_lifecycle_entries
+        ),
+        idempotency_disposition_events=(branch_reserve,),
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(
+        forged_registry
+    )
+    assert valid is False
+    assert "authority_transition_requires_g2a3_binding" in reasons
+    before = repr(registry).encode("utf-8")
+    with pytest.raises(
+        ValueError,
+        match="^authority_transition_requires_g2a3_binding$",
+    ):
+        acp.activate_action_packet_lifecycle_v01(
+            registry,
+            packet_id=successor_id,
+            transition_event=activation,
+            disposition_event=branch_reserve,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry).encode("utf-8") == before
+    successor_state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=successor_id,
+    )
+    assert successor_state.lifecycle_state == "CREATED"
+    assert successor_state.idempotency_disposition == "UNCLAIMED"
+    assert successor_state.reservation_owner_packet_id is None
+    assert acp.validate_action_commit_packet_registry_v02(registry) == (
+        True,
+        (),
+    )
+
+
+def test_g2a2b_transition_chain_tampering_fails_closed(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, _ = _g2a2b_pending_registry(root_bound)
+    entry = registry.action_packet_lifecycle_entries[0]
+    mutations = (
+        replace(
+            entry,
+            transition_events=(
+                entry.transition_events[0],
+                replace(
+                    entry.transition_events[1],
+                    previous_transition_event_id=None,
+                ),
+                entry.transition_events[2],
+            ),
+        ),
+        replace(
+            entry,
+            transition_events=(
+                entry.transition_events[1],
+                entry.transition_events[0],
+                entry.transition_events[2],
+            ),
+        ),
+        replace(
+            entry,
+            transition_events=entry.transition_events
+            + (entry.transition_events[-1],),
+        ),
+        replace(
+            entry,
+            transition_events=(
+                entry.transition_events[0],
+                replace(entry.transition_events[1], packet_id=G2A2A_PACKET_ID),
+                entry.transition_events[2],
+            ),
+        ),
+    )
+    for forged in mutations:
+        assert acp.validate_action_packet_lifecycle_entry_v01(
+            forged,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )[0] is False
+    assert acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    ).lifecycle_state == "PENDING_FULFILLMENT"
+
+
+def test_g2a2b_custom_equality_disposition_identity_is_rejected() -> None:
+    initial = _standalone_disposition_fixtures()[0]
+    forged = replace(
+        initial,
+        idempotency_disposition_event_id=_AlwaysEqualStr(
+            initial.idempotency_disposition_event_id
+        ),
+    )
+    assert acp.validate_idempotency_disposition_event_v01(forged)[0] is False
+
+
+def test_g2a2b_exact_new_dataclass_field_orders() -> None:
+    assert tuple(field.name for field in fields(acp.ActionPacketLifecycleEntryV01)) == (
+        "root_bound_genesis",
+        "transition_registry_id",
+        "transition_events",
+    )
+    assert tuple(
+        field.name for field in fields(acp.IdempotencyDispositionEventV01)
+    ) == (
+        "idempotency_disposition_event_id",
+        "event_profile_version",
+        "idempotency_key",
+        "event_class",
+        "from_disposition",
+        "to_disposition",
+        "from_owner_packet_id",
+        "to_owner_packet_id",
+        "previous_disposition_event_id",
+        "cause_transition_event_ids",
+        "root_decision_ref",
+        "predecessor_packet_id",
+        "successor_packet_id",
+        "evidence_refs",
+        "evaluation_time",
+        "evaluation_time_source",
+        "evaluation_context_id",
+    )
+    registry_fields = tuple(
+        field.name for field in fields(acp.ActionCommitPacketRegistryV02)
+    )
+    assert registry_fields[-2:] == (
+        "action_packet_lifecycle_entries",
+        "idempotency_disposition_events",
+    )
+    assert acp.IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01 == (
+        "action_idempotency_disposition_event_v01"
+    )
+    assert acp.IDEMPOTENCY_DISPOSITION_EVENT_DOMAIN_V01 == (
+        "HEDGEHOG_ACTION_IDEMPOTENCY_DISPOSITION_EVENT_V01"
+    )
+    assert acp.IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01 == "idem_event_v01:"
+    assert "RELEASE" not in acp.IDEMPOTENCY_DISPOSITION_EVENT_CLASSES_V01
+
+
+def test_g2a2b_incomplete_atomic_pairs_are_rejected(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    genesis_registry = _g2a2b_recorded_genesis(root_bound)
+    entry = genesis_registry.action_packet_lifecycle_entries[0]
+    activation = _g2a2b_event(
+        entry,
+        "g2a_t01_activate_root_authorization",
+    )
+    with pytest.raises(
+        ValueError,
+        match="action_packet_transition_requires_atomic_operation",
+    ):
+        acp.append_action_packet_lifecycle_transition_v01(
+            genesis_registry,
+            packet_id=packet_id,
+            transition_event=activation,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+    pending_registry, _ = _g2a2b_pending_registry(root_bound)
+    pending_entry = pending_registry.action_packet_lifecycle_entries[0]
+    fulfilled = _g2a2b_event(
+        pending_entry,
+        "g2a_t04_fulfill_mock",
+    )
+    with pytest.raises(
+        ValueError,
+        match="action_packet_transition_requires_atomic_operation",
+    ):
+        acp.append_action_packet_lifecycle_transition_v01(
+            pending_registry,
+            packet_id=packet_id,
+            transition_event=fulfilled,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    forged_entry = replace(
+        pending_entry,
+        transition_events=pending_entry.transition_events + (fulfilled,),
+    )
+    forged_registry = replace(
+        pending_registry,
+        action_packet_lifecycle_entries=(forged_entry,),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        forged_registry
+    )[0] is False
+
+
+def test_g2a2b_outcome_attempt_must_reuse_immediately_preceding_pending(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, pending = _g2a2b_pending_registry(root_bound)
+    entry = registry.action_packet_lifecycle_entries[0]
+    wrong_attempt = acp.build_action_execution_attempt_identity_v01(
+        packet_id=packet_id,
+        idempotency_key=(
+            root_bound.canonical_projection.idempotency_identity.idempotency_key
+        ),
+        attempt_ordinal=2,
+        evaluation_context_id=pending.evaluation_context_id,
+    )
+    wrong = acp.build_action_packet_transition_event_v01(
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+        transition_rule_id="g2a_t24_nonconsuming_failure",
+        packet_id=packet_id,
+        idempotency_key=(
+            root_bound.canonical_projection.idempotency_identity.idempotency_key
+        ),
+        previous_transition_event_id=pending.transition_event_id,
+        owning_local_root_id=ROOT_ID,
+        root_decision_ref=None,
+        transition_evidence_bindings=_g2a2a_bindings(
+            "g2a_t24_nonconsuming_failure"
+        ),
+        dependency_set_candidate_fingerprint=(
+            root_bound.canonical_projection.dependency_set_candidate_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            root_bound.canonical_projection.temporal_authority_fingerprint
+        ),
+        evaluation_time=EVALUATION_TIME,
+        evaluation_time_source=EVALUATION_TIME_SOURCE,
+        evaluation_context_id=pending.evaluation_context_id,
+        execution_attempt_identity=wrong_attempt,
+        receipt_ref=None,
+    )
+    with pytest.raises(ValueError):
+        acp.record_action_packet_nonconsuming_outcome_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=wrong,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def _g2a2_final_entry(
+    registry: acp.ActionCommitPacketRegistryV02,
+    packet_id: str,
+) -> acp.ActionPacketLifecycleEntryV01:
+    return next(
+        entry
+        for entry in registry.action_packet_lifecycle_entries
+        if entry.root_bound_genesis.packet_identity.packet_id == packet_id
+    )
+
+
+def _g2a2_final_registry_with_event(
+    registry: acp.ActionCommitPacketRegistryV02,
+    packet_id: str,
+    event: acp.ActionPacketTransitionEventV01,
+    *,
+    disposition_event: acp.IdempotencyDispositionEventV01 | None = None,
+) -> acp.ActionCommitPacketRegistryV02:
+    entry = _g2a2_final_entry(registry, packet_id)
+    forged_entry = replace(
+        entry,
+        transition_events=entry.transition_events + (event,),
+    )
+    return replace(
+        registry,
+        action_packet_lifecycle_entries=tuple(
+            forged_entry if candidate is entry else candidate
+            for candidate in registry.action_packet_lifecycle_entries
+        ),
+        idempotency_disposition_events=(
+            registry.idempotency_disposition_events
+            if disposition_event is None
+            else registry.idempotency_disposition_events
+            + (disposition_event,)
+        ),
+    )
+
+
+def _g2a2_final_live_t24(
+    registry: acp.ActionCommitPacketRegistryV02,
+    packet_id: str,
+    *,
+    evaluation_time: int | None = None,
+) -> acp.ActionPacketTransitionEventV01:
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    return _g2a2b_event(
+        _g2a2_final_entry(registry, packet_id),
+        "g2a_t24_nonconsuming_failure",
+        evaluation_time=evaluation_time,
+        latest_disposition_event_id=state.latest_disposition_event_id,
+    )
+
+
+def _g2a2_final_failed_nonconsuming_registry(
+    root_bound: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+) -> tuple[
+    acp.ActionCommitPacketRegistryV02,
+    acp.ActionPacketTransitionEventV01,
+]:
+    packet_id = root_bound.packet_identity.packet_id
+    registry, _ = _g2a2b_pending_registry(root_bound)
+    failure = _g2a2_final_live_t24(registry, packet_id)
+    registry = acp.record_action_packet_nonconsuming_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=failure,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    return registry, failure
+
+
+def _g2a2_final_expiry_source(
+    root_bound: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    rule_id: str,
+) -> acp.ActionCommitPacketRegistryV02:
+    packet_id = root_bound.packet_identity.packet_id
+    registry = _g2a2b_recorded_genesis(root_bound)
+    if rule_id == "g2a_t11_created_expire":
+        return registry
+    registry, _, _ = _g2a2b_activate(registry, packet_id)
+    if rule_id == "g2a_t12_authorized_expire":
+        return registry
+    registry, _ = _g2a2b_append(registry, packet_id, "g2a_t02_queue")
+    if rule_id == "g2a_t13_queued_expire":
+        return registry
+    registry, _ = _g2a2b_append(
+        registry,
+        packet_id,
+        "g2a_t03_pending",
+        evaluation_context_id="evaluation_context:g2a2_final:expiry",
+    )
+    if rule_id == "g2a_t14_pending_expire":
+        return registry
+    failure = _g2a2_final_live_t24(registry, packet_id)
+    return acp.record_action_packet_nonconsuming_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=failure,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+
+
+def _g2a2_final_replace_t24_binding(
+    event: acp.ActionPacketTransitionEventV01,
+    *,
+    evidence_ref: str | None = None,
+    evidence_sha256: str | None = None,
+    validator_profile_id: str | None = None,
+    remove: bool = False,
+    duplicate: bool = False,
+) -> acp.ActionPacketTransitionEventV01:
+    bindings: list[acp.TransitionEvidenceBindingV01] = []
+    replacement: acp.TransitionEvidenceBindingV01 | None = None
+    for binding in event.transition_evidence_bindings:
+        if binding.evidence_code != "latest_disposition_event_binding_valid":
+            bindings.append(binding)
+            continue
+        if remove:
+            continue
+        replacement = acp.build_transition_evidence_binding_v01(
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+            transition_rule_id=event.transition_rule_id,
+            evidence_code=binding.evidence_code,
+            evidence_ref=(
+                binding.evidence_ref
+                if evidence_ref is None
+                else evidence_ref
+            ),
+            evidence_sha256=(
+                binding.evidence_sha256
+                if evidence_sha256 is None
+                else evidence_sha256
+            ),
+            validator_profile_id=(
+                binding.validator_profile_id
+                if validator_profile_id is None
+                else validator_profile_id
+            ),
+        )
+        bindings.append(replacement)
+    if duplicate and replacement is not None:
+        bindings.append(replacement)
+    return _rebuild_transition_event(
+        event,
+        transition_evidence_bindings=tuple(bindings),
+    )
+
+
+@pytest.mark.parametrize(
+    ("offset", "accepted"),
+    ((-1, True), (0, True), (3599, True), (3600, False), (3601, False)),
+)
+def test_g2a2_final_activation_uses_canonical_temporal_truth(
+    root_bound_fixture: _RootBoundFixtureV01,
+    offset: int,
+    accepted: bool,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    issued = root_bound.canonical_projection.temporal_authority.issued_at_utc
+    registry = _g2a2b_recorded_genesis(root_bound)
+    event, reserve = _g2a2b_activation_pair(
+        registry,
+        packet_id,
+        evaluation_time=issued + offset,
+    )
+    if accepted:
+        activated = acp.activate_action_packet_lifecycle_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=event,
+            disposition_event=reserve,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+        state = acp.derive_action_packet_lifecycle_state_v01(
+            activated,
+            packet_id=packet_id,
+        )
+        assert state.lifecycle_state == "ROOT_AUTHORIZED"
+        assert state.executable is False
+        assert acp.validate_action_commit_packet_registry_v02(
+            activated
+        ) == (True, ())
+    else:
+        before = repr(registry).encode("utf-8")
+        with pytest.raises(
+            ValueError,
+            match="^action_packet_activation_after_expiry_forbidden$",
+        ):
+            acp.activate_action_packet_lifecycle_v01(
+                registry,
+                packet_id=packet_id,
+                transition_event=event,
+                disposition_event=reserve,
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+            )
+        assert repr(registry).encode("utf-8") == before
+        forged = _g2a2_final_registry_with_event(
+            registry,
+            packet_id,
+            event,
+            disposition_event=reserve,
+        )
+        assert acp.validate_action_commit_packet_registry_v02(
+            forged
+        )[0] is False
+
+
+def test_g2a2_final_queue_pending_and_retry_require_valid_interval(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    temporal = root_bound.canonical_projection.temporal_authority
+
+    registry = _g2a2b_recorded_genesis(root_bound)
+    registry, _, _ = _g2a2b_activate(
+        registry,
+        packet_id,
+        evaluation_time=temporal.issued_at_utc - 1,
+    )
+    entry = _g2a2_final_entry(registry, packet_id)
+    early_queue = _g2a2b_event(
+        entry,
+        "g2a_t02_queue",
+        evaluation_time=temporal.issued_at_utc - 1,
+    )
+    with pytest.raises(
+        ValueError,
+        match="^action_packet_transition_temporal_truth_invalid$",
+    ):
+        acp.append_action_packet_lifecycle_transition_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=early_queue,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert acp.validate_action_commit_packet_registry_v02(
+        _g2a2_final_registry_with_event(
+            registry,
+            packet_id,
+            early_queue,
+        )
+    )[0] is False
+
+    valid_queue = _g2a2b_event(
+        entry,
+        "g2a_t02_queue",
+        evaluation_time=temporal.issued_at_utc,
+    )
+    registry = acp.append_action_packet_lifecycle_transition_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=valid_queue,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    expired_pending = _g2a2b_event(
+        _g2a2_final_entry(registry, packet_id),
+        "g2a_t03_pending",
+        evaluation_time=temporal.expires_at_utc,
+        evaluation_context_id="evaluation_context:g2a2_final:expired_pending",
+    )
+    with pytest.raises(
+        ValueError,
+        match="^action_packet_transition_temporal_truth_invalid$",
+    ):
+        acp.append_action_packet_lifecycle_transition_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=expired_pending,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert acp.validate_action_commit_packet_registry_v02(
+        _g2a2_final_registry_with_event(
+            registry,
+            packet_id,
+            expired_pending,
+        )
+    )[0] is False
+
+    failed_registry, _ = _g2a2_final_failed_nonconsuming_registry(root_bound)
+    for evaluation_time in (
+        temporal.expires_at_utc,
+        temporal.expires_at_utc + 1,
+    ):
+        expired_retry = _g2a2b_event(
+            _g2a2_final_entry(failed_registry, packet_id),
+            "g2a_t25_retry",
+            evaluation_time=evaluation_time,
+        )
+        with pytest.raises(
+            ValueError,
+            match="^action_packet_transition_temporal_truth_invalid$",
+        ):
+            acp.append_action_packet_lifecycle_transition_v01(
+                failed_registry,
+                packet_id=packet_id,
+                transition_event=expired_retry,
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+            )
+        assert acp.validate_action_commit_packet_registry_v02(
+            _g2a2_final_registry_with_event(
+                failed_registry,
+                packet_id,
+                expired_retry,
+            )
+        )[0] is False
+
+
+@pytest.mark.parametrize(
+    "rule_id",
+    (
+        "g2a_t11_created_expire",
+        "g2a_t12_authorized_expire",
+        "g2a_t13_queued_expire",
+        "g2a_t14_pending_expire",
+        "g2a_t15_failed_expire",
+    ),
+)
+def test_g2a2_final_expiry_rules_use_exact_half_open_boundary(
+    root_bound_fixture: _RootBoundFixtureV01,
+    rule_id: str,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    expires = root_bound.canonical_projection.temporal_authority.expires_at_utc
+    early_registry = _g2a2_final_expiry_source(root_bound, rule_id)
+    early = _g2a2b_event(
+        _g2a2_final_entry(early_registry, packet_id),
+        rule_id,
+        evaluation_time=expires - 1,
+    )
+    with pytest.raises(
+        ValueError,
+        match="^action_packet_expiry_not_reached$",
+    ):
+        acp.append_action_packet_lifecycle_transition_v01(
+            early_registry,
+            packet_id=packet_id,
+            transition_event=early,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert acp.validate_action_commit_packet_registry_v02(
+        _g2a2_final_registry_with_event(
+            early_registry,
+            packet_id,
+            early,
+        )
+    )[0] is False
+
+    for evaluation_time in (expires, expires + 1):
+        registry = _g2a2_final_expiry_source(root_bound, rule_id)
+        event = _g2a2b_event(
+            _g2a2_final_entry(registry, packet_id),
+            rule_id,
+            evaluation_time=evaluation_time,
+        )
+        updated = acp.append_action_packet_lifecycle_transition_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=event,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+        assert acp.derive_action_packet_lifecycle_state_v01(
+            updated,
+            packet_id=packet_id,
+        ).lifecycle_state == "EXPIRED"
+
+
+@pytest.mark.parametrize(
+    "rule_id",
+    (
+        "g2a_t04_fulfill_mock",
+        "g2a_t24_nonconsuming_failure",
+        "g2a_t26_uncertain_adapter_outcome",
+    ),
+)
+def test_g2a2_final_outcome_attempt_context_cannot_change(
+    root_bound_fixture: _RootBoundFixtureV01,
+    rule_id: str,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, _ = _g2a2b_pending_registry(root_bound)
+    if rule_id == "g2a_t24_nonconsuming_failure":
+        event = _g2a2_final_live_t24(registry, packet_id)
+    else:
+        event = _g2a2b_event(
+            _g2a2_final_entry(registry, packet_id),
+            rule_id,
+        )
+    forged = _rebuild_transition_event(
+        event,
+        evaluation_context_id="evaluation_context:g2a2_final:forged",
+    )
+    assert acp.validate_action_packet_transition_event_v01(
+        forged,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    ) == (True, ())
+    assert acp.validate_action_packet_transition_history_v01(
+        _g2a2_final_entry(registry, packet_id).transition_events + (forged,),
+        root_bound_genesis=root_bound,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )[0] is False
+    before = repr(registry).encode("utf-8")
+    with pytest.raises(
+        ValueError,
+        match="^action_packet_transition_attempt_context_mismatch$",
+    ):
+        if rule_id == "g2a_t24_nonconsuming_failure":
+            acp.record_action_packet_nonconsuming_outcome_v01(
+                registry,
+                packet_id=packet_id,
+                transition_event=forged,
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+            )
+        else:
+            disposition_class = (
+                "CONSUME"
+                if rule_id == "g2a_t04_fulfill_mock"
+                else "UNCERTAIN_CLOSE"
+            )
+            state = acp.derive_action_packet_lifecycle_state_v01(
+                registry,
+                packet_id=packet_id,
+            )
+            disposition = _g2a2b_outcome_disposition(
+                state,
+                forged,
+                disposition_class,
+            )
+            operation = (
+                acp.record_action_packet_consumed_outcome_v01
+                if disposition_class == "CONSUME"
+                else acp.record_action_packet_uncertain_outcome_v01
+            )
+            operation(
+                registry,
+                packet_id=packet_id,
+                transition_event=forged,
+                disposition_event=disposition,
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+            )
+    assert repr(registry).encode("utf-8") == before
+
+
+def test_g2a2_final_receipt_attempt_context_cannot_change(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, _ = _g2a2b_pending_registry(root_bound)
+    fulfilled = _g2a2b_event(
+        _g2a2_final_entry(registry, packet_id),
+        "g2a_t04_fulfill_mock",
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    registry = acp.record_action_packet_consumed_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=fulfilled,
+        disposition_event=_g2a2b_outcome_disposition(
+            state,
+            fulfilled,
+            "CONSUME",
+        ),
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    receipt = _g2a2b_event(
+        _g2a2_final_entry(registry, packet_id),
+        "g2a_t05_receipt",
+        receipt_ref="receipt:g2a2_final",
+    )
+    forged = _rebuild_transition_event(
+        receipt,
+        evaluation_context_id="evaluation_context:g2a2_final:receipt_forged",
+    )
+    assert acp.validate_action_packet_transition_event_v01(
+        forged,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    ) == (True, ())
+    consumed = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    confirmation = _g2a2b_outcome_disposition(
+        consumed,
+        forged,
+        "RECEIPT_CONFIRM",
+    )
+    with pytest.raises(
+        ValueError,
+        match="^action_packet_transition_attempt_context_mismatch$",
+    ):
+        acp.record_action_packet_receipt_confirmation_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=forged,
+            disposition_event=confirmation,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def test_g2a2_final_t24_binds_exact_latest_disposition_event(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, _ = _g2a2b_pending_registry(root_bound)
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    event = _g2a2_final_live_t24(registry, packet_id)
+    binding = next(
+        item
+        for item in event.transition_evidence_bindings
+        if item.evidence_code == "latest_disposition_event_binding_valid"
+    )
+    assert binding.evidence_ref == state.latest_disposition_event_id
+    assert binding.evidence_sha256 == state.latest_disposition_event_id.split(
+        ":",
+        1,
+    )[1]
+    assert (
+        binding.validator_profile_id
+        == acp.IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01
+    )
+    updated = acp.record_action_packet_nonconsuming_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert (
+        acp.derive_action_packet_lifecycle_state_v01(
+            updated,
+            packet_id=packet_id,
+        ).latest_disposition_event_id
+        == state.latest_disposition_event_id
+    )
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (
+        ("evidence_ref", "idem_event_v01:" + "1" * 64),
+        ("evidence_ref", "evidence:not_latest"),
+        ("evidence_sha256", "2" * 64),
+        ("validator_profile_id", "validator:not_disposition_event"),
+    ),
+)
+def test_g2a2_final_t24_rejects_inexact_latest_binding(
+    root_bound_fixture: _RootBoundFixtureV01,
+    field: str,
+    value: str,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, _ = _g2a2b_pending_registry(root_bound)
+    event = _g2a2_final_live_t24(registry, packet_id)
+    forged = _g2a2_final_replace_t24_binding(
+        event,
+        **{field: value},
+    )
+    with pytest.raises(
+        ValueError,
+        match="^latest_disposition_event_binding_invalid$",
+    ):
+        acp.record_action_packet_nonconsuming_outcome_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=forged,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    forged_registry = _g2a2_final_registry_with_event(
+        registry,
+        packet_id,
+        forged,
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        forged_registry
+    )[0] is False
+
+
+@pytest.mark.parametrize(("remove", "duplicate"), ((True, False), (False, True)))
+def test_g2a2_final_t24_rejects_missing_or_duplicate_latest_binding(
+    root_bound_fixture: _RootBoundFixtureV01,
+    remove: bool,
+    duplicate: bool,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, _ = _g2a2b_pending_registry(root_bound)
+    forged = _g2a2_final_replace_t24_binding(
+        _g2a2_final_live_t24(registry, packet_id),
+        remove=remove,
+        duplicate=duplicate,
+    )
+    with pytest.raises(ValueError):
+        acp.record_action_packet_nonconsuming_outcome_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=forged,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+
+
+def test_g2a2_final_historical_t24_uses_then_latest_not_later_consume(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, failure = _g2a2_final_failed_nonconsuming_registry(root_bound)
+    reserve_id = registry.idempotency_disposition_events[0].idempotency_disposition_event_id
+    registry, _ = _g2a2b_append(registry, packet_id, "g2a_t25_retry")
+    registry, _ = _g2a2b_append(
+        registry,
+        packet_id,
+        "g2a_t03_pending",
+        evaluation_context_id="evaluation_context:g2a2_final:attempt_2",
+    )
+    fulfilled = _g2a2b_event(
+        _g2a2_final_entry(registry, packet_id),
+        "g2a_t04_fulfill_mock",
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    registry = acp.record_action_packet_consumed_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=fulfilled,
+        disposition_event=_g2a2b_outcome_disposition(
+            state,
+            fulfilled,
+            "CONSUME",
+        ),
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    t24_binding = next(
+        binding
+        for binding in failure.transition_evidence_bindings
+        if binding.evidence_code == "latest_disposition_event_binding_valid"
+    )
+    assert t24_binding.evidence_ref == reserve_id
+    assert (
+        registry.idempotency_disposition_events[-1]
+        .idempotency_disposition_event_id
+        != reserve_id
+    )
+    assert acp.validate_action_commit_packet_registry_v02(registry) == (
+        True,
+        (),
+    )
+
+
+@pytest.mark.parametrize(
+    "rule_id",
+    (
+        "g2a_t04_fulfill_mock",
+        "g2a_t24_nonconsuming_failure",
+        "g2a_t26_uncertain_adapter_outcome",
+    ),
+)
+def test_g2a2_final_outcome_observation_may_follow_expiry(
+    root_bound_fixture: _RootBoundFixtureV01,
+    rule_id: str,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    expires = root_bound.canonical_projection.temporal_authority.expires_at_utc
+    registry, _ = _g2a2b_pending_registry(root_bound)
+    if rule_id == "g2a_t24_nonconsuming_failure":
+        event = _g2a2_final_live_t24(
+            registry,
+            packet_id,
+            evaluation_time=expires + 1,
+        )
+        updated = acp.record_action_packet_nonconsuming_outcome_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=event,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+        assert acp.derive_action_packet_lifecycle_state_v01(
+            updated,
+            packet_id=packet_id,
+        ).failed_provenance == "FAILED_NON_CONSUMING"
+        return
+    event = _g2a2b_event(
+        _g2a2_final_entry(registry, packet_id),
+        rule_id,
+        evaluation_time=expires + 1,
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    disposition_class = (
+        "CONSUME"
+        if rule_id == "g2a_t04_fulfill_mock"
+        else "UNCERTAIN_CLOSE"
+    )
+    disposition = _g2a2b_outcome_disposition(
+        state,
+        event,
+        disposition_class,
+    )
+    operation = (
+        acp.record_action_packet_consumed_outcome_v01
+        if disposition_class == "CONSUME"
+        else acp.record_action_packet_uncertain_outcome_v01
+    )
+    updated = operation(
+        registry,
+        packet_id=packet_id,
+        transition_event=event,
+        disposition_event=disposition,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(updated) == (
+        True,
+        (),
+    )
+
+
+def test_g2a2_final_receipt_observation_may_follow_expiry(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    expires = root_bound.canonical_projection.temporal_authority.expires_at_utc
+    registry, _ = _g2a2b_pending_registry(root_bound)
+    fulfilled = _g2a2b_event(
+        _g2a2_final_entry(registry, packet_id),
+        "g2a_t04_fulfill_mock",
+        evaluation_time=expires,
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    registry = acp.record_action_packet_consumed_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=fulfilled,
+        disposition_event=_g2a2b_outcome_disposition(
+            state,
+            fulfilled,
+            "CONSUME",
+        ),
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    receipt = _g2a2b_event(
+        _g2a2_final_entry(registry, packet_id),
+        "g2a_t05_receipt",
+        evaluation_time=expires + 1,
+        receipt_ref="receipt:g2a2_final:late",
+    )
+    consumed = acp.derive_action_packet_lifecycle_state_v01(
+        registry,
+        packet_id=packet_id,
+    )
+    updated = acp.record_action_packet_receipt_confirmation_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=receipt,
+        disposition_event=_g2a2b_outcome_disposition(
+            consumed,
+            receipt,
+            "RECEIPT_CONFIRM",
+        ),
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=packet_id,
+    ).lifecycle_state == "RECEIPT_RECEIVED"
+
+
+def test_g2a2_final_t24_custom_equality_reference_fails_closed(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    registry, _ = _g2a2b_pending_registry(root_bound)
+    event = _g2a2_final_live_t24(registry, packet_id)
+    forged_bindings = tuple(
+        replace(
+            binding,
+            evidence_ref=_AlwaysEqualStr(binding.evidence_ref),
+        )
+        if binding.evidence_code == "latest_disposition_event_binding_valid"
+        else binding
+        for binding in event.transition_evidence_bindings
+    )
+    forged = replace(
+        event,
+        transition_evidence_bindings=forged_bindings,
+    )
+    with pytest.raises(
+        ValueError,
+        match="^latest_disposition_event_binding_invalid$",
+    ):
+        acp.record_action_packet_nonconsuming_outcome_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=forged,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert acp.validate_action_commit_packet_registry_v02(
+        _g2a2_final_registry_with_event(
+            registry,
+            packet_id,
+            forged,
+        )
+    )[0] is False
+
+
+@pytest.mark.parametrize(
+    "rule_id",
+    (
+        "g2a_t06_created_block",
+        "g2a_t07_authorized_block",
+        "g2a_t08_queued_block",
+        "g2a_t09_pending_block",
+        "g2a_t10_failed_block",
+    ),
+)
+def test_g2a2_final_invalidation_mutation_requires_g2a3(
+    root_bound_fixture: _RootBoundFixtureV01,
+    rule_id: str,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    packet_id = root_bound.packet_identity.packet_id
+    if rule_id == "g2a_t06_created_block":
+        registry = _g2a2b_recorded_genesis(root_bound)
+    elif rule_id == "g2a_t07_authorized_block":
+        registry = _g2a2b_recorded_genesis(root_bound)
+        registry, _, _ = _g2a2b_activate(registry, packet_id)
+    elif rule_id == "g2a_t08_queued_block":
+        registry = _g2a2b_recorded_genesis(root_bound)
+        registry, _, _ = _g2a2b_activate(registry, packet_id)
+        registry, _ = _g2a2b_append(
+            registry,
+            packet_id,
+            "g2a_t02_queue",
+        )
+    elif rule_id == "g2a_t09_pending_block":
+        registry, _ = _g2a2b_pending_registry(root_bound)
+    else:
+        registry, _ = _g2a2_final_failed_nonconsuming_registry(root_bound)
+    event = _g2a2b_event(
+        _g2a2_final_entry(registry, packet_id),
+        rule_id,
+    )
+    assert acp.validate_action_packet_transition_event_v01(
+        event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    ) == (True, ())
+    before = repr(registry).encode("utf-8")
+    with pytest.raises(
+        ValueError,
+        match="^invalidation_transition_requires_g2a3_binding$",
+    ):
+        acp.append_action_packet_lifecycle_transition_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=event,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry).encode("utf-8") == before
+    forged = _g2a2_final_registry_with_event(
+        registry,
+        packet_id,
+        event,
+    )
+    valid, reasons = acp.validate_action_commit_packet_registry_v02(forged)
+    assert valid is False
+    assert (
+        "action_packet_registry_lifecycle_entry_invalid" in reasons
+        or "invalidation_transition_requires_g2a3_binding" in reasons
+    )
+
+
+def _g2a2_final_same_key_successor(
+    predecessor: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01,
+) -> acp.SupplierRootBoundActionCommitPacketV02ProjectionV01:
+    source = acp.build_supplier_a_mock_action_commit_packet_fixture_v02()
+    altered = replace(
+        source,
+        packet_id="legacy:g2a2_final_same_key_successor",
+        source_root_decision_ref="legacy:g2a2_final_same_key_root",
+        ttl=replace(
+            source.ttl,
+            created_at="2026-07-08T00:10:00Z",
+            expires_at="2026-07-08T01:10:00Z",
+        ),
+    )
+    successor = _root_bound_from_canonical(_projection(packet=altered))
+    assert (
+        successor.canonical_projection.logical_intent.root_owned_intent_id
+        == predecessor.canonical_projection.logical_intent.root_owned_intent_id
+    )
+    assert (
+        successor.canonical_projection.idempotency_identity.idempotency_key
+        == predecessor.canonical_projection.idempotency_identity.idempotency_key
+    )
+    assert successor.packet_identity.packet_id != predecessor.packet_identity.packet_id
+    return successor
+
+
+def test_g2a2_final_unlinked_same_key_activation_is_symmetric_and_closed(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    first = root_bound_fixture.root_bound_projection
+    second = _g2a2_final_same_key_successor(first)
+    registry = _g2a2b_recorded_genesis(first)
+    registry = acp.record_action_packet_genesis_v01(
+        registry,
+        root_bound_genesis=second,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    before = repr(registry).encode("utf-8")
+    for packet_id in (
+        first.packet_identity.packet_id,
+        second.packet_identity.packet_id,
+    ):
+        event, reserve = _g2a2b_activation_pair(registry, packet_id)
+        with pytest.raises(
+            ValueError,
+            match="^authority_transition_requires_g2a3_binding$",
+        ):
+            acp.activate_action_packet_lifecycle_v01(
+                registry,
+                packet_id=packet_id,
+                transition_event=event,
+                disposition_event=reserve,
+                action_packet_transition_registry_profile=_g2a2a_registry(),
+            )
+        forged = _g2a2_final_registry_with_event(
+            registry,
+            packet_id,
+            event,
+            disposition_event=reserve,
+        )
+        valid, reasons = acp.validate_action_commit_packet_registry_v02(
+            forged
+        )
+        assert valid is False
+        assert (
+            "authority_transition_requires_g2a3_binding" in reasons
+            or "action_packet_registry_lifecycle_entry_invalid" in reasons
+        )
+    assert repr(registry).encode("utf-8") == before
+    assert registry.idempotency_disposition_events == ()
+    for packet_id in (
+        first.packet_identity.packet_id,
+        second.packet_identity.packet_id,
+    ):
+        state = acp.derive_action_packet_lifecycle_state_v01(
+            registry,
+            packet_id=packet_id,
+        )
+        assert state.lifecycle_state == "CREATED"
+        assert state.idempotency_disposition == "UNCLAIMED"
+        assert state.reservation_owner_packet_id is None
+
+
+def test_g2a2_retry_policy_no_retry_blocks_manual_history_bypass() -> None:
+    policy = _policy(retry_policy="NO_RETRY")
+    assert acp.validate_action_authority_policy_profile_v01(policy) == (
+        True,
+        (),
+    )
+    root_bound = _root_bound_from_canonical(_projection(policy=policy))
+    assert (
+        acp.validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            root_bound
+        )
+        == (True, ())
+    )
+    packet_id = root_bound.packet_identity.packet_id
+    registry, _ = _g2a2_final_failed_nonconsuming_registry(root_bound)
+    entry = _g2a2_final_entry(registry, packet_id)
+    retry = _g2a2b_event(entry, "g2a_t25_retry")
+    assert acp.validate_action_packet_transition_event_v01(
+        retry,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    ) == (True, ())
+
+    source_bytes = repr(registry).encode("utf-8")
+    source_transition_count = len(entry.transition_events)
+    source_disposition_count = len(registry.idempotency_disposition_events)
+    with pytest.raises(ValueError, match="^retry_policy_invalid$"):
+        acp.append_action_packet_lifecycle_transition_v01(
+            registry,
+            packet_id=packet_id,
+            transition_event=retry,
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert repr(registry).encode("utf-8") == source_bytes
+    assert len(
+        _g2a2_final_entry(registry, packet_id).transition_events
+    ) == source_transition_count
+    assert (
+        len(registry.idempotency_disposition_events)
+        == source_disposition_count
+    )
+
+    forged_history = entry.transition_events + (retry,)
+    valid, reasons = acp.validate_action_packet_transition_history_v01(
+        forged_history,
+        root_bound_genesis=root_bound,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert valid is False
+    assert "retry_policy_invalid" in reasons
+
+    forged_entry = replace(entry, transition_events=forged_history)
+    valid, reasons = acp.validate_action_packet_lifecycle_entry_v01(
+        forged_entry,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert valid is False
+    assert "retry_policy_invalid" in reasons
+
+    forged_registry = replace(
+        registry,
+        action_packet_lifecycle_entries=(forged_entry,),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        forged_registry
+    )[0] is False
+
+
+def test_g2a2_retry_policy_nonconsuming_positive_control(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    root_bound = root_bound_fixture.root_bound_projection
+    assert (
+        root_bound.canonical_projection.authority_policy.retry_policy
+        == "NON_CONSUMING_RETRY"
+    )
+    packet_id = root_bound.packet_identity.packet_id
+    registry, _ = _g2a2_final_failed_nonconsuming_registry(root_bound)
+    entry = _g2a2_final_entry(registry, packet_id)
+    retry = _g2a2b_event(entry, "g2a_t25_retry")
+    assert acp.validate_action_packet_transition_history_v01(
+        entry.transition_events + (retry,),
+        root_bound_genesis=root_bound,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    ) == (True, ())
+    updated = acp.append_action_packet_lifecycle_transition_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=retry,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        updated,
+        packet_id=packet_id,
+    )
+    assert state.lifecycle_state == "QUEUED"
+    assert state.idempotency_disposition == "RESERVED"

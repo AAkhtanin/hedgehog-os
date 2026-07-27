@@ -60,6 +60,11 @@ PUBLIC_FUNCTIONS = (
     "causal_consumption_ref_to_plain_dict_v01",
     "causal_consumption_refs_to_plain_list_v01",
 )
+ACTION_PACKET_PUBLIC_FUNCTIONS = (
+    "build_action_packet_lifecycle_profile_v01",
+    "validate_action_packet_lifecycle_profile_v01",
+    "action_packet_lifecycle_profile_to_plain_dict_v01",
+)
 
 ARTIFACT_FIELDS = (
     "abi_version",
@@ -321,7 +326,10 @@ def test_exact_public_function_surface() -> None:
         and inspect.isfunction(value)
         and value.__module__ == abi.__name__
     )
-    assert actual == PUBLIC_FUNCTIONS
+    assert actual == (
+        *ACTION_PACKET_PUBLIC_FUNCTIONS,
+        *PUBLIC_FUNCTIONS,
+    )
 
 
 @pytest.mark.parametrize("name", ("KernelArtifactV01", "CausalConsumptionRefV01", *PUBLIC_FUNCTIONS))
@@ -332,6 +340,128 @@ def test_package_direct_attributes(name: str) -> None:
 def test_package_all_remains_accepted_legacy_surface() -> None:
     assert kernel.__all__ == COMMITTED_ALL
     assert not set(PUBLIC_FUNCTIONS).intersection(kernel.__all__)
+
+
+def test_action_packet_lifecycle_profile_is_explicit_and_exact() -> None:
+    profile = abi.build_action_packet_lifecycle_profile_v01()
+    assert tuple(field.name for field in fields(type(profile))) == (
+        "profile_id",
+        "abi_family",
+        "transition_registry_family",
+        "lifecycle_states",
+    )
+    assert profile.profile_id == "action_packet_lifecycle_profile_v01"
+    assert profile.abi_family == "hedgehog_kernel_abi"
+    assert profile.transition_registry_family == "TransitionRegistryV01"
+    assert profile.lifecycle_states == (
+        "CREATED",
+        "ROOT_AUTHORIZED",
+        "QUEUED",
+        "PENDING_FULFILLMENT",
+        "FULFILLED_MOCK",
+        "RECEIPT_RECEIVED",
+        "FAILED",
+        "BLOCKED",
+        "EXPIRED",
+        "REVOKED",
+        "SUPERSEDED",
+    )
+    assert abi.validate_action_packet_lifecycle_profile_v01(profile) == ()
+    assert abi.action_packet_lifecycle_profile_to_plain_dict_v01(profile) == {
+        "profile_id": "action_packet_lifecycle_profile_v01",
+        "abi_family": "hedgehog_kernel_abi",
+        "transition_registry_family": "TransitionRegistryV01",
+        "lifecycle_states": list(profile.lifecycle_states),
+    }
+
+
+@pytest.mark.parametrize(
+    "lifecycle_states",
+    (
+        list(abi.ACTION_PACKET_LIFECYCLE_STATES_V01),
+        tuple(reversed(abi.ACTION_PACKET_LIFECYCLE_STATES_V01)),
+        abi.ACTION_PACKET_LIFECYCLE_STATES_V01[:-1],
+        (*abi.ACTION_PACKET_LIFECYCLE_STATES_V01, "UNKNOWN"),
+        (
+            "PROPOSED",
+            *abi.ACTION_PACKET_LIFECYCLE_STATES_V01[1:],
+        ),
+        (
+            abi.ACTION_PACKET_LIFECYCLE_STATES_V01[0],
+            *abi.ACTION_PACKET_LIFECYCLE_STATES_V01,
+        ),
+    ),
+)
+def test_action_packet_lifecycle_profile_rejects_state_drift(
+    lifecycle_states: object,
+) -> None:
+    profile = abi.build_action_packet_lifecycle_profile_v01()
+    forged = replace(profile, lifecycle_states=lifecycle_states)
+    assert abi.validate_action_packet_lifecycle_profile_v01(forged)
+
+
+def test_action_packet_lifecycle_profile_validator_is_total() -> None:
+    class EqualString(str):
+        def __eq__(self, other: object) -> bool:
+            return True
+
+    profile = abi.build_action_packet_lifecycle_profile_v01()
+    malformed = (
+        None,
+        object(),
+        replace(profile, profile_id=EqualString(profile.profile_id)),
+        replace(
+            profile,
+            lifecycle_states=(
+                EqualString("CREATED"),
+                *profile.lifecycle_states[1:],
+            ),
+        ),
+    )
+    for value in malformed:
+        errors = abi.validate_action_packet_lifecycle_profile_v01(value)
+        assert errors
+        assert all(type(reason) is str and reason for reason in errors)
+
+
+def test_legacy_abi_vector_remains_exact() -> None:
+    assert abi.KERNEL_ABI_VERSION == "v1.0"
+    assert abi.KERNEL_ABI_MAJOR_VERSION == 1
+    assert abi.KERNEL_ABI_MINOR_VERSION == 0
+    assert abi.SUPPORTED_ABI_VERSIONS == ("v1.0",)
+    assert abi.LIFECYCLE_STATES == (
+        "PROPOSED",
+        "VALIDATED",
+        "ROOT_REVIEWED",
+        "ROOT_ACCEPTED",
+        "ROOT_REJECTED",
+        "BLOCKED_FAIL_CLOSED",
+        "EXECUTED_MOCK",
+        "RECEIPT_RECORDED",
+        "FINALIZED",
+    )
+    assert tuple(field.name for field in fields(abi.KernelArtifactV01)) == (
+        "abi_version",
+        "artifact_id",
+        "artifact_type",
+        "schema_version",
+        "transaction_id",
+        "owner_root_id",
+        "source_component",
+        "authority_class",
+        "lifecycle_state",
+        "payload",
+        "trace_refs",
+        "parent_refs",
+        "time_envelope",
+    )
+    artifact = _artifact()
+    assert abi.validate_kernel_artifact_v01(artifact) == ()
+    assert canonical_json_bytes_v01(
+        abi.kernel_artifact_to_plain_dict_v01(artifact)
+    ) == canonical_json_bytes_v01(
+        abi.kernel_artifact_to_plain_dict_v01(_artifact())
+    )
 
 
 @pytest.mark.parametrize(

@@ -22,6 +22,14 @@ from hedgehog.kernel.root_decision_v01 import (
     validate_root_decision_kernel_v01,
     validate_root_decision_result_v01,
 )
+from hedgehog.kernel.transition_registry_v01 import (
+    ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01,
+    ActionPacketTransitionRegistryProfileV01,
+    ActionPacketTransitionRuleV01,
+    build_action_packet_transition_registry_profile_v01,
+    lookup_action_packet_transition_rule_v01,
+    validate_action_packet_transition_registry_profile_v01,
+)
 
 
 SUBJECT_SUPPLIER_A = "supplier_a_adriatic_filters"
@@ -306,6 +314,8 @@ class ActionCommitPacketRegistryV02:
     executes_payment: bool = False
     releases_shipment: bool = False
     real_world_effects_count: int = 0
+    action_packet_lifecycle_entries: tuple[ActionPacketLifecycleEntryV01, ...] = ()
+    idempotency_disposition_events: tuple[IdempotencyDispositionEventV01, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -733,33 +743,53 @@ def build_registry_with_terminal_receipt_v02(
 
 
 def validate_action_commit_packet_registry_v02(
-    registry: ActionCommitPacketRegistryV02,
+    registry: object,
 ) -> tuple[bool, tuple[str, ...]]:
+    if type(registry) is not ActionCommitPacketRegistryV02:
+        return False, ("action_packet_registry_type_invalid",)
     reasons: list[str] = []
 
-    if not registry.local_proof_only:
+    if type(registry.local_proof_only) is not bool or not registry.local_proof_only:
         _append_reason(reasons, REASON_REGISTRY_IS_LOCAL_PROOF_ONLY)
         _append_reason(reasons, REASON_REGISTRY_IS_NOT_DRS)
-    if registry.production_persistence:
+    if (
+        type(registry.production_persistence) is not bool
+        or registry.production_persistence
+    ):
         _append_reason(reasons, REASON_REGISTRY_PRODUCTION_PERSISTENCE_FORBIDDEN)
         _append_reason(reasons, REASON_REGISTRY_IS_NOT_DRS)
-    if registry.global_drs_write:
+    if type(registry.global_drs_write) is not bool or registry.global_drs_write:
         _append_reason(reasons, REASON_REGISTRY_GLOBAL_DRS_WRITE_FORBIDDEN)
         _append_reason(reasons, REASON_REGISTRY_IS_NOT_DRS)
-    if registry.external_drs_write:
+    if (
+        type(registry.external_drs_write) is not bool
+        or registry.external_drs_write
+    ):
         _append_reason(reasons, REASON_REGISTRY_EXTERNAL_DRS_WRITE_FORBIDDEN)
         _append_reason(reasons, REASON_REGISTRY_IS_NOT_DRS)
-    if registry.creates_permission:
+    if type(registry.creates_permission) is not bool or registry.creates_permission:
         _append_reason(reasons, REASON_REGISTRY_IS_NOT_PERMISSION)
         _append_reason(reasons, REASON_REGISTRY_IS_NOT_AUTHORITY)
-    if registry.creates_receipt:
+    if type(registry.creates_receipt) is not bool or registry.creates_receipt:
         _append_reason(reasons, REASON_REGISTRY_CANNOT_CREATE_RECEIPT)
-    if registry.executes_payment:
+    if type(registry.executes_payment) is not bool or registry.executes_payment:
         _append_reason(reasons, REASON_REGISTRY_CANNOT_EXECUTE_PAYMENT)
-    if registry.releases_shipment:
+    if type(registry.releases_shipment) is not bool or registry.releases_shipment:
         _append_reason(reasons, REASON_REGISTRY_CANNOT_RELEASE_SHIPMENT)
-    if registry.real_world_effects_count != 0:
+    if (
+        type(registry.real_world_effects_count) is not int
+        or registry.real_world_effects_count != 0
+    ):
         _append_reason(reasons, REASON_REGISTRY_REAL_WORLD_EFFECTS_FORBIDDEN)
+
+    try:
+        lifecycle_valid, lifecycle_reasons = (
+            _validate_registry_lifecycle_histories_v01(registry)
+        )
+        if not lifecycle_valid:
+            reasons.extend(lifecycle_reasons)
+    except Exception:
+        _append_reason(reasons, "action_packet_registry_lifecycle_invalid")
 
     return not reasons, tuple(reasons)
 
@@ -924,6 +954,8 @@ def record_packet_seen_v02(
         executes_payment=registry.executes_payment,
         releases_shipment=registry.releases_shipment,
         real_world_effects_count=registry.real_world_effects_count,
+        action_packet_lifecycle_entries=registry.action_packet_lifecycle_entries,
+        idempotency_disposition_events=registry.idempotency_disposition_events,
     )
 
 
@@ -960,6 +992,12 @@ def record_terminal_receipt_observation_v02(
         executes_payment=seen_registry.executes_payment,
         releases_shipment=seen_registry.releases_shipment,
         real_world_effects_count=seen_registry.real_world_effects_count,
+        action_packet_lifecycle_entries=(
+            seen_registry.action_packet_lifecycle_entries
+        ),
+        idempotency_disposition_events=(
+            seen_registry.idempotency_disposition_events
+        ),
     )
     return terminal_registry, ()
 
@@ -1053,6 +1091,48 @@ ROOT_PACKET_AUTHORIZATION_PREFIX_V01 = "root_packet_authorization_v01:"
 ACTION_COMMIT_PACKET_ID_PREFIX_V01 = "acp_v02:"
 PACKET_DEPENDENCY_ACCEPTANCE_PREFIX_V01 = (
     "packet_dependency_acceptance_v01:"
+)
+TRANSITION_EVIDENCE_BINDING_PROFILE_ID_V01 = (
+    "action_transition_evidence_binding_v01"
+)
+TRANSITION_EVIDENCE_BINDING_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_TRANSITION_EVIDENCE_BINDING_V01"
+)
+TRANSITION_EVIDENCE_BINDING_PREFIX_V01 = "acpte_v01:"
+EXECUTION_ATTEMPT_IDENTITY_PROFILE_ID_V01 = (
+    "action_execution_attempt_identity_v01"
+)
+EXECUTION_ATTEMPT_IDENTITY_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_EXECUTION_ATTEMPT_ID_V01"
+)
+EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01 = "execution_attempt_v01:"
+ACTION_PACKET_TRANSITION_EVENT_PROFILE_ID_V01 = (
+    "action_packet_transition_identity_profile_v01"
+)
+ACTION_PACKET_TRANSITION_EVENT_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_PACKET_TRANSITION_V01"
+)
+ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01 = "acpt_v01:"
+IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01 = (
+    "action_idempotency_disposition_event_v01"
+)
+IDEMPOTENCY_DISPOSITION_EVENT_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_IDEMPOTENCY_DISPOSITION_EVENT_V01"
+)
+IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01 = "idem_event_v01:"
+IDEMPOTENCY_DISPOSITIONS_V01 = (
+    "UNCLAIMED",
+    "RESERVED",
+    "CONSUMED",
+    "UNCERTAIN_CLOSED",
+)
+IDEMPOTENCY_DISPOSITION_EVENT_CLASSES_V01 = (
+    "RESERVE",
+    "TRANSFER_RENEWAL",
+    "TRANSFER_SUPERSESSION",
+    "CONSUME",
+    "UNCERTAIN_CLOSE",
+    "RECEIPT_CONFIRM",
 )
 PRE_G2A_ADAPTER_VERSION_V01 = "pre_g2a_adapter_contract_v01"
 EFFECT_FIREWALL_VOCABULARY_PROJECTION_PROFILE_ID_V01 = (
@@ -1303,6 +1383,53 @@ class ActionCommitPacketIdentityResultV01:
 
 
 @dataclass(frozen=True)
+class TransitionEvidenceBindingV01:
+    transition_evidence_binding_id: str
+    evidence_code: str
+    evidence_ref: str
+    evidence_sha256: str
+    validator_profile_id: str
+    validation_status: str
+
+
+@dataclass(frozen=True)
+class ActionExecutionAttemptIdentityV01:
+    execution_attempt_id: str
+    packet_id: str
+    idempotency_key: str
+    attempt_ordinal: int
+    evaluation_context_id: str
+    material: CanonicalMaterialV01
+
+
+@dataclass(frozen=True)
+class ActionPacketTransitionEventV01:
+    transition_event_id: str
+    transition_profile_version: str
+    transition_registry_id: str
+    transition_rule_id: str
+    packet_id: str
+    idempotency_key: str
+    previous_transition_event_id: str | None
+    source_state: str
+    target_state: str
+    transition_class_code: str
+    performed_by_component: str
+    owning_local_root_id: str
+    root_decision_ref: str | None
+    transition_evidence_bindings: tuple[TransitionEvidenceBindingV01, ...]
+    reason_code: str
+    dependency_set_candidate_fingerprint: str
+    temporal_authority_fingerprint: str
+    evaluation_time: int
+    evaluation_time_source: str
+    evaluation_context_id: str
+    execution_attempt_id: str | None
+    effect_consumption_class: str
+    receipt_ref: str | None
+
+
+@dataclass(frozen=True)
 class EffectFirewallVocabularyProjectionV01:
     identifier_kind: str
     raw_identifier: str
@@ -1368,6 +1495,65 @@ class SupplierRootBoundActionCommitPacketV02ProjectionV01:
     packet_identity: ActionCommitPacketIdentityResultV01
     dependency_acceptance_binding: PacketDependencyAcceptanceBindingV01
     packet: ActionCommitPacketV02
+
+
+@dataclass(frozen=True)
+class ActionPacketLifecycleEntryV01:
+    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01
+    transition_registry_id: str
+    transition_events: tuple[ActionPacketTransitionEventV01, ...]
+
+
+@dataclass(frozen=True)
+class IdempotencyDispositionEventV01:
+    idempotency_disposition_event_id: str
+    event_profile_version: str
+    idempotency_key: str
+    event_class: str
+    from_disposition: str
+    to_disposition: str
+    from_owner_packet_id: str | None
+    to_owner_packet_id: str | None
+    previous_disposition_event_id: str | None
+    cause_transition_event_ids: tuple[str, ...]
+    root_decision_ref: str | None
+    predecessor_packet_id: str | None
+    successor_packet_id: str | None
+    evidence_refs: tuple[str, ...]
+    evaluation_time: int
+    evaluation_time_source: str
+    evaluation_context_id: str
+
+
+@dataclass(frozen=True)
+class IdempotencyDispositionStateV01:
+    idempotency_key: str
+    disposition: str
+    reservation_owner_packet_id: str | None
+    latest_disposition_event_id: str | None
+    event_count: int
+
+
+@dataclass(frozen=True)
+class ActionPacketLifecycleStateV01:
+    packet_id: str
+    idempotency_key: str
+    lifecycle_state: str
+    failed_provenance: str | None
+    transition_event_count: int
+    latest_transition_event_id: str | None
+    execution_attempt_count: int
+    idempotency_disposition: str
+    reservation_owner_packet_id: str | None
+    latest_disposition_event_id: str | None
+    terminal_receipt_ref: str | None
+    lifecycle_terminal: bool
+    eligible_for_corridor_revalidation: bool
+    executable: bool
+    registry_is_authority: bool
+    registry_grants_permission: bool
+    real_world_effects_count: int
+    reason_codes: tuple[str, ...]
 
 
 def _canonical_absent_v01() -> Mapping[str, str]:
@@ -5952,3 +6138,2767 @@ def build_supplier_root_bound_action_commit_packet_v02_projection_v01(
         ) from None
     except Exception:
         raise ValueError("supplier_root_bound_projection_invalid") from None
+
+
+def transition_evidence_binding_material_v01(
+    value: TransitionEvidenceBindingV01,
+) -> CanonicalMaterialV01:
+    if type(value) is not TransitionEvidenceBindingV01:
+        raise ValueError("transition_evidence_binding_type_invalid")
+    return (
+        ("evidence_code", value.evidence_code),
+        ("evidence_ref", value.evidence_ref),
+        ("evidence_sha256", value.evidence_sha256),
+        ("validator_profile_id", value.validator_profile_id),
+        ("validation_status", value.validation_status),
+    )
+
+
+def build_transition_evidence_binding_v01(
+    *,
+    action_packet_transition_registry_profile: object,
+    transition_rule_id: object,
+    evidence_code: object,
+    evidence_ref: object,
+    evidence_sha256: object,
+    validator_profile_id: object,
+) -> TransitionEvidenceBindingV01:
+    try:
+        rule = lookup_action_packet_transition_rule_v01(
+            registry=action_packet_transition_registry_profile,
+            transition_rule_id=transition_rule_id,
+        )
+        if (
+            type(evidence_code) is not str
+            or evidence_code not in rule.required_evidence_codes
+        ):
+            raise ValueError("transition_evidence_code_not_required")
+        for value in (evidence_ref, validator_profile_id):
+            valid_text, text_reasons = validate_identity_text_v01(value)
+            if not valid_text:
+                raise ValueError(text_reasons[0])
+        valid_hash, hash_reasons = validate_lowercase_sha256_hex_v01(
+            evidence_sha256
+        )
+        if not valid_hash:
+            raise ValueError(hash_reasons[0])
+        provisional = TransitionEvidenceBindingV01(
+            transition_evidence_binding_id="",
+            evidence_code=evidence_code,
+            evidence_ref=evidence_ref,
+            evidence_sha256=evidence_sha256,
+            validator_profile_id=validator_profile_id,
+            validation_status="PASS",
+        )
+        material = transition_evidence_binding_material_v01(provisional)
+        binding = TransitionEvidenceBindingV01(
+            transition_evidence_binding_id=(
+                build_domain_separated_identity_v01(
+                    domain=TRANSITION_EVIDENCE_BINDING_DOMAIN_V01,
+                    prefix=TRANSITION_EVIDENCE_BINDING_PREFIX_V01,
+                    material=material,
+                )
+            ),
+            evidence_code=evidence_code,
+            evidence_ref=evidence_ref,
+            evidence_sha256=evidence_sha256,
+            validator_profile_id=validator_profile_id,
+            validation_status="PASS",
+        )
+        valid, reasons = validate_transition_evidence_binding_v01(
+            binding,
+            action_packet_transition_registry_profile=(
+                action_packet_transition_registry_profile
+            ),
+            transition_rule_id=transition_rule_id,
+        )
+        if not valid:
+            raise ValueError(reasons[0])
+        return binding
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="transition_evidence_binding_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("transition_evidence_binding_invalid") from None
+
+
+def validate_transition_evidence_binding_v01(
+    value: object,
+    *,
+    action_packet_transition_registry_profile: object = None,
+    transition_rule_id: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not TransitionEvidenceBindingV01:
+            return False, ("transition_evidence_binding_type_invalid",)
+        if validate_action_packet_transition_registry_profile_v01(
+            action_packet_transition_registry_profile
+        ):
+            return False, ("transition_evidence_registry_invalid",)
+        try:
+            rule = lookup_action_packet_transition_rule_v01(
+                registry=action_packet_transition_registry_profile,
+                transition_rule_id=transition_rule_id,
+            )
+        except ValueError:
+            return False, ("transition_evidence_rule_unknown",)
+        reasons: list[str] = []
+        binding_id_valid, _ = validate_prefixed_sha256_identity_v01(
+            value.transition_evidence_binding_id,
+            prefix=TRANSITION_EVIDENCE_BINDING_PREFIX_V01,
+        )
+        if not binding_id_valid:
+            _reason_v01(reasons, "transition_evidence_binding_id_invalid")
+        if (
+            type(value.evidence_code) is not str
+            or value.evidence_code not in rule.required_evidence_codes
+        ):
+            _reason_v01(reasons, "transition_evidence_code_not_required")
+        for field_value, reason in (
+            (value.evidence_ref, "transition_evidence_ref_invalid"),
+            (
+                value.validator_profile_id,
+                "transition_evidence_validator_profile_invalid",
+            ),
+        ):
+            if not validate_identity_text_v01(field_value)[0]:
+                _reason_v01(reasons, reason)
+        if not validate_lowercase_sha256_hex_v01(value.evidence_sha256)[0]:
+            _reason_v01(reasons, "transition_evidence_sha256_invalid")
+        if type(value.validation_status) is not str or (
+            value.validation_status != "PASS"
+        ):
+            _reason_v01(reasons, "transition_evidence_status_invalid")
+        if reasons:
+            return _result_v01(reasons)
+        material = transition_evidence_binding_material_v01(value)
+        expected_id = build_domain_separated_identity_v01(
+            domain=TRANSITION_EVIDENCE_BINDING_DOMAIN_V01,
+            prefix=TRANSITION_EVIDENCE_BINDING_PREFIX_V01,
+            material=material,
+        )
+        if (
+            type(value.transition_evidence_binding_id) is not str
+            or value.transition_evidence_binding_id != expected_id
+        ):
+            _reason_v01(reasons, "transition_evidence_binding_id_mismatch")
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("transition_evidence_binding_invalid",)
+
+
+def action_execution_attempt_identity_material_v01(
+    *,
+    packet_id: object,
+    idempotency_key: object,
+    attempt_ordinal: object,
+    evaluation_context_id: object,
+) -> CanonicalMaterialV01:
+    if not validate_prefixed_sha256_identity_v01(
+        packet_id,
+        prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+    )[0]:
+        raise ValueError("execution_attempt_packet_id_invalid")
+    if not validate_prefixed_sha256_identity_v01(
+        idempotency_key,
+        prefix=ACTION_IDEMPOTENCY_PREFIX_V01,
+    )[0]:
+        raise ValueError("execution_attempt_idempotency_key_invalid")
+    if not validate_positive_int_v01(attempt_ordinal)[0]:
+        raise ValueError("execution_attempt_ordinal_invalid")
+    if not validate_identity_text_v01(evaluation_context_id)[0]:
+        raise ValueError("execution_attempt_evaluation_context_invalid")
+    return (
+        ("packet_id", packet_id),
+        ("idempotency_key", idempotency_key),
+        ("attempt_ordinal", attempt_ordinal),
+        ("evaluation_context_id", evaluation_context_id),
+    )
+
+
+def build_action_execution_attempt_identity_v01(
+    *,
+    packet_id: object,
+    idempotency_key: object,
+    attempt_ordinal: object,
+    evaluation_context_id: object,
+) -> ActionExecutionAttemptIdentityV01:
+    """Build an attempt ID; G2-A2B derives its ordinal from validated history."""
+
+    try:
+        material = action_execution_attempt_identity_material_v01(
+            packet_id=packet_id,
+            idempotency_key=idempotency_key,
+            attempt_ordinal=attempt_ordinal,
+            evaluation_context_id=evaluation_context_id,
+        )
+        value = ActionExecutionAttemptIdentityV01(
+            execution_attempt_id=build_domain_separated_identity_v01(
+                domain=EXECUTION_ATTEMPT_IDENTITY_DOMAIN_V01,
+                prefix=EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01,
+                material=material,
+            ),
+            packet_id=packet_id,
+            idempotency_key=idempotency_key,
+            attempt_ordinal=attempt_ordinal,
+            evaluation_context_id=evaluation_context_id,
+            material=material,
+        )
+        valid, reasons = validate_action_execution_attempt_identity_v01(value)
+        if not valid:
+            raise ValueError(reasons[0])
+        return value
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="execution_attempt_identity_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("execution_attempt_identity_invalid") from None
+
+
+def validate_action_execution_attempt_identity_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not ActionExecutionAttemptIdentityV01:
+            return False, ("execution_attempt_identity_type_invalid",)
+        if not validate_prefixed_sha256_identity_v01(
+            value.execution_attempt_id,
+            prefix=EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01,
+        )[0]:
+            return False, ("execution_attempt_id_invalid",)
+        try:
+            rebuilt_material = action_execution_attempt_identity_material_v01(
+                packet_id=value.packet_id,
+                idempotency_key=value.idempotency_key,
+                attempt_ordinal=value.attempt_ordinal,
+                evaluation_context_id=value.evaluation_context_id,
+            )
+            rebuilt_id = build_domain_separated_identity_v01(
+                domain=EXECUTION_ATTEMPT_IDENTITY_DOMAIN_V01,
+                prefix=EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01,
+                material=rebuilt_material,
+            )
+        except ValueError as exc:
+            return False, (
+                _stable_exception_reason_v01(
+                    exc,
+                    fallback="execution_attempt_identity_invalid",
+                ),
+            )
+        expected_fields = (
+            "packet_id",
+            "idempotency_key",
+            "attempt_ordinal",
+            "evaluation_context_id",
+        )
+        if not validate_canonical_profile_material_v01(
+            value.material,
+            expected_field_names=expected_fields,
+        )[0]:
+            return False, ("execution_attempt_material_invalid",)
+        if (
+            canonical_material_bytes_v01(value.material)
+            != canonical_material_bytes_v01(rebuilt_material)
+            or type(value.execution_attempt_id) is not str
+            or value.execution_attempt_id != rebuilt_id
+        ):
+            return False, ("execution_attempt_identity_mismatch",)
+        return True, ()
+    except Exception:
+        return False, ("execution_attempt_identity_invalid",)
+
+
+def action_packet_transition_event_material_v01(
+    value: ActionPacketTransitionEventV01,
+) -> CanonicalMaterialV01:
+    if type(value) is not ActionPacketTransitionEventV01:
+        raise ValueError("transition_event_type_invalid")
+    if type(value.transition_evidence_bindings) is not tuple:
+        raise ValueError("transition_event_evidence_type_invalid")
+    return (
+        ("transition_profile_version", value.transition_profile_version),
+        ("transition_registry_id", value.transition_registry_id),
+        ("transition_rule_id", value.transition_rule_id),
+        ("packet_id", value.packet_id),
+        ("idempotency_key", value.idempotency_key),
+        (
+            "previous_transition_event_id",
+            _optional_identity_material_v01(
+                value.previous_transition_event_id
+            ),
+        ),
+        ("source_state", value.source_state),
+        ("target_state", value.target_state),
+        ("transition_class_code", value.transition_class_code),
+        ("performed_by_component", value.performed_by_component),
+        ("owning_local_root_id", value.owning_local_root_id),
+        (
+            "root_decision_ref",
+            _optional_identity_material_v01(value.root_decision_ref),
+        ),
+        (
+            "transition_evidence_bindings",
+            tuple(
+                transition_evidence_binding_material_v01(binding)
+                for binding in value.transition_evidence_bindings
+            ),
+        ),
+        ("reason_code", value.reason_code),
+        (
+            "dependency_set_candidate_fingerprint",
+            value.dependency_set_candidate_fingerprint,
+        ),
+        (
+            "temporal_authority_fingerprint",
+            value.temporal_authority_fingerprint,
+        ),
+        ("evaluation_time", value.evaluation_time),
+        ("evaluation_time_source", value.evaluation_time_source),
+        ("evaluation_context_id", value.evaluation_context_id),
+        (
+            "execution_attempt_id",
+            _optional_identity_material_v01(value.execution_attempt_id),
+        ),
+        ("effect_consumption_class", value.effect_consumption_class),
+        ("receipt_ref", _optional_identity_material_v01(value.receipt_ref)),
+    )
+
+
+def build_action_packet_transition_event_v01(
+    *,
+    action_packet_transition_registry_profile: object,
+    transition_rule_id: object,
+    packet_id: object,
+    idempotency_key: object,
+    previous_transition_event_id: object,
+    owning_local_root_id: object,
+    root_decision_ref: object,
+    transition_evidence_bindings: object,
+    dependency_set_candidate_fingerprint: object,
+    temporal_authority_fingerprint: object,
+    evaluation_time: object,
+    evaluation_time_source: object,
+    evaluation_context_id: object,
+    execution_attempt_identity: object,
+    receipt_ref: object,
+) -> ActionPacketTransitionEventV01:
+    try:
+        if validate_action_packet_transition_registry_profile_v01(
+            action_packet_transition_registry_profile
+        ):
+            raise ValueError("transition_event_registry_invalid")
+        rule = lookup_action_packet_transition_rule_v01(
+            registry=action_packet_transition_registry_profile,
+            transition_rule_id=transition_rule_id,
+        )
+        execution_attempt_id = _transition_attempt_id_for_event_v01(
+            execution_attempt_identity,
+            packet_id=packet_id,
+            idempotency_key=idempotency_key,
+            evaluation_context_id=evaluation_context_id,
+        )
+        event = ActionPacketTransitionEventV01(
+            transition_event_id="",
+            transition_profile_version=(
+                ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01
+            ),
+            transition_registry_id=(
+                action_packet_transition_registry_profile
+                .transition_registry_id
+            ),
+            transition_rule_id=rule.transition_rule_id,
+            packet_id=packet_id,
+            idempotency_key=idempotency_key,
+            previous_transition_event_id=previous_transition_event_id,
+            source_state=rule.source_state,
+            target_state=rule.target_state,
+            transition_class_code=rule.transition_class_code,
+            performed_by_component=rule.permitted_component_code,
+            owning_local_root_id=owning_local_root_id,
+            root_decision_ref=root_decision_ref,
+            transition_evidence_bindings=transition_evidence_bindings,
+            reason_code=rule.reason_code,
+            dependency_set_candidate_fingerprint=(
+                dependency_set_candidate_fingerprint
+            ),
+            temporal_authority_fingerprint=temporal_authority_fingerprint,
+            evaluation_time=evaluation_time,
+            evaluation_time_source=evaluation_time_source,
+            evaluation_context_id=evaluation_context_id,
+            execution_attempt_id=execution_attempt_id,
+            effect_consumption_class=rule.effect_consumption_class,
+            receipt_ref=receipt_ref,
+        )
+        material = action_packet_transition_event_material_v01(event)
+        event = ActionPacketTransitionEventV01(
+            transition_event_id=build_domain_separated_identity_v01(
+                domain=ACTION_PACKET_TRANSITION_EVENT_DOMAIN_V01,
+                prefix=ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01,
+                material=material,
+            ),
+            transition_profile_version=event.transition_profile_version,
+            transition_registry_id=event.transition_registry_id,
+            transition_rule_id=event.transition_rule_id,
+            packet_id=event.packet_id,
+            idempotency_key=event.idempotency_key,
+            previous_transition_event_id=event.previous_transition_event_id,
+            source_state=event.source_state,
+            target_state=event.target_state,
+            transition_class_code=event.transition_class_code,
+            performed_by_component=event.performed_by_component,
+            owning_local_root_id=event.owning_local_root_id,
+            root_decision_ref=event.root_decision_ref,
+            transition_evidence_bindings=(
+                event.transition_evidence_bindings
+            ),
+            reason_code=event.reason_code,
+            dependency_set_candidate_fingerprint=(
+                event.dependency_set_candidate_fingerprint
+            ),
+            temporal_authority_fingerprint=(
+                event.temporal_authority_fingerprint
+            ),
+            evaluation_time=event.evaluation_time,
+            evaluation_time_source=event.evaluation_time_source,
+            evaluation_context_id=event.evaluation_context_id,
+            execution_attempt_id=event.execution_attempt_id,
+            effect_consumption_class=event.effect_consumption_class,
+            receipt_ref=event.receipt_ref,
+        )
+        valid, reasons = validate_action_packet_transition_event_v01(
+            event,
+            action_packet_transition_registry_profile=(
+                action_packet_transition_registry_profile
+            ),
+        )
+        if not valid:
+            raise ValueError(reasons[0])
+        return event
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="transition_event_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("transition_event_invalid") from None
+
+
+def validate_action_packet_transition_event_v01(
+    value: object,
+    *,
+    action_packet_transition_registry_profile: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not ActionPacketTransitionEventV01:
+            return False, ("transition_event_type_invalid",)
+        if validate_action_packet_transition_registry_profile_v01(
+            action_packet_transition_registry_profile
+        ):
+            return False, ("transition_event_registry_invalid",)
+        try:
+            rule = lookup_action_packet_transition_rule_v01(
+                registry=action_packet_transition_registry_profile,
+                transition_rule_id=value.transition_rule_id,
+            )
+        except ValueError:
+            return False, ("transition_event_rule_unknown",)
+        reasons: list[str] = []
+        if (
+            type(value.transition_profile_version) is not str
+            or value.transition_profile_version
+            != ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01
+        ):
+            _reason_v01(reasons, "transition_event_profile_version_mismatch")
+        if (
+            type(value.transition_registry_id) is not str
+            or value.transition_registry_id
+            != action_packet_transition_registry_profile.transition_registry_id
+        ):
+            _reason_v01(reasons, "transition_event_registry_id_mismatch")
+        derived_fields = (
+            (value.source_state, rule.source_state, "transition_event_source_mismatch"),
+            (value.target_state, rule.target_state, "transition_event_target_mismatch"),
+            (
+                value.transition_class_code,
+                rule.transition_class_code,
+                "transition_event_class_mismatch",
+            ),
+            (
+                value.performed_by_component,
+                rule.permitted_component_code,
+                "transition_event_component_mismatch",
+            ),
+            (value.reason_code, rule.reason_code, "transition_event_reason_mismatch"),
+            (
+                value.effect_consumption_class,
+                rule.effect_consumption_class,
+                "transition_event_consumption_mismatch",
+            ),
+        )
+        for actual, expected, reason in derived_fields:
+            if type(actual) is not str or actual != expected:
+                _reason_v01(reasons, reason)
+        if not validate_prefixed_sha256_identity_v01(
+            value.packet_id,
+            prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+        )[0]:
+            _reason_v01(reasons, "transition_event_packet_id_invalid")
+        if not validate_prefixed_sha256_identity_v01(
+            value.idempotency_key,
+            prefix=ACTION_IDEMPOTENCY_PREFIX_V01,
+        )[0]:
+            _reason_v01(reasons, "transition_event_idempotency_key_invalid")
+        if value.previous_transition_event_id is not None and (
+            not validate_prefixed_sha256_identity_v01(
+                value.previous_transition_event_id,
+                prefix=ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01,
+            )[0]
+        ):
+            _reason_v01(reasons, "transition_event_previous_id_invalid")
+        if (
+            rule.transition_rule_id == "g2a_t01_activate_root_authorization"
+            and value.previous_transition_event_id is not None
+        ):
+            _reason_v01(reasons, "transition_event_activation_previous_forbidden")
+        if not validate_identity_text_v01(value.owning_local_root_id)[0]:
+            _reason_v01(reasons, "transition_event_owning_root_invalid")
+        _validate_transition_root_ref_v01(value, rule, reasons)
+        if not validate_lowercase_sha256_hex_v01(
+            value.dependency_set_candidate_fingerprint
+        )[0]:
+            _reason_v01(reasons, "transition_event_dependency_fingerprint_invalid")
+        if not validate_lowercase_sha256_hex_v01(
+            value.temporal_authority_fingerprint
+        )[0]:
+            _reason_v01(reasons, "transition_event_temporal_fingerprint_invalid")
+        if not validate_signed_int64_v01(value.evaluation_time)[0]:
+            _reason_v01(reasons, "transition_event_evaluation_time_invalid")
+        for field_value, reason in (
+            (
+                value.evaluation_time_source,
+                "transition_event_evaluation_source_invalid",
+            ),
+            (
+                value.evaluation_context_id,
+                "transition_event_evaluation_context_invalid",
+            ),
+        ):
+            if not validate_identity_text_v01(field_value)[0]:
+                _reason_v01(reasons, reason)
+        _validate_transition_evidence_collection_v01(
+            value,
+            action_packet_transition_registry_profile,
+            rule,
+            reasons,
+        )
+        _validate_transition_attempt_receipt_matrix_v01(value, rule, reasons)
+        if reasons:
+            return _result_v01(reasons)
+        material = action_packet_transition_event_material_v01(value)
+        if len(material) != 22:
+            _reason_v01(reasons, "transition_event_material_count_invalid")
+        expected_id = build_domain_separated_identity_v01(
+            domain=ACTION_PACKET_TRANSITION_EVENT_DOMAIN_V01,
+            prefix=ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01,
+            material=material,
+        )
+        if (
+            type(value.transition_event_id) is not str
+            or value.transition_event_id != expected_id
+        ):
+            _reason_v01(reasons, "transition_event_id_mismatch")
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("transition_event_invalid",)
+
+
+def _transition_attempt_id_for_event_v01(
+    value: object,
+    *,
+    packet_id: object,
+    idempotency_key: object,
+    evaluation_context_id: object,
+) -> str | None:
+    if value is None:
+        return None
+    if type(value) is not ActionExecutionAttemptIdentityV01:
+        raise ValueError("transition_event_attempt_identity_invalid")
+    if not validate_action_execution_attempt_identity_v01(value)[0]:
+        raise ValueError("transition_event_attempt_identity_invalid")
+    if (
+        type(packet_id) is not str
+        or type(idempotency_key) is not str
+        or type(evaluation_context_id) is not str
+        or value.packet_id != packet_id
+        or value.idempotency_key != idempotency_key
+        or value.evaluation_context_id != evaluation_context_id
+    ):
+        raise ValueError("transition_event_attempt_binding_mismatch")
+    return value.execution_attempt_id
+
+
+def _validate_transition_root_ref_v01(
+    event: ActionPacketTransitionEventV01,
+    rule: ActionPacketTransitionRuleV01,
+    reasons: list[str],
+) -> None:
+    if rule.root_decision_requirement_code == "NONE":
+        if event.root_decision_ref is not None:
+            _reason_v01(reasons, "transition_event_root_ref_forbidden")
+        return
+    if not validate_lowercase_sha256_hex_v01(event.root_decision_ref)[0]:
+        _reason_v01(reasons, "transition_event_root_ref_required")
+
+
+def _validate_transition_evidence_collection_v01(
+    event: ActionPacketTransitionEventV01,
+    registry: ActionPacketTransitionRegistryProfileV01,
+    rule: ActionPacketTransitionRuleV01,
+    reasons: list[str],
+) -> None:
+    bindings = event.transition_evidence_bindings
+    if type(bindings) is not tuple or any(
+        type(binding) is not TransitionEvidenceBindingV01
+        for binding in bindings
+    ):
+        _reason_v01(reasons, "transition_event_evidence_type_invalid")
+        return
+    codes = tuple(binding.evidence_code for binding in bindings)
+    if codes != rule.required_evidence_codes:
+        _reason_v01(reasons, "transition_event_evidence_order_mismatch")
+    if len(codes) != len(set(codes)):
+        _reason_v01(reasons, "transition_event_evidence_duplicate")
+    if set(codes) != set(rule.required_evidence_codes):
+        _reason_v01(reasons, "transition_event_evidence_set_mismatch")
+    for binding in bindings:
+        if not validate_transition_evidence_binding_v01(
+            binding,
+            action_packet_transition_registry_profile=registry,
+            transition_rule_id=rule.transition_rule_id,
+        )[0]:
+            _reason_v01(reasons, "transition_event_evidence_binding_invalid")
+
+
+def _validate_transition_attempt_receipt_matrix_v01(
+    event: ActionPacketTransitionEventV01,
+    rule: ActionPacketTransitionRuleV01,
+    reasons: list[str],
+) -> None:
+    attempt_rules = {
+        "g2a_t03_pending",
+        "g2a_t04_fulfill_mock",
+        "g2a_t05_receipt",
+        "g2a_t24_nonconsuming_failure",
+        "g2a_t26_uncertain_adapter_outcome",
+    }
+    if rule.transition_rule_id in attempt_rules:
+        if not validate_prefixed_sha256_identity_v01(
+            event.execution_attempt_id,
+            prefix=EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01,
+        )[0]:
+            _reason_v01(reasons, "transition_event_attempt_required")
+    elif event.execution_attempt_id is not None:
+        _reason_v01(reasons, "transition_event_attempt_forbidden")
+    if rule.transition_rule_id == "g2a_t05_receipt":
+        if not validate_identity_text_v01(event.receipt_ref)[0]:
+            _reason_v01(reasons, "transition_event_receipt_required")
+    elif event.receipt_ref is not None:
+        _reason_v01(reasons, "transition_event_receipt_forbidden")
+
+
+def idempotency_disposition_event_material_v01(
+    value: IdempotencyDispositionEventV01,
+) -> CanonicalMaterialV01:
+    if type(value) is not IdempotencyDispositionEventV01:
+        raise ValueError("idempotency_disposition_event_type_invalid")
+    if type(value.cause_transition_event_ids) is not tuple:
+        raise ValueError("idempotency_disposition_cause_type_invalid")
+    if type(value.evidence_refs) is not tuple:
+        raise ValueError("idempotency_disposition_evidence_type_invalid")
+    return (
+        ("event_profile_version", value.event_profile_version),
+        ("idempotency_key", value.idempotency_key),
+        ("event_class", value.event_class),
+        ("from_disposition", value.from_disposition),
+        ("to_disposition", value.to_disposition),
+        (
+            "from_owner_packet_id",
+            _optional_identity_material_v01(value.from_owner_packet_id),
+        ),
+        (
+            "to_owner_packet_id",
+            _optional_identity_material_v01(value.to_owner_packet_id),
+        ),
+        (
+            "previous_disposition_event_id",
+            _optional_identity_material_v01(
+                value.previous_disposition_event_id
+            ),
+        ),
+        ("cause_transition_event_ids", value.cause_transition_event_ids),
+        (
+            "root_decision_ref",
+            _optional_identity_material_v01(value.root_decision_ref),
+        ),
+        (
+            "predecessor_packet_id",
+            _optional_identity_material_v01(value.predecessor_packet_id),
+        ),
+        (
+            "successor_packet_id",
+            _optional_identity_material_v01(value.successor_packet_id),
+        ),
+        ("evidence_refs", value.evidence_refs),
+        ("evaluation_time", value.evaluation_time),
+        ("evaluation_time_source", value.evaluation_time_source),
+        ("evaluation_context_id", value.evaluation_context_id),
+    )
+
+
+def build_idempotency_disposition_event_v01(
+    *,
+    idempotency_key: object,
+    event_class: object,
+    from_disposition: object,
+    to_disposition: object,
+    from_owner_packet_id: object,
+    to_owner_packet_id: object,
+    previous_disposition_event_id: object,
+    cause_transition_event_ids: object,
+    root_decision_ref: object,
+    predecessor_packet_id: object,
+    successor_packet_id: object,
+    evidence_refs: object,
+    evaluation_time: object,
+    evaluation_time_source: object,
+    evaluation_context_id: object,
+) -> IdempotencyDispositionEventV01:
+    try:
+        event = IdempotencyDispositionEventV01(
+            idempotency_disposition_event_id="",
+            event_profile_version=(
+                ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01
+            ),
+            idempotency_key=idempotency_key,
+            event_class=event_class,
+            from_disposition=from_disposition,
+            to_disposition=to_disposition,
+            from_owner_packet_id=from_owner_packet_id,
+            to_owner_packet_id=to_owner_packet_id,
+            previous_disposition_event_id=previous_disposition_event_id,
+            cause_transition_event_ids=cause_transition_event_ids,
+            root_decision_ref=root_decision_ref,
+            predecessor_packet_id=predecessor_packet_id,
+            successor_packet_id=successor_packet_id,
+            evidence_refs=evidence_refs,
+            evaluation_time=evaluation_time,
+            evaluation_time_source=evaluation_time_source,
+            evaluation_context_id=evaluation_context_id,
+        )
+        material = idempotency_disposition_event_material_v01(event)
+        event = IdempotencyDispositionEventV01(
+            idempotency_disposition_event_id=(
+                build_domain_separated_identity_v01(
+                    domain=IDEMPOTENCY_DISPOSITION_EVENT_DOMAIN_V01,
+                    prefix=IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01,
+                    material=material,
+                )
+            ),
+            event_profile_version=event.event_profile_version,
+            idempotency_key=event.idempotency_key,
+            event_class=event.event_class,
+            from_disposition=event.from_disposition,
+            to_disposition=event.to_disposition,
+            from_owner_packet_id=event.from_owner_packet_id,
+            to_owner_packet_id=event.to_owner_packet_id,
+            previous_disposition_event_id=(
+                event.previous_disposition_event_id
+            ),
+            cause_transition_event_ids=event.cause_transition_event_ids,
+            root_decision_ref=event.root_decision_ref,
+            predecessor_packet_id=event.predecessor_packet_id,
+            successor_packet_id=event.successor_packet_id,
+            evidence_refs=event.evidence_refs,
+            evaluation_time=event.evaluation_time,
+            evaluation_time_source=event.evaluation_time_source,
+            evaluation_context_id=event.evaluation_context_id,
+        )
+        valid, reasons = validate_idempotency_disposition_event_v01(event)
+        if not valid:
+            raise ValueError(reasons[0])
+        return event
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="idempotency_disposition_event_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("idempotency_disposition_event_invalid") from None
+
+
+def validate_idempotency_disposition_event_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not IdempotencyDispositionEventV01:
+            return False, ("idempotency_disposition_event_type_invalid",)
+        reasons: list[str] = []
+        if (
+            type(value.event_profile_version) is not str
+            or value.event_profile_version
+            != ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01
+        ):
+            _reason_v01(
+                reasons,
+                "idempotency_disposition_event_profile_version_invalid",
+            )
+        if not validate_prefixed_sha256_identity_v01(
+            value.idempotency_key,
+            prefix=ACTION_IDEMPOTENCY_PREFIX_V01,
+        )[0]:
+            _reason_v01(reasons, "idempotency_disposition_key_invalid")
+        if (
+            type(value.event_class) is not str
+            or value.event_class
+            not in IDEMPOTENCY_DISPOSITION_EVENT_CLASSES_V01
+        ):
+            _reason_v01(reasons, "idempotency_disposition_class_invalid")
+        for item, reason in (
+            (
+                value.from_disposition,
+                "idempotency_disposition_from_invalid",
+            ),
+            (
+                value.to_disposition,
+                "idempotency_disposition_to_invalid",
+            ),
+        ):
+            if (
+                type(item) is not str
+                or item not in IDEMPOTENCY_DISPOSITIONS_V01
+            ):
+                _reason_v01(reasons, reason)
+        _validate_optional_packet_identity_v01(
+            value.from_owner_packet_id,
+            "idempotency_disposition_from_owner_invalid",
+            reasons,
+        )
+        _validate_optional_packet_identity_v01(
+            value.to_owner_packet_id,
+            "idempotency_disposition_to_owner_invalid",
+            reasons,
+        )
+        _validate_optional_prefixed_identity_v01(
+            value.previous_disposition_event_id,
+            IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01,
+            "idempotency_disposition_previous_event_invalid",
+            reasons,
+        )
+        _validate_optional_packet_identity_v01(
+            value.predecessor_packet_id,
+            "idempotency_disposition_predecessor_invalid",
+            reasons,
+        )
+        _validate_optional_packet_identity_v01(
+            value.successor_packet_id,
+            "idempotency_disposition_successor_invalid",
+            reasons,
+        )
+        if value.root_decision_ref is not None and (
+            not validate_lowercase_sha256_hex_v01(
+                value.root_decision_ref
+            )[0]
+        ):
+            _reason_v01(reasons, "idempotency_disposition_root_ref_invalid")
+        causes = value.cause_transition_event_ids
+        if (
+            type(causes) is not tuple
+            or not causes
+            or any(
+                not validate_prefixed_sha256_identity_v01(
+                    item,
+                    prefix=ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01,
+                )[0]
+                for item in causes
+            )
+        ):
+            _reason_v01(reasons, "idempotency_disposition_causes_invalid")
+        elif len(causes) != len(set(causes)):
+            _reason_v01(reasons, "idempotency_disposition_causes_duplicate")
+        evidence_valid, _ = validate_set_like_string_tuple_v01(
+            value.evidence_refs,
+            require_non_empty=True,
+        )
+        if not evidence_valid:
+            _reason_v01(reasons, "idempotency_disposition_evidence_invalid")
+        if not validate_signed_int64_v01(value.evaluation_time)[0]:
+            _reason_v01(reasons, "idempotency_disposition_time_invalid")
+        if not validate_identity_text_v01(value.evaluation_time_source)[0]:
+            _reason_v01(reasons, "idempotency_disposition_time_source_invalid")
+        if not validate_identity_text_v01(value.evaluation_context_id)[0]:
+            _reason_v01(reasons, "idempotency_disposition_context_invalid")
+        _validate_idempotency_disposition_event_matrix_v01(value, reasons)
+        if reasons:
+            return _result_v01(reasons)
+        material = idempotency_disposition_event_material_v01(value)
+        if len(material) != 16:
+            _reason_v01(reasons, "idempotency_disposition_material_count_invalid")
+        expected_id = build_domain_separated_identity_v01(
+            domain=IDEMPOTENCY_DISPOSITION_EVENT_DOMAIN_V01,
+            prefix=IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01,
+            material=material,
+        )
+        if (
+            type(value.idempotency_disposition_event_id) is not str
+            or value.idempotency_disposition_event_id != expected_id
+        ):
+            _reason_v01(reasons, "idempotency_disposition_event_id_mismatch")
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("idempotency_disposition_event_invalid",)
+
+
+def _validate_optional_packet_identity_v01(
+    value: object,
+    reason: str,
+    reasons: list[str],
+) -> None:
+    if value is not None and not validate_prefixed_sha256_identity_v01(
+        value,
+        prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+    )[0]:
+        _reason_v01(reasons, reason)
+
+
+def _validate_optional_prefixed_identity_v01(
+    value: object,
+    prefix: str,
+    reason: str,
+    reasons: list[str],
+) -> None:
+    if value is not None and not validate_prefixed_sha256_identity_v01(
+        value,
+        prefix=prefix,
+    )[0]:
+        _reason_v01(reasons, reason)
+
+
+def _validate_idempotency_disposition_event_matrix_v01(
+    event: IdempotencyDispositionEventV01,
+    reasons: list[str],
+) -> None:
+    if event.event_class == "RESERVE":
+        valid_common = (
+            event.from_disposition == "UNCLAIMED"
+            and event.to_disposition == "RESERVED"
+            and event.from_owner_packet_id is None
+            and event.to_owner_packet_id is not None
+            and event.previous_disposition_event_id is None
+            and event.root_decision_ref is not None
+        )
+        initial = (
+            event.predecessor_packet_id is None
+            and event.successor_packet_id is None
+            and len(event.cause_transition_event_ids) == 1
+            and len(event.evidence_refs) == 3
+        )
+        branch_a = (
+            event.predecessor_packet_id is not None
+            and event.successor_packet_id is not None
+            and event.predecessor_packet_id != event.successor_packet_id
+            and event.to_owner_packet_id == event.successor_packet_id
+            and len(event.cause_transition_event_ids) == 2
+            and len(event.evidence_refs) == 3
+        )
+        if not valid_common or not (initial or branch_a):
+            _reason_v01(reasons, "idempotency_disposition_reserve_matrix_invalid")
+        return
+    if event.event_class in {
+        "TRANSFER_RENEWAL",
+        "TRANSFER_SUPERSESSION",
+    }:
+        if not (
+            event.from_disposition == "RESERVED"
+            and event.to_disposition == "RESERVED"
+            and event.from_owner_packet_id is not None
+            and event.to_owner_packet_id is not None
+            and event.from_owner_packet_id != event.to_owner_packet_id
+            and event.previous_disposition_event_id is not None
+            and event.predecessor_packet_id == event.from_owner_packet_id
+            and event.successor_packet_id == event.to_owner_packet_id
+            and event.root_decision_ref is not None
+            and len(event.cause_transition_event_ids) == 2
+            and len(event.evidence_refs) == 3
+        ):
+            _reason_v01(reasons, "idempotency_disposition_transfer_matrix_invalid")
+        return
+    common_terminal = (
+        event.from_owner_packet_id is not None
+        and event.from_owner_packet_id == event.to_owner_packet_id
+        and event.previous_disposition_event_id is not None
+        and len(event.cause_transition_event_ids) == 1
+        and event.root_decision_ref is None
+        and event.predecessor_packet_id is None
+        and event.successor_packet_id is None
+        and len(event.evidence_refs) == 2
+    )
+    if event.event_class == "CONSUME":
+        valid = (
+            common_terminal
+            and event.from_disposition == "RESERVED"
+            and event.to_disposition == "CONSUMED"
+        )
+    elif event.event_class == "UNCERTAIN_CLOSE":
+        valid = (
+            common_terminal
+            and event.from_disposition == "RESERVED"
+            and event.to_disposition == "UNCERTAIN_CLOSED"
+        )
+    elif event.event_class == "RECEIPT_CONFIRM":
+        valid = (
+            common_terminal
+            and event.from_disposition == "CONSUMED"
+            and event.to_disposition == "CONSUMED"
+        )
+    else:
+        return
+    if not valid:
+        _reason_v01(reasons, "idempotency_disposition_outcome_matrix_invalid")
+
+
+def validate_idempotency_disposition_history_v01(
+    history: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(history) is not tuple:
+            return False, ("idempotency_disposition_history_type_invalid",)
+        reasons: list[str] = []
+        seen_ids: set[str] = set()
+        latest_by_key: dict[str, IdempotencyDispositionEventV01] = {}
+        for event in history:
+            valid, _ = validate_idempotency_disposition_event_v01(event)
+            if not valid:
+                _reason_v01(
+                    reasons,
+                    "idempotency_disposition_history_event_invalid",
+                )
+                continue
+            event_id = event.idempotency_disposition_event_id
+            if event_id in seen_ids:
+                _reason_v01(
+                    reasons,
+                    "idempotency_disposition_history_duplicate",
+                )
+                continue
+            seen_ids.add(event_id)
+            previous = latest_by_key.get(event.idempotency_key)
+            if previous is None:
+                if (
+                    event.previous_disposition_event_id is not None
+                    or event.from_disposition != "UNCLAIMED"
+                    or event.from_owner_packet_id is not None
+                    or event.event_class != "RESERVE"
+                ):
+                    _reason_v01(
+                        reasons,
+                        "idempotency_disposition_history_initial_invalid",
+                    )
+            else:
+                if (
+                    event.previous_disposition_event_id
+                    != previous.idempotency_disposition_event_id
+                ):
+                    _reason_v01(
+                        reasons,
+                        "idempotency_disposition_history_chain_invalid",
+                    )
+                if event.from_disposition != previous.to_disposition:
+                    _reason_v01(
+                        reasons,
+                        "idempotency_disposition_history_state_mismatch",
+                    )
+                if event.from_owner_packet_id != previous.to_owner_packet_id:
+                    _reason_v01(
+                        reasons,
+                        "idempotency_disposition_history_owner_mismatch",
+                    )
+                if previous.to_disposition == "UNCERTAIN_CLOSED":
+                    _reason_v01(
+                        reasons,
+                        "uncertain_key_permanently_closed",
+                    )
+                if previous.to_disposition == "CONSUMED" and (
+                    event.event_class != "RECEIPT_CONFIRM"
+                    or previous.event_class != "CONSUME"
+                ):
+                    _reason_v01(
+                        reasons,
+                        "consumed_key_permanently_closed",
+                    )
+                if (
+                    previous.event_class == "RECEIPT_CONFIRM"
+                    and event.idempotency_key == previous.idempotency_key
+                ):
+                    _reason_v01(
+                        reasons,
+                        "consumed_key_permanently_closed",
+                    )
+                if event.event_class == "RESERVE":
+                    _reason_v01(
+                        reasons,
+                        "idempotency_disposition_reacquisition_forbidden",
+                    )
+            latest_by_key[event.idempotency_key] = event
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("idempotency_disposition_history_invalid",)
+
+
+def derive_idempotency_disposition_v01(
+    history: object,
+    *,
+    idempotency_key: object,
+) -> IdempotencyDispositionStateV01:
+    try:
+        valid_key, _ = validate_prefixed_sha256_identity_v01(
+            idempotency_key,
+            prefix=ACTION_IDEMPOTENCY_PREFIX_V01,
+        )
+        if not valid_key:
+            raise ValueError("idempotency_disposition_key_invalid")
+        valid, reasons = validate_idempotency_disposition_history_v01(history)
+        if not valid:
+            raise ValueError(reasons[0])
+        matching = tuple(
+            event for event in history if event.idempotency_key == idempotency_key
+        )
+        if not matching:
+            return IdempotencyDispositionStateV01(
+                idempotency_key=idempotency_key,
+                disposition="UNCLAIMED",
+                reservation_owner_packet_id=None,
+                latest_disposition_event_id=None,
+                event_count=0,
+            )
+        latest = matching[-1]
+        return IdempotencyDispositionStateV01(
+            idempotency_key=idempotency_key,
+            disposition=latest.to_disposition,
+            reservation_owner_packet_id=latest.to_owner_packet_id,
+            latest_disposition_event_id=(
+                latest.idempotency_disposition_event_id
+            ),
+            event_count=len(matching),
+        )
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="idempotency_disposition_history_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("idempotency_disposition_history_invalid") from None
+
+
+def build_action_packet_lifecycle_entry_v01(
+    *,
+    root_bound_genesis: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionPacketLifecycleEntryV01:
+    try:
+        if validate_action_packet_transition_registry_profile_v01(
+            action_packet_transition_registry_profile
+        ):
+            raise ValueError("action_packet_lifecycle_registry_invalid")
+        entry = ActionPacketLifecycleEntryV01(
+            root_bound_genesis=root_bound_genesis,
+            transition_registry_id=(
+                action_packet_transition_registry_profile.transition_registry_id
+            ),
+            transition_events=(),
+        )
+        valid, reasons = validate_action_packet_lifecycle_entry_v01(
+            entry,
+            action_packet_transition_registry_profile=(
+                action_packet_transition_registry_profile
+            ),
+        )
+        if not valid:
+            raise ValueError(reasons[0])
+        return entry
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_lifecycle_entry_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_lifecycle_entry_invalid") from None
+
+
+def validate_action_packet_lifecycle_entry_v01(
+    value: object,
+    *,
+    action_packet_transition_registry_profile: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not ActionPacketLifecycleEntryV01:
+            return False, ("action_packet_lifecycle_entry_type_invalid",)
+        registry = _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        reasons: list[str] = []
+        genesis_valid, _ = (
+            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                value.root_bound_genesis
+            )
+        )
+        if not genesis_valid:
+            _reason_v01(reasons, "action_packet_lifecycle_genesis_invalid")
+        if (
+            type(value.transition_registry_id) is not str
+            or value.transition_registry_id != registry.transition_registry_id
+        ):
+            _reason_v01(reasons, "action_packet_lifecycle_registry_id_mismatch")
+        history_valid, history_reasons = (
+            validate_action_packet_transition_history_v01(
+                value.transition_events,
+                root_bound_genesis=value.root_bound_genesis,
+                action_packet_transition_registry_profile=registry,
+            )
+        )
+        if not history_valid:
+            reasons.extend(history_reasons)
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("action_packet_lifecycle_entry_invalid",)
+
+
+def validate_action_packet_transition_history_v01(
+    transition_events: object,
+    *,
+    root_bound_genesis: object,
+    action_packet_transition_registry_profile: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(transition_events) is not tuple:
+            return False, ("action_packet_transition_history_type_invalid",)
+        registry = _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        genesis_valid, _ = (
+            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                root_bound_genesis
+            )
+        )
+        if not genesis_valid:
+            return False, ("action_packet_transition_genesis_invalid",)
+        canonical = root_bound_genesis.canonical_projection
+        packet_id = root_bound_genesis.packet_identity.packet_id
+        idempotency_key = canonical.idempotency_identity.idempotency_key
+        owning_root = canonical.owning_local_root_id
+        dependency_fingerprint = (
+            canonical.dependency_set_candidate_fingerprint
+        )
+        temporal_fingerprint = canonical.temporal_authority_fingerprint
+        source_root_decision_id = (
+            root_bound_genesis.root_decision_projection.root_decision_result
+            .decision_id
+        )
+        reasons: list[str] = []
+        seen_ids: set[str] = set()
+        current_state = "CREATED"
+        failed_provenance: str | None = None
+        attempt_count = 0
+        for index, event in enumerate(transition_events):
+            event_valid, _ = validate_action_packet_transition_event_v01(
+                event,
+                action_packet_transition_registry_profile=registry,
+            )
+            if not event_valid:
+                _reason_v01(reasons, "action_packet_transition_event_invalid")
+                continue
+            if event.transition_event_id in seen_ids:
+                _reason_v01(reasons, "action_packet_transition_history_duplicate")
+            seen_ids.add(event.transition_event_id)
+            expected_previous = (
+                None
+                if index == 0
+                else transition_events[index - 1].transition_event_id
+            )
+            if event.previous_transition_event_id != expected_previous:
+                _reason_v01(reasons, "action_packet_transition_history_chain_invalid")
+            if index == 0 and event.transition_rule_id not in {
+                "g2a_t01_activate_root_authorization",
+                "g2a_t06_created_block",
+                "g2a_t11_created_expire",
+            }:
+                _reason_v01(reasons, "action_packet_transition_first_event_invalid")
+            if (
+                event.packet_id != packet_id
+                or event.idempotency_key != idempotency_key
+            ):
+                _reason_v01(reasons, "action_packet_transition_packet_key_mismatch")
+            if event.owning_local_root_id != owning_root:
+                _reason_v01(reasons, "action_packet_transition_root_mismatch")
+            if (
+                event.dependency_set_candidate_fingerprint
+                != dependency_fingerprint
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_transition_dependency_mismatch",
+                )
+            if event.temporal_authority_fingerprint != temporal_fingerprint:
+                _reason_v01(reasons, "action_packet_transition_temporal_mismatch")
+            temporal_reason = _action_packet_transition_temporal_reason_v01(
+                root_bound_genesis,
+                event,
+            )
+            if temporal_reason is not None:
+                _reason_v01(reasons, temporal_reason)
+            if event.source_state != current_state:
+                _reason_v01(reasons, "action_packet_transition_source_mismatch")
+            if (
+                event.transition_rule_id
+                == "g2a_t01_activate_root_authorization"
+                and event.root_decision_ref != source_root_decision_id
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_transition_source_authorization_mismatch",
+                )
+            if event.transition_rule_id in {
+                "g2a_t06_created_block",
+                "g2a_t07_authorized_block",
+                "g2a_t08_queued_block",
+                "g2a_t09_pending_block",
+                "g2a_t10_failed_block",
+            }:
+                _reason_v01(
+                    reasons,
+                    "invalidation_transition_requires_g2a3_binding",
+                )
+            if event.transition_rule_id in {
+                "g2a_t16_authorized_revoke",
+                "g2a_t17_queued_revoke",
+                "g2a_t18_pending_revoke",
+                "g2a_t19_failed_revoke",
+                "g2a_t20_authorized_supersede",
+                "g2a_t21_queued_supersede",
+                "g2a_t22_pending_supersede",
+                "g2a_t23_failed_supersede",
+            }:
+                _reason_v01(
+                    reasons,
+                    "authority_transition_requires_g2a3_binding",
+                )
+            if current_state == "FAILED" and (
+                failed_provenance != "FAILED_NON_CONSUMING"
+                or event.transition_rule_id
+                not in {
+                    "g2a_t10_failed_block",
+                    "g2a_t15_failed_expire",
+                    "g2a_t19_failed_revoke",
+                    "g2a_t23_failed_supersede",
+                    "g2a_t25_retry",
+                }
+            ):
+                _reason_v01(reasons, "failed_provenance_invalid")
+            if (
+                event.transition_rule_id == "g2a_t25_retry"
+                and canonical.authority_policy.retry_policy
+                != "NON_CONSUMING_RETRY"
+            ):
+                _reason_v01(reasons, "retry_policy_invalid")
+            if event.transition_rule_id == "g2a_t03_pending":
+                attempt_count += 1
+                expected_attempt = build_action_execution_attempt_identity_v01(
+                    packet_id=packet_id,
+                    idempotency_key=idempotency_key,
+                    attempt_ordinal=attempt_count,
+                    evaluation_context_id=event.evaluation_context_id,
+                )
+                if event.execution_attempt_id != expected_attempt.execution_attempt_id:
+                    _reason_v01(
+                        reasons,
+                        "action_packet_transition_attempt_ordinal_mismatch",
+                    )
+            if event.transition_rule_id in {
+                "g2a_t04_fulfill_mock",
+                "g2a_t24_nonconsuming_failure",
+                "g2a_t26_uncertain_adapter_outcome",
+            }:
+                if (
+                    index == 0
+                    or transition_events[index - 1].transition_rule_id
+                    != "g2a_t03_pending"
+                    or event.execution_attempt_id
+                    != transition_events[index - 1].execution_attempt_id
+                ):
+                    _reason_v01(
+                        reasons,
+                        "action_packet_transition_outcome_attempt_mismatch",
+                    )
+                if (
+                    index > 0
+                    and event.evaluation_context_id
+                    != transition_events[index - 1].evaluation_context_id
+                ):
+                    _reason_v01(
+                        reasons,
+                        "action_packet_transition_attempt_context_mismatch",
+                    )
+            if event.transition_rule_id == "g2a_t05_receipt":
+                if (
+                    index == 0
+                    or transition_events[index - 1].transition_rule_id
+                    != "g2a_t04_fulfill_mock"
+                    or event.execution_attempt_id
+                    != transition_events[index - 1].execution_attempt_id
+                ):
+                    _reason_v01(
+                        reasons,
+                        "action_packet_transition_receipt_attempt_mismatch",
+                    )
+                if (
+                    index > 0
+                    and event.evaluation_context_id
+                    != transition_events[index - 1].evaluation_context_id
+                ):
+                    _reason_v01(
+                        reasons,
+                        "action_packet_transition_attempt_context_mismatch",
+                    )
+            current_state = event.target_state
+            if event.transition_rule_id == "g2a_t24_nonconsuming_failure":
+                failed_provenance = "FAILED_NON_CONSUMING"
+            elif event.transition_rule_id == "g2a_t26_uncertain_adapter_outcome":
+                failed_provenance = "FAILED_UNCERTAIN_TERMINAL"
+            elif current_state != "FAILED":
+                failed_provenance = None
+        return _result_v01(reasons)
+    except Exception:
+        return False, ("action_packet_transition_history_invalid",)
+
+
+def _action_packet_transition_temporal_reason_v01(
+    root_bound_genesis: object,
+    event: object,
+) -> str | None:
+    try:
+        if (
+            type(root_bound_genesis)
+            is not SupplierRootBoundActionCommitPacketV02ProjectionV01
+            or type(event) is not ActionPacketTransitionEventV01
+        ):
+            return "action_packet_transition_temporal_truth_invalid"
+        evaluation = evaluate_temporal_authority_v01(
+            root_bound_genesis.canonical_projection.temporal_authority,
+            evaluation_time=event.evaluation_time,
+        )
+        rule_id = event.transition_rule_id
+        if rule_id == "g2a_t01_activate_root_authorization":
+            if evaluation.outcome == TEMPORAL_OUTCOME_EXPIRED_V01:
+                return "action_packet_activation_after_expiry_forbidden"
+            return None
+        if rule_id in {
+            "g2a_t02_queue",
+            "g2a_t03_pending",
+            "g2a_t25_retry",
+        }:
+            if (
+                evaluation.outcome != TEMPORAL_OUTCOME_VALID_V01
+                or type(evaluation.executable) is not bool
+                or not evaluation.executable
+            ):
+                return "action_packet_transition_temporal_truth_invalid"
+            return None
+        if rule_id in {
+            "g2a_t11_created_expire",
+            "g2a_t12_authorized_expire",
+            "g2a_t13_queued_expire",
+            "g2a_t14_pending_expire",
+            "g2a_t15_failed_expire",
+        }:
+            if evaluation.outcome != TEMPORAL_OUTCOME_EXPIRED_V01:
+                return "action_packet_expiry_not_reached"
+        return None
+    except Exception:
+        return "action_packet_transition_temporal_truth_invalid"
+
+
+def _exact_action_packet_transition_registry_v01(
+    value: object,
+) -> ActionPacketTransitionRegistryProfileV01:
+    registry = (
+        build_action_packet_transition_registry_profile_v01()
+        if value is None
+        else value
+    )
+    if validate_action_packet_transition_registry_profile_v01(registry):
+        raise ValueError("action_packet_lifecycle_registry_invalid")
+    expected = build_action_packet_transition_registry_profile_v01()
+    if (
+        type(registry) is not ActionPacketTransitionRegistryProfileV01
+        or registry != expected
+    ):
+        raise ValueError("action_packet_lifecycle_registry_invalid")
+    return registry
+
+
+def derive_action_packet_lifecycle_state_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    action_packet_transition_registry_profile: object = None,
+) -> ActionPacketLifecycleStateV01:
+    try:
+        valid, reasons = validate_action_commit_packet_registry_v02(registry)
+        if not valid:
+            raise ValueError(reasons[0])
+        transition_registry = _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        entry = _find_lifecycle_entry_v01(registry, packet_id)
+        if entry.transition_registry_id != transition_registry.transition_registry_id:
+            raise ValueError("action_packet_lifecycle_registry_id_mismatch")
+        return _derive_action_packet_lifecycle_state_unchecked_v01(
+            entry,
+            registry.idempotency_disposition_events,
+        )
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_lifecycle_state_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_lifecycle_state_invalid") from None
+
+
+def _derive_action_packet_lifecycle_state_unchecked_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    disposition_history: tuple[IdempotencyDispositionEventV01, ...],
+) -> ActionPacketLifecycleStateV01:
+    genesis = entry.root_bound_genesis
+    packet_id = genesis.packet_identity.packet_id
+    idempotency_key = (
+        genesis.canonical_projection.idempotency_identity.idempotency_key
+    )
+    events = entry.transition_events
+    latest = events[-1] if events else None
+    lifecycle_state = latest.target_state if latest is not None else "CREATED"
+    failed_provenance = None
+    if latest is not None:
+        if latest.transition_rule_id == "g2a_t24_nonconsuming_failure":
+            failed_provenance = "FAILED_NON_CONSUMING"
+        elif latest.transition_rule_id == "g2a_t26_uncertain_adapter_outcome":
+            failed_provenance = "FAILED_UNCERTAIN_TERMINAL"
+    disposition = _derive_idempotency_disposition_unchecked_v01(
+        disposition_history,
+        idempotency_key,
+    )
+    terminal_receipt_ref = (
+        latest.receipt_ref
+        if latest is not None
+        and latest.transition_rule_id == "g2a_t05_receipt"
+        else None
+    )
+    lifecycle_terminal = lifecycle_state in {
+        "RECEIPT_RECEIVED",
+        "BLOCKED",
+        "EXPIRED",
+        "REVOKED",
+        "SUPERSEDED",
+    } or failed_provenance == "FAILED_UNCERTAIN_TERMINAL"
+    eligible = (
+        lifecycle_state == "PENDING_FULFILLMENT"
+        and disposition.disposition == "RESERVED"
+        and disposition.reservation_owner_packet_id == packet_id
+        and terminal_receipt_ref is None
+    )
+    return ActionPacketLifecycleStateV01(
+        packet_id=packet_id,
+        idempotency_key=idempotency_key,
+        lifecycle_state=lifecycle_state,
+        failed_provenance=failed_provenance,
+        transition_event_count=len(events),
+        latest_transition_event_id=(
+            latest.transition_event_id if latest is not None else None
+        ),
+        execution_attempt_count=sum(
+            event.transition_rule_id == "g2a_t03_pending" for event in events
+        ),
+        idempotency_disposition=disposition.disposition,
+        reservation_owner_packet_id=(
+            disposition.reservation_owner_packet_id
+        ),
+        latest_disposition_event_id=(
+            disposition.latest_disposition_event_id
+        ),
+        terminal_receipt_ref=terminal_receipt_ref,
+        lifecycle_terminal=lifecycle_terminal,
+        eligible_for_corridor_revalidation=eligible,
+        executable=False,
+        registry_is_authority=False,
+        registry_grants_permission=False,
+        real_world_effects_count=0,
+        reason_codes=(),
+    )
+
+
+def _derive_idempotency_disposition_unchecked_v01(
+    history: tuple[IdempotencyDispositionEventV01, ...],
+    idempotency_key: str,
+) -> IdempotencyDispositionStateV01:
+    matching = tuple(
+        event for event in history if event.idempotency_key == idempotency_key
+    )
+    if not matching:
+        return IdempotencyDispositionStateV01(
+            idempotency_key=idempotency_key,
+            disposition="UNCLAIMED",
+            reservation_owner_packet_id=None,
+            latest_disposition_event_id=None,
+            event_count=0,
+        )
+    latest = matching[-1]
+    return IdempotencyDispositionStateV01(
+        idempotency_key=idempotency_key,
+        disposition=latest.to_disposition,
+        reservation_owner_packet_id=latest.to_owner_packet_id,
+        latest_disposition_event_id=latest.idempotency_disposition_event_id,
+        event_count=len(matching),
+    )
+
+
+def _find_lifecycle_entry_v01(
+    registry: ActionCommitPacketRegistryV02,
+    packet_id: object,
+) -> ActionPacketLifecycleEntryV01:
+    if not validate_prefixed_sha256_identity_v01(
+        packet_id,
+        prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+    )[0]:
+        raise ValueError("action_packet_lifecycle_packet_id_invalid")
+    matching = tuple(
+        entry
+        for entry in registry.action_packet_lifecycle_entries
+        if entry.root_bound_genesis.packet_identity.packet_id == packet_id
+    )
+    if len(matching) != 1:
+        raise ValueError("action_packet_lifecycle_entry_not_found")
+    return matching[0]
+
+
+def _validate_registry_lifecycle_histories_v01(
+    registry: ActionCommitPacketRegistryV02,
+) -> tuple[bool, tuple[str, ...]]:
+    reasons: list[str] = []
+    entries = registry.action_packet_lifecycle_entries
+    dispositions = registry.idempotency_disposition_events
+    if type(entries) is not tuple or any(
+        type(entry) is not ActionPacketLifecycleEntryV01 for entry in entries
+    ):
+        return False, ("action_packet_registry_lifecycle_entries_invalid",)
+    if type(dispositions) is not tuple or any(
+        type(event) is not IdempotencyDispositionEventV01
+        for event in dispositions
+    ):
+        return False, ("action_packet_registry_disposition_events_invalid",)
+    transition_registry = build_action_packet_transition_registry_profile_v01()
+    packet_ids: list[str] = []
+    transition_by_id: dict[str, ActionPacketTransitionEventV01] = {}
+    entry_by_packet: dict[str, ActionPacketLifecycleEntryV01] = {}
+    for entry in entries:
+        valid, _ = validate_action_packet_lifecycle_entry_v01(
+            entry,
+            action_packet_transition_registry_profile=transition_registry,
+        )
+        if not valid:
+            _reason_v01(reasons, "action_packet_registry_lifecycle_entry_invalid")
+            continue
+        packet_id = entry.root_bound_genesis.packet_identity.packet_id
+        if packet_id in packet_ids:
+            _reason_v01(reasons, "action_packet_registry_duplicate_genesis")
+        packet_ids.append(packet_id)
+        entry_by_packet[packet_id] = entry
+        for event in entry.transition_events:
+            if event.transition_event_id in transition_by_id:
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_duplicate_transition_event",
+                )
+            transition_by_id[event.transition_event_id] = event
+    disposition_valid, _ = validate_idempotency_disposition_history_v01(
+        dispositions
+    )
+    if not disposition_valid:
+        _reason_v01(reasons, "action_packet_registry_disposition_history_invalid")
+    for disposition_event in dispositions:
+        owner_ids = tuple(
+            packet_id
+            for packet_id in (
+                disposition_event.from_owner_packet_id,
+                disposition_event.to_owner_packet_id,
+                disposition_event.predecessor_packet_id,
+                disposition_event.successor_packet_id,
+            )
+            if packet_id is not None
+        )
+        if any(packet_id not in entry_by_packet for packet_id in owner_ids):
+            _reason_v01(reasons, "action_packet_registry_owner_packet_missing")
+        causes = tuple(
+            transition_by_id.get(event_id)
+            for event_id in disposition_event.cause_transition_event_ids
+        )
+        if any(cause is None for cause in causes):
+            _reason_v01(reasons, "action_packet_registry_cause_transition_missing")
+            continue
+        typed_causes = tuple(cause for cause in causes if cause is not None)
+        if any(
+            cause.idempotency_key != disposition_event.idempotency_key
+            for cause in typed_causes
+        ):
+            _reason_v01(reasons, "action_packet_registry_cause_key_mismatch")
+        _validate_registry_disposition_cause_bundle_v01(
+            disposition_event,
+            typed_causes,
+            entry_by_packet,
+            reasons,
+        )
+    if reasons:
+        return _result_v01(reasons)
+    for entry in entries:
+        state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            entry,
+            dispositions,
+        )
+        _validate_registry_state_disposition_coherence_v01(
+            entry,
+            state,
+            dispositions,
+            reasons,
+        )
+    return _result_v01(reasons)
+
+
+def _validate_registry_disposition_cause_bundle_v01(
+    event: IdempotencyDispositionEventV01,
+    causes: tuple[ActionPacketTransitionEventV01, ...],
+    entries: dict[str, ActionPacketLifecycleEntryV01],
+    reasons: list[str],
+) -> None:
+    rule_ids = tuple(cause.transition_rule_id for cause in causes)
+    if event.event_class == "RESERVE":
+        if event.predecessor_packet_id is None:
+            same_key_entry_count = sum(
+                (
+                    entry.root_bound_genesis.canonical_projection
+                    .idempotency_identity.idempotency_key
+                    == event.idempotency_key
+                )
+                for entry in entries.values()
+            )
+            if same_key_entry_count != 1:
+                _reason_v01(
+                    reasons,
+                    "authority_transition_requires_g2a3_binding",
+                )
+            if (
+                rule_ids != ("g2a_t01_activate_root_authorization",)
+                or causes[0].packet_id != event.to_owner_packet_id
+                or causes[0].root_decision_ref != event.root_decision_ref
+                or not _disposition_context_matches_transition_v01(
+                    event,
+                    causes[0],
+                )
+                or event.evidence_refs
+                != _binding_ids_for_codes_v01(
+                    causes[0],
+                    (
+                        "packet_genesis_valid",
+                        "source_root_authorization_valid",
+                        "idempotency_acquisition_valid",
+                    ),
+                )
+            ):
+                _reason_v01(reasons, "atomic_activation_reserve_invalid")
+            return
+        if (
+            rule_ids
+            != (
+                "g2a_t11_created_expire",
+                "g2a_t01_activate_root_authorization",
+            )
+            or causes[0].packet_id != event.predecessor_packet_id
+            or causes[1].packet_id != event.successor_packet_id
+            or event.to_owner_packet_id != event.successor_packet_id
+            or causes[1].root_decision_ref != event.root_decision_ref
+            or not _same_logical_effect_entries_v01(
+                entries.get(event.predecessor_packet_id),
+                entries.get(event.successor_packet_id),
+            )
+            or not _disposition_context_matches_transition_v01(
+                event,
+                causes[1],
+            )
+        ):
+            _reason_v01(reasons, "unclaimed_predecessor_transfer_forbidden")
+        _reason_v01(
+            reasons,
+            "authority_transition_requires_g2a3_binding",
+        )
+        return
+    if event.event_class in {
+        "TRANSFER_RENEWAL",
+        "TRANSFER_SUPERSESSION",
+    }:
+        _reason_v01(reasons, "authority_transition_requires_g2a3_binding")
+        return
+    if event.event_class == "CONSUME":
+        expected_codes = (
+            "effect_consumption_evidence_valid",
+            "mock_adapter_result_valid",
+        )
+        expected_rule = "g2a_t04_fulfill_mock"
+    elif event.event_class == "UNCERTAIN_CLOSE":
+        expected_codes = (
+            "adapter_invocation_evidence_valid",
+            "effect_outcome_unresolved",
+        )
+        expected_rule = "g2a_t26_uncertain_adapter_outcome"
+    elif event.event_class == "RECEIPT_CONFIRM":
+        expected_codes = (
+            "fulfillment_consumption_evidence_valid",
+            "terminal_receipt_valid",
+        )
+        expected_rule = "g2a_t05_receipt"
+    else:
+        return
+    if (
+        rule_ids != (expected_rule,)
+        or causes[0].packet_id != event.to_owner_packet_id
+        or not _disposition_context_matches_transition_v01(event, causes[0])
+        or event.evidence_refs
+        != _binding_ids_for_codes_v01(causes[0], expected_codes)
+    ):
+        _reason_v01(reasons, "atomic_outcome_disposition_invalid")
+
+
+def _binding_ids_for_codes_v01(
+    event: ActionPacketTransitionEventV01,
+    codes: tuple[str, ...],
+) -> tuple[str, ...]:
+    selected = tuple(
+        binding.transition_evidence_binding_id
+        for binding in event.transition_evidence_bindings
+        if binding.evidence_code in codes
+    )
+    return tuple(sorted(selected, key=lambda item: item.encode("utf-8")))
+
+
+def _disposition_context_matches_transition_v01(
+    disposition_event: IdempotencyDispositionEventV01,
+    transition_event: ActionPacketTransitionEventV01,
+) -> bool:
+    return (
+        disposition_event.evaluation_time == transition_event.evaluation_time
+        and disposition_event.evaluation_time_source
+        == transition_event.evaluation_time_source
+        and disposition_event.evaluation_context_id
+        == transition_event.evaluation_context_id
+    )
+
+
+def _same_logical_effect_entries_v01(
+    predecessor: ActionPacketLifecycleEntryV01 | None,
+    successor: ActionPacketLifecycleEntryV01 | None,
+) -> bool:
+    if (
+        type(predecessor) is not ActionPacketLifecycleEntryV01
+        or type(successor) is not ActionPacketLifecycleEntryV01
+    ):
+        return False
+    predecessor_projection = predecessor.root_bound_genesis.canonical_projection
+    successor_projection = successor.root_bound_genesis.canonical_projection
+    return (
+        predecessor_projection.logical_intent.root_owned_intent_id
+        == successor_projection.logical_intent.root_owned_intent_id
+        and predecessor_projection.idempotency_identity.idempotency_key
+        == successor_projection.idempotency_identity.idempotency_key
+    )
+
+
+def _validate_registry_state_disposition_coherence_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    state: ActionPacketLifecycleStateV01,
+    dispositions: tuple[IdempotencyDispositionEventV01, ...],
+    reasons: list[str],
+) -> None:
+    events = entry.transition_events
+    packet_id = state.packet_id
+    latest_rule = events[-1].transition_rule_id if events else None
+    reserve_events = tuple(
+        event
+        for event in dispositions
+        if event.idempotency_key == state.idempotency_key
+        and event.event_class == "RESERVE"
+        and event.to_owner_packet_id == packet_id
+    )
+    expected_reserved_rules = {
+        "g2a_t01_activate_root_authorization",
+        "g2a_t02_queue",
+        "g2a_t03_pending",
+        "g2a_t07_authorized_block",
+        "g2a_t08_queued_block",
+        "g2a_t09_pending_block",
+        "g2a_t10_failed_block",
+        "g2a_t12_authorized_expire",
+        "g2a_t13_queued_expire",
+        "g2a_t14_pending_expire",
+        "g2a_t15_failed_expire",
+        "g2a_t24_nonconsuming_failure",
+        "g2a_t25_retry",
+    }
+    if latest_rule in expected_reserved_rules and not (
+        state.idempotency_disposition == "RESERVED"
+        and state.reservation_owner_packet_id == packet_id
+        and len(reserve_events) == 1
+    ):
+        _reason_v01(reasons, "action_packet_registry_reservation_mismatch")
+    if latest_rule in {
+        "g2a_t04_fulfill_mock",
+        "g2a_t05_receipt",
+    } and not (
+        state.idempotency_disposition == "CONSUMED"
+        and state.reservation_owner_packet_id == packet_id
+    ):
+        _reason_v01(reasons, "action_packet_registry_consumption_mismatch")
+    if latest_rule == "g2a_t26_uncertain_adapter_outcome" and not (
+        state.idempotency_disposition == "UNCERTAIN_CLOSED"
+        and state.reservation_owner_packet_id == packet_id
+    ):
+        _reason_v01(reasons, "action_packet_registry_uncertain_close_mismatch")
+    cause_classes = {
+        "g2a_t01_activate_root_authorization": "RESERVE",
+        "g2a_t04_fulfill_mock": "CONSUME",
+        "g2a_t05_receipt": "RECEIPT_CONFIRM",
+        "g2a_t26_uncertain_adapter_outcome": "UNCERTAIN_CLOSE",
+    }
+    for transition in events:
+        expected_class = cause_classes.get(transition.transition_rule_id)
+        matching = tuple(
+            event
+            for event in dispositions
+            if transition.transition_event_id
+            in event.cause_transition_event_ids
+            and event.event_class == expected_class
+        )
+        if expected_class is not None and len(matching) != 1:
+            _reason_v01(reasons, "action_packet_registry_atomic_pair_missing")
+        if (
+            transition.transition_rule_id
+            == "g2a_t24_nonconsuming_failure"
+            and any(
+                transition.transition_event_id
+                in event.cause_transition_event_ids
+                for event in dispositions
+            )
+        ):
+            _reason_v01(reasons, "disposition_history_changed")
+    for index, transition in enumerate(events):
+        if transition.transition_rule_id != "g2a_t24_nonconsuming_failure":
+            continue
+        disposition_before = _derive_disposition_before_transition_v01(
+            entry,
+            dispositions,
+            transition_index=index,
+        )
+        if not _t24_latest_disposition_binding_is_exact_v01(
+            transition,
+            disposition_before,
+        ):
+            _reason_v01(
+                reasons,
+                "latest_disposition_event_binding_invalid",
+            )
+    if state.lifecycle_state == "RECEIPT_RECEIVED" and (
+        state.terminal_receipt_ref is None
+        or state.idempotency_disposition != "CONSUMED"
+    ):
+        _reason_v01(reasons, "action_packet_registry_receipt_state_invalid")
+
+
+def _derive_disposition_before_transition_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    dispositions: tuple[IdempotencyDispositionEventV01, ...],
+    *,
+    transition_index: int,
+) -> IdempotencyDispositionStateV01:
+    prefix_transition_ids = {
+        event.transition_event_id
+        for event in entry.transition_events[:transition_index]
+    }
+    key = (
+        entry.root_bound_genesis.canonical_projection.idempotency_identity
+        .idempotency_key
+    )
+    historical_events = tuple(
+        event
+        for event in dispositions
+        if event.idempotency_key == key
+        and all(
+            cause_id in prefix_transition_ids
+            for cause_id in event.cause_transition_event_ids
+        )
+    )
+    return _derive_idempotency_disposition_unchecked_v01(
+        historical_events,
+        key,
+    )
+
+
+def _t24_latest_disposition_binding_is_exact_v01(
+    transition_event: object,
+    disposition_state: object,
+) -> bool:
+    try:
+        if type(disposition_state) is IdempotencyDispositionStateV01:
+            disposition = disposition_state.disposition
+        elif type(disposition_state) is ActionPacketLifecycleStateV01:
+            disposition = disposition_state.idempotency_disposition
+        else:
+            return False
+        if (
+            type(transition_event) is not ActionPacketTransitionEventV01
+            or transition_event.transition_rule_id
+            != "g2a_t24_nonconsuming_failure"
+            or disposition != "RESERVED"
+            or disposition_state.reservation_owner_packet_id
+            != transition_event.packet_id
+            or type(disposition_state.latest_disposition_event_id) is not str
+        ):
+            return False
+        latest_id = disposition_state.latest_disposition_event_id
+        if not validate_prefixed_sha256_identity_v01(
+            latest_id,
+            prefix=IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01,
+        )[0]:
+            return False
+        matching = tuple(
+            binding
+            for binding in transition_event.transition_evidence_bindings
+            if binding.evidence_code
+            == "latest_disposition_event_binding_valid"
+        )
+        if len(matching) != 1:
+            return False
+        binding = matching[0]
+        digest = latest_id[len(IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01) :]
+        return (
+            type(binding.evidence_ref) is str
+            and binding.evidence_ref == latest_id
+            and type(binding.evidence_sha256) is str
+            and binding.evidence_sha256 == digest
+            and type(binding.validator_profile_id) is str
+            and binding.validator_profile_id
+            == IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01
+            and type(binding.validation_status) is str
+            and binding.validation_status == "PASS"
+        )
+    except Exception:
+        return False
+
+
+def record_action_packet_genesis_v01(
+    registry: object,
+    *,
+    root_bound_genesis: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    try:
+        _require_valid_action_packet_registry_v01(registry)
+        transition_registry = _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        genesis_valid, genesis_reasons = (
+            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                root_bound_genesis
+            )
+        )
+        if not genesis_valid:
+            raise ValueError(genesis_reasons[0])
+        packet_id = root_bound_genesis.packet_identity.packet_id
+        idempotency_key = (
+            root_bound_genesis.canonical_projection.idempotency_identity
+            .idempotency_key
+        )
+        if any(
+            entry.root_bound_genesis.packet_identity.packet_id == packet_id
+            for entry in registry.action_packet_lifecycle_entries
+        ):
+            raise ValueError("action_packet_registry_duplicate_genesis")
+        existing_same_key = tuple(
+            entry
+            for entry in registry.action_packet_lifecycle_entries
+            if (
+                entry.root_bound_genesis.canonical_projection
+                .idempotency_identity.idempotency_key
+                == idempotency_key
+            )
+        )
+        stable_intent_id = (
+            root_bound_genesis.canonical_projection.logical_intent
+            .root_owned_intent_id
+        )
+        if any(
+            entry.root_bound_genesis.canonical_projection.logical_intent
+            .root_owned_intent_id
+            != stable_intent_id
+            for entry in existing_same_key
+        ):
+            raise ValueError("logical_effect_identity_alias_forbidden")
+        disposition = _derive_idempotency_disposition_unchecked_v01(
+            registry.idempotency_disposition_events,
+            idempotency_key,
+        )
+        if disposition.disposition == "CONSUMED":
+            raise ValueError("consumed_key_permanently_closed")
+        if disposition.disposition == "UNCERTAIN_CLOSED":
+            raise ValueError("uncertain_key_permanently_closed")
+        entry = build_action_packet_lifecycle_entry_v01(
+            root_bound_genesis=root_bound_genesis,
+            action_packet_transition_registry_profile=transition_registry,
+        )
+        proposed = _registry_with_g2a_histories_v01(
+            registry,
+            lifecycle_entries=registry.action_packet_lifecycle_entries + (entry,),
+        )
+        _require_valid_action_packet_registry_v01(proposed)
+        return proposed
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_genesis_record_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_genesis_record_invalid") from None
+
+
+def activate_action_packet_lifecycle_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    transition_event: object,
+    disposition_event: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    try:
+        _require_valid_action_packet_registry_v01(registry)
+        transition_registry = _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        entry = _find_lifecycle_entry_v01(registry, packet_id)
+        state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            entry,
+            registry.idempotency_disposition_events,
+        )
+        if state.lifecycle_state != "CREATED" or entry.transition_events:
+            raise ValueError("action_packet_lifecycle_activation_state_invalid")
+        if (
+            type(transition_event) is not ActionPacketTransitionEventV01
+            or transition_event.transition_rule_id
+            != "g2a_t01_activate_root_authorization"
+        ):
+            raise ValueError("action_packet_lifecycle_activation_event_invalid")
+        if (
+            type(disposition_event) is not IdempotencyDispositionEventV01
+            or disposition_event.event_class != "RESERVE"
+        ):
+            raise ValueError("action_packet_lifecycle_activation_reserve_invalid")
+        temporal_reason = _action_packet_transition_temporal_reason_v01(
+            entry.root_bound_genesis,
+            transition_event,
+        )
+        if temporal_reason is not None:
+            raise ValueError(temporal_reason)
+        if disposition_event.predecessor_packet_id is not None:
+            raise ValueError("authority_transition_requires_g2a3_binding")
+        if disposition_event.successor_packet_id is not None:
+            raise ValueError("action_packet_lifecycle_activation_pair_invalid")
+        canonical_key = (
+            entry.root_bound_genesis.canonical_projection.idempotency_identity
+            .idempotency_key
+        )
+        same_key_entry_count = sum(
+            candidate.root_bound_genesis.canonical_projection
+            .idempotency_identity.idempotency_key
+            == canonical_key
+            for candidate in registry.action_packet_lifecycle_entries
+        )
+        if same_key_entry_count != 1:
+            raise ValueError("authority_transition_requires_g2a3_binding")
+        _validate_activation_pair_v01(
+            registry,
+            entry,
+            transition_event,
+            disposition_event,
+        )
+        updated_entry = ActionPacketLifecycleEntryV01(
+            root_bound_genesis=entry.root_bound_genesis,
+            transition_registry_id=entry.transition_registry_id,
+            transition_events=(transition_event,),
+        )
+        proposed = _registry_replace_entry_and_dispositions_v01(
+            registry,
+            old_entry=entry,
+            new_entry=updated_entry,
+            disposition_events=(
+                registry.idempotency_disposition_events
+                + (disposition_event,)
+            ),
+        )
+        _require_valid_action_packet_registry_v01(proposed)
+        return proposed
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_lifecycle_activation_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_lifecycle_activation_invalid") from None
+
+
+def append_action_packet_lifecycle_transition_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    transition_event: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    try:
+        _require_valid_action_packet_registry_v01(registry)
+        _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        if type(transition_event) is not ActionPacketTransitionEventV01:
+            raise ValueError("action_packet_lifecycle_transition_invalid")
+        blocked_rules = {
+            "g2a_t01_activate_root_authorization",
+            "g2a_t04_fulfill_mock",
+            "g2a_t05_receipt",
+            "g2a_t24_nonconsuming_failure",
+            "g2a_t26_uncertain_adapter_outcome",
+        }
+        authority_rules = {
+            "g2a_t16_authorized_revoke",
+            "g2a_t17_queued_revoke",
+            "g2a_t18_pending_revoke",
+            "g2a_t19_failed_revoke",
+            "g2a_t20_authorized_supersede",
+            "g2a_t21_queued_supersede",
+            "g2a_t22_pending_supersede",
+            "g2a_t23_failed_supersede",
+        }
+        if transition_event.transition_rule_id in authority_rules:
+            raise ValueError("authority_transition_requires_g2a3_binding")
+        if transition_event.transition_rule_id in {
+            "g2a_t06_created_block",
+            "g2a_t07_authorized_block",
+            "g2a_t08_queued_block",
+            "g2a_t09_pending_block",
+            "g2a_t10_failed_block",
+        }:
+            raise ValueError("invalidation_transition_requires_g2a3_binding")
+        if transition_event.transition_rule_id in blocked_rules:
+            raise ValueError("action_packet_transition_requires_atomic_operation")
+        allowed_rules = {
+            "g2a_t02_queue",
+            "g2a_t03_pending",
+            "g2a_t06_created_block",
+            "g2a_t07_authorized_block",
+            "g2a_t08_queued_block",
+            "g2a_t09_pending_block",
+            "g2a_t10_failed_block",
+            "g2a_t11_created_expire",
+            "g2a_t12_authorized_expire",
+            "g2a_t13_queued_expire",
+            "g2a_t14_pending_expire",
+            "g2a_t15_failed_expire",
+            "g2a_t25_retry",
+        }
+        if transition_event.transition_rule_id not in allowed_rules:
+            raise ValueError("action_packet_lifecycle_transition_invalid")
+        entry = _find_lifecycle_entry_v01(registry, packet_id)
+        temporal_reason = _action_packet_transition_temporal_reason_v01(
+            entry.root_bound_genesis,
+            transition_event,
+        )
+        if temporal_reason is not None:
+            raise ValueError(temporal_reason)
+        state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            entry,
+            registry.idempotency_disposition_events,
+        )
+        if transition_event.transition_rule_id not in {
+            "g2a_t06_created_block",
+            "g2a_t11_created_expire",
+        } and not (
+            state.idempotency_disposition == "RESERVED"
+            and state.reservation_owner_packet_id == packet_id
+        ):
+            raise ValueError("idempotency_reservation_invalid")
+        if transition_event.transition_rule_id == "g2a_t25_retry":
+            if (
+                state.failed_provenance != "FAILED_NON_CONSUMING"
+                or state.terminal_receipt_ref is not None
+            ):
+                raise ValueError("failed_provenance_invalid")
+            if (
+                entry.root_bound_genesis.canonical_projection.authority_policy
+                .retry_policy
+                != "NON_CONSUMING_RETRY"
+            ):
+                raise ValueError("retry_policy_invalid")
+        return _append_transition_and_validate_registry_v01(
+            registry,
+            entry,
+            transition_event,
+        )
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_lifecycle_transition_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_lifecycle_transition_invalid") from None
+
+
+def record_action_packet_consumed_outcome_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    transition_event: object,
+    disposition_event: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    return _record_atomic_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=transition_event,
+        disposition_event=disposition_event,
+        action_packet_transition_registry_profile=(
+            action_packet_transition_registry_profile
+        ),
+        required_source_state="PENDING_FULFILLMENT",
+        transition_rule_id="g2a_t04_fulfill_mock",
+        disposition_event_class="CONSUME",
+        failure_reason="action_packet_consumed_outcome_invalid",
+    )
+
+
+def record_action_packet_nonconsuming_outcome_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    transition_event: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    try:
+        _require_valid_action_packet_registry_v01(registry)
+        _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        entry = _find_lifecycle_entry_v01(registry, packet_id)
+        state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            entry,
+            registry.idempotency_disposition_events,
+        )
+        if not (
+            state.lifecycle_state == "PENDING_FULFILLMENT"
+            and state.idempotency_disposition == "RESERVED"
+            and state.reservation_owner_packet_id == packet_id
+            and type(transition_event) is ActionPacketTransitionEventV01
+            and transition_event.transition_rule_id
+            == "g2a_t24_nonconsuming_failure"
+        ):
+            raise ValueError("action_packet_nonconsuming_outcome_invalid")
+        _require_live_attempt_context_continuity_v01(entry, transition_event)
+        if not _t24_latest_disposition_binding_is_exact_v01(
+            transition_event,
+            state,
+        ):
+            raise ValueError("latest_disposition_event_binding_invalid")
+        before_history = registry.idempotency_disposition_events
+        before_bytes = _disposition_history_bytes_v01(before_history)
+        before_latest = state.latest_disposition_event_id
+        proposed = _append_transition_and_validate_registry_v01(
+            registry,
+            entry,
+            transition_event,
+        )
+        after_state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            _find_lifecycle_entry_v01(proposed, packet_id),
+            proposed.idempotency_disposition_events,
+        )
+        if (
+            proposed.idempotency_disposition_events is not before_history
+            or proposed.idempotency_disposition_events != before_history
+            or _disposition_history_bytes_v01(
+                proposed.idempotency_disposition_events
+            )
+            != before_bytes
+            or after_state.latest_disposition_event_id != before_latest
+            or after_state.idempotency_disposition != "RESERVED"
+            or after_state.reservation_owner_packet_id != packet_id
+        ):
+            raise ValueError("disposition_history_changed")
+        return proposed
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_nonconsuming_outcome_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_nonconsuming_outcome_invalid") from None
+
+
+def record_action_packet_uncertain_outcome_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    transition_event: object,
+    disposition_event: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    return _record_atomic_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=transition_event,
+        disposition_event=disposition_event,
+        action_packet_transition_registry_profile=(
+            action_packet_transition_registry_profile
+        ),
+        required_source_state="PENDING_FULFILLMENT",
+        transition_rule_id="g2a_t26_uncertain_adapter_outcome",
+        disposition_event_class="UNCERTAIN_CLOSE",
+        failure_reason="action_packet_uncertain_outcome_invalid",
+    )
+
+
+def record_action_packet_receipt_confirmation_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    transition_event: object,
+    disposition_event: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    return _record_atomic_outcome_v01(
+        registry,
+        packet_id=packet_id,
+        transition_event=transition_event,
+        disposition_event=disposition_event,
+        action_packet_transition_registry_profile=(
+            action_packet_transition_registry_profile
+        ),
+        required_source_state="FULFILLED_MOCK",
+        transition_rule_id="g2a_t05_receipt",
+        disposition_event_class="RECEIPT_CONFIRM",
+        failure_reason="action_packet_receipt_confirmation_invalid",
+    )
+
+
+def _record_atomic_outcome_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    transition_event: object,
+    disposition_event: object,
+    action_packet_transition_registry_profile: object,
+    required_source_state: str,
+    transition_rule_id: str,
+    disposition_event_class: str,
+    failure_reason: str,
+) -> ActionCommitPacketRegistryV02:
+    try:
+        _require_valid_action_packet_registry_v01(registry)
+        _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        entry = _find_lifecycle_entry_v01(registry, packet_id)
+        state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            entry,
+            registry.idempotency_disposition_events,
+        )
+        required_disposition = (
+            "CONSUMED"
+            if transition_rule_id == "g2a_t05_receipt"
+            else "RESERVED"
+        )
+        if not (
+            state.lifecycle_state == required_source_state
+            and state.idempotency_disposition == required_disposition
+            and state.reservation_owner_packet_id == packet_id
+            and type(transition_event) is ActionPacketTransitionEventV01
+            and transition_event.transition_rule_id == transition_rule_id
+            and type(disposition_event) is IdempotencyDispositionEventV01
+            and disposition_event.event_class == disposition_event_class
+            and disposition_event.cause_transition_event_ids
+            == (transition_event.transition_event_id,)
+            and disposition_event.previous_disposition_event_id
+            == state.latest_disposition_event_id
+        ):
+            raise ValueError(failure_reason)
+        _require_live_attempt_context_continuity_v01(entry, transition_event)
+        updated_entry = ActionPacketLifecycleEntryV01(
+            root_bound_genesis=entry.root_bound_genesis,
+            transition_registry_id=entry.transition_registry_id,
+            transition_events=entry.transition_events + (transition_event,),
+        )
+        proposed = _registry_replace_entry_and_dispositions_v01(
+            registry,
+            old_entry=entry,
+            new_entry=updated_entry,
+            disposition_events=(
+                registry.idempotency_disposition_events
+                + (disposition_event,)
+            ),
+        )
+        _require_valid_action_packet_registry_v01(proposed)
+        return proposed
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(exc, fallback=failure_reason)
+        ) from None
+    except Exception:
+        raise ValueError(failure_reason) from None
+
+
+def _require_live_attempt_context_continuity_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    transition_event: ActionPacketTransitionEventV01,
+) -> None:
+    expected_predecessor_rule = {
+        "g2a_t04_fulfill_mock": "g2a_t03_pending",
+        "g2a_t24_nonconsuming_failure": "g2a_t03_pending",
+        "g2a_t26_uncertain_adapter_outcome": "g2a_t03_pending",
+        "g2a_t05_receipt": "g2a_t04_fulfill_mock",
+    }.get(transition_event.transition_rule_id)
+    if expected_predecessor_rule is None:
+        return
+    if not entry.transition_events:
+        raise ValueError("action_packet_transition_attempt_context_mismatch")
+    predecessor = entry.transition_events[-1]
+    if (
+        predecessor.transition_rule_id != expected_predecessor_rule
+        or type(predecessor.execution_attempt_id) is not str
+        or type(transition_event.execution_attempt_id) is not str
+        or transition_event.execution_attempt_id
+        != predecessor.execution_attempt_id
+        or type(predecessor.evaluation_context_id) is not str
+        or type(transition_event.evaluation_context_id) is not str
+        or transition_event.evaluation_context_id
+        != predecessor.evaluation_context_id
+    ):
+        raise ValueError("action_packet_transition_attempt_context_mismatch")
+
+
+def _validate_activation_pair_v01(
+    registry: ActionCommitPacketRegistryV02,
+    entry: ActionPacketLifecycleEntryV01,
+    transition_event: ActionPacketTransitionEventV01,
+    disposition_event: IdempotencyDispositionEventV01,
+) -> None:
+    genesis = entry.root_bound_genesis
+    packet_id = genesis.packet_identity.packet_id
+    canonical = genesis.canonical_projection
+    idempotency_key = canonical.idempotency_identity.idempotency_key
+    source_root_id = (
+        genesis.root_decision_projection.root_decision_result.decision_id
+    )
+    event_valid, _ = validate_action_packet_transition_event_v01(
+        transition_event,
+        action_packet_transition_registry_profile=(
+            build_action_packet_transition_registry_profile_v01()
+        ),
+    )
+    disposition_valid, _ = validate_idempotency_disposition_event_v01(
+        disposition_event
+    )
+    if not event_valid or not disposition_valid:
+        raise ValueError("action_packet_lifecycle_activation_pair_invalid")
+    if not (
+        transition_event.packet_id == packet_id
+        and transition_event.idempotency_key == idempotency_key
+        and transition_event.owning_local_root_id
+        == canonical.owning_local_root_id
+        and transition_event.dependency_set_candidate_fingerprint
+        == canonical.dependency_set_candidate_fingerprint
+        and transition_event.temporal_authority_fingerprint
+        == canonical.temporal_authority_fingerprint
+        and transition_event.previous_transition_event_id is None
+        and transition_event.root_decision_ref == source_root_id
+        and disposition_event.idempotency_key == idempotency_key
+        and disposition_event.to_owner_packet_id == packet_id
+        and disposition_event.root_decision_ref == source_root_id
+        and disposition_event.cause_transition_event_ids[-1]
+        == transition_event.transition_event_id
+    ):
+        raise ValueError("action_packet_lifecycle_activation_pair_invalid")
+    current = _derive_idempotency_disposition_unchecked_v01(
+        registry.idempotency_disposition_events,
+        idempotency_key,
+    )
+    if current.disposition != "UNCLAIMED":
+        raise ValueError("idempotency_acquisition_invalid")
+    if disposition_event.predecessor_packet_id is None:
+        if disposition_event.cause_transition_event_ids != (
+            transition_event.transition_event_id,
+        ):
+            raise ValueError("action_packet_lifecycle_activation_pair_invalid")
+        return
+    predecessor = _find_lifecycle_entry_v01(
+        registry,
+        disposition_event.predecessor_packet_id,
+    )
+    predecessor_state = _derive_action_packet_lifecycle_state_unchecked_v01(
+        predecessor,
+        registry.idempotency_disposition_events,
+    )
+    if not (
+        disposition_event.successor_packet_id == packet_id
+        and predecessor_state.lifecycle_state == "EXPIRED"
+        and predecessor.transition_events
+        and predecessor.transition_events[-1].transition_rule_id
+        == "g2a_t11_created_expire"
+        and disposition_event.cause_transition_event_ids
+        == (
+            predecessor.transition_events[-1].transition_event_id,
+            transition_event.transition_event_id,
+        )
+        and _same_logical_effect_entries_v01(predecessor, entry)
+    ):
+        raise ValueError("unclaimed_predecessor_transfer_forbidden")
+
+
+def _append_transition_and_validate_registry_v01(
+    registry: ActionCommitPacketRegistryV02,
+    entry: ActionPacketLifecycleEntryV01,
+    transition_event: ActionPacketTransitionEventV01,
+) -> ActionCommitPacketRegistryV02:
+    updated_entry = ActionPacketLifecycleEntryV01(
+        root_bound_genesis=entry.root_bound_genesis,
+        transition_registry_id=entry.transition_registry_id,
+        transition_events=entry.transition_events + (transition_event,),
+    )
+    proposed = _registry_replace_entry_and_dispositions_v01(
+        registry,
+        old_entry=entry,
+        new_entry=updated_entry,
+        disposition_events=registry.idempotency_disposition_events,
+    )
+    _require_valid_action_packet_registry_v01(proposed)
+    return proposed
+
+
+def _registry_replace_entry_and_dispositions_v01(
+    registry: ActionCommitPacketRegistryV02,
+    *,
+    old_entry: ActionPacketLifecycleEntryV01,
+    new_entry: ActionPacketLifecycleEntryV01,
+    disposition_events: tuple[IdempotencyDispositionEventV01, ...],
+) -> ActionCommitPacketRegistryV02:
+    entries = tuple(
+        new_entry if entry is old_entry else entry
+        for entry in registry.action_packet_lifecycle_entries
+    )
+    if sum(entry is old_entry for entry in registry.action_packet_lifecycle_entries) != 1:
+        raise ValueError("action_packet_lifecycle_entry_not_found")
+    return _registry_with_g2a_histories_v01(
+        registry,
+        lifecycle_entries=entries,
+        disposition_events=disposition_events,
+    )
+
+
+def _registry_with_g2a_histories_v01(
+    registry: ActionCommitPacketRegistryV02,
+    *,
+    lifecycle_entries: tuple[ActionPacketLifecycleEntryV01, ...] | None = None,
+    disposition_events: tuple[IdempotencyDispositionEventV01, ...] | None = None,
+) -> ActionCommitPacketRegistryV02:
+    return ActionCommitPacketRegistryV02(
+        registry_id=registry.registry_id,
+        seen_packet_ids=registry.seen_packet_ids,
+        used_idempotency_keys=registry.used_idempotency_keys,
+        terminal_receipt_packet_ids=registry.terminal_receipt_packet_ids,
+        terminal_receipt_idempotency_keys=(
+            registry.terminal_receipt_idempotency_keys
+        ),
+        expired_packet_ids=registry.expired_packet_ids,
+        failed_packet_ids=registry.failed_packet_ids,
+        local_proof_only=registry.local_proof_only,
+        production_persistence=registry.production_persistence,
+        global_drs_write=registry.global_drs_write,
+        external_drs_write=registry.external_drs_write,
+        creates_permission=registry.creates_permission,
+        creates_receipt=registry.creates_receipt,
+        executes_payment=registry.executes_payment,
+        releases_shipment=registry.releases_shipment,
+        real_world_effects_count=registry.real_world_effects_count,
+        action_packet_lifecycle_entries=(
+            registry.action_packet_lifecycle_entries
+            if lifecycle_entries is None
+            else lifecycle_entries
+        ),
+        idempotency_disposition_events=(
+            registry.idempotency_disposition_events
+            if disposition_events is None
+            else disposition_events
+        ),
+    )
+
+
+def _require_valid_action_packet_registry_v01(
+    registry: object,
+) -> None:
+    valid, reasons = validate_action_commit_packet_registry_v02(registry)
+    if not valid:
+        raise ValueError(reasons[0])
+
+
+def _disposition_history_bytes_v01(
+    history: tuple[IdempotencyDispositionEventV01, ...],
+) -> bytes:
+    return canonical_json_bytes_v01(
+        tuple(
+            idempotency_disposition_event_material_v01(event)
+            for event in history
+        )
+    )

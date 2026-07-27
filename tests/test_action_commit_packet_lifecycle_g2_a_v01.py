@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, fields, replace
 from decimal import Decimal
+from functools import wraps
 from pathlib import Path
 
 import pytest
@@ -12961,3 +12962,449 @@ def test_g2a3a_public_validators_are_total(malformed: object) -> None:
     )
     for validator in validators:
         assert validator(malformed)[0] is False
+
+
+def test_g2a_validation_pass_preserves_malformed_transition_reason_contract(
+    root_bound_fixture: _RootBoundFixtureV01,
+) -> None:
+    registry = _g2a2b_recorded_genesis(
+        root_bound_fixture.root_bound_projection
+    )
+    entry = registry.action_packet_lifecycle_entries[0]
+    expected = (
+        False,
+        ("action_packet_registry_lifecycle_entry_invalid",),
+    )
+    for malformed in (None, 1, {}, "x", [], (object(),)):
+        malformed_entry = replace(entry, transition_events=malformed)
+        malformed_registry = replace(
+            registry,
+            action_packet_lifecycle_entries=(malformed_entry,),
+        )
+        assert (
+            acp.validate_action_commit_packet_registry_v02(
+                malformed_registry
+            )
+            == expected
+        )
+
+
+def _g2a_validation_representative_registry(
+    fixture: _G2A3AFixtureV01,
+) -> acp.ActionCommitPacketRegistryV02:
+    material_fixture = _g2a3b2_material_fixture_for_amount(
+        fixture,
+        amount="1700.00",
+        reason="MATERIAL_EFFECT_LINEAGE_ROOT",
+    )
+    registry = _g2a3b2_registry_for_state(
+        material_fixture,
+        "ROOT_AUTHORIZED",
+    )
+    registry, _, _, _ = _g2a3b2_apply(
+        registry,
+        material_fixture,
+        branch="MATERIAL",
+    )
+    renewal_fixture = _g2a3b2_next_same_key_generation(
+        material_fixture,
+        supersession_reason_class="RENEWAL",
+        variation="TTL",
+    )
+    registry = acp.record_action_packet_genesis_v01(
+        registry,
+        root_bound_genesis=renewal_fixture.successor,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    registry, _, _, _ = _g2a3b2_apply(
+        registry,
+        renewal_fixture,
+        branch="ACTIVE",
+        predecessor_rule="g2a_t20_authorized_supersede",
+    )
+    return registry
+
+
+def test_g2a_validation_pass_preserves_unique_packet_lookup_semantics(
+    g2a3a_fixture: _G2A3AFixtureV01,
+) -> None:
+    registry = _g2a_validation_representative_registry(g2a3a_fixture)
+    entries = registry.action_packet_lifecycle_entries
+    context = registry.action_packet_invalidation_contexts[-1]
+    predecessor_entry = next(
+        entry
+        for entry in entries
+        if entry.root_bound_genesis.packet_identity.packet_id
+        == context.invalidation_evidence.packet_id
+    )
+    successor_entry = next(
+        entry
+        for entry in entries
+        if entry.root_bound_genesis.packet_identity.packet_id
+        == context.supersession_successor_packet_id
+    )
+    predecessor_id = (
+        predecessor_entry.root_bound_genesis.packet_identity.packet_id
+    )
+    successor_id = successor_entry.root_bound_genesis.packet_identity.packet_id
+    validation_pass = acp._ActionPacketRegistryValidationPassV01(registry)
+
+    assert acp._unique_lifecycle_entry_from_validation_pass_v01(
+        validation_pass,
+        predecessor_id,
+    ) is predecessor_entry
+    assert acp._find_lifecycle_entry_v01(
+        registry,
+        predecessor_id,
+    ) is predecessor_entry
+    missing_id = "acp_v02:" + "9" * 64
+    for lookup in (
+        lambda: acp._unique_lifecycle_entry_from_validation_pass_v01(
+            validation_pass,
+            missing_id,
+        ),
+        lambda: acp._find_lifecycle_entry_v01(registry, missing_id),
+    ):
+        with pytest.raises(
+            ValueError,
+            match="^action_packet_lifecycle_entry_not_found$",
+        ):
+            lookup()
+
+    for duplicate_entry in (predecessor_entry, successor_entry):
+        forged = replace(
+            registry,
+            action_packet_lifecycle_entries=entries + (duplicate_entry,),
+        )
+        forged_pass = acp._ActionPacketRegistryValidationPassV01(forged)
+        duplicate_id = (
+            duplicate_entry.root_bound_genesis.packet_identity.packet_id
+        )
+        assert len(forged_pass.entries_by_packet_id[duplicate_id]) == 2
+        for lookup in (
+            lambda: acp._unique_lifecycle_entry_from_validation_pass_v01(
+                forged_pass,
+                duplicate_id,
+            ),
+            lambda: acp._find_lifecycle_entry_v01(forged, duplicate_id),
+        ):
+            with pytest.raises(
+                ValueError,
+                match="^action_packet_lifecycle_entry_not_found$",
+            ):
+                lookup()
+        bundle_valid, _, matched_disposition = (
+            acp._cached_registry_supersession_bundle_v01(
+                forged_pass,
+                context,
+            )
+        )
+        assert bundle_valid is False
+        assert matched_disposition is None
+        valid, reasons = acp.validate_action_commit_packet_registry_v02(
+            forged
+        )
+        assert valid is False
+        assert reasons[0] == "action_packet_registry_duplicate_genesis"
+
+    assert successor_id != predecessor_id
+
+
+def test_g2a_validation_pass_bounds_exact_object_revalidation(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    registry = _g2a_validation_representative_registry(g2a3a_fixture)
+    calls = {
+        "registry": 0,
+        "histories": 0,
+        "bundle": 0,
+        "root_bound": 0,
+        "context": 0,
+        "linear_lookup": 0,
+    }
+
+    def wrap(name: str, counter: str) -> None:
+        original = getattr(acp, name)
+
+        @wraps(original)
+        def counted(*args: object, **kwargs: object) -> object:
+            calls[counter] += 1
+            return original(*args, **kwargs)
+
+        monkeypatch.setattr(acp, name, counted)
+
+    wrap("validate_action_commit_packet_registry_v02", "registry")
+    wrap("_validate_registry_lifecycle_histories_v01", "histories")
+    wrap("_validate_registry_supersession_bundle_v01", "bundle")
+    wrap(
+        "validate_supplier_root_bound_action_commit_packet_v02_projection_v01",
+        "root_bound",
+    )
+    wrap("_validate_action_packet_invalidation_context_core_v01", "context")
+    wrap("_find_lifecycle_entry_v01", "linear_lookup")
+
+    assert acp.validate_action_commit_packet_registry_v02(registry) == (
+        True,
+        (),
+    )
+    exact_root_bound_objects = {
+        id(entry.root_bound_genesis)
+        for entry in registry.action_packet_lifecycle_entries
+    }
+    exact_context_inputs = {
+        (
+            id(context),
+            context.invalidation_evidence.packet_id,
+            context.supersession_successor_packet_id,
+        )
+        for context in registry.action_packet_invalidation_contexts
+    }
+    supersession_context_count = sum(
+        context.invalidation_evidence.invalidation_class
+        == "ROOT_SUPERSESSION"
+        for context in registry.action_packet_invalidation_contexts
+    )
+    assert calls == {
+        "registry": 1,
+        "histories": 1,
+        "bundle": supersession_context_count,
+        "root_bound": len(exact_root_bound_objects),
+        "context": len(exact_context_inputs),
+        "linear_lookup": 0,
+    }
+
+
+@pytest.fixture(scope="module")
+def _g2a_validation_reason_matrix_fixture() -> tuple[
+    acp.ActionCommitPacketRegistryV02,
+    acp.ActionCommitPacketRegistryV02,
+    acp.ActionCommitPacketRegistryV02,
+]:
+    root_fixture = root_bound_fixture.__wrapped__()
+    fixture = g2a3a_fixture.__wrapped__(root_fixture)
+    base = _g2a2b_recorded_genesis(fixture.predecessor)
+    activated, _, _ = _g2a2b_activate(
+        base,
+        fixture.predecessor.packet_identity.packet_id,
+    )
+    representative = _g2a_validation_representative_registry(fixture)
+    return base, activated, representative
+
+
+@pytest.mark.parametrize(
+    ("case", "expected"),
+    (
+        (
+            "wrong_lifecycle_tuple",
+            (False, ("action_packet_registry_lifecycle_entries_invalid",)),
+        ),
+        (
+            "wrong_disposition_tuple",
+            (False, ("action_packet_registry_disposition_events_invalid",)),
+        ),
+        (
+            "wrong_context_tuple",
+            (
+                False,
+                ("action_packet_registry_invalidation_contexts_invalid",),
+            ),
+        ),
+        (
+            "transition_none",
+            (False, ("action_packet_registry_lifecycle_entry_invalid",)),
+        ),
+        (
+            "transition_integer",
+            (False, ("action_packet_registry_lifecycle_entry_invalid",)),
+        ),
+        (
+            "transition_list",
+            (False, ("action_packet_registry_lifecycle_entry_invalid",)),
+        ),
+        (
+            "transition_string",
+            (False, ("action_packet_registry_lifecycle_entry_invalid",)),
+        ),
+        (
+            "malformed_transition",
+            (False, ("action_packet_registry_lifecycle_entry_invalid",)),
+        ),
+        (
+            "duplicate_genesis",
+            (
+                False,
+                (
+                    "action_packet_registry_duplicate_genesis",
+                    "authority_transition_requires_g2a3_binding",
+                ),
+            ),
+        ),
+        (
+            "duplicate_transition_identity",
+            (
+                False,
+                (
+                    "action_packet_registry_duplicate_genesis",
+                    "authority_transition_requires_g2a3_binding",
+                    "action_packet_registry_duplicate_transition_event",
+                ),
+            ),
+        ),
+        (
+            "duplicate_context",
+            (
+                False,
+                (
+                    "authority_transition_requires_g2a3_binding",
+                    "action_packet_registry_lifecycle_entry_invalid",
+                    "action_packet_registry_invalidation_context_duplicate",
+                    "action_packet_registry_accepted_binding_reused",
+                    "action_packet_registry_invalidation_context_reused",
+                    "action_packet_registry_invalidation_context_reordered",
+                    "action_packet_registry_cause_transition_missing",
+                ),
+            ),
+        ),
+        (
+            "duplicate_disposition",
+            (
+                False,
+                (
+                    "authority_transition_requires_g2a3_binding",
+                    "action_packet_supersession_disposition_invalid",
+                    "action_packet_registry_invalidation_context_orphan",
+                    "action_packet_registry_disposition_history_invalid",
+                ),
+            ),
+        ),
+        (
+            "missing_context_packet",
+            (
+                False,
+                (
+                    "authority_transition_requires_g2a3_binding",
+                    "action_packet_registry_lifecycle_entry_invalid",
+                    "action_packet_registry_invalidation_packet_missing",
+                    "action_packet_registry_cause_transition_missing",
+                ),
+            ),
+        ),
+        (
+            "missing_context_successor",
+            (
+                False,
+                (
+                    "authority_transition_requires_g2a3_binding",
+                    "action_packet_registry_lifecycle_entry_invalid",
+                    "action_packet_registry_invalidation_context_invalid",
+                    "action_packet_supersession_bundle_invalid",
+                    "action_packet_registry_invalidation_context_orphan",
+                    "action_packet_registry_cause_transition_missing",
+                ),
+            ),
+        ),
+    ),
+)
+def test_g2a_validation_pass_preserves_registry_reason_matrix(
+    case: str,
+    expected: tuple[bool, tuple[str, ...]],
+    _g2a_validation_reason_matrix_fixture: tuple[
+        acp.ActionCommitPacketRegistryV02,
+        acp.ActionCommitPacketRegistryV02,
+        acp.ActionCommitPacketRegistryV02,
+    ],
+) -> None:
+    base, activated, representative = (
+        _g2a_validation_reason_matrix_fixture
+    )
+    base_entry = base.action_packet_lifecycle_entries[0]
+    last_context = representative.action_packet_invalidation_contexts[-1]
+    last_disposition = representative.idempotency_disposition_events[-1]
+    missing_id = "acp_v02:" + "9" * 64
+    if case == "wrong_lifecycle_tuple":
+        forged = replace(base, action_packet_lifecycle_entries=[])
+    elif case == "wrong_disposition_tuple":
+        forged = replace(base, idempotency_disposition_events=[])
+    elif case == "wrong_context_tuple":
+        forged = replace(base, action_packet_invalidation_contexts=[])
+    elif case.startswith("transition_") or case == "malformed_transition":
+        malformed_by_case = {
+            "transition_none": None,
+            "transition_integer": 1,
+            "transition_list": [],
+            "transition_string": "x",
+            "malformed_transition": (object(),),
+        }
+        forged = replace(
+            base,
+            action_packet_lifecycle_entries=(
+                replace(
+                    base_entry,
+                    transition_events=malformed_by_case[case],
+                ),
+            ),
+        )
+    elif case == "duplicate_genesis":
+        forged = replace(
+            base,
+            action_packet_lifecycle_entries=(
+                base.action_packet_lifecycle_entries
+                + (base.action_packet_lifecycle_entries[0],)
+            ),
+        )
+    elif case == "duplicate_transition_identity":
+        forged = replace(
+            activated,
+            action_packet_lifecycle_entries=(
+                activated.action_packet_lifecycle_entries
+                + (activated.action_packet_lifecycle_entries[0],)
+            ),
+        )
+    elif case == "duplicate_context":
+        forged = replace(
+            representative,
+            action_packet_invalidation_contexts=(
+                representative.action_packet_invalidation_contexts
+                + (last_context,)
+            ),
+        )
+    elif case == "duplicate_disposition":
+        forged = replace(
+            representative,
+            idempotency_disposition_events=(
+                representative.idempotency_disposition_events
+                + (last_disposition,)
+            ),
+        )
+    elif case == "missing_context_packet":
+        forged = replace(
+            representative,
+            action_packet_invalidation_contexts=(
+                representative.action_packet_invalidation_contexts[:-1]
+                + (
+                    replace(
+                        last_context,
+                        invalidation_evidence=replace(
+                            last_context.invalidation_evidence,
+                            packet_id=missing_id,
+                        ),
+                    ),
+                )
+            ),
+        )
+    else:
+        assert case == "missing_context_successor"
+        forged = replace(
+            representative,
+            action_packet_invalidation_contexts=(
+                representative.action_packet_invalidation_contexts[:-1]
+                + (
+                    replace(
+                        last_context,
+                        supersession_successor_packet_id=missing_id,
+                    ),
+                )
+            ),
+        )
+    assert acp.validate_action_commit_packet_registry_v02(forged) == expected

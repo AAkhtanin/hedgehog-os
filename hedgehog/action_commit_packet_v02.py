@@ -746,12 +746,264 @@ def build_registry_with_terminal_receipt_v02(
     )
 
 
-def validate_action_commit_packet_registry_v02(
-    registry: object,
+class _ActionPacketRegistryValidationPassV01:
+    __slots__ = (
+        "registry",
+        "entries_by_packet_id",
+        "entries_by_idempotency_key",
+        "dispositions_by_to_owner_packet_id",
+        "context_by_object_id",
+        "root_bound_genesis_by_object_id",
+        "_root_bound_validation_cache",
+        "_invalidation_context_validation_cache",
+        "_supersession_bundle_cache",
+    )
+
+    def __init__(
+        self,
+        registry: ActionCommitPacketRegistryV02,
+    ) -> None:
+        entries_by_packet: dict[
+            str,
+            list[ActionPacketLifecycleEntryV01],
+        ] = {}
+        entries_by_key: dict[
+            str,
+            list[ActionPacketLifecycleEntryV01],
+        ] = {}
+        root_bound_by_object_id: dict[
+            int,
+            SupplierRootBoundActionCommitPacketV02ProjectionV01,
+        ] = {}
+        for entry in registry.action_packet_lifecycle_entries:
+            if type(entry) is not ActionPacketLifecycleEntryV01:
+                continue
+            root_bound = entry.root_bound_genesis
+            if (
+                type(root_bound)
+                is not SupplierRootBoundActionCommitPacketV02ProjectionV01
+            ):
+                continue
+            root_bound_by_object_id[id(root_bound)] = root_bound
+            packet_identity = root_bound.packet_identity
+            if (
+                type(packet_identity) is ActionCommitPacketIdentityResultV01
+                and type(packet_identity.packet_id) is str
+            ):
+                entries_by_packet.setdefault(
+                    packet_identity.packet_id,
+                    [],
+                ).append(entry)
+            canonical = root_bound.canonical_projection
+            if (
+                type(canonical)
+                is SupplierActionCommitPacketCanonicalProjectionV01
+                and type(canonical.idempotency_identity)
+                is ActionIdempotencyIdentityV01
+                and type(
+                    canonical.idempotency_identity.idempotency_key
+                )
+                is str
+            ):
+                entries_by_key.setdefault(
+                    canonical.idempotency_identity.idempotency_key,
+                    [],
+                ).append(entry)
+
+        dispositions_by_owner: dict[
+            str,
+            list[IdempotencyDispositionEventV01],
+        ] = {}
+        for event in registry.idempotency_disposition_events:
+            if (
+                type(event) is IdempotencyDispositionEventV01
+                and type(event.to_owner_packet_id) is str
+            ):
+                dispositions_by_owner.setdefault(
+                    event.to_owner_packet_id,
+                    [],
+                ).append(event)
+
+        context_by_object_id: dict[
+            int,
+            _ActionPacketInvalidationContextV01,
+        ] = {}
+        for context in registry.action_packet_invalidation_contexts:
+            if type(context) is not _ActionPacketInvalidationContextV01:
+                continue
+            context_by_object_id[id(context)] = context
+
+        self.registry = registry
+        self.entries_by_packet_id = MappingProxyType(
+            {
+                key: tuple(value)
+                for key, value in entries_by_packet.items()
+            }
+        )
+        self.entries_by_idempotency_key = MappingProxyType(
+            {
+                key: tuple(value)
+                for key, value in entries_by_key.items()
+            }
+        )
+        self.dispositions_by_to_owner_packet_id = MappingProxyType(
+            {
+                key: tuple(value)
+                for key, value in dispositions_by_owner.items()
+            }
+        )
+        self.context_by_object_id = MappingProxyType(context_by_object_id)
+        self.root_bound_genesis_by_object_id = MappingProxyType(
+            root_bound_by_object_id
+        )
+        self._root_bound_validation_cache: dict[
+            int,
+            tuple[
+                SupplierRootBoundActionCommitPacketV02ProjectionV01,
+                tuple[bool, tuple[str, ...]],
+            ],
+        ] = {}
+        self._invalidation_context_validation_cache: dict[
+            tuple[int, int, int | None],
+            tuple[
+                _ActionPacketInvalidationContextV01,
+                SupplierRootBoundActionCommitPacketV02ProjectionV01,
+                SupplierRootBoundActionCommitPacketV02ProjectionV01 | None,
+                tuple[bool, tuple[str, ...]],
+            ],
+        ] = {}
+        self._supersession_bundle_cache: dict[
+            int,
+            tuple[
+                _ActionPacketInvalidationContextV01,
+                tuple[
+                    bool,
+                    tuple[str, ...],
+                    IdempotencyDispositionEventV01 | None,
+                ],
+            ],
+        ] = {}
+
+
+@dataclass(frozen=True)
+class _ActionPacketRegistryValidationResultV02:
+    valid: bool
+    reasons: tuple[str, ...]
+    validation_pass: _ActionPacketRegistryValidationPassV01 | None
+
+
+def _unique_lifecycle_entry_from_validation_pass_v01(
+    validation_pass: _ActionPacketRegistryValidationPassV01,
+    packet_id: object,
+) -> ActionPacketLifecycleEntryV01:
+    if not validate_prefixed_sha256_identity_v01(
+        packet_id,
+        prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+    )[0]:
+        raise ValueError("action_packet_lifecycle_packet_id_invalid")
+    matching = validation_pass.entries_by_packet_id.get(packet_id, ())
+    if len(matching) != 1:
+        raise ValueError("action_packet_lifecycle_entry_not_found")
+    return matching[0]
+
+
+def _cached_root_bound_validation_v01(
+    validation_pass: _ActionPacketRegistryValidationPassV01,
+    root_bound_genesis: object,
 ) -> tuple[bool, tuple[str, ...]]:
+    if (
+        type(validation_pass) is not _ActionPacketRegistryValidationPassV01
+        or validation_pass.root_bound_genesis_by_object_id.get(
+            id(root_bound_genesis)
+        )
+        is not root_bound_genesis
+    ):
+        return validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            root_bound_genesis
+        )
+    cached = validation_pass._root_bound_validation_cache.get(
+        id(root_bound_genesis)
+    )
+    if cached is not None and cached[0] is root_bound_genesis:
+        return cached[1]
+    result = (
+        validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            root_bound_genesis
+        )
+    )
+    validation_pass._root_bound_validation_cache[id(root_bound_genesis)] = (
+        root_bound_genesis,
+        result,
+    )
+    return result
+
+
+def _cached_invalidation_context_validation_v01(
+    validation_pass: _ActionPacketRegistryValidationPassV01,
+    context: object,
+    predecessor: object,
+    *,
+    supersession_successor: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    successor_id = (
+        id(supersession_successor)
+        if supersession_successor is not None
+        else None
+    )
+    cache_key = (id(context), id(predecessor), successor_id)
+    cacheable = (
+        type(context) is _ActionPacketInvalidationContextV01
+        and validation_pass.context_by_object_id.get(id(context)) is context
+        and validation_pass.root_bound_genesis_by_object_id.get(
+            id(predecessor)
+        )
+        is predecessor
+        and (
+            supersession_successor is None
+            or validation_pass.root_bound_genesis_by_object_id.get(
+                id(supersession_successor)
+            )
+            is supersession_successor
+        )
+    )
+    if cacheable:
+        cached = validation_pass._invalidation_context_validation_cache.get(
+            cache_key
+        )
+        if (
+            cached is not None
+            and cached[0] is context
+            and cached[1] is predecessor
+            and cached[2] is supersession_successor
+        ):
+            return cached[3]
+    result = _validate_action_packet_invalidation_context_core_v01(
+        context,
+        predecessor,
+        supersession_successor=supersession_successor,
+        validation_pass=validation_pass,
+    )
+    if cacheable:
+        validation_pass._invalidation_context_validation_cache[cache_key] = (
+            context,
+            predecessor,
+            supersession_successor,
+            result,
+        )
+    return result
+
+
+def _validate_action_commit_packet_registry_core_v02(
+    registry: object,
+) -> _ActionPacketRegistryValidationResultV02:
     if type(registry) is not ActionCommitPacketRegistryV02:
-        return False, ("action_packet_registry_type_invalid",)
+        return _ActionPacketRegistryValidationResultV02(
+            valid=False,
+            reasons=("action_packet_registry_type_invalid",),
+            validation_pass=None,
+        )
     reasons: list[str] = []
+    validation_pass = None
 
     if type(registry.local_proof_only) is not bool or not registry.local_proof_only:
         _append_reason(reasons, REASON_REGISTRY_IS_LOCAL_PROOF_ONLY)
@@ -787,7 +1039,7 @@ def validate_action_commit_packet_registry_v02(
         _append_reason(reasons, REASON_REGISTRY_REAL_WORLD_EFFECTS_FORBIDDEN)
 
     try:
-        lifecycle_valid, lifecycle_reasons = (
+        lifecycle_valid, lifecycle_reasons, validation_pass = (
             _validate_registry_lifecycle_histories_v01(registry)
         )
         if not lifecycle_valid:
@@ -795,22 +1047,32 @@ def validate_action_commit_packet_registry_v02(
     except Exception:
         _append_reason(reasons, "action_packet_registry_lifecycle_invalid")
 
-    return not reasons, tuple(reasons)
+    return _ActionPacketRegistryValidationResultV02(
+        valid=not reasons,
+        reasons=tuple(reasons),
+        validation_pass=validation_pass,
+    )
 
 
-def validate_packet_against_registry_v02(
+def validate_action_commit_packet_registry_v02(
+    registry: object,
+) -> tuple[bool, tuple[str, ...]]:
+    result = _validate_action_commit_packet_registry_core_v02(registry)
+    return result.valid, result.reasons
+
+
+def _validate_packet_against_registry_prevalidated_v02(
     packet: ActionCommitPacketV02,
     registry: ActionCommitPacketRegistryV02,
     *,
-    allow_retry_before_terminal_receipt: bool = False,
+    allow_retry_before_terminal_receipt: bool,
+    registry_validation_result: tuple[bool, tuple[str, ...]],
 ) -> PacketRegistryValidationReportV02:
     reasons: list[str] = []
     retry_allowed = False
     packet_accepted = False
 
-    registry_valid, registry_reasons = validate_action_commit_packet_registry_v02(
-        registry,
-    )
+    registry_valid, registry_reasons = registry_validation_result
     if not registry_valid:
         reasons.extend(registry_reasons)
 
@@ -873,6 +1135,25 @@ def validate_packet_against_registry_v02(
     )
 
 
+def validate_packet_against_registry_v02(
+    packet: ActionCommitPacketV02,
+    registry: ActionCommitPacketRegistryV02,
+    *,
+    allow_retry_before_terminal_receipt: bool = False,
+) -> PacketRegistryValidationReportV02:
+    registry_validation_result = validate_action_commit_packet_registry_v02(
+        registry,
+    )
+    return _validate_packet_against_registry_prevalidated_v02(
+        packet,
+        registry,
+        allow_retry_before_terminal_receipt=(
+            allow_retry_before_terminal_receipt
+        ),
+        registry_validation_result=registry_validation_result,
+    )
+
+
 def validate_packet_corridor_entry_v02(
     packet: ActionCommitPacketV02,
     corridor: ContractFulfillmentCorridorV01,
@@ -893,10 +1174,11 @@ def validate_packet_corridor_entry_v02(
     if not registry_valid:
         reasons.extend(registry_reasons)
 
-    registry_report = validate_packet_against_registry_v02(
+    registry_report = _validate_packet_against_registry_prevalidated_v02(
         packet,
         registry,
         allow_retry_before_terminal_receipt=allow_retry_before_terminal_receipt,
+        registry_validation_result=(registry_valid, registry_reasons),
     )
     if registry_report.validation_status != STATUS_PASS:
         reasons.extend(registry_report.reason_codes)
@@ -5944,9 +6226,11 @@ def validate_supersession_candidate_v01(
         return False, ("supersession_candidate_invalid",)
 
 
-def validate_revocation_candidate_against_packet_v01(
+def _validate_revocation_candidate_against_packet_core_v01(
     candidate: object,
     packet: object,
+    *,
+    packet_validation_result: tuple[bool, tuple[str, ...]] | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         candidate_valid, candidate_reasons = validate_revocation_candidate_v01(
@@ -5955,7 +6239,9 @@ def validate_revocation_candidate_against_packet_v01(
         if not candidate_valid:
             return False, candidate_reasons
         packet_valid, packet_reasons = (
-            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            packet_validation_result
+            if packet_validation_result is not None
+            else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
                 packet
             )
         )
@@ -5987,10 +6273,31 @@ def validate_revocation_candidate_against_packet_v01(
         return False, ("revocation_candidate_context_invalid",)
 
 
-def validate_supersession_candidate_against_packets_v01(
+def validate_revocation_candidate_against_packet_v01(
+    candidate: object,
+    packet: object,
+) -> tuple[bool, tuple[str, ...]]:
+    return _validate_revocation_candidate_against_packet_core_v01(
+        candidate,
+        packet,
+    )
+
+
+def _validate_supersession_candidate_against_packets_core_v01(
     candidate: object,
     predecessor: object,
     successor: object,
+    *,
+    predecessor_validation_result: tuple[
+        bool,
+        tuple[str, ...],
+    ]
+    | None = None,
+    successor_validation_result: tuple[
+        bool,
+        tuple[str, ...],
+    ]
+    | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         candidate_valid, candidate_reasons = (
@@ -5998,9 +6305,14 @@ def validate_supersession_candidate_against_packets_v01(
         )
         if not candidate_valid:
             return False, candidate_reasons
-        for packet in (predecessor, successor):
+        for packet, validation_result in (
+            (predecessor, predecessor_validation_result),
+            (successor, successor_validation_result),
+        ):
             packet_valid, packet_reasons = (
-                validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                validation_result
+                if validation_result is not None
+                else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
                     packet
                 )
             )
@@ -6084,6 +6396,18 @@ def validate_supersession_candidate_against_packets_v01(
         return _result_v01(reasons)
     except Exception:
         return False, ("supersession_candidate_context_invalid",)
+
+
+def validate_supersession_candidate_against_packets_v01(
+    candidate: object,
+    predecessor: object,
+    successor: object,
+) -> tuple[bool, tuple[str, ...]]:
+    return _validate_supersession_candidate_against_packets_core_v01(
+        candidate,
+        predecessor,
+        successor,
+    )
 
 
 def build_action_source_root_decision_hash_v01(result: object) -> str:
@@ -6373,16 +6697,19 @@ def build_root_decision_candidate_projection_v01(
         raise ValueError("root_candidate_projection_invalid") from None
 
 
-def validate_revocation_root_context_coherence_v01(
+def _validate_revocation_root_context_coherence_core_v01(
     candidate: object,
     root_projection: object,
     packet: object,
+    *,
+    packet_validation_result: tuple[bool, tuple[str, ...]] | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         context_valid, context_reasons = (
-            validate_revocation_candidate_against_packet_v01(
+            _validate_revocation_candidate_against_packet_core_v01(
                 candidate,
                 packet,
+                packet_validation_result=packet_validation_result,
             )
         )
         if not context_valid:
@@ -6445,18 +6772,45 @@ def validate_revocation_root_context_coherence_v01(
         return False, ("revocation_root_context_invalid",)
 
 
-def validate_supersession_root_context_coherence_v01(
+def validate_revocation_root_context_coherence_v01(
+    candidate: object,
+    root_projection: object,
+    packet: object,
+) -> tuple[bool, tuple[str, ...]]:
+    return _validate_revocation_root_context_coherence_core_v01(
+        candidate,
+        root_projection,
+        packet,
+    )
+
+
+def _validate_supersession_root_context_coherence_core_v01(
     candidate: object,
     root_projection: object,
     predecessor: object,
     successor: object,
+    *,
+    predecessor_validation_result: tuple[
+        bool,
+        tuple[str, ...],
+    ]
+    | None = None,
+    successor_validation_result: tuple[
+        bool,
+        tuple[str, ...],
+    ]
+    | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         context_valid, context_reasons = (
-            validate_supersession_candidate_against_packets_v01(
+            _validate_supersession_candidate_against_packets_core_v01(
                 candidate,
                 predecessor,
                 successor,
+                predecessor_validation_result=(
+                    predecessor_validation_result
+                ),
+                successor_validation_result=successor_validation_result,
             )
         )
         if not context_valid:
@@ -6532,6 +6886,20 @@ def validate_supersession_root_context_coherence_v01(
         return _result_v01(reasons)
     except Exception:
         return False, ("supersession_root_context_invalid",)
+
+
+def validate_supersession_root_context_coherence_v01(
+    candidate: object,
+    root_projection: object,
+    predecessor: object,
+    successor: object,
+) -> tuple[bool, tuple[str, ...]]:
+    return _validate_supersession_root_context_coherence_core_v01(
+        candidate,
+        root_projection,
+        predecessor,
+        successor,
+    )
 
 
 def accepted_revocation_binding_material_v01(
@@ -6657,19 +7025,23 @@ def _validate_accepted_revocation_binding_against_context_v01(
     candidate: object,
     root_projection: object,
     packet: object,
+    *,
+    packet_validation_result: tuple[bool, tuple[str, ...]] | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         if not validate_accepted_revocation_binding_v01(value)[0]:
             return False, ("accepted_revocation_binding_context_invalid",)
-        if not validate_revocation_candidate_against_packet_v01(
+        if not _validate_revocation_candidate_against_packet_core_v01(
             candidate,
             packet,
+            packet_validation_result=packet_validation_result,
         )[0]:
             return False, ("accepted_revocation_binding_context_invalid",)
-        if not validate_revocation_root_context_coherence_v01(
+        if not _validate_revocation_root_context_coherence_core_v01(
             candidate,
             root_projection,
             packet,
+            packet_validation_result=packet_validation_result,
         )[0]:
             return False, ("accepted_revocation_binding_context_invalid",)
         expected = _build_expected_accepted_revocation_binding_v01(
@@ -6858,21 +7230,36 @@ def _validate_accepted_supersession_binding_against_context_v01(
     root_projection: object,
     predecessor: object,
     successor: object,
+    *,
+    predecessor_validation_result: tuple[
+        bool,
+        tuple[str, ...],
+    ]
+    | None = None,
+    successor_validation_result: tuple[
+        bool,
+        tuple[str, ...],
+    ]
+    | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         if not validate_accepted_supersession_binding_v01(value)[0]:
             return False, ("accepted_supersession_binding_context_invalid",)
-        if not validate_supersession_candidate_against_packets_v01(
+        if not _validate_supersession_candidate_against_packets_core_v01(
             candidate,
             predecessor,
             successor,
+            predecessor_validation_result=predecessor_validation_result,
+            successor_validation_result=successor_validation_result,
         )[0]:
             return False, ("accepted_supersession_binding_context_invalid",)
-        if not validate_supersession_root_context_coherence_v01(
+        if not _validate_supersession_root_context_coherence_core_v01(
             candidate,
             root_projection,
             predecessor,
             successor,
+            predecessor_validation_result=predecessor_validation_result,
+            successor_validation_result=successor_validation_result,
         )[0]:
             return False, ("accepted_supersession_binding_context_invalid",)
         expected = _build_expected_accepted_supersession_binding_v01(
@@ -6930,12 +7317,16 @@ def build_accepted_supersession_binding_v01(
         raise ValueError("accepted_supersession_binding_invalid") from None
 
 
-def validate_mandatory_dependency_local_root_acceptance_v01(
+def _validate_mandatory_dependency_local_root_acceptance_core_v01(
     packet: object,
+    *,
+    packet_validation_result: tuple[bool, tuple[str, ...]] | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         packet_valid, packet_reasons = (
-            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            packet_validation_result
+            if packet_validation_result is not None
+            else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
                 packet
             )
         )
@@ -7020,6 +7411,14 @@ def validate_mandatory_dependency_local_root_acceptance_v01(
         return _result_v01(reasons)
     except Exception:
         return False, ("mandatory_dependency_acceptance_invalid",)
+
+
+def validate_mandatory_dependency_local_root_acceptance_v01(
+    packet: object,
+) -> tuple[bool, tuple[str, ...]]:
+    return _validate_mandatory_dependency_local_root_acceptance_core_v01(
+        packet
+    )
 
 
 def action_invalidation_evidence_material_v01(
@@ -7372,7 +7771,7 @@ def validate_action_invalidation_evidence_v01(
         return False, ("action_invalidation_evidence_invalid",)
 
 
-def validate_action_invalidation_evidence_against_packet_v01(
+def _validate_action_invalidation_evidence_against_packet_core_v01(
     evidence: object,
     packet: object,
     *,
@@ -7383,6 +7782,12 @@ def validate_action_invalidation_evidence_against_packet_v01(
     supersession_root_projection: object = None,
     supersession_successor: object = None,
     accepted_supersession_binding: object = None,
+    packet_validation_result: tuple[bool, tuple[str, ...]] | None = None,
+    successor_validation_result: tuple[
+        bool,
+        tuple[str, ...],
+    ]
+    | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         evidence_valid, evidence_reasons = (
@@ -7391,7 +7796,10 @@ def validate_action_invalidation_evidence_against_packet_v01(
         if not evidence_valid:
             return False, evidence_reasons
         dependency_valid, dependency_reasons = (
-            validate_mandatory_dependency_local_root_acceptance_v01(packet)
+            _validate_mandatory_dependency_local_root_acceptance_core_v01(
+                packet,
+                packet_validation_result=packet_validation_result,
+            )
         )
         if not dependency_valid:
             return False, dependency_reasons
@@ -7451,6 +7859,7 @@ def validate_action_invalidation_evidence_against_packet_v01(
                     revocation_candidate,
                     revocation_root_projection,
                     packet,
+                    packet_validation_result=packet_validation_result,
                 )
             )
             if not binding_context_valid:
@@ -7492,6 +7901,8 @@ def validate_action_invalidation_evidence_against_packet_v01(
                     supersession_root_projection,
                     packet,
                     supersession_successor,
+                    predecessor_validation_result=packet_validation_result,
+                    successor_validation_result=successor_validation_result,
                 )
             )
             if not binding_context_valid:
@@ -7531,11 +7942,37 @@ def validate_action_invalidation_evidence_against_packet_v01(
         return False, ("action_invalidation_context_invalid",)
 
 
-def _validate_action_packet_invalidation_context_v01(
+def validate_action_invalidation_evidence_against_packet_v01(
+    evidence: object,
+    packet: object,
+    *,
+    revocation_candidate: object = None,
+    revocation_root_projection: object = None,
+    accepted_revocation_binding: object = None,
+    supersession_candidate: object = None,
+    supersession_root_projection: object = None,
+    supersession_successor: object = None,
+    accepted_supersession_binding: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    return _validate_action_invalidation_evidence_against_packet_core_v01(
+        evidence,
+        packet,
+        revocation_candidate=revocation_candidate,
+        revocation_root_projection=revocation_root_projection,
+        accepted_revocation_binding=accepted_revocation_binding,
+        supersession_candidate=supersession_candidate,
+        supersession_root_projection=supersession_root_projection,
+        supersession_successor=supersession_successor,
+        accepted_supersession_binding=accepted_supersession_binding,
+    )
+
+
+def _validate_action_packet_invalidation_context_core_v01(
     value: object,
     packet: object,
     *,
     supersession_successor: object = None,
+    validation_pass: _ActionPacketRegistryValidationPassV01 | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         if type(value) is not _ActionPacketInvalidationContextV01:
@@ -7571,9 +8008,18 @@ def _validate_action_packet_invalidation_context_v01(
                 return False, (
                     "action_packet_invalidation_context_shape_invalid",
                 )
-            return validate_action_invalidation_evidence_against_packet_v01(
+            packet_validation_result = (
+                _cached_root_bound_validation_v01(
+                    validation_pass,
+                    packet,
+                )
+                if validation_pass is not None
+                else None
+            )
+            return _validate_action_invalidation_evidence_against_packet_core_v01(
                 evidence,
                 packet,
+                packet_validation_result=packet_validation_result,
             )
         if revocation:
             if (
@@ -7589,7 +8035,15 @@ def _validate_action_packet_invalidation_context_v01(
                 return False, (
                     "action_packet_invalidation_context_shape_invalid",
                 )
-            return validate_action_invalidation_evidence_against_packet_v01(
+            packet_validation_result = (
+                _cached_root_bound_validation_v01(
+                    validation_pass,
+                    packet,
+                )
+                if validation_pass is not None
+                else None
+            )
+            return _validate_action_invalidation_evidence_against_packet_core_v01(
                 evidence,
                 packet,
                 revocation_candidate=value.revocation_candidate,
@@ -7597,6 +8051,7 @@ def _validate_action_packet_invalidation_context_v01(
                 accepted_revocation_binding=(
                     value.accepted_revocation_binding
                 ),
+                packet_validation_result=packet_validation_result,
             )
         if supersession:
             if (
@@ -7617,7 +8072,23 @@ def _validate_action_packet_invalidation_context_v01(
                 return False, (
                     "action_packet_invalidation_context_shape_invalid",
                 )
-            return validate_action_invalidation_evidence_against_packet_v01(
+            packet_validation_result = (
+                _cached_root_bound_validation_v01(
+                    validation_pass,
+                    packet,
+                )
+                if validation_pass is not None
+                else None
+            )
+            successor_validation_result = (
+                _cached_root_bound_validation_v01(
+                    validation_pass,
+                    supersession_successor,
+                )
+                if validation_pass is not None
+                else None
+            )
+            return _validate_action_invalidation_evidence_against_packet_core_v01(
                 evidence,
                 packet,
                 supersession_candidate=value.supersession_candidate,
@@ -7628,10 +8099,25 @@ def _validate_action_packet_invalidation_context_v01(
                 accepted_supersession_binding=(
                     value.accepted_supersession_binding
                 ),
+                packet_validation_result=packet_validation_result,
+                successor_validation_result=successor_validation_result,
             )
         return False, ("action_packet_invalidation_context_class_invalid",)
     except Exception:
         return False, ("action_packet_invalidation_context_invalid",)
+
+
+def _validate_action_packet_invalidation_context_v01(
+    value: object,
+    packet: object,
+    *,
+    supersession_successor: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    return _validate_action_packet_invalidation_context_core_v01(
+        value,
+        packet,
+        supersession_successor=supersession_successor,
+    )
 
 
 def _transition_evidence_binding_for_code_v01(
@@ -9518,13 +10004,14 @@ def build_action_packet_lifecycle_entry_v01(
         raise ValueError("action_packet_lifecycle_entry_invalid") from None
 
 
-def validate_action_packet_lifecycle_entry_v01(
+def _validate_action_packet_lifecycle_entry_core_v01(
     value: object,
     *,
     action_packet_transition_registry_profile: object = None,
     invalidation_contexts: object = None,
     idempotency_disposition_events: object = None,
     lifecycle_entries: object = None,
+    validation_pass: _ActionPacketRegistryValidationPassV01 | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         if type(value) is not ActionPacketLifecycleEntryV01:
@@ -9533,11 +10020,17 @@ def validate_action_packet_lifecycle_entry_v01(
             action_packet_transition_registry_profile
         )
         reasons: list[str] = []
-        genesis_valid, _ = (
-            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+        genesis_result = (
+            _cached_root_bound_validation_v01(
+                validation_pass,
+                value.root_bound_genesis,
+            )
+            if validation_pass is not None
+            else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
                 value.root_bound_genesis
             )
         )
+        genesis_valid, _ = genesis_result
         if not genesis_valid:
             _reason_v01(reasons, "action_packet_lifecycle_genesis_invalid")
         if (
@@ -9546,7 +10039,7 @@ def validate_action_packet_lifecycle_entry_v01(
         ):
             _reason_v01(reasons, "action_packet_lifecycle_registry_id_mismatch")
         history_valid, history_reasons = (
-            validate_action_packet_transition_history_v01(
+            _validate_action_packet_transition_history_core_v01(
                 value.transition_events,
                 root_bound_genesis=value.root_bound_genesis,
                 action_packet_transition_registry_profile=registry,
@@ -9555,6 +10048,8 @@ def validate_action_packet_lifecycle_entry_v01(
                     idempotency_disposition_events
                 ),
                 lifecycle_entries=lifecycle_entries,
+                root_bound_validation_result=genesis_result,
+                validation_pass=validation_pass,
             )
         )
         if not history_valid:
@@ -9564,7 +10059,26 @@ def validate_action_packet_lifecycle_entry_v01(
         return False, ("action_packet_lifecycle_entry_invalid",)
 
 
-def validate_action_packet_transition_history_v01(
+def validate_action_packet_lifecycle_entry_v01(
+    value: object,
+    *,
+    action_packet_transition_registry_profile: object = None,
+    invalidation_contexts: object = None,
+    idempotency_disposition_events: object = None,
+    lifecycle_entries: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    return _validate_action_packet_lifecycle_entry_core_v01(
+        value,
+        action_packet_transition_registry_profile=(
+            action_packet_transition_registry_profile
+        ),
+        invalidation_contexts=invalidation_contexts,
+        idempotency_disposition_events=idempotency_disposition_events,
+        lifecycle_entries=lifecycle_entries,
+    )
+
+
+def _validate_action_packet_transition_history_core_v01(
     transition_events: object,
     *,
     root_bound_genesis: object,
@@ -9572,6 +10086,12 @@ def validate_action_packet_transition_history_v01(
     invalidation_contexts: object = None,
     idempotency_disposition_events: object = None,
     lifecycle_entries: object = None,
+    root_bound_validation_result: tuple[
+        bool,
+        tuple[str, ...],
+    ]
+    | None = None,
+    validation_pass: _ActionPacketRegistryValidationPassV01 | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         if type(transition_events) is not tuple:
@@ -9579,11 +10099,19 @@ def validate_action_packet_transition_history_v01(
         registry = _exact_action_packet_transition_registry_v01(
             action_packet_transition_registry_profile
         )
-        genesis_valid, _ = (
-            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+        genesis_result = (
+            root_bound_validation_result
+            if root_bound_validation_result is not None
+            else _cached_root_bound_validation_v01(
+                validation_pass,
+                root_bound_genesis,
+            )
+            if validation_pass is not None
+            else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
                 root_bound_genesis
             )
         )
+        genesis_valid, _ = genesis_result
         if not genesis_valid:
             return False, ("action_packet_transition_genesis_invalid",)
         canonical = root_bound_genesis.canonical_projection
@@ -9715,6 +10243,7 @@ def validate_action_packet_transition_history_v01(
                             root_bound_genesis=root_bound_genesis,
                             preceding_events=transition_events[:index],
                             disposition_events=dispositions,
+                            validation_pass=validation_pass,
                         )
                     )
                     if not context_valid:
@@ -9747,6 +10276,7 @@ def validate_action_packet_transition_history_v01(
                             root_bound_genesis=root_bound_genesis,
                             preceding_events=transition_events[:index],
                             disposition_events=dispositions,
+                            validation_pass=validation_pass,
                         )
                     )
                     if not context_valid:
@@ -9795,6 +10325,7 @@ def validate_action_packet_transition_history_v01(
                                 supersession_successor=(
                                     successor_entries[0].root_bound_genesis
                                 ),
+                                validation_pass=validation_pass,
                             )
                         )
                         if not context_valid:
@@ -9888,6 +10419,27 @@ def validate_action_packet_transition_history_v01(
         return False, ("action_packet_transition_history_invalid",)
 
 
+def validate_action_packet_transition_history_v01(
+    transition_events: object,
+    *,
+    root_bound_genesis: object,
+    action_packet_transition_registry_profile: object,
+    invalidation_contexts: object = None,
+    idempotency_disposition_events: object = None,
+    lifecycle_entries: object = None,
+) -> tuple[bool, tuple[str, ...]]:
+    return _validate_action_packet_transition_history_core_v01(
+        transition_events,
+        root_bound_genesis=root_bound_genesis,
+        action_packet_transition_registry_profile=(
+            action_packet_transition_registry_profile
+        ),
+        invalidation_contexts=invalidation_contexts,
+        idempotency_disposition_events=idempotency_disposition_events,
+        lifecycle_entries=lifecycle_entries,
+    )
+
+
 def _packet_local_disposition_history_v01(
     root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01,
     preceding_events: tuple[ActionPacketTransitionEventV01, ...],
@@ -9963,6 +10515,7 @@ def _validate_contextual_invalidation_transition_v01(
     preceding_events: object,
     disposition_events: object,
     supersession_successor: object = None,
+    validation_pass: _ActionPacketRegistryValidationPassV01 | None = None,
 ) -> tuple[bool, tuple[str, ...]]:
     try:
         if (
@@ -9984,10 +10537,19 @@ def _validate_contextual_invalidation_transition_v01(
             return False, (
                 "action_packet_invalidation_transition_context_invalid",
             )
-        context_valid, _ = _validate_action_packet_invalidation_context_v01(
-            context,
-            root_bound_genesis,
-            supersession_successor=supersession_successor,
+        context_valid, _ = (
+            _cached_invalidation_context_validation_v01(
+                validation_pass,
+                context,
+                root_bound_genesis,
+                supersession_successor=supersession_successor,
+            )
+            if validation_pass is not None
+            else _validate_action_packet_invalidation_context_v01(
+                context,
+                root_bound_genesis,
+                supersession_successor=supersession_successor,
+            )
         )
         if not context_valid:
             return False, (
@@ -10601,7 +11163,11 @@ def _find_lifecycle_entry_v01(
 
 def _validate_registry_lifecycle_histories_v01(
     registry: ActionCommitPacketRegistryV02,
-) -> tuple[bool, tuple[str, ...]]:
+) -> tuple[
+    bool,
+    tuple[str, ...],
+    _ActionPacketRegistryValidationPassV01 | None,
+]:
     reasons: list[str] = []
     entries = registry.action_packet_lifecycle_entries
     dispositions = registry.idempotency_disposition_events
@@ -10609,17 +11175,29 @@ def _validate_registry_lifecycle_histories_v01(
     if type(entries) is not tuple or any(
         type(entry) is not ActionPacketLifecycleEntryV01 for entry in entries
     ):
-        return False, ("action_packet_registry_lifecycle_entries_invalid",)
+        return (
+            False,
+            ("action_packet_registry_lifecycle_entries_invalid",),
+            None,
+        )
     if type(dispositions) is not tuple or any(
         type(event) is not IdempotencyDispositionEventV01
         for event in dispositions
     ):
-        return False, ("action_packet_registry_disposition_events_invalid",)
+        return (
+            False,
+            ("action_packet_registry_disposition_events_invalid",),
+            None,
+        )
     if type(contexts) is not tuple or any(
         type(context) is not _ActionPacketInvalidationContextV01
         for context in contexts
     ):
-        return False, ("action_packet_registry_invalidation_contexts_invalid",)
+        return (
+            False,
+            ("action_packet_registry_invalidation_contexts_invalid",),
+            None,
+        )
     transition_registry = build_action_packet_transition_registry_profile_v01()
     packet_ids: list[str] = []
     transition_by_id: dict[str, ActionPacketTransitionEventV01] = {}
@@ -10637,7 +11215,10 @@ def _validate_registry_lifecycle_histories_v01(
             .idempotency_identity.idempotency_key
         )
         entries_by_key.setdefault(key, []).append(entry)
-    for same_key_entries in entries_by_key.values():
+    validation_pass = _ActionPacketRegistryValidationPassV01(registry)
+    for same_key_entries in (
+        validation_pass.entries_by_idempotency_key.values()
+    ):
         if len(same_key_entries) < 2:
             continue
         root_kinds = tuple(
@@ -10647,6 +11228,7 @@ def _validate_registry_lifecycle_histories_v01(
                     registry,
                     entry,
                     entry_by_packet,
+                    validation_pass=validation_pass,
                 ),
             )
             for entry in same_key_entries
@@ -10667,6 +11249,7 @@ def _validate_registry_lifecycle_histories_v01(
                 registry,
                 roots[0],
                 entry_by_packet,
+                validation_pass=validation_pass,
             )
         ):
             _reason_v01(
@@ -10674,12 +11257,13 @@ def _validate_registry_lifecycle_histories_v01(
                 "authority_transition_requires_g2a3_binding",
             )
     for entry in entries:
-        valid, _ = validate_action_packet_lifecycle_entry_v01(
+        valid, _ = _validate_action_packet_lifecycle_entry_core_v01(
             entry,
             action_packet_transition_registry_profile=transition_registry,
             invalidation_contexts=contexts,
             idempotency_disposition_events=dispositions,
             lifecycle_entries=entries,
+            validation_pass=validation_pass,
         )
         if not valid:
             _reason_v01(reasons, "action_packet_registry_lifecycle_entry_invalid")
@@ -10724,7 +11308,8 @@ def _validate_registry_lifecycle_histories_v01(
             if context.supersession_successor_packet_id is not None
             else None
         )
-        context_valid, _ = _validate_action_packet_invalidation_context_v01(
+        context_valid, _ = _cached_invalidation_context_validation_v01(
+            validation_pass,
             context,
             packet_entry.root_bound_genesis,
             supersession_successor=(
@@ -10764,8 +11349,8 @@ def _validate_registry_lifecycle_histories_v01(
             accepted_binding_ids.add(accepted_id)
         if evidence.invalidation_class == "ROOT_SUPERSESSION":
             bundle_valid, bundle_reasons, disposition = (
-                _validate_registry_supersession_bundle_v01(
-                    registry,
+                _cached_registry_supersession_bundle_v01(
+                    validation_pass,
                     context,
                 )
             )
@@ -10897,9 +11482,11 @@ def _validate_registry_lifecycle_histories_v01(
             typed_causes,
             entry_by_packet,
             reasons,
+            validation_pass=validation_pass,
         )
     if reasons:
-        return _result_v01(reasons)
+        valid, result_reasons = _result_v01(reasons)
+        return valid, result_reasons, validation_pass
     for entry in entries:
         state = _derive_action_packet_lifecycle_state_unchecked_v01(
             entry,
@@ -10911,7 +11498,8 @@ def _validate_registry_lifecycle_histories_v01(
             dispositions,
             reasons,
         )
-    return _result_v01(reasons)
+    valid, result_reasons = _result_v01(reasons)
+    return valid, result_reasons, validation_pass
 
 
 def _is_initial_authorization_lifecycle_entry_v01(value: object) -> bool:
@@ -10931,6 +11519,8 @@ def _same_key_lineage_root_kind_v01(
     registry: ActionCommitPacketRegistryV02,
     value: ActionPacketLifecycleEntryV01,
     entries: dict[str, ActionPacketLifecycleEntryV01],
+    *,
+    validation_pass: _ActionPacketRegistryValidationPassV01 | None = None,
 ) -> str | None:
     if _is_initial_authorization_lifecycle_entry_v01(value):
         return "ORDINARY"
@@ -10981,10 +11571,17 @@ def _same_key_lineage_root_kind_v01(
                 and context.invalidation_evidence.packet_id == predecessor_id
                 and context.supersession_successor_packet_id
                 == value.root_bound_genesis.packet_identity.packet_id
-                and _validate_registry_supersession_bundle_v01(
-                    registry,
-                    context,
-                )[0]
+                and (
+                    _cached_registry_supersession_bundle_v01(
+                        validation_pass,
+                        context,
+                    )[0]
+                    if validation_pass is not None
+                    else _validate_registry_supersession_bundle_v01(
+                        registry,
+                        context,
+                    )[0]
+                )
             )
         )
         if len(matching_contexts) != 1:
@@ -10996,6 +11593,8 @@ def _same_key_entries_are_bound_successors_v01(
     registry: ActionCommitPacketRegistryV02,
     owner_entry: ActionPacketLifecycleEntryV01,
     entries: dict[str, ActionPacketLifecycleEntryV01],
+    *,
+    validation_pass: _ActionPacketRegistryValidationPassV01 | None = None,
 ) -> bool:
     owner_key = (
         owner_entry.root_bound_genesis.canonical_projection
@@ -11015,7 +11614,12 @@ def _same_key_entries_are_bound_successors_v01(
     entry_by_id: dict[str, ActionPacketLifecycleEntryV01] = {}
     for entry in same_key_entries:
         genesis_valid, _ = (
-            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            _cached_root_bound_validation_v01(
+                validation_pass,
+                entry.root_bound_genesis,
+            )
+            if validation_pass is not None
+            else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
                 entry.root_bound_genesis
             )
         )
@@ -11034,6 +11638,7 @@ def _same_key_entries_are_bound_successors_v01(
             registry,
             entry,
             entries,
+            validation_pass=validation_pass,
         )
         in {"ORDINARY", "MATERIAL"}
     )
@@ -11118,10 +11723,17 @@ def _same_key_entries_are_bound_successors_v01(
                     == predecessor_id
                     and context.supersession_successor_packet_id
                     == entry.root_bound_genesis.packet_identity.packet_id
-                    and _validate_registry_supersession_bundle_v01(
-                        registry,
-                        context,
-                    )[0]
+                    and (
+                        _cached_registry_supersession_bundle_v01(
+                            validation_pass,
+                            context,
+                        )[0]
+                        if validation_pass is not None
+                        else _validate_registry_supersession_bundle_v01(
+                            registry,
+                            context,
+                        )[0]
+                    )
                 )
             )
             if len(matching_contexts) != 1:
@@ -11135,6 +11747,8 @@ def _validate_registry_disposition_cause_bundle_v01(
     causes: tuple[ActionPacketTransitionEventV01, ...],
     entries: dict[str, ActionPacketLifecycleEntryV01],
     reasons: list[str],
+    *,
+    validation_pass: _ActionPacketRegistryValidationPassV01 | None = None,
 ) -> None:
     rule_ids = tuple(cause.transition_rule_id for cause in causes)
     if event.event_class == "RESERVE":
@@ -11142,6 +11756,7 @@ def _validate_registry_disposition_cause_bundle_v01(
             _disposition_has_valid_supersession_context_v01(
                 registry,
                 event,
+                validation_pass=validation_pass,
             )
         )
         if event.predecessor_packet_id is None:
@@ -11177,6 +11792,7 @@ def _validate_registry_disposition_cause_bundle_v01(
                         registry,
                         owner_entry,
                         entries,
+                        validation_pass=validation_pass,
                     )
                 )
             ):
@@ -11237,6 +11853,7 @@ def _validate_registry_disposition_cause_bundle_v01(
         if not _disposition_has_valid_supersession_context_v01(
             registry,
             event,
+            validation_pass=validation_pass,
         ):
             _reason_v01(
                 reasons,
@@ -11341,6 +11958,8 @@ def _logical_effect_relation_v01(
 def _validate_registry_supersession_bundle_v01(
     registry: ActionCommitPacketRegistryV02,
     context: _ActionPacketInvalidationContextV01,
+    *,
+    validation_pass: _ActionPacketRegistryValidationPassV01 | None = None,
 ) -> tuple[
     bool,
     tuple[str, ...],
@@ -11354,18 +11973,40 @@ def _validate_registry_supersession_bundle_v01(
             or evidence.authority_effect != "ROOT_SUPERSESSION"
         ):
             return False, ("action_packet_supersession_context_invalid",), None
-        predecessor = _find_lifecycle_entry_v01(
-            registry,
-            evidence.packet_id,
-        )
-        successor = _find_lifecycle_entry_v01(
-            registry,
-            context.supersession_successor_packet_id,
-        )
-        context_valid, _ = _validate_action_packet_invalidation_context_v01(
-            context,
-            predecessor.root_bound_genesis,
-            supersession_successor=successor.root_bound_genesis,
+        if (
+            type(validation_pass) is _ActionPacketRegistryValidationPassV01
+            and validation_pass.registry is registry
+        ):
+            predecessor = _unique_lifecycle_entry_from_validation_pass_v01(
+                validation_pass,
+                evidence.packet_id
+            )
+            successor = _unique_lifecycle_entry_from_validation_pass_v01(
+                validation_pass,
+                context.supersession_successor_packet_id
+            )
+        else:
+            predecessor = _find_lifecycle_entry_v01(
+                registry,
+                evidence.packet_id,
+            )
+            successor = _find_lifecycle_entry_v01(
+                registry,
+                context.supersession_successor_packet_id,
+            )
+        context_valid, _ = (
+            _cached_invalidation_context_validation_v01(
+                validation_pass,
+                context,
+                predecessor.root_bound_genesis,
+                supersession_successor=successor.root_bound_genesis,
+            )
+            if validation_pass is not None
+            else _validate_action_packet_invalidation_context_v01(
+                context,
+                predecessor.root_bound_genesis,
+                supersession_successor=successor.root_bound_genesis,
+            )
         )
         if not context_valid:
             return False, ("action_packet_supersession_context_invalid",), None
@@ -11416,9 +12057,21 @@ def _validate_registry_supersession_bundle_v01(
         ):
             _reason_v01(reasons, "action_packet_successor_activation_invalid")
             return _result_v01(reasons)[0], tuple(reasons), None
+        candidate_dispositions = (
+            validation_pass.dispositions_by_to_owner_packet_id.get(
+                successor_id,
+                (),
+            )
+            if (
+                type(validation_pass)
+                is _ActionPacketRegistryValidationPassV01
+                and validation_pass.registry is registry
+            )
+            else registry.idempotency_disposition_events
+        )
         matching_dispositions = tuple(
             disposition
-            for disposition in registry.idempotency_disposition_events
+            for disposition in candidate_dispositions
             if disposition.to_owner_packet_id == successor_id
             and successor_activation.transition_event_id
             in disposition.cause_transition_event_ids
@@ -11654,9 +12307,42 @@ def _validate_registry_supersession_bundle_v01(
         return False, ("action_packet_supersession_bundle_invalid",), None
 
 
+def _cached_registry_supersession_bundle_v01(
+    validation_pass: _ActionPacketRegistryValidationPassV01,
+    context: _ActionPacketInvalidationContextV01,
+) -> tuple[
+    bool,
+    tuple[str, ...],
+    IdempotencyDispositionEventV01 | None,
+]:
+    if (
+        type(validation_pass) is not _ActionPacketRegistryValidationPassV01
+        or validation_pass.context_by_object_id.get(id(context)) is not context
+    ):
+        return _validate_registry_supersession_bundle_v01(
+            validation_pass.registry,
+            context,
+        )
+    cached = validation_pass._supersession_bundle_cache.get(id(context))
+    if cached is not None and cached[0] is context:
+        return cached[1]
+    result = _validate_registry_supersession_bundle_v01(
+        validation_pass.registry,
+        context,
+        validation_pass=validation_pass,
+    )
+    validation_pass._supersession_bundle_cache[id(context)] = (
+        context,
+        result,
+    )
+    return result
+
+
 def _disposition_has_valid_supersession_context_v01(
     registry: ActionCommitPacketRegistryV02,
     disposition: IdempotencyDispositionEventV01,
+    *,
+    validation_pass: _ActionPacketRegistryValidationPassV01 | None = None,
 ) -> bool:
     matching = 0
     for context in registry.action_packet_invalidation_contexts:
@@ -11667,7 +12353,15 @@ def _disposition_has_valid_supersession_context_v01(
         ):
             continue
         valid, _, matched_disposition = (
-            _validate_registry_supersession_bundle_v01(registry, context)
+            _cached_registry_supersession_bundle_v01(
+                validation_pass,
+                context,
+            )
+            if validation_pass is not None
+            else _validate_registry_supersession_bundle_v01(
+                registry,
+                context,
+            )
         )
         if (
             valid
@@ -12787,9 +13481,14 @@ def record_action_packet_supersession_v01(
                 registry.action_packet_invalidation_contexts + (context,)
             ),
         )
-        _require_valid_action_packet_registry_v01(proposed)
+        proposed_validation = _require_valid_action_packet_registry_v01(
+            proposed
+        )
         bundle_valid, bundle_reasons, matched_disposition = (
-            _validate_registry_supersession_bundle_v01(proposed, context)
+            _cached_registry_supersession_bundle_v01(
+                proposed_validation.validation_pass,
+                context,
+            )
         )
         if (
             not bundle_valid
@@ -13120,10 +13819,11 @@ def _registry_with_g2a_histories_v01(
 
 def _require_valid_action_packet_registry_v01(
     registry: object,
-) -> None:
-    valid, reasons = validate_action_commit_packet_registry_v02(registry)
-    if not valid:
-        raise ValueError(reasons[0])
+) -> _ActionPacketRegistryValidationResultV02:
+    result = _validate_action_commit_packet_registry_core_v02(registry)
+    if not result.valid:
+        raise ValueError(result.reasons[0])
+    return result
 
 
 def _disposition_history_bytes_v01(

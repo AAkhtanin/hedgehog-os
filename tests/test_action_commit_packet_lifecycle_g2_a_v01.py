@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 
+import demo.run_action_commit_packet_lifecycle_g2_a_v01 as g2a5_runner
 import hedgehog.action_commit_packet_v02 as acp
 import hedgehog.kernel.abi_v01 as kernel_abi
 import hedgehog.kernel.effect_firewall_v01 as effect_firewall
@@ -13494,6 +13495,7 @@ def _g2a4a_fixture_value(
     allowed_subjects: tuple[str, ...] = (
         "subject:procurement_requester",
     ),
+    retry_policy: str = "NON_CONSUMING_RETRY",
 ) -> _G2A4AFixtureV01:
     source = acp.build_supplier_a_mock_action_commit_packet_fixture_v02()
     source = replace(
@@ -13540,6 +13542,7 @@ def _g2a4a_fixture_value(
     )
     canonical = _projection(
         packet=source,
+        policy=_policy(retry_policy=retry_policy),
         dependency=committed_dependency,
     )
     _, _, kernel, decision_input, result = _build_frozen_root_evidence(
@@ -16500,3 +16503,1634 @@ def test_g2a4_final_post_invocation_fallback_preserves_truth(
         "_g2a4b_build_invoked_outcome_bundle_v01",
         failed_primary_finalizer,
     )
+
+
+def test_g2a5_replay_report_contract_and_exact_history_hashes(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    report = acp.replay_action_packet_lifecycle_history_v01(
+        fixture.registry,
+        packet_id=fixture.root_bound.packet_identity.packet_id,
+    )
+    assert [field.name for field in fields(
+        acp.ActionPacketRecordedTransitionReplayV01
+    )] == [
+        "transition_event_id",
+        "transition_rule_id",
+        "source_state",
+        "target_state",
+        "evaluation_time",
+        "evaluation_time_source",
+        "evaluation_context_id",
+        "execution_attempt_id",
+        "effect_consumption_class",
+        "receipt_ref",
+    ]
+    assert [field.name for field in fields(
+        acp.ActionPacketLifecycleReplayReportV01
+    )] == [
+        "replay_profile_id",
+        "registry_id",
+        "packet_id",
+        "transition_registry_id",
+        "source_root_decision_id",
+        "source_root_decision_hash",
+        "rebuilt_packet_id",
+        "rebuilt_idempotency_key",
+        "recorded_transitions",
+        "disposition_event_ids",
+        "invalidation_evidence_ids",
+        "fulfillment_attempt_evidence_ids",
+        "reconstructed_state",
+        "transition_history_sha256",
+        "disposition_history_sha256",
+        "invalidation_history_sha256",
+        "fulfillment_history_sha256",
+        "historical_temporal_replay_pass",
+        "t24_reserved_history_replay_pass",
+        "distinct_firewall_attempt_replay_pass",
+        "registry_unchanged",
+        "creates_authority",
+        "creates_permission",
+        "creates_packet",
+        "creates_receipt",
+        "adapter_calls",
+        "real_world_effects_count",
+    ]
+    assert report.replay_profile_id == "action_packet_lifecycle_replay_v01"
+    assert tuple(
+        item.transition_event_id for item in report.recorded_transitions
+    ) == tuple(
+        item.transition_event_id
+        for item in fixture.registry.action_packet_lifecycle_entries[
+            0
+        ].transition_events
+    )
+    assert report.rebuilt_packet_id == report.packet_id
+    assert report.rebuilt_idempotency_key == (
+        fixture.root_bound.canonical_projection
+        .idempotency_identity.idempotency_key
+    )
+    assert report.source_root_decision_id == (
+        fixture.root_bound.root_decision_projection
+        .root_decision_result.decision_id
+    )
+    assert report.source_root_decision_hash == (
+        fixture.root_bound.root_decision_projection
+        .source_root_decision_hash
+    )
+    assert (
+        report.transition_history_sha256,
+        report.disposition_history_sha256,
+        report.invalidation_history_sha256,
+        report.fulfillment_history_sha256,
+    ) == (
+        "c54474adcf79227d5a00427e2b2e60dff80e65c36781a938bc41e08e65cc0bf5",
+        "991f14f47709a93e68ccd6d60a613549b653dadd4c6aad016d65994df41ab236",
+        "0e79ba4b61ca0e58866292df756b4a1f7d3600419db451132a98de595644d62a",
+        "a16c1145c84e1872255db6a71b5c595c0e248aa115ffdbf5850a564d1c5a3fc2",
+    )
+    assert report.reconstructed_state.lifecycle_state == "PENDING_FULFILLMENT"
+    assert acp.validate_action_packet_lifecycle_replay_report_v01(
+        report,
+        fixture.registry,
+        packet_id=report.packet_id,
+    ) == (True, ())
+    forged = replace(report, creates_permission=True)
+    assert acp.validate_action_packet_lifecycle_replay_report_v01(
+        forged,
+        fixture.registry,
+        packet_id=report.packet_id,
+    ) == (
+        False,
+        ("action_packet_lifecycle_replay_report_invalid",),
+    )
+
+
+def test_g2a5_historical_replay_uses_recorded_time_and_never_executes(
+    g2a3a_fixture: _G2A3AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root_bound = g2a3a_fixture.predecessor
+    packet_id = root_bound.packet_identity.packet_id
+    registry = _g2a3b1_registry_for_rule(
+        root_bound,
+        "g2a_t09_pending_block",
+    )
+    invalidation = _g2a3a_invalidation(
+        g2a3a_fixture,
+        "ROOT_BOUND_KILL_SWITCH",
+    )
+    transition = _g2a3b1_transition_event(
+        registry,
+        packet_id,
+        "g2a_t09_pending_block",
+        invalidation,
+    )
+    blocked = acp.record_action_packet_deterministic_invalidation_v01(
+        registry,
+        packet_id=packet_id,
+        invalidation_evidence=invalidation,
+        transition_event=transition,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    before = canonical_json_bytes_v01(
+        acp._action_packet_replay_canonical_value_v01(blocked)
+    )
+    calls = {
+        "firewall": 0,
+        "authorize": 0,
+        "execute": 0,
+        "receipt": 0,
+    }
+
+
+    def forbidden(name: str, original: object) -> object:
+        @wraps(original)
+        def wrapper(*args: object, **kwargs: object) -> object:
+            calls[name] += 1
+            return original(*args, **kwargs)  # type: ignore[operator]
+
+        return wrapper
+
+    monkeypatch.setattr(
+        acp,
+        "_build_effect_firewall_v01",
+        forbidden("firewall", acp._build_effect_firewall_v01),
+    )
+    monkeypatch.setattr(
+        acp,
+        "_authorize_effect_request_v01",
+        forbidden("authorize", acp._authorize_effect_request_v01),
+    )
+    monkeypatch.setattr(
+        acp,
+        "_execute_mock_effect_v01",
+        forbidden("execute", acp._execute_mock_effect_v01),
+    )
+    monkeypatch.setattr(
+        acp,
+        "_build_kernel_artifact_v01",
+        forbidden("receipt", acp._build_kernel_artifact_v01),
+    )
+    report = acp.replay_action_packet_lifecycle_history_v01(
+        blocked,
+        packet_id=packet_id,
+    )
+    stored = _g2a4b_entry(blocked, packet_id).transition_events
+    assert tuple(
+        (
+            item.evaluation_time,
+            item.evaluation_time_source,
+            item.evaluation_context_id,
+        )
+        for item in report.recorded_transitions
+    ) == tuple(
+        (
+            item.evaluation_time,
+            item.evaluation_time_source,
+            item.evaluation_context_id,
+        )
+        for item in stored
+    )
+    assert report.reconstructed_state.lifecycle_state == "BLOCKED"
+    assert report.historical_temporal_replay_pass is True
+    assert calls == {
+        "firewall": 0,
+        "authorize": 0,
+        "execute": 0,
+        "receipt": 0,
+    }
+    assert canonical_json_bytes_v01(
+        acp._action_packet_replay_canonical_value_v01(blocked)
+    ) == before
+
+
+def test_g2a5_present_inspection_uses_injected_time_without_rewriting_history(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    expiry = (
+        fixture.root_bound.canonical_projection.temporal_authority
+        .expires_at_utc
+    )
+    before = canonical_json_bytes_v01(
+        acp._action_packet_replay_canonical_value_v01(fixture.registry)
+    )
+    historical_times = tuple(
+        item.evaluation_time
+        for item in fixture.registry.action_packet_lifecycle_entries[
+            0
+        ].transition_events
+    )
+
+    def inspect(at: int, suffix: str) -> (
+        acp.ActionPacketPresentEligibilityInspectionV01
+    ):
+        context = f"evaluation_context:g2a5:present:{suffix}"
+        observations = _g2a4b_observations_for_context(
+            fixture.observations,
+            context,
+        )
+        return acp.inspect_action_packet_present_eligibility_v01(
+            fixture.registry,
+            packet_id=packet_id,
+            corridor=fixture.corridor,
+            corridor_step=fixture.corridor_step,
+            current_dependency_observations=observations,
+            logical_time_bridge=fixture.logical_time_bridge,
+            evaluation_time=at,
+            evaluation_time_source="explicit_g2a5_present_time",
+            evaluation_context_id=context,
+        )
+
+    before_expiry = inspect(expiry - 1, "before_expiry")
+    at_expiry = inspect(expiry, "at_expiry")
+    after_expiry = inspect(expiry + 1, "after_expiry")
+    assert before_expiry.present_eligibility_status == (
+        "ELIGIBLE_FOR_BOUNDED_MOCK_ATTEMPT"
+    )
+    assert before_expiry.present_executable is True
+    for report in (at_expiry, after_expiry):
+        assert report.present_eligibility_status == "NON_EXECUTABLE"
+        assert report.present_executable is False
+        assert report.reason_codes == (
+            "action_packet_effect_temporal_invalid",
+        )
+        assert report.historical_state.lifecycle_state == (
+            "PENDING_FULFILLMENT"
+        )
+        assert acp.validate_action_packet_present_eligibility_inspection_v01(
+            report,
+            fixture.registry,
+            packet_id=packet_id,
+            corridor=fixture.corridor,
+            corridor_step=fixture.corridor_step,
+            current_dependency_observations=(
+                _g2a4b_observations_for_context(
+                    fixture.observations,
+                    report.evaluation_context_id,
+                )
+            ),
+            logical_time_bridge=fixture.logical_time_bridge,
+            evaluation_time=report.evaluation_time,
+            evaluation_time_source=report.evaluation_time_source,
+            evaluation_context_id=report.evaluation_context_id,
+        ) == (True, ())
+    assert tuple(
+        item.evaluation_time
+        for item in fixture.registry.action_packet_lifecycle_entries[
+            0
+        ].transition_events
+    ) == historical_times
+    assert canonical_json_bytes_v01(
+        acp._action_packet_replay_canonical_value_v01(fixture.registry)
+    ) == before
+
+
+def test_g2a5_replay_t24_reconstructs_reserved_owner_and_retry_without_execution(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    before_dispositions = fixture.registry.idempotency_disposition_events
+    calls = {"execute": 0}
+
+    @wraps(acp._execute_mock_effect_v01)
+    def nonconsuming(**kwargs: object) -> object:
+        calls["execute"] += 1
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", nonconsuming)
+    result = _g2a4b_execute(fixture)
+    assert calls["execute"] == 1
+    report = acp.replay_action_packet_lifecycle_history_v01(
+        result,
+        packet_id=packet_id,
+    )
+    inspection = acp.inspect_action_packet_present_eligibility_v01(
+        result,
+        packet_id=packet_id,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        current_dependency_observations=fixture.observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+        evaluation_time=fixture.eligibility_evaluation_time,
+        evaluation_time_source=fixture.eligibility_evaluation_time_source,
+        evaluation_context_id=fixture.eligibility_evaluation_context_id,
+    )
+    assert report.reconstructed_state.failed_provenance == (
+        "FAILED_NON_CONSUMING"
+    )
+    assert report.t24_reserved_history_replay_pass is True
+    assert result.idempotency_disposition_events is before_dispositions
+    assert report.reconstructed_state.idempotency_disposition == "RESERVED"
+    assert report.reconstructed_state.reservation_owner_packet_id == packet_id
+    assert inspection.present_executable is False
+    assert inspection.retry_eligible is True
+    assert inspection.reason_codes == (
+        "action_packet_retry_transition_required",
+    )
+    assert calls["execute"] == 1
+    assert result.action_packet_lifecycle_entries[0].transition_events[
+        -1
+    ].transition_rule_id == "g2a_t24_nonconsuming_failure"
+
+
+def test_g2a5_replay_uncertain_closed_is_terminal_and_reconciliation_does_not_reopen(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    calls = {"execute": 0}
+
+    @wraps(acp._execute_mock_effect_v01)
+    def uncertain(**kwargs: object) -> object:
+        calls["execute"] += 1
+        raise RuntimeError("g2a5_controlled_uncertainty")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", uncertain)
+    result = _g2a4b_execute(fixture)
+    report = acp.replay_action_packet_lifecycle_history_v01(
+        result,
+        packet_id=packet_id,
+    )
+    inspection = acp.inspect_action_packet_present_eligibility_v01(
+        result,
+        packet_id=packet_id,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        current_dependency_observations=fixture.observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+        evaluation_time=fixture.eligibility_evaluation_time,
+        evaluation_time_source=fixture.eligibility_evaluation_time_source,
+        evaluation_context_id=fixture.eligibility_evaluation_context_id,
+    )
+    state = report.reconstructed_state
+    assert state.failed_provenance == "FAILED_UNCERTAIN_TERMINAL"
+    assert state.idempotency_disposition == "UNCERTAIN_CLOSED"
+    assert state.lifecycle_terminal is True
+    assert inspection.present_executable is False
+    assert inspection.retry_eligible is False
+    assert inspection.reason_codes == (
+        "action_packet_present_state_non_executable",
+    )
+    assert all(
+        context.receipt is None
+        for context in result.action_packet_fulfillment_attempt_contexts
+    )
+    assert calls["execute"] == 1
+    with pytest.raises(ValueError):
+        _g2a2b_append(result, packet_id, "g2a_t25_retry")
+    assert calls["execute"] == 1
+
+
+def test_g2a5_replay_rejects_coherent_history_and_report_forgery(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    report = acp.replay_action_packet_lifecycle_history_v01(
+        fixture.registry,
+        packet_id=packet_id,
+    )
+    for forged in (
+        replace(
+            report,
+            transition_history_sha256="f" * 64,
+        ),
+        replace(
+            report,
+            reconstructed_state=replace(
+                report.reconstructed_state,
+                lifecycle_state="BLOCKED",
+            ),
+        ),
+        replace(report, t24_reserved_history_replay_pass=False),
+        replace(
+            report,
+            recorded_transitions=tuple(
+                reversed(report.recorded_transitions)
+            ),
+        ),
+    ):
+        assert acp.validate_action_packet_lifecycle_replay_report_v01(
+            forged,
+            fixture.registry,
+            packet_id=packet_id,
+        )[0] is False
+    entry = fixture.registry.action_packet_lifecycle_entries[0]
+    reordered = replace(
+        fixture.registry,
+        action_packet_lifecycle_entries=(
+            replace(
+                entry,
+                transition_events=tuple(reversed(entry.transition_events)),
+            ),
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(reordered)[0] is False
+    changed_time = replace(
+        fixture.registry,
+        action_packet_lifecycle_entries=(
+            replace(
+                entry,
+                transition_events=(
+                    *entry.transition_events[:-1],
+                    replace(
+                        entry.transition_events[-1],
+                        evaluation_time=(
+                            entry.transition_events[-1].evaluation_time + 1
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(changed_time)[0] is False
+
+
+def test_g2a5_two_domain_airline_supplier_use_one_kernel_authority_law(
+) -> None:
+    report = (
+        g2a5_runner.collect_action_commit_packet_lifecycle_g2_a_v01()
+    )
+    airline = report.airline
+    supplier = report.supplier
+    assert (
+        airline.invalidation_class,
+        supplier.invalidation_class,
+    ) == (
+        "DEPENDENCY_CHANGED",
+        "ROOT_BOUND_KILL_SWITCH",
+    )
+    assert report.same_packet_family is True
+    assert report.same_transition_registry_id is True
+    assert report.same_authority_law is True
+    assert airline.generic_authority_law_id == (
+        supplier.generic_authority_law_id
+    )
+    assert airline.authority_effect == supplier.authority_effect == (
+        "DETERMINISTIC_BLOCK"
+    )
+    assert airline.lifecycle_after == supplier.lifecycle_after == "BLOCKED"
+    assert airline.registry_creates_authority is False
+    assert supplier.registry_creates_authority is False
+    assert "INDEPENDENT_ROOT_GEOMETRY_REFERENCE_ONLY" in (
+        airline.source_reference_status
+    )
+    assert "MIXED_REFERENCE_ONLY" in supplier.source_reference_status
+    assert "SUPPLIER_B_BLOCKED" in supplier.source_reference_status
+    assert "SHIPMENT_HELD" in supplier.source_reference_status
+    assert report.closed_domain_artifacts_rerun is False
+    assert report.real_world_effects_count == 0
+
+
+def test_g2a5_two_domain_runner_is_deterministic_public_safe_and_zero_effect(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import builtins
+
+    reads = {"count": 0}
+    original_open = builtins.open
+
+    @wraps(original_open)
+    def forbidden_open(*args: object, **kwargs: object) -> object:
+        reads["count"] += 1
+        raise AssertionError("runner_filesystem_read_forbidden")
+
+    monkeypatch.setattr(builtins, "open", forbidden_open)
+    first = (
+        g2a5_runner.collect_action_commit_packet_lifecycle_g2_a_v01()
+    )
+    second = (
+        g2a5_runner.collect_action_commit_packet_lifecycle_g2_a_v01()
+    )
+    first_bytes = canonical_json_bytes_v01(g2a5_runner._plain(first))
+    second_bytes = canonical_json_bytes_v01(g2a5_runner._plain(second))
+    assert first.final_status == "PASS"
+    assert g2a5_runner.validate_action_commit_packet_lifecycle_g2_a_report_v01(
+        first
+    ) == (True, ())
+    assert first_bytes == second_bytes
+    rendered = (
+        g2a5_runner.render_action_commit_packet_lifecycle_g2_a_v01(first)
+    )
+    assert rendered.encode("utf-8") == first_bytes
+    assert reads["count"] == 0
+    lowered = rendered.lower()
+    assert all(
+        marker not in lowered
+        for marker in (
+            "api_key",
+            "secret",
+            "raw_prompt",
+            "provider_response",
+        )
+    )
+    assert (
+        first.provider_calls,
+        first.network_calls,
+        first.gemini_calls,
+        first.adapter_calls,
+        first.receipt_creations,
+        first.real_world_effects_count,
+    ) == (0, 0, 0, 0, 0, 0)
+    assert first.closed_domain_artifacts_rerun is False
+
+
+def test_g2a5_replay_and_inspection_never_reach_root_firewall_adapter_or_receipt_creation(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    consumed = _g2a4b_execute(fixture)
+    calls = {
+        "registry": 0,
+        "firewall": 0,
+        "authorize": 0,
+        "execute": 0,
+        "receipt": 0,
+    }
+    original_registry = acp._validate_action_commit_packet_registry_core_v02
+
+    @wraps(original_registry)
+    def counted_registry(registry: object) -> object:
+        calls["registry"] += 1
+        return original_registry(registry)
+
+    def counted(name: str, original: object) -> object:
+        @wraps(original)
+        def wrapper(*args: object, **kwargs: object) -> object:
+            calls[name] += 1
+            return original(*args, **kwargs)  # type: ignore[operator]
+
+        return wrapper
+
+    monkeypatch.setattr(
+        acp,
+        "_validate_action_commit_packet_registry_core_v02",
+        counted_registry,
+    )
+    for name, target in (
+        ("firewall", "_build_effect_firewall_v01"),
+        ("authorize", "_authorize_effect_request_v01"),
+        ("execute", "_execute_mock_effect_v01"),
+        ("receipt", "_build_kernel_artifact_v01"),
+    ):
+        monkeypatch.setattr(
+            acp,
+            target,
+            counted(name, getattr(acp, target)),
+        )
+    acp.replay_action_packet_lifecycle_history_v01(
+        fixture.registry,
+        packet_id=fixture.root_bound.packet_identity.packet_id,
+    )
+    assert calls == {
+        "registry": 1,
+        "firewall": 0,
+        "authorize": 0,
+        "execute": 0,
+        "receipt": 0,
+    }
+    calls["registry"] = 0
+    acp.inspect_action_packet_present_eligibility_v01(
+        fixture.registry,
+        packet_id=fixture.root_bound.packet_identity.packet_id,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        current_dependency_observations=fixture.observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+        evaluation_time=fixture.eligibility_evaluation_time,
+        evaluation_time_source=fixture.eligibility_evaluation_time_source,
+        evaluation_context_id=fixture.eligibility_evaluation_context_id,
+    )
+    assert calls == {
+        "registry": 1,
+        "firewall": 0,
+        "authorize": 0,
+        "execute": 0,
+        "receipt": 0,
+    }
+    calls["registry"] = 0
+    assert acp.validate_action_commit_packet_registry_v02(
+        consumed
+    ) == (True, ())
+    assert calls == {
+        "registry": 1,
+        "firewall": 0,
+        "authorize": 0,
+        "execute": 0,
+        "receipt": 0,
+    }
+
+
+def test_g2a5_replay_accepts_legacy_proof_t24_without_a4b_context(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    legacy, _ = _g2a2_final_failed_nonconsuming_registry(
+        fixture.root_bound
+    )
+    assert acp.validate_action_commit_packet_registry_v02(legacy) == (
+        True,
+        (),
+    )
+    entry = _g2a4b_entry(legacy, packet_id)
+    assert entry.transition_events[-1].transition_rule_id == (
+        "g2a_t24_nonconsuming_failure"
+    )
+    assert legacy.action_packet_fulfillment_attempt_contexts == ()
+    before = canonical_json_bytes_v01(
+        acp._action_packet_replay_canonical_value_v01(legacy)
+    )
+    replay = acp.replay_action_packet_lifecycle_history_v01(
+        legacy,
+        packet_id=packet_id,
+    )
+    state = replay.reconstructed_state
+    assert replay.t24_reserved_history_replay_pass is True
+    assert state.failed_provenance == "FAILED_NON_CONSUMING"
+    assert state.idempotency_disposition == "RESERVED"
+    assert state.reservation_owner_packet_id == packet_id
+    assert state.latest_disposition_event_id == (
+        legacy.idempotency_disposition_events[-1]
+        .idempotency_disposition_event_id
+    )
+    assert all(
+        event.receipt_ref is None
+        for event in entry.transition_events
+        if event.execution_attempt_id
+        == entry.transition_events[-1].execution_attempt_id
+    )
+    assert not any(
+        entry.transition_events[-1].transition_event_id
+        in event.cause_transition_event_ids
+        for event in legacy.idempotency_disposition_events
+    )
+    assert canonical_json_bytes_v01(
+        acp._action_packet_replay_canonical_value_v01(legacy)
+    ) == before
+
+    calls = {"execute": 0}
+
+    @wraps(acp._execute_mock_effect_v01)
+    def nonconsuming(**kwargs: object) -> object:
+        calls["execute"] += 1
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", nonconsuming)
+    a4b = _g2a4b_execute(fixture)
+    assert calls["execute"] == 1
+    missing_context = replace(
+        a4b,
+        action_packet_fulfillment_attempt_contexts=(),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        missing_context
+    )[0] is False
+    with pytest.raises(ValueError):
+        acp.replay_action_packet_lifecycle_history_v01(
+            missing_context,
+            packet_id=packet_id,
+        )
+    assert calls["execute"] == 1
+
+
+def test_g2a5_present_inspection_respects_no_retry_policy_for_legacy_and_a4b_t24(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    no_retry = _g2a4a_fixture_value(retry_policy="NO_RETRY")
+    positive = g2a4a_fixture
+    calls = {"execute": 0}
+
+    @wraps(acp._execute_mock_effect_v01)
+    def nonconsuming(**kwargs: object) -> object:
+        calls["execute"] += 1
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", nonconsuming)
+    a4b_no_retry = _g2a4b_execute(no_retry)
+    a4b_positive = _g2a4b_execute(positive)
+    legacy_no_retry, _ = _g2a2_final_failed_nonconsuming_registry(
+        no_retry.root_bound
+    )
+    assert calls["execute"] == 2
+
+    for target in (
+        "_build_effect_firewall_v01",
+        "_authorize_effect_request_v01",
+        "_execute_mock_effect_v01",
+        "_build_kernel_artifact_v01",
+    ):
+        monkeypatch.setattr(
+            acp,
+            target,
+            lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("present_inspection_runtime_path_forbidden")
+            ),
+        )
+
+    def inspect(
+        fixture: _G2A4AFixtureV01,
+        registry: acp.ActionCommitPacketRegistryV02,
+    ) -> acp.ActionPacketPresentEligibilityInspectionV01:
+        before = canonical_json_bytes_v01(
+            acp._action_packet_replay_canonical_value_v01(registry)
+        )
+        transition_count = len(
+            _g2a4b_entry(
+                registry,
+                fixture.root_bound.packet_identity.packet_id,
+            ).transition_events
+        )
+        report = acp.inspect_action_packet_present_eligibility_v01(
+            registry,
+            packet_id=fixture.root_bound.packet_identity.packet_id,
+            corridor=fixture.corridor,
+            corridor_step=fixture.corridor_step,
+            current_dependency_observations=fixture.observations,
+            logical_time_bridge=fixture.logical_time_bridge,
+            evaluation_time=fixture.eligibility_evaluation_time,
+            evaluation_time_source=(
+                fixture.eligibility_evaluation_time_source
+            ),
+            evaluation_context_id=fixture.eligibility_evaluation_context_id,
+        )
+        assert len(
+            _g2a4b_entry(
+                registry,
+                fixture.root_bound.packet_identity.packet_id,
+            ).transition_events
+        ) == transition_count
+        assert canonical_json_bytes_v01(
+            acp._action_packet_replay_canonical_value_v01(registry)
+        ) == before
+        return report
+
+    a4b_no_retry_report = inspect(no_retry, a4b_no_retry)
+    for report in (a4b_no_retry_report,):
+        assert report.present_eligibility_status == "NON_EXECUTABLE"
+        assert report.present_executable is False
+        assert report.retry_eligible is False
+        assert report.reason_codes == ("retry_policy_invalid",)
+
+    legacy_no_retry_report = inspect(no_retry, legacy_no_retry)
+    assert legacy_no_retry_report.present_eligibility_status == (
+        "NON_EXECUTABLE"
+    )
+    assert legacy_no_retry_report.present_executable is False
+    assert legacy_no_retry_report.retry_eligible is False
+    assert legacy_no_retry_report.reason_codes == ("retry_policy_invalid",)
+
+    positive_report = inspect(positive, a4b_positive)
+    assert positive_report.present_eligibility_status == "NON_EXECUTABLE"
+    assert positive_report.present_executable is False
+    assert positive_report.retry_eligible is True
+    assert positive_report.reason_codes == (
+        "action_packet_retry_transition_required",
+    )
+    assert calls["execute"] == 2
+
+
+def test_g2a5_runner_validator_rejects_coherent_internal_and_cross_domain_forgery(
+) -> None:
+    report = (
+        g2a5_runner.collect_action_commit_packet_lifecycle_g2_a_v01()
+    )
+    assert g2a5_runner.validate_action_commit_packet_lifecycle_g2_a_report_v01(
+        report
+    ) == (True, ())
+    airline = report.airline
+    supplier = report.supplier
+    replay = airline.replay_report
+    inspection = airline.present_inspection
+    state = replay.reconstructed_state
+    transitions = replay.recorded_transitions
+
+    def airline_result(
+        **changes: object,
+    ) -> g2a5_runner.ActionCommitPacketLifecycleG2A5ReportV01:
+        return replace(report, airline=replace(airline, **changes))
+
+    def airline_replay(
+        **changes: object,
+    ) -> g2a5_runner.ActionCommitPacketLifecycleG2A5ReportV01:
+        return airline_result(
+            replay_report=replace(replay, **changes),
+        )
+
+    def airline_inspection(
+        **changes: object,
+    ) -> g2a5_runner.ActionCommitPacketLifecycleG2A5ReportV01:
+        return airline_result(
+            present_inspection=replace(inspection, **changes),
+        )
+
+    def airline_state(
+        **changes: object,
+    ) -> g2a5_runner.ActionCommitPacketLifecycleG2A5ReportV01:
+        return airline_replay(
+            reconstructed_state=replace(state, **changes),
+        )
+
+    def airline_transition(
+        index: int,
+        **changes: object,
+    ) -> g2a5_runner.ActionCommitPacketLifecycleG2A5ReportV01:
+        changed = replace(transitions[index], **changes)
+        return airline_replay(
+            recorded_transitions=(
+                transitions[:index] + (changed,) + transitions[index + 1 :]
+            ),
+        )
+
+    mutations: list[
+        tuple[
+            str,
+            g2a5_runner.ActionCommitPacketLifecycleG2A5ReportV01,
+        ]
+    ] = [
+        (
+            "domain_packet_id",
+            airline_result(packet_id="acp_v02:" + "0" * 64),
+        ),
+        (
+            "domain_root_id",
+            airline_result(owning_local_root_id="root:g2a5:forged"),
+        ),
+        (
+            "domain_transition_registry",
+            airline_result(
+                transition_registry_id="acptr_v01:" + "0" * 64
+            ),
+        ),
+        (
+            "domain_invalidation_class",
+            airline_result(invalidation_class="ROOT_BOUND_KILL_SWITCH"),
+        ),
+        (
+            "domain_reference_status",
+            airline_result(
+                source_reference_status=supplier.source_reference_status
+            ),
+        ),
+        (
+            "domain_authority_effect",
+            airline_result(authority_effect="ALLOW"),
+        ),
+        (
+            "domain_transition_rule",
+            airline_result(transition_rule_id="g2a_t08_queued_block"),
+        ),
+        (
+            "domain_lifecycle_before",
+            airline_result(lifecycle_before="QUEUED"),
+        ),
+        (
+            "domain_lifecycle_after",
+            airline_result(lifecycle_after="FAILED"),
+        ),
+        (
+            "domain_disposition",
+            airline_result(idempotency_disposition_after="CONSUMED"),
+        ),
+        (
+            "domain_reservation_owner",
+            airline_result(
+                reservation_owner_packet_id_after=supplier.packet_id
+            ),
+        ),
+        (
+            "domain_replay_clone",
+            airline_result(replay_report=supplier.replay_report),
+        ),
+        (
+            "domain_inspection_clone",
+            airline_result(present_inspection=supplier.present_inspection),
+        ),
+        (
+            "domain_authority_law",
+            airline_result(generic_authority_law_id="authority:forged"),
+        ),
+        (
+            "domain_registry_authority",
+            airline_result(registry_creates_authority=True),
+        ),
+        ("domain_adapter_calls", airline_result(adapter_calls=1)),
+        ("domain_receipts", airline_result(receipt_creations=1)),
+        (
+            "domain_real_effects",
+            airline_result(real_world_effects_count=1),
+        ),
+        (
+            "replay_profile",
+            airline_replay(replay_profile_id="replay:forged"),
+        ),
+        (
+            "replay_registry",
+            airline_replay(registry_id="acp_v02:forged_registry"),
+        ),
+        (
+            "replay_packet",
+            airline_replay(packet_id="acp_v02:" + "0" * 64),
+        ),
+        (
+            "replay_transition_registry",
+            airline_replay(transition_registry_id="acptr_v01:" + "0" * 64),
+        ),
+        (
+            "replay_root_decision_id",
+            airline_replay(source_root_decision_id="0" * 64),
+        ),
+        (
+            "replay_root_decision_hash",
+            airline_replay(source_root_decision_hash="0" * 64),
+        ),
+        (
+            "replay_rebuilt_packet",
+            airline_replay(rebuilt_packet_id="acp_v02:" + "0" * 64),
+        ),
+        (
+            "replay_idempotency",
+            airline_replay(
+                rebuilt_idempotency_key="idem:action_v01:" + "0" * 64
+            ),
+        ),
+        ("replay_transitions_empty", airline_replay(recorded_transitions=())),
+        (
+            "replay_transitions_reordered",
+            airline_replay(recorded_transitions=tuple(reversed(transitions))),
+        ),
+        (
+            "replay_dispositions",
+            airline_replay(disposition_event_ids=()),
+        ),
+        (
+            "replay_invalidations",
+            airline_replay(invalidation_evidence_ids=()),
+        ),
+        (
+            "replay_fulfillments",
+            airline_replay(
+                fulfillment_attempt_evidence_ids=(
+                    "fulfillment_attempt_evidence_v01:" + "0" * 64,
+                )
+            ),
+        ),
+        (
+            "replay_transition_hash",
+            airline_replay(transition_history_sha256="0" * 64),
+        ),
+        (
+            "replay_disposition_hash",
+            airline_replay(disposition_history_sha256="0" * 64),
+        ),
+        (
+            "replay_invalidation_hash",
+            airline_replay(invalidation_history_sha256="0" * 64),
+        ),
+        (
+            "replay_fulfillment_hash",
+            airline_replay(fulfillment_history_sha256="0" * 64),
+        ),
+        (
+            "replay_temporal_pass",
+            airline_replay(historical_temporal_replay_pass=False),
+        ),
+        (
+            "replay_t24_pass",
+            airline_replay(t24_reserved_history_replay_pass=False),
+        ),
+        (
+            "replay_firewall_attempt_pass",
+            airline_replay(distinct_firewall_attempt_replay_pass=False),
+        ),
+        (
+            "replay_registry_unchanged",
+            airline_replay(registry_unchanged=False),
+        ),
+        (
+            "replay_creates_authority",
+            airline_replay(creates_authority=True),
+        ),
+        (
+            "replay_creates_permission",
+            airline_replay(creates_permission=True),
+        ),
+        ("replay_creates_packet", airline_replay(creates_packet=True)),
+        ("replay_creates_receipt", airline_replay(creates_receipt=True)),
+        ("replay_adapter_calls", airline_replay(adapter_calls=1)),
+        (
+            "replay_real_effects",
+            airline_replay(real_world_effects_count=1),
+        ),
+        (
+            "inspection_profile",
+            airline_inspection(inspection_profile_id="inspection:forged"),
+        ),
+        (
+            "inspection_registry",
+            airline_inspection(registry_id="acp_v02:forged_registry"),
+        ),
+        (
+            "inspection_packet",
+            airline_inspection(packet_id="acp_v02:" + "0" * 64),
+        ),
+        (
+            "inspection_time",
+            airline_inspection(evaluation_time=inspection.evaluation_time + 1),
+        ),
+        (
+            "inspection_time_source",
+            airline_inspection(evaluation_time_source="time:forged"),
+        ),
+        (
+            "inspection_context",
+            airline_inspection(evaluation_context_id="context:forged"),
+        ),
+        (
+            "inspection_status",
+            airline_inspection(
+                present_eligibility_status=(
+                    "ELIGIBLE_FOR_BOUNDED_MOCK_ATTEMPT"
+                )
+            ),
+        ),
+        (
+            "inspection_executable",
+            airline_inspection(present_executable=True),
+        ),
+        ("inspection_retry", airline_inspection(retry_eligible=True)),
+        (
+            "inspection_reasons",
+            airline_inspection(reason_codes=("forged_reason",)),
+        ),
+        (
+            "inspection_transition_hash",
+            airline_inspection(transition_history_sha256="0" * 64),
+        ),
+        (
+            "inspection_disposition_hash",
+            airline_inspection(disposition_history_sha256="0" * 64),
+        ),
+        (
+            "inspection_history_unchanged",
+            airline_inspection(historical_result_unchanged=False),
+        ),
+        (
+            "inspection_creates_authority",
+            airline_inspection(creates_authority=True),
+        ),
+        (
+            "inspection_creates_permission",
+            airline_inspection(creates_permission=True),
+        ),
+        (
+            "inspection_creates_packet",
+            airline_inspection(creates_packet=True),
+        ),
+        (
+            "inspection_creates_receipt",
+            airline_inspection(creates_receipt=True),
+        ),
+        (
+            "inspection_adapter_calls",
+            airline_inspection(adapter_calls=1),
+        ),
+        (
+            "inspection_real_effects",
+            airline_inspection(real_world_effects_count=1),
+        ),
+        ("state_packet", airline_state(packet_id=supplier.packet_id)),
+        (
+            "state_idempotency",
+            airline_state(idempotency_key=supplier.replay_report.rebuilt_idempotency_key),
+        ),
+        ("state_lifecycle", airline_state(lifecycle_state="FAILED")),
+        (
+            "state_failed_provenance",
+            airline_state(failed_provenance="FAILED_NON_CONSUMING"),
+        ),
+        (
+            "state_transition_count",
+            airline_state(transition_event_count=3),
+        ),
+        (
+            "state_latest_transition",
+            airline_state(
+                latest_transition_event_id=transitions[-2].transition_event_id
+            ),
+        ),
+        (
+            "state_attempt_count",
+            airline_state(execution_attempt_count=2),
+        ),
+        (
+            "state_disposition",
+            airline_state(idempotency_disposition="CONSUMED"),
+        ),
+        (
+            "state_reservation_owner",
+            airline_state(reservation_owner_packet_id=supplier.packet_id),
+        ),
+        (
+            "state_latest_disposition",
+            airline_state(
+                latest_disposition_event_id=(
+                    supplier.replay_report.disposition_event_ids[0]
+                )
+            ),
+        ),
+        (
+            "state_terminal_receipt",
+            airline_state(terminal_receipt_ref="receipt:forged"),
+        ),
+        (
+            "state_terminal",
+            airline_state(lifecycle_terminal=False),
+        ),
+        (
+            "state_corridor_eligible",
+            airline_state(eligible_for_corridor_revalidation=True),
+        ),
+        ("state_executable", airline_state(executable=True)),
+        (
+            "state_registry_authority",
+            airline_state(registry_is_authority=True),
+        ),
+        (
+            "state_registry_permission",
+            airline_state(registry_grants_permission=True),
+        ),
+        (
+            "state_real_effects",
+            airline_state(real_world_effects_count=1),
+        ),
+        ("state_reasons", airline_state(reason_codes=("forged_reason",))),
+        (
+            "transition_event_id_shape",
+            airline_transition(0, transition_event_id="acpt_v01:bad"),
+        ),
+        (
+            "transition_event_id_duplicate",
+            airline_transition(
+                1,
+                transition_event_id=transitions[0].transition_event_id,
+            ),
+        ),
+        (
+            "transition_rule",
+            airline_transition(
+                1,
+                transition_rule_id="g2a_t03_pending",
+            ),
+        ),
+        (
+            "transition_source",
+            airline_transition(1, source_state="CREATED"),
+        ),
+        (
+            "transition_target",
+            airline_transition(1, target_state="PENDING_FULFILLMENT"),
+        ),
+        (
+            "transition_time",
+            airline_transition(
+                1,
+                evaluation_time=transitions[1].evaluation_time + 1,
+            ),
+        ),
+        (
+            "transition_time_source",
+            airline_transition(1, evaluation_time_source="time:forged"),
+        ),
+        (
+            "transition_context",
+            airline_transition(1, evaluation_context_id="context:forged"),
+        ),
+        (
+            "transition_attempt_added",
+            airline_transition(
+                0,
+                execution_attempt_id=transitions[2].execution_attempt_id,
+            ),
+        ),
+        (
+            "transition_attempt_removed",
+            airline_transition(2, execution_attempt_id=None),
+        ),
+        (
+            "transition_consumption",
+            airline_transition(1, effect_consumption_class="CONSUMED"),
+        ),
+        (
+            "transition_receipt",
+            airline_transition(1, receipt_ref="receipt:forged"),
+        ),
+        (
+            "inspection_state_link",
+            airline_inspection(
+                historical_state=replace(state, lifecycle_state="FAILED")
+            ),
+        ),
+        ("report_profile", replace(report, report_profile_id="report:forged")),
+        ("report_same_packet", replace(report, same_packet_family=False)),
+        (
+            "report_same_registry",
+            replace(report, same_transition_registry_id=False),
+        ),
+        ("report_same_law", replace(report, same_authority_law=False)),
+        (
+            "report_immutable_history",
+            replace(report, immutable_history_proven=False),
+        ),
+        (
+            "report_closed_artifacts",
+            replace(report, closed_domain_artifacts_rerun=True),
+        ),
+        ("report_provider_calls", replace(report, provider_calls=1)),
+        ("report_network_calls", replace(report, network_calls=1)),
+        ("report_gemini_calls", replace(report, gemini_calls=1)),
+        ("report_adapter_calls", replace(report, adapter_calls=1)),
+        ("report_receipts", replace(report, receipt_creations=1)),
+        (
+            "report_real_effects",
+            replace(report, real_world_effects_count=1),
+        ),
+        ("report_status", replace(report, final_status="FAIL_CLOSED")),
+    ]
+
+    supplier_clone = replace(
+        supplier,
+        replay_report=airline.replay_report,
+        present_inspection=airline.present_inspection,
+    )
+    mutations.append(
+        (
+            "cross_domain_complete_nested_clone",
+            replace(report, supplier=supplier_clone),
+        )
+    )
+
+    supplier_state = supplier.replay_report.reconstructed_state
+    packet_alias_state = replace(
+        supplier_state,
+        packet_id=airline.packet_id,
+        reservation_owner_packet_id=airline.packet_id,
+    )
+    packet_alias_replay = replace(
+        supplier.replay_report,
+        packet_id=airline.packet_id,
+        rebuilt_packet_id=airline.packet_id,
+        reconstructed_state=packet_alias_state,
+    )
+    packet_alias_inspection = replace(
+        supplier.present_inspection,
+        packet_id=airline.packet_id,
+        historical_state=packet_alias_state,
+    )
+    mutations.append(
+        (
+            "cross_domain_packet_alias",
+            replace(
+                report,
+                supplier=replace(
+                    supplier,
+                    packet_id=airline.packet_id,
+                    reservation_owner_packet_id_after=airline.packet_id,
+                    replay_report=packet_alias_replay,
+                    present_inspection=packet_alias_inspection,
+                ),
+            ),
+        )
+    )
+
+    idempotency_alias_state = replace(
+        supplier_state,
+        idempotency_key=replay.rebuilt_idempotency_key,
+    )
+    mutations.extend(
+        (
+            (
+                "cross_domain_idempotency_alias",
+                replace(
+                    report,
+                    supplier=replace(
+                        supplier,
+                        replay_report=replace(
+                            supplier.replay_report,
+                            rebuilt_idempotency_key=(
+                                replay.rebuilt_idempotency_key
+                            ),
+                            reconstructed_state=idempotency_alias_state,
+                        ),
+                        present_inspection=replace(
+                            supplier.present_inspection,
+                            historical_state=idempotency_alias_state,
+                        ),
+                    ),
+                ),
+            ),
+            (
+                "cross_domain_root_decision_id_alias",
+                replace(
+                    report,
+                    supplier=replace(
+                        supplier,
+                        replay_report=replace(
+                            supplier.replay_report,
+                            source_root_decision_id=(
+                                replay.source_root_decision_id
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            (
+                "cross_domain_root_decision_hash_alias",
+                replace(
+                    report,
+                    supplier=replace(
+                        supplier,
+                        replay_report=replace(
+                            supplier.replay_report,
+                            source_root_decision_hash=(
+                                replay.source_root_decision_hash
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            (
+                "cross_domain_transition_history_alias",
+                replace(
+                    report,
+                    supplier=replace(
+                        supplier,
+                        replay_report=replace(
+                            supplier.replay_report,
+                            transition_history_sha256=(
+                                replay.transition_history_sha256
+                            ),
+                        ),
+                        present_inspection=replace(
+                            supplier.present_inspection,
+                            transition_history_sha256=(
+                                replay.transition_history_sha256
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            (
+                "cross_domain_disposition_history_alias",
+                replace(
+                    report,
+                    supplier=replace(
+                        supplier,
+                        replay_report=replace(
+                            supplier.replay_report,
+                            disposition_history_sha256=(
+                                replay.disposition_history_sha256
+                            ),
+                        ),
+                        present_inspection=replace(
+                            supplier.present_inspection,
+                            disposition_history_sha256=(
+                                replay.disposition_history_sha256
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            (
+                "cross_domain_invalidation_id_alias",
+                replace(
+                    report,
+                    supplier=replace(
+                        supplier,
+                        replay_report=replace(
+                            supplier.replay_report,
+                            invalidation_evidence_ids=(
+                                replay.invalidation_evidence_ids
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+                (
+                    "cross_domain_invalidation_history_alias",
+                    replace(
+                        report,
+                    supplier=replace(
+                        supplier,
+                        replay_report=replace(
+                            supplier.replay_report,
+                            invalidation_history_sha256=(
+                                replay.invalidation_history_sha256
+                            ),
+                        ),
+                        ),
+                    ),
+                ),
+                (
+                    "cross_domain_transition_context_alias",
+                    replace(
+                        report,
+                        supplier=replace(
+                            supplier,
+                            replay_report=replace(
+                                supplier.replay_report,
+                                recorded_transitions=tuple(
+                                    replace(
+                                        transition,
+                                        evaluation_context_id=(
+                                            replay.recorded_transitions[index]
+                                            .evaluation_context_id
+                                        ),
+                                    )
+                                    for index, transition in enumerate(
+                                        supplier.replay_report
+                                        .recorded_transitions
+                                    )
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                (
+                    "cross_domain_inspection_context_alias",
+                    replace(
+                        report,
+                        supplier=replace(
+                            supplier,
+                            present_inspection=replace(
+                                supplier.present_inspection,
+                                evaluation_context_id=(
+                                    inspection.evaluation_context_id
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            )
+        )
+
+    expected_state_fields = (
+        "packet_id",
+        "idempotency_key",
+        "lifecycle_state",
+        "failed_provenance",
+        "transition_event_count",
+        "latest_transition_event_id",
+        "execution_attempt_count",
+        "idempotency_disposition",
+        "reservation_owner_packet_id",
+        "latest_disposition_event_id",
+        "terminal_receipt_ref",
+        "lifecycle_terminal",
+        "eligible_for_corridor_revalidation",
+        "executable",
+        "registry_is_authority",
+        "registry_grants_permission",
+        "real_world_effects_count",
+        "reason_codes",
+    )
+    assert tuple(field.name for field in fields(state)) == (
+        expected_state_fields
+    )
+    assert tuple(
+        field.name
+        for field in fields(
+            supplier.present_inspection.historical_state
+        )
+    ) == expected_state_fields
+
+    custom_equality_mutations: list[
+        tuple[
+            str,
+            g2a5_runner.ActionCommitPacketLifecycleG2A5ReportV01,
+        ]
+    ] = []
+    for domain_field, domain_result in (
+        ("airline", airline),
+        ("supplier", supplier),
+    ):
+        historical_state = domain_result.present_inspection.historical_state
+        for field_name in expected_state_fields:
+            forged_state = replace(
+                historical_state,
+                **{field_name: _AlwaysEqualObject()},
+            )
+            assert type(forged_state) is acp.ActionPacketLifecycleStateV01
+            forged_inspection = replace(
+                domain_result.present_inspection,
+                historical_state=forged_state,
+            )
+            forged_domain = replace(
+                domain_result,
+                present_inspection=forged_inspection,
+            )
+            custom_equality_mutations.append(
+                (
+                    (
+                        f"{domain_field}_inspection_state_"
+                        f"custom_equality_{field_name}"
+                    ),
+                    replace(report, **{domain_field: forged_domain}),
+                )
+            )
+
+    reason_code_element_mutations = (
+        (
+            "airline_inspection_reason_codes_custom_equality_object",
+            replace(
+                report,
+                airline=replace(
+                    airline,
+                    present_inspection=replace(
+                        airline.present_inspection,
+                        reason_codes=(_AlwaysEqualObject(),),
+                    ),
+                ),
+            ),
+        ),
+        (
+            "supplier_inspection_reason_codes_custom_equality_object",
+            replace(
+                report,
+                supplier=replace(
+                    supplier,
+                    present_inspection=replace(
+                        supplier.present_inspection,
+                        reason_codes=(_AlwaysEqualObject(),),
+                    ),
+                ),
+            ),
+        ),
+        (
+            "airline_inspection_reason_codes_custom_equality_str",
+            replace(
+                report,
+                airline=replace(
+                    airline,
+                    present_inspection=replace(
+                        airline.present_inspection,
+                        reason_codes=(_AlwaysEqualStr("forged_reason"),),
+                    ),
+                ),
+            ),
+        ),
+        (
+            "supplier_inspection_reason_codes_custom_equality_str",
+            replace(
+                report,
+                supplier=replace(
+                    supplier,
+                    present_inspection=replace(
+                        supplier.present_inspection,
+                        reason_codes=(_AlwaysEqualStr("forged_reason"),),
+                    ),
+                ),
+            ),
+        ),
+    )
+
+    assert len(mutations) == 119
+    assert len(custom_equality_mutations) == 36
+    mutations.extend(custom_equality_mutations)
+    assert len(mutations) == 155
+    assert len(reason_code_element_mutations) == 4
+    mutations.extend(reason_code_element_mutations)
+    assert len(mutations) == 159
+    assert len({label for label, _ in mutations}) == len(mutations)
+    validation_results = tuple(
+        (
+            label,
+            g2a5_runner
+            .validate_action_commit_packet_lifecycle_g2_a_report_v01(
+                forged
+            ),
+        )
+        for label, forged in mutations
+    )
+    incorrectly_accepted = tuple(
+        label
+        for label, result in validation_results
+        if result == (True, ())
+    )
+    assert incorrectly_accepted == ()
+    for label, result in validation_results:
+        assert result == (
+            False,
+            ("g2a5_report_fail_closed",),
+        ), label

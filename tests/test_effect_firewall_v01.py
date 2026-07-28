@@ -6,6 +6,7 @@ import inspect
 import json
 import pickle
 from dataclasses import FrozenInstanceError, fields, is_dataclass, replace
+from functools import wraps
 from pathlib import Path
 
 import pytest
@@ -83,6 +84,17 @@ FIREWALL_PUBLIC_FIELDS = (
     "mock_only",
     "effect_access_owner",
 )
+HISTORICAL_AUTHORIZATION_FIELDS = (
+    "profile_id",
+    "firewall_id",
+    "request",
+    "decision",
+    "expected_capability_id",
+    "fresh_empty_invocation_state",
+    "firewall_object_created",
+    "capability_object_created",
+    "real_world_effects_count",
+)
 CAPABILITY_PROPERTIES = (
     "capability_id",
     "firewall_id",
@@ -98,7 +110,7 @@ CAPABILITY_PROPERTIES = (
     "scope_refs",
     "expires_at_tick",
 )
-PUBLIC_FUNCTIONS = (
+PACKAGE_EFFECT_FUNCTIONS = (
     "build_effect_firewall_v01",
     "validate_effect_firewall_v01",
     "build_effect_request_v01",
@@ -111,6 +123,11 @@ PUBLIC_FUNCTIONS = (
     "effect_firewall_decision_to_plain_dict_v01",
     "effect_firewall_to_plain_dict_v01",
 )
+HISTORICAL_PUBLIC_FUNCTIONS = (
+    "project_effect_firewall_historical_authorization_v01",
+    "validate_effect_firewall_historical_authorization_projection_v01",
+)
+PUBLIC_FUNCTIONS = PACKAGE_EFFECT_FUNCTIONS + HISTORICAL_PUBLIC_FUNCTIONS
 TIME_ENVELOPE = {
     "pt_created_at": "2026-01-01T00:00:00+00:00",
     "kt_asof": "2026-01-01T00:00:00+00:00",
@@ -336,6 +353,10 @@ def _execute_authorized(firewall, request, decision, receipt_id):
         ("MOCK_ADAPTER_PREFIX", "mock_adapter:"),
         ("MOCK_ACTION_PREFIX", "mock_action:"),
         ("RECEIPT_SOURCE_COMPONENT", "effect_firewall"),
+        (
+            "EFFECT_FIREWALL_HISTORICAL_AUTHORIZATION_PROFILE_ID_V01",
+            "effect_firewall_historical_authorization_projection_v01",
+        ),
         ("NoExpansionAfterRoot", True),
     ),
 )
@@ -364,6 +385,10 @@ def test_exact_immutable_tuple_constant(name, expected):
         (
             subject.EffectFirewallV01,
             FIREWALL_PUBLIC_FIELDS + ("_issuer_token", "_state"),
+        ),
+        (
+            subject.EffectFirewallHistoricalAuthorizationProjectionV01,
+            HISTORICAL_AUTHORIZATION_FIELDS,
         ),
     ),
 )
@@ -421,7 +446,7 @@ def test_exact_public_function_surface():
         "EffectFirewallV01",
         "EffectCapabilityV01",
     )
-    + PUBLIC_FUNCTIONS,
+    + PACKAGE_EFFECT_FUNCTIONS,
 )
 def test_direct_package_attribute_exists(name):
     assert getattr(kernel_package, name) is getattr(subject, name)
@@ -1646,3 +1671,255 @@ def test_canonical_request_decision_and_capability_ids_remain_frozen():
     assert decision.capability_id == (
         "77f3943c8a9a9c99852603400c0895201f156bd1f7ff65de2d6cec5a58da847a"
     )
+
+
+def _historical_projection_kwargs(**changes):
+    _, kernel, decision_input, result = _root_context()
+    values = {
+        "root_decision_kernel": kernel,
+        "decision_input": decision_input,
+        "root_decision_result": result,
+        "invocation_id": "invocation:fixture:effect_firewall:001",
+        "allowed_adapter_ids": ("mock_adapter:bounded_neutral_v01",),
+        "allowed_action_kinds": ("mock_action:record_neutral_receipt",),
+        "root_scope_refs": ("scope:neutral:alpha", "scope:neutral:beta"),
+        "maximum_expires_at_tick": 200,
+        "request_kind": "ActionCommitPacket",
+        "adapter_id": "mock_adapter:bounded_neutral_v01",
+        "action_kind": "mock_action:record_neutral_receipt",
+        "scope_refs": ("scope:neutral:alpha",),
+        "issued_at_tick": 100,
+        "expires_at_tick": 150,
+        "idempotency_key": "idempotency:fixture:effect_firewall:001",
+        "current_tick": 110,
+    }
+    values.update(changes)
+    return values
+
+
+def _historical_static_reason_case(reason):
+    kernel, decision_input, result, firewall, request = _request()
+    tick = 110
+    if reason == "forged_request":
+        request = replace(request, request_id="0" * 64)
+    elif reason == "request_root_binding_mismatch":
+        request = _rehash_request(request, root_decision_id="decision:other")
+    elif reason == "permission_binding_mismatch":
+        request = _rehash_request(request, permission_ref="permission:other")
+    elif reason == "real_effect_forbidden":
+        request = _rehash_request(request, mock_only=False)
+    elif reason == "adapter_not_allowed":
+        request = _rehash_request(request, adapter_id="mock_adapter:other")
+    elif reason == "action_not_allowed":
+        request = _rehash_request(request, action_kind="mock_action:other")
+    elif reason == "scope_expansion_forbidden":
+        request = _rehash_request(request, scope_refs=("scope:other",))
+    elif reason == "ttl_expansion_forbidden":
+        request = _rehash_request(request, expires_at_tick=201)
+    elif reason == "request_not_yet_valid":
+        tick = 99
+    elif reason == "request_expired":
+        tick = 150
+    projection = subject._project_effect_firewall_historical_request_v01(
+        root_decision_kernel=kernel,
+        decision_input=decision_input,
+        root_decision_result=result,
+        invocation_id=firewall.invocation_id,
+        allowed_adapter_ids=firewall.allowed_adapter_ids,
+        allowed_action_kinds=firewall.allowed_action_kinds,
+        root_scope_refs=firewall.root_scope_refs,
+        maximum_expires_at_tick=firewall.maximum_expires_at_tick,
+        request=request,
+        current_tick=tick,
+    )
+    runtime = subject.authorize_effect_request_v01(
+        firewall=firewall,
+        request=request,
+        current_tick=tick,
+    )
+    return projection, runtime
+
+
+def test_effect_firewall_historical_projection_matches_runtime_allow_without_state():
+    values = _historical_projection_kwargs()
+    historical = (
+        subject.project_effect_firewall_historical_authorization_v01(
+            **values
+        )
+    )
+    runtime_firewall = subject.build_effect_firewall_v01(
+        root_decision_kernel=values["root_decision_kernel"],
+        decision_input=values["decision_input"],
+        root_decision_result=values["root_decision_result"],
+        invocation_id=values["invocation_id"],
+        allowed_adapter_ids=values["allowed_adapter_ids"],
+        allowed_action_kinds=values["allowed_action_kinds"],
+        root_scope_refs=values["root_scope_refs"],
+        maximum_expires_at_tick=values["maximum_expires_at_tick"],
+    )
+    runtime_request = subject.build_effect_request_v01(
+        root_decision_kernel=values["root_decision_kernel"],
+        decision_input=values["decision_input"],
+        root_decision_result=values["root_decision_result"],
+        request_kind=values["request_kind"],
+        adapter_id=values["adapter_id"],
+        action_kind=values["action_kind"],
+        scope_refs=values["scope_refs"],
+        issued_at_tick=values["issued_at_tick"],
+        expires_at_tick=values["expires_at_tick"],
+        idempotency_key=values["idempotency_key"],
+    )
+    runtime_decision = subject.authorize_effect_request_v01(
+        firewall=runtime_firewall,
+        request=runtime_request,
+        current_tick=values["current_tick"],
+    )
+    assert tuple(
+        field.name
+        for field in fields(
+            subject.EffectFirewallHistoricalAuthorizationProjectionV01
+        )
+    ) == HISTORICAL_AUTHORIZATION_FIELDS
+    assert historical.firewall_id == runtime_firewall.firewall_id
+    assert historical.request == runtime_request
+    assert historical.decision == runtime_decision
+    assert historical.expected_capability_id == runtime_decision.capability_id
+    assert historical.fresh_empty_invocation_state is True
+    assert historical.firewall_object_created is False
+    assert historical.capability_object_created is False
+    assert historical.real_world_effects_count == 0
+    assert subject.validate_effect_firewall_historical_authorization_projection_v01(
+        historical,
+        **values,
+    ) == ()
+    with pytest.raises(FrozenInstanceError):
+        historical.firewall_object_created = True
+
+
+def test_effect_firewall_historical_projection_matches_static_block_reasons():
+    reasons = (
+        "forged_request",
+        "request_root_binding_mismatch",
+        "permission_binding_mismatch",
+        "real_effect_forbidden",
+        "adapter_not_allowed",
+        "action_not_allowed",
+        "scope_expansion_forbidden",
+        "ttl_expansion_forbidden",
+        "request_not_yet_valid",
+        "request_expired",
+    )
+    for reason in reasons:
+        historical, runtime = _historical_static_reason_case(reason)
+        assert historical.decision == runtime
+        assert historical.decision.reason_code == reason
+        assert historical.expected_capability_id is None
+        assert historical.decision.capability_issued is False
+        assert historical.decision.return_to_root is True
+        assert historical.real_world_effects_count == 0
+    assert "duplicate_request" not in reasons
+    assert "duplicate_idempotency_key" not in reasons
+
+
+def test_effect_firewall_historical_projection_rejects_drift_and_is_total():
+    values = _historical_projection_kwargs()
+    projection = (
+        subject.project_effect_firewall_historical_authorization_v01(
+            **values
+        )
+    )
+    replacements = {
+        "profile_id": "wrong_profile",
+        "firewall_id": "0" * 64,
+        "request": replace(projection.request, request_id="0" * 64),
+        "decision": replace(projection.decision, decision_id="0" * 64),
+        "expected_capability_id": "0" * 64,
+        "fresh_empty_invocation_state": False,
+        "firewall_object_created": True,
+        "capability_object_created": True,
+        "real_world_effects_count": 1,
+    }
+    for field_name, replacement in replacements.items():
+        drifted = replace(projection, **{field_name: replacement})
+        assert subject.validate_effect_firewall_historical_authorization_projection_v01(
+            drifted,
+            **values,
+        )
+    for malformed in (None, True, 1, {}, [], (), object()):
+        assert subject.validate_effect_firewall_historical_authorization_projection_v01(
+            malformed,
+            **values,
+        ) == ("effect_firewall_historical_projection_invalid",)
+    with pytest.raises(
+        ValueError,
+        match="^effect_firewall_historical_projection_invalid$",
+    ):
+        subject.project_effect_firewall_historical_authorization_v01(
+            **_historical_projection_kwargs(current_tick=True)
+        )
+
+    class EqualProjection:
+        def __eq__(self, other):
+            return True
+
+    assert subject.validate_effect_firewall_historical_authorization_projection_v01(
+        EqualProjection(),
+        **values,
+    ) == ("effect_firewall_historical_projection_invalid",)
+
+
+def test_effect_firewall_historical_projection_has_zero_runtime_state(
+    monkeypatch,
+):
+    calls = {
+        "firewall": 0,
+        "authorize": 0,
+        "execute": 0,
+        "capability": 0,
+    }
+
+
+    def counter(name, original):
+        @wraps(original)
+        def wrapped(*args, **kwargs):
+            calls[name] += 1
+            return original(*args, **kwargs)
+
+        return wrapped
+
+    monkeypatch.setattr(
+        subject,
+        "build_effect_firewall_v01",
+        counter("firewall", subject.build_effect_firewall_v01),
+    )
+    monkeypatch.setattr(
+        subject,
+        "authorize_effect_request_v01",
+        counter("authorize", subject.authorize_effect_request_v01),
+    )
+    monkeypatch.setattr(
+        subject,
+        "execute_mock_effect_v01",
+        counter("execute", subject.execute_mock_effect_v01),
+    )
+    monkeypatch.setattr(
+        subject,
+        "_issue_capability",
+        counter("capability", subject._issue_capability),
+    )
+    values = _historical_projection_kwargs()
+    projection = (
+        subject.project_effect_firewall_historical_authorization_v01(
+            **values
+        )
+    )
+    assert subject.validate_effect_firewall_historical_authorization_projection_v01(
+        projection,
+        **values,
+    ) == ()
+    assert calls == {
+        "firewall": 0,
+        "authorize": 0,
+        "execute": 0,
+        "capability": 0,
+    }

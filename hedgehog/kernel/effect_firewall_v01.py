@@ -59,6 +59,9 @@ EFFECT_ACCESS_OWNER = "EFFECT_FIREWALL_ONLY"
 MOCK_ADAPTER_PREFIX = "mock_adapter:"
 MOCK_ACTION_PREFIX = "mock_action:"
 RECEIPT_SOURCE_COMPONENT = "effect_firewall"
+EFFECT_FIREWALL_HISTORICAL_AUTHORIZATION_PROFILE_ID_V01 = (
+    "effect_firewall_historical_authorization_projection_v01"
+)
 NoExpansionAfterRoot = True
 
 _FIREWALL_DOMAIN = "hedgehog.kernel.effect_firewall.v01"
@@ -304,6 +307,19 @@ class EffectFirewallDecisionV01:
 
 
 @_dataclass(frozen=True, slots=True)
+class EffectFirewallHistoricalAuthorizationProjectionV01:
+    profile_id: str
+    firewall_id: str
+    request: EffectRequestV01
+    decision: EffectFirewallDecisionV01
+    expected_capability_id: str | None
+    fresh_empty_invocation_state: bool
+    firewall_object_created: bool
+    capability_object_created: bool
+    real_world_effects_count: int
+
+
+@_dataclass(frozen=True, slots=True)
 class EffectFirewallV01:
     firewall_id: str
     firewall_version: str
@@ -489,6 +505,116 @@ def validate_effect_request_v01(request: object) -> tuple[str, ...]:
         return _request_errors(request, check_id=True)
     except Exception:
         return ("effect_request_unexpected_exception",)
+
+
+def project_effect_firewall_historical_authorization_v01(
+    *,
+    root_decision_kernel: object,
+    decision_input: object,
+    root_decision_result: object,
+    invocation_id: object,
+    allowed_adapter_ids: object,
+    allowed_action_kinds: object,
+    root_scope_refs: object,
+    maximum_expires_at_tick: object,
+    request_kind: object,
+    adapter_id: object,
+    action_kind: object,
+    scope_refs: object,
+    issued_at_tick: object,
+    expires_at_tick: object,
+    idempotency_key: object,
+    current_tick: object,
+) -> EffectFirewallHistoricalAuthorizationProjectionV01:
+    try:
+        request = build_effect_request_v01(
+            root_decision_kernel=root_decision_kernel,
+            decision_input=decision_input,
+            root_decision_result=root_decision_result,
+            request_kind=request_kind,
+            adapter_id=adapter_id,
+            action_kind=action_kind,
+            scope_refs=scope_refs,
+            issued_at_tick=issued_at_tick,
+            expires_at_tick=expires_at_tick,
+            idempotency_key=idempotency_key,
+        )
+        return _project_effect_firewall_historical_request_v01(
+            root_decision_kernel=root_decision_kernel,
+            decision_input=decision_input,
+            root_decision_result=root_decision_result,
+            invocation_id=invocation_id,
+            allowed_adapter_ids=allowed_adapter_ids,
+            allowed_action_kinds=allowed_action_kinds,
+            root_scope_refs=root_scope_refs,
+            maximum_expires_at_tick=maximum_expires_at_tick,
+            request=request,
+            current_tick=current_tick,
+        )
+    except ValueError as exc:
+        reason = _allowed_reason(
+            exc,
+            (
+                *_FIREWALL_REASONS,
+                *_REQUEST_REASONS,
+                "effect_firewall_historical_projection_invalid",
+            ),
+        )
+        raise ValueError(
+            reason or "effect_firewall_historical_projection_invalid"
+        ) from None
+    except Exception:
+        raise ValueError(
+            "effect_firewall_historical_projection_invalid"
+        ) from None
+
+
+def validate_effect_firewall_historical_authorization_projection_v01(
+    projection: object,
+    *,
+    root_decision_kernel: object,
+    decision_input: object,
+    root_decision_result: object,
+    invocation_id: object,
+    allowed_adapter_ids: object,
+    allowed_action_kinds: object,
+    root_scope_refs: object,
+    maximum_expires_at_tick: object,
+    request_kind: object,
+    adapter_id: object,
+    action_kind: object,
+    scope_refs: object,
+    issued_at_tick: object,
+    expires_at_tick: object,
+    idempotency_key: object,
+    current_tick: object,
+) -> tuple[str, ...]:
+    try:
+        if not _historical_projection_shape_valid(projection):
+            return ("effect_firewall_historical_projection_invalid",)
+        expected = project_effect_firewall_historical_authorization_v01(
+            root_decision_kernel=root_decision_kernel,
+            decision_input=decision_input,
+            root_decision_result=root_decision_result,
+            invocation_id=invocation_id,
+            allowed_adapter_ids=allowed_adapter_ids,
+            allowed_action_kinds=allowed_action_kinds,
+            root_scope_refs=root_scope_refs,
+            maximum_expires_at_tick=maximum_expires_at_tick,
+            request_kind=request_kind,
+            adapter_id=adapter_id,
+            action_kind=action_kind,
+            scope_refs=scope_refs,
+            issued_at_tick=issued_at_tick,
+            expires_at_tick=expires_at_tick,
+            idempotency_key=idempotency_key,
+            current_tick=current_tick,
+        )
+        if projection != expected:
+            return ("effect_firewall_historical_projection_mismatch",)
+        return ()
+    except Exception:
+        return ("effect_firewall_historical_projection_invalid",)
 
 
 def authorize_effect_request_v01(
@@ -1007,6 +1133,250 @@ def _validated_root_context(
     }
 
 
+def _historical_firewall_values_v01(
+    *,
+    root_decision_kernel: object,
+    decision_input: object,
+    root_decision_result: object,
+    invocation_id: object,
+    allowed_adapter_ids: object,
+    allowed_action_kinds: object,
+    root_scope_refs: object,
+    maximum_expires_at_tick: object,
+) -> dict[str, object]:
+    context = _validated_root_context(
+        root_decision_kernel,
+        decision_input,
+        root_decision_result,
+    )
+    if not _valid_text(invocation_id):
+        raise ValueError("effect_firewall_binding_invalid")
+    if not _valid_text_tuple(
+        allowed_adapter_ids,
+        allow_empty=False,
+    ) or any(
+        not item.startswith(MOCK_ADAPTER_PREFIX)
+        for item in allowed_adapter_ids
+    ):
+        raise ValueError("effect_firewall_adapter_policy_invalid")
+    if not _valid_text_tuple(
+        allowed_action_kinds,
+        allow_empty=False,
+    ) or any(
+        not item.startswith(MOCK_ACTION_PREFIX)
+        for item in allowed_action_kinds
+    ):
+        raise ValueError("effect_firewall_action_policy_invalid")
+    if not _valid_text_tuple(root_scope_refs, allow_empty=False):
+        raise ValueError("effect_firewall_scope_invalid")
+    if (
+        type(maximum_expires_at_tick) is not int
+        or maximum_expires_at_tick <= 0
+    ):
+        raise ValueError("effect_firewall_time_invalid")
+    values: dict[str, object] = {
+        "firewall_version": EFFECT_FIREWALL_VERSION,
+        "invocation_id": invocation_id,
+        "transaction_id": context["transaction_id"],
+        "target_root_id": context["target_root_id"],
+        "root_decision_id": context["root_decision_id"],
+        "selected_candidate_id": context["selected_candidate_id"],
+        "permission_ref": context["permission_ref"],
+        "allowed_adapter_ids": allowed_adapter_ids,
+        "allowed_action_kinds": allowed_action_kinds,
+        "root_scope_refs": root_scope_refs,
+        "maximum_expires_at_tick": maximum_expires_at_tick,
+        "mock_only": True,
+        "effect_access_owner": EFFECT_ACCESS_OWNER,
+    }
+    material = {
+        key: list(value) if type(value) is tuple else value
+        for key, value in values.items()
+    }
+    values["firewall_id"] = _hash(_FIREWALL_DOMAIN, material)
+    return values
+
+
+def _historical_static_block_reason_v01(
+    firewall_values: dict[str, object],
+    request: EffectRequestV01,
+    current_tick: int,
+) -> str | None:
+    if (
+        request.transaction_id != firewall_values["transaction_id"]
+        or request.target_root_id != firewall_values["target_root_id"]
+        or request.root_decision_id != firewall_values["root_decision_id"]
+        or request.selected_candidate_id
+        != firewall_values["selected_candidate_id"]
+    ):
+        return "request_root_binding_mismatch"
+    if request.permission_ref != firewall_values["permission_ref"]:
+        return "permission_binding_mismatch"
+    if (
+        request.mock_only is not True
+        or not request.adapter_id.startswith(MOCK_ADAPTER_PREFIX)
+        or not request.action_kind.startswith(MOCK_ACTION_PREFIX)
+    ):
+        return "real_effect_forbidden"
+    if request.adapter_id not in firewall_values["allowed_adapter_ids"]:
+        return "adapter_not_allowed"
+    if request.action_kind not in firewall_values["allowed_action_kinds"]:
+        return "action_not_allowed"
+    if not _is_subset(
+        request.scope_refs,
+        firewall_values["root_scope_refs"],
+    ):
+        return "scope_expansion_forbidden"
+    if (
+        request.expires_at_tick
+        > firewall_values["maximum_expires_at_tick"]
+    ):
+        return "ttl_expansion_forbidden"
+    if current_tick < request.issued_at_tick:
+        return "request_not_yet_valid"
+    if current_tick >= request.expires_at_tick:
+        return "request_expired"
+    return None
+
+
+def _historical_capability_id_v01(
+    firewall_values: dict[str, object],
+    request: EffectRequestV01,
+) -> str:
+    return _hash(
+        _CAPABILITY_DOMAIN,
+        {
+            "firewall_id": firewall_values["firewall_id"],
+            "invocation_id": firewall_values["invocation_id"],
+            "request_id": request.request_id,
+            "transaction_id": request.transaction_id,
+            "target_root_id": request.target_root_id,
+            "root_decision_id": request.root_decision_id,
+            "selected_candidate_id": request.selected_candidate_id,
+            "permission_ref": request.permission_ref,
+            "adapter_id": request.adapter_id,
+            "action_kind": request.action_kind,
+            "scope_refs": list(request.scope_refs),
+            "expires_at_tick": request.expires_at_tick,
+        },
+    )
+
+
+def _project_effect_firewall_historical_request_v01(
+    *,
+    root_decision_kernel: object,
+    decision_input: object,
+    root_decision_result: object,
+    invocation_id: object,
+    allowed_adapter_ids: object,
+    allowed_action_kinds: object,
+    root_scope_refs: object,
+    maximum_expires_at_tick: object,
+    request: object,
+    current_tick: object,
+) -> EffectFirewallHistoricalAuthorizationProjectionV01:
+    values = _historical_firewall_values_v01(
+        root_decision_kernel=root_decision_kernel,
+        decision_input=decision_input,
+        root_decision_result=root_decision_result,
+        invocation_id=invocation_id,
+        allowed_adapter_ids=allowed_adapter_ids,
+        allowed_action_kinds=allowed_action_kinds,
+        root_scope_refs=root_scope_refs,
+        maximum_expires_at_tick=maximum_expires_at_tick,
+    )
+    if (
+        type(request) is not EffectRequestV01
+        or not _request_authorization_shape_valid(request)
+        or type(current_tick) is not int
+        or current_tick < 0
+    ):
+        raise ValueError("effect_firewall_historical_projection_invalid")
+    if request.request_id != _request_id(request):
+        reason = "forged_request"
+    else:
+        reason = _historical_static_block_reason_v01(
+            values,
+            request,
+            current_tick,
+        )
+    capability_id = (
+        _historical_capability_id_v01(values, request)
+        if reason is None
+        else None
+    )
+    decision = _build_decision_values_v01(
+        firewall_id=values["firewall_id"],
+        invocation_id=values["invocation_id"],
+        request=request,
+        tick=current_tick,
+        decision=(
+            EFFECT_DECISION_ALLOW_MOCK_EFFECT
+            if reason is None
+            else EFFECT_DECISION_BLOCKED_FAIL_CLOSED
+        ),
+        reason="mock_effect_authorized" if reason is None else reason,
+        capability_id=capability_id,
+        capability_issued=reason is None,
+        return_to_root=reason is not None,
+    )
+    projection = EffectFirewallHistoricalAuthorizationProjectionV01(
+        profile_id=(
+            EFFECT_FIREWALL_HISTORICAL_AUTHORIZATION_PROFILE_ID_V01
+        ),
+        firewall_id=values["firewall_id"],
+        request=request,
+        decision=decision,
+        expected_capability_id=capability_id,
+        fresh_empty_invocation_state=True,
+        firewall_object_created=False,
+        capability_object_created=False,
+        real_world_effects_count=0,
+    )
+    if not _historical_projection_shape_valid(projection):
+        raise ValueError("effect_firewall_historical_projection_invalid")
+    return projection
+
+
+def _historical_projection_shape_valid(projection: object) -> bool:
+    if (
+        type(projection)
+        is not EffectFirewallHistoricalAuthorizationProjectionV01
+    ):
+        return False
+    try:
+        decision = projection.decision
+        return bool(
+            projection.profile_id
+            == EFFECT_FIREWALL_HISTORICAL_AUTHORIZATION_PROFILE_ID_V01
+            and _valid_sha256(projection.firewall_id)
+            and type(projection.request) is EffectRequestV01
+            and _request_authorization_shape_valid(projection.request)
+            and type(decision) is EffectFirewallDecisionV01
+            and not _decision_structure_errors(decision)
+            and decision.firewall_id == projection.firewall_id
+            and projection.expected_capability_id
+            == decision.capability_id
+            and projection.fresh_empty_invocation_state is True
+            and type(projection.fresh_empty_invocation_state) is bool
+            and projection.firewall_object_created is False
+            and type(projection.firewall_object_created) is bool
+            and projection.capability_object_created is False
+            and type(projection.capability_object_created) is bool
+            and type(projection.real_world_effects_count) is int
+            and projection.real_world_effects_count == 0
+            and (
+                decision.decision == EFFECT_DECISION_ALLOW_MOCK_EFFECT
+                and _valid_sha256(projection.expected_capability_id)
+                or decision.decision
+                == EFFECT_DECISION_BLOCKED_FAIL_CLOSED
+                and projection.expected_capability_id is None
+            )
+        )
+    except Exception:
+        return False
+
+
 def _firewall_errors(firewall: object) -> tuple[str, ...]:
     if type(firewall) is not EffectFirewallV01:
         return ("effect_firewall_invalid",)
@@ -1420,10 +1790,35 @@ def _build_decision(
     capability_issued: bool,
     return_to_root: bool,
 ) -> EffectFirewallDecisionV01:
-    provisional = EffectFirewallDecisionV01(
-        decision_id="0" * 64,
+    return _build_decision_values_v01(
         firewall_id=firewall.firewall_id,
         invocation_id=firewall.invocation_id,
+        request=request,
+        tick=tick,
+        decision=decision,
+        reason=reason,
+        capability_id=capability_id,
+        capability_issued=capability_issued,
+        return_to_root=return_to_root,
+    )
+
+
+def _build_decision_values_v01(
+    *,
+    firewall_id: str,
+    invocation_id: str,
+    request: EffectRequestV01,
+    tick: int,
+    decision: str,
+    reason: str,
+    capability_id: str | None,
+    capability_issued: bool,
+    return_to_root: bool,
+) -> EffectFirewallDecisionV01:
+    provisional = EffectFirewallDecisionV01(
+        decision_id="0" * 64,
+        firewall_id=firewall_id,
+        invocation_id=invocation_id,
         request_id=request.request_id,
         transaction_id=request.transaction_id,
         target_root_id=request.target_root_id,

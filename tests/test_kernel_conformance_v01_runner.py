@@ -11,6 +11,7 @@ import pytest
 
 import hedgehog.kernel as kernel
 from demo import run_kernel_conformance_v01 as runner
+from demo import run_living_gauntlet_v01 as living
 from hedgehog.kernel import conformance_v01 as conformance
 
 
@@ -18,7 +19,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 COMPLETION_MANIFEST_PATH = REPOSITORY_ROOT / "release/completion_manifest.json"
 
 
-EXPECTED_CATEGORIES = (
+GATE1_EXPECTED_CATEGORIES = (
     "DomainPackConformance",
     "RootAdapterConformance",
     "CorridorAdapterConformance",
@@ -30,8 +31,12 @@ EXPECTED_CATEGORIES = (
     "EffectFirewallConformance",
     "MultiRootConformance",
 )
+EXPECTED_CATEGORIES = (
+    *GATE1_EXPECTED_CATEGORIES,
+    "ActionPacketLifecycleConformance",
+)
 EXPECTED_DOMAINS = ("airline", "supplier_water_filter")
-EXPECTED_PROBES = (
+GATE1_EXPECTED_PROBES = (
     "manifest_hash_mismatch",
     "replay_hash_mismatch",
     "cross_root_signer_misuse",
@@ -43,7 +48,20 @@ EXPECTED_PROBES = (
     "airline_adapter_effect_access_forbidden",
     "supplier_adapter_effect_counter_rejected",
 )
-EXPECTED_ACTIVE_REFS = (
+EXPECTED_PROBES = (
+    *GATE1_EXPECTED_PROBES,
+    "action_packet_identity_forgery",
+    "action_packet_time_forgery",
+    "action_packet_illegal_transition",
+    "action_packet_unknown_transition",
+    "action_packet_root_authority_forgery",
+    "action_packet_registry_authority_forgery",
+    "action_packet_corridor_freshness_forgery",
+    "action_packet_receipt_authority_forgery",
+    "action_packet_replay_execution_forgery",
+    "action_packet_cross_domain_substitution",
+)
+GATE1_EXPECTED_ACTIVE_REFS = (
     "airline_deterministic_transaction_runtime",
     "all_layers_invariant_super_smoke",
     "generic_integrity_replay",
@@ -56,6 +74,10 @@ EXPECTED_ACTIVE_REFS = (
     "effect_firewall",
     "generic_multiroot",
     "supplier_water_filter_portability",
+)
+EXPECTED_ACTIVE_REFS = (
+    *GATE1_EXPECTED_ACTIVE_REFS,
+    "action_packet_lifecycle",
 )
 DATACLASS_FIELDS = {
     "ConformanceCountersV01": (
@@ -142,6 +164,67 @@ PUBLIC_FUNCTIONS = (
     "negative_conformance_result_to_plain_dict_v01",
     "kernel_conformance_report_to_plain_dict_v01",
 )
+_PUBLIC_FUNCTION_SIGNATURES = {
+    "build_conformance_category_result_v01": (
+        "(*, category_id: 'str', check_results: "
+        "'tuple[tuple[str, bool], ...]', evidence_refs: 'tuple[str, ...]', "
+        "limitation_refs: 'tuple[str, ...]') -> "
+        "'ConformanceCategoryResultV01'"
+    ),
+    "validate_conformance_category_result_v01": (
+        "(result: 'object') -> 'tuple[str, ...]'"
+    ),
+    "build_domain_conformance_result_v01": (
+        "(*, domain_id: 'str', adapter_ref: 'str', source_ref: 'str', "
+        "check_results: 'tuple[tuple[str, bool], ...]', evidence_refs: "
+        "'tuple[str, ...]', limitation_refs: 'tuple[str, ...]', "
+        "provider_call_count: 'int', network_call_count: 'int', "
+        "gemini_call_count: 'int', real_world_effects_count: 'int') -> "
+        "'DomainConformanceResultV01'"
+    ),
+    "validate_domain_conformance_result_v01": (
+        "(result: 'object') -> 'tuple[str, ...]'"
+    ),
+    "build_negative_conformance_result_v01": (
+        "(*, probe_id: 'str', target_contract: 'str', "
+        "expected_reason_codes: 'tuple[str, ...]', observed_reason_codes: "
+        "'tuple[str, ...]', blocked: 'bool', evidence_refs: "
+        "'tuple[str, ...]', real_world_effects_count: 'int') -> "
+        "'NegativeConformanceResultV01'"
+    ),
+    "validate_negative_conformance_result_v01": (
+        "(result: 'object') -> 'tuple[str, ...]'"
+    ),
+    "validate_conformance_counters_v01": (
+        "(counters: 'object') -> 'tuple[str, ...]'"
+    ),
+    "build_kernel_conformance_report_v01": (
+        "(*, implementation_commit: 'str', category_results: "
+        "'tuple[ConformanceCategoryResultV01, ...]', domain_results: "
+        "'tuple[DomainConformanceResultV01, ...]', negative_test_results: "
+        "'tuple[NegativeConformanceResultV01, ...]', active_gauntlet_refs: "
+        "'tuple[str, ...]', evidence_refs: 'tuple[str, ...]', limitations: "
+        "'tuple[str, ...]') -> 'KernelConformanceReportV01'"
+    ),
+    "validate_kernel_conformance_report_v01": (
+        "(report: 'object') -> 'tuple[str, ...]'"
+    ),
+    "conformance_counters_to_plain_dict_v01": (
+        "(counters: 'ConformanceCountersV01') -> 'dict[str, object]'"
+    ),
+    "conformance_category_result_to_plain_dict_v01": (
+        "(result: 'ConformanceCategoryResultV01') -> 'dict[str, object]'"
+    ),
+    "domain_conformance_result_to_plain_dict_v01": (
+        "(result: 'DomainConformanceResultV01') -> 'dict[str, object]'"
+    ),
+    "negative_conformance_result_to_plain_dict_v01": (
+        "(result: 'NegativeConformanceResultV01') -> 'dict[str, object]'"
+    ),
+    "kernel_conformance_report_to_plain_dict_v01": (
+        "(report: 'KernelConformanceReportV01') -> 'dict[str, object]'"
+    ),
+}
 COMMITTED_KERNEL_ALL = (
     "CanonicalArtifactRefV01",
     "ArtifactDependencyEdgeV01",
@@ -174,8 +257,18 @@ def _category(category_id: str, passed: bool = True):
     return conformance.build_conformance_category_result_v01(
         category_id=category_id,
         check_results=tuple((check_id, passed) for check_id in required),
-        evidence_refs=(f"evidence:{category_id}",),
-        limitation_refs=(f"limitation:{category_id}",),
+        evidence_refs=(
+            ("runtime:kernel_conformance:ActionPacketLifecycleConformance",)
+            if category_id == "ActionPacketLifecycleConformance"
+            else (f"evidence:{category_id}",)
+        ),
+        limitation_refs=(
+            (
+                "limitation_g2a6_deterministic_local_actionpacket_lifecycle_only",
+            )
+            if category_id == "ActionPacketLifecycleConformance"
+            else (f"limitation:{category_id}",)
+        ),
     )
 
 
@@ -212,7 +305,11 @@ def _negative(probe_id: str, *, blocked: bool = True, observed: bool = True):
         expected_reason_codes=expected_reasons,
         observed_reason_codes=expected_reasons if observed else (),
         blocked=blocked,
-        evidence_refs=(f"evidence:{probe_id}",),
+        evidence_refs=(
+            ("demo/run_action_commit_packet_lifecycle_g2_a_v01.py",)
+            if probe_id not in GATE1_EXPECTED_PROBES
+            else (f"evidence:{probe_id}",)
+        ),
         real_world_effects_count=0,
     )
 
@@ -239,6 +336,33 @@ def _report(*, commit: str = "abcdef0", categories=None, domains=None, negatives
         evidence_refs=("evidence:kernel:conformance",),
         limitations=("limitation:kernel:conformance",),
     )
+
+
+def _historical_v01_report():
+    categories = tuple(_category(item) for item in GATE1_EXPECTED_CATEGORIES)
+    domains = tuple(_domain(item) for item in EXPECTED_DOMAINS)
+    negatives = tuple(_negative(item) for item in GATE1_EXPECTED_PROBES)
+    evidence_refs = ("evidence:kernel:conformance:v0.1",)
+    provisional = conformance.KernelConformanceReportV01(
+        report_id="0" * 64,
+        conformance_version="v0.1",
+        implementation_commit="abcdef0",
+        category_results=categories,
+        domain_results=domains,
+        negative_test_results=negatives,
+        active_gauntlet_refs=GATE1_EXPECTED_ACTIVE_REFS,
+        evidence_refs=evidence_refs,
+        limitations=("limitation:kernel:conformance:v0.1",),
+        counters=conformance._derive_counters(
+            categories,
+            domains,
+            negatives,
+            GATE1_EXPECTED_ACTIVE_REFS,
+            evidence_refs,
+        ),
+        final_status=conformance.STATUS_PASS,
+    )
+    return conformance._replace_report_id(provisional)
 
 
 def _contains_type(value, target_type) -> bool:
@@ -299,7 +423,7 @@ def test_future_annotations_binding_is_absent():
     (
         ("MODULE_ID", "kernel_conformance_v01"),
         ("SLICE_ID", "domain_neutral_reference_kernel_gate1_g1e"),
-        ("CONFORMANCE_VERSION", "v0.1"),
+        ("CONFORMANCE_VERSION", "v0.2"),
         ("STATUS_PASS", "PASS"),
         ("STATUS_FAIL_CLOSED", "FAIL_CLOSED"),
         ("CONFORMANCE_STATUSES", ("PASS", "FAIL_CLOSED")),
@@ -465,11 +589,15 @@ def test_report_pass_geometry_and_counters_are_derived():
     report = _report()
     assert report.final_status == "PASS"
     assert conformance.validate_kernel_conformance_report_v01(report) == ()
-    assert (len(report.category_results), len(report.domain_results), len(report.negative_test_results)) == (10, 2, 10)
-    assert report.counters.category_pass_count == 10
+    assert (
+        len(report.category_results),
+        len(report.domain_results),
+        len(report.negative_test_results),
+    ) == (11, 2, 20)
+    assert report.counters.category_pass_count == 11
     assert report.counters.domain_pass_count == 2
-    assert report.counters.negative_pass_count == 10
-    assert report.counters.active_gauntlet_ref_count == 12
+    assert report.counters.negative_pass_count == 20
+    assert report.counters.active_gauntlet_ref_count == 13
 
 
 def test_final_report_rejects_arbitrary_synthetic_check_geometry_after_rehash():
@@ -746,12 +874,12 @@ def test_canonical_report_validates_and_projects(standalone_report):
         standalone_report
     )
     assert projection["final_status"] == conformance.STATUS_PASS
-    assert len(projection["category_results"]) == 10
+    assert len(projection["category_results"]) == 11
     assert len(projection["domain_results"]) == 2
-    assert len(projection["negative_test_results"]) == 10
+    assert len(projection["negative_test_results"]) == 20
 
 
-@pytest.mark.parametrize("index", range(10))
+@pytest.mark.parametrize("index", range(11))
 def test_canonical_category_check_geometry_is_exact(standalone_report, index):
     category_id, required = conformance._EXPECTED_CATEGORY_CHECK_IDS[index]
     result = standalone_report.category_results[index]
@@ -773,7 +901,7 @@ def test_canonical_domain_binding_geometry_is_exact(standalone_report, index):
     ) == expected
 
 
-@pytest.mark.parametrize("index", range(10))
+@pytest.mark.parametrize("index", range(20))
 def test_canonical_negative_geometry_is_exact(standalone_report, index):
     probe_id, target, expected_reasons = conformance._EXPECTED_NEGATIVE_GEOMETRY[
         index
@@ -948,7 +1076,293 @@ def test_runner_does_not_call_supplier_source_collector():
 
 def test_render_contains_only_summary_geometry(standalone_report):
     rendered = runner.render_kernel_conformance_v01(standalone_report)
-    assert "kernel_conformance_v01 v0.1" in rendered
+    assert "kernel_conformance_v01 v0.2" in rendered
     assert "final_status=PASS" in rendered
     for forbidden in ("manifest_hash=", "adapter_id=", "artifact_id=", "invoice", "shipment_sh"):
         assert forbidden not in rendered.lower()
+
+
+def test_g2a6_conformance_v02_preserves_v01_geometry_and_adds_lifecycle_category(
+    standalone_report,
+):
+    historical = _historical_v01_report()
+    assert conformance.validate_kernel_conformance_report_v01(historical) == ()
+    assert (
+        len(historical.category_results),
+        len(historical.domain_results),
+        len(historical.negative_test_results),
+        len(historical.active_gauntlet_refs),
+    ) == (10, 2, 10, 12)
+    assert conformance.validate_kernel_conformance_report_v01(standalone_report) == ()
+    assert (
+        standalone_report.conformance_version,
+        len(standalone_report.category_results),
+        len(standalone_report.domain_results),
+        len(standalone_report.negative_test_results),
+        len(standalone_report.active_gauntlet_refs),
+    ) == ("v0.2", 11, 2, 20, 13)
+    unknown = conformance._replace_report_id(
+        replace(standalone_report, conformance_version="v0.3")
+    )
+    mixed_v01 = conformance._replace_report_id(
+        replace(standalone_report, conformance_version="v0.1")
+    )
+    mixed_v02 = conformance._replace_report_id(
+        replace(historical, conformance_version="v0.2")
+    )
+    assert conformance.validate_kernel_conformance_report_v01(unknown)
+    assert "conformance_report_geometry_invalid" in (
+        conformance.validate_kernel_conformance_report_v01(mixed_v01)
+    )
+    assert "conformance_report_geometry_invalid" in (
+        conformance.validate_kernel_conformance_report_v01(mixed_v02)
+    )
+    assert conformance.CATEGORY_IDS[:10] == GATE1_EXPECTED_CATEGORIES
+    assert conformance.NEGATIVE_PROBE_IDS[:10] == GATE1_EXPECTED_PROBES
+    assert conformance._ACTIVE_GAUNTLET_REFS[:12] == GATE1_EXPECTED_ACTIVE_REFS
+    assert tuple(
+        (item.category_id, item.required_check_ids)
+        for item in standalone_report.category_results[:10]
+    ) == conformance._GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01
+    assert tuple(
+        (
+            item.probe_id,
+            item.target_contract,
+            item.expected_reason_codes,
+        )
+        for item in standalone_report.negative_test_results[:10]
+    ) == conformance._GATE1_EXPECTED_NEGATIVE_GEOMETRY_V01
+    assert standalone_report.category_results[10].category_id == (
+        "ActionPacketLifecycleConformance"
+    )
+    assert tuple(item.name for item in fields(conformance.KernelConformanceReportV01)) == (
+        DATACLASS_FIELDS["KernelConformanceReportV01"]
+    )
+    assert {
+        name: str(inspect.signature(getattr(conformance, name)))
+        for name in PUBLIC_FUNCTIONS
+    } == _PUBLIC_FUNCTION_SIGNATURES
+
+
+def test_g2a6_action_packet_lifecycle_category_matches_exact_checks(
+    standalone_report,
+):
+    category = standalone_report.category_results[-1]
+    expected_checks = (
+        "canonical_identity",
+        "canonical_time",
+        "legal_transitions",
+        "unknown_transition_block",
+        "root_only_authority_changes",
+        "registry_non_authority",
+        "corridor_freshness_enforcement",
+        "receipt_non_authority",
+        "replay_non_execution",
+        "cross_domain_invariance",
+    )
+    assert category.category_id == "ActionPacketLifecycleConformance"
+    assert category.required_check_ids == expected_checks
+    assert category.passed_check_ids == expected_checks
+    assert category.failed_check_ids == ()
+    assert category.evidence_refs == (
+        "runtime:kernel_conformance:ActionPacketLifecycleConformance",
+    )
+    assert category.limitation_refs == (
+        "limitation_g2a6_deterministic_local_actionpacket_lifecycle_only",
+    )
+    assert category.status == conformance.STATUS_PASS
+    assert category.result_id == conformance._category_id(category)
+
+    failed = conformance.build_conformance_category_result_v01(
+        category_id=category.category_id,
+        check_results=tuple(
+            (check_id, index != 0)
+            for index, check_id in enumerate(expected_checks)
+        ),
+        evidence_refs=category.evidence_refs,
+        limitation_refs=category.limitation_refs,
+    )
+    assert failed.status == conformance.STATUS_FAIL_CLOSED
+    forged_rows = (
+        replace(category, required_check_ids=expected_checks[:-1]),
+        replace(
+            category,
+            required_check_ids=tuple(reversed(expected_checks)),
+            passed_check_ids=tuple(reversed(expected_checks)),
+        ),
+        replace(
+            category,
+            required_check_ids=(expected_checks[0], *expected_checks),
+            passed_check_ids=(expected_checks[0], *expected_checks),
+        ),
+        replace(failed, status=conformance.STATUS_PASS),
+    )
+    for forged in forged_rows:
+        forged = conformance._replace_category_id(forged)
+        forged_report = conformance._replace_report_id(
+            replace(
+                standalone_report,
+                category_results=(
+                    *standalone_report.category_results[:-1],
+                    forged,
+                ),
+            )
+        )
+        assert conformance.validate_kernel_conformance_report_v01(forged_report)
+    source = inspect.getsource(runner._build_category_results)
+    assert "action_packet_lifecycle" in source
+    for probe_id in conformance.NEGATIVE_PROBE_IDS[10:]:
+        assert probe_id in source
+    assert standalone_report.counters.created_authority_count == 0
+    assert standalone_report.counters.created_permission_count == 0
+    assert standalone_report.counters.real_world_effects_count == 0
+
+
+def test_g2a6_action_packet_lifecycle_negative_probe_matrix_is_exact(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    collection_count = 0
+    original_collect = (
+        runner._action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01
+    )
+    original_validate = (
+        runner._action_packet_lifecycle.validate_action_commit_packet_lifecycle_g2_a_report_v01
+    )
+    validations = []
+
+    def collect_once():
+        nonlocal collection_count
+        collection_count += 1
+        return original_collect()
+
+    def validate_wrapper(report):
+        result = original_validate(report)
+        validations.append(result)
+        return result
+
+    monkeypatch.setattr(
+        runner._action_packet_lifecycle,
+        "collect_action_commit_packet_lifecycle_g2_a_v01",
+        collect_once,
+    )
+    monkeypatch.setattr(
+        runner._action_packet_lifecycle,
+        "validate_action_commit_packet_lifecycle_g2_a_report_v01",
+        validate_wrapper,
+    )
+    baseline = (
+        runner._action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01()
+    )
+    observations = runner._collect_action_packet_negative_observations_v01(
+        baseline
+    )
+    assert collection_count == 1
+    assert validations == [(True, ()), *((False, ("g2a5_report_fail_closed",)),) * 10]
+    assert tuple(item[0] for item in observations) == conformance.NEGATIVE_PROBE_IDS[
+        10:
+    ]
+    assert len(observations) == 10
+    for observation, expected_geometry in zip(
+        observations,
+        conformance._EXPECTED_NEGATIVE_GEOMETRY[10:],
+    ):
+        probe_id, target, expected, observed, blocked, evidence = observation
+        assert (probe_id, target, expected) == expected_geometry
+        assert observed == ("g2a5_report_fail_closed",)
+        assert blocked is True
+        assert evidence == "demo/run_action_commit_packet_lifecycle_g2_a_v01.py"
+        result = conformance.build_negative_conformance_result_v01(
+            probe_id=probe_id,
+            target_contract=target,
+            expected_reason_codes=expected,
+            observed_reason_codes=observed,
+            blocked=blocked,
+            evidence_refs=(evidence,),
+            real_world_effects_count=0,
+        )
+        assert result.status == conformance.STATUS_PASS
+        assert result.result_id == conformance._negative_id(result)
+
+    class _AlwaysEqual:
+        def __eq__(self, other):
+            return True
+
+        def __hash__(self):
+            return hash(conformance.NEGATIVE_PROBE_IDS[10])
+
+    class _AlwaysEqualStr(str):
+        def __eq__(self, other):
+            return True
+
+        __hash__ = str.__hash__
+
+    valid = conformance.build_negative_conformance_result_v01(
+        probe_id=conformance.NEGATIVE_PROBE_IDS[10],
+        target_contract=conformance._EXPECTED_NEGATIVE_GEOMETRY[10][1],
+        expected_reason_codes=("g2a5_report_fail_closed",),
+        observed_reason_codes=("g2a5_report_fail_closed",),
+        blocked=True,
+        evidence_refs=("demo/run_action_commit_packet_lifecycle_g2_a_v01.py",),
+        real_world_effects_count=0,
+    )
+    custom_object = replace(valid, probe_id=_AlwaysEqual())
+    custom_str = replace(valid, probe_id=_AlwaysEqualStr("forged"))
+    assert conformance.validate_negative_conformance_result_v01(custom_object)
+    assert conformance.validate_negative_conformance_result_v01(custom_str)
+
+
+def test_g2a6_conformance_and_living_gauntlet_are_deterministic_and_zero_effect():
+    release_hashes_before = (
+        hashlib.sha256(COMPLETION_MANIFEST_PATH.read_bytes()).hexdigest(),
+        hashlib.sha256(
+            (REPOSITORY_ROOT / "release/integration_seam_index.json").read_bytes()
+        ).hexdigest(),
+    )
+    first_conformance = runner.collect_standalone_kernel_conformance_v01(
+        implementation_commit="abcdef0"
+    )
+    second_conformance = runner.collect_standalone_kernel_conformance_v01(
+        implementation_commit="abcdef0"
+    )
+    first_living = living.collect_living_gauntlet_v01()
+    second_living = living.collect_living_gauntlet_v01()
+    assert (
+        conformance.kernel_conformance_report_to_plain_dict_v01(first_conformance)
+        == conformance.kernel_conformance_report_to_plain_dict_v01(
+            second_conformance
+        )
+    )
+    assert first_living == second_living
+    assert first_conformance.final_status == conformance.STATUS_PASS
+    assert (
+        first_conformance.counters.category_pass_count,
+        first_conformance.counters.domain_pass_count,
+        first_conformance.counters.negative_pass_count,
+    ) == (11, 2, 20)
+    assert first_living["final_status"] == living.STATUS_PASS
+    assert first_living["counters"]["active_act_pass_count"] == 14
+    assert (
+        first_conformance.counters.provider_call_count,
+        first_conformance.counters.network_call_count,
+        first_conformance.counters.gemini_call_count,
+        first_conformance.counters.created_authority_count,
+        first_conformance.counters.created_permission_count,
+        first_conformance.counters.real_world_effects_count,
+        first_living["counters"]["real_world_effects_count"],
+    ) == (0, 0, 0, 0, 0, 0, 0)
+    assert release_hashes_before == (
+        hashlib.sha256(COMPLETION_MANIFEST_PATH.read_bytes()).hexdigest(),
+        hashlib.sha256(
+            (REPOSITORY_ROOT / "release/integration_seam_index.json").read_bytes()
+        ).hexdigest(),
+    )
+    source = inspect.getsource(runner) + inspect.getsource(living)
+    for forbidden in (
+        "run_airline_all_real",
+        "run_supplier_programme",
+        "run_package",
+        "run_anchor",
+        "run_sealed_replay",
+        "g2_b",
+    ):
+        assert forbidden not in source

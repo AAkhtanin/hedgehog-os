@@ -9,11 +9,13 @@ effect operation. It is not production certification.
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import asdict as _asdict
 from dataclasses import fields, replace
 import inspect
 import re
 import subprocess
 
+import demo.run_action_commit_packet_lifecycle_g2_a_v01 as _action_packet_lifecycle
 from hedgehog.domains.airline import kernel_adapter_v01 as airline_adapter
 from hedgehog.domains.supplier_water_filter import (
     kernel_adapter_v01 as supplier_adapter,
@@ -80,11 +82,11 @@ from hedgehog.kernel.trust_model_v01 import (
 
 
 RUNNER_ID = "kernel_conformance_v01"
-RUNNER_VERSION = "v0.1"
+RUNNER_VERSION = "v0.2"
 SLICE_ID = "domain_neutral_reference_kernel_gate1_g1e"
 
 _COMMIT_PATTERN = re.compile(r"^[0-9a-f]{7,40}$")
-_BASE_ACT_IDS = (
+_GATE1_BASE_ACT_IDS_V01 = (
     "airline_deterministic_transaction_runtime",
     "all_layers_invariant_super_smoke",
     "generic_integrity_replay",
@@ -98,6 +100,7 @@ _BASE_ACT_IDS = (
     "generic_multiroot",
     "supplier_water_filter_portability",
 )
+_BASE_ACT_IDS = (*_GATE1_BASE_ACT_IDS_V01, "action_packet_lifecycle")
 _ACT_FIELDS = frozenset(
     {
         "act_id",
@@ -161,6 +164,10 @@ _ACT_SOURCES = {
         "demo.run_living_gauntlet_v01",
         "collect_supplier_water_filter_portability_gauntlet_act_v01",
     ),
+    "action_packet_lifecycle": (
+        "demo.run_living_gauntlet_v01",
+        "collect_action_packet_lifecycle_gauntlet_act_v01",
+    ),
 }
 _EVIDENCE_REFS = (
     "hedgehog/kernel/integrity_replay_v01.py",
@@ -174,6 +181,7 @@ _EVIDENCE_REFS = (
     "hedgehog/kernel/multiroot_v01.py",
     "hedgehog/domains/airline/kernel_adapter_v01.py",
     "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+    "demo/run_action_commit_packet_lifecycle_g2_a_v01.py",
 )
 _LIMITATIONS = (
     "deterministic_current_repository_conformance_only",
@@ -181,6 +189,7 @@ _LIMITATIONS = (
     "no_fresh_all_real_run_or_package_regeneration",
     "no_root_attestation_pki_federation_or_production_connector",
     "independent_audit_and_consolidated_docs_closure_pending",
+    "limitation_g2a6_deterministic_local_actionpacket_lifecycle_only",
 )
 def resolve_current_implementation_commit_v01() -> str:
     try:
@@ -189,7 +198,6 @@ def resolve_current_implementation_commit_v01() -> str:
             check=True,
             capture_output=True,
             text=True,
-            timeout=5,
         )
         value = completed.stdout.strip()
         if _COMMIT_PATTERN.fullmatch(value) is None:
@@ -209,9 +217,20 @@ def collect_kernel_conformance_v01(
         if _COMMIT_PATTERN.fullmatch(implementation_commit) is None:
             raise ValueError("implementation_commit_invalid")
         by_id = {row["act_id"]: row for row in rows}
-        negatives = _collect_negative_results(by_id)
+        action_packet_report = (
+            _action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01()
+        )
+        action_packet_geometry_pass = _action_packet_report_geometry_passes_v01(
+            action_packet_report
+        )
+        negatives = _collect_negative_results(by_id, action_packet_report)
         domains = _build_domain_results(by_id, negatives)
-        categories = _build_category_results(by_id, domains, negatives)
+        categories = _build_category_results(
+            by_id,
+            domains,
+            negatives,
+            action_packet_geometry_pass,
+        )
         report = conformance.build_kernel_conformance_report_v01(
             implementation_commit=implementation_commit,
             category_results=categories,
@@ -247,7 +266,9 @@ def collect_standalone_kernel_conformance_v01(
     try:
         from demo import run_living_gauntlet_v01 as living
 
-        active_results = living.collect_living_gauntlet_base_act_results_v01()
+        base_results = living.collect_living_gauntlet_base_act_results_v01()
+        lifecycle_result = living.collect_action_packet_lifecycle_gauntlet_act_v01()
+        active_results = (*base_results, _asdict(lifecycle_result))
         commit = (
             resolve_current_implementation_commit_v01()
             if implementation_commit is None
@@ -282,9 +303,9 @@ def validate_kernel_conformance_runtime_v01(
             errors.append("kernel_conformance_not_pass")
         counters = report.counters
         if (
-            counters.category_pass_count != 10
+            counters.category_pass_count != 11
             or counters.domain_pass_count != 2
-            or counters.negative_pass_count != 10
+            or counters.negative_pass_count != 20
             or any(
                 value != 0
                 for value in (
@@ -358,7 +379,7 @@ def main() -> int:
         return 0
     except Exception:
         print(
-            "kernel_conformance: kernel_conformance_v01 v0.1\n"
+            "kernel_conformance: kernel_conformance_v01 v0.2\n"
             "final_status=FAIL_CLOSED\n",
             end="",
         )
@@ -368,7 +389,10 @@ def main() -> int:
 def _validate_active_act_results(
     active_act_results: object,
 ) -> tuple[dict[str, object], ...]:
-    if type(active_act_results) is not tuple or len(active_act_results) != 12:
+    if (
+        type(active_act_results) is not tuple
+        or len(active_act_results) != len(_BASE_ACT_IDS)
+    ):
         raise ValueError("active_gauntlet_results_invalid")
     copied: list[dict[str, object]] = []
     for expected_id, row in zip(_BASE_ACT_IDS, active_act_results):
@@ -409,6 +433,76 @@ def _act_safe(row: Mapping[str, object]) -> bool:
         and row.get("no_real_connector_or_action") is True
         and row.get("real_world_effects_count") == 0
     )
+
+
+def _action_packet_report_geometry_passes_v01(report: object) -> bool:
+    try:
+        if (
+            type(report)
+            is not _action_packet_lifecycle.ActionCommitPacketLifecycleG2A5ReportV01
+            or report.final_status != conformance.STATUS_PASS
+            or report.same_packet_family is not True
+            or report.same_transition_registry_id is not True
+            or report.same_authority_law is not True
+            or report.immutable_history_proven is not True
+            or report.closed_domain_artifacts_rerun is not False
+            or any(
+                type(value) is not int or value != 0
+                for value in (
+                    report.provider_calls,
+                    report.network_calls,
+                    report.gemini_calls,
+                    report.adapter_calls,
+                    report.receipt_creations,
+                    report.real_world_effects_count,
+                )
+            )
+        ):
+            return False
+        expected_domains = (
+            (
+                report.airline,
+                "AIRLINE",
+                "DEPENDENCY_CHANGED",
+                "root:g2a5:airline",
+            ),
+            (
+                report.supplier,
+                "SUPPLIER",
+                "ROOT_BOUND_KILL_SWITCH",
+                "root:g2a5:supplier",
+            ),
+        )
+        for result, domain_shape, invalidation_class, root_id in expected_domains:
+            replay = result.replay_report
+            inspection = result.present_inspection
+            if (
+                result.domain_shape != domain_shape
+                or result.owning_local_root_id != root_id
+                or result.invalidation_class != invalidation_class
+                or result.authority_effect != "DETERMINISTIC_BLOCK"
+                or result.transition_rule_id != "g2a_t09_pending_block"
+                or result.lifecycle_before != "PENDING_FULFILLMENT"
+                or result.lifecycle_after != "BLOCKED"
+                or result.idempotency_disposition_after != "RESERVED"
+                or result.reservation_owner_packet_id_after != result.packet_id
+                or replay.registry_unchanged is not True
+                or replay.historical_temporal_replay_pass is not True
+                or replay.t24_reserved_history_replay_pass is not True
+                or replay.distinct_firewall_attempt_replay_pass is not True
+                or inspection.historical_result_unchanged is not True
+                or inspection.present_eligibility_status != "NON_EXECUTABLE"
+                or inspection.present_executable is not False
+                or inspection.retry_eligible is not False
+                or result.registry_creates_authority is not False
+                or result.adapter_calls != 0
+                or result.receipt_creations != 0
+                or result.real_world_effects_count != 0
+            ):
+                return False
+        return report.airline.packet_id != report.supplier.packet_id
+    except Exception:
+        return False
 
 
 def _build_domain_results(
@@ -498,6 +592,7 @@ def _build_category_results(
     by_id: Mapping[str, Mapping[str, object]],
     domains: tuple[conformance.DomainConformanceResultV01, ...],
     negatives: tuple[conformance.NegativeConformanceResultV01, ...],
+    action_packet_geometry_pass: bool,
 ) -> tuple[conformance.ConformanceCategoryResultV01, ...]:
     negative_by_id = {item.probe_id: item for item in negatives}
     domain_by_id = {item.domain_id: item for item in domains}
@@ -658,6 +753,82 @@ def _build_category_results(
             ),
             ("limitation_g1d2_generic_multiroot_conformance_only",),
         ),
+        (
+            "ActionPacketLifecycleConformance",
+            (
+                (
+                    "canonical_identity",
+                    safe["action_packet_lifecycle"]
+                    and action_packet_geometry_pass
+                    and negative_by_id["action_packet_identity_forgery"].status
+                    == conformance.STATUS_PASS,
+                ),
+                (
+                    "canonical_time",
+                    action_packet_geometry_pass
+                    and negative_by_id["action_packet_time_forgery"].status
+                    == conformance.STATUS_PASS,
+                ),
+                (
+                    "legal_transitions",
+                    action_packet_geometry_pass
+                    and negative_by_id["action_packet_illegal_transition"].status
+                    == conformance.STATUS_PASS,
+                ),
+                (
+                    "unknown_transition_block",
+                    negative_by_id["action_packet_unknown_transition"].status
+                    == conformance.STATUS_PASS,
+                ),
+                (
+                    "root_only_authority_changes",
+                    safe["action_packet_lifecycle"]
+                    and negative_by_id[
+                        "action_packet_root_authority_forgery"
+                    ].status
+                    == conformance.STATUS_PASS,
+                ),
+                (
+                    "registry_non_authority",
+                    negative_by_id[
+                        "action_packet_registry_authority_forgery"
+                    ].status
+                    == conformance.STATUS_PASS,
+                ),
+                (
+                    "corridor_freshness_enforcement",
+                    negative_by_id[
+                        "action_packet_corridor_freshness_forgery"
+                    ].status
+                    == conformance.STATUS_PASS,
+                ),
+                (
+                    "receipt_non_authority",
+                    negative_by_id[
+                        "action_packet_receipt_authority_forgery"
+                    ].status
+                    == conformance.STATUS_PASS,
+                ),
+                (
+                    "replay_non_execution",
+                    negative_by_id[
+                        "action_packet_replay_execution_forgery"
+                    ].status
+                    == conformance.STATUS_PASS,
+                ),
+                (
+                    "cross_domain_invariance",
+                    action_packet_geometry_pass
+                    and negative_by_id[
+                        "action_packet_cross_domain_substitution"
+                    ].status
+                    == conformance.STATUS_PASS,
+                ),
+            ),
+            (
+                "limitation_g2a6_deterministic_local_actionpacket_lifecycle_only",
+            ),
+        ),
     )
     return tuple(
         conformance.build_conformance_category_result_v01(
@@ -676,6 +847,7 @@ def _category_evidence(category_id: str) -> tuple[str, ...]:
 
 def _collect_negative_results(
     by_id: Mapping[str, Mapping[str, object]],
+    action_packet_report: object,
 ) -> tuple[conformance.NegativeConformanceResultV01, ...]:
     observations = (
         _probe_manifest_hash_mismatch(),
@@ -688,6 +860,7 @@ def _collect_negative_results(
         _probe_multiroot_reserved(),
         _probe_airline_effect_access(by_id["generic_integrity_replay"]),
         _probe_supplier_effect_counter(by_id["supplier_water_filter_portability"]),
+        *_collect_action_packet_negative_observations_v01(action_packet_report),
     )
     return tuple(
         conformance.build_negative_conformance_result_v01(
@@ -701,6 +874,160 @@ def _collect_negative_results(
         )
         for probe_id, target, expected, observed, blocked, evidence in observations
     )
+
+
+def _collect_action_packet_negative_observations_v01(
+    report: object,
+) -> tuple[tuple[object, ...], ...]:
+    if (
+        type(report)
+        is not _action_packet_lifecycle.ActionCommitPacketLifecycleG2A5ReportV01
+        or _action_packet_lifecycle.validate_action_commit_packet_lifecycle_g2_a_report_v01(
+            report
+        )
+        != (True, ())
+    ):
+        raise ValueError("kernel_conformance_runtime_invalid")
+
+    airline = report.airline
+    supplier = report.supplier
+    first_transition = airline.replay_report.recorded_transitions[0]
+    identity_forgery = replace(
+        report,
+        airline=replace(airline, packet_id=f"acp_v02:{'f' * 64}"),
+    )
+    time_forgery = replace(
+        report,
+        airline=replace(
+            airline,
+            replay_report=replace(
+                airline.replay_report,
+                recorded_transitions=(
+                    replace(
+                        first_transition,
+                        evaluation_time=first_transition.evaluation_time + 1,
+                    ),
+                    *airline.replay_report.recorded_transitions[1:],
+                ),
+            ),
+        ),
+    )
+    illegal_transition = replace(
+        report,
+        airline=replace(
+            airline,
+            replay_report=replace(
+                airline.replay_report,
+                recorded_transitions=(
+                    replace(
+                        first_transition,
+                        source_state="BLOCKED",
+                        target_state="CREATED",
+                    ),
+                    *airline.replay_report.recorded_transitions[1:],
+                ),
+            ),
+        ),
+    )
+    unknown_transition = replace(
+        report,
+        airline=replace(
+            airline,
+            replay_report=replace(
+                airline.replay_report,
+                recorded_transitions=(
+                    replace(first_transition, transition_rule_id="g2a_t99_unknown"),
+                    *airline.replay_report.recorded_transitions[1:],
+                ),
+            ),
+        ),
+    )
+    root_authority_forgery = replace(
+        report,
+        airline=replace(airline, owning_local_root_id="root:g2a5:forged"),
+    )
+    registry_authority_forgery = replace(
+        report,
+        airline=replace(airline, registry_creates_authority=True),
+    )
+    corridor_freshness_forgery = replace(
+        report,
+        airline=replace(
+            airline,
+            present_inspection=replace(
+                airline.present_inspection,
+                present_eligibility_status="ELIGIBLE_FOR_BOUNDED_MOCK_ATTEMPT",
+                present_executable=True,
+                reason_codes=(),
+            ),
+        ),
+    )
+    receipt_authority_forgery = replace(
+        report,
+        airline=replace(airline, receipt_creations=1),
+    )
+    replay_execution_forgery = replace(
+        report,
+        airline=replace(
+            airline,
+            replay_report=replace(airline.replay_report, adapter_calls=1),
+        ),
+    )
+    cross_domain_substitution = replace(
+        report,
+        airline=replace(
+            airline,
+            replay_report=supplier.replay_report,
+            present_inspection=supplier.present_inspection,
+        ),
+    )
+    mutations = (
+        ("action_packet_identity_forgery", identity_forgery),
+        ("action_packet_time_forgery", time_forgery),
+        ("action_packet_illegal_transition", illegal_transition),
+        ("action_packet_unknown_transition", unknown_transition),
+        ("action_packet_root_authority_forgery", root_authority_forgery),
+        (
+            "action_packet_registry_authority_forgery",
+            registry_authority_forgery,
+        ),
+        (
+            "action_packet_corridor_freshness_forgery",
+            corridor_freshness_forgery,
+        ),
+        ("action_packet_receipt_authority_forgery", receipt_authority_forgery),
+        ("action_packet_replay_execution_forgery", replay_execution_forgery),
+        (
+            "action_packet_cross_domain_substitution",
+            cross_domain_substitution,
+        ),
+    )
+    target = (
+        "demo.run_action_commit_packet_lifecycle_g2_a_v01."
+        "validate_action_commit_packet_lifecycle_g2_a_report_v01"
+    )
+    expected = ("g2a5_report_fail_closed",)
+    evidence = "demo/run_action_commit_packet_lifecycle_g2_a_v01.py"
+    observations: list[tuple[object, ...]] = []
+    for probe_id, forged in mutations:
+        try:
+            valid, observed = (
+                _action_packet_lifecycle.validate_action_commit_packet_lifecycle_g2_a_report_v01(
+                    forged
+                )
+            )
+        except Exception:
+            valid, observed = False, ()
+        blocked = (
+            valid is False
+            and type(observed) is tuple
+            and observed == expected
+            and all(type(item) is str for item in observed)
+        )
+        observations.append(
+            (probe_id, target, expected, observed, blocked, evidence)
+        )
+    return tuple(observations)
 
 
 def _neutral_manifest_fixture() -> tuple[object, tuple[tuple[str, object], ...]]:

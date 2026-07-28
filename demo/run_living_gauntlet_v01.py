@@ -10,6 +10,9 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from demo import (
+    run_action_commit_packet_lifecycle_g2_a_v01 as _action_packet_lifecycle
+)
 from demo.run_all_layers_applied_super_smoke import (
     collect_all_layers_applied_super_smoke,
     validate_all_layers_applied_super_smoke_report_consistency,
@@ -156,7 +159,8 @@ import hedgehog.kernel.transition_registry_v01 as transition_registry_module
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v1.0"
+RUNNER_VERSION = "v1.1"
+_GATE1_RELEASE_RUNNER_VERSION_V10 = "v1.0"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -207,7 +211,7 @@ _SEAM_FIELD_NAMES = frozenset(
         "status",
     }
 )
-_ACTIVE_ACT_SOURCES = {
+_GATE1_ACTIVE_ACT_SOURCES_V10 = {
     "airline_deterministic_transaction_runtime": (
         "demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01",
         "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
@@ -259,6 +263,14 @@ _ACTIVE_ACT_SOURCES = {
     "kernel_conformance_closure": (
         "demo.run_living_gauntlet_v01",
         "collect_kernel_conformance_closure_gauntlet_act_v01",
+    ),
+}
+_GATE1_ACTIVE_ACT_IDS_V10 = tuple(_GATE1_ACTIVE_ACT_SOURCES_V10)
+_ACTIVE_ACT_SOURCES = {
+    **_GATE1_ACTIVE_ACT_SOURCES_V10,
+    "action_packet_lifecycle": (
+        "demo.run_living_gauntlet_v01",
+        "collect_action_packet_lifecycle_gauntlet_act_v01",
     ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
@@ -547,6 +559,7 @@ _COUNTER_FIELD_NAMES = frozenset(
         "generic_multiroot_execution_count",
         "supplier_water_filter_portability_execution_count",
         "kernel_conformance_closure_execution_count",
+        "action_packet_lifecycle_execution_count",
     }
 )
 
@@ -792,7 +805,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("runner_version", RUNNER_VERSION),
+        ("runner_version", _GATE1_RELEASE_RUNNER_VERSION_V10),
         ("manifest_status", "ACTIVE_GATE1_G1E"),
     ):
         if manifest.get(key) != expected:
@@ -807,7 +820,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     errors.extend(id_errors)
     planned_ids, id_errors = _record_ids(planned, "act_id", "planned_act")
     errors.extend(id_errors)
-    if active_ids != _ACTIVE_ACT_IDS:
+    if active_ids != _GATE1_ACTIVE_ACT_IDS_V10:
         errors.append("active_act_ids_mismatch")
     if evidence_ids != _EVIDENCE_ONLY_ACT_IDS:
         errors.append("evidence_only_act_ids_mismatch")
@@ -823,7 +836,9 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
                 continue
             if record.get("status") != STATUS_ACTIVE:
                 errors.append(f"active_act_status_invalid:{record.get('act_id', '')}")
-            expected_source = _ACTIVE_ACT_SOURCES.get(record.get("act_id"))
+            expected_source = _GATE1_ACTIVE_ACT_SOURCES_V10.get(
+                record.get("act_id")
+            )
             if expected_source is not None and (
                 record.get("source_module"), record.get("source_symbol")
             ) != expected_source:
@@ -4188,7 +4203,236 @@ def _derive_report_counters_v01(
             and row.get("executed") is True
             for row in active_rows
         ),
+        "action_packet_lifecycle_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[13]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
     }
+
+
+def _prefixed_sha256_identity_v01(value: object, prefix: str) -> bool:
+    return (
+        type(value) is str
+        and value.startswith(prefix)
+        and len(value) == len(prefix) + 64
+        and all(character in "0123456789abcdef" for character in value[len(prefix) :])
+    )
+
+
+def _action_packet_lifecycle_domain_passes_v01(
+    result: object,
+    *,
+    domain_shape: str,
+    root_id: str,
+    invalidation_class: str,
+) -> bool:
+    try:
+        replay = result.replay_report
+        inspection = result.present_inspection
+        transitions = replay.recorded_transitions
+        domain_context = domain_shape.lower()
+        expected_transitions = (
+            (
+                "g2a_t01_activate_root_authorization",
+                "CREATED",
+                "ROOT_AUTHORIZED",
+                f"evaluation_context:g2a5:{domain_context}:activate",
+            ),
+            (
+                "g2a_t02_queue",
+                "ROOT_AUTHORIZED",
+                "QUEUED",
+                f"evaluation_context:g2a5:{domain_context}:g2a_t02_queue",
+            ),
+            (
+                "g2a_t03_pending",
+                "QUEUED",
+                "PENDING_FULFILLMENT",
+                f"evaluation_context:g2a5:{domain_context}:g2a_t03_pending",
+            ),
+            (
+                "g2a_t09_pending_block",
+                "PENDING_FULFILLMENT",
+                "BLOCKED",
+                f"evaluation_context:g2a5:{domain_context}:invalidation",
+            ),
+        )
+        if (
+            result.domain_shape != domain_shape
+            or result.owning_local_root_id != root_id
+            or result.invalidation_class != invalidation_class
+            or result.authority_effect != "DETERMINISTIC_BLOCK"
+            or result.transition_rule_id != "g2a_t09_pending_block"
+            or not _prefixed_sha256_identity_v01(result.packet_id, "acp_v02:")
+            or result.lifecycle_before != "PENDING_FULFILLMENT"
+            or result.lifecycle_after != "BLOCKED"
+            or result.idempotency_disposition_after != "RESERVED"
+            or result.reservation_owner_packet_id_after != result.packet_id
+            or type(transitions) is not tuple
+            or len(transitions) != 4
+        ):
+            return False
+        for index, (transition, expected) in enumerate(
+            zip(transitions, expected_transitions)
+        ):
+            rule_id, source_state, target_state, context_id = expected
+            attempt_id = transition.execution_attempt_id
+            if (
+                not _prefixed_sha256_identity_v01(
+                    transition.transition_event_id,
+                    "acpt_v01:",
+                )
+                or transition.transition_rule_id != rule_id
+                or transition.source_state != source_state
+                or transition.target_state != target_state
+                or type(transition.evaluation_time) is not int
+                or transition.evaluation_time != 1783470600 + index
+                or transition.evaluation_time_source
+                != "explicit_g2a5_synthetic_time"
+                or transition.evaluation_context_id != context_id
+                or (
+                    index == 2
+                    and not _prefixed_sha256_identity_v01(
+                        attempt_id,
+                        "execution_attempt_v01:",
+                    )
+                )
+                or (index != 2 and attempt_id is not None)
+                or transition.effect_consumption_class != "NOT_CONSUMED"
+                or transition.receipt_ref is not None
+            ):
+                return False
+        state = replay.reconstructed_state
+        return (
+            replay.packet_id == result.packet_id
+            and replay.rebuilt_packet_id == result.packet_id
+            and replay.transition_registry_id == result.transition_registry_id
+            and replay.registry_unchanged is True
+            and replay.historical_temporal_replay_pass is True
+            and replay.t24_reserved_history_replay_pass is True
+            and replay.distinct_firewall_attempt_replay_pass is True
+            and replay.creates_authority is False
+            and replay.creates_permission is False
+            and replay.creates_packet is False
+            and replay.creates_receipt is False
+            and replay.adapter_calls == 0
+            and replay.real_world_effects_count == 0
+            and state.packet_id == result.packet_id
+            and state.lifecycle_state == "BLOCKED"
+            and state.transition_event_count == 4
+            and state.latest_transition_event_id
+            == transitions[-1].transition_event_id
+            and state.execution_attempt_count == 1
+            and state.idempotency_disposition == "RESERVED"
+            and state.reservation_owner_packet_id == result.packet_id
+            and state.terminal_receipt_ref is None
+            and state.lifecycle_terminal is True
+            and state.executable is False
+            and state.registry_is_authority is False
+            and state.registry_grants_permission is False
+            and state.real_world_effects_count == 0
+            and inspection.packet_id == result.packet_id
+            and inspection.historical_state == state
+            and inspection.historical_result_unchanged is True
+            and inspection.present_eligibility_status == "NON_EXECUTABLE"
+            and inspection.present_executable is False
+            and inspection.retry_eligible is False
+            and inspection.creates_authority is False
+            and inspection.creates_permission is False
+            and inspection.creates_packet is False
+            and inspection.creates_receipt is False
+            and inspection.adapter_calls == 0
+            and inspection.real_world_effects_count == 0
+            and result.registry_creates_authority is False
+            and result.adapter_calls == 0
+            and result.receipt_creations == 0
+            and result.real_world_effects_count == 0
+        )
+    except Exception:
+        return False
+
+
+def collect_action_packet_lifecycle_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    act_id = "action_packet_lifecycle"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        report = (
+            _action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01()
+        )
+        valid, validation_errors = (
+            _action_packet_lifecycle.validate_action_commit_packet_lifecycle_g2_a_report_v01(
+                report
+            )
+        )
+        if (
+            type(report)
+            is not _action_packet_lifecycle.ActionCommitPacketLifecycleG2A5ReportV01
+            or valid is not True
+            or validation_errors != ()
+            or report.final_status != STATUS_PASS
+            or report.same_packet_family is not True
+            or report.same_transition_registry_id is not True
+            or report.same_authority_law is not True
+            or report.immutable_history_proven is not True
+            or report.closed_domain_artifacts_rerun is not False
+            or not _action_packet_lifecycle_domain_passes_v01(
+                report.airline,
+                domain_shape="AIRLINE",
+                root_id="root:g2a5:airline",
+                invalidation_class="DEPENDENCY_CHANGED",
+            )
+            or not _action_packet_lifecycle_domain_passes_v01(
+                report.supplier,
+                domain_shape="SUPPLIER",
+                root_id="root:g2a5:supplier",
+                invalidation_class="ROOT_BOUND_KILL_SWITCH",
+            )
+            or report.airline.packet_id == report.supplier.packet_id
+            or report.airline.transition_registry_id
+            != report.supplier.transition_registry_id
+            or report.airline.generic_authority_law_id
+            != report.supplier.generic_authority_law_id
+            or any(
+                type(value) is not int or value != 0
+                for value in (
+                    report.provider_calls,
+                    report.network_calls,
+                    report.gemini_calls,
+                    report.adapter_calls,
+                    report.receipt_creations,
+                    report.real_world_effects_count,
+                )
+            )
+        ):
+            raise ValueError
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("action_packet_lifecycle_gauntlet_act_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
 
 
 def collect_living_gauntlet_base_act_results_v01(
@@ -4284,9 +4528,10 @@ def collect_kernel_conformance_closure_gauntlet_act_v01(
         passed = (
             not validation_errors
             and report.final_status == STATUS_PASS
-            and len(report.category_results) == 10
+            and report.conformance_version == "v0.2"
+            and len(report.category_results) == 11
             and len(report.domain_results) == 2
-            and len(report.negative_test_results) == 10
+            and len(report.negative_test_results) == 20
             and all(item.status == STATUS_PASS for item in report.category_results)
             and all(item.status == STATUS_PASS for item in report.domain_results)
             and all(
@@ -4358,11 +4603,19 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             base_results = ()
             errors.append("living_base_collection_failed")
         if base_results:
-            active_result_rows.extend(dict(row) for row in base_results)
+            try:
+                lifecycle = collect_action_packet_lifecycle_gauntlet_act_v01()
+            except Exception:
+                lifecycle = _failed_act_result(
+                    act_id="action_packet_lifecycle",
+                    reason="action_packet_lifecycle_gauntlet_act_failed",
+                )
             closure = collect_kernel_conformance_closure_gauntlet_act_v01(
-                base_results
+                (*base_results, asdict(lifecycle))
             )
+            active_result_rows.extend(dict(row) for row in base_results)
             active_result_rows.append(asdict(closure))
+            active_result_rows.append(asdict(lifecycle))
 
     for result in active_result_rows:
         row_errors = result.get("errors")
@@ -4441,6 +4694,13 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             "planned_acts_not_executed",
             len(planned_entries) == len(_PLANNED_ACT_IDS)
             and all(entry["executed"] is False for entry in planned_entries),
+        ),
+        _invariant_result(
+            "action_packet_lifecycle_act_pass",
+            len(active_result_rows) == len(_ACTIVE_ACT_IDS)
+            and active_result_rows[-1].get("act_id")
+            == "action_packet_lifecycle"
+            and active_result_rows[-1].get("state") == STATUS_PASS,
         ),
     ]
     for invariant in invariants:

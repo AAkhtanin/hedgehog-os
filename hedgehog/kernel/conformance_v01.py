@@ -21,13 +21,14 @@ del annotations
 
 MODULE_ID = "kernel_conformance_v01"
 SLICE_ID = "domain_neutral_reference_kernel_gate1_g1e"
-CONFORMANCE_VERSION = "v0.1"
+CONFORMANCE_VERSION = "v0.2"
+_GATE1_CONFORMANCE_VERSION_V01 = "v0.1"
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
 CONFORMANCE_STATUSES = (STATUS_PASS, STATUS_FAIL_CLOSED)
 
-CATEGORY_IDS = (
+_GATE1_CATEGORY_IDS_V01 = (
     "DomainPackConformance",
     "RootAdapterConformance",
     "CorridorAdapterConformance",
@@ -39,8 +40,12 @@ CATEGORY_IDS = (
     "EffectFirewallConformance",
     "MultiRootConformance",
 )
+CATEGORY_IDS = (
+    *_GATE1_CATEGORY_IDS_V01,
+    "ActionPacketLifecycleConformance",
+)
 DOMAIN_IDS = ("airline", "supplier_water_filter")
-NEGATIVE_PROBE_IDS = (
+_GATE1_NEGATIVE_PROBE_IDS_V01 = (
     "manifest_hash_mismatch",
     "replay_hash_mismatch",
     "cross_root_signer_misuse",
@@ -52,8 +57,21 @@ NEGATIVE_PROBE_IDS = (
     "airline_adapter_effect_access_forbidden",
     "supplier_adapter_effect_counter_rejected",
 )
+NEGATIVE_PROBE_IDS = (
+    *_GATE1_NEGATIVE_PROBE_IDS_V01,
+    "action_packet_identity_forgery",
+    "action_packet_time_forgery",
+    "action_packet_illegal_transition",
+    "action_packet_unknown_transition",
+    "action_packet_root_authority_forgery",
+    "action_packet_registry_authority_forgery",
+    "action_packet_corridor_freshness_forgery",
+    "action_packet_receipt_authority_forgery",
+    "action_packet_replay_execution_forgery",
+    "action_packet_cross_domain_substitution",
+)
 
-_ACTIVE_GAUNTLET_REFS = (
+_GATE1_ACTIVE_GAUNTLET_REFS_V01 = (
     "airline_deterministic_transaction_runtime",
     "all_layers_invariant_super_smoke",
     "generic_integrity_replay",
@@ -67,7 +85,11 @@ _ACTIVE_GAUNTLET_REFS = (
     "generic_multiroot",
     "supplier_water_filter_portability",
 )
-_EXPECTED_CATEGORY_CHECK_IDS = (
+_ACTIVE_GAUNTLET_REFS = (
+    *_GATE1_ACTIVE_GAUNTLET_REFS_V01,
+    "action_packet_lifecycle",
+)
+_GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01 = (
     (
         "DomainPackConformance",
         (
@@ -168,6 +190,24 @@ _EXPECTED_CATEGORY_CHECK_IDS = (
         ),
     ),
 )
+_EXPECTED_CATEGORY_CHECK_IDS = (
+    *_GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01,
+    (
+        "ActionPacketLifecycleConformance",
+        (
+            "canonical_identity",
+            "canonical_time",
+            "legal_transitions",
+            "unknown_transition_block",
+            "root_only_authority_changes",
+            "registry_non_authority",
+            "corridor_freshness_enforcement",
+            "receipt_non_authority",
+            "replay_non_execution",
+            "cross_domain_invariance",
+        ),
+    ),
+)
 _EXPECTED_DOMAIN_GEOMETRY = (
     (
         "airline",
@@ -226,7 +266,7 @@ _EXPECTED_DOMAIN_GEOMETRY = (
         ("limitation_g1d2_supplier_water_filter_projection_only",),
     ),
 )
-_EXPECTED_NEGATIVE_GEOMETRY = (
+_GATE1_EXPECTED_NEGATIVE_GEOMETRY_V01 = (
     (
         "manifest_hash_mismatch",
         "hedgehog.kernel.integrity_replay_v01.verify_artifact_manifest_v01",
@@ -279,6 +319,22 @@ _EXPECTED_NEGATIVE_GEOMETRY = (
             "collect_supplier_water_filter_portability_gauntlet_act_v01"
         ),
         ("supplier_water_filter_effect_creation_forbidden",),
+    ),
+)
+_ACTION_PACKET_REPORT_VALIDATOR_TARGET_V01 = (
+    "demo.run_action_commit_packet_lifecycle_g2_a_v01."
+    "validate_action_commit_packet_lifecycle_g2_a_report_v01"
+)
+_ACTION_PACKET_REPORT_REJECTION_REASONS_V01 = ("g2a5_report_fail_closed",)
+_EXPECTED_NEGATIVE_GEOMETRY = (
+    *_GATE1_EXPECTED_NEGATIVE_GEOMETRY_V01,
+    *(
+        (
+            probe_id,
+            _ACTION_PACKET_REPORT_VALIDATOR_TARGET_V01,
+            _ACTION_PACKET_REPORT_REJECTION_REASONS_V01,
+        )
+        for probe_id in NEGATIVE_PROBE_IDS[len(_GATE1_NEGATIVE_PROBE_IDS_V01) :]
     ),
 )
 _CATEGORY_DOMAIN = "hedgehog.kernel.conformance.category_result.v01"
@@ -676,7 +732,13 @@ def _category_errors(result: object) -> tuple[str, ...]:
     if type(result) is not ConformanceCategoryResultV01:
         return ("conformance_category_invalid",)
     errors: list[str] = []
-    if result.category_id not in CATEGORY_IDS:
+    if (
+        not _valid_text(result.result_id)
+        or not _valid_text(result.category_id)
+        or result.category_id not in CATEGORY_IDS
+        or type(result.status) is not str
+        or result.status not in CONFORMANCE_STATUSES
+    ):
         errors.append("conformance_category_invalid")
     if not _partition_valid(
         result.required_check_ids,
@@ -709,9 +771,15 @@ def _domain_errors(result: object) -> tuple[str, ...]:
     if type(result) is not DomainConformanceResultV01:
         return ("domain_conformance_invalid",)
     errors: list[str] = []
-    if result.domain_id not in DOMAIN_IDS or not _valid_text(
-        result.adapter_ref
-    ) or not _valid_text(result.source_ref):
+    if (
+        not _valid_text(result.result_id)
+        or not _valid_text(result.domain_id)
+        or result.domain_id not in DOMAIN_IDS
+        or not _valid_text(result.adapter_ref)
+        or not _valid_text(result.source_ref)
+        or type(result.status) is not str
+        or result.status not in CONFORMANCE_STATUSES
+    ):
         errors.append("domain_conformance_invalid")
     if not _partition_valid(
         result.required_check_ids,
@@ -751,8 +819,13 @@ def _negative_errors(result: object) -> tuple[str, ...]:
     if type(result) is not NegativeConformanceResultV01:
         return ("negative_conformance_invalid",)
     errors: list[str] = []
-    if result.probe_id not in NEGATIVE_PROBE_IDS or not _valid_text(
-        result.target_contract
+    if (
+        not _valid_text(result.result_id)
+        or not _valid_text(result.probe_id)
+        or result.probe_id not in NEGATIVE_PROBE_IDS
+        or not _valid_text(result.target_contract)
+        or type(result.status) is not str
+        or result.status not in CONFORMANCE_STATUSES
     ):
         errors.append("negative_conformance_invalid")
     if not _valid_text_tuple(
@@ -786,8 +859,14 @@ def _report_errors(report: object) -> tuple[str, ...]:
     if type(report) is not KernelConformanceReportV01:
         return ("kernel_conformance_report_invalid",)
     errors: list[str] = []
-    if report.conformance_version != CONFORMANCE_VERSION or not _valid_commit(
-        report.implementation_commit
+    if (
+        not _valid_text(report.report_id)
+        or type(report.conformance_version) is not str
+        or report.conformance_version
+        not in (_GATE1_CONFORMANCE_VERSION_V01, CONFORMANCE_VERSION)
+        or not _valid_commit(report.implementation_commit)
+        or type(report.final_status) is not str
+        or report.final_status not in CONFORMANCE_STATUSES
     ):
         errors.append("kernel_conformance_report_invalid")
     try:
@@ -796,6 +875,7 @@ def _report_errors(report: object) -> tuple[str, ...]:
             report.domain_results,
             report.negative_test_results,
             report.active_gauntlet_refs,
+            conformance_version=report.conformance_version,
         )
     except Exception:
         errors.append("conformance_report_geometry_invalid")
@@ -846,11 +926,27 @@ def _require_report_geometry(
     domains: object,
     negatives: object,
     active_refs: object,
+    *,
+    conformance_version: str = CONFORMANCE_VERSION,
 ) -> None:
+    if conformance_version == _GATE1_CONFORMANCE_VERSION_V01:
+        category_ids = _GATE1_CATEGORY_IDS_V01
+        negative_probe_ids = _GATE1_NEGATIVE_PROBE_IDS_V01
+        expected_active_refs = _GATE1_ACTIVE_GAUNTLET_REFS_V01
+        expected_category_geometry = _GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01
+        expected_negative_geometry = _GATE1_EXPECTED_NEGATIVE_GEOMETRY_V01
+    elif conformance_version == CONFORMANCE_VERSION:
+        category_ids = CATEGORY_IDS
+        negative_probe_ids = NEGATIVE_PROBE_IDS
+        expected_active_refs = _ACTIVE_GAUNTLET_REFS
+        expected_category_geometry = _EXPECTED_CATEGORY_CHECK_IDS
+        expected_negative_geometry = _EXPECTED_NEGATIVE_GEOMETRY
+    else:
+        raise ValueError
     if type(categories) is not tuple or tuple(
         item.category_id if type(item) is ConformanceCategoryResultV01 else None
         for item in categories
-    ) != CATEGORY_IDS:
+    ) != category_ids:
         raise ValueError
     if type(domains) is not tuple or tuple(
         item.domain_id if type(item) is DomainConformanceResultV01 else None
@@ -860,16 +956,28 @@ def _require_report_geometry(
     if type(negatives) is not tuple or tuple(
         item.probe_id if type(item) is NegativeConformanceResultV01 else None
         for item in negatives
-    ) != NEGATIVE_PROBE_IDS:
+    ) != negative_probe_ids:
         raise ValueError
-    if active_refs != _ACTIVE_GAUNTLET_REFS:
+    if (
+        not _valid_text_tuple(active_refs, allow_empty=False)
+        or active_refs != expected_active_refs
+    ):
         raise ValueError
     for item, (category_id, required_check_ids) in zip(
-        categories, _EXPECTED_CATEGORY_CHECK_IDS
+        categories, expected_category_geometry
     ):
         if (
             item.category_id != category_id
             or item.required_check_ids != required_check_ids
+        ):
+            raise ValueError
+        if category_id == "ActionPacketLifecycleConformance" and (
+            item.evidence_refs
+            != ("runtime:kernel_conformance:ActionPacketLifecycleConformance",)
+            or item.limitation_refs
+            != (
+                "limitation_g2a6_deterministic_local_actionpacket_lifecycle_only",
+            )
         ):
             raise ValueError
     for item, expected in zip(domains, _EXPECTED_DOMAIN_GEOMETRY):
@@ -891,13 +999,19 @@ def _require_report_geometry(
         ):
             raise ValueError
     for item, (probe_id, target_contract, expected_reasons) in zip(
-        negatives, _EXPECTED_NEGATIVE_GEOMETRY
+        negatives, expected_negative_geometry
     ):
         if (
             item.probe_id != probe_id
             or item.target_contract != target_contract
             or item.expected_reason_codes != expected_reasons
             or not _valid_text_tuple(item.evidence_refs, allow_empty=False)
+        ):
+            raise ValueError
+        if probe_id in NEGATIVE_PROBE_IDS[
+            len(_GATE1_NEGATIVE_PROBE_IDS_V01) :
+        ] and item.evidence_refs != (
+            "demo/run_action_commit_packet_lifecycle_g2_a_v01.py",
         ):
             raise ValueError
     if len({item.result_id for item in categories}) != len(categories):

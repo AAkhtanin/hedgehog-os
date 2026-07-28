@@ -816,3 +816,23 @@ def test_forbidden_phrases_absent() -> None:
 
     for phrase in forbidden:
         assert phrase not in combined_source
+
+
+def test_g2a4a_no_parallel_effect_path_or_adapter_reachability() -> None:
+    source = Path("hedgehog/action_commit_packet_v02.py").read_text(
+        encoding="utf-8"
+    )
+    assert "from hedgehog.kernel.effect_firewall_v01 import (" in source
+    assert "class EffectCapabilityV01" not in source
+    assert "def authorize_action_packet_effect" not in source
+    assert "execute_mock_effect_v01(" not in source
+    assert "adapter.invoke(" not in source
+    assert "execute_adapter(" not in source
+    assert "google.genai" not in source
+    assert "import requests" not in source
+    assert "import urllib" not in source
+    assert "import socket" not in source
+    assert "import openai" not in source
+    assert "EffectRequestV01 as _EffectRequestV01" in source
+    assert "EffectFirewallV01 as _EffectFirewallV01" in source
+    assert not hasattr(acp, "EffectCapabilityV01")

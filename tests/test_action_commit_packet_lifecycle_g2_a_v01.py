@@ -1,13 +1,19 @@
 from __future__ import annotations
 
+import ast
+import copy
 from dataclasses import dataclass, fields, replace
 from decimal import Decimal
 from functools import wraps
+import inspect
+import pickle
 from pathlib import Path
 
 import pytest
 
 import hedgehog.action_commit_packet_v02 as acp
+import hedgehog.kernel.abi_v01 as kernel_abi
+import hedgehog.kernel.effect_firewall_v01 as effect_firewall
 from hedgehog.kernel.integrity_replay_v01 import (
     canonical_json_bytes_v01,
     domain_separated_sha256_hex_v01,
@@ -3337,9 +3343,60 @@ def test_g2a1b_source_non_authority_boundary() -> None:
     for forbidden in (
         "EffectFirewallV01(",
         "EffectRequestV01(",
-        "execute_mock_effect_v01",
     ):
         assert forbidden not in source
+    tree = ast.parse(source)
+    executor_imports = tuple(
+        imported
+        for node in ast.walk(tree)
+        if (
+            isinstance(node, ast.ImportFrom)
+            and node.module == "hedgehog.kernel.effect_firewall_v01"
+        )
+        for imported in node.names
+        if (
+            imported.name == "execute_mock_effect_v01"
+            and imported.asname == "_execute_mock_effect_v01"
+        )
+    )
+    executor_calls = tuple(
+        node
+        for node in ast.walk(tree)
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "_execute_mock_effect_v01"
+        )
+    )
+    unaliased_calls = tuple(
+        node
+        for node in ast.walk(tree)
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "execute_mock_effect_v01"
+        )
+    )
+    alternate_executor_calls = tuple(
+        node
+        for node in ast.walk(tree)
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id.endswith("execute_mock_effect_v01")
+            and node.func.id
+            not in {"_execute_mock_effect_v01", "execute_mock_effect_v01"}
+        )
+    )
+    assert len(executor_imports) == 1
+    assert len(executor_calls) == 1
+    assert unaliased_calls == ()
+    assert alternate_executor_calls == ()
+    assert "mock_connector_sandbox" not in source
+    assert not any(
+        isinstance(node, ast.ClassDef) and node.name == "EffectCapabilityV01"
+        for node in ast.walk(tree)
+    )
 
 
 def test_supplier_projection_retains_exact_validated_source_packet() -> None:
@@ -5558,11 +5615,18 @@ def test_g2a2b_exact_new_dataclass_field_orders() -> None:
     registry_fields = tuple(
         field.name for field in fields(acp.ActionCommitPacketRegistryV02)
     )
-    assert registry_fields[-3:] == (
+    assert registry_fields[-4:] == (
         "action_packet_lifecycle_entries",
         "idempotency_disposition_events",
         "action_packet_invalidation_contexts",
+        "action_packet_fulfillment_attempt_contexts",
     )
+    fulfillment_field = fields(acp.ActionCommitPacketRegistryV02)[-1]
+    assert fulfillment_field.name == (
+        "action_packet_fulfillment_attempt_contexts"
+    )
+    assert fulfillment_field.default == ()
+    assert acp.ActionCommitPacketRegistryV02.__dataclass_params__.frozen is True
     assert acp.IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01 == (
         "action_idempotency_disposition_event_v01"
     )
@@ -13408,3 +13472,3031 @@ def test_g2a_validation_pass_preserves_registry_reason_matrix(
             ),
         )
     assert acp.validate_action_commit_packet_registry_v02(forged) == expected
+
+
+@dataclass(frozen=True)
+class _G2A4AFixtureV01:
+    root_bound: acp.SupplierRootBoundActionCommitPacketV02ProjectionV01
+    registry: acp.ActionCommitPacketRegistryV02
+    pending: acp.ActionPacketTransitionEventV01
+    corridor: acp.ContractFulfillmentCorridorV01
+    corridor_step: acp.CorridorStepV01
+    observations: tuple[acp.ActionDependencyCurrentObservationV01, ...]
+    logical_time_bridge: acp.LogicalTimeBridgeV01
+    eligibility_evaluation_time: int
+    eligibility_evaluation_time_source: str
+    eligibility_evaluation_context_id: str
+
+
+def _g2a4a_fixture_value(
+    *,
+    dependency: acp.DependencySetCandidateV01 | None = None,
+    allowed_subjects: tuple[str, ...] = (
+        "subject:procurement_requester",
+    ),
+) -> _G2A4AFixtureV01:
+    source = acp.build_supplier_a_mock_action_commit_packet_fixture_v02()
+    source = replace(
+        source,
+        scope=replace(
+            source.scope,
+            allowed_subjects=allowed_subjects,
+        ),
+    )
+    temporal = acp.project_packet_ttl_compatibility_v01(
+        source.ttl,
+        evaluation_time=EVALUATION_TIME,
+        temporal_policy_version=TEMPORAL_POLICY,
+    ).temporal_authority
+    source_dependency = dependency or _dependency(root_id=ROOT_ID)
+    committed_records = tuple(
+        acp.build_dependency_set_candidate_record_v01(
+            dependency_id=record.dependency_id,
+            dependency_class=record.dependency_class,
+            evidence_ref=record.evidence_ref,
+            content_sha256=record.content_sha256,
+            requirement_class=record.requirement_class,
+            time_envelope_id=(
+                acp.build_action_dependency_time_envelope_id_v01(
+                    dependency_id=record.dependency_id,
+                    evidence_ref=record.evidence_ref,
+                    content_sha256=record.content_sha256,
+                    freshness_policy_id=record.freshness_policy_id,
+                    source_provenance_refs=record.source_provenance_refs,
+                    valid_from_utc=temporal.issued_at_utc,
+                    valid_to_utc=temporal.expires_at_utc,
+                )
+            ),
+            freshness_policy_id=record.freshness_policy_id,
+            source_provenance_refs=record.source_provenance_refs,
+            expected_accepting_local_root_id=(
+                record.expected_accepting_local_root_id
+            ),
+        )
+        for record in source_dependency.dependency_records
+    )
+    committed_dependency = acp.build_dependency_set_candidate_v01(
+        dependency_records=committed_records
+    )
+    canonical = _projection(
+        packet=source,
+        dependency=committed_dependency,
+    )
+    _, _, kernel, decision_input, result = _build_frozen_root_evidence(
+        canonical
+    )
+    root_projection = acp.build_root_decision_candidate_projection_v01(
+        candidate_kind=(
+            acp.ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01
+        ),
+        projected_candidate_id=(
+            canonical.authorization_candidate
+            .root_packet_authorization_candidate_id
+        ),
+        root_decision_kernel=kernel,
+        root_decision_input=decision_input,
+        root_decision_result=result,
+    )
+    root_bound = (
+        acp.build_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            canonical_projection=canonical,
+            root_decision_projection=root_projection,
+        )
+    )
+    registry, pending = _g2a2b_pending_registry(root_bound)
+    step = replace(
+        acp.build_supplier_a_corridor_step_fixture_v01(source),
+        parent_packet_id=root_bound.packet_identity.packet_id,
+        allowed_subjects=source.scope.allowed_subjects,
+    )
+    corridor = acp.ContractFulfillmentCorridorV01(
+        corridor_id="corridor:g2a4a:supplier_a_mock",
+        packet_id=root_bound.packet_identity.packet_id,
+        corridor_kind=canonical.adapter_binding.corridor_class,
+        allowed_steps=(step.step_id,),
+    )
+    evaluation_context_id = "evaluation_context:g2a4a:eligibility"
+    observations = tuple(
+        acp.build_action_dependency_current_observation_v01(
+            dependency_id=record.dependency_id,
+            evidence_ref=record.evidence_ref,
+            observed_content_sha256=record.content_sha256,
+            time_envelope_id=record.time_envelope_id,
+            freshness_policy_id=record.freshness_policy_id,
+            source_provenance_refs=record.source_provenance_refs,
+            valid_from_utc=canonical.temporal_authority.issued_at_utc,
+            valid_to_utc=canonical.temporal_authority.expires_at_utc,
+            observed_at_utc=pending.evaluation_time,
+            observation_context_id=evaluation_context_id,
+        )
+        for record in canonical.dependency_candidate.dependency_records
+    )
+    bridge = acp.build_logical_time_bridge_v01(
+        origin_utc_epoch_seconds=canonical.temporal_authority.issued_at_utc,
+        seconds_per_tick=1,
+        bridge_policy_version="g2a4a_epoch_seconds_v01",
+    )
+    return _G2A4AFixtureV01(
+        root_bound=root_bound,
+        registry=registry,
+        pending=pending,
+        corridor=corridor,
+        corridor_step=step,
+        observations=observations,
+        logical_time_bridge=bridge,
+        eligibility_evaluation_time=pending.evaluation_time,
+        eligibility_evaluation_time_source=(
+            "explicit_g2a4a_eligibility_time"
+        ),
+        eligibility_evaluation_context_id=evaluation_context_id,
+    )
+
+
+@pytest.fixture(scope="module")
+def g2a4a_fixture() -> _G2A4AFixtureV01:
+    return _g2a4a_fixture_value()
+
+
+def _g2a4a_projection_kwargs(
+    fixture: _G2A4AFixtureV01,
+    **changes: object,
+) -> dict[str, object]:
+    values: dict[str, object] = {
+        "packet_id": fixture.root_bound.packet_identity.packet_id,
+        "corridor": fixture.corridor,
+        "corridor_step": fixture.corridor_step,
+        "current_dependency_observations": fixture.observations,
+        "logical_time_bridge": fixture.logical_time_bridge,
+        "eligibility_evaluation_time": (
+            fixture.eligibility_evaluation_time
+        ),
+        "eligibility_evaluation_time_source": (
+            fixture.eligibility_evaluation_time_source
+        ),
+        "eligibility_evaluation_context_id": (
+            fixture.eligibility_evaluation_context_id
+        ),
+    }
+    values.update(changes)
+    return values
+
+
+def _g2a4a_projection(
+    fixture: _G2A4AFixtureV01,
+    registry: acp.ActionCommitPacketRegistryV02 | None = None,
+    **changes: object,
+) -> acp.ActionPacketEffectFirewallProjectionV01:
+    return acp.build_action_packet_effect_firewall_projection_v01(
+        fixture.registry if registry is None else registry,
+        **_g2a4a_projection_kwargs(fixture, **changes),
+    )
+
+
+def test_g2a4a_dependency_observation_identity_and_freshness_are_exact(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    observation = fixture.observations[0]
+    material = acp.action_dependency_current_observation_material_v01(
+        observation
+    )
+    expected_id = acp.build_domain_separated_identity_v01(
+        domain=acp.ACTION_DEPENDENCY_CURRENT_OBSERVATION_DOMAIN_V01,
+        prefix=acp.ACTION_DEPENDENCY_CURRENT_OBSERVATION_PREFIX_V01,
+        material=material,
+    )
+    assert observation.observation_id == expected_id
+    assert acp.validate_action_dependency_current_observation_v01(
+        observation
+    ) == (True, ())
+    inclusive = acp.build_action_dependency_current_observation_v01(
+        dependency_id=observation.dependency_id,
+        evidence_ref=observation.evidence_ref,
+        observed_content_sha256=observation.observed_content_sha256,
+        time_envelope_id=observation.time_envelope_id,
+        freshness_policy_id=observation.freshness_policy_id,
+        source_provenance_refs=observation.source_provenance_refs,
+        valid_from_utc=observation.valid_from_utc,
+        valid_to_utc=observation.valid_to_utc,
+        observed_at_utc=observation.valid_from_utc,
+        observation_context_id=observation.observation_context_id,
+    )
+    assert acp.validate_action_dependency_current_observation_v01(
+        inclusive
+    ) == (True, ())
+    with pytest.raises(ValueError):
+        acp.build_action_dependency_current_observation_v01(
+            dependency_id=observation.dependency_id,
+            evidence_ref=observation.evidence_ref,
+            observed_content_sha256=observation.observed_content_sha256,
+            time_envelope_id=observation.time_envelope_id,
+            freshness_policy_id=observation.freshness_policy_id,
+            source_provenance_refs=observation.source_provenance_refs,
+            valid_from_utc=observation.valid_from_utc,
+            valid_to_utc=observation.valid_to_utc,
+            observed_at_utc=observation.valid_to_utc,
+            observation_context_id=observation.observation_context_id,
+        )
+    for bad_time in (True, False):
+        with pytest.raises(ValueError):
+            acp.build_action_dependency_current_observation_v01(
+                dependency_id=observation.dependency_id,
+                evidence_ref=observation.evidence_ref,
+                observed_content_sha256=(
+                    observation.observed_content_sha256
+                ),
+                time_envelope_id=observation.time_envelope_id,
+                freshness_policy_id=observation.freshness_policy_id,
+                source_provenance_refs=observation.source_provenance_refs,
+                valid_from_utc=bad_time,
+                valid_to_utc=observation.valid_to_utc,
+                observed_at_utc=observation.observed_at_utc,
+                observation_context_id=observation.observation_context_id,
+            )
+    for drift in (
+        replace(observation, observed_content_sha256="b" * 64),
+        replace(observation, time_envelope_id="time_envelope:other"),
+        replace(observation, freshness_policy_id="freshness_policy:other"),
+        replace(observation, source_provenance_refs=("source:other",)),
+    ):
+        valid, reasons = (
+            acp.validate_action_dependency_current_observation_v01(drift)
+        )
+        assert valid is False
+        assert reasons == (
+            "dependency_observation_time_envelope_identity_mismatch",
+        )
+    forged_observation_id = replace(
+        observation,
+        observation_id=(
+            acp.ACTION_DEPENDENCY_CURRENT_OBSERVATION_PREFIX_V01
+            + ("c" * 64)
+        ),
+    )
+    assert acp.validate_action_dependency_current_observation_v01(
+        forged_observation_id
+    ) == (
+        False,
+        ("dependency_observation_identity_mismatch",),
+    )
+    future = acp.build_action_dependency_current_observation_v01(
+        dependency_id=observation.dependency_id,
+        evidence_ref=observation.evidence_ref,
+        observed_content_sha256=observation.observed_content_sha256,
+        time_envelope_id=observation.time_envelope_id,
+        freshness_policy_id=observation.freshness_policy_id,
+        source_provenance_refs=observation.source_provenance_refs,
+        valid_from_utc=observation.valid_from_utc,
+        valid_to_utc=observation.valid_to_utc,
+        observed_at_utc=fixture.eligibility_evaluation_time + 1,
+        observation_context_id=observation.observation_context_id,
+    )
+    for observations in (
+        (observation, observation),
+        (replace(observation, dependency_id="dependency:unknown"),),
+        (future,),
+    ):
+        with pytest.raises(ValueError):
+            _g2a4a_projection(
+                fixture,
+                current_dependency_observations=observations,
+            )
+
+
+def test_g2a4a_pre_fulfillment_requires_pending_owned_reserved_packet(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    projection = _g2a4a_projection(fixture)
+    assert projection.execution_attempt_id == (
+        fixture.pending.execution_attempt_id
+    )
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        fixture.registry,
+        packet_id=packet_id,
+    )
+    assert state.lifecycle_state == "PENDING_FULFILLMENT"
+    assert state.idempotency_disposition == "RESERVED"
+    assert state.reservation_owner_packet_id == packet_id
+
+    genesis = _g2a2b_recorded_genesis(fixture.root_bound)
+    authorized, _, _ = _g2a2b_activate(genesis, packet_id)
+    queued, _ = _g2a2b_append(
+        authorized,
+        packet_id,
+        "g2a_t02_queue",
+    )
+    for registry in (genesis, authorized, queued):
+        with pytest.raises(ValueError):
+            _g2a4a_projection(fixture, registry)
+
+    current = state
+    failed_event = _g2a2b_event(
+        fixture.registry.action_packet_lifecycle_entries[0],
+        "g2a_t24_nonconsuming_failure",
+        latest_disposition_event_id=current.latest_disposition_event_id,
+    )
+    failed = acp.record_action_packet_nonconsuming_outcome_v01(
+        fixture.registry,
+        packet_id=packet_id,
+        transition_event=failed_event,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    with pytest.raises(ValueError):
+        _g2a4a_projection(fixture, failed)
+
+    fulfilled_event = _g2a2b_event(
+        fixture.registry.action_packet_lifecycle_entries[0],
+        "g2a_t04_fulfill_mock",
+    )
+    consume = _g2a2b_outcome_disposition(
+        state,
+        fulfilled_event,
+        "CONSUME",
+    )
+    fulfilled = acp.record_action_packet_consumed_outcome_v01(
+        fixture.registry,
+        packet_id=packet_id,
+        transition_event=fulfilled_event,
+        disposition_event=consume,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    with pytest.raises(ValueError):
+        _g2a4a_projection(fixture, fulfilled)
+    fulfilled_state = acp.derive_action_packet_lifecycle_state_v01(
+        fulfilled,
+        packet_id=packet_id,
+    )
+    receipt_event = _g2a2b_event(
+        fulfilled.action_packet_lifecycle_entries[0],
+        "g2a_t05_receipt",
+        receipt_ref="receipt:g2a4a:terminal",
+    )
+    confirmation = _g2a2b_outcome_disposition(
+        fulfilled_state,
+        receipt_event,
+        "RECEIPT_CONFIRM",
+    )
+    received = acp.record_action_packet_receipt_confirmation_v01(
+        fulfilled,
+        packet_id=packet_id,
+        transition_event=receipt_event,
+        disposition_event=confirmation,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    with pytest.raises(ValueError):
+        _g2a4a_projection(fixture, received)
+
+    uncertain_event = _g2a2b_event(
+        fixture.registry.action_packet_lifecycle_entries[0],
+        "g2a_t26_uncertain_adapter_outcome",
+    )
+    uncertain_disposition = _g2a2b_outcome_disposition(
+        state,
+        uncertain_event,
+        "UNCERTAIN_CLOSE",
+    )
+    uncertain = acp.record_action_packet_uncertain_outcome_v01(
+        fixture.registry,
+        packet_id=packet_id,
+        transition_event=uncertain_event,
+        disposition_event=uncertain_disposition,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    with pytest.raises(ValueError):
+        _g2a4a_projection(fixture, uncertain)
+
+    wrong_owner = replace(
+        fixture.registry,
+        idempotency_disposition_events=(
+            replace(
+                fixture.registry.idempotency_disposition_events[0],
+                to_owner_packet_id="acp_v02:" + "f" * 64,
+            ),
+        ),
+    )
+    with pytest.raises(ValueError):
+        _g2a4a_projection(fixture, wrong_owner)
+
+
+def test_g2a4a_pre_fulfillment_recomputes_mandatory_dependency_freshness(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    observation = fixture.observations[0]
+    assert _g2a4a_projection(fixture).dependency_observation_ids == (
+        observation.observation_id,
+    )
+    assert _g2a4a_projection(
+        fixture,
+        current_dependency_observations=(observation,),
+        eligibility_evaluation_time=observation.valid_to_utc - 1,
+    )
+    with pytest.raises(ValueError):
+        _g2a4a_projection(
+            fixture,
+            current_dependency_observations=(observation,),
+            eligibility_evaluation_time=observation.valid_to_utc,
+        )
+    for observations in (
+        (),
+        (
+            replace(
+                observation,
+                observed_content_sha256="c" * 64,
+            ),
+        ),
+    ):
+        with pytest.raises(ValueError):
+            _g2a4a_projection(
+                fixture,
+                current_dependency_observations=observations,
+            )
+
+    mandatory = fixture.root_bound.canonical_projection.dependency_candidate
+    optional_record = acp.build_dependency_set_candidate_record_v01(
+        dependency_id="dependency:optional_quote",
+        dependency_class="QUOTE_EVIDENCE",
+        evidence_ref="evidence:optional_quote",
+        content_sha256="d" * 64,
+        requirement_class="OPTIONAL",
+        time_envelope_id="time_envelope:optional_quote",
+        freshness_policy_id="freshness_policy:optional_quote_v01",
+        source_provenance_refs=("source:optional_quote",),
+        expected_accepting_local_root_id=ROOT_ID,
+    )
+    with_optional = acp.build_dependency_set_candidate_v01(
+        dependency_records=(
+            mandatory.dependency_records[0],
+            optional_record,
+        ),
+    )
+    optional_fixture = _g2a4a_fixture_value(dependency=with_optional)
+    mandatory_only = tuple(
+        item
+        for item in optional_fixture.observations
+        if item.dependency_id != optional_record.dependency_id
+    )
+    assert _g2a4a_projection(
+        optional_fixture,
+        current_dependency_observations=mandatory_only,
+    )
+
+
+def test_g2a4a_retry_uses_new_attempt_and_fresh_firewall_state(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    first = acp._prepare_action_packet_effect_attempt_v01(
+        fixture.registry,
+        **_g2a4a_projection_kwargs(fixture),
+    )
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        fixture.registry,
+        packet_id=packet_id,
+    )
+    failure = _g2a2b_event(
+        fixture.registry.action_packet_lifecycle_entries[0],
+        "g2a_t24_nonconsuming_failure",
+        latest_disposition_event_id=state.latest_disposition_event_id,
+    )
+    retry_registry = acp.record_action_packet_nonconsuming_outcome_v01(
+        fixture.registry,
+        packet_id=packet_id,
+        transition_event=failure,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    retry_registry, _ = _g2a2b_append(
+        retry_registry,
+        packet_id,
+        "g2a_t25_retry",
+    )
+    retry_registry, second_pending = _g2a2b_append(
+        retry_registry,
+        packet_id,
+        "g2a_t03_pending",
+        evaluation_context_id="evaluation_context:g2a4a:attempt:2",
+    )
+    second = acp._prepare_action_packet_effect_attempt_v01(
+        retry_registry,
+        **_g2a4a_projection_kwargs(
+            fixture,
+            eligibility_evaluation_time=second_pending.evaluation_time,
+        ),
+    )
+    assert fixture.pending.execution_attempt_id != (
+        second_pending.execution_attempt_id
+    )
+    assert first.firewall.invocation_id == (
+        fixture.pending.execution_attempt_id
+    )
+    assert second.firewall.invocation_id == second_pending.execution_attempt_id
+    assert first.firewall._state is not second.firewall._state
+    assert first.request.idempotency_key == second.request.idempotency_key
+    state_after = acp.derive_action_packet_lifecycle_state_v01(
+        retry_registry,
+        packet_id=packet_id,
+    )
+    assert state_after.idempotency_disposition == "RESERVED"
+    assert state_after.reservation_owner_packet_id == packet_id
+    old_decision = effect_firewall.authorize_effect_request_v01(
+        firewall=first.firewall,
+        request=second.request,
+        current_tick=second.projection.current_tick,
+    )
+    assert old_decision.decision != (
+        effect_firewall.EFFECT_DECISION_ALLOW_MOCK_EFFECT
+    )
+    assert first.firewall._state.mock_effect_execution_count == 0
+    assert second.firewall._state.mock_effect_execution_count == 0
+
+
+def test_g2a4a_preparation_preserves_registry_and_all_histories(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    registry = fixture.registry
+    before_bytes = repr(registry).encode("utf-8")
+    entries = registry.action_packet_lifecycle_entries
+    transitions = entries[0].transition_events
+    dispositions = registry.idempotency_disposition_events
+    invalidations = registry.action_packet_invalidation_contexts
+    genesis = entries[0].root_bound_genesis
+    root_result = genesis.root_decision_projection.root_decision_result
+    acceptance = genesis.dependency_acceptance_binding
+    preparation = acp._prepare_action_packet_effect_attempt_v01(
+        registry,
+        **_g2a4a_projection_kwargs(fixture),
+    )
+    assert preparation.decision.real_world_effects_count == 0
+    assert repr(registry).encode("utf-8") == before_bytes
+    assert registry.action_packet_lifecycle_entries is entries
+    assert entries[0].transition_events is transitions
+    assert registry.idempotency_disposition_events is dispositions
+    assert registry.action_packet_invalidation_contexts is invalidations
+    assert entries[0].root_bound_genesis is genesis
+    assert genesis.root_decision_projection.root_decision_result is root_result
+    assert genesis.dependency_acceptance_binding is acceptance
+
+
+def test_g2a4a_effect_firewall_projection_matches_every_frozen_field(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    projection = _g2a4a_projection(fixture)
+    canonical = fixture.root_bound.canonical_projection
+    root_result = (
+        fixture.root_bound.root_decision_projection.root_decision_result
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        fixture.registry,
+        packet_id=fixture.root_bound.packet_identity.packet_id,
+    )
+    expected = (
+        acp.ACTION_PACKET_EFFECT_FIREWALL_PROJECTION_PROFILE_ID_V01,
+        fixture.root_bound.packet_identity.packet_id,
+        fixture.registry.registry_id,
+        fixture.pending.transition_event_id,
+        fixture.pending.execution_attempt_id,
+        fixture.corridor.corridor_id,
+        fixture.corridor_step.step_id,
+        canonical.adapter_binding.corridor_class,
+        canonical.transaction_id,
+        canonical.owning_local_root_id,
+        root_result.decision_id,
+        canonical.authorization_candidate
+        .root_packet_authorization_candidate_id,
+        canonical.canonical_permission_ref,
+        canonical.normalized_permission_scope.allowed_adapter_ids,
+        canonical.normalized_permission_scope.allowed_action_classes,
+        (
+            canonical.normalized_subject_scope.included_subject_refs
+            + canonical.normalized_target_scope.included_target_refs
+        ),
+        canonical.temporal_authority.expires_at_utc
+        - fixture.logical_time_bridge.origin_utc_epoch_seconds,
+        "ActionCommitPacket",
+        canonical.adapter_binding.adapter_id,
+        canonical.selected_canonical_action,
+        (
+            canonical.normalized_subject_scope.included_subject_refs
+            + canonical.normalized_target_scope.included_target_refs
+        ),
+        canonical.temporal_authority.issued_at_utc
+        - fixture.logical_time_bridge.origin_utc_epoch_seconds,
+        canonical.temporal_authority.expires_at_utc
+        - fixture.logical_time_bridge.origin_utc_epoch_seconds,
+        fixture.eligibility_evaluation_time
+        - fixture.logical_time_bridge.origin_utc_epoch_seconds,
+        canonical.idempotency_identity.idempotency_key,
+        True,
+        effect_firewall.EFFECT_ACCESS_OWNER,
+        fixture.logical_time_bridge.bridge_id,
+        fixture.pending.evaluation_time,
+        fixture.pending.evaluation_time_source,
+        fixture.pending.evaluation_context_id,
+        fixture.eligibility_evaluation_time,
+        fixture.eligibility_evaluation_time_source,
+        fixture.eligibility_evaluation_context_id,
+        state.latest_disposition_event_id,
+        fixture.root_bound.dependency_acceptance_binding
+        .packet_dependency_acceptance_binding_id,
+        tuple(item.observation_id for item in fixture.observations),
+        canonical.authority_policy_fingerprint,
+        canonical.temporal_authority_fingerprint,
+    )
+    assert len(fields(projection)) == 39
+    assert tuple(getattr(projection, item.name) for item in fields(projection)) == (
+        expected
+    )
+    assert acp.validate_action_packet_effect_firewall_projection_v01(
+        projection,
+        fixture.registry,
+        **_g2a4a_projection_kwargs(fixture),
+    ) == (True, ())
+
+
+def test_g2a4a_projection_builds_valid_frozen_firewall_and_request(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    preparation = acp._prepare_action_packet_effect_attempt_v01(
+        fixture.registry,
+        **_g2a4a_projection_kwargs(fixture),
+    )
+    projection = preparation.projection
+    firewall = preparation.firewall
+    request = preparation.request
+    assert effect_firewall.validate_effect_firewall_v01(firewall) == ()
+    assert effect_firewall.validate_effect_request_v01(request) == ()
+    rebuilt_firewall = effect_firewall.build_effect_firewall_v01(
+        root_decision_kernel=(
+            fixture.root_bound.root_decision_projection
+            .root_decision_kernel
+        ),
+        decision_input=(
+            fixture.root_bound.root_decision_projection.root_decision_input
+        ),
+        root_decision_result=(
+            fixture.root_bound.root_decision_projection
+            .root_decision_result
+        ),
+        invocation_id=projection.execution_attempt_id,
+        allowed_adapter_ids=projection.allowed_adapter_ids,
+        allowed_action_kinds=projection.allowed_action_kinds,
+        root_scope_refs=projection.root_scope_refs,
+        maximum_expires_at_tick=projection.maximum_expires_at_tick,
+    )
+    rebuilt_request = effect_firewall.build_effect_request_v01(
+        root_decision_kernel=(
+            fixture.root_bound.root_decision_projection
+            .root_decision_kernel
+        ),
+        decision_input=(
+            fixture.root_bound.root_decision_projection.root_decision_input
+        ),
+        root_decision_result=(
+            fixture.root_bound.root_decision_projection
+            .root_decision_result
+        ),
+        request_kind=projection.request_kind,
+        adapter_id=projection.adapter_id,
+        action_kind=projection.action_kind,
+        scope_refs=projection.scope_refs,
+        issued_at_tick=projection.issued_at_tick,
+        expires_at_tick=projection.expires_at_tick,
+        idempotency_key=projection.idempotency_key,
+    )
+    assert firewall.firewall_id == rebuilt_firewall.firewall_id
+    assert request.request_id == rebuilt_request.request_id
+    assert firewall.invocation_id == projection.execution_attempt_id
+    assert (
+        firewall.transaction_id,
+        firewall.target_root_id,
+        firewall.root_decision_id,
+        firewall.selected_candidate_id,
+        firewall.permission_ref,
+        firewall.allowed_adapter_ids,
+        firewall.allowed_action_kinds,
+        firewall.root_scope_refs,
+        firewall.maximum_expires_at_tick,
+        firewall.mock_only,
+        firewall.effect_access_owner,
+    ) == (
+        projection.transaction_id,
+        projection.target_root_id,
+        projection.root_decision_id,
+        projection.selected_candidate_id,
+        projection.permission_ref,
+        projection.allowed_adapter_ids,
+        projection.allowed_action_kinds,
+        projection.root_scope_refs,
+        projection.maximum_expires_at_tick,
+        True,
+        effect_firewall.EFFECT_ACCESS_OWNER,
+    )
+    assert (
+        request.request_kind,
+        request.adapter_id,
+        request.action_kind,
+        request.scope_refs,
+        request.issued_at_tick,
+        request.expires_at_tick,
+        request.idempotency_key,
+        request.mock_only,
+    ) == (
+        "ActionCommitPacket",
+        projection.adapter_id,
+        projection.action_kind,
+        projection.root_scope_refs,
+        projection.issued_at_tick,
+        projection.expires_at_tick,
+        projection.idempotency_key,
+        True,
+    )
+
+
+def test_g2a4a_projection_rejects_every_field_drift(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    projection = _g2a4a_projection(fixture)
+    for field in fields(projection):
+        value = getattr(projection, field.name)
+        if type(value) is str:
+            changed: object = value + ":drift"
+        elif type(value) is tuple:
+            changed = value + ("scope:drift",)
+        elif type(value) is int:
+            changed = value + 1
+        else:
+            assert type(value) is bool
+            changed = not value
+        forged = replace(projection, **{field.name: changed})
+        valid, reasons = (
+            acp.validate_action_packet_effect_firewall_projection_v01(
+                forged,
+                fixture.registry,
+                **_g2a4a_projection_kwargs(fixture),
+            )
+        )
+        assert valid is False, field.name
+        assert reasons == ("action_packet_effect_projection_mismatch",), (
+            field.name,
+            reasons,
+        )
+
+
+def test_g2a4a_corridor_legacy_and_canonical_containment_are_independent(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    assert _g2a4a_projection(fixture)
+    step = fixture.corridor_step
+    corridor = fixture.corridor
+    failures = (
+        {"corridor_step": replace(step, allowed_actions=())},
+        {
+            "corridor": replace(
+                corridor,
+                allowed_steps=("corridor_step:other",),
+            )
+        },
+        {
+            "corridor": replace(
+                corridor,
+                allowed_steps=(step.step_id, step.step_id),
+            )
+        },
+        {"corridor": replace(corridor, corridor_kind="corridor:other")},
+        {
+            "corridor_step": replace(
+                step,
+                adapter_id=acp.ADAPTER_REAL_BANK,
+            )
+        },
+        {
+            "corridor_step": replace(
+                step,
+                allowed_actions=(acp.ACTION_REAL_PAYMENT,),
+            )
+        },
+        {
+            "corridor_step": replace(
+                step,
+                parent_packet_id="acp_v02:" + "1" * 64,
+            )
+        },
+    )
+    for changes in failures:
+        with pytest.raises(ValueError):
+            _g2a4a_projection(fixture, **changes)
+
+    duplicate_scope_fixture = _g2a4a_fixture_value(
+        allowed_subjects=(acp.SUBJECT_SUPPLIER_A,),
+    )
+    with pytest.raises(
+        ValueError,
+        match="action_packet_effect_scope_invalid",
+    ):
+        _g2a4a_projection(duplicate_scope_fixture)
+
+
+def test_g2a4a_firewall_authorization_issues_private_capability_only(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    preparation = acp._prepare_action_packet_effect_attempt_v01(
+        g2a4a_fixture.registry,
+        **_g2a4a_projection_kwargs(g2a4a_fixture),
+    )
+    decision = preparation.decision
+    assert decision.decision == effect_firewall.EFFECT_DECISION_ALLOW_MOCK_EFFECT
+    assert decision.reason_code == "mock_effect_authorized"
+    assert decision.capability_issued is True
+    assert decision.return_to_root is False
+    assert decision.real_world_effects_count == 0
+    assert not hasattr(preparation, "capability")
+    assert type(decision).__name__ == "EffectFirewallDecisionV01"
+    with pytest.raises(TypeError):
+        copy.copy(preparation.firewall)
+    with pytest.raises(TypeError):
+        copy.deepcopy(preparation.firewall)
+    with pytest.raises(TypeError):
+        pickle.dumps(preparation.firewall)
+    assert preparation.firewall._state.mock_effect_execution_count == 0
+    assert preparation.firewall._state.terminal_receipt_ids == set()
+    assert not hasattr(acp, "EffectCapabilityV01")
+
+
+def test_g2a4a_failed_eligibility_never_reaches_firewall(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    calls = {"firewall": 0, "request": 0, "authorize": 0}
+    original_firewall = acp._build_effect_firewall_v01
+    original_request = acp._build_effect_request_v01
+    original_authorize = acp._authorize_effect_request_v01
+
+    @wraps(original_firewall)
+    def counted_firewall(**kwargs: object) -> object:
+        calls["firewall"] += 1
+        return original_firewall(**kwargs)
+
+    @wraps(original_request)
+    def counted_request(**kwargs: object) -> object:
+        calls["request"] += 1
+        return original_request(**kwargs)
+
+    @wraps(original_authorize)
+    def counted_authorize(**kwargs: object) -> object:
+        calls["authorize"] += 1
+        return original_authorize(**kwargs)
+
+    monkeypatch.setattr(acp, "_build_effect_firewall_v01", counted_firewall)
+    monkeypatch.setattr(acp, "_build_effect_request_v01", counted_request)
+    monkeypatch.setattr(acp, "_authorize_effect_request_v01", counted_authorize)
+    bad_observation = replace(
+        fixture.observations[0],
+        observed_content_sha256="e" * 64,
+    )
+    failures = (
+        {"packet_id": "acp_v02:" + "9" * 64},
+        {"current_dependency_observations": ()},
+        {"current_dependency_observations": (bad_observation,)},
+        {
+            "corridor": replace(
+                fixture.corridor,
+                packet_id="acp_v02:" + "8" * 64,
+            )
+        },
+        {
+            "eligibility_evaluation_time": (
+                fixture.root_bound.canonical_projection
+                .temporal_authority.expires_at_utc
+            )
+        },
+    )
+    for changes in failures:
+        with pytest.raises(ValueError):
+            acp._prepare_action_packet_effect_attempt_v01(
+                fixture.registry,
+                **_g2a4a_projection_kwargs(fixture, **changes),
+            )
+        assert calls == {"firewall": 0, "request": 0, "authorize": 0}
+
+
+def test_g2a4a_projection_rejects_unrepresentable_logical_time(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    canonical = fixture.root_bound.canonical_projection
+    issued = canonical.temporal_authority.issued_at_utc
+    cases = (
+        acp.build_logical_time_bridge_v01(
+            origin_utc_epoch_seconds=issued + 1,
+            seconds_per_tick=1,
+            bridge_policy_version="g2a4a_wrong_origin_v01",
+        ),
+        acp.build_logical_time_bridge_v01(
+            origin_utc_epoch_seconds=issued,
+            seconds_per_tick=7,
+            bridge_policy_version="g2a4a_nondivisible_v01",
+        ),
+        replace(
+            fixture.logical_time_bridge,
+            bridge_id="0" * 64,
+        ),
+    )
+    for bridge in cases:
+        with pytest.raises(ValueError):
+            _g2a4a_projection(fixture, logical_time_bridge=bridge)
+    for evaluation_time in (
+        True,
+        canonical.temporal_authority.expires_at_utc,
+    ):
+        with pytest.raises(ValueError):
+            _g2a4a_projection(
+                fixture,
+                eligibility_evaluation_time=evaluation_time,
+            )
+    overflow_bridge = acp.build_logical_time_bridge_v01(
+        origin_utc_epoch_seconds=-(2**63),
+        seconds_per_tick=2**62,
+        bridge_policy_version="g2a4a_overflow_v01",
+    )
+    with pytest.raises(ValueError):
+        _g2a4a_projection(fixture, logical_time_bridge=overflow_bridge)
+
+
+def test_g2a4a_dependency_time_envelope_commitment_binds_exact_interval(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    observation = g2a4a_fixture.observations[0]
+    values: dict[str, object] = {
+        "dependency_id": observation.dependency_id,
+        "evidence_ref": observation.evidence_ref,
+        "content_sha256": observation.observed_content_sha256,
+        "freshness_policy_id": observation.freshness_policy_id,
+        "source_provenance_refs": observation.source_provenance_refs,
+        "valid_from_utc": observation.valid_from_utc,
+        "valid_to_utc": observation.valid_to_utc,
+    }
+    material = (
+        acp.action_dependency_time_envelope_commitment_material_v01(
+            **values
+        )
+    )
+    assert tuple(name for name, _ in material) == (
+        "profile_id",
+        "dependency_id",
+        "evidence_ref",
+        "content_sha256",
+        "freshness_policy_id",
+        "source_provenance_refs",
+        "valid_from_utc",
+        "valid_to_utc",
+    )
+    assert len(material) == 8
+    assert {
+        "packet_id",
+        "source_root_decision_id",
+        "source_root_decision_hash",
+        "observation_id",
+        "observed_at_utc",
+        "observation_context_id",
+        "evaluation_context_id",
+    }.isdisjoint(name for name, _ in material)
+    expected = acp.build_domain_separated_identity_v01(
+        domain=(
+            acp.ACTION_DEPENDENCY_TIME_ENVELOPE_COMMITMENT_DOMAIN_V01
+        ),
+        prefix=(
+            acp.ACTION_DEPENDENCY_TIME_ENVELOPE_COMMITMENT_PREFIX_V01
+        ),
+        material=material,
+    )
+    assert observation.time_envelope_id == expected
+    assert acp.validate_action_dependency_time_envelope_binding_v01(
+        expected,
+        **values,
+    ) == (True, ())
+
+    for changed in (
+        {"dependency_id": "dependency:other"},
+        {"evidence_ref": "evidence:other"},
+        {"content_sha256": "f" * 64},
+        {"freshness_policy_id": "freshness_policy:other"},
+        {"source_provenance_refs": ("source:other",)},
+        {"valid_from_utc": observation.valid_from_utc + 1},
+        {"valid_to_utc": observation.valid_to_utc - 1},
+    ):
+        changed_values = dict(values)
+        changed_values.update(changed)
+        changed_id = acp.build_action_dependency_time_envelope_id_v01(
+            **changed_values
+        )
+        assert changed_id != expected
+        assert (
+            acp.validate_action_dependency_time_envelope_binding_v01(
+                expected,
+                **changed_values,
+            )[0]
+            is False
+        )
+
+    for invalid in (
+        {"valid_from_utc": True},
+        {"valid_to_utc": False},
+        {
+            "valid_from_utc": observation.valid_to_utc,
+            "valid_to_utc": observation.valid_to_utc,
+        },
+        {
+            "valid_from_utc": observation.valid_to_utc + 1,
+            "valid_to_utc": observation.valid_to_utc,
+        },
+    ):
+        invalid_values = dict(values)
+        invalid_values.update(invalid)
+        with pytest.raises(
+            ValueError,
+            match="dependency_time_envelope_commitment_invalid",
+        ):
+            acp.build_action_dependency_time_envelope_id_v01(
+                **invalid_values
+            )
+
+
+def test_g2a4a_reused_time_envelope_id_cannot_extend_current_freshness(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    observation = fixture.observations[0]
+    registry_bytes = repr(fixture.registry).encode("utf-8")
+    calls = {"firewall": 0, "request": 0, "authorize": 0}
+    original_firewall = acp._build_effect_firewall_v01
+    original_request = acp._build_effect_request_v01
+    original_authorize = acp._authorize_effect_request_v01
+
+    @wraps(original_firewall)
+    def counted_firewall(**kwargs: object) -> object:
+        calls["firewall"] += 1
+        return original_firewall(**kwargs)
+
+    @wraps(original_request)
+    def counted_request(**kwargs: object) -> object:
+        calls["request"] += 1
+        return original_request(**kwargs)
+
+    @wraps(original_authorize)
+    def counted_authorize(**kwargs: object) -> object:
+        calls["authorize"] += 1
+        return original_authorize(**kwargs)
+
+    monkeypatch.setattr(acp, "_build_effect_firewall_v01", counted_firewall)
+    monkeypatch.setattr(acp, "_build_effect_request_v01", counted_request)
+    monkeypatch.setattr(acp, "_authorize_effect_request_v01", counted_authorize)
+
+    assert _g2a4a_projection(fixture)
+    assert _g2a4a_projection(
+        fixture,
+        eligibility_evaluation_time=observation.valid_to_utc - 1,
+    )
+    with pytest.raises(ValueError):
+        _g2a4a_projection(
+            fixture,
+            eligibility_evaluation_time=observation.valid_to_utc,
+        )
+
+    forged_observations = []
+    for extension in (1, 1_000_000):
+        provisional = replace(
+            observation,
+            valid_to_utc=observation.valid_to_utc + extension,
+            observation_id="",
+        )
+        forged_observations.append(
+            replace(
+                provisional,
+                observation_id=acp.build_domain_separated_identity_v01(
+                    domain=(
+                        acp.ACTION_DEPENDENCY_CURRENT_OBSERVATION_DOMAIN_V01
+                    ),
+                    prefix=(
+                        acp.ACTION_DEPENDENCY_CURRENT_OBSERVATION_PREFIX_V01
+                    ),
+                    material=(
+                        acp.action_dependency_current_observation_material_v01(
+                            provisional
+                        )
+                    ),
+                ),
+            )
+        )
+    for forged in forged_observations:
+        assert acp.validate_action_dependency_current_observation_v01(
+            forged
+        )[0] is False
+        with pytest.raises(ValueError):
+            acp._prepare_action_packet_effect_attempt_v01(
+                fixture.registry,
+                **_g2a4a_projection_kwargs(
+                    fixture,
+                    current_dependency_observations=(forged,),
+                ),
+            )
+
+    extended_valid_to = observation.valid_to_utc + 1_000_000
+    new_envelope = acp.build_action_dependency_time_envelope_id_v01(
+        dependency_id=observation.dependency_id,
+        evidence_ref=observation.evidence_ref,
+        content_sha256=observation.observed_content_sha256,
+        freshness_policy_id=observation.freshness_policy_id,
+        source_provenance_refs=observation.source_provenance_refs,
+        valid_from_utc=observation.valid_from_utc,
+        valid_to_utc=extended_valid_to,
+    )
+    assert new_envelope != observation.time_envelope_id
+    self_consistent = acp.build_action_dependency_current_observation_v01(
+        dependency_id=observation.dependency_id,
+        evidence_ref=observation.evidence_ref,
+        observed_content_sha256=observation.observed_content_sha256,
+        time_envelope_id=new_envelope,
+        freshness_policy_id=observation.freshness_policy_id,
+        source_provenance_refs=observation.source_provenance_refs,
+        valid_from_utc=observation.valid_from_utc,
+        valid_to_utc=extended_valid_to,
+        observed_at_utc=observation.observed_at_utc,
+        observation_context_id=observation.observation_context_id,
+    )
+    assert acp.validate_action_dependency_current_observation_v01(
+        self_consistent
+    ) == (True, ())
+    with pytest.raises(ValueError):
+        acp._prepare_action_packet_effect_attempt_v01(
+            fixture.registry,
+            **_g2a4a_projection_kwargs(
+                fixture,
+                current_dependency_observations=(self_consistent,),
+            ),
+        )
+    assert calls == {"firewall": 0, "request": 0, "authorize": 0}
+    assert repr(fixture.registry).encode("utf-8") == registry_bytes
+
+
+def test_g2a4a_projection_builder_is_closed_under_its_validator(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    projection = _g2a4a_projection(fixture)
+    assert acp.validate_action_packet_effect_firewall_projection_v01(
+        projection,
+        fixture.registry,
+        **_g2a4a_projection_kwargs(fixture),
+    ) == (True, ())
+    assert acp.validate_action_packet_effect_firewall_projection_v01(
+        replace(projection, registry_id=""),
+        fixture.registry,
+        **_g2a4a_projection_kwargs(fixture),
+    )[0] is False
+
+    calls = {"registry": 0, "firewall": 0}
+    original_registry = acp._validate_action_commit_packet_registry_core_v02
+    original_firewall = acp._build_effect_firewall_v01
+
+    @wraps(original_registry)
+    def counted_registry(registry: object) -> object:
+        calls["registry"] += 1
+        return original_registry(registry)
+
+    @wraps(original_firewall)
+    def counted_firewall(**kwargs: object) -> object:
+        calls["firewall"] += 1
+        return original_firewall(**kwargs)
+
+    monkeypatch.setattr(
+        acp,
+        "_validate_action_commit_packet_registry_core_v02",
+        counted_registry,
+    )
+    monkeypatch.setattr(acp, "_build_effect_firewall_v01", counted_firewall)
+
+    calls.update(registry=0, firewall=0)
+    preparation = acp._prepare_action_packet_effect_attempt_v01(
+        fixture.registry,
+        **_g2a4a_projection_kwargs(fixture),
+    )
+    assert preparation.projection == projection
+    assert calls == {"registry": 1, "firewall": 1}
+
+    malformed_contexts = (
+        (
+            replace(fixture.registry, registry_id=""),
+            fixture.corridor,
+            "action_packet_effect_registry_id_invalid",
+        ),
+        (
+            replace(fixture.registry, registry_id="   "),
+            fixture.corridor,
+            "action_packet_effect_registry_id_invalid",
+        ),
+        (
+            fixture.registry,
+            replace(fixture.corridor, corridor_id=""),
+            "action_packet_effect_corridor_id_invalid",
+        ),
+        (
+            fixture.registry,
+            replace(fixture.corridor, corridor_id="   "),
+            "action_packet_effect_corridor_id_invalid",
+        ),
+        (
+            fixture.registry,
+            replace(fixture.corridor, corridor_id="e\u0301"),
+            "action_packet_effect_corridor_id_invalid",
+        ),
+    )
+    for registry, corridor, reason in malformed_contexts:
+        calls.update(registry=0, firewall=0)
+        with pytest.raises(ValueError, match=reason):
+            acp.build_action_packet_effect_firewall_projection_v01(
+                registry,
+                **_g2a4a_projection_kwargs(
+                    fixture,
+                    corridor=corridor,
+                ),
+            )
+        assert calls == {"registry": 1, "firewall": 0}
+        calls.update(registry=0, firewall=0)
+        with pytest.raises(ValueError, match=reason):
+            acp._prepare_action_packet_effect_attempt_v01(
+                registry,
+                **_g2a4a_projection_kwargs(
+                    fixture,
+                    corridor=corridor,
+                ),
+            )
+        assert calls == {"registry": 1, "firewall": 0}
+
+
+def _g2a4b_execute(
+    fixture: _G2A4AFixtureV01,
+    registry: acp.ActionCommitPacketRegistryV02 | None = None,
+    **changes: object,
+) -> acp.ActionCommitPacketRegistryV02:
+    return acp.execute_action_packet_mock_fulfillment_v01(
+        fixture.registry if registry is None else registry,
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+        **_g2a4a_projection_kwargs(fixture, **changes),
+    )
+
+
+def _g2a4b_entry(
+    registry: acp.ActionCommitPacketRegistryV02,
+    packet_id: str,
+) -> acp.ActionPacketLifecycleEntryV01:
+    matching = tuple(
+        entry
+        for entry in registry.action_packet_lifecycle_entries
+        if entry.root_bound_genesis.packet_identity.packet_id == packet_id
+    )
+    assert len(matching) == 1
+    return matching[0]
+
+
+def _g2a4b_observations_for_context(
+    observations: tuple[acp.ActionDependencyCurrentObservationV01, ...],
+    context_id: str,
+) -> tuple[acp.ActionDependencyCurrentObservationV01, ...]:
+    return tuple(
+        acp.build_action_dependency_current_observation_v01(
+            dependency_id=observation.dependency_id,
+            evidence_ref=observation.evidence_ref,
+            observed_content_sha256=observation.observed_content_sha256,
+            time_envelope_id=observation.time_envelope_id,
+            freshness_policy_id=observation.freshness_policy_id,
+            source_provenance_refs=observation.source_provenance_refs,
+            valid_from_utc=observation.valid_from_utc,
+            valid_to_utc=observation.valid_to_utc,
+            observed_at_utc=observation.observed_at_utc,
+            observation_context_id=context_id,
+        )
+        for observation in observations
+    )
+
+
+def _g2a4b_evidence_kwargs(
+    evidence: acp.ActionPacketFulfillmentAttemptEvidenceV01,
+    **changes: object,
+) -> dict[str, object]:
+    values = {
+        field.name: getattr(evidence, field.name)
+        for field in fields(evidence)
+        if field.name not in {"evidence_profile_id", "attempt_evidence_id"}
+    }
+    values.update(changes)
+    return values
+
+
+def test_g2a4b_fulfillment_attempt_evidence_identity_and_branch_invariants(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    original_execute = acp._execute_mock_effect_v01
+    original_authorize = acp._authorize_effect_request_v01
+
+    preblocked = _g2a4b_execute(
+        fixture,
+        current_dependency_observations=(),
+    ).action_packet_fulfillment_attempt_contexts[-1].attempt_evidence
+
+    @wraps(original_authorize)
+    def blocked_authorize(**kwargs: object) -> object:
+        request = kwargs["request"]
+        return original_authorize(
+            firewall=kwargs["firewall"],
+            request=request,
+            current_tick=request.expires_at_tick,
+        )
+
+    monkeypatch.setattr(
+        acp,
+        "_authorize_effect_request_v01",
+        blocked_authorize,
+    )
+    firewall_blocked = _g2a4b_execute(
+        fixture
+    ).action_packet_fulfillment_attempt_contexts[-1].attempt_evidence
+    monkeypatch.setattr(
+        acp,
+        "_authorize_effect_request_v01",
+        original_authorize,
+    )
+    consumed = _g2a4b_execute(
+        fixture
+    ).action_packet_fulfillment_attempt_contexts[-1].attempt_evidence
+
+    @wraps(original_execute)
+    def nonconsuming_execute(**kwargs: object) -> object:
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(
+        acp,
+        "_execute_mock_effect_v01",
+        nonconsuming_execute,
+    )
+    nonconsuming = _g2a4b_execute(
+        fixture
+    ).action_packet_fulfillment_attempt_contexts[-1].attempt_evidence
+
+    @wraps(original_execute)
+    def uncertain_execute(**kwargs: object) -> object:
+        raise RuntimeError("controlled_uncertain")
+
+    monkeypatch.setattr(
+        acp,
+        "_execute_mock_effect_v01",
+        uncertain_execute,
+    )
+    uncertain = _g2a4b_execute(
+        fixture
+    ).action_packet_fulfillment_attempt_contexts[-1].attempt_evidence
+
+    samples = (
+        preblocked,
+        firewall_blocked,
+        consumed,
+        nonconsuming,
+        uncertain,
+    )
+    assert len(fields(acp.ActionPacketFulfillmentAttemptEvidenceV01)) == 38
+    material_names = tuple(
+        name
+        for name, _ in (
+            acp.action_packet_fulfillment_attempt_evidence_material_v01(
+                consumed
+            )
+        )
+    )
+    assert len(material_names) == 37
+    assert material_names == tuple(
+        field.name
+        for field in fields(acp.ActionPacketFulfillmentAttemptEvidenceV01)
+        if field.name != "attempt_evidence_id"
+    )
+    assert preblocked.projection_sha256 is None
+    assert dict(
+        acp.action_packet_fulfillment_attempt_evidence_material_v01(
+            preblocked
+        )
+    )["projection_sha256"] == acp.ABSENT_V01
+    assert tuple(item.outcome_class for item in samples) == (
+        "PRE_FULFILLMENT_BLOCKED",
+        "FIREWALL_BLOCKED",
+        "CONSUMED",
+        "NOT_CONSUMED",
+        "UNCERTAIN",
+    )
+    for evidence in samples:
+        assert acp.validate_action_packet_fulfillment_attempt_evidence_v01(
+            evidence
+        ) == (True, ())
+        assert evidence.attempt_evidence_id.startswith(
+            acp.ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PREFIX_V01
+        )
+        rebuilt = acp.build_action_packet_fulfillment_attempt_evidence_v01(
+            **_g2a4b_evidence_kwargs(evidence)
+        )
+        assert rebuilt == evidence
+    assert consumed.attempt_observation_ordinal == 1
+    for forged in (
+        replace(consumed, adapter_invoked=False),
+        replace(nonconsuming, receipt_ref="receipt:forged"),
+        replace(preblocked, capability_id="f" * 64),
+        replace(consumed, attempt_observation_ordinal=True),
+    ):
+        valid, reasons = (
+            acp.validate_action_packet_fulfillment_attempt_evidence_v01(
+                forged
+            )
+        )
+        assert valid is False
+        assert reasons
+
+    class EqualText(str):
+        def __eq__(self, other: object) -> bool:
+            return True
+
+    custom_equal = replace(consumed, reason_code=EqualText("mock_effect_consumed"))
+    assert acp.validate_action_packet_fulfillment_attempt_evidence_v01(
+        custom_equal
+    )[0] is False
+
+
+def test_g2a4b_pre_adapter_failure_appends_evidence_without_invocation(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    source_entry = _g2a4b_entry(fixture.registry, packet_id)
+    source_dispositions = fixture.registry.idempotency_disposition_events
+    calls = {"firewall": 0, "execute": 0}
+    original_firewall = acp._build_effect_firewall_v01
+    original_execute = acp._execute_mock_effect_v01
+
+    @wraps(original_firewall)
+    def counted_firewall(**kwargs: object) -> object:
+        calls["firewall"] += 1
+        return original_firewall(**kwargs)
+
+    @wraps(original_execute)
+    def counted_execute(**kwargs: object) -> object:
+        calls["execute"] += 1
+        return original_execute(**kwargs)
+
+    monkeypatch.setattr(acp, "_build_effect_firewall_v01", counted_firewall)
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", counted_execute)
+
+    missing = _g2a4b_execute(
+        fixture,
+        current_dependency_observations=(),
+    )
+    missing_context = missing.action_packet_fulfillment_attempt_contexts[-1]
+    assert missing_context.attempt_evidence.outcome_class == (
+        "PRE_FULFILLMENT_BLOCKED"
+    )
+    assert missing_context.attempt_evidence.adapter_call_count == 0
+    assert missing_context.projection is None
+    assert missing_context.receipt is None
+    assert _g2a4b_entry(missing, packet_id).transition_events == (
+        source_entry.transition_events
+    )
+    assert missing.idempotency_disposition_events is source_dispositions
+
+    at_expiry_context = "evaluation_context:g2a4b:expiry"
+    at_expiry_observations = _g2a4b_observations_for_context(
+        fixture.observations,
+        at_expiry_context,
+    )
+    at_expiry = _g2a4b_execute(
+        fixture,
+        eligibility_evaluation_time=(
+            fixture.root_bound.canonical_projection.temporal_authority
+            .expires_at_utc
+        ),
+        eligibility_evaluation_context_id=at_expiry_context,
+        current_dependency_observations=at_expiry_observations,
+    )
+    assert at_expiry.action_packet_fulfillment_attempt_contexts[
+        -1
+    ].attempt_evidence.outcome_class == "PRE_FULFILLMENT_BLOCKED"
+
+    wrong_corridor = _g2a4b_execute(
+        fixture,
+        corridor=replace(fixture.corridor, allowed_steps=()),
+    )
+    assert wrong_corridor.action_packet_fulfillment_attempt_contexts[
+        -1
+    ].attempt_evidence.outcome_class == "PRE_FULFILLMENT_BLOCKED"
+    assert calls == {"firewall": 0, "execute": 0}
+
+    retry_context = "evaluation_context:g2a4b:fresh_after_block"
+    fresh_observations = _g2a4b_observations_for_context(
+        fixture.observations,
+        retry_context,
+    )
+    completed = _g2a4b_execute(
+        fixture,
+        missing,
+        current_dependency_observations=fresh_observations,
+        eligibility_evaluation_context_id=retry_context,
+    )
+    assert tuple(
+        context.attempt_evidence.outcome_class
+        for context in completed.action_packet_fulfillment_attempt_contexts
+    ) == ("PRE_FULFILLMENT_BLOCKED", "CONSUMED")
+    assert calls == {"firewall": 2, "execute": 1}
+    with pytest.raises(ValueError, match="observation_duplicate"):
+        _g2a4b_execute(
+            fixture,
+            missing,
+            current_dependency_observations=(),
+        )
+
+
+def test_g2a4b_firewall_block_appends_evidence_and_never_invokes_effect(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    source_entry = _g2a4b_entry(fixture.registry, packet_id)
+    calls = {"authorize": 0, "execute": 0}
+    original_authorize = acp._authorize_effect_request_v01
+    original_execute = acp._execute_mock_effect_v01
+
+    @wraps(original_authorize)
+    def blocked_authorize(**kwargs: object) -> object:
+        calls["authorize"] += 1
+        request = kwargs["request"]
+        return original_authorize(
+            firewall=kwargs["firewall"],
+            request=request,
+            current_tick=request.expires_at_tick,
+        )
+
+    @wraps(original_execute)
+    def counted_execute(**kwargs: object) -> object:
+        calls["execute"] += 1
+        return original_execute(**kwargs)
+
+    monkeypatch.setattr(
+        acp,
+        "_authorize_effect_request_v01",
+        blocked_authorize,
+    )
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", counted_execute)
+    result = _g2a4b_execute(fixture)
+    assert calls["execute"] == 0
+    assert calls["authorize"] >= 2
+    assert acp.validate_action_commit_packet_registry_v02(result) == (True, ())
+    context = result.action_packet_fulfillment_attempt_contexts[-1]
+    evidence = context.attempt_evidence
+    assert evidence.outcome_class == "FIREWALL_BLOCKED"
+    assert evidence.capability_id is None
+    assert evidence.adapter_invoked is False
+    assert context.projection is not None
+    assert context.request is not None
+    assert context.decision is not None
+    assert context.decision.decision == (
+        effect_firewall.EFFECT_DECISION_BLOCKED_FAIL_CLOSED
+    )
+    assert context.receipt is None
+    assert _g2a4b_entry(result, packet_id).transition_events == (
+        source_entry.transition_events
+    )
+    assert result.idempotency_disposition_events is (
+        fixture.registry.idempotency_disposition_events
+    )
+
+
+def test_g2a4b_consumed_branch_invokes_once_and_atomically_records_t04_consume(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    calls = {"execute": 0, "source": 0, "proposed": 0}
+    original_execute = acp._execute_mock_effect_v01
+    original_validate = acp._validate_action_commit_packet_registry_core_v02
+
+    @wraps(original_execute)
+    def counted_execute(**kwargs: object) -> object:
+        calls["execute"] += 1
+        return original_execute(**kwargs)
+
+    @wraps(original_validate)
+    def counted_validate(registry: object) -> object:
+        if registry is fixture.registry:
+            calls["source"] += 1
+        else:
+            calls["proposed"] += 1
+        return original_validate(registry)
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", counted_execute)
+    monkeypatch.setattr(
+        acp,
+        "_validate_action_commit_packet_registry_core_v02",
+        counted_validate,
+    )
+    result = _g2a4b_execute(fixture)
+    assert calls == {"execute": 1, "source": 1, "proposed": 1}
+    assert acp.validate_action_commit_packet_registry_v02(result) == (True, ())
+    assert len(result.action_packet_fulfillment_attempt_contexts) == 1
+    context = result.action_packet_fulfillment_attempt_contexts[0]
+    evidence = context.attempt_evidence
+    assert evidence.outcome_class == "CONSUMED"
+    assert evidence.adapter_call_count == 1
+    assert context.receipt is not None
+    assert acp.validate_action_packet_fulfillment_attempt_evidence_v01(
+        evidence
+    ) == (True, ())
+    entry = _g2a4b_entry(result, packet_id)
+    assert entry.transition_events[-1].transition_rule_id == (
+        "g2a_t04_fulfill_mock"
+    )
+    assert (
+        entry.transition_events[-1].execution_attempt_id
+        == fixture.pending.execution_attempt_id
+    )
+    assert result.idempotency_disposition_events[-1].event_class == "CONSUME"
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        result,
+        packet_id=packet_id,
+    )
+    assert state.lifecycle_state == "FULFILLED_MOCK"
+    assert state.idempotency_disposition == "CONSUMED"
+    assert state.reservation_owner_packet_id == packet_id
+    assert all(
+        event.transition_rule_id != "g2a_t05_receipt"
+        for event in entry.transition_events
+    )
+    with pytest.raises(ValueError):
+        _g2a4b_execute(fixture, result)
+    assert calls["execute"] == 1
+
+
+def test_g2a4b_receipt_observation_atomically_records_t05_receipt_confirm(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    consumed = _g2a4b_execute(fixture)
+    context = consumed.action_packet_fulfillment_attempt_contexts[0]
+    assert context.receipt is not None
+    assert effect_firewall.validate_effect_receipt_v01(
+        firewall=acp._build_effect_firewall_v01(
+            root_decision_kernel=(
+                fixture.root_bound.root_decision_projection.root_decision_kernel
+            ),
+            decision_input=(
+                fixture.root_bound.root_decision_projection.root_decision_input
+            ),
+            root_decision_result=(
+                fixture.root_bound.root_decision_projection.root_decision_result
+            ),
+            invocation_id=context.projection.execution_attempt_id,
+            allowed_adapter_ids=context.projection.allowed_adapter_ids,
+            allowed_action_kinds=context.projection.allowed_action_kinds,
+            root_scope_refs=context.projection.root_scope_refs,
+            maximum_expires_at_tick=(
+                context.projection.maximum_expires_at_tick
+            ),
+        ),
+        request=context.request,
+        decision=context.decision,
+        receipt=context.receipt,
+    ) != ()
+    calls = {"execute": 0, "source": 0, "proposed": 0}
+    original_execute = acp._execute_mock_effect_v01
+    original_validate = acp._validate_action_commit_packet_registry_core_v02
+
+    @wraps(original_execute)
+    def counted_execute(**kwargs: object) -> object:
+        calls["execute"] += 1
+        return original_execute(**kwargs)
+
+    @wraps(original_validate)
+    def counted_validate(registry: object) -> object:
+        if registry is consumed:
+            calls["source"] += 1
+        else:
+            calls["proposed"] += 1
+        return original_validate(registry)
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", counted_execute)
+    monkeypatch.setattr(
+        acp,
+        "_validate_action_commit_packet_registry_core_v02",
+        counted_validate,
+    )
+    result = acp.observe_action_packet_effect_receipt_v01(
+        consumed,
+        packet_id=packet_id,
+        attempt_evidence_id=context.attempt_evidence.attempt_evidence_id,
+        receipt_evaluation_time=fixture.eligibility_evaluation_time + 1,
+        receipt_evaluation_time_source="explicit_g2a4b_receipt_time",
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert calls == {"execute": 0, "source": 1, "proposed": 1}
+    assert acp.validate_action_commit_packet_registry_v02(result) == (True, ())
+    entry = _g2a4b_entry(result, packet_id)
+    assert entry.transition_events[-1].transition_rule_id == "g2a_t05_receipt"
+    assert entry.transition_events[-1].execution_attempt_id == (
+        context.attempt_evidence.execution_attempt_id
+    )
+    assert entry.transition_events[-1].receipt_ref == context.receipt.artifact_id
+    assert result.idempotency_disposition_events[-1].event_class == (
+        "RECEIPT_CONFIRM"
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        result,
+        packet_id=packet_id,
+    )
+    assert state.lifecycle_state == "RECEIPT_RECEIVED"
+    assert state.idempotency_disposition == "CONSUMED"
+    with pytest.raises(ValueError):
+        acp.observe_action_packet_effect_receipt_v01(
+            result,
+            packet_id=packet_id,
+            attempt_evidence_id=context.attempt_evidence.attempt_evidence_id,
+            receipt_evaluation_time=fixture.eligibility_evaluation_time + 2,
+            receipt_evaluation_time_source="explicit_g2a4b_receipt_time",
+            action_packet_transition_registry_profile=_g2a2a_registry(),
+        )
+    assert calls["execute"] == 0
+
+
+def test_g2a4b_nonconsuming_branch_preserves_disposition_and_allows_retry(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    before_dispositions = fixture.registry.idempotency_disposition_events
+    before_bytes = canonical_json_bytes_v01(
+        tuple(
+            acp.idempotency_disposition_event_material_v01(event)
+            for event in before_dispositions
+        )
+    )
+    calls = {"execute": 0}
+
+    @wraps(acp._execute_mock_effect_v01)
+    def reject_before_mutation(**kwargs: object) -> object:
+        calls["execute"] += 1
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(
+        acp,
+        "_execute_mock_effect_v01",
+        reject_before_mutation,
+    )
+    result = _g2a4b_execute(fixture)
+    assert calls["execute"] == 1
+    assert result.idempotency_disposition_events is before_dispositions
+    assert canonical_json_bytes_v01(
+        tuple(
+            acp.idempotency_disposition_event_material_v01(event)
+            for event in result.idempotency_disposition_events
+        )
+    ) == before_bytes
+    context = result.action_packet_fulfillment_attempt_contexts[-1]
+    evidence = context.attempt_evidence
+    assert evidence.outcome_class == "NOT_CONSUMED"
+    assert evidence.firewall_state_sha256_before == (
+        evidence.firewall_state_sha256_after
+    )
+    assert context.receipt is None
+    entry = _g2a4b_entry(result, packet_id)
+    assert entry.transition_events[-1].transition_rule_id == (
+        "g2a_t24_nonconsuming_failure"
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        result,
+        packet_id=packet_id,
+    )
+    assert state.failed_provenance == "FAILED_NON_CONSUMING"
+    assert state.idempotency_disposition == "RESERVED"
+    assert state.reservation_owner_packet_id == packet_id
+    assert state.latest_disposition_event_id == (
+        acp.derive_action_packet_lifecycle_state_v01(
+            fixture.registry,
+            packet_id=packet_id,
+        ).latest_disposition_event_id
+    )
+    retried, _ = _g2a2b_append(result, packet_id, "g2a_t25_retry")
+    retried, second_pending = _g2a2b_append(
+        retried,
+        packet_id,
+        "g2a_t03_pending",
+        evaluation_context_id="evaluation_context:g2a4b:attempt:2",
+    )
+    assert second_pending.execution_attempt_id != (
+        fixture.pending.execution_attempt_id
+    )
+    with pytest.raises(ValueError):
+        _g2a4b_execute(fixture, result)
+    assert calls["execute"] == 1
+
+
+def test_g2a4b_uncertain_branch_closes_packet_and_key_without_receipt(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    calls = {"execute": 0}
+
+    @wraps(acp._execute_mock_effect_v01)
+    def unexpected(**kwargs: object) -> object:
+        calls["execute"] += 1
+        raise RuntimeError("controlled_post_authorization_exception")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", unexpected)
+    result = _g2a4b_execute(fixture)
+    assert calls["execute"] == 1
+    context = result.action_packet_fulfillment_attempt_contexts[-1]
+    assert context.attempt_evidence.outcome_class == "UNCERTAIN"
+    assert context.receipt is None
+    entry = _g2a4b_entry(result, packet_id)
+    assert entry.transition_events[-1].transition_rule_id == (
+        "g2a_t26_uncertain_adapter_outcome"
+    )
+    assert result.idempotency_disposition_events[-1].event_class == (
+        "UNCERTAIN_CLOSE"
+    )
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        result,
+        packet_id=packet_id,
+    )
+    assert state.failed_provenance == "FAILED_UNCERTAIN_TERMINAL"
+    assert state.idempotency_disposition == "UNCERTAIN_CLOSED"
+    assert state.lifecycle_terminal is True
+    with pytest.raises(ValueError):
+        _g2a4b_execute(fixture, result)
+    with pytest.raises(ValueError):
+        _g2a2b_append(result, packet_id, "g2a_t25_retry")
+    assert calls["execute"] == 1
+
+
+def test_g2a4b_one_invocation_has_exactly_one_terminal_outcome(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    forbidden_parameters = {
+        "outcome_class",
+        "consumed",
+        "nonconsuming",
+        "uncertain",
+        "adapter_invoked",
+        "transition_event",
+        "disposition_event",
+        "receipt",
+        "reason_code",
+    }
+    assert not (
+        forbidden_parameters
+        & set(
+            inspect.signature(
+                acp.execute_action_packet_mock_fulfillment_v01
+            ).parameters
+        )
+    )
+    original_execute = acp._execute_mock_effect_v01
+
+    def outcome_registry(mode: str) -> acp.ActionCommitPacketRegistryV02:
+        if mode == "CONSUMED":
+            monkeypatch.setattr(
+                acp,
+                "_execute_mock_effect_v01",
+                original_execute,
+            )
+        elif mode == "NOT_CONSUMED":
+            @wraps(original_execute)
+            def nonconsuming(**kwargs: object) -> object:
+                raise ValueError("effect_request_expired")
+
+            monkeypatch.setattr(
+                acp,
+                "_execute_mock_effect_v01",
+                nonconsuming,
+            )
+        else:
+            @wraps(original_execute)
+            def uncertain(**kwargs: object) -> object:
+                return object()
+
+            monkeypatch.setattr(
+                acp,
+                "_execute_mock_effect_v01",
+                uncertain,
+            )
+        return _g2a4b_execute(fixture)
+
+    expected_rules = {
+        "CONSUMED": "g2a_t04_fulfill_mock",
+        "NOT_CONSUMED": "g2a_t24_nonconsuming_failure",
+        "UNCERTAIN": "g2a_t26_uncertain_adapter_outcome",
+    }
+    for mode in ("CONSUMED", "NOT_CONSUMED", "UNCERTAIN"):
+        registry = outcome_registry(mode)
+        context = registry.action_packet_fulfillment_attempt_contexts[-1]
+        assert context.attempt_evidence.outcome_class == mode
+        result_events = tuple(
+            event
+            for event in _g2a4b_entry(
+                registry,
+                fixture.root_bound.packet_identity.packet_id,
+            ).transition_events
+            if event.transition_rule_id in set(expected_rules.values())
+        )
+        assert tuple(event.transition_rule_id for event in result_events) == (
+            expected_rules[mode],
+        )
+        disposition_classes = tuple(
+            event.event_class
+            for event in registry.idempotency_disposition_events
+            if event.event_class in {"CONSUME", "UNCERTAIN_CLOSE"}
+        )
+        assert disposition_classes == {
+            "CONSUMED": ("CONSUME",),
+            "NOT_CONSUMED": (),
+            "UNCERTAIN": ("UNCERTAIN_CLOSE",),
+        }[mode]
+
+
+def test_g2a4b_manual_registry_bypass_and_context_forgery_fail_closed(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    consumed = _g2a4b_execute(fixture)
+    context = consumed.action_packet_fulfillment_attempt_contexts[-1]
+    evidence = context.attempt_evidence
+    consumed_entry = _g2a4b_entry(
+        consumed,
+        fixture.root_bound.packet_identity.packet_id,
+    )
+    source_entry = _g2a4b_entry(
+        fixture.registry,
+        fixture.root_bound.packet_identity.packet_id,
+    )
+    forged_ordinal = acp.build_action_packet_fulfillment_attempt_evidence_v01(
+        **_g2a4b_evidence_kwargs(
+            evidence,
+            attempt_observation_ordinal=2,
+        )
+    )
+    forged_contexts = (
+        replace(
+            fixture.registry,
+            action_packet_fulfillment_attempt_contexts=(context,),
+        ),
+        replace(
+            consumed,
+            action_packet_fulfillment_attempt_contexts=(),
+        ),
+        replace(
+            consumed,
+            action_packet_fulfillment_attempt_contexts=(
+                replace(context, attempt_evidence=forged_ordinal),
+            ),
+        ),
+        replace(
+            consumed,
+            action_packet_fulfillment_attempt_contexts=(context, context),
+        ),
+        replace(
+            consumed,
+            action_packet_fulfillment_attempt_contexts=(
+                replace(
+                    context,
+                    attempt_evidence=replace(
+                        evidence,
+                        projection_sha256="f" * 64,
+                    ),
+                ),
+            ),
+        ),
+        replace(
+            consumed,
+            action_packet_fulfillment_attempt_contexts=(
+                replace(
+                    context,
+                    attempt_evidence=replace(
+                        evidence,
+                        capability_id="e" * 64,
+                    ),
+                ),
+            ),
+        ),
+        replace(
+            consumed,
+            idempotency_disposition_events=(
+                fixture.registry.idempotency_disposition_events
+            ),
+        ),
+        replace(
+            consumed,
+            action_packet_lifecycle_entries=(
+                replace(
+                    consumed_entry,
+                    transition_events=source_entry.transition_events,
+                ),
+            ),
+        ),
+    )
+    for forged in forged_contexts:
+        assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+
+    original_execute = acp._execute_mock_effect_v01
+
+    @wraps(original_execute)
+    def nonconsuming(**kwargs: object) -> object:
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", nonconsuming)
+    failed = _g2a4b_execute(fixture)
+    assert acp.validate_action_commit_packet_registry_v02(
+        replace(
+            failed,
+            idempotency_disposition_events=(
+                failed.idempotency_disposition_events
+                + (failed.idempotency_disposition_events[-1],)
+            ),
+        )
+    )[0] is False
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", original_execute)
+
+    @wraps(original_execute)
+    def uncertain(**kwargs: object) -> object:
+        raise RuntimeError("controlled_uncertain")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", uncertain)
+    uncertain_registry = _g2a4b_execute(fixture)
+    uncertain_context = (
+        uncertain_registry.action_packet_fulfillment_attempt_contexts[-1]
+    )
+    assert acp.validate_action_commit_packet_registry_v02(
+        replace(
+            uncertain_registry,
+            action_packet_fulfillment_attempt_contexts=(
+                replace(uncertain_context, receipt=context.receipt),
+            ),
+        )
+    )[0] is False
+
+
+def test_g2a4b_attempt_and_receipt_histories_are_ordered_and_immutable(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    blocked = _g2a4b_execute(
+        fixture,
+        current_dependency_observations=(),
+    )
+    second_context_id = "evaluation_context:g2a4b:history:2"
+    consumed = _g2a4b_execute(
+        fixture,
+        blocked,
+        current_dependency_observations=_g2a4b_observations_for_context(
+            fixture.observations,
+            second_context_id,
+        ),
+        eligibility_evaluation_context_id=second_context_id,
+    )
+    consumed_context = consumed.action_packet_fulfillment_attempt_contexts[-1]
+    confirmed = acp.observe_action_packet_effect_receipt_v01(
+        consumed,
+        packet_id=packet_id,
+        attempt_evidence_id=(
+            consumed_context.attempt_evidence.attempt_evidence_id
+        ),
+        receipt_evaluation_time=fixture.eligibility_evaluation_time + 1,
+        receipt_evaluation_time_source="explicit_g2a4b_receipt_time",
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    contexts = confirmed.action_packet_fulfillment_attempt_contexts
+    assert tuple(
+        context.attempt_evidence.outcome_class for context in contexts
+    ) == ("PRE_FULFILLMENT_BLOCKED", "CONSUMED")
+    assert tuple(
+        context.attempt_evidence.attempt_observation_ordinal
+        for context in contexts
+    ) == (1, 2)
+    entry = _g2a4b_entry(confirmed, packet_id)
+    forged_registries = (
+        replace(
+            confirmed,
+            action_packet_fulfillment_attempt_contexts=tuple(
+                reversed(contexts)
+            ),
+        ),
+        replace(
+            confirmed,
+            action_packet_fulfillment_attempt_contexts=contexts[1:],
+        ),
+        replace(
+            confirmed,
+            action_packet_fulfillment_attempt_contexts=contexts
+            + (contexts[-1],),
+        ),
+        replace(
+            confirmed,
+            action_packet_fulfillment_attempt_contexts=(
+                contexts[0],
+                replace(
+                    contexts[1],
+                    attempt_evidence=replace(
+                        contexts[1].attempt_evidence,
+                        reason_code="rewritten",
+                    ),
+                ),
+            ),
+        ),
+        replace(
+            confirmed,
+            action_packet_lifecycle_entries=(
+                replace(
+                    entry,
+                    transition_events=entry.transition_events[:-1],
+                ),
+            ),
+        ),
+        replace(
+            confirmed,
+            idempotency_disposition_events=tuple(
+                reversed(confirmed.idempotency_disposition_events)
+            ),
+        ),
+        replace(
+            confirmed,
+            action_packet_fulfillment_attempt_contexts=(
+                contexts[0],
+                replace(
+                    contexts[1],
+                    receipt=replace(
+                        contexts[1].receipt,
+                        artifact_id="receipt:rewritten",
+                    ),
+                ),
+            ),
+        ),
+    )
+    for forged in forged_registries:
+        assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+
+
+def test_g2a4b_retry_creates_new_attempt_and_old_attempt_cannot_execute(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    original_execute = acp._execute_mock_effect_v01
+    calls = {"execute": 0}
+
+    @wraps(original_execute)
+    def nonconsuming(**kwargs: object) -> object:
+        calls["execute"] += 1
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", nonconsuming)
+    failed = _g2a4b_execute(fixture)
+    failed, _ = _g2a2b_append(failed, packet_id, "g2a_t25_retry")
+    failed, second_pending = _g2a2b_append(
+        failed,
+        packet_id,
+        "g2a_t03_pending",
+        evaluation_context_id="evaluation_context:g2a4b:retry:attempt:2",
+    )
+    second_context_id = "evaluation_context:g2a4b:retry:eligibility:2"
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", original_execute)
+    completed = _g2a4b_execute(
+        fixture,
+        failed,
+        current_dependency_observations=_g2a4b_observations_for_context(
+            fixture.observations,
+            second_context_id,
+        ),
+        eligibility_evaluation_time=second_pending.evaluation_time,
+        eligibility_evaluation_context_id=second_context_id,
+    )
+    calls["execute"] += 1
+    contexts = completed.action_packet_fulfillment_attempt_contexts
+    assert tuple(
+        context.attempt_evidence.execution_attempt_id for context in contexts
+    ) == (
+        fixture.pending.execution_attempt_id,
+        second_pending.execution_attempt_id,
+    )
+    assert tuple(
+        context.attempt_evidence.outcome_class for context in contexts
+    ) == ("NOT_CONSUMED", "CONSUMED")
+    assert contexts[0].request.idempotency_key == (
+        contexts[1].request.idempotency_key
+    )
+    assert contexts[0].decision.capability_id != (
+        contexts[1].decision.capability_id
+    )
+    assert calls["execute"] == 2
+    with pytest.raises(ValueError):
+        _g2a4b_execute(fixture, completed)
+
+
+def test_g2a4b_post_invocation_failures_never_erase_observed_truth(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    original_execute = acp._execute_mock_effect_v01
+    calls = {"execute": 0}
+
+    @wraps(original_execute)
+    def malformed_return(**kwargs: object) -> object:
+        calls["execute"] += 1
+        return {"not": "a receipt"}
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", malformed_return)
+    malformed = _g2a4b_execute(fixture)
+    assert malformed is not fixture.registry
+    assert malformed.action_packet_fulfillment_attempt_contexts[
+        -1
+    ].attempt_evidence.outcome_class == "UNCERTAIN"
+
+    @wraps(original_execute)
+    def mutated_then_failed(**kwargs: object) -> object:
+        calls["execute"] += 1
+        firewall = kwargs["firewall"]
+        firewall._state.seen_request_ids = set()
+        firewall._state.used_idempotency_keys = set()
+        firewall._state.issued_capabilities = {}
+        firewall._state.idempotency_key_by_request_id = {}
+        firewall._state.authorization_decision_id_by_capability_id = {}
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", mutated_then_failed)
+    ambiguous = _g2a4b_execute(fixture)
+    assert ambiguous is not fixture.registry
+    assert ambiguous.action_packet_fulfillment_attempt_contexts[
+        -1
+    ].attempt_evidence.outcome_class == "UNCERTAIN"
+
+    @wraps(original_execute)
+    def counted_consumed(**kwargs: object) -> object:
+        calls["execute"] += 1
+        return original_execute(**kwargs)
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", counted_consumed)
+    consumed = _g2a4b_execute(fixture)
+    consumed_context = consumed.action_packet_fulfillment_attempt_contexts[-1]
+    assert consumed_context.attempt_evidence.outcome_class == "CONSUMED"
+    assert consumed_context.receipt is not None
+    assert calls["execute"] == 3
+    assert all(
+        len(registry.action_packet_fulfillment_attempt_contexts) == 1
+        for registry in (malformed, ambiguous, consumed)
+    )
+
+
+def test_g2a4b_frozen_effect_firewall_execution_is_the_only_effect_path(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source_path = Path(acp.__file__)
+    source = source_path.read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    frozen_calls = tuple(
+        node
+        for node in ast.walk(tree)
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "_execute_mock_effect_v01"
+        )
+    )
+    assert len(frozen_calls) == 1
+    assert "mock_connector_sandbox" not in source
+    assert "EffectCapabilityV01" not in {
+        node.name
+        for node in tree.body
+        if isinstance(node, (ast.ClassDef, ast.FunctionDef))
+    }
+    assert "provider" not in inspect.getsource(
+        acp.execute_action_packet_mock_fulfillment_v01
+    ).lower()
+    calls = {"execute": 0}
+    original_execute = acp._execute_mock_effect_v01
+
+    @wraps(original_execute)
+    def counted_execute(**kwargs: object) -> object:
+        calls["execute"] += 1
+        return original_execute(**kwargs)
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", counted_execute)
+    result = _g2a4b_execute(g2a4a_fixture)
+    assert calls["execute"] == 1
+    assert result.action_packet_fulfillment_attempt_contexts[
+        -1
+    ].attempt_evidence.real_world_effects_count == 0
+
+
+def test_g2a4b_deterministic_attempt_transition_disposition_and_receipt_vectors(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = g2a4a_fixture
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    preblocked = _g2a4b_execute(
+        fixture,
+        current_dependency_observations=(),
+    )
+    consumed = _g2a4b_execute(fixture)
+    consumed_context = consumed.action_packet_fulfillment_attempt_contexts[-1]
+    original_execute = acp._execute_mock_effect_v01
+
+    @wraps(original_execute)
+    def nonconsuming(**kwargs: object) -> object:
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", nonconsuming)
+    failed = _g2a4b_execute(fixture)
+
+    @wraps(original_execute)
+    def uncertain(**kwargs: object) -> object:
+        raise RuntimeError("vector_uncertain")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", uncertain)
+    uncertain_registry = _g2a4b_execute(fixture)
+    confirmed = acp.observe_action_packet_effect_receipt_v01(
+        consumed,
+        packet_id=packet_id,
+        attempt_evidence_id=(
+            consumed_context.attempt_evidence.attempt_evidence_id
+        ),
+        receipt_evaluation_time=fixture.eligibility_evaluation_time + 1,
+        receipt_evaluation_time_source="explicit_g2a4b_receipt_time",
+        action_packet_transition_registry_profile=_g2a2a_registry(),
+    )
+    assert (
+        preblocked.action_packet_fulfillment_attempt_contexts[
+            -1
+        ].attempt_evidence.attempt_evidence_id
+        == "fulfillment_attempt_evidence_v01:"
+        "5f8fa939343b558a33624642d40c16b5e3b43d685ae2655c29ab064b0b0097d6"
+    )
+    assert (
+        consumed_context.attempt_evidence.attempt_evidence_id
+        == "fulfillment_attempt_evidence_v01:"
+        "b7d2e28954ed568f031f8b2cf62002a2927cb9deccb7e169644c319244ab2dda"
+    )
+    assert (
+        failed.action_packet_fulfillment_attempt_contexts[
+            -1
+        ].attempt_evidence.attempt_evidence_id
+        == "fulfillment_attempt_evidence_v01:"
+        "30a0f8bc7ee12bb05877731f1a64536675719aa272fc06070f33e01ea39e7c23"
+    )
+    assert (
+        uncertain_registry.action_packet_fulfillment_attempt_contexts[
+            -1
+        ].attempt_evidence.attempt_evidence_id
+        == "fulfillment_attempt_evidence_v01:"
+        "86078fbdf211ee56fb66c594db9cdb01c7459409b880070ac2da65a025d02f38"
+    )
+    assert _g2a4b_entry(
+        consumed,
+        packet_id,
+    ).transition_events[-1].transition_event_id == (
+        "acpt_v01:"
+        "0d1fa24efb522e363f26a6270755dd294a889a01868aa01b81ec932f490efd80"
+    )
+    assert _g2a4b_entry(
+        failed,
+        packet_id,
+    ).transition_events[-1].transition_event_id == (
+        "acpt_v01:"
+        "7159f821c0ec2962d4ef55cd4258127dd8e237f8da5d1b354886e245c9ab4b63"
+    )
+    assert _g2a4b_entry(
+        uncertain_registry,
+        packet_id,
+    ).transition_events[-1].transition_event_id == (
+        "acpt_v01:"
+        "ca7f2c0818778ae187807a5c0f9a7e3864bff9dc0762bff14cee996c3f6f05d5"
+    )
+    assert _g2a4b_entry(
+        confirmed,
+        packet_id,
+    ).transition_events[-1].transition_event_id == (
+        "acpt_v01:"
+        "0c448c16f4836e7030f7ee069df5e550098451218b7a3eecd196642a0bf3d256"
+    )
+    assert (
+        consumed.idempotency_disposition_events[
+            -1
+        ].idempotency_disposition_event_id
+        == "idem_event_v01:"
+        "a0a5b50ad2da32a7bed5d912ce5acb4a83b891c43ff99edc80eded2a747f3d96"
+    )
+    assert (
+        uncertain_registry.idempotency_disposition_events[
+            -1
+        ].idempotency_disposition_event_id
+        == "idem_event_v01:"
+        "d6226471ad9879b7c0abf6847bfdcbc4f9b123d2efbafa1d3d270e9b699d6164"
+    )
+    assert (
+        confirmed.idempotency_disposition_events[
+            -1
+        ].idempotency_disposition_event_id
+        == "idem_event_v01:"
+        "03bc62fc14ae4c8693e72466a6c3793691ef5723277b4cbf01d8662c34a0fa15"
+    )
+    assert consumed_context.attempt_evidence.receipt_sha256 == (
+        "c5f7e2307e71cdb6aba06cddec5b37a4e25e7268f1f0d52259a63828adfc8a68"
+    )
+
+
+def _g2a4_final_rebuild_terminal_bundle(
+    fixture: _G2A4AFixtureV01,
+    context: acp._ActionPacketFulfillmentAttemptContextV01,
+    *,
+    projection: acp.ActionPacketEffectFirewallProjectionV01 | None = None,
+    request: object | None = None,
+    decision: object | None = None,
+    receipt: object | None = None,
+    reason_code: str | None = None,
+) -> acp.ActionCommitPacketRegistryV02:
+    source = fixture.registry
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    entry = _g2a4b_entry(source, packet_id)
+    pending = entry.transition_events[-1]
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        source,
+        packet_id=packet_id,
+    )
+    original = context.attempt_evidence
+    effective_projection = context.projection if projection is None else projection
+    effective_request = context.request if request is None else request
+    effective_decision = context.decision if decision is None else decision
+    effective_receipt = context.receipt if receipt is None else receipt
+    evidence_changes: dict[str, object] = {
+        "projection_sha256": (
+            acp._action_packet_effect_projection_sha256_v01(
+                effective_projection
+            )
+            if effective_projection is not None
+            else None
+        ),
+        "firewall_id": (
+            effective_decision.firewall_id
+            if effective_decision is not None
+            else None
+        ),
+        "request_id": (
+            effective_request.request_id
+            if effective_request is not None
+            else None
+        ),
+        "decision_id": (
+            effective_decision.decision_id
+            if effective_decision is not None
+            else None
+        ),
+        "capability_id": (
+            effective_decision.capability_id
+            if effective_decision is not None
+            else None
+        ),
+        "adapter_id": (
+            effective_projection.adapter_id
+            if effective_projection is not None
+            else None
+        ),
+        "action_kind": (
+            effective_projection.action_kind
+            if effective_projection is not None
+            else None
+        ),
+        "receipt_ref": (
+            effective_receipt.artifact_id
+            if effective_receipt is not None
+            else None
+        ),
+        "receipt_sha256": (
+            acp._action_packet_effect_receipt_sha256_v01(
+                effective_receipt
+            )
+            if effective_receipt is not None
+            else None
+        ),
+    }
+    if reason_code is not None:
+        evidence_changes["reason_code"] = reason_code
+    evidence = acp.build_action_packet_fulfillment_attempt_evidence_v01(
+        **_g2a4b_evidence_kwargs(original, **evidence_changes)
+    )
+    rule_id = {
+        "CONSUMED": "g2a_t04_fulfill_mock",
+        "NOT_CONSUMED": "g2a_t24_nonconsuming_failure",
+        "UNCERTAIN": "g2a_t26_uncertain_adapter_outcome",
+    }[evidence.outcome_class]
+    transition = acp._g2a4b_outcome_transition_v01(
+        entry,
+        pending,
+        state,
+        evidence,
+        rule_id=rule_id,
+        receipt=(
+            effective_receipt
+            if evidence.outcome_class == "CONSUMED"
+            else None
+        ),
+        transition_registry=_g2a2a_registry(),
+    )
+    disposition_class = {
+        "CONSUMED": "CONSUME",
+        "NOT_CONSUMED": None,
+        "UNCERTAIN": "UNCERTAIN_CLOSE",
+    }[evidence.outcome_class]
+    disposition = (
+        acp._g2a4b_outcome_disposition_v01(
+            state,
+            transition,
+            event_class=disposition_class,
+        )
+        if disposition_class is not None
+        else None
+    )
+    forged_context = replace(
+        context,
+        attempt_evidence=evidence,
+        projection=effective_projection,
+        request=effective_request,
+        decision=effective_decision,
+        receipt=effective_receipt,
+    )
+    forged_entry = replace(
+        entry,
+        transition_events=entry.transition_events + (transition,),
+    )
+    return replace(
+        source,
+        action_packet_lifecycle_entries=(forged_entry,),
+        idempotency_disposition_events=(
+            source.idempotency_disposition_events
+            if disposition is None
+            else source.idempotency_disposition_events + (disposition,)
+        ),
+        action_packet_fulfillment_attempt_contexts=(forged_context,),
+    )
+
+
+def _g2a4_final_forged_preblocked_registry(
+    fixture: _G2A4AFixtureV01,
+    *,
+    reason_code: str,
+) -> acp.ActionCommitPacketRegistryV02:
+    source = fixture.registry
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    entry = _g2a4b_entry(source, packet_id)
+    pending = entry.transition_events[-1]
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        source,
+        packet_id=packet_id,
+    )
+    evidence = acp._g2a4b_attempt_evidence_v01(
+        source,
+        entry,
+        pending,
+        state,
+        ordinal=1,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        observations=fixture.observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+        eligibility_evaluation_time=fixture.eligibility_evaluation_time,
+        eligibility_evaluation_time_source=(
+            fixture.eligibility_evaluation_time_source
+        ),
+        eligibility_evaluation_context_id=(
+            fixture.eligibility_evaluation_context_id
+        ),
+        projection=None,
+        preparation=None,
+        outcome_class="PRE_FULFILLMENT_BLOCKED",
+        reason_code=reason_code,
+        adapter_invoked=False,
+        firewall_state_sha256_before=None,
+        firewall_state_sha256_after=None,
+        receipt=None,
+    )
+    context = acp._ActionPacketFulfillmentAttemptContextV01(
+        attempt_evidence=evidence,
+        projection=None,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        current_dependency_observations=fixture.observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+        request=None,
+        decision=None,
+        receipt=None,
+    )
+    return replace(
+        source,
+        action_packet_fulfillment_attempt_contexts=(context,),
+    )
+
+
+def _g2a4_final_forged_firewall_block_registry(
+    fixture: _G2A4AFixtureV01,
+) -> acp.ActionCommitPacketRegistryV02:
+    source = fixture.registry
+    packet_id = fixture.root_bound.packet_identity.packet_id
+    entry = _g2a4b_entry(source, packet_id)
+    pending = entry.transition_events[-1]
+    state = acp.derive_action_packet_lifecycle_state_v01(
+        source,
+        packet_id=packet_id,
+    )
+    projection = _g2a4a_projection(fixture)
+    root = fixture.root_bound.root_decision_projection
+    firewall = acp._build_effect_firewall_v01(
+        root_decision_kernel=root.root_decision_kernel,
+        decision_input=root.root_decision_input,
+        root_decision_result=root.root_decision_result,
+        invocation_id=projection.execution_attempt_id,
+        allowed_adapter_ids=projection.allowed_adapter_ids,
+        allowed_action_kinds=projection.allowed_action_kinds,
+        root_scope_refs=projection.root_scope_refs,
+        maximum_expires_at_tick=projection.maximum_expires_at_tick,
+    )
+    request = acp._build_effect_request_v01(
+        root_decision_kernel=root.root_decision_kernel,
+        decision_input=root.root_decision_input,
+        root_decision_result=root.root_decision_result,
+        request_kind=projection.request_kind,
+        adapter_id=projection.adapter_id,
+        action_kind=projection.action_kind,
+        scope_refs=projection.scope_refs,
+        issued_at_tick=projection.issued_at_tick,
+        expires_at_tick=projection.expires_at_tick,
+        idempotency_key=projection.idempotency_key,
+    )
+    decision = acp._authorize_effect_request_v01(
+        firewall=firewall,
+        request=request,
+        current_tick=request.expires_at_tick,
+    )
+    preparation = acp._ActionPacketEffectAttemptPreparationV01(
+        projection=projection,
+        firewall=firewall,
+        request=request,
+        decision=decision,
+    )
+    evidence = acp._g2a4b_attempt_evidence_v01(
+        source,
+        entry,
+        pending,
+        state,
+        ordinal=1,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        observations=fixture.observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+        eligibility_evaluation_time=fixture.eligibility_evaluation_time,
+        eligibility_evaluation_time_source=(
+            fixture.eligibility_evaluation_time_source
+        ),
+        eligibility_evaluation_context_id=(
+            fixture.eligibility_evaluation_context_id
+        ),
+        projection=projection,
+        preparation=preparation,
+        outcome_class="FIREWALL_BLOCKED",
+        reason_code=decision.reason_code,
+        adapter_invoked=False,
+        firewall_state_sha256_before=None,
+        firewall_state_sha256_after=None,
+        receipt=None,
+    )
+    context = acp._ActionPacketFulfillmentAttemptContextV01(
+        attempt_evidence=evidence,
+        projection=projection,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        current_dependency_observations=fixture.observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+        request=request,
+        decision=decision,
+        receipt=None,
+    )
+    return replace(
+        source,
+        action_packet_fulfillment_attempt_contexts=(context,),
+    )
+
+
+def _g2a4_final_forged_receipt(
+    receipt: kernel_abi.KernelArtifactV01,
+) -> kernel_abi.KernelArtifactV01:
+    plain = kernel_abi.kernel_artifact_to_plain_dict_v01(receipt)
+    artifact_id = "receipt:g2a4:coherent_forgery"
+    payload = dict(plain["payload"])
+    payload["receipt_ref"] = artifact_id
+    time_envelope = dict(plain["time_envelope"])
+    time_envelope["valid_to"] = "2099-01-01T00:00:00Z"
+    time_envelope["ttl_seconds"] = int(time_envelope["ttl_seconds"]) + 1
+    return kernel_abi.build_kernel_artifact_v01(
+        abi_version=plain["abi_version"],
+        artifact_id=artifact_id,
+        artifact_type=plain["artifact_type"],
+        schema_version=plain["schema_version"],
+        transaction_id=plain["transaction_id"],
+        owner_root_id=plain["owner_root_id"],
+        source_component=plain["source_component"],
+        authority_class=plain["authority_class"],
+        lifecycle_state=plain["lifecycle_state"],
+        payload=payload,
+        trace_refs=tuple(plain["trace_refs"]),
+        parent_refs=tuple(plain["parent_refs"]),
+        time_envelope=time_envelope,
+    )
+
+
+def test_g2a4_final_preblocked_requires_replayed_failure(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    replayed = _g2a4b_execute(
+        g2a4a_fixture,
+        current_dependency_observations=(),
+    )
+    assert acp.validate_action_commit_packet_registry_v02(replayed) == (
+        True,
+        (),
+    )
+    assert (
+        replayed.action_packet_fulfillment_attempt_contexts[
+            -1
+        ].attempt_evidence.reason_code
+        == "current_mandatory_dependency_missing"
+    )
+    forged = _g2a4_final_forged_preblocked_registry(
+        g2a4a_fixture,
+        reason_code="fabricated_block",
+    )
+    assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+
+
+def _g2a4_final_alternate_projection_field(
+    field_name: str,
+    value: object,
+) -> object:
+    if type(value) is bool:
+        return not value
+    if type(value) is int:
+        return value + 1
+    if type(value) is tuple:
+        return value + (f"forged:{field_name}",)
+    if field_name in {
+        "authority_policy_fingerprint",
+        "temporal_authority_fingerprint",
+    }:
+        return ("e" if value != "e" * 64 else "d") * 64
+    return f"forged:{field_name}"
+
+
+def test_g2a4_final_projection_rebuild_rejects_coherent_drift(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    consumed = _g2a4b_execute(g2a4a_fixture)
+    context = consumed.action_packet_fulfillment_attempt_contexts[-1]
+    projection = context.projection
+    assert projection is not None
+    projection_fields = fields(
+        acp.ActionPacketEffectFirewallProjectionV01
+    )
+    assert len(projection_fields) == 39
+    rejected = 0
+    for field in projection_fields:
+        forged_projection = replace(
+            projection,
+            **{
+                field.name: _g2a4_final_alternate_projection_field(
+                    field.name,
+                    getattr(projection, field.name),
+                )
+            },
+        )
+        forged = _g2a4_final_rebuild_terminal_bundle(
+            g2a4a_fixture,
+            context,
+            projection=forged_projection,
+        )
+        assert (
+            acp.validate_action_commit_packet_registry_v02(forged)[0]
+            is False
+        ), field.name
+        rejected += 1
+    assert rejected == 39
+
+
+def test_g2a4_final_firewall_decision_uses_projection_tick(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    forged = _g2a4_final_forged_firewall_block_registry(g2a4a_fixture)
+    assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+
+
+def test_g2a4_final_branch_reason_codes_are_closed(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original_execute = acp._execute_mock_effect_v01
+    consumed = _g2a4b_execute(g2a4a_fixture)
+    consumed_context = (
+        consumed.action_packet_fulfillment_attempt_contexts[-1]
+    )
+    assert acp.validate_action_commit_packet_registry_v02(consumed) == (
+        True,
+        (),
+    )
+    forged_consumed = _g2a4_final_rebuild_terminal_bundle(
+        g2a4a_fixture,
+        consumed_context,
+        reason_code="effect_request_expired",
+    )
+    assert (
+        acp.validate_action_commit_packet_registry_v02(forged_consumed)[0]
+        is False
+    )
+
+    @wraps(original_execute)
+    def nonconsuming(**kwargs: object) -> object:
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", nonconsuming)
+    failed = _g2a4b_execute(g2a4a_fixture)
+    context = failed.action_packet_fulfillment_attempt_contexts[-1]
+    forged = _g2a4_final_rebuild_terminal_bundle(
+        g2a4a_fixture,
+        context,
+        reason_code="effect_capability_missing",
+    )
+    assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+    assert acp.validate_action_commit_packet_registry_v02(failed) == (
+        True,
+        (),
+    )
+
+    @wraps(original_execute)
+    def uncertain(**kwargs: object) -> object:
+        raise RuntimeError("controlled_uncertain")
+
+    monkeypatch.setattr(acp, "_execute_mock_effect_v01", uncertain)
+    uncertain_registry = _g2a4b_execute(g2a4a_fixture)
+    uncertain_context = (
+        uncertain_registry.action_packet_fulfillment_attempt_contexts[-1]
+    )
+    assert (
+        acp.validate_action_commit_packet_registry_v02(
+            uncertain_registry
+        )
+        == (True, ())
+    )
+    for wrong_reason in (
+        "arbitrary_uncertain_reason",
+        "effect_request_expired",
+        "mock_effect_consumed",
+    ):
+        forged_uncertain = _g2a4_final_rebuild_terminal_bundle(
+            g2a4a_fixture,
+            uncertain_context,
+            reason_code=wrong_reason,
+        )
+        assert (
+            acp.validate_action_commit_packet_registry_v02(
+                forged_uncertain
+            )[0]
+            is False
+        )
+
+
+def test_g2a4_final_receipt_is_exactly_rebuilt(
+    g2a4a_fixture: _G2A4AFixtureV01,
+) -> None:
+    consumed = _g2a4b_execute(g2a4a_fixture)
+    context = consumed.action_packet_fulfillment_attempt_contexts[-1]
+    forged_receipt = _g2a4_final_forged_receipt(context.receipt)
+    forged = _g2a4_final_rebuild_terminal_bundle(
+        g2a4a_fixture,
+        context,
+        receipt=forged_receipt,
+    )
+    assert kernel_abi.validate_kernel_artifact_v01(forged_receipt) == ()
+    assert acp.validate_action_commit_packet_registry_v02(forged)[0] is False
+
+
+def test_g2a4_final_post_invocation_fallback_preserves_truth(
+    g2a4a_fixture: _G2A4AFixtureV01,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original_execute = acp._execute_mock_effect_v01
+    original_evidence = acp._g2a4b_attempt_evidence_v01
+    original_state = acp._action_packet_firewall_state_observation_v01
+    original_classifier = acp._g2a4b_classify_invoked_outcome_v01
+    original_finalizer = acp._g2a4b_build_invoked_outcome_bundle_v01
+
+    def run_with_failure(
+        target: str,
+        replacement: object,
+    ) -> None:
+        calls = {"execute": 0}
+
+        @wraps(original_execute)
+        def counted_execute(**kwargs: object) -> object:
+            calls["execute"] += 1
+            return original_execute(**kwargs)
+
+        with monkeypatch.context() as patch:
+            patch.setattr(acp, "_execute_mock_effect_v01", counted_execute)
+            patch.setattr(acp, target, replacement)
+            result = _g2a4b_execute(g2a4a_fixture)
+        assert result is not g2a4a_fixture.registry
+        assert calls["execute"] == 1
+        assert (
+            result.action_packet_fulfillment_attempt_contexts[
+                -1
+            ].attempt_evidence.outcome_class
+            == "CONSUMED"
+        )
+        assert acp.validate_action_commit_packet_registry_v02(result) == (
+            True,
+            (),
+        )
+
+    @wraps(original_evidence)
+    def failed_primary_evidence(*args: object, **kwargs: object) -> object:
+        raise ValueError("controlled_primary_evidence_failure")
+
+    state_calls = {"count": 0}
+
+    @wraps(original_state)
+    def failed_post_state(*args: object, **kwargs: object) -> object:
+        state_calls["count"] += 1
+        if state_calls["count"] == 2:
+            raise ValueError("controlled_post_state_failure")
+        return original_state(*args, **kwargs)
+
+    @wraps(original_classifier)
+    def failed_receipt_classifier(
+        *args: object,
+        **kwargs: object,
+    ) -> object:
+        raise ValueError("controlled_receipt_classification_failure")
+
+    @wraps(original_finalizer)
+    def failed_primary_finalizer(
+        *args: object,
+        **kwargs: object,
+    ) -> object:
+        raise ValueError("controlled_primary_finalizer_failure")
+
+    run_with_failure(
+        "_g2a4b_attempt_evidence_v01",
+        failed_primary_evidence,
+    )
+    run_with_failure(
+        "_action_packet_firewall_state_observation_v01",
+        failed_post_state,
+    )
+    run_with_failure(
+        "_g2a4b_classify_invoked_outcome_v01",
+        failed_receipt_classifier,
+    )
+    run_with_failure(
+        "_g2a4b_build_invoked_outcome_bundle_v01",
+        failed_primary_finalizer,
+    )

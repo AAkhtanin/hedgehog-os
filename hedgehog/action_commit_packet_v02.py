@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace as _dataclass_replace
 from datetime import date
 from decimal import Decimal, InvalidOperation
 import re
@@ -11,6 +11,32 @@ import unicodedata
 from hedgehog.kernel.integrity_replay_v01 import (
     canonical_json_bytes_v01,
     domain_separated_sha256_hex_v01,
+)
+from hedgehog.kernel.effect_firewall_v01 import (
+    EFFECT_ACCESS_OWNER as _EFFECT_ACCESS_OWNER,
+    EFFECT_DECISION_ALLOW_MOCK_EFFECT as _EFFECT_DECISION_ALLOW_MOCK_EFFECT,
+    EFFECT_DECISION_BLOCKED_FAIL_CLOSED as _EFFECT_DECISION_BLOCKED_FAIL_CLOSED,
+    RECEIPT_SOURCE_COMPONENT as _RECEIPT_SOURCE_COMPONENT,
+    EffectFirewallDecisionV01 as _EffectFirewallDecisionV01,
+    EffectFirewallV01 as _EffectFirewallV01,
+    EffectRequestV01 as _EffectRequestV01,
+    authorize_effect_request_v01 as _authorize_effect_request_v01,
+    build_effect_firewall_v01 as _build_effect_firewall_v01,
+    build_effect_request_v01 as _build_effect_request_v01,
+    effect_firewall_decision_to_plain_dict_v01 as _effect_firewall_decision_to_plain_dict_v01,
+    effect_firewall_to_plain_dict_v01 as _effect_firewall_to_plain_dict_v01,
+    effect_request_to_plain_dict_v01 as _effect_request_to_plain_dict_v01,
+    execute_mock_effect_v01 as _execute_mock_effect_v01,
+    validate_effect_receipt_v01 as _validate_effect_receipt_v01,
+    validate_effect_firewall_decision_v01 as _validate_effect_firewall_decision_v01,
+    validate_effect_firewall_v01 as _validate_effect_firewall_v01,
+    validate_effect_request_v01 as _validate_effect_request_v01,
+)
+from hedgehog.kernel.abi_v01 import (
+    KernelArtifactV01 as _KernelArtifactV01,
+    build_kernel_artifact_v01 as _build_kernel_artifact_v01,
+    kernel_artifact_to_plain_dict_v01 as _kernel_artifact_to_plain_dict_v01,
+    validate_kernel_artifact_v01 as _validate_kernel_artifact_v01,
 )
 from hedgehog.kernel.root_decision_v01 import (
     RootDecisionInputV01,
@@ -318,6 +344,10 @@ class ActionCommitPacketRegistryV02:
     idempotency_disposition_events: tuple[IdempotencyDispositionEventV01, ...] = ()
     action_packet_invalidation_contexts: tuple[
         _ActionPacketInvalidationContextV01,
+        ...,
+    ] = ()
+    action_packet_fulfillment_attempt_contexts: tuple[
+        _ActionPacketFulfillmentAttemptContextV01,
         ...,
     ] = ()
 
@@ -1245,6 +1275,9 @@ def record_packet_seen_v02(
         action_packet_invalidation_contexts=(
             registry.action_packet_invalidation_contexts
         ),
+        action_packet_fulfillment_attempt_contexts=(
+            registry.action_packet_fulfillment_attempt_contexts
+        ),
     )
 
 
@@ -1289,6 +1322,9 @@ def record_terminal_receipt_observation_v02(
         ),
         action_packet_invalidation_contexts=(
             seen_registry.action_packet_invalidation_contexts
+        ),
+        action_packet_fulfillment_attempt_contexts=(
+            seen_registry.action_packet_fulfillment_attempt_contexts
         ),
     )
     return terminal_registry, ()
@@ -1340,6 +1376,18 @@ ACTION_ADAPTER_BINDING_PROFILE_ID_V01 = "action_adapter_binding_profile_v01"
 ACTION_DEPENDENCY_SET_CANDIDATE_PROFILE_ID_V01 = (
     "action_dependency_set_candidate_v01"
 )
+ACTION_DEPENDENCY_TIME_ENVELOPE_COMMITMENT_PROFILE_ID_V01 = (
+    "action_dependency_time_envelope_commitment_v01"
+)
+ACTION_DEPENDENCY_CURRENT_OBSERVATION_PROFILE_ID_V01 = (
+    "action_dependency_current_observation_v01"
+)
+ACTION_PACKET_EFFECT_FIREWALL_PROJECTION_PROFILE_ID_V01 = (
+    "action_packet_effect_firewall_projection_v01"
+)
+ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PROFILE_ID_V01 = (
+    "action_packet_fulfillment_attempt_evidence_v01"
+)
 ACTION_TEMPORAL_AUTHORITY_PROFILE_ID_V01 = (
     "action_temporal_authority_profile_v01"
 )
@@ -1354,6 +1402,15 @@ ACTION_CONSEQUENTIAL_EFFECT_PARAMETERS_PROFILE_ID_V01 = (
 ACTION_EFFECT_PARAMETERS_DOMAIN_V01 = "HEDGEHOG_ACTION_EFFECT_PARAMETERS_V01"
 ACTION_DEPENDENCY_SET_CANDIDATE_DOMAIN_V01 = (
     "HEDGEHOG_ACTION_DEPENDENCY_SET_CANDIDATE_V01"
+)
+ACTION_DEPENDENCY_TIME_ENVELOPE_COMMITMENT_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_DEPENDENCY_TIME_ENVELOPE_COMMITMENT_V01"
+)
+ACTION_DEPENDENCY_CURRENT_OBSERVATION_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_DEPENDENCY_CURRENT_OBSERVATION_V01"
+)
+ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_V01"
 )
 PACKET_DEPENDENCY_ACCEPTANCE_BINDING_DOMAIN_V01 = (
     "HEDGEHOG_PACKET_DEPENDENCY_ACCEPTANCE_BINDING_V01"
@@ -1383,6 +1440,63 @@ ROOT_PACKET_AUTHORIZATION_PREFIX_V01 = "root_packet_authorization_v01:"
 ACTION_COMMIT_PACKET_ID_PREFIX_V01 = "acp_v02:"
 PACKET_DEPENDENCY_ACCEPTANCE_PREFIX_V01 = (
     "packet_dependency_acceptance_v01:"
+)
+ACTION_DEPENDENCY_TIME_ENVELOPE_COMMITMENT_PREFIX_V01 = (
+    "dependency_time_envelope_v01:"
+)
+ACTION_DEPENDENCY_CURRENT_OBSERVATION_PREFIX_V01 = (
+    "dependency_observation_v01:"
+)
+ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PREFIX_V01 = (
+    "fulfillment_attempt_evidence_v01:"
+)
+_ACTION_PACKET_EFFECT_PROJECTION_HASH_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_PACKET_EFFECT_PROJECTION_HASH_V01"
+)
+_ACTION_PACKET_FIREWALL_STATE_HASH_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_PACKET_FIREWALL_STATE_HASH_V01"
+)
+_ACTION_PACKET_DISPOSITION_HISTORY_HASH_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_PACKET_DISPOSITION_HISTORY_HASH_V01"
+)
+_ACTION_PACKET_EFFECT_RECEIPT_HASH_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_PACKET_EFFECT_RECEIPT_HASH_V01"
+)
+_ACTION_PACKET_EFFECT_RECEIPT_REF_DOMAIN_V01 = (
+    "HEDGEHOG_ACTION_PACKET_EFFECT_RECEIPT_REF_V01"
+)
+_ACTION_PACKET_EFFECT_RECEIPT_REF_PREFIX_V01 = "effect_receipt_v01:"
+_ACTION_PACKET_FULFILLMENT_OUTCOME_CLASSES_V01 = (
+    "PRE_FULFILLMENT_BLOCKED",
+    "FIREWALL_BLOCKED",
+    "CONSUMED",
+    "NOT_CONSUMED",
+    "UNCERTAIN",
+)
+_ACTION_PACKET_FULFILLMENT_INVOCATION_RELATIONS_V01 = (
+    "NO_ADAPTER_INVOCATION",
+    "CORRIDOR_INVOCATION_CONSUMED",
+    "CORRIDOR_INVOCATION_NONCONSUMING",
+    "CORRIDOR_INVOCATION_UNCERTAIN",
+)
+_ACTION_PACKET_NONCONSUMING_EXECUTION_REASONS_V01 = (
+    "effect_request_expired",
+)
+_ACTION_PACKET_UNCERTAIN_EXECUTION_REASONS_V01 = (
+    "effect_execution_invalid",
+    "effect_capability_missing",
+    "effect_capability_forged",
+    "effect_capability_consumed",
+    "effect_capability_adapter_mismatch",
+    "effect_capability_action_mismatch",
+    "effect_scope_expansion_forbidden",
+    "effect_ttl_expansion_forbidden",
+    "effect_request_not_yet_valid",
+    "effect_request_expired",
+    "effect_receipt_duplicate",
+    "effect_receipt_invalid",
+    "effect_execution_unexpected_exception",
+    "effect_outcome_unresolved",
 )
 TRANSITION_EVIDENCE_BINDING_PROFILE_ID_V01 = (
     "action_transition_evidence_binding_v01"
@@ -1607,6 +1721,22 @@ class DependencySetCandidateRecordV01:
 @dataclass(frozen=True)
 class DependencySetCandidateV01:
     dependency_records: tuple[DependencySetCandidateRecordV01, ...]
+
+
+@dataclass(frozen=True)
+class ActionDependencyCurrentObservationV01:
+    observation_profile_id: str
+    dependency_id: str
+    evidence_ref: str
+    observed_content_sha256: str
+    time_envelope_id: str
+    freshness_policy_id: str
+    source_provenance_refs: tuple[str, ...]
+    valid_from_utc: int
+    valid_to_utc: int
+    observed_at_utc: int
+    observation_context_id: str
+    observation_id: str
 
 
 @dataclass(frozen=True)
@@ -1936,6 +2066,115 @@ class SupplierRootBoundActionCommitPacketV02ProjectionV01:
     packet_identity: ActionCommitPacketIdentityResultV01
     dependency_acceptance_binding: PacketDependencyAcceptanceBindingV01
     packet: ActionCommitPacketV02
+
+
+@dataclass(frozen=True)
+class ActionPacketEffectFirewallProjectionV01:
+    projection_profile_id: str
+    packet_id: str
+    registry_id: str
+    pending_transition_event_id: str
+    execution_attempt_id: str
+    corridor_id: str
+    corridor_step_id: str
+    corridor_class: str
+    transaction_id: str
+    target_root_id: str
+    root_decision_id: str
+    selected_candidate_id: str
+    permission_ref: str
+    allowed_adapter_ids: tuple[str, ...]
+    allowed_action_kinds: tuple[str, ...]
+    root_scope_refs: tuple[str, ...]
+    maximum_expires_at_tick: int
+    request_kind: str
+    adapter_id: str
+    action_kind: str
+    scope_refs: tuple[str, ...]
+    issued_at_tick: int
+    expires_at_tick: int
+    current_tick: int
+    idempotency_key: str
+    mock_only: bool
+    effect_access_owner: str
+    logical_time_bridge_id: str
+    attempt_evaluation_time: int
+    attempt_evaluation_time_source: str
+    attempt_evaluation_context_id: str
+    eligibility_evaluation_time: int
+    eligibility_evaluation_time_source: str
+    eligibility_evaluation_context_id: str
+    latest_disposition_event_id: str
+    dependency_acceptance_binding_id: str
+    dependency_observation_ids: tuple[str, ...]
+    authority_policy_fingerprint: str
+    temporal_authority_fingerprint: str
+
+
+@dataclass(frozen=True)
+class ActionPacketFulfillmentAttemptEvidenceV01:
+    evidence_profile_id: str
+    packet_id: str
+    registry_id_before: str
+    pending_transition_event_id: str
+    execution_attempt_id: str
+    attempt_observation_ordinal: int
+    corridor_id: str
+    corridor_step_id: str
+    logical_time_bridge_id: str
+    dependency_observation_ids: tuple[str, ...]
+    projection_sha256: str | None
+    firewall_id: str | None
+    request_id: str | None
+    decision_id: str | None
+    capability_id: str | None
+    adapter_id: str | None
+    action_kind: str | None
+    invocation_relation_code: str
+    outcome_class: str
+    reason_code: str
+    adapter_invoked: bool
+    adapter_call_count: int
+    firewall_state_sha256_before: str | None
+    firewall_state_sha256_after: str | None
+    receipt_ref: str | None
+    receipt_sha256: str | None
+    disposition_before: str
+    reservation_owner_packet_id_before: str
+    latest_disposition_event_id_before: str | None
+    disposition_history_sha256_before: str
+    attempt_evaluation_time: int
+    attempt_evaluation_time_source: str
+    attempt_evaluation_context_id: str
+    eligibility_evaluation_time: int
+    eligibility_evaluation_time_source: str
+    eligibility_evaluation_context_id: str
+    real_world_effects_count: int
+    attempt_evidence_id: str
+
+
+@dataclass(frozen=True)
+class _ActionPacketEffectAttemptPreparationV01:
+    projection: ActionPacketEffectFirewallProjectionV01
+    firewall: _EffectFirewallV01
+    request: _EffectRequestV01
+    decision: _EffectFirewallDecisionV01
+
+
+@dataclass(frozen=True)
+class _ActionPacketFulfillmentAttemptContextV01:
+    attempt_evidence: ActionPacketFulfillmentAttemptEvidenceV01
+    projection: ActionPacketEffectFirewallProjectionV01 | None
+    corridor: ContractFulfillmentCorridorV01
+    corridor_step: CorridorStepV01
+    current_dependency_observations: tuple[
+        ActionDependencyCurrentObservationV01,
+        ...,
+    ]
+    logical_time_bridge: LogicalTimeBridgeV01
+    request: _EffectRequestV01 | None
+    decision: _EffectFirewallDecisionV01 | None
+    receipt: _KernelArtifactV01 | None
 
 
 @dataclass(frozen=True)
@@ -3346,6 +3585,860 @@ def validate_dependency_set_candidate_v01(
         False,
         ("dependency_candidate_not_canonical",),
     )
+
+
+def action_dependency_time_envelope_commitment_material_v01(
+    *,
+    dependency_id: object,
+    evidence_ref: object,
+    content_sha256: object,
+    freshness_policy_id: object,
+    source_provenance_refs: object,
+    valid_from_utc: object,
+    valid_to_utc: object,
+) -> CanonicalMaterialV01:
+    try:
+        dependency = normalize_identity_text_v01(dependency_id)
+        evidence = normalize_identity_text_v01(evidence_ref)
+        freshness = normalize_identity_text_v01(freshness_policy_id)
+        if (
+            dependency != dependency_id
+            or evidence != evidence_ref
+            or freshness != freshness_policy_id
+        ):
+            raise ValueError(
+                "dependency_time_envelope_commitment_invalid"
+            )
+        valid_hash, _ = validate_lowercase_sha256_hex_v01(content_sha256)
+        if not valid_hash:
+            raise ValueError(
+                "dependency_time_envelope_commitment_invalid"
+            )
+        provenance = canonicalize_set_like_string_tuple_v01(
+            source_provenance_refs
+        )
+        if (
+            not provenance
+            or provenance != source_provenance_refs
+        ):
+            raise ValueError(
+                "dependency_time_envelope_commitment_invalid"
+            )
+        for value in (valid_from_utc, valid_to_utc):
+            if not validate_signed_int64_v01(value)[0]:
+                raise ValueError(
+                    "dependency_time_envelope_commitment_invalid"
+                )
+        if valid_from_utc >= valid_to_utc:
+            raise ValueError(
+                "dependency_time_envelope_commitment_invalid"
+            )
+        return (
+            (
+                "profile_id",
+                ACTION_DEPENDENCY_TIME_ENVELOPE_COMMITMENT_PROFILE_ID_V01,
+            ),
+            ("dependency_id", dependency),
+            ("evidence_ref", evidence),
+            ("content_sha256", content_sha256),
+            ("freshness_policy_id", freshness),
+            ("source_provenance_refs", provenance),
+            ("valid_from_utc", valid_from_utc),
+            ("valid_to_utc", valid_to_utc),
+        )
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="dependency_time_envelope_commitment_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError(
+            "dependency_time_envelope_commitment_invalid"
+        ) from None
+
+
+def build_action_dependency_time_envelope_id_v01(
+    *,
+    dependency_id: object,
+    evidence_ref: object,
+    content_sha256: object,
+    freshness_policy_id: object,
+    source_provenance_refs: object,
+    valid_from_utc: object,
+    valid_to_utc: object,
+) -> str:
+    try:
+        material = (
+            action_dependency_time_envelope_commitment_material_v01(
+                dependency_id=dependency_id,
+                evidence_ref=evidence_ref,
+                content_sha256=content_sha256,
+                freshness_policy_id=freshness_policy_id,
+                source_provenance_refs=source_provenance_refs,
+                valid_from_utc=valid_from_utc,
+                valid_to_utc=valid_to_utc,
+            )
+        )
+        return build_domain_separated_identity_v01(
+            domain=(
+                ACTION_DEPENDENCY_TIME_ENVELOPE_COMMITMENT_DOMAIN_V01
+            ),
+            prefix=(
+                ACTION_DEPENDENCY_TIME_ENVELOPE_COMMITMENT_PREFIX_V01
+            ),
+            material=material,
+        )
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="dependency_time_envelope_commitment_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError(
+            "dependency_time_envelope_commitment_invalid"
+        ) from None
+
+
+def validate_action_dependency_time_envelope_binding_v01(
+    time_envelope_id: object,
+    *,
+    dependency_id: object,
+    evidence_ref: object,
+    content_sha256: object,
+    freshness_policy_id: object,
+    source_provenance_refs: object,
+    valid_from_utc: object,
+    valid_to_utc: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        identity_valid, _ = validate_prefixed_sha256_identity_v01(
+            time_envelope_id,
+            prefix=(
+                ACTION_DEPENDENCY_TIME_ENVELOPE_COMMITMENT_PREFIX_V01
+            ),
+        )
+        if not identity_valid:
+            return False, (
+                "dependency_time_envelope_commitment_invalid",
+            )
+        expected = build_action_dependency_time_envelope_id_v01(
+            dependency_id=dependency_id,
+            evidence_ref=evidence_ref,
+            content_sha256=content_sha256,
+            freshness_policy_id=freshness_policy_id,
+            source_provenance_refs=source_provenance_refs,
+            valid_from_utc=valid_from_utc,
+            valid_to_utc=valid_to_utc,
+        )
+        if time_envelope_id != expected:
+            return False, (
+                "dependency_time_envelope_identity_mismatch",
+            )
+        return True, ()
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="dependency_time_envelope_commitment_invalid",
+            ),
+        )
+    except Exception:
+        return False, (
+            "dependency_time_envelope_commitment_invalid",
+        )
+
+
+def action_dependency_current_observation_material_v01(
+    value: ActionDependencyCurrentObservationV01,
+) -> CanonicalMaterialV01:
+    if type(value) is not ActionDependencyCurrentObservationV01:
+        raise ValueError("dependency_observation_type_invalid")
+    return (
+        ("observation_profile_id", value.observation_profile_id),
+        ("dependency_id", value.dependency_id),
+        ("evidence_ref", value.evidence_ref),
+        ("observed_content_sha256", value.observed_content_sha256),
+        ("time_envelope_id", value.time_envelope_id),
+        ("freshness_policy_id", value.freshness_policy_id),
+        ("source_provenance_refs", value.source_provenance_refs),
+        ("valid_from_utc", value.valid_from_utc),
+        ("valid_to_utc", value.valid_to_utc),
+        ("observed_at_utc", value.observed_at_utc),
+        ("observation_context_id", value.observation_context_id),
+    )
+
+
+def build_action_dependency_current_observation_v01(
+    *,
+    dependency_id: object,
+    evidence_ref: object,
+    observed_content_sha256: object,
+    time_envelope_id: object,
+    freshness_policy_id: object,
+    source_provenance_refs: object,
+    valid_from_utc: object,
+    valid_to_utc: object,
+    observed_at_utc: object,
+    observation_context_id: object,
+) -> ActionDependencyCurrentObservationV01:
+    try:
+        dependency = normalize_identity_text_v01(dependency_id)
+        evidence = normalize_identity_text_v01(evidence_ref)
+        envelope = normalize_identity_text_v01(time_envelope_id)
+        freshness = normalize_identity_text_v01(freshness_policy_id)
+        context = normalize_identity_text_v01(observation_context_id)
+        valid_hash, hash_reasons = validate_lowercase_sha256_hex_v01(
+            observed_content_sha256
+        )
+        if not valid_hash:
+            raise ValueError(hash_reasons[0])
+        provenance = canonicalize_set_like_string_tuple_v01(
+            source_provenance_refs
+        )
+        if not provenance:
+            raise ValueError("dependency_observation_provenance_empty")
+        for value in (
+            valid_from_utc,
+            valid_to_utc,
+            observed_at_utc,
+        ):
+            valid_time, time_reasons = validate_signed_int64_v01(value)
+            if not valid_time:
+                raise ValueError(time_reasons[0])
+        if valid_from_utc >= valid_to_utc:
+            raise ValueError("dependency_observation_interval_invalid")
+        if not valid_from_utc <= observed_at_utc < valid_to_utc:
+            raise ValueError("dependency_observation_time_invalid")
+        time_envelope_valid, _ = (
+            validate_action_dependency_time_envelope_binding_v01(
+                envelope,
+                dependency_id=dependency,
+                evidence_ref=evidence,
+                content_sha256=observed_content_sha256,
+                freshness_policy_id=freshness,
+                source_provenance_refs=provenance,
+                valid_from_utc=valid_from_utc,
+                valid_to_utc=valid_to_utc,
+            )
+        )
+        if not time_envelope_valid:
+            raise ValueError(
+                "dependency_observation_time_envelope_identity_mismatch"
+            )
+        provisional = ActionDependencyCurrentObservationV01(
+            observation_profile_id=(
+                ACTION_DEPENDENCY_CURRENT_OBSERVATION_PROFILE_ID_V01
+            ),
+            dependency_id=dependency,
+            evidence_ref=evidence,
+            observed_content_sha256=observed_content_sha256,
+            time_envelope_id=envelope,
+            freshness_policy_id=freshness,
+            source_provenance_refs=provenance,
+            valid_from_utc=valid_from_utc,
+            valid_to_utc=valid_to_utc,
+            observed_at_utc=observed_at_utc,
+            observation_context_id=context,
+            observation_id="",
+        )
+        observation_id = build_domain_separated_identity_v01(
+            domain=ACTION_DEPENDENCY_CURRENT_OBSERVATION_DOMAIN_V01,
+            prefix=ACTION_DEPENDENCY_CURRENT_OBSERVATION_PREFIX_V01,
+            material=action_dependency_current_observation_material_v01(
+                provisional
+            ),
+        )
+        return _replace_action_dependency_current_observation_id_v01(
+            provisional,
+            observation_id,
+        )
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="dependency_observation_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("dependency_observation_invalid") from None
+
+
+def _replace_action_dependency_current_observation_id_v01(
+    value: ActionDependencyCurrentObservationV01,
+    observation_id: str,
+) -> ActionDependencyCurrentObservationV01:
+    return ActionDependencyCurrentObservationV01(
+        observation_profile_id=value.observation_profile_id,
+        dependency_id=value.dependency_id,
+        evidence_ref=value.evidence_ref,
+        observed_content_sha256=value.observed_content_sha256,
+        time_envelope_id=value.time_envelope_id,
+        freshness_policy_id=value.freshness_policy_id,
+        source_provenance_refs=value.source_provenance_refs,
+        valid_from_utc=value.valid_from_utc,
+        valid_to_utc=value.valid_to_utc,
+        observed_at_utc=value.observed_at_utc,
+        observation_context_id=value.observation_context_id,
+        observation_id=observation_id,
+    )
+
+
+def validate_action_dependency_current_observation_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionDependencyCurrentObservationV01:
+        return False, ("dependency_observation_type_invalid",)
+    try:
+        if (
+            type(value.observation_profile_id) is not str
+            or value.observation_profile_id
+            != ACTION_DEPENDENCY_CURRENT_OBSERVATION_PROFILE_ID_V01
+        ):
+            return False, ("dependency_observation_profile_invalid",)
+        rebuilt = build_action_dependency_current_observation_v01(
+            dependency_id=value.dependency_id,
+            evidence_ref=value.evidence_ref,
+            observed_content_sha256=value.observed_content_sha256,
+            time_envelope_id=value.time_envelope_id,
+            freshness_policy_id=value.freshness_policy_id,
+            source_provenance_refs=value.source_provenance_refs,
+            valid_from_utc=value.valid_from_utc,
+            valid_to_utc=value.valid_to_utc,
+            observed_at_utc=value.observed_at_utc,
+            observation_context_id=value.observation_context_id,
+        )
+        if (
+            type(value.observation_id) is not str
+            or value.observation_id != rebuilt.observation_id
+            or value != rebuilt
+        ):
+            return False, ("dependency_observation_identity_mismatch",)
+        return True, ()
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="dependency_observation_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("dependency_observation_invalid",)
+
+
+def action_packet_fulfillment_attempt_evidence_material_v01(
+    value: ActionPacketFulfillmentAttemptEvidenceV01,
+) -> CanonicalMaterialV01:
+    if type(value) is not ActionPacketFulfillmentAttemptEvidenceV01:
+        raise ValueError("fulfillment_attempt_evidence_type_invalid")
+    return (
+        ("evidence_profile_id", value.evidence_profile_id),
+        ("packet_id", value.packet_id),
+        ("registry_id_before", value.registry_id_before),
+        ("pending_transition_event_id", value.pending_transition_event_id),
+        ("execution_attempt_id", value.execution_attempt_id),
+        ("attempt_observation_ordinal", value.attempt_observation_ordinal),
+        ("corridor_id", value.corridor_id),
+        ("corridor_step_id", value.corridor_step_id),
+        ("logical_time_bridge_id", value.logical_time_bridge_id),
+        ("dependency_observation_ids", value.dependency_observation_ids),
+        (
+            "projection_sha256",
+            _optional_identity_material_v01(value.projection_sha256),
+        ),
+        ("firewall_id", _optional_identity_material_v01(value.firewall_id)),
+        ("request_id", _optional_identity_material_v01(value.request_id)),
+        ("decision_id", _optional_identity_material_v01(value.decision_id)),
+        (
+            "capability_id",
+            _optional_identity_material_v01(value.capability_id),
+        ),
+        ("adapter_id", _optional_identity_material_v01(value.adapter_id)),
+        ("action_kind", _optional_identity_material_v01(value.action_kind)),
+        ("invocation_relation_code", value.invocation_relation_code),
+        ("outcome_class", value.outcome_class),
+        ("reason_code", value.reason_code),
+        ("adapter_invoked", value.adapter_invoked),
+        ("adapter_call_count", value.adapter_call_count),
+        (
+            "firewall_state_sha256_before",
+            _optional_identity_material_v01(
+                value.firewall_state_sha256_before
+            ),
+        ),
+        (
+            "firewall_state_sha256_after",
+            _optional_identity_material_v01(
+                value.firewall_state_sha256_after
+            ),
+        ),
+        ("receipt_ref", _optional_identity_material_v01(value.receipt_ref)),
+        (
+            "receipt_sha256",
+            _optional_identity_material_v01(value.receipt_sha256),
+        ),
+        ("disposition_before", value.disposition_before),
+        (
+            "reservation_owner_packet_id_before",
+            value.reservation_owner_packet_id_before,
+        ),
+        (
+            "latest_disposition_event_id_before",
+            _optional_identity_material_v01(
+                value.latest_disposition_event_id_before
+            ),
+        ),
+        (
+            "disposition_history_sha256_before",
+            value.disposition_history_sha256_before,
+        ),
+        ("attempt_evaluation_time", value.attempt_evaluation_time),
+        (
+            "attempt_evaluation_time_source",
+            value.attempt_evaluation_time_source,
+        ),
+        (
+            "attempt_evaluation_context_id",
+            value.attempt_evaluation_context_id,
+        ),
+        ("eligibility_evaluation_time", value.eligibility_evaluation_time),
+        (
+            "eligibility_evaluation_time_source",
+            value.eligibility_evaluation_time_source,
+        ),
+        (
+            "eligibility_evaluation_context_id",
+            value.eligibility_evaluation_context_id,
+        ),
+        ("real_world_effects_count", value.real_world_effects_count),
+    )
+
+
+def _fulfillment_attempt_evidence_errors_v01(
+    value: object,
+    *,
+    check_identity: bool,
+) -> tuple[str, ...]:
+    if type(value) is not ActionPacketFulfillmentAttemptEvidenceV01:
+        return ("fulfillment_attempt_evidence_type_invalid",)
+    reasons: list[str] = []
+    if (
+        type(value.evidence_profile_id) is not str
+        or value.evidence_profile_id
+        != ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PROFILE_ID_V01
+    ):
+        _reason_v01(reasons, "fulfillment_attempt_evidence_profile_invalid")
+    for field_value, prefix, reason in (
+        (
+            value.packet_id,
+            ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+            "fulfillment_attempt_packet_id_invalid",
+        ),
+        (
+            value.pending_transition_event_id,
+            ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01,
+            "fulfillment_attempt_pending_transition_invalid",
+        ),
+        (
+            value.execution_attempt_id,
+            EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01,
+            "fulfillment_attempt_execution_attempt_invalid",
+        ),
+    ):
+        if not validate_prefixed_sha256_identity_v01(
+            field_value,
+            prefix=prefix,
+        )[0]:
+            _reason_v01(reasons, reason)
+    for field_value, reason in (
+        (value.registry_id_before, "fulfillment_attempt_registry_id_invalid"),
+        (value.corridor_id, "fulfillment_attempt_corridor_id_invalid"),
+        (value.corridor_step_id, "fulfillment_attempt_step_id_invalid"),
+        (
+            value.logical_time_bridge_id,
+            "fulfillment_attempt_logical_time_bridge_id_invalid",
+        ),
+        (value.reason_code, "fulfillment_attempt_reason_invalid"),
+        (
+            value.attempt_evaluation_time_source,
+            "fulfillment_attempt_evaluation_source_invalid",
+        ),
+        (
+            value.attempt_evaluation_context_id,
+            "fulfillment_attempt_evaluation_context_invalid",
+        ),
+        (
+            value.eligibility_evaluation_time_source,
+            "fulfillment_attempt_eligibility_source_invalid",
+        ),
+        (
+            value.eligibility_evaluation_context_id,
+            "fulfillment_attempt_eligibility_context_invalid",
+        ),
+    ):
+        if (
+            not validate_identity_text_v01(field_value)[0]
+            or not field_value.strip()
+        ):
+            _reason_v01(reasons, reason)
+    if not validate_positive_int_v01(
+        value.attempt_observation_ordinal
+    )[0]:
+        _reason_v01(reasons, "fulfillment_attempt_ordinal_invalid")
+    if (
+        type(value.dependency_observation_ids) is not tuple
+        or len(value.dependency_observation_ids)
+        != len(set(value.dependency_observation_ids))
+        or any(
+            not validate_prefixed_sha256_identity_v01(
+                item,
+                prefix=ACTION_DEPENDENCY_CURRENT_OBSERVATION_PREFIX_V01,
+            )[0]
+            for item in value.dependency_observation_ids
+        )
+    ):
+        _reason_v01(
+            reasons,
+            "fulfillment_attempt_dependency_observations_invalid",
+        )
+    for field_value, reason in (
+        (value.projection_sha256, "fulfillment_attempt_projection_hash_invalid"),
+        (
+            value.firewall_state_sha256_before,
+            "fulfillment_attempt_firewall_state_hash_invalid",
+        ),
+        (
+            value.firewall_state_sha256_after,
+            "fulfillment_attempt_firewall_state_hash_invalid",
+        ),
+        (value.receipt_sha256, "fulfillment_attempt_receipt_hash_invalid"),
+    ):
+        if field_value is not None and not validate_lowercase_sha256_hex_v01(
+            field_value
+        )[0]:
+            _reason_v01(reasons, reason)
+    for field_value, reason in (
+        (value.firewall_id, "fulfillment_attempt_firewall_id_invalid"),
+        (value.request_id, "fulfillment_attempt_request_id_invalid"),
+        (value.decision_id, "fulfillment_attempt_decision_id_invalid"),
+        (value.capability_id, "fulfillment_attempt_capability_id_invalid"),
+    ):
+        if field_value is not None and not validate_lowercase_sha256_hex_v01(
+            field_value
+        )[0]:
+            _reason_v01(reasons, reason)
+    for field_value, reason in (
+        (value.adapter_id, "fulfillment_attempt_adapter_id_invalid"),
+        (value.action_kind, "fulfillment_attempt_action_kind_invalid"),
+        (value.receipt_ref, "fulfillment_attempt_receipt_ref_invalid"),
+    ):
+        if field_value is not None and not validate_identity_text_v01(
+            field_value
+        )[0]:
+            _reason_v01(reasons, reason)
+    if (
+        type(value.invocation_relation_code) is not str
+        or value.invocation_relation_code
+        not in _ACTION_PACKET_FULFILLMENT_INVOCATION_RELATIONS_V01
+    ):
+        _reason_v01(reasons, "fulfillment_attempt_invocation_relation_invalid")
+    if (
+        type(value.outcome_class) is not str
+        or value.outcome_class
+        not in _ACTION_PACKET_FULFILLMENT_OUTCOME_CLASSES_V01
+    ):
+        _reason_v01(reasons, "fulfillment_attempt_outcome_class_invalid")
+    if type(value.adapter_invoked) is not bool:
+        _reason_v01(reasons, "fulfillment_attempt_adapter_invoked_invalid")
+    if (
+        type(value.adapter_call_count) is not int
+        or value.adapter_call_count not in {0, 1}
+    ):
+        _reason_v01(reasons, "fulfillment_attempt_adapter_call_count_invalid")
+    if (
+        type(value.disposition_before) is not str
+        or value.disposition_before not in IDEMPOTENCY_DISPOSITIONS_V01
+    ):
+        _reason_v01(reasons, "fulfillment_attempt_disposition_invalid")
+    if not validate_prefixed_sha256_identity_v01(
+        value.reservation_owner_packet_id_before,
+        prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,
+    )[0]:
+        _reason_v01(reasons, "fulfillment_attempt_owner_invalid")
+    if (
+        value.latest_disposition_event_id_before is not None
+        and not validate_prefixed_sha256_identity_v01(
+            value.latest_disposition_event_id_before,
+            prefix=IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01,
+        )[0]
+    ):
+        _reason_v01(reasons, "fulfillment_attempt_latest_disposition_invalid")
+    if not validate_lowercase_sha256_hex_v01(
+        value.disposition_history_sha256_before
+    )[0]:
+        _reason_v01(
+            reasons,
+            "fulfillment_attempt_disposition_history_hash_invalid",
+        )
+    for field_value in (
+        value.attempt_evaluation_time,
+        value.eligibility_evaluation_time,
+    ):
+        if not validate_signed_int64_v01(field_value)[0]:
+            _reason_v01(reasons, "fulfillment_attempt_time_invalid")
+    if (
+        type(value.real_world_effects_count) is not int
+        or value.real_world_effects_count != 0
+    ):
+        _reason_v01(reasons, "fulfillment_attempt_real_effect_invalid")
+    no_invocation = (
+        value.adapter_invoked is False
+        and value.adapter_call_count == 0
+        and value.invocation_relation_code == "NO_ADAPTER_INVOCATION"
+        and value.capability_id is None
+        and value.receipt_ref is None
+        and value.receipt_sha256 is None
+    )
+    component_ids_present = all(
+        item is not None
+        for item in (
+            value.projection_sha256,
+            value.firewall_id,
+            value.request_id,
+            value.decision_id,
+            value.adapter_id,
+            value.action_kind,
+        )
+    )
+    if value.outcome_class == "PRE_FULFILLMENT_BLOCKED":
+        if not (
+            no_invocation
+            and value.projection_sha256 is None
+            and value.firewall_id is None
+            and value.request_id is None
+            and value.decision_id is None
+            and value.adapter_id is None
+            and value.action_kind is None
+            and value.firewall_state_sha256_before is None
+            and value.firewall_state_sha256_after is None
+        ):
+            _reason_v01(reasons, "fulfillment_attempt_branch_invariant_invalid")
+    elif value.outcome_class == "FIREWALL_BLOCKED":
+        if not (
+            no_invocation
+            and component_ids_present
+            and value.firewall_state_sha256_before is None
+            and value.firewall_state_sha256_after is None
+        ):
+            _reason_v01(reasons, "fulfillment_attempt_branch_invariant_invalid")
+    elif value.outcome_class == "CONSUMED":
+        if not (
+            component_ids_present
+            and value.capability_id is not None
+            and value.adapter_invoked is True
+            and value.adapter_call_count == 1
+            and value.invocation_relation_code
+            == "CORRIDOR_INVOCATION_CONSUMED"
+            and value.firewall_state_sha256_before is not None
+            and value.firewall_state_sha256_after is not None
+            and value.receipt_ref is not None
+            and value.receipt_sha256 is not None
+        ):
+            _reason_v01(reasons, "fulfillment_attempt_branch_invariant_invalid")
+    elif value.outcome_class == "NOT_CONSUMED":
+        if not (
+            component_ids_present
+            and value.capability_id is not None
+            and value.adapter_invoked is True
+            and value.adapter_call_count == 1
+            and value.invocation_relation_code
+            == "CORRIDOR_INVOCATION_NONCONSUMING"
+            and value.firewall_state_sha256_before is not None
+            and value.firewall_state_sha256_before
+            == value.firewall_state_sha256_after
+            and value.receipt_ref is None
+            and value.receipt_sha256 is None
+        ):
+            _reason_v01(reasons, "fulfillment_attempt_branch_invariant_invalid")
+    elif value.outcome_class == "UNCERTAIN":
+        if not (
+            component_ids_present
+            and value.capability_id is not None
+            and value.adapter_invoked is True
+            and value.adapter_call_count == 1
+            and value.invocation_relation_code
+            == "CORRIDOR_INVOCATION_UNCERTAIN"
+            and value.firewall_state_sha256_before is not None
+            and value.firewall_state_sha256_after is not None
+            and value.receipt_ref is None
+            and value.receipt_sha256 is None
+        ):
+            _reason_v01(reasons, "fulfillment_attempt_branch_invariant_invalid")
+    if reasons or not check_identity:
+        return tuple(dict.fromkeys(reasons))
+    if not validate_prefixed_sha256_identity_v01(
+        value.attempt_evidence_id,
+        prefix=ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PREFIX_V01,
+    )[0]:
+        return ("fulfillment_attempt_evidence_id_invalid",)
+    expected_id = build_domain_separated_identity_v01(
+        domain=ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_DOMAIN_V01,
+        prefix=ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PREFIX_V01,
+        material=action_packet_fulfillment_attempt_evidence_material_v01(
+            value
+        ),
+    )
+    if value.attempt_evidence_id != expected_id:
+        return ("fulfillment_attempt_evidence_identity_mismatch",)
+    return ()
+
+
+def build_action_packet_fulfillment_attempt_evidence_v01(
+    *,
+    packet_id: object,
+    registry_id_before: object,
+    pending_transition_event_id: object,
+    execution_attempt_id: object,
+    attempt_observation_ordinal: object,
+    corridor_id: object,
+    corridor_step_id: object,
+    logical_time_bridge_id: object,
+    dependency_observation_ids: object,
+    projection_sha256: object,
+    firewall_id: object,
+    request_id: object,
+    decision_id: object,
+    capability_id: object,
+    adapter_id: object,
+    action_kind: object,
+    invocation_relation_code: object,
+    outcome_class: object,
+    reason_code: object,
+    adapter_invoked: object,
+    adapter_call_count: object,
+    firewall_state_sha256_before: object,
+    firewall_state_sha256_after: object,
+    receipt_ref: object,
+    receipt_sha256: object,
+    disposition_before: object,
+    reservation_owner_packet_id_before: object,
+    latest_disposition_event_id_before: object,
+    disposition_history_sha256_before: object,
+    attempt_evaluation_time: object,
+    attempt_evaluation_time_source: object,
+    attempt_evaluation_context_id: object,
+    eligibility_evaluation_time: object,
+    eligibility_evaluation_time_source: object,
+    eligibility_evaluation_context_id: object,
+    real_world_effects_count: object,
+) -> ActionPacketFulfillmentAttemptEvidenceV01:
+    try:
+        provisional = ActionPacketFulfillmentAttemptEvidenceV01(
+            evidence_profile_id=(
+                ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PROFILE_ID_V01
+            ),
+            packet_id=packet_id,
+            registry_id_before=registry_id_before,
+            pending_transition_event_id=pending_transition_event_id,
+            execution_attempt_id=execution_attempt_id,
+            attempt_observation_ordinal=attempt_observation_ordinal,
+            corridor_id=corridor_id,
+            corridor_step_id=corridor_step_id,
+            logical_time_bridge_id=logical_time_bridge_id,
+            dependency_observation_ids=dependency_observation_ids,
+            projection_sha256=projection_sha256,
+            firewall_id=firewall_id,
+            request_id=request_id,
+            decision_id=decision_id,
+            capability_id=capability_id,
+            adapter_id=adapter_id,
+            action_kind=action_kind,
+            invocation_relation_code=invocation_relation_code,
+            outcome_class=outcome_class,
+            reason_code=reason_code,
+            adapter_invoked=adapter_invoked,
+            adapter_call_count=adapter_call_count,
+            firewall_state_sha256_before=firewall_state_sha256_before,
+            firewall_state_sha256_after=firewall_state_sha256_after,
+            receipt_ref=receipt_ref,
+            receipt_sha256=receipt_sha256,
+            disposition_before=disposition_before,
+            reservation_owner_packet_id_before=(
+                reservation_owner_packet_id_before
+            ),
+            latest_disposition_event_id_before=(
+                latest_disposition_event_id_before
+            ),
+            disposition_history_sha256_before=(
+                disposition_history_sha256_before
+            ),
+            attempt_evaluation_time=attempt_evaluation_time,
+            attempt_evaluation_time_source=attempt_evaluation_time_source,
+            attempt_evaluation_context_id=attempt_evaluation_context_id,
+            eligibility_evaluation_time=eligibility_evaluation_time,
+            eligibility_evaluation_time_source=(
+                eligibility_evaluation_time_source
+            ),
+            eligibility_evaluation_context_id=(
+                eligibility_evaluation_context_id
+            ),
+            real_world_effects_count=real_world_effects_count,
+            attempt_evidence_id="",
+        )
+        errors = _fulfillment_attempt_evidence_errors_v01(
+            provisional,
+            check_identity=False,
+        )
+        if errors:
+            raise ValueError(errors[0])
+        value = _dataclass_replace(
+            provisional,
+            attempt_evidence_id=build_domain_separated_identity_v01(
+                domain=(
+                    ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_DOMAIN_V01
+                ),
+                prefix=(
+                    ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PREFIX_V01
+                ),
+                material=(
+                    action_packet_fulfillment_attempt_evidence_material_v01(
+                        provisional
+                    )
+                ),
+            ),
+        )
+        errors = _fulfillment_attempt_evidence_errors_v01(
+            value,
+            check_identity=True,
+        )
+        if errors:
+            raise ValueError(errors[0])
+        return value
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="fulfillment_attempt_evidence_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("fulfillment_attempt_evidence_invalid") from None
+
+
+def validate_action_packet_fulfillment_attempt_evidence_v01(
+    value: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        errors = _fulfillment_attempt_evidence_errors_v01(
+            value,
+            check_identity=True,
+        )
+        return not errors, errors
+    except Exception:
+        return False, ("fulfillment_attempt_evidence_invalid",)
 
 
 def dependency_set_candidate_material_v01(
@@ -11172,6 +12265,7 @@ def _validate_registry_lifecycle_histories_v01(
     entries = registry.action_packet_lifecycle_entries
     dispositions = registry.idempotency_disposition_events
     contexts = registry.action_packet_invalidation_contexts
+    fulfillment_contexts = registry.action_packet_fulfillment_attempt_contexts
     if type(entries) is not tuple or any(
         type(entry) is not ActionPacketLifecycleEntryV01 for entry in entries
     ):
@@ -11196,6 +12290,15 @@ def _validate_registry_lifecycle_histories_v01(
         return (
             False,
             ("action_packet_registry_invalidation_contexts_invalid",),
+            None,
+        )
+    if type(fulfillment_contexts) is not tuple or any(
+        type(context) is not _ActionPacketFulfillmentAttemptContextV01
+        for context in fulfillment_contexts
+    ):
+        return (
+            False,
+            ("action_packet_registry_fulfillment_contexts_invalid",),
             None,
         )
     transition_registry = build_action_packet_transition_registry_profile_v01()
@@ -11484,6 +12587,13 @@ def _validate_registry_lifecycle_histories_v01(
             reasons,
             validation_pass=validation_pass,
         )
+    _validate_registry_fulfillment_attempt_histories_v01(
+        registry,
+        entry_by_packet=entry_by_packet,
+        transition_by_id=transition_by_id,
+        validation_pass=validation_pass,
+        reasons=reasons,
+    )
     if reasons:
         valid, result_reasons = _result_v01(reasons)
         return valid, result_reasons, validation_pass
@@ -13779,14 +14889,27 @@ def _registry_with_g2a_histories_v01(
         ...,
     ]
     | None = None,
+    fulfillment_attempt_contexts: tuple[
+        _ActionPacketFulfillmentAttemptContextV01,
+        ...,
+    ]
+    | None = None,
+    terminal_receipt_packet_ids: tuple[str, ...] | None = None,
+    terminal_receipt_idempotency_keys: tuple[str, ...] | None = None,
 ) -> ActionCommitPacketRegistryV02:
     return ActionCommitPacketRegistryV02(
         registry_id=registry.registry_id,
         seen_packet_ids=registry.seen_packet_ids,
         used_idempotency_keys=registry.used_idempotency_keys,
-        terminal_receipt_packet_ids=registry.terminal_receipt_packet_ids,
+        terminal_receipt_packet_ids=(
+            registry.terminal_receipt_packet_ids
+            if terminal_receipt_packet_ids is None
+            else terminal_receipt_packet_ids
+        ),
         terminal_receipt_idempotency_keys=(
             registry.terminal_receipt_idempotency_keys
+            if terminal_receipt_idempotency_keys is None
+            else terminal_receipt_idempotency_keys
         ),
         expired_packet_ids=registry.expired_packet_ids,
         failed_packet_ids=registry.failed_packet_ids,
@@ -13814,6 +14937,11 @@ def _registry_with_g2a_histories_v01(
             if invalidation_contexts is None
             else invalidation_contexts
         ),
+        action_packet_fulfillment_attempt_contexts=(
+            registry.action_packet_fulfillment_attempt_contexts
+            if fulfillment_attempt_contexts is None
+            else fulfillment_attempt_contexts
+        ),
     )
 
 
@@ -13826,6 +14954,1086 @@ def _require_valid_action_packet_registry_v01(
     return result
 
 
+def _g2a4a_current_dependency_observation_ids_v01(
+    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    current_dependency_observations: object,
+    *,
+    eligibility_evaluation_time: object,
+    eligibility_evaluation_context_id: object,
+    validation_pass: _ActionPacketRegistryValidationPassV01,
+) -> tuple[str, ...]:
+    if type(current_dependency_observations) is not tuple:
+        raise ValueError("current_dependency_observations_type_invalid")
+    if not validate_signed_int64_v01(eligibility_evaluation_time)[0]:
+        raise ValueError("current_dependency_evaluation_time_invalid")
+    if not validate_identity_text_v01(
+        eligibility_evaluation_context_id
+    )[0]:
+        raise ValueError("current_dependency_evaluation_context_invalid")
+    root_bound_result = _cached_root_bound_validation_v01(
+        validation_pass,
+        root_bound_genesis,
+    )
+    accepted, _ = _validate_mandatory_dependency_local_root_acceptance_core_v01(
+        root_bound_genesis,
+        packet_validation_result=root_bound_result,
+    )
+    if not accepted:
+        raise ValueError("current_dependency_acceptance_invalid")
+    canonical = root_bound_genesis.canonical_projection
+    candidate = canonical.dependency_candidate
+    if not validate_dependency_set_candidate_v01(candidate)[0]:
+        raise ValueError("current_dependency_candidate_invalid")
+    records_by_id = {
+        record.dependency_id: record
+        for record in candidate.dependency_records
+    }
+    observations_by_id: dict[
+        str,
+        ActionDependencyCurrentObservationV01,
+    ] = {}
+    observation_ids: set[str] = set()
+    for observation in current_dependency_observations:
+        valid_observation, _ = (
+            validate_action_dependency_current_observation_v01(observation)
+        )
+        if not valid_observation:
+            raise ValueError("current_dependency_observation_invalid")
+        if observation.observation_id in observation_ids:
+            raise ValueError("current_dependency_observation_duplicate")
+        observation_ids.add(observation.observation_id)
+        if observation.dependency_id in observations_by_id:
+            raise ValueError("current_dependency_observation_duplicate")
+        if observation.dependency_id not in records_by_id:
+            raise ValueError("current_dependency_observation_unknown")
+        observations_by_id[observation.dependency_id] = observation
+    ordered_ids: list[str] = []
+    for record in candidate.dependency_records:
+        observation = observations_by_id.get(record.dependency_id)
+        if observation is None:
+            if record.requirement_class == "MANDATORY":
+                raise ValueError("current_mandatory_dependency_missing")
+            continue
+        if (
+            type(record.time_envelope_id) is not str
+            or type(record.freshness_policy_id) is not str
+            or observation.dependency_id != record.dependency_id
+            or observation.evidence_ref != record.evidence_ref
+            or observation.observed_content_sha256 != record.content_sha256
+            or observation.time_envelope_id != record.time_envelope_id
+            or observation.freshness_policy_id
+            != record.freshness_policy_id
+            or observation.source_provenance_refs
+            != record.source_provenance_refs
+        ):
+            raise ValueError("current_dependency_observation_mismatch")
+        time_envelope_valid, _ = (
+            validate_action_dependency_time_envelope_binding_v01(
+                record.time_envelope_id,
+                dependency_id=record.dependency_id,
+                evidence_ref=record.evidence_ref,
+                content_sha256=record.content_sha256,
+                freshness_policy_id=record.freshness_policy_id,
+                source_provenance_refs=record.source_provenance_refs,
+                valid_from_utc=observation.valid_from_utc,
+                valid_to_utc=observation.valid_to_utc,
+            )
+        )
+        if not time_envelope_valid:
+            raise ValueError(
+                "current_dependency_time_envelope_invalid"
+            )
+        if (
+            record.expected_accepting_local_root_id
+            != canonical.owning_local_root_id
+        ):
+            raise ValueError("current_dependency_root_mismatch")
+        if (
+            not observation.valid_from_utc
+            <= eligibility_evaluation_time
+            < observation.valid_to_utc
+            or observation.observed_at_utc > eligibility_evaluation_time
+        ):
+            raise ValueError("current_dependency_stale")
+        if (
+            observation.observation_context_id
+            != eligibility_evaluation_context_id
+        ):
+            raise ValueError("current_dependency_context_mismatch")
+        ordered_ids.append(observation.observation_id)
+    return tuple(ordered_ids)
+
+
+def _g2a4a_root_scope_refs_v01(
+    canonical: SupplierActionCommitPacketCanonicalProjectionV01,
+) -> tuple[str, ...]:
+    subject = canonical.normalized_subject_scope
+    target = canonical.normalized_target_scope
+    root_scope_refs = (
+        subject.included_subject_refs + target.included_target_refs
+    )
+    if (
+        not root_scope_refs
+        or len(root_scope_refs) != len(set(root_scope_refs))
+        or any(
+            type(item) is not str
+            or not validate_identity_text_v01(item)[0]
+            for item in root_scope_refs
+        )
+        or set(root_scope_refs).intersection(
+            subject.excluded_subject_refs + target.excluded_target_refs
+        )
+    ):
+        raise ValueError("action_packet_effect_scope_invalid")
+    return root_scope_refs
+
+
+def _g2a4a_validate_corridor_containment_v01(
+    canonical: SupplierActionCommitPacketCanonicalProjectionV01,
+    packet_id: str,
+    corridor: object,
+    corridor_step: object,
+) -> tuple[str, ...]:
+    if type(corridor) is not ContractFulfillmentCorridorV01:
+        raise ValueError("action_packet_corridor_type_invalid")
+    if type(corridor_step) is not CorridorStepV01:
+        raise ValueError("action_packet_corridor_step_type_invalid")
+    if (
+        corridor.packet_id != packet_id
+        or corridor.corridor_kind != canonical.adapter_binding.corridor_class
+        or type(corridor.deterministic_only) is not bool
+        or corridor.deterministic_only is not True
+        or type(corridor.post_root_llm_reasoning_allowed) is not bool
+        or corridor.post_root_llm_reasoning_allowed is not False
+        or type(corridor.reasoning_restarted_after_root) is not bool
+        or corridor.reasoning_restarted_after_root is not False
+        or type(corridor.root_review_required_on_mismatch) is not bool
+        or corridor.root_review_required_on_mismatch is not True
+    ):
+        raise ValueError("action_packet_corridor_binding_invalid")
+    if (
+        type(corridor.allowed_steps) is not tuple
+        or not corridor.allowed_steps
+        or len(corridor.allowed_steps) != len(set(corridor.allowed_steps))
+        or any(
+            type(step_id) is not str
+            or not validate_identity_text_v01(step_id)[0]
+            for step_id in corridor.allowed_steps
+        )
+        or corridor.allowed_steps.count(corridor_step.step_id) != 1
+    ):
+        raise ValueError("action_packet_corridor_step_not_authorized")
+    legacy_valid, _ = validate_corridor_no_post_root_reasoning_v01(
+        corridor
+    )
+    legacy_validation_packet = _dataclass_replace(
+        canonical.source_packet,
+        packet_id=packet_id,
+    )
+    step_report = validate_corridor_step_against_packet_v01(
+        legacy_validation_packet,
+        corridor_step,
+    )
+    if not legacy_valid or step_report.validation_status != STATUS_PASS:
+        raise ValueError("action_packet_corridor_legacy_invalid")
+    raw_action = canonical.selected_legacy_action
+    raw_adapter = canonical.source_packet.adapter_binding.adapter_id
+    if (
+        corridor_step.parent_packet_id != packet_id
+        or corridor_step.allowed_actions.count(raw_action) != 1
+        or corridor_step.adapter_id != raw_adapter
+        or raw_action not in canonical.raw_allowed_actions
+        or raw_action in canonical.raw_forbidden_actions
+        or raw_adapter not in canonical.raw_allowed_adapters
+        or raw_adapter in canonical.raw_forbidden_adapters
+    ):
+        raise ValueError("action_packet_corridor_legacy_containment_invalid")
+    permission = canonical.normalized_permission_scope
+    policy = canonical.authority_policy
+    effect_class = canonical.authorization_candidate.effect_class
+    business_namespace = (
+        canonical.business_object_identity.business_object_namespace
+    )
+    if (
+        canonical.adapter_binding.adapter_id
+        not in permission.allowed_adapter_ids
+        or canonical.adapter_binding.adapter_id
+        in permission.forbidden_adapter_ids
+        or canonical.selected_canonical_action
+        not in permission.allowed_action_classes
+        or canonical.selected_canonical_action
+        in permission.forbidden_action_classes
+        or effect_class in permission.prohibited_effect_classes
+        or effect_class not in policy.allowed_logical_effect_classes
+        or canonical.adapter_binding.corridor_class
+        not in policy.allowed_corridor_classes
+        or business_namespace
+        not in policy.allowed_business_object_namespaces
+        or canonical.canonical_permission_ref
+        not in permission.required_approval_refs
+    ):
+        raise ValueError("action_packet_corridor_canonical_containment_invalid")
+    return _g2a4a_root_scope_refs_v01(canonical)
+
+
+def _g2a4a_logical_ticks_v01(
+    canonical: SupplierActionCommitPacketCanonicalProjectionV01,
+    logical_time_bridge: object,
+    eligibility_evaluation_time: object,
+) -> tuple[int, int, int]:
+    valid_bridge, bridge_reasons = validate_logical_time_bridge_v01(
+        logical_time_bridge
+    )
+    if not valid_bridge:
+        raise ValueError(bridge_reasons[0])
+    issued_at_tick = epoch_seconds_to_logical_tick_v01(
+        logical_time_bridge,
+        canonical.temporal_authority.issued_at_utc,
+    )
+    expires_at_tick = epoch_seconds_to_logical_tick_v01(
+        logical_time_bridge,
+        canonical.temporal_authority.expires_at_utc,
+    )
+    current_tick = epoch_seconds_to_logical_tick_v01(
+        logical_time_bridge,
+        eligibility_evaluation_time,
+    )
+    for tick, epoch in (
+        (issued_at_tick, canonical.temporal_authority.issued_at_utc),
+        (expires_at_tick, canonical.temporal_authority.expires_at_utc),
+        (current_tick, eligibility_evaluation_time),
+    ):
+        if logical_tick_to_epoch_seconds_v01(
+            logical_time_bridge,
+            tick,
+        ) != epoch:
+            raise ValueError("logical_time_bridge_round_trip_mismatch")
+    if not issued_at_tick <= current_tick < expires_at_tick:
+        raise ValueError("action_packet_effect_time_invalid")
+    return issued_at_tick, expires_at_tick, current_tick
+
+
+def _build_action_packet_effect_firewall_projection_core_v01(
+    registry: ActionCommitPacketRegistryV02,
+    *,
+    packet_id: object,
+    corridor: object,
+    corridor_step: object,
+    current_dependency_observations: object,
+    logical_time_bridge: object,
+    eligibility_evaluation_time: object,
+    eligibility_evaluation_time_source: object,
+    eligibility_evaluation_context_id: object,
+    registry_validation_result: _ActionPacketRegistryValidationResultV02,
+) -> ActionPacketEffectFirewallProjectionV01:
+    validation_pass = registry_validation_result.validation_pass
+    if (
+        not registry_validation_result.valid
+        or type(validation_pass)
+        is not _ActionPacketRegistryValidationPassV01
+        or validation_pass.registry is not registry
+    ):
+        raise ValueError("action_packet_effect_registry_invalid")
+    if (
+        not validate_identity_text_v01(registry.registry_id)[0]
+        or not registry.registry_id.strip()
+    ):
+        raise ValueError("action_packet_effect_registry_id_invalid")
+    if (
+        type(corridor) is ContractFulfillmentCorridorV01
+        and (
+            not validate_identity_text_v01(corridor.corridor_id)[0]
+            or not corridor.corridor_id.strip()
+        )
+    ):
+        raise ValueError("action_packet_effect_corridor_id_invalid")
+    if not validate_signed_int64_v01(eligibility_evaluation_time)[0]:
+        raise ValueError("action_packet_effect_evaluation_time_invalid")
+    if not validate_identity_text_v01(
+        eligibility_evaluation_time_source
+    )[0]:
+        raise ValueError("action_packet_effect_evaluation_source_invalid")
+    if not validate_identity_text_v01(
+        eligibility_evaluation_context_id
+    )[0]:
+        raise ValueError("action_packet_effect_evaluation_context_invalid")
+    entry = _unique_lifecycle_entry_from_validation_pass_v01(
+        validation_pass,
+        packet_id,
+    )
+    root_bound = entry.root_bound_genesis
+    root_bound_valid, _ = _cached_root_bound_validation_v01(
+        validation_pass,
+        root_bound,
+    )
+    if not root_bound_valid:
+        raise ValueError("action_packet_effect_genesis_invalid")
+    canonical = root_bound.canonical_projection
+    if not validate_supplier_action_commit_packet_canonical_projection_v01(
+        canonical
+    )[0]:
+        raise ValueError("action_packet_effect_projection_invalid")
+    root_projection = root_bound.root_decision_projection
+    if not validate_root_decision_candidate_projection_v01(
+        root_projection
+    )[0]:
+        raise ValueError("action_packet_effect_root_invalid")
+    state = _derive_action_packet_lifecycle_state_unchecked_v01(
+        entry,
+        registry.idempotency_disposition_events,
+    )
+    latest = entry.transition_events[-1] if entry.transition_events else None
+    transition_registry = build_action_packet_transition_registry_profile_v01()
+    pending_rule = lookup_action_packet_transition_rule_v01(
+        registry=transition_registry,
+        transition_rule_id="g2a_t03_pending",
+    )
+    if (
+        state.lifecycle_state != "PENDING_FULFILLMENT"
+        or state.eligible_for_corridor_revalidation is not True
+        or type(latest) is not ActionPacketTransitionEventV01
+        or latest.transition_rule_id != "g2a_t03_pending"
+        or latest.target_state != "PENDING_FULFILLMENT"
+        or type(latest.execution_attempt_id) is not str
+        or not validate_prefixed_sha256_identity_v01(
+            latest.execution_attempt_id,
+            prefix=EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01,
+        )[0]
+        or latest.effect_consumption_class
+        != pending_rule.effect_consumption_class
+        or latest.receipt_ref is not None
+        or any(
+            event.execution_attempt_id == latest.execution_attempt_id
+            and event.transition_rule_id
+            in {
+                "g2a_t04_fulfill_mock",
+                "g2a_t24_nonconsuming_failure",
+                "g2a_t26_uncertain_adapter_outcome",
+            }
+            for event in entry.transition_events
+        )
+    ):
+        raise ValueError("action_packet_effect_pending_attempt_invalid")
+    if (
+        state.idempotency_disposition != "RESERVED"
+        or state.reservation_owner_packet_id != packet_id
+        or type(state.latest_disposition_event_id) is not str
+        or not validate_prefixed_sha256_identity_v01(
+            state.latest_disposition_event_id,
+            prefix=IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01,
+        )[0]
+        or state.terminal_receipt_ref is not None
+        or packet_id in registry.terminal_receipt_packet_ids
+        or state.idempotency_key
+        in registry.terminal_receipt_idempotency_keys
+    ):
+        raise ValueError("action_packet_effect_reservation_invalid")
+    temporal = evaluate_temporal_authority_v01(
+        canonical.temporal_authority,
+        evaluation_time=eligibility_evaluation_time,
+    )
+    if (
+        temporal.outcome != TEMPORAL_OUTCOME_VALID_V01
+        or type(temporal.executable) is not bool
+        or temporal.executable is not True
+    ):
+        raise ValueError("action_packet_effect_temporal_invalid")
+    dependency_observation_ids = (
+        _g2a4a_current_dependency_observation_ids_v01(
+            root_bound,
+            current_dependency_observations,
+            eligibility_evaluation_time=eligibility_evaluation_time,
+            eligibility_evaluation_context_id=(
+                eligibility_evaluation_context_id
+            ),
+            validation_pass=validation_pass,
+        )
+    )
+    root_scope_refs = _g2a4a_validate_corridor_containment_v01(
+        canonical,
+        root_bound.packet_identity.packet_id,
+        corridor,
+        corridor_step,
+    )
+    issued_at_tick, expires_at_tick, current_tick = (
+        _g2a4a_logical_ticks_v01(
+            canonical,
+            logical_time_bridge,
+            eligibility_evaluation_time,
+        )
+    )
+    root_result = root_projection.root_decision_result
+    projection = ActionPacketEffectFirewallProjectionV01(
+        projection_profile_id=(
+            ACTION_PACKET_EFFECT_FIREWALL_PROJECTION_PROFILE_ID_V01
+        ),
+        packet_id=root_bound.packet_identity.packet_id,
+        registry_id=registry.registry_id,
+        pending_transition_event_id=latest.transition_event_id,
+        execution_attempt_id=latest.execution_attempt_id,
+        corridor_id=corridor.corridor_id,
+        corridor_step_id=corridor_step.step_id,
+        corridor_class=canonical.adapter_binding.corridor_class,
+        transaction_id=canonical.transaction_id,
+        target_root_id=canonical.owning_local_root_id,
+        root_decision_id=root_result.decision_id,
+        selected_candidate_id=(
+            canonical.authorization_candidate
+            .root_packet_authorization_candidate_id
+        ),
+        permission_ref=canonical.canonical_permission_ref,
+        allowed_adapter_ids=(
+            canonical.normalized_permission_scope.allowed_adapter_ids
+        ),
+        allowed_action_kinds=(
+            canonical.normalized_permission_scope.allowed_action_classes
+        ),
+        root_scope_refs=root_scope_refs,
+        maximum_expires_at_tick=expires_at_tick,
+        request_kind="ActionCommitPacket",
+        adapter_id=canonical.adapter_binding.adapter_id,
+        action_kind=canonical.selected_canonical_action,
+        scope_refs=root_scope_refs,
+        issued_at_tick=issued_at_tick,
+        expires_at_tick=expires_at_tick,
+        current_tick=current_tick,
+        idempotency_key=(
+            canonical.idempotency_identity.idempotency_key
+        ),
+        mock_only=True,
+        effect_access_owner=_EFFECT_ACCESS_OWNER,
+        logical_time_bridge_id=logical_time_bridge.bridge_id,
+        attempt_evaluation_time=latest.evaluation_time,
+        attempt_evaluation_time_source=latest.evaluation_time_source,
+        attempt_evaluation_context_id=latest.evaluation_context_id,
+        eligibility_evaluation_time=eligibility_evaluation_time,
+        eligibility_evaluation_time_source=(
+            eligibility_evaluation_time_source
+        ),
+        eligibility_evaluation_context_id=(
+            eligibility_evaluation_context_id
+        ),
+        latest_disposition_event_id=state.latest_disposition_event_id,
+        dependency_acceptance_binding_id=(
+            root_bound.dependency_acceptance_binding
+            .packet_dependency_acceptance_binding_id
+        ),
+        dependency_observation_ids=dependency_observation_ids,
+        authority_policy_fingerprint=(
+            canonical.authority_policy_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            canonical.temporal_authority_fingerprint
+        ),
+    )
+    if not _action_packet_effect_projection_exact_types_v01(projection):
+        raise ValueError("action_packet_effect_projection_shape_invalid")
+    return projection
+
+
+def _build_action_packet_effect_projection_from_historical_view_v01(
+    *,
+    registry_id: str,
+    entry: ActionPacketLifecycleEntryV01,
+    disposition_history: tuple[IdempotencyDispositionEventV01, ...],
+    terminal_receipt_packet_ids: tuple[str, ...],
+    terminal_receipt_idempotency_keys: tuple[str, ...],
+    packet_id: object,
+    corridor: object,
+    corridor_step: object,
+    current_dependency_observations: object,
+    logical_time_bridge: object,
+    eligibility_evaluation_time: object,
+    eligibility_evaluation_time_source: object,
+    eligibility_evaluation_context_id: object,
+    validation_pass: _ActionPacketRegistryValidationPassV01,
+) -> ActionPacketEffectFirewallProjectionV01:
+    if (
+        not validate_identity_text_v01(registry_id)[0]
+        or not registry_id.strip()
+    ):
+        raise ValueError("action_packet_effect_registry_id_invalid")
+    if (
+        type(corridor) is ContractFulfillmentCorridorV01
+        and (
+            not validate_identity_text_v01(corridor.corridor_id)[0]
+            or not corridor.corridor_id.strip()
+        )
+    ):
+        raise ValueError("action_packet_effect_corridor_id_invalid")
+    if (
+        type(entry) is not ActionPacketLifecycleEntryV01
+        or type(disposition_history) is not tuple
+        or type(terminal_receipt_packet_ids) is not tuple
+        or type(terminal_receipt_idempotency_keys) is not tuple
+        or not validate_signed_int64_v01(
+            eligibility_evaluation_time
+        )[0]
+        or not validate_identity_text_v01(
+            eligibility_evaluation_time_source
+        )[0]
+        or not validate_identity_text_v01(
+            eligibility_evaluation_context_id
+        )[0]
+    ):
+        raise ValueError("action_packet_effect_historical_view_invalid")
+    root_bound = entry.root_bound_genesis
+    root_bound_valid, _ = _cached_root_bound_validation_v01(
+        validation_pass,
+        root_bound,
+    )
+    if not root_bound_valid:
+        raise ValueError("action_packet_effect_genesis_invalid")
+    if root_bound.packet_identity.packet_id != packet_id:
+        raise ValueError("action_packet_effect_packet_mismatch")
+    canonical = root_bound.canonical_projection
+    if not validate_supplier_action_commit_packet_canonical_projection_v01(
+        canonical
+    )[0]:
+        raise ValueError("action_packet_effect_projection_invalid")
+    root_projection = root_bound.root_decision_projection
+    if not validate_root_decision_candidate_projection_v01(
+        root_projection
+    )[0]:
+        raise ValueError("action_packet_effect_root_invalid")
+    state = _derive_action_packet_lifecycle_state_unchecked_v01(
+        entry,
+        disposition_history,
+    )
+    latest = entry.transition_events[-1] if entry.transition_events else None
+    transition_registry = build_action_packet_transition_registry_profile_v01()
+    pending_rule = lookup_action_packet_transition_rule_v01(
+        registry=transition_registry,
+        transition_rule_id="g2a_t03_pending",
+    )
+    if (
+        state.lifecycle_state != "PENDING_FULFILLMENT"
+        or state.eligible_for_corridor_revalidation is not True
+        or type(latest) is not ActionPacketTransitionEventV01
+        or latest.transition_rule_id != "g2a_t03_pending"
+        or latest.target_state != "PENDING_FULFILLMENT"
+        or type(latest.execution_attempt_id) is not str
+        or not validate_prefixed_sha256_identity_v01(
+            latest.execution_attempt_id,
+            prefix=EXECUTION_ATTEMPT_IDENTITY_PREFIX_V01,
+        )[0]
+        or latest.effect_consumption_class
+        != pending_rule.effect_consumption_class
+        or latest.receipt_ref is not None
+        or any(
+            event.execution_attempt_id == latest.execution_attempt_id
+            and event.transition_rule_id
+            in {
+                "g2a_t04_fulfill_mock",
+                "g2a_t24_nonconsuming_failure",
+                "g2a_t26_uncertain_adapter_outcome",
+            }
+            for event in entry.transition_events
+        )
+    ):
+        raise ValueError("action_packet_effect_pending_attempt_invalid")
+    if (
+        state.idempotency_disposition != "RESERVED"
+        or state.reservation_owner_packet_id != packet_id
+        or type(state.latest_disposition_event_id) is not str
+        or not validate_prefixed_sha256_identity_v01(
+            state.latest_disposition_event_id,
+            prefix=IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01,
+        )[0]
+        or state.terminal_receipt_ref is not None
+        or packet_id in terminal_receipt_packet_ids
+        or state.idempotency_key in terminal_receipt_idempotency_keys
+    ):
+        raise ValueError("action_packet_effect_reservation_invalid")
+    temporal = evaluate_temporal_authority_v01(
+        canonical.temporal_authority,
+        evaluation_time=eligibility_evaluation_time,
+    )
+    if (
+        temporal.outcome != TEMPORAL_OUTCOME_VALID_V01
+        or type(temporal.executable) is not bool
+        or temporal.executable is not True
+    ):
+        raise ValueError("action_packet_effect_temporal_invalid")
+    dependency_observation_ids = (
+        _g2a4a_current_dependency_observation_ids_v01(
+            root_bound,
+            current_dependency_observations,
+            eligibility_evaluation_time=eligibility_evaluation_time,
+            eligibility_evaluation_context_id=(
+                eligibility_evaluation_context_id
+            ),
+            validation_pass=validation_pass,
+        )
+    )
+    root_scope_refs = _g2a4a_validate_corridor_containment_v01(
+        canonical,
+        root_bound.packet_identity.packet_id,
+        corridor,
+        corridor_step,
+    )
+    issued_at_tick, expires_at_tick, current_tick = (
+        _g2a4a_logical_ticks_v01(
+            canonical,
+            logical_time_bridge,
+            eligibility_evaluation_time,
+        )
+    )
+    root_result = root_projection.root_decision_result
+    projection = ActionPacketEffectFirewallProjectionV01(
+        projection_profile_id=(
+            ACTION_PACKET_EFFECT_FIREWALL_PROJECTION_PROFILE_ID_V01
+        ),
+        packet_id=root_bound.packet_identity.packet_id,
+        registry_id=registry_id,
+        pending_transition_event_id=latest.transition_event_id,
+        execution_attempt_id=latest.execution_attempt_id,
+        corridor_id=corridor.corridor_id,
+        corridor_step_id=corridor_step.step_id,
+        corridor_class=canonical.adapter_binding.corridor_class,
+        transaction_id=canonical.transaction_id,
+        target_root_id=canonical.owning_local_root_id,
+        root_decision_id=root_result.decision_id,
+        selected_candidate_id=(
+            canonical.authorization_candidate
+            .root_packet_authorization_candidate_id
+        ),
+        permission_ref=canonical.canonical_permission_ref,
+        allowed_adapter_ids=(
+            canonical.normalized_permission_scope.allowed_adapter_ids
+        ),
+        allowed_action_kinds=(
+            canonical.normalized_permission_scope.allowed_action_classes
+        ),
+        root_scope_refs=root_scope_refs,
+        maximum_expires_at_tick=expires_at_tick,
+        request_kind="ActionCommitPacket",
+        adapter_id=canonical.adapter_binding.adapter_id,
+        action_kind=canonical.selected_canonical_action,
+        scope_refs=root_scope_refs,
+        issued_at_tick=issued_at_tick,
+        expires_at_tick=expires_at_tick,
+        current_tick=current_tick,
+        idempotency_key=canonical.idempotency_identity.idempotency_key,
+        mock_only=True,
+        effect_access_owner=_EFFECT_ACCESS_OWNER,
+        logical_time_bridge_id=logical_time_bridge.bridge_id,
+        attempt_evaluation_time=latest.evaluation_time,
+        attempt_evaluation_time_source=latest.evaluation_time_source,
+        attempt_evaluation_context_id=latest.evaluation_context_id,
+        eligibility_evaluation_time=eligibility_evaluation_time,
+        eligibility_evaluation_time_source=(
+            eligibility_evaluation_time_source
+        ),
+        eligibility_evaluation_context_id=(
+            eligibility_evaluation_context_id
+        ),
+        latest_disposition_event_id=state.latest_disposition_event_id,
+        dependency_acceptance_binding_id=(
+            root_bound.dependency_acceptance_binding
+            .packet_dependency_acceptance_binding_id
+        ),
+        dependency_observation_ids=dependency_observation_ids,
+        authority_policy_fingerprint=(
+            canonical.authority_policy_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            canonical.temporal_authority_fingerprint
+        ),
+    )
+    if not _action_packet_effect_projection_exact_types_v01(projection):
+        raise ValueError("action_packet_effect_projection_shape_invalid")
+    return projection
+
+
+def build_action_packet_effect_firewall_projection_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    corridor: object,
+    corridor_step: object,
+    current_dependency_observations: object,
+    logical_time_bridge: object,
+    eligibility_evaluation_time: object,
+    eligibility_evaluation_time_source: object,
+    eligibility_evaluation_context_id: object,
+) -> ActionPacketEffectFirewallProjectionV01:
+    try:
+        validation_result = _require_valid_action_packet_registry_v01(
+            registry
+        )
+        return _build_action_packet_effect_firewall_projection_core_v01(
+            registry,
+            packet_id=packet_id,
+            corridor=corridor,
+            corridor_step=corridor_step,
+            current_dependency_observations=(
+                current_dependency_observations
+            ),
+            logical_time_bridge=logical_time_bridge,
+            eligibility_evaluation_time=eligibility_evaluation_time,
+            eligibility_evaluation_time_source=(
+                eligibility_evaluation_time_source
+            ),
+            eligibility_evaluation_context_id=(
+                eligibility_evaluation_context_id
+            ),
+            registry_validation_result=validation_result,
+        )
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_effect_projection_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_effect_projection_invalid") from None
+
+
+def _action_packet_effect_projection_exact_types_v01(
+    value: ActionPacketEffectFirewallProjectionV01,
+) -> bool:
+    string_fields = (
+        "projection_profile_id",
+        "packet_id",
+        "registry_id",
+        "pending_transition_event_id",
+        "execution_attempt_id",
+        "corridor_id",
+        "corridor_step_id",
+        "corridor_class",
+        "transaction_id",
+        "target_root_id",
+        "root_decision_id",
+        "selected_candidate_id",
+        "permission_ref",
+        "request_kind",
+        "adapter_id",
+        "action_kind",
+        "idempotency_key",
+        "effect_access_owner",
+        "logical_time_bridge_id",
+        "attempt_evaluation_time_source",
+        "attempt_evaluation_context_id",
+        "eligibility_evaluation_time_source",
+        "eligibility_evaluation_context_id",
+        "latest_disposition_event_id",
+        "dependency_acceptance_binding_id",
+        "authority_policy_fingerprint",
+        "temporal_authority_fingerprint",
+    )
+    tuple_fields = (
+        "allowed_adapter_ids",
+        "allowed_action_kinds",
+        "root_scope_refs",
+        "scope_refs",
+        "dependency_observation_ids",
+    )
+    int_fields = (
+        "maximum_expires_at_tick",
+        "issued_at_tick",
+        "expires_at_tick",
+        "current_tick",
+        "attempt_evaluation_time",
+        "eligibility_evaluation_time",
+    )
+    return (
+        all(
+            type(getattr(value, name)) is str
+            and validate_identity_text_v01(getattr(value, name))[0]
+            for name in string_fields
+        )
+        and all(
+            type(getattr(value, name)) is tuple
+            and all(type(item) is str for item in getattr(value, name))
+            for name in tuple_fields
+        )
+        and all(type(getattr(value, name)) is int for name in int_fields)
+        and type(value.mock_only) is bool
+    )
+
+
+def _validate_action_packet_effect_firewall_projection_core_v01(
+    value: object,
+    registry: ActionCommitPacketRegistryV02,
+    *,
+    packet_id: object,
+    corridor: object,
+    corridor_step: object,
+    current_dependency_observations: object,
+    logical_time_bridge: object,
+    eligibility_evaluation_time: object,
+    eligibility_evaluation_time_source: object,
+    eligibility_evaluation_context_id: object,
+    registry_validation_result: _ActionPacketRegistryValidationResultV02,
+) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is not ActionPacketEffectFirewallProjectionV01:
+        return False, ("action_packet_effect_projection_type_invalid",)
+    if not _action_packet_effect_projection_exact_types_v01(value):
+        return False, ("action_packet_effect_projection_field_type_invalid",)
+    try:
+        expected = _build_action_packet_effect_firewall_projection_core_v01(
+            registry,
+            packet_id=packet_id,
+            corridor=corridor,
+            corridor_step=corridor_step,
+            current_dependency_observations=(
+                current_dependency_observations
+            ),
+            logical_time_bridge=logical_time_bridge,
+            eligibility_evaluation_time=eligibility_evaluation_time,
+            eligibility_evaluation_time_source=(
+                eligibility_evaluation_time_source
+            ),
+            eligibility_evaluation_context_id=(
+                eligibility_evaluation_context_id
+            ),
+            registry_validation_result=registry_validation_result,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_effect_projection_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("action_packet_effect_projection_invalid",)
+    if value != expected:
+        return False, ("action_packet_effect_projection_mismatch",)
+    return True, ()
+
+
+def validate_action_packet_effect_firewall_projection_v01(
+    value: object,
+    registry: object,
+    *,
+    packet_id: object,
+    corridor: object,
+    corridor_step: object,
+    current_dependency_observations: object,
+    logical_time_bridge: object,
+    eligibility_evaluation_time: object,
+    eligibility_evaluation_time_source: object,
+    eligibility_evaluation_context_id: object,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        validation_result = _require_valid_action_packet_registry_v01(
+            registry
+        )
+        return _validate_action_packet_effect_firewall_projection_core_v01(
+            value,
+            registry,
+            packet_id=packet_id,
+            corridor=corridor,
+            corridor_step=corridor_step,
+            current_dependency_observations=(
+                current_dependency_observations
+            ),
+            logical_time_bridge=logical_time_bridge,
+            eligibility_evaluation_time=eligibility_evaluation_time,
+            eligibility_evaluation_time_source=(
+                eligibility_evaluation_time_source
+            ),
+            eligibility_evaluation_context_id=(
+                eligibility_evaluation_context_id
+            ),
+            registry_validation_result=validation_result,
+        )
+    except ValueError as exc:
+        return False, (
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_effect_projection_invalid",
+            ),
+        )
+    except Exception:
+        return False, ("action_packet_effect_projection_invalid",)
+
+
+def _prepare_action_packet_effect_attempt_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    corridor: object,
+    corridor_step: object,
+    current_dependency_observations: object,
+    logical_time_bridge: object,
+    eligibility_evaluation_time: object,
+    eligibility_evaluation_time_source: object,
+    eligibility_evaluation_context_id: object,
+) -> _ActionPacketEffectAttemptPreparationV01:
+    try:
+        validation_result = _require_valid_action_packet_registry_v01(
+            registry
+        )
+        projection = (
+            _build_action_packet_effect_firewall_projection_core_v01(
+                registry,
+                packet_id=packet_id,
+                corridor=corridor,
+                corridor_step=corridor_step,
+                current_dependency_observations=(
+                    current_dependency_observations
+                ),
+                logical_time_bridge=logical_time_bridge,
+                eligibility_evaluation_time=eligibility_evaluation_time,
+                eligibility_evaluation_time_source=(
+                    eligibility_evaluation_time_source
+                ),
+                eligibility_evaluation_context_id=(
+                    eligibility_evaluation_context_id
+                ),
+                registry_validation_result=validation_result,
+            )
+        )
+        projection_valid, projection_reasons = (
+            _validate_action_packet_effect_firewall_projection_core_v01(
+                projection,
+                registry,
+                packet_id=packet_id,
+                corridor=corridor,
+                corridor_step=corridor_step,
+                current_dependency_observations=(
+                    current_dependency_observations
+                ),
+                logical_time_bridge=logical_time_bridge,
+                eligibility_evaluation_time=eligibility_evaluation_time,
+                eligibility_evaluation_time_source=(
+                    eligibility_evaluation_time_source
+                ),
+                eligibility_evaluation_context_id=(
+                    eligibility_evaluation_context_id
+                ),
+                registry_validation_result=validation_result,
+            )
+        )
+        if not projection_valid:
+            raise ValueError(projection_reasons[0])
+        validation_pass = validation_result.validation_pass
+        if type(validation_pass) is not _ActionPacketRegistryValidationPassV01:
+            raise ValueError("action_packet_effect_registry_invalid")
+        entry = _unique_lifecycle_entry_from_validation_pass_v01(
+            validation_pass,
+            packet_id,
+        )
+        root_projection = entry.root_bound_genesis.root_decision_projection
+        firewall = _build_effect_firewall_v01(
+            root_decision_kernel=root_projection.root_decision_kernel,
+            decision_input=root_projection.root_decision_input,
+            root_decision_result=root_projection.root_decision_result,
+            invocation_id=projection.execution_attempt_id,
+            allowed_adapter_ids=projection.allowed_adapter_ids,
+            allowed_action_kinds=projection.allowed_action_kinds,
+            root_scope_refs=projection.root_scope_refs,
+            maximum_expires_at_tick=projection.maximum_expires_at_tick,
+        )
+        if _validate_effect_firewall_v01(firewall) != ():
+            raise ValueError("action_packet_effect_firewall_invalid")
+        firewall_equalities = (
+            firewall.invocation_id == projection.execution_attempt_id,
+            firewall.transaction_id == projection.transaction_id,
+            firewall.target_root_id == projection.target_root_id,
+            firewall.root_decision_id == projection.root_decision_id,
+            firewall.selected_candidate_id
+            == projection.selected_candidate_id,
+            firewall.permission_ref == projection.permission_ref,
+            firewall.allowed_adapter_ids == projection.allowed_adapter_ids,
+            firewall.allowed_action_kinds
+            == projection.allowed_action_kinds,
+            firewall.root_scope_refs == projection.root_scope_refs,
+            firewall.maximum_expires_at_tick
+            == projection.maximum_expires_at_tick,
+            type(firewall.mock_only) is bool,
+            firewall.mock_only is True,
+            firewall.effect_access_owner == _EFFECT_ACCESS_OWNER,
+        )
+        state = firewall._state
+        if not all(firewall_equalities) or not (
+            len(state.seen_request_ids) == 0
+            and len(state.used_idempotency_keys) == 0
+            and len(state.issued_capabilities) == 0
+            and len(state.consumed_capability_ids) == 0
+            and len(state.terminal_receipt_ids) == 0
+            and state.mock_effect_execution_count == 0
+        ):
+            raise ValueError("action_packet_effect_firewall_binding_invalid")
+        request = _build_effect_request_v01(
+            root_decision_kernel=root_projection.root_decision_kernel,
+            decision_input=root_projection.root_decision_input,
+            root_decision_result=root_projection.root_decision_result,
+            request_kind=projection.request_kind,
+            adapter_id=projection.adapter_id,
+            action_kind=projection.action_kind,
+            scope_refs=projection.scope_refs,
+            issued_at_tick=projection.issued_at_tick,
+            expires_at_tick=projection.expires_at_tick,
+            idempotency_key=projection.idempotency_key,
+        )
+        if _validate_effect_request_v01(request) != ():
+            raise ValueError("action_packet_effect_request_invalid")
+        request_equalities = (
+            request.request_kind == "ActionCommitPacket",
+            request.transaction_id == firewall.transaction_id,
+            request.target_root_id == firewall.target_root_id,
+            request.root_decision_id == firewall.root_decision_id,
+            request.selected_candidate_id == firewall.selected_candidate_id,
+            request.permission_ref == firewall.permission_ref,
+            request.adapter_id == projection.adapter_id,
+            request.action_kind == projection.action_kind,
+            request.scope_refs == firewall.root_scope_refs,
+            request.issued_at_tick == projection.issued_at_tick,
+            request.expires_at_tick == projection.expires_at_tick,
+            request.idempotency_key == projection.idempotency_key,
+            type(request.mock_only) is bool,
+            request.mock_only is True,
+        )
+        if not all(request_equalities):
+            raise ValueError("action_packet_effect_request_binding_invalid")
+        decision = _authorize_effect_request_v01(
+            firewall=firewall,
+            request=request,
+            current_tick=projection.current_tick,
+        )
+        if (
+            _validate_effect_firewall_decision_v01(
+                firewall=firewall,
+                request=request,
+                decision=decision,
+            )
+            != ()
+            or decision.decision != _EFFECT_DECISION_ALLOW_MOCK_EFFECT
+            or decision.reason_code != "mock_effect_authorized"
+            or type(decision.capability_issued) is not bool
+            or decision.capability_issued is not True
+            or type(decision.return_to_root) is not bool
+            or decision.return_to_root is not False
+            or type(decision.real_world_effects_count) is not int
+            or decision.real_world_effects_count != 0
+            or len(state.issued_capabilities) != 1
+            or len(state.consumed_capability_ids) != 0
+            or len(state.terminal_receipt_ids) != 0
+            or state.mock_effect_execution_count != 0
+        ):
+            raise ValueError("action_packet_effect_authorization_invalid")
+        return _ActionPacketEffectAttemptPreparationV01(
+            projection=projection,
+            firewall=firewall,
+            request=request,
+            decision=decision,
+        )
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_effect_preparation_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_effect_preparation_invalid") from None
+
+
 def _disposition_history_bytes_v01(
     history: tuple[IdempotencyDispositionEventV01, ...],
 ) -> bytes:
@@ -13835,3 +16043,2492 @@ def _disposition_history_bytes_v01(
             for event in history
         )
     )
+
+
+def _action_packet_private_component_sha256_v01(
+    domain: str,
+    value: object,
+) -> str:
+    return domain_separated_sha256_hex_v01(
+        domain=domain,
+        payload=canonical_json_bytes_v01(value),
+    )
+
+
+def _action_packet_effect_projection_sha256_v01(
+    projection: ActionPacketEffectFirewallProjectionV01,
+) -> str:
+    if (
+        type(projection) is not ActionPacketEffectFirewallProjectionV01
+        or not _action_packet_effect_projection_exact_types_v01(projection)
+    ):
+        raise ValueError("action_packet_effect_projection_invalid")
+    material = tuple(
+        (name, getattr(projection, name))
+        for name in (
+            "projection_profile_id",
+            "packet_id",
+            "registry_id",
+            "pending_transition_event_id",
+            "execution_attempt_id",
+            "corridor_id",
+            "corridor_step_id",
+            "corridor_class",
+            "transaction_id",
+            "target_root_id",
+            "root_decision_id",
+            "selected_candidate_id",
+            "permission_ref",
+            "allowed_adapter_ids",
+            "allowed_action_kinds",
+            "root_scope_refs",
+            "maximum_expires_at_tick",
+            "request_kind",
+            "adapter_id",
+            "action_kind",
+            "scope_refs",
+            "issued_at_tick",
+            "expires_at_tick",
+            "current_tick",
+            "idempotency_key",
+            "mock_only",
+            "effect_access_owner",
+            "logical_time_bridge_id",
+            "attempt_evaluation_time",
+            "attempt_evaluation_time_source",
+            "attempt_evaluation_context_id",
+            "eligibility_evaluation_time",
+            "eligibility_evaluation_time_source",
+            "eligibility_evaluation_context_id",
+            "latest_disposition_event_id",
+            "dependency_acceptance_binding_id",
+            "dependency_observation_ids",
+            "authority_policy_fingerprint",
+            "temporal_authority_fingerprint",
+        )
+    )
+    return _action_packet_private_component_sha256_v01(
+        _ACTION_PACKET_EFFECT_PROJECTION_HASH_DOMAIN_V01,
+        material,
+    )
+
+
+def _action_packet_firewall_state_sha256_v01(
+    firewall: _EffectFirewallV01,
+) -> str:
+    return _action_packet_firewall_state_observation_v01(firewall)[1]
+
+
+def _action_packet_firewall_state_observation_v01(
+    firewall: object,
+) -> tuple[bool, str, dict[str, object] | None]:
+    try:
+        plain = _effect_firewall_to_plain_dict_v01(firewall)
+        return (
+            True,
+            _action_packet_private_component_sha256_v01(
+                _ACTION_PACKET_FIREWALL_STATE_HASH_DOMAIN_V01,
+                plain,
+            ),
+            plain,
+        )
+    except Exception:
+        state = (
+            getattr(firewall, "_state", None)
+            if type(firewall) is _EffectFirewallV01
+            else None
+        )
+        observation = {
+            "observation_class": "UNVALIDATABLE_STATE",
+            "firewall_type_status": (
+                "EXACT" if type(firewall) is _EffectFirewallV01 else "INVALID"
+            ),
+            "state_presence_status": (
+                "PRESENT" if state is not None else "ABSENT"
+            ),
+            "seen_request_ids_status": (
+                "EXACT_SET"
+                if type(getattr(state, "seen_request_ids", None)) is set
+                else "INVALID"
+            ),
+            "used_idempotency_keys_status": (
+                "EXACT_SET"
+                if type(getattr(state, "used_idempotency_keys", None)) is set
+                else "INVALID"
+            ),
+            "issued_capabilities_status": (
+                "EXACT_DICT"
+                if type(getattr(state, "issued_capabilities", None)) is dict
+                else "INVALID"
+            ),
+            "consumed_capability_ids_status": (
+                "EXACT_SET"
+                if type(
+                    getattr(state, "consumed_capability_ids", None)
+                )
+                is set
+                else "INVALID"
+            ),
+            "terminal_receipt_ids_status": (
+                "EXACT_SET"
+                if type(getattr(state, "terminal_receipt_ids", None)) is set
+                else "INVALID"
+            ),
+            "mock_effect_execution_count_status": (
+                "EXACT_INT"
+                if type(
+                    getattr(state, "mock_effect_execution_count", None)
+                )
+                is int
+                else "INVALID"
+            ),
+        }
+        return (
+            False,
+            _action_packet_private_component_sha256_v01(
+                _ACTION_PACKET_FIREWALL_STATE_HASH_DOMAIN_V01,
+                observation,
+            ),
+            None,
+        )
+
+
+def _action_packet_disposition_history_sha256_v01(
+    history: tuple[IdempotencyDispositionEventV01, ...],
+) -> str:
+    return domain_separated_sha256_hex_v01(
+        domain=_ACTION_PACKET_DISPOSITION_HISTORY_HASH_DOMAIN_V01,
+        payload=_disposition_history_bytes_v01(history),
+    )
+
+
+def _action_packet_effect_receipt_sha256_v01(
+    receipt: _KernelArtifactV01,
+) -> str:
+    return _action_packet_private_component_sha256_v01(
+        _ACTION_PACKET_EFFECT_RECEIPT_HASH_DOMAIN_V01,
+        _kernel_artifact_to_plain_dict_v01(receipt),
+    )
+
+
+def _action_packet_effect_receipt_ref_v01(
+    *,
+    packet_id: str,
+    execution_attempt_id: str,
+    request_id: str,
+    decision_id: str,
+    eligibility_evaluation_context_id: str,
+) -> str:
+    return build_domain_separated_identity_v01(
+        domain=_ACTION_PACKET_EFFECT_RECEIPT_REF_DOMAIN_V01,
+        prefix=_ACTION_PACKET_EFFECT_RECEIPT_REF_PREFIX_V01,
+        material=(
+            ("packet_id", packet_id),
+            ("execution_attempt_id", execution_attempt_id),
+            ("request_id", request_id),
+            ("decision_id", decision_id),
+            (
+                "eligibility_evaluation_context_id",
+                eligibility_evaluation_context_id,
+            ),
+        ),
+    )
+
+
+def _action_packet_effect_receipt_time_envelope_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    projection: ActionPacketEffectFirewallProjectionV01,
+) -> dict[str, object]:
+    temporal = entry.root_bound_genesis.canonical_projection.temporal_authority
+    return {
+        "ct_session_anchor": projection.eligibility_evaluation_context_id,
+        "et_observed_at": format_utc_timestamp_v01(
+            projection.eligibility_evaluation_time
+        ),
+        "freshness_class": "real_time",
+        "kt_asof": format_utc_timestamp_v01(
+            projection.eligibility_evaluation_time
+        ),
+        "pt_created_at": format_utc_timestamp_v01(temporal.issued_at_utc),
+        "ttl_seconds": (
+            temporal.expires_at_utc
+            - projection.eligibility_evaluation_time
+        ),
+        "valid_from": format_utc_timestamp_v01(temporal.issued_at_utc),
+        "valid_to": format_utc_timestamp_v01(temporal.expires_at_utc),
+    }
+
+
+def _rebuild_exact_action_packet_effect_receipt_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    projection: ActionPacketEffectFirewallProjectionV01,
+    request: _EffectRequestV01,
+    decision: _EffectFirewallDecisionV01,
+) -> _KernelArtifactV01:
+    receipt_ref = _action_packet_effect_receipt_ref_v01(
+        packet_id=projection.packet_id,
+        execution_attempt_id=projection.execution_attempt_id,
+        request_id=request.request_id,
+        decision_id=decision.decision_id,
+        eligibility_evaluation_context_id=(
+            projection.eligibility_evaluation_context_id
+        ),
+    )
+    payload = {
+        "receipt_ref": receipt_ref,
+        "request_id": request.request_id,
+        "firewall_decision_id": decision.decision_id,
+        "capability_id": decision.capability_id,
+        "root_decision_id": request.root_decision_id,
+        "selected_candidate_id": request.selected_candidate_id,
+        "permission_ref": request.permission_ref,
+        "adapter_id": request.adapter_id,
+        "action_kind": request.action_kind,
+        "scope_refs": list(request.scope_refs),
+        "mock_execution_status": STATUS_PASS,
+        "receipt_evidence_only": True,
+        "root_confirmation_required": True,
+        "root_confirmation_created": False,
+        "future_permission_created": False,
+        "root_decision_created": False,
+        "final_output_created": False,
+        "effect_handle_exposed": False,
+        "real_world_effects_count": 0,
+    }
+    return _build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id=receipt_ref,
+        artifact_type="EvidenceReceipt",
+        schema_version="v1",
+        transaction_id=request.transaction_id,
+        owner_root_id=request.target_root_id,
+        source_component=_RECEIPT_SOURCE_COMPONENT,
+        authority_class="EVIDENCE_ONLY",
+        lifecycle_state="RECEIPT_RECORDED",
+        payload=payload,
+        trace_refs=(
+            request.request_id,
+            request.root_decision_id,
+            decision.decision_id,
+        ),
+        parent_refs=(request.root_decision_id,),
+        time_envelope=_action_packet_effect_receipt_time_envelope_v01(
+            entry,
+            projection,
+        ),
+    )
+
+
+def _prepare_action_packet_effect_attempt_from_projection_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    projection: ActionPacketEffectFirewallProjectionV01,
+) -> _ActionPacketEffectAttemptPreparationV01:
+    root_projection = entry.root_bound_genesis.root_decision_projection
+    firewall = _build_effect_firewall_v01(
+        root_decision_kernel=root_projection.root_decision_kernel,
+        decision_input=root_projection.root_decision_input,
+        root_decision_result=root_projection.root_decision_result,
+        invocation_id=projection.execution_attempt_id,
+        allowed_adapter_ids=projection.allowed_adapter_ids,
+        allowed_action_kinds=projection.allowed_action_kinds,
+        root_scope_refs=projection.root_scope_refs,
+        maximum_expires_at_tick=projection.maximum_expires_at_tick,
+    )
+    if _validate_effect_firewall_v01(firewall) != ():
+        raise ValueError("action_packet_effect_firewall_invalid")
+    request = _build_effect_request_v01(
+        root_decision_kernel=root_projection.root_decision_kernel,
+        decision_input=root_projection.root_decision_input,
+        root_decision_result=root_projection.root_decision_result,
+        request_kind=projection.request_kind,
+        adapter_id=projection.adapter_id,
+        action_kind=projection.action_kind,
+        scope_refs=projection.scope_refs,
+        issued_at_tick=projection.issued_at_tick,
+        expires_at_tick=projection.expires_at_tick,
+        idempotency_key=projection.idempotency_key,
+    )
+    if _validate_effect_request_v01(request) != ():
+        raise ValueError("action_packet_effect_request_invalid")
+    decision = _authorize_effect_request_v01(
+        firewall=firewall,
+        request=request,
+        current_tick=projection.current_tick,
+    )
+    if (
+        _validate_effect_firewall_decision_v01(
+            firewall=firewall,
+            request=request,
+            decision=decision,
+        )
+        != ()
+        or decision.decision
+        not in {
+            _EFFECT_DECISION_ALLOW_MOCK_EFFECT,
+            _EFFECT_DECISION_BLOCKED_FAIL_CLOSED,
+        }
+        or decision.real_world_effects_count != 0
+    ):
+        raise ValueError("action_packet_effect_authorization_invalid")
+    return _ActionPacketEffectAttemptPreparationV01(
+        projection=projection,
+        firewall=firewall,
+        request=request,
+        decision=decision,
+    )
+
+
+def _g2a4b_attempt_input_v01(
+    registry: ActionCommitPacketRegistryV02,
+    validation_result: _ActionPacketRegistryValidationResultV02,
+    *,
+    packet_id: object,
+    corridor: object,
+    corridor_step: object,
+    current_dependency_observations: object,
+    logical_time_bridge: object,
+    eligibility_evaluation_time: object,
+    eligibility_evaluation_time_source: object,
+    eligibility_evaluation_context_id: object,
+) -> tuple[
+    ActionPacketLifecycleEntryV01,
+    ActionPacketTransitionEventV01,
+    ActionPacketLifecycleStateV01,
+    int,
+]:
+    validation_pass = validation_result.validation_pass
+    if type(validation_pass) is not _ActionPacketRegistryValidationPassV01:
+        raise ValueError("action_packet_fulfillment_registry_invalid")
+    entry = _unique_lifecycle_entry_from_validation_pass_v01(
+        validation_pass,
+        packet_id,
+    )
+    state = _derive_action_packet_lifecycle_state_unchecked_v01(
+        entry,
+        registry.idempotency_disposition_events,
+    )
+    pending = entry.transition_events[-1] if entry.transition_events else None
+    if not (
+        type(pending) is ActionPacketTransitionEventV01
+        and pending.transition_rule_id == "g2a_t03_pending"
+        and type(pending.execution_attempt_id) is str
+        and state.lifecycle_state == "PENDING_FULFILLMENT"
+        and state.idempotency_disposition == "RESERVED"
+        and state.reservation_owner_packet_id == packet_id
+        and type(state.latest_disposition_event_id) is str
+    ):
+        raise ValueError("action_packet_fulfillment_attempt_invalid")
+    if (
+        type(corridor) is not ContractFulfillmentCorridorV01
+        or type(corridor_step) is not CorridorStepV01
+        or type(current_dependency_observations) is not tuple
+        or any(
+            not validate_action_dependency_current_observation_v01(item)[0]
+            for item in current_dependency_observations
+        )
+        or type(logical_time_bridge) is not LogicalTimeBridgeV01
+        or not validate_logical_time_bridge_v01(logical_time_bridge)[0]
+        or not validate_signed_int64_v01(
+            eligibility_evaluation_time
+        )[0]
+        or not validate_identity_text_v01(
+            eligibility_evaluation_time_source
+        )[0]
+        or not validate_identity_text_v01(
+            eligibility_evaluation_context_id
+        )[0]
+    ):
+        raise ValueError("action_packet_fulfillment_context_invalid")
+    prior = tuple(
+        context
+        for context in registry.action_packet_fulfillment_attempt_contexts
+        if (
+            context.attempt_evidence.execution_attempt_id
+            == pending.execution_attempt_id
+        )
+    )
+    if any(
+        context.attempt_evidence.outcome_class
+        in {"CONSUMED", "NOT_CONSUMED", "UNCERTAIN"}
+        for context in prior
+    ):
+        raise ValueError("action_packet_fulfillment_attempt_closed")
+    if any(
+        context.attempt_evidence.eligibility_evaluation_context_id
+        == eligibility_evaluation_context_id
+        for context in prior
+    ):
+        raise ValueError("action_packet_fulfillment_observation_duplicate")
+    return entry, pending, state, len(prior) + 1
+
+
+def _g2a4b_dependency_observation_ids_v01(
+    observations: tuple[ActionDependencyCurrentObservationV01, ...],
+) -> tuple[str, ...]:
+    return tuple(
+        item.observation_id
+        for item in sorted(
+            observations,
+            key=lambda item: item.dependency_id.encode("utf-8"),
+        )
+    )
+
+
+def _g2a4b_attempt_evidence_v01(
+    registry: ActionCommitPacketRegistryV02,
+    entry: ActionPacketLifecycleEntryV01,
+    pending: ActionPacketTransitionEventV01,
+    state: ActionPacketLifecycleStateV01,
+    *,
+    ordinal: int,
+    corridor: ContractFulfillmentCorridorV01,
+    corridor_step: CorridorStepV01,
+    observations: tuple[ActionDependencyCurrentObservationV01, ...],
+    logical_time_bridge: LogicalTimeBridgeV01,
+    eligibility_evaluation_time: int,
+    eligibility_evaluation_time_source: str,
+    eligibility_evaluation_context_id: str,
+    projection: ActionPacketEffectFirewallProjectionV01 | None,
+    preparation: _ActionPacketEffectAttemptPreparationV01 | None,
+    outcome_class: str,
+    reason_code: str,
+    adapter_invoked: bool,
+    firewall_state_sha256_before: str | None,
+    firewall_state_sha256_after: str | None,
+    receipt: _KernelArtifactV01 | None,
+) -> ActionPacketFulfillmentAttemptEvidenceV01:
+    decision = preparation.decision if preparation is not None else None
+    request = preparation.request if preparation is not None else None
+    firewall = preparation.firewall if preparation is not None else None
+    relation = {
+        "PRE_FULFILLMENT_BLOCKED": "NO_ADAPTER_INVOCATION",
+        "FIREWALL_BLOCKED": "NO_ADAPTER_INVOCATION",
+        "CONSUMED": "CORRIDOR_INVOCATION_CONSUMED",
+        "NOT_CONSUMED": "CORRIDOR_INVOCATION_NONCONSUMING",
+        "UNCERTAIN": "CORRIDOR_INVOCATION_UNCERTAIN",
+    }[outcome_class]
+    receipt_ref = receipt.artifact_id if receipt is not None else None
+    return build_action_packet_fulfillment_attempt_evidence_v01(
+        packet_id=entry.root_bound_genesis.packet_identity.packet_id,
+        registry_id_before=registry.registry_id,
+        pending_transition_event_id=pending.transition_event_id,
+        execution_attempt_id=pending.execution_attempt_id,
+        attempt_observation_ordinal=ordinal,
+        corridor_id=corridor.corridor_id,
+        corridor_step_id=corridor_step.step_id,
+        logical_time_bridge_id=logical_time_bridge.bridge_id,
+        dependency_observation_ids=(
+            _g2a4b_dependency_observation_ids_v01(observations)
+        ),
+        projection_sha256=(
+            _action_packet_effect_projection_sha256_v01(projection)
+            if projection is not None
+            else None
+        ),
+        firewall_id=firewall.firewall_id if firewall is not None else None,
+        request_id=request.request_id if request is not None else None,
+        decision_id=decision.decision_id if decision is not None else None,
+        capability_id=(
+            decision.capability_id
+            if (
+                decision is not None
+                and outcome_class
+                not in {"PRE_FULFILLMENT_BLOCKED", "FIREWALL_BLOCKED"}
+            )
+            else None
+        ),
+        adapter_id=projection.adapter_id if projection is not None else None,
+        action_kind=projection.action_kind if projection is not None else None,
+        invocation_relation_code=relation,
+        outcome_class=outcome_class,
+        reason_code=reason_code,
+        adapter_invoked=adapter_invoked,
+        adapter_call_count=1 if adapter_invoked else 0,
+        firewall_state_sha256_before=firewall_state_sha256_before,
+        firewall_state_sha256_after=firewall_state_sha256_after,
+        receipt_ref=receipt_ref,
+        receipt_sha256=(
+            _action_packet_effect_receipt_sha256_v01(receipt)
+            if receipt is not None
+            else None
+        ),
+        disposition_before=state.idempotency_disposition,
+        reservation_owner_packet_id_before=(
+            state.reservation_owner_packet_id
+        ),
+        latest_disposition_event_id_before=(
+            state.latest_disposition_event_id
+        ),
+        disposition_history_sha256_before=(
+            _action_packet_disposition_history_sha256_v01(
+                registry.idempotency_disposition_events
+            )
+        ),
+        attempt_evaluation_time=pending.evaluation_time,
+        attempt_evaluation_time_source=pending.evaluation_time_source,
+        attempt_evaluation_context_id=pending.evaluation_context_id,
+        eligibility_evaluation_time=eligibility_evaluation_time,
+        eligibility_evaluation_time_source=(
+            eligibility_evaluation_time_source
+        ),
+        eligibility_evaluation_context_id=(
+            eligibility_evaluation_context_id
+        ),
+        real_world_effects_count=0,
+    )
+
+
+def _g2a4b_transition_binding_v01(
+    transition_registry: ActionPacketTransitionRegistryProfileV01,
+    *,
+    rule_id: str,
+    evidence_code: str,
+    evidence_ref: str,
+    evidence_sha256: str,
+    validator_profile_id: str,
+) -> TransitionEvidenceBindingV01:
+    return build_transition_evidence_binding_v01(
+        action_packet_transition_registry_profile=transition_registry,
+        transition_rule_id=rule_id,
+        evidence_code=evidence_code,
+        evidence_ref=evidence_ref,
+        evidence_sha256=evidence_sha256,
+        validator_profile_id=validator_profile_id,
+    )
+
+
+def _g2a4b_attempt_identity_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    pending: ActionPacketTransitionEventV01,
+) -> ActionExecutionAttemptIdentityV01:
+    attempt = build_action_execution_attempt_identity_v01(
+        packet_id=pending.packet_id,
+        idempotency_key=pending.idempotency_key,
+        attempt_ordinal=sum(
+            event.transition_rule_id == "g2a_t03_pending"
+            for event in entry.transition_events
+        ),
+        evaluation_context_id=pending.evaluation_context_id,
+    )
+    if attempt.execution_attempt_id != pending.execution_attempt_id:
+        raise ValueError("action_packet_fulfillment_attempt_invalid")
+    return attempt
+
+
+def _g2a4b_outcome_transition_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    pending: ActionPacketTransitionEventV01,
+    state: ActionPacketLifecycleStateV01,
+    evidence: ActionPacketFulfillmentAttemptEvidenceV01,
+    *,
+    rule_id: str,
+    receipt: _KernelArtifactV01 | None,
+    transition_registry: ActionPacketTransitionRegistryProfileV01,
+) -> ActionPacketTransitionEventV01:
+    evidence_hash = evidence.attempt_evidence_id[
+        len(ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PREFIX_V01) :
+    ]
+    disposition_id = state.latest_disposition_event_id
+    if type(disposition_id) is not str:
+        raise ValueError("action_packet_fulfillment_disposition_invalid")
+    disposition_hash = disposition_id[
+        len(IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01) :
+    ]
+    binding_specs: dict[str, tuple[str, str, str]] = {
+        "adapter_invocation_evidence_valid": (
+            evidence.attempt_evidence_id,
+            evidence_hash,
+            ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PROFILE_ID_V01,
+        ),
+        "effect_consumption_evidence_valid": (
+            evidence.attempt_evidence_id,
+            evidence_hash,
+            ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PROFILE_ID_V01,
+        ),
+        "effect_nonconsumption_evidence_valid": (
+            evidence.attempt_evidence_id,
+            evidence_hash,
+            ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PROFILE_ID_V01,
+        ),
+        "effect_outcome_unresolved": (
+            evidence.attempt_evidence_id,
+            evidence_hash,
+            ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PROFILE_ID_V01,
+        ),
+        "idempotency_reservation_owned": (
+            disposition_id,
+            disposition_hash,
+            IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01,
+        ),
+        "latest_disposition_event_binding_valid": (
+            disposition_id,
+            disposition_hash,
+            IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01,
+        ),
+    }
+    if rule_id == "g2a_t04_fulfill_mock":
+        if receipt is None or evidence.receipt_sha256 is None:
+            raise ValueError("action_packet_fulfillment_receipt_invalid")
+        binding_specs["mock_adapter_result_valid"] = (
+            receipt.artifact_id,
+            evidence.receipt_sha256,
+            "effect_firewall_receipt_v01",
+        )
+    rule = lookup_action_packet_transition_rule_v01(
+        registry=transition_registry,
+        transition_rule_id=rule_id,
+    )
+    bindings = tuple(
+        _g2a4b_transition_binding_v01(
+            transition_registry,
+            rule_id=rule_id,
+            evidence_code=code,
+            evidence_ref=binding_specs[code][0],
+            evidence_sha256=binding_specs[code][1],
+            validator_profile_id=binding_specs[code][2],
+        )
+        for code in rule.required_evidence_codes
+    )
+    return build_action_packet_transition_event_v01(
+        action_packet_transition_registry_profile=transition_registry,
+        transition_rule_id=rule_id,
+        packet_id=pending.packet_id,
+        idempotency_key=pending.idempotency_key,
+        previous_transition_event_id=pending.transition_event_id,
+        owning_local_root_id=pending.owning_local_root_id,
+        root_decision_ref=None,
+        transition_evidence_bindings=bindings,
+        dependency_set_candidate_fingerprint=(
+            pending.dependency_set_candidate_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            pending.temporal_authority_fingerprint
+        ),
+        evaluation_time=pending.evaluation_time,
+        evaluation_time_source=pending.evaluation_time_source,
+        evaluation_context_id=pending.evaluation_context_id,
+        execution_attempt_identity=_g2a4b_attempt_identity_v01(
+            entry,
+            pending,
+        ),
+        receipt_ref=None,
+    )
+
+
+def _g2a4b_receipt_transition_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    consumed: ActionPacketTransitionEventV01,
+    evidence: ActionPacketFulfillmentAttemptEvidenceV01,
+    receipt: _KernelArtifactV01,
+    *,
+    receipt_evaluation_time: int,
+    receipt_evaluation_time_source: str,
+    transition_registry: ActionPacketTransitionRegistryProfileV01,
+) -> ActionPacketTransitionEventV01:
+    if evidence.receipt_sha256 is None:
+        raise ValueError("action_packet_receipt_observation_invalid")
+    specs = {
+        "terminal_receipt_valid": (
+            receipt.artifact_id,
+            evidence.receipt_sha256,
+            "effect_firewall_receipt_v01",
+        ),
+        "fulfillment_consumption_evidence_valid": (
+            consumed.transition_event_id,
+            consumed.transition_event_id[
+                len(ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01) :
+            ],
+            ACTION_PACKET_TRANSITION_EVENT_PROFILE_ID_V01,
+        ),
+    }
+    rule_id = "g2a_t05_receipt"
+    rule = lookup_action_packet_transition_rule_v01(
+        registry=transition_registry,
+        transition_rule_id=rule_id,
+    )
+    bindings = tuple(
+        _g2a4b_transition_binding_v01(
+            transition_registry,
+            rule_id=rule_id,
+            evidence_code=code,
+            evidence_ref=specs[code][0],
+            evidence_sha256=specs[code][1],
+            validator_profile_id=specs[code][2],
+        )
+        for code in rule.required_evidence_codes
+    )
+    pending = next(
+        event
+        for event in reversed(entry.transition_events)
+        if (
+            event.transition_rule_id == "g2a_t03_pending"
+            and event.execution_attempt_id == consumed.execution_attempt_id
+        )
+    )
+    return build_action_packet_transition_event_v01(
+        action_packet_transition_registry_profile=transition_registry,
+        transition_rule_id=rule_id,
+        packet_id=consumed.packet_id,
+        idempotency_key=consumed.idempotency_key,
+        previous_transition_event_id=consumed.transition_event_id,
+        owning_local_root_id=consumed.owning_local_root_id,
+        root_decision_ref=None,
+        transition_evidence_bindings=bindings,
+        dependency_set_candidate_fingerprint=(
+            consumed.dependency_set_candidate_fingerprint
+        ),
+        temporal_authority_fingerprint=(
+            consumed.temporal_authority_fingerprint
+        ),
+        evaluation_time=receipt_evaluation_time,
+        evaluation_time_source=receipt_evaluation_time_source,
+        evaluation_context_id=consumed.evaluation_context_id,
+        execution_attempt_identity=_g2a4b_attempt_identity_v01(
+            entry,
+            pending,
+        ),
+        receipt_ref=receipt.artifact_id,
+    )
+
+
+def _g2a4b_outcome_disposition_v01(
+    state: ActionPacketLifecycleStateV01,
+    transition: ActionPacketTransitionEventV01,
+    *,
+    event_class: str,
+) -> IdempotencyDispositionEventV01:
+    from_disposition, to_disposition, evidence_codes = {
+        "CONSUME": (
+            "RESERVED",
+            "CONSUMED",
+            (
+                "effect_consumption_evidence_valid",
+                "mock_adapter_result_valid",
+            ),
+        ),
+        "UNCERTAIN_CLOSE": (
+            "RESERVED",
+            "UNCERTAIN_CLOSED",
+            (
+                "adapter_invocation_evidence_valid",
+                "effect_outcome_unresolved",
+            ),
+        ),
+        "RECEIPT_CONFIRM": (
+            "CONSUMED",
+            "CONSUMED",
+            (
+                "fulfillment_consumption_evidence_valid",
+                "terminal_receipt_valid",
+            ),
+        ),
+    }[event_class]
+    return build_idempotency_disposition_event_v01(
+        idempotency_key=state.idempotency_key,
+        event_class=event_class,
+        from_disposition=from_disposition,
+        to_disposition=to_disposition,
+        from_owner_packet_id=state.packet_id,
+        to_owner_packet_id=state.packet_id,
+        previous_disposition_event_id=state.latest_disposition_event_id,
+        cause_transition_event_ids=(transition.transition_event_id,),
+        root_decision_ref=None,
+        predecessor_packet_id=None,
+        successor_packet_id=None,
+        evidence_refs=_binding_ids_for_codes_v01(
+            transition,
+            evidence_codes,
+        ),
+        evaluation_time=transition.evaluation_time,
+        evaluation_time_source=transition.evaluation_time_source,
+        evaluation_context_id=transition.evaluation_context_id,
+    )
+
+
+def _g2a4b_append_context_only_v01(
+    registry: ActionCommitPacketRegistryV02,
+    context: _ActionPacketFulfillmentAttemptContextV01,
+) -> ActionCommitPacketRegistryV02:
+    proposed = _registry_with_g2a_histories_v01(
+        registry,
+        fulfillment_attempt_contexts=(
+            registry.action_packet_fulfillment_attempt_contexts
+            + (context,)
+        ),
+    )
+    _require_valid_action_packet_registry_v01(proposed)
+    return proposed
+
+
+def _g2a4b_append_outcome_v01(
+    registry: ActionCommitPacketRegistryV02,
+    entry: ActionPacketLifecycleEntryV01,
+    context: _ActionPacketFulfillmentAttemptContextV01,
+    transition: ActionPacketTransitionEventV01,
+    disposition: IdempotencyDispositionEventV01 | None,
+) -> ActionCommitPacketRegistryV02:
+    proposed = _g2a4b_build_outcome_registry_v01(
+        registry,
+        entry,
+        context,
+        transition,
+        disposition,
+    )
+    _require_valid_action_packet_registry_v01(proposed)
+    return proposed
+
+
+def _g2a4b_build_outcome_registry_v01(
+    registry: ActionCommitPacketRegistryV02,
+    entry: ActionPacketLifecycleEntryV01,
+    context: _ActionPacketFulfillmentAttemptContextV01,
+    transition: ActionPacketTransitionEventV01,
+    disposition: IdempotencyDispositionEventV01 | None,
+) -> ActionCommitPacketRegistryV02:
+    updated_entry = ActionPacketLifecycleEntryV01(
+        root_bound_genesis=entry.root_bound_genesis,
+        transition_registry_id=entry.transition_registry_id,
+        transition_events=entry.transition_events + (transition,),
+    )
+    entries = tuple(
+        updated_entry if candidate is entry else candidate
+        for candidate in registry.action_packet_lifecycle_entries
+    )
+    proposed = _registry_with_g2a_histories_v01(
+        registry,
+        lifecycle_entries=entries,
+        disposition_events=(
+            registry.idempotency_disposition_events
+            if disposition is None
+            else registry.idempotency_disposition_events + (disposition,)
+        ),
+        fulfillment_attempt_contexts=(
+            registry.action_packet_fulfillment_attempt_contexts
+            + (context,)
+        ),
+    )
+    return proposed
+
+
+def _g2a4b_transition_binding_matches_v01(
+    transition: ActionPacketTransitionEventV01,
+    evidence_code: str,
+    *,
+    evidence_ref: str,
+    evidence_sha256: str,
+    validator_profile_id: str,
+) -> bool:
+    matching = tuple(
+        binding
+        for binding in transition.transition_evidence_bindings
+        if binding.evidence_code == evidence_code
+    )
+    return (
+        len(matching) == 1
+        and matching[0].evidence_ref == evidence_ref
+        and matching[0].evidence_sha256 == evidence_sha256
+        and matching[0].validator_profile_id == validator_profile_id
+        and matching[0].validation_status == "PASS"
+    )
+
+
+def _g2a4b_receipt_bindings_valid_v01(
+    receipt: object,
+    projection: ActionPacketEffectFirewallProjectionV01,
+    request: _EffectRequestV01,
+    decision: _EffectFirewallDecisionV01,
+) -> bool:
+    try:
+        if (
+            type(receipt) is not _KernelArtifactV01
+            or _validate_kernel_artifact_v01(receipt) != ()
+        ):
+            return False
+        plain = _kernel_artifact_to_plain_dict_v01(receipt)
+        payload = plain.get("payload")
+        return (
+            type(payload) is dict
+            and plain.get("artifact_id") == payload.get("receipt_ref")
+            and plain.get("artifact_type") == "EvidenceReceipt"
+            and plain.get("transaction_id") == projection.transaction_id
+            and plain.get("owner_root_id") == projection.target_root_id
+            and plain.get("authority_class") == "EVIDENCE_ONLY"
+            and plain.get("lifecycle_state") == "RECEIPT_RECORDED"
+            and payload.get("request_id") == request.request_id
+            and payload.get("firewall_decision_id") == decision.decision_id
+            and payload.get("capability_id") == decision.capability_id
+            and payload.get("root_decision_id") == projection.root_decision_id
+            and payload.get("selected_candidate_id")
+            == projection.selected_candidate_id
+            and payload.get("permission_ref") == projection.permission_ref
+            and payload.get("adapter_id") == projection.adapter_id
+            and payload.get("action_kind") == projection.action_kind
+            and payload.get("scope_refs") == list(projection.scope_refs)
+            and payload.get("receipt_evidence_only") is True
+            and payload.get("root_confirmation_required") is True
+            and payload.get("root_confirmation_created") is False
+            and payload.get("future_permission_created") is False
+            and payload.get("root_decision_created") is False
+            and payload.get("final_output_created") is False
+            and payload.get("effect_handle_exposed") is False
+            and type(payload.get("real_world_effects_count")) is int
+            and payload.get("real_world_effects_count") == 0
+        )
+    except Exception:
+        return False
+
+
+def _g2a4b_expected_consumed_firewall_state_sha256_v01(
+    firewall: _EffectFirewallV01,
+) -> str:
+    plain = _effect_firewall_to_plain_dict_v01(firewall)
+    counters = dict(plain["state_counters"])
+    counters["consumed_capability_count"] = 1
+    counters["terminal_receipt_count"] = 1
+    counters["mock_effect_execution_count"] = 1
+    projected = dict(plain)
+    projected["state_counters"] = counters
+    return _action_packet_private_component_sha256_v01(
+        _ACTION_PACKET_FIREWALL_STATE_HASH_DOMAIN_V01,
+        projected,
+    )
+
+
+def _recompute_historical_action_packet_attempt_v01(
+    registry: ActionCommitPacketRegistryV02,
+    context: _ActionPacketFulfillmentAttemptContextV01,
+    entry: ActionPacketLifecycleEntryV01,
+    pending: ActionPacketTransitionEventV01,
+    *,
+    validation_pass: _ActionPacketRegistryValidationPassV01,
+) -> tuple[
+    ActionPacketEffectFirewallProjectionV01 | None,
+    _ActionPacketEffectAttemptPreparationV01 | None,
+    str | None,
+    ActionPacketLifecycleEntryV01,
+    tuple[IdempotencyDispositionEventV01, ...],
+]:
+    evidence = context.attempt_evidence
+    pending_positions = tuple(
+        index
+        for index, event in enumerate(entry.transition_events)
+        if event is pending
+    )
+    disposition_positions = tuple(
+        index
+        for index, event in enumerate(
+            registry.idempotency_disposition_events
+        )
+        if (
+            event.idempotency_disposition_event_id
+            == evidence.latest_disposition_event_id_before
+        )
+    )
+    if len(pending_positions) != 1 or len(disposition_positions) != 1:
+        raise ValueError(
+            "action_packet_registry_fulfillment_historical_view_invalid"
+        )
+    historical_entry = ActionPacketLifecycleEntryV01(
+        root_bound_genesis=entry.root_bound_genesis,
+        transition_registry_id=entry.transition_registry_id,
+        transition_events=entry.transition_events[
+            : pending_positions[0] + 1
+        ],
+    )
+    disposition_prefix = registry.idempotency_disposition_events[
+        : disposition_positions[0] + 1
+    ]
+    if evidence.disposition_history_sha256_before != (
+        _action_packet_disposition_history_sha256_v01(
+            disposition_prefix
+        )
+    ):
+        raise ValueError(
+            "action_packet_registry_fulfillment_historical_view_invalid"
+        )
+    try:
+        projection = (
+            _build_action_packet_effect_projection_from_historical_view_v01(
+                registry_id=registry.registry_id,
+                entry=historical_entry,
+                disposition_history=disposition_prefix,
+                terminal_receipt_packet_ids=(),
+                terminal_receipt_idempotency_keys=(),
+                packet_id=evidence.packet_id,
+                corridor=context.corridor,
+                corridor_step=context.corridor_step,
+                current_dependency_observations=(
+                    context.current_dependency_observations
+                ),
+                logical_time_bridge=context.logical_time_bridge,
+                eligibility_evaluation_time=(
+                    evidence.eligibility_evaluation_time
+                ),
+                eligibility_evaluation_time_source=(
+                    evidence.eligibility_evaluation_time_source
+                ),
+                eligibility_evaluation_context_id=(
+                    evidence.eligibility_evaluation_context_id
+                ),
+                validation_pass=validation_pass,
+            )
+        )
+    except ValueError as exc:
+        replay_reason = _stable_exception_reason_v01(
+            exc,
+            fallback="action_packet_effect_historical_replay_invalid",
+        )
+        if (
+            context.projection is None
+            and evidence.outcome_class == "PRE_FULFILLMENT_BLOCKED"
+            and evidence.reason_code == replay_reason
+        ):
+            return (
+                None,
+                None,
+                replay_reason,
+                historical_entry,
+                disposition_prefix,
+            )
+        raise ValueError(
+            "action_packet_registry_fulfillment_historical_replay_invalid"
+        ) from None
+    if (
+        type(context.projection)
+        is not ActionPacketEffectFirewallProjectionV01
+        or context.projection != projection
+        or evidence.projection_sha256
+        != _action_packet_effect_projection_sha256_v01(projection)
+    ):
+        raise ValueError(
+            "action_packet_registry_fulfillment_projection_invalid"
+        )
+    preparation = _prepare_action_packet_effect_attempt_from_projection_v01(
+        historical_entry,
+        projection,
+    )
+    return (
+        projection,
+        preparation,
+        None,
+        historical_entry,
+        disposition_prefix,
+    )
+
+
+def _validate_registry_fulfillment_attempt_histories_v01(
+    registry: ActionCommitPacketRegistryV02,
+    *,
+    entry_by_packet: dict[str, ActionPacketLifecycleEntryV01],
+    transition_by_id: dict[str, ActionPacketTransitionEventV01],
+    validation_pass: _ActionPacketRegistryValidationPassV01,
+    reasons: list[str],
+) -> None:
+    contexts = registry.action_packet_fulfillment_attempt_contexts
+    seen_evidence_ids: set[str] = set()
+    state_by_attempt: dict[str, dict[str, object]] = {}
+    terminal_context_by_attempt: dict[
+        str,
+        _ActionPacketFulfillmentAttemptContextV01,
+    ] = {}
+    transition_context_counts: dict[str, int] = {}
+    for context in contexts:
+        evidence = context.attempt_evidence
+        if not validate_action_packet_fulfillment_attempt_evidence_v01(
+            evidence
+        )[0]:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_evidence_invalid",
+            )
+            continue
+        if evidence.attempt_evidence_id in seen_evidence_ids:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_evidence_duplicate",
+            )
+        seen_evidence_ids.add(evidence.attempt_evidence_id)
+        attempt_state = state_by_attempt.setdefault(
+            evidence.execution_attempt_id,
+            {
+                "count": 0,
+                "contexts": set(),
+                "adapter_calls": 0,
+                "terminal": False,
+            },
+        )
+        attempt_state["count"] = int(attempt_state["count"]) + 1
+        if evidence.attempt_observation_ordinal != attempt_state["count"]:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_ordinal_invalid",
+            )
+        evaluation_contexts = attempt_state["contexts"]
+        if (
+            type(evaluation_contexts) is set
+            and evidence.eligibility_evaluation_context_id
+            in evaluation_contexts
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_observation_duplicate",
+            )
+        if type(evaluation_contexts) is set:
+            evaluation_contexts.add(
+                evidence.eligibility_evaluation_context_id
+            )
+        if attempt_state["terminal"]:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_context_after_terminal",
+            )
+        attempt_state["adapter_calls"] = (
+            int(attempt_state["adapter_calls"])
+            + evidence.adapter_call_count
+        )
+        if int(attempt_state["adapter_calls"]) > 1:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_multiple_invocations",
+            )
+        if evidence.outcome_class in {
+            "CONSUMED",
+            "NOT_CONSUMED",
+            "UNCERTAIN",
+        }:
+            attempt_state["terminal"] = True
+            terminal_context_by_attempt[evidence.execution_attempt_id] = (
+                context
+            )
+        try:
+            entry = _unique_lifecycle_entry_from_validation_pass_v01(
+                validation_pass,
+                evidence.packet_id,
+            )
+        except ValueError:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_packet_missing",
+            )
+            continue
+        pending = transition_by_id.get(evidence.pending_transition_event_id)
+        if not (
+            type(pending) is ActionPacketTransitionEventV01
+            and pending in entry.transition_events
+            and pending.transition_rule_id == "g2a_t03_pending"
+            and pending.execution_attempt_id == evidence.execution_attempt_id
+            and pending.packet_id == evidence.packet_id
+            and evidence.registry_id_before == registry.registry_id
+            and evidence.attempt_evaluation_time == pending.evaluation_time
+            and evidence.attempt_evaluation_time_source
+            == pending.evaluation_time_source
+            and evidence.attempt_evaluation_context_id
+            == pending.evaluation_context_id
+            and evidence.disposition_before == "RESERVED"
+            and evidence.reservation_owner_packet_id_before
+            == evidence.packet_id
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_attempt_binding_invalid",
+            )
+            continue
+        matching_latest_positions = tuple(
+            index
+            for index, disposition in enumerate(
+                registry.idempotency_disposition_events
+            )
+            if disposition.idempotency_disposition_event_id
+            == evidence.latest_disposition_event_id_before
+        )
+        if (
+            len(matching_latest_positions) != 1
+            or evidence.disposition_history_sha256_before
+            != _action_packet_disposition_history_sha256_v01(
+                registry.idempotency_disposition_events[
+                    : matching_latest_positions[0] + 1
+                ]
+            )
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_disposition_history_invalid",
+            )
+        if not (
+            type(context.corridor) is ContractFulfillmentCorridorV01
+            and type(context.corridor_step) is CorridorStepV01
+            and type(context.current_dependency_observations) is tuple
+            and all(
+                validate_action_dependency_current_observation_v01(item)[0]
+                for item in context.current_dependency_observations
+            )
+            and type(context.logical_time_bridge) is LogicalTimeBridgeV01
+            and validate_logical_time_bridge_v01(
+                context.logical_time_bridge
+            )[0]
+            and evidence.corridor_id == context.corridor.corridor_id
+            and evidence.corridor_step_id == context.corridor_step.step_id
+            and evidence.logical_time_bridge_id
+            == context.logical_time_bridge.bridge_id
+            and evidence.dependency_observation_ids
+            == _g2a4b_dependency_observation_ids_v01(
+                context.current_dependency_observations
+            )
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_context_binding_invalid",
+            )
+        try:
+            (
+                projection,
+                preparation,
+                _replay_reason,
+                historical_entry,
+                _disposition_prefix,
+            ) = _recompute_historical_action_packet_attempt_v01(
+                registry,
+                context,
+                entry,
+                pending,
+                validation_pass=validation_pass,
+            )
+        except ValueError:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_historical_replay_invalid",
+            )
+            continue
+        if projection is None:
+            if any(
+                item is not None
+                for item in (
+                    context.request,
+                    context.decision,
+                    context.receipt,
+                )
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_fulfillment_component_invalid",
+                )
+            continue
+        if (
+            type(preparation) is not _ActionPacketEffectAttemptPreparationV01
+            or type(context.request) is not _EffectRequestV01
+            or type(context.decision) is not _EffectFirewallDecisionV01
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_component_invalid",
+            )
+            continue
+        firewall = preparation.firewall
+        request = preparation.request
+        decision = preparation.decision
+        expected_before_hash = _action_packet_firewall_state_sha256_v01(
+            firewall
+        )
+        if not (
+            request == context.request
+            and decision == context.decision
+            and firewall.firewall_id == evidence.firewall_id
+            and request.request_id == evidence.request_id
+            and decision.decision_id == evidence.decision_id
+            and decision.capability_id == evidence.capability_id
+            and evidence.adapter_id == projection.adapter_id
+            and evidence.action_kind == projection.action_kind
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_component_invalid",
+            )
+            continue
+        if evidence.outcome_class == "FIREWALL_BLOCKED":
+            if not (
+                decision.decision == _EFFECT_DECISION_BLOCKED_FAIL_CLOSED
+                and decision.capability_id is None
+                and evidence.reason_code == decision.reason_code
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_fulfillment_reason_invalid",
+                )
+            continue
+        if (
+            decision.decision != _EFFECT_DECISION_ALLOW_MOCK_EFFECT
+            or evidence.firewall_state_sha256_before
+            != expected_before_hash
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_component_invalid",
+            )
+            continue
+        if evidence.outcome_class == "CONSUMED":
+            if (
+                evidence.reason_code != "mock_effect_consumed"
+                or evidence.firewall_state_sha256_after
+                != _g2a4b_expected_consumed_firewall_state_sha256_v01(
+                    firewall
+                )
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_fulfillment_reason_invalid",
+                )
+        elif evidence.outcome_class == "NOT_CONSUMED":
+            if not (
+                evidence.reason_code
+                in _ACTION_PACKET_NONCONSUMING_EXECUTION_REASONS_V01
+                and evidence.firewall_state_sha256_after
+                == expected_before_hash
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_fulfillment_reason_invalid",
+                )
+        elif evidence.outcome_class == "UNCERTAIN":
+            if (
+                evidence.reason_code
+                not in _ACTION_PACKET_UNCERTAIN_EXECUTION_REASONS_V01
+                or (
+                    evidence.reason_code == "effect_request_expired"
+                    and evidence.firewall_state_sha256_after
+                    == expected_before_hash
+                )
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_fulfillment_reason_invalid",
+                )
+        else:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_reason_invalid",
+            )
+        if evidence.outcome_class == "CONSUMED":
+            try:
+                expected_receipt = (
+                    _rebuild_exact_action_packet_effect_receipt_v01(
+                        historical_entry,
+                        projection,
+                        request,
+                        decision,
+                    )
+                )
+                receipt_valid = (
+                    type(context.receipt) is _KernelArtifactV01
+                    and _validate_kernel_artifact_v01(context.receipt) == ()
+                    and context.receipt == expected_receipt
+                    and _kernel_artifact_to_plain_dict_v01(context.receipt)
+                    == _kernel_artifact_to_plain_dict_v01(expected_receipt)
+                    and evidence.receipt_ref == expected_receipt.artifact_id
+                    and evidence.receipt_sha256
+                    == _action_packet_effect_receipt_sha256_v01(
+                        expected_receipt
+                    )
+                    and _g2a4b_receipt_bindings_valid_v01(
+                        context.receipt,
+                        projection,
+                        request,
+                        decision,
+                    )
+                )
+            except Exception:
+                receipt_valid = False
+            if not receipt_valid:
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_fulfillment_receipt_invalid",
+                )
+        elif context.receipt is not None:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_receipt_invalid",
+            )
+    a4b_transitions = tuple(
+        transition
+        for transition in transition_by_id.values()
+        if any(
+            binding.validator_profile_id
+            == ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PROFILE_ID_V01
+            for binding in transition.transition_evidence_bindings
+        )
+    )
+    for transition in a4b_transitions:
+        matching = tuple(
+            context
+            for context in contexts
+            if (
+                context.attempt_evidence.execution_attempt_id
+                == transition.execution_attempt_id
+                and context.attempt_evidence.packet_id
+                == transition.packet_id
+                and context.attempt_evidence.outcome_class
+                == {
+                    "g2a_t04_fulfill_mock": "CONSUMED",
+                    "g2a_t24_nonconsuming_failure": "NOT_CONSUMED",
+                    "g2a_t26_uncertain_adapter_outcome": "UNCERTAIN",
+                }.get(transition.transition_rule_id)
+            )
+        )
+        if len(matching) != 1:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_bundle_missing",
+            )
+            continue
+        context = matching[0]
+        evidence = context.attempt_evidence
+        evidence_hash = evidence.attempt_evidence_id[
+            len(ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PREFIX_V01) :
+        ]
+        latest_id = evidence.latest_disposition_event_id_before
+        latest_hash = (
+            latest_id[len(IDEMPOTENCY_DISPOSITION_EVENT_PREFIX_V01) :]
+            if latest_id is not None
+            else ""
+        )
+        attempt_codes = {
+            "g2a_t04_fulfill_mock": (
+                "effect_consumption_evidence_valid",
+            ),
+            "g2a_t24_nonconsuming_failure": (
+                "adapter_invocation_evidence_valid",
+                "effect_nonconsumption_evidence_valid",
+            ),
+            "g2a_t26_uncertain_adapter_outcome": (
+                "adapter_invocation_evidence_valid",
+                "effect_outcome_unresolved",
+            ),
+        }[transition.transition_rule_id]
+        if any(
+            not _g2a4b_transition_binding_matches_v01(
+                transition,
+                code,
+                evidence_ref=evidence.attempt_evidence_id,
+                evidence_sha256=evidence_hash,
+                validator_profile_id=(
+                    ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PROFILE_ID_V01
+                ),
+            )
+            for code in attempt_codes
+        ) or not _g2a4b_transition_binding_matches_v01(
+            transition,
+            "idempotency_reservation_owned",
+            evidence_ref=latest_id or "",
+            evidence_sha256=latest_hash,
+            validator_profile_id=IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01,
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_transition_binding_invalid",
+            )
+        if transition.transition_rule_id == "g2a_t24_nonconsuming_failure":
+            if not _g2a4b_transition_binding_matches_v01(
+                transition,
+                "latest_disposition_event_binding_valid",
+                evidence_ref=latest_id or "",
+                evidence_sha256=latest_hash,
+                validator_profile_id=(
+                    IDEMPOTENCY_DISPOSITION_EVENT_PROFILE_ID_V01
+                ),
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_fulfillment_transition_binding_invalid",
+                )
+        if transition.transition_rule_id == "g2a_t04_fulfill_mock":
+            if (
+                context.receipt is None
+                or evidence.receipt_sha256 is None
+                or not _g2a4b_transition_binding_matches_v01(
+                    transition,
+                    "mock_adapter_result_valid",
+                    evidence_ref=context.receipt.artifact_id,
+                    evidence_sha256=evidence.receipt_sha256,
+                    validator_profile_id="effect_firewall_receipt_v01",
+                )
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_fulfillment_transition_binding_invalid",
+                )
+        transition_context_counts[transition.transition_event_id] = 1
+    for attempt_id, context in terminal_context_by_attempt.items():
+        evidence = context.attempt_evidence
+        expected_rule = {
+            "CONSUMED": "g2a_t04_fulfill_mock",
+            "NOT_CONSUMED": "g2a_t24_nonconsuming_failure",
+            "UNCERTAIN": "g2a_t26_uncertain_adapter_outcome",
+        }[evidence.outcome_class]
+        matching = tuple(
+            transition
+            for transition in a4b_transitions
+            if (
+                transition.execution_attempt_id == attempt_id
+                and transition.transition_rule_id == expected_rule
+            )
+        )
+        if len(matching) != 1:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_bundle_missing",
+            )
+            continue
+        transition = matching[0]
+        dispositions = tuple(
+            event
+            for event in registry.idempotency_disposition_events
+            if transition.transition_event_id
+            in event.cause_transition_event_ids
+        )
+        expected_class = {
+            "CONSUMED": "CONSUME",
+            "NOT_CONSUMED": None,
+            "UNCERTAIN": "UNCERTAIN_CLOSE",
+        }[evidence.outcome_class]
+        if (
+            expected_class is None
+            and dispositions
+            or expected_class is not None
+            and (
+                len(dispositions) != 1
+                or dispositions[0].event_class != expected_class
+            )
+        ):
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_disposition_invalid",
+            )
+        receipt_events = tuple(
+            event
+            for event in entry_by_packet[evidence.packet_id].transition_events
+            if (
+                event.transition_rule_id == "g2a_t05_receipt"
+                and event.execution_attempt_id == attempt_id
+                and any(
+                    binding.validator_profile_id
+                    == "effect_firewall_receipt_v01"
+                    for binding in event.transition_evidence_bindings
+                )
+            )
+        )
+        if evidence.outcome_class != "CONSUMED" and receipt_events:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_receipt_invalid",
+            )
+        if len(receipt_events) > 1:
+            _reason_v01(
+                reasons,
+                "action_packet_registry_fulfillment_receipt_duplicate",
+            )
+        if receipt_events:
+            receipt_event = receipt_events[0]
+            if (
+                context.receipt is None
+                or evidence.receipt_sha256 is None
+                or receipt_event.receipt_ref != context.receipt.artifact_id
+                or not _g2a4b_transition_binding_matches_v01(
+                    receipt_event,
+                    "terminal_receipt_valid",
+                    evidence_ref=context.receipt.artifact_id,
+                    evidence_sha256=evidence.receipt_sha256,
+                    validator_profile_id="effect_firewall_receipt_v01",
+                )
+                or not _g2a4b_transition_binding_matches_v01(
+                    receipt_event,
+                    "fulfillment_consumption_evidence_valid",
+                    evidence_ref=transition.transition_event_id,
+                    evidence_sha256=transition.transition_event_id[
+                        len(ACTION_PACKET_TRANSITION_EVENT_PREFIX_V01) :
+                    ],
+                    validator_profile_id=(
+                        ACTION_PACKET_TRANSITION_EVENT_PROFILE_ID_V01
+                    ),
+                )
+            ):
+                _reason_v01(
+                    reasons,
+                    "action_packet_registry_fulfillment_receipt_invalid",
+                )
+
+
+def _g2a4b_fallback_attempt_evidence_v01(
+    registry: ActionCommitPacketRegistryV02,
+    entry: ActionPacketLifecycleEntryV01,
+    pending: ActionPacketTransitionEventV01,
+    state: ActionPacketLifecycleStateV01,
+    *,
+    ordinal: int,
+    corridor: ContractFulfillmentCorridorV01,
+    corridor_step: CorridorStepV01,
+    observations: tuple[ActionDependencyCurrentObservationV01, ...],
+    logical_time_bridge: LogicalTimeBridgeV01,
+    eligibility_evaluation_time: int,
+    eligibility_evaluation_time_source: str,
+    eligibility_evaluation_context_id: str,
+    projection: ActionPacketEffectFirewallProjectionV01,
+    preparation: _ActionPacketEffectAttemptPreparationV01,
+    outcome_class: str,
+    reason_code: str,
+    firewall_state_sha256_before: str,
+    firewall_state_sha256_after: str,
+    receipt: _KernelArtifactV01 | None,
+) -> ActionPacketFulfillmentAttemptEvidenceV01:
+    relation = {
+        "CONSUMED": "CORRIDOR_INVOCATION_CONSUMED",
+        "UNCERTAIN": "CORRIDOR_INVOCATION_UNCERTAIN",
+    }[outcome_class]
+    decision = preparation.decision
+    request = preparation.request
+    return build_action_packet_fulfillment_attempt_evidence_v01(
+        packet_id=entry.root_bound_genesis.packet_identity.packet_id,
+        registry_id_before=registry.registry_id,
+        pending_transition_event_id=pending.transition_event_id,
+        execution_attempt_id=pending.execution_attempt_id,
+        attempt_observation_ordinal=ordinal,
+        corridor_id=corridor.corridor_id,
+        corridor_step_id=corridor_step.step_id,
+        logical_time_bridge_id=logical_time_bridge.bridge_id,
+        dependency_observation_ids=(
+            _g2a4b_dependency_observation_ids_v01(observations)
+        ),
+        projection_sha256=(
+            _action_packet_effect_projection_sha256_v01(projection)
+        ),
+        firewall_id=preparation.firewall.firewall_id,
+        request_id=request.request_id,
+        decision_id=decision.decision_id,
+        capability_id=decision.capability_id,
+        adapter_id=projection.adapter_id,
+        action_kind=projection.action_kind,
+        invocation_relation_code=relation,
+        outcome_class=outcome_class,
+        reason_code=reason_code,
+        adapter_invoked=True,
+        adapter_call_count=1,
+        firewall_state_sha256_before=firewall_state_sha256_before,
+        firewall_state_sha256_after=firewall_state_sha256_after,
+        receipt_ref=receipt.artifact_id if receipt is not None else None,
+        receipt_sha256=(
+            _action_packet_effect_receipt_sha256_v01(receipt)
+            if receipt is not None
+            else None
+        ),
+        disposition_before=state.idempotency_disposition,
+        reservation_owner_packet_id_before=(
+            state.reservation_owner_packet_id
+        ),
+        latest_disposition_event_id_before=(
+            state.latest_disposition_event_id
+        ),
+        disposition_history_sha256_before=(
+            _action_packet_disposition_history_sha256_v01(
+                registry.idempotency_disposition_events
+            )
+        ),
+        attempt_evaluation_time=pending.evaluation_time,
+        attempt_evaluation_time_source=pending.evaluation_time_source,
+        attempt_evaluation_context_id=pending.evaluation_context_id,
+        eligibility_evaluation_time=eligibility_evaluation_time,
+        eligibility_evaluation_time_source=(
+            eligibility_evaluation_time_source
+        ),
+        eligibility_evaluation_context_id=(
+            eligibility_evaluation_context_id
+        ),
+        real_world_effects_count=0,
+    )
+
+
+def _g2a4b_prove_consumed_receipt_truth_v01(
+    entry: ActionPacketLifecycleEntryV01,
+    projection: ActionPacketEffectFirewallProjectionV01,
+    preparation: _ActionPacketEffectAttemptPreparationV01,
+    returned: object,
+    execution_reason: str | None,
+) -> tuple[bool, _KernelArtifactV01 | None]:
+    try:
+        expected = _rebuild_exact_action_packet_effect_receipt_v01(
+            entry,
+            projection,
+            preparation.request,
+            preparation.decision,
+        )
+        if (
+            execution_reason is not None
+            or type(returned) is not _KernelArtifactV01
+            or returned != expected
+            or _kernel_artifact_to_plain_dict_v01(returned)
+            != _kernel_artifact_to_plain_dict_v01(expected)
+            or _validate_kernel_artifact_v01(returned) != ()
+            or _validate_effect_receipt_v01(
+                firewall=preparation.firewall,
+                request=preparation.request,
+                decision=preparation.decision,
+                receipt=returned,
+            )
+            != ()
+            or not _g2a4b_receipt_bindings_valid_v01(
+                returned,
+                projection,
+                preparation.request,
+                preparation.decision,
+            )
+        ):
+            return False, None
+        plain = _effect_firewall_to_plain_dict_v01(preparation.firewall)
+        counters = plain["state_counters"]
+        if not (
+            counters["consumed_capability_count"] == 1
+            and counters["terminal_receipt_count"] == 1
+            and counters["mock_effect_execution_count"] == 1
+            and counters["real_world_effects_count"] == 0
+        ):
+            return False, None
+        return True, returned
+    except Exception:
+        return False, None
+
+
+def _g2a4b_classify_invoked_outcome_v01(
+    *,
+    consumed_truth: bool,
+    receipt: _KernelArtifactV01 | None,
+    returned: object,
+    execution_reason: str | None,
+    firewall_before_valid: bool,
+    firewall_before_sha256: str,
+    firewall_after_valid: bool,
+    firewall_after_sha256: str,
+) -> tuple[str, str, _KernelArtifactV01 | None, str, str | None]:
+    if consumed_truth and receipt is not None:
+        return (
+            "CONSUMED",
+            "mock_effect_consumed",
+            receipt,
+            "g2a_t04_fulfill_mock",
+            "CONSUME",
+        )
+    if (
+        execution_reason
+        in _ACTION_PACKET_NONCONSUMING_EXECUTION_REASONS_V01
+        and firewall_before_valid
+        and firewall_after_valid
+        and firewall_before_sha256 == firewall_after_sha256
+        and returned is None
+    ):
+        return (
+            "NOT_CONSUMED",
+            execution_reason,
+            None,
+            "g2a_t24_nonconsuming_failure",
+            None,
+        )
+    reason = (
+        execution_reason
+        if execution_reason in _ACTION_PACKET_UNCERTAIN_EXECUTION_REASONS_V01
+        else "effect_outcome_unresolved"
+    )
+    return (
+        "UNCERTAIN",
+        reason,
+        None,
+        "g2a_t26_uncertain_adapter_outcome",
+        "UNCERTAIN_CLOSE",
+    )
+
+
+def _g2a4b_assemble_invoked_outcome_bundle_v01(
+    registry: ActionCommitPacketRegistryV02,
+    entry: ActionPacketLifecycleEntryV01,
+    pending: ActionPacketTransitionEventV01,
+    state: ActionPacketLifecycleStateV01,
+    *,
+    ordinal: int,
+    corridor: ContractFulfillmentCorridorV01,
+    corridor_step: CorridorStepV01,
+    observations: tuple[ActionDependencyCurrentObservationV01, ...],
+    logical_time_bridge: LogicalTimeBridgeV01,
+    eligibility_evaluation_time: int,
+    eligibility_evaluation_time_source: str,
+    eligibility_evaluation_context_id: str,
+    projection: ActionPacketEffectFirewallProjectionV01,
+    preparation: _ActionPacketEffectAttemptPreparationV01,
+    outcome_class: str,
+    reason_code: str,
+    firewall_state_sha256_before: str,
+    firewall_state_sha256_after: str,
+    receipt: _KernelArtifactV01 | None,
+    rule_id: str,
+    disposition_class: str | None,
+    transition_registry: ActionPacketTransitionRegistryProfileV01,
+    fallback: bool,
+) -> tuple[
+    _ActionPacketFulfillmentAttemptContextV01,
+    ActionPacketTransitionEventV01,
+    IdempotencyDispositionEventV01 | None,
+]:
+    evidence = (
+        _g2a4b_fallback_attempt_evidence_v01(
+            registry,
+            entry,
+            pending,
+            state,
+            ordinal=ordinal,
+            corridor=corridor,
+            corridor_step=corridor_step,
+            observations=observations,
+            logical_time_bridge=logical_time_bridge,
+            eligibility_evaluation_time=eligibility_evaluation_time,
+            eligibility_evaluation_time_source=(
+                eligibility_evaluation_time_source
+            ),
+            eligibility_evaluation_context_id=(
+                eligibility_evaluation_context_id
+            ),
+            projection=projection,
+            preparation=preparation,
+            outcome_class=outcome_class,
+            reason_code=reason_code,
+            firewall_state_sha256_before=firewall_state_sha256_before,
+            firewall_state_sha256_after=firewall_state_sha256_after,
+            receipt=receipt,
+        )
+        if fallback
+        else _g2a4b_attempt_evidence_v01(
+            registry,
+            entry,
+            pending,
+            state,
+            ordinal=ordinal,
+            corridor=corridor,
+            corridor_step=corridor_step,
+            observations=observations,
+            logical_time_bridge=logical_time_bridge,
+            eligibility_evaluation_time=eligibility_evaluation_time,
+            eligibility_evaluation_time_source=(
+                eligibility_evaluation_time_source
+            ),
+            eligibility_evaluation_context_id=(
+                eligibility_evaluation_context_id
+            ),
+            projection=projection,
+            preparation=preparation,
+            outcome_class=outcome_class,
+            reason_code=reason_code,
+            adapter_invoked=True,
+            firewall_state_sha256_before=firewall_state_sha256_before,
+            firewall_state_sha256_after=firewall_state_sha256_after,
+            receipt=receipt,
+        )
+    )
+    transition = _g2a4b_outcome_transition_v01(
+        entry,
+        pending,
+        state,
+        evidence,
+        rule_id=rule_id,
+        receipt=receipt,
+        transition_registry=transition_registry,
+    )
+    disposition = (
+        _g2a4b_outcome_disposition_v01(
+            state,
+            transition,
+            event_class=disposition_class,
+        )
+        if disposition_class is not None
+        else None
+    )
+    context = _ActionPacketFulfillmentAttemptContextV01(
+        attempt_evidence=evidence,
+        projection=projection,
+        corridor=corridor,
+        corridor_step=corridor_step,
+        current_dependency_observations=observations,
+        logical_time_bridge=logical_time_bridge,
+        request=preparation.request,
+        decision=preparation.decision,
+        receipt=receipt,
+    )
+    return context, transition, disposition
+
+
+def _g2a4b_build_invoked_outcome_bundle_v01(
+    registry: ActionCommitPacketRegistryV02,
+    entry: ActionPacketLifecycleEntryV01,
+    pending: ActionPacketTransitionEventV01,
+    state: ActionPacketLifecycleStateV01,
+    **kwargs: object,
+) -> tuple[
+    _ActionPacketFulfillmentAttemptContextV01,
+    ActionPacketTransitionEventV01,
+    IdempotencyDispositionEventV01 | None,
+]:
+    return _g2a4b_assemble_invoked_outcome_bundle_v01(
+        registry,
+        entry,
+        pending,
+        state,
+        fallback=False,
+        **kwargs,
+    )
+
+
+def _g2a4b_fallback_invoked_outcome_bundle_v01(
+    registry: ActionCommitPacketRegistryV02,
+    entry: ActionPacketLifecycleEntryV01,
+    pending: ActionPacketTransitionEventV01,
+    state: ActionPacketLifecycleStateV01,
+    *,
+    ordinal: int,
+    corridor: ContractFulfillmentCorridorV01,
+    corridor_step: CorridorStepV01,
+    observations: tuple[ActionDependencyCurrentObservationV01, ...],
+    logical_time_bridge: LogicalTimeBridgeV01,
+    eligibility_evaluation_time: int,
+    eligibility_evaluation_time_source: str,
+    eligibility_evaluation_context_id: str,
+    projection: ActionPacketEffectFirewallProjectionV01,
+    preparation: _ActionPacketEffectAttemptPreparationV01,
+    consumed_truth: bool,
+    receipt: _KernelArtifactV01 | None,
+    firewall_state_sha256_before: str,
+    firewall_state_sha256_after: str,
+    transition_registry: ActionPacketTransitionRegistryProfileV01,
+) -> tuple[
+    _ActionPacketFulfillmentAttemptContextV01,
+    ActionPacketTransitionEventV01,
+    IdempotencyDispositionEventV01 | None,
+]:
+    return _g2a4b_assemble_invoked_outcome_bundle_v01(
+        registry,
+        entry,
+        pending,
+        state,
+        ordinal=ordinal,
+        corridor=corridor,
+        corridor_step=corridor_step,
+        observations=observations,
+        logical_time_bridge=logical_time_bridge,
+        eligibility_evaluation_time=eligibility_evaluation_time,
+        eligibility_evaluation_time_source=(
+            eligibility_evaluation_time_source
+        ),
+        eligibility_evaluation_context_id=(
+            eligibility_evaluation_context_id
+        ),
+        projection=projection,
+        preparation=preparation,
+        outcome_class="CONSUMED" if consumed_truth else "UNCERTAIN",
+        reason_code=(
+            "mock_effect_consumed"
+            if consumed_truth
+            else "effect_outcome_unresolved"
+        ),
+        firewall_state_sha256_before=firewall_state_sha256_before,
+        firewall_state_sha256_after=firewall_state_sha256_after,
+        receipt=receipt if consumed_truth else None,
+        rule_id=(
+            "g2a_t04_fulfill_mock"
+            if consumed_truth
+            else "g2a_t26_uncertain_adapter_outcome"
+        ),
+        disposition_class=(
+            "CONSUME" if consumed_truth else "UNCERTAIN_CLOSE"
+        ),
+        transition_registry=transition_registry,
+        fallback=True,
+    )
+
+
+def execute_action_packet_mock_fulfillment_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    corridor: object,
+    corridor_step: object,
+    current_dependency_observations: object,
+    logical_time_bridge: object,
+    eligibility_evaluation_time: object,
+    eligibility_evaluation_time_source: object,
+    eligibility_evaluation_context_id: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    invoked = False
+    try:
+        validation_result = _require_valid_action_packet_registry_v01(
+            registry
+        )
+        transition_registry = _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        entry, pending, state, ordinal = _g2a4b_attempt_input_v01(
+            registry,
+            validation_result,
+            packet_id=packet_id,
+            corridor=corridor,
+            corridor_step=corridor_step,
+            current_dependency_observations=(
+                current_dependency_observations
+            ),
+            logical_time_bridge=logical_time_bridge,
+            eligibility_evaluation_time=eligibility_evaluation_time,
+            eligibility_evaluation_time_source=(
+                eligibility_evaluation_time_source
+            ),
+            eligibility_evaluation_context_id=(
+                eligibility_evaluation_context_id
+            ),
+        )
+        observations = current_dependency_observations
+        try:
+            projection = (
+                _build_action_packet_effect_firewall_projection_core_v01(
+                    registry,
+                    packet_id=packet_id,
+                    corridor=corridor,
+                    corridor_step=corridor_step,
+                    current_dependency_observations=observations,
+                    logical_time_bridge=logical_time_bridge,
+                    eligibility_evaluation_time=(
+                        eligibility_evaluation_time
+                    ),
+                    eligibility_evaluation_time_source=(
+                        eligibility_evaluation_time_source
+                    ),
+                    eligibility_evaluation_context_id=(
+                        eligibility_evaluation_context_id
+                    ),
+                    registry_validation_result=validation_result,
+                )
+            )
+        except ValueError as exc:
+            reason = _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_pre_fulfillment_blocked",
+            )
+            evidence = _g2a4b_attempt_evidence_v01(
+                registry,
+                entry,
+                pending,
+                state,
+                ordinal=ordinal,
+                corridor=corridor,
+                corridor_step=corridor_step,
+                observations=observations,
+                logical_time_bridge=logical_time_bridge,
+                eligibility_evaluation_time=eligibility_evaluation_time,
+                eligibility_evaluation_time_source=(
+                    eligibility_evaluation_time_source
+                ),
+                eligibility_evaluation_context_id=(
+                    eligibility_evaluation_context_id
+                ),
+                projection=None,
+                preparation=None,
+                outcome_class="PRE_FULFILLMENT_BLOCKED",
+                reason_code=reason,
+                adapter_invoked=False,
+                firewall_state_sha256_before=None,
+                firewall_state_sha256_after=None,
+                receipt=None,
+            )
+            context = _ActionPacketFulfillmentAttemptContextV01(
+                attempt_evidence=evidence,
+                projection=None,
+                corridor=corridor,
+                corridor_step=corridor_step,
+                current_dependency_observations=observations,
+                logical_time_bridge=logical_time_bridge,
+                request=None,
+                decision=None,
+                receipt=None,
+            )
+            return _g2a4b_append_context_only_v01(registry, context)
+        preparation = _prepare_action_packet_effect_attempt_from_projection_v01(
+            entry,
+            projection,
+        )
+        decision = preparation.decision
+        if decision.decision == _EFFECT_DECISION_BLOCKED_FAIL_CLOSED:
+            evidence = _g2a4b_attempt_evidence_v01(
+                registry,
+                entry,
+                pending,
+                state,
+                ordinal=ordinal,
+                corridor=corridor,
+                corridor_step=corridor_step,
+                observations=observations,
+                logical_time_bridge=logical_time_bridge,
+                eligibility_evaluation_time=eligibility_evaluation_time,
+                eligibility_evaluation_time_source=(
+                    eligibility_evaluation_time_source
+                ),
+                eligibility_evaluation_context_id=(
+                    eligibility_evaluation_context_id
+                ),
+                projection=projection,
+                preparation=preparation,
+                outcome_class="FIREWALL_BLOCKED",
+                reason_code=decision.reason_code,
+                adapter_invoked=False,
+                firewall_state_sha256_before=None,
+                firewall_state_sha256_after=None,
+                receipt=None,
+            )
+            context = _ActionPacketFulfillmentAttemptContextV01(
+                attempt_evidence=evidence,
+                projection=projection,
+                corridor=corridor,
+                corridor_step=corridor_step,
+                current_dependency_observations=observations,
+                logical_time_bridge=logical_time_bridge,
+                request=preparation.request,
+                decision=decision,
+                receipt=None,
+            )
+            return _g2a4b_append_context_only_v01(registry, context)
+        if not (
+            decision.decision == _EFFECT_DECISION_ALLOW_MOCK_EFFECT
+            and type(decision.capability_id) is str
+            and decision.capability_issued is True
+        ):
+            raise ValueError("action_packet_effect_authorization_invalid")
+        firewall = preparation.firewall
+        (
+            firewall_before_valid,
+            firewall_before,
+            _firewall_before_plain,
+        ) = _action_packet_firewall_state_observation_v01(firewall)
+        if not firewall_before_valid:
+            raise ValueError("action_packet_effect_firewall_state_invalid")
+        receipt_ref = _action_packet_effect_receipt_ref_v01(
+            packet_id=projection.packet_id,
+            execution_attempt_id=projection.execution_attempt_id,
+            request_id=preparation.request.request_id,
+            decision_id=decision.decision_id,
+            eligibility_evaluation_context_id=(
+                projection.eligibility_evaluation_context_id
+            ),
+        )
+        receipt_time_envelope = (
+            _action_packet_effect_receipt_time_envelope_v01(
+                entry,
+                projection,
+            )
+        )
+        returned: object = None
+        execution_reason: str | None = None
+        try:
+            invoked = True
+            returned = (_execute_mock_effect_v01)(
+                firewall=firewall,
+                request=preparation.request,
+                decision=decision,
+                current_tick=projection.current_tick,
+                adapter_id=projection.adapter_id,
+                action_kind=projection.action_kind,
+                child_scope_refs=projection.scope_refs,
+                child_expires_at_tick=projection.expires_at_tick,
+                receipt_artifact_id=receipt_ref,
+                time_envelope=receipt_time_envelope,
+            )
+        except ValueError as exc:
+            execution_reason = _stable_exception_reason_v01(
+                exc,
+                fallback="effect_execution_unexpected_exception",
+            )
+            if execution_reason not in (
+                _ACTION_PACKET_NONCONSUMING_EXECUTION_REASONS_V01
+                + _ACTION_PACKET_UNCERTAIN_EXECUTION_REASONS_V01
+            ):
+                execution_reason = "effect_execution_unexpected_exception"
+        except Exception:
+            execution_reason = "effect_execution_unexpected_exception"
+        consumed_truth, proven_receipt = (
+            _g2a4b_prove_consumed_receipt_truth_v01(
+                entry,
+                projection,
+                preparation,
+                returned,
+                execution_reason,
+            )
+        )
+        try:
+            (
+                firewall_after_valid,
+                firewall_after,
+                _firewall_after_plain,
+            ) = _action_packet_firewall_state_observation_v01(firewall)
+        except Exception:
+            firewall_after_valid = False
+            firewall_after = (
+                _g2a4b_expected_consumed_firewall_state_sha256_v01(
+                    firewall
+                )
+                if consumed_truth
+                else _action_packet_private_component_sha256_v01(
+                    _ACTION_PACKET_FIREWALL_STATE_HASH_DOMAIN_V01,
+                    {
+                        "observation_class": "UNVALIDATABLE_STATE",
+                        "observer_status": "FAILED",
+                    },
+                )
+            )
+        try:
+            (
+                outcome_class,
+                reason_code,
+                stored_receipt,
+                rule_id,
+                disposition_class,
+            ) = _g2a4b_classify_invoked_outcome_v01(
+                consumed_truth=consumed_truth,
+                receipt=proven_receipt,
+                returned=returned,
+                execution_reason=execution_reason,
+                firewall_before_valid=firewall_before_valid,
+                firewall_before_sha256=firewall_before,
+                firewall_after_valid=firewall_after_valid,
+                firewall_after_sha256=firewall_after,
+            )
+            context, transition, disposition = (
+                _g2a4b_build_invoked_outcome_bundle_v01(
+                    registry,
+                    entry,
+                    pending,
+                    state,
+                    ordinal=ordinal,
+                    corridor=corridor,
+                    corridor_step=corridor_step,
+                    observations=observations,
+                    logical_time_bridge=logical_time_bridge,
+                    eligibility_evaluation_time=eligibility_evaluation_time,
+                    eligibility_evaluation_time_source=(
+                        eligibility_evaluation_time_source
+                    ),
+                    eligibility_evaluation_context_id=(
+                        eligibility_evaluation_context_id
+                    ),
+                    projection=projection,
+                    preparation=preparation,
+                    outcome_class=outcome_class,
+                    reason_code=reason_code,
+                    firewall_state_sha256_before=firewall_before,
+                    firewall_state_sha256_after=firewall_after,
+                    receipt=stored_receipt,
+                    rule_id=rule_id,
+                    disposition_class=disposition_class,
+                    transition_registry=transition_registry,
+                )
+            )
+        except Exception:
+            context, transition, disposition = (
+                _g2a4b_fallback_invoked_outcome_bundle_v01(
+                    registry,
+                    entry,
+                    pending,
+                    state,
+                    ordinal=ordinal,
+                    corridor=corridor,
+                    corridor_step=corridor_step,
+                    observations=observations,
+                    logical_time_bridge=logical_time_bridge,
+                    eligibility_evaluation_time=eligibility_evaluation_time,
+                    eligibility_evaluation_time_source=(
+                        eligibility_evaluation_time_source
+                    ),
+                    eligibility_evaluation_context_id=(
+                        eligibility_evaluation_context_id
+                    ),
+                    projection=projection,
+                    preparation=preparation,
+                    consumed_truth=consumed_truth,
+                    receipt=proven_receipt,
+                    firewall_state_sha256_before=firewall_before,
+                    firewall_state_sha256_after=firewall_after,
+                    transition_registry=transition_registry,
+                )
+            )
+        proposed = _g2a4b_build_outcome_registry_v01(
+            registry,
+            entry,
+            context,
+            transition,
+            disposition,
+        )
+        _require_valid_action_packet_registry_v01(proposed)
+        return proposed
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback=(
+                    "action_packet_post_invocation_outcome_invalid"
+                    if invoked
+                    else "action_packet_mock_fulfillment_invalid"
+                ),
+            )
+        ) from None
+    except Exception:
+        raise ValueError(
+            "action_packet_post_invocation_outcome_invalid"
+            if invoked
+            else "action_packet_mock_fulfillment_invalid"
+        ) from None
+
+
+def observe_action_packet_effect_receipt_v01(
+    registry: object,
+    *,
+    packet_id: object,
+    attempt_evidence_id: object,
+    receipt_evaluation_time: object,
+    receipt_evaluation_time_source: object,
+    action_packet_transition_registry_profile: object,
+) -> ActionCommitPacketRegistryV02:
+    try:
+        validation_result = _require_valid_action_packet_registry_v01(
+            registry
+        )
+        transition_registry = _exact_action_packet_transition_registry_v01(
+            action_packet_transition_registry_profile
+        )
+        if (
+            not validate_prefixed_sha256_identity_v01(
+                attempt_evidence_id,
+                prefix=(
+                    ACTION_PACKET_FULFILLMENT_ATTEMPT_EVIDENCE_PREFIX_V01
+                ),
+            )[0]
+            or not validate_signed_int64_v01(receipt_evaluation_time)[0]
+            or not validate_identity_text_v01(
+                receipt_evaluation_time_source
+            )[0]
+        ):
+            raise ValueError("action_packet_receipt_observation_invalid")
+        validation_pass = validation_result.validation_pass
+        if type(validation_pass) is not _ActionPacketRegistryValidationPassV01:
+            raise ValueError("action_packet_receipt_observation_invalid")
+        entry = _unique_lifecycle_entry_from_validation_pass_v01(
+            validation_pass,
+            packet_id,
+        )
+        matching = tuple(
+            context
+            for context in registry.action_packet_fulfillment_attempt_contexts
+            if (
+                context.attempt_evidence.attempt_evidence_id
+                == attempt_evidence_id
+                and context.attempt_evidence.packet_id == packet_id
+                and context.attempt_evidence.outcome_class == "CONSUMED"
+            )
+        )
+        if len(matching) != 1:
+            raise ValueError("action_packet_receipt_observation_invalid")
+        context = matching[0]
+        evidence = context.attempt_evidence
+        receipt = context.receipt
+        try:
+            exact_receipt = _rebuild_exact_action_packet_effect_receipt_v01(
+                entry,
+                context.projection,
+                context.request,
+                context.decision,
+            )
+            receipt_valid = (
+                type(context.projection)
+                is ActionPacketEffectFirewallProjectionV01
+                and type(context.request) is _EffectRequestV01
+                and type(context.decision) is _EffectFirewallDecisionV01
+                and type(receipt) is _KernelArtifactV01
+                and receipt == exact_receipt
+                and _kernel_artifact_to_plain_dict_v01(receipt)
+                == _kernel_artifact_to_plain_dict_v01(exact_receipt)
+                and evidence.receipt_ref == exact_receipt.artifact_id
+                and evidence.receipt_sha256
+                == _action_packet_effect_receipt_sha256_v01(exact_receipt)
+                and _validate_kernel_artifact_v01(receipt) == ()
+                and _g2a4b_receipt_bindings_valid_v01(
+                    receipt,
+                    context.projection,
+                    context.request,
+                    context.decision,
+                )
+            )
+        except Exception:
+            receipt_valid = False
+        if not receipt_valid:
+            raise ValueError("action_packet_receipt_observation_invalid")
+        state = _derive_action_packet_lifecycle_state_unchecked_v01(
+            entry,
+            registry.idempotency_disposition_events,
+        )
+        consumed = entry.transition_events[-1] if entry.transition_events else None
+        if not (
+            state.lifecycle_state == "FULFILLED_MOCK"
+            and state.idempotency_disposition == "CONSUMED"
+            and state.reservation_owner_packet_id == packet_id
+            and type(consumed) is ActionPacketTransitionEventV01
+            and consumed.transition_rule_id == "g2a_t04_fulfill_mock"
+            and consumed.execution_attempt_id == evidence.execution_attempt_id
+            and packet_id not in registry.terminal_receipt_packet_ids
+            and state.idempotency_key
+            not in registry.terminal_receipt_idempotency_keys
+        ):
+            raise ValueError("action_packet_receipt_observation_invalid")
+        receipt_transition = _g2a4b_receipt_transition_v01(
+            entry,
+            consumed,
+            evidence,
+            receipt,
+            receipt_evaluation_time=receipt_evaluation_time,
+            receipt_evaluation_time_source=receipt_evaluation_time_source,
+            transition_registry=transition_registry,
+        )
+        disposition = _g2a4b_outcome_disposition_v01(
+            state,
+            receipt_transition,
+            event_class="RECEIPT_CONFIRM",
+        )
+        updated_entry = ActionPacketLifecycleEntryV01(
+            root_bound_genesis=entry.root_bound_genesis,
+            transition_registry_id=entry.transition_registry_id,
+            transition_events=entry.transition_events
+            + (receipt_transition,),
+        )
+        entries = tuple(
+            updated_entry if candidate is entry else candidate
+            for candidate in registry.action_packet_lifecycle_entries
+        )
+        proposed = _registry_with_g2a_histories_v01(
+            registry,
+            lifecycle_entries=entries,
+            disposition_events=registry.idempotency_disposition_events
+            + (disposition,),
+            terminal_receipt_packet_ids=_tuple_add_unique(
+                registry.terminal_receipt_packet_ids,
+                packet_id,
+            ),
+            terminal_receipt_idempotency_keys=_tuple_add_unique(
+                registry.terminal_receipt_idempotency_keys,
+                state.idempotency_key,
+            ),
+        )
+        _require_valid_action_packet_registry_v01(proposed)
+        return proposed
+    except ValueError as exc:
+        raise ValueError(
+            _stable_exception_reason_v01(
+                exc,
+                fallback="action_packet_receipt_observation_invalid",
+            )
+        ) from None
+    except Exception:
+        raise ValueError("action_packet_receipt_observation_invalid") from None

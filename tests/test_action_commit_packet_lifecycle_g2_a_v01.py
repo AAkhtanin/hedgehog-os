@@ -14812,35 +14812,111 @@ def test_g2a4b_fulfillment_attempt_evidence_identity_and_branch_invariants(
 ) -> None:
     fixture = g2a4a_fixture
     original_execute = acp._execute_mock_effect_v01
-    original_authorize = acp._authorize_effect_request_v01
 
     preblocked = _g2a4b_execute(
         fixture,
         current_dependency_observations=(),
     ).action_packet_fulfillment_attempt_contexts[-1].attempt_evidence
 
-    @wraps(original_authorize)
-    def blocked_authorize(**kwargs: object) -> object:
-        request = kwargs["request"]
-        return original_authorize(
-            firewall=kwargs["firewall"],
-            request=request,
-            current_tick=request.expires_at_tick,
+    projection = _g2a4a_projection(fixture)
+    root_projection = fixture.root_bound.root_decision_projection
+    blocked_projection_kwargs = {
+        "root_decision_kernel": root_projection.root_decision_kernel,
+        "decision_input": root_projection.root_decision_input,
+        "root_decision_result": root_projection.root_decision_result,
+        "invocation_id": projection.execution_attempt_id,
+        "allowed_adapter_ids": projection.allowed_adapter_ids,
+        "allowed_action_kinds": projection.allowed_action_kinds,
+        "root_scope_refs": projection.root_scope_refs,
+        "maximum_expires_at_tick": projection.maximum_expires_at_tick,
+        "request_kind": projection.request_kind,
+        "adapter_id": projection.adapter_id,
+        "action_kind": projection.action_kind,
+        "scope_refs": projection.scope_refs,
+        "issued_at_tick": projection.issued_at_tick,
+        "expires_at_tick": projection.expires_at_tick,
+        "idempotency_key": projection.idempotency_key,
+        "current_tick": projection.expires_at_tick,
+    }
+    blocked_projection = (
+        effect_firewall.project_effect_firewall_historical_authorization_v01(
+            **blocked_projection_kwargs
         )
+    )
+    assert (
+        effect_firewall
+        .validate_effect_firewall_historical_authorization_projection_v01(
+            blocked_projection,
+            **blocked_projection_kwargs,
+        )
+        == ()
+    )
+    assert blocked_projection.profile_id == (
+        effect_firewall
+        .EFFECT_FIREWALL_HISTORICAL_AUTHORIZATION_PROFILE_ID_V01
+    )
+    assert blocked_projection.decision.decision == (
+        effect_firewall.EFFECT_DECISION_BLOCKED_FAIL_CLOSED
+    )
+    assert blocked_projection.decision.reason_code == "request_expired"
+    assert blocked_projection.expected_capability_id is None
+    assert blocked_projection.fresh_empty_invocation_state is True
+    assert blocked_projection.firewall_object_created is False
+    assert blocked_projection.capability_object_created is False
+    firewall_blocked = (
+        acp.build_action_packet_fulfillment_attempt_evidence_v01(
+            **_g2a4b_evidence_kwargs(
+                preblocked,
+                dependency_observation_ids=(
+                    projection.dependency_observation_ids
+                ),
+                projection_sha256=(
+                    acp._action_packet_effect_projection_sha256_v01(
+                        projection
+                    )
+                ),
+                firewall_id=blocked_projection.firewall_id,
+                request_id=blocked_projection.request.request_id,
+                decision_id=blocked_projection.decision.decision_id,
+                capability_id=None,
+                adapter_id=projection.adapter_id,
+                action_kind=projection.action_kind,
+                invocation_relation_code="NO_ADAPTER_INVOCATION",
+                outcome_class="FIREWALL_BLOCKED",
+                reason_code=blocked_projection.decision.reason_code,
+                adapter_invoked=False,
+                adapter_call_count=0,
+                firewall_state_sha256_before=None,
+                firewall_state_sha256_after=None,
+                receipt_ref=None,
+                receipt_sha256=None,
+            )
+        )
+    )
+    assert firewall_blocked.outcome_class == "FIREWALL_BLOCKED"
+    assert firewall_blocked.invocation_relation_code == (
+        "NO_ADAPTER_INVOCATION"
+    )
+    assert all(
+        value is not None
+        for value in (
+            firewall_blocked.projection_sha256,
+            firewall_blocked.firewall_id,
+            firewall_blocked.request_id,
+            firewall_blocked.decision_id,
+            firewall_blocked.adapter_id,
+            firewall_blocked.action_kind,
+        )
+    )
+    assert firewall_blocked.capability_id is None
+    assert firewall_blocked.adapter_invoked is False
+    assert firewall_blocked.adapter_call_count == 0
+    assert firewall_blocked.firewall_state_sha256_before is None
+    assert firewall_blocked.firewall_state_sha256_after is None
+    assert firewall_blocked.receipt_ref is None
+    assert firewall_blocked.receipt_sha256 is None
+    assert firewall_blocked.real_world_effects_count == 0
 
-    monkeypatch.setattr(
-        acp,
-        "_authorize_effect_request_v01",
-        blocked_authorize,
-    )
-    firewall_blocked = _g2a4b_execute(
-        fixture
-    ).action_packet_fulfillment_attempt_contexts[-1].attempt_evidence
-    monkeypatch.setattr(
-        acp,
-        "_authorize_effect_request_v01",
-        original_authorize,
-    )
     consumed = _g2a4b_execute(
         fixture
     ).action_packet_fulfillment_attempt_contexts[-1].attempt_evidence
@@ -15025,7 +15101,7 @@ def test_g2a4b_pre_adapter_failure_appends_evidence_without_invocation(
         context.attempt_evidence.outcome_class
         for context in completed.action_packet_fulfillment_attempt_contexts
     ) == ("PRE_FULFILLMENT_BLOCKED", "CONSUMED")
-    assert calls == {"firewall": 2, "execute": 1}
+    assert calls == {"firewall": 1, "execute": 1}
     with pytest.raises(ValueError, match="observation_duplicate"):
         _g2a4b_execute(
             fixture,
@@ -15034,13 +15110,19 @@ def test_g2a4b_pre_adapter_failure_appends_evidence_without_invocation(
         )
 
 
-def test_g2a4b_firewall_block_appends_evidence_and_never_invokes_effect(
+def test_g2a4b_noncanonical_firewall_block_is_rejected_and_never_invokes_effect(
     g2a4a_fixture: _G2A4AFixtureV01,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     fixture = g2a4a_fixture
-    packet_id = fixture.root_bound.packet_identity.packet_id
-    source_entry = _g2a4b_entry(fixture.registry, packet_id)
+    source_registry = fixture.registry
+    source_entries = source_registry.action_packet_lifecycle_entries
+    source_entry = source_entries[0]
+    source_transitions = source_entry.transition_events
+    source_dispositions = source_registry.idempotency_disposition_events
+    source_contexts = (
+        source_registry.action_packet_fulfillment_attempt_contexts
+    )
     calls = {"authorize": 0, "execute": 0}
     original_authorize = acp._authorize_effect_request_v01
     original_execute = acp._execute_mock_effect_v01
@@ -15066,28 +15148,23 @@ def test_g2a4b_firewall_block_appends_evidence_and_never_invokes_effect(
         blocked_authorize,
     )
     monkeypatch.setattr(acp, "_execute_mock_effect_v01", counted_execute)
-    result = _g2a4b_execute(fixture)
-    assert calls["execute"] == 0
-    assert calls["authorize"] >= 2
-    assert acp.validate_action_commit_packet_registry_v02(result) == (True, ())
-    context = result.action_packet_fulfillment_attempt_contexts[-1]
-    evidence = context.attempt_evidence
-    assert evidence.outcome_class == "FIREWALL_BLOCKED"
-    assert evidence.capability_id is None
-    assert evidence.adapter_invoked is False
-    assert context.projection is not None
-    assert context.request is not None
-    assert context.decision is not None
-    assert context.decision.decision == (
-        effect_firewall.EFFECT_DECISION_BLOCKED_FAIL_CLOSED
+    with pytest.raises(
+        ValueError,
+        match="^action_packet_registry_fulfillment_component_invalid$",
+    ):
+        _g2a4b_execute(fixture)
+
+    assert calls == {"authorize": 1, "execute": 0}
+    assert fixture.registry is source_registry
+    assert fixture.registry.action_packet_lifecycle_entries is source_entries
+    assert source_entry.transition_events is source_transitions
+    assert fixture.registry.idempotency_disposition_events is (
+        source_dispositions
     )
-    assert context.receipt is None
-    assert _g2a4b_entry(result, packet_id).transition_events == (
-        source_entry.transition_events
+    assert fixture.registry.action_packet_fulfillment_attempt_contexts is (
+        source_contexts
     )
-    assert result.idempotency_disposition_events is (
-        fixture.registry.idempotency_disposition_events
-    )
+    assert source_contexts == ()
 
 
 def test_g2a4b_consumed_branch_invokes_once_and_atomically_records_t04_consume(

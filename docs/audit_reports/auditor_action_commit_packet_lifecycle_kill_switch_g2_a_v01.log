@@ -1,0 +1,414 @@
+AUDIT_ID=auditor_action_commit_packet_lifecycle_kill_switch_g2_a_v01
+AUDIT_STATUS=PASS
+AUDIT_DISPOSITION=ACCEPT_G2A_ACTIONPACKET_LIFECYCLE_KILL_SWITCH_INTERNAL_CLOSURE
+GATE_ID=gate2_g2a_actionpacket_lifecycle_kill_switch
+AUDITED_REPOSITORY_BASIS_HEAD=d6a22010a6c4c63d76cb889d79fc75965bc0a3f2
+RUNTIME_IMPLEMENTATION_HEAD=f92aa5314ce6e7adbf964b5fbbf55049a57dc2de
+PREFLIGHT_COMMIT=64db47b2413ab92b74918fc4bd3c4e5c2652c105
+G2A1_COMMIT=0164032fe20c6da25a1b33da2373fe12a590a997
+G2A2_COMMIT=fbe984ad2adc5cc63996d3846f1e06f4cab2050c
+G2A3_COMMIT=ff3a3892a64daad6154e231ea29572d0db010102
+G2A_VALIDATION_PERFORMANCE_COMMIT=2c08b21db7929f0764346b08a341d2d78c51440a
+G2A4_COMMIT=cad3475436da57273ca5b18e9608adb200244a6d
+G2A5_COMMIT=5124c0c9a1d93a6d5212361a0f7152a62c2c4f2f
+G2A6_RUNTIME_COMMIT=f92aa5314ce6e7adbf964b5fbbf55049a57dc2de
+PRE_AUDIT_TEST_RECONCILIATION_COMMIT=d6a22010a6c4c63d76cb889d79fc75965bc0a3f2
+IMPLEMENTATION_MODIFIED_BY_AUDIT=false
+TESTS_MODIFIED_BY_AUDIT=false
+PROVIDER_CALLS=0
+NETWORK_CALLS=0
+GEMINI_CALLS=0
+REAL_WORLD_EFFECTS=0
+
+1. Audit Purpose
+
+This independent audit verifies the committed Gate 2 / G2-A ActionPacket
+lifecycle and kill-switch implementation against preflight revision v0.1.5.
+It audits committed bytes only. It does not repair runtime or tests, grant
+authority, execute a real connector, close Gate 2, claim RC2, or start G2-B.
+
+2. Audited Committed Basis
+
+The audited repository basis is
+d6a22010a6c4c63d76cb889d79fc75965bc0a3f2. Runtime implementation ends at
+f92aa5314ce6e7adbf964b5fbbf55049a57dc2de. The separate current-HEAD commit
+d6a22010a6c4c63d76cb889d79fc75965bc0a3f2 reconciles three tests with the
+already committed replay-safe historical Effect Firewall contract.
+
+The required commit subjects, ancestry, and order were verified:
+
+- 64db47b2413ab92b74918fc4bd3c4e5c2652c105 - Finalize G2-A lifecycle kill-switch preflight
+- 0164032fe20c6da25a1b33da2373fe12a590a997 - Implement G2-A1 canonical profiles and Root binding
+- fbe984ad2adc5cc63996d3846f1e06f4cab2050c - Implement G2-A2 lifecycle and immutable history
+- ff3a3892a64daad6154e231ea29572d0db010102 - Implement G2-A3 root-bound invalidation and supersession
+- 2c08b21db7929f0764346b08a341d2d78c51440a - Harden G2-A Registry validation performance
+- cad3475436da57273ca5b18e9608adb200244a6d - Implement G2-A4 Corridor integration and atomic outcomes
+- 5124c0c9a1d93a6d5212361a0f7152a62c2c4f2f - Implement G2-A5 two-domain proof and replay
+- f92aa5314ce6e7adbf964b5fbbf55049a57dc2de - Implement G2-A6 Living Gauntlet and Conformance
+- d6a22010a6c4c63d76cb889d79fc75965bc0a3f2 - Reconcile G2-A4B tests with replay-safe validation
+
+3. Commit and Path-Scope Verification
+
+The inclusive committed G2-A chain changes exactly 16 paths. Every path is in
+the authorized preflight, implementation, test, Gauntlet, Conformance, or
+test-reconciliation surface. First-changing commit and final committed SHA-256:
+
+- docs/actionpacket_lifecycle_kill_switch_g2_a_preflight_v01.md | 64db47b2413ab92b74918fc4bd3c4e5c2652c105 | db43f0c4d467d04921f103b69fc59e60633e17d313dd94b70ed33a41cad94f1a
+- hedgehog/action_commit_packet_v02.py | 0164032fe20c6da25a1b33da2373fe12a590a997 | b68b1dfd759bde818e5f9562d41d1072a1462e1e6c5eec24639257e7e24931e3
+- tests/test_action_commit_packet_lifecycle_g2_a_v01.py | 0164032fe20c6da25a1b33da2373fe12a590a997 | 044a0bafa42e12cce1af8f500ef8f136df383152a3a81d233b7616f28b877c49
+- hedgehog/kernel/abi_v01.py | fbe984ad2adc5cc63996d3846f1e06f4cab2050c | 59ec0078bb0814bb3ba2ad8ae6bb75cefffe8da27f70ab385e668951ddfcfffa
+- hedgehog/kernel/transition_registry_v01.py | fbe984ad2adc5cc63996d3846f1e06f4cab2050c | a5b9c0e17cf0db25c5da2c789de8d0ba8b909ab9e87df4160ff790d36acee7ef
+- tests/test_kernel_abi_v01.py | fbe984ad2adc5cc63996d3846f1e06f4cab2050c | a231fa084b2d7f14fb8b4f86d87f3d815d174c931c30623633bc6a715107a5f7
+- tests/test_transition_registry_v01.py | fbe984ad2adc5cc63996d3846f1e06f4cab2050c | f7b3534eece5f3b905edc61ea9e9b8920050b39950ef27dad40d5cfb9f0949bf
+- tests/test_action_commit_packet_contract_corridor_v02.py | cad3475436da57273ca5b18e9608adb200244a6d | ffd8eca76e0a2cc0a3c82e09e685fa8a9416766ac326ee13f662ddac7c45adf2
+- demo/run_action_commit_packet_lifecycle_g2_a_v01.py | 5124c0c9a1d93a6d5212361a0f7152a62c2c4f2f | 49d9bb14a2ea04c9a9906a75eb245fcebcca3db98badd9d6d0224b807850a903
+- hedgehog/kernel/effect_firewall_v01.py | 5124c0c9a1d93a6d5212361a0f7152a62c2c4f2f | e467fdde7ed2f8ff7b7e6130ebb2fa62844b667089a15b42af83d9d4402b40c6
+- tests/test_effect_firewall_v01.py | 5124c0c9a1d93a6d5212361a0f7152a62c2c4f2f | 4f8276656c495637e56acb385be8876f5e42986bbb099f4fdfc60d0505c2b332
+- demo/run_kernel_conformance_v01.py | f92aa5314ce6e7adbf964b5fbbf55049a57dc2de | 670949027ff65cfe386daa823bab871d060268a377ba9ad7c8bc082c93c09db3
+- demo/run_living_gauntlet_v01.py | f92aa5314ce6e7adbf964b5fbbf55049a57dc2de | dfe6e25b368341910f33f685606cf5340147917f89d782420b89bfc48ab10400
+- hedgehog/kernel/conformance_v01.py | f92aa5314ce6e7adbf964b5fbbf55049a57dc2de | 760c8652141b2b44109027dfa9723c19637fbe2a01b7438377c7c04dd29845fd
+- tests/test_kernel_conformance_v01_runner.py | f92aa5314ce6e7adbf964b5fbbf55049a57dc2de | b1efed3812d428d9f2a22f0b64811d2deff0dc9d5d0c4b17afb6ef4558d7b141
+- tests/test_living_gauntlet_v01_runner.py | f92aa5314ce6e7adbf964b5fbbf55049a57dc2de | 883936d222755c789d38d0794b51dc607cd6d8f24b12dadfaeece61b18623ae6
+
+No Root Decision, MultiRoot, integrity-Replay, schema, release, README,
+closed Airline/Supplier, X1/X2, provider, real-connector, G2-B through G2-F,
+showcase, or RC2 path changed.
+
+4. Pre-Audit Test Reconciliation Verification
+
+Commit d6a22010a6c4c63d76cb889d79fc75965bc0a3f2 changes exactly one path:
+tests/test_action_commit_packet_lifecycle_g2_a_v01.py. It modifies no runtime
+path, creates no path, and deletes no path. It replaces a fabricated Registry
+FIREWALL_BLOCKED history with standalone evidence-shape validation, expects
+one real Firewall construction for one valid attempt, and verifies that a
+decision evaluated at a noncanonical tick is rejected by historical
+recomputation at projection.current_tick. Runtime G2-A hashes equal the G2-A6
+committed hashes.
+
+5. Architecture and Authority Findings
+
+- ActionCommitPacketV02 and ActionCommitPacketRegistryV02 are the sole current G2-A packet and Registry families.
+- TransitionRegistryV01 is the sole transition-policy family.
+- RootDecisionKernelV01 remains the sole final authority path and is frozen.
+- ContractFulfillmentCorridorV01 remains the sole adapter-handle owner.
+- ActionPacketEffectFirewallProjectionV01 is the sole packet-to-effect bridge.
+- EffectFirewallV01 is the sole capability issuer; EffectCapabilityV01 has no public constructor.
+- execute_mock_effect_v01 has exactly one G2-A runtime call site.
+- Runtime fulfillment uses at most one real Firewall per attempt.
+- Historical Registry validation uses the pure historical projection and has zero Firewall, capability, authorization, adapter, and effect calls.
+- Lifecycle Replay and present inspection have zero Firewall, authorization, and effect call sites.
+- Registry, Corridor, Effect Firewall, receipt, Replay, and Conformance create no Root authority.
+- Registry and Conformance create no permission.
+- No module-global mutable G2-A runtime state exists.
+- Canonical authority uses injected logical time, not ambient clock, random, or UUID state.
+- No provider, network, Gemini, real connector, production persistence, or PlanGraph path shapes G2-A.
+
+Exact audited counts:
+
+- transition rules: 26
+- disposition-event classes: 6
+- RELEASE event present: false
+- adapter-invocation relation codes: 5
+- Living Gauntlet active acts: 14
+- Kernel Conformance categories: 11
+- Kernel Conformance domains: 2
+- Kernel Conformance negative probes: 20
+
+6. Canonical Identity Findings
+
+Packet, logical-intent, idempotency, authorization-candidate, transition,
+disposition, invalidation, attempt, projection, request, decision, receipt,
+and history identities are domain-separated and rebuilt from exact canonical
+materials. Exact-type validators reject malformed values, bool-as-int,
+custom-equality substitutes, reordered material, and coherent identity drift.
+Root selection binds the packet authorization candidate rather than treating
+logical intent as authority.
+
+7. Lifecycle and Transition Findings
+
+The 26-rule profile is exact. CREATED is Root-bound and non-executable.
+Activation acquires reservation atomically. Queue, pending, block, expiry,
+revocation, supersession, fulfillment, receipt, non-consuming failure, retry,
+and uncertain terminal transitions are rule-bound and history-preserving.
+Unknown transitions fail closed. t04, t24, and t26 are mutually exclusive
+outcomes of one invocation.
+
+8. Idempotency and Immutable History Findings
+
+UNCLAIMED, RESERVED, CONSUMED, and UNCERTAIN_CLOSED are distinct. Six exact
+event classes reconstruct immutable 16-field disposition history. There is no
+release event. t24 appends no disposition event and preserves exact RESERVED
+owner and history. CONSUMED and UNCERTAIN_CLOSED are permanent.
+
+9. Root-Bound Invalidation, Expiry and Supersession Findings
+
+Dependency acceptance, revocation, and supersession use separate
+non-self-referential candidates and accepted post-Root bindings. Mandatory
+dependency freshness, expiry, accepted kill switches, revocation, and
+supersession deterministically remove executability without allowing
+Registry-created authority.
+
+10. Corridor, Effect Firewall and Receipt Findings
+
+Corridor recomputes current eligibility and ownership before fulfillment.
+EffectRequest fields are exactly projected from packet, Root, permission,
+scope, time, and idempotency contracts. Runtime capability state is private
+to one invocation. Receipt is exact immutable EvidenceReceipt material and
+creates no authority, permission, future permission, FinalOutput, or effect
+handle.
+
+11. Replay and Present-Inspection Findings
+
+Historical validation projects immutable Firewall authorization without
+constructing EffectFirewallV01, EffectCapabilityV01, or mutable invocation
+state. Replay uses recorded time and cannot mutate or execute. Present
+inspection uses injected current time and cannot rewrite history. Legacy and
+A4B t24 histories are replayed under separate exact evidence laws. NO_RETRY
+never reports retry eligibility.
+
+12. Two-Domain Invariance Findings
+
+The deterministic AIRLINE and SUPPLIER fixtures use distinct packet,
+idempotency, Root-decision, invalidation, and history identities while sharing
+one packet family, Transition Registry, and Root authority law. Both become
+BLOCKED with RESERVED ownership preserved. Cross-domain substitution fails
+closed. Closed domain programs are not rerun.
+
+13. Living Gauntlet and Conformance Findings
+
+Living Gauntlet v1.1 executes 14 active acts with 14 PASS, including one real
+bounded action_packet_lifecycle act. Kernel Conformance v0.2 reports 11/11
+categories, 2/2 domains, and 20/20 negative probes PASS. The lifecycle
+category and ten G2-A negative probes are derived from actual validated
+runtime observations. Authority, permission, provider, network, Gemini, and
+real-effect counters remain zero.
+
+14. Complete 109-Condition Definition-of-Done Matrix
+
+condition_number | condition_text | audit_status | evidence_paths | evidence_symbols | evidence_tests_or_runner | audit_note
+1 | `ActionCommitPacketV02` is the sole current G2-A packet family. | PASS | hedgehog/action_commit_packet_v02.py | ActionCommitPacketV02 | test_g2a2a_public_contract_shapes_and_constants | Repository AST finds exactly one exact class.
+2 | Every identity uses canonical bytes and the exact keyword-only hash API. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/integrity_replay_v01.py | canonical_json_bytes_v01; domain_separated_sha256_hex_v01 | test_canonical_material_field_validation | Canonical identity paths and signatures validated.
+3 | Packet identity is rebuilt from the exact ordered 20-field profile. | PASS | hedgehog/action_commit_packet_v02.py | action_commit_packet_identity_material_v01 | test_identity_material_counts_prefixes_and_forgery_rejection | Exact count, order, and rebuild pass.
+4 | Idempotency identity is rebuilt from the exact ordered 10-field profile. | PASS | hedgehog/action_commit_packet_v02.py | action_idempotency_identity_material_v01 | test_identity_material_counts_prefixes_and_forgery_rejection | Exact count, order, and rebuild pass.
+5 | Missing optional values use exact `ABSENT_V01`. | PASS | hedgehog/action_commit_packet_v02.py | ABSENT_V01 | test_absent_sentinel_and_canonical_distinctions | Exact sentinel and substitution rejection pass.
+6 | Stable logical intent is rebuilt from the exact ordered 9-field profile. | PASS | hedgehog/action_commit_packet_v02.py | RootOwnedLogicalEffectIntentV01 | test_identity_material_counts_prefixes_and_forgery_rejection | Exact material count and rebuild pass.
+7 | Packet authorization candidate is rebuilt from the exact ordered 18-field profile. | PASS | hedgehog/action_commit_packet_v02.py | RootBoundPacketAuthorizationCandidateV01 | test_identity_material_counts_prefixes_and_forgery_rejection | Exact material count and rebuild pass.
+8 | TTL, adapter, dependency, or policy-only changes preserve stable logical intent and idempotency when the consequential effect is unchanged. | PASS | hedgehog/action_commit_packet_v02.py | build_action_commit_packet_identity_v01 | test_packet_only_changes_preserve_logical_intent_and_idempotency | Invariance vectors pass.
+9 | Root selects the exact packet-authorization candidate rather than the logical-intent ID. | PASS | hedgehog/action_commit_packet_v02.py | RootDecisionCandidateProjectionV01 | test_frozen_root_packet_authorization_path_is_exact | Frozen Root selection binding passes.
+10 | Root authorization binding is reconstructed with the exact frozen kernel, decision input, and result validator API. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/root_decision_v01.py | validate_root_decision_result_v01 | test_root_bound_builder_validator_closure_and_totality | Exact frozen API and result rebuild pass.
+11 | `CREATED` is already Root-bound, non-executable, and unclaimed in the idempotency journal. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketLifecycleEntryV01 | test_g2a2b_genesis_is_immutable_unclaimed_and_non_authoritative | Genesis state passes.
+12 | `CREATED -> ROOT_AUTHORIZED` activates existing authority and atomically acquires or transfers reservation without creating authority. | PASS | hedgehog/action_commit_packet_v02.py | activate_action_commit_packet_root_authorization_v01 | test_g2a2b_activation_is_atomic_and_reserves_exact_owner | Atomic activation passes.
+13 | V02 operational fields cannot diverge from canonical profiles. | PASS | hedgehog/action_commit_packet_v02.py | validate_supplier_root_bound_action_commit_packet_v02_projection_v01 | test_root_bound_operational_packet_drift_fails_closed | Coherent drift is rejected.
+14 | Cross-profile identifiers, Roots, scopes, Corridor, policy, effect class, and consequential parameters are exactly coherent. | PASS | hedgehog/action_commit_packet_v02.py | validate_action_commit_packet_cross_profile_coherence_v01 | test_cross_profile_coherence_mismatch_classes | Cross-profile mismatch matrix passes.
+15 | Canonical decimals satisfy the exact full-match profile. | PASS | hedgehog/action_commit_packet_v02.py | validate_canonical_decimal_v01 | test_canonical_decimal_accepts_exact_examples; test_canonical_decimal_rejects_exact_examples | Exact decimal language passes.
+16 | Legacy PacketTTL strings are parsed to epoch seconds and never compared lexically. | PASS | hedgehog/action_commit_packet_v02.py | build_packet_ttl_compatibility_projection_v01 | test_packet_ttl_assertions_are_recomputed | Numeric temporal projection passes.
+17 | Idempotency namespace and allowed classes are policy-bound. | PASS | hedgehog/action_commit_packet_v02.py | ActionAuthorityPolicyProfileV01 | test_policy_business_and_consequential_contracts | Policy-bound vocabulary passes.
+18 | `UNCLAIMED`, `RESERVED`, `CONSUMED`, and `UNCERTAIN_CLOSED` remain distinct. | PASS | hedgehog/action_commit_packet_v02.py | IDEMPOTENCY_DISPOSITIONS_V01 | test_g2a2b_disposition_profile_matrix_and_literal_ids | Exact four-state vocabulary passes.
+19 | Idempotency disposition is reconstructed from an immutable ordered 16-field disposition-event journal. | PASS | hedgehog/action_commit_packet_v02.py | IdempotencyDispositionEventV01 | test_g2a2b_disposition_history_reconstructs_and_closes | Ordered reconstruction passes.
+20 | Reservation transfer is atomic, Root-bound, history-preserving, and has no release path. | PASS | hedgehog/action_commit_packet_v02.py | supersede_action_commit_packet_v01 | test_g2a3b2_active_same_effect_transfer | Atomic transfer and no RELEASE pass.
+21 | Immutable packet genesis is explicit and cannot be caller asserted. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketLifecycleEntryV01 | test_g2a2b_genesis_is_immutable_unclaimed_and_non_authoritative | Caller assertion is rejected.
+22 | Transition Registry identity hashes only exact ordered machine-code rule records, never human explanation prose. | PASS | hedgehog/kernel/transition_registry_v01.py | ActionPacketTransitionRegistryProfileV01 | tests/test_transition_registry_v01.py | Frozen registry identity tests pass.
+23 | Transition-rule identity and transition-event identity remain distinct. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/transition_registry_v01.py | ActionPacketTransitionEventV01 | test_transition_event_rule_and_identity_drift_fails_closed | Distinct identities and drift rejection pass.
+24 | Every transition event binds the exact Transition Registry identity. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketTransitionEventV01.transition_registry_id | test_every_action_packet_transition_event_builds_and_validates | All 26 rules pass.
+25 | Every transition event binds its rule, performing component, decision requirement, evidence codes, reason, and fail codes. | PASS | hedgehog/action_commit_packet_v02.py | TransitionEvidenceBindingV01 | test_transition_event_evidence_set_order_and_binding_are_exact | Exact evidence set passes.
+26 | Identity fields cannot change under the same profile version. | PASS | hedgehog/action_commit_packet_v02.py | validate_action_packet_transition_event_v01 | test_transition_event_id_and_material_forgery_fail_closed | Identity drift fails closed.
+27 | A pending packet can be revoked before mock fulfillment. | PASS | hedgehog/action_commit_packet_v02.py | revoke_action_commit_packet_v01 | test_g2a3b1_live_root_revocation_is_atomic | Pending revocation passes.
+28 | An expired packet cannot execute. | PASS | hedgehog/action_commit_packet_v02.py | inspect_action_packet_present_eligibility_v01 | test_g2a2_final_expiry_rules_use_exact_half_open_boundary | Expiry boundary blocks execution.
+29 | A revoked packet cannot execute. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketLifecycleStateV01 | test_g2a3b1_live_root_revocation_is_atomic | Revoked terminal state passes.
+30 | A superseded packet cannot execute. | PASS | hedgehog/action_commit_packet_v02.py | supersede_action_commit_packet_v01 | test_g2a3b2_lifecycle_continuity_transfer_successor_block_and_terminal | Superseded predecessor stays non-executable.
+31 | A stale mandatory dependency makes the packet non-executable. | PASS | hedgehog/action_commit_packet_v02.py | ActionDependencyCurrentObservationV01 | test_g2a4a_pre_fulfillment_recomputes_mandatory_dependency_freshness | Current freshness is recomputed.
+32 | Mandatory dependencies bind exact local Root acceptance. | PASS | hedgehog/action_commit_packet_v02.py | PacketDependencyAcceptanceBindingV01 | test_g2a3a_mandatory_dependency_acceptance_is_exact | Root acceptance binding passes.
+33 | Invalidation identity is non-self-referential and binds exact class, effect, owning Root, accepting Root, and decision provenance. | PASS | hedgehog/action_commit_packet_v02.py | ActionInvalidationEvidenceV01 | test_g2a3a_invalidation_classes_validate_exact_context | Exact invalidation material passes.
+34 | Accepted kill-switch evidence is deterministically enforced. | PASS | hedgehog/action_commit_packet_v02.py | apply_action_packet_deterministic_invalidation_v01 | test_g2a3b1_live_deterministic_block_is_atomic | Atomic block matrix passes.
+35 | Consumed idempotency cannot be reused. | PASS | hedgehog/action_commit_packet_v02.py | IdempotencyDispositionStateV01 | test_g2a3b2_consumed_and_uncertain_keys_are_permanently_closed | Reuse fails closed.
+36 | An uncertain adapter outcome terminally closes packet and key without being classified as consumed or non-consumed. | PASS | hedgehog/action_commit_packet_v02.py | execute_action_packet_mock_fulfillment_v01 | test_g2a4b_uncertain_branch_closes_packet_and_key_without_receipt | t26/UNCERTAIN_CLOSE passes.
+37 | `FAILED_UNCERTAIN_TERMINAL` permits no outgoing lifecycle transition. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketLifecycleStateV01 | test_g2a2b_uncertain_outcome_is_permanently_closed | Terminal closure passes.
+38 | A new packet ID cannot bypass consumed or uncertain-closed logical-effect identity. | PASS | hedgehog/action_commit_packet_v02.py | validate_action_commit_packet_registry_v02 | test_g2a3b2_consumed_and_uncertain_keys_are_permanently_closed | New-ID bypass rejected.
+39 | Unknown transition fails closed. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/transition_registry_v01.py | lookup_action_packet_transition_rule_v01 | test_transition_event_unknown_rule_fails_closed | Unknown rule rejected.
+40 | Registry creates no permission. | PASS | hedgehog/action_commit_packet_v02.py | ActionCommitPacketRegistryV02.creates_permission | test_g2a2b_genesis_is_immutable_unclaimed_and_non_authoritative | Exact false boundary passes.
+41 | Registry executes no adapter. | PASS | hedgehog/action_commit_packet_v02.py | validate_action_commit_packet_registry_v02 | test_g2a5_replay_and_inspection_never_reach_root_firewall_adapter_or_receipt_creation | Registry validation call counts are zero.
+42 | Corridor remains sole adapter-handle owner. | PASS | hedgehog/action_commit_packet_v02.py | ContractFulfillmentCorridorV01 | test_g2a4b_frozen_effect_firewall_execution_is_the_only_effect_path | Exclusive path passes.
+43 | Corridor recomputes executability, Registry history, disposition owner, and current reservation immediately before fulfillment. | PASS | hedgehog/action_commit_packet_v02.py | _build_action_packet_effect_firewall_projection_core_v01 | test_g2a4a_pre_fulfillment_requires_pending_owned_reserved_packet | Current state gates pass.
+44 | Expiry, consumption, or uncertain closure requires no redundant Root decision. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/transition_registry_v01.py | ACTION_PACKET_ROOT_DECISION_REQUIREMENT_CODES_V01 | test_transition_event_root_reference_matrix | Rule-exact Root matrix passes.
+45 | Root is required for creation, renewal, revocation, supersession, and materially changed authority. | PASS | hedgehog/action_commit_packet_v02.py | RootDecisionCandidateProjectionV01 | test_g2a3a_root_projection_surfaces_are_exact | Exact Root candidate path passes.
+46 | Transition, disposition, fulfillment, receipt, and uncertain history cannot be deleted or rewritten. | PASS | hedgehog/action_commit_packet_v02.py | ActionCommitPacketRegistryV02 | test_g2a4b_attempt_and_receipt_histories_are_ordered_and_immutable | Append-only histories pass.
+47 | Reconciliation evidence is append-only and cannot reopen state or key. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketLifecycleStateV01 | test_g2a5_replay_uncertain_closed_is_terminal_and_reconciliation_does_not_reopen | Reconciliation cannot reopen.
+48 | Current state is reconstructable from immutable packet genesis, ordered transition events, ordered disposition events, invalidation evidence, and reconciliation evidence. | PASS | hedgehog/action_commit_packet_v02.py | replay_action_packet_lifecycle_history_v01 | test_g2a5_replay_report_contract_and_exact_history_hashes | Exact reconstruction passes.
+49 | Prior authorization remains auditable after executability becomes false. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketLifecycleReplayReportV01 | test_g2a5_present_inspection_uses_injected_time_without_rewriting_history | Historical state remains intact.
+50 | Receipt remains evidence only and cannot create consumption. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/effect_firewall_v01.py | KernelArtifactV01; EvidenceReceipt | test_g2a4b_receipt_observation_atomically_records_t05_receipt_confirm | Receipt confirmation is evidence-only.
+51 | Replay reconstructs exact lifecycle and disposition history but cannot execute, reserve, transfer, consume, reopen, or create authority. | PASS | hedgehog/action_commit_packet_v02.py | replay_action_packet_lifecycle_history_v01 | test_g2a5_historical_replay_uses_recorded_time_and_never_executes | Replay non-execution passes.
+52 | Airline and Supplier use one authority law. | PASS | demo/run_action_commit_packet_lifecycle_g2_a_v01.py | _AUTHORITY_LAW_ID | test_g2a5_two_domain_airline_supplier_use_one_kernel_authority_law | Two-domain runner PASS.
+53 | Gate-1 Root, Transition Registry, and Corridor laws remain intact. | PASS | hedgehog/kernel/root_decision_v01.py; hedgehog/kernel/transition_registry_v01.py; hedgehog/action_commit_packet_v02.py | RootDecisionKernelV01; TransitionRegistryV01; ContractFulfillmentCorridorV01 | bounded compatibility selection | Frozen hashes and 1739 tests pass.
+54 | Focused tests pass. | PASS | tests/test_action_commit_packet_lifecycle_g2_a_v01.py | focused lifecycle suite | focused lifecycle command | 534 passed.
+55 | Bounded compatibility tests pass. | PASS | tests/test_action_commit_packet_contract_corridor_v02.py and seven bounded files | bounded compatibility suite | bounded compatibility command | 1739 passed.
+56 | Living Gauntlet lifecycle act passes. | PASS | demo/run_living_gauntlet_v01.py | collect_action_packet_lifecycle_gauntlet_act_v01 | Living Gauntlet v1.1 | 14/14 active acts PASS.
+57 | Kernel Conformance lifecycle category passes. | PASS | hedgehog/kernel/conformance_v01.py | ActionPacketLifecycleConformance | Kernel Conformance v0.2 | 11/11 categories PASS.
+58 | Independent audit closes. | PASS | this audit log | AUDIT_STATUS | independent audit disposition | All gates pass before this file is created.
+59 | Real-world effects remain zero. | PASS | all G2-A runtime and runner paths | real_world_effects_count | all three deterministic runners | 0 in every runner.
+60 | G2-A receives no standalone public showcase. | PASS | committed path-scope audit | changed path set | git range audit | No showcase path changed or created.
+61 | G2-A does not authorize the RC2 claim. | PASS | preflight and runner non-claims | RC2 non-claim | path and text audit | RC2 is not claimed.
+62 | G2-B starts only after internal G2-A closure. | PASS | committed path-scope audit | G2-B absence | git range audit | No G2-B file exists in the change range.
+63 | Dependency identity has no current-Root-decision self-reference. | PASS | hedgehog/action_commit_packet_v02.py | DependencySetCandidateV01 | test_dependency_profiles_exact_material_and_anti_cycle | Anti-cycle material passes.
+64 | Packet dependency acceptance is a separate post-Root binding. | PASS | hedgehog/action_commit_packet_v02.py | PacketDependencyAcceptanceBindingV01 | test_dependency_acceptance_binding_exact_identity | Separate binding passes.
+65 | Revocation candidate has no new-decision self-reference. | PASS | hedgehog/action_commit_packet_v02.py | RevocationCandidateV01 | test_g2a3a_revocation_candidate_sorting_identity_and_context | Candidate material passes.
+66 | Supersession candidate has no new-decision self-reference. | PASS | hedgehog/action_commit_packet_v02.py | SupersessionCandidateV01 | test_g2a3a_supersession_candidate_context_and_foreign_root | Candidate material passes.
+67 | Lifecycle invalidation transitions reference accepted post-Root bindings. | PASS | hedgehog/action_commit_packet_v02.py | AcceptedRevocationBindingV01; AcceptedSupersessionBindingV01 | test_g2a3a_accepted_bindings_are_post_root_and_exact | Post-Root binding passes.
+68 | Every Root candidate traverses the exact frozen Root Review, Post V&V, GT, Root input, and Root result path. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/root_decision_v01.py | RootDecisionCandidateProjectionV01 | test_frozen_root_packet_authorization_path_is_exact; test_g2a3a_root_projection_surfaces_are_exact | Exact path is rebuilt and validated.
+69 | Frozen `RootDecisionKernelV01` is neither bypassed nor modified. | PASS | hedgehog/kernel/root_decision_v01.py | RootDecisionKernelV01 | test_root_bound_builder_validator_closure_and_totality; bounded compatibility | Path unchanged and tests pass.
+70 | `ActionPacketEffectFirewallProjectionV01` is the sole Gate-1 effect bridge. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketEffectFirewallProjectionV01 | test_g2a4a_effect_firewall_projection_matches_every_frozen_field | AST finds one exact bridge class.
+71 | Existing permission-state requirements remain mandatory. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/effect_firewall_v01.py | ActionPermissionScopeProfileV01 | test_coherent_forged_permission_context_fails_executable_gate | Permission drift fails closed.
+72 | Existing `EffectFirewallV01` remains the sole capability issuer. | PASS | hedgehog/kernel/effect_firewall_v01.py | EffectFirewallV01; EffectCapabilityV01 | test_g2a4a_firewall_authorization_issues_private_capability_only | One class and private issuance pass.
+73 | Adapter invocation relation uses the exact five-code vocabulary. | PASS | hedgehog/kernel/transition_registry_v01.py | ACTION_PACKET_ADAPTER_INVOCATION_RELATION_CODES_V01 | test_g2a4b_fulfillment_attempt_evidence_identity_and_branch_invariants | Exact count is 5.
+74 | t04, t24, and t26 are mutually exclusive classifications of one invocation. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketFulfillmentAttemptEvidenceV01 | test_g2a4b_one_invocation_has_exactly_one_terminal_outcome | Outcome exclusivity passes.
+75 | `UNCLAIMED` renewal uses `RESERVE`, never transfer. | PASS | hedgehog/action_commit_packet_v02.py | IdempotencyDispositionEventV01 | test_g2a3b2_branch_a_successor_reserve | Branch A exact class passes.
+76 | `RESERVED` renewal or supersession uses the exact atomic transfer. | PASS | hedgehog/action_commit_packet_v02.py | TRANSFER_RENEWAL; TRANSFER_SUPERSESSION | test_g2a3b2_transfer_class_previous_owner_and_evidence_are_exact | Exact transfer classes pass.
+77 | `CONSUMED` and `UNCERTAIN_CLOSED` are permanent. | PASS | hedgehog/action_commit_packet_v02.py | IDEMPOTENCY_DISPOSITIONS_V01 | test_g2a3b2_consumed_and_uncertain_keys_are_permanently_closed | Terminal keys stay closed.
+78 | Transition-required evidence uses typed validated bindings. | PASS | hedgehog/action_commit_packet_v02.py | TransitionEvidenceBindingV01 | test_transition_evidence_binding_adversarial_rejections | Typed forgery matrix passes.
+79 | Execution-attempt and receipt presence is rule-exact. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketTransitionEventV01 | test_transition_event_attempt_and_receipt_presence_matrix | Presence matrix passes.
+80 | Every disposition event class has a complete 16-field matrix. | PASS | hedgehog/action_commit_packet_v02.py | IdempotencyDispositionEventV01 | test_g2a2b_disposition_profile_matrix_and_literal_ids | All six classes pass.
+81 | Generic permission coherence is enforced independently of legacy validation. | PASS | hedgehog/action_commit_packet_v02.py | validate_action_commit_packet_cross_profile_coherence_v01 | test_coherent_forged_permission_context_fails_executable_gate | Independent coherence gate passes.
+82 | Runtime implementation remains unauthorized until independent review returns `PASS`. | PASS_HISTORICAL_GOVERNANCE | commit chain; this audit log | AUDIT_STATUS | ordered ancestry verification | Preflight review and owner authorization preceded separate runtime commits; final audit is separate.
+83 | Preflight commit remains unauthorized until independent review returns `PASS`. | PASS_HISTORICAL_GOVERNANCE | commit chain | PREFLIGHT_COMMIT | ordered ancestry verification | Preflight was independently reviewed before its owner commit.
+84 | Real-world effects remain zero throughout this correction and G2-A proof. | PASS | tests and deterministic runners | real_world_effects_count | focused, selector, bounded, and runner commands | All observed effect counters are 0.
+85 | t24 appends no idempotency-disposition event. | PASS | hedgehog/action_commit_packet_v02.py | g2a_t24_nonconsuming_failure | test_g2a4b_nonconsuming_branch_preserves_disposition_and_allows_retry | No event is appended.
+86 | t24 preserves exact `RESERVED` disposition and exact packet reservation owner. | PASS | hedgehog/action_commit_packet_v02.py | IdempotencyDispositionStateV01 | test_g2a4b_nonconsuming_branch_preserves_disposition_and_allows_retry | Owner and RESERVED state remain exact.
+87 | t24 preserves byte-identical disposition history and the exact latest disposition-event ID. | PASS | hedgehog/action_commit_packet_v02.py | _action_packet_replay_t24_pass_v01 | test_g2a5_replay_t24_reconstructs_reserved_owner_and_retry_without_execution | History hashes and latest ID pass.
+88 | t24 remains fully evidenced by its lifecycle transition and exact `TransitionEvidenceBindingV01` records. | PASS | hedgehog/action_commit_packet_v02.py | TransitionEvidenceBindingV01 | test_g2a2_final_t24_binds_exact_latest_disposition_event | Exact evidence binding passes.
+89 | The disposition-event class vocabulary remains exactly six; no seventh class exists and `RESERVE` cannot mean `RESERVED -> RESERVED`. | PASS | hedgehog/action_commit_packet_v02.py | IDEMPOTENCY_DISPOSITION_EVENT_CLASSES_V01 | test_g2a2b_disposition_profile_matrix_and_literal_ids | Static count 6; no RELEASE or seventh class.
+90 | Native executable adapter IDs satisfy the frozen `mock_adapter:` namespace. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/effect_firewall_v01.py | MOCK_ADAPTER_PREFIX | test_effect_firewall_vocabulary_exact_mappings_and_native_path | Namespace law passes.
+91 | Native executable action IDs satisfy the frozen `mock_action:` namespace. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/effect_firewall_v01.py | MOCK_ACTION_PREFIX | test_effect_firewall_vocabulary_exact_mappings_and_native_path | Namespace law passes.
+92 | Legacy Supplier adapter/action IDs use only the exact closed four-row mapping. | PASS | hedgehog/action_commit_packet_v02.py | EFFECT_FIREWALL_VOCABULARY mappings | test_effect_firewall_vocabulary_exact_mappings_and_native_path | Four-row mapping passes.
+93 | A real or unknown identifier cannot be relabeled as mock. | PASS | hedgehog/action_commit_packet_v02.py | validate_effect_firewall_vocabulary_projection_v01 | test_effect_firewall_vocabulary_rejects_bypass | Relabeling fails closed.
+94 | Human approval evidence is not the Effect Firewall permission reference. | PASS | hedgehog/action_commit_packet_v02.py | human_approval_ref; permission_ref | test_supplier_permission_reference_must_be_exact_singleton | References stay distinct.
+95 | Canonical permission reference comes from validated Root permission state. | PASS | hedgehog/action_commit_packet_v02.py | ActionPermissionScopeProfileV01 | test_permission_and_executable_transaction_helpers | Root permission projection passes.
+96 | Every lifecycle-activated or executable packet has a non-`ABSENT_V01` transaction ID. | PASS | hedgehog/action_commit_packet_v02.py | transaction_id | test_coherent_absent_transaction_fails_executable_gate | ABSENT transaction fails closed.
+97 | Transaction identity is continuous through Root Review, Post V&V, GT, Root input/result, packet, Firewall, and EffectRequest. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/effect_firewall_v01.py | transaction_id | test_g2a4a_effect_firewall_projection_matches_every_frozen_field | End-to-end binding passes.
+98 | Firewall invocation ID equals execution-attempt ID. | PASS | hedgehog/action_commit_packet_v02.py | execution_attempt_id; invocation_id | test_g2a4a_projection_builds_valid_frozen_firewall_and_request | Exact equality passes.
+99 | Each accepted retry receives a new execution attempt and new Firewall instance. | PASS | hedgehog/action_commit_packet_v02.py | ActionExecutionAttemptIdentityV01 | test_g2a4a_retry_uses_new_attempt_and_fresh_firewall_state | Fresh attempt and state pass.
+100 | EffectRequest request kind is exactly `ActionCommitPacket`. | PASS | hedgehog/action_commit_packet_v02.py; hedgehog/kernel/effect_firewall_v01.py | EffectRequestV01.request_kind | test_g2a4a_projection_builds_valid_frozen_firewall_and_request | Exact request kind passes.
+101 | Every EffectRequest field is exactly projected from packet, Root, permission, scope, time, and idempotency contracts. | PASS | hedgehog/action_commit_packet_v02.py | ActionPacketEffectFirewallProjectionV01 | test_g2a4a_effect_firewall_projection_matches_every_frozen_field | All 39 projection fields pass.
+102 | Firewall per-invocation used-key state is not global consumption truth. | PASS | hedgehog/kernel/effect_firewall_v01.py; hedgehog/action_commit_packet_v02.py | _InvocationState; IdempotencyDispositionStateV01 | test_g2a4b_nonconsuming_branch_preserves_disposition_and_allows_retry | Local and global state remain distinct.
+103 | t24 may retry under a new Firewall invocation while global disposition remains `RESERVED`. | PASS | hedgehog/action_commit_packet_v02.py | g2a_t24_nonconsuming_failure; g2a_t25_retry | test_g2a4b_nonconsuming_branch_preserves_disposition_and_allows_retry | Retry law passes.
+104 | No old capability survives across execution attempts. | PASS | hedgehog/kernel/effect_firewall_v01.py | EffectCapabilityV01; _InvocationState | test_g2a4b_retry_creates_new_attempt_and_old_attempt_cannot_execute | Old attempt cannot execute.
+105 | Historical compatibility values remain unchanged and cannot directly bypass frozen Firewall namespaces. | PASS | hedgehog/action_commit_packet_v02.py | SupplierActionCommitPacketCanonicalProjectionV01 | test_historical_supplier_contract_remains_byte_for_byte_observable; test_effect_firewall_vocabulary_rejects_bypass | Compatibility and namespace gates pass.
+106 | No second capability issuer or effect path exists. | PASS | hedgehog/kernel/effect_firewall_v01.py; hedgehog/action_commit_packet_v02.py | EffectFirewallV01; execute_mock_effect_v01 | test_g2a4b_frozen_effect_firewall_execution_is_the_only_effect_path | AST finds one issuer family and one G2-A call site.
+107 | Independent review `PASS` remains required before preflight commit. | PASS_HISTORICAL_GOVERNANCE | commit chain | PREFLIGHT_COMMIT | ordered ancestry verification | Independent preflight review preceded the owner preflight commit.
+108 | Runtime implementation remains unauthorized. | PASS_HISTORICAL_GOVERNANCE | commit chain; this audit log | RUNTIME_IMPLEMENTATION_HEAD; AUDIT_STATUS | ordered ancestry verification | Prospective authorization governed implementation; current runtime and final audit are separate commits.
+109 | Real-world effects remain zero. | PASS | all G2-A runtime and runner paths | real_world_effects_count | all tests and deterministic runners | Final audited count is 0.
+
+Matrix result: 109/109 conditions evidenced in exact order. Technical
+conditions are PASS. Conditions 82, 83, 107, and 108 are
+PASS_HISTORICAL_GOVERNANCE based on the independently reviewed preflight,
+owner commit ordering, explicit later implementation authorization, separate
+runtime commits, separate test-reconciliation commit, and this separate final
+audit.
+
+15. Commands and Exact Results
+
+Focused lifecycle:
+
+PYTHONBREAKPOINT=0 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_action_commit_packet_lifecycle_g2_a_v01.py
+
+Result: exit=0; passed=534; failed=0; skipped=0; xfailed=0; warnings=0;
+duration=830.20s.
+
+G2-A6 seven-node selector:
+
+PYTHONBREAKPOINT=0 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_living_gauntlet_v01_runner.py::test_g2a6_action_packet_lifecycle_act_executes_real_runtime_and_zero_effect tests/test_living_gauntlet_v01_runner.py::test_g2a6_living_gauntlet_v11_preserves_gate1_acts_and_appends_lifecycle_act tests/test_living_gauntlet_v01_runner.py::test_g2a6_living_gauntlet_lifecycle_failure_is_fail_closed_and_not_normalized tests/test_kernel_conformance_v01_runner.py::test_g2a6_conformance_v02_preserves_v01_geometry_and_adds_lifecycle_category tests/test_kernel_conformance_v01_runner.py::test_g2a6_action_packet_lifecycle_category_matches_exact_checks tests/test_kernel_conformance_v01_runner.py::test_g2a6_action_packet_lifecycle_negative_probe_matrix_is_exact tests/test_kernel_conformance_v01_runner.py::test_g2a6_conformance_and_living_gauntlet_are_deterministic_and_zero_effect
+
+Result: exit=0; passed=7; failed=0; skipped=0; xfailed=0; warnings=2;
+duration=414.59s. Both warnings are jsonschema.RefResolver deprecation
+warnings from hedgehog/post_vv.py; no warning was suppressed.
+
+Bounded compatibility:
+
+PYTHONBREAKPOINT=0 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_action_commit_packet_contract_corridor_v02.py tests/test_action_commit_packet_core.py tests/test_effect_firewall_v01.py tests/test_kernel_abi_v01.py tests/test_transition_registry_v01.py tests/test_kernel_integrity_replay_v01.py tests/test_root_decision_kernel_v01.py tests/test_mock_connector_sandbox_core.py
+
+Result: exit=0; passed=1739; failed=0; skipped=0; xfailed=0; warnings=0;
+duration=45.26s.
+
+G2-A lifecycle/two-domain runner:
+
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python demo/run_action_commit_packet_lifecycle_g2_a_v01.py
+
+Result: exit=0; final_status=PASS; Airline=PASS; Supplier=PASS;
+same_packet_family=true; same_authority_law=true;
+same_transition_registry_id=true; immutable_history_proven=true;
+provider/network/Gemini=0/0/0; adapter_calls=0; receipt_creations=0;
+real_world_effects=0; duration=6.76s.
+
+Kernel Conformance:
+
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m demo.run_kernel_conformance_v01
+
+Result: exit=0; version=v0.2; categories=11/11; domains=2/2;
+negative_probes=20/20; active_gauntlet_refs=13; created_authority=0;
+created_permission=0; provider/network/Gemini/effects=0/0/0/0;
+final_status=PASS; duration=54.60s.
+
+Living Gauntlet:
+
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m demo.run_living_gauntlet_v01
+
+Result: exit=0; version=v1.1; active=14; active_pass=14;
+active_fail_closed=0; lifecycle_execution_count=1; evidence_only=1;
+evidence_only_executed=0; planned=0; validation_errors=0;
+real_world_effects=0; final_status=PASS; duration=52.06s.
+
+16. Operation Accounting
+
+arbitrary_wall_clock_timeouts_used=0
+focused_lifecycle_runs=1
+g2a6_seven_node_selector_runs=1
+bounded_compatibility_runs=1
+g2a5_lifecycle_runner_calls=1
+kernel_conformance_runner_calls=1
+living_gauntlet_runner_calls=1
+repository_wide_pytest_runs=0
+full_suite_runs=0
+provider_calls=0
+network_calls=0
+gemini_calls=0
+real_world_effects=0
+implementation_files_modified_by_audit=0
+test_files_modified_by_audit=0
+runtime_files_created_by_audit=0
+release_files_modified=0
+public_showcases_created=0
+g2b_files_created_or_modified=0
+staged_paths=0
+commits_created=0
+pushes=0
+OWNER_FULL_SUITE_REQUIRED=false
+
+17. Explicit Non-Claims
+
+- Root remains sole final authority.
+- Registry creates no authority or permission.
+- Corridor creates no authority.
+- Effect Firewall creates no Root authority.
+- Receipt creates no authority and remains evidence only.
+- Replay creates no authority and is non-executing.
+- Conformance creates no authority or permission.
+- Actual bounded execution uses one real Firewall per attempt.
+- Historical validation creates no real Firewall or capability.
+- Real-world effects remain zero.
+- G2-A is not production.
+- Gate 2 is not closed.
+- Operational Reference Kernel RC2 is not claimed.
+- Public release is not claimed.
+- Production readiness is not claimed.
+- Production security certification is not claimed.
+- Real connector readiness is not claimed.
+- G2-B has not started.
+
+18. Audit Disposition
+
+G2A7_AUDIT_STATUS=PASS
+DEFINITION_OF_DONE_PASS=109/109
+OWNER_FULL_SUITE_REQUIRED=false
+AUDIT_DISPOSITION=ACCEPT_G2A_ACTIONPACKET_LIFECYCLE_KILL_SWITCH_INTERNAL_CLOSURE
+
+The committed G2-A basis is accepted for internal closure documentation and
+owner review. This audit does not authorize its own commit, close Gate 2,
+claim RC2, claim a public release, or begin G2-B implementation.

@@ -1,0 +1,940 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/drs_meaning_record_v01.schema.json",
+  "title": "MeaningRecordV01",
+  "$ref": "#/$defs/MeaningRecordV01",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        }
+      ]
+    },
+    "noLineTerminator": {
+      "not": {
+        "pattern": "[\\n\\r\\u2028\\u2029]"
+      }
+    },
+    "secretSafe": {
+      "allOf": [
+        {
+          "not": {
+            "pattern": "(^|[^A-Za-z0-9])(?:[Aa][Pp][Ii]_[Kk][Ee][Yy]|[Aa][Pp][Ii]-[Kk][Ee][Yy]|[Aa][Pp][Ii][Kk][Ee][Yy]|[Xx]-[Aa][Pp][Ii]-[Kk][Ee][Yy]|[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Pp][Aa][Ss][Ss][Ww][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Cc][Cc][Ee][Ss][Ss]_[Tt][Oo][Kk][Ee][Nn]|[Aa][Cc][Cc][Ee][Ss][Ss]-[Tt][Oo][Kk][Ee][Nn]|[Rr][Ee][Ff][Rr][Ee][Ss][Hh]_[Tt][Oo][Kk][Ee][Nn]|[Rr][Ee][Ff][Rr][Ee][Ss][Hh]-[Tt][Oo][Kk][Ee][Nn]|[Cc][Ll][Ii][Ee][Nn][Tt]_[Ss][Ee][Cc][Rr][Ee][Tt]|[Cc][Ll][Ii][Ee][Nn][Tt]-[Ss][Ee][Cc][Rr][Ee][Tt]|[Aa][Uu][Tt][Hh][Ee][Nn][Tt][Ii][Cc][Aa][Tt][Ii][Oo][Nn]_[Ss][Ee][Cc][Rr][Ee][Tt]|[Aa][Uu][Tt][Hh][Ee][Nn][Tt][Ii][Cc][Aa][Tt][Ii][Oo][Nn]-[Ss][Ee][Cc][Rr][Ee][Tt]|[Bb][Aa][Nn][Kk]_[Aa][Cc][Cc][Oo][Uu][Nn][Tt]|[Bb][Aa][Nn][Kk]-[Aa][Cc][Cc][Oo][Uu][Nn][Tt]|[Ii][Bb][Aa][Nn]|[Cc][Vv][Vv])[=:]"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(^|[^A-Za-z0-9])(?:[Bb][Ee][Aa][Rr][Ee][Rr]|[Bb][Aa][Ss][Ii][Cc])[ \\t]+\\S"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(^|[^A-Za-z0-9])[Aa][Uu][Tt][Hh][Oo][Rr][Ii][Zz][Aa][Tt][Ii][Oo][Nn]:[ \\t]*\\S"
+          }
+        },
+        {
+          "not": {
+            "pattern": "-----[Bb][Ee][Gg][Ii][Nn] [A-Za-z0-9 ]*[Pp][Rr][Ii][Vv][Aa][Tt][Ee] [Kk][Ee][Yy]-----"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(?:^|[^0-9 -]|(?:^|[^0-9])[ -])[0-9](?:[ -]?[0-9]){12,18}(?![ -]?[0-9])"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(^|[^A-Za-z0-9])[A-Za-z][ ]?[A-Za-z][ ]?[0-9][ ]?[0-9](?:[ ]?[A-Za-z0-9]){11,30}(?![ ]?[A-Za-z0-9])"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(^|[^A-Za-z0-9])[Pp][Aa][Ss][Ss][Pp][Oo][Rr][Tt][:_][ \\t-]?[A-Za-z0-9]*[0-9][A-Za-z0-9]*([^A-Za-z0-9]|$)"
+          }
+        },
+        {
+          "if": {
+            "pattern": "^sealed-secret-ref:"
+          },
+          "then": {
+            "allOf": [
+              {
+                "pattern": "^sealed-secret-ref:[A-Za-z0-9][A-Za-z0-9._:/#-]{0,237}$"
+              },
+              {
+                "$ref": "#/$defs/noLineTerminator"
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "pattern": "^audit-ref:"
+          },
+          "then": {
+            "allOf": [
+              {
+                "pattern": "^audit-ref:[A-Za-z0-9][A-Za-z0-9._:/#-]{0,245}$"
+              },
+              {
+                "$ref": "#/$defs/noLineTerminator"
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "pattern": "^scope-ref:"
+          },
+          "then": {
+            "allOf": [
+              {
+                "pattern": "^scope-ref:[A-Za-z0-9][A-Za-z0-9._:/#-]{0,245}$"
+              },
+              {
+                "$ref": "#/$defs/noLineTerminator"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "token": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        },
+        {
+          "$ref": "#/$defs/secretSafe"
+        }
+      ]
+    },
+    "reference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/#-]*$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        },
+        {
+          "$ref": "#/$defs/secretSafe"
+        }
+      ]
+    },
+    "safeText1024": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^[^\\u0000-\\u0008\\u000B-\\u001F\\u007F]*$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/secretSafe"
+        }
+      ]
+    },
+    "safeText256": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u0008\\u000B-\\u001F\\u007F]*$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/secretSafe"
+        }
+      ]
+    },
+    "safeText512": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^[^\\u0000-\\u0008\\u000B-\\u001F\\u007F]*$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/secretSafe"
+        }
+      ]
+    },
+    "mediaType": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9.+-]*/[A-Za-z0-9][A-Za-z0-9.+-]*$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        }
+      ]
+    },
+    "drsMeaningId": {
+      "type": "string",
+      "minLength": 79,
+      "maxLength": 79,
+      "pattern": "^drsmeaning_v01:[0-9a-f]{64}$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        }
+      ]
+    },
+    "drsMemoryPointerId": {
+      "type": "string",
+      "minLength": 75,
+      "maxLength": 75,
+      "pattern": "^drsmem_v01:[0-9a-f]{64}$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        }
+      ]
+    },
+    "drsArtifactPointerId": {
+      "type": "string",
+      "minLength": 75,
+      "maxLength": 75,
+      "pattern": "^drsart_v01:[0-9a-f]{64}$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        }
+      ]
+    },
+    "drsLineageEdgeId": {
+      "type": "string",
+      "minLength": 76,
+      "maxLength": 76,
+      "pattern": "^drsedge_v01:[0-9a-f]{64}$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        }
+      ]
+    },
+    "drsAuthorityEnvelopeId": {
+      "type": "string",
+      "minLength": 76,
+      "maxLength": 76,
+      "pattern": "^drsauth_v01:[0-9a-f]{64}$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        }
+      ]
+    },
+    "drsTimeEnvelopeId": {
+      "type": "string",
+      "minLength": 76,
+      "maxLength": 76,
+      "pattern": "^drstime_v01:[0-9a-f]{64}$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        }
+      ]
+    },
+    "int64": {
+      "type": "integer",
+      "minimum": -9223372036854775808,
+      "maximum": 9223372036854775807
+    },
+    "nonnegativeInt64": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9223372036854775807
+    },
+    "positiveInt64": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9223372036854775807
+    },
+    "referenceArray64": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "uniqueItems": true,
+      "maxItems": 64
+    },
+    "tokenArray64": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/token"
+      },
+      "uniqueItems": true,
+      "maxItems": 64
+    },
+    "tokenArray32": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/token"
+      },
+      "uniqueItems": true,
+      "maxItems": 32
+    },
+    "safeText256Array32": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/safeText256"
+      },
+      "uniqueItems": true,
+      "maxItems": 32
+    },
+    "SemanticAddressV01": {
+      "$ref": "drs_semantic_address_v01.schema.json"
+    },
+    "MemoryPointerV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pointer_version",
+        "pointer_id",
+        "storage_class",
+        "object_reference",
+        "content_sha256",
+        "record_class",
+        "byte_length",
+        "access_policy_id",
+        "sensitivity_class",
+        "allowed_use_classes",
+        "forbidden_use_classes",
+        "summary_read_permitted",
+        "payload_read_permitted",
+        "creates_authority",
+        "creates_permission"
+      ],
+      "properties": {
+        "pointer_version": {
+          "const": "v0.1"
+        },
+        "pointer_id": {
+          "$ref": "#/$defs/drsMemoryPointerId"
+        },
+        "storage_class": {
+          "enum": [
+            "LOCAL_MEANING_RECORD",
+            "LOCAL_LINEAGE_SET",
+            "LOCAL_CONFLICT_SET",
+            "LOCAL_DEADEND_PROOF"
+          ]
+        },
+        "object_reference": {
+          "$ref": "#/$defs/reference"
+        },
+        "content_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "record_class": {
+          "$ref": "#/$defs/token"
+        },
+        "byte_length": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nonnegativeInt64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "access_policy_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "sensitivity_class": {
+          "enum": [
+            "PUBLIC",
+            "INTERNAL",
+            "CONFIDENTIAL_REFERENCE_ONLY",
+            "SECRET_REFERENCE_ONLY"
+          ]
+        },
+        "allowed_use_classes": {
+          "$ref": "#/$defs/tokenArray64"
+        },
+        "forbidden_use_classes": {
+          "$ref": "#/$defs/tokenArray64"
+        },
+        "summary_read_permitted": {
+          "type": "boolean"
+        },
+        "payload_read_permitted": {
+          "type": "boolean"
+        },
+        "creates_authority": {
+          "const": false
+        },
+        "creates_permission": {
+          "const": false
+        }
+      }
+    },
+    "ArtifactPointerV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pointer_version",
+        "pointer_id",
+        "storage_class",
+        "object_reference",
+        "content_sha256",
+        "media_type",
+        "byte_length",
+        "access_policy_id",
+        "sensitivity_class",
+        "allowed_use_classes",
+        "forbidden_use_classes",
+        "summary_read_permitted",
+        "payload_read_permitted",
+        "creates_authority",
+        "creates_permission"
+      ],
+      "properties": {
+        "pointer_version": {
+          "const": "v0.1"
+        },
+        "pointer_id": {
+          "$ref": "#/$defs/drsArtifactPointerId"
+        },
+        "storage_class": {
+          "enum": [
+            "LOCAL_DOCUMENT",
+            "LOCAL_AUDIT_TRACE",
+            "LOCAL_SEALED_EVIDENCE"
+          ]
+        },
+        "object_reference": {
+          "$ref": "#/$defs/reference"
+        },
+        "content_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "media_type": {
+          "$ref": "#/$defs/mediaType"
+        },
+        "byte_length": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nonnegativeInt64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "access_policy_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "sensitivity_class": {
+          "enum": [
+            "PUBLIC",
+            "INTERNAL",
+            "CONFIDENTIAL_REFERENCE_ONLY",
+            "SECRET_REFERENCE_ONLY"
+          ]
+        },
+        "allowed_use_classes": {
+          "$ref": "#/$defs/tokenArray64"
+        },
+        "forbidden_use_classes": {
+          "$ref": "#/$defs/tokenArray64"
+        },
+        "summary_read_permitted": {
+          "type": "boolean"
+        },
+        "payload_read_permitted": {
+          "type": "boolean"
+        },
+        "creates_authority": {
+          "const": false
+        },
+        "creates_permission": {
+          "const": false
+        }
+      }
+    },
+    "LineageEdgeV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lineage_edge_version",
+        "lineage_edge_id",
+        "source_meaning_record_id",
+        "target_meaning_record_id",
+        "relation_class",
+        "claim_dimension",
+        "source_history_hash",
+        "evidence_ref_ids",
+        "created_at",
+        "recording_component",
+        "creates_authority",
+        "transfers_authority"
+      ],
+      "properties": {
+        "lineage_edge_version": {
+          "const": "v0.1"
+        },
+        "lineage_edge_id": {
+          "$ref": "#/$defs/drsLineageEdgeId"
+        },
+        "source_meaning_record_id": {
+          "$ref": "#/$defs/drsMeaningId"
+        },
+        "target_meaning_record_id": {
+          "$ref": "#/$defs/drsMeaningId"
+        },
+        "relation_class": {
+          "enum": [
+            "DERIVED_FROM",
+            "SUPPORTS",
+            "WARNS_AGAINST",
+            "CONTRADICTS",
+            "SUPERSEDES",
+            "REPLACES",
+            "SAME_TRACE",
+            "REFERENCES",
+            "BLOCKED_BY_POLICY",
+            "DEGRADED_FROM"
+          ]
+        },
+        "claim_dimension": {
+          "$ref": "#/$defs/token"
+        },
+        "source_history_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "evidence_ref_ids": {
+          "$ref": "#/$defs/referenceArray64"
+        },
+        "created_at": {
+          "$ref": "#/$defs/int64"
+        },
+        "recording_component": {
+          "$ref": "#/$defs/token"
+        },
+        "creates_authority": {
+          "const": false
+        },
+        "transfers_authority": {
+          "const": false
+        }
+      }
+    },
+    "DRSAuthorityEnvelopeV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "authority_class": {
+                "const": "ROOT_ACCEPTED_CONTEXT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "owning_local_root_id": {
+                "$ref": "#/$defs/reference"
+              },
+              "source_root_decision_input_id": {
+                "$ref": "#/$defs/reference"
+              },
+              "source_root_decision_id": {
+                "$ref": "#/$defs/reference"
+              },
+              "source_root_decision_hash": {
+                "$ref": "#/$defs/sha256"
+              },
+              "root_acceptance_state": {
+                "const": "ACCEPTED_CONTEXT"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "authority_class": {
+                "enum": [
+                  "ROOT_ACCEPTED_WORK",
+                  "ROOT_FINAL_REFERENCE"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "owning_local_root_id": {
+                "$ref": "#/$defs/reference"
+              },
+              "source_root_decision_input_id": {
+                "$ref": "#/$defs/reference"
+              },
+              "source_root_decision_id": {
+                "$ref": "#/$defs/reference"
+              },
+              "source_root_decision_hash": {
+                "$ref": "#/$defs/sha256"
+              },
+              "root_acceptance_state": {
+                "const": "ACCEPTED_WORK"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "authority_class": {
+                "enum": [
+                  "UNTRUSTED_SEMANTIC_DRAFT",
+                  "CONNECTOR_OBSERVATION",
+                  "EVIDENCE_CANDIDATE",
+                  "ACTION_HISTORY_REFERENCE"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "owning_local_root_id": {
+                "type": "null"
+              },
+              "source_root_decision_input_id": {
+                "type": "null"
+              },
+              "source_root_decision_id": {
+                "type": "null"
+              },
+              "source_root_decision_hash": {
+                "type": "null"
+              },
+              "root_acceptance_state": {
+                "enum": [
+                  "UNREVIEWED",
+                  "REJECTED",
+                  "QUARANTINED"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "required": [
+        "authority_envelope_version",
+        "authority_envelope_id",
+        "authority_class",
+        "owning_local_root_id",
+        "source_root_decision_input_id",
+        "source_root_decision_id",
+        "source_root_decision_hash",
+        "authority_scope_fingerprint",
+        "root_acceptance_state",
+        "recording_component",
+        "creates_authority",
+        "creates_permission",
+        "action_permission_present"
+      ],
+      "properties": {
+        "authority_envelope_version": {
+          "const": "v0.1"
+        },
+        "authority_envelope_id": {
+          "$ref": "#/$defs/drsAuthorityEnvelopeId"
+        },
+        "authority_class": {
+          "enum": [
+            "UNTRUSTED_SEMANTIC_DRAFT",
+            "CONNECTOR_OBSERVATION",
+            "EVIDENCE_CANDIDATE",
+            "ROOT_ACCEPTED_CONTEXT",
+            "ROOT_ACCEPTED_WORK",
+            "ROOT_FINAL_REFERENCE",
+            "ACTION_HISTORY_REFERENCE"
+          ]
+        },
+        "owning_local_root_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/reference"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_root_decision_input_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/reference"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_root_decision_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/reference"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_root_decision_hash": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authority_scope_fingerprint": {
+          "$ref": "#/$defs/sha256"
+        },
+        "root_acceptance_state": {
+          "enum": [
+            "UNREVIEWED",
+            "ACCEPTED_CONTEXT",
+            "ACCEPTED_WORK",
+            "REJECTED",
+            "QUARANTINED"
+          ]
+        },
+        "recording_component": {
+          "$ref": "#/$defs/token"
+        },
+        "creates_authority": {
+          "const": false
+        },
+        "creates_permission": {
+          "const": false
+        },
+        "action_permission_present": {
+          "const": false
+        }
+      }
+    },
+    "DRSTimeEnvelopeV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time_envelope_version",
+        "time_envelope_id",
+        "pt_created_at",
+        "kt_as_of",
+        "et_observed_at",
+        "ct_context_anchor",
+        "ttl_seconds",
+        "valid_from",
+        "valid_to",
+        "source_observed_at",
+        "source_reported_at",
+        "system_ingested_at",
+        "system_verified_at",
+        "freshness_policy_id"
+      ],
+      "properties": {
+        "time_envelope_version": {
+          "const": "v0.1"
+        },
+        "time_envelope_id": {
+          "$ref": "#/$defs/drsTimeEnvelopeId"
+        },
+        "pt_created_at": {
+          "$ref": "#/$defs/int64"
+        },
+        "kt_as_of": {
+          "$ref": "#/$defs/int64"
+        },
+        "et_observed_at": {
+          "$ref": "#/$defs/int64"
+        },
+        "ct_context_anchor": {
+          "$ref": "#/$defs/int64"
+        },
+        "ttl_seconds": {
+          "$ref": "#/$defs/positiveInt64"
+        },
+        "valid_from": {
+          "$ref": "#/$defs/int64"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/int64"
+        },
+        "source_observed_at": {
+          "$ref": "#/$defs/int64"
+        },
+        "source_reported_at": {
+          "$ref": "#/$defs/int64"
+        },
+        "system_ingested_at": {
+          "$ref": "#/$defs/int64"
+        },
+        "system_verified_at": {
+          "$ref": "#/$defs/int64"
+        },
+        "freshness_policy_id": {
+          "$ref": "#/$defs/reference"
+        }
+      }
+    },
+    "MeaningRecordV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "meaning_record_version",
+        "meaning_record_id",
+        "semantic_address",
+        "predecessor_record_id",
+        "supersession_reason",
+        "safe_summary",
+        "semantic_tags",
+        "resonance_reason",
+        "memory_pointers",
+        "artifact_pointers",
+        "source_reference_ids",
+        "lineage_edges",
+        "time_envelope",
+        "authority_envelope",
+        "persistent_lifecycle_state",
+        "risk_hints",
+        "conflict_hints",
+        "reuse_policy_class",
+        "policy_version",
+        "schema_versions",
+        "content_fingerprint",
+        "recording_component",
+        "local_reference_kernel_scope",
+        "creates_authority",
+        "creates_permission"
+      ],
+      "properties": {
+        "meaning_record_version": {
+          "const": "v0.1"
+        },
+        "meaning_record_id": {
+          "$ref": "#/$defs/drsMeaningId"
+        },
+        "semantic_address": {
+          "$ref": "#/$defs/SemanticAddressV01"
+        },
+        "predecessor_record_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/drsMeaningId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "supersession_reason": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/safeText256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "safe_summary": {
+          "$ref": "#/$defs/safeText1024"
+        },
+        "semantic_tags": {
+          "$ref": "#/$defs/tokenArray32"
+        },
+        "resonance_reason": {
+          "$ref": "#/$defs/safeText512"
+        },
+        "memory_pointers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemoryPointerV01"
+          },
+          "uniqueItems": true,
+          "maxItems": 16
+        },
+        "artifact_pointers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactPointerV01"
+          },
+          "uniqueItems": true,
+          "maxItems": 16
+        },
+        "source_reference_ids": {
+          "$ref": "#/$defs/referenceArray64"
+        },
+        "lineage_edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LineageEdgeV01"
+          },
+          "uniqueItems": true,
+          "maxItems": 32
+        },
+        "time_envelope": {
+          "$ref": "#/$defs/DRSTimeEnvelopeV01"
+        },
+        "authority_envelope": {
+          "$ref": "#/$defs/DRSAuthorityEnvelopeV01"
+        },
+        "persistent_lifecycle_state": {
+          "enum": [
+            "ACTIVE",
+            "COMPLETED",
+            "REJECTED",
+            "QUARANTINED",
+            "DEADEND",
+            "ARCHIVED"
+          ]
+        },
+        "risk_hints": {
+          "$ref": "#/$defs/safeText256Array32"
+        },
+        "conflict_hints": {
+          "$ref": "#/$defs/safeText256Array32"
+        },
+        "reuse_policy_class": {
+          "$ref": "#/$defs/token"
+        },
+        "policy_version": {
+          "$ref": "#/$defs/token"
+        },
+        "schema_versions": {
+          "$ref": "#/$defs/tokenArray32"
+        },
+        "content_fingerprint": {
+          "$ref": "#/$defs/sha256"
+        },
+        "recording_component": {
+          "$ref": "#/$defs/token"
+        },
+        "local_reference_kernel_scope": {
+          "const": "LOCAL_REFERENCE_KERNEL"
+        },
+        "creates_authority": {
+          "const": false
+        },
+        "creates_permission": {
+          "const": false
+        }
+      }
+    }
+  }
+}

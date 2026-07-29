@@ -1,0 +1,557 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/reuse_certificate_v01.schema.json",
+  "title": "ReuseCertificateV01",
+  "$ref": "#/$defs/ReuseCertificateV01",
+  "$defs": {
+    "sha256": {
+      "$ref": "drs_meaning_record_v01.schema.json#/$defs/sha256"
+    },
+    "reference": {
+      "$ref": "drs_meaning_record_v01.schema.json#/$defs/reference"
+    },
+    "token": {
+      "$ref": "drs_meaning_record_v01.schema.json#/$defs/token"
+    },
+    "noLineTerminator": {
+      "$ref": "drs_meaning_record_v01.schema.json#/$defs/noLineTerminator"
+    },
+    "int64": {
+      "type": "integer",
+      "minimum": -9223372036854775808,
+      "maximum": 9223372036854775807
+    },
+    "tokenArray32": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/token"
+      },
+      "uniqueItems": true,
+      "maxItems": 32
+    },
+    "evaluationTimeSource": {
+      "enum": [
+        "INJECTED_CURRENT_DECISION_TIME",
+        "RECORDED_HISTORICAL_AS_OF_TIME",
+        "RECORDED_AUDIT_REPLAY_TIME",
+        "INJECTED_ANALYSIS_TIME"
+      ]
+    },
+    "RootShortcutAuthorizationProjectionV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "root_shortcut_projection_version",
+        "root_shortcut_projection_id",
+        "owning_local_root_id",
+        "root_kernel_id",
+        "root_decision_input_id",
+        "root_decision_id",
+        "root_decision_hash",
+        "selected_candidate_id",
+        "semantic_address_id",
+        "meaning_record_id",
+        "query_id",
+        "query_evaluation_id",
+        "allowed_reuse_class",
+        "scope_fingerprint",
+        "policy_version",
+        "schema_versions",
+        "valid_from",
+        "valid_to",
+        "root_shortcut_policy_ref",
+        "carries_validated_authority_evidence",
+        "creates_authority",
+        "creates_permission",
+        "creates_action_commit_packet",
+        "creates_receipt",
+        "creates_effect",
+        "creates_final_output"
+      ],
+      "properties": {
+        "root_shortcut_projection_version": {
+          "const": "v0.1"
+        },
+        "root_shortcut_projection_id": {
+          "type": "string",
+          "minLength": 84,
+          "maxLength": 84,
+          "pattern": "^drsrootshortcut_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "owning_local_root_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "root_kernel_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "root_decision_input_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "root_decision_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "root_decision_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "selected_candidate_id": {
+          "type": "string",
+          "minLength": 81,
+          "maxLength": 81,
+          "pattern": "^drscandidate_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "semantic_address_id": {
+          "type": "string",
+          "minLength": 76,
+          "maxLength": 76,
+          "pattern": "^drsaddr_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "meaning_record_id": {
+          "type": "string",
+          "minLength": 79,
+          "maxLength": 79,
+          "pattern": "^drsmeaning_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "query_id": {
+          "type": "string",
+          "minLength": 77,
+          "maxLength": 77,
+          "pattern": "^drsquery_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "query_evaluation_id": {
+          "type": "string",
+          "minLength": 77,
+          "maxLength": 77,
+          "pattern": "^drsqeval_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "allowed_reuse_class": {
+          "enum": [
+            "CONTEXT_ONLY",
+            "ANSWER_SHORTCUT"
+          ]
+        },
+        "scope_fingerprint": {
+          "$ref": "#/$defs/sha256"
+        },
+        "policy_version": {
+          "$ref": "#/$defs/reference"
+        },
+        "schema_versions": {
+          "$ref": "#/$defs/tokenArray32"
+        },
+        "valid_from": {
+          "$ref": "#/$defs/int64"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/int64"
+        },
+        "root_shortcut_policy_ref": {
+          "$ref": "#/$defs/reference"
+        },
+        "carries_validated_authority_evidence": {
+          "const": true
+        },
+        "creates_authority": {
+          "const": false
+        },
+        "creates_permission": {
+          "const": false
+        },
+        "creates_action_commit_packet": {
+          "const": false
+        },
+        "creates_receipt": {
+          "const": false
+        },
+        "creates_effect": {
+          "const": false
+        },
+        "creates_final_output": {
+          "const": false
+        }
+      }
+    },
+    "ReuseCertificateV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "certificate_version",
+        "certificate_id",
+        "semantic_address_id",
+        "meaning_record_id",
+        "query_id",
+        "query_evaluation_id",
+        "resolution_candidate_id",
+        "root_shortcut_authorization_projection_id",
+        "owning_local_root_id",
+        "root_decision_input_id",
+        "root_decision_id",
+        "root_decision_hash",
+        "case_type",
+        "scope_fingerprint",
+        "required_evidence_classes",
+        "observed_evidence_fingerprint",
+        "forbidden_changes",
+        "checked_dependency_fingerprint",
+        "valid_from",
+        "valid_to",
+        "reuse_class",
+        "policy_version",
+        "schema_versions",
+        "root_shortcut_policy_ref",
+        "source_history_hash",
+        "action_history_binding_id",
+        "issued_at",
+        "evaluated_at",
+        "creates_authority",
+        "creates_permission",
+        "creates_final_output",
+        "creates_action_commit_packet",
+        "creates_receipt",
+        "creates_capability",
+        "creates_effect_handle",
+        "creates_effect",
+        "real_world_effects_count",
+        "proves_external_truth",
+        "proves_action_occurred"
+      ],
+      "properties": {
+        "certificate_version": {
+          "const": "v0.1"
+        },
+        "certificate_id": {
+          "type": "string",
+          "minLength": 78,
+          "maxLength": 78,
+          "pattern": "^reusecert_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "semantic_address_id": {
+          "type": "string",
+          "minLength": 76,
+          "maxLength": 76,
+          "pattern": "^drsaddr_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "meaning_record_id": {
+          "type": "string",
+          "minLength": 79,
+          "maxLength": 79,
+          "pattern": "^drsmeaning_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "query_id": {
+          "type": "string",
+          "minLength": 77,
+          "maxLength": 77,
+          "pattern": "^drsquery_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "query_evaluation_id": {
+          "type": "string",
+          "minLength": 77,
+          "maxLength": 77,
+          "pattern": "^drsqeval_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "resolution_candidate_id": {
+          "type": "string",
+          "minLength": 81,
+          "maxLength": 81,
+          "pattern": "^drscandidate_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "root_shortcut_authorization_projection_id": {
+          "type": "string",
+          "minLength": 84,
+          "maxLength": 84,
+          "pattern": "^drsrootshortcut_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "owning_local_root_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "root_decision_input_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "root_decision_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "root_decision_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "case_type": {
+          "const": "NON_ACTION_INFORMATIONAL"
+        },
+        "scope_fingerprint": {
+          "$ref": "#/$defs/sha256"
+        },
+        "required_evidence_classes": {
+          "$ref": "#/$defs/tokenArray32"
+        },
+        "observed_evidence_fingerprint": {
+          "$ref": "#/$defs/sha256"
+        },
+        "forbidden_changes": {
+          "$ref": "#/$defs/tokenArray32"
+        },
+        "checked_dependency_fingerprint": {
+          "$ref": "#/$defs/sha256"
+        },
+        "valid_from": {
+          "$ref": "#/$defs/int64"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/int64"
+        },
+        "reuse_class": {
+          "enum": [
+            "CONTEXT_ONLY",
+            "ANSWER_SHORTCUT"
+          ]
+        },
+        "policy_version": {
+          "$ref": "#/$defs/reference"
+        },
+        "schema_versions": {
+          "$ref": "#/$defs/tokenArray32"
+        },
+        "root_shortcut_policy_ref": {
+          "$ref": "#/$defs/reference"
+        },
+        "source_history_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "action_history_binding_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 82,
+              "maxLength": 82,
+              "pattern": "^drsg2ahistory_v01:[0-9a-f]{64}$",
+              "allOf": [
+                {
+                  "$ref": "#/$defs/noLineTerminator"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "issued_at": {
+          "$ref": "#/$defs/int64"
+        },
+        "evaluated_at": {
+          "$ref": "#/$defs/int64"
+        },
+        "creates_authority": {
+          "const": false
+        },
+        "creates_permission": {
+          "const": false
+        },
+        "creates_final_output": {
+          "const": false
+        },
+        "creates_action_commit_packet": {
+          "const": false
+        },
+        "creates_receipt": {
+          "const": false
+        },
+        "creates_capability": {
+          "const": false
+        },
+        "creates_effect_handle": {
+          "const": false
+        },
+        "creates_effect": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        },
+        "proves_external_truth": {
+          "const": false
+        },
+        "proves_action_occurred": {
+          "const": false
+        }
+      }
+    },
+    "G2AActionHistoryBindingV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binding_version",
+        "binding_id",
+        "packet_id",
+        "registry_id",
+        "transition_history_sha256",
+        "disposition_history_sha256",
+        "lifecycle_state",
+        "disposition",
+        "reservation_owner_packet_id",
+        "terminal_receipt_ref",
+        "current_status_validation_id",
+        "current_status_evaluated_at",
+        "current_status_evaluation_time_source",
+        "shortcut_eligible",
+        "reason_codes",
+        "creates_authority",
+        "creates_permission"
+      ],
+      "properties": {
+        "binding_version": {
+          "const": "v0.1"
+        },
+        "binding_id": {
+          "type": "string",
+          "minLength": 82,
+          "maxLength": 82,
+          "pattern": "^drsg2ahistory_v01:[0-9a-f]{64}$",
+          "allOf": [
+            {
+              "$ref": "#/$defs/noLineTerminator"
+            }
+          ]
+        },
+        "packet_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "registry_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "transition_history_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "disposition_history_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "lifecycle_state": {
+          "enum": [
+            "CREATED",
+            "ROOT_AUTHORIZED",
+            "QUEUED",
+            "PENDING_FULFILLMENT",
+            "FULFILLED_MOCK",
+            "RECEIPT_RECEIVED",
+            "BLOCKED",
+            "FAILED",
+            "EXPIRED",
+            "REVOKED",
+            "SUPERSEDED"
+          ]
+        },
+        "disposition": {
+          "enum": [
+            "UNCLAIMED",
+            "RESERVED",
+            "CONSUMED",
+            "UNCERTAIN_CLOSED"
+          ]
+        },
+        "reservation_owner_packet_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/reference"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "terminal_receipt_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/reference"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "current_status_validation_id": {
+          "$ref": "#/$defs/reference"
+        },
+        "current_status_evaluated_at": {
+          "$ref": "#/$defs/int64"
+        },
+        "current_status_evaluation_time_source": {
+          "$ref": "#/$defs/evaluationTimeSource"
+        },
+        "shortcut_eligible": {
+          "const": false
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/tokenArray32"
+        },
+        "creates_authority": {
+          "const": false
+        },
+        "creates_permission": {
+          "const": false
+        }
+      }
+    }
+  }
+}

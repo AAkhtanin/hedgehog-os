@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog-os.local/schemas/drs_semantic_address_v01.schema.json",
+  "title": "SemanticAddressV01",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "address_profile_version",
+    "namespace",
+    "domain",
+    "subject_class",
+    "intent_class",
+    "meaning_schema_id",
+    "meaning_schema_version",
+    "semantic_address_id"
+  ],
+  "properties": {
+    "address_profile_version": {
+      "const": "v0.1"
+    },
+    "namespace": {
+      "$ref": "#/$defs/token"
+    },
+    "domain": {
+      "$ref": "#/$defs/token"
+    },
+    "subject_class": {
+      "$ref": "#/$defs/token"
+    },
+    "intent_class": {
+      "$ref": "#/$defs/token"
+    },
+    "meaning_schema_id": {
+      "$ref": "#/$defs/token"
+    },
+    "meaning_schema_version": {
+      "$ref": "#/$defs/token"
+    },
+    "semantic_address_id": {
+      "$ref": "#/$defs/semanticAddressId"
+    }
+  },
+  "$defs": {
+    "noLineTerminator": {
+      "not": {
+        "pattern": "[\\n\\r\\u2028\\u2029]"
+      }
+    },
+    "secretSafe": {
+      "allOf": [
+        {
+          "not": {
+            "pattern": "(^|[^A-Za-z0-9])(?:[Aa][Pp][Ii]_[Kk][Ee][Yy]|[Aa][Pp][Ii]-[Kk][Ee][Yy]|[Aa][Pp][Ii][Kk][Ee][Yy]|[Xx]-[Aa][Pp][Ii]-[Kk][Ee][Yy]|[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Pp][Aa][Ss][Ss][Ww][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Cc][Cc][Ee][Ss][Ss]_[Tt][Oo][Kk][Ee][Nn]|[Aa][Cc][Cc][Ee][Ss][Ss]-[Tt][Oo][Kk][Ee][Nn]|[Rr][Ee][Ff][Rr][Ee][Ss][Hh]_[Tt][Oo][Kk][Ee][Nn]|[Rr][Ee][Ff][Rr][Ee][Ss][Hh]-[Tt][Oo][Kk][Ee][Nn]|[Cc][Ll][Ii][Ee][Nn][Tt]_[Ss][Ee][Cc][Rr][Ee][Tt]|[Cc][Ll][Ii][Ee][Nn][Tt]-[Ss][Ee][Cc][Rr][Ee][Tt]|[Aa][Uu][Tt][Hh][Ee][Nn][Tt][Ii][Cc][Aa][Tt][Ii][Oo][Nn]_[Ss][Ee][Cc][Rr][Ee][Tt]|[Aa][Uu][Tt][Hh][Ee][Nn][Tt][Ii][Cc][Aa][Tt][Ii][Oo][Nn]-[Ss][Ee][Cc][Rr][Ee][Tt]|[Bb][Aa][Nn][Kk]_[Aa][Cc][Cc][Oo][Uu][Nn][Tt]|[Bb][Aa][Nn][Kk]-[Aa][Cc][Cc][Oo][Uu][Nn][Tt]|[Ii][Bb][Aa][Nn]|[Cc][Vv][Vv])[=:]"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(^|[^A-Za-z0-9])(?:[Bb][Ee][Aa][Rr][Ee][Rr]|[Bb][Aa][Ss][Ii][Cc])[ \\t]+\\S"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(^|[^A-Za-z0-9])[Aa][Uu][Tt][Hh][Oo][Rr][Ii][Zz][Aa][Tt][Ii][Oo][Nn]:[ \\t]*\\S"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(?:^|[^0-9 -]|(?:^|[^0-9])[ -])[0-9](?:[ -]?[0-9]){12,18}(?![ -]?[0-9])"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(^|[^A-Za-z0-9])[A-Za-z][ ]?[A-Za-z][ ]?[0-9][ ]?[0-9](?:[ ]?[A-Za-z0-9]){11,30}(?![ ]?[A-Za-z0-9])"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(^|[^A-Za-z0-9])[Pp][Aa][Ss][Ss][Pp][Oo][Rr][Tt][:_][ \\t-]?[A-Za-z0-9]*[0-9][A-Za-z0-9]*([^A-Za-z0-9]|$)"
+          }
+        },
+        {
+          "if": {
+            "pattern": "^sealed-secret-ref:"
+          },
+          "then": {
+            "allOf": [
+              {
+                "pattern": "^sealed-secret-ref:[A-Za-z0-9][A-Za-z0-9._:/#-]{0,237}$"
+              },
+              {
+                "$ref": "#/$defs/noLineTerminator"
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "pattern": "^audit-ref:"
+          },
+          "then": {
+            "allOf": [
+              {
+                "pattern": "^audit-ref:[A-Za-z0-9][A-Za-z0-9._:/#-]{0,245}$"
+              },
+              {
+                "$ref": "#/$defs/noLineTerminator"
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "pattern": "^scope-ref:"
+          },
+          "then": {
+            "allOf": [
+              {
+                "pattern": "^scope-ref:[A-Za-z0-9][A-Za-z0-9._:/#-]{0,245}$"
+              },
+              {
+                "$ref": "#/$defs/noLineTerminator"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "token": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        },
+        {
+          "$ref": "#/$defs/secretSafe"
+        }
+      ]
+    },
+    "semanticAddressId": {
+      "type": "string",
+      "minLength": 76,
+      "maxLength": 76,
+      "pattern": "^drsaddr_v01:[0-9a-f]{64}$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/noLineTerminator"
+        }
+      ]
+    }
+  }
+}

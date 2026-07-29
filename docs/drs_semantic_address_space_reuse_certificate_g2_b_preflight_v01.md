@@ -1,6 +1,6 @@
 # Hedgehog OS Gate 2 / G2-B
 ## DRS Semantic Address Space, Controlled Memory Descent,
-## and ReuseCertificate Preflight v0.1
+## and ReuseCertificate Preflight v0.1.1
 
 ## 1. Metadata
 
@@ -9,7 +9,7 @@ document_id:
   drs_semantic_address_space_reuse_certificate_g2_b_preflight_v01
 
 document_revision:
-  v0.1
+  v0.1.1
 
 document_status:
   PREFLIGHT
@@ -266,14 +266,29 @@ schema versions fail closed.
 
 Canonical identity profile `drs_g2b_identity_profile_v01` is frozen as:
 
-1. validate every consequential field with exact built-in or exact canonical
-   dataclass type;
-2. project the exact ordered identity fields to a JSON array;
-3. encode compact JSON with UTF-8, `ensure_ascii=True`, separators `(",", ":")`,
-   and no key sorting because field order is positional;
-4. prepend the exact ASCII domain tag and one LF byte;
-5. compute lowercase SHA-256 hex;
-6. prepend the exact identity prefix.
+1. validate every consequential field;
+2. build the exact ordered positional material;
+3. project it through `canonical_json_bytes_v01`;
+4. call exactly once:
+
+   ```python
+   domain_separated_sha256_hex_v01(
+       domain=<exact committed ASCII domain tag>,
+       payload=<canonical JSON bytes>,
+   )
+   ```
+
+5. do not manually prepend the domain tag;
+6. do not manually append or prepend an LF byte;
+7. do not duplicate the Kernel framing;
+8. prepend the committed type-specific textual ID prefix to the returned
+   lowercase hex digest.
+
+The frozen Kernel function owns domain framing. Do not reimplement or alter
+its framing.
+
+v0.1.1 corrects identity API wording only; no field, authority, scope, slice,
+test, or non-claim law changed.
 
 No Unicode normalization, case folding, trimming, alias mapping, default
 insertion, numeric coercion, or omitted consequential field is permitted.
@@ -2139,7 +2154,10 @@ Definition-of-Done condition count: **120**.
 17. `bool` is rejected wherever `int` is required.
 18. `str` subclasses and custom-equality substitutes are rejected.
 19. Binary floats and `Decimal` are absent from canonical identity and ranking.
-20. Every canonical identity rebuild uses the exact domain-separated profile.
+20. Every canonical identity rebuild calls the exact frozen Kernel
+    `domain_separated_sha256_hex_v01` API once with the committed ASCII domain
+    tag through `domain=`, canonical JSON bytes through `payload=`, and no
+    manual or duplicate domain/LF framing.
 21. `SemanticAddressV01` identity uses exactly the seven frozen fields.
 22. Dynamic user, query, time, Root, score, lifecycle, pointer, and certificate
     context is excluded from address identity.

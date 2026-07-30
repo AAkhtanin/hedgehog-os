@@ -4616,3 +4616,1749 @@ def test_g2b_schema_and_version_mixing_fails_closed() -> None:
             schemas["drs_semantic_address_v01.schema.json"],
             registry=registry,
         ).validate(semantic.semantic_address_to_plain_data_v01(mixed))
+
+
+_B2_EVIDENCE_CLASSES = (
+    "SOURCE_IDENTITY",
+    "SOURCE_INTEGRITY",
+    "PROVENANCE_CHAIN",
+    "TIME_FITNESS",
+    "POLICY_COMPATIBILITY",
+    "SCHEMA_COMPATIBILITY",
+    "CONFLICT_CLEARANCE",
+    "ROOT_DECISION",
+    "SOURCE_HISTORY",
+)
+_B2_ALL_TIME_AXES = ("PT", "KT", "ET", "CT", "TTL", "VALIDITY")
+_B2_MODE_PROFILE = (
+    (
+        "CURRENT_DECISION",
+        "INJECTED_CURRENT_DECISION_TIME",
+        _B2_ALL_TIME_AXES,
+    ),
+    (
+        "DIRECT_REUSE_CANDIDATE",
+        "INJECTED_CURRENT_DECISION_TIME",
+        _B2_ALL_TIME_AXES,
+    ),
+    (
+        "HISTORICAL_AS_OF",
+        "RECORDED_HISTORICAL_AS_OF_TIME",
+        ("KT", "VALIDITY"),
+    ),
+    (
+        "AUDIT_REPLAY",
+        "RECORDED_AUDIT_REPLAY_TIME",
+        ("PT", "KT", "ET", "CT", "VALIDITY"),
+    ),
+    (
+        "TREND_ANALYSIS",
+        "INJECTED_ANALYSIS_TIME",
+        ("KT", "ET", "VALIDITY"),
+    ),
+    (
+        "MEMORY_CONTEXT_ONLY",
+        "INJECTED_ANALYSIS_TIME",
+        ("KT", "TTL", "VALIDITY"),
+    ),
+)
+_B2_IDENTITY_VECTORS = {
+    "query_evaluation_id": (
+        "drsqeval_v01:"
+        "febbf3354c3aecfc9b7a3a6b88c4f2f61d930f6f2faaae5f0df3801dab230ba3"
+    ),
+    "candidate_ids": (
+        "drscandidate_v01:"
+        "0c233cfa0bffa0b6c30641dbf0ebaab479e20f5ba7383d5dfc67e4dcf58e5e7a",
+        "drscandidate_v01:"
+        "10ad3d8778725da9f3fb7bc7203252490e81b7c3c2dab669ef26498f37b6a087",
+        "drscandidate_v01:"
+        "3088fd39fcee23ff38f19743f68459bcab64e0675fcdcb06637f6de1e9dd80cc",
+    ),
+    "ranked_candidate_ids": (
+        "drscandidate_v01:"
+        "0c233cfa0bffa0b6c30641dbf0ebaab479e20f5ba7383d5dfc67e4dcf58e5e7a",
+        "drscandidate_v01:"
+        "10ad3d8778725da9f3fb7bc7203252490e81b7c3c2dab669ef26498f37b6a087",
+        "drscandidate_v01:"
+        "3088fd39fcee23ff38f19743f68459bcab64e0675fcdcb06637f6de1e9dd80cc",
+    ),
+    "selected_candidate_id": (
+        "drscandidate_v01:"
+        "0c233cfa0bffa0b6c30641dbf0ebaab479e20f5ba7383d5dfc67e4dcf58e5e7a"
+    ),
+    "observed_evidence_fingerprint": (
+        "f73b43cc76eacc59184c16065bf76276c072afaa02011a1a49fb0e48759bb38e"
+    ),
+    "checked_dependency_fingerprint": (
+        "b0ae1bb7426fa62f8478de0465f6fc12b8484b69c74e81e16300b7761529fd06"
+    ),
+    "source_history_hash": (
+        "7ff6d9fbef5907865f15980eb451c060bce2c186a6845e4e31fd23b8e3f7bcdc"
+    ),
+    "report_id": (
+        "drsreport_v01:"
+        "8663d05defeda985e4c2c7979858665ccebaa16ff4c278d48ab551c3dd3a551b"
+    ),
+}
+
+
+def _b2_address(
+    *,
+    intent_class: str = "informational_summary",
+) -> semantic.SemanticAddressV01:
+    return semantic.build_semantic_address_v01(
+        namespace="local_reference",
+        domain="g2b2_information",
+        subject_class="bounded_information",
+        intent_class=intent_class,
+        meaning_schema_id="drs_meaning_record",
+        meaning_schema_version="v0.1",
+    )
+
+
+def _b2_authority(
+    *,
+    authority_class: str = "ROOT_ACCEPTED_CONTEXT",
+    root_acceptance_state: str = "ACCEPTED_CONTEXT",
+) -> semantic.DRSAuthorityEnvelopeV01:
+    root_evidence = authority_class in {
+        "ROOT_ACCEPTED_CONTEXT",
+        "ROOT_ACCEPTED_WORK",
+        "ROOT_FINAL_REFERENCE",
+    }
+    return semantic.build_drs_authority_envelope_v01(
+        authority_class=authority_class,
+        owning_local_root_id="root:local_reference" if root_evidence else None,
+        source_root_decision_input_id=(
+            "root-input:g2b2:accepted" if root_evidence else None
+        ),
+        source_root_decision_id=(
+            "root-decision:g2b2:accepted" if root_evidence else None
+        ),
+        source_root_decision_hash=_SHA_D if root_evidence else None,
+        authority_scope_fingerprint=_SHA_C,
+        root_acceptance_state=root_acceptance_state,
+        recording_component="g2b2_fixture",
+    )
+
+
+def _b2_time(
+    *,
+    pt_created_at: int = 100,
+    kt_as_of: int = 100,
+    et_observed_at: int = 100,
+    ct_context_anchor: int = 100,
+    ttl_seconds: int = 1000,
+    valid_from: int = 50,
+    valid_to: int = 1000,
+) -> semantic.DRSTimeEnvelopeV01:
+    return semantic.build_drs_time_envelope_v01(
+        pt_created_at=pt_created_at,
+        kt_as_of=kt_as_of,
+        et_observed_at=et_observed_at,
+        ct_context_anchor=ct_context_anchor,
+        ttl_seconds=ttl_seconds,
+        valid_from=valid_from,
+        valid_to=valid_to,
+        source_observed_at=100,
+        source_reported_at=101,
+        system_ingested_at=102,
+        system_verified_at=103,
+        freshness_policy_id="freshness:g2b2_v01",
+    )
+
+
+def _b2_record(
+    *,
+    ordinal: int = 1,
+    address: semantic.SemanticAddressV01 | None = None,
+    time_envelope: semantic.DRSTimeEnvelopeV01 | None = None,
+    authority: semantic.DRSAuthorityEnvelopeV01 | None = None,
+    persistent_lifecycle_state: str = "ACTIVE",
+    risk_hints: tuple[str, ...] = (),
+    conflict_hints: tuple[str, ...] = (),
+    reuse_policy_class: str = "ANSWER_SHORTCUT",
+    policy_version: str = "policy_v01",
+    schema_versions: tuple[str, ...] = ("v0.1",),
+    source_reference_ids: tuple[str, ...] | None = None,
+    lineage_edges: tuple[semantic.LineageEdgeV01, ...] = (),
+) -> semantic.MeaningRecordV01:
+    address = address or _b2_address()
+    return semantic.build_meaning_record_v01(
+        semantic_address=address,
+        predecessor_record_id=None,
+        supersession_reason=None,
+        safe_summary=f"Bounded G2-B2 informational summary {ordinal}.",
+        semantic_tags=("g2b2", "informational"),
+        resonance_reason="Exact local semantic address match.",
+        memory_pointers=(),
+        artifact_pointers=(),
+        source_reference_ids=(
+            source_reference_ids
+            if source_reference_ids is not None
+            else (f"source:g2b2:{ordinal}",)
+        ),
+        lineage_edges=lineage_edges,
+        time_envelope=time_envelope or _b2_time(),
+        authority_envelope=authority or _b2_authority(),
+        persistent_lifecycle_state=persistent_lifecycle_state,
+        risk_hints=risk_hints,
+        conflict_hints=conflict_hints,
+        reuse_policy_class=reuse_policy_class,
+        policy_version=policy_version,
+        schema_versions=schema_versions,
+        content_fingerprint=f"{ordinal:x}"[-1] * 64,
+        recording_component="g2b2_fixture",
+    )
+
+
+def _b2_query(
+    *,
+    address: semantic.SemanticAddressV01 | None = None,
+    query_mode: str = "DIRECT_REUSE_CANDIDATE",
+    as_of: int = 200,
+    evaluation_time: int = 200,
+    evaluation_time_source: str = "INJECTED_CURRENT_DECISION_TIME",
+    required_time_axes: tuple[str, ...] = _B2_ALL_TIME_AXES,
+    max_age_seconds: int = 1000,
+    reuse_intent: str = "INFORMATIONAL_SHORTCUT_CONSIDERATION",
+    requested_reuse_classes: tuple[str, ...] = ("ANSWER_SHORTCUT",),
+    required_evidence_classes: tuple[str, ...] = _B2_EVIDENCE_CLASSES,
+    forbidden_changes: tuple[str, ...] = ("POLICY_CHANGED",),
+    policy_version: str = "policy_v01",
+    schema_versions: tuple[str, ...] = ("v0.1",),
+    scope_fingerprint: str = _SHA_C,
+    owning_local_root_id: str = "root:local_reference",
+) -> resolution.DRSTemporalQueryV01:
+    address = address or _b2_address()
+    return resolution.build_drs_temporal_query_v01(
+        query_mode=query_mode,
+        semantic_address_id=address.semantic_address_id,
+        scope_fingerprint=scope_fingerprint,
+        as_of=as_of,
+        evaluation_time=evaluation_time,
+        evaluation_time_source=evaluation_time_source,
+        time_range_start=0,
+        time_range_end=2000,
+        required_time_axes=required_time_axes,
+        freshness_policy_id="freshness:g2b2_v01",
+        max_age_seconds=max_age_seconds,
+        domain=address.domain,
+        risk_class="LOW",
+        reuse_intent=reuse_intent,
+        requested_reuse_classes=requested_reuse_classes,
+        required_evidence_classes=required_evidence_classes,
+        forbidden_changes=forbidden_changes,
+        policy_version=policy_version,
+        schema_versions=schema_versions,
+        owning_local_root_id=owning_local_root_id,
+    )
+
+
+def _b2_evaluate(
+    record: semantic.MeaningRecordV01,
+    query: resolution.DRSTemporalQueryV01,
+    *,
+    address: semantic.SemanticAddressV01 | None = None,
+    action_history_binding: reuse.G2AActionHistoryBindingV01 | None = None,
+) -> resolution.QueryEvaluationStateV01:
+    return resolution.evaluate_drs_candidate_v01(
+        semantic_address=address or record.semantic_address,
+        query=query,
+        meaning_record=record,
+        action_history_binding=action_history_binding,
+    )
+
+
+def _b2_candidate(
+    evaluation: resolution.QueryEvaluationStateV01,
+    query: resolution.DRSTemporalQueryV01,
+    record: semantic.MeaningRecordV01,
+    *,
+    semantic_similarity_units: int,
+    gt_advisory_prior_units: int = 1000,
+    conflict_penalty_units: int = 0,
+    risk_penalty_units: int = 0,
+    retrieval_cost_units: int = 100,
+) -> resolution.ResolutionCandidateV01:
+    return resolution.build_resolution_candidate_v01(
+        query_id=query.query_id,
+        semantic_address_id=query.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        safe_summary=record.safe_summary,
+        evidence_ref_ids=record.source_reference_ids,
+        source_history_hash=evaluation.source_history_hash,
+        action_history_binding_id=evaluation.action_history_binding_id,
+        semantic_similarity_units=semantic_similarity_units,
+        freshness_units=evaluation.current_freshness_units,
+        source_authority_prior_units=9000,
+        lineage_proximity_units=7000,
+        historical_utility_units=6000,
+        gt_advisory_prior_units=gt_advisory_prior_units,
+        conflict_penalty_units=conflict_penalty_units,
+        risk_penalty_units=risk_penalty_units,
+        retrieval_cost_units=retrieval_cost_units,
+    )
+
+
+def _b2_positive_fixture() -> dict[str, object]:
+    address = _b2_address()
+    query = _b2_query(address=address)
+    records = tuple(
+        _b2_record(ordinal=ordinal, address=address)
+        for ordinal in (1, 2, 3)
+    )
+    evaluations = tuple(_b2_evaluate(record, query) for record in records)
+    candidates = (
+        _b2_candidate(
+            evaluations[0],
+            query,
+            records[0],
+            semantic_similarity_units=9000,
+        ),
+        _b2_candidate(
+            evaluations[1],
+            query,
+            records[1],
+            semantic_similarity_units=8000,
+        ),
+        _b2_candidate(
+            evaluations[2],
+            query,
+            records[2],
+            semantic_similarity_units=8000,
+        ),
+    )
+    ranked = resolution.rank_eligible_drs_candidates_v01(
+        query=query,
+        query_evaluations=evaluations,
+        candidates=candidates,
+    )
+    budget = resolution.build_memory_descent_budget_v01(
+        max_depth=0,
+        max_records_opened=3,
+        max_pointers_opened=0,
+        max_artifacts_opened=0,
+        max_bytes_opened=0,
+        max_lineage_edges=0,
+        max_conflict_records=0,
+    )
+    plan = resolution.build_retrieval_plan_v01(
+        query_id=query.query_id,
+        semantic_address_id=address.semantic_address_id,
+        proposed_record_ids=tuple(
+            record.meaning_record_id for record in records
+        ),
+        proposed_memory_pointer_ids=(),
+        proposed_artifact_pointer_ids=(),
+        requested_descent_class="SUMMARY_ONLY",
+        proposed_budget_id=budget.memory_descent_budget_id,
+        required_access_policy_ids=(),
+        reason_codes=(),
+    )
+    report = resolution.build_drs_resolution_report_v01(
+        semantic_address=address,
+        query=query,
+        source_projections=(),
+        source_records=records,
+        query_evaluations=evaluations,
+        eligible_candidates=candidates,
+        ranked_candidate_ids=tuple(
+            candidate.resolution_candidate_id for candidate in ranked
+        ),
+        selected_candidate_id=ranked[0].resolution_candidate_id,
+        retrieval_plan=plan,
+        memory_descent_result=None,
+        root_shortcut_projection=None,
+        reuse_certificate=None,
+        context_only_record_ids=(),
+        historical_only_record_ids=(),
+        warning_only_record_ids=(),
+        rerun_required_record_ids=(),
+        blocked_record_ids=(),
+        provider_calls=0,
+        network_calls=0,
+        gemini_calls=0,
+        external_drs_calls=0,
+        connector_calls=0,
+        real_world_effects_count=0,
+        final_status="PASS",
+        reason_codes=(),
+    )
+    return {
+        "address": address,
+        "query": query,
+        "records": records,
+        "evaluations": evaluations,
+        "candidates": candidates,
+        "ranked": ranked,
+        "plan": plan,
+        "report": report,
+    }
+
+
+def _b2_record_with_time(
+    record: semantic.MeaningRecordV01,
+    **changes: object,
+) -> semantic.MeaningRecordV01:
+    time_envelope = _reidentify(replace(record.time_envelope, **changes))
+    return _reidentify(replace(record, time_envelope=time_envelope))
+
+
+def _b2_action_history(
+    *,
+    lifecycle_state: str = "ROOT_AUTHORIZED",
+    disposition: str = "RESERVED",
+    terminal_receipt_ref: str | None = None,
+) -> reuse.G2AActionHistoryBindingV01:
+    return reuse.build_g2a_action_history_binding_v01(
+        packet_id="acp_v02:g2b2_historical",
+        registry_id="acp_v02:g2b2_registry",
+        transition_history_sha256=_SHA_A,
+        disposition_history_sha256=_SHA_B,
+        lifecycle_state=lifecycle_state,
+        disposition=disposition,
+        reservation_owner_packet_id="acp_v02:g2b2_historical",
+        terminal_receipt_ref=terminal_receipt_ref,
+        current_status_validation_id="action-history-validation:g2b2",
+        current_status_evaluated_at=200,
+        current_status_evaluation_time_source=(
+            "INJECTED_CURRENT_DECISION_TIME"
+        ),
+        reason_codes=("action_history_shortcut_forbidden",),
+    )
+
+
+def _b2_assert_blocked(
+    evaluation: resolution.QueryEvaluationStateV01,
+    *,
+    state: str,
+    first_reason: str,
+) -> None:
+    assert evaluation.eligible_for_ranking is False
+    assert evaluation.query_state == state
+    assert evaluation.reason_codes[0] == first_reason
+    assert evaluation.creates_authority is False
+    assert evaluation.creates_permission is False
+
+
+def _b2_reidentified_report(
+    report: resolution.DRSResolutionReportV01,
+    **changes: object,
+) -> resolution.DRSResolutionReportV01:
+    return _reidentify(replace(report, **changes))
+
+
+def _b2_ineligible_evaluation(
+    evaluation: resolution.QueryEvaluationStateV01,
+    *,
+    ordinal: int,
+    **changes: object,
+) -> resolution.QueryEvaluationStateV01:
+    return _reidentify(
+        replace(
+            evaluation,
+            meaning_record_id=(
+                "drsmeaning_v01:" + format(ordinal, "x")[-1] * 64
+            ),
+            query_state="BLOCKED_BY_SCOPE",
+            scope_passed=False,
+            eligible_for_ranking=False,
+            reason_codes=("drs_address_scope_mismatch",),
+            **changes,
+        )
+    )
+
+
+def _b2_assert_ranking_error(
+    expected: str,
+    *,
+    query: object,
+    evaluations: object,
+    candidates: object,
+) -> None:
+    with pytest.raises(ValueError, match=rf"^{expected}$"):
+        resolution.rank_eligible_drs_candidates_v01(
+            query=query,
+            query_evaluations=evaluations,
+            candidates=candidates,
+        )
+
+
+def _b2_report_forgery_matrix(
+    fixture: dict[str, object],
+) -> tuple[tuple[str, resolution.DRSResolutionReportV01], ...]:
+    report = fixture["report"]
+    assert isinstance(report, resolution.DRSResolutionReportV01)
+    evaluations = report.query_evaluations
+    candidates = report.eligible_candidates
+    records = report.source_records
+    changed_evaluation = _reidentify(
+        replace(
+            evaluations[0],
+            policy_compatible=False,
+            query_state="BLOCKED_BY_POLICY",
+            eligible_for_ranking=False,
+            reason_codes=("drs_policy_version_mismatch",),
+        )
+    )
+    changed_reason = _reidentify(
+        replace(
+            evaluations[0],
+            query_state="BLOCKED_BY_POLICY",
+            eligible_for_ranking=False,
+            reason_codes=("drs_schema_version_mismatch",),
+        )
+    )
+    changed_state = _reidentify(
+        replace(
+            evaluations[0],
+            query_state="STALE_CONTEXT_ONLY",
+            eligible_for_ranking=False,
+            reason_codes=("drs_query_mode_invalid_for_shortcut",),
+        )
+    )
+    changed_freshness = _reidentify(
+        replace(evaluations[0], current_freshness_units=8999)
+    )
+    rebound_candidate = _reidentify(
+        replace(
+            candidates[0],
+            query_evaluation_id=evaluations[1].query_evaluation_id,
+        )
+    )
+    pointer_plan = _reidentify(
+        replace(
+            report.retrieval_plan,
+            proposed_memory_pointer_ids=("drsmem_v01:" + "a" * 64,),
+        )
+    )
+    open_plan = _reidentify(
+        replace(
+            report.retrieval_plan,
+            requested_descent_class="OPEN_ONE_ARTIFACT",
+        )
+    )
+    nonzero_counter = _b2_reidentified_report(report, provider_calls=-1)
+    return (
+        (
+            "changed_evaluation_boolean",
+            _b2_reidentified_report(
+                report,
+                query_evaluations=(changed_evaluation,) + evaluations[1:],
+            ),
+        ),
+        (
+            "changed_evaluation_reason",
+            _b2_reidentified_report(
+                report,
+                query_evaluations=(changed_reason,) + evaluations[1:],
+            ),
+        ),
+        (
+            "changed_query_state",
+            _b2_reidentified_report(
+                report,
+                query_evaluations=(changed_state,) + evaluations[1:],
+            ),
+        ),
+        (
+            "changed_freshness",
+            _b2_reidentified_report(
+                report,
+                query_evaluations=(changed_freshness,) + evaluations[1:],
+            ),
+        ),
+        (
+            "omitted_evaluation",
+            _b2_reidentified_report(
+                report,
+                query_evaluations=evaluations[:-1],
+            ),
+        ),
+        (
+            "extra_evaluation",
+            _b2_reidentified_report(
+                report,
+                query_evaluations=evaluations + (evaluations[0],),
+            ),
+        ),
+        (
+            "omitted_candidate",
+            _b2_reidentified_report(
+                report,
+                eligible_candidates=candidates[:-1],
+                ranked_candidate_ids=report.ranked_candidate_ids[:-1],
+            ),
+        ),
+        (
+            "extra_candidate",
+            _b2_reidentified_report(
+                report,
+                eligible_candidates=candidates + (candidates[0],),
+            ),
+        ),
+        (
+            "candidate_rebound",
+            _b2_reidentified_report(
+                report,
+                eligible_candidates=(rebound_candidate,) + candidates[1:],
+                ranked_candidate_ids=(
+                    rebound_candidate.resolution_candidate_id,
+                )
+                + report.ranked_candidate_ids[1:],
+                selected_candidate_id=rebound_candidate.resolution_candidate_id,
+            ),
+        ),
+        (
+            "swapped_rank_order",
+            _b2_reidentified_report(
+                report,
+                ranked_candidate_ids=(
+                    report.ranked_candidate_ids[1],
+                    report.ranked_candidate_ids[0],
+                )
+                + report.ranked_candidate_ids[2:],
+                selected_candidate_id=report.ranked_candidate_ids[1],
+            ),
+        ),
+        (
+            "wrong_selected",
+            _b2_reidentified_report(
+                report,
+                selected_candidate_id=report.ranked_candidate_ids[1],
+            ),
+        ),
+        (
+            "duplicate_bucket",
+            _b2_reidentified_report(
+                report,
+                context_only_record_ids=(records[0].meaning_record_id,),
+                blocked_record_ids=(records[0].meaning_record_id,),
+            ),
+        ),
+        (
+            "wrong_bucket",
+            _b2_reidentified_report(
+                report,
+                historical_only_record_ids=(records[0].meaning_record_id,),
+            ),
+        ),
+        (
+            "changed_record_order",
+            _b2_reidentified_report(
+                report,
+                source_records=(records[1], records[0]) + records[2:],
+            ),
+        ),
+        (
+            "changed_plan_order",
+            _b2_reidentified_report(
+                report,
+                retrieval_plan=_reidentify(
+                    replace(
+                        report.retrieval_plan,
+                        proposed_record_ids=(
+                            report.retrieval_plan.proposed_record_ids[1],
+                            report.retrieval_plan.proposed_record_ids[0],
+                        )
+                        + report.retrieval_plan.proposed_record_ids[2:],
+                    )
+                ),
+            ),
+        ),
+        (
+            "non_summary_plan",
+            _b2_reidentified_report(report, retrieval_plan=open_plan),
+        ),
+        (
+            "pointer_plan",
+            _b2_reidentified_report(report, retrieval_plan=pointer_plan),
+        ),
+        ("forged_counter", nonzero_counter),
+        (
+            "pass_over_mismatch",
+            _b2_reidentified_report(
+                report,
+                query_evaluations=(changed_evaluation,) + evaluations[1:],
+                final_status="PASS",
+                reason_codes=(),
+            ),
+        ),
+    )
+
+
+def test_g2b_half_open_validity_boundary_rejects_exact_valid_to() -> None:
+    address = _b2_address()
+    query = _b2_query(address=address, as_of=200, evaluation_time=200)
+    baseline = _b2_record(address=address)
+    at_valid_from_query = _b2_query(
+        address=address,
+        as_of=50,
+        evaluation_time=50,
+    )
+    at_valid_from_record = _b2_record_with_time(
+        baseline,
+        pt_created_at=50,
+        kt_as_of=50,
+        et_observed_at=50,
+        ct_context_anchor=50,
+    )
+    assert _b2_evaluate(
+        at_valid_from_record,
+        at_valid_from_query,
+    ).validity_interval_passed is True
+    valid = _b2_evaluate(
+        _b2_record_with_time(baseline, valid_to=201),
+        query,
+    )
+    assert valid.eligible_for_ranking is True
+    exact_boundary = _b2_evaluate(
+        _b2_record_with_time(baseline, valid_to=200),
+        query,
+    )
+    _b2_assert_blocked(
+        exact_boundary,
+        state="BLOCKED_BY_TIME",
+        first_reason="drs_time_validity_interval_invalid",
+    )
+
+
+def test_g2b_half_open_ttl_boundary_rejects_exact_expiry() -> None:
+    address = _b2_address()
+    query = _b2_query(address=address, as_of=200, evaluation_time=200)
+    baseline = _b2_record(address=address)
+    assert _b2_evaluate(
+        _b2_record_with_time(
+            baseline,
+            pt_created_at=100,
+            ttl_seconds=101,
+        ),
+        query,
+    ).eligible_for_ranking is True
+    expired = _b2_evaluate(
+        _b2_record_with_time(
+            baseline,
+            pt_created_at=100,
+            ttl_seconds=100,
+        ),
+        query,
+    )
+    _b2_assert_blocked(
+        expired,
+        state="BLOCKED_BY_TIME",
+        first_reason="drs_time_ttl_expired",
+    )
+    zero_age_record = _b2_record_with_time(
+        baseline,
+        pt_created_at=200,
+        kt_as_of=200,
+        et_observed_at=200,
+        ct_context_anchor=200,
+    )
+    zero_age_query = _b2_query(
+        address=address,
+        max_age_seconds=0,
+    )
+    zero_age = _b2_evaluate(zero_age_record, zero_age_query)
+    assert zero_age.current_freshness_units == 10000
+    assert zero_age.eligible_for_ranking is True
+    positive_age = _b2_evaluate(baseline, zero_age_query)
+    assert positive_age.current_freshness_units == 0
+    _b2_assert_blocked(
+        positive_age,
+        state="BLOCKED_BY_TIME",
+        first_reason="drs_temporal_hard_gate_failed",
+    )
+    max_age_minus_one = _b2_evaluate(
+        baseline,
+        _b2_query(address=address, max_age_seconds=101),
+    )
+    assert max_age_minus_one.current_freshness_units == 99
+    assert max_age_minus_one.eligible_for_ranking is True
+    exact_max_age = _b2_evaluate(
+        baseline,
+        _b2_query(address=address, max_age_seconds=100),
+    )
+    assert exact_max_age.current_freshness_units == 0
+    _b2_assert_blocked(
+        exact_max_age,
+        state="BLOCKED_BY_TIME",
+        first_reason="drs_temporal_hard_gate_failed",
+    )
+    future_cases = (
+        ("pt_created_at", 201),
+        ("kt_as_of", 201),
+        ("et_observed_at", 201),
+        ("ct_context_anchor", 201),
+    )
+    for field_name, value in future_cases:
+        future_record = _b2_record_with_time(
+            baseline,
+            **{field_name: value},
+        )
+        future_evaluation = _b2_evaluate(future_record, query)
+        if field_name == "pt_created_at":
+            assert future_evaluation.current_freshness_units == 0
+        _b2_assert_blocked(
+            future_evaluation,
+            state="BLOCKED_BY_TIME",
+            first_reason="drs_temporal_hard_gate_failed",
+        )
+    for invalid in (True, 100.0, Decimal("100"), "100"):
+        invalid_time = replace(
+            baseline.time_envelope,
+            pt_created_at=invalid,
+        )
+        invalid_record = replace(baseline, time_envelope=invalid_time)
+        with pytest.raises(
+            ValueError,
+            match=r"^drs_exact_type_or_identity_invalid$",
+        ):
+            _b2_evaluate(invalid_record, query)
+
+    class _IntSubclass(int):
+        pass
+
+    subclass_time = replace(
+        baseline.time_envelope,
+        pt_created_at=_IntSubclass(100),
+    )
+    subclass_record = replace(baseline, time_envelope=subclass_time)
+    with pytest.raises(
+        ValueError,
+        match=r"^drs_exact_type_or_identity_invalid$",
+    ):
+        _b2_evaluate(subclass_record, query)
+
+
+def test_g2b_missing_required_time_axis_fails_closed() -> None:
+    address = _b2_address()
+    record = _b2_record(address=address)
+    for missing in _B2_ALL_TIME_AXES:
+        axes = tuple(axis for axis in _B2_ALL_TIME_AXES if axis != missing)
+        query = _b2_query(address=address, required_time_axes=axes)
+        evaluation = _b2_evaluate(record, query)
+        _b2_assert_blocked(
+            evaluation,
+            state="BLOCKED_BY_TIME",
+            first_reason="drs_time_axis_missing",
+        )
+    extended_axes = (
+        ("SOURCE_OBSERVED", "source_observed_at", "as_of"),
+        ("SOURCE_REPORTED", "source_reported_at", "as_of"),
+        ("SYSTEM_INGESTED", "system_ingested_at", "evaluation_time"),
+        ("SYSTEM_VERIFIED", "system_verified_at", "evaluation_time"),
+    )
+    observed = {}
+    for axis, field_name, boundary_name in extended_axes:
+        query = _b2_query(
+            address=address,
+            required_time_axes=_B2_ALL_TIME_AXES + (axis,),
+            required_evidence_classes=(),
+        )
+        boundary = getattr(query, boundary_name)
+        boundary_evaluation = _b2_evaluate(
+            _b2_record_with_time(record, **{field_name: boundary}),
+            query,
+        )
+        future_evaluation = _b2_evaluate(
+            _b2_record_with_time(record, **{field_name: boundary + 1}),
+            query,
+        )
+        unrequested_evaluation = _b2_evaluate(
+            _b2_record_with_time(record, **{field_name: boundary + 1}),
+            _b2_query(address=address, required_evidence_classes=()),
+        )
+        observed[axis] = (
+            (
+                boundary_evaluation.required_time_axes_passed,
+                boundary_evaluation.temporal_hard_gate_passed,
+                boundary_evaluation.eligible_for_ranking,
+            ),
+            (
+                future_evaluation.required_time_axes_passed,
+                future_evaluation.temporal_hard_gate_passed,
+                future_evaluation.eligible_for_ranking,
+                future_evaluation.query_state,
+                future_evaluation.reason_codes,
+            ),
+            (
+                unrequested_evaluation.required_time_axes_passed,
+                unrequested_evaluation.temporal_hard_gate_passed,
+                unrequested_evaluation.eligible_for_ranking,
+            ),
+        )
+    assert observed == {
+        axis: (
+            (True, True, True),
+            (
+                False,
+                False,
+                False,
+                "BLOCKED_BY_TIME",
+                ("drs_temporal_hard_gate_failed",),
+            ),
+            (True, True, True),
+        )
+        for axis, _, _ in extended_axes
+    }, repr(observed)
+
+
+def test_g2b_query_mode_controls_temporal_validity_and_shortcut_eligibility() -> None:
+    address = _b2_address()
+    observed = {}
+    for mode, source, axes in _B2_MODE_PROFILE:
+        intents = (
+            ("CONTEXT", ("CONTEXT_ONLY",)),
+            (
+                "INFORMATIONAL_SHORTCUT_CONSIDERATION",
+                ("ANSWER_SHORTCUT",),
+            ),
+            ("WARNING_LOOKUP", ("CONTEXT_ONLY",)),
+            ("HISTORY_INSPECTION", ("CONTEXT_ONLY",)),
+        )
+        for reuse_intent, reuse_classes in intents:
+            record = _b2_record(
+                address=address,
+                reuse_policy_class=reuse_classes[0],
+            )
+            query = _b2_query(
+                address=address,
+                query_mode=mode,
+                evaluation_time_source=source,
+                required_time_axes=axes,
+                reuse_intent=reuse_intent,
+                requested_reuse_classes=reuse_classes,
+                required_evidence_classes=(),
+            )
+            evaluation = _b2_evaluate(record, query)
+            observed[(mode, reuse_intent)] = (
+                evaluation.query_state,
+                evaluation.eligible_for_ranking,
+            )
+    assert observed[
+        ("DIRECT_REUSE_CANDIDATE", "INFORMATIONAL_SHORTCUT_CONSIDERATION")
+    ] == ("FRESH_CANDIDATE", True)
+    assert observed[("CURRENT_DECISION", "CONTEXT")] == (
+        "FRESH_CANDIDATE",
+        True,
+    )
+    assert all(
+        eligible is False
+        for (mode, _), (_, eligible) in observed.items()
+        if mode not in {"CURRENT_DECISION", "DIRECT_REUSE_CANDIDATE"}
+    )
+    for mode, expected_source, axes in _B2_MODE_PROFILE:
+        wrong_source = next(
+            source
+            for source in (
+                "INJECTED_CURRENT_DECISION_TIME",
+                "RECORDED_HISTORICAL_AS_OF_TIME",
+                "RECORDED_AUDIT_REPLAY_TIME",
+                "INJECTED_ANALYSIS_TIME",
+            )
+            if source != expected_source
+        )
+        query = _b2_query(
+            address=address,
+            query_mode=mode,
+            evaluation_time_source=wrong_source,
+            required_time_axes=axes,
+            required_evidence_classes=(),
+        )
+        _b2_assert_blocked(
+            _b2_evaluate(record, query),
+            state="BLOCKED_BY_TIME",
+            first_reason="drs_temporal_hard_gate_failed",
+        )
+    disabled_classes = tuple(
+        reuse_class
+        for reuse_class in resolution.DRS_REUSE_CLASSES_V01
+        if reuse_class not in resolution.DRS_ENABLED_REUSE_CLASSES_V01
+    )
+    disabled_observed = {}
+    for mode, source, axes in _B2_MODE_PROFILE:
+        for disabled_class in disabled_classes:
+            standalone = _b2_evaluate(
+                _b2_record(
+                    address=address,
+                    reuse_policy_class=disabled_class,
+                ),
+                _b2_query(
+                    address=address,
+                    query_mode=mode,
+                    evaluation_time_source=source,
+                    required_time_axes=axes,
+                    reuse_intent="CONTEXT",
+                    requested_reuse_classes=(disabled_class,),
+                    required_evidence_classes=(),
+                ),
+            )
+            mixed = _b2_evaluate(
+                _b2_record(address=address),
+                _b2_query(
+                    address=address,
+                    query_mode=mode,
+                    evaluation_time_source=source,
+                    required_time_axes=axes,
+                    requested_reuse_classes=(
+                        "ANSWER_SHORTCUT",
+                        disabled_class,
+                    ),
+                    required_evidence_classes=(),
+                ),
+            )
+            disabled_record = _b2_evaluate(
+                _b2_record(
+                    address=address,
+                    reuse_policy_class=disabled_class,
+                ),
+                _b2_query(
+                    address=address,
+                    query_mode=mode,
+                    evaluation_time_source=source,
+                    required_time_axes=axes,
+                    reuse_intent="CONTEXT",
+                    requested_reuse_classes=("CONTEXT_ONLY",),
+                    required_evidence_classes=(),
+                ),
+            )
+            disabled_observed[(mode, disabled_class)] = tuple(
+                (
+                    evaluation.query_state,
+                    evaluation.eligible_for_ranking,
+                    evaluation.reason_codes,
+                )
+                for evaluation in (
+                    standalone,
+                    mixed,
+                    disabled_record,
+                )
+            )
+    expected_disabled = (
+        "BLOCKED_BY_POLICY",
+        False,
+        ("drs_reuse_class_disabled",),
+    )
+    assert disabled_classes == (
+        "ROUTE_SHORTCUT",
+        "SEALED_REPLAY_SHORTCUT",
+        "PROTOCOL_PREPARATION_SHORTCUT",
+        "ACTION_SHORTCUT_NOT_ENABLED_IN_REFERENCE_KERNEL",
+    )
+    assert disabled_observed == {
+        key: (
+            expected_disabled,
+            expected_disabled,
+            expected_disabled,
+        )
+        for key in disabled_observed
+    }, repr(disabled_observed)
+
+
+def test_g2b_hard_eligibility_precedes_ranking() -> None:
+    fixture = _b2_positive_fixture()
+    query = fixture["query"]
+    record = fixture["records"][0]
+    assert isinstance(query, resolution.DRSTemporalQueryV01)
+    assert isinstance(record, semantic.MeaningRecordV01)
+    bad_record = _reidentify(
+        replace(
+            record,
+            policy_version="policy_v02",
+            schema_versions=("v0.2",),
+            conflict_hints=("CONFLICT_PRESENT",),
+        )
+    )
+    evaluation = _b2_evaluate(bad_record, query)
+    assert evaluation.reason_codes[:3] == (
+        "drs_policy_version_mismatch",
+        "drs_schema_version_mismatch",
+        "drs_required_evidence_missing",
+    )
+    assert evaluation.reason_codes.index(
+        "drs_conflict_blocked"
+    ) > evaluation.reason_codes.index("drs_required_evidence_missing")
+    independent_cases = (
+        (
+            _reidentify(
+                replace(
+                    record,
+                    authority_envelope=_b2_authority(
+                        authority_class="UNTRUSTED_SEMANTIC_DRAFT",
+                        root_acceptance_state="UNREVIEWED",
+                    ),
+                )
+            ),
+            "drs_provenance_invalid",
+        ),
+        (
+            _reidentify(
+                replace(
+                    record,
+                    persistent_lifecycle_state="ARCHIVED",
+                )
+            ),
+            "drs_persistent_lifecycle_blocked",
+        ),
+        (
+            _reidentify(
+                replace(
+                    record,
+                    source_reference_ids=("permission:g2b2:stale",),
+                )
+            ),
+            "drs_permission_boundary_failed",
+        ),
+    )
+    for mutated, expected_reason in independent_cases:
+        restricted_query = _b2_query(
+            address=record.semantic_address,
+            required_evidence_classes=(),
+        )
+        blocked = _b2_evaluate(mutated, restricted_query)
+        assert expected_reason in blocked.reason_codes
+    wrong_scope_query = _b2_query(
+        address=record.semantic_address,
+        required_evidence_classes=(),
+        scope_fingerprint=_SHA_D,
+    )
+    _b2_assert_blocked(
+        _b2_evaluate(record, wrong_scope_query),
+        state="BLOCKED_BY_SCOPE",
+        first_reason="drs_address_scope_mismatch",
+    )
+
+
+def test_g2b_ineligible_highest_score_candidate_cannot_win() -> None:
+    fixture = _b2_positive_fixture()
+    query = fixture["query"]
+    evaluations = fixture["evaluations"]
+    candidates = fixture["candidates"]
+    assert isinstance(query, resolution.DRSTemporalQueryV01)
+    assert isinstance(evaluations, tuple)
+    assert isinstance(candidates, tuple)
+    ineligible = _reidentify(
+        replace(
+            evaluations[0],
+            query_state="BLOCKED_BY_POLICY",
+            policy_compatible=False,
+            eligible_for_ranking=False,
+            reason_codes=("drs_policy_version_mismatch",),
+        )
+    )
+    with pytest.raises(
+        ValueError,
+        match=r"^drs_ineligible_candidate_selected$",
+    ):
+        resolution.rank_eligible_drs_candidates_v01(
+            query=query,
+            query_evaluations=(ineligible,) + evaluations[1:],
+            candidates=candidates,
+        )
+    assert resolution.rank_eligible_drs_candidates_v01(
+        query=query,
+        query_evaluations=(),
+        candidates=(),
+    ) == ()
+    assert resolution.rank_eligible_drs_candidates_v01(
+        query=query,
+        query_evaluations=(evaluations[0],),
+        candidates=(candidates[0],),
+    ) == (candidates[0],)
+    _b2_assert_ranking_error(
+        "drs_ranking_tie_break_invalid",
+        query=query,
+        evaluations=evaluations + (evaluations[0],),
+        candidates=candidates,
+    )
+    _b2_assert_ranking_error(
+        "drs_ranking_tie_break_invalid",
+        query=query,
+        evaluations=evaluations,
+        candidates=candidates + (candidates[0],),
+    )
+    _b2_assert_ranking_error(
+        "drs_ranking_tie_break_invalid",
+        query=query,
+        evaluations=evaluations,
+        candidates=candidates[:-1],
+    )
+    unknown_candidate = _reidentify(
+        replace(
+            candidates[0],
+            meaning_record_id="drsmeaning_v01:" + "f" * 64,
+        )
+    )
+    _b2_assert_ranking_error(
+        "drs_ineligible_candidate_selected",
+        query=query,
+        evaluations=evaluations,
+        candidates=(unknown_candidate,) + candidates[1:],
+    )
+    binding_forgeries = (
+        replace(candidates[0], query_id="drsquery_v01:" + "f" * 64),
+        replace(
+            candidates[0],
+            query_evaluation_id=evaluations[1].query_evaluation_id,
+        ),
+        replace(candidates[0], source_history_hash=_SHA_E),
+        replace(
+            candidates[0],
+            action_history_binding_id="drsg2ahistory_v01:" + "f" * 64,
+        ),
+        replace(
+            candidates[0],
+            freshness_units=evaluations[0].current_freshness_units - 1,
+            total_score_units=candidates[0].total_score_units - 2000,
+        ),
+    )
+    for forged in binding_forgeries:
+        reidentified = _reidentify(forged)
+        _b2_assert_ranking_error(
+            "drs_ineligible_candidate_selected",
+            query=query,
+            evaluations=evaluations,
+            candidates=(reidentified,) + candidates[1:],
+        )
+    foreign_evaluations = (
+        _b2_ineligible_evaluation(
+            evaluations[0],
+            ordinal=10,
+            query_id="drsquery_v01:" + "a" * 64,
+        ),
+        _b2_ineligible_evaluation(
+            evaluations[0],
+            ordinal=11,
+            semantic_address_id="drsaddr_v01:" + "b" * 64,
+        ),
+        _b2_ineligible_evaluation(
+            evaluations[0],
+            ordinal=12,
+            query_id="drsquery_v01:" + "c" * 64,
+            semantic_address_id="drsaddr_v01:" + "d" * 64,
+        ),
+        _b2_ineligible_evaluation(
+            evaluations[0],
+            ordinal=13,
+            evaluated_at=query.evaluation_time + 1,
+        ),
+        _b2_ineligible_evaluation(
+            evaluations[0],
+            ordinal=14,
+            evaluation_time_source="INJECTED_ANALYSIS_TIME",
+        ),
+        _b2_ineligible_evaluation(
+            evaluations[0],
+            ordinal=15,
+            evaluated_at=query.evaluation_time + 1,
+            evaluation_time_source="INJECTED_ANALYSIS_TIME",
+        ),
+    )
+    foreign_acceptance = []
+    for foreign in foreign_evaluations:
+        try:
+            ranked = resolution.rank_eligible_drs_candidates_v01(
+                query=query,
+                query_evaluations=evaluations + (foreign,),
+                candidates=candidates,
+            )
+        except ValueError as exc:
+            foreign_acceptance.append((False, str(exc)))
+        else:
+            foreign_acceptance.append((ranked == fixture["ranked"], None))
+    assert foreign_acceptance == [
+        (False, "drs_ranking_tie_break_invalid")
+        for _ in foreign_evaluations
+    ], repr(foreign_acceptance)
+    query_local_ineligible = _b2_ineligible_evaluation(
+        evaluations[0],
+        ordinal=9,
+    )
+    assert resolution.rank_eligible_drs_candidates_v01(
+        query=query,
+        query_evaluations=evaluations + (query_local_ineligible,),
+        candidates=candidates,
+    ) == fixture["ranked"]
+
+
+def test_g2b_ranking_tie_break_ends_with_canonical_candidate_id() -> None:
+    fixture = _b2_positive_fixture()
+    ranked = fixture["ranked"]
+    assert isinstance(ranked, tuple)
+    assert ranked[1].total_score_units == ranked[2].total_score_units
+    assert ranked[1].resolution_candidate_id < ranked[2].resolution_candidate_id
+    assert tuple(
+        candidate.resolution_candidate_id for candidate in ranked[1:]
+    ) == tuple(
+        sorted(
+            candidate.resolution_candidate_id
+            for candidate in ranked[1:]
+        )
+    )
+    evaluation = fixture["evaluations"][0]
+    query = fixture["query"]
+    record = fixture["records"][0]
+    minimum = resolution.build_resolution_candidate_v01(
+        query_id=query.query_id,
+        semantic_address_id=query.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        safe_summary=record.safe_summary,
+        evidence_ref_ids=record.source_reference_ids,
+        source_history_hash=evaluation.source_history_hash,
+        action_history_binding_id=None,
+        semantic_similarity_units=0,
+        freshness_units=evaluation.current_freshness_units,
+        source_authority_prior_units=0,
+        lineage_proximity_units=0,
+        historical_utility_units=0,
+        gt_advisory_prior_units=0,
+        conflict_penalty_units=10000,
+        risk_penalty_units=10000,
+        retrieval_cost_units=10000,
+    )
+    assert minimum.total_score_units < 0
+    maximum = resolution.build_resolution_candidate_v01(
+        query_id=query.query_id,
+        semantic_address_id=query.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        safe_summary=record.safe_summary,
+        evidence_ref_ids=record.source_reference_ids,
+        source_history_hash=evaluation.source_history_hash,
+        action_history_binding_id=None,
+        semantic_similarity_units=10000,
+        freshness_units=evaluation.current_freshness_units,
+        source_authority_prior_units=10000,
+        lineage_proximity_units=10000,
+        historical_utility_units=10000,
+        gt_advisory_prior_units=10000,
+        conflict_penalty_units=0,
+        risk_penalty_units=0,
+        retrieval_cost_units=0,
+    )
+    assert maximum.total_score_units > 0
+
+
+def test_g2b_gt_advisory_score_creates_no_authority() -> None:
+    fixture = _b2_positive_fixture()
+    candidate = _b2_candidate(
+        fixture["evaluations"][0],
+        fixture["query"],
+        fixture["records"][0],
+        semantic_similarity_units=0,
+        gt_advisory_prior_units=10000,
+    )
+    assert candidate.creates_authority is False
+    assert candidate.creates_permission is False
+    assert candidate.creates_final_output is False
+
+
+def test_g2b_semantic_similarity_creates_no_authority() -> None:
+    fixture = _b2_positive_fixture()
+    candidate = _b2_candidate(
+        fixture["evaluations"][0],
+        fixture["query"],
+        fixture["records"][0],
+        semantic_similarity_units=10000,
+        gt_advisory_prior_units=0,
+    )
+    assert candidate.creates_authority is False
+    assert candidate.creates_permission is False
+
+
+def test_g2b_freshness_creates_no_authority() -> None:
+    fixture = _b2_positive_fixture()
+    evaluation = fixture["evaluations"][0]
+    assert evaluation.current_freshness_units == 9000
+    assert evaluation.creates_authority is False
+    assert evaluation.creates_permission is False
+
+
+def test_g2b_forbidden_change_blocks_reuse() -> None:
+    address = _b2_address()
+    query = _b2_query(address=address)
+    record = _b2_record(
+        address=address,
+        risk_hints=("POLICY_CHANGED",),
+    )
+    _b2_assert_blocked(
+        _b2_evaluate(record, query),
+        state="BLOCKED_BY_FORBIDDEN_CHANGE",
+        first_reason="drs_forbidden_change_detected",
+    )
+
+
+def test_g2b_missing_required_evidence_blocks_reuse() -> None:
+    address = _b2_address()
+    query = _b2_query(
+        address=address,
+        required_evidence_classes=_B2_EVIDENCE_CLASSES
+        + ("UNAVAILABLE_EVIDENCE",),
+    )
+    _b2_assert_blocked(
+        _b2_evaluate(_b2_record(address=address), query),
+        state="BLOCKED_BY_REQUIRED_EVIDENCE",
+        first_reason="drs_required_evidence_missing",
+    )
+
+
+def test_g2b_policy_version_mismatch_blocks_reuse() -> None:
+    address = _b2_address()
+    query = _b2_query(
+        address=address,
+        required_evidence_classes=(),
+    )
+    record = _b2_record(address=address, policy_version="policy_v02")
+    _b2_assert_blocked(
+        _b2_evaluate(record, query),
+        state="BLOCKED_BY_POLICY",
+        first_reason="drs_policy_version_mismatch",
+    )
+
+
+def test_g2b_schema_version_mismatch_blocks_reuse() -> None:
+    address = _b2_address()
+    query = _b2_query(
+        address=address,
+        required_evidence_classes=(),
+    )
+    record = _b2_record(address=address, schema_versions=("v0.2",))
+    _b2_assert_blocked(
+        _b2_evaluate(record, query),
+        state="BLOCKED_BY_POLICY",
+        first_reason="drs_schema_version_mismatch",
+    )
+
+
+def test_g2b_conflict_blocks_reuse() -> None:
+    address = _b2_address()
+    query = _b2_query(
+        address=address,
+        required_evidence_classes=(),
+    )
+    record = _b2_record(
+        address=address,
+        conflict_hints=("CONFLICT_PRESENT",),
+    )
+    _b2_assert_blocked(
+        _b2_evaluate(record, query),
+        state="BLOCKED_BY_CONFLICT",
+        first_reason="drs_conflict_blocked",
+    )
+
+
+def test_g2b_quarantined_record_blocks_reuse() -> None:
+    address = _b2_address()
+    query = _b2_query(
+        address=address,
+        required_evidence_classes=(),
+    )
+    record = _b2_record(
+        address=address,
+        persistent_lifecycle_state="QUARANTINED",
+    )
+    _b2_assert_blocked(
+        _b2_evaluate(record, query),
+        state="BLOCKED_BY_QUARANTINE",
+        first_reason="drs_quarantine_blocked",
+    )
+
+
+def test_g2b_deadend_record_blocks_reuse() -> None:
+    address = _b2_address()
+    query = _b2_query(
+        address=address,
+        required_evidence_classes=(),
+    )
+    record = _b2_record(
+        address=address,
+        persistent_lifecycle_state="DEADEND",
+    )
+    _b2_assert_blocked(
+        _b2_evaluate(record, query),
+        state="BLOCKED_BY_DEADEND",
+        first_reason="drs_deadend_blocked",
+    )
+
+
+def test_g2b_action_like_request_cannot_take_answer_shortcut() -> None:
+    address = _b2_address(intent_class="action_request")
+    query = _b2_query(
+        address=address,
+        required_evidence_classes=(),
+    )
+    record = _b2_record(address=address)
+    _b2_assert_blocked(
+        _b2_evaluate(record, query),
+        state="BLOCKED_BY_ACTION_INTENT",
+        first_reason="drs_action_intent_shortcut_forbidden",
+    )
+
+
+def test_g2b_prior_root_final_cannot_authorize_shortcut() -> None:
+    address = _b2_address()
+    query = _b2_query(
+        address=address,
+        required_evidence_classes=(),
+    )
+    record = _b2_record(
+        address=address,
+        authority=_b2_authority(
+            authority_class="ROOT_FINAL_REFERENCE",
+            root_acceptance_state="ACCEPTED_WORK",
+        ),
+    )
+    _b2_assert_blocked(
+        _b2_evaluate(record, query),
+        state="BLOCKED_BY_PROVENANCE",
+        first_reason="drs_prior_root_final_shortcut_forbidden",
+    )
+    action_history_record = _b2_record(
+        address=address,
+        authority=_b2_authority(
+            authority_class="ACTION_HISTORY_REFERENCE",
+            root_acceptance_state="UNREVIEWED",
+        ),
+    )
+    _b2_assert_blocked(
+        _b2_evaluate(action_history_record, query),
+        state="BLOCKED_BY_ACTION_HISTORY",
+        first_reason="drs_action_history_shortcut_forbidden",
+    )
+
+
+def test_g2b_prior_receipt_cannot_authorize_shortcut() -> None:
+    address = _b2_address()
+    query = _b2_query(address=address)
+    evaluation = _b2_evaluate(
+        _b2_record(address=address),
+        query,
+        action_history_binding=_b2_action_history(
+            terminal_receipt_ref="receipt:g2b2:historical",
+        ),
+    )
+    _b2_assert_blocked(
+        evaluation,
+        state="BLOCKED_BY_ACTION_HISTORY",
+        first_reason="drs_prior_receipt_shortcut_forbidden",
+    )
+    malformed = _reidentify(
+        replace(
+            _b2_action_history(),
+            terminal_receipt_ref="receipt with whitespace",
+        )
+    )
+    with pytest.raises(
+        ValueError,
+        match=r"^drs_exact_type_or_identity_invalid$",
+    ):
+        _b2_evaluate(
+            _b2_record(address=address),
+            query,
+            action_history_binding=malformed,
+        )
+
+
+def test_g2b_expired_action_packet_cannot_authorize_shortcut() -> None:
+    address = _b2_address()
+    query = _b2_query(address=address)
+    evaluation = _b2_evaluate(
+        _b2_record(address=address),
+        query,
+        action_history_binding=_b2_action_history(
+            lifecycle_state="EXPIRED",
+        ),
+    )
+    _b2_assert_blocked(
+        evaluation,
+        state="BLOCKED_BY_ACTION_HISTORY",
+        first_reason="drs_action_history_expired",
+    )
+
+
+def test_g2b_revoked_action_packet_cannot_authorize_shortcut() -> None:
+    address = _b2_address()
+    query = _b2_query(address=address)
+    evaluation = _b2_evaluate(
+        _b2_record(address=address),
+        query,
+        action_history_binding=_b2_action_history(
+            lifecycle_state="REVOKED",
+        ),
+    )
+    _b2_assert_blocked(
+        evaluation,
+        state="BLOCKED_BY_ACTION_HISTORY",
+        first_reason="drs_action_history_revoked",
+    )
+
+
+def test_g2b_superseded_action_packet_cannot_authorize_shortcut() -> None:
+    address = _b2_address()
+    query = _b2_query(address=address)
+    evaluation = _b2_evaluate(
+        _b2_record(address=address),
+        query,
+        action_history_binding=_b2_action_history(
+            lifecycle_state="SUPERSEDED",
+        ),
+    )
+    _b2_assert_blocked(
+        evaluation,
+        state="BLOCKED_BY_ACTION_HISTORY",
+        first_reason="drs_action_history_superseded",
+    )
+
+
+def test_g2b_blocked_action_packet_cannot_authorize_shortcut() -> None:
+    address = _b2_address()
+    query = _b2_query(address=address)
+    for lifecycle_state in ("BLOCKED", "FAILED"):
+        evaluation = _b2_evaluate(
+            _b2_record(address=address),
+            query,
+            action_history_binding=_b2_action_history(
+                lifecycle_state=lifecycle_state,
+            ),
+        )
+        _b2_assert_blocked(
+            evaluation,
+            state="BLOCKED_BY_ACTION_HISTORY",
+            first_reason="drs_action_history_blocked",
+        )
+
+
+def test_g2b_consumed_action_history_cannot_authorize_shortcut() -> None:
+    address = _b2_address()
+    query = _b2_query(address=address)
+    evaluation = _b2_evaluate(
+        _b2_record(address=address),
+        query,
+        action_history_binding=_b2_action_history(
+            disposition="CONSUMED",
+        ),
+    )
+    _b2_assert_blocked(
+        evaluation,
+        state="BLOCKED_BY_ACTION_HISTORY",
+        first_reason="drs_action_history_consumed",
+    )
+
+
+def test_g2b_uncertain_closed_history_cannot_authorize_shortcut() -> None:
+    address = _b2_address()
+    query = _b2_query(address=address)
+    evaluation = _b2_evaluate(
+        _b2_record(address=address),
+        query,
+        action_history_binding=_b2_action_history(
+            disposition="UNCERTAIN_CLOSED",
+        ),
+    )
+    _b2_assert_blocked(
+        evaluation,
+        state="BLOCKED_BY_ACTION_HISTORY",
+        first_reason="drs_action_history_uncertain_closed",
+    )
+
+
+def test_g2b_root_remains_final_authority() -> None:
+    fixture = _b2_positive_fixture()
+    report = fixture["report"]
+    assert report.final_status == "PASS"
+    assert report.memory_descent_result is None
+    assert report.root_shortcut_projection is None
+    assert report.reuse_certificate is None
+    assert report.retrieval_plan.executes_read is False
+    assert all(
+        candidate.creates_authority is False
+        and candidate.creates_permission is False
+        and candidate.creates_final_output is False
+        for candidate in report.eligible_candidates
+    )
+    first_evaluation = fixture["evaluations"][0]
+    assert {
+        "query_evaluation_id": first_evaluation.query_evaluation_id,
+        "candidate_ids": tuple(
+            candidate.resolution_candidate_id
+            for candidate in fixture["candidates"]
+        ),
+        "ranked_candidate_ids": tuple(
+            candidate.resolution_candidate_id
+            for candidate in fixture["ranked"]
+        ),
+        "selected_candidate_id": report.selected_candidate_id,
+        "observed_evidence_fingerprint": (
+            first_evaluation.observed_evidence_fingerprint
+        ),
+        "checked_dependency_fingerprint": (
+            first_evaluation.checked_dependency_fingerprint
+        ),
+        "source_history_hash": first_evaluation.source_history_hash,
+        "report_id": report.report_id,
+    } == _B2_IDENTITY_VECTORS
+    report_forgeries = _b2_report_forgery_matrix(fixture)
+    observed = {
+        label: resolution.validate_drs_resolution_report_v01(forgery)
+        for label, forgery in report_forgeries
+    }
+    assert all(result[0] is False for result in observed.values()), repr(
+        observed
+    )
+    before = (
+        semantic.semantic_address_to_plain_data_v01(fixture["address"]),
+        resolution.drs_temporal_query_to_plain_data_v01(fixture["query"]),
+        tuple(
+            semantic.meaning_record_to_plain_data_v01(record)
+            for record in fixture["records"]
+        ),
+    )
+    _b2_positive_fixture()
+    after = (
+        semantic.semantic_address_to_plain_data_v01(fixture["address"]),
+        resolution.drs_temporal_query_to_plain_data_v01(fixture["query"]),
+        tuple(
+            semantic.meaning_record_to_plain_data_v01(record)
+            for record in fixture["records"]
+        ),
+    )
+    assert canonical_json_bytes_v01(before) == canonical_json_bytes_v01(after)
+
+    class _QuerySubclass(resolution.DRSTemporalQueryV01):
+        pass
+
+    class _TupleSubclass(tuple):
+        pass
+
+    query_subclass = _QuerySubclass(**fixture["query"].__dict__)
+    with pytest.raises(
+        ValueError,
+        match=r"^drs_exact_type_or_identity_invalid$",
+    ):
+        resolution.evaluate_drs_candidate_v01(
+            semantic_address=fixture["address"],
+            query=query_subclass,
+            meaning_record=fixture["records"][0],
+        )
+    _b2_assert_ranking_error(
+        "drs_exact_type_or_identity_invalid",
+        query=fixture["query"],
+        evaluations=_TupleSubclass(fixture["evaluations"]),
+        candidates=fixture["candidates"],
+    )
+    _b2_assert_ranking_error(
+        "drs_exact_type_or_identity_invalid",
+        query=fixture["query"],
+        evaluations=fixture["evaluations"],
+        candidates=_TupleSubclass(fixture["candidates"]),
+    )
+    pickled_query = pickle.loads(pickle.dumps(fixture["query"]))
+    assert (
+        resolution.validate_drs_temporal_query_v01(pickled_query)
+        == (True, ())
+    )

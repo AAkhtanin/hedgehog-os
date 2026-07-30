@@ -41,14 +41,17 @@ from hedgehog.drs_semantic_address_v01 import (
     validate_semantic_address_v01,
 )
 from hedgehog.reuse_certificate_v01 import ReuseCertificateV01
+from hedgehog.reuse_certificate_v01 import G2AActionHistoryBindingV01
 from hedgehog.reuse_certificate_v01 import (
     RootShortcutAuthorizationProjectionV01,
 )
 from hedgehog.reuse_certificate_v01 import (
     _REUSE_CERTIFICATE_FIELDS,
     _ROOT_SHORTCUT_FIELDS,
+    g2a_action_history_binding_to_plain_data_v01,
     reuse_certificate_to_plain_data_v01,
     root_shortcut_authorization_projection_to_plain_data_v01,
+    validate_g2a_action_history_binding_v01,
     validate_reuse_certificate_v01,
     validate_root_shortcut_authorization_projection_v01,
 )
@@ -147,6 +150,53 @@ _TIME_AXES = (
 )
 _INT64_MIN = -(2**63)
 _INT64_MAX = 2**63 - 1
+
+_B2_EVIDENCE_CLASS_ORDER_V01 = (
+    "SOURCE_IDENTITY",
+    "SOURCE_INTEGRITY",
+    "PROVENANCE_CHAIN",
+    "TIME_FITNESS",
+    "POLICY_COMPATIBILITY",
+    "SCHEMA_COMPATIBILITY",
+    "CONFLICT_CLEARANCE",
+    "ROOT_DECISION",
+    "SOURCE_HISTORY",
+)
+_B2_REQUIRED_TIME_AXES_BY_MODE_V01 = (
+    ("CURRENT_DECISION", ("PT", "KT", "ET", "CT", "TTL", "VALIDITY")),
+    (
+        "DIRECT_REUSE_CANDIDATE",
+        ("PT", "KT", "ET", "CT", "TTL", "VALIDITY"),
+    ),
+    ("HISTORICAL_AS_OF", ("KT", "VALIDITY")),
+    ("AUDIT_REPLAY", ("PT", "KT", "ET", "CT", "VALIDITY")),
+    ("TREND_ANALYSIS", ("KT", "ET", "VALIDITY")),
+    ("MEMORY_CONTEXT_ONLY", ("KT", "TTL", "VALIDITY")),
+)
+_B2_EVALUATION_TIME_SOURCE_BY_MODE_V01 = (
+    ("CURRENT_DECISION", "INJECTED_CURRENT_DECISION_TIME"),
+    ("DIRECT_REUSE_CANDIDATE", "INJECTED_CURRENT_DECISION_TIME"),
+    ("HISTORICAL_AS_OF", "RECORDED_HISTORICAL_AS_OF_TIME"),
+    ("AUDIT_REPLAY", "RECORDED_AUDIT_REPLAY_TIME"),
+    ("TREND_ANALYSIS", "INJECTED_ANALYSIS_TIME"),
+    ("MEMORY_CONTEXT_ONLY", "INJECTED_ANALYSIS_TIME"),
+)
+_B2_INFORMATIONAL_INTENT_CLASSES_V01 = (
+    "informational_summary",
+    "informational_lookup",
+    "informational_explanation",
+    "context_lookup",
+    "warning_lookup",
+    "historical_inspection",
+    "trend_analysis",
+)
+_B2_CHANGE_RELATION_CLASSES_V01 = (
+    "CONTRADICTS",
+    "SUPERSEDES",
+    "REPLACES",
+    "BLOCKED_BY_POLICY",
+    "DEGRADED_FROM",
+)
 
 _QUERY_FIELDS = (
     "temporal_query_version",
@@ -1022,6 +1072,629 @@ def query_evaluation_state_to_plain_data_v01(value: object) -> dict[str, object]
     return {name: _plain_value(getattr(value, name)) for name in _QUERY_EVALUATION_FIELDS}
 
 
+def _b2_profile_value(
+    profile: tuple[tuple[str, object], ...],
+    key: str,
+) -> object:
+    for profile_key, profile_value in profile:
+        if profile_key == key:
+            return profile_value
+    raise ValueError("drs_exact_type_or_identity_invalid")
+
+
+def _b2_digest(*, domain: str, material: tuple[object, ...]) -> str:
+    payload = _canonical_json_bytes_v01(material)
+    return _domain_separated_sha256_hex_v01(
+        domain=domain,
+        payload=payload,
+    )
+
+
+def _b2_ordered_unique(values: tuple[str, ...]) -> tuple[str, ...]:
+    observed: list[str] = []
+    for value in values:
+        if value not in observed:
+            observed.append(value)
+    return tuple(observed)
+
+
+def _b2_source_history_hash(
+    meaning_record: MeaningRecordV01,
+    action_history_binding_id: str | None,
+) -> str:
+    return _b2_digest(
+        domain="hedgehog:drs:source_history:v01",
+        material=(
+            meaning_record.meaning_record_id,
+            meaning_record.content_fingerprint,
+            meaning_record.predecessor_record_id,
+            tuple(
+                edge.lineage_edge_id
+                for edge in meaning_record.lineage_edges
+            ),
+            tuple(
+                edge.source_history_hash
+                for edge in meaning_record.lineage_edges
+            ),
+            meaning_record.source_reference_ids,
+            meaning_record.authority_envelope.authority_envelope_id,
+            meaning_record.time_envelope.time_envelope_id,
+            action_history_binding_id,
+        ),
+    )
+
+
+def _b2_observed_evidence_fingerprint(
+    *,
+    evidence_classes: tuple[str, ...],
+    meaning_record: MeaningRecordV01,
+    action_history_binding_id: str | None,
+) -> str:
+    source_reference_ids = _b2_ordered_unique(
+        meaning_record.source_reference_ids
+    )
+    observed_refs = list(source_reference_ids)
+    lineage_evidence_refs: list[str] = []
+    for edge in meaning_record.lineage_edges:
+        for evidence_ref_id in edge.evidence_ref_ids:
+            if evidence_ref_id not in observed_refs:
+                observed_refs.append(evidence_ref_id)
+                lineage_evidence_refs.append(evidence_ref_id)
+    authority = meaning_record.authority_envelope
+    return _b2_digest(
+        domain="hedgehog:drs:observed_evidence:v01",
+        material=(
+            evidence_classes,
+            source_reference_ids,
+            tuple(lineage_evidence_refs),
+            authority.source_root_decision_input_id,
+            authority.source_root_decision_id,
+            authority.source_root_decision_hash,
+            action_history_binding_id,
+        ),
+    )
+
+
+def _b2_observed_changes(
+    meaning_record: MeaningRecordV01,
+) -> tuple[str, ...]:
+    values = list(meaning_record.risk_hints)
+    values.extend(meaning_record.conflict_hints)
+    values.extend(
+        edge.relation_class
+        for edge in meaning_record.lineage_edges
+        if edge.relation_class in _B2_CHANGE_RELATION_CLASSES_V01
+    )
+    if meaning_record.predecessor_record_id is not None:
+        values.append("SUPERSESSION_PRESENT")
+    return _b2_ordered_unique(tuple(values))
+
+
+def _b2_required_axes_are_ordered(
+    actual: tuple[str, ...],
+    required: tuple[str, ...],
+) -> bool:
+    position = 0
+    for axis in actual:
+        if position < len(required) and axis == required[position]:
+            position += 1
+    return position == len(required)
+
+
+def _b2_history_reason(
+    binding: G2AActionHistoryBindingV01 | None,
+) -> str | None:
+    if binding is None:
+        return None
+    if binding.lifecycle_state == "EXPIRED":
+        return "drs_action_history_expired"
+    if binding.lifecycle_state == "REVOKED":
+        return "drs_action_history_revoked"
+    if binding.lifecycle_state == "SUPERSEDED":
+        return "drs_action_history_superseded"
+    if binding.lifecycle_state in ("BLOCKED", "FAILED"):
+        return "drs_action_history_blocked"
+    if binding.disposition == "CONSUMED":
+        return "drs_action_history_consumed"
+    if binding.disposition == "UNCERTAIN_CLOSED":
+        return "drs_action_history_uncertain_closed"
+    if binding.terminal_receipt_ref is not None:
+        return "drs_prior_receipt_shortcut_forbidden"
+    return "drs_action_history_shortcut_forbidden"
+
+
+def evaluate_drs_candidate_v01(
+    *,
+    semantic_address: SemanticAddressV01,
+    query: DRSTemporalQueryV01,
+    meaning_record: MeaningRecordV01,
+    action_history_binding: G2AActionHistoryBindingV01 | None = None,
+) -> QueryEvaluationStateV01:
+    try:
+        if type(semantic_address) is not SemanticAddressV01:
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        valid, reasons = validate_semantic_address_v01(semantic_address)
+        if not valid or reasons:
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        if type(query) is not DRSTemporalQueryV01:
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        valid, reasons = validate_drs_temporal_query_v01(query)
+        if not valid or reasons:
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        if type(meaning_record) is not MeaningRecordV01:
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        valid, reasons = validate_meaning_record_v01(meaning_record)
+        if not valid or reasons:
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        action_history_binding_id = None
+        if action_history_binding is not None:
+            if type(action_history_binding) is not G2AActionHistoryBindingV01:
+                raise ValueError("drs_exact_type_or_identity_invalid")
+            valid, reasons = validate_g2a_action_history_binding_v01(
+                action_history_binding
+            )
+            if not valid or reasons:
+                raise ValueError("drs_exact_type_or_identity_invalid")
+            binding_data = g2a_action_history_binding_to_plain_data_v01(
+                action_history_binding
+            )
+            action_history_binding_id = binding_data["binding_id"]
+
+        time_envelope = meaning_record.time_envelope
+        authority = meaning_record.authority_envelope
+        required_axes = _b2_profile_value(
+            _B2_REQUIRED_TIME_AXES_BY_MODE_V01,
+            query.query_mode,
+        )
+        expected_time_source = _b2_profile_value(
+            _B2_EVALUATION_TIME_SOURCE_BY_MODE_V01,
+            query.query_mode,
+        )
+        if type(required_axes) is not tuple or type(expected_time_source) is not str:
+            raise ValueError("drs_exact_type_or_identity_invalid")
+
+        validity_interval_passed = (
+            time_envelope.valid_from
+            <= query.as_of
+            < time_envelope.valid_to
+        )
+        ttl_expiry = (
+            time_envelope.pt_created_at + time_envelope.ttl_seconds
+        )
+        ttl_arithmetic_safe = _INT64_MIN <= ttl_expiry <= _INT64_MAX
+        ttl_interval_passed = ttl_arithmetic_safe and query.as_of < ttl_expiry
+        age_seconds = query.as_of - time_envelope.pt_created_at
+        if query.max_age_seconds == 0:
+            max_age_passed = age_seconds == 0
+            current_freshness_units = 10000 if age_seconds == 0 else 0
+        else:
+            max_age_passed = 0 <= age_seconds < query.max_age_seconds
+            current_freshness_units = (
+                0
+                if age_seconds < 0
+                else max(
+                    0,
+                    (
+                        (query.max_age_seconds - age_seconds)
+                        * 10000
+                    )
+                    // query.max_age_seconds,
+                )
+            )
+        freshness_policy_passed = (
+            query.freshness_policy_id
+            == time_envelope.freshness_policy_id
+        )
+        ttl_freshness_passed = (
+            ttl_interval_passed
+            and max_age_passed
+            and freshness_policy_passed
+        )
+        mode_required_axes_present = _b2_required_axes_are_ordered(
+            query.required_time_axes,
+            required_axes,
+        )
+        requested_point_axes_available = True
+        if "PT" in query.required_time_axes:
+            requested_point_axes_available = (
+                requested_point_axes_available
+                and time_envelope.pt_created_at <= query.as_of
+            )
+        if "KT" in query.required_time_axes:
+            requested_point_axes_available = (
+                requested_point_axes_available
+                and time_envelope.kt_as_of <= query.as_of
+            )
+        if "ET" in query.required_time_axes:
+            requested_point_axes_available = (
+                requested_point_axes_available
+                and time_envelope.et_observed_at <= query.as_of
+            )
+        if "CT" in query.required_time_axes:
+            requested_point_axes_available = (
+                requested_point_axes_available
+                and time_envelope.ct_context_anchor
+                <= query.evaluation_time
+            )
+        if "SOURCE_OBSERVED" in query.required_time_axes:
+            requested_point_axes_available = (
+                requested_point_axes_available
+                and time_envelope.source_observed_at <= query.as_of
+            )
+        if "SOURCE_REPORTED" in query.required_time_axes:
+            requested_point_axes_available = (
+                requested_point_axes_available
+                and time_envelope.source_reported_at <= query.as_of
+            )
+        if "SYSTEM_INGESTED" in query.required_time_axes:
+            requested_point_axes_available = (
+                requested_point_axes_available
+                and time_envelope.system_ingested_at
+                <= query.evaluation_time
+            )
+        if "SYSTEM_VERIFIED" in query.required_time_axes:
+            requested_point_axes_available = (
+                requested_point_axes_available
+                and time_envelope.system_verified_at
+                <= query.evaluation_time
+            )
+        if "TTL" in query.required_time_axes:
+            requested_point_axes_available = (
+                requested_point_axes_available
+                and ttl_freshness_passed
+            )
+        if "VALIDITY" in query.required_time_axes:
+            requested_point_axes_available = (
+                requested_point_axes_available
+                and validity_interval_passed
+            )
+        required_time_axes_passed = (
+            mode_required_axes_present
+            and requested_point_axes_available
+        )
+        source_mapping_passed = (
+            query.evaluation_time_source == expected_time_source
+        )
+        current_time_binding_passed = (
+            query.query_mode
+            not in ("CURRENT_DECISION", "DIRECT_REUSE_CANDIDATE")
+            or query.evaluation_time == query.as_of
+        )
+        temporal_hard_gate_passed = (
+            validity_interval_passed
+            and ttl_freshness_passed
+            and required_time_axes_passed
+            and source_mapping_passed
+            and current_time_binding_passed
+        )
+
+        scope_passed = (
+            meaning_record.semantic_address == semantic_address
+            and semantic_address.semantic_address_id
+            == query.semantic_address_id
+            and semantic_address.domain == query.domain
+            and authority.authority_scope_fingerprint
+            == query.scope_fingerprint
+        )
+        shortcut_requested = (
+            "ANSWER_SHORTCUT" in query.requested_reuse_classes
+            or query.reuse_intent
+            == "INFORMATIONAL_SHORTCUT_CONSIDERATION"
+        )
+        lifecycle_passed = (
+            meaning_record.persistent_lifecycle_state == "ACTIVE"
+            or (
+                meaning_record.persistent_lifecycle_state == "COMPLETED"
+                and not shortcut_requested
+            )
+            or meaning_record.persistent_lifecycle_state
+            in ("QUARANTINED", "DEADEND")
+        )
+        requested_reuse_classes_enabled = all(
+            reuse_class in DRS_ENABLED_REUSE_CLASSES_V01
+            for reuse_class in query.requested_reuse_classes
+        )
+        record_reuse_class_enabled = (
+            meaning_record.reuse_policy_class
+            in DRS_ENABLED_REUSE_CLASSES_V01
+        )
+        disabled_reuse_class_present = (
+            not requested_reuse_classes_enabled
+            or not record_reuse_class_enabled
+        )
+        enabled_class_binding_passed = (
+            meaning_record.reuse_policy_class
+            in query.requested_reuse_classes
+            and (
+                "ANSWER_SHORTCUT" not in query.requested_reuse_classes
+                or meaning_record.reuse_policy_class == "ANSWER_SHORTCUT"
+            )
+        )
+        independent_policy_mismatch = (
+            meaning_record.policy_version != query.policy_version
+            or (
+                requested_reuse_classes_enabled
+                and record_reuse_class_enabled
+                and not enabled_class_binding_passed
+            )
+        )
+        policy_compatible = (
+            not disabled_reuse_class_present
+            and not independent_policy_mismatch
+        )
+        schema_compatible = (
+            meaning_record.schema_versions == query.schema_versions
+        )
+        is_root_accepted = (
+            authority.authority_class
+            in ("ROOT_ACCEPTED_CONTEXT", "ROOT_ACCEPTED_WORK")
+            and authority.owning_local_root_id
+            == query.owning_local_root_id
+            and authority.source_root_decision_input_id is not None
+            and authority.source_root_decision_id is not None
+            and authority.source_root_decision_hash is not None
+            and (
+                (
+                    authority.authority_class
+                    == "ROOT_ACCEPTED_CONTEXT"
+                    and authority.root_acceptance_state
+                    == "ACCEPTED_CONTEXT"
+                )
+                or (
+                    authority.authority_class
+                    == "ROOT_ACCEPTED_WORK"
+                    and authority.root_acceptance_state
+                    == "ACCEPTED_WORK"
+                )
+            )
+            and bool(meaning_record.source_reference_ids)
+        )
+        is_action_history_reference = (
+            authority.authority_class == "ACTION_HISTORY_REFERENCE"
+        )
+        provenance_passed = (
+            is_root_accepted or is_action_history_reference
+        )
+        authority_envelope_passed = is_root_accepted
+        conflict_passed = (
+            not meaning_record.conflict_hints
+            and all(
+                edge.relation_class
+                not in (
+                    "CONTRADICTS",
+                    "WARNS_AGAINST",
+                    "BLOCKED_BY_POLICY",
+                )
+                for edge in meaning_record.lineage_edges
+            )
+        )
+        quarantine_passed = (
+            meaning_record.persistent_lifecycle_state != "QUARANTINED"
+            and authority.root_acceptance_state != "QUARANTINED"
+        )
+        deadend_passed = (
+            meaning_record.persistent_lifecycle_state != "DEADEND"
+        )
+        action_intent_passed = (
+            semantic_address.intent_class
+            in _B2_INFORMATIONAL_INTENT_CLASSES_V01
+        )
+        history_reason = _b2_history_reason(action_history_binding)
+        if is_action_history_reference and action_history_binding is None:
+            history_reason = "drs_action_history_shortcut_forbidden"
+        g2a_action_history_passed = history_reason is None
+        permission_boundary_passed = (
+            authority.action_permission_present is False
+            and authority.creates_permission is False
+            and all(
+                not source_ref.startswith("permission:")
+                for source_ref in meaning_record.source_reference_ids
+            )
+        )
+
+        source_history_hash = _b2_source_history_hash(
+            meaning_record,
+            action_history_binding_id,
+        )
+        evidence_presence = (
+            ("SOURCE_IDENTITY", True),
+            ("SOURCE_INTEGRITY", True),
+            (
+                "PROVENANCE_CHAIN",
+                bool(meaning_record.source_reference_ids),
+            ),
+            ("TIME_FITNESS", temporal_hard_gate_passed),
+            ("POLICY_COMPATIBILITY", policy_compatible),
+            ("SCHEMA_COMPATIBILITY", schema_compatible),
+            ("CONFLICT_CLEARANCE", conflict_passed),
+            ("ROOT_DECISION", is_root_accepted),
+            ("SOURCE_HISTORY", True),
+        )
+        evidence_classes = tuple(
+            evidence_class
+            for evidence_class in _B2_EVIDENCE_CLASS_ORDER_V01
+            if any(
+                candidate_class == evidence_class and present is True
+                for candidate_class, present in evidence_presence
+            )
+        )
+        required_evidence_passed = all(
+            required in evidence_classes
+            for required in query.required_evidence_classes
+        )
+        observed_changes = _b2_observed_changes(meaning_record)
+        forbidden_changes_passed = all(
+            forbidden not in observed_changes
+            for forbidden in query.forbidden_changes
+        )
+        observed_evidence_fingerprint = (
+            _b2_observed_evidence_fingerprint(
+                evidence_classes=evidence_classes,
+                meaning_record=meaning_record,
+                action_history_binding_id=action_history_binding_id,
+            )
+        )
+        checked_dependency_fingerprint = _b2_digest(
+            domain="hedgehog:drs:checked_dependencies:v01",
+            material=(
+                query.forbidden_changes,
+                observed_changes,
+            ),
+        )
+
+        failure_reasons: list[str] = []
+        failure_states: list[str] = []
+        if not scope_passed:
+            failure_reasons.append("drs_address_scope_mismatch")
+            failure_states.append("BLOCKED_BY_SCOPE")
+        if not lifecycle_passed:
+            failure_reasons.append("drs_persistent_lifecycle_blocked")
+            failure_states.append("BLOCKED_BY_POLICY")
+        temporal_reasons: list[str] = []
+        if not validity_interval_passed:
+            temporal_reasons.append("drs_time_validity_interval_invalid")
+        if not ttl_interval_passed:
+            temporal_reasons.append("drs_time_ttl_expired")
+        if not mode_required_axes_present:
+            temporal_reasons.append("drs_time_axis_missing")
+        if (
+            not temporal_hard_gate_passed
+            and not temporal_reasons
+        ):
+            temporal_reasons.append("drs_temporal_hard_gate_failed")
+        if temporal_reasons:
+            failure_reasons.extend(temporal_reasons)
+            failure_states.extend(
+                "BLOCKED_BY_TIME" for _ in temporal_reasons
+            )
+        if disabled_reuse_class_present:
+            failure_reasons.append("drs_reuse_class_disabled")
+            failure_states.append("BLOCKED_BY_POLICY")
+        if independent_policy_mismatch:
+            failure_reasons.append("drs_policy_version_mismatch")
+            failure_states.append("BLOCKED_BY_POLICY")
+        if not schema_compatible:
+            failure_reasons.append("drs_schema_version_mismatch")
+            failure_states.append("BLOCKED_BY_POLICY")
+        if authority.authority_class == "ROOT_FINAL_REFERENCE":
+            failure_reasons.append(
+                "drs_prior_root_final_shortcut_forbidden"
+            )
+            failure_states.append("BLOCKED_BY_PROVENANCE")
+        elif not provenance_passed:
+            failure_reasons.append("drs_provenance_invalid")
+            failure_states.append("BLOCKED_BY_PROVENANCE")
+        if not required_evidence_passed:
+            failure_reasons.append("drs_required_evidence_missing")
+            failure_states.append("BLOCKED_BY_REQUIRED_EVIDENCE")
+        if not forbidden_changes_passed:
+            failure_reasons.append("drs_forbidden_change_detected")
+            failure_states.append("BLOCKED_BY_FORBIDDEN_CHANGE")
+        if not conflict_passed:
+            failure_reasons.append("drs_conflict_blocked")
+            failure_states.append("BLOCKED_BY_CONFLICT")
+        if not quarantine_passed:
+            failure_reasons.append("drs_quarantine_blocked")
+            failure_states.append("BLOCKED_BY_QUARANTINE")
+        if not deadend_passed:
+            failure_reasons.append("drs_deadend_blocked")
+            failure_states.append("BLOCKED_BY_DEADEND")
+        if not action_intent_passed:
+            failure_reasons.append(
+                "drs_action_intent_shortcut_forbidden"
+            )
+            failure_states.append("BLOCKED_BY_ACTION_INTENT")
+        if history_reason is not None:
+            failure_reasons.append(history_reason)
+            failure_states.append("BLOCKED_BY_ACTION_HISTORY")
+        if not permission_boundary_passed:
+            failure_reasons.append("drs_permission_boundary_failed")
+            failure_states.append("BLOCKED_BY_ACTION_HISTORY")
+
+        mode_rankable = query.query_mode in (
+            "CURRENT_DECISION",
+            "DIRECT_REUSE_CANDIDATE",
+        ) and not disabled_reuse_class_present
+        if query.query_mode == "DIRECT_REUSE_CANDIDATE":
+            mode_rankable = (
+                query.reuse_intent
+                == "INFORMATIONAL_SHORTCUT_CONSIDERATION"
+                and "ANSWER_SHORTCUT"
+                in query.requested_reuse_classes
+                and action_intent_passed
+            )
+        if not failure_reasons and not mode_rankable:
+            failure_reasons.append(
+                "drs_query_mode_invalid_for_shortcut"
+            )
+            if query.query_mode in (
+                "HISTORICAL_AS_OF",
+                "AUDIT_REPLAY",
+                "TREND_ANALYSIS",
+            ):
+                failure_states.append("HISTORICAL_ONLY")
+            elif (
+                query.query_mode == "MEMORY_CONTEXT_ONLY"
+                and query.reuse_intent == "WARNING_LOOKUP"
+            ):
+                failure_states.append("WARNING_ONLY")
+            else:
+                failure_states.append("STALE_CONTEXT_ONLY")
+
+        failure_reasons_tuple = _dedupe(failure_reasons)
+        eligible_for_ranking = (
+            not failure_reasons_tuple and mode_rankable
+        )
+        query_state = (
+            "FRESH_CANDIDATE"
+            if eligible_for_ranking
+            else failure_states[0]
+        )
+        return build_query_evaluation_state_v01(
+            query_id=query.query_id,
+            semantic_address_id=semantic_address.semantic_address_id,
+            meaning_record_id=meaning_record.meaning_record_id,
+            query_state=query_state,
+            evaluated_at=query.evaluation_time,
+            evaluation_time_source=query.evaluation_time_source,
+            temporal_hard_gate_passed=temporal_hard_gate_passed,
+            validity_interval_passed=validity_interval_passed,
+            ttl_freshness_passed=ttl_freshness_passed,
+            required_time_axes_passed=required_time_axes_passed,
+            scope_passed=scope_passed,
+            lifecycle_passed=lifecycle_passed,
+            policy_compatible=policy_compatible,
+            schema_compatible=schema_compatible,
+            provenance_passed=provenance_passed,
+            authority_envelope_passed=authority_envelope_passed,
+            required_evidence_passed=required_evidence_passed,
+            forbidden_changes_passed=forbidden_changes_passed,
+            conflict_passed=conflict_passed,
+            quarantine_passed=quarantine_passed,
+            deadend_passed=deadend_passed,
+            action_intent_passed=action_intent_passed,
+            g2a_action_history_passed=g2a_action_history_passed,
+            permission_boundary_passed=permission_boundary_passed,
+            current_freshness_units=current_freshness_units,
+            observed_evidence_fingerprint=(
+                observed_evidence_fingerprint
+            ),
+            checked_dependency_fingerprint=(
+                checked_dependency_fingerprint
+            ),
+            source_history_hash=source_history_hash,
+            action_history_binding_id=action_history_binding_id,
+            eligible_for_ranking=eligible_for_ranking,
+            reason_codes=failure_reasons_tuple,
+        )
+    except ValueError as exc:
+        if str(exc) == "drs_exact_type_or_identity_invalid":
+            raise
+        raise ValueError("drs_exact_type_or_identity_invalid") from None
+    except Exception:
+        raise ValueError("drs_exact_type_or_identity_invalid") from None
+
+
 def _score_total(value: ResolutionCandidateV01) -> int:
     return (
         3000 * value.semantic_similarity_units
@@ -1157,6 +1830,132 @@ def resolution_candidate_to_plain_data_v01(value: object) -> dict[str, object]:
     if type(value) is not ResolutionCandidateV01:
         raise ValueError("drs_exact_type_required") from None
     return {name: _plain_value(getattr(value, name)) for name in _CANDIDATE_FIELDS}
+
+
+def rank_eligible_drs_candidates_v01(
+    *,
+    query: DRSTemporalQueryV01,
+    query_evaluations: tuple[QueryEvaluationStateV01, ...],
+    candidates: tuple[ResolutionCandidateV01, ...],
+) -> tuple[ResolutionCandidateV01, ...]:
+    try:
+        if type(query) is not DRSTemporalQueryV01:
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        valid, reasons = validate_drs_temporal_query_v01(query)
+        if not valid or reasons:
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        if type(query_evaluations) is not tuple or type(candidates) is not tuple:
+            raise ValueError("drs_exact_type_or_identity_invalid")
+
+        evaluations_by_id: dict[str, QueryEvaluationStateV01] = {}
+        meaning_record_ids: set[str] = set()
+        for evaluation in query_evaluations:
+            if type(evaluation) is not QueryEvaluationStateV01:
+                raise ValueError("drs_exact_type_or_identity_invalid")
+            valid, reasons = validate_query_evaluation_state_v01(evaluation)
+            if not valid or reasons:
+                raise ValueError("drs_exact_type_or_identity_invalid")
+            if (
+                evaluation.query_id != query.query_id
+                or evaluation.semantic_address_id
+                != query.semantic_address_id
+                or evaluation.evaluated_at != query.evaluation_time
+                or evaluation.evaluation_time_source
+                != query.evaluation_time_source
+            ):
+                raise ValueError("drs_ranking_tie_break_invalid")
+            if (
+                evaluation.query_evaluation_id in evaluations_by_id
+                or evaluation.meaning_record_id in meaning_record_ids
+            ):
+                raise ValueError("drs_ranking_tie_break_invalid")
+            evaluations_by_id[evaluation.query_evaluation_id] = evaluation
+            meaning_record_ids.add(evaluation.meaning_record_id)
+
+        candidate_ids: set[str] = set()
+        candidate_evaluation_ids: set[str] = set()
+        candidate_by_evaluation_id: dict[
+            str,
+            ResolutionCandidateV01,
+        ] = {}
+        for candidate in candidates:
+            if type(candidate) is not ResolutionCandidateV01:
+                raise ValueError("drs_exact_type_or_identity_invalid")
+            valid, reasons = validate_resolution_candidate_v01(candidate)
+            if not valid or reasons:
+                raise ValueError("drs_exact_type_or_identity_invalid")
+            if (
+                candidate.resolution_candidate_id in candidate_ids
+                or candidate.query_evaluation_id
+                in candidate_evaluation_ids
+            ):
+                raise ValueError("drs_ranking_tie_break_invalid")
+            candidate_ids.add(candidate.resolution_candidate_id)
+            candidate_evaluation_ids.add(candidate.query_evaluation_id)
+            evaluation = evaluations_by_id.get(
+                candidate.query_evaluation_id
+            )
+            if (
+                evaluation is None
+                or evaluation.eligible_for_ranking is not True
+                or evaluation.query_state != "FRESH_CANDIDATE"
+                or evaluation.reason_codes
+                or candidate.query_id != query.query_id
+                or candidate.semantic_address_id
+                != query.semantic_address_id
+                or evaluation.query_id != query.query_id
+                or evaluation.semantic_address_id
+                != query.semantic_address_id
+                or candidate.meaning_record_id
+                != evaluation.meaning_record_id
+                or candidate.source_history_hash
+                != evaluation.source_history_hash
+                or candidate.action_history_binding_id
+                != evaluation.action_history_binding_id
+                or candidate.freshness_units
+                != evaluation.current_freshness_units
+            ):
+                raise ValueError("drs_ineligible_candidate_selected")
+            candidate_by_evaluation_id[
+                evaluation.query_evaluation_id
+            ] = candidate
+
+        eligible_evaluation_ids = tuple(
+            evaluation.query_evaluation_id
+            for evaluation in query_evaluations
+            if evaluation.eligible_for_ranking is True
+            and evaluation.query_state == "FRESH_CANDIDATE"
+            and not evaluation.reason_codes
+        )
+        if (
+            len(candidate_by_evaluation_id)
+            != len(eligible_evaluation_ids)
+            or any(
+                evaluation_id not in candidate_by_evaluation_id
+                for evaluation_id in eligible_evaluation_ids
+            )
+        ):
+            raise ValueError("drs_ranking_tie_break_invalid")
+        return tuple(
+            sorted(
+                candidates,
+                key=lambda candidate: (
+                    -candidate.total_score_units,
+                    candidate.resolution_candidate_id,
+                ),
+            )
+        )
+    except ValueError as exc:
+        reason = str(exc)
+        if reason in (
+            "drs_exact_type_or_identity_invalid",
+            "drs_ineligible_candidate_selected",
+            "drs_ranking_tie_break_invalid",
+        ):
+            raise
+        raise ValueError("drs_exact_type_or_identity_invalid") from None
+    except Exception:
+        raise ValueError("drs_exact_type_or_identity_invalid") from None
 
 
 def _plan_reasons(value: object, *, check_identity: bool) -> tuple[str, ...]:
@@ -1619,6 +2418,125 @@ def _exact_nested_tuple(value: object, exact_type: type, validator: object) -> t
     return _dedupe(reasons)
 
 
+def _b2_pre_descent_report_reasons(
+    value: DRSResolutionReportV01,
+) -> tuple[str, ...]:
+    try:
+        if (
+            type(value.source_records) is not tuple
+            or type(value.query_evaluations) is not tuple
+            or type(value.eligible_candidates) is not tuple
+            or len(value.source_records) != len(value.query_evaluations)
+        ):
+            return ("drs_resolution_report_binding_invalid",)
+        rebuilt_evaluations: list[QueryEvaluationStateV01] = []
+        for source_record, transported_evaluation in zip(
+            value.source_records,
+            value.query_evaluations,
+        ):
+            if (
+                type(source_record) is not MeaningRecordV01
+                or type(transported_evaluation)
+                is not QueryEvaluationStateV01
+                or source_record.meaning_record_id
+                != transported_evaluation.meaning_record_id
+            ):
+                return ("drs_resolution_report_binding_invalid",)
+            rebuilt = evaluate_drs_candidate_v01(
+                semantic_address=value.semantic_address,
+                query=value.query,
+                meaning_record=source_record,
+                action_history_binding=None,
+            )
+            rebuilt_evaluations.append(rebuilt)
+            if rebuilt != transported_evaluation:
+                return ("drs_resolution_report_binding_invalid",)
+
+        ranked = rank_eligible_drs_candidates_v01(
+            query=value.query,
+            query_evaluations=tuple(rebuilt_evaluations),
+            candidates=value.eligible_candidates,
+        )
+        ranked_ids = tuple(
+            candidate.resolution_candidate_id
+            for candidate in ranked
+        )
+        selected_id = (
+            ranked[0].resolution_candidate_id if ranked else None
+        )
+        if (
+            value.ranked_candidate_ids != ranked_ids
+            or value.selected_candidate_id != selected_id
+        ):
+            return ("drs_resolution_report_binding_invalid",)
+
+        context_only: list[str] = []
+        historical_only: list[str] = []
+        warning_only: list[str] = []
+        rerun_required: list[str] = []
+        blocked: list[str] = []
+        for source_record, evaluation in zip(
+            value.source_records,
+            rebuilt_evaluations,
+        ):
+            if evaluation.query_state == "STALE_CONTEXT_ONLY":
+                context_only.append(source_record.meaning_record_id)
+            elif evaluation.query_state == "HISTORICAL_ONLY":
+                historical_only.append(source_record.meaning_record_id)
+            elif evaluation.query_state == "WARNING_ONLY":
+                warning_only.append(source_record.meaning_record_id)
+            elif evaluation.query_state == "RERUN_REQUIRED":
+                rerun_required.append(source_record.meaning_record_id)
+            elif evaluation.query_state.startswith("BLOCKED_"):
+                blocked.append(source_record.meaning_record_id)
+        if (
+            value.context_only_record_ids != tuple(context_only)
+            or value.historical_only_record_ids
+            != tuple(historical_only)
+            or value.warning_only_record_ids != tuple(warning_only)
+            or value.rerun_required_record_ids
+            != tuple(rerun_required)
+            or value.blocked_record_ids != tuple(blocked)
+        ):
+            return ("drs_resolution_report_binding_invalid",)
+
+        record_ids = tuple(
+            record.meaning_record_id
+            for record in value.source_records
+        )
+        plan = value.retrieval_plan
+        if (
+            type(plan) is not RetrievalPlanV01
+            or plan.query_id != value.query.query_id
+            or plan.semantic_address_id
+            != value.query.semantic_address_id
+            or plan.proposed_record_ids != record_ids
+            or plan.requested_descent_class != "SUMMARY_ONLY"
+            or plan.proposed_memory_pointer_ids
+            or plan.proposed_artifact_pointer_ids
+            or plan.executes_read is not False
+        ):
+            return ("drs_resolution_report_binding_invalid",)
+        counters = (
+            value.provider_calls,
+            value.network_calls,
+            value.gemini_calls,
+            value.external_drs_calls,
+            value.connector_calls,
+            value.real_world_effects_count,
+        )
+        if (
+            value.persistent_records_unchanged is not True
+            or any(type(counter) is not int or counter != 0 for counter in counters)
+            or value.final_status != "PASS"
+            or value.reason_codes
+        ):
+            return ("drs_resolution_report_binding_invalid",)
+        return ()
+    except Exception:
+        return ("drs_resolution_report_binding_invalid",)
+
+
 def _report_reasons(value: object, *, check_identity: bool) -> tuple[str, ...]:
     if type(value) is not DRSResolutionReportV01:
         return ("drs_exact_type_required",)
@@ -1711,6 +2629,12 @@ def _report_reasons(value: object, *, check_identity: bool) -> tuple[str, ...]:
             reasons.append("drs_resolution_report_status_invalid")
     elif not value.reason_codes:
         reasons.append("drs_resolution_report_status_invalid")
+    if (
+        value.memory_descent_result is None
+        and value.root_shortcut_projection is None
+        and value.reuse_certificate is None
+    ):
+        reasons.extend(_b2_pre_descent_report_reasons(value))
     if check_identity and not reasons:
         reason = _id_reason(value, "DRSResolutionReportV01")
         if reason:
@@ -1839,4 +2763,6 @@ __all__ = (
     "build_drs_resolution_report_v01",
     "validate_drs_resolution_report_v01",
     "drs_resolution_report_to_plain_data_v01",
+    "evaluate_drs_candidate_v01",
+    "rank_eligible_drs_candidates_v01",
 )

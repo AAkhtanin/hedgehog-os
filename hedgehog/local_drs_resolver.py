@@ -2,10 +2,41 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
+import hashlib
+import json
 import re
+import stat
+from pathlib import Path
 from typing import Any
 
-from hedgehog.drs import LocalDRS
+from hedgehog.drs import (
+    REQUIRED_RECORD_FIELDS,
+    LocalDRS,
+    _safe_filename,
+    assert_no_sensitive_drs_keys,
+)
+from hedgehog.drs_semantic_address_v01 import (
+    LineageEdgeV01,
+    MeaningRecordV01,
+    meaning_record_to_plain_data_v01,
+    validate_lineage_edge_v01,
+    validate_meaning_record_v01,
+)
+from hedgehog.kernel.integrity_replay_v01 import (
+    canonical_json_bytes_v01,
+    domain_separated_sha256_hex_v01,
+)
+from hedgehog.kernel.root_decision_v01 import (
+    ROOT_DECISION_ACCEPT,
+    RootDecisionInputV01,
+    RootDecisionKernelV01,
+    RootDecisionResultV01,
+    root_decision_input_to_plain_dict_v01,
+    root_decision_result_to_plain_dict_v01,
+    validate_root_decision_input_v01,
+    validate_root_decision_kernel_v01,
+    validate_root_decision_result_v01,
+)
 from hedgehog.reuse_gate import compute_reuse_score
 from hedgehog.time_model import make_temporal_query, make_time_envelope
 
@@ -660,3 +691,813 @@ def write_root_final_record(
             root_final_ref=str(artifact_id),
         ),
     )
+
+
+_G2B_LOCAL_LAYERS_V01 = (
+    "work",
+    "thoughts",
+    "quarantine",
+    "deadends",
+)
+_G2B_WRITEBACK_PROPOSAL_DOMAIN_V01 = (
+    "hedgehog:drs:meaning_record_writeback_proposal:v01"
+)
+_G2B_WRITEBACK_ROOT_RESULT_DOMAIN_V01 = (
+    "hedgehog:drs:meaning_record_writeback_root_result_binding:v01"
+)
+_G2B_HISTORY_DOMAIN_V01 = "hedgehog:drs:meaning_record_history:v01"
+_G2B_WRITEBACK_PREDICATE_V01 = (
+    "authorize_g2b_immutable_meaning_record_writeback_v01"
+)
+_G2B_WRITEBACK_POLICY_REF_V01 = (
+    "policy:drs_immutable_meaning_record_writeback:v0.1"
+)
+_G2B_STORAGE_PROFILE_V01 = "g2b_meaning_record_storage_v01"
+_G2B_TOKEN_V01 = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
+
+
+def _g2b_plain_copy_v01(value: object) -> object:
+    return json.loads(
+        json.dumps(
+            value,
+            ensure_ascii=True,
+            allow_nan=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+    )
+
+
+def _g2b_store_snapshot_v01(root: Path) -> tuple[tuple[object, ...], ...]:
+    if not root.exists():
+        return ()
+    if root.is_symlink() or not root.is_dir():
+        raise ValueError("drs_legacy_source_invalid")
+    rows: list[tuple[object, ...]] = []
+    for path in sorted(root.rglob("*"), key=lambda item: item.as_posix()):
+        if path.is_symlink():
+            raise ValueError("drs_legacy_source_invalid")
+        if path.is_dir():
+            continue
+        if not path.is_file():
+            raise ValueError("drs_legacy_source_invalid")
+        payload = path.read_bytes()
+        rows.append(
+            (
+                path.relative_to(root).as_posix(),
+                hashlib.sha256(payload).hexdigest(),
+                len(payload),
+                stat.S_IMODE(
+                    path.stat(follow_symlinks=False).st_mode
+                ),
+            )
+        )
+    return tuple(rows)
+
+
+def _g2b_read_local_records_v01(
+    *,
+    drs: LocalDRS,
+    layers: tuple[str, ...],
+) -> tuple[dict[str, object], ...]:
+    try:
+        if (
+            type(drs) is not LocalDRS
+            or type(layers) is not tuple
+            or any(type(layer) is not str for layer in layers)
+            or len(set(layers)) != len(layers)
+            or any(layer not in _G2B_LOCAL_LAYERS_V01 for layer in layers)
+        ):
+            raise ValueError("drs_legacy_source_invalid")
+        root = drs.root_path
+        if not isinstance(root, Path):
+            raise ValueError("drs_legacy_source_invalid")
+        before = _g2b_store_snapshot_v01(root)
+        if not root.exists():
+            return ()
+        records: list[dict[str, object]] = []
+        for layer in layers:
+            layer_path = root / layer
+            if not layer_path.exists():
+                continue
+            if layer_path.is_symlink() or not layer_path.is_dir():
+                raise ValueError("drs_legacy_source_invalid")
+            for path in sorted(
+                layer_path.iterdir(), key=lambda item: item.name
+            ):
+                if (
+                    path.is_symlink()
+                    or not path.is_file()
+                    or path.suffix != ".json"
+                ):
+                    raise ValueError("drs_legacy_source_invalid")
+                payload = path.read_bytes()
+                value = json.loads(payload.decode("utf-8"))
+                if (
+                    type(value) is not dict
+                    or any(
+                        type(key) is not str for key in value
+                    )
+                    or not REQUIRED_RECORD_FIELDS.issubset(value)
+                    or value.get("layer") != layer
+                    or type(value.get("record_id")) is not str
+                    or path.name
+                    != _safe_filename(value["record_id"])
+                ):
+                    raise ValueError("drs_legacy_source_invalid")
+                assert_no_sensitive_drs_keys(value)
+                records.append(_g2b_plain_copy_v01(value))
+        after = _g2b_store_snapshot_v01(root)
+        if before != after:
+            raise ValueError("drs_read_write_boundary_violation")
+        return tuple(records)
+    except ValueError as exc:
+        if str(exc) == "drs_read_write_boundary_violation":
+            raise ValueError("drs_read_write_boundary_violation") from None
+        raise ValueError("drs_legacy_source_invalid") from None
+    except Exception:
+        raise ValueError("drs_legacy_source_invalid") from None
+
+
+def _g2b_storage_record_v01(
+    *,
+    meaning_record: MeaningRecordV01,
+    writeback_metadata: dict[str, object],
+) -> dict[str, object]:
+    if (
+        type(meaning_record) is not MeaningRecordV01
+        or validate_meaning_record_v01(meaning_record) != (True, ())
+        or type(writeback_metadata) is not dict
+        or any(type(key) is not str for key in writeback_metadata)
+    ):
+        raise ValueError("drs_exact_type_or_identity_invalid") from None
+    allowed = (
+        "writeback_proposal_id",
+        "supersession_evidence_id",
+        "root_decision_id",
+        "root_result_binding_hash",
+    )
+    if any(key not in allowed for key in writeback_metadata):
+        raise ValueError("drs_exact_type_or_identity_invalid") from None
+    metadata = {
+        key: writeback_metadata.get(key) for key in allowed
+    }
+    record_id = meaning_record.meaning_record_id
+    trace = {
+        "trace_id": f"trace:{record_id}",
+        "kind": "g2b_immutable_writeback",
+    }
+    return {
+        "record_id": record_id,
+        "layer": "work",
+        "type": "generic",
+        "domain": meaning_record.semantic_address.domain,
+        "content": {
+            "storage_profile": _G2B_STORAGE_PROFILE_V01,
+            "canonical_meaning_record": (
+                meaning_record_to_plain_data_v01(meaning_record)
+            ),
+            **metadata,
+            "local_writeback_only": True,
+            "production_persistence_claimed": False,
+            "external_global_drs_write": False,
+            "action_side_effects": False,
+            "connector_side_effects": False,
+            "creates_authority": False,
+            "creates_permission": False,
+            "real_world_effects_count": 0,
+        },
+        "time_envelope": {
+            "pt_created_at": "2026-07-30T08:00:00Z",
+            "kt_asof": "2026-07-30T08:00:00Z",
+            "et_observed_at": "2026-07-30T08:00:00Z",
+            "ct_session_anchor": "g2b5",
+            "ttl_seconds": 86400,
+            "freshness_class": "normal",
+            "valid_from": "2026-07-30T08:00:00Z",
+            "valid_to": "2026-07-31T08:00:00Z",
+        },
+        "provenance": {
+            "request_id": f"request:{record_id}",
+            "created_by": "root_orchestrator",
+            "trace_refs": [trace],
+        },
+        "status": "accepted",
+        "trace_refs": [trace],
+        "source_refs": [
+            {
+                "source": "local_drs",
+                "source_id": record_id,
+                "trace_ref": trace,
+            }
+        ],
+    }
+
+
+def _g2b_predecessor_history_hash_v01(
+    predecessor_record: MeaningRecordV01,
+) -> str:
+    return domain_separated_sha256_hex_v01(
+        domain=_G2B_HISTORY_DOMAIN_V01,
+        payload=canonical_json_bytes_v01(
+            meaning_record_to_plain_data_v01(predecessor_record)
+        ),
+    )
+
+
+def _g2b_writeback_proposal_material_v01(
+    *,
+    predecessor_record: MeaningRecordV01,
+    successor_commitment_record: MeaningRecordV01,
+    claim_dimension: str,
+    supersession_reason: str,
+) -> tuple[object, ...]:
+    return (
+        "v0.1",
+        predecessor_record.semantic_address.semantic_address_id,
+        predecessor_record.meaning_record_id,
+        successor_commitment_record.meaning_record_id,
+        claim_dimension,
+        supersession_reason,
+        predecessor_record.authority_envelope.owning_local_root_id,
+        predecessor_record.authority_envelope.authority_scope_fingerprint,
+        predecessor_record.policy_version,
+        predecessor_record.schema_versions,
+        successor_commitment_record.time_envelope.valid_from,
+        successor_commitment_record.time_envelope.valid_to,
+        _g2b_predecessor_history_hash_v01(predecessor_record),
+    )
+
+
+def _g2b_writeback_proposal_id_v01(
+    *,
+    predecessor_record: MeaningRecordV01,
+    successor_commitment_record: MeaningRecordV01,
+    claim_dimension: str,
+    supersession_reason: str,
+) -> str:
+    material = _g2b_writeback_proposal_material_v01(
+        predecessor_record=predecessor_record,
+        successor_commitment_record=successor_commitment_record,
+        claim_dimension=claim_dimension,
+        supersession_reason=supersession_reason,
+    )
+    return _g2b_writeback_proposal_id_from_material_v01(material)
+
+
+def _g2b_writeback_proposal_id_from_material_v01(
+    material: tuple[object, ...],
+) -> str:
+    return "g2bwriteback_v01:" + domain_separated_sha256_hex_v01(
+        domain=_G2B_WRITEBACK_PROPOSAL_DOMAIN_V01,
+        payload=canonical_json_bytes_v01(material),
+    )
+
+
+def _g2b_writeback_claim_preimage_v01(
+    *,
+    predecessor_record: MeaningRecordV01,
+    successor_commitment_record: MeaningRecordV01,
+    claim_dimension: str,
+    supersession_reason: str,
+) -> dict[str, object]:
+    material = _g2b_writeback_proposal_material_v01(
+        predecessor_record=predecessor_record,
+        successor_commitment_record=successor_commitment_record,
+        claim_dimension=claim_dimension,
+        supersession_reason=supersession_reason,
+    )
+    names = (
+        "profile_version",
+        "semantic_address_id",
+        "predecessor_record_id",
+        "successor_commitment_record_id",
+        "claim_dimension",
+        "supersession_reason",
+        "owning_local_root_id",
+        "authority_scope_fingerprint",
+        "policy_version",
+        "schema_versions",
+        "successor_valid_from",
+        "successor_valid_to",
+        "predecessor_source_history_hash",
+    )
+    return {
+        "writeback_proposal_id": (
+            _g2b_writeback_proposal_id_from_material_v01(material)
+        ),
+        **{
+            name: list(value) if type(value) is tuple else value
+            for name, value in zip(names, material, strict=True)
+        },
+        "writeback_policy_ref": _G2B_WRITEBACK_POLICY_REF_V01,
+    }
+
+
+def _g2b_writeback_root_result_hash_v01(
+    *,
+    root_decision_result: RootDecisionResultV01,
+) -> str:
+    if type(root_decision_result) is not RootDecisionResultV01:
+        raise ValueError("drs_writeback_root_binding_invalid") from None
+    return domain_separated_sha256_hex_v01(
+        domain=_G2B_WRITEBACK_ROOT_RESULT_DOMAIN_V01,
+        payload=canonical_json_bytes_v01(
+            root_decision_result_to_plain_dict_v01(
+                root_decision_result
+            )
+        ),
+    )
+
+
+def _g2b_wrapper_matches_v01(
+    wrapper: object,
+    record: MeaningRecordV01,
+) -> bool:
+    if (
+        type(wrapper) is not dict
+        or type(record) is not MeaningRecordV01
+        or validate_meaning_record_v01(record) != (True, ())
+        or set(wrapper)
+        != {
+            "record_id",
+            "layer",
+            "type",
+            "domain",
+            "content",
+            "time_envelope",
+            "provenance",
+            "status",
+            "trace_refs",
+            "source_refs",
+        }
+    ):
+        return False
+    content = wrapper.get("content")
+    expected_content_keys = {
+        "storage_profile",
+        "canonical_meaning_record",
+        "writeback_proposal_id",
+        "supersession_evidence_id",
+        "root_decision_id",
+        "root_result_binding_hash",
+        "local_writeback_only",
+        "production_persistence_claimed",
+        "external_global_drs_write",
+        "action_side_effects",
+        "connector_side_effects",
+        "creates_authority",
+        "creates_permission",
+        "real_world_effects_count",
+    }
+    optional_strings = (
+        content.get("writeback_proposal_id")
+        if type(content) is dict
+        else object(),
+        content.get("supersession_evidence_id")
+        if type(content) is dict
+        else object(),
+        content.get("root_decision_id")
+        if type(content) is dict
+        else object(),
+    )
+    root_hash = (
+        content.get("root_result_binding_hash")
+        if type(content) is dict
+        else object()
+    )
+    return (
+        type(content) is dict
+        and set(content) == expected_content_keys
+        and type(wrapper.get("record_id")) is str
+        and wrapper["record_id"] == record.meaning_record_id
+        and type(wrapper.get("layer")) is str
+        and wrapper["layer"] == "work"
+        and type(wrapper.get("type")) is str
+        and wrapper["type"] == "generic"
+        and type(wrapper.get("domain")) is str
+        and wrapper["domain"] == record.semantic_address.domain
+        and type(wrapper.get("status")) is str
+        and wrapper["status"] == "accepted"
+        and type(wrapper.get("time_envelope")) is dict
+        and type(wrapper.get("provenance")) is dict
+        and type(wrapper.get("trace_refs")) is list
+        and type(wrapper.get("source_refs")) is list
+        and content.get("storage_profile")
+        == _G2B_STORAGE_PROFILE_V01
+        and type(content.get("canonical_meaning_record")) is dict
+        and content.get("canonical_meaning_record")
+        == meaning_record_to_plain_data_v01(record)
+        and all(
+            item is None or type(item) is str
+            for item in optional_strings
+        )
+        and (
+            root_hash is None
+            or (
+                type(root_hash) is str
+                and re.fullmatch(r"[0-9a-f]{64}", root_hash)
+                is not None
+            )
+        )
+        and content.get("local_writeback_only") is True
+        and content.get("production_persistence_claimed") is False
+        and content.get("external_global_drs_write") is False
+        and content.get("action_side_effects") is False
+        and content.get("connector_side_effects") is False
+        and content.get("creates_authority") is False
+        and content.get("creates_permission") is False
+        and type(content.get("real_world_effects_count")) is int
+        and content["real_world_effects_count"] == 0
+    )
+
+
+def _g2b_validate_root_reviewed_writeback_geometry_v01(
+    *,
+    predecessor_record: MeaningRecordV01,
+    successor_commitment_record: MeaningRecordV01,
+    successor_record: MeaningRecordV01,
+    claim_dimension: str,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+) -> tuple[str, str, LineageEdgeV01]:
+    records = (
+        predecessor_record,
+        successor_commitment_record,
+        successor_record,
+    )
+    if any(
+        type(record) is not MeaningRecordV01
+        or validate_meaning_record_v01(record) != (True, ())
+        for record in records
+    ):
+        raise ValueError("drs_supersession_evidence_invalid") from None
+    if (
+        type(claim_dimension) is not str
+        or _G2B_TOKEN_V01.fullmatch(claim_dimension) is None
+    ):
+        raise ValueError("drs_supersession_evidence_invalid") from None
+    expected_tag = f"claim_dimension:{claim_dimension}"
+    for record in records:
+        claim_dimension_tags = tuple(
+            tag
+            for tag in record.semantic_tags
+            if tag.startswith("claim_dimension:")
+        )
+        if claim_dimension_tags != (expected_tag,):
+            raise ValueError(
+                "drs_supersession_evidence_invalid"
+            ) from None
+    reason = successor_record.supersession_reason
+    if type(reason) is not str or not reason or len(reason) > 1024:
+        raise ValueError("drs_supersession_evidence_invalid") from None
+    expected_claim = _g2b_writeback_claim_preimage_v01(
+        predecessor_record=predecessor_record,
+        successor_commitment_record=successor_commitment_record,
+        claim_dimension=claim_dimension,
+        supersession_reason=reason,
+    )
+    proposal_id = expected_claim["writeback_proposal_id"]
+    if type(proposal_id) is not str:
+        raise ValueError("drs_writeback_root_binding_invalid") from None
+    if (
+        type(root_kernel) is not RootDecisionKernelV01
+        or type(root_decision_input) is not RootDecisionInputV01
+        or type(root_decision_result) is not RootDecisionResultV01
+        or validate_root_decision_kernel_v01(root_kernel) != ()
+        or validate_root_decision_input_v01(
+            kernel=root_kernel,
+            decision_input=root_decision_input,
+        )
+        != ()
+        or validate_root_decision_result_v01(
+            kernel=root_kernel,
+            decision_input=root_decision_input,
+            result=root_decision_result,
+        )
+        != ()
+    ):
+        raise ValueError("drs_writeback_root_binding_invalid") from None
+    owner = predecessor_record.authority_envelope.owning_local_root_id
+    root_plain = root_decision_input_to_plain_dict_v01(
+        root_decision_input
+    )
+    claims = root_plain["root_review_packet"]["synthesis_proposal"][
+        "normalized_claims"
+    ]
+    if (
+        type(owner) is not str
+        or not owner
+        or root_decision_input.transaction_id != proposal_id
+        or root_decision_result.transaction_id != proposal_id
+        or root_decision_input.target_root_id != owner
+        or root_decision_result.target_root_id != owner
+        or root_decision_result.decision != ROOT_DECISION_ACCEPT
+        or root_decision_result.reason_code
+        != "validated_candidate_accepted"
+        or root_decision_result.selected_candidate_id != proposal_id
+        or root_decision_result.root_commit_created is not True
+        or root_decision_result.permission_created is not False
+        or root_decision_result.final_output_created is not False
+        or root_decision_result.effect_requested is not False
+        or type(claims) is not list
+        or len(claims) != 1
+        or claims[0].get("claim_id") != proposal_id
+        or claims[0].get("subject")
+        != predecessor_record.semantic_address.semantic_address_id
+        or claims[0].get("predicate")
+        != _G2B_WRITEBACK_PREDICATE_V01
+        or claims[0].get("object_or_value") != expected_claim
+        or claims[0].get("authority_class") != "NONE"
+    ):
+        raise ValueError("drs_writeback_root_binding_invalid") from None
+    root_hash = _g2b_writeback_root_result_hash_v01(
+        root_decision_result=root_decision_result
+    )
+    predecessor_authority = predecessor_record.authority_envelope
+    successor_authority = successor_record.authority_envelope
+    commitment_authority = (
+        successor_commitment_record.authority_envelope
+    )
+    semantic_fields = (
+        "semantic_address",
+        "safe_summary",
+        "semantic_tags",
+        "resonance_reason",
+        "memory_pointers",
+        "artifact_pointers",
+        "time_envelope",
+        "persistent_lifecycle_state",
+        "risk_hints",
+        "conflict_hints",
+        "reuse_policy_class",
+        "policy_version",
+        "schema_versions",
+        "content_fingerprint",
+    )
+    edge = (
+        successor_record.lineage_edges[0]
+        if len(successor_record.lineage_edges) == 1
+        else None
+    )
+    history_hash = _g2b_predecessor_history_hash_v01(
+        predecessor_record
+    )
+    if (
+        predecessor_record.persistent_lifecycle_state != "ACTIVE"
+        or predecessor_authority.authority_class
+        != "ROOT_ACCEPTED_WORK"
+        or predecessor_authority.root_acceptance_state
+        != "ACCEPTED_WORK"
+        or predecessor_authority.action_permission_present is not False
+        or predecessor_record.creates_authority is not False
+        or predecessor_record.creates_permission is not False
+        or successor_commitment_record.predecessor_record_id is not None
+        or successor_commitment_record.supersession_reason is not None
+        or successor_commitment_record.lineage_edges
+        or commitment_authority.authority_class
+        != "EVIDENCE_CANDIDATE"
+        or commitment_authority.root_acceptance_state != "UNREVIEWED"
+        or successor_record.persistent_lifecycle_state != "ACTIVE"
+        or successor_authority.authority_class
+        != "ROOT_ACCEPTED_WORK"
+        or successor_authority.root_acceptance_state != "ACCEPTED_WORK"
+        or successor_authority.owning_local_root_id != owner
+        or successor_authority.source_root_decision_input_id
+        != root_decision_input.decision_input_id
+        or successor_authority.source_root_decision_id
+        != root_decision_result.decision_id
+        or successor_authority.source_root_decision_hash != root_hash
+        or successor_record.creates_authority is not False
+        or successor_record.creates_permission is not False
+        or any(
+            getattr(successor_record, name)
+            != getattr(successor_commitment_record, name)
+            for name in semantic_fields
+        )
+        or successor_record.predecessor_record_id
+        != predecessor_record.meaning_record_id
+        or edge is None
+        or validate_lineage_edge_v01(edge) != (True, ())
+        or edge.relation_class not in ("SUPERSEDES", "REPLACES")
+        or edge.source_meaning_record_id
+        != predecessor_record.meaning_record_id
+        or edge.target_meaning_record_id
+        != successor_commitment_record.meaning_record_id
+        or edge.claim_dimension != claim_dimension
+        or edge.source_history_hash != history_hash
+        or edge.evidence_ref_ids != (proposal_id,)
+        or edge.creates_authority is not False
+        or edge.transfers_authority is not False
+        or successor_record.source_reference_ids
+        != successor_commitment_record.source_reference_ids
+        + (proposal_id, edge.lineage_edge_id)
+        or successor_record.semantic_address
+        != predecessor_record.semantic_address
+    ):
+        raise ValueError("drs_supersession_evidence_invalid") from None
+    predecessor_time = predecessor_record.time_envelope
+    successor_time = successor_record.time_envelope
+    if (
+        successor_time.valid_from < predecessor_time.valid_from
+        or successor_time.valid_from >= predecessor_time.valid_to
+        or successor_time.valid_to <= successor_time.valid_from
+        or successor_time.kt_as_of < predecessor_time.kt_as_of
+        or successor_time.source_observed_at
+        > successor_time.system_verified_at
+        or successor_time.source_reported_at
+        > successor_time.system_verified_at
+        or successor_time.system_ingested_at
+        > successor_time.system_verified_at
+    ):
+        raise ValueError("drs_supersession_evidence_invalid") from None
+    return proposal_id, root_hash, edge
+
+
+def _g2b_write_root_reviewed_meaning_record_v01(
+    *,
+    drs: LocalDRS,
+    predecessor_record: MeaningRecordV01,
+    successor_commitment_record: MeaningRecordV01,
+    successor_record: MeaningRecordV01,
+    claim_dimension: str,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+) -> dict[str, object]:
+    if type(drs) is not LocalDRS:
+        raise ValueError("drs_supersession_evidence_invalid") from None
+    proposal_id, root_hash, edge = (
+        _g2b_validate_root_reviewed_writeback_geometry_v01(
+            predecessor_record=predecessor_record,
+            successor_commitment_record=successor_commitment_record,
+            successor_record=successor_record,
+            claim_dimension=claim_dimension,
+            root_kernel=root_kernel,
+            root_decision_input=root_decision_input,
+            root_decision_result=root_decision_result,
+        )
+    )
+    wrappers = _g2b_read_local_records_v01(
+        drs=drs,
+        layers=("work",),
+    )
+    predecessor_wrappers = tuple(
+        wrapper
+        for wrapper in wrappers
+        if wrapper.get("record_id")
+        == predecessor_record.meaning_record_id
+    )
+    if (
+        len(predecessor_wrappers) != 1
+        or not _g2b_wrapper_matches_v01(
+            predecessor_wrappers[0], predecessor_record
+        )
+    ):
+        raise ValueError("drs_supersession_evidence_invalid") from None
+    predecessor_path = (
+        drs.root_path
+        / "work"
+        / _safe_filename(predecessor_record.meaning_record_id)
+    )
+    successor_path = (
+        drs.root_path
+        / "work"
+        / _safe_filename(successor_record.meaning_record_id)
+    )
+    if successor_path.exists():
+        raise ValueError("drs_read_write_boundary_violation") from None
+    predecessor_bytes = predecessor_path.read_bytes()
+    predecessor_sha = hashlib.sha256(predecessor_bytes).hexdigest()
+    wrapper = _g2b_storage_record_v01(
+        meaning_record=successor_record,
+        writeback_metadata={
+            "writeback_proposal_id": proposal_id,
+            "supersession_evidence_id": edge.lineage_edge_id,
+            "root_decision_id": root_decision_result.decision_id,
+            "root_result_binding_hash": root_hash,
+        },
+    )
+    try:
+        drs.write_record(wrapper)
+        readback_bytes = successor_path.read_bytes()
+        readback = json.loads(readback_bytes.decode("utf-8"))
+        from hedgehog.drs_g2b_compatibility_v01 import (
+            project_legacy_drs_source_v01,
+            validate_legacy_drs_projection_v01,
+        )
+
+        projection = project_legacy_drs_source_v01(
+            source_family="LOCAL_DRS_DICT",
+            source=readback,
+            target_semantic_address=successor_record.semantic_address,
+            target_meaning_record=None,
+        )
+        if (
+            validate_legacy_drs_projection_v01(projection)
+            != (True, ())
+            or projection.projection_status
+            != "CANONICAL_CONTEXT_ONLY"
+            or projection.target_meaning_record_id is not None
+            or not _g2b_wrapper_matches_v01(readback, successor_record)
+            or predecessor_path.read_bytes() != predecessor_bytes
+        ):
+            raise ValueError
+    except Exception:
+        try:
+            if successor_path.exists():
+                successor_path.unlink()
+        except Exception:
+            pass
+        raise ValueError("drs_read_write_boundary_violation") from None
+    successor_sha = hashlib.sha256(readback_bytes).hexdigest()
+    return {
+        "writeback_profile_version": "v0.1",
+        "writeback_proposal_id": proposal_id,
+        "claim_dimension": claim_dimension,
+        "supersession_evidence_id": edge.lineage_edge_id,
+        "predecessor_record_id": predecessor_record.meaning_record_id,
+        "successor_commitment_record_id": (
+            successor_commitment_record.meaning_record_id
+        ),
+        "successor_record_id": successor_record.meaning_record_id,
+        "root_kernel_id": root_kernel.kernel_id,
+        "root_decision_input_id": root_decision_input.decision_input_id,
+        "root_decision_id": root_decision_result.decision_id,
+        "root_result_binding_hash": root_hash,
+        "predecessor_storage_sha256_before": predecessor_sha,
+        "predecessor_storage_sha256_after": hashlib.sha256(
+            predecessor_path.read_bytes()
+        ).hexdigest(),
+        "successor_storage_sha256": successor_sha,
+        "predecessor_preserved": True,
+        "successor_readback_exact": True,
+        "records_written": 1,
+        "creates_authority": False,
+        "creates_permission": False,
+        "real_world_effects_count": 0,
+    }
+
+
+def _g2b_action_request_reason_v01(value: object) -> str | None:
+    if type(value) is not str:
+        return "drs_action_intent_shortcut_forbidden"
+    normalized = " ".join(
+        re.sub(r"[^a-z0-9]+", " ", value.lower()).split()
+    )
+    profiles = (
+        (
+            "drs_payment_shortcut_forbidden",
+            (
+                "pay supplier",
+                "send payment",
+                "transfer funds",
+                "authorize payment",
+                "execute payment",
+                "make bank transfer",
+                "use payment reference",
+                "authorize supplier payment",
+            ),
+        ),
+        (
+            "drs_shipment_shortcut_forbidden",
+            ("release shipment", "dispatch shipment", "ship order"),
+        ),
+        (
+            "drs_ticket_shortcut_forbidden",
+            (
+                "buy ticket",
+                "purchase ticket",
+                "book ticket",
+                "issue ticket",
+                "reserve seat",
+            ),
+        ),
+        (
+            "drs_action_packet_shortcut_forbidden",
+            (
+                "create actioncommitpacket",
+                "issue actioncommitpacket",
+                "generate action packet",
+                "authorize action packet",
+            ),
+        ),
+        (
+            "drs_receipt_creation_shortcut_forbidden",
+            ("create receipt", "issue receipt", "generate receipt"),
+        ),
+        (
+            "drs_action_intent_shortcut_forbidden",
+            (
+                "execute maintenance",
+                "execute maintenance action",
+                "order replacement part",
+                "perform external action",
+            ),
+        ),
+    )
+    for reason, phrases in profiles:
+        if any(phrase in normalized for phrase in phrases):
+            return reason
+    return None

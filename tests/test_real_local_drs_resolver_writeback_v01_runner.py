@@ -402,3 +402,170 @@ def test_command_execution_exits_zero_and_has_required_output():
         "whitepaper ready",
     )
     assert not any(term in output for term in forbidden)
+
+
+def test_g2b_pure_adapter_and_immutable_writeback_are_separate_operations(
+    tmp_path,
+    monkeypatch,
+):
+    from demo import (
+        run_drs_semantic_address_reuse_certificate_g2_b_v01 as b5,
+    )
+    from hedgehog.local_drs_resolver import (
+        _g2b_read_local_records_v01,
+        _g2b_storage_record_v01,
+        _g2b_write_root_reviewed_meaning_record_v01,
+    )
+    from hedgehog.drs_g2b_compatibility_v01 import (
+        project_legacy_drs_source_v01,
+        validate_legacy_drs_projection_v01,
+    )
+
+    absent_root = tmp_path / "absent"
+    absent_drs = LocalDRS(absent_root)
+    assert _g2b_read_local_records_v01(
+        drs=absent_drs,
+        layers=("work",),
+    ) == ()
+    assert not absent_root.exists()
+    for invalid_layers in (
+        ["work"],
+        ("up",),
+        ("work", "work"),
+        ("../work",),
+    ):
+        with pytest.raises(ValueError) as caught:
+            _g2b_read_local_records_v01(
+                drs=absent_drs,
+                layers=invalid_layers,
+            )
+        assert str(caught.value) == "drs_legacy_source_invalid"
+    assert not absent_root.exists()
+
+    report = b5.collect_drs_semantic_address_reuse_certificate_g2_b_v01()
+    domain = report.domain_results[0]
+    drs = LocalDRS(tmp_path / "writeback")
+    for record in domain.source_records:
+        drs.write_record(
+            _g2b_storage_record_v01(
+                meaning_record=record,
+                writeback_metadata={},
+            )
+        )
+    predecessor = domain.source_records[0]
+    predecessor_path = (
+        drs.root_path
+        / "work"
+        / f"{predecessor.meaning_record_id.replace(':', '_')}.json"
+    )
+    predecessor_before = predecessor_path.read_bytes()
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("LocalDRS read/write API used during pure read")
+
+    with monkeypatch.context() as patcher:
+        patcher.setattr(LocalDRS, "layer_path", forbidden)
+        patcher.setattr(LocalDRS, "read_record", forbidden)
+        patcher.setattr(LocalDRS, "read_layer", forbidden)
+        patcher.setattr(LocalDRS, "query_records", forbidden)
+        patcher.setattr(LocalDRS, "write_record", forbidden)
+        pure_records = _g2b_read_local_records_v01(
+            drs=drs,
+            layers=("work",),
+        )
+    assert len(pure_records) == 2
+    assert predecessor_path.read_bytes() == predecessor_before
+    source_bytes_before = tuple(
+        path.read_bytes()
+        for path in sorted((drs.root_path / "work").iterdir())
+    )
+    projections = tuple(
+        project_legacy_drs_source_v01(
+            source_family="LOCAL_DRS_DICT",
+            source=wrapper,
+            target_semantic_address=record.semantic_address,
+            target_meaning_record=None,
+        )
+        for wrapper, record in zip(
+            pure_records,
+            sorted(
+                domain.source_records,
+                key=lambda item: item.meaning_record_id,
+            ),
+            strict=True,
+        )
+    )
+    source_bytes_after = tuple(
+        path.read_bytes()
+        for path in sorted((drs.root_path / "work").iterdir())
+    )
+    assert source_bytes_before == source_bytes_after
+    for projection in projections:
+        assert validate_legacy_drs_projection_v01(projection) == (
+            True,
+            (),
+        )
+        assert projection.projection_status == "CANONICAL_CONTEXT_ONLY"
+        assert projection.target_meaning_record_id is None
+        assert projection.answer_shortcut_eligible is False
+        assert projection.creates_authority is False
+        assert projection.creates_permission is False
+    with pytest.raises(ValueError):
+        project_legacy_drs_source_v01(
+            source_family="LOCAL_DRS_DICT",
+            source=pure_records[0],
+            target_semantic_address=domain.semantic_address,
+            target_meaning_record=predecessor,
+        )
+
+    evidence = _g2b_write_root_reviewed_meaning_record_v01(
+        drs=drs,
+        predecessor_record=predecessor,
+        successor_commitment_record=domain.successor_commitment_record,
+        successor_record=domain.successor_record,
+        claim_dimension=domain.successor_record.lineage_edges[0].claim_dimension,
+        root_kernel=domain.writeback_root_kernel,
+        root_decision_input=domain.writeback_root_decision_input,
+        root_decision_result=domain.writeback_root_decision_result,
+    )
+    assert evidence["records_written"] == 1
+    assert predecessor_path.read_bytes() == predecessor_before
+    later = _g2b_read_local_records_v01(
+        drs=drs,
+        layers=("work",),
+    )
+    assert len(later) == 3
+    successor_wrapper = next(
+        item
+        for item in later
+        if item["record_id"] == domain.successor_record.meaning_record_id
+    )
+    assert successor_wrapper["type"] == "generic"
+    successor_projection = project_legacy_drs_source_v01(
+        source_family="LOCAL_DRS_DICT",
+        source=successor_wrapper,
+        target_semantic_address=domain.semantic_address,
+        target_meaning_record=None,
+    )
+    assert successor_projection.projection_status == (
+        "CANONICAL_CONTEXT_ONLY"
+    )
+    assert successor_projection.target_meaning_record_id is None
+    assert successor_projection.answer_shortcut_eligible is False
+    assert evidence["creates_authority"] is False
+    assert evidence["creates_permission"] is False
+    assert evidence["real_world_effects_count"] == 0
+
+    malformed_root = tmp_path / "malformed"
+    malformed_layer = malformed_root / "work"
+    malformed_layer.mkdir(parents=True)
+    (malformed_layer / "unknown.txt").write_text(
+        "not a supported LocalDRS source",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError) as caught:
+        _g2b_read_local_records_v01(
+            drs=LocalDRS(malformed_root),
+            layers=("work",),
+        )
+    assert str(caught.value) == "drs_legacy_source_invalid"

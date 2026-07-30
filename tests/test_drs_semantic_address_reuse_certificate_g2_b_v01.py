@@ -9008,3 +9008,1930 @@ def test_g2b_certificate_cannot_create_final_output() -> None:
     assert fixture["certificate"].creates_authority is False
     assert fixture["certificate"].creates_permission is False
     assert fixture["certificate"].real_world_effects_count == 0
+
+
+def _b5_module():
+    from demo import (
+        run_drs_semantic_address_reuse_certificate_g2_b_v01 as b5,
+    )
+
+    return b5
+
+
+def _b5_report():
+    return (
+        _b5_module()
+        .collect_drs_semantic_address_reuse_certificate_g2_b_v01()
+    )
+
+
+def _b5_validate(value: object) -> tuple[bool, tuple[str, ...]]:
+    return (
+        _b5_module()
+        .validate_drs_semantic_address_reuse_certificate_g2_b_report_v01(
+            value
+        )
+    )
+
+
+def _b5_reidentify(value):
+    return _b5_module()._reidentify_report_v01(value)
+
+
+def _b5_replace_domain(report, index: int, **changes):
+    domain = replace(report.domain_results[index], **changes)
+    domains = list(report.domain_results)
+    domains[index] = domain
+    return _b5_reidentify(
+        replace(report, domain_results=tuple(domains))
+    )
+
+
+def _b5_project_wrapper(wrapper, address):
+    return compatibility.project_legacy_drs_source_v01(
+        source_family="LOCAL_DRS_DICT",
+        source=wrapper,
+        target_semantic_address=address,
+        target_meaning_record=None,
+    )
+
+
+def _b5_domain_spec(domain):
+    return next(
+        spec
+        for spec in _b5_module()._DOMAIN_SPECS_V01
+        if spec.domain_id == domain.domain_id
+    )
+
+
+def _b5_alternate_writeback_root(
+    domain,
+    *,
+    transaction_id: str,
+    target_root_id: str,
+    label: str,
+):
+    b5 = _b5_module()
+    proposal_id = domain.writeback_evidence["writeback_proposal_id"]
+    claim = b5._writeback_claim_preimage(
+        predecessor_record=domain.source_records[0],
+        successor_commitment_record=domain.successor_commitment_record,
+        claim_dimension=_b5_domain_spec(domain).claim_dimension,
+        supersession_reason=domain.successor_record.supersession_reason,
+    )
+    return b5._root_triple(
+        transaction_id=transaction_id,
+        target_root_id=target_root_id,
+        selected_id=proposal_id,
+        subject=domain.semantic_address.semantic_address_id,
+        predicate=b5._WRITEBACK_PREDICATE,
+        claim_value=claim,
+        label=label,
+    )
+
+
+def _b5_domain_with_writeback_root(
+    domain,
+    *,
+    root_kernel,
+    root_input,
+    root_result,
+):
+    b5 = _b5_module()
+    proposal_id = domain.writeback_evidence["writeback_proposal_id"]
+    successor = b5._final_successor(
+        spec=_b5_domain_spec(domain),
+        predecessor=domain.source_records[0],
+        commitment=domain.successor_commitment_record,
+        proposal_id=proposal_id,
+        supersession_reason=domain.successor_record.supersession_reason,
+        root_input=root_input,
+        root_result=root_result,
+    )
+    edge = successor.lineage_edges[0]
+    root_hash = b5._writeback_root_hash(
+        root_decision_result=root_result
+    )
+    wrapper = b5._storage_record(
+        meaning_record=successor,
+        writeback_metadata={
+            "writeback_proposal_id": proposal_id,
+            "supersession_evidence_id": edge.lineage_edge_id,
+            "root_decision_id": root_result.decision_id,
+            "root_result_binding_hash": root_hash,
+        },
+    )
+    evidence = {
+        **domain.writeback_evidence,
+        "successor_record_id": successor.meaning_record_id,
+        "root_kernel_id": root_kernel.kernel_id,
+        "root_decision_input_id": root_input.decision_input_id,
+        "root_decision_id": root_result.decision_id,
+        "root_result_binding_hash": root_hash,
+        "supersession_evidence_id": edge.lineage_edge_id,
+        "successor_storage_sha256": hashlib.sha256(
+            json.dumps(
+                wrapper,
+                indent=2,
+                sort_keys=True,
+            ).encode("utf-8")
+        ).hexdigest(),
+    }
+    return replace(
+        domain,
+        successor_record=successor,
+        writeback_root_kernel=root_kernel,
+        writeback_root_decision_input=root_input,
+        writeback_root_decision_result=root_result,
+        writeback_evidence=evidence,
+    )
+
+
+def _b5_reidentify_root_result(value):
+    provisional = replace(value, decision_id="0" * 64)
+    return replace(
+        provisional,
+        decision_id=root_decision._result_id(provisional),
+    )
+
+
+def _b5_domain_with_invalid_writeback_result(
+    domain,
+    *,
+    root_result,
+):
+    b5 = _b5_module()
+    root_input = domain.writeback_root_decision_input
+    root_hash = domain_separated_sha256_hex_v01(
+        domain=(
+            "hedgehog:drs:"
+            "meaning_record_writeback_root_result_binding:v01"
+        ),
+        payload=canonical_json_bytes_v01(
+            root_decision._result_plain(root_result)
+        ),
+    )
+    authority = _reidentify(
+        replace(
+            domain.successor_record.authority_envelope,
+            source_root_decision_input_id=root_input.decision_input_id,
+            source_root_decision_id=root_result.decision_id,
+            source_root_decision_hash=root_hash,
+        )
+    )
+    successor = _reidentify(
+        replace(
+            domain.successor_record,
+            authority_envelope=authority,
+        )
+    )
+    edge = successor.lineage_edges[0]
+    wrapper = b5._storage_record(
+        meaning_record=successor,
+        writeback_metadata={
+            "writeback_proposal_id": domain.writeback_evidence[
+                "writeback_proposal_id"
+            ],
+            "supersession_evidence_id": edge.lineage_edge_id,
+            "root_decision_id": root_result.decision_id,
+            "root_result_binding_hash": root_hash,
+        },
+    )
+    evidence = {
+        **domain.writeback_evidence,
+        "successor_record_id": successor.meaning_record_id,
+        "root_decision_id": root_result.decision_id,
+        "root_result_binding_hash": root_hash,
+        "successor_storage_sha256": hashlib.sha256(
+            json.dumps(
+                wrapper,
+                indent=2,
+                sort_keys=True,
+            ).encode("utf-8")
+        ).hexdigest(),
+    }
+    return replace(
+        domain,
+        successor_record=successor,
+        writeback_root_decision_result=root_result,
+        writeback_evidence=evidence,
+    )
+
+
+def _b5_non_accept_writeback_root(domain):
+    root_kernel, root_input, _ = _b5_alternate_writeback_root(
+        domain,
+        transaction_id=domain.writeback_evidence[
+            "writeback_proposal_id"
+        ],
+        target_root_id=(
+            domain.source_records[0]
+            .authority_envelope.owning_local_root_id
+        ),
+        label=f"{domain.domain_id}:non_accept",
+    )
+    plain = root_decision.root_decision_input_to_plain_dict_v01(
+        root_input
+    )
+    policy_state = dict(plain["policy_state"])
+    policy_state["allow_accept"] = False
+    changed_input = root_decision.build_root_decision_input_v01(
+        transaction_id=root_input.transaction_id,
+        target_root_id=root_input.target_root_id,
+        root_review_packet=root_input.root_review_packet,
+        post_vv_bundle=plain["post_vv_bundle"],
+        gt_advisory=plain["gt_advisory"],
+        policy_state=policy_state,
+        permission_state=plain["permission_state"],
+        temporal_state=plain["temporal_state"],
+        conflict_state=plain["conflict_state"],
+        prior_root_state=plain["prior_root_state"],
+    )
+    changed_result = root_decision.decide_root_v01(
+        kernel=root_kernel,
+        decision_input=changed_input,
+    )
+    return root_kernel, changed_input, changed_result
+
+
+class _B5TupleSubclass(tuple):
+    pass
+
+
+class _B5ReportSubclass:
+    pass
+
+
+class _B5EqualitySubstitute:
+    def __eq__(self, other: object) -> bool:
+        return True
+
+
+def test_g2b_two_domain_generic_contract_invariance() -> None:
+    report = _b5_report()
+    assert _b5_validate(report) == (True, ())
+    assert report.domain_order == (
+        "TRAVEL_POLICY_INFORMATION",
+        "WAREHOUSE_MAINTENANCE_INFORMATION",
+    )
+    assert tuple(item.domain_id for item in report.domain_results) == (
+        report.domain_order
+    )
+    structural_profiles = []
+    for domain in report.domain_results:
+        assert domain.final_status == "PASS"
+        assert domain.reason_codes == ()
+        assert domain.pure_read_snapshot_before == (
+            domain.pure_read_snapshot_after
+        )
+        assert len(domain.legacy_source_records) == 2
+        assert len(domain.source_projections) == 2
+        assert len(domain.source_records) == 2
+        for wrapper, projection, record in zip(
+            domain.legacy_source_records,
+            domain.source_projections,
+            domain.source_records,
+            strict=True,
+        ):
+            assert wrapper["type"] == "generic"
+            assert wrapper["record_id"] == record.meaning_record_id
+            assert wrapper["domain"] == record.semantic_address.domain
+            assert wrapper["content"]["canonical_meaning_record"] == (
+                semantic.meaning_record_to_plain_data_v01(record)
+            )
+            assert projection.source_family == "LOCAL_DRS_DICT"
+            assert projection.projection_status == "CANONICAL_CONTEXT_ONLY"
+            assert projection.target_meaning_record_id is None
+            assert projection.answer_shortcut_eligible is False
+            assert projection.creates_authority is False
+            assert projection.creates_permission is False
+        structural_profiles.append(
+            (
+                domain.answer_report.query.query_mode,
+                domain.answer_report.query.required_time_axes,
+                domain.descent_request.approved_descent_class,
+                domain.answer_report.reuse_certificate.reuse_class,
+                domain.context_report.query.query_mode,
+                domain.successor_record.lineage_edges[0].relation_class,
+            )
+        )
+        descent = domain.answer_report.memory_descent_result
+        assert descent.executed_descent_class == "SUMMARY_ONLY"
+        assert descent.safe_summaries == tuple(
+            record.safe_summary for record in domain.source_records
+        )
+        assert descent.opened_memory_pointer_ids == (
+            domain.source_records[0].memory_pointers[0].pointer_id,
+        )
+        assert descent.opened_artifact_pointer_ids == ()
+        assert descent.opened_payload_fingerprints == ()
+        assert descent.bytes_opened == 0
+        assert domain.context_report.selected_candidate_id is None
+        assert domain.context_report.root_shortcut_projection is None
+        assert domain.context_report.reuse_certificate is None
+    assert structural_profiles[0] == structural_profiles[1]
+
+    b5 = _b5_module()
+    first = report.domain_results[0]
+    legacy = dict(first.legacy_source_records[0])
+    bad_types = (
+        "g2b_meaning_record_v01",
+        "task_outcome",
+    )
+    for bad_type in bad_types:
+        changed = dict(legacy)
+        changed["type"] = bad_type
+        projection_passes = True
+        try:
+            compatibility.project_legacy_drs_source_v01(
+                source_family="LOCAL_DRS_DICT",
+                source=changed,
+                target_semantic_address=first.semantic_address,
+                target_meaning_record=None,
+            )
+        except ValueError:
+            projection_passes = False
+        if bad_type == "g2b_meaning_record_v01":
+            assert projection_passes is False
+    with pytest.raises(ValueError):
+        compatibility.project_legacy_drs_source_v01(
+            source_family="LOCAL_DRS_DICT",
+            source=legacy,
+            target_semantic_address=first.semantic_address,
+            target_meaning_record=first.source_records[0],
+        )
+    wrapper_forgery_cases = []
+    changed = json.loads(json.dumps(legacy))
+    changed["content"]["canonical_meaning_record"]["safe_summary"] = (
+        "Foreign but bounded nested canonical summary."
+    )
+    wrapper_forgery_cases.append(("nested_canonical_plain", changed))
+    changed = json.loads(json.dumps(legacy))
+    changed["record_id"] = "record:foreign"
+    wrapper_forgery_cases.append(("wrapper_record_id", changed))
+    changed = json.loads(json.dumps(legacy))
+    changed["domain"] = "foreign_domain"
+    wrapper_forgery_cases.append(("wrapper_domain", changed))
+    changed = json.loads(json.dumps(legacy))
+    changed["content"]["storage_profile"] = "foreign_profile"
+    wrapper_forgery_cases.append(("storage_profile", changed))
+    changed = json.loads(json.dumps(legacy))
+    changed["type"] = "task_outcome"
+    wrapper_forgery_cases.append(("accepted_legacy_wrong_type", changed))
+    for label, changed_wrapper in wrapper_forgery_cases:
+        changed_projection = _b5_project_wrapper(
+            changed_wrapper,
+            first.semantic_address,
+        )
+        forged = _b5_replace_domain(
+            report,
+            0,
+            legacy_source_records=(
+                changed_wrapper,
+                first.legacy_source_records[1],
+            ),
+            source_projections=(
+                changed_projection,
+                first.source_projections[1],
+            ),
+        )
+        assert _b5_validate(forged) == (
+            False,
+            ("g2b_report_fail_closed",),
+        ), label
+
+    second = report.domain_results[1]
+    forged = _b5_replace_domain(
+        report,
+        0,
+        legacy_source_records=(
+            second.legacy_source_records[0],
+            first.legacy_source_records[1],
+        ),
+        source_projections=(
+            second.source_projections[0],
+            first.source_projections[1],
+        ),
+    )
+    assert _b5_validate(forged) == (
+        False,
+        ("g2b_report_fail_closed",),
+    )
+    forged = _b5_replace_domain(
+        report,
+        0,
+        source_projections=(
+            second.source_projections[0],
+            first.source_projections[1],
+        ),
+    )
+    assert _b5_validate(forged) == (
+        False,
+        ("g2b_report_fail_closed",),
+    )
+    targeted_projection = _reidentify(
+        replace(
+            first.source_projections[0],
+            target_meaning_record_id=(
+                first.source_records[0].meaning_record_id
+            ),
+        )
+    )
+    forged = _b5_replace_domain(
+        report,
+        0,
+        source_projections=(
+            targeted_projection,
+            first.source_projections[1],
+        ),
+    )
+    assert _b5_validate(forged) == (
+        False,
+        ("g2b_report_fail_closed",),
+    )
+    assert tuple(b5.__all__) == (
+        "collect_drs_semantic_address_reuse_certificate_g2_b_v01",
+        "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01",
+    )
+    safe_controls = (
+        "retrieve a current bounded travel-policy summary",
+        "retrieve a current bounded maintenance-interval summary",
+        "explain payment policy",
+        "summarize ticket rules",
+        "show shipment policy",
+        "explain maintenance intervals",
+    )
+    assert all(b5._action_reason(item) is None for item in safe_controls)
+    action_controls = (
+        ("pay supplier", "drs_payment_shortcut_forbidden"),
+        ("send payment", "drs_payment_shortcut_forbidden"),
+        ("transfer funds", "drs_payment_shortcut_forbidden"),
+        ("authorize payment", "drs_payment_shortcut_forbidden"),
+        ("execute payment", "drs_payment_shortcut_forbidden"),
+        ("make bank transfer", "drs_payment_shortcut_forbidden"),
+        ("release shipment", "drs_shipment_shortcut_forbidden"),
+        ("dispatch shipment", "drs_shipment_shortcut_forbidden"),
+        ("ship order", "drs_shipment_shortcut_forbidden"),
+        ("buy ticket", "drs_ticket_shortcut_forbidden"),
+        ("purchase ticket", "drs_ticket_shortcut_forbidden"),
+        ("book ticket", "drs_ticket_shortcut_forbidden"),
+        ("issue ticket", "drs_ticket_shortcut_forbidden"),
+        ("reserve seat", "drs_ticket_shortcut_forbidden"),
+        (
+            "create ActionCommitPacket",
+            "drs_action_packet_shortcut_forbidden",
+        ),
+        ("create receipt", "drs_receipt_creation_shortcut_forbidden"),
+        (
+            "perform external action",
+            "drs_action_intent_shortcut_forbidden",
+        ),
+    )
+    for question, reason in action_controls:
+        assert b5._action_reason(question) == reason
+
+
+def test_g2b_report_replay_is_byte_deterministic(tmp_path) -> None:
+    from hedgehog.drs import LocalDRS
+    from hedgehog.local_drs_resolver import (
+        _g2b_write_root_reviewed_meaning_record_v01,
+    )
+
+    b5 = _b5_module()
+    first = b5.collect_drs_semantic_address_reuse_certificate_g2_b_v01()
+    second = b5.collect_drs_semantic_address_reuse_certificate_g2_b_v01()
+    assert first == second
+    first_plain = b5._report_to_plain_data_v01(first)
+    second_plain = b5._report_to_plain_data_v01(second)
+    assert first_plain == second_plain
+    assert canonical_json_bytes_v01(first_plain) == (
+        canonical_json_bytes_v01(second_plain)
+    )
+    assert first.report_id == second.report_id
+
+    for forged in (
+        object(),
+        _B5ReportSubclass(),
+        replace(first, report_version="v9.9"),
+        replace(first, profile_id="g2b_foreign_profile"),
+        replace(first, domain_order=tuple(reversed(first.domain_order))),
+        replace(first, domain_results=(first.domain_results[0],) * 2),
+        replace(first, domain_results=first.domain_results[:1]),
+        replace(
+            first,
+            domain_results=_B5TupleSubclass(first.domain_results),
+        ),
+        replace(first, final_status="PASS", reason_codes=("forged",)),
+        replace(first, operation_counters=first.operation_counters[:-1]),
+        replace(
+            first,
+            closed_programme_counters=(
+                ("airline_programme_runs", 1),
+            )
+            + first.closed_programme_counters[1:],
+        ),
+        replace(
+            first,
+            profile_id=_B5EqualitySubstitute(),
+        ),
+    ):
+        if type(forged) is type(first):
+            forged = _b5_reidentify(forged)
+        assert _b5_validate(forged) == (
+            False,
+            ("g2b_report_fail_closed",),
+        )
+
+    domain = first.domain_results[0]
+    other = first.domain_results[1]
+    changed_projection = _reidentify(
+        replace(
+            domain.source_projections[0],
+            source_hash=_SHA_B,
+        )
+    )
+    changed_result = _reidentify(
+        replace(
+            domain.answer_report.memory_descent_result,
+            safe_summaries=(
+                "Foreign bounded summary.",
+                domain.answer_report.memory_descent_result.safe_summaries[1],
+            ),
+        )
+    )
+    changed_answer_report = _reidentify(
+        replace(
+            domain.answer_report,
+            memory_descent_result=changed_result,
+        )
+    )
+    changed_context_certificate = _reidentify(
+        replace(
+            domain.context_report,
+            root_shortcut_projection=(
+                domain.answer_report.root_shortcut_projection
+            ),
+            reuse_certificate=domain.answer_report.reuse_certificate,
+        )
+    )
+    changed_certificate = _reidentify(
+        replace(
+            domain.answer_report.reuse_certificate,
+            valid_to=(
+                domain.answer_report.reuse_certificate.valid_to + 1
+            ),
+        )
+    )
+    changed_certificate_report = _reidentify(
+        replace(
+            domain.answer_report,
+            reuse_certificate=changed_certificate,
+        )
+    )
+    changed_evaluation_report = _reidentify(
+        replace(
+            domain.answer_report,
+            query_evaluations=other.answer_report.query_evaluations,
+        )
+    )
+    changed_candidate_report = _reidentify(
+        replace(
+            domain.answer_report,
+            eligible_candidates=other.answer_report.eligible_candidates,
+            ranked_candidate_ids=(
+                other.answer_report.ranked_candidate_ids
+            ),
+            selected_candidate_id=(
+                other.answer_report.selected_candidate_id
+            ),
+        )
+    )
+    changed_plan_report = _reidentify(
+        replace(
+            domain.answer_report,
+            retrieval_plan=other.answer_report.retrieval_plan,
+        )
+    )
+    changed_shortcut_projection_report = _reidentify(
+        replace(
+            domain.answer_report,
+            root_shortcut_projection=(
+                other.answer_report.root_shortcut_projection
+            ),
+        )
+    )
+    changed_reuse_certificate_report = _reidentify(
+        replace(
+            domain.answer_report,
+            reuse_certificate=other.answer_report.reuse_certificate,
+        )
+    )
+    changed_commitment = _reidentify(
+        replace(
+            domain.successor_commitment_record,
+            safe_summary="Foreign deterministic successor summary.",
+        )
+    )
+    changed_successor_predecessor = _reidentify(
+        replace(
+            domain.successor_record,
+            predecessor_record_id=other.source_records[0].meaning_record_id,
+        )
+    )
+    changed_edge = _reidentify(
+        replace(
+            domain.successor_record.lineage_edges[0],
+            created_at=(
+                domain.successor_record.lineage_edges[0].created_at + 1
+            ),
+        )
+    )
+    changed_edge_successor = _reidentify(
+        replace(
+            domain.successor_record,
+            lineage_edges=(changed_edge,),
+            source_reference_ids=(
+                domain.successor_commitment_record.source_reference_ids
+                + (
+                    domain.writeback_evidence[
+                        "writeback_proposal_id"
+                    ],
+                    changed_edge.lineage_edge_id,
+                )
+            ),
+        )
+    )
+    changed_dimension_edge = _reidentify(
+        replace(
+            domain.successor_record.lineage_edges[0],
+            claim_dimension="foreign_claim_dimension",
+        )
+    )
+    changed_dimension_successor = _reidentify(
+        replace(
+            domain.successor_record,
+            lineage_edges=(changed_dimension_edge,),
+            source_reference_ids=(
+                domain.successor_commitment_record.source_reference_ids
+                + (
+                    domain.writeback_evidence[
+                        "writeback_proposal_id"
+                    ],
+                    changed_dimension_edge.lineage_edge_id,
+                )
+            ),
+        )
+    )
+    changed_authority = _reidentify(
+        replace(
+            domain.successor_record.authority_envelope,
+            authority_class="EVIDENCE_CANDIDATE",
+            owning_local_root_id=None,
+            source_root_decision_input_id=None,
+            source_root_decision_id=None,
+            source_root_decision_hash=None,
+            root_acceptance_state="UNREVIEWED",
+        )
+    )
+    changed_authority_successor = _reidentify(
+        replace(
+            domain.successor_record,
+            authority_envelope=changed_authority,
+        )
+    )
+    domain_type = type(domain)
+
+    class _B5DomainDataclassSubclass(domain_type):
+        pass
+
+    domain_subclass = _B5DomainDataclassSubclass(
+        **{
+            field.name: getattr(domain, field.name)
+            for field in fields(domain)
+        }
+    )
+    report_type = type(first)
+
+    class _B5OuterReportDataclassSubclass(report_type):
+        pass
+
+    report_subclass = _B5OuterReportDataclassSubclass(
+        **{
+            field.name: getattr(first, field.name)
+            for field in fields(first)
+        }
+    )
+    evidence = dict(domain.writeback_evidence)
+    evidence["writeback_proposal_id"] = "g2bwriteback_v01:" + _SHA_B
+    storage_evidence = dict(domain.writeback_evidence)
+    storage_evidence["successor_storage_sha256"] = _SHA_B
+    preserved_evidence = dict(domain.writeback_evidence)
+    preserved_evidence["predecessor_preserved"] = False
+    readback_evidence = dict(domain.writeback_evidence)
+    readback_evidence["successor_readback_exact"] = False
+    count_evidence = dict(domain.writeback_evidence)
+    count_evidence["records_written"] = 2
+    forged_snapshot = (("work/foreign.json", _SHA_B, 1, 0o644),)
+    nested_forgery_cases = (
+        (
+            "changed_positive_question",
+            replace(domain, positive_question="foreign question"),
+        ),
+        (
+            "changed_negative_request",
+            replace(
+                domain,
+                negative_requests=("foreign action",)
+                + domain.negative_requests[1:],
+            ),
+        ),
+        (
+            "changed_negative_reason",
+            replace(
+                domain,
+                negative_reason_codes=(
+                    "drs_action_intent_shortcut_forbidden",
+                )
+                + domain.negative_reason_codes[1:],
+            ),
+        ),
+        (
+            "cross_domain_semantic_address",
+            replace(domain, semantic_address=other.semantic_address),
+        ),
+        (
+            "cross_domain_source_record",
+            replace(
+                domain,
+                source_records=(
+                    other.source_records[0],
+                    domain.source_records[1],
+                ),
+            ),
+        ),
+        (
+            "source_record_reordered",
+            replace(
+                domain,
+                source_records=tuple(reversed(domain.source_records)),
+            ),
+        ),
+        (
+            "cross_domain_projection",
+            replace(
+                domain,
+                source_projections=(
+                    other.source_projections[0],
+                    domain.source_projections[1],
+                ),
+            ),
+        ),
+        (
+            "projection_source_hash_drift",
+            replace(
+                domain,
+                source_projections=(
+                    changed_projection,
+                    domain.source_projections[1],
+                ),
+            ),
+        ),
+        (
+            "answer_selected_candidate_drift",
+            replace(
+                domain,
+                answer_report=_reidentify(
+                    replace(
+                        domain.answer_report,
+                        selected_candidate_id=None,
+                    )
+                ),
+            ),
+        ),
+        (
+            "cross_domain_query_evaluation",
+            replace(domain, answer_report=changed_evaluation_report),
+        ),
+        (
+            "cross_domain_candidate",
+            replace(domain, answer_report=changed_candidate_report),
+        ),
+        (
+            "cross_domain_retrieval_plan",
+            replace(domain, answer_report=changed_plan_report),
+        ),
+        (
+            "cross_domain_root_projection",
+            replace(
+                domain,
+                answer_report=changed_shortcut_projection_report,
+            ),
+        ),
+        (
+            "cross_domain_reuse_certificate",
+            replace(
+                domain,
+                answer_report=changed_reuse_certificate_report,
+            ),
+        ),
+        (
+            "answer_context_only_policy",
+            replace(domain, answer_report=domain.context_report),
+        ),
+        (
+            "context_certificate_inserted",
+            replace(domain, context_report=changed_context_certificate),
+        ),
+        (
+            "context_selected_shortcut_candidate",
+            replace(domain, context_report=domain.answer_report),
+        ),
+        (
+            "changed_descent_request",
+            replace(
+                domain,
+                descent_request=_reidentify(
+                    replace(domain.descent_request, root_approved=False)
+                ),
+            ),
+        ),
+        (
+            "changed_descent_root_triple",
+            replace(
+                domain,
+                descent_root_kernel=domain.shortcut_root_kernel,
+                descent_root_decision_input=(
+                    domain.shortcut_root_decision_input
+                ),
+                descent_root_decision_result=(
+                    domain.shortcut_root_decision_result
+                ),
+            ),
+        ),
+        (
+            "changed_memory_descent_result",
+            replace(domain, answer_report=changed_answer_report),
+        ),
+        (
+            "changed_shortcut_root_triple",
+            replace(
+                domain,
+                shortcut_root_kernel=domain.descent_root_kernel,
+                shortcut_root_decision_input=(
+                    domain.descent_root_decision_input
+                ),
+                shortcut_root_decision_result=(
+                    domain.descent_root_decision_result
+                ),
+            ),
+        ),
+        (
+            "changed_use_time",
+            replace(
+                domain,
+                answer_use_time=(
+                    domain.answer_report.reuse_certificate.valid_to
+                ),
+            ),
+        ),
+        (
+            "expired_certificate",
+            replace(domain, answer_report=changed_certificate_report),
+        ),
+        (
+            "changed_successor_commitment",
+            replace(
+                domain,
+                successor_commitment_record=changed_commitment,
+            ),
+        ),
+        (
+            "changed_predecessor_id",
+            replace(
+                domain,
+                successor_record=changed_successor_predecessor,
+            ),
+        ),
+        (
+            "changed_writeback_proposal_id",
+            replace(domain, writeback_evidence=evidence),
+        ),
+        (
+            "changed_writeback_root_triple",
+            replace(
+                domain,
+                writeback_root_kernel=domain.shortcut_root_kernel,
+                writeback_root_decision_input=(
+                    domain.shortcut_root_decision_input
+                ),
+                writeback_root_decision_result=(
+                    domain.shortcut_root_decision_result
+                ),
+            ),
+        ),
+        (
+            "changed_supersession_edge",
+            replace(domain, successor_record=changed_edge_successor),
+        ),
+        (
+            "changed_claim_dimension",
+            replace(
+                domain,
+                successor_record=changed_dimension_successor,
+            ),
+        ),
+        (
+            "changed_successor_authority",
+            replace(
+                domain,
+                successor_record=changed_authority_successor,
+            ),
+        ),
+        (
+            "changed_successor_storage_hash",
+            replace(domain, writeback_evidence=storage_evidence),
+        ),
+        (
+            "predecessor_not_preserved",
+            replace(domain, writeback_evidence=preserved_evidence),
+        ),
+        (
+            "successor_readback_not_exact",
+            replace(domain, writeback_evidence=readback_evidence),
+        ),
+        (
+            "records_written_not_one",
+            replace(domain, writeback_evidence=count_evidence),
+        ),
+        (
+            "equal_but_forged_read_snapshots",
+            replace(
+                domain,
+                pure_read_snapshot_before=forged_snapshot,
+                pure_read_snapshot_after=forged_snapshot,
+            ),
+        ),
+        (
+            "domain_custom_equality_string",
+            replace(domain, positive_question=_B5EqualitySubstitute()),
+        ),
+        (
+            "domain_tuple_subclass",
+            replace(
+                domain,
+                negative_requests=_B5TupleSubclass(
+                    domain.negative_requests
+                ),
+            ),
+        ),
+        ("domain_dataclass_subclass", domain_subclass),
+    )
+    for label, forged_domain in nested_forgery_cases:
+        forged = _b5_reidentify(
+            replace(
+                first,
+                domain_results=(forged_domain,)
+                + first.domain_results[1:],
+            )
+        )
+        assert _b5_validate(forged) == (
+            False,
+            ("g2b_report_fail_closed",),
+        ), label
+    assert _b5_validate(report_subclass) == (
+        False,
+        ("g2b_report_fail_closed",),
+    )
+    nonzero_provider_counters = tuple(
+        (name, 1 if name == "provider_calls" else value)
+        for name, value in first.operation_counters
+    )
+    forged = _b5_reidentify(
+        replace(
+            first,
+            operation_counters=nonzero_provider_counters,
+            final_status="PASS",
+        )
+    )
+    assert _b5_validate(forged) == (
+        False,
+        ("g2b_report_fail_closed",),
+    )
+
+    proposal_id = domain.writeback_evidence["writeback_proposal_id"]
+    coherent_alternate_roots = (
+        (
+            "wrong_transaction",
+            _b5_alternate_writeback_root(
+                domain,
+                transaction_id="g2bwriteback_v01:" + _SHA_C,
+                target_root_id=(
+                    domain.source_records[0]
+                    .authority_envelope.owning_local_root_id
+                ),
+                label=f"{domain.domain_id}:wrong_transaction",
+            ),
+        ),
+        (
+            "wrong_owner",
+            _b5_alternate_writeback_root(
+                domain,
+                transaction_id=proposal_id,
+                target_root_id="root:foreign_local",
+                label=f"{domain.domain_id}:wrong_owner",
+            ),
+        ),
+        (
+            "valid_non_accept",
+            _b5_non_accept_writeback_root(domain),
+        ),
+    )
+    for label, root_triple in coherent_alternate_roots:
+        root_kernel, root_input, root_result = root_triple
+        assert root_decision.validate_root_decision_kernel_v01(
+            root_kernel
+        ) == ()
+        assert root_decision.validate_root_decision_input_v01(
+            kernel=root_kernel,
+            decision_input=root_input,
+        ) == ()
+        assert root_decision.validate_root_decision_result_v01(
+            kernel=root_kernel,
+            decision_input=root_input,
+            result=root_result,
+        ) == ()
+        forged_domain = _b5_domain_with_writeback_root(
+            domain,
+            root_kernel=root_kernel,
+            root_input=root_input,
+            root_result=root_result,
+        )
+        forged_report = _b5_reidentify(
+            replace(
+                first,
+                domain_results=(forged_domain,)
+                + first.domain_results[1:],
+            )
+        )
+        with pytest.raises(ValueError) as caught:
+            _g2b_write_root_reviewed_meaning_record_v01(
+                drs=LocalDRS(tmp_path / label),
+                predecessor_record=forged_domain.source_records[0],
+                successor_commitment_record=(
+                    forged_domain.successor_commitment_record
+                ),
+                successor_record=forged_domain.successor_record,
+                claim_dimension=_b5_domain_spec(
+                    forged_domain
+                ).claim_dimension,
+                root_kernel=root_kernel,
+                root_decision_input=root_input,
+                root_decision_result=root_result,
+            )
+        assert str(caught.value) == "drs_writeback_root_binding_invalid"
+        assert _b5_validate(forged_report) == (
+            False,
+            ("g2b_report_fail_closed",),
+        ), label
+
+    accepted_result = domain.writeback_root_decision_result
+    intrinsically_invalid_results = (
+        (
+            "wrong_selected_proposal",
+            _b5_reidentify_root_result(
+                replace(
+                    accepted_result,
+                    selected_candidate_id=(
+                        "g2bwriteback_v01:" + _SHA_D
+                    ),
+                )
+            ),
+        ),
+        (
+            "root_commit_false",
+            _b5_reidentify_root_result(
+                replace(
+                    accepted_result,
+                    root_commit_created=False,
+                )
+            ),
+        ),
+        (
+            "permission_created",
+            _b5_reidentify_root_result(
+                replace(
+                    accepted_result,
+                    permission_created=True,
+                )
+            ),
+        ),
+        (
+            "final_output_created",
+            _b5_reidentify_root_result(
+                replace(
+                    accepted_result,
+                    final_output_created=True,
+                )
+            ),
+        ),
+        (
+            "effect_requested",
+            _b5_reidentify_root_result(
+                replace(
+                    accepted_result,
+                    effect_requested=True,
+                )
+            ),
+        ),
+        (
+            "wrong_accepted_reason",
+            _b5_reidentify_root_result(
+                replace(
+                    accepted_result,
+                    reason_code="policy_rejected_candidate",
+                )
+            ),
+        ),
+    )
+    for label, changed_result in intrinsically_invalid_results:
+        assert root_decision.validate_root_decision_result_v01(
+            kernel=domain.writeback_root_kernel,
+            decision_input=domain.writeback_root_decision_input,
+            result=changed_result,
+        )
+        forged_domain = _b5_domain_with_invalid_writeback_result(
+            domain,
+            root_result=changed_result,
+        )
+        forged_report = _b5_reidentify(
+            replace(
+                first,
+                domain_results=(forged_domain,)
+                + first.domain_results[1:],
+            )
+        )
+        with pytest.raises(ValueError) as caught:
+            _g2b_write_root_reviewed_meaning_record_v01(
+                drs=LocalDRS(tmp_path / label),
+                predecessor_record=forged_domain.source_records[0],
+                successor_commitment_record=(
+                    forged_domain.successor_commitment_record
+                ),
+                successor_record=forged_domain.successor_record,
+                claim_dimension=_b5_domain_spec(
+                    forged_domain
+                ).claim_dimension,
+                root_kernel=forged_domain.writeback_root_kernel,
+                root_decision_input=(
+                    forged_domain.writeback_root_decision_input
+                ),
+                root_decision_result=changed_result,
+            )
+        assert str(caught.value) == "drs_writeback_root_binding_invalid"
+        assert _b5_validate(forged_report) == (
+            False,
+            ("g2b_report_fail_closed",),
+        ), label
+
+
+def test_g2b_provider_network_gemini_and_effect_counters_are_zero() -> None:
+    report = _b5_report()
+    counters = dict(report.operation_counters)
+    assert counters == {
+        "domain_count": 2,
+        "positive_answer_shortcuts": 2,
+        "context_only_fallbacks": 2,
+        "action_negative_requests": 8,
+        "pure_read_passes": 4,
+        "initial_local_records_written": 4,
+        "immutable_successor_records_written": 2,
+        "root_decisions_created_in_fixture": 6,
+        "reuse_certificates_created_in_fixture": 2,
+        "provider_calls": 0,
+        "network_calls": 0,
+        "gemini_calls": 0,
+        "external_drs_calls": 0,
+        "connector_calls": 0,
+        "real_world_effects": 0,
+        "canonical_meaning_records_mutated": 0,
+        "final_outputs_created_by_drs": 0,
+        "final_outputs_created_by_certificate": 0,
+        "action_commit_packets_created": 0,
+        "receipts_created": 0,
+        "capabilities_created": 0,
+        "effect_handles_created": 0,
+    }
+    assert all(value == 0 for _, value in report.closed_programme_counters)
+
+
+def test_g2b_disabled_reuse_class_does_not_silently_downgrade() -> None:
+    report = _b5_report()
+    domain = report.domain_results[0]
+    disabled = (
+        "ROUTE_SHORTCUT",
+        "SEALED_REPLAY_SHORTCUT",
+        "PROTOCOL_PREPARATION_SHORTCUT",
+        "ACTION_SHORTCUT_NOT_ENABLED_IN_REFERENCE_KERNEL",
+    )
+    for requested_reuse_classes in tuple(
+        (reuse_class,) for reuse_class in disabled
+    ) + (("ANSWER_SHORTCUT", disabled[0]),):
+        forged_query = _reidentify(
+            replace(
+                domain.answer_report.query,
+                requested_reuse_classes=requested_reuse_classes,
+            )
+        )
+        evaluation = resolution.evaluate_drs_candidate_v01(
+            semantic_address=domain.semantic_address,
+            query=forged_query,
+            meaning_record=domain.source_records[0],
+        )
+        assert evaluation.eligible_for_ranking is False
+        assert evaluation.query_state == "BLOCKED_BY_POLICY"
+        assert evaluation.reason_codes[0] == "drs_reuse_class_disabled"
+        forged_domain = replace(
+            domain,
+            answer_report=_reidentify(
+                replace(
+                    domain.answer_report,
+                    query=forged_query,
+                    root_shortcut_projection=None,
+                    reuse_certificate=None,
+                )
+            ),
+        )
+        forged = _b5_reidentify(
+            replace(report, domain_results=(forged_domain,) + report.domain_results[1:])
+        )
+        assert _b5_validate(forged) == (
+            False,
+            ("g2b_report_fail_closed",),
+        )
+
+
+def test_g2b_root_reviewed_writeback_creates_new_immutable_version() -> None:
+    from hedgehog.local_drs_resolver import (
+        _g2b_writeback_proposal_id_v01,
+    )
+
+    report = _b5_report()
+    for domain in report.domain_results:
+        evidence = domain.writeback_evidence
+        assert evidence["writeback_proposal_id"] == (
+            _g2b_writeback_proposal_id_v01(
+                predecessor_record=domain.source_records[0],
+                successor_commitment_record=(
+                    domain.successor_commitment_record
+                ),
+                claim_dimension=(
+                    domain.successor_record.lineage_edges[0]
+                    .claim_dimension
+                ),
+                supersession_reason=(
+                    domain.successor_record.supersession_reason
+                ),
+            )
+        )
+        assert evidence["writeback_profile_version"] == "v0.1"
+        assert evidence["predecessor_record_id"] == (
+            domain.source_records[0].meaning_record_id
+        )
+        assert evidence["successor_commitment_record_id"] == (
+            domain.successor_commitment_record.meaning_record_id
+        )
+        assert evidence["successor_record_id"] == (
+            domain.successor_record.meaning_record_id
+        )
+        assert evidence["supersession_evidence_id"] == (
+            domain.successor_record.lineage_edges[0].lineage_edge_id
+        )
+        assert evidence["predecessor_storage_sha256_before"] == (
+            evidence["predecessor_storage_sha256_after"]
+        )
+        assert evidence["predecessor_preserved"] is True
+        assert evidence["successor_readback_exact"] is True
+        assert evidence["records_written"] == 1
+        assert evidence["creates_authority"] is False
+        assert evidence["creates_permission"] is False
+        assert evidence["real_world_effects_count"] == 0
+
+
+def test_g2b_supersession_requires_root_provenance_reason_and_predecessor(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    from hedgehog.drs import LocalDRS
+    from hedgehog.local_drs_resolver import (
+        _g2b_storage_record_v01,
+        _g2b_write_root_reviewed_meaning_record_v01,
+    )
+
+    report = _b5_report()
+    domain = report.domain_results[0]
+    other = report.domain_results[1]
+    predecessor = domain.source_records[0]
+    commitment = domain.successor_commitment_record
+    successor = domain.successor_record
+    edge = successor.lineage_edges[0]
+    proposal_id = domain.writeback_evidence["writeback_proposal_id"]
+    spec = _b5_domain_spec(domain)
+    b5 = _b5_module()
+
+    expected_dimension_tag = (
+        f"claim_dimension:{spec.claim_dimension}"
+    )
+    ordinary_predecessor_tags = tuple(
+        tag
+        for tag in predecessor.semantic_tags
+        if not tag.startswith("claim_dimension:")
+    )
+    ordinary_commitment_tags = tuple(
+        tag
+        for tag in commitment.semantic_tags
+        if not tag.startswith("claim_dimension:")
+    )
+
+    def run_claim_dimension_case(
+        label: str,
+        *,
+        predecessor_dimension_tags,
+        commitment_dimension_tags,
+        successor_dimension_tags=None,
+        valid: bool,
+    ):
+        changed_predecessor = _reidentify(
+            replace(
+                predecessor,
+                semantic_tags=ordinary_predecessor_tags
+                + predecessor_dimension_tags,
+            )
+        )
+        changed_commitment = _reidentify(
+            replace(
+                commitment,
+                semantic_tags=ordinary_commitment_tags
+                + commitment_dimension_tags,
+            )
+        )
+        claim = b5._writeback_claim_preimage(
+            predecessor_record=changed_predecessor,
+            successor_commitment_record=changed_commitment,
+            claim_dimension=spec.claim_dimension,
+            supersession_reason=successor.supersession_reason,
+        )
+        changed_proposal = claim["writeback_proposal_id"]
+        (
+            changed_root_kernel,
+            changed_root_input,
+            changed_root_result,
+        ) = b5._root_triple(
+            transaction_id=changed_proposal,
+            target_root_id=(
+                changed_predecessor.authority_envelope
+                .owning_local_root_id
+            ),
+            selected_id=changed_proposal,
+            subject=domain.semantic_address.semantic_address_id,
+            predicate=b5._WRITEBACK_PREDICATE,
+            claim_value=claim,
+            label=f"{domain.domain_id}:{label}",
+        )
+        changed_successor = b5._final_successor(
+            spec=spec,
+            predecessor=changed_predecessor,
+            commitment=changed_commitment,
+            proposal_id=changed_proposal,
+            supersession_reason=successor.supersession_reason,
+            root_input=changed_root_input,
+            root_result=changed_root_result,
+        )
+        if successor_dimension_tags is not None:
+            changed_successor = _reidentify(
+                replace(
+                    changed_successor,
+                    semantic_tags=ordinary_commitment_tags
+                    + successor_dimension_tags,
+                )
+            )
+        for record in (
+            changed_predecessor,
+            changed_commitment,
+            changed_successor,
+        ):
+            assert semantic.validate_meaning_record_v01(record) == (
+                True,
+                (),
+            ), label
+        changed_drs = LocalDRS(tmp_path / f"claim_dimension_{label}")
+        changed_drs.write_record(
+            _g2b_storage_record_v01(
+                meaning_record=changed_predecessor,
+                writeback_metadata={},
+            )
+        )
+        predecessor_path = (
+            changed_drs.root_path
+            / "work"
+            / (
+                f"{changed_predecessor.meaning_record_id.replace(':', '_')}"
+                ".json"
+            )
+        )
+        predecessor_before = predecessor_path.read_bytes()
+        successor_path = (
+            changed_drs.root_path
+            / "work"
+            / (
+                f"{changed_successor.meaning_record_id.replace(':', '_')}"
+                ".json"
+            )
+        )
+        call = lambda: _g2b_write_root_reviewed_meaning_record_v01(
+            drs=changed_drs,
+            predecessor_record=changed_predecessor,
+            successor_commitment_record=changed_commitment,
+            successor_record=changed_successor,
+            claim_dimension=spec.claim_dimension,
+            root_kernel=changed_root_kernel,
+            root_decision_input=changed_root_input,
+            root_decision_result=changed_root_result,
+        )
+        if valid:
+            evidence = call()
+            assert evidence["records_written"] == 1
+            assert successor_path.exists()
+        else:
+            with pytest.raises(ValueError) as caught:
+                call()
+            assert str(caught.value) == (
+                "drs_supersession_evidence_invalid"
+            ), label
+            assert not successor_path.exists(), label
+        assert predecessor_path.read_bytes() == predecessor_before, label
+
+    foreign_tag = "claim_dimension:foreign_dimension"
+    second_foreign_tag = "claim_dimension:second_foreign_dimension"
+    claim_dimension_cases = (
+        (
+            "foreign_on_predecessor",
+            (expected_dimension_tag, foreign_tag),
+            (expected_dimension_tag,),
+            (expected_dimension_tag,),
+        ),
+        (
+            "foreign_on_commitment",
+            (expected_dimension_tag,),
+            (expected_dimension_tag, foreign_tag),
+            (expected_dimension_tag,),
+        ),
+        (
+            "foreign_on_successor",
+            (expected_dimension_tag,),
+            (expected_dimension_tag,),
+            (expected_dimension_tag, foreign_tag),
+        ),
+        (
+            "foreign_on_all",
+            (expected_dimension_tag, foreign_tag),
+            (expected_dimension_tag, foreign_tag),
+            (expected_dimension_tag, foreign_tag),
+        ),
+        (
+            "two_foreign_tags",
+            (
+                expected_dimension_tag,
+                foreign_tag,
+                second_foreign_tag,
+            ),
+            (
+                expected_dimension_tag,
+                foreign_tag,
+                second_foreign_tag,
+            ),
+            (
+                expected_dimension_tag,
+                foreign_tag,
+                second_foreign_tag,
+            ),
+        ),
+        (
+            "empty_suffix",
+            (expected_dimension_tag, "claim_dimension:"),
+            (expected_dimension_tag, "claim_dimension:"),
+            (expected_dimension_tag, "claim_dimension:"),
+        ),
+        (
+            "missing_expected",
+            (),
+            (),
+            (),
+        ),
+    )
+    for (
+        label,
+        predecessor_dimension_tags,
+        commitment_dimension_tags,
+        successor_dimension_tags,
+    ) in claim_dimension_cases:
+        run_claim_dimension_case(
+            label,
+            predecessor_dimension_tags=predecessor_dimension_tags,
+            commitment_dimension_tags=commitment_dimension_tags,
+            successor_dimension_tags=successor_dimension_tags,
+            valid=False,
+        )
+    descriptive_tag = "claim_dimension_policy"
+    run_claim_dimension_case(
+        "descriptive_tag",
+        predecessor_dimension_tags=(
+            expected_dimension_tag,
+            descriptive_tag,
+        ),
+        commitment_dimension_tags=(
+            expected_dimension_tag,
+            descriptive_tag,
+        ),
+        successor_dimension_tags=(
+            expected_dimension_tag,
+            descriptive_tag,
+        ),
+        valid=True,
+    )
+
+    def changed_edge_successor(label: str, **changes):
+        changed_edge = _reidentify(replace(edge, **changes))
+        return _reidentify(
+            replace(
+                successor,
+                lineage_edges=(changed_edge,),
+                source_reference_ids=(
+                    commitment.source_reference_ids
+                    + (proposal_id, changed_edge.lineage_edge_id)
+                ),
+            )
+        )
+
+    def changed_authority_successor(
+        authority_class: str,
+        root_acceptance_state: str,
+    ):
+        root_evidence = authority_class == "ROOT_ACCEPTED_WORK"
+        authority = _reidentify(
+            replace(
+                successor.authority_envelope,
+                authority_class=authority_class,
+                owning_local_root_id=(
+                    successor.authority_envelope.owning_local_root_id
+                    if root_evidence
+                    else None
+                ),
+                source_root_decision_input_id=(
+                    successor.authority_envelope
+                    .source_root_decision_input_id
+                    if root_evidence
+                    else None
+                ),
+                source_root_decision_id=(
+                    successor.authority_envelope
+                    .source_root_decision_id
+                    if root_evidence
+                    else None
+                ),
+                source_root_decision_hash=(
+                    successor.authority_envelope
+                    .source_root_decision_hash
+                    if root_evidence
+                    else None
+                ),
+                root_acceptance_state=root_acceptance_state,
+            )
+        )
+        return _reidentify(
+            replace(successor, authority_envelope=authority)
+        )
+
+    wrong_address_successor = _reidentify(
+        replace(successor, semantic_address=other.semantic_address)
+    )
+    wrong_owner_authority = _reidentify(
+        replace(
+            successor.authority_envelope,
+            owning_local_root_id="root:foreign",
+        )
+    )
+    wrong_owner_successor = _reidentify(
+        replace(
+            successor,
+            authority_envelope=wrong_owner_authority,
+        )
+    )
+    invalid_time = _reidentify(
+        replace(
+            successor.time_envelope,
+            valid_from=predecessor.time_envelope.valid_to,
+            valid_to=predecessor.time_envelope.valid_to + 100,
+        )
+    )
+    invalid_time_successor = _reidentify(
+        replace(successor, time_envelope=invalid_time)
+    )
+    newer_kt_time = _reidentify(
+        replace(
+            successor.time_envelope,
+            kt_as_of=successor.time_envelope.kt_as_of + 1,
+        )
+    )
+    newer_kt_only = _reidentify(
+        replace(
+            successor,
+            time_envelope=newer_kt_time,
+            lineage_edges=(),
+            source_reference_ids=commitment.source_reference_ids,
+        )
+    )
+    freshness_only = _reidentify(
+        replace(
+            successor,
+            safe_summary=successor.safe_summary + " Fresher.",
+            lineage_edges=(),
+            source_reference_ids=commitment.source_reference_ids,
+        )
+    )
+    gt_only = _reidentify(
+        replace(
+            successor,
+            risk_hints=("gt_style_only",),
+            lineage_edges=(),
+            source_reference_ids=commitment.source_reference_ids,
+        )
+    )
+    changed_commitment = _reidentify(
+        replace(
+            commitment,
+            safe_summary=commitment.safe_summary + " Changed.",
+        )
+    )
+    result = domain.writeback_root_decision_result
+    root_result_mutations = (
+        (
+            "non_accept_root_result",
+            replace(result, decision=root_decision.ROOT_DECISION_REJECT),
+        ),
+        (
+            "permission_created",
+            replace(result, permission_created=True),
+        ),
+        (
+            "effect_requested",
+            replace(result, effect_requested=True),
+        ),
+    )
+    supersession_cases = (
+        ("wrong_semantic_address", wrong_address_successor),
+        (
+            "missing_predecessor",
+            _reidentify(
+                replace(successor, predecessor_record_id=None)
+            ),
+        ),
+        (
+            "missing_reason",
+            _reidentify(replace(successor, supersession_reason=None)),
+        ),
+        (
+            "empty_reason",
+            _reidentify(replace(successor, supersession_reason="")),
+        ),
+        (
+            "missing_edge",
+            _reidentify(replace(successor, lineage_edges=())),
+        ),
+        (
+            "second_edge",
+            _reidentify(replace(successor, lineage_edges=(edge, edge))),
+        ),
+        (
+            "wrong_edge_relation",
+            changed_edge_successor(
+                "relation",
+                relation_class="DERIVED_FROM",
+            ),
+        ),
+        (
+            "wrong_edge_source",
+            changed_edge_successor(
+                "source",
+                source_meaning_record_id=(
+                    other.source_records[0].meaning_record_id
+                ),
+            ),
+        ),
+        (
+            "wrong_edge_target",
+            changed_edge_successor(
+                "target",
+                target_meaning_record_id=(
+                    other.successor_commitment_record.meaning_record_id
+                ),
+            ),
+        ),
+        (
+            "wrong_edge_history",
+            changed_edge_successor(
+                "history",
+                source_history_hash=_SHA_B,
+            ),
+        ),
+        (
+            "wrong_edge_evidence",
+            changed_edge_successor(
+                "evidence",
+                evidence_ref_ids=("g2bwriteback_v01:" + _SHA_B,),
+            ),
+        ),
+        ("wrong_root_owner", wrong_owner_successor),
+        (
+            "draft_authority",
+            changed_authority_successor(
+                "UNTRUSTED_SEMANTIC_DRAFT",
+                "UNREVIEWED",
+            ),
+        ),
+        (
+            "connector_authority",
+            changed_authority_successor(
+                "CONNECTOR_OBSERVATION",
+                "UNREVIEWED",
+            ),
+        ),
+        (
+            "candidate_authority",
+            changed_authority_successor(
+                "EVIDENCE_CANDIDATE",
+                "UNREVIEWED",
+            ),
+        ),
+        (
+            "root_acceptance_not_accepted",
+            changed_authority_successor(
+                "ROOT_ACCEPTED_WORK",
+                "UNREVIEWED",
+            ),
+        ),
+        ("incompatible_validity", invalid_time_successor),
+        ("newer_kt_only", newer_kt_only),
+        ("freshness_only", freshness_only),
+        ("gt_metadata_only", gt_only),
+    )
+
+    def run_failure(
+        label: str,
+        *,
+        candidate_successor=successor,
+        candidate_commitment=commitment,
+        candidate_claim_dimension=None,
+        root_kernel=None,
+        root_input=None,
+        root_result=None,
+        store_predecessor=True,
+        stored_predecessor_wrapper=None,
+        expected_reason="drs_supersession_evidence_invalid",
+    ):
+        drs = LocalDRS(tmp_path / label)
+        if store_predecessor:
+            wrapper = (
+                stored_predecessor_wrapper
+                if stored_predecessor_wrapper is not None
+                else _g2b_storage_record_v01(
+                    meaning_record=predecessor,
+                    writeback_metadata={},
+                )
+            )
+            drs.write_record(wrapper)
+        predecessor_path = (
+            drs.root_path
+            / "work"
+            / f"{predecessor.meaning_record_id.replace(':', '_')}.json"
+        )
+        predecessor_before = (
+            predecessor_path.read_bytes()
+            if predecessor_path.exists()
+            else None
+        )
+        successor_path = (
+            drs.root_path
+            / "work"
+            / (
+                f"{candidate_successor.meaning_record_id.replace(':', '_')}"
+                ".json"
+            )
+        )
+        with pytest.raises(ValueError) as caught:
+            _g2b_write_root_reviewed_meaning_record_v01(
+                drs=drs,
+                predecessor_record=predecessor,
+                successor_commitment_record=candidate_commitment,
+                successor_record=candidate_successor,
+                claim_dimension=(
+                    candidate_claim_dimension
+                    if candidate_claim_dimension is not None
+                    else edge.claim_dimension
+                ),
+                root_kernel=(
+                    root_kernel
+                    if root_kernel is not None
+                    else domain.writeback_root_kernel
+                ),
+                root_decision_input=(
+                    root_input
+                    if root_input is not None
+                    else domain.writeback_root_decision_input
+                ),
+                root_decision_result=(
+                    root_result
+                    if root_result is not None
+                    else domain.writeback_root_decision_result
+                ),
+            )
+        assert str(caught.value) == expected_reason, label
+        assert not successor_path.exists(), label
+        if predecessor_before is not None:
+            assert predecessor_path.read_bytes() == predecessor_before, label
+
+    run_failure(
+        "wrong_claim_dimension",
+        candidate_claim_dimension="foreign_claim_dimension",
+    )
+    for label, candidate_successor in supersession_cases:
+        run_failure(label, candidate_successor=candidate_successor)
+    run_failure(
+        "changed_commitment",
+        candidate_commitment=changed_commitment,
+        expected_reason="drs_writeback_root_binding_invalid",
+    )
+    run_failure(
+        "foreign_valid_root_triple",
+        root_kernel=domain.shortcut_root_kernel,
+        root_input=domain.shortcut_root_decision_input,
+        root_result=domain.shortcut_root_decision_result,
+        expected_reason="drs_writeback_root_binding_invalid",
+    )
+    run_failure(
+        "another_proposal_root_triple",
+        root_kernel=domain.descent_root_kernel,
+        root_input=domain.descent_root_decision_input,
+        root_result=domain.descent_root_decision_result,
+        expected_reason="drs_writeback_root_binding_invalid",
+    )
+    for label, changed_result in root_result_mutations:
+        run_failure(
+            label,
+            root_result=changed_result,
+            expected_reason="drs_writeback_root_binding_invalid",
+        )
+    run_failure("predecessor_absent", store_predecessor=False)
+    changed_wrapper = _g2b_storage_record_v01(
+        meaning_record=predecessor,
+        writeback_metadata={},
+    )
+    changed_wrapper = json.loads(json.dumps(changed_wrapper))
+    changed_wrapper["content"]["canonical_meaning_record"][
+        "safe_summary"
+    ] = "Stored predecessor drift."
+    run_failure(
+        "stored_predecessor_drift",
+        stored_predecessor_wrapper=changed_wrapper,
+    )
+
+    original_write = LocalDRS.write_record
+
+    def fail_write(self, record):
+        if record["record_id"] == successor.meaning_record_id:
+            raise OSError("injected atomic write failure")
+        return original_write(self, record)
+
+    with monkeypatch.context() as patcher:
+        patcher.setattr(LocalDRS, "write_record", fail_write)
+        run_failure(
+            "atomic_write_failure",
+            expected_reason="drs_read_write_boundary_violation",
+        )
+
+    def corrupt_readback(self, record):
+        path = original_write(self, record)
+        if record["record_id"] == successor.meaning_record_id:
+            value = json.loads(path.read_text(encoding="utf-8"))
+            value["content"]["successor_readback_exact"] = False
+            path.write_text(
+                json.dumps(value, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+        return path
+
+    with monkeypatch.context() as patcher:
+        patcher.setattr(LocalDRS, "write_record", corrupt_readback)
+        run_failure(
+            "readback_mismatch",
+            expected_reason="drs_read_write_boundary_violation",
+        )

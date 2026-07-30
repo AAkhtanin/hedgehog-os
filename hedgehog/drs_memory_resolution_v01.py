@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass as _dataclass
 from dataclasses import replace as _replace
+from hashlib import sha256 as _artifact_sha256
 
 from hedgehog.drs_g2b_compatibility_v01 import LegacyDRSProjectionV01
 from hedgehog.drs_g2b_compatibility_v01 import (
@@ -16,7 +17,9 @@ from hedgehog.drs_g2b_compatibility_v01 import (
 from hedgehog.drs_semantic_address_v01 import (
     DRS_G2B_PROFILE_VERSION_V01 as _PROFILE_VERSION,
 )
+from hedgehog.drs_semantic_address_v01 import ArtifactPointerV01
 from hedgehog.drs_semantic_address_v01 import MeaningRecordV01
+from hedgehog.drs_semantic_address_v01 import MemoryPointerV01
 from hedgehog.drs_semantic_address_v01 import SemanticAddressV01
 from hedgehog.drs_semantic_address_v01 import (
     _bounded_text,
@@ -35,10 +38,26 @@ from hedgehog.drs_semantic_address_v01 import (
     _sha256_tuple_reasons,
     _token_tuple_reasons,
     _typed_id_tuple_reasons,
+    artifact_pointer_to_plain_data_v01,
+    memory_pointer_to_plain_data_v01,
     meaning_record_to_plain_data_v01,
     semantic_address_to_plain_data_v01,
+    validate_artifact_pointer_v01,
     validate_meaning_record_v01,
+    validate_memory_pointer_v01,
     validate_semantic_address_v01,
+)
+from hedgehog.kernel.root_decision_v01 import ROOT_DECISION_ACCEPT
+from hedgehog.kernel.root_decision_v01 import RootDecisionInputV01
+from hedgehog.kernel.root_decision_v01 import RootDecisionKernelV01
+from hedgehog.kernel.root_decision_v01 import RootDecisionResultV01
+from hedgehog.kernel.root_decision_v01 import (
+    root_decision_input_to_plain_dict_v01,
+    root_decision_kernel_to_plain_dict_v01,
+    root_decision_result_to_plain_dict_v01,
+    validate_root_decision_input_v01,
+    validate_root_decision_kernel_v01,
+    validate_root_decision_result_v01,
 )
 from hedgehog.reuse_certificate_v01 import ReuseCertificateV01
 from hedgehog.reuse_certificate_v01 import G2AActionHistoryBindingV01
@@ -196,6 +215,64 @@ _B2_CHANGE_RELATION_CLASSES_V01 = (
     "REPLACES",
     "BLOCKED_BY_POLICY",
     "DEGRADED_FROM",
+)
+
+_B3_ROOT_RESULT_BINDING_DOMAIN_V01 = (
+    "hedgehog:drs:memory_descent_root_result_binding:v01"
+)
+_B3_ROOT_APPROVAL_PREDICATE_V01 = (
+    "approve_controlled_memory_descent_plan_v01"
+)
+_B3_DESCENT_CLASS_NARROWING_V01 = (
+    ("SUMMARY_ONLY", ("SUMMARY_ONLY",)),
+    ("OPEN_ONE_ARTIFACT", ("OPEN_ONE_ARTIFACT", "SUMMARY_ONLY")),
+    (
+        "OPEN_LINEAGE_NEIGHBORHOOD",
+        ("OPEN_LINEAGE_NEIGHBORHOOD", "SUMMARY_ONLY"),
+    ),
+    ("OPEN_CONFLICT_SET", ("OPEN_CONFLICT_SET", "SUMMARY_ONLY")),
+    ("OPEN_DEADEND_PROOF", ("OPEN_DEADEND_PROOF", "SUMMARY_ONLY")),
+    (
+        "OPEN_FULL_TRACE",
+        (
+            "OPEN_FULL_TRACE",
+            "OPEN_ONE_ARTIFACT",
+            "OPEN_LINEAGE_NEIGHBORHOOD",
+            "OPEN_CONFLICT_SET",
+            "OPEN_DEADEND_PROOF",
+            "SUMMARY_ONLY",
+        ),
+    ),
+)
+_B3_POINTER_STORAGE_BY_CLASS_V01 = (
+    ("SUMMARY_ONLY", ("LOCAL_MEANING_RECORD", "LOCAL_LINEAGE_SET")),
+    (
+        "OPEN_ONE_ARTIFACT",
+        ("LOCAL_DOCUMENT", "LOCAL_AUDIT_TRACE", "LOCAL_SEALED_EVIDENCE"),
+    ),
+    (
+        "OPEN_LINEAGE_NEIGHBORHOOD",
+        ("LOCAL_MEANING_RECORD", "LOCAL_LINEAGE_SET"),
+    ),
+    ("OPEN_CONFLICT_SET", ("LOCAL_CONFLICT_SET",)),
+    ("OPEN_DEADEND_PROOF", ("LOCAL_DEADEND_PROOF",)),
+    (
+        "OPEN_FULL_TRACE",
+        (
+            "LOCAL_MEANING_RECORD",
+            "LOCAL_LINEAGE_SET",
+            "LOCAL_CONFLICT_SET",
+            "LOCAL_DEADEND_PROOF",
+            "LOCAL_DOCUMENT",
+            "LOCAL_AUDIT_TRACE",
+            "LOCAL_SEALED_EVIDENCE",
+        ),
+    ),
+)
+_B3_CONFLICT_RELATIONS_V01 = (
+    "CONTRADICTS",
+    "WARNS_AGAINST",
+    "BLOCKED_BY_POLICY",
 )
 
 _QUERY_FIELDS = (
@@ -2057,6 +2134,16 @@ def _ceiling(name: str) -> int:
     raise ValueError("drs_memory_descent_budget_invalid")
 
 
+def _b3_profile_values(
+    profile: tuple[tuple[str, tuple[str, ...]], ...],
+    key: str,
+) -> tuple[str, ...]:
+    for profile_key, values in profile:
+        if profile_key == key:
+            return values
+    return ()
+
+
 def _budget_reasons(value: object, *, check_identity: bool) -> tuple[str, ...]:
     if type(value) is not MemoryDescentBudgetV01:
         return ("drs_exact_type_required",)
@@ -2145,9 +2232,10 @@ def _request_reasons(value: object, *, check_identity: bool) -> tuple[str, ...]:
     if (
         type(value.requested_descent_class) is str
         and type(value.approved_descent_class) is str
-        and value.approved_descent_class not in (
+        and value.approved_descent_class
+        not in _b3_profile_values(
+            _B3_DESCENT_CLASS_NARROWING_V01,
             value.requested_descent_class,
-            "SUMMARY_ONLY",
         )
     ):
         reasons.append("drs_memory_descent_budget_expansion")
@@ -2289,19 +2377,35 @@ def _result_reasons(value: object, *, check_identity: bool) -> tuple[str, ...]:
         reasons.append("drs_memory_descent_accounting_invalid")
     if (
         type(value.records_opened) is int
-        and value.records_opened != len(value.opened_record_ids)
+        and (
+            value.records_opened <= 0
+            or value.records_opened != len(value.opened_record_ids)
+            or value.records_opened != len(value.safe_summaries)
+        )
     ) or (
         type(value.pointers_opened) is int
         and value.pointers_opened != len(value.opened_memory_pointer_ids) + len(value.opened_artifact_pointer_ids)
     ) or (
         type(value.artifacts_opened) is int
-        and value.artifacts_opened != len(value.opened_artifact_pointer_ids)
+        and (
+            value.artifacts_opened
+            != len(value.opened_artifact_pointer_ids)
+            or value.artifacts_opened
+            != len(value.opened_payload_fingerprints)
+        )
     ) or (
         type(value.lineage_edges_traversed) is int
         and value.lineage_edges_traversed != len(value.traversed_lineage_edge_ids)
     ) or (
         type(value.conflict_records_opened) is int
         and value.conflict_records_opened != len(value.opened_conflict_record_ids)
+    ) or (
+        type(value.opened_conflict_record_ids) is tuple
+        and type(value.opened_record_ids) is tuple
+        and not _b3_is_ordered_subsequence(
+            value.opened_conflict_record_ids,
+            value.opened_record_ids,
+        )
     ):
         reasons.append("drs_memory_descent_accounting_invalid")
     reasons.extend(
@@ -2318,6 +2422,19 @@ def _result_reasons(value: object, *, check_identity: bool) -> tuple[str, ...]:
     )
     if fingerprint_reasons:
         reasons.append("drs_memory_descent_accounting_invalid")
+    if value.executed_descent_class == "SUMMARY_ONLY" and (
+        value.opened_artifact_pointer_ids
+        or value.opened_payload_fingerprints
+        or value.bytes_opened != 0
+    ):
+        reasons.append("drs_summary_only_payload_forbidden")
+    if value.executed_descent_class == "OPEN_ONE_ARTIFACT" and (
+        value.artifacts_opened > 1
+        or len(value.opened_artifact_pointer_ids) > 1
+        or len(value.opened_payload_fingerprints) > 1
+        or value.depth_reached > 1
+    ):
+        reasons.append("drs_open_one_artifact_limit_exceeded")
     reasons.extend(
         _token_tuple_reasons(value.reason_codes, maximum_items=32)
     )
@@ -2402,6 +2519,1033 @@ def memory_descent_result_to_plain_data_v01(value: object) -> dict[str, object]:
     if type(value) is not MemoryDescentResultV01:
         raise ValueError("drs_exact_type_required") from None
     return {name: _plain_value(getattr(value, name)) for name in _RESULT_FIELDS}
+
+
+def _b3_is_ordered_subsequence(
+    approved: tuple[str, ...],
+    proposed: tuple[str, ...],
+) -> bool:
+    approved_index = 0
+    for proposed_item in proposed:
+        if (
+            approved_index < len(approved)
+            and approved[approved_index] == proposed_item
+        ):
+            approved_index += 1
+    return approved_index == len(approved)
+
+
+def _b3_canonical_snapshot(
+    *,
+    retrieval_plan: RetrievalPlanV01,
+    proposed_budget: MemoryDescentBudgetV01,
+    descent_request: MemoryDescentRequestV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+    source_records: tuple[MeaningRecordV01, ...],
+) -> bytes:
+    return _canonical_json_bytes_v01(
+        (
+            retrieval_plan_to_plain_data_v01(retrieval_plan),
+            memory_descent_budget_to_plain_data_v01(proposed_budget),
+            memory_descent_request_to_plain_data_v01(descent_request),
+            root_decision_kernel_to_plain_dict_v01(root_kernel),
+            root_decision_input_to_plain_dict_v01(root_decision_input),
+            root_decision_result_to_plain_dict_v01(root_decision_result),
+            tuple(
+                meaning_record_to_plain_data_v01(record)
+                for record in source_records
+            ),
+        )
+    )
+
+
+def _b3_pointer_access_allowed(
+    *,
+    pointer: MemoryPointerV01 | ArtifactPointerV01,
+    approved_descent_class: str,
+    required_access_policy_ids: tuple[str, ...],
+    artifact: bool,
+) -> bool:
+    storage_classes = _b3_profile_values(
+        _B3_POINTER_STORAGE_BY_CLASS_V01,
+        approved_descent_class,
+    )
+    return bool(
+        pointer.summary_read_permitted is True
+        and approved_descent_class in pointer.allowed_use_classes
+        and approved_descent_class not in pointer.forbidden_use_classes
+        and pointer.access_policy_id in required_access_policy_ids
+        and pointer.storage_class in storage_classes
+        and pointer.creates_authority is False
+        and pointer.creates_permission is False
+        and (not artifact or pointer.payload_read_permitted is True)
+    )
+
+
+def _b3_report_observation_matches(
+    report: DRSResolutionReportV01,
+) -> bool:
+    try:
+        plan = report.retrieval_plan
+        result = report.memory_descent_result
+        source_records = report.source_records
+        if (
+            type(plan) is not RetrievalPlanV01
+            or type(result) is not MemoryDescentResultV01
+            or type(source_records) is not tuple
+            or not source_records
+        ):
+            return False
+        record_ids = tuple(
+            record.meaning_record_id
+            for record in source_records
+            if type(record) is MeaningRecordV01
+        )
+        if (
+            len(record_ids) != len(source_records)
+            or len(record_ids) != len(set(record_ids))
+            or record_ids != plan.proposed_record_ids
+        ):
+            return False
+        for record in source_records:
+            if not validate_meaning_record_v01(record)[0]:
+                return False
+
+        allowed_classes = _b3_profile_values(
+            _B3_DESCENT_CLASS_NARROWING_V01,
+            plan.requested_descent_class,
+        )
+        if (
+            result.retrieval_plan_id != plan.retrieval_plan_id
+            or type(report.query) is not DRSTemporalQueryV01
+            or result.query_id != report.query.query_id
+            or result.executed_descent_class not in allowed_classes
+            or not _b3_is_ordered_subsequence(
+                result.opened_record_ids,
+                plan.proposed_record_ids,
+            )
+            or not _b3_is_ordered_subsequence(
+                result.opened_memory_pointer_ids,
+                plan.proposed_memory_pointer_ids,
+            )
+            or not _b3_is_ordered_subsequence(
+                result.opened_artifact_pointer_ids,
+                plan.proposed_artifact_pointer_ids,
+            )
+        ):
+            return False
+
+        record_by_id = {
+            record.meaning_record_id: record for record in source_records
+        }
+        memory_by_id: dict[str, MemoryPointerV01] = {}
+        artifact_by_id: dict[str, ArtifactPointerV01] = {}
+        memory_owner: dict[str, str] = {}
+        artifact_owner: dict[str, str] = {}
+        lineage_ids: set[str] = set()
+        lineage_adjacency: dict[str, list[object]] = {}
+        all_lineage_edges: list[object] = []
+        for record in source_records:
+            for pointer in record.memory_pointers:
+                if (
+                    type(pointer) is not MemoryPointerV01
+                    or pointer.pointer_id in memory_by_id
+                    or not validate_memory_pointer_v01(pointer)[0]
+                ):
+                    return False
+                memory_by_id[pointer.pointer_id] = pointer
+                memory_owner[pointer.pointer_id] = (
+                    record.meaning_record_id
+                )
+            for pointer in record.artifact_pointers:
+                if (
+                    type(pointer) is not ArtifactPointerV01
+                    or pointer.pointer_id in artifact_by_id
+                    or not validate_artifact_pointer_v01(pointer)[0]
+                ):
+                    return False
+                artifact_by_id[pointer.pointer_id] = pointer
+                artifact_owner[pointer.pointer_id] = (
+                    record.meaning_record_id
+                )
+            for edge in record.lineage_edges:
+                if (
+                    edge.lineage_edge_id in lineage_ids
+                    or edge.source_meaning_record_id not in record_by_id
+                    or edge.target_meaning_record_id not in record_by_id
+                ):
+                    return False
+                lineage_ids.add(edge.lineage_edge_id)
+                all_lineage_edges.append(edge)
+                lineage_adjacency.setdefault(
+                    edge.source_meaning_record_id,
+                    [],
+                ).append(edge)
+        if (
+            any(
+                pointer_id not in memory_by_id
+                for pointer_id in plan.proposed_memory_pointer_ids
+            )
+            or any(
+                pointer_id not in artifact_by_id
+                for pointer_id in plan.proposed_artifact_pointer_ids
+            )
+        ):
+            return False
+
+        for pointer_id in plan.proposed_memory_pointer_ids:
+            pointer = memory_by_id[pointer_id]
+            target = record_by_id.get(pointer.object_reference)
+            if (
+                target is None
+                or pointer.content_sha256
+                != target.content_fingerprint
+            ):
+                return False
+
+        proposed_pointers: list[
+            MemoryPointerV01 | ArtifactPointerV01
+        ] = [
+            memory_by_id[pointer_id]
+            for pointer_id in plan.proposed_memory_pointer_ids
+        ]
+        proposed_pointers.extend(
+            artifact_by_id[pointer_id]
+            for pointer_id in plan.proposed_artifact_pointer_ids
+        )
+        required_access_policy_ids: list[str] = []
+        for pointer in proposed_pointers:
+            if pointer.access_policy_id not in required_access_policy_ids:
+                required_access_policy_ids.append(
+                    pointer.access_policy_id
+                )
+        if plan.required_access_policy_ids != tuple(
+            required_access_policy_ids
+        ):
+            return False
+
+        claimed_record_set = set(result.opened_record_ids)
+        claimed_memory_set = set(result.opened_memory_pointer_ids)
+        claimed_artifact_set = set(
+            result.opened_artifact_pointer_ids
+        )
+        opened_record_ids: list[str] = []
+        opened_memory_pointer_ids: list[str] = []
+        opened_artifact_pointer_ids: list[str] = []
+        traversed_lineage_edge_ids: list[str] = []
+        opened_conflict_record_ids: list[str] = []
+        opened_payload_fingerprints: list[str] = []
+        depth_by_record: dict[str, int] = {}
+        queue: list[str] = []
+        bytes_opened = 0
+        depth_reached = 0
+
+        def open_record(
+            record_id: str,
+            *,
+            depth: int,
+            conflict_record: bool = False,
+        ) -> bool:
+            nonlocal depth_reached
+            if record_id not in claimed_record_set:
+                return False
+            if record_id in depth_by_record:
+                if (
+                    conflict_record
+                    and record_id not in opened_conflict_record_ids
+                ):
+                    opened_conflict_record_ids.append(record_id)
+                return True
+            opened_record_ids.append(record_id)
+            depth_by_record[record_id] = depth
+            queue.append(record_id)
+            depth_reached = max(depth_reached, depth)
+            if conflict_record:
+                opened_conflict_record_ids.append(record_id)
+            return True
+
+        if not open_record(result.opened_record_ids[0], depth=0):
+            return False
+        executed_class = result.executed_descent_class
+        allowed_storage = _b3_profile_values(
+            _B3_POINTER_STORAGE_BY_CLASS_V01,
+            executed_class,
+        )
+        queue_index = 0
+        while queue_index < len(queue):
+            current_id = queue[queue_index]
+            queue_index += 1
+            current = record_by_id[current_id]
+            current_depth = depth_by_record[current_id]
+            for pointer in current.memory_pointers:
+                if pointer.pointer_id not in claimed_memory_set:
+                    continue
+                if (
+                    memory_owner.get(pointer.pointer_id) != current_id
+                    or pointer.storage_class not in allowed_storage
+                    or not _b3_pointer_access_allowed(
+                        pointer=pointer,
+                        approved_descent_class=executed_class,
+                        required_access_policy_ids=(
+                            plan.required_access_policy_ids
+                        ),
+                        artifact=False,
+                    )
+                ):
+                    return False
+                if pointer.pointer_id in opened_memory_pointer_ids:
+                    continue
+                target = record_by_id.get(pointer.object_reference)
+                if (
+                    target is None
+                    or pointer.content_sha256
+                    != target.content_fingerprint
+                ):
+                    return False
+                conflict_record = (
+                    pointer.storage_class == "LOCAL_CONFLICT_SET"
+                )
+                if conflict_record:
+                    related_conflict = any(
+                        edge.relation_class
+                        in _B3_CONFLICT_RELATIONS_V01
+                        and target.meaning_record_id
+                        in (
+                            edge.source_meaning_record_id,
+                            edge.target_meaning_record_id,
+                        )
+                        for edge in all_lineage_edges
+                    )
+                    if (
+                        not target.conflict_hints
+                        and not related_conflict
+                    ):
+                        return False
+                if (
+                    pointer.storage_class == "LOCAL_DEADEND_PROOF"
+                    and target.persistent_lifecycle_state != "DEADEND"
+                ):
+                    return False
+                opened_memory_pointer_ids.append(pointer.pointer_id)
+                if not open_record(
+                    target.meaning_record_id,
+                    depth=current_depth + 1,
+                    conflict_record=conflict_record,
+                ):
+                    return False
+            if executed_class in (
+                "OPEN_LINEAGE_NEIGHBORHOOD",
+                "OPEN_FULL_TRACE",
+            ):
+                for edge in lineage_adjacency.get(current_id, ()):
+                    if (
+                        edge.target_meaning_record_id
+                        not in claimed_record_set
+                    ):
+                        return False
+                    if (
+                        edge.lineage_edge_id
+                        in traversed_lineage_edge_ids
+                    ):
+                        continue
+                    traversed_lineage_edge_ids.append(
+                        edge.lineage_edge_id
+                    )
+                    if not open_record(
+                        edge.target_meaning_record_id,
+                        depth=current_depth + 1,
+                        conflict_record=(
+                            edge.relation_class
+                            in _B3_CONFLICT_RELATIONS_V01
+                        ),
+                    ):
+                        return False
+
+        for record_id in opened_record_ids:
+            record = record_by_id[record_id]
+            owner_depth = depth_by_record[record_id]
+            for pointer in record.artifact_pointers:
+                if pointer.pointer_id not in claimed_artifact_set:
+                    continue
+                if (
+                    artifact_owner.get(pointer.pointer_id) != record_id
+                    or pointer.storage_class not in allowed_storage
+                    or not _b3_pointer_access_allowed(
+                        pointer=pointer,
+                        approved_descent_class=executed_class,
+                        required_access_policy_ids=(
+                            plan.required_access_policy_ids
+                        ),
+                        artifact=True,
+                    )
+                    or type(pointer.byte_length) is not int
+                    or pointer.byte_length < 0
+                ):
+                    return False
+                if pointer.pointer_id in opened_artifact_pointer_ids:
+                    continue
+                opened_artifact_pointer_ids.append(pointer.pointer_id)
+                opened_payload_fingerprints.append(
+                    pointer.content_sha256
+                )
+                bytes_opened += pointer.byte_length
+                depth_reached = max(
+                    depth_reached,
+                    owner_depth + 1,
+                )
+
+        if executed_class == "OPEN_ONE_ARTIFACT" and (
+            len(opened_record_ids) != 1
+            or opened_memory_pointer_ids
+            or len(opened_artifact_pointer_ids) != 1
+        ):
+            return False
+        if executed_class not in (
+            "OPEN_ONE_ARTIFACT",
+            "OPEN_FULL_TRACE",
+        ) and opened_artifact_pointer_ids:
+            return False
+
+        safe_summaries = tuple(
+            record_by_id[record_id].safe_summary
+            for record_id in opened_record_ids
+        )
+        expected_counts = (
+            len(opened_record_ids),
+            len(opened_memory_pointer_ids)
+            + len(opened_artifact_pointer_ids),
+            len(opened_artifact_pointer_ids),
+            bytes_opened,
+            len(traversed_lineage_edge_ids),
+            len(opened_conflict_record_ids),
+            depth_reached,
+        )
+        transported_counts = (
+            result.records_opened,
+            result.pointers_opened,
+            result.artifacts_opened,
+            result.bytes_opened,
+            result.lineage_edges_traversed,
+            result.conflict_records_opened,
+            result.depth_reached,
+        )
+        return bool(
+            tuple(opened_record_ids) == result.opened_record_ids
+            and tuple(opened_memory_pointer_ids)
+            == result.opened_memory_pointer_ids
+            and tuple(opened_artifact_pointer_ids)
+            == result.opened_artifact_pointer_ids
+            and tuple(traversed_lineage_edge_ids)
+            == result.traversed_lineage_edge_ids
+            and tuple(opened_conflict_record_ids)
+            == result.opened_conflict_record_ids
+            and safe_summaries == result.safe_summaries
+            and tuple(opened_payload_fingerprints)
+            == result.opened_payload_fingerprints
+            and transported_counts == expected_counts
+            and result.limits_respected is True
+            and result.reason_codes == ()
+            and result.creates_authority is False
+            and result.creates_permission is False
+            and result.real_world_effects_count == 0
+        )
+    except Exception:
+        return False
+
+
+def execute_local_memory_descent_v01(
+    *,
+    retrieval_plan: RetrievalPlanV01,
+    proposed_budget: MemoryDescentBudgetV01,
+    descent_request: MemoryDescentRequestV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+    source_records: tuple[MeaningRecordV01, ...],
+    artifact_payloads: tuple[tuple[str, bytes], ...] = (),
+) -> MemoryDescentResultV01:
+    try:
+        if (
+            type(retrieval_plan) is not RetrievalPlanV01
+            or type(proposed_budget) is not MemoryDescentBudgetV01
+            or type(descent_request) is not MemoryDescentRequestV01
+            or type(root_kernel) is not RootDecisionKernelV01
+            or type(root_decision_input) is not RootDecisionInputV01
+            or type(root_decision_result) is not RootDecisionResultV01
+            or type(source_records) is not tuple
+            or type(artifact_payloads) is not tuple
+        ):
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        for validator, value in (
+            (validate_retrieval_plan_v01, retrieval_plan),
+            (validate_memory_descent_budget_v01, proposed_budget),
+        ):
+            valid, _ = validator(value)
+            if not valid:
+                raise ValueError("drs_exact_type_or_identity_invalid")
+        request_valid, request_reasons = (
+            validate_memory_descent_request_v01(descent_request)
+        )
+        if not request_valid:
+            if "drs_memory_descent_budget_expansion" in request_reasons:
+                raise ValueError("drs_memory_descent_budget_expansion")
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        for record in source_records:
+            if type(record) is not MeaningRecordV01:
+                raise ValueError("drs_exact_type_or_identity_invalid")
+            valid, _ = validate_meaning_record_v01(record)
+            if not valid:
+                raise ValueError("drs_exact_type_or_identity_invalid")
+        for row in artifact_payloads:
+            if (
+                type(row) is not tuple
+                or len(row) != 2
+                or type(row[0]) is not str
+                or type(row[1]) is not bytes
+            ):
+                raise ValueError("drs_exact_type_or_identity_invalid")
+
+        input_snapshot = _b3_canonical_snapshot(
+            retrieval_plan=retrieval_plan,
+            proposed_budget=proposed_budget,
+            descent_request=descent_request,
+            root_kernel=root_kernel,
+            root_decision_input=root_decision_input,
+            root_decision_result=root_decision_result,
+            source_records=source_records,
+        )
+        payload_snapshot = tuple(artifact_payloads)
+
+        if (
+            retrieval_plan.proposed_budget_id
+            != proposed_budget.memory_descent_budget_id
+            or descent_request.retrieval_plan_id
+            != retrieval_plan.retrieval_plan_id
+            or descent_request.query_id != retrieval_plan.query_id
+            or descent_request.requested_descent_class
+            != retrieval_plan.requested_descent_class
+            or descent_request.proposed_budget_id
+            != proposed_budget.memory_descent_budget_id
+            or retrieval_plan.reason_codes
+            or retrieval_plan.root_approval_required is not True
+            or retrieval_plan.executes_read is not False
+            or retrieval_plan.creates_authority is not False
+            or retrieval_plan.creates_permission is not False
+        ):
+            raise ValueError("drs_root_decision_binding_invalid")
+
+        if validate_root_decision_kernel_v01(root_kernel):
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        if validate_root_decision_input_v01(
+            kernel=root_kernel,
+            decision_input=root_decision_input,
+        ):
+            raise ValueError("drs_exact_type_or_identity_invalid")
+        if validate_root_decision_result_v01(
+            kernel=root_kernel,
+            decision_input=root_decision_input,
+            result=root_decision_result,
+        ):
+            raise ValueError("drs_exact_type_or_identity_invalid")
+
+        if (
+            root_decision_input.target_root_id
+            != descent_request.owning_local_root_id
+            or root_decision_result.target_root_id
+            != descent_request.owning_local_root_id
+        ):
+            raise ValueError("drs_root_owner_mismatch")
+        if (
+            descent_request.root_kernel_id != root_kernel.kernel_id
+            or descent_request.root_decision_input_id
+            != root_decision_input.decision_input_id
+            or descent_request.root_decision_id
+            != root_decision_result.decision_id
+            or root_decision_result.decision_input_id
+            != root_decision_input.decision_input_id
+            or root_decision_input.transaction_id != retrieval_plan.query_id
+            or root_decision_result.transaction_id != retrieval_plan.query_id
+        ):
+            raise ValueError("drs_root_decision_binding_invalid")
+
+        root_result_binding_hash = _domain_separated_sha256_hex_v01(
+            domain=_B3_ROOT_RESULT_BINDING_DOMAIN_V01,
+            payload=_canonical_json_bytes_v01(
+                root_decision_result_to_plain_dict_v01(
+                    root_decision_result
+                )
+            ),
+        )
+        if descent_request.root_decision_hash != root_result_binding_hash:
+            raise ValueError("drs_root_decision_binding_invalid")
+        if (
+            root_decision_result.decision != ROOT_DECISION_ACCEPT
+            or root_decision_result.reason_code
+            != "validated_candidate_accepted"
+            or root_decision_result.selected_candidate_id
+            != retrieval_plan.retrieval_plan_id
+            or root_decision_result.root_commit_created is not True
+            or root_decision_result.permission_created is not False
+            or root_decision_result.final_output_created is not False
+            or root_decision_result.effect_requested is not False
+        ):
+            raise ValueError("drs_memory_descent_root_approval_missing")
+
+        root_input_plain = root_decision_input_to_plain_dict_v01(
+            root_decision_input
+        )
+        packet = root_input_plain.get("root_review_packet")
+        synthesis = (
+            packet.get("synthesis_proposal")
+            if type(packet) is dict
+            else None
+        )
+        claims = (
+            synthesis.get("normalized_claims")
+            if type(synthesis) is dict
+            else None
+        )
+        if type(claims) is not list or len(claims) != 1:
+            raise ValueError("drs_root_decision_binding_invalid")
+        claim = claims[0]
+        if (
+            type(claim) is not dict
+            or claim.get("claim_id") != retrieval_plan.retrieval_plan_id
+            or claim.get("subject") != retrieval_plan.semantic_address_id
+            or claim.get("predicate")
+            != _B3_ROOT_APPROVAL_PREDICATE_V01
+            or claim.get("object_or_value")
+            != retrieval_plan_to_plain_data_v01(retrieval_plan)
+            or claim.get("authority_class") != "NONE"
+        ):
+            raise ValueError("drs_root_decision_binding_invalid")
+
+        approved_classes = _b3_profile_values(
+            _B3_DESCENT_CLASS_NARROWING_V01,
+            descent_request.requested_descent_class,
+        )
+        if (
+            descent_request.approved_descent_class not in approved_classes
+            or descent_request.root_approved is not True
+            or descent_request.reason_codes
+            or descent_request.creates_authority is not False
+            or descent_request.creates_permission is not False
+        ):
+            raise ValueError("drs_memory_descent_budget_expansion")
+        for field_name in _BUDGET_FIELDS[2:]:
+            approved = getattr(descent_request.approved_budget, field_name)
+            proposed = getattr(proposed_budget, field_name)
+            if (
+                type(approved) is not int
+                or type(proposed) is not int
+                or not 0 <= approved <= proposed <= _ceiling(field_name)
+            ):
+                raise ValueError("drs_memory_descent_budget_expansion")
+        for approved_ids, proposed_ids in (
+            (
+                descent_request.approved_record_ids,
+                retrieval_plan.proposed_record_ids,
+            ),
+            (
+                descent_request.approved_memory_pointer_ids,
+                retrieval_plan.proposed_memory_pointer_ids,
+            ),
+            (
+                descent_request.approved_artifact_pointer_ids,
+                retrieval_plan.proposed_artifact_pointer_ids,
+            ),
+        ):
+            if not _b3_is_ordered_subsequence(approved_ids, proposed_ids):
+                raise ValueError("drs_memory_descent_budget_expansion")
+
+        record_ids = tuple(
+            record.meaning_record_id for record in source_records
+        )
+        if (
+            len(record_ids) != len(set(record_ids))
+            or record_ids != retrieval_plan.proposed_record_ids
+        ):
+            raise ValueError("drs_pointer_access_policy_denied")
+        record_by_id = {
+            record.meaning_record_id: record for record in source_records
+        }
+        memory_by_id: dict[str, MemoryPointerV01] = {}
+        artifact_by_id: dict[str, ArtifactPointerV01] = {}
+        memory_owner: dict[str, str] = {}
+        artifact_owner: dict[str, str] = {}
+        for record in source_records:
+            for pointer in record.memory_pointers:
+                if (
+                    type(pointer) is not MemoryPointerV01
+                    or pointer.pointer_id in memory_by_id
+                    or not validate_memory_pointer_v01(pointer)[0]
+                ):
+                    raise ValueError("drs_pointer_access_policy_denied")
+                memory_by_id[pointer.pointer_id] = pointer
+                memory_owner[pointer.pointer_id] = record.meaning_record_id
+            for pointer in record.artifact_pointers:
+                if (
+                    type(pointer) is not ArtifactPointerV01
+                    or pointer.pointer_id in artifact_by_id
+                    or not validate_artifact_pointer_v01(pointer)[0]
+                ):
+                    raise ValueError("drs_pointer_access_policy_denied")
+                artifact_by_id[pointer.pointer_id] = pointer
+                artifact_owner[pointer.pointer_id] = record.meaning_record_id
+        if (
+            any(
+                pointer_id not in memory_by_id
+                for pointer_id in retrieval_plan.proposed_memory_pointer_ids
+            )
+            or any(
+                pointer_id not in artifact_by_id
+                for pointer_id in retrieval_plan.proposed_artifact_pointer_ids
+            )
+        ):
+            raise ValueError("drs_pointer_access_policy_denied")
+        for pointer_id in retrieval_plan.proposed_memory_pointer_ids:
+            pointer = memory_by_id[pointer_id]
+            target = record_by_id.get(pointer.object_reference)
+            if (
+                target is None
+                or pointer.content_sha256 != target.content_fingerprint
+            ):
+                raise ValueError("drs_pointer_access_policy_denied")
+
+        proposed_pointers: list[MemoryPointerV01 | ArtifactPointerV01] = [
+            memory_by_id[pointer_id]
+            for pointer_id in retrieval_plan.proposed_memory_pointer_ids
+        ]
+        proposed_pointers.extend(
+            artifact_by_id[pointer_id]
+            for pointer_id in retrieval_plan.proposed_artifact_pointer_ids
+        )
+        derived_access_policies: list[str] = []
+        for pointer in proposed_pointers:
+            if pointer.access_policy_id not in derived_access_policies:
+                derived_access_policies.append(pointer.access_policy_id)
+        if retrieval_plan.required_access_policy_ids != tuple(
+            derived_access_policies
+        ):
+            raise ValueError("drs_pointer_access_policy_denied")
+
+        payload_by_pointer: dict[str, bytes] = {}
+        for pointer_id, payload in artifact_payloads:
+            if pointer_id in payload_by_pointer:
+                raise ValueError("drs_pointer_access_policy_denied")
+            payload_by_pointer[pointer_id] = payload
+        approved_artifact_ids = (
+            descent_request.approved_artifact_pointer_ids
+        )
+        if descent_request.approved_descent_class == "SUMMARY_ONLY" and (
+            approved_artifact_ids or artifact_payloads
+        ):
+            raise ValueError("drs_summary_only_payload_forbidden")
+        if set(payload_by_pointer) != set(approved_artifact_ids):
+            reason = (
+                "drs_open_one_artifact_limit_exceeded"
+                if descent_request.approved_descent_class
+                == "OPEN_ONE_ARTIFACT"
+                else "drs_pointer_access_policy_denied"
+            )
+            raise ValueError(reason)
+        if descent_request.approved_descent_class == "OPEN_ONE_ARTIFACT" and (
+            len(descent_request.approved_record_ids) != 1
+            or descent_request.approved_memory_pointer_ids
+            or len(approved_artifact_ids) != 1
+            or len(artifact_payloads) != 1
+        ):
+            raise ValueError("drs_open_one_artifact_limit_exceeded")
+
+        approved_budget = descent_request.approved_budget
+        approved_record_set = set(descent_request.approved_record_ids)
+        approved_memory_set = set(
+            descent_request.approved_memory_pointer_ids
+        )
+        approved_artifact_set = set(approved_artifact_ids)
+        if not descent_request.approved_record_ids:
+            raise ValueError("drs_memory_descent_accounting_invalid")
+
+        opened_record_ids: list[str] = []
+        opened_memory_pointer_ids: list[str] = []
+        opened_artifact_pointer_ids: list[str] = []
+        traversed_lineage_edge_ids: list[str] = []
+        opened_conflict_record_ids: list[str] = []
+        opened_payload_fingerprints: list[str] = []
+        depth_by_record: dict[str, int] = {}
+        queue: list[str] = []
+        bytes_opened = 0
+        depth_reached = 0
+
+        def open_record(
+            record_id: str,
+            *,
+            depth: int,
+            conflict_record: bool = False,
+        ) -> None:
+            nonlocal depth_reached
+            if record_id not in approved_record_set:
+                raise ValueError("drs_pointer_access_policy_denied")
+            if record_id in depth_by_record:
+                if (
+                    conflict_record
+                    and record_id not in opened_conflict_record_ids
+                ):
+                    if (
+                        len(opened_conflict_record_ids) + 1
+                        > approved_budget.max_conflict_records
+                    ):
+                        raise ValueError(
+                            "drs_memory_descent_accounting_invalid"
+                        )
+                    opened_conflict_record_ids.append(record_id)
+                return
+            if (
+                depth > approved_budget.max_depth
+                or len(opened_record_ids) + 1
+                > approved_budget.max_records_opened
+            ):
+                raise ValueError("drs_memory_descent_accounting_invalid")
+            opened_record_ids.append(record_id)
+            depth_by_record[record_id] = depth
+            queue.append(record_id)
+            depth_reached = max(depth_reached, depth)
+            if conflict_record:
+                if (
+                    len(opened_conflict_record_ids) + 1
+                    > approved_budget.max_conflict_records
+                ):
+                    raise ValueError("drs_memory_descent_accounting_invalid")
+                opened_conflict_record_ids.append(record_id)
+
+        open_record(descent_request.approved_record_ids[0], depth=0)
+        approved_class = descent_request.approved_descent_class
+        allowed_storage = _b3_profile_values(
+            _B3_POINTER_STORAGE_BY_CLASS_V01,
+            approved_class,
+        )
+        lineage_adjacency: dict[str, list[object]] = {}
+        for record in source_records:
+            for edge in record.lineage_edges:
+                lineage_adjacency.setdefault(
+                    edge.source_meaning_record_id, []
+                ).append(edge)
+
+        queue_index = 0
+        while queue_index < len(queue):
+            current_id = queue[queue_index]
+            queue_index += 1
+            current = record_by_id[current_id]
+            current_depth = depth_by_record[current_id]
+            for pointer in current.memory_pointers:
+                if pointer.pointer_id not in approved_memory_set:
+                    continue
+                if (
+                    pointer.storage_class not in allowed_storage
+                    or not _b3_pointer_access_allowed(
+                        pointer=pointer,
+                        approved_descent_class=approved_class,
+                        required_access_policy_ids=(
+                            retrieval_plan.required_access_policy_ids
+                        ),
+                        artifact=False,
+                    )
+                ):
+                    raise ValueError("drs_pointer_access_policy_denied")
+                if pointer.pointer_id in opened_memory_pointer_ids:
+                    continue
+                if (
+                    len(opened_memory_pointer_ids)
+                    + len(opened_artifact_pointer_ids)
+                    + 1
+                    > approved_budget.max_pointers_opened
+                ):
+                    raise ValueError(
+                        "drs_memory_descent_accounting_invalid"
+                    )
+                target = record_by_id[pointer.object_reference]
+                conflict_record = pointer.storage_class == "LOCAL_CONFLICT_SET"
+                if conflict_record:
+                    related_conflict = any(
+                        edge.relation_class in _B3_CONFLICT_RELATIONS_V01
+                        and target.meaning_record_id
+                        in (
+                            edge.source_meaning_record_id,
+                            edge.target_meaning_record_id,
+                        )
+                        for record in source_records
+                        for edge in record.lineage_edges
+                    )
+                    if not target.conflict_hints and not related_conflict:
+                        raise ValueError("drs_pointer_access_policy_denied")
+                if (
+                    pointer.storage_class == "LOCAL_DEADEND_PROOF"
+                    and target.persistent_lifecycle_state != "DEADEND"
+                ):
+                    raise ValueError("drs_pointer_access_policy_denied")
+                opened_memory_pointer_ids.append(pointer.pointer_id)
+                open_record(
+                    target.meaning_record_id,
+                    depth=current_depth + 1,
+                    conflict_record=conflict_record,
+                )
+            if approved_class in (
+                "OPEN_LINEAGE_NEIGHBORHOOD",
+                "OPEN_FULL_TRACE",
+            ):
+                for edge in lineage_adjacency.get(current_id, ()):
+                    if edge.target_meaning_record_id not in approved_record_set:
+                        raise ValueError("drs_pointer_access_policy_denied")
+                    if edge.lineage_edge_id in traversed_lineage_edge_ids:
+                        continue
+                    if (
+                        len(traversed_lineage_edge_ids) + 1
+                        > approved_budget.max_lineage_edges
+                    ):
+                        raise ValueError(
+                            "drs_memory_descent_accounting_invalid"
+                        )
+                    traversed_lineage_edge_ids.append(edge.lineage_edge_id)
+                    open_record(
+                        edge.target_meaning_record_id,
+                        depth=current_depth + 1,
+                        conflict_record=(
+                            edge.relation_class
+                            in _B3_CONFLICT_RELATIONS_V01
+                        ),
+                    )
+
+        for record_id in opened_record_ids:
+            record = record_by_id[record_id]
+            owner_depth = depth_by_record[record_id]
+            for pointer in record.artifact_pointers:
+                if pointer.pointer_id not in approved_artifact_set:
+                    continue
+                if (
+                    pointer.storage_class not in allowed_storage
+                    or not _b3_pointer_access_allowed(
+                        pointer=pointer,
+                        approved_descent_class=approved_class,
+                        required_access_policy_ids=(
+                            retrieval_plan.required_access_policy_ids
+                        ),
+                        artifact=True,
+                    )
+                ):
+                    raise ValueError("drs_pointer_access_policy_denied")
+                if pointer.pointer_id in opened_artifact_pointer_ids:
+                    continue
+                if (
+                    len(opened_memory_pointer_ids)
+                    + len(opened_artifact_pointer_ids)
+                    + 1
+                    > approved_budget.max_pointers_opened
+                    or len(opened_artifact_pointer_ids) + 1
+                    > approved_budget.max_artifacts_opened
+                ):
+                    reason = (
+                        "drs_open_one_artifact_limit_exceeded"
+                        if approved_class == "OPEN_ONE_ARTIFACT"
+                        else "drs_memory_descent_accounting_invalid"
+                    )
+                    raise ValueError(reason)
+                payload = payload_by_pointer[pointer.pointer_id]
+                if (
+                    type(pointer.byte_length) is not int
+                    or pointer.byte_length < 0
+                    or len(payload) != pointer.byte_length
+                ):
+                    raise ValueError("drs_pointer_access_policy_denied")
+                fingerprint = _artifact_sha256(payload).hexdigest()
+                if fingerprint != pointer.content_sha256:
+                    raise ValueError("drs_pointer_access_policy_denied")
+                if bytes_opened + len(payload) > approved_budget.max_bytes_opened:
+                    raise ValueError(
+                        "drs_memory_descent_accounting_invalid"
+                    )
+                artifact_depth = owner_depth + 1
+                if artifact_depth > approved_budget.max_depth:
+                    reason = (
+                        "drs_open_one_artifact_limit_exceeded"
+                        if approved_class == "OPEN_ONE_ARTIFACT"
+                        else "drs_memory_descent_accounting_invalid"
+                    )
+                    raise ValueError(reason)
+                opened_artifact_pointer_ids.append(pointer.pointer_id)
+                opened_payload_fingerprints.append(fingerprint)
+                bytes_opened += len(payload)
+                depth_reached = max(depth_reached, artifact_depth)
+
+        if (
+            tuple(opened_record_ids) != descent_request.approved_record_ids
+            or tuple(opened_memory_pointer_ids)
+            != descent_request.approved_memory_pointer_ids
+            or tuple(opened_artifact_pointer_ids)
+            != descent_request.approved_artifact_pointer_ids
+        ):
+            raise ValueError("drs_memory_descent_accounting_invalid")
+        if approved_class == "OPEN_ONE_ARTIFACT" and (
+            len(opened_artifact_pointer_ids) != 1
+            or depth_reached > 1
+        ):
+            raise ValueError("drs_open_one_artifact_limit_exceeded")
+
+        safe_summaries = tuple(
+            record_by_id[record_id].safe_summary
+            for record_id in opened_record_ids
+        )
+        result = build_memory_descent_result_v01(
+            memory_descent_request_id=(
+                descent_request.memory_descent_request_id
+            ),
+            retrieval_plan_id=retrieval_plan.retrieval_plan_id,
+            query_id=retrieval_plan.query_id,
+            executed_descent_class=approved_class,
+            applied_budget_id=(
+                descent_request.approved_budget.memory_descent_budget_id
+            ),
+            opened_record_ids=tuple(opened_record_ids),
+            opened_memory_pointer_ids=tuple(opened_memory_pointer_ids),
+            opened_artifact_pointer_ids=tuple(
+                opened_artifact_pointer_ids
+            ),
+            traversed_lineage_edge_ids=tuple(
+                traversed_lineage_edge_ids
+            ),
+            opened_conflict_record_ids=tuple(
+                opened_conflict_record_ids
+            ),
+            depth_reached=depth_reached,
+            bytes_opened=bytes_opened,
+            safe_summaries=safe_summaries,
+            opened_payload_fingerprints=tuple(
+                opened_payload_fingerprints
+            ),
+        )
+        if (
+            _b3_canonical_snapshot(
+                retrieval_plan=retrieval_plan,
+                proposed_budget=proposed_budget,
+                descent_request=descent_request,
+                root_kernel=root_kernel,
+                root_decision_input=root_decision_input,
+                root_decision_result=root_decision_result,
+                source_records=source_records,
+            )
+            != input_snapshot
+            or tuple(artifact_payloads) != payload_snapshot
+        ):
+            raise ValueError("drs_retrieval_read_mutation_detected")
+        return result
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if type(reason) is str and reason.startswith("drs_"):
+            raise ValueError(reason) from None
+        raise ValueError("drs_exact_type_or_identity_invalid") from None
+    except Exception:
+        raise ValueError("drs_exact_type_or_identity_invalid") from None
 
 
 def _exact_nested_tuple(value: object, exact_type: type, validator: object) -> tuple[str, ...]:
@@ -2578,10 +3722,59 @@ def _report_reasons(value: object, *, check_identity: bool) -> tuple[str, ...]:
         reasons.extend(nested)
     if type(value.query) is DRSTemporalQueryV01 and type(value.retrieval_plan) is RetrievalPlanV01 and (value.retrieval_plan.query_id != value.query.query_id or value.retrieval_plan.semantic_address_id != value.query.semantic_address_id):
         reasons.append("drs_resolution_report_binding_invalid")
+    b3_direct_descent_profile = (
+        value.memory_descent_result is not None
+        and value.root_shortcut_projection is None
+        and value.reuse_certificate is None
+    )
     if value.memory_descent_result is not None:
         valid, nested = validate_memory_descent_result_v01(value.memory_descent_result)
         if not valid:
-            reasons.extend(nested)
+            if b3_direct_descent_profile:
+                reasons.append("drs_resolution_report_binding_invalid")
+            else:
+                reasons.extend(nested)
+        elif type(value.retrieval_plan) is RetrievalPlanV01:
+            result = value.memory_descent_result
+            allowed_classes = _b3_profile_values(
+                _B3_DESCENT_CLASS_NARROWING_V01,
+                value.retrieval_plan.requested_descent_class,
+            )
+            if (
+                result.retrieval_plan_id
+                != value.retrieval_plan.retrieval_plan_id
+                or type(value.query) is not DRSTemporalQueryV01
+                or result.query_id != value.query.query_id
+                or result.executed_descent_class not in allowed_classes
+                or not set(result.opened_record_ids).issubset(
+                    value.retrieval_plan.proposed_record_ids
+                )
+                or not set(result.opened_memory_pointer_ids).issubset(
+                    value.retrieval_plan.proposed_memory_pointer_ids
+                )
+                or not set(result.opened_artifact_pointer_ids).issubset(
+                    value.retrieval_plan.proposed_artifact_pointer_ids
+                )
+                or result.real_world_effects_count != 0
+                or value.persistent_records_unchanged is not True
+                or any(
+                    counter != 0
+                    for counter in (
+                        value.provider_calls,
+                        value.network_calls,
+                        value.gemini_calls,
+                        value.external_drs_calls,
+                        value.connector_calls,
+                        value.real_world_effects_count,
+                    )
+                )
+            ):
+                reasons.append("drs_resolution_report_binding_invalid")
+    if (
+        b3_direct_descent_profile
+        and not _b3_report_observation_matches(value)
+    ):
+        reasons.append("drs_resolution_report_binding_invalid")
     if value.root_shortcut_projection is not None:
         valid, nested = validate_root_shortcut_authorization_projection_v01(value.root_shortcut_projection)
         if not valid:
@@ -2765,4 +3958,5 @@ __all__ = (
     "drs_resolution_report_to_plain_data_v01",
     "evaluate_drs_candidate_v01",
     "rank_eligible_drs_candidates_v01",
+    "execute_local_memory_descent_v01",
 )

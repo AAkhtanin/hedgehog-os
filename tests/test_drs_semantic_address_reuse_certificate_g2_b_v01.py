@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import FrozenInstanceError, fields, is_dataclass, replace
 from decimal import Decimal
+import hashlib
+import inspect
 import json
 from pathlib import Path
 import pickle
@@ -14,6 +16,11 @@ import hedgehog.drs_g2b_compatibility_v01 as compatibility
 import hedgehog.drs_memory_resolution_v01 as resolution
 import hedgehog.drs_semantic_address_v01 as semantic
 import hedgehog.reuse_certificate_v01 as reuse
+import hedgehog.kernel.root_decision_v01 as root_decision
+import hedgehog.kernel.semantic_work_v01 as semantic_work
+from hedgehog.kernel.trust_model_v01 import (
+    build_default_component_trust_profiles_v01,
+)
 from hedgehog.kernel.integrity_replay_v01 import canonical_json_bytes_v01
 from hedgehog.kernel.integrity_replay_v01 import (
     domain_separated_sha256_hex_v01,
@@ -6362,3 +6369,1357 @@ def test_g2b_root_remains_final_authority() -> None:
         resolution.validate_drs_temporal_query_v01(pickled_query)
         == (True, ())
     )
+
+
+_B3_DESCENT_CLASSES = (
+    "SUMMARY_ONLY",
+    "OPEN_ONE_ARTIFACT",
+    "OPEN_LINEAGE_NEIGHBORHOOD",
+    "OPEN_CONFLICT_SET",
+    "OPEN_DEADEND_PROOF",
+    "OPEN_FULL_TRACE",
+)
+_B3_ROOT_BINDING_DOMAIN = (
+    "hedgehog:drs:memory_descent_root_result_binding:v01"
+)
+_B3_ROOT_PREDICATE = "approve_controlled_memory_descent_plan_v01"
+_B3_CLASS_APPROVALS = (
+    (
+        "SUMMARY_ONLY",
+        ("anchor", "neighbor"),
+        ("summary",),
+        (),
+    ),
+    (
+        "OPEN_ONE_ARTIFACT",
+        ("anchor",),
+        (),
+        ("artifact",),
+    ),
+    (
+        "OPEN_LINEAGE_NEIGHBORHOOD",
+        ("anchor", "neighbor", "conflict"),
+        ("summary", "lineage"),
+        (),
+    ),
+    (
+        "OPEN_CONFLICT_SET",
+        ("anchor", "conflict"),
+        ("conflict",),
+        (),
+    ),
+    (
+        "OPEN_DEADEND_PROOF",
+        ("anchor", "deadend"),
+        ("deadend",),
+        (),
+    ),
+    (
+        "OPEN_FULL_TRACE",
+        ("anchor", "neighbor", "conflict", "deadend"),
+        ("summary", "lineage", "conflict", "deadend"),
+        ("artifact",),
+    ),
+)
+_B3_NARROWING = (
+    ("SUMMARY_ONLY", ("SUMMARY_ONLY",)),
+    ("OPEN_ONE_ARTIFACT", ("OPEN_ONE_ARTIFACT", "SUMMARY_ONLY")),
+    (
+        "OPEN_LINEAGE_NEIGHBORHOOD",
+        ("OPEN_LINEAGE_NEIGHBORHOOD", "SUMMARY_ONLY"),
+    ),
+    ("OPEN_CONFLICT_SET", ("OPEN_CONFLICT_SET", "SUMMARY_ONLY")),
+    ("OPEN_DEADEND_PROOF", ("OPEN_DEADEND_PROOF", "SUMMARY_ONLY")),
+    ("OPEN_FULL_TRACE", _B3_DESCENT_CLASSES),
+)
+_B3_IDENTITY_VECTORS = {
+    "proposed_budget_id": (
+        "drsbudget_v01:"
+        "ac854beda1471218b53f91712054ac033d634b4778e48756c260e2453ecbf7b4"
+    ),
+    "retrieval_plan_id": (
+        "drsplan_v01:"
+        "668b1900a8c3df7661119b4a5df1b71072718933b248e3c6b1f8b6413f82406a"
+    ),
+    "root_kernel_id": (
+        "6cbe784404adaf78863830a3dd1cb67d1baaa1c3d46296c633018c715c522235"
+    ),
+    "root_input_id": (
+        "1e8c1ba880665c10a59b1a8e479bfe0a50dac8dff1282e6b813397d772f78614"
+    ),
+    "root_result_id": (
+        "db753fd76d44a0d7690322223fbd4ebf6f7e9f6434f208d89b1bf4f930d77e01"
+    ),
+    "root_result_binding_hash": (
+        "8babadd4b1f7e34d9745a2941d53a5203bcddf580f099be3b539e705d94aadea"
+    ),
+    "summary_request_id": (
+        "drsdescentreq_v01:"
+        "b38fcc2dc70ff2a651bba50078c9ed0b1bcf548a5cb0d25141d51e838a186fed"
+    ),
+    "summary_result_id": (
+        "drsdescentres_v01:"
+        "f31544ab7dce1fd19d08bc3a507eba8af233407d62f75c60d2ce55bfe7632e3c"
+    ),
+    "open_one_artifact_request_id": (
+        "drsdescentreq_v01:"
+        "17a88cf1c1d36cee76e2ed9effa8980d46c229f9bc7e9bda2d4703fc265bc7b4"
+    ),
+    "open_one_artifact_result_id": (
+        "drsdescentres_v01:"
+        "3a6141d9f05da7e722624a178ed73f8b7b1356fe454bad2a2c2466fab99b182f"
+    ),
+    "open_full_trace_request_id": (
+        "drsdescentreq_v01:"
+        "94d2891144a0faea761b4a07518120ec2e29cf57cf24cb52bec196f0f9c4862d"
+    ),
+    "open_full_trace_result_id": (
+        "drsdescentres_v01:"
+        "03ae97b1316fa0a1bf9031c833e43beb3239be446f91bd37f0936e72a883b485"
+    ),
+    "report_id": (
+        "drsreport_v01:"
+        "67d2f3d84a5a5eb97c8fc8c838af40f0e494c38a82f457937707bb42c296f48a"
+    ),
+}
+
+
+def _b3_root_states(
+    plan: resolution.RetrievalPlanV01,
+) -> dict[str, dict[str, object]]:
+    candidate_ids = [plan.retrieval_plan_id]
+    return {
+        "post_vv_bundle": {
+            "bundle_id": "post-vv:g2b3",
+            "post_vv_passed": True,
+            "validated_candidate_ids": candidate_ids,
+            "rejected_candidate_ids": [],
+            "required_evidence_refs": [],
+            "provided_evidence_refs": [],
+            "hard_failure_reasons": [],
+        },
+        "gt_advisory": {
+            "advisory_id": "gt:g2b3",
+            "candidate_ids": candidate_ids,
+            "selected_candidate_id": plan.retrieval_plan_id,
+            "score_micros_by_candidate": {
+                plan.retrieval_plan_id: 500_000,
+            },
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "target_artifact_type": "RootDecision",
+            "advisory_only": True,
+            "creates_final_output": False,
+            "requests_effect": False,
+        },
+        "policy_state": {
+            "policy_id": "policy:g2b3",
+            "identity_passed": True,
+            "scope_passed": True,
+            "hard_policy_passed": True,
+            "allow_accept": True,
+            "conflict_policy": "DEFER",
+            "no_candidate_policy": "NO_UPDATE",
+        },
+        "permission_state": {
+            "permission_required": False,
+            "user_permission_present": False,
+            "permission_scope_valid": True,
+            "permission_ref": None,
+        },
+        "temporal_state": {
+            "temporal_valid": True,
+            "expired": False,
+            "not_before_satisfied": True,
+            "time_envelope_ref": "time-envelope:g2b3",
+        },
+        "conflict_state": {
+            "material_unresolved_conflict": False,
+            "conflict_set_ids": [],
+        },
+        "prior_root_state": {
+            "prior_decision_id": None,
+            "prior_decision": None,
+            "prior_selected_candidate_id": None,
+        },
+    }
+
+
+def _b3_root_triple(
+    plan: resolution.RetrievalPlanV01,
+) -> tuple[
+    root_decision.RootDecisionKernelV01,
+    root_decision.RootDecisionInputV01,
+    root_decision.RootDecisionResultV01,
+]:
+    request = semantic_work.build_semantic_work_request_v01(
+        request_id="semantic-work-request:g2b3",
+        transaction_id=plan.query_id,
+        target_root_id="root:local_reference",
+        runtime_topology_ref="topology:g2b3",
+        bounded_context_refs=("context:g2b3",),
+        permitted_actor_ids=("actor:g2b3",),
+        permitted_contribution_modes=("DETERMINISTIC",),
+        requested_subjects=(plan.semantic_address_id,),
+        required_evidence_classes=("PLAN_BINDING",),
+        forbidden_claims=("create_permission",),
+    )
+    evidence = semantic_work.build_evidence_binding_v01(
+        evidence_id="evidence-binding:g2b3:plan",
+        evidence_ref="evidence:g2b3:plan",
+        evidence_class="PLAN_BINDING",
+        source_component_id="actor:g2b3",
+        provenance_ref="provenance:g2b3",
+        evidence_state=semantic_work.EVIDENCE_STATE_PRESENT,
+    )
+    claim = semantic_work.build_normalized_claim_v01(
+        claim_id=plan.retrieval_plan_id,
+        subject=plan.semantic_address_id,
+        predicate=_B3_ROOT_PREDICATE,
+        object_or_value=resolution.retrieval_plan_to_plain_data_v01(plan),
+        time_envelope_ref="time-envelope:g2b3",
+        provenance_refs=("provenance:g2b3",),
+        evidence_refs=("evidence-binding:g2b3:plan",),
+        confidence_micros=1_000_000,
+        source_role="deterministic_runtime",
+        source_mode="DETERMINISTIC",
+    )
+    contribution = semantic_work.build_actor_contribution_v01(
+        contribution_id="contribution:g2b3",
+        request_id=request.request_id,
+        actor_id="actor:g2b3",
+        actor_role="deterministic_runtime",
+        contribution_mode="DETERMINISTIC",
+        bsep_projection_ref="bsep:g2b3",
+        scope=plan.semantic_address_id,
+        bounded_context_refs=("context:g2b3",),
+        claims=(claim,),
+        evidence_bindings=(evidence,),
+        constraint_bindings=(),
+        uncertainty_bindings=(),
+        requested_validators=(),
+        forbidden_claims_observed=(),
+    )
+    packet = semantic_work.build_root_review_packet_from_contributions_v01(
+        request=request,
+        contributions=(contribution,),
+        trust_profiles=build_default_component_trust_profiles_v01(),
+    )
+    kernel = root_decision.build_root_decision_kernel_v01()
+    decision_input = root_decision.build_root_decision_input_v01(
+        transaction_id=plan.query_id,
+        target_root_id="root:local_reference",
+        root_review_packet=packet,
+        **_b3_root_states(plan),
+    )
+    result = root_decision.decide_root_v01(
+        kernel=kernel,
+        decision_input=decision_input,
+    )
+    assert result.decision == root_decision.ROOT_DECISION_ACCEPT
+    assert result.selected_candidate_id == plan.retrieval_plan_id
+    return kernel, decision_input, result
+
+
+def _b3_approval(
+    descent_class: str,
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    for name, record_names, memory_names, artifact_names in _B3_CLASS_APPROVALS:
+        if name == descent_class:
+            return record_names, memory_names, artifact_names
+    raise AssertionError("unknown B3 descent class")
+
+
+def _b3_fixture(
+    *,
+    requested_descent_class: str = "OPEN_FULL_TRACE",
+    approved_descent_class: str | None = None,
+    approved_budget_changes: dict[str, object] | None = None,
+) -> dict[str, object]:
+    approved_descent_class = (
+        approved_descent_class or requested_descent_class
+    )
+    address = _b2_address()
+    query = _b2_query(address=address)
+    neighbor = _b2_record(ordinal=2, address=address)
+    conflict = _b2_record(
+        ordinal=3,
+        address=address,
+        conflict_hints=("Conflicting source evidence.",),
+    )
+    deadend = _b2_record(
+        ordinal=4,
+        address=address,
+        persistent_lifecycle_state="DEADEND",
+    )
+    payload = b'{"bounded":"g2b3 artifact"}'
+    pointer_uses = _B3_DESCENT_CLASSES
+    memory_pointers = {
+        "summary": semantic.build_memory_pointer_v01(
+            storage_class="LOCAL_MEANING_RECORD",
+            object_reference=neighbor.meaning_record_id,
+            content_sha256=neighbor.content_fingerprint,
+            record_class="MeaningRecordV01",
+            byte_length=None,
+            access_policy_id="policy:g2b3:summary",
+            sensitivity_class="INTERNAL",
+            allowed_use_classes=pointer_uses,
+            forbidden_use_classes=(),
+            summary_read_permitted=True,
+            payload_read_permitted=False,
+        ),
+        "lineage": semantic.build_memory_pointer_v01(
+            storage_class="LOCAL_LINEAGE_SET",
+            object_reference=neighbor.meaning_record_id,
+            content_sha256=neighbor.content_fingerprint,
+            record_class="MeaningRecordV01",
+            byte_length=None,
+            access_policy_id="policy:g2b3:lineage",
+            sensitivity_class="INTERNAL",
+            allowed_use_classes=pointer_uses,
+            forbidden_use_classes=(),
+            summary_read_permitted=True,
+            payload_read_permitted=False,
+        ),
+        "conflict": semantic.build_memory_pointer_v01(
+            storage_class="LOCAL_CONFLICT_SET",
+            object_reference=conflict.meaning_record_id,
+            content_sha256=conflict.content_fingerprint,
+            record_class="MeaningRecordV01",
+            byte_length=None,
+            access_policy_id="policy:g2b3:conflict",
+            sensitivity_class="INTERNAL",
+            allowed_use_classes=pointer_uses,
+            forbidden_use_classes=(),
+            summary_read_permitted=True,
+            payload_read_permitted=False,
+        ),
+        "deadend": semantic.build_memory_pointer_v01(
+            storage_class="LOCAL_DEADEND_PROOF",
+            object_reference=deadend.meaning_record_id,
+            content_sha256=deadend.content_fingerprint,
+            record_class="MeaningRecordV01",
+            byte_length=None,
+            access_policy_id="policy:g2b3:deadend",
+            sensitivity_class="INTERNAL",
+            allowed_use_classes=pointer_uses,
+            forbidden_use_classes=(),
+            summary_read_permitted=True,
+            payload_read_permitted=False,
+        ),
+    }
+    artifact_pointer = semantic.build_artifact_pointer_v01(
+        storage_class="LOCAL_DOCUMENT",
+        object_reference="artifact:g2b3:bounded",
+        content_sha256=hashlib.sha256(payload).hexdigest(),
+        media_type="application/json",
+        byte_length=len(payload),
+        access_policy_id="policy:g2b3:artifact",
+        sensitivity_class="INTERNAL",
+        allowed_use_classes=pointer_uses,
+        forbidden_use_classes=(),
+        summary_read_permitted=True,
+        payload_read_permitted=True,
+    )
+    lineage_edge = semantic.build_lineage_edge_v01(
+        source_meaning_record_id=neighbor.meaning_record_id,
+        target_meaning_record_id=conflict.meaning_record_id,
+        relation_class="CONTRADICTS",
+        claim_dimension="g2b3_conflict",
+        source_history_hash=_SHA_E,
+        evidence_ref_ids=("evidence:g2b3:lineage",),
+        created_at=150,
+        recording_component="g2b3_fixture",
+    )
+    anchor = semantic.build_meaning_record_v01(
+        semantic_address=address,
+        predecessor_record_id=None,
+        supersession_reason=None,
+        safe_summary="Bounded G2-B3 anchor summary.",
+        semantic_tags=("g2b3", "informational"),
+        resonance_reason="Root-approved controlled local memory descent.",
+        memory_pointers=tuple(memory_pointers.values()),
+        artifact_pointers=(artifact_pointer,),
+        source_reference_ids=("source:g2b3:anchor",),
+        lineage_edges=(lineage_edge,),
+        time_envelope=_b2_time(),
+        authority_envelope=_b2_authority(),
+        persistent_lifecycle_state="ACTIVE",
+        risk_hints=(),
+        conflict_hints=(),
+        reuse_policy_class="ANSWER_SHORTCUT",
+        policy_version="policy_v01",
+        schema_versions=("v0.1",),
+        content_fingerprint=_SHA_A,
+        recording_component="g2b3_fixture",
+    )
+    records_by_name = {
+        "anchor": anchor,
+        "neighbor": neighbor,
+        "conflict": conflict,
+        "deadend": deadend,
+    }
+    source_records = tuple(records_by_name.values())
+    proposed_budget = resolution.build_memory_descent_budget_v01(
+        max_depth=3,
+        max_records_opened=4,
+        max_pointers_opened=5,
+        max_artifacts_opened=1,
+        max_bytes_opened=len(payload),
+        max_lineage_edges=1,
+        max_conflict_records=1,
+    )
+    proposed_memory_pointers = tuple(memory_pointers.values())
+    all_pointers = proposed_memory_pointers + (artifact_pointer,)
+    plan = resolution.build_retrieval_plan_v01(
+        query_id=query.query_id,
+        semantic_address_id=address.semantic_address_id,
+        proposed_record_ids=tuple(
+            record.meaning_record_id for record in source_records
+        ),
+        proposed_memory_pointer_ids=tuple(
+            pointer.pointer_id for pointer in proposed_memory_pointers
+        ),
+        proposed_artifact_pointer_ids=(artifact_pointer.pointer_id,),
+        requested_descent_class=requested_descent_class,
+        proposed_budget_id=proposed_budget.memory_descent_budget_id,
+        required_access_policy_ids=tuple(
+            pointer.access_policy_id for pointer in all_pointers
+        ),
+        reason_codes=(),
+    )
+    kernel, decision_input, root_result = _b3_root_triple(plan)
+    root_hash = domain_separated_sha256_hex_v01(
+        domain=_B3_ROOT_BINDING_DOMAIN,
+        payload=canonical_json_bytes_v01(
+            root_decision.root_decision_result_to_plain_dict_v01(root_result)
+        ),
+    )
+    approved_budget_values: dict[str, object] = {
+        "max_depth": proposed_budget.max_depth,
+        "max_records_opened": proposed_budget.max_records_opened,
+        "max_pointers_opened": proposed_budget.max_pointers_opened,
+        "max_artifacts_opened": proposed_budget.max_artifacts_opened,
+        "max_bytes_opened": proposed_budget.max_bytes_opened,
+        "max_lineage_edges": proposed_budget.max_lineage_edges,
+        "max_conflict_records": proposed_budget.max_conflict_records,
+    }
+    approved_budget_values.update(approved_budget_changes or {})
+    approved_budget = resolution.build_memory_descent_budget_v01(
+        **approved_budget_values,
+    )
+    record_names, memory_names, artifact_names = _b3_approval(
+        approved_descent_class
+    )
+    request = resolution.build_memory_descent_request_v01(
+        retrieval_plan_id=plan.retrieval_plan_id,
+        query_id=plan.query_id,
+        owning_local_root_id="root:local_reference",
+        root_kernel_id=kernel.kernel_id,
+        root_decision_input_id=decision_input.decision_input_id,
+        root_decision_id=root_result.decision_id,
+        root_decision_hash=root_hash,
+        requested_descent_class=requested_descent_class,
+        approved_descent_class=approved_descent_class,
+        proposed_budget_id=proposed_budget.memory_descent_budget_id,
+        approved_budget=approved_budget,
+        approved_record_ids=tuple(
+            records_by_name[name].meaning_record_id for name in record_names
+        ),
+        approved_memory_pointer_ids=tuple(
+            memory_pointers[name].pointer_id for name in memory_names
+        ),
+        approved_artifact_pointer_ids=tuple(
+            artifact_pointer.pointer_id for _ in artifact_names
+        ),
+    )
+    artifact_payloads = (
+        ((artifact_pointer.pointer_id, payload),)
+        if artifact_names
+        else ()
+    )
+    return {
+        "address": address,
+        "query": query,
+        "records": source_records,
+        "records_by_name": records_by_name,
+        "memory_pointers": memory_pointers,
+        "artifact_pointer": artifact_pointer,
+        "lineage_edge": lineage_edge,
+        "payload": payload,
+        "artifact_payloads": artifact_payloads,
+        "proposed_budget": proposed_budget,
+        "plan": plan,
+        "kernel": kernel,
+        "root_input": decision_input,
+        "root_result": root_result,
+        "root_hash": root_hash,
+        "approved_budget": approved_budget,
+        "request": request,
+    }
+
+
+def _b3_execute(fixture: dict[str, object]) -> resolution.MemoryDescentResultV01:
+    return resolution.execute_local_memory_descent_v01(
+        retrieval_plan=fixture["plan"],
+        proposed_budget=fixture["proposed_budget"],
+        descent_request=fixture["request"],
+        root_kernel=fixture["kernel"],
+        root_decision_input=fixture["root_input"],
+        root_decision_result=fixture["root_result"],
+        source_records=fixture["records"],
+        artifact_payloads=fixture["artifact_payloads"],
+    )
+
+
+def _b3_execution_kwargs(fixture: dict[str, object]) -> dict[str, object]:
+    return {
+        "retrieval_plan": fixture["plan"],
+        "proposed_budget": fixture["proposed_budget"],
+        "descent_request": fixture["request"],
+        "root_kernel": fixture["kernel"],
+        "root_decision_input": fixture["root_input"],
+        "root_decision_result": fixture["root_result"],
+        "source_records": fixture["records"],
+        "artifact_payloads": fixture["artifact_payloads"],
+    }
+
+
+def _b3_assert_error(
+    expected: str,
+    fixture: dict[str, object],
+    **changes: object,
+) -> None:
+    kwargs = _b3_execution_kwargs(fixture)
+    kwargs.update(changes)
+    with pytest.raises(ValueError, match=rf"^{expected}$"):
+        resolution.execute_local_memory_descent_v01(**kwargs)
+
+
+def _b3_input_snapshot(
+    fixture: dict[str, object],
+) -> tuple[bytes, tuple[tuple[str, bytes], ...]]:
+    material = (
+        resolution.retrieval_plan_to_plain_data_v01(fixture["plan"]),
+        resolution.memory_descent_budget_to_plain_data_v01(
+            fixture["proposed_budget"]
+        ),
+        resolution.memory_descent_request_to_plain_data_v01(
+            fixture["request"]
+        ),
+        root_decision.root_decision_kernel_to_plain_dict_v01(
+            fixture["kernel"]
+        ),
+        root_decision.root_decision_input_to_plain_dict_v01(
+            fixture["root_input"]
+        ),
+        root_decision.root_decision_result_to_plain_dict_v01(
+            fixture["root_result"]
+        ),
+        tuple(
+            semantic.meaning_record_to_plain_data_v01(record)
+            for record in fixture["records"]
+        ),
+    )
+    return canonical_json_bytes_v01(material), tuple(
+        fixture["artifact_payloads"]
+    )
+
+
+def _b3_report(
+    fixture: dict[str, object],
+    result: resolution.MemoryDescentResultV01,
+) -> resolution.DRSResolutionReportV01:
+    return resolution.build_drs_resolution_report_v01(
+        semantic_address=fixture["address"],
+        query=fixture["query"],
+        source_projections=(),
+        source_records=fixture["records"],
+        query_evaluations=(),
+        eligible_candidates=(),
+        ranked_candidate_ids=(),
+        selected_candidate_id=None,
+        retrieval_plan=fixture["plan"],
+        memory_descent_result=result,
+        root_shortcut_projection=None,
+        reuse_certificate=None,
+        context_only_record_ids=(),
+        historical_only_record_ids=(),
+        warning_only_record_ids=(),
+        rerun_required_record_ids=(),
+        blocked_record_ids=(),
+        provider_calls=0,
+        network_calls=0,
+        gemini_calls=0,
+        external_drs_calls=0,
+        connector_calls=0,
+        real_world_effects_count=0,
+        final_status="PASS",
+        reason_codes=(),
+    )
+
+
+def _b3_reidentified_report_result(
+    report: resolution.DRSResolutionReportV01,
+    result: resolution.MemoryDescentResultV01,
+    **changes: object,
+) -> resolution.DRSResolutionReportV01:
+    changed_result = _reidentify(replace(result, **changes))
+    return _reidentify(
+        replace(report, memory_descent_result=changed_result)
+    )
+
+
+def _b3_proposed_unopened_memory_pointer_forgery(
+    **pointer_changes: object,
+) -> tuple[
+    dict[str, object],
+    resolution.DRSResolutionReportV01,
+]:
+    fixture = _b3_fixture(
+        requested_descent_class="OPEN_ONE_ARTIFACT",
+        approved_descent_class="OPEN_ONE_ARTIFACT",
+    )
+    result = _b3_execute(fixture)
+    report = _b3_report(fixture, result)
+    original_pointer = fixture["memory_pointers"]["summary"]
+    changed_pointer = _reidentify(
+        replace(original_pointer, **pointer_changes)
+    )
+    changed_memory_pointers = dict(fixture["memory_pointers"])
+    changed_memory_pointers["summary"] = changed_pointer
+    original_anchor = fixture["records_by_name"]["anchor"]
+    changed_anchor = _reidentify(
+        replace(
+            original_anchor,
+            memory_pointers=tuple(changed_memory_pointers.values()),
+        )
+    )
+    changed_records_by_name = dict(fixture["records_by_name"])
+    changed_records_by_name["anchor"] = changed_anchor
+    changed_records = tuple(changed_records_by_name.values())
+    changed_plan = _reidentify(
+        replace(
+            fixture["plan"],
+            proposed_record_ids=tuple(
+                record.meaning_record_id for record in changed_records
+            ),
+            proposed_memory_pointer_ids=tuple(
+                pointer.pointer_id
+                for pointer in changed_memory_pointers.values()
+            ),
+        )
+    )
+    kernel, root_input, root_result = _b3_root_triple(changed_plan)
+    root_hash = domain_separated_sha256_hex_v01(
+        domain=_B3_ROOT_BINDING_DOMAIN,
+        payload=canonical_json_bytes_v01(
+            root_decision.root_decision_result_to_plain_dict_v01(
+                root_result
+            )
+        ),
+    )
+    changed_request = _reidentify(
+        replace(
+            fixture["request"],
+            retrieval_plan_id=changed_plan.retrieval_plan_id,
+            root_kernel_id=kernel.kernel_id,
+            root_decision_input_id=root_input.decision_input_id,
+            root_decision_id=root_result.decision_id,
+            root_decision_hash=root_hash,
+            approved_record_ids=(changed_anchor.meaning_record_id,),
+        )
+    )
+    changed_result = _reidentify(
+        replace(
+            result,
+            memory_descent_request_id=(
+                changed_request.memory_descent_request_id
+            ),
+            retrieval_plan_id=changed_plan.retrieval_plan_id,
+            opened_record_ids=(changed_anchor.meaning_record_id,),
+        )
+    )
+    changed_report = _reidentify(
+        replace(
+            report,
+            source_records=changed_records,
+            retrieval_plan=changed_plan,
+            memory_descent_result=changed_result,
+        )
+    )
+    changed_fixture = dict(fixture)
+    changed_fixture.update(
+        {
+            "records": changed_records,
+            "records_by_name": changed_records_by_name,
+            "memory_pointers": changed_memory_pointers,
+            "plan": changed_plan,
+            "kernel": kernel,
+            "root_input": root_input,
+            "root_result": root_result,
+            "root_hash": root_hash,
+            "request": changed_request,
+        }
+    )
+    return changed_fixture, changed_report
+
+
+def _b3_observation_report_forgeries(
+    fixture: dict[str, object],
+    result: resolution.MemoryDescentResultV01,
+    report: resolution.DRSResolutionReportV01,
+) -> tuple[tuple[str, resolution.DRSResolutionReportV01], ...]:
+    ordinary_record_id = fixture[
+        "records_by_name"
+    ]["neighbor"].meaning_record_id
+    return (
+        (
+            "foreign_safe_summary",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                safe_summaries=(
+                    "Safe but foreign transported summary.",
+                )
+                + result.safe_summaries[1:],
+            ),
+        ),
+        (
+            "foreign_payload_fingerprint",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                opened_payload_fingerprints=(_SHA_B,),
+            ),
+        ),
+        (
+            "missing_payload_fingerprint",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                opened_payload_fingerprints=(),
+            ),
+        ),
+        (
+            "extra_payload_fingerprint",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                opened_payload_fingerprints=(
+                    result.opened_payload_fingerprints + (_SHA_B,)
+                ),
+            ),
+        ),
+        (
+            "zero_bytes",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                bytes_opened=0,
+            ),
+        ),
+        (
+            "changed_bytes",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                bytes_opened=result.bytes_opened + 1,
+            ),
+        ),
+        (
+            "zero_depth",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                depth_reached=0,
+            ),
+        ),
+        (
+            "foreign_lineage_edge",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                traversed_lineage_edge_ids=(
+                    "drsedge_v01:" + "f" * 64,
+                ),
+            ),
+        ),
+        (
+            "ordinary_conflict_record",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                opened_conflict_record_ids=(ordinary_record_id,),
+            ),
+        ),
+        (
+            "incompatible_conflict_class",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                executed_descent_class="OPEN_CONFLICT_SET",
+            ),
+        ),
+        (
+            "incompatible_deadend_class",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                executed_descent_class="OPEN_DEADEND_PROOF",
+            ),
+        ),
+        (
+            "reversed_memory_pointer_order",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                opened_memory_pointer_ids=tuple(
+                    reversed(result.opened_memory_pointer_ids)
+                ),
+            ),
+        ),
+        (
+            "reversed_record_order",
+            _b3_reidentified_report_result(
+                report,
+                result,
+                opened_record_ids=tuple(
+                    reversed(result.opened_record_ids)
+                ),
+                safe_summaries=tuple(
+                    reversed(result.safe_summaries)
+                ),
+            ),
+        ),
+    )
+
+
+def _b3_observed_identity_vectors() -> dict[str, object]:
+    summary = _b3_fixture(
+        requested_descent_class="SUMMARY_ONLY",
+        approved_descent_class="SUMMARY_ONLY",
+    )
+    open_one = _b3_fixture(
+        requested_descent_class="OPEN_ONE_ARTIFACT",
+        approved_descent_class="OPEN_ONE_ARTIFACT",
+    )
+    full = _b3_fixture(
+        requested_descent_class="OPEN_FULL_TRACE",
+        approved_descent_class="OPEN_FULL_TRACE",
+    )
+    summary_result = _b3_execute(summary)
+    open_one_result = _b3_execute(open_one)
+    full_result = _b3_execute(full)
+    report = _b3_report(full, full_result)
+    return {
+        "proposed_budget_id": full[
+            "proposed_budget"
+        ].memory_descent_budget_id,
+        "retrieval_plan_id": full["plan"].retrieval_plan_id,
+        "root_kernel_id": full["kernel"].kernel_id,
+        "root_input_id": full["root_input"].decision_input_id,
+        "root_result_id": full["root_result"].decision_id,
+        "root_result_binding_hash": full["root_hash"],
+        "summary_request_id": summary[
+            "request"
+        ].memory_descent_request_id,
+        "summary_result_id": summary_result.memory_descent_result_id,
+        "open_one_artifact_request_id": open_one[
+            "request"
+        ].memory_descent_request_id,
+        "open_one_artifact_result_id": (
+            open_one_result.memory_descent_result_id
+        ),
+        "open_full_trace_request_id": full[
+            "request"
+        ].memory_descent_request_id,
+        "open_full_trace_result_id": full_result.memory_descent_result_id,
+        "report_id": report.report_id,
+    }
+
+
+def test_g2b_retrieval_is_filesystem_and_record_read_pure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixture = _b3_fixture(approved_descent_class="OPEN_FULL_TRACE")
+    before = _b3_input_snapshot(fixture)
+
+    def _forbidden_open(*args: object, **kwargs: object) -> object:
+        raise AssertionError("filesystem access attempted")
+
+    monkeypatch.setattr("builtins.open", _forbidden_open)
+    first = _b3_execute(fixture)
+    second = _b3_execute(fixture)
+    assert first == second
+    assert _b3_input_snapshot(fixture) == before
+    assert first.real_world_effects_count == 0
+    assert first.creates_authority is False
+    assert first.creates_permission is False
+    report = _b3_report(fixture, first)
+    assert resolution.validate_drs_resolution_report_v01(report) == (
+        True,
+        (),
+    )
+    proposed_pointer_forgeries = (
+        (
+            "proposed_unopened_content_mismatch",
+            _b3_proposed_unopened_memory_pointer_forgery(
+                content_sha256="e" * 64,
+            ),
+        ),
+        (
+            "proposed_unopened_foreign_target",
+            _b3_proposed_unopened_memory_pointer_forgery(
+                object_reference="drsmeaning_v01:" + "f" * 64,
+            ),
+        ),
+    )
+    proposed_pointer_results = []
+    for label, (changed_fixture, changed_report) in (
+        proposed_pointer_forgeries
+    ):
+        assert changed_fixture[
+            "request"
+        ].approved_memory_pointer_ids == ()
+        _b3_assert_error(
+            "drs_pointer_access_policy_denied",
+            changed_fixture,
+        )
+        proposed_pointer_results.append(
+            (
+                label,
+                resolution.validate_drs_resolution_report_v01(
+                    changed_report
+                ),
+            )
+        )
+    assert tuple(proposed_pointer_results) == tuple(
+        (
+            label,
+            (
+                False,
+                ("drs_resolution_report_binding_invalid",),
+            ),
+        )
+        for label, _ in proposed_pointer_results
+    ), "; ".join(
+        f"{label}={outcome!r}"
+        for label, outcome in proposed_pointer_results
+    )
+    report_forgery_results = tuple(
+        (
+            label,
+            resolution.validate_drs_resolution_report_v01(
+                forged_report
+            ),
+        )
+        for label, forged_report in _b3_observation_report_forgeries(
+            fixture,
+            first,
+            report,
+        )
+    )
+    assert report_forgery_results == tuple(
+        (
+            label,
+            (
+                False,
+                ("drs_resolution_report_binding_invalid",),
+            ),
+        )
+        for label, _ in report_forgery_results
+    ), "; ".join(
+        f"{label}={outcome!r}"
+        for label, outcome in report_forgery_results
+    )
+    wrong_plan_result = _reidentify(
+        replace(
+            first,
+            retrieval_plan_id="drsplan_v01:" + "f" * 64,
+        )
+    )
+    wrong_plan_report = _reidentify(
+        replace(report, memory_descent_result=wrong_plan_result)
+    )
+    assert resolution.validate_drs_resolution_report_v01(
+        wrong_plan_report
+    )[0] is False
+    nonzero_effect_result = _reidentify(
+        replace(first, real_world_effects_count=1)
+    )
+    nonzero_effect_report = _reidentify(
+        replace(report, memory_descent_result=nonzero_effect_result)
+    )
+    assert resolution.validate_drs_resolution_report_v01(
+        nonzero_effect_report
+    )[0] is False
+    source = inspect.getsource(resolution.execute_local_memory_descent_v01)
+    for forbidden in (
+        "open(",
+        "Path(",
+        "LocalDRS",
+        "decide_root_v01",
+        "provider",
+        "network",
+        "connector",
+        "external_drs",
+    ):
+        assert forbidden not in source
+    for descent_class in _B3_DESCENT_CLASSES:
+        class_fixture = _b3_fixture(
+            requested_descent_class=descent_class,
+            approved_descent_class=descent_class,
+        )
+        result = _b3_execute(class_fixture)
+        assert result.executed_descent_class == descent_class
+        assert result.limits_respected is True
+        assert result.reason_codes == ()
+        assert resolution.validate_memory_descent_result_v01(
+            result
+        ) == (True, ())
+        assert resolution.validate_drs_resolution_report_v01(
+            _b3_report(class_fixture, result)
+        ) == (True, ())
+    b1_report = _fixture_family()[resolution.DRSResolutionReportV01]
+    b2_report = _b2_positive_fixture()["report"]
+    assert resolution.validate_drs_resolution_report_v01(
+        b1_report
+    ) == (True, ())
+    assert resolution.validate_drs_resolution_report_v01(
+        b2_report
+    ) == (True, ())
+    assert _b3_observed_identity_vectors() == _B3_IDENTITY_VECTORS
+
+
+def test_g2b_memory_descent_without_root_approval_is_rejected() -> None:
+    fixture = _b3_fixture(approved_descent_class="SUMMARY_ONLY")
+    result = _b3_execute(fixture)
+    assert result.memory_descent_request_id == fixture[
+        "request"
+    ].memory_descent_request_id
+    request = fixture["request"]
+    forged_approval = _reidentify(replace(request, root_approved=False))
+    _b3_assert_error(
+        "drs_exact_type_or_identity_invalid",
+        fixture,
+        descent_request=forged_approval,
+    )
+    _b3_assert_error(
+        "drs_exact_type_or_identity_invalid",
+        fixture,
+        root_kernel=None,
+    )
+    wrong_owner = _reidentify(
+        replace(request, owning_local_root_id="root:foreign")
+    )
+    _b3_assert_error(
+        "drs_root_owner_mismatch",
+        fixture,
+        descent_request=wrong_owner,
+    )
+    wrong_hash = _reidentify(replace(request, root_decision_hash=_SHA_A))
+    _b3_assert_error(
+        "drs_root_decision_binding_invalid",
+        fixture,
+        descent_request=wrong_hash,
+    )
+    wrong_result_id = _reidentify(
+        replace(request, root_decision_id="root-decision:foreign")
+    )
+    _b3_assert_error(
+        "drs_root_decision_binding_invalid",
+        fixture,
+        descent_request=wrong_result_id,
+    )
+    wrong_plan = _reidentify(
+        replace(
+            fixture["plan"],
+            semantic_address_id="drsaddr_v01:" + "f" * 64,
+        )
+    )
+    _b3_assert_error(
+        "drs_root_decision_binding_invalid",
+        fixture,
+        retrieval_plan=wrong_plan,
+    )
+    assert root_decision.validate_root_decision_kernel_v01(
+        fixture["kernel"]
+    ) == ()
+    assert root_decision.validate_root_decision_input_v01(
+        kernel=fixture["kernel"],
+        decision_input=fixture["root_input"],
+    ) == ()
+    assert root_decision.validate_root_decision_result_v01(
+        kernel=fixture["kernel"],
+        decision_input=fixture["root_input"],
+        result=fixture["root_result"],
+    ) == ()
+
+
+def test_g2b_root_cannot_expand_reference_descent_budget() -> None:
+    for requested_class, allowed in _B3_NARROWING:
+        fixture = _b3_fixture(
+            requested_descent_class=requested_class,
+            approved_descent_class=allowed[0],
+        )
+        request = fixture["request"]
+        for approved_class in _B3_DESCENT_CLASSES:
+            candidate = _reidentify(
+                replace(request, approved_descent_class=approved_class)
+            )
+            valid, reasons = resolution.validate_memory_descent_request_v01(
+                candidate
+            )
+            if approved_class in allowed:
+                assert valid, (requested_class, approved_class, reasons)
+            else:
+                assert not valid, (requested_class, approved_class)
+                assert "drs_memory_descent_budget_expansion" in reasons
+
+    fixture = _b3_fixture(approved_descent_class="OPEN_FULL_TRACE")
+    proposed = fixture["proposed_budget"]
+    request = fixture["request"]
+    budget_fields = (
+        "max_depth",
+        "max_records_opened",
+        "max_pointers_opened",
+        "max_artifacts_opened",
+        "max_bytes_opened",
+        "max_lineage_edges",
+        "max_conflict_records",
+    )
+    for field_name in budget_fields:
+        expanded_budget = _reidentify(
+            replace(
+                request.approved_budget,
+                **{field_name: getattr(proposed, field_name) + 1},
+            )
+        )
+        expanded_request = _reidentify(
+            replace(request, approved_budget=expanded_budget)
+        )
+        _b3_assert_error(
+            "drs_memory_descent_budget_expansion",
+            fixture,
+            descent_request=expanded_request,
+        )
+    reordered = _reidentify(
+        replace(
+            request,
+            approved_record_ids=tuple(reversed(request.approved_record_ids)),
+        )
+    )
+    _b3_assert_error(
+        "drs_memory_descent_budget_expansion",
+        fixture,
+        descent_request=reordered,
+    )
+    unknown = _reidentify(
+        replace(
+            request,
+            approved_record_ids=request.approved_record_ids
+            + ("drsmeaning_v01:" + "f" * 64,),
+        )
+    )
+    _b3_assert_error(
+        "drs_memory_descent_budget_expansion",
+        fixture,
+        descent_request=unknown,
+    )
+
+
+def test_g2b_pointer_open_accounting_is_exact() -> None:
+    expected = {
+        "SUMMARY_ONLY": (2, 1, 0, 0),
+        "OPEN_ONE_ARTIFACT": (1, 1, 1, 0),
+        "OPEN_LINEAGE_NEIGHBORHOOD": (3, 2, 0, 1),
+        "OPEN_CONFLICT_SET": (2, 1, 0, 0),
+        "OPEN_DEADEND_PROOF": (2, 1, 0, 0),
+        "OPEN_FULL_TRACE": (4, 5, 1, 1),
+    }
+    results = {}
+    for descent_class, counts in expected.items():
+        fixture = _b3_fixture(
+            requested_descent_class=descent_class,
+            approved_descent_class=descent_class,
+        )
+        result = _b3_execute(fixture)
+        results[descent_class] = result
+        assert (
+            result.records_opened,
+            result.pointers_opened,
+            result.artifacts_opened,
+            result.lineage_edges_traversed,
+        ) == counts
+        assert result.records_opened == len(result.opened_record_ids)
+        assert result.pointers_opened == (
+            len(result.opened_memory_pointer_ids)
+            + len(result.opened_artifact_pointer_ids)
+        )
+        assert result.artifacts_opened == len(
+            result.opened_artifact_pointer_ids
+        )
+        assert result.lineage_edges_traversed == len(
+            result.traversed_lineage_edge_ids
+        )
+        assert result.conflict_records_opened == len(
+            result.opened_conflict_record_ids
+        )
+    full = results["OPEN_FULL_TRACE"]
+    fixture = _b3_fixture(approved_descent_class="OPEN_FULL_TRACE")
+    assert full.bytes_opened == len(fixture["payload"])
+    assert full.opened_payload_fingerprints == (
+        hashlib.sha256(fixture["payload"]).hexdigest(),
+    )
+    assert fixture["payload"] not in full.__dict__.values()
+
+    for field_name, value in (
+            ("records_opened", full.records_opened - 1),
+            ("pointers_opened", full.pointers_opened - 1),
+            ("artifacts_opened", 0),
+            ("lineage_edges_traversed", 0),
+        ("conflict_records_opened", 0),
+        ("limits_respected", False),
+        ("real_world_effects_count", 1),
+    ):
+        forgery = _reidentify(replace(full, **{field_name: value}))
+        assert resolution.validate_memory_descent_result_v01(forgery)[0] is False
+
+    intrinsic_forgeries = (
+        (
+            "summary_count",
+            _reidentify(
+                replace(
+                    full,
+                    safe_summaries=full.safe_summaries[:-1],
+                )
+            ),
+        ),
+        (
+            "fingerprint_count",
+            _reidentify(
+                replace(full, opened_payload_fingerprints=())
+            ),
+        ),
+        (
+            "conflict_order",
+            _reidentify(
+                replace(
+                    full,
+                    opened_conflict_record_ids=(
+                        fixture[
+                            "records_by_name"
+                        ]["conflict"].meaning_record_id,
+                        fixture[
+                            "records_by_name"
+                        ]["neighbor"].meaning_record_id,
+                    ),
+                    conflict_records_opened=2,
+                )
+            ),
+        ),
+    )
+    intrinsic_results = tuple(
+        (
+            label,
+            resolution.validate_memory_descent_result_v01(forgery),
+        )
+        for label, forgery in intrinsic_forgeries
+    )
+    assert all(
+        valid is False
+        and "drs_memory_descent_accounting_invalid" in reasons
+        for _, (valid, reasons) in intrinsic_results
+    ), "; ".join(
+        f"{label}={outcome!r}"
+        for label, outcome in intrinsic_results
+    )
+
+
+def test_g2b_summary_only_opens_no_payload() -> None:
+    fixture = _b3_fixture(
+        requested_descent_class="OPEN_FULL_TRACE",
+        approved_descent_class="SUMMARY_ONLY",
+    )
+    result = _b3_execute(fixture)
+    assert result.executed_descent_class == "SUMMARY_ONLY"
+    assert result.opened_artifact_pointer_ids == ()
+    assert result.opened_payload_fingerprints == ()
+    assert result.artifacts_opened == 0
+    assert result.bytes_opened == 0
+    _b3_assert_error(
+        "drs_summary_only_payload_forbidden",
+        fixture,
+        artifact_payloads=(
+            (
+                fixture["artifact_pointer"].pointer_id,
+                fixture["payload"],
+            ),
+        ),
+    )
+    forged = _reidentify(
+        replace(
+            result,
+            opened_artifact_pointer_ids=(
+                fixture["artifact_pointer"].pointer_id,
+            ),
+            opened_payload_fingerprints=(
+                hashlib.sha256(fixture["payload"]).hexdigest(),
+            ),
+            pointers_opened=result.pointers_opened + 1,
+            artifacts_opened=1,
+            bytes_opened=len(fixture["payload"]),
+        )
+    )
+    valid, reasons = resolution.validate_memory_descent_result_v01(forged)
+    assert valid is False
+    assert "drs_summary_only_payload_forbidden" in reasons
+
+
+def test_g2b_open_one_artifact_obeys_depth_and_count_one() -> None:
+    fixture = _b3_fixture(approved_descent_class="OPEN_ONE_ARTIFACT")
+    result = _b3_execute(fixture)
+    assert result.executed_descent_class == "OPEN_ONE_ARTIFACT"
+    assert result.opened_record_ids == (
+        fixture["records_by_name"]["anchor"].meaning_record_id,
+    )
+    assert result.opened_memory_pointer_ids == ()
+    assert result.opened_artifact_pointer_ids == (
+        fixture["artifact_pointer"].pointer_id,
+    )
+    assert result.pointers_opened == 1
+    assert result.artifacts_opened == 1
+    assert result.depth_reached == 1
+    assert result.bytes_opened == len(fixture["payload"])
+    assert result.opened_payload_fingerprints == (
+        hashlib.sha256(fixture["payload"]).hexdigest(),
+    )
+
+    extra_pointer = next(iter(fixture["memory_pointers"].values()))
+    expanded_request = _reidentify(
+        replace(
+            fixture["request"],
+            approved_memory_pointer_ids=(extra_pointer.pointer_id,),
+        )
+    )
+    _b3_assert_error(
+        "drs_open_one_artifact_limit_exceeded",
+        fixture,
+        descent_request=expanded_request,
+    )
+    missing_payload = dict(_b3_execution_kwargs(fixture))
+    missing_payload["artifact_payloads"] = ()
+    with pytest.raises(
+        ValueError,
+        match=r"^drs_open_one_artifact_limit_exceeded$",
+    ):
+        resolution.execute_local_memory_descent_v01(**missing_payload)
+    forged_depth = _reidentify(replace(result, depth_reached=2))
+    valid, reasons = resolution.validate_memory_descent_result_v01(
+        forged_depth
+    )
+    assert valid is False
+    assert "drs_open_one_artifact_limit_exceeded" in reasons

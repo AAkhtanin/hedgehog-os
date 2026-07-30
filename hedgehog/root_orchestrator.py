@@ -9,6 +9,7 @@ from hedgehog.architect import make_plan_graph
 from hedgehog.avf import build_attractor_packet
 from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
 from hedgehog.drs import LocalDRS
+from hedgehog.drs_memory_resolution_v01 import DRSResolutionReportV01
 from hedgehog.executor import execute_plan_graph
 from hedgehog.final_renderer import render_final_draft
 from hedgehog.fractal_dag_executor import run_fractal_dag_executor
@@ -22,6 +23,19 @@ from hedgehog.mode_router import route_execution
 from hedgehog.post_vv import validate_result_proposals
 from hedgehog.reflex import detect_reflex_action, execute_reflex_action
 from hedgehog.reuse_gate import evaluate_reuse_candidates
+from hedgehog.reuse_certificate_v01 import (
+    RootShortcutAuthorizationProjectionV01,
+    validate_existing_root_shortcut_decision_v01,
+    validate_root_shortcut_authorization_projection_v01,
+)
+from hedgehog.kernel.root_decision_v01 import (
+    RootDecisionInputV01,
+    RootDecisionKernelV01,
+    RootDecisionResultV01,
+    validate_root_decision_input_v01,
+    validate_root_decision_kernel_v01,
+    validate_root_decision_result_v01,
+)
 from hedgehog.time_model import make_temporal_query, make_time_envelope
 from hedgehog.up import create_up_after_task_record
 
@@ -37,6 +51,14 @@ SENSITIVE_DRS_TERMS = {
     "card_number",
     "cvv",
 }
+_G2B_ACTION_SHORTCUT_REASONS = (
+    "drs_payment_shortcut_forbidden",
+    "drs_shipment_shortcut_forbidden",
+    "drs_ticket_shortcut_forbidden",
+    "drs_action_packet_shortcut_forbidden",
+    "drs_receipt_creation_shortcut_forbidden",
+    "drs_action_intent_shortcut_forbidden",
+)
 
 
 def _sensitive_terms_absent(*values: Any) -> bool:
@@ -45,9 +67,71 @@ def _sensitive_terms_absent(*values: Any) -> bool:
 
 
 class RootOrchestrator:
-    def __init__(self, drs: LocalDRS, needles_dir: Path):
+    def __init__(
+        self,
+        drs: LocalDRS,
+        needles_dir: Path,
+        *,
+        _g2b_root_decision_evidence: tuple[
+            tuple[
+                RootDecisionKernelV01,
+                RootDecisionInputV01,
+                RootDecisionResultV01,
+            ],
+            ...,
+        ] = (),
+    ) -> None:
+        if type(_g2b_root_decision_evidence) is not tuple:
+            raise ValueError("drs_root_decision_binding_invalid") from None
+        identities: list[tuple[str, str, str]] = []
+        for row in _g2b_root_decision_evidence:
+            if (
+                type(row) is not tuple
+                or len(row) != 3
+                or type(row[0]) is not RootDecisionKernelV01
+                or type(row[1]) is not RootDecisionInputV01
+                or type(row[2]) is not RootDecisionResultV01
+            ):
+                raise ValueError(
+                    "drs_root_decision_binding_invalid"
+                ) from None
+            try:
+                if validate_root_decision_kernel_v01(row[0]) != ():
+                    raise ValueError
+                if (
+                    validate_root_decision_input_v01(
+                        kernel=row[0],
+                        decision_input=row[1],
+                    )
+                    != ()
+                ):
+                    raise ValueError
+                if (
+                    validate_root_decision_result_v01(
+                        kernel=row[0],
+                        decision_input=row[1],
+                        result=row[2],
+                    )
+                    != ()
+                ):
+                    raise ValueError
+                identity = (
+                    row[0].kernel_id,
+                    row[1].decision_input_id,
+                    row[2].decision_id,
+                )
+                if any(type(value) is not str for value in identity):
+                    raise ValueError
+                if identity in identities:
+                    raise ValueError
+            except Exception:
+                raise ValueError(
+                    "drs_root_decision_binding_invalid"
+                ) from None
+            identities.append(identity)
         self.drs = drs
         self.needles_dir = Path(needles_dir)
+        self._g2b_root_decision_evidence = _g2b_root_decision_evidence
         self.last_trace: dict = {}
 
     def process_event(
@@ -65,6 +149,8 @@ class RootOrchestrator:
         architect_model: str | None = None,
         architect_allow_config: bool = True,
         use_fractal_dag_executor: bool = False,
+        g2b_resolution_report: DRSResolutionReportV01 | None = None,
+        g2b_use_time: int | None = None,
     ) -> dict:
         canonical_goal = "Prepare a mock government certificate request plan."
         desired_state = "Mock government certificate request is prepared for human review."
@@ -86,7 +172,7 @@ class RootOrchestrator:
         reuse_decision = reuse_gate["reuse_decision"]
         reuse_applied = False
         reused_record_ids = []
-        mode_router = route_execution(
+        legacy_mode_router = route_execution(
             raw_user_text=raw_user_text,
             retrieved_records=retrieved_records,
             reuse_gate=reuse_gate,
@@ -94,13 +180,15 @@ class RootOrchestrator:
             force_full_pipeline=force_full_pipeline,
             allow_reflex=allow_reflex,
         )
+        mode_router = legacy_mode_router
+        g2b_shortcut_reason: str | None = None
 
         reflex_action = detect_reflex_action(raw_user_text)
         if (
             not force_full_pipeline
             and allow_reflex
             and reflex_action is not None
-            and mode_router["execution_mode"] in {
+            and legacy_mode_router["execution_mode"] in {
                 "deterministic_reflex_candidate",
                 "proof_full_pipeline",
             }
@@ -113,11 +201,143 @@ class RootOrchestrator:
                 memory_source_record_ids=memory_source_record_ids,
                 reuse_gate=reuse_gate,
                 mode_router=mode_router,
+                legacy_mode_router=legacy_mode_router,
                 action=reflex_action,
                 user_confirmed=user_confirmed,
             )
 
-        if input_intake["intent_kind"] == "general_request":
+        if allow_direct_reuse and not force_full_pipeline:
+            action_reason = self._classify_g2b_shortcut_request(
+                raw_user_text
+            )
+            if action_reason is not None:
+                g2b_shortcut_reason = action_reason
+            elif (
+                type(g2b_resolution_report) is DRSResolutionReportV01
+                and g2b_use_time is not None
+            ):
+                projection = (
+                    g2b_resolution_report.root_shortcut_projection
+                )
+                if (
+                    type(projection)
+                    is not RootShortcutAuthorizationProjectionV01
+                ):
+                    g2b_shortcut_reason = (
+                        "drs_root_projection_invalid"
+                    )
+                else:
+                    projection_valid, projection_reasons = (
+                        validate_root_shortcut_authorization_projection_v01(
+                            projection
+                        )
+                    )
+                    if not projection_valid or projection_reasons:
+                        g2b_shortcut_reason = (
+                            "drs_root_projection_invalid"
+                        )
+                    else:
+                        matches = tuple(
+                            row
+                            for row in self._g2b_root_decision_evidence
+                            if (
+                                row[0].kernel_id
+                                == projection.root_kernel_id
+                                and row[1].decision_input_id
+                                == projection.root_decision_input_id
+                                and row[2].decision_id
+                                == projection.root_decision_id
+                            )
+                        )
+                        if len(matches) == 1:
+                            valid, reasons = (
+                                validate_existing_root_shortcut_decision_v01(
+                                    resolution_report=(
+                                        g2b_resolution_report
+                                    ),
+                                    root_kernel=matches[0][0],
+                                    root_decision_input=matches[0][1],
+                                    root_decision_result=matches[0][2],
+                                    use_time=g2b_use_time,
+                                )
+                            )
+                            if valid and not reasons:
+                                canonical_mode_router = {
+                                    "execution_mode": "direct_reuse",
+                                    "direct_reuse_allowed": True,
+                                    "reason": (
+                                        "g2b_root_projection_and_"
+                                        "certificate_validated"
+                                    ),
+                                    "intent_complexity": (
+                                        legacy_mode_router[
+                                            "intent_complexity"
+                                        ]
+                                    ),
+                                }
+                                return (
+                                    self
+                                    ._process_g2b_informational_shortcut(
+                                        request_id=request_id,
+                                        session_anchor=session_anchor,
+                                        temporal_query=temporal_query,
+                                        input_intake=input_intake,
+                                        retrieved_records=(
+                                            retrieved_records
+                                        ),
+                                        memory_source_record_ids=(
+                                            memory_source_record_ids
+                                        ),
+                                        reuse_gate=reuse_gate,
+                                        legacy_mode_router=(
+                                            legacy_mode_router
+                                        ),
+                                        mode_router=(
+                                            canonical_mode_router
+                                        ),
+                                        report=g2b_resolution_report,
+                                        use_time=g2b_use_time,
+                                    )
+                                )
+                            g2b_shortcut_reason = (
+                                reasons[0]
+                                if reasons
+                                else (
+                                    "drs_root_shortcut_evidence_"
+                                    "missing"
+                                )
+                            )
+                        else:
+                            g2b_shortcut_reason = (
+                                "drs_root_decision_binding_invalid"
+                            )
+            else:
+                g2b_shortcut_reason = (
+                    "drs_root_shortcut_evidence_missing"
+                )
+
+        if legacy_mode_router["execution_mode"] == "direct_reuse":
+            mode_router = {
+                "execution_mode": (
+                    "context_only"
+                    if retrieved_records
+                    else "proof_full_pipeline"
+                ),
+                "direct_reuse_allowed": False,
+                "reason": "drs_root_shortcut_evidence_missing",
+                "intent_complexity": legacy_mode_router[
+                    "intent_complexity"
+                ],
+            }
+
+        if (
+            input_intake["intent_kind"] == "general_request"
+            and not (
+                g2b_resolution_report is not None
+                and g2b_shortcut_reason
+                in _G2B_ACTION_SHORTCUT_REASONS
+            )
+        ):
             return self._process_general_request(
                 request_id=request_id,
                 session_anchor=session_anchor,
@@ -127,21 +347,11 @@ class RootOrchestrator:
                 memory_source_record_ids=memory_source_record_ids,
                 reuse_gate=reuse_gate,
                 mode_router=mode_router,
+                legacy_mode_router=legacy_mode_router,
+                g2b_shortcut_reason=g2b_shortcut_reason,
                 raw_user_text=raw_user_text,
                 llm_provider=llm_provider,
                 llm_model=llm_model,
-            )
-
-        if mode_router["execution_mode"] == "direct_reuse":
-            return self._process_direct_reuse(
-                request_id=request_id,
-                session_anchor=session_anchor,
-                canonical_goal=canonical_goal,
-                temporal_query=temporal_query,
-                retrieved_records=retrieved_records,
-                memory_source_record_ids=memory_source_record_ids,
-                reuse_gate=reuse_gate,
-                mode_router=mode_router,
             )
 
         candidate_vectors = load_candidate_vectors_from_needles(
@@ -362,9 +572,14 @@ class RootOrchestrator:
             "memory_source_record_ids": memory_source_record_ids,
             "reuse_gate": reuse_gate,
             "mode_router": mode_router,
+            "legacy_mode_router": legacy_mode_router,
+            "g2b_shortcut_reason": g2b_shortcut_reason,
             "reuse_decision": reuse_decision,
             "reuse_applied": reuse_applied,
             "reused_record_ids": reused_record_ids,
+            "direct_reuse_applied": False,
+            "architect_skipped": False,
+            "executor_skipped": False,
             "attractor_packet": attractor_packet,
             "llm_architect_result": llm_architect_result,
             "plan_graph": plan_graph,
@@ -394,6 +609,8 @@ class RootOrchestrator:
         memory_source_record_ids: list[str],
         reuse_gate: dict,
         mode_router: dict,
+        legacy_mode_router: dict,
+        g2b_shortcut_reason: str | None,
         raw_user_text: str,
         llm_provider: str,
         llm_model: str | None,
@@ -449,6 +666,8 @@ class RootOrchestrator:
             "memory_source_record_ids": memory_source_record_ids,
             "reuse_gate": reuse_gate,
             "mode_router": mode_router,
+            "legacy_mode_router": legacy_mode_router,
+            "g2b_shortcut_reason": g2b_shortcut_reason,
             "execution_mode": "llm_general",
             "route": "llm_general",
             "reuse_decision": "none" if not memory_source_record_ids else reuse_gate["reuse_decision"],
@@ -482,6 +701,7 @@ class RootOrchestrator:
         memory_source_record_ids: list[str],
         reuse_gate: dict,
         mode_router: dict,
+        legacy_mode_router: dict,
         action: dict,
         user_confirmed: bool,
     ) -> dict:
@@ -543,6 +763,7 @@ class RootOrchestrator:
             "memory_source_record_ids": memory_source_record_ids,
             "reuse_gate": reuse_gate,
             "mode_router": mode_router,
+            "legacy_mode_router": legacy_mode_router,
             "execution_mode": "deterministic_reflex",
             "reuse_decision": reuse_gate["reuse_decision"],
             "reuse_applied": False,
@@ -566,6 +787,243 @@ class RootOrchestrator:
             "final_output": final_output,
         }
         return final_output
+
+    def _process_g2b_informational_shortcut(
+        self,
+        *,
+        request_id: str,
+        session_anchor: str,
+        temporal_query: dict,
+        input_intake: dict,
+        retrieved_records: list[dict],
+        memory_source_record_ids: list[str],
+        reuse_gate: dict,
+        legacy_mode_router: dict,
+        mode_router: dict,
+        report: DRSResolutionReportV01,
+        use_time: int,
+    ) -> dict:
+        candidate = next(
+            item
+            for item in report.eligible_candidates
+            if item.resolution_candidate_id
+            == report.selected_candidate_id
+        )
+        selected_record = next(
+            item
+            for item in report.source_records
+            if item.meaning_record_id == candidate.meaning_record_id
+        )
+        projection = report.root_shortcut_projection
+        certificate = report.reuse_certificate
+        assert projection is not None
+        assert certificate is not None
+        work_record = {
+            "record_id": f"work:{request_id}",
+            "layer": "work",
+            "type": "task_outcome",
+            "domain": "government_certificate",
+            "content": {
+                "summary": selected_record.safe_summary,
+                "result": "direct_reuse",
+                "final_status": "success",
+                "execution_mode": "direct_reuse",
+                "route": "direct_reuse",
+                "reuse_decision": "direct_reuse",
+                "reuse_applied": True,
+                "direct_reuse_applied": True,
+                "architect_skipped": True,
+                "executor_skipped": True,
+                "g2b_report_id": report.report_id,
+                "g2b_root_shortcut_projection_id": (
+                    projection.root_shortcut_projection_id
+                ),
+                "g2b_reuse_certificate_id": (
+                    certificate.certificate_id
+                ),
+                "g2b_selected_candidate_id": (
+                    candidate.resolution_candidate_id
+                ),
+                "g2b_selected_meaning_record_id": (
+                    selected_record.meaning_record_id
+                ),
+                "g2b_use_time": use_time,
+                "g2b_root_decision_id": projection.root_decision_id,
+                "provider_calls": 0,
+                "network_calls": 0,
+                "gemini_calls": 0,
+                "connector_calls": 0,
+                "real_world_effects_count": 0,
+            },
+            "time_envelope": make_time_envelope(session_anchor),
+            "provenance": {
+                "request_id": request_id,
+                "created_by": "root_orchestrator",
+                "trace_refs": [
+                    {
+                        "trace_id": f"trace:{request_id}",
+                        "span_id": "g2b_informational_shortcut",
+                        "kind": "root_orchestrator",
+                    }
+                ],
+            },
+            "gt": {
+                "gt_report_id": projection.root_decision_id,
+                "half_life_hours": 1.0,
+                "decay_rate": 0.0,
+            },
+            "status": "accepted",
+        }
+        self.drs.write_record(work_record)
+        final_output = {
+            "final_output_id": f"final:{request_id}",
+            "request_id": request_id,
+            "created_by": "root_orchestrator",
+            "status": "success",
+            "answer": selected_record.safe_summary,
+            "used_proposals": [],
+            "gt_report_ref": projection.root_decision_id,
+            "drs_writes": [work_record["record_id"]],
+            "time_envelope": make_time_envelope(session_anchor),
+            "summary": selected_record.safe_summary,
+            "trace_refs": [
+                {
+                    "trace_id": f"trace:{request_id}",
+                    "span_id": "root_g2b_informational_final",
+                    "kind": "root_orchestrator",
+                }
+            ],
+        }
+        self.last_trace = {
+            "temporal_query": temporal_query,
+            "input_intake": input_intake,
+            "retrieved_record_count": len(retrieved_records),
+            "memory_context_applied": bool(memory_source_record_ids),
+            "memory_source_record_ids": memory_source_record_ids,
+            "reuse_gate": reuse_gate,
+            "legacy_mode_router": legacy_mode_router,
+            "mode_router": mode_router,
+            "execution_mode": "direct_reuse",
+            "route": "direct_reuse",
+            "reuse_decision": "direct_reuse",
+            "reuse_applied": True,
+            "direct_reuse_applied": True,
+            "reused_record_ids": [],
+            "architect_skipped": True,
+            "executor_skipped": True,
+            "root_created_final_output": True,
+            "root_final_authority_preserved": True,
+            "g2b_report_id": report.report_id,
+            "g2b_root_shortcut_projection_id": (
+                projection.root_shortcut_projection_id
+            ),
+            "g2b_reuse_certificate_id": certificate.certificate_id,
+            "g2b_use_time": use_time,
+            "g2b_root_decision_id": projection.root_decision_id,
+            "g2b_selected_candidate_id": (
+                candidate.resolution_candidate_id
+            ),
+            "g2b_selected_meaning_record_id": (
+                selected_record.meaning_record_id
+            ),
+            "g2b_shortcut_validation": "PASS",
+            "provider_calls": 0,
+            "network_calls": 0,
+            "gemini_calls": 0,
+            "connector_calls": 0,
+            "real_world_effects_count": 0,
+            "attractor_packet": None,
+            "plan_graph": None,
+            "result_proposals": [],
+            "vv_reports": [],
+            "gt_report": {
+                "gt_report_id": projection.root_decision_id,
+                "decision": "accept",
+            },
+            "drs_records": [work_record],
+            "marenna_hook_records": [],
+            "up_hook_records": [],
+            "marenna_records": [],
+            "up_records": [],
+            "final_draft_proposal": None,
+            "final_output": final_output,
+        }
+        return final_output
+
+    @staticmethod
+    def _classify_g2b_shortcut_request(
+        raw_user_text: str,
+    ) -> str | None:
+        if type(raw_user_text) is not str:
+            return "drs_action_intent_shortcut_forbidden"
+        normalized = " ".join(
+            "".join(
+                character.lower()
+                if character.isalnum()
+                else " "
+                for character in raw_user_text
+            ).split()
+        )
+        phrases = (
+            (
+                (
+                    "pay supplier",
+                    "send payment",
+                    "transfer funds",
+                    "authorize payment",
+                    "execute payment",
+                    "make bank transfer",
+                ),
+                "drs_payment_shortcut_forbidden",
+            ),
+            (
+                (
+                    "release shipment",
+                    "dispatch shipment",
+                    "ship order",
+                ),
+                "drs_shipment_shortcut_forbidden",
+            ),
+            (
+                (
+                    "buy ticket",
+                    "purchase ticket",
+                    "book ticket",
+                    "issue ticket",
+                    "reserve seat",
+                ),
+                "drs_ticket_shortcut_forbidden",
+            ),
+            (
+                (
+                    "create actioncommitpacket",
+                    "issue actioncommitpacket",
+                    "generate action packet",
+                    "authorize action packet",
+                ),
+                "drs_action_packet_shortcut_forbidden",
+            ),
+            (
+                (
+                    "create receipt",
+                    "issue receipt",
+                    "generate receipt",
+                ),
+                "drs_receipt_creation_shortcut_forbidden",
+            ),
+            (
+                (
+                    "execute maintenance",
+                    "order replacement part",
+                    "perform external action",
+                ),
+                "drs_action_intent_shortcut_forbidden",
+            ),
+        )
+        for candidates, reason in phrases:
+            if any(phrase in normalized for phrase in candidates):
+                return reason
+        return None
 
     def _process_direct_reuse(
         self,

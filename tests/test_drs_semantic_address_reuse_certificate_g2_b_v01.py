@@ -6369,6 +6369,12 @@ def test_g2b_root_remains_final_authority() -> None:
         resolution.validate_drs_temporal_query_v01(pickled_query)
         == (True, ())
     )
+    b4_fixture = _b4_fixture()
+    assert _b4_validate(b4_fixture) == (True, ())
+    assert b4_fixture["projection"].creates_authority is False
+    assert b4_fixture["certificate"].creates_authority is False
+    assert b4_fixture["certificate"].creates_permission is False
+    assert b4_fixture["certificate"].creates_final_output is False
 
 
 _B3_DESCENT_CLASSES = (
@@ -7723,3 +7729,1282 @@ def test_g2b_open_one_artifact_obeys_depth_and_count_one() -> None:
     )
     assert valid is False
     assert "drs_open_one_artifact_limit_exceeded" in reasons
+
+
+_B4_ROOT_RESULT_BINDING_DOMAIN = (
+    "hedgehog:drs:root_shortcut_root_result_binding:v01"
+)
+_B4_ROOT_CLAIM_PREDICATE = (
+    "authorize_non_action_informational_answer_shortcut_v01"
+)
+_B4_POLICY_REF = "policy:drs_answer_shortcut:v0.1"
+_B4_IDENTITY_VECTORS = {
+    "root_kernel_id": (
+        "6cbe784404adaf78863830a3dd1cb67d1baaa1c3d46296c633018c715c522235"
+    ),
+    "root_input_id": (
+        "430997a4dfe7bbebafb71d43630fdff3b1bcc14ca5fb5c6459f23a0d07ecde4f"
+    ),
+    "root_result_id": (
+        "15298756dba7b09d6934c1592cd8b4f3835f2f35fd66112f70988069354b3ccf"
+    ),
+    "root_result_binding_hash": (
+        "a7fa40eaa6feab89abcd032f579b075a5a32cfbf05de4713558b0cde17aa3cd7"
+    ),
+    "selected_candidate_id": (
+        "drscandidate_v01:"
+        "0c233cfa0bffa0b6c30641dbf0ebaab479e20f5ba7383d5dfc67e4dcf58e5e7a"
+    ),
+    "projection_id": (
+        "drsrootshortcut_v01:"
+        "f76532bf93271230b99daefa18750d6c48ccd50ba3b222f670859c81e98ce3fb"
+    ),
+    "certificate_id": (
+        "reusecert_v01:"
+        "8e5d38ed4e690409177a3791278b771d55c436c0c8c0bd54e460f95f4d73975f"
+    ),
+    "report_id": (
+        "drsreport_v01:"
+        "247a3f57bc4dcdd726b6d5bced7a6c7bba9394c8bff96fe141a7976ec2e997c8"
+    ),
+    "use_time": 200,
+}
+
+
+def _b4_claim_preimage(
+    *,
+    fixture: dict[str, object],
+    valid_from: int = 200,
+    valid_to: int = 300,
+    issued_at: int = 200,
+) -> dict[str, object]:
+    query = fixture["query"]
+    candidate = fixture["ranked"][0]
+    evaluation = next(
+        item
+        for item in fixture["evaluations"]
+        if item.query_evaluation_id == candidate.query_evaluation_id
+    )
+    return {
+        "profile_version": "v0.1",
+        "semantic_address_id": query.semantic_address_id,
+        "meaning_record_id": candidate.meaning_record_id,
+        "query_id": query.query_id,
+        "query_evaluation_id": evaluation.query_evaluation_id,
+        "resolution_candidate_id": candidate.resolution_candidate_id,
+        "reuse_class": "ANSWER_SHORTCUT",
+        "case_type": "NON_ACTION_INFORMATIONAL",
+        "scope_fingerprint": query.scope_fingerprint,
+        "policy_version": query.policy_version,
+        "schema_versions": list(query.schema_versions),
+        "required_evidence_classes": list(
+            query.required_evidence_classes
+        ),
+        "observed_evidence_fingerprint": (
+            evaluation.observed_evidence_fingerprint
+        ),
+        "forbidden_changes": list(query.forbidden_changes),
+        "checked_dependency_fingerprint": (
+            evaluation.checked_dependency_fingerprint
+        ),
+        "source_history_hash": evaluation.source_history_hash,
+        "action_history_binding_id": None,
+        "valid_from": valid_from,
+        "valid_to": valid_to,
+        "issued_at": issued_at,
+        "evaluated_at": evaluation.evaluated_at,
+        "root_shortcut_policy_ref": _B4_POLICY_REF,
+    }
+
+
+def _b4_root_states(candidate_id: str) -> dict[str, dict[str, object]]:
+    return {
+        "post_vv_bundle": {
+            "bundle_id": "post-vv:g2b4",
+            "post_vv_passed": True,
+            "validated_candidate_ids": [candidate_id],
+            "rejected_candidate_ids": [],
+            "required_evidence_refs": [],
+            "provided_evidence_refs": [],
+            "hard_failure_reasons": [],
+        },
+        "gt_advisory": {
+            "advisory_id": "gt:g2b4",
+            "candidate_ids": [candidate_id],
+            "selected_candidate_id": candidate_id,
+            "score_micros_by_candidate": {candidate_id: 500_000},
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "target_artifact_type": "RootDecision",
+            "advisory_only": True,
+            "creates_final_output": False,
+            "requests_effect": False,
+        },
+        "policy_state": {
+            "policy_id": "policy:g2b4",
+            "identity_passed": True,
+            "scope_passed": True,
+            "hard_policy_passed": True,
+            "allow_accept": True,
+            "conflict_policy": "DEFER",
+            "no_candidate_policy": "NO_UPDATE",
+        },
+        "permission_state": {
+            "permission_required": False,
+            "user_permission_present": False,
+            "permission_scope_valid": True,
+            "permission_ref": None,
+        },
+        "temporal_state": {
+            "temporal_valid": True,
+            "expired": False,
+            "not_before_satisfied": True,
+            "time_envelope_ref": "time-envelope:g2b4",
+        },
+        "conflict_state": {
+            "material_unresolved_conflict": False,
+            "conflict_set_ids": [],
+        },
+        "prior_root_state": {
+            "prior_decision_id": None,
+            "prior_decision": None,
+            "prior_selected_candidate_id": None,
+        },
+    }
+
+
+def _b4_fixture() -> dict[str, object]:
+    fixture = _b2_positive_fixture()
+    query = fixture["query"]
+    address = fixture["address"]
+    candidate = fixture["ranked"][0]
+    evaluation = next(
+        item
+        for item in fixture["evaluations"]
+        if item.query_evaluation_id == candidate.query_evaluation_id
+    )
+    record = next(
+        item
+        for item in fixture["records"]
+        if item.meaning_record_id == candidate.meaning_record_id
+    )
+    claim_preimage = _b4_claim_preimage(fixture=fixture)
+    request = semantic_work.build_semantic_work_request_v01(
+        request_id="semantic-work-request:g2b4",
+        transaction_id=query.query_id,
+        target_root_id="root:local_reference",
+        runtime_topology_ref="topology:g2b4",
+        bounded_context_refs=("context:g2b4",),
+        permitted_actor_ids=("actor:g2b4",),
+        permitted_contribution_modes=("DETERMINISTIC",),
+        requested_subjects=(address.semantic_address_id,),
+        required_evidence_classes=("ROOT_SHORTCUT_BINDING",),
+        forbidden_claims=("create_permission",),
+    )
+    evidence = semantic_work.build_evidence_binding_v01(
+        evidence_id="evidence-binding:g2b4:shortcut",
+        evidence_ref="evidence:g2b4:shortcut",
+        evidence_class="ROOT_SHORTCUT_BINDING",
+        source_component_id="actor:g2b4",
+        provenance_ref="provenance:g2b4",
+        evidence_state=semantic_work.EVIDENCE_STATE_PRESENT,
+    )
+    claim = semantic_work.build_normalized_claim_v01(
+        claim_id=candidate.resolution_candidate_id,
+        subject=address.semantic_address_id,
+        predicate=_B4_ROOT_CLAIM_PREDICATE,
+        object_or_value=claim_preimage,
+        time_envelope_ref="time-envelope:g2b4",
+        provenance_refs=("provenance:g2b4",),
+        evidence_refs=("evidence-binding:g2b4:shortcut",),
+        confidence_micros=1_000_000,
+        source_role="deterministic_runtime",
+        source_mode="DETERMINISTIC",
+    )
+    contribution = semantic_work.build_actor_contribution_v01(
+        contribution_id="contribution:g2b4",
+        request_id=request.request_id,
+        actor_id="actor:g2b4",
+        actor_role="deterministic_runtime",
+        contribution_mode="DETERMINISTIC",
+        bsep_projection_ref="bsep:g2b4",
+        scope=address.semantic_address_id,
+        bounded_context_refs=("context:g2b4",),
+        claims=(claim,),
+        evidence_bindings=(evidence,),
+        constraint_bindings=(),
+        uncertainty_bindings=(),
+        requested_validators=(),
+        forbidden_claims_observed=(),
+    )
+    packet = semantic_work.build_root_review_packet_from_contributions_v01(
+        request=request,
+        contributions=(contribution,),
+        trust_profiles=build_default_component_trust_profiles_v01(),
+    )
+    kernel = root_decision.build_root_decision_kernel_v01()
+    decision_input = root_decision.build_root_decision_input_v01(
+        transaction_id=query.query_id,
+        target_root_id="root:local_reference",
+        root_review_packet=packet,
+        **_b4_root_states(candidate.resolution_candidate_id),
+    )
+    decision_result = root_decision.decide_root_v01(
+        kernel=kernel,
+        decision_input=decision_input,
+    )
+    result_hash = domain_separated_sha256_hex_v01(
+        domain=_B4_ROOT_RESULT_BINDING_DOMAIN,
+        payload=canonical_json_bytes_v01(
+            root_decision.root_decision_result_to_plain_dict_v01(
+                decision_result
+            )
+        ),
+    )
+    projection = reuse.build_root_shortcut_authorization_projection_v01(
+        owning_local_root_id="root:local_reference",
+        root_kernel_id=kernel.kernel_id,
+        root_decision_input_id=decision_input.decision_input_id,
+        root_decision_id=decision_result.decision_id,
+        root_decision_hash=result_hash,
+        selected_candidate_id=candidate.resolution_candidate_id,
+        semantic_address_id=address.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_id=query.query_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        allowed_reuse_class="ANSWER_SHORTCUT",
+        scope_fingerprint=query.scope_fingerprint,
+        policy_version=query.policy_version,
+        schema_versions=query.schema_versions,
+        valid_from=200,
+        valid_to=300,
+        root_shortcut_policy_ref=_B4_POLICY_REF,
+    )
+    certificate = reuse.build_reuse_certificate_v01(
+        semantic_address_id=address.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_id=query.query_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        resolution_candidate_id=candidate.resolution_candidate_id,
+        root_shortcut_authorization_projection=projection,
+        case_type="NON_ACTION_INFORMATIONAL",
+        required_evidence_classes=query.required_evidence_classes,
+        observed_evidence_fingerprint=(
+            evaluation.observed_evidence_fingerprint
+        ),
+        forbidden_changes=query.forbidden_changes,
+        checked_dependency_fingerprint=(
+            evaluation.checked_dependency_fingerprint
+        ),
+        valid_from=200,
+        valid_to=300,
+        reuse_class="ANSWER_SHORTCUT",
+        source_history_hash=evaluation.source_history_hash,
+        action_history_binding_id=None,
+        issued_at=200,
+        evaluated_at=evaluation.evaluated_at,
+    )
+    report = _reidentify(
+        replace(
+            fixture["report"],
+            root_shortcut_projection=projection,
+            reuse_certificate=certificate,
+        )
+    )
+    assert resolution.validate_drs_resolution_report_v01(report) == (
+        True,
+        (),
+    )
+    return {
+        **fixture,
+        "selected_candidate": candidate,
+        "selected_evaluation": evaluation,
+        "selected_record": record,
+        "claim_preimage": claim_preimage,
+        "root_kernel": kernel,
+        "root_input": decision_input,
+        "root_result": decision_result,
+        "root_result_binding_hash": result_hash,
+        "projection": projection,
+        "certificate": certificate,
+        "report": report,
+        "use_time": 200,
+    }
+
+
+class _B4ExplodingEqualityError(Exception):
+    pass
+
+
+class _B4ExplodingEquality:
+    def __eq__(self, other: object) -> bool:
+        raise _B4ExplodingEqualityError("unvalidated equality executed")
+
+
+def _b4_alternate_root_triple(
+    fixture: dict[str, object],
+    *,
+    transaction_id: str | None = None,
+    target_root_id: str = "root:local_reference",
+    selected_candidate_id: str | None = None,
+    claim_specs: tuple[dict[str, object], ...] | None = None,
+) -> tuple[
+    root_decision.RootDecisionKernelV01,
+    root_decision.RootDecisionInputV01,
+    root_decision.RootDecisionResultV01,
+]:
+    query = fixture["query"]
+    address = fixture["address"]
+    candidate_id = (
+        fixture["selected_candidate"].resolution_candidate_id
+        if selected_candidate_id is None
+        else selected_candidate_id
+    )
+    root_transaction_id = (
+        query.query_id if transaction_id is None else transaction_id
+    )
+    if claim_specs is None:
+        claim_specs = ({},)
+    requested_subjects = tuple(
+        dict.fromkeys(
+            (
+                address.semantic_address_id,
+                *(
+                    str(
+                        spec.get(
+                            "subject",
+                            address.semantic_address_id,
+                        )
+                    )
+                    for spec in claim_specs
+                ),
+            )
+        )
+    )
+    request = semantic_work.build_semantic_work_request_v01(
+        request_id="semantic-work-request:g2b4:alternate",
+        transaction_id=root_transaction_id,
+        target_root_id=target_root_id,
+        runtime_topology_ref="topology:g2b4:alternate",
+        bounded_context_refs=("context:g2b4:alternate",),
+        permitted_actor_ids=("actor:g2b4:alternate",),
+        permitted_contribution_modes=("DETERMINISTIC",),
+        requested_subjects=requested_subjects,
+        required_evidence_classes=("ROOT_SHORTCUT_BINDING",),
+        forbidden_claims=("create_permission",),
+    )
+    evidence = semantic_work.build_evidence_binding_v01(
+        evidence_id="evidence-binding:g2b4:alternate",
+        evidence_ref="evidence:g2b4:alternate",
+        evidence_class="ROOT_SHORTCUT_BINDING",
+        source_component_id="actor:g2b4:alternate",
+        provenance_ref="provenance:g2b4:alternate",
+        evidence_state=semantic_work.EVIDENCE_STATE_PRESENT,
+    )
+    claims = tuple(
+        semantic_work.build_normalized_claim_v01(
+            claim_id=str(spec.get("claim_id", candidate_id)),
+            subject=str(
+                spec.get("subject", address.semantic_address_id)
+            ),
+            predicate=str(
+                spec.get("predicate", _B4_ROOT_CLAIM_PREDICATE)
+            ),
+            object_or_value=spec.get(
+                "object_or_value",
+                fixture["claim_preimage"],
+            ),
+            time_envelope_ref="time-envelope:g2b4:alternate",
+            provenance_refs=("provenance:g2b4:alternate",),
+            evidence_refs=("evidence-binding:g2b4:alternate",),
+            confidence_micros=1_000_000,
+            source_role="deterministic_runtime",
+            source_mode="DETERMINISTIC",
+        )
+        for spec in claim_specs
+    )
+    contribution = semantic_work.build_actor_contribution_v01(
+        contribution_id="contribution:g2b4:alternate",
+        request_id=request.request_id,
+        actor_id="actor:g2b4:alternate",
+        actor_role="deterministic_runtime",
+        contribution_mode="DETERMINISTIC",
+        bsep_projection_ref="bsep:g2b4:alternate",
+        scope=address.semantic_address_id,
+        bounded_context_refs=("context:g2b4:alternate",),
+        claims=claims,
+        evidence_bindings=(evidence,),
+        constraint_bindings=(),
+        uncertainty_bindings=(),
+        requested_validators=(),
+        forbidden_claims_observed=(),
+    )
+    packet = semantic_work.build_root_review_packet_from_contributions_v01(
+        request=request,
+        contributions=(contribution,),
+        trust_profiles=build_default_component_trust_profiles_v01(),
+    )
+    states = _b4_root_states(candidate_id)
+    root_candidate_ids = list(
+        dict.fromkeys(
+            (
+                candidate_id,
+                *(claim.claim_id for claim in claims),
+            )
+        )
+    )
+    states["post_vv_bundle"]["validated_candidate_ids"] = (
+        root_candidate_ids
+    )
+    states["gt_advisory"]["candidate_ids"] = root_candidate_ids
+    states["gt_advisory"]["score_micros_by_candidate"] = {
+        item: 500_000 for item in root_candidate_ids
+    }
+    kernel = root_decision.build_root_decision_kernel_v01()
+    decision_input = root_decision.build_root_decision_input_v01(
+        transaction_id=root_transaction_id,
+        target_root_id=target_root_id,
+        root_review_packet=packet,
+        **states,
+    )
+    result = root_decision.decide_root_v01(
+        kernel=kernel,
+        decision_input=decision_input,
+    )
+    assert root_decision.validate_root_decision_kernel_v01(kernel) == ()
+    assert root_decision.validate_root_decision_input_v01(
+        kernel=kernel,
+        decision_input=decision_input,
+    ) == ()
+    assert root_decision.validate_root_decision_result_v01(
+        kernel=kernel,
+        decision_input=decision_input,
+        result=result,
+    ) == ()
+    return kernel, decision_input, result
+
+
+def _b4_report_for_root_triple(
+    fixture: dict[str, object],
+    *,
+    root_kernel: root_decision.RootDecisionKernelV01,
+    root_input: root_decision.RootDecisionInputV01,
+    root_result: root_decision.RootDecisionResultV01,
+    owning_local_root_id: str = "root:local_reference",
+) -> resolution.DRSResolutionReportV01:
+    query = fixture["query"]
+    address = fixture["address"]
+    candidate = fixture["selected_candidate"]
+    evaluation = fixture["selected_evaluation"]
+    record = fixture["selected_record"]
+    result_hash = domain_separated_sha256_hex_v01(
+        domain=_B4_ROOT_RESULT_BINDING_DOMAIN,
+        payload=canonical_json_bytes_v01(
+            root_decision.root_decision_result_to_plain_dict_v01(
+                root_result
+            )
+        ),
+    )
+    projection = reuse.build_root_shortcut_authorization_projection_v01(
+        owning_local_root_id=owning_local_root_id,
+        root_kernel_id=root_kernel.kernel_id,
+        root_decision_input_id=root_input.decision_input_id,
+        root_decision_id=root_result.decision_id,
+        root_decision_hash=result_hash,
+        selected_candidate_id=candidate.resolution_candidate_id,
+        semantic_address_id=address.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_id=query.query_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        allowed_reuse_class="ANSWER_SHORTCUT",
+        scope_fingerprint=query.scope_fingerprint,
+        policy_version=query.policy_version,
+        schema_versions=query.schema_versions,
+        valid_from=fixture["projection"].valid_from,
+        valid_to=fixture["projection"].valid_to,
+        root_shortcut_policy_ref=_B4_POLICY_REF,
+    )
+    certificate = reuse.build_reuse_certificate_v01(
+        semantic_address_id=address.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_id=query.query_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        resolution_candidate_id=candidate.resolution_candidate_id,
+        root_shortcut_authorization_projection=projection,
+        case_type="NON_ACTION_INFORMATIONAL",
+        required_evidence_classes=query.required_evidence_classes,
+        observed_evidence_fingerprint=(
+            evaluation.observed_evidence_fingerprint
+        ),
+        forbidden_changes=query.forbidden_changes,
+        checked_dependency_fingerprint=(
+            evaluation.checked_dependency_fingerprint
+        ),
+        valid_from=projection.valid_from,
+        valid_to=projection.valid_to,
+        reuse_class="ANSWER_SHORTCUT",
+        source_history_hash=evaluation.source_history_hash,
+        action_history_binding_id=None,
+        issued_at=fixture["certificate"].issued_at,
+        evaluated_at=evaluation.evaluated_at,
+    )
+    report = _reidentify(
+        replace(
+            fixture["report"],
+            root_shortcut_projection=projection,
+            reuse_certificate=certificate,
+        )
+    )
+    assert resolution.validate_drs_resolution_report_v01(report) == (
+        True,
+        (),
+    )
+    return report
+
+
+_B4_UNSET = object()
+
+
+def _b4_validate(
+    fixture: dict[str, object],
+    *,
+    report: object | None = None,
+    root_kernel: object | None = None,
+    root_input: object | None = None,
+    root_result: object | None = None,
+    use_time: object = _B4_UNSET,
+) -> tuple[bool, tuple[str, ...]]:
+    return reuse.validate_existing_root_shortcut_decision_v01(
+        resolution_report=(
+            fixture["report"] if report is None else report
+        ),
+        root_kernel=(
+            fixture["root_kernel"] if root_kernel is None else root_kernel
+        ),
+        root_decision_input=(
+            fixture["root_input"] if root_input is None else root_input
+        ),
+        root_decision_result=(
+            fixture["root_result"] if root_result is None else root_result
+        ),
+        use_time=(
+            fixture["use_time"]
+            if use_time is _B4_UNSET
+            else use_time
+        ),
+    )
+
+
+def _b4_alternate_value(name: str, value: object) -> object:
+    if type(value) is bool:
+        return not value
+    if type(value) is int:
+        return value + 1
+    if type(value) is tuple:
+        return value + ("G2B4_MUTATION",)
+    if value is None:
+        return "drsg2ahistory_v01:" + "e" * 64
+    if type(value) is str:
+        for prefix in (
+            "drsaddr_v01:",
+            "drsmeaning_v01:",
+            "drsquery_v01:",
+            "drsqeval_v01:",
+            "drscandidate_v01:",
+            "drsrootshortcut_v01:",
+            "reusecert_v01:",
+        ):
+            if value.startswith(prefix):
+                return prefix + "e" * 64
+        if len(value) == 64 and all(
+            character in "0123456789abcdef" for character in value
+        ):
+            return "e" * 64
+        if name.endswith("_version"):
+            return "v9.9"
+        return value + ":mutation"
+    raise AssertionError(name)
+
+
+def test_g2b_root_decision_exact_cross_binding_is_required() -> None:
+    fixture = _b4_fixture()
+    assert _b4_validate(fixture) == (True, ())
+
+    class _RootKernelSubclass(root_decision.RootDecisionKernelV01):
+        pass
+
+    class _RootInputSubclass(root_decision.RootDecisionInputV01):
+        pass
+
+    class _RootResultSubclass(root_decision.RootDecisionResultV01):
+        pass
+
+    kernel_subclass = _RootKernelSubclass(
+        *(
+            getattr(fixture["root_kernel"], field.name)
+            for field in fields(fixture["root_kernel"])
+        )
+    )
+    input_subclass = _RootInputSubclass(
+        *(
+            getattr(fixture["root_input"], field.name)
+            for field in fields(fixture["root_input"])
+        )
+    )
+    result_subclass = _RootResultSubclass(
+        *(
+            getattr(fixture["root_result"], field.name)
+            for field in fields(fixture["root_result"])
+        )
+    )
+    kernel_cases = (
+        ("kernel_wrong_outer_type", object()),
+        ("kernel_subclass", kernel_subclass),
+        (
+            "kernel_malformed_identity_field",
+            replace(
+                fixture["root_kernel"],
+                kernel_id=_B4ExplodingEquality(),
+            ),
+        ),
+        (
+            "kernel_wrong_id",
+            replace(fixture["root_kernel"], kernel_id="e" * 64),
+        ),
+    )
+    for label, invalid_kernel in kernel_cases:
+        assert root_decision.validate_root_decision_kernel_v01(
+            invalid_kernel
+        )
+        valid, reasons = _b4_validate(
+            fixture,
+            root_kernel=invalid_kernel,
+        )
+        assert valid is False, label
+        assert reasons == ("drs_exact_type_or_identity_invalid",)
+
+    packet = fixture["root_input"].root_review_packet
+    proposal = packet.synthesis_proposal
+    authority_claim = replace(
+        proposal.normalized_claims[0],
+        authority_class="ROOT",
+    )
+    authority_proposal = replace(
+        proposal,
+        normalized_claims=(authority_claim,),
+    )
+    authority_packet = replace(
+        packet,
+        synthesis_proposal=authority_proposal,
+    )
+    missing_claim_proposal = replace(
+        proposal,
+        normalized_claims=(),
+    )
+    missing_claim_packet = replace(
+        packet,
+        synthesis_proposal=missing_claim_proposal,
+    )
+    input_cases = (
+        ("input_wrong_outer_type", object()),
+        ("input_subclass", input_subclass),
+        (
+            "input_malformed_identity_field",
+            replace(
+                fixture["root_input"],
+                decision_input_id=_B4ExplodingEquality(),
+            ),
+        ),
+        (
+            "input_wrong_id",
+            replace(
+                fixture["root_input"],
+                decision_input_id="e" * 64,
+            ),
+        ),
+        (
+            "input_claim_authority_not_none",
+            replace(
+                fixture["root_input"],
+                root_review_packet=authority_packet,
+            ),
+        ),
+        (
+            "input_claim_missing",
+            replace(
+                fixture["root_input"],
+                root_review_packet=missing_claim_packet,
+            ),
+        ),
+    )
+    for label, invalid_input in input_cases:
+        assert root_decision.validate_root_decision_input_v01(
+            kernel=fixture["root_kernel"],
+            decision_input=invalid_input,
+        )
+        valid, reasons = _b4_validate(
+            fixture,
+            root_input=invalid_input,
+        )
+        assert valid is False, label
+        assert reasons == ("drs_exact_type_or_identity_invalid",)
+
+    other_candidate_id = fixture["ranked"][1].resolution_candidate_id
+    result_cases = (
+        ("result_wrong_outer_type", object()),
+        ("result_subclass", result_subclass),
+        (
+            "result_malformed_identity_field",
+            replace(
+                fixture["root_result"],
+                decision_id=_B4ExplodingEquality(),
+            ),
+        ),
+        (
+            "result_wrong_id",
+            replace(fixture["root_result"], decision_id="e" * 64),
+        ),
+        (
+            "result_wrong_decision_input_binding",
+            replace(
+                fixture["root_result"],
+                decision_input_id="e" * 64,
+            ),
+        ),
+        (
+            "result_wrong_transaction",
+            replace(
+                fixture["root_result"],
+                transaction_id="drsquery_v01:" + "e" * 64,
+            ),
+        ),
+        (
+            "result_wrong_target_root",
+            replace(
+                fixture["root_result"],
+                target_root_id="root:foreign",
+            ),
+        ),
+        (
+            "result_non_accept",
+            replace(fixture["root_result"], decision="REJECT"),
+        ),
+        (
+            "result_wrong_accepted_reason",
+            replace(
+                fixture["root_result"],
+                reason_code="no_valid_candidate",
+            ),
+        ),
+        (
+            "result_wrong_selected_candidate",
+            replace(
+                fixture["root_result"],
+                selected_candidate_id=other_candidate_id,
+            ),
+        ),
+        (
+            "result_root_commit_false",
+            replace(
+                fixture["root_result"],
+                root_commit_created=False,
+            ),
+        ),
+        (
+            "result_permission_created",
+            replace(
+                fixture["root_result"],
+                permission_created=True,
+            ),
+        ),
+        (
+            "result_final_output_created",
+            replace(
+                fixture["root_result"],
+                final_output_created=True,
+            ),
+        ),
+        (
+            "result_effect_requested",
+            replace(
+                fixture["root_result"],
+                effect_requested=True,
+            ),
+        ),
+    )
+    for label, invalid_result in result_cases:
+        assert root_decision.validate_root_decision_result_v01(
+            kernel=fixture["root_kernel"],
+            decision_input=fixture["root_input"],
+            result=invalid_result,
+        )
+        valid, reasons = _b4_validate(
+            fixture,
+            root_result=invalid_result,
+        )
+        assert valid is False, label
+        assert reasons == ("drs_exact_type_or_identity_invalid",)
+
+    forged_projection = _reidentify(
+        replace(fixture["projection"], root_decision_hash=_SHA_E)
+    )
+    forged_certificate = _reidentify(
+        replace(
+            fixture["certificate"],
+            root_shortcut_authorization_projection_id=(
+                forged_projection.root_shortcut_projection_id
+            ),
+            root_decision_hash=_SHA_E,
+        )
+    )
+    forged_report = _reidentify(
+        replace(
+            fixture["report"],
+            root_shortcut_projection=forged_projection,
+            reuse_certificate=forged_certificate,
+        )
+    )
+    assert _b4_validate(fixture, report=forged_report) == (
+        False,
+        ("drs_root_decision_binding_invalid",),
+    )
+
+    second_claim_id = fixture["ranked"][1].resolution_candidate_id
+    changed_preimage = {
+        **fixture["claim_preimage"],
+        "observed_evidence_fingerprint": "e" * 64,
+    }
+    changed_policy_preimage = {
+        **fixture["claim_preimage"],
+        "root_shortcut_policy_ref": "policy:foreign",
+    }
+    claim_cases = (
+        (
+            "claim_second_present",
+            (
+                {},
+                {
+                    "claim_id": second_claim_id,
+                    "predicate": (
+                        _B4_ROOT_CLAIM_PREDICATE + ":second"
+                    ),
+                },
+            ),
+            None,
+        ),
+        (
+            "claim_wrong_id",
+            ({"claim_id": second_claim_id},),
+            second_claim_id,
+        ),
+        (
+            "claim_wrong_subject",
+            ({"subject": "drsaddr_v01:" + "e" * 64},),
+            None,
+        ),
+        (
+            "claim_wrong_predicate",
+            ({"predicate": "authorize_other_shortcut_v01"},),
+            None,
+        ),
+        (
+            "claim_changed_preimage",
+            ({"object_or_value": changed_preimage},),
+            None,
+        ),
+        (
+            "claim_wrong_policy_reference",
+            ({"object_or_value": changed_policy_preimage},),
+            None,
+        ),
+    )
+    for label, claim_specs, selected_candidate_id in claim_cases:
+        kernel, decision_input, result = _b4_alternate_root_triple(
+            fixture,
+            claim_specs=claim_specs,
+            selected_candidate_id=selected_candidate_id,
+        )
+        report = _b4_report_for_root_triple(
+            fixture,
+            root_kernel=kernel,
+            root_input=decision_input,
+            root_result=result,
+        )
+        valid, reasons = _b4_validate(
+            fixture,
+            report=report,
+            root_kernel=kernel,
+            root_input=decision_input,
+            root_result=result,
+        )
+        assert valid is False, label
+        assert reasons == ("drs_root_decision_binding_invalid",)
+
+
+def test_g2b_wrong_local_root_is_rejected() -> None:
+    fixture = _b4_fixture()
+    projection = _reidentify(
+        replace(fixture["projection"], owning_local_root_id="root:foreign")
+    )
+    certificate = _reidentify(
+        replace(
+            fixture["certificate"],
+            root_shortcut_authorization_projection_id=(
+                projection.root_shortcut_projection_id
+            ),
+            owning_local_root_id="root:foreign",
+        )
+    )
+    report = _reidentify(
+        replace(
+            fixture["report"],
+            root_shortcut_projection=projection,
+            reuse_certificate=certificate,
+        )
+    )
+    assert _b4_validate(fixture, report=report) == (
+        False,
+        ("drs_root_owner_mismatch",),
+    )
+    coherent_cases = (
+        (
+            "coherent_foreign_root",
+            {
+                "target_root_id": "root:foreign",
+            },
+            "root:foreign",
+        ),
+        (
+            "coherent_other_query",
+            {
+                "transaction_id": "drsquery_v01:" + "e" * 64,
+            },
+            "root:local_reference",
+        ),
+        (
+            "coherent_other_candidate",
+            {
+                "selected_candidate_id": (
+                    fixture["ranked"][1].resolution_candidate_id
+                ),
+            },
+            "root:local_reference",
+        ),
+    )
+    for label, triple_changes, projection_root_id in coherent_cases:
+        kernel, decision_input, result = _b4_alternate_root_triple(
+            fixture,
+            **triple_changes,
+        )
+        alternate_report = _b4_report_for_root_triple(
+            fixture,
+            root_kernel=kernel,
+            root_input=decision_input,
+            root_result=result,
+            owning_local_root_id=projection_root_id,
+        )
+        valid, reasons = _b4_validate(
+            fixture,
+            report=alternate_report,
+            root_kernel=kernel,
+            root_input=decision_input,
+            root_result=result,
+        )
+        assert valid is False, label
+        assert reasons
+
+
+def test_g2b_forged_root_shortcut_projection_is_rejected() -> None:
+    fixture = _b4_fixture()
+    projection_fields = tuple(
+        field.name for field in fields(reuse.RootShortcutAuthorizationProjectionV01)
+    )
+    assert len(projection_fields) == 26
+    for name in projection_fields:
+        changed = replace(
+            fixture["projection"],
+            **{
+                name: _b4_alternate_value(
+                    name,
+                    getattr(fixture["projection"], name),
+                )
+            },
+        )
+        projection = (
+            changed
+            if name == "root_shortcut_projection_id"
+            else _reidentify(changed)
+        )
+        report = _reidentify(
+            replace(fixture["report"], root_shortcut_projection=projection)
+        )
+        valid, reasons = _b4_validate(fixture, report=report)
+        assert valid is False, name
+        assert reasons
+
+    class _ProjectionSubclass(
+        reuse.RootShortcutAuthorizationProjectionV01
+    ):
+        pass
+
+    subclass = _ProjectionSubclass(
+        *(
+            getattr(fixture["projection"], field.name)
+            for field in fields(fixture["projection"])
+        )
+    )
+    report = replace(
+        fixture["report"],
+        root_shortcut_projection=subclass,
+    )
+    assert _b4_validate(fixture, report=report)[0] is False
+
+
+def test_g2b_reuse_certificate_identity_rebuild_is_exact() -> None:
+    fixture = _b4_fixture()
+    assert reuse.validate_reuse_certificate_v01(
+        fixture["certificate"]
+    ) == (True, ())
+    stale = replace(
+        fixture["certificate"],
+        observed_evidence_fingerprint=_SHA_E,
+    )
+    assert reuse.validate_reuse_certificate_v01(stale) == (
+        False,
+        ("reuse_certificate_identity_invalid",),
+    )
+    rebuilt = _reidentify(stale)
+    assert reuse.validate_reuse_certificate_v01(rebuilt) == (True, ())
+    report = _reidentify(
+        replace(fixture["report"], reuse_certificate=rebuilt)
+    )
+    assert _b4_validate(fixture, report=report) == (
+        False,
+        ("reuse_certificate_cross_profile_mismatch",),
+    )
+
+
+def test_g2b_reuse_certificate_cross_profile_coherence_is_exact() -> None:
+    fixture = _b4_fixture()
+    certificate_fields = tuple(
+        field.name for field in fields(reuse.ReuseCertificateV01)
+    )
+    assert len(certificate_fields) == 39
+    for name in certificate_fields:
+        changed = replace(
+            fixture["certificate"],
+            **{
+                name: _b4_alternate_value(
+                    name,
+                    getattr(fixture["certificate"], name),
+                )
+            },
+        )
+        certificate = (
+            changed if name == "certificate_id" else _reidentify(changed)
+        )
+        report = _reidentify(
+            replace(fixture["report"], reuse_certificate=certificate)
+        )
+        valid, reasons = _b4_validate(fixture, report=report)
+        assert valid is False, name
+        assert reasons
+
+
+def test_g2b_reuse_certificate_expires_at_exact_valid_to() -> None:
+    fixture = _b4_fixture()
+    class _B4IntSubclass(int):
+        pass
+
+    assert _b4_validate(fixture, use_time=200) == (True, ())
+    assert _b4_validate(fixture, use_time=299) == (True, ())
+    assert _b4_validate(fixture, use_time=300) == (
+        False,
+        ("reuse_certificate_expired",),
+    )
+    assert _b4_validate(fixture, use_time=199) == (
+        False,
+        ("reuse_certificate_expired",),
+    )
+    for invalid in (
+        True,
+        200.0,
+        Decimal("200"),
+        "200",
+        _B4IntSubclass(200),
+        None,
+    ):
+        assert _b4_validate(fixture, use_time=invalid) == (
+            False,
+            ("drs_exact_type_or_identity_invalid",),
+        )
+
+
+def _b4_request_reason(text: str) -> str | None:
+    from hedgehog.root_orchestrator import RootOrchestrator
+
+    return RootOrchestrator._classify_g2b_shortcut_request(text)
+
+
+def test_g2b_payment_request_cannot_take_answer_shortcut() -> None:
+    for text in (
+        "pay supplier",
+        "SEND PAYMENT!",
+        "transfer   funds",
+        "authorize payment",
+        "execute payment",
+        "make bank transfer",
+    ):
+        assert _b4_request_reason(text) == "drs_payment_shortcut_forbidden"
+    assert _b4_request_reason("explain the payment policy") is None
+
+
+def test_g2b_shipment_release_cannot_take_answer_shortcut() -> None:
+    for text in ("release shipment", "Dispatch shipment!", "ship order"):
+        assert _b4_request_reason(text) == "drs_shipment_shortcut_forbidden"
+    assert _b4_request_reason("show shipment policy") is None
+
+
+def test_g2b_ticket_issue_cannot_take_answer_shortcut() -> None:
+    for text in (
+        "buy ticket",
+        "purchase ticket",
+        "book ticket",
+        "issue ticket",
+        "reserve seat",
+    ):
+        assert _b4_request_reason(text) == "drs_ticket_shortcut_forbidden"
+    assert _b4_request_reason("summarize ticket rules") is None
+
+
+def test_g2b_action_commit_packet_creation_cannot_take_answer_shortcut() -> None:
+    for text in (
+        "create ActionCommitPacket",
+        "issue ActionCommitPacket",
+        "generate action packet",
+        "authorize action packet",
+    ):
+        assert _b4_request_reason(text) == (
+            "drs_action_packet_shortcut_forbidden"
+        )
+
+
+def test_g2b_receipt_creation_cannot_take_answer_shortcut() -> None:
+    for text in ("create receipt", "issue receipt", "generate receipt"):
+        assert _b4_request_reason(text) == (
+            "drs_receipt_creation_shortcut_forbidden"
+        )
+    assert _b4_request_reason("explain receipt requirements") is None
+    assert _b4_request_reason("execute maintenance") == (
+        "drs_action_intent_shortcut_forbidden"
+    )
+    assert _b4_request_reason("summarize maintenance intervals") is None
+    assert _b4_request_reason("explain passport requirements") is None
+
+
+def test_g2b_caller_boolean_cannot_authorize_shortcut() -> None:
+    from hedgehog.root_orchestrator import RootOrchestrator
+
+    signature = inspect.signature(RootOrchestrator.process_event)
+    assert tuple(signature.parameters)[-2:] == (
+        "g2b_resolution_report",
+        "g2b_use_time",
+    )
+    assert signature.parameters["allow_direct_reuse"].default is False
+    assert signature.parameters["g2b_resolution_report"].default is None
+    assert signature.parameters["g2b_use_time"].default is None
+
+
+def test_g2b_valid_informational_shortcut_skips_only_allowed_heavy_actors() -> None:
+    fixture = _b4_fixture()
+    assert _b4_validate(fixture) == (True, ())
+    assert {
+        "root_kernel_id": fixture["root_kernel"].kernel_id,
+        "root_input_id": fixture["root_input"].decision_input_id,
+        "root_result_id": fixture["root_result"].decision_id,
+        "root_result_binding_hash": fixture[
+            "root_result_binding_hash"
+        ],
+        "selected_candidate_id": fixture[
+            "selected_candidate"
+        ].resolution_candidate_id,
+        "projection_id": fixture[
+            "projection"
+        ].root_shortcut_projection_id,
+        "certificate_id": fixture["certificate"].certificate_id,
+        "report_id": fixture["report"].report_id,
+        "use_time": fixture["use_time"],
+    } == _B4_IDENTITY_VECTORS
+    assert fixture["selected_record"].semantic_address.intent_class in (
+        "informational_summary",
+        "informational_lookup",
+        "informational_explanation",
+        "context_lookup",
+        "warning_lookup",
+        "historical_inspection",
+        "trend_analysis",
+    )
+    assert _b4_request_reason("explain passport requirements") is None
+    report_mutations = (
+        {"root_shortcut_projection": None},
+        {"reuse_certificate": None},
+        {
+            "ranked_candidate_ids": tuple(
+                reversed(fixture["report"].ranked_candidate_ids)
+            )
+        },
+        {"selected_candidate_id": None},
+        {"source_records": fixture["report"].source_records[1:]},
+        {
+            "source_records": tuple(
+                reversed(fixture["report"].source_records)
+            )
+        },
+        {
+            "query_evaluations": (
+                fixture["report"].query_evaluations[1:]
+            )
+        },
+        {
+            "eligible_candidates": (
+                fixture["report"].eligible_candidates[1:]
+            )
+        },
+        {"final_status": "FAIL"},
+        {"reason_codes": ("drs_resolution_report_binding_invalid",)},
+        {"persistent_records_unchanged": False},
+        {"provider_calls": 1},
+        {"network_calls": 1},
+        {"gemini_calls": 1},
+        {"external_drs_calls": 1},
+        {"connector_calls": 1},
+        {"real_world_effects_count": 1},
+    )
+    for changes in report_mutations:
+        forged_report = _reidentify(
+            replace(fixture["report"], **changes)
+        )
+        valid, reasons = _b4_validate(
+            fixture,
+            report=forged_report,
+        )
+        assert valid is False, repr(changes)
+        assert reasons
+
+
+def test_g2b_drs_cannot_create_final_output() -> None:
+    fixture = _b4_fixture()
+    assert fixture["projection"].creates_final_output is False
+    assert fixture["selected_record"].creates_authority is False
+    assert fixture["selected_record"].creates_permission is False
+    assert not hasattr(resolution, "build_final_output_v01")
+
+
+def test_g2b_certificate_cannot_create_final_output() -> None:
+    fixture = _b4_fixture()
+    assert fixture["certificate"].creates_final_output is False
+    assert fixture["certificate"].creates_authority is False
+    assert fixture["certificate"].creates_permission is False
+    assert fixture["certificate"].real_world_effects_count == 0

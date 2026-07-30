@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import jsonschema
@@ -35,9 +36,16 @@ def final_output_validator():
     return jsonschema.Draft202012Validator(final_output_schema, resolver=resolver)
 
 
-def make_orchestrator(tmp_path):
+def make_orchestrator(tmp_path, *, g2b_root_evidence=()):
     drs = LocalDRS(tmp_path)
-    return RootOrchestrator(drs=drs, needles_dir=NEEDLES_DIR), drs
+    kwargs = {}
+    if g2b_root_evidence:
+        kwargs["_g2b_root_decision_evidence"] = g2b_root_evidence
+    return RootOrchestrator(
+        drs=drs,
+        needles_dir=NEEDLES_DIR,
+        **kwargs,
+    ), drs
 
 
 def run_demo(tmp_path, request_id="req_root_001"):
@@ -342,23 +350,206 @@ def test_root_orchestrator_direct_reuse_candidate_still_runs_full_pipeline(tmp_p
 
 
 def test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor(tmp_path):
+    from tests.test_drs_semantic_address_reuse_certificate_g2_b_v01 import (
+        _b4_fixture,
+    )
+
+    fixture = _b4_fixture()
+    root_evidence = (
+        (
+            fixture["root_kernel"],
+            fixture["root_input"],
+            fixture["root_result"],
+        ),
+    )
+    orchestrator, drs = make_orchestrator(
+        tmp_path,
+        g2b_root_evidence=root_evidence,
+    )
+
+    final_output = orchestrator.process_event(
+        raw_user_text="explain passport requirements",
+        request_id="req_direct_reuse_001",
+        session_anchor="sess_direct_reuse_001",
+        allow_direct_reuse=True,
+        force_full_pipeline=False,
+        g2b_resolution_report=fixture["report"],
+        g2b_use_time=fixture["use_time"],
+    )
+    work_record = drs.read_record("work", final_output["drs_writes"][0])
+
+    final_output_validator().validate(final_output)
+    assert orchestrator.last_trace["mode_router"]["execution_mode"] == "direct_reuse"
+    assert orchestrator.last_trace["mode_router"]["direct_reuse_allowed"] is True
+    assert orchestrator.last_trace["reuse_decision"] == "direct_reuse"
+    assert orchestrator.last_trace["reuse_applied"] is True
+    assert orchestrator.last_trace["direct_reuse_applied"] is True
+    assert orchestrator.last_trace["root_created_final_output"] is True
+    assert orchestrator.last_trace["architect_skipped"] is True
+    assert orchestrator.last_trace["executor_skipped"] is True
+    assert orchestrator.last_trace["plan_graph"] is None
+    assert orchestrator.last_trace["result_proposals"] == []
+    assert orchestrator.last_trace["vv_reports"] == []
+    assert final_output["created_by"] == "root_orchestrator"
+    assert final_output["status"] == "success"
+    assert final_output["used_proposals"] == []
+    assert final_output["answer"] == fixture["selected_record"].safe_summary
+    assert work_record["content"]["result"] == "direct_reuse"
+    assert work_record["content"]["final_status"] == final_output["status"]
+    assert work_record["content"]["execution_mode"] == "direct_reuse"
+    assert work_record["content"]["route"] == "direct_reuse"
+    assert work_record["content"]["reuse_applied"] is True
+    assert work_record["content"]["direct_reuse_applied"] is True
+    assert work_record["content"]["reuse_decision"] == "direct_reuse"
+    assert work_record["content"]["architect_skipped"] is True
+    assert work_record["content"]["executor_skipped"] is True
+
+
+def test_g2b_root_orchestrator_requires_certificate_and_root_projection_for_direct_reuse(
+    tmp_path,
+):
+    from tests.test_drs_semantic_address_reuse_certificate_g2_b_v01 import (
+        _B4ExplodingEquality,
+        _b4_fixture,
+        _reidentify,
+    )
+
+    fixture = _b4_fixture()
+    root_row = (
+        fixture["root_kernel"],
+        fixture["root_input"],
+        fixture["root_result"],
+    )
+    for invalid_catalog in (
+        [],
+        [root_row],
+        ((fixture["root_kernel"], fixture["root_input"]),),
+        (list(root_row),),
+        (root_row, root_row),
+    ):
+        try:
+            RootOrchestrator(
+                drs=LocalDRS(tmp_path / "invalid_catalog"),
+                needles_dir=NEEDLES_DIR,
+                _g2b_root_decision_evidence=invalid_catalog,
+            )
+        except ValueError as exc:
+            assert str(exc) == "drs_root_decision_binding_invalid"
+        else:
+            raise AssertionError("invalid Root evidence catalog accepted")
+
+    malformed_catalog_rows = (
+        (
+            "kernel_identity",
+            (
+                replace(
+                    fixture["root_kernel"],
+                    kernel_id=_B4ExplodingEquality(),
+                ),
+                fixture["root_input"],
+                fixture["root_result"],
+            ),
+        ),
+        (
+            "input_identity",
+            (
+                fixture["root_kernel"],
+                replace(
+                    fixture["root_input"],
+                    decision_input_id=_B4ExplodingEquality(),
+                ),
+                fixture["root_result"],
+            ),
+        ),
+        (
+            "result_identity",
+            (
+                fixture["root_kernel"],
+                fixture["root_input"],
+                replace(
+                    fixture["root_result"],
+                    decision_id=_B4ExplodingEquality(),
+                ),
+            ),
+        ),
+    )
+    for label, malformed_row in malformed_catalog_rows:
+        try:
+            RootOrchestrator(
+                drs=LocalDRS(tmp_path / f"catalog_{label}"),
+                needles_dir=NEEDLES_DIR,
+                _g2b_root_decision_evidence=(malformed_row,),
+            )
+        except ValueError as exc:
+            assert str(exc) == "drs_root_decision_binding_invalid"
+        else:
+            raise AssertionError(
+                f"malformed exact Root catalog row accepted: {label}"
+            )
+
+    for projection_field in (
+        "root_kernel_id",
+        "root_decision_input_id",
+        "root_decision_id",
+    ):
+        malformed_projection = replace(
+            fixture["projection"],
+            **{projection_field: _B4ExplodingEquality()},
+        )
+        malformed_report = replace(
+            fixture["report"],
+            root_shortcut_projection=malformed_projection,
+        )
+        case_orchestrator, _ = make_orchestrator(
+            tmp_path / f"projection_{projection_field}",
+            g2b_root_evidence=(root_row,),
+        )
+        output = case_orchestrator.process_event(
+            raw_user_text=(
+                "I need a certificate for a mock government service."
+            ),
+            request_id=f"req_g2b4_{projection_field}",
+            session_anchor=f"sess_g2b4_{projection_field}",
+            allow_direct_reuse=True,
+            force_full_pipeline=False,
+            g2b_resolution_report=malformed_report,
+            g2b_use_time=fixture["use_time"],
+        )
+        assert output["created_by"] == "root_orchestrator"
+        assert case_orchestrator.last_trace["reuse_applied"] is False
+        assert (
+            case_orchestrator.last_trace["direct_reuse_applied"] is False
+        )
+        assert (
+            case_orchestrator.last_trace["mode_router"][
+                "direct_reuse_allowed"
+            ]
+            is False
+        )
+        assert case_orchestrator.last_trace["architect_skipped"] is False
+        assert case_orchestrator.last_trace["executor_skipped"] is False
+        assert case_orchestrator.last_trace[
+            "g2b_shortcut_reason"
+        ] in (
+            "drs_root_projection_invalid",
+            "drs_root_shortcut_evidence_missing",
+        )
+
     orchestrator, drs = make_orchestrator(tmp_path)
     strong_record = {
-        "record_id": "work:direct_reuse_source",
+        "record_id": "work:g2b4_legacy_only",
         "layer": "work",
         "type": "task_outcome",
         "domain": "government_certificate",
-        "content": {
-            "summary": "Strong prior mock certificate outcome."
-        },
-        "time_envelope": make_time_envelope("sess_direct_reuse_source"),
+        "content": {"summary": "Legacy evidence only."},
+        "time_envelope": make_time_envelope("sess_g2b4_legacy_only"),
         "provenance": {
-            "request_id": "req_direct_reuse_source",
+            "request_id": "req_g2b4_legacy_only",
             "created_by": "root_orchestrator",
             "trace_refs": [],
         },
         "gt": {
-            "gt_report_id": "gt:direct:reuse:source",
+            "gt_report_id": "gt:g2b4:legacy_only",
             "half_life_hours": 2_000.0,
             "decay_rate": 0.0001,
         },
@@ -368,39 +559,180 @@ def test_root_orchestrator_direct_reuse_enabled_skips_architect_and_executor(tmp
 
     final_output = orchestrator.process_event(
         raw_user_text="I need a certificate for a mock government service.",
-        request_id="req_direct_reuse_001",
-        session_anchor="sess_direct_reuse_001",
+        request_id="req_g2b4_legacy_fenced",
+        session_anchor="sess_g2b4_legacy_fenced",
         allow_direct_reuse=True,
         force_full_pipeline=False,
     )
-    work_record = drs.read_record("work", final_output["drs_writes"][0])
 
-    final_output_validator().validate(final_output)
-    assert orchestrator.last_trace["mode_router"]["execution_mode"] == "direct_reuse"
-    assert orchestrator.last_trace["mode_router"]["direct_reuse_allowed"] is True
-    assert orchestrator.last_trace["reuse_decision"] == "direct_reuse"
-    assert orchestrator.last_trace["reuse_applied"] is True
-    assert orchestrator.last_trace["reused_record_ids"] == ["work:direct_reuse_source"]
-    assert orchestrator.last_trace["architect_skipped"] is True
-    assert orchestrator.last_trace["executor_skipped"] is True
-    assert orchestrator.last_trace["plan_graph"] is None
-    assert orchestrator.last_trace["result_proposals"] == []
-    assert orchestrator.last_trace["vv_reports"] == []
-    assert orchestrator.last_trace["final_draft_proposal"]["created_by"] == "final_renderer"
-    assert orchestrator.last_trace["final_draft_proposal"]["mode"] == "direct_reuse"
     assert final_output["created_by"] == "root_orchestrator"
-    assert final_output["status"] == "success"
-    assert final_output["used_proposals"] == []
-    assert work_record["content"]["result"] == "direct_reuse"
-    assert work_record["content"]["final_status"] == final_output["status"]
-    assert work_record["content"]["execution_mode"] == "direct_reuse"
-    assert work_record["content"]["route"] == "direct_reuse"
-    assert work_record["content"]["reused_record_ids"] == ["work:direct_reuse_source"]
-    assert work_record["content"]["reuse_applied"] is True
-    assert work_record["content"]["direct_reuse_applied"] is True
-    assert work_record["content"]["reuse_decision"] == "direct_reuse"
-    assert work_record["content"]["architect_skipped"] is True
-    assert work_record["content"]["executor_skipped"] is True
+    assert orchestrator.last_trace["legacy_mode_router"][
+        "execution_mode"
+    ] == "direct_reuse"
+    assert orchestrator.last_trace["mode_router"][
+        "direct_reuse_allowed"
+    ] is False
+    assert orchestrator.last_trace["mode_router"]["reason"] == (
+        "drs_root_shortcut_evidence_missing"
+    )
+    assert orchestrator.last_trace["reuse_applied"] is False
+    assert orchestrator.last_trace["direct_reuse_applied"] is False
+    assert orchestrator.last_trace["architect_skipped"] is False
+    assert orchestrator.last_trace["executor_skipped"] is False
+
+    projection_only = _reidentify(
+        replace(fixture["report"], reuse_certificate=None)
+    )
+    certificate_only = _reidentify(
+        replace(fixture["report"], root_shortcut_projection=None)
+    )
+    forged_projection = _reidentify(
+        replace(
+            fixture["projection"],
+            root_decision_hash="e" * 64,
+        )
+    )
+    forged_report = _reidentify(
+        replace(
+            fixture["report"],
+            root_shortcut_projection=forged_projection,
+        )
+    )
+    matrix = (
+        (
+            "allow_false",
+            fixture["report"],
+            fixture["use_time"],
+            (root_row,),
+            False,
+            False,
+            "I need a certificate for a mock government service.",
+        ),
+        (
+            "missing_report",
+            None,
+            fixture["use_time"],
+            (root_row,),
+            True,
+            False,
+            "I need a certificate for a mock government service.",
+        ),
+        (
+            "missing_use_time",
+            fixture["report"],
+            None,
+            (root_row,),
+            True,
+            False,
+            "I need a certificate for a mock government service.",
+        ),
+        (
+            "projection_only",
+            projection_only,
+            fixture["use_time"],
+            (root_row,),
+            True,
+            False,
+            "I need a certificate for a mock government service.",
+        ),
+        (
+            "certificate_only",
+            certificate_only,
+            fixture["use_time"],
+            (root_row,),
+            True,
+            False,
+            "I need a certificate for a mock government service.",
+        ),
+        (
+            "no_root_match",
+            fixture["report"],
+            fixture["use_time"],
+            (),
+            True,
+            False,
+            "I need a certificate for a mock government service.",
+        ),
+        (
+            "expired",
+            fixture["report"],
+            fixture["certificate"].valid_to,
+            (root_row,),
+            True,
+            False,
+            "I need a certificate for a mock government service.",
+        ),
+        (
+            "forged_projection",
+            forged_report,
+            fixture["use_time"],
+            (root_row,),
+            True,
+            False,
+            "I need a certificate for a mock government service.",
+        ),
+        (
+            "action_request",
+            fixture["report"],
+            fixture["use_time"],
+            (root_row,),
+            True,
+            False,
+            "pay supplier",
+        ),
+        (
+            "force_full",
+            fixture["report"],
+            fixture["use_time"],
+            (root_row,),
+            True,
+            True,
+            "I need a certificate for a mock government service.",
+        ),
+    )
+    for (
+        label,
+        report,
+        use_time,
+        catalog,
+        allow_direct_reuse,
+        force_full_pipeline,
+        request_text,
+    ) in matrix:
+        case_orchestrator, _ = make_orchestrator(
+            tmp_path / label,
+            g2b_root_evidence=catalog,
+        )
+        output = case_orchestrator.process_event(
+            raw_user_text=request_text,
+            request_id=f"req_g2b4_{label}",
+            session_anchor=f"sess_g2b4_{label}",
+            allow_direct_reuse=allow_direct_reuse,
+            force_full_pipeline=force_full_pipeline,
+            g2b_resolution_report=report,
+            g2b_use_time=use_time,
+        )
+        assert output["created_by"] == "root_orchestrator", label
+        assert case_orchestrator.last_trace["reuse_applied"] is False, label
+        assert (
+            case_orchestrator.last_trace["direct_reuse_applied"] is False
+        ), label
+        assert (
+            case_orchestrator.last_trace["mode_router"][
+                "direct_reuse_allowed"
+            ]
+            is False
+        ), label
+        if label == "action_request":
+            assert (
+                case_orchestrator.last_trace["architect_skipped"] is False
+            )
+            assert (
+                case_orchestrator.last_trace["executor_skipped"] is False
+            )
+            assert case_orchestrator.last_trace[
+                "g2b_shortcut_reason"
+            ] == "drs_payment_shortcut_forbidden"
 
 
 def test_root_orchestrator_context_only_does_not_shortcut_with_direct_reuse_enabled(tmp_path):

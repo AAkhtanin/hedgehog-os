@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass as _dataclass
 from dataclasses import replace as _replace
+from typing import TYPE_CHECKING as _TYPE_CHECKING
 
 from hedgehog.drs_semantic_address_v01 import (
     DRS_G2B_PROFILE_VERSION_V01 as _PROFILE_VERSION,
@@ -20,6 +21,14 @@ from hedgehog.drs_semantic_address_v01 import (
     _plain_data_value,
     _token_tuple_reasons,
 )
+
+if _TYPE_CHECKING:
+    from hedgehog.drs_memory_resolution_v01 import DRSResolutionReportV01
+    from hedgehog.kernel.root_decision_v01 import (
+        RootDecisionInputV01,
+        RootDecisionKernelV01,
+        RootDecisionResultV01,
+    )
 
 
 _ENABLED_REUSE_CLASSES = (
@@ -50,6 +59,22 @@ _EVALUATION_TIME_SOURCES = (
     "RECORDED_HISTORICAL_AS_OF_TIME",
     "RECORDED_AUDIT_REPLAY_TIME",
     "INJECTED_ANALYSIS_TIME",
+)
+_B4_ROOT_RESULT_BINDING_DOMAIN_V01 = (
+    "hedgehog:drs:root_shortcut_root_result_binding:v01"
+)
+_B4_ROOT_SHORTCUT_PREDICATE_V01 = (
+    "authorize_non_action_informational_answer_shortcut_v01"
+)
+_B4_ROOT_SHORTCUT_POLICY_REF_V01 = "policy:drs_answer_shortcut:v0.1"
+_B4_INFORMATIONAL_INTENT_CLASSES_V01 = (
+    "informational_summary",
+    "informational_lookup",
+    "informational_explanation",
+    "context_lookup",
+    "warning_lookup",
+    "historical_inspection",
+    "trend_analysis",
 )
 
 _ROOT_SHORTCUT_FIELDS = (
@@ -738,6 +763,477 @@ def reuse_certificate_to_plain_data_v01(value: object) -> dict[str, object]:
     }
 
 
+def _b4_root_claim_preimage_v01(
+    *,
+    report: object,
+    candidate: object,
+    evaluation: object,
+    certificate: ReuseCertificateV01,
+) -> dict[str, object]:
+    query = report.query
+    return {
+        "profile_version": _PROFILE_VERSION,
+        "semantic_address_id": report.semantic_address.semantic_address_id,
+        "meaning_record_id": candidate.meaning_record_id,
+        "query_id": query.query_id,
+        "query_evaluation_id": evaluation.query_evaluation_id,
+        "resolution_candidate_id": candidate.resolution_candidate_id,
+        "reuse_class": "ANSWER_SHORTCUT",
+        "case_type": "NON_ACTION_INFORMATIONAL",
+        "scope_fingerprint": query.scope_fingerprint,
+        "policy_version": query.policy_version,
+        "schema_versions": list(query.schema_versions),
+        "required_evidence_classes": list(
+            query.required_evidence_classes
+        ),
+        "observed_evidence_fingerprint": (
+            evaluation.observed_evidence_fingerprint
+        ),
+        "forbidden_changes": list(query.forbidden_changes),
+        "checked_dependency_fingerprint": (
+            evaluation.checked_dependency_fingerprint
+        ),
+        "source_history_hash": evaluation.source_history_hash,
+        "action_history_binding_id": None,
+        "valid_from": certificate.valid_from,
+        "valid_to": certificate.valid_to,
+        "issued_at": certificate.issued_at,
+        "evaluated_at": evaluation.evaluated_at,
+        "root_shortcut_policy_ref": (
+            _B4_ROOT_SHORTCUT_POLICY_REF_V01
+        ),
+    }
+
+
+def validate_existing_root_shortcut_decision_v01(
+    *,
+    resolution_report: DRSResolutionReportV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+    use_time: int,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        from hedgehog.drs_memory_resolution_v01 import (
+            DRSResolutionReportV01 as _DRSResolutionReportV01,
+            QueryEvaluationStateV01 as _QueryEvaluationStateV01,
+            ResolutionCandidateV01 as _ResolutionCandidateV01,
+            validate_drs_resolution_report_v01 as _validate_report,
+        )
+        from hedgehog.drs_semantic_address_v01 import (
+            MeaningRecordV01 as _MeaningRecordV01,
+            validate_meaning_record_v01 as _validate_record,
+        )
+        from hedgehog.kernel.root_decision_v01 import (
+            ROOT_DECISION_ACCEPT as _ROOT_DECISION_ACCEPT,
+            RootDecisionInputV01 as _RootDecisionInputV01,
+            RootDecisionKernelV01 as _RootDecisionKernelV01,
+            RootDecisionResultV01 as _RootDecisionResultV01,
+            root_decision_input_to_plain_dict_v01 as _root_input_plain,
+            root_decision_result_to_plain_dict_v01 as _root_result_plain,
+            validate_root_decision_input_v01 as _validate_root_input,
+            validate_root_decision_kernel_v01 as _validate_root_kernel,
+            validate_root_decision_result_v01 as _validate_root_result,
+        )
+
+        if (
+            type(resolution_report) is not _DRSResolutionReportV01
+            or type(root_kernel) is not _RootDecisionKernelV01
+            or type(root_decision_input) is not _RootDecisionInputV01
+            or type(root_decision_result) is not _RootDecisionResultV01
+            or type(use_time) is not int
+            or not _is_int64(use_time)
+        ):
+            return False, ("drs_exact_type_or_identity_invalid",)
+
+        report_valid, report_reasons = _validate_report(
+            resolution_report
+        )
+        if not report_valid or report_reasons:
+            return False, ("drs_exact_type_or_identity_invalid",)
+        report = resolution_report
+        projection = report.root_shortcut_projection
+        certificate = report.reuse_certificate
+        if type(projection) is not RootShortcutAuthorizationProjectionV01:
+            return False, ("drs_root_projection_invalid",)
+        projection_valid, projection_reasons = (
+            validate_root_shortcut_authorization_projection_v01(projection)
+        )
+        if not projection_valid or projection_reasons:
+            return False, ("drs_root_projection_invalid",)
+        if type(certificate) is not ReuseCertificateV01:
+            return False, ("reuse_certificate_identity_invalid",)
+        certificate_valid, certificate_reasons = (
+            validate_reuse_certificate_v01(certificate)
+        )
+        if not certificate_valid:
+            if "reuse_certificate_identity_invalid" in certificate_reasons:
+                return False, ("reuse_certificate_identity_invalid",)
+            return False, ("reuse_certificate_cross_profile_mismatch",)
+
+        if (
+            report.final_status != "PASS"
+            or report.reason_codes
+            or report.persistent_records_unchanged is not True
+            or any(
+                value != 0 or type(value) is not int
+                for value in (
+                    report.provider_calls,
+                    report.network_calls,
+                    report.gemini_calls,
+                    report.external_drs_calls,
+                    report.connector_calls,
+                    report.real_world_effects_count,
+                )
+            )
+            or report.selected_candidate_id is None
+            or not report.ranked_candidate_ids
+            or report.selected_candidate_id
+            != report.ranked_candidate_ids[0]
+        ):
+            return False, ("reuse_certificate_cross_profile_mismatch",)
+
+        if (
+            len(report.source_records) != len(report.query_evaluations)
+            or tuple(
+                record.meaning_record_id
+                for record in report.source_records
+            )
+            != tuple(
+                evaluation.meaning_record_id
+                for evaluation in report.query_evaluations
+            )
+            or tuple(
+                record.meaning_record_id
+                for record in report.source_records
+            )
+            != report.retrieval_plan.proposed_record_ids
+            or tuple(
+                candidate.resolution_candidate_id
+                for candidate in sorted(
+                    report.eligible_candidates,
+                    key=lambda item: (
+                        -item.total_score_units,
+                        item.resolution_candidate_id,
+                    ),
+                )
+            )
+            != report.ranked_candidate_ids
+        ):
+            return False, ("reuse_certificate_cross_profile_mismatch",)
+        evaluation_by_id = {
+            item.query_evaluation_id: item
+            for item in report.query_evaluations
+        }
+        candidate_counts: dict[str, int] = {}
+        for item in report.eligible_candidates:
+            candidate_counts[item.query_evaluation_id] = (
+                candidate_counts.get(item.query_evaluation_id, 0) + 1
+            )
+        if any(
+            candidate_counts.get(item.query_evaluation_id, 0)
+            != (1 if item.eligible_for_ranking else 0)
+            for item in report.query_evaluations
+        ) or any(
+            item.query_evaluation_id not in evaluation_by_id
+            or not evaluation_by_id[
+                item.query_evaluation_id
+            ].eligible_for_ranking
+            for item in report.eligible_candidates
+        ):
+            return False, ("reuse_certificate_cross_profile_mismatch",)
+
+        candidates = tuple(
+            item
+            for item in report.eligible_candidates
+            if (
+                type(item) is _ResolutionCandidateV01
+                and item.resolution_candidate_id
+                == report.selected_candidate_id
+            )
+        )
+        if len(candidates) != 1:
+            return False, ("reuse_certificate_cross_profile_mismatch",)
+        candidate = candidates[0]
+        evaluations = tuple(
+            item
+            for item in report.query_evaluations
+            if (
+                type(item) is _QueryEvaluationStateV01
+                and item.query_evaluation_id
+                == candidate.query_evaluation_id
+            )
+        )
+        if len(evaluations) != 1:
+            return False, ("reuse_certificate_cross_profile_mismatch",)
+        evaluation = evaluations[0]
+        records = tuple(
+            item
+            for item in report.source_records
+            if (
+                type(item) is _MeaningRecordV01
+                and item.meaning_record_id == candidate.meaning_record_id
+            )
+        )
+        if len(records) != 1:
+            return False, ("reuse_certificate_cross_profile_mismatch",)
+        record = records[0]
+        record_valid, record_reasons = _validate_record(record)
+        if not record_valid or record_reasons:
+            return False, ("drs_exact_type_or_identity_invalid",)
+
+        query = report.query
+        address_id = report.semantic_address.semantic_address_id
+        if (
+            candidate.query_id != query.query_id
+            or candidate.semantic_address_id != address_id
+            or candidate.query_evaluation_id
+            != evaluation.query_evaluation_id
+            or candidate.meaning_record_id != record.meaning_record_id
+            or candidate.source_history_hash
+            != evaluation.source_history_hash
+            or candidate.action_history_binding_id
+            != evaluation.action_history_binding_id
+            or candidate.freshness_units
+            != evaluation.current_freshness_units
+            or evaluation.query_state != "FRESH_CANDIDATE"
+            or evaluation.eligible_for_ranking is not True
+            or evaluation.reason_codes
+            or evaluation.query_id != query.query_id
+            or evaluation.semantic_address_id != address_id
+            or evaluation.meaning_record_id != record.meaning_record_id
+            or evaluation.evaluated_at != query.evaluation_time
+            or evaluation.evaluation_time_source
+            != query.evaluation_time_source
+        ):
+            return False, ("reuse_certificate_cross_profile_mismatch",)
+
+        authority = record.authority_envelope
+        if (
+            record.semantic_address != report.semantic_address
+            or record.semantic_address.intent_class
+            not in _B4_INFORMATIONAL_INTENT_CLASSES_V01
+            or authority.authority_class
+            not in ("ROOT_ACCEPTED_CONTEXT", "ROOT_ACCEPTED_WORK")
+            or authority.root_acceptance_state
+            not in ("ACCEPTED_CONTEXT", "ACCEPTED_WORK")
+            or authority.action_permission_present is not False
+            or authority.creates_permission is not False
+            or record.creates_authority is not False
+            or record.creates_permission is not False
+            or record.persistent_lifecycle_state != "ACTIVE"
+            or record.conflict_hints
+        ):
+            return False, ("drs_action_intent_shortcut_forbidden",)
+
+        if (
+            evaluation.action_history_binding_id is not None
+            or candidate.action_history_binding_id is not None
+            or certificate.action_history_binding_id is not None
+        ):
+            return False, ("drs_action_history_shortcut_forbidden",)
+
+        if (
+            projection.owning_local_root_id
+            != query.owning_local_root_id
+            or projection.owning_local_root_id
+            != authority.owning_local_root_id
+        ):
+            return False, ("drs_root_owner_mismatch",)
+        if (
+            projection.selected_candidate_id
+            != candidate.resolution_candidate_id
+            or projection.semantic_address_id != address_id
+            or projection.meaning_record_id != record.meaning_record_id
+            or projection.query_id != query.query_id
+            or projection.query_evaluation_id
+            != evaluation.query_evaluation_id
+            or projection.allowed_reuse_class != "ANSWER_SHORTCUT"
+            or projection.scope_fingerprint != query.scope_fingerprint
+            or projection.policy_version != query.policy_version
+            or projection.policy_version != record.policy_version
+            or projection.schema_versions != query.schema_versions
+            or projection.schema_versions != record.schema_versions
+            or projection.root_shortcut_policy_ref
+            != _B4_ROOT_SHORTCUT_POLICY_REF_V01
+            or projection.carries_validated_authority_evidence is not True
+            or any(
+                value is not False
+                for value in (
+                    projection.creates_authority,
+                    projection.creates_permission,
+                    projection.creates_action_commit_packet,
+                    projection.creates_receipt,
+                    projection.creates_effect,
+                    projection.creates_final_output,
+                )
+            )
+        ):
+            return False, ("drs_root_projection_invalid",)
+
+        if (
+            certificate.root_shortcut_authorization_projection_id
+            != projection.root_shortcut_projection_id
+            or certificate.semantic_address_id != address_id
+            or certificate.meaning_record_id != record.meaning_record_id
+            or certificate.query_id != query.query_id
+            or certificate.query_evaluation_id
+            != evaluation.query_evaluation_id
+            or certificate.resolution_candidate_id
+            != candidate.resolution_candidate_id
+            or certificate.owning_local_root_id
+            != projection.owning_local_root_id
+            or certificate.root_decision_input_id
+            != projection.root_decision_input_id
+            or certificate.root_decision_id
+            != projection.root_decision_id
+            or certificate.root_decision_hash
+            != projection.root_decision_hash
+            or certificate.case_type != "NON_ACTION_INFORMATIONAL"
+            or certificate.scope_fingerprint
+            != projection.scope_fingerprint
+            or certificate.scope_fingerprint != query.scope_fingerprint
+            or certificate.required_evidence_classes
+            != query.required_evidence_classes
+            or certificate.observed_evidence_fingerprint
+            != evaluation.observed_evidence_fingerprint
+            or certificate.forbidden_changes != query.forbidden_changes
+            or certificate.checked_dependency_fingerprint
+            != evaluation.checked_dependency_fingerprint
+            or certificate.reuse_class != "ANSWER_SHORTCUT"
+            or certificate.reuse_class
+            != projection.allowed_reuse_class
+            or certificate.policy_version != query.policy_version
+            or certificate.policy_version != record.policy_version
+            or certificate.schema_versions != query.schema_versions
+            or certificate.schema_versions != record.schema_versions
+            or certificate.root_shortcut_policy_ref
+            != _B4_ROOT_SHORTCUT_POLICY_REF_V01
+            or certificate.source_history_hash
+            != evaluation.source_history_hash
+            or certificate.source_history_hash
+            != candidate.source_history_hash
+            or certificate.evaluated_at != evaluation.evaluated_at
+            or any(
+                value is not False
+                for value in (
+                    certificate.creates_authority,
+                    certificate.creates_permission,
+                    certificate.creates_final_output,
+                    certificate.creates_action_commit_packet,
+                    certificate.creates_receipt,
+                    certificate.creates_capability,
+                    certificate.creates_effect_handle,
+                    certificate.creates_effect,
+                    certificate.proves_external_truth,
+                    certificate.proves_action_occurred,
+                )
+            )
+            or certificate.real_world_effects_count != 0
+        ):
+            return False, ("reuse_certificate_cross_profile_mismatch",)
+
+        if (
+            projection.valid_from != certificate.valid_from
+            or projection.valid_to != certificate.valid_to
+        ):
+            return False, ("reuse_certificate_cross_profile_mismatch",)
+        if not (
+            certificate.valid_from
+            <= use_time
+            < certificate.valid_to
+        ):
+            return False, ("reuse_certificate_expired",)
+        if not (
+            certificate.issued_at
+            <= certificate.evaluated_at
+            <= use_time
+        ):
+            return False, ("reuse_certificate_expired",)
+
+        if _validate_root_kernel(root_kernel):
+            return False, ("drs_exact_type_or_identity_invalid",)
+        if _validate_root_input(
+            kernel=root_kernel,
+            decision_input=root_decision_input,
+        ):
+            return False, ("drs_exact_type_or_identity_invalid",)
+        if _validate_root_result(
+            kernel=root_kernel,
+            decision_input=root_decision_input,
+            result=root_decision_result,
+        ):
+            return False, ("drs_exact_type_or_identity_invalid",)
+
+        if (
+            root_decision_input.target_root_id
+            != projection.owning_local_root_id
+            or root_decision_result.target_root_id
+            != projection.owning_local_root_id
+        ):
+            return False, ("drs_root_owner_mismatch",)
+        if (
+            projection.root_kernel_id != root_kernel.kernel_id
+            or projection.root_decision_input_id
+            != root_decision_input.decision_input_id
+            or projection.root_decision_id
+            != root_decision_result.decision_id
+            or root_decision_result.decision_input_id
+            != root_decision_input.decision_input_id
+            or root_decision_input.transaction_id != query.query_id
+            or root_decision_result.transaction_id != query.query_id
+        ):
+            return False, ("drs_root_decision_binding_invalid",)
+        root_hash = _domain_separated_sha256_hex_v01(
+            domain=_B4_ROOT_RESULT_BINDING_DOMAIN_V01,
+            payload=_canonical_json_bytes_v01(
+                _root_result_plain(root_decision_result)
+            ),
+        )
+        if (
+            projection.root_decision_hash != root_hash
+            or certificate.root_decision_hash != root_hash
+            or root_decision_result.decision != _ROOT_DECISION_ACCEPT
+            or root_decision_result.reason_code
+            != "validated_candidate_accepted"
+            or root_decision_result.selected_candidate_id
+            != report.selected_candidate_id
+            or root_decision_result.root_commit_created is not True
+            or root_decision_result.permission_created is not False
+            or root_decision_result.final_output_created is not False
+            or root_decision_result.effect_requested is not False
+        ):
+            return False, ("drs_root_decision_binding_invalid",)
+
+        input_plain = _root_input_plain(root_decision_input)
+        claims = input_plain["root_review_packet"][
+            "synthesis_proposal"
+        ]["normalized_claims"]
+        if type(claims) is not list or len(claims) != 1:
+            return False, ("drs_root_decision_binding_invalid",)
+        claim = claims[0]
+        if (
+            type(claim) is not dict
+            or claim.get("claim_id")
+            != candidate.resolution_candidate_id
+            or claim.get("subject") != address_id
+            or claim.get("predicate")
+            != _B4_ROOT_SHORTCUT_PREDICATE_V01
+            or claim.get("object_or_value")
+            != _b4_root_claim_preimage_v01(
+                report=report,
+                candidate=candidate,
+                evaluation=evaluation,
+                certificate=certificate,
+            )
+            or claim.get("authority_class") != "NONE"
+        ):
+            return False, ("drs_root_decision_binding_invalid",)
+        return True, ()
+    except Exception:
+        return False, ("drs_exact_type_or_identity_invalid",)
+
+
 def _g2a_history_reasons(
     value: object,
     *,
@@ -879,6 +1375,7 @@ __all__ = (
     "build_reuse_certificate_v01",
     "validate_reuse_certificate_v01",
     "reuse_certificate_to_plain_data_v01",
+    "validate_existing_root_shortcut_decision_v01",
     "build_g2a_action_history_binding_v01",
     "validate_g2a_action_history_binding_v01",
     "g2a_action_history_binding_to_plain_data_v01",

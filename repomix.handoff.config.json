@@ -1,0 +1,463 @@
+{
+  "schema_version": "v0.1",
+  "config_role": "hedgehog_repository_owned_repomix_handoff_manifest",
+  "generated_output_root": "_audit_exports",
+  "repository_policy": {
+    "require_git_checkout": true,
+    "require_clean_worktree_for_generation": true,
+    "require_head_equals_origin_main_for_generation": true,
+    "allow_dirty_diagnostic_only": true,
+    "generated_outputs_tracked": false,
+    "network_allowed": false,
+    "installation_allowed": false,
+    "stage_commit_push_allowed": false,
+    "writes_outside_generated_output_root_allowed": false
+  },
+  "repomix_policy": {
+    "binary_default": "repomix",
+    "style": "markdown",
+    "file_path_style": "cwd-relative",
+    "parsable_style": false,
+    "compress": false,
+    "file_summary": true,
+    "directory_structure": true,
+    "files": true,
+    "remove_comments": false,
+    "remove_empty_lines": false,
+    "show_line_numbers": false,
+    "copy_to_clipboard": false,
+    "include_empty_directories": false,
+    "include_full_directory_structure": false,
+    "git_sort_by_changes": false,
+    "git_include_diffs": false,
+    "git_include_logs": false,
+    "security_check": true,
+    "use_gitignore": true,
+    "use_dot_ignore": true,
+    "use_default_patterns": true,
+    "token_count_encoding": "o200k_base",
+    "capture_version": true,
+    "exact_version_required_for_byte_reproduction": true,
+    "remote_mode_allowed": false,
+    "installation_allowed": false,
+    "npx_allowed": false
+  },
+  "output_order": [
+    "00_head_and_origin.txt",
+    "00_repo_governance_and_metadata.md",
+    "01_hedgehog_kernel_and_contracts.md",
+    "02_docs_specs_checkpoints_and_roadmaps.md",
+    "03_demo_runners_and_fixtures.md",
+    "04_tests_and_test_fixtures.md",
+    "05_audit_logs_and_public_safe_evidence.md",
+    "06_current_g2a_g2b_focus.md",
+    "07_passport_release_and_root_contract_data.md",
+    "SHA256SUMS"
+  ],
+  "profile_order": [
+    "00_repo_governance_and_metadata",
+    "01_hedgehog_kernel_and_contracts",
+    "02_docs_specs_checkpoints_and_roadmaps",
+    "03_demo_runners_and_fixtures",
+    "04_tests_and_test_fixtures",
+    "05_audit_logs_and_public_safe_evidence",
+    "06_current_g2a_g2b_focus",
+    "07_passport_release_and_root_contract_data"
+  ],
+  "global_exclude_patterns": [
+    ".git/**",
+    ".venv/**",
+    "venv/**",
+    ".tmp/**",
+    "_audit_exports/**",
+    "**/__pycache__/**",
+    "**/*.pyc",
+    "**/*.pyo",
+    ".pytest_cache/**",
+    ".mypy_cache/**",
+    ".ruff_cache/**",
+    "htmlcov/**",
+    ".coverage",
+    "coverage.xml",
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    ".DS_Store",
+    ".idea/**",
+    ".vscode/**",
+    ".codex/**",
+    "repomix-output.*",
+    "config.py",
+    ".env",
+    ".env.*",
+    "**/.env",
+    "**/.env.*",
+    "logs/**",
+    "data/logs/**",
+    "data/drs/**/*.json",
+    "credentials/**",
+    "secrets/**",
+    ".secrets/**",
+    "private_keys/**",
+    "signing_material/**",
+    "provider_raw_outputs/**",
+    "**/*.pem",
+    "**/*.key",
+    "**/*.p12",
+    "**/*.pfx",
+    "**/*.sqlite",
+    "**/*.sqlite3",
+    "**/*.db",
+    "**/*.pptx",
+    "**/*.pdf",
+    "**/*.png",
+    "**/*.jpg",
+    "**/*.jpeg",
+    "**/*.gif",
+    "**/*.webp",
+    "**/*.zip",
+    "**/*.tar",
+    "**/*.gz",
+    "**/*.7z"
+  ],
+  "external_companion_documents": [
+    {
+      "document_name": "hedgehog_deeptech_completion_roadmap_v3_1_gate_based_guardian.md",
+      "custody": "OWNER_SUPPLIED_EXTERNAL",
+      "generator_action": "DO_NOT_FABRICATE"
+    },
+    {
+      "document_name": "hedgehog_deeptech_completion_master_roadmap_v2_1.md",
+      "custody": "OWNER_SUPPLIED_EXTERNAL",
+      "generator_action": "DO_NOT_FABRICATE"
+    }
+  ],
+  "profiles": [
+    {
+      "profile_id": "00_repo_governance_and_metadata",
+      "output_name": "00_repo_governance_and_metadata.md",
+      "include_patterns": [
+        ".gitignore",
+        ".gitattributes",
+        "AGENTS.md",
+        "README*",
+        "LICENSE*",
+        "COMMERCIAL-LICENSING.md",
+        "CHANGELOG*",
+        "CONTRIBUTING*",
+        "SECURITY*",
+        "*.toml",
+        "requirements*.txt",
+        "pytest.ini",
+        "setup.cfg",
+        "setup.py",
+        "tox.ini",
+        "Makefile",
+        "Dockerfile*",
+        "package.json",
+        "package-lock.json",
+        "pnpm-lock.yaml",
+        ".github/**",
+        "scripts/**",
+        "tools/**",
+        "repomix.handoff.config.json",
+        "docs/repomix_handoff_reproducibility_v01.md"
+      ],
+      "public_safe_audit_profile": false,
+      "allows_committed_log_suffix": false
+    },
+    {
+      "profile_id": "01_hedgehog_kernel_and_contracts",
+      "output_name": "01_hedgehog_kernel_and_contracts.md",
+      "include_patterns": [
+        "hedgehog/**",
+        "schemas/**",
+        "contracts/**"
+      ],
+      "public_safe_audit_profile": false,
+      "allows_committed_log_suffix": false
+    },
+    {
+      "profile_id": "02_docs_specs_checkpoints_and_roadmaps",
+      "output_name": "02_docs_specs_checkpoints_and_roadmaps.md",
+      "include_patterns": [
+        "docs/**/*.md",
+        "docs/**/*.txt",
+        "docs/**/*.yaml",
+        "docs/**/*.yml"
+      ],
+      "public_safe_audit_profile": false,
+      "allows_committed_log_suffix": false
+    },
+    {
+      "profile_id": "03_demo_runners_and_fixtures",
+      "output_name": "03_demo_runners_and_fixtures.md",
+      "include_patterns": [
+        "demo/**"
+      ],
+      "public_safe_audit_profile": false,
+      "allows_committed_log_suffix": false
+    },
+    {
+      "profile_id": "04_tests_and_test_fixtures",
+      "output_name": "04_tests_and_test_fixtures.md",
+      "include_patterns": [
+        "tests/**"
+      ],
+      "public_safe_audit_profile": false,
+      "allows_committed_log_suffix": false
+    },
+    {
+      "profile_id": "05_audit_logs_and_public_safe_evidence",
+      "output_name": "05_audit_logs_and_public_safe_evidence.md",
+      "include_patterns": [
+        "docs/audit_reports/**",
+        "docs/evidence/**"
+      ],
+      "public_safe_audit_profile": true,
+      "allows_committed_log_suffix": true
+    },
+    {
+      "profile_id": "06_current_g2a_g2b_focus",
+      "output_name": "06_current_g2a_g2b_focus.md",
+      "include_patterns": [
+        "AGENTS.md",
+        "docs/**/*g2_a*",
+        "docs/**/*g2_b*",
+        "docs/**/*g2-a*",
+        "docs/**/*g2-b*",
+        "docs/**/*action_commit_packet*",
+        "docs/**/*semantic_address*",
+        "docs/**/*reuse_certificate*",
+        "hedgehog/kernel/**",
+        "demo/**/*g2_a*",
+        "demo/**/*g2_b*",
+        "demo/**/*g2-a*",
+        "demo/**/*g2-b*",
+        "demo/run_living_gauntlet_v01.py",
+        "demo/run_kernel_conformance_v01.py",
+        "tests/**/*g2_a*",
+        "tests/**/*g2_b*",
+        "tests/**/*g2-a*",
+        "tests/**/*g2-b*",
+        "tests/test_living_gauntlet_v01_runner.py",
+        "tests/test_kernel_conformance_v01_runner.py"
+      ],
+      "public_safe_audit_profile": false,
+      "allows_committed_log_suffix": false
+    },
+    {
+      "profile_id": "07_passport_release_and_root_contract_data",
+      "output_name": "07_passport_release_and_root_contract_data.md",
+      "include_patterns": [
+        "specs/**",
+        "release/**",
+        "policies/**",
+        "needles/**",
+        "fixtures/**"
+      ],
+      "public_safe_audit_profile": false,
+      "allows_committed_log_suffix": false
+    }
+  ],
+  "r_h1_artifact_mappings": [
+    {
+      "path": "AGENTS.md",
+      "profile_ids": [
+        "00_repo_governance_and_metadata",
+        "06_current_g2a_g2b_focus"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "README.md",
+      "profile_ids": [
+        "00_repo_governance_and_metadata"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "pyproject.toml",
+      "profile_ids": [
+        "00_repo_governance_and_metadata"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "LICENSE",
+      "profile_ids": [
+        "00_repo_governance_and_metadata"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "COMMERCIAL-LICENSING.md",
+      "profile_ids": [
+        "00_repo_governance_and_metadata"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "repomix.handoff.config.json",
+      "profile_ids": [
+        "00_repo_governance_and_metadata"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "tools/generate_repomix_handoff_v01.py",
+      "profile_ids": [
+        "00_repo_governance_and_metadata"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "docs/repomix_handoff_reproducibility_v01.md",
+      "profile_ids": [
+        "00_repo_governance_and_metadata",
+        "02_docs_specs_checkpoints_and_roadmaps"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "docs/clean_clone_licensing_release_spine_reconciliation_r_h1_preflight_v01.md",
+      "profile_ids": [
+        "02_docs_specs_checkpoints_and_roadmaps"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md",
+      "profile_ids": [
+        "02_docs_specs_checkpoints_and_roadmaps"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "tests/test_repository_maintenance_contract_v01.py",
+      "profile_ids": [
+        "04_tests_and_test_fixtures"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "tests/test_repository_release_spine_v01.py",
+      "profile_ids": [
+        "04_tests_and_test_fixtures"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "tests/test_repomix_handoff_reproducibility_v01.py",
+      "profile_ids": [
+        "04_tests_and_test_fixtures"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log",
+      "profile_ids": [
+        "05_audit_logs_and_public_safe_evidence"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "specs/machine_manifest_v0_25.json",
+      "profile_ids": [
+        "07_passport_release_and_root_contract_data"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "release/current_status_overlay_v01.json",
+      "profile_ids": [
+        "07_passport_release_and_root_contract_data"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "release/claim_to_evidence_index.md",
+      "profile_ids": [
+        "07_passport_release_and_root_contract_data"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "release/integration_seam_index.md",
+      "profile_ids": [
+        "07_passport_release_and_root_contract_data"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "release/one_command_gauntlet.md",
+      "profile_ids": [
+        "07_passport_release_and_root_contract_data"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "release/current_limitations.md",
+      "profile_ids": [
+        "07_passport_release_and_root_contract_data"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "release/current_release_notes.md",
+      "profile_ids": [
+        "07_passport_release_and_root_contract_data"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "release/completion_manifest.json",
+      "profile_ids": [
+        "07_passport_release_and_root_contract_data"
+      ],
+      "required_when_present": true
+    },
+    {
+      "path": "release/integration_seam_index.json",
+      "profile_ids": [
+        "07_passport_release_and_root_contract_data"
+      ],
+      "required_when_present": true
+    }
+  ],
+  "planned_artifact_obligations": [
+    {
+      "path": "docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log",
+      "owner_slice": "R-H1D1",
+      "profile_id": "05_audit_logs_and_public_safe_evidence",
+      "current_status": "NOT_YET_PRESENT",
+      "required_when_present": true,
+      "required_after_r_h1_closure": true
+    },
+    {
+      "path": "docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md",
+      "owner_slice": "R-H1D2",
+      "profile_id": "02_docs_specs_checkpoints_and_roadmaps",
+      "current_status": "NOT_YET_PRESENT",
+      "required_when_present": true,
+      "required_after_r_h1_closure": true
+    }
+  ],
+  "checksum_policy": {
+    "algorithm": "sha256",
+    "output_name": "SHA256SUMS",
+    "entry_format": "{sha256}  {filename}\n",
+    "include_checksum_file_itself": false,
+    "ordered_inputs": [
+      "00_head_and_origin.txt",
+      "00_repo_governance_and_metadata.md",
+      "01_hedgehog_kernel_and_contracts.md",
+      "02_docs_specs_checkpoints_and_roadmaps.md",
+      "03_demo_runners_and_fixtures.md",
+      "04_tests_and_test_fixtures.md",
+      "05_audit_logs_and_public_safe_evidence.md",
+      "06_current_g2a_g2b_focus.md",
+      "07_passport_release_and_root_contract_data.md"
+    ]
+  }
+}

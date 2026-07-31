@@ -33,17 +33,54 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 ---
 
-## Current Checkpoint
+<!-- BEGIN HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
+## Current Engineering Boundary
 
-Hedgehog OS Domain-Neutral Reference Kernel RC1 is `CLOSED / PASS` for Gate 1.
+The current repository-maintenance workstream is R-H1. It is open and
+`IMPLEMENTATION_IN_PROGRESS`; it is not an R-H1 closure, Gate-2 closure,
+public release, RC2, production-readiness claim, or production-security
+certification.
 
-- Implementation commit: `d188e2a`.
-- Independent audit commit: `3dd9e89`.
-- Final checkpoint:
-  [docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md](docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md).
-- Next owner action: create the private continuity dump outside the repository.
-- Next repository gate:
-  `two_domain_all_real_sealed_evidence_program_v01_preflight`.
+```text
+workstream_id: R-H1
+workstream_status: IMPLEMENTATION_IN_PROGRESS
+implementation_was_explicitly_authorized: true
+implementation_open: true
+closure_claimed: false
+independent_audit_passed: false
+accepted_pre_r_h1_base_commit: 3785d67e9d33adf145a3f6f60981abf38767b25d
+preflight_commit: df6b4904594a84519a3056e77d2af5a9eb743185
+implementation_basis_commit: NOT_YET_SYNCHRONIZED
+audit_commit: NOT_YET_SYNCHRONIZED
+closure_commit_identity: NOT_APPLICABLE
+gate1_status: CLOSED_PASS
+two_domain_status: CLOSED_PASS
+g2a_status: CLOSED_PASS
+g2b_status: CLOSED_PASS
+gate2_status: NOT_CLOSED
+g2c_status: NEXT_NOT_STARTED
+g2c_implementation_authorized: false
+public_release_claimed: false
+rc2_claimed: false
+production_readiness_claimed: false
+production_security_certification_claimed: false
+```
+
+- Gate 1, the Two-Domain All-Real Sealed Evidence Program, G2-A, and G2-B
+  are `CLOSED_PASS`.
+- Gate 2 is `NOT_CLOSED`.
+- G2-C is `NEXT / NOT_STARTED`, has not started, and is not authorized.
+- R-H1 independent audit synchronized for closure: `false`.
+- R-H1 checkpoint: `NOT_YET_PRESENT`.
+- R-H1 is not closed.
+- [Accepted R-H1 preflight](docs/clean_clone_licensing_release_spine_reconciliation_r_h1_preflight_v01.md)
+- [Current status overlay](release/current_status_overlay_v01.json)
+- [Claim-to-evidence index](release/claim_to_evidence_index.md)
+- [Current integration seam index](release/integration_seam_index.md)
+- [Deterministic one-command gauntlet](release/one_command_gauntlet.md)
+- [Current limitations](release/current_limitations.md)
+- [Current engineering notes](release/current_release_notes.md)
+<!-- END HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 
 ## Hedgehog OS Domain-Neutral Reference Kernel RC1 — Gate 1 CLOSED / PASS
 
@@ -1088,23 +1125,45 @@ The direct_reuse CLI scenario demonstrates that optional RootFinalFromReuse path
 
 ## Install And Run
 
-bash python3 -m venv .venv source .venv/bin/activate python -m pip install --upgrade pip python -m pip install -e .
+The supported R-H1 target is an editable Git checkout used from the repository
+root:
 
-Run the focused MVP test suite:
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -e .
+.venv/bin/python -m pip check
+```
 
-bash python -m pytest tests/test_schema_files_valid.py \   tests/test_needles_valid.py \   tests/test_time_model.py \   tests/test_candidate_vectors.py \   tests/test_avf_runtime.py \   tests/test_architect_runtime.py \   tests/test_executor_runtime.py \   tests/test_post_vv_runtime.py \   tests/test_gt_validator_runtime.py \   tests/test_drs_runtime.py \   tests/test_root_orchestrator_runtime.py \   tests/test_marenna_up_runtime.py \   tests/test_demo_certificate_runner.py
+Installation may access a Python package index. After installation, these
+deterministic runners require no Gemini credentials, invoke no Telegram lane,
+make no runtime network call, and perform no real-world effect:
 
-Run the CLI demo:
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
+  .venv/bin/python -m demo.run_kernel_conformance_v01
 
-bash python -m demo.run_certificate_demo --scenario cold_start python -m demo.run_certificate_demo --scenario reuse python -m demo.run_certificate_demo --scenario direct_reuse
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. \
+  .venv/bin/python -m demo.run_living_gauntlet_v01
+```
 
-Run the canonical pipeline trace:
+Standalone wheel completeness is `NOT_CLAIMED`. This README section does not
+itself claim an external clean-clone result. The authoritative current result,
+when accepted, is recorded by the R-H1 audit/checkpoint and
+`release/current_limitations.md`.
 
-bash python -m demo.run_canonical_pipeline_trace
+## Licensing
 
-Run the Root DAG integration smoke if present in the current branch:
+Repository source is licensed under `AGPL-3.0-only`. [LICENSE](LICENSE)
+contains the governing standard license text.
+[COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md) is a non-granting,
+informational policy notice. Separate terms require a separately executed
+written agreement, and no owner-designated contact channel is currently
+published.
 
-bash python -m demo.run_root_dag_integration_smoke
+This licensing section does not claim public release, RC2, production
+readiness, patent clearance, title, relicensing authority, or legal review.
+The commercial notice is not a granted license or evidence that an agreement
+exists.
 
 ---
 

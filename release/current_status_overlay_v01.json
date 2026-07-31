@@ -1,0 +1,70 @@
+{
+  "profile_version": "v0.1",
+  "overlay_id": "current_status_overlay_v01",
+  "overlay_role": {
+    "metadata_only": true,
+    "is_authority": false,
+    "is_root_decision": false,
+    "is_completion_certificate": false,
+    "replaces_historical_evidence": false,
+    "is_gate2_closure_manifest": false,
+    "is_public_release_declaration": false
+  },
+  "current_engineering_boundary": {
+    "profile_version": "v0.1",
+    "boundary_id": "current_engineering_boundary_v01",
+    "accepted_pre_r_h1_base_commit": "3785d67e9d33adf145a3f6f60981abf38767b25d",
+    "preflight_commit": "df6b4904594a84519a3056e77d2af5a9eb743185",
+    "implementation_basis_commit": null,
+    "audit_commit": null,
+    "closure_commit_identity": null,
+    "workstream_id": "R-H1",
+    "workstream_status": "IMPLEMENTATION_IN_PROGRESS",
+    "implementation_was_explicitly_authorized": true,
+    "implementation_open": true,
+    "closure_claimed": false,
+    "independent_audit_passed": false,
+    "gate1_status": "CLOSED_PASS",
+    "two_domain_status": "CLOSED_PASS",
+    "g2a_status": "CLOSED_PASS",
+    "g2b_status": "CLOSED_PASS",
+    "gate2_status": "NOT_CLOSED",
+    "g2c_status": "NEXT_NOT_STARTED",
+    "g2c_implementation_authorized": false,
+    "public_release_claimed": false,
+    "rc2_claimed": false,
+    "production_readiness_claimed": false,
+    "production_security_certification_claimed": false,
+    "accepted_pre_r_h1_checkpoint": "docs/drs_semantic_address_space_reuse_certificate_g2_b_checkpoint_v01.md",
+    "accepted_pre_r_h1_audit": "docs/audit_reports/auditor_drs_semantic_address_space_reuse_certificate_g2_b_v01.log",
+    "r_h1_audit_path": null,
+    "r_h1_checkpoint_path": null,
+    "historical_nested_objects_are_current_queue_authority": false
+  },
+  "frozen_evidence": {
+    "completion_manifest": {
+      "path": "release/completion_manifest.json",
+      "sha256": "02ffac0d78df768f91df0bb06bdd15ec463dbe5ccea6ef82b7022146819f3466",
+      "classification": "FROZEN_EVIDENCE"
+    },
+    "integration_seam_index": {
+      "path": "release/integration_seam_index.json",
+      "sha256": "c29c2ff873c8b448d8825c3288918e980eab3d65a5114762d2e3fbe5b1206231",
+      "classification": "FROZEN_EVIDENCE"
+    }
+  },
+  "does_not_override": [
+    "owner_instruction",
+    "AGENTS.md",
+    "accepted_checkpoints",
+    "accepted_audits",
+    "specs/human_passport_v0_25.md"
+  ],
+  "release_spine_paths": [
+    "release/claim_to_evidence_index.md",
+    "release/integration_seam_index.md",
+    "release/one_command_gauntlet.md",
+    "release/current_limitations.md",
+    "release/current_release_notes.md"
+  ]
+}

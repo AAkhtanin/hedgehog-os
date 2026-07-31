@@ -57,30 +57,40 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: Gate 2 / G2-A — ActionPacket lifecycle and kill-switch CLOSED_PASS
+Current checkpoint: Gate 2 / G2-B — DRS semantic address space, controlled memory descent, and ReuseCertificate CLOSED_PASS
 
-Current G2-A closure facts:
+Current G2-B closure facts:
 
-- Gate ID: `gate2_g2a_actionpacket_lifecycle_kill_switch`.
-- Audited repository basis: `d6a22010a6c4c63d76cb889d79fc75965bc0a3f2`.
-- Runtime implementation basis: `f92aa5314ce6e7adbf964b5fbbf55049a57dc2de`.
-- Pre-audit test reconciliation: `d6a22010a6c4c63d76cb889d79fc75965bc0a3f2`.
+- Gate ID: `gate2_g2b_drs_semantic_address_space_reuse_certificate`.
+- Audited repository basis: `58167e022f77b53550e65df2f5b1ff1cdc154eee`.
+- G2-B preflight commit: `3364aba6ac5c2141f7737b43b5b8a153827f947a`.
+- G2-B preflight correction: `ad81b0a3ef82d85662e3b2c494e39b91ea19566d`.
+- G2-B1: `8a6c6d9f4ada81238892c5b58f534375824ff6ef`.
+- G2-B2: `86ecc3543f72d9d8e7d59a8ae9813fd882871fe7`.
+- G2-B3: `bf5d57210c5126cf4f3ebe59525ef5066814ca88`.
+- G2-B4: `ee6ccbb50188520bb88e29bcfecaf85c331d9360`.
+- G2-B5: `4e806369f213f6746b62c2bcb308a4eed0f33527`.
+- G2-B6: `58167e022f77b53550e65df2f5b1ff1cdc154eee`.
 - Independent audit: `PASS`.
-- Audit path: `docs/audit_reports/auditor_action_commit_packet_lifecycle_kill_switch_g2_a_v01.log`.
-- Internal checkpoint: `docs/actionpacket_lifecycle_kill_switch_g2_a_checkpoint_v01.md`.
+- Audit path: `docs/audit_reports/auditor_drs_semantic_address_space_reuse_certificate_g2_b_v01.log`.
+- Audit SHA-256: `78d2debc7d9969caca6b896b00273d879eb72a933b84b29eb43d27456effa17b`.
+- Internal checkpoint: `docs/drs_semantic_address_space_reuse_certificate_g2_b_checkpoint_v01.md`.
+- G2-B status: `CLOSED_PASS`.
 - G2-A status: `CLOSED_PASS`.
 - Gate 1: `CLOSED_PASS`.
 - Two-Domain All-Real Sealed Evidence Program: `CLOSED_PASS`.
 - Public release: `NOT CLAIMED`.
 - Gate 2: `NOT CLOSED`.
 - RC2: `NOT CLAIMED`.
-- Provider calls, network calls, Gemini calls, and real-world effects: `0/0/0/0`.
-- Next approved engineering slice: G2-B — DRS semantic address space and ReuseCertificate.
-- G2-B implementation: `NOT STARTED`.
+- Provider calls, network calls, Gemini calls, external-DRS calls, connector calls, and real-world effects: `0/0/0/0/0/0`.
+- Next roadmap slice: G2-C — ExecutionModeRouter, subject to a separate architect preflight and authorization.
+- G2-C implementation: `NOT STARTED`.
+- Raw-user-request to canonical G2-B query cross-binding implemented: `false`.
+- Production generic informational responder claimed: `false`.
 - Root remains final authority.
-- Registry is not authority.
-- Receipt is evidence only.
-- Replay is non-executing.
+- DRS retrieval, eligibility, ranking, controlled descent, compatibility projection, and ReuseCertificate create no authority or permission.
+- ReuseCertificate is not an ActionCommitPacket, receipt, capability, effect, effect handle, completed action, truth proof, or FinalOutput.
+- General mode routing remains frozen until a separately authorized G2-C slice.
 - Real-world effects remain zero.
 
 ## Root-centered capability geometry

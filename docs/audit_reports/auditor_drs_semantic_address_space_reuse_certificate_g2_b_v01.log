@@ -1,0 +1,390 @@
+AUDIT_ID=auditor_drs_semantic_address_space_reuse_certificate_g2_b_v01
+AUDIT_STATUS=PASS
+AUDIT_DISPOSITION=ACCEPT_G2B_DRS_SEMANTIC_ADDRESS_REUSE_CERTIFICATE_INTERNAL_CLOSURE
+GATE_ID=gate2_g2b_drs_semantic_address_space_reuse_certificate
+AUDITED_REPOSITORY_BASIS_HEAD=58167e022f77b53550e65df2f5b1ff1cdc154eee
+G2A_CLOSURE_COMMIT=b78183b3bd5ecc5e9ea2201b9fe498d208423747
+G2B_PREFLIGHT_COMMIT=3364aba6ac5c2141f7737b43b5b8a153827f947a
+G2B_PREFLIGHT_CORRECTION_COMMIT=ad81b0a3ef82d85662e3b2c494e39b91ea19566d
+G2B1_COMMIT=8a6c6d9f4ada81238892c5b58f534375824ff6ef
+G2B2_COMMIT=86ecc3543f72d9d8e7d59a8ae9813fd882871fe7
+G2B3_COMMIT=bf5d57210c5126cf4f3ebe59525ef5066814ca88
+G2B4_COMMIT=ee6ccbb50188520bb88e29bcfecaf85c331d9360
+G2B5_COMMIT=4e806369f213f6746b62c2bcb308a4eed0f33527
+G2B6_COMMIT=58167e022f77b53550e65df2f5b1ff1cdc154eee
+IMPLEMENTATION_MODIFIED_BY_AUDIT=false
+TESTS_MODIFIED_BY_AUDIT=false
+PROVIDER_CALLS=0
+NETWORK_CALLS=0
+GEMINI_CALLS=0
+EXTERNAL_DRS_CALLS=0
+CONNECTOR_CALLS=0
+REAL_WORLD_EFFECTS=0
+
+1. Audit Purpose
+
+This independent, non-repairing audit verifies the closed G2-B1 through G2-B6 implementation against the committed v0.1.1 preflight. It authorizes internal closure evidence only and changes no runtime, test, demo, schema, release, or specification.
+
+2. Audited Committed Basis
+
+The audited immutable implementation basis is HEAD 58167e022f77b53550e65df2f5b1ff1cdc154eee on main, equal to origin/main, with an initially clean worktree and empty staging.
+The binding preflight is revision v0.1.1 with SHA-256 0b72a7794c0eee9d86d7745a304f7c4341d3e2c8b7ffece3665f16e38643a094.
+
+3. Ordered Commit Ancestry
+
+- b78183b3bd5ecc5e9ea2201b9fe498d208423747 - Close G2-A ActionPacket lifecycle and kill-switch
+- 3364aba6ac5c2141f7737b43b5b8a153827f947a - Add G2-B semantic address and reuse preflight
+- ad81b0a3ef82d85662e3b2c494e39b91ea19566d - Correct G2-B preflight identity framing
+- 8a6c6d9f4ada81238892c5b58f534375824ff6ef - Implement G2-B1 canonical DRS contracts and schemas
+- 86ecc3543f72d9d8e7d59a8ae9813fd882871fe7 - Implement G2-B2 temporal eligibility and ranking
+- bf5d57210c5126cf4f3ebe59525ef5066814ca88 - Implement G2-B3 Root-approved controlled memory descent
+- ee6ccbb50188520bb88e29bcfecaf85c331d9360 - Implement G2-B4 Root-bound informational shortcut
+- 4e806369f213f6746b62c2bcb308a4eed0f33527 - Implement G2-B5 pure local adapter and immutable writeback
+- 58167e022f77b53550e65df2f5b1ff1cdc154eee - Integrate G2-B6 Living Gauntlet and Kernel Conformance
+
+Every commit exists, each is an ancestor of the next, and the reverse rev-list from G2-A closure through G2-B6 contains exactly the eight ordered G2-B commits.
+
+4. Exact Commit and Path-Scope Verification
+
+All eight G2-B commits match their exact authorized path sets. The inclusive unique path set contains exactly 20 paths. There is no deletion, rename, inserted commit, foreign path, release edit, README edit, specification edit, provider edit, connector edit, or public release/RC2 path.
+
+5. Frozen G2-A and Release Boundary
+
+G2-A remains CLOSED_PASS at closure commit b78183b3bd5ecc5e9ea2201b9fe498d208423747. All 13 dedicated G2-A implementation/test/runner/preflight/audit/checkpoint paths match their closure bytes. Shared Living and Conformance paths preserve executable v1.0/v1.1 and v0.1/v0.2 historical geometries.
+release/completion_manifest.json and release/integration_seam_index.json match their frozen hashes. Gate 2, public release, RC2, and G2-C remain unclaimed.
+
+6. Canonical Family, Public Surface, and Exact-Type Findings
+
+Exactly one canonical G2-B family exists with 19 frozen dataclasses. Every field tuple, builder, validator, serializer, evaluator, ranker, descent function, Root shortcut validator, B5 collector/total validator, and Living act matches the preflight surface. Exact built-in types, bool/int separation, subclass resistance, deterministic serializers, and total validation are executable.
+
+7. Semantic Address, Time, Query, and Lifecycle Findings
+
+The seven-field address material, drsaddr_v01 identity, bounded namespace, signed-int64 time, explicit evaluation source, half-open validity/TTL, six ordered query modes, immutable query evaluation, and six persistent lifecycle states all pass.
+
+8. Pointer, Secret, Read-Purity, and Compatibility Findings
+
+MeaningRecord carries no dense payload. Pointer storage classes and access policy are exact; no pointer creates authority. Raw secrets are rejected. Legacy projections remain context-only evidence. The pure reader calls neither LocalDRS.layer_path nor mutation methods, and hedgehog/drs.py remains frozen.
+
+9. Eligibility, Ranking, and Resolution Findings
+
+All hard eligibility gates execute before ranking. Ranking receives eligible candidates only, uses signed integer units and exact weights, ends ties with canonical candidate ID, and cannot turn score, GT, freshness, similarity, or lineage into authority.
+
+10. Root-Approved Descent and Accounting Findings
+
+RetrievalPlan is proposal-only. The seven-counter budget is bounded, Root may narrow but not expand it, SUMMARY_ONLY opens zero payload bytes, OPEN_ONE_ARTIFACT is bounded, and observed pointer/record/artifact/byte/edge/conflict/depth accounting is exact with zero effects.
+
+11. Root Shortcut and ReuseCertificate Findings
+
+RootDecisionKernelV01 remains the sole shortcut authority. Root input, result, owner, candidate, query, scope, and hashes cross-bind exactly. ReuseCertificate has complete identity/use-time checks and creates no authority, permission, FinalOutput, packet, receipt, capability, effect handle, effect, truth, or action proof.
+
+12. G2-A History and Action-Reuse Fence Findings
+
+All eight action-shaped requests fail closed. Expired, revoked, superseded, blocked, failed, consumed, uncertain-closed, receipt, prior-permission, and prior-Root-Final history remains evidence only and cannot authorize reuse.
+
+13. Immutable Writeback and Supersession Findings
+
+The shared pure writeback-geometry validator binds exact Root transaction, owner, accepted result, claim, unique claim_dimension tag, predecessor, successor commitment, canonical edge, and successor. One immutable successor is written per success, predecessor bytes remain unchanged, and failed writeback leaves no partial successor.
+
+14. Two-Domain Deterministic Proof Findings
+
+TRAVEL_POLICY_INFORMATION and WAREHOUSE_MAINTENANCE_INFORMATION use the same generic contract. Both prove pointer-first SUMMARY_ONLY descent, ANSWER_SHORTCUT, context fallback, immutable successor writeback, predecessor preservation, and zero effects.
+
+G2B_PROOF_REPORT_ID=g2bproof_v01:b0425c01a3e0ae6b90e8eaa25279fca363f0fddf9bda1fa48f119a721f70c287
+TRAVEL_POLICY_INFORMATION.semantic_address_id=drsaddr_v01:2cc79cf3bf056291d8559161cdbb6392e093d8ce2e57b2f8585838cfdd99c335
+TRAVEL_POLICY_INFORMATION.selected_candidate_id=drscandidate_v01:7f457a13415f7ab96577a037ef3b67c9745cb4124f60357886d0d42225f375d7
+TRAVEL_POLICY_INFORMATION.descent_request_id=drsdescentreq_v01:7e7139c3f8b584df39e79f1604ae6981cd75f688ba6beeba916be951dd859a02
+TRAVEL_POLICY_INFORMATION.descent_result_id=drsdescentres_v01:24c6613066bc8a87035fed46ace05a0c3c297459c12b00e601ef644c51aed185
+TRAVEL_POLICY_INFORMATION.root_shortcut_projection_id=drsrootshortcut_v01:e65b152391b521082fc74d32abac5732bdb1063d3c0db1e2a13311cb3261e770
+TRAVEL_POLICY_INFORMATION.reuse_certificate_id=reusecert_v01:781bd4654f3ca0de32229276623d97958fee89e49f69241893764c88a4257614
+TRAVEL_POLICY_INFORMATION.writeback_proposal_id=g2bwriteback_v01:ffe41d1f7de5b2bcc59b4d058f48bc33df60dc6de89ca9e028bcc411bda6cf92
+TRAVEL_POLICY_INFORMATION.successor_commitment_id=drsmeaning_v01:8c7277422450561d464a17423bd70e44196c037453507450db24a9cbfcd006fa
+TRAVEL_POLICY_INFORMATION.supersession_edge_id=drsedge_v01:bd8d0aaea5ce5e095e8916fc4baf33d8c429a4735f312645786cd279769179bb
+TRAVEL_POLICY_INFORMATION.successor_meaning_record_id=drsmeaning_v01:d1a16776cb0b4ff424a0c90a46bd73713a8b89fe95ba9e6d1dcb39e8fd147019
+WAREHOUSE_MAINTENANCE_INFORMATION.semantic_address_id=drsaddr_v01:ef536211f16017933b2e44e1c772a2f7a3d1eb79c5bc2e791e3d34d3b81fc572
+WAREHOUSE_MAINTENANCE_INFORMATION.selected_candidate_id=drscandidate_v01:0e1cbb95898c9edde4d3422982bb517ff7f9107ab3bd340fc44895831a77b9c7
+WAREHOUSE_MAINTENANCE_INFORMATION.descent_request_id=drsdescentreq_v01:bf1db2ece592c369b4e1df064963cdc4e6ebdfaa7a6fdd9a9d97d850de8fb573
+WAREHOUSE_MAINTENANCE_INFORMATION.descent_result_id=drsdescentres_v01:10e222ff17718ff5927f2b5162f8babf1eaeee8745130450ee8e6f9db30ee1df
+WAREHOUSE_MAINTENANCE_INFORMATION.root_shortcut_projection_id=drsrootshortcut_v01:8f010805997d54bb5945a540e4738c44105e7804b03d9ef7b6a859dc93c0cbf4
+WAREHOUSE_MAINTENANCE_INFORMATION.reuse_certificate_id=reusecert_v01:f29c60689ba034a556303fef66575107c4e7ab0dcf8e2b4b1e88848371a97eab
+WAREHOUSE_MAINTENANCE_INFORMATION.writeback_proposal_id=g2bwriteback_v01:62c2af8bf2c07c89b226bedfa6c49916c4d3c16ea4f60b452829cda45c2c8ace
+WAREHOUSE_MAINTENANCE_INFORMATION.successor_commitment_id=drsmeaning_v01:34994a82b4193c848984209521b36ae38f1d40a68296bbe33003e35fff7b8120
+WAREHOUSE_MAINTENANCE_INFORMATION.supersession_edge_id=drsedge_v01:3e9db1c2465bddea85e1b387a9eacbbe622c3ae1c7cdb442905b249f37b88747
+WAREHOUSE_MAINTENANCE_INFORMATION.successor_meaning_record_id=drsmeaning_v01:4a4c8c59df53ef338040c349d4063c196000f97beab00223e6e3009e8f296b5c
+KERNEL_CONFORMANCE_REPORT_ID=1db915396503f54b7860a5302ea2b788bd32718aad40a1b9e610255108c968aa
+G2B_CONFORMANCE_CATEGORY_RESULT_ID=ae27f0e1fa58f831ad3cf012c94fcacec238fe8f8d1b9f60a3520b09c39b272e
+drs_address_identity_forgery.negative_result_id=9f4b8bae0532aff2e27178e7a2b7b99943878d486321cc74231519d9bd2653ce
+drs_time_query_forgery.negative_result_id=01d24dd2028e49bb151a35615e110ef0d3ba040586a0d438d530877223cf1c88
+drs_pointer_policy_forgery.negative_result_id=28f1d6e07aed898f203f5472d8bfb096c67625d30c7f24fba0260dd70f454c28
+drs_eligibility_order_forgery.negative_result_id=a652052c09ad17fc3fce7dd18d2e6e6eba3775937645974ca1696419296bcf0f
+drs_ranking_ineligible_selection_forgery.negative_result_id=1293fd7ffa2d1cbd680e82053dbfde51a198942876c46959a4c46618dd7b1ccb
+drs_memory_descent_budget_forgery.negative_result_id=78e683ea7479edbb9b3aba46871cb12c3745084ac1a372d3820dd8e61f25230b
+drs_root_shortcut_authority_forgery.negative_result_id=0e468cbaa4ec9477a22976faab778566811de04096b67bf6484a91450bc35cbc
+reuse_certificate_cross_binding_forgery.negative_result_id=8be9b4d348efd2271480d4ee3813c97bf60f8fcfbca62d9c1a5fba32c2156795
+drs_action_reuse_forgery.negative_result_id=1f55d0e047485d30015b62a34a95c2edcfc7ae7196a2c83206389ca89a94793a
+drs_cross_domain_substitution.negative_result_id=4bbc22eb13d23eac028f4b405422ef1fddb3ea2536d2a5af561a8ec3bc2d92d5
+
+15. Living Gauntlet v1.2 and Kernel Conformance v0.3 Findings
+
+Living v1.2 preserves exact v1.0/v1.1 geometry and appends the G2-B act at row 15. Conformance v0.3 preserves exact v0.1/v0.2 geometry, appends one ten-check category at row 12, and appends ten coherent G2-B probes. One B5 baseline and eleven public validator calls support the baseline plus ten coherently reidentified forgeries. Caller PASS is not proof.
+
+16. Complete 120-Condition Definition-of-Done Matrix
+
+Condition text is represented as an exact JSON string; escaped newline and indentation bytes are reversible. Status 119 is the sole PASS_GOVERNANCE_ORDER row.
+
+condition_number | condition_text | audit_status | evidence_paths | evidence_symbols | evidence_tests_or_runner | audit_note
+1 | "The implementation basis follows a committed, independently reviewed G2-B\n   preflight." | PASS | docs/drs_semantic_address_space_reuse_certificate_g2_b_preflight_v01.md | document_revision v0.1.1; frozen preflight SHA-256 | ordered Git ancestry and preflight identity audit | The committed, corrected preflight is the exact audited basis.
+2 | "G2-A remains `CLOSED_PASS` and byte-identical." | PASS | docs/actionpacket_lifecycle_kill_switch_g2_a_checkpoint_v01.md; docs/audit_reports/auditor_action_commit_packet_lifecycle_kill_switch_g2_a_v01.log | G2-A CLOSED_PASS; historical v1.1/v0.2 geometry | frozen G2-A hash audit; bounded compatibility selector | Dedicated G2-A paths match closure bytes and shared geometry remains executable.
+3 | "G2-C implementation has not started." | PASS | hedgehog/mode_router.py; committed Git tree | ExecutionModeRouter and G2-C runtime symbol absence | path/symbol scan and strict scope audit | G2-C has no implementation path or symbol.
+4 | "Exactly one canonical versioned G2-B family exists." | PASS | hedgehog/drs_g2b_compatibility_v01.py; tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py | LegacyDRSProjectionV01; project_legacy_drs_source_v01 | focused legacy projection and report-forgery nodes | Exact legacy source validation and context-only downgrade are executable.
+5 | "Legacy DRS objects remain compatibility inputs only." | PASS | hedgehog/drs_g2b_compatibility_v01.py; tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py | LegacyDRSProjectionV01; project_legacy_drs_source_v01 | focused legacy projection and report-forgery nodes | Exact legacy source validation and context-only downgrade are executable.
+6 | "No legacy object becomes canonical through duck typing." | PASS | hedgehog/drs_g2b_compatibility_v01.py; tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py | LegacyDRSProjectionV01; project_legacy_drs_source_v01 | focused legacy projection and report-forgery nodes | Exact legacy source validation and context-only downgrade are executable.
+7 | "Every compatibility source passes exact source-family validation." | PASS | hedgehog/drs_g2b_compatibility_v01.py; tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py | LegacyDRSProjectionV01; project_legacy_drs_source_v01 | focused legacy projection and report-forgery nodes | Exact legacy source validation and context-only downgrade are executable.
+8 | "Every compatibility source passes source identity and source-hash\n   validation." | PASS | hedgehog/drs_g2b_compatibility_v01.py; tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py | LegacyDRSProjectionV01; project_legacy_drs_source_v01 | focused legacy projection and report-forgery nodes | Exact legacy source validation and context-only downgrade are executable.
+9 | "Every projection records preserved, synthesized, unavailable, and\n   restricted fields." | PASS | hedgehog/drs_g2b_compatibility_v01.py; tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py | LegacyDRSProjectionV01; project_legacy_drs_source_v01 | focused legacy projection and report-forgery nodes | Exact legacy source validation and context-only downgrade are executable.
+10 | "Missing legacy safety evidence never becomes `ANSWER_SHORTCUT`." | PASS | hedgehog/drs_g2b_compatibility_v01.py; tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py | LegacyDRSProjectionV01; project_legacy_drs_source_v01 | focused legacy projection and report-forgery nodes | Exact legacy source validation and context-only downgrade are executable.
+11 | "Every canonical dataclass is frozen and immutable." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py; hedgehog/reuse_certificate_v01.py; hedgehog/drs_g2b_compatibility_v01.py | 19 frozen dataclasses; exact builders, validators, serializers, identity APIs | test_g2b_canonical_address_identity_rebuild_is_exact; exact-type nodes 60-63 | AST, dataclass, identity, total-validator, and focused executable checks pass.
+12 | "Every field tuple equals the order frozen in this document." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py; hedgehog/reuse_certificate_v01.py; hedgehog/drs_g2b_compatibility_v01.py | 19 frozen dataclasses; exact builders, validators, serializers, identity APIs | test_g2b_canonical_address_identity_rebuild_is_exact; exact-type nodes 60-63 | AST, dataclass, identity, total-validator, and focused executable checks pass.
+13 | "Every validator is total over arbitrary objects." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py; hedgehog/reuse_certificate_v01.py; hedgehog/drs_g2b_compatibility_v01.py | 19 frozen dataclasses; exact builders, validators, serializers, identity APIs | test_g2b_canonical_address_identity_rebuild_is_exact; exact-type nodes 60-63 | AST, dataclass, identity, total-validator, and focused executable checks pass.
+14 | "Every builder exposes only a sanitized stable failure reason." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py; hedgehog/reuse_certificate_v01.py; hedgehog/drs_g2b_compatibility_v01.py | 19 frozen dataclasses; exact builders, validators, serializers, identity APIs | test_g2b_canonical_address_identity_rebuild_is_exact; exact-type nodes 60-63 | AST, dataclass, identity, total-validator, and focused executable checks pass.
+15 | "Every serializer produces deterministic exact plain data." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py; hedgehog/reuse_certificate_v01.py; hedgehog/drs_g2b_compatibility_v01.py | 19 frozen dataclasses; exact builders, validators, serializers, identity APIs | test_g2b_canonical_address_identity_rebuild_is_exact; exact-type nodes 60-63 | AST, dataclass, identity, total-validator, and focused executable checks pass.
+16 | "Exact built-in types are required at every nested level." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py; hedgehog/reuse_certificate_v01.py; hedgehog/drs_g2b_compatibility_v01.py | 19 frozen dataclasses; exact builders, validators, serializers, identity APIs | test_g2b_canonical_address_identity_rebuild_is_exact; exact-type nodes 60-63 | AST, dataclass, identity, total-validator, and focused executable checks pass.
+17 | "`bool` is rejected wherever `int` is required." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py; hedgehog/reuse_certificate_v01.py; hedgehog/drs_g2b_compatibility_v01.py | 19 frozen dataclasses; exact builders, validators, serializers, identity APIs | test_g2b_canonical_address_identity_rebuild_is_exact; exact-type nodes 60-63 | AST, dataclass, identity, total-validator, and focused executable checks pass.
+18 | "`str` subclasses and custom-equality substitutes are rejected." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py; hedgehog/reuse_certificate_v01.py; hedgehog/drs_g2b_compatibility_v01.py | 19 frozen dataclasses; exact builders, validators, serializers, identity APIs | test_g2b_canonical_address_identity_rebuild_is_exact; exact-type nodes 60-63 | AST, dataclass, identity, total-validator, and focused executable checks pass.
+19 | "Binary floats and `Decimal` are absent from canonical identity and ranking." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py; hedgehog/reuse_certificate_v01.py; hedgehog/drs_g2b_compatibility_v01.py | 19 frozen dataclasses; exact builders, validators, serializers, identity APIs | test_g2b_canonical_address_identity_rebuild_is_exact; exact-type nodes 60-63 | AST, dataclass, identity, total-validator, and focused executable checks pass.
+20 | "Every canonical identity rebuild calls the exact frozen Kernel\n    `domain_separated_sha256_hex_v01` API once with the committed ASCII domain\n    tag through `domain=`, canonical JSON bytes through `payload=`, and no\n    manual or duplicate domain/LF framing." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py; hedgehog/reuse_certificate_v01.py; hedgehog/drs_g2b_compatibility_v01.py | 19 frozen dataclasses; exact builders, validators, serializers, identity APIs | test_g2b_canonical_address_identity_rebuild_is_exact; exact-type nodes 60-63 | AST, dataclass, identity, total-validator, and focused executable checks pass.
+21 | "`SemanticAddressV01` identity uses exactly the seven frozen fields." | PASS | hedgehog/drs_semantic_address_v01.py | SemanticAddressV01; build_semantic_address_v01 | focused nodes 1-2 | Seven-field address identity and dynamic-material exclusion pass.
+22 | "Dynamic user, query, time, Root, score, lifecycle, pointer, and certificate\n    context is excluded from address identity." | PASS | hedgehog/drs_semantic_address_v01.py | SemanticAddressV01; build_semantic_address_v01 | focused nodes 1-2 | Seven-field address identity and dynamic-material exclusion pass.
+23 | "Namespace is bounded and cannot carry unbounded raw user identity." | PASS | hedgehog/drs_semantic_address_v01.py | SemanticAddressV01; build_semantic_address_v01 | focused nodes 1-2 | Seven-field address identity and dynamic-material exclusion pass.
+24 | "Canonical address ID uses prefix `drsaddr_v01:`." | PASS | hedgehog/drs_semantic_address_v01.py | SemanticAddressV01; build_semantic_address_v01 | focused nodes 1-2 | Seven-field address identity and dynamic-material exclusion pass.
+25 | "`DRSTimeEnvelopeV01` uses exact signed-int64 UTC epoch seconds." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+26 | "Legacy ISO time enters only through strict compatibility projection." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+27 | "Evaluation time and evaluation-time source are always explicit." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+28 | "Validity obeys `valid_from <= as_of < valid_to`." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+29 | "TTL obeys `as_of < pt_created_at + ttl_seconds`." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+30 | "Exact `valid_to` and exact TTL expiry fail their respective gates." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+31 | "TTL expiry remains distinct from claim invalidity." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+32 | "Validity, freshness, authority, and score remain distinct." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+33 | "All six canonical query modes are exact and ordered." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+34 | "Only `CURRENT_DECISION` and `DIRECT_REUSE_CANDIDATE` may consider\n    `ANSWER_SHORTCUT`." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+35 | "Historical, audit, trend, context, and warning modes cannot issue an\n    answer shortcut." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+36 | "`QueryEvaluationStateV01` is pure and immutable." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+37 | "Query state is never persisted as record lifecycle." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+38 | "Time fitness is independently recomputed for every query." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+39 | "Transported freshness flags or classes cannot authorize eligibility." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+40 | "Missing required time axes fail closed." | PASS | hedgehog/drs_semantic_address_v01.py; hedgehog/drs_memory_resolution_v01.py | DRSTimeEnvelopeV01; DRSTemporalQueryV01; QueryEvaluationStateV01 | focused nodes 7-12 and temporal eligibility matrix | Signed-int64, half-open validity, TTL, modes, and recomputation pass.
+41 | "`MeaningRecordV01` contains no dense payload." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+42 | "Bounded safe summary and metadata pass the secret-boundary profile." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+43 | "Persistent lifecycle vocabulary is exactly the six frozen states." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+44 | "Lifecycle change creates a new immutable record version." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+45 | "Old record bytes remain preserved after writeback or supersession." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+46 | "Every memory pointer uses one exact local storage class." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+47 | "Every artifact pointer uses one exact local storage class." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+48 | "Every pointer binds content hash, access policy, sensitivity, and allowed\n    and forbidden uses." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+49 | "Summary and payload permissions are independently enforced." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+50 | "No external/global pointer storage class executes." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+51 | "No pointer grants authority or permission." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+52 | "Raw credentials, tokens, private keys, identity documents, card data, bank\n    identifiers, and authentication material are rejected." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+53 | "Only sealed references and bounded status metadata may represent secrets." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+54 | "Secret scanning is not described as production secret detection." | PASS | hedgehog/drs_semantic_address_v01.py; schemas/drs_meaning_record_v01.schema.json | MeaningRecordV01; MemoryPointerV01; ArtifactPointerV01 | focused nodes 3-6 and schema metaschema validation | Dense-payload exclusion, lifecycle, pointer policy, and secret boundaries pass.
+55 | "Retrieval creates no directory or file." | PASS | hedgehog/local_drs_resolver.py; hedgehog/drs.py; tests/test_real_local_drs_resolver_writeback_v01_runner.py | _g2b_read_local_records_v01; _g2b_write_root_reviewed_meaning_record_v01 | focused node 13; resolver integration node; AST purity audit | Pure read is filesystem-nonmutating; writeback is separate and immutable.
+56 | "Retrieval mutates no record, metadata, lifecycle, query state, or cache." | PASS | hedgehog/local_drs_resolver.py; hedgehog/drs.py; tests/test_real_local_drs_resolver_writeback_v01_runner.py | _g2b_read_local_records_v01; _g2b_write_root_reviewed_meaning_record_v01 | focused node 13; resolver integration node; AST purity audit | Pure read is filesystem-nonmutating; writeback is separate and immutable.
+57 | "The selected pure G2-B adapter does not call `LocalDRS.layer_path`." | PASS | hedgehog/local_drs_resolver.py; hedgehog/drs.py; tests/test_real_local_drs_resolver_writeback_v01_runner.py | _g2b_read_local_records_v01; _g2b_write_root_reviewed_meaning_record_v01 | focused node 13; resolver integration node; AST purity audit | Pure read is filesystem-nonmutating; writeback is separate and immutable.
+58 | "`hedgehog/drs.py` remains frozen." | PASS | hedgehog/local_drs_resolver.py; hedgehog/drs.py; tests/test_real_local_drs_resolver_writeback_v01_runner.py | _g2b_read_local_records_v01; _g2b_write_root_reviewed_meaning_record_v01 | focused node 13; resolver integration node; AST purity audit | Pure read is filesystem-nonmutating; writeback is separate and immutable.
+59 | "Writeback is a separate Root-reviewed operation." | PASS | hedgehog/local_drs_resolver.py; hedgehog/drs.py; tests/test_real_local_drs_resolver_writeback_v01_runner.py | _g2b_read_local_records_v01; _g2b_write_root_reviewed_meaning_record_v01 | focused node 13; resolver integration node; AST purity audit | Pure read is filesystem-nonmutating; writeback is separate and immutable.
+60 | "Writeback validates and persists one new immutable record version." | PASS | hedgehog/local_drs_resolver.py; hedgehog/drs.py; tests/test_real_local_drs_resolver_writeback_v01_runner.py | _g2b_read_local_records_v01; _g2b_write_root_reviewed_meaning_record_v01 | focused node 13; resolver integration node; AST purity audit | Pure read is filesystem-nonmutating; writeback is separate and immutable.
+61 | "Hard eligibility gates execute in the exact frozen order." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+62 | "Every ineligible candidate remains outside the eligible set." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+63 | "Ranking receives eligible candidates only." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+64 | "An ineligible highest-score candidate cannot become selected." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+65 | "Ineligible candidates may remain only as context, history, warning, rerun,\n    or blocked explanation." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+66 | "No ineligible candidate creates Root shortcut evidence." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+67 | "No ineligible candidate receives a ReuseCertificate." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+68 | "Policy and schema compatibility require exact versions." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+69 | "Provenance and authority-envelope evidence is independently validated." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+70 | "Required evidence, forbidden change, conflict, quarantine, and deadend are\n    hard gates." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+71 | "Permission boundary and action-intent checks are hard gates." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+72 | "Ranking uses exact signed integer score units." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+73 | "All component ranges and weights equal the frozen v0.1 profile." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+74 | "Total score formula rebuild is exact and signed-int64 safe." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+75 | "Deterministic tie-break ends with canonical candidate ID." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+76 | "GT, similarity, freshness, lineage, and score create no authority." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+77 | "`ResolutionCandidateV01` exists only for an eligible evaluation." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+78 | "Selected candidate is the first exact ranked eligible candidate or none." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+79 | "`DRSResolutionReportV01` independently rebuilds the eligible and ranked\n    sets." | PASS | hedgehog/drs_memory_resolution_v01.py | evaluate_drs_candidate_v01; rank_eligible_drs_candidates_v01; DRSResolutionReportV01 | focused nodes 16-34 | Hard gates precede exact integer ranking and report geometry is independently rebuilt.
+80 | "Unknown effect accounting remains `-1`, never normalized to zero." | PASS | demo/run_living_gauntlet_v01.py | Living G2-B fail-closed act result | test_g2b6_living_gauntlet_g2b_failure_is_fail_closed_and_unknown_effect | Unknown effect accounting remains exactly -1.
+81 | "Every RetrievalPlan is proposal-only and executes no read." | PASS | hedgehog/drs_memory_resolution_v01.py | RetrievalPlanV01; MemoryDescentBudgetV01; execute_local_memory_descent_v01 | focused nodes 35-37 and 66-67 | Proposal-only planning and Root-approved bounded local descent pass.
+82 | "Memory descent class is one of the six frozen classes." | PASS | hedgehog/drs_memory_resolution_v01.py | RetrievalPlanV01; MemoryDescentBudgetV01; execute_local_memory_descent_v01 | focused nodes 35-37 and 66-67 | Proposal-only planning and Root-approved bounded local descent pass.
+83 | "Memory descent budget has all seven exact bounded counters." | PASS | hedgehog/drs_memory_resolution_v01.py | RetrievalPlanV01; MemoryDescentBudgetV01; execute_local_memory_descent_v01 | focused nodes 35-37 and 66-67 | Proposal-only planning and Root-approved bounded local descent pass.
+84 | "No approved budget exceeds any reference-kernel ceiling." | PASS | hedgehog/drs_memory_resolution_v01.py | RetrievalPlanV01; MemoryDescentBudgetV01; execute_local_memory_descent_v01 | focused nodes 35-37 and 66-67 | Proposal-only planning and Root-approved bounded local descent pass.
+85 | "Root may narrow but never expand class, IDs, or budget." | PASS | hedgehog/drs_memory_resolution_v01.py | RetrievalPlanV01; MemoryDescentBudgetV01; execute_local_memory_descent_v01 | focused nodes 35-37 and 66-67 | Proposal-only planning and Root-approved bounded local descent pass.
+86 | "`SUMMARY_ONLY` opens no payload." | PASS | hedgehog/drs_memory_resolution_v01.py | RetrievalPlanV01; MemoryDescentBudgetV01; execute_local_memory_descent_v01 | focused nodes 35-37 and 66-67 | Proposal-only planning and Root-approved bounded local descent pass.
+87 | "`OPEN_ONE_ARTIFACT` opens at most one artifact at depth at most one." | PASS | hedgehog/drs_memory_resolution_v01.py | RetrievalPlanV01; MemoryDescentBudgetV01; execute_local_memory_descent_v01 | focused nodes 35-37 and 66-67 | Proposal-only planning and Root-approved bounded local descent pass.
+88 | "No descent executes without exact local-Root approval." | PASS | hedgehog/drs_memory_resolution_v01.py | RetrievalPlanV01; MemoryDescentBudgetV01; execute_local_memory_descent_v01 | focused nodes 35-37 and 66-67 | Proposal-only planning and Root-approved bounded local descent pass.
+89 | "Pointer, record, artifact, byte, edge, conflict, and depth accounting\n    exactly matches observations." | PASS | hedgehog/drs_memory_resolution_v01.py | RetrievalPlanV01; MemoryDescentBudgetV01; execute_local_memory_descent_v01 | focused nodes 35-37 and 66-67 | Proposal-only planning and Root-approved bounded local descent pass.
+90 | "Controlled descent performs only bounded local reads and zero effects." | PASS | hedgehog/drs_memory_resolution_v01.py | RetrievalPlanV01; MemoryDescentBudgetV01; execute_local_memory_descent_v01 | focused nodes 35-37 and 66-67 | Proposal-only planning and Root-approved bounded local descent pass.
+91 | "Existing `RootDecisionKernelV01` remains the sole shortcut authority\n    kernel." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+92 | "Root input, result, hash, kernel, owner, candidate, query, and scope\n    cross-bind exactly." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+93 | "`RootShortcutAuthorizationProjectionV01` carries evidence but creates no\n    authority or permission." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+94 | "Only `CONTEXT_ONLY` and `ANSWER_SHORTCUT` are operational in v0.1." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+95 | "Route, sealed-Replay, and protocol-preparation shortcuts remain disabled." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+96 | "Action shortcut remains always disabled." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+97 | "Disabled classes do not silently downgrade." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+98 | "`ReuseCertificateV01` identity includes every consequential field." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+99 | "Certificate address, record, query, evaluation, candidate, Root, policy,\n    schema, scope, validity, evidence, dependency, and history bindings match\n    exactly." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+100 | "Certificate validity is half-open and rechecked at use time." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+101 | "ReuseCertificate creates no authority, permission, FinalOutput, packet,\n     receipt, capability, effect, truth, or action proof." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+102 | "Root alone constructs any informational final output." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+103 | "The caller boolean `allow_direct_reuse` is consideration only." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+104 | "Missing certificate or Root projection prevents direct shortcut." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+105 | "A failed shortcut may continue only through the normal full pipeline." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/root_orchestrator.py | RootShortcutAuthorizationProjectionV01; ReuseCertificateV01; validate_existing_root_shortcut_decision_v01; RootOrchestrator.process_event | focused nodes 22-34 and 52-56; RootOrchestrator integration node | Exact Root cross-binding, certificate validity, and non-authority pass.
+106 | "Action-like requests cannot take an informational shortcut." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/action_commit_packet_v02.py | G2AActionHistoryBindingV01; ReuseCertificateV01 | focused action-negative and G2-A history nodes 38-51 | Action-shaped requests and closed action history cannot authorize reuse.
+107 | "Every G2-A-linked source has exact immutable action-history binding." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/action_commit_packet_v02.py | G2AActionHistoryBindingV01; ReuseCertificateV01 | focused action-negative and G2-A history nodes 38-51 | Action-shaped requests and closed action history cannot authorize reuse.
+108 | "Expired, revoked, superseded, blocked, failed, consumed, uncertain-closed,\n     receipt, prior-permission, and prior-Root-Final history cannot authorize\n     reuse." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/action_commit_packet_v02.py | G2AActionHistoryBindingV01; ReuseCertificateV01 | focused action-negative and G2-A history nodes 38-51 | Action-shaped requests and closed action history cannot authorize reuse.
+109 | "No old ActionPacket or receipt becomes present permission." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/action_commit_packet_v02.py | G2AActionHistoryBindingV01; ReuseCertificateV01 | focused action-negative and G2-A history nodes 38-51 | Action-shaped requests and closed action history cannot authorize reuse.
+110 | "No ReuseCertificate creates an ActionCommitPacket." | PASS | hedgehog/reuse_certificate_v01.py; hedgehog/action_commit_packet_v02.py | G2AActionHistoryBindingV01; ReuseCertificateV01 | focused action-negative and G2-A history nodes 38-51 | Action-shaped requests and closed action history cannot authorize reuse.
+111 | "Supersession requires same address and claim dimension, provenance,\n     reason, Root acceptance, allowed authority, compatible validity,\n     predecessor, and evidence identity." | PASS | hedgehog/local_drs_resolver.py; demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py | _g2b_validate_root_reviewed_writeback_geometry_v01; canonical supersession edge | focused nodes 68-69 | Root-reviewed immutable successor and strict supersession geometry pass.
+112 | "Newer KT, freshness, draft, observation, external pointer, candidate, or\n     GT alone cannot supersede accepted Work." | PASS | hedgehog/local_drs_resolver.py; demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py | _g2b_validate_root_reviewed_writeback_geometry_v01; canonical supersession edge | focused nodes 68-69 | Root-reviewed immutable successor and strict supersession geometry pass.
+113 | "Both synthetic domains use the same generic contracts and authority law." | PASS | demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py | _G2B5DeterministicReportV01; two-domain collector and total validator | focused nodes 57-59; deterministic G2-B runner | Both domains use one law; shortcut, fallback, and eight negatives pass.
+114 | "Both positive informational cases prove bounded shortcut and context\n     fallback." | PASS | demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py | _G2B5DeterministicReportV01; two-domain collector and total validator | focused nodes 57-59; deterministic G2-B runner | Both domains use one law; shortcut, fallback, and eight negatives pass.
+115 | "All eight domain action-shaped requests fail closed with zero effects." | PASS | demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py | _G2B5DeterministicReportV01; two-domain collector and total validator | focused nodes 57-59; deterministic G2-B runner | Both domains use one law; shortcut, fallback, and eight negatives pass.
+116 | "Living Gauntlet v1.2 appends exactly one real G2-B act without rewriting\n     historical geometry." | PASS | demo/run_living_gauntlet_v01.py; tests/test_living_gauntlet_v01_runner.py | RUNNER_VERSION v1.2; G2-B Living act; v1.0/v1.1 snapshots | three G2-B6 Living nodes; Living runner | One real zero-effect G2-B act is appended without historical rewrite.
+117 | "Kernel Conformance v0.3 appends exactly one category and ten negative\n     probes without rewriting historical geometry." | PASS | hedgehog/kernel/conformance_v01.py; demo/run_kernel_conformance_v01.py; tests/test_kernel_conformance_v01_runner.py | CONFORMANCE_VERSION v0.3; G2-B category; ten G2-B probes | four G2-B6 Conformance nodes; Kernel Conformance runner | One category and ten coherent negative probes are appended.
+118 | "Focused, compatibility, deterministic runner, Gauntlet, and Conformance\n     evidence all pass under the planned execution law." | PASS | authorized focused, compatibility, Living, and Conformance test/runner paths | 69-node focused; 7-node selector; 22-node compatibility; three runners | all six exact G2-B7 executable commands | 69/69, 7/7, 22/22, and all three deterministic runners passed once.
+119 | "Independent audit passes before audit, checkpoint, or AGENTS closure\n     writes." | PASS_GOVERNANCE_ORDER | Git status; absent closure paths; final read-only G2-B7 guard | AUDIT_STATUS=PASS; closure-path absence before first write | final read-only audit gate | All read-only gates passed before audit, checkpoint, or AGENTS writes.
+120 | "Provider, network, Gemini, external DRS, connector, and real-world effect\n     counts remain zero, while Gate 2, production, public release, RC2, and\n     G2-C remain unclaimed." | PASS | all canonical G2-B paths; release indexes; runner output; Git status | zero operation counters; Gate 2/G2-C/public release/RC2 non-claims | three deterministic runners and final structural guard | All six operation families are zero and every required non-claim is preserved.
+
+DEFINITION_OF_DONE=120/120
+
+17. Test and Runner Evidence
+
+command_1.exact=PYTHONBREAKPOINT=0 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py
+command_1.exit_code=0
+command_1.passed=69
+command_1.failed=0
+command_1.skipped=0
+command_1.xfailed=0
+command_1.warnings=0
+command_1.duration=63.03s
+command_2.exact=PYTHONBREAKPOINT=0 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_living_gauntlet_v01_runner.py::test_g2b6_drs_semantic_address_reuse_certificate_act_is_real_bounded_and_zero_effect tests/test_living_gauntlet_v01_runner.py::test_g2b6_living_gauntlet_v12_preserves_v11_and_appends_g2b_act tests/test_living_gauntlet_v01_runner.py::test_g2b6_living_gauntlet_g2b_failure_is_fail_closed_and_unknown_effect tests/test_kernel_conformance_v01_runner.py::test_g2b6_conformance_v03_preserves_v02_geometry tests/test_kernel_conformance_v01_runner.py::test_g2b6_drs_semantic_address_reuse_certificate_category_is_exact tests/test_kernel_conformance_v01_runner.py::test_g2b6_drs_negative_probe_matrix_is_exact tests/test_kernel_conformance_v01_runner.py::test_g2b6_conformance_and_gauntlet_are_deterministic_and_zero_effect
+command_2.exit_code=0
+command_2.passed=7
+command_2.failed=0
+command_2.skipped=0
+command_2.xfailed=0
+command_2.warnings=2 (jsonschema.RefResolver deprecation at hedgehog/post_vv.py:58 and hedgehog/post_vv.py:75)
+command_2.duration=435.52s
+command_3.exact=PYTHONBREAKPOINT=0 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_living_gauntlet_v01_runner.py::test_g2a6_action_packet_lifecycle_act_executes_real_runtime_and_zero_effect tests/test_living_gauntlet_v01_runner.py::test_g2a6_living_gauntlet_v11_preserves_gate1_acts_and_appends_lifecycle_act tests/test_living_gauntlet_v01_runner.py::test_g2a6_living_gauntlet_lifecycle_failure_is_fail_closed_and_not_normalized tests/test_kernel_conformance_v01_runner.py::test_g2a6_conformance_v02_preserves_v01_geometry_and_adds_lifecycle_category tests/test_kernel_conformance_v01_runner.py::test_g2a6_action_packet_lifecycle_category_matches_exact_checks tests/test_kernel_conformance_v01_runner.py::test_g2a6_action_packet_lifecycle_negative_probe_matrix_is_exact tests/test_kernel_conformance_v01_runner.py::test_g2a6_conformance_and_living_gauntlet_are_deterministic_and_zero_effect tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_two_domain_generic_contract_invariance tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_report_replay_is_byte_deterministic tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_provider_network_gemini_and_effect_counters_are_zero tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_disabled_reuse_class_does_not_silently_downgrade tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_root_reviewed_writeback_creates_new_immutable_version tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_supersession_requires_root_provenance_reason_and_predecessor tests/test_root_orchestrator_runtime.py::test_g2b_root_orchestrator_requires_certificate_and_root_projection_for_direct_reuse tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_expired_action_packet_cannot_authorize_shortcut tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_revoked_action_packet_cannot_authorize_shortcut tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_superseded_action_packet_cannot_authorize_shortcut tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_blocked_action_packet_cannot_authorize_shortcut tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_consumed_action_history_cannot_authorize_shortcut tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_uncertain_closed_history_cannot_authorize_shortcut tests/test_root_decision_kernel_v01.py::test_valid_input_and_result tests/test_root_decision_kernel_v01.py::test_root_result_creation_boundaries
+command_3.exit_code=0
+command_3.passed=22
+command_3.failed=0
+command_3.skipped=0
+command_3.xfailed=0
+command_3.warnings=2 (jsonschema.RefResolver deprecation at hedgehog/post_vv.py:58 and hedgehog/post_vv.py:75)
+command_3.duration=536.26s
+command_4.exact=PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m demo.run_drs_semantic_address_reuse_certificate_g2_b_v01
+command_4.exit_code=0
+command_4.passed=1
+command_4.failed=0
+command_4.skipped=0
+command_4.xfailed=0
+command_4.warnings=0
+command_4.duration=1.00s
+command_5.exact=PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m demo.run_kernel_conformance_v01
+command_5.exit_code=0
+command_5.passed=1
+command_5.failed=0
+command_5.skipped=0
+command_5.xfailed=0
+command_5.warnings=0
+command_5.duration=58.16s
+command_6.exact=PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. .venv/bin/python -m demo.run_living_gauntlet_v01
+command_6.exit_code=0
+command_6.passed=1
+command_6.failed=0
+command_6.skipped=0
+command_6.xfailed=0
+command_6.warnings=0
+command_6.duration=56.06s
+
+All pytest commands exited 0 with failed=0, skipped=0, and xfailed=0. The only warnings were the two existing jsonschema.RefResolver deprecations in each selected Living compatibility run.
+
+18. Zero-Operation Accounting
+
+arbitrary_wall_clock_timeouts_used=0
+provider_calls=0
+network_calls=0
+gemini_calls=0
+external_drs_calls=0
+connector_calls=0
+real_world_effects=0
+created_authority_count=0
+created_permission_count=0
+action_commit_packets_created_by_g2b7=0
+receipts_created_by_g2b7=0
+capabilities_created_by_g2b7=0
+effect_handles_created_by_g2b7=0
+final_outputs_created_by_g2b7=0
+repository_wide_pytest_runs=0
+full_suite_runs=0
+complete_living_gauntlet_test_file_runs=0
+complete_kernel_conformance_test_file_runs=0
+g2a_lifecycle_full_suite_runs=0
+airline_programme_runs=0
+supplier_programme_runs=0
+package_runner_calls=0
+anchor_runner_calls=0
+replay_runner_calls=0
+
+19. Frozen File Identities
+
+path | sha256 | bytes | lines | mode
+docs/drs_semantic_address_space_reuse_certificate_g2_b_preflight_v01.md | 0b72a7794c0eee9d86d7745a304f7c4341d3e2c8b7ffece3665f16e38643a094 | 104493 | 2381 | 0644
+hedgehog/drs_g2b_compatibility_v01.py | dff9ab0c9717289b3999844440ad2c16a1f9c64dca8ae4151dc4fd2e0a6b48b5 | 48098 | 1493 | 0644
+hedgehog/drs_memory_resolution_v01.py | 698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8 | 157202 | 3962 | 0644
+hedgehog/drs_semantic_address_v01.py | 9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20 | 57213 | 1753 | 0644
+hedgehog/reuse_certificate_v01.py | 55a061a0e225ae479d06380a9f47ac4e3d22f5771ad0fc24c0f4a0bdc73c852c | 50900 | 1382 | 0644
+schemas/drs_meaning_record_v01.schema.json | dc6499a7e0fa4f89851cfc90dcc029a6fef3178a8f6c593c65f5a81c4f5f0f1c | 23992 | 940 | 0644
+schemas/drs_memory_resolution_v01.schema.json | 194b8f44aec569f7c064dd1423bb2f9696d8cca0742f0ad48f093cd45dc0f742 | 50293 | 1895 | 0644
+schemas/drs_semantic_address_v01.schema.json | 595e7b1950ea5a879003633441069a68c75ff36d774fad9c85220dc46a0e002c | 4442 | 154 | 0644
+schemas/reuse_certificate_v01.schema.json | c19b0d114fc67e852e26d83c2c0d3ac5bd3d9870d096a095c68ad45b97262a0e | 14505 | 557 | 0644
+tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py | fa8de4a4f731a6b1ce487e1860a34268a6b7a8784c73cdc1185462c85e9628d0 | 373141 | 10937 | 0644
+hedgehog/root_orchestrator.py | 412739ccc209fd1aa7b66195ed04fdadd8eda63d5866a10fa846dfbf3e09760c | 64173 | 1560 | 0644
+tests/test_root_orchestrator_runtime.py | 82d1d6f9c4c28191c4752763e44d5ddc9e70e17d76b2657811bb7f200f17fd9b | 39887 | 972 | 0644
+demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py | be4d2b4803e57e2bfe6464094cb48c95b6f13ef0f1847f32d161629aba4140ef | 67486 | 1823 | 0644
+hedgehog/local_drs_resolver.py | 5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4 | 53552 | 1503 | 0644
+tests/test_real_local_drs_resolver_writeback_v01_runner.py | 1debda228a5357d9f09b877c637655aef510ad5084f6b7fcf433ad628006f0d1 | 19546 | 571 | 0644
+demo/run_kernel_conformance_v01.py | 469e663e20525340ea7b03f05550100319d37a53fe0c0c8d7ecd51d41a0001d2 | 77408 | 2028 | 0644
+demo/run_living_gauntlet_v01.py | 50423bd70b475afbd3abf46329f40f50bcbfbc6f321f8720489ca2df2ad19c81 | 204027 | 5171 | 0644
+hedgehog/kernel/conformance_v01.py | c12d03a9dcbc8956dcf6085e1c79348a4eb5e4c692c566b0f2c86894cd2bf478 | 49876 | 1425 | 0644
+tests/test_kernel_conformance_v01_runner.py | c4dd456b2eb5c2040dbe7a80e5d99e5dbb593023ef33377d25341ca9572d3fb4 | 64160 | 1734 | 0644
+tests/test_living_gauntlet_v01_runner.py | 424e6761e5b0405918ef8f60dde0caf108f4bd1e8486121c1963ff33841d2cee | 169293 | 4592 | 0644
+
+path | sha256 | bytes | lines | mode
+docs/actionpacket_lifecycle_kill_switch_g2_a_checkpoint_v01.md | 61feef4640856f2474848d316e8f2159ed8522fffddc8c512f07c308b6ff9234 | 8544 | 240 | 0644
+docs/audit_reports/auditor_action_commit_packet_lifecycle_kill_switch_g2_a_v01.log | ca3b63d74744b53f02e0b638fc26e6bb476a350682ad3035c4f81307c5deb777 | 44928 | 414 | 0644
+release/completion_manifest.json | 02ffac0d78df768f91df0bb06bdd15ec463dbe5ccea6ef82b7022146819f3466 | 26256 | 446 | 0644
+release/integration_seam_index.json | c29c2ff873c8b448d8825c3288918e980eab3d65a5114762d2e3fbe5b1206231 | 15150 | 295 | 0644
+
+AGENTS.md before closure-block replacement | 3f1acc80778383ac3c8d328c5034fb87e27888c7469a32f78909e6c1be38af39 | 87738 | 992 | 0644
+AGENTS.md prefix SHA-256 before start marker | 47a4b9d84cf476fee6ede83a0b2e804e55e0605b4a69f9344b5a03066f5ce53d
+AGENTS.md suffix SHA-256 from end marker | 60fedcf3a4dc98bbed70c59de4626259c68afdcf930803c0d672617a567907f6
+AGENTS.md start marker byte offset | 5068
+AGENTS.md end marker byte offset | 6249
+
+20. Explicit Non-Claims
+
+G2-B CLOSED_PASS is an internal closure only.
+Gate 2 remains NOT CLOSED.
+Production readiness is not claimed.
+Production security certification is not claimed.
+Public release is not claimed.
+RC2 is not claimed.
+G2-C is not started.
+RAW_USER_REQUEST_TO_G2B_QUERY_CROSS_BINDING_IMPLEMENTED=false.
+PRODUCTION_GENERIC_INFORMATIONAL_RESPONDER_CLAIMED=false.
+ReuseCertificate is not authority or permission.
+DRS is not truth.
+No real connector or external/global DRS was executed.
+Real-world effects remain zero.
+
+FINAL_AUDIT_RESULT=PASS; AUDIT_DISPOSITION=ACCEPT_G2B_DRS_SEMANTIC_ADDRESS_REUSE_CERTIFICATE_INTERNAL_CLOSURE

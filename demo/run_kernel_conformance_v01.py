@@ -16,6 +16,10 @@ import re
 import subprocess
 
 import demo.run_action_commit_packet_lifecycle_g2_a_v01 as _action_packet_lifecycle
+from demo import (
+    run_drs_semantic_address_reuse_certificate_g2_b_v01 as _g2b,
+)
+from hedgehog import drs_memory_resolution_v01 as _drs_resolution
 from hedgehog.domains.airline import kernel_adapter_v01 as airline_adapter
 from hedgehog.domains.supplier_water_filter import (
     kernel_adapter_v01 as supplier_adapter,
@@ -56,6 +60,7 @@ from hedgehog.kernel.root_decision_v01 import (
     decide_root_v01,
     validate_root_decision_result_v01,
 )
+from hedgehog.kernel import root_decision_v01 as _root_decision
 from hedgehog.kernel.root_signer_isolation_v01 import (
     build_root_owned_commitment_v01,
     build_trusted_root_key_set_v01,
@@ -100,7 +105,14 @@ _GATE1_BASE_ACT_IDS_V01 = (
     "generic_multiroot",
     "supplier_water_filter_portability",
 )
-_BASE_ACT_IDS = (*_GATE1_BASE_ACT_IDS_V01, "action_packet_lifecycle")
+_G2A_BASE_ACT_IDS_V02 = (
+    *_GATE1_BASE_ACT_IDS_V01,
+    "action_packet_lifecycle",
+)
+_BASE_ACT_IDS = (
+    *_G2A_BASE_ACT_IDS_V02,
+    "drs_semantic_address_and_reuse_certificate",
+)
 _ACT_FIELDS = frozenset(
     {
         "act_id",
@@ -168,6 +180,13 @@ _ACT_SOURCES = {
         "demo.run_living_gauntlet_v01",
         "collect_action_packet_lifecycle_gauntlet_act_v01",
     ),
+    "drs_semantic_address_and_reuse_certificate": (
+        "demo.run_living_gauntlet_v01",
+        (
+            "collect_drs_semantic_address_and_reuse_certificate_"
+            "gauntlet_act_v01"
+        ),
+    ),
 }
 _EVIDENCE_REFS = (
     "hedgehog/kernel/integrity_replay_v01.py",
@@ -182,6 +201,7 @@ _EVIDENCE_REFS = (
     "hedgehog/domains/airline/kernel_adapter_v01.py",
     "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
     "demo/run_action_commit_packet_lifecycle_g2_a_v01.py",
+    "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py",
 )
 _LIMITATIONS = (
     "deterministic_current_repository_conformance_only",
@@ -190,6 +210,7 @@ _LIMITATIONS = (
     "no_root_attestation_pki_federation_or_production_connector",
     "independent_audit_and_consolidated_docs_closure_pending",
     "limitation_g2a6_deterministic_local_actionpacket_lifecycle_only",
+    "limitation_g2b6_deterministic_local_drs_semantic_reuse_only",
 )
 def resolve_current_implementation_commit_v01() -> str:
     try:
@@ -223,13 +244,24 @@ def collect_kernel_conformance_v01(
         action_packet_geometry_pass = _action_packet_report_geometry_passes_v01(
             action_packet_report
         )
-        negatives = _collect_negative_results(by_id, action_packet_report)
+        g2b_baseline = (
+            _g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01()
+        )
+        g2b_observations = _collect_g2b_negative_observations_v01(
+            g2b_baseline
+        )
+        negatives = _collect_negative_results(
+            by_id,
+            action_packet_report,
+            g2b_observations,
+        )
         domains = _build_domain_results(by_id, negatives)
         categories = _build_category_results(
             by_id,
             domains,
             negatives,
             action_packet_geometry_pass,
+            g2b_baseline,
         )
         report = conformance.build_kernel_conformance_report_v01(
             implementation_commit=implementation_commit,
@@ -268,7 +300,14 @@ def collect_standalone_kernel_conformance_v01(
 
         base_results = living.collect_living_gauntlet_base_act_results_v01()
         lifecycle_result = living.collect_action_packet_lifecycle_gauntlet_act_v01()
-        active_results = (*base_results, _asdict(lifecycle_result))
+        g2b_result = (
+            living.collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01()
+        )
+        active_results = (
+            *base_results,
+            _asdict(lifecycle_result),
+            _asdict(g2b_result),
+        )
         commit = (
             resolve_current_implementation_commit_v01()
             if implementation_commit is None
@@ -303,9 +342,10 @@ def validate_kernel_conformance_runtime_v01(
             errors.append("kernel_conformance_not_pass")
         counters = report.counters
         if (
-            counters.category_pass_count != 11
+            counters.category_pass_count != 12
             or counters.domain_pass_count != 2
-            or counters.negative_pass_count != 20
+            or counters.negative_pass_count != 30
+            or counters.active_gauntlet_ref_count != 14
             or any(
                 value != 0
                 for value in (
@@ -588,15 +628,163 @@ def _build_domain_results(
     )
 
 
+def _g2b_baseline_geometry_v01(report: object) -> dict[str, bool]:
+    checks = {
+        "canonical_identity": False,
+        "time": False,
+        "pointer_policy": False,
+        "eligibility": False,
+        "ranking": False,
+        "descent": False,
+        "root_shortcut": False,
+        "certificate_non_authority": False,
+        "action_boundary": False,
+        "cross_domain_invariance": False,
+    }
+    try:
+        if (
+            type(report) is not _g2b._G2B5DeterministicReportV01
+            or report.final_status != conformance.STATUS_PASS
+            or report.reason_codes != ()
+            or report.domain_order
+            != (
+                "TRAVEL_POLICY_INFORMATION",
+                "WAREHOUSE_MAINTENANCE_INFORMATION",
+            )
+            or len(report.domain_results) != 2
+        ):
+            return checks
+        domains = report.domain_results
+        operation_counters = dict(report.operation_counters)
+        checks["canonical_identity"] = (
+            report.report_id == _g2b._reidentify_report_v01(report).report_id
+            and all(
+                type(item) is _g2b._G2B5DomainProofV01
+                and item.final_status == conformance.STATUS_PASS
+                and item.reason_codes == ()
+                for item in domains
+            )
+        )
+        checks["time"] = all(
+            type(item.answer_report.query.as_of) is int
+            and type(item.answer_use_time) is int
+            for item in domains
+        )
+        checks["pointer_policy"] = all(
+            item.answer_report.memory_descent_result is not None
+            and item.answer_report.memory_descent_result.executed_descent_class
+            == "SUMMARY_ONLY"
+            and item.answer_report.memory_descent_result.bytes_opened == 0
+            for item in domains
+        )
+        checks["eligibility"] = all(
+            item.answer_report.query_evaluations
+            and all(
+                evaluation.eligible_for_ranking is True
+                for evaluation in item.answer_report.query_evaluations
+                if evaluation.meaning_record_id
+                in {
+                    candidate.meaning_record_id
+                    for candidate in item.answer_report.eligible_candidates
+                }
+            )
+            for item in domains
+        )
+        checks["ranking"] = all(
+            item.answer_report.ranked_candidate_ids
+            and item.answer_report.selected_candidate_id
+            == item.answer_report.ranked_candidate_ids[0]
+            and item.answer_report.eligible_candidates
+            and item.answer_report.selected_candidate_id
+            == item.answer_report.eligible_candidates[
+                0
+            ].resolution_candidate_id
+            for item in domains
+        )
+        checks["descent"] = all(
+            item.answer_report.memory_descent_result is not None
+            and item.answer_report.memory_descent_result.limits_respected
+            is True
+            and item.answer_report.memory_descent_result.real_world_effects_count
+            == 0
+            for item in domains
+        )
+        checks["root_shortcut"] = all(
+            item.answer_report.root_shortcut_projection is not None
+            and item.answer_report.reuse_certificate is not None
+            for item in domains
+        )
+        checks["certificate_non_authority"] = (
+            all(
+                certificate is not None
+                and certificate.creates_authority is False
+                and certificate.creates_permission is False
+                and certificate.creates_final_output is False
+                and certificate.creates_action_commit_packet is False
+                and certificate.creates_receipt is False
+                and certificate.creates_capability is False
+                and certificate.creates_effect_handle is False
+                and certificate.creates_effect is False
+                and certificate.real_world_effects_count == 0
+                for certificate in (
+                    item.answer_report.reuse_certificate for item in domains
+                )
+            )
+            and all(
+                operation_counters[name] == 0
+                for name in (
+                    "provider_calls",
+                    "network_calls",
+                    "gemini_calls",
+                    "external_drs_calls",
+                    "connector_calls",
+                    "real_world_effects",
+                    "canonical_meaning_records_mutated",
+                    "final_outputs_created_by_drs",
+                    "final_outputs_created_by_certificate",
+                    "action_commit_packets_created",
+                    "receipts_created",
+                    "capabilities_created",
+                    "effect_handles_created",
+                )
+            )
+        )
+        checks["action_boundary"] = (
+            sum(len(item.negative_requests) for item in domains) == 8
+            and operation_counters["action_negative_requests"] == 8
+        )
+        checks["cross_domain_invariance"] = (
+            len({item.domain_id for item in domains}) == 2
+            and all(
+                item.pure_read_snapshot_before
+                == item.pure_read_snapshot_after
+                and item.context_report.selected_candidate_id is None
+                and item.context_report.root_shortcut_projection is None
+                and item.context_report.reuse_certificate is None
+                and item.writeback_evidence["predecessor_preserved"] is True
+                and item.writeback_evidence["successor_readback_exact"] is True
+                and item.writeback_evidence["records_written"] == 1
+                and item.writeback_evidence["real_world_effects_count"] == 0
+                for item in domains
+            )
+        )
+        return checks
+    except Exception:
+        return {key: False for key in checks}
+
+
 def _build_category_results(
     by_id: Mapping[str, Mapping[str, object]],
     domains: tuple[conformance.DomainConformanceResultV01, ...],
     negatives: tuple[conformance.NegativeConformanceResultV01, ...],
     action_packet_geometry_pass: bool,
+    g2b_baseline: object,
 ) -> tuple[conformance.ConformanceCategoryResultV01, ...]:
     negative_by_id = {item.probe_id: item for item in negatives}
     domain_by_id = {item.domain_id: item for item in domains}
     safe = {key: _act_safe(value) for key, value in by_id.items()}
+    g2b_geometry = _g2b_baseline_geometry_v01(g2b_baseline)
+    g2b_act_pass = safe["drs_semantic_address_and_reuse_certificate"]
     rows = (
         (
             "DomainPackConformance",
@@ -829,6 +1017,49 @@ def _build_category_results(
                 "limitation_g2a6_deterministic_local_actionpacket_lifecycle_only",
             ),
         ),
+        (
+            "DRSSemanticAddressReuseCertificateConformance",
+            tuple(
+                (
+                    check_id,
+                    g2b_act_pass
+                    and passed
+                    and negative_by_id[probe_id].status
+                    == conformance.STATUS_PASS,
+                )
+                for check_id, probe_id, passed in zip(
+                    (
+                        "canonical_identity",
+                        "time",
+                        "pointer_policy",
+                        "eligibility",
+                        "ranking",
+                        "descent",
+                        "root_shortcut",
+                        "certificate_non_authority",
+                        "action_boundary",
+                        "cross_domain_invariance",
+                    ),
+                    (
+                        "drs_address_identity_forgery",
+                        "drs_time_query_forgery",
+                        "drs_pointer_policy_forgery",
+                        "drs_eligibility_order_forgery",
+                        "drs_ranking_ineligible_selection_forgery",
+                        "drs_memory_descent_budget_forgery",
+                        "drs_root_shortcut_authority_forgery",
+                        "reuse_certificate_cross_binding_forgery",
+                        "drs_action_reuse_forgery",
+                        "drs_cross_domain_substitution",
+                    ),
+                    tuple(g2b_geometry.values()),
+                    strict=True,
+                )
+            ),
+            (
+                "limitation_g2b6_deterministic_local_drs_semantic_reuse_only",
+            ),
+        ),
     )
     return tuple(
         conformance.build_conformance_category_result_v01(
@@ -848,6 +1079,7 @@ def _category_evidence(category_id: str) -> tuple[str, ...]:
 def _collect_negative_results(
     by_id: Mapping[str, Mapping[str, object]],
     action_packet_report: object,
+    g2b_observations: tuple[tuple[object, ...], ...],
 ) -> tuple[conformance.NegativeConformanceResultV01, ...]:
     observations = (
         _probe_manifest_hash_mismatch(),
@@ -861,7 +1093,293 @@ def _collect_negative_results(
         _probe_airline_effect_access(by_id["generic_integrity_replay"]),
         _probe_supplier_effect_counter(by_id["supplier_water_filter_portability"]),
         *_collect_action_packet_negative_observations_v01(action_packet_report),
+        *g2b_observations,
     )
+    return tuple(
+        conformance.build_negative_conformance_result_v01(
+            probe_id=probe_id,
+            target_contract=target,
+            expected_reason_codes=expected,
+            observed_reason_codes=observed,
+            blocked=blocked,
+            evidence_refs=(evidence,),
+            real_world_effects_count=0,
+        )
+        for probe_id, target, expected, observed, blocked, evidence in observations
+    )
+
+
+def _reidentify_drs_contract_v01(value: object) -> object:
+    identity_field, _, prefix, _ = _drs_resolution._profile(
+        type(value).__name__
+    )
+    provisional = replace(
+        value,
+        **{identity_field: prefix + "0" * 64},
+    )
+    return replace(
+        provisional,
+        **{
+            identity_field: _drs_resolution._identity(
+                provisional,
+                type(value).__name__,
+            )
+        },
+    )
+
+
+def _reidentify_root_result_v01(value: object) -> object:
+    provisional = replace(value, decision_id="0" * 64)
+    return replace(
+        provisional,
+        decision_id=_root_decision._result_id(provisional),
+    )
+
+
+def _replace_g2b_domain_v01(
+    report: object,
+    *,
+    domain_index: int,
+    **changes: object,
+) -> object:
+    domains = list(report.domain_results)
+    domains[domain_index] = replace(domains[domain_index], **changes)
+    return _g2b._reidentify_report_v01(
+        replace(report, domain_results=tuple(domains))
+    )
+
+
+def _g2b_negative_mutations_v01(
+    report: object,
+) -> tuple[tuple[str, object], ...]:
+    if (
+        type(report) is not _g2b._G2B5DeterministicReportV01
+        or len(report.domain_results) != 2
+    ):
+        raise ValueError("kernel_conformance_runtime_invalid")
+    domain = report.domain_results[0]
+    other = report.domain_results[1]
+    answer = domain.answer_report
+
+    changed_address = replace(
+        domain.semantic_address,
+        semantic_address_id=f"drsaddr_v01:{'f' * 64}",
+    )
+    address_forgery = _replace_g2b_domain_v01(
+        report,
+        domain_index=0,
+        semantic_address=changed_address,
+    )
+
+    selected_record = next(
+        record
+        for record in domain.source_records
+        if record.meaning_record_id
+        == next(
+            candidate.meaning_record_id
+            for candidate in answer.eligible_candidates
+            if candidate.resolution_candidate_id
+            == answer.selected_candidate_id
+        )
+    )
+    changed_query = replace(
+        answer.query,
+        as_of=selected_record.time_envelope.valid_to,
+    )
+    time_forgery = _replace_g2b_domain_v01(
+        report,
+        domain_index=0,
+        answer_report=replace(answer, query=changed_query),
+    )
+
+    selected_index = domain.source_records.index(selected_record)
+    changed_pointer = replace(
+        selected_record.memory_pointers[0],
+        summary_read_permitted=False,
+    )
+    changed_record = replace(
+        selected_record,
+        memory_pointers=(
+            changed_pointer,
+            *selected_record.memory_pointers[1:],
+        ),
+    )
+    changed_records = list(domain.source_records)
+    changed_records[selected_index] = changed_record
+    changed_records_tuple = tuple(changed_records)
+    pointer_forgery = _replace_g2b_domain_v01(
+        report,
+        domain_index=0,
+        source_records=changed_records_tuple,
+        answer_report=replace(
+            answer,
+            source_records=changed_records_tuple,
+        ),
+        context_report=replace(
+            domain.context_report,
+            source_records=changed_records_tuple,
+        ),
+    )
+
+    reversed_evaluations = _reidentify_drs_contract_v01(
+        replace(
+            answer,
+            query_evaluations=tuple(reversed(answer.query_evaluations)),
+        )
+    )
+    eligibility_forgery = _replace_g2b_domain_v01(
+        report,
+        domain_index=0,
+        answer_report=reversed_evaluations,
+    )
+
+    selected_candidate = next(
+        candidate
+        for candidate in answer.eligible_candidates
+        if candidate.resolution_candidate_id
+        == answer.selected_candidate_id
+    )
+    ineligible_candidate = _reidentify_drs_contract_v01(
+        replace(selected_candidate, eligible_for_ranking=False)
+    )
+    changed_candidates = tuple(
+        ineligible_candidate
+        if candidate is selected_candidate
+        else candidate
+        for candidate in answer.eligible_candidates
+    )
+    changed_ranked_ids = tuple(
+        ineligible_candidate.resolution_candidate_id
+        if candidate_id == selected_candidate.resolution_candidate_id
+        else candidate_id
+        for candidate_id in answer.ranked_candidate_ids
+    )
+    changed_candidate_report = _reidentify_drs_contract_v01(
+        replace(
+            answer,
+            eligible_candidates=changed_candidates,
+            ranked_candidate_ids=changed_ranked_ids,
+            selected_candidate_id=ineligible_candidate.resolution_candidate_id,
+        )
+    )
+    ranking_forgery = _replace_g2b_domain_v01(
+        report,
+        domain_index=0,
+        answer_report=changed_candidate_report,
+    )
+
+    changed_budget = replace(
+        domain.descent_proposed_budget,
+        max_depth=4,
+    )
+    budget_forgery = _replace_g2b_domain_v01(
+        report,
+        domain_index=0,
+        descent_proposed_budget=changed_budget,
+    )
+
+    changed_root_result = _reidentify_root_result_v01(
+        replace(
+            domain.shortcut_root_decision_result,
+            permission_created=True,
+        )
+    )
+    root_forgery = _replace_g2b_domain_v01(
+        report,
+        domain_index=0,
+        shortcut_root_decision_result=changed_root_result,
+    )
+
+    changed_certificate_report = _reidentify_drs_contract_v01(
+        replace(
+            answer,
+            reuse_certificate=other.answer_report.reuse_certificate,
+        )
+    )
+    certificate_forgery = _replace_g2b_domain_v01(
+        report,
+        domain_index=0,
+        answer_report=changed_certificate_report,
+    )
+
+    action_forgery = _replace_g2b_domain_v01(
+        report,
+        domain_index=0,
+        positive_question="buy ticket",
+    )
+    cross_domain_forgery = _replace_g2b_domain_v01(
+        report,
+        domain_index=0,
+        source_records=other.source_records,
+        source_projections=other.source_projections,
+    )
+
+    return (
+        ("drs_address_identity_forgery", address_forgery),
+        ("drs_time_query_forgery", time_forgery),
+        ("drs_pointer_policy_forgery", pointer_forgery),
+        ("drs_eligibility_order_forgery", eligibility_forgery),
+        (
+            "drs_ranking_ineligible_selection_forgery",
+            ranking_forgery,
+        ),
+        ("drs_memory_descent_budget_forgery", budget_forgery),
+        ("drs_root_shortcut_authority_forgery", root_forgery),
+        (
+            "reuse_certificate_cross_binding_forgery",
+            certificate_forgery,
+        ),
+        ("drs_action_reuse_forgery", action_forgery),
+        ("drs_cross_domain_substitution", cross_domain_forgery),
+    )
+
+
+def _collect_g2b_negative_observations_v01(
+    report: object,
+) -> tuple[tuple[object, ...], ...]:
+    if (
+        type(report) is not _g2b._G2B5DeterministicReportV01
+        or _g2b.validate_drs_semantic_address_reuse_certificate_g2_b_report_v01(
+            report
+        )
+        != (True, ())
+    ):
+        raise ValueError("kernel_conformance_runtime_invalid")
+    target = (
+        "demo.run_drs_semantic_address_reuse_certificate_g2_b_v01."
+        "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01"
+    )
+    expected = ("g2b_report_fail_closed",)
+    evidence = (
+        "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py"
+    )
+    observations: list[tuple[object, ...]] = []
+    for probe_id, forged in _g2b_negative_mutations_v01(report):
+        stable_identity = _g2b._reidentify_report_v01(forged) == forged
+        try:
+            valid, observed = (
+                _g2b.validate_drs_semantic_address_reuse_certificate_g2_b_report_v01(
+                    forged
+                )
+            )
+        except Exception:
+            valid, observed = False, ()
+        blocked = (
+            stable_identity
+            and type(forged) is type(report)
+            and valid is False
+            and type(observed) is tuple
+            and observed == expected
+        )
+        observations.append(
+            (probe_id, target, expected, observed, blocked, evidence)
+        )
+    return tuple(observations)
+
+
+def _build_g2b_negative_results_v01(
+    observations: tuple[tuple[object, ...], ...],
+) -> tuple[conformance.NegativeConformanceResultV01, ...]:
     return tuple(
         conformance.build_negative_conformance_result_v01(
             probe_id=probe_id,

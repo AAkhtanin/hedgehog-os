@@ -21,8 +21,9 @@ del annotations
 
 MODULE_ID = "kernel_conformance_v01"
 SLICE_ID = "domain_neutral_reference_kernel_gate1_g1e"
-CONFORMANCE_VERSION = "v0.2"
+CONFORMANCE_VERSION = "v0.3"
 _GATE1_CONFORMANCE_VERSION_V01 = "v0.1"
+_G2A_CONFORMANCE_VERSION_V02 = "v0.2"
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
@@ -40,9 +41,13 @@ _GATE1_CATEGORY_IDS_V01 = (
     "EffectFirewallConformance",
     "MultiRootConformance",
 )
-CATEGORY_IDS = (
+_G2A_CATEGORY_IDS_V02 = (
     *_GATE1_CATEGORY_IDS_V01,
     "ActionPacketLifecycleConformance",
+)
+CATEGORY_IDS = (
+    *_G2A_CATEGORY_IDS_V02,
+    "DRSSemanticAddressReuseCertificateConformance",
 )
 DOMAIN_IDS = ("airline", "supplier_water_filter")
 _GATE1_NEGATIVE_PROBE_IDS_V01 = (
@@ -57,7 +62,7 @@ _GATE1_NEGATIVE_PROBE_IDS_V01 = (
     "airline_adapter_effect_access_forbidden",
     "supplier_adapter_effect_counter_rejected",
 )
-NEGATIVE_PROBE_IDS = (
+_G2A_NEGATIVE_PROBE_IDS_V02 = (
     *_GATE1_NEGATIVE_PROBE_IDS_V01,
     "action_packet_identity_forgery",
     "action_packet_time_forgery",
@@ -69,6 +74,22 @@ NEGATIVE_PROBE_IDS = (
     "action_packet_receipt_authority_forgery",
     "action_packet_replay_execution_forgery",
     "action_packet_cross_domain_substitution",
+)
+_G2B_NEGATIVE_PROBE_IDS_V03 = (
+    "drs_address_identity_forgery",
+    "drs_time_query_forgery",
+    "drs_pointer_policy_forgery",
+    "drs_eligibility_order_forgery",
+    "drs_ranking_ineligible_selection_forgery",
+    "drs_memory_descent_budget_forgery",
+    "drs_root_shortcut_authority_forgery",
+    "reuse_certificate_cross_binding_forgery",
+    "drs_action_reuse_forgery",
+    "drs_cross_domain_substitution",
+)
+NEGATIVE_PROBE_IDS = (
+    *_G2A_NEGATIVE_PROBE_IDS_V02,
+    *_G2B_NEGATIVE_PROBE_IDS_V03,
 )
 
 _GATE1_ACTIVE_GAUNTLET_REFS_V01 = (
@@ -85,9 +106,13 @@ _GATE1_ACTIVE_GAUNTLET_REFS_V01 = (
     "generic_multiroot",
     "supplier_water_filter_portability",
 )
-_ACTIVE_GAUNTLET_REFS = (
+_G2A_ACTIVE_GAUNTLET_REFS_V02 = (
     *_GATE1_ACTIVE_GAUNTLET_REFS_V01,
     "action_packet_lifecycle",
+)
+_ACTIVE_GAUNTLET_REFS = (
+    *_G2A_ACTIVE_GAUNTLET_REFS_V02,
+    "drs_semantic_address_and_reuse_certificate",
 )
 _GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01 = (
     (
@@ -190,7 +215,7 @@ _GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01 = (
         ),
     ),
 )
-_EXPECTED_CATEGORY_CHECK_IDS = (
+_G2A_EXPECTED_CATEGORY_CHECK_IDS_V02 = (
     *_GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01,
     (
         "ActionPacketLifecycleConformance",
@@ -204,6 +229,24 @@ _EXPECTED_CATEGORY_CHECK_IDS = (
             "corridor_freshness_enforcement",
             "receipt_non_authority",
             "replay_non_execution",
+            "cross_domain_invariance",
+        ),
+    ),
+)
+_EXPECTED_CATEGORY_CHECK_IDS = (
+    *_G2A_EXPECTED_CATEGORY_CHECK_IDS_V02,
+    (
+        "DRSSemanticAddressReuseCertificateConformance",
+        (
+            "canonical_identity",
+            "time",
+            "pointer_policy",
+            "eligibility",
+            "ranking",
+            "descent",
+            "root_shortcut",
+            "certificate_non_authority",
+            "action_boundary",
             "cross_domain_invariance",
         ),
     ),
@@ -326,7 +369,7 @@ _ACTION_PACKET_REPORT_VALIDATOR_TARGET_V01 = (
     "validate_action_commit_packet_lifecycle_g2_a_report_v01"
 )
 _ACTION_PACKET_REPORT_REJECTION_REASONS_V01 = ("g2a5_report_fail_closed",)
-_EXPECTED_NEGATIVE_GEOMETRY = (
+_G2A_EXPECTED_NEGATIVE_GEOMETRY_V02 = (
     *_GATE1_EXPECTED_NEGATIVE_GEOMETRY_V01,
     *(
         (
@@ -334,7 +377,25 @@ _EXPECTED_NEGATIVE_GEOMETRY = (
             _ACTION_PACKET_REPORT_VALIDATOR_TARGET_V01,
             _ACTION_PACKET_REPORT_REJECTION_REASONS_V01,
         )
-        for probe_id in NEGATIVE_PROBE_IDS[len(_GATE1_NEGATIVE_PROBE_IDS_V01) :]
+        for probe_id in _G2A_NEGATIVE_PROBE_IDS_V02[
+            len(_GATE1_NEGATIVE_PROBE_IDS_V01) :
+        ]
+    ),
+)
+_G2B_REPORT_VALIDATOR_TARGET_V01 = (
+    "demo.run_drs_semantic_address_reuse_certificate_g2_b_v01."
+    "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01"
+)
+_G2B_REPORT_REJECTION_REASONS_V01 = ("g2b_report_fail_closed",)
+_EXPECTED_NEGATIVE_GEOMETRY = (
+    *_G2A_EXPECTED_NEGATIVE_GEOMETRY_V02,
+    *(
+        (
+            probe_id,
+            _G2B_REPORT_VALIDATOR_TARGET_V01,
+            _G2B_REPORT_REJECTION_REASONS_V01,
+        )
+        for probe_id in _G2B_NEGATIVE_PROBE_IDS_V03
     ),
 )
 _CATEGORY_DOMAIN = "hedgehog.kernel.conformance.category_result.v01"
@@ -863,7 +924,11 @@ def _report_errors(report: object) -> tuple[str, ...]:
         not _valid_text(report.report_id)
         or type(report.conformance_version) is not str
         or report.conformance_version
-        not in (_GATE1_CONFORMANCE_VERSION_V01, CONFORMANCE_VERSION)
+        not in (
+            _GATE1_CONFORMANCE_VERSION_V01,
+            _G2A_CONFORMANCE_VERSION_V02,
+            CONFORMANCE_VERSION,
+        )
         or not _valid_commit(report.implementation_commit)
         or type(report.final_status) is not str
         or report.final_status not in CONFORMANCE_STATUSES
@@ -935,6 +1000,12 @@ def _require_report_geometry(
         expected_active_refs = _GATE1_ACTIVE_GAUNTLET_REFS_V01
         expected_category_geometry = _GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01
         expected_negative_geometry = _GATE1_EXPECTED_NEGATIVE_GEOMETRY_V01
+    elif conformance_version == _G2A_CONFORMANCE_VERSION_V02:
+        category_ids = _G2A_CATEGORY_IDS_V02
+        negative_probe_ids = _G2A_NEGATIVE_PROBE_IDS_V02
+        expected_active_refs = _G2A_ACTIVE_GAUNTLET_REFS_V02
+        expected_category_geometry = _G2A_EXPECTED_CATEGORY_CHECK_IDS_V02
+        expected_negative_geometry = _G2A_EXPECTED_NEGATIVE_GEOMETRY_V02
     elif conformance_version == CONFORMANCE_VERSION:
         category_ids = CATEGORY_IDS
         negative_probe_ids = NEGATIVE_PROBE_IDS
@@ -980,6 +1051,18 @@ def _require_report_geometry(
             )
         ):
             raise ValueError
+        if category_id == "DRSSemanticAddressReuseCertificateConformance" and (
+            item.evidence_refs
+            != (
+                "runtime:kernel_conformance:"
+                "DRSSemanticAddressReuseCertificateConformance",
+            )
+            or item.limitation_refs
+            != (
+                "limitation_g2b6_deterministic_local_drs_semantic_reuse_only",
+            )
+        ):
+            raise ValueError
     for item, expected in zip(domains, _EXPECTED_DOMAIN_GEOMETRY):
         (
             domain_id,
@@ -1008,10 +1091,14 @@ def _require_report_geometry(
             or not _valid_text_tuple(item.evidence_refs, allow_empty=False)
         ):
             raise ValueError
-        if probe_id in NEGATIVE_PROBE_IDS[
+        if probe_id in _G2A_NEGATIVE_PROBE_IDS_V02[
             len(_GATE1_NEGATIVE_PROBE_IDS_V01) :
         ] and item.evidence_refs != (
             "demo/run_action_commit_packet_lifecycle_g2_a_v01.py",
+        ):
+            raise ValueError
+        if probe_id in _G2B_NEGATIVE_PROBE_IDS_V03 and item.evidence_refs != (
+            "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py",
         ):
             raise ValueError
     if len({item.result_id for item in categories}) != len(categories):

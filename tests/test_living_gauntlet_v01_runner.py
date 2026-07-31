@@ -4254,8 +4254,9 @@ def test_g2a6_living_gauntlet_v11_preserves_gate1_acts_and_appends_lifecycle_act
     base = runner.collect_living_gauntlet_base_act_results_v01()
     active = report["active_act_results"]
 
-    assert runner.RUNNER_VERSION == "v1.1"
+    assert runner.RUNNER_VERSION == "v1.2"
     assert runner._GATE1_RELEASE_RUNNER_VERSION_V10 == "v1.0"
+    assert runner._G2A_RUNNER_VERSION_V11 == "v1.1"
     assert tuple(item["act_id"] for item in base) == runner._GATE1_ACTIVE_ACT_IDS_V10[
         :12
     ]
@@ -4277,10 +4278,13 @@ def test_g2a6_living_gauntlet_v11_preserves_gate1_acts_and_appends_lifecycle_act
         "c29c2ff873c8b448d8825c3288918e980eab3d65a5114762d2e3fbe5b1206231"
     )
     assert _json(COMPLETION_MANIFEST_PATH)["runner_version"] == "v1.0"
-    assert report["counters"]["active_act_count"] == 14
-    assert report["counters"]["active_act_pass_count"] == 14
+    assert tuple(item["act_id"] for item in active[:14]) == (
+        runner._G2A_ACTIVE_ACT_IDS_V11
+    )
+    assert report["counters"]["active_act_count"] == 15
+    assert report["counters"]["active_act_pass_count"] == 15
     assert report["counters"]["active_act_fail_closed_count"] == 0
-    assert report["counters"]["active_collector_execution_count"] == 14
+    assert report["counters"]["active_collector_execution_count"] == 15
     assert report["counters"]["evidence_only_entry_count"] == 1
     assert report["counters"]["evidence_only_executed_count"] == 0
     assert report["counters"]["planned_act_count"] == 0
@@ -4296,6 +4300,7 @@ def test_g2a6_living_gauntlet_v11_preserves_gate1_acts_and_appends_lifecycle_act
         "evidence_only_not_executed",
         "planned_acts_not_executed",
         "action_packet_lifecycle_act_pass",
+        "drs_semantic_address_reuse_certificate_act_pass",
     )
 
 
@@ -4343,3 +4348,245 @@ def test_g2a6_living_gauntlet_lifecycle_failure_is_fail_closed_and_not_normalize
         assert full["final_status"] == runner.STATUS_FAIL_CLOSED
         assert full["counters"]["real_world_effects_count"] == -1
         assert tuple(full["active_act_results"][:12]) == old_rows
+
+
+def test_g2b6_drs_semantic_address_reuse_certificate_act_is_real_bounded_and_zero_effect(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    collected = []
+    validations = []
+    original_collect = (
+        runner._g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01
+    )
+    original_validate = (
+        runner._g2b.validate_drs_semantic_address_reuse_certificate_g2_b_report_v01
+    )
+
+    def collect_wrapper():
+        monkeypatch.setattr(
+            runner._g2b,
+            "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01",
+            original_validate,
+        )
+        try:
+            report = original_collect()
+        finally:
+            monkeypatch.setattr(
+                runner._g2b,
+                "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01",
+                validate_wrapper,
+            )
+        collected.append(report)
+        return report
+
+    def validate_wrapper(report):
+        result = original_validate(report)
+        validations.append((report, result))
+        return result
+
+    monkeypatch.setattr(
+        runner._g2b,
+        "collect_drs_semantic_address_reuse_certificate_g2_b_v01",
+        collect_wrapper,
+    )
+    monkeypatch.setattr(
+        runner._g2b,
+        "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01",
+        validate_wrapper,
+    )
+    result = (
+        runner.collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01()
+    )
+
+    assert len(collected) == 1
+    assert validations == [(collected[0], (True, ()))]
+    report = collected[0]
+    counters = dict(report.operation_counters)
+    assert report.domain_order == (
+        "TRAVEL_POLICY_INFORMATION",
+        "WAREHOUSE_MAINTENANCE_INFORMATION",
+    )
+    assert len(report.domain_results) == 2
+    assert sum(
+        len(item.negative_requests) for item in report.domain_results
+    ) == 8
+    assert counters == dict(runner._G2B_EXPECTED_OPERATION_COUNTERS_V01)
+    assert all(value == 0 for _, value in report.closed_programme_counters)
+    for domain in report.domain_results:
+        answer = domain.answer_report
+        context = domain.context_report
+        descent = answer.memory_descent_result
+        certificate = answer.reuse_certificate
+        evidence = domain.writeback_evidence
+        assert answer.selected_candidate_id is not None
+        assert answer.root_shortcut_projection is not None
+        assert certificate is not None
+        assert descent is not None
+        assert descent.executed_descent_class == "SUMMARY_ONLY"
+        assert descent.bytes_opened == 0
+        assert context.selected_candidate_id is None
+        assert context.root_shortcut_projection is None
+        assert context.reuse_certificate is None
+        assert evidence["predecessor_preserved"] is True
+        assert evidence["successor_readback_exact"] is True
+        assert evidence["records_written"] == 1
+        assert evidence["creates_authority"] is False
+        assert evidence["creates_permission"] is False
+        assert evidence["real_world_effects_count"] == 0
+        assert certificate.creates_authority is False
+        assert certificate.creates_permission is False
+        assert certificate.creates_final_output is False
+        assert certificate.creates_action_commit_packet is False
+        assert certificate.creates_receipt is False
+        assert certificate.creates_capability is False
+        assert certificate.creates_effect_handle is False
+        assert certificate.creates_effect is False
+    assert result == runner.LivingGauntletActResultV01(
+        act_id="drs_semantic_address_and_reuse_certificate",
+        errors=(),
+        executed=True,
+        no_real_connector_or_action=True,
+        real_world_effects_count=0,
+        root_authority_preserved=True,
+        runtime_status=runner.STATUS_PASS,
+        source_module="demo.run_living_gauntlet_v01",
+        source_symbol=(
+            "collect_drs_semantic_address_and_reuse_certificate_"
+            "gauntlet_act_v01"
+        ),
+        state=runner.STATUS_PASS,
+    )
+
+
+def test_g2b6_living_gauntlet_v12_preserves_v11_and_appends_g2b_act(
+    report,
+):
+    manifest_bytes = COMPLETION_MANIFEST_PATH.read_bytes()
+    seam_bytes = SEAM_INDEX_PATH.read_bytes()
+    active = report["active_act_results"]
+
+    assert runner.RUNNER_VERSION == "v1.2"
+    assert runner._GATE1_RELEASE_RUNNER_VERSION_V10 == "v1.0"
+    assert runner._G2A_RUNNER_VERSION_V11 == "v1.1"
+    assert runner._G2A_ACTIVE_ACT_IDS_V11 == (
+        *runner._GATE1_ACTIVE_ACT_IDS_V10,
+        "action_packet_lifecycle",
+    )
+    assert runner._ACTIVE_ACT_IDS == (
+        *runner._G2A_ACTIVE_ACT_IDS_V11,
+        "drs_semantic_address_and_reuse_certificate",
+    )
+    assert tuple(item["act_id"] for item in active) == runner._ACTIVE_ACT_IDS
+    assert active[12]["act_id"] == "kernel_conformance_closure"
+    assert active[13]["act_id"] == "action_packet_lifecycle"
+    assert active[14]["act_id"] == (
+        "drs_semantic_address_and_reuse_certificate"
+    )
+    assert tuple(
+        (item["source_module"], item["source_symbol"]) for item in active[:13]
+    ) == tuple(
+        runner._GATE1_ACTIVE_ACT_SOURCES_V10[act_id]
+        for act_id in runner._GATE1_ACTIVE_ACT_IDS_V10
+    )
+    assert (
+        active[14]["source_module"],
+        active[14]["source_symbol"],
+    ) == (
+        "demo.run_living_gauntlet_v01",
+        (
+            "collect_drs_semantic_address_and_reuse_certificate_"
+            "gauntlet_act_v01"
+        ),
+    )
+    assert hashlib.sha256(manifest_bytes).hexdigest() == (
+        "02ffac0d78df768f91df0bb06bdd15ec463dbe5ccea6ef82b7022146819f3466"
+    )
+    assert hashlib.sha256(seam_bytes).hexdigest() == (
+        "c29c2ff873c8b448d8825c3288918e980eab3d65a5114762d2e3fbe5b1206231"
+    )
+    assert report["counters"]["active_act_count"] == 15
+    assert report["counters"]["active_act_pass_count"] == 15
+    assert report["counters"][
+        "drs_semantic_address_reuse_certificate_execution_count"
+    ] == 1
+
+
+def test_g2b6_living_gauntlet_g2b_failure_is_fail_closed_and_unknown_effect(
+    report,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    baseline = (
+        runner._g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01()
+    )
+    counters = tuple(
+        (name, 1 if name == "provider_calls" else value)
+        for name, value in baseline.operation_counters
+    )
+    nonzero = runner._g2b._reidentify_report_v01(
+        replace(baseline, operation_counters=counters)
+    )
+    base_rows = tuple(dict(item) for item in report["active_act_results"][:12])
+    closure = runner.LivingGauntletActResultV01(
+        **report["active_act_results"][12]
+    )
+    lifecycle = runner.LivingGauntletActResultV01(
+        **report["active_act_results"][13]
+    )
+    cases = (
+        (
+            "collector",
+            lambda: (_ for _ in ()).throw(RuntimeError("controlled")),
+            None,
+        ),
+        ("validator", lambda: baseline, (False, ("controlled",))),
+        ("nonzero", lambda: nonzero, None),
+    )
+    for label, collector, validation_result in cases:
+        with monkeypatch.context() as scoped:
+            scoped.setattr(
+                runner._g2b,
+                "collect_drs_semantic_address_reuse_certificate_g2_b_v01",
+                collector,
+            )
+            if validation_result is not None:
+                scoped.setattr(
+                    runner._g2b,
+                    (
+                        "validate_drs_semantic_address_reuse_certificate_"
+                        "g2_b_report_v01"
+                    ),
+                    lambda _: validation_result,
+                )
+            scoped.setattr(
+                runner,
+                "collect_living_gauntlet_base_act_results_v01",
+                lambda: base_rows,
+            )
+            scoped.setattr(
+                runner,
+                "collect_action_packet_lifecycle_gauntlet_act_v01",
+                lambda: lifecycle,
+            )
+            scoped.setattr(
+                runner,
+                "collect_kernel_conformance_closure_gauntlet_act_v01",
+                lambda _: closure,
+            )
+            act = (
+                runner.collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01()
+            )
+            full = runner.collect_living_gauntlet_v01()
+
+        assert act.act_id == "drs_semantic_address_and_reuse_certificate"
+        assert act.errors == (
+            "drs_semantic_address_reuse_certificate_gauntlet_act_failed",
+        )
+        assert act.executed is True
+        assert act.no_real_connector_or_action is False
+        assert act.real_world_effects_count == -1
+        assert act.root_authority_preserved is False
+        assert act.runtime_status == runner.STATUS_FAIL_CLOSED
+        assert act.state == runner.STATUS_FAIL_CLOSED
+        assert "controlled" not in repr(act)
+        assert full["final_status"] == runner.STATUS_FAIL_CLOSED, label
+        assert full["counters"]["real_world_effects_count"] == -1, label

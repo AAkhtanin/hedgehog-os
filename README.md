@@ -36,23 +36,22 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 <!-- BEGIN HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 ## Current Engineering Boundary
 
-The current repository-maintenance workstream is R-H1. It is open and
-`IMPLEMENTATION_IN_PROGRESS`; it is not an R-H1 closure, Gate-2 closure,
-public release, RC2, production-readiness claim, or production-security
-certification.
+The R-H1 repository-maintenance workstream is `CLOSED_PASS`. This internal
+maintenance closure does not close Gate 2 and is not a public release, RC2,
+production-readiness claim, or production-security-certification claim.
 
 ```text
 workstream_id: R-H1
-workstream_status: IMPLEMENTATION_IN_PROGRESS
+workstream_status: CLOSED_PASS
 implementation_was_explicitly_authorized: true
-implementation_open: true
-closure_claimed: false
-independent_audit_passed: false
+implementation_open: false
+closure_claimed: true
+independent_audit_passed: true
 accepted_pre_r_h1_base_commit: 3785d67e9d33adf145a3f6f60981abf38767b25d
 preflight_commit: df6b4904594a84519a3056e77d2af5a9eb743185
-implementation_basis_commit: NOT_YET_SYNCHRONIZED
-audit_commit: NOT_YET_SYNCHRONIZED
-closure_commit_identity: NOT_APPLICABLE
+implementation_basis_commit: c5ca150af2fbb7981e1ed8ee83d914570e14cdeb
+audit_commit: 056bc1c746b49699069a90766d067f1a77d205dc
+closure_commit_identity: NOT_SELF_RECORDED
 gate1_status: CLOSED_PASS
 two_domain_status: CLOSED_PASS
 g2a_status: CLOSED_PASS
@@ -70,9 +69,10 @@ production_security_certification_claimed: false
   are `CLOSED_PASS`.
 - Gate 2 is `NOT_CLOSED`.
 - G2-C is `NEXT / NOT_STARTED`, has not started, and is not authorized.
-- R-H1 independent audit synchronized for closure: `false`.
-- R-H1 checkpoint: `NOT_YET_PRESENT`.
-- R-H1 is not closed.
+- R-H1 independent audit synchronized for closure: `true`.
+- R-H1 audit: `docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log`.
+- R-H1 checkpoint: `docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md`.
+- R-H1 is `CLOSED_PASS`.
 - [Accepted R-H1 preflight](docs/clean_clone_licensing_release_spine_reconciliation_r_h1_preflight_v01.md)
 - [Current status overlay](release/current_status_overlay_v01.json)
 - [Claim-to-evidence index](release/claim_to_evidence_index.md)

@@ -294,6 +294,9 @@ def test_module_identity(name: str, value: object) -> None:
                 "CrossRootEvidenceRef",
                 "TransactionOutcomeEnvelope",
                 "CausalConsumptionRef",
+                "ExecutionModeProposal",
+                "RootExecutionModeDecision",
+                "ExecutionModeRouteEligibility",
             ),
         ),
         (
@@ -1544,3 +1547,72 @@ def test_fixture_projection_hashes_remain_unchanged(
             _build_causal_consumption_fixture_v01()[1]
         )
     assert hashlib.sha256(canonical_json_bytes_v01(projection)).hexdigest() == expected
+
+
+def test_g2c1_artifact_type_append_preserves_historical_prefix() -> None:
+    historical = (
+        "OrchestratorRouteProposal",
+        "RootAcceptedRoute",
+        "BSEPPacket",
+        "BSEPProjection",
+        "SemanticArchitectProposal",
+        "RuntimeExecutionTopology",
+        "ActorContribution",
+        "SemanticEvidence",
+        "ValidatedEvidence",
+        "ResultProposal",
+        "PostVVReport",
+        "GTAdvisoryReport",
+        "RootOwnedIntent",
+        "RootDecision",
+        "ExecutionRequest",
+        "EvidenceReceipt",
+        "RootFinal",
+        "CrossRootEvidenceRef",
+        "TransactionOutcomeEnvelope",
+        "CausalConsumptionRef",
+    )
+    suffix = (
+        "ExecutionModeProposal",
+        "RootExecutionModeDecision",
+        "ExecutionModeRouteEligibility",
+    )
+    assert abi.ARTIFACT_TYPES[: len(historical)] == historical
+    assert abi.ARTIFACT_TYPES[len(historical) :] == suffix
+    assert tuple(_schema()["$defs"]["artifactType"]["enum"][: len(historical)]) == historical
+    assert tuple(_schema()["$defs"]["artifactType"]["enum"][len(historical) :]) == suffix
+
+
+@pytest.mark.parametrize(
+    "artifact_type",
+    (
+        "ExecutionModeProposal",
+        "RootExecutionModeDecision",
+        "ExecutionModeRouteEligibility",
+    ),
+)
+def test_g2c1_artifact_literals_use_unchanged_generic_v1_envelope(
+    artifact_type: str,
+) -> None:
+    artifact = _artifact(artifact_type=artifact_type)
+    assert artifact.abi_version == "v1.0"
+    assert abi.validate_kernel_artifact_v01(artifact) == ()
+    projection = abi.kernel_artifact_to_plain_dict_v01(artifact)
+    Draft202012Validator(_schema()).validate(projection)
+    assert projection["payload"] == {"value": {"items": [1, True, None]}}
+    assert projection["time_envelope"] == _time_envelope()
+
+
+def test_g2c1_abi_append_contains_no_router_import_or_orchestration() -> None:
+    tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
+    imports = []
+    function_names = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imports.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            imports.append(node.module or "")
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            function_names.append(node.name)
+    assert not any("execution_mode_router_v01" in item for item in imports)
+    assert not any("execution_mode" in item for item in function_names)

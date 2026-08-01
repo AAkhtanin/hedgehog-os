@@ -169,7 +169,10 @@
         "RootFinal",
         "CrossRootEvidenceRef",
         "TransactionOutcomeEnvelope",
-        "CausalConsumptionRef"
+        "CausalConsumptionRef",
+        "ExecutionModeProposal",
+        "RootExecutionModeDecision",
+        "ExecutionModeRouteEligibility"
       ]
     },
     "causalDisposition": {

@@ -95,6 +95,9 @@ ARTIFACT_TYPES = (
     "CrossRootEvidenceRef",
     "TransactionOutcomeEnvelope",
     "CausalConsumptionRef",
+    "ExecutionModeProposal",
+    "RootExecutionModeDecision",
+    "ExecutionModeRouteEligibility",
 )
 
 CAUSAL_DISPOSITIONS = (

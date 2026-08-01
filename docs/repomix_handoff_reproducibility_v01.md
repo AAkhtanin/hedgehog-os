@@ -28,10 +28,14 @@ It is not a native Repomix auto-discovery configuration.
 
 During real generation, the tool creates a fully specified native Repomix JSON
 configuration for each profile inside the transactional `_audit_exports`
-directory. It invokes an already-installed local Repomix executable with that
-configuration, removes the temporary configuration, validates the outputs,
-creates `SHA256SUMS`, and atomically publishes the completed handoff directory.
-No permanent `repomix.config.json` is created.
+directory. All active settings are explicit. Unused optional output fields are
+omitted rather than serialized as JSON `null`: no custom header is supplied and
+no instruction file is supplied. This installed-schema compatibility rule does
+not change profile meaning or introduce another content source. The tool
+invokes an already-installed local Repomix executable with that configuration,
+removes the temporary configuration, validates the outputs, creates
+`SHA256SUMS`, and atomically publishes the completed handoff directory. No
+permanent `repomix.config.json` is created.
 
 The generator has no installation or network behavior. It does not use remote
 Repomix mode. Byte-identical reproduction requires the same branch identity,

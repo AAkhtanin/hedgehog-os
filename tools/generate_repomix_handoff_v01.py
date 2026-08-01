@@ -727,6 +727,27 @@ def build_output_plan(config: Mapping[str, object]) -> tuple[tuple[str, str], ..
     return tuple((profile["profile_id"], profile["output_name"]) for profile in profiles)
 
 
+def validate_native_repomix_config_is_null_free(
+    value: object,
+    *,
+    path: str = "$",
+) -> None:
+    if value is None:
+        raise HandoffError(f"Native Repomix config contains null at {path}")
+    if isinstance(value, Mapping):
+        for key, nested in value.items():
+            validate_native_repomix_config_is_null_free(
+                nested,
+                path=f"{path}.{key}",
+            )
+    elif isinstance(value, (list, tuple)):
+        for index, nested in enumerate(value):
+            validate_native_repomix_config_is_null_free(
+                nested,
+                path=f"{path}[{index}]",
+            )
+
+
 def build_native_repomix_config(
     profile: Mapping[str, object],
     output_path: str,
@@ -734,7 +755,7 @@ def build_native_repomix_config(
 ) -> dict[str, object]:
     _safe_relative_path(output_path, "transactional Repomix output path")
     policy = config["repomix_policy"]
-    return {
+    native_config = {
         "input": {"maxFileSize": 50000000},
         "output": {
             "filePath": output_path,
@@ -742,8 +763,6 @@ def build_native_repomix_config(
             "filePathStyle": policy["file_path_style"],
             "parsableStyle": policy["parsable_style"],
             "compress": policy["compress"],
-            "headerText": None,
-            "instructionFilePath": None,
             "fileSummary": policy["file_summary"],
             "directoryStructure": policy["directory_structure"],
             "files": policy["files"],
@@ -773,6 +792,8 @@ def build_native_repomix_config(
         "security": {"enableSecurityCheck": policy["security_check"]},
         "tokenCount": {"encoding": policy["token_count_encoding"]},
     }
+    validate_native_repomix_config_is_null_free(native_config)
+    return native_config
 
 
 def _head_and_origin_bytes(

@@ -572,8 +572,6 @@ def test_native_repomix_config_shape_is_fully_specified() -> None:
             "filePathStyle": "cwd-relative",
             "parsableStyle": False,
             "compress": False,
-            "headerText": None,
-            "instructionFilePath": None,
             "fileSummary": True,
             "directoryStructure": True,
             "files": True,
@@ -601,6 +599,39 @@ def test_native_repomix_config_shape_is_fully_specified() -> None:
         "security": {"enableSecurityCheck": True},
         "tokenCount": {"encoding": "o200k_base"},
     }
+
+
+def test_native_repomix_configs_omit_unused_optional_fields_and_contain_no_nulls() -> None:
+    config = _config()
+    for profile in config["profiles"]:
+        native = GENERATOR.build_native_repomix_config(
+            profile,
+            f"_audit_exports/.sample.tmp-1/{profile['output_name']}",
+            config,
+        )
+        output = native["output"]
+        assert "headerText" not in output
+        assert "instructionFilePath" not in output
+        GENERATOR.validate_native_repomix_config_is_null_free(native)
+        assert "processors" not in native["input"]
+        assert native["security"] == {"enableSecurityCheck": True}
+
+        expected_excludes = list(GLOBAL_EXCLUDE_PATTERNS)
+        if profile["profile_id"] != PROFILE_ORDER[5]:
+            expected_excludes.append("**/*.log")
+        assert native["ignore"]["customPatterns"] == expected_excludes
+
+    invalid_native = GENERATOR.build_native_repomix_config(
+        config["profiles"][0],
+        "_audit_exports/.sample.tmp-1/null-regression.md",
+        config,
+    )
+    invalid_native["output"]["futureOptionalField"] = None
+    with pytest.raises(
+        GENERATOR.HandoffError,
+        match=r"Native Repomix config contains null at \$\.output\.futureOptionalField",
+    ):
+        GENERATOR.validate_native_repomix_config_is_null_free(invalid_native)
 
 
 def test_repository_state_validation_is_phase_independent() -> None:

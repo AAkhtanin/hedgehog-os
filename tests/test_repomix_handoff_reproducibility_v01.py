@@ -603,41 +603,202 @@ def test_native_repomix_config_shape_is_fully_specified() -> None:
     }
 
 
-def test_dirty_diagnostic_dry_run_is_read_only_and_tool_optional() -> None:
+def test_repository_state_validation_is_phase_independent() -> None:
+    clean_identity = _identity(clean=True)
+    dirty_identity = _identity(clean=False)
+    ahead_identity = replace(
+        clean_identity,
+        head="b" * 40,
+        origin_main="a" * 40,
+    )
+
+    GENERATOR.validate_repository_state(
+        clean_identity,
+        mode="dry-run",
+        allow_dirty_diagnostic=False,
+    )
+    GENERATOR.validate_repository_state(
+        clean_identity,
+        mode="dry-run",
+        allow_dirty_diagnostic=True,
+    )
+    GENERATOR.validate_repository_state(
+        clean_identity,
+        mode="generate",
+        allow_dirty_diagnostic=False,
+    )
+    with pytest.raises(GENERATOR.HandoffError, match="Worktree must be clean"):
+        GENERATOR.validate_repository_state(
+            dirty_identity,
+            mode="dry-run",
+            allow_dirty_diagnostic=False,
+        )
+    GENERATOR.validate_repository_state(
+        dirty_identity,
+        mode="dry-run",
+        allow_dirty_diagnostic=True,
+    )
+
+    GENERATOR.validate_repository_state(
+        ahead_identity,
+        mode="dry-run",
+        allow_dirty_diagnostic=False,
+    )
+    GENERATOR.validate_repository_state(
+        ahead_identity,
+        mode="dry-run",
+        allow_dirty_diagnostic=True,
+    )
+    GENERATOR.validate_repository_state(
+        ahead_identity,
+        mode="verify",
+        allow_dirty_diagnostic=False,
+    )
+    with pytest.raises(
+        GENERATOR.HandoffError,
+        match="HEAD must equal origin/main for generation",
+    ):
+        GENERATOR.validate_repository_state(
+            ahead_identity,
+            mode="generate",
+            allow_dirty_diagnostic=False,
+        )
+
+    for mode in ("generate", "verify"):
+        with pytest.raises(
+            GENERATOR.HandoffError,
+            match="valid only with --dry-run",
+        ):
+            GENERATOR.validate_repository_state(
+                clean_identity,
+                mode=mode,
+                allow_dirty_diagnostic=True,
+            )
+
+
+def test_dry_validate_reports_clean_and_dirty_states_without_writes(
+    monkeypatch,
+    capsys,
+) -> None:
     status_before = _git_status()
     output_before = _tree_snapshot(OUTPUT_ROOT)
-    result = _run_generator(
+    real_identity = GENERATOR.collect_repository_identity()
+    simulated = {
+        "identity": replace(
+            real_identity,
+            dirty_entries=(),
+            staging_empty=True,
+        )
+    }
+
+    def collect_simulated_identity(_repository_root=REPOSITORY_ROOT):
+        return simulated["identity"]
+
+    monkeypatch.setattr(
+        GENERATOR,
+        "collect_repository_identity",
+        collect_simulated_identity,
+    )
+
+    GENERATOR.dry_validate(
+        _config(),
+        repomix_binary="/definitely/not/installed/repomix",
+        allow_dirty_diagnostic=False,
+    )
+    assert capsys.readouterr().out.splitlines() == [
+        "STATIC_VALIDATION=PASS",
+        "DIRTY_DIAGNOSTIC_ONLY=false",
+        "WORKTREE_CLEAN=true",
+        "REPOMIX_AVAILABLE=false",
+        "REAL_GENERATION_AVAILABLE=false",
+        "GENERATION_PERFORMED=false",
+    ]
+
+    simulated["identity"] = replace(
+        real_identity,
+        dirty_entries=(" M tests/simulated_dirty_state.py",),
+        staging_empty=True,
+    )
+    GENERATOR.dry_validate(
+        _config(),
+        repomix_binary="/definitely/not/installed/repomix",
+        allow_dirty_diagnostic=True,
+    )
+    assert capsys.readouterr().out.splitlines() == [
+        "STATIC_VALIDATION=PASS",
+        "DIRTY_DIAGNOSTIC_ONLY=true",
+        "WORKTREE_CLEAN=false",
+        "REPOMIX_AVAILABLE=false",
+        "REAL_GENERATION_AVAILABLE=false",
+        "GENERATION_PERFORMED=false",
+    ]
+
+    with pytest.raises(GENERATOR.HandoffError, match="Worktree must be clean"):
+        GENERATOR.dry_validate(
+            _config(),
+            repomix_binary="/definitely/not/installed/repomix",
+            allow_dirty_diagnostic=False,
+        )
+    assert _git_status() == status_before
+    assert _tree_snapshot(OUTPUT_ROOT) == output_before
+
+
+def test_cli_dry_run_matches_actual_repository_phase_and_is_read_only() -> None:
+    status_before = _git_status()
+    output_before = _tree_snapshot(OUTPUT_ROOT)
+    actual_worktree_clean = not bool(status_before)
+
+    diagnostic = _run_generator(
         "--dry-run",
         "--allow-dirty-diagnostic",
         "--repomix-bin",
         "/definitely/not/installed/repomix",
     )
-    assert result.returncode == 0, result.stderr
-    assert "STATIC_VALIDATION=PASS" in result.stdout
-    assert "DIRTY_DIAGNOSTIC_ONLY=true" in result.stdout
-    assert "REPOMIX_AVAILABLE=false" in result.stdout
-    assert "REAL_GENERATION_AVAILABLE=false" in result.stdout
-    assert "GENERATION_PERFORMED=false" in result.stdout
-    assert _git_status() == status_before
-    assert _tree_snapshot(OUTPUT_ROOT) == output_before
+    assert diagnostic.returncode == 0, diagnostic.stderr
+    assert "STATIC_VALIDATION=PASS" in diagnostic.stdout
+    assert "DIRTY_DIAGNOSTIC_ONLY=true" in diagnostic.stdout
+    assert (
+        f"WORKTREE_CLEAN={str(actual_worktree_clean).lower()}"
+        in diagnostic.stdout
+    )
+    assert "REPOMIX_AVAILABLE=false" in diagnostic.stdout
+    assert "REAL_GENERATION_AVAILABLE=false" in diagnostic.stdout
+    assert "GENERATION_PERFORMED=false" in diagnostic.stdout
 
-    closed = _run_generator(
+    ordinary = _run_generator(
         "--dry-run",
         "--repomix-bin",
         "/definitely/not/installed/repomix",
     )
-    assert closed.returncode != 0
-    assert "Worktree must be clean" in closed.stderr
+    if actual_worktree_clean:
+        assert ordinary.returncode == 0, ordinary.stderr
+        assert "STATIC_VALIDATION=PASS" in ordinary.stdout
+        assert "DIRTY_DIAGNOSTIC_ONLY=false" in ordinary.stdout
+        assert "WORKTREE_CLEAN=true" in ordinary.stdout
+        assert "REPOMIX_AVAILABLE=false" in ordinary.stdout
+        assert "REAL_GENERATION_AVAILABLE=false" in ordinary.stdout
+        assert "GENERATION_PERFORMED=false" in ordinary.stdout
+    else:
+        assert ordinary.returncode != 0
+        assert "Worktree must be clean" in ordinary.stderr
+        assert "GENERATION_PERFORMED=false" in ordinary.stderr
+
+    assert _git_status() == status_before
     assert _tree_snapshot(OUTPUT_ROOT) == output_before
 
 
 def test_unavailable_repomix_generate_fails_before_output(monkeypatch, capsys) -> None:
+    status_before = _git_status()
     output_before = _tree_snapshot(OUTPUT_ROOT)
-    real_identity = GENERATOR.collect_repository_identity()
+    synchronized_identity = _identity(clean=True)
+
+    def collect_synchronized_identity(_repository_root=REPOSITORY_ROOT):
+        return synchronized_identity
+
     monkeypatch.setattr(
         GENERATOR,
         "collect_repository_identity",
-        lambda: replace(real_identity, dirty_entries=(), staging_empty=True),
+        collect_synchronized_identity,
     )
     result = GENERATOR.main(
         (
@@ -650,6 +811,8 @@ def test_unavailable_repomix_generate_fails_before_output(monkeypatch, capsys) -
     assert result != 0
     assert "Repomix unavailable" in captured.err
     assert "GENERATION_PERFORMED=false" in captured.err
+    assert "HEAD must equal origin/main" not in captured.err
+    assert _git_status() == status_before
     assert _tree_snapshot(OUTPUT_ROOT) == output_before
 
 

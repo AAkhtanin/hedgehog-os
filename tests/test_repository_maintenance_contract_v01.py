@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 from contextlib import contextmanager
 import hashlib
+import importlib
 import importlib.metadata
 import os
 from pathlib import Path
@@ -62,7 +63,7 @@ DIRECT_IMPORT_ROOT_TO_DISTRIBUTION = {
     "reportlab": "reportlab",
 }
 
-BUILD_SYSTEM_IMPORT_ROOT_TO_REQUIREMENT = {
+BUILD_SYSTEM_BACKEND_ROOT_TO_REQUIREMENT = {
     "setuptools": "setuptools>=77.0.3",
 }
 
@@ -198,14 +199,13 @@ def test_pyproject_dependency_and_direct_import_contract() -> None:
     assert "setuptools" not in declared_names
 
     project_import_roots = set(DIRECT_IMPORT_ROOT_TO_DISTRIBUTION)
-    build_system_import_roots = set(BUILD_SYSTEM_IMPORT_ROOT_TO_REQUIREMENT)
-    expected_import_roots = project_import_roots | build_system_import_roots
+    build_backend_roots = set(BUILD_SYSTEM_BACKEND_ROOT_TO_REQUIREMENT)
 
     repository_python_paths = _repository_python_paths()
     current_test_path = Path(__file__).resolve()
     assert current_test_path in repository_python_paths
-    assert "setuptools" in _direct_import_roots(current_test_path)
-    assert "setuptools" in build_system_import_roots
+    assert "setuptools" not in _direct_import_roots(current_test_path)
+    assert "setuptools" in build_backend_roots
     assert "setuptools" not in project_import_roots
 
     observed_roots: set[str] = set()
@@ -213,22 +213,26 @@ def test_pyproject_dependency_and_direct_import_contract() -> None:
     for path in repository_python_paths:
         observed_roots.update(_direct_import_roots(path) - ignored_roots)
 
-    unknown_import_roots = observed_roots - expected_import_roots
+    unknown_import_roots = observed_roots - project_import_roots
     assert unknown_import_roots == set()
-    assert observed_roots == expected_import_roots
-    assert observed_roots & project_import_roots == project_import_roots
-    assert observed_roots & build_system_import_roots == build_system_import_roots
+    assert observed_roots == project_import_roots
+    assert observed_roots.isdisjoint(build_backend_roots)
 
     approved_build_requirements = set(
-        BUILD_SYSTEM_IMPORT_ROOT_TO_REQUIREMENT.values()
+        BUILD_SYSTEM_BACKEND_ROOT_TO_REQUIREMENT.values()
     )
     assert set(build_requirements) == approved_build_requirements
     assert len(build_requirements) == len(approved_build_requirements)
-    assert BUILD_SYSTEM_IMPORT_ROOT_TO_REQUIREMENT["setuptools"] == (
+    backend = build_system["build-backend"]
+    assert isinstance(backend, str)
+    backend_root = backend.split(".", 1)[0]
+    assert backend_root == "setuptools"
+    assert backend_root in build_backend_roots
+    assert BUILD_SYSTEM_BACKEND_ROOT_TO_REQUIREMENT[backend_root] == (
         "setuptools>=77.0.3"
     )
     assert (
-        BUILD_SYSTEM_IMPORT_ROOT_TO_REQUIREMENT["setuptools"]
+        BUILD_SYSTEM_BACKEND_ROOT_TO_REQUIREMENT[backend_root]
         in build_requirements
     )
 
@@ -267,20 +271,58 @@ def test_license_metadata_and_canonical_bytes_are_exact() -> None:
 
 def test_prepared_metadata_carries_spdx_expression_and_license() -> None:
     try:
-        import setuptools
-        from setuptools import build_meta
-    except Exception as exc:
+        build_meta = importlib.import_module("setuptools.build_meta")
+    except ModuleNotFoundError as exc:
+        if exc.name != "setuptools":
+            raise
         try:
-            observed_version = importlib.metadata.version("setuptools")
-        except importlib.metadata.PackageNotFoundError:
-            observed_version = "UNAVAILABLE"
-        pytest.fail(
-            "accepted PEP-639 metadata proof cannot run: "
-            f"setuptools_version={observed_version}; "
-            f"error={type(exc).__name__}: {exc}"
-        )
+            distribution = importlib.metadata.distribution("hedgehog-os-demo")
+        except importlib.metadata.PackageNotFoundError as metadata_exc:
+            pytest.fail(
+                "accepted PEP-639 metadata proof unavailable: "
+                f"build_backend={type(exc).__name__}: {exc}; "
+                "installed_distribution=PackageNotFoundError: "
+                f"{metadata_exc}"
+            )
 
-    observed_version = getattr(setuptools, "__version__", "UNKNOWN")
+        metadata = distribution.metadata
+        license_fields = metadata.get_all("License-File") or []
+        distribution_files = distribution.files or []
+        license_candidates = [
+            Path(distribution.locate_file(entry))
+            for entry in distribution_files
+            if Path(str(entry)).name == "LICENSE"
+        ]
+        errors: list[str] = []
+        if metadata.get("Name") != "hedgehog-os-demo":
+            errors.append(f"Name={metadata.get('Name')!r}")
+        if distribution.version != "0.1.0":
+            errors.append(f"Version={distribution.version!r}")
+        if metadata.get("License-Expression") != "AGPL-3.0-only":
+            errors.append(
+                f"License-Expression={metadata.get('License-Expression')!r}"
+            )
+        if not any(Path(value).name == "LICENSE" for value in license_fields):
+            errors.append(f"License-File={license_fields!r}")
+        regular_licenses = [path for path in license_candidates if path.is_file()]
+        if not regular_licenses:
+            errors.append("installed_LICENSE=NOT_FOUND")
+        elif not any(
+            _sha256(path) == CANONICAL_AGPL_SOURCE_SHA256
+            for path in regular_licenses
+        ):
+            errors.append("installed_LICENSE_SHA256=MISMATCH")
+        if _sha256(LICENSE_PATH) != CANONICAL_AGPL_SOURCE_SHA256:
+            errors.append("source_LICENSE_SHA256=MISMATCH")
+        if errors:
+            pytest.fail(
+                "accepted PEP-639 installed metadata proof failed: "
+                f"build_backend={type(exc).__name__}: {exc}; "
+                "installed_distribution=" + "; ".join(errors)
+            )
+        return
+
+    observed_version = importlib.metadata.version("setuptools")
     with tempfile.TemporaryDirectory(prefix="hedgehog-r-h1a-metadata-") as raw:
         temporary_root = Path(raw)
         assert REPOSITORY_ROOT not in temporary_root.parents
@@ -307,7 +349,10 @@ def test_prepared_metadata_carries_spdx_expression_and_license() -> None:
 
         dist_info = metadata_dir / dist_info_name
         metadata = (dist_info / "METADATA").read_text(encoding="utf-8")
+        assert "Name: hedgehog-os-demo\n" in metadata
+        assert "Version: 0.1.0\n" in metadata
         assert "License-Expression: AGPL-3.0-only\n" in metadata
+        assert "License-File: LICENSE\n" in metadata
 
         prepared_license = dist_info / "licenses" / "LICENSE"
         assert prepared_license.is_file()

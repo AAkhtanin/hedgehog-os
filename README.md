@@ -36,9 +36,10 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 <!-- BEGIN HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 ## Current Engineering Boundary
 
-The R-H1 repository-maintenance workstream is `CLOSED_PASS`. This internal
-maintenance closure does not close Gate 2 and is not a public release, RC2,
-production-readiness claim, or production-security-certification claim.
+R-H1, G2-A, and G2-B are `CLOSED_PASS`. G2-C ExecutionModeRouter is also
+`CLOSED_PASS`. G2-C is an internal Gate-2 slice closure. It does not close
+Gate 2 and is not a public release, RC2, production-readiness claim, or
+production-security-certification claim.
 
 ```text
 workstream_id: R-H1
@@ -57,23 +58,33 @@ two_domain_status: CLOSED_PASS
 g2a_status: CLOSED_PASS
 g2b_status: CLOSED_PASS
 gate2_status: NOT_CLOSED
-g2c_status: NEXT_NOT_STARTED
-g2c_implementation_authorized: false
+g2c_status: CLOSED_PASS
+g2c_implementation_authorized: true
+g2c_preflight_commit: 4b33c8106dbb3d7b50596630cd9dcdcf3f84cfac
+g2c_implementation_basis_commit: 27a866ca06a331b4169c56abac9a460334d75539
+g2c_audit_commit: 72854bcdc85d19e9c6a6636f9a7eedd1929f03cb
+g2c_closure_commit_identity: NOT_SELF_RECORDED
+g2d_status: NEXT_NOT_STARTED
+g2d_implementation_authorized: false
+g2d_implementation_started: false
 public_release_claimed: false
 rc2_claimed: false
 production_readiness_claimed: false
 production_security_certification_claimed: false
 ```
 
-- Gate 1, the Two-Domain All-Real Sealed Evidence Program, G2-A, and G2-B
-  are `CLOSED_PASS`.
+- Gate 1, the Two-Domain All-Real Sealed Evidence Program, G2-A, G2-B, and
+  G2-C ExecutionModeRouter are `CLOSED_PASS`.
 - Gate 2 is `NOT_CLOSED`.
-- G2-C is `NEXT / NOT_STARTED`, has not started, and is not authorized.
+- G2-D is `NEXT / NOT_STARTED` and `NOT_AUTHORIZED`.
 - R-H1 independent audit synchronized for closure: `true`.
 - R-H1 audit: `docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log`.
 - R-H1 checkpoint: `docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md`.
 - R-H1 is `CLOSED_PASS`.
 - [Accepted R-H1 preflight](docs/clean_clone_licensing_release_spine_reconciliation_r_h1_preflight_v01.md)
+- [Accepted G2-C preflight](docs/execution_mode_router_g2_c_preflight_v01.md)
+- [G2-C independent audit](docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log)
+- [G2-C checkpoint](docs/execution_mode_router_g2_c_checkpoint_v01.md)
 - [Current status overlay](release/current_status_overlay_v01.json)
 - [Claim-to-evidence index](release/claim_to_evidence_index.md)
 - [Current integration seam index](release/integration_seam_index.md)

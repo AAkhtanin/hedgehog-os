@@ -57,26 +57,32 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: R-H1 Clean-Clone, Licensing, and Release-Spine Reconciliation CLOSED_PASS.
+Current checkpoint: G2-C ExecutionModeRouter CLOSED_PASS.
 
-Current R-H1 closure facts:
+Current G2-C closure facts:
 
-- Implementation basis: `c5ca150af2fbb7981e1ed8ee83d914570e14cdeb`.
-- Accepted independent audit commit: `056bc1c746b49699069a90766d067f1a77d205dc`.
-- Accepted audit path: `docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log`.
-- Accepted audit SHA-256: `40148424d58b1f599c9212a6914bdaadbfc932b2cce19fc67fccd0801b12af23`.
-- Checkpoint path: `docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md`.
+- R-H1 implementation basis: `c5ca150af2fbb7981e1ed8ee83d914570e14cdeb`.
+- R-H1 accepted independent audit commit: `056bc1c746b49699069a90766d067f1a77d205dc`.
+- R-H1 accepted audit path: `docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log`.
+- R-H1 accepted audit SHA-256: `40148424d58b1f599c9212a6914bdaadbfc932b2cce19fc67fccd0801b12af23`.
+- R-H1 checkpoint path: `docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md`.
+- Accepted G2-C preflight commit: `4b33c8106dbb3d7b50596630cd9dcdcf3f84cfac`.
+- Accepted G2-C preflight path: `docs/execution_mode_router_g2_c_preflight_v01.md`.
+- G2-C implementation basis: `27a866ca06a331b4169c56abac9a460334d75539`.
+- G2-C audit commit: `72854bcdc85d19e9c6a6636f9a7eedd1929f03cb`.
+- G2-C audit: `docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log`.
+- G2-C checkpoint: `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
 - Closure commit identity: `NOT_SELF_RECORDED`.
 - R-H1 status: `CLOSED_PASS`.
 - Gate 1: `CLOSED_PASS`.
 - Two-Domain programme: `CLOSED_PASS`.
 - G2-A: `CLOSED_PASS`.
 - G2-B: `CLOSED_PASS`.
+- G2-C: `CLOSED_PASS`.
 - Gate 2: `NOT_CLOSED`.
-- G2-C: `NEXT / NOT_STARTED`.
-- G2-C implementation: `NOT_AUTHORIZED`.
-- Next repository operation: read-only G2-C inventory followed by a separately reviewed preflight.
-- No G2-C slice names, slice counts, implementation plans, or validation geometry are frozen yet.
+- G2-D: `NEXT / NOT_STARTED`.
+- G2-D implementation: `NOT_AUTHORIZED`.
+- G2-D implementation started: `false`.
 - Current architecture:
 
   ```text
@@ -86,8 +92,10 @@ Current R-H1 closure facts:
   -> Root
   ```
 
-- Historical execution-representation references create no contract, adapter, migration, cleanup, compatibility workstream, or implementation slice in R-H1D2.
-- R-IP1 does not block G2-C through G2-F.
+- ExecutionModeRouter creates no RuntimeExecutionTopology, packet, permission,
+  receipt, DRS write, FinalOutput, or effect.
+- Historical execution-representation references create no contract, adapter, migration, cleanup, compatibility workstream, or implementation slice.
+- R-IP1 does not block G2-D through G2-F.
 - Private R-IP1 drafts may remain living through Gates 3-6.
 - No public publication occurs before Gate 6 closure and separate explicit owner release approval.
 - Public release: `NOT_CLAIMED`.

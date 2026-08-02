@@ -7,9 +7,14 @@
   `docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md`.
 - External clean-clone validation is `ACCEPTED_PASS` for the audited
   implementation basis.
+- G2-C is `CLOSED_PASS`.
+- Accepted G2-C audit:
+  `docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log`.
+- Accepted G2-C checkpoint:
+  `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-C remains `NEXT / NOT_STARTED`.
-- G2-C implementation remains `NOT_AUTHORIZED`.
+- G2-D is `NEXT / NOT_STARTED`.
+- G2-D implementation remains `NOT_AUTHORIZED`.
 - Public release remains `NOT_CLAIMED`.
 - RC2 remains `NOT_CLAIMED`.
 - Production readiness remains `NOT_CLAIMED`.
@@ -19,6 +24,7 @@
 - Standalone wheel completeness remains `NOT_CLAIMED`.
 - Package-resource migration and console entry points are deferred.
 - No real-world effect is claimed.
+- No RuntimeExecutionTopology was created by G2-C.
 - `release/current_status_overlay_v01.json` is metadata-only and
   non-authoritative.
 - `release/completion_manifest.json` and

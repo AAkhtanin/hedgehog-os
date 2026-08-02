@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 from dataclasses import fields, is_dataclass, replace
+from datetime import datetime, timezone
 from decimal import Decimal
 import hashlib
 import inspect
@@ -13,9 +14,21 @@ from typing import get_args, get_origin, get_type_hints
 from jsonschema import Draft202012Validator
 import pytest
 
+import hedgehog.action_commit_packet_v02 as action_packet
+import hedgehog.context_packets as context_packets
+import hedgehog.drs_g2b_compatibility_v01 as compatibility
+import hedgehog.drs_memory_resolution_v01 as resolution
+import hedgehog.drs_semantic_address_v01 as semantic_address
+import hedgehog.evidence.external_anchor_v01 as external_anchor
+import hedgehog.evidence.sealed_evidence_profile_v01 as evidence_profile
+import hedgehog.evidence.sealed_package_v01 as sealed_package
+import hedgehog.evidence.sealed_replay_evidence_v01 as sealed_replay
 import hedgehog.kernel as kernel
 import hedgehog.kernel.execution_mode_router_v01 as router
+import hedgehog.kernel.transition_registry_v01 as transition_registry
 from hedgehog.kernel.integrity_replay_v01 import canonical_json_bytes_v01
+import hedgehog.semantic_reasoning_adapter as semantic_adapter
+import hedgehog.structured_rationale as structured_rationale
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +48,77 @@ CAPABILITY_SNAPSHOT_ID = "capability-snapshot:g2c:c1:test"
 COST_MODEL_ID = "cost-model:g2c:c1:test"
 EVALUATION_TIME = 1767225600
 ZERO_HASH = "0" * 64
+
+C2_BSEP_BUSINESS_KEYS = (
+    "packet_type", "packet_id", "created_by", "source_refs", "domain",
+    "root_final_authority_preserved", "truth_claimed", "authority_claimed",
+    "action_permission_claimed", "final_output_claimed",
+    "connector_command_claimed", "drs_write_claimed", "root_bypass_claimed",
+    "real_world_effects_allowed", "Root remains final authority", "request_id",
+    "business_subject", "requested_action", "explicit_blockers",
+    "user_visible_summary", "forbidden_authority_fields",
+    "forbidden_action_fields",
+)
+C2_BSEP_ROUTE_KEYS = (
+    "packet_type", "packet_id", "created_by", "source_refs", "domain",
+    "root_final_authority_preserved", "truth_claimed", "authority_claimed",
+    "action_permission_claimed", "final_output_claimed",
+    "connector_command_claimed", "drs_write_claimed", "root_bypass_claimed",
+    "real_world_effects_allowed", "Root remains final authority",
+    "allowed_routes", "required_guards", "selected_vector_ids",
+    "route_validation_expectations", "orchestrator_is_root",
+    "creates_action_commit_packet", "calls_connectors",
+)
+C2_BSEP_PROPOSAL_KEYS = (
+    "proposal_id", "suggested_route", "selected_vector_ids", "required_guards",
+    "reason", "confidence", "needs_review", "uncertainty_notes",
+    "root_review_required", "truth_claimed", "authority_claimed",
+    "action_permission_claimed", "final_output_claimed",
+    "connector_command_claimed", "drs_write_claimed", "plan_graph_claimed",
+    "bypass_root_claimed", "semantic_observations", "route_reasoning",
+    "rejected_route_reasoning", "guard_reasoning", "vector_reasoning",
+    "authority_boundary_reasoning",
+)
+C2_BSEP_RATIONALE_KEYS = (
+    "rationale_type", "schema_version", "observed_semantics",
+    "route_selection_reason", "rejected_routes", "required_guards_reasoning",
+    "selected_vector_reasoning", "uncertainty_notes", "authority_boundary",
+    "root_review_required", "orchestrator_is_root",
+    "creates_action_commit_packet", "calls_connectors", "truth_claimed",
+    "authority_claimed", "action_permission_claimed", "final_output_claimed",
+    "connector_command_claimed", "drs_write_claimed",
+    "action_commit_packet_claimed", "root_bypass_claimed",
+    "root_final_authority_preserved", "Root remains final authority",
+)
+C2_BSEP_PACKET_KEYS = (
+    "packet_type", "packet_id", "created_by", "source_refs", "domain",
+    "root_final_authority_preserved", "truth_claimed", "authority_claimed",
+    "action_permission_claimed", "final_output_claimed",
+    "connector_command_claimed", "drs_write_claimed", "root_bypass_claimed",
+    "real_world_effects_allowed", "Root remains final authority", "source_role",
+    "target_role", "source_route_id", "source_proposal_id",
+    "source_context_packet_id", "source_structured_rationale_ref",
+    "schema_version", "action_commit_packet_claimed", "raw_user_text_included",
+    "raw_cross_role_text_included", "ContextPacket is not truth",
+    "ContextPacket is not authority", "BoundedSemanticEvidencePacket is not truth",
+    "BoundedSemanticEvidencePacket is not authority",
+    "BoundedSemanticEvidencePacket is not FinalOutput",
+    "BoundedSemanticEvidencePacket is not ActionCommitPacket",
+    "Evidence packet is not action permission", "Gemini proposes, Root disposes",
+    "observed_semantic_facts", "missing_evidence", "uncertainty_notes",
+    "risk_boundary_notes", "rejected_action_routes",
+    "required_approvals_or_conditions", "authority_boundary_notes",
+    "selected_vector_ids", "required_guards",
+)
+C2_BSEP_EVIDENCE_FIELDS = (
+    "observed_semantic_facts", "missing_evidence", "uncertainty_notes",
+    "risk_boundary_notes", "rejected_action_routes",
+    "required_approvals_or_conditions", "authority_boundary_notes",
+)
+C2_BSEP_EVIDENCE_ITEM_KEYS = (
+    "text", "source", "evidence_kind", "confidence_label", "candidate_only",
+    "raw_quote",
+)
 
 TYPE_NAMES = (
     "ExecutionModeBSEPBindingV01",
@@ -250,6 +334,18 @@ C1_FUNCTIONS = (
     "rebuild_execution_mode_validation_report_identity_v01",
 )
 
+C2_FUNCTIONS = (
+    "build_execution_mode_source_context_v01",
+    "build_execution_mode_bsep_binding_v01",
+    "build_execution_mode_replay_not_applicable_binding_v01",
+    "build_execution_mode_replay_binding_v01",
+    "build_execution_mode_g2a_no_packet_binding_v01",
+    "build_execution_mode_g2a_binding_v01",
+    "build_execution_mode_g2b_not_applicable_binding_v01",
+    "build_execution_mode_g2b_binding_v01",
+    "validate_execution_mode_router_input_against_sources_v01",
+)
+
 PUBLIC_FUNCTIONS = (
     "build_execution_mode_source_context_v01",
     "validate_execution_mode_source_context_v01",
@@ -325,6 +421,10 @@ PUBLIC_FUNCTIONS = (
     "validate_execution_mode_validation_report_v01",
     "execution_mode_validation_report_to_plain_data_v01",
     "rebuild_execution_mode_validation_report_identity_v01",
+)
+
+IMPLEMENTED_FUNCTIONS_AFTER_C2 = tuple(
+    name for name in PUBLIC_FUNCTIONS if name in set(C1_FUNCTIONS + C2_FUNCTIONS)
 )
 
 PUBLIC_REASONS = (
@@ -457,6 +557,18 @@ C1_SIGNATURES = {
     "validate_execution_mode_validation_report_v01": "(value: 'object') -> 'tuple[str, ...]'",
     "execution_mode_validation_report_to_plain_data_v01": "(value: 'ExecutionModeValidationReportV01') -> 'dict[str, object]'",
     "rebuild_execution_mode_validation_report_identity_v01": "(value: 'ExecutionModeValidationReportV01') -> 'str'",
+}
+
+C2_SIGNATURES = {
+    "build_execution_mode_source_context_v01": "(*, business_request_context_packet: 'dict[str, object]', bsep_packet: 'dict[str, object]', bsep_route_context_packet: 'dict[str, object]', bsep_orchestrator_proposal: 'dict[str, object]', bsep_structured_rationale: 'dict[str, object]', sealed_replay_evidence: 'SealedReplayEvidenceV01 | None', replay_source_manifest: 'SealedPackageManifestV01 | None', replay_source_domain_projection: 'DomainEvidenceProjectionV01 | None', replay_source_safe_file_contents: 'tuple[bytes, ...]', replay_anchor_publication: 'ExternalAnchorPublicationV01 | None', replay_anchored_verification: 'AnchoredPackageVerificationV01 | None', replay_supplied_anchor_publication_id: 'str | None', replay_reconstructed_manifest: 'SealedPackageManifestV01 | None', replay_reconstructed_domain_projection: 'DomainEvidenceProjectionV01 | None', replay_reconstructed_safe_file_contents: 'tuple[bytes, ...]', g2a_inspection: 'ActionPacketPresentEligibilityInspectionV01 | None', g2a_registry: 'ActionCommitPacketRegistryV02 | None', g2a_packet_id: 'str | None', g2a_corridor: 'ContractFulfillmentCorridorV01 | None', g2a_corridor_step: 'CorridorStepV01 | None', g2a_current_dependency_observations: 'tuple[ActionDependencyCurrentObservationV01, ...]', g2a_logical_time_bridge: 'LogicalTimeBridgeV01 | None', g2a_evaluation_time: 'int | None', g2a_evaluation_time_source: 'str | None', g2a_evaluation_context_id: 'str | None', g2a_transition_registry_profile: 'ActionPacketTransitionRegistryProfileV01 | None', g2b_resolution_report: 'DRSResolutionReportV01 | None', g2b_compatibility_projections: 'tuple[LegacyDRSProjectionV01, ...]', g2b_use_time: 'int | None', g2b_root_kernel: 'RootDecisionKernelV01 | None', g2b_root_decision_input: 'RootDecisionInputV01 | None', g2b_root_decision_result: 'RootDecisionResultV01 | None', g2b_writeback_evidence: 'None') -> 'ExecutionModeSourceContextV01'",
+    "build_execution_mode_bsep_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str', source_context: 'ExecutionModeSourceContextV01') -> 'ExecutionModeBSEPBindingV01'",
+    "build_execution_mode_replay_not_applicable_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str') -> 'ExecutionModeReplayBindingV01'",
+    "build_execution_mode_replay_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str', source_context: 'ExecutionModeSourceContextV01') -> 'ExecutionModeReplayBindingV01'",
+    "build_execution_mode_g2a_no_packet_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str', evaluation_time: 'int', evaluation_time_source: 'str', evaluation_context_id: 'str') -> 'ExecutionModeG2ABindingV01'",
+    "build_execution_mode_g2a_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str', source_context: 'ExecutionModeSourceContextV01') -> 'ExecutionModeG2ABindingV01'",
+    "build_execution_mode_g2b_not_applicable_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str') -> 'ExecutionModeG2BBindingV01'",
+    "build_execution_mode_g2b_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str', source_context: 'ExecutionModeSourceContextV01') -> 'ExecutionModeG2BBindingV01'",
+    "validate_execution_mode_router_input_against_sources_v01": "(*, router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01') -> 'ExecutionModeValidationReportV01'",
 }
 
 TYPE_HINT_LABELS = {
@@ -788,6 +900,599 @@ def _source_context() -> router.ExecutionModeSourceContextV01:
     )
 
 
+def _c2_bsep_family(
+    *,
+    request_id: str = "request:g2c:c2:test",
+    domain_id: str = "G2C_C2_TEST_DOMAIN",
+) -> dict[str, dict[str, object]]:
+    route_id = "route:g2c:c2:bounded"
+    proposal_id = "proposal:g2c:c2:bounded"
+    vectors = ("vector:g2c:c2:bounded",)
+    guards = ("guard:g2c:c2:root_review",)
+    business = context_packets.build_business_request_context_packet(
+        packet_id="context_packet:g2c:c2:business",
+        created_by="runtime:g2c:c2",
+        domain=domain_id,
+        request_id=request_id,
+        business_subject="certificate_request",
+        requested_action="bounded_review",
+        user_visible_summary="Bounded certificate request for Root review",
+    )
+    business_ref = {
+        "source": "G2C_BUSINESS_REQUEST_CONTEXT_PACKET_V01",
+        "packet_id": business["packet_id"],
+        "request_id": request_id,
+        "domain_id": domain_id,
+    }
+    route = context_packets.build_orchestrator_route_context_packet(
+        packet_id="context_packet:g2c:c2:route",
+        created_by="runtime:g2c:c2",
+        source_refs=(business_ref,),
+        domain=domain_id,
+        allowed_routes=(route_id,),
+        required_guards=guards,
+        selected_vector_ids=vectors,
+        route_validation_expectations={
+            "root_review_required": True,
+            "selected_only_allowed_vectors": True,
+        },
+        orchestrator_is_root=False,
+        creates_action_commit_packet=False,
+        calls_connectors=False,
+    )
+    proposal: dict[str, object] = {
+        "proposal_id": proposal_id,
+        "suggested_route": route_id,
+        "selected_vector_ids": vectors,
+        "required_guards": guards,
+        "reason": "Bounded semantic review is required.",
+        "confidence": 0.66,
+        "needs_review": True,
+        "uncertainty_notes": ("Evidence remains bounded and incomplete.",),
+        "root_review_required": True,
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "plan_graph_claimed": False,
+        "bypass_root_claimed": False,
+        "semantic_observations": (
+            "A certificate request requires bounded review.",
+        ),
+        "route_reasoning": ("Use the bounded Root review route.",),
+        "rejected_route_reasoning": ("Direct action remains forbidden.",),
+        "guard_reasoning": ("Root review is mandatory.",),
+        "vector_reasoning": ("The bounded vector is relevant.",),
+        "authority_boundary_reasoning": ("Root remains final authority.",),
+    }
+    rationale = structured_rationale.build_orchestrator_structured_rationale(
+        observed_semantics=proposal["semantic_observations"],
+        route_selection_reason=proposal["route_reasoning"],
+        rejected_routes=proposal["rejected_route_reasoning"],
+        required_guards_reasoning=proposal["guard_reasoning"],
+        selected_vector_reasoning=proposal["vector_reasoning"],
+        uncertainty_notes=proposal["uncertainty_notes"],
+        authority_boundary=proposal["authority_boundary_reasoning"],
+        root_review_required=True,
+    )
+    rationale_sha = hashlib.sha256(
+        canonical_json_bytes_v01(rationale)
+    ).hexdigest()
+
+    def item(text: str, evidence_kind: str) -> dict[str, object]:
+        return context_packets.semantic_evidence_item(
+            text,
+            source="runtime_canonicalization",
+            evidence_kind=evidence_kind,
+            confidence_label="medium",
+        )
+
+    packet = context_packets.build_bounded_semantic_evidence_packet(
+        packet_id="context_packet:g2c:c2:bsep",
+        source_refs=(business_ref,),
+        domain=domain_id,
+        source_role="orchestrator",
+        target_role="architect",
+        source_route_id=route_id,
+        source_proposal_id=proposal_id,
+        source_context_packet_id=route["packet_id"],
+        source_structured_rationale_ref=(
+            "structured_rationale_v01:" + rationale_sha
+        ),
+        observed_semantic_facts=(
+            item("A certificate request requires bounded review.", "observed_fact"),
+        ),
+        missing_evidence=(
+            item("Root decision evidence is pending.", "missing_evidence"),
+        ),
+        uncertainty_notes=(
+            item("Evidence remains bounded and incomplete.", "uncertainty"),
+        ),
+        risk_boundary_notes=(
+            item("No action authority is present.", "risk_boundary"),
+        ),
+        rejected_action_routes=(
+            item("Direct action remains forbidden.", "rejected_route"),
+        ),
+        required_approvals_or_conditions=(
+            item("Root review is required.", "approval_condition"),
+        ),
+        authority_boundary_notes=(
+            item("Root remains final authority.", "authority_boundary"),
+        ),
+        selected_vector_ids=vectors,
+        required_guards=guards,
+    )
+    return {
+        "business": business,
+        "route": route,
+        "proposal": proposal,
+        "rationale": rationale,
+        "packet": packet,
+    }
+
+
+def _c2_rebind_rationale(
+    bsep: dict[str, dict[str, object]],
+    rationale: dict[str, object],
+) -> dict[str, dict[str, object]]:
+    rationale_sha = hashlib.sha256(canonical_json_bytes_v01(rationale)).hexdigest()
+    return {
+        **bsep,
+        "rationale": rationale,
+        "packet": {
+            **bsep["packet"],
+            "source_structured_rationale_ref": (
+                "structured_rationale_v01:" + rationale_sha
+            ),
+        },
+    }
+
+
+def _c2_context_for_bsep(
+    bsep: dict[str, dict[str, object]],
+) -> router.ExecutionModeSourceContextV01:
+    return _c2_source_context(
+        bsep=bsep,
+        evaluation_time=200,
+        evaluation_time_source="runtime:g2c:c2:snapshot",
+        evaluation_context_id="emlocal_v01:" + "a" * 64,
+    )
+
+
+def _c2_assert_bsep_failure(
+    bsep: dict[str, dict[str, object]],
+    expected_reason: str,
+) -> None:
+    with pytest.raises(ValueError) as exc:
+        router.build_execution_mode_bsep_binding_v01(
+            request_id="request:g2c:c2:test",
+            transaction_id="transaction:g2c:c2:test",
+            owning_root_id="root:g2c:c2:test",
+            domain_id="G2C_C2_TEST_DOMAIN",
+            source_context=_c2_context_for_bsep(bsep),
+        )
+    assert str(exc.value) == expected_reason
+
+
+def _c2_replay_family(domain_id: str) -> dict[str, object]:
+    kernel_hash = hashlib.sha256(
+        canonical_json_bytes_v01({"domain": domain_id, "slice": "G2-C2"})
+    ).hexdigest()
+    programme = evidence_profile.build_programme_evidence_identity_v01(
+        programme_id="g2c_c2_replay_programme_v01",
+        programme_version="v0.1",
+    )
+    execution = evidence_profile.build_domain_execution_identity_v01(
+        programme_identity=programme,
+        domain_id=domain_id,
+        execution_head="abcdef1",
+        source_task_id="task:g2c:c2:replay",
+        run_id="run:g2c:c2:replay",
+        report_id="report:g2c:c2:replay",
+    )
+    attempt = evidence_profile.build_live_attempt_identity_v01(
+        programme_identity=programme,
+        domain_execution_identity=execution,
+        attempt_number=1,
+        package_id="package:g2c:c2:replay",
+        logical_package_ref="g2c/c2/replay",
+        output_directory_ref="g2c/c2/replay/output",
+        provider_mode="deterministic_fixture",
+        model_id="none",
+        expected_actor_count=1,
+        provider_call_budget=0,
+    )
+    source = evidence_profile.build_safe_source_record_v01(
+        source_id="source:g2c:c2:replay",
+        source_type="g2c_c2_replay_fixture",
+        evidence_class="CRYPTOGRAPHIC_INTEGRITY",
+        canonical_projection={"domain": domain_id, "hash": kernel_hash},
+        media_type="application/json",
+        trace_refs=(kernel_hash,),
+        contains_raw_prompt=False,
+        contains_raw_provider_response=False,
+        secret_scan_passed=True,
+        observed_provider_call_count=0,
+        observed_network_call_count=0,
+        observed_gemini_call_count=0,
+        real_world_effects_count=0,
+    )
+    artifact = evidence_profile.build_evidence_artifact_record_v01(
+        artifact_id="artifact:g2c:c2:replay",
+        artifact_type="g2c_c2_replay_fixture",
+        evidence_class="CRYPTOGRAPHIC_INTEGRITY",
+        source_record_ids=(source.source_record_id,),
+        canonical_projection={"domain": domain_id, "hash": kernel_hash},
+        authority_class="evidence_only",
+        owner_root_id=None,
+        trace_refs=(kernel_hash,),
+        created_authority_count=0,
+        created_permission_count=0,
+        real_world_effects_count=0,
+    )
+    projection = evidence_profile.build_domain_evidence_projection_v01(
+        programme_identity=programme,
+        domain_execution_identity=execution,
+        attempt_identity=attempt,
+        source_records=(source,),
+        artifact_records=(artifact,),
+        kernel_artifact_refs=(),
+        causal_consumption_refs=(),
+        evidence_refs=("evidence:g2c:c2:replay",),
+        limitation_refs=("limitation:g2c:c2:local_only",),
+    )
+    content = canonical_json_bytes_v01(
+        {"domain": domain_id, "hash": kernel_hash}
+    ) + b"\n"
+    file_record = sealed_package.build_safe_file_record_v01(
+        logical_path="evidence/g2c_c2_replay.json",
+        media_type="application/json",
+        content_bytes=content,
+        evidence_class="CRYPTOGRAPHIC_INTEGRITY",
+        source_record_ids=(source.source_record_id,),
+        terminal_newline_required=True,
+        secret_scan_passed=True,
+    )
+    manifest = sealed_package.build_sealed_package_manifest_v01(
+        domain_projection=projection,
+        safe_file_records=(file_record,),
+        safe_file_contents=(content,),
+        kernel_manifest_hash=kernel_hash,
+    )
+    publication = external_anchor.build_external_anchor_publication_v01(
+        manifest=manifest,
+        domain_projection=projection,
+        safe_file_contents=(content,),
+        publication_base_head="abcdef1",
+    )
+    verification = external_anchor.build_anchored_package_verification_v01(
+        anchor_publication=publication,
+        manifest=manifest,
+        domain_projection=projection,
+        safe_file_contents=(content,),
+        supplied_anchor_publication_id=publication.anchor_publication_id,
+    )
+    replay = sealed_replay.build_sealed_replay_evidence_v01(
+        source_manifest=manifest,
+        source_domain_projection=projection,
+        source_safe_file_contents=(content,),
+        anchor_publication=publication,
+        anchored_verification=verification,
+        supplied_anchor_publication_id=publication.anchor_publication_id,
+        reconstructed_manifest=manifest,
+        reconstructed_domain_projection=projection,
+        reconstructed_safe_file_contents=(content,),
+        evidence_refs=("evidence:g2c:c2:replay", "anchor:g2c:c2:replay"),
+    )
+    return {
+        "replay": replay,
+        "manifest": manifest,
+        "projection": projection,
+        "contents": (content,),
+        "publication": publication,
+        "verification": verification,
+    }
+
+
+def _c2_source_context(
+    *,
+    bsep: dict[str, dict[str, object]],
+    evaluation_time: int,
+    evaluation_time_source: str,
+    evaluation_context_id: str,
+    replay: dict[str, object] | None = None,
+    g2a: object | None = None,
+    g2b: dict[str, object] | None = None,
+) -> router.ExecutionModeSourceContextV01:
+    replay = replay or {}
+    g2b = g2b or {}
+    return router.build_execution_mode_source_context_v01(
+        business_request_context_packet=bsep["business"],
+        bsep_packet=bsep["packet"],
+        bsep_route_context_packet=bsep["route"],
+        bsep_orchestrator_proposal=bsep["proposal"],
+        bsep_structured_rationale=bsep["rationale"],
+        sealed_replay_evidence=replay.get("replay"),
+        replay_source_manifest=replay.get("manifest"),
+        replay_source_domain_projection=replay.get("projection"),
+        replay_source_safe_file_contents=replay.get("contents", ()),
+        replay_anchor_publication=replay.get("publication"),
+        replay_anchored_verification=replay.get("verification"),
+        replay_supplied_anchor_publication_id=(
+            replay["publication"].anchor_publication_id if replay else None
+        ),
+        replay_reconstructed_manifest=replay.get("manifest"),
+        replay_reconstructed_domain_projection=replay.get("projection"),
+        replay_reconstructed_safe_file_contents=replay.get("contents", ()),
+        g2a_inspection=getattr(g2a, "inspection", None),
+        g2a_registry=getattr(g2a, "registry", None),
+        g2a_packet_id=(
+            getattr(getattr(g2a, "root_bound", None), "packet_identity", None).packet_id
+            if g2a is not None
+            else None
+        ),
+        g2a_corridor=getattr(g2a, "corridor", None),
+        g2a_corridor_step=getattr(g2a, "corridor_step", None),
+        g2a_current_dependency_observations=getattr(g2a, "observations", ()),
+        g2a_logical_time_bridge=getattr(g2a, "logical_time_bridge", None),
+        g2a_evaluation_time=evaluation_time,
+        g2a_evaluation_time_source=evaluation_time_source,
+        g2a_evaluation_context_id=evaluation_context_id,
+        g2a_transition_registry_profile=(
+            transition_registry.build_action_packet_transition_registry_profile_v01()
+            if g2a is not None
+            else None
+        ),
+        g2b_resolution_report=g2b.get("report"),
+        g2b_compatibility_projections=g2b.get("projections", ()),
+        g2b_use_time=g2b.get("use_time"),
+        g2b_root_kernel=g2b.get("root_kernel"),
+        g2b_root_decision_input=g2b.get("root_input"),
+        g2b_root_decision_result=g2b.get("root_result"),
+        g2b_writeback_evidence=None,
+    )
+
+
+def _c2_snapshot(
+    *,
+    request_id: str,
+    transaction_id: str,
+    owning_root_id: str,
+    domain_id: str,
+    evaluation_time: int,
+    created_by: str = "runtime:g2c:c2:snapshot",
+    action_class: str = "NON_ACTION",
+    action_packet_relation: str = "NOT_APPLICABLE",
+) -> router.ExecutionModeLocalRoutingSnapshotV01:
+    def utc(value: int) -> str:
+        return datetime.fromtimestamp(value, timezone.utc).strftime(
+            "%Y-%m-%dT%H:%M:%S+00:00"
+        )
+
+    profiles = []
+    for index, mode in enumerate(router.EXECUTABLE_EXECUTION_MODES_V01):
+        not_required = mode in (
+            "sealed_replay",
+            "direct_informational_reuse",
+        )
+        profiles.append(
+            router.build_execution_mode_local_mode_profile_v01(
+                request_id=request_id,
+                transaction_id=transaction_id,
+                owning_root_id=owning_root_id,
+                domain_id=domain_id,
+                mode=mode,
+                policy_snapshot_id="policy:g2c:c2",
+                capability_snapshot_id="capability:g2c:c2",
+                cost_model_id="cost:g2c:c2",
+                policy_allowed=True,
+                scope_allowed=True,
+                risk_allowed=True,
+                privacy_allowed=True,
+                capability_state=("NOT_REQUIRED" if not_required else "AVAILABLE"),
+                capability_id=(None if not_required else f"capability:g2c:c2:{mode}"),
+                cost_units=index + 1,
+            )
+        )
+    return router.build_execution_mode_local_routing_snapshot_v01(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        request_class="BOUNDED_REVIEW",
+        action_class=action_class,
+        action_packet_relation=action_packet_relation,
+        scope_class="BOUNDED",
+        scope_ref="scope:g2c:c2",
+        permitted_narrower_scope_refs=(),
+        risk_class="LOW",
+        policy_snapshot_id="policy:g2c:c2",
+        capability_snapshot_id="capability:g2c:c2",
+        cost_model_id="cost:g2c:c2",
+        required_user_input_state="COMPLETE",
+        hard_block_state="CLEAR",
+        evaluation_time_epoch_seconds=evaluation_time,
+        pt_created_at_utc=utc(evaluation_time - 100),
+        et_observed_at_utc=utc(evaluation_time),
+        ct_session_anchor=created_by,
+        ttl_seconds=1000,
+        freshness_class="normal",
+        valid_from_utc=utc(evaluation_time - 100),
+        valid_to_utc=utc(evaluation_time + 900),
+        mode_profiles=tuple(profiles),
+    )
+
+
+def _c2_projection_for_report(
+    report: resolution.DRSResolutionReportV01,
+) -> compatibility.LegacyDRSProjectionV01:
+    import test_drs_semantic_address_reuse_certificate_g2_b_v01 as source_g2b
+
+    return compatibility.build_legacy_drs_projection_v01(
+        source_family="LOCAL_DRS_DICT",
+        source=source_g2b._legacy_sources()["LOCAL_DRS_DICT"],
+        target_semantic_address=report.semantic_address,
+    )
+
+
+def _c2_report_with_projection(
+    report: resolution.DRSResolutionReportV01,
+) -> resolution.DRSResolutionReportV01:
+    projection = _c2_projection_for_report(report)
+    return resolution.build_drs_resolution_report_v01(
+        semantic_address=report.semantic_address,
+        query=report.query,
+        source_projections=(projection,),
+        source_records=report.source_records,
+        query_evaluations=report.query_evaluations,
+        eligible_candidates=report.eligible_candidates,
+        ranked_candidate_ids=report.ranked_candidate_ids,
+        selected_candidate_id=report.selected_candidate_id,
+        retrieval_plan=report.retrieval_plan,
+        memory_descent_result=report.memory_descent_result,
+        root_shortcut_projection=report.root_shortcut_projection,
+        reuse_certificate=report.reuse_certificate,
+        context_only_record_ids=report.context_only_record_ids,
+        historical_only_record_ids=report.historical_only_record_ids,
+        warning_only_record_ids=report.warning_only_record_ids,
+        rerun_required_record_ids=report.rerun_required_record_ids,
+        blocked_record_ids=report.blocked_record_ids,
+        provider_calls=report.provider_calls,
+        network_calls=report.network_calls,
+        gemini_calls=report.gemini_calls,
+        external_drs_calls=report.external_drs_calls,
+        connector_calls=report.connector_calls,
+        real_world_effects_count=report.real_world_effects_count,
+        final_status=report.final_status,
+        reason_codes=report.reason_codes,
+    )
+
+
+def _c2_g2b_context_family() -> dict[str, object]:
+    import test_drs_semantic_address_reuse_certificate_g2_b_v01 as source_g2b
+
+    address = source_g2b._b2_address()
+    record = source_g2b._b2_record(
+        address=address,
+        reuse_policy_class="CONTEXT_ONLY",
+    )
+    query = source_g2b._b2_query(
+        address=address,
+        query_mode="MEMORY_CONTEXT_ONLY",
+        evaluation_time_source="INJECTED_ANALYSIS_TIME",
+        required_time_axes=("KT", "TTL", "VALIDITY"),
+        reuse_intent="CONTEXT",
+        requested_reuse_classes=("CONTEXT_ONLY",),
+    )
+    evaluation = source_g2b._b2_evaluate(record, query)
+    assert evaluation.query_state == "STALE_CONTEXT_ONLY"
+    budget = resolution.build_memory_descent_budget_v01(
+        max_depth=0,
+        max_records_opened=1,
+        max_pointers_opened=0,
+        max_artifacts_opened=0,
+        max_bytes_opened=0,
+        max_lineage_edges=0,
+        max_conflict_records=0,
+    )
+    plan = resolution.build_retrieval_plan_v01(
+        query_id=query.query_id,
+        semantic_address_id=address.semantic_address_id,
+        proposed_record_ids=(record.meaning_record_id,),
+        proposed_memory_pointer_ids=(),
+        proposed_artifact_pointer_ids=(),
+        requested_descent_class="SUMMARY_ONLY",
+        proposed_budget_id=budget.memory_descent_budget_id,
+        required_access_policy_ids=(),
+        reason_codes=(),
+    )
+    provisional = resolution.build_drs_resolution_report_v01(
+        semantic_address=address,
+        query=query,
+        source_projections=(),
+        source_records=(record,),
+        query_evaluations=(evaluation,),
+        eligible_candidates=(),
+        ranked_candidate_ids=(),
+        selected_candidate_id=None,
+        retrieval_plan=plan,
+        memory_descent_result=None,
+        root_shortcut_projection=None,
+        reuse_certificate=None,
+        context_only_record_ids=(record.meaning_record_id,),
+        historical_only_record_ids=(),
+        warning_only_record_ids=(),
+        rerun_required_record_ids=(),
+        blocked_record_ids=(),
+        provider_calls=0,
+        network_calls=0,
+        gemini_calls=0,
+        external_drs_calls=0,
+        connector_calls=0,
+        real_world_effects_count=0,
+        final_status="PASS",
+        reason_codes=(),
+    )
+    report = _c2_report_with_projection(provisional)
+    return {
+        "report": report,
+        "projections": report.source_projections,
+        "use_time": query.evaluation_time,
+    }
+
+
+def _c2_g2b_direct_family() -> dict[str, object]:
+    import test_drs_semantic_address_reuse_certificate_g2_b_v01 as source_g2b
+
+    fixture = source_g2b._b4_fixture()
+    report = _c2_report_with_projection(fixture["report"])
+    return {
+        "report": report,
+        "projections": report.source_projections,
+        "use_time": fixture["use_time"],
+        "root_kernel": fixture["root_kernel"],
+        "root_input": fixture["root_input"],
+        "root_result": fixture["root_result"],
+    }
+
+
+def _c2_g2a_present_family(
+    *,
+    evaluation_time: int,
+    evaluation_time_source: str,
+    evaluation_context_id: str,
+) -> object:
+    from types import SimpleNamespace
+    import test_action_commit_packet_lifecycle_g2_a_v01 as source_g2a
+
+    fixture = source_g2a._g2a4a_fixture_value()
+    profile = transition_registry.build_action_packet_transition_registry_profile_v01()
+    inspection = action_packet.inspect_action_packet_present_eligibility_v01(
+        fixture.registry,
+        packet_id=fixture.root_bound.packet_identity.packet_id,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        current_dependency_observations=fixture.observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+        evaluation_time=evaluation_time,
+        evaluation_time_source=evaluation_time_source,
+        evaluation_context_id=evaluation_context_id,
+        action_packet_transition_registry_profile=profile,
+    )
+    return SimpleNamespace(
+        inspection=inspection,
+        registry=fixture.registry,
+        root_bound=fixture.root_bound,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        observations=fixture.observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+    )
+
+
 SERIALIZED_STEMS = {
     router.ExecutionModeBSEPBindingV01: "execution_mode_bsep_binding",
     router.ExecutionModeReplayBindingV01: "execution_mode_replay_binding",
@@ -1091,7 +1796,7 @@ def test_exact_type_geometry_and_frozen_dataclasses():
         assert tuple(hints[item.name] for item in fields(cls)) == expected
 
 
-def test_exact_public_registries_and_c1_staging():
+def test_exact_public_registries_and_c2_staging():
     assert router.PUBLIC_G2C_FUNCTIONS_V01 == PUBLIC_FUNCTIONS
     assert len(router.PUBLIC_G2C_FUNCTIONS_V01) == 74
     assert len(set(router.PUBLIC_G2C_FUNCTIONS_V01)) == 74
@@ -1111,10 +1816,10 @@ def test_exact_public_registries_and_c1_staging():
     assert router.G2C_IDENTITY_PROFILES_V01 == IDENTITY_PROFILES
     actual = tuple(name for name in router.PUBLIC_G2C_FUNCTIONS_V01
                    if callable(getattr(router, name, None)))
-    assert actual == C1_FUNCTIONS
-    assert len(actual) == 41
+    assert actual == IMPLEMENTED_FUNCTIONS_AFTER_C2
+    assert len(actual) == 50
     assert all(not hasattr(router, name) for name in router.PUBLIC_G2C_FUNCTIONS_V01
-               if name not in C1_FUNCTIONS)
+               if name not in IMPLEMENTED_FUNCTIONS_AFTER_C2)
 
 
 def test_bsep_family_digest_recomputed_and_wrong_well_formed_digest_rejected():
@@ -1155,6 +1860,22 @@ def test_c1_signatures_are_keyword_bounded_and_derived_fields_are_absent():
     assert tuple(C1_SIGNATURES) == C1_FUNCTIONS
     for name, expected in C1_SIGNATURES.items():
         assert str(inspect.signature(getattr(router, name))) == expected
+
+
+def test_exact_c2_signatures_and_future_surface_absence():
+    assert tuple(C2_SIGNATURES) == C2_FUNCTIONS
+    for name, expected in C2_SIGNATURES.items():
+        assert str(inspect.signature(getattr(router, name))) == expected
+    future = tuple(
+        name
+        for name in router.PUBLIC_G2C_FUNCTIONS_V01
+        if name not in IMPLEMENTED_FUNCTIONS_AFTER_C2
+    )
+    assert len(future) == 24
+    assert all(not hasattr(router, name) for name in future)
+    source = MODULE_PATH.read_text(encoding="utf-8")
+    assert "NotImplemented" not in source
+    assert "__getattr__" not in source
 
 
 def test_all_serialized_fixtures_validate_serialize_rebuild_and_match_schema():
@@ -1609,7 +2330,7 @@ def test_import_and_zero_operation_boundary_is_static_and_package_facade_absent(
     assert not banned_calls.intersection(calls)
     for path in (ABI_PATH, TRANSITION_PATH, ROOT_DECISION_PATH):
         assert "execution_mode_router_v01" not in path.read_text(encoding="utf-8")
-    for name in TYPE_NAMES + C1_FUNCTIONS:
+    for name in TYPE_NAMES + IMPLEMENTED_FUNCTIONS_AFTER_C2:
         assert not hasattr(kernel, name)
     assert tuple(kernel.__all__) == (
         "CanonicalArtifactRefV01", "ArtifactDependencyEdgeV01",
@@ -1623,3 +2344,975 @@ def test_import_and_zero_operation_boundary_is_static_and_package_facade_absent(
         "seal_verification_result_to_plain_dict_v01",
         "replay_verification_result_to_plain_dict_v01",
     )
+
+
+def test_c2_source_context_and_actual_bsep_source_family():
+    request_id = "request:g2c:c2:test"
+    transaction_id = "transaction:g2c:c2:test"
+    owning_root_id = "root:g2c:c2:test"
+    domain_id = "G2C_C2_TEST_DOMAIN"
+    bsep = _c2_bsep_family(request_id=request_id, domain_id=domain_id)
+    context = _c2_source_context(
+        bsep=bsep,
+        evaluation_time=200,
+        evaluation_time_source="runtime:g2c:c2:snapshot",
+        evaluation_context_id="emlocal_v01:" + "a" * 64,
+    )
+    assert router.validate_execution_mode_source_context_v01(
+        context
+    ).validation_status == "PASS"
+    rationale_result = (
+        structured_rationale.validate_orchestrator_structured_rationale(
+            bsep["rationale"]
+        )
+    )
+    assert context_packets.validate_business_request_context_packet(
+        bsep["business"]
+    )["accepted"] is True
+    assert context_packets.validate_orchestrator_route_context_packet(
+        bsep["route"]
+    )["accepted"] is True
+    assert semantic_adapter.validate_orchestrator_semantic_reasoning_proposal(
+        bsep["proposal"]
+    ) == ()
+    assert rationale_result["accepted"] is True
+    assert context_packets.validate_bounded_semantic_evidence_packet(
+        bsep["packet"],
+        route_context_packet=bsep["route"],
+        orchestrator_proposal=bsep["proposal"],
+        structured_rationale_validation=rationale_result,
+    )["accepted"] is True
+
+    binding = router.build_execution_mode_bsep_binding_v01(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        source_context=context,
+    )
+    expected_hashes = {
+        "business_request_packet_sha256": hashlib.sha256(
+            canonical_json_bytes_v01(bsep["business"])
+        ).hexdigest(),
+        "source_route_context_sha256": hashlib.sha256(
+            canonical_json_bytes_v01(bsep["route"])
+        ).hexdigest(),
+        "source_proposal_sha256": hashlib.sha256(
+            canonical_json_bytes_v01(bsep["proposal"])
+        ).hexdigest(),
+        "source_structured_rationale_sha256": hashlib.sha256(
+            canonical_json_bytes_v01(bsep["rationale"])
+        ).hexdigest(),
+        "source_packet_sha256": hashlib.sha256(
+            canonical_json_bytes_v01(bsep["packet"])
+        ).hexdigest(),
+    }
+    assert binding.business_request_packet_sha256 == (
+        expected_hashes["business_request_packet_sha256"]
+    )
+    assert binding.source_route_context_sha256 == (
+        expected_hashes["source_route_context_sha256"]
+    )
+    assert binding.source_proposal_sha256 == expected_hashes["source_proposal_sha256"]
+    assert binding.source_structured_rationale_sha256 == (
+        expected_hashes["source_structured_rationale_sha256"]
+    )
+    assert binding.source_packet_sha256 == expected_hashes["source_packet_sha256"]
+    assert binding.source_family_sha256 == router._bsep_source_family_sha256(
+        **expected_hashes
+    )
+    assert binding.source_structured_rationale_ref == (
+        "structured_rationale_v01:"
+        + expected_hashes["source_structured_rationale_sha256"]
+    )
+    assert binding == router.build_execution_mode_bsep_binding_v01(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        source_context=context,
+    )
+    assert not any(
+        (
+            binding.authority_created,
+            binding.permission_created,
+            binding.action_commit_packet_created,
+            binding.final_output_created,
+            bool(binding.real_world_effects_count),
+        )
+    )
+
+
+@pytest.mark.parametrize(
+    ("mutation", "expected_reason"),
+    (
+        ("request", "g2c_business_request_invalid"),
+        ("missing_ref", "g2c_business_request_ref_invalid"),
+        ("foreign_ref", "g2c_business_request_ref_invalid"),
+        ("route", "g2c_bsep_invalid"),
+        ("proposal", "g2c_semantic_proposal_invalid"),
+        ("confidence", "g2c_semantic_proposal_invalid"),
+        ("authority", "g2c_semantic_proposal_invalid"),
+        ("rationale", "g2c_structured_rationale_invalid"),
+        ("packet", "g2c_bsep_invalid"),
+    ),
+)
+def test_c2_bsep_substitution_matrix(mutation, expected_reason):
+    bsep = _c2_bsep_family()
+    context = _c2_source_context(
+        bsep=bsep,
+        evaluation_time=200,
+        evaluation_time_source="runtime:g2c:c2:snapshot",
+        evaluation_context_id="emlocal_v01:" + "a" * 64,
+    )
+    if mutation == "request":
+        context = replace(
+            context,
+            business_request_context_packet={
+                **bsep["business"],
+                "request_id": "request:g2c:c2:foreign",
+            },
+        )
+    elif mutation == "missing_ref":
+        context = replace(
+            context,
+            bsep_route_context_packet={**bsep["route"], "source_refs": ()},
+        )
+    elif mutation == "foreign_ref":
+        context = replace(
+            context,
+            bsep_route_context_packet={
+                **bsep["route"],
+                "source_refs": bsep["route"]["source_refs"]
+                + (
+                    {
+                        "source": "G2C_BUSINESS_REQUEST_CONTEXT_PACKET_V01",
+                        "packet_id": "context_packet:g2c:c2:foreign",
+                        "request_id": "request:g2c:c2:foreign",
+                        "domain_id": "G2C_C2_TEST_DOMAIN",
+                    },
+                ),
+            },
+        )
+    elif mutation == "route":
+        context = replace(
+            context,
+            bsep_route_context_packet={
+                **bsep["route"],
+                "selected_vector_ids": ("vector:g2c:c2:foreign",),
+            },
+        )
+    elif mutation == "proposal":
+        changed = dict(bsep["proposal"])
+        changed.pop("guard_reasoning")
+        context = replace(context, bsep_orchestrator_proposal=changed)
+    elif mutation == "confidence":
+        context = replace(
+            context,
+            bsep_orchestrator_proposal={**bsep["proposal"], "confidence": True},
+        )
+    elif mutation == "authority":
+        context = replace(
+            context,
+            bsep_orchestrator_proposal={
+                **bsep["proposal"],
+                "authority_claimed": True,
+            },
+        )
+    elif mutation == "rationale":
+        context = replace(
+            context,
+            bsep_structured_rationale={
+                **bsep["rationale"],
+                "root_review_required": False,
+            },
+        )
+    else:
+        context = replace(
+            context,
+            bsep_packet={
+                **bsep["packet"],
+                "source_proposal_id": "proposal:g2c:c2:foreign",
+            },
+        )
+    with pytest.raises(ValueError) as exc:
+        router.build_execution_mode_bsep_binding_v01(
+            request_id="request:g2c:c2:test",
+            transaction_id="transaction:g2c:c2:test",
+            owning_root_id="root:g2c:c2:test",
+            domain_id="G2C_C2_TEST_DOMAIN",
+            source_context=context,
+        )
+    assert str(exc.value) == expected_reason
+
+
+def test_c2_replay_absent_bound_and_substitution_contract():
+    common = {
+        "request_id": "request:g2c:c2:replay",
+        "transaction_id": "transaction:g2c:c2:replay",
+        "owning_root_id": "root:g2c:c2:replay",
+        "domain_id": "G2C_C2_REPLAY_DOMAIN",
+    }
+    absent = router.build_execution_mode_replay_not_applicable_binding_v01(
+        **common
+    )
+    assert absent.binding_state == "NOT_APPLICABLE"
+    assert absent.replay_status == "NOT_APPLICABLE"
+    assert absent.evidence_refs == ()
+    assert not any(
+        getattr(absent, name)
+        for name in (
+            "authority_created",
+            "permission_created",
+            "action_commit_packet_created",
+            "receipt_created",
+            "final_output_created",
+            "real_world_effects_count",
+        )
+    )
+    family = _c2_replay_family(common["domain_id"])
+    bsep = _c2_bsep_family(
+        request_id=common["request_id"], domain_id=common["domain_id"]
+    )
+    context = _c2_source_context(
+        bsep=bsep,
+        evaluation_time=200,
+        evaluation_time_source="runtime:g2c:c2:snapshot",
+        evaluation_context_id="emlocal_v01:" + "b" * 64,
+        replay=family,
+    )
+    bound = router.build_execution_mode_replay_binding_v01(
+        **common, source_context=context
+    )
+    assert bound.binding_state == "SEALED_REPLAY_BOUND"
+    assert bound.replay_status == "PASS"
+    assert bound.integrity_verified is True
+    assert bound.continuity_verified is True
+    assert bound.anchor_verified is True
+    assert bound.source_replay_sha256 == hashlib.sha256(
+        canonical_json_bytes_v01(
+            sealed_replay.sealed_replay_evidence_to_plain_dict_v01(
+                family["replay"],
+                source_manifest=family["manifest"],
+                source_domain_projection=family["projection"],
+                source_safe_file_contents=family["contents"],
+                anchor_publication=family["publication"],
+                anchored_verification=family["verification"],
+                supplied_anchor_publication_id=(
+                    family["publication"].anchor_publication_id
+                ),
+                reconstructed_manifest=family["manifest"],
+                reconstructed_domain_projection=family["projection"],
+                reconstructed_safe_file_contents=family["contents"],
+            )
+        )
+    ).hexdigest()
+    for forged in (
+        replace(
+            context,
+            replay_supplied_anchor_publication_id="f" * 64,
+        ),
+        replace(context, replay_reconstructed_safe_file_contents=(b"changed\n",)),
+    ):
+        with pytest.raises(ValueError, match="^g2c_replay_binding_invalid$"):
+            router.build_execution_mode_replay_binding_v01(
+                **common, source_context=forged
+            )
+    with pytest.raises(ValueError, match="^g2c_source_context_invalid$"):
+        router.build_execution_mode_source_context_v01(
+            **{
+                **{
+                    name: getattr(context, name)
+                    for name in FIELD_NAMES["ExecutionModeSourceContextV01"]
+                },
+                "replay_anchor_publication": None,
+            }
+        )
+
+
+def test_c2_g2a_no_packet_and_actual_present_inspection():
+    no_packet = router.build_execution_mode_g2a_no_packet_binding_v01(
+        request_id="request:g2c:c2:g2a",
+        transaction_id="transaction:g2c:c2:g2a",
+        owning_root_id="root:g2c:c2:g2a",
+        domain_id="G2C_C2_G2A_DOMAIN",
+        evaluation_time=1783470602,
+        evaluation_time_source="runtime:g2c:c2:g2a",
+        evaluation_context_id="emlocal_v01:" + "c" * 64,
+    )
+    assert no_packet.binding_state == "NO_PACKET"
+    assert no_packet.historical_lifecycle_state == "NO_PACKET"
+    assert no_packet.idempotency_disposition == "NOT_APPLICABLE"
+    assert no_packet.source_reason_codes == ()
+    assert no_packet.transition_event_count == no_packet.execution_attempt_count == 0
+    assert no_packet.historical_result_unchanged is True
+
+    evaluation_time = 1783470602
+    evaluation_source = "runtime:g2c:c2:g2a"
+    evaluation_context = "emlocal_v01:" + "d" * 64
+    family = _c2_g2a_present_family(
+        evaluation_time=evaluation_time,
+        evaluation_time_source=evaluation_source,
+        evaluation_context_id=evaluation_context,
+    )
+    bsep = _c2_bsep_family(domain_id="G2C_C2_G2A_DOMAIN")
+    context = _c2_source_context(
+        bsep=bsep,
+        evaluation_time=evaluation_time,
+        evaluation_time_source=evaluation_source,
+        evaluation_context_id=evaluation_context,
+        g2a=family,
+    )
+    bound = router.build_execution_mode_g2a_binding_v01(
+        request_id="request:g2c:c2:test",
+        transaction_id=(
+            family.registry.action_packet_lifecycle_entries[0]
+            .root_bound_genesis.canonical_projection.transaction_id
+        ),
+        owning_root_id=(
+            family.registry.action_packet_lifecycle_entries[0]
+            .root_bound_genesis.canonical_projection.owning_local_root_id
+        ),
+        domain_id="G2C_C2_G2A_DOMAIN",
+        source_context=context,
+    )
+    assert bound.binding_state == "PRESENT_INSPECTION_BOUND"
+    assert bound.present_executable is False
+    assert bound.present_eligibility_status == "NON_EXECUTABLE"
+    assert bound.source_reason_codes == family.inspection.reason_codes
+    assert bound.source_inspection_sha256 is not None
+    forged = replace(
+        context,
+        g2a_inspection=replace(
+            family.inspection,
+            present_executable=True,
+        ),
+    )
+    with pytest.raises(
+        ValueError, match="^g2c_g2a_present_inspection_invalid$"
+    ):
+        router.build_execution_mode_g2a_binding_v01(
+            request_id="request:g2c:c2:test",
+            transaction_id=bound.transaction_id,
+            owning_root_id=bound.owning_root_id,
+            domain_id="G2C_C2_G2A_DOMAIN",
+            source_context=forged,
+        )
+
+
+def test_c2_g2b_three_state_query_transaction_and_no_downgrade():
+    absent = router.build_execution_mode_g2b_not_applicable_binding_v01(
+        request_id="request:g2c:c2:g2b",
+        transaction_id="transaction:g2c:c2:g2b",
+        owning_root_id="root:g2c:c2:g2b",
+        domain_id="G2C_C2_G2B_DOMAIN",
+    )
+    assert absent.binding_state == "NOT_APPLICABLE"
+    assert absent.lineage_state == "NOT_APPLICABLE"
+    assert absent.context_available is False
+
+    for maker, expected_state, direct in (
+        (_c2_g2b_context_family, "RESOLUTION_CONTEXT_BOUND", False),
+        (_c2_g2b_direct_family, "DIRECT_REUSE_BOUND", True),
+    ):
+        family = maker()
+        query = family["report"].query
+        bsep = _c2_bsep_family(
+            request_id="request:g2c:c2:g2b", domain_id=query.domain
+        )
+        context = _c2_source_context(
+            bsep=bsep,
+            evaluation_time=query.evaluation_time,
+            evaluation_time_source="runtime:g2c:c2:snapshot",
+            evaluation_context_id="emlocal_v01:" + "e" * 64,
+            g2b=family,
+        )
+        binding = router.build_execution_mode_g2b_binding_v01(
+            request_id="request:g2c:c2:g2b",
+            transaction_id=query.query_id,
+            owning_root_id=query.owning_local_root_id,
+            domain_id=query.domain,
+            source_context=context,
+        )
+        assert binding.binding_state == expected_state
+        assert binding.transaction_id == binding.query_id == query.query_id
+        assert binding.context_available is True
+        assert binding.direct_informational_reuse_eligible is direct
+        assert binding.lineage_state == "VALIDATED"
+        assert binding.freshness_state == ("CURRENT" if direct else "STALE")
+        assert binding.report_sha256 == hashlib.sha256(
+            canonical_json_bytes_v01(
+                resolution.drs_resolution_report_to_plain_data_v01(
+                    family["report"]
+                )
+            )
+        ).hexdigest()
+        with pytest.raises(
+            ValueError, match="^g2c_g2b_query_transaction_mismatch$"
+        ):
+            router.build_execution_mode_g2b_binding_v01(
+                request_id="request:g2c:c2:g2b",
+                transaction_id="transaction:g2c:c2:foreign",
+                owning_root_id=query.owning_local_root_id,
+                domain_id=query.domain,
+                source_context=context,
+            )
+        with pytest.raises(ValueError, match="^g2c_g2b_use_time_invalid$"):
+            router.build_execution_mode_g2b_binding_v01(
+                request_id="request:g2c:c2:g2b",
+                transaction_id=query.query_id,
+                owning_root_id=query.owning_local_root_id,
+                domain_id=query.domain,
+                source_context=replace(context, g2b_use_time=query.evaluation_time + 1),
+            )
+
+    direct_family = _c2_g2b_direct_family()
+    query = direct_family["report"].query
+    bsep = _c2_bsep_family(
+        request_id="request:g2c:c2:g2b", domain_id=query.domain
+    )
+    direct_context = _c2_source_context(
+        bsep=bsep,
+        evaluation_time=query.evaluation_time,
+        evaluation_time_source="runtime:g2c:c2:snapshot",
+        evaluation_context_id="emlocal_v01:" + "e" * 64,
+        g2b=direct_family,
+    )
+    with pytest.raises(ValueError, match="^g2c_g2b_binding_state_derivation_mismatch$"):
+        router.build_execution_mode_g2b_binding_v01(
+            request_id="request:g2c:c2:g2b",
+            transaction_id=query.query_id,
+            owning_root_id=query.owning_local_root_id,
+            domain_id=query.domain,
+            source_context=replace(
+                direct_context,
+                g2b_root_kernel=None,
+                g2b_root_decision_input=None,
+                g2b_root_decision_result=None,
+            ),
+        )
+    assert "binding_state" not in inspect.signature(
+        router.build_execution_mode_g2b_binding_v01
+    ).parameters
+
+
+def _c2_contextual_case(
+    source_kind: str,
+) -> tuple[router.ExecutionModeRouterInputV01, router.ExecutionModeSourceContextV01]:
+    request_id = f"request:g2c:c2:contextual:{source_kind}"
+    transaction_id = f"transaction:g2c:c2:contextual:{source_kind}"
+    owning_root_id = "root:g2c:c2:contextual"
+    domain_id = "G2C_C2_CONTEXTUAL_DOMAIN"
+    evaluation_time = 200
+    replay_family = None
+    g2a_family = None
+    g2b_family = None
+    action_class = "NON_ACTION"
+    action_relation = "NOT_APPLICABLE"
+    if source_kind == "replay":
+        replay_family = _c2_replay_family(domain_id)
+    elif source_kind in {"g2b_context", "g2b_direct"}:
+        g2b_family = (
+            _c2_g2b_context_family()
+            if source_kind == "g2b_context"
+            else _c2_g2b_direct_family()
+        )
+        query = g2b_family["report"].query
+        transaction_id = query.query_id
+        owning_root_id = query.owning_local_root_id
+        domain_id = query.domain
+        evaluation_time = query.evaluation_time
+    elif source_kind == "g2a":
+        evaluation_time = 1783470602
+        action_class = "ACTION"
+        action_relation = "EXISTING_PACKET_ATTEMPT"
+        source_g2a = _c2_g2a_present_family(
+            evaluation_time=evaluation_time,
+            evaluation_time_source="runtime:g2c:c2:snapshot",
+            evaluation_context_id="emlocal_v01:" + "0" * 64,
+        )
+        canonical = (
+            source_g2a.registry.action_packet_lifecycle_entries[0]
+            .root_bound_genesis.canonical_projection
+        )
+        transaction_id = canonical.transaction_id
+        owning_root_id = canonical.owning_local_root_id
+    snapshot = _c2_snapshot(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        evaluation_time=evaluation_time,
+        action_class=action_class,
+        action_packet_relation=action_relation,
+    )
+    if source_kind == "g2a":
+        g2a_family = _c2_g2a_present_family(
+            evaluation_time=evaluation_time,
+            evaluation_time_source=snapshot.created_by,
+            evaluation_context_id=snapshot.local_routing_snapshot_id,
+        )
+    bsep = _c2_bsep_family(request_id=request_id, domain_id=domain_id)
+    context = _c2_source_context(
+        bsep=bsep,
+        evaluation_time=evaluation_time,
+        evaluation_time_source=snapshot.created_by,
+        evaluation_context_id=snapshot.local_routing_snapshot_id,
+        replay=replay_family,
+        g2a=g2a_family,
+        g2b=g2b_family,
+    )
+    common = {
+        "request_id": request_id,
+        "transaction_id": transaction_id,
+        "owning_root_id": owning_root_id,
+        "domain_id": domain_id,
+    }
+    bsep_binding = router.build_execution_mode_bsep_binding_v01(
+        **common, source_context=context
+    )
+    replay_binding = (
+        router.build_execution_mode_replay_binding_v01(
+            **common, source_context=context
+        )
+        if replay_family
+        else router.build_execution_mode_replay_not_applicable_binding_v01(**common)
+    )
+    g2a_binding = (
+        router.build_execution_mode_g2a_binding_v01(
+            **common, source_context=context
+        )
+        if g2a_family
+        else router.build_execution_mode_g2a_no_packet_binding_v01(
+            **common,
+            evaluation_time=evaluation_time,
+            evaluation_time_source=snapshot.created_by,
+            evaluation_context_id=snapshot.local_routing_snapshot_id,
+        )
+    )
+    g2b_binding = (
+        router.build_execution_mode_g2b_binding_v01(
+            **common, source_context=context
+        )
+        if g2b_family
+        else router.build_execution_mode_g2b_not_applicable_binding_v01(**common)
+    )
+    value = router.build_execution_mode_router_input_v01(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        bsep_binding=bsep_binding,
+        local_routing_snapshot=snapshot,
+        replay_binding=replay_binding,
+        g2a_binding=g2a_binding,
+        g2b_binding=g2b_binding,
+    )
+    return value, context
+
+
+@pytest.mark.parametrize(
+    "source_kind",
+    ("absent", "replay", "g2b_context", "g2b_direct", "g2a"),
+)
+def test_c2_contextual_router_input_rebuilds_complete_bindings(source_kind):
+    value, context = _c2_contextual_case(source_kind)
+    report = router.validate_execution_mode_router_input_against_sources_v01(
+        router_input=value,
+        source_context=context,
+    )
+    assert report.validation_status == "PASS"
+    assert report.validation_target == "ROUTER_INPUT_AGAINST_SOURCES"
+    assert report.validated_artifact_id == value.router_input_id
+    assert report.failure_stage == "NONE"
+    assert report.return_to_root_required is False
+    assert report.reason_codes == report.source_reason_codes == ()
+    expected_traces = tuple(
+        sorted(
+            {
+                value.bsep_binding.business_request_packet_id,
+                value.bsep_binding.bsep_binding_id,
+                value.local_routing_snapshot.local_routing_snapshot_id,
+                value.replay_binding.replay_binding_id,
+                value.g2a_binding.g2a_binding_id,
+                value.g2b_binding.g2b_binding_id,
+            }
+        )
+    )
+    assert value.trace_refs == expected_traces
+    assert not any(
+        (
+            report.authority_created,
+            report.permission_created,
+            bool(report.real_world_effects_count),
+        )
+    )
+
+
+def test_c2_contextual_substitution_is_total_and_fail_closed():
+    value, context = _c2_contextual_case("absent")
+    substituted = replace(
+        value,
+        bsep_binding=replace(
+            value.bsep_binding,
+            source_packet_sha256="f" * 64,
+        ),
+    )
+    substituted = replace(
+        substituted,
+        router_input_id=router.rebuild_execution_mode_router_input_identity_v01(
+            substituted
+        ),
+    )
+    report = router.validate_execution_mode_router_input_against_sources_v01(
+        router_input=substituted,
+        source_context=context,
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage in {"STRUCTURAL", "BSEP"}
+    assert report.return_to_root_required is True
+    assert report.reason_codes
+    arbitrary = router.validate_execution_mode_router_input_against_sources_v01(
+        router_input=object(),  # type: ignore[arg-type]
+        source_context=object(),  # type: ignore[arg-type]
+    )
+    assert arbitrary.validation_status == "FAIL_CLOSED"
+    assert arbitrary.validated_artifact_id is None
+    assert arbitrary.request_id is None
+    assert arbitrary.transaction_id is None
+    assert arbitrary.owning_root_id is None
+    assert arbitrary.domain_id is None
+
+
+def test_c2_exact_bsep_source_and_evidence_item_key_sets():
+    bsep = _c2_bsep_family()
+    expected = {
+        "business": C2_BSEP_BUSINESS_KEYS,
+        "route": C2_BSEP_ROUTE_KEYS,
+        "proposal": C2_BSEP_PROPOSAL_KEYS,
+        "rationale": C2_BSEP_RATIONALE_KEYS,
+        "packet": C2_BSEP_PACKET_KEYS,
+    }
+    for family_name, expected_keys in expected.items():
+        assert len(bsep[family_name]) == len(expected_keys)
+        assert set(bsep[family_name]) == set(expected_keys)
+    assert semantic_adapter.ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS == (
+        C2_BSEP_PROPOSAL_KEYS
+    )
+    assert set(router._BSEP_BUSINESS_REQUEST_KEYS) == set(C2_BSEP_BUSINESS_KEYS)
+    assert set(router._BSEP_ROUTE_CONTEXT_KEYS) == set(C2_BSEP_ROUTE_KEYS)
+    assert set(router._BSEP_STRUCTURED_RATIONALE_KEYS) == set(
+        C2_BSEP_RATIONALE_KEYS
+    )
+    assert set(router._BSEP_PACKET_KEYS) == set(C2_BSEP_PACKET_KEYS)
+    assert router._BSEP_EVIDENCE_ITEM_FIELDS == C2_BSEP_EVIDENCE_FIELDS
+    assert set(router._BSEP_EVIDENCE_ITEM_KEYS) == set(
+        C2_BSEP_EVIDENCE_ITEM_KEYS
+    )
+    for field_name in C2_BSEP_EVIDENCE_FIELDS:
+        items = bsep["packet"][field_name]
+        assert type(items) is tuple
+        assert items
+        for item in items:
+            assert type(item) is dict
+            assert set(item) == set(C2_BSEP_EVIDENCE_ITEM_KEYS)
+
+
+def test_c2_bsep_public_source_validator_order_is_preserved(monkeypatch):
+    calls: list[str] = []
+    validator_names = (
+        "validate_business_request_context_packet",
+        "validate_orchestrator_route_context_packet",
+        "validate_orchestrator_semantic_reasoning_proposal",
+        "validate_orchestrator_structured_rationale",
+        "validate_bounded_semantic_evidence_packet",
+    )
+    for name in validator_names:
+        original = getattr(router, name)
+
+        def wrapped(*args, _name=name, _original=original, **kwargs):
+            calls.append(_name)
+            return _original(*args, **kwargs)
+
+        monkeypatch.setattr(router, name, wrapped)
+    bsep = _c2_bsep_family()
+    binding = router.build_execution_mode_bsep_binding_v01(
+        request_id="request:g2c:c2:test",
+        transaction_id="transaction:g2c:c2:test",
+        owning_root_id="root:g2c:c2:test",
+        domain_id="G2C_C2_TEST_DOMAIN",
+        source_context=_c2_context_for_bsep(bsep),
+    )
+    assert binding.binding_state == "BOUNDED_SEMANTIC_EVIDENCE_BOUND"
+    assert tuple(calls) == validator_names
+
+
+_C2_TOP_LEVEL_FOREIGN_FIELDS = (
+    ("extra_benign", "bounded"),
+    ("accepted", True),
+    ("authority_created", True),
+    ("permission_created", True),
+    ("effect_created", True),
+    ("topology_created", True),
+    ("execution_authorized", True),
+    ("provider_selected_mode", "cloud_llm"),
+)
+
+
+@pytest.mark.parametrize(
+    ("family_name", "expected_reason"),
+    (
+        ("business", "g2c_business_request_invalid"),
+        ("route", "g2c_route_context_invalid"),
+        ("proposal", "g2c_semantic_proposal_invalid"),
+        ("rationale", "g2c_structured_rationale_invalid"),
+        ("packet", "g2c_bsep_invalid"),
+    ),
+)
+@pytest.mark.parametrize(("foreign_key", "foreign_value"), _C2_TOP_LEVEL_FOREIGN_FIELDS)
+def test_c2_bsep_top_level_foreign_fields_fail_before_digest(
+    family_name,
+    expected_reason,
+    foreign_key,
+    foreign_value,
+    monkeypatch,
+):
+    bsep = _c2_bsep_family()
+    changed = {**bsep[family_name], foreign_key: foreign_value}
+    bsep = (
+        _c2_rebind_rationale(bsep, changed)
+        if family_name == "rationale"
+        else {**bsep, family_name: changed}
+    )
+    digest_calls: list[object] = []
+    original_sha = router._plain_sha256
+
+    def tracked_sha(value):
+        digest_calls.append(value)
+        return original_sha(value)
+
+    monkeypatch.setattr(router, "_plain_sha256", tracked_sha)
+    _c2_assert_bsep_failure(bsep, expected_reason)
+    assert digest_calls == []
+
+
+@pytest.mark.parametrize("field_name", C2_BSEP_EVIDENCE_FIELDS)
+@pytest.mark.parametrize(
+    ("foreign_key", "foreign_value"),
+    (
+        ("extra_benign", "bounded"),
+        ("accepted", True),
+        ("authority_created", True),
+        ("effect_created", True),
+    ),
+)
+def test_c2_bsep_evidence_item_foreign_fields_rejected(
+    field_name,
+    foreign_key,
+    foreign_value,
+):
+    bsep = _c2_bsep_family()
+    items = list(bsep["packet"][field_name])
+    items[0] = {**items[0], foreign_key: foreign_value}
+    bsep = {
+        **bsep,
+        "packet": {**bsep["packet"], field_name: tuple(items)},
+    }
+    _c2_assert_bsep_failure(bsep, "g2c_bsep_invalid")
+
+
+@pytest.mark.parametrize(
+    "claim_key",
+    (
+        "truth_claimed",
+        "authority_claimed",
+        "action_permission_claimed",
+        "final_output_claimed",
+        "connector_command_claimed",
+        "drs_write_claimed",
+        "action_commit_packet_claimed",
+        "root_bypass_claimed",
+        "bypass_root_claimed",
+        "plan_graph_claimed",
+        "authority_created",
+        "permission_created",
+        "topology_created",
+        "effect_created",
+        "execution_authorized",
+    ),
+)
+def test_c2_nested_rationale_authority_claims_rejected(claim_key):
+    bsep = _c2_bsep_family()
+    rationale = {
+        **bsep["rationale"],
+        "observed_semantics": (
+            {"summary": "Bounded nested explanation.", claim_key: True},
+        ),
+    }
+    _c2_assert_bsep_failure(
+        _c2_rebind_rationale(bsep, rationale),
+        "g2c_structured_rationale_invalid",
+    )
+
+
+def test_c2_nested_rationale_false_claims_and_zero_counters_are_safe():
+    bsep = _c2_bsep_family()
+    nested = {
+        "summary": "Bounded nested explanation.",
+        **{name: False for name in router._SOURCE_FORBIDDEN_TRUE_FIELDS},
+        **{
+            name: 0 for name in router._SOURCE_ZERO_OPERATION_COUNTER_FIELDS
+        },
+    }
+    rationale = {
+        **bsep["rationale"],
+        "observed_semantics": (nested,),
+    }
+    rebound = _c2_rebind_rationale(bsep, rationale)
+    binding = router.build_execution_mode_bsep_binding_v01(
+        request_id="request:g2c:c2:test",
+        transaction_id="transaction:g2c:c2:test",
+        owning_root_id="root:g2c:c2:test",
+        domain_id="G2C_C2_TEST_DOMAIN",
+        source_context=_c2_context_for_bsep(rebound),
+    )
+    assert binding.binding_state == "BOUNDED_SEMANTIC_EVIDENCE_BOUND"
+
+
+@pytest.mark.parametrize(
+    ("unsafe_key", "unsafe_value"),
+    (
+        ("authority_claimed", True),
+        ("final_output_claimed", True),
+        ("authority_created", True),
+        ("effect_created", True),
+        ("real_world_effects_count", 1),
+        ("provider_selected_mode", "cloud_llm"),
+    ),
+)
+def test_c2_business_source_ref_recursive_safety_rejects_unsafe_values(
+    unsafe_key,
+    unsafe_value,
+):
+    bsep = _c2_bsep_family()
+    source_ref = {
+        "source": "G2C_TEST_BUSINESS_SOURCE_V01",
+        "packet_id": "context_packet:g2c:c2:upstream",
+        unsafe_key: unsafe_value,
+    }
+    bsep = {
+        **bsep,
+        "business": {**bsep["business"], "source_refs": (source_ref,)},
+    }
+    _c2_assert_bsep_failure(bsep, "g2c_business_request_invalid")
+
+
+def test_c2_business_source_ref_false_and_zero_claims_are_safe():
+    bsep = _c2_bsep_family()
+    source_ref = {
+        "source": "G2C_TEST_BUSINESS_SOURCE_V01",
+        "packet_id": "context_packet:g2c:c2:upstream",
+        "authority_claimed": False,
+        "final_output_claimed": False,
+        "authority_created": False,
+        "effect_created": False,
+        "real_world_effects_count": 0,
+    }
+    bsep = {
+        **bsep,
+        "business": {**bsep["business"], "source_refs": (source_ref,)},
+    }
+    binding = router.build_execution_mode_bsep_binding_v01(
+        request_id="request:g2c:c2:test",
+        transaction_id="transaction:g2c:c2:test",
+        owning_root_id="root:g2c:c2:test",
+        domain_id="G2C_C2_TEST_DOMAIN",
+        source_context=_c2_context_for_bsep(bsep),
+    )
+    assert binding.binding_state == "BOUNDED_SEMANTIC_EVIDENCE_BOUND"
+
+
+@pytest.mark.parametrize(
+    "family_maker",
+    (_c2_g2b_context_family, _c2_g2b_direct_family),
+    ids=("resolution_context", "direct_reuse"),
+)
+@pytest.mark.parametrize(
+    ("mismatch", "expected_reason"),
+    (
+        ("request_equals_transaction", "g2c_transaction_binding_mismatch"),
+        ("foreign_transaction", "g2c_g2b_query_transaction_mismatch"),
+        ("foreign_root", "g2c_root_binding_mismatch"),
+        ("foreign_domain", "g2c_domain_binding_mismatch"),
+        ("wrong_use_time", "g2c_g2b_use_time_invalid"),
+        ("bool_use_time", "g2c_g2b_use_time_invalid"),
+    ),
+)
+def test_c2_g2b_bound_state_reason_ownership(
+    family_maker,
+    mismatch,
+    expected_reason,
+):
+    family = family_maker()
+    query = family["report"].query
+    bsep = _c2_bsep_family(
+        request_id="request:g2c:c2:g2b",
+        domain_id=query.domain,
+    )
+    context = _c2_source_context(
+        bsep=bsep,
+        evaluation_time=query.evaluation_time,
+        evaluation_time_source="runtime:g2c:c2:snapshot",
+        evaluation_context_id="emlocal_v01:" + "e" * 64,
+        g2b=family,
+    )
+    arguments = {
+        "request_id": "request:g2c:c2:g2b",
+        "transaction_id": query.query_id,
+        "owning_root_id": query.owning_local_root_id,
+        "domain_id": query.domain,
+        "source_context": context,
+    }
+    if mismatch == "request_equals_transaction":
+        arguments["request_id"] = query.query_id
+    elif mismatch == "foreign_transaction":
+        arguments["transaction_id"] = "transaction:g2c:c2:foreign"
+    elif mismatch == "foreign_root":
+        arguments["owning_root_id"] = "root:g2c:c2:foreign"
+    elif mismatch == "foreign_domain":
+        arguments["domain_id"] = "G2C_C2_FOREIGN_DOMAIN"
+    elif mismatch == "wrong_use_time":
+        arguments["source_context"] = replace(
+            context,
+            g2b_use_time=query.evaluation_time + 1,
+        )
+    else:
+        arguments["source_context"] = replace(context, g2b_use_time=True)
+    with pytest.raises(ValueError) as exc:
+        router.build_execution_mode_g2b_binding_v01(**arguments)
+    assert str(exc.value) == expected_reason
+
+
+def test_c2_contextual_source_owned_reason_separation():
+    router_input, source_context = _c2_contextual_case("absent")
+    proposal = dict(source_context.bsep_orchestrator_proposal)
+    proposal.pop("guard_reasoning")
+    report = router.validate_execution_mode_router_input_against_sources_v01(
+        router_input=router_input,
+        source_context=replace(
+            source_context,
+            bsep_orchestrator_proposal=proposal,
+        ),
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == "BSEP"
+    assert report.reason_codes == ("g2c_semantic_proposal_invalid",)
+    assert report.source_reason_codes == (
+        "missing_required_field:guard_reasoning",
+        "semantic_reasoning_missing_field:guard_reasoning",
+    )
+    assert set(report.reason_codes).isdisjoint(report.source_reason_codes)
+    assert report.return_to_root_required is True
+    assert report.authority_created is False
+    assert report.permission_created is False
+    assert report.real_world_effects_count == 0
+    assert not hasattr(router, "build_execution_mode_proposal_v01")

@@ -6,6 +6,7 @@ import hashlib
 import inspect
 import json
 from pathlib import Path
+import re
 
 import pytest
 
@@ -433,7 +434,11 @@ def test_public_dataclasses_are_frozen(cls, registry):
 
 def test_exact_public_function_surface():
     observed = tuple(name for name, value in vars(transition).items() if inspect.isfunction(value) and not name.startswith("_"))
-    assert observed == (*PUBLIC_FUNCTIONS, *ACTION_PACKET_PUBLIC_FUNCTIONS)
+    assert observed == (
+        *PUBLIC_FUNCTIONS,
+        *ACTION_PACKET_PUBLIC_FUNCTIONS,
+        *G2C_TRANSITION_FUNCTIONS,
+    )
 
 
 @pytest.mark.parametrize("name", (
@@ -1006,3 +1011,263 @@ def test_action_packet_registry_validators_are_total() -> None:
         )
     for value in (None, object(), _ExplosiveStr("g2a_t01_activate_root_authorization")):
         assert transition.validate_action_packet_transition_rule_v01(value)
+
+
+G2C_TRANSITION_FUNCTIONS = (
+    "build_execution_mode_transition_registry_profile_v01",
+    "validate_execution_mode_transition_registry_profile_v01",
+    "execution_mode_transition_registry_profile_to_plain_dict_v01",
+    "validate_execution_mode_transition_decision_v01",
+    "execution_mode_transition_decision_to_plain_dict_v01",
+    "rebuild_execution_mode_transition_decision_identity_v01",
+)
+G2C_TRANSITION_SIGNATURES = {
+    "build_execution_mode_transition_registry_profile_v01": (
+        "() -> 'TransitionRegistryV01'"
+    ),
+    "validate_execution_mode_transition_registry_profile_v01": (
+        "(registry: 'object') -> 'tuple[str, ...]'"
+    ),
+    "execution_mode_transition_registry_profile_to_plain_dict_v01": (
+        "(registry: 'TransitionRegistryV01') -> 'dict[str, object]'"
+    ),
+    "validate_execution_mode_transition_decision_v01": (
+        "(*, registry: 'TransitionRegistryV01', decision: 'object') -> "
+        "'tuple[str, ...]'"
+    ),
+    "execution_mode_transition_decision_to_plain_dict_v01": (
+        "(*, registry: 'TransitionRegistryV01', decision: "
+        "'TransitionDecisionV01') -> 'dict[str, object]'"
+    ),
+    "rebuild_execution_mode_transition_decision_identity_v01": (
+        "(decision: 'TransitionDecisionV01') -> 'str'"
+    ),
+}
+G2C_TRANSITION_ROWS = (
+    (
+        "g2c_transition:proposal_to_root_review:v01",
+        "ExecutionModeProposal",
+        "VALIDATED",
+        "execution_mode_router",
+        "ENTER_ROOT_REVIEW",
+        "RootExecutionModeDecision",
+        ("proposal_sources_valid", "proposal_artifact_valid", "target_root_bound"),
+        "RETURN_TO_ROOT",
+        "g2c_transition_root_review_required",
+        False,
+    ),
+    (
+        "g2c_transition:root_accept_to_route:v01",
+        "RootExecutionModeDecision",
+        "ROOT_ACCEPTED",
+        "root",
+        "ACCEPT_ROUTE",
+        "ExecutionModeRouteEligibility",
+        (
+            "root_result_valid",
+            "accepted_mode_valid",
+            "accepted_scope_valid",
+            "consumption_class_valid",
+        ),
+        "ALLOW",
+        "g2c_transition_route_accept_allowed",
+        True,
+    ),
+    (
+        "g2c_transition:root_narrow_to_route:v01",
+        "RootExecutionModeDecision",
+        "ROOT_ACCEPTED",
+        "root",
+        "NARROW_SCOPE",
+        "ExecutionModeRouteEligibility",
+        (
+            "root_result_valid",
+            "accepted_mode_valid",
+            "narrowing_proof_valid",
+            "consumption_class_valid",
+        ),
+        "ALLOW",
+        "g2c_transition_scope_narrow_allowed",
+        True,
+    ),
+    (
+        "g2c_transition:root_reject_record:v01",
+        "RootExecutionModeDecision",
+        "ROOT_REJECTED",
+        "root",
+        "REJECT_ROUTE",
+        "RootExecutionModeDecision",
+        ("root_result_valid", "terminal_consumption_forbidden"),
+        "RETURN_TO_ROOT",
+        "g2c_transition_reject_recorded",
+        True,
+    ),
+    (
+        "g2c_transition:root_block_record:v01",
+        "RootExecutionModeDecision",
+        "BLOCKED_FAIL_CLOSED",
+        "root",
+        "BLOCK_ROUTE",
+        "RootExecutionModeDecision",
+        ("root_result_valid", "terminal_consumption_forbidden"),
+        "BLOCKED_FAIL_CLOSED",
+        "g2c_transition_blocked_recorded",
+        True,
+    ),
+    (
+        "g2c_transition:root_needs_user_record:v01",
+        "RootExecutionModeDecision",
+        "ROOT_REVIEWED",
+        "root",
+        "REQUEST_USER_INPUT",
+        "RootExecutionModeDecision",
+        ("root_result_valid", "terminal_consumption_forbidden"),
+        "NEEDS_USER",
+        "g2c_transition_needs_user_recorded",
+        True,
+    ),
+)
+
+
+def _g2c_decision(
+    rule: transition.TransitionRuleV01,
+    registry: transition.TransitionRegistryV01,
+) -> transition.TransitionDecisionV01:
+    provisional = transition.TransitionDecisionV01(
+        decision_id="0" * 64,
+        registry_id=registry.registry_id,
+        rule_id=rule.rule_id,
+        abi_major_version=rule.abi_major_version,
+        source_artifact_type=rule.source_artifact_type,
+        source_lifecycle_state=rule.source_lifecycle_state,
+        actor_role=rule.actor_role,
+        attempted_effect=rule.attempted_effect,
+        target_artifact_type=rule.target_artifact_type,
+        required_guards=rule.required_guards,
+        satisfied_guards=rule.required_guards,
+        missing_guards=(),
+        decision=rule.decision,
+        reason_code=rule.reason_code,
+        root_commit_required=rule.root_commit_required,
+        root_commit_present=rule.root_commit_required,
+        matched=True,
+    )
+    return replace(
+        provisional,
+        decision_id=transition.rebuild_execution_mode_transition_decision_identity_v01(
+            provisional
+        ),
+    )
+
+
+def test_g2c4_transition_public_surface_and_exact_six_rule_profile() -> None:
+    for name in G2C_TRANSITION_FUNCTIONS:
+        assert inspect.isfunction(getattr(transition, name))
+        assert str(inspect.signature(getattr(transition, name))) == (
+            G2C_TRANSITION_SIGNATURES[name]
+        )
+        assert getattr(kernel_package, name) is getattr(transition, name)
+        assert name not in kernel_package.__all__
+
+    registry = transition.build_execution_mode_transition_registry_profile_v01()
+    assert registry.registry_version == "v0.1"
+    assert registry.abi_major_version == 1
+    assert len(registry.rules) == 6
+    assert tuple(
+        (
+            rule.rule_id,
+            rule.source_artifact_type,
+            rule.source_lifecycle_state,
+            rule.actor_role,
+            rule.attempted_effect,
+            rule.target_artifact_type,
+            rule.required_guards,
+            rule.decision,
+            rule.reason_code,
+            rule.root_commit_required,
+        )
+        for rule in registry.rules
+    ) == G2C_TRANSITION_ROWS
+    assert transition.validate_execution_mode_transition_registry_profile_v01(
+        registry
+    ) == ()
+    plain = transition.execution_mode_transition_registry_profile_to_plain_dict_v01(
+        registry
+    )
+    assert list(plain) == [
+        "registry_id",
+        "registry_version",
+        "abi_major_version",
+        "rules",
+    ]
+    assert canonical_json_bytes_v01(plain) == canonical_json_bytes_v01(
+        transition.execution_mode_transition_registry_profile_to_plain_dict_v01(
+            transition.build_execution_mode_transition_registry_profile_v01()
+        )
+    )
+    assert registry.registry_id == (
+        "a44c497efb934d85d08b1ca097bdae8c4fa07806906e95176d232b1341572376"
+    )
+
+
+def test_g2c4_default_registry_is_byte_identical_after_profile_build() -> None:
+    before = transition.build_default_transition_registry_v01()
+    before_plain = transition.transition_registry_to_plain_dict_v01(before)
+    transition.build_execution_mode_transition_registry_profile_v01()
+    after = transition.build_default_transition_registry_v01()
+    assert after.registry_id == LEGACY_REGISTRY_ID
+    assert tuple(rule.rule_id for rule in after.rules) == LEGACY_RULE_IDS
+    assert canonical_json_bytes_v01(before_plain) == canonical_json_bytes_v01(
+        transition.transition_registry_to_plain_dict_v01(after)
+    )
+
+
+@pytest.mark.parametrize("rule_index", range(6))
+def test_g2c4_profile_decision_identity_and_exact_rule_law(rule_index: int) -> None:
+    registry = transition.build_execution_mode_transition_registry_profile_v01()
+    decision = _g2c_decision(registry.rules[rule_index], registry)
+    assert re.fullmatch(r"[0-9a-f]{64}", decision.decision_id)
+    assert transition.validate_execution_mode_transition_decision_v01(
+        registry=registry, decision=decision
+    ) == ()
+    assert transition.rebuild_execution_mode_transition_decision_identity_v01(
+        decision
+    ) == decision.decision_id
+    plain = transition.execution_mode_transition_decision_to_plain_dict_v01(
+        registry=registry, decision=decision
+    )
+    assert tuple(plain) == DECISION_FIELDS
+    assert plain["required_guards"] == list(decision.required_guards)
+    assert plain["satisfied_guards"] == list(decision.required_guards)
+    assert plain["missing_guards"] == []
+
+
+def test_g2c4_profile_and_decision_mutations_fail_closed() -> None:
+    registry = transition.build_execution_mode_transition_registry_profile_v01()
+    profile_mutations = (
+        None,
+        replace(registry, registry_id="0" * 64),
+        replace(registry, rules=registry.rules[::-1]),
+        replace(registry, rules=registry.rules[:-1]),
+        replace(registry, registry_version="v9.9"),
+    )
+    for mutation in profile_mutations:
+        assert transition.validate_execution_mode_transition_registry_profile_v01(
+            mutation
+        )
+
+    decision = _g2c_decision(registry.rules[1], registry)
+    mutations = (
+        replace(decision, registry_id="0" * 64),
+        replace(decision, rule_id=registry.rules[2].rule_id),
+        replace(decision, satisfied_guards=decision.satisfied_guards[::-1]),
+        replace(decision, missing_guards=(decision.required_guards[0],)),
+        replace(decision, decision="RETURN_TO_ROOT"),
+        replace(decision, reason_code="g2c_transition_reject_recorded"),
+        replace(decision, root_commit_present=False),
+        replace(decision, decision_id="0" * 64),
+    )
+    for mutation in mutations:
+        assert transition.validate_execution_mode_transition_decision_v01(
+            registry=registry, decision=mutation
+        )

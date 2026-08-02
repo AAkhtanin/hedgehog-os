@@ -660,20 +660,23 @@ TYPE_HINT_TYPES = {
     "snapshot": router.ExecutionModeLocalRoutingSnapshotV01,
     "profile_tuple": tuple[router.ExecutionModeLocalModeProfileV01, ...],
     "row_tuple": tuple[router.ExecutionModeFeasibilityRowV01, ...],
-    "opt_sealed_replay": router.SealedReplayEvidenceV01 | None,
-    "opt_manifest": router.SealedPackageManifestV01 | None,
-    "opt_projection": router.DomainEvidenceProjectionV01 | None,
-    "opt_anchor_publication": router.ExternalAnchorPublicationV01 | None,
-    "opt_anchor_verification": router.AnchoredPackageVerificationV01 | None,
-    "opt_g2a_inspection": router.ActionPacketPresentEligibilityInspectionV01 | None,
-    "opt_g2a_registry": router.ActionCommitPacketRegistryV02 | None,
-    "opt_corridor": router.ContractFulfillmentCorridorV01 | None,
-    "opt_corridor_step": router.CorridorStepV01 | None,
-    "observation_tuple": tuple[router.ActionDependencyCurrentObservationV01, ...],
-    "opt_time_bridge": router.LogicalTimeBridgeV01 | None,
+    "opt_sealed_replay": sealed_replay.SealedReplayEvidenceV01 | None,
+    "opt_manifest": sealed_package.SealedPackageManifestV01 | None,
+    "opt_projection": evidence_profile.DomainEvidenceProjectionV01 | None,
+    "opt_anchor_publication": external_anchor.ExternalAnchorPublicationV01 | None,
+    "opt_anchor_verification": external_anchor.AnchoredPackageVerificationV01 | None,
+    "opt_g2a_inspection": action_packet.ActionPacketPresentEligibilityInspectionV01
+    | None,
+    "opt_g2a_registry": action_packet.ActionCommitPacketRegistryV02 | None,
+    "opt_corridor": action_packet.ContractFulfillmentCorridorV01 | None,
+    "opt_corridor_step": action_packet.CorridorStepV01 | None,
+    "observation_tuple": tuple[
+        action_packet.ActionDependencyCurrentObservationV01, ...
+    ],
+    "opt_time_bridge": action_packet.LogicalTimeBridgeV01 | None,
     "opt_action_transition_profile": router.ActionPacketTransitionRegistryProfileV01 | None,
-    "opt_resolution_report": router.DRSResolutionReportV01 | None,
-    "compatibility_tuple": tuple[router.LegacyDRSProjectionV01, ...],
+    "opt_resolution_report": resolution.DRSResolutionReportV01 | None,
+    "compatibility_tuple": tuple[compatibility.LegacyDRSProjectionV01, ...],
     "opt_root_kernel": router.RootDecisionKernelV01 | None,
     "opt_root_input": router.RootDecisionInputV01 | None,
     "opt_root_result": router.RootDecisionResultV01 | None,
@@ -1856,7 +1859,7 @@ def test_exact_type_geometry_and_frozen_dataclasses():
         assert tuple(hints[item.name] for item in fields(cls)) == expected
 
 
-def test_exact_public_registries_and_c3_staging():
+def test_exact_public_registries_and_c4_staging():
     assert router.PUBLIC_G2C_FUNCTIONS_V01 == PUBLIC_FUNCTIONS
     assert len(router.PUBLIC_G2C_FUNCTIONS_V01) == 74
     assert len(set(router.PUBLIC_G2C_FUNCTIONS_V01)) == 74
@@ -1876,10 +1879,11 @@ def test_exact_public_registries_and_c3_staging():
     assert router.G2C_IDENTITY_PROFILES_V01 == IDENTITY_PROFILES
     actual = tuple(name for name in router.PUBLIC_G2C_FUNCTIONS_V01
                    if callable(getattr(router, name, None)))
-    assert actual == IMPLEMENTED_FUNCTIONS_AFTER_C3
-    assert len(actual) == 55
-    assert all(not hasattr(router, name) for name in router.PUBLIC_G2C_FUNCTIONS_V01
-               if name not in IMPLEMENTED_FUNCTIONS_AFTER_C3)
+    assert actual == tuple(
+        name for name in PUBLIC_FUNCTIONS if name not in C4_TRANSITION_FUNCTIONS
+    )
+    assert len(actual) == 68
+    assert all(not hasattr(router, name) for name in C4_TRANSITION_FUNCTIONS)
 
 
 def test_bsep_family_digest_recomputed_and_wrong_well_formed_digest_rejected():
@@ -1922,20 +1926,15 @@ def test_c1_signatures_are_keyword_bounded_and_derived_fields_are_absent():
         assert str(inspect.signature(getattr(router, name))) == expected
 
 
-def test_exact_c2_and_c3_signatures_and_future_surface_absence():
+def test_exact_c2_and_c3_signatures_remain_preserved():
     assert tuple(C2_SIGNATURES) == C2_FUNCTIONS
     for name, expected in C2_SIGNATURES.items():
         assert str(inspect.signature(getattr(router, name))) == expected
-    future = tuple(
-        name
-        for name in router.PUBLIC_G2C_FUNCTIONS_V01
-        if name not in IMPLEMENTED_FUNCTIONS_AFTER_C3
-    )
     assert tuple(C3_SIGNATURES) == C3_FUNCTIONS
     for name, expected in C3_SIGNATURES.items():
         assert str(inspect.signature(getattr(router, name))) == expected
-    assert len(future) == 19
-    assert all(not hasattr(router, name) for name in future)
+    assert all(hasattr(router, name) for name in C4_ROUTER_FUNCTIONS)
+    assert all(hasattr(transition_registry, name) for name in C4_TRANSITION_FUNCTIONS)
     source = MODULE_PATH.read_text(encoding="utf-8")
     assert "NotImplemented" not in source
     assert "__getattr__" not in source
@@ -2108,15 +2107,25 @@ def test_source_context_complete_replay_g2a_and_g2b_structural_shapes():
 
     replay = replace(
         value,
-        sealed_replay_evidence=object.__new__(router.SealedReplayEvidenceV01),
-        replay_source_manifest=object.__new__(router.SealedPackageManifestV01),
-        replay_source_domain_projection=object.__new__(router.DomainEvidenceProjectionV01),
+        sealed_replay_evidence=object.__new__(sealed_replay.SealedReplayEvidenceV01),
+        replay_source_manifest=object.__new__(sealed_package.SealedPackageManifestV01),
+        replay_source_domain_projection=object.__new__(
+            evidence_profile.DomainEvidenceProjectionV01
+        ),
         replay_source_safe_file_contents=(b"source",),
-        replay_anchor_publication=object.__new__(router.ExternalAnchorPublicationV01),
-        replay_anchored_verification=object.__new__(router.AnchoredPackageVerificationV01),
+        replay_anchor_publication=object.__new__(
+            external_anchor.ExternalAnchorPublicationV01
+        ),
+        replay_anchored_verification=object.__new__(
+            external_anchor.AnchoredPackageVerificationV01
+        ),
         replay_supplied_anchor_publication_id="anchor:g2c:c1:test",
-        replay_reconstructed_manifest=object.__new__(router.SealedPackageManifestV01),
-        replay_reconstructed_domain_projection=object.__new__(router.DomainEvidenceProjectionV01),
+        replay_reconstructed_manifest=object.__new__(
+            sealed_package.SealedPackageManifestV01
+        ),
+        replay_reconstructed_domain_projection=object.__new__(
+            evidence_profile.DomainEvidenceProjectionV01
+        ),
         replay_reconstructed_safe_file_contents=(b"reconstructed",),
     )
     assert router.validate_execution_mode_source_context_v01(replay).validation_status == "PASS"
@@ -2126,15 +2135,17 @@ def test_source_context_complete_replay_g2a_and_g2b_structural_shapes():
 
     g2a = replace(
         value,
-        g2a_inspection=object.__new__(router.ActionPacketPresentEligibilityInspectionV01),
-        g2a_registry=object.__new__(router.ActionCommitPacketRegistryV02),
-        g2a_packet_id="packet:g2c:c1:test",
-        g2a_corridor=object.__new__(router.ContractFulfillmentCorridorV01),
-        g2a_corridor_step=object.__new__(router.CorridorStepV01),
-        g2a_current_dependency_observations=(
-            object.__new__(router.ActionDependencyCurrentObservationV01),
+        g2a_inspection=object.__new__(
+            action_packet.ActionPacketPresentEligibilityInspectionV01
         ),
-        g2a_logical_time_bridge=object.__new__(router.LogicalTimeBridgeV01),
+        g2a_registry=object.__new__(action_packet.ActionCommitPacketRegistryV02),
+        g2a_packet_id="packet:g2c:c1:test",
+        g2a_corridor=object.__new__(action_packet.ContractFulfillmentCorridorV01),
+        g2a_corridor_step=object.__new__(action_packet.CorridorStepV01),
+        g2a_current_dependency_observations=(
+            object.__new__(action_packet.ActionDependencyCurrentObservationV01),
+        ),
+        g2a_logical_time_bridge=object.__new__(action_packet.LogicalTimeBridgeV01),
         g2a_transition_registry_profile=object.__new__(
             router.ActionPacketTransitionRegistryProfileV01
         ),
@@ -2144,10 +2155,10 @@ def test_source_context_complete_replay_g2a_and_g2b_structural_shapes():
         replace(g2a, g2a_corridor_step=None)
     ).validation_status == "FAIL_CLOSED"
 
-    projection = object.__new__(router.LegacyDRSProjectionV01)
+    projection = object.__new__(compatibility.LegacyDRSProjectionV01)
     context_bound = replace(
         value,
-        g2b_resolution_report=object.__new__(router.DRSResolutionReportV01),
+        g2b_resolution_report=object.__new__(resolution.DRSResolutionReportV01),
         g2b_compatibility_projections=(projection,),
         g2b_use_time=EVALUATION_TIME,
     )
@@ -2371,7 +2382,7 @@ def test_identity_substitution_tuple_subclass_and_source_native_raw_hex():
     assert router.validate_root_execution_mode_decision_v01(digit_raw).validation_status == "PASS"
 
 
-def test_import_and_zero_operation_boundary_is_static_and_package_facade_absent():
+def test_import_zero_operation_boundary_and_direct_package_facade():
     tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
     imported = []
     calls = []
@@ -2393,8 +2404,12 @@ def test_import_and_zero_operation_boundary_is_static_and_package_facade_absent(
     assert not banned_calls.intersection(calls)
     for path in (ABI_PATH, TRANSITION_PATH, ROOT_DECISION_PATH):
         assert "execution_mode_router_v01" not in path.read_text(encoding="utf-8")
-    for name in TYPE_NAMES + IMPLEMENTED_FUNCTIONS_AFTER_C3:
-        assert not hasattr(kernel, name)
+    for name in TYPE_NAMES + tuple(
+        item for item in PUBLIC_FUNCTIONS if item not in C4_TRANSITION_FUNCTIONS
+    ):
+        assert getattr(kernel, name) is getattr(router, name)
+    for name in C4_TRANSITION_FUNCTIONS:
+        assert getattr(kernel, name) is getattr(transition_registry, name)
     assert tuple(kernel.__all__) == (
         "CanonicalArtifactRefV01", "ArtifactDependencyEdgeV01",
         "RootOwnershipBindingV01", "EvidenceClassBindingV01",
@@ -3388,21 +3403,21 @@ def test_c2_exact_bsep_source_and_evidence_item_key_sets():
 
 def test_c2_bsep_public_source_validator_order_is_preserved(monkeypatch):
     calls: list[str] = []
-    validator_names = (
-        "validate_business_request_context_packet",
-        "validate_orchestrator_route_context_packet",
-        "validate_orchestrator_semantic_reasoning_proposal",
-        "validate_orchestrator_structured_rationale",
-        "validate_bounded_semantic_evidence_packet",
+    validator_owners = (
+        (context_packets, "validate_business_request_context_packet"),
+        (context_packets, "validate_orchestrator_route_context_packet"),
+        (semantic_adapter, "validate_orchestrator_semantic_reasoning_proposal"),
+        (structured_rationale, "validate_orchestrator_structured_rationale"),
+        (context_packets, "validate_bounded_semantic_evidence_packet"),
     )
-    for name in validator_names:
-        original = getattr(router, name)
+    for owner, name in validator_owners:
+        original = getattr(owner, name)
 
         def wrapped(*args, _name=name, _original=original, **kwargs):
             calls.append(_name)
             return _original(*args, **kwargs)
 
-        monkeypatch.setattr(router, name, wrapped)
+        monkeypatch.setattr(owner, name, wrapped)
     bsep = _c2_bsep_family()
     binding = router.build_execution_mode_bsep_binding_v01(
         request_id="request:g2c:c2:test",
@@ -3412,7 +3427,7 @@ def test_c2_bsep_public_source_validator_order_is_preserved(monkeypatch):
         source_context=_c2_context_for_bsep(bsep),
     )
     assert binding.binding_state == "BOUNDED_SEMANTIC_EVIDENCE_BOUND"
-    assert tuple(calls) == validator_names
+    assert tuple(calls) == tuple(name for _, name in validator_owners)
 
 
 _C2_TOP_LEVEL_FOREIGN_FIELDS = (
@@ -3754,7 +3769,7 @@ C3_FUTURE_FUNCTIONS = (
 
 def test_c3_exact_cumulative_surface_and_mode_tables():
     assert router.SLICE_ID == (
-        "gate2_g2c3_execution_mode_router_feasibility_proposal"
+        "gate2_g2c4_execution_mode_router_root_abi_transition_route_eligibility"
     )
     assert tuple(C3_SIGNATURES) == C3_FUNCTIONS
     for name, expected in {**C1_SIGNATURES, **C2_SIGNATURES, **C3_SIGNATURES}.items():
@@ -3762,12 +3777,12 @@ def test_c3_exact_cumulative_surface_and_mode_tables():
     actual = tuple(
         name for name in PUBLIC_FUNCTIONS if callable(getattr(router, name, None))
     )
-    assert actual == IMPLEMENTED_FUNCTIONS_AFTER_C3
-    assert len(actual) == 55
-    assert tuple(
-        name for name in PUBLIC_FUNCTIONS if name not in actual
-    ) == C3_FUTURE_FUNCTIONS
-    assert all(not hasattr(router, name) for name in C3_FUTURE_FUNCTIONS)
+    assert actual == tuple(
+        name for name in PUBLIC_FUNCTIONS if name not in C4_TRANSITION_FUNCTIONS
+    )
+    assert len(actual) == 68
+    assert all(hasattr(router, name) for name in C4_ROUTER_FUNCTIONS)
+    assert all(not hasattr(router, name) for name in C4_TRANSITION_FUNCTIONS)
     assert router.CANONICAL_EXECUTION_MODES_V01 == (
         "deterministic", "sealed_replay", "direct_informational_reuse",
         "memory_informed", "local_slm", "cloud_llm", "full_semantic",
@@ -4967,3 +4982,504 @@ def test_c3r2_returned_c2_failure_preserves_stage_and_reason_ownership():
     assert report.failure_stage == input_report.failure_stage
     assert report.reason_codes == input_report.reason_codes
     assert report.source_reason_codes == input_report.source_reason_codes
+
+
+C4_TRANSITION_FUNCTIONS = (
+    "build_execution_mode_transition_registry_profile_v01",
+    "validate_execution_mode_transition_registry_profile_v01",
+    "execution_mode_transition_registry_profile_to_plain_dict_v01",
+    "validate_execution_mode_transition_decision_v01",
+    "execution_mode_transition_decision_to_plain_dict_v01",
+    "rebuild_execution_mode_transition_decision_identity_v01",
+)
+C4_ROUTER_FUNCTIONS = (
+    "build_root_execution_mode_review_input_v01",
+    "build_execution_mode_root_decision_source_v01",
+    "project_root_execution_mode_decision_v01",
+    "review_execution_mode_proposal_v01",
+    "validate_root_execution_mode_review_input_against_sources_v01",
+    "validate_root_execution_mode_decision_against_source_v01",
+    "validate_execution_mode_route_eligibility_against_source_v01",
+    "project_execution_mode_proposal_kernel_artifact_v01",
+    "project_root_execution_mode_decision_kernel_artifact_v01",
+    "project_execution_mode_route_eligibility_kernel_artifact_v01",
+    "validate_execution_mode_abi_profile_v01",
+    "evaluate_execution_mode_proposal_to_root_transition_v01",
+    "evaluate_execution_mode_root_route_transition_v01",
+)
+C4_SIGNATURES = {
+    "build_root_execution_mode_review_input_v01": "(*, proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', proposal_artifact: 'KernelArtifactV01', proposal_transition_decision: 'TransitionDecisionV01', review_action: 'str', accepted_scope_ref: 'str | None', narrowing_basis_refs: 'tuple[str, ...]') -> 'RootExecutionModeReviewInputV01'",
+    "build_execution_mode_root_decision_source_v01": "(*, review_input: 'RootExecutionModeReviewInputV01', proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', proposal_artifact: 'KernelArtifactV01', proposal_transition_decision: 'TransitionDecisionV01', root_kernel: 'RootDecisionKernelV01') -> 'tuple[SemanticWorkRequestV01, NormalizedClaimV01, ActorContributionV01, RootReviewPacketV01, RootDecisionInputV01, RootDecisionResultV01]'",
+    "project_root_execution_mode_decision_v01": "(*, review_input: 'RootExecutionModeReviewInputV01', proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', root_kernel: 'RootDecisionKernelV01', root_decision_input: 'RootDecisionInputV01', root_decision_result: 'RootDecisionResultV01') -> 'RootExecutionModeDecisionV01'",
+    "review_execution_mode_proposal_v01": "(*, review_input: 'RootExecutionModeReviewInputV01', proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', proposal_artifact: 'KernelArtifactV01', proposal_transition_decision: 'TransitionDecisionV01') -> 'tuple[RootExecutionModeDecisionV01 | None, RootDecisionKernelV01 | None, RootDecisionInputV01 | None, RootDecisionResultV01 | None, ExecutionModeValidationReportV01]'",
+    "validate_root_execution_mode_review_input_against_sources_v01": "(*, review_input: 'RootExecutionModeReviewInputV01', proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', proposal_artifact: 'KernelArtifactV01', proposal_transition_decision: 'TransitionDecisionV01') -> 'ExecutionModeValidationReportV01'",
+    "validate_root_execution_mode_decision_against_source_v01": "(*, decision: 'RootExecutionModeDecisionV01', review_input: 'RootExecutionModeReviewInputV01', proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', proposal_artifact: 'KernelArtifactV01', proposal_transition_decision: 'TransitionDecisionV01', root_kernel: 'RootDecisionKernelV01', root_decision_input: 'RootDecisionInputV01', root_decision_result: 'RootDecisionResultV01') -> 'ExecutionModeValidationReportV01'",
+    "validate_execution_mode_route_eligibility_against_source_v01": "(*, route_eligibility_artifact: 'KernelArtifactV01', decision: 'RootExecutionModeDecisionV01', review_input: 'RootExecutionModeReviewInputV01', proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', proposal_artifact: 'KernelArtifactV01', proposal_transition_decision: 'TransitionDecisionV01', root_kernel: 'RootDecisionKernelV01', root_decision_input: 'RootDecisionInputV01', root_decision_result: 'RootDecisionResultV01', decision_artifact: 'KernelArtifactV01', root_route_transition_decision: 'TransitionDecisionV01') -> 'ExecutionModeValidationReportV01'",
+    "project_execution_mode_proposal_kernel_artifact_v01": "(*, proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01') -> 'KernelArtifactV01'",
+    "project_root_execution_mode_decision_kernel_artifact_v01": "(*, decision: 'RootExecutionModeDecisionV01', review_input: 'RootExecutionModeReviewInputV01', proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', proposal_artifact: 'KernelArtifactV01', proposal_transition_decision: 'TransitionDecisionV01', root_kernel: 'RootDecisionKernelV01', root_decision_input: 'RootDecisionInputV01', root_decision_result: 'RootDecisionResultV01') -> 'KernelArtifactV01'",
+    "project_execution_mode_route_eligibility_kernel_artifact_v01": "(*, decision: 'RootExecutionModeDecisionV01', review_input: 'RootExecutionModeReviewInputV01', proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', proposal_artifact: 'KernelArtifactV01', proposal_transition_decision: 'TransitionDecisionV01', root_kernel: 'RootDecisionKernelV01', root_decision_input: 'RootDecisionInputV01', root_decision_result: 'RootDecisionResultV01', decision_artifact: 'KernelArtifactV01', root_route_transition_decision: 'TransitionDecisionV01') -> 'KernelArtifactV01 | None'",
+    "validate_execution_mode_abi_profile_v01": "(*, proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', proposal_artifact: 'KernelArtifactV01', proposal_transition_decision: 'TransitionDecisionV01', review_input: 'RootExecutionModeReviewInputV01', decision: 'RootExecutionModeDecisionV01', root_kernel: 'RootDecisionKernelV01', root_decision_input: 'RootDecisionInputV01', root_decision_result: 'RootDecisionResultV01', decision_artifact: 'KernelArtifactV01', root_route_transition_decision: 'TransitionDecisionV01', route_eligibility_artifact: 'KernelArtifactV01 | None') -> 'ExecutionModeValidationReportV01'",
+    "evaluate_execution_mode_proposal_to_root_transition_v01": "(*, registry: 'TransitionRegistryV01', proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', proposal_artifact: 'KernelArtifactV01') -> 'TransitionDecisionV01'",
+    "evaluate_execution_mode_root_route_transition_v01": "(*, registry: 'TransitionRegistryV01', proposal_transition_decision: 'TransitionDecisionV01', review_input: 'RootExecutionModeReviewInputV01', decision: 'RootExecutionModeDecisionV01', proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', root_kernel: 'RootDecisionKernelV01', root_decision_input: 'RootDecisionInputV01', root_decision_result: 'RootDecisionResultV01', proposal_artifact: 'KernelArtifactV01', decision_artifact: 'KernelArtifactV01') -> 'TransitionDecisionV01'",
+}
+
+
+def _c4_with_narrower_scope(
+    router_input: router.ExecutionModeRouterInputV01,
+) -> router.ExecutionModeRouterInputV01:
+    old = router_input.local_routing_snapshot
+    snapshot = router.build_execution_mode_local_routing_snapshot_v01(
+        request_id=old.request_id, transaction_id=old.transaction_id,
+        owning_root_id=old.owning_root_id, domain_id=old.domain_id,
+        request_class=old.request_class, action_class=old.action_class,
+        action_packet_relation=old.action_packet_relation,
+        scope_class=old.scope_class, scope_ref=old.scope_ref,
+        permitted_narrower_scope_refs=("scope:g2c:c4:narrow",),
+        risk_class=old.risk_class, policy_snapshot_id=old.policy_snapshot_id,
+        capability_snapshot_id=old.capability_snapshot_id,
+        cost_model_id=old.cost_model_id,
+        required_user_input_state=old.required_user_input_state,
+        hard_block_state=old.hard_block_state,
+        evaluation_time_epoch_seconds=old.evaluation_time_epoch_seconds,
+        pt_created_at_utc=old.pt_created_at_utc,
+        et_observed_at_utc=old.et_observed_at_utc,
+        ct_session_anchor=old.ct_session_anchor, ttl_seconds=old.ttl_seconds,
+        freshness_class=old.freshness_class,
+        valid_from_utc=old.valid_from_utc, valid_to_utc=old.valid_to_utc,
+        mode_profiles=old.mode_profiles,
+    )
+    g2a = router.build_execution_mode_g2a_no_packet_binding_v01(
+        request_id=old.request_id, transaction_id=old.transaction_id,
+        owning_root_id=old.owning_root_id, domain_id=old.domain_id,
+        evaluation_time=old.evaluation_time_epoch_seconds,
+        evaluation_time_source=old.created_by,
+        evaluation_context_id=snapshot.local_routing_snapshot_id,
+    )
+    return router.build_execution_mode_router_input_v01(
+        request_id=old.request_id, transaction_id=old.transaction_id,
+        owning_root_id=old.owning_root_id,
+        bsep_binding=router_input.bsep_binding,
+        local_routing_snapshot=snapshot,
+        replay_binding=router_input.replay_binding,
+        g2a_binding=g2a, g2b_binding=router_input.g2b_binding,
+    )
+
+
+def _c4_pipeline(outcome: str) -> dict[str, object]:
+    kwargs: dict[str, object] = {}
+    if outcome == "BLOCKED":
+        kwargs["hard_block_state"] = "BLOCKED"
+    elif outcome == "NEEDS_USER":
+        kwargs["required_user_input_state"] = "MISSING_RESOLVABLE"
+    router_input, context = _c3_contextual_case(**kwargs)
+    if outcome == "NARROW":
+        router_input = _c4_with_narrower_scope(router_input)
+        context = replace(
+            context,
+            g2a_evaluation_time=(
+                router_input.local_routing_snapshot.evaluation_time_epoch_seconds
+            ),
+            g2a_evaluation_time_source=router_input.local_routing_snapshot.created_by,
+            g2a_evaluation_context_id=(
+                router_input.local_routing_snapshot.local_routing_snapshot_id
+            ),
+        )
+    proposal, route_report = router.route_execution_mode_v01(
+        router_input=router_input, source_context=context
+    )
+    assert proposal is not None and route_report.validation_status == "PASS"
+    proposal_artifact = router.project_execution_mode_proposal_kernel_artifact_v01(
+        proposal=proposal, router_input=router_input, source_context=context
+    )
+    registry = transition_registry.build_execution_mode_transition_registry_profile_v01()
+    pre = router.evaluate_execution_mode_proposal_to_root_transition_v01(
+        registry=registry, proposal=proposal, router_input=router_input,
+        source_context=context, proposal_artifact=proposal_artifact,
+    )
+    if outcome == "ACCEPT":
+        action, accepted, basis = "ACCEPT", proposal.proposed_scope_ref, ()
+    elif outcome == "NARROW":
+        action, accepted, basis = "NARROW", "scope:g2c:c4:narrow", ("basis:g2c:c4:narrow",)
+    elif outcome == "REJECT":
+        action, accepted, basis = "REJECT", None, ()
+    else:
+        action, accepted, basis = "TERMINAL_FROM_PROPOSAL", None, ()
+    review_input = router.build_root_execution_mode_review_input_v01(
+        proposal=proposal, router_input=router_input, source_context=context,
+        proposal_artifact=proposal_artifact, proposal_transition_decision=pre,
+        review_action=action, accepted_scope_ref=accepted,
+        narrowing_basis_refs=basis,
+    )
+    decision, root_kernel, root_input, root_result, review_report = router.review_execution_mode_proposal_v01(
+        review_input=review_input, proposal=proposal, router_input=router_input,
+        source_context=context, proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+    )
+    assert decision is not None and root_kernel is not None
+    assert root_input is not None and root_result is not None
+    assert review_report.validation_status == "PASS"
+    decision_artifact = router.project_root_execution_mode_decision_kernel_artifact_v01(
+        decision=decision, review_input=review_input, proposal=proposal,
+        router_input=router_input, source_context=context,
+        proposal_artifact=proposal_artifact, proposal_transition_decision=pre,
+        root_kernel=root_kernel, root_decision_input=root_input,
+        root_decision_result=root_result,
+    )
+    post = router.evaluate_execution_mode_root_route_transition_v01(
+        registry=registry, proposal_transition_decision=pre,
+        review_input=review_input, decision=decision, proposal=proposal,
+        router_input=router_input, source_context=context, root_kernel=root_kernel,
+        root_decision_input=root_input, root_decision_result=root_result,
+        proposal_artifact=proposal_artifact, decision_artifact=decision_artifact,
+    )
+    eligibility = router.project_execution_mode_route_eligibility_kernel_artifact_v01(
+        decision=decision, review_input=review_input, proposal=proposal,
+        router_input=router_input, source_context=context,
+        proposal_artifact=proposal_artifact, proposal_transition_decision=pre,
+        root_kernel=root_kernel, root_decision_input=root_input,
+        root_decision_result=root_result, decision_artifact=decision_artifact,
+        root_route_transition_decision=post,
+    )
+    return locals()
+
+
+def test_c4_final_surface_facade_and_exact_signatures():
+    for name, expected in C4_SIGNATURES.items():
+        assert str(inspect.signature(getattr(router, name))) == expected
+    router_functions = tuple(
+        name for name in PUBLIC_FUNCTIONS if name not in C4_TRANSITION_FUNCTIONS
+    )
+    assert len(router_functions) == 68
+    assert len(C4_TRANSITION_FUNCTIONS) == 6
+    direct = TYPE_NAMES + router_functions + C4_TRANSITION_FUNCTIONS
+    assert len(direct) == len(set(direct)) == 87
+    for name in TYPE_NAMES + router_functions:
+        assert getattr(kernel, name) is getattr(router, name)
+    for name in C4_TRANSITION_FUNCTIONS:
+        assert getattr(kernel, name) is getattr(transition_registry, name)
+    assert not set(direct).intersection(kernel.__all__)
+
+
+@pytest.mark.parametrize("outcome", ("ACCEPT", "NARROW", "REJECT", "BLOCKED", "NEEDS_USER"))
+def test_c4_five_root_outcomes_transitions_artifacts_and_abi(outcome):
+    case = _c4_pipeline(outcome)
+    decision = case["decision"]
+    root_result = case["root_result"]
+    eligibility = case["eligibility"]
+    assert decision.outcome == outcome
+    assert root_result.root_commit_created is True
+    assert root_result.permission_created is False
+    assert root_result.final_output_created is False
+    assert root_result.effect_requested is False
+    assert decision.reason_codes == (router._ROOT_PROJECTION_REASON[outcome],)
+    assert (eligibility is not None) == (outcome in {"ACCEPT", "NARROW"})
+    report = router.validate_execution_mode_abi_profile_v01(
+        proposal=case["proposal"], router_input=case["router_input"],
+        source_context=case["context"], proposal_artifact=case["proposal_artifact"],
+        proposal_transition_decision=case["pre"], review_input=case["review_input"],
+        decision=decision, root_kernel=case["root_kernel"],
+        root_decision_input=case["root_input"], root_decision_result=root_result,
+        decision_artifact=case["decision_artifact"],
+        root_route_transition_decision=case["post"],
+        route_eligibility_artifact=eligibility,
+    )
+    assert report.validation_status == "PASS"
+    assert report.authority_created is report.permission_created is False
+    assert report.real_world_effects_count == 0
+
+
+def test_c4_exact_abi_payloads_parents_traces_and_direct_bypass():
+    case = _c4_pipeline("ACCEPT")
+    proposal_plain = kernel.kernel_artifact_to_plain_dict_v01(case["proposal_artifact"])
+    decision_plain = kernel.kernel_artifact_to_plain_dict_v01(case["decision_artifact"])
+    eligibility_plain = kernel.kernel_artifact_to_plain_dict_v01(case["eligibility"])
+    assert tuple(router._proposal_payload(case["proposal"])) == C4_PROPOSAL_PAYLOAD_KEYS
+    assert tuple(proposal_plain["payload"]) == tuple(sorted(C4_PROPOSAL_PAYLOAD_KEYS))
+    assert proposal_plain["parent_refs"] == []
+    assert decision_plain["parent_refs"] == [case["proposal_artifact"].artifact_id]
+    assert eligibility_plain["parent_refs"] == [case["decision_artifact"].artifact_id]
+    assert eligibility_plain["payload"]["transition_registry_id"] == case["registry"].registry_id
+    report = router.validate_execution_mode_route_eligibility_against_source_v01(
+        route_eligibility_artifact=case["decision"],
+        decision=case["decision"], review_input=case["review_input"],
+        proposal=case["proposal"], router_input=case["router_input"],
+        source_context=case["context"], proposal_artifact=case["proposal_artifact"],
+        proposal_transition_decision=case["pre"], root_kernel=case["root_kernel"],
+        root_decision_input=case["root_input"], root_decision_result=case["root_result"],
+        decision_artifact=case["decision_artifact"],
+        root_route_transition_decision=case["post"],
+    )
+    assert report.failure_stage == "ROUTE_ELIGIBILITY"
+    assert report.reason_codes == ("g2c_route_decision_bypass_forbidden",)
+
+
+def test_c4_root_source_support_and_substitution_fail_closed():
+    case = _c4_pipeline("ACCEPT")
+    family = router.build_execution_mode_root_decision_source_v01(
+        review_input=case["review_input"], proposal=case["proposal"],
+        router_input=case["router_input"], source_context=case["context"],
+        proposal_artifact=case["proposal_artifact"],
+        proposal_transition_decision=case["pre"], root_kernel=case["root_kernel"],
+    )
+    request, claim, contribution, packet, root_input, root_result = family
+    assert request.runtime_topology_ref == "g2c:runtime_topology:not_created_before_root_review:v01"
+    assert len(claim.evidence_refs) == 2
+    assert contribution.contribution_id.startswith("emrootcontrib_v01:")
+    assert packet.conflict_set_ids == packet.missing_evidence_refs == ()
+    assert root_result.conflict_set_ids == ()
+    forged = replace(case["decision_artifact"], artifact_id="emabi_decision_v01:" + "f" * 64)
+    report = router.validate_execution_mode_abi_profile_v01(
+        proposal=case["proposal"], router_input=case["router_input"],
+        source_context=case["context"], proposal_artifact=case["proposal_artifact"],
+        proposal_transition_decision=case["pre"], review_input=case["review_input"],
+        decision=case["decision"], root_kernel=case["root_kernel"],
+        root_decision_input=root_input, root_decision_result=root_result,
+        decision_artifact=forged, root_route_transition_decision=case["post"],
+        route_eligibility_artifact=case["eligibility"],
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == "ABI"
+    assert report.authority_created is report.permission_created is False
+    assert report.real_world_effects_count == 0
+
+
+C4_PROPOSAL_PAYLOAD_KEYS = (
+    "proposal_id", "source_input_id", "request_id", "domain_id",
+    "source_bsep_binding_id", "source_bsep_packet_id", "source_bsep_sha256",
+    "source_local_routing_snapshot_id", "source_replay_binding_id",
+    "source_g2a_binding_id", "source_g2b_binding_id", "selected_mode",
+    "selected_safe_depth_rank", "selected_local_mode_profile_id",
+    "selected_expected_cost_units", "proposed_scope_ref",
+    "ordered_feasibility_row_ids", "selected_feasibility_row_id",
+    "reason_codes", "required_downstream_capability_ids",
+    "downstream_consumption_class", "downstream_action_packet_required",
+    "root_review_required", "authority_created", "permission_created",
+    "action_commit_packet_created", "receipt_created", "topology_created",
+    "final_output_created", "drs_write_created", "real_world_effects_count",
+)
+C4_DECISION_PAYLOAD_KEYS = (
+    "decision_id", "root_review_input_id", "proposal_id", "router_input_id",
+    "request_id", "domain_id", "outcome", "accepted_mode",
+    "accepted_scope_ref", "scope_narrowing_proof_id",
+    "downstream_consumption_class", "downstream_action_packet_required",
+    "source_root_decision_id", "source_root_decision_input_id",
+    "source_root_decision", "source_root_reason_code",
+    "source_root_transition_decision_id", "source_root_transition_decision",
+    "reason_codes", "route_eligibility_candidate", "authority_created",
+    "permission_created", "action_commit_packet_created", "receipt_created",
+    "topology_created", "final_output_created", "drs_write_created",
+    "real_world_effects_count",
+)
+C4_ROUTE_PAYLOAD_KEYS = (
+    "request_id", "domain_id", "decision_id", "accepted_mode",
+    "accepted_scope_ref", "downstream_consumption_class",
+    "downstream_action_packet_required", "abi_profile_id",
+    "transition_registry_id", "root_route_transition_decision_id",
+    "topology_created", "permission_created", "action_commit_packet_created",
+    "final_output_created", "real_world_effects_count",
+)
+
+
+def test_c4_hardcoded_artifact_payload_trace_parent_and_bundle_laws():
+    case = _c4_pipeline("ACCEPT")
+    proposal = case["proposal_artifact"]
+    decision = case["decision_artifact"]
+    route = case["eligibility"]
+    assert route is not None
+    assert tuple(router._proposal_payload(case["proposal"])) == C4_PROPOSAL_PAYLOAD_KEYS
+    assert tuple(router._decision_payload(case["decision"])) == C4_DECISION_PAYLOAD_KEYS
+    assert tuple(router._route_payload(
+        decision=case["decision"], registry=case["registry"],
+        transition=case["post"],
+    )) == C4_ROUTE_PAYLOAD_KEYS
+    assert tuple(kernel.kernel_artifact_to_plain_dict_v01(proposal)["payload"]) == (
+        tuple(sorted(C4_PROPOSAL_PAYLOAD_KEYS))
+    )
+    assert tuple(kernel.kernel_artifact_to_plain_dict_v01(decision)["payload"]) == (
+        tuple(sorted(C4_DECISION_PAYLOAD_KEYS))
+    )
+    assert tuple(kernel.kernel_artifact_to_plain_dict_v01(route)["payload"]) == (
+        tuple(sorted(C4_ROUTE_PAYLOAD_KEYS))
+    )
+    assert proposal.parent_refs == ()
+    assert decision.parent_refs == (proposal.artifact_id,)
+    assert route.parent_refs == (decision.artifact_id,)
+    assert kernel.validate_kernel_artifact_bundle_v01(artifacts=(proposal,)) == ()
+    assert kernel.validate_kernel_artifact_bundle_v01(
+        artifacts=(proposal, decision)
+    ) == ()
+    assert kernel.validate_kernel_artifact_bundle_v01(
+        artifacts=(proposal, decision, route)
+    ) == ()
+    assert len(proposal.trace_refs) == 8
+    assert len(decision.trace_refs) == 6
+    assert len(route.trace_refs) == 4
+    for artifact in (proposal, decision, route):
+        assert artifact.trace_refs == tuple(sorted(set(artifact.trace_refs)))
+        assert artifact.time_envelope == proposal.time_envelope
+
+
+@pytest.mark.parametrize(
+    ("outcome", "source_decision", "source_reason", "post_rule", "post_reason"),
+    (
+        (
+            "ACCEPT", "ACCEPT", "validated_candidate_accepted",
+            "g2c_transition:root_accept_to_route:v01",
+            "g2c_transition_route_accept_allowed",
+        ),
+        (
+            "NARROW", "ACCEPT", "validated_candidate_accepted",
+            "g2c_transition:root_narrow_to_route:v01",
+            "g2c_transition_scope_narrow_allowed",
+        ),
+        (
+            "REJECT", "REJECT", "policy_rejected_candidate",
+            "g2c_transition:root_reject_record:v01",
+            "g2c_transition_reject_recorded",
+        ),
+        (
+            "BLOCKED", "BLOCKED_FAIL_CLOSED", "hard_policy_violation",
+            "g2c_transition:root_block_record:v01",
+            "g2c_transition_blocked_recorded",
+        ),
+        (
+            "NEEDS_USER", "NEEDS_USER", "user_permission_missing",
+            "g2c_transition:root_needs_user_record:v01",
+            "g2c_transition_needs_user_recorded",
+        ),
+    ),
+)
+def test_c4_exact_root_source_projection_and_post_transition(
+    outcome, source_decision, source_reason, post_rule, post_reason
+):
+    case = _c4_pipeline(outcome)
+    decision = case["decision"]
+    root_result = case["root_result"]
+    post = case["post"]
+    assert root_result.decision == source_decision
+    assert root_result.reason_code == source_reason
+    assert decision.source_root_decision == source_decision
+    assert decision.source_root_reason_code == source_reason
+    assert decision.reason_codes == (router._ROOT_PROJECTION_REASON[outcome],)
+    assert post.rule_id == post_rule
+    assert post.reason_code == post_reason
+    assert post.root_commit_required is post.root_commit_present is True
+    assert post.required_guards == post.satisfied_guards
+    assert post.missing_guards == ()
+
+
+def test_c4_forged_bsep_conflict_keeps_source_reason_separate():
+    case = _c4_pipeline("ACCEPT")
+    root_input = replace(
+        case["root_input"],
+        conflict_state={
+            "conflict_set_ids": [case["router_input"].bsep_binding.source_packet_id],
+            "material_unresolved_conflict": False,
+        },
+    )
+    report = router.validate_root_execution_mode_decision_against_source_v01(
+        decision=case["decision"], review_input=case["review_input"],
+        proposal=case["proposal"], router_input=case["router_input"],
+        source_context=case["context"], proposal_artifact=case["proposal_artifact"],
+        proposal_transition_decision=case["pre"], root_kernel=case["root_kernel"],
+        root_decision_input=root_input, root_decision_result=case["root_result"],
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == "ROOT_DECISION"
+    assert report.reason_codes == ("g2c_root_input_invalid",)
+    assert report.source_reason_codes == ("root_decision_conflict_state_invalid",)
+    assert not set(report.source_reason_codes).intersection(report.reason_codes)
+
+
+@pytest.mark.parametrize(
+    ("outcome", "review_action", "accepted_scope", "basis", "reason"),
+    (
+        ("ACCEPT", "TERMINAL_FROM_PROPOSAL", None, (), "g2c_review_action_invalid"),
+        ("BLOCKED", "ACCEPT", "scope:g2c:c3", (), "g2c_terminal_review_mismatch"),
+        ("ACCEPT", "NARROW", "scope:foreign", ("basis:one",), "g2c_scope_narrowing_invalid"),
+        ("ACCEPT", "NARROW", "scope:g2c:c3", ("basis:one",), "g2c_scope_narrowing_invalid"),
+        ("ACCEPT", "ACCEPT", "scope:g2c:c3", ("basis:one",), "g2c_review_action_invalid"),
+    ),
+)
+def test_c4_review_barrier_rejects_illegal_action_scope_geometry(
+    outcome, review_action, accepted_scope, basis, reason
+):
+    case = _c4_pipeline(outcome)
+    with pytest.raises(ValueError, match=f"^{reason}$"):
+        router.build_root_execution_mode_review_input_v01(
+            proposal=case["proposal"], router_input=case["router_input"],
+            source_context=case["context"],
+            proposal_artifact=case["proposal_artifact"],
+            proposal_transition_decision=case["pre"], review_action=review_action,
+            accepted_scope_ref=accepted_scope, narrowing_basis_refs=basis,
+        )
+
+
+def test_c4_operation_order_barriers_reject_transition_and_artifact_substitution():
+    case = _c4_pipeline("ACCEPT")
+    forged_pre = replace(case["pre"], decision_id="f" * 64)
+    with pytest.raises(ValueError, match="^g2c_proposal_transition_substituted$"):
+        router.build_root_execution_mode_review_input_v01(
+            proposal=case["proposal"], router_input=case["router_input"],
+            source_context=case["context"],
+            proposal_artifact=case["proposal_artifact"],
+            proposal_transition_decision=forged_pre, review_action="ACCEPT",
+            accepted_scope_ref=case["proposal"].proposed_scope_ref,
+            narrowing_basis_refs=(),
+        )
+    forged_post = replace(case["post"], decision_id="f" * 64)
+    with pytest.raises(ValueError, match="^g2c_post_root_transition_substituted$"):
+        router.project_execution_mode_route_eligibility_kernel_artifact_v01(
+            decision=case["decision"], review_input=case["review_input"],
+            proposal=case["proposal"], router_input=case["router_input"],
+            source_context=case["context"],
+            proposal_artifact=case["proposal_artifact"],
+            proposal_transition_decision=case["pre"], root_kernel=case["root_kernel"],
+            root_decision_input=case["root_input"],
+            root_decision_result=case["root_result"],
+            decision_artifact=case["decision_artifact"],
+            root_route_transition_decision=forged_post,
+        )
+
+
+@pytest.mark.parametrize(
+    ("field_name", "replacement", "stage"),
+    (
+        ("proposal_artifact", "artifact", "ABI"),
+        ("proposal_transition_decision", "transition", "TRANSITION"),
+        ("review_input", "review", "ROOT_REVIEW"),
+        ("decision", "decision", "ROOT_DECISION"),
+        ("decision_artifact", "artifact", "ABI"),
+        ("root_route_transition_decision", "transition", "TRANSITION"),
+        ("route_eligibility_artifact", "artifact", "ROUTE_ELIGIBILITY"),
+    ),
+)
+def test_c4_complete_profile_stage_ownership(field_name, replacement, stage):
+    case = _c4_pipeline("ACCEPT")
+    kwargs = {
+        "proposal": case["proposal"], "router_input": case["router_input"],
+        "source_context": case["context"],
+        "proposal_artifact": case["proposal_artifact"],
+        "proposal_transition_decision": case["pre"],
+        "review_input": case["review_input"], "decision": case["decision"],
+        "root_kernel": case["root_kernel"],
+        "root_decision_input": case["root_input"],
+        "root_decision_result": case["root_result"],
+        "decision_artifact": case["decision_artifact"],
+        "root_route_transition_decision": case["post"],
+        "route_eligibility_artifact": case["eligibility"],
+    }
+    value = kwargs[field_name]
+    if replacement == "artifact":
+        kwargs[field_name] = replace(value, artifact_id="f" * 64)
+    elif replacement == "transition":
+        kwargs[field_name] = replace(value, decision_id="f" * 64)
+    elif replacement == "review":
+        kwargs[field_name] = replace(value, policy_snapshot_id="policy:foreign")
+    else:
+        kwargs[field_name] = replace(value, decision_id="emrootdecision_v01:" + "f" * 64)
+    report = router.validate_execution_mode_abi_profile_v01(**kwargs)
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == stage
+    assert report.authority_created is report.permission_created is False
+    assert report.real_world_effects_count == 0

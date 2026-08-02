@@ -1964,3 +1964,268 @@ def _lowercase_sha256_valid_v01(value: object) -> bool:
         type(value) is str
         and _re.fullmatch(r"[0-9a-f]{64}", value) is not None
     )
+
+
+EXECUTION_MODE_TRANSITION_REGISTRY_PROFILE_ID_V01 = (
+    "execution_mode_router_g2c_transition_profile_v01"
+)
+EXECUTION_MODE_TRANSITION_REGISTRY_PROFILE_VERSION_V01 = "v0.1"
+EXECUTION_MODE_TRANSITION_REGISTRY_RULE_COUNT_V01 = 6
+
+_EXECUTION_MODE_TRANSITION_RULE_ROWS_V01 = (
+    (
+        "g2c_transition:proposal_to_root_review:v01",
+        "ExecutionModeProposal", "VALIDATED", "execution_mode_router",
+        "ENTER_ROOT_REVIEW", "RootExecutionModeDecision",
+        ("proposal_sources_valid", "proposal_artifact_valid", "target_root_bound"),
+        DECISION_RETURN_TO_ROOT, "g2c_transition_root_review_required", False,
+    ),
+    (
+        "g2c_transition:root_accept_to_route:v01",
+        "RootExecutionModeDecision", "ROOT_ACCEPTED", "root", "ACCEPT_ROUTE",
+        "ExecutionModeRouteEligibility",
+        ("root_result_valid", "accepted_mode_valid", "accepted_scope_valid", "consumption_class_valid"),
+        DECISION_ALLOW, "g2c_transition_route_accept_allowed", True,
+    ),
+    (
+        "g2c_transition:root_narrow_to_route:v01",
+        "RootExecutionModeDecision", "ROOT_ACCEPTED", "root", "NARROW_SCOPE",
+        "ExecutionModeRouteEligibility",
+        ("root_result_valid", "accepted_mode_valid", "narrowing_proof_valid", "consumption_class_valid"),
+        DECISION_ALLOW, "g2c_transition_scope_narrow_allowed", True,
+    ),
+    (
+        "g2c_transition:root_reject_record:v01",
+        "RootExecutionModeDecision", "ROOT_REJECTED", "root", "REJECT_ROUTE",
+        "RootExecutionModeDecision",
+        ("root_result_valid", "terminal_consumption_forbidden"),
+        DECISION_RETURN_TO_ROOT, "g2c_transition_reject_recorded", True,
+    ),
+    (
+        "g2c_transition:root_block_record:v01",
+        "RootExecutionModeDecision", "BLOCKED_FAIL_CLOSED", "root", "BLOCK_ROUTE",
+        "RootExecutionModeDecision",
+        ("root_result_valid", "terminal_consumption_forbidden"),
+        DECISION_BLOCKED_FAIL_CLOSED, "g2c_transition_blocked_recorded", True,
+    ),
+    (
+        "g2c_transition:root_needs_user_record:v01",
+        "RootExecutionModeDecision", "ROOT_REVIEWED", "root", "REQUEST_USER_INPUT",
+        "RootExecutionModeDecision",
+        ("root_result_valid", "terminal_consumption_forbidden"),
+        DECISION_NEEDS_USER, "g2c_transition_needs_user_recorded", True,
+    ),
+)
+
+
+def _execution_mode_transition_rules_v01() -> tuple[TransitionRuleV01, ...]:
+    return tuple(
+        TransitionRuleV01(
+            rule_id=row[0], abi_major_version=1,
+            source_artifact_type=row[1], source_lifecycle_state=row[2],
+            actor_role=row[3], attempted_effect=row[4],
+            target_artifact_type=row[5], required_guards=row[6],
+            decision=row[7], reason_code=row[8], root_commit_required=row[9],
+        )
+        for row in _EXECUTION_MODE_TRANSITION_RULE_ROWS_V01
+    )
+
+
+def _execution_mode_transition_registry_material_v01(
+    rules: tuple[TransitionRuleV01, ...],
+) -> dict[str, object]:
+    return {
+        "registry_version": EXECUTION_MODE_TRANSITION_REGISTRY_PROFILE_VERSION_V01,
+        "abi_major_version": 1,
+        "rules": [_rule_plain(rule) for rule in rules],
+    }
+
+
+def build_execution_mode_transition_registry_profile_v01(
+) -> TransitionRegistryV01:
+    rules = _execution_mode_transition_rules_v01()
+    return TransitionRegistryV01(
+        registry_id=_hash(
+            _REGISTRY_DOMAIN,
+            _execution_mode_transition_registry_material_v01(rules),
+        ),
+        registry_version=EXECUTION_MODE_TRANSITION_REGISTRY_PROFILE_VERSION_V01,
+        abi_major_version=1,
+        rules=rules,
+    )
+
+
+def validate_execution_mode_transition_registry_profile_v01(
+    registry: object,
+) -> tuple[str, ...]:
+    try:
+        if type(registry) is not TransitionRegistryV01:
+            return ("g2c_transition_profile_invalid",)
+        expected_rules = _execution_mode_transition_rules_v01()
+        if (
+            registry.registry_version
+            != EXECUTION_MODE_TRANSITION_REGISTRY_PROFILE_VERSION_V01
+            or type(registry.abi_major_version) is not int
+            or registry.abi_major_version != 1
+            or type(registry.rules) is not tuple
+            or len(registry.rules) != EXECUTION_MODE_TRANSITION_REGISTRY_RULE_COUNT_V01
+            or any(type(rule) is not TransitionRuleV01 for rule in registry.rules)
+            or _canonical_bytes([_rule_plain(rule) for rule in registry.rules])
+            != _canonical_bytes([_rule_plain(rule) for rule in expected_rules])
+        ):
+            return ("g2c_transition_profile_invalid",)
+        expected_id = _hash(
+            _REGISTRY_DOMAIN,
+            _execution_mode_transition_registry_material_v01(expected_rules),
+        )
+        if registry.registry_id != expected_id:
+            return ("g2c_transition_registry_identity_mismatch",)
+        return ()
+    except Exception:
+        return ("g2c_transition_profile_invalid",)
+
+
+def execution_mode_transition_registry_profile_to_plain_dict_v01(
+    registry: TransitionRegistryV01,
+) -> dict[str, object]:
+    try:
+        errors = validate_execution_mode_transition_registry_profile_v01(registry)
+        if errors:
+            raise ValueError(errors[0])
+        result = _registry_plain(registry)
+        _canonical_json_bytes_v01(result)
+        return result
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in {
+            "g2c_transition_profile_invalid",
+            "g2c_transition_registry_identity_mismatch",
+        }:
+            reason = "g2c_transition_profile_invalid"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2c_transition_profile_invalid") from None
+
+
+def _execution_mode_transition_decision_structure_v01(
+    decision: object,
+) -> bool:
+    if type(decision) is not TransitionDecisionV01:
+        return False
+    if not all(
+        _valid_text(value)
+        for value in (
+            decision.decision_id, decision.registry_id, decision.rule_id,
+            decision.source_artifact_type, decision.source_lifecycle_state,
+            decision.actor_role, decision.attempted_effect,
+            decision.target_artifact_type, decision.reason_code,
+        )
+    ):
+        return False
+    if type(decision.abi_major_version) is not int:
+        return False
+    if not all(
+        _valid_text_tuple(value, allow_empty=True)
+        for value in (
+            decision.required_guards,
+            decision.satisfied_guards,
+            decision.missing_guards,
+        )
+    ):
+        return False
+    return (
+        type(decision.decision) is str
+        and decision.decision in TRANSITION_DECISIONS
+        and type(decision.root_commit_required) is bool
+        and type(decision.root_commit_present) is bool
+        and type(decision.matched) is bool
+    )
+
+
+def validate_execution_mode_transition_decision_v01(
+    *, registry: TransitionRegistryV01, decision: object,
+) -> tuple[str, ...]:
+    try:
+        registry_errors = validate_execution_mode_transition_registry_profile_v01(
+            registry
+        )
+        if registry_errors:
+            return registry_errors
+        if not _execution_mode_transition_decision_structure_v01(decision):
+            return ("g2c_transition_decision_invalid",)
+        assert type(decision) is TransitionDecisionV01
+        rule = {item.rule_id: item for item in registry.rules}.get(decision.rule_id)
+        if rule is None:
+            return ("g2c_transition_decision_invalid",)
+        if (
+            decision.required_guards != rule.required_guards
+            or decision.satisfied_guards != rule.required_guards
+            or decision.missing_guards != ()
+        ):
+            return ("g2c_transition_guard_invalid",)
+        if (
+            decision.root_commit_required is not rule.root_commit_required
+            or decision.root_commit_present is not rule.root_commit_required
+        ):
+            return ("g2c_transition_root_commit_required",)
+        if (
+            decision.registry_id != registry.registry_id
+            or decision.abi_major_version != rule.abi_major_version
+            or decision.source_artifact_type != rule.source_artifact_type
+            or decision.source_lifecycle_state != rule.source_lifecycle_state
+            or decision.actor_role != rule.actor_role
+            or decision.attempted_effect != rule.attempted_effect
+            or decision.target_artifact_type != rule.target_artifact_type
+            or decision.decision != rule.decision
+            or decision.reason_code != rule.reason_code
+            or decision.matched is not True
+        ):
+            return ("g2c_transition_decision_invalid",)
+        if decision.decision_id != rebuild_execution_mode_transition_decision_identity_v01(
+            decision
+        ):
+            return ("g2c_transition_decision_identity_mismatch",)
+        return ()
+    except Exception:
+        return ("g2c_transition_decision_invalid",)
+
+
+def execution_mode_transition_decision_to_plain_dict_v01(
+    *, registry: TransitionRegistryV01, decision: TransitionDecisionV01,
+) -> dict[str, object]:
+    try:
+        errors = validate_execution_mode_transition_decision_v01(
+            registry=registry, decision=decision
+        )
+        if errors:
+            raise ValueError(errors[0])
+        result = _decision_plain(decision)
+        _canonical_json_bytes_v01(result)
+        return result
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in {
+            "g2c_transition_profile_invalid",
+            "g2c_transition_registry_identity_mismatch",
+            "g2c_transition_decision_invalid",
+            "g2c_transition_decision_identity_mismatch",
+            "g2c_transition_guard_invalid",
+            "g2c_transition_root_commit_required",
+        }:
+            reason = "g2c_transition_decision_invalid"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2c_transition_decision_invalid") from None
+
+
+def rebuild_execution_mode_transition_decision_identity_v01(
+    decision: TransitionDecisionV01,
+) -> str:
+    try:
+        if not _execution_mode_transition_decision_structure_v01(decision):
+            raise ValueError("g2c_transition_decision_invalid")
+        material = _decision_plain(decision)
+        material.pop("decision_id")
+        return _hash(_DECISION_DOMAIN, material)
+    except Exception:
+        raise ValueError("g2c_transition_decision_invalid") from None

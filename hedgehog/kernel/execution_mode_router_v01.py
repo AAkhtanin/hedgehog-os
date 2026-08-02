@@ -2,9 +2,9 @@
 
 G2-C1 owns canonical types and structural validation. G2-C2 adds actual source
 binding and contextual input validation. G2-C3 adds feasibility, deterministic
-selection, terminal handling, and bounded proposal construction. The module
-still performs no Root review, Transition evaluation, ABI projection, topology
-construction, I/O, provider work, or effects.
+selection, terminal handling, and bounded proposal construction. G2-C4 adds
+existing-Root projection, contextual ABI artifacts, Transition-profile use,
+and bounded RouteEligibility. The module creates no topology or effect.
 """
 
 from __future__ import annotations
@@ -18,90 +18,61 @@ import types
 import unicodedata
 from typing import get_args, get_origin, get_type_hints
 
-from hedgehog.action_commit_packet_v02 import (
-    ActionCommitPacketRegistryV02,
-    ActionDependencyCurrentObservationV01,
-    ActionPacketPresentEligibilityInspectionV01,
-    ContractFulfillmentCorridorV01,
-    CorridorStepV01,
-    LogicalTimeBridgeV01,
-    validate_action_packet_present_eligibility_inspection_v01,
-)
-from hedgehog.context_packets import (
-    validate_bounded_semantic_evidence_packet,
-    validate_business_request_context_packet,
-    validate_orchestrator_route_context_packet,
-)
-from hedgehog.drs_g2b_compatibility_v01 import (
-    LegacyDRSProjectionV01,
-    legacy_drs_projection_to_plain_data_v01,
-    validate_legacy_drs_projection_v01,
-)
-from hedgehog.drs_memory_resolution_v01 import (
-    DRSResolutionReportV01,
-    drs_resolution_report_to_plain_data_v01,
-    validate_drs_resolution_report_v01,
-    validate_drs_temporal_query_v01,
-    validate_memory_descent_result_v01,
-    validate_query_evaluation_state_v01,
-    validate_resolution_candidate_v01,
-    validate_retrieval_plan_v01,
-)
-from hedgehog.drs_semantic_address_v01 import (
-    validate_meaning_record_v01,
-    validate_semantic_address_v01,
-)
-from hedgehog.evidence.external_anchor_v01 import (
-    AnchoredPackageVerificationV01,
-    ExternalAnchorPublicationV01,
-    validate_anchored_package_verification_v01,
-    validate_external_anchor_publication_v01,
-)
-from hedgehog.evidence.sealed_evidence_profile_v01 import (
-    DomainEvidenceProjectionV01,
-    validate_domain_evidence_projection_v01,
-)
-from hedgehog.evidence.sealed_package_v01 import (
-    SealedPackageManifestV01,
-    validate_sealed_package_manifest_v01,
-)
-from hedgehog.evidence.sealed_replay_evidence_v01 import (
-    SealedReplayEvidenceV01,
-    sealed_replay_evidence_to_plain_dict_v01,
-    validate_sealed_replay_evidence_v01,
-)
+import hedgehog
 from hedgehog.kernel.integrity_replay_v01 import (
     canonical_json_bytes_v01,
     domain_separated_sha256_hex_v01,
+)
+from hedgehog.kernel.abi_v01 import (
+    KernelArtifactV01,
+    build_kernel_artifact_v01,
+    kernel_artifact_to_plain_dict_v01,
+    validate_kernel_artifact_bundle_v01,
+    validate_kernel_artifact_v01,
 )
 from hedgehog.kernel.root_decision_v01 import (
     RootDecisionInputV01,
     RootDecisionKernelV01,
     RootDecisionResultV01,
+    build_root_decision_input_v01,
+    build_root_decision_kernel_v01,
+    decide_root_v01,
     root_decision_result_to_plain_dict_v01,
     validate_root_decision_input_v01,
     validate_root_decision_kernel_v01,
     validate_root_decision_result_v01,
 )
+from hedgehog.kernel.semantic_work_v01 import (
+    ActorContributionV01,
+    NormalizedClaimV01,
+    RootReviewPacketV01,
+    SemanticWorkRequestV01,
+    build_actor_contribution_v01,
+    build_evidence_binding_v01,
+    build_normalized_claim_v01,
+    build_root_review_packet_from_contributions_v01,
+    build_semantic_work_request_v01,
+    validate_actor_contribution_v01,
+    validate_root_review_packet_v01,
+    validate_semantic_work_request_v01,
+)
+from hedgehog.kernel.trust_model_v01 import (
+    build_default_component_trust_profiles_v01,
+    validate_component_trust_profiles_v01,
+)
 from hedgehog.kernel.transition_registry_v01 import (
     ActionPacketTransitionRegistryProfileV01,
-)
-from hedgehog.reuse_certificate_v01 import (
-    validate_existing_root_shortcut_decision_v01,
-    validate_reuse_certificate_v01,
-    validate_root_shortcut_authorization_projection_v01,
-)
-from hedgehog.semantic_reasoning_adapter import (
-    ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS,
-    validate_orchestrator_semantic_reasoning_proposal,
-)
-from hedgehog.structured_rationale import (
-    validate_orchestrator_structured_rationale,
+    TransitionDecisionV01,
+    TransitionRegistryV01,
+    build_execution_mode_transition_registry_profile_v01 as _build_execution_mode_transition_registry_profile_v01,
+    rebuild_execution_mode_transition_decision_identity_v01 as _rebuild_execution_mode_transition_decision_identity_v01,
+    validate_execution_mode_transition_decision_v01 as _validate_execution_mode_transition_decision_v01,
+    validate_execution_mode_transition_registry_profile_v01 as _validate_execution_mode_transition_registry_profile_v01,
 )
 
 
 MODULE_ID = "kernel_execution_mode_router_v01"
-SLICE_ID = "gate2_g2c3_execution_mode_router_feasibility_proposal"
+SLICE_ID = "gate2_g2c4_execution_mode_router_root_abi_transition_route_eligibility"
 EXECUTION_MODE_ROUTER_VERSION = "v0.1"
 
 TOTAL_G2C_TYPE_COUNT = 13
@@ -262,6 +233,30 @@ _PROPOSAL_SOURCE_FIELDS_V01 = (
     "source_replay_binding_id",
     "source_g2a_binding_id",
     "source_g2b_binding_id",
+)
+
+_G2C_ABI_PROFILE_ID_V01 = "execution_mode_router_g2c_abi_profile_v01"
+_G2C_ABI_VERSION_V01 = "v1.0"
+_G2C_SCHEMA_VERSION_V01 = "v0.1"
+_G2C_ROOT_SOURCE_SUPPORT_DOMAIN_V01 = (
+    "HEDGEHOG_EXECUTION_MODE_ROOT_SOURCE_SUPPORT_V01"
+)
+_G2C_ABI_RESERVED_KEYS_V01 = frozenset(
+    {
+        "abi_version", "artifact_id", "artifact_type", "schema_version",
+        "transaction_id", "owner_root_id", "source_component",
+        "authority_class", "lifecycle_state", "payload", "trace_refs",
+        "parent_refs", "time_envelope",
+    }
+)
+_G2C_PROPOSAL_ARTIFACT_DOMAIN_V01 = (
+    "HEDGEHOG_EXECUTION_MODE_PROPOSAL_KERNEL_ARTIFACT_V01"
+)
+_G2C_DECISION_ARTIFACT_DOMAIN_V01 = (
+    "HEDGEHOG_EXECUTION_MODE_DECISION_KERNEL_ARTIFACT_V01"
+)
+_G2C_ROUTE_ARTIFACT_DOMAIN_V01 = (
+    "HEDGEHOG_EXECUTION_MODE_ROUTE_ELIGIBILITY_KERNEL_ARTIFACT_V01"
 )
 
 VALIDATION_TARGETS_V01 = (
@@ -865,31 +860,31 @@ class ExecutionModeSourceContextV01:
     bsep_route_context_packet: dict[str, object]
     bsep_orchestrator_proposal: dict[str, object]
     bsep_structured_rationale: dict[str, object]
-    sealed_replay_evidence: SealedReplayEvidenceV01 | None
-    replay_source_manifest: SealedPackageManifestV01 | None
-    replay_source_domain_projection: DomainEvidenceProjectionV01 | None
+    sealed_replay_evidence: hedgehog.evidence.sealed_replay_evidence_v01.SealedReplayEvidenceV01 | None
+    replay_source_manifest: hedgehog.evidence.sealed_package_v01.SealedPackageManifestV01 | None
+    replay_source_domain_projection: hedgehog.evidence.sealed_evidence_profile_v01.DomainEvidenceProjectionV01 | None
     replay_source_safe_file_contents: tuple[bytes, ...]
-    replay_anchor_publication: ExternalAnchorPublicationV01 | None
-    replay_anchored_verification: AnchoredPackageVerificationV01 | None
+    replay_anchor_publication: hedgehog.evidence.external_anchor_v01.ExternalAnchorPublicationV01 | None
+    replay_anchored_verification: hedgehog.evidence.external_anchor_v01.AnchoredPackageVerificationV01 | None
     replay_supplied_anchor_publication_id: str | None
-    replay_reconstructed_manifest: SealedPackageManifestV01 | None
-    replay_reconstructed_domain_projection: DomainEvidenceProjectionV01 | None
+    replay_reconstructed_manifest: hedgehog.evidence.sealed_package_v01.SealedPackageManifestV01 | None
+    replay_reconstructed_domain_projection: hedgehog.evidence.sealed_evidence_profile_v01.DomainEvidenceProjectionV01 | None
     replay_reconstructed_safe_file_contents: tuple[bytes, ...]
-    g2a_inspection: ActionPacketPresentEligibilityInspectionV01 | None
-    g2a_registry: ActionCommitPacketRegistryV02 | None
+    g2a_inspection: hedgehog.action_commit_packet_v02.ActionPacketPresentEligibilityInspectionV01 | None
+    g2a_registry: hedgehog.action_commit_packet_v02.ActionCommitPacketRegistryV02 | None
     g2a_packet_id: str | None
-    g2a_corridor: ContractFulfillmentCorridorV01 | None
-    g2a_corridor_step: CorridorStepV01 | None
+    g2a_corridor: hedgehog.action_commit_packet_v02.ContractFulfillmentCorridorV01 | None
+    g2a_corridor_step: hedgehog.action_commit_packet_v02.CorridorStepV01 | None
     g2a_current_dependency_observations: tuple[
-        ActionDependencyCurrentObservationV01, ...
+        hedgehog.action_commit_packet_v02.ActionDependencyCurrentObservationV01, ...
     ]
-    g2a_logical_time_bridge: LogicalTimeBridgeV01 | None
+    g2a_logical_time_bridge: hedgehog.action_commit_packet_v02.LogicalTimeBridgeV01 | None
     g2a_evaluation_time: int | None
     g2a_evaluation_time_source: str | None
     g2a_evaluation_context_id: str | None
     g2a_transition_registry_profile: ActionPacketTransitionRegistryProfileV01 | None
-    g2b_resolution_report: DRSResolutionReportV01 | None
-    g2b_compatibility_projections: tuple[LegacyDRSProjectionV01, ...]
+    g2b_resolution_report: hedgehog.drs_memory_resolution_v01.DRSResolutionReportV01 | None
+    g2b_compatibility_projections: tuple[hedgehog.drs_g2b_compatibility_v01.LegacyDRSProjectionV01, ...]
     g2b_use_time: int | None
     g2b_root_kernel: RootDecisionKernelV01 | None
     g2b_root_decision_input: RootDecisionInputV01 | None
@@ -2366,12 +2361,37 @@ def _root_review_errors(value: object) -> tuple[str, ...]:
             errors.append("g2c_scope_narrowing_invalid")
     elif value.scope_narrowing_proof_id is not None or value.narrowing_basis_refs != ():
         errors.append("g2c_scope_narrowing_invalid")
+    if value.review_action == "ACCEPT" and (
+        value.proposed_mode in _TERMINAL_MODES_V01
+        or value.proposed_scope_ref is None
+        or value.accepted_scope_ref != value.proposed_scope_ref
+    ):
+        errors.append("g2c_review_action_invalid")
+    if value.review_action == "REJECT" and (
+        value.proposed_mode in _TERMINAL_MODES_V01
+        or value.proposed_scope_ref is None
+        or value.accepted_scope_ref is not None
+    ):
+        errors.append("g2c_review_action_invalid")
+    if value.review_action == "NARROW" and value.proposed_mode in _TERMINAL_MODES_V01:
+        errors.append("g2c_terminal_review_mismatch")
     if value.review_action == "TERMINAL_FROM_PROPOSAL" and (
         value.proposed_mode not in {"blocked", "needs_user"}
         or value.proposed_scope_ref is not None
         or value.accepted_scope_ref is not None
     ):
         errors.append("g2c_terminal_review_mismatch")
+    if value.review_action != "TERMINAL_FROM_PROPOSAL" and value.proposed_mode in _TERMINAL_MODES_V01:
+        errors.append("g2c_terminal_review_mismatch")
+    if not all(
+        _source_identity_valid(item)
+        for item in (
+            value.policy_snapshot_id,
+            value.time_envelope_ref,
+            value.root_local_context_id,
+        )
+    ):
+        errors.append("g2c_scalar_invalid")
     return _sort_public_reasons(errors) if errors else ()
 
 
@@ -2435,6 +2455,17 @@ def _root_decision_errors(value: object) -> tuple[str, ...]:
         "NEEDS_USER": "NEEDS_USER",
     }.get(value.outcome)
     if source_decision is not None and value.source_root_decision != source_decision:
+        errors.append("g2c_root_mapping_invalid")
+    expected_source_reason = {
+        "ACCEPT": "validated_candidate_accepted",
+        "NARROW": "validated_candidate_accepted",
+        "REJECT": "policy_rejected_candidate",
+        "BLOCKED": "hard_policy_violation",
+        "NEEDS_USER": "user_permission_missing",
+    }.get(value.outcome)
+    if expected_source_reason is not None and value.source_root_reason_code != expected_source_reason:
+        errors.append("g2c_root_mapping_invalid")
+    if value.source_root_transition_decision != "RETURN_TO_ROOT":
         errors.append("g2c_root_mapping_invalid")
     if not _source_identity_valid(value.source_root_decision_id) or not _source_identity_valid(
         value.source_root_decision_input_id
@@ -2544,6 +2575,14 @@ def _source_plain_value_valid(value: object, active: set[int]) -> bool:
 
 
 def _source_context_errors(value: object) -> tuple[str, ...]:
+    import hedgehog.action_commit_packet_v02 as _action_packet
+    import hedgehog.drs_g2b_compatibility_v01 as _compatibility
+    import hedgehog.drs_memory_resolution_v01 as _resolution
+    import hedgehog.evidence.external_anchor_v01 as _external_anchor
+    import hedgehog.evidence.sealed_evidence_profile_v01 as _evidence_profile
+    import hedgehog.evidence.sealed_package_v01 as _sealed_package
+    import hedgehog.evidence.sealed_replay_evidence_v01 as _sealed_replay
+
     if type(value) is not ExecutionModeSourceContextV01:
         return ("g2c_exact_type_invalid",)
     errors: list[str] = []
@@ -2573,14 +2612,19 @@ def _source_context_errors(value: object) -> tuple[str, ...]:
         and value.replay_reconstructed_safe_file_contents == ()
     )
     replay_present = (
-        type(value.sealed_replay_evidence) is SealedReplayEvidenceV01
-        and type(value.replay_source_manifest) is SealedPackageManifestV01
-        and type(value.replay_source_domain_projection) is DomainEvidenceProjectionV01
-        and type(value.replay_anchor_publication) is ExternalAnchorPublicationV01
-        and type(value.replay_anchored_verification) is AnchoredPackageVerificationV01
+        type(value.sealed_replay_evidence) is _sealed_replay.SealedReplayEvidenceV01
+        and type(value.replay_source_manifest) is _sealed_package.SealedPackageManifestV01
+        and type(value.replay_source_domain_projection)
+        is _evidence_profile.DomainEvidenceProjectionV01
+        and type(value.replay_anchor_publication)
+        is _external_anchor.ExternalAnchorPublicationV01
+        and type(value.replay_anchored_verification)
+        is _external_anchor.AnchoredPackageVerificationV01
         and _source_identity_valid(value.replay_supplied_anchor_publication_id)
-        and type(value.replay_reconstructed_manifest) is SealedPackageManifestV01
-        and type(value.replay_reconstructed_domain_projection) is DomainEvidenceProjectionV01
+        and type(value.replay_reconstructed_manifest)
+        is _sealed_package.SealedPackageManifestV01
+        and type(value.replay_reconstructed_domain_projection)
+        is _evidence_profile.DomainEvidenceProjectionV01
         and type(value.replay_source_safe_file_contents) is tuple
         and bool(value.replay_source_safe_file_contents)
         and all(type(item) is bytes for item in value.replay_source_safe_file_contents)
@@ -2610,17 +2654,19 @@ def _source_context_errors(value: object) -> tuple[str, ...]:
         and _project_ref_valid(value.g2a_evaluation_context_id)
     )
     g2a_present = (
-        type(value.g2a_inspection) is ActionPacketPresentEligibilityInspectionV01
-        and type(value.g2a_registry) is ActionCommitPacketRegistryV02
+        type(value.g2a_inspection)
+        is _action_packet.ActionPacketPresentEligibilityInspectionV01
+        and type(value.g2a_registry) is _action_packet.ActionCommitPacketRegistryV02
         and _source_identity_valid(value.g2a_packet_id)
-        and type(value.g2a_corridor) is ContractFulfillmentCorridorV01
-        and type(value.g2a_corridor_step) is CorridorStepV01
+        and type(value.g2a_corridor)
+        is _action_packet.ContractFulfillmentCorridorV01
+        and type(value.g2a_corridor_step) is _action_packet.CorridorStepV01
         and type(value.g2a_current_dependency_observations) is tuple
         and all(
-            type(item) is ActionDependencyCurrentObservationV01
+            type(item) is _action_packet.ActionDependencyCurrentObservationV01
             for item in value.g2a_current_dependency_observations
         )
-        and type(value.g2a_logical_time_bridge) is LogicalTimeBridgeV01
+        and type(value.g2a_logical_time_bridge) is _action_packet.LogicalTimeBridgeV01
         and _exact_int_valid(value.g2a_evaluation_time)
         and _project_ref_valid(value.g2a_evaluation_time_source)
         and _project_ref_valid(value.g2a_evaluation_context_id)
@@ -2630,7 +2676,7 @@ def _source_context_errors(value: object) -> tuple[str, ...]:
     if not (g2a_no_packet or g2a_present):
         errors.append("g2c_source_context_invalid")
     if type(value.g2b_compatibility_projections) is not tuple or any(
-        type(item) is not LegacyDRSProjectionV01
+        type(item) is not _compatibility.LegacyDRSProjectionV01
         for item in value.g2b_compatibility_projections
     ):
         errors.append("g2c_source_context_invalid")
@@ -2652,13 +2698,13 @@ def _source_context_errors(value: object) -> tuple[str, ...]:
         and roots_absent
     )
     g2b_context = (
-        type(value.g2b_resolution_report) is DRSResolutionReportV01
+        type(value.g2b_resolution_report) is _resolution.DRSResolutionReportV01
         and bool(value.g2b_compatibility_projections)
         and _exact_int_valid(value.g2b_use_time)
         and roots_absent
     )
     g2b_direct = (
-        type(value.g2b_resolution_report) is DRSResolutionReportV01
+        type(value.g2b_resolution_report) is _resolution.DRSResolutionReportV01
         and bool(value.g2b_compatibility_projections)
         and _exact_int_valid(value.g2b_use_time)
         and roots_present
@@ -3232,6 +3278,10 @@ def _validated_bsep_binding(
     domain_id: str,
     source_context: ExecutionModeSourceContextV01,
 ) -> ExecutionModeBSEPBindingV01:
+    import hedgehog.context_packets as _context_packets
+    import hedgehog.semantic_reasoning_adapter as _semantic_adapter
+    import hedgehog.structured_rationale as _structured_rationale
+
     if type(source_context) is not ExecutionModeSourceContextV01:
         _raise_c2("g2c_source_context_invalid", "SOURCE_CONTEXT")
     context_report = validate_execution_mode_source_context_v01(source_context)
@@ -3243,7 +3293,9 @@ def _validated_bsep_binding(
     rationale = source_context.bsep_structured_rationale
     packet = source_context.bsep_packet
 
-    business_result = validate_business_request_context_packet(business)
+    business_result = _context_packets.validate_business_request_context_packet(
+        business
+    )
     _source_acceptance(
         business_result,
         reason="g2c_business_request_invalid",
@@ -3259,7 +3311,7 @@ def _validated_bsep_binding(
     ):
         _raise_c2("g2c_business_request_invalid", "BUSINESS_REQUEST")
 
-    route_result = validate_orchestrator_route_context_packet(route)
+    route_result = _context_packets.validate_orchestrator_route_context_packet(route)
     _source_acceptance(
         route_result,
         reason="g2c_route_context_invalid",
@@ -3280,14 +3332,16 @@ def _validated_bsep_binding(
         if type(source_refs) is not tuple or source_refs != (expected_source_ref,):
             _raise_c2("g2c_business_request_ref_invalid", "BSEP")
 
-    proposal_reasons = validate_orchestrator_semantic_reasoning_proposal(proposal)
+    proposal_reasons = _semantic_adapter.validate_orchestrator_semantic_reasoning_proposal(
+        proposal
+    )
     _empty_reason_source_acceptance(
         proposal_reasons,
         reason="g2c_semantic_proposal_invalid",
         stage="BSEP",
     )
     if not _exact_source_key_set(
-        proposal, ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS
+        proposal, _semantic_adapter.ORCHESTRATOR_SEMANTIC_REASONING_REQUIRED_FIELDS
     ):
         _raise_c2("g2c_semantic_proposal_invalid", "BSEP")
     confidence = proposal.get("confidence")
@@ -3302,7 +3356,9 @@ def _validated_bsep_binding(
     ):
         _raise_c2("g2c_semantic_proposal_invalid", "BSEP")
 
-    rationale_result = validate_orchestrator_structured_rationale(rationale)
+    rationale_result = _structured_rationale.validate_orchestrator_structured_rationale(
+        rationale
+    )
     _source_acceptance(
         rationale_result,
         reason="g2c_structured_rationale_invalid",
@@ -3316,7 +3372,7 @@ def _validated_bsep_binding(
     ):
         _raise_c2("g2c_structured_rationale_invalid", "BSEP")
 
-    packet_result = validate_bounded_semantic_evidence_packet(
+    packet_result = _context_packets.validate_bounded_semantic_evidence_packet(
         packet,
         route_context_packet=route,
         orchestrator_proposal=proposal,
@@ -3492,6 +3548,11 @@ def _validated_replay_binding(
     domain_id: str,
     source_context: ExecutionModeSourceContextV01,
 ) -> ExecutionModeReplayBindingV01:
+    import hedgehog.evidence.external_anchor_v01 as _external_anchor
+    import hedgehog.evidence.sealed_evidence_profile_v01 as _evidence_profile
+    import hedgehog.evidence.sealed_package_v01 as _sealed_package
+    import hedgehog.evidence.sealed_replay_evidence_v01 as _sealed_replay
+
     replay = source_context.sealed_replay_evidence
     source_manifest = source_context.replay_source_manifest
     source_projection = source_context.replay_source_domain_projection
@@ -3504,37 +3565,40 @@ def _validated_replay_binding(
     rebuilt_contents = source_context.replay_reconstructed_safe_file_contents
     if not all(
         (
-            type(replay) is SealedReplayEvidenceV01,
-            type(source_manifest) is SealedPackageManifestV01,
-            type(source_projection) is DomainEvidenceProjectionV01,
-            type(publication) is ExternalAnchorPublicationV01,
-            type(verification) is AnchoredPackageVerificationV01,
+            type(replay) is _sealed_replay.SealedReplayEvidenceV01,
+            type(source_manifest) is _sealed_package.SealedPackageManifestV01,
+            type(source_projection)
+            is _evidence_profile.DomainEvidenceProjectionV01,
+            type(publication) is _external_anchor.ExternalAnchorPublicationV01,
+            type(verification)
+            is _external_anchor.AnchoredPackageVerificationV01,
             type(supplied_anchor_id) is str,
-            type(rebuilt_manifest) is SealedPackageManifestV01,
-            type(rebuilt_projection) is DomainEvidenceProjectionV01,
+            type(rebuilt_manifest) is _sealed_package.SealedPackageManifestV01,
+            type(rebuilt_projection)
+            is _evidence_profile.DomainEvidenceProjectionV01,
         )
     ):
         _raise_c2("g2c_replay_binding_invalid", "REPLAY")
     for result in (
-        validate_domain_evidence_projection_v01(source_projection),
-        validate_domain_evidence_projection_v01(rebuilt_projection),
-        validate_sealed_package_manifest_v01(
+        _evidence_profile.validate_domain_evidence_projection_v01(source_projection),
+        _evidence_profile.validate_domain_evidence_projection_v01(rebuilt_projection),
+        _sealed_package.validate_sealed_package_manifest_v01(
             source_manifest,
             domain_projection=source_projection,
             safe_file_contents=source_contents,
         ),
-        validate_sealed_package_manifest_v01(
+        _sealed_package.validate_sealed_package_manifest_v01(
             rebuilt_manifest,
             domain_projection=rebuilt_projection,
             safe_file_contents=rebuilt_contents,
         ),
-        validate_external_anchor_publication_v01(
+        _external_anchor.validate_external_anchor_publication_v01(
             publication,
             manifest=source_manifest,
             domain_projection=source_projection,
             safe_file_contents=source_contents,
         ),
-        validate_anchored_package_verification_v01(
+        _external_anchor.validate_anchored_package_verification_v01(
             verification,
             anchor_publication=publication,
             manifest=source_manifest,
@@ -3548,7 +3612,7 @@ def _validated_replay_binding(
             reason="g2c_replay_binding_invalid",
             stage="REPLAY",
         )
-    replay_reasons = validate_sealed_replay_evidence_v01(
+    replay_reasons = _sealed_replay.validate_sealed_replay_evidence_v01(
         replay,
         source_manifest=source_manifest,
         source_domain_projection=source_projection,
@@ -3573,7 +3637,7 @@ def _validated_replay_binding(
         )
     ):
         _raise_c2("g2c_replay_binding_invalid", "REPLAY")
-    replay_plain = sealed_replay_evidence_to_plain_dict_v01(
+    replay_plain = _sealed_replay.sealed_replay_evidence_to_plain_dict_v01(
         replay,
         source_manifest=source_manifest,
         source_domain_projection=source_projection,
@@ -3725,8 +3789,10 @@ def _validated_g2a_binding(
     domain_id: str,
     source_context: ExecutionModeSourceContextV01,
 ) -> ExecutionModeG2ABindingV01:
+    import hedgehog.action_commit_packet_v02 as _action_packet
+
     inspection = source_context.g2a_inspection
-    validation = validate_action_packet_present_eligibility_inspection_v01(
+    validation = _action_packet.validate_action_packet_present_eligibility_inspection_v01(
         inspection,
         source_context.g2a_registry,
         packet_id=source_context.g2a_packet_id,
@@ -3748,7 +3814,7 @@ def _validated_g2a_binding(
         reason="g2c_g2a_present_inspection_invalid",
         stage="G2A",
     )
-    if type(inspection) is not ActionPacketPresentEligibilityInspectionV01:
+    if type(inspection) is not _action_packet.ActionPacketPresentEligibilityInspectionV01:
         _raise_c2("g2c_g2a_present_inspection_invalid", "G2A")
     entries = tuple(
         item
@@ -3901,22 +3967,41 @@ def build_execution_mode_g2b_not_applicable_binding_v01(
     )  # type: ignore[return-value]
 
 
-def _validate_g2b_report_family(report: DRSResolutionReportV01) -> None:
+def _validate_g2b_report_family(
+    report: hedgehog.drs_memory_resolution_v01.DRSResolutionReportV01,
+) -> None:
+    import hedgehog.drs_memory_resolution_v01 as _resolution
+    import hedgehog.drs_semantic_address_v01 as _semantic_address
+    import hedgehog.reuse_certificate_v01 as _reuse_certificate
+
     checks = (
-        validate_semantic_address_v01(report.semantic_address),
-        validate_drs_temporal_query_v01(report.query),
-        *(validate_meaning_record_v01(item) for item in report.source_records),
-        *(validate_query_evaluation_state_v01(item) for item in report.query_evaluations),
-        *(validate_resolution_candidate_v01(item) for item in report.eligible_candidates),
-        validate_retrieval_plan_v01(report.retrieval_plan),
+        _semantic_address.validate_semantic_address_v01(report.semantic_address),
+        _resolution.validate_drs_temporal_query_v01(report.query),
         *(
-            (validate_memory_descent_result_v01(report.memory_descent_result),)
+            _semantic_address.validate_meaning_record_v01(item)
+            for item in report.source_records
+        ),
+        *(
+            _resolution.validate_query_evaluation_state_v01(item)
+            for item in report.query_evaluations
+        ),
+        *(
+            _resolution.validate_resolution_candidate_v01(item)
+            for item in report.eligible_candidates
+        ),
+        _resolution.validate_retrieval_plan_v01(report.retrieval_plan),
+        *(
+            (
+                _resolution.validate_memory_descent_result_v01(
+                    report.memory_descent_result
+                ),
+            )
             if report.memory_descent_result is not None
             else ()
         ),
         *(
             (
-                validate_root_shortcut_authorization_projection_v01(
+                _reuse_certificate.validate_root_shortcut_authorization_projection_v01(
                     report.root_shortcut_projection
                 ),
             )
@@ -3924,11 +4009,15 @@ def _validate_g2b_report_family(report: DRSResolutionReportV01) -> None:
             else ()
         ),
         *(
-            (validate_reuse_certificate_v01(report.reuse_certificate),)
+            (
+                _reuse_certificate.validate_reuse_certificate_v01(
+                    report.reuse_certificate
+                ),
+            )
             if report.reuse_certificate is not None
             else ()
         ),
-        validate_drs_resolution_report_v01(report),
+        _resolution.validate_drs_resolution_report_v01(report),
     )
     for result in checks:
         _boolean_source_acceptance(
@@ -3946,10 +4035,14 @@ def _validated_g2b_binding(
     domain_id: str,
     source_context: ExecutionModeSourceContextV01,
 ) -> ExecutionModeG2BBindingV01:
+    import hedgehog.drs_g2b_compatibility_v01 as _compatibility
+    import hedgehog.drs_memory_resolution_v01 as _resolution
+    import hedgehog.reuse_certificate_v01 as _reuse_certificate
+
     report = source_context.g2b_resolution_report
     projections = source_context.g2b_compatibility_projections
     use_time = source_context.g2b_use_time
-    if type(report) is not DRSResolutionReportV01:
+    if type(report) is not _resolution.DRSResolutionReportV01:
         _raise_c2("g2c_g2b_binding_invalid", "G2B")
     _validate_g2b_report_family(report)
     if type(projections) is not tuple or projections != report.source_projections:
@@ -3957,11 +4050,13 @@ def _validated_g2b_binding(
     projection_plain: list[dict[str, object]] = []
     for projection in projections:
         _boolean_source_acceptance(
-            validate_legacy_drs_projection_v01(projection),
+            _compatibility.validate_legacy_drs_projection_v01(projection),
             reason="g2c_g2b_binding_invalid",
             stage="G2B",
         )
-        projection_plain.append(legacy_drs_projection_to_plain_data_v01(projection))
+        projection_plain.append(
+            _compatibility.legacy_drs_projection_to_plain_data_v01(projection)
+        )
     query = report.query
     if request_id == transaction_id:
         _raise_c2("g2c_transaction_binding_mismatch", "G2B")
@@ -4033,7 +4128,7 @@ def _validated_g2b_binding(
                 stage="G2B",
             )
         _boolean_source_acceptance(
-            validate_existing_root_shortcut_decision_v01(
+            _reuse_certificate.validate_existing_root_shortcut_decision_v01(
                 resolution_report=report,
                 root_kernel=kernel,
                 root_decision_input=decision_input,
@@ -4066,7 +4161,9 @@ def _validated_g2b_binding(
         owning_root_id=owning_root_id,
         domain_id=domain_id,
         report_id=report.report_id,
-        report_sha256=_plain_sha256(drs_resolution_report_to_plain_data_v01(report)),
+        report_sha256=_plain_sha256(
+            _resolution.drs_resolution_report_to_plain_data_v01(report)
+        ),
         semantic_address_id=report.semantic_address.semantic_address_id,
         query_id=query.query_id,
         query_evaluation_ids=tuple(
@@ -5505,6 +5602,1728 @@ def route_execution_mode_v01(
             stage="PROPOSAL",
             reason="g2c_proposal_rows_invalid",
         )
+
+
+def _c4_identity(*, domain: str, prefix: str, material: object) -> str:
+    return prefix + domain_separated_sha256_hex_v01(
+        domain=domain,
+        payload=canonical_json_bytes_v01(material),
+    )
+
+
+def _lexical_refs(*values: str) -> tuple[str, ...]:
+    return tuple(sorted(set(values)))
+
+
+def _c4_report(
+    *, target: str, artifact_id: str | None, router_input: object,
+    status: str, stage: str, reasons: tuple[str, ...] = (),
+    source_reasons: tuple[str, ...] = (),
+) -> ExecutionModeValidationReportV01:
+    recognized = type(router_input) is ExecutionModeRouterInputV01
+    return build_execution_mode_validation_report_v01(
+        validation_target=target,
+        validated_artifact_id=artifact_id if recognized else None,
+        request_id=router_input.request_id if recognized else None,
+        transaction_id=router_input.transaction_id if recognized else None,
+        owning_root_id=router_input.owning_root_id if recognized else None,
+        domain_id=(router_input.local_routing_snapshot.domain_id if recognized else None),
+        validation_status=status,
+        failure_stage=stage,
+        return_to_root_required=status != "PASS",
+        reason_codes=_sort_public_reasons(reasons) if reasons else (),
+        source_reason_codes=source_reasons,
+    )
+
+
+def _require_c4_proposal(
+    *, proposal: object, router_input: object, source_context: object,
+) -> None:
+    report = validate_execution_mode_proposal_against_sources_v01(
+        proposal=proposal, router_input=router_input, source_context=source_context
+    )
+    if report.validation_status != "PASS":
+        raise ValueError(
+            report.reason_codes[0]
+            if report.reason_codes else "g2c_source_object_substituted"
+        )
+
+
+def _payload_has_reserved_key(value: object, active: set[int]) -> bool:
+    if type(value) not in {dict, list, tuple}:
+        return False
+    marker = id(value)
+    if marker in active:
+        return True
+    active.add(marker)
+    try:
+        if type(value) is dict:
+            if any(
+                type(key) is not str or key in _G2C_ABI_RESERVED_KEYS_V01
+                for key in value
+            ):
+                return True
+            return any(
+                _payload_has_reserved_key(item, active) for item in value.values()
+            )
+        return any(_payload_has_reserved_key(item, active) for item in value)
+    finally:
+        active.remove(marker)
+
+
+def _artifact_identity(
+    artifact: KernelArtifactV01, *, domain: str, prefix: str,
+) -> str:
+    material = kernel_artifact_to_plain_dict_v01(artifact)
+    material.pop("artifact_id")
+    return _c4_identity(domain=domain, prefix=prefix, material=material)
+
+
+def _finish_c4_artifact(
+    *, artifact_type: str, transaction_id: str, owning_root_id: str,
+    source_component: str, authority_class: str, lifecycle_state: str,
+    payload: dict[str, object], trace_refs: tuple[str, ...],
+    parent_refs: tuple[str, ...], snapshot: ExecutionModeLocalRoutingSnapshotV01,
+    domain: str, prefix: str,
+) -> KernelArtifactV01:
+    if _payload_has_reserved_key(payload, set()):
+        raise ValueError("g2c_abi_reserved_payload_key")
+    provisional = build_kernel_artifact_v01(
+        abi_version=_G2C_ABI_VERSION_V01,
+        artifact_id=prefix + _ZERO_SHA256,
+        artifact_type=artifact_type,
+        schema_version=_G2C_SCHEMA_VERSION_V01,
+        transaction_id=transaction_id,
+        owner_root_id=owning_root_id,
+        source_component=source_component,
+        authority_class=authority_class,
+        lifecycle_state=lifecycle_state,
+        payload=payload,
+        trace_refs=trace_refs,
+        parent_refs=parent_refs,
+        time_envelope=_time_envelope_plain(snapshot),
+    )
+    artifact = replace(
+        provisional,
+        artifact_id=_artifact_identity(provisional, domain=domain, prefix=prefix),
+    )
+    if validate_kernel_artifact_v01(artifact):
+        raise ValueError("g2c_abi_profile_invalid")
+    return artifact
+
+
+def _proposal_payload(proposal: ExecutionModeProposalV01) -> dict[str, object]:
+    return {
+        "proposal_id": proposal.proposal_id,
+        "source_input_id": proposal.source_input_id,
+        "request_id": proposal.request_id,
+        "domain_id": proposal.domain_id,
+        "source_bsep_binding_id": proposal.source_bsep_binding_id,
+        "source_bsep_packet_id": proposal.source_bsep_packet_id,
+        "source_bsep_sha256": proposal.source_bsep_sha256,
+        "source_local_routing_snapshot_id": proposal.source_local_routing_snapshot_id,
+        "source_replay_binding_id": proposal.source_replay_binding_id,
+        "source_g2a_binding_id": proposal.source_g2a_binding_id,
+        "source_g2b_binding_id": proposal.source_g2b_binding_id,
+        "selected_mode": proposal.selected_mode,
+        "selected_safe_depth_rank": proposal.selected_safe_depth_rank,
+        "selected_local_mode_profile_id": proposal.selected_local_mode_profile_id,
+        "selected_expected_cost_units": proposal.selected_expected_cost_units,
+        "proposed_scope_ref": proposal.proposed_scope_ref,
+        "ordered_feasibility_row_ids": [
+            row.feasibility_row_id for row in proposal.ordered_feasibility_rows
+        ],
+        "selected_feasibility_row_id": proposal.selected_feasibility_row_id,
+        "reason_codes": list(proposal.reason_codes),
+        "required_downstream_capability_ids": list(proposal.required_downstream_capability_ids),
+        "downstream_consumption_class": proposal.downstream_consumption_class,
+        "downstream_action_packet_required": proposal.downstream_action_packet_required,
+        "root_review_required": proposal.root_review_required,
+        "authority_created": proposal.authority_created,
+        "permission_created": proposal.permission_created,
+        "action_commit_packet_created": proposal.action_commit_packet_created,
+        "receipt_created": proposal.receipt_created,
+        "topology_created": proposal.topology_created,
+        "final_output_created": proposal.final_output_created,
+        "drs_write_created": proposal.drs_write_created,
+        "real_world_effects_count": proposal.real_world_effects_count,
+    }
+
+
+def _expected_proposal_artifact(
+    *, proposal: ExecutionModeProposalV01, router_input: ExecutionModeRouterInputV01,
+) -> KernelArtifactV01:
+    return _finish_c4_artifact(
+        artifact_type="ExecutionModeProposal",
+        transaction_id=router_input.transaction_id,
+        owning_root_id=router_input.owning_root_id,
+        source_component="execution_mode_router_v01",
+        authority_class="ADVISORY",
+        lifecycle_state="VALIDATED",
+        payload=_proposal_payload(proposal),
+        trace_refs=_lexical_refs(
+            router_input.bsep_binding.business_request_packet_id,
+            router_input.bsep_binding.bsep_binding_id,
+            router_input.router_input_id,
+            router_input.local_routing_snapshot.local_routing_snapshot_id,
+            router_input.replay_binding.replay_binding_id,
+            router_input.g2a_binding.g2a_binding_id,
+            router_input.g2b_binding.g2b_binding_id,
+            proposal.proposal_id,
+        ),
+        parent_refs=(),
+        snapshot=router_input.local_routing_snapshot,
+        domain=_G2C_PROPOSAL_ARTIFACT_DOMAIN_V01,
+        prefix="emabi_proposal_v01:",
+    )
+
+
+def _require_proposal_artifact(
+    *, proposal_artifact: object, proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+) -> None:
+    if type(proposal_artifact) is not KernelArtifactV01:
+        raise ValueError("g2c_abi_profile_invalid")
+    if proposal_artifact != _expected_proposal_artifact(
+        proposal=proposal, router_input=router_input
+    ):
+        raise ValueError("g2c_abi_projection_substituted")
+    if validate_kernel_artifact_bundle_v01(artifacts=(proposal_artifact,)):
+        raise ValueError("g2c_abi_bundle_validation_failed")
+
+
+def project_execution_mode_proposal_kernel_artifact_v01(
+    *, proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+) -> KernelArtifactV01:
+    try:
+        _require_c4_proposal(
+            proposal=proposal, router_input=router_input, source_context=source_context
+        )
+        artifact = _expected_proposal_artifact(
+            proposal=proposal, router_input=router_input
+        )
+        _require_proposal_artifact(
+            proposal_artifact=artifact, proposal=proposal, router_input=router_input
+        )
+        return artifact
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_abi_profile_invalid"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2c_abi_profile_invalid") from None
+
+
+def _build_profile_transition(
+    *, registry: TransitionRegistryV01, rule_id: str,
+) -> TransitionDecisionV01:
+    errors = _validate_execution_mode_transition_registry_profile_v01(registry)
+    if errors:
+        raise ValueError(errors[0])
+    rule = next((item for item in registry.rules if item.rule_id == rule_id), None)
+    if rule is None:
+        raise ValueError("g2c_transition_decision_invalid")
+    provisional = TransitionDecisionV01(
+        decision_id=_ZERO_SHA256,
+        registry_id=registry.registry_id,
+        rule_id=rule.rule_id,
+        abi_major_version=rule.abi_major_version,
+        source_artifact_type=rule.source_artifact_type,
+        source_lifecycle_state=rule.source_lifecycle_state,
+        actor_role=rule.actor_role,
+        attempted_effect=rule.attempted_effect,
+        target_artifact_type=rule.target_artifact_type,
+        required_guards=rule.required_guards,
+        satisfied_guards=rule.required_guards,
+        missing_guards=(),
+        decision=rule.decision,
+        reason_code=rule.reason_code,
+        root_commit_required=rule.root_commit_required,
+        root_commit_present=rule.root_commit_required,
+        matched=True,
+    )
+    decision = replace(
+        provisional,
+        decision_id=_rebuild_execution_mode_transition_decision_identity_v01(provisional),
+    )
+    if _validate_execution_mode_transition_decision_v01(
+        registry=registry, decision=decision
+    ):
+        raise ValueError("g2c_transition_decision_invalid")
+    return decision
+
+
+def _require_pre_root_transition(
+    *, transition: object, registry: TransitionRegistryV01,
+) -> None:
+    if type(transition) is not TransitionDecisionV01:
+        raise ValueError("g2c_proposal_transition_missing")
+    if transition != _build_profile_transition(
+        registry=registry,
+        rule_id="g2c_transition:proposal_to_root_review:v01",
+    ):
+        raise ValueError("g2c_proposal_transition_substituted")
+
+
+def evaluate_execution_mode_proposal_to_root_transition_v01(
+    *, registry: TransitionRegistryV01, proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    proposal_artifact: KernelArtifactV01,
+) -> TransitionDecisionV01:
+    try:
+        _require_c4_proposal(
+            proposal=proposal, router_input=router_input, source_context=source_context
+        )
+        _require_proposal_artifact(
+            proposal_artifact=proposal_artifact, proposal=proposal,
+            router_input=router_input,
+        )
+        decision = _build_profile_transition(
+            registry=registry,
+            rule_id="g2c_transition:proposal_to_root_review:v01",
+        )
+        _require_pre_root_transition(transition=decision, registry=registry)
+        return decision
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_transition_substituted"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2c_transition_substituted") from None
+
+
+def _root_support_material(
+    *, kind: str, proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    specific: tuple[tuple[str, object], ...],
+) -> dict[str, object]:
+    material: dict[str, object] = {
+        "kind": kind,
+        "request_id": router_input.request_id,
+        "transaction_id": router_input.transaction_id,
+        "owning_root_id": router_input.owning_root_id,
+        "domain_id": router_input.local_routing_snapshot.domain_id,
+        "proposal_id": proposal.proposal_id,
+        "router_input_id": router_input.router_input_id,
+        "proposal_artifact_id": proposal_artifact.artifact_id,
+        "proposal_transition_decision_id": proposal_transition_decision.decision_id,
+    }
+    material.update(specific)
+    return material
+
+
+def _root_support_identity(
+    *, kind: str, prefix: str, proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    specific: tuple[tuple[str, object], ...],
+) -> str:
+    return _c4_identity(
+        domain=_G2C_ROOT_SOURCE_SUPPORT_DOMAIN_V01,
+        prefix=prefix,
+        material=_root_support_material(
+            kind=kind, proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            specific=specific,
+        ),
+    )
+
+
+def _scope_narrowing_identity(
+    *, proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    accepted_scope_ref: str,
+    narrowing_basis_refs: tuple[str, ...],
+) -> str:
+    snapshot = router_input.local_routing_snapshot
+    return _c4_identity(
+        domain="HEDGEHOG_EXECUTION_MODE_SCOPE_NARROWING_V01",
+        prefix="emnarrow_v01:",
+        material={
+            "request_id": router_input.request_id,
+            "transaction_id": router_input.transaction_id,
+            "owning_root_id": router_input.owning_root_id,
+            "proposal_id": proposal.proposal_id,
+            "proposed_scope_ref": proposal.proposed_scope_ref,
+            "accepted_scope_ref": accepted_scope_ref,
+            "policy_snapshot_id": snapshot.policy_snapshot_id,
+            "evaluation_time_epoch_seconds": snapshot.evaluation_time_epoch_seconds,
+            "narrowing_basis_refs": list(narrowing_basis_refs),
+        },
+    )
+
+
+def _review_geometry(
+    *, proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    review_action: str,
+    accepted_scope_ref: str | None,
+    narrowing_basis_refs: tuple[str, ...],
+) -> tuple[str | None, tuple[str, ...]]:
+    if (
+        type(narrowing_basis_refs) is not tuple
+        or tuple(sorted(narrowing_basis_refs)) != narrowing_basis_refs
+        or len(narrowing_basis_refs) != len(set(narrowing_basis_refs))
+        or any(not _source_identity_valid(item) for item in narrowing_basis_refs)
+    ):
+        raise ValueError("g2c_scope_narrowing_invalid")
+    executable = proposal.selected_mode in EXECUTABLE_EXECUTION_MODES_V01
+    if executable and review_action == "ACCEPT":
+        if accepted_scope_ref != proposal.proposed_scope_ref or narrowing_basis_refs:
+            raise ValueError("g2c_review_action_invalid")
+        return None, ()
+    if executable and review_action == "NARROW":
+        permitted = router_input.local_routing_snapshot.permitted_narrower_scope_refs
+        if (
+            accepted_scope_ref is None
+            or accepted_scope_ref == proposal.proposed_scope_ref
+            or permitted.count(accepted_scope_ref) != 1
+            or not narrowing_basis_refs
+        ):
+            raise ValueError("g2c_scope_narrowing_invalid")
+        return _scope_narrowing_identity(
+            proposal=proposal, router_input=router_input,
+            accepted_scope_ref=accepted_scope_ref,
+            narrowing_basis_refs=narrowing_basis_refs,
+        ), narrowing_basis_refs
+    if executable and review_action == "REJECT":
+        if accepted_scope_ref is not None or narrowing_basis_refs:
+            raise ValueError("g2c_review_action_invalid")
+        return None, ()
+    if (
+        not executable
+        and review_action == "TERMINAL_FROM_PROPOSAL"
+        and proposal.selected_mode in _TERMINAL_MODES_V01
+        and accepted_scope_ref is None
+        and not narrowing_basis_refs
+    ):
+        return None, ()
+    raise ValueError(
+        "g2c_review_action_invalid" if executable else "g2c_terminal_review_mismatch"
+    )
+
+
+def _build_review_input(
+    *, proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    review_action: str,
+    accepted_scope_ref: str | None,
+    narrowing_basis_refs: tuple[str, ...],
+) -> RootExecutionModeReviewInputV01:
+    proof_id, exact_basis = _review_geometry(
+        proposal=proposal, router_input=router_input, review_action=review_action,
+        accepted_scope_ref=accepted_scope_ref,
+        narrowing_basis_refs=narrowing_basis_refs,
+    )
+    snapshot = router_input.local_routing_snapshot
+    context_id = _root_support_identity(
+        kind="ROOT_LOCAL_CONTEXT", prefix="emrootctx_v01:",
+        proposal=proposal, router_input=router_input,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=proposal_transition_decision,
+        specific=(
+            ("policy_snapshot_id", snapshot.policy_snapshot_id),
+            ("time_envelope_ref", snapshot.time_envelope_ref),
+            ("proposed_scope_ref", proposal.proposed_scope_ref),
+            ("accepted_scope_ref", accepted_scope_ref),
+            ("scope_narrowing_proof_id", proof_id),
+            ("narrowing_basis_refs", list(exact_basis)),
+        ),
+    )
+    provisional = RootExecutionModeReviewInputV01(
+        root_review_input_id="emrootreview_v01:" + _ZERO_SHA256,
+        request_id=router_input.request_id,
+        transaction_id=router_input.transaction_id,
+        owning_root_id=router_input.owning_root_id,
+        domain_id=snapshot.domain_id,
+        proposal_id=proposal.proposal_id,
+        router_input_id=router_input.router_input_id,
+        proposal_artifact_id=proposal_artifact.artifact_id,
+        proposal_transition_decision_id=proposal_transition_decision.decision_id,
+        created_by="OWNING_LOCAL_ROOT_EXECUTION_MODE_REVIEW_V01",
+        review_action=review_action,
+        proposed_mode=proposal.selected_mode,
+        proposed_scope_ref=proposal.proposed_scope_ref,
+        accepted_scope_ref=accepted_scope_ref,
+        scope_narrowing_proof_id=proof_id,
+        narrowing_basis_refs=exact_basis,
+        policy_snapshot_id=snapshot.policy_snapshot_id,
+        evaluation_time_epoch_seconds=snapshot.evaluation_time_epoch_seconds,
+        time_envelope_ref=snapshot.time_envelope_ref,
+        root_local_context_id=context_id,
+        trace_refs=_lexical_refs(
+            proposal_artifact.artifact_id,
+            proposal_transition_decision.decision_id,
+            proposal.proposal_id,
+            router_input.router_input_id,
+            context_id,
+        ),
+    )
+    result = replace(provisional, root_review_input_id=_rebuild_identity(provisional))
+    errors = _root_review_errors(result)
+    if errors:
+        raise ValueError(errors[0])
+    return result
+
+
+def build_root_execution_mode_review_input_v01(
+    *, proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    review_action: str,
+    accepted_scope_ref: str | None,
+    narrowing_basis_refs: tuple[str, ...],
+) -> RootExecutionModeReviewInputV01:
+    try:
+        _require_c4_proposal(
+            proposal=proposal, router_input=router_input, source_context=source_context
+        )
+        _require_proposal_artifact(
+            proposal_artifact=proposal_artifact, proposal=proposal,
+            router_input=router_input,
+        )
+        _require_pre_root_transition(
+            transition=proposal_transition_decision,
+            registry=_build_execution_mode_transition_registry_profile_v01(),
+        )
+        result = _build_review_input(
+            proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            review_action=review_action, accepted_scope_ref=accepted_scope_ref,
+            narrowing_basis_refs=narrowing_basis_refs,
+        )
+        report = validate_root_execution_mode_review_input_against_sources_v01(
+            review_input=result, proposal=proposal, router_input=router_input,
+            source_context=source_context, proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+        )
+        if report.validation_status != "PASS":
+            raise ValueError(report.reason_codes[0])
+        return result
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_review_action_invalid"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2c_review_action_invalid") from None
+
+
+def validate_root_execution_mode_review_input_against_sources_v01(
+    *, review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+) -> ExecutionModeValidationReportV01:
+    try:
+        _require_c4_proposal(
+            proposal=proposal, router_input=router_input, source_context=source_context
+        )
+        _require_proposal_artifact(
+            proposal_artifact=proposal_artifact, proposal=proposal,
+            router_input=router_input,
+        )
+        _require_pre_root_transition(
+            transition=proposal_transition_decision,
+            registry=_build_execution_mode_transition_registry_profile_v01(),
+        )
+        structural = validate_root_execution_mode_review_input_v01(review_input)
+        if structural.validation_status != "PASS":
+            return _c4_report(
+                target="ROOT_REVIEW_AGAINST_SOURCES", artifact_id=None,
+                router_input=router_input, status="FAIL_CLOSED", stage="ROOT_REVIEW",
+                reasons=structural.reason_codes,
+            )
+        expected = _build_review_input(
+            proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            review_action=review_input.review_action,
+            accepted_scope_ref=review_input.accepted_scope_ref,
+            narrowing_basis_refs=review_input.narrowing_basis_refs,
+        )
+        if review_input != expected:
+            raise ValueError("g2c_source_object_substituted")
+        return _c4_report(
+            target="ROOT_REVIEW_AGAINST_SOURCES",
+            artifact_id=review_input.root_review_input_id,
+            router_input=router_input, status="PASS", stage="NONE",
+        )
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_source_object_substituted"
+        return _c4_report(
+            target="ROOT_REVIEW_AGAINST_SOURCES", artifact_id=None,
+            router_input=router_input, status="FAIL_CLOSED", stage="ROOT_REVIEW",
+            reasons=(reason,),
+        )
+    except Exception:
+        return _c4_report(
+            target="ROOT_REVIEW_AGAINST_SOURCES", artifact_id=None,
+            router_input=router_input, status="FAIL_CLOSED", stage="ROOT_REVIEW",
+            reasons=("g2c_review_action_invalid",),
+        )
+
+
+def _root_source_family(
+    *, review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    root_kernel: RootDecisionKernelV01,
+) -> tuple[
+    SemanticWorkRequestV01, NormalizedClaimV01, ActorContributionV01,
+    RootReviewPacketV01, RootDecisionInputV01, RootDecisionResultV01,
+]:
+    if root_kernel != build_root_decision_kernel_v01() or validate_root_decision_kernel_v01(
+        root_kernel
+    ):
+        raise ValueError("g2c_root_input_invalid")
+    snapshot = router_input.local_routing_snapshot
+    common = dict(
+        proposal=proposal,
+        router_input=router_input,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=proposal_transition_decision,
+    )
+    bsep_evidence_id = _root_support_identity(
+        kind="BSEP_EVIDENCE", prefix="emrootev_v01:",
+        specific=(
+            ("bsep_binding_id", router_input.bsep_binding.bsep_binding_id),
+            ("source_family_sha256", router_input.bsep_binding.source_family_sha256),
+        ),
+        **common,
+    )
+    feasibility_evidence_id = _root_support_identity(
+        kind="FEASIBILITY_EVIDENCE", prefix="emrootev_v01:",
+        specific=(
+            ("selected_feasibility_row_id", proposal.selected_feasibility_row_id),
+            ("selected_mode", proposal.selected_mode),
+            ("ordered_feasibility_row_ids", [
+                row.feasibility_row_id for row in proposal.ordered_feasibility_rows
+            ]),
+        ),
+        **common,
+    )
+    evidence_ids = (bsep_evidence_id, feasibility_evidence_id)
+    request = build_semantic_work_request_v01(
+        request_id=router_input.request_id,
+        transaction_id=router_input.transaction_id,
+        target_root_id=router_input.owning_root_id,
+        runtime_topology_ref="g2c:runtime_topology:not_created_before_root_review:v01",
+        bounded_context_refs=(
+            router_input.bsep_binding.business_request_packet_id,
+            router_input.bsep_binding.bsep_binding_id,
+            router_input.router_input_id,
+            proposal.proposal_id,
+        ),
+        permitted_actor_ids=("execution_mode_router_v01",),
+        permitted_contribution_modes=("DETERMINISTIC",),
+        requested_subjects=("execution_mode_route",),
+        required_evidence_classes=("BSEP", "EXECUTION_MODE_FEASIBILITY"),
+        forbidden_claims=("AUTHORITY", "PERMISSION", "EFFECT", "TOPOLOGY", "FINAL_OUTPUT"),
+    )
+    bindings = (
+        build_evidence_binding_v01(
+            evidence_id=bsep_evidence_id,
+            evidence_ref=router_input.bsep_binding.bsep_binding_id,
+            evidence_class="BSEP",
+            source_component_id="execution_mode_router_v01",
+            provenance_ref=router_input.bsep_binding.source_family_sha256,
+            evidence_state="PRESENT",
+        ),
+        build_evidence_binding_v01(
+            evidence_id=feasibility_evidence_id,
+            evidence_ref=proposal.selected_feasibility_row_id,
+            evidence_class="EXECUTION_MODE_FEASIBILITY",
+            source_component_id="execution_mode_router_v01",
+            provenance_ref=proposal.proposal_id,
+            evidence_state="PRESENT",
+        ),
+    )
+    claim = build_normalized_claim_v01(
+        claim_id=proposal.proposal_id,
+        subject="execution_mode_route",
+        predicate="selected_mode",
+        object_or_value=proposal.selected_mode,
+        time_envelope_ref=snapshot.time_envelope_ref,
+        provenance_refs=(router_input.bsep_binding.bsep_binding_id, router_input.router_input_id),
+        evidence_refs=evidence_ids,
+        confidence_micros=1_000_000,
+        source_role="deterministic_runtime",
+        source_mode="DETERMINISTIC",
+    )
+    contribution_scope = proposal.proposed_scope_ref or snapshot.scope_ref
+    contribution_id = _root_support_identity(
+        kind="ACTOR_CONTRIBUTION", prefix="emrootcontrib_v01:",
+        specific=(
+            ("bsep_evidence_id", bsep_evidence_id),
+            ("feasibility_evidence_id", feasibility_evidence_id),
+            ("contribution_scope", contribution_scope),
+            ("selected_mode", proposal.selected_mode),
+        ),
+        **common,
+    )
+    contribution = build_actor_contribution_v01(
+        contribution_id=contribution_id,
+        request_id=router_input.request_id,
+        actor_id="execution_mode_router_v01",
+        actor_role="deterministic_runtime",
+        contribution_mode="DETERMINISTIC",
+        bsep_projection_ref=router_input.bsep_binding.bsep_binding_id,
+        scope=contribution_scope,
+        bounded_context_refs=request.bounded_context_refs,
+        claims=(claim,),
+        evidence_bindings=bindings,
+        constraint_bindings=(),
+        uncertainty_bindings=(),
+        requested_validators=("execution_mode_proposal_sources_v01",),
+        forbidden_claims_observed=(),
+    )
+    trust_profiles = build_default_component_trust_profiles_v01()
+    if validate_component_trust_profiles_v01(profiles=trust_profiles):
+        raise ValueError("g2c_root_input_invalid")
+    if validate_semantic_work_request_v01(request) or validate_actor_contribution_v01(
+        request=request, contribution=contribution, trust_profiles=trust_profiles
+    ):
+        raise ValueError("g2c_root_input_invalid")
+    packet = build_root_review_packet_from_contributions_v01(
+        request=request, contributions=(contribution,), trust_profiles=trust_profiles
+    )
+    if validate_root_review_packet_v01(
+        request=request, contributions=(contribution,), packet=packet,
+        trust_profiles=trust_profiles,
+    ) or packet.conflict_set_ids != () or packet.missing_evidence_refs != ():
+        raise ValueError("g2c_root_input_invalid")
+
+    post_id = _root_support_identity(
+        kind="POST_VV_BUNDLE", prefix="emrootpostvv_v01:",
+        specific=(
+            ("bsep_evidence_id", bsep_evidence_id),
+            ("feasibility_evidence_id", feasibility_evidence_id),
+            ("contribution_id", contribution_id),
+            ("review_action", review_input.review_action),
+            ("validated_candidate_ids", [proposal.proposal_id]),
+            ("rejected_candidate_ids", []),
+        ),
+        **common,
+    )
+    gt_transition = (
+        "GTAdvisoryReport", "VALIDATED", "gt", "CREATE_ROOT_DECISION",
+        "RootDecision",
+    )
+    gt_id = _root_support_identity(
+        kind="GT_ADVISORY", prefix="emrootgt_v01:",
+        specific=(
+            ("contribution_id", contribution_id),
+            ("review_action", review_input.review_action),
+            ("candidate_ids", [proposal.proposal_id]),
+            ("selected_candidate_id", proposal.proposal_id),
+            ("score_micros_by_candidate", [[proposal.proposal_id, 1_000_000]]),
+            ("transition_fields", list(gt_transition)),
+        ),
+        **common,
+    )
+    post_vv = {
+        "bundle_id": post_id,
+        "hard_failure_reasons": [],
+        "post_vv_passed": True,
+        "provided_evidence_refs": list(evidence_ids),
+        "rejected_candidate_ids": [],
+        "required_evidence_refs": list(evidence_ids),
+        "validated_candidate_ids": [proposal.proposal_id],
+    }
+    gt_advisory = {
+        "actor_role": "gt",
+        "advisory_id": gt_id,
+        "advisory_only": True,
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "candidate_ids": [proposal.proposal_id],
+        "creates_final_output": False,
+        "requests_effect": False,
+        "score_micros_by_candidate": {proposal.proposal_id: 1_000_000},
+        "selected_candidate_id": proposal.proposal_id,
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision",
+    }
+    action = review_input.review_action
+    policy = {
+        "allow_accept": action not in {"REJECT"},
+        "conflict_policy": "REJECT",
+        "hard_policy_passed": proposal.selected_mode != "blocked",
+        "identity_passed": True,
+        "no_candidate_policy": "REJECT",
+        "policy_id": snapshot.policy_snapshot_id,
+        "scope_passed": True,
+    }
+    permission = {
+        "permission_ref": None,
+        "permission_required": proposal.selected_mode == "needs_user",
+        "permission_scope_valid": True,
+        "user_permission_present": False,
+    }
+    decision_input = build_root_decision_input_v01(
+        transaction_id=router_input.transaction_id,
+        target_root_id=router_input.owning_root_id,
+        root_review_packet=packet,
+        post_vv_bundle=post_vv,
+        gt_advisory=gt_advisory,
+        policy_state=policy,
+        permission_state=permission,
+        temporal_state={
+            "expired": False,
+            "not_before_satisfied": True,
+            "temporal_valid": True,
+            "time_envelope_ref": snapshot.time_envelope_ref,
+        },
+        conflict_state={
+            "conflict_set_ids": [],
+            "material_unresolved_conflict": False,
+        },
+        prior_root_state={
+            "prior_decision": None,
+            "prior_decision_id": None,
+            "prior_selected_candidate_id": None,
+        },
+    )
+    input_errors = validate_root_decision_input_v01(
+        kernel=root_kernel, decision_input=decision_input
+    )
+    if input_errors:
+        error = ValueError("g2c_root_input_invalid")
+        error.__cause__ = None
+        setattr(error, "source_reasons", input_errors)
+        raise error
+    result = decide_root_v01(kernel=root_kernel, decision_input=decision_input)
+    result_errors = validate_root_decision_result_v01(
+        kernel=root_kernel, decision_input=decision_input, result=result
+    )
+    if result_errors or not result.root_commit_created or result.conflict_set_ids != ():
+        error = ValueError("g2c_root_result_invalid")
+        setattr(error, "source_reasons", result_errors)
+        raise error
+    return request, claim, contribution, packet, decision_input, result
+
+
+def build_execution_mode_root_decision_source_v01(
+    *, review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    root_kernel: RootDecisionKernelV01,
+) -> tuple[
+    SemanticWorkRequestV01, NormalizedClaimV01, ActorContributionV01,
+    RootReviewPacketV01, RootDecisionInputV01, RootDecisionResultV01,
+]:
+    try:
+        report = validate_root_execution_mode_review_input_against_sources_v01(
+            review_input=review_input, proposal=proposal, router_input=router_input,
+            source_context=source_context, proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+        )
+        if report.validation_status != "PASS":
+            raise ValueError(report.reason_codes[0])
+        return _root_source_family(
+            review_input=review_input, proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            root_kernel=root_kernel,
+        )
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_root_input_invalid"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2c_root_input_invalid") from None
+
+
+def _expected_root_source(
+    *, review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+) -> None:
+    family = _root_source_family(
+        review_input=review_input, proposal=proposal, router_input=router_input,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=proposal_transition_decision,
+        root_kernel=root_kernel,
+    )
+    if root_decision_input != family[4] or root_decision_result != family[5]:
+        raise ValueError("g2c_source_object_substituted")
+
+
+def _project_root_decision(
+    *, review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    root_decision_result: RootDecisionResultV01,
+) -> RootExecutionModeDecisionV01:
+    action = review_input.review_action
+    if action == "ACCEPT":
+        outcome, expected_source, expected_reason = (
+            "ACCEPT", "ACCEPT", "validated_candidate_accepted"
+        )
+    elif action == "NARROW":
+        outcome, expected_source, expected_reason = (
+            "NARROW", "ACCEPT", "validated_candidate_accepted"
+        )
+    elif action == "REJECT":
+        outcome, expected_source, expected_reason = (
+            "REJECT", "REJECT", "policy_rejected_candidate"
+        )
+    elif proposal.selected_mode == "blocked":
+        outcome, expected_source, expected_reason = (
+            "BLOCKED", "BLOCKED_FAIL_CLOSED", "hard_policy_violation"
+        )
+    elif proposal.selected_mode == "needs_user":
+        outcome, expected_source, expected_reason = (
+            "NEEDS_USER", "NEEDS_USER", "user_permission_missing"
+        )
+    else:
+        raise ValueError("g2c_root_mapping_invalid")
+    if (
+        root_decision_result.decision != expected_source
+        or root_decision_result.reason_code != expected_reason
+        or root_decision_result.root_commit_created is not True
+        or root_decision_result.permission_created is not False
+        or root_decision_result.final_output_created is not False
+        or root_decision_result.effect_requested is not False
+    ):
+        raise ValueError("g2c_root_mapping_invalid")
+    accepted = outcome in {"ACCEPT", "NARROW"}
+    provisional = RootExecutionModeDecisionV01(
+        decision_id="emrootdecision_v01:" + _ZERO_SHA256,
+        root_review_input_id=review_input.root_review_input_id,
+        proposal_id=proposal.proposal_id,
+        router_input_id=router_input.router_input_id,
+        request_id=router_input.request_id,
+        transaction_id=router_input.transaction_id,
+        owning_root_id=router_input.owning_root_id,
+        domain_id=router_input.local_routing_snapshot.domain_id,
+        outcome=outcome,
+        accepted_mode=proposal.selected_mode if accepted else None,
+        accepted_scope_ref=review_input.accepted_scope_ref if accepted else None,
+        scope_narrowing_proof_id=(
+            review_input.scope_narrowing_proof_id if outcome == "NARROW" else None
+        ),
+        downstream_consumption_class=(
+            proposal.downstream_consumption_class
+            if accepted else "TERMINAL_NO_CONSUMPTION"
+        ),
+        downstream_action_packet_required=(
+            proposal.downstream_action_packet_required if accepted else False
+        ),
+        source_root_decision_id=root_decision_result.decision_id,
+        source_root_decision_input_id=root_decision_result.decision_input_id,
+        source_root_decision=root_decision_result.decision,
+        source_root_reason_code=root_decision_result.reason_code,
+        source_root_transition_decision_id=(
+            root_decision_result.transition_decision.decision_id
+        ),
+        source_root_transition_decision=(
+            root_decision_result.transition_decision.decision
+        ),
+        reason_codes=(_ROOT_PROJECTION_REASON[outcome],),
+        route_eligibility_candidate=accepted,
+        authority_created=False,
+        permission_created=False,
+        action_commit_packet_created=False,
+        receipt_created=False,
+        topology_created=False,
+        final_output_created=False,
+        drs_write_created=False,
+        real_world_effects_count=0,
+    )
+    decision = replace(provisional, decision_id=_rebuild_identity(provisional))
+    errors = _root_decision_errors(decision)
+    if errors:
+        raise ValueError(errors[0])
+    return decision
+
+
+def project_root_execution_mode_decision_v01(
+    *, review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+) -> RootExecutionModeDecisionV01:
+    try:
+        _require_c4_proposal(
+            proposal=proposal, router_input=router_input, source_context=source_context
+        )
+        proposal_artifact = _expected_proposal_artifact(
+            proposal=proposal, router_input=router_input
+        )
+        proposal_transition = _build_profile_transition(
+            registry=_build_execution_mode_transition_registry_profile_v01(),
+            rule_id="g2c_transition:proposal_to_root_review:v01",
+        )
+        expected_review = _build_review_input(
+            proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition,
+            review_action=review_input.review_action,
+            accepted_scope_ref=review_input.accepted_scope_ref,
+            narrowing_basis_refs=review_input.narrowing_basis_refs,
+        )
+        if review_input != expected_review:
+            raise ValueError("g2c_source_object_substituted")
+        _expected_root_source(
+            review_input=review_input, proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition,
+            root_kernel=root_kernel, root_decision_input=root_decision_input,
+            root_decision_result=root_decision_result,
+        )
+        return _project_root_decision(
+            review_input=review_input, proposal=proposal, router_input=router_input,
+            root_decision_result=root_decision_result,
+        )
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_root_mapping_invalid"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2c_root_mapping_invalid") from None
+
+
+def validate_root_execution_mode_decision_against_source_v01(
+    *, decision: RootExecutionModeDecisionV01,
+    review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+) -> ExecutionModeValidationReportV01:
+    try:
+        review_report = validate_root_execution_mode_review_input_against_sources_v01(
+            review_input=review_input, proposal=proposal, router_input=router_input,
+            source_context=source_context, proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+        )
+        if review_report.validation_status != "PASS":
+            return _c4_report(
+                target="ROOT_DECISION_AGAINST_SOURCE", artifact_id=None,
+                router_input=router_input, status="FAIL_CLOSED", stage="ROOT_REVIEW",
+                reasons=review_report.reason_codes,
+                source_reasons=review_report.source_reason_codes,
+            )
+        kernel_reasons = validate_root_decision_kernel_v01(root_kernel)
+        if kernel_reasons:
+            return _c4_report(
+                target="ROOT_DECISION_AGAINST_SOURCE", artifact_id=None,
+                router_input=router_input, status="FAIL_CLOSED",
+                stage="ROOT_DECISION", reasons=("g2c_root_input_invalid",),
+                source_reasons=kernel_reasons,
+            )
+        input_reasons = validate_root_decision_input_v01(
+            kernel=root_kernel, decision_input=root_decision_input
+        )
+        if input_reasons:
+            return _c4_report(
+                target="ROOT_DECISION_AGAINST_SOURCE", artifact_id=None,
+                router_input=router_input, status="FAIL_CLOSED",
+                stage="ROOT_DECISION", reasons=("g2c_root_input_invalid",),
+                source_reasons=input_reasons,
+            )
+        result_reasons = validate_root_decision_result_v01(
+            kernel=root_kernel, decision_input=root_decision_input,
+            result=root_decision_result,
+        )
+        if result_reasons:
+            return _c4_report(
+                target="ROOT_DECISION_AGAINST_SOURCE", artifact_id=None,
+                router_input=router_input, status="FAIL_CLOSED",
+                stage="ROOT_DECISION", reasons=("g2c_root_result_invalid",),
+                source_reasons=result_reasons,
+            )
+        _expected_root_source(
+            review_input=review_input, proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            root_kernel=root_kernel, root_decision_input=root_decision_input,
+            root_decision_result=root_decision_result,
+        )
+        structural = validate_root_execution_mode_decision_v01(decision)
+        if structural.validation_status != "PASS":
+            return _c4_report(
+                target="ROOT_DECISION_AGAINST_SOURCE", artifact_id=None,
+                router_input=router_input, status="FAIL_CLOSED", stage="ROOT_DECISION",
+                reasons=structural.reason_codes,
+            )
+        expected = _project_root_decision(
+            review_input=review_input, proposal=proposal, router_input=router_input,
+            root_decision_result=root_decision_result,
+        )
+        if decision != expected:
+            raise ValueError("g2c_source_object_substituted")
+        return _c4_report(
+            target="ROOT_DECISION_AGAINST_SOURCE",
+            artifact_id=decision.decision_id, router_input=router_input,
+            status="PASS", stage="NONE",
+        )
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_root_result_invalid"
+        stage = "ROOT_REVIEW" if reason in {
+            "g2c_review_action_invalid", "g2c_terminal_review_mismatch",
+            "g2c_scope_narrowing_invalid", "g2c_policy_snapshot_binding_mismatch",
+            "g2c_terminal_contribution_scope_mismatch",
+        } else "ROOT_DECISION"
+        return _c4_report(
+            target="ROOT_DECISION_AGAINST_SOURCE", artifact_id=None,
+            router_input=router_input, status="FAIL_CLOSED", stage=stage,
+            reasons=(reason,), source_reasons=getattr(exc, "source_reasons", ()),
+        )
+    except Exception:
+        return _c4_report(
+            target="ROOT_DECISION_AGAINST_SOURCE", artifact_id=None,
+            router_input=router_input, status="FAIL_CLOSED", stage="ROOT_DECISION",
+            reasons=("g2c_root_result_invalid",),
+        )
+
+
+def review_execution_mode_proposal_v01(
+    *, review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+) -> tuple[
+    RootExecutionModeDecisionV01 | None, RootDecisionKernelV01 | None,
+    RootDecisionInputV01 | None, RootDecisionResultV01 | None,
+    ExecutionModeValidationReportV01,
+]:
+    kernel: RootDecisionKernelV01 | None = None
+    decision_input: RootDecisionInputV01 | None = None
+    result: RootDecisionResultV01 | None = None
+    try:
+        review_report = validate_root_execution_mode_review_input_against_sources_v01(
+            review_input=review_input, proposal=proposal, router_input=router_input,
+            source_context=source_context, proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+        )
+        if review_report.validation_status != "PASS":
+            return None, None, None, None, _c4_report(
+                target="ROOT_DECISION_AGAINST_SOURCE", artifact_id=None,
+                router_input=router_input, status="FAIL_CLOSED", stage="ROOT_REVIEW",
+                reasons=_public_reason_union(
+                    review_report.reason_codes, ("g2c_fail_closed_return_to_root",)
+                ), source_reasons=review_report.source_reason_codes,
+            )
+        kernel = build_root_decision_kernel_v01()
+        family = build_execution_mode_root_decision_source_v01(
+            review_input=review_input, proposal=proposal, router_input=router_input,
+            source_context=source_context, proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            root_kernel=kernel,
+        )
+        decision_input, result = family[4], family[5]
+        decision = _project_root_decision(
+            review_input=review_input, proposal=proposal, router_input=router_input,
+            root_decision_result=result,
+        )
+        report = validate_root_execution_mode_decision_against_source_v01(
+            decision=decision, review_input=review_input, proposal=proposal,
+            router_input=router_input, source_context=source_context,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            root_kernel=kernel, root_decision_input=decision_input,
+            root_decision_result=result,
+        )
+        if report.validation_status != "PASS":
+            return None, kernel, decision_input, result, report
+        return decision, kernel, decision_input, result, report
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_root_input_invalid"
+        return None, kernel, decision_input, result, _c4_report(
+            target="ROOT_DECISION_AGAINST_SOURCE", artifact_id=None,
+            router_input=router_input, status="FAIL_CLOSED", stage="ROOT_DECISION",
+            reasons=_public_reason_union((reason,), ("g2c_fail_closed_return_to_root",)),
+            source_reasons=getattr(exc, "source_reasons", ()),
+        )
+    except Exception:
+        return None, kernel, decision_input, result, _c4_report(
+            target="ROOT_DECISION_AGAINST_SOURCE", artifact_id=None,
+            router_input=router_input, status="FAIL_CLOSED", stage="ROOT_DECISION",
+            reasons=_public_reason_union(
+                ("g2c_root_result_invalid",), ("g2c_fail_closed_return_to_root",)
+            ),
+        )
+
+
+def _decision_payload(decision: RootExecutionModeDecisionV01) -> dict[str, object]:
+    return {
+        "decision_id": decision.decision_id,
+        "root_review_input_id": decision.root_review_input_id,
+        "proposal_id": decision.proposal_id,
+        "router_input_id": decision.router_input_id,
+        "request_id": decision.request_id,
+        "domain_id": decision.domain_id,
+        "outcome": decision.outcome,
+        "accepted_mode": decision.accepted_mode,
+        "accepted_scope_ref": decision.accepted_scope_ref,
+        "scope_narrowing_proof_id": decision.scope_narrowing_proof_id,
+        "downstream_consumption_class": decision.downstream_consumption_class,
+        "downstream_action_packet_required": decision.downstream_action_packet_required,
+        "source_root_decision_id": decision.source_root_decision_id,
+        "source_root_decision_input_id": decision.source_root_decision_input_id,
+        "source_root_decision": decision.source_root_decision,
+        "source_root_reason_code": decision.source_root_reason_code,
+        "source_root_transition_decision_id": decision.source_root_transition_decision_id,
+        "source_root_transition_decision": decision.source_root_transition_decision,
+        "reason_codes": list(decision.reason_codes),
+        "route_eligibility_candidate": decision.route_eligibility_candidate,
+        "authority_created": decision.authority_created,
+        "permission_created": decision.permission_created,
+        "action_commit_packet_created": decision.action_commit_packet_created,
+        "receipt_created": decision.receipt_created,
+        "topology_created": decision.topology_created,
+        "final_output_created": decision.final_output_created,
+        "drs_write_created": decision.drs_write_created,
+        "real_world_effects_count": decision.real_world_effects_count,
+    }
+
+
+def _expected_decision_artifact(
+    *, decision: RootExecutionModeDecisionV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    proposal_artifact: KernelArtifactV01,
+) -> KernelArtifactV01:
+    lifecycle = {
+        "ACCEPT": "ROOT_ACCEPTED", "NARROW": "ROOT_ACCEPTED",
+        "REJECT": "ROOT_REJECTED", "BLOCKED": "BLOCKED_FAIL_CLOSED",
+        "NEEDS_USER": "ROOT_REVIEWED",
+    }[decision.outcome]
+    return _finish_c4_artifact(
+        artifact_type="RootExecutionModeDecision",
+        transaction_id=router_input.transaction_id,
+        owning_root_id=router_input.owning_root_id,
+        source_component="root_decision_v01",
+        authority_class="ROOT_OWNED",
+        lifecycle_state=lifecycle,
+        payload=_decision_payload(decision),
+        trace_refs=_lexical_refs(
+            proposal_artifact.artifact_id,
+            proposal.proposal_id,
+            decision.root_review_input_id,
+            decision.source_root_decision_id,
+            decision.source_root_transition_decision_id,
+            decision.decision_id,
+        ),
+        parent_refs=(proposal_artifact.artifact_id,),
+        snapshot=router_input.local_routing_snapshot,
+        domain=_G2C_DECISION_ARTIFACT_DOMAIN_V01,
+        prefix="emabi_decision_v01:",
+    )
+
+
+def _require_decision_artifact(
+    *, decision_artifact: object, decision: RootExecutionModeDecisionV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    proposal_artifact: KernelArtifactV01,
+) -> None:
+    if type(decision_artifact) is not KernelArtifactV01:
+        raise ValueError("g2c_abi_profile_invalid")
+    expected = _expected_decision_artifact(
+        decision=decision, proposal=proposal, router_input=router_input,
+        proposal_artifact=proposal_artifact,
+    )
+    if decision_artifact != expected:
+        raise ValueError("g2c_abi_projection_substituted")
+    if validate_kernel_artifact_bundle_v01(
+        artifacts=(proposal_artifact, decision_artifact)
+    ):
+        raise ValueError("g2c_abi_bundle_validation_failed")
+
+
+def project_root_execution_mode_decision_kernel_artifact_v01(
+    *, decision: RootExecutionModeDecisionV01,
+    review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+) -> KernelArtifactV01:
+    try:
+        report = validate_root_execution_mode_decision_against_source_v01(
+            decision=decision, review_input=review_input, proposal=proposal,
+            router_input=router_input, source_context=source_context,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            root_kernel=root_kernel, root_decision_input=root_decision_input,
+            root_decision_result=root_decision_result,
+        )
+        if report.validation_status != "PASS":
+            raise ValueError(report.reason_codes[0])
+        artifact = _expected_decision_artifact(
+            decision=decision, proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+        )
+        _require_decision_artifact(
+            decision_artifact=artifact, decision=decision, proposal=proposal,
+            router_input=router_input, proposal_artifact=proposal_artifact,
+        )
+        return artifact
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_abi_profile_invalid"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2c_abi_profile_invalid") from None
+
+
+def _post_root_rule_id(decision: RootExecutionModeDecisionV01) -> str:
+    return {
+        "ACCEPT": "g2c_transition:root_accept_to_route:v01",
+        "NARROW": "g2c_transition:root_narrow_to_route:v01",
+        "REJECT": "g2c_transition:root_reject_record:v01",
+        "BLOCKED": "g2c_transition:root_block_record:v01",
+        "NEEDS_USER": "g2c_transition:root_needs_user_record:v01",
+    }[decision.outcome]
+
+
+def _require_post_root_transition(
+    *, transition: object, registry: TransitionRegistryV01,
+    decision: RootExecutionModeDecisionV01,
+) -> None:
+    if type(transition) is not TransitionDecisionV01:
+        raise ValueError("g2c_post_root_transition_missing")
+    if transition != _build_profile_transition(
+        registry=registry, rule_id=_post_root_rule_id(decision)
+    ):
+        raise ValueError("g2c_post_root_transition_substituted")
+
+
+def evaluate_execution_mode_root_route_transition_v01(
+    *, registry: TransitionRegistryV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    review_input: RootExecutionModeReviewInputV01,
+    decision: RootExecutionModeDecisionV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+    proposal_artifact: KernelArtifactV01,
+    decision_artifact: KernelArtifactV01,
+) -> TransitionDecisionV01:
+    try:
+        _require_pre_root_transition(
+            transition=proposal_transition_decision, registry=registry
+        )
+        report = validate_root_execution_mode_decision_against_source_v01(
+            decision=decision, review_input=review_input, proposal=proposal,
+            router_input=router_input, source_context=source_context,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            root_kernel=root_kernel, root_decision_input=root_decision_input,
+            root_decision_result=root_decision_result,
+        )
+        if report.validation_status != "PASS":
+            raise ValueError(report.reason_codes[0])
+        _require_decision_artifact(
+            decision_artifact=decision_artifact, decision=decision,
+            proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+        )
+        if root_decision_result.root_commit_created is not True:
+            raise ValueError("g2c_transition_root_commit_required")
+        transition = _build_profile_transition(
+            registry=registry, rule_id=_post_root_rule_id(decision)
+        )
+        _require_post_root_transition(
+            transition=transition, registry=registry, decision=decision
+        )
+        return transition
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_transition_substituted"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2c_transition_substituted") from None
+
+
+def _route_payload(
+    *, decision: RootExecutionModeDecisionV01,
+    registry: TransitionRegistryV01,
+    transition: TransitionDecisionV01,
+) -> dict[str, object]:
+    return {
+        "request_id": decision.request_id,
+        "domain_id": decision.domain_id,
+        "decision_id": decision.decision_id,
+        "accepted_mode": decision.accepted_mode,
+        "accepted_scope_ref": decision.accepted_scope_ref,
+        "downstream_consumption_class": decision.downstream_consumption_class,
+        "downstream_action_packet_required": decision.downstream_action_packet_required,
+        "abi_profile_id": _G2C_ABI_PROFILE_ID_V01,
+        "transition_registry_id": registry.registry_id,
+        "root_route_transition_decision_id": transition.decision_id,
+        "topology_created": False,
+        "permission_created": False,
+        "action_commit_packet_created": False,
+        "final_output_created": False,
+        "real_world_effects_count": 0,
+    }
+
+
+def _expected_route_artifact(
+    *, decision: RootExecutionModeDecisionV01,
+    router_input: ExecutionModeRouterInputV01,
+    decision_artifact: KernelArtifactV01,
+    registry: TransitionRegistryV01,
+    transition: TransitionDecisionV01,
+) -> KernelArtifactV01 | None:
+    if decision.outcome not in {"ACCEPT", "NARROW"}:
+        return None
+    return _finish_c4_artifact(
+        artifact_type="ExecutionModeRouteEligibility",
+        transaction_id=router_input.transaction_id,
+        owning_root_id=router_input.owning_root_id,
+        source_component="root_decision_v01",
+        authority_class="ROOT_AUTHORIZED",
+        lifecycle_state="ROOT_ACCEPTED",
+        payload=_route_payload(
+            decision=decision, registry=registry, transition=transition
+        ),
+        trace_refs=_lexical_refs(
+            decision_artifact.artifact_id, decision.decision_id,
+            registry.registry_id, transition.decision_id,
+        ),
+        parent_refs=(decision_artifact.artifact_id,),
+        snapshot=router_input.local_routing_snapshot,
+        domain=_G2C_ROUTE_ARTIFACT_DOMAIN_V01,
+        prefix="emabi_route_v01:",
+    )
+
+
+def _require_route_artifact(
+    *, route_artifact: object, expected: KernelArtifactV01 | None,
+    proposal_artifact: KernelArtifactV01,
+    decision_artifact: KernelArtifactV01,
+) -> None:
+    if expected is None:
+        if route_artifact is not None:
+            raise ValueError("g2c_route_eligibility_invalid")
+        bundle = (proposal_artifact, decision_artifact)
+    else:
+        if type(route_artifact) is RootExecutionModeDecisionV01:
+            raise ValueError("g2c_route_decision_bypass_forbidden")
+        if type(route_artifact) is not KernelArtifactV01 or route_artifact != expected:
+            raise ValueError("g2c_route_eligibility_invalid")
+        bundle = (proposal_artifact, decision_artifact, route_artifact)
+    if validate_kernel_artifact_bundle_v01(artifacts=bundle):
+        raise ValueError("g2c_abi_bundle_validation_failed")
+
+
+def project_execution_mode_route_eligibility_kernel_artifact_v01(
+    *, decision: RootExecutionModeDecisionV01,
+    review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+    decision_artifact: KernelArtifactV01,
+    root_route_transition_decision: TransitionDecisionV01,
+) -> KernelArtifactV01 | None:
+    try:
+        registry = _build_execution_mode_transition_registry_profile_v01()
+        _require_post_root_transition(
+            transition=root_route_transition_decision,
+            registry=registry, decision=decision,
+        )
+        report = validate_root_execution_mode_decision_against_source_v01(
+            decision=decision, review_input=review_input, proposal=proposal,
+            router_input=router_input, source_context=source_context,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            root_kernel=root_kernel, root_decision_input=root_decision_input,
+            root_decision_result=root_decision_result,
+        )
+        if report.validation_status != "PASS":
+            raise ValueError(report.reason_codes[0])
+        _require_decision_artifact(
+            decision_artifact=decision_artifact, decision=decision,
+            proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+        )
+        artifact = _expected_route_artifact(
+            decision=decision, router_input=router_input,
+            decision_artifact=decision_artifact, registry=registry,
+            transition=root_route_transition_decision,
+        )
+        _require_route_artifact(
+            route_artifact=artifact, expected=artifact,
+            proposal_artifact=proposal_artifact,
+            decision_artifact=decision_artifact,
+        )
+        return artifact
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_route_eligibility_invalid"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2c_route_eligibility_invalid") from None
+
+
+def validate_execution_mode_route_eligibility_against_source_v01(
+    *, route_eligibility_artifact: KernelArtifactV01,
+    decision: RootExecutionModeDecisionV01,
+    review_input: RootExecutionModeReviewInputV01,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+    decision_artifact: KernelArtifactV01,
+    root_route_transition_decision: TransitionDecisionV01,
+) -> ExecutionModeValidationReportV01:
+    try:
+        if type(route_eligibility_artifact) is RootExecutionModeDecisionV01:
+            raise ValueError("g2c_route_decision_bypass_forbidden")
+        decision_report = validate_root_execution_mode_decision_against_source_v01(
+            decision=decision, review_input=review_input, proposal=proposal,
+            router_input=router_input, source_context=source_context,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=proposal_transition_decision,
+            root_kernel=root_kernel, root_decision_input=root_decision_input,
+            root_decision_result=root_decision_result,
+        )
+        if decision_report.validation_status != "PASS":
+            return _c4_report(
+                target="ROUTE_ELIGIBILITY_AGAINST_SOURCE", artifact_id=None,
+                router_input=router_input, status="FAIL_CLOSED",
+                stage=decision_report.failure_stage,
+                reasons=decision_report.reason_codes,
+                source_reasons=decision_report.source_reason_codes,
+            )
+        _require_decision_artifact(
+            decision_artifact=decision_artifact, decision=decision,
+            proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+        )
+        registry = _build_execution_mode_transition_registry_profile_v01()
+        _require_post_root_transition(
+            transition=root_route_transition_decision,
+            registry=registry, decision=decision,
+        )
+        expected = _expected_route_artifact(
+            decision=decision, router_input=router_input,
+            decision_artifact=decision_artifact, registry=registry,
+            transition=root_route_transition_decision,
+        )
+        if expected is None:
+            raise ValueError("g2c_route_eligibility_invalid")
+        _require_route_artifact(
+            route_artifact=route_eligibility_artifact, expected=expected,
+            proposal_artifact=proposal_artifact,
+            decision_artifact=decision_artifact,
+        )
+        return _c4_report(
+            target="ROUTE_ELIGIBILITY_AGAINST_SOURCE",
+            artifact_id=route_eligibility_artifact.artifact_id,
+            router_input=router_input, status="PASS", stage="NONE",
+        )
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_route_eligibility_invalid"
+        stage = "ABI" if reason.startswith("g2c_abi_") else (
+            "TRANSITION" if "transition" in reason else "ROUTE_ELIGIBILITY"
+        )
+        return _c4_report(
+            target="ROUTE_ELIGIBILITY_AGAINST_SOURCE", artifact_id=None,
+            router_input=router_input, status="FAIL_CLOSED", stage=stage,
+            reasons=(reason,),
+        )
+    except Exception:
+        return _c4_report(
+            target="ROUTE_ELIGIBILITY_AGAINST_SOURCE", artifact_id=None,
+            router_input=router_input, status="FAIL_CLOSED",
+            stage="ROUTE_ELIGIBILITY",
+            reasons=("g2c_route_eligibility_invalid",),
+        )
+
+
+def validate_execution_mode_abi_profile_v01(
+    *, proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    review_input: RootExecutionModeReviewInputV01,
+    decision: RootExecutionModeDecisionV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+    decision_artifact: KernelArtifactV01,
+    root_route_transition_decision: TransitionDecisionV01,
+    route_eligibility_artifact: KernelArtifactV01 | None,
+) -> ExecutionModeValidationReportV01:
+    target = "ABI_PROFILE"
+    try:
+        _require_c4_proposal(
+            proposal=proposal, router_input=router_input, source_context=source_context
+        )
+        _require_proposal_artifact(
+            proposal_artifact=proposal_artifact, proposal=proposal,
+            router_input=router_input,
+        )
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else "g2c_abi_profile_invalid"
+        if reason not in PUBLIC_G2C_REASON_CODES_V01:
+            reason = "g2c_abi_profile_invalid"
+        return _c4_report(
+            target=target, artifact_id=None, router_input=router_input,
+            status="FAIL_CLOSED", stage="ABI", reasons=(reason,),
+        )
+    registry = _build_execution_mode_transition_registry_profile_v01()
+    try:
+        _require_pre_root_transition(
+            transition=proposal_transition_decision, registry=registry
+        )
+    except ValueError as exc:
+        return _c4_report(
+            target=target, artifact_id=None, router_input=router_input,
+            status="FAIL_CLOSED", stage="TRANSITION",
+            reasons=(exc.args[0],),
+        )
+    review_report = validate_root_execution_mode_review_input_against_sources_v01(
+        review_input=review_input, proposal=proposal, router_input=router_input,
+        source_context=source_context, proposal_artifact=proposal_artifact,
+        proposal_transition_decision=proposal_transition_decision,
+    )
+    if review_report.validation_status != "PASS":
+        return _c4_report(
+            target=target, artifact_id=None, router_input=router_input,
+            status="FAIL_CLOSED", stage="ROOT_REVIEW",
+            reasons=review_report.reason_codes,
+            source_reasons=review_report.source_reason_codes,
+        )
+    decision_report = validate_root_execution_mode_decision_against_source_v01(
+        decision=decision, review_input=review_input, proposal=proposal,
+        router_input=router_input, source_context=source_context,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=proposal_transition_decision,
+        root_kernel=root_kernel, root_decision_input=root_decision_input,
+        root_decision_result=root_decision_result,
+    )
+    if decision_report.validation_status != "PASS":
+        return _c4_report(
+            target=target, artifact_id=None, router_input=router_input,
+            status="FAIL_CLOSED", stage="ROOT_DECISION",
+            reasons=decision_report.reason_codes,
+            source_reasons=decision_report.source_reason_codes,
+        )
+    try:
+        _require_decision_artifact(
+            decision_artifact=decision_artifact, decision=decision,
+            proposal=proposal, router_input=router_input,
+            proposal_artifact=proposal_artifact,
+        )
+    except ValueError as exc:
+        return _c4_report(
+            target=target, artifact_id=None, router_input=router_input,
+            status="FAIL_CLOSED", stage="ABI", reasons=(exc.args[0],),
+        )
+    try:
+        _require_post_root_transition(
+            transition=root_route_transition_decision,
+            registry=registry, decision=decision,
+        )
+    except ValueError as exc:
+        return _c4_report(
+            target=target, artifact_id=None, router_input=router_input,
+            status="FAIL_CLOSED", stage="TRANSITION", reasons=(exc.args[0],),
+        )
+    try:
+        expected_route = _expected_route_artifact(
+            decision=decision, router_input=router_input,
+            decision_artifact=decision_artifact, registry=registry,
+            transition=root_route_transition_decision,
+        )
+        _require_route_artifact(
+            route_artifact=route_eligibility_artifact, expected=expected_route,
+            proposal_artifact=proposal_artifact,
+            decision_artifact=decision_artifact,
+        )
+    except ValueError as exc:
+        return _c4_report(
+            target=target, artifact_id=None, router_input=router_input,
+            status="FAIL_CLOSED", stage="ROUTE_ELIGIBILITY",
+            reasons=(exc.args[0],),
+        )
+    except Exception:
+        return _c4_report(
+            target=target, artifact_id=None, router_input=router_input,
+            status="FAIL_CLOSED", stage="ABI",
+            reasons=("g2c_abi_profile_invalid",),
+        )
+    return _c4_report(
+        target=target,
+        artifact_id=(
+            route_eligibility_artifact.artifact_id
+            if route_eligibility_artifact is not None else decision_artifact.artifact_id
+        ),
+        router_input=router_input, status="PASS", stage="NONE",
+    )
 
 
 def _validate_serialized(

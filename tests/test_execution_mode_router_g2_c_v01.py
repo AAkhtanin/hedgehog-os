@@ -9,6 +9,7 @@ import inspect
 import json
 from pathlib import Path
 import re
+import sys
 from typing import get_args, get_origin, get_type_hints
 
 from jsonschema import Draft202012Validator
@@ -25,10 +26,12 @@ import hedgehog.evidence.sealed_package_v01 as sealed_package
 import hedgehog.evidence.sealed_replay_evidence_v01 as sealed_replay
 import hedgehog.kernel as kernel
 import hedgehog.kernel.execution_mode_router_v01 as router
+import hedgehog.kernel.root_decision_v01 as root_decision
 import hedgehog.kernel.transition_registry_v01 as transition_registry
 from hedgehog.kernel.integrity_replay_v01 import canonical_json_bytes_v01
 import hedgehog.semantic_reasoning_adapter as semantic_adapter
 import hedgehog.structured_rationale as structured_rationale
+import demo.run_execution_mode_router_g2_c_v01 as c5_runner
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -5483,3 +5486,646 @@ def test_c4_complete_profile_stage_ownership(field_name, replacement, stage):
     assert report.failure_stage == stage
     assert report.authority_created is report.permission_created is False
     assert report.real_world_effects_count == 0
+
+
+@pytest.fixture(scope="module")
+def _c5_pipelines():
+    return tuple(
+        c5_runner._collect_case_pipeline_v01(spec)
+        for spec in c5_runner.CASE_SPECS
+    )
+
+
+C5_EXPECTED_CASES = (
+    ("g2c_case:travel:sealed_replay:v01", "sealed_replay", "ACCEPT",
+     "SHORTCUT_RETURN_TO_ROOT", True, "g2c_sealed_replay_feasible",
+     "validated_candidate_accepted", "g2c_root_accept_projected",
+     "g2c_transition_route_accept_allowed"),
+    ("g2c_case:travel:direct_informational_reuse:v01",
+     "direct_informational_reuse", "ACCEPT", "SHORTCUT_RETURN_TO_ROOT",
+     True, "g2c_direct_informational_reuse_feasible",
+     "validated_candidate_accepted", "g2c_root_accept_projected",
+     "g2c_transition_route_accept_allowed"),
+    ("g2c_case:travel:memory_informed:v01", "memory_informed", "ACCEPT",
+     "RUNTIME_TOPOLOGY_ELIGIBLE", True, "g2c_memory_informed_feasible",
+     "validated_candidate_accepted", "g2c_root_accept_projected",
+     "g2c_transition_route_accept_allowed"),
+    ("g2c_case:travel:cloud_llm_narrow:v01", "cloud_llm", "NARROW",
+     "RUNTIME_TOPOLOGY_ELIGIBLE", True, "g2c_cloud_llm_feasible",
+     "validated_candidate_accepted", "g2c_root_narrow_projected",
+     "g2c_transition_scope_narrow_allowed"),
+    ("g2c_case:travel:full_semantic_reject:v01", "full_semantic", "REJECT",
+     "TERMINAL_NO_CONSUMPTION", False, "g2c_full_semantic_feasible",
+     "policy_rejected_candidate", "g2c_root_reject_projected",
+     "g2c_transition_reject_recorded"),
+    ("g2c_case:warehouse:deterministic_new_action:v01", "deterministic",
+     "ACCEPT", "SHORTCUT_RETURN_TO_ROOT", True,
+     "g2c_deterministic_feasible", "validated_candidate_accepted",
+     "g2c_root_accept_projected", "g2c_transition_route_accept_allowed"),
+    ("g2c_case:warehouse:local_slm:v01", "local_slm", "ACCEPT",
+     "RUNTIME_TOPOLOGY_ELIGIBLE", True, "g2c_local_slm_feasible",
+     "validated_candidate_accepted", "g2c_root_accept_projected",
+     "g2c_transition_route_accept_allowed"),
+    ("g2c_case:warehouse:full_fractal_fixture_capability:v01", "full_fractal",
+     "ACCEPT", "RUNTIME_TOPOLOGY_ELIGIBLE", True,
+     "g2c_full_fractal_feasible", "validated_candidate_accepted",
+     "g2c_root_accept_projected", "g2c_transition_route_accept_allowed"),
+    ("g2c_case:warehouse:blocked_existing_packet:v01", "blocked", "BLOCKED",
+     "TERMINAL_NO_CONSUMPTION", False, "g2c_hard_block_present",
+     "hard_policy_violation", "g2c_root_blocked_projected",
+     "g2c_transition_blocked_recorded"),
+    ("g2c_case:warehouse:needs_user:v01", "needs_user", "NEEDS_USER",
+     "TERMINAL_NO_CONSUMPTION", False, "g2c_user_input_required",
+     "user_permission_missing", "g2c_root_needs_user_projected",
+     "g2c_transition_needs_user_recorded"),
+)
+
+
+def test_c5_runner_surface_report_geometry_and_repeated_canonical_equality():
+    assert c5_runner.EXECUTION_MODE_ROUTER_G2_C_PROOF_VERSION == "v0.1"
+    assert c5_runner.EXECUTION_MODE_ROUTER_G2_C_PROFILE_ID == (
+        "execution_mode_router_g2c_two_domain_proof_v01"
+    )
+    assert c5_runner.CANONICAL_SCENARIO_COUNT == 10
+    for name in (
+        "collect_execution_mode_router_g2_c_v01",
+        "validate_execution_mode_router_g2_c_report_v01",
+        "execution_mode_router_g2_c_report_to_plain_data_v01",
+        "render_execution_mode_router_g2_c_v01",
+        "main",
+    ):
+        assert inspect.isfunction(getattr(c5_runner, name))
+    first = c5_runner.collect_execution_mode_router_g2_c_v01()
+    second = c5_runner.collect_execution_mode_router_g2_c_v01()
+    assert first == second
+    assert c5_runner.validate_execution_mode_router_g2_c_report_v01(first) == ()
+    assert (c5_runner.execution_mode_router_g2_c_report_to_plain_data_v01(first)
+            == c5_runner.execution_mode_router_g2_c_report_to_plain_data_v01(second))
+    assert (c5_runner.render_execution_mode_router_g2_c_v01(first).encode("utf-8")
+            == c5_runner.render_execution_mode_router_g2_c_v01(second).encode("utf-8"))
+    assert first.report_id == second.report_id
+    assert first.domain_order == (
+        "TRAVEL_POLICY_INFORMATION", "WAREHOUSE_MAINTENANCE_INFORMATION",
+    )
+    assert len(first.case_results) == 10
+    assert all(getattr(first, name) == 0 for name in c5_runner.ZERO_OPERATION_NAMES)
+
+
+def test_c5_exact_ten_case_outcomes_reasons_and_route_eligibility(_c5_pipelines):
+    assert tuple(item.spec.case_id for item in _c5_pipelines) == tuple(
+        row[0] for row in C5_EXPECTED_CASES
+    )
+    for case, expected in zip(_c5_pipelines, C5_EXPECTED_CASES, strict=True):
+        (_, mode, outcome, downstream, eligibility, selected_reason,
+         source_reason, projection_reason, post_reason) = expected
+        assert len(case.rows) == 10
+        assert tuple(row.mode for row in case.rows) == router.CANONICAL_EXECUTION_MODES_V01
+        assert case.selected_row.mode == mode
+        assert case.selected_row.reason_codes == (selected_reason,)
+        assert case.selected_row.feasibility_row_id == (
+            router.rebuild_execution_mode_feasibility_row_identity_v01(
+                case.selected_row
+            )
+        )
+        assert case.proposal.reason_codes == ("g2c_proposal_sources_valid",)
+        assert case.root_result.reason_code == source_reason
+        assert case.decision.outcome == outcome
+        assert case.decision.reason_codes == (projection_reason,)
+        assert case.pre_transition.reason_code == (
+            "g2c_transition_root_review_required"
+        )
+        assert case.post_transition.reason_code == post_reason
+        assert case.decision.downstream_consumption_class == downstream
+        assert (case.route_eligibility is not None) is eligibility
+        assert case.root_input.root_review_packet.conflict_set_ids == ()
+        root_plain = root_decision.root_decision_input_to_plain_dict_v01(
+            case.root_input
+        )
+        assert tuple(root_plain["conflict_state"]["conflict_set_ids"]) == ()
+        assert case.root_result.conflict_set_ids == ()
+        assert case.root_result.root_commit_created is True
+        assert case.root_result.permission_created is False
+        assert case.root_result.final_output_created is False
+        assert case.root_result.effect_requested is False
+
+
+def test_c5_exact_domains_requests_transactions_roots_and_g2b_queries(_c5_pipelines):
+    expected_requests = tuple(spec.request_id for spec in c5_runner.CASE_SPECS)
+    assert tuple(case.router_input.request_id for case in _c5_pipelines) == expected_requests
+    for index, case in enumerate(_c5_pipelines):
+        spec = c5_runner.CASE_SPECS[index]
+        assert case.router_input.owning_root_id == c5_runner.ROOT_BY_DOMAIN[spec.domain_id]
+        assert case.router_input.local_routing_snapshot.domain_id == spec.domain_id
+        assert case.router_input.request_id != case.router_input.transaction_id
+        if index in {1, 2, 3}:
+            assert case.temporal_query_id is not None
+            assert case.router_input.transaction_id == case.temporal_query_id
+            assert case.router_input.g2b_binding.query_id == case.temporal_query_id
+            assert case.router_input.g2b_binding.binding_state == (
+                "DIRECT_REUSE_BOUND" if index == 1 else "RESOLUTION_CONTEXT_BOUND"
+            )
+        else:
+            assert case.router_input.transaction_id == spec.literal_transaction_id
+    assert _c5_pipelines[2].router_input.g2b_binding.context_available is True
+    assert _c5_pipelines[2].router_input.g2b_binding.freshness_state == "STALE"
+    assert _c5_pipelines[2].router_input.g2b_binding.lineage_state == "VALIDATED"
+    assert _c5_pipelines[2].router_input.g2b_binding.reuse_certificate_id is None
+    assert _c5_pipelines[1].router_input.g2b_binding.direct_informational_reuse_eligible
+
+
+def test_c5_exact_profile_matrix_times_and_classification_non_authority(_c5_pipelines):
+    for index, case in enumerate(_c5_pipelines):
+        snapshot = case.router_input.local_routing_snapshot
+        assert tuple(profile.capability_state for profile in snapshot.mode_profiles) == (
+            c5_runner.PROFILE_STATES[index]
+        )
+        assert tuple(profile.cost_units for profile in snapshot.mode_profiles) == (
+            c5_runner.PROFILE_COSTS[index]
+        )
+        assert tuple(profile.mode for profile in snapshot.mode_profiles) == (
+            "deterministic", "sealed_replay", "direct_informational_reuse",
+            "memory_informed", "local_slm", "cloud_llm", "full_semantic",
+            "full_fractal",
+        )
+        assert snapshot.evaluation_time_epoch_seconds == 1785542400
+        assert snapshot.pt_created_at_utc == "2026-08-01T00:00:00+00:00"
+        assert snapshot.et_observed_at_utc == "2026-08-01T00:00:00+00:00"
+        assert snapshot.valid_from_utc == "2026-08-01T00:00:00+00:00"
+        assert snapshot.valid_to_utc == "2026-08-01T01:00:00+00:00"
+        assert snapshot.ttl_seconds == 3600 and snapshot.freshness_class == "static"
+    fractal = _c5_pipelines[7]
+    assert fractal.router_input.local_routing_snapshot.request_class == (
+        "BOUNDED_FRACTAL_REQUIRED"
+    )
+    assert tuple(row.feasibility_status for row in fractal.rows[:7]) == (
+        "INFEASIBLE",
+    ) * 7
+    assert fractal.rows[7].feasibility_status == "FEASIBLE"
+
+
+@pytest.mark.parametrize(
+    ("local_state", "local_cost", "cloud_cost", "expected", "tie_break"),
+    (
+        ("AVAILABLE", 40, 50, "local_slm", False),
+        ("AVAILABLE", 60, 40, "cloud_llm", False),
+        ("AVAILABLE", 40, 40, "local_slm", True),
+        ("UNAVAILABLE", 1, 40, "cloud_llm", False),
+    ),
+)
+def test_c5_sibling_shared_rank_cost_and_canonical_tie_break(
+    local_state, local_cost, cloud_cost, expected, tie_break,
+):
+    spec = c5_runner.CASE_SPECS[6]
+    states = (
+        "UNAVAILABLE", "NOT_REQUIRED", "NOT_REQUIRED", "UNAVAILABLE",
+        local_state, "AVAILABLE", "UNAVAILABLE", "UNAVAILABLE",
+    )
+    costs = (10, 20, 30, 40, local_cost, cloud_cost, 70, 80)
+    router_input, context, _, _ = c5_runner._build_router_input(
+        spec, profile_states=states, profile_costs=costs
+    )
+    rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input, source_context=context
+    )
+    selected = router.select_execution_mode_v01(
+        router_input=router_input, source_context=context, ordered_rows=rows
+    )
+    proposal = router.build_execution_mode_proposal_v01(
+        router_input=router_input, source_context=context,
+        ordered_rows=rows, selected_row=selected,
+    )
+    assert selected.mode == expected
+    assert ("g2c_selection_tie_break_applied" in proposal.reason_codes) is tie_break
+    if local_state == "UNAVAILABLE":
+        local = next(row for row in rows if row.mode == "local_slm")
+        assert local.feasibility_status == "INFEASIBLE"
+        assert "g2c_capability_unavailable" in local.reason_codes
+
+
+def test_c5_finite_confidence_digest_identity_and_nonfinite_rejection(_c5_pipelines):
+    case = _c5_pipelines[0]
+    proposal = case.source_context.bsep_orchestrator_proposal
+    assert proposal["confidence"] == 0.66
+    assert case.router_input.bsep_binding.source_family_sha256 == (
+        _c5_pipelines[0].router_input.bsep_binding.source_family_sha256
+    )
+    for value in (float("nan"), float("inf"), float("-inf")):
+        forged = replace(
+            case.source_context,
+            bsep_orchestrator_proposal={**proposal, "confidence": value},
+        )
+        report = router.validate_execution_mode_source_context_v01(forged)
+        assert report.validation_status == "FAIL_CLOSED"
+        assert report.authority_created is report.permission_created is False
+        assert report.real_world_effects_count == 0
+    assert re.fullmatch(r"[0-9a-f]{64}", "1" + "a" * 63)
+
+
+@pytest.mark.parametrize("case_index", range(10))
+def test_c5_every_case_cross_domain_source_context_substitution_fails_closed(
+    _c5_pipelines, case_index,
+):
+    case = _c5_pipelines[case_index]
+    foreign = _c5_pipelines[(case_index + 5) % 10].source_context
+    report = router.validate_execution_mode_router_input_against_sources_v01(
+        router_input=case.router_input, source_context=foreign
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.return_to_root_required is True
+    assert report.authority_created is report.permission_created is False
+    assert report.real_world_effects_count == 0
+
+
+@pytest.mark.parametrize("case_index", range(10))
+@pytest.mark.parametrize(
+    "mutation",
+    ("business", "bsep", "digest", "absence", "request", "transaction",
+     "root", "domain", "time"),
+)
+def test_c5_every_case_source_identity_and_binding_negative_matrix(
+    _c5_pipelines, case_index, mutation,
+):
+    case = _c5_pipelines[case_index]
+    context = case.source_context
+    router_input = case.router_input
+    if mutation == "business":
+        context = replace(
+            context,
+            business_request_context_packet={
+                **context.business_request_context_packet,
+                "request_id": "request:g2c:substituted:v01",
+            },
+        )
+    elif mutation == "bsep":
+        context = replace(
+            context,
+            bsep_packet={**context.bsep_packet, "source_role": "substituted"},
+        )
+    elif mutation == "digest":
+        router_input = replace(
+            router_input,
+            bsep_binding=replace(
+                router_input.bsep_binding, source_family_sha256="f" * 64
+            ),
+        )
+    elif mutation == "absence":
+        context = replace(context, bsep_packet=None)
+    elif mutation == "request":
+        router_input = replace(router_input, request_id="request:g2c:foreign:v01")
+    elif mutation == "transaction":
+        router_input = replace(
+            router_input, transaction_id="transaction:g2c:foreign:v01"
+        )
+    elif mutation == "root":
+        router_input = replace(router_input, owning_root_id="root:g2c:foreign:v01")
+    elif mutation == "domain":
+        snapshot = replace(
+            router_input.local_routing_snapshot, domain_id="FOREIGN_DOMAIN"
+        )
+        router_input = replace(router_input, local_routing_snapshot=snapshot)
+    else:
+        snapshot = replace(
+            router_input.local_routing_snapshot,
+            time_envelope_ref="emtime_v01:" + "f" * 64,
+        )
+        router_input = replace(router_input, local_routing_snapshot=snapshot)
+    proposal, report = router.route_execution_mode_v01(
+        router_input=router_input, source_context=context
+    )
+    assert proposal is None
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.return_to_root_required is True
+    assert "g2c_invalid_source_no_proposal" in report.reason_codes
+    assert "g2c_fail_closed_return_to_root" in report.reason_codes
+    assert report.authority_created is report.permission_created is False
+    assert report.real_world_effects_count == 0
+
+
+def _c5_abi_kwargs(case):
+    return {
+        "proposal": case.proposal, "router_input": case.router_input,
+        "source_context": case.source_context,
+        "proposal_artifact": case.proposal_artifact,
+        "proposal_transition_decision": case.pre_transition,
+        "review_input": case.review_input, "decision": case.decision,
+        "root_kernel": case.root_kernel, "root_decision_input": case.root_input,
+        "root_decision_result": case.root_result,
+        "decision_artifact": case.decision_artifact,
+        "root_route_transition_decision": case.post_transition,
+        "route_eligibility_artifact": case.route_eligibility,
+    }
+
+
+@pytest.mark.parametrize(
+    ("field_name", "replacement", "stage"),
+    (
+        ("proposal_artifact", "artifact", "ABI"),
+        ("proposal_transition_decision", "transition", "TRANSITION"),
+        ("review_input", "review", "ROOT_REVIEW"),
+        ("root_kernel", "kernel", "ROOT_DECISION"),
+        ("root_decision_input", "root_input", "ROOT_DECISION"),
+        ("root_decision_result", "root_result", "ROOT_DECISION"),
+        ("decision", "decision", "ROOT_DECISION"),
+        ("decision_artifact", "artifact", "ABI"),
+        ("root_route_transition_decision", "transition", "TRANSITION"),
+        ("route_eligibility_artifact", "artifact", "ROUTE_ELIGIBILITY"),
+    ),
+)
+def test_c5_complete_abi_transition_root_substitution_matrix(
+    _c5_pipelines, field_name, replacement, stage,
+):
+    case = _c5_pipelines[0]
+    kwargs = _c5_abi_kwargs(case)
+    value = kwargs[field_name]
+    if replacement == "artifact":
+        kwargs[field_name] = replace(value, artifact_id="f" * 64)
+    elif replacement == "transition":
+        kwargs[field_name] = replace(value, decision_id="f" * 64)
+    elif replacement == "review":
+        kwargs[field_name] = replace(value, policy_snapshot_id="policy:foreign:v01")
+    elif replacement == "kernel":
+        kwargs[field_name] = replace(value, kernel_id="f" * 64)
+    elif replacement == "root_input":
+        kwargs[field_name] = replace(value, decision_input_id="f" * 64)
+    elif replacement == "root_result":
+        kwargs[field_name] = replace(value, decision_id="f" * 64)
+    else:
+        kwargs[field_name] = replace(value, decision_id="emrootdecision_v01:" + "f" * 64)
+    report = router.validate_execution_mode_abi_profile_v01(**kwargs)
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == stage
+    assert report.return_to_root_required is True
+    assert report.authority_created is report.permission_created is False
+    assert report.real_world_effects_count == 0
+
+
+def test_c5_abi_schema_parent_transition_and_direct_decision_negatives(_c5_pipelines):
+    case = _c5_pipelines[0]
+    assert case.proposal_artifact.schema_version == "v0.1"
+    assert case.decision_artifact.schema_version == "v0.1"
+    assert case.route_eligibility is not None
+    assert case.route_eligibility.schema_version == "v0.1"
+    assert case.proposal_artifact.parent_refs == ()
+    assert case.decision_artifact.parent_refs == (case.proposal_artifact.artifact_id,)
+    assert case.route_eligibility.parent_refs == (case.decision_artifact.artifact_id,)
+    wrong_registry = replace(case.registry, registry_id="f" * 64)
+    assert "g2c_transition_registry_identity_mismatch" in (
+        transition_registry.validate_execution_mode_transition_registry_profile_v01(
+            wrong_registry
+        )
+    )
+    wrong_guards = replace(
+        case.pre_transition,
+        satisfied_guards=tuple(reversed(case.pre_transition.satisfied_guards)),
+    )
+    assert transition_registry.validate_execution_mode_transition_decision_v01(
+        registry=case.registry, decision=wrong_guards
+    )
+    report = router.validate_execution_mode_route_eligibility_against_source_v01(
+        route_eligibility_artifact=case.decision,
+        decision=case.decision, review_input=case.review_input,
+        proposal=case.proposal, router_input=case.router_input,
+        source_context=case.source_context,
+        proposal_artifact=case.proposal_artifact,
+        proposal_transition_decision=case.pre_transition,
+        root_kernel=case.root_kernel, root_decision_input=case.root_input,
+        root_decision_result=case.root_result,
+        decision_artifact=case.decision_artifact,
+        root_route_transition_decision=case.post_transition,
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert "g2c_route_decision_bypass_forbidden" in report.reason_codes
+
+
+def test_c5_root_review_narrowing_support_and_conflict_reason_ownership(_c5_pipelines):
+    narrow = _c5_pipelines[3]
+    assert narrow.review_input.accepted_scope_ref == (
+        "scope:g2c:travel:public_summary:v01"
+    )
+    assert narrow.review_input.scope_narrowing_proof_id == (
+        router._scope_narrowing_identity(
+            proposal=narrow.proposal, router_input=narrow.router_input,
+            accepted_scope_ref=narrow.review_input.accepted_scope_ref,
+            narrowing_basis_refs=narrow.review_input.narrowing_basis_refs,
+        )
+    )
+    assert narrow.review_input.narrowing_basis_refs == tuple(
+        sorted(narrow.review_input.narrowing_basis_refs, key=lambda item: item.encode())
+    )
+    assert len(narrow.review_input.narrowing_basis_refs) == len(
+        set(narrow.review_input.narrowing_basis_refs)
+    )
+    for case in _c5_pipelines:
+        assert case.review_input.root_review_input_id == (
+            router.rebuild_root_execution_mode_review_input_identity_v01(
+                case.review_input
+            )
+        )
+        assert len(case.root_input.root_review_packet.contribution_ids) == 1
+        assert case.root_input.root_review_packet.conflict_set_ids == ()
+    forged_input = replace(
+        narrow.root_input,
+        conflict_state={
+            "material_unresolved_conflict": False,
+            "conflict_set_ids": [narrow.router_input.bsep_binding.source_packet_id],
+        },
+    )
+    report = router.validate_root_execution_mode_decision_against_source_v01(
+        decision=narrow.decision, review_input=narrow.review_input,
+        proposal=narrow.proposal, router_input=narrow.router_input,
+        source_context=narrow.source_context,
+        proposal_artifact=narrow.proposal_artifact,
+        proposal_transition_decision=narrow.pre_transition,
+        root_kernel=narrow.root_kernel, root_decision_input=forged_input,
+        root_decision_result=narrow.root_result,
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == "ROOT_DECISION"
+    assert "g2c_root_input_invalid" in report.reason_codes
+    assert "root_decision_conflict_state_invalid" in report.source_reason_codes
+    assert set(report.reason_codes).isdisjoint(report.source_reason_codes)
+
+
+def test_c5_report_fail_closed_mutation_matrix():
+    report = c5_runner.collect_execution_mode_router_g2_c_v01()
+    mutations = (
+        replace(report, report_id=c5_runner.REPORT_ID_PREFIX + "f" * 64),
+        replace(report, profile_id="execution_mode_router_g2c_foreign_v01"),
+        replace(report, domain_order=tuple(reversed(report.domain_order))),
+        replace(report, case_order=tuple(reversed(report.case_order))),
+        replace(report, case_results=report.case_results[:-1]),
+        replace(report, provider_calls=1),
+        replace(report, final_status="FAIL_CLOSED"),
+    )
+    for forged in mutations:
+        assert c5_runner.validate_execution_mode_router_g2_c_report_v01(forged)
+        with pytest.raises(ValueError, match="^g2c5_report_invalid$"):
+            c5_runner.render_execution_mode_router_g2_c_v01(forged)
+    assert c5_runner.validate_execution_mode_router_g2_c_report_v01(object()) == (
+        "g2c5_report_invalid",
+    )
+
+
+def test_c5_package_facade_signatures_all_and_import_direction_preserved():
+    router_functions = tuple(
+        name for name in PUBLIC_FUNCTIONS if name not in C4_TRANSITION_FUNCTIONS
+    )
+    direct = TYPE_NAMES + router_functions + C4_TRANSITION_FUNCTIONS
+    assert len(TYPE_NAMES) == 13
+    assert len(router_functions) == 68
+    assert len(C4_TRANSITION_FUNCTIONS) == 6
+    assert len(PUBLIC_FUNCTIONS) == 74
+    assert len(direct) == len(set(direct)) == 87
+    for name in TYPE_NAMES + router_functions:
+        assert getattr(kernel, name) is getattr(router, name)
+    for name in C4_TRANSITION_FUNCTIONS:
+        assert getattr(kernel, name) is getattr(transition_registry, name)
+    assert not set(direct).intersection(kernel.__all__)
+    assert all(inspect.isfunction(getattr(router, name)) for name in router_functions)
+    init_text = KERNEL_INIT_PATH.read_text(encoding="utf-8")
+    assert "__getattr__" not in init_text and "importlib" not in init_text
+    assert "execution_mode_router_v01" not in ABI_PATH.read_text(encoding="utf-8")
+    transition_text = TRANSITION_PATH.read_text(encoding="utf-8")
+    assert "execution_mode_router_v01" not in transition_text
+    assert "root_decision_v01" not in transition_text
+    assert "semantic_work_v01" not in transition_text
+    assert "execution_mode_router_v01" not in ROOT_DECISION_PATH.read_text(
+        encoding="utf-8"
+    )
+    router_tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
+    assert not any(
+        isinstance(node, (ast.Import, ast.ImportFrom))
+        and any(alias.name == "hedgehog.kernel" for alias in node.names)
+        for node in ast.walk(router_tree)
+    )
+
+
+def test_c5_source_context_structural_contextual_separation(_c5_pipelines):
+    first, foreign = _c5_pipelines[0], _c5_pipelines[5]
+    assert router.validate_execution_mode_source_context_v01(
+        foreign.source_context
+    ).validation_status == "PASS"
+    report = router.validate_execution_mode_router_input_against_sources_v01(
+        router_input=first.router_input, source_context=foreign.source_context
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.return_to_root_required is True
+    copied_identity = replace(
+        foreign.router_input,
+        router_input_id=first.router_input.router_input_id,
+    )
+    copied = router.validate_execution_mode_router_input_against_sources_v01(
+        router_input=copied_identity, source_context=foreign.source_context
+    )
+    assert copied.validation_status == "FAIL_CLOSED"
+
+
+@pytest.mark.parametrize(
+    ("failure_name", "later_name"),
+    (
+        ("validate_execution_mode_router_input_against_sources_v01",
+         "evaluate_execution_mode_feasibility_v01"),
+        ("evaluate_execution_mode_feasibility_v01", "select_execution_mode_v01"),
+        ("select_execution_mode_v01", "build_execution_mode_proposal_v01"),
+        ("build_execution_mode_proposal_v01",
+         "project_execution_mode_proposal_kernel_artifact_v01"),
+        ("project_execution_mode_proposal_kernel_artifact_v01",
+         "evaluate_execution_mode_proposal_to_root_transition_v01"),
+        ("evaluate_execution_mode_proposal_to_root_transition_v01",
+         "build_root_execution_mode_review_input_v01"),
+        ("build_root_execution_mode_review_input_v01",
+         "review_execution_mode_proposal_v01"),
+        ("review_execution_mode_proposal_v01",
+         "project_root_execution_mode_decision_kernel_artifact_v01"),
+        ("project_root_execution_mode_decision_kernel_artifact_v01",
+         "evaluate_execution_mode_root_route_transition_v01"),
+        ("evaluate_execution_mode_root_route_transition_v01",
+         "project_execution_mode_route_eligibility_kernel_artifact_v01"),
+        ("project_execution_mode_route_eligibility_kernel_artifact_v01",
+         "validate_execution_mode_abi_profile_v01"),
+    ),
+)
+def test_c5_operation_order_function_barriers_prevent_later_creation(
+    monkeypatch, failure_name, later_name,
+):
+    later_called = False
+    original_later = getattr(router, later_name)
+
+    def fail(*args, **kwargs):
+        raise RuntimeError("c5 injected phase failure")
+
+    def later(*args, **kwargs):
+        nonlocal later_called
+        later_called = True
+        return original_later(*args, **kwargs)
+
+    monkeypatch.setattr(router, failure_name, fail)
+    monkeypatch.setattr(router, later_name, later)
+    with pytest.raises((RuntimeError, ValueError)):
+        c5_runner._collect_case_pipeline_v01(c5_runner.CASE_SPECS[6])
+    assert later_called is False
+
+
+@pytest.mark.parametrize("bundle_ordinal", (1, 2, 3))
+def test_c5_stage_bundle_barriers_prevent_later_creation(monkeypatch, bundle_ordinal):
+    call_count = 0
+    later_called = False
+    original_bundle = c5_runner.abi.validate_kernel_artifact_bundle_v01
+    later_name = {
+        1: "evaluate_execution_mode_proposal_to_root_transition_v01",
+        2: "evaluate_execution_mode_root_route_transition_v01",
+        3: "validate_execution_mode_abi_profile_v01",
+    }[bundle_ordinal]
+    original_later = getattr(router, later_name)
+
+    def bundle(*args, **kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == bundle_ordinal:
+            return ("artifact_bundle_invalid",)
+        return original_bundle(*args, **kwargs)
+
+    def later(*args, **kwargs):
+        nonlocal later_called
+        later_called = True
+        return original_later(*args, **kwargs)
+
+    monkeypatch.setattr(c5_runner.abi, "validate_kernel_artifact_bundle_v01", bundle)
+    monkeypatch.setattr(router, later_name, later)
+    with pytest.raises(ValueError):
+        c5_runner._collect_case_pipeline_v01(c5_runner.CASE_SPECS[6])
+    assert later_called is False
+
+
+def test_c5_runner_static_zero_operation_and_no_forbidden_imports():
+    path = ROOT / "demo/run_execution_mode_router_g2_c_v01.py"
+    text = path.read_text(encoding="utf-8")
+    tree = ast.parse(text)
+    imported = {
+        alias.name
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.Import, ast.ImportFrom))
+        for alias in node.names
+    }
+    assert "hedgehog.kernel" not in imported
+    assert not any(name.startswith("tests") for name in imported)
+    assert not any(name in imported for name in {
+        "socket", "subprocess", "requests", "http", "httpx", "random",
+        "time", "pathlib", "os",
+    })
+    forbidden_calls = {
+        "open", "write_text", "write_bytes", "mkdir", "makedirs", "system",
+        "popen", "run", "call", "check_call", "check_output", "urlopen",
+        "request", "connect", "send", "sendall", "time", "sleep", "now",
+        "utcnow", "random", "randint", "choice",
+    }
+    assert not any(
+        isinstance(node, ast.Call)
+        and ((isinstance(node.func, ast.Name) and node.func.id in forbidden_calls)
+             or (isinstance(node.func, ast.Attribute)
+                 and node.func.attr in forbidden_calls))
+        for node in ast.walk(tree)
+    )
+    assert "hedgehog.mode_router" not in imported
+    assert "demo.run_mode_selection_matrix" not in imported
+    assert all(name in text for name in c5_runner.ZERO_OPERATION_NAMES)

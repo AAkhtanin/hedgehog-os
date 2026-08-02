@@ -1,0 +1,596 @@
+audit_id: auditor_execution_mode_router_g2_c_v01
+audit_status: PASS
+audit_mode: independent_read_only_non_repairing
+audit_date: 2026-08-02
+gate_id: gate2_g2c_execution_mode_router
+accepted_preflight_commit: 4b33c8106dbb3d7b50596630cd9dcdcf3f84cfac
+implementation_basis_commit: 27a866ca06a331b4169c56abac9a460334d75539
+audit_commit: NOT_YET_KNOWN
+preflight_path: docs/execution_mode_router_g2_c_preflight_v01.md
+preflight_sha256: 5bea2e49a6a5ff1c80df526a142329e7e218558f64c77be0a2f64294f2673077
+
+[AUDIT BOUNDARY]
+authorization: owner_authorized_g2c_independent_audit_only
+repository: /Users/admin/Projects/hedgehog-os
+branch: main
+head: 27a866ca06a331b4169c56abac9a460334d75539
+origin_main: 27a866ca06a331b4169c56abac9a460334d75539
+head_subject: Integrate G2-C6 Living Gauntlet and Kernel Conformance
+initial_worktree: CLEAN
+initial_staging: EMPTY
+initial_untracked_paths: 0
+initial_git_diff_check: PASS
+implementation_modified_by_audit: false
+tests_modified_by_audit: false
+runtime_modules_imported_for_behavior: false
+pytest_run: false
+c5_runner_executed: false
+living_runner_executed: false
+conformance_runner_executed: false
+network_accessed: false
+audit_method: Git ancestry and path inspection, full source reading, SHA-256, JSON parsing, AST parsing, source-text and import inspection, and deterministic identity reconstruction from committed bytes only.
+
+The sole repository output authorized for this audit is
+docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log. The audit is
+non-repairing. No implementation, test, schema, runner, release, checkpoint,
+status, documentation, or package file was changed.
+
+Full-read register (44 files):
+- docs/execution_mode_router_g2_c_preflight_v01.md
+- hedgehog/kernel/execution_mode_router_v01.py
+- schemas/execution_mode_router_v01.schema.json
+- tests/test_execution_mode_router_g2_c_v01.py
+- demo/run_execution_mode_router_g2_c_v01.py
+- hedgehog/kernel/conformance_v01.py
+- demo/run_kernel_conformance_v01.py
+- tests/test_kernel_conformance_v01_runner.py
+- demo/run_living_gauntlet_v01.py
+- tests/test_living_gauntlet_v01_runner.py
+- hedgehog/kernel/__init__.py
+- hedgehog/kernel/abi_v01.py
+- schemas/kernel_artifact_v01.schema.json
+- tests/test_kernel_abi_v01.py
+- hedgehog/kernel/root_decision_v01.py
+- tests/test_root_decision_kernel_v01.py
+- hedgehog/kernel/transition_registry_v01.py
+- tests/test_transition_registry_v01.py
+- hedgehog/kernel/semantic_work_v01.py
+- tests/test_semantic_work_v01.py
+- hedgehog/kernel/trust_model_v01.py
+- tests/test_kernel_trust_model_v01.py
+- hedgehog/kernel/integrity_replay_v01.py
+- tests/test_kernel_integrity_replay_v01.py
+- hedgehog/context_packets.py
+- hedgehog/semantic_reasoning_adapter.py
+- hedgehog/structured_rationale.py
+- hedgehog/evidence/sealed_evidence_profile_v01.py
+- hedgehog/evidence/sealed_package_v01.py
+- hedgehog/evidence/external_anchor_v01.py
+- hedgehog/evidence/sealed_replay_evidence_v01.py
+- hedgehog/action_commit_packet_v02.py
+- hedgehog/drs_semantic_address_v01.py
+- hedgehog/drs_memory_resolution_v01.py
+- hedgehog/reuse_certificate_v01.py
+- hedgehog/drs_g2b_compatibility_v01.py
+- docs/actionpacket_lifecycle_kill_switch_g2_a_checkpoint_v01.md
+- docs/audit_reports/auditor_action_commit_packet_lifecycle_kill_switch_g2_a_v01.log
+- docs/drs_semantic_address_space_reuse_certificate_g2_b_checkpoint_v01.md
+- docs/audit_reports/auditor_drs_semantic_address_space_reuse_certificate_g2_b_v01.log
+- docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md
+- docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log
+- release/completion_manifest.json
+- release/integration_seam_index.json
+
+[EXACT IMPLEMENTATION CHAIN]
+chain_status: PASS
+inclusive_commit_count: 8
+unlisted_intervening_commit_count: 0
+
+1. commit: 3cd5c4db2fc6e9e3b04a309decc5682ed6f4ea21
+   parent: 056bc1c746b49699069a90766d067f1a77d205dc
+   subject: Close R-H1 clean-clone licensing release spine
+2. commit: 4b33c8106dbb3d7b50596630cd9dcdcf3f84cfac
+   parent: 3cd5c4db2fc6e9e3b04a309decc5682ed6f4ea21
+   subject: Add G2-C ExecutionModeRouter architect preflight
+3. commit: 664bf5c0496d69e8a29dc0dc667f8c009a936222
+   parent: 4b33c8106dbb3d7b50596630cd9dcdcf3f84cfac
+   subject: Implement G2-C1 ExecutionModeRouter structural contracts
+4. commit: e0c13919222b40a21b0ed0662c1144a5971209af
+   parent: 664bf5c0496d69e8a29dc0dc667f8c009a936222
+   subject: Implement G2-C2 ExecutionModeRouter source bindings
+5. commit: 80090cfed292346f1bef3a93e2c6d46b45686f83
+   parent: e0c13919222b40a21b0ed0662c1144a5971209af
+   subject: Implement G2-C3 ExecutionModeRouter feasibility and proposal
+6. commit: 87fbae934192498a13362f76e9d4af3cd288475b
+   parent: 80090cfed292346f1bef3a93e2c6d46b45686f83
+   subject: Implement G2-C4 ExecutionModeRouter Root ABI and route eligibility
+7. commit: 1782ad40ec64f3c1a1d3960628208110d2c54a57
+   parent: 87fbae934192498a13362f76e9d4af3cd288475b
+   subject: Implement G2-C5 ExecutionModeRouter two-domain proof
+8. commit: 27a866ca06a331b4169c56abac9a460334d75539
+   parent: 1782ad40ec64f3c1a1d3960628208110d2c54a57
+   subject: Integrate G2-C6 Living Gauntlet and Kernel Conformance
+
+Git ancestry proves each listed commit is the immediate parent of the next.
+The inclusive first-parent/reverse range contains exactly this sequence.
+
+[EXACT PER-COMMIT PATH SCOPE]
+path_scope_status: PASS
+
+3cd5c4d R-H1 basis: A=1 M=7 D=0 R=0
+- M AGENTS.md
+- M README.md
+- A docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md
+- M release/claim_to_evidence_index.md
+- M release/current_limitations.md
+- M release/current_release_notes.md
+- M release/current_status_overlay_v01.json
+- M specs/machine_manifest_v0_25.json
+
+4b33c81 accepted preflight: A=1 M=0 D=0 R=0
+- A docs/execution_mode_router_g2_c_preflight_v01.md
+
+664bf5c G2-C1: A=3 M=3 D=0 R=0
+- M hedgehog/kernel/abi_v01.py
+- A hedgehog/kernel/execution_mode_router_v01.py
+- A schemas/execution_mode_router_v01.schema.json
+- M schemas/kernel_artifact_v01.schema.json
+- A tests/test_execution_mode_router_g2_c_v01.py
+- M tests/test_kernel_abi_v01.py
+
+e0c1391 G2-C2: A=0 M=2 D=0 R=0
+- M hedgehog/kernel/execution_mode_router_v01.py
+- M tests/test_execution_mode_router_g2_c_v01.py
+
+80090cf G2-C3: A=0 M=2 D=0 R=0
+- M hedgehog/kernel/execution_mode_router_v01.py
+- M tests/test_execution_mode_router_g2_c_v01.py
+
+87fbae9 G2-C4: A=0 M=5 D=0 R=0
+- M hedgehog/kernel/__init__.py
+- M hedgehog/kernel/execution_mode_router_v01.py
+- M hedgehog/kernel/transition_registry_v01.py
+- M tests/test_execution_mode_router_g2_c_v01.py
+- M tests/test_transition_registry_v01.py
+
+1782ad4 G2-C5: A=1 M=1 D=0 R=0
+- A demo/run_execution_mode_router_g2_c_v01.py
+- M tests/test_execution_mode_router_g2_c_v01.py
+
+27a866c G2-C6: A=0 M=5 D=0 R=0
+- M demo/run_kernel_conformance_v01.py
+- M demo/run_living_gauntlet_v01.py
+- M hedgehog/kernel/conformance_v01.py
+- M tests/test_kernel_conformance_v01_runner.py
+- M tests/test_living_gauntlet_v01_runner.py
+
+Every G2-C slice path set is an exact subset of the accepted preflight path
+ledger for that slice. There are no implementation deletions or renames, no
+foreign implementation commit, and no release, checkpoint, audit, or status
+mutation in C1 through C6.
+
+[CANONICAL TYPES IDENTITIES AND API]
+canonical_geometry_status: PASS
+total_g2c_type_count: 13
+serialized_identity_type_count: 12
+runtime_only_source_context_type_count: 1
+router_function_count: 68
+transition_profile_function_count: 6
+public_g2c_function_count: 74
+public_g2c_reason_count: 100
+direct_package_g2c_attribute_count: 87
+
+Exact types in source order:
+1. ExecutionModeBSEPBindingV01
+2. ExecutionModeReplayBindingV01
+3. ExecutionModeG2ABindingV01
+4. ExecutionModeG2BBindingV01
+5. ExecutionModeLocalModeProfileV01
+6. ExecutionModeLocalRoutingSnapshotV01
+7. ExecutionModeRouterInputV01
+8. ExecutionModeFeasibilityRowV01
+9. ExecutionModeProposalV01
+10. RootExecutionModeReviewInputV01
+11. RootExecutionModeDecisionV01
+12. ExecutionModeValidationReportV01
+13. ExecutionModeSourceContextV01
+
+The first twelve types are represented by the twelve Router schema
+definitions. ExecutionModeSourceContextV01 is runtime-only. Dataclass field
+order and schema property/required order match exactly for all twelve
+serialized types. Field counts are 30, 29, 35, 42, 21, 34, 10, 22, 33, 21,
+30, and 15 respectively; SourceContext has 33 fields.
+
+Static canonical tuple digests, calculated as compact ordered JSON SHA-256:
+- type-name tuple: 52f1c559ee91efc4f6db1e7c5a85ebd133a48f579bc5c16f63ffad8cb4485178
+- 74-function tuple: a554e1f20eda2708f2ef409999e5df6add8bf96548e4d8805978be4d660c9c8d
+- 100-reason tuple: bc39f990774bbd38ec9482374a5c4ccd70887b49115b6894735f6a9632e3240a
+- schema field geometry: a946662909c1646330d69fa53a69e6cf85f1970e8b6549f590aa8ec81c6c4973
+
+All 74 public names have physical implementations: 68 in
+execution_mode_router_v01.py and six profile-aware functions in
+transition_registry_v01.py. No future stub remains. No second G2-C ABI
+dataclass, TransitionRegistry dataclass, TransitionDecision dataclass, or Root
+decision engine was introduced.
+
+[SOURCE BINDING AND SELECTION LAW]
+source_binding_status: PASS
+selection_law_status: PASS
+
+The structural SourceContext validator validates concrete BSEP, Replay, G2-A,
+and G2-B source-family object geometry. The contextual Router validator then
+rebuilds each committed binding from the actual source objects and compares
+the complete binding and snapshot geometry. A copied PASS label, copied
+digest, ID-only match, absent source, or caller-selected binding state is not
+accepted.
+
+BSEP inspection uses the current business-request, route-packet, semantic
+proposal, structured-rationale, and bounded evidence validators. Replay uses
+the current evidence profile, sealed package, external anchor, and sealed
+Replay validators. G2-A uses the current present-eligibility inspection and
+requires the complete positive predicate, including retry_eligible=false.
+G2-B validates the address, temporal query, records, evaluations, candidates,
+resolution plan/descent, Root shortcut, certificate, report, and compatibility
+family applicable to the binding state.
+
+Request identity and transaction identity remain independent. For applicable
+G2-B cases, the Router transaction is required to equal the actual
+builder-derived TemporalQuery query_id. No literal replacement transaction is
+accepted.
+
+Feasibility is established before cost. Executable selection uses the exact
+ordered key (safe_depth_rank, expected_cost_units, canonical_mode_index).
+Hard block and missing required user input are applied before executable
+feasibility; blocked has global precedence, needs_user owns the missing-input
+terminal, and no-safe-mode selects blocked. request_class, scope_class, and
+risk_class are absent from feasibility and selection authority. No public
+transition evaluator accepts caller guard tuples, rule IDs, reasons, or commit
+booleans.
+
+[ROOT ABI TRANSITION AND ROUTE ELIGIBILITY]
+root_abi_transition_status: PASS
+
+The Router imports and uses the existing SemanticWork builders, default trust
+profiles, RootDecisionKernelV01 construction, RootDecisionInputV01 builder,
+decide_root_v01, and existing Root validators. No independent Root law is
+present. Root conflict geometry is required to remain empty.
+
+Proposal, Root decision, and optional RouteEligibility projections use the
+existing KernelArtifactV01 envelope and validator. Static bundle geometry is:
+- Stage A: (ExecutionModeProposal artifact,)
+- Stage B: (ExecutionModeProposal artifact, RootExecutionModeDecision artifact)
+- Stage C ACCEPT/NARROW: Stage B plus ExecutionModeRouteEligibility artifact
+- Stage C REJECT/BLOCKED/NEEDS_USER: Stage B only
+
+The G2-C Transition profile has six exact rules. Its registry identity was
+independently reconstructed from committed source material under
+hedgehog.kernel.transition_registry.v01 as:
+a44c497efb934d85d08b1ca097bdae8c4fa07806906e95176d232b1341572376
+The compact canonical profile payload SHA-256 is:
+1c6dfc957a764d32ff6348a32f400551fa002ca7c8f7305922dab6f8c7d98fcb
+The reconstructed registry identity matches the exact committed Transition
+test expectation.
+
+The pre-Root decision is RETURN_TO_ROOT with root commit false/false. The five
+post-Root rules derive the actual Root result lineage and require commit
+true/true. ACCEPT and NARROW alone may produce RouteEligibility. REJECT,
+BLOCKED, and NEEDS_USER produce no eligibility. Direct use of
+RootExecutionModeDecisionV01 as route permission is explicitly rejected with
+g2c_route_decision_bypass_forbidden. RouteEligibility is the bounded
+consumption artifact; G2-C defines or creates no RuntimeExecutionTopology.
+
+[TWO-DOMAIN TEN-CASE C5 PROOF]
+c5_static_contract_status: PASS
+proof_version: v0.1
+profile_id: execution_mode_router_g2c_two_domain_proof_v01
+domain_count: 2
+case_count: 10
+
+Exact domains:
+1. TRAVEL_POLICY_INFORMATION
+2. WAREHOUSE_MAINTENANCE_INFORMATION
+
+Exact case order and selected result:
+1. g2c_case:travel:sealed_replay:v01 -> sealed_replay -> ACCEPT
+2. g2c_case:travel:direct_informational_reuse:v01 -> direct_informational_reuse -> ACCEPT
+3. g2c_case:travel:memory_informed:v01 -> memory_informed -> ACCEPT
+4. g2c_case:travel:cloud_llm_narrow:v01 -> cloud_llm -> NARROW
+5. g2c_case:travel:full_semantic_reject:v01 -> full_semantic -> REJECT
+6. g2c_case:warehouse:deterministic_new_action:v01 -> deterministic -> ACCEPT
+7. g2c_case:warehouse:local_slm:v01 -> local_slm -> ACCEPT
+8. g2c_case:warehouse:full_fractal_fixture_capability:v01 -> full_fractal -> ACCEPT
+9. g2c_case:warehouse:blocked_existing_packet:v01 -> blocked -> BLOCKED
+10. g2c_case:warehouse:needs_user:v01 -> needs_user -> NEEDS_USER
+
+The C5 collector statically builds all cases through current public source and
+G2-C contracts. Cases 2, 3, and 4 assign the actual G2-B TemporalQuery query_id
+as transaction_id. The validator checks exact domain/case order, rebuilt
+selected-row identity, proposal/source-Root/projection/Transition reason
+separation, RouteEligibility presence, empty three-stage Root conflict tuples,
+six unique Root support identities per case, exact operation order, and all
+zero counters.
+
+The exact seventeen steps are source validation, contextual input validation,
+ten-row feasibility, exact selection, proposal and contextual validation,
+proposal artifact, Stage A, pre-Root RETURN_TO_ROOT, review input, actual Root
+source family, projected Root decision, decision artifact, Stage B, post-Root
+Transition, conditional RouteEligibility, Stage C, and complete profile
+validation. The committed C5 test source contains the complete grouped source,
+ABI/Transition, time/G2-B, profile/selection/proposal, Root/support,
+package/import, structural/contextual, operation-barrier, repeated-equality,
+domain-invariance, non-finite confidence, and zero-operation matrices. All 17
+new C5 test functions are prefixed test_c5_.
+
+This section records independently inspected source geometry. Its runtime PASS
+claim is additionally supported by, but not confused with, the owner-supplied
+execution evidence recorded below.
+
+[LIVING GAUNTLET V1.3]
+living_static_contract_status: PASS
+runner_version: v1.3
+historical_versions_preserved: v1.0,v1.1,v1.2
+active_act_count: 16
+historical_active_prefix_count: 15
+
+The historical fifteen-act prefix is preserved. execution_mode_router is act
+sixteen and maps exactly to:
+- module: demo.run_execution_mode_router_g2_c_v01
+- symbol: collect_execution_mode_router_g2_c_v01
+
+collect_execution_mode_router_gauntlet_act_v01 calls the public C5 collector
+and the public C5 report validator, then independently checks v0.1/profile,
+two-domain/ten-case order, all five Root outcomes, rebuilt selected rows,
+reason lineage, derived G2-B transactions, eligibility presence, empty
+conflicts, six unique support identities, seventeen steps, and zero counters.
+It returns current fail-closed Living geometry on any invalid report or
+exception; no caller supplies PASS. The exact valid counter
+execution_mode_router_execution_count is derived as one. Historical G2-A and
+G2-B act order, identities, and counters remain prefix-preserved.
+
+[KERNEL CONFORMANCE V0.4 RUNNER V0.3]
+conformance_static_contract_status: PASS
+conformance_version: v0.4
+runner_version: v0.3
+historical_contract_versions_preserved: v0.1,v0.2,v0.3
+category_geometry: 13/13
+domain_geometry: 2/2
+negative_geometry: 40/40
+active_gauntlet_ref_count: 15
+
+ExecutionModeRouterConformance is category thirteen. Exact ordered checks:
+1. two_domain_ten_case_report
+2. all_five_root_outcomes
+3. seventeen_step_order
+4. source_binding_and_derived_query
+5. one_abi_profile_and_stage_bundles
+6. one_transition_profile_and_root_lineage
+7. route_eligibility_and_direct_bypass
+8. package_facade_and_import_boundary
+9. negative_matrix_and_domain_invariance
+10. zero_operations
+
+The two domain IDs remain exactly airline and supplier_water_filter. The
+execution_mode_router active ref is appended after the fourteen historical
+refs. Exact appended negative probes:
+1. execution_mode_report_identity_forgery
+2. execution_mode_case_order_forgery
+3. execution_mode_selected_row_forgery
+4. execution_mode_root_outcome_forgery
+5. execution_mode_transition_lineage_forgery
+6. execution_mode_route_eligibility_forgery
+7. execution_mode_conflict_state_forgery
+8. execution_mode_cross_domain_substitution
+9. execution_mode_operation_order_forgery
+10. execution_mode_zero_operation_forgery
+
+The Conformance runner constructs independent frozen-report mutations and
+passes each mutation to the public C5 validator. Observed reason geometry is:
+- report identity: (g2c5_report_identity_invalid,)
+- case order: (g2c5_case_order_invalid, g2c5_report_identity_invalid)
+- selected row through operation order: (g2c5_case_result_invalid, g2c5_report_identity_invalid)
+- zero operation: (g2c5_zero_operation_invalid, g2c5_report_identity_invalid)
+
+The observed tuples are validator outputs, not caller-fabricated PASS values.
+Historical category and negative tuples are spread as immutable prefixes.
+
+[PACKAGE FACADE AND IMPORT DIRECTION]
+package_facade_status: PASS
+direct_package_attribute_count: 87
+kernel_all_count: 19
+kernel_all_historical_equality: true
+g2c_names_in_kernel_all: 0
+
+The package source contains explicit direct imports for all 13 types, 68
+Router functions, and six Transition-profile functions. It contains no proxy,
+wrapper, lazy loader, fallback, or generated callable. Static comparison with
+the package at committed pre-facade basis 80090cfed292346f1bef3a93e2c6d46b45686f83
+proves historical kernel.__all__ value and order are unchanged.
+
+execution_mode_router_v01.py imports concrete Kernel submodules and does not
+import aggregate hedgehog.kernel. ABI and Root do not import the Router.
+Transition imports neither Router, Root, nor SemanticWork. The C6 Conformance
+runner's aggregate package import is used alongside concrete owner modules for
+the explicitly required facade-preservation probe, not as a replacement
+contract. No base-to-composition cycle is introduced.
+
+[ZERO-OPERATION AND AUTHORITY BOUNDARY]
+zero_operation_static_status: PASS
+provider_calls: 0
+model_calls: 0
+network_calls: 0
+connector_calls: 0
+external_drs_calls: 0
+action_commit_packets_created: 0
+permissions_created: 0
+receipts_created: 0
+runtime_topologies_created: 0
+drs_writes_created: 0
+final_outputs_created: 0
+real_world_effects_count: 0
+
+AST and C6-diff inspection found no new provider, model gateway, network,
+connector, external DRS, filesystem-write, wall-clock, randomness, subprocess,
+packet, permission, receipt, topology, FinalOutput, DRS-write, or real-effect
+call path in G2-C. Added occurrences of operation terms are zero-counter checks
+or deliberate negative mutations. Existing historical Living/Conformance
+infrastructure is not reclassified as G2-C execution. No topology class is
+defined in the Router or C5 proof.
+
+[OWNER-SUPPLIED EXECUTION EVIDENCE]
+evidence_provenance: owner_supplied_completed_execution_evidence
+auditor_reran_evidence: false
+evidence_binding: exact committed file identities listed in FROZEN EVIDENCE
+
+C5:
+- direct runs: PASS, byte-identical
+- rendered SHA-256: 1564dec170bf3bf08b93d1d1595a0380eb20ad50d1f29a538c2678bd1099d640
+- targeted C5: 139 passed
+- complete Router: 392 passed
+- complete Transition: 237 passed
+- focused C5: 4038 passed
+
+C6:
+- targeted C6: 13 passed, 866 deselected, 915.81 seconds
+- complete Living: 569 passed, 2 warnings, 3454.32 seconds
+- complete Conformance: 310 passed, 2 warnings, 1378.78 seconds
+- exact cumulative: 4917 passed, 2 warnings, 6123.63 seconds
+- warnings: existing jsonschema.RefResolver deprecations only
+
+Final Living direct evidence:
+- return codes: 0,0
+- byte-identical: true
+- SHA-256: 873e02c90a3e98c6b82796c7f67d5e9333fa79174937d7ef738830965acdabce
+- bytes: 4311
+- lines: 82
+
+Final Conformance direct evidence:
+- return codes: 0,0
+- byte-identical: true
+- SHA-256: bf191823f967764d360a7eb5889030410756e22420098d780bd8d38489783065
+- bytes: 3195
+- lines: 74
+
+These results were not independently rerun by this auditor. The audit accepts
+them as owner-supplied execution evidence tied to exact committed identities,
+and combines them with independently inspected Git and static source evidence.
+
+[FROZEN EVIDENCE]
+All required current identities match.
+
+path | sha256 | bytes | lines | mode
+hedgehog/kernel/conformance_v01.py | 93907341301bfbd6fbd631738ad0175a6100a7076482c04cb04ef8cf2fc7bc32 | 53427 | 1514 | 0644
+demo/run_kernel_conformance_v01.py | c80b794c2015a14b84c97091b0bbd5b5b9a654cb1d41728001fd07eb08e757f6 | 90000 | 2378 | 0644
+tests/test_kernel_conformance_v01_runner.py | c801c75b4446b3c19dc886797bc2810501da9489c57dd5a1efda14f7bd57dc63 | 74709 | 2003 | 0644
+demo/run_living_gauntlet_v01.py | 5809c4f64d9272e632babaed4f6278d6b1fc0e3c04067a19e84e71c15b337f05 | 213291 | 5445 | 0644
+tests/test_living_gauntlet_v01_runner.py | 96c85915bb52fa5fc8ee46d79dc2ca2d8be4bb796cbd639dffaa21f86aedb3bb | 177317 | 4798 | 0644
+
+path | sha256
+docs/execution_mode_router_g2_c_preflight_v01.md | 5bea2e49a6a5ff1c80df526a142329e7e218558f64c77be0a2f64294f2673077
+demo/run_execution_mode_router_g2_c_v01.py | 1d775010d0fdcba7d2ebbcadf50d0bc4815a99dc08785f2f6a0d635477ff8719
+tests/test_execution_mode_router_g2_c_v01.py | 6903a7e4223f2d8c4712122fb88dbaa4b788ef84d5d85b53ce6ea1eacbbbbeec
+hedgehog/kernel/__init__.py | 0a2fa5805505052afcfa14b2f3b13ce0ecf44cb876a2577909b55cbe57c9aaaf
+hedgehog/kernel/execution_mode_router_v01.py | 29e6500ca2b6966d0b5068f9fa1cdc1ef937cb4e5c284ea3acc78b0e9103ca22
+hedgehog/kernel/transition_registry_v01.py | 24b6ca783ea64ecf5aa8f3efd5a066e3d76a0ca23b4ab9f47b4aed6f04ba43df
+tests/test_transition_registry_v01.py | 4be578533511032144bfe1530c0ab073af7dab6ac5dd175689dafb27f76921dd
+schemas/execution_mode_router_v01.schema.json | cd07223ffd6085682cee4a49781f5471997ad371b4cd3916d01c146ed7e33468
+hedgehog/kernel/abi_v01.py | 984521aa7e0b997db754f54ad2731cb08064f998fcbcd309cca65ebcf1a329dd
+schemas/kernel_artifact_v01.schema.json | d16b1772c8e1b1304e58c325bf70597d369c0d4531d602b5e92b526df72f0b27
+tests/test_kernel_abi_v01.py | 8f8f3fbda5bb25558c10eb4154b7fa554218e2c0a85f0b5cd7594e83c4b0d7dc
+hedgehog/kernel/root_decision_v01.py | cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c
+release/completion_manifest.json | 02ffac0d78df768f91df0bb06bdd15ec463dbe5ccea6ef82b7022146819f3466
+release/integration_seam_index.json | c29c2ff873c8b448d8825c3288918e980eab3d65a5114762d2e3fbe5b1206231
+
+Accepted predecessor evidence also matches current bytes:
+- G2-A checkpoint: 61feef4640856f2474848d316e8f2159ed8522fffddc8c512f07c308b6ff9234
+- G2-A audit: ca3b63d74744b53f02e0b638fc26e6bb476a350682ad3035c4f81307c5deb777
+- G2-B checkpoint: c8f94825080864bf14afe8219a3c0bab4ff5613dcb7bddc471b141f3ffbac553
+- G2-B audit: 78d2debc7d9969caca6b896b00273d879eb72a933b84b29eb43d27456effa17b
+- R-H1 checkpoint: 58e26aac7a44e18775de7b6d5baf5c12665c3b5c746e4cc0784ec060a97ecd8a
+- R-H1 audit: 40148424d58b1f599c9212a6914bdaadbfc932b2cce19fc67fccd0801b12af23
+
+JSON parsing passed for both G2-C schemas and both frozen release files. The
+release files remain byte-identical Gate-1 evidence and were not rewritten to
+claim G2-C closure.
+
+[CURRENT NON-CLAIMS]
+- G2-C is not yet CLOSED_PASS; a later owner-authorized checkpoint/status commit is required.
+- Gate 2 remains NOT_CLOSED.
+- G2-D remains NEXT / NOT_STARTED.
+- Public release is not claimed.
+- RC2 is not claimed.
+- Production readiness is not claimed.
+- Production security certification is not claimed.
+- RuntimeExecutionTopology is not implemented or created by G2-C.
+- RouteEligibility is bounded Root-authorized consumption evidence, not topology.
+- No ActionCommitPacket, permission, receipt, FinalOutput, DRS write, provider/model call, network/connector/external-DRS call, or real-world effect is claimed.
+- No historical router migration, adapter, compatibility layer, cleanup, or caller migration is created.
+
+[LIMITATIONS]
+blocking_findings: 0
+non_blocking_findings: 0
+
+1. This audit is intentionally static and non-executing. It did not rerun
+   pytest or any deterministic runner and did not import repository runtime
+   modules for behavioral execution.
+2. Runtime results, deterministic byte equality, elapsed times, and warning
+   counts are owner-supplied completed evidence. They are accepted only because
+   all cited implementation identities match the audited committed basis.
+3. Direct package object identity was inspected as explicit source ownership
+   and historical __all__ equality; its behavioral object-identity probes are
+   part of the owner-supplied completed test evidence, not an auditor import.
+4. Planning-state statements in the accepted preflight and historical R-H1,
+   G2-A, G2-B, and frozen Gate-1 evidence are historical context, not current
+   closure synchronization. No stale historical label changes current contract
+   behavior or creates a material audit finding.
+5. The two jsonschema.RefResolver deprecation warnings are owner-reported,
+   pre-existing, and non-blocking; this audit made no dependency or schema
+   change.
+
+[FINAL AUDIT VERDICT]
+audit_status: PASS
+g2c_preflight_conformance: true
+g2c_c1_through_c6_conform: true
+implementation_basis_accepted_for_closure_synchronization: true
+repair_required: false
+
+Independent Git, path-scope, identity, JSON, AST, source-text, import-direction,
+and content-identity inspection found no material defect. Combined with the
+owner-supplied completed execution evidence tied to these exact committed
+bytes, G2-C1 through G2-C6 conform to accepted preflight v0.1.6. Commit
+27a866ca06a331b4169c56abac9a460334d75539 is accepted as the implementation
+basis for later closure synchronization. No repair is required.
+
+G2-C is not yet CLOSED_PASS until a separately authorized checkpoint/status
+commit records closure. Gate 2 remains NOT_CLOSED. G2-D remains NEXT /
+NOT_STARTED. This audit creates no public release, RC2, production readiness,
+or production security claim. The audit created no topology and no real-world
+effect.
+
+FILES_CHANGED=0
+FILES_CREATED=1
+FILES_DELETED=0
+FILES_RENAMED=0
+STAGING_CHANGED=0
+COMMIT_CREATED=0
+PUSH_PERFORMED=0
+G2C_AUDIT_STATUS=PASS
+G2C_AUDIT_INDEPENDENT_NON_REPAIRING=true
+G2C_IMPLEMENTATION_BASIS_COMMIT=27a866ca06a331b4169c56abac9a460334d75539
+G2C_PREFLIGHT_CONFORMANCE=true
+G2C_REPAIR_REQUIRED=false
+OWNER_EXECUTION_EVIDENCE_RECORDED=true
+PYTEST_RUN=false
+C5_RUNNER_EXECUTED=false
+LIVING_RUNNER_EXECUTED=false
+CONFORMANCE_RUNNER_EXECUTED=false
+PROVIDER_CALLS=0
+MODEL_CALLS=0
+NETWORK_CALLS=0
+CONNECTOR_CALLS=0
+EXTERNAL_DRS_CALLS=0
+REAL_WORLD_EFFECTS_COUNT=0
+G2C_CLOSED=false
+G2C_CHECKPOINT_STARTED=false
+G2D_STARTED=false
+GATE2_CLOSED=false
+READY_FOR_OWNER_AUDIT_REVIEW=true

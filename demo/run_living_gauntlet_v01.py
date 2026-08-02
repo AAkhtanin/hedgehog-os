@@ -16,6 +16,7 @@ from demo import (
 from demo import (
     run_drs_semantic_address_reuse_certificate_g2_b_v01 as _g2b
 )
+from demo import run_execution_mode_router_g2_c_v01 as _g2c
 from demo.run_all_layers_applied_super_smoke import (
     collect_all_layers_applied_super_smoke,
     validate_all_layers_applied_super_smoke_report_consistency,
@@ -162,9 +163,10 @@ import hedgehog.kernel.transition_registry_v01 as transition_registry_module
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v1.2"
+RUNNER_VERSION = "v1.3"
 _GATE1_RELEASE_RUNNER_VERSION_V10 = "v1.0"
 _G2A_RUNNER_VERSION_V11 = "v1.1"
+_G2B_RUNNER_VERSION_V12 = "v1.2"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -278,7 +280,7 @@ _G2A_ACTIVE_ACT_SOURCES_V11 = {
     ),
 }
 _G2A_ACTIVE_ACT_IDS_V11 = tuple(_G2A_ACTIVE_ACT_SOURCES_V11)
-_ACTIVE_ACT_SOURCES = {
+_G2B_ACTIVE_ACT_SOURCES_V12 = {
     **_G2A_ACTIVE_ACT_SOURCES_V11,
     "drs_semantic_address_and_reuse_certificate": (
         "demo.run_living_gauntlet_v01",
@@ -286,6 +288,14 @@ _ACTIVE_ACT_SOURCES = {
             "collect_drs_semantic_address_and_reuse_certificate_"
             "gauntlet_act_v01"
         ),
+    ),
+}
+_G2B_ACTIVE_ACT_IDS_V12 = tuple(_G2B_ACTIVE_ACT_SOURCES_V12)
+_ACTIVE_ACT_SOURCES = {
+    **_G2B_ACTIVE_ACT_SOURCES_V12,
+    "execution_mode_router": (
+        "demo.run_execution_mode_router_g2_c_v01",
+        "collect_execution_mode_router_g2_c_v01",
     ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
@@ -576,6 +586,7 @@ _COUNTER_FIELD_NAMES = frozenset(
         "kernel_conformance_closure_execution_count",
         "action_packet_lifecycle_execution_count",
         "drs_semantic_address_reuse_certificate_execution_count",
+        "execution_mode_router_execution_count",
     }
 )
 
@@ -4265,6 +4276,12 @@ def _derive_report_counters_v01(
             and row.get("executed") is True
             for row in active_rows
         ),
+        "execution_mode_router_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == _ACTIVE_ACT_IDS[15]
+            and row.get("executed") is True
+            for row in active_rows
+        ),
     }
 
 
@@ -4640,6 +4657,243 @@ def collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01(
         )
 
 
+_G2C_EXPECTED_DOMAIN_ORDER_V13 = (
+    "TRAVEL_POLICY_INFORMATION",
+    "WAREHOUSE_MAINTENANCE_INFORMATION",
+)
+_G2C_EXPECTED_CASE_ORDER_V13 = (
+    "g2c_case:travel:sealed_replay:v01",
+    "g2c_case:travel:direct_informational_reuse:v01",
+    "g2c_case:travel:memory_informed:v01",
+    "g2c_case:travel:cloud_llm_narrow:v01",
+    "g2c_case:travel:full_semantic_reject:v01",
+    "g2c_case:warehouse:deterministic_new_action:v01",
+    "g2c_case:warehouse:local_slm:v01",
+    "g2c_case:warehouse:full_fractal_fixture_capability:v01",
+    "g2c_case:warehouse:blocked_existing_packet:v01",
+    "g2c_case:warehouse:needs_user:v01",
+)
+_G2C_EXPECTED_CASE_GEOMETRY_V13 = (
+    (
+        "g2c_sealed_replay_feasible",
+        "validated_candidate_accepted",
+        "ACCEPT",
+        "g2c_root_accept_projected",
+        "g2c_transition_route_accept_allowed",
+        True,
+    ),
+    (
+        "g2c_direct_informational_reuse_feasible",
+        "validated_candidate_accepted",
+        "ACCEPT",
+        "g2c_root_accept_projected",
+        "g2c_transition_route_accept_allowed",
+        True,
+    ),
+    (
+        "g2c_memory_informed_feasible",
+        "validated_candidate_accepted",
+        "ACCEPT",
+        "g2c_root_accept_projected",
+        "g2c_transition_route_accept_allowed",
+        True,
+    ),
+    (
+        "g2c_cloud_llm_feasible",
+        "validated_candidate_accepted",
+        "NARROW",
+        "g2c_root_narrow_projected",
+        "g2c_transition_scope_narrow_allowed",
+        True,
+    ),
+    (
+        "g2c_full_semantic_feasible",
+        "policy_rejected_candidate",
+        "REJECT",
+        "g2c_root_reject_projected",
+        "g2c_transition_reject_recorded",
+        False,
+    ),
+    (
+        "g2c_deterministic_feasible",
+        "validated_candidate_accepted",
+        "ACCEPT",
+        "g2c_root_accept_projected",
+        "g2c_transition_route_accept_allowed",
+        True,
+    ),
+    (
+        "g2c_local_slm_feasible",
+        "validated_candidate_accepted",
+        "ACCEPT",
+        "g2c_root_accept_projected",
+        "g2c_transition_route_accept_allowed",
+        True,
+    ),
+    (
+        "g2c_full_fractal_feasible",
+        "validated_candidate_accepted",
+        "ACCEPT",
+        "g2c_root_accept_projected",
+        "g2c_transition_route_accept_allowed",
+        True,
+    ),
+    (
+        "g2c_hard_block_present",
+        "hard_policy_violation",
+        "BLOCKED",
+        "g2c_root_blocked_projected",
+        "g2c_transition_blocked_recorded",
+        False,
+    ),
+    (
+        "g2c_user_input_required",
+        "user_permission_missing",
+        "NEEDS_USER",
+        "g2c_root_needs_user_projected",
+        "g2c_transition_needs_user_recorded",
+        False,
+    ),
+)
+_G2C_ZERO_OPERATION_FIELDS_V13 = (
+    "provider_calls",
+    "model_calls",
+    "gemini_calls",
+    "network_calls",
+    "connector_calls",
+    "external_drs_calls",
+    "action_commit_packets_created",
+    "permissions_created",
+    "receipts_created",
+    "topologies_created",
+    "drs_writes",
+    "final_outputs_created",
+    "real_world_effects",
+)
+
+
+def _execution_mode_router_report_passes_living_act_v01(
+    report: object,
+) -> bool:
+    try:
+        if (
+            type(report) is not _g2c.ExecutionModeRouterG2CReportV01
+            or _g2c.validate_execution_mode_router_g2_c_report_v01(report) != ()
+            or report.report_version != "v0.1"
+            or report.profile_id
+            != "execution_mode_router_g2c_two_domain_proof_v01"
+            or report.final_status != STATUS_PASS
+            or report.reason_codes != ()
+            or report.domain_order != _G2C_EXPECTED_DOMAIN_ORDER_V13
+            or report.case_order != _G2C_EXPECTED_CASE_ORDER_V13
+            or type(report.case_results) is not tuple
+            or len(report.case_results) != 10
+            or any(
+                type(getattr(report, name)) is not int
+                or getattr(report, name) != 0
+                for name in _G2C_ZERO_OPERATION_FIELDS_V13
+            )
+        ):
+            return False
+        for index, (case, expected) in enumerate(
+            zip(
+                report.case_results,
+                _G2C_EXPECTED_CASE_GEOMETRY_V13,
+                strict=True,
+            )
+        ):
+            (
+                row_reason,
+                source_root_reason,
+                root_outcome,
+                projection_reason,
+                post_transition_reason,
+                eligibility_present,
+            ) = expected
+            if (
+                case.case_id != _G2C_EXPECTED_CASE_ORDER_V13[index]
+                or case.selected_feasibility_row_id
+                != case.rebuilt_selected_feasibility_row_id
+                or case.selected_row_reason != row_reason
+                or case.proposal_reason_codes
+                != ("g2c_proposal_sources_valid",)
+                or case.source_root_reason != source_root_reason
+                or case.root_outcome != root_outcome
+                or case.root_projection_reason_codes
+                != (projection_reason,)
+                or case.pre_root_transition_reason
+                != "g2c_transition_root_review_required"
+                or case.post_root_transition_reason
+                != post_transition_reason
+                or (case.route_eligibility_artifact_id is not None)
+                is not eligibility_present
+                or case.root_review_conflict_set_ids != ()
+                or case.root_input_conflict_set_ids != ()
+                or case.root_result_conflict_set_ids != ()
+                or len(case.root_support_ids) != 6
+                or len(set(case.root_support_ids)) != 6
+                or case.operation_steps != _g2c.OPERATION_STEPS
+                or case.final_status != STATUS_PASS
+                or case.reason_codes != ()
+                or any(
+                    type(getattr(case, name)) is not int
+                    or getattr(case, name) != 0
+                    for name in _G2C_ZERO_OPERATION_FIELDS_V13
+                )
+            ):
+                return False
+            if index in (1, 2, 3) and (
+                case.temporal_query_id is None
+                or not case.temporal_query_id.startswith("drsquery_v01:")
+                or case.transaction_id != case.temporal_query_id
+            ):
+                return False
+        return {case.root_outcome for case in report.case_results} == {
+            "ACCEPT",
+            "NARROW",
+            "REJECT",
+            "BLOCKED",
+            "NEEDS_USER",
+        }
+    except Exception:
+        return False
+
+
+def collect_execution_mode_router_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    act_id = "execution_mode_router"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    try:
+        report = _g2c.collect_execution_mode_router_g2_c_v01()
+        if not _execution_mode_router_report_passes_living_act_v01(report):
+            raise ValueError
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    except Exception:
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=("execution_mode_router_gauntlet_act_failed",),
+            executed=True,
+            no_real_connector_or_action=False,
+            real_world_effects_count=-1,
+            root_authority_preserved=False,
+            runtime_status=STATUS_FAIL_CLOSED,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_FAIL_CLOSED,
+        )
+
+
 def collect_living_gauntlet_base_act_results_v01(
 ) -> tuple[dict[str, object], ...]:
     collectors = (
@@ -4733,11 +4987,11 @@ def collect_kernel_conformance_closure_gauntlet_act_v01(
         passed = (
             not validation_errors
             and report.final_status == STATUS_PASS
-            and report.conformance_version == "v0.3"
-            and len(report.category_results) == 12
+            and report.conformance_version == "v0.4"
+            and len(report.category_results) == 13
             and len(report.domain_results) == 2
-            and len(report.negative_test_results) == 30
-            and len(report.active_gauntlet_refs) == 14
+            and len(report.negative_test_results) == 40
+            and len(report.active_gauntlet_refs) == 15
             and all(item.status == STATUS_PASS for item in report.category_results)
             and all(item.status == STATUS_PASS for item in report.domain_results)
             and all(
@@ -4828,13 +5082,26 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                         "gauntlet_act_failed"
                     ),
                 )
+            try:
+                g2c = collect_execution_mode_router_gauntlet_act_v01()
+            except Exception:
+                g2c = _failed_act_result(
+                    act_id="execution_mode_router",
+                    reason="execution_mode_router_gauntlet_act_failed",
+                )
             closure = collect_kernel_conformance_closure_gauntlet_act_v01(
-                (*base_results, asdict(lifecycle), asdict(g2b))
+                (
+                    *base_results,
+                    asdict(lifecycle),
+                    asdict(g2b),
+                    asdict(g2c),
+                )
             )
             active_result_rows.extend(dict(row) for row in base_results)
             active_result_rows.append(asdict(closure))
             active_result_rows.append(asdict(lifecycle))
             active_result_rows.append(asdict(g2b))
+            active_result_rows.append(asdict(g2c))
 
     for result in active_result_rows:
         row_errors = result.get("errors")
@@ -4917,15 +5184,22 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
         _invariant_result(
             "action_packet_lifecycle_act_pass",
             len(active_result_rows) == len(_ACTIVE_ACT_IDS)
-            and active_result_rows[-2].get("act_id")
+            and active_result_rows[-3].get("act_id")
             == "action_packet_lifecycle"
-            and active_result_rows[-2].get("state") == STATUS_PASS,
+            and active_result_rows[-3].get("state") == STATUS_PASS,
         ),
         _invariant_result(
             "drs_semantic_address_reuse_certificate_act_pass",
             len(active_result_rows) == len(_ACTIVE_ACT_IDS)
-            and active_result_rows[-1].get("act_id")
+            and active_result_rows[-2].get("act_id")
             == "drs_semantic_address_and_reuse_certificate"
+            and active_result_rows[-2].get("state") == STATUS_PASS,
+        ),
+        _invariant_result(
+            "execution_mode_router_act_pass",
+            len(active_result_rows) == len(_ACTIVE_ACT_IDS)
+            and active_result_rows[-1].get("act_id")
+            == "execution_mode_router"
             and active_result_rows[-1].get("state") == STATUS_PASS,
         ),
     ]

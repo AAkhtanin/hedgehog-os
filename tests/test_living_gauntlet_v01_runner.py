@@ -305,7 +305,7 @@ def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.Monke
         "conformance": 1,
         "lifecycle": 1,
     }
-    assert exact_once_report["counters"]["active_collector_execution_count"] == 14
+    assert exact_once_report["counters"]["active_collector_execution_count"] == 16
 
 
 def test_frozen_all_real_evidence_is_not_executed(report: dict[str, Any]) -> None:
@@ -756,9 +756,9 @@ def test_generic_integrity_replay_act_executes_and_passes(
 
 
 def test_successful_report_has_thirteen_active_acts(report: dict[str, Any]) -> None:
-    assert len(report["active_act_results"]) == 14
-    assert report["counters"]["active_act_count"] == 14
-    assert report["counters"]["active_act_pass_count"] == 14
+    assert len(report["active_act_results"]) == 16
+    assert report["counters"]["active_act_count"] == 16
+    assert report["counters"]["active_act_pass_count"] == 16
     assert report["counters"]["active_act_fail_closed_count"] == 0
 
 
@@ -961,8 +961,9 @@ def test_renderer_shows_generic_active_act(report: dict[str, Any]) -> None:
 
 
 def test_runner_version_is_v10(report: dict[str, Any]) -> None:
-    assert runner.RUNNER_VERSION == "v1.1"
-    assert report["runner_version"] == "v1.1"
+    assert runner._G2A_RUNNER_VERSION_V11 == "v1.1"
+    assert runner.RUNNER_VERSION == "v1.3"
+    assert report["runner_version"] == "v1.3"
 
 
 def test_runner_introduces_no_domain_adapter_import() -> None:
@@ -1074,8 +1075,10 @@ def test_all_thirteen_active_act_ids_are_exact(report: dict[str, Any]) -> None:
         "supplier_water_filter_portability",
         "kernel_conformance_closure",
         "action_packet_lifecycle",
+        "drs_semantic_address_and_reuse_certificate",
+        "execution_mode_router",
     )
-    assert report["counters"]["active_collector_execution_count"] == 14
+    assert report["counters"]["active_collector_execution_count"] == 16
 
 
 def test_signer_execution_counter_is_one(report: dict[str, Any]) -> None:
@@ -3747,22 +3750,48 @@ def g1e_base_rows(report):
 
 @pytest.fixture(scope="module")
 def g1e_conformance_report(g1e_base_rows, report):
-    return conformance_runner.collect_kernel_conformance_v01(
+    current = conformance_runner.collect_kernel_conformance_v01(
         active_act_results=(
             *g1e_base_rows,
             dict(report["active_act_results"][13]),
+            dict(report["active_act_results"][14]),
+            dict(report["active_act_results"][15]),
         ),
         implementation_commit="abcdef0",
     )
+    categories = current.category_results[:11]
+    negatives = current.negative_test_results[:20]
+    active_refs = current.active_gauntlet_refs[:13]
+    provisional = conformance.KernelConformanceReportV01(
+        report_id="0" * 64,
+        conformance_version="v0.2",
+        implementation_commit=current.implementation_commit,
+        category_results=categories,
+        domain_results=current.domain_results,
+        negative_test_results=negatives,
+        active_gauntlet_refs=active_refs,
+        evidence_refs=current.evidence_refs,
+        limitations=current.limitations,
+        counters=conformance._derive_counters(
+            categories,
+            current.domain_results,
+            negatives,
+            active_refs,
+            current.evidence_refs,
+        ),
+        final_status=conformance.STATUS_PASS,
+    )
+    return conformance._replace_report_id(provisional)
 
 
 def test_g1e_runner_version_and_geometry_are_exact(report):
-    assert runner.RUNNER_VERSION == "v1.1"
-    assert report["runner_version"] == "v1.1"
+    assert runner._G2A_RUNNER_VERSION_V11 == "v1.1"
+    assert runner.RUNNER_VERSION == "v1.3"
+    assert report["runner_version"] == "v1.3"
     assert report["final_status"] == runner.STATUS_PASS
     assert report["validation_errors"] == ()
-    assert report["counters"]["active_act_count"] == 14
-    assert report["counters"]["active_act_pass_count"] == 14
+    assert report["counters"]["active_act_count"] == 16
+    assert report["counters"]["active_act_pass_count"] == 16
     assert report["counters"]["evidence_only_entry_count"] == 1
     assert report["counters"]["planned_act_count"] == 0
 
@@ -3795,6 +3824,8 @@ def test_g1e_exact_active_order(report):
         "supplier_water_filter_portability",
         "kernel_conformance_closure",
         "action_packet_lifecycle",
+        "drs_semantic_address_and_reuse_certificate",
+        "execution_mode_router",
     )
 
 
@@ -3828,9 +3859,14 @@ def test_g1e_collect_living_passes_same_base_tuple_to_closure(
     monkeypatch.setattr(runner, "collect_kernel_conformance_closure_gauntlet_act_v01", closure)
     rebuilt = runner.collect_living_gauntlet_v01()
     assert captured == [
-        (*base, dict(report["active_act_results"][13])),
+        (
+            *base,
+            dict(report["active_act_results"][13]),
+            dict(report["active_act_results"][14]),
+            dict(report["active_act_results"][15]),
+        ),
     ]
-    assert captured[0][:-1] == base
+    assert captured[0][:12] == base
     assert rebuilt["final_status"] == runner.STATUS_PASS
 
 
@@ -3844,7 +3880,12 @@ def test_g1e_closure_does_not_recollect_supplier(
     )
     monkeypatch.setattr(runner, "resolve_current_implementation_commit_v01", lambda: "abcdef0")
     row = runner.collect_kernel_conformance_closure_gauntlet_act_v01(
-        (*g1e_base_rows, dict(report["active_act_results"][13]))
+        (
+            *g1e_base_rows,
+            dict(report["active_act_results"][13]),
+            dict(report["active_act_results"][14]),
+            dict(report["active_act_results"][15]),
+        )
     )
     assert row.state == runner.STATUS_PASS
 
@@ -3862,7 +3903,7 @@ def test_g1e_closure_execution_counter_is_one(report):
 
 
 def test_g1e_conformance_runtime_report_passes(g1e_conformance_report):
-    assert conformance_runner.validate_kernel_conformance_runtime_v01(
+    assert conformance.validate_kernel_conformance_report_v01(
         g1e_conformance_report
     ) == ()
     assert g1e_conformance_report.final_status == conformance.STATUS_PASS
@@ -3897,7 +3938,9 @@ def test_g1e_supplier_multiroot_mixed_is_visible(g1e_conformance_report):
     assert "supplier_multiroot_pass" not in supplier.required_check_ids
 
 
-@pytest.mark.parametrize("probe_id", conformance.NEGATIVE_PROBE_IDS)
+@pytest.mark.parametrize(
+    "probe_id", conformance._G2A_NEGATIVE_PROBE_IDS_V02
+)
 def test_g1e_each_negative_probe_passes(g1e_conformance_report, probe_id):
     result = next(
         item
@@ -4094,7 +4137,12 @@ def test_g1e_nested_conformance_failure_closes_act(
         )
     row = _g1e_failed_closure(
         value,
-        (*g1e_base_rows, dict(report["active_act_results"][13])),
+        (
+            *g1e_base_rows,
+            dict(report["active_act_results"][13]),
+            dict(report["active_act_results"][14]),
+            dict(report["active_act_results"][15]),
+        ),
         monkeypatch,
     )
     assert row.state == runner.STATUS_FAIL_CLOSED
@@ -4254,7 +4302,7 @@ def test_g2a6_living_gauntlet_v11_preserves_gate1_acts_and_appends_lifecycle_act
     base = runner.collect_living_gauntlet_base_act_results_v01()
     active = report["active_act_results"]
 
-    assert runner.RUNNER_VERSION == "v1.2"
+    assert runner.RUNNER_VERSION == "v1.3"
     assert runner._GATE1_RELEASE_RUNNER_VERSION_V10 == "v1.0"
     assert runner._G2A_RUNNER_VERSION_V11 == "v1.1"
     assert tuple(item["act_id"] for item in base) == runner._GATE1_ACTIVE_ACT_IDS_V10[
@@ -4281,10 +4329,10 @@ def test_g2a6_living_gauntlet_v11_preserves_gate1_acts_and_appends_lifecycle_act
     assert tuple(item["act_id"] for item in active[:14]) == (
         runner._G2A_ACTIVE_ACT_IDS_V11
     )
-    assert report["counters"]["active_act_count"] == 15
-    assert report["counters"]["active_act_pass_count"] == 15
+    assert report["counters"]["active_act_count"] == 16
+    assert report["counters"]["active_act_pass_count"] == 16
     assert report["counters"]["active_act_fail_closed_count"] == 0
-    assert report["counters"]["active_collector_execution_count"] == 15
+    assert report["counters"]["active_collector_execution_count"] == 16
     assert report["counters"]["evidence_only_entry_count"] == 1
     assert report["counters"]["evidence_only_executed_count"] == 0
     assert report["counters"]["planned_act_count"] == 0
@@ -4301,6 +4349,7 @@ def test_g2a6_living_gauntlet_v11_preserves_gate1_acts_and_appends_lifecycle_act
         "planned_acts_not_executed",
         "action_packet_lifecycle_act_pass",
         "drs_semantic_address_reuse_certificate_act_pass",
+        "execution_mode_router_act_pass",
     )
 
 
@@ -4465,14 +4514,15 @@ def test_g2b6_living_gauntlet_v12_preserves_v11_and_appends_g2b_act(
     seam_bytes = SEAM_INDEX_PATH.read_bytes()
     active = report["active_act_results"]
 
-    assert runner.RUNNER_VERSION == "v1.2"
+    assert runner.RUNNER_VERSION == "v1.3"
     assert runner._GATE1_RELEASE_RUNNER_VERSION_V10 == "v1.0"
     assert runner._G2A_RUNNER_VERSION_V11 == "v1.1"
     assert runner._G2A_ACTIVE_ACT_IDS_V11 == (
         *runner._GATE1_ACTIVE_ACT_IDS_V10,
         "action_packet_lifecycle",
     )
-    assert runner._ACTIVE_ACT_IDS == (
+    assert runner._G2B_RUNNER_VERSION_V12 == "v1.2"
+    assert runner._G2B_ACTIVE_ACT_IDS_V12 == (
         *runner._G2A_ACTIVE_ACT_IDS_V11,
         "drs_semantic_address_and_reuse_certificate",
     )
@@ -4504,8 +4554,8 @@ def test_g2b6_living_gauntlet_v12_preserves_v11_and_appends_g2b_act(
     assert hashlib.sha256(seam_bytes).hexdigest() == (
         "c29c2ff873c8b448d8825c3288918e980eab3d65a5114762d2e3fbe5b1206231"
     )
-    assert report["counters"]["active_act_count"] == 15
-    assert report["counters"]["active_act_pass_count"] == 15
+    assert report["counters"]["active_act_count"] == 16
+    assert report["counters"]["active_act_pass_count"] == 16
     assert report["counters"][
         "drs_semantic_address_reuse_certificate_execution_count"
     ] == 1
@@ -4590,3 +4640,159 @@ def test_g2b6_living_gauntlet_g2b_failure_is_fail_closed_and_unknown_effect(
         assert "controlled" not in repr(act)
         assert full["final_status"] == runner.STATUS_FAIL_CLOSED, label
         assert full["counters"]["real_world_effects_count"] == -1, label
+
+
+def test_c6_living_v13_appends_exact_execution_mode_router_act(report):
+    active = report["active_act_results"]
+    assert runner.RUNNER_VERSION == "v1.3"
+    assert runner._G2B_RUNNER_VERSION_V12 == "v1.2"
+    assert runner._ACTIVE_ACT_IDS == (
+        *runner._G2B_ACTIVE_ACT_IDS_V12,
+        "execution_mode_router",
+    )
+    assert tuple(item["act_id"] for item in active) == runner._ACTIVE_ACT_IDS
+    assert tuple(item["act_id"] for item in active[:-1]) == (
+        runner._G2B_ACTIVE_ACT_IDS_V12
+    )
+    assert active[-1] == {
+        "act_id": "execution_mode_router",
+        "errors": (),
+        "executed": True,
+        "no_real_connector_or_action": True,
+        "real_world_effects_count": 0,
+        "root_authority_preserved": True,
+        "runtime_status": runner.STATUS_PASS,
+        "source_module": "demo.run_execution_mode_router_g2_c_v01",
+        "source_symbol": "collect_execution_mode_router_g2_c_v01",
+        "state": runner.STATUS_PASS,
+    }
+    assert report["counters"]["active_act_count"] == 16
+    assert report["counters"]["active_act_pass_count"] == 16
+    assert report["counters"]["active_act_fail_closed_count"] == 0
+    assert report["counters"]["active_collector_execution_count"] == 16
+    assert report["counters"]["execution_mode_router_execution_count"] == 1
+    assert report["counters"]["action_packet_lifecycle_execution_count"] == 1
+    assert report["counters"][
+        "drs_semantic_address_reuse_certificate_execution_count"
+    ] == 1
+    assert report["counters"]["real_world_effects_count"] == 0
+    assert report["invariant_results"][-1] == {
+        "invariant_id": "execution_mode_router_act_pass",
+        "state": runner.STATUS_PASS,
+    }
+
+
+def test_c6_execution_mode_router_act_consumes_validated_c5_proof():
+    result = runner.collect_execution_mode_router_gauntlet_act_v01()
+    report = runner._g2c.collect_execution_mode_router_g2_c_v01()
+    assert runner._g2c.validate_execution_mode_router_g2_c_report_v01(report) == ()
+    assert runner._execution_mode_router_report_passes_living_act_v01(report) is True
+    assert report.report_version == "v0.1"
+    assert report.profile_id == "execution_mode_router_g2c_two_domain_proof_v01"
+    assert report.domain_order == runner._G2C_EXPECTED_DOMAIN_ORDER_V13
+    assert report.case_order == runner._G2C_EXPECTED_CASE_ORDER_V13
+    assert len(report.case_results) == 10
+    assert {item.root_outcome for item in report.case_results} == {
+        "ACCEPT", "NARROW", "REJECT", "BLOCKED", "NEEDS_USER"
+    }
+    assert all(item.operation_steps == runner._g2c.OPERATION_STEPS for item in report.case_results)
+    assert all(len(item.root_support_ids) == len(set(item.root_support_ids)) == 6 for item in report.case_results)
+    assert all(
+        report.case_results[index].transaction_id
+        == report.case_results[index].temporal_query_id
+        for index in (1, 2, 3)
+    )
+    assert result == runner.LivingGauntletActResultV01(
+        act_id="execution_mode_router",
+        errors=(),
+        executed=True,
+        no_real_connector_or_action=True,
+        real_world_effects_count=0,
+        root_authority_preserved=True,
+        runtime_status=runner.STATUS_PASS,
+        source_module="demo.run_execution_mode_router_g2_c_v01",
+        source_symbol="collect_execution_mode_router_g2_c_v01",
+        state=runner.STATUS_PASS,
+    )
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        lambda report: replace(
+            report,
+            case_order=tuple(reversed(report.case_order)),
+        ),
+        lambda report: replace(
+            report,
+            case_results=(
+                replace(report.case_results[0], root_outcome="REJECT"),
+                *report.case_results[1:],
+            ),
+        ),
+        lambda report: replace(
+            report,
+            case_results=(
+                replace(
+                    report.case_results[0],
+                    post_root_transition_reason="g2c_transition_reject_recorded",
+                ),
+                *report.case_results[1:],
+            ),
+        ),
+        lambda report: replace(
+            report,
+            case_results=(
+                replace(
+                    report.case_results[0],
+                    operation_steps=tuple(
+                        reversed(report.case_results[0].operation_steps)
+                    ),
+                ),
+                *report.case_results[1:],
+            ),
+        ),
+        lambda report: replace(report, provider_calls=1),
+    ),
+)
+def test_c6_invalid_c5_report_fails_living_act_closed(
+    mutation,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    baseline = runner._g2c.collect_execution_mode_router_g2_c_v01()
+    forged = mutation(baseline)
+    assert runner._g2c.validate_execution_mode_router_g2_c_report_v01(forged)
+    monkeypatch.setattr(
+        runner._g2c,
+        "collect_execution_mode_router_g2_c_v01",
+        lambda: forged,
+    )
+    result = runner.collect_execution_mode_router_gauntlet_act_v01()
+    assert result.act_id == "execution_mode_router"
+    assert result.errors == ("execution_mode_router_gauntlet_act_failed",)
+    assert result.executed is True
+    assert result.no_real_connector_or_action is False
+    assert result.real_world_effects_count == -1
+    assert result.root_authority_preserved is False
+    assert result.runtime_status == runner.STATUS_FAIL_CLOSED
+    assert result.state == runner.STATUS_FAIL_CLOSED
+    assert "forged" not in repr(result)
+
+
+def test_c6_living_report_and_render_are_repeated_and_zero_operation():
+    first = runner.collect_living_gauntlet_v01()
+    second = runner.collect_living_gauntlet_v01()
+    assert first == second
+    assert runner.render_living_gauntlet_v01(first) == (
+        runner.render_living_gauntlet_v01(second)
+    )
+    assert first["runner_version"] == "v1.3"
+    assert first["final_status"] == runner.STATUS_PASS
+    assert first["validation_errors"] == ()
+    assert first["counters"]["real_world_effects_count"] == 0
+    assert all(
+        item["real_world_effects_count"] == 0
+        and item["root_authority_preserved"] is True
+        and item["no_real_connector_or_action"] is True
+        for item in first["active_act_results"]
+    )

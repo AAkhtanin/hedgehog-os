@@ -21,9 +21,10 @@ del annotations
 
 MODULE_ID = "kernel_conformance_v01"
 SLICE_ID = "domain_neutral_reference_kernel_gate1_g1e"
-CONFORMANCE_VERSION = "v0.3"
+CONFORMANCE_VERSION = "v0.4"
 _GATE1_CONFORMANCE_VERSION_V01 = "v0.1"
 _G2A_CONFORMANCE_VERSION_V02 = "v0.2"
+_G2B_CONFORMANCE_VERSION_V03 = "v0.3"
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
@@ -45,9 +46,13 @@ _G2A_CATEGORY_IDS_V02 = (
     *_GATE1_CATEGORY_IDS_V01,
     "ActionPacketLifecycleConformance",
 )
-CATEGORY_IDS = (
+_G2B_CATEGORY_IDS_V03 = (
     *_G2A_CATEGORY_IDS_V02,
     "DRSSemanticAddressReuseCertificateConformance",
+)
+CATEGORY_IDS = (
+    *_G2B_CATEGORY_IDS_V03,
+    "ExecutionModeRouterConformance",
 )
 DOMAIN_IDS = ("airline", "supplier_water_filter")
 _GATE1_NEGATIVE_PROBE_IDS_V01 = (
@@ -87,9 +92,25 @@ _G2B_NEGATIVE_PROBE_IDS_V03 = (
     "drs_action_reuse_forgery",
     "drs_cross_domain_substitution",
 )
-NEGATIVE_PROBE_IDS = (
+_G2B_NEGATIVE_PROBE_IDS_CUMULATIVE_V03 = (
     *_G2A_NEGATIVE_PROBE_IDS_V02,
     *_G2B_NEGATIVE_PROBE_IDS_V03,
+)
+_G2C_NEGATIVE_PROBE_IDS_V04 = (
+    "execution_mode_report_identity_forgery",
+    "execution_mode_case_order_forgery",
+    "execution_mode_selected_row_forgery",
+    "execution_mode_root_outcome_forgery",
+    "execution_mode_transition_lineage_forgery",
+    "execution_mode_route_eligibility_forgery",
+    "execution_mode_conflict_state_forgery",
+    "execution_mode_cross_domain_substitution",
+    "execution_mode_operation_order_forgery",
+    "execution_mode_zero_operation_forgery",
+)
+NEGATIVE_PROBE_IDS = (
+    *_G2B_NEGATIVE_PROBE_IDS_CUMULATIVE_V03,
+    *_G2C_NEGATIVE_PROBE_IDS_V04,
 )
 
 _GATE1_ACTIVE_GAUNTLET_REFS_V01 = (
@@ -110,9 +131,13 @@ _G2A_ACTIVE_GAUNTLET_REFS_V02 = (
     *_GATE1_ACTIVE_GAUNTLET_REFS_V01,
     "action_packet_lifecycle",
 )
-_ACTIVE_GAUNTLET_REFS = (
+_G2B_ACTIVE_GAUNTLET_REFS_V03 = (
     *_G2A_ACTIVE_GAUNTLET_REFS_V02,
     "drs_semantic_address_and_reuse_certificate",
+)
+_ACTIVE_GAUNTLET_REFS = (
+    *_G2B_ACTIVE_GAUNTLET_REFS_V03,
+    "execution_mode_router",
 )
 _GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01 = (
     (
@@ -233,7 +258,7 @@ _G2A_EXPECTED_CATEGORY_CHECK_IDS_V02 = (
         ),
     ),
 )
-_EXPECTED_CATEGORY_CHECK_IDS = (
+_G2B_EXPECTED_CATEGORY_CHECK_IDS_V03 = (
     *_G2A_EXPECTED_CATEGORY_CHECK_IDS_V02,
     (
         "DRSSemanticAddressReuseCertificateConformance",
@@ -250,6 +275,22 @@ _EXPECTED_CATEGORY_CHECK_IDS = (
             "cross_domain_invariance",
         ),
     ),
+)
+_G2C_EXPECTED_CHECK_IDS_V04 = (
+    "two_domain_ten_case_report",
+    "all_five_root_outcomes",
+    "seventeen_step_order",
+    "source_binding_and_derived_query",
+    "one_abi_profile_and_stage_bundles",
+    "one_transition_profile_and_root_lineage",
+    "route_eligibility_and_direct_bypass",
+    "package_facade_and_import_boundary",
+    "negative_matrix_and_domain_invariance",
+    "zero_operations",
+)
+_EXPECTED_CATEGORY_CHECK_IDS = (
+    *_G2B_EXPECTED_CATEGORY_CHECK_IDS_V03,
+    ("ExecutionModeRouterConformance", _G2C_EXPECTED_CHECK_IDS_V04),
 )
 _EXPECTED_DOMAIN_GEOMETRY = (
     (
@@ -387,7 +428,7 @@ _G2B_REPORT_VALIDATOR_TARGET_V01 = (
     "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01"
 )
 _G2B_REPORT_REJECTION_REASONS_V01 = ("g2b_report_fail_closed",)
-_EXPECTED_NEGATIVE_GEOMETRY = (
+_G2B_EXPECTED_NEGATIVE_GEOMETRY_V03 = (
     *_G2A_EXPECTED_NEGATIVE_GEOMETRY_V02,
     *(
         (
@@ -396,6 +437,33 @@ _EXPECTED_NEGATIVE_GEOMETRY = (
             _G2B_REPORT_REJECTION_REASONS_V01,
         )
         for probe_id in _G2B_NEGATIVE_PROBE_IDS_V03
+    ),
+)
+_G2C_REPORT_VALIDATOR_TARGET_V01 = (
+    "demo.run_execution_mode_router_g2_c_v01."
+    "validate_execution_mode_router_g2_c_report_v01"
+)
+_G2C_EXPECTED_NEGATIVE_REASONS_V04 = (
+    ("g2c5_report_identity_invalid",),
+    ("g2c5_case_order_invalid", "g2c5_report_identity_invalid"),
+    ("g2c5_case_result_invalid", "g2c5_report_identity_invalid"),
+    ("g2c5_case_result_invalid", "g2c5_report_identity_invalid"),
+    ("g2c5_case_result_invalid", "g2c5_report_identity_invalid"),
+    ("g2c5_case_result_invalid", "g2c5_report_identity_invalid"),
+    ("g2c5_case_result_invalid", "g2c5_report_identity_invalid"),
+    ("g2c5_case_result_invalid", "g2c5_report_identity_invalid"),
+    ("g2c5_case_result_invalid", "g2c5_report_identity_invalid"),
+    ("g2c5_zero_operation_invalid", "g2c5_report_identity_invalid"),
+)
+_EXPECTED_NEGATIVE_GEOMETRY = (
+    *_G2B_EXPECTED_NEGATIVE_GEOMETRY_V03,
+    *(
+        (probe_id, _G2C_REPORT_VALIDATOR_TARGET_V01, expected_reasons)
+        for probe_id, expected_reasons in zip(
+            _G2C_NEGATIVE_PROBE_IDS_V04,
+            _G2C_EXPECTED_NEGATIVE_REASONS_V04,
+            strict=True,
+        )
     ),
 )
 _CATEGORY_DOMAIN = "hedgehog.kernel.conformance.category_result.v01"
@@ -927,6 +995,7 @@ def _report_errors(report: object) -> tuple[str, ...]:
         not in (
             _GATE1_CONFORMANCE_VERSION_V01,
             _G2A_CONFORMANCE_VERSION_V02,
+            _G2B_CONFORMANCE_VERSION_V03,
             CONFORMANCE_VERSION,
         )
         or not _valid_commit(report.implementation_commit)
@@ -1006,6 +1075,12 @@ def _require_report_geometry(
         expected_active_refs = _G2A_ACTIVE_GAUNTLET_REFS_V02
         expected_category_geometry = _G2A_EXPECTED_CATEGORY_CHECK_IDS_V02
         expected_negative_geometry = _G2A_EXPECTED_NEGATIVE_GEOMETRY_V02
+    elif conformance_version == _G2B_CONFORMANCE_VERSION_V03:
+        category_ids = _G2B_CATEGORY_IDS_V03
+        negative_probe_ids = _G2B_NEGATIVE_PROBE_IDS_CUMULATIVE_V03
+        expected_active_refs = _G2B_ACTIVE_GAUNTLET_REFS_V03
+        expected_category_geometry = _G2B_EXPECTED_CATEGORY_CHECK_IDS_V03
+        expected_negative_geometry = _G2B_EXPECTED_NEGATIVE_GEOMETRY_V03
     elif conformance_version == CONFORMANCE_VERSION:
         category_ids = CATEGORY_IDS
         negative_probe_ids = NEGATIVE_PROBE_IDS
@@ -1063,6 +1138,16 @@ def _require_report_geometry(
             )
         ):
             raise ValueError
+        if category_id == "ExecutionModeRouterConformance" and (
+            item.evidence_refs
+            != ("runtime:kernel_conformance:ExecutionModeRouterConformance",)
+            or item.limitation_refs
+            != (
+                "limitation_g2c6_deterministic_two_domain_"
+                "execution_mode_router_only",
+            )
+        ):
+            raise ValueError
     for item, expected in zip(domains, _EXPECTED_DOMAIN_GEOMETRY):
         (
             domain_id,
@@ -1099,6 +1184,10 @@ def _require_report_geometry(
             raise ValueError
         if probe_id in _G2B_NEGATIVE_PROBE_IDS_V03 and item.evidence_refs != (
             "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py",
+        ):
+            raise ValueError
+        if probe_id in _G2C_NEGATIVE_PROBE_IDS_V04 and item.evidence_refs != (
+            "demo/run_execution_mode_router_g2_c_v01.py",
         ):
             raise ValueError
     if len({item.result_id for item in categories}) != len(categories):

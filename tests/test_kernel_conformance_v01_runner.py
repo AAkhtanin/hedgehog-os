@@ -35,9 +35,13 @@ G2A_EXPECTED_CATEGORIES = (
     *GATE1_EXPECTED_CATEGORIES,
     "ActionPacketLifecycleConformance",
 )
-EXPECTED_CATEGORIES = (
+G2B_EXPECTED_CATEGORIES = (
     *G2A_EXPECTED_CATEGORIES,
     "DRSSemanticAddressReuseCertificateConformance",
+)
+EXPECTED_CATEGORIES = (
+    *G2B_EXPECTED_CATEGORIES,
+    "ExecutionModeRouterConformance",
 )
 EXPECTED_DOMAINS = ("airline", "supplier_water_filter")
 GATE1_EXPECTED_PROBES = (
@@ -65,7 +69,7 @@ G2A_EXPECTED_PROBES = (
     "action_packet_replay_execution_forgery",
     "action_packet_cross_domain_substitution",
 )
-EXPECTED_PROBES = (
+G2B_EXPECTED_PROBES = (
     *G2A_EXPECTED_PROBES,
     "drs_address_identity_forgery",
     "drs_time_query_forgery",
@@ -78,6 +82,19 @@ EXPECTED_PROBES = (
     "drs_action_reuse_forgery",
     "drs_cross_domain_substitution",
 )
+G2C_EXPECTED_PROBES = (
+    "execution_mode_report_identity_forgery",
+    "execution_mode_case_order_forgery",
+    "execution_mode_selected_row_forgery",
+    "execution_mode_root_outcome_forgery",
+    "execution_mode_transition_lineage_forgery",
+    "execution_mode_route_eligibility_forgery",
+    "execution_mode_conflict_state_forgery",
+    "execution_mode_cross_domain_substitution",
+    "execution_mode_operation_order_forgery",
+    "execution_mode_zero_operation_forgery",
+)
+EXPECTED_PROBES = (*G2B_EXPECTED_PROBES, *G2C_EXPECTED_PROBES)
 GATE1_EXPECTED_ACTIVE_REFS = (
     "airline_deterministic_transaction_runtime",
     "all_layers_invariant_super_smoke",
@@ -96,10 +113,11 @@ G2A_EXPECTED_ACTIVE_REFS = (
     *GATE1_EXPECTED_ACTIVE_REFS,
     "action_packet_lifecycle",
 )
-EXPECTED_ACTIVE_REFS = (
+G2B_EXPECTED_ACTIVE_REFS = (
     *G2A_EXPECTED_ACTIVE_REFS,
     "drs_semantic_address_and_reuse_certificate",
 )
+EXPECTED_ACTIVE_REFS = (*G2B_EXPECTED_ACTIVE_REFS, "execution_mode_router")
 DATACLASS_FIELDS = {
     "ConformanceCountersV01": (
         "category_result_count",
@@ -291,7 +309,14 @@ def _category(category_id: str, passed: bool = True):
                 )
                 if category_id
                 == "DRSSemanticAddressReuseCertificateConformance"
-                else (f"evidence:{category_id}",)
+                else (
+                    (
+                        "runtime:kernel_conformance:"
+                        "ExecutionModeRouterConformance",
+                    )
+                    if category_id == "ExecutionModeRouterConformance"
+                    else (f"evidence:{category_id}",)
+                )
             )
         ),
         limitation_refs=(
@@ -306,7 +331,14 @@ def _category(category_id: str, passed: bool = True):
                 )
                 if category_id
                 == "DRSSemanticAddressReuseCertificateConformance"
-                else (f"limitation:{category_id}",)
+                else (
+                    (
+                        "limitation_g2c6_deterministic_two_domain_"
+                        "execution_mode_router_only",
+                    )
+                    if category_id == "ExecutionModeRouterConformance"
+                    else (f"limitation:{category_id}",)
+                )
             )
         ),
     )
@@ -346,12 +378,18 @@ def _negative(probe_id: str, *, blocked: bool = True, observed: bool = True):
         observed_reason_codes=expected_reasons if observed else (),
         blocked=blocked,
         evidence_refs=(
-            ("demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py",)
-            if probe_id in EXPECTED_PROBES[len(G2A_EXPECTED_PROBES) :]
+            ("demo/run_execution_mode_router_g2_c_v01.py",)
+            if probe_id in G2C_EXPECTED_PROBES
             else (
-                ("demo/run_action_commit_packet_lifecycle_g2_a_v01.py",)
-                if probe_id not in GATE1_EXPECTED_PROBES
-                else (f"evidence:{probe_id}",)
+                (
+                    "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py",
+                )
+                if probe_id in G2B_EXPECTED_PROBES[len(G2A_EXPECTED_PROBES) :]
+                else (
+                    ("demo/run_action_commit_packet_lifecycle_g2_a_v01.py",)
+                    if probe_id not in GATE1_EXPECTED_PROBES
+                    else (f"evidence:{probe_id}",)
+                )
             )
         ),
         real_world_effects_count=0,
@@ -467,7 +505,7 @@ def test_future_annotations_binding_is_absent():
     (
         ("MODULE_ID", "kernel_conformance_v01"),
         ("SLICE_ID", "domain_neutral_reference_kernel_gate1_g1e"),
-        ("CONFORMANCE_VERSION", "v0.2"),
+        ("CONFORMANCE_VERSION", "v0.4"),
         ("STATUS_PASS", "PASS"),
         ("STATUS_FAIL_CLOSED", "FAIL_CLOSED"),
         ("CONFORMANCE_STATUSES", ("PASS", "FAIL_CLOSED")),
@@ -637,11 +675,11 @@ def test_report_pass_geometry_and_counters_are_derived():
         len(report.category_results),
         len(report.domain_results),
         len(report.negative_test_results),
-    ) == (11, 2, 20)
-    assert report.counters.category_pass_count == 11
+    ) == (13, 2, 40)
+    assert report.counters.category_pass_count == 13
     assert report.counters.domain_pass_count == 2
-    assert report.counters.negative_pass_count == 20
-    assert report.counters.active_gauntlet_ref_count == 13
+    assert report.counters.negative_pass_count == 40
+    assert report.counters.active_gauntlet_ref_count == 15
 
 
 def test_final_report_rejects_arbitrary_synthetic_check_geometry_after_rehash():
@@ -918,12 +956,12 @@ def test_canonical_report_validates_and_projects(standalone_report):
         standalone_report
     )
     assert projection["final_status"] == conformance.STATUS_PASS
-    assert len(projection["category_results"]) == 11
+    assert len(projection["category_results"]) == 13
     assert len(projection["domain_results"]) == 2
-    assert len(projection["negative_test_results"]) == 20
+    assert len(projection["negative_test_results"]) == 40
 
 
-@pytest.mark.parametrize("index", range(11))
+@pytest.mark.parametrize("index", range(13))
 def test_canonical_category_check_geometry_is_exact(standalone_report, index):
     category_id, required = conformance._EXPECTED_CATEGORY_CHECK_IDS[index]
     result = standalone_report.category_results[index]
@@ -945,7 +983,7 @@ def test_canonical_domain_binding_geometry_is_exact(standalone_report, index):
     ) == expected
 
 
-@pytest.mark.parametrize("index", range(20))
+@pytest.mark.parametrize("index", range(40))
 def test_canonical_negative_geometry_is_exact(standalone_report, index):
     probe_id, target, expected_reasons = conformance._EXPECTED_NEGATIVE_GEOMETRY[
         index
@@ -1062,7 +1100,27 @@ def test_runner_living_import_is_function_local():
         if isinstance(node, (ast.Import, ast.ImportFrom))
     ]
     assert not any(
-        isinstance(node, ast.ImportFrom) and node.module == "demo" for node in module_imports
+        (
+            isinstance(node, ast.ImportFrom)
+            and (
+                node.module == "demo.run_living_gauntlet_v01"
+                or (
+                    node.module == "demo"
+                    and any(
+                        alias.name == "run_living_gauntlet_v01"
+                        for alias in node.names
+                    )
+                )
+            )
+        )
+        or (
+            isinstance(node, ast.Import)
+            and any(
+                alias.name == "demo.run_living_gauntlet_v01"
+                for alias in node.names
+            )
+        )
+        for node in module_imports
     )
     standalone = next(
         node
@@ -1120,7 +1178,7 @@ def test_runner_does_not_call_supplier_source_collector():
 
 def test_render_contains_only_summary_geometry(standalone_report):
     rendered = runner.render_kernel_conformance_v01(standalone_report)
-    assert "kernel_conformance_v01 v0.2" in rendered
+    assert "kernel_conformance_v01 v0.3" in rendered
     assert "final_status=PASS" in rendered
     for forbidden in ("manifest_hash=", "adapter_id=", "artifact_id=", "invoice", "shipment_sh"):
         assert forbidden not in rendered.lower()
@@ -1149,7 +1207,7 @@ def test_g2a6_conformance_v02_preserves_v01_geometry_and_adds_lifecycle_category
         len(historical_v02.active_gauntlet_refs),
     ) == ("v0.2", 11, 2, 20, 13)
     unknown = conformance._replace_report_id(
-        replace(standalone_report, conformance_version="v0.4")
+        replace(standalone_report, conformance_version="v0.5")
     )
     mixed_v01 = conformance._replace_report_id(
         replace(historical_v02, conformance_version="v0.1")
@@ -1395,9 +1453,9 @@ def test_g2a6_conformance_and_living_gauntlet_are_deterministic_and_zero_effect(
         first_conformance.counters.category_pass_count,
         first_conformance.counters.domain_pass_count,
         first_conformance.counters.negative_pass_count,
-    ) == (12, 2, 30)
+    ) == (13, 2, 40)
     assert first_living["final_status"] == living.STATUS_PASS
-    assert first_living["counters"]["active_act_pass_count"] == 15
+    assert first_living["counters"]["active_act_pass_count"] == 16
     assert (
         first_conformance.counters.provider_call_count,
         first_conformance.counters.network_call_count,
@@ -1480,6 +1538,33 @@ def _historical_v02_report(current):
     return conformance._replace_report_id(provisional)
 
 
+def _historical_v03_report(current):
+    categories = current.category_results[:12]
+    negatives = current.negative_test_results[:30]
+    active_refs = current.active_gauntlet_refs[:14]
+    evidence_refs = current.evidence_refs
+    provisional = conformance.KernelConformanceReportV01(
+        report_id="0" * 64,
+        conformance_version="v0.3",
+        implementation_commit=current.implementation_commit,
+        category_results=categories,
+        domain_results=current.domain_results,
+        negative_test_results=negatives,
+        active_gauntlet_refs=active_refs,
+        evidence_refs=evidence_refs,
+        limitations=current.limitations,
+        counters=conformance._derive_counters(
+            categories,
+            current.domain_results,
+            negatives,
+            active_refs,
+            evidence_refs,
+        ),
+        final_status=conformance.STATUS_PASS,
+    )
+    return conformance._replace_report_id(provisional)
+
+
 def _reversion(report, version):
     return conformance._replace_report_id(
         replace(report, conformance_version=version)
@@ -1491,6 +1576,7 @@ def test_g2b6_conformance_v03_preserves_v02_geometry(
 ):
     historical_v01 = _historical_v01_report()
     historical_v02 = _historical_v02_report(standalone_report)
+    historical_v03 = _historical_v03_report(standalone_report)
     assert conformance.validate_kernel_conformance_report_v01(
         historical_v01
     ) == ()
@@ -1498,7 +1584,7 @@ def test_g2b6_conformance_v03_preserves_v02_geometry(
         historical_v02
     ) == ()
     assert conformance.validate_kernel_conformance_report_v01(
-        standalone_report
+        historical_v03
     ) == ()
     assert (
         len(historical_v01.category_results),
@@ -1513,29 +1599,29 @@ def test_g2b6_conformance_v03_preserves_v02_geometry(
         len(historical_v02.active_gauntlet_refs),
     ) == (11, 2, 20, 13)
     assert (
-        standalone_report.conformance_version,
-        len(standalone_report.category_results),
-        len(standalone_report.domain_results),
-        len(standalone_report.negative_test_results),
-        len(standalone_report.active_gauntlet_refs),
+        historical_v03.conformance_version,
+        len(historical_v03.category_results),
+        len(historical_v03.domain_results),
+        len(historical_v03.negative_test_results),
+        len(historical_v03.active_gauntlet_refs),
     ) == ("v0.3", 12, 2, 30, 14)
-    assert standalone_report.category_results[:11] == (
+    assert historical_v03.category_results[:11] == (
         historical_v02.category_results
     )
-    assert standalone_report.negative_test_results[:20] == (
+    assert historical_v03.negative_test_results[:20] == (
         historical_v02.negative_test_results
     )
-    assert standalone_report.active_gauntlet_refs[:13] == (
+    assert historical_v03.active_gauntlet_refs[:13] == (
         historical_v02.active_gauntlet_refs
     )
     mixed = (
         _reversion(historical_v02, "v0.1"),
-        _reversion(standalone_report, "v0.1"),
+        _reversion(historical_v03, "v0.1"),
         _reversion(historical_v01, "v0.2"),
-        _reversion(standalone_report, "v0.2"),
+        _reversion(historical_v03, "v0.2"),
         _reversion(historical_v01, "v0.3"),
         _reversion(historical_v02, "v0.3"),
-        _reversion(standalone_report, "v0.4"),
+        _reversion(historical_v03, "v0.4"),
     )
     for forged in mixed:
         assert conformance.validate_kernel_conformance_report_v01(forged)
@@ -1574,15 +1660,17 @@ def test_g2b6_drs_semantic_address_reuse_certificate_category_is_exact(
     forged_report = conformance._replace_report_id(
         replace(
             standalone_report,
-            category_results=(
-                *standalone_report.category_results[:11],
-                failed,
-            ),
-            counters=conformance._derive_counters(
-                (
+                category_results=(
                     *standalone_report.category_results[:11],
                     failed,
+                    *standalone_report.category_results[12:],
                 ),
+                counters=conformance._derive_counters(
+                    (
+                        *standalone_report.category_results[:11],
+                        failed,
+                        *standalone_report.category_results[12:],
+                    ),
                 standalone_report.domain_results,
                 standalone_report.negative_test_results,
                 standalone_report.active_gauntlet_refs,
@@ -1722,7 +1810,7 @@ def test_g2b6_conformance_and_gauntlet_are_deterministic_and_zero_effect():
         first_conformance.counters.domain_pass_count,
         first_conformance.counters.negative_pass_count,
         first_conformance.counters.active_gauntlet_ref_count,
-    ) == (12, 2, 30, 14)
+    ) == (13, 2, 40, 15)
     assert (
         first_conformance.counters.provider_call_count,
         first_conformance.counters.network_call_count,
@@ -1732,3 +1820,184 @@ def test_g2b6_conformance_and_gauntlet_are_deterministic_and_zero_effect():
         first_conformance.counters.real_world_effects_count,
         first_living["counters"]["real_world_effects_count"],
     ) == (0, 0, 0, 0, 0, 0, 0)
+
+
+G2C_EXPECTED_CHECKS = (
+    "two_domain_ten_case_report",
+    "all_five_root_outcomes",
+    "seventeen_step_order",
+    "source_binding_and_derived_query",
+    "one_abi_profile_and_stage_bundles",
+    "one_transition_profile_and_root_lineage",
+    "route_eligibility_and_direct_bypass",
+    "package_facade_and_import_boundary",
+    "negative_matrix_and_domain_invariance",
+    "zero_operations",
+)
+
+
+def _c6_active_rows():
+    return tuple(
+        {
+            "act_id": act_id,
+            "errors": (),
+            "executed": True,
+            "no_real_connector_or_action": True,
+            "real_world_effects_count": 0,
+            "root_authority_preserved": True,
+            "runtime_status": conformance.STATUS_PASS,
+            "source_module": runner._ACT_SOURCES[act_id][0],
+            "source_symbol": runner._ACT_SOURCES[act_id][1],
+            "state": conformance.STATUS_PASS,
+        }
+        for act_id in runner._BASE_ACT_IDS
+    )
+
+
+def test_c6_conformance_v04_preserves_v03_and_appends_exact_geometry(
+    standalone_report,
+):
+    historical_v03 = _historical_v03_report(standalone_report)
+    assert conformance.CONFORMANCE_VERSION == "v0.4"
+    assert conformance._G2B_CONFORMANCE_VERSION_V03 == "v0.3"
+    assert runner.RUNNER_VERSION == "v0.3"
+    assert conformance.validate_kernel_conformance_report_v01(
+        historical_v03
+    ) == ()
+    assert conformance.validate_kernel_conformance_report_v01(
+        standalone_report
+    ) == ()
+    assert standalone_report.conformance_version == "v0.4"
+    assert standalone_report.category_results[:12] == historical_v03.category_results
+    assert standalone_report.negative_test_results[:30] == (
+        historical_v03.negative_test_results
+    )
+    assert standalone_report.active_gauntlet_refs[:14] == (
+        historical_v03.active_gauntlet_refs
+    )
+    assert tuple(item.category_id for item in standalone_report.category_results) == (
+        *G2B_EXPECTED_CATEGORIES,
+        "ExecutionModeRouterConformance",
+    )
+    assert tuple(item.probe_id for item in standalone_report.negative_test_results) == (
+        *G2B_EXPECTED_PROBES,
+        *G2C_EXPECTED_PROBES,
+    )
+    assert standalone_report.active_gauntlet_refs == (
+        *G2B_EXPECTED_ACTIVE_REFS,
+        "execution_mode_router",
+    )
+    counters = standalone_report.counters
+    assert (
+        counters.category_result_count,
+        counters.category_pass_count,
+        counters.domain_result_count,
+        counters.domain_pass_count,
+        counters.negative_result_count,
+        counters.negative_pass_count,
+        counters.active_gauntlet_ref_count,
+    ) == (13, 13, 2, 2, 40, 40, 15)
+
+
+def test_c6_execution_mode_router_category_and_c5_profile_are_exact(
+    standalone_report,
+):
+    category = standalone_report.category_results[-1]
+    assert category.category_id == "ExecutionModeRouterConformance"
+    assert category.required_check_ids == G2C_EXPECTED_CHECKS
+    assert category.passed_check_ids == G2C_EXPECTED_CHECKS
+    assert category.failed_check_ids == ()
+    assert category.evidence_refs == (
+        "runtime:kernel_conformance:ExecutionModeRouterConformance",
+    )
+    assert category.limitation_refs == (
+        "limitation_g2c6_deterministic_two_domain_execution_mode_router_only",
+    )
+    assert category.status == conformance.STATUS_PASS
+    assert category.real_world_effects_count == 0
+    assert category.result_id == conformance._category_id(category)
+    report = runner._g2c.collect_execution_mode_router_g2_c_v01()
+    assert runner._g2c.validate_execution_mode_router_g2_c_report_v01(report) == ()
+    assert report.domain_order == (
+        "TRAVEL_POLICY_INFORMATION",
+        "WAREHOUSE_MAINTENANCE_INFORMATION",
+    )
+    assert len(report.case_results) == 10
+    assert {item.root_outcome for item in report.case_results} == {
+        "ACCEPT", "NARROW", "REJECT", "BLOCKED", "NEEDS_USER"
+    }
+    assert all(item.operation_steps == runner._g2c.OPERATION_STEPS for item in report.case_results)
+    assert all(
+        report.case_results[index].transaction_id
+        == report.case_results[index].temporal_query_id
+        for index in (1, 2, 3)
+    )
+    assert runner._g2c_package_facade_passes_v01() is True
+
+
+def test_c6_exact_ten_negative_observations_and_reason_tuples():
+    report = runner._g2c.collect_execution_mode_router_g2_c_v01()
+    mutations = runner._g2c_negative_mutations_v01(report)
+    observations = runner._collect_g2c_negative_observations_v01(report)
+    assert tuple(item[0] for item in mutations) == G2C_EXPECTED_PROBES
+    assert tuple(item[0] for item in observations) == G2C_EXPECTED_PROBES
+    assert len(mutations) == len(observations) == 10
+    for observation, expected_reasons in zip(
+        observations,
+        conformance._G2C_EXPECTED_NEGATIVE_REASONS_V04,
+        strict=True,
+    ):
+        probe_id, target, expected, observed, blocked, evidence = observation
+        assert probe_id in G2C_EXPECTED_PROBES
+        assert target == (
+            "demo.run_execution_mode_router_g2_c_v01."
+            "validate_execution_mode_router_g2_c_report_v01"
+        )
+        assert expected == observed == expected_reasons
+        assert blocked is True
+        assert evidence == "demo/run_execution_mode_router_g2_c_v01.py"
+    results = runner._build_g2c_negative_results_v01(observations)
+    assert len({item.result_id for item in results}) == 10
+    assert all(item.status == conformance.STATUS_PASS for item in results)
+    assert all(item.real_world_effects_count == 0 for item in results)
+
+
+def test_c6_active_act_validation_rejects_missing_invalid_and_substituted_source():
+    rows = _c6_active_rows()
+    assert runner._validate_active_act_results(rows) == rows
+    with pytest.raises(ValueError, match="^active_gauntlet_results_invalid$"):
+        runner._validate_active_act_results(rows[:-1])
+    failed = dict(rows[-1], state=conformance.STATUS_FAIL_CLOSED)
+    with pytest.raises(ValueError, match="^active_gauntlet_results_invalid$"):
+        runner._validate_active_act_results((*rows[:-1], failed))
+    substituted = dict(rows[-1], source_symbol="collect_foreign_g2c")
+    with pytest.raises(ValueError, match="^active_gauntlet_results_invalid$"):
+        runner._validate_active_act_results((*rows[:-1], substituted))
+
+
+def test_c6_conformance_report_and_render_are_repeated_and_zero_operation(
+    standalone_report,
+):
+    second = runner.collect_standalone_kernel_conformance_v01(
+        implementation_commit="abcdef0"
+    )
+    assert standalone_report == second
+    assert conformance.kernel_conformance_report_to_plain_dict_v01(
+        standalone_report
+    ) == conformance.kernel_conformance_report_to_plain_dict_v01(second)
+    assert runner.render_kernel_conformance_v01(standalone_report) == (
+        runner.render_kernel_conformance_v01(second)
+    )
+    counters = standalone_report.counters
+    assert (
+        counters.provider_call_count,
+        counters.network_call_count,
+        counters.gemini_call_count,
+        counters.created_authority_count,
+        counters.created_permission_count,
+        counters.real_world_effects_count,
+    ) == (0, 0, 0, 0, 0, 0)
+    assert standalone_report.domain_results == second.domain_results
+    assert tuple(item.domain_id for item in standalone_report.domain_results) == (
+        "airline", "supplier_water_filter"
+    )

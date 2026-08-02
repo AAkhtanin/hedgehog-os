@@ -346,6 +346,14 @@ C2_FUNCTIONS = (
     "validate_execution_mode_router_input_against_sources_v01",
 )
 
+C3_FUNCTIONS = (
+    "evaluate_execution_mode_feasibility_v01",
+    "select_execution_mode_v01",
+    "build_execution_mode_proposal_v01",
+    "route_execution_mode_v01",
+    "validate_execution_mode_proposal_against_sources_v01",
+)
+
 PUBLIC_FUNCTIONS = (
     "build_execution_mode_source_context_v01",
     "validate_execution_mode_source_context_v01",
@@ -423,8 +431,10 @@ PUBLIC_FUNCTIONS = (
     "rebuild_execution_mode_validation_report_identity_v01",
 )
 
-IMPLEMENTED_FUNCTIONS_AFTER_C2 = tuple(
-    name for name in PUBLIC_FUNCTIONS if name in set(C1_FUNCTIONS + C2_FUNCTIONS)
+IMPLEMENTED_FUNCTIONS_AFTER_C3 = tuple(
+    name
+    for name in PUBLIC_FUNCTIONS
+    if name in set(C1_FUNCTIONS + C2_FUNCTIONS + C3_FUNCTIONS)
 )
 
 PUBLIC_REASONS = (
@@ -569,6 +579,14 @@ C2_SIGNATURES = {
     "build_execution_mode_g2b_not_applicable_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str') -> 'ExecutionModeG2BBindingV01'",
     "build_execution_mode_g2b_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str', source_context: 'ExecutionModeSourceContextV01') -> 'ExecutionModeG2BBindingV01'",
     "validate_execution_mode_router_input_against_sources_v01": "(*, router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01') -> 'ExecutionModeValidationReportV01'",
+}
+
+C3_SIGNATURES = {
+    "evaluate_execution_mode_feasibility_v01": "(*, router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01') -> 'tuple[ExecutionModeFeasibilityRowV01, ...]'",
+    "select_execution_mode_v01": "(*, router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', ordered_rows: 'tuple[ExecutionModeFeasibilityRowV01, ...]') -> 'ExecutionModeFeasibilityRowV01'",
+    "build_execution_mode_proposal_v01": "(*, router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01', ordered_rows: 'tuple[ExecutionModeFeasibilityRowV01, ...]', selected_row: 'ExecutionModeFeasibilityRowV01') -> 'ExecutionModeProposalV01'",
+    "route_execution_mode_v01": "(*, router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01') -> 'tuple[ExecutionModeProposalV01 | None, ExecutionModeValidationReportV01]'",
+    "validate_execution_mode_proposal_against_sources_v01": "(*, proposal: 'ExecutionModeProposalV01', router_input: 'ExecutionModeRouterInputV01', source_context: 'ExecutionModeSourceContextV01') -> 'ExecutionModeValidationReportV01'",
 }
 
 TYPE_HINT_LABELS = {
@@ -809,16 +827,40 @@ def _serialized_fixtures() -> tuple[object, ...]:
     for index, mode in enumerate(router.EXECUTABLE_EXECUTION_MODES_V01):
         profile = snapshot.mode_profiles[index]
         feasible = index == 0
-        required = (bsep.bsep_binding_id, snapshot.local_routing_snapshot_id,
-                    profile.local_mode_profile_id)
+        required_values = [
+            bsep.bsep_binding_id,
+            snapshot.local_routing_snapshot_id,
+            profile.local_mode_profile_id,
+        ]
+        if mode in {
+            "deterministic", "memory_informed", "local_slm", "cloud_llm",
+            "full_semantic", "full_fractal",
+        }:
+            required_values.append(profile.capability_id)
+            missing = ("g2c_capability_unavailable",)
+            negative = ("g2c_capability_unavailable",)
+        else:
+            required_values.append(
+                replay.replay_binding_id
+                if mode == "sealed_replay"
+                else g2b.g2b_binding_id
+            )
+            missing = ("g2c_required_evidence_missing",)
+            negative = ("g2c_required_evidence_missing",)
+        required = tuple(required_values)
         row = router.ExecutionModeFeasibilityRowV01(
             "emrow_v01:" + ZERO_HASH, router_input.router_input_id, REQUEST_ID,
             TRANSACTION_ID, ROOT_ID, DOMAIN_ID, mode, "EXECUTABLE", ranks[mode],
             "FEASIBLE" if feasible else "INFEASIBLE", profile.local_mode_profile_id,
-            required, required if feasible else required[:2],
-            () if feasible else ("g2c_capability_unavailable",),
-            (positive[index],) if feasible else ("g2c_capability_unavailable",),
-            profile.capability_id, profile.cost_units, computes[index], True, False,
+            required, required if feasible else required[:3],
+            () if feasible else missing,
+            (positive[index],) if feasible else negative,
+            (
+                profile.capability_id
+                if mode not in {"sealed_replay", "direct_informational_reuse"}
+                else None
+            ),
+            profile.cost_units, computes[index], True, False,
             False, 0,
         )
         rows.append(_with_identity(row, "feasibility_row_id", router.rebuild_execution_mode_feasibility_row_identity_v01))
@@ -827,7 +869,8 @@ def _serialized_fixtures() -> tuple[object, ...]:
             "emrow_v01:" + ZERO_HASH, router_input.router_input_id, REQUEST_ID,
             TRANSACTION_ID, ROOT_ID, DOMAIN_ID, mode, "TERMINAL", None,
             "TERMINAL_NOT_SELECTED", None, (bsep.bsep_binding_id,
-            snapshot.local_routing_snapshot_id), (), (), (), None, None,
+            snapshot.local_routing_snapshot_id), (bsep.bsep_binding_id,
+            snapshot.local_routing_snapshot_id), (), (), None, None,
             "TERMINAL", True, False, False, 0,
         )
         rows.append(_with_identity(row, "feasibility_row_id", router.rebuild_execution_mode_feasibility_row_identity_v01))
@@ -1266,6 +1309,12 @@ def _c2_snapshot(
     created_by: str = "runtime:g2c:c2:snapshot",
     action_class: str = "NON_ACTION",
     action_packet_relation: str = "NOT_APPLICABLE",
+    request_class: str = "BOUNDED_REVIEW",
+    scope_class: str = "BOUNDED",
+    risk_class: str = "LOW",
+    required_user_input_state: str = "COMPLETE",
+    hard_block_state: str = "CLEAR",
+    profile_overrides: dict[str, dict[str, object]] | None = None,
 ) -> router.ExecutionModeLocalRoutingSnapshotV01:
     def utc(value: int) -> str:
         return datetime.fromtimestamp(value, timezone.utc).strftime(
@@ -1273,11 +1322,22 @@ def _c2_snapshot(
         )
 
     profiles = []
+    profile_overrides = {} if profile_overrides is None else profile_overrides
     for index, mode in enumerate(router.EXECUTABLE_EXECUTION_MODES_V01):
         not_required = mode in (
             "sealed_replay",
             "direct_informational_reuse",
         )
+        values = {
+            "policy_allowed": True,
+            "scope_allowed": True,
+            "risk_allowed": True,
+            "privacy_allowed": True,
+            "capability_state": "NOT_REQUIRED" if not_required else "AVAILABLE",
+            "capability_id": None if not_required else f"capability:g2c:c2:{mode}",
+            "cost_units": index + 1,
+        }
+        values.update(profile_overrides.get(mode, {}))
         profiles.append(
             router.build_execution_mode_local_mode_profile_v01(
                 request_id=request_id,
@@ -1288,13 +1348,13 @@ def _c2_snapshot(
                 policy_snapshot_id="policy:g2c:c2",
                 capability_snapshot_id="capability:g2c:c2",
                 cost_model_id="cost:g2c:c2",
-                policy_allowed=True,
-                scope_allowed=True,
-                risk_allowed=True,
-                privacy_allowed=True,
-                capability_state=("NOT_REQUIRED" if not_required else "AVAILABLE"),
-                capability_id=(None if not_required else f"capability:g2c:c2:{mode}"),
-                cost_units=index + 1,
+                policy_allowed=values["policy_allowed"],
+                scope_allowed=values["scope_allowed"],
+                risk_allowed=values["risk_allowed"],
+                privacy_allowed=values["privacy_allowed"],
+                capability_state=values["capability_state"],
+                capability_id=values["capability_id"],
+                cost_units=values["cost_units"],
             )
         )
     return router.build_execution_mode_local_routing_snapshot_v01(
@@ -1302,18 +1362,18 @@ def _c2_snapshot(
         transaction_id=transaction_id,
         owning_root_id=owning_root_id,
         domain_id=domain_id,
-        request_class="BOUNDED_REVIEW",
+        request_class=request_class,
         action_class=action_class,
         action_packet_relation=action_packet_relation,
-        scope_class="BOUNDED",
+        scope_class=scope_class,
         scope_ref="scope:g2c:c2",
         permitted_narrower_scope_refs=(),
-        risk_class="LOW",
+        risk_class=risk_class,
         policy_snapshot_id="policy:g2c:c2",
         capability_snapshot_id="capability:g2c:c2",
         cost_model_id="cost:g2c:c2",
-        required_user_input_state="COMPLETE",
-        hard_block_state="CLEAR",
+        required_user_input_state=required_user_input_state,
+        hard_block_state=hard_block_state,
         evaluation_time_epoch_seconds=evaluation_time,
         pt_created_at_utc=utc(evaluation_time - 100),
         et_observed_at_utc=utc(evaluation_time),
@@ -1796,7 +1856,7 @@ def test_exact_type_geometry_and_frozen_dataclasses():
         assert tuple(hints[item.name] for item in fields(cls)) == expected
 
 
-def test_exact_public_registries_and_c2_staging():
+def test_exact_public_registries_and_c3_staging():
     assert router.PUBLIC_G2C_FUNCTIONS_V01 == PUBLIC_FUNCTIONS
     assert len(router.PUBLIC_G2C_FUNCTIONS_V01) == 74
     assert len(set(router.PUBLIC_G2C_FUNCTIONS_V01)) == 74
@@ -1816,10 +1876,10 @@ def test_exact_public_registries_and_c2_staging():
     assert router.G2C_IDENTITY_PROFILES_V01 == IDENTITY_PROFILES
     actual = tuple(name for name in router.PUBLIC_G2C_FUNCTIONS_V01
                    if callable(getattr(router, name, None)))
-    assert actual == IMPLEMENTED_FUNCTIONS_AFTER_C2
-    assert len(actual) == 50
+    assert actual == IMPLEMENTED_FUNCTIONS_AFTER_C3
+    assert len(actual) == 55
     assert all(not hasattr(router, name) for name in router.PUBLIC_G2C_FUNCTIONS_V01
-               if name not in IMPLEMENTED_FUNCTIONS_AFTER_C2)
+               if name not in IMPLEMENTED_FUNCTIONS_AFTER_C3)
 
 
 def test_bsep_family_digest_recomputed_and_wrong_well_formed_digest_rejected():
@@ -1862,16 +1922,19 @@ def test_c1_signatures_are_keyword_bounded_and_derived_fields_are_absent():
         assert str(inspect.signature(getattr(router, name))) == expected
 
 
-def test_exact_c2_signatures_and_future_surface_absence():
+def test_exact_c2_and_c3_signatures_and_future_surface_absence():
     assert tuple(C2_SIGNATURES) == C2_FUNCTIONS
     for name, expected in C2_SIGNATURES.items():
         assert str(inspect.signature(getattr(router, name))) == expected
     future = tuple(
         name
         for name in router.PUBLIC_G2C_FUNCTIONS_V01
-        if name not in IMPLEMENTED_FUNCTIONS_AFTER_C2
+        if name not in IMPLEMENTED_FUNCTIONS_AFTER_C3
     )
-    assert len(future) == 24
+    assert tuple(C3_SIGNATURES) == C3_FUNCTIONS
+    for name, expected in C3_SIGNATURES.items():
+        assert str(inspect.signature(getattr(router, name))) == expected
+    assert len(future) == 19
     assert all(not hasattr(router, name) for name in future)
     source = MODULE_PATH.read_text(encoding="utf-8")
     assert "NotImplemented" not in source
@@ -2330,7 +2393,7 @@ def test_import_and_zero_operation_boundary_is_static_and_package_facade_absent(
     assert not banned_calls.intersection(calls)
     for path in (ABI_PATH, TRANSITION_PATH, ROOT_DECISION_PATH):
         assert "execution_mode_router_v01" not in path.read_text(encoding="utf-8")
-    for name in TYPE_NAMES + IMPLEMENTED_FUNCTIONS_AFTER_C2:
+    for name in TYPE_NAMES + IMPLEMENTED_FUNCTIONS_AFTER_C3:
         assert not hasattr(kernel, name)
     assert tuple(kernel.__all__) == (
         "CanonicalArtifactRefV01", "ArtifactDependencyEdgeV01",
@@ -2910,6 +2973,312 @@ def _c2_contextual_case(
     return value, context
 
 
+def _c3_positive_g2a_family(
+    *,
+    evaluation_time_source: str,
+    evaluation_context_id: str,
+) -> tuple[object, int, str, str]:
+    from types import SimpleNamespace
+    import test_action_commit_packet_lifecycle_g2_a_v01 as source_g2a
+
+    fixture = source_g2a._g2a4a_fixture_value()
+    canonical = fixture.root_bound.canonical_projection
+    evaluation_time = canonical.temporal_authority.expires_at_utc - 1
+    observations = source_g2a._g2a4b_observations_for_context(
+        fixture.observations,
+        evaluation_context_id,
+    )
+    profile = transition_registry.build_action_packet_transition_registry_profile_v01()
+    inspection = action_packet.inspect_action_packet_present_eligibility_v01(
+        fixture.registry,
+        packet_id=fixture.root_bound.packet_identity.packet_id,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        current_dependency_observations=observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+        evaluation_time=evaluation_time,
+        evaluation_time_source=evaluation_time_source,
+        evaluation_context_id=evaluation_context_id,
+        action_packet_transition_registry_profile=profile,
+    )
+    assert inspection.present_eligibility_status == (
+        "ELIGIBLE_FOR_BOUNDED_MOCK_ATTEMPT"
+    )
+    assert inspection.present_executable is True
+    return (
+        SimpleNamespace(
+            inspection=inspection,
+            registry=fixture.registry,
+            root_bound=fixture.root_bound,
+            corridor=fixture.corridor,
+            corridor_step=fixture.corridor_step,
+            observations=observations,
+            logical_time_bridge=fixture.logical_time_bridge,
+        ),
+        evaluation_time,
+        canonical.transaction_id,
+        canonical.owning_local_root_id,
+    )
+
+
+def _c3_contextual_case(
+    *,
+    selected_mode: str = "deterministic",
+    source_kind: str = "absent",
+    action_class: str = "NON_ACTION",
+    action_packet_relation: str = "NOT_APPLICABLE",
+    required_user_input_state: str = "COMPLETE",
+    hard_block_state: str = "CLEAR",
+    request_class: str = "BOUNDED_REVIEW",
+    scope_class: str = "BOUNDED",
+    risk_class: str = "LOW",
+    profile_overrides: dict[str, dict[str, object]] | None = None,
+) -> tuple[router.ExecutionModeRouterInputV01, router.ExecutionModeSourceContextV01]:
+    request_id = f"request:g2c:c3:{selected_mode}:{source_kind}"
+    transaction_id = f"transaction:g2c:c3:{selected_mode}:{source_kind}"
+    owning_root_id = "root:g2c:c3"
+    domain_id = "G2C_C3_TEST_DOMAIN"
+    evaluation_time = 200
+    replay_family = None
+    g2b_family = None
+    if source_kind in {"g2b_context", "g2b_direct"}:
+        g2b_family = (
+            _c2_g2b_context_family()
+            if source_kind == "g2b_context"
+            else _c2_g2b_direct_family()
+        )
+        query = g2b_family["report"].query
+        transaction_id = query.query_id
+        owning_root_id = query.owning_local_root_id
+        domain_id = query.domain
+        evaluation_time = query.evaluation_time
+    overrides = {
+        mode: {"policy_allowed": False}
+        for mode in router.EXECUTABLE_EXECUTION_MODES_V01[
+            : router.EXECUTABLE_EXECUTION_MODES_V01.index(selected_mode)
+        ]
+    }
+    if profile_overrides:
+        for mode, values in profile_overrides.items():
+            overrides.setdefault(mode, {}).update(values)
+    g2a_family = None
+    if source_kind in {
+        "g2a_positive",
+        "g2a_non_executable",
+        "replay_g2a_non_executable",
+    }:
+        import test_action_commit_packet_lifecycle_g2_a_v01 as source_g2a
+
+        fixture = source_g2a._g2a4a_fixture_value()
+        canonical = fixture.root_bound.canonical_projection
+        evaluation_time = (
+            canonical.temporal_authority.expires_at_utc - 1
+            if source_kind == "g2a_positive"
+            else 1783470602
+        )
+        transaction_id = canonical.transaction_id
+        owning_root_id = canonical.owning_local_root_id
+    if source_kind in {"replay", "replay_g2a_non_executable"}:
+        replay_family = _c2_replay_family(domain_id)
+    snapshot = _c2_snapshot(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        evaluation_time=evaluation_time,
+        action_class=action_class,
+        action_packet_relation=action_packet_relation,
+        request_class=request_class,
+        scope_class=scope_class,
+        risk_class=risk_class,
+        required_user_input_state=required_user_input_state,
+        hard_block_state=hard_block_state,
+        profile_overrides=overrides,
+    )
+    if source_kind == "g2a_positive":
+        g2a_family, positive_time, positive_transaction, positive_root = (
+            _c3_positive_g2a_family(
+                evaluation_time_source=snapshot.created_by,
+                evaluation_context_id=snapshot.local_routing_snapshot_id,
+            )
+        )
+        assert (positive_time, positive_transaction, positive_root) == (
+            evaluation_time,
+            transaction_id,
+            owning_root_id,
+        )
+    elif source_kind in {
+        "g2a_non_executable",
+        "replay_g2a_non_executable",
+    }:
+        g2a_family = _c2_g2a_present_family(
+            evaluation_time=evaluation_time,
+            evaluation_time_source=snapshot.created_by,
+            evaluation_context_id=snapshot.local_routing_snapshot_id,
+        )
+    bsep = _c2_bsep_family(request_id=request_id, domain_id=domain_id)
+    context = _c2_source_context(
+        bsep=bsep,
+        evaluation_time=evaluation_time,
+        evaluation_time_source=snapshot.created_by,
+        evaluation_context_id=snapshot.local_routing_snapshot_id,
+        replay=replay_family,
+        g2a=g2a_family,
+        g2b=g2b_family,
+    )
+    common = {
+        "request_id": request_id,
+        "transaction_id": transaction_id,
+        "owning_root_id": owning_root_id,
+        "domain_id": domain_id,
+    }
+    bsep_binding = router.build_execution_mode_bsep_binding_v01(
+        **common,
+        source_context=context,
+    )
+    replay_binding = (
+        router.build_execution_mode_replay_binding_v01(
+            **common,
+            source_context=context,
+        )
+        if replay_family
+        else router.build_execution_mode_replay_not_applicable_binding_v01(**common)
+    )
+    g2a_binding = (
+        router.build_execution_mode_g2a_binding_v01(
+            **common,
+            source_context=context,
+        )
+        if g2a_family
+        else router.build_execution_mode_g2a_no_packet_binding_v01(
+            **common,
+            evaluation_time=evaluation_time,
+            evaluation_time_source=snapshot.created_by,
+            evaluation_context_id=snapshot.local_routing_snapshot_id,
+        )
+    )
+    g2b_binding = (
+        router.build_execution_mode_g2b_binding_v01(
+            **common,
+            source_context=context,
+        )
+        if g2b_family
+        else router.build_execution_mode_g2b_not_applicable_binding_v01(**common)
+    )
+    router_input = router.build_execution_mode_router_input_v01(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        bsep_binding=bsep_binding,
+        local_routing_snapshot=snapshot,
+        replay_binding=replay_binding,
+        g2a_binding=g2a_binding,
+        g2b_binding=g2b_binding,
+    )
+    assert router.validate_execution_mode_router_input_against_sources_v01(
+        router_input=router_input,
+        source_context=context,
+    ).validation_status == "PASS"
+    return router_input, context
+
+
+def _c3_retry_eligible_contextual_case(
+    monkeypatch: pytest.MonkeyPatch,
+) -> tuple[router.ExecutionModeRouterInputV01, router.ExecutionModeSourceContextV01]:
+    from types import SimpleNamespace
+    import test_action_commit_packet_lifecycle_g2_a_v01 as source_g2a
+
+    fixture = source_g2a._g2a4a_fixture_value()
+
+    def nonconsuming(**kwargs: object) -> object:
+        raise ValueError("effect_request_expired")
+
+    monkeypatch.setattr(action_packet, "_execute_mock_effect_v01", nonconsuming)
+    retry_registry = source_g2a._g2a4b_execute(fixture)
+    canonical = fixture.root_bound.canonical_projection
+    request_id = "request:g2c:c3:g2a_retry"
+    transaction_id = canonical.transaction_id
+    owning_root_id = canonical.owning_local_root_id
+    domain_id = "G2C_C3_TEST_DOMAIN"
+    evaluation_time = fixture.eligibility_evaluation_time
+    snapshot = _c2_snapshot(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        evaluation_time=evaluation_time,
+        action_class="ACTION",
+        action_packet_relation="EXISTING_PACKET_ATTEMPT",
+    )
+    observations = source_g2a._g2a4b_observations_for_context(
+        fixture.observations,
+        snapshot.local_routing_snapshot_id,
+    )
+    profile = transition_registry.build_action_packet_transition_registry_profile_v01()
+    inspection = action_packet.inspect_action_packet_present_eligibility_v01(
+        retry_registry,
+        packet_id=fixture.root_bound.packet_identity.packet_id,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        current_dependency_observations=observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+        evaluation_time=evaluation_time,
+        evaluation_time_source=snapshot.created_by,
+        evaluation_context_id=snapshot.local_routing_snapshot_id,
+        action_packet_transition_registry_profile=profile,
+    )
+    assert inspection.present_executable is False
+    assert inspection.retry_eligible is True
+    g2a_family = SimpleNamespace(
+        inspection=inspection,
+        registry=retry_registry,
+        root_bound=fixture.root_bound,
+        corridor=fixture.corridor,
+        corridor_step=fixture.corridor_step,
+        observations=observations,
+        logical_time_bridge=fixture.logical_time_bridge,
+    )
+    bsep = _c2_bsep_family(request_id=request_id, domain_id=domain_id)
+    context = _c2_source_context(
+        bsep=bsep,
+        evaluation_time=evaluation_time,
+        evaluation_time_source=snapshot.created_by,
+        evaluation_context_id=snapshot.local_routing_snapshot_id,
+        g2a=g2a_family,
+    )
+    common = {
+        "request_id": request_id,
+        "transaction_id": transaction_id,
+        "owning_root_id": owning_root_id,
+        "domain_id": domain_id,
+    }
+    router_input = router.build_execution_mode_router_input_v01(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        bsep_binding=router.build_execution_mode_bsep_binding_v01(
+            **common,
+            source_context=context,
+        ),
+        local_routing_snapshot=snapshot,
+        replay_binding=(
+            router.build_execution_mode_replay_not_applicable_binding_v01(**common)
+        ),
+        g2a_binding=router.build_execution_mode_g2a_binding_v01(
+            **common,
+            source_context=context,
+        ),
+        g2b_binding=router.build_execution_mode_g2b_not_applicable_binding_v01(
+            **common
+        ),
+    )
+    assert router.validate_execution_mode_router_input_against_sources_v01(
+        router_input=router_input,
+        source_context=context,
+    ).validation_status == "PASS"
+    return router_input, context
+
+
 @pytest.mark.parametrize(
     "source_kind",
     ("absent", "replay", "g2b_context", "g2b_direct", "g2a"),
@@ -3315,4 +3684,1286 @@ def test_c2_contextual_source_owned_reason_separation():
     assert report.authority_created is False
     assert report.permission_created is False
     assert report.real_world_effects_count == 0
-    assert not hasattr(router, "build_execution_mode_proposal_v01")
+    assert hasattr(router, "build_execution_mode_proposal_v01")
+
+
+C3_POSITIVE_REASONS = {
+    "deterministic": "g2c_deterministic_feasible",
+    "sealed_replay": "g2c_sealed_replay_feasible",
+    "direct_informational_reuse": "g2c_direct_informational_reuse_feasible",
+    "memory_informed": "g2c_memory_informed_feasible",
+    "local_slm": "g2c_local_slm_feasible",
+    "cloud_llm": "g2c_cloud_llm_feasible",
+    "full_semantic": "g2c_full_semantic_feasible",
+    "full_fractal": "g2c_full_fractal_feasible",
+}
+C3_COMPUTE_CLASSES = {
+    "deterministic": "NONE",
+    "sealed_replay": "NONE",
+    "direct_informational_reuse": "NONE",
+    "memory_informed": "MEMORY_INFORMED",
+    "local_slm": "LOCAL_SLM",
+    "cloud_llm": "CLOUD_LLM",
+    "full_semantic": "FULL_SEMANTIC",
+    "full_fractal": "FULL_FRACTAL",
+    "blocked": "TERMINAL",
+    "needs_user": "TERMINAL",
+}
+C3_CONSUMPTION_CLASSES = {
+    "deterministic": "SHORTCUT_RETURN_TO_ROOT",
+    "sealed_replay": "SHORTCUT_RETURN_TO_ROOT",
+    "direct_informational_reuse": "SHORTCUT_RETURN_TO_ROOT",
+    "memory_informed": "RUNTIME_TOPOLOGY_ELIGIBLE",
+    "local_slm": "RUNTIME_TOPOLOGY_ELIGIBLE",
+    "cloud_llm": "RUNTIME_TOPOLOGY_ELIGIBLE",
+    "full_semantic": "RUNTIME_TOPOLOGY_ELIGIBLE",
+    "full_fractal": "RUNTIME_TOPOLOGY_ELIGIBLE",
+    "blocked": "TERMINAL_NO_CONSUMPTION",
+    "needs_user": "TERMINAL_NO_CONSUMPTION",
+}
+C3_CAPABILITY_MODES = (
+    "deterministic",
+    "memory_informed",
+    "local_slm",
+    "cloud_llm",
+    "full_semantic",
+    "full_fractal",
+)
+C3_FUTURE_FUNCTIONS = (
+    "build_root_execution_mode_review_input_v01",
+    "build_execution_mode_root_decision_source_v01",
+    "project_root_execution_mode_decision_v01",
+    "review_execution_mode_proposal_v01",
+    "validate_root_execution_mode_review_input_against_sources_v01",
+    "validate_root_execution_mode_decision_against_source_v01",
+    "validate_execution_mode_route_eligibility_against_source_v01",
+    "project_execution_mode_proposal_kernel_artifact_v01",
+    "project_root_execution_mode_decision_kernel_artifact_v01",
+    "project_execution_mode_route_eligibility_kernel_artifact_v01",
+    "validate_execution_mode_abi_profile_v01",
+    "build_execution_mode_transition_registry_profile_v01",
+    "validate_execution_mode_transition_registry_profile_v01",
+    "execution_mode_transition_registry_profile_to_plain_dict_v01",
+    "validate_execution_mode_transition_decision_v01",
+    "execution_mode_transition_decision_to_plain_dict_v01",
+    "rebuild_execution_mode_transition_decision_identity_v01",
+    "evaluate_execution_mode_proposal_to_root_transition_v01",
+    "evaluate_execution_mode_root_route_transition_v01",
+)
+
+
+def test_c3_exact_cumulative_surface_and_mode_tables():
+    assert router.SLICE_ID == (
+        "gate2_g2c3_execution_mode_router_feasibility_proposal"
+    )
+    assert tuple(C3_SIGNATURES) == C3_FUNCTIONS
+    for name, expected in {**C1_SIGNATURES, **C2_SIGNATURES, **C3_SIGNATURES}.items():
+        assert str(inspect.signature(getattr(router, name))) == expected
+    actual = tuple(
+        name for name in PUBLIC_FUNCTIONS if callable(getattr(router, name, None))
+    )
+    assert actual == IMPLEMENTED_FUNCTIONS_AFTER_C3
+    assert len(actual) == 55
+    assert tuple(
+        name for name in PUBLIC_FUNCTIONS if name not in actual
+    ) == C3_FUTURE_FUNCTIONS
+    assert all(not hasattr(router, name) for name in C3_FUTURE_FUNCTIONS)
+    assert router.CANONICAL_EXECUTION_MODES_V01 == (
+        "deterministic", "sealed_replay", "direct_informational_reuse",
+        "memory_informed", "local_slm", "cloud_llm", "full_semantic",
+        "full_fractal", "blocked", "needs_user",
+    )
+    assert router.EXECUTION_MODE_SAFE_DEPTH_RANKS_V01 == (
+        ("deterministic", 10), ("sealed_replay", 20),
+        ("direct_informational_reuse", 30), ("memory_informed", 40),
+        ("local_slm", 50), ("cloud_llm", 50),
+        ("full_semantic", 60), ("full_fractal", 70),
+    )
+    assert router._MODE_POSITIVE_REASONS_V01 == C3_POSITIVE_REASONS
+    assert router._MODE_DOWNSTREAM_COMPUTE_CLASSES_V01 == C3_COMPUTE_CLASSES
+    assert (
+        router._MODE_DOWNSTREAM_CONSUMPTION_CLASSES_V01
+        == C3_CONSUMPTION_CLASSES
+    )
+    assert router._CAPABILITY_REQUIRED_MODES_V01 == C3_CAPABILITY_MODES
+    assert router._NO_CAPABILITY_MODES_V01 == (
+        "sealed_replay", "direct_informational_reuse", "blocked", "needs_user",
+    )
+
+
+@pytest.mark.parametrize(
+    ("mode", "source_kind"),
+    (
+        ("deterministic", "absent"),
+        ("sealed_replay", "replay"),
+        ("direct_informational_reuse", "g2b_direct"),
+        ("memory_informed", "g2b_context"),
+        ("local_slm", "absent"),
+        ("cloud_llm", "absent"),
+        ("full_semantic", "absent"),
+        ("full_fractal", "absent"),
+    ),
+)
+def test_c3_all_executable_modes_have_exact_rows_and_proposals(mode, source_kind):
+    router_input, context = _c3_contextual_case(
+        selected_mode=mode,
+        source_kind=source_kind,
+    )
+    rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    assert len(rows) == 10
+    assert tuple(row.mode for row in rows) == router.CANONICAL_EXECUTION_MODES_V01
+    assert tuple(row.category for row in rows) == ("EXECUTABLE",) * 8 + (
+        "TERMINAL", "TERMINAL",
+    )
+    assert tuple(row.safe_depth_rank for row in rows) == (
+        10, 20, 30, 40, 50, 50, 60, 70, None, None,
+    )
+    assert tuple(row.downstream_compute_class for row in rows) == tuple(
+        C3_COMPUTE_CLASSES[item] for item in router.CANONICAL_EXECUTION_MODES_V01
+    )
+    assert rows == router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    selected = router.select_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+    )
+    assert selected.mode == mode
+    assert selected.feasibility_status == "FEASIBLE"
+    assert selected.reason_codes == (C3_POSITIVE_REASONS[mode],)
+    assert selected.missing_evidence_codes == ()
+    assert selected.satisfied_evidence_refs == selected.required_evidence_refs
+    proposal = router.build_execution_mode_proposal_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+        selected_row=selected,
+    )
+    routed, report = router.route_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    assert routed == proposal
+    assert report.validation_status == "PASS"
+    assert router.validate_execution_mode_proposal_against_sources_v01(
+        proposal=proposal,
+        router_input=router_input,
+        source_context=context,
+    ).validation_status == "PASS"
+    assert proposal.selected_mode == mode
+    assert proposal.downstream_consumption_class == C3_CONSUMPTION_CLASSES[mode]
+    assert proposal.required_downstream_capability_ids == (
+        (selected.required_capability_id,) if mode in C3_CAPABILITY_MODES else ()
+    )
+    assert proposal.reason_codes == ("g2c_proposal_sources_valid",)
+    assert proposal.proposed_scope_ref == router_input.local_routing_snapshot.scope_ref
+    assert not any(
+        (
+            proposal.authority_created,
+            proposal.permission_created,
+            proposal.action_commit_packet_created,
+            proposal.receipt_created,
+            proposal.topology_created,
+            proposal.final_output_created,
+            proposal.drs_write_created,
+            bool(proposal.real_world_effects_count),
+        )
+    )
+
+
+def test_c3_evidence_reference_order_and_source_requirements():
+    replay_input, replay_context = _c3_contextual_case(
+        selected_mode="sealed_replay",
+        source_kind="replay",
+    )
+    replay_rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=replay_input,
+        source_context=replay_context,
+    )
+    replay_row = replay_rows[1]
+    assert replay_row.required_evidence_refs == (
+        replay_input.bsep_binding.bsep_binding_id,
+        replay_input.local_routing_snapshot.local_routing_snapshot_id,
+        replay_input.local_routing_snapshot.mode_profiles[1].local_mode_profile_id,
+        replay_input.replay_binding.replay_binding_id,
+        replay_input.replay_binding.replay_id,
+    )
+    direct_input, direct_context = _c3_contextual_case(
+        selected_mode="direct_informational_reuse",
+        source_kind="g2b_direct",
+    )
+    direct = router.evaluate_execution_mode_feasibility_v01(
+        router_input=direct_input,
+        source_context=direct_context,
+    )[2]
+    assert direct.required_evidence_refs == (
+        direct_input.bsep_binding.bsep_binding_id,
+        direct_input.local_routing_snapshot.local_routing_snapshot_id,
+        direct_input.local_routing_snapshot.mode_profiles[2].local_mode_profile_id,
+        direct_input.g2b_binding.g2b_binding_id,
+        direct_input.g2b_binding.report_id,
+        direct_input.g2b_binding.reuse_certificate_id,
+        direct_input.g2b_binding.source_root_decision_id,
+    )
+    absent_input, absent_context = _c3_contextual_case()
+    absent_rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=absent_input,
+        source_context=absent_context,
+    )
+    replay_absent = absent_rows[1]
+    assert replay_absent.required_evidence_refs[-1] == (
+        absent_input.replay_binding.replay_binding_id
+    )
+    assert None not in replay_absent.required_evidence_refs
+    assert replay_absent.missing_evidence_codes == (
+        "g2c_required_evidence_missing",
+    )
+    for row in absent_rows[8:]:
+        assert row.required_evidence_refs == row.satisfied_evidence_refs == (
+            absent_input.bsep_binding.bsep_binding_id,
+            absent_input.local_routing_snapshot.local_routing_snapshot_id,
+        )
+
+
+@pytest.mark.parametrize(
+    ("hard_block", "user_state", "selected_mode", "selected_reason"),
+    (
+        ("BLOCKED", "COMPLETE", "blocked", "g2c_hard_block_present"),
+        ("BLOCKED", "MISSING_RESOLVABLE", "blocked", "g2c_hard_block_present"),
+        ("CLEAR", "MISSING_RESOLVABLE", "needs_user", "g2c_user_input_required"),
+    ),
+)
+def test_c3_global_terminal_precedence(
+    hard_block,
+    user_state,
+    selected_mode,
+    selected_reason,
+):
+    router_input, context = _c3_contextual_case(
+        hard_block_state=hard_block,
+        required_user_input_state=user_state,
+    )
+    rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    assert all(row.feasibility_status == "INFEASIBLE" for row in rows[:8])
+    expected_global = (
+        "g2c_hard_block_present"
+        if hard_block == "BLOCKED"
+        else "g2c_user_input_required"
+    )
+    assert all(expected_global in row.reason_codes for row in rows[:8])
+    if hard_block == "BLOCKED":
+        assert all("g2c_user_input_required" not in row.reason_codes for row in rows[:8])
+    else:
+        assert all(
+            "g2c_required_evidence_missing" in row.missing_evidence_codes
+            for row in rows[:8]
+        )
+    selected = router.select_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+    )
+    assert selected.mode == selected_mode
+    assert selected.reason_codes == (selected_reason,)
+    proposal, report = router.route_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    assert report.validation_status == "PASS"
+    assert proposal.selected_mode == selected_mode
+    assert proposal.downstream_action_packet_required is False
+
+
+def test_c3_no_safe_mode_and_local_gate_reason_law():
+    overrides = {
+        mode: {"policy_allowed": False}
+        for mode in router.EXECUTABLE_EXECUTION_MODES_V01
+    }
+    router_input, context = _c3_contextual_case(profile_overrides=overrides)
+    rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    assert all(row.feasibility_status == "INFEASIBLE" for row in rows[:8])
+    assert all("g2c_policy_forbidden" in row.reason_codes for row in rows[:8])
+    assert all(
+        not set(row.reason_codes).intersection(C3_POSITIVE_REASONS.values())
+        for row in rows[:8]
+    )
+    assert rows[8].feasibility_status == "TERMINAL_SELECTED"
+    assert rows[8].reason_codes == ("g2c_no_safe_mode",)
+    assert rows[9].feasibility_status == "TERMINAL_NOT_SELECTED"
+    assert rows[9].reason_codes == ()
+
+
+@pytest.mark.parametrize(
+    ("field_name", "reason"),
+    (
+        ("policy_allowed", "g2c_policy_forbidden"),
+        ("scope_allowed", "g2c_scope_forbidden"),
+        ("risk_allowed", "g2c_risk_forbidden"),
+        ("privacy_allowed", "g2c_privacy_forbidden"),
+    ),
+)
+@pytest.mark.parametrize(
+    ("mode", "source_kind"),
+    (
+        ("deterministic", "absent"),
+        ("sealed_replay", "replay"),
+        ("direct_informational_reuse", "g2b_direct"),
+        ("memory_informed", "g2b_context"),
+        ("local_slm", "absent"),
+        ("cloud_llm", "absent"),
+        ("full_semantic", "absent"),
+        ("full_fractal", "absent"),
+    ),
+)
+def test_c3_each_local_gate_blocks_each_executable_mode(
+    mode,
+    source_kind,
+    field_name,
+    reason,
+):
+    router_input, context = _c3_contextual_case(
+        selected_mode=mode,
+        source_kind=source_kind,
+        profile_overrides={mode: {field_name: False, "cost_units": 0}},
+    )
+    row = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )[router.EXECUTABLE_EXECUTION_MODES_V01.index(mode)]
+    assert row.feasibility_status == "INFEASIBLE"
+    assert reason in row.reason_codes
+    assert C3_POSITIVE_REASONS[mode] not in row.reason_codes
+    assert row.cost_units == 0
+
+
+@pytest.mark.parametrize("mode", C3_CAPABILITY_MODES)
+def test_c3_required_capability_unavailable_is_missing_and_never_admitted(mode):
+    source_kind = "g2b_context" if mode == "memory_informed" else "absent"
+    capability_id = f"capability:g2c:c2:{mode}"
+    router_input, context = _c3_contextual_case(
+        selected_mode=mode,
+        source_kind=source_kind,
+        profile_overrides={
+            mode: {
+                "capability_state": "UNAVAILABLE",
+                "capability_id": capability_id,
+                "cost_units": 0,
+            }
+        },
+    )
+    row = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )[router.EXECUTABLE_EXECUTION_MODES_V01.index(mode)]
+    assert row.feasibility_status == "INFEASIBLE"
+    assert row.required_capability_id == capability_id
+    assert "g2c_capability_unavailable" in row.reason_codes
+    assert "g2c_capability_unavailable" in row.missing_evidence_codes
+    assert capability_id in row.required_evidence_refs
+    assert capability_id not in row.satisfied_evidence_refs
+
+
+def test_c3_replay_direct_and_memory_source_laws_remain_distinct():
+    absent_input, absent_context = _c3_contextual_case()
+    absent_rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=absent_input,
+        source_context=absent_context,
+    )
+    for index in (1, 2, 3):
+        assert absent_rows[index].feasibility_status == "INFEASIBLE"
+        assert "g2c_required_evidence_missing" in absent_rows[index].reason_codes
+    context_input, context = _c3_contextual_case(
+        selected_mode="memory_informed",
+        source_kind="g2b_context",
+    )
+    context_rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=context_input,
+        source_context=context,
+    )
+    assert context_rows[2].feasibility_status == "INFEASIBLE"
+    assert context_rows[3].reason_codes == ("g2c_memory_informed_feasible",)
+    direct_input, direct_context = _c3_contextual_case(
+        selected_mode="direct_informational_reuse",
+        source_kind="g2b_direct",
+    )
+    direct_rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=direct_input,
+        source_context=direct_context,
+    )
+    assert direct_rows[2].reason_codes == (
+        "g2c_direct_informational_reuse_feasible",
+    )
+    assert direct_rows[3].reason_codes == ("g2c_memory_informed_feasible",)
+
+
+@pytest.mark.parametrize(
+    ("local_cost", "cloud_cost", "local_allowed", "expected", "tie"),
+    (
+        (40, 50, True, "local_slm", False),
+        (60, 40, True, "cloud_llm", False),
+        (40, 40, True, "local_slm", True),
+        (1, 40, False, "cloud_llm", False),
+    ),
+)
+def test_c3_shared_rank_cost_and_canonical_index_tie_break(
+    local_cost,
+    cloud_cost,
+    local_allowed,
+    expected,
+    tie,
+):
+    overrides = {
+        "deterministic": {"policy_allowed": False},
+        "local_slm": {
+            "cost_units": local_cost,
+            "policy_allowed": local_allowed,
+        },
+        "cloud_llm": {"cost_units": cloud_cost},
+    }
+    router_input, context = _c3_contextual_case(profile_overrides=overrides)
+    rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    selected = router.select_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+    )
+    assert selected.mode == expected
+    proposal = router.build_execution_mode_proposal_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+        selected_row=selected,
+    )
+    assert ("g2c_selection_tie_break_applied" in proposal.reason_codes) is tie
+    if not local_allowed:
+        assert rows[4].feasibility_status == "INFEASIBLE"
+        assert rows[4].cost_units == 1
+
+
+def test_c3_classification_labels_do_not_change_feasibility_or_selection():
+    base_input, base_context = _c3_contextual_case(
+        selected_mode="local_slm",
+    )
+    changed_input, changed_context = _c3_contextual_case(
+        selected_mode="local_slm",
+        request_class="BOUNDED_FRACTAL_REQUIRED",
+        scope_class="EXPANDED_AUDIT_LABEL",
+        risk_class="CRITICAL",
+    )
+    base_rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=base_input,
+        source_context=base_context,
+    )
+    changed_rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=changed_input,
+        source_context=changed_context,
+    )
+    projection = lambda rows: tuple(
+        (
+            row.mode,
+            row.feasibility_status,
+            row.missing_evidence_codes,
+            row.reason_codes,
+            row.cost_units,
+        )
+        for row in rows
+    )
+    assert projection(base_rows) == projection(changed_rows)
+    assert router.select_execution_mode_v01(
+        router_input=changed_input,
+        source_context=changed_context,
+        ordered_rows=changed_rows,
+    ).mode == "local_slm"
+    assert changed_rows[7].feasibility_status == "FEASIBLE"
+    assert router.select_execution_mode_v01(
+        router_input=base_input,
+        source_context=base_context,
+        ordered_rows=base_rows,
+    ).mode == "local_slm"
+
+
+def test_c3_action_relation_and_downstream_packet_declaration():
+    fresh_input, fresh_context = _c3_contextual_case(
+        action_class="ACTION",
+        action_packet_relation="NEW_ACTION_NO_PACKET",
+    )
+    fresh, fresh_report = router.route_execution_mode_v01(
+        router_input=fresh_input,
+        source_context=fresh_context,
+    )
+    assert fresh_report.validation_status == "PASS"
+    assert fresh.selected_mode == "deterministic"
+    assert fresh.downstream_action_packet_required is True
+    assert fresh.action_commit_packet_created is False
+    existing_input, existing_context = _c3_contextual_case(
+        source_kind="g2a_positive",
+        action_class="ACTION",
+        action_packet_relation="EXISTING_PACKET_ATTEMPT",
+    )
+    existing, existing_report = router.route_execution_mode_v01(
+        router_input=existing_input,
+        source_context=existing_context,
+    )
+    assert existing_report.validation_status == "PASS"
+    assert existing.selected_mode == "deterministic"
+    assert existing.downstream_action_packet_required is False
+    selected = existing.ordered_feasibility_rows[0]
+    assert selected.required_evidence_refs[-3:] == (
+        existing_input.g2a_binding.g2a_binding_id,
+        existing_input.g2a_binding.packet_id,
+        existing_input.g2a_binding.source_inspection_sha256,
+    )
+    direct_input, direct_context = _c3_contextual_case(
+        selected_mode="direct_informational_reuse",
+        source_kind="g2b_direct",
+        action_class="ACTION",
+        action_packet_relation="NEW_ACTION_NO_PACKET",
+    )
+    direct_rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=direct_input,
+        source_context=direct_context,
+    )
+    assert direct_rows[2].feasibility_status == "INFEASIBLE"
+    assert "g2c_action_shortcut_forbidden" in direct_rows[2].reason_codes
+
+
+def test_c3_row_and_proposal_structural_and_contextual_substitution_rejection():
+    router_input, context = _c3_contextual_case()
+    rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    selected = router.select_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+    )
+    proposal = router.build_execution_mode_proposal_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+        selected_row=selected,
+    )
+    for supplied in (rows[:-1], (rows[1], rows[0], *rows[2:])):
+        with pytest.raises(ValueError, match="^g2c_selection_invalid$"):
+            router.select_execution_mode_v01(
+                router_input=router_input,
+                source_context=context,
+                ordered_rows=supplied,
+            )
+    forged_row = replace(rows[7], cost_units=rows[7].cost_units + 1)
+    forged_row = replace(
+        forged_row,
+        feasibility_row_id=router.rebuild_execution_mode_feasibility_row_identity_v01(
+            forged_row
+        ),
+    )
+    forged_rows = (*rows[:7], forged_row, *rows[8:])
+    forged = replace(proposal, ordered_feasibility_rows=forged_rows)
+    forged = replace(
+        forged,
+        proposal_id=router.rebuild_execution_mode_proposal_identity_v01(forged),
+    )
+    report = router.validate_execution_mode_proposal_against_sources_v01(
+        proposal=forged,
+        router_input=router_input,
+        source_context=context,
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == "FEASIBILITY"
+    assert "g2c_proposal_rows_invalid" in report.reason_codes
+    wrong_reason = replace(
+        proposal,
+        reason_codes=("g2c_selection_tie_break_applied", "g2c_proposal_sources_valid"),
+    )
+    wrong_reason = replace(
+        wrong_reason,
+        proposal_id=router.rebuild_execution_mode_proposal_identity_v01(
+            wrong_reason
+        ),
+    )
+    assert router.validate_execution_mode_proposal_v01(
+        wrong_reason
+    ).validation_status == "FAIL_CLOSED"
+
+
+def test_c3_invalid_source_creates_no_proposal_and_total_boundaries():
+    router_input, context = _c3_contextual_case()
+    invalid_context = replace(
+        context,
+        bsep_packet={
+            **context.bsep_packet,
+            "source_proposal_id": "proposal:g2c:c3:substituted",
+        },
+    )
+    proposal, report = router.route_execution_mode_v01(
+        router_input=router_input,
+        source_context=invalid_context,
+    )
+    assert proposal is None
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.return_to_root_required is True
+    assert "g2c_invalid_source_no_proposal" in report.reason_codes
+    assert "g2c_fail_closed_return_to_root" in report.reason_codes
+    assert report.authority_created is False
+    assert report.permission_created is False
+    assert report.real_world_effects_count == 0
+    arbitrary_proposal, arbitrary_report = router.route_execution_mode_v01(
+        router_input=object(),  # type: ignore[arg-type]
+        source_context=object(),  # type: ignore[arg-type]
+    )
+    assert arbitrary_proposal is None
+    assert arbitrary_report.validation_status == "FAIL_CLOSED"
+    arbitrary_validation = router.validate_execution_mode_proposal_against_sources_v01(
+        proposal=object(),  # type: ignore[arg-type]
+        router_input=object(),  # type: ignore[arg-type]
+        source_context=object(),  # type: ignore[arg-type]
+    )
+    assert arbitrary_validation.validation_status == "FAIL_CLOSED"
+    assert not any(
+        (
+            arbitrary_report.authority_created,
+            arbitrary_report.permission_created,
+            bool(arbitrary_report.real_world_effects_count),
+        )
+    )
+
+
+def _assert_c3_injected_failure_report(
+    report: router.ExecutionModeValidationReportV01,
+    *,
+    expected_stage: str,
+    expected_reason: str,
+    include_return_reason: bool,
+) -> None:
+    expected_reason_set = {expected_reason}
+    if include_return_reason:
+        expected_reason_set.add("g2c_fail_closed_return_to_root")
+    expected_reasons = tuple(
+        reason
+        for reason in router.PUBLIC_G2C_REASON_CODES_V01
+        if reason in expected_reason_set
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == expected_stage
+    assert report.return_to_root_required is True
+    assert report.reason_codes == expected_reasons
+    assert "g2c_invalid_source_no_proposal" not in report.reason_codes
+    assert report.source_reason_codes == ()
+    assert report.authority_created is False
+    assert report.permission_created is False
+    assert report.real_world_effects_count == 0
+    serialized = json.dumps(
+        router.execution_mode_validation_report_to_plain_data_v01(report),
+        sort_keys=True,
+    )
+    assert "g2c3r1 injected internal detail" not in serialized
+    assert "RuntimeError" not in serialized
+
+
+@pytest.mark.parametrize(
+    ("phase_name", "expected_stage", "expected_reason"),
+    (
+        (
+            "_build_feasibility_rows",
+            "FEASIBILITY",
+            "g2c_feasibility_row_invalid",
+        ),
+        ("_select_c3_row", "SELECTION", "g2c_selection_invalid"),
+        ("_build_c3_proposal", "PROPOSAL", "g2c_proposal_rows_invalid"),
+        (
+            "validate_execution_mode_proposal_against_sources_v01",
+            "PROPOSAL",
+            "g2c_proposal_rows_invalid",
+        ),
+    ),
+)
+def test_c3r1_route_phase_local_unexpected_failure_ownership(
+    monkeypatch: pytest.MonkeyPatch,
+    phase_name: str,
+    expected_stage: str,
+    expected_reason: str,
+) -> None:
+    router_input, context = _c3_contextual_case()
+
+    def injected_failure(*args: object, **kwargs: object) -> object:
+        raise RuntimeError("g2c3r1 injected internal detail")
+
+    monkeypatch.setattr(router, phase_name, injected_failure)
+    proposal, report = router.route_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    assert proposal is None
+    _assert_c3_injected_failure_report(
+        report,
+        expected_stage=expected_stage,
+        expected_reason=expected_reason,
+        include_return_reason=True,
+    )
+
+
+@pytest.mark.parametrize(
+    ("phase_name", "expected_stage", "expected_reason"),
+    (
+        (
+            "_build_feasibility_rows",
+            "FEASIBILITY",
+            "g2c_proposal_rows_invalid",
+        ),
+        (
+            "_select_c3_row",
+            "SELECTION",
+            "g2c_proposal_selected_row_mismatch",
+        ),
+        ("_build_c3_proposal", "PROPOSAL", "g2c_proposal_rows_invalid"),
+    ),
+)
+def test_c3r1_proposal_validator_phase_local_unexpected_failure_ownership(
+    monkeypatch: pytest.MonkeyPatch,
+    phase_name: str,
+    expected_stage: str,
+    expected_reason: str,
+) -> None:
+    router_input, context = _c3_contextual_case()
+    rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    selected = router.select_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+    )
+    proposal = router.build_execution_mode_proposal_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+        selected_row=selected,
+    )
+
+    def injected_failure(*args: object, **kwargs: object) -> object:
+        raise RuntimeError("g2c3r1 injected internal detail")
+
+    monkeypatch.setattr(router, phase_name, injected_failure)
+    report = router.validate_execution_mode_proposal_against_sources_v01(
+        proposal=proposal,
+        router_input=router_input,
+        source_context=context,
+    )
+    _assert_c3_injected_failure_report(
+        report,
+        expected_stage=expected_stage,
+        expected_reason=expected_reason,
+        include_return_reason=False,
+    )
+
+
+def test_c3r1_selected_row_substitution_is_owned_by_selection():
+    router_input, context = _c3_contextual_case()
+    rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    selected = router.select_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+    )
+    proposal = router.build_execution_mode_proposal_v01(
+        router_input=router_input,
+        source_context=context,
+        ordered_rows=rows,
+        selected_row=selected,
+    )
+    forged_selected = replace(selected, cost_units=selected.cost_units + 1)
+    forged_selected = replace(
+        forged_selected,
+        feasibility_row_id=router.rebuild_execution_mode_feasibility_row_identity_v01(
+            forged_selected
+        ),
+    )
+    forged_rows = (forged_selected, *rows[1:])
+    forged_proposal = replace(
+        proposal,
+        ordered_feasibility_rows=forged_rows,
+        selected_feasibility_row_id=forged_selected.feasibility_row_id,
+        selected_expected_cost_units=forged_selected.cost_units,
+    )
+    forged_proposal = replace(
+        forged_proposal,
+        proposal_id=router.rebuild_execution_mode_proposal_identity_v01(
+            forged_proposal
+        ),
+    )
+    assert router.validate_execution_mode_proposal_v01(
+        forged_proposal
+    ).validation_status == "PASS"
+    report = router.validate_execution_mode_proposal_against_sources_v01(
+        proposal=forged_proposal,
+        router_input=router_input,
+        source_context=context,
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == "SELECTION"
+    assert report.reason_codes == ("g2c_proposal_selected_row_mismatch",)
+
+
+def _assert_c3_existing_packet_rows_fail_closed(
+    router_input: router.ExecutionModeRouterInputV01,
+    context: router.ExecutionModeSourceContextV01,
+) -> tuple[router.ExecutionModeFeasibilityRowV01, ...]:
+    rows = router.evaluate_execution_mode_feasibility_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    assert all(row.feasibility_status == "INFEASIBLE" for row in rows[:8])
+    assert all("g2c_action_shortcut_forbidden" in row.reason_codes for row in rows[:8])
+    assert all(
+        not set(row.reason_codes).intersection(C3_POSITIVE_REASONS.values())
+        for row in rows[:8]
+    )
+    assert rows[8].feasibility_status == "TERMINAL_SELECTED"
+    assert rows[8].reason_codes == ("g2c_no_safe_mode",)
+    proposal, report = router.route_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    assert report.validation_status == "PASS"
+    assert proposal is not None
+    assert proposal.selected_mode == "blocked"
+    assert not any(
+        (
+            proposal.authority_created,
+            proposal.permission_created,
+            proposal.action_commit_packet_created,
+            proposal.receipt_created,
+            proposal.topology_created,
+            proposal.final_output_created,
+            proposal.drs_write_created,
+            bool(proposal.real_world_effects_count),
+        )
+    )
+    return rows
+
+
+def test_c3r1_non_executable_existing_packet_is_terminal_not_malformed():
+    router_input, context = _c3_contextual_case(
+        source_kind="g2a_non_executable",
+        action_class="ACTION",
+        action_packet_relation="EXISTING_PACKET_ATTEMPT",
+    )
+    assert router_input.g2a_binding.binding_state == "PRESENT_INSPECTION_BOUND"
+    assert router_input.g2a_binding.present_eligibility_status == "NON_EXECUTABLE"
+    assert router_input.g2a_binding.present_executable is False
+    assert router_input.g2a_binding.retry_eligible is False
+    _assert_c3_existing_packet_rows_fail_closed(router_input, context)
+
+
+def test_c3r1_retry_eligible_existing_packet_cannot_restart_router(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    router_input, context = _c3_retry_eligible_contextual_case(monkeypatch)
+    assert router_input.g2a_binding.binding_state == "PRESENT_INSPECTION_BOUND"
+    assert router_input.g2a_binding.present_executable is False
+    assert router_input.g2a_binding.retry_eligible is True
+    _assert_c3_existing_packet_rows_fail_closed(router_input, context)
+
+
+def test_c3r1_replay_and_direct_reuse_cannot_revive_existing_packet():
+    replay_input, replay_context = _c3_contextual_case(
+        source_kind="replay_g2a_non_executable",
+        action_class="ACTION",
+        action_packet_relation="EXISTING_PACKET_ATTEMPT",
+    )
+    replay_rows = _assert_c3_existing_packet_rows_fail_closed(
+        replay_input,
+        replay_context,
+    )
+    assert replay_input.replay_binding.binding_state == "SEALED_REPLAY_BOUND"
+    assert replay_rows[1].feasibility_status == "INFEASIBLE"
+    assert "g2c_action_shortcut_forbidden" in replay_rows[1].reason_codes
+    direct_input, direct_context = _c3_contextual_case(
+        source_kind="g2a_non_executable",
+        action_class="ACTION",
+        action_packet_relation="EXISTING_PACKET_ATTEMPT",
+    )
+    direct_rows = _assert_c3_existing_packet_rows_fail_closed(
+        direct_input,
+        direct_context,
+    )
+    assert direct_rows[2].feasibility_status == "INFEASIBLE"
+    assert "g2c_action_shortcut_forbidden" in direct_rows[2].reason_codes
+    assert "g2c_direct_informational_reuse_feasible" not in direct_rows[2].reason_codes
+
+
+def test_c3r1_copied_present_executable_status_cannot_create_proposal():
+    router_input, context = _c3_contextual_case(
+        source_kind="g2a_non_executable",
+        action_class="ACTION",
+        action_packet_relation="EXISTING_PACKET_ATTEMPT",
+    )
+    forged_context = replace(
+        context,
+        g2a_inspection=replace(context.g2a_inspection, present_executable=True),
+    )
+    proposal, report = router.route_execution_mode_v01(
+        router_input=router_input,
+        source_context=forged_context,
+    )
+    assert proposal is None
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.return_to_root_required is True
+    assert "g2c_invalid_source_no_proposal" in report.reason_codes
+    assert "g2c_fail_closed_return_to_root" in report.reason_codes
+    assert report.authority_created is False
+    assert report.permission_created is False
+    assert report.real_world_effects_count == 0
+
+
+def _c3r2_valid_proposal() -> tuple[
+    router.ExecutionModeRouterInputV01,
+    router.ExecutionModeSourceContextV01,
+    router.ExecutionModeProposalV01,
+]:
+    router_input, context = _c3_contextual_case()
+    proposal, report = router.route_execution_mode_v01(
+        router_input=router_input,
+        source_context=context,
+    )
+    assert report.validation_status == "PASS"
+    assert proposal is not None
+    return router_input, context, proposal
+
+
+def _c3r2_rebuild_proposal(
+    proposal: router.ExecutionModeProposalV01,
+) -> router.ExecutionModeProposalV01:
+    return replace(
+        proposal,
+        proposal_id=router.rebuild_execution_mode_proposal_identity_v01(proposal),
+    )
+
+
+def _assert_c3r2_stage(
+    *,
+    proposal: object,
+    router_input: router.ExecutionModeRouterInputV01,
+    context: router.ExecutionModeSourceContextV01,
+    expected_stage: str,
+    expected_reason: str,
+) -> router.ExecutionModeValidationReportV01:
+    report = router.validate_execution_mode_proposal_against_sources_v01(
+        proposal=proposal,  # type: ignore[arg-type]
+        router_input=router_input,
+        source_context=context,
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == expected_stage
+    assert expected_reason in report.reason_codes
+    assert report.return_to_root_required is True
+    assert report.authority_created is False
+    assert report.permission_created is False
+    assert report.real_world_effects_count == 0
+    return report
+
+
+def test_c3r2_proposal_field_stage_partition_is_complete():
+    feasibility_fields = ("ordered_feasibility_rows",)
+    selection_fields = (
+        "selected_mode",
+        "selected_safe_depth_rank",
+        "selected_local_mode_profile_id",
+        "selected_expected_cost_units",
+        "selected_feasibility_row_id",
+    )
+    proposal_fields = (
+        "proposal_id",
+        "source_input_id",
+        "request_id",
+        "transaction_id",
+        "owning_root_id",
+        "domain_id",
+        "source_bsep_binding_id",
+        "source_bsep_packet_id",
+        "source_bsep_sha256",
+        "source_local_routing_snapshot_id",
+        "source_replay_binding_id",
+        "source_g2a_binding_id",
+        "source_g2b_binding_id",
+        "proposed_scope_ref",
+        "reason_codes",
+        "required_downstream_capability_ids",
+        "downstream_consumption_class",
+        "downstream_action_packet_required",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "action_commit_packet_created",
+        "receipt_created",
+        "topology_created",
+        "final_output_created",
+        "drs_write_created",
+        "real_world_effects_count",
+    )
+    assert router._PROPOSAL_FEASIBILITY_FIELDS_V01 == feasibility_fields
+    assert router._PROPOSAL_SELECTION_FIELDS_V01 == selection_fields
+    assert router._PROPOSAL_GEOMETRY_FIELDS_V01 == proposal_fields
+    groups = tuple(map(set, (feasibility_fields, selection_fields, proposal_fields)))
+    assert all(groups[left].isdisjoint(groups[right]) for left in range(3) for right in range(left + 1, 3))
+    assert set.union(*groups) == {
+        field.name for field in fields(router.ExecutionModeProposalV01)
+    }
+    assert sum(map(len, groups)) == 33
+
+
+def test_c3r2_feasibility_stage_complete_row_geometry_matrix():
+    router_input, context, proposal = _c3r2_valid_proposal()
+    rows = proposal.ordered_feasibility_rows
+    malformed_row = replace(rows[7], cost_units=-1)
+    malformed_row = replace(
+        malformed_row,
+        feasibility_row_id=router.rebuild_execution_mode_feasibility_row_identity_v01(
+            malformed_row
+        ),
+    )
+    substituted_row = replace(rows[7], cost_units=rows[7].cost_units + 1)
+    substituted_row = replace(
+        substituted_row,
+        feasibility_row_id=router.rebuild_execution_mode_feasibility_row_identity_v01(
+            substituted_row
+        ),
+    )
+    cases = {
+        "missing": rows[:-1],
+        "extra": (*rows, rows[-1]),
+        "reordered": (rows[1], rows[0], *rows[2:]),
+        "duplicated": (*rows[:7], rows[6], *rows[8:]),
+        "malformed_non_selected": (*rows[:7], malformed_row, *rows[8:]),
+        "substituted_non_selected": (*rows[:7], substituted_row, *rows[8:]),
+    }
+    for case_name, mutated_rows in cases.items():
+        mutated = _c3r2_rebuild_proposal(
+            replace(proposal, ordered_feasibility_rows=mutated_rows)
+        )
+        report = _assert_c3r2_stage(
+            proposal=mutated,
+            router_input=router_input,
+            context=context,
+            expected_stage="FEASIBILITY",
+            expected_reason="g2c_proposal_rows_invalid",
+        )
+        assert report.reason_codes == ("g2c_proposal_rows_invalid",), case_name
+
+
+def test_c3r2_selection_stage_complete_selected_geometry_matrix():
+    router_input, context, proposal = _c3r2_valid_proposal()
+    rows = proposal.ordered_feasibility_rows
+    selected = rows[0]
+    forged_selected = replace(selected, cost_units=selected.cost_units + 1)
+    forged_selected = replace(
+        forged_selected,
+        feasibility_row_id=router.rebuild_execution_mode_feasibility_row_identity_v01(
+            forged_selected
+        ),
+    )
+    selected_row_mutation = replace(
+        proposal,
+        ordered_feasibility_rows=(forged_selected, *rows[1:]),
+        selected_feasibility_row_id=forged_selected.feasibility_row_id,
+        selected_expected_cost_units=forged_selected.cost_units,
+    )
+    cases = {
+        "selected_row": selected_row_mutation,
+        "selected_feasibility_row_id": replace(
+            proposal,
+            selected_feasibility_row_id=rows[1].feasibility_row_id,
+        ),
+        "selected_mode": replace(proposal, selected_mode="local_slm"),
+        "selected_safe_depth_rank": replace(
+            proposal,
+            selected_safe_depth_rank=proposal.selected_safe_depth_rank + 1,
+        ),
+        "selected_local_mode_profile_id": replace(
+            proposal,
+            selected_local_mode_profile_id="profile:g2c:c3:r2:foreign",
+        ),
+        "selected_expected_cost_units": replace(
+            proposal,
+            selected_expected_cost_units=proposal.selected_expected_cost_units + 1,
+        ),
+    }
+    for case_name, mutated in cases.items():
+        report = _assert_c3r2_stage(
+            proposal=_c3r2_rebuild_proposal(mutated),
+            router_input=router_input,
+            context=context,
+            expected_stage="SELECTION",
+            expected_reason="g2c_proposal_selected_row_mismatch",
+        )
+        assert report.reason_codes == (
+            "g2c_proposal_selected_row_mismatch",
+        ), case_name
+
+
+def test_c3r2_proposal_stage_header_and_source_matrix():
+    router_input, context, proposal = _c3r2_valid_proposal()
+    mutations = {
+        "source_input_id": "eminput_v01:" + ("f" * 64),
+        "request_id": "request:g2c:c3:r2:foreign",
+        "transaction_id": "transaction:g2c:c3:r2:foreign",
+        "owning_root_id": "root:g2c:c3:r2:foreign",
+        "domain_id": "G2C_C3_R2_FOREIGN",
+        "source_bsep_binding_id": "foreign:g2c:r2:bsep_binding",
+        "source_bsep_packet_id": "foreign:g2c:r2:bsep_packet",
+        "source_bsep_sha256": "f" * 64,
+        "source_local_routing_snapshot_id": "foreign:g2c:r2:snapshot",
+        "source_replay_binding_id": "foreign:g2c:r2:replay",
+        "source_g2a_binding_id": "foreign:g2c:r2:g2a",
+        "source_g2b_binding_id": "foreign:g2c:r2:g2b",
+        "proposed_scope_ref": "scope:g2c:c3:r2:foreign",
+    }
+    source_fields = set(router._PROPOSAL_SOURCE_FIELDS_V01)
+    for field_name, field_value in mutations.items():
+        mutated = _c3r2_rebuild_proposal(
+            replace(proposal, **{field_name: field_value})
+        )
+        report = _assert_c3r2_stage(
+            proposal=mutated,
+            router_input=router_input,
+            context=context,
+            expected_stage="PROPOSAL",
+            expected_reason=(
+                "g2c_source_object_substituted"
+                if field_name in source_fields
+                else "g2c_proposal_rows_invalid"
+            ),
+        )
+        if field_name in source_fields:
+            assert "g2c_source_object_substituted" in report.reason_codes
+    wrong_identity = replace(proposal, proposal_id="emproposal_v01:" + ("f" * 64))
+    _assert_c3r2_stage(
+        proposal=wrong_identity,
+        router_input=router_input,
+        context=context,
+        expected_stage="PROPOSAL",
+        expected_reason="g2c_identity_mismatch",
+    )
+    _assert_c3r2_stage(
+        proposal=object(),
+        router_input=router_input,
+        context=context,
+        expected_stage="PROPOSAL",
+        expected_reason="g2c_exact_type_invalid",
+    )
+
+
+def test_c3r2_proposal_stage_reason_downstream_and_zero_matrix():
+    router_input, context, proposal = _c3r2_valid_proposal()
+    mutations = {
+        "reason_codes": (
+            "g2c_selection_tie_break_applied",
+            "g2c_proposal_sources_valid",
+        ),
+        "required_downstream_capability_ids": (
+            "capability:g2c:c3:r2:foreign",
+        ),
+        "downstream_consumption_class": "RUNTIME_TOPOLOGY_ELIGIBLE",
+        "downstream_action_packet_required": True,
+        "root_review_required": False,
+        "authority_created": True,
+        "permission_created": True,
+        "action_commit_packet_created": True,
+        "receipt_created": True,
+        "topology_created": True,
+        "final_output_created": True,
+        "drs_write_created": True,
+        "real_world_effects_count": 1,
+    }
+    for field_name, field_value in mutations.items():
+        mutated = _c3r2_rebuild_proposal(
+            replace(proposal, **{field_name: field_value})
+        )
+        report = router.validate_execution_mode_proposal_against_sources_v01(
+            proposal=mutated,
+            router_input=router_input,
+            source_context=context,
+        )
+        assert report.validation_status == "FAIL_CLOSED", field_name
+        assert report.failure_stage == "PROPOSAL", field_name
+        assert report.reason_codes, field_name
+        assert report.authority_created is False
+        assert report.permission_created is False
+        assert report.real_world_effects_count == 0
+
+
+def test_c3r2_input_validator_unexpected_exception_is_structural(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    router_input, context, proposal = _c3r2_valid_proposal()
+
+    def injected_failure(*args: object, **kwargs: object) -> object:
+        raise RuntimeError("g2c3r2 input validator internal detail")
+
+    monkeypatch.setattr(
+        router,
+        "validate_execution_mode_router_input_against_sources_v01",
+        injected_failure,
+    )
+    report = router.validate_execution_mode_proposal_against_sources_v01(
+        proposal=proposal,
+        router_input=router_input,
+        source_context=context,
+    )
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == "STRUCTURAL"
+    assert report.reason_codes == ("g2c_source_validator_failed",)
+    assert report.return_to_root_required is True
+    assert report.authority_created is False
+    assert report.permission_created is False
+    assert report.real_world_effects_count == 0
+    serialized = json.dumps(
+        router.execution_mode_validation_report_to_plain_data_v01(report),
+        sort_keys=True,
+    )
+    assert "g2c3r2 input validator internal detail" not in serialized
+    assert "RuntimeError" not in serialized
+
+
+def test_c3r2_returned_c2_failure_preserves_stage_and_reason_ownership():
+    router_input, context, proposal = _c3r2_valid_proposal()
+    invalid_context = replace(
+        context,
+        bsep_packet={
+            **context.bsep_packet,
+            "source_proposal_id": "proposal:g2c:c3:r2:substituted",
+        },
+    )
+    input_report = router.validate_execution_mode_router_input_against_sources_v01(
+        router_input=router_input,
+        source_context=invalid_context,
+    )
+    report = router.validate_execution_mode_proposal_against_sources_v01(
+        proposal=proposal,
+        router_input=router_input,
+        source_context=invalid_context,
+    )
+    assert input_report.validation_status == "FAIL_CLOSED"
+    assert report.validation_status == "FAIL_CLOSED"
+    assert report.failure_stage == input_report.failure_stage
+    assert report.reason_codes == input_report.reason_codes
+    assert report.source_reason_codes == input_report.source_reason_codes

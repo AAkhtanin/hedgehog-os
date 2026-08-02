@@ -1,9 +1,10 @@
-"""Deterministic planning contracts for Gate 2 G2-C ExecutionModeRouter.
+"""Deterministic contracts for Gate 2 G2-C ExecutionModeRouter.
 
 G2-C1 owns canonical types and structural validation. G2-C2 adds actual source
-binding and contextual input validation. This module still performs no routing,
-feasibility, Root review, Transition evaluation, ABI projection, I/O, provider
-work, or effects.
+binding and contextual input validation. G2-C3 adds feasibility, deterministic
+selection, terminal handling, and bounded proposal construction. The module
+still performs no Root review, Transition evaluation, ABI projection, topology
+construction, I/O, provider work, or effects.
 """
 
 from __future__ import annotations
@@ -100,7 +101,7 @@ from hedgehog.structured_rationale import (
 
 
 MODULE_ID = "kernel_execution_mode_router_v01"
-SLICE_ID = "gate2_g2c2_execution_mode_router_source_bindings"
+SLICE_ID = "gate2_g2c3_execution_mode_router_feasibility_proposal"
 EXECUTION_MODE_ROUTER_VERSION = "v0.1"
 
 TOTAL_G2C_TYPE_COUNT = 13
@@ -143,6 +144,124 @@ EXECUTION_MODE_SAFE_DEPTH_RANKS_V01 = (
     ("cloud_llm", 50),
     ("full_semantic", 60),
     ("full_fractal", 70),
+)
+
+_MODE_POSITIVE_REASONS_V01 = {
+    "deterministic": "g2c_deterministic_feasible",
+    "sealed_replay": "g2c_sealed_replay_feasible",
+    "direct_informational_reuse": "g2c_direct_informational_reuse_feasible",
+    "memory_informed": "g2c_memory_informed_feasible",
+    "local_slm": "g2c_local_slm_feasible",
+    "cloud_llm": "g2c_cloud_llm_feasible",
+    "full_semantic": "g2c_full_semantic_feasible",
+    "full_fractal": "g2c_full_fractal_feasible",
+}
+_MODE_DOWNSTREAM_COMPUTE_CLASSES_V01 = {
+    "deterministic": "NONE",
+    "sealed_replay": "NONE",
+    "direct_informational_reuse": "NONE",
+    "memory_informed": "MEMORY_INFORMED",
+    "local_slm": "LOCAL_SLM",
+    "cloud_llm": "CLOUD_LLM",
+    "full_semantic": "FULL_SEMANTIC",
+    "full_fractal": "FULL_FRACTAL",
+    "blocked": "TERMINAL",
+    "needs_user": "TERMINAL",
+}
+_MODE_DOWNSTREAM_CONSUMPTION_CLASSES_V01 = {
+    "deterministic": "SHORTCUT_RETURN_TO_ROOT",
+    "sealed_replay": "SHORTCUT_RETURN_TO_ROOT",
+    "direct_informational_reuse": "SHORTCUT_RETURN_TO_ROOT",
+    "memory_informed": "RUNTIME_TOPOLOGY_ELIGIBLE",
+    "local_slm": "RUNTIME_TOPOLOGY_ELIGIBLE",
+    "cloud_llm": "RUNTIME_TOPOLOGY_ELIGIBLE",
+    "full_semantic": "RUNTIME_TOPOLOGY_ELIGIBLE",
+    "full_fractal": "RUNTIME_TOPOLOGY_ELIGIBLE",
+    "blocked": "TERMINAL_NO_CONSUMPTION",
+    "needs_user": "TERMINAL_NO_CONSUMPTION",
+}
+_CAPABILITY_REQUIRED_MODES_V01 = (
+    "deterministic",
+    "memory_informed",
+    "local_slm",
+    "cloud_llm",
+    "full_semantic",
+    "full_fractal",
+)
+_NO_CAPABILITY_MODES_V01 = (
+    "sealed_replay",
+    "direct_informational_reuse",
+    "blocked",
+    "needs_user",
+)
+_TERMINAL_MODES_V01 = ("blocked", "needs_user")
+_CANONICAL_MODE_INDEX_V01 = {
+    mode: index for index, mode in enumerate(CANONICAL_EXECUTION_MODES_V01)
+}
+_ALLOWED_MISSING_EVIDENCE_CODES_V01 = (
+    "g2c_required_evidence_missing",
+    "g2c_capability_unavailable",
+)
+_LOCAL_NEGATIVE_REASONS_V01 = (
+    "g2c_policy_forbidden",
+    "g2c_scope_forbidden",
+    "g2c_risk_forbidden",
+    "g2c_privacy_forbidden",
+    "g2c_capability_unavailable",
+)
+_EXECUTABLE_NEGATIVE_REASONS_V01 = (
+    *_LOCAL_NEGATIVE_REASONS_V01,
+    "g2c_required_evidence_missing",
+    "g2c_action_shortcut_forbidden",
+    "g2c_hard_block_present",
+    "g2c_user_input_required",
+)
+_PROPOSAL_FEASIBILITY_FIELDS_V01 = ("ordered_feasibility_rows",)
+_PROPOSAL_SELECTION_FIELDS_V01 = (
+    "selected_mode",
+    "selected_safe_depth_rank",
+    "selected_local_mode_profile_id",
+    "selected_expected_cost_units",
+    "selected_feasibility_row_id",
+)
+_PROPOSAL_GEOMETRY_FIELDS_V01 = (
+    "proposal_id",
+    "source_input_id",
+    "request_id",
+    "transaction_id",
+    "owning_root_id",
+    "domain_id",
+    "source_bsep_binding_id",
+    "source_bsep_packet_id",
+    "source_bsep_sha256",
+    "source_local_routing_snapshot_id",
+    "source_replay_binding_id",
+    "source_g2a_binding_id",
+    "source_g2b_binding_id",
+    "proposed_scope_ref",
+    "reason_codes",
+    "required_downstream_capability_ids",
+    "downstream_consumption_class",
+    "downstream_action_packet_required",
+    "root_review_required",
+    "authority_created",
+    "permission_created",
+    "action_commit_packet_created",
+    "receipt_created",
+    "topology_created",
+    "final_output_created",
+    "drs_write_created",
+    "real_world_effects_count",
+)
+_PROPOSAL_SOURCE_FIELDS_V01 = (
+    "source_input_id",
+    "source_bsep_binding_id",
+    "source_bsep_packet_id",
+    "source_bsep_sha256",
+    "source_local_routing_snapshot_id",
+    "source_replay_binding_id",
+    "source_g2a_binding_id",
+    "source_g2b_binding_id",
 )
 
 VALIDATION_TARGETS_V01 = (
@@ -1038,6 +1157,14 @@ def _sort_public_reasons(values: list[str] | tuple[str, ...]) -> tuple[str, ...]
     if not known:
         known = {"g2c_scalar_invalid"}
     return tuple(sorted(known, key=_REASON_POSITION.__getitem__))
+
+
+def _is_order_preserving_subset(
+    subset: tuple[str, ...],
+    sequence: tuple[str, ...],
+) -> bool:
+    positions = iter(sequence)
+    return all(any(candidate == item for candidate in positions) for item in subset)
 
 
 def _text_valid(value: object, *, maximum: int = 512, allow_empty: bool = False) -> bool:
@@ -1955,7 +2082,8 @@ def _feasibility_row_errors(value: object) -> tuple[str, ...]:
     errors = list(_common_serialized_errors(value, ExecutionModeFeasibilityRowV01))
     if type(value) is not ExecutionModeFeasibilityRowV01:
         return tuple(errors)
-    if value.mode not in CANONICAL_EXECUTION_MODES_V01:
+    mode = value.mode
+    if mode not in CANONICAL_EXECUTION_MODES_V01:
         errors.append("g2c_noncanonical_mode")
     if value.category not in {"EXECUTABLE", "TERMINAL"}:
         errors.append("g2c_feasibility_row_invalid")
@@ -1974,38 +2102,81 @@ def _feasibility_row_errors(value: object) -> tuple[str, ...]:
         _ordered_public_reasons(value.reason_codes)
     except ValueError:
         errors.append("g2c_sequence_invalid")
-    if not set(value.satisfied_evidence_refs).issubset(value.required_evidence_refs):
+    if (
+        any(
+            reason not in _ALLOWED_MISSING_EVIDENCE_CODES_V01
+            for reason in value.missing_evidence_codes
+        )
+        or not _is_order_preserving_subset(
+            value.satisfied_evidence_refs,
+            value.required_evidence_refs,
+        )
+    ):
         errors.append("g2c_feasibility_row_invalid")
     rank_by_mode = dict(EXECUTION_MODE_SAFE_DEPTH_RANKS_V01)
     if value.category == "EXECUTABLE":
         if (
-            value.mode not in EXECUTABLE_EXECUTION_MODES_V01
-            or value.safe_depth_rank != rank_by_mode.get(value.mode)
+            mode not in EXECUTABLE_EXECUTION_MODES_V01
+            or value.safe_depth_rank != rank_by_mode.get(mode)
             or not _source_identity_valid(value.local_mode_profile_id)
             or not _exact_int_valid(value.cost_units, minimum=0)
             or value.feasibility_status not in {"FEASIBLE", "INFEASIBLE"}
             or value.downstream_compute_class
-            not in {
-                "NONE",
-                "MEMORY_INFORMED",
-                "LOCAL_SLM",
-                "CLOUD_LLM",
-                "FULL_SEMANTIC",
-                "FULL_FRACTAL",
-            }
+            != _MODE_DOWNSTREAM_COMPUTE_CLASSES_V01.get(mode)
+            or len(value.required_evidence_refs) < 3
+        ):
+            errors.append("g2c_feasibility_row_invalid")
+        if mode in _CAPABILITY_REQUIRED_MODES_V01:
+            if (
+                not _source_identity_valid(value.required_capability_id)
+                or value.required_capability_id not in value.required_evidence_refs
+            ):
+                errors.append("g2c_feasibility_row_invalid")
+        elif value.required_capability_id is not None:
+            errors.append("g2c_feasibility_row_invalid")
+        positive_reasons = set(_MODE_POSITIVE_REASONS_V01.values())
+        if value.feasibility_status == "FEASIBLE":
+            if (
+                value.reason_codes != (_MODE_POSITIVE_REASONS_V01.get(mode),)
+                or value.missing_evidence_codes != ()
+                or value.satisfied_evidence_refs != value.required_evidence_refs
+            ):
+                errors.append("g2c_feasibility_row_invalid")
+        elif (
+            not value.reason_codes
+            or any(reason in positive_reasons for reason in value.reason_codes)
+            or any(
+                reason not in _EXECUTABLE_NEGATIVE_REASONS_V01
+                for reason in value.reason_codes
+            )
         ):
             errors.append("g2c_feasibility_row_invalid")
     elif value.category == "TERMINAL":
         if (
-            value.mode not in {"blocked", "needs_user"}
+            mode not in _TERMINAL_MODES_V01
             or value.safe_depth_rank is not None
             or value.local_mode_profile_id is not None
             or value.required_capability_id is not None
             or value.cost_units is not None
-            or value.downstream_compute_class != "TERMINAL"
+            or value.downstream_compute_class
+            != _MODE_DOWNSTREAM_COMPUTE_CLASSES_V01.get(mode)
             or value.feasibility_status
             not in {"TERMINAL_SELECTED", "TERMINAL_NOT_SELECTED"}
+            or len(value.required_evidence_refs) != 2
+            or value.satisfied_evidence_refs != value.required_evidence_refs
+            or value.missing_evidence_codes != ()
         ):
+            errors.append("g2c_feasibility_row_invalid")
+        if value.feasibility_status == "TERMINAL_NOT_SELECTED":
+            if value.reason_codes != ():
+                errors.append("g2c_feasibility_row_invalid")
+        elif mode == "blocked":
+            if value.reason_codes not in {
+                ("g2c_hard_block_present",),
+                ("g2c_no_safe_mode",),
+            }:
+                errors.append("g2c_feasibility_row_invalid")
+        elif value.reason_codes != ("g2c_user_input_required",):
             errors.append("g2c_feasibility_row_invalid")
     if value.root_review_required is not True:
         errors.append("g2c_feasibility_row_invalid")
@@ -2017,7 +2188,8 @@ def _proposal_errors(value: object) -> tuple[str, ...]:
     errors = list(_common_serialized_errors(value, ExecutionModeProposalV01))
     if type(value) is not ExecutionModeProposalV01:
         return tuple(errors)
-    if value.selected_mode not in CANONICAL_EXECUTION_MODES_V01:
+    mode = value.selected_mode
+    if mode not in CANONICAL_EXECUTION_MODES_V01:
         errors.append("g2c_noncanonical_mode")
     if not _sha256_valid(value.source_bsep_sha256):
         errors.append("g2c_source_digest_mismatch")
@@ -2035,11 +2207,50 @@ def _proposal_errors(value: object) -> tuple[str, ...]:
         selected = tuple(
             item
             for item in value.ordered_feasibility_rows
-            if item.feasibility_status in {"FEASIBLE", "TERMINAL_SELECTED"}
-            and item.feasibility_row_id == value.selected_feasibility_row_id
+            if item.feasibility_row_id == value.selected_feasibility_row_id
         )
-        if len(selected) != 1 or selected[0].mode != value.selected_mode:
+        if (
+            len(selected) != 1
+            or selected[0].mode != mode
+            or selected[0].feasibility_status
+            not in {"FEASIBLE", "TERMINAL_SELECTED"}
+        ):
             errors.append("g2c_proposal_selected_row_mismatch")
+        else:
+            selected_row = selected[0]
+            if (
+                value.selected_safe_depth_rank != selected_row.safe_depth_rank
+                or value.selected_local_mode_profile_id
+                != selected_row.local_mode_profile_id
+                or value.selected_expected_cost_units != selected_row.cost_units
+            ):
+                errors.append("g2c_proposal_selected_row_mismatch")
+            feasible_rows = tuple(
+                row
+                for row in value.ordered_feasibility_rows
+                if row.feasibility_status == "FEASIBLE"
+            )
+            selected_terminals = tuple(
+                row
+                for row in value.ordered_feasibility_rows
+                if row.feasibility_status == "TERMINAL_SELECTED"
+            )
+            if selected_row.category == "TERMINAL":
+                if len(selected_terminals) != 1 or feasible_rows:
+                    errors.append("g2c_proposal_selected_row_mismatch")
+            elif selected_terminals:
+                errors.append("g2c_proposal_selected_row_mismatch")
+            elif feasible_rows:
+                expected_selected = min(
+                    feasible_rows,
+                    key=lambda row: (
+                        row.safe_depth_rank,
+                        row.cost_units,
+                        _CANONICAL_MODE_INDEX_V01[row.mode],
+                    ),
+                )
+                if selected_row != expected_selected:
+                    errors.append("g2c_proposal_selected_row_mismatch")
         for row in value.ordered_feasibility_rows:
             if (
                 row.source_input_id != value.source_input_id
@@ -2056,13 +2267,48 @@ def _proposal_errors(value: object) -> tuple[str, ...]:
         errors.append("g2c_sequence_invalid")
     if not _valid_ref_tuple(value.required_downstream_capability_ids):
         errors.append("g2c_sequence_invalid")
-    if value.downstream_consumption_class not in {
-        "SHORTCUT_RETURN_TO_ROOT",
-        "RUNTIME_TOPOLOGY_ELIGIBLE",
-        "TERMINAL_NO_CONSUMPTION",
-    }:
+    if value.downstream_consumption_class != (
+        _MODE_DOWNSTREAM_CONSUMPTION_CLASSES_V01.get(mode)
+    ):
         errors.append("g2c_proposal_rows_invalid")
-    terminal = value.selected_mode in {"blocked", "needs_user"}
+    expected_capabilities: tuple[str, ...] = ()
+    if mode in _CAPABILITY_REQUIRED_MODES_V01:
+        selected_capability = None
+        if "selected_row" in locals():
+            selected_capability = selected_row.required_capability_id
+        if not _source_identity_valid(selected_capability):
+            errors.append("g2c_proposal_selected_row_mismatch")
+        else:
+            expected_capabilities = (selected_capability,)
+    if value.required_downstream_capability_ids != expected_capabilities:
+        errors.append("g2c_proposal_selected_row_mismatch")
+    tie_break_applied = False
+    if "selected_row" in locals() and selected_row.category == "EXECUTABLE":
+        feasible_rows = tuple(
+            row
+            for row in value.ordered_feasibility_rows
+            if row.feasibility_status == "FEASIBLE"
+        )
+        if feasible_rows:
+            minimum_rank = min(row.safe_depth_rank for row in feasible_rows)
+            rank_rows = tuple(
+                row for row in feasible_rows if row.safe_depth_rank == minimum_rank
+            )
+            minimum_cost = min(row.cost_units for row in rank_rows)
+            tie_break_applied = sum(
+                row.cost_units == minimum_cost for row in rank_rows
+            ) >= 2
+    expected_reasons = (
+        (
+            "g2c_selection_tie_break_applied",
+            "g2c_proposal_sources_valid",
+        )
+        if tie_break_applied
+        else ("g2c_proposal_sources_valid",)
+    )
+    if value.reason_codes != expected_reasons:
+        errors.append("g2c_proposal_rows_invalid")
+    terminal = mode in _TERMINAL_MODES_V01
     if terminal:
         if (
             value.selected_safe_depth_rank is not None
@@ -2071,6 +2317,7 @@ def _proposal_errors(value: object) -> tuple[str, ...]:
             or value.proposed_scope_ref is not None
             or value.downstream_consumption_class != "TERMINAL_NO_CONSUMPTION"
             or value.downstream_action_packet_required is not False
+            or value.required_downstream_capability_ids != ()
         ):
             errors.append("g2c_terminal_review_mismatch")
     elif (
@@ -3914,7 +4161,11 @@ def _contextual_input_report(
     transaction_id: str | None = None
     owning_root_id: str | None = None
     domain_id: str | None = None
-    if type(router_input) is ExecutionModeRouterInputV01:
+    if (
+        type(router_input) is ExecutionModeRouterInputV01
+        and type(router_input.local_routing_snapshot)
+        is ExecutionModeLocalRoutingSnapshotV01
+    ):
         candidate_values = (
             router_input.router_input_id,
             router_input.request_id,
@@ -4315,6 +4566,945 @@ def build_execution_mode_router_input_v01(
         raise ValueError(reason) from None
     except Exception:
         raise ValueError("g2c_source_context_invalid") from None
+
+
+class _C3Failure(Exception):
+    def __init__(
+        self,
+        reason: str,
+        stage: str,
+        source_reasons: tuple[str, ...] = (),
+    ) -> None:
+        super().__init__(reason)
+        self.reason = reason
+        self.stage = stage
+        self.source_reasons = _dedupe(source_reasons)
+
+
+def _public_reason_union(*groups: tuple[str, ...]) -> tuple[str, ...]:
+    present = {
+        reason
+        for group in groups
+        for reason in group
+        if reason in _REASON_POSITION
+    }
+    return tuple(
+        reason for reason in PUBLIC_G2C_REASON_CODES_V01 if reason in present
+    )
+
+
+def _require_c3_context(
+    router_input: object,
+    source_context: object,
+) -> None:
+    report = validate_execution_mode_router_input_against_sources_v01(
+        router_input=router_input,  # type: ignore[arg-type]
+        source_context=source_context,  # type: ignore[arg-type]
+    )
+    if report.validation_status != "PASS":
+        reason = (
+            report.reason_codes[0]
+            if report.reason_codes
+            else "g2c_source_validator_failed"
+        )
+        raise _C3Failure(reason, report.failure_stage, report.source_reason_codes)
+
+
+def _present_g2a_usable(binding: ExecutionModeG2ABindingV01) -> bool:
+    return (
+        binding.binding_state == "PRESENT_INSPECTION_BOUND"
+        and binding.present_eligibility_status
+        == "ELIGIBLE_FOR_BOUNDED_MOCK_ATTEMPT"
+        and binding.present_executable is True
+        and binding.retry_eligible is False
+        and binding.source_reason_codes == ()
+        and binding.failed_provenance is None
+        and binding.historical_result_unchanged is True
+        and binding.source_inspection_sha256 is not None
+        and binding.transition_history_sha256 is not None
+        and binding.disposition_history_sha256 is not None
+    )
+
+
+def _mode_action_allowed(
+    mode: str,
+    snapshot: ExecutionModeLocalRoutingSnapshotV01,
+    g2a_binding: ExecutionModeG2ABindingV01,
+) -> bool:
+    relation = snapshot.action_packet_relation
+    if mode == "direct_informational_reuse":
+        return (
+            snapshot.action_class == "NON_ACTION"
+            and relation == "NOT_APPLICABLE"
+            and g2a_binding.binding_state == "NO_PACKET"
+        )
+    if mode == "sealed_replay":
+        return relation in {"NOT_APPLICABLE", "NEW_ACTION_NO_PACKET"}
+    if relation == "EXISTING_PACKET_ATTEMPT":
+        return _present_g2a_usable(g2a_binding)
+    return relation in {"NOT_APPLICABLE", "NEW_ACTION_NO_PACKET"}
+
+
+def _replay_available(binding: ExecutionModeReplayBindingV01) -> bool:
+    return (
+        binding.binding_state == "SEALED_REPLAY_BOUND"
+        and binding.replay_id is not None
+        and binding.source_replay_sha256 is not None
+        and binding.replay_status == "PASS"
+        and binding.integrity_verified is True
+        and binding.continuity_verified is True
+        and binding.anchor_verified is True
+    )
+
+
+def _direct_reuse_available(binding: ExecutionModeG2BBindingV01) -> bool:
+    return (
+        binding.binding_state == "DIRECT_REUSE_BOUND"
+        and binding.context_available is True
+        and binding.direct_informational_reuse_eligible is True
+        and binding.freshness_state == "CURRENT"
+        and binding.lineage_state == "VALIDATED"
+        and binding.quarantine_present is False
+        and binding.deadend_present is False
+        and binding.report_id is not None
+        and binding.reuse_certificate_id is not None
+        and binding.source_root_decision_id is not None
+    )
+
+
+def _memory_context_available(binding: ExecutionModeG2BBindingV01) -> bool:
+    return (
+        binding.binding_state
+        in {"RESOLUTION_CONTEXT_BOUND", "DIRECT_REUSE_BOUND"}
+        and binding.context_available is True
+        and binding.lineage_state == "VALIDATED"
+        and binding.report_id is not None
+    )
+
+
+def _append_unique_ref(values: list[str], value: str | None) -> None:
+    if value is not None and value not in values:
+        values.append(value)
+
+
+def _row_evidence(
+    *,
+    mode: str,
+    router_input: ExecutionModeRouterInputV01,
+    profile: ExecutionModeLocalModeProfileV01,
+    capability_available: bool,
+    mode_source_available: bool,
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    required = [
+        router_input.bsep_binding.bsep_binding_id,
+        router_input.local_routing_snapshot.local_routing_snapshot_id,
+        profile.local_mode_profile_id,
+    ]
+    satisfied = list(required)
+    replay = router_input.replay_binding
+    g2b = router_input.g2b_binding
+    g2a = router_input.g2a_binding
+    if mode == "sealed_replay":
+        _append_unique_ref(required, replay.replay_binding_id)
+        _append_unique_ref(satisfied, replay.replay_binding_id)
+        _append_unique_ref(required, replay.replay_id)
+        if mode_source_available:
+            _append_unique_ref(satisfied, replay.replay_id)
+    elif mode == "direct_informational_reuse":
+        for item in (
+            g2b.g2b_binding_id,
+            g2b.report_id,
+            g2b.reuse_certificate_id,
+            g2b.source_root_decision_id,
+        ):
+            _append_unique_ref(required, item)
+            _append_unique_ref(satisfied, item)
+    elif mode == "memory_informed":
+        _append_unique_ref(required, g2b.g2b_binding_id)
+        _append_unique_ref(satisfied, g2b.g2b_binding_id)
+        _append_unique_ref(required, g2b.report_id)
+        if g2b.report_id is not None:
+            _append_unique_ref(satisfied, g2b.report_id)
+    if mode in _CAPABILITY_REQUIRED_MODES_V01:
+        _append_unique_ref(required, profile.capability_id)
+        if capability_available:
+            _append_unique_ref(satisfied, profile.capability_id)
+    if (
+        router_input.local_routing_snapshot.action_packet_relation
+        == "EXISTING_PACKET_ATTEMPT"
+    ):
+        for item in (
+            g2a.g2a_binding_id,
+            g2a.packet_id,
+            g2a.source_inspection_sha256,
+        ):
+            _append_unique_ref(required, item)
+            _append_unique_ref(satisfied, item)
+    return tuple(required), tuple(satisfied)
+
+
+def _finish_c3_row(
+    provisional: ExecutionModeFeasibilityRowV01,
+) -> ExecutionModeFeasibilityRowV01:
+    row = replace(provisional, feasibility_row_id=_rebuild_identity(provisional))
+    errors = _feasibility_row_errors(row)
+    if errors:
+        raise _C3Failure(errors[0], "FEASIBILITY")
+    return row
+
+
+def _build_feasibility_rows(
+    router_input: ExecutionModeRouterInputV01,
+) -> tuple[ExecutionModeFeasibilityRowV01, ...]:
+    snapshot = router_input.local_routing_snapshot
+    rank_by_mode = dict(EXECUTION_MODE_SAFE_DEPTH_RANKS_V01)
+    executable_rows: list[ExecutionModeFeasibilityRowV01] = []
+    hard_block = snapshot.hard_block_state == "BLOCKED"
+    user_missing = (
+        not hard_block
+        and snapshot.required_user_input_state == "MISSING_RESOLVABLE"
+    )
+    for mode, profile in zip(
+        EXECUTABLE_EXECUTION_MODES_V01,
+        snapshot.mode_profiles,
+        strict=True,
+    ):
+        if profile.mode != mode or _local_profile_errors(profile):
+            raise _C3Failure("g2c_local_mode_profile_invalid", "LOCAL_PROFILE")
+        capability_available = (
+            profile.capability_state == "AVAILABLE"
+            and profile.capability_id is not None
+        )
+        mode_source_available = True
+        if mode == "sealed_replay":
+            mode_source_available = _replay_available(router_input.replay_binding)
+        elif mode == "direct_informational_reuse":
+            mode_source_available = _direct_reuse_available(router_input.g2b_binding)
+        elif mode == "memory_informed":
+            mode_source_available = _memory_context_available(router_input.g2b_binding)
+        local_reasons = list(profile.local_reason_codes)
+        source_reason_needed = not mode_source_available
+        if source_reason_needed:
+            local_reasons.append("g2c_required_evidence_missing")
+        if not _mode_action_allowed(mode, snapshot, router_input.g2a_binding):
+            local_reasons.append("g2c_action_shortcut_forbidden")
+        missing_codes: list[str] = []
+        if source_reason_needed:
+            missing_codes.append("g2c_required_evidence_missing")
+        if (
+            mode in _CAPABILITY_REQUIRED_MODES_V01
+            and not capability_available
+        ):
+            missing_codes.append("g2c_capability_unavailable")
+        if hard_block:
+            local_reasons.append("g2c_hard_block_present")
+        elif user_missing:
+            local_reasons.append("g2c_user_input_required")
+            missing_codes.append("g2c_required_evidence_missing")
+        reasons = _public_reason_union(tuple(local_reasons))
+        missing = _public_reason_union(tuple(missing_codes))
+        required, satisfied = _row_evidence(
+            mode=mode,
+            router_input=router_input,
+            profile=profile,
+            capability_available=capability_available,
+            mode_source_available=mode_source_available,
+        )
+        feasible = not reasons
+        if feasible:
+            reasons = (_MODE_POSITIVE_REASONS_V01[mode],)
+            missing = ()
+            satisfied = required
+        provisional = ExecutionModeFeasibilityRowV01(
+            feasibility_row_id="emrow_v01:" + _ZERO_SHA256,
+            source_input_id=router_input.router_input_id,
+            request_id=router_input.request_id,
+            transaction_id=router_input.transaction_id,
+            owning_root_id=router_input.owning_root_id,
+            domain_id=snapshot.domain_id,
+            mode=mode,
+            category="EXECUTABLE",
+            safe_depth_rank=rank_by_mode[mode],
+            feasibility_status="FEASIBLE" if feasible else "INFEASIBLE",
+            local_mode_profile_id=profile.local_mode_profile_id,
+            required_evidence_refs=required,
+            satisfied_evidence_refs=satisfied,
+            missing_evidence_codes=missing,
+            reason_codes=reasons,
+            required_capability_id=(
+                profile.capability_id
+                if mode in _CAPABILITY_REQUIRED_MODES_V01
+                else None
+            ),
+            cost_units=profile.cost_units,
+            downstream_compute_class=_MODE_DOWNSTREAM_COMPUTE_CLASSES_V01[mode],
+            root_review_required=True,
+            authority_created=False,
+            permission_created=False,
+            real_world_effects_count=0,
+        )
+        executable_rows.append(_finish_c3_row(provisional))
+    any_feasible = any(
+        row.feasibility_status == "FEASIBLE" for row in executable_rows
+    )
+    blocked_selected = hard_block or (
+        not user_missing and not hard_block and not any_feasible
+    )
+    needs_user_selected = user_missing
+    universal = (
+        router_input.bsep_binding.bsep_binding_id,
+        snapshot.local_routing_snapshot_id,
+    )
+    terminal_rows: list[ExecutionModeFeasibilityRowV01] = []
+    for mode in _TERMINAL_MODES_V01:
+        selected = (
+            blocked_selected if mode == "blocked" else needs_user_selected
+        )
+        if not selected:
+            reasons = ()
+        elif mode == "needs_user":
+            reasons = ("g2c_user_input_required",)
+        elif hard_block:
+            reasons = ("g2c_hard_block_present",)
+        else:
+            reasons = ("g2c_no_safe_mode",)
+        terminal_rows.append(
+            _finish_c3_row(
+                ExecutionModeFeasibilityRowV01(
+                    feasibility_row_id="emrow_v01:" + _ZERO_SHA256,
+                    source_input_id=router_input.router_input_id,
+                    request_id=router_input.request_id,
+                    transaction_id=router_input.transaction_id,
+                    owning_root_id=router_input.owning_root_id,
+                    domain_id=snapshot.domain_id,
+                    mode=mode,
+                    category="TERMINAL",
+                    safe_depth_rank=None,
+                    feasibility_status=(
+                        "TERMINAL_SELECTED"
+                        if selected
+                        else "TERMINAL_NOT_SELECTED"
+                    ),
+                    local_mode_profile_id=None,
+                    required_evidence_refs=universal,
+                    satisfied_evidence_refs=universal,
+                    missing_evidence_codes=(),
+                    reason_codes=reasons,
+                    required_capability_id=None,
+                    cost_units=None,
+                    downstream_compute_class="TERMINAL",
+                    root_review_required=True,
+                    authority_created=False,
+                    permission_created=False,
+                    real_world_effects_count=0,
+                )
+            )
+        )
+    return (*executable_rows, *terminal_rows)
+
+
+def _select_c3_row(
+    rows: tuple[ExecutionModeFeasibilityRowV01, ...],
+) -> ExecutionModeFeasibilityRowV01:
+    selected_terminals = tuple(
+        row for row in rows if row.feasibility_status == "TERMINAL_SELECTED"
+    )
+    if len(selected_terminals) == 1:
+        return selected_terminals[0]
+    if selected_terminals:
+        raise _C3Failure("g2c_selection_invalid", "SELECTION")
+    feasible = tuple(
+        row
+        for row in rows
+        if row.category == "EXECUTABLE" and row.feasibility_status == "FEASIBLE"
+    )
+    if not feasible:
+        raise _C3Failure("g2c_selection_invalid", "SELECTION")
+    return min(
+        feasible,
+        key=lambda row: (
+            row.safe_depth_rank,
+            row.cost_units,
+            _CANONICAL_MODE_INDEX_V01[row.mode],
+        ),
+    )
+
+
+def _tie_break_applied(
+    rows: tuple[ExecutionModeFeasibilityRowV01, ...],
+) -> bool:
+    feasible = tuple(row for row in rows if row.feasibility_status == "FEASIBLE")
+    if not feasible:
+        return False
+    minimum_rank = min(row.safe_depth_rank for row in feasible)
+    rank_rows = tuple(row for row in feasible if row.safe_depth_rank == minimum_rank)
+    minimum_cost = min(row.cost_units for row in rank_rows)
+    return sum(row.cost_units == minimum_cost for row in rank_rows) >= 2
+
+
+def _build_c3_proposal(
+    *,
+    router_input: ExecutionModeRouterInputV01,
+    rows: tuple[ExecutionModeFeasibilityRowV01, ...],
+    selected: ExecutionModeFeasibilityRowV01,
+) -> ExecutionModeProposalV01:
+    mode = selected.mode
+    tie_break = selected.category == "EXECUTABLE" and _tie_break_applied(rows)
+    reason_codes = (
+        (
+            "g2c_selection_tie_break_applied",
+            "g2c_proposal_sources_valid",
+        )
+        if tie_break
+        else ("g2c_proposal_sources_valid",)
+    )
+    capabilities = (
+        (selected.required_capability_id,)
+        if mode in _CAPABILITY_REQUIRED_MODES_V01
+        else ()
+    )
+    snapshot = router_input.local_routing_snapshot
+    provisional = ExecutionModeProposalV01(
+        proposal_id="emproposal_v01:" + _ZERO_SHA256,
+        source_input_id=router_input.router_input_id,
+        request_id=router_input.request_id,
+        transaction_id=router_input.transaction_id,
+        owning_root_id=router_input.owning_root_id,
+        domain_id=snapshot.domain_id,
+        source_bsep_binding_id=router_input.bsep_binding.bsep_binding_id,
+        source_bsep_packet_id=router_input.bsep_binding.source_packet_id,
+        source_bsep_sha256=router_input.bsep_binding.source_packet_sha256,
+        source_local_routing_snapshot_id=snapshot.local_routing_snapshot_id,
+        source_replay_binding_id=router_input.replay_binding.replay_binding_id,
+        source_g2a_binding_id=router_input.g2a_binding.g2a_binding_id,
+        source_g2b_binding_id=router_input.g2b_binding.g2b_binding_id,
+        selected_mode=mode,
+        selected_safe_depth_rank=selected.safe_depth_rank,
+        selected_local_mode_profile_id=selected.local_mode_profile_id,
+        selected_expected_cost_units=selected.cost_units,
+        proposed_scope_ref=(snapshot.scope_ref if selected.category == "EXECUTABLE" else None),
+        ordered_feasibility_rows=rows,
+        selected_feasibility_row_id=selected.feasibility_row_id,
+        reason_codes=reason_codes,
+        required_downstream_capability_ids=capabilities,
+        downstream_consumption_class=_MODE_DOWNSTREAM_CONSUMPTION_CLASSES_V01[mode],
+        downstream_action_packet_required=(
+            selected.category == "EXECUTABLE"
+            and snapshot.action_class == "ACTION"
+            and snapshot.action_packet_relation == "NEW_ACTION_NO_PACKET"
+        ),
+        root_review_required=True,
+        authority_created=False,
+        permission_created=False,
+        action_commit_packet_created=False,
+        receipt_created=False,
+        topology_created=False,
+        final_output_created=False,
+        drs_write_created=False,
+        real_world_effects_count=0,
+    )
+    proposal = replace(provisional, proposal_id=_rebuild_identity(provisional))
+    errors = _proposal_errors(proposal)
+    if errors:
+        raise _C3Failure(errors[0], "PROPOSAL")
+    return proposal
+
+
+def _proposal_context_report(
+    *,
+    proposal: object,
+    router_input: object,
+    status: str,
+    stage: str,
+    reasons: tuple[str, ...],
+    source_reasons: tuple[str, ...] = (),
+) -> ExecutionModeValidationReportV01:
+    artifact_id: str | None = None
+    request_id: str | None = None
+    transaction_id: str | None = None
+    owning_root_id: str | None = None
+    domain_id: str | None = None
+    if (
+        type(router_input) is ExecutionModeRouterInputV01
+        and type(router_input.local_routing_snapshot)
+        is ExecutionModeLocalRoutingSnapshotV01
+    ):
+        candidate = (
+            router_input.request_id,
+            router_input.transaction_id,
+            router_input.owning_root_id,
+            router_input.local_routing_snapshot.domain_id,
+        )
+        if all(_project_ref_valid(item) for item in candidate):
+            request_id, transaction_id, owning_root_id, domain_id = candidate
+    if type(proposal) is ExecutionModeProposalV01 and _source_identity_valid(
+        proposal.proposal_id
+    ):
+        artifact_id = proposal.proposal_id
+    return build_execution_mode_validation_report_v01(
+        validation_target="PROPOSAL_AGAINST_SOURCES",
+        validated_artifact_id=artifact_id,
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        validation_status=status,
+        failure_stage=stage,
+        return_to_root_required=status != "PASS",
+        reason_codes=reasons,
+        source_reason_codes=_dedupe(source_reasons),
+    )
+
+
+def _proposal_c3_failure_report(
+    *,
+    proposal: object,
+    router_input: object,
+    failure: _C3Failure,
+) -> ExecutionModeValidationReportV01:
+    return _proposal_context_report(
+        proposal=proposal,
+        router_input=router_input,
+        status="FAIL_CLOSED",
+        stage=failure.stage,
+        reasons=(failure.reason,),
+        source_reasons=failure.source_reasons,
+    )
+
+
+def _proposal_rows_have_invalid_geometry(
+    proposal: ExecutionModeProposalV01,
+) -> bool:
+    rows = proposal.ordered_feasibility_rows
+    return (
+        type(rows) is not tuple
+        or len(rows) != CANONICAL_MODE_COUNT
+        or tuple(type(row) for row in rows)
+        != (ExecutionModeFeasibilityRowV01,) * CANONICAL_MODE_COUNT
+        or tuple(row.mode for row in rows) != CANONICAL_EXECUTION_MODES_V01
+        or any(_feasibility_row_errors(row) for row in rows)
+    )
+
+
+def _proposal_source_fields_differ(
+    proposal: ExecutionModeProposalV01,
+    expected: ExecutionModeProposalV01,
+) -> bool:
+    return any(
+        getattr(proposal, field_name) != getattr(expected, field_name)
+        for field_name in _PROPOSAL_SOURCE_FIELDS_V01
+    )
+
+
+def _route_c3_failure_report(
+    *,
+    router_input: object,
+    stage: str,
+    reason: str,
+    source_reasons: tuple[str, ...] = (),
+) -> ExecutionModeValidationReportV01:
+    return _proposal_context_report(
+        proposal=None,
+        router_input=router_input,
+        status="FAIL_CLOSED",
+        stage=stage,
+        reasons=_public_reason_union(
+            (reason,),
+            ("g2c_fail_closed_return_to_root",),
+        ),
+        source_reasons=source_reasons,
+    )
+
+
+def evaluate_execution_mode_feasibility_v01(
+    *,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+) -> tuple[ExecutionModeFeasibilityRowV01, ...]:
+    try:
+        _require_c3_context(router_input, source_context)
+        return _build_feasibility_rows(router_input)
+    except _C3Failure as exc:
+        raise ValueError(exc.reason) from None
+    except Exception:
+        raise ValueError("g2c_feasibility_row_invalid") from None
+
+
+def select_execution_mode_v01(
+    *,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    ordered_rows: tuple[ExecutionModeFeasibilityRowV01, ...],
+) -> ExecutionModeFeasibilityRowV01:
+    try:
+        _require_c3_context(router_input, source_context)
+        expected = _build_feasibility_rows(router_input)
+        if type(ordered_rows) is not tuple or ordered_rows != expected:
+            raise _C3Failure("g2c_selection_invalid", "SELECTION")
+        return _select_c3_row(expected)
+    except _C3Failure as exc:
+        raise ValueError(exc.reason) from None
+    except Exception:
+        raise ValueError("g2c_selection_invalid") from None
+
+
+def build_execution_mode_proposal_v01(
+    *,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+    ordered_rows: tuple[ExecutionModeFeasibilityRowV01, ...],
+    selected_row: ExecutionModeFeasibilityRowV01,
+) -> ExecutionModeProposalV01:
+    try:
+        _require_c3_context(router_input, source_context)
+        expected_rows = _build_feasibility_rows(router_input)
+        if type(ordered_rows) is not tuple or ordered_rows != expected_rows:
+            raise _C3Failure("g2c_proposal_rows_invalid", "FEASIBILITY")
+        expected_selected = _select_c3_row(expected_rows)
+        if selected_row != expected_selected:
+            raise _C3Failure("g2c_proposal_selected_row_mismatch", "SELECTION")
+        return _build_c3_proposal(
+            router_input=router_input,
+            rows=expected_rows,
+            selected=expected_selected,
+        )
+    except _C3Failure as exc:
+        raise ValueError(exc.reason) from None
+    except Exception:
+        raise ValueError("g2c_proposal_rows_invalid") from None
+
+
+def validate_execution_mode_proposal_against_sources_v01(
+    *,
+    proposal: ExecutionModeProposalV01,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+) -> ExecutionModeValidationReportV01:
+    try:
+        input_report = validate_execution_mode_router_input_against_sources_v01(
+            router_input=router_input,
+            source_context=source_context,
+        )
+        if input_report.validation_status != "PASS":
+            return _proposal_context_report(
+                proposal=proposal,
+                router_input=router_input,
+                status="FAIL_CLOSED",
+                stage=input_report.failure_stage,
+                reasons=input_report.reason_codes,
+                source_reasons=input_report.source_reason_codes,
+            )
+    except Exception:
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="STRUCTURAL",
+            reasons=("g2c_source_validator_failed",),
+        )
+
+    if type(proposal) is not ExecutionModeProposalV01:
+        structural = validate_execution_mode_proposal_v01(proposal)
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="PROPOSAL",
+            reasons=structural.reason_codes,
+        )
+
+    try:
+        expected_rows = _build_feasibility_rows(router_input)
+    except _C3Failure as exc:
+        return _proposal_c3_failure_report(
+            proposal=proposal,
+            router_input=router_input,
+            failure=exc,
+        )
+    except Exception:
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="FEASIBILITY",
+            reasons=("g2c_proposal_rows_invalid",),
+        )
+
+    if _proposal_rows_have_invalid_geometry(proposal):
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="FEASIBILITY",
+            reasons=("g2c_proposal_rows_invalid",),
+        )
+
+    try:
+        selected = _select_c3_row(expected_rows)
+    except _C3Failure as exc:
+        return _proposal_c3_failure_report(
+            proposal=proposal,
+            router_input=router_input,
+            failure=exc,
+        )
+    except Exception:
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="SELECTION",
+            reasons=("g2c_proposal_selected_row_mismatch",),
+        )
+
+    if proposal.ordered_feasibility_rows != expected_rows:
+        differing_indexes = tuple(
+            index
+            for index, (supplied_row, expected_row) in enumerate(
+                zip(proposal.ordered_feasibility_rows, expected_rows)
+            )
+            if supplied_row != expected_row
+        )
+        selected_index = next(
+            index
+            for index, row in enumerate(expected_rows)
+            if row.feasibility_row_id == selected.feasibility_row_id
+        )
+        selected_row_substituted = differing_indexes == (selected_index,)
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage=("SELECTION" if selected_row_substituted else "FEASIBILITY"),
+            reasons=(
+                (
+                    "g2c_proposal_selected_row_mismatch"
+                    if selected_row_substituted
+                    else "g2c_proposal_rows_invalid"
+                ),
+            ),
+        )
+
+    if any(
+        getattr(proposal, field_name) != getattr(selected, selected_field_name)
+        for field_name, selected_field_name in (
+            ("selected_mode", "mode"),
+            ("selected_safe_depth_rank", "safe_depth_rank"),
+            ("selected_local_mode_profile_id", "local_mode_profile_id"),
+            ("selected_expected_cost_units", "cost_units"),
+            ("selected_feasibility_row_id", "feasibility_row_id"),
+        )
+    ):
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="SELECTION",
+            reasons=("g2c_proposal_selected_row_mismatch",),
+        )
+
+    try:
+        expected = _build_c3_proposal(
+            router_input=router_input,
+            rows=expected_rows,
+            selected=selected,
+        )
+    except _C3Failure as exc:
+        return _proposal_c3_failure_report(
+            proposal=proposal,
+            router_input=router_input,
+            failure=exc,
+        )
+    except Exception:
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="PROPOSAL",
+            reasons=("g2c_proposal_rows_invalid",),
+        )
+
+    try:
+        structural = validate_execution_mode_proposal_v01(proposal)
+    except Exception:
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="PROPOSAL",
+            reasons=("g2c_proposal_rows_invalid",),
+        )
+    if structural.validation_status != "PASS":
+        reasons = structural.reason_codes
+        if _proposal_source_fields_differ(proposal, expected):
+            reasons = _public_reason_union(
+                reasons,
+                ("g2c_source_object_substituted",),
+            )
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="PROPOSAL",
+            reasons=reasons,
+        )
+
+    if proposal != expected:
+        reason = (
+            "g2c_source_object_substituted"
+            if _proposal_source_fields_differ(proposal, expected)
+            else "g2c_proposal_rows_invalid"
+        )
+        return _proposal_context_report(
+            proposal=proposal,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="PROPOSAL",
+            reasons=(reason,),
+        )
+    return _proposal_context_report(
+        proposal=proposal,
+        router_input=router_input,
+        status="PASS",
+        stage="NONE",
+        reasons=(),
+    )
+
+
+def route_execution_mode_v01(
+    *,
+    router_input: ExecutionModeRouterInputV01,
+    source_context: ExecutionModeSourceContextV01,
+) -> tuple[
+    ExecutionModeProposalV01 | None,
+    ExecutionModeValidationReportV01,
+]:
+    try:
+        input_report = validate_execution_mode_router_input_against_sources_v01(
+            router_input=router_input,
+            source_context=source_context,
+        )
+        if input_report.validation_status != "PASS":
+            reasons = _public_reason_union(
+                input_report.reason_codes,
+                (
+                    "g2c_invalid_source_no_proposal",
+                    "g2c_fail_closed_return_to_root",
+                ),
+            )
+            return None, _proposal_context_report(
+                proposal=None,
+                router_input=router_input,
+                status="FAIL_CLOSED",
+                stage=input_report.failure_stage,
+                reasons=reasons,
+                source_reasons=input_report.source_reason_codes,
+            )
+    except _C3Failure as exc:
+        return None, _route_c3_failure_report(
+            router_input=router_input,
+            stage=exc.stage,
+            reason=exc.reason,
+            source_reasons=exc.source_reasons,
+        )
+    except Exception:
+        return None, _proposal_context_report(
+            proposal=None,
+            router_input=router_input,
+            status="FAIL_CLOSED",
+            stage="STRUCTURAL",
+            reasons=_public_reason_union(
+                ("g2c_source_validator_failed",),
+                (
+                    "g2c_invalid_source_no_proposal",
+                    "g2c_fail_closed_return_to_root",
+                ),
+            ),
+        )
+
+    try:
+        rows = _build_feasibility_rows(router_input)
+    except _C3Failure as exc:
+        return None, _route_c3_failure_report(
+            router_input=router_input,
+            stage=exc.stage,
+            reason=exc.reason,
+            source_reasons=exc.source_reasons,
+        )
+    except Exception:
+        return None, _route_c3_failure_report(
+            router_input=router_input,
+            stage="FEASIBILITY",
+            reason="g2c_feasibility_row_invalid",
+        )
+
+    try:
+        selected = _select_c3_row(rows)
+    except _C3Failure as exc:
+        return None, _route_c3_failure_report(
+            router_input=router_input,
+            stage=exc.stage,
+            reason=exc.reason,
+            source_reasons=exc.source_reasons,
+        )
+    except Exception:
+        return None, _route_c3_failure_report(
+            router_input=router_input,
+            stage="SELECTION",
+            reason="g2c_selection_invalid",
+        )
+
+    try:
+        proposal = _build_c3_proposal(
+            router_input=router_input,
+            rows=rows,
+            selected=selected,
+        )
+    except _C3Failure as exc:
+        return None, _route_c3_failure_report(
+            router_input=router_input,
+            stage=exc.stage,
+            reason=exc.reason,
+            source_reasons=exc.source_reasons,
+        )
+    except Exception:
+        return None, _route_c3_failure_report(
+            router_input=router_input,
+            stage="PROPOSAL",
+            reason="g2c_proposal_rows_invalid",
+        )
+
+    try:
+        report = validate_execution_mode_proposal_against_sources_v01(
+            proposal=proposal,
+            router_input=router_input,
+            source_context=source_context,
+        )
+        if report.validation_status != "PASS":
+            return None, _proposal_context_report(
+                proposal=None,
+                router_input=router_input,
+                status="FAIL_CLOSED",
+                stage=report.failure_stage,
+                reasons=_public_reason_union(
+                    report.reason_codes,
+                    ("g2c_fail_closed_return_to_root",),
+                ),
+                source_reasons=report.source_reason_codes,
+            )
+        return proposal, report
+    except _C3Failure as exc:
+        return None, _route_c3_failure_report(
+            router_input=router_input,
+            stage=exc.stage,
+            reason=exc.reason,
+            source_reasons=exc.source_reasons,
+        )
+    except Exception:
+        return None, _route_c3_failure_report(
+            router_input=router_input,
+            stage="PROPOSAL",
+            reason="g2c_proposal_rows_invalid",
+        )
 
 
 def _validate_serialized(

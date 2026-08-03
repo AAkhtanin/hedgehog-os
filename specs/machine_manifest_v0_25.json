@@ -12,6 +12,26 @@
     "human_passport": "specs/human_passport_v0_25.md",
     "math_appendix": "specs/math_appendix_v0_3.md",
     "strategic_expansion_map": "docs/strategic_expansion_map.md",
+    "future_design_profiles": [
+      {
+        "profile_id": "quantum_mathematical_extension_v2_0",
+        "document_ref": "specs/future/quantum/hedgehog_quantum_mathematical_extension_roadmap_v2_0.md",
+        "status": "FUTURE_DESIGN_NOT_IMPLEMENTED",
+        "private_design_commit_allowed_after": "G2C_CLOSED_PASS",
+        "public_disclosure_required_gate": "GATE6_CLOSED_PASS_AND_R_IP1_RELEASE_APPROVAL",
+        "implementation_baseline_required": "HEDGEHOG_GATE6_CLOSED_PASS_AND_TAGGED",
+        "current_release_claim": false,
+        "current_conformance_category": null,
+        "physical_qpu_required": false,
+        "quantum_advantage_claimed": false,
+        "physical_quantum_state_claimed": false,
+        "changes_root_law": false,
+        "changes_bsep_law": false,
+        "changes_hardmask_law": false,
+        "changes_corridor_law": false,
+        "changes_replay_law": false
+      }
+    ],
     "rules": [
       "Human Passport defines MVP architecture and invariants.",
       "Math Appendix defines formulas and algorithmic details.",

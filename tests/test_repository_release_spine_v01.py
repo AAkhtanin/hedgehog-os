@@ -12,11 +12,17 @@ import tomllib
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 AGENTS_PATH = REPOSITORY_ROOT / "AGENTS.md"
 README_PATH = REPOSITORY_ROOT / "README.md"
+HUMAN_PASSPORT_PATH = REPOSITORY_ROOT / "specs/human_passport_v0_25.md"
+MATH_APPENDIX_PATH = REPOSITORY_ROOT / "specs/math_appendix_v0_3.md"
 MANIFEST_PATH = REPOSITORY_ROOT / "specs/machine_manifest_v0_25.json"
 OVERLAY_PATH = REPOSITORY_ROOT / "release/current_status_overlay_v01.json"
 CLAIM_INDEX_PATH = REPOSITORY_ROOT / "release/claim_to_evidence_index.md"
 LIMITATIONS_PATH = REPOSITORY_ROOT / "release/current_limitations.md"
 NOTES_PATH = REPOSITORY_ROOT / "release/current_release_notes.md"
+ROADMAP_PATH = REPOSITORY_ROOT / (
+    "specs/future/quantum/"
+    "hedgehog_quantum_mathematical_extension_roadmap_v2_0.md"
+)
 
 ACCEPTED_PRE_R_H1_BASE_COMMIT = (
     "3785d67e9d33adf145a3f6f60981abf38767b25d"
@@ -58,6 +64,12 @@ G2C_AUDIT_SHA256 = (
     "3f6aab5c26b486a463174a6d57a22097b8eee2dcd314433b27462117b21d73d5"
 )
 G2C_CHECKPOINT_PATH = "docs/execution_mode_router_g2_c_checkpoint_v01.md"
+G2C_CHECKPOINT_SHA256 = (
+    "28ba0de21cf6458a408911b0342d57db72ad6f6cf6e8e5aec8b87fb616802f0b"
+)
+G2C_CLOSURE_COMMIT = "5d1c64942ec141a65ac6be9cb469d428a3cca73d"
+G2C_CLOSURE_PARENT = G2C_AUDIT_COMMIT
+G2C_CLOSURE_SUBJECT = "Close G2-C ExecutionModeRouter"
 G2C_CLOSURE_CLAIM_ID = "claim_g2c_execution_mode_router_closed_pass"
 G2C_CLOSURE_CLAIM_WORDING = (
     "Gate 2 slice G2-C ExecutionModeRouter is CLOSED_PASS."
@@ -76,7 +88,6 @@ G2C_CLOSURE_PATHS = (
 )
 
 PROTECTED_PATHS_AT_G2C_AUDIT = (
-    "specs/human_passport_v0_25.md",
     "release/completion_manifest.json",
     "release/integration_seam_index.json",
     "release/integration_seam_index.md",
@@ -85,6 +96,89 @@ PROTECTED_PATHS_AT_G2C_AUDIT = (
     "LICENSE",
     "COMMERCIAL-LICENSING.md",
 )
+
+ROADMAP_SHA256 = (
+    "c406dd84163634d55e23309a814d49c7a3ff30171059b7b95a1a38e2cc07e7b6"
+)
+ROADMAP_BYTES = 82789
+ROADMAP_LINES = 2291
+RETIRED_ROADMAP_PATH = (
+    "specs/future/quantum/"
+    "hedgehog_quantum_mathematical_extension_roadmap_v1_0.md"
+)
+
+REPOSITORY_RELEASE_SPINE_TEST_MODIFIED = True
+OTHER_TESTS_MODIFIED = False
+RUNTIME_TESTS_MODIFIED = False
+
+README_QUANTUM_SECTION = """## Future Mathematical Profiles
+
+**Probabilistic intelligence. Deterministic authority.**
+
+Hedgehog OS does not require uncertain computation to become deterministic. It gives deterministic, probabilistic, tensor, quantum-inspired, and optional QPU-backed methods a bounded advisory space while keeping authority and consequential effects classical, explicit, Root-bound, and auditable.
+
+Future mathematical profiles may change how possibilities are represented and explored. They do not change who owns the decision or who controls the effect.
+
+Status: future post-Gate-6 design only; not implemented; not part of current release claims; physical QPU not required; quantum advantage not claimed.
+
+[Quantum-Inspired Mathematical Extension Roadmap v2.0](specs/future/quantum/hedgehog_quantum_mathematical_extension_roadmap_v2_0.md)"""
+
+PASSPORT_QUANTUM_SECTION = """### Computational Substrate Neutrality
+
+Hedgehog authority law is independent of the advisory mathematical or computational substrate. Deterministic code, classical optimization, probabilistic models, LLMs, SLMs, tensor methods, quantum-inspired mathematics, classical simulators, and optional physical-QPU backends may serve as replaceable advisory compute organs only when Root sovereignty, BSEP context boundaries, HardMask, Transition Registry, Root-created ActionCommitPacket, Corridor exclusivity, Receipt non-authority, temporal hard gates, and Replay non-execution remain unchanged.
+
+Hedgehog does not make intelligence deterministic. It makes the ownership of action deterministic."""
+
+MATH_QUANTUM_SECTION = """## Future Mathematical Extension Profiles
+
+Hedgehog OS preserves a possibility space before it creates authority. The current classical AVF, GT, DRS, ExecutionModeRouter, and Fractal mathematics may be extended after Gate 6 by versioned probabilistic, tensor, quantum-inspired, or optional physical-QPU advisory profiles.
+
+Possibility may remain probabilistic. Authority must become explicit.
+
+Such a profile may change representation and evaluation of candidate space, contextual interaction, strategy correlation, advisory-memory evolution, or compute allocation. It may not change Root sovereignty, BSEP-scoped observation, HardMask, Transition Registry, ActionCommitPacket, Corridor exclusivity, Receipt non-authority, temporal hard gates, or Replay non-execution.
+
+The classical profile remains mandatory and must appear as an exact or explicitly bounded classical limit of every promoted extension. This is an architectural-computation statement, not a claim that the current runtime contains a physical quantum state.
+
+See: `specs/future/quantum/hedgehog_quantum_mathematical_extension_roadmap_v2_0.md`."""
+
+QUANTUM_LIMITATION = (
+    "- The Quantum-Inspired Mathematical Extension is a future post-Gate-6 "
+    "engineering design only. No quantum-inspired state ABI, Quantum AVF, "
+    "Quantum GT, Quantum DRS, quantum Fractal allocator, simulator backend, "
+    "physical-QPU adapter, physical quantum-state result, or quantum-advantage "
+    "result is implemented or claimed in the current release."
+)
+
+QUANTUM_ENGINEERING_NOTE = (
+    "- Added the non-implementing future Quantum-Inspired Mathematical "
+    "Extension Roadmap v2.0. This private design record changes no current "
+    "runtime, gate status, conformance result, release claim, or authority law "
+    "and does not authorize implementation before the tagged Gate-6 baseline."
+)
+
+QUANTUM_FUTURE_PROFILE = {
+    "profile_id": "quantum_mathematical_extension_v2_0",
+    "document_ref": (
+        "specs/future/quantum/"
+        "hedgehog_quantum_mathematical_extension_roadmap_v2_0.md"
+    ),
+    "status": "FUTURE_DESIGN_NOT_IMPLEMENTED",
+    "private_design_commit_allowed_after": "G2C_CLOSED_PASS",
+    "public_disclosure_required_gate": (
+        "GATE6_CLOSED_PASS_AND_R_IP1_RELEASE_APPROVAL"
+    ),
+    "implementation_baseline_required": "HEDGEHOG_GATE6_CLOSED_PASS_AND_TAGGED",
+    "current_release_claim": False,
+    "current_conformance_category": None,
+    "physical_qpu_required": False,
+    "quantum_advantage_claimed": False,
+    "physical_quantum_state_claimed": False,
+    "changes_root_law": False,
+    "changes_bsep_law": False,
+    "changes_hardmask_law": False,
+    "changes_corridor_law": False,
+    "changes_replay_law": False,
+}
 
 FROZEN_EVIDENCE = {
     "completion_manifest": {
@@ -376,23 +470,35 @@ def test_manifest_baseline_is_preserved_by_one_add_only_boundary() -> None:
     )
     assert _sha256_bytes(baseline_bytes) == ACCEPTED_MANIFEST_SHA256
     baseline = json.loads(baseline_bytes)
-    current = _read_json(MANIFEST_PATH)
+    closure = json.loads(_git_show(
+        G2C_CLOSURE_COMMIT,
+        MANIFEST_PATH.relative_to(REPOSITORY_ROOT).as_posix(),
+    ))
 
-    checkpoint = current["current_checkpoint_status"]
+    checkpoint = closure["current_checkpoint_status"]
     assert isinstance(checkpoint, dict)
     assert tuple(checkpoint).count("current_engineering_boundary_v01") == 1
     boundary = checkpoint["current_engineering_boundary_v01"]
     assert isinstance(boundary, dict)
     assert set(boundary) == set(IN_PROGRESS_BOUNDARY)
 
-    current_without_boundary = copy.deepcopy(current)
-    removed = current_without_boundary["current_checkpoint_status"].pop(
+    closure_without_boundary = copy.deepcopy(closure)
+    removed = closure_without_boundary["current_checkpoint_status"].pop(
         "current_engineering_boundary_v01"
     )
     assert removed == boundary
-    assert current_without_boundary == baseline
+    assert closure_without_boundary == baseline
     assert checkpoint["metadata_sync_only"] is True
     assert checkpoint["manifest_does_not_override_human_passport"] is True
+
+    current = _read_json(MANIFEST_PATH)
+    current_checkpoint = current["current_checkpoint_status"]
+    assert isinstance(current_checkpoint, dict)
+    assert current_checkpoint["metadata_sync_only"] is True
+    assert current_checkpoint["manifest_does_not_override_human_passport"] is True
+    _assert_closed_boundary(
+        current_checkpoint["current_engineering_boundary_v01"]
+    )
 
 
 def test_g2c_manifest_transition_is_exactly_two_children() -> None:
@@ -401,11 +507,14 @@ def test_g2c_manifest_transition_is_exactly_two_children() -> None:
             REPOSITORY_ROOT
         ).as_posix())
     )
-    current_manifest = _read_json(MANIFEST_PATH)
+    closure_manifest = json.loads(_git_show(
+        G2C_CLOSURE_COMMIT,
+        MANIFEST_PATH.relative_to(REPOSITORY_ROOT).as_posix(),
+    ))
     audit_boundary = audit_manifest["current_checkpoint_status"][
         "current_engineering_boundary_v01"
     ]
-    current_boundary = current_manifest["current_checkpoint_status"][
+    current_boundary = closure_manifest["current_checkpoint_status"][
         "current_engineering_boundary_v01"
     ]
     assert isinstance(audit_boundary, dict)
@@ -416,7 +525,7 @@ def test_g2c_manifest_transition_is_exactly_two_children() -> None:
     assert current_boundary["g2c_status"] == "CLOSED_PASS"
     assert current_boundary["g2c_implementation_authorized"] is True
     assert _revert_g2c_boundary_transition(
-        current_manifest,
+        closure_manifest,
         overlay=False,
     ) == audit_manifest
 
@@ -523,9 +632,6 @@ def test_readme_current_boundary_install_and_license_are_bounded() -> None:
             "R-H1 checkpoint: `NOT_YET_PRESENT`",
             "R-H1 is not closed",
         ))
-
-        audit_readme = _git_show(G2C_AUDIT_COMMIT_BASELINE, "README.md")
-        assert _readme_without_block(raw) == _readme_without_block(audit_readme)
 
     for path in RELEASE_SPINE_PATHS:
         assert path in block
@@ -1022,27 +1128,171 @@ def test_g2c_preflight_audit_and_protected_bytes_are_exact() -> None:
     assert _sha256_bytes(
         (REPOSITORY_ROOT / G2C_AUDIT_PATH).read_bytes()
     ) == G2C_AUDIT_SHA256
+    assert _sha256_bytes(
+        (REPOSITORY_ROOT / G2C_CHECKPOINT_PATH).read_bytes()
+    ) == G2C_CHECKPOINT_SHA256
     for path in PROTECTED_PATHS_AT_G2C_AUDIT:
         current = (REPOSITORY_ROOT / path).read_bytes()
         assert current == _git_show(G2C_AUDIT_COMMIT_BASELINE, path), path
 
 
-def test_g2c_closure_git_scope_is_exactly_nine_paths() -> None:
-    completed = subprocess.run(
-        ("git", "status", "--porcelain=v1", "--untracked-files=all"),
+def test_g2c_closure_history_has_exact_scope_and_preservation() -> None:
+    parent = subprocess.run(
+        ("git", "rev-parse", f"{G2C_CLOSURE_COMMIT}^"),
+        cwd=REPOSITORY_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    subject = subprocess.run(
+        ("git", "show", "-s", "--format=%s", G2C_CLOSURE_COMMIT),
+        cwd=REPOSITORY_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    changed = subprocess.run(
+        (
+            "git",
+            "diff-tree",
+            "--no-commit-id",
+            "--name-status",
+            "-r",
+            "--no-renames",
+            G2C_CLOSURE_PARENT,
+            G2C_CLOSURE_COMMIT,
+        ),
+        cwd=REPOSITORY_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+
+    assert parent == G2C_CLOSURE_PARENT
+    assert subject == G2C_CLOSURE_SUBJECT
+    observed = {
+        path: status
+        for status, path in (line.split("\t", 1) for line in changed)
+    }
+    assert tuple(sorted(observed)) == G2C_CLOSURE_PATHS
+    assert observed[G2C_CHECKPOINT_PATH] == "A"
+    for path in G2C_CLOSURE_PATHS:
+        if path != G2C_CHECKPOINT_PATH:
+            assert observed[path] == "M"
+    assert tuple(observed.values()).count("M") == 8
+    assert tuple(observed.values()).count("A") == 1
+
+    historical_passport = "specs/human_passport_v0_25.md"
+    assert _git_show(G2C_AUDIT_COMMIT, historical_passport) == _git_show(
+        G2C_CLOSURE_COMMIT,
+        historical_passport,
+    )
+
+
+def test_quantum_roadmap_identity_metadata_and_amendment_are_exact() -> None:
+    raw = ROADMAP_PATH.read_bytes()
+    text = raw.decode("utf-8", errors="strict")
+    lines = text.splitlines()
+    metadata_lines = text.split("```text\n", 1)[1].split("\n```", 1)[0].splitlines()
+
+    assert len(raw) == ROADMAP_BYTES
+    assert raw.count(b"\n") == ROADMAP_LINES
+    assert _sha256_bytes(raw) == ROADMAP_SHA256
+    assert b"\x00" not in raw
+    assert b"\r" not in raw
+    assert raw.endswith(b"\n")
+    for required in (
+        "document_id: hedgehog_quantum_mathematical_extension_roadmap_v2_0",
+        "document_status: FUTURE_POST_GATE6_ENGINEERING_DESIGN",
+        "intended_first_repository_version: v2.0",
+        (
+            "repository_target_path: specs/future/quantum/"
+            "hedgehog_quantum_mathematical_extension_roadmap_v2_0.md"
+        ),
+        "earliest_private_design_commit_point: AFTER_G2C_CLOSED_PASS",
+        (
+            "implementation_baseline_required: "
+            "HEDGEHOG_GATE6_CLOSED_PASS_AND_TAGGED"
+        ),
+        "current_release_claim: false",
+        "normative_for_current_gate_1_to_gate_6_runtime: false",
+        "private_commit_is_publication: false",
+        "public_prior_art_created_by_private_commit: false",
+        "changes_current_six_gate_strategy: NO",
+        "physical_qpu_required_for_initial_profile: NO",
+        "quantum_advantage_claimed: NO",
+        "license: AGPL-3.0-only",
+    ):
+        assert metadata_lines.count(required) == 1
+    assert lines.count("## 19.10. Post-G2-C integration nonclaims") == 1
+    assert lines.count("repository_release_spine_test_modified: true") == 1
+    assert lines.count("other_tests_modified: false") == 1
+    assert lines.count("runtime_tests_modified: false") == 1
+    assert lines.count("tests_modified: false") == 0
+
+    retired = REPOSITORY_ROOT / RETIRED_ROADMAP_PATH
+    assert not retired.exists()
+    history = subprocess.run(
+        ("git", "log", "--all", "--format=", "--name-only", "--", RETIRED_ROADMAP_PATH),
         cwd=REPOSITORY_ROOT,
         check=True,
         capture_output=True,
         text=True,
     )
-    observed: dict[str, str] = {}
-    for line in completed.stdout.splitlines():
-        status = line[:2]
-        path = line[3:]
-        assert " -> " not in path
-        observed[path] = status
-    assert tuple(sorted(observed)) == G2C_CLOSURE_PATHS
-    assert observed[G2C_CHECKPOINT_PATH] == "??"
-    for path in G2C_CLOSURE_PATHS:
-        if path != G2C_CHECKPOINT_PATH:
-            assert observed[path] == " M"
+    assert history.stdout.strip() == ""
+
+
+def test_quantum_future_design_content_is_exact_and_non_implementing() -> None:
+    readme = README_PATH.read_text(encoding="utf-8")
+    passport = HUMAN_PASSPORT_PATH.read_text(encoding="utf-8")
+    math_appendix = MATH_APPENDIX_PATH.read_text(encoding="utf-8")
+    limitations = LIMITATIONS_PATH.read_text(encoding="utf-8")
+    notes = NOTES_PATH.read_text(encoding="utf-8")
+
+    assert readme.count(README_QUANTUM_SECTION) == 1
+    assert readme.count(ROADMAP_PATH.relative_to(REPOSITORY_ROOT).as_posix()) == 1
+    assert "Status: future post-Gate-6 design only; not implemented" in readme
+    assert "quantum advantage not claimed" in readme
+
+    assert passport.count(PASSPORT_QUANTUM_SECTION) == 1
+    assert passport.count("### Computational Substrate Neutrality") == 1
+    assert passport.count(
+        "Hedgehog does not make intelligence deterministic. "
+        "It makes the ownership of action deterministic."
+    ) == 1
+
+    assert math_appendix.count(MATH_QUANTUM_SECTION) == 1
+    assert math_appendix.endswith(MATH_QUANTUM_SECTION + "\n")
+    assert "may be extended after Gate 6" in MATH_QUANTUM_SECTION
+    assert "not a claim that the current runtime contains" in MATH_QUANTUM_SECTION
+
+    manifest = _read_json(MANIFEST_PATH)
+    hierarchy = manifest["document_hierarchy"]
+    assert isinstance(hierarchy, dict)
+    profiles = hierarchy["future_design_profiles"]
+    assert isinstance(profiles, list)
+    matching = [
+        profile
+        for profile in profiles
+        if isinstance(profile, dict)
+        and profile.get("profile_id") == "quantum_mathematical_extension_v2_0"
+    ]
+    assert matching == [QUANTUM_FUTURE_PROFILE]
+
+    assert limitations.count(QUANTUM_LIMITATION) == 1
+    for forbidden_claim in (
+        "The Quantum-Inspired Mathematical Extension is implemented",
+        "Quantum AVF is implemented",
+        "quantum advantage is claimed",
+    ):
+        assert forbidden_claim not in limitations
+    assert notes.count(QUANTUM_ENGINEERING_NOTE) == 1
+    note_line = next(
+        line for line in notes.splitlines() if line == QUANTUM_ENGINEERING_NOTE
+    )
+    assert "published" not in note_line.lower()
+    assert "publicly released" not in note_line.lower()
+
+    assert REPOSITORY_RELEASE_SPINE_TEST_MODIFIED is True
+    assert OTHER_TESTS_MODIFIED is False
+    assert RUNTIME_TESTS_MODIFIED is False

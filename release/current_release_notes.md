@@ -2,6 +2,8 @@
 
 These are current engineering notes, not a public release announcement.
 
+- Added the non-implementing future Quantum-Inspired Mathematical Extension Roadmap v2.0. This private design record changes no current runtime, gate status, conformance result, release claim, or authority law and does not authorize implementation before the tagged Gate-6 baseline.
+
 - Accepted pre-R-H1 repository boundary:
   `3785d67e9d33adf145a3f6f60981abf38767b25d`.
 - Committed R-H1 preflight:

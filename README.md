@@ -93,6 +93,18 @@ production_security_certification_claimed: false
 - [Current engineering notes](release/current_release_notes.md)
 <!-- END HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 
+## Future Mathematical Profiles
+
+**Probabilistic intelligence. Deterministic authority.**
+
+Hedgehog OS does not require uncertain computation to become deterministic. It gives deterministic, probabilistic, tensor, quantum-inspired, and optional QPU-backed methods a bounded advisory space while keeping authority and consequential effects classical, explicit, Root-bound, and auditable.
+
+Future mathematical profiles may change how possibilities are represented and explored. They do not change who owns the decision or who controls the effect.
+
+Status: future post-Gate-6 design only; not implemented; not part of current release claims; physical QPU not required; quantum advantage not claimed.
+
+[Quantum-Inspired Mathematical Extension Roadmap v2.0](specs/future/quantum/hedgehog_quantum_mathematical_extension_roadmap_v2_0.md)
+
 ## Hedgehog OS Domain-Neutral Reference Kernel RC1 — Gate 1 CLOSED / PASS
 
 Gate 1 extracted and exercised a domain-neutral reference Kernel without

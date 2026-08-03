@@ -25,6 +25,7 @@
 - Package-resource migration and console entry points are deferred.
 - No real-world effect is claimed.
 - No RuntimeExecutionTopology was created by G2-C.
+- The Quantum-Inspired Mathematical Extension is a future post-Gate-6 engineering design only. No quantum-inspired state ABI, Quantum AVF, Quantum GT, Quantum DRS, quantum Fractal allocator, simulator backend, physical-QPU adapter, physical quantum-state result, or quantum-advantage result is implemented or claimed in the current release.
 - `release/current_status_overlay_v01.json` is metadata-only and
   non-authoritative.
 - `release/completion_manifest.json` and

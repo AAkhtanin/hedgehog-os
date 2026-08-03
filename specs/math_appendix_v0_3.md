@@ -3567,3 +3567,15 @@ Formulas and algorithms:
 ```
 
 This is sufficient for a new branch to preserve the project mathematics.
+
+## Future Mathematical Extension Profiles
+
+Hedgehog OS preserves a possibility space before it creates authority. The current classical AVF, GT, DRS, ExecutionModeRouter, and Fractal mathematics may be extended after Gate 6 by versioned probabilistic, tensor, quantum-inspired, or optional physical-QPU advisory profiles.
+
+Possibility may remain probabilistic. Authority must become explicit.
+
+Such a profile may change representation and evaluation of candidate space, contextual interaction, strategy correlation, advisory-memory evolution, or compute allocation. It may not change Root sovereignty, BSEP-scoped observation, HardMask, Transition Registry, ActionCommitPacket, Corridor exclusivity, Receipt non-authority, temporal hard gates, or Replay non-execution.
+
+The classical profile remains mandatory and must appear as an exact or explicitly bounded classical limit of every promoted extension. This is an architectural-computation statement, not a claim that the current runtime contains a physical quantum state.
+
+See: `specs/future/quantum/hedgehog_quantum_mathematical_extension_roadmap_v2_0.md`.

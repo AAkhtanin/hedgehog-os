@@ -1930,6 +1930,12 @@ It never mutates `Work` directly.
 
 These invariants are non-negotiable:
 
+### Computational Substrate Neutrality
+
+Hedgehog authority law is independent of the advisory mathematical or computational substrate. Deterministic code, classical optimization, probabilistic models, LLMs, SLMs, tensor methods, quantum-inspired mathematics, classical simulators, and optional physical-QPU backends may serve as replaceable advisory compute organs only when Root sovereignty, BSEP context boundaries, HardMask, Transition Registry, Root-created ActionCommitPacket, Corridor exclusivity, Receipt non-authority, temporal hard gates, and Replay non-execution remain unchanged.
+
+Hedgehog does not make intelligence deterministic. It makes the ownership of action deterministic.
+
 1. `FinalOutput` is created only by `RootOrchestrator`.
 2. Executor returns `ResultProposal` only.
 3. Architect returns `PlanGraph` only.

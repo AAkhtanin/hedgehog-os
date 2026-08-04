@@ -1,0 +1,5551 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog.local/schemas/fractal_runtime_v02.schema.json",
+  "title": "Hedgehog Fractal Runtime v0.2",
+  "version": "v0.2",
+  "$ref": "#/$defs/RuntimeExecutionTopologyV02",
+  "$defs": {
+    "FractalRuntimePolicyV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_id",
+        "policy_profile_id",
+        "policy_version",
+        "allowed_modes",
+        "allowed_node_kinds",
+        "allowed_edge_kinds",
+        "allowed_assignment_kinds",
+        "recursive_mode",
+        "recursive_capability_id",
+        "allowed_capability_ids",
+        "forbidden_claims",
+        "permitted_child_scope_refs",
+        "reference_child_count",
+        "queue_profile_id",
+        "budget_profile_id",
+        "max_depth",
+        "max_fan_out",
+        "max_total_cells",
+        "max_parallelism",
+        "max_revise_count",
+        "max_consecutive_no_progress",
+        "max_wall_time_units",
+        "max_token_budget",
+        "max_provider_calls",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "policy_id": {
+          "type": "string",
+          "pattern": "^frpolicy_v02\\:[0-9a-f]{64}$"
+        },
+        "policy_profile_id": {
+          "const": "fractal_runtime_policy_g2d_v02"
+        },
+        "policy_version": {
+          "const": "v0.2"
+        },
+        "allowed_modes": {
+          "const": [
+            "memory_informed",
+            "local_slm",
+            "cloud_llm",
+            "full_semantic",
+            "full_fractal"
+          ]
+        },
+        "allowed_node_kinds": {
+          "const": [
+            "MEMORY_CONTEXT",
+            "LOCAL_MODEL_DECLARATION",
+            "CLOUD_MODEL_DECLARATION",
+            "SEMANTIC_ACTOR",
+            "SEMANTIC_MERGE",
+            "FRACTAL_CELL",
+            "FRACTAL_MERGE",
+            "POST_VV",
+            "GT_ADVISORY",
+            "PARENT_RETURN"
+          ]
+        },
+        "allowed_edge_kinds": {
+          "const": [
+            "DATA_DEPENDENCY",
+            "CONTROL_DEPENDENCY",
+            "PARENT_CHILD",
+            "VALIDATION",
+            "RETURN"
+          ]
+        },
+        "allowed_assignment_kinds": {
+          "const": [
+            "LOCAL_DETERMINISTIC",
+            "LOCAL_MODEL_DECLARED",
+            "CLOUD_MODEL_DECLARED",
+            "SEMANTIC_ACTOR",
+            "FRACTAL_CHILD",
+            "VALIDATOR",
+            "ADVISORY",
+            "PARENT_RETURN"
+          ]
+        },
+        "recursive_mode": {
+          "const": "full_fractal"
+        },
+        "recursive_capability_id": {
+          "const": "capability:g2d:fractal_child:v02"
+        },
+        "allowed_capability_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "forbidden_claims": {
+          "const": [
+            "FINAL_OUTPUT",
+            "ROOT_FINAL_OUTPUT",
+            "ACTION_PERMISSION",
+            "ACTION_COMMIT_PACKET",
+            "EVIDENCE_RECEIPT",
+            "EFFECT_REQUEST",
+            "CONNECTOR_COMMAND",
+            "DRS_WRITE",
+            "PARENT_ARCHITECT_COMMAND",
+            "ROOT_AUTHORITY_CLAIM"
+          ]
+        },
+        "permitted_child_scope_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "reference_child_count": {
+          "const": 2
+        },
+        "queue_profile_id": {
+          "const": "node_work_queue_v02"
+        },
+        "budget_profile_id": {
+          "const": "fractal_runtime_budget_g2d_v02"
+        },
+        "max_depth": {
+          "const": 3
+        },
+        "max_fan_out": {
+          "const": 4
+        },
+        "max_total_cells": {
+          "const": 21
+        },
+        "max_parallelism": {
+          "const": 4
+        },
+        "max_revise_count": {
+          "const": 2
+        },
+        "max_consecutive_no_progress": {
+          "const": 2
+        },
+        "max_wall_time_units": {
+          "const": 1000
+        },
+        "max_token_budget": {
+          "const": 100000
+        },
+        "max_provider_calls": {
+          "const": 0
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "FractalRuntimeBudgetV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "budget_id",
+        "policy_id",
+        "topology_seed_id",
+        "allocation_parent_budget_id",
+        "predecessor_budget_id",
+        "owning_cell_id",
+        "budget_scope",
+        "budget_state",
+        "budget_event_kind",
+        "budget_event_ref",
+        "max_depth",
+        "max_fan_out",
+        "max_total_cells",
+        "max_parallelism",
+        "max_revise_count",
+        "max_wall_time_units",
+        "max_token_budget",
+        "max_provider_calls",
+        "consumed_wall_time_units",
+        "consumed_token_budget",
+        "consumed_provider_calls",
+        "consumed_cell_count",
+        "consumed_revise_count",
+        "current_parallelism",
+        "remaining_wall_time_units",
+        "remaining_token_budget",
+        "remaining_provider_calls",
+        "remaining_cell_count",
+        "remaining_revise_count",
+        "remaining_parallel_slots",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "action_commit_packet_created",
+        "receipt_created",
+        "final_output_created",
+        "drs_write_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "budget_id": {
+          "type": "string",
+          "pattern": "^frbudget_v02\\:[0-9a-f]{64}$"
+        },
+        "policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "topology_seed_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "allocation_parent_budget_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "predecessor_budget_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "owning_cell_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "budget_scope": {
+          "type": "string",
+          "enum": [
+            "ROOT_GLOBAL_AND_CELL",
+            "CHILD_CELL_LOCAL"
+          ]
+        },
+        "budget_state": {
+          "type": "string",
+          "enum": [
+            "ALLOCATED",
+            "ACTIVE",
+            "FINAL"
+          ]
+        },
+        "budget_event_kind": {
+          "type": "string",
+          "enum": [
+            "INITIAL_ALLOCATION",
+            "ACTIVATE",
+            "CELL_CREATE",
+            "START_NODE",
+            "FINISH_NODE",
+            "REVISE",
+            "CHILD_AGGREGATE",
+            "FINALIZE"
+          ]
+        },
+        "budget_event_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "max_depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_fan_out": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_total_cells": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_parallelism": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_revise_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_wall_time_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_token_budget": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_provider_calls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "consumed_wall_time_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "consumed_token_budget": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "consumed_provider_calls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "consumed_cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "consumed_revise_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "current_parallelism": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "remaining_wall_time_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "remaining_token_budget": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "remaining_provider_calls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "remaining_cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "remaining_revise_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "remaining_parallel_slots": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "action_commit_packet_created": {
+          "const": false
+        },
+        "receipt_created": {
+          "const": false
+        },
+        "final_output_created": {
+          "const": false
+        },
+        "drs_write_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "RuntimeTopologySourceBindingV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_binding_id",
+        "request_id",
+        "transaction_id",
+        "owning_root_id",
+        "domain_id",
+        "accepted_mode",
+        "accepted_scope_ref",
+        "route_eligibility_artifact_id",
+        "route_eligibility_artifact_sha256",
+        "source_decision_artifact_id",
+        "source_proposal_artifact_id",
+        "selected_local_mode_profile_id",
+        "selected_feasibility_row_id",
+        "selected_safe_depth_rank",
+        "selected_expected_cost_units",
+        "required_downstream_capability_ids",
+        "source_mode_profile_set_id",
+        "source_policy_snapshot_id",
+        "source_capability_snapshot_id",
+        "permitted_narrower_scope_refs",
+        "source_root_decision_result_id",
+        "source_root_transition_decision_id",
+        "proposal_transition_decision_id",
+        "post_root_transition_decision_id",
+        "transition_registry_id",
+        "g2c_abi_profile_id",
+        "downstream_action_packet_required",
+        "runtime_policy_id",
+        "source_time_envelope_ref",
+        "source_trace_refs",
+        "source_parent_refs",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "source_binding_id": {
+          "type": "string",
+          "pattern": "^frsource_v02\\:[0-9a-f]{64}$"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "transaction_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "owning_root_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "domain_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "accepted_mode": {
+          "type": "string",
+          "enum": [
+            "memory_informed",
+            "local_slm",
+            "cloud_llm",
+            "full_semantic",
+            "full_fractal"
+          ]
+        },
+        "accepted_scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "route_eligibility_artifact_id": {
+          "type": "string",
+          "pattern": "^emabi_route_v01\\:[0-9a-f]{64}$"
+        },
+        "route_eligibility_artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_decision_artifact_id": {
+          "type": "string",
+          "pattern": "^emabi_decision_v01\\:[0-9a-f]{64}$"
+        },
+        "source_proposal_artifact_id": {
+          "type": "string",
+          "pattern": "^emabi_proposal_v01\\:[0-9a-f]{64}$"
+        },
+        "selected_local_mode_profile_id": {
+          "type": "string",
+          "pattern": "^emprofile_v01\\:[0-9a-f]{64}$"
+        },
+        "selected_feasibility_row_id": {
+          "type": "string",
+          "pattern": "^emrow_v01\\:[0-9a-f]{64}$"
+        },
+        "selected_safe_depth_rank": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "selected_expected_cost_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "required_downstream_capability_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "source_mode_profile_set_id": {
+          "type": "string",
+          "pattern": "^emprofiles_v01\\:[0-9a-f]{64}$"
+        },
+        "source_policy_snapshot_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "source_capability_snapshot_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "permitted_narrower_scope_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "source_root_decision_result_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_root_transition_decision_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "proposal_transition_decision_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "post_root_transition_decision_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "transition_registry_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "g2c_abi_profile_id": {
+          "const": "execution_mode_router_g2c_abi_profile_v01"
+        },
+        "downstream_action_packet_required": {
+          "type": "boolean"
+        },
+        "runtime_policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "source_time_envelope_ref": {
+          "type": "string",
+          "pattern": "^emtime_v01\\:[0-9a-f]{64}$"
+        },
+        "source_trace_refs": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "string",
+            "anyOf": [
+              {
+                "pattern": "^emabi_decision_v01\\:[0-9a-f]{64}$"
+              },
+              {
+                "pattern": "^emdecision_v01\\:[0-9a-f]{64}$"
+              },
+              {
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            ]
+          },
+          "uniqueItems": true,
+          "contains": {
+            "type": "string",
+            "pattern": "^emdecision_v01\\:[0-9a-f]{64}$"
+          },
+          "minContains": 1,
+          "maxContains": 1,
+          "allOf": [
+            {
+              "contains": {
+                "type": "string",
+                "pattern": "^emabi_decision_v01\\:[0-9a-f]{64}$"
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "minContains": 2,
+              "maxContains": 2
+            }
+          ]
+        },
+        "source_parent_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "prefixItems": [
+            {
+              "type": "string",
+              "pattern": "^emabi_decision_v01\\:[0-9a-f]{64}$"
+            }
+          ],
+          "items": false,
+          "uniqueItems": true
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "RuntimeTopologySeedV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "topology_seed_id",
+        "seed_version",
+        "profile_id",
+        "request_id",
+        "transaction_id",
+        "owning_root_id",
+        "domain_id",
+        "accepted_mode",
+        "accepted_scope_ref",
+        "source_binding_id",
+        "runtime_policy_id",
+        "root_cell_id",
+        "source_time_envelope_ref",
+        "trace_refs",
+        "parent_refs",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "topology_seed_id": {
+          "type": "string",
+          "pattern": "^frseed_v02\\:[0-9a-f]{64}$"
+        },
+        "seed_version": {
+          "const": "v0.2"
+        },
+        "profile_id": {
+          "type": "string",
+          "enum": [
+            "fractal_runtime_g2d_profile_v02"
+          ]
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "transaction_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "owning_root_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "domain_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "accepted_mode": {
+          "type": "string",
+          "enum": [
+            "memory_informed",
+            "local_slm",
+            "cloud_llm",
+            "full_semantic",
+            "full_fractal"
+          ]
+        },
+        "accepted_scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "source_binding_id": {
+          "type": "string",
+          "pattern": "^frsource_v02\\:[0-9a-f]{64}$"
+        },
+        "runtime_policy_id": {
+          "type": "string",
+          "pattern": "^frpolicy_v02\\:[0-9a-f]{64}$"
+        },
+        "root_cell_id": {
+          "type": "string",
+          "pattern": "^frrootcell_v02\\:[0-9a-f]{64}$"
+        },
+        "source_time_envelope_ref": {
+          "type": "string",
+          "pattern": "^emtime_v01\\:[0-9a-f]{64}$"
+        },
+        "trace_refs": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "prefixItems": [
+            {
+              "type": "string",
+              "anyOf": [
+                {
+                  "pattern": "^emabi_decision_v01\\:[0-9a-f]{64}$"
+                },
+                {
+                  "pattern": "^emdecision_v01\\:[0-9a-f]{64}$"
+                },
+                {
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              ]
+            },
+            {
+              "type": "string",
+              "anyOf": [
+                {
+                  "pattern": "^emabi_decision_v01\\:[0-9a-f]{64}$"
+                },
+                {
+                  "pattern": "^emdecision_v01\\:[0-9a-f]{64}$"
+                },
+                {
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              ]
+            },
+            {
+              "type": "string",
+              "anyOf": [
+                {
+                  "pattern": "^emabi_decision_v01\\:[0-9a-f]{64}$"
+                },
+                {
+                  "pattern": "^emdecision_v01\\:[0-9a-f]{64}$"
+                },
+                {
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              ]
+            },
+            {
+              "type": "string",
+              "anyOf": [
+                {
+                  "pattern": "^emabi_decision_v01\\:[0-9a-f]{64}$"
+                },
+                {
+                  "pattern": "^emdecision_v01\\:[0-9a-f]{64}$"
+                },
+                {
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              ]
+            },
+            {
+              "type": "string",
+              "pattern": "^frsource_v02\\:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^frpolicy_v02\\:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^frrootcell_v02\\:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^emtime_v01\\:[0-9a-f]{64}$"
+            }
+          ],
+          "items": false,
+          "uniqueItems": true,
+          "allOf": [
+            {
+              "contains": {
+                "type": "string",
+                "pattern": "^emabi_decision_v01\\:[0-9a-f]{64}$"
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "string",
+                "pattern": "^emdecision_v01\\:[0-9a-f]{64}$"
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "minContains": 2,
+              "maxContains": 2
+            }
+          ]
+        },
+        "parent_refs": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "prefixItems": [
+            {
+              "type": "string",
+              "pattern": "^emabi_route_v01\\:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^emabi_decision_v01\\:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^emabi_proposal_v01\\:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^frsource_v02\\:[0-9a-f]{64}$"
+            }
+          ],
+          "items": false,
+          "uniqueItems": true
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "RuntimeTopologyNodeV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "topology_seed_id",
+        "accepted_mode",
+        "node_kind",
+        "canonical_index",
+        "depth",
+        "scope_ref",
+        "cell_binding_class",
+        "scope_binding_class",
+        "budget_binding_class",
+        "required_capability_ids",
+        "allowed_capability_ids",
+        "forbidden_claims",
+        "input_ref_derivation_class",
+        "input_refs",
+        "trace_refs",
+        "expected_output_kind",
+        "required",
+        "recursive_expansion_allowed",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "node_id": {
+          "type": "string",
+          "pattern": "^frnode_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_seed_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "accepted_mode": {
+          "type": "string",
+          "enum": [
+            "memory_informed",
+            "local_slm",
+            "cloud_llm",
+            "full_semantic",
+            "full_fractal"
+          ]
+        },
+        "node_kind": {
+          "type": "string",
+          "enum": [
+            "MEMORY_CONTEXT",
+            "LOCAL_MODEL_DECLARATION",
+            "CLOUD_MODEL_DECLARATION",
+            "SEMANTIC_ACTOR",
+            "SEMANTIC_MERGE",
+            "FRACTAL_CELL",
+            "FRACTAL_MERGE",
+            "POST_VV",
+            "GT_ADVISORY",
+            "PARENT_RETURN"
+          ]
+        },
+        "canonical_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "cell_binding_class": {
+          "type": "string",
+          "enum": [
+            "CURRENT_CELL",
+            "CURRENT_CELL_CHILD_SLOT"
+          ]
+        },
+        "scope_binding_class": {
+          "type": "string",
+          "enum": [
+            "CURRENT_CELL_SCOPE",
+            "PERMITTED_CHILD_SCOPE"
+          ]
+        },
+        "budget_binding_class": {
+          "type": "string",
+          "enum": [
+            "CURRENT_CELL_BUDGET",
+            "CHILD_ALLOCATION_BUDGET"
+          ]
+        },
+        "required_capability_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "allowed_capability_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "forbidden_claims": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "input_ref_derivation_class": {
+          "type": "string",
+          "enum": [
+            "SOURCE_CONTEXT",
+            "PREDECESSOR_OUTPUTS",
+            "FAN_IN_OUTPUTS_0_1_2",
+            "PREDECESSOR_AND_CHILD_SLOT_1",
+            "PREDECESSOR_AND_CHILD_SLOT_2",
+            "FAN_IN_CHILD_SLOT_RETURNS_1_2"
+          ]
+        },
+        "input_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "trace_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "expected_output_kind": {
+          "type": "string",
+          "enum": [
+            "MEMORY_CONTEXT_OUTPUT",
+            "LOCAL_MODEL_DECLARATION_OUTPUT",
+            "CLOUD_MODEL_DECLARATION_OUTPUT",
+            "SEMANTIC_ACTOR_OUTPUT",
+            "SEMANTIC_MERGE_OUTPUT",
+            "FRACTAL_CELL_OUTPUT",
+            "FRACTAL_MERGE_OUTPUT",
+            "POST_VV_REPORT",
+            "GT_ADVISORY_REPORT",
+            "PARENT_RETURN_EVIDENCE"
+          ]
+        },
+        "required": {
+          "const": true
+        },
+        "recursive_expansion_allowed": {
+          "type": "boolean"
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "accepted_mode": {
+                "const": "full_fractal"
+              },
+              "node_kind": {
+                "const": "FRACTAL_CELL"
+              }
+            },
+            "required": [
+              "accepted_mode",
+              "node_kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "recursive_expansion_allowed": {
+                "const": true
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "recursive_expansion_allowed": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "RuntimeTopologyEdgeV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edge_id",
+        "topology_seed_id",
+        "source_node_id",
+        "target_node_id",
+        "edge_kind",
+        "canonical_index",
+        "cell_projection_class",
+        "required",
+        "evidence_flow_allowed",
+        "authority_flow_allowed",
+        "trace_refs",
+        "root_review_required"
+      ],
+      "properties": {
+        "edge_id": {
+          "type": "string",
+          "pattern": "^fredge_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_seed_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "source_node_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "target_node_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "edge_kind": {
+          "type": "string",
+          "enum": [
+            "DATA_DEPENDENCY",
+            "CONTROL_DEPENDENCY",
+            "PARENT_CHILD",
+            "VALIDATION",
+            "RETURN"
+          ]
+        },
+        "canonical_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cell_projection_class": {
+          "type": "string",
+          "enum": [
+            "ROOT_CELL_PROJECTION",
+            "FRACTAL_LEAF_PROJECTION"
+          ]
+        },
+        "required": {
+          "const": true
+        },
+        "evidence_flow_allowed": {
+          "const": true
+        },
+        "authority_flow_allowed": {
+          "const": false
+        },
+        "trace_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "root_review_required": {
+          "const": true
+        }
+      }
+    },
+    "RuntimeAssignmentV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assignment_id",
+        "topology_seed_id",
+        "node_id",
+        "canonical_index",
+        "assignment_kind",
+        "executor_component_id",
+        "capability_ids",
+        "cell_binding_class",
+        "scope_binding_class",
+        "budget_binding_class",
+        "provider_call_allowed",
+        "network_call_allowed",
+        "connector_call_allowed",
+        "trace_refs",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "effect_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "assignment_id": {
+          "type": "string",
+          "pattern": "^frassign_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_seed_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "node_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "canonical_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "assignment_kind": {
+          "type": "string",
+          "enum": [
+            "LOCAL_DETERMINISTIC",
+            "LOCAL_MODEL_DECLARED",
+            "CLOUD_MODEL_DECLARED",
+            "SEMANTIC_ACTOR",
+            "FRACTAL_CHILD",
+            "VALIDATOR",
+            "ADVISORY",
+            "PARENT_RETURN"
+          ]
+        },
+        "executor_component_id": {
+          "type": "string",
+          "enum": [
+            "fractal_runtime_v02",
+            "fractal_scheduler_v02",
+            "post_vv_v01",
+            "gt_validator_v01",
+            "parent_return_v02"
+          ]
+        },
+        "capability_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "cell_binding_class": {
+          "type": "string",
+          "enum": [
+            "CURRENT_CELL",
+            "CURRENT_CELL_CHILD_SLOT"
+          ]
+        },
+        "scope_binding_class": {
+          "type": "string",
+          "enum": [
+            "CURRENT_CELL_SCOPE",
+            "PERMITTED_CHILD_SCOPE"
+          ]
+        },
+        "budget_binding_class": {
+          "type": "string",
+          "enum": [
+            "CURRENT_CELL_BUDGET",
+            "CHILD_ALLOCATION_BUDGET"
+          ]
+        },
+        "provider_call_allowed": {
+          "const": false
+        },
+        "network_call_allowed": {
+          "const": false
+        },
+        "connector_call_allowed": {
+          "const": false
+        },
+        "trace_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "effect_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "RuntimeExecutionTopologyV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "topology_id",
+        "topology_version",
+        "topology_seed_id",
+        "request_id",
+        "transaction_id",
+        "owning_root_id",
+        "domain_id",
+        "accepted_mode",
+        "accepted_scope_ref",
+        "source_binding_id",
+        "source_route_eligibility_artifact_id",
+        "source_root_decision_artifact_id",
+        "source_proposal_artifact_id",
+        "runtime_policy_id",
+        "ordered_node_ids",
+        "ordered_edge_ids",
+        "ordered_assignment_ids",
+        "root_cell_id",
+        "global_budget_id",
+        "time_envelope_ref",
+        "trace_refs",
+        "parent_refs",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "action_commit_packet_created",
+        "receipt_created",
+        "final_output_created",
+        "drs_write_created",
+        "provider_calls",
+        "network_calls",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "topology_id": {
+          "type": "string",
+          "pattern": "^frtopology_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_version": {
+          "const": "v0.2"
+        },
+        "topology_seed_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "transaction_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "owning_root_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "domain_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "accepted_mode": {
+          "type": "string",
+          "enum": [
+            "memory_informed",
+            "local_slm",
+            "cloud_llm",
+            "full_semantic",
+            "full_fractal"
+          ]
+        },
+        "accepted_scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "source_binding_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "source_route_eligibility_artifact_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "source_root_decision_artifact_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "source_proposal_artifact_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "runtime_policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "ordered_node_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "ordered_edge_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "ordered_assignment_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "root_cell_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "global_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "time_envelope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "trace_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "parent_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "action_commit_packet_created": {
+          "const": false
+        },
+        "receipt_created": {
+          "const": false
+        },
+        "final_output_created": {
+          "const": false
+        },
+        "drs_write_created": {
+          "const": false
+        },
+        "provider_calls": {
+          "const": 0
+        },
+        "network_calls": {
+          "const": 0
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "ParentChildScopeProjectionV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projection_id",
+        "topology_id",
+        "parent_cell_id",
+        "child_cell_id",
+        "parent_scope_ref",
+        "child_scope_ref",
+        "scope_relation",
+        "budget_relation",
+        "parent_allowed_capability_ids",
+        "child_allowed_capability_ids",
+        "parent_forbidden_claims",
+        "child_forbidden_claims",
+        "parent_ttl_units",
+        "child_ttl_units",
+        "parent_budget_id",
+        "child_budget_id",
+        "global_budget_id",
+        "child_depth",
+        "parent_lineage_refs",
+        "child_lineage_refs",
+        "proof_refs",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "final_output_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "projection_id": {
+          "type": "string",
+          "pattern": "^frscope_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "parent_cell_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "child_cell_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "parent_scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "child_scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "scope_relation": {
+          "type": "string",
+          "enum": [
+            "EQUAL",
+            "NARROWER"
+          ]
+        },
+        "budget_relation": {
+          "type": "string",
+          "enum": [
+            "ROOT_BUDGET",
+            "CHILD_BUDGET"
+          ]
+        },
+        "parent_allowed_capability_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "child_allowed_capability_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "parent_forbidden_claims": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "child_forbidden_claims": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "parent_ttl_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "child_ttl_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "parent_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "child_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "global_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "child_depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "parent_lineage_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "child_lineage_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "proof_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "final_output_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "FractalCellInputV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cell_input_id",
+        "topology_id",
+        "cell_id",
+        "parent_cell_id",
+        "request_id",
+        "transaction_id",
+        "owning_root_id",
+        "domain_id",
+        "accepted_mode",
+        "scope_projection_id",
+        "scope_ref",
+        "cell_budget_id",
+        "global_budget_id",
+        "ordered_initial_queue_entry_ids",
+        "ordered_required_queue_entry_ids",
+        "cell_depth",
+        "requested_child_count",
+        "ordered_planned_child_cell_ids",
+        "ordered_node_ids",
+        "evidence_refs",
+        "context_refs",
+        "required_output_kinds",
+        "forbidden_output_kinds",
+        "initial_revise_count",
+        "time_envelope_ref",
+        "trace_refs",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "action_commit_packet_created",
+        "final_output_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "cell_input_id": {
+          "type": "string",
+          "pattern": "^frcellin_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "cell_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "parent_cell_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "transaction_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "owning_root_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "domain_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "accepted_mode": {
+          "type": "string",
+          "enum": [
+            "memory_informed",
+            "local_slm",
+            "cloud_llm",
+            "full_semantic",
+            "full_fractal"
+          ]
+        },
+        "scope_projection_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "cell_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "global_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "ordered_initial_queue_entry_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "ordered_required_queue_entry_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "cell_depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "requested_child_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ordered_planned_child_cell_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "ordered_node_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "context_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "required_output_kinds": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "forbidden_output_kinds": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "initial_revise_count": {
+          "const": 0
+        },
+        "time_envelope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "trace_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "action_commit_packet_created": {
+          "const": false
+        },
+        "final_output_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "accepted_mode": {
+                "const": "memory_informed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "ordered_initial_queue_entry_ids": {
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "ordered_required_queue_entry_ids": {
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "ordered_node_ids": {
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "requested_child_count": {
+                "const": 0
+              },
+              "ordered_planned_child_cell_ids": {
+                "maxItems": 0
+              },
+              "required_output_kinds": {
+                "const": [
+                  "MEMORY_CONTEXT_OUTPUT",
+                  "SEMANTIC_ACTOR_OUTPUT",
+                  "POST_VV_REPORT",
+                  "GT_ADVISORY_REPORT",
+                  "PARENT_RETURN_EVIDENCE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "accepted_mode": {
+                "const": "local_slm"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "ordered_initial_queue_entry_ids": {
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "ordered_required_queue_entry_ids": {
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "ordered_node_ids": {
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "requested_child_count": {
+                "const": 0
+              },
+              "ordered_planned_child_cell_ids": {
+                "maxItems": 0
+              },
+              "required_output_kinds": {
+                "const": [
+                  "LOCAL_MODEL_DECLARATION_OUTPUT",
+                  "SEMANTIC_ACTOR_OUTPUT",
+                  "POST_VV_REPORT",
+                  "GT_ADVISORY_REPORT",
+                  "PARENT_RETURN_EVIDENCE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "accepted_mode": {
+                "const": "cloud_llm"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "ordered_initial_queue_entry_ids": {
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "ordered_required_queue_entry_ids": {
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "ordered_node_ids": {
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "requested_child_count": {
+                "const": 0
+              },
+              "ordered_planned_child_cell_ids": {
+                "maxItems": 0
+              },
+              "required_output_kinds": {
+                "const": [
+                  "CLOUD_MODEL_DECLARATION_OUTPUT",
+                  "SEMANTIC_ACTOR_OUTPUT",
+                  "POST_VV_REPORT",
+                  "GT_ADVISORY_REPORT",
+                  "PARENT_RETURN_EVIDENCE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "accepted_mode": {
+                "const": "full_semantic"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "ordered_initial_queue_entry_ids": {
+                "minItems": 7,
+                "maxItems": 7
+              },
+              "ordered_required_queue_entry_ids": {
+                "minItems": 7,
+                "maxItems": 7
+              },
+              "ordered_node_ids": {
+                "minItems": 7,
+                "maxItems": 7
+              },
+              "requested_child_count": {
+                "const": 0
+              },
+              "ordered_planned_child_cell_ids": {
+                "maxItems": 0
+              },
+              "required_output_kinds": {
+                "const": [
+                  "SEMANTIC_ACTOR_OUTPUT",
+                  "SEMANTIC_ACTOR_OUTPUT",
+                  "SEMANTIC_ACTOR_OUTPUT",
+                  "SEMANTIC_MERGE_OUTPUT",
+                  "POST_VV_REPORT",
+                  "GT_ADVISORY_REPORT",
+                  "PARENT_RETURN_EVIDENCE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "accepted_mode": {
+                "const": "full_fractal"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "ordered_initial_queue_entry_ids": {
+                "minItems": 7,
+                "maxItems": 7
+              },
+              "ordered_required_queue_entry_ids": {
+                "minItems": 7,
+                "maxItems": 7
+              },
+              "ordered_node_ids": {
+                "minItems": 7,
+                "maxItems": 7
+              },
+              "requested_child_count": {
+                "const": 2
+              },
+              "ordered_planned_child_cell_ids": {
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "required_output_kinds": {
+                "const": [
+                  "SEMANTIC_ACTOR_OUTPUT",
+                  "FRACTAL_CELL_OUTPUT",
+                  "FRACTAL_CELL_OUTPUT",
+                  "FRACTAL_MERGE_OUTPUT",
+                  "POST_VV_REPORT",
+                  "GT_ADVISORY_REPORT",
+                  "PARENT_RETURN_EVIDENCE"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "FractalCellQueueEntryV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "queue_entry_id",
+        "topology_id",
+        "topology_seed_id",
+        "cell_id",
+        "parent_cell_id",
+        "node_id",
+        "planned_child_cell_id",
+        "cell_depth",
+        "scope_ref",
+        "cell_budget_id",
+        "global_budget_id",
+        "state",
+        "prior_state",
+        "predecessor_queue_entry_id",
+        "predecessor_relation",
+        "transition_decision_id",
+        "canonical_priority",
+        "node_instance_sequence",
+        "snapshot_sequence",
+        "admission_round",
+        "queue_reason_codes",
+        "observed_output_refs",
+        "observed_evidence_refs",
+        "advisory_refs",
+        "lineage_refs",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "final_output_created",
+        "drs_write_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "queue_entry_id": {
+          "type": "string",
+          "pattern": "^frqueue_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "topology_seed_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "cell_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "parent_cell_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "node_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "planned_child_cell_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cell_depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "cell_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "global_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "READY",
+            "RUNNING",
+            "VALIDATING",
+            "COMPLETED",
+            "DEGRADED",
+            "BLOCKED",
+            "NEEDS_USER",
+            "DEADEND"
+          ]
+        },
+        "prior_state": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "READY",
+                "RUNNING",
+                "VALIDATING",
+                "COMPLETED",
+                "DEGRADED",
+                "BLOCKED",
+                "NEEDS_USER",
+                "DEADEND"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "predecessor_queue_entry_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "predecessor_relation": {
+          "type": "string",
+          "enum": [
+            "INITIAL_NONE",
+            "EXACT_IMMEDIATE_PREDECESSOR"
+          ]
+        },
+        "transition_decision_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "canonical_priority": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "node_instance_sequence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "snapshot_sequence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "admission_round": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "queue_reason_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "enum": [
+              "g2d_type_invalid",
+              "g2d_field_count_invalid",
+              "g2d_field_type_invalid",
+              "g2d_identity_invalid",
+              "g2d_identity_mismatch",
+              "g2d_serialization_invalid",
+              "g2d_tuple_order_invalid",
+              "g2d_tuple_duplicate",
+              "g2d_text_invalid",
+              "g2d_integer_invalid",
+              "g2d_boolean_is_not_integer",
+              "g2d_float_forbidden",
+              "g2d_decimal_forbidden",
+              "g2d_nonfinite_forbidden",
+              "g2d_wall_clock_forbidden",
+              "g2d_randomness_forbidden",
+              "g2d_caller_identity_forbidden",
+              "g2d_caller_pass_forbidden",
+              "g2d_secret_material_forbidden",
+              "g2d_callback_forbidden",
+              "g2d_client_handle_forbidden",
+              "g2d_effect_handle_forbidden",
+              "g2d_raw_provider_output_forbidden",
+              "g2d_unknown_enum",
+              "g2d_source_context_invalid",
+              "g2d_g2c_context_invalid",
+              "g2d_g2c_router_input_invalid",
+              "g2d_g2c_proposal_invalid",
+              "g2d_g2c_proposal_artifact_invalid",
+              "g2d_g2c_proposal_transition_invalid",
+              "g2d_g2c_review_input_invalid",
+              "g2d_g2c_root_kernel_invalid",
+              "g2d_g2c_root_input_invalid",
+              "g2d_g2c_root_result_invalid",
+              "g2d_g2c_decision_invalid",
+              "g2d_g2c_decision_artifact_invalid",
+              "g2d_g2c_post_root_transition_invalid",
+              "g2d_route_eligibility_missing",
+              "g2d_route_eligibility_invalid",
+              "g2d_route_eligibility_substituted",
+              "g2d_route_eligibility_context_mismatch",
+              "g2d_route_class_not_topology_eligible",
+              "g2d_shortcut_consumption_forbidden",
+              "g2d_terminal_consumption_forbidden",
+              "g2d_direct_root_decision_consumption_forbidden",
+              "g2d_mode_not_topology_eligible",
+              "g2d_mode_upgrade_forbidden",
+              "g2d_mode_downgrade_forbidden",
+              "g2d_mode_profile_mismatch",
+              "g2d_full_fractal_capability_missing",
+              "g2d_non_fractal_recursion_forbidden",
+              "g2d_topology_policy_invalid",
+              "g2d_topology_source_binding_invalid",
+              "g2d_topology_identity_mismatch",
+              "g2d_topology_lineage_mismatch",
+              "g2d_topology_time_mismatch",
+              "g2d_topology_node_invalid",
+              "g2d_topology_edge_invalid",
+              "g2d_topology_assignment_invalid",
+              "g2d_topology_order_invalid",
+              "g2d_topology_cycle",
+              "g2d_topology_unknown_node",
+              "g2d_topology_duplicate_edge",
+              "g2d_topology_orphan_node",
+              "g2d_topology_parent_mismatch",
+              "g2d_topology_provider_owned_forbidden",
+              "g2d_topology_authority_claim_forbidden",
+              "g2d_queue_entry_invalid",
+              "g2d_queue_state_unknown",
+              "g2d_queue_transition_unknown",
+              "g2d_queue_transition_illegal",
+              "g2d_queue_caller_state_forbidden",
+              "g2d_queue_order_mismatch",
+              "g2d_queue_priority_source_forbidden",
+              "g2d_terminal_queue_reentry_forbidden",
+              "g2d_backpressure_invalid",
+              "g2d_backpressure_work_drop_forbidden",
+              "g2d_backpressure_lineage_missing",
+              "g2d_depth_limit_exceeded",
+              "g2d_fan_out_limit_exceeded",
+              "g2d_total_cell_limit_exceeded",
+              "g2d_parallelism_limit_exceeded",
+              "g2d_revise_limit_exceeded",
+              "g2d_wall_time_budget_exceeded",
+              "g2d_token_budget_exceeded",
+              "g2d_provider_budget_exceeded",
+              "g2d_budget_invalid",
+              "g2d_budget_negative",
+              "g2d_budget_overflow",
+              "g2d_budget_double_spend",
+              "g2d_budget_hidden_reset",
+              "g2d_sibling_budget_borrowing_forbidden",
+              "g2d_child_budget_widening",
+              "g2d_child_depth_mismatch",
+              "g2d_child_scope_widening",
+              "g2d_child_capability_widening",
+              "g2d_child_forbidden_narrowing",
+              "g2d_child_ttl_widening",
+              "g2d_child_lineage_mismatch",
+              "g2d_revise_observation_invalid",
+              "g2d_revise_progress_mismatch",
+              "g2d_revise_hidden_retry_forbidden",
+              "g2d_revise_terminal_caller_selection_forbidden",
+              "g2d_no_progress_deadend",
+              "g2d_resolvable_input_needs_user",
+              "g2d_partial_failure_invalid",
+              "g2d_required_child_failure",
+              "g2d_sibling_evidence_erasure_forbidden",
+              "g2d_success_laundering_forbidden",
+              "g2d_parent_disposition_mismatch",
+              "g2d_cell_input_invalid",
+              "g2d_cell_result_invalid",
+              "g2d_cell_result_context_mismatch",
+              "g2d_cell_root_claim_forbidden",
+              "g2d_cell_final_output_claim_forbidden",
+              "g2d_cell_permission_claim_forbidden",
+              "g2d_cell_packet_claim_forbidden",
+              "g2d_cell_receipt_claim_forbidden",
+              "g2d_cell_effect_claim_forbidden",
+              "g2d_runtime_trace_invalid",
+              "g2d_runtime_report_invalid",
+              "g2d_runtime_report_identity_mismatch",
+              "g2d_abi_profile_invalid",
+              "g2d_abi_bundle_invalid",
+              "g2d_abi_projection_substituted",
+              "g2d_transition_profile_invalid",
+              "g2d_transition_decision_substituted",
+              "g2d_parent_return_invalid",
+              "g2d_sources_valid",
+              "g2d_route_eligibility_valid",
+              "g2d_topology_constructed",
+              "g2d_topology_valid",
+              "g2d_queue_admitted",
+              "g2d_queue_state_advanced",
+              "g2d_scope_projection_valid",
+              "g2d_budget_accounting_valid",
+              "g2d_revise_progress_valid",
+              "g2d_partial_failure_recorded",
+              "g2d_backpressure_recorded",
+              "g2d_cell_result_valid",
+              "g2d_runtime_trace_valid",
+              "g2d_runtime_report_valid",
+              "g2d_abi_profile_valid",
+              "g2d_transition_topology_construction_allowed",
+              "g2d_transition_queue_admission_allowed",
+              "g2d_transition_backpressure_deferred",
+              "g2d_transition_pending_ready_allowed",
+              "g2d_transition_ready_running_allowed",
+              "g2d_transition_running_validating_allowed",
+              "g2d_transition_bounded_revise_allowed",
+              "g2d_transition_completed_recorded",
+              "g2d_transition_degraded_recorded",
+              "g2d_transition_blocked_recorded",
+              "g2d_transition_needs_user_recorded",
+              "g2d_transition_deadend_recorded",
+              "g2d_transition_completed_parent_return",
+              "g2d_transition_degraded_parent_return",
+              "g2d_transition_blocked_parent_return",
+              "g2d_transition_needs_user_parent_return",
+              "g2d_transition_deadend_parent_return",
+              "g2d_identity_dependency_cycle",
+              "g2d_topology_seed_invalid",
+              "g2d_root_cell_identity_invalid",
+              "g2d_child_cell_identity_invalid",
+              "g2d_queue_predecessor_invalid",
+              "g2d_queue_artifact_lineage_invalid",
+              "g2d_post_vv_time_source_invalid",
+              "g2d_gt_time_source_invalid",
+              "g2d_post_vv_fallback_forbidden",
+              "g2d_causal_consumption_invalid",
+              "g2d_causal_consumption_missing",
+              "g2d_causal_counterfactual_mismatch",
+              "g2d_unused_field_disposition_missing",
+              "g2d_partial_failure_result_cycle",
+              "g2d_validation_report_identity_cycle",
+              "g2d_node_instance_geometry_invalid",
+              "g2d_cell_result_postorder_invalid",
+              "g2d_child_result_direct_parent_return_forbidden",
+              "g2d_mode_template_matrix_invalid",
+              "g2d_source_profile_binding_mismatch",
+              "g2d_scope_relation_unproven",
+              "g2d_budget_predecessor_invalid",
+              "g2d_budget_allocation_oversubscribed",
+              "g2d_budget_debit_mismatch",
+              "g2d_result_proposal_invalid",
+              "g2d_post_vv_report_invalid",
+              "g2d_gt_advisory_invalid",
+              "g2d_terminal_outcome_mapping_invalid",
+              "g2d_abi_field_partition_invalid",
+              "g2d_trace_lineage_invalid",
+              "g2d_backpressure_reason_invalid",
+              "g2d_root_result_required_for_parent_return",
+              "g2d_runtime_bundle_report_missing",
+              "g2d_causal_json_pointer_invalid",
+              "g2d_causal_reason_prefix_invalid",
+              "g2d_policy_profile_identity_mismatch",
+              "g2d_cell_edge_projection_invalid",
+              "g2d_leaf_projection_unexecutable",
+              "g2d_static_input_derivation_invalid",
+              "g2d_assignment_trace_invalid",
+              "g2d_global_budget_binding_missing",
+              "g2d_budget_event_pair_mismatch",
+              "g2d_budget_state_transition_invalid",
+              "g2d_pre_root_lifecycle_escalation_forbidden",
+              "g2d_gt_report_identity_collision",
+              "g2d_gt_report_context_id_invalid",
+              "g2d_validation_status_stage_mismatch",
+              "g2d_validation_target_id_mismatch",
+              "g2d_queue_sequence_invalid",
+              "g2d_blocked_reason_selection_invalid",
+              "g2d_result_report_ref_mismatch",
+              "g2d_child_slot_activation_invalid",
+              "g2d_cell_input_build_order_invalid",
+              "g2d_node_cell_outcome_conflation",
+              "g2d_runtime_report_status_outcome_mismatch",
+              "g2d_runtime_outcome_root_result_mismatch",
+              "g2d_budget_event_context_invalid",
+              "g2d_transition_target_dependency_cycle",
+              "g2d_revise_budget_dependency_cycle",
+              "g2d_execution_bundle_dependency_cycle"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "observed_output_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "observed_evidence_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "advisory_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "lineage_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "final_output_created": {
+          "const": false
+        },
+        "drs_write_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "FractalReviseObservationV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_id",
+        "topology_id",
+        "cell_id",
+        "queue_entry_id",
+        "revision_index",
+        "newly_validated_evidence_count",
+        "newly_resolved_constraints_count",
+        "newly_accepted_outputs_count",
+        "newly_introduced_conflicts_count",
+        "progress_units",
+        "consecutive_non_positive_count",
+        "max_consecutive_non_positive_count",
+        "revise_eligible",
+        "derived_terminal_state",
+        "reason_codes",
+        "cell_budget_before_id",
+        "global_budget_before_id",
+        "trace_refs",
+        "root_review_required",
+        "authority_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "pattern": "^frrevise_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "cell_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "queue_entry_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "revision_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "newly_validated_evidence_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "newly_resolved_constraints_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "newly_accepted_outputs_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "newly_introduced_conflicts_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "progress_units": {
+          "type": "integer"
+        },
+        "consecutive_non_positive_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_consecutive_non_positive_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "revise_eligible": {
+          "type": "boolean"
+        },
+        "derived_terminal_state": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "COMPLETED",
+                "DEGRADED",
+                "BLOCKED",
+                "NEEDS_USER",
+                "DEADEND"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "enum": [
+              "g2d_type_invalid",
+              "g2d_field_count_invalid",
+              "g2d_field_type_invalid",
+              "g2d_identity_invalid",
+              "g2d_identity_mismatch",
+              "g2d_serialization_invalid",
+              "g2d_tuple_order_invalid",
+              "g2d_tuple_duplicate",
+              "g2d_text_invalid",
+              "g2d_integer_invalid",
+              "g2d_boolean_is_not_integer",
+              "g2d_float_forbidden",
+              "g2d_decimal_forbidden",
+              "g2d_nonfinite_forbidden",
+              "g2d_wall_clock_forbidden",
+              "g2d_randomness_forbidden",
+              "g2d_caller_identity_forbidden",
+              "g2d_caller_pass_forbidden",
+              "g2d_secret_material_forbidden",
+              "g2d_callback_forbidden",
+              "g2d_client_handle_forbidden",
+              "g2d_effect_handle_forbidden",
+              "g2d_raw_provider_output_forbidden",
+              "g2d_unknown_enum",
+              "g2d_source_context_invalid",
+              "g2d_g2c_context_invalid",
+              "g2d_g2c_router_input_invalid",
+              "g2d_g2c_proposal_invalid",
+              "g2d_g2c_proposal_artifact_invalid",
+              "g2d_g2c_proposal_transition_invalid",
+              "g2d_g2c_review_input_invalid",
+              "g2d_g2c_root_kernel_invalid",
+              "g2d_g2c_root_input_invalid",
+              "g2d_g2c_root_result_invalid",
+              "g2d_g2c_decision_invalid",
+              "g2d_g2c_decision_artifact_invalid",
+              "g2d_g2c_post_root_transition_invalid",
+              "g2d_route_eligibility_missing",
+              "g2d_route_eligibility_invalid",
+              "g2d_route_eligibility_substituted",
+              "g2d_route_eligibility_context_mismatch",
+              "g2d_route_class_not_topology_eligible",
+              "g2d_shortcut_consumption_forbidden",
+              "g2d_terminal_consumption_forbidden",
+              "g2d_direct_root_decision_consumption_forbidden",
+              "g2d_mode_not_topology_eligible",
+              "g2d_mode_upgrade_forbidden",
+              "g2d_mode_downgrade_forbidden",
+              "g2d_mode_profile_mismatch",
+              "g2d_full_fractal_capability_missing",
+              "g2d_non_fractal_recursion_forbidden",
+              "g2d_topology_policy_invalid",
+              "g2d_topology_source_binding_invalid",
+              "g2d_topology_identity_mismatch",
+              "g2d_topology_lineage_mismatch",
+              "g2d_topology_time_mismatch",
+              "g2d_topology_node_invalid",
+              "g2d_topology_edge_invalid",
+              "g2d_topology_assignment_invalid",
+              "g2d_topology_order_invalid",
+              "g2d_topology_cycle",
+              "g2d_topology_unknown_node",
+              "g2d_topology_duplicate_edge",
+              "g2d_topology_orphan_node",
+              "g2d_topology_parent_mismatch",
+              "g2d_topology_provider_owned_forbidden",
+              "g2d_topology_authority_claim_forbidden",
+              "g2d_queue_entry_invalid",
+              "g2d_queue_state_unknown",
+              "g2d_queue_transition_unknown",
+              "g2d_queue_transition_illegal",
+              "g2d_queue_caller_state_forbidden",
+              "g2d_queue_order_mismatch",
+              "g2d_queue_priority_source_forbidden",
+              "g2d_terminal_queue_reentry_forbidden",
+              "g2d_backpressure_invalid",
+              "g2d_backpressure_work_drop_forbidden",
+              "g2d_backpressure_lineage_missing",
+              "g2d_depth_limit_exceeded",
+              "g2d_fan_out_limit_exceeded",
+              "g2d_total_cell_limit_exceeded",
+              "g2d_parallelism_limit_exceeded",
+              "g2d_revise_limit_exceeded",
+              "g2d_wall_time_budget_exceeded",
+              "g2d_token_budget_exceeded",
+              "g2d_provider_budget_exceeded",
+              "g2d_budget_invalid",
+              "g2d_budget_negative",
+              "g2d_budget_overflow",
+              "g2d_budget_double_spend",
+              "g2d_budget_hidden_reset",
+              "g2d_sibling_budget_borrowing_forbidden",
+              "g2d_child_budget_widening",
+              "g2d_child_depth_mismatch",
+              "g2d_child_scope_widening",
+              "g2d_child_capability_widening",
+              "g2d_child_forbidden_narrowing",
+              "g2d_child_ttl_widening",
+              "g2d_child_lineage_mismatch",
+              "g2d_revise_observation_invalid",
+              "g2d_revise_progress_mismatch",
+              "g2d_revise_hidden_retry_forbidden",
+              "g2d_revise_terminal_caller_selection_forbidden",
+              "g2d_no_progress_deadend",
+              "g2d_resolvable_input_needs_user",
+              "g2d_partial_failure_invalid",
+              "g2d_required_child_failure",
+              "g2d_sibling_evidence_erasure_forbidden",
+              "g2d_success_laundering_forbidden",
+              "g2d_parent_disposition_mismatch",
+              "g2d_cell_input_invalid",
+              "g2d_cell_result_invalid",
+              "g2d_cell_result_context_mismatch",
+              "g2d_cell_root_claim_forbidden",
+              "g2d_cell_final_output_claim_forbidden",
+              "g2d_cell_permission_claim_forbidden",
+              "g2d_cell_packet_claim_forbidden",
+              "g2d_cell_receipt_claim_forbidden",
+              "g2d_cell_effect_claim_forbidden",
+              "g2d_runtime_trace_invalid",
+              "g2d_runtime_report_invalid",
+              "g2d_runtime_report_identity_mismatch",
+              "g2d_abi_profile_invalid",
+              "g2d_abi_bundle_invalid",
+              "g2d_abi_projection_substituted",
+              "g2d_transition_profile_invalid",
+              "g2d_transition_decision_substituted",
+              "g2d_parent_return_invalid",
+              "g2d_sources_valid",
+              "g2d_route_eligibility_valid",
+              "g2d_topology_constructed",
+              "g2d_topology_valid",
+              "g2d_queue_admitted",
+              "g2d_queue_state_advanced",
+              "g2d_scope_projection_valid",
+              "g2d_budget_accounting_valid",
+              "g2d_revise_progress_valid",
+              "g2d_partial_failure_recorded",
+              "g2d_backpressure_recorded",
+              "g2d_cell_result_valid",
+              "g2d_runtime_trace_valid",
+              "g2d_runtime_report_valid",
+              "g2d_abi_profile_valid",
+              "g2d_transition_topology_construction_allowed",
+              "g2d_transition_queue_admission_allowed",
+              "g2d_transition_backpressure_deferred",
+              "g2d_transition_pending_ready_allowed",
+              "g2d_transition_ready_running_allowed",
+              "g2d_transition_running_validating_allowed",
+              "g2d_transition_bounded_revise_allowed",
+              "g2d_transition_completed_recorded",
+              "g2d_transition_degraded_recorded",
+              "g2d_transition_blocked_recorded",
+              "g2d_transition_needs_user_recorded",
+              "g2d_transition_deadend_recorded",
+              "g2d_transition_completed_parent_return",
+              "g2d_transition_degraded_parent_return",
+              "g2d_transition_blocked_parent_return",
+              "g2d_transition_needs_user_parent_return",
+              "g2d_transition_deadend_parent_return",
+              "g2d_identity_dependency_cycle",
+              "g2d_topology_seed_invalid",
+              "g2d_root_cell_identity_invalid",
+              "g2d_child_cell_identity_invalid",
+              "g2d_queue_predecessor_invalid",
+              "g2d_queue_artifact_lineage_invalid",
+              "g2d_post_vv_time_source_invalid",
+              "g2d_gt_time_source_invalid",
+              "g2d_post_vv_fallback_forbidden",
+              "g2d_causal_consumption_invalid",
+              "g2d_causal_consumption_missing",
+              "g2d_causal_counterfactual_mismatch",
+              "g2d_unused_field_disposition_missing",
+              "g2d_partial_failure_result_cycle",
+              "g2d_validation_report_identity_cycle",
+              "g2d_node_instance_geometry_invalid",
+              "g2d_cell_result_postorder_invalid",
+              "g2d_child_result_direct_parent_return_forbidden",
+              "g2d_mode_template_matrix_invalid",
+              "g2d_source_profile_binding_mismatch",
+              "g2d_scope_relation_unproven",
+              "g2d_budget_predecessor_invalid",
+              "g2d_budget_allocation_oversubscribed",
+              "g2d_budget_debit_mismatch",
+              "g2d_result_proposal_invalid",
+              "g2d_post_vv_report_invalid",
+              "g2d_gt_advisory_invalid",
+              "g2d_terminal_outcome_mapping_invalid",
+              "g2d_abi_field_partition_invalid",
+              "g2d_trace_lineage_invalid",
+              "g2d_backpressure_reason_invalid",
+              "g2d_root_result_required_for_parent_return",
+              "g2d_runtime_bundle_report_missing",
+              "g2d_causal_json_pointer_invalid",
+              "g2d_causal_reason_prefix_invalid",
+              "g2d_policy_profile_identity_mismatch",
+              "g2d_cell_edge_projection_invalid",
+              "g2d_leaf_projection_unexecutable",
+              "g2d_static_input_derivation_invalid",
+              "g2d_assignment_trace_invalid",
+              "g2d_global_budget_binding_missing",
+              "g2d_budget_event_pair_mismatch",
+              "g2d_budget_state_transition_invalid",
+              "g2d_pre_root_lifecycle_escalation_forbidden",
+              "g2d_gt_report_identity_collision",
+              "g2d_gt_report_context_id_invalid",
+              "g2d_validation_status_stage_mismatch",
+              "g2d_validation_target_id_mismatch",
+              "g2d_queue_sequence_invalid",
+              "g2d_blocked_reason_selection_invalid",
+              "g2d_result_report_ref_mismatch",
+              "g2d_child_slot_activation_invalid",
+              "g2d_cell_input_build_order_invalid",
+              "g2d_node_cell_outcome_conflation",
+              "g2d_runtime_report_status_outcome_mismatch",
+              "g2d_runtime_outcome_root_result_mismatch",
+              "g2d_budget_event_context_invalid",
+              "g2d_transition_target_dependency_cycle",
+              "g2d_revise_budget_dependency_cycle",
+              "g2d_execution_bundle_dependency_cycle"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "cell_budget_before_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "global_budget_before_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "trace_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "FractalPartialFailureRecordV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "partial_failure_id",
+        "topology_id",
+        "parent_cell_id",
+        "child_cell_id",
+        "child_result_id",
+        "failure_stage",
+        "reason_codes",
+        "source_reason_codes",
+        "evidence_refs",
+        "trace_refs",
+        "allocated_cell_budget_id",
+        "final_cell_budget_id",
+        "global_budget_id",
+        "retry_eligible",
+        "revise_eligible",
+        "required_child",
+        "sibling_independent",
+        "parent_disposition",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "final_output_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "partial_failure_id": {
+          "type": "string",
+          "pattern": "^frfailure_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "parent_cell_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "child_cell_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "child_result_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "failure_stage": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "SOURCE_CONTEXT",
+            "POLICY",
+            "SOURCE_BINDING",
+            "ROOT_CELL_ID",
+            "TOPOLOGY_SEED",
+            "BUDGET",
+            "NODE",
+            "EDGE",
+            "ASSIGNMENT",
+            "TOPOLOGY",
+            "QUEUE",
+            "SCOPE",
+            "CELL_INPUT",
+            "RESULT_PROPOSAL",
+            "CELL_RESULT_PRECONDITIONS",
+            "POST_VV",
+            "GT",
+            "CELL_RESULT",
+            "REVISE",
+            "PARTIAL_FAILURE",
+            "BACKPRESSURE",
+            "RUNTIME_TRACE",
+            "ABI",
+            "TRANSITION",
+            "CAUSAL_CONSUMPTION",
+            "CAUSAL_COUNTERFACTUAL",
+            "PARENT_RETURN",
+            "REPORT",
+            "COMPLETE_PROFILE"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "enum": [
+              "g2d_type_invalid",
+              "g2d_field_count_invalid",
+              "g2d_field_type_invalid",
+              "g2d_identity_invalid",
+              "g2d_identity_mismatch",
+              "g2d_serialization_invalid",
+              "g2d_tuple_order_invalid",
+              "g2d_tuple_duplicate",
+              "g2d_text_invalid",
+              "g2d_integer_invalid",
+              "g2d_boolean_is_not_integer",
+              "g2d_float_forbidden",
+              "g2d_decimal_forbidden",
+              "g2d_nonfinite_forbidden",
+              "g2d_wall_clock_forbidden",
+              "g2d_randomness_forbidden",
+              "g2d_caller_identity_forbidden",
+              "g2d_caller_pass_forbidden",
+              "g2d_secret_material_forbidden",
+              "g2d_callback_forbidden",
+              "g2d_client_handle_forbidden",
+              "g2d_effect_handle_forbidden",
+              "g2d_raw_provider_output_forbidden",
+              "g2d_unknown_enum",
+              "g2d_source_context_invalid",
+              "g2d_g2c_context_invalid",
+              "g2d_g2c_router_input_invalid",
+              "g2d_g2c_proposal_invalid",
+              "g2d_g2c_proposal_artifact_invalid",
+              "g2d_g2c_proposal_transition_invalid",
+              "g2d_g2c_review_input_invalid",
+              "g2d_g2c_root_kernel_invalid",
+              "g2d_g2c_root_input_invalid",
+              "g2d_g2c_root_result_invalid",
+              "g2d_g2c_decision_invalid",
+              "g2d_g2c_decision_artifact_invalid",
+              "g2d_g2c_post_root_transition_invalid",
+              "g2d_route_eligibility_missing",
+              "g2d_route_eligibility_invalid",
+              "g2d_route_eligibility_substituted",
+              "g2d_route_eligibility_context_mismatch",
+              "g2d_route_class_not_topology_eligible",
+              "g2d_shortcut_consumption_forbidden",
+              "g2d_terminal_consumption_forbidden",
+              "g2d_direct_root_decision_consumption_forbidden",
+              "g2d_mode_not_topology_eligible",
+              "g2d_mode_upgrade_forbidden",
+              "g2d_mode_downgrade_forbidden",
+              "g2d_mode_profile_mismatch",
+              "g2d_full_fractal_capability_missing",
+              "g2d_non_fractal_recursion_forbidden",
+              "g2d_topology_policy_invalid",
+              "g2d_topology_source_binding_invalid",
+              "g2d_topology_identity_mismatch",
+              "g2d_topology_lineage_mismatch",
+              "g2d_topology_time_mismatch",
+              "g2d_topology_node_invalid",
+              "g2d_topology_edge_invalid",
+              "g2d_topology_assignment_invalid",
+              "g2d_topology_order_invalid",
+              "g2d_topology_cycle",
+              "g2d_topology_unknown_node",
+              "g2d_topology_duplicate_edge",
+              "g2d_topology_orphan_node",
+              "g2d_topology_parent_mismatch",
+              "g2d_topology_provider_owned_forbidden",
+              "g2d_topology_authority_claim_forbidden",
+              "g2d_queue_entry_invalid",
+              "g2d_queue_state_unknown",
+              "g2d_queue_transition_unknown",
+              "g2d_queue_transition_illegal",
+              "g2d_queue_caller_state_forbidden",
+              "g2d_queue_order_mismatch",
+              "g2d_queue_priority_source_forbidden",
+              "g2d_terminal_queue_reentry_forbidden",
+              "g2d_backpressure_invalid",
+              "g2d_backpressure_work_drop_forbidden",
+              "g2d_backpressure_lineage_missing",
+              "g2d_depth_limit_exceeded",
+              "g2d_fan_out_limit_exceeded",
+              "g2d_total_cell_limit_exceeded",
+              "g2d_parallelism_limit_exceeded",
+              "g2d_revise_limit_exceeded",
+              "g2d_wall_time_budget_exceeded",
+              "g2d_token_budget_exceeded",
+              "g2d_provider_budget_exceeded",
+              "g2d_budget_invalid",
+              "g2d_budget_negative",
+              "g2d_budget_overflow",
+              "g2d_budget_double_spend",
+              "g2d_budget_hidden_reset",
+              "g2d_sibling_budget_borrowing_forbidden",
+              "g2d_child_budget_widening",
+              "g2d_child_depth_mismatch",
+              "g2d_child_scope_widening",
+              "g2d_child_capability_widening",
+              "g2d_child_forbidden_narrowing",
+              "g2d_child_ttl_widening",
+              "g2d_child_lineage_mismatch",
+              "g2d_revise_observation_invalid",
+              "g2d_revise_progress_mismatch",
+              "g2d_revise_hidden_retry_forbidden",
+              "g2d_revise_terminal_caller_selection_forbidden",
+              "g2d_no_progress_deadend",
+              "g2d_resolvable_input_needs_user",
+              "g2d_partial_failure_invalid",
+              "g2d_required_child_failure",
+              "g2d_sibling_evidence_erasure_forbidden",
+              "g2d_success_laundering_forbidden",
+              "g2d_parent_disposition_mismatch",
+              "g2d_cell_input_invalid",
+              "g2d_cell_result_invalid",
+              "g2d_cell_result_context_mismatch",
+              "g2d_cell_root_claim_forbidden",
+              "g2d_cell_final_output_claim_forbidden",
+              "g2d_cell_permission_claim_forbidden",
+              "g2d_cell_packet_claim_forbidden",
+              "g2d_cell_receipt_claim_forbidden",
+              "g2d_cell_effect_claim_forbidden",
+              "g2d_runtime_trace_invalid",
+              "g2d_runtime_report_invalid",
+              "g2d_runtime_report_identity_mismatch",
+              "g2d_abi_profile_invalid",
+              "g2d_abi_bundle_invalid",
+              "g2d_abi_projection_substituted",
+              "g2d_transition_profile_invalid",
+              "g2d_transition_decision_substituted",
+              "g2d_parent_return_invalid",
+              "g2d_sources_valid",
+              "g2d_route_eligibility_valid",
+              "g2d_topology_constructed",
+              "g2d_topology_valid",
+              "g2d_queue_admitted",
+              "g2d_queue_state_advanced",
+              "g2d_scope_projection_valid",
+              "g2d_budget_accounting_valid",
+              "g2d_revise_progress_valid",
+              "g2d_partial_failure_recorded",
+              "g2d_backpressure_recorded",
+              "g2d_cell_result_valid",
+              "g2d_runtime_trace_valid",
+              "g2d_runtime_report_valid",
+              "g2d_abi_profile_valid",
+              "g2d_transition_topology_construction_allowed",
+              "g2d_transition_queue_admission_allowed",
+              "g2d_transition_backpressure_deferred",
+              "g2d_transition_pending_ready_allowed",
+              "g2d_transition_ready_running_allowed",
+              "g2d_transition_running_validating_allowed",
+              "g2d_transition_bounded_revise_allowed",
+              "g2d_transition_completed_recorded",
+              "g2d_transition_degraded_recorded",
+              "g2d_transition_blocked_recorded",
+              "g2d_transition_needs_user_recorded",
+              "g2d_transition_deadend_recorded",
+              "g2d_transition_completed_parent_return",
+              "g2d_transition_degraded_parent_return",
+              "g2d_transition_blocked_parent_return",
+              "g2d_transition_needs_user_parent_return",
+              "g2d_transition_deadend_parent_return",
+              "g2d_identity_dependency_cycle",
+              "g2d_topology_seed_invalid",
+              "g2d_root_cell_identity_invalid",
+              "g2d_child_cell_identity_invalid",
+              "g2d_queue_predecessor_invalid",
+              "g2d_queue_artifact_lineage_invalid",
+              "g2d_post_vv_time_source_invalid",
+              "g2d_gt_time_source_invalid",
+              "g2d_post_vv_fallback_forbidden",
+              "g2d_causal_consumption_invalid",
+              "g2d_causal_consumption_missing",
+              "g2d_causal_counterfactual_mismatch",
+              "g2d_unused_field_disposition_missing",
+              "g2d_partial_failure_result_cycle",
+              "g2d_validation_report_identity_cycle",
+              "g2d_node_instance_geometry_invalid",
+              "g2d_cell_result_postorder_invalid",
+              "g2d_child_result_direct_parent_return_forbidden",
+              "g2d_mode_template_matrix_invalid",
+              "g2d_source_profile_binding_mismatch",
+              "g2d_scope_relation_unproven",
+              "g2d_budget_predecessor_invalid",
+              "g2d_budget_allocation_oversubscribed",
+              "g2d_budget_debit_mismatch",
+              "g2d_result_proposal_invalid",
+              "g2d_post_vv_report_invalid",
+              "g2d_gt_advisory_invalid",
+              "g2d_terminal_outcome_mapping_invalid",
+              "g2d_abi_field_partition_invalid",
+              "g2d_trace_lineage_invalid",
+              "g2d_backpressure_reason_invalid",
+              "g2d_root_result_required_for_parent_return",
+              "g2d_runtime_bundle_report_missing",
+              "g2d_causal_json_pointer_invalid",
+              "g2d_causal_reason_prefix_invalid",
+              "g2d_policy_profile_identity_mismatch",
+              "g2d_cell_edge_projection_invalid",
+              "g2d_leaf_projection_unexecutable",
+              "g2d_static_input_derivation_invalid",
+              "g2d_assignment_trace_invalid",
+              "g2d_global_budget_binding_missing",
+              "g2d_budget_event_pair_mismatch",
+              "g2d_budget_state_transition_invalid",
+              "g2d_pre_root_lifecycle_escalation_forbidden",
+              "g2d_gt_report_identity_collision",
+              "g2d_gt_report_context_id_invalid",
+              "g2d_validation_status_stage_mismatch",
+              "g2d_validation_target_id_mismatch",
+              "g2d_queue_sequence_invalid",
+              "g2d_blocked_reason_selection_invalid",
+              "g2d_result_report_ref_mismatch",
+              "g2d_child_slot_activation_invalid",
+              "g2d_cell_input_build_order_invalid",
+              "g2d_node_cell_outcome_conflation",
+              "g2d_runtime_report_status_outcome_mismatch",
+              "g2d_runtime_outcome_root_result_mismatch",
+              "g2d_budget_event_context_invalid",
+              "g2d_transition_target_dependency_cycle",
+              "g2d_revise_budget_dependency_cycle",
+              "g2d_execution_bundle_dependency_cycle"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "source_reason_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$",
+            "not": {
+              "pattern": "^g2d_[a-z0-9_]+$"
+            }
+          },
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "trace_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "allocated_cell_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "final_cell_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "global_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "retry_eligible": {
+          "const": false
+        },
+        "revise_eligible": {
+          "type": "boolean"
+        },
+        "required_child": {
+          "type": "boolean"
+        },
+        "sibling_independent": {
+          "type": "boolean"
+        },
+        "parent_disposition": {
+          "type": "string",
+          "enum": [
+            "COMPLETED",
+            "DEGRADED",
+            "BLOCKED",
+            "NEEDS_USER",
+            "DEADEND"
+          ]
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "final_output_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "FractalBackpressureStateV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backpressure_id",
+        "topology_id",
+        "policy_id",
+        "evaluated_round",
+        "queue_capacity",
+        "running_count",
+        "ready_count",
+        "pending_count",
+        "deferred_queue_entry_ids",
+        "admission_order",
+        "backpressure_reason",
+        "reason_codes",
+        "no_work_dropped",
+        "lineage_refs",
+        "global_budget_id",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "backpressure_id": {
+          "type": "string",
+          "pattern": "^frbackpressure_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "evaluated_round": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "queue_capacity": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "running_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ready_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pending_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deferred_queue_entry_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "admission_order": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "backpressure_reason": {
+          "type": "string",
+          "enum": [
+            "PARALLELISM_CAPACITY_EXHAUSTED"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "enum": [
+              "g2d_type_invalid",
+              "g2d_field_count_invalid",
+              "g2d_field_type_invalid",
+              "g2d_identity_invalid",
+              "g2d_identity_mismatch",
+              "g2d_serialization_invalid",
+              "g2d_tuple_order_invalid",
+              "g2d_tuple_duplicate",
+              "g2d_text_invalid",
+              "g2d_integer_invalid",
+              "g2d_boolean_is_not_integer",
+              "g2d_float_forbidden",
+              "g2d_decimal_forbidden",
+              "g2d_nonfinite_forbidden",
+              "g2d_wall_clock_forbidden",
+              "g2d_randomness_forbidden",
+              "g2d_caller_identity_forbidden",
+              "g2d_caller_pass_forbidden",
+              "g2d_secret_material_forbidden",
+              "g2d_callback_forbidden",
+              "g2d_client_handle_forbidden",
+              "g2d_effect_handle_forbidden",
+              "g2d_raw_provider_output_forbidden",
+              "g2d_unknown_enum",
+              "g2d_source_context_invalid",
+              "g2d_g2c_context_invalid",
+              "g2d_g2c_router_input_invalid",
+              "g2d_g2c_proposal_invalid",
+              "g2d_g2c_proposal_artifact_invalid",
+              "g2d_g2c_proposal_transition_invalid",
+              "g2d_g2c_review_input_invalid",
+              "g2d_g2c_root_kernel_invalid",
+              "g2d_g2c_root_input_invalid",
+              "g2d_g2c_root_result_invalid",
+              "g2d_g2c_decision_invalid",
+              "g2d_g2c_decision_artifact_invalid",
+              "g2d_g2c_post_root_transition_invalid",
+              "g2d_route_eligibility_missing",
+              "g2d_route_eligibility_invalid",
+              "g2d_route_eligibility_substituted",
+              "g2d_route_eligibility_context_mismatch",
+              "g2d_route_class_not_topology_eligible",
+              "g2d_shortcut_consumption_forbidden",
+              "g2d_terminal_consumption_forbidden",
+              "g2d_direct_root_decision_consumption_forbidden",
+              "g2d_mode_not_topology_eligible",
+              "g2d_mode_upgrade_forbidden",
+              "g2d_mode_downgrade_forbidden",
+              "g2d_mode_profile_mismatch",
+              "g2d_full_fractal_capability_missing",
+              "g2d_non_fractal_recursion_forbidden",
+              "g2d_topology_policy_invalid",
+              "g2d_topology_source_binding_invalid",
+              "g2d_topology_identity_mismatch",
+              "g2d_topology_lineage_mismatch",
+              "g2d_topology_time_mismatch",
+              "g2d_topology_node_invalid",
+              "g2d_topology_edge_invalid",
+              "g2d_topology_assignment_invalid",
+              "g2d_topology_order_invalid",
+              "g2d_topology_cycle",
+              "g2d_topology_unknown_node",
+              "g2d_topology_duplicate_edge",
+              "g2d_topology_orphan_node",
+              "g2d_topology_parent_mismatch",
+              "g2d_topology_provider_owned_forbidden",
+              "g2d_topology_authority_claim_forbidden",
+              "g2d_queue_entry_invalid",
+              "g2d_queue_state_unknown",
+              "g2d_queue_transition_unknown",
+              "g2d_queue_transition_illegal",
+              "g2d_queue_caller_state_forbidden",
+              "g2d_queue_order_mismatch",
+              "g2d_queue_priority_source_forbidden",
+              "g2d_terminal_queue_reentry_forbidden",
+              "g2d_backpressure_invalid",
+              "g2d_backpressure_work_drop_forbidden",
+              "g2d_backpressure_lineage_missing",
+              "g2d_depth_limit_exceeded",
+              "g2d_fan_out_limit_exceeded",
+              "g2d_total_cell_limit_exceeded",
+              "g2d_parallelism_limit_exceeded",
+              "g2d_revise_limit_exceeded",
+              "g2d_wall_time_budget_exceeded",
+              "g2d_token_budget_exceeded",
+              "g2d_provider_budget_exceeded",
+              "g2d_budget_invalid",
+              "g2d_budget_negative",
+              "g2d_budget_overflow",
+              "g2d_budget_double_spend",
+              "g2d_budget_hidden_reset",
+              "g2d_sibling_budget_borrowing_forbidden",
+              "g2d_child_budget_widening",
+              "g2d_child_depth_mismatch",
+              "g2d_child_scope_widening",
+              "g2d_child_capability_widening",
+              "g2d_child_forbidden_narrowing",
+              "g2d_child_ttl_widening",
+              "g2d_child_lineage_mismatch",
+              "g2d_revise_observation_invalid",
+              "g2d_revise_progress_mismatch",
+              "g2d_revise_hidden_retry_forbidden",
+              "g2d_revise_terminal_caller_selection_forbidden",
+              "g2d_no_progress_deadend",
+              "g2d_resolvable_input_needs_user",
+              "g2d_partial_failure_invalid",
+              "g2d_required_child_failure",
+              "g2d_sibling_evidence_erasure_forbidden",
+              "g2d_success_laundering_forbidden",
+              "g2d_parent_disposition_mismatch",
+              "g2d_cell_input_invalid",
+              "g2d_cell_result_invalid",
+              "g2d_cell_result_context_mismatch",
+              "g2d_cell_root_claim_forbidden",
+              "g2d_cell_final_output_claim_forbidden",
+              "g2d_cell_permission_claim_forbidden",
+              "g2d_cell_packet_claim_forbidden",
+              "g2d_cell_receipt_claim_forbidden",
+              "g2d_cell_effect_claim_forbidden",
+              "g2d_runtime_trace_invalid",
+              "g2d_runtime_report_invalid",
+              "g2d_runtime_report_identity_mismatch",
+              "g2d_abi_profile_invalid",
+              "g2d_abi_bundle_invalid",
+              "g2d_abi_projection_substituted",
+              "g2d_transition_profile_invalid",
+              "g2d_transition_decision_substituted",
+              "g2d_parent_return_invalid",
+              "g2d_sources_valid",
+              "g2d_route_eligibility_valid",
+              "g2d_topology_constructed",
+              "g2d_topology_valid",
+              "g2d_queue_admitted",
+              "g2d_queue_state_advanced",
+              "g2d_scope_projection_valid",
+              "g2d_budget_accounting_valid",
+              "g2d_revise_progress_valid",
+              "g2d_partial_failure_recorded",
+              "g2d_backpressure_recorded",
+              "g2d_cell_result_valid",
+              "g2d_runtime_trace_valid",
+              "g2d_runtime_report_valid",
+              "g2d_abi_profile_valid",
+              "g2d_transition_topology_construction_allowed",
+              "g2d_transition_queue_admission_allowed",
+              "g2d_transition_backpressure_deferred",
+              "g2d_transition_pending_ready_allowed",
+              "g2d_transition_ready_running_allowed",
+              "g2d_transition_running_validating_allowed",
+              "g2d_transition_bounded_revise_allowed",
+              "g2d_transition_completed_recorded",
+              "g2d_transition_degraded_recorded",
+              "g2d_transition_blocked_recorded",
+              "g2d_transition_needs_user_recorded",
+              "g2d_transition_deadend_recorded",
+              "g2d_transition_completed_parent_return",
+              "g2d_transition_degraded_parent_return",
+              "g2d_transition_blocked_parent_return",
+              "g2d_transition_needs_user_parent_return",
+              "g2d_transition_deadend_parent_return",
+              "g2d_identity_dependency_cycle",
+              "g2d_topology_seed_invalid",
+              "g2d_root_cell_identity_invalid",
+              "g2d_child_cell_identity_invalid",
+              "g2d_queue_predecessor_invalid",
+              "g2d_queue_artifact_lineage_invalid",
+              "g2d_post_vv_time_source_invalid",
+              "g2d_gt_time_source_invalid",
+              "g2d_post_vv_fallback_forbidden",
+              "g2d_causal_consumption_invalid",
+              "g2d_causal_consumption_missing",
+              "g2d_causal_counterfactual_mismatch",
+              "g2d_unused_field_disposition_missing",
+              "g2d_partial_failure_result_cycle",
+              "g2d_validation_report_identity_cycle",
+              "g2d_node_instance_geometry_invalid",
+              "g2d_cell_result_postorder_invalid",
+              "g2d_child_result_direct_parent_return_forbidden",
+              "g2d_mode_template_matrix_invalid",
+              "g2d_source_profile_binding_mismatch",
+              "g2d_scope_relation_unproven",
+              "g2d_budget_predecessor_invalid",
+              "g2d_budget_allocation_oversubscribed",
+              "g2d_budget_debit_mismatch",
+              "g2d_result_proposal_invalid",
+              "g2d_post_vv_report_invalid",
+              "g2d_gt_advisory_invalid",
+              "g2d_terminal_outcome_mapping_invalid",
+              "g2d_abi_field_partition_invalid",
+              "g2d_trace_lineage_invalid",
+              "g2d_backpressure_reason_invalid",
+              "g2d_root_result_required_for_parent_return",
+              "g2d_runtime_bundle_report_missing",
+              "g2d_causal_json_pointer_invalid",
+              "g2d_causal_reason_prefix_invalid",
+              "g2d_policy_profile_identity_mismatch",
+              "g2d_cell_edge_projection_invalid",
+              "g2d_leaf_projection_unexecutable",
+              "g2d_static_input_derivation_invalid",
+              "g2d_assignment_trace_invalid",
+              "g2d_global_budget_binding_missing",
+              "g2d_budget_event_pair_mismatch",
+              "g2d_budget_state_transition_invalid",
+              "g2d_pre_root_lifecycle_escalation_forbidden",
+              "g2d_gt_report_identity_collision",
+              "g2d_gt_report_context_id_invalid",
+              "g2d_validation_status_stage_mismatch",
+              "g2d_validation_target_id_mismatch",
+              "g2d_queue_sequence_invalid",
+              "g2d_blocked_reason_selection_invalid",
+              "g2d_result_report_ref_mismatch",
+              "g2d_child_slot_activation_invalid",
+              "g2d_cell_input_build_order_invalid",
+              "g2d_node_cell_outcome_conflation",
+              "g2d_runtime_report_status_outcome_mismatch",
+              "g2d_runtime_outcome_root_result_mismatch",
+              "g2d_budget_event_context_invalid",
+              "g2d_transition_target_dependency_cycle",
+              "g2d_revise_budget_dependency_cycle",
+              "g2d_execution_bundle_dependency_cycle"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "no_work_dropped": {
+          "const": true
+        },
+        "lineage_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "global_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "FractalCellResultV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_id",
+        "topology_id",
+        "topology_seed_id",
+        "cell_id",
+        "parent_cell_id",
+        "cell_depth",
+        "cell_input_id",
+        "ordered_terminal_queue_entry_ids",
+        "ordered_child_result_ids",
+        "outcome",
+        "accepted_output_refs",
+        "evidence_refs",
+        "pre_result_validation_report_id",
+        "post_vv_report_ref",
+        "gt_advisory_ref",
+        "partial_failure_ids",
+        "allocated_cell_budget_id",
+        "final_cell_budget_id",
+        "global_budget_id",
+        "scope_ref",
+        "reason_codes",
+        "source_reason_codes",
+        "trace_refs",
+        "parent_return_required",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "action_commit_packet_created",
+        "receipt_created",
+        "final_output_created",
+        "drs_write_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "result_id": {
+          "type": "string",
+          "pattern": "^frcellresult_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "topology_seed_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "cell_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "parent_cell_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cell_depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cell_input_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "ordered_terminal_queue_entry_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "ordered_child_result_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "COMPLETED",
+            "DEGRADED",
+            "BLOCKED",
+            "NEEDS_USER",
+            "DEADEND"
+          ]
+        },
+        "accepted_output_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "pre_result_validation_report_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "post_vv_report_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "gt_advisory_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "partial_failure_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "allocated_cell_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "final_cell_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "global_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "enum": [
+              "g2d_type_invalid",
+              "g2d_field_count_invalid",
+              "g2d_field_type_invalid",
+              "g2d_identity_invalid",
+              "g2d_identity_mismatch",
+              "g2d_serialization_invalid",
+              "g2d_tuple_order_invalid",
+              "g2d_tuple_duplicate",
+              "g2d_text_invalid",
+              "g2d_integer_invalid",
+              "g2d_boolean_is_not_integer",
+              "g2d_float_forbidden",
+              "g2d_decimal_forbidden",
+              "g2d_nonfinite_forbidden",
+              "g2d_wall_clock_forbidden",
+              "g2d_randomness_forbidden",
+              "g2d_caller_identity_forbidden",
+              "g2d_caller_pass_forbidden",
+              "g2d_secret_material_forbidden",
+              "g2d_callback_forbidden",
+              "g2d_client_handle_forbidden",
+              "g2d_effect_handle_forbidden",
+              "g2d_raw_provider_output_forbidden",
+              "g2d_unknown_enum",
+              "g2d_source_context_invalid",
+              "g2d_g2c_context_invalid",
+              "g2d_g2c_router_input_invalid",
+              "g2d_g2c_proposal_invalid",
+              "g2d_g2c_proposal_artifact_invalid",
+              "g2d_g2c_proposal_transition_invalid",
+              "g2d_g2c_review_input_invalid",
+              "g2d_g2c_root_kernel_invalid",
+              "g2d_g2c_root_input_invalid",
+              "g2d_g2c_root_result_invalid",
+              "g2d_g2c_decision_invalid",
+              "g2d_g2c_decision_artifact_invalid",
+              "g2d_g2c_post_root_transition_invalid",
+              "g2d_route_eligibility_missing",
+              "g2d_route_eligibility_invalid",
+              "g2d_route_eligibility_substituted",
+              "g2d_route_eligibility_context_mismatch",
+              "g2d_route_class_not_topology_eligible",
+              "g2d_shortcut_consumption_forbidden",
+              "g2d_terminal_consumption_forbidden",
+              "g2d_direct_root_decision_consumption_forbidden",
+              "g2d_mode_not_topology_eligible",
+              "g2d_mode_upgrade_forbidden",
+              "g2d_mode_downgrade_forbidden",
+              "g2d_mode_profile_mismatch",
+              "g2d_full_fractal_capability_missing",
+              "g2d_non_fractal_recursion_forbidden",
+              "g2d_topology_policy_invalid",
+              "g2d_topology_source_binding_invalid",
+              "g2d_topology_identity_mismatch",
+              "g2d_topology_lineage_mismatch",
+              "g2d_topology_time_mismatch",
+              "g2d_topology_node_invalid",
+              "g2d_topology_edge_invalid",
+              "g2d_topology_assignment_invalid",
+              "g2d_topology_order_invalid",
+              "g2d_topology_cycle",
+              "g2d_topology_unknown_node",
+              "g2d_topology_duplicate_edge",
+              "g2d_topology_orphan_node",
+              "g2d_topology_parent_mismatch",
+              "g2d_topology_provider_owned_forbidden",
+              "g2d_topology_authority_claim_forbidden",
+              "g2d_queue_entry_invalid",
+              "g2d_queue_state_unknown",
+              "g2d_queue_transition_unknown",
+              "g2d_queue_transition_illegal",
+              "g2d_queue_caller_state_forbidden",
+              "g2d_queue_order_mismatch",
+              "g2d_queue_priority_source_forbidden",
+              "g2d_terminal_queue_reentry_forbidden",
+              "g2d_backpressure_invalid",
+              "g2d_backpressure_work_drop_forbidden",
+              "g2d_backpressure_lineage_missing",
+              "g2d_depth_limit_exceeded",
+              "g2d_fan_out_limit_exceeded",
+              "g2d_total_cell_limit_exceeded",
+              "g2d_parallelism_limit_exceeded",
+              "g2d_revise_limit_exceeded",
+              "g2d_wall_time_budget_exceeded",
+              "g2d_token_budget_exceeded",
+              "g2d_provider_budget_exceeded",
+              "g2d_budget_invalid",
+              "g2d_budget_negative",
+              "g2d_budget_overflow",
+              "g2d_budget_double_spend",
+              "g2d_budget_hidden_reset",
+              "g2d_sibling_budget_borrowing_forbidden",
+              "g2d_child_budget_widening",
+              "g2d_child_depth_mismatch",
+              "g2d_child_scope_widening",
+              "g2d_child_capability_widening",
+              "g2d_child_forbidden_narrowing",
+              "g2d_child_ttl_widening",
+              "g2d_child_lineage_mismatch",
+              "g2d_revise_observation_invalid",
+              "g2d_revise_progress_mismatch",
+              "g2d_revise_hidden_retry_forbidden",
+              "g2d_revise_terminal_caller_selection_forbidden",
+              "g2d_no_progress_deadend",
+              "g2d_resolvable_input_needs_user",
+              "g2d_partial_failure_invalid",
+              "g2d_required_child_failure",
+              "g2d_sibling_evidence_erasure_forbidden",
+              "g2d_success_laundering_forbidden",
+              "g2d_parent_disposition_mismatch",
+              "g2d_cell_input_invalid",
+              "g2d_cell_result_invalid",
+              "g2d_cell_result_context_mismatch",
+              "g2d_cell_root_claim_forbidden",
+              "g2d_cell_final_output_claim_forbidden",
+              "g2d_cell_permission_claim_forbidden",
+              "g2d_cell_packet_claim_forbidden",
+              "g2d_cell_receipt_claim_forbidden",
+              "g2d_cell_effect_claim_forbidden",
+              "g2d_runtime_trace_invalid",
+              "g2d_runtime_report_invalid",
+              "g2d_runtime_report_identity_mismatch",
+              "g2d_abi_profile_invalid",
+              "g2d_abi_bundle_invalid",
+              "g2d_abi_projection_substituted",
+              "g2d_transition_profile_invalid",
+              "g2d_transition_decision_substituted",
+              "g2d_parent_return_invalid",
+              "g2d_sources_valid",
+              "g2d_route_eligibility_valid",
+              "g2d_topology_constructed",
+              "g2d_topology_valid",
+              "g2d_queue_admitted",
+              "g2d_queue_state_advanced",
+              "g2d_scope_projection_valid",
+              "g2d_budget_accounting_valid",
+              "g2d_revise_progress_valid",
+              "g2d_partial_failure_recorded",
+              "g2d_backpressure_recorded",
+              "g2d_cell_result_valid",
+              "g2d_runtime_trace_valid",
+              "g2d_runtime_report_valid",
+              "g2d_abi_profile_valid",
+              "g2d_transition_topology_construction_allowed",
+              "g2d_transition_queue_admission_allowed",
+              "g2d_transition_backpressure_deferred",
+              "g2d_transition_pending_ready_allowed",
+              "g2d_transition_ready_running_allowed",
+              "g2d_transition_running_validating_allowed",
+              "g2d_transition_bounded_revise_allowed",
+              "g2d_transition_completed_recorded",
+              "g2d_transition_degraded_recorded",
+              "g2d_transition_blocked_recorded",
+              "g2d_transition_needs_user_recorded",
+              "g2d_transition_deadend_recorded",
+              "g2d_transition_completed_parent_return",
+              "g2d_transition_degraded_parent_return",
+              "g2d_transition_blocked_parent_return",
+              "g2d_transition_needs_user_parent_return",
+              "g2d_transition_deadend_parent_return",
+              "g2d_identity_dependency_cycle",
+              "g2d_topology_seed_invalid",
+              "g2d_root_cell_identity_invalid",
+              "g2d_child_cell_identity_invalid",
+              "g2d_queue_predecessor_invalid",
+              "g2d_queue_artifact_lineage_invalid",
+              "g2d_post_vv_time_source_invalid",
+              "g2d_gt_time_source_invalid",
+              "g2d_post_vv_fallback_forbidden",
+              "g2d_causal_consumption_invalid",
+              "g2d_causal_consumption_missing",
+              "g2d_causal_counterfactual_mismatch",
+              "g2d_unused_field_disposition_missing",
+              "g2d_partial_failure_result_cycle",
+              "g2d_validation_report_identity_cycle",
+              "g2d_node_instance_geometry_invalid",
+              "g2d_cell_result_postorder_invalid",
+              "g2d_child_result_direct_parent_return_forbidden",
+              "g2d_mode_template_matrix_invalid",
+              "g2d_source_profile_binding_mismatch",
+              "g2d_scope_relation_unproven",
+              "g2d_budget_predecessor_invalid",
+              "g2d_budget_allocation_oversubscribed",
+              "g2d_budget_debit_mismatch",
+              "g2d_result_proposal_invalid",
+              "g2d_post_vv_report_invalid",
+              "g2d_gt_advisory_invalid",
+              "g2d_terminal_outcome_mapping_invalid",
+              "g2d_abi_field_partition_invalid",
+              "g2d_trace_lineage_invalid",
+              "g2d_backpressure_reason_invalid",
+              "g2d_root_result_required_for_parent_return",
+              "g2d_runtime_bundle_report_missing",
+              "g2d_causal_json_pointer_invalid",
+              "g2d_causal_reason_prefix_invalid",
+              "g2d_policy_profile_identity_mismatch",
+              "g2d_cell_edge_projection_invalid",
+              "g2d_leaf_projection_unexecutable",
+              "g2d_static_input_derivation_invalid",
+              "g2d_assignment_trace_invalid",
+              "g2d_global_budget_binding_missing",
+              "g2d_budget_event_pair_mismatch",
+              "g2d_budget_state_transition_invalid",
+              "g2d_pre_root_lifecycle_escalation_forbidden",
+              "g2d_gt_report_identity_collision",
+              "g2d_gt_report_context_id_invalid",
+              "g2d_validation_status_stage_mismatch",
+              "g2d_validation_target_id_mismatch",
+              "g2d_queue_sequence_invalid",
+              "g2d_blocked_reason_selection_invalid",
+              "g2d_result_report_ref_mismatch",
+              "g2d_child_slot_activation_invalid",
+              "g2d_cell_input_build_order_invalid",
+              "g2d_node_cell_outcome_conflation",
+              "g2d_runtime_report_status_outcome_mismatch",
+              "g2d_runtime_outcome_root_result_mismatch",
+              "g2d_budget_event_context_invalid",
+              "g2d_transition_target_dependency_cycle",
+              "g2d_revise_budget_dependency_cycle",
+              "g2d_execution_bundle_dependency_cycle"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "source_reason_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$",
+            "not": {
+              "pattern": "^g2d_[a-z0-9_]+$"
+            }
+          },
+          "uniqueItems": true
+        },
+        "trace_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "parent_return_required": {
+          "const": true
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "action_commit_packet_created": {
+          "const": false
+        },
+        "receipt_created": {
+          "const": false
+        },
+        "final_output_created": {
+          "const": false
+        },
+        "drs_write_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "FractalRuntimeTraceV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trace_id",
+        "topology_id",
+        "topology_seed_id",
+        "source_binding_id",
+        "ordered_queue_entry_ids",
+        "state_transition_decision_ids",
+        "cell_input_ids",
+        "cell_result_ids",
+        "scope_projection_ids",
+        "revise_observation_ids",
+        "partial_failure_ids",
+        "backpressure_state_ids",
+        "budget_ids",
+        "abi_artifact_refs",
+        "transition_refs",
+        "parent_return_refs",
+        "root_review_required",
+        "provider_calls",
+        "model_calls",
+        "network_calls",
+        "connector_calls",
+        "external_drs_calls",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "trace_id": {
+          "type": "string",
+          "pattern": "^frtrace_v02\\:[0-9a-f]{64}$"
+        },
+        "topology_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "topology_seed_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "source_binding_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "ordered_queue_entry_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "state_transition_decision_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "cell_input_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "cell_result_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "scope_projection_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "revise_observation_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "partial_failure_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "backpressure_state_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "budget_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "abi_artifact_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "transition_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          }
+        },
+        "parent_return_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "provider_calls": {
+          "const": 0
+        },
+        "model_calls": {
+          "const": 0
+        },
+        "network_calls": {
+          "const": 0
+        },
+        "connector_calls": {
+          "const": 0
+        },
+        "external_drs_calls": {
+          "const": 0
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      }
+    },
+    "FractalRuntimeReportV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "report_id",
+        "report_version",
+        "profile_id",
+        "topology_id",
+        "topology_seed_id",
+        "topology_artifact_id",
+        "source_binding_id",
+        "request_id",
+        "transaction_id",
+        "owning_root_id",
+        "domain_id",
+        "accepted_mode",
+        "accepted_scope_ref",
+        "runtime_outcome",
+        "ordered_cell_result_ids",
+        "completed_cell_count",
+        "degraded_cell_count",
+        "blocked_cell_count",
+        "needs_user_cell_count",
+        "deadend_cell_count",
+        "queue_entry_ids",
+        "backpressure_state_ids",
+        "runtime_trace_id",
+        "final_budget_id",
+        "parent_return_transition_decision_id",
+        "parent_return_refs",
+        "report_status",
+        "reason_codes",
+        "topology_created_count",
+        "provider_calls",
+        "model_calls",
+        "network_calls",
+        "connector_calls",
+        "external_drs_calls",
+        "action_commit_packets_created",
+        "permissions_created",
+        "receipts_created",
+        "final_outputs_created",
+        "drs_writes",
+        "authority_created_count",
+        "real_world_effects_count",
+        "root_review_required"
+      ],
+      "properties": {
+        "report_id": {
+          "type": "string",
+          "pattern": "^frreport_v02\\:[0-9a-f]{64}$"
+        },
+        "report_version": {
+          "const": "v0.2"
+        },
+        "profile_id": {
+          "type": "string",
+          "enum": [
+            "fractal_runtime_g2d_profile_v02"
+          ]
+        },
+        "topology_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "topology_seed_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "topology_artifact_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "source_binding_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "transaction_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "owning_root_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "domain_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "accepted_mode": {
+          "type": "string",
+          "enum": [
+            "memory_informed",
+            "local_slm",
+            "cloud_llm",
+            "full_semantic",
+            "full_fractal"
+          ]
+        },
+        "accepted_scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "runtime_outcome": {
+          "type": "string",
+          "enum": [
+            "COMPLETED",
+            "DEGRADED",
+            "BLOCKED",
+            "NEEDS_USER",
+            "DEADEND"
+          ]
+        },
+        "ordered_cell_result_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "completed_cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "degraded_cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocked_cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "needs_user_cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deadend_cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "queue_entry_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "backpressure_state_ids": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "runtime_trace_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "final_budget_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "parent_return_transition_decision_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+        },
+        "parent_return_refs": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+          },
+          "uniqueItems": true
+        },
+        "report_status": {
+          "const": "PASS"
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "enum": [
+              "g2d_type_invalid",
+              "g2d_field_count_invalid",
+              "g2d_field_type_invalid",
+              "g2d_identity_invalid",
+              "g2d_identity_mismatch",
+              "g2d_serialization_invalid",
+              "g2d_tuple_order_invalid",
+              "g2d_tuple_duplicate",
+              "g2d_text_invalid",
+              "g2d_integer_invalid",
+              "g2d_boolean_is_not_integer",
+              "g2d_float_forbidden",
+              "g2d_decimal_forbidden",
+              "g2d_nonfinite_forbidden",
+              "g2d_wall_clock_forbidden",
+              "g2d_randomness_forbidden",
+              "g2d_caller_identity_forbidden",
+              "g2d_caller_pass_forbidden",
+              "g2d_secret_material_forbidden",
+              "g2d_callback_forbidden",
+              "g2d_client_handle_forbidden",
+              "g2d_effect_handle_forbidden",
+              "g2d_raw_provider_output_forbidden",
+              "g2d_unknown_enum",
+              "g2d_source_context_invalid",
+              "g2d_g2c_context_invalid",
+              "g2d_g2c_router_input_invalid",
+              "g2d_g2c_proposal_invalid",
+              "g2d_g2c_proposal_artifact_invalid",
+              "g2d_g2c_proposal_transition_invalid",
+              "g2d_g2c_review_input_invalid",
+              "g2d_g2c_root_kernel_invalid",
+              "g2d_g2c_root_input_invalid",
+              "g2d_g2c_root_result_invalid",
+              "g2d_g2c_decision_invalid",
+              "g2d_g2c_decision_artifact_invalid",
+              "g2d_g2c_post_root_transition_invalid",
+              "g2d_route_eligibility_missing",
+              "g2d_route_eligibility_invalid",
+              "g2d_route_eligibility_substituted",
+              "g2d_route_eligibility_context_mismatch",
+              "g2d_route_class_not_topology_eligible",
+              "g2d_shortcut_consumption_forbidden",
+              "g2d_terminal_consumption_forbidden",
+              "g2d_direct_root_decision_consumption_forbidden",
+              "g2d_mode_not_topology_eligible",
+              "g2d_mode_upgrade_forbidden",
+              "g2d_mode_downgrade_forbidden",
+              "g2d_mode_profile_mismatch",
+              "g2d_full_fractal_capability_missing",
+              "g2d_non_fractal_recursion_forbidden",
+              "g2d_topology_policy_invalid",
+              "g2d_topology_source_binding_invalid",
+              "g2d_topology_identity_mismatch",
+              "g2d_topology_lineage_mismatch",
+              "g2d_topology_time_mismatch",
+              "g2d_topology_node_invalid",
+              "g2d_topology_edge_invalid",
+              "g2d_topology_assignment_invalid",
+              "g2d_topology_order_invalid",
+              "g2d_topology_cycle",
+              "g2d_topology_unknown_node",
+              "g2d_topology_duplicate_edge",
+              "g2d_topology_orphan_node",
+              "g2d_topology_parent_mismatch",
+              "g2d_topology_provider_owned_forbidden",
+              "g2d_topology_authority_claim_forbidden",
+              "g2d_queue_entry_invalid",
+              "g2d_queue_state_unknown",
+              "g2d_queue_transition_unknown",
+              "g2d_queue_transition_illegal",
+              "g2d_queue_caller_state_forbidden",
+              "g2d_queue_order_mismatch",
+              "g2d_queue_priority_source_forbidden",
+              "g2d_terminal_queue_reentry_forbidden",
+              "g2d_backpressure_invalid",
+              "g2d_backpressure_work_drop_forbidden",
+              "g2d_backpressure_lineage_missing",
+              "g2d_depth_limit_exceeded",
+              "g2d_fan_out_limit_exceeded",
+              "g2d_total_cell_limit_exceeded",
+              "g2d_parallelism_limit_exceeded",
+              "g2d_revise_limit_exceeded",
+              "g2d_wall_time_budget_exceeded",
+              "g2d_token_budget_exceeded",
+              "g2d_provider_budget_exceeded",
+              "g2d_budget_invalid",
+              "g2d_budget_negative",
+              "g2d_budget_overflow",
+              "g2d_budget_double_spend",
+              "g2d_budget_hidden_reset",
+              "g2d_sibling_budget_borrowing_forbidden",
+              "g2d_child_budget_widening",
+              "g2d_child_depth_mismatch",
+              "g2d_child_scope_widening",
+              "g2d_child_capability_widening",
+              "g2d_child_forbidden_narrowing",
+              "g2d_child_ttl_widening",
+              "g2d_child_lineage_mismatch",
+              "g2d_revise_observation_invalid",
+              "g2d_revise_progress_mismatch",
+              "g2d_revise_hidden_retry_forbidden",
+              "g2d_revise_terminal_caller_selection_forbidden",
+              "g2d_no_progress_deadend",
+              "g2d_resolvable_input_needs_user",
+              "g2d_partial_failure_invalid",
+              "g2d_required_child_failure",
+              "g2d_sibling_evidence_erasure_forbidden",
+              "g2d_success_laundering_forbidden",
+              "g2d_parent_disposition_mismatch",
+              "g2d_cell_input_invalid",
+              "g2d_cell_result_invalid",
+              "g2d_cell_result_context_mismatch",
+              "g2d_cell_root_claim_forbidden",
+              "g2d_cell_final_output_claim_forbidden",
+              "g2d_cell_permission_claim_forbidden",
+              "g2d_cell_packet_claim_forbidden",
+              "g2d_cell_receipt_claim_forbidden",
+              "g2d_cell_effect_claim_forbidden",
+              "g2d_runtime_trace_invalid",
+              "g2d_runtime_report_invalid",
+              "g2d_runtime_report_identity_mismatch",
+              "g2d_abi_profile_invalid",
+              "g2d_abi_bundle_invalid",
+              "g2d_abi_projection_substituted",
+              "g2d_transition_profile_invalid",
+              "g2d_transition_decision_substituted",
+              "g2d_parent_return_invalid",
+              "g2d_sources_valid",
+              "g2d_route_eligibility_valid",
+              "g2d_topology_constructed",
+              "g2d_topology_valid",
+              "g2d_queue_admitted",
+              "g2d_queue_state_advanced",
+              "g2d_scope_projection_valid",
+              "g2d_budget_accounting_valid",
+              "g2d_revise_progress_valid",
+              "g2d_partial_failure_recorded",
+              "g2d_backpressure_recorded",
+              "g2d_cell_result_valid",
+              "g2d_runtime_trace_valid",
+              "g2d_runtime_report_valid",
+              "g2d_abi_profile_valid",
+              "g2d_transition_topology_construction_allowed",
+              "g2d_transition_queue_admission_allowed",
+              "g2d_transition_backpressure_deferred",
+              "g2d_transition_pending_ready_allowed",
+              "g2d_transition_ready_running_allowed",
+              "g2d_transition_running_validating_allowed",
+              "g2d_transition_bounded_revise_allowed",
+              "g2d_transition_completed_recorded",
+              "g2d_transition_degraded_recorded",
+              "g2d_transition_blocked_recorded",
+              "g2d_transition_needs_user_recorded",
+              "g2d_transition_deadend_recorded",
+              "g2d_transition_completed_parent_return",
+              "g2d_transition_degraded_parent_return",
+              "g2d_transition_blocked_parent_return",
+              "g2d_transition_needs_user_parent_return",
+              "g2d_transition_deadend_parent_return",
+              "g2d_identity_dependency_cycle",
+              "g2d_topology_seed_invalid",
+              "g2d_root_cell_identity_invalid",
+              "g2d_child_cell_identity_invalid",
+              "g2d_queue_predecessor_invalid",
+              "g2d_queue_artifact_lineage_invalid",
+              "g2d_post_vv_time_source_invalid",
+              "g2d_gt_time_source_invalid",
+              "g2d_post_vv_fallback_forbidden",
+              "g2d_causal_consumption_invalid",
+              "g2d_causal_consumption_missing",
+              "g2d_causal_counterfactual_mismatch",
+              "g2d_unused_field_disposition_missing",
+              "g2d_partial_failure_result_cycle",
+              "g2d_validation_report_identity_cycle",
+              "g2d_node_instance_geometry_invalid",
+              "g2d_cell_result_postorder_invalid",
+              "g2d_child_result_direct_parent_return_forbidden",
+              "g2d_mode_template_matrix_invalid",
+              "g2d_source_profile_binding_mismatch",
+              "g2d_scope_relation_unproven",
+              "g2d_budget_predecessor_invalid",
+              "g2d_budget_allocation_oversubscribed",
+              "g2d_budget_debit_mismatch",
+              "g2d_result_proposal_invalid",
+              "g2d_post_vv_report_invalid",
+              "g2d_gt_advisory_invalid",
+              "g2d_terminal_outcome_mapping_invalid",
+              "g2d_abi_field_partition_invalid",
+              "g2d_trace_lineage_invalid",
+              "g2d_backpressure_reason_invalid",
+              "g2d_root_result_required_for_parent_return",
+              "g2d_runtime_bundle_report_missing",
+              "g2d_causal_json_pointer_invalid",
+              "g2d_causal_reason_prefix_invalid",
+              "g2d_policy_profile_identity_mismatch",
+              "g2d_cell_edge_projection_invalid",
+              "g2d_leaf_projection_unexecutable",
+              "g2d_static_input_derivation_invalid",
+              "g2d_assignment_trace_invalid",
+              "g2d_global_budget_binding_missing",
+              "g2d_budget_event_pair_mismatch",
+              "g2d_budget_state_transition_invalid",
+              "g2d_pre_root_lifecycle_escalation_forbidden",
+              "g2d_gt_report_identity_collision",
+              "g2d_gt_report_context_id_invalid",
+              "g2d_validation_status_stage_mismatch",
+              "g2d_validation_target_id_mismatch",
+              "g2d_queue_sequence_invalid",
+              "g2d_blocked_reason_selection_invalid",
+              "g2d_result_report_ref_mismatch",
+              "g2d_child_slot_activation_invalid",
+              "g2d_cell_input_build_order_invalid",
+              "g2d_node_cell_outcome_conflation",
+              "g2d_runtime_report_status_outcome_mismatch",
+              "g2d_runtime_outcome_root_result_mismatch",
+              "g2d_budget_event_context_invalid",
+              "g2d_transition_target_dependency_cycle",
+              "g2d_revise_budget_dependency_cycle",
+              "g2d_execution_bundle_dependency_cycle"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "topology_created_count": {
+          "const": 1
+        },
+        "provider_calls": {
+          "const": 0
+        },
+        "model_calls": {
+          "const": 0
+        },
+        "network_calls": {
+          "const": 0
+        },
+        "connector_calls": {
+          "const": 0
+        },
+        "external_drs_calls": {
+          "const": 0
+        },
+        "action_commit_packets_created": {
+          "const": 0
+        },
+        "permissions_created": {
+          "const": 0
+        },
+        "receipts_created": {
+          "const": 0
+        },
+        "final_outputs_created": {
+          "const": 0
+        },
+        "drs_writes": {
+          "const": 0
+        },
+        "authority_created_count": {
+          "const": 0
+        },
+        "real_world_effects_count": {
+          "const": 0
+        },
+        "root_review_required": {
+          "const": true
+        }
+      }
+    },
+    "FractalRuntimeValidationReportV02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validation_report_id",
+        "validation_target",
+        "validated_object_id",
+        "status",
+        "failure_stage",
+        "reason_codes",
+        "source_reason_codes",
+        "return_to_root_required",
+        "root_review_required",
+        "authority_created",
+        "permission_created",
+        "action_commit_packet_created",
+        "final_output_created",
+        "drs_write_created",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "validation_report_id": {
+          "type": "string",
+          "pattern": "^frvalidation_v02\\:[0-9a-f]{64}$"
+        },
+        "validation_target": {
+          "type": "string",
+          "enum": [
+            "FractalRuntimePolicyV02",
+            "FractalRuntimeBudgetV02",
+            "RuntimeTopologySourceBindingV02",
+            "RuntimeTopologySeedV02",
+            "RuntimeTopologyNodeV02",
+            "RuntimeTopologyEdgeV02",
+            "RuntimeAssignmentV02",
+            "RuntimeExecutionTopologyV02",
+            "ParentChildScopeProjectionV02",
+            "FractalCellInputV02",
+            "FractalCellQueueEntryV02",
+            "FractalReviseObservationV02",
+            "FractalPartialFailureRecordV02",
+            "FractalBackpressureStateV02",
+            "FractalCellResultV02",
+            "FractalRuntimeTraceV02",
+            "FractalRuntimeReportV02",
+            "SOURCE_CONTEXT_STRUCTURAL",
+            "SOURCE_BINDING_AGAINST_G2C",
+            "TOPOLOGY_AGAINST_SOURCES",
+            "SCOPE_PROJECTION_AGAINST_SOURCES",
+            "CELL_INPUT_AGAINST_SOURCES",
+            "RESULT_PROPOSAL",
+            "POST_VV_REPORT",
+            "GT_ADVISORY_REPORT",
+            "CELL_RESULT_PRECONDITIONS",
+            "RUNTIME_REPORT_AGAINST_SOURCES",
+            "STAGE_D_A",
+            "STAGE_D_B",
+            "STAGE_D_C",
+            "ABI_PROFILE",
+            "CAUSAL_CONSUMPTION",
+            "CAUSAL_COUNTERFACTUAL",
+            "COMPLETE_PROFILE"
+          ]
+        },
+        "validated_object_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAIL_CLOSED"
+          ]
+        },
+        "failure_stage": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "SOURCE_CONTEXT",
+            "POLICY",
+            "SOURCE_BINDING",
+            "ROOT_CELL_ID",
+            "TOPOLOGY_SEED",
+            "BUDGET",
+            "NODE",
+            "EDGE",
+            "ASSIGNMENT",
+            "TOPOLOGY",
+            "QUEUE",
+            "SCOPE",
+            "CELL_INPUT",
+            "RESULT_PROPOSAL",
+            "CELL_RESULT_PRECONDITIONS",
+            "POST_VV",
+            "GT",
+            "CELL_RESULT",
+            "REVISE",
+            "PARTIAL_FAILURE",
+            "BACKPRESSURE",
+            "RUNTIME_TRACE",
+            "ABI",
+            "TRANSITION",
+            "CAUSAL_CONSUMPTION",
+            "CAUSAL_COUNTERFACTUAL",
+            "PARENT_RETURN",
+            "REPORT",
+            "COMPLETE_PROFILE"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "enum": [
+              "g2d_type_invalid",
+              "g2d_field_count_invalid",
+              "g2d_field_type_invalid",
+              "g2d_identity_invalid",
+              "g2d_identity_mismatch",
+              "g2d_serialization_invalid",
+              "g2d_tuple_order_invalid",
+              "g2d_tuple_duplicate",
+              "g2d_text_invalid",
+              "g2d_integer_invalid",
+              "g2d_boolean_is_not_integer",
+              "g2d_float_forbidden",
+              "g2d_decimal_forbidden",
+              "g2d_nonfinite_forbidden",
+              "g2d_wall_clock_forbidden",
+              "g2d_randomness_forbidden",
+              "g2d_caller_identity_forbidden",
+              "g2d_caller_pass_forbidden",
+              "g2d_secret_material_forbidden",
+              "g2d_callback_forbidden",
+              "g2d_client_handle_forbidden",
+              "g2d_effect_handle_forbidden",
+              "g2d_raw_provider_output_forbidden",
+              "g2d_unknown_enum",
+              "g2d_source_context_invalid",
+              "g2d_g2c_context_invalid",
+              "g2d_g2c_router_input_invalid",
+              "g2d_g2c_proposal_invalid",
+              "g2d_g2c_proposal_artifact_invalid",
+              "g2d_g2c_proposal_transition_invalid",
+              "g2d_g2c_review_input_invalid",
+              "g2d_g2c_root_kernel_invalid",
+              "g2d_g2c_root_input_invalid",
+              "g2d_g2c_root_result_invalid",
+              "g2d_g2c_decision_invalid",
+              "g2d_g2c_decision_artifact_invalid",
+              "g2d_g2c_post_root_transition_invalid",
+              "g2d_route_eligibility_missing",
+              "g2d_route_eligibility_invalid",
+              "g2d_route_eligibility_substituted",
+              "g2d_route_eligibility_context_mismatch",
+              "g2d_route_class_not_topology_eligible",
+              "g2d_shortcut_consumption_forbidden",
+              "g2d_terminal_consumption_forbidden",
+              "g2d_direct_root_decision_consumption_forbidden",
+              "g2d_mode_not_topology_eligible",
+              "g2d_mode_upgrade_forbidden",
+              "g2d_mode_downgrade_forbidden",
+              "g2d_mode_profile_mismatch",
+              "g2d_full_fractal_capability_missing",
+              "g2d_non_fractal_recursion_forbidden",
+              "g2d_topology_policy_invalid",
+              "g2d_topology_source_binding_invalid",
+              "g2d_topology_identity_mismatch",
+              "g2d_topology_lineage_mismatch",
+              "g2d_topology_time_mismatch",
+              "g2d_topology_node_invalid",
+              "g2d_topology_edge_invalid",
+              "g2d_topology_assignment_invalid",
+              "g2d_topology_order_invalid",
+              "g2d_topology_cycle",
+              "g2d_topology_unknown_node",
+              "g2d_topology_duplicate_edge",
+              "g2d_topology_orphan_node",
+              "g2d_topology_parent_mismatch",
+              "g2d_topology_provider_owned_forbidden",
+              "g2d_topology_authority_claim_forbidden",
+              "g2d_queue_entry_invalid",
+              "g2d_queue_state_unknown",
+              "g2d_queue_transition_unknown",
+              "g2d_queue_transition_illegal",
+              "g2d_queue_caller_state_forbidden",
+              "g2d_queue_order_mismatch",
+              "g2d_queue_priority_source_forbidden",
+              "g2d_terminal_queue_reentry_forbidden",
+              "g2d_backpressure_invalid",
+              "g2d_backpressure_work_drop_forbidden",
+              "g2d_backpressure_lineage_missing",
+              "g2d_depth_limit_exceeded",
+              "g2d_fan_out_limit_exceeded",
+              "g2d_total_cell_limit_exceeded",
+              "g2d_parallelism_limit_exceeded",
+              "g2d_revise_limit_exceeded",
+              "g2d_wall_time_budget_exceeded",
+              "g2d_token_budget_exceeded",
+              "g2d_provider_budget_exceeded",
+              "g2d_budget_invalid",
+              "g2d_budget_negative",
+              "g2d_budget_overflow",
+              "g2d_budget_double_spend",
+              "g2d_budget_hidden_reset",
+              "g2d_sibling_budget_borrowing_forbidden",
+              "g2d_child_budget_widening",
+              "g2d_child_depth_mismatch",
+              "g2d_child_scope_widening",
+              "g2d_child_capability_widening",
+              "g2d_child_forbidden_narrowing",
+              "g2d_child_ttl_widening",
+              "g2d_child_lineage_mismatch",
+              "g2d_revise_observation_invalid",
+              "g2d_revise_progress_mismatch",
+              "g2d_revise_hidden_retry_forbidden",
+              "g2d_revise_terminal_caller_selection_forbidden",
+              "g2d_no_progress_deadend",
+              "g2d_resolvable_input_needs_user",
+              "g2d_partial_failure_invalid",
+              "g2d_required_child_failure",
+              "g2d_sibling_evidence_erasure_forbidden",
+              "g2d_success_laundering_forbidden",
+              "g2d_parent_disposition_mismatch",
+              "g2d_cell_input_invalid",
+              "g2d_cell_result_invalid",
+              "g2d_cell_result_context_mismatch",
+              "g2d_cell_root_claim_forbidden",
+              "g2d_cell_final_output_claim_forbidden",
+              "g2d_cell_permission_claim_forbidden",
+              "g2d_cell_packet_claim_forbidden",
+              "g2d_cell_receipt_claim_forbidden",
+              "g2d_cell_effect_claim_forbidden",
+              "g2d_runtime_trace_invalid",
+              "g2d_runtime_report_invalid",
+              "g2d_runtime_report_identity_mismatch",
+              "g2d_abi_profile_invalid",
+              "g2d_abi_bundle_invalid",
+              "g2d_abi_projection_substituted",
+              "g2d_transition_profile_invalid",
+              "g2d_transition_decision_substituted",
+              "g2d_parent_return_invalid",
+              "g2d_sources_valid",
+              "g2d_route_eligibility_valid",
+              "g2d_topology_constructed",
+              "g2d_topology_valid",
+              "g2d_queue_admitted",
+              "g2d_queue_state_advanced",
+              "g2d_scope_projection_valid",
+              "g2d_budget_accounting_valid",
+              "g2d_revise_progress_valid",
+              "g2d_partial_failure_recorded",
+              "g2d_backpressure_recorded",
+              "g2d_cell_result_valid",
+              "g2d_runtime_trace_valid",
+              "g2d_runtime_report_valid",
+              "g2d_abi_profile_valid",
+              "g2d_transition_topology_construction_allowed",
+              "g2d_transition_queue_admission_allowed",
+              "g2d_transition_backpressure_deferred",
+              "g2d_transition_pending_ready_allowed",
+              "g2d_transition_ready_running_allowed",
+              "g2d_transition_running_validating_allowed",
+              "g2d_transition_bounded_revise_allowed",
+              "g2d_transition_completed_recorded",
+              "g2d_transition_degraded_recorded",
+              "g2d_transition_blocked_recorded",
+              "g2d_transition_needs_user_recorded",
+              "g2d_transition_deadend_recorded",
+              "g2d_transition_completed_parent_return",
+              "g2d_transition_degraded_parent_return",
+              "g2d_transition_blocked_parent_return",
+              "g2d_transition_needs_user_parent_return",
+              "g2d_transition_deadend_parent_return",
+              "g2d_identity_dependency_cycle",
+              "g2d_topology_seed_invalid",
+              "g2d_root_cell_identity_invalid",
+              "g2d_child_cell_identity_invalid",
+              "g2d_queue_predecessor_invalid",
+              "g2d_queue_artifact_lineage_invalid",
+              "g2d_post_vv_time_source_invalid",
+              "g2d_gt_time_source_invalid",
+              "g2d_post_vv_fallback_forbidden",
+              "g2d_causal_consumption_invalid",
+              "g2d_causal_consumption_missing",
+              "g2d_causal_counterfactual_mismatch",
+              "g2d_unused_field_disposition_missing",
+              "g2d_partial_failure_result_cycle",
+              "g2d_validation_report_identity_cycle",
+              "g2d_node_instance_geometry_invalid",
+              "g2d_cell_result_postorder_invalid",
+              "g2d_child_result_direct_parent_return_forbidden",
+              "g2d_mode_template_matrix_invalid",
+              "g2d_source_profile_binding_mismatch",
+              "g2d_scope_relation_unproven",
+              "g2d_budget_predecessor_invalid",
+              "g2d_budget_allocation_oversubscribed",
+              "g2d_budget_debit_mismatch",
+              "g2d_result_proposal_invalid",
+              "g2d_post_vv_report_invalid",
+              "g2d_gt_advisory_invalid",
+              "g2d_terminal_outcome_mapping_invalid",
+              "g2d_abi_field_partition_invalid",
+              "g2d_trace_lineage_invalid",
+              "g2d_backpressure_reason_invalid",
+              "g2d_root_result_required_for_parent_return",
+              "g2d_runtime_bundle_report_missing",
+              "g2d_causal_json_pointer_invalid",
+              "g2d_causal_reason_prefix_invalid",
+              "g2d_policy_profile_identity_mismatch",
+              "g2d_cell_edge_projection_invalid",
+              "g2d_leaf_projection_unexecutable",
+              "g2d_static_input_derivation_invalid",
+              "g2d_assignment_trace_invalid",
+              "g2d_global_budget_binding_missing",
+              "g2d_budget_event_pair_mismatch",
+              "g2d_budget_state_transition_invalid",
+              "g2d_pre_root_lifecycle_escalation_forbidden",
+              "g2d_gt_report_identity_collision",
+              "g2d_gt_report_context_id_invalid",
+              "g2d_validation_status_stage_mismatch",
+              "g2d_validation_target_id_mismatch",
+              "g2d_queue_sequence_invalid",
+              "g2d_blocked_reason_selection_invalid",
+              "g2d_result_report_ref_mismatch",
+              "g2d_child_slot_activation_invalid",
+              "g2d_cell_input_build_order_invalid",
+              "g2d_node_cell_outcome_conflation",
+              "g2d_runtime_report_status_outcome_mismatch",
+              "g2d_runtime_outcome_root_result_mismatch",
+              "g2d_budget_event_context_invalid",
+              "g2d_transition_target_dependency_cycle",
+              "g2d_revise_budget_dependency_cycle",
+              "g2d_execution_bundle_dependency_cycle"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "source_reason_codes": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$",
+            "not": {
+              "pattern": "^g2d_[a-z0-9_]+$"
+            }
+          },
+          "uniqueItems": true
+        },
+        "return_to_root_required": {
+          "type": "boolean"
+        },
+        "root_review_required": {
+          "const": true
+        },
+        "authority_created": {
+          "const": false
+        },
+        "permission_created": {
+          "const": false
+        },
+        "action_commit_packet_created": {
+          "const": false
+        },
+        "final_output_created": {
+          "const": false
+        },
+        "drs_write_created": {
+          "const": false
+        },
+        "real_world_effects_count": {
+          "const": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "PASS"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "failure_stage": {
+                "const": "NONE"
+              },
+              "reason_codes": {
+                "maxItems": 0
+              },
+              "source_reason_codes": {
+                "maxItems": 0
+              },
+              "return_to_root_required": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "FAIL_CLOSED"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "validated_object_id": {
+                "type": "null"
+              },
+              "failure_stage": {
+                "type": "string",
+                "enum": [
+                  "SOURCE_CONTEXT",
+                  "POLICY",
+                  "SOURCE_BINDING",
+                  "ROOT_CELL_ID",
+                  "TOPOLOGY_SEED",
+                  "BUDGET",
+                  "NODE",
+                  "EDGE",
+                  "ASSIGNMENT",
+                  "TOPOLOGY",
+                  "QUEUE",
+                  "SCOPE",
+                  "CELL_INPUT",
+                  "RESULT_PROPOSAL",
+                  "CELL_RESULT_PRECONDITIONS",
+                  "POST_VV",
+                  "GT",
+                  "CELL_RESULT",
+                  "REVISE",
+                  "PARTIAL_FAILURE",
+                  "BACKPRESSURE",
+                  "RUNTIME_TRACE",
+                  "ABI",
+                  "TRANSITION",
+                  "CAUSAL_CONSUMPTION",
+                  "CAUSAL_COUNTERFACTUAL",
+                  "PARENT_RETURN",
+                  "REPORT",
+                  "COMPLETE_PROFILE"
+                ]
+              },
+              "return_to_root_required": {
+                "const": true
+              }
+            },
+            "anyOf": [
+              {
+                "properties": {
+                  "reason_codes": {
+                    "minItems": 1
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "source_reason_codes": {
+                    "minItems": 1
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

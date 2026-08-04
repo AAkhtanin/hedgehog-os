@@ -98,6 +98,9 @@ ARTIFACT_TYPES = (
     "ExecutionModeProposal",
     "RootExecutionModeDecision",
     "ExecutionModeRouteEligibility",
+    "FractalCellQueueEntry",
+    "FractalCellResult",
+    "FractalRuntimeReport",
 )
 
 CAUSAL_DISPOSITIONS = (

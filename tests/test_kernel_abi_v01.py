@@ -297,6 +297,9 @@ def test_module_identity(name: str, value: object) -> None:
                 "ExecutionModeProposal",
                 "RootExecutionModeDecision",
                 "ExecutionModeRouteEligibility",
+                "FractalCellQueueEntry",
+                "FractalCellResult",
+                "FractalRuntimeReport",
             ),
         ),
         (
@@ -1578,9 +1581,13 @@ def test_g2c1_artifact_type_append_preserves_historical_prefix() -> None:
         "ExecutionModeRouteEligibility",
     )
     assert abi.ARTIFACT_TYPES[: len(historical)] == historical
-    assert abi.ARTIFACT_TYPES[len(historical) :] == suffix
+    assert abi.ARTIFACT_TYPES[len(historical) : len(historical) + len(suffix)] == suffix
     assert tuple(_schema()["$defs"]["artifactType"]["enum"][: len(historical)]) == historical
-    assert tuple(_schema()["$defs"]["artifactType"]["enum"][len(historical) :]) == suffix
+    assert tuple(
+        _schema()["$defs"]["artifactType"]["enum"][
+            len(historical) : len(historical) + len(suffix)
+        ]
+    ) == suffix
 
 
 @pytest.mark.parametrize(
@@ -1616,3 +1623,46 @@ def test_g2c1_abi_append_contains_no_router_import_or_orchestration() -> None:
             function_names.append(node.name)
     assert not any("execution_mode_router_v01" in item for item in imports)
     assert not any("execution_mode" in item for item in function_names)
+
+
+def test_g2d2_artifact_type_append_and_generic_envelope() -> None:
+    historical = (
+        "OrchestratorRouteProposal", "RootAcceptedRoute", "BSEPPacket",
+        "BSEPProjection", "SemanticArchitectProposal",
+        "RuntimeExecutionTopology", "ActorContribution", "SemanticEvidence",
+        "ValidatedEvidence", "ResultProposal", "PostVVReport",
+        "GTAdvisoryReport", "RootOwnedIntent", "RootDecision",
+        "ExecutionRequest", "EvidenceReceipt", "RootFinal",
+        "CrossRootEvidenceRef", "TransactionOutcomeEnvelope",
+        "CausalConsumptionRef", "ExecutionModeProposal",
+        "RootExecutionModeDecision", "ExecutionModeRouteEligibility",
+    )
+    suffix = (
+        "FractalCellQueueEntry", "FractalCellResult", "FractalRuntimeReport",
+    )
+    assert abi.ARTIFACT_TYPES[: len(historical)] == historical
+    assert abi.ARTIFACT_TYPES[len(historical) :] == suffix
+    schema_types = tuple(_schema()["$defs"]["artifactType"]["enum"])
+    assert schema_types[: len(historical)] == historical
+    assert schema_types[len(historical) :] == suffix
+    assert abi.ARTIFACT_TYPES.count("RuntimeExecutionTopology") == 1
+    for artifact_type in suffix:
+        artifact = _artifact(artifact_type=artifact_type)
+        assert abi.validate_kernel_artifact_v01(artifact) == ()
+        Draft202012Validator(_schema()).validate(
+            abi.kernel_artifact_to_plain_dict_v01(artifact)
+        )
+
+    tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
+    imports = {
+        alias.name
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    }
+    imports.update(
+        node.module or ""
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom)
+    )
+    assert "hedgehog.kernel.fractal_runtime_v02" not in imports

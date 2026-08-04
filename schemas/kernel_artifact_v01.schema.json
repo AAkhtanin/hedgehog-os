@@ -172,7 +172,10 @@
         "CausalConsumptionRef",
         "ExecutionModeProposal",
         "RootExecutionModeDecision",
-        "ExecutionModeRouteEligibility"
+        "ExecutionModeRouteEligibility",
+        "FractalCellQueueEntry",
+        "FractalCellResult",
+        "FractalRuntimeReport"
       ]
     },
     "causalDisposition": {

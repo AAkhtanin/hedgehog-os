@@ -11,7 +11,12 @@ import re
 import pytest
 
 import hedgehog.kernel as kernel_package
-from hedgehog.kernel.abi_v01 import ARTIFACT_TYPES, LIFECYCLE_STATES
+from hedgehog.kernel.abi_v01 import (
+    ARTIFACT_TYPES,
+    LIFECYCLE_STATES,
+    build_kernel_artifact_v01,
+    kernel_artifact_to_plain_dict_v01,
+)
 from hedgehog.kernel.integrity_replay_v01 import (
     canonical_json_bytes_v01,
     domain_separated_sha256_hex_v01,
@@ -438,6 +443,7 @@ def test_exact_public_function_surface():
         *PUBLIC_FUNCTIONS,
         *ACTION_PACKET_PUBLIC_FUNCTIONS,
         *G2C_TRANSITION_FUNCTIONS,
+        *G2D2_TRANSITION_FUNCTIONS,
     )
 
 
@@ -1271,3 +1277,1026 @@ def test_g2c4_profile_and_decision_mutations_fail_closed() -> None:
         assert transition.validate_execution_mode_transition_decision_v01(
             registry=registry, decision=mutation
         )
+
+
+G2D2_TRANSITION_FUNCTIONS = (
+    "build_fractal_runtime_transition_registry_profile_v02",
+    "validate_fractal_runtime_transition_registry_profile_v02",
+    "fractal_runtime_transition_registry_profile_to_plain_dict_v02",
+    "validate_fractal_runtime_transition_decision_v02",
+    "fractal_runtime_transition_decision_to_plain_dict_v02",
+    "rebuild_fractal_runtime_transition_decision_identity_v02",
+)
+G2D2_TRANSITION_SIGNATURES = {
+    "build_fractal_runtime_transition_registry_profile_v02": "() -> 'TransitionRegistryV01'",
+    "validate_fractal_runtime_transition_registry_profile_v02": "(value: 'object') -> 'tuple[str, ...]'",
+    "fractal_runtime_transition_registry_profile_to_plain_dict_v02": "(value: 'TransitionRegistryV01') -> 'dict[str, object]'",
+    "validate_fractal_runtime_transition_decision_v02": "(value: 'object', *, registry: 'TransitionRegistryV01', source_artifact: 'KernelArtifactV01', target_artifact: 'KernelArtifactV01') -> 'tuple[str, ...]'",
+    "fractal_runtime_transition_decision_to_plain_dict_v02": "(value: 'TransitionDecisionV01') -> 'dict[str, object]'",
+    "rebuild_fractal_runtime_transition_decision_identity_v02": "(value: 'TransitionDecisionV01') -> 'str'",
+}
+G2D2_RULE_IDS = tuple(
+    f"g2d_t{index:02d}_{suffix}"
+    for index, suffix in enumerate(
+        (
+            "route_eligibility_to_topology",
+            "topology_to_pending",
+            "pending_backpressure_defer",
+            "pending_to_ready",
+            "ready_to_running",
+            "running_to_validating",
+            "validating_to_revise",
+            "validating_to_completed",
+            "validating_to_degraded",
+            "validating_to_blocked",
+            "validating_to_needs_user",
+            "validating_to_deadend",
+            "completed_to_parent_return",
+            "degraded_to_parent_return",
+            "blocked_to_parent_return",
+            "needs_user_to_parent_return",
+            "deadend_to_parent_return",
+        ),
+        start=1,
+    )
+)
+
+G2D2_ARTIFACT_CONTEXT_PROFILES = {
+    "ExecutionModeRouteEligibility": (
+        "HEDGEHOG_EXECUTION_MODE_ROUTE_ELIGIBILITY_KERNEL_ARTIFACT_V01",
+        "emabi_route_v01:", "v0.1", "root_decision_v01", "ROOT_AUTHORIZED",
+    ),
+    "RuntimeExecutionTopology": (
+        "HEDGEHOG_FRACTAL_RUNTIME_TOPOLOGY_KERNEL_ARTIFACT_V02",
+        "frabi_topology_v02:", "v0.2", "fractal_runtime_v02", "ADVISORY",
+    ),
+    "FractalCellQueueEntry": (
+        "HEDGEHOG_FRACTAL_CELL_QUEUE_ENTRY_KERNEL_ARTIFACT_V02",
+        "frabi_queue_v02:", "v0.2", "fractal_scheduler_v02", "ADVISORY",
+    ),
+    "FractalCellResult": (
+        "HEDGEHOG_FRACTAL_CELL_RESULT_KERNEL_ARTIFACT_V02",
+        "frabi_result_v02:", "v0.2", "fractal_runtime_v02", "ADVISORY",
+    ),
+    "FractalRuntimeReport": (
+        "HEDGEHOG_FRACTAL_RUNTIME_REPORT_KERNEL_ARTIFACT_V02",
+        "frabi_report_v02:", "v0.2", "fractal_runtime_v02", "ADVISORY",
+    ),
+}
+
+G2D2_TARGET_LIFECYCLES = (
+    "VALIDATED", "VALIDATED", "VALIDATED", "VALIDATED", "VALIDATED",
+    "VALIDATED", "VALIDATED", "VALIDATED", "VALIDATED", "VALIDATED",
+    "VALIDATED", "VALIDATED", "VALIDATED", "VALIDATED",
+    "BLOCKED_FAIL_CLOSED", "VALIDATED", "VALIDATED",
+)
+
+G2D2_SOURCE_PARENT_PROFILE_ROWS = (
+    ("g2d_t01_route_eligibility_to_topology", "ROUTE_ELIGIBILITY_SOURCE"),
+    ("g2d_t02_topology_to_pending", "TOPOLOGY_SOURCE"),
+    ("g2d_t03_pending_backpressure_defer", "PENDING_QUEUE_SOURCE"),
+    ("g2d_t04_pending_to_ready", "PENDING_QUEUE_SOURCE"),
+    ("g2d_t05_ready_to_running", "TWO_PARENT_QUEUE_SOURCE"),
+    ("g2d_t06_running_to_validating", "TWO_PARENT_QUEUE_SOURCE"),
+    ("g2d_t07_validating_to_revise", "TWO_PARENT_QUEUE_SOURCE"),
+    ("g2d_t08_validating_to_completed", "TERMINAL_QUEUE_SOURCE"),
+    ("g2d_t09_validating_to_degraded", "TERMINAL_QUEUE_SOURCE"),
+    ("g2d_t10_validating_to_blocked", "TERMINAL_QUEUE_SOURCE"),
+    ("g2d_t11_validating_to_needs_user", "TERMINAL_QUEUE_SOURCE"),
+    ("g2d_t12_validating_to_deadend", "TERMINAL_QUEUE_SOURCE"),
+    ("g2d_t13_completed_to_parent_return", "CELL_RESULT_SOURCE"),
+    ("g2d_t14_degraded_to_parent_return", "CELL_RESULT_SOURCE"),
+    ("g2d_t15_blocked_to_parent_return", "CELL_RESULT_SOURCE"),
+    ("g2d_t16_needs_user_to_parent_return", "CELL_RESULT_SOURCE"),
+    ("g2d_t17_deadend_to_parent_return", "CELL_RESULT_SOURCE"),
+)
+
+G2D2_PARENT_RELATION_ROWS = (
+    ("g2d_t01_route_eligibility_to_topology", "ROUTE_TO_TOPOLOGY"),
+    ("g2d_t02_topology_to_pending", "TOPOLOGY_TO_INITIAL_QUEUE"),
+    ("g2d_t03_pending_backpressure_defer", "QUEUE_SUCCESSOR_NO_RESULT"),
+    ("g2d_t04_pending_to_ready", "QUEUE_SUCCESSOR_NO_RESULT"),
+    ("g2d_t05_ready_to_running", "QUEUE_SUCCESSOR_NO_RESULT"),
+    (
+        "g2d_t06_running_to_validating",
+        "QUEUE_SUCCESSOR_RESULT_INTRODUCTION",
+    ),
+    ("g2d_t07_validating_to_revise", "QUEUE_SUCCESSOR_NO_RESULT"),
+    (
+        "g2d_t08_validating_to_completed",
+        "QUEUE_SUCCESSOR_RESULT_PRESERVATION",
+    ),
+    (
+        "g2d_t09_validating_to_degraded",
+        "QUEUE_SUCCESSOR_RESULT_PRESERVATION",
+    ),
+    (
+        "g2d_t10_validating_to_blocked",
+        "QUEUE_SUCCESSOR_RESULT_PRESERVATION",
+    ),
+    (
+        "g2d_t11_validating_to_needs_user",
+        "QUEUE_SUCCESSOR_RESULT_PRESERVATION",
+    ),
+    (
+        "g2d_t12_validating_to_deadend",
+        "QUEUE_SUCCESSOR_RESULT_PRESERVATION",
+    ),
+    ("g2d_t13_completed_to_parent_return", "ROOT_RESULT_TO_REPORT"),
+    ("g2d_t14_degraded_to_parent_return", "ROOT_RESULT_TO_REPORT"),
+    ("g2d_t15_blocked_to_parent_return", "ROOT_RESULT_TO_REPORT"),
+    ("g2d_t16_needs_user_to_parent_return", "ROOT_RESULT_TO_REPORT"),
+    ("g2d_t17_deadend_to_parent_return", "ROOT_RESULT_TO_REPORT"),
+)
+
+G2D2_EXPECTED_RULE_ROWS = (
+    (
+        "g2d_t01_route_eligibility_to_topology", 1,
+        "ExecutionModeRouteEligibility", "ROOT_ACCEPTED", "fractal_runtime",
+        "CONSTRUCT_RUNTIME_TOPOLOGY", "RuntimeExecutionTopology",
+        (
+            "g2c_profile_valid", "route_eligibility_context_valid",
+            "runtime_topology_class", "runtime_policy_valid",
+            "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_topology_construction_allowed", True,
+    ),
+    (
+        "g2d_t02_topology_to_pending", 1, "RuntimeExecutionTopology",
+        "VALIDATED", "fractal_runtime", "ADMIT_TOPOLOGY_QUEUE",
+        "FractalCellQueueEntry",
+        (
+            "topology_context_valid", "budget_valid", "queue_capacity_visible",
+            "queue_predecessor_initial_none", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_queue_admission_allowed", True,
+    ),
+    (
+        "g2d_t03_pending_backpressure_defer", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "DEFER_BACKPRESSURE",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_pending",
+            "predecessor_queue_artifact_lineage_valid", "cell_activation_valid",
+            "dependencies_satisfied", "cell_input_context_valid",
+            "budget_available", "admission_slot_unavailable_after_ordering",
+            "lineage_preserved", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_backpressure_deferred", True,
+    ),
+    (
+        "g2d_t04_pending_to_ready", 1, "FractalCellQueueEntry", "VALIDATED",
+        "fractal_scheduler", "MARK_READY", "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_pending",
+            "predecessor_queue_artifact_lineage_valid", "cell_activation_valid",
+            "dependencies_satisfied", "cell_input_context_valid",
+            "budget_available", "admission_slot_selected", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_pending_ready_allowed", True,
+    ),
+    (
+        "g2d_t05_ready_to_running", 1, "FractalCellQueueEntry", "VALIDATED",
+        "fractal_scheduler", "START_LOCAL_WORK", "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_ready",
+            "predecessor_queue_artifact_lineage_valid", "assignment_valid",
+            "ready_parallel_reservation_valid", "budget_available",
+            "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_ready_running_allowed", True,
+    ),
+    (
+        "g2d_t06_running_to_validating", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "ENTER_VALIDATION",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_running",
+            "predecessor_queue_artifact_lineage_valid", "cell_input_context_valid",
+            "local_result_or_activation_gate_outcome_available",
+            "running_budget_debit_present",
+            "global_parallelism_release_derivable", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_running_validating_allowed", True,
+    ),
+    (
+        "g2d_t07_validating_to_revise", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "REVISE_BOUNDED",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "cell_validation_complete", "revise_eligible",
+            "progress_policy_valid", "budget_available",
+            "revise_admission_slot_selected", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_bounded_revise_allowed", True,
+    ),
+    (
+        "g2d_t08_validating_to_completed", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "RECORD_COMPLETED",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "node_validation_complete", "node_outcome_completed",
+            "budget_accounted", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_completed_recorded", True,
+    ),
+    (
+        "g2d_t09_validating_to_degraded", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "RECORD_DEGRADED",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "node_validation_complete", "node_outcome_degraded",
+            "node_degraded_basis_valid", "budget_accounted",
+            "root_commit_present",
+        ),
+        "RETURN_TO_ROOT", "g2d_transition_degraded_recorded", True,
+    ),
+    (
+        "g2d_t10_validating_to_blocked", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "RECORD_BLOCKED",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "node_validation_complete", "node_outcome_blocked",
+            "node_hard_failure_valid", "budget_accounted",
+            "root_commit_present",
+        ),
+        "BLOCKED_FAIL_CLOSED", "g2d_transition_blocked_recorded", True,
+    ),
+    (
+        "g2d_t11_validating_to_needs_user", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "RECORD_NEEDS_USER",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "node_validation_complete", "node_outcome_needs_user",
+            "node_resolvable_input_missing", "budget_accounted",
+            "root_commit_present",
+        ),
+        "NEEDS_USER", "g2d_transition_needs_user_recorded", True,
+    ),
+    (
+        "g2d_t12_validating_to_deadend", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "RECORD_DEADEND",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "node_validation_complete", "node_outcome_deadend",
+            "node_no_progress_or_nonresolvable", "budget_accounted",
+            "root_commit_present",
+        ),
+        "RETURN_TO_ROOT", "g2d_transition_deadend_recorded", True,
+    ),
+    (
+        "g2d_t13_completed_to_parent_return", 1, "FractalCellResult",
+        "VALIDATED", "fractal_runtime", "RETURN_TO_PARENT",
+        "FractalRuntimeReport",
+        (
+            "cell_result_context_valid", "cell_outcome_completed",
+            "source_cell_is_root", "root_cell_result_context_valid",
+            "all_required_descendant_results_accounted",
+            "canonical_result_postorder_valid", "parent_lineage_valid",
+            "root_review_required", "root_commit_present",
+        ),
+        "RETURN_TO_ROOT", "g2d_transition_completed_parent_return", True,
+    ),
+    (
+        "g2d_t14_degraded_to_parent_return", 1, "FractalCellResult",
+        "VALIDATED", "fractal_runtime", "RETURN_TO_PARENT",
+        "FractalRuntimeReport",
+        (
+            "cell_result_context_valid", "cell_outcome_degraded",
+            "source_cell_is_root", "root_cell_result_context_valid",
+            "all_required_descendant_results_accounted",
+            "canonical_result_postorder_valid", "parent_lineage_valid",
+            "root_review_required", "root_commit_present",
+        ),
+        "RETURN_TO_ROOT", "g2d_transition_degraded_parent_return", True,
+    ),
+    (
+        "g2d_t15_blocked_to_parent_return", 1, "FractalCellResult",
+        "BLOCKED_FAIL_CLOSED", "fractal_runtime", "RETURN_TO_PARENT",
+        "FractalRuntimeReport",
+        (
+            "cell_result_context_valid", "cell_outcome_blocked",
+            "source_cell_is_root", "root_cell_result_context_valid",
+            "all_required_descendant_results_accounted",
+            "canonical_result_postorder_valid", "parent_lineage_valid",
+            "root_review_required", "root_commit_present",
+        ),
+        "BLOCKED_FAIL_CLOSED", "g2d_transition_blocked_parent_return", True,
+    ),
+    (
+        "g2d_t16_needs_user_to_parent_return", 1, "FractalCellResult",
+        "VALIDATED", "fractal_runtime", "RETURN_TO_PARENT",
+        "FractalRuntimeReport",
+        (
+            "cell_result_context_valid", "cell_outcome_needs_user",
+            "source_cell_is_root", "root_cell_result_context_valid",
+            "all_required_descendant_results_accounted",
+            "canonical_result_postorder_valid", "parent_lineage_valid",
+            "root_review_required", "root_commit_present",
+        ),
+        "NEEDS_USER", "g2d_transition_needs_user_parent_return", True,
+    ),
+    (
+        "g2d_t17_deadend_to_parent_return", 1, "FractalCellResult",
+        "VALIDATED", "fractal_runtime", "RETURN_TO_PARENT",
+        "FractalRuntimeReport",
+        (
+            "cell_result_context_valid", "cell_outcome_deadend",
+            "source_cell_is_root", "root_cell_result_context_valid",
+            "all_required_descendant_results_accounted",
+            "canonical_result_postorder_valid", "parent_lineage_valid",
+            "root_review_required", "root_commit_present",
+        ),
+        "RETURN_TO_ROOT", "g2d_transition_deadend_parent_return", True,
+    ),
+)
+
+
+def _g2d2_artifact(
+    artifact_type: str,
+    lifecycle_state: str,
+    suffix: str,
+    *,
+    payload: dict[str, object],
+    parent_refs: tuple[str, ...],
+    transaction_id: str,
+    owner_root_id: str,
+    time_envelope: dict[str, object] | None = None,
+):
+    domain, prefix, schema_version, source_component, authority_class = (
+        G2D2_ARTIFACT_CONTEXT_PROFILES[artifact_type]
+    )
+    provisional = build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id=prefix + "0" * 64,
+        artifact_type=artifact_type,
+        schema_version=schema_version,
+        transaction_id=transaction_id,
+        owner_root_id=owner_root_id,
+        source_component=source_component,
+        authority_class=authority_class,
+        lifecycle_state=lifecycle_state,
+        payload=payload,
+        trace_refs=(f"trace:g2d2:{suffix}",),
+        parent_refs=parent_refs,
+        time_envelope=time_envelope or {
+            "ct_session_anchor": "ct:g2d2",
+            "et_observed_at": "2026-08-04T00:00:00+00:00",
+            "freshness_class": "static",
+            "kt_asof": "2026-08-04T00:00:00+00:00",
+            "pt_created_at": "2026-08-04T00:00:00+00:00",
+            "ttl_seconds": 3600,
+            "valid_from": "2026-08-04T00:00:00+00:00",
+            "valid_to": "2026-08-04T01:00:00+00:00",
+        },
+    )
+    material = kernel_artifact_to_plain_dict_v01(provisional)
+    material.pop("artifact_id")
+    return replace(
+        provisional,
+        artifact_id=prefix + domain_separated_sha256_hex_v01(
+            domain=domain,
+            payload=canonical_json_bytes_v01(material),
+        ),
+    )
+
+
+def _g2d2_rebuild_artifact(
+    artifact,
+    *,
+    lifecycle_state: str | None = None,
+    payload: dict[str, object] | None = None,
+    parent_refs: tuple[str, ...] | None = None,
+    transaction_id: str | None = None,
+    owner_root_id: str | None = None,
+    time_envelope: dict[str, object] | None = None,
+):
+    plain = kernel_artifact_to_plain_dict_v01(artifact)
+    return _g2d2_artifact(
+        artifact.artifact_type,
+        lifecycle_state or artifact.lifecycle_state,
+        "rebuilt",
+        payload=plain["payload"] if payload is None else payload,
+        parent_refs=artifact.parent_refs if parent_refs is None else parent_refs,
+        transaction_id=transaction_id or artifact.transaction_id,
+        owner_root_id=owner_root_id or artifact.owner_root_id,
+        time_envelope=plain["time_envelope"] if time_envelope is None else time_envelope,
+    )
+
+
+def _g2d2_artifact_pair(
+    rule: transition.TransitionRuleV01,
+    rule_index: int,
+    *,
+    transaction_id: str | None = None,
+    owner_root_id: str | None = None,
+):
+    transaction = transaction_id or f"transaction:g2d2:{rule_index}"
+    root = owner_root_id or f"root:g2d2:{rule_index}"
+    topology_artifact_id = "frabi_topology_v02:" + "a" * 64
+    topology_id = f"frtopology_v02:{rule_index:064x}"
+    topology_seed_id = f"frseed_v02:{rule_index:064x}"
+    if rule_index == 0:
+        decision_parent = "emabi_decision_v01:" + "b" * 64
+        source_payload = {
+            "accepted_mode": "full_fractal",
+            "accepted_scope_ref": "scope:g2d2:transition",
+        }
+        source_parents = (decision_parent,)
+        target_payload = {
+            "accepted_mode": "full_fractal",
+            "accepted_scope_ref": "scope:g2d2:transition",
+            "source_root_decision_artifact_id": decision_parent,
+        }
+    elif rule_index == 1:
+        source_payload = {"topology_id": topology_id}
+        source_parents = ("emabi_route_v01:" + "c" * 64,)
+        target_payload = {"topology_id": topology_id}
+    elif 2 <= rule_index <= 11:
+        source_payload = {
+            "topology_id": topology_id,
+            "topology_seed_id": topology_seed_id,
+            "cell_id": "frrootcell_v02:" + "d" * 64,
+            "parent_cell_id": None,
+            "node_id": "frnode_v02:" + "e" * 64,
+        }
+        source_parents = (
+            (topology_artifact_id,)
+            if rule_index in {2, 3}
+            else (
+                topology_artifact_id,
+                "frabi_queue_v02:" + "1" * 64,
+            )
+        )
+        target_payload = dict(source_payload)
+    else:
+        source_payload = {
+            "topology_id": topology_id,
+            "topology_seed_id": topology_seed_id,
+        }
+        source_parents = (
+            topology_artifact_id,
+            "frabi_queue_v02:" + "f" * 64,
+        )
+        target_payload = dict(source_payload)
+    source = _g2d2_artifact(
+        rule.source_artifact_type,
+        rule.source_lifecycle_state,
+        f"source-{rule_index}",
+        payload=source_payload,
+        parent_refs=source_parents,
+        transaction_id=transaction,
+        owner_root_id=root,
+    )
+    if rule_index <= 1:
+        target_parents = (source.artifact_id,)
+    elif rule_index <= 11:
+        target_parents = (source.parent_refs[0], source.artifact_id)
+    else:
+        target_parents = (source.parent_refs[0], source.artifact_id)
+    target = _g2d2_artifact(
+        rule.target_artifact_type,
+        G2D2_TARGET_LIFECYCLES[rule_index],
+        f"target-{rule_index}",
+        payload=target_payload,
+        parent_refs=target_parents,
+        transaction_id=transaction,
+        owner_root_id=root,
+    )
+    return source, target
+
+
+def _g2d2_decision(
+    rule: transition.TransitionRuleV01,
+    registry: transition.TransitionRegistryV01,
+) -> transition.TransitionDecisionV01:
+    provisional = transition.TransitionDecisionV01(
+        decision_id="0" * 64,
+        registry_id=registry.registry_id,
+        rule_id=rule.rule_id,
+        abi_major_version=rule.abi_major_version,
+        source_artifact_type=rule.source_artifact_type,
+        source_lifecycle_state=rule.source_lifecycle_state,
+        actor_role=rule.actor_role,
+        attempted_effect=rule.attempted_effect,
+        target_artifact_type=rule.target_artifact_type,
+        required_guards=rule.required_guards,
+        satisfied_guards=rule.required_guards,
+        missing_guards=(),
+        decision=rule.decision,
+        reason_code=rule.reason_code,
+        root_commit_required=True,
+        root_commit_present=True,
+        matched=True,
+    )
+    return replace(
+        provisional,
+        decision_id=transition.rebuild_fractal_runtime_transition_decision_identity_v02(
+            provisional
+        ),
+    )
+
+
+def _g2d2_pair_errors(
+    registry: transition.TransitionRegistryV01,
+    rule_index: int,
+    source,
+    target,
+) -> tuple[str, ...]:
+    rule = registry.rules[rule_index]
+    return transition.validate_fractal_runtime_transition_decision_v02(
+        _g2d2_decision(rule, registry),
+        registry=registry,
+        source_artifact=source,
+        target_artifact=target,
+    )
+
+
+def _g2d2_target_for_source(
+    target,
+    source,
+    parent_refs: tuple[str, ...],
+):
+    return _g2d2_rebuild_artifact(
+        target,
+        parent_refs=tuple(
+            source.artifact_id if parent == "SOURCE" else parent
+            for parent in parent_refs
+        ),
+    )
+
+
+def test_g2d2_transition_surface_and_exact_seventeen_rule_profile() -> None:
+    for name in G2D2_TRANSITION_FUNCTIONS:
+        assert inspect.isfunction(getattr(transition, name))
+        assert str(inspect.signature(getattr(transition, name))) == G2D2_TRANSITION_SIGNATURES[name]
+        assert not hasattr(kernel_package, name)
+    registry = transition.build_fractal_runtime_transition_registry_profile_v02()
+    assert registry.registry_version == "v0.1"
+    assert registry.abi_major_version == 1
+    assert len(registry.rules) == 17
+    assert tuple(rule.rule_id for rule in registry.rules) == G2D2_RULE_IDS
+    assert tuple(
+        tuple(getattr(rule, field_name) for field_name in RULE_FIELDS)
+        for rule in registry.rules
+    ) == G2D2_EXPECTED_RULE_ROWS
+    assert transition._FRACTAL_RUNTIME_ARTIFACT_CONTEXT_PROFILES_V02 == tuple(
+        (artifact_type, *profile)
+        for artifact_type, profile in G2D2_ARTIFACT_CONTEXT_PROFILES.items()
+    )
+    assert tuple(
+        lifecycle
+        for _rule_id, lifecycle in (
+            transition._FRACTAL_RUNTIME_TARGET_LIFECYCLE_BY_RULE_V02
+        )
+    ) == G2D2_TARGET_LIFECYCLES
+    assert (
+        transition._FRACTAL_RUNTIME_SOURCE_PARENT_PROFILE_BY_RULE_V02
+        == G2D2_SOURCE_PARENT_PROFILE_ROWS
+    )
+    assert (
+        transition._FRACTAL_RUNTIME_PARENT_RELATION_BY_RULE_V02
+        == G2D2_PARENT_RELATION_ROWS
+    )
+    assert all(rule.abi_major_version == 1 for rule in registry.rules)
+    assert all(rule.root_commit_required is True for rule in registry.rules)
+    t01 = registry.rules[0]
+    assert (
+        t01.source_artifact_type,
+        t01.source_lifecycle_state,
+        t01.actor_role,
+        t01.attempted_effect,
+        t01.target_artifact_type,
+        t01.required_guards,
+        t01.decision,
+        t01.reason_code,
+    ) == (
+        "ExecutionModeRouteEligibility",
+        "ROOT_ACCEPTED",
+        "fractal_runtime",
+        "CONSTRUCT_RUNTIME_TOPOLOGY",
+        "RuntimeExecutionTopology",
+        (
+            "g2c_profile_valid", "route_eligibility_context_valid",
+            "runtime_topology_class", "runtime_policy_valid",
+            "root_commit_present",
+        ),
+        "ALLOW",
+        "g2d_transition_topology_construction_allowed",
+    )
+    assert transition.validate_fractal_runtime_transition_registry_profile_v02(registry) == ()
+    plain = transition.fractal_runtime_transition_registry_profile_to_plain_dict_v02(registry)
+    assert tuple(plain) == REGISTRY_FIELDS
+    assert canonical_json_bytes_v01(plain) == canonical_json_bytes_v01(
+        transition.fractal_runtime_transition_registry_profile_to_plain_dict_v02(
+            transition.build_fractal_runtime_transition_registry_profile_v02()
+        )
+    )
+
+
+@pytest.mark.parametrize("rule_index", range(17))
+def test_g2d2_transition_decision_identity_and_substitution(rule_index: int) -> None:
+    registry = transition.build_fractal_runtime_transition_registry_profile_v02()
+    rule = registry.rules[rule_index]
+    decision = _g2d2_decision(rule, registry)
+    source, target = _g2d2_artifact_pair(rule, rule_index)
+    assert transition.validate_fractal_runtime_transition_decision_v02(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=target,
+    ) == ()
+    assert transition.rebuild_fractal_runtime_transition_decision_identity_v02(decision) == decision.decision_id
+    assert tuple(transition.fractal_runtime_transition_decision_to_plain_dict_v02(decision)) == DECISION_FIELDS
+    for mutation in (
+        replace(decision, registry_id="0" * 64),
+        replace(decision, rule_id=registry.rules[(rule_index + 1) % 17].rule_id),
+        replace(decision, satisfied_guards=decision.satisfied_guards[::-1]),
+        replace(decision, decision="ALLOW" if decision.decision != "ALLOW" else "RETURN_TO_ROOT"),
+        replace(decision, reason_code="g2d_transition_decision_substituted"),
+        replace(decision, root_commit_required=False),
+        replace(decision, root_commit_present=False),
+        replace(decision, decision_id="0" * 64),
+    ):
+        assert transition.validate_fractal_runtime_transition_decision_v02(
+            mutation,
+            registry=registry,
+            source_artifact=source,
+            target_artifact=target,
+        )
+    assert transition.validate_fractal_runtime_transition_decision_v02(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=_g2d2_rebuild_artifact(
+            target,
+            lifecycle_state=(
+                "VALIDATED" if rule_index == 14 else "BLOCKED_FAIL_CLOSED"
+            ),
+        ),
+    )
+    foreign_source, foreign_target = _g2d2_artifact_pair(
+        rule,
+        rule_index,
+        transaction_id=f"transaction:g2d2:foreign:{rule_index}",
+        owner_root_id=f"root:g2d2:foreign:{rule_index}",
+    )
+    assert transition.validate_fractal_runtime_transition_decision_v02(
+        decision,
+        registry=registry,
+        source_artifact=foreign_source,
+        target_artifact=target,
+    )
+    assert transition.validate_fractal_runtime_transition_decision_v02(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=foreign_target,
+    )
+    assert transition.validate_fractal_runtime_transition_decision_v02(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=_g2d2_rebuild_artifact(
+            target,
+            parent_refs=("frabi_topology_v02:" + "9" * 64,),
+        ),
+    )
+    target_payload = kernel_artifact_to_plain_dict_v01(target)["payload"]
+    lineage_key = "accepted_mode" if rule_index == 0 else "topology_id"
+    assert transition.validate_fractal_runtime_transition_decision_v02(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=_g2d2_rebuild_artifact(
+            target,
+            payload={**target_payload, lineage_key: "foreign:value"},
+        ),
+    )
+    target_time = kernel_artifact_to_plain_dict_v01(target)["time_envelope"]
+    assert transition.validate_fractal_runtime_transition_decision_v02(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=_g2d2_rebuild_artifact(
+            target,
+            time_envelope={
+                **target_time,
+                "ct_session_anchor": "ct:g2d2:foreign",
+            },
+        ),
+    )
+    assert transition.validate_fractal_runtime_transition_decision_v02(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=replace(
+            target,
+            artifact_id=(
+                target.artifact_id[:-1]
+                + ("0" if target.artifact_id[-1] != "0" else "1")
+            ),
+        ),
+    )
+    mutated_rule = replace(rule, actor_role=rule.actor_role + "_foreign")
+    mutated_registry = replace(
+        registry,
+        rules=registry.rules[:rule_index] + (mutated_rule,) + registry.rules[rule_index + 1:],
+    )
+    assert transition.validate_fractal_runtime_transition_registry_profile_v02(mutated_registry)
+
+
+def test_g2d2_initial_and_queue_parent_geometry() -> None:
+    registry = transition.build_fractal_runtime_transition_registry_profile_v02()
+    topology_id = "frabi_topology_v02:" + "2" * 64
+    parent_slot_id = "frabi_queue_v02:" + "3" * 64
+    result_id = "frabi_result_v02:" + "4" * 64
+
+    t02_source, t02_target = _g2d2_artifact_pair(registry.rules[1], 1)
+    assert _g2d2_pair_errors(registry, 1, t02_source, t02_target) == ()
+    child_target = _g2d2_rebuild_artifact(
+        t02_target,
+        parent_refs=(t02_source.artifact_id, parent_slot_id),
+    )
+    assert _g2d2_pair_errors(registry, 1, t02_source, child_target) == ()
+    for bad_parents in (
+        (t02_source.artifact_id, result_id),
+        (topology_id, parent_slot_id),
+        (t02_source.artifact_id, parent_slot_id, result_id),
+    ):
+        assert _g2d2_pair_errors(
+            registry,
+            1,
+            t02_source,
+            _g2d2_rebuild_artifact(t02_target, parent_refs=bad_parents),
+        )
+    assert _g2d2_pair_errors(
+        registry,
+        1,
+        t02_source,
+        replace(
+            t02_target,
+            parent_refs=(t02_source.artifact_id, t02_source.artifact_id),
+        ),
+    )
+    assert _g2d2_pair_errors(
+        registry,
+        1,
+        t02_source,
+        replace(t02_target, parent_refs=(t02_target.artifact_id,)),
+    )
+
+    for rule_index in (2, 3):
+        source, target = _g2d2_artifact_pair(
+            registry.rules[rule_index], rule_index
+        )
+        assert len(source.parent_refs) == 1
+        assert _g2d2_pair_errors(registry, rule_index, source, target) == ()
+        child_source = _g2d2_rebuild_artifact(
+            source,
+            parent_refs=(source.parent_refs[0], parent_slot_id),
+        )
+        child_target = _g2d2_target_for_source(
+            target,
+            child_source,
+            (child_source.parent_refs[0], "SOURCE"),
+        )
+        assert _g2d2_pair_errors(
+            registry, rule_index, child_source, child_target
+        ) == ()
+
+    for rule_index in range(4, 12):
+        source, target = _g2d2_artifact_pair(
+            registry.rules[rule_index], rule_index
+        )
+        assert len(source.parent_refs) == 2
+        assert _g2d2_pair_errors(registry, rule_index, source, target) == ()
+
+    for rule_index in (2, 3, 4, 6):
+        source, target = _g2d2_artifact_pair(
+            registry.rules[rule_index], rule_index
+        )
+        forbidden_target = _g2d2_rebuild_artifact(
+            target,
+            parent_refs=(
+                source.parent_refs[0],
+                source.artifact_id,
+                result_id,
+            ),
+        )
+        assert _g2d2_pair_errors(
+            registry, rule_index, source, forbidden_target
+        )
+
+
+def test_g2d2_child_result_parent_introduction_and_preservation() -> None:
+    registry = transition.build_fractal_runtime_transition_registry_profile_v02()
+    child_result_id = "frabi_result_v02:" + "5" * 64
+    foreign_result_id = "frabi_result_v02:" + "6" * 64
+
+    t06_source, t06_target = _g2d2_artifact_pair(registry.rules[5], 5)
+    invoked_t06_target = _g2d2_rebuild_artifact(
+        t06_target,
+        parent_refs=(
+            t06_source.parent_refs[0],
+            t06_source.artifact_id,
+            child_result_id,
+        ),
+    )
+    assert len(t06_source.parent_refs) == 2
+    assert _g2d2_pair_errors(
+        registry, 5, t06_source, invoked_t06_target
+    ) == ()
+
+    for rule_index in range(7, 12):
+        source, ordinary_target = _g2d2_artifact_pair(
+            registry.rules[rule_index], rule_index
+        )
+        assert _g2d2_pair_errors(
+            registry, rule_index, source, ordinary_target
+        ) == ()
+        invented_target = _g2d2_rebuild_artifact(
+            ordinary_target,
+            parent_refs=(
+                source.parent_refs[0],
+                source.artifact_id,
+                child_result_id,
+            ),
+        )
+        assert _g2d2_pair_errors(
+            registry, rule_index, source, invented_target
+        )
+
+        invoked_source = _g2d2_rebuild_artifact(
+            source,
+            parent_refs=source.parent_refs + (child_result_id,),
+        )
+        invoked_target = _g2d2_target_for_source(
+            ordinary_target,
+            invoked_source,
+            (invoked_source.parent_refs[0], "SOURCE", child_result_id),
+        )
+        assert _g2d2_pair_errors(
+            registry, rule_index, invoked_source, invoked_target
+        ) == ()
+        removed_target = _g2d2_target_for_source(
+            ordinary_target,
+            invoked_source,
+            (invoked_source.parent_refs[0], "SOURCE"),
+        )
+        changed_target = _g2d2_target_for_source(
+            ordinary_target,
+            invoked_source,
+            (invoked_source.parent_refs[0], "SOURCE", foreign_result_id),
+        )
+        assert _g2d2_pair_errors(
+            registry, rule_index, invoked_source, removed_target
+        )
+        assert _g2d2_pair_errors(
+            registry, rule_index, invoked_source, changed_target
+        )
+
+
+def test_g2d2_topology_continuity_and_source_parent_envelopes() -> None:
+    registry = transition.build_fractal_runtime_transition_registry_profile_v02()
+    foreign_topology_id = "frabi_topology_v02:" + "7" * 64
+    queue_id = "frabi_queue_v02:" + "8" * 64
+    second_queue_id = "frabi_queue_v02:" + "9" * 64
+    result_id = "frabi_result_v02:" + "a" * 64
+
+    for rule_index in range(2, 17):
+        source, target = _g2d2_artifact_pair(
+            registry.rules[rule_index], rule_index
+        )
+        foreign_target_parents = (
+            foreign_topology_id,
+            *target.parent_refs[1:],
+        )
+        assert _g2d2_pair_errors(
+            registry,
+            rule_index,
+            source,
+            _g2d2_rebuild_artifact(
+                target,
+                parent_refs=foreign_target_parents,
+            ),
+        )
+
+    source, target = _g2d2_artifact_pair(registry.rules[0], 0)
+    malformed_source = _g2d2_rebuild_artifact(
+        source,
+        parent_refs=("emabi_route_v01:" + "b" * 64,),
+    )
+    assert _g2d2_pair_errors(
+        registry,
+        0,
+        malformed_source,
+        _g2d2_target_for_source(target, malformed_source, ("SOURCE",)),
+    )
+
+    source, target = _g2d2_artifact_pair(registry.rules[1], 1)
+    malformed_source = _g2d2_rebuild_artifact(
+        source,
+        parent_refs=("emabi_decision_v01:" + "c" * 64,),
+    )
+    assert _g2d2_pair_errors(
+        registry,
+        1,
+        malformed_source,
+        _g2d2_target_for_source(target, malformed_source, ("SOURCE",)),
+    )
+
+    for rule_index in (4, 5, 6):
+        source, target = _g2d2_artifact_pair(
+            registry.rules[rule_index], rule_index
+        )
+        for bad_source_parents in (
+            (source.parent_refs[0],),
+            source.parent_refs + (result_id,),
+        ):
+            malformed_source = _g2d2_rebuild_artifact(
+                source,
+                parent_refs=bad_source_parents,
+            )
+            assert _g2d2_pair_errors(
+                registry,
+                rule_index,
+                malformed_source,
+                _g2d2_target_for_source(
+                    target,
+                    malformed_source,
+                    (source.parent_refs[0], "SOURCE"),
+                ),
+            )
+
+    for rule_index in range(12, 17):
+        source, target = _g2d2_artifact_pair(
+            registry.rules[rule_index], rule_index
+        )
+        for bad_source_parents in (
+            (source.parent_refs[0], result_id),
+            (source.parent_refs[0], queue_id, result_id, second_queue_id),
+        ):
+            malformed_source = _g2d2_rebuild_artifact(
+                source,
+                parent_refs=bad_source_parents,
+            )
+            assert _g2d2_pair_errors(
+                registry,
+                rule_index,
+                malformed_source,
+                _g2d2_target_for_source(
+                    target,
+                    malformed_source,
+                    (source.parent_refs[0], "SOURCE"),
+                ),
+            )
+        assert _g2d2_pair_errors(
+            registry,
+            rule_index,
+            replace(
+                source,
+                parent_refs=(source.parent_refs[0], queue_id, queue_id),
+            ),
+            target,
+        )
+        assert _g2d2_pair_errors(
+            registry,
+            rule_index,
+            replace(source, parent_refs=(source.artifact_id,)),
+            target,
+        )
+
+
+def test_g2d2_profile_preserves_historical_registries_and_import_direction() -> None:
+    default_before = transition.transition_registry_to_plain_dict_v01(
+        transition.build_default_transition_registry_v01()
+    )
+    g2c_before = transition.execution_mode_transition_registry_profile_to_plain_dict_v01(
+        transition.build_execution_mode_transition_registry_profile_v01()
+    )
+    transition.build_fractal_runtime_transition_registry_profile_v02()
+    assert canonical_json_bytes_v01(default_before) == canonical_json_bytes_v01(
+        transition.transition_registry_to_plain_dict_v01(
+            transition.build_default_transition_registry_v01()
+        )
+    )
+    assert canonical_json_bytes_v01(g2c_before) == canonical_json_bytes_v01(
+        transition.execution_mode_transition_registry_profile_to_plain_dict_v01(
+            transition.build_execution_mode_transition_registry_profile_v01()
+        )
+    )
+    source = MODULE_PATH.read_text(encoding="utf-8")
+    assert "hedgehog.kernel.fractal_runtime_v02" not in source

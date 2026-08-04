@@ -17,8 +17,11 @@ from hedgehog.kernel.abi_v01 import (
     ACTION_PACKET_LIFECYCLE_PROFILE_ID_V01,
     ACTION_PACKET_LIFECYCLE_STATES_V01,
     ARTIFACT_TYPES as _ARTIFACT_TYPES,
+    KernelArtifactV01,
     LIFECYCLE_STATES as _LIFECYCLE_STATES,
     build_action_packet_lifecycle_profile_v01 as _build_action_packet_lifecycle_profile_v01,
+    kernel_artifact_to_plain_dict_v01 as _kernel_artifact_to_plain_dict_v01,
+    validate_kernel_artifact_v01 as _validate_kernel_artifact_v01,
     validate_action_packet_lifecycle_profile_v01 as _validate_action_packet_lifecycle_profile_v01,
 )
 from hedgehog.kernel.integrity_replay_v01 import (
@@ -2229,3 +2232,792 @@ def rebuild_execution_mode_transition_decision_identity_v01(
         return _hash(_DECISION_DOMAIN, material)
     except Exception:
         raise ValueError("g2c_transition_decision_invalid") from None
+
+
+_FRACTAL_RUNTIME_TRANSITION_PROFILE_ID_V02 = (
+    "fractal_runtime_g2d_transition_profile_v02"
+)
+_FRACTAL_RUNTIME_TRANSITION_PROFILE_VERSION_V02 = "v0.1"
+_FRACTAL_RUNTIME_TRANSITION_RULE_COUNT_V02 = 17
+
+_FRACTAL_RUNTIME_ARTIFACT_CONTEXT_PROFILES_V02 = (
+    (
+        "ExecutionModeRouteEligibility",
+        "HEDGEHOG_EXECUTION_MODE_ROUTE_ELIGIBILITY_KERNEL_ARTIFACT_V01",
+        "emabi_route_v01:",
+        "v0.1",
+        "root_decision_v01",
+        "ROOT_AUTHORIZED",
+    ),
+    (
+        "RuntimeExecutionTopology",
+        "HEDGEHOG_FRACTAL_RUNTIME_TOPOLOGY_KERNEL_ARTIFACT_V02",
+        "frabi_topology_v02:",
+        "v0.2",
+        "fractal_runtime_v02",
+        "ADVISORY",
+    ),
+    (
+        "FractalCellQueueEntry",
+        "HEDGEHOG_FRACTAL_CELL_QUEUE_ENTRY_KERNEL_ARTIFACT_V02",
+        "frabi_queue_v02:",
+        "v0.2",
+        "fractal_scheduler_v02",
+        "ADVISORY",
+    ),
+    (
+        "FractalCellResult",
+        "HEDGEHOG_FRACTAL_CELL_RESULT_KERNEL_ARTIFACT_V02",
+        "frabi_result_v02:",
+        "v0.2",
+        "fractal_runtime_v02",
+        "ADVISORY",
+    ),
+    (
+        "FractalRuntimeReport",
+        "HEDGEHOG_FRACTAL_RUNTIME_REPORT_KERNEL_ARTIFACT_V02",
+        "frabi_report_v02:",
+        "v0.2",
+        "fractal_runtime_v02",
+        "ADVISORY",
+    ),
+)
+
+_FRACTAL_RUNTIME_TARGET_LIFECYCLE_BY_RULE_V02 = (
+    ("g2d_t01_route_eligibility_to_topology", "VALIDATED"),
+    ("g2d_t02_topology_to_pending", "VALIDATED"),
+    ("g2d_t03_pending_backpressure_defer", "VALIDATED"),
+    ("g2d_t04_pending_to_ready", "VALIDATED"),
+    ("g2d_t05_ready_to_running", "VALIDATED"),
+    ("g2d_t06_running_to_validating", "VALIDATED"),
+    ("g2d_t07_validating_to_revise", "VALIDATED"),
+    ("g2d_t08_validating_to_completed", "VALIDATED"),
+    ("g2d_t09_validating_to_degraded", "VALIDATED"),
+    ("g2d_t10_validating_to_blocked", "VALIDATED"),
+    ("g2d_t11_validating_to_needs_user", "VALIDATED"),
+    ("g2d_t12_validating_to_deadend", "VALIDATED"),
+    ("g2d_t13_completed_to_parent_return", "VALIDATED"),
+    ("g2d_t14_degraded_to_parent_return", "VALIDATED"),
+    ("g2d_t15_blocked_to_parent_return", "BLOCKED_FAIL_CLOSED"),
+    ("g2d_t16_needs_user_to_parent_return", "VALIDATED"),
+    ("g2d_t17_deadend_to_parent_return", "VALIDATED"),
+)
+
+_FRACTAL_RUNTIME_SOURCE_PARENT_PROFILE_BY_RULE_V02 = (
+    ("g2d_t01_route_eligibility_to_topology", "ROUTE_ELIGIBILITY_SOURCE"),
+    ("g2d_t02_topology_to_pending", "TOPOLOGY_SOURCE"),
+    ("g2d_t03_pending_backpressure_defer", "PENDING_QUEUE_SOURCE"),
+    ("g2d_t04_pending_to_ready", "PENDING_QUEUE_SOURCE"),
+    ("g2d_t05_ready_to_running", "TWO_PARENT_QUEUE_SOURCE"),
+    ("g2d_t06_running_to_validating", "TWO_PARENT_QUEUE_SOURCE"),
+    ("g2d_t07_validating_to_revise", "TWO_PARENT_QUEUE_SOURCE"),
+    ("g2d_t08_validating_to_completed", "TERMINAL_QUEUE_SOURCE"),
+    ("g2d_t09_validating_to_degraded", "TERMINAL_QUEUE_SOURCE"),
+    ("g2d_t10_validating_to_blocked", "TERMINAL_QUEUE_SOURCE"),
+    ("g2d_t11_validating_to_needs_user", "TERMINAL_QUEUE_SOURCE"),
+    ("g2d_t12_validating_to_deadend", "TERMINAL_QUEUE_SOURCE"),
+    ("g2d_t13_completed_to_parent_return", "CELL_RESULT_SOURCE"),
+    ("g2d_t14_degraded_to_parent_return", "CELL_RESULT_SOURCE"),
+    ("g2d_t15_blocked_to_parent_return", "CELL_RESULT_SOURCE"),
+    ("g2d_t16_needs_user_to_parent_return", "CELL_RESULT_SOURCE"),
+    ("g2d_t17_deadend_to_parent_return", "CELL_RESULT_SOURCE"),
+)
+
+_FRACTAL_RUNTIME_PARENT_RELATION_BY_RULE_V02 = (
+    ("g2d_t01_route_eligibility_to_topology", "ROUTE_TO_TOPOLOGY"),
+    ("g2d_t02_topology_to_pending", "TOPOLOGY_TO_INITIAL_QUEUE"),
+    ("g2d_t03_pending_backpressure_defer", "QUEUE_SUCCESSOR_NO_RESULT"),
+    ("g2d_t04_pending_to_ready", "QUEUE_SUCCESSOR_NO_RESULT"),
+    ("g2d_t05_ready_to_running", "QUEUE_SUCCESSOR_NO_RESULT"),
+    (
+        "g2d_t06_running_to_validating",
+        "QUEUE_SUCCESSOR_RESULT_INTRODUCTION",
+    ),
+    ("g2d_t07_validating_to_revise", "QUEUE_SUCCESSOR_NO_RESULT"),
+    (
+        "g2d_t08_validating_to_completed",
+        "QUEUE_SUCCESSOR_RESULT_PRESERVATION",
+    ),
+    (
+        "g2d_t09_validating_to_degraded",
+        "QUEUE_SUCCESSOR_RESULT_PRESERVATION",
+    ),
+    (
+        "g2d_t10_validating_to_blocked",
+        "QUEUE_SUCCESSOR_RESULT_PRESERVATION",
+    ),
+    (
+        "g2d_t11_validating_to_needs_user",
+        "QUEUE_SUCCESSOR_RESULT_PRESERVATION",
+    ),
+    (
+        "g2d_t12_validating_to_deadend",
+        "QUEUE_SUCCESSOR_RESULT_PRESERVATION",
+    ),
+    ("g2d_t13_completed_to_parent_return", "ROOT_RESULT_TO_REPORT"),
+    ("g2d_t14_degraded_to_parent_return", "ROOT_RESULT_TO_REPORT"),
+    ("g2d_t15_blocked_to_parent_return", "ROOT_RESULT_TO_REPORT"),
+    ("g2d_t16_needs_user_to_parent_return", "ROOT_RESULT_TO_REPORT"),
+    ("g2d_t17_deadend_to_parent_return", "ROOT_RESULT_TO_REPORT"),
+)
+
+_FRACTAL_RUNTIME_TRANSITION_RULE_ROWS_V02 = (
+    (
+        "g2d_t01_route_eligibility_to_topology", 1,
+        "ExecutionModeRouteEligibility", "ROOT_ACCEPTED", "fractal_runtime",
+        "CONSTRUCT_RUNTIME_TOPOLOGY", "RuntimeExecutionTopology",
+        (
+            "g2c_profile_valid", "route_eligibility_context_valid",
+            "runtime_topology_class", "runtime_policy_valid",
+            "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_topology_construction_allowed", True,
+    ),
+    (
+        "g2d_t02_topology_to_pending", 1, "RuntimeExecutionTopology",
+        "VALIDATED", "fractal_runtime", "ADMIT_TOPOLOGY_QUEUE",
+        "FractalCellQueueEntry",
+        (
+            "topology_context_valid", "budget_valid", "queue_capacity_visible",
+            "queue_predecessor_initial_none", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_queue_admission_allowed", True,
+    ),
+    (
+        "g2d_t03_pending_backpressure_defer", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "DEFER_BACKPRESSURE",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_pending",
+            "predecessor_queue_artifact_lineage_valid", "cell_activation_valid",
+            "dependencies_satisfied", "cell_input_context_valid",
+            "budget_available", "admission_slot_unavailable_after_ordering",
+            "lineage_preserved", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_backpressure_deferred", True,
+    ),
+    (
+        "g2d_t04_pending_to_ready", 1, "FractalCellQueueEntry", "VALIDATED",
+        "fractal_scheduler", "MARK_READY", "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_pending",
+            "predecessor_queue_artifact_lineage_valid", "cell_activation_valid",
+            "dependencies_satisfied", "cell_input_context_valid",
+            "budget_available", "admission_slot_selected", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_pending_ready_allowed", True,
+    ),
+    (
+        "g2d_t05_ready_to_running", 1, "FractalCellQueueEntry", "VALIDATED",
+        "fractal_scheduler", "START_LOCAL_WORK", "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_ready",
+            "predecessor_queue_artifact_lineage_valid", "assignment_valid",
+            "ready_parallel_reservation_valid", "budget_available",
+            "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_ready_running_allowed", True,
+    ),
+    (
+        "g2d_t06_running_to_validating", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "ENTER_VALIDATION",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_running",
+            "predecessor_queue_artifact_lineage_valid", "cell_input_context_valid",
+            "local_result_or_activation_gate_outcome_available",
+            "running_budget_debit_present",
+            "global_parallelism_release_derivable", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_running_validating_allowed", True,
+    ),
+    (
+        "g2d_t07_validating_to_revise", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "REVISE_BOUNDED",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "cell_validation_complete", "revise_eligible",
+            "progress_policy_valid", "budget_available",
+            "revise_admission_slot_selected", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_bounded_revise_allowed", True,
+    ),
+    (
+        "g2d_t08_validating_to_completed", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "RECORD_COMPLETED",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "node_validation_complete", "node_outcome_completed",
+            "budget_accounted", "root_commit_present",
+        ),
+        "ALLOW", "g2d_transition_completed_recorded", True,
+    ),
+    (
+        "g2d_t09_validating_to_degraded", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "RECORD_DEGRADED",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "node_validation_complete", "node_outcome_degraded",
+            "node_degraded_basis_valid", "budget_accounted",
+            "root_commit_present",
+        ),
+        "RETURN_TO_ROOT", "g2d_transition_degraded_recorded", True,
+    ),
+    (
+        "g2d_t10_validating_to_blocked", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "RECORD_BLOCKED",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "node_validation_complete", "node_outcome_blocked",
+            "node_hard_failure_valid", "budget_accounted",
+            "root_commit_present",
+        ),
+        "BLOCKED_FAIL_CLOSED", "g2d_transition_blocked_recorded", True,
+    ),
+    (
+        "g2d_t11_validating_to_needs_user", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "RECORD_NEEDS_USER",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "node_validation_complete", "node_outcome_needs_user",
+            "node_resolvable_input_missing", "budget_accounted",
+            "root_commit_present",
+        ),
+        "NEEDS_USER", "g2d_transition_needs_user_recorded", True,
+    ),
+    (
+        "g2d_t12_validating_to_deadend", 1, "FractalCellQueueEntry",
+        "VALIDATED", "fractal_scheduler", "RECORD_DEADEND",
+        "FractalCellQueueEntry",
+        (
+            "queue_entry_context_valid", "queue_state_validating",
+            "predecessor_queue_artifact_lineage_valid",
+            "node_validation_complete", "node_outcome_deadend",
+            "node_no_progress_or_nonresolvable", "budget_accounted",
+            "root_commit_present",
+        ),
+        "RETURN_TO_ROOT", "g2d_transition_deadend_recorded", True,
+    ),
+    (
+        "g2d_t13_completed_to_parent_return", 1, "FractalCellResult",
+        "VALIDATED", "fractal_runtime", "RETURN_TO_PARENT",
+        "FractalRuntimeReport",
+        (
+            "cell_result_context_valid", "cell_outcome_completed",
+            "source_cell_is_root", "root_cell_result_context_valid",
+            "all_required_descendant_results_accounted",
+            "canonical_result_postorder_valid", "parent_lineage_valid",
+            "root_review_required", "root_commit_present",
+        ),
+        "RETURN_TO_ROOT", "g2d_transition_completed_parent_return", True,
+    ),
+    (
+        "g2d_t14_degraded_to_parent_return", 1, "FractalCellResult",
+        "VALIDATED", "fractal_runtime", "RETURN_TO_PARENT",
+        "FractalRuntimeReport",
+        (
+            "cell_result_context_valid", "cell_outcome_degraded",
+            "source_cell_is_root", "root_cell_result_context_valid",
+            "all_required_descendant_results_accounted",
+            "canonical_result_postorder_valid", "parent_lineage_valid",
+            "root_review_required", "root_commit_present",
+        ),
+        "RETURN_TO_ROOT", "g2d_transition_degraded_parent_return", True,
+    ),
+    (
+        "g2d_t15_blocked_to_parent_return", 1, "FractalCellResult",
+        "BLOCKED_FAIL_CLOSED", "fractal_runtime", "RETURN_TO_PARENT",
+        "FractalRuntimeReport",
+        (
+            "cell_result_context_valid", "cell_outcome_blocked",
+            "source_cell_is_root", "root_cell_result_context_valid",
+            "all_required_descendant_results_accounted",
+            "canonical_result_postorder_valid", "parent_lineage_valid",
+            "root_review_required", "root_commit_present",
+        ),
+        "BLOCKED_FAIL_CLOSED", "g2d_transition_blocked_parent_return", True,
+    ),
+    (
+        "g2d_t16_needs_user_to_parent_return", 1, "FractalCellResult",
+        "VALIDATED", "fractal_runtime", "RETURN_TO_PARENT",
+        "FractalRuntimeReport",
+        (
+            "cell_result_context_valid", "cell_outcome_needs_user",
+            "source_cell_is_root", "root_cell_result_context_valid",
+            "all_required_descendant_results_accounted",
+            "canonical_result_postorder_valid", "parent_lineage_valid",
+            "root_review_required", "root_commit_present",
+        ),
+        "NEEDS_USER", "g2d_transition_needs_user_parent_return", True,
+    ),
+    (
+        "g2d_t17_deadend_to_parent_return", 1, "FractalCellResult",
+        "VALIDATED", "fractal_runtime", "RETURN_TO_PARENT",
+        "FractalRuntimeReport",
+        (
+            "cell_result_context_valid", "cell_outcome_deadend",
+            "source_cell_is_root", "root_cell_result_context_valid",
+            "all_required_descendant_results_accounted",
+            "canonical_result_postorder_valid", "parent_lineage_valid",
+            "root_review_required", "root_commit_present",
+        ),
+        "RETURN_TO_ROOT", "g2d_transition_deadend_parent_return", True,
+    ),
+)
+
+
+def _fractal_runtime_transition_rules_v02() -> tuple[TransitionRuleV01, ...]:
+    return tuple(
+        TransitionRuleV01(
+            rule_id=row[0],
+            abi_major_version=row[1],
+            source_artifact_type=row[2],
+            source_lifecycle_state=row[3],
+            actor_role=row[4],
+            attempted_effect=row[5],
+            target_artifact_type=row[6],
+            required_guards=row[7],
+            decision=row[8],
+            reason_code=row[9],
+            root_commit_required=row[10],
+        )
+        for row in _FRACTAL_RUNTIME_TRANSITION_RULE_ROWS_V02
+    )
+
+
+def _fractal_runtime_transition_registry_material_v02(
+    rules: tuple[TransitionRuleV01, ...],
+) -> dict[str, object]:
+    return {
+        "registry_version": _FRACTAL_RUNTIME_TRANSITION_PROFILE_VERSION_V02,
+        "abi_major_version": 1,
+        "rules": [_rule_plain(rule) for rule in rules],
+    }
+
+
+def build_fractal_runtime_transition_registry_profile_v02(
+) -> TransitionRegistryV01:
+    rules = _fractal_runtime_transition_rules_v02()
+    return TransitionRegistryV01(
+        registry_id=_hash(
+            _REGISTRY_DOMAIN,
+            _fractal_runtime_transition_registry_material_v02(rules),
+        ),
+        registry_version=_FRACTAL_RUNTIME_TRANSITION_PROFILE_VERSION_V02,
+        abi_major_version=1,
+        rules=rules,
+    )
+
+
+def validate_fractal_runtime_transition_registry_profile_v02(
+    value: object,
+) -> tuple[str, ...]:
+    try:
+        if type(value) is not TransitionRegistryV01:
+            return ("g2d_transition_profile_invalid",)
+        expected_rules = _fractal_runtime_transition_rules_v02()
+        if (
+            value.registry_version
+            != _FRACTAL_RUNTIME_TRANSITION_PROFILE_VERSION_V02
+            or type(value.abi_major_version) is not int
+            or value.abi_major_version != 1
+            or type(value.rules) is not tuple
+            or len(value.rules) != _FRACTAL_RUNTIME_TRANSITION_RULE_COUNT_V02
+            or any(type(rule) is not TransitionRuleV01 for rule in value.rules)
+            or _canonical_bytes([_rule_plain(rule) for rule in value.rules])
+            != _canonical_bytes([_rule_plain(rule) for rule in expected_rules])
+        ):
+            return ("g2d_transition_profile_invalid",)
+        expected_id = _hash(
+            _REGISTRY_DOMAIN,
+            _fractal_runtime_transition_registry_material_v02(expected_rules),
+        )
+        if value.registry_id != expected_id:
+            return ("g2d_transition_profile_invalid",)
+        return ()
+    except Exception:
+        return ("g2d_transition_profile_invalid",)
+
+
+def fractal_runtime_transition_registry_profile_to_plain_dict_v02(
+    value: TransitionRegistryV01,
+) -> dict[str, object]:
+    try:
+        errors = validate_fractal_runtime_transition_registry_profile_v02(value)
+        if errors:
+            raise ValueError(errors[0])
+        result = _registry_plain(value)
+        _canonical_json_bytes_v01(result)
+        return result
+    except Exception:
+        raise ValueError("g2d_transition_profile_invalid") from None
+
+
+def _fractal_runtime_transition_decision_structure_v02(value: object) -> bool:
+    return _execution_mode_transition_decision_structure_v01(value)
+
+
+def _fractal_runtime_artifact_context_valid_v02(
+    artifact: KernelArtifactV01,
+    *,
+    expected_lifecycle: str,
+) -> bool:
+    profiles = {
+        row[0]: row[1:]
+        for row in _FRACTAL_RUNTIME_ARTIFACT_CONTEXT_PROFILES_V02
+    }
+    profile = profiles.get(artifact.artifact_type)
+    if profile is None:
+        return False
+    domain, prefix, schema_version, source_component, authority_class = profile
+    if (
+        artifact.abi_version != "v1.0"
+        or artifact.schema_version != schema_version
+        or artifact.source_component != source_component
+        or artifact.authority_class != authority_class
+        or artifact.lifecycle_state != expected_lifecycle
+    ):
+        return False
+    material = _kernel_artifact_to_plain_dict_v01(artifact)
+    material.pop("artifact_id")
+    return artifact.artifact_id == prefix + _hash(domain, material)
+
+
+def _fractal_runtime_payload_v02(
+    artifact: KernelArtifactV01,
+) -> dict[str, object] | None:
+    plain = _kernel_artifact_to_plain_dict_v01(artifact)
+    payload = plain.get("payload")
+    return payload if type(payload) is dict else None
+
+
+def _fractal_runtime_prefixed_digest_v02(value: object, prefix: str) -> bool:
+    return type(value) is str and _re.fullmatch(
+        _re.escape(prefix) + r"[0-9a-f]{64}", value
+    ) is not None
+
+
+def _fractal_runtime_source_parent_envelope_valid_v02(
+    *,
+    rule: TransitionRuleV01,
+    source_artifact: KernelArtifactV01,
+) -> bool:
+    profile = dict(_FRACTAL_RUNTIME_SOURCE_PARENT_PROFILE_BY_RULE_V02).get(
+        rule.rule_id
+    )
+    parents = source_artifact.parent_refs
+    if (
+        profile is None
+        or type(parents) is not tuple
+        or not parents
+        or any(type(parent) is not str or not parent for parent in parents)
+        or len(parents) != len(set(parents))
+        or source_artifact.artifact_id in parents
+    ):
+        return False
+
+    topology = lambda value: _fractal_runtime_prefixed_digest_v02(
+        value, "frabi_topology_v02:"
+    )
+    queue = lambda value: _fractal_runtime_prefixed_digest_v02(
+        value, "frabi_queue_v02:"
+    )
+    result = lambda value: _fractal_runtime_prefixed_digest_v02(
+        value, "frabi_result_v02:"
+    )
+
+    if profile == "ROUTE_ELIGIBILITY_SOURCE":
+        return len(parents) == 1 and _fractal_runtime_prefixed_digest_v02(
+            parents[0], "emabi_decision_v01:"
+        )
+    if profile == "TOPOLOGY_SOURCE":
+        return len(parents) == 1 and _fractal_runtime_prefixed_digest_v02(
+            parents[0], "emabi_route_v01:"
+        )
+    if profile == "PENDING_QUEUE_SOURCE":
+        return (
+            len(parents) == 1 and topology(parents[0])
+        ) or (
+            len(parents) == 2
+            and topology(parents[0])
+            and queue(parents[1])
+        )
+    if profile == "TWO_PARENT_QUEUE_SOURCE":
+        return (
+            len(parents) == 2
+            and topology(parents[0])
+            and queue(parents[1])
+        )
+    if profile == "TERMINAL_QUEUE_SOURCE":
+        return (
+            len(parents) in {2, 3}
+            and topology(parents[0])
+            and queue(parents[1])
+            and (len(parents) == 2 or result(parents[2]))
+        )
+    if profile == "CELL_RESULT_SOURCE":
+        if len(parents) < 2 or not topology(parents[0]):
+            return False
+        queue_count = 0
+        result_seen = False
+        for parent in parents[1:]:
+            if queue(parent) and not result_seen:
+                queue_count += 1
+            elif result(parent):
+                result_seen = True
+            else:
+                return False
+        return queue_count > 0
+    return False
+
+
+def _fractal_runtime_artifact_pair_valid_v02(
+    *,
+    rule: TransitionRuleV01,
+    source_artifact: KernelArtifactV01,
+    target_artifact: KernelArtifactV01,
+) -> bool:
+    target_lifecycles = dict(_FRACTAL_RUNTIME_TARGET_LIFECYCLE_BY_RULE_V02)
+    target_lifecycle = target_lifecycles.get(rule.rule_id)
+    if target_lifecycle is None:
+        return False
+    if not _fractal_runtime_artifact_context_valid_v02(
+        source_artifact,
+        expected_lifecycle=rule.source_lifecycle_state,
+    ) or not _fractal_runtime_artifact_context_valid_v02(
+        target_artifact,
+        expected_lifecycle=target_lifecycle,
+    ) or not _fractal_runtime_source_parent_envelope_valid_v02(
+        rule=rule,
+        source_artifact=source_artifact,
+    ):
+        return False
+    source_plain = _kernel_artifact_to_plain_dict_v01(source_artifact)
+    target_plain = _kernel_artifact_to_plain_dict_v01(target_artifact)
+    if (
+        source_artifact.artifact_id == target_artifact.artifact_id
+        or source_artifact.transaction_id != target_artifact.transaction_id
+        or source_artifact.owner_root_id != target_artifact.owner_root_id
+        or _canonical_bytes(source_plain["time_envelope"])
+        != _canonical_bytes(target_plain["time_envelope"])
+        or len(target_artifact.parent_refs)
+        != len(set(target_artifact.parent_refs))
+        or target_artifact.artifact_id in target_artifact.parent_refs
+        or target_artifact.parent_refs.count(source_artifact.artifact_id) != 1
+    ):
+        return False
+
+    parent_relation = dict(_FRACTAL_RUNTIME_PARENT_RELATION_BY_RULE_V02).get(
+        rule.rule_id
+    )
+    if parent_relation is None:
+        return False
+    rule_index = int(rule.rule_id[5:7])
+    source_parents = source_artifact.parent_refs
+    parents = target_artifact.parent_refs
+    if parent_relation == "ROUTE_TO_TOPOLOGY":
+        if parents != (source_artifact.artifact_id,):
+            return False
+    elif parent_relation == "TOPOLOGY_TO_INITIAL_QUEUE":
+        if not (
+            parents == (source_artifact.artifact_id,)
+            or (
+                len(parents) == 2
+                and parents[0] == source_artifact.artifact_id
+                and _fractal_runtime_prefixed_digest_v02(
+                    parents[1], "frabi_queue_v02:"
+                )
+            )
+        ):
+            return False
+    elif parent_relation == "QUEUE_SUCCESSOR_NO_RESULT":
+        if parents != (source_parents[0], source_artifact.artifact_id):
+            return False
+    elif parent_relation == "QUEUE_SUCCESSOR_RESULT_INTRODUCTION":
+        if (
+            len(parents) not in {2, 3}
+            or parents[0] != source_parents[0]
+            or parents[1] != source_artifact.artifact_id
+            or (
+                len(parents) == 3
+                and not _fractal_runtime_prefixed_digest_v02(
+                    parents[2], "frabi_result_v02:"
+                )
+            )
+        ):
+            return False
+    elif parent_relation == "QUEUE_SUCCESSOR_RESULT_PRESERVATION":
+        expected_parents = (
+            (source_parents[0], source_artifact.artifact_id)
+            if len(source_parents) == 2
+            else (
+                source_parents[0],
+                source_artifact.artifact_id,
+                source_parents[2],
+            )
+        )
+        if parents != expected_parents:
+            return False
+    elif parent_relation == "ROOT_RESULT_TO_REPORT":
+        if (
+            len(parents) < 2
+            or parents[0] != source_parents[0]
+            or parents[-1] != source_artifact.artifact_id
+            or any(
+                not _fractal_runtime_prefixed_digest_v02(
+                    parent, "frabi_result_v02:"
+                )
+                for parent in parents[1:-1]
+            )
+        ):
+            return False
+    else:
+        return False
+
+    source_payload = _fractal_runtime_payload_v02(source_artifact)
+    target_payload = _fractal_runtime_payload_v02(target_artifact)
+    if source_payload is None or target_payload is None:
+        return False
+    if rule_index == 1:
+        if not {
+            "accepted_mode",
+            "accepted_scope_ref",
+        }.issubset(source_payload) or not {
+            "accepted_mode",
+            "accepted_scope_ref",
+            "source_root_decision_artifact_id",
+        }.issubset(target_payload):
+            return False
+        if (
+            source_payload.get("accepted_mode")
+            != target_payload.get("accepted_mode")
+            or source_payload.get("accepted_scope_ref")
+            != target_payload.get("accepted_scope_ref")
+            or len(source_artifact.parent_refs) != 1
+            or target_payload.get("source_root_decision_artifact_id")
+            != source_artifact.parent_refs[0]
+        ):
+            return False
+    elif rule_index == 2:
+        if (
+            "topology_id" not in source_payload
+            or "topology_id" not in target_payload
+            or source_payload["topology_id"] != target_payload["topology_id"]
+        ):
+            return False
+    elif 3 <= rule_index <= 12:
+        for field_name in (
+            "topology_id",
+            "topology_seed_id",
+            "cell_id",
+            "parent_cell_id",
+            "node_id",
+        ):
+            if (
+                field_name not in source_payload
+                or field_name not in target_payload
+                or source_payload[field_name] != target_payload[field_name]
+            ):
+                return False
+    else:
+        for field_name in ("topology_id", "topology_seed_id"):
+            if (
+                field_name not in source_payload
+                or field_name not in target_payload
+                or source_payload[field_name] != target_payload[field_name]
+            ):
+                return False
+    return True
+
+
+def validate_fractal_runtime_transition_decision_v02(
+    value: object,
+    *,
+    registry: TransitionRegistryV01,
+    source_artifact: KernelArtifactV01,
+    target_artifact: KernelArtifactV01,
+) -> tuple[str, ...]:
+    try:
+        if validate_fractal_runtime_transition_registry_profile_v02(registry):
+            return ("g2d_transition_profile_invalid",)
+        if (
+            not _fractal_runtime_transition_decision_structure_v02(value)
+            or type(source_artifact) is not KernelArtifactV01
+            or type(target_artifact) is not KernelArtifactV01
+            or _validate_kernel_artifact_v01(source_artifact)
+            or _validate_kernel_artifact_v01(target_artifact)
+        ):
+            return ("g2d_transition_decision_substituted",)
+        assert type(value) is TransitionDecisionV01
+        rule = {item.rule_id: item for item in registry.rules}.get(value.rule_id)
+        if rule is None:
+            return ("g2d_transition_decision_substituted",)
+        if (
+            value.registry_id != registry.registry_id
+            or value.abi_major_version != rule.abi_major_version
+            or value.source_artifact_type != rule.source_artifact_type
+            or value.source_lifecycle_state != rule.source_lifecycle_state
+            or value.actor_role != rule.actor_role
+            or value.attempted_effect != rule.attempted_effect
+            or value.target_artifact_type != rule.target_artifact_type
+            or value.required_guards != rule.required_guards
+            or value.satisfied_guards != rule.required_guards
+            or value.missing_guards != ()
+            or value.decision != rule.decision
+            or value.reason_code != rule.reason_code
+            or value.root_commit_required is not rule.root_commit_required
+            or value.root_commit_present is not True
+            or value.matched is not True
+            or source_artifact.artifact_type != rule.source_artifact_type
+            or source_artifact.lifecycle_state != rule.source_lifecycle_state
+            or target_artifact.artifact_type != rule.target_artifact_type
+            or not _fractal_runtime_artifact_pair_valid_v02(
+                rule=rule,
+                source_artifact=source_artifact,
+                target_artifact=target_artifact,
+            )
+        ):
+            return ("g2d_transition_decision_substituted",)
+        if value.decision_id != rebuild_fractal_runtime_transition_decision_identity_v02(value):
+            return ("g2d_transition_decision_substituted",)
+        return ()
+    except Exception:
+        return ("g2d_transition_decision_substituted",)
+
+
+def fractal_runtime_transition_decision_to_plain_dict_v02(
+    value: TransitionDecisionV01,
+) -> dict[str, object]:
+    try:
+        if not _fractal_runtime_transition_decision_structure_v02(value):
+            raise ValueError("g2d_transition_decision_substituted")
+        if value.decision_id != rebuild_fractal_runtime_transition_decision_identity_v02(value):
+            raise ValueError("g2d_transition_decision_substituted")
+        result = _decision_plain(value)
+        _canonical_json_bytes_v01(result)
+        return result
+    except Exception:
+        raise ValueError("g2d_transition_decision_substituted") from None
+
+
+def rebuild_fractal_runtime_transition_decision_identity_v02(
+    value: TransitionDecisionV01,
+) -> str:
+    try:
+        if not _fractal_runtime_transition_decision_structure_v02(value):
+            raise ValueError("g2d_transition_decision_substituted")
+        material = _decision_plain(value)
+        material.pop("decision_id")
+        return _hash(_DECISION_DOMAIN, material)
+    except Exception:
+        raise ValueError("g2d_transition_decision_substituted") from None

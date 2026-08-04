@@ -1,7 +1,7 @@
-"""Deterministic structural contracts for Fractal Runtime v0.2 G2-D1.
+"""Deterministic contracts for Fractal Runtime v0.2 through G2-D2.
 
-This module owns canonical data, identity, serialization, and structural
-validation only.  It performs no scheduling, provider, model, network,
+This module owns canonical data, structural and G2-C source validation, and
+deterministic topology construction only.  It performs no scheduling, provider, model, network,
 connector, filesystem, clock, random, DRS, permission, packet, receipt,
 FinalOutput, authority, or effect operation.
 """
@@ -18,7 +18,9 @@ from typing import get_args as _get_args, get_origin as _get_origin, get_type_hi
 from hedgehog.kernel.abi_v01 import (
     CausalConsumptionRefV01,
     KernelArtifactV01,
+    build_kernel_artifact_v01 as _build_kernel_artifact_v01,
     kernel_artifact_to_plain_dict_v01 as _kernel_artifact_to_plain_dict_v01,
+    validate_kernel_artifact_v01 as _validate_kernel_artifact_v01,
 )
 from hedgehog.kernel.execution_mode_router_v01 import (
     ExecutionModeProposalV01,
@@ -26,6 +28,18 @@ from hedgehog.kernel.execution_mode_router_v01 import (
     ExecutionModeSourceContextV01,
     RootExecutionModeDecisionV01,
     RootExecutionModeReviewInputV01,
+    evaluate_execution_mode_proposal_to_root_transition_v01 as _evaluate_execution_mode_proposal_to_root_transition_v01,
+    evaluate_execution_mode_root_route_transition_v01 as _evaluate_execution_mode_root_route_transition_v01,
+    project_execution_mode_proposal_kernel_artifact_v01 as _project_execution_mode_proposal_kernel_artifact_v01,
+    project_execution_mode_route_eligibility_kernel_artifact_v01 as _project_execution_mode_route_eligibility_kernel_artifact_v01,
+    project_root_execution_mode_decision_kernel_artifact_v01 as _project_root_execution_mode_decision_kernel_artifact_v01,
+    validate_execution_mode_abi_profile_v01 as _validate_execution_mode_abi_profile_v01,
+    validate_execution_mode_proposal_against_sources_v01 as _validate_execution_mode_proposal_against_sources_v01,
+    validate_execution_mode_route_eligibility_against_source_v01 as _validate_execution_mode_route_eligibility_against_source_v01,
+    validate_execution_mode_router_input_against_sources_v01 as _validate_execution_mode_router_input_against_sources_v01,
+    validate_execution_mode_source_context_v01 as _validate_execution_mode_source_context_v01,
+    validate_root_execution_mode_decision_against_source_v01 as _validate_root_execution_mode_decision_against_source_v01,
+    validate_root_execution_mode_review_input_against_sources_v01 as _validate_root_execution_mode_review_input_against_sources_v01,
 )
 from hedgehog.kernel.integrity_replay_v01 import (
     canonical_json_bytes_v01 as _canonical_json_bytes_v01,
@@ -35,15 +49,23 @@ from hedgehog.kernel.root_decision_v01 import (
     RootDecisionInputV01,
     RootDecisionKernelV01,
     RootDecisionResultV01,
+    validate_root_decision_input_v01 as _validate_root_decision_input_v01,
+    validate_root_decision_kernel_v01 as _validate_root_decision_kernel_v01,
+    validate_root_decision_result_v01 as _validate_root_decision_result_v01,
 )
 from hedgehog.kernel.transition_registry_v01 import (
     TransitionDecisionV01,
     TransitionRegistryV01,
+    build_fractal_runtime_transition_registry_profile_v02 as _build_fractal_runtime_transition_registry_profile_v02,
+    rebuild_fractal_runtime_transition_decision_identity_v02 as _rebuild_fractal_runtime_transition_decision_identity_v02,
+    validate_execution_mode_transition_registry_profile_v01 as _validate_execution_mode_transition_registry_profile_v01,
+    validate_fractal_runtime_transition_decision_v02 as _validate_fractal_runtime_transition_decision_v02,
+    validate_fractal_runtime_transition_registry_profile_v02 as _validate_fractal_runtime_transition_registry_profile_v02,
 )
 
 
 MODULE_ID = "kernel_fractal_runtime_v02"
-SLICE_ID = "gate2_g2d1_fractal_runtime_canonical_structural_contracts"
+SLICE_ID = "gate2_g2d2_fractal_runtime_source_topology_contracts"
 FRACTAL_RUNTIME_VERSION = "v0.2"
 
 TOTAL_G2D_TYPE_COUNT = 20
@@ -4437,3 +4459,655 @@ def derive_fractal_child_cell_id_v02(
         payload=_canonical_json_bytes_v01(material),
     )
     return "frchildcell_v02:" + digest
+
+
+def _source_report_v02(
+    *,
+    public_reason: str | None,
+    source_reasons: tuple[str, ...] = (),
+) -> FractalRuntimeValidationReportV02:
+    return build_fractal_runtime_validation_report_v02(
+        validation_target="SOURCE_CONTEXT_STRUCTURAL",
+        validated_object_id=None,
+        failure_stage="NONE" if public_reason is None and not source_reasons else "SOURCE_CONTEXT",
+        reason_codes=() if public_reason is None else (public_reason,),
+        source_reason_codes=source_reasons,
+    )
+
+
+def _source_reasons_from_report_v02(value: object) -> tuple[str, ...]:
+    reasons: list[str] = []
+    for name in ("reason_codes", "source_reason_codes"):
+        current = getattr(value, name, ())
+        if type(current) is tuple:
+            for reason in current:
+                if type(reason) is str and not _REASON_PATTERN.fullmatch(reason) and reason not in reasons:
+                    reasons.append(reason)
+    return tuple(reasons)
+
+
+def _source_context_failure_v02(
+    reason: str,
+    report: object | None = None,
+) -> tuple[str, tuple[str, ...]]:
+    return reason, () if report is None else _source_reasons_from_report_v02(report)
+
+
+def _validate_source_context_family_v02(
+    value: object,
+) -> tuple[str | None, tuple[str, ...]]:
+    try:
+        if type(value) is not FractalRuntimeSourceContextV02:
+            return _source_context_failure_v02("g2d_source_context_invalid")
+        source_report = _validate_execution_mode_source_context_v01(value.g2c_source_context)
+        if source_report.validation_status != "PASS":
+            return _source_context_failure_v02("g2d_g2c_context_invalid", source_report)
+        router_report = _validate_execution_mode_router_input_against_sources_v01(
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+        )
+        if router_report.validation_status != "PASS":
+            return _source_context_failure_v02("g2d_g2c_router_input_invalid", router_report)
+        proposal_report = _validate_execution_mode_proposal_against_sources_v01(
+            proposal=value.proposal,
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+        )
+        if proposal_report.validation_status != "PASS":
+            return _source_context_failure_v02("g2d_g2c_proposal_invalid", proposal_report)
+        if _validate_execution_mode_transition_registry_profile_v01(value.transition_registry):
+            return _source_context_failure_v02("g2d_g2c_context_invalid")
+        expected_proposal_artifact = _project_execution_mode_proposal_kernel_artifact_v01(
+            proposal=value.proposal,
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+        )
+        if value.proposal_artifact != expected_proposal_artifact:
+            return _source_context_failure_v02("g2d_g2c_proposal_artifact_invalid")
+        expected_proposal_transition = _evaluate_execution_mode_proposal_to_root_transition_v01(
+            registry=value.transition_registry,
+            proposal=value.proposal,
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+            proposal_artifact=value.proposal_artifact,
+        )
+        if value.proposal_transition_decision != expected_proposal_transition:
+            return _source_context_failure_v02("g2d_g2c_proposal_transition_invalid")
+        review_report = _validate_root_execution_mode_review_input_against_sources_v01(
+            review_input=value.review_input,
+            proposal=value.proposal,
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+            proposal_artifact=value.proposal_artifact,
+            proposal_transition_decision=value.proposal_transition_decision,
+        )
+        if review_report.validation_status != "PASS":
+            return _source_context_failure_v02("g2d_g2c_review_input_invalid", review_report)
+        if _validate_root_decision_kernel_v01(value.root_kernel):
+            return _source_context_failure_v02("g2d_g2c_root_kernel_invalid")
+        if _validate_root_decision_input_v01(
+            kernel=value.root_kernel,
+            decision_input=value.root_decision_input,
+        ):
+            return _source_context_failure_v02("g2d_g2c_root_input_invalid")
+        if _validate_root_decision_result_v01(
+            kernel=value.root_kernel,
+            decision_input=value.root_decision_input,
+            result=value.root_decision_result,
+        ):
+            return _source_context_failure_v02("g2d_g2c_root_result_invalid")
+        decision_report = _validate_root_execution_mode_decision_against_source_v01(
+            decision=value.decision,
+            review_input=value.review_input,
+            proposal=value.proposal,
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+            proposal_artifact=value.proposal_artifact,
+            proposal_transition_decision=value.proposal_transition_decision,
+            root_kernel=value.root_kernel,
+            root_decision_input=value.root_decision_input,
+            root_decision_result=value.root_decision_result,
+        )
+        if decision_report.validation_status != "PASS":
+            return _source_context_failure_v02("g2d_g2c_decision_invalid", decision_report)
+        expected_decision_artifact = _project_root_execution_mode_decision_kernel_artifact_v01(
+            decision=value.decision,
+            review_input=value.review_input,
+            proposal=value.proposal,
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+            proposal_artifact=value.proposal_artifact,
+            proposal_transition_decision=value.proposal_transition_decision,
+            root_kernel=value.root_kernel,
+            root_decision_input=value.root_decision_input,
+            root_decision_result=value.root_decision_result,
+        )
+        if value.decision_artifact != expected_decision_artifact:
+            return _source_context_failure_v02("g2d_g2c_decision_artifact_invalid")
+        expected_route_transition = _evaluate_execution_mode_root_route_transition_v01(
+            registry=value.transition_registry,
+            proposal_transition_decision=value.proposal_transition_decision,
+            review_input=value.review_input,
+            decision=value.decision,
+            proposal=value.proposal,
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+            root_kernel=value.root_kernel,
+            root_decision_input=value.root_decision_input,
+            root_decision_result=value.root_decision_result,
+            proposal_artifact=value.proposal_artifact,
+            decision_artifact=value.decision_artifact,
+        )
+        if value.root_route_transition_decision != expected_route_transition:
+            return _source_context_failure_v02("g2d_g2c_post_root_transition_invalid")
+        expected_route_artifact = _project_execution_mode_route_eligibility_kernel_artifact_v01(
+            decision=value.decision,
+            review_input=value.review_input,
+            proposal=value.proposal,
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+            proposal_artifact=value.proposal_artifact,
+            proposal_transition_decision=value.proposal_transition_decision,
+            root_kernel=value.root_kernel,
+            root_decision_input=value.root_decision_input,
+            root_decision_result=value.root_decision_result,
+            decision_artifact=value.decision_artifact,
+            root_route_transition_decision=value.root_route_transition_decision,
+        )
+        if expected_route_artifact is None or value.route_eligibility_artifact != expected_route_artifact:
+            return _source_context_failure_v02("g2d_route_eligibility_missing")
+        route_report = _validate_execution_mode_route_eligibility_against_source_v01(
+            route_eligibility_artifact=value.route_eligibility_artifact,
+            decision=value.decision,
+            review_input=value.review_input,
+            proposal=value.proposal,
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+            proposal_artifact=value.proposal_artifact,
+            proposal_transition_decision=value.proposal_transition_decision,
+            root_kernel=value.root_kernel,
+            root_decision_input=value.root_decision_input,
+            root_decision_result=value.root_decision_result,
+            decision_artifact=value.decision_artifact,
+            root_route_transition_decision=value.root_route_transition_decision,
+        )
+        if route_report.validation_status != "PASS":
+            return _source_context_failure_v02("g2d_route_eligibility_invalid", route_report)
+        abi_report = _validate_execution_mode_abi_profile_v01(
+            proposal=value.proposal,
+            router_input=value.router_input,
+            source_context=value.g2c_source_context,
+            proposal_artifact=value.proposal_artifact,
+            proposal_transition_decision=value.proposal_transition_decision,
+            review_input=value.review_input,
+            decision=value.decision,
+            root_kernel=value.root_kernel,
+            root_decision_input=value.root_decision_input,
+            root_decision_result=value.root_decision_result,
+            decision_artifact=value.decision_artifact,
+            root_route_transition_decision=value.root_route_transition_decision,
+            route_eligibility_artifact=value.route_eligibility_artifact,
+        )
+        if abi_report.validation_status != "PASS":
+            return _source_context_failure_v02("g2d_route_eligibility_invalid", abi_report)
+        if value.decision.outcome not in {"ACCEPT", "NARROW"}:
+            return _source_context_failure_v02("g2d_terminal_consumption_forbidden")
+        if value.decision.accepted_mode not in TOPOLOGY_ELIGIBLE_MODES:
+            if value.decision.downstream_consumption_class == "SHORTCUT_RETURN_TO_ROOT":
+                return _source_context_failure_v02("g2d_shortcut_consumption_forbidden")
+            return _source_context_failure_v02("g2d_mode_not_topology_eligible")
+        if value.decision.downstream_consumption_class != "RUNTIME_TOPOLOGY_ELIGIBLE":
+            return _source_context_failure_v02(
+                "g2d_shortcut_consumption_forbidden"
+                if value.decision.downstream_consumption_class == "SHORTCUT_RETURN_TO_ROOT"
+                else "g2d_terminal_consumption_forbidden"
+            )
+        if value.root_decision_result.root_commit_created is not True:
+            return _source_context_failure_v02("g2d_g2c_root_result_invalid")
+        snapshot = value.router_input.local_routing_snapshot
+        expected_policy = build_fractal_runtime_policy_v02(
+            required_downstream_capability_ids=value.proposal.required_downstream_capability_ids,
+            permitted_child_scope_refs=snapshot.permitted_narrower_scope_refs,
+        )
+        if value.runtime_policy != expected_policy:
+            return _source_context_failure_v02("g2d_topology_policy_invalid")
+        payload = _kernel_artifact_to_plain_dict_v01(
+            value.route_eligibility_artifact
+        )["payload"]
+        assert type(payload) is dict
+        if (
+            payload.get("downstream_consumption_class") != "RUNTIME_TOPOLOGY_ELIGIBLE"
+            or payload.get("accepted_mode") != value.decision.accepted_mode
+            or payload.get("accepted_scope_ref") != value.decision.accepted_scope_ref
+            or payload.get("downstream_action_packet_required")
+            is not value.decision.downstream_action_packet_required
+            or value.proposal.downstream_action_packet_required
+            is not value.decision.downstream_action_packet_required
+        ):
+            return _source_context_failure_v02("g2d_route_eligibility_context_mismatch")
+        return None, ()
+    except Exception:
+        return _source_context_failure_v02("g2d_source_context_invalid")
+
+
+def build_fractal_runtime_source_context_v02(
+    *,
+    transition_registry: TransitionRegistryV01,
+    g2c_source_context: ExecutionModeSourceContextV01,
+    router_input: ExecutionModeRouterInputV01,
+    proposal: ExecutionModeProposalV01,
+    proposal_artifact: KernelArtifactV01,
+    proposal_transition_decision: TransitionDecisionV01,
+    review_input: RootExecutionModeReviewInputV01,
+    decision: RootExecutionModeDecisionV01,
+    root_kernel: RootDecisionKernelV01,
+    root_decision_input: RootDecisionInputV01,
+    root_decision_result: RootDecisionResultV01,
+    decision_artifact: KernelArtifactV01,
+    root_route_transition_decision: TransitionDecisionV01,
+    route_eligibility_artifact: KernelArtifactV01,
+    runtime_policy: FractalRuntimePolicyV02,
+) -> FractalRuntimeSourceContextV02:
+    value = FractalRuntimeSourceContextV02(
+        transition_registry=transition_registry,
+        g2c_source_context=g2c_source_context,
+        router_input=router_input,
+        proposal=proposal,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=proposal_transition_decision,
+        review_input=review_input,
+        decision=decision,
+        root_kernel=root_kernel,
+        root_decision_input=root_decision_input,
+        root_decision_result=root_decision_result,
+        decision_artifact=decision_artifact,
+        root_route_transition_decision=root_route_transition_decision,
+        route_eligibility_artifact=route_eligibility_artifact,
+        runtime_policy=runtime_policy,
+    )
+    report = validate_fractal_runtime_source_context_v02(value)
+    if report.status != "PASS":
+        raise ValueError(report.reason_codes[0] if report.reason_codes else "g2d_source_context_invalid")
+    return value
+
+
+def validate_fractal_runtime_source_context_v02(
+    value: object,
+) -> FractalRuntimeValidationReportV02:
+    reason, source_reasons = _validate_source_context_family_v02(value)
+    return _source_report_v02(public_reason=reason, source_reasons=source_reasons)
+
+
+def validate_runtime_topology_source_binding_against_g2c_v02(
+    value: object,
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+) -> FractalRuntimeValidationReportV02:
+    try:
+        context_report = validate_fractal_runtime_source_context_v02(source_context)
+        structural = validate_runtime_topology_source_binding_v02(value)
+        valid = context_report.status == structural.status == "PASS"
+        expected = build_runtime_topology_source_binding_v02(source_context=source_context) if valid else None
+        valid = bool(
+            valid
+            and type(value) is RuntimeTopologySourceBindingV02
+            and value == expected
+            and _canonical_json_bytes_v01(runtime_topology_source_binding_to_plain_data_v02(value))
+            == _canonical_json_bytes_v01(runtime_topology_source_binding_to_plain_data_v02(expected))
+        )
+        return build_fractal_runtime_validation_report_v02(
+            validation_target="SOURCE_BINDING_AGAINST_G2C",
+            validated_object_id=value.source_binding_id if valid else None,
+            failure_stage="NONE" if valid else "SOURCE_BINDING",
+            reason_codes=() if valid else ("g2d_topology_source_binding_invalid",),
+            source_reason_codes=(),
+        )
+    except Exception:
+        return build_fractal_runtime_validation_report_v02(
+            validation_target="SOURCE_BINDING_AGAINST_G2C",
+            validated_object_id=None,
+            failure_stage="SOURCE_BINDING",
+            reason_codes=("g2d_topology_source_binding_invalid",),
+            source_reason_codes=(),
+        )
+
+
+def _construct_runtime_execution_topology_from_source_v02(
+    source_context: FractalRuntimeSourceContextV02,
+) -> RuntimeExecutionTopologyV02:
+    source_binding = build_runtime_topology_source_binding_v02(source_context=source_context)
+    policy = source_context.runtime_policy
+    root_cell_id = derive_fractal_root_cell_id_v02(
+        source_binding_id=source_binding.source_binding_id,
+        runtime_policy_id=policy.policy_id,
+        accepted_mode=source_binding.accepted_mode,
+        accepted_scope_ref=source_binding.accepted_scope_ref,
+    )
+    seed = build_runtime_topology_seed_v02(source_binding, policy, root_cell_id=root_cell_id)
+    global_budget = build_fractal_runtime_budget_v02(
+        policy=policy,
+        topology_seed=seed,
+        allocation_parent_budget=None,
+        predecessor_budget=None,
+        owning_cell_id=root_cell_id,
+        budget_scope="ROOT_GLOBAL_AND_CELL",
+        budget_state="ALLOCATED",
+        budget_event_kind="INITIAL_ALLOCATION",
+        budget_context_input=None,
+        canonical_child_index=None,
+        allocation_queue_entries=(),
+        transition_decision=None,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    node_rows = dict(MODE_NODE_TEMPLATE_ROWS_V02)[source_binding.accepted_mode]
+    nodes = tuple(
+        build_runtime_topology_node_v02(
+            seed,
+            source_binding,
+            policy,
+            canonical_index=row[0],
+            node_kind=row[1],
+            depth=0,
+            scope_ref=source_binding.accepted_scope_ref,
+            cell_binding_class=row[2],
+            scope_binding_class=row[3],
+            budget_binding_class=row[4],
+            required_capability_ids=(
+                source_binding.required_downstream_capability_ids
+                if row[5] == ("SRC_CAPS",)
+                else row[5]
+            ),
+            input_ref_derivation_class=row[8],
+        )
+        for row in node_rows
+    )
+    edge_rows = dict(MODE_EDGE_TEMPLATE_ROWS_V02)[source_binding.accepted_mode]
+    edges = tuple(
+        build_runtime_topology_edge_v02(
+            seed,
+            nodes[row[2]],
+            nodes[row[3]],
+            edge_kind=row[4],
+            canonical_index=row[0],
+            cell_projection_class=row[1],
+        )
+        for row in edge_rows
+    )
+    assignment_rows = dict(MODE_ASSIGNMENT_TEMPLATE_ROWS_V02)[source_binding.accepted_mode]
+    assignments = tuple(
+        build_runtime_assignment_v02(
+            seed,
+            nodes[row[1]],
+            assignment_kind=row[2],
+            executor_component_id=row[3],
+            capability_ids=nodes[row[1]].required_capability_ids if row[4] == ("SRC_CAPS",) else row[4],
+            cell_binding_class=row[5],
+            scope_binding_class=row[6],
+            budget_binding_class=row[7],
+        )
+        for row in assignment_rows
+    )
+    return build_runtime_execution_topology_v02(
+        source_binding,
+        seed,
+        policy,
+        nodes=nodes,
+        edges=edges,
+        assignments=assignments,
+        root_cell_id=root_cell_id,
+        global_budget=global_budget,
+        time_envelope_ref=source_binding.source_time_envelope_ref,
+    )
+
+
+def construct_runtime_execution_topology_v02(
+    source_context: FractalRuntimeSourceContextV02,
+) -> RuntimeExecutionTopologyV02:
+    if validate_fractal_runtime_source_context_v02(source_context).status != "PASS":
+        raise ValueError("g2d_source_context_invalid")
+    topology = _construct_runtime_execution_topology_from_source_v02(source_context)
+    if validate_runtime_execution_topology_against_sources_v02(
+        topology,
+        source_context=source_context,
+    ).status != "PASS":
+        raise ValueError("g2d_topology_identity_mismatch")
+    return topology
+
+
+def validate_runtime_execution_topology_against_sources_v02(
+    value: object,
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+) -> FractalRuntimeValidationReportV02:
+    try:
+        context_pass = validate_fractal_runtime_source_context_v02(source_context).status == "PASS"
+        structural_pass = validate_runtime_execution_topology_v02(value).status == "PASS"
+        expected = _construct_runtime_execution_topology_from_source_v02(source_context) if context_pass else None
+        valid = bool(
+            context_pass
+            and structural_pass
+            and type(value) is RuntimeExecutionTopologyV02
+            and value == expected
+            and _canonical_json_bytes_v01(runtime_execution_topology_to_plain_data_v02(value))
+            == _canonical_json_bytes_v01(runtime_execution_topology_to_plain_data_v02(expected))
+        )
+        return build_fractal_runtime_validation_report_v02(
+            validation_target="TOPOLOGY_AGAINST_SOURCES",
+            validated_object_id=value.topology_id if valid else None,
+            failure_stage="NONE" if valid else "TOPOLOGY",
+            reason_codes=() if valid else ("g2d_topology_identity_mismatch",),
+            source_reason_codes=(),
+        )
+    except Exception:
+        return build_fractal_runtime_validation_report_v02(
+            validation_target="TOPOLOGY_AGAINST_SOURCES",
+            validated_object_id=None,
+            failure_stage="TOPOLOGY",
+            reason_codes=("g2d_topology_identity_mismatch",),
+            source_reason_codes=(),
+        )
+
+
+def _topology_payload_v02(topology: RuntimeExecutionTopologyV02) -> dict[str, object]:
+    return {
+        "topology_id": topology.topology_id,
+        "topology_version": topology.topology_version,
+        "topology_seed_id": topology.topology_seed_id,
+        "request_id": topology.request_id,
+        "domain_id": topology.domain_id,
+        "accepted_mode": topology.accepted_mode,
+        "accepted_scope_ref": topology.accepted_scope_ref,
+        "source_binding_id": topology.source_binding_id,
+        "source_root_decision_artifact_id": topology.source_root_decision_artifact_id,
+        "source_proposal_artifact_id": topology.source_proposal_artifact_id,
+        "runtime_policy_id": topology.runtime_policy_id,
+        "ordered_node_ids": list(topology.ordered_node_ids),
+        "ordered_edge_ids": list(topology.ordered_edge_ids),
+        "ordered_assignment_ids": list(topology.ordered_assignment_ids),
+        "root_cell_id": topology.root_cell_id,
+        "global_budget_id": topology.global_budget_id,
+        "root_review_required": topology.root_review_required,
+        "authority_created": topology.authority_created,
+        "permission_created": topology.permission_created,
+        "action_commit_packet_created": topology.action_commit_packet_created,
+        "receipt_created": topology.receipt_created,
+        "final_output_created": topology.final_output_created,
+        "drs_write_created": topology.drs_write_created,
+        "provider_calls": topology.provider_calls,
+        "network_calls": topology.network_calls,
+        "real_world_effects_count": topology.real_world_effects_count,
+    }
+
+
+def _build_topology_artifact_v02(
+    topology: RuntimeExecutionTopologyV02,
+    source_context: FractalRuntimeSourceContextV02,
+) -> KernelArtifactV01:
+    route_plain = _kernel_artifact_to_plain_dict_v01(source_context.route_eligibility_artifact)
+    provisional = _build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id="frabi_topology_v02:" + _ZERO_SHA256,
+        artifact_type="RuntimeExecutionTopology",
+        schema_version="v0.2",
+        transaction_id=topology.transaction_id,
+        owner_root_id=topology.owning_root_id,
+        source_component="fractal_runtime_v02",
+        authority_class="ADVISORY",
+        lifecycle_state="VALIDATED",
+        payload=_topology_payload_v02(topology),
+        trace_refs=topology.trace_refs,
+        parent_refs=(source_context.route_eligibility_artifact.artifact_id,),
+        time_envelope=route_plain["time_envelope"],
+    )
+    material = _kernel_artifact_to_plain_dict_v01(provisional)
+    material.pop("artifact_id")
+    artifact_id = "frabi_topology_v02:" + _domain_separated_sha256_hex_v01(
+        domain="HEDGEHOG_FRACTAL_RUNTIME_TOPOLOGY_KERNEL_ARTIFACT_V02",
+        payload=_canonical_json_bytes_v01(material),
+    )
+    result = _replace(provisional, artifact_id=artifact_id)
+    if _validate_kernel_artifact_v01(result):
+        raise ValueError("g2d_abi_projection_substituted")
+    return result
+
+
+def project_runtime_execution_topology_kernel_artifact_v02(
+    topology: RuntimeExecutionTopologyV02,
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology_transition_decision: TransitionDecisionV01,
+) -> KernelArtifactV01:
+    if validate_runtime_execution_topology_against_sources_v02(
+        topology,
+        source_context=source_context,
+    ).status != "PASS":
+        raise ValueError("g2d_abi_projection_substituted")
+    registry = _build_fractal_runtime_transition_registry_profile_v02()
+    expected_decision = evaluate_route_eligibility_to_topology_transition_v02(
+        source_context=source_context,
+        topology=topology,
+        transition_registry=registry,
+    )
+    if topology_transition_decision != expected_decision:
+        raise ValueError("g2d_transition_decision_substituted")
+    artifact = _build_topology_artifact_v02(topology, source_context)
+    if _validate_fractal_runtime_transition_decision_v02(
+        topology_transition_decision,
+        registry=registry,
+        source_artifact=source_context.route_eligibility_artifact,
+        target_artifact=artifact,
+    ):
+        raise ValueError("g2d_transition_decision_substituted")
+    return artifact
+
+
+def evaluate_route_eligibility_to_topology_transition_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    transition_registry: TransitionRegistryV01,
+) -> TransitionDecisionV01:
+    if validate_fractal_runtime_source_context_v02(source_context).status != "PASS":
+        raise ValueError("g2d_source_context_invalid")
+    if validate_runtime_execution_topology_against_sources_v02(
+        topology,
+        source_context=source_context,
+    ).status != "PASS":
+        raise ValueError("g2d_topology_identity_mismatch")
+    expected_registry = _build_fractal_runtime_transition_registry_profile_v02()
+    if (
+        _validate_fractal_runtime_transition_registry_profile_v02(transition_registry)
+        or transition_registry != expected_registry
+    ):
+        raise ValueError("g2d_transition_profile_invalid")
+    if source_context.root_decision_result.root_commit_created is not True:
+        raise ValueError("g2d_g2c_root_result_invalid")
+    rule = transition_registry.rules[0]
+    provisional = TransitionDecisionV01(
+        decision_id=_ZERO_SHA256,
+        registry_id=transition_registry.registry_id,
+        rule_id=rule.rule_id,
+        abi_major_version=rule.abi_major_version,
+        source_artifact_type=rule.source_artifact_type,
+        source_lifecycle_state=rule.source_lifecycle_state,
+        actor_role=rule.actor_role,
+        attempted_effect=rule.attempted_effect,
+        target_artifact_type=rule.target_artifact_type,
+        required_guards=rule.required_guards,
+        satisfied_guards=rule.required_guards,
+        missing_guards=(),
+        decision=rule.decision,
+        reason_code=rule.reason_code,
+        root_commit_required=rule.root_commit_required,
+        root_commit_present=True,
+        matched=True,
+    )
+    return _replace(
+        provisional,
+        decision_id=_rebuild_fractal_runtime_transition_decision_identity_v02(provisional),
+    )
+
+
+def _derive_settled_planned_root_child_ids_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_transition_decision: TransitionDecisionV01,
+    topology_artifact: KernelArtifactV01,
+) -> tuple[str, ...]:
+    if validate_fractal_runtime_source_context_v02(source_context).status != "PASS":
+        raise ValueError("g2d_source_context_invalid")
+    if validate_runtime_execution_topology_against_sources_v02(
+        topology,
+        source_context=source_context,
+    ).status != "PASS":
+        raise ValueError("g2d_topology_identity_mismatch")
+    registry = _build_fractal_runtime_transition_registry_profile_v02()
+    expected_decision = evaluate_route_eligibility_to_topology_transition_v02(
+        source_context=source_context,
+        topology=topology,
+        transition_registry=registry,
+    )
+    if topology_transition_decision != expected_decision:
+        raise ValueError("g2d_transition_decision_substituted")
+    expected_artifact = project_runtime_execution_topology_kernel_artifact_v02(
+        topology,
+        source_context=source_context,
+        topology_transition_decision=topology_transition_decision,
+    )
+    if topology_artifact != expected_artifact:
+        raise ValueError("g2d_abi_projection_substituted")
+    if topology.accepted_mode != "full_fractal":
+        return ()
+    if CHILD_SLOT_INDEX_ROWS_V02 != (
+        (1, "PREDECESSOR_AND_CHILD_SLOT_1", 1, 0, 0),
+        (2, "PREDECESSOR_AND_CHILD_SLOT_2", 2, 1, 1),
+    ):
+        raise ValueError("g2d_child_cell_identity_invalid")
+    selected_profile_id = source_context.proposal.selected_local_mode_profile_id
+    if type(selected_profile_id) is not str:
+        raise ValueError("g2d_child_cell_identity_invalid")
+    result = tuple(
+        derive_fractal_child_cell_id_v02(
+            topology_seed_id=topology.topology_seed_id,
+            parent_cell_id=topology.root_cell_id,
+            canonical_child_index=row[4],
+            accepted_mode=topology.accepted_mode,
+            selected_local_mode_profile_id=selected_profile_id,
+            source_mode_profile_set_id=(
+                source_context.router_input.local_routing_snapshot.mode_profile_set_id
+            ),
+            child_scope_ref=topology.accepted_scope_ref,
+            runtime_policy_id=topology.runtime_policy_id,
+            required_capability_ids=(
+                source_context.proposal.required_downstream_capability_ids
+            ),
+            forbidden_claims=source_context.runtime_policy.forbidden_claims,
+            child_depth=1,
+        )
+        for row in CHILD_SLOT_INDEX_ROWS_V02
+    )
+    if len(result) != 2 or len(set(result)) != 2:
+        raise ValueError("g2d_child_cell_identity_invalid")
+    return result

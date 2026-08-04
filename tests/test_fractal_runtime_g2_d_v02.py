@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 from dataclasses import FrozenInstanceError, fields, replace
+from datetime import datetime, timezone
 from decimal import Decimal
 import hashlib
 import importlib
@@ -14,7 +15,29 @@ from types import SimpleNamespace
 import pytest
 from jsonschema import Draft202012Validator, ValidationError
 
-from hedgehog.kernel.abi_v01 import KernelArtifactV01, build_kernel_artifact_v01
+import hedgehog.context_packets as context_packets
+import hedgehog.drs_g2b_compatibility_v01 as drs_compatibility
+import hedgehog.drs_memory_resolution_v01 as drs_resolution
+import hedgehog.drs_semantic_address_v01 as drs_semantic
+import hedgehog.reuse_certificate_v01 as reuse_certificate
+import hedgehog.structured_rationale as structured_rationale
+from hedgehog.evidence import external_anchor_v01 as external_anchor
+from hedgehog.evidence import sealed_evidence_profile_v01 as evidence_profile
+from hedgehog.evidence import sealed_package_v01 as sealed_package
+from hedgehog.evidence import sealed_replay_evidence_v01 as sealed_replay
+import hedgehog.kernel.execution_mode_router_v01 as g2c
+import hedgehog.kernel.root_decision_v01 as root_decision
+import hedgehog.kernel.semantic_work_v01 as semantic_work
+import hedgehog.kernel.transition_registry_v01 as transition_registry
+from hedgehog.kernel.trust_model_v01 import (
+    build_default_component_trust_profiles_v01,
+)
+from hedgehog.kernel.abi_v01 import (
+    KernelArtifactV01,
+    build_kernel_artifact_v01,
+    kernel_artifact_to_plain_dict_v01,
+    validate_kernel_artifact_v01,
+)
 from hedgehog.kernel.integrity_replay_v01 import (
     canonical_json_bytes_v01,
     domain_separated_sha256_hex_v01,
@@ -834,7 +857,7 @@ def test_d1_static_surface_schema_import() -> None:
         name for name, value in vars(fr).items()
         if not name.startswith("_") and inspect.isfunction(value) and value.__module__ == fr.__name__
     ]
-    assert len(public_functions) == 74
+    assert len(public_functions) == 81
     preflight = PREFLIGHT_PATH.read_text(encoding="utf-8")
     expected_rows = re.findall(r"^\|\s*(\d+)\s*\|\s*D1\s*\|\s*`([^`]+)`\s*\|$", preflight, re.MULTILINE)
     assert len(expected_rows) == 74
@@ -845,7 +868,7 @@ def test_d1_static_surface_schema_import() -> None:
         current = actual[signature.split("(", 1)[0]]
         assert ast.dump(current.args, include_attributes=False) == ast.dump(expected.args, include_attributes=False)
         assert ast.dump(current.returns, include_attributes=False) == ast.dump(expected.returns, include_attributes=False)
-    future_names = re.findall(r"^\|\s*(?:7[5-9]|[89]\d|1(?:0\d|1[0-6]))\s*\|\s*D[2-4T]\s*\|\s*`([a-z0-9_]+)\(", preflight, re.MULTILINE)
+    future_names = re.findall(r"^\|\s*(?:8[2-9]|9\d|1(?:0\d|1[0]))\s*\|\s*D[3-4]\s*\|\s*`([a-z0-9_]+)\(", preflight, re.MULTILINE)
     assert future_names and not any(callable(getattr(fr, name, None)) for name in future_names)
     assert not any(hasattr(importlib.import_module("hedgehog.kernel"), name) for name in public_functions)
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -1866,3 +1889,1395 @@ def test_d1_import_and_zero_operation_boundary() -> None:
     assert fr.D1_MODULE_PUBLIC_FUNCTION_COUNT == 74
     assert fr.TOTAL_G2D_TYPE_COUNT == 20
     assert fr.SCHEMA_DEFINITION_COUNT == 18
+
+
+_D2_TIME = 1785542400
+_D2_VALID_TO = 1785546000
+_D2_UTC = "2026-08-01T00:00:00+00:00"
+_D2_VALID_TO_UTC = "2026-08-01T01:00:00+00:00"
+
+
+def _d2_bsep(mode: str, request_id: str, domain_id: str) -> dict[str, dict[str, object]]:
+    label = mode.replace("_", "-")
+    route_id = f"route:g2d2:{label}"
+    proposal_id = f"proposal:g2d2:{label}"
+    vector_ids = (f"vector:g2d2:{label}",)
+    guards = ("guard:g2d2:root-review",)
+    business = context_packets.build_business_request_context_packet(
+        packet_id=f"context_packet:g2d2:{label}:business",
+        created_by="runtime:g2d2:test",
+        domain=domain_id,
+        request_id=request_id,
+        business_subject="bounded_runtime_topology",
+        requested_action="root_review",
+        user_visible_summary="Bounded topology source review.",
+    )
+    business_ref = {
+        "source": "G2C_BUSINESS_REQUEST_CONTEXT_PACKET_V01",
+        "packet_id": business["packet_id"],
+        "request_id": request_id,
+        "domain_id": domain_id,
+    }
+    route = context_packets.build_orchestrator_route_context_packet(
+        packet_id=f"context_packet:g2d2:{label}:route",
+        created_by="runtime:g2d2:test",
+        source_refs=(business_ref,),
+        domain=domain_id,
+        allowed_routes=(route_id,),
+        required_guards=guards,
+        selected_vector_ids=vector_ids,
+        route_validation_expectations={
+            "root_review_required": True,
+            "selected_only_allowed_vectors": True,
+        },
+        orchestrator_is_root=False,
+        creates_action_commit_packet=False,
+        calls_connectors=False,
+    )
+    proposal: dict[str, object] = {
+        "proposal_id": proposal_id,
+        "suggested_route": route_id,
+        "selected_vector_ids": vector_ids,
+        "required_guards": guards,
+        "reason": "Bounded deterministic topology review is required.",
+        "confidence": 0.66,
+        "needs_review": True,
+        "uncertainty_notes": ("Source evidence remains advisory.",),
+        "root_review_required": True,
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "plan_graph_claimed": False,
+        "bypass_root_claimed": False,
+        "semantic_observations": ("A bounded topology route is available.",),
+        "route_reasoning": ("Use deterministic mode selection.",),
+        "rejected_route_reasoning": ("Unsupported action remains forbidden.",),
+        "guard_reasoning": ("Root review remains mandatory.",),
+        "vector_reasoning": ("The bounded vector matches the request.",),
+        "authority_boundary_reasoning": ("Root remains final authority.",),
+    }
+    rationale = structured_rationale.build_orchestrator_structured_rationale(
+        observed_semantics=proposal["semantic_observations"],
+        route_selection_reason=proposal["route_reasoning"],
+        rejected_routes=proposal["rejected_route_reasoning"],
+        required_guards_reasoning=proposal["guard_reasoning"],
+        selected_vector_reasoning=proposal["vector_reasoning"],
+        uncertainty_notes=proposal["uncertainty_notes"],
+        authority_boundary=proposal["authority_boundary_reasoning"],
+        root_review_required=True,
+    )
+    rationale_sha = hashlib.sha256(canonical_json_bytes_v01(rationale)).hexdigest()
+
+    def item(text: str, kind: str) -> dict[str, object]:
+        return context_packets.semantic_evidence_item(
+            text,
+            source="runtime_canonicalization",
+            evidence_kind=kind,
+            confidence_label="medium",
+        )
+
+    packet = context_packets.build_bounded_semantic_evidence_packet(
+        packet_id=f"context_packet:g2d2:{label}:bsep",
+        source_refs=(business_ref,),
+        domain=domain_id,
+        source_role="orchestrator",
+        target_role="architect",
+        source_route_id=route_id,
+        source_proposal_id=proposal_id,
+        source_context_packet_id=route["packet_id"],
+        source_structured_rationale_ref="structured_rationale_v01:" + rationale_sha,
+        observed_semantic_facts=(item("A bounded route is present.", "observed_fact"),),
+        missing_evidence=(item("Root review is pending.", "missing_evidence"),),
+        uncertainty_notes=(item("Source evidence remains advisory.", "uncertainty"),),
+        risk_boundary_notes=(item("No action authority is present.", "risk_boundary"),),
+        rejected_action_routes=(item("Unsupported action is forbidden.", "rejected_route"),),
+        required_approvals_or_conditions=(item("Root review is required.", "approval_condition"),),
+        authority_boundary_notes=(item("Root remains final authority.", "authority_boundary"),),
+        selected_vector_ids=vector_ids,
+        required_guards=guards,
+    )
+    return {
+        "business": business,
+        "route": route,
+        "proposal": proposal,
+        "rationale": rationale,
+        "packet": packet,
+    }
+
+
+def _d2_replay_family(
+    *,
+    mode: str,
+    request_id: str,
+    domain_id: str,
+) -> dict[str, object]:
+    label = mode.replace("_", "-")
+    kernel_hash = hashlib.sha256(
+        canonical_json_bytes_v01((domain_id, request_id, "sealed_replay"))
+    ).hexdigest()
+    programme = evidence_profile.build_programme_evidence_identity_v01(
+        programme_id=f"g2d2_{label}_programme_v01",
+        programme_version="v0.1",
+    )
+    execution = evidence_profile.build_domain_execution_identity_v01(
+        programme_identity=programme,
+        domain_id=domain_id,
+        execution_head="abcdef1",
+        source_task_id=f"task:g2d2:{label}",
+        run_id=f"run:g2d2:{label}",
+        report_id=f"report:g2d2:{label}",
+    )
+    attempt = evidence_profile.build_live_attempt_identity_v01(
+        programme_identity=programme,
+        domain_execution_identity=execution,
+        attempt_number=1,
+        package_id=f"package:g2d2:{label}",
+        logical_package_ref=f"g2d2/{label}",
+        output_directory_ref=f"g2d2/{label}/output",
+        provider_mode="deterministic_fixture",
+        model_id="none",
+        expected_actor_count=1,
+        provider_call_budget=0,
+    )
+    source = evidence_profile.build_safe_source_record_v01(
+        source_id=f"source:g2d2:{label}:replay",
+        source_type="g2d2_replay_fixture",
+        evidence_class="CRYPTOGRAPHIC_INTEGRITY",
+        canonical_projection={"domain": domain_id, "hash": kernel_hash},
+        media_type="application/json",
+        trace_refs=(kernel_hash,),
+        contains_raw_prompt=False,
+        contains_raw_provider_response=False,
+        secret_scan_passed=True,
+        observed_provider_call_count=0,
+        observed_network_call_count=0,
+        observed_gemini_call_count=0,
+        real_world_effects_count=0,
+    )
+    artifact = evidence_profile.build_evidence_artifact_record_v01(
+        artifact_id=f"artifact:g2d2:{label}:replay",
+        artifact_type="g2d2_replay_fixture",
+        evidence_class="CRYPTOGRAPHIC_INTEGRITY",
+        source_record_ids=(source.source_record_id,),
+        canonical_projection={"domain": domain_id, "hash": kernel_hash},
+        authority_class="evidence_only",
+        owner_root_id=None,
+        trace_refs=(kernel_hash,),
+        created_authority_count=0,
+        created_permission_count=0,
+        real_world_effects_count=0,
+    )
+    projection = evidence_profile.build_domain_evidence_projection_v01(
+        programme_identity=programme,
+        domain_execution_identity=execution,
+        attempt_identity=attempt,
+        source_records=(source,),
+        artifact_records=(artifact,),
+        kernel_artifact_refs=(),
+        causal_consumption_refs=(),
+        evidence_refs=(f"evidence:g2d2:{label}:replay",),
+        limitation_refs=("limitation:g2d2:local-only",),
+    )
+    content = canonical_json_bytes_v01(
+        {"domain": domain_id, "hash": kernel_hash}
+    ) + b"\n"
+    file_record = sealed_package.build_safe_file_record_v01(
+        logical_path=f"evidence/{label}.json",
+        media_type="application/json",
+        content_bytes=content,
+        evidence_class="CRYPTOGRAPHIC_INTEGRITY",
+        source_record_ids=(source.source_record_id,),
+        terminal_newline_required=True,
+        secret_scan_passed=True,
+    )
+    manifest = sealed_package.build_sealed_package_manifest_v01(
+        domain_projection=projection,
+        safe_file_records=(file_record,),
+        safe_file_contents=(content,),
+        kernel_manifest_hash=kernel_hash,
+    )
+    publication = external_anchor.build_external_anchor_publication_v01(
+        manifest=manifest,
+        domain_projection=projection,
+        safe_file_contents=(content,),
+        publication_base_head="abcdef1",
+    )
+    verification = external_anchor.build_anchored_package_verification_v01(
+        anchor_publication=publication,
+        manifest=manifest,
+        domain_projection=projection,
+        safe_file_contents=(content,),
+        supplied_anchor_publication_id=publication.anchor_publication_id,
+    )
+    replay = sealed_replay.build_sealed_replay_evidence_v01(
+        source_manifest=manifest,
+        source_domain_projection=projection,
+        source_safe_file_contents=(content,),
+        anchor_publication=publication,
+        anchored_verification=verification,
+        supplied_anchor_publication_id=publication.anchor_publication_id,
+        reconstructed_manifest=manifest,
+        reconstructed_domain_projection=projection,
+        reconstructed_safe_file_contents=(content,),
+        evidence_refs=(
+            f"evidence:g2d2:{label}:replay",
+            f"anchor:g2d2:{label}",
+        ),
+    )
+    return {
+        "replay": replay,
+        "manifest": manifest,
+        "projection": projection,
+        "contents": (content,),
+        "publication": publication,
+        "verification": verification,
+    }
+
+
+def _d2_memory_family(
+    *,
+    request_id: str,
+    domain_id: str,
+    root_id: str,
+    scope_ref: str,
+    direct: bool = False,
+) -> dict[str, object]:
+    address = drs_semantic.build_semantic_address_v01(
+        namespace="g2d2_v02",
+        domain=domain_id,
+        subject_class="bounded_information",
+        intent_class="informational_summary",
+        meaning_schema_id="drs_meaning_record",
+        meaning_schema_version="v0.1",
+    )
+    scope_sha256 = hashlib.sha256(scope_ref.encode("utf-8")).hexdigest()
+    envelope = drs_semantic.build_drs_time_envelope_v01(
+        pt_created_at=_D2_TIME,
+        kt_as_of=_D2_TIME,
+        et_observed_at=_D2_TIME,
+        ct_context_anchor=_D2_TIME,
+        ttl_seconds=3600,
+        valid_from=_D2_TIME,
+        valid_to=_D2_VALID_TO,
+        source_observed_at=_D2_TIME,
+        source_reported_at=_D2_TIME,
+        system_ingested_at=_D2_TIME,
+        system_verified_at=_D2_TIME,
+        freshness_policy_id="freshness:g2d2:v01",
+    )
+    authority = drs_semantic.build_drs_authority_envelope_v01(
+        authority_class="ROOT_ACCEPTED_WORK" if direct else "ROOT_ACCEPTED_CONTEXT",
+        owning_local_root_id=root_id,
+        source_root_decision_input_id="root-input:g2d2:memory",
+        source_root_decision_id="root-decision:g2d2:memory",
+        source_root_decision_hash=hashlib.sha256(b"g2d2-memory-root").hexdigest(),
+        authority_scope_fingerprint=scope_sha256,
+        root_acceptance_state="ACCEPTED_WORK" if direct else "ACCEPTED_CONTEXT",
+        recording_component="fractal_runtime_g2d2_test",
+    )
+    record = drs_semantic.build_meaning_record_v01(
+        semantic_address=address,
+        predecessor_record_id=None,
+        supersession_reason=None,
+        safe_summary="Bounded deterministic context for topology routing.",
+        semantic_tags=("bounded", "g2d2"),
+        resonance_reason="Exact deterministic semantic-address match.",
+        memory_pointers=(),
+        artifact_pointers=(),
+        source_reference_ids=("source:g2d2:memory",),
+        lineage_edges=(),
+        time_envelope=envelope,
+        authority_envelope=authority,
+        persistent_lifecycle_state="ACTIVE",
+        risk_hints=(),
+        conflict_hints=(),
+        reuse_policy_class="ANSWER_SHORTCUT" if direct else "CONTEXT_ONLY",
+        policy_version="policy:g2d2:memory:v01",
+        schema_versions=("v0.1",),
+        content_fingerprint=hashlib.sha256(b"g2d2-memory-record").hexdigest(),
+        recording_component="fractal_runtime_g2d2_test",
+    )
+    query = drs_resolution.build_drs_temporal_query_v01(
+        query_mode="DIRECT_REUSE_CANDIDATE" if direct else "MEMORY_CONTEXT_ONLY",
+        semantic_address_id=address.semantic_address_id,
+        scope_fingerprint=scope_sha256,
+        as_of=_D2_TIME,
+        evaluation_time=_D2_TIME,
+        evaluation_time_source=(
+            "INJECTED_CURRENT_DECISION_TIME" if direct else "INJECTED_ANALYSIS_TIME"
+        ),
+        time_range_start=_D2_TIME,
+        time_range_end=_D2_VALID_TO,
+        required_time_axes=(
+            ("PT", "KT", "ET", "CT", "TTL", "VALIDITY")
+            if direct else ("KT", "TTL", "VALIDITY")
+        ),
+        freshness_policy_id="freshness:g2d2:v01",
+        max_age_seconds=3600,
+        domain=domain_id,
+        risk_class="LOW",
+        reuse_intent=(
+            "INFORMATIONAL_SHORTCUT_CONSIDERATION" if direct else "CONTEXT"
+        ),
+        requested_reuse_classes=("ANSWER_SHORTCUT",) if direct else ("CONTEXT_ONLY",),
+        required_evidence_classes=(
+            "SOURCE_IDENTITY", "SOURCE_INTEGRITY", "PROVENANCE_CHAIN",
+            "TIME_FITNESS", "POLICY_COMPATIBILITY", "SCHEMA_COMPATIBILITY",
+            "CONFLICT_CLEARANCE", "ROOT_DECISION", "SOURCE_HISTORY",
+        ),
+        forbidden_changes=("POLICY_CHANGED",),
+        policy_version="policy:g2d2:memory:v01",
+        schema_versions=("v0.1",),
+        owning_local_root_id=root_id,
+    )
+    evaluation = drs_resolution.evaluate_drs_candidate_v01(
+        semantic_address=address,
+        query=query,
+        meaning_record=record,
+        action_history_binding=None,
+    )
+    legacy = {
+        "record_id": "legacy:g2d2:memory",
+        "layer": "work",
+        "type": "generic",
+        "domain": domain_id,
+        "content": {"summary": "Bounded deterministic memory context."},
+        "time_envelope": {
+            "pt_created_at": "2026-08-01T00:00:00Z",
+            "kt_asof": "2026-08-01T00:00:00Z",
+            "et_observed_at": "2026-08-01T00:00:00Z",
+            "ct_session_anchor": "case:g2d2:memory",
+            "ttl_seconds": 3600,
+            "freshness_class": "static",
+            "valid_from": "2026-08-01T00:00:00Z",
+            "valid_to": "2026-08-01T01:00:00Z",
+        },
+        "provenance": {
+            "request_id": request_id,
+            "created_by": "root_orchestrator",
+            "trace_refs": [],
+        },
+        "status": "active",
+    }
+    projection = drs_compatibility.build_legacy_drs_projection_v01(
+        source_family="LOCAL_DRS_DICT",
+        source=legacy,
+        target_semantic_address=address,
+    )
+    budget = drs_resolution.build_memory_descent_budget_v01(
+        max_depth=0,
+        max_records_opened=1,
+        max_pointers_opened=0,
+        max_artifacts_opened=0,
+        max_bytes_opened=0,
+        max_lineage_edges=0,
+        max_conflict_records=0,
+    )
+    plan = drs_resolution.build_retrieval_plan_v01(
+        query_id=query.query_id,
+        semantic_address_id=address.semantic_address_id,
+        proposed_record_ids=(record.meaning_record_id,),
+        proposed_memory_pointer_ids=(),
+        proposed_artifact_pointer_ids=(),
+        requested_descent_class="SUMMARY_ONLY",
+        proposed_budget_id=budget.memory_descent_budget_id,
+        required_access_policy_ids=(),
+        reason_codes=(),
+    )
+    common_report = {
+        "semantic_address": address,
+        "query": query,
+        "source_projections": (projection,),
+        "source_records": (record,),
+        "query_evaluations": (evaluation,),
+        "retrieval_plan": plan,
+        "memory_descent_result": None,
+        "historical_only_record_ids": (),
+        "warning_only_record_ids": (),
+        "rerun_required_record_ids": (),
+        "blocked_record_ids": (),
+        "provider_calls": 0,
+        "network_calls": 0,
+        "gemini_calls": 0,
+        "external_drs_calls": 0,
+        "connector_calls": 0,
+        "real_world_effects_count": 0,
+        "final_status": "PASS",
+        "reason_codes": (),
+    }
+    if not direct:
+        report = drs_resolution.build_drs_resolution_report_v01(
+            **common_report,
+            eligible_candidates=(),
+            ranked_candidate_ids=(),
+            selected_candidate_id=None,
+            root_shortcut_projection=None,
+            reuse_certificate=None,
+            context_only_record_ids=(record.meaning_record_id,),
+        )
+        return {
+            "transaction_id": query.query_id,
+            "report": report,
+            "projections": (projection,),
+            "use_time": _D2_TIME,
+        }
+
+    candidate = drs_resolution.build_resolution_candidate_v01(
+        query_id=query.query_id,
+        semantic_address_id=query.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        safe_summary=record.safe_summary,
+        evidence_ref_ids=record.source_reference_ids,
+        source_history_hash=evaluation.source_history_hash,
+        action_history_binding_id=None,
+        semantic_similarity_units=9000,
+        freshness_units=evaluation.current_freshness_units,
+        source_authority_prior_units=9000,
+        lineage_proximity_units=7000,
+        historical_utility_units=6000,
+        gt_advisory_prior_units=1000,
+        conflict_penalty_units=0,
+        risk_penalty_units=0,
+        retrieval_cost_units=100,
+    )
+    ranked = drs_resolution.rank_eligible_drs_candidates_v01(
+        query=query,
+        query_evaluations=(evaluation,),
+        candidates=(candidate,),
+    )
+    claim_preimage = {
+        "profile_version": "v0.1",
+        "semantic_address_id": address.semantic_address_id,
+        "meaning_record_id": record.meaning_record_id,
+        "query_id": query.query_id,
+        "query_evaluation_id": evaluation.query_evaluation_id,
+        "resolution_candidate_id": candidate.resolution_candidate_id,
+        "reuse_class": "ANSWER_SHORTCUT",
+        "case_type": "NON_ACTION_INFORMATIONAL",
+        "scope_fingerprint": query.scope_fingerprint,
+        "policy_version": query.policy_version,
+        "schema_versions": list(query.schema_versions),
+        "required_evidence_classes": list(query.required_evidence_classes),
+        "observed_evidence_fingerprint": evaluation.observed_evidence_fingerprint,
+        "forbidden_changes": list(query.forbidden_changes),
+        "checked_dependency_fingerprint": evaluation.checked_dependency_fingerprint,
+        "source_history_hash": evaluation.source_history_hash,
+        "action_history_binding_id": None,
+        "valid_from": _D2_TIME,
+        "valid_to": _D2_VALID_TO,
+        "issued_at": _D2_TIME,
+        "evaluated_at": evaluation.evaluated_at,
+        "root_shortcut_policy_ref": "policy:drs_answer_shortcut:v0.1",
+    }
+    actor_id = "actor:g2d2:direct-reuse"
+    work_request = semantic_work.build_semantic_work_request_v01(
+        request_id="semantic-work-request:g2d2:direct-reuse",
+        transaction_id=query.query_id,
+        target_root_id=root_id,
+        runtime_topology_ref="g2d2:runtime_topology:not_created",
+        bounded_context_refs=("context:g2d2:direct-reuse",),
+        permitted_actor_ids=(actor_id,),
+        permitted_contribution_modes=("DETERMINISTIC",),
+        requested_subjects=(address.semantic_address_id,),
+        required_evidence_classes=("ROOT_SHORTCUT_BINDING",),
+        forbidden_claims=("create_permission",),
+    )
+    evidence = semantic_work.build_evidence_binding_v01(
+        evidence_id="evidence-binding:g2d2:direct-reuse",
+        evidence_ref="evidence:g2d2:direct-reuse",
+        evidence_class="ROOT_SHORTCUT_BINDING",
+        source_component_id=actor_id,
+        provenance_ref="provenance:g2d2:direct-reuse",
+        evidence_state=semantic_work.EVIDENCE_STATE_PRESENT,
+    )
+    claim = semantic_work.build_normalized_claim_v01(
+        claim_id=candidate.resolution_candidate_id,
+        subject=address.semantic_address_id,
+        predicate="authorize_non_action_informational_answer_shortcut_v01",
+        object_or_value=claim_preimage,
+        time_envelope_ref="time-envelope:g2d2:direct-reuse",
+        provenance_refs=("provenance:g2d2:direct-reuse",),
+        evidence_refs=(evidence.evidence_id,),
+        confidence_micros=1000000,
+        source_role="deterministic_runtime",
+        source_mode="DETERMINISTIC",
+    )
+    contribution = semantic_work.build_actor_contribution_v01(
+        contribution_id="contribution:g2d2:direct-reuse",
+        request_id=work_request.request_id,
+        actor_id=actor_id,
+        actor_role="deterministic_runtime",
+        contribution_mode="DETERMINISTIC",
+        bsep_projection_ref="bsep:g2d2:direct-reuse",
+        scope=address.semantic_address_id,
+        bounded_context_refs=("context:g2d2:direct-reuse",),
+        claims=(claim,),
+        evidence_bindings=(evidence,),
+        constraint_bindings=(),
+        uncertainty_bindings=(),
+        requested_validators=(),
+        forbidden_claims_observed=(),
+    )
+    review_packet = semantic_work.build_root_review_packet_from_contributions_v01(
+        request=work_request,
+        contributions=(contribution,),
+        trust_profiles=build_default_component_trust_profiles_v01(),
+    )
+    root_kernel = root_decision.build_root_decision_kernel_v01()
+    root_input = root_decision.build_root_decision_input_v01(
+        transaction_id=query.query_id,
+        target_root_id=root_id,
+        root_review_packet=review_packet,
+        post_vv_bundle={
+            "bundle_id": "post-vv:g2d2:direct-reuse",
+            "post_vv_passed": True,
+            "validated_candidate_ids": [candidate.resolution_candidate_id],
+            "rejected_candidate_ids": [],
+            "required_evidence_refs": [],
+            "provided_evidence_refs": [],
+            "hard_failure_reasons": [],
+        },
+        gt_advisory={
+            "advisory_id": "gt:g2d2:direct-reuse",
+            "candidate_ids": [candidate.resolution_candidate_id],
+            "selected_candidate_id": candidate.resolution_candidate_id,
+            "score_micros_by_candidate": {candidate.resolution_candidate_id: 500000},
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "target_artifact_type": "RootDecision",
+            "advisory_only": True,
+            "creates_final_output": False,
+            "requests_effect": False,
+        },
+        policy_state={
+            "policy_id": "policy:g2d2:direct-reuse",
+            "identity_passed": True,
+            "scope_passed": True,
+            "hard_policy_passed": True,
+            "allow_accept": True,
+            "conflict_policy": "DEFER",
+            "no_candidate_policy": "NO_UPDATE",
+        },
+        permission_state={
+            "permission_required": False,
+            "user_permission_present": False,
+            "permission_scope_valid": True,
+            "permission_ref": None,
+        },
+        temporal_state={
+            "temporal_valid": True,
+            "expired": False,
+            "not_before_satisfied": True,
+            "time_envelope_ref": "time-envelope:g2d2:direct-reuse",
+        },
+        conflict_state={
+            "material_unresolved_conflict": False,
+            "conflict_set_ids": [],
+        },
+        prior_root_state={
+            "prior_decision_id": None,
+            "prior_decision": None,
+            "prior_selected_candidate_id": None,
+        },
+    )
+    root_result = root_decision.decide_root_v01(
+        kernel=root_kernel,
+        decision_input=root_input,
+    )
+    assert root_result.decision == "ACCEPT"
+    root_hash = domain_separated_sha256_hex_v01(
+        domain="hedgehog:drs:root_shortcut_root_result_binding:v01",
+        payload=canonical_json_bytes_v01(
+            root_decision.root_decision_result_to_plain_dict_v01(root_result)
+        ),
+    )
+    root_projection = reuse_certificate.build_root_shortcut_authorization_projection_v01(
+        owning_local_root_id=root_id,
+        root_kernel_id=root_kernel.kernel_id,
+        root_decision_input_id=root_input.decision_input_id,
+        root_decision_id=root_result.decision_id,
+        root_decision_hash=root_hash,
+        selected_candidate_id=candidate.resolution_candidate_id,
+        semantic_address_id=address.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_id=query.query_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        allowed_reuse_class="ANSWER_SHORTCUT",
+        scope_fingerprint=scope_sha256,
+        policy_version=query.policy_version,
+        schema_versions=query.schema_versions,
+        valid_from=_D2_TIME,
+        valid_to=_D2_VALID_TO,
+        root_shortcut_policy_ref="policy:drs_answer_shortcut:v0.1",
+    )
+    certificate = reuse_certificate.build_reuse_certificate_v01(
+        semantic_address_id=address.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_id=query.query_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        resolution_candidate_id=candidate.resolution_candidate_id,
+        root_shortcut_authorization_projection=root_projection,
+        case_type="NON_ACTION_INFORMATIONAL",
+        required_evidence_classes=query.required_evidence_classes,
+        observed_evidence_fingerprint=evaluation.observed_evidence_fingerprint,
+        forbidden_changes=query.forbidden_changes,
+        checked_dependency_fingerprint=evaluation.checked_dependency_fingerprint,
+        valid_from=_D2_TIME,
+        valid_to=_D2_VALID_TO,
+        reuse_class="ANSWER_SHORTCUT",
+        source_history_hash=evaluation.source_history_hash,
+        action_history_binding_id=None,
+        issued_at=_D2_TIME,
+        evaluated_at=evaluation.evaluated_at,
+    )
+    report = drs_resolution.build_drs_resolution_report_v01(
+        **common_report,
+        eligible_candidates=(candidate,),
+        ranked_candidate_ids=tuple(
+            item.resolution_candidate_id for item in ranked
+        ),
+        selected_candidate_id=candidate.resolution_candidate_id,
+        root_shortcut_projection=root_projection,
+        reuse_certificate=certificate,
+        context_only_record_ids=(),
+    )
+    assert reuse_certificate.validate_existing_root_shortcut_decision_v01(
+        resolution_report=report,
+        root_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+        use_time=_D2_TIME,
+    ) == (True, ())
+    return {
+        "transaction_id": query.query_id,
+        "report": report,
+        "projections": (projection,),
+        "use_time": _D2_TIME,
+        "root_kernel": root_kernel,
+        "root_input": root_input,
+        "root_result": root_result,
+    }
+
+
+def _d2_source_context(
+    *,
+    bsep: dict[str, dict[str, object]],
+    snapshot: g2c.ExecutionModeLocalRoutingSnapshotV01,
+    memory: dict[str, object] | None,
+    replay: dict[str, object] | None = None,
+) -> g2c.ExecutionModeSourceContextV01:
+    memory = memory or {}
+    replay = replay or {}
+    return g2c.build_execution_mode_source_context_v01(
+        business_request_context_packet=bsep["business"],
+        bsep_packet=bsep["packet"],
+        bsep_route_context_packet=bsep["route"],
+        bsep_orchestrator_proposal=bsep["proposal"],
+        bsep_structured_rationale=bsep["rationale"],
+        sealed_replay_evidence=replay.get("replay"),
+        replay_source_manifest=replay.get("manifest"),
+        replay_source_domain_projection=replay.get("projection"),
+        replay_source_safe_file_contents=replay.get("contents", ()),
+        replay_anchor_publication=replay.get("publication"),
+        replay_anchored_verification=replay.get("verification"),
+        replay_supplied_anchor_publication_id=(
+            replay["publication"].anchor_publication_id if replay else None
+        ),
+        replay_reconstructed_manifest=replay.get("manifest"),
+        replay_reconstructed_domain_projection=replay.get("projection"),
+        replay_reconstructed_safe_file_contents=replay.get("contents", ()),
+        g2a_inspection=None,
+        g2a_registry=None,
+        g2a_packet_id=None,
+        g2a_corridor=None,
+        g2a_corridor_step=None,
+        g2a_current_dependency_observations=(),
+        g2a_logical_time_bridge=None,
+        g2a_evaluation_time=snapshot.evaluation_time_epoch_seconds,
+        g2a_evaluation_time_source=snapshot.created_by,
+        g2a_evaluation_context_id=snapshot.local_routing_snapshot_id,
+        g2a_transition_registry_profile=None,
+        g2b_resolution_report=memory.get("report"),
+        g2b_compatibility_projections=memory.get("projections", ()),
+        g2b_use_time=memory.get("use_time"),
+        g2b_root_kernel=memory.get("root_kernel"),
+        g2b_root_decision_input=memory.get("root_input"),
+        g2b_root_decision_result=memory.get("root_result"),
+        g2b_writeback_evidence=None,
+    )
+
+
+def _d2_g2c_family(
+    mode: str,
+    *,
+    narrow: bool = False,
+    action_packet_required: bool = False,
+    review_action: str | None = None,
+    reject_for_g2d: bool = False,
+    root_id_override: str | None = None,
+    domain_id_override: str | None = None,
+) -> dict[str, object]:
+    request_id = f"request:g2d2:{mode}"
+    domain_id = domain_id_override or "G2D2_RUNTIME_TOPOLOGY"
+    root_id = root_id_override or "root:g2d2"
+    scope_ref = f"scope:g2d2:{mode}"
+    memory = (
+        _d2_memory_family(
+            request_id=request_id,
+            domain_id=domain_id,
+            root_id=root_id,
+            scope_ref=scope_ref,
+            direct=mode == "direct_informational_reuse",
+        )
+        if mode in {"memory_informed", "direct_informational_reuse"}
+        else None
+    )
+    replay = (
+        _d2_replay_family(
+            mode=mode,
+            request_id=request_id,
+            domain_id=domain_id,
+        )
+        if mode == "sealed_replay"
+        else None
+    )
+    transaction_id = memory["transaction_id"] if memory else f"transaction:g2d2:{mode}"
+    profiles = []
+    selected_index = (
+        g2c.EXECUTABLE_EXECUTION_MODES_V01.index(mode)
+        if mode in g2c.EXECUTABLE_EXECUTION_MODES_V01
+        else 0
+    )
+    for index, candidate in enumerate(g2c.EXECUTABLE_EXECUTION_MODES_V01):
+        not_required = candidate in {"sealed_replay", "direct_informational_reuse"}
+        profiles.append(g2c.build_execution_mode_local_mode_profile_v01(
+            request_id=request_id,
+            transaction_id=transaction_id,
+            owning_root_id=root_id,
+            domain_id=domain_id,
+            mode=candidate,
+            policy_snapshot_id=f"policy:g2d2:{mode}",
+            capability_snapshot_id=f"capabilities:g2d2:{mode}",
+            cost_model_id="cost:g2d2:v01",
+            policy_allowed=index >= selected_index,
+            scope_allowed=True,
+            risk_allowed=True,
+            privacy_allowed=True,
+            capability_state="NOT_REQUIRED" if not_required else "AVAILABLE",
+            capability_id=None if not_required else f"capability:g2d2:{candidate}",
+            cost_units=index + 1,
+        ))
+    accepted_scope = f"{scope_ref}:narrow"
+    snapshot = g2c.build_execution_mode_local_routing_snapshot_v01(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=root_id,
+        domain_id=domain_id,
+        request_class="BOUNDED_FRACTAL_REQUIRED" if mode == "full_fractal" else "BOUNDED_REVIEW",
+        action_class="ACTION" if action_packet_required else "NON_ACTION",
+        action_packet_relation="NEW_ACTION_NO_PACKET" if action_packet_required else "NOT_APPLICABLE",
+        scope_class="BOUNDED",
+        scope_ref=scope_ref,
+        permitted_narrower_scope_refs=(accepted_scope,) if narrow else (),
+        risk_class="LOW",
+        policy_snapshot_id=f"policy:g2d2:{mode}",
+        capability_snapshot_id=f"capabilities:g2d2:{mode}",
+        cost_model_id="cost:g2d2:v01",
+        required_user_input_state=(
+            "MISSING_RESOLVABLE" if mode == "needs_user" else "COMPLETE"
+        ),
+        hard_block_state="BLOCKED" if mode == "blocked" else "CLEAR",
+        evaluation_time_epoch_seconds=_D2_TIME,
+        pt_created_at_utc=_D2_UTC,
+        et_observed_at_utc=_D2_UTC,
+        ct_session_anchor=f"ct:g2d2:{mode}",
+        ttl_seconds=3600,
+        freshness_class="static",
+        valid_from_utc=_D2_UTC,
+        valid_to_utc=_D2_VALID_TO_UTC,
+        mode_profiles=tuple(profiles),
+    )
+    bsep = _d2_bsep(mode, request_id, domain_id)
+    source = _d2_source_context(
+        bsep=bsep,
+        snapshot=snapshot,
+        memory=memory,
+        replay=replay,
+    )
+    common = {
+        "request_id": request_id,
+        "transaction_id": transaction_id,
+        "owning_root_id": root_id,
+        "domain_id": domain_id,
+    }
+    router_input = g2c.build_execution_mode_router_input_v01(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=root_id,
+        bsep_binding=g2c.build_execution_mode_bsep_binding_v01(**common, source_context=source),
+        local_routing_snapshot=snapshot,
+        replay_binding=(
+            g2c.build_execution_mode_replay_binding_v01(
+                **common,
+                source_context=source,
+            )
+            if replay
+            else g2c.build_execution_mode_replay_not_applicable_binding_v01(**common)
+        ),
+        g2a_binding=g2c.build_execution_mode_g2a_no_packet_binding_v01(
+            **common,
+            evaluation_time=_D2_TIME,
+            evaluation_time_source=snapshot.created_by,
+            evaluation_context_id=snapshot.local_routing_snapshot_id,
+        ),
+        g2b_binding=(
+            g2c.build_execution_mode_g2b_binding_v01(**common, source_context=source)
+            if memory
+            else g2c.build_execution_mode_g2b_not_applicable_binding_v01(**common)
+        ),
+    )
+    proposal, route_report = g2c.route_execution_mode_v01(
+        router_input=router_input,
+        source_context=source,
+    )
+    assert route_report.validation_status == "PASS" and proposal is not None
+    assert proposal.selected_mode == mode
+    proposal_artifact = g2c.project_execution_mode_proposal_kernel_artifact_v01(
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+    )
+    registry = transition_registry.build_execution_mode_transition_registry_profile_v01()
+    pre = g2c.evaluate_execution_mode_proposal_to_root_transition_v01(
+        registry=registry,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+    )
+    effective_review_action = review_action or (
+        "TERMINAL_FROM_PROPOSAL" if mode in {"blocked", "needs_user"}
+        else "NARROW" if narrow else "ACCEPT"
+    )
+    basis = tuple(sorted((
+        router_input.bsep_binding.bsep_binding_id,
+        proposal_artifact.artifact_id,
+        proposal.selected_feasibility_row_id,
+    ))) if effective_review_action == "NARROW" else ()
+    review = g2c.build_root_execution_mode_review_input_v01(
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+        review_action=effective_review_action,
+        accepted_scope_ref=(
+            accepted_scope if effective_review_action == "NARROW"
+            else proposal.proposed_scope_ref
+            if effective_review_action == "ACCEPT"
+            else None
+        ),
+        narrowing_basis_refs=basis,
+    )
+    decision, root_kernel, root_input, root_result, review_report = g2c.review_execution_mode_proposal_v01(
+        review_input=review,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+    )
+    assert review_report.validation_status == "PASS"
+    assert decision is not None and root_kernel is not None
+    assert root_input is not None and root_result is not None
+    decision_artifact = g2c.project_root_execution_mode_decision_kernel_artifact_v01(
+        decision=decision,
+        review_input=review,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+        root_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+    )
+    post = g2c.evaluate_execution_mode_root_route_transition_v01(
+        registry=registry,
+        proposal_transition_decision=pre,
+        review_input=review,
+        decision=decision,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        root_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+        proposal_artifact=proposal_artifact,
+        decision_artifact=decision_artifact,
+    )
+    route = g2c.project_execution_mode_route_eligibility_kernel_artifact_v01(
+        decision=decision,
+        review_input=review,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+        root_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+        decision_artifact=decision_artifact,
+        root_route_transition_decision=post,
+    )
+    assert (route is not None) is (decision.outcome in {"ACCEPT", "NARROW"})
+    policy = fr.build_fractal_runtime_policy_v02(
+        required_downstream_capability_ids=proposal.required_downstream_capability_ids,
+        permitted_child_scope_refs=snapshot.permitted_narrower_scope_refs,
+    )
+    source_kwargs = {
+        "transition_registry": registry,
+        "g2c_source_context": source,
+        "router_input": router_input,
+        "proposal": proposal,
+        "proposal_artifact": proposal_artifact,
+        "proposal_transition_decision": pre,
+        "review_input": review,
+        "decision": decision,
+        "root_kernel": root_kernel,
+        "root_decision_input": root_input,
+        "root_decision_result": root_result,
+        "decision_artifact": decision_artifact,
+        "root_route_transition_decision": post,
+        "route_eligibility_artifact": route,
+        "runtime_policy": policy,
+    }
+    runtime_source = (
+        fr.FractalRuntimeSourceContextV02(**source_kwargs)
+        if reject_for_g2d
+        else fr.build_fractal_runtime_source_context_v02(**source_kwargs)
+    )
+    return {
+        "source": runtime_source,
+        "g2c_source": source,
+        "router_input": router_input,
+        "proposal": proposal,
+        "proposal_artifact": proposal_artifact,
+        "proposal_transition_decision": pre,
+        "review_input": review,
+        "decision": decision,
+        "root_kernel": root_kernel,
+        "root_decision_input": root_input,
+        "root_decision_result": root_result,
+        "decision_artifact": decision_artifact,
+        "root_route_transition_decision": post,
+        "route": route,
+        "policy": policy,
+    }
+
+
+@pytest.mark.parametrize(
+    ("mode", "narrow", "packet_required"),
+    (
+        ("memory_informed", False, False),
+        ("local_slm", False, True),
+        ("cloud_llm", True, False),
+        ("full_semantic", False, False),
+        ("full_fractal", False, False),
+    ),
+)
+def test_d2_complete_g2c_source_and_five_mode_topologies(
+    mode: str,
+    narrow: bool,
+    packet_required: bool,
+) -> None:
+    case = _d2_g2c_family(mode, narrow=narrow, action_packet_required=packet_required)
+    source = case["source"]
+    assert fr.validate_fractal_runtime_source_context_v02(source).status == "PASS"
+    binding = fr.build_runtime_topology_source_binding_v02(source_context=source)
+    assert fr.validate_runtime_topology_source_binding_v02(binding).status == "PASS"
+    assert fr.validate_runtime_topology_source_binding_against_g2c_v02(
+        binding,
+        source_context=source,
+    ).status == "PASS"
+    assert binding.downstream_action_packet_required is packet_required
+    first = fr.construct_runtime_execution_topology_v02(source)
+    second = fr.construct_runtime_execution_topology_v02(source)
+    assert first == second
+    assert canonical_json_bytes_v01(fr.runtime_execution_topology_to_plain_data_v02(first)) == canonical_json_bytes_v01(fr.runtime_execution_topology_to_plain_data_v02(second))
+    assert fr.validate_runtime_execution_topology_against_sources_v02(
+        first,
+        source_context=source,
+    ).status == "PASS"
+    node_rows = dict(fr.MODE_NODE_TEMPLATE_ROWS_V02)[mode]
+    edge_rows = dict(fr.MODE_EDGE_TEMPLATE_ROWS_V02)[mode]
+    assignment_rows = dict(fr.MODE_ASSIGNMENT_TEMPLATE_ROWS_V02)[mode]
+    assert len(first.ordered_node_ids) == len(node_rows)
+    assert len(first.ordered_edge_ids) == len(edge_rows)
+    assert len(first.ordered_assignment_ids) == len(assignment_rows)
+    registry = transition_registry.build_fractal_runtime_transition_registry_profile_v02()
+    decision = fr.evaluate_route_eligibility_to_topology_transition_v02(
+        source_context=source,
+        topology=first,
+        transition_registry=registry,
+    )
+    assert decision.rule_id == "g2d_t01_route_eligibility_to_topology"
+    artifact = fr.project_runtime_execution_topology_kernel_artifact_v02(
+        first,
+        source_context=source,
+        topology_transition_decision=decision,
+    )
+    assert validate_kernel_artifact_v01(artifact) == ()
+    assert artifact.parent_refs == (source.route_eligibility_artifact.artifact_id,)
+    assert artifact.artifact_type == "RuntimeExecutionTopology"
+    assert artifact.lifecycle_state == "VALIDATED"
+    assert artifact.authority_class == "ADVISORY"
+    planned_ids = fr._derive_settled_planned_root_child_ids_v02(
+        source_context=source,
+        topology=first,
+        topology_transition_decision=decision,
+        topology_artifact=artifact,
+    )
+    if mode == "full_fractal":
+        expected_planned_ids = tuple(
+            fr.derive_fractal_child_cell_id_v02(
+                topology_seed_id=first.topology_seed_id,
+                parent_cell_id=first.root_cell_id,
+                canonical_child_index=canonical_index,
+                accepted_mode="full_fractal",
+                selected_local_mode_profile_id=(
+                    source.proposal.selected_local_mode_profile_id
+                ),
+                source_mode_profile_set_id=(
+                    source.router_input.local_routing_snapshot.mode_profile_set_id
+                ),
+                child_scope_ref=first.accepted_scope_ref,
+                runtime_policy_id=first.runtime_policy_id,
+                required_capability_ids=(
+                    source.proposal.required_downstream_capability_ids
+                ),
+                forbidden_claims=source.runtime_policy.forbidden_claims,
+                child_depth=1,
+            )
+            for canonical_index in (0, 1)
+        )
+        assert planned_ids == expected_planned_ids
+        assert len(planned_ids) == len(set(planned_ids)) == 2
+    else:
+        assert planned_ids == ()
+    assert first.authority_created is first.permission_created is False
+    assert first.action_commit_packet_created is first.receipt_created is False
+    assert first.final_output_created is first.drs_write_created is False
+    assert first.provider_calls == first.network_calls == first.real_world_effects_count == 0
+
+
+def test_d2_full_fractal_geometry_t01_order_and_partition() -> None:
+    source = _d2_g2c_family("full_fractal")["source"]
+    topology = fr.construct_runtime_execution_topology_v02(source)
+    assert (len(topology.ordered_node_ids), len(topology.ordered_edge_ids), len(topology.ordered_assignment_ids)) == (7, 10, 7)
+    edge_rows = dict(fr.MODE_EDGE_TEMPLATE_ROWS_V02)["full_fractal"]
+    assert tuple(row[0] for row in edge_rows if row[1] == "ROOT_CELL_PROJECTION") == tuple(range(7))
+    assert tuple(row[0] for row in edge_rows if row[1] == "FRACTAL_LEAF_PROJECTION") == (7, 8, 9)
+    assert dict(fr.MODE_NODE_TEMPLATE_ROWS_V02)["full_fractal"][3][8] == "FAN_IN_CHILD_SLOT_RETURNS_1_2"
+    assert fr.CHILD_SLOT_INDEX_ROWS_V02 == (
+        (1, "PREDECESSOR_AND_CHILD_SLOT_1", 1, 0, 0),
+        (2, "PREDECESSOR_AND_CHILD_SLOT_2", 2, 1, 1),
+    )
+    registry = transition_registry.build_fractal_runtime_transition_registry_profile_v02()
+    decision = fr.evaluate_route_eligibility_to_topology_transition_v02(
+        source_context=source,
+        topology=topology,
+        transition_registry=registry,
+    )
+    artifact = fr.project_runtime_execution_topology_kernel_artifact_v02(
+        topology,
+        source_context=source,
+        topology_transition_decision=decision,
+    )
+    payload = kernel_artifact_to_plain_dict_v01(artifact)["payload"]
+    expected_payload_fields = (
+        "topology_id", "topology_version", "topology_seed_id", "request_id",
+        "domain_id", "accepted_mode", "accepted_scope_ref", "source_binding_id",
+        "source_root_decision_artifact_id", "source_proposal_artifact_id",
+        "runtime_policy_id", "ordered_node_ids", "ordered_edge_ids",
+        "ordered_assignment_ids", "root_cell_id", "global_budget_id",
+        "root_review_required", "authority_created", "permission_created",
+        "action_commit_packet_created", "receipt_created", "final_output_created",
+        "drs_write_created", "provider_calls", "network_calls",
+        "real_world_effects_count",
+    )
+    assert tuple(payload) == tuple(sorted(expected_payload_fields))
+    assert len(payload) == 26
+    assert artifact.artifact_id.startswith("frabi_topology_v02:")
+    planned = fr._derive_settled_planned_root_child_ids_v02(
+        source_context=source,
+        topology=topology,
+        topology_transition_decision=decision,
+        topology_artifact=artifact,
+    )
+    assert planned == fr._derive_settled_planned_root_child_ids_v02(
+        source_context=source,
+        topology=topology,
+        topology_transition_decision=decision,
+        topology_artifact=artifact,
+    )
+    assert len(planned) == 2
+    assert all(type(item) is str and item.startswith("frchildcell_v02:") for item in planned)
+    assert not any(
+        type(item) in fr.G2D_TYPES_V02
+        for item in planned
+    )
+    with pytest.raises(ValueError):
+        fr._derive_settled_planned_root_child_ids_v02(
+            source_context=source,
+            topology=topology,
+            topology_transition_decision=replace(decision, decision_id="0" * 64),
+            topology_artifact=artifact,
+        )
+    with pytest.raises(ValueError):
+        fr._derive_settled_planned_root_child_ids_v02(
+            source_context=source,
+            topology=topology,
+            topology_transition_decision=decision,
+            topology_artifact=replace(artifact, artifact_id="frabi_topology_v02:" + "0" * 64),
+        )
+
+
+def _assert_d2_g2c_family_publicly_valid(case: dict[str, object]) -> None:
+    source = case["g2c_source"]
+    router_input = case["router_input"]
+    proposal = case["proposal"]
+    proposal_artifact = case["proposal_artifact"]
+    pre = case["proposal_transition_decision"]
+    review = case["review_input"]
+    decision = case["decision"]
+    root_kernel = case["root_kernel"]
+    root_input = case["root_decision_input"]
+    root_result = case["root_decision_result"]
+    decision_artifact = case["decision_artifact"]
+    post = case["root_route_transition_decision"]
+    route = case["route"]
+    assert g2c.validate_execution_mode_source_context_v01(
+        source
+    ).validation_status == "PASS"
+    assert g2c.validate_execution_mode_router_input_against_sources_v01(
+        router_input=router_input,
+        source_context=source,
+    ).validation_status == "PASS"
+    assert g2c.validate_execution_mode_proposal_against_sources_v01(
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+    ).validation_status == "PASS"
+    assert g2c.validate_root_execution_mode_review_input_against_sources_v01(
+        review_input=review,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+    ).validation_status == "PASS"
+    assert g2c.validate_root_execution_mode_decision_against_source_v01(
+        decision=decision,
+        review_input=review,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+        root_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+    ).validation_status == "PASS"
+    assert g2c.validate_execution_mode_abi_profile_v01(
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+        review_input=review,
+        decision=decision,
+        root_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+        decision_artifact=decision_artifact,
+        root_route_transition_decision=post,
+        route_eligibility_artifact=route,
+    ).validation_status == "PASS"
+    if route is not None:
+        assert g2c.validate_execution_mode_route_eligibility_against_source_v01(
+            route_eligibility_artifact=route,
+            decision=decision,
+            review_input=review,
+            proposal=proposal,
+            router_input=router_input,
+            source_context=source,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=pre,
+            root_kernel=root_kernel,
+            root_decision_input=root_input,
+            root_decision_result=root_result,
+            decision_artifact=decision_artifact,
+            root_route_transition_decision=post,
+        ).validation_status == "PASS"
+
+
+@pytest.mark.parametrize(
+    ("mode", "review_action", "expected_class"),
+    (
+        ("deterministic", "ACCEPT", "SHORTCUT_RETURN_TO_ROOT"),
+        ("sealed_replay", "ACCEPT", "SHORTCUT_RETURN_TO_ROOT"),
+        ("direct_informational_reuse", "ACCEPT", "SHORTCUT_RETURN_TO_ROOT"),
+        ("full_semantic", "REJECT", "TERMINAL_NO_CONSUMPTION"),
+        ("blocked", "TERMINAL_FROM_PROPOSAL", "TERMINAL_NO_CONSUMPTION"),
+        ("needs_user", "TERMINAL_FROM_PROPOSAL", "TERMINAL_NO_CONSUMPTION"),
+    ),
+)
+def test_d2_actual_shortcut_and_terminal_source_families_fail_consumption(
+    mode: str,
+    review_action: str,
+    expected_class: str,
+) -> None:
+    case = _d2_g2c_family(
+        mode,
+        review_action=review_action,
+        reject_for_g2d=True,
+    )
+    _assert_d2_g2c_family_publicly_valid(case)
+    assert case["decision"].downstream_consumption_class == expected_class
+    assert fr.validate_fractal_runtime_source_context_v02(
+        case["source"]
+    ).status == "FAIL_CLOSED"
+    with pytest.raises(ValueError):
+        fr.build_runtime_topology_source_binding_v02(
+            source_context=case["source"]
+        )
+    with pytest.raises(ValueError):
+        fr.construct_runtime_execution_topology_v02(case["source"])
+    assert case["decision"].topology_created is False
+    assert case["decision"].authority_created is False
+    assert case["decision"].permission_created is False
+    assert case["decision"].action_commit_packet_created is False
+    assert case["decision"].final_output_created is False
+    assert case["decision"].drs_write_created is False
+    assert case["decision"].real_world_effects_count == 0
+
+
+def test_d2_complete_runtime_source_context_cross_object_substitution_matrix() -> None:
+    first = _d2_g2c_family("local_slm")["source"]
+    second = _d2_g2c_family(
+        "cloud_llm",
+        narrow=True,
+        root_id_override="root:g2d2:foreign",
+        domain_id_override="G2D2_RUNTIME_TOPOLOGY_FOREIGN",
+    )["source"]
+    assert fr.validate_fractal_runtime_source_context_v02(first).status == "PASS"
+    assert fr.validate_fractal_runtime_source_context_v02(second).status == "PASS"
+    for field_name in fr.FractalRuntimeSourceContextV02.__annotations__:
+        replacement = getattr(second, field_name)
+        if replacement == getattr(first, field_name):
+            identity_field = {
+                "transition_registry": "registry_id",
+                "proposal_transition_decision": "decision_id",
+                "root_kernel": "kernel_id",
+            }[field_name]
+            replacement = replace(replacement, **{identity_field: "0" * 64})
+        substituted = replace(first, **{field_name: replacement})
+        assert fr.validate_fractal_runtime_source_context_v02(
+            substituted
+        ).status == "FAIL_CLOSED", field_name
+
+
+def test_d2_source_topology_transition_and_artifact_substitutions_fail_closed() -> None:
+    case = _d2_g2c_family("cloud_llm", narrow=True)
+    source = case["source"]
+    for direct_or_id_only in (
+        source.decision,
+        source.proposal,
+        source.route_eligibility_artifact.artifact_id,
+        source.decision_artifact.artifact_id,
+    ):
+        assert fr.validate_fractal_runtime_source_context_v02(
+            direct_or_id_only
+        ).status == "FAIL_CLOSED"
+    topology = fr.construct_runtime_execution_topology_v02(source)
+    foreign_source = replace(source, runtime_policy=fr.build_fractal_runtime_policy_v02(
+        required_downstream_capability_ids=("capability:g2d2:foreign",),
+        permitted_child_scope_refs=source.runtime_policy.permitted_child_scope_refs,
+    ))
+    assert fr.validate_fractal_runtime_source_context_v02(foreign_source).status == "FAIL_CLOSED"
+    binding = fr.build_runtime_topology_source_binding_v02(source_context=source)
+    assert fr.validate_runtime_topology_source_binding_against_g2c_v02(
+        replace(binding, runtime_policy_id=foreign_source.runtime_policy.policy_id),
+        source_context=source,
+    ).status == "FAIL_CLOSED"
+    forged_topology = _seal(replace(topology, accepted_scope_ref="scope:g2d2:foreign"))
+    assert fr.validate_runtime_execution_topology_against_sources_v02(
+        forged_topology,
+        source_context=source,
+    ).status == "FAIL_CLOSED"
+    registry = transition_registry.build_fractal_runtime_transition_registry_profile_v02()
+    decision = fr.evaluate_route_eligibility_to_topology_transition_v02(
+        source_context=source,
+        topology=topology,
+        transition_registry=registry,
+    )
+    with pytest.raises(ValueError):
+        fr.evaluate_route_eligibility_to_topology_transition_v02(
+            source_context=source,
+            topology=topology,
+            transition_registry=replace(registry, registry_id="0" * 64),
+        )
+    with pytest.raises(ValueError):
+        fr.project_runtime_execution_topology_kernel_artifact_v02(
+            topology,
+            source_context=source,
+            topology_transition_decision=replace(decision, rule_id=registry.rules[1].rule_id),
+        )
+
+
+def test_d2_surface_staging_and_import_boundaries() -> None:
+    expected = (
+        "build_fractal_runtime_source_context_v02",
+        "validate_fractal_runtime_source_context_v02",
+        "validate_runtime_topology_source_binding_against_g2c_v02",
+        "construct_runtime_execution_topology_v02",
+        "validate_runtime_execution_topology_against_sources_v02",
+        "project_runtime_execution_topology_kernel_artifact_v02",
+        "evaluate_route_eligibility_to_topology_transition_v02",
+    )
+    for name in expected:
+        assert inspect.isfunction(getattr(fr, name))
+    signatures = {
+        "build_fractal_runtime_source_context_v02": "(*, transition_registry: 'TransitionRegistryV01', g2c_source_context: 'ExecutionModeSourceContextV01', router_input: 'ExecutionModeRouterInputV01', proposal: 'ExecutionModeProposalV01', proposal_artifact: 'KernelArtifactV01', proposal_transition_decision: 'TransitionDecisionV01', review_input: 'RootExecutionModeReviewInputV01', decision: 'RootExecutionModeDecisionV01', root_kernel: 'RootDecisionKernelV01', root_decision_input: 'RootDecisionInputV01', root_decision_result: 'RootDecisionResultV01', decision_artifact: 'KernelArtifactV01', root_route_transition_decision: 'TransitionDecisionV01', route_eligibility_artifact: 'KernelArtifactV01', runtime_policy: 'FractalRuntimePolicyV02') -> 'FractalRuntimeSourceContextV02'",
+        "validate_fractal_runtime_source_context_v02": "(value: 'object') -> 'FractalRuntimeValidationReportV02'",
+        "validate_runtime_topology_source_binding_against_g2c_v02": "(value: 'object', *, source_context: 'FractalRuntimeSourceContextV02') -> 'FractalRuntimeValidationReportV02'",
+        "construct_runtime_execution_topology_v02": "(source_context: 'FractalRuntimeSourceContextV02') -> 'RuntimeExecutionTopologyV02'",
+        "validate_runtime_execution_topology_against_sources_v02": "(value: 'object', *, source_context: 'FractalRuntimeSourceContextV02') -> 'FractalRuntimeValidationReportV02'",
+        "project_runtime_execution_topology_kernel_artifact_v02": "(topology: 'RuntimeExecutionTopologyV02', *, source_context: 'FractalRuntimeSourceContextV02', topology_transition_decision: 'TransitionDecisionV01') -> 'KernelArtifactV01'",
+        "evaluate_route_eligibility_to_topology_transition_v02": "(*, source_context: 'FractalRuntimeSourceContextV02', topology: 'RuntimeExecutionTopologyV02', transition_registry: 'TransitionRegistryV01') -> 'TransitionDecisionV01'",
+    }
+    assert set(signatures) == set(expected)
+    for name, signature in signatures.items():
+        assert str(inspect.signature(getattr(fr, name))) == signature
+    public_functions = tuple(
+        name
+        for name, value in vars(fr).items()
+        if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
+    )
+    assert len(public_functions) == 81
+    for forbidden in (
+        "evaluate_fractal_runtime_state_transition_v02",
+        "execute_fractal_runtime_v02",
+        "build_fractal_runtime_execution_bundle_v02",
+    ):
+        assert not callable(getattr(fr, forbidden, None))
+    module_source = MODULE_PATH.read_text(encoding="utf-8")
+    assert "import hedgehog.kernel\n" not in module_source
+    assert "demo." not in module_source and "tests." not in module_source

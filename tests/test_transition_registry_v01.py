@@ -1633,6 +1633,7 @@ def _g2d2_artifact(
     parent_refs: tuple[str, ...],
     transaction_id: str,
     owner_root_id: str,
+    trace_refs: tuple[str, ...] | None = None,
     time_envelope: dict[str, object] | None = None,
 ):
     domain, prefix, schema_version, source_component, authority_class = (
@@ -1649,7 +1650,7 @@ def _g2d2_artifact(
         authority_class=authority_class,
         lifecycle_state=lifecycle_state,
         payload=payload,
-        trace_refs=(f"trace:g2d2:{suffix}",),
+        trace_refs=(f"trace:g2d2:{suffix}",) if trace_refs is None else trace_refs,
         parent_refs=parent_refs,
         time_envelope=time_envelope or {
             "ct_session_anchor": "ct:g2d2",
@@ -1681,6 +1682,7 @@ def _g2d2_rebuild_artifact(
     parent_refs: tuple[str, ...] | None = None,
     transaction_id: str | None = None,
     owner_root_id: str | None = None,
+    trace_refs: tuple[str, ...] | None = None,
     time_envelope: dict[str, object] | None = None,
 ):
     plain = kernel_artifact_to_plain_dict_v01(artifact)
@@ -1692,6 +1694,7 @@ def _g2d2_rebuild_artifact(
         parent_refs=artifact.parent_refs if parent_refs is None else parent_refs,
         transaction_id=transaction_id or artifact.transaction_id,
         owner_root_id=owner_root_id or artifact.owner_root_id,
+        trace_refs=artifact.trace_refs if trace_refs is None else trace_refs,
         time_envelope=plain["time_envelope"] if time_envelope is None else time_envelope,
     )
 
@@ -1708,6 +1711,11 @@ def _g2d2_artifact_pair(
     topology_artifact_id = "frabi_topology_v02:" + "a" * 64
     topology_id = f"frtopology_v02:{rule_index:064x}"
     topology_seed_id = f"frseed_v02:{rule_index:064x}"
+    registry = transition.build_fractal_runtime_transition_registry_profile_v02()
+    decision_id = _g2d2_decision(rule, registry).decision_id
+    prior_decision_id = f"{rule_index + 100:064x}"
+    source_trace = (f"trace:g2d2:source:{rule_index}",)
+    target_trace = (f"trace:g2d2:target:{rule_index}",)
     if rule_index == 0:
         decision_parent = "emabi_decision_v01:" + "b" * 64
         source_payload = {
@@ -1721,12 +1729,19 @@ def _g2d2_artifact_pair(
             "source_root_decision_artifact_id": decision_parent,
         }
     elif rule_index == 1:
-        source_payload = {"topology_id": topology_id}
-        source_parents = ("emabi_route_v01:" + "c" * 64,)
-        target_payload = {"topology_id": topology_id}
-    elif 2 <= rule_index <= 11:
         source_payload = {
             "topology_id": topology_id,
+            "topology_seed_id": topology_seed_id,
+        }
+        source_parents = ("emabi_route_v01:" + "c" * 64,)
+        target_payload = {"topology_seed_id": topology_seed_id}
+        target_trace = (
+            decision_id,
+            topology_id,
+            "lineage:g2d2:t02:target",
+        )
+    elif 2 <= rule_index <= 11:
+        source_payload = {
             "topology_seed_id": topology_seed_id,
             "cell_id": "frrootcell_v02:" + "d" * 64,
             "parent_cell_id": None,
@@ -1741,9 +1756,18 @@ def _g2d2_artifact_pair(
             )
         )
         target_payload = dict(source_payload)
+        source_trace = (
+            prior_decision_id,
+            topology_id,
+            f"lineage:g2d2:source:{rule_index}",
+        )
+        target_trace = (
+            decision_id,
+            topology_id,
+            f"lineage:g2d2:target:{rule_index}",
+        )
     else:
         source_payload = {
-            "topology_id": topology_id,
             "topology_seed_id": topology_seed_id,
         }
         source_parents = (
@@ -1751,6 +1775,16 @@ def _g2d2_artifact_pair(
             "frabi_queue_v02:" + "f" * 64,
         )
         target_payload = dict(source_payload)
+        source_trace = (
+            f"post-vv:g2d2:{rule_index}",
+            f"gt:g2d2:{rule_index}",
+            topology_id,
+        )
+        target_trace = (
+            f"runtime-trace:g2d2:{rule_index}",
+            decision_id,
+            f"parent-return:g2d2:{rule_index}",
+        )
     source = _g2d2_artifact(
         rule.source_artifact_type,
         rule.source_lifecycle_state,
@@ -1759,6 +1793,7 @@ def _g2d2_artifact_pair(
         parent_refs=source_parents,
         transaction_id=transaction,
         owner_root_id=root,
+        trace_refs=source_trace,
     )
     if rule_index <= 1:
         target_parents = (source.artifact_id,)
@@ -1774,6 +1809,7 @@ def _g2d2_artifact_pair(
         parent_refs=target_parents,
         transaction_id=transaction,
         owner_root_id=root,
+        trace_refs=target_trace,
     )
     return source, target
 
@@ -2016,6 +2052,169 @@ def test_g2d2_transition_decision_identity_and_substitution(rule_index: int) -> 
         rules=registry.rules[:rule_index] + (mutated_rule,) + registry.rules[rule_index + 1:],
     )
     assert transition.validate_fractal_runtime_transition_registry_profile_v02(mutated_registry)
+
+
+def test_g2d2_ctx_only_topology_partition_and_trace_binding() -> None:
+    queue_forbidden_ctx_keys = ("topology_id", "predecessor_queue_entry_id")
+    result_forbidden_ctx_keys = ("topology_id",)
+    report_forbidden_ctx_keys = ("topology_id",)
+    registry = transition.build_fractal_runtime_transition_registry_profile_v02()
+    foreign_topology = "frtopology_v02:" + "9" * 64
+    foreign_decision = "9" * 64
+
+    t02_source, t02_target = _g2d2_artifact_pair(registry.rules[1], 1)
+    t02_source_payload = kernel_artifact_to_plain_dict_v01(t02_source)["payload"]
+    t02_target_payload = kernel_artifact_to_plain_dict_v01(t02_target)["payload"]
+    assert t02_source_payload["topology_id"] == t02_target.trace_refs[1]
+    assert t02_source_payload["topology_seed_id"] == t02_target_payload["topology_seed_id"]
+    assert all(key not in t02_target_payload for key in queue_forbidden_ctx_keys)
+    for payload in (
+        {**t02_target_payload, "topology_id": t02_source_payload["topology_id"]},
+        {**t02_target_payload, "predecessor_queue_entry_id": "frqueue_v02:" + "1" * 64},
+        {**t02_target_payload, "topology_seed_id": "frseed_v02:" + "2" * 64},
+    ):
+        assert _g2d2_pair_errors(
+            registry,
+            1,
+            t02_source,
+            _g2d2_rebuild_artifact(t02_target, payload=payload),
+        )
+    assert _g2d2_pair_errors(
+        registry, 1, t02_source, replace(t02_target, trace_refs=())
+    )
+    for trace_refs in (
+        (t02_target.trace_refs[0],),
+        (t02_target.trace_refs[0], "topology:wrong"),
+        (t02_target.trace_refs[0], foreign_topology),
+        (foreign_decision, t02_target.trace_refs[1]),
+    ):
+        assert _g2d2_pair_errors(
+            registry,
+            1,
+            t02_source,
+            _g2d2_rebuild_artifact(t02_target, trace_refs=trace_refs),
+        )
+
+    for rule_index in range(2, 12):
+        source, target = _g2d2_artifact_pair(
+            registry.rules[rule_index], rule_index
+        )
+        source_payload = kernel_artifact_to_plain_dict_v01(source)["payload"]
+        target_payload = kernel_artifact_to_plain_dict_v01(target)["payload"]
+        assert all(key not in source_payload for key in queue_forbidden_ctx_keys)
+        assert all(key not in target_payload for key in queue_forbidden_ctx_keys)
+        assert source.trace_refs[1] == target.trace_refs[1]
+        for artifact, payload in (
+            (source, {**source_payload, "topology_id": source.trace_refs[1]}),
+            (source, {**source_payload, "predecessor_queue_entry_id": "frqueue_v02:" + "2" * 64}),
+            (target, {**target_payload, "topology_id": target.trace_refs[1]}),
+            (target, {**target_payload, "predecessor_queue_entry_id": source.artifact_id}),
+        ):
+            rebuilt = _g2d2_rebuild_artifact(artifact, payload=payload)
+            assert _g2d2_pair_errors(
+                registry,
+                rule_index,
+                rebuilt if artifact is source else source,
+                rebuilt if artifact is target else target,
+            )
+        assert _g2d2_pair_errors(
+            registry,
+            rule_index,
+            replace(source, trace_refs=()),
+            target,
+        )
+        for source_trace_refs in (
+            (source.trace_refs[0],),
+            (source.trace_refs[0], "topology:wrong"),
+        ):
+            assert _g2d2_pair_errors(
+                registry,
+                rule_index,
+                _g2d2_rebuild_artifact(
+                    source, trace_refs=source_trace_refs
+                ),
+                target,
+            )
+        assert _g2d2_pair_errors(
+            registry,
+            rule_index,
+            _g2d2_rebuild_artifact(
+                source,
+                trace_refs=(source.trace_refs[0], foreign_topology),
+            ),
+            target,
+        )
+        assert _g2d2_pair_errors(
+            registry, rule_index, source, replace(target, trace_refs=())
+        )
+        for trace_refs in (
+            (target.trace_refs[0],),
+            (target.trace_refs[0], "topology:wrong"),
+            (target.trace_refs[0], foreign_topology),
+            (foreign_decision, target.trace_refs[1]),
+        ):
+            assert _g2d2_pair_errors(
+                registry,
+                rule_index,
+                source,
+                _g2d2_rebuild_artifact(target, trace_refs=trace_refs),
+            )
+        assert _g2d2_pair_errors(
+            registry,
+            rule_index,
+            source,
+            _g2d2_rebuild_artifact(
+                target,
+                payload={
+                    **target_payload,
+                    "topology_seed_id": "frseed_v02:" + "3" * 64,
+                },
+            ),
+        )
+
+    for rule_index in range(12, 17):
+        source, target = _g2d2_artifact_pair(
+            registry.rules[rule_index], rule_index
+        )
+        source_payload = kernel_artifact_to_plain_dict_v01(source)["payload"]
+        target_payload = kernel_artifact_to_plain_dict_v01(target)["payload"]
+        assert all(key not in source_payload for key in result_forbidden_ctx_keys)
+        assert all(key not in target_payload for key in report_forbidden_ctx_keys)
+        assert target.trace_refs[1] == _g2d2_decision(
+            registry.rules[rule_index], registry
+        ).decision_id
+        assert _g2d2_pair_errors(
+            registry,
+            rule_index,
+            _g2d2_rebuild_artifact(
+                source,
+                payload={**source_payload, "topology_id": foreign_topology},
+            ),
+            target,
+        )
+        for payload in (
+            {**target_payload, "topology_id": foreign_topology},
+            {**target_payload, "topology_seed_id": "frseed_v02:" + "4" * 64},
+        ):
+            assert _g2d2_pair_errors(
+                registry,
+                rule_index,
+                source,
+                _g2d2_rebuild_artifact(target, payload=payload),
+            )
+        assert _g2d2_pair_errors(
+            registry, rule_index, source, replace(target, trace_refs=())
+        )
+        for trace_refs in (
+            (target.trace_refs[0],),
+            (target.trace_refs[0], foreign_decision),
+        ):
+            assert _g2d2_pair_errors(
+                registry,
+                rule_index,
+                source,
+                _g2d2_rebuild_artifact(target, trace_refs=trace_refs),
+            )
 
 
 def test_g2d2_initial_and_queue_parent_geometry() -> None:

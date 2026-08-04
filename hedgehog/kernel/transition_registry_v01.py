@@ -2701,6 +2701,29 @@ def _fractal_runtime_payload_v02(
     return payload if type(payload) is dict else None
 
 
+def _fractal_runtime_queue_topology_context_v02(
+    artifact: KernelArtifactV01,
+) -> str | None:
+    if artifact.artifact_type != "FractalCellQueueEntry":
+        return None
+    trace_refs = artifact.trace_refs
+    payload = _fractal_runtime_payload_v02(artifact)
+    if (
+        type(trace_refs) is not tuple
+        or len(trace_refs) < 2
+        or any(type(ref) is not str or not ref for ref in trace_refs)
+        or _re.fullmatch(r"[0-9a-f]{64}", trace_refs[0]) is None
+        or not _fractal_runtime_prefixed_digest_v02(
+            trace_refs[1], "frtopology_v02:"
+        )
+        or payload is None
+        or "topology_id" in payload
+        or "predecessor_queue_entry_id" in payload
+    ):
+        return None
+    return trace_refs[1]
+
+
 def _fractal_runtime_prefixed_digest_v02(value: object, prefix: str) -> bool:
     return type(value) is str and _re.fullmatch(
         _re.escape(prefix) + r"[0-9a-f]{64}", value
@@ -2784,6 +2807,7 @@ def _fractal_runtime_source_parent_envelope_valid_v02(
 def _fractal_runtime_artifact_pair_valid_v02(
     *,
     rule: TransitionRuleV01,
+    decision: TransitionDecisionV01,
     source_artifact: KernelArtifactV01,
     target_artifact: KernelArtifactV01,
 ) -> bool:
@@ -2909,15 +2933,38 @@ def _fractal_runtime_artifact_pair_valid_v02(
         ):
             return False
     elif rule_index == 2:
+        target_topology_id = _fractal_runtime_queue_topology_context_v02(
+            target_artifact
+        )
         if (
             "topology_id" not in source_payload
-            or "topology_id" not in target_payload
-            or source_payload["topology_id"] != target_payload["topology_id"]
+            or not _fractal_runtime_prefixed_digest_v02(
+                source_payload["topology_id"], "frtopology_v02:"
+            )
+            or target_topology_id is None
+            or source_payload["topology_id"] != target_topology_id
+            or "topology_seed_id" not in source_payload
+            or "topology_seed_id" not in target_payload
+            or source_payload["topology_seed_id"]
+            != target_payload["topology_seed_id"]
+            or target_artifact.trace_refs[0] != decision.decision_id
         ):
             return False
     elif 3 <= rule_index <= 12:
+        source_topology_id = _fractal_runtime_queue_topology_context_v02(
+            source_artifact
+        )
+        target_topology_id = _fractal_runtime_queue_topology_context_v02(
+            target_artifact
+        )
+        if (
+            source_topology_id is None
+            or target_topology_id is None
+            or source_topology_id != target_topology_id
+            or target_artifact.trace_refs[0] != decision.decision_id
+        ):
+            return False
         for field_name in (
-            "topology_id",
             "topology_seed_id",
             "cell_id",
             "parent_cell_id",
@@ -2930,13 +2977,22 @@ def _fractal_runtime_artifact_pair_valid_v02(
             ):
                 return False
     else:
-        for field_name in ("topology_id", "topology_seed_id"):
-            if (
-                field_name not in source_payload
-                or field_name not in target_payload
-                or source_payload[field_name] != target_payload[field_name]
-            ):
-                return False
+        if (
+            "topology_id" in source_payload
+            or "topology_id" in target_payload
+            or "topology_seed_id" not in source_payload
+            or "topology_seed_id" not in target_payload
+            or source_payload["topology_seed_id"]
+            != target_payload["topology_seed_id"]
+            or type(target_artifact.trace_refs) is not tuple
+            or len(target_artifact.trace_refs) < 2
+            or any(
+                type(ref) is not str or not ref
+                for ref in target_artifact.trace_refs
+            )
+            or target_artifact.trace_refs[1] != decision.decision_id
+        ):
+            return False
     return True
 
 
@@ -2983,6 +3039,7 @@ def validate_fractal_runtime_transition_decision_v02(
             or target_artifact.artifact_type != rule.target_artifact_type
             or not _fractal_runtime_artifact_pair_valid_v02(
                 rule=rule,
+                decision=value,
                 source_artifact=source_artifact,
                 target_artifact=target_artifact,
             )
